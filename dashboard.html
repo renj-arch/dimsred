@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Dashboard - StudyPro</title>
-    <script src="js/supabase.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}
@@ -160,7 +159,9 @@ style="background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none
         document.getElementById('historyCard').querySelector('h3').after(bc);
       }
     }
-
+    </script>
+<script src="js/supabase.js"></script>
+    <script>
     // Try loading from Supabase if logged in, else fallback to localStorage
     if (typeof window.loadUserData === 'function') {
       window.loadUserData(function(data) {
