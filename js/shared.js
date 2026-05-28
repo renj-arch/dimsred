@@ -403,8 +403,8 @@
     }
 
     html += '<div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">';
-    html += '<a href="../mistakes.html" class="pc-btn" style="text-decoration:none">❌ Review Mistakes</a>';
-    html += '<a href="../dashboard.html" class="pc-btn" style="text-decoration:none">📊 Dashboard</a>';
+    html += '<a href="/mistakes.html" class="pc-btn" style="text-decoration:none">❌ Review Mistakes</a>';
+    html += '<a href="/dashboard.html" class="pc-btn" style="text-decoration:none">📊 Dashboard</a>';
     html += '<button class="pc-btn dash-close" style="background:#52525b">Close</button>';
     html += '</div></div></div>';
 
