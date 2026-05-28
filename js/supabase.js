@@ -13,9 +13,16 @@ function sbHeaders(token) {
 }
 
 // ========== AUTH — Google Login ==========
+function makeRedirectUrl() {
+  var host = window.location.host;
+  // If on localhost, use the live domain instead for the redirect
+  if (host.indexOf('localhost') >= 0 || host.indexOf('127.0.0.1') >= 0) {
+    host = 'vlymbooq.qzz.io';
+  }
+  return encodeURIComponent('https://' + host + window.location.pathname);
+}
 window.supabaseLogin = function () {
-  var redirect = encodeURIComponent(window.location.origin + window.location.pathname);
-  window.location.href = SUPABASE_URL + '/auth/v1/authorize?provider=google&redirect_to=' + redirect;
+  window.location.href = SUPABASE_URL + '/auth/v1/authorize?provider=google&redirect_to=' + makeRedirectUrl();
 };
 
 window.supabaseLogout = function () {
@@ -213,7 +220,7 @@ window.getLeaderboard = async function (examFilter, callback) {
 
 // ========== UI UPDATE ==========
 function updateAuthUI() {
-  var loginUrl = SUPABASE_URL + '/auth/v1/authorize?provider=google&redirect_to=' + encodeURIComponent(window.location.origin + window.location.pathname);
+  var loginUrl = SUPABASE_URL + '/auth/v1/authorize?provider=google&redirect_to=' + makeRedirectUrl();
   document.querySelectorAll('.auth-btn').forEach(function (el) {
     if (supabaseUser) {
       var name = supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0] || 'User';
