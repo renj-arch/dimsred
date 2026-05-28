@@ -1,8 +1,8 @@
 // ==========================================
 // SUPABASE SETUP — Replace with your project
 // ==========================================
-var SUPABASE_URL = 'https://YOUR_PROJECT.supabase.co';
-var SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
+var SUPABASE_URL = 'https://krvlufonfbcabgcjomvs.supabase.co';
+var SUPABASE_ANON_KEY = 'sb_publishable_jQqqojpcRKwI3boRYfmBYg_-Kem7UyW';
 
 var supabaseClient = null;
 var supabaseUser = null;
