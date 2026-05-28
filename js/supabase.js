@@ -213,16 +213,23 @@ window.getLeaderboard = async function (examFilter, callback) {
 
 // ========== UI UPDATE ==========
 function updateAuthUI() {
+  var loginUrl = SUPABASE_URL + '/auth/v1/authorize?provider=google&redirect_to=' + encodeURIComponent(window.location.origin + window.location.pathname);
   document.querySelectorAll('.auth-btn').forEach(function (el) {
     if (supabaseUser) {
       var name = supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0] || 'User';
       var photo = supabaseUser.user_metadata?.avatar_url || '';
       el.innerHTML = photo ? '<img src="' + photo + '" style="width:22px;height:22px;border-radius:50%;vertical-align:middle;margin-right:6px">' + name : name;
       el.onclick = function (e) { e.preventDefault(); if (confirm('Logout?')) window.supabaseLogout(); };
+      if (el.tagName === 'A') el.removeAttribute('href');
       el.style.cssText = 'padding:4px 12px 4px 4px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center';
     } else {
       el.innerHTML = 'Login';
-      el.onclick = function (e) { e.preventDefault(); window.supabaseLogin(); };
+      if (el.tagName === 'A') {
+        el.href = loginUrl;
+        el.onclick = null;
+      } else {
+        el.onclick = function (e) { e.preventDefault(); window.location.href = loginUrl; };
+      }
       el.style.cssText = 'background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap';
     }
   });
@@ -234,3 +241,6 @@ document.querySelectorAll('script[src*="supabase-js"]').forEach(function(s) { s.
 
 // Initialize
 initSupabase();
+
+// Re-run after shared.js creates the auth button (deferred)
+setTimeout(updateAuthUI, 50);

@@ -520,11 +520,12 @@
   if (!document.querySelector('.auth-btn')) {
     var nav = document.querySelector('.nav-links, .site-nav');
     if (nav) {
-      var authBtn = document.createElement('span');
+      var authBtn = document.createElement('a');
       authBtn.className = 'auth-btn';
-      authBtn.style.cssText = 'background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap';
+      var _redirect = encodeURIComponent(window.location.origin + window.location.pathname);
+      authBtn.href = (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : 'https://krvlufonfbcabgcjomvs.supabase.co') + '/auth/v1/authorize?provider=google&redirect_to=' + _redirect;
       authBtn.textContent = 'Login';
-      authBtn.onclick = function (e) { e.preventDefault(); if (window.supabaseLogin) window.supabaseLogin(); };
+      authBtn.style.cssText = 'background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none';
       nav.appendChild(authBtn);
     }
   }
