@@ -63,9 +63,9 @@ async function initSupabase() {
   var token = localStorage.getItem('sb_access_token');
   if (token) {
     supabaseUser = await fetchUser();
-    updateAuthUI();
     if (supabaseUser) ensureProfile(supabaseUser);
   }
+  updateAuthUI();
 }
 
 function getToken() {

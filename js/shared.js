@@ -524,6 +524,7 @@
       authBtn.className = 'auth-btn';
       authBtn.style.cssText = 'background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap';
       authBtn.textContent = 'Login';
+      authBtn.onclick = function (e) { e.preventDefault(); if (window.supabaseLogin) window.supabaseLogin(); };
       nav.appendChild(authBtn);
     }
   }
