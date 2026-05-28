@@ -1,197 +1,236 @@
 // ==========================================
-// SUPABASE SETUP — Replace with your project
+// SUPABASE — Direct REST API (no SDK needed)
 // ==========================================
 var SUPABASE_URL = 'https://krvlufonfbcabgcjomvs.supabase.co';
 var SUPABASE_ANON_KEY = 'sb_publishable_jQqqojpcRKwI3boRYfmBYg_-Kem7UyW';
-
-var supabaseClient = null;
 var supabaseUser = null;
 
-if (typeof supabase !== 'undefined') {
-  supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Headers for Supabase REST API
+function sbHeaders(token) {
+  var h = { 'apikey': SUPABASE_ANON_KEY, 'Content-Type': 'application/json' };
+  if (token) h['Authorization'] = 'Bearer ' + token;
+  return h;
+}
 
-  // ========== AUTH STATE ==========
-  supabaseClient.auth.onAuthStateChange(function(event, session) {
-    supabaseUser = session ? session.user : null;
+// ========== AUTH — Google Login ==========
+window.supabaseLogin = function () {
+  var redirect = encodeURIComponent(window.location.origin + window.location.pathname);
+  window.location.href = SUPABASE_URL + '/auth/v1/authorize?provider=google&redirect_to=' + redirect;
+};
+
+window.supabaseLogout = function () {
+  localStorage.removeItem('sb_access_token');
+  localStorage.removeItem('sb_refresh_token');
+  localStorage.removeItem('sb_user');
+  supabaseUser = null;
+  updateAuthUI();
+};
+
+// Check for auth tokens in URL hash (after OAuth redirect)
+function handleAuthRedirect() {
+  var hash = window.location.hash;
+  if (hash && hash.indexOf('access_token') >= 0) {
+    var params = new URLSearchParams(hash.substring(1));
+    var token = params.get('access_token');
+    var refresh = params.get('refresh_token');
+    if (token) {
+      localStorage.setItem('sb_access_token', token);
+      if (refresh) localStorage.setItem('sb_refresh_token', refresh);
+      window.location.hash = '';
+      window.history.replaceState(null, '', window.location.pathname);
+      return true;
+    }
+  }
+  return false;
+}
+
+// Get user from saved token
+async function fetchUser() {
+  var token = localStorage.getItem('sb_access_token');
+  if (!token) return null;
+  try {
+    var r = await fetch(SUPABASE_URL + '/auth/v1/user', { headers: sbHeaders(token) });
+    if (!r.ok) { localStorage.removeItem('sb_access_token'); return null; }
+    var user = await r.json();
+    localStorage.setItem('sb_user', JSON.stringify(user));
+    return user;
+  } catch (e) { return null; }
+}
+
+// Init: handle redirect, then set user
+async function initSupabase() {
+  handleAuthRedirect();
+  var token = localStorage.getItem('sb_access_token');
+  if (token) {
+    supabaseUser = await fetchUser();
     updateAuthUI();
-    if (supabaseUser) {
-      ensureProfile(supabaseUser);
+    if (supabaseUser) ensureProfile(supabaseUser);
+  }
+}
+
+function getToken() {
+  return localStorage.getItem('sb_access_token');
+}
+
+async function ensureProfile(user) {
+  var tok = getToken();
+  try {
+    var r = await fetch(SUPABASE_URL + '/rest/v1/profiles?id=eq.' + user.id, { headers: sbHeaders(tok) });
+    var data = await r.json();
+    if (!data || data.length === 0) {
+      await fetch(SUPABASE_URL + '/rest/v1/profiles', {
+        method: 'POST',
+        headers: sbHeaders(tok),
+        body: JSON.stringify({
+          id: user.id,
+          name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
+          photo: user.user_metadata?.avatar_url || '',
+          email: user.email
+        })
+      });
     }
+  } catch (e) {}
+}
+
+// ========== SYNC FUNCTIONS ==========
+window.syncResult = async function (result) {
+  var tok = getToken();
+  if (!tok) return;
+  await fetch(SUPABASE_URL + '/rest/v1/results', {
+    method: 'POST', headers: sbHeaders(tok),
+    body: JSON.stringify({
+      user_id: supabaseUser.id, exam: result.exam, paper_id: result.paperId,
+      correct: result.correct, wrong: result.wrong, total: result.total,
+      answered: result.answered, pct: result.pct, time: result.time
+    })
   });
-
-  function getCurrentUser() {
-    return supabaseUser;
-  }
-
-  async function ensureProfile(user) {
-    var { data, error } = await supabaseClient.from('profiles').select('id').eq('id', user.id).single();
-    if (error || !data) {
-      await supabaseClient.from('profiles').upsert({
-        id: user.id,
-        name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
-        photo: user.user_metadata?.avatar_url || '',
-        email: user.email
-      });
-    }
-  }
-
-  // ========== GOOGLE LOGIN ==========
-  window.supabaseLogin = async function() {
-    var { error } = await supabaseClient.auth.signInWithOAuth({ provider: 'google' });
-    if (error) console.error('Login error:', error);
-  };
-
-  window.supabaseLogout = async function() {
-    await supabaseClient.auth.signOut();
-  };
-
-  // ========== SYNC FUNCTIONS ==========
-
-  // Save paper result
-  window.syncResult = async function(result) {
-    if (!supabaseUser) return;
-    var { error } = await supabaseClient.from('results').insert({
+  await fetch(SUPABASE_URL + '/rest/v1/leaderboard', {
+    method: 'POST', headers: sbHeaders(tok),
+    body: JSON.stringify({
       user_id: supabaseUser.id,
-      exam: result.exam,
-      paper_id: result.paperId,
-      correct: result.correct,
-      wrong: result.wrong,
-      total: result.total,
-      answered: result.answered,
-      pct: result.pct,
-      time: result.time
+      name: supabaseUser.user_metadata?.full_name || 'User',
+      photo: supabaseUser.user_metadata?.avatar_url || '',
+      exam: result.exam, score: result.correct, total: result.total, pct: result.pct
+    })
+  });
+};
+
+window.syncWrongAnswer = async function (item) {
+  var tok = getToken();
+  if (!tok) return;
+  await fetch(SUPABASE_URL + '/rest/v1/wrong_answers', {
+    method: 'POST', headers: sbHeaders(tok),
+    body: JSON.stringify({
+      user_id: supabaseUser.id, paper_id: item.paperId, exam: item.exam,
+      q_num: item.qNum, q_text: item.qText, correct: item.correct,
+      chosen: item.chosen, difficulty: item.difficulty, section: item.section
+    })
+  });
+};
+
+window.syncBookmark = async function (item, isRemoving) {
+  var tok = getToken();
+  if (!tok) return;
+  if (isRemoving) {
+    await fetch(SUPABASE_URL + '/rest/v1/bookmarks?user_id=eq.' + supabaseUser.id + '&paper_id=eq.' + encodeURIComponent(item.paperId) + '&q_num=eq.' + encodeURIComponent(item.qNum), {
+      method: 'DELETE', headers: sbHeaders(tok)
     });
-    // Also update leaderboard (keep only best per exam)
-    if (!error) {
-      await supabaseClient.from('leaderboard').insert({
-        user_id: supabaseUser.id,
-        name: supabaseUser.user_metadata?.full_name || 'User',
-        photo: supabaseUser.user_metadata?.avatar_url || '',
-        exam: result.exam,
-        score: result.correct,
-        total: result.total,
-        pct: result.pct
-      });
-    }
-  };
-
-  // Save wrong answer
-  window.syncWrongAnswer = async function(item) {
-    if (!supabaseUser) return;
-    await supabaseClient.from('wrong_answers').insert({
-      user_id: supabaseUser.id,
-      paper_id: item.paperId,
-      exam: item.exam,
-      q_num: item.qNum,
-      q_text: item.qText,
-      correct: item.correct,
-      chosen: item.chosen,
-      difficulty: item.difficulty,
-      section: item.section
+  } else {
+    await fetch(SUPABASE_URL + '/rest/v1/bookmarks', {
+      method: 'POST', headers: sbHeaders(tok),
+      body: JSON.stringify({
+        user_id: supabaseUser.id, paper_id: item.paperId, exam: item.exam,
+        q_num: item.qNum, q_text: item.qText, section: item.section
+      })
     });
-  };
+  }
+};
 
-  // Save bookmark
-  window.syncBookmark = async function(item, isRemoving) {
-    if (!supabaseUser) return;
-    if (isRemoving) {
-      await supabaseClient.from('bookmarks').delete().match({ user_id: supabaseUser.id, paper_id: item.paperId, q_num: item.qNum });
-    } else {
-      await supabaseClient.from('bookmarks').upsert({
-        user_id: supabaseUser.id,
-        paper_id: item.paperId,
-        exam: item.exam,
-        q_num: item.qNum,
-        q_text: item.qText,
-        section: item.section
-      }, { onConflict: 'user_id,paper_id,q_num' });
-    }
-  };
+window.syncStreak = async function (streak) {
+  var tok = getToken();
+  if (!tok) return;
+  await fetch(SUPABASE_URL + '/rest/v1/profiles?id=eq.' + supabaseUser.id, {
+    method: 'PATCH', headers: sbHeaders(tok),
+    body: JSON.stringify({ streak_current: streak.current, streak_longest: streak.longest, streak_last_date: streak.lastDate })
+  });
+};
 
-  // Sync streak
-  window.syncStreak = async function(streak) {
-    if (!supabaseUser) return;
-    await supabaseClient.from('profiles').update({
-      streak_current: streak.current,
-      streak_longest: streak.longest,
-      streak_last_date: streak.lastDate
-    }).eq('id', supabaseUser.id);
-  };
+window.syncBadges = async function (badges) {
+  var tok = getToken();
+  if (!tok) return;
+  await fetch(SUPABASE_URL + '/rest/v1/profiles?id=eq.' + supabaseUser.id, {
+    method: 'PATCH', headers: sbHeaders(tok),
+    body: JSON.stringify({ badges: JSON.stringify(badges) })
+  });
+};
 
-  // Sync badges
-  window.syncBadges = async function(badges) {
-    if (!supabaseUser) return;
-    await supabaseClient.from('profiles').update({ badges: JSON.stringify(badges) }).eq('id', supabaseUser.id);
-  };
+window.syncGoals = async function (goals) {
+  var tok = getToken();
+  if (!tok) return;
+  await fetch(SUPABASE_URL + '/rest/v1/profiles?id=eq.' + supabaseUser.id, {
+    method: 'PATCH', headers: sbHeaders(tok),
+    body: JSON.stringify({ goals: JSON.stringify(goals) })
+  });
+};
 
-  // Sync goals
-  window.syncGoals = async function(goals) {
-    if (!supabaseUser) return;
-    await supabaseClient.from('profiles').update({ goals: JSON.stringify(goals) }).eq('id', supabaseUser.id);
-  };
+// ========== LOAD USER DATA ==========
+window.loadUserData = async function (callback) {
+  var tok = getToken();
+  if (!tok || !supabaseUser) { if (callback) callback(null); return; }
+  var uid = supabaseUser.id;
 
-  // ========== LOAD USER DATA ==========
-  window.loadUserData = async function(callback) {
-    if (!supabaseUser) { if (callback) callback(null); return; }
-    var uid = supabaseUser.id;
-
-    var [profileRes, resultsRes, wrongRes, bookmarksRes] = await Promise.all([
-      supabaseClient.from('profiles').select('*').eq('id', uid).single(),
-      supabaseClient.from('results').select('*').eq('user_id', uid).order('date', { ascending: false }).limit(50),
-      supabaseClient.from('wrong_answers').select('*').eq('user_id', uid).order('created_at', { ascending: false }).limit(200),
-      supabaseClient.from('bookmarks').select('*').eq('user_id', uid)
+  try {
+    var [profR, resR, wrongR, bmR] = await Promise.all([
+      fetch(SUPABASE_URL + '/rest/v1/profiles?id=eq.' + uid, { headers: sbHeaders(tok) }),
+      fetch(SUPABASE_URL + '/rest/v1/results?user_id=eq.' + uid + '&order=date.desc&limit=50', { headers: sbHeaders(tok) }),
+      fetch(SUPABASE_URL + '/rest/v1/wrong_answers?user_id=eq.' + uid + '&order=created_at.desc&limit=200', { headers: sbHeaders(tok) }),
+      fetch(SUPABASE_URL + '/rest/v1/bookmarks?user_id=eq.' + uid, { headers: sbHeaders(tok) })
     ]);
 
     var data = {};
-    if (!profileRes.error) data.profile = profileRes.data;
-    if (!resultsRes.error) data.results = resultsRes.data;
-    if (!wrongRes.error) data.wrongAnswers = wrongRes.data;
-    if (!bookmarksRes.error) data.bookmarks = bookmarksRes.data;
-
-    if (data.profile) {
+    var p = await profR.json(); if (p && p.length > 0) {
+      data.profile = p[0];
       data.profile.badges = typeof data.profile.badges === 'string' ? JSON.parse(data.profile.badges || '[]') : (data.profile.badges || []);
       data.profile.goals = typeof data.profile.goals === 'string' ? JSON.parse(data.profile.goals || '{}') : (data.profile.goals || {});
     }
-
+    var r = await resR.json(); if (r) data.results = r;
+    var w = await wrongR.json(); if (w) data.wrongAnswers = w;
+    var b = await bmR.json(); if (b) data.bookmarks = b;
     if (callback) callback(data);
-  };
+  } catch (e) { if (callback) callback(null); }
+};
 
-  // ========== LEADERBOARD ==========
-  window.getLeaderboard = async function(examFilter, callback) {
-    var q = supabaseClient.from('leaderboard').select('*');
-    if (examFilter && examFilter !== 'all') q = q.eq('exam', examFilter);
-    var { data, error } = await q.order('pct', { ascending: false }).limit(50);
-    if (callback) callback(data || [], error);
-  };
+// ========== LEADERBOARD ==========
+window.getLeaderboard = async function (examFilter, callback) {
+  var url = SUPABASE_URL + '/rest/v1/leaderboard?order=pct.desc&limit=50';
+  if (examFilter && examFilter !== 'all') url += '&exam=eq.' + encodeURIComponent(examFilter);
+  try {
+    var r = await fetch(url, { headers: sbHeaders(getToken()) });
+    var data = await r.json();
+    if (callback) callback(data || [], null);
+  } catch (e) { if (callback) callback([], e); }
+};
 
-  // ========== UI UPDATE ==========
-  function updateAuthUI() {
-    document.querySelectorAll('.auth-btn').forEach(function(el) {
-      if (supabaseUser) {
-        var name = supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0] || 'User';
-        var photo = supabaseUser.user_metadata?.avatar_url || '';
-        el.innerHTML = photo ? '<img src="'+photo+'" style="width:22px;height:22px;border-radius:50%;vertical-align:middle;margin-right:6px">'+name : name;
-        el.onclick = function(e) {
-          e.preventDefault();
-          if (confirm('Logout?')) window.supabaseLogout();
-        };
-        el.style.padding = '4px 12px 4px 4px';
-      } else {
-        el.innerHTML = 'Login';
-        el.onclick = function(e) { e.preventDefault(); window.supabaseLogin(); };
-        el.style.padding = '';
-      }
-    });
-  }
-
-  // check initial session
-  supabaseClient.auth.getSession().then(function(res) {
-    if (res.data.session) {
-      supabaseUser = res.data.session.user;
-      updateAuthUI();
-      ensureProfile(supabaseUser);
+// ========== UI UPDATE ==========
+function updateAuthUI() {
+  document.querySelectorAll('.auth-btn').forEach(function (el) {
+    if (supabaseUser) {
+      var name = supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0] || 'User';
+      var photo = supabaseUser.user_metadata?.avatar_url || '';
+      el.innerHTML = photo ? '<img src="' + photo + '" style="width:22px;height:22px;border-radius:50%;vertical-align:middle;margin-right:6px">' + name : name;
+      el.onclick = function (e) { e.preventDefault(); if (confirm('Logout?')) window.supabaseLogout(); };
+      el.style.cssText = 'padding:4px 12px 4px 4px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center';
+    } else {
+      el.innerHTML = 'Login';
+      el.onclick = function (e) { e.preventDefault(); window.supabaseLogin(); };
+      el.style.cssText = 'background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap';
     }
   });
-} else {
-  console.warn('Supabase SDK not loaded');
 }
+
+// ========== INIT ==========
+// Remove old Supabase SDK scripts from page (cleanup)
+document.querySelectorAll('script[src*="supabase-js"]').forEach(function(s) { s.remove(); });
+
+// Initialize
+initSupabase();
