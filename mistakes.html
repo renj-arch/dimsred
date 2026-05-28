@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Review Mistakes - StudyPro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',-apple-system,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
+        a{color:#a78bfa;text-decoration:none}
+        .nav{position:sticky;top:0;z-index:50;padding:16px 24px;background:rgba(9,9,11,.8);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.04)}
+        .nav-inner{max-width:1000px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+        .site-title{font-size:1.1em;font-weight:800;color:#fafafa}
+        .site-title span{background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .container{max-width:800px;margin:0 auto;padding:32px 24px}
+        h1{font-size:1.5em;font-weight:800;margin-bottom:4px}
+        .sub{color:#71717a;font-size:.9em;margin-bottom:24px}
+        .empty{text-align:center;padding:60px 24px;color:#52525b}
+        .empty .big{font-size:3em;margin-bottom:12px}
+        .mistake-card{
+            background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;
+            padding:20px;margin-bottom:12px;
+        }
+        .mc-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+        .mc-exam{font-size:.75em;color:#52525b}
+        .mc-q{font-weight:600;font-size:.95em;margin-bottom:8px;line-height:1.5}
+        .mc-answers{font-size:.85em}
+        .mc-correct{color:#34d399;font-weight:600}
+        .mc-wrong{color:#ef4444;font-weight:600;text-decoration:line-through}
+        .mc-topic{font-size:.78em;color:#71717a;margin-top:6px}
+        .clear-btn{
+            background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#ef4444;
+            padding:8px 16px;border-radius:100px;font-size:.82em;cursor:pointer;margin-bottom:20px;
+        }
+        .pc-btn{
+            background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:10px 22px;
+            border-radius:100px;font-size:.82em;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="site-title"><span>Study</span>Pro</a>
+            <a href="index.html" class="pc-btn" style="padding:6px 14px;font-size:.78em">← Home</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>❌ Review Mistakes</h1>
+        <p class="sub">Your wrong answers saved from all practice papers</p>
+        <button class="clear-btn" onclick="clearAll()">🗑 Clear All</button>
+        <div id="list"></div>
+    </div>
+    <script>
+    var STORAGE_KEY = 'studypro_wrong';
+    function render(){
+        var list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        var el = document.getElementById('list');
+        if(list.length === 0){
+            el.innerHTML = '<div class="empty"><div class="big">✅</div><p>No mistakes saved yet. Practice some papers first!</p></div>';
+            return;
+        }
+        var html = '';
+        list.forEach(function(item){
+            html += '<div class="mistake-card">';
+            html += '<div class="mc-header"><span class="mc-exam">'+item.exam+'</span><span class="mc-exam">'+item.date.slice(0,10)+'</span></div>';
+            html += '<div class="mc-q">'+item.qNum+'. '+item.qText+'</div>';
+            html += '<div class="mc-answers">You chose: <span class="mc-wrong">'+item.chosen+'</span> &nbsp;|&nbsp; Correct: <span class="mc-correct">'+item.correct+'</span></div>';
+            html += '<div class="mc-topic">📂 '+item.section+' &nbsp;·&nbsp; 🔴 '+item.difficulty+'</div>';
+            html += '</div>';
+        });
+        el.innerHTML = html;
+    }
+    function clearAll(){
+        if(confirm('Delete all saved mistakes?')){
+            localStorage.removeItem(STORAGE_KEY);
+            render();
+        }
+    }
+    render();
+    </script>
+</body>
+</html>

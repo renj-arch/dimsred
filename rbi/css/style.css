@@ -125,3 +125,26 @@ a:hover{opacity:.8}
     .site-nav a{white-space:nowrap;padding:6px 12px;font-size:.8em}
     .nav-inner,.header-inner{flex-wrap:wrap;gap:8px}
 }
+/* ===== SHARED FEATURES ===== */
+.diff-dot{display:inline-block;font-size:.65em;padding:1px 8px;border-radius:100px;margin-left:6px;font-weight:600}
+.diff-easy{background:rgba(52,211,153,.12);color:#34d399}
+.diff-medium{background:rgba(251,191,36,.12);color:#fbbf24}
+.diff-hard{background:rgba(239,68,68,.12);color:#ef4444}
+
+.dash-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px}
+.dash-modal{background:#18181b;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:28px;max-width:420px;width:100%}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.dash-stat{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:16px;text-align:center}
+.dash-num{display:block;font-size:1.5em;font-weight:800;color:#fafafa}
+.dash-label{font-size:.75em;color:#71717a;margin-top:2px}
+.dash-topics{margin-top:8px}
+.dash-topic{display:flex;justify-content:space-between;padding:6px 0;font-size:.82em;border-bottom:1px solid rgba(255,255,255,.04);color:#d4d4d8}
+.dash-topic-pct{font-weight:700}
+
+.question[data-difficulty]{position:relative}
+@media(max-width:600px){
+    .dash-modal{padding:20px}
+    .dash-grid{gap:6px}
+    .dash-stat{padding:12px}
+    .dash-num{font-size:1.2em}
+}
