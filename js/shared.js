@@ -83,6 +83,7 @@
     list.unshift(item);
     if (list.length > 200) list = list.slice(0, 200);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    if (typeof window.syncWrongAnswer === 'function') window.syncWrongAnswer(item);
   }
 
   document.addEventListener('click', function (e) {
@@ -111,15 +112,18 @@
     var qText = qEl.querySelector('.q-text') ? qEl.querySelector('.q-text').textContent.trim() : '';
     var section = qEl.querySelector('.section-badge') ? qEl.querySelector('.section-badge').textContent.trim() : 'General';
     var bm = getBookmarks();
+    var item = { paperId: paperId, exam: document.title, qNum: qNum, qText: qText, section: section, date: new Date().toISOString() };
     var existing = bm.findIndex(function (b) { return b.paperId === paperId && b.qNum === qNum; });
     if (existing >= 0) {
       bm.splice(existing, 1);
       qEl.classList.remove('bookmarked');
       updateBookmarkBtn(qEl, false);
+      if (typeof window.syncBookmark === 'function') window.syncBookmark(item, true);
     } else {
-      bm.push({ paperId: paperId, exam: document.title, qNum: qNum, qText: qText, section: section, date: new Date().toISOString() });
+      bm.push(item);
       qEl.classList.add('bookmarked');
       updateBookmarkBtn(qEl, true);
+      if (typeof window.syncBookmark === 'function') window.syncBookmark(item, false);
     }
     saveBookmarks(bm);
   }
@@ -213,6 +217,7 @@
     if (streak.current > streak.longest) streak.longest = streak.current;
     streak.lastDate = today;
     localStorage.setItem(STREAK_KEY, JSON.stringify(streak));
+    if (typeof window.syncStreak === 'function') window.syncStreak(streak);
     return streak;
   }
 
@@ -247,6 +252,7 @@
     if (wrongList.length > 0 && results.some(function (r) { return r.pct === 100; })) award('perfect_score', 'Perfect Score', '🌟');
 
     localStorage.setItem(BADGES_KEY, JSON.stringify(badges));
+    if (typeof window.syncBadges === 'function') window.syncBadges(badges);
     return newBadges;
   }
 
@@ -292,6 +298,7 @@
     }).length;
     goals.completed = thisWeek;
     localStorage.setItem(GOALS_KEY, JSON.stringify(goals));
+    if (typeof window.syncGoals === 'function') window.syncGoals(goals);
   }
 
   // ========== 7. PERFORMANCE DASHBOARD ==========
@@ -328,6 +335,7 @@
     updateStreak();
     var newBadges = checkBadges();
     updateGoalProgress();
+    if (typeof window.syncResult === 'function') window.syncResult(result);
 
     var weakTopics = [];
     for (var s in sectionData) {
@@ -508,12 +516,24 @@
     });
   }
 
-  // ========== 11. GOAL PROMPT ON FIRST VISIT ==========
+  // ========== 11. AUTH BUTTON FOR PAPER PAGES ==========
+  if (!document.querySelector('.auth-btn')) {
+    var nav = document.querySelector('.nav-links, .site-nav');
+    if (nav) {
+      var authBtn = document.createElement('span');
+      authBtn.className = 'auth-btn';
+      authBtn.style.cssText = 'background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap';
+      authBtn.textContent = 'Login';
+      nav.appendChild(authBtn);
+    }
+  }
+
+  // ========== 13. GOAL PROMPT ON FIRST VISIT ==========
   if (!localStorage.getItem(GOALS_KEY)) {
     setTimeout(showGoalPrompt, 3000);
   }
 
-  // ========== 12. DAILY REMINDER ==========
+  // ========== 14. DAILY REMINDER ==========
   var dailyKey = 'studypro_daily_visit_' + new Date().toISOString().slice(0, 10);
   if (!localStorage.getItem(dailyKey)) {
     var dailyReminder = document.createElement('div');

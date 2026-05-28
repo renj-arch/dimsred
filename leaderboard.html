@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Leaderboard - StudyPro</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min"></script>
+    <script src="js/supabase.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}
@@ -39,6 +41,7 @@
             <div style="display:flex;gap:8px;align-items:center">
                 <a href="index.html" class="pc-btn">Home</a>
                 <a href="dashboard.html" class="pc-btn">📊 Dashboard</a>
+                <span class="auth-btn" style="background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap">Login</span>
             </div>
         </div>
     </nav>
@@ -66,11 +69,44 @@
       return results.filter(function(r){ return exam === 'all' || (r.exam && r.exam.indexOf(exam) >= 0); });
     }
 
-    function loadBoard() {
-      var filtered = getBestByExam(currentFilter);
+    function loadBoard(supabaseList) {
       var el = document.getElementById('list');
+      var data = supabaseList || [];
 
-      // Summary stats
+      // If logged in + we got Supabase data, use that; else use localStorage
+      if (supabaseList) {
+        var total = data.length;
+        var best = data.length > 0 ? data.reduce(function(a,b){ return a.pct > b.pct ? a : b; }) : null;
+
+        document.getElementById('summary').innerHTML =
+          '<div class="stat-box"><div class="stat-num">' + total + '</div><div class="stat-label">Total Entries</div></div>' +
+          (best ? '<div class="stat-box"><div class="stat-num" style="color:#fbbf24">' + best.pct + '%</div><div class="stat-label">Top Score</div></div>' : '');
+
+        if (data.length === 0) {
+          el.innerHTML = '<div class="empty">No scores on the leaderboard yet. Be the first!</div>';
+          return;
+        }
+
+        var html = '';
+        data.forEach(function(item, i){
+          var cls = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+          var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+          var name = item.name || 'Anonymous';
+          var photo = item.photo || '';
+          var percentile = Math.round((data.length - i) / data.length * 100);
+          html += '<div class="rank-row">';
+          html += '<div class="rank-num ' + cls + '">' + medal + ' ' + (i+1) + '</div>';
+          html += '<div class="rank-avatar"><img src="' + photo + '" onerror="this.src=\'data:image/svg+xml,<svg xmlns=\\\'http://www.w3.org/2000/svg\\\' width=\\\'36\\\' height=\\\'36\\\'><rect fill=\\\'%2352525b\\\' width=\\\'36\\\' height=\\\'36\\\' rx=\\\'18\\\'/><text x=\\\'18\\\' y=\\\'24\\\' text-anchor=\\\'middle\\\' fill=\\\'%23fafafa\\\' font-size=\\\'16\\\'>' + (name ? name[0] : '?') + '</text></svg>\'" style="width:36px;height:36px;border-radius:50%"></div>';
+          html += '<div class="rank-name">' + name + '</div>';
+          html += '<div class="rank-score"><div class="rank-pct">' + item.pct + '%</div><div class="rank-detail">' + item.score + '/' + item.total + ' · Top ' + percentile + '%</div></div>';
+          html += '</div>';
+        });
+        el.innerHTML = html;
+        return;
+      }
+
+      // Fallback to localStorage
+      var filtered = getBestByExam(currentFilter);
       var total = filtered.length;
       var best = filtered.length > 0 ? filtered.reduce(function(a,b){ return a.pct > b.pct ? a : b; }) : null;
       var avg = filtered.length > 0 ? Math.round(filtered.reduce(function(s,r){ return s + r.pct; }, 0) / filtered.length) : 0;
@@ -84,7 +120,6 @@
         return;
       }
 
-      // Sort by pct descending
       var sorted = filtered.slice().sort(function(a,b){ return b.pct - a.pct; });
       var html = '';
       sorted.forEach(function(item, i){
@@ -107,11 +142,29 @@
         document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
         this.classList.add('active');
         currentFilter = this.getAttribute('data-exam');
-        loadBoard();
+        // Try Supabase first
+        if (typeof window.getLeaderboard === 'function') {
+          window.getLeaderboard(currentFilter === 'all' ? null : currentFilter, function(data){
+            loadBoard(data);
+          });
+        } else {
+          loadBoard();
+        }
       });
     });
 
-    loadBoard();
+    // Load: try Supabase, fallback to localStorage
+    if (typeof window.getLeaderboard === 'function') {
+      window.getLeaderboard(null, function(data){
+        if (data && data.length > 0) {
+          loadBoard(data);
+        } else {
+          loadBoard();
+        }
+      });
+    } else {
+      loadBoard();
+    }
     </script>
 </body>
 </html>

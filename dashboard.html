@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Dashboard - StudyPro</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min"></script>
+    <script src="js/supabase.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}
@@ -45,6 +47,7 @@
             <a href="index.html" class="site-title"><span>Study</span>Pro</a>
             <div style="display:flex;gap:8px;align-items:center">
                 <a href="index.html" class="pc-btn">Home</a>
+                <span class="auth-btn" style="background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap">Login</span>
             </div>
         </div>
     </nav>
@@ -91,69 +94,79 @@
         </div>
     </div>
     <script>
-    var results = JSON.parse(localStorage.getItem('studypro_results') || '[]');
-    var streak = JSON.parse(localStorage.getItem('studypro_streak') || '{"current":0,"longest":0,"lastDate":null}');
-    var badges = JSON.parse(localStorage.getItem('studypro_badges') || '[]');
-    var goals = JSON.parse(localStorage.getItem('studypro_goals') || '{}');
-    var bookmarks = JSON.parse(localStorage.getItem('studypro_bookmarks') || '[]');
+    function renderDashboard(data) {
+      var results = (data && data.results) || JSON.parse(localStorage.getItem('studypro_results') || '[]');
+      var streak = (data && data.profile) ? { current: data.profile.streak_current||0, longest: data.profile.streak_longest||0, lastDate: data.profile.streak_last_date } : JSON.parse(localStorage.getItem('studypro_streak') || '{"current":0,"longest":0,"lastDate":null}');
+      var badges = (data && data.profile && data.profile.badges) || JSON.parse(localStorage.getItem('studypro_badges') || '[]');
+      var goals = (data && data.profile && data.profile.goals) || JSON.parse(localStorage.getItem('studypro_goals') || '{}');
+      var bookmarks = (data && data.bookmarks) || JSON.parse(localStorage.getItem('studypro_bookmarks') || '[]');
 
-    if (streak.current > 0) {
-      var sb = document.getElementById('streakBar');
-      sb.style.display = 'flex';
-      document.getElementById('streakNum').textContent = streak.current;
-      document.getElementById('longestStreak').textContent = streak.longest;
-    }
+      if (streak.current > 0) {
+        document.getElementById('streakBar').style.display = 'flex';
+        document.getElementById('streakNum').textContent = streak.current;
+        document.getElementById('longestStreak').textContent = streak.longest;
+      }
 
-    if (badges.length > 0) {
-      document.getElementById('badgesCard').style.display = 'block';
-      document.getElementById('badgeGrid').innerHTML = badges.map(function(b){
-        return '<div class="badge-item"><span class="bi-icon">' + b.icon + '</span><span class="bi-name">' + b.name + '</span></div>';
-      }).join('');
-    }
-
-    if (goals.papersPerWeek) {
-      document.getElementById('goalCard').style.display = 'block';
-      var pct = Math.min(100, Math.round((goals.completed || 0) / goals.papersPerWeek * 100));
-      document.getElementById('goalContent').innerHTML =
-        '<div style="display:flex;justify-content:space-between;font-size:.85em;color:#a1a1aa">' +
-        '<span>Completed: ' + (goals.completed || 0) + '/' + goals.papersPerWeek + ' papers</span>' +
-        '<span>' + pct + '%</span></div>' +
-        '<div class="goal-bar"><div class="goal-fill" style="width:' + pct + '%"></div></div>';
-    }
-
-    var totalCorrect = 0, totalAnswered = 0;
-    if (results.length > 0) {
-      var hl = results.slice(0, 10).map(function(r){
-        totalCorrect += r.correct || 0;
-        totalAnswered += r.answered || 0;
-        var cls = r.pct >= 70 ? 'good' : r.pct >= 40 ? 'ok' : 'bad';
-        return '<div class="history-item"><span>' + (r.date ? r.date.slice(0,10) : '?') + ' — ' + (r.exam || 'Paper') + '</span><span class="history-pct ' + cls + '">' + (r.correct||0) + '/' + (r.total||0) + ' (' + (r.pct||0) + '%)</span></div>';
-      }).join('');
-      document.getElementById('historyList').innerHTML = hl;
-
-      document.getElementById('overview').innerHTML =
-        '<div class="stat-box"><div class="stat-num" style="color:#a78bfa">' + totalAnswered + '</div><div class="stat-label">Answered</div></div>' +
-        '<div class="stat-box"><div class="stat-num" style="color:' + (totalAnswered > 0 && Math.round(totalCorrect/totalAnswered*100) >= 60 ? '#34d399' : '#ef4444') + '">' + (totalAnswered > 0 ? Math.round(totalCorrect/totalAnswered*100) : 0) + '%</div><div class="stat-label">Accuracy</div></div>' +
-        '<div class="stat-box"><div class="stat-num" style="color:#34d399">' + totalCorrect + '</div><div class="stat-label">Correct</div></div>' +
-        '<div class="stat-box"><div class="stat-num" style="color:#ef4444">' + (totalAnswered - totalCorrect) + '</div><div class="stat-label">Wrong</div></div>';
-
-      var lowScores = results.filter(function(r){ return r.pct < 60 && r.answered >= 5; });
-      if (lowScores.length > 0) {
-        document.getElementById('weaknessCard').style.display = 'block';
-        document.getElementById('weaknessList').innerHTML = lowScores.slice(0, 5).map(function(r){
-          return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.82em"><span>' + (r.exam || 'Paper') + ' (' + r.date.slice(0,10) + ')</span><span style="color:#ef4444;font-weight:700">' + r.pct + '%</span></div>';
+      if (badges.length > 0) {
+        document.getElementById('badgesCard').style.display = 'block';
+        document.getElementById('badgeGrid').innerHTML = badges.map(function(b){
+          return '<div class="badge-item"><span class="bi-icon">' + b.icon + '</span><span class="bi-name">' + b.name + '</span></div>';
         }).join('');
       }
-    } else {
-      document.getElementById('overview').innerHTML = '';
-      document.getElementById('historyList').innerHTML = '<div style="color:#52525b;padding:20px;text-align:center">Complete a paper to see your stats here</div>';
+
+      if (goals.papersPerWeek) {
+        document.getElementById('goalCard').style.display = 'block';
+        var pct = Math.min(100, Math.round((goals.completed || 0) / goals.papersPerWeek * 100));
+        document.getElementById('goalContent').innerHTML =
+          '<div style="display:flex;justify-content:space-between;font-size:.85em;color:#a1a1aa">' +
+          '<span>Completed: ' + (goals.completed || 0) + '/' + goals.papersPerWeek + ' papers</span>' +
+          '<span>' + pct + '%</span></div>' +
+          '<div class="goal-bar"><div class="goal-fill" style="width:' + pct + '%"></div></div>';
+      }
+
+      var totalCorrect = 0, totalAnswered = 0;
+      if (results.length > 0) {
+        var hl = results.slice(0, 10).map(function(r){
+          totalCorrect += r.correct || 0;
+          totalAnswered += r.answered || 0;
+          var cls = r.pct >= 70 ? 'good' : r.pct >= 40 ? 'ok' : 'bad';
+          return '<div class="history-item"><span>' + (r.date ? r.date.slice(0,10) : '?') + ' — ' + (r.exam || 'Paper') + '</span><span class="history-pct ' + cls + '">' + (r.correct||0) + '/' + (r.total||0) + ' (' + (r.pct||0) + '%)</span></div>';
+        }).join('');
+        document.getElementById('historyList').innerHTML = hl;
+
+        document.getElementById('overview').innerHTML =
+          '<div class="stat-box"><div class="stat-num" style="color:#a78bfa">' + totalAnswered + '</div><div class="stat-label">Answered</div></div>' +
+          '<div class="stat-box"><div class="stat-num" style="color:' + (totalAnswered > 0 && Math.round(totalCorrect/totalAnswered*100) >= 60 ? '#34d399' : '#ef4444') + '">' + (totalAnswered > 0 ? Math.round(totalCorrect/totalAnswered*100) : 0) + '%</div><div class="stat-label">Accuracy</div></div>' +
+          '<div class="stat-box"><div class="stat-num" style="color:#34d399">' + totalCorrect + '</div><div class="stat-label">Correct</div></div>' +
+          '<div class="stat-box"><div class="stat-num" style="color:#ef4444">' + (totalAnswered - totalCorrect) + '</div><div class="stat-label">Wrong</div></div>';
+
+        var lowScores = results.filter(function(r){ return r.pct < 60 && r.answered >= 5; });
+        if (lowScores.length > 0) {
+          document.getElementById('weaknessCard').style.display = 'block';
+          document.getElementById('weaknessList').innerHTML = lowScores.slice(0, 5).map(function(r){
+            return '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:.82em"><span>' + (r.exam || 'Paper') + ' (' + r.date.slice(0,10) + ')</span><span style="color:#ef4444;font-weight:700">' + r.pct + '%</span></div>';
+          }).join('');
+        }
+      } else {
+        document.getElementById('overview').innerHTML = '';
+        document.getElementById('historyList').innerHTML = '<div style="color:#52525b;padding:20px;text-align:center">Complete a paper to see your stats here</div>';
+      }
+
+      if (bookmarks.length > 0) {
+        var bc = document.createElement('div');
+        bc.style.cssText = 'font-size:.82em;color:#a1a1aa;margin-top:8px';
+        bc.textContent = '🔖 ' + bookmarks.length + ' bookmarked question' + (bookmarks.length > 1 ? 's' : '');
+        document.getElementById('historyCard').querySelector('h3').after(bc);
+      }
     }
 
-    if (bookmarks.length > 0) {
-      var bc = document.createElement('div');
-      bc.style.cssText = 'font-size:.82em;color:#a1a1aa;margin-top:8px';
-      bc.textContent = '🔖 ' + bookmarks.length + ' bookmarked question' + (bookmarks.length > 1 ? 's' : '');
-      document.getElementById('historyCard').querySelector('h3').after(bc);
+    // Try loading from Supabase if logged in, else fallback to localStorage
+    if (typeof window.loadUserData === 'function') {
+      window.loadUserData(function(data) {
+        renderDashboard(data);
+      });
+    } else {
+      renderDashboard(null);
     }
     </script>
 </body>
