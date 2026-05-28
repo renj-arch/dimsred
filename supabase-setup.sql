@@ -1,7 +1,7 @@
 -- Run this in Supabase SQL Editor (https://supabase.com > SQL Editor)
 
 -- 1. Profiles table
-CREATE TABLE profiles (
+CREATE TABLE IF NOT EXISTS profiles (
   id UUID PRIMARY KEY REFERENCES auth.users ON DELETE CASCADE,
   name TEXT,
   photo TEXT,
@@ -15,7 +15,7 @@ CREATE TABLE profiles (
 );
 
 -- 2. Results (paper completions)
-CREATE TABLE results (
+CREATE TABLE IF NOT EXISTS results (
   id BIGSERIAL PRIMARY KEY,
   user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
   exam TEXT NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE results (
 );
 
 -- 3. Wrong answers (spaced repetition)
-CREATE TABLE wrong_answers (
+CREATE TABLE IF NOT EXISTS wrong_answers (
   id BIGSERIAL PRIMARY KEY,
   user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
   paper_id TEXT,
@@ -47,7 +47,7 @@ CREATE TABLE wrong_answers (
 );
 
 -- 4. Bookmarks
-CREATE TABLE bookmarks (
+CREATE TABLE IF NOT EXISTS bookmarks (
   id BIGSERIAL PRIMARY KEY,
   user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
   paper_id TEXT NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE bookmarks (
 );
 
 -- 5. Leaderboard (aggregated from results)
-CREATE TABLE leaderboard (
+CREATE TABLE IF NOT EXISTS leaderboard (
   id BIGSERIAL PRIMARY KEY,
   user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
   name TEXT,
@@ -87,11 +87,17 @@ ALTER TABLE bookmarks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE leaderboard ENABLE ROW LEVEL SECURITY;
 
 -- Policies: users can read/write their own data
+DROP POLICY IF EXISTS "profiles_own" ON profiles;
+DROP POLICY IF EXISTS "results_own" ON results;
+DROP POLICY IF EXISTS "wrong_own" ON wrong_answers;
+DROP POLICY IF EXISTS "bookmarks_own" ON bookmarks;
+DROP POLICY IF EXISTS "leaderboard_select" ON leaderboard;
+DROP POLICY IF EXISTS "leaderboard_insert" ON leaderboard;
+
 CREATE POLICY "profiles_own" ON profiles FOR ALL USING (auth.uid() = id);
 CREATE POLICY "results_own" ON results FOR ALL USING (auth.uid() = user_id);
 CREATE POLICY "wrong_own" ON wrong_answers FOR ALL USING (auth.uid() = user_id);
 CREATE POLICY "bookmarks_own" ON bookmarks FOR ALL USING (auth.uid() = user_id);
 
--- Leaderboard: anyone can read, only own user can insert
 CREATE POLICY "leaderboard_select" ON leaderboard FOR SELECT USING (true);
 CREATE POLICY "leaderboard_insert" ON leaderboard FOR INSERT WITH CHECK (auth.uid() = user_id);
