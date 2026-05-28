@@ -70,7 +70,15 @@ async function initSupabase() {
   var token = localStorage.getItem('sb_access_token');
   if (token) {
     supabaseUser = await fetchUser();
-    if (supabaseUser) ensureProfile(supabaseUser);
+    if (supabaseUser) {
+      ensureProfile(supabaseUser);
+    } else {
+      // fetchUser failed (network/CORS), use cached user info so we don't appear logged out
+      var cached = localStorage.getItem('sb_user');
+      if (cached) {
+        try { supabaseUser = JSON.parse(cached); } catch(e) {}
+      }
+    }
   }
   updateAuthUI();
 }
