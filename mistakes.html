@@ -37,47 +37,144 @@
             background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:10px 22px;
             border-radius:100px;font-size:.82em;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;
         }
+        .sr-filters{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+        .sr-btn{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:100px;padding:8px 16px;color:#a1a1aa;cursor:pointer;font-size:.78em;transition:all .2s}
+        .sr-btn.active,.sr-btn:hover{border-color:#a78bfa;color:#fafafa;background:rgba(139,92,246,.1)}
+        .sr-count{font-size:.78em;color:#52525b;margin-bottom:12px}
+        .mc-review{font-size:.75em;color:#a78bfa;margin-top:6px}
     </style>
 </head>
 <body>
     <nav class="nav">
         <div class="nav-inner">
             <a href="index.html" class="site-title"><span>Study</span>Pro</a>
-            <a href="index.html" class="pc-btn" style="padding:6px 14px;font-size:.78em">← Home</a>
+            <div style="display:flex;gap:8px;align-items:center">
+                <a href="index.html" class="pc-btn" style="padding:6px 14px;font-size:.78em">← Home</a>
+                <a href="dashboard.html" class="pc-btn" style="padding:6px 14px;font-size:.78em">📊 Dashboard</a>
+            </div>
         </div>
     </nav>
     <div class="container">
         <h1>❌ Review Mistakes</h1>
-        <p class="sub">Your wrong answers saved from all practice papers</p>
+        <p class="sub">Your wrong answers — review with spaced repetition</p>
+        <div class="sr-filters" id="srFilters">
+            <button class="sr-btn active" data-filter="all">All</button>
+            <button class="sr-btn" data-filter="today">Due Today</button>
+            <button class="sr-btn" data-filter="thisweek">This Week</button>
+            <button class="sr-btn" data-filter="easy">Easy</button>
+            <button class="sr-btn" data-filter="medium">Medium</button>
+            <button class="sr-btn" data-filter="hard">Hard</button>
+        </div>
+        <div class="sr-count" id="srCount"></div>
         <button class="clear-btn" onclick="clearAll()">🗑 Clear All</button>
         <div id="list"></div>
     </div>
     <script>
     var STORAGE_KEY = 'studypro_wrong';
+    var currentFilter = 'all';
+
+    function getDaysSince(dateStr) {
+        var d = new Date(dateStr);
+        var now = new Date();
+        return Math.floor((now - d) / 86400000);
+    }
+
+    function isDue(item) {
+        var days = getDaysSince(item.date);
+        var reviewInterval = item.reviewCount === 0 ? 1 : 
+                            item.reviewCount === 1 ? 3 : 
+                            item.reviewCount === 2 ? 7 : 
+                            item.reviewCount === 3 ? 14 : 30;
+        return days >= reviewInterval;
+    }
+
     function render(){
         var list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         var el = document.getElementById('list');
-        if(list.length === 0){
+        var countEl = document.getElementById('srCount');
+
+        // Apply filter
+        var filtered = list.filter(function(item){
+            if (currentFilter === 'all') return true;
+            if (currentFilter === 'today') return isDue(item);
+            if (currentFilter === 'thisweek') return getDaysSince(item.date) <= 7;
+            return item.difficulty === currentFilter;
+        });
+
+        countEl.textContent = 'Showing ' + filtered.length + ' of ' + list.length + ' saved mistakes';
+
+        if(filtered.length === 0){
             el.innerHTML = '<div class="empty"><div class="big">✅</div><p>No mistakes saved yet. Practice some papers first!</p></div>';
             return;
         }
         var html = '';
-        list.forEach(function(item){
+        filtered.forEach(function(item){
+            var days = getDaysSince(item.date);
+            var srLabel = '';
+            if (item.reviewCount > 0) srLabel = '<span class="sr-badge">Reviewed ' + item.reviewCount + 'x</span>';
+
             html += '<div class="mistake-card">';
-            html += '<div class="mc-header"><span class="mc-exam">'+item.exam+'</span><span class="mc-exam">'+item.date.slice(0,10)+'</span></div>';
+            html += '<div class="mc-header">';
+            html += '<span class="mc-exam">'+item.exam+'</span>';
+            html += '<span class="mc-exam">'+item.date.slice(0,10)+' ' + srLabel + '</span>';
+            html += '</div>';
             html += '<div class="mc-q">'+item.qNum+'. '+item.qText+'</div>';
             html += '<div class="mc-answers">You chose: <span class="mc-wrong">'+item.chosen+'</span> &nbsp;|&nbsp; Correct: <span class="mc-correct">'+item.correct+'</span></div>';
-            html += '<div class="mc-topic">📂 '+item.section+' &nbsp;·&nbsp; 🔴 '+item.difficulty+'</div>';
+            html += '<div class="mc-topic">📂 '+item.section+' &nbsp;·&nbsp; '+(item.difficulty==='easy'?'🟢':item.difficulty==='medium'?'🟡':'🔴')+' '+item.difficulty+'</div>';
+            if (!isDue(item)) {
+                var nextDays = item.reviewCount === 0 ? 1 : item.reviewCount === 1 ? 3 : item.reviewCount === 2 ? 7 : item.reviewCount === 3 ? 14 : 30;
+                html += '<div class="mc-review">⏰ Next review in ' + (nextDays - days) + ' day' + ((nextDays - days) === 1 ? '' : 's') + '</div>';
+            } else {
+                html += '<div class="mc-review" style="color:#34d399">✅ Due for review</div>';
+            }
             html += '</div>';
         });
         el.innerHTML = html;
     }
+
+    document.querySelectorAll('.sr-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            document.querySelectorAll('.sr-btn').forEach(function(b){ b.classList.remove('active'); });
+            this.classList.add('active');
+            currentFilter = this.getAttribute('data-filter');
+            render();
+        });
+    });
+
     function clearAll(){
         if(confirm('Delete all saved mistakes?')){
             localStorage.removeItem(STORAGE_KEY);
             render();
         }
     }
+
+    // Mark reviewed items (click marks as reviewed)
+    document.addEventListener('click', function(e){
+        var card = e.target.closest('.mistake-card');
+        if (!card) return;
+        var examEl = card.querySelector('.mc-exam');
+        if (!examEl) return;
+        // Find the item by exam and qNum
+        var list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        var idx = -1;
+        // More reliable: match by content
+        var qTextEl = card.querySelector('.mc-q');
+        if (!qTextEl) return;
+        var qText = qTextEl.textContent.replace(/^Q\d+\.\s*/, '');
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].qText === qText && list[i].exam === (examEl.textContent || '').trim()) {
+                idx = i;
+                break;
+            }
+        }
+        if (idx >= 0) {
+            list[idx].reviewCount = (list[idx].reviewCount || 0) + 1;
+            list[idx].date = new Date().toISOString();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+            render();
+        }
+    });
+
     render();
     </script>
 </body>

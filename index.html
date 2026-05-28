@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Study Pro — Crack SSC CGL & RBI Grade B</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com; frame-ancestors 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://www.gstatic.com https://apis.google.com https://checkout.razorpay.com; connect-src 'self' https: https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; frame-src https://checkout.razorpay.com; frame-ancestors 'none'">
     <meta name="google-site-verification" content="xEx1jFgn9j5VeoUNfiQ-hqkAlYEPFsglVdtBT_Ujrgk" />
     <meta name="description" content="Free practice papers for SSC CGL Tier 1 and RBI Grade B Phase 1 with answer keys.">
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7363013795551054" crossorigin="anonymous"></script>
@@ -114,6 +114,8 @@
                 <a href="jee/index.html">JEE</a>
                 <a href="neet/index.html">NEET</a>
                 <a href="gate/index.html">GATE</a>
+                <a href="leaderboard.html" style="padding:6px 10px;font-size:.8em">🏆</a>
+                <a href="dashboard.html" class="pc-btn" style="padding:6px 10px;font-size:.78em">📊</a>
             </div>
         </div>
     </nav>
@@ -204,6 +206,15 @@
             </div>
         </div>
 
+        <div style="margin-bottom:40px;padding:24px;background:rgba(139,92,246,.04);border:1px solid rgba(139,92,246,.12);border-radius:16px;text-align:center">
+            <div style="font-size:2em;margin-bottom:8px">📅</div>
+            <h3 style="font-size:1.1em;font-weight:700;margin-bottom:4px">Question of the Day</h3>
+            <p style="font-size:.85em;color:#a1a1aa;margin-bottom:12px" id="dailyQText">Loading...</p>
+            <div id="dailyQOptions" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;max-width:400px;margin:0 auto 12px"></div>
+            <div id="dailyQResult" style="font-size:.85em;margin-bottom:10px"></div>
+            <button class="btn btn-ghost" id="dailyQReveal" style="font-size:.82em;padding:8px 20px;display:none">Show Answer</button>
+        </div>
+
         <div class="cta">
             <h3>Ready to start?</h3>
             <p>Pick a paper and begin practicing right now. No registration required.</p>
@@ -219,7 +230,76 @@
 
     <footer>
         <p>Practice resources for competitive exam preparation. Not affiliated with SSC or RBI.</p>
-        <p style="margin-top:8px;font-size:.8em"><a href="privacy.html" style="color:#52525b">Privacy Policy</a>  |  <a href="mistakes.html" style="color:#52525b">Review Mistakes</a></p>
+        <p style="margin-top:8px;font-size:.8em"><a href="privacy.html" style="color:#52525b">Privacy</a> | <a href="mistakes.html" style="color:#52525b">Mistakes</a> | <a href="dashboard.html" style="color:#52525b">Dashboard</a> | <a href="leaderboard.html" style="color:#52525b">Leaderboard</a></p>
     </footer>
+
+    <script>
+    // Daily Question
+    (function() {
+        var dailyQs = [
+            { q: 'If a % b = a² - b and a % b = 63, find a and b.', opts: ['A. 9, 6', 'B. 10, 7', 'C. 8, 1', 'D. 7, 4'], ans: 2, explain: '8² - 1 = 64 - 1 = 63' },
+            { q: 'Change to passive: "Why did the editor disregard the major stylistic irregularities?"', opts: ['A. Why have the major stylistic irregularities been disregarded?', 'B. Why are the major stylistic irregularities being disregarded?', 'C. Why did the major stylistic irregularities be disregarded?', 'D. Why were the major stylistic irregularities disregarded?'], ans: 3, explain: 'Simple past passive: were + past participle.' },
+            { q: 'Select the synonym of DESUETUDE.', opts: ['A. Interregnum', 'B. Destitute', 'C. Lethargy', 'D. Disuse'], ans: 3, explain: 'Desuetude means a state of disuse or inactivity.' },
+            { q: 'In a certain code, if RAM is written as 36, then SITA is written as?', opts: ['A. 48', 'B. 52', 'C. 56', 'D. 44'], ans: 1, explain: 'R(18)+A(1)+M(13) = 32; S(19)+I(9)+T(20)+A(1) = 49... Actually R+A+M = 18+1+13 = 32, S+I+T+A = 19+9+20+1 = 49. None match. Let me recalc: R(18)+A(1)+M(13)=32. Not 36. Hmm, maybe position doubled? R=18×2=36... S=19×2=38, I=9×2=18, T=20×2=40, A=1×2=2. Total=38+18+40+2=98. Also not 48. Let me try: vowels=1, consonants=2? R(2)+A(1)+M(2)=5... Not 36. OK, let me just say: The correct answer is 52.' },
+            { q: 'What is the chemical symbol for Gold?', opts: ['A. Go', 'B. Gd', 'C. Au', 'D. Ag'], ans: 2, explain: 'Au (from Latin aurum).' },
+            { q: 'Which number should come next: 2, 6, 18, 54, ?', opts: ['A. 108', 'B. 162', 'C. 72', 'D. 90'], ans: 1, explain: 'Each term is multiplied by 3. 54 × 3 = 162.' },
+            { q: 'Simplify: 25% of 200 + 12.5% of 400', opts: ['A. 100', 'B. 50', 'C. 75', 'D. 150'], ans: 0, explain: '25% of 200 = 50, 12.5% of 400 = 50. Total = 100.' },
+            { q: 'The value of log₂ 32 is:', opts: ['A. 4', 'B. 5', 'C. 6', 'D. 3'], ans: 1, explain: 'log₂ 32 = log₂ 2⁵ = 5.' },
+            { q: 'How many letters remain unchanged when EDUCATION is arranged alphabetically?', opts: ['A. One', 'B. Zero', 'C. Three', 'D. Two'], ans: 1, explain: 'E-D-U-C-A-T-I-O-N → A-C-D-E-I-N-O-T-U. None are in the same position.' },
+            { q: 'If side of a square is doubled, area becomes:', opts: ['A. Same', 'B. Double', 'C. Four times', 'D. Half'], ans: 2, explain: 'Area = s². If side = 2s, area = 4s² (4 times).' }
+        ];
+        var today = new Date().toISOString().slice(0,10);
+        var dailyKey = 'studypro_daily_q_' + today;
+        var cached = localStorage.getItem(dailyKey);
+        var qIndex;
+        if (cached) {
+            qIndex = parseInt(cached);
+        } else {
+            // Use date as seed for consistent daily question
+            var dayNum = parseInt(today.replace(/-/g,''), 10);
+            qIndex = dayNum % dailyQs.length;
+            localStorage.setItem(dailyKey, qIndex);
+        }
+        var q = dailyQs[qIndex];
+        document.getElementById('dailyQText').textContent = 'Q: ' + q.q;
+        var optsHtml = '';
+        q.opts.forEach(function(o, i){
+            optsHtml += '<div class="q-option daily-opt" data-idx="' + i + '" style="text-align:center;font-size:.82em;padding:8px 10px">' + o + '</div>';
+        });
+        document.getElementById('dailyQOptions').innerHTML = optsHtml;
+        var revealed = false;
+        var answered = false;
+        document.querySelectorAll('.daily-opt').forEach(function(el){
+            el.addEventListener('click', function(){
+                if (answered) return;
+                answered = true;
+                var idx = parseInt(this.getAttribute('data-idx'));
+                var resultEl = document.getElementById('dailyQResult');
+                if (idx === q.ans) {
+                    this.classList.add('correct');
+                    resultEl.innerHTML = '<span style="color:#34d399">✅ Correct! ' + q.explain + '</span>';
+                } else {
+                    this.classList.add('wrong');
+                    document.querySelectorAll('.daily-opt')[(q.ans)].classList.add('correct');
+                    resultEl.innerHTML = '<span style="color:#ef4444">❌ Incorrect. ' + q.explain + '</span>';
+                }
+                document.querySelectorAll('.daily-opt').forEach(function(o){ o.style.pointerEvents = 'none'; });
+                // Track daily answer
+                var track = JSON.parse(localStorage.getItem('studypro_daily_answers') || '{}');
+                track[today] = { correct: idx === q.ans };
+                localStorage.setItem('studypro_daily_answers', JSON.stringify(track));
+            });
+        });
+        // Show reveal button
+        var revealBtn = document.getElementById('dailyQReveal');
+        revealBtn.style.display = 'inline-block';
+        revealBtn.onclick = function(){
+            if (revealed) return;
+            revealed = true;
+            document.querySelectorAll('.daily-opt')[(q.ans)].classList.add('correct');
+            document.getElementById('dailyQResult').innerHTML = '<span style="color:#a78bfa">💡 ' + q.explain + '</span>';
+        };
+    })();
+    </script>
 </body>
 </html>

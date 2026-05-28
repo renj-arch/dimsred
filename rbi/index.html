@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com; frame-ancestors 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://www.gstatic.com https://apis.google.com https://checkout.razorpay.com; connect-src 'self' https: https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; frame-src https://checkout.razorpay.com; frame-ancestors 'none'">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>RBI Grade B Practice Questions with Answers • StudyPro</title>
@@ -12,6 +12,10 @@
     <meta property="og:description" content="Free practice questions for RBI Grade B. 400+ GA questions with answers.">
     <meta name="twitter:card" content="summary_large_image">
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="../js/firebase.js"></script>
 <script>if(location.protocol!=='https:')location.href='https://'+location.host+location.pathname</script>
 </head>
 <body>
@@ -29,7 +33,7 @@
                 <a href="../neet/index.html">NEET</a>
                 <a href="../gate/index.html">GATE</a>
             </div>
-        </div>
+                <a href="../leaderboard.html" class="pc-btn" style="padding:6px 10px;font-size:.78em">Leaderboard</a> <span class="auth-btn" style="background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap">Login</span></div>
     </nav>
 
     <div class="container">
@@ -119,7 +123,9 @@
 
     <footer class="site-footer">
         <p>RBIPro — Free RBI Grade B preparation resources. Not affiliated with RBI.</p>
-        <p style="margin-top:8px;font-size:.82em"><a href="../privacy.html" style="color:#52525b">Privacy Policy</a>  |  <a href="../mistakes.html" style="color:#52525b">Review Mistakes</a></p>
+        
+    
+<p style="margin-top:8px;font-size:.82em"><a href="../privacy.html" style="color:#52525b">Privacy</a> | <a href="../mistakes.html" style="color:#52525b">Mistakes</a> | <a href="../dashboard.html" style="color:#52525b">Dashboard</a> | <a href="../leaderboard.html" style="color:#52525b">Leaderboard</a></p>
     </footer>
 
     <script src="js/main.js"></script>

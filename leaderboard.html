@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Leaderboard - StudyPro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',-apple-system,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
+        a{color:#a78bfa;text-decoration:none}
+        .nav{position:sticky;top:0;z-index:50;padding:16px 24px;background:rgba(9,9,11,.8);border-bottom:1px solid rgba(255,255,255,.04)}
+        .nav-inner{max-width:1000px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+        .site-title{font-size:1.1em;font-weight:800;color:#fafafa}
+        .site-title span{background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .container{max-width:700px;margin:0 auto;padding:32px 24px}
+        h1{font-size:1.5em;font-weight:800;margin-bottom:4px}
+        .sub{color:#71717a;font-size:.9em;margin-bottom:24px}
+        .filters{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+        .filter-btn{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:100px;padding:8px 16px;color:#a1a1aa;cursor:pointer;font-size:.82em;transition:all .2s}
+        .filter-btn.active,.filter-btn:hover{border-color:#a78bfa;color:#fafafa;background:rgba(139,92,246,.1)}
+        .rank-row{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px 18px;margin-bottom:8px}
+        .rank-num{font-size:1em;font-weight:700;color:#52525b;min-width:32px}
+        .rank-num.top1{color:#fbbf24}.rank-num.top2{color:#94a3b8}.rank-num.top3{color:#d97706}
+        .rank-pct{font-size:1.1em;font-weight:800;color:#34d399}
+        .rank-detail{font-size:.75em;color:#52525b}
+        .empty{text-align:center;padding:60px 24px;color:#52525b;font-size:.95em}
+        .pc-btn{background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:8px 16px;border-radius:100px;font-size:.8em;font-weight:600;cursor:pointer;text-decoration:none}
+        .stat-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
+        .stat-box{text-align:center;padding:16px;background:rgba(255,255,255,.02);border-radius:10px}
+        .stat-num{font-size:1.4em;font-weight:800;color:#a78bfa}
+        .stat-label{font-size:.75em;color:#71717a;margin-top:2px}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="site-title"><span>Study</span>Pro</a>
+            <div style="display:flex;gap:8px;align-items:center">
+                <a href="index.html" class="pc-btn">Home</a>
+                <a href="dashboard.html" class="pc-btn">📊 Dashboard</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>🏆 Leaderboard</h1>
+        <p class="sub">Your personal best scores across all practice papers</p>
+
+        <div class="stat-summary" id="summary"></div>
+
+        <div class="filters" id="filters">
+            <button class="filter-btn active" data-exam="all">All</button>
+            <button class="filter-btn" data-exam="SSC CGL">SSC CGL</button>
+            <button class="filter-btn" data-exam="RBI">RBI</button>
+            <button class="filter-btn" data-exam="JEE">JEE</button>
+            <button class="filter-btn" data-exam="NEET">NEET</button>
+            <button class="filter-btn" data-exam="GATE">GATE</button>
+        </div>
+        <div id="list"><div class="empty">Complete a paper to see your scores here!</div></div>
+    </div>
+    <script>
+    var currentFilter = 'all';
+    var results = JSON.parse(localStorage.getItem('studypro_results') || '[]');
+
+    function getBestByExam(exam) {
+      return results.filter(function(r){ return exam === 'all' || (r.exam && r.exam.indexOf(exam) >= 0); });
+    }
+
+    function loadBoard() {
+      var filtered = getBestByExam(currentFilter);
+      var el = document.getElementById('list');
+
+      // Summary stats
+      var total = filtered.length;
+      var best = filtered.length > 0 ? filtered.reduce(function(a,b){ return a.pct > b.pct ? a : b; }) : null;
+      var avg = filtered.length > 0 ? Math.round(filtered.reduce(function(s,r){ return s + r.pct; }, 0) / filtered.length) : 0;
+      document.getElementById('summary').innerHTML =
+        '<div class="stat-box"><div class="stat-num">' + total + '</div><div class="stat-label">Papers Completed</div></div>' +
+        '<div class="stat-box"><div class="stat-num" style="color:#fbbf24">' + avg + '%</div><div class="stat-label">Average Accuracy</div></div>' +
+        (best ? '<div class="stat-box"><div class="stat-num" style="color:#34d399">' + best.pct + '%</div><div class="stat-label">Best Score</div></div>' : '');
+
+      if (filtered.length === 0) {
+        el.innerHTML = '<div class="empty">No scores yet. Complete a paper first!</div>';
+        return;
+      }
+
+      // Sort by pct descending
+      var sorted = filtered.slice().sort(function(a,b){ return b.pct - a.pct; });
+      var html = '';
+      sorted.forEach(function(item, i){
+        var cls = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+        var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+        var percentile = Math.round((sorted.length - i) / sorted.length * 100);
+        html += '<div class="rank-row">';
+        html += '<div class="rank-num ' + cls + '">' + medal + ' ' + (i+1) + '</div>';
+        html += '<div style="flex:1">';
+        html += '<div style="font-weight:600;font-size:.9em">' + (item.exam || 'Paper') + '</div>';
+        html += '<div style="font-size:.75em;color:#52525b">' + (item.date ? item.date.slice(0,10) : '') + '</div></div>';
+        html += '<div class="rank-score"><div class="rank-pct">' + item.pct + '%</div><div class="rank-detail">' + item.correct + '/' + item.total + ' · Top ' + percentile + '%</div></div>';
+        html += '</div>';
+      });
+      el.innerHTML = html;
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+        this.classList.add('active');
+        currentFilter = this.getAttribute('data-exam');
+        loadBoard();
+      });
+    });
+
+    loadBoard();
+    </script>
+</body>
+</html>
