@@ -27,6 +27,11 @@ jobs:
       - name: Build practice papers
         run: node scripts/generate-papers.js
 
+      - name: Build weekly PDF digest
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: node scripts/build-weekly-pdf.js
+
       - name: Commit and push
         run: |
           git config user.name "vlymbooq-bot"

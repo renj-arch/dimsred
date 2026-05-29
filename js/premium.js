@@ -45,6 +45,35 @@
 
   function esc(s) { return String(s).replace(/[&<>"']/g, function(c) { return '&#' + c.charCodeAt(0) + ';'; }); }
 
+  function loadPDFs() {
+    var p = getPremium();
+    var code = (p && p.code) || '';
+    var list = document.getElementById('pdfList');
+    var loading = document.getElementById('pdfLoading');
+    if (!list || !loading) return;
+
+    fetch('/pdfs/latest.json?_=' + Date.now())
+      .then(function(r) {
+        if (!r.ok) throw new Error('No PDFs yet');
+        return r.json();
+      })
+      .then(function(data) {
+        loading.style.display = 'none';
+        var dlUrl = '/api/serve-pdf?code=' + encodeURIComponent(code) + '&file=' + encodeURIComponent(data.filename);
+        list.innerHTML = '<div class="feature-item" style="text-align:left;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px">' +
+          '<div><div class="label" style="margin-bottom:2px">' + esc(data.date) + '</div><div class="desc">' + esc(data.filename) + ' — Premium Weekly Digest</div></div>' +
+          '<a href="' + dlUrl + '" style="background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#fff;padding:8px 20px;border-radius:var(--radius);font-size:.78em;font-weight:600;text-decoration:none;white-space:nowrap">Download</a>' +
+          '</div>';
+
+        // Also try to show the download section if it was hidden
+        var ds = document.getElementById('downloadsSection');
+        if (ds) ds.style.display = '';
+      })
+      .catch(function() {
+        loading.textContent = 'No weekly PDFs available yet. Check back after Monday!';
+      });
+  }
+
   function updateUI() {
     var p = getPremium();
     var card = document.getElementById('statusCard');
@@ -59,6 +88,9 @@
       document.getElementById('codeBox').style.display = 'none';
       document.getElementById('howToGet').style.display = 'none';
       document.getElementById('premiumLogoutBtn').onclick = function() { localStorage.removeItem(KEY_PREMIUM); location.reload(); };
+      var ds = document.getElementById('downloadsSection');
+      if (ds) ds.style.display = '';
+      loadPDFs();
     }
   }
 
@@ -94,7 +126,7 @@
           msg.textContent = taunts[fails % taunts.length];
           return;
         }
-        setPremium({ active: true, plan: data.plan, expiresAt: data.expiresAt });
+        setPremium({ active: true, plan: data.plan, expiresAt: data.expiresAt, code: code });
         markConsumed(code);
         msg.className = 'code-msg success';
         msg.textContent = 'Boom. Premium unlocked. You\'re officially a vlymbooq legend.';
