@@ -123,9 +123,9 @@
     var msg = document.getElementById('codeMsg');
     var code = input.value.trim().toUpperCase();
 
-    if (!code || code.length < 9) {
+    if (!code || code.length < 14) {
       msg.className = 'code-msg error';
-      msg.textContent = code ? 'That code looks incomplete.' : 'Type your code first.';
+      msg.textContent = code ? 'That code looks incomplete (format: VLYM-XXXX-XXXX).' : 'Type your code first.';
       input.focus(); return;
     }
 
