@@ -249,7 +249,8 @@ window.getLeaderboard = async function (examFilter, callback) {
   var url = SUPABASE_URL + '/rest/v1/leaderboard?order=pct.desc&limit=50';
   if (examFilter && examFilter !== 'all') url += '&exam=eq.' + encodeURIComponent(examFilter);
   try {
-    var r = await fetch(url, { headers: sbHeaders(getToken()) });
+    var r = await fetch(url, { headers: sbHeaders() });
+    if (!r.ok) { if (callback) callback([], new Error('API error')); return; }
     var data = await r.json();
     if (callback) callback(data || [], null);
   } catch (e) { if (callback) callback([], e); }

@@ -1,76 +1,250 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Review Mistakes - StudyPro</title>
+    <title>Review Mistakes � vlymbooq</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://pagead2.googlesyndication.com https://www.gstatic.com https://apis.google.com; connect-src 'self' https:; frame-src 'self' https://googleads.g.doubleclick.net; frame-ancestors 'self'; upgrade-insecure-requests">
+    <script src="js/redirect.js" async></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7363013795551054" crossorigin="anonymous"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Inter',-apple-system,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
-        a{color:#a78bfa;text-decoration:none}
-        .nav{position:sticky;top:0;z-index:50;padding:16px 24px;background:rgba(9,9,11,.8);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.04)}
-        .nav-inner{max-width:1000px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-        .site-title{font-size:1.1em;font-weight:800;color:#fafafa}
-        .site-title span{background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .container{max-width:800px;margin:0 auto;padding:32px 24px}
-        h1{font-size:1.5em;font-weight:800;margin-bottom:4px}
-        .sub{color:#71717a;font-size:.9em;margin-bottom:24px}
-        .empty{text-align:center;padding:60px 24px;color:#52525b}
-        .empty .big{font-size:3em;margin-bottom:12px}
+        :root{
+            --bg:#09090b;--bg-elevated:#0c0c0f;--bg-card:#111113;--bg-hover:#18181b;
+            --border:rgba(255,255,255,.06);--border-hover:rgba(255,255,255,.1);
+            --text:#fafafa;--text-secondary:#a1a1aa;--text-muted:#52525b;
+            --purple:#a78bfa;--purple-dark:#8b5cf6;--emerald:#34d399;
+            --radius:12px;--radius-lg:16px;--radius-full:100px;
+        }
+        html{scroll-behavior:smooth}
+        body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+        a{color:var(--text);text-decoration:none}
+        ::selection{background:rgba(139,92,246,.3);color:#fff}
+
+        .bg-grid{
+            position:fixed;inset:0;z-index:0;pointer-events:none;
+            background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
+                linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+            background-size:60px 60px;
+        }
+        .bg-glow{
+            position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;
+        }
+        .bg-glow.purple{width:500px;height:500px;background:rgba(139,92,246,.08);top:-200px;right:-150px}
+        .bg-glow.emerald{width:400px;height:400px;background:rgba(16,185,129,.05);bottom:-180px;left:-120px}
+
+        .nav{
+            position:sticky;top:0;z-index:100;padding:14px 24px;
+            background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+            border-bottom:1px solid var(--border);
+        }
+        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+        .brand{display:flex;align-items:center;gap:8px;text-decoration:none}
+        .brand-icon{width:28px;height:28px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.02em}
+        .nav-links{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+        .nav-links a{
+            padding:7px 14px;border-radius:var(--radius-full);font-size:.82em;font-weight:500;
+            color:var(--text-secondary);transition:all .2s;white-space:nowrap;
+        }
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+
+        .container{max-width:800px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+
+        .page-hero{
+            text-align:center;padding:48px 0 32px;
+        }
+        .page-hero h1{
+            font-size:clamp(1.6rem,3.5vw,2.2rem);font-weight:900;
+            letter-spacing:-.03em;margin-bottom:8px;
+        }
+        .page-hero h1 span{background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .page-hero p{color:var(--text-secondary);font-size:.92em}
+
+        /* Stats row */
+        .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+        .stat-pill{
+            text-align:center;padding:18px 12px;border-radius:var(--radius);
+            border:1px solid var(--border);background:var(--bg-elevated);
+            transition:all .3s;
+        }
+        .stat-pill:hover{transform:translateY(-2px);border-color:var(--border-hover)}
+        .stat-pill .num{font-size:1.4em;font-weight:900;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+        .stat-pill .label{font-size:.72em;color:var(--text-muted);margin-top:4px}
+        .stat-pill .sub{font-size:.65em;color:var(--text-muted);margin-top:1px;opacity:.6}
+
+        /* Filter bar */
+        .filter-bar{
+            display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;justify-content:center;
+        }
+        .filter-btn{
+            padding:7px 16px;border-radius:var(--radius-full);font-size:.78em;font-weight:500;
+            border:1px solid var(--border);background:transparent;color:var(--text-secondary);
+            cursor:pointer;transition:all .25s;
+        }
+        .filter-btn:hover{border-color:var(--border-hover);color:var(--text)}
+        .filter-btn.active{
+            background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#fff;
+            border-color:transparent;box-shadow:0 4px 16px rgba(139,92,246,.2);
+        }
+        .filter-bar .clear-btn{
+            margin-left:auto;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);
+            color:#ef4444;padding:7px 14px;border-radius:var(--radius-full);font-size:.78em;
+            cursor:pointer;transition:all .2s;
+        }
+        .filter-bar .clear-btn:hover{background:rgba(239,68,68,.15)}
+
+        .count-label{text-align:center;font-size:.8em;color:var(--text-muted);margin-bottom:16px}
+
+        /* Mistake card */
         .mistake-card{
-            background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;
-            padding:20px;margin-bottom:12px;
+            border-radius:var(--radius-lg);padding:20px 22px;margin-bottom:10px;
+            border:1px solid var(--border);background:var(--bg-card);
+            cursor:pointer;transition:all .3s cubic-bezier(.22,1,.36,1);
+            animation:cardIn .35s ease both;
         }
-        .mc-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px}
-        .mc-exam{font-size:.75em;color:#52525b}
-        .mc-q{font-weight:600;font-size:.95em;margin-bottom:8px;line-height:1.5}
-        .mc-answers{font-size:.85em}
-        .mc-correct{color:#34d399;font-weight:600}
-        .mc-wrong{color:#ef4444;font-weight:600;text-decoration:line-through}
-        .mc-topic{font-size:.78em;color:#71717a;margin-top:6px}
-        .clear-btn{
-            background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#ef4444;
-            padding:8px 16px;border-radius:100px;font-size:.82em;cursor:pointer;margin-bottom:20px;
+        @keyframes cardIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+        .mistake-card:hover{border-color:var(--border-hover);background:var(--bg-hover);transform:translateY(-2px)}
+        .mistake-card.due{
+            border-color:rgba(52,211,153,.15);
+            background:linear-gradient(135deg,rgba(52,211,153,.02),transparent);
         }
-        .pc-btn{
-            background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:10px 22px;
-            border-radius:100px;font-size:.82em;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block;
+        .mc-head{
+            display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:10px;
         }
-        .sr-filters{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
-        .sr-btn{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:100px;padding:8px 16px;color:#a1a1aa;cursor:pointer;font-size:.78em;transition:all .2s}
-        .sr-btn.active,.sr-btn:hover{border-color:#a78bfa;color:#fafafa;background:rgba(139,92,246,.1)}
-        .sr-count{font-size:.78em;color:#52525b;margin-bottom:12px}
-        .mc-review{font-size:.75em;color:#a78bfa;margin-top:6px}
+        .mc-badge{
+            display:inline-flex;align-items:center;gap:4px;
+            padding:3px 10px;border-radius:var(--radius-full);
+            font-size:.7em;font-weight:600;
+        }
+        .mc-badge.exam{background:rgba(139,92,246,.1);color:var(--purple)}
+        .mc-badge.section{background:rgba(255,255,255,.04);color:var(--text-muted)}
+        .mc-badge.due{
+            background:rgba(52,211,153,.12);color:var(--emerald);
+            animation:pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+        .mc-badge.reviewed{background:rgba(96,165,250,.1);color:#60a5fa}
+        .mc-badge.easy{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .mc-badge.medium{background:rgba(251,191,36,.1);color:#fbbf24}
+        .mc-badge.hard{background:rgba(239,68,68,.1);color:#ef4444}
+        .mc-text{
+            font-weight:600;font-size:.92em;line-height:1.6;margin-bottom:12px;
+            color:var(--text);
+        }
+        .mc-answers{
+            background:rgba(255,255,255,.02);border-radius:8px;padding:10px 14px;
+            margin-bottom:10px;
+        }
+        .mc-answers .row{
+            display:flex;align-items:center;gap:8px;font-size:.85em;margin:3px 0;
+        }
+        .mc-answers .wrong{color:#ef4444;text-decoration:line-through;font-weight:600}
+        .mc-answers .correct{color:var(--emerald);font-weight:600}
+        .mc-answers .icon{font-size:1em;flex-shrink:0}
+        .mc-footer{
+            display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+        }
+        .mc-review-progress{display:flex;align-items:center;gap:8px;font-size:.75em;color:var(--text-muted)}
+        .mc-review-progress .bar{
+            width:60px;height:3px;border-radius:3px;background:rgba(255,255,255,.05);
+            overflow:hidden;
+        }
+        .mc-review-progress .bar-fill{
+            height:100%;border-radius:3px;background:linear-gradient(90deg,var(--purple),var(--emerald));
+            transition:width .4s ease;
+        }
+        .mc-click{font-size:.7em;color:var(--text-muted);opacity:.5}
+        .mc-date{font-size:.72em;color:var(--text-muted)}
+
+        .empty-state{text-align:center;padding:60px 20px;color:var(--text-muted)}
+        .empty-state .icon{font-size:3em;margin-bottom:12px;display:block}
+        .empty-state p{font-size:.9em;margin-bottom:16px}
+        .empty-state .btn{
+            display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:var(--radius-full);
+            font-size:.85em;font-weight:600;border:none;cursor:pointer;text-decoration:none;
+            background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#fff;
+            box-shadow:0 4px 24px rgba(139,92,246,.25);transition:all .25s;
+        }
+        .empty-state .btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(139,92,246,.35)}
+
+        /* Progress ring */
+        .progress-ring{
+            display:flex;align-items:center;justify-content:center;gap:4px;
+        }
+        .progress-ring .ring{
+            width:28px;height:28px;border-radius:50%;
+            border:2px solid rgba(255,255,255,.05);
+            position:relative;display:flex;align-items:center;justify-content:center;
+        }
+        .progress-ring .ring.done{border-color:var(--emerald)}
+        .progress-ring .ring.partial{border-color:var(--purple)}
+        .progress-ring .ring span{font-size:.55em;font-weight:700;color:var(--text-muted)}
+        .progress-ring .ring.done span{color:var(--emerald)}
+        .progress-ring .ring.partial span{color:var(--purple)}
+
+        @media(max-width:640px){
+            .stats-row{grid-template-columns:1fr;gap:8px}
+            .page-hero{padding:32px 0 20px}
+            .mistake-card{padding:16px}
+            .filter-bar .clear-btn{margin-left:0;width:100%;text-align:center}
+        }
     </style>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7363013795551054" crossorigin="anonymous"></script>
 </head>
 <body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow purple"></div>
+    <div class="bg-glow emerald"></div>
+
     <nav class="nav">
         <div class="nav-inner">
-            <a href="index.html" class="site-title"><span>Study</span>Pro</a>
-            <div style="display:flex;gap:8px;align-items:center">
-                <a href="index.html" class="pc-btn" style="padding:6px 14px;font-size:.78em">← Home</a>
-                <a href="lab.html" class="pc-btn" style="padding:6px 14px;font-size:.78em">🧪 Lab</a>
-                <a href="dashboard.html" class="pc-btn" style="padding:6px 14px;font-size:.78em">📊 Dashboard</a>
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 40 40" fill="none">
+                    <defs><linearGradient id="vx" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#34d399"/></linearGradient></defs>
+                    <path d="M20 36 C17 28 10 18 5 13 C3 11 3 10 6 9" stroke="url(#vx)" stroke-width="2.8" stroke-linecap="round"/>
+                    <path d="M20 36 C23 28 30 18 35 13 C37 11 37 10 34 9" stroke="url(#vx)" stroke-width="2.8" stroke-linecap="round"/>
+                    <path d="M20 34 L22 36 L20 38 L18 36 Z" fill="url(#vx)"/>
+                    <circle cx="20" cy="5" r="2.5" fill="#a78bfa"/>
+                    <circle cx="20" cy="5" r="5" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.35"/>
+                    <circle cx="10" cy="16" r="1.2" fill="#a78bfa" opacity="0.45"/>
+                    <circle cx="30" cy="16" r="1.2" fill="#34d399" opacity="0.45"/>
+                </svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="lab.html">Lab</a>
+                <a href="leaderboard.html">?? Leaderboard</a>
+                <a href="mistakes.html" class="active">? Mistakes</a>
             </div>
         </div>
     </nav>
+
     <div class="container">
-        <h1>❌ Review Mistakes</h1>
-        <p class="sub">Your wrong answers — review with spaced repetition</p>
-        <div class="sr-filters" id="srFilters">
-            <button class="sr-btn active" data-filter="all">All</button>
-            <button class="sr-btn" data-filter="today">Due Today</button>
-            <button class="sr-btn" data-filter="thisweek">This Week</button>
-            <button class="sr-btn" data-filter="easy">Easy</button>
-            <button class="sr-btn" data-filter="medium">Medium</button>
-            <button class="sr-btn" data-filter="hard">Hard</button>
+        <section class="page-hero">
+            <h1>? <span>Mistake Review</span></h1>
+            <p>Master your weak spots with spaced repetition � click a card to mark it reviewed</p>
+        </section>
+
+        <div class="stats-row" id="summary"></div>
+
+        <div class="filter-bar" id="filterBar">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="today">?? Due Today</button>
+            <button class="filter-btn" data-filter="thisweek">This Week</button>
+            <button class="filter-btn" data-filter="easy">?? Easy</button>
+            <button class="filter-btn" data-filter="medium">?? Medium</button>
+            <button class="filter-btn" data-filter="hard">?? Hard</button>
+            <button class="clear-btn" id="clearAllBtn">?? Clear All</button>
         </div>
-        <div class="sr-count" id="srCount"></div>
-        <button class="clear-btn" onclick="clearAll()">🗑 Clear All</button>
+
+        <div class="count-label" id="countLabel"></div>
         <div id="list"></div>
     </div>
+
     <script>
     var STORAGE_KEY = 'studypro_wrong';
     var currentFilter = 'all';
@@ -83,19 +257,37 @@
 
     function isDue(item) {
         var days = getDaysSince(item.date);
-        var reviewInterval = item.reviewCount === 0 ? 1 : 
-                            item.reviewCount === 1 ? 3 : 
-                            item.reviewCount === 2 ? 7 : 
-                            item.reviewCount === 3 ? 14 : 30;
-        return days >= reviewInterval;
+        var intervals = [1, 3, 7, 14, 30];
+        var idx = Math.min(item.reviewCount || 0, intervals.length - 1);
+        return days >= intervals[idx];
+    }
+
+    function getNextInterval(item) {
+        var intervals = [1, 3, 7, 14, 30];
+        var idx = Math.min(item.reviewCount || 0, intervals.length - 1);
+        return intervals[idx];
+    }
+
+    function getProgress(item) {
+        var intervals = [1, 3, 7, 14, 30];
+        var idx = Math.min(item.reviewCount || 0, intervals.length - 1);
+        var days = getDaysSince(item.date);
+        return Math.min(100, Math.round((days / intervals[idx]) * 100));
     }
 
     function render(){
         var list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         var el = document.getElementById('list');
-        var countEl = document.getElementById('srCount');
+        var countEl = document.getElementById('countLabel');
 
-        // Apply filter
+        var dueCount = list.filter(function(i){ return isDue(i); }).length;
+        var totalCount = list.length;
+
+        document.getElementById('summary').innerHTML =
+            '<div class="stat-pill"><div class="num">' + totalCount + '</div><div class="label">Total Mistakes</div></div>' +
+            '<div class="stat-pill"><div class="num">' + dueCount + '</div><div class="label">Due for Review</div><div class="sub">Tap to review & advance</div></div>' +
+            '<div class="stat-pill"><div class="num">' + (totalCount > 0 ? Math.round(dueCount / totalCount * 100) : 0) + '%</div><div class="label">Review Load</div></div>';
+
         var filtered = list.filter(function(item){
             if (currentFilter === 'all') return true;
             if (currentFilter === 'today') return isDue(item);
@@ -103,40 +295,57 @@
             return item.difficulty === currentFilter;
         });
 
-        countEl.textContent = 'Showing ' + filtered.length + ' of ' + list.length + ' saved mistakes';
+        countEl.textContent = filtered.length === list.length
+            ? 'Showing all ' + list.length + ' mistake' + (list.length === 1 ? '' : 's')
+            : 'Showing ' + filtered.length + ' of ' + list.length + ' mistake' + (list.length === 1 ? '' : 's');
 
-        if(filtered.length === 0){
-            el.innerHTML = '<div class="empty"><div class="big">✅</div><p>No mistakes saved yet. Practice some papers first!</p></div>';
+        if (filtered.length === 0) {
+            var msg = totalCount === 0
+                ? '<span class="icon">?</span><p>No mistakes saved yet. Practice some papers to build your review queue!</p><a href="index.html#papers" class="btn">Browse Papers</a>'
+                : '<span class="icon">??</span><p>No mistakes match this filter. All reviewed!</p>';
+            el.innerHTML = '<div class="empty-state">' + msg + '</div>';
             return;
         }
-        var html = '';
-        filtered.forEach(function(item){
-            var days = getDaysSince(item.date);
-            var srLabel = '';
-            if (item.reviewCount > 0) srLabel = '<span class="sr-badge">Reviewed ' + item.reviewCount + 'x</span>';
 
-            html += '<div class="mistake-card">';
-            html += '<div class="mc-header">';
-            html += '<span class="mc-exam">'+item.exam+'</span>';
-            html += '<span class="mc-exam">'+item.date.slice(0,10)+' ' + srLabel + '</span>';
+        var html = '';
+        filtered.forEach(function(item, idx){
+            var due = isDue(item);
+            var days = getDaysSince(item.date);
+            var nextInt = getNextInterval(item);
+            var progress = getProgress(item);
+            var reviewCount = item.reviewCount || 0;
+            var dueLabel = due ? '<span class="mc-badge due">?? Due Now</span>' : '';
+            var reviewedLabel = reviewCount > 0 ? '<span class="mc-badge reviewed">? Reviewed ' + reviewCount + 'x</span>' : '<span class="mc-badge reviewed" style="background:rgba(255,255,255,.03);color:var(--text-muted)">? New</span>';
+
+            html += '<div class="mistake-card' + (due ? ' due' : '') + '" data-uid="' + (item.uid || idx) + '" style="animation-delay:' + (idx % 15 * 0.04) + 's">';
+            html += '<div class="mc-head">';
+            html += '<span class="mc-badge exam">' + (item.exam || 'Paper') + '</span>';
+            html += '<span class="mc-badge section">' + (item.section || 'General') + '</span>';
+            html += '<span class="mc-badge ' + (item.difficulty || 'medium') + '">' + (item.difficulty === 'easy' ? '??' : item.difficulty === 'hard' ? '??' : '??') + ' ' + (item.difficulty || 'medium') + '</span>';
             html += '</div>';
-            html += '<div class="mc-q">'+item.qNum+'. '+item.qText+'</div>';
-            html += '<div class="mc-answers">You chose: <span class="mc-wrong">'+item.chosen+'</span> &nbsp;|&nbsp; Correct: <span class="mc-correct">'+item.correct+'</span></div>';
-            html += '<div class="mc-topic">📂 '+item.section+' &nbsp;·&nbsp; '+(item.difficulty==='easy'?'🟢':item.difficulty==='medium'?'🟡':'🔴')+' '+item.difficulty+'</div>';
-            if (!isDue(item)) {
-                var nextDays = item.reviewCount === 0 ? 1 : item.reviewCount === 1 ? 3 : item.reviewCount === 2 ? 7 : item.reviewCount === 3 ? 14 : 30;
-                html += '<div class="mc-review">⏰ Next review in ' + (nextDays - days) + ' day' + ((nextDays - days) === 1 ? '' : 's') + '</div>';
-            } else {
-                html += '<div class="mc-review" style="color:#34d399">✅ Due for review</div>';
-            }
+            html += '<div class="mc-text">Q' + (item.qNum || '') + '. ' + (item.qText || '') + '</div>';
+            html += '<div class="mc-answers">';
+            html += '<div class="row"><span class="icon">?</span> You chose: <span class="wrong">' + (item.chosen || '�') + '</span></div>';
+            html += '<div class="row"><span class="icon">?</span> Correct: <span class="correct">' + (item.correct || '�') + '</span></div>';
+            html += '</div>';
+            html += '<div class="mc-footer">';
+            html += '<div class="mc-review-progress">';
+            html += '<span>' + (due ? '?? Overdue' : '? Next in ' + (nextInt - days) + 'd') + '</span>';
+            html += '<div class="bar"><div class="bar-fill" style="width:' + progress + '%"></div></div>';
+            html += '</div>';
+            html += '<div style="display:flex;align-items:center;gap:8px">';
+            html += '<span class="mc-date">' + (item.date ? item.date.slice(0,10) : '') + '</span>';
+            html += reviewedLabel;
+            html += '</div>';
+            html += '</div>';
             html += '</div>';
         });
         el.innerHTML = html;
     }
 
-    document.querySelectorAll('.sr-btn').forEach(function(btn){
+    document.querySelectorAll('.filter-btn').forEach(function(btn){
         btn.addEventListener('click', function(){
-            document.querySelectorAll('.sr-btn').forEach(function(b){ b.classList.remove('active'); });
+            document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
             this.classList.add('active');
             currentFilter = this.getAttribute('data-filter');
             render();
@@ -144,29 +353,29 @@
     });
 
     function clearAll(){
-        if(confirm('Delete all saved mistakes?')){
+        if (confirm('Delete all saved mistakes?')) {
             localStorage.removeItem(STORAGE_KEY);
             render();
         }
     }
 
-    // Mark reviewed items (click marks as reviewed)
+    document.getElementById('clearAllBtn').addEventListener('click', clearAll);
+
     document.addEventListener('click', function(e){
-        var card = e.target.closest('.mistake-card');
+        var card = e.target.closest('.mistake-card:not(.processing)');
         if (!card) return;
-        var examEl = card.querySelector('.mc-exam');
-        if (!examEl) return;
-        // Find the item by exam and qNum
+        if (e.target.closest('.clear-btn')) return;
+        card.classList.add('processing');
         var list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        var qTextEl = card.querySelector('.mc-text');
+        if (!qTextEl) { card.classList.remove('processing'); return; }
+        var qText = (qTextEl.textContent || '').replace(/^Q\d+\.\s*/, '');
+        var examEl = card.querySelector('.mc-badge.exam');
+        var examText = examEl ? (examEl.textContent || '').trim() : '';
         var idx = -1;
-        // More reliable: match by content
-        var qTextEl = card.querySelector('.mc-q');
-        if (!qTextEl) return;
-        var qText = qTextEl.textContent.replace(/^Q\d+\.\s*/, '');
         for (var i = 0; i < list.length; i++) {
-            if (list[i].qText === qText && list[i].exam === (examEl.textContent || '').trim()) {
-                idx = i;
-                break;
+            if (list[i].qText === qText && list[i].exam === examText) {
+                idx = i; break;
             }
         }
         if (idx >= 0) {
@@ -175,6 +384,7 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
             render();
         }
+        card.classList.remove('processing');
     });
 
     render();

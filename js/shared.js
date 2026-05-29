@@ -545,6 +545,17 @@
     setTimeout(showGoalPrompt, 3000);
   }
 
+  // ========== 13b. SAVE LAST PAPER FOR RESUME ==========
+  var paperPage = document.querySelector('.paper-page');
+  if (paperPage) {
+    var lastPaper = {
+      url: window.location.pathname,
+      title: document.title,
+      date: new Date().toISOString()
+    };
+    localStorage.setItem('studypro_last_paper', JSON.stringify(lastPaper));
+  }
+
   // ========== 14. DAILY REMINDER ==========
   var dailyKey = 'studypro_daily_visit_' + new Date().toISOString().slice(0, 10);
   if (!localStorage.getItem(dailyKey)) {

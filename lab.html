@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Study Lab — StudyPro</title>
+    <title>Study Lab � vlymbooq</title>
+    <meta http-equiv="Content-Security-Policy" content="style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://pagead2.googlesyndication.com; frame-ancestors 'self'; upgrade-insecure-requests">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}
@@ -93,36 +94,49 @@
 <body>
     <nav class="nav">
         <div class="nav-inner">
-            <a href="index.html" class="site-title"><span>Study</span>Pro</a>
+            <a href="index.html" class="brand">
+  <svg class="brand-icon" viewBox="0 0 40 40" fill="none">
+    <defs><linearGradient id="vx" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#34d399"/></linearGradient></defs>
+    <path d="M20 36 C17 28 10 18 5 13 C3 11 3 10 6 9" stroke="url(#vx)" stroke-width="2.8" stroke-linecap="round"/>
+    <path d="M20 36 C23 28 30 18 35 13 C37 11 37 10 34 9" stroke="url(#vx)" stroke-width="2.8" stroke-linecap="round"/>
+    <path d="M20 34 L22 36 L20 38 L18 36 Z" fill="url(#vx)"/>
+    <circle cx="20" cy="5" r="2.5" fill="#a78bfa"/>
+    <circle cx="20" cy="5" r="5" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.35"/>
+    <circle cx="10" cy="16" r="1.2" fill="#a78bfa" opacity="0.45"/>
+    <circle cx="30" cy="16" r="1.2" fill="#34d399" opacity="0.45"/>
+  </svg>
+  <span class="brand-text">vlymbooq</span>
+</a>
             <div style="display:flex;gap:8px;align-items:center">
                 <a href="index.html" class="pc-btn">Home</a>
-                <a href="dashboard.html" class="pc-btn">📊 Dashboard</a>
+                <a href="dashboard.html" class="pc-btn">?? Dashboard</a>
                 <a class="auth-btn" href="#"
-                style="background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none;transition:all .2s">🚀 Unlock Lab</a>
+                style="background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none;transition:all .2s">?? Unlock Lab</a>
             </div>
         </div>
     </nav>
     <div class="container">
-        <h1>🧪 Study Lab</h1>
-        <p class="sub">Smart practice tools — topic drills, custom mocks, and weak area fixer</p>
+        <h1>?? Study Lab</h1>
+        <p class="sub">Smart practice tools � topic drills, custom mocks, and weak area fixer</p>
 
         <div class="lab-tabs">
-            <button class="lab-tab active" data-tab="drill">🎯 Topic Drill</button>
-            <button class="lab-tab" data-tab="mock">⚡ Custom Mock</button>
-            <button class="lab-tab" data-tab="weak">🔧 Weak Area Fixer</button>
+            <button class="lab-tab active" data-tab="drill">?? Topic Drill</button>
+            <button class="lab-tab" data-tab="mock">? Custom Mock</button>
+            <button class="lab-tab" data-tab="weak">?? Weak Area Fixer</button>
         </div>
 
         <div id="tab-drill" class="tab-content active">
             <div class="card">
-                <div class="card-title">🎯 Topic Drill</div>
+                <div class="card-title">?? Topic Drill</div>
                 <p style="font-size:.85em;color:#71717a;margin-bottom:14px">Focus on one section at a time. Pick an exam and topic to drill.</p>
                 <select id="drill-exam">
-                    <option value="">— Select Exam —</option>
+                    <option value="">� Select Exam �</option>
                     <option value="cgl">SSC CGL</option>
                     <option value="rbi">RBI Grade B</option>
                     <option value="jee">JEE</option>
                     <option value="neet">NEET</option>
                     <option value="gate">GATE</option>
+                    <option value="agniveer">Agniveer</option>
                 </select>
                 <div id="drill-sections" class="chip-group"></div>
                 <button class="btn btn-primary" id="drill-start" disabled>Start Drill</button>
@@ -132,15 +146,16 @@
 
         <div id="tab-mock" class="tab-content">
             <div class="card">
-                <div class="card-title">⚡ Custom Mock Generator</div>
+                <div class="card-title">? Custom Mock Generator</div>
                 <p style="font-size:.85em;color:#71717a;margin-bottom:14px">Build a personalized test. Pick sections, difficulty, and question count.</p>
                 <select id="mock-exam">
-                    <option value="">— Select Exam —</option>
+                    <option value="">� Select Exam �</option>
                     <option value="cgl">SSC CGL</option>
                     <option value="rbi">RBI Grade B</option>
                     <option value="jee">JEE</option>
                     <option value="neet">NEET</option>
                     <option value="gate">GATE</option>
+                    <option value="agniveer">Agniveer</option>
                 </select>
                 <div id="mock-sections" class="chip-group"></div>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
@@ -171,7 +186,7 @@
 
         <div id="tab-weak" class="tab-content">
             <div class="card">
-                <div class="card-title">🔧 Weak Area Fixer</div>
+                <div class="card-title">?? Weak Area Fixer</div>
                 <p style="font-size:.85em;color:#71717a;margin-bottom:14px">Your past mistakes, organized by topic. Practice them until they stick.</p>
                 <div id="weak-filters" class="chip-group">
                     <span class="chip active" data-filter="all">All</span>
@@ -181,453 +196,7 @@
         </div>
     </div>
 
-    <script>
-    var PAPERS = {
-        cgl: [
-            { id:'12-sep-2025-s3', title:'CGL 12 Sep 2025 S3', path:'cgl/papers/12-sep-2025-s3.html' },
-            { id:'13-sep-2025-s1', title:'CGL 13 Sep 2025 S1', path:'cgl/papers/13-sep-2025-s1.html' },
-            { id:'13-sep-2025-s2', title:'CGL 13 Sep 2025 S2', path:'cgl/papers/13-sep-2025-s2.html' }
-        ],
-        rbi: [
-            { id:'2025-phase1', title:'RBI 2025 Phase 1', path:'rbi/papers/2025-phase1.html' },
-            { id:'2024-phase1', title:'RBI 2024 Phase 1', path:'rbi/papers/2024-phase1.html' },
-            { id:'2023-phase1', title:'RBI 2023 Phase 1', path:'rbi/papers/2023-phase1.html' },
-            { id:'2022-phase1', title:'RBI 2022 Phase 1', path:'rbi/papers/2022-phase1.html' },
-            { id:'2021-phase1', title:'RBI 2021 Phase 1', path:'rbi/papers/2021-phase1.html' }
-        ],
-        jee: [
-            { id:'2025-jan-s1', title:'JEE 2025 Jan S1', path:'jee/papers/2025-jan-s1.html' },
-            { id:'2025-apr-s1', title:'JEE 2025 Apr S1', path:'jee/papers/2025-apr-s1.html' },
-            { id:'2025-apr-s2', title:'JEE 2025 Apr S2', path:'jee/papers/2025-apr-s2.html' }
-        ],
-        neet: [
-            { id:'2025-paper1', title:'NEET 2025', path:'neet/papers/2025-paper1.html' },
-            { id:'2024-paper1', title:'NEET 2024', path:'neet/papers/2024-paper1.html' },
-            { id:'2023-paper1', title:'NEET 2023', path:'neet/papers/2023-paper1.html' }
-        ],
-        gate: [
-            { id:'2025-cs', title:'GATE 2025 CS', path:'gate/papers/2025-cs.html' },
-            { id:'2025-ec', title:'GATE 2025 EC', path:'gate/papers/2025-ec.html' },
-            { id:'2025-me', title:'GATE 2025 ME', path:'gate/papers/2025-me.html' },
-            { id:'2025-ce', title:'GATE 2025 CE', path:'gate/papers/2025-ce.html' }
-        ]
-    };
-
-    var SECTIONS = {
-        cgl: ['General Intelligence & Reasoning','General Awareness','Quantitative Aptitude','English Comprehension'],
-        rbi: ['General Awareness','Quantitative Aptitude','Reasoning','English'],
-        jee: ['Physics','Chemistry','Mathematics'],
-        neet: ['Physics','Chemistry','Botany','Zoology'],
-        gate: ['General Aptitude','Core Subject']
-    };
-
-    var currentTab = 'drill';
-    var drillQuestions = [];
-    var mockQuestions = [];
-    var mockTimer = null;
-    var mockTimeLeft = 0;
-    var mockAnswered = 0;
-    var mockCorrect = 0;
-
-    document.querySelectorAll('.lab-tab').forEach(function(tab){
-        tab.addEventListener('click', function(){
-            document.querySelectorAll('.lab-tab').forEach(function(t){ t.classList.remove('active'); });
-            document.querySelectorAll('.tab-content').forEach(function(tc){ tc.classList.remove('active'); });
-            this.classList.add('active');
-            var target = this.getAttribute('data-tab');
-            document.getElementById('tab-' + target).classList.add('active');
-            currentTab = target;
-        });
-    });
-
-    // === TOPIC DRILL ===
-    document.getElementById('drill-exam').addEventListener('change', function(){
-        var exam = this.value;
-        var container = document.getElementById('drill-sections');
-        container.innerHTML = '';
-        document.getElementById('drill-start').disabled = true;
-        if (!exam) return;
-        var secs = SECTIONS[exam] || [];
-        secs.forEach(function(s, i){
-            var chip = document.createElement('span');
-            chip.className = 'chip' + (i === 0 ? ' active' : '');
-            chip.textContent = s;
-            chip.dataset.section = s;
-            chip.addEventListener('click', function(){
-                this.classList.toggle('active');
-                updateDrillStart();
-            });
-            container.appendChild(chip);
-        });
-        updateDrillStart();
-    });
-
-    function updateDrillStart(){
-        var exam = document.getElementById('drill-exam').value;
-        var active = document.querySelectorAll('#drill-sections .chip.active');
-        document.getElementById('drill-start').disabled = !exam || active.length === 0;
-    }
-
-    document.getElementById('drill-start').addEventListener('click', async function(){
-        var exam = document.getElementById('drill-exam').value;
-        var activeSections = [];
-        document.querySelectorAll('#drill-sections .chip.active').forEach(function(c){
-            activeSections.push(c.getAttribute('data-section') || c.textContent);
-        });
-        var papers = PAPERS[exam] || [];
-        if (papers.length === 0) return;
-        var randomPaper = papers[Math.floor(Math.random() * papers.length)];
-        this.textContent = 'Loading...';
-        this.disabled = true;
-        try {
-            var r = await fetch(randomPaper.path);
-            var html = await r.text();
-            var parser = new DOMParser();
-            var doc = parser.parseFromString(html, 'text/html');
-            var allQs = doc.querySelectorAll('.question');
-            drillQuestions = [];
-            allQs.forEach(function(q){
-                var secBadge = q.querySelector('.section-badge');
-                var section = secBadge ? secBadge.textContent.trim() : '';
-                if (activeSections.some(function(s){ return section.indexOf(s) >= 0 || s.indexOf(section) >= 0; })) {
-                    drillQuestions.push(parseQuestion(q, randomPaper.id));
-                }
-            });
-            renderDrill();
-        } catch(e) {
-            document.getElementById('drill-area').innerHTML = '<div class="empty-state"><p>⚠ Failed to load paper. Try again.</p></div>';
-        }
-        this.textContent = 'Start Drill';
-        this.disabled = false;
-    });
-
-    function parseQuestion(qEl, paperId){
-        var num = qEl.getAttribute('data-q') || '?';
-        var text = qEl.querySelector('.q-text') ? qEl.querySelector('.q-text').textContent.trim() : '';
-        var opts = [];
-        qEl.querySelectorAll('.q-option').forEach(function(o, i){
-            opts.push({
-                text: o.textContent.trim(),
-                correct: o.hasAttribute('data-correct')
-            });
-        });
-        var solEl = qEl.querySelector('.solution-box');
-        var solution = solEl ? solEl.textContent.trim() : '';
-        var secBadge = qEl.querySelector('.section-badge');
-        var section = secBadge ? secBadge.textContent.trim() : 'General';
-        return { num: num, text: text, options: opts, solution: solution, section: section, paperId: paperId };
-    }
-
-    function renderDrill(){
-        var area = document.getElementById('drill-area');
-        if (drillQuestions.length === 0) {
-            area.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No questions found for this topic in the selected paper.</p></div>';
-            return;
-        }
-        var html = '<div style="font-size:.82em;color:#71717a;margin-bottom:10px">' + drillQuestions.length + ' questions found. Click to answer.</div>';
-        drillQuestions.forEach(function(q, i){
-            html += '<div class="q-block" data-idx="' + i + '">';
-            html += '<div class="q-num"><span class="weak-section">' + q.section + '</span> Q' + q.num + '</div>';
-            html += '<div class="q-text">' + q.text + '</div>';
-            html += '<div class="q-opts">';
-            q.options.forEach(function(o, oi){
-                html += '<div class="q-opt" data-opt="' + oi + '" data-correct="' + o.correct + '">' + o.text + '</div>';
-            });
-            html += '</div>';
-            html += '<div class="q-soln">' + q.solution + '</div>';
-            html += '</div>';
-        });
-        area.innerHTML = html;
-
-        area.querySelectorAll('.q-opt').forEach(function(el){
-            el.addEventListener('click', function(){
-                var block = this.closest('.q-block');
-                if (block.classList.contains('answered')) return;
-                block.classList.add('answered');
-                var isCorrect = this.getAttribute('data-correct') === 'true';
-                if (isCorrect) {
-                    this.classList.add('correct');
-                } else {
-                    this.classList.add('wrong');
-                    block.querySelector('.q-opt[data-correct="true"]').classList.add('correct');
-                }
-                block.querySelectorAll('.q-opt').forEach(function(o){ o.style.pointerEvents = 'none'; });
-                var sol = block.querySelector('.q-soln');
-                if (sol) sol.classList.add('show');
-            });
-        });
-    }
-
-    // === CUSTOM MOCK ===
-    document.getElementById('mock-exam').addEventListener('change', function(){
-        var exam = this.value;
-        var container = document.getElementById('mock-sections');
-        container.innerHTML = '';
-        document.getElementById('mock-start').disabled = true;
-        if (!exam) return;
-        var secs = SECTIONS[exam] || [];
-        secs.forEach(function(s, i){
-            var chip = document.createElement('span');
-            chip.className = 'chip' + (i === 0 ? ' active' : '');
-            chip.textContent = s;
-            chip.dataset.section = s;
-            chip.addEventListener('click', function(){
-                this.classList.toggle('active');
-                updateMockStart();
-            });
-            container.appendChild(chip);
-        });
-        updateMockStart();
-    });
-
-    function updateMockStart(){
-        var exam = document.getElementById('mock-exam').value;
-        var active = document.querySelectorAll('#mock-sections .chip.active');
-        document.getElementById('mock-start').disabled = !exam || active.length === 0;
-    }
-
-    document.getElementById('mock-start').addEventListener('click', async function(){
-        if (mockTimer) { clearInterval(mockTimer); mockTimer = null; }
-        var exam = document.getElementById('mock-exam').value;
-        var activeSections = [];
-        document.querySelectorAll('#mock-sections .chip.active').forEach(function(c){
-            activeSections.push(c.getAttribute('data-section') || c.textContent);
-        });
-        var count = parseInt(document.getElementById('mock-count').value);
-        var diff = document.getElementById('mock-difficulty').value;
-        var timeLimit = parseInt(document.getElementById('mock-time').value);
-
-        var allQuestions = [];
-        var papers = PAPERS[exam] || [];
-        this.textContent = 'Loading...';
-        this.disabled = true;
-
-        try {
-            for (var pi = 0; pi < papers.length; pi++) {
-                var r = await fetch(papers[pi].path);
-                var html = await r.text();
-                var parser = new DOMParser();
-                var doc = parser.parseFromString(html, 'text/html');
-                doc.querySelectorAll('.question').forEach(function(q){
-                    var secBadge = q.querySelector('.section-badge');
-                    var section = secBadge ? secBadge.textContent.trim() : '';
-                    if (activeSections.some(function(s){ return section.indexOf(s) >= 0 || s.indexOf(section) >= 0; })) {
-                        var parsed = parseQuestion(q, papers[pi].id);
-                        if (diff === 'all' || parsed.difficulty === diff) {
-                            allQuestions.push(parsed);
-                        }
-                    }
-                });
-            }
-
-            shuffle(allQuestions);
-            mockQuestions = allQuestions.slice(0, Math.min(count, allQuestions.length));
-
-            if (mockQuestions.length === 0) {
-                document.getElementById('mock-area').innerHTML = '<div class="empty-state"><p>No questions match your criteria. Try different sections.</p></div>';
-                this.textContent = 'Generate Mock';
-                this.disabled = false;
-                return;
-            }
-
-            mockAnswered = 0;
-            mockCorrect = 0;
-            renderMock(timeLimit);
-            if (timeLimit > 0) startMockTimer(timeLimit);
-        } catch(e) {
-            document.getElementById('mock-area').innerHTML = '<div class="empty-state"><p>⚠ Failed to load papers. Try again.</p></div>';
-        }
-        this.textContent = 'Generate Mock';
-        this.disabled = false;
-    });
-
-    function shuffle(arr){
-        for (var i = arr.length - 1; i > 0; i--){
-            var j = Math.floor(Math.random() * (i + 1));
-            var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
-        }
-    }
-
-    function startMockTimer(seconds){
-        mockTimeLeft = seconds;
-        var el = document.getElementById('mock-timer-display');
-        if (el) el.style.display = 'block';
-        mockTimer = setInterval(function(){
-            mockTimeLeft--;
-            var m = Math.floor(mockTimeLeft / 60);
-            var s = mockTimeLeft % 60;
-            var display = document.getElementById('mock-timer-display');
-            if (display) display.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
-            if (mockTimeLeft <= 0) {
-                clearInterval(mockTimer);
-                mockTimer = null;
-                finishMock();
-            }
-        }, 1000);
-    }
-
-    function renderMock(timeLimit){
-        var area = document.getElementById('mock-area');
-        var html = '<div class="mock-header">';
-        html += '<div style="font-size:.85em;color:#71717a">' + mockQuestions.length + ' questions</div>';
-        if (timeLimit > 0) html += '<div id="mock-timer-display" class="mock-timer" style="font-size:1.3em;padding:0">' + formatTime(timeLimit) + '</div>';
-        html += '<button class="btn btn-sm btn-danger" id="mock-finish-early">Finish & See Results</button>';
-        html += '</div>';
-
-        mockQuestions.forEach(function(q, i){
-            html += '<div class="q-block" data-idx="' + i + '">';
-            html += '<div class="q-num"><span class="weak-section">' + q.section + '</span> Q' + (i+1) + '</div>';
-            html += '<div class="q-text">' + q.text + '</div>';
-            html += '<div class="q-opts">';
-            q.options.forEach(function(o, oi){
-                html += '<div class="q-opt" data-opt="' + oi + '" data-correct="' + o.correct + '">' + o.text + '</div>';
-            });
-            html += '</div>';
-            html += '<div class="q-soln">' + q.solution + '</div>';
-            html += '</div>';
-        });
-        area.innerHTML = html;
-
-        area.querySelectorAll('.q-opt').forEach(function(el){
-            el.addEventListener('click', function(){
-                var block = this.closest('.q-block');
-                if (block.classList.contains('answered')) return;
-                block.classList.add('answered');
-                mockAnswered++;
-                var isCorrect = this.getAttribute('data-correct') === 'true';
-                if (isCorrect) { mockCorrect++; this.classList.add('correct'); }
-                else {
-                    this.classList.add('wrong');
-                    block.querySelector('.q-opt[data-correct="true"]').classList.add('correct');
-                }
-                block.querySelectorAll('.q-opt').forEach(function(o){ o.style.pointerEvents = 'none'; });
-                var sol = block.querySelector('.q-soln');
-                if (sol) sol.classList.add('show');
-
-                var total = mockQuestions.length;
-                if (mockAnswered === total) {
-                    setTimeout(finishMock, 600);
-                }
-            });
-        });
-
-        document.getElementById('mock-finish-early').addEventListener('click', finishMock);
-    }
-
-    function formatTime(s){
-        var m = Math.floor(s / 60);
-        var sec = s % 60;
-        return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
-    }
-
-    function finishMock(){
-        if (mockTimer) { clearInterval(mockTimer); mockTimer = null; }
-        var total = mockQuestions.length;
-        var wrong = mockAnswered - mockCorrect;
-        var pct = mockAnswered > 0 ? Math.round(mockCorrect / mockAnswered * 100) : 0;
-
-        var overlay = document.createElement('div');
-        overlay.className = 'result-overlay';
-        overlay.innerHTML =
-            '<div class="result-modal">' +
-            '<div style="font-size:1em;color:#a1a1aa;margin-bottom:4px">Mock Complete!</div>' +
-            '<div class="score" style="color:' + (pct >= 60 ? '#34d399' : '#ef4444') + '">' + mockCorrect + '/' + mockAnswered + '</div>' +
-            '<div class="detail">' + pct + '% accuracy</div>' +
-            '<div class="stat-row">' +
-            '<div class="stat-item"><div class="stat-val" style="color:#34d399">' + mockCorrect + '</div><div class="stat-lbl">Correct</div></div>' +
-            '<div class="stat-item"><div class="stat-val" style="color:#ef4444">' + wrong + '</div><div class="stat-lbl">Wrong</div></div>' +
-            '<div class="stat-item"><div class="stat-val">' + (total - mockAnswered) + '</div><div class="stat-lbl">Unanswered</div></div>' +
-            '</div>' +
-            '<button class="btn btn-primary btn-sm" onclick="this.closest(\'.result-overlay\').remove()">Close</button>' +
-            '</div>';
-        document.body.appendChild(overlay);
-
-        saveMockResult({ correct: mockCorrect, wrong: wrong, total: total, answered: mockAnswered, pct: pct });
-    }
-
-    function saveMockResult(r){
-        var key = 'studypro_mock_results';
-        var list = JSON.parse(localStorage.getItem(key) || '[]');
-        list.unshift({ date: new Date().toISOString(), correct: r.correct, wrong: r.wrong, total: r.total, answered: r.answered, pct: r.pct });
-        if (list.length > 20) list = list.slice(0, 20);
-        localStorage.setItem(key, JSON.stringify(list));
-    }
-
-    // === WEAK AREA FIXER ===
-    function renderWeak(filter){
-        var list = JSON.parse(localStorage.getItem('studypro_wrong') || '[]');
-        var area = document.getElementById('weak-list');
-        if (filter && filter !== 'all') {
-            list = list.filter(function(item){
-                var sec = item.section || '';
-                return sec.indexOf(filter) >= 0 || filter.indexOf(sec) >= 0;
-            });
-        }
-        if (list.length === 0) {
-            area.innerHTML = '<div class="empty-state"><div class="icon">✅</div><p>No mistakes yet. Keep practicing!</p></div>';
-            return;
-        }
-        var html = '';
-        list.forEach(function(item, i){
-            html += '<div class="weak-item" data-idx="' + i + '">';
-            html += '<div style="font-size:.85em;color:#a78bfa;font-weight:600;min-width:36px">' + (i+1) + '.</div>';
-            html += '<div class="weak-q">' + (item.qText ? item.qText.slice(0, 80) + '...' : 'Question') + '</div>';
-            html += '<span class="weak-section">' + (item.section || 'General') + '</span>';
-            html += '<span class="weak-date">' + (item.date ? item.date.slice(0,10) : '') + '</span>';
-            html += '</div>';
-        });
-        area.innerHTML = html;
-        area.querySelectorAll('.weak-item').forEach(function(el){
-            el.addEventListener('click', function(){
-                var idx = parseInt(this.getAttribute('data-idx'));
-                showWeakDetail(list[idx]);
-            });
-        });
-    }
-
-    function showWeakDetail(item){
-        var overlay = document.createElement('div');
-        overlay.className = 'result-overlay';
-        var html = '<div class="result-modal" style="max-width:500px;text-align:left">';
-        html += '<div style="font-size:.78em;color:#71717a;margin-bottom:8px">' + (item.exam || '') + ' · ' + (item.section || 'General') + '</div>';
-        html += '<div style="font-weight:600;margin-bottom:12px">' + (item.qText || 'Question') + '</div>';
-        html += '<div style="font-size:.85em;margin-bottom:6px"><strong style="color:#34d399">Correct:</strong> ' + (item.correct || '') + '</div>';
-        html += '<div style="font-size:.85em;margin-bottom:6px"><strong style="color:#ef4444">Your Answer:</strong> ' + (item.chosen || '') + '</div>';
-        if (item.paperId) {
-            html += '<div style="margin-top:14px;font-size:.82em;color:#a78bfa">📄 ' + item.paperId + '</div>';
-        }
-        html += '<button class="btn btn-primary btn-sm" style="width:100%;margin-top:16px" onclick="this.closest(\'.result-overlay\').remove()">Close</button>';
-        html += '</div>';
-        overlay.innerHTML = html;
-        document.body.appendChild(overlay);
-    }
-
-    function loadWeakFilters(){
-        var wrong = JSON.parse(localStorage.getItem('studypro_wrong') || '[]');
-        var sections = {};
-        wrong.forEach(function(item){
-            var sec = item.section || 'General';
-            sections[sec] = (sections[sec] || 0) + 1;
-        });
-        var container = document.getElementById('weak-filters');
-        container.innerHTML = '<span class="chip active" data-filter="all">All (' + wrong.length + ')</span>';
-        Object.keys(sections).sort().forEach(function(sec){
-            var chip = document.createElement('span');
-            chip.className = 'chip';
-            chip.textContent = sec + ' (' + sections[sec] + ')';
-            chip.dataset.filter = sec;
-            chip.addEventListener('click', function(){
-                document.querySelectorAll('#weak-filters .chip').forEach(function(c){ c.classList.remove('active'); });
-                this.classList.add('active');
-                renderWeak(this.getAttribute('data-filter'));
-            });
-            container.appendChild(chip);
-        });
-        renderWeak('all');
-    }
-
-    loadWeakFilters();
-    </script>
+<script src="js/lab.js" defer></script>
     <script src="js/supabase.js?v=20260529b"></script>
     <script src="js/shared.js?v=20260529b"></script>
 </body>
