@@ -22,7 +22,7 @@ jobs:
       - name: Generate new AI questions
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: node scripts/generate-ai-questions.js all --count=30
+        run: node scripts/generate-ai-questions.js all --count=15
 
       - name: Clean up previous PDFs
         run: rm -f pdfs/weekly-*.pdf

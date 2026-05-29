@@ -5,8 +5,8 @@ var root = path.resolve(__dirname, '..');
 var bankDir = path.join(root, 'question-bank');
 var dataDir = path.join(root, 'papers-data');
 
-var QUESTION_COUNTS = { cgl: 100, rbi: 80, jee: 30, neet: 30, gate: 30, agniveer: 10 };
-var MIN_BANK_SIZE = { cgl: 200, rbi: 160, jee: 60, neet: 60, gate: 60, agniveer: 12 };
+var QUESTION_COUNTS = { cgl: 15, rbi: 15, jee: 15, neet: 15, gate: 15, agniveer: 15 };
+var MIN_BANK_SIZE = { cgl: 30, rbi: 30, jee: 30, neet: 30, gate: 30, agniveer: 30 };
 var EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer'];
 
 function shuffle(arr) {

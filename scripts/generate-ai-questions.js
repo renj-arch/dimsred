@@ -274,11 +274,11 @@ async function run() {
     console.log('Usage: node scripts/generate-ai-questions.js <exam1> [exam2] ...');
     console.log('Exams: neet, jee, gate, rbi, cgl, agniveer');
     console.log('Use "all" to generate for all exams');
-    console.log('Set count with --count=N (default 30)');
+    console.log('Set count with --count=N (default 15)');
     return;
   }
 
-  var count = 30;
+  var count = 15;
   var exams = [];
   for (var i = 0; i < args.length; i++) {
     var m = args[i].match(/^--count=(\d+)$/);
