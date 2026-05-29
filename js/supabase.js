@@ -157,15 +157,6 @@ window.syncResult = async function (result) {
       answered: result.answered, pct: result.pct, time: result.time
     })
   });
-  await fetch(SUPABASE_URL + '/rest/v1/leaderboard', {
-    method: 'POST', headers: sbHeaders(tok),
-    body: JSON.stringify({
-      user_id: supabaseUser.id,
-      name: supabaseUser.user_metadata?.full_name || 'User',
-      photo: supabaseUser.user_metadata?.avatar_url || '',
-      exam: result.exam, score: result.correct, total: result.total, pct: result.pct
-    })
-  });
 };
 
 window.syncWrongAnswer = async function (item) {
