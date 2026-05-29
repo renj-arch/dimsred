@@ -51,7 +51,7 @@ function getLatestPaper(exam) {
 }
 
 async function callGroq(apiKey, prompt, model) {
-  if (!model) model = 'llama3-70b-8192';
+  if (!model) model = 'llama-3.3-70b-versatile';
   for (var retry = 0; retry < 3; retry++) {
     try {
       var r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -92,7 +92,7 @@ async function getDetailedSolutions(apiKey, exam, questions) {
     'Make each solution at least 4-6 sentences. Be thorough and exam-focused.';
 
   try {
-    var text = await callGroq(apiKey, prompt, 'llama3-70b-8192');
+    var text = await callGroq(apiKey, prompt, 'llama-3.3-70b-versatile');
     if (!text) throw new Error('Empty response');
     var solutions = {};
     var parts = text.split(/===Q(\d+)===/);

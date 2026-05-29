@@ -231,7 +231,7 @@ async function generateQuestions(exam, count) {
   var prompt = buildPrompt(exam, count);
   if (!prompt) return;
 
-  var models = ['llama3-70b-8192', 'mixtral-8x7b-32768', 'gemma2-9b-it'];
+  var models = ['llama-3.3-70b-versatile', 'mixtral-8x7b-32768', 'gemma2-9b-it'];
   var success = false;
 
   for (var attempt = 0; attempt < 2 && !success; attempt++) {
