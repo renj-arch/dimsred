@@ -31,7 +31,8 @@
       var p = JSON.parse(raw);
       if (!p || !p.active || !p.plan || !p.expiresAt) return null;
       if (typeof p.active !== 'boolean' || typeof p.plan !== 'string' || typeof p.expiresAt !== 'string') return null;
-      if (['Monthly','Yearly'].indexOf(p.plan) === -1) return null;
+      var pplan = p.plan.toLowerCase();
+      if (pplan !== 'monthly' && pplan !== 'yearly') return null;
       return p;
     } catch(e) {
       return null;
