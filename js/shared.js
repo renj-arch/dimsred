@@ -526,7 +526,7 @@
       if (authHost.indexOf('localhost') >= 0 || authHost.indexOf('127.0.0.1') >= 0) authHost = 'vlymbooq.qzz.io';
       authBtn.href = (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : 'https://krvlufonfbcabgcjomvs.supabase.co') + '/auth/v1/authorize?provider=google&redirect_to=' + encodeURIComponent('https://' + authHost + '/lab.html');
       authBtn.textContent = '🚀 Unlock Lab';
-      authBtn.style.cssText = 'background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none';
+      authBtn.style.cssText = 'background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none;transition:all .2s';
       nav.appendChild(authBtn);
       // Apply current auth state to the newly created button
       if (typeof updateAuthUI === 'function') setTimeout(updateAuthUI, 10);

@@ -277,11 +277,13 @@ function updateAuthUI() {
     if (supabaseUser) {
       var name = supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0] || 'User';
       var photo = supabaseUser.user_metadata?.avatar_url || '';
-      el.innerHTML = photo ? '<img src="' + photo + '" style="width:22px;height:22px;border-radius:50%;vertical-align:middle;margin-right:6px">' : '';
-      el.innerHTML += '🚀 My Lab';
+      var name = supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0] || 'User';
+      var photo = supabaseUser.user_metadata?.avatar_url || '';
+      el.innerHTML = photo ? '<img src="' + photo + '" style="width:20px;height:20px;border-radius:50%;flex-shrink:0">' : '<span style="width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0">' + name[0] + '</span>';
+      el.innerHTML += '<span>' + name.split(' ')[0] + '</span>';
       el.onclick = function (e) { e.preventDefault(); window.location.href = '/lab.html'; };
       if (el.tagName === 'A') el.removeAttribute('href');
-      el.style.cssText = 'padding:4px 14px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px';
+      el.style.cssText = 'padding:3px 12px 3px 3px;background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.08);border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:all .2s';
     } else {
       el.innerHTML = '🚀 Unlock Lab';
       if (el.tagName === 'A') {
@@ -290,7 +292,7 @@ function updateAuthUI() {
       } else {
         el.onclick = function (e) { e.preventDefault(); window.location.href = loginUrl; };
       }
-      el.style.cssText = 'background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap';
+      el.style.cssText = 'background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .2s';
     }
   });
 }
