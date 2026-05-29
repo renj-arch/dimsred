@@ -22,7 +22,7 @@ function makeRedirectUrl() {
   return encodeURIComponent('https://' + host + window.location.pathname);
 }
 window.supabaseLogin = function () {
-  window.location.href = SUPABASE_URL + '/auth/v1/authorize?provider=google&redirect_to=' + makeRedirectUrl();
+  window.location.href = SUPABASE_URL + '/auth/v1/authorize?provider=google&redirect_to=' + encodeURIComponent('https://' + (window.location.host.indexOf('localhost') >= 0 ? 'vlymbooq.qzz.io' : window.location.host) + '/lab.html');
 };
 
 window.supabaseLogout = function () {
@@ -265,18 +265,25 @@ window.getLeaderboard = async function (examFilter, callback) {
 };
 
 // ========== UI UPDATE ==========
+function labRedirectUrl() {
+  var host = window.location.host;
+  if (host.indexOf('localhost') >= 0 || host.indexOf('127.0.0.1') >= 0) host = 'vlymbooq.qzz.io';
+  return encodeURIComponent('https://' + host + '/lab.html');
+}
+
 function updateAuthUI() {
-  var loginUrl = SUPABASE_URL + '/auth/v1/authorize?provider=google&redirect_to=' + makeRedirectUrl();
+  var loginUrl = SUPABASE_URL + '/auth/v1/authorize?provider=google&redirect_to=' + labRedirectUrl();
   document.querySelectorAll('.auth-btn').forEach(function (el) {
     if (supabaseUser) {
       var name = supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0] || 'User';
       var photo = supabaseUser.user_metadata?.avatar_url || '';
-      el.innerHTML = photo ? '<img src="' + photo + '" style="width:22px;height:22px;border-radius:50%;vertical-align:middle;margin-right:6px">' + name : name;
-      el.onclick = function (e) { e.preventDefault(); if (confirm('Logout?')) window.supabaseLogout(); };
+      el.innerHTML = photo ? '<img src="' + photo + '" style="width:22px;height:22px;border-radius:50%;vertical-align:middle;margin-right:6px">' : '';
+      el.innerHTML += '🚀 My Lab';
+      el.onclick = function (e) { e.preventDefault(); window.location.href = '/lab.html'; };
       if (el.tagName === 'A') el.removeAttribute('href');
-      el.style.cssText = 'padding:4px 12px 4px 4px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center';
+      el.style.cssText = 'padding:4px 14px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px';
     } else {
-      el.innerHTML = 'Login';
+      el.innerHTML = '🚀 Unlock Lab';
       if (el.tagName === 'A') {
         el.href = loginUrl;
         el.onclick = null;

@@ -522,11 +522,10 @@
     if (nav) {
       var authBtn = document.createElement('a');
       authBtn.className = 'auth-btn';
-      var _host = window.location.host;
-      if (_host.indexOf('localhost') >= 0 || _host.indexOf('127.0.0.1') >= 0) _host = 'vlymbooq.qzz.io';
-      var _redirect = encodeURIComponent('https://' + _host + window.location.pathname);
-      authBtn.href = (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : 'https://krvlufonfbcabgcjomvs.supabase.co') + '/auth/v1/authorize?provider=google&redirect_to=' + _redirect;
-      authBtn.textContent = 'Login';
+      var authHost = window.location.host;
+      if (authHost.indexOf('localhost') >= 0 || authHost.indexOf('127.0.0.1') >= 0) authHost = 'vlymbooq.qzz.io';
+      authBtn.href = (typeof SUPABASE_URL !== 'undefined' ? SUPABASE_URL : 'https://krvlufonfbcabgcjomvs.supabase.co') + '/auth/v1/authorize?provider=google&redirect_to=' + encodeURIComponent('https://' + authHost + '/lab.html');
+      authBtn.textContent = '🚀 Unlock Lab';
       authBtn.style.cssText = 'background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none';
       nav.appendChild(authBtn);
       // Apply current auth state to the newly created button
