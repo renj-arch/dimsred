@@ -66,9 +66,8 @@ function getUnusedQuestions(bank) {
 function pickQuestions(bank, count) {
   var unused = getUnusedQuestions(bank);
   if (unused.length < count) {
-    console.log('  Only ' + unused.length + ' unused questions left, reusing from full bank');
-    // Reset and use all
-    unused = shuffle(bank.questions.slice());
+    console.log('  SKIPPED: Only ' + unused.length + ' unused questions left (need ' + count + '). Run generate-ai-questions first.');
+    return null;
   }
   var picked = shuffle(unused).slice(0, count);
   // Renumber sequentially
@@ -127,6 +126,10 @@ function generatePaper(folder) {
   var title = bank.paperDefaults.titlePrefix + ' ' + setNumber;
 
   var questions = pickQuestions(bank, count);
+  if (!questions) {
+    console.log('  SKIPPED ' + title + ': not enough unused questions');
+    return;
+  }
   var usedIds = questions.map(function(q) { return q.id; });
   var totalInBank = bank.questions.length;
 
