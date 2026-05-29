@@ -45,12 +45,25 @@
 
   function esc(s) { return String(s).replace(/[&<>"']/g, function(c) { return '&#' + c.charCodeAt(0) + ';'; }); }
 
+  var EXAM_LABELS = { cgl: 'SSC CGL', rbi: 'RBI Grade B', jee: 'JEE Main', neet: 'NEET UG', gate: 'GATE', agniveer: 'Agniveer' };
+  var EXAM_ICONS = { cgl: '\uD83D\uDCD6', rbi: '\uD83C\uDFE6', jee: '\uD83D\uDD2C', neet: '\u2695\uFE0F', gate: '\uD83D\uDEE0\uFE0F', agniveer: '\uD83C\uDF93' };
+
   function loadPDFs() {
     var p = getPremium();
     var code = (p && p.code) || '';
+    var allowedExams = (p && p.exams) || [];
+    var allAccess = allowedExams.length === 0;
     var list = document.getElementById('pdfList');
     var loading = document.getElementById('pdfLoading');
-    if (!list || !loading) return;
+    var ds = document.getElementById('downloadsSection');
+    if (!list || !loading || !ds) return;
+
+    if (allowedExams.length > 0 && !allAccess) {
+      var examNames = allowedExams.map(function(e) { return EXAM_LABELS[e] || e.toUpperCase(); }).join(', ');
+      ds.innerHTML = '<h2>\uD83D\uDCE5 <span>Weekly PDF</span> Downloads</h2><p style="margin-bottom:12px;font-size:.82em;color:var(--text-secondary)">Your code covers: <strong>' + esc(examNames) + '</strong></p><div id="pdfList"></div><div id="pdfLoading" style="text-align:center;padding:16px;color:var(--text-secondary);font-size:.82em">Loading available PDFs...</div>';
+      list = document.getElementById('pdfList');
+      loading = document.getElementById('pdfLoading');
+    }
 
     fetch('/pdfs/latest.json?_=' + Date.now())
       .then(function(r) {
@@ -59,15 +72,26 @@
       })
       .then(function(data) {
         loading.style.display = 'none';
-        var dlUrl = '/api/serve-pdf?code=' + encodeURIComponent(code) + '&file=' + encodeURIComponent(data.filename);
-        list.innerHTML = '<div class="feature-item" style="text-align:left;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px">' +
-          '<div><div class="label" style="margin-bottom:2px">' + esc(data.date) + '</div><div class="desc">' + esc(data.filename) + ' — Premium Weekly Digest</div></div>' +
-          '<a href="' + dlUrl + '" style="background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#fff;padding:8px 20px;border-radius:var(--radius);font-size:.78em;font-weight:600;text-decoration:none;white-space:nowrap">Download</a>' +
-          '</div>';
+        var html = '';
 
-        // Also try to show the download section if it was hidden
-        var ds = document.getElementById('downloadsSection');
-        if (ds) ds.style.display = '';
+        for (var exam in data) {
+          if (!allAccess && allowedExams.indexOf(exam) === -1) continue;
+          var entry = data[exam];
+          var label = EXAM_LABELS[exam] || exam.toUpperCase();
+          var icon = EXAM_ICONS[exam] || '\uD83D\uDCC4';
+          var dlUrl = '/api/serve-pdf?code=' + encodeURIComponent(code) + '&file=' + encodeURIComponent(entry.filename);
+          html += '<div class="feature-item" style="text-align:left;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px">' +
+            '<div><div class="label" style="margin-bottom:2px">' + icon + ' ' + esc(label) + '</div><div class="desc">' + esc(entry.date) + ' \u2014 Weekly Digest</div></div>' +
+            '<a href="' + dlUrl + '" style="background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#fff;padding:8px 20px;border-radius:var(--radius);font-size:.78em;font-weight:600;text-decoration:none;white-space:nowrap">Download</a>' +
+            '</div>';
+        }
+
+        if (!html) {
+          loading.textContent = 'No PDFs available for your exams yet. Check back after Monday!';
+          return;
+        }
+        list.innerHTML = html;
+        ds.style.display = '';
       })
       .catch(function() {
         loading.textContent = 'No weekly PDFs available yet. Check back after Monday!';
@@ -126,7 +150,7 @@
           msg.textContent = taunts[fails % taunts.length];
           return;
         }
-        setPremium({ active: true, plan: data.plan, expiresAt: data.expiresAt, code: code });
+        setPremium({ active: true, plan: data.plan, expiresAt: data.expiresAt, code: code, exams: data.exams || [] });
         markConsumed(code);
         msg.className = 'code-msg success';
         msg.textContent = 'Boom. Premium unlocked. You\'re officially a vlymbooq legend.';

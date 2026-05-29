@@ -56,14 +56,14 @@ async function getTopicAnalysis(apiKey, exam, questions) {
   var url = 'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + apiKey;
 
   var qText = questions.map(function(q, i) {
-    return (i + 1) + '. ' + (q.text || q.question || '') + '\nOptions: ' + (q.options || []).join(', ') + '\nAnswer: ' + (q.answer || q.correctAnswer || '');
+    return (i + 1) + '. ' + (q.text || q.question || '');
   }).join('\n\n');
 
   var prompt = 'You are an expert ' + EXAM_LABELS[exam] + ' tutor. Analyze these practice questions and provide a concise analysis with:\n' +
     '1. Topics Covered - List main topics and subtopics tested\n' +
-    '2. Difficulty Breakdown - What percentage were easy, medium, hard\n' +
+    '2. Difficulty Breakdown - Rough percentage easy/medium/hard\n' +
     '3. Key Concepts - Most important concepts to master\n' +
-    '4. Common Mistakes - Errors students commonly make on these questions\n' +
+    '4. Common Mistakes - Errors students commonly make\n' +
     '5. Study Tips - How to prepare for these topics effectively\n\n' +
     'Questions:\n' + qText + '\n\n' +
     'Use plain text with bullet points (use *). Do NOT use markdown headers or formatting. Keep it under 300 words.';
@@ -97,177 +97,54 @@ async function getTopicAnalysis(apiKey, exam, questions) {
   return null;
 }
 
-function wrapText(doc, text, x, y, maxWidth, lineHeight) {
-  var lines = [];
-  var currentLine = '';
-  var words = text.split(' ');
-  for (var i = 0; i < words.length; i++) {
-    var testLine = currentLine ? currentLine + ' ' + words[i] : words[i];
-    if (doc.widthOfString(testLine) > maxWidth && currentLine) {
-      lines.push(currentLine);
-      currentLine = words[i];
-    } else {
-      currentLine = testLine;
-    }
-  }
-  if (currentLine) lines.push(currentLine);
-  return lines;
-}
-
-function drawWrapped(doc, text, x, y, maxWidth, lineHeight) {
-  var lines = wrapText(doc, text, x, y, maxWidth, lineHeight);
-  for (var i = 0; i < lines.length; i++) {
-    doc.text(lines[i], x, y, { lineBreak: false });
-    y += lineHeight;
-  }
-  return y;
-}
-
-function addSectionBadge(doc, sectionName, sectionColor, y) {
-  doc.roundedRect(50, y, doc.widthOfString(sectionName, { fontSize: 8 }) + 16, 16, 4)
-    .fillColor(sectionColor).fill();
-  doc.fillColor('#ffffff')
-    .fontSize(8)
-    .text(sectionName, 58, y + 4);
-  doc.fillColor('#1f2937');
-}
-
-async function buildPDF() {
-  if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir);
-
-  var dateStr = getDateStr();
-  var weekRange = formatWeekRange();
-  var filename = 'weekly-' + dateStr + '.pdf';
-  var filepath = path.join(pdfDir, filename);
-
-  var papers = [];
-  for (var i = 0; i < EXAMS.length; i++) {
-    var p = getLatestPaper(EXAMS[i]);
-    if (p) papers.push({ exam: EXAMS[i], paper: p });
-  }
-
-  if (papers.length === 0) {
-    console.log('No paper data found. Run generate-papers first.');
-    return null;
-  }
-
-  var totalQ = 0;
-  for (var i = 0; i < papers.length; i++) totalQ += papers[i].paper.questions.length;
-
-  console.log('Building PDF: ' + filename);
-  console.log('  Exams: ' + papers.length + ', Questions: ' + totalQ);
-
-  var apiKey = getApiKey();
-  var analyses = {};
-  if (apiKey) {
-    console.log('  Fetching topic analyses from Gemini...');
-    for (var ai = 0; ai < papers.length; ai++) {
-      var exam = papers[ai].exam;
-      var label = EXAM_LABELS[exam] || exam.toUpperCase();
-      process.stdout.write('    ' + label + '... ');
-      var text = await getTopicAnalysis(apiKey, exam, papers[ai].paper.questions);
-      if (text) {
-        analyses[exam] = text;
-        console.log('OK');
-      } else {
-        console.log('skipped');
-      }
-      if (ai < papers.length - 1) await new Promise(function(r) { setTimeout(r, 3000); });
-    }
-  } else {
-    console.log('  No Gemini API key found, skipping topic analyses');
-  }
-
-  var doc = new PDFDocument({ margin: 50, size: 'A4' });
-  var stream = fs.createWriteStream(filepath);
-  doc.pipe(stream);
-
-  var pageW = doc.page.width - 100;
-  var accentColor = '#6366f1';
-  var lightBg = '#f3f4f6';
-
-  // --- Cover Page ---
-  doc.rect(0, 0, doc.page.width, doc.page.height).fillColor('#1e1b4b').fill();
-  doc.fillColor('#ffffff')
-    .fontSize(36)
-    .text('Weekly Study Digest', 50, 180, { align: 'left' });
-  doc.fontSize(16)
-    .fillColor('#a5b4fc')
-    .text(weekRange, 50, 230);
-  doc.moveTo(50, 270).lineTo(350, 270).strokeColor('#6366f1').lineWidth(2).stroke();
-  doc.fontSize(12)
-    .fillColor('#c7d2fe')
-    .text('vlymbooq.qzz.io', 50, 290);
-  doc.fontSize(11)
-    .text('Premium Weekly Question Analysis & Solutions', 50, 315);
-
-  doc.fontSize(10).fillColor('#e0e7ff');
-  var y = 370;
-  for (var i = 0; i < papers.length; i++) {
-    var exam = papers[i].exam;
+function buildExamPDF(exam, paper, analysis, weekRange, dateStr) {
+  return new Promise(function(resolve, reject) {
     var label = EXAM_LABELS[exam] || exam.toUpperCase();
-    var count = papers[i].paper.questions.length;
-    var title = papers[i].paper.title || '';
-    doc.text('\u2022  ' + label + ' \u2014 ' + title + ' (' + count + ' questions)', 50, y);
-    y += 22;
-  }
-
-  doc.addPage();
-
-  // --- Table of Contents ---
-  doc.fillColor('#1e1b4b').fontSize(22).text('Contents', 50, 50);
-  doc.moveTo(50, 75).lineTo(200, 75).strokeColor(accentColor).lineWidth(2).stroke();
-  y = 100;
-  doc.fontSize(12).fillColor('#374151');
-  for (var i = 0; i < papers.length; i++) {
-    var label = EXAM_LABELS[papers[i].exam] || papers[i].exam.toUpperCase();
-    doc.text('  ' + (i + 1) + '.  ' + label + ' \u2014 ' + papers[i].paper.questions.length + ' questions', 50, y);
-    y += 24;
-  }
-  doc.text('  ' + (papers.length + 1) + '.  Week in Review', 50, y);
-  doc.addPage();
-
-  // --- Per-Exam Sections ---
-  var qNumGlobal = 0;
-  for (var ei = 0; ei < papers.length; ei++) {
-    var exam = papers[ei].exam;
-    var paper = papers[ei].paper;
+    var filename = 'weekly-' + dateStr + '-' + exam + '.pdf';
+    var filepath = path.join(pdfDir, filename);
     var questions = paper.questions || [];
-    var label = EXAM_LABELS[exam] || exam.toUpperCase();
     var sections = paper.sections || [];
+    var pageW = 495;
 
-    // Exam header page
-    y = 50;
-    doc.fillColor('#1e1b4b').fontSize(24).text(label, 50, y);
-    y += 35;
-    doc.fillColor('#6b7280').fontSize(11).text(paper.title || label + ' Practice', 50, y);
-    y += 30;
-    doc.moveTo(50, y).lineTo(300, y).strokeColor(accentColor).lineWidth(1.5).stroke();
-    y += 25;
+    var doc = new PDFDocument({ margin: 50, size: 'A4' });
+    var stream = fs.createWriteStream(filepath);
+    doc.pipe(stream);
 
-    var analysis = analyses[exam];
+    // --- Cover ---
+    doc.rect(0, 0, doc.page.width, doc.page.height).fillColor('#1e1b4b').fill();
+    doc.fillColor('#ffffff').fontSize(32).text(label + ' Study Digest', 50, 170, { align: 'left' });
+    doc.fontSize(14).fillColor('#a5b4fc').text(weekRange, 50, 215);
+    doc.moveTo(50, 245).lineTo(350, 245).strokeColor('#6366f1').lineWidth(2).stroke();
+    doc.fontSize(11).fillColor('#c7d2fe').text('vlymbooq.qzz.io', 50, 265);
+    doc.fontSize(10).fillColor('#e0e7ff').text(paper.title || label + ' Practice', 50, 290);
+    doc.fontSize(10).fillColor('#e0e7ff').text(questions.length + ' questions with detailed solutions', 50, 310);
+
+    // --- Questions ---
+    doc.addPage();
+    doc.fillColor('#1e1b4b').fontSize(18).text(label, 50, 40);
+    doc.moveTo(50, 62).lineTo(180, 62).strokeColor('#6366f1').lineWidth(1.5).stroke();
+
+    var y = 80;
+
+    // Topic analysis
     if (analysis) {
-      doc.fillColor('#1f2937').fontSize(13).text('Topic Analysis', 50, y);
-      y += 22;
+      doc.fillColor('#1f2937').fontSize(12).text('Topic Analysis', 50, y);
+      y += 20;
       var aLines = analysis.split('\n');
-      var aHeight = aLines.length * 14 + 20;
-      if (aHeight < 40) aHeight = 40;
+      var aHeight = Math.max(aLines.length * 14 + 20, 40);
       doc.roundedRect(50, y, pageW, aHeight, 6).fillColor('#eef2ff').fill();
       doc.fillColor('#374151').fontSize(9);
       var ay = y + 10;
       for (var ai = 0; ai < aLines.length; ai++) {
         var line = aLines[ai].trim();
-        if (line) {
-          doc.text(line, 60, ay, { width: pageW - 20, lineBreak: true });
-          ay = doc.y + 4;
-        }
+        if (line) { doc.text(line, 60, ay, { width: pageW - 20 }); ay = doc.y + 4; }
       }
       doc.fillColor('#1f2937');
       y = ay + 20;
     }
 
+    // Questions
     for (var qi = 0; qi < questions.length; qi++) {
-      qNumGlobal++;
       var q = questions[qi];
       var qText = q.text || q.question || '';
       var qOptions = q.options || [];
@@ -283,109 +160,131 @@ async function buildPDF() {
         if (qOptions[oi].correct) { correctLabel = qOptions[oi].label; break; }
       }
 
-      if (y > 620) { doc.addPage(); y = 50; }
+      if (y > 680) { doc.addPage(); y = 40; }
 
       if (sectionName) {
-        doc.roundedRect(50, y, doc.widthOfString(sectionName, { fontSize: 8 }) + 16, 16, 4).fillColor(sectionColor).fill();
+        var bw = doc.widthOfString(sectionName, { fontSize: 8 }) + 16;
+        doc.roundedRect(50, y, bw, 16, 4).fillColor(sectionColor).fill();
         doc.fillColor('#ffffff').fontSize(8).text(sectionName, 58, y + 4);
         doc.fillColor('#1f2937');
         y += 22;
       }
 
-      doc.fontSize(11).fillColor('#111827');
-      doc.text('Q' + qNumGlobal + '. ' + qText, 50, y, { width: pageW, lineBreak: true });
+      doc.fontSize(11).fillColor('#111827').text('Q' + (qi + 1) + '. ' + qText, 50, y, { width: pageW });
       y = doc.y + 6;
 
       if (qOptions.length > 0) {
         doc.fontSize(10);
         for (var oi = 0; oi < qOptions.length; oi++) {
           var opt = qOptions[oi];
-          var prefix = opt.label + '. ';
-          var isCorrect = opt.correct;
-          doc.fillColor(isCorrect ? '#059669' : '#4b5563');
-          doc.text('     ' + prefix + (opt.text || ''), 50, y, { width: pageW - 60, lineBreak: true });
+          doc.fillColor(opt.correct ? '#059669' : '#4b5563');
+          doc.text('     ' + opt.label + '. ' + (opt.text || ''), 50, y, { width: pageW - 60 });
           y = doc.y + 2;
         }
         y += 2;
-        doc.fillColor('#059669').fontSize(9);
-        doc.text('  \u2713 Correct: ' + correctLabel, 50, y);
+        doc.fillColor('#059669').fontSize(9).text('  \u2713 Correct: ' + correctLabel, 50, y);
         y = doc.y + 6;
         doc.fillColor('#1f2937');
       }
 
       if (qSolution) {
-        doc.fontSize(9).fillColor('#6b7280');
-        doc.text('  \u25B7 ' + qSolution, 50, y, { width: pageW - 20, lineBreak: true });
+        doc.fontSize(9).fillColor('#6b7280').text('  \u25B7 ' + qSolution, 50, y, { width: pageW - 20 });
         y = doc.y + 8;
         doc.fillColor('#1f2937');
       }
 
-      y += 8;
-
+      y += 6;
       if (qi < questions.length - 1) {
         doc.moveTo(50, y).lineTo(50 + pageW, y).strokeColor('#e5e7eb').lineWidth(0.5).stroke();
         y += 10;
       }
     }
 
-    // Page break between exams
-    if (ei < papers.length - 1) doc.addPage();
-  }
+    // Footer
+    doc.addPage();
+    doc.fillColor('#1e1b4b').fontSize(18).text('Study Tips', 50, 50);
+    doc.moveTo(50, 72).lineTo(180, 72).strokeColor('#6366f1').lineWidth(1.5).stroke();
+    doc.fontSize(10).fillColor('#374151');
+    var tips = [
+      'Review each solution carefully, even for questions you got right',
+      'Practice similar problems from the same topic to reinforce concepts',
+      'Track your accuracy and time per question to measure improvement',
+      'Focus on weak areas identified in the Topic Analysis section',
+      'Attempt the online mock tests on vlymbooq for timed practice'
+    ];
+    var ty = 100;
+    for (var ti = 0; ti < tips.length; ti++) {
+      doc.text((ti + 1) + '. ' + tips[ti], 50, ty, { width: pageW });
+      ty += 24;
+    }
+    ty += 30;
+    doc.fillColor('#9ca3af').fontSize(9).text(label + ' \u2014 vlymbooq.qzz.io \u2014 Generated ' + new Date().toDateString(), 50, ty, { align: 'center' });
 
-  // --- Week in Review ---
-  doc.addPage();
-  doc.fillColor('#1e1b4b').fontSize(22).text('Week in Review', 50, 50);
-  doc.moveTo(50, 75).lineTo(250, 75).strokeColor(accentColor).lineWidth(2).stroke();
+    doc.end();
 
-  y = 100;
-  doc.fontSize(12).fillColor('#374151');
-  doc.text('This week\'s digest covered ' + totalQ + ' questions across ' + papers.length + ' exams.', 50, y);
-  y += 30;
-
-  var perExam = [];
-  for (var i = 0; i < papers.length; i++) {
-    perExam.push(EXAM_LABELS[papers[i].exam] + ' (' + papers[i].paper.questions.length + ' Q)');
-  }
-  doc.text('Exams covered: ' + perExam.join(', '), 50, y);
-  y += 30;
-
-  doc.fontSize(11).fillColor('#6b7280');
-  doc.text('Review Strategy:', 50, y);
-  y += 22;
-  var tips = [
-    'Review questions you got wrong and understand the solution thoroughly',
-    'Practice similar problems from each topic to reinforce concepts',
-    'Time yourself when attempting questions to simulate exam conditions',
-    'Track your accuracy across weeks to measure improvement',
-    'Focus on weak areas identified in the topic analysis sections'
-  ];
-  for (var ti = 0; ti < tips.length; ti++) {
-    doc.text('  ' + (ti + 1) + '. ' + tips[ti], 50, y);
-    y += 20;
-  }
-
-  y += 30;
-  doc.fillColor('#374151').fontSize(10);
-  doc.text('vlymbooq.qzz.io  |  Premium Weekly Study Digest', 50, y, { align: 'center' });
-  y += 18;
-  doc.fillColor('#9ca3af').fontSize(9);
-  doc.text('Generated on ' + new Date().toDateString(), 50, y, { align: 'center' });
-
-  doc.end();
-
-  return new Promise(function(resolve, reject) {
     stream.on('finish', function() {
       var stats = fs.statSync(filepath);
-      fs.writeFileSync(path.join(pdfDir, 'latest.json'), JSON.stringify({ filename: filename, date: weekRange, generated: dateStr }));
-      console.log('  PDF created: ' + filename + ' (' + (stats.size / 1024).toFixed(1) + ' KB)');
-      resolve({ filename: filename, filepath: filepath, size: stats.size });
+      console.log('  ' + filename + ' (' + (stats.size / 1024).toFixed(1) + ' KB \u00B7 ' + questions.length + ' Q)');
+      resolve({ exam: exam, filename: filename, size: stats.size });
     });
     stream.on('error', reject);
   });
 }
 
-// Run
+async function buildPDF() {
+  if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir);
+
+  var dateStr = getDateStr();
+  var weekRange = formatWeekRange();
+  var apiKey = getApiKey();
+
+  var papers = [];
+  for (var i = 0; i < EXAMS.length; i++) {
+    var p = getLatestPaper(EXAMS[i]);
+    if (p) papers.push({ exam: EXAMS[i], paper: p });
+  }
+
+  if (papers.length === 0) {
+    console.log('No paper data found. Run generate-papers first.');
+    return;
+  }
+
+  console.log('Building weekly study digests (' + weekRange + '):');
+
+  // Fetch topic analyses
+  var analyses = {};
+  if (apiKey) {
+    console.log('  Fetching topic analyses from Gemini...');
+    for (var ai = 0; ai < papers.length; ai++) {
+      var exam = papers[ai].exam;
+      var label = EXAM_LABELS[exam] || exam.toUpperCase();
+      process.stdout.write('    ' + label + '... ');
+      var text = await getTopicAnalysis(apiKey, exam, papers[ai].paper.questions);
+      if (text) { analyses[exam] = text; console.log('OK'); }
+      else { console.log('skipped'); }
+      if (ai < papers.length - 1) await new Promise(function(r) { setTimeout(r, 3000); });
+    }
+  } else {
+    console.log('  No Gemini API key found, skipping topic analyses');
+  }
+
+  // Build one PDF per exam
+  var results = [];
+  for (var i = 0; i < papers.length; i++) {
+    var r = await buildExamPDF(papers[i].exam, papers[i].paper, analyses[papers[i].exam], weekRange, dateStr);
+    results.push(r);
+  }
+
+  // Write latest.json
+  var manifest = {};
+  for (var i = 0; i < results.length; i++) {
+    manifest[results[i].exam] = { filename: results[i].filename, date: weekRange };
+  }
+  fs.writeFileSync(path.join(pdfDir, 'latest.json'), JSON.stringify(manifest, null, 2));
+  console.log('\nDone! Generated ' + results.length + ' PDF(s).');
+}
+
 buildPDF().catch(function(err) {
-  console.error('Error building PDF:', err);
+  console.error('Error:', err);
   process.exit(1);
 });

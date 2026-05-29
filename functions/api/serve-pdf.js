@@ -26,8 +26,14 @@ export async function onRequestGet(context) {
       return JSONresp({ error: 'Code expired on ' + data.expiresAt }, 403);
     }
 
-    if (!/^weekly-\d{4}-\d{2}-\d{2}\.pdf$/.test(file)) {
+    if (!/^weekly-\d{4}-\d{2}-\d{2}-[a-z]+\.pdf$/.test(file)) {
       return JSONresp({ error: 'Invalid file name' }, 403);
+    }
+
+    var exam = file.match(/^weekly-\d{4}-\d{2}-\d{2}-([a-z]+)\.pdf$/)[1];
+    var allowedExams = data.exams || [];
+    if (allowedExams.length > 0 && allowedExams.indexOf(exam) === -1 && allowedExams.indexOf('all') === -1) {
+      return JSONresp({ error: 'Your code does not cover ' + exam + ' exams' }, 403);
     }
 
     var pdfUrl = new URL('/pdfs/' + file, context.request.url);

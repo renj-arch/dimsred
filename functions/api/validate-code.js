@@ -24,7 +24,8 @@ export async function onRequestPost(context) {
       return new Response(JSON.stringify({ valid: false, reason: 'expired' }), { headers: CORS() });
     }
 
-    return new Response(JSON.stringify({ valid: true, plan: data.plan, expiresAt: data.expiresAt }), { headers: CORS() });
+    var exams = data.exams || [];
+    return new Response(JSON.stringify({ valid: true, plan: data.plan, expiresAt: data.expiresAt, exams: exams }), { headers: CORS() });
   } catch(e) {
     return new Response(JSON.stringify({ valid: false, error: e.message }), { headers: CORS() });
   }
