@@ -162,6 +162,59 @@ function generatePaper(folder) {
   return { folder: folder, setNumber: setNumber, slug: slug, title: title };
 }
 
+function countPapers() {
+  var total = 0;
+  for (var i = 0; i < EXAMS.length; i++) {
+    var dir = path.join(root, EXAMS[i], 'papers');
+    if (fs.existsSync(dir)) {
+      var files = fs.readdirSync(dir).filter(function(f) { return f.endsWith('.html'); });
+      total += files.length;
+    }
+  }
+  return total;
+}
+
+function countQuestions() {
+  var total = 0;
+  for (var i = 0; i < EXAMS.length; i++) {
+    var bankPath = path.join(bankDir, EXAMS[i] + '.json');
+    if (fs.existsSync(bankPath)) {
+      try {
+        var bank = JSON.parse(fs.readFileSync(bankPath, 'utf-8'));
+        total += bank.questions.length;
+      } catch (e) {}
+    }
+  }
+  return total;
+}
+
+function updateRootStats() {
+  var indexPath = path.join(root, 'index.html');
+  if (!fs.existsSync(indexPath)) { console.log('  WARNING: root index.html not found'); return; }
+
+  var papers = countPapers();
+  var questions = countQuestions();
+  var exams = EXAMS.length;
+
+  console.log('  Root stats: ' + questions + ' questions, ' + papers + ' papers, ' + exams + ' exams');
+
+  var html = fs.readFileSync(indexPath, 'utf-8');
+  html = html.replace(
+    /(data-target=")\d+(">\s*)0(\s*<\/div>\s*<div class="stat-label">Practice Questions)/,
+    function(m, a, b, c) { return a + questions + b + '0' + c; }
+  );
+  html = html.replace(
+    /(data-target=")\d+(">\s*)0(\s*<\/div>\s*<div class="stat-label">Full-Length Papers)/,
+    function(m, a, b, c) { return a + papers + b + '0' + c; }
+  );
+  html = html.replace(
+    /(data-target=")\d+(">\s*)0(\s*<\/div>\s*<div class="stat-label">Exams Covered)/,
+    function(m, a, b, c) { return a + exams + b + '0' + c; }
+  );
+  fs.writeFileSync(indexPath, html, 'utf-8');
+  console.log('  Updated root index.html stats');
+}
+
 function run() {
   var args = process.argv.slice(2);
   var folders = args.length > 0 ? args : EXAMS;
@@ -169,6 +222,8 @@ function run() {
   for (var i = 0; i < folders.length; i++) {
     generatePaper(folders[i]);
   }
+
+  updateRootStats();
 
   console.log('\nDone! Generated ' + folders.length + ' paper(s).');
 }
