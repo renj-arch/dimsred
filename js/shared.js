@@ -529,6 +529,8 @@
       authBtn.textContent = 'Login';
       authBtn.style.cssText = 'background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none';
       nav.appendChild(authBtn);
+      // Apply current auth state to the newly created button
+      if (typeof updateAuthUI === 'function') setTimeout(updateAuthUI, 10);
     }
   }
 

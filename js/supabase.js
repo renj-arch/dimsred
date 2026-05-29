@@ -51,13 +51,51 @@ function handleAuthRedirect() {
   return false;
 }
 
+// Try refreshing the access token using the refresh token
+async function refreshToken() {
+  var refresh = localStorage.getItem('sb_refresh_token');
+  if (!refresh) return false;
+  try {
+    var r = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=refresh_token', {
+      method: 'POST',
+      headers: sbHeaders(),
+      body: JSON.stringify({ refresh_token: refresh })
+    });
+    if (!r.ok) return false;
+    var data = await r.json();
+    localStorage.setItem('sb_access_token', data.access_token);
+    if (data.refresh_token) localStorage.setItem('sb_refresh_token', data.refresh_token);
+    if (data.user) localStorage.setItem('sb_user', JSON.stringify(data.user));
+    return true;
+  } catch (e) { return false; }
+}
+
 // Get user from saved token
 async function fetchUser() {
   var token = localStorage.getItem('sb_access_token');
   if (!token) return null;
   try {
     var r = await fetch(SUPABASE_URL + '/auth/v1/user', { headers: sbHeaders(token) });
-    if (!r.ok) { localStorage.removeItem('sb_access_token'); return null; }
+    if (r.status === 401) {
+      // Token expired or invalid — try to refresh
+      var refreshed = await refreshToken();
+      if (refreshed) {
+        // Retry with new token
+        var newToken = localStorage.getItem('sb_access_token');
+        r = await fetch(SUPABASE_URL + '/auth/v1/user', { headers: sbHeaders(newToken) });
+        if (r.ok) {
+          var user = await r.json();
+          localStorage.setItem('sb_user', JSON.stringify(user));
+          return user;
+        }
+      }
+      // Refresh failed — clear everything
+      localStorage.removeItem('sb_access_token');
+      localStorage.removeItem('sb_refresh_token');
+      localStorage.removeItem('sb_user');
+      return null;
+    }
+    if (!r.ok) return null; // server error, don't remove token
     var user = await r.json();
     localStorage.setItem('sb_user', JSON.stringify(user));
     return user;
