@@ -150,7 +150,7 @@ function drawRadio(doc, x, y, filled, c) {
 function drawAccent(doc, x, y, h, c) { doc.save().roundedRect(x, y, 4, h, 2).fillColor(c).fill().restore(); }
 
 // --- PDF Builder ---
-function buildExamPDF(exam, paper, analysis, weekRange, dateStr, detailedSols) {
+function buildExamPDF(exam, paper, analysis, weekRange, dateStr, detailedSols, quickRef) {
   return new Promise(function(resolve, reject) {
     var label = EXAM_LABELS[exam] || exam.toUpperCase();
     var filename = 'weekly-' + dateStr + '-' + exam + '.pdf';
@@ -216,6 +216,28 @@ function buildExamPDF(exam, paper, analysis, weekRange, dateStr, detailedSols) {
         }
       }
       y = ay + 20;
+    }
+
+    // ===== Quick Reference =====
+    if (quickRef) {
+      var qrLines = quickRef.split('\n');
+      var qrH = Math.max(qrLines.length * 14 + 36, 50);
+      if (y + qrH > 700) { doc.addPage(); y = 40; }
+      doc.roundedRect(ML, y, PW, qrH, 8).fillColor('#fefce8').fill();
+      drawAccent(doc, ML + 4, y + 8, qrH - 16, '#eab308');
+      doc.fillColor('#854d0e').fontSize(11).font('Helvetica-Bold').text('\u26A1 Quick Reference', ML + 20, y + 8);
+      doc.fillColor('#713f12').fontSize(9).font('Helvetica');
+      var qy = y + 28;
+      for (var qi2 = 0; qi2 < qrLines.length; qi2++) {
+        var l = qrLines[qi2].trim();
+        if (l) {
+          if (l.charAt(0) === '*') { doc.circle(ML + 20, qy + 4, 2).fillColor('#eab308').fill(); doc.fillColor('#713f12').text(l.substring(1).trim(), ML + 28, qy, { width: PW - 50 }); }
+          else if (l.match(/^7\.|Weekly Strategy/i)) { doc.fillColor('#854d0e').fontSize(9.5).font('Helvetica-Bold').text(l, ML + 20, qy, { width: PW - 40 }); }
+          else { doc.fillColor('#713f12').text(l, ML + 20, qy, { width: PW - 40 }); }
+          qy = doc.y + 3;
+        }
+      }
+      y = qy + 20;
     }
 
     // ===== Questions =====
@@ -374,6 +396,7 @@ async function buildPDF() {
 
   // Fetch topic analyses + detailed solutions
   var analyses = {};
+  var quickRefs = {};
   var allSols = {};
   if (apiKey) {
     console.log('  Fetching topic analyses & detailed solutions from Gemini...');
@@ -383,16 +406,25 @@ async function buildPDF() {
       process.stdout.write('    ' + label + '... ');
       try {
       var text = await callGemini(apiKey,
-        'You are an expert ' + label + ' tutor. Analyze these practice questions and provide a concise analysis with:\n' +
+        'You are an expert ' + label + ' tutor. Analyze these practice questions and provide a concise analysis. Use the EXACT format below with ===SECTION=== markers:\n\n' +
+        '===ANALYSIS===\n' +
         '1. Topics Covered - List main topics and subtopics tested\n' +
         '2. Difficulty Breakdown - Rough percentage easy/medium/hard\n' +
         '3. Key Concepts - Most important concepts to master\n' +
         '4. Common Mistakes - Errors students commonly make\n' +
-        '5. Study Tips - How to prepare for these topics effectively\n\n' +
+        '5. Study Tips - How to prepare\n' +
+        '===QUICKREF===\n' +
+        '6. Key Formulas & Shortcuts - List key formulas, time-saving shortcuts, and quick tricks relevant to these questions\n' +
+        '7. Weekly Strategy - One actionable strategy to master this week\'s topics\n\n' +
         'Questions:\n' + papers[ai].paper.questions.map(function(q, i) { return (i + 1) + '. ' + (q.text || q.question || ''); }).join('\n') + '\n\n' +
-        'Use plain text with bullet points (use *). Keep it under 300 words.'
+        'Use plain text with bullet points (use *). Keep each section under 150 words.'
       );
-      if (text) { analyses[exam] = text; console.log('analysis OK'); } else { console.log('analysis skipped'); }
+      if (text) {
+        var parts = text.split('===QUICKREF===');
+        analyses[exam] = parts[0] ? parts[0].replace('===ANALYSIS===', '').trim() : text;
+        quickRefs[exam] = parts[1] ? parts[1].replace(/^6\.\s*Key Formulas.*?\n/i, '').trim() : '';
+        console.log('OK');
+      } else { console.log('analysis skipped'); }
     } catch (e) { console.log('analysis unavailable (' + e.message + ')'); }
 
     await new Promise(function(r) { setTimeout(r, 2000); });
@@ -412,7 +444,7 @@ async function buildPDF() {
 
   var results = [];
   for (var i = 0; i < papers.length; i++) {
-    var r = await buildExamPDF(papers[i].exam, papers[i].paper, analyses[papers[i].exam], weekRange, dateStr, allSols[papers[i].exam] || null);
+    var r = await buildExamPDF(papers[i].exam, papers[i].paper, analyses[papers[i].exam], weekRange, dateStr, allSols[papers[i].exam] || null, quickRefs[papers[i].exam] || null);
     results.push(r);
   }
   var manifest = {};
