@@ -24,7 +24,7 @@ jobs:
 
       - name: Generate new AI questions
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: node scripts/generate-ai-questions.js all --count=15
 
       - name: Clean up PDFs older than 2 weeks
@@ -35,7 +35,7 @@ jobs:
 
       - name: Build weekly PDF digest
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: node scripts/build-weekly-pdf.js
 
       - name: Update sitemap

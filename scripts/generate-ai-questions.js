@@ -177,94 +177,103 @@ function addToBank(exam, newQuestions) {
   return newQuestions.length;
 }
 
-async function generateQuestions(exam, count) {
-  var apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    // Try reading from a local file for development
-    var keyPath = path.join(root, '.gemini-key');
-    if (fs.existsSync(keyPath)) {
-      apiKey = fs.readFileSync(keyPath, 'utf-8').trim();
-    } else {
-      console.error('ERROR: Set GEMINI_API_KEY environment variable or create .gemini-key file');
-      process.exit(1);
+function getApiKey(name) {
+  if (process.env[name]) return process.env[name];
+  var keyFile = path.join(root, name === 'GROQ_API_KEY' ? '.groq-key' : '.gemini-key');
+  if (fs.existsSync(keyFile)) return fs.readFileSync(keyFile, 'utf-8').trim();
+  return null;
+}
+
+async function callGroq(apiKey, prompt, model) {
+  if (!model) model = 'llama3-70b-8192';
+  var url = 'https://api.groq.com/openai/v1/chat/completions';
+  var body = JSON.stringify({
+    model: model,
+    messages: [{ role: 'user', content: prompt }],
+    temperature: 0.7,
+    max_tokens: 8192
+  });
+
+  for (var retry = 0; retry < 3; retry++) {
+    try {
+      var response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+        body: body
+      });
+      if (response.status === 429) {
+        console.log('  Rate limited, waiting 10s...');
+        await new Promise(function(r) { setTimeout(r, 10000); });
+        continue;
+      }
+      if (!response.ok) {
+        console.log('  HTTP ' + response.status + ', retry ' + (retry + 1));
+        await new Promise(function(r) { setTimeout(r, 3000); });
+        continue;
+      }
+      var data = await response.json();
+      return (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '';
+    } catch (e) {
+      console.log('  Error: ' + e.message + ', retry ' + (retry + 1));
+      await new Promise(function(r) { setTimeout(r, 3000); });
     }
+  }
+  return null;
+}
+
+async function generateQuestions(exam, count) {
+  var apiKey = getApiKey('GROQ_API_KEY');
+  if (!apiKey) {
+    console.error('ERROR: Set GROQ_API_KEY env var or create .groq-key file');
+    process.exit(1);
   }
 
   var prompt = buildPrompt(exam, count);
   if (!prompt) return;
 
-  var models = ['gemini-2.0-flash-lite', 'gemini-2.5-flash-lite', 'gemini-2.5-flash'];
-
-  var body = JSON.stringify({
-    contents: [{ parts: [{ text: prompt }] }],
-    generationConfig: {
-      temperature: 0.7,
-      maxOutputTokens: 8192
-    }
-  });
-
+  var models = ['llama3-70b-8192', 'mixtral-8x7b-32768', 'gemma2-9b-it'];
   var success = false;
 
-  for (var attempt = 0; attempt < 3 && !success; attempt++) {
-    if (attempt > 0) {
-      console.log('  Retry attempt ' + (attempt + 1) + '...');
-      await new Promise(function(r) { setTimeout(r, 2000); });
-    }
-
+  for (var attempt = 0; attempt < 2 && !success; attempt++) {
     for (var i = 0; i < models.length && !success; i++) {
-      var url = 'https://generativelanguage.googleapis.com/v1beta/models/' + models[i] + ':generateContent?key=' + apiKey;
       console.log('  Calling ' + models[i] + ' (' + count + ' questions)...');
+      var text = await callGroq(apiKey, prompt, models[i]);
+      if (!text) continue;
+
+      fs.writeFileSync(path.join(bankDir, '_last-response.txt'), text, 'utf-8');
 
       try {
-        var response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: body
-        });
+        var parsed = cleanJson(text);
+        var questions = parsed.questions || parsed;
+        if (!Array.isArray(questions)) continue;
 
-        var data = await response.json();
-        if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-          var text = data.candidates[0].content.parts[0].text;
-          fs.writeFileSync(path.join(bankDir, '_last-response.txt'), text, 'utf-8');
-
-          try {
-            var parsed = cleanJson(text);
-            var questions = parsed.questions || parsed;
-            if (!Array.isArray(questions)) continue;
-
-            var valid = [];
-            for (var qi = 0; qi < questions.length; qi++) {
-              var q = questions[qi];
-              var hasCorrect = false;
-              if (q.text && q.options && q.options.length === 4) {
-                for (var ji = 0; ji < q.options.length; ji++) {
-                  if (q.options[ji].correct) { hasCorrect = true; break; }
-                }
-                if (hasCorrect) valid.push(q);
-              }
+        var valid = [];
+        for (var qi = 0; qi < questions.length; qi++) {
+          var q = questions[qi];
+          var hasCorrect = false;
+          if (q.text && q.options && q.options.length === 4) {
+            for (var ji = 0; ji < q.options.length; ji++) {
+              if (q.options[ji].correct) { hasCorrect = true; break; }
             }
-
-            if (valid.length > 0) {
-              addToBank(exam, valid);
-              var metaPath = path.join(bankDir, exam + '-meta.json');
-              if (fs.existsSync(metaPath)) fs.unlinkSync(metaPath);
-              console.log('  Added ' + valid.length + ' new questions to ' + exam + ' bank');
-              success = true;
-            }
-          } catch (e) {
-            continue;
+            if (hasCorrect) valid.push(q);
           }
-        } else {
-          console.log('  ' + models[i] + ' unavailable, trying next...');
+        }
+
+        if (valid.length > 0) {
+          addToBank(exam, valid);
+          var metaPath = path.join(bankDir, exam + '-meta.json');
+          if (fs.existsSync(metaPath)) fs.unlinkSync(metaPath);
+          console.log('  Added ' + valid.length + ' new questions to ' + exam + ' bank');
+          success = true;
         }
       } catch (e) {
-        console.log('  ' + models[i] + ' error, trying next...');
+        continue;
       }
     }
   }
 
   if (!success) {
-    console.error('  Failed to generate questions after 3 attempts');
+    console.error('  Failed to generate questions');
   }
 }
 

@@ -10,8 +10,8 @@ var EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer'];
 var EXAM_LABELS = { cgl: 'SSC CGL', rbi: 'RBI Grade B', jee: 'JEE Main', neet: 'NEET UG', gate: 'GATE', agniveer: 'Agniveer' };
 
 function getApiKey() {
-  if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
-  var keyPath = path.join(root, '.gemini-key');
+  if (process.env.GROQ_API_KEY) return process.env.GROQ_API_KEY;
+  var keyPath = path.join(root, '.groq-key');
   if (fs.existsSync(keyPath)) return fs.readFileSync(keyPath, 'utf-8').trim();
   return null;
 }
@@ -50,27 +50,24 @@ function getLatestPaper(exam) {
   try { return JSON.parse(fs.readFileSync(paperPath, 'utf-8')); } catch (e) { return null; }
 }
 
-function callGemini(apiKey, prompt, retries) {
-  if (!retries) retries = 3;
-  var model = 'gemini-2.5-flash-lite';
-  var url = 'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + apiKey;
-  var body = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.3, maxOutputTokens: 2000 } });
-  return (function attempt(n) {
-    return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body })
-      .then(function(r) {
-        if (r.status === 429 && n > 1) { return new Promise(function(ok) { setTimeout(ok, 5000); }).then(function() { return attempt(n - 1); }); }
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      })
-      .then(function(data) {
-        var text = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) || '';
-        return text.trim();
-      })
-      .catch(function(e) {
-        if (n > 1) return new Promise(function(ok) { setTimeout(ok, 2000); }).then(function() { return attempt(n - 1); });
-        throw e;
+async function callGroq(apiKey, prompt, model) {
+  if (!model) model = 'llama3-70b-8192';
+  for (var retry = 0; retry < 3; retry++) {
+    try {
+      var r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: model, messages: [{ role: 'user', content: prompt }], temperature: 0.3, max_tokens: 4000 })
       });
-  })(retries);
+      if (r.status === 429) { console.log('  Rate limited, waiting 10s...'); await new Promise(function(ok) { setTimeout(ok, 10000); }); continue; }
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      var d = await r.json();
+      return (d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content || '').trim();
+    } catch (e) {
+      if (retry < 2) { await new Promise(function(ok) { setTimeout(ok, 3000); }); continue; }
+      throw e;
+    }
+  }
 }
 
 async function getDetailedSolutions(apiKey, exam, questions) {
@@ -95,7 +92,8 @@ async function getDetailedSolutions(apiKey, exam, questions) {
     'Make each solution at least 4-6 sentences. Be thorough and exam-focused.';
 
   try {
-    var text = await callGemini(apiKey, prompt);
+    var text = await callGroq(apiKey, prompt, 'llama3-70b-8192');
+    if (!text) throw new Error('Empty response');
     var solutions = {};
     var parts = text.split(/===Q(\d+)===/);
     for (var i = 1; i < parts.length; i += 2) {
@@ -446,13 +444,13 @@ async function buildPDF() {
   var quickRefs = {};
   var allSols = {};
   if (apiKey) {
-    console.log('  Fetching topic analyses & detailed solutions from Gemini...');
+    console.log('  Fetching topic analyses & detailed solutions from Groq...');
     for (var ai = 0; ai < papers.length; ai++) {
       var exam = papers[ai].exam;
       var label = EXAM_LABELS[exam] || exam.toUpperCase();
       process.stdout.write('    ' + label + '... ');
       try {
-      var text = await callGemini(apiKey,
+      var text = await callGroq(apiKey,
         'You are an expert ' + label + ' tutor. Analyze these practice questions and provide a concise analysis. Use the EXACT format below with ===SECTION=== markers:\n\n' +
         '===ANALYSIS===\n' +
         '1. Topics Covered - List main topics and subtopics tested\n' +
@@ -486,7 +484,7 @@ async function buildPDF() {
       if (ai < papers.length - 1) await new Promise(function(r) { setTimeout(r, 3000); });
     }
   } else {
-    console.log('  No Gemini API key found, skipping AI enhancements');
+    console.log('  No Groq API key found, skipping AI enhancements');
   }
 
   var results = [];
