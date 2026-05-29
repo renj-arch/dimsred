@@ -110,6 +110,52 @@ async function getDetailedSolutions(apiKey, exam, questions) {
   }
 }
 
+// --- Exam-specific formula references (fallback when AI unavailable) ---
+var EXAM_REFERENCE = {
+  cgl: 'Key Formulas & Shortcuts:\n' +
+    '* Percentage: Profit% = (Profit/CP) x 100, Discount% = (Discount/MP) x 100\n' +
+    '* SI: (P x R x T)/100 | CI: P(1 + R/100)^T - P\n' +
+    '* Speed = Distance/Time | Avg Speed = 2ab/(a+b) for equal distances\n' +
+    '* Number System: Sum of n natural = n(n+1)/2, Sum of n odd = n^2\n' +
+    '* Allegation: Cheaper/Dearer = (Mean - Dearer)/(Cheaper - Mean)\n' +
+    'Weekly Strategy: Master 1 topic daily - start with Percentages & SI/CI as they cover 40% of quant.',
+  rbi: 'Key Formulas & Shortcuts:\n' +
+    '* GDP = C + I + G + (X - M) | GDP Deflator = (Nominal/Real) x 100\n' +
+    '* Money Multiplier = 1/CRR | Credit Creation = Deposits x (1/CRR - 1)\n' +
+    '* Fisher Effect: Real Rate = Nominal Rate - Inflation Rate\n' +
+    '* BOP: Current Account + Capital Account + Reserves = 0\n' +
+    '* Fiscal Deficit = Total Exp - Non-Borrowed Receipts\n' +
+    'Weekly Strategy: Focus on RBI Monetary Policy instruments - REPO, CRR, SLR, MSF - these form 50% of Grade B economics.',
+  jee: 'Key Formulas & Shortcuts:\n' +
+    '* Quadratic: x = [-b +/- sqrt(b^2 - 4ac)]/2a | Sum = -b/a, Product = c/a\n' +
+    '* Differentiation: d/dx(x^n) = nx^(n-1) | Integration: Int x^n dx = x^(n+1)/(n+1)\n' +
+    '* Kinematics: v = u + at, s = ut + (1/2)at^2, v^2 = u^2 + 2as\n' +
+    '* Vectors: a.b = |a||b|cos(theta), |axb| = |a||b|sin(theta)\n' +
+    '* Organic: IUPAC naming priority - COOH > CHO > OH > NH2\n' +
+    'Weekly Strategy: Physics formula derivations + Organic name reactions = highest weightage. Practice 5 integration/differentiation problems daily.',
+  neet: 'Key Formulas & Shortcuts:\n' +
+    '* Genetics: Monohybrid = 3:1, Dihybrid = 9:3:3:1, Incomplete = 1:2:1\n' +
+    '* Hardy-Weinberg: p^2 + 2pq + q^2 = 1 | p + q = 1\n' +
+    '* Cardiac Output = Stroke Volume x Heart Rate (4-5 L/min)\n' +
+    '* Photosynthesis: 6CO2 + 6H2O -> C6H12O6 + 6O2\n' +
+    '* Enzyme: Lock & Key vs Induced Fit, Vmax & Km from MM equation\n' +
+    'Weekly Strategy: NCERT is KEY - 80% questions come directly. Read 1 chapter daily, focus on diagrams and tables.',
+  gate: 'Key Formulas & Shortcuts:\n' +
+    '* Matrix: det(AB) = det(A)xdet(B), |A^(-1)| = 1/|A|\n' +
+    '* Probability: P(A or B) = P(A) + P(B) - P(A and B), Bayes: P(A|B) = P(B|A)P(A)/P(B)\n' +
+    '* Laplace: L{f\'(t)} = sF(s) - f(0), L{Int f(t) dt} = F(s)/s\n' +
+    '* Network: Kirchhoff\'s Laws, Thevenin & Norton equivalents\n' +
+    '* DLD: Boolean algebra, K-map minimization, De Morgan\'s laws\n' +
+    'Weekly Strategy: Previous year questions are the best practice - solve 10 PYQs daily. Focus on Numerical Answer Type (NAT) questions.',
+  agniveer: 'Key Formulas & Shortcuts:\n' +
+    '* Average = Sum of terms / Number of terms\n' +
+    '* Speed = Distance/Time | If same distance: Avg = 2ab/(a+b)\n' +
+    '* Simple Interest: (P x R x T)/100 | Profit% = (Profit/CP) x 100\n' +
+    '* Area: Circle = pi x r^2, Triangle = (1/2) x b x h, Square = side^2\n' +
+    '* Blood Relations: Draw family tree, use gender markers (brother/sister/husband/wife)\n' +
+    'Weekly Strategy: Focus on Reasoning (series, coding, blood relations) + General Knowledge (sports, rivers, constitution) - these two sections cover 60% of the paper.'
+};
+
 // --- Doodle Helpers ---
 function starPts(cx, cy, R) {
   var a = [], r = R * 0.382;
@@ -184,10 +230,10 @@ function buildExamPDF(exam, paper, analysis, weekRange, dateStr, detailedSols, q
     doc.roundedRect(50, 280, dw, 30, 15).fillColor('#2e1065').fill();
     doc.fillColor('#c4b5fd').fontSize(11).font('Helvetica').text(weekRange, 66, 288);
 
-    doc.fontSize(10).fillColor('#94a3b8').text(questions.length + ' Questions \u00B7 Detailed Solutions with Shortcuts', 50, 330);
-    doc.fontSize(9).fillColor('#4f46e5').text('vlymbooq.qzz.io', 50, doc.page.height - 60);
-    doc.fontSize(8).fillColor('#374151').text('Premium Weekly Study Digest', 50, doc.page.height - 42);
-    drawDots(doc, 50, doc.page.height - 80, 30, 6, 1.2, '#312e81');
+    doc.fontSize(10).fillColor('#94a3b8').text(questions.length + ' Questions . Detailed Solutions with Shortcuts', 50, 330);
+    doc.fontSize(9).fillColor('#4f46e5').text('vlymbooq.qzz.io', 50, doc.page.height - 58);
+    doc.fontSize(8).fillColor('#374151').text('Premium Weekly Study Digest', 50, doc.page.height - 44);
+    drawDots(doc, 50, doc.page.height - 76, 30, 6, 1.2, '#312e81');
 
     // ========== CONTENT ==========
     doc.addPage();
@@ -348,12 +394,12 @@ function buildExamPDF(exam, paper, analysis, weekRange, dateStr, detailedSols, q
     doc.fontSize(10).fillColor('#6b7280').font('Helvetica').text('Maximize your preparation with these strategies:', 50, 110);
 
     var tips = [
-      { icon: '\uD83D\uDCD6', title: 'Review Thoroughly', desc: 'Read each detailed solution carefully, even for questions you got right. The shortcuts and alternative methods will save you time on exam day.' },
-      { icon: '\uD83D\uDD0D', title: 'Practice Similar Problems', desc: 'After reviewing, solve 2-3 similar problems on the same topic. Pattern recognition is the key to speed in competitive exams.' },
-      { icon: '\u23F1\uFE0F', title: 'Master the Shortcuts', desc: 'The shortcuts in these solutions are battle-tested. Practice them until they become automatic. A 30-second shortcut can decide your rank.' },
-      { icon: '\uD83D\uDCCA', title: 'Track Accuracy & Speed', desc: 'Note time per question. If a question takes >2 minutes, flag it. Review why it took long \u2014 was it the concept or the calculation?' },
-      { icon: '\uD83C\uDFAF', title: 'Focus on Weak Areas', desc: 'Use the Topic Analysis to identify weak spots. Dedicate extra sessions to those topics before moving to new material.' },
-      { icon: '\uD83D\uDCDD', title: 'Simulate Exam Conditions', desc: 'Take timed mock tests on vlymbooq. Real exam simulation reduces anxiety and builds the mental stamina needed for 2-3 hour papers.' }
+      { icon: '[R]', title: 'Review Thoroughly', desc: 'Read each detailed solution carefully, even for questions you got right. The shortcuts and alternative methods will save you time on exam day.' },
+      { icon: '[P]', title: 'Practice Similar Problems', desc: 'After reviewing, solve 2-3 similar problems on the same topic. Pattern recognition is the key to speed in competitive exams.' },
+      { icon: '[S]', title: 'Master the Shortcuts', desc: 'The shortcuts in these solutions are battle-tested. Practice them until they become automatic. A 30-second shortcut can decide your rank.' },
+      { icon: '[T]', title: 'Track Accuracy & Speed', desc: 'Note time per question. If a question takes more than 2 minutes, flag it. Review why it took long - was it the concept or the calculation?' },
+      { icon: '[F]', title: 'Focus on Weak Areas', desc: 'Use the Topic Analysis to identify weak spots. Dedicate extra sessions to those topics before moving to new material.' },
+      { icon: '[E]', title: 'Simulate Exam Conditions', desc: 'Take timed mock tests on vlymbooq. Real exam simulation reduces anxiety and builds the mental stamina needed for 2-3 hour papers.' }
     ];
 
     var ty = 140;
@@ -445,7 +491,8 @@ async function buildPDF() {
 
   var results = [];
   for (var i = 0; i < papers.length; i++) {
-    var r = await buildExamPDF(papers[i].exam, papers[i].paper, analyses[papers[i].exam], weekRange, dateStr, allSols[papers[i].exam] || null, quickRefs[papers[i].exam] || null);
+    var fallbackRef = EXAM_REFERENCE[papers[i].exam] || '';
+    var r = await buildExamPDF(papers[i].exam, papers[i].paper, analyses[papers[i].exam], weekRange, dateStr, allSols[papers[i].exam] || null, quickRefs[papers[i].exam] || fallbackRef);
     results.push(r);
   }
   var manifest = {};

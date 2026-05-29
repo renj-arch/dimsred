@@ -156,7 +156,7 @@ function addToBank(exam, newQuestions) {
       titlePrefix: cfg.name + ' Practice Set',
       pageTitleTemplate: cfg.name + ' Practice Set {number} — Solved Paper',
       pageDescTemplate: 'Free ' + cfg.name + ' practice paper set {number} with detailed solutions.',
-      metaTemplate: '{questionCount} Q · Solved with answers'
+      metaTemplate: '{questionCount} Q . Solved with answers'
     };
     bank.generatedPapers = [];
   }
