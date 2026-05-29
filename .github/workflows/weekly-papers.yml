@@ -24,6 +24,9 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: node scripts/generate-ai-questions.js all --count=30
 
+      - name: Clean up previous PDFs
+        run: rm -f pdfs/weekly-*.pdf
+
       - name: Build practice papers
         run: node scripts/generate-papers.js
 
