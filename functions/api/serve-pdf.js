@@ -26,11 +26,11 @@ export async function onRequestGet(context) {
       return JSONresp({ error: 'Code expired on ' + data.expiresAt }, 403);
     }
 
-    if (!/^weekly-\d{4}-\d{2}-\d{2}-[a-z]+\.pdf$/.test(file)) {
+    if (!/^weekly-\d{4}-\d{2}-\d{2}-[a-z]+-[a-z0-9]{4}\.pdf$/.test(file)) {
       return JSONresp({ error: 'Invalid file name' }, 403);
     }
 
-    var exam = file.match(/^weekly-\d{4}-\d{2}-\d{2}-([a-z]+)\.pdf$/)[1];
+    var exam = file.match(/^weekly-\d{4}-\d{2}-\d{2}-([a-z]+)-[a-z0-9]{4}\.pdf$/)[1];
     var allowedExams = data.exams || [];
     if (allowedExams.length > 0 && allowedExams.indexOf(exam) === -1 && allowedExams.indexOf('all') === -1) {
       return JSONresp({ error: 'Your code does not cover ' + exam + ' exams' }, 403);
@@ -57,5 +57,5 @@ export async function onRequestGet(context) {
 }
 
 export async function onRequestPost(context) {
-  return JSONresp({ ok: true, msg: 'Use GET /api/serve-pdf?code=XXXX&file=weekly-YYYY-MM-DD.pdf' });
+  return JSONresp({ ok: true, msg: 'Use GET /api/serve-pdf?code=XXXX&file=weekly-YYYY-MM-DD-exam-hash.pdf' });
 }

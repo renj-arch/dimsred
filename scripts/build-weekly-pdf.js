@@ -153,7 +153,8 @@ function drawAccent(doc, x, y, h, c) { doc.save().roundedRect(x, y, 4, h, 2).fil
 function buildExamPDF(exam, paper, analysis, weekRange, dateStr, detailedSols, quickRef) {
   return new Promise(function(resolve, reject) {
     var label = EXAM_LABELS[exam] || exam.toUpperCase();
-    var filename = 'weekly-' + dateStr + '-' + exam + '.pdf';
+    var hash = Math.random().toString(36).substring(2, 6);
+    var filename = 'weekly-' + dateStr + '-' + exam + '-' + hash + '.pdf';
     var filepath = path.join(pdfDir, filename);
     var questions = paper.questions || [];
     var sections = paper.sections || [];
