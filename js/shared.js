@@ -328,14 +328,21 @@
 
     var result = { exam: document.title, paperId: paperId, date: new Date().toISOString(), correct: correct, wrong: wrong, total: totalQs, answered: answered, time: timeStr, pct: pct };
     var hist = JSON.parse(localStorage.getItem(RESULTS_KEY) || '[]');
-    hist.unshift(result);
-    if (hist.length > 50) hist = hist.slice(0, 50);
-    localStorage.setItem(RESULTS_KEY, JSON.stringify(hist));
-
-    updateStreak();
-    var newBadges = checkBadges();
-    updateGoalProgress();
-    if (typeof window.syncResult === 'function') window.syncResult(result);
+    // Deduplicate existing entries
+    var seen = {}; hist = hist.filter(function(r){ var k = r.paperId + '|' + r.correct + '|' + r.wrong + '|' + r.pct; if (seen[k]) return false; seen[k] = true; return true; });
+    // Avoid adding another duplicate
+    var isDuplicate = hist.some(function(r){ return r.paperId === paperId && r.correct === correct && r.wrong === wrong && r.pct === pct; });
+    if (!isDuplicate) {
+      hist.unshift(result);
+      if (hist.length > 50) hist = hist.slice(0, 50);
+      localStorage.setItem(RESULTS_KEY, JSON.stringify(hist));
+      updateStreak();
+      var newBadges = checkBadges();
+      updateGoalProgress();
+      if (typeof window.syncResult === 'function') window.syncResult(result);
+    } else {
+      localStorage.setItem(RESULTS_KEY, JSON.stringify(hist));
+    }
 
     var weakTopics = [];
     for (var s in sectionData) {
