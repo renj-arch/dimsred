@@ -28,8 +28,7 @@ function formatWeekRange() {
   var monday = getMonday(new Date());
   var sunday = new Date(monday);
   sunday.setDate(sunday.getDate() + 6);
-  var opts = { month: 'long', day: 'numeric' };
-  var mo = monday.toLocaleDateString('en-US', opts);
+  var mo = monday.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
   var su = sunday.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   return mo + ' \u2013 ' + su;
 }
@@ -51,215 +50,168 @@ function getLatestPaper(exam) {
   try { return JSON.parse(fs.readFileSync(paperPath, 'utf-8')); } catch (e) { return null; }
 }
 
-async function getTopicAnalysis(apiKey, exam, questions) {
+function callGemini(apiKey, prompt, retries) {
+  if (!retries) retries = 3;
   var model = 'gemini-2.5-flash-lite';
   var url = 'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + apiKey;
-  var qText = questions.map(function(q, i) { return (i + 1) + '. ' + (q.text || q.question || ''); }).join('\n\n');
-  var prompt = 'You are an expert ' + EXAM_LABELS[exam] + ' tutor. Analyze these practice questions and provide a concise analysis with:\n' +
-    '1. Topics Covered - List main topics and subtopics tested\n' +
-    '2. Difficulty Breakdown - Rough percentage easy/medium/hard\n' +
-    '3. Key Concepts - Most important concepts to master\n' +
-    '4. Common Mistakes - Errors students commonly make\n' +
-    '5. Study Tips - How to prepare for these topics effectively\n\n' +
+  var body = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.3, maxOutputTokens: 2000 } });
+  return (function attempt(n) {
+    return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body })
+      .then(function(r) {
+        if (r.status === 429 && n > 1) { return new Promise(function(ok) { setTimeout(ok, 5000); }).then(function() { return attempt(n - 1); }); }
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(data) {
+        var text = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) || '';
+        return text.trim();
+      })
+      .catch(function(e) {
+        if (n > 1) return new Promise(function(ok) { setTimeout(ok, 2000); }).then(function() { return attempt(n - 1); });
+        throw e;
+      });
+  })(retries);
+}
+
+async function getDetailedSolutions(apiKey, exam, questions) {
+  if (!apiKey) return null;
+  var label = EXAM_LABELS[exam] || exam.toUpperCase();
+  var qText = questions.map(function(q, i) {
+    var opts = (q.options || []).map(function(o) { return o.label + '. ' + (o.text || ''); }).join(' | ');
+    var correctLabel = '';
+    for (var oi = 0; oi < (q.options || []).length; oi++) { if (q.options[oi].correct) { correctLabel = q.options[oi].label; break; } }
+    return 'Q' + (i + 1) + ': ' + (q.text || q.question || '') + '\nOptions: ' + opts + '\nCorrect Answer: ' + correctLabel;
+  }).join('\n\n');
+
+  var prompt = 'You are a top ' + label + ' tutor. For each question below, provide an EXTREMELY DETAILED solution. Each solution MUST include:\n' +
+    '- Step-by-step working with all formulas and calculations shown clearly\n' +
+    '- The logical reasoning behind each step\n' +
+    '- Smart shortcuts, tricks, or alternative methods to solve faster\n' +
+    '- Common mistakes students make on this question\n' +
+    '- Final answer\n\n' +
     'Questions:\n' + qText + '\n\n' +
-    'Use plain text with bullet points (use *). Do NOT use markdown headers or formatting. Keep it under 300 words.';
-  var body = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.3, maxOutputTokens: 500 } });
-  for (var attempt = 1; attempt <= 3; attempt++) {
-    try {
-      var resp = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body });
-      if (!resp.ok) {
-        if (resp.status === 429) { console.log('  Rate limited, waiting 5s...'); await new Promise(function(r) { setTimeout(r, 5000); }); continue; }
-        console.log('  Gemini error ' + resp.status); if (attempt < 3) await new Promise(function(r) { setTimeout(r, 2000); }); continue;
-      }
-      var data = await resp.json();
-      var text = (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0].text) || '';
-      return text.trim();
-    } catch (e) { if (attempt < 3) await new Promise(function(r) { setTimeout(r, 2000); }); }
-  }
-  return null;
-}
+    'Return in this exact format (use ===Q1=== as delimiters):\n' +
+    '===Q1===\n[detailed solution for question 1]\n===Q2===\n[detailed solution for question 2]\n...\n\n' +
+    'Make each solution at least 4-6 sentences. Be thorough and exam-focused.';
 
-// --- Doodle & Decoration Helpers ---
-
-function starPoints(cx, cy, R) {
-  var pts = [];
-  var r = R * 0.382;
-  for (var i = 0; i < 5; i++) {
-    var aOuter = (i * 72 - 90) * Math.PI / 180;
-    var aInner = (i * 72 + 36 - 90) * Math.PI / 180;
-    pts.push(cx + R * Math.cos(aOuter), cy + R * Math.sin(aOuter));
-    pts.push(cx + r * Math.cos(aInner), cy + r * Math.sin(aInner));
-  }
-  return pts;
-}
-
-function drawStar(doc, cx, cy, R, color) {
-  var pts = starPoints(cx, cy, R);
-  doc.save().fillColor(color).polygon(pts).fill().restore();
-}
-
-function drawSparkle(doc, x, y, s, color) {
-  doc.save();
-  doc.fillColor(color);
-  // Diamond sparkle: 4-pointed star
-  var pts = [x, y - s, x + s * 0.3, y - s * 0.3, x + s, y, x + s * 0.3, y + s * 0.3, x, y + s, x - s * 0.3, y + s * 0.3, x - s, y, x - s * 0.3, y - s * 0.3];
-  doc.polygon(pts).fill();
-  doc.restore();
-}
-
-function drawDots(doc, x, y, count, spacing, r, color) {
-  doc.save().fillColor(color);
-  for (var i = 0; i < count; i++) { doc.circle(x + i * spacing, y, r).fill(); }
-  doc.restore();
-}
-
-function drawDottedLine(doc, x1, y1, x2, y2, color) {
-  doc.save();
-  doc.strokeColor(color).lineWidth(0.8);
-  var dx = x2 - x1, dy = y2 - y1;
-  var len = Math.sqrt(dx * dx + dy * dy);
-  var steps = Math.floor(len / 4);
-  for (var i = 0; i <= steps; i++) {
-    if (i % 2 === 0) {
-      var t = i / steps, tx = x1 + dx * t, ty = y1 + dy * t;
-      var t2 = (i + 1) / steps, tnx = x1 + dx * t2, tny = y1 + dy * t2;
-      if (i < steps) { doc.moveTo(tx, ty).lineTo(tnx, tny).stroke(); }
+  try {
+    var text = await callGemini(apiKey, prompt);
+    var solutions = {};
+    var parts = text.split(/===Q(\d+)===/);
+    for (var i = 1; i < parts.length; i += 2) {
+      var idx = parseInt(parts[i]) - 1;
+      var sol = parts[i + 1];
+      if (idx >= 0 && sol) solutions[idx] = sol.trim();
     }
+    return solutions;
+  } catch (e) {
+    console.log('  Detailed solutions failed: ' + e.message);
+    return null;
   }
-  doc.restore();
 }
 
-function drawFlourish(doc, x, y, w, color) {
-  doc.save();
-  doc.strokeColor(color).lineWidth(1.2);
-  var mid = x + w / 2;
-  // Left line
-  doc.moveTo(x, y).lineTo(mid - 10, y).stroke();
-  // Right line
-  doc.moveTo(mid + 10, y).lineTo(x + w, y).stroke();
-  // Center diamond
-  doc.fillColor(color);
-  doc.polygon([mid, y - 5, mid + 5, y, mid, y + 5, mid - 5, y]).fill();
+// --- Doodle Helpers ---
+function starPts(cx, cy, R) {
+  var a = [], r = R * 0.382;
+  for (var i = 0; i < 5; i++) {
+    var o = (i * 72 - 90) * Math.PI / 180, n = (i * 72 + 36 - 90) * Math.PI / 180;
+    a.push(cx + R * Math.cos(o), cy + R * Math.sin(o), cx + r * Math.cos(n), cy + r * Math.sin(n));
+  }
+  return a;
+}
+function drawStar(doc, cx, cy, R, c) { doc.save().fillColor(c).polygon(starPts(cx, cy, R)).fill().restore(); }
+function drawSparkle(doc, x, y, s, c) {
+  doc.save().fillColor(c);
+  doc.polygon([x, y - s, x + s * 0.3, y - s * 0.3, x + s, y, x + s * 0.3, y + s * 0.3, x, y + s, x - s * 0.3, y + s * 0.3, x - s, y, x - s * 0.3, y - s * 0.3]).fill();
   doc.restore();
 }
-
-function drawNumberCircle(doc, x, y, num, r, color) {
-  doc.save();
-  doc.circle(x + r, y + r, r).fillColor(color).fill();
-  doc.fillColor('#ffffff').fontSize(r * 0.9).text(String(num), x + r - doc.widthOfString(String(num)) / 2, y + r - r * 0.35);
+function drawDots(doc, x, y, n, sp, r, c) { doc.save().fillColor(c); for (var i = 0; i < n; i++) doc.circle(x + i * sp, y, r).fill(); doc.restore(); }
+function drawDottedLine(doc, x1, y1, x2, y2, c) {
+  doc.save().strokeColor(c).lineWidth(0.6);
+  var dx = x2 - x1, dy = y2 - y1, len = Math.sqrt(dx * dx + dy * dy), st = Math.floor(len / 5);
+  for (var i = 0; i <= st; i++) { if (i % 2 === 0) { var t = i / st, t2 = Math.min((i + 1) / st, 1); doc.moveTo(x1 + dx * t, y1 + dy * t).lineTo(x1 + dx * t2, y1 + dy * t2).stroke(); } }
   doc.restore();
 }
-
-function drawRadio(doc, x, y, filled, color) {
-  doc.save();
-  doc.circle(x + 5, y + 4, 5).lineWidth(1.2).strokeColor(color).stroke();
-  if (filled) { doc.circle(x + 5, y + 4, 3).fillColor(color).fill(); }
+function drawFlourish(doc, x, y, w, c) {
+  doc.save().strokeColor(c).lineWidth(1); var m = x + w / 2;
+  doc.moveTo(x, y).lineTo(m - 8, y).stroke(); doc.moveTo(m + 8, y).lineTo(x + w, y).stroke();
+  doc.fillColor(c).polygon([m, y - 4, m + 4, y, m, y + 4, m - 4, y]).fill(); doc.restore();
+}
+function drawNumCircle(doc, x, y, num, r, c) {
+  doc.save().circle(x + r, y + r, r).fillColor(c).fill();
+  doc.fillColor('#ffffff').fontSize(r * 0.85).text(String(num), x + r - doc.widthOfString(String(num)) / 2, y + r - r * 0.35);
   doc.restore();
 }
-
-function drawAccentBar(doc, x, y, h, color) {
-  doc.save();
-  doc.roundedRect(x, y, 4, h, 2).fillColor(color).fill();
+function drawRadio(doc, x, y, filled, c) {
+  doc.save(); doc.circle(x + 5, y + 4, 5).lineWidth(1.2).strokeColor(c).stroke();
+  if (filled) doc.circle(x + 5, y + 4, 3).fillColor(c).fill();
   doc.restore();
 }
+function drawAccent(doc, x, y, h, c) { doc.save().roundedRect(x, y, 4, h, 2).fillColor(c).fill().restore(); }
 
 // --- PDF Builder ---
-
-function buildExamPDF(exam, paper, analysis, weekRange, dateStr) {
+function buildExamPDF(exam, paper, analysis, weekRange, dateStr, detailedSols) {
   return new Promise(function(resolve, reject) {
     var label = EXAM_LABELS[exam] || exam.toUpperCase();
     var filename = 'weekly-' + dateStr + '-' + exam + '.pdf';
     var filepath = path.join(pdfDir, filename);
     var questions = paper.questions || [];
     var sections = paper.sections || [];
-    var pageW = 495;
-    var marginL = 50;
-    var contentW = pageW;
-
+    var PW = 495, ML = 50;
     var doc = new PDFDocument({ margin: 50, size: 'A4' });
     var stream = fs.createWriteStream(filepath);
     doc.pipe(stream);
 
-    // ===== COVER PAGE =====
+    // ========== COVER ==========
     doc.rect(0, 0, doc.page.width, doc.page.height).fillColor('#0f0d1a').fill();
-    // Subtle gradient overlay
     doc.rect(0, 0, doc.page.width, doc.page.height / 2).fillColor('#1a1540').fill({ opacity: 0.3 });
-    // Decorative top-right cluster
     drawStar(doc, doc.page.width - 80, 90, 25, '#8b5cf6');
     drawStar(doc, doc.page.width - 40, 130, 12, '#a78bfa');
     drawSparkle(doc, doc.page.width - 120, 60, 8, '#c4b5fd');
     drawSparkle(doc, doc.page.width - 30, 50, 5, '#a78bfa');
-    // Bottom-left decorations
     drawStar(doc, 80, doc.page.height - 100, 18, '#6366f1');
     drawSparkle(doc, 60, doc.page.height - 150, 6, '#818cf8');
     drawSparkle(doc, 120, doc.page.height - 80, 7, '#818cf8');
-    // Dot cluster top-left
     drawDots(doc, 55, 55, 8, 14, 2, '#4f46e5');
     drawDots(doc, 60, 80, 6, 12, 1.5, '#6366f1');
 
-    // Cover title
-    doc.fillColor('#ffffff').fontSize(36).font('Helvetica-Bold');
-    doc.text(label, 50, 180, { align: 'left' });
-    doc.fontSize(22).fillColor('#a78bfa').font('Helvetica');
-    doc.text('Weekly Study Digest', 50, 225);
-    // Decorative flourish under title
-    drawFlourish(doc, 50, 265, 200, '#8b5cf6');
+    doc.fillColor('#ffffff').fontSize(36).font('Helvetica-Bold').text(label, 50, 170);
+    doc.fontSize(22).fillColor('#a78bfa').font('Helvetica').text('Weekly Study Digest', 50, 215);
+    drawFlourish(doc, 50, 255, 200, '#8b5cf6');
 
-    // Date in a pill
-    var dateW = doc.widthOfString(weekRange, { fontSize: 11 }) + 32;
-    doc.roundedRect(50, 290, dateW, 30, 15).fillColor('#2e1065').fill();
-    doc.fillColor('#c4b5fd').fontSize(11).font('Helvetica').text(weekRange, 66, 298);
+    var dw = doc.widthOfString(weekRange, { fontSize: 11 }) + 32;
+    doc.roundedRect(50, 280, dw, 30, 15).fillColor('#2e1065').fill();
+    doc.fillColor('#c4b5fd').fontSize(11).font('Helvetica').text(weekRange, 66, 288);
 
-    // Stats badge
-    doc.fontSize(10).fillColor('#94a3b8');
-    var qCount = questions.length;
-    var secNames = sections.map(function(s) { return s.name; }).join(' \u00B7 ');
-    doc.text(qCount + ' Questions \u00B7 ' + (secNames || 'Mixed Topics'), 50, 340);
-
-    // Bottom branding
-    doc.fontSize(9).fillColor('#4f46e5');
-    doc.text('vlymbooq.qzz.io', 50, doc.page.height - 60);
-    doc.fontSize(8).fillColor('#374151');
-    doc.text('Premium Weekly Study Digest', 50, doc.page.height - 42);
-
-    // Dots footer
+    doc.fontSize(10).fillColor('#94a3b8').text(questions.length + ' Questions \u00B7 Detailed Solutions with Shortcuts', 50, 330);
+    doc.fontSize(9).fillColor('#4f46e5').text('vlymbooq.qzz.io', 50, doc.page.height - 60);
+    doc.fontSize(8).fillColor('#374151').text('Premium Weekly Study Digest', 50, doc.page.height - 42);
     drawDots(doc, 50, doc.page.height - 80, 30, 6, 1.2, '#312e81');
 
-    // ===== CONTENT PAGES =====
+    // ========== CONTENT ==========
     doc.addPage();
-
-    // Page header
-    doc.fillColor('#1e1b4b').fontSize(16).font('Helvetica-Bold').text(label, marginL, 35);
-    doc.fontSize(9).fillColor('#6b7280').font('Helvetica').text('Weekly Study Digest \u00B7 ' + weekRange, marginL, 55);
-    doc.moveTo(marginL, 70).lineTo(marginL + 120, 70).strokeColor('#8b5cf6').lineWidth(2).stroke();
+    doc.fillColor('#1e1b4b').fontSize(16).font('Helvetica-Bold').text(label, ML, 35);
+    doc.fontSize(9).fillColor('#6b7280').font('Helvetica').text('Weekly Study Digest \u00B7 ' + weekRange, ML, 55);
+    doc.moveTo(ML, 70).lineTo(ML + 120, 70).strokeColor('#8b5cf6').lineWidth(2).stroke();
 
     var y = 90;
 
     // ===== Topic Analysis =====
     if (analysis) {
       var aLines = analysis.split('\n');
-      var aHeight = Math.max(aLines.length * 14 + 36, 60);
-      if (y + aHeight > 700) { doc.addPage(); y = 40; }
-
-      // Analysis card
-      doc.roundedRect(marginL, y, contentW, aHeight, 8).fillColor('#f5f3ff').fill();
-      // Left accent
-      drawAccentBar(doc, marginL + 4, y + 8, aHeight - 16, '#8b5cf6');
-      // Header
-      drawSparkle(doc, marginL + 20, y + 16, 5, '#8b5cf6');
-      doc.fillColor('#4c1d95').fontSize(11).font('Helvetica-Bold').text('Topic Analysis', marginL + 32, y + 8);
-
+      var aH = Math.max(aLines.length * 14 + 36, 60);
+      if (y + aH > 700) { doc.addPage(); y = 40; }
+      doc.roundedRect(ML, y, PW, aH, 8).fillColor('#f5f3ff').fill();
+      drawAccent(doc, ML + 4, y + 8, aH - 16, '#8b5cf6');
+      drawSparkle(doc, ML + 20, y + 16, 5, '#8b5cf6');
+      doc.fillColor('#4c1d95').fontSize(11).font('Helvetica-Bold').text('Topic Analysis', ML + 32, y + 8);
       doc.fillColor('#374151').fontSize(9).font('Helvetica');
       var ay = y + 28;
       for (var ai = 0; ai < aLines.length; ai++) {
-        var line = aLines[ai].trim();
-        if (line) {
-          if (line.charAt(0) === '*') {
-            doc.circle(marginL + 22, ay + 4, 2).fillColor('#8b5cf6').fill();
-            doc.fillColor('#374151').text(line.substring(1).trim(), marginL + 32, ay, { width: contentW - 60 });
-          } else {
-            doc.text(line, marginL + 22, ay, { width: contentW - 50 });
-          }
+        var l = aLines[ai].trim();
+        if (l) {
+          if (l.charAt(0) === '*') { doc.circle(ML + 22, ay + 4, 2).fillColor('#8b5cf6').fill(); doc.fillColor('#374151').text(l.substring(1).trim(), ML + 32, ay, { width: PW - 60 }); }
+          else { doc.text(l, ML + 22, ay, { width: PW - 50 }); }
           ay = doc.y + 3;
         }
       }
@@ -271,69 +223,52 @@ function buildExamPDF(exam, paper, analysis, weekRange, dateStr) {
       var q = questions[qi];
       var qText = q.text || q.question || '';
       var qOptions = q.options || [];
-      var qSolution = q.solution || '';
+      var qSolution = detailedSols && detailedSols[qi] ? detailedSols[qi] : (q.solution || '');
       var sectionName = q.section || (sections.length > 0 ? sections[0].name : '');
       var sectionColor = '#6366f1';
-      for (var si = 0; si < sections.length; si++) {
-        if (sections[si].name === sectionName) { sectionColor = sections[si].color || sectionColor; break; }
-      }
-
+      for (var si = 0; si < sections.length; si++) { if (sections[si].name === sectionName) { sectionColor = sections[si].color || sectionColor; break; } }
       var correctLabel = '';
-      for (var oi = 0; oi < qOptions.length; oi++) {
-        if (qOptions[oi].correct) { correctLabel = qOptions[oi].label; break; }
+      for (var oi = 0; oi < qOptions.length; oi++) { if (qOptions[oi].correct) { correctLabel = qOptions[oi].label; break; } }
+
+      // Pre-measure all heights
+      var innerX = ML + 22, innerW = PW - 36;
+      var pad = 14, numR = 10;
+      var contentY = 0;
+      var hBadge = sectionName ? 22 : 0;
+      var hNum = numR * 2 + 6;
+      var hQ = doc.heightOfString(qText, { width: innerW - numR * 2 - 8 });
+      var hOpts = 0;
+      if (qOptions.length > 0) {
+        for (var oi = 0; oi < qOptions.length; oi++) hOpts += doc.heightOfString(qOptions[oi].label + '. ' + (qOptions[oi].text || ''), { width: innerW - 20 }) + 3;
+        hOpts += 10;
       }
+      var hAns = correctLabel ? 24 : 0;
+      var hSol = qSolution ? doc.heightOfString(qSolution, { width: innerW - 28 }) + 30 : 0;
+      var cardH = pad + hBadge + Math.max(hNum, hQ) + hOpts + hAns + hSol + pad + 10;
 
-      // Estimate card height (rough)
-      var estH = 80 + (qOptions.length * 16) + (qSolution ? 60 : 0);
-      if (y + estH > 720) { doc.addPage(); y = 40; }
+      if (y + cardH > 720) { doc.addPage(); y = 40; }
 
-      var cardX = marginL;
-      var cardY = y;
-      var cardW = contentW;
-      var cardPad = 14;
+      var cardX = ML, cardY = y;
 
-      // Card background
-      doc.roundedRect(cardX, cardY, cardW, 10, 8).fillColor('#fafafa').fill(); // placeholder, actual height unknown
-      // Actual card: we need to draw after we know the height. Use two-pass.
+      // Draw card background
+      doc.roundedRect(cardX, cardY, PW, cardH, 8).fillColor('#f8fafc').fill();
+      doc.roundedRect(cardX, cardY, PW, cardH, 8).lineWidth(0.6).strokeColor('#e2e8f0').stroke();
+      drawAccent(doc, cardX + 3, cardY + 6, cardH - 12, sectionColor);
 
-      // --- First pass: measure content height ---
-      // We'll use doc.y tracking for the actual height
-      var innerX = cardX + cardPad + 8; // +8 for accent bar
-      var innerW = cardW - cardPad * 2 - 12;
+      y = cardY + pad;
 
-      // Save state, calculate height by writing to a scratch approach
-      // Actually, just use a pre-draw then re-draw approach
-      var contentStartY = cardY + cardPad;
-
-      // Draw card (will be re-drawn after we know final height)
-      // We'll just draw now and track y properly
-
-      // Card background (light)
-      doc.roundedRect(cardX, cardY, cardW, 10, 8).fillColor('#f8fafc').fill();
-      // We'll track the height and re-draw
-      // Actually, let's use the stroke approach - fill first, track height, then adjust
-
-      // Accent bar
-      drawAccentBar(doc, cardX + 4, cardY + 8, 10, sectionColor);
-
-      // Section badge (if different from previous)
+      // Section badge
       if (sectionName) {
         var bw = doc.widthOfString(sectionName, { fontSize: 7.5 }) + 14;
-        doc.roundedRect(innerX, contentStartY, bw, 16, 4).fillColor(sectionColor).fill();
-        doc.fillColor('#ffffff').fontSize(7.5).font('Helvetica-Bold').text(sectionName, innerX + 7, contentStartY + 4);
-        y = contentStartY + 22;
-      } else {
-        y = contentStartY + 4;
+        doc.roundedRect(innerX, y, bw, 16, 4).fillColor(sectionColor).fill();
+        doc.fillColor('#ffffff').fontSize(7.5).font('Helvetica-Bold').text(sectionName, innerX + 7, y + 4);
+        y += 22;
       }
 
-      // Question number badge + text
-      var numR = 10;
-      drawNumberCircle(doc, innerX, y, qi + 1, numR, sectionColor);
-
-      doc.fillColor('#111827').fontSize(10.5).font('Helvetica-Bold');
-      // Question text next to badge
-      var qX = innerX + numR * 2 + 8;
-      doc.text(qText, qX, y + 2, { width: innerW - numR * 2 - 8 });
+      // Question number + text
+      drawNumCircle(doc, innerX, y, qi + 1, numR, sectionColor);
+      var qx = innerX + numR * 2 + 8;
+      doc.fillColor('#111827').fontSize(10.5).font('Helvetica-Bold').text(qText, qx, y + 2, { width: innerW - numR * 2 - 8 });
       y = Math.max(doc.y, y + numR * 2) + 6;
 
       // Options
@@ -341,10 +276,8 @@ function buildExamPDF(exam, paper, analysis, weekRange, dateStr) {
         doc.fontSize(10).font('Helvetica');
         for (var oi = 0; oi < qOptions.length; oi++) {
           var opt = qOptions[oi];
-          var isCorrect = opt.correct;
-          drawRadio(doc, innerX, y, isCorrect, isCorrect ? '#059669' : '#9ca3af');
-          doc.fillColor(isCorrect ? '#059669' : '#4b5563');
-          doc.text(opt.label + '. ' + (opt.text || ''), innerX + 16, y, { width: innerW - 20 });
+          drawRadio(doc, innerX, y, opt.correct, opt.correct ? '#059669' : '#9ca3af');
+          doc.fillColor(opt.correct ? '#059669' : '#4b5563').text(opt.label + '. ' + (opt.text || ''), innerX + 16, y, { width: innerW - 20 });
           y = doc.y + 2;
         }
         y += 4;
@@ -352,156 +285,73 @@ function buildExamPDF(exam, paper, analysis, weekRange, dateStr) {
 
       // Correct answer badge
       if (correctLabel) {
-        var ansW = doc.widthOfString('\u2713 Correct: ' + correctLabel, { fontSize: 8.5 }) + 20;
-        doc.roundedRect(innerX, y, ansW, 18, 9).fillColor('#ecfdf5').fill();
-        doc.roundedRect(innerX, y, ansW, 18, 9).lineWidth(0.8).strokeColor('#a7f3d0').stroke();
-        doc.fillColor('#059669').fontSize(8.5).font('Helvetica-Bold');
-        doc.text('\u2713 Correct: ' + correctLabel, innerX + 10, y + 4);
-        y += 28;
+        var aw = doc.widthOfString('\u2713 Correct: ' + correctLabel, { fontSize: 8.5 }) + 20;
+        doc.roundedRect(innerX, y, aw, 18, 9).fillColor('#ecfdf5').fill();
+        doc.roundedRect(innerX, y, aw, 18, 9).lineWidth(0.8).strokeColor('#a7f3d0').stroke();
+        doc.fillColor('#059669').fontSize(8.5).font('Helvetica-Bold').text('\u2713 Correct: ' + correctLabel, innerX + 10, y + 4);
+        y += 26;
       }
 
       // Solution box
       if (qSolution) {
-        var solLines = qSolution.split('\n');
-        var solH = Math.max(solLines.length * 14 + 20, 36);
+        var solH = doc.heightOfString(qSolution, { width: innerW - 28 }) + 30;
         doc.roundedRect(innerX, y, innerW, solH, 6).fillColor('#f0f9ff').fill();
         doc.roundedRect(innerX, y, innerW, solH, 6).lineWidth(0.6).strokeColor('#bae6fd').stroke();
-        drawAccentBar(doc, innerX + 3, y + 6, solH - 12, '#38bdf8');
-        doc.fillColor('#0369a1').fontSize(8).font('Helvetica-Bold');
-        var solLabelW = doc.widthOfString('Solution');
-        doc.text('Solution', innerX + 14, y + 5);
-        doc.fillColor('#475569').fontSize(8.5).font('Helvetica');
-        doc.text(qSolution, innerX + 14, y + 18, { width: innerW - 28 });
+        drawAccent(doc, innerX + 3, y + 6, solH - 12, '#38bdf8');
+        doc.fillColor('#0369a1').fontSize(8).font('Helvetica-Bold').text('Detailed Solution', innerX + 14, y + 5);
+        doc.fillColor('#475569').fontSize(8.5).font('Helvetica').text(qSolution, innerX + 14, y + 18, { width: innerW - 28 });
         y = doc.y + 10;
-      }
-
-      y += 8;
-
-      // Now re-draw the card with the correct height
-      var cardH = y - cardY;
-      // Fill card
-      doc.roundedRect(cardX, cardY, cardW, cardH, 8).fillColor('#f8fafc').fill();
-      // Card border
-      doc.roundedRect(cardX, cardY, cardW, cardH, 8).lineWidth(0.6).strokeColor('#e2e8f0').stroke();
-      // Left accent bar (full height)
-      doc.roundedRect(cardX + 3, cardY + 6, 3, cardH - 12, 1.5).fillColor(sectionColor).fill();
-
-      // Re-draw all content (overlay on the card background)
-      // Section badge
-      if (sectionName) {
-        var bw = doc.widthOfString(sectionName, { fontSize: 7.5 }) + 14;
-        doc.roundedRect(innerX, contentStartY, bw, 16, 4).fillColor(sectionColor).fill();
-        doc.fillColor('#ffffff').fontSize(7.5).font('Helvetica-Bold').text(sectionName, innerX + 7, contentStartY + 4);
-      }
-
-      // Question number
-      var qNumY = sectionName ? contentStartY + 22 : contentStartY + 4;
-      drawNumberCircle(doc, innerX, qNumY, qi + 1, numR, sectionColor);
-      doc.fillColor('#111827').fontSize(10.5).font('Helvetica-Bold');
-      doc.text(qText, qX, qNumY + 2, { width: innerW - numR * 2 - 8 });
-
-      // Options
-      var optY = Math.max(doc.y, qNumY + numR * 2) + 6;
-      if (qOptions.length > 0) {
-        doc.fontSize(10).font('Helvetica');
-        for (var oi = 0; oi < qOptions.length; oi++) {
-          var opt = qOptions[oi];
-          drawRadio(doc, innerX, optY, opt.correct, opt.correct ? '#059669' : '#9ca3af');
-          doc.fillColor(opt.correct ? '#059669' : '#4b5563');
-          doc.text(opt.label + '. ' + (opt.text || ''), innerX + 16, optY, { width: innerW - 20 });
-          optY = doc.y + 2;
-        }
-        optY += 4;
-      }
-
-      // Correct answer
-      if (correctLabel) {
-        var ansW = doc.widthOfString('\u2713 Correct: ' + correctLabel, { fontSize: 8.5 }) + 20;
-        doc.roundedRect(innerX, optY, ansW, 18, 9).fillColor('#ecfdf5').fill();
-        doc.roundedRect(innerX, optY, ansW, 18, 9).lineWidth(0.8).strokeColor('#a7f3d0').stroke();
-        doc.fillColor('#059669').fontSize(8.5).font('Helvetica-Bold');
-        doc.text('\u2713 Correct: ' + correctLabel, innerX + 10, optY + 4);
-        optY += 28;
-      }
-
-      // Solution
-      if (qSolution) {
-        var solLines2 = qSolution.split('\n');
-        var solH2 = Math.max(solLines2.length * 14 + 20, 36);
-        doc.roundedRect(innerX, optY, innerW, solH2, 6).fillColor('#f0f9ff').fill();
-        doc.roundedRect(innerX, optY, innerW, solH2, 6).lineWidth(0.6).strokeColor('#bae6fd').stroke();
-        drawAccentBar(doc, innerX + 3, optY + 6, solH2 - 12, '#38bdf8');
-        doc.fillColor('#0369a1').fontSize(8).font('Helvetica-Bold').text('Solution', innerX + 14, optY + 5);
-        doc.fillColor('#475569').fontSize(8.5).font('Helvetica');
-        doc.text(qSolution, innerX + 14, optY + 18, { width: innerW - 28 });
-        optY = doc.y + 10;
       }
 
       y = cardY + cardH + 10;
 
       // Dotted separator
       if (qi < questions.length - 1) {
-        drawDottedLine(doc, marginL + 20, y, marginL + contentW - 20, y, '#d1d5db');
-        y += 14;
+        drawDottedLine(doc, ML + 20, y, ML + PW - 20, y, '#d1d5db');
+        y += 12;
       }
     }
 
-    // ===== CLOSING PAGE: Study Tips =====
+    // ========== STUDY TIPS ==========
     doc.addPage();
-
-    // Background decoration
     doc.rect(0, 0, doc.page.width, doc.page.height).fillColor('#faf5ff').fill();
     drawStar(doc, doc.page.width - 80, 80, 20, '#e9d5ff');
     drawSparkle(doc, doc.page.width - 40, 130, 6, '#c4b5fd');
     drawSparkle(doc, 70, doc.page.height - 80, 7, '#c4b5fd');
     drawDots(doc, 50, 40, 10, 12, 1.5, '#ddd6fe');
 
-    // Header
     doc.fillColor('#4c1d95').fontSize(22).font('Helvetica-Bold').text('Study Tips', 50, 60);
     drawFlourish(doc, 50, 88, 150, '#8b5cf6');
-
-    doc.fontSize(10).fillColor('#6b7280').font('Helvetica');
-    doc.text('Maximize your learning with these strategies:', 50, 110);
+    doc.fontSize(10).fillColor('#6b7280').font('Helvetica').text('Maximize your preparation with these strategies:', 50, 110);
 
     var tips = [
-      { icon: '\uD83D\uDCD6', title: 'Review Thoroughly', desc: 'Read every solution carefully, even for questions you answered correctly. Understanding why the wrong options are incorrect is just as important.' },
-      { icon: '\uD83D\uDD0D', title: 'Practice Similar Problems', desc: 'After reviewing, find 2-3 similar problems on the same topic and solve them. Repetition builds neural pathways for recall during exams.' },
-      { icon: '\u23F1\uFE0F', title: 'Track Your Time', desc: 'Note how long each question takes you. If a question takes more than 2 minutes, flag it and move on. Speed comes with practice.' },
-      { icon: '\uD83D\uDCCA', title: 'Measure Progress', desc: 'Keep a weekly accuracy log. Compare your scores across weeks. A rising trend means your preparation is on track.' },
-      { icon: '\uD83C\uDFAF', title: 'Focus on Weak Areas', desc: 'Use the Topic Analysis section to identify which areas need more attention. Dedicate extra practice time to those topics.' },
-      { icon: '\uD83D\uDCDD', title: 'Mock Tests', desc: 'Take the online timed mock tests on vlymbooq. Simulating exam conditions reduces anxiety and improves time management.' }
+      { icon: '\uD83D\uDCD6', title: 'Review Thoroughly', desc: 'Read each detailed solution carefully, even for questions you got right. The shortcuts and alternative methods will save you time on exam day.' },
+      { icon: '\uD83D\uDD0D', title: 'Practice Similar Problems', desc: 'After reviewing, solve 2-3 similar problems on the same topic. Pattern recognition is the key to speed in competitive exams.' },
+      { icon: '\u23F1\uFE0F', title: 'Master the Shortcuts', desc: 'The shortcuts in these solutions are battle-tested. Practice them until they become automatic. A 30-second shortcut can decide your rank.' },
+      { icon: '\uD83D\uDCCA', title: 'Track Accuracy & Speed', desc: 'Note time per question. If a question takes >2 minutes, flag it. Review why it took long \u2014 was it the concept or the calculation?' },
+      { icon: '\uD83C\uDFAF', title: 'Focus on Weak Areas', desc: 'Use the Topic Analysis to identify weak spots. Dedicate extra sessions to those topics before moving to new material.' },
+      { icon: '\uD83D\uDCDD', title: 'Simulate Exam Conditions', desc: 'Take timed mock tests on vlymbooq. Real exam simulation reduces anxiety and builds the mental stamina needed for 2-3 hour papers.' }
     ];
 
-    var ty = 145;
+    var ty = 140;
     for (var ti = 0; ti < tips.length; ti++) {
       var t = tips[ti];
-      // Tip card
-      var tipH = 65;
-      doc.roundedRect(50, ty, contentW, tipH, 8).fillColor('#ffffff').fill();
-      doc.roundedRect(50, ty, contentW, tipH, 8).lineWidth(0.5).strokeColor('#e9d5ff').stroke();
-      drawAccentBar(doc, 50, ty + 6, tipH - 12, '#8b5cf6');
-
-      doc.fontSize(20).fillColor('#7c3aed');
-      doc.text(t.icon, 68, ty + 10);
-
-      doc.fontSize(11).font('Helvetica-Bold').fillColor('#1e1b4b');
-      doc.text(t.title, 100, ty + 10, { width: contentW - 120 });
-
-      doc.fontSize(8.5).font('Helvetica').fillColor('#6b7280');
-      doc.text(t.desc, 100, ty + 28, { width: contentW - 120 });
-
+      var tipH = 60;
+      doc.roundedRect(50, ty, PW, tipH, 8).fillColor('#ffffff').fill();
+      doc.roundedRect(50, ty, PW, tipH, 8).lineWidth(0.5).strokeColor('#e9d5ff').stroke();
+      drawAccent(doc, 50, ty + 6, tipH - 12, '#8b5cf6');
+      doc.fontSize(18).fillColor('#7c3aed').text(t.icon, 66, ty + 10);
+      doc.fontSize(11).font('Helvetica-Bold').fillColor('#1e1b4b').text(t.title, 96, ty + 10, { width: PW - 110 });
+      doc.fontSize(8.5).font('Helvetica').fillColor('#6b7280').text(t.desc, 96, ty + 28, { width: PW - 110 });
       ty += tipH + 10;
     }
 
-    // Footer
-    ty += 15;
-    drawDottedLine(doc, 50, ty, 50 + contentW, ty, '#d1d5db');
-    ty += 18;
-    doc.fillColor('#6b7280').fontSize(8.5).font('Helvetica');
-    doc.text(label + ' \u2014 vlymbooq.qzz.io \u2014 Generated ' + new Date().toDateString(), 50, ty, { align: 'center' });
+    ty += 10;
+    drawDottedLine(doc, 50, ty, 50 + PW, ty, '#d1d5db');
+    ty += 16;
+    doc.fillColor('#6b7280').fontSize(8.5).font('Helvetica').text(label + ' \u2014 vlymbooq.qzz.io \u2014 Generated ' + new Date().toDateString(), 50, ty, { align: 'center' });
 
     doc.end();
-
     stream.on('finish', function() {
       var stats = fs.statSync(filepath);
       console.log('  ' + filename + ' (' + (stats.size / 1024).toFixed(1) + ' KB \u00B7 ' + questions.length + ' Q)');
@@ -511,8 +361,7 @@ function buildExamPDF(exam, paper, analysis, weekRange, dateStr) {
   });
 }
 
-// ===== Main =====
-
+// ========== MAIN ==========
 async function buildPDF() {
   if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir);
   var dateStr = getDateStr();
@@ -522,25 +371,52 @@ async function buildPDF() {
   for (var i = 0; i < EXAMS.length; i++) { var p = getLatestPaper(EXAMS[i]); if (p) papers.push({ exam: EXAMS[i], paper: p }); }
   if (papers.length === 0) { console.log('No paper data found. Run generate-papers first.'); return; }
   console.log('Building weekly study digests (' + weekRange + '):');
+
+  // Fetch topic analyses + detailed solutions
   var analyses = {};
+  var allSols = {};
   if (apiKey) {
-    console.log('  Fetching topic analyses from Gemini...');
+    console.log('  Fetching topic analyses & detailed solutions from Gemini...');
     for (var ai = 0; ai < papers.length; ai++) {
       var exam = papers[ai].exam;
       var label = EXAM_LABELS[exam] || exam.toUpperCase();
       process.stdout.write('    ' + label + '... ');
-      var text = await getTopicAnalysis(apiKey, exam, papers[ai].paper.questions);
-      if (text) { analyses[exam] = text; console.log('OK'); } else { console.log('skipped'); }
+      try {
+      var text = await callGemini(apiKey,
+        'You are an expert ' + label + ' tutor. Analyze these practice questions and provide a concise analysis with:\n' +
+        '1. Topics Covered - List main topics and subtopics tested\n' +
+        '2. Difficulty Breakdown - Rough percentage easy/medium/hard\n' +
+        '3. Key Concepts - Most important concepts to master\n' +
+        '4. Common Mistakes - Errors students commonly make\n' +
+        '5. Study Tips - How to prepare for these topics effectively\n\n' +
+        'Questions:\n' + papers[ai].paper.questions.map(function(q, i) { return (i + 1) + '. ' + (q.text || q.question || ''); }).join('\n') + '\n\n' +
+        'Use plain text with bullet points (use *). Keep it under 300 words.'
+      );
+      if (text) { analyses[exam] = text; console.log('analysis OK'); } else { console.log('analysis skipped'); }
+    } catch (e) { console.log('analysis unavailable (' + e.message + ')'); }
+
+    await new Promise(function(r) { setTimeout(r, 2000); });
+
+    process.stdout.write('      solutions... ');
+    try {
+      var sols = await getDetailedSolutions(apiKey, exam, papers[ai].paper.questions);
+      if (sols) { allSols[exam] = sols; console.log('OK (' + Object.keys(sols).length + ' enhanced)'); }
+      else { console.log('using existing solutions'); }
+    } catch (e) { console.log('enhancement unavailable (' + e.message + ')'); }
+
       if (ai < papers.length - 1) await new Promise(function(r) { setTimeout(r, 3000); });
     }
-  } else { console.log('  No Gemini API key found, skipping topic analyses'); }
+  } else {
+    console.log('  No Gemini API key found, skipping AI enhancements');
+  }
+
   var results = [];
   for (var i = 0; i < papers.length; i++) {
-    var r = await buildExamPDF(papers[i].exam, papers[i].paper, analyses[papers[i].exam], weekRange, dateStr);
+    var r = await buildExamPDF(papers[i].exam, papers[i].paper, analyses[papers[i].exam], weekRange, dateStr, allSols[papers[i].exam] || null);
     results.push(r);
   }
   var manifest = {};
-  for (var i = 0; i < results.length; i++) { manifest[results[i].exam] = { filename: results[i].filename, date: weekRange }; }
+  for (var i = 0; i < results.length; i++) manifest[results[i].exam] = { filename: results[i].filename, date: weekRange };
   fs.writeFileSync(path.join(pdfDir, 'latest.json'), JSON.stringify(manifest, null, 2));
   console.log('\nDone! Generated ' + results.length + ' PDF(s).');
 }
