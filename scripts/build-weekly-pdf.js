@@ -6,8 +6,8 @@ var root = path.resolve(__dirname, '..');
 var bankDir = path.join(root, 'question-bank');
 var dataDir = path.join(root, 'papers-data');
 var pdfDir = path.join(root, 'pdfs');
-var EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer'];
-var EXAM_LABELS = { cgl: 'SSC CGL', rbi: 'RBI Grade B', jee: 'JEE Main', neet: 'NEET UG', gate: 'GATE', agniveer: 'Agniveer' };
+var EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer', 'upsc', 'ibps-po', 'sbi-clerk', 'ssc-gd', 'ctet'];
+var EXAM_LABELS = { cgl: 'SSC CGL', rbi: 'RBI Grade B', jee: 'JEE Main', neet: 'NEET UG', gate: 'GATE', agniveer: 'Agniveer', upsc: 'UPSC CSE', 'ibps-po': 'IBPS PO', 'sbi-clerk': 'SBI Clerk', 'ssc-gd': 'SSC GD', ctet: 'CTET' };
 
 function getApiKey() {
   if (process.env.GROQ_API_KEY) return process.env.GROQ_API_KEY;
@@ -151,7 +151,42 @@ var EXAM_REFERENCE = {
     '* Simple Interest: (P x R x T)/100 | Profit% = (Profit/CP) x 100\n' +
     '* Area: Circle = pi x r^2, Triangle = (1/2) x b x h, Square = side^2\n' +
     '* Blood Relations: Draw family tree, use gender markers (brother/sister/husband/wife)\n' +
-    'Weekly Strategy: Focus on Reasoning (series, coding, blood relations) + General Knowledge (sports, rivers, constitution) - these two sections cover 60% of the paper.'
+    'Weekly Strategy: Focus on Reasoning (series, coding, blood relations) + General Knowledge (sports, rivers, constitution) - these two sections cover 60% of the paper.',
+  upsc: 'Key Formulas & Shortcuts:\n' +
+    '* GDP = C + I + G + (X - M) | GDP Deflator = (Nominal/Real) x 100\n' +
+    '* Fiscal Deficit = Total Exp - Non-Borrowed Receipts\n' +
+    '* Money Multiplier = 1/CRR | Credit Creation = Deposits x (1/CRR - 1)\n' +
+    '* Gini Coefficient = A/(A+B) | Lorenz Curve: Income distribution\n' +
+    '* HDI = (LEI x EI x II)^(1/3) where LEI = (LE - 20)/(85 - 20)\n' +
+    'Weekly Strategy: Focus on Indian Economy + Polity as they make up 50% of the paper. Read The Hindu editorial daily for current affairs.',
+  'ibps-po': 'Key Formulas & Shortcuts:\n' +
+    '* Percentage: Profit% = (Profit/CP) x 100 | Discount% = (Discount/MP) x 100\n' +
+    '* SI: (P x R x T)/100 | CI: P(1 + R/100)^T - P\n' +
+    '* Speed = Distance/Time | Avg Speed = 2ab/(a+b) for equal distances\n' +
+    '* Number Series: Look for diff, ratio, square, cube patterns\n' +
+    '* Puzzle: Tabular or floor-based - start with fixed conditions first\n' +
+    'Weekly Strategy: Reasoning puzzles + Data Interpretation cover 40% of the paper. Practice 1 puzzle + 1 DI set daily.',
+  'sbi-clerk': 'Key Formulas & Shortcuts:\n' +
+    '* Average = Sum of terms / Number of terms\n' +
+    '* Ratio: a:b = c:d => ad = bc | Componendo: (a+b)/b = (c+d)/d\n' +
+    '* Speed = Distance/Time | Boat: Downstream = b + s, Upstream = b - s\n' +
+    '* Simple Interest: (P x R x T)/100 | Profit% = (Profit/CP) x 100\n' +
+    '* Coding-Decoding: Letter positions, reverse alphabet, pattern shift\n' +
+    'Weekly Strategy: Speed is key in Clerk exams. Solve 20 quants + 20 reasoning questions daily with a timer - target 30 seconds per question.',
+  'ssc-gd': 'Key Formulas & Shortcuts:\n' +
+    '* Average = Sum of terms / Number of terms\n' +
+    '* Speed = Distance/Time | Avg Speed = Total Distance/Total Time\n' +
+    '* Simple Interest: (P x R x T)/100 | Profit% = (Profit/CP) x 100\n' +
+    '* Area: Circle = pi x r^2, Rectangle = l x b, Triangle = (1/2) x b x h\n' +
+    '* Blood Relations: Draw family tree, use gender markers\n' +
+    'Weekly Strategy: GK + Reasoning = 60% of GD paper. Focus on current affairs (last 6 months) and basic arithmetic daily.',
+  ctet: 'Key Formulas & Shortcuts:\n' +
+    '* Child Development: Piaget (Sensorimotor -> Formal), Vygotsky (ZPD), Kohlberg (Moral stages)\n' +
+    '* Pedagogy: Teaching methods (Inductive/Deductive), Assessment types (Formative/Summative)\n' +
+    '* Percentage: Profit% = (Profit/CP) x 100 | Discount% = (Discount/MP) x 100\n' +
+    '* Area: Circle = pi x r^2, Rectangle = l x b, Triangle = (1/2) x b x h\n' +
+    '* English: Active-Passive, Direct-Indirect Speech, Tenses, Subject-Verb Agreement\n' +
+    'Weekly Strategy: Child Development & Pedagogy is the core subject - 30 questions. Master Piaget, Vygotsky, and Kohlberg theories first.'
 };
 
 // --- Doodle Helpers ---
