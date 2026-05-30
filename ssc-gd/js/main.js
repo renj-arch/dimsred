@@ -1,4 +1,4 @@
-(function(){
+﻿(function(){
     document.querySelectorAll('.q-option').forEach(function(opt){
         opt.addEventListener('click', function(){
             var parent = this.closest('.question');
@@ -32,7 +32,8 @@
 
     var timerEl = document.getElementById('timer');
     if(timerEl){
-        var total = 60 * 60;
+        var parts = timerEl.textContent.split(':');
+        var total = parseInt(parts[0]) * 60 + parseInt(parts[1]);
         var tick = function(){
             var m = Math.floor(total / 60);
             var s = total % 60;
