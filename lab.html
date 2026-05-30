@@ -131,6 +131,7 @@
                 <a href="dashboard.html" class="pc-btn">Dashboard</a>
                 <a class="auth-btn" href="#"
                 style="background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none;transition:all .2s">Unlock Lab</a>
+                <button id="logout-btn" style="display:none;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.2);padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .2s">Logout</button>
             </div>
         </div>
     </nav>
@@ -141,7 +142,7 @@
         <div class="lab-tabs">
             <button class="lab-tab active" data-tab="drill">🎯 Topic Drill</button>
             <button class="lab-tab" data-tab="mock">🎯 Custom Mock</button>
-            <button class="lab-tab" data-tab="weak">?? Weak Area Fixer</button>
+            <button class="lab-tab" data-tab="weak">🔧 Weak Area Fixer</button>
         </div>
 
         <div id="tab-drill" class="tab-content active">
@@ -205,7 +206,7 @@
 
         <div id="tab-weak" class="tab-content">
             <div class="card">
-                <div class="card-title">?? Weak Area Fixer</div>
+                <div class="card-title">🔧 Weak Area Fixer</div>
                 <p style="font-size:.85em;color:#71717a;margin-bottom:14px">Your past mistakes, organized by topic. Practice them until they stick.</p>
                 <div id="weak-filters" class="chip-group">
                     <span class="chip active" data-filter="all">All</span>
@@ -216,6 +217,20 @@
     </div>
 
 <script src="js/lab.js" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var lo = document.getElementById('logout-btn');
+  function check() {
+    if (typeof supabaseUser !== 'undefined' && supabaseUser) {
+      lo.style.display = 'inline-block';
+      lo.onclick = function() { window.supabaseLogout(); window.location.href = '/lab.html'; };
+    }
+  }
+  check();
+  setTimeout(check, 500);
+  setTimeout(check, 1500);
+});
+</script>
     <script src="js/supabase.js?v=20260529b"></script>
     <script src="js/shared.js?v=20260529b"></script>
 
