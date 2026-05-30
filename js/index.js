@@ -136,7 +136,7 @@ try { AOS.init({duration:600,once:true,offset:40}); } catch(e) {}
 })();
 
 // ===== Your Exam Fortune (daily widget) =====
-try { (function() {
+(function() { try {
     var fortunes = [
         { msg: '🌟 Today is your day to shine!', sub: 'Focus on Quantitative Aptitude — you\'re building strong foundations.', tip: 'Try the 5-minute Pomodoro technique for deep focus.' },
         { msg: '📚 Knowledge grows when shared!', sub: 'Review General Awareness — current affairs are your friend.', tip: 'Read the newspaper editorial every morning.' },
@@ -171,7 +171,7 @@ try { (function() {
 } catch(e) {} })();
 
 // ===== Study Vibe Switcher =====
-try { (function() {
+(function() { try {
     var vibes = [
         { id: 'rainy', label: '🌧️ Rainy Study', bg: '#0a0a1a', bgCard: '#12121e', purple: '#7c9bfc', emerald: '#5eead4' },
         { id: 'library', label: '📚 Library', bg: '#0d0b09', bgCard: '#141110', purple: '#d4a574', emerald: '#a8b59a' },
@@ -253,19 +253,51 @@ try { (function() {
         currentMood: 'idle',
         idleTimer: null,
         idleTimeout: 90000,
-        
+        isQuizActive: false,
+        isDancing: false,
+        clickTimestamps: [],
+        isDragging: false,
+        hadDragMove: false,
+        dragOffsetX: 0,
+        dragOffsetY: 0,
+
+        quizQuestions: [
+            { q: 'What does HTML stand for?', o: ['Hyper Text Markup Language', 'High Tech Modern Language', 'Home Tool Markup Language', 'Hyper Transfer Markup Language'], a: 0 },
+            { q: 'Which planet is known as the Red Planet?', o: ['Venus', 'Jupiter', 'Mars', 'Saturn'], a: 2 },
+            { q: 'What is the chemical symbol for water?', o: ['H2O', 'CO2', 'NaCl', 'O2'], a: 0 },
+            { q: 'How many bits are in a byte?', o: ['4', '8', '16', '32'], a: 1 },
+            { q: 'Which language styles web pages?', o: ['HTML', 'JavaScript', 'CSS', 'Python'], a: 2 },
+            { q: 'What is the largest organ in the human body?', o: ['Liver', 'Brain', 'Skin', 'Heart'], a: 2 },
+            { q: 'In which year did World War II end?', o: ['1943', '1944', '1945', '1946'], a: 2 },
+            { q: 'What does CPU stand for?', o: ['Central Processing Unit', 'Computer Personal Unit', 'Central Program Utility', 'Core Processing Unit'], a: 0 },
+            { q: 'Which gas do plants absorb?', o: ['Oxygen', 'Nitrogen', 'Carbon Dioxide', 'Hydrogen'], a: 2 },
+            { q: 'What is the square root of 144?', o: ['10', '11', '12', '13'], a: 2 },
+            { q: 'Which planet has the most moons?', o: ['Jupiter', 'Saturn', 'Uranus', 'Neptune'], a: 1 },
+            { q: 'What is the powerhouse of the cell?', o: ['Nucleus', 'Ribosome', 'Mitochondria', 'Golgi Apparatus'], a: 2 },
+            { q: 'Which ocean is the largest?', o: ['Atlantic', 'Indian', 'Arctic', 'Pacific'], a: 3 },
+            { q: 'How many continents are there?', o: ['5', '6', '7', '8'], a: 2 },
+            { q: 'What does JSON stand for?', o: ['Java Simple Object Notation', 'JavaScript Object Notation', 'Java Serialized Object Network', 'JavaScript Optimized Notation'], a: 1 },
+        ],
+
         init: function() {
             var self = this;
-            this.setMood('wave');
+            this.applyTimeMood();
             this.showMessage('Ready to study? 📚');
+
             setInterval(function() {
-                self.messageIndex = (self.messageIndex + 1) % self.messages.length;
-                self.showMessage(self.messages[self.messageIndex]);
+                if (!self.isQuizActive && !self.isDancing && !self.isDragging) {
+                    self.messageIndex = (self.messageIndex + 1) % self.messages.length;
+                    self.showMessage(self.messages[self.messageIndex]);
+                }
             }, 8000);
+
             this.startIdleTimer();
-            document.getElementById('mascotWrap').addEventListener('click', function() {
+
+            document.getElementById('mascotWrap').addEventListener('click', function(e) {
+                if (self.hadDragMove) { self.hadDragMove = false; return; }
                 self.handleClick();
             });
+
             document.addEventListener('studypro:correct', function() {
                 self.setMood('celebrate');
                 self.showMessage('Great job! 🎉');
@@ -281,46 +313,260 @@ try { (function() {
                 self.setMood('sleep');
                 self.showMessage('Taking a nap... 💤');
             });
+
+            document.addEventListener('mousemove', function(e) { self.trackEyes(e); });
+
+            document.getElementById('mascotSvg').addEventListener('mouseenter', function() { self.petStart(); });
+            document.getElementById('mascotSvg').addEventListener('mouseleave', function() { self.petEnd(); });
+
+            var wrap = document.getElementById('mascotWrap');
+            wrap.addEventListener('mousedown', function(e) { self.startDrag(e); });
+            document.addEventListener('mousemove', function(e) { self.onDrag(e); });
+            document.addEventListener('mouseup', function() { self.endDrag(); });
+
+            wrap.addEventListener('touchstart', function(e) { self.startDrag(e); }, {passive: true});
+            document.addEventListener('touchmove', function(e) { self.onDrag(e); }, {passive: false});
+            document.addEventListener('touchend', function() { self.endDrag(); });
+
+            setInterval(function() { self.applyTimeMood(); }, 60000);
+
             setTimeout(function() {
-                if (self.currentMood === 'wave') {
-                    self.setMood('idle');
-                }
+                if (self.currentMood === 'wave') self.setMood('idle');
             }, 2500);
         },
-        
+
+        trackEyes: function(e) {
+            if (this.currentMood === 'sleep') return;
+            var svg = document.getElementById('mascotSvg');
+            var rect = svg.getBoundingClientRect();
+            var cx = rect.left + rect.width / 2;
+            var cy = rect.top + rect.height / 2;
+            var dx = e.clientX - cx;
+            var dy = e.clientY - cy;
+            var angle = Math.atan2(dy, dx);
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            var factor = Math.min(dist / 200, 1);
+            var moveX = Math.cos(angle) * 3 * factor;
+            var moveY = Math.sin(angle) * 3 * factor;
+            var t = 'translate(' + moveX.toFixed(1) + ',' + moveY.toFixed(1) + ')';
+            var lp = document.getElementById('leftPupil');
+            var rp = document.getElementById('rightPupil');
+            var lh = document.getElementById('leftHighlight');
+            var rh = document.getElementById('rightHighlight');
+            if (lp) lp.setAttribute('transform', t);
+            if (rp) rp.setAttribute('transform', t);
+            if (lh) lh.setAttribute('transform', t);
+            if (rh) rh.setAttribute('transform', t);
+        },
+
+        applyTimeMood: function() {
+            if (this.isQuizActive || this.isDancing) return;
+            var h = new Date().getHours();
+            if (h >= 6 && h < 12 && this.currentMood === 'sleep') {
+                this.setMood('excited');
+                this.showMessage('Good morning! ☀️');
+            } else if (h >= 22 || h < 6) {
+                if (this.currentMood !== 'sleep') {
+                    this.setMood('sleep');
+                    this.showMessage('Past bedtime... 🌙');
+                }
+            }
+        },
+
+        petStart: function() {
+            if (this.currentMood === 'sleep' || this.isQuizActive || this.isDancing) return;
+            this.setMood('excited');
+            this.createHearts();
+        },
+
+        petEnd: function() {
+            if (this.currentMood === 'excited' && !this.isQuizActive && !this.isDancing) {
+                this.setMood('idle');
+            }
+        },
+
+        createHearts: function() {
+            var wrap = document.getElementById('mascotWrap');
+            var rect = wrap.getBoundingClientRect();
+            var cx = rect.left + rect.width / 2;
+            var cy = rect.top;
+            var emojis = ['❤️', '💜', '💖', '💕', '✨'];
+            for (var i = 0; i < 5; i++) {
+                (function(idx) {
+                    setTimeout(function() {
+                        var heart = document.createElement('div');
+                        heart.className = 'heart-particle';
+                        heart.textContent = emojis[idx];
+                        heart.style.left = (cx + (Math.random() - 0.5) * 30) + 'px';
+                        heart.style.top = (cy - 5) + 'px';
+                        document.body.appendChild(heart);
+                        setTimeout(function() { heart.remove(); }, 1000);
+                    }, idx * 120);
+                })(i);
+            }
+        },
+
+        startDrag: function(e) {
+            this.isDragging = true;
+            this.hadDragMove = false;
+            var p = e.touches ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : { x: e.clientX, y: e.clientY };
+            var wrap = document.getElementById('mascotWrap');
+            var rect = wrap.getBoundingClientRect();
+            this.dragOffsetX = p.x - rect.left;
+            this.dragOffsetY = p.y - rect.top;
+            wrap.classList.add('dragging');
+        },
+
+        onDrag: function(e) {
+            if (!this.isDragging) return;
+            if (e.cancelable) e.preventDefault();
+            var p = e.touches ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : { x: e.clientX, y: e.clientY };
+            var wrap = document.getElementById('mascotWrap');
+            var curLeft = parseFloat(wrap.style.left) || 0;
+            var curTop = parseFloat(wrap.style.top) || 0;
+            var newLeft = p.x - this.dragOffsetX;
+            var newTop = p.y - this.dragOffsetY;
+            if (Math.abs(newLeft - curLeft) > 4 || Math.abs(newTop - curTop) > 4) {
+                this.hadDragMove = true;
+            }
+            wrap.style.left = newLeft + 'px';
+            wrap.style.top = newTop + 'px';
+            wrap.style.bottom = 'auto';
+            wrap.style.right = 'auto';
+        },
+
+        endDrag: function() {
+            if (this.isDragging) {
+                this.isDragging = false;
+                document.getElementById('mascotWrap').classList.remove('dragging');
+            }
+        },
+
+        handleClick: function() {
+            if (this.isQuizActive || this.isDancing) return;
+            var now = Date.now();
+            this.clickTimestamps.push(now);
+            this.clickTimestamps = this.clickTimestamps.filter(function(t) { return now - t < 2000; });
+            if (this.clickTimestamps.length >= 5) {
+                this.clickTimestamps = [];
+                this.triggerDanceParty();
+                return;
+            }
+            this.showQuiz();
+            this.resetIdleTimer();
+        },
+
+        showQuiz: function() {
+            var self = this;
+            this.isQuizActive = true;
+            var q = this.quizQuestions[Math.floor(Math.random() * this.quizQuestions.length)];
+            this.setMood('excited');
+            this.showMessage('🧠 ' + q.q);
+            var existing = document.getElementById('quizOptions');
+            if (existing) existing.remove();
+            var optDiv = document.createElement('div');
+            optDiv.id = 'quizOptions';
+            optDiv.className = 'quiz-options';
+            q.o.forEach(function(opt, idx) {
+                var btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.textContent = opt;
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    self.handleQuizAnswer(idx, q.a, optDiv);
+                });
+                optDiv.appendChild(btn);
+            });
+            document.getElementById('mascotWrap').appendChild(optDiv);
+        },
+
+        handleQuizAnswer: function(selected, correct, optDiv) {
+            var btns = optDiv.querySelectorAll('.quiz-option');
+            btns.forEach(function(b, i) {
+                b.disabled = true;
+                b.style.cursor = 'default';
+                if (i === correct) b.classList.add('correct');
+                if (i === selected && selected !== correct) b.classList.add('wrong');
+            });
+            if (selected === correct) {
+                this.setMood('celebrate');
+                this.showMessage('Correct! 🎉');
+            } else {
+                this.setMood('idle');
+                this.showMessage('Oops! Answer: ' + btns[correct].textContent + ' 📚');
+            }
+            var self = this;
+            setTimeout(function() {
+                if (optDiv.parentNode) optDiv.remove();
+                self.isQuizActive = false;
+                self.setMood('idle');
+                self.showMessage(self.messages[self.messageIndex]);
+            }, 2500);
+        },
+
+        triggerDanceParty: function() {
+            var self = this;
+            this.isDancing = true;
+            this.setMood('dance');
+            this.showMessage('💃 DANCE PARTY! 🕺');
+            this.createConfetti();
+            setTimeout(function() {
+                self.setMood('idle');
+                self.showMessage('Whew! Fun! 🎵');
+                self.isDancing = false;
+                setTimeout(function() {
+                    self.showMessage(self.messages[self.messageIndex]);
+                }, 2000);
+            }, 4200);
+        },
+
+        createConfetti: function() {
+            var wrap = document.getElementById('mascotWrap');
+            var rect = wrap.getBoundingClientRect();
+            var cx = rect.left + rect.width / 2;
+            var cy = rect.top + rect.height / 2;
+            var colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff6bcb', '#c084fc', '#34d399'];
+            for (var i = 0; i < 30; i++) {
+                (function(idx) {
+                    setTimeout(function() {
+                        var c = document.createElement('div');
+                        c.className = 'confetti-particle';
+                        c.style.left = (cx + (Math.random() - 0.5) * 60) + 'px';
+                        c.style.top = (cy + (Math.random() - 0.5) * 30) + 'px';
+                        c.style.background = colors[idx % colors.length];
+                        c.style.transform = 'rotate(' + (Math.random() * 360) + 'deg)';
+                        document.body.appendChild(c);
+                        setTimeout(function() { c.remove(); }, 1500);
+                    }, idx * 40);
+                })(i);
+            }
+        },
+
         setMood: function(mood) {
             var svg = document.getElementById('mascotSvg');
-            svg.classList.remove('idle', 'wave', 'celebrate', 'sleep', 'excited');
+            if (!svg) return;
+            svg.classList.remove('idle', 'wave', 'celebrate', 'sleep', 'excited', 'dance');
             svg.classList.add(mood);
             this.currentMood = mood;
         },
-        
+
         showMessage: function(msg) {
             var bubble = document.getElementById('speechBubble');
+            if (!bubble) return;
             bubble.textContent = msg;
             bubble.style.animation = 'none';
             bubble.offsetHeight;
             bubble.style.animation = 'bubbleFade .5s ease';
         },
-        
-        handleClick: function() {
-            var moods = ['idle', 'wave', 'celebrate', 'excited'];
-            var idx = moods.indexOf(this.currentMood);
-            if (idx === -1) idx = 0;
-            var next = moods[(idx + 1) % moods.length];
-            this.setMood(next);
-            var msgs = { idle: 'Keep going! 🌟', wave: 'Hey there! 👋', celebrate: 'Woohoo! 🎉', excited: 'Let\'s go! 🚀' };
-            this.showMessage(msgs[next] || 'You got this! 💪');
-            this.resetIdleTimer();
-        },
-        
+
         startIdleTimer: function() {
             var self = this;
+            clearTimeout(this.idleTimer);
             this.idleTimer = setTimeout(function() {
                 document.dispatchEvent(new CustomEvent('studypro:idle'));
             }, this.idleTimeout);
         },
-        
+
         resetIdleTimer: function() {
             clearTimeout(this.idleTimer);
             if (this.currentMood === 'sleep') {
@@ -329,10 +575,10 @@ try { (function() {
             this.startIdleTimer();
         }
     };
-    
+
     StudyBuddy.init();
     window.StudyBuddy = StudyBuddy;
-} catch(e) {} })();
+})(); } catch(e) {}
 
 // ---- Paper of the Day ----
 (function() {

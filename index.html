@@ -568,6 +568,20 @@
         @keyframes mascotExcited{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
         @keyframes sparklePop{0%{transform:scale(0) rotate(0deg);opacity:1}100%{transform:scale(1.5) rotate(180deg);opacity:0}}
         @keyframes zzzFloat{0%,100%{opacity:0;transform:translateX(0) translateY(0)}50%{opacity:.8;transform:translateX(-6px) translateY(-6px)}}
+        /* ===== Mascot Interactive Extras ===== */
+        @keyframes mascotDance{0%,100%{transform:rotate(-8deg) translateY(0)}25%{transform:rotate(8deg) translateY(-8px)}50%{transform:rotate(-8deg) translateY(-4px)}75%{transform:rotate(8deg) translateY(-8px)}}
+        .mascot-svg.dance{animation:mascotDance .35s ease-in-out 12}
+        .mascot-wrap.dragging .mascot-svg.idle{animation:none}
+        .mascot-wrap.dragging{cursor:grabbing}
+        @keyframes heartFloat{0%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}100%{opacity:0;transform:translateY(-50px) scale(0);filter:blur(2px)}}
+        .heart-particle{position:fixed;pointer-events:none;z-index:10000;font-size:18px;animation:heartFloat 1s ease-out forwards}
+        @keyframes confettiFall{0%{opacity:1;transform:translateY(0) rotate(0deg) scale(1);filter:blur(0)}100%{opacity:0;transform:translateY(100px) rotate(720deg) scale(.5);filter:blur(1px)}}
+        .confetti-particle{position:fixed;pointer-events:none;z-index:10000;width:8px;height:8px;border-radius:1px;animation:confettiFall 1.5s ease-in forwards}
+        .quiz-options{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:2px;position:absolute;top:100%;left:50%;transform:translateX(-50%);width:max-content;max-width:220px;padding:4px}
+        .quiz-option{padding:4px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.68em;cursor:pointer;transition:all .2s;user-select:none;font-family:inherit;white-space:nowrap}
+        .quiz-option:hover{border-color:var(--purple);background:rgba(167,139,250,.15)}
+        .quiz-option.correct{border-color:var(--emerald)!important;background:rgba(52,211,153,.15)!important;color:var(--emerald)}
+        .quiz-option.wrong{border-color:#ef4444!important;background:rgba(239,68,68,.15)!important;color:#ef4444}
         /* ===== Vibe Switcher ===== */
         .vibe-toggle{
             position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:9998;
@@ -643,9 +657,10 @@
             transition:opacity .8s ease;
         }
         .vibe-overlay.active{opacity:.12}
-        /* ===== Mobile hide ===== */
+        /* ===== Mobile adjustments ===== */
         @media(max-width:768px){
-            .mascot-wrap,.vibe-toggle,.vibe-panel{display:none!important}
+            .vibe-toggle,.vibe-panel{display:none!important}
+            .mascot-wrap{transform:scale(.75);transform-origin:bottom right}
         }
     </style>
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
@@ -1265,10 +1280,10 @@
             <circle cx="60" cy="38" r="24" fill="rgba(167,139,250,.12)"/>
             <circle class="eye-open" cx="49" cy="34" r="7.5" fill="rgba(255,255,255,.08)"/>
             <circle class="eye-open" cx="71" cy="34" r="7.5" fill="rgba(255,255,255,.08)"/>
-            <circle class="eye-open" cx="49" cy="34" r="4" fill="var(--purple)"/>
-            <circle class="eye-open" cx="71" cy="34" r="4" fill="var(--purple)"/>
-            <circle class="eye-open" cx="47" cy="32" r="1.8" fill="rgba(255,255,255,.4)"/>
-            <circle class="eye-open" cx="69" cy="32" r="1.8" fill="rgba(255,255,255,.4)"/>
+            <circle class="eye-open" id="leftPupil" cx="49" cy="34" r="4" fill="var(--purple)"/>
+            <circle class="eye-open" id="rightPupil" cx="71" cy="34" r="4" fill="var(--purple)"/>
+            <circle class="eye-open" id="leftHighlight" cx="47" cy="32" r="1.8" fill="rgba(255,255,255,.4)"/>
+            <circle class="eye-open" id="rightHighlight" cx="69" cy="32" r="1.8" fill="rgba(255,255,255,.4)"/>
             <path class="eye-closed" d="M43 35q6-5 12 0" stroke="var(--purple)" stroke-width="2" fill="none" stroke-linecap="round"/>
             <path class="eye-closed" d="M65 35q6-5 12 0" stroke="var(--purple)" stroke-width="2" fill="none" stroke-linecap="round"/>
             <path d="M56 40l4 5 4-5" fill="rgba(251,191,36,.3)"/>
