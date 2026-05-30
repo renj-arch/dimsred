@@ -2,12 +2,54 @@
   var container = document.getElementById('exam-calendar');
   if (!container) return;
 
+  var STORAGE_KEY = 'vlymbooq_practice_log';
   var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   var DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
   var papers = [];
   var currentMonth = new Date().getMonth();
   var currentYear = new Date().getFullYear();
+
+  function todayStr() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+
+  function getLog() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e) { return []; }
+  }
+
+  function saveLog(log) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(log));
+  }
+
+  function markToday() {
+    var log = getLog();
+    var ts = todayStr();
+    if (log.indexOf(ts) === -1) {
+      log.push(ts);
+      saveLog(log);
+    }
+    render();
+  }
+
+  function calcStreak() {
+    var log = getLog();
+    if (log.length === 0) return 0;
+    var sorted = log.slice().sort().reverse();
+    var streak = 0;
+    var d = new Date();
+    for (var i = 0; i < sorted.length; i++) {
+      var expected = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+      if (sorted[i] === expected) {
+        streak++;
+        d.setDate(d.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+    return streak;
+  }
 
   function loadData() {
     var scriptTag = document.getElementById('papers-manifest');
@@ -34,25 +76,61 @@
   function render() {
     var firstDay = new Date(currentYear, currentMonth, 1).getDay();
     var daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    var ts = todayStr();
+    var log = getLog();
+    var streak = calcStreak();
+    var practicedToday = log.indexOf(ts) >= 0;
 
-    var html = '<div class="cal-header">';
+    var html = '';
+
+    // Streak banner
+    if (streak > 1 || practicedToday) {
+      html += '<div class="cal-streak">';
+      html += '<span class="cal-streak-fire">🔥</span>';
+      html += '<span class="cal-streak-count">' + streak + '-day streak!</span>';
+      html += '</div>';
+    }
+
+    if (!practicedToday) {
+      html += '<div class="cal-prompt">';
+      html += '<span class="cal-prompt-icon">📅</span>';
+      html += '<span class="cal-prompt-text">Complete 1 paper today to keep your streak alive!</span>';
+      html += '<button class="cal-gotit" onclick="window.__calGotIt()">Got it!</button>';
+      html += '</div>';
+    } else {
+      html += '<div class="cal-prompt cal-prompt-done">';
+      html += '<span class="cal-prompt-icon">✅</span>';
+      html += '<span class="cal-prompt-text">Today\'s practice done! Come back tomorrow.</span>';
+      html += '</div>';
+    }
+
+    // Calendar header
+    html += '<div class="cal-header">';
     html += '<button class="cal-prev" onclick="window.__calNav(-1)">\u25C0</button>';
     html += '<span class="cal-title">' + MONTHS[currentMonth] + ' ' + currentYear + '</span>';
     html += '<button class="cal-next" onclick="window.__calNav(1)">\u25B6</button>';
     html += '</div>';
 
+    // Day labels
     html += '<div class="cal-days">';
     for (var d = 0; d < 7; d++) {
       html += '<div class="cal-day-label">' + DAYS[d] + '</div>';
     }
 
+    // Empty cells before first day
     for (var i = 0; i < firstDay; i++) {
       html += '<div class="cal-cell cal-empty"></div>';
     }
 
+    // Day cells
     for (var day = 1; day <= daysInMonth; day++) {
+      var ds = currentYear + '-' + String(currentMonth + 1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
       var match = papersForDate(currentYear, currentMonth, day);
-      var extra = match.length > 0 ? ' cal-has-paper' : '';
+      var done = log.indexOf(ds) >= 0;
+      var extra = '';
+      if (match.length > 0) extra += ' cal-has-paper';
+      if (done) extra += ' cal-done';
+      if (ds === ts) extra += ' cal-today';
       var title = match.length > 0 ? match.map(function(p) { return p.title; }).join('; ') : '';
       html += '<div class="cal-cell' + extra + '" title="' + title + '"';
       if (match.length > 0) {
@@ -63,9 +141,11 @@
 
     html += '</div>';
 
-    if (papers.length > 0) {
-      html += '<div class="cal-legend"><span class="cal-dot"></span> Practice paper available</div>';
-    }
+    // Legend
+    html += '<div class="cal-legend">';
+    html += '<span><span class="cal-dot" style="background:rgba(139,92,246,.5)"></span> Paper available</span>';
+    html += '<span><span class="cal-dot" style="background:rgba(52,211,153,.5)"></span> Completed</span>';
+    html += '</div>';
 
     container.innerHTML = html;
   }
@@ -79,6 +159,10 @@
 
   window.__calPaper = function(slug) {
     window.location.href = 'papers/' + slug + '.html';
+  };
+
+  window.__calGotIt = function() {
+    markToday();
   };
 
   loadData();

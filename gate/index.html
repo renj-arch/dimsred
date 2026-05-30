@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com https://unpkg.com; script-src 'self' https://pagead2.googlesyndication.com https://www.gstatic.com https://apis.google.com https://unpkg.com https://static.cloudflareinsights.com https://ep2.adtrafficquality.google https://*.adtrafficquality.google; connect-src 'self' https:; frame-src 'self' https://googleads.g.doubleclick.net https://ep2.adtrafficquality.google https://www.google.com; upgrade-insecure-requests">
@@ -140,8 +140,22 @@
         .cal-cell.cal-has-paper{background:rgba(139,92,246,.12);color:var(--purple);font-weight:600;cursor:pointer}
         .cal-cell.cal-has-paper:hover{background:rgba(139,92,246,.2);transform:scale(1.1)}
         .cal-empty{background:0 0}
-        .cal-legend{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:.75em;color:var(--text-muted)}
-        .cal-dot{width:8px;height:8px;border-radius:50%;background:rgba(139,92,246,.5);display:inline-block}
+        
+        .cal-streak{text-align:center;margin-bottom:12px;padding:8px;background:linear-gradient(135deg,rgba(251,191,36,.1),rgba(251,191,36,.05));border:1px solid rgba(251,191,36,.2);border-radius:var(--radius)}
+        .cal-streak-fire{font-size:1.2em;margin-right:6px}
+        .cal-streak-count{font-weight:700;font-size:.85em;color:#fbbf24}
+        .cal-prompt{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px 14px;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.15);border-radius:var(--radius);flex-wrap:wrap}
+        .cal-prompt-icon{font-size:1.1em}
+        .cal-prompt-text{flex:1;font-size:.8em;color:var(--text-secondary);min-width:140px}
+        .cal-gotit{background:var(--purple);color:#fff;border:none;padding:6px 16px;border-radius:6px;font-size:.78em;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+        .cal-gotit:hover{background:var(--purple-hover);transform:scale(1.04)}
+        .cal-prompt-done{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.2)}
+        .cal-prompt-done .cal-prompt-text{color:rgba(52,211,153,.9)}
+        .cal-cell.cal-today{outline:2px solid rgba(139,92,246,.4);outline-offset:-2px}
+        .cal-cell.cal-done{background:rgba(52,211,153,.12);color:rgba(52,211,153,.9)}
+        .cal-cell.cal-done:hover{background:rgba(52,211,153,.2)}
+        .cal-legend{display:flex;align-items:center;gap:12px;margin-top:12px;font-size:.75em;color:var(--text-muted);flex-wrap:wrap}
+        .cal-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
 
     </style>
 </head>
@@ -279,7 +293,7 @@
         </section>
         <section class="section">
             <h2 class="section-title">Practice <span>Calendar</span></h2>
-            <p class="section-sub">Click a highlighted date to open that day’s paper.</p>
+            <p class="section-sub">Click a highlighted date to open that day�s paper.</p>
             <div class="cal-wrap" id="exam-calendar" data-src="papers/calendar-data.json"></div>
         </section>
 
@@ -289,22 +303,22 @@
             <h2 class="section-title">Why <span>GATE Pro?</span></h2>
             <div class="feat-grid">
                 <div class="feat-card">
-                    <span class="icon">🎯</span>
+                    <span class="icon">??</span>
                     <div class="ftitle">Branch-Wise Papers</div>
                     <div class="fdesc">CS, EC, ME, CE covered with subject-specific solutions.</div>
                 </div>
                 <div class="feat-card">
-                    <span class="icon">🎯</span>
+                    <span class="icon">??</span>
                     <div class="ftitle">Detailed Solutions</div>
                     <div class="fdesc">Every question explained with step-by-step reasoning.</div>
                 </div>
                 <div class="feat-card">
-                    <span class="icon">🎯</span>
+                    <span class="icon">??</span>
                     <div class="ftitle">Topic Tags</div>
                     <div class="fdesc">Questions organized by subject and topic for easy navigation.</div>
                 </div>
                 <div class="feat-card">
-                    <span class="icon">🎯</span>
+                    <span class="icon">??</span>
                     <div class="ftitle">Free Forever</div>
                     <div class="fdesc">No registration, no paywall, complete access for everyone.</div>
                 </div>
