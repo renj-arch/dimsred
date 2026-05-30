@@ -1,77 +1,46 @@
-// ---- Viral Currents Ticker (live, polls every 2min) ----
+// ---- Viral Currents Ticker (horizontal marquee, fetches 3 every 2min) ----
 (function() { try {
     var tickerEl = document.getElementById('tickerText');
     if (!tickerEl) return;
 
-    var used = [];
-    var spanEl = null;
+    var track = document.createElement('div');
+    track.className = 'marquee-track';
+    tickerEl.appendChild(track);
 
-    function showNext(headlines) {
-        var available = [];
-        for (var i = 0; i < headlines.length; i++) {
-            if (used.indexOf(i) === -1) available.push(i);
-        }
-        if (available.length === 0) {
-            used = [];
-            for (var i = 0; i < headlines.length; i++) available.push(i);
-        }
-
-        var pick = available[Math.floor(Math.random() * available.length)];
-        used.push(pick);
-
-        if (!spanEl) {
-            spanEl = document.createElement('span');
-            spanEl.textContent = headlines[pick];
-            tickerEl.appendChild(spanEl);
-            spanEl.className = 'active';
-            if (spanEl.scrollWidth > tickerEl.clientWidth) spanEl.classList.add('scroll');
-        } else {
-            spanEl.className = 'exit';
-            var old = spanEl;
-            spanEl = document.createElement('span');
-            spanEl.textContent = headlines[pick];
-            tickerEl.appendChild(spanEl);
-            void spanEl.offsetHeight;
-            spanEl.className = 'active';
-            if (spanEl.scrollWidth > tickerEl.clientWidth) spanEl.classList.add('scroll');
-            setTimeout(function() {
-                if (old.parentNode) old.remove();
-            }, 500);
-        }
+    function buildContent(items) {
+        var html = '';
+        items.forEach(function(text, i) {
+            if (i > 0) html += '<span class="news-sep">◆</span>';
+            html += '<span class="news-item">' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>';
+        });
+        return html;
     }
 
-    var pool = [];
-
-    function loadFallback() {
-        fetch('/data/headlines.json')
-            .then(function(r) { return r.json(); })
-            .then(function(data) {
-                var list = data.headlines || [];
-                for (var i = 0; i < list.length; i++) { pool.push(list[i]); }
-                if (pool.length > 0) showNext(pool);
-            })
-            .catch(function() {});
+    function setItems(items) {
+        if (items.length === 0) return;
+        var content = buildContent(items);
+        track.innerHTML = content + content;
+        track.classList.remove('paused');
+        void track.offsetHeight;
     }
 
-    function fetchLive() {
+    function fetchNews() {
+        track.classList.add('paused');
         fetch('/api/headlines')
             .then(function(r) { if (!r.ok) throw new Error('fail'); return r.json(); })
             .then(function(data) {
                 var fresh = data.headlines || [];
                 var emoji = data.emoji || '';
-                for (var i = 0; i < fresh.length; i++) {
-                    if (emoji && fresh[i].indexOf(emoji) !== 0) {
-                        fresh[i] = emoji + ' ' + fresh[i];
-                    }
-                    pool.push(fresh[i]);
-                }
-                if (pool.length > 0) showNext(pool);
+                var items = fresh.map(function(h) {
+                    return (emoji && h.indexOf(emoji) !== 0 ? emoji + ' ' : '') + h;
+                });
+                setItems(items);
             })
-            .catch(function() { if (pool.length === 0) loadFallback(); else showNext(pool); });
+            .catch(function() { track.classList.remove('paused'); });
     }
 
-    fetchLive();
-    setInterval(fetchLive, 120000);
+    fetchNews();
+    setInterval(fetchNews, 120000);
 } catch(e) {} })();
 
 // ---- Upcoming Exam Notifications ----
