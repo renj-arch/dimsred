@@ -160,7 +160,7 @@
             var dateStr = year + '-' + (month < 9 ? '0' : '') + (month + 1) + '-' + (d < 10 ? '0' : '') + d;
             var hasPaper = practiceDates[dateStr];
             if (hasPaper) practicedCount++;
-            html += '<div style="padding:6px 0;font-size:.78em;border-radius:6px;' + (hasPaper ? 'background:rgba(52,211,399,.12);color:#34d399;font-weight:600' : 'color:#52525b') + '">' + d + '</div>';
+            html += '<div style="padding:6px 0;font-size:.78em;border-radius:6px;' + (hasPaper ? 'background:rgba(52,211,153,.12);color:#34d399;font-weight:600' : 'color:#52525b') + '">' + d + '</div>';
         }
         html += '</div>';
         html += '<div style="display:flex;gap:12px;margin-top:10px;font-size:.75em;color:#71717a">';
