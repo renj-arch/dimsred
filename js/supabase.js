@@ -292,7 +292,7 @@ function updateAuthUI() {
       el.innerHTML += '<span>' + name.split(' ')[0] + '</span>';
       el.onclick = function (e) { e.preventDefault(); window.location.href = '/lab.html'; };
       if (el.tagName === 'A') el.removeAttribute('href');
-      el.style.cssText = 'padding:3px 12px 3px 3px;background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.08);border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:all .2s';
+      el.style.cssText = 'padding:3px 12px 3px 3px;background:var(--btn-bg,rgba(255,255,255,.06));color:var(--btn-text,#fff);border:1px solid var(--btn-border,rgba(255,255,255,.08));border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:all .2s';
     } else {
       el.innerHTML = '🚀 Unlock Lab';
       if (el.tagName === 'A') {
@@ -301,7 +301,7 @@ function updateAuthUI() {
       } else {
         el.onclick = function (e) { e.preventDefault(); window.location.href = loginUrl; };
       }
-      el.style.cssText = 'background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .2s';
+      el.style.cssText = 'background:var(--btn-bg,rgba(255,255,255,.06));color:var(--btn-text,#fff);border:1px solid var(--btn-border,rgba(255,255,255,.1));padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .2s';
     }
   });
 }
