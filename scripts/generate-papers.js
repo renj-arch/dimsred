@@ -141,6 +141,7 @@ function generatePaper(folder) {
     pageDesc: bank.paperDefaults.pageDescTemplate.replace('{number}', setNumber),
     meta: count + ' Q \u00B7 ' + count + ' min \u00B7 Solved with answers',
     timerMinutes: count,
+    createdDate: new Date().toISOString().split('T')[0],
     sections: bank.sections,
     questions: questions
   };
