@@ -1,16 +1,16 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Leaderboard 🏆 vlymbooq</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://pagead2.googlesyndication.com https://www.gstatic.com https://apis.google.com; connect-src 'self' https:; frame-src 'self' https://googleads.g.doubleclick.net; upgrade-insecure-requests">
+    <title>Leaderboard ?? vlymbooq</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://pagead2.googlesyndication.com https://www.gstatic.com https://apis.google.com; connect-src 'self' https://krvlufonfbcabgcjomvs.supabase.co https://pagead2.googlesyndication.com https://ep2.adtrafficquality.google https://static.cloudflareinsights.com https://apis.google.com https://www.gstatic.com https://www.google.com https://googleads.g.doubleclick.net; frame-src 'self' https://googleads.g.doubleclick.net; upgrade-insecure-requests">
     <script src="js/redirect.js" async></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7363013795551054" crossorigin="anonymous"></script>
     <meta name="description" content="Track your practice scores and see how you rank on the vlymbooq leaderboard across all competitive exam papers.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="canonical" href="https://vlymbooq.qzz.io/leaderboard.html">
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Leaderboard 🏆 vlymbooq","description":"Track your practice scores and see how you rank on the vlymbooq leaderboard across all competitive exam papers.","url":"https://vlymbooq.qzz.io/leaderboard.html","educationalLevel":"Competitive Exam","audience":{"@type":"EducationalAudience","educationalRole":"student"},"publisher":{"@type":"Organization","name":"vlymbooq","url":"https://vlymbooq.qzz.io"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Leaderboard ?? vlymbooq","description":"Track your practice scores and see how you rank on the vlymbooq leaderboard across all competitive exam papers.","url":"https://vlymbooq.qzz.io/leaderboard.html","educationalLevel":"Competitive Exam","audience":{"@type":"EducationalAudience","educationalRole":"student"},"publisher":{"@type":"Organization","name":"vlymbooq","url":"https://vlymbooq.qzz.io"}}</script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}
@@ -198,15 +198,15 @@
                 <a href="index.html">Home</a>
                 <a href="dashboard.html">Dashboard</a>
                 <a href="lab.html">Lab</a>
-                <a href="leaderboard.html" class="active">🏆 Leaderboard</a>
-                <a class="auth-btn" href="#">🔑 Sign In</a>
+                <a href="leaderboard.html" class="active">?? Leaderboard</a>
+                <a class="auth-btn" href="#">?? Sign In</a>
             </div>
         </div>
     </nav>
 
     <div class="container">
         <section class="page-hero">
-            <h1>🏆 <span>Leaderboard</span></h1>
+            <h1>?? <span>Leaderboard</span></h1>
             <p>Your personal best scores ranked across every practice paper</p>
         </section>
 
@@ -249,10 +249,10 @@
       document.getElementById('summary').innerHTML =
         '<div class="stat-pill"><div class="num">' + total + '</div><div class="label">Entries</div></div>' +
         '<div class="stat-pill"><div class="num">' + avg + '%</div><div class="label">Avg Accuracy</div></div>' +
-        (best ? '<div class="stat-pill"><div class="num" style="-webkit-text-fill-color:#fbbf24;background:linear-gradient(135deg,#fbbf24,#f59e0b);-webkit-background-clip:text">' + best.pct + '%</div><div class="label">Best Score</div></div>' : '<div class="stat-pill"><div class="num">—</div><div class="label">Best Score</div></div>');
+        (best ? '<div class="stat-pill"><div class="num" style="-webkit-text-fill-color:#fbbf24;background:linear-gradient(135deg,#fbbf24,#f59e0b);-webkit-background-clip:text">' + best.pct + '%</div><div class="label">Best Score</div></div>' : '<div class="stat-pill"><div class="num">�</div><div class="label">Best Score</div></div>');
 
       if (data.length === 0) {
-        listEl.innerHTML = '<div class="empty-state"><span class="icon">🏆</span><p>No scores yet. Complete a practice paper to appear here!</p><a href="index.html#papers" class="btn">Browse Papers</a></div>';
+        listEl.innerHTML = '<div class="empty-state"><span class="icon">??</span><p>No scores yet. Complete a practice paper to appear here!</p><a href="index.html#papers" class="btn">Browse Papers</a></div>';
         return;
       }
 
@@ -266,7 +266,7 @@
       podiumOrder.forEach(function(idx) {
         if (idx < top3.length) {
           var item = top3[idx];
-          var medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉';
+          var medal = idx === 0 ? '??' : idx === 1 ? '??' : '??';
           var cls = idx === 0 ? 'gold' : idx === 1 ? 'silver' : 'bronze';
           var name = isLocal ? (item.exam || 'Paper') : (item.name || 'Anonymous');
           html += '<div class="podium-card ' + cls + '">';
@@ -297,7 +297,7 @@
           html += '<div class="rank-num ' + cls + '">#' + rank + '</div>';
           html += '<div class="rank-info">';
           html += '<div class="rank-name">' + name + '</div>';
-          html += '<div class="rank-date">' + (item.date ? item.date.slice(0,10) : '') + (item.exam && isLocal ? ' · ' + item.exam : '') + '</div>';
+          html += '<div class="rank-date">' + (item.date ? item.date.slice(0,10) : '') + (item.exam && isLocal ? ' � ' + item.exam : '') + '</div>';
           html += '</div>';
           html += '<div class="rank-stats">';
           html += '<div class="rank-pct">' + pct + '%</div>';
