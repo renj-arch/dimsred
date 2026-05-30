@@ -191,6 +191,42 @@ function countQuestions() {
   return total;
 }
 
+function countPapersForExam(folder) {
+  var dir = path.join(root, folder, 'papers');
+  if (!fs.existsSync(dir)) return 0;
+  return fs.readdirSync(dir).filter(function(f) { return f.endsWith('.html'); }).length;
+}
+
+function countQuestionsInBank(folder) {
+  var bankPath = path.join(bankDir, folder + '.json');
+  if (!fs.existsSync(bankPath)) return 0;
+  try { return JSON.parse(fs.readFileSync(bankPath, 'utf-8')).questions.length; } catch (e) { return 0; }
+}
+
+function updateExamStats() {
+  for (var i = 0; i < EXAMS.length; i++) {
+    var folder = EXAMS[i];
+    var indexPath = path.join(root, folder, 'index.html');
+    if (!fs.existsSync(indexPath)) { console.log('  WARNING: ' + indexPath + ' not found'); continue; }
+
+    var paperCount = countPapersForExam(folder);
+    var questionCount = countQuestionsInBank(folder);
+    var html = fs.readFileSync(indexPath, 'utf-8');
+
+    html = html.replace(
+      /(<div class="num">)\d+(<\/div>\s*<div class="label">Solved Papers)/,
+      function(m, before, after) { return before + paperCount + after; }
+    );
+    html = html.replace(
+      /(<div class="num">)\d+\+?(<\/div>\s*<div class="label">Questions)/,
+      function(m, before, after) { return before + questionCount + '+' + after; }
+    );
+
+    fs.writeFileSync(indexPath, html, 'utf-8');
+    console.log('  Updated ' + folder + '/index.html: ' + paperCount + ' papers, ' + questionCount + '+ questions');
+  }
+}
+
 function updateRootStats() {
   var indexPath = path.join(root, 'index.html');
   if (!fs.existsSync(indexPath)) { console.log('  WARNING: root index.html not found'); return; }
@@ -227,6 +263,7 @@ function run() {
   }
 
   updateRootStats();
+  updateExamStats();
 
   console.log('\nDone! Generated ' + folders.length + ' paper(s).');
 }
