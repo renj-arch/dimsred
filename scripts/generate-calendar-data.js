@@ -45,8 +45,8 @@ EXAMS.forEach(function(folder) {
     var qm = html.match(/<div class="question"/g);
     if (qm) qCount = qm.length;
 
-    var stat = fs.statSync(path.join(papersDir, hf));
-    var date = stat.mtime.toISOString().split('T')[0];
+    // HTML-only papers are legacy (created before JSON system). Default to site launch date.
+    var date = '2026-05-29';
 
     byFolder[folder][slug] = {
       date: date,

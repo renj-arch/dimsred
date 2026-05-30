@@ -157,6 +157,18 @@
         .cal-legend{display:flex;align-items:center;gap:12px;margin-top:12px;font-size:.75em;color:var(--text-muted);flex-wrap:wrap}
         .cal-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
 
+        .cal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+        .cal-modal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:0;max-width:360px;width:100%;max-height:80vh;overflow-y:auto;animation:calFadeIn .2s ease}
+        .cal-modal-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);font-weight:700;font-size:.88em;color:var(--text)}
+        .cal-modal-close{background:none;border:none;color:var(--text-muted);font-size:1.1em;cursor:pointer;padding:2px 6px;border-radius:4px;transition:all .2s}
+        .cal-modal-close:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        .cal-modal-body{padding:8px}
+        .cal-modal-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:8px;text-decoration:none;color:var(--text);transition:all .2s;margin-bottom:4px}
+        .cal-modal-item:hover{background:rgba(139,92,246,.1)}
+        .cal-modal-title{font-size:.82em;font-weight:500}
+        .cal-modal-meta{font-size:.72em;color:var(--text-muted);background:rgba(255,255,255,.04);padding:2px 8px;border-radius:4px}
+        @keyframes calFadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
     </style>
 </head>
 <body>
@@ -181,7 +193,7 @@
                 <a href="../ssc-gd/index.html">SSC GD</a>
                 <a href="../ctet/index.html">CTET</a>
                 <a href="../lab.html">Lab</a>
-                <a href="../leaderboard.html">??</a>
+                <a href="../leaderboard.html">🏆</a>
                 <a class="auth-btn" href="#">Sign In</a>
             </div>
         </div>
@@ -207,21 +219,21 @@
                     <div class="title">Agniveer Practice Set 01</div>
                     <div class="meta">50 Q  GK, Math, Science, Reasoning  60 min</div>
                 </div>
-                <a href="papers/practice-set-01.html" class="btn">Start Practice ?</a>
+                <a href="papers/practice-set-01.html" class="btn">Start Practice →</a>
             </div>
             <div class="paper-card">
                 <div>
                     <div class="title">Agniveer Practice Set 02</div>
                     <div class="meta">50 Q  GK, Math, Science, Reasoning  60 min</div>
                 </div>
-                <a href="papers/practice-set-02.html" class="btn">Start Practice ?</a>
+                <a href="papers/practice-set-02.html" class="btn">Start Practice →</a>
             </div>
             <div class="paper-card">
                 <div>
                     <div class="title">Agniveer Practice Set 03</div>
                     <div class="meta">50 Q  GK, Math, Science, Reasoning  60 min</div>
                 </div>
-                <a href="papers/practice-set-03.html" class="btn">Start Practice ?</a>
+                <a href="papers/practice-set-03.html" class="btn">Start Practice →</a>
             </div>
         
             <div class="paper-card">
@@ -282,7 +294,7 @@
         </section>
         <section class="section">
             <h2 class="section-title">Practice <span>Calendar</span></h2>
-            <p class="section-sub">Click a highlighted date to open that day�s paper.</p>
+            <p class="section-sub">Click a highlighted date to open that day's paper.</p>
             <div class="cal-wrap" id="exam-calendar" data-src="papers/calendar-data.json"></div>
         </section>
 
@@ -292,22 +304,22 @@
             <h2 class="section-title">Why <span>Agniveer Pro?</span></h2>
             <div class="feat-grid">
                 <div class="feat-card">
-                    <span class="icon">??</span>
+                    <span class="icon">📘</span>
                     <div class="ftitle">Exam-Focused Content</div>
                     <div class="fdesc">Questions designed to match the Agniveer exam pattern and difficulty level.</div>
                 </div>
                 <div class="feat-card">
-                    <span class="icon">??</span>
+                    <span class="icon">📘</span>
                     <div class="ftitle">All 4 Subjects</div>
                     <div class="fdesc">General Knowledge, Mathematics, Science &amp; Reasoning  covered comprehensively.</div>
                 </div>
                 <div class="feat-card">
-                    <span class="icon">??</span>
+                    <span class="icon">📘</span>
                     <div class="ftitle">Detailed Solutions</div>
                     <div class="fdesc">Every question comes with a clear explanation to help you learn.</div>
                 </div>
                 <div class="feat-card">
-                    <span class="icon">??</span>
+                    <span class="icon">📘</span>
                     <div class="ftitle">Mobile Friendly</div>
                     <div class="fdesc">Practice on the go. Works perfectly on phone, tablet, or desktop.</div>
                 </div>
@@ -324,24 +336,24 @@
         <h2 class="section-title">Recommended <span>Books</span></h2>
         <div class="books-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:20px">
             <a href="https://www.amazon.in/dp/B0GHJMD3NN?tag=vlymbooq-21" target="_blank" rel="noopener" style="display:block;padding:16px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);text-decoration:none;transition:all .3s">
-                <span style="font-size:1.5em;display:block;margin-bottom:6px">??</span>
+                <span style="font-size:1.5em;display:block;margin-bottom:6px">📖</span>
                 <div style="font-size:.82em;font-weight:600;color:var(--text);line-height:1.4">Indian Army Agniveer Guide</div>
-                <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">Check price on Amazon ?</div>
+                <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">Check price on Amazon →</div>
             </a>
             <a href="https://www.amazon.in/dp/B0FGQ14552?tag=vlymbooq-21" target="_blank" rel="noopener" style="display:block;padding:16px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);text-decoration:none;transition:all .3s">
-                <span style="font-size:1.5em;display:block;margin-bottom:6px">??</span>
+                <span style="font-size:1.5em;display:block;margin-bottom:6px">📖</span>
                 <div style="font-size:.82em;font-weight:600;color:var(--text);line-height:1.4">General Knowledge 2025</div>
-                <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">Check price on Amazon ?</div>
+                <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">Check price on Amazon →</div>
             </a>
             <a href="https://www.amazon.in/dp/9370789073?tag=vlymbooq-21" target="_blank" rel="noopener" style="display:block;padding:16px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);text-decoration:none;transition:all .3s">
-                <span style="font-size:1.5em;display:block;margin-bottom:6px">??</span>
+                <span style="font-size:1.5em;display:block;margin-bottom:6px">📖</span>
                 <div style="font-size:.82em;font-weight:600;color:var(--text);line-height:1.4">Agniveer Previous Year Papers</div>
-                <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">Check price on Amazon ?</div>
+                <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">Check price on Amazon →</div>
             </a>
             <a href="https://www.amazon.in/dp/B0FZ5K8GDM?tag=vlymbooq-21" target="_blank" rel="noopener" style="display:block;padding:16px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);text-decoration:none;transition:all .3s">
-                <span style="font-size:1.5em;display:block;margin-bottom:6px">??</span>
+                <span style="font-size:1.5em;display:block;margin-bottom:6px">📖</span>
                 <div style="font-size:.82em;font-weight:600;color:var(--text);line-height:1.4">Physical Fitness for Defence</div>
-                <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">Check price on Amazon ?</div>
+                <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">Check price on Amazon →</div>
             </a>
         </div>
     </section>

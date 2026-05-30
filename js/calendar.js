@@ -132,9 +132,10 @@
       if (done) extra += ' cal-done';
       if (ds === ts) extra += ' cal-today';
       var title = match.length > 0 ? match.map(function(p) { return p.title; }).join('; ') : '';
-      html += '<div class="cal-cell' + extra + '" title="' + title + '"';
+      html += '<div class="cal-cell' + extra + '" title="' + title.replace(/"/g, '&quot;') + '"';
       if (match.length > 0) {
-        html += ' onclick="window.__calPaper(\'' + match[0].slug + '\')"';
+        var slugs = match.map(function(p) { return p.slug; }).join(',');
+        html += ' data-slugs="' + slugs.replace(/"/g, '&quot;') + '" onclick="window.__calPick(\'' + slugs.replace(/'/g, "\\'") + '\')"';
       }
       html += '>' + day + '</div>';
     }
@@ -150,6 +151,32 @@
     container.innerHTML = html;
   }
 
+  function openModal(slugs) {
+    var list = slugs.split(',');
+    if (list.length === 1) {
+      window.location.href = 'papers/' + list[0] + '.html';
+      return;
+    }
+    var items = list.map(function(s) {
+      var p = papers.filter(function(x) { return x.slug === s; })[0];
+      if (!p) return '<div class="cal-modal-item">' + s + '</div>';
+      return '<a href="papers/' + s + '.html" class="cal-modal-item">' +
+        '<span class="cal-modal-title">' + p.title + '</span>' +
+        '<span class="cal-modal-meta">' + (p.questions || '?') + ' Q</span>' +
+        '</a>';
+    }).join('');
+    var overlay = document.createElement('div');
+    overlay.className = 'cal-overlay';
+    overlay.innerHTML = '<div class="cal-modal"><div class="cal-modal-header">' +
+      '<span>Papers available</span>' +
+      '<button class="cal-modal-close" onclick="this.closest(\'.cal-overlay\').remove()">✕</button>' +
+      '</div><div class="cal-modal-body">' + items + '</div></div>';
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) overlay.remove();
+    });
+    document.body.appendChild(overlay);
+  }
+
   window.__calNav = function(dir) {
     currentMonth += dir;
     if (currentMonth > 11) { currentMonth = 0; currentYear++; }
@@ -157,8 +184,8 @@
     render();
   };
 
-  window.__calPaper = function(slug) {
-    window.location.href = 'papers/' + slug + '.html';
+  window.__calPick = function(slugs) {
+    openModal(slugs);
   };
 
   window.__calGotIt = function() {

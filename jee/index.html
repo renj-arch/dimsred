@@ -157,6 +157,18 @@
         .cal-legend{display:flex;align-items:center;gap:12px;margin-top:12px;font-size:.75em;color:var(--text-muted);flex-wrap:wrap}
         .cal-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
 
+        .cal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+        .cal-modal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:0;max-width:360px;width:100%;max-height:80vh;overflow-y:auto;animation:calFadeIn .2s ease}
+        .cal-modal-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);font-weight:700;font-size:.88em;color:var(--text)}
+        .cal-modal-close{background:none;border:none;color:var(--text-muted);font-size:1.1em;cursor:pointer;padding:2px 6px;border-radius:4px;transition:all .2s}
+        .cal-modal-close:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        .cal-modal-body{padding:8px}
+        .cal-modal-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:8px;text-decoration:none;color:var(--text);transition:all .2s;margin-bottom:4px}
+        .cal-modal-item:hover{background:rgba(139,92,246,.1)}
+        .cal-modal-title{font-size:.82em;font-weight:500}
+        .cal-modal-meta{font-size:.72em;color:var(--text-muted);background:rgba(255,255,255,.04);padding:2px 8px;border-radius:4px}
+        @keyframes calFadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
     </style>
 </head>
 <body>
@@ -286,7 +298,7 @@
         </section>
         <section class="section">
             <h2 class="section-title">Practice <span>Calendar</span></h2>
-            <p class="section-sub">Click a highlighted date to open that day�s paper.</p>
+            <p class="section-sub">Click a highlighted date to open that day's paper.</p>
             <div class="cal-wrap" id="exam-calendar" data-src="papers/calendar-data.json"></div>
         </section>
 
@@ -296,22 +308,22 @@
             <h2 class="section-title">Why <span>JEE Pro?</span></h2>
             <div class="feat-grid">
                 <div class="feat-card">
-                    <span class="icon">??</span>
+                    <span class="icon">📘</span>
                     <div class="ftitle">PCM Solved Papers</div>
                     <div class="fdesc">Full-length Physics, Chemistry, Mathematics papers with answer keys.</div>
                 </div>
                 <div class="feat-card">
-                    <span class="icon">??</span>
+                    <span class="icon">📘</span>
                     <div class="ftitle">Shortcut Methods</div>
                     <div class="fdesc">Time-saving techniques explained for every problem.</div>
                 </div>
                 <div class="feat-card">
-                    <span class="icon">??</span>
+                    <span class="icon">📘</span>
                     <div class="ftitle">Chapter-wise Tags</div>
                     <div class="fdesc">Questions organized by topic for targeted practice.</div>
                 </div>
                 <div class="feat-card">
-                    <span class="icon">??</span>
+                    <span class="icon">📘</span>
                     <div class="ftitle">Exam Pattern</div>
                     <div class="fdesc">Familiarize with the actual JEE Main pattern and marking scheme.</div>
                 </div>
@@ -328,24 +340,24 @@
         <h2 class="section-title">Recommended <span>Books</span></h2>
         <div class="books-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:20px">
             <a href="https://www.amazon.in/dp/B0GVMZG44G?tag=vlymbooq-21" target="_blank" rel="noopener" style="display:block;padding:16px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);text-decoration:none;transition:all .3s">
-                <span style="font-size:1.5em;display:block;margin-bottom:6px">??</span>
+                <span style="font-size:1.5em;display:block;margin-bottom:6px">📖</span>
                 <div style="font-size:.82em;font-weight:600;color:var(--text);line-height:1.4">Physics Galaxy</div>
-                <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">Check price on Amazon ?</div>
+                <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">Check price on Amazon →</div>
             </a>
             <a href="https://www.amazon.in/dp/9368020388?tag=vlymbooq-21" target="_blank" rel="noopener" style="display:block;padding:16px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);text-decoration:none;transition:all .3s">
-                <span style="font-size:1.5em;display:block;margin-bottom:6px">??</span>
+                <span style="font-size:1.5em;display:block;margin-bottom:6px">📖</span>
                 <div style="font-size:.82em;font-weight:600;color:var(--text);line-height:1.4">Organic Chemistry by MS Chouhan</div>
-                <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">Check price on Amazon ?</div>
+                <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">Check price on Amazon →</div>
             </a>
             <a href="https://www.amazon.in/dp/B0DLT28W8Z?tag=vlymbooq-21" target="_blank" rel="noopener" style="display:block;padding:16px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);text-decoration:none;transition:all .3s">
-                <span style="font-size:1.5em;display:block;margin-bottom:6px">??</span>
+                <span style="font-size:1.5em;display:block;margin-bottom:6px">📖</span>
                 <div style="font-size:.82em;font-weight:600;color:var(--text);line-height:1.4">Mathematics for JEE by RD Sharma</div>
-                <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">Check price on Amazon ?</div>
+                <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">Check price on Amazon →</div>
             </a>
             <a href="https://www.amazon.in/dp/9362259532?tag=vlymbooq-21" target="_blank" rel="noopener" style="display:block;padding:16px;border-radius:12px;border:1px solid var(--border);background:var(--bg-card);text-decoration:none;transition:all .3s">
-                <span style="font-size:1.5em;display:block;margin-bottom:6px">??</span>
+                <span style="font-size:1.5em;display:block;margin-bottom:6px">📖</span>
                 <div style="font-size:.82em;font-weight:600;color:var(--text);line-height:1.4">IIT JEE Previous Year Papers</div>
-                <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">Check price on Amazon ?</div>
+                <div style="font-size:.72em;color:var(--text-muted);margin-top:6px">Check price on Amazon →</div>
             </a>
         </div>
     </section>
