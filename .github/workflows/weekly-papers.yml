@@ -58,7 +58,7 @@ jobs:
         if: steps.batch.outputs.exams != 'skip'
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-        run: node scripts/generate-ai-questions.js ${{ steps.batch.outputs.exams }} --count=5
+        run: node scripts/generate-ai-questions.js ${{ steps.batch.outputs.exams }} --count=15
 
       - name: Clean up PDFs older than 2 weeks
         run: find pdfs -name "weekly-*.pdf" -mtime +13 -delete
