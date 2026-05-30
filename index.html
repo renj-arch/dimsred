@@ -104,16 +104,25 @@
         .ticker-label .dot{width:6px;height:6px;border-radius:50%;background:#60a5fa;animation:tickerPulse 1.5s ease-in-out infinite}
         @keyframes tickerPulse{0%,100%{opacity:1}50%{opacity:.3}}
         .ticker-text{
-            flex:1;overflow:hidden;position:relative;height:1.4em;
+            flex:1;overflow:hidden;position:relative;height:1.5em;
+            white-space:nowrap;
         }
         .ticker-text span{
-            display:block;position:absolute;width:100%;
-            white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-            color:var(--text-secondary);transition:none;
-            opacity:0;transform:translateY(8px);
+            display:inline-block;position:absolute;white-space:nowrap;
+            color:var(--text-secondary);
+            opacity:0;transform:translateY(8px);transition:none;
         }
         .ticker-text span.active{opacity:1;transform:translateY(0);transition:all .4s ease}
         .ticker-text span.exit{opacity:0;transform:translateY(-8px);transition:all .4s ease}
+        .ticker-text span.scroll{
+            animation:tickerScroll 12s linear infinite;
+        }
+        @keyframes tickerScroll{
+            0%{transform:translateY(0) translateX(0)}
+            10%{transform:translateY(0) translateX(0)}
+            90%{transform:translateY(0) translateX(calc(-100% + 300px))}
+            100%{transform:translateY(0) translateX(calc(-100% + 300px))}
+        }
 
         /* -- Upcoming Exams -- */
         .exam-alerts{margin-bottom:48px}

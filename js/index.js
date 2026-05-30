@@ -22,8 +22,9 @@
         if (!spanEl) {
             spanEl = document.createElement('span');
             spanEl.textContent = headlines[pick];
-            spanEl.className = 'active';
             tickerEl.appendChild(spanEl);
+            spanEl.className = 'active';
+            if (spanEl.scrollWidth > tickerEl.clientWidth) spanEl.classList.add('scroll');
         } else {
             spanEl.className = 'exit';
             var old = spanEl;
@@ -32,6 +33,7 @@
             tickerEl.appendChild(spanEl);
             void spanEl.offsetHeight;
             spanEl.className = 'active';
+            if (spanEl.scrollWidth > tickerEl.clientWidth) spanEl.classList.add('scroll');
             setTimeout(function() {
                 if (old.parentNode) old.remove();
             }, 500);
