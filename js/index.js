@@ -434,8 +434,8 @@ try { (function() {
             this.dragOffsetX = p.x - rect.left;
             this.dragOffsetY = p.y - rect.top;
             wrap.classList.add('dragging');
-            this.setMood('excited');
-            var msgs = ['Whoa! 😰', 'Hey! 😯', 'Eek! 😨', 'Ahh! 😱', 'Careful! 😬'];
+            this.setMood('scared');
+            var msgs = ['Whoa! 😰', 'Hey! 😯', 'Eek! 😨', 'Ahh! 😱', 'Careful! 😬', 'Put me down! 😰', 'Stop! 😨'];
             this.showMessage(msgs[Math.floor(Math.random() * msgs.length)]);
             this.resetIdleTimer();
         },
@@ -674,7 +674,7 @@ try { (function() {
         setMood: function(mood) {
             var svg = document.getElementById('mascotSvg');
             if (!svg) return;
-            svg.classList.remove('idle', 'wave', 'celebrate', 'sleep', 'excited', 'dance');
+            svg.classList.remove('idle', 'wave', 'celebrate', 'sleep', 'excited', 'dance', 'scared');
             svg.classList.add(mood);
             this.currentMood = mood;
         },
