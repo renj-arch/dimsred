@@ -257,60 +257,61 @@ function getApiKey(name) {
   return null;
 }
 
-async function callGroq(apiKey, prompt, model) {
-  if (!model) model = 'llama3-70b-8192';
-  var url = 'https://api.groq.com/openai/v1/chat/completions';
-  var body = JSON.stringify({
-    model: model,
-    messages: [{ role: 'user', content: prompt }],
-    temperature: 0.7,
-    max_tokens: 8192
-  });
-
-  for (var retry = 0; retry < 3; retry++) {
-    try {
-      var response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
-        body: body
-      });
-      if (response.status === 429) {
-        console.log('  Rate limited, waiting 10s...');
-        await new Promise(function(r) { setTimeout(r, 10000); });
-        continue;
-      }
-      if (!response.ok) {
-        console.log('  HTTP ' + response.status + ', retry ' + (retry + 1));
-        await new Promise(function(r) { setTimeout(r, 3000); });
-        continue;
-      }
-      var data = await response.json();
-      return (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '';
-    } catch (e) {
-      console.log('  Error: ' + e.message + ', retry ' + (retry + 1));
-      await new Promise(function(r) { setTimeout(r, 3000); });
+async function callGroq(apiKey, prompt) {
+  var models = ['llama-3.3-70b-versatile', 'mixtral-8x7b-32768', 'gemma2-9b-it'];
+  for (var m = 0; m < models.length; m++) {
+    for (var r = 0; r < 3; r++) {
+      try {
+        var resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: models[m], messages: [{ role: 'user', content: prompt }], temperature: 0.7, max_tokens: 8192 })
+        });
+        if (resp.status === 429) { console.log('  Rate limited, waiting 15s...'); await new Promise(function(r) { setTimeout(r, 15000); }); continue; }
+        if (!resp.ok) { await new Promise(function(r) { setTimeout(r, 3000); }); continue; }
+        var data = await resp.json();
+        return (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '';
+      } catch (e) { await new Promise(function(r) { setTimeout(r, 3000); }); }
     }
   }
   return null;
 }
 
-async function generateQuestions(exam, count) {
-  var apiKey = getApiKey('GROQ_API_KEY');
-  if (!apiKey) {
-    console.error('ERROR: Set GROQ_API_KEY env var or create .groq-key file');
-    process.exit(1);
+async function callGemini(apiKey, prompt) {
+  var models = ['gemini-2.0-flash', 'gemini-2.0-flash-001', 'gemini-2.0-flash-lite', 'gemini-2.0-flash-lite-001'];
+  var body = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] });
+  for (var m = 0; m < models.length; m++) {
+    try {
+      var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + models[m] + ':generateContent?key=' + apiKey, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body
+      });
+      var data = await resp.json();
+      if (data.error) continue;
+      var text = data.candidates && data.candidates[0] && data.candidates[0].content &&
+        data.candidates[0].content.parts && data.candidates[0].content.parts[0].text || '';
+      if (text) return text;
+    } catch (e) {}
   }
+  return null;
+}
+
+async function generateQuestions(exam, count) {
+  var groqKey = getApiKey('GROQ_API_KEY');
+  var geminiKey = getApiKey('GEMINI_API_KEY');
 
   var prompt = buildPrompt(exam, count);
   if (!prompt) return;
 
-  var models = ['llama-3.3-70b-versatile', 'mixtral-8x7b-32768', 'gemma2-9b-it'];
   var success = false;
 
-  for (var attempt = 0; attempt < 2 && !success; attempt++) {
-    for (var i = 0; i < models.length && !success; i++) {
-      console.log('  Calling ' + models[i] + ' (' + count + ' questions)...');
-      var text = await callGroq(apiKey, prompt, models[i]);
+  var providers = [];
+  if (groqKey) providers.push({ name: 'Groq', fn: function(p) { return callGroq(groqKey, p); } });
+  if (geminiKey) providers.push({ name: 'Gemini', fn: function(p) { return callGemini(geminiKey, p); } });
+
+  for (var p = 0; p < providers.length && !success; p++) {
+    console.log('  Trying ' + providers[p].name + '...');
+    for (var attempt = 0; attempt < 2 && !success; attempt++) {
+      var text = await providers[p].fn(prompt);
       if (!text) continue;
 
       fs.writeFileSync(path.join(bankDir, '_last-response.txt'), text, 'utf-8');
@@ -336,12 +337,10 @@ async function generateQuestions(exam, count) {
           addToBank(exam, valid);
           var metaPath = path.join(bankDir, exam + '-meta.json');
           if (fs.existsSync(metaPath)) fs.unlinkSync(metaPath);
-          console.log('  Added ' + valid.length + ' new questions to ' + exam + ' bank');
+          console.log('  Added ' + valid.length + ' new questions to ' + exam + ' bank (via ' + providers[p].name + ')');
           success = true;
         }
-      } catch (e) {
-        continue;
-      }
+      } catch (e) { continue; }
     }
   }
 

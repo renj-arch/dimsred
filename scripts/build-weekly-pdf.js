@@ -9,10 +9,11 @@ var pdfDir = path.join(root, 'pdfs');
 var EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer', 'upsc', 'ibps-po', 'sbi-clerk', 'ssc-gd', 'ctet'];
 var EXAM_LABELS = { cgl: 'SSC CGL', rbi: 'RBI Grade B', jee: 'JEE Main', neet: 'NEET UG', gate: 'GATE', agniveer: 'Agniveer', upsc: 'UPSC CSE', 'ibps-po': 'IBPS PO', 'sbi-clerk': 'SBI Clerk', 'ssc-gd': 'SSC GD', ctet: 'CTET' };
 
-function getApiKey() {
-  if (process.env.GROQ_API_KEY) return process.env.GROQ_API_KEY;
-  var keyPath = path.join(root, '.groq-key');
-  if (fs.existsSync(keyPath)) return fs.readFileSync(keyPath, 'utf-8').trim();
+function getApiKey(name) {
+  if (!name) name = 'GROQ_API_KEY';
+  if (process.env[name]) return process.env[name];
+  var keyFile = path.join(root, name === 'GROQ_API_KEY' ? '.groq-key' : '.gemini-key');
+  if (fs.existsSync(keyFile)) return fs.readFileSync(keyFile, 'utf-8').trim();
   return null;
 }
 
@@ -50,28 +51,62 @@ function getLatestPaper(exam) {
   try { return JSON.parse(fs.readFileSync(paperPath, 'utf-8')); } catch (e) { return null; }
 }
 
-async function callGroq(apiKey, prompt, model) {
-  if (!model) model = 'llama-3.3-70b-versatile';
-  for (var retry = 0; retry < 3; retry++) {
-    try {
-      var r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: model, messages: [{ role: 'user', content: prompt }], temperature: 0.3, max_tokens: 4000 })
-      });
-      if (r.status === 429) { console.log('  Rate limited, waiting 10s...'); await new Promise(function(ok) { setTimeout(ok, 10000); }); continue; }
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      var d = await r.json();
-      return (d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content || '').trim();
-    } catch (e) {
-      if (retry < 2) { await new Promise(function(ok) { setTimeout(ok, 3000); }); continue; }
-      throw e;
+async function callGroq(apiKey, prompt) {
+  var models = ['llama-3.3-70b-versatile', 'mixtral-8x7b-32768', 'gemma2-9b-it'];
+  for (var m = 0; m < models.length; m++) {
+    for (var r = 0; r < 3; r++) {
+      try {
+        var resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: models[m], messages: [{ role: 'user', content: prompt }], temperature: 0.3, max_tokens: 4000 })
+        });
+        if (resp.status === 429) { console.log('  Rate limited, waiting 15s...'); await new Promise(function(ok) { setTimeout(ok, 15000); }); continue; }
+        if (!resp.ok) { await new Promise(function(ok) { setTimeout(ok, 3000); }); continue; }
+        var d = await resp.json();
+        return (d.choices && d.choices[0] && d.choices[0].message && d.choices[0].message.content || '').trim();
+      } catch (e) { await new Promise(function(ok) { setTimeout(ok, 3000); }); }
     }
   }
+  return null;
 }
 
-async function getDetailedSolutions(apiKey, exam, questions) {
-  if (!apiKey) return null;
+async function callGemini(apiKey, prompt) {
+  var models = ['gemini-2.0-flash', 'gemini-2.0-flash-001', 'gemini-2.0-flash-lite', 'gemini-2.0-flash-lite-001'];
+  var body = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] });
+  for (var m = 0; m < models.length; m++) {
+    try {
+      var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + models[m] + ':generateContent?key=' + apiKey, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body
+      });
+      var data = await resp.json();
+      if (data.error) continue;
+      var text = data.candidates && data.candidates[0] && data.candidates[0].content &&
+        data.candidates[0].content.parts && data.candidates[0].content.parts[0].text || '';
+      if (text) return text.trim();
+    } catch (e) {}
+  }
+  return null;
+}
+
+async function callAI(prompt) {
+  var text = null;
+  var groqKey = getApiKey('GROQ_API_KEY');
+  if (groqKey) {
+    console.log('  Trying Groq...');
+    text = await callGroq(groqKey, prompt);
+  }
+  if (!text) {
+    var geminiKey = getApiKey('GEMINI_API_KEY');
+    if (geminiKey) {
+      console.log('  Trying Gemini...');
+      text = await callGemini(geminiKey, prompt);
+    }
+  }
+  return text;
+}
+
+async function getDetailedSolutions(exam, questions) {
   var label = EXAM_LABELS[exam] || exam.toUpperCase();
   var qText = questions.map(function(q, i) {
     var opts = (q.options || []).map(function(o) { return o.label + '. ' + (o.text || ''); }).join(' | ');
@@ -92,7 +127,7 @@ async function getDetailedSolutions(apiKey, exam, questions) {
     'Make each solution at least 4-6 sentences. Be thorough and exam-focused.';
 
   try {
-    var text = await callGroq(apiKey, prompt, 'llama-3.3-70b-versatile');
+    var text = await callAI(prompt);
     if (!text) throw new Error('Empty response');
     var solutions = {};
     var parts = text.split(/===Q(\d+)===/);
@@ -468,7 +503,6 @@ async function buildPDF(examArgs) {
   if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir);
   var dateStr = getDateStr();
   var weekRange = formatWeekRange();
-  var apiKey = getApiKey();
   var examsToBuild = examArgs && examArgs.length > 0 ? examArgs : EXAMS;
   var papers = [];
   for (var i = 0; i < examsToBuild.length; i++) { var p = getLatestPaper(examsToBuild[i]); if (p) papers.push({ exam: examsToBuild[i], paper: p }); }
@@ -479,14 +513,15 @@ async function buildPDF(examArgs) {
   var analyses = {};
   var quickRefs = {};
   var allSols = {};
-  if (apiKey) {
-    console.log('  Fetching topic analyses & detailed solutions from Groq...');
+  var hasAnyKey = getApiKey('GROQ_API_KEY') || getApiKey('GEMINI_API_KEY');
+  if (hasAnyKey) {
+    console.log('  Fetching topic analyses & detailed solutions...');
     for (var ai = 0; ai < papers.length; ai++) {
       var exam = papers[ai].exam;
       var label = EXAM_LABELS[exam] || exam.toUpperCase();
       process.stdout.write('    ' + label + '... ');
       try {
-      var text = await callGroq(apiKey,
+      var text = await callAI(
         'You are an expert ' + label + ' tutor. Analyze these practice questions and provide a concise analysis. Use the EXACT format below with ===SECTION=== markers:\n\n' +
         '===ANALYSIS===\n' +
         '1. Topics Covered - List main topics and subtopics tested\n' +
@@ -512,7 +547,7 @@ async function buildPDF(examArgs) {
 
     process.stdout.write('      solutions... ');
     try {
-      var sols = await getDetailedSolutions(apiKey, exam, papers[ai].paper.questions);
+      var sols = await getDetailedSolutions(exam, papers[ai].paper.questions);
       if (sols) { allSols[exam] = sols; console.log('OK (' + Object.keys(sols).length + ' enhanced)'); }
       else { console.log('using existing solutions'); }
     } catch (e) { console.log('enhancement unavailable (' + e.message + ')'); }
@@ -520,7 +555,7 @@ async function buildPDF(examArgs) {
       if (ai < papers.length - 1) await new Promise(function(r) { setTimeout(r, 3000); });
     }
   } else {
-    console.log('  No Groq API key found, skipping AI enhancements');
+    console.log('  No API keys found, skipping AI enhancements');
   }
 
   var results = [];
