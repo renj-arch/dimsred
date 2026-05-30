@@ -1,0 +1,83 @@
+name: Generate Weekly PDF Digests
+
+on:
+  schedule:
+    - cron: '0 13 * * 1'
+    - cron: '0 14 * * 1'
+    - cron: '0 15 * * 1'
+    - cron: '0 16 * * 1'
+    - cron: '0 17 * * 1'
+    - cron: '0 18 * * 1'
+    - cron: '0 19 * * 1'
+    - cron: '0 20 * * 1'
+    - cron: '0 21 * * 1'
+    - cron: '0 22 * * 1'
+    - cron: '0 23 * * 1'
+  workflow_dispatch:
+    inputs:
+      exam:
+        description: 'Exam to generate PDF for (default: all)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  generate-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Pull latest changes
+        run: git pull --rebase
+
+      - name: Determine exam for this slot
+        id: exam
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ -n "${{ github.event.inputs.exam }}" ]; then
+              echo "name=${{ github.event.inputs.exam }}" >> $GITHUB_OUTPUT
+            else
+              echo "name=all" >> $GITHUB_OUTPUT
+            fi
+          else
+            HOUR=$(date +%H)
+            case "$HOUR" in
+              13) echo "name=cgl" ;;
+              14) echo "name=rbi" ;;
+              15) echo "name=jee" ;;
+              16) echo "name=neet" ;;
+              17) echo "name=gate" ;;
+              18) echo "name=agniveer" ;;
+              19) echo "name=upsc" ;;
+              20) echo "name=ibps-po" ;;
+              21) echo "name=sbi-clerk" ;;
+              22) echo "name=ssc-gd" ;;
+              23) echo "name=ctet" ;;
+              *) echo "name=skip" ;;
+            esac >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build weekly PDF
+        if: steps.exam.outputs.name != 'skip'
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: node scripts/build-weekly-pdf.js ${{ steps.exam.outputs.name }}
+
+      - name: Commit and push
+        if: steps.exam.outputs.name != 'skip'
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          git diff --staged --quiet || git commit -m "Weekly PDF digest — ${{ steps.exam.outputs.name }}"
+          git push
