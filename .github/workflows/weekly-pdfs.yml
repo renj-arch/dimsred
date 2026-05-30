@@ -73,6 +73,9 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: node scripts/build-weekly-pdf.js ${{ steps.exam.outputs.name }}
 
+      - name: Clean up PDFs older than 4 weeks
+        run: find pdfs -name "weekly-*.pdf" -mtime +27 -delete
+
       - name: Commit and push
         if: steps.exam.outputs.name != 'skip'
         run: |

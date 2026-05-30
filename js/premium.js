@@ -46,8 +46,8 @@
 
   function esc(s) { return String(s).replace(/[&<>"']/g, function(c) { return '&#' + c.charCodeAt(0) + ';'; }); }
 
-  var EXAM_LABELS = { cgl: 'SSC CGL', rbi: 'RBI Grade B', jee: 'JEE Main', neet: 'NEET UG', gate: 'GATE', agniveer: 'Agniveer' };
-  var EXAM_ICONS = { cgl: '\uD83D\uDCD6', rbi: '\uD83C\uDFE6', jee: '\uD83D\uDD2C', neet: '\u2695\uFE0F', gate: '\uD83D\uDEE0\uFE0F', agniveer: '\uD83C\uDF93' };
+  var EXAM_LABELS = { cgl: 'SSC CGL', rbi: 'RBI Grade B', jee: 'JEE Main', neet: 'NEET UG', gate: 'GATE', agniveer: 'Agniveer', upsc: 'UPSC CSE', 'ibps-po': 'IBPS PO', 'sbi-clerk': 'SBI Clerk', 'ssc-gd': 'SSC GD', ctet: 'CTET' };
+  var EXAM_ICONS = { cgl: '\uD83D\uDCD6', rbi: '\uD83C\uDFE6', jee: '\uD83D\uDD2C', neet: '\u2695\uFE0F', gate: '\uD83D\uDEE0\uFE0F', agniveer: '\uD83C\uDF93', upsc: '\uD83C\uDFDB', 'ibps-po': '\uD83C\uDFE6', 'sbi-clerk': '\uD83C\uDFE6', 'ssc-gd': '\uD83C\uDFC6', ctet: '\uD83C\uDF93' };
 
   function loadPDFs() {
     var p = getPremium();
@@ -77,14 +77,19 @@
 
         for (var exam in data) {
           if (!allAccess && allowedExams.indexOf(exam) === -1) continue;
-          var entry = data[exam];
+          var entries = data[exam];
+          if (!entries || !entries.length) continue;
           var label = EXAM_LABELS[exam] || exam.toUpperCase();
           var icon = EXAM_ICONS[exam] || '\uD83D\uDCC4';
-          var dlUrl = '/api/serve-pdf?code=' + encodeURIComponent(code) + '&file=' + encodeURIComponent(entry.filename);
-          html += '<div class="feature-item" style="text-align:left;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px">' +
-            '<div><div class="label" style="margin-bottom:2px">' + icon + ' ' + esc(label) + '</div><div class="desc">' + esc(entry.date) + ' \u2014 Weekly Digest</div></div>' +
-            '<a href="' + dlUrl + '" style="background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#fff;padding:8px 20px;border-radius:var(--radius);font-size:.78em;font-weight:600;text-decoration:none;white-space:nowrap">Download</a>' +
-            '</div>';
+
+          for (var ei = 0; ei < entries.length; ei++) {
+            var entry = entries[ei];
+            var dlUrl = '/api/serve-pdf?code=' + encodeURIComponent(code) + '&file=' + encodeURIComponent(entry.filename);
+            html += '<div class="feature-item" style="text-align:left;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px">' +
+              '<div><div class="label" style="margin-bottom:2px">' + icon + ' ' + esc(label) + '</div><div class="desc">' + esc(entry.date) + ' \u2014 Weekly Digest</div></div>' +
+              '<a href="' + dlUrl + '" style="background:linear-gradient(135deg,var(--purple),var(--purple-dark));color:#fff;padding:8px 20px;border-radius:var(--radius);font-size:.78em;font-weight:600;text-decoration:none;white-space:nowrap">Download</a>' +
+              '</div>';
+          }
         }
 
         if (!html) {

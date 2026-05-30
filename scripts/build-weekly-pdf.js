@@ -530,7 +530,23 @@ async function buildPDF(examArgs) {
     results.push(r);
   }
   var manifest = {};
-  for (var i = 0; i < results.length; i++) manifest[results[i].exam] = { filename: results[i].filename, date: weekRange };
+  try { manifest = JSON.parse(fs.readFileSync(path.join(pdfDir, 'latest.json'), 'utf-8')); } catch (e) { manifest = {}; }
+  // Migrate old format (object per exam) to new format (array per exam)
+  for (var exam in manifest) {
+    if (!Array.isArray(manifest[exam])) {
+      manifest[exam] = [manifest[exam]];
+    }
+  }
+  var cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 28);
+  for (var i = 0; i < results.length; i++) {
+    var exam = results[i].exam;
+    if (!manifest[exam]) manifest[exam] = [];
+    manifest[exam].push({ filename: results[i].filename, date: weekRange, generated: dateStr });
+    manifest[exam].sort(function(a, b) { return b.generated.localeCompare(a.generated); });
+    manifest[exam] = manifest[exam].filter(function(e) { return !e.generated || new Date(e.generated) >= cutoff; });
+    manifest[exam] = manifest[exam].slice(0, 4);
+  }
   fs.writeFileSync(path.join(pdfDir, 'latest.json'), JSON.stringify(manifest, null, 2));
   console.log('\nDone! Generated ' + results.length + ' PDF(s).');
 }
