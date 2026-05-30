@@ -45,5 +45,5 @@ async function logVisit(serviceKey, log) {
     await fetch(sbUrl + '/rest/v1/visits?created_at=lt.' + cutoff, {
       method: 'DELETE', headers: h
     });
-  } catch (e) { console.log('VISIT_LOG_ERR: ' + e.message); }
+  } catch (e) { /* fail silently */ }
 }
