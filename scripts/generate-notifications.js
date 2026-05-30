@@ -146,8 +146,9 @@ async function run() {
     '- Only include notifications that are currently open (closing date has not passed yet)\n' +
     '- DO NOT include any notification whose closing date has already passed\n' +
     '- Include 8-12 notifications covering different exams (banking, railway, SSC, UPSC, teaching, medical, engineering)\n' +
-    '- Use realistic dates and titles based on actual exam cycles\n' +
-    '- Today is ' + new Date().toISOString().split('T')[0] + '. All closing dates should be in the future.';
+    '- Use realistic dates and titles based on actual exam cycles — verify that the application window is genuinely open\n' +
+    '- CRITICAL: Ensure closing dates are accurate. Do NOT guess or make up dates. Only include exams you are confident about.\n' +
+    '- Today is ' + new Date().toISOString().split('T')[0] + '. All closing dates should be in the future (between today and Dec 2026).';
 
   console.log('Calling Groq for exam notifications...');
   var text = await callGroq(apiKey, prompt);
@@ -162,7 +163,14 @@ async function run() {
     return;
   }
 
-  var incoming = parsed.notifications.filter(function(n) { return n.tag && n.title && n.closing; });
+  var incoming = parsed.notifications.filter(function(n) {
+    if (!n.tag || !n.title || !n.closing) return false;
+    var parts = n.closing.split('/');
+    if (parts.length !== 3) return false;
+    var dd = parseInt(parts[0]), mm = parseInt(parts[1]) - 1, yy = parseInt(parts[2]);
+    if (yy < 2025 || yy > 2027) return false;
+    return true;
+  });
   console.log('Received ' + incoming.length + ' notifications from AI');
 
   var merged = mergeNotifications(existing, incoming);
