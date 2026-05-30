@@ -36,7 +36,13 @@
                 });
                 setItems(items);
             })
-            .catch(function() { track.classList.remove('paused'); });
+            .catch(function() {
+                track.classList.remove('paused');
+                if (track.children.length === 0) {
+                    var fallback = ['Stay updated with current affairs 📡', 'Practice daily for exam success 🎯', 'Read newspapers for GK preparation 📚'];
+                    setItems(fallback);
+                }
+            });
     }
 
     fetchNews();
