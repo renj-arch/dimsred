@@ -22,19 +22,19 @@ export async function onRequest(context) {
   console.log(JSON.stringify(log));
 
   // Persist to Supabase + cleanup rows older than 24h (fire-and-forget)
-  var supabaseUrl = context.env.SUPABASE_URL;
   var serviceKey = context.env.SUPER_SERVICE_KEY;
-  if (supabaseUrl && serviceKey) {
-    logVisit(supabaseUrl, serviceKey, log);
+  if (serviceKey) {
+    logVisit(serviceKey, log);
   }
 
   return await context.next();
 }
 
-async function logVisit(supabaseUrl, serviceKey, log) {
+async function logVisit(serviceKey, log) {
+  var sbUrl = 'https://krvlufonfbcabgcjomvs.supabase.co';
   var h = { 'apikey': serviceKey, 'Authorization': 'Bearer ' + serviceKey, 'Content-Type': 'application/json' };
   try {
-    await fetch(supabaseUrl + '/rest/v1/visits', {
+    await fetch(sbUrl + '/rest/v1/visits', {
       method: 'POST', headers: h,
       body: JSON.stringify({
         ip: log.ip, country: log.country, city: log.city, region: log.region,
@@ -42,8 +42,8 @@ async function logVisit(supabaseUrl, serviceKey, log) {
       })
     });
     var cutoff = new Date(Date.now() - 86400000).toISOString();
-    await fetch(supabaseUrl + '/rest/v1/visits?created_at=lt.' + cutoff, {
+    await fetch(sbUrl + '/rest/v1/visits?created_at=lt.' + cutoff, {
       method: 'DELETE', headers: h
     });
-  } catch (e) { console.log('VISIT_LOG_ERR: ' + e.message + ' | URL: ' + supabaseUrl); }
+  } catch (e) { console.log('VISIT_LOG_ERR: ' + e.message); }
 }
