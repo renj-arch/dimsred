@@ -1,0 +1,35 @@
+name: Weekly Stale Paper Cleanup
+
+on:
+  schedule:
+    - cron: '0 3 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run stale paper cleanup
+        id: cleanup
+        run: node scripts/cleanup-stale-papers.js
+
+      - name: Commit and push if changes
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          git diff --staged --quiet || git commit -m "Weekly stale paper cleanup $(date +'%Y-%m-%d')"
+          git push
