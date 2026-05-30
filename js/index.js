@@ -1,72 +1,52 @@
 // ---- Viral Currents Ticker ----
 (function() { try {
-    var headlines = [
-        '🎯 SSC CGL 2026 notification expected next month — 8,000+ vacancies',
-        '🏦 RBI Grade B 2026: Phase 2 results announced on official website',
-        '📢 7th Pay Commission: DA hike likely for central govt employees',
-        '🚀 ISRO to launch Gaganyaan test mission this quarter',
-        '💰 India GDP growth projected at 6.8% for FY 2026-27',
-        '📚 NEP 2025: New curriculum framework rolled out in 50 universities',
-        '⚡ EPFO interest rate for 2025-26 set at 8.25%',
-        '🌾 MSP hike for Kharif crops approved by Cabinet',
-        '🏆 India ranks 3rd in Global Startup Ecosystem Report',
-        '🛡️ Agnipath scheme: 3rd batch recruitment begins next week',
-        '🔋 India targets 500 GW renewable energy by 2030',
-        '📱 DigiLocker integrates with 500+ university databases',
-        '🏛️ Supreme Court: New criminal laws come into effect from July 1',
-        '🎓 UGC NET 2026: Exam pattern revised, computer-based mode',
-        '💳 UPI transactions cross 20 billion monthly mark',
-        '🌏 India-EU free trade agreement talks in final stage',
-        '⚕️ Ayushman Bharat cover expanded to all senior citizens',
-        '📊 Sensex hits fresh all-time high of 85,000',
-        '🚄 Vande Bharat sleeper trains to launch on 6 new routes',
-        '🎯 IBPS PO 2026: Prelims exam dates announced',
-        '🏦 SBI Clerk 2026: Notification for 8,000+ posts expected soon',
-        '📚 CTET July 2026: Application window opens next month',
-        '🛡️ SSC GD 2026: Physical efficiency test standards revised',
-        '🌾 PM-KISAN 18th instalment released to 9.5 crore farmers',
-        '🔬 India launches first indigenous mRNA vaccine platform',
-        '🏗️ National Highway network expands to 1.5 lakh km',
-        '📈 Retail inflation drops to 4.2%, lowest in 6 months',
-        '🎯 UPSC Civil Services 2025: Final results declared',
-        '💡 Digital India: 5G coverage reaches 95% of districts',
-        '🚀 India successfully tests anti-satellite missile system',
-    ];
-    var seed = Math.floor(Date.now() / 86400000);
-    var idx = seed % headlines.length;
     var tickerEl = document.getElementById('tickerText');
     if (!tickerEl) return;
 
-    var shown = [];
-    for (var i = 0; i < 3; i++) {
-        shown.push(headlines[(idx + i) % headlines.length]);
-    }
+    var used = [];
+    var currentIdx = -1;
+    var spanEl = null;
 
-    var current = 0;
-    function showTicker(index) {
-        var items = tickerEl.querySelectorAll('span');
-        items.forEach(function(s) { s.className = ''; });
-        if (items[index]) items[index].className = 'active';
-    }
+    function showNext(headlines) {
+        var available = [];
+        for (var i = 0; i < headlines.length; i++) {
+            if (used.indexOf(i) === -1) available.push(i);
+        }
+        if (available.length === 0) {
+            used = [];
+            for (var i = 0; i < headlines.length; i++) available.push(i);
+        }
 
-    shown.forEach(function(h, i) {
-        var span = document.createElement('span');
-        if (i === 0) span.className = 'active';
-        span.textContent = h;
-        tickerEl.appendChild(span);
-    });
+        var pick = available[Math.floor(Math.random() * available.length)];
+        used.push(pick);
+        currentIdx = pick;
 
-    setInterval(function() {
-        var prev = current;
-        current = (current + 1) % shown.length;
-        var items = tickerEl.querySelectorAll('span');
-        if (items[prev]) items[prev].className = 'exit';
-        if (items[current]) {
+        if (!spanEl) {
+            spanEl = document.createElement('span');
+            spanEl.className = 'active';
+            tickerEl.appendChild(spanEl);
+        } else {
+            spanEl.className = 'exit';
+            var old = spanEl;
+            spanEl = document.createElement('span');
+            tickerEl.appendChild(spanEl);
             setTimeout(function() {
-                items[current].className = 'active';
+                spanEl.className = 'active';
+                if (old.parentNode) old.remove();
             }, 50);
         }
-    }, 5000);
+        spanEl.textContent = headlines[pick];
+    }
+
+    fetch('/data/headlines.json')
+        .then(function(r) { if (!r.ok) throw new Error('not found'); return r.json(); })
+        .then(function(data) {
+            var list = data.headlines || [];
+            if (list.length === 0) return;
+            showNext(list);
+            setInterval(function() { showNext(list); }, 120000);
+        })
+        .catch(function() {});
 } catch(e) {} })();
 
 // ---- Upcoming Exam Notifications ----
@@ -81,28 +61,23 @@
             if (list.length === 0) { container.parentElement.style.display = 'none'; return; }
 
             var seed = Math.floor(Date.now() / 86400000);
-            var active = list.filter(function(n) { return !n.expired; });
-            var expired = list.filter(function(n) { return n.expired; });
-            var shuffled = active.slice();
-            for (var i = shuffled.length - 1; i > 0; i--) {
+            var ordered = list.slice();
+            for (var i = ordered.length - 1; i > 0; i--) {
                 var j = Math.floor((Math.sin(seed * 9301 + i * 49297) - Math.floor(Math.sin(seed * 9301 + i * 49297))) * (i + 1));
-                var tmp = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = tmp;
+                var tmp = ordered[i]; ordered[i] = ordered[j]; ordered[j] = tmp;
             }
-            var ordered = shuffled.concat(expired);
 
             ordered.forEach(function(n) {
-                var color = n.color || 'var(--purple)';
-                var isExpired = n.expired;
                 var card = document.createElement('div');
-                card.className = 'exam-card' + (isExpired ? ' expired' : '');
+                card.className = 'exam-card';
                 var bottomHtml = '';
                 if (n.link) {
-                    bottomHtml = '<div class="exam-card-bottom"><a href="' + n.link + '">' + (isExpired ? 'View Details →' : 'View Details →') + '</a><span class="vacancy">' + (n.vacancy || '') + '</span></div>';
+                    bottomHtml = '<div class="exam-card-bottom"><a href="' + n.link + '">View Details →</a><span class="vacancy">' + (n.vacancy || '') + '</span></div>';
                 } else if (n.vacancy) {
                     bottomHtml = '<div class="exam-card-bottom"><span class="vacancy">' + n.vacancy + '</span></div>';
                 }
                 card.innerHTML =
-                    '<div class="exam-card-top"><div class="date-badge' + (isExpired ? ' expired' : '') + '"><span class="month">' + n.startMonth + '</span><span class="day">' + n.startDay + '</span><span class="year">' + n.startYear + '</span></div><div class="card-body"><span class="exam-tag" style="background:rgba(167,139,250,.1);color:var(--purple)">' + n.tag + '</span><h3>' + n.title + '</h3><div class="closing">' + (isExpired ? '⏰ Closed on ' : '🗓️ Apply by: <span class="urgent">') + n.closing + (isExpired ? '' : '</span>') + '</div></div><div class="card-shape"></div></div>' + bottomHtml;
+                    '<div class="exam-card-top"><div class="date-badge"><span class="month">' + n.startMonth + '</span><span class="day">' + n.startDay + '</span><span class="year">' + n.startYear + '</span></div><div class="card-body"><span class="exam-tag" style="background:rgba(167,139,250,.1);color:var(--purple)">' + n.tag + '</span><h3>' + n.title + '</h3><div class="closing">🗓️ Apply by: <span class="urgent">' + n.closing + '</span></div></div><div class="card-shape"></div></div>' + bottomHtml;
                 container.appendChild(card);
             });
         })

@@ -91,13 +91,16 @@ function isExpired(closingStr) {
 function mergeNotifications(existing, incoming) {
   var seen = {};
   for (var i = 0; i < existing.length; i++) {
-    var key = existing[i].tag + '|' + existing[i].title;
-    seen[key] = existing[i];
+    var n = existing[i];
+    if (isExpired(n.closing)) continue;
+    var key = n.tag + '|' + n.title;
+    seen[key] = n;
   }
 
   for (var i = 0; i < incoming.length; i++) {
     var n = incoming[i];
     if (!n.tag || !n.title || !n.closing) continue;
+    if (isExpired(n.closing)) continue;
     var key = n.tag + '|' + n.title;
     if (!seen[key]) {
       n.link = findExamLink(n.tag, n.title);
@@ -107,14 +110,9 @@ function mergeNotifications(existing, incoming) {
   }
 
   var result = [];
-  for (var key in seen) {
-    var item = seen[key];
-    item.expired = isExpired(item.closing);
-    result.push(item);
-  }
+  for (var key in seen) { result.push(seen[key]); }
 
   result.sort(function(a, b) {
-    if (a.expired !== b.expired) return a.expired ? 1 : -1;
     return (a.closing || '').localeCompare(b.closing || '');
   });
 
@@ -146,6 +144,7 @@ async function run() {
     '- vacancy is a short description like "~8,000+ vacancies" or "Eligibility exam"\n' +
     '- source is the official website domain\n' +
     '- Only include notifications that are currently open (closing date has not passed yet)\n' +
+    '- DO NOT include any notification whose closing date has already passed\n' +
     '- Include 8-12 notifications covering different exams (banking, railway, SSC, UPSC, teaching, medical, engineering)\n' +
     '- Use realistic dates and titles based on actual exam cycles\n' +
     '- Today is ' + new Date().toISOString().split('T')[0] + '. All closing dates should be in the future.';
@@ -171,8 +170,75 @@ async function run() {
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
   fs.writeFileSync(notifPath, JSON.stringify({ notifications: merged, updatedAt: new Date().toISOString() }, null, 2), 'utf-8');
 
-  var active = merged.filter(function(n) { return !n.expired; });
-  console.log('Saved ' + merged.length + ' notifications (' + active.length + ' active, ' + (merged.length - active.length) + ' expired)');
+  console.log('Saved ' + merged.length + ' active notifications');
+
+  // ---- Viral Currents Headlines ----
+  console.log('\nCalling Groq for current-affairs headlines...');
+  var headlinePrompt = 'You are a news assistant. Generate 15 unique, current, India-focused current-affairs headlines ' +
+    'relevant for competitive exam preparation (UPSC, SSC, Banking, etc.). ' +
+    'Return ONLY valid JSON (no markdown) in this format:\n' +
+    '{\n  "headlines": [\n    {\n      "emoji": "🎯",\n      "text": "Brief headline here"\n    }\n  ]\n}\n\n' +
+    'Rules:\n' +
+    '- Each headline must start with a relevant emoji\n' +
+    '- Headlines should be 10-20 words each\n' +
+    '- Cover diverse topics: economy, science, technology, politics, environment, sports, defense, health, education, infrastructure\n' +
+    '- Include specific numbers, dates, or facts where possible\n' +
+    '- Focus on recent developments (2025-2026)\n' +
+    '- DO NOT include exam/recruitment notifications (those are in a separate section)\n' +
+    '- Today is ' + new Date().toISOString().split('T')[0];
+
+  var headlineText = await callGroq(apiKey, headlinePrompt);
+  if (!headlineText) {
+    console.log('Failed to get headlines from Groq, keeping existing');
+    return;
+  }
+
+  var parsedHeadlines = cleanJson(headlineText);
+  if (!parsedHeadlines || !parsedHeadlines.headlines || !Array.isArray(parsedHeadlines.headlines)) {
+    console.log('Failed to parse headlines, keeping existing');
+    return;
+  }
+
+  var incomingHeadlines = parsedHeadlines.headlines
+    .filter(function(h) { return h.text && h.emoji; })
+    .map(function(h) { return h.emoji + ' ' + h.text.replace(/^[^\w\s]+\s*/, ''); });
+
+  if (incomingHeadlines.length < 5) {
+    console.log('Too few headlines (' + incomingHeadlines.length + '), keeping existing');
+    var oldHeadlines = [];
+    try { oldHeadlines = JSON.parse(fs.readFileSync(path.join(dataDir, 'headlines.json'), 'utf-8')); } catch(e) {}
+    if (oldHeadlines && oldHeadlines.headlines && oldHeadlines.headlines.length >= 5) return;
+  }
+
+  var headlinePath = path.join(dataDir, 'headlines.json');
+  var existingHL = [];
+  try { existingHL = JSON.parse(fs.readFileSync(headlinePath, 'utf-8')); }
+  catch (e) { existingHL = {}; }
+  var oldList = existingHL.headlines || [];
+  var seenText = {};
+  for (var i = 0; i < oldList.length; i++) {
+    var norm = oldList[i].replace(/[^a-z0-9]/gi, '').toLowerCase();
+    seenText[norm] = true;
+  }
+
+  var fresh = [];
+  for (var i = 0; i < incomingHeadlines.length; i++) {
+    var norm = incomingHeadlines[i].replace(/[^a-z0-9]/gi, '').toLowerCase();
+    if (!seenText[norm]) {
+      fresh.push(incomingHeadlines[i]);
+      seenText[norm] = true;
+    }
+  }
+
+  var allHeadlines = oldList.concat(fresh);
+  var dateStr = new Date().toISOString().split('T')[0];
+  fs.writeFileSync(headlinePath, JSON.stringify({
+    headlines: allHeadlines,
+    updatedAt: dateStr,
+    count: allHeadlines.length
+  }, null, 2), 'utf-8');
+
+  console.log('Added ' + fresh.length + ' new headlines (total: ' + allHeadlines.length + ')');
 }
 
 run().catch(function(e) { console.error(e); process.exit(1); });
