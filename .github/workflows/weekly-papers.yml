@@ -71,11 +71,14 @@ jobs:
         if: steps.batch.outputs.exams != 'skip'
         run: node scripts/generate-calendar-data.js
 
-      - name: Build weekly PDF digest
+      - name: Build weekly PDF digest (Monday only)
         if: steps.batch.outputs.exams != 'skip'
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-        run: node scripts/build-weekly-pdf.js
+        run: |
+          if [ "$(date +%u)" = "1" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            node scripts/build-weekly-pdf.js
+          fi
 
       - name: Update sitemap
         if: steps.batch.outputs.exams != 'skip'
