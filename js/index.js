@@ -260,6 +260,12 @@ try { (function() {
         hadDragMove: false,
         dragOffsetX: 0,
         dragOffsetY: 0,
+        gameActive: false,
+        gameScore: 0,
+        gameLives: 3,
+        gameTimer: null,
+        gameMoveTimer: null,
+        gameDuration: 20000,
 
         quizQuestions: [
             { q: 'What does HTML stand for?', o: ['Hyper Text Markup Language', 'High Tech Modern Language', 'Home Tool Markup Language', 'Hyper Transfer Markup Language'], a: 0 },
@@ -285,7 +291,7 @@ try { (function() {
             this.showMessage('Ready to study? 📚');
 
             setInterval(function() {
-                if (!self.isQuizActive && !self.isDancing && !self.isDragging) {
+                if (!self.isQuizActive && !self.isDancing && !self.isDragging && !self.gameActive) {
                     self.messageIndex = (self.messageIndex + 1) % self.messages.length;
                     self.showMessage(self.messages[self.messageIndex]);
                 }
@@ -294,6 +300,7 @@ try { (function() {
             this.startIdleTimer();
 
             document.getElementById('mascotWrap').addEventListener('click', function(e) {
+                if (self.gameActive) { self.handleGameClick(); return; }
                 if (self.hadDragMove) { self.hadDragMove = false; return; }
                 self.handleClick();
             });
@@ -329,6 +336,8 @@ try { (function() {
             document.addEventListener('touchend', function() { self.endDrag(); });
 
             setInterval(function() { self.applyTimeMood(); }, 60000);
+
+            this.createGameBtn();
 
             setTimeout(function() {
                 if (self.currentMood === 'wave') self.setMood('idle');
@@ -540,6 +549,104 @@ try { (function() {
                     }, idx * 40);
                 })(i);
             }
+        },
+
+        // ---- Mini-Game: Catch the StudyBuddy ----
+        createGameBtn: function() {
+            var self = this;
+            var btn = document.createElement('button');
+            btn.className = 'game-btn';
+            btn.textContent = '🎮';
+            btn.title = 'Play Catch the StudyBuddy!';
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                self.toggleGame();
+            });
+            document.getElementById('mascotWrap').appendChild(btn);
+        },
+
+        toggleGame: function() {
+            if (this.gameActive) return;
+            this.startGame();
+        },
+
+        startGame: function() {
+            var self = this;
+            this.gameActive = true;
+            this.gameScore = 0;
+            this.gameLives = 3;
+            this.isDragging = false;
+            clearTimeout(this.idleTimer);
+            document.getElementById('mascotWrap').classList.add('gaming');
+            this.setMood('excited');
+            this.showMessage('Catch me! 🏃 Score: 0');
+            this.moveMascot();
+            this.gameTimer = setTimeout(function() { self.endGame(); }, this.gameDuration);
+        },
+
+        moveMascot: function() {
+            if (!this.gameActive) return;
+            var self = this;
+            var wrap = document.getElementById('mascotWrap');
+            var pad = 20;
+            var mw = 120, mh = 180;
+            var vw = window.innerWidth - mw - pad * 2;
+            var vh = window.innerHeight - mh - pad * 2;
+            var x = pad + Math.random() * vw;
+            var y = pad + Math.random() * vh;
+            wrap.style.transition = 'left .7s ease, top .7s ease';
+            wrap.style.left = x + 'px';
+            wrap.style.top = y + 'px';
+            wrap.style.bottom = 'auto';
+            wrap.style.right = 'auto';
+            this.gameMoveTimer = setTimeout(function() { self.missCatch(); }, 1100 + Math.random() * 500);
+        },
+
+        handleGameClick: function() {
+            if (!this.gameActive) return;
+            var self = this;
+            clearTimeout(this.gameMoveTimer);
+            this.gameScore++;
+            if (this.gameScore % 5 === 0) { this.gameLives++; }
+            this.setMood('celebrate');
+            this.showMessage('+' + this.gameScore + '! 🎯 Lives: ' + '❤️'.repeat(Math.min(this.gameLives, 5)) + (this.gameLives > 5 ? '+' : ''));
+            this.resetIdleTimer();
+            setTimeout(function() { self.moveMascot(); }, 400);
+        },
+
+        missCatch: function() {
+            if (!this.gameActive) return;
+            var self = this;
+            this.gameLives--;
+            this.setMood('sleep');
+            var hearts = '❤️'.repeat(Math.max(this.gameLives, 0)) + '🖤'.repeat(Math.max(3 - Math.max(this.gameLives, 0), 0));
+            this.showMessage('Miss! ❌ ' + hearts);
+            if (this.gameLives <= 0) {
+                this.endGame();
+            } else {
+                setTimeout(function() { self.moveMascot(); }, 600);
+            }
+        },
+
+        endGame: function() {
+            this.gameActive = false;
+            clearTimeout(this.gameTimer);
+            clearTimeout(this.gameMoveTimer);
+            var wrap = document.getElementById('mascotWrap');
+            wrap.style.transition = '';
+            wrap.classList.remove('gaming');
+            this.setMood('celebrate');
+            var msg = 'Game Over! Score: ' + this.gameScore;
+            if (this.gameScore >= 10) msg += ' 🌟 Amazing!';
+            else if (this.gameScore >= 5) msg += ' 👏 Great!';
+            else msg += ' 🎮 Try again!';
+            this.showMessage(msg);
+            var self = this;
+            setTimeout(function() {
+                self.setMood('idle');
+                self.showMessage(self.messages[self.messageIndex]);
+                self.startIdleTimer();
+            }, 3000);
         },
 
         setMood: function(mood) {
