@@ -25,43 +25,6 @@ function getApiKey(name) {
   return null;
 }
 
-async function callGroq(apiKey, prompt, model) {
-  if (!model) model = 'llama3-70b-8192';
-  var url = 'https://api.groq.com/openai/v1/chat/completions';
-  var body = JSON.stringify({
-    model: model,
-    messages: [{ role: 'user', content: prompt }],
-    temperature: 0.7,
-    max_tokens: 4096
-  });
-
-  for (var retry = 0; retry < 3; retry++) {
-    try {
-      var response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
-        body: body
-      });
-      if (response.status === 429) {
-        console.log('  Rate limited, waiting 10s...');
-        await new Promise(function(r) { setTimeout(r, 10000); });
-        continue;
-      }
-      if (!response.ok) {
-        console.log('  HTTP ' + response.status + ', retry ' + (retry + 1));
-        await new Promise(function(r) { setTimeout(r, 3000); });
-        continue;
-      }
-      var data = await response.json();
-      return (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '';
-    } catch (e) {
-      console.log('  Error: ' + e.message + ', retry ' + (retry + 1));
-      await new Promise(function(r) { setTimeout(r, 3000); });
-    }
-  }
-  return null;
-}
-
 function cleanJson(text) {
   if (!text) return null;
   text = text.replace(/```json\s*/gi, '').replace(/```\s*$/g, '').trim();
@@ -96,7 +59,6 @@ function mergeNotifications(existing, incoming) {
     var key = n.tag + '|' + n.title;
     seen[key] = n;
   }
-
   for (var i = 0; i < incoming.length; i++) {
     var n = incoming[i];
     if (!n.tag || !n.title || !n.closing) continue;
@@ -108,31 +70,55 @@ function mergeNotifications(existing, incoming) {
       seen[key] = n;
     }
   }
-
   var result = [];
   for (var key in seen) { result.push(seen[key]); }
-
   result.sort(function(a, b) {
     return (a.closing || '').localeCompare(b.closing || '');
   });
-
   return result;
 }
 
+async function callGroq(apiKey, prompt) {
+  var models = ['llama-3.3-70b-versatile', 'mixtral-8x7b-32768', 'gemma2-9b-it'];
+  for (var m = 0; m < models.length; m++) {
+    console.log('  Groq model: ' + models[m]);
+    for (var r = 0; r < 3; r++) {
+      try {
+        var resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: models[m], messages: [{ role: 'user', content: prompt }], temperature: 0.7, max_tokens: 4096 })
+        });
+        if (resp.status === 429) { console.log('    Rate limited, waiting 15s...'); await new Promise(function(r) { setTimeout(r, 15000); }); continue; }
+        if (!resp.ok) { console.log('    HTTP ' + resp.status); await new Promise(function(r) { setTimeout(r, 3000); }); continue; }
+        var data = await resp.json();
+        return (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '';
+      } catch (e) { console.log('    Error: ' + e.message); await new Promise(function(r) { setTimeout(r, 3000); }); }
+    }
+  }
+  return null;
+}
+
+async function callGemini(apiKey, prompt) {
+  var models = ['gemini-2.0-flash', 'gemini-2.0-flash-001', 'gemini-2.0-flash-lite', 'gemini-2.0-flash-lite-001'];
+  var body = JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] });
+  for (var m = 0; m < models.length; m++) {
+    console.log('  Gemini model: ' + models[m]);
+    try {
+      var resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + models[m] + ':generateContent?key=' + apiKey, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body
+      });
+      var data = await resp.json();
+      if (data.error) { console.log('    ' + (data.error.status || data.error.message)); continue; }
+      var text = data.candidates && data.candidates[0] && data.candidates[0].content &&
+        data.candidates[0].content.parts && data.candidates[0].content.parts[0].text || '';
+      if (text) return text;
+    } catch (e) { console.log('    Error: ' + e.message); }
+  }
+  return null;
+}
+
 async function run() {
-  var apiKey = getApiKey('GROQ_API_KEY');
-  if (!apiKey) {
-    console.log('No GROQ_API_KEY found, skipping notification generation');
-    process.exit(0);
-  }
-
-  var notifPath = path.join(dataDir, 'notifications.json');
-  var existing = [];
-  if (fs.existsSync(notifPath)) {
-    try { existing = JSON.parse(fs.readFileSync(notifPath, 'utf-8')); }
-    catch (e) { existing = []; }
-  }
-
   var prompt = 'You are a helpful assistant that provides current exam and recruitment notifications in India. ' +
     'Return ONLY valid JSON (no markdown) in this exact format:\n' +
     '{\n  "notifications": [\n    {\n      "tag": "SSC CGL",\n      "title": "Combined Graduate Level Exam 2026",\n      "startDay": 20,\n      "startMonth": "Jun",\n      "startYear": 2026,\n      "closing": "19/07/2026",\n      "vacancy": "~8,000+ vacancies",\n      "source": "ssc.nic.in"\n    }\n  ]\n}\n\n' +
@@ -146,20 +132,44 @@ async function run() {
     '- Only include notifications that are currently open (closing date has not passed yet)\n' +
     '- DO NOT include any notification whose closing date has already passed\n' +
     '- Include 8-12 notifications covering different exams (banking, railway, SSC, UPSC, teaching, medical, engineering)\n' +
-    '- Use realistic dates and titles based on actual exam cycles — verify that the application window is genuinely open\n' +
+    '- Use realistic dates and titles based on actual exam cycles\n' +
     '- CRITICAL: Ensure closing dates are accurate. Do NOT guess or make up dates. Only include exams you are confident about.\n' +
     '- Today is ' + new Date().toISOString().split('T')[0] + '. All closing dates should be in the future (between today and Dec 2026).';
 
-  console.log('Calling Groq for exam notifications...');
-  var text = await callGroq(apiKey, prompt);
+  var notifPath = path.join(dataDir, 'notifications.json');
+  var existing = [];
+  if (fs.existsSync(notifPath)) {
+    try { existing = JSON.parse(fs.readFileSync(notifPath, 'utf-8')); }
+    catch (e) { existing = []; }
+  }
+
+  var text = '';
+  var groqKey = getApiKey('GROQ_API_KEY');
+  var geminiKey = getApiKey('GEMINI_API_KEY');
+
+  // Try Groq first, then Gemini, then keep existing
+  if (groqKey) {
+    console.log('Trying Groq...');
+    text = await callGroq(groqKey, prompt);
+  } else {
+    console.log('No GROQ_API_KEY found');
+  }
+
+  if (!text && geminiKey) {
+    console.log('Trying Gemini...');
+    text = await callGemini(geminiKey, prompt);
+  } else if (!text) {
+    console.log('No GEMINI_API_KEY found');
+  }
+
   if (!text) {
-    console.log('Failed to get response from Groq, keeping existing notifications');
+    console.log('All providers failed. Keeping existing (' + existing.length + ' notifications).');
     return;
   }
 
   var parsed = cleanJson(text);
   if (!parsed || !parsed.notifications || !Array.isArray(parsed.notifications)) {
-    console.log('Failed to parse notifications from response, keeping existing');
+    console.log('Failed to parse response. Keeping existing.');
     return;
   }
 
@@ -167,8 +177,6 @@ async function run() {
     if (!n.tag || !n.title || !n.closing) return false;
     var parts = n.closing.split('/');
     if (parts.length !== 3) return false;
-    var dd = parseInt(parts[0]), mm = parseInt(parts[1]) - 1, yy = parseInt(parts[2]);
-    if (yy < 2025 || yy > 2027) return false;
     return true;
   });
   console.log('Received ' + incoming.length + ' notifications from AI');
@@ -177,7 +185,6 @@ async function run() {
 
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
   fs.writeFileSync(notifPath, JSON.stringify({ notifications: merged, updatedAt: new Date().toISOString() }, null, 2), 'utf-8');
-
   console.log('Saved ' + merged.length + ' active notifications');
 }
 
