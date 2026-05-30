@@ -78,10 +78,18 @@
         });
     }
 
+    function isExpired(closing) {
+        if (!closing) return false;
+        var parts = closing.split('/');
+        if (parts.length !== 3) return false;
+        var d = new Date(parts[2], parts[1] - 1, parts[0]);
+        return d < new Date();
+    }
+
     fetch('/data/notifications.json')
         .then(function(r) { return r.json(); })
         .then(function(data) {
-            var list = data.notifications || [];
+            var list = (data.notifications || []).filter(function(n) { return !isExpired(n.closing); });
             if (list.length > 0) { renderNotifications(list); }
             else { container.parentElement.style.display = 'none'; }
         })
