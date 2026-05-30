@@ -1,3 +1,74 @@
+// ---- Viral Currents Ticker ----
+(function() { try {
+    var headlines = [
+        '🎯 SSC CGL 2026 notification expected next month — 8,000+ vacancies',
+        '🏦 RBI Grade B 2026: Phase 2 results announced on official website',
+        '📢 7th Pay Commission: DA hike likely for central govt employees',
+        '🚀 ISRO to launch Gaganyaan test mission this quarter',
+        '💰 India GDP growth projected at 6.8% for FY 2026-27',
+        '📚 NEP 2025: New curriculum framework rolled out in 50 universities',
+        '⚡ EPFO interest rate for 2025-26 set at 8.25%',
+        '🌾 MSP hike for Kharif crops approved by Cabinet',
+        '🏆 India ranks 3rd in Global Startup Ecosystem Report',
+        '🛡️ Agnipath scheme: 3rd batch recruitment begins next week',
+        '🔋 India targets 500 GW renewable energy by 2030',
+        '📱 DigiLocker integrates with 500+ university databases',
+        '🏛️ Supreme Court: New criminal laws come into effect from July 1',
+        '🎓 UGC NET 2026: Exam pattern revised, computer-based mode',
+        '💳 UPI transactions cross 20 billion monthly mark',
+        '🌏 India-EU free trade agreement talks in final stage',
+        '⚕️ Ayushman Bharat cover expanded to all senior citizens',
+        '📊 Sensex hits fresh all-time high of 85,000',
+        '🚄 Vande Bharat sleeper trains to launch on 6 new routes',
+        '🎯 IBPS PO 2026: Prelims exam dates announced',
+        '🏦 SBI Clerk 2026: Notification for 8,000+ posts expected soon',
+        '📚 CTET July 2026: Application window opens next month',
+        '🛡️ SSC GD 2026: Physical efficiency test standards revised',
+        '🌾 PM-KISAN 18th instalment released to 9.5 crore farmers',
+        '🔬 India launches first indigenous mRNA vaccine platform',
+        '🏗️ National Highway network expands to 1.5 lakh km',
+        '📈 Retail inflation drops to 4.2%, lowest in 6 months',
+        '🎯 UPSC Civil Services 2025: Final results declared',
+        '💡 Digital India: 5G coverage reaches 95% of districts',
+        '🚀 India successfully tests anti-satellite missile system',
+    ];
+    var seed = Math.floor(Date.now() / 86400000);
+    var idx = seed % headlines.length;
+    var tickerEl = document.getElementById('tickerText');
+    if (!tickerEl) return;
+
+    var shown = [];
+    for (var i = 0; i < 3; i++) {
+        shown.push(headlines[(idx + i) % headlines.length]);
+    }
+
+    var current = 0;
+    function showTicker(index) {
+        var items = tickerEl.querySelectorAll('span');
+        items.forEach(function(s) { s.className = ''; });
+        if (items[index]) items[index].className = 'active';
+    }
+
+    shown.forEach(function(h, i) {
+        var span = document.createElement('span');
+        if (i === 0) span.className = 'active';
+        span.textContent = h;
+        tickerEl.appendChild(span);
+    });
+
+    setInterval(function() {
+        var prev = current;
+        current = (current + 1) % shown.length;
+        var items = tickerEl.querySelectorAll('span');
+        if (items[prev]) items[prev].className = 'exit';
+        if (items[current]) {
+            setTimeout(function() {
+                items[current].className = 'active';
+            }, 50);
+        }
+    }, 5000);
+} catch(e) {} })();
+
 // ---- Daily Question ----
 (function() { try {
     var dailyQs = [
