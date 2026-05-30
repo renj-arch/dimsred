@@ -434,6 +434,10 @@ try { (function() {
             this.dragOffsetX = p.x - rect.left;
             this.dragOffsetY = p.y - rect.top;
             wrap.classList.add('dragging');
+            this.setMood('excited');
+            var msgs = ['Whoa! 😰', 'Hey! 😯', 'Eek! 😨', 'Ahh! 😱', 'Careful! 😬'];
+            this.showMessage(msgs[Math.floor(Math.random() * msgs.length)]);
+            this.resetIdleTimer();
         },
 
         onDrag: function(e) {
@@ -458,6 +462,14 @@ try { (function() {
             if (this.isDragging) {
                 this.isDragging = false;
                 document.getElementById('mascotWrap').classList.remove('dragging');
+                this.setMood('idle');
+                var msgs = ['Phew! 😅', 'Don\'t do that! 😰', 'My head is spinning! 🌀', 'Again? 😵‍💫', 'So dizzy... 😵'];
+                this.showMessage(msgs[Math.floor(Math.random() * msgs.length)]);
+                var self = this;
+                clearTimeout(this.dragRecoverTimer);
+                this.dragRecoverTimer = setTimeout(function() {
+                    self.showMessage(self.messages[self.messageIndex]);
+                }, 2500);
             }
         },
 
