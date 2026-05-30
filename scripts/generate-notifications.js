@@ -163,7 +163,29 @@ async function run() {
   }
 
   if (!text) {
-    console.log('All providers failed. Keeping existing (' + existing.length + ' notifications).');
+    if (existing.length > 0) {
+      console.log('All providers failed. Keeping existing (' + existing.length + ' notifications).');
+      return;
+    }
+    console.log('All providers failed, no existing data. Using built-in fallback.');
+    var now = new Date();
+    var dd = String(now.getDate()).padStart(2,'0');
+    var mm = String(now.getMonth() + 1).padStart(2,'0');
+    var yyyy = now.getFullYear();
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var currentMonth = months[now.getMonth()];
+    var fallback = [
+      { tag:'SSC CGL', title:'Combined Graduate Level Examination ' + yyyy, startDay:now.getDate(), startMonth:currentMonth, startYear:yyyy, closing:'30/06/' + yyyy, vacancy:'Visit ssc.nic.in', link:'/cgl/' },
+      { tag:'RBI Grade B', title:'Grade B Officer Recruitment ' + yyyy, startDay:now.getDate(), startMonth:currentMonth, startYear:yyyy, closing:'30/06/' + yyyy, vacancy:'Visit rbi.org.in', link:'/rbi/' },
+      { tag:'UPSC', title:'Civil Services Examination ' + yyyy, startDay:now.getDate(), startMonth:currentMonth, startYear:yyyy, closing:'30/06/' + yyyy, vacancy:'Visit upsc.gov.in', link:'/upsc/' },
+      { tag:'NEET UG', title:'Undergraduate Medical Entrance ' + yyyy, startDay:now.getDate(), startMonth:currentMonth, startYear:yyyy, closing:'30/06/' + yyyy, vacancy:'Visit nta.nic.in', link:'/neet/' },
+      { tag:'IBPS PO', title:'Probationary Officer Recruitment ' + yyyy, startDay:now.getDate(), startMonth:currentMonth, startYear:yyyy, closing:'30/06/' + yyyy, vacancy:'Visit ibps.in', link:'/ibps-po/' },
+      { tag:'SBI Clerk', title:'Junior Associate Recruitment ' + yyyy, startDay:now.getDate(), startMonth:currentMonth, startYear:yyyy, closing:'30/06/' + yyyy, vacancy:'Visit sbi.co.in', link:'/sbi-clerk/' },
+      { tag:'SSC GD', title:'Constable General Duty Exam ' + yyyy, startDay:now.getDate(), startMonth:currentMonth, startYear:yyyy, closing:'30/06/' + yyyy, vacancy:'Visit ssc.nic.in', link:'/ssc-gd/' },
+      { tag:'CTET', title:'Central Teacher Eligibility Test ' + yyyy, startDay:now.getDate(), startMonth:currentMonth, startYear:yyyy, closing:'30/06/' + yyyy, vacancy:'Visit ctet.nic.in', link:'/ctet/' },
+    ];
+    fs.writeFileSync(notifPath, JSON.stringify({ notifications: fallback, updatedAt: now.toISOString() }, null, 2), 'utf-8');
+    console.log('Saved ' + fallback.length + ' fallback notifications');
     return;
   }
 
