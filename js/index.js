@@ -235,37 +235,45 @@ try { AOS.init({duration:600,once:true,offset:40}); } catch(e) {}
 // ===== StudyBuddy Mascot Controller =====
 try { (function() {
     var StudyBuddy = {
-        messages: [
-            'Ready to study? 📚',
-            'You got this! 💪',
-            'Stay focused! 🎯',
-            'One step at a time! 🚀',
-            'Practice makes progress! ✨',
-            'Believe in yourself! 🌟',
-            'Every expert was once a beginner! 📖',
-            'Small steps lead to big wins! 🏆',
-            'Your future self will thank you! ⏰',
-            'Consistency beats intensity! 🔥',
-            'Dream big, study hard! 🌈',
-            'Success is built daily! 📈'
-        ],
+        messages: [],
         messageIndex: 0,
-        currentMood: 'idle',
-        idleTimer: null,
-        idleTimeout: 90000,
-        isQuizActive: false,
-        isDancing: false,
-        clickTimestamps: [],
-        isDragging: false,
-        hadDragMove: false,
-        dragOffsetX: 0,
-        dragOffsetY: 0,
-        gameActive: false,
-        gameScore: 0,
-        gameLives: 3,
-        gameTimer: null,
-        gameMoveTimer: null,
-        gameDuration: 20000,
+        lastMsgRefresh: -1,
+        msgPool: {
+            s: ['Ready to', 'Time to', "Let's", 'Keep', 'Stay', "It's time to"],
+            v: ['study', 'practice', 'learn', 'crush', 'master', 'ace', 'conquer', 'tackle', 'drill', 'review', 'solve', 'crack', 'grind', 'level up'],
+            t: ['Quant', 'Reasoning', 'GK', 'English', 'Math', 'Science', 'Vocab', 'Grammar', 'Aptitude', 'Comprehension', 'Speed', 'Accuracy'],
+            c: ['smart!', 'strong!', 'focused!', 'sharp!', 'confident!', 'awesome!', 'brilliant!', 'unstoppable!', 'on fire!', 'winning!'],
+            e: ['📚','💪','🎯','🚀','🌟','🔥','⚡','💡','🎓','🏆','✨','📈','⭐','💫'],
+            p: ['Practice makes progress!', 'Small steps, big wins!', 'Consistency beats intensity!', 'Dream big, study hard!', 'Success is built daily!', 'Every expert was once a beginner!', 'Your future self will thank you!', 'Hard work beats talent!'],
+            tmpl: ['{s} {v} {t} — {c} {e}', '{e} {s} {v} like a champ!', '{p} {e}', '{v} + {t} = success {e}', '{e} keep pushing — {p}', 'Stay {c} {e}', '{t} today, topper tomorrow {e}', '{s} {v} — you\'ve got this {e}', '{e} one step at a time!', '{s} {v} — {c}', 'Time to {v} {t} {e}', '{e} let\'s {v} and grow!'],
+        },
+
+        seededRandom: function(seed, i) {
+            var x = Math.sin(seed * 9301 + i * 49297) * 233280;
+            return x - Math.floor(x);
+        },
+
+        pick: function(arr, seed, i) {
+            return arr[Math.floor(this.seededRandom(seed, i) * arr.length)];
+        },
+
+        generateMessages: function() {
+            var seed = Math.floor(Date.now() / 1800000);
+            if (seed === this.lastMsgRefresh && this.messages.length >= 6) return;
+            this.lastMsgRefresh = seed;
+            var pool = this.msgPool;
+            var pick = this.pick.bind(this);
+            var msgs = [];
+            for (var i = 0; i < 12; i++) {
+                var t = pick(pool.tmpl, seed, i * 10);
+                var msg = t.replace(/\{(\w+)\}/g, function(m, k) {
+                    return pool[k] ? pick(pool[k], seed, i * 10 + k.charCodeAt(0)) : m;
+                });
+                msg = msg.charAt(0).toUpperCase() + msg.slice(1);
+                msgs.push(msg);
+            }
+            this.messages = msgs;
+        },
 
         quizQuestions: [
             { q: 'What does HTML stand for?', o: ['Hyper Text Markup Language', 'High Tech Modern Language', 'Home Tool Markup Language', 'Hyper Transfer Markup Language'], a: 0 },
@@ -288,9 +296,11 @@ try { (function() {
         init: function() {
             var self = this;
             this.applyTimeMood();
-            this.showMessage('Ready to study? 📚');
+            this.generateMessages();
+            this.showMessage(this.messages[0] || 'Ready to study? 📚');
 
             setInterval(function() {
+                self.generateMessages();
                 if (!self.isQuizActive && !self.isDancing && !self.isDragging && !self.gameActive) {
                     self.messageIndex = (self.messageIndex + 1) % self.messages.length;
                     self.showMessage(self.messages[self.messageIndex]);
