@@ -87,26 +87,21 @@ function updateIndexPage(folder, title, slug, count) {
   var html = fs.readFileSync(indexPath, 'utf-8');
   var cardHtml = '\n            <div class="paper-card">\n                <div>\n                    <div class="title">' + title.replace(/"/g, '&quot;') + '</div>\n                    <div class="meta">' + count + ' Q \u00B7 ' + count + ' min \u00B7 Solved with answers</div>\n                </div>\n                <a href="papers/' + slug + '.html" class="btn">View Paper</a>\n            </div>';
 
-  // Find the papers section and insert before its closing </section>
-  var sectionEnd = html.lastIndexOf('</section>');
-  if (sectionEnd === -1) {
-    console.log('  WARNING: Could not find section end in ' + indexPath);
-    return;
+  // Insert card before pagination controls or before closing </section>
+  var insertAt = html.indexOf('<div class="pagination-controls"');
+  if (insertAt === -1) {
+    // Fall back: insert before the closing </section> of the first section
+    var sectionStart = html.indexOf('class="section"');
+    if (sectionStart === -1) {
+      console.log('  WARNING: Could not find section in ' + indexPath);
+      return;
+    }
+    insertAt = html.indexOf('</section>', sectionStart);
+    if (insertAt === -1) return;
   }
 
-  // Find the start of the first papers section
-  var sectionStart = html.indexOf('class="section"');
-  if (sectionStart === -1) {
-    console.log('  WARNING: Could not find section in ' + indexPath);
-    return;
-  }
-
-  // Find the </section> that closes the papers section (first one after the section)
-  var firstSectionEnd = html.indexOf('</section>', sectionStart);
-  if (firstSectionEnd === -1) return;
-
-  var before = html.substring(0, firstSectionEnd);
-  var after = html.substring(firstSectionEnd);
+  var before = html.substring(0, insertAt);
+  var after = html.substring(insertAt);
   fs.writeFileSync(indexPath, before + cardHtml + '\n        ' + after, 'utf-8');
   console.log('  Updated ' + folder + '/index.html');
 }
