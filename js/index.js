@@ -1,10 +1,9 @@
-// ---- Viral Currents Ticker ----
+// ---- Viral Currents Ticker (live, polls every 2min) ----
 (function() { try {
     var tickerEl = document.getElementById('tickerText');
     if (!tickerEl) return;
 
     var used = [];
-    var currentIdx = -1;
     var spanEl = null;
 
     function showNext(headlines) {
@@ -19,7 +18,6 @@
 
         var pick = available[Math.floor(Math.random() * available.length)];
         used.push(pick);
-        currentIdx = pick;
 
         if (!spanEl) {
             spanEl = document.createElement('span');
@@ -38,15 +36,38 @@
         spanEl.textContent = headlines[pick];
     }
 
-    fetch('/data/headlines.json')
-        .then(function(r) { if (!r.ok) throw new Error('not found'); return r.json(); })
-        .then(function(data) {
-            var list = data.headlines || [];
-            if (list.length === 0) return;
-            showNext(list);
-            setInterval(function() { showNext(list); }, 120000);
-        })
-        .catch(function() {});
+    var pool = [];
+
+    function loadFallback() {
+        fetch('/data/headlines.json')
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                var list = data.headlines || [];
+                for (var i = 0; i < list.length; i++) { pool.push(list[i]); }
+                if (pool.length > 0) showNext(pool);
+            })
+            .catch(function() {});
+    }
+
+    function fetchLive() {
+        fetch('/api/headlines')
+            .then(function(r) { if (!r.ok) throw new Error('fail'); return r.json(); })
+            .then(function(data) {
+                var fresh = data.headlines || [];
+                var emoji = data.emoji || '';
+                for (var i = 0; i < fresh.length; i++) {
+                    if (emoji && fresh[i].indexOf(emoji) !== 0) {
+                        fresh[i] = emoji + ' ' + fresh[i];
+                    }
+                    pool.push(fresh[i]);
+                }
+                if (pool.length > 0) showNext(pool);
+            })
+            .catch(function() { if (pool.length === 0) loadFallback(); else showNext(pool); });
+    }
+
+    fetchLive();
+    setInterval(fetchLive, 120000);
 } catch(e) {} })();
 
 // ---- Upcoming Exam Notifications ----
