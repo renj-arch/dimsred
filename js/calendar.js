@@ -9,10 +9,10 @@
   var papers = [];
   var currentMonth = new Date().getMonth();
   var currentYear = new Date().getFullYear();
+  var today = new Date();
 
   function todayStr() {
-    var d = new Date();
-    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+    return today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
   }
 
   function getLog() {
@@ -38,7 +38,7 @@
     if (log.length === 0) return 0;
     var sorted = log.slice().sort().reverse();
     var streak = 0;
-    var d = new Date();
+    var d = new Date(today);
     for (var i = 0; i < sorted.length; i++) {
       var expected = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
       if (sorted[i] === expected) {
@@ -56,88 +56,26 @@
     return papers.filter(function(p) { return p.date === ds; });
   }
 
-  function openModal(list) {
-    if (list.length === 1) {
-      window.location.href = 'papers/' + list[0] + '.html';
-      return;
-    }
-    var items = list.map(function(s) {
-      var p = papers.filter(function(x) { return x.slug === s; })[0];
-      if (!p) return '<div class="cal-modal-item">' + escapeHtml(s) + '</div>';
-      return '<a href="papers/' + encodeURIComponent(s) + '.html" class="cal-modal-item">' +
-        '<span class="cal-modal-title">' + escapeHtml(p.title) + '</span>' +
-        '<span class="cal-modal-meta">' + (p.questions || '?') + ' Q</span>' +
-        '</a>';
-    }).join('');
-    var overlay = document.createElement('div');
-    overlay.className = 'cal-overlay';
-    overlay.innerHTML =
-      '<div class="cal-modal"><div class="cal-modal-header">' +
-      '<span>Papers available</span>' +
-      '<button class="cal-modal-close" data-close-overlay>&#10005;</button>' +
-      '</div><div class="cal-modal-body">' + items + '</div></div>';
-    overlay.addEventListener('click', function(e) {
-      if (e.target === overlay) overlay.remove();
-    });
-    document.body.appendChild(overlay);
-  }
-
-  function escapeHtml(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  // Event delegation: one listener on container for all clicks
-  container.addEventListener('click', function(e) {
-    var cell = e.target.closest('.cal-cell');
-    if (cell && cell.dataset.slugs) {
-      openModal(cell.dataset.slugs.split(','));
-      return;
-    }
-    if (e.target.classList.contains('cal-gotit')) {
-      markToday();
-      return;
-    }
-    if (e.target.classList.contains('cal-prev')) {
-      currentMonth--;
-      if (currentMonth < 0) { currentMonth = 11; currentYear--; }
-      render();
-      return;
-    }
-    if (e.target.classList.contains('cal-next')) {
-      currentMonth++;
-      if (currentMonth > 11) { currentMonth = 0; currentYear++; }
-      render();
-      return;
-    }
-    // Modal close button
-    if (e.target.hasAttribute('data-close-overlay')) {
-      var overlay = e.target.closest('.cal-overlay');
-      if (overlay) overlay.remove();
-    }
-  });
-
   function loadData() {
+    // Try inline data first
     var scriptTag = document.getElementById('papers-manifest');
     if (scriptTag) {
-      try { papers = JSON.parse(scriptTag.textContent); } catch(e) { console.warn('Calendar: invalid manifest JSON'); }
+      try { papers = JSON.parse(scriptTag.textContent); } catch(e) {}
       if (papers.length) { render(); return; }
     }
+    // XHR fallback
     var dataUrl = container.getAttribute('data-src') || 'papers/calendar-data.json';
     var xhr = new XMLHttpRequest();
     xhr.open('GET', dataUrl, true);
-    xhr.onload = function() {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        try { papers = JSON.parse(xhr.responseText); } catch(e) { console.warn('Calendar: invalid JSON from ' + dataUrl); }
-      } else {
-        console.warn('Calendar: HTTP ' + xhr.status + ' loading ' + dataUrl);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try { papers = JSON.parse(xhr.responseText); } catch(e) {}
+        }
+        render();
       }
-      render();
     };
-    xhr.onerror = function() {
-      console.warn('Calendar: network error loading ' + dataUrl);
-      render();
-    };
-    try { xhr.send(); } catch(e) { console.warn('Calendar: send failed', e); render(); }
+    xhr.send();
   }
 
   function render() {
@@ -148,70 +86,157 @@
     var streak = calcStreak();
     var practicedToday = log.indexOf(ts) >= 0;
 
-    var html = '';
+    container.innerHTML = '';
 
-    // Streak banner
+    // Streak
     if (streak > 1 || practicedToday) {
-      html += '<div class="cal-streak">';
-      html += '<span class="cal-streak-fire">&#x1F525;</span>';
-      html += '<span class="cal-streak-count">' + streak + '-day streak!</span>';
-      html += '</div>';
+      var streakEl = document.createElement('div');
+      streakEl.className = 'cal-streak';
+      streakEl.innerHTML = '<span class="cal-streak-fire">🔥</span><span class="cal-streak-count">' + streak + '-day streak!</span>';
+      container.appendChild(streakEl);
     }
 
+    // Prompt
+    var promptEl = document.createElement('div');
+    promptEl.className = practicedToday ? 'cal-prompt cal-prompt-done' : 'cal-prompt';
     if (!practicedToday) {
-      html += '<div class="cal-prompt">';
-      html += '<span class="cal-prompt-icon">&#x1F4C5;</span>';
-      html += '<span class="cal-prompt-text">Complete 1 paper today to keep your streak alive!</span>';
-      html += '<button class="cal-gotit">Got it!</button>';
-      html += '</div>';
+      promptEl.innerHTML = '<span class="cal-prompt-icon">📅</span><span class="cal-prompt-text">Complete 1 paper today to keep your streak alive!</span><button class="cal-gotit">Got it!</button>';
+      promptEl.querySelector('.cal-gotit').addEventListener('click', markToday);
     } else {
-      html += '<div class="cal-prompt cal-prompt-done">';
-      html += '<span class="cal-prompt-icon">&#x2705;</span>';
-      html += '<span class="cal-prompt-text">Today\'s practice done! Come back tomorrow.</span>';
-      html += '</div>';
+      promptEl.innerHTML = '<span class="cal-prompt-icon">✅</span><span class="cal-prompt-text">Today\'s practice done! Come back tomorrow.</span>';
+    }
+    container.appendChild(promptEl);
+
+    // Header
+    var headerEl = document.createElement('div');
+    headerEl.className = 'cal-header';
+
+    var prevBtn = document.createElement('button');
+    prevBtn.className = 'cal-prev';
+    prevBtn.textContent = '\u25C0';
+    prevBtn.addEventListener('click', function() {
+      currentMonth--;
+      if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+      render();
+    });
+    headerEl.appendChild(prevBtn);
+
+    var titleEl = document.createElement('span');
+    titleEl.className = 'cal-title';
+    titleEl.textContent = MONTHS[currentMonth] + ' ' + currentYear;
+    headerEl.appendChild(titleEl);
+
+    var nextBtn = document.createElement('button');
+    nextBtn.className = 'cal-next';
+    nextBtn.textContent = '\u25B6';
+    nextBtn.addEventListener('click', function() {
+      currentMonth++;
+      if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+      render();
+    });
+    headerEl.appendChild(nextBtn);
+
+    // Today button (only if not on current month)
+    if (currentMonth !== today.getMonth() || currentYear !== today.getFullYear()) {
+      var todayBtn = document.createElement('button');
+      todayBtn.className = 'cal-today-btn';
+      todayBtn.textContent = 'Today';
+      todayBtn.addEventListener('click', function() {
+        currentMonth = today.getMonth();
+        currentYear = today.getFullYear();
+        render();
+      });
+      headerEl.appendChild(todayBtn);
     }
 
-    // Calendar header
-    html += '<div class="cal-header">';
-    html += '<button class="cal-prev">&#x25C0;</button>';
-    html += '<span class="cal-title">' + MONTHS[currentMonth] + ' ' + currentYear + '</span>';
-    html += '<button class="cal-next">&#x25B6;</button>';
-    html += '</div>';
+    container.appendChild(headerEl);
 
-    html += '<div class="cal-days">';
+    // Day labels
+    var daysGrid = document.createElement('div');
+    daysGrid.className = 'cal-days';
+
     for (var d = 0; d < 7; d++) {
-      html += '<div class="cal-day-label">' + DAYS[d] + '</div>';
+      var label = document.createElement('div');
+      label.className = 'cal-day-label';
+      label.textContent = DAYS[d];
+      daysGrid.appendChild(label);
     }
 
+    // Empty cells
     for (var i = 0; i < firstDay; i++) {
-      html += '<div class="cal-cell cal-empty"></div>';
+      var empty = document.createElement('div');
+      empty.className = 'cal-cell cal-empty';
+      daysGrid.appendChild(empty);
     }
 
+    // Day cells
     for (var day = 1; day <= daysInMonth; day++) {
       var ds = currentYear + '-' + String(currentMonth + 1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
       var match = papersForDate(currentYear, currentMonth, day);
       var done = log.indexOf(ds) >= 0;
-      var extra = '';
-      if (match.length > 0) extra += ' cal-has-paper';
-      if (done) extra += ' cal-done';
-      if (ds === ts) extra += ' cal-today';
-      var slugs = match.map(function(p) { return p.slug; }).join(',');
-      html += '<div class="cal-cell' + extra + '"';
+
+      var cell = document.createElement('div');
+      var cls = 'cal-cell';
+      if (match.length > 0) cls += ' cal-has-paper';
+      if (done) cls += ' cal-done';
+      if (ds === ts) cls += ' cal-today';
+      cell.className = cls;
+      cell.textContent = day;
+
       if (match.length > 0) {
-        html += ' data-slugs="' + slugs.replace(/"/g, '&quot;') + '"';
+        (function(papersList) {
+          cell.addEventListener('click', function() {
+            if (papersList.length === 1) {
+              window.location.href = 'papers/' + papersList[0].slug + '.html';
+            } else {
+              showModal(papersList);
+            }
+          });
+        })(match);
       }
-      html += '>' + day + '</div>';
+
+      daysGrid.appendChild(cell);
     }
 
-    html += '</div>';
+    container.appendChild(daysGrid);
 
     // Legend
-    html += '<div class="cal-legend">';
-    html += '<span><span class="cal-dot" style="background:rgba(139,92,246,.5)"></span> Paper available</span>';
-    html += '<span><span class="cal-dot" style="background:rgba(52,211,153,.5)"></span> Completed</span>';
-    html += '</div>';
+    var legend = document.createElement('div');
+    legend.className = 'cal-legend';
+    legend.innerHTML = '<span><span class="cal-dot" style="background:rgba(139,92,246,.5)"></span> Paper available</span><span><span class="cal-dot" style="background:rgba(52,211,153,.5)"></span> Completed</span>';
+    container.appendChild(legend);
+  }
 
-    container.innerHTML = html;
+  function showModal(papersList) {
+    var overlay = document.createElement('div');
+    overlay.className = 'cal-overlay';
+
+    var modal = document.createElement('div');
+    modal.className = 'cal-modal';
+
+    var header = document.createElement('div');
+    header.className = 'cal-modal-header';
+    header.innerHTML = '<span>Papers available</span><button class="cal-modal-close">✕</button>';
+    header.querySelector('.cal-modal-close').addEventListener('click', function() { overlay.remove(); });
+    modal.appendChild(header);
+
+    var body = document.createElement('div');
+    body.className = 'cal-modal-body';
+
+    papersList.forEach(function(p) {
+      var link = document.createElement('a');
+      link.className = 'cal-modal-item';
+      link.href = 'papers/' + p.slug + '.html';
+      link.innerHTML = '<span class="cal-modal-title">' + p.title + '</span><span class="cal-modal-meta">' + (p.questions || '?') + ' Q</span>';
+      body.appendChild(link);
+    });
+
+    modal.appendChild(body);
+    overlay.appendChild(modal);
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) overlay.remove();
+    });
+    document.body.appendChild(overlay);
   }
 
   loadData();
