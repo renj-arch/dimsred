@@ -2,9 +2,9 @@ name: Auto-Generate Practice Papers
 
 on:
   schedule:
-    - cron: '0 6 * * 1'
-    - cron: '0 6 * * 3'
-    - cron: '0 6 * * 5'
+    - cron: '0 4 * * *'
+    - cron: '0 5 * * *'
+    - cron: '0 6 * * *'
   workflow_dispatch:
     inputs:
       exams:
@@ -29,6 +29,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Pull latest changes (in case prior batch just ran)
+        run: git pull --rebase
+
       - name: Determine today batch
         id: batch
         run: |
@@ -39,12 +42,12 @@ jobs:
               echo "exams=all" >> $GITHUB_OUTPUT
             fi
           else
-            DAY=$(date +%u)
-            if [ "$DAY" = "1" ]; then
+            HOUR=$(date +%H)
+            if [ "$HOUR" = "04" ]; then
               echo "exams=cgl rbi jee" >> $GITHUB_OUTPUT
-            elif [ "$DAY" = "3" ]; then
+            elif [ "$HOUR" = "05" ]; then
               echo "exams=neet gate agniveer" >> $GITHUB_OUTPUT
-            elif [ "$DAY" = "5" ]; then
+            elif [ "$HOUR" = "06" ]; then
               echo "exams=upsc ibps-po sbi-clerk ssc-gd ctet" >> $GITHUB_OUTPUT
             else
               echo "exams=skip" >> $GITHUB_OUTPUT
@@ -90,5 +93,5 @@ jobs:
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git add -A
-          git diff --staged --quiet || git commit -m "Auto-generate practice papers $(date +'%Y-%m-%d')"
+          git diff --staged --quiet || git commit -m "Auto-generate practice papers $(date +'%Y-%m-%d') — ${{ steps.batch.outputs.exams }}"
           git push
