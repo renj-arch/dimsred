@@ -88,6 +88,79 @@ var EXAM_CONFIG = {
       'Science: Physics, Chemistry, Biology basics (up to Class 10 level)',
       'Reasoning: Analogies, Series, Coding-decoding, Blood relations, Directions'
     ]
+  },
+  upsc: {
+    name: 'UPSC Civil Services',
+    subjects: {
+      'General Studies': '#a855f7',
+      'CSAT': '#6366f1',
+      'Current Affairs': '#34d399'
+    },
+    topics: [
+      'General Studies: Indian History, Geography, Polity, Economy, Environment, Science & Technology, Art & Culture, International Relations',
+      'CSAT: Comprehension, Logical reasoning, Decision making, Numeracy, Data interpretation',
+      'Current Affairs: National and International events, Government schemes, Reports and indices'
+    ]
+  },
+  'ibps-po': {
+    name: 'IBPS PO',
+    subjects: {
+      'Reasoning': '#a855f7',
+      'Quantitative Aptitude': '#60a5fa',
+      'English': '#34d399',
+      'General Awareness': '#fb923c'
+    },
+    topics: [
+      'Reasoning: Puzzles, Seating arrangement, Syllogism, Inequalities, Data sufficiency, Coding-decoding',
+      'Quantitative Aptitude: Arithmetic, Data Interpretation, Number series, Quadratic equations, Simplification',
+      'English: Reading comprehension, Cloze test, Fillers, Error spotting, Sentence improvement, Para jumbles',
+      'General Awareness: Banking awareness, Financial terms, Current affairs, Static GK'
+    ]
+  },
+  'sbi-clerk': {
+    name: 'SBI Clerk',
+    subjects: {
+      'Reasoning': '#a855f7',
+      'Quantitative Aptitude': '#60a5fa',
+      'English': '#34d399',
+      'General Awareness': '#fb923c'
+    },
+    topics: [
+      'Reasoning: Puzzles, Inequalities, Syllogism, Coding-decoding, Blood relations, Direction sense',
+      'Quantitative Aptitude: Simplification, Number series, Data interpretation, Ratio & Proportion, Percentage, Profit & Loss',
+      'English: Reading comprehension, Fill in the blanks, Error detection, Para jumbles, Vocabulary',
+      'General Awareness: Current affairs, Banking & Financial awareness, Static GK'
+    ]
+  },
+  'ssc-gd': {
+    name: 'SSC GD Constable',
+    subjects: {
+      'General Knowledge': '#a855f7',
+      'Mathematics': '#60a5fa',
+      'Reasoning': '#34d399',
+      'English': '#fb923c'
+    },
+    topics: [
+      'General Knowledge: Indian History, Geography, Polity, Economy, Science, Current Affairs, Sports',
+      'Mathematics: Number system, Percentage, Ratio, Average, Time & Work, Speed & Distance, Mensuration',
+      'Reasoning: Analogies, Series, Classification, Coding-decoding, Blood relations, Direction',
+      'English: Grammar, Vocabulary, Comprehension, Fillers, Error spotting'
+    ]
+  },
+  ctet: {
+    name: 'CTET',
+    subjects: {
+      'Child Development & Pedagogy': '#a855f7',
+      'Mathematics': '#6366f1',
+      'Environmental Studies': '#34d399',
+      'Language': '#fb923c'
+    },
+    topics: [
+      'Child Development & Pedagogy: Piaget, Vygotsky, Kohlberg theories, Learning, Motivation, Inclusive education',
+      'Mathematics: Number system, Algebra, Geometry, Mensuration, Data handling, Pedagogical issues',
+      'Environmental Studies: Family, Food, Shelter, Water, Travel, Natural resources, Pedagogy',
+      'Language: Grammar, Comprehension, Pedagogy of language development'
+    ]
   }
 };
 
@@ -281,7 +354,7 @@ async function run() {
   var args = process.argv.slice(2);
   if (args.length === 0) {
     console.log('Usage: node scripts/generate-ai-questions.js <exam1> [exam2] ...');
-    console.log('Exams: neet, jee, gate, rbi, cgl, agniveer');
+    console.log('Exams: neet, jee, gate, rbi, cgl, agniveer, upsc, ibps-po, sbi-clerk, ssc-gd, ctet');
     console.log('Use "all" to generate for all exams');
     console.log('Set count with --count=N (default 15)');
     return;

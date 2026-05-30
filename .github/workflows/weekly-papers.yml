@@ -41,6 +41,11 @@ jobs:
       - name: Update sitemap
         run: node scripts/generate-sitemap.js
 
+      - name: Ping search engines
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" "https://www.google.com/ping?sitemap=https://vlymbooq.qzz.io/sitemap.xml"
+          curl -s -o /dev/null -w "%{http_code}" "https://www.bing.com/ping?siteMap=https://vlymbooq.qzz.io/sitemap.xml"
+
       - name: Commit and push
         run: |
           git config user.name "vlymbooq-bot"

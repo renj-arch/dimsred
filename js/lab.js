@@ -34,7 +34,12 @@ var SECTIONS = {
     rbi: ['General Awareness','Quantitative Aptitude','Reasoning','English'],
     jee: ['Physics','Chemistry','Mathematics'],
     neet: ['Physics','Chemistry','Botany','Zoology'],
-    gate: ['General Aptitude','Core Subject']
+    gate: ['General Aptitude','Core Subject'],
+    upsc: ['General Studies','CSAT','Current Affairs'],
+    'ibps-po': ['Reasoning','Quantitative Aptitude','English','General Awareness'],
+    'sbi-clerk': ['Reasoning','Quantitative Aptitude','English','General Awareness'],
+    'ssc-gd': ['General Knowledge','Mathematics','Reasoning','English'],
+    ctet: ['Child Development & Pedagogy','Mathematics','Environmental Studies','Language']
 };
 
 function esc(s) { return String(s).replace(/[&<>"']/g, function(c) { return '&#' + c.charCodeAt(0) + ';'; }); }

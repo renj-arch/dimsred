@@ -3,7 +3,7 @@ var path = require('path');
 
 var root = __dirname;
 var BASE = 'https://vlymbooq.qzz.io';
-var EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer'];
+var EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer', 'upsc', 'ibps-po', 'sbi-clerk', 'ssc-gd', 'ctet'];
 
 function today() {
   var d = new Date();

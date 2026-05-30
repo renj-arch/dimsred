@@ -5,9 +5,9 @@ var root = path.resolve(__dirname, '..');
 var bankDir = path.join(root, 'question-bank');
 var dataDir = path.join(root, 'papers-data');
 
-var QUESTION_COUNTS = { cgl: 15, rbi: 15, jee: 15, neet: 15, gate: 15, agniveer: 15 };
-var MIN_BANK_SIZE = { cgl: 30, rbi: 30, jee: 30, neet: 30, gate: 30, agniveer: 30 };
-var EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer'];
+var QUESTION_COUNTS = { cgl: 15, rbi: 15, jee: 15, neet: 15, gate: 15, agniveer: 15, upsc: 15, 'ibps-po': 15, 'sbi-clerk': 15, 'ssc-gd': 15, ctet: 15 };
+var MIN_BANK_SIZE = { cgl: 30, rbi: 30, jee: 30, neet: 30, gate: 30, agniveer: 30, upsc: 30, 'ibps-po': 30, 'sbi-clerk': 30, 'ssc-gd': 30, ctet: 30 };
+var EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer', 'upsc', 'ibps-po', 'sbi-clerk', 'ssc-gd', 'ctet'];
 
 function shuffle(arr) {
   for (var i = arr.length - 1; i > 0; i--) {
@@ -227,6 +227,63 @@ function updateExamStats() {
   }
 }
 
+function updateRootHeroBadge() {
+  var indexPath = path.join(root, 'index.html');
+  if (!fs.existsSync(indexPath)) return;
+  var papers = countPapers();
+  var questions = countQuestions();
+  var exams = EXAMS.length;
+  var html = fs.readFileSync(indexPath, 'utf-8');
+  html = html.replace(
+    /(<div class="hero-badge">🔥 )[\d,]+[+]?( Questions · )\d+( Papers · )\d+( Exams · Free<\/div>)/,
+    function(m, a, b, c, d) { return a + questions.toLocaleString() + '+' + b + papers + c + exams + d; }
+  );
+  fs.writeFileSync(indexPath, html, 'utf-8');
+  console.log('  Updated hero badge: ' + questions.toLocaleString() + '+ Q · ' + papers + ' P · ' + exams + ' Exams');
+}
+
+function updateExamGridCards() {
+  var indexPath = path.join(root, 'index.html');
+  if (!fs.existsSync(indexPath)) return;
+  var html = fs.readFileSync(indexPath, 'utf-8');
+  var h3Labels = { cgl: 'SSC CGL Tier 1', rbi: 'RBI Grade B Phase 1', jee: 'JEE Main &amp; Advanced', neet: 'NEET UG', gate: 'GATE', agniveer: 'Agniveer', upsc: 'UPSC Civil Services', 'ibps-po': 'IBPS PO', 'sbi-clerk': 'SBI Clerk', 'ssc-gd': 'SSC GD', ctet: 'CTET' };
+
+  for (var i = 0; i < EXAMS.length; i++) {
+    var folder = EXAMS[i];
+    var label = h3Labels[folder];
+    var paperCount = countPapersForExam(folder);
+    var questionCount = countQuestionsInBank(folder);
+
+    html = html.replace(
+      new RegExp('(<h3>' + label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '<\\/h3>\\s*<div class="meta">)[^<]+(<\\/div>)'),
+      function(m, before, after) { return before + paperCount + ' papers \u00B7 ' + questionCount + '+ questions' + after; }
+    );
+  }
+
+  fs.writeFileSync(indexPath, html, 'utf-8');
+  console.log('  Updated exam grid cards');
+}
+
+function updateTrustBar() {
+  var indexPath = path.join(root, 'index.html');
+  if (!fs.existsSync(indexPath)) return;
+  var papers = countPapers();
+  var questions = countQuestions();
+  var html = fs.readFileSync(indexPath, 'utf-8');
+
+  html = html.replace(
+    /(<div class="trust-item"><span class="icon">📝<\/span><div class="num">)[^<]+(<\/div><div class="label">Questions Solved)/,
+    function(m, before, after) { return before + questions.toLocaleString() + '+' + after; }
+  );
+  html = html.replace(
+    /(<div class="trust-item"><span class="icon">🏆<\/span><div class="num">)[^<]+(<\/div><div class="label">Full Papers)/,
+    function(m, before, after) { return before + papers + after; }
+  );
+
+  fs.writeFileSync(indexPath, html, 'utf-8');
+  console.log('  Updated trust bar: ' + questions.toLocaleString() + '+ questions, ' + papers + ' papers');
+}
+
 function updateRootStats() {
   var indexPath = path.join(root, 'index.html');
   if (!fs.existsSync(indexPath)) { console.log('  WARNING: root index.html not found'); return; }
@@ -262,6 +319,9 @@ function run() {
     generatePaper(folders[i]);
   }
 
+  updateRootHeroBadge();
+  updateExamGridCards();
+  updateTrustBar();
   updateRootStats();
   updateExamStats();
 
