@@ -77,7 +77,7 @@ function pickQuestions(bank, count) {
   return picked;
 }
 
-function updateIndexPage(folder, title, slug) {
+function updateIndexPage(folder, title, slug, count) {
   var indexPath = path.join(root, folder, 'index.html');
   if (!fs.existsSync(indexPath)) {
     console.log('  WARNING: ' + indexPath + ' not found, skipping index update');
@@ -85,7 +85,7 @@ function updateIndexPage(folder, title, slug) {
   }
 
   var html = fs.readFileSync(indexPath, 'utf-8');
-  var cardHtml = '\n            <div class="paper-card">\n                <div>\n                    <div class="title">' + title.replace(/"/g, '&quot;') + '</div>\n                    <div class="meta">' + QUESTION_COUNTS[folder] + ' Q \u00B7 Solved with answers</div>\n                </div>\n                <a href="papers/' + slug + '.html" class="btn">View Paper</a>\n            </div>';
+  var cardHtml = '\n            <div class="paper-card">\n                <div>\n                    <div class="title">' + title.replace(/"/g, '&quot;') + '</div>\n                    <div class="meta">' + count + ' Q \u00B7 ' + count + ' min \u00B7 Solved with answers</div>\n                </div>\n                <a href="papers/' + slug + '.html" class="btn">View Paper</a>\n            </div>';
 
   // Find the papers section and insert before its closing </section>
   var sectionEnd = html.lastIndexOf('</section>');
@@ -139,8 +139,8 @@ function generatePaper(folder) {
     title: title,
     pageTitle: bank.paperDefaults.pageTitleTemplate.replace('{number}', setNumber),
     pageDesc: bank.paperDefaults.pageDescTemplate.replace('{number}', setNumber),
-    meta: bank.paperDefaults.metaTemplate.replace('{questionCount}', count),
-    timerMinutes: bank.timerMinutes || 60,
+    meta: count + ' Q \u00B7 ' + count + ' min \u00B7 Solved with answers',
+    timerMinutes: count,
     sections: bank.sections,
     questions: questions
   };
@@ -157,7 +157,7 @@ function generatePaper(folder) {
   require('child_process').execSync('node "' + buildScript + '"', { cwd: root, stdio: 'inherit' });
 
   // Update index
-  updateIndexPage(folder, title, slug);
+  updateIndexPage(folder, title, slug, count);
 
   // Save meta
   saveMeta(folder, setNumber, usedIds);
