@@ -23,7 +23,7 @@ export async function onRequest(context) {
 
   // Persist to Supabase + cleanup rows older than 24h (fire-and-forget)
   var supabaseUrl = context.env.SUPABASE_URL;
-  var serviceKey = context.env.SUPABASE_SERVICE_KEY;
+  var serviceKey = context.env.SUPER_SERVICE_KEY;
   if (supabaseUrl && serviceKey) {
     logVisit(supabaseUrl, serviceKey, log);
   }
