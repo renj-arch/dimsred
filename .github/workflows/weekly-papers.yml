@@ -65,11 +65,11 @@ jobs:
 
       - name: Build practice papers
         if: steps.batch.outputs.exams != 'skip'
-        run: node scripts/generate-papers.js
+        run: node scripts/generate-papers.js ${{ steps.batch.outputs.exams }}
 
       - name: Generate calendar data
         if: steps.batch.outputs.exams != 'skip'
-        run: node scripts/generate-calendar-data.js
+        run: node scripts/generate-calendar-data.js ${{ steps.batch.outputs.exams }}
 
       - name: Update sitemap
         if: steps.batch.outputs.exams != 'skip'
