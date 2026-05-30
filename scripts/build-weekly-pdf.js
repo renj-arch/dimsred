@@ -464,13 +464,14 @@ function buildExamPDF(exam, paper, analysis, weekRange, dateStr, detailedSols, q
 }
 
 // ========== MAIN ==========
-async function buildPDF() {
+async function buildPDF(examArgs) {
   if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir);
   var dateStr = getDateStr();
   var weekRange = formatWeekRange();
   var apiKey = getApiKey();
+  var examsToBuild = examArgs && examArgs.length > 0 ? examArgs : EXAMS;
   var papers = [];
-  for (var i = 0; i < EXAMS.length; i++) { var p = getLatestPaper(EXAMS[i]); if (p) papers.push({ exam: EXAMS[i], paper: p }); }
+  for (var i = 0; i < examsToBuild.length; i++) { var p = getLatestPaper(examsToBuild[i]); if (p) papers.push({ exam: examsToBuild[i], paper: p }); }
   if (papers.length === 0) { console.log('No paper data found. Run generate-papers first.'); return; }
   console.log('Building weekly study digests (' + weekRange + '):');
 
@@ -534,4 +535,6 @@ async function buildPDF() {
   console.log('\nDone! Generated ' + results.length + ' PDF(s).');
 }
 
-buildPDF().catch(function(err) { console.error('Error:', err); process.exit(1); });
+var examArgs = process.argv.slice(2).filter(function(a) { return a.indexOf('--') !== 0; });
+if (examArgs.length === 1 && examArgs[0] === 'all') examArgs = [];
+buildPDF(examArgs.length > 0 ? examArgs : null).catch(function(err) { console.error('Error:', err); process.exit(1); });
