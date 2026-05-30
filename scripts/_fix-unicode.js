@@ -4,7 +4,7 @@ var path = require('path');
 var root = path.resolve(__dirname, '..');
 var bankDir = path.join(root, 'question-bank');
 var dataDir = path.join(root, 'papers-data');
-var EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer'];
+var EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer', 'upsc', 'ibps-po', 'sbi-clerk', 'ssc-gd', 'ctet'];
 
 function toAscii(s) {
   if (!s) return s;

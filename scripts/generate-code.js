@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-var ALL_EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer'];
+var ALL_EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer', 'upsc', 'ibps-po', 'sbi-clerk', 'ssc-gd', 'ctet'];
 
 function generateCode() {
   var prefix = 'VLYM';
