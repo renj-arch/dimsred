@@ -91,29 +91,35 @@ export async function onRequest(context) {
     }
     var html = await resp.text();
 
-    var linkRegex = /<a[^>]*href="([^"]*)"[^>]*>([^<]+)<\/a>/gi;
+    var linkRegex = /<a[^>]+href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi;
     var links = [];
     var m;
     while ((m = linkRegex.exec(html)) !== null) {
       var href = m[1].trim();
-      var text = m[2].replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
-      if (!text || text.length < 20 || text.length > 200) continue;
+      var inner = m[2].replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+      if (!inner || inner.length < 15 || inner.length > 250) continue;
       if (!href.startsWith('http') && !href.startsWith('/')) continue;
-      if (/google|facebook|twitter|youtube|instagram|whatsapp|telegram/i.test(href)) continue;
-      if (/home|login|register|contact|about|privacy/i.test(text)) continue;
-      var exam = detectExam(text);
-      if (exam.tag === 'Government' && !/(recruit|vacanc|apply|notification|online\s*form|post)/i.test(text)) continue;
-      links.push({ text: text, href: href, exam: exam });
+      if (/google|facebook|twitter|youtube|instagram|whatsapp|telegram|addthis|share/i.test(href)) continue;
+      if (/^home$|^login$|^register$|^contact|^about|privacy/i.test(inner)) continue;
+      links.push({ text: inner, href: href });
     }
+
+    var known = Object.keys(TAG_MAP);
+    var filtered = links.filter(function(item) {
+      var lower = item.text.toLowerCase();
+      if (known.some(function(k) { return lower.indexOf(k) !== -1; })) return true;
+      return /(recruit|vacanc|apply|notification|online\s*form|post|result|answer\s*key|admit|syllabus|exam\s*date|score|counselling)/i.test(lower);
+    });
 
     var unique = [];
     var seen = {};
-    for (var i = 0; i < links.length; i++) {
-      var key = links[i].text.toLowerCase();
-      if (!seen[key]) { seen[key] = true; unique.push(links[i]); }
+    for (var i = 0; i < filtered.length; i++) {
+      var key = filtered[i].text.toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (!seen[key]) { seen[key] = true; unique.push(filtered[i]); }
     }
 
-    var notifications = unique.slice(0, 20).map(function(item) {
+    var notifications = unique.slice(0, 30).map(function(item) {
+      var exam = detectExam(item.text);
       var dateInfo = extractMonthDayYear(item.text);
       var closing = extractClosingDate(item.text);
       var vacancy = extractVacancy(item.text);
