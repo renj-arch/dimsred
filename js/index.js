@@ -71,85 +71,44 @@
 
 // ---- Upcoming Exam Notifications ----
 (function() { try {
-    var notifications = [
-        {
-            tag: 'RRB', title: 'Recruitment of Assistant Loco Pilot (ALP)', color: '#8b5cf6',
-            startDay: 15, startMonth: 'May', startYear: 2026, closing: '14/06/2026',
-            link: 'https://www.rrbapply.gov.in', vacancy: '~18,000+ vacancies',
-        },
-        {
-            tag: 'SSC CGL', title: 'Combined Graduate Level Exam 2026', color: '#a78bfa',
-            startDay: 20, startMonth: 'Jun', startYear: 2026, closing: '19/07/2026',
-            link: 'https://ssc.nic.in', vacancy: '~8,000+ vacancies',
-        },
-        {
-            tag: 'IBPS PO', title: 'Probationary Officer Recruitment 2026', color: '#34d399',
-            startDay: 1, startMonth: 'Jul', startYear: 2026, closing: '21/07/2026',
-            link: 'https://ibps.in', vacancy: '~4,500+ vacancies',
-        },
-        {
-            tag: 'UPSC', title: 'Civil Services Preliminary Exam 2026', color: '#f59e0b',
-            startDay: 28, startMonth: 'May', startYear: 2026, closing: '17/06/2026',
-            link: 'https://upsc.gov.in', vacancy: '~1,000+ vacancies',
-        },
-        {
-            tag: 'SBI Clerk', title: 'Junior Associate Recruitment 2026', color: '#06b6d4',
-            startDay: 5, startMonth: 'Jul', startYear: 2026, closing: '25/07/2026',
-            link: 'https://sbi.co.in/careers', vacancy: '~8,000+ vacancies',
-        },
-        {
-            tag: 'CTET', title: 'Central Teacher Eligibility Test July 2026', color: '#f97316',
-            startDay: 10, startMonth: 'Jun', startYear: 2026, closing: '30/06/2026',
-            link: 'https://ctet.nic.in', vacancy: 'Eligibility exam',
-        },
-        {
-            tag: 'SSC GD', title: 'Constable General Duty Exam 2026', color: '#84cc16',
-            startDay: 12, startMonth: 'Jun', startYear: 2026, closing: '12/07/2026',
-            link: 'https://ssc.nic.in', vacancy: '~26,000+ vacancies',
-        },
-        {
-            tag: 'Agniveer', title: 'Indian Army Agniveer Recruitment 2026', color: '#ef4444',
-            startDay: 1, startMonth: 'Jun', startYear: 2026, closing: '30/06/2026',
-            link: 'https://agniveer.cdac.in', vacancy: '~40,000+ vacancies',
-        },
-        {
-            tag: 'RBI Grade B', title: 'Grade B Officer Recruitment 2026', color: '#34d399',
-            startDay: 8, startMonth: 'Jun', startYear: 2026, closing: '28/06/2026',
-            link: 'https://rbi.org.in', vacancy: '~300+ vacancies',
-        },
-        {
-            tag: 'GATE', title: 'Graduate Aptitude Test in Engineering 2027', color: '#ec4899',
-            startDay: 1, startMonth: 'Jul', startYear: 2026, closing: '30/09/2026',
-            link: 'https://gate.iitd.ac.in', vacancy: 'PG admissions + PSUs',
-        },
-        {
-            tag: 'NEET UG', title: 'Undergraduate Medical Entrance 2026', color: '#34d399',
-            startDay: 1, startMonth: 'Jun', startYear: 2026, closing: '15/06/2026',
-            link: 'https://neet.nta.nic.in', vacancy: '~1.2L+ seats',
-        },
-        {
-            tag: 'JEE Main', title: 'Joint Entrance Exam Main 2027', color: '#60a5fa',
-            startDay: 15, startMonth: 'Jul', startYear: 2026, closing: '15/08/2026',
-            link: 'https://jeemain.nta.nic.in', vacancy: 'B.E./B.Tech admissions',
-        },
-    ];
     var container = document.getElementById('examAlertsScroll');
     if (!container) return;
 
-    var seed = Math.floor(Date.now() / 86400000);
-    var shuffled = notifications.slice();
-    for (var i = shuffled.length - 1; i > 0; i--) {
-        var j = Math.floor((Math.sin(seed * 9301 + i * 49297) - Math.floor(Math.sin(seed * 9301 + i * 49297))) * (i + 1));
-        var tmp = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = tmp;
-    }
+    fetch('/data/notifications.json')
+        .then(function(r) { if (!r.ok) throw new Error('not found'); return r.json(); })
+        .then(function(data) {
+            var list = data.notifications || [];
+            if (list.length === 0) { container.parentElement.style.display = 'none'; return; }
 
-    shuffled.forEach(function(n) {
-        var card = document.createElement('div');
-        card.className = 'exam-card';
-        card.innerHTML =
-            '<div class="exam-card-top"><div class="date-badge"><span class="month">' + n.startMonth + '</span><span class="day">' + n.startDay + '</span><span class="year">' + n.startYear + '</span></div><div class="card-body"><span class="exam-tag" style="background:' + n.color.replace(')', ',.1)').replace('rgb','rgba') + ';color:' + n.color + '">' + n.tag + '</span><h3>' + n.title + '</h3><div class="closing">🗓️ Apply by: <span class="urgent">' + n.closing + '</span></div></div><div class="card-shape"></div></div><div class="exam-card-bottom"><a href="' + n.link + '" target="_blank" rel="noopener">Apply Now →</a><span class="vacancy">' + n.vacancy + '</span></div>';
-        container.appendChild(card);
-    });
+            var seed = Math.floor(Date.now() / 86400000);
+            var active = list.filter(function(n) { return !n.expired; });
+            var expired = list.filter(function(n) { return n.expired; });
+            var shuffled = active.slice();
+            for (var i = shuffled.length - 1; i > 0; i--) {
+                var j = Math.floor((Math.sin(seed * 9301 + i * 49297) - Math.floor(Math.sin(seed * 9301 + i * 49297))) * (i + 1));
+                var tmp = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = tmp;
+            }
+            var ordered = shuffled.concat(expired);
+
+            ordered.forEach(function(n) {
+                var color = n.color || 'var(--purple)';
+                var isExpired = n.expired;
+                var card = document.createElement('div');
+                card.className = 'exam-card' + (isExpired ? ' expired' : '');
+                var bottomHtml = '';
+                if (n.link) {
+                    bottomHtml = '<div class="exam-card-bottom"><a href="' + n.link + '">' + (isExpired ? 'View Details →' : 'View Details →') + '</a><span class="vacancy">' + (n.vacancy || '') + '</span></div>';
+                } else if (n.vacancy) {
+                    bottomHtml = '<div class="exam-card-bottom"><span class="vacancy">' + n.vacancy + '</span></div>';
+                }
+                card.innerHTML =
+                    '<div class="exam-card-top"><div class="date-badge' + (isExpired ? ' expired' : '') + '"><span class="month">' + n.startMonth + '</span><span class="day">' + n.startDay + '</span><span class="year">' + n.startYear + '</span></div><div class="card-body"><span class="exam-tag" style="background:rgba(167,139,250,.1);color:var(--purple)">' + n.tag + '</span><h3>' + n.title + '</h3><div class="closing">' + (isExpired ? '⏰ Closed on ' : '🗓️ Apply by: <span class="urgent">') + n.closing + (isExpired ? '' : '</span>') + '</div></div><div class="card-shape"></div></div>' + bottomHtml;
+                container.appendChild(card);
+            });
+        })
+        .catch(function() {
+            container.parentElement.style.display = 'none';
+        });
 } catch(e) {} })();
 
 // ---- Daily Question ----

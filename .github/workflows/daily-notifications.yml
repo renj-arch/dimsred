@@ -1,0 +1,34 @@
+name: Daily Exam Notification Generator
+
+on:
+  schedule:
+    - cron: '30 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate exam notifications
+        id: notify
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: node scripts/generate-notifications.js
+
+      - name: Commit and push
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          git diff --staged --quiet || git commit -m "Update exam notifications $(date +'%Y-%m-%d')"
+          git push
