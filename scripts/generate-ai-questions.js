@@ -252,7 +252,8 @@ function addToBank(exam, newQuestions) {
 
 function getApiKey(name) {
   if (process.env[name]) return process.env[name];
-  var keyFile = path.join(root, name === 'GROQ_API_KEY' ? '.groq-key' : '.gemini-key');
+  var FILE_MAP = { GROQ_API_KEY: '.groq-key', GEMINI_API_KEY: '.gemini-key', HUGGINGFACE_API_KEY: '.hf-key' };
+  var keyFile = path.join(root, FILE_MAP[name] || '');
   if (fs.existsSync(keyFile)) return fs.readFileSync(keyFile, 'utf-8').trim();
   return null;
 }
@@ -295,9 +296,28 @@ async function callGemini(apiKey, prompt) {
   return null;
 }
 
+async function callHuggingFace(apiKey, prompt) {
+  var models = ['mistralai/Mistral-7B-Instruct-v0.3', 'HuggingFaceH4/zephyr-7b-beta', 'microsoft/Phi-3-mini-4k-instruct'];
+  var body = JSON.stringify({ inputs: prompt, parameters: { temperature: 0.7, max_new_tokens: 8192, return_full_text: false } });
+  for (var m = 0; m < models.length; m++) {
+    try {
+      var resp = await fetch('https://api-inference.huggingface.co/models/' + models[m], {
+        method: 'POST', headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' }, body: body
+      });
+      if (resp.status === 429) continue;
+      if (!resp.ok) continue;
+      var data = await resp.json();
+      var text = data[0] && data[0].generated_text || '';
+      if (text) return text;
+    } catch (e) {}
+  }
+  return null;
+}
+
 async function generateQuestions(exam, count) {
   var groqKey = getApiKey('GROQ_API_KEY');
   var geminiKey = getApiKey('GEMINI_API_KEY');
+  var hfKey = getApiKey('HUGGINGFACE_API_KEY');
 
   var prompt = buildPrompt(exam, count);
   if (!prompt) return;
@@ -307,6 +327,7 @@ async function generateQuestions(exam, count) {
   var providers = [];
   if (groqKey) providers.push({ name: 'Groq', fn: function(p) { return callGroq(groqKey, p); } });
   if (geminiKey) providers.push({ name: 'Gemini', fn: function(p) { return callGemini(geminiKey, p); } });
+  if (hfKey) providers.push({ name: 'HuggingFace', fn: function(p) { return callHuggingFace(hfKey, p); } });
 
   for (var p = 0; p < providers.length && !success; p++) {
     console.log('  Trying ' + providers[p].name + '...');

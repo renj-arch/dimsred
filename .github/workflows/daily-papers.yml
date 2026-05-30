@@ -59,6 +59,7 @@ jobs:
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
         run: node scripts/generate-ai-questions.js ${{ steps.batch.outputs.exams }} --count=15
 
       - name: Clean up PDFs older than 4 weeks

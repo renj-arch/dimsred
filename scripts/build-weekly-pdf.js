@@ -12,7 +12,8 @@ var EXAM_LABELS = { cgl: 'SSC CGL', rbi: 'RBI Grade B', jee: 'JEE Main', neet: '
 function getApiKey(name) {
   if (!name) name = 'GROQ_API_KEY';
   if (process.env[name]) return process.env[name];
-  var keyFile = path.join(root, name === 'GROQ_API_KEY' ? '.groq-key' : '.gemini-key');
+  var FILE_MAP = { GROQ_API_KEY: '.groq-key', GEMINI_API_KEY: '.gemini-key', HUGGINGFACE_API_KEY: '.hf-key' };
+  var keyFile = path.join(root, FILE_MAP[name] || '');
   if (fs.existsSync(keyFile)) return fs.readFileSync(keyFile, 'utf-8').trim();
   return null;
 }
@@ -89,18 +90,40 @@ async function callGemini(apiKey, prompt) {
   return null;
 }
 
+async function callHuggingFace(apiKey, prompt) {
+  var models = ['mistralai/Mistral-7B-Instruct-v0.3', 'HuggingFaceH4/zephyr-7b-beta', 'microsoft/Phi-3-mini-4k-instruct'];
+  var body = JSON.stringify({ inputs: prompt, parameters: { temperature: 0.3, max_new_tokens: 4000, return_full_text: false } });
+  for (var m = 0; m < models.length; m++) {
+    try {
+      var resp = await fetch('https://api-inference.huggingface.co/models/' + models[m], {
+        method: 'POST', headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' }, body: body
+      });
+      if (resp.status === 429) continue;
+      if (!resp.ok) continue;
+      var data = await resp.json();
+      var text = data[0] && data[0].generated_text || '';
+      if (text) return text.trim();
+    } catch (e) {}
+  }
+  return null;
+}
+
 async function callAI(prompt) {
   var text = null;
   var groqKey = getApiKey('GROQ_API_KEY');
   if (groqKey) {
-    console.log('  Trying Groq...');
     text = await callGroq(groqKey, prompt);
   }
   if (!text) {
     var geminiKey = getApiKey('GEMINI_API_KEY');
     if (geminiKey) {
-      console.log('  Trying Gemini...');
       text = await callGemini(geminiKey, prompt);
+    }
+  }
+  if (!text) {
+    var hfKey = getApiKey('HUGGINGFACE_API_KEY');
+    if (hfKey) {
+      text = await callHuggingFace(hfKey, prompt);
     }
   }
   return text;
