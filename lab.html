@@ -1,1 +1,203 @@
-﻿<!DOCTYPE html><html lang="en"><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width,initial-scale=1.0">    <title>Study Lab � vlymbooq</title>    <meta http-equiv="Content-Security-Policy" content="style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://pagead2.googlesyndication.com; upgrade-insecure-requests">    <style>        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');        *{margin:0;padding:0;box-sizing:border-box}        body{font-family:'Inter',-apple-system,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}        a{color:#a78bfa;text-decoration:none}        .nav{position:sticky;top:0;z-index:50;padding:16px 24px;background:rgba(9,9,11,.8);border-bottom:1px solid rgba(255,255,255,.04)}        .nav-inner{max-width:1000px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}        .site-title{font-size:1.1em;font-weight:800;color:#fafafa}        .site-title span{background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}        .container{max-width:1000px;margin:0 auto;padding:32px 24px}        h1{font-size:1.5em;font-weight:800;margin-bottom:4px}        .sub{color:#71717a;font-size:.9em;margin-bottom:24px}        .lab-tabs{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:12px}        .lab-tab{padding:10px 20px;border-radius:100px;font-size:.85em;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.06);background:transparent;color:#a1a1aa;transition:all .2s}        .lab-tab:hover{border-color:rgba(255,255,255,.12);color:#fafafa}        .lab-tab.active{background:rgba(139,92,246,.15);border-color:#a78bfa;color:#a78bfa}        .tab-content{display:none}        .tab-content.active{display:block}        .card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:20px;margin-bottom:14px}        .card-title{font-size:1em;font-weight:700;margin-bottom:12px}        select,picker{width:100%;padding:10px;border-radius:8px;background:#18181b;color:#fafafa;border:1px solid rgba(255,255,255,.1);font-size:.9em;margin-bottom:10px}        select:focus{outline:none;border-color:#a78bfa}        .chip-group{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}        .chip{padding:6px 14px;border-radius:100px;font-size:.8em;font-weight:500;cursor:pointer;border:1px solid rgba(255,255,255,.06);background:transparent;color:#a1a1aa;transition:all .2s}        .chip:hover{border-color:rgba(255,255,255,.12);color:#fafafa}        .chip.active{background:rgba(139,92,246,.15);border-color:#a78bfa;color:#a78bfa}        .chip.green{border-color:rgba(52,211,153,.3);color:#34d399}        .chip.green.active{background:rgba(52,211,153,.15);border-color:#34d399;color:#34d399}        .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:100px;font-size:.85em;font-weight:600;border:none;cursor:pointer;text-decoration:none;transition:all .2s}        .btn-primary{background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff}        .btn-primary:hover{transform:translateY(-1px)}        .btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}        .btn-ghost{border:1px solid rgba(255,255,255,.1);color:#fafafa;background:rgba(255,255,255,.03)}        .btn-ghost:hover{background:rgba(255,255,255,.08)}        .btn-sm{padding:8px 16px;font-size:.8em}        .btn-danger{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.2)}        .drill-area,.mock-area{min-height:200px;margin-top:16px}        .q-block{border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:16px;margin-bottom:12px}        .q-block .q-num{font-size:.8em;color:#71717a;margin-bottom:6px}        .q-block .q-text{font-size:.95em;margin-bottom:10px;line-height:1.6}        .q-block .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}        .q-block .q-opt{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.06);cursor:pointer;font-size:.85em;transition:all .15s}        .q-block .q-opt:hover{border-color:rgba(255,255,255,.15)}        .q-block .q-opt.correct{border-color:#34d399;background:rgba(52,211,153,.1)}        .q-block .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1)}        .q-block .q-soln{display:none;margin-top:10px;padding:10px;background:rgba(139,92,246,.06);border-radius:8px;font-size:.85em;color:#a1a1aa}        .q-block .q-soln.show{display:block}        .mock-timer{font-size:2.5em;font-weight:900;color:#a78bfa;text-align:center;padding:20px}        .mock-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}        .empty-state{text-align:center;padding:60px 20px;color:#52525b}        .empty-state .icon{font-size:3em;margin-bottom:12px}        .empty-state p{font-size:.9em}        .weak-item{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid rgba(255,255,255,.04);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all .15s}        .weak-item:hover{background:rgba(255,255,255,.03)}        .weak-q{flex:1;font-size:.85em;color:#d4d4d8}        .weak-section{font-size:.75em;padding:2px 8px;border-radius:100px;background:rgba(139,92,246,.1);color:#a78bfa}        .weak-date{font-size:.75em;color:#52525b}        .pc-btn{background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;text-decoration:none;white-space:nowrap}        .result-overlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:20px}        .result-modal{background:#18181b;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:28px;max-width:400px;width:100%;text-align:center}        .result-modal .score{font-size:3em;font-weight:900;margin:12px 0}        .result-modal .detail{font-size:.9em;color:#a1a1aa;margin-bottom:16px}        .result-modal .stat-row{display:flex;justify-content:center;gap:24px;margin:16px 0}        .result-modal .stat-item{text-align:center}        .result-modal .stat-val{font-size:1.2em;font-weight:700}        .result-modal .stat-lbl{font-size:.78em;color:#71717a}        @media(max-width:600px){            .q-block .q-opts{grid-template-columns:1fr}            .lab-tab{padding:8px 14px;font-size:.8em}        }    </style>    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7363013795551054" crossorigin="anonymous"></script></head><body>    <nav class="nav">        <div class="nav-inner">            <a href="index.html" class="brand">  <svg class="brand-icon" viewBox="0 0 40 40" fill="none">    <defs><linearGradient id="vx" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#34d399"/></linearGradient></defs>    <path d="M20 36 C17 28 10 18 5 13 C3 11 3 10 6 9" stroke="url(#vx)" stroke-width="2.8" stroke-linecap="round"/>    <path d="M20 36 C23 28 30 18 35 13 C37 11 37 10 34 9" stroke="url(#vx)" stroke-width="2.8" stroke-linecap="round"/>    <path d="M20 34 L22 36 L20 38 L18 36 Z" fill="url(#vx)"/>    <circle cx="20" cy="5" r="2.5" fill="#a78bfa"/>    <circle cx="20" cy="5" r="5" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.35"/>    <circle cx="10" cy="16" r="1.2" fill="#a78bfa" opacity="0.45"/>    <circle cx="30" cy="16" r="1.2" fill="#34d399" opacity="0.45"/>  </svg>  <span class="brand-text">vlymbooq</span></a>            <div style="display:flex;gap:8px;align-items:center">                <a href="index.html" class="pc-btn">Home</a>                <a href="dashboard.html" class="pc-btn">?? Dashboard</a>                <a class="auth-btn" href="#"                style="background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none;transition:all .2s">?? Unlock Lab</a>            </div>        </div>    </nav>    <div class="container">        <h1>?? Study Lab</h1>        <p class="sub">Smart practice tools � topic drills, custom mocks, and weak area fixer</p>        <div class="lab-tabs">            <button class="lab-tab active" data-tab="drill">?? Topic Drill</button>            <button class="lab-tab" data-tab="mock">? Custom Mock</button>            <button class="lab-tab" data-tab="weak">?? Weak Area Fixer</button>        </div>        <div id="tab-drill" class="tab-content active">            <div class="card">                <div class="card-title">?? Topic Drill</div>                <p style="font-size:.85em;color:#71717a;margin-bottom:14px">Focus on one section at a time. Pick an exam and topic to drill.</p>                <select id="drill-exam">                    <option value="">� Select Exam �</option>                    <option value="cgl">SSC CGL</option>                    <option value="rbi">RBI Grade B</option>                    <option value="jee">JEE</option>                    <option value="neet">NEET</option>                    <option value="gate">GATE</option>                    <option value="agniveer">Agniveer</option>                </select>                <div id="drill-sections" class="chip-group"></div>                <button class="btn btn-primary" id="drill-start" disabled>Start Drill</button>                <div id="drill-area" class="drill-area"></div>            </div>        </div>        <div id="tab-mock" class="tab-content">            <div class="card">                <div class="card-title">? Custom Mock Generator</div>                <p style="font-size:.85em;color:#71717a;margin-bottom:14px">Build a personalized test. Pick sections, difficulty, and question count.</p>                <select id="mock-exam">                    <option value="">� Select Exam �</option>                    <option value="cgl">SSC CGL</option>                    <option value="rbi">RBI Grade B</option>                    <option value="jee">JEE</option>                    <option value="neet">NEET</option>                    <option value="gate">GATE</option>                    <option value="agniveer">Agniveer</option>                </select>                <div id="mock-sections" class="chip-group"></div>                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">                    <select id="mock-count" style="width:auto;flex:1">                        <option value="5">5 Questions</option>                        <option value="10" selected>10 Questions</option>                        <option value="15">15 Questions</option>                        <option value="20">20 Questions</option>                    </select>                    <select id="mock-difficulty" style="width:auto;flex:1">                        <option value="all">All Difficulties</option>                        <option value="easy">Easy</option>                        <option value="medium">Medium</option>                        <option value="hard">Hard</option>                    </select>                    <select id="mock-time" style="width:auto;flex:1">                        <option value="0">No Timer</option>                        <option value="300">5 min</option>                        <option value="600" selected>10 min</option>                        <option value="900">15 min</option>                        <option value="1800">30 min</option>                    </select>                </div>                <button class="btn btn-primary" id="mock-start" disabled>Generate Mock</button>                <div id="mock-area" class="mock-area"></div>            </div>        </div>        <div id="tab-weak" class="tab-content">            <div class="card">                <div class="card-title">?? Weak Area Fixer</div>                <p style="font-size:.85em;color:#71717a;margin-bottom:14px">Your past mistakes, organized by topic. Practice them until they stick.</p>                <div id="weak-filters" class="chip-group">                    <span class="chip active" data-filter="all">All</span>                </div>                <div id="weak-list"></div>            </div>        </div>    </div><script src="js/lab.js" defer></script>    <script src="js/supabase.js?v=20260529b"></script>    <script src="js/shared.js?v=20260529b"></script></body></html>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Study Lab 🔬 vlymbooq</title>
+    <meta http-equiv="Content-Security-Policy" content="style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://pagead2.googlesyndication.com; upgrade-insecure-requests">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',-apple-system,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
+        a{color:#a78bfa;text-decoration:none}
+        .nav{position:sticky;top:0;z-index:50;padding:16px 24px;background:rgba(9,9,11,.8);border-bottom:1px solid rgba(255,255,255,.04)}
+        .nav-inner{max-width:1000px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+        .site-title{font-size:1.1em;font-weight:800;color:#fafafa}
+        .site-title span{background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .container{max-width:1000px;margin:0 auto;padding:32px 24px}
+        h1{font-size:1.5em;font-weight:800;margin-bottom:4px}
+        .sub{color:#71717a;font-size:.9em;margin-bottom:24px}
+
+        .lab-tabs{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:12px}
+        .lab-tab{padding:10px 20px;border-radius:100px;font-size:.85em;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.06);background:transparent;color:#a1a1aa;transition:all .2s}
+        .lab-tab:hover{border-color:rgba(255,255,255,.12);color:#fafafa}
+        .lab-tab.active{background:rgba(139,92,246,.15);border-color:#a78bfa;color:#a78bfa}
+
+        .tab-content{display:none}
+        .tab-content.active{display:block}
+
+        .card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:20px;margin-bottom:14px}
+        .card-title{font-size:1em;font-weight:700;margin-bottom:12px}
+
+        select,picker{width:100%;padding:10px;border-radius:8px;background:#18181b;color:#fafafa;border:1px solid rgba(255,255,255,.1);font-size:.9em;margin-bottom:10px}
+        select:focus{outline:none;border-color:#a78bfa}
+
+        .chip-group{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+        .chip{padding:6px 14px;border-radius:100px;font-size:.8em;font-weight:500;cursor:pointer;border:1px solid rgba(255,255,255,.06);background:transparent;color:#a1a1aa;transition:all .2s}
+        .chip:hover{border-color:rgba(255,255,255,.12);color:#fafafa}
+        .chip.active{background:rgba(139,92,246,.15);border-color:#a78bfa;color:#a78bfa}
+        .chip.green{border-color:rgba(52,211,153,.3);color:#34d399}
+        .chip.green.active{background:rgba(52,211,153,.15);border-color:#34d399;color:#34d399}
+
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:100px;font-size:.85em;font-weight:600;border:none;cursor:pointer;text-decoration:none;transition:all .2s}
+        .btn-primary{background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff}
+        .btn-primary:hover{transform:translateY(-1px)}
+        .btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+        .btn-ghost{border:1px solid rgba(255,255,255,.1);color:#fafafa;background:rgba(255,255,255,.03)}
+        .btn-ghost:hover{background:rgba(255,255,255,.08)}
+        .btn-sm{padding:8px 16px;font-size:.8em}
+        .btn-danger{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.2)}
+
+        .drill-area,.mock-area{min-height:200px;margin-top:16px}
+        .q-block{border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:16px;margin-bottom:12px}
+        .q-block .q-num{font-size:.8em;color:#71717a;margin-bottom:6px}
+        .q-block .q-text{font-size:.95em;margin-bottom:10px;line-height:1.6}
+        .q-block .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        .q-block .q-opt{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.06);cursor:pointer;font-size:.85em;transition:all .15s}
+        .q-block .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-block .q-opt.correct{border-color:#34d399;background:rgba(52,211,153,.1)}
+        .q-block .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1)}
+        .q-block .q-soln{display:none;margin-top:10px;padding:10px;background:rgba(139,92,246,.06);border-radius:8px;font-size:.85em;color:#a1a1aa}
+        .q-block .q-soln.show{display:block}
+
+        .mock-timer{font-size:2.5em;font-weight:900;color:#a78bfa;text-align:center;padding:20px}
+        .mock-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+
+        .empty-state{text-align:center;padding:60px 20px;color:#52525b}
+        .empty-state .icon{font-size:3em;margin-bottom:12px}
+        .empty-state p{font-size:.9em}
+
+        .weak-item{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid rgba(255,255,255,.04);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all .15s}
+        .weak-item:hover{background:rgba(255,255,255,.03)}
+        .weak-q{flex:1;font-size:.85em;color:#d4d4d8}
+        .weak-section{font-size:.75em;padding:2px 8px;border-radius:100px;background:rgba(139,92,246,.1);color:#a78bfa}
+        .weak-date{font-size:.75em;color:#52525b}
+
+        .pc-btn{background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:600;cursor:pointer;text-decoration:none;white-space:nowrap}
+
+        .result-overlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:20px}
+        .result-modal{background:#18181b;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:28px;max-width:400px;width:100%;text-align:center}
+        .result-modal .score{font-size:3em;font-weight:900;margin:12px 0}
+        .result-modal .detail{font-size:.9em;color:#a1a1aa;margin-bottom:16px}
+        .result-modal .stat-row{display:flex;justify-content:center;gap:24px;margin:16px 0}
+        .result-modal .stat-item{text-align:center}
+        .result-modal .stat-val{font-size:1.2em;font-weight:700}
+        .result-modal .stat-lbl{font-size:.78em;color:#71717a}
+
+        @media(max-width:600px){
+            .q-block .q-opts{grid-template-columns:1fr}
+            .lab-tab{padding:8px 14px;font-size:.8em}
+        }
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7363013795551054" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+  <svg class="brand-icon" viewBox="0 0 40 40" fill="none">
+    <defs><linearGradient id="vx" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#34d399"/></linearGradient></defs>
+    <path d="M20 36 C17 28 10 18 5 13 C3 11 3 10 6 9" stroke="url(#vx)" stroke-width="2.8" stroke-linecap="round"/>
+    <path d="M20 36 C23 28 30 18 35 13 C37 11 37 10 34 9" stroke="url(#vx)" stroke-width="2.8" stroke-linecap="round"/>
+    <path d="M20 34 L22 36 L20 38 L18 36 Z" fill="url(#vx)"/>
+    <circle cx="20" cy="5" r="2.5" fill="#a78bfa"/>
+    <circle cx="20" cy="5" r="5" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.35"/>
+    <circle cx="10" cy="16" r="1.2" fill="#a78bfa" opacity="0.45"/>
+    <circle cx="30" cy="16" r="1.2" fill="#34d399" opacity="0.45"/>
+  </svg>
+  <span class="brand-text">vlymbooq</span>
+</a>
+            <div style="display:flex;gap:8px;align-items:center">
+                <a href="index.html" class="pc-btn">Home</a>
+                <a href="dashboard.html" class="pc-btn">?? Dashboard</a>
+                <a class="auth-btn" href="#"
+                style="background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none;transition:all .2s">?? Unlock Lab</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>🔬 Study Lab</h1>
+        <p class="sub">Smart practice tools — topic drills, custom mocks, and weak area fixer</p>
+
+        <div class="lab-tabs">
+            <button class="lab-tab active" data-tab="drill">?? Topic Drill</button>
+            <button class="lab-tab" data-tab="mock">? Custom Mock</button>
+            <button class="lab-tab" data-tab="weak">?? Weak Area Fixer</button>
+        </div>
+
+        <div id="tab-drill" class="tab-content active">
+            <div class="card">
+                <div class="card-title">📝 Topic Drill</div>
+                <p style="font-size:.85em;color:#71717a;margin-bottom:14px">Focus on one section at a time. Pick an exam and topic to drill.</p>
+                <select id="drill-exam">
+                    <option value="">📋 Select Exam</option>
+                    <option value="cgl">SSC CGL</option>
+                    <option value="rbi">RBI Grade B</option>
+                    <option value="jee">JEE</option>
+                    <option value="neet">NEET</option>
+                    <option value="gate">GATE</option>
+                    <option value="agniveer">Agniveer</option>
+                </select>
+                <div id="drill-sections" class="chip-group"></div>
+                <button class="btn btn-primary" id="drill-start" disabled>Start Drill</button>
+                <div id="drill-area" class="drill-area"></div>
+            </div>
+        </div>
+
+        <div id="tab-mock" class="tab-content">
+            <div class="card">
+                <div class="card-title">📝 Custom Mock Generator</div>
+                <p style="font-size:.85em;color:#71717a;margin-bottom:14px">Build a personalized test. Pick sections, difficulty, and question count.</p>
+                <select id="mock-exam">
+                    <option value="">📋 Select Exam</option>
+                    <option value="cgl">SSC CGL</option>
+                    <option value="rbi">RBI Grade B</option>
+                    <option value="jee">JEE</option>
+                    <option value="neet">NEET</option>
+                    <option value="gate">GATE</option>
+                    <option value="agniveer">Agniveer</option>
+                </select>
+                <div id="mock-sections" class="chip-group"></div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+                    <select id="mock-count" style="width:auto;flex:1">
+                        <option value="5">5 Questions</option>
+                        <option value="10" selected>10 Questions</option>
+                        <option value="15">15 Questions</option>
+                        <option value="20">20 Questions</option>
+                    </select>
+                    <select id="mock-difficulty" style="width:auto;flex:1">
+                        <option value="all">All Difficulties</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                    <select id="mock-time" style="width:auto;flex:1">
+                        <option value="0">No Timer</option>
+                        <option value="300">5 min</option>
+                        <option value="600" selected>10 min</option>
+                        <option value="900">15 min</option>
+                        <option value="1800">30 min</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" id="mock-start" disabled>Generate Mock</button>
+                <div id="mock-area" class="mock-area"></div>
+            </div>
+        </div>
+
+        <div id="tab-weak" class="tab-content">
+            <div class="card">
+                <div class="card-title">?? Weak Area Fixer</div>
+                <p style="font-size:.85em;color:#71717a;margin-bottom:14px">Your past mistakes, organized by topic. Practice them until they stick.</p>
+                <div id="weak-filters" class="chip-group">
+                    <span class="chip active" data-filter="all">All</span>
+                </div>
+                <div id="weak-list"></div>
+            </div>
+        </div>
+    </div>
+
+<script src="js/lab.js" defer></script>
+    <script src="js/supabase.js?v=20260529b"></script>
+    <script src="js/shared.js?v=20260529b"></script>
+</body>
+</html>
