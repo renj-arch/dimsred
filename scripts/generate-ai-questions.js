@@ -365,7 +365,7 @@ async function run() {
   for (var i = 0; i < args.length; i++) {
     var m = args[i].match(/^--count=(\d+)$/);
     if (m) { count = parseInt(m[1]); continue; }
-    exams.push(args[i]);
+    exams.push(args[i].toLowerCase());
   }
 
   if (exams.length === 1 && exams[0] === 'all') {

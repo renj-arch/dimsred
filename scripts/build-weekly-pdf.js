@@ -535,6 +535,6 @@ async function buildPDF(examArgs) {
   console.log('\nDone! Generated ' + results.length + ' PDF(s).');
 }
 
-var examArgs = process.argv.slice(2).filter(function(a) { return a.indexOf('--') !== 0; });
+var examArgs = process.argv.slice(2).filter(function(a) { return a.indexOf('--') !== 0; }).map(function(a) { return a.toLowerCase(); });
 if (examArgs.length === 1 && examArgs[0] === 'all') examArgs = [];
 buildPDF(examArgs.length > 0 ? examArgs : null).catch(function(err) { console.error('Error:', err); process.exit(1); });

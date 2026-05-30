@@ -308,7 +308,7 @@ function updateRootStats() {
 }
 
 function run() {
-  var args = process.argv.slice(2);
+  var args = process.argv.slice(2).map(function(a) { return a.toLowerCase(); });
   if (args.length === 1 && args[0] === 'all') args = [];
   var folders = args.length > 0 ? args : EXAMS;
 

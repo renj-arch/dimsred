@@ -5,7 +5,7 @@ var root = path.resolve(__dirname, '..');
 var dataDir = path.join(root, 'papers-data');
 
 var ALL_EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer', 'upsc', 'ibps-po', 'sbi-clerk', 'ssc-gd', 'ctet'];
-var EXAMS = process.argv.slice(2).filter(function(a) { return a.indexOf('--') !== 0; });
+var EXAMS = process.argv.slice(2).filter(function(a) { return a.indexOf('--') !== 0; }).map(function(a) { return a.toLowerCase(); });
 if (EXAMS.length === 0 || (EXAMS.length === 1 && EXAMS[0] === 'all')) EXAMS = ALL_EXAMS;
 
 var byFolder = {};
