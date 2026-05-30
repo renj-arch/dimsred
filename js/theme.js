@@ -1,8 +1,7 @@
 (function() {
   var key = 'vlymbooq_theme';
   var saved = localStorage.getItem(key);
-  var prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-  var isLight = saved ? saved === 'light' : prefersLight;
+  var isLight = saved === 'light';
   var root = document.documentElement;
   function apply(light) {
     if (light) { root.classList.add('light'); } else { root.classList.remove('light'); }
