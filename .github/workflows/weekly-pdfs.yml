@@ -67,6 +67,14 @@ jobs:
             esac >> $GITHUB_OUTPUT
           fi
 
+      - name: Build practice papers (if not already built)
+        if: steps.exam.outputs.name != 'skip'
+        run: node scripts/generate-papers.js ${{ steps.exam.outputs.name }}
+
+      - name: Generate calendar data
+        if: steps.exam.outputs.name != 'skip'
+        run: node scripts/generate-calendar-data.js ${{ steps.exam.outputs.name }}
+
       - name: Build weekly PDF
         if: steps.exam.outputs.name != 'skip'
         env:
