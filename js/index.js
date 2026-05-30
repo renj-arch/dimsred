@@ -1,5 +1,5 @@
 // ---- Daily Question ----
-(function() {
+(function() { try {
     var dailyQs = [
         { q: 'If a % b = a² - b and a % b = 63, find a and b.', opts: ['A. 9, 6', 'B. 10, 7', 'C. 8, 1', 'D. 7, 4'], ans: 2, explain: '8² - 1 = 64 - 1 = 63' },
         { q: 'Change to passive: "Why did the editor disregard the major stylistic irregularities?"', opts: ['A. Why have the major stylistic irregularities been disregarded?', 'B. Why are the major stylistic irregularities being disregarded?', 'C. Why did the major stylistic irregularities be disregarded?', 'D. Why were the major stylistic irregularities disregarded?'], ans: 3, explain: 'Simple past passive: were + past participle.' },
@@ -60,7 +60,7 @@
         document.querySelectorAll('.daily-opt')[q.ans].classList.add('correct');
         document.getElementById('dailyQResult').innerHTML = '<span style="color:#a78bfa">💡 ' + q.explain + '</span>';
     };
-})();
+} catch(e) {} })();
 
 // ---- Animated counters ----
 (function() {
@@ -85,7 +85,7 @@
     document.querySelectorAll('.stat-number[data-target]').forEach(function(el) { counterObserver.observe(el); });
 })();
 
-lucide.createIcons();
+try { lucide.createIcons(); } catch(e) {}
 
 // 3D tilt effect on cards
 (function(){
@@ -119,7 +119,7 @@ lucide.createIcons();
   });
 })();
 
-AOS.init({duration:600,once:true,offset:40});
+try { AOS.init({duration:600,once:true,offset:40}); } catch(e) {}
 
 // ===== Live Exam Theme (auto color shift by month) =====
 (function() {
@@ -136,7 +136,7 @@ AOS.init({duration:600,once:true,offset:40});
 })();
 
 // ===== Your Exam Fortune (daily widget) =====
-(function() {
+try { (function() {
     var fortunes = [
         { msg: '🌟 Today is your day to shine!', sub: 'Focus on Quantitative Aptitude — you\'re building strong foundations.', tip: 'Try the 5-minute Pomodoro technique for deep focus.' },
         { msg: '📚 Knowledge grows when shared!', sub: 'Review General Awareness — current affairs are your friend.', tip: 'Read the newspaper editorial every morning.' },
@@ -168,10 +168,10 @@ AOS.init({duration:600,once:true,offset:40});
     document.getElementById('fortuneMsg').textContent = f.msg;
     document.getElementById('fortuneSub').textContent = f.sub;
     document.getElementById('fortuneTip').innerHTML = '💡 ' + f.tip;
-})();
+} catch(e) {} })();
 
 // ===== Study Vibe Switcher =====
-(function() {
+try { (function() {
     var vibes = [
         { id: 'rainy', label: '🌧️ Rainy Study', bg: '#0a0a1a', bgCard: '#12121e', purple: '#7c9bfc', emerald: '#5eead4' },
         { id: 'library', label: '📚 Library', bg: '#0d0b09', bgCard: '#141110', purple: '#d4a574', emerald: '#a8b59a' },
@@ -230,10 +230,10 @@ AOS.init({duration:600,once:true,offset:40});
     });
     
     if (activeVibe) { applyVibe(activeVibe); }
-})();
+} catch(e) {} })();
 
 // ===== StudyBuddy Mascot Controller =====
-(function() {
+try { (function() {
     var StudyBuddy = {
         messages: [
             'Ready to study? 📚',
@@ -332,7 +332,7 @@ AOS.init({duration:600,once:true,offset:40});
     
     StudyBuddy.init();
     window.StudyBuddy = StudyBuddy;
-})();
+} catch(e) {} })();
 
 // ---- Paper of the Day ----
 (function() {
