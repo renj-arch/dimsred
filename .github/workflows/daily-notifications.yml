@@ -1,4 +1,4 @@
-name: Daily Exam Notification Generator
+name: Daily Exam Notification Fetcher
 
 on:
   schedule:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  generate:
+  fetch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,13 +19,9 @@ jobs:
         with:
           node-version: 20
 
-      - name: Generate exam notifications
+      - name: Fetch exam notifications from RSS
         id: notify
-        env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
-        run: node scripts/generate-notifications.js
+        run: node scripts/fetch-rss-notifications.js
 
       - name: Commit and push
         run: |
