@@ -20,7 +20,7 @@ export async function onRequestPost(context) {
       return new Response(JSON.stringify({ valid: false }), { headers: CORS() });
     }
 
-    if (new Date(data.expiresAt) < new Date()) {
+    if (!data.expiresAt || new Date(data.expiresAt) < new Date()) {
       return new Response(JSON.stringify({ valid: false, reason: 'expired' }), { headers: CORS() });
     }
 

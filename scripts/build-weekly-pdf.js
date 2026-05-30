@@ -543,7 +543,9 @@ async function buildPDF(examArgs) {
     var exam = results[i].exam;
     if (!manifest[exam]) manifest[exam] = [];
     manifest[exam].push({ filename: results[i].filename, date: weekRange, generated: dateStr });
-    manifest[exam].sort(function(a, b) { return b.generated.localeCompare(a.generated); });
+    manifest[exam].sort(function(a, b) {
+      return (b.generated || '').localeCompare(a.generated || '');
+    });
     manifest[exam] = manifest[exam].filter(function(e) { return !e.generated || new Date(e.generated) >= cutoff; });
     manifest[exam] = manifest[exam].slice(0, 4);
   }

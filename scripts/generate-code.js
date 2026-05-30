@@ -1,48 +1,42 @@
-const crypto = require('crypto');
+// Generate premium codes for vlymbooq
+// Usage: node scripts/generate-code.js [count] [plan] [days]
+//   count: number of codes (default 1)
+//   plan: monthly or yearly (default monthly)
+//   days: expiry in days (default 30/365)
+//
+// Output: JSON to paste into Cloudflare Pages → Settings → Environment variables → CODES
+// The CODES variable is NOT stored in git — only in Cloudflare dashboard.
 
-var ALL_EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer', 'upsc', 'ibps-po', 'sbi-clerk', 'ssc-gd', 'ctet'];
+function randomPart(len) {
+  var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', s = '';
+  for (var i = 0; i < len; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return s;
+}
 
 function generateCode() {
-  var prefix = 'VLYM';
-  var seg1 = crypto.randomBytes(2).toString('hex').toUpperCase();
-  var seg2 = crypto.randomBytes(2).toString('hex').toUpperCase();
-  return prefix + '-' + seg1 + '-' + seg2;
+  return 'VLYM-' + randomPart(4) + '-' + randomPart(4);
 }
 
-function generateExpiry(days) {
-  var d = new Date();
-  d.setDate(d.getDate() + days);
-  return d.toISOString();
+var args = process.argv.slice(2);
+var count = parseInt(args[0]) || 1;
+var plan = (args[1] || 'monthly').toLowerCase();
+var days = parseInt(args[2]) || (plan === 'yearly' ? 365 : 30);
+
+var codes = {};
+for (var i = 0; i < count; i++) {
+  var code = generateCode();
+  var expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + days);
+  codes[code] = {
+    plan: plan,
+    expiresAt: expiresAt.toISOString(),
+    exams: []  // empty = all exams; or ["cgl","rbi"] for specific
+  };
 }
 
-var days = 30;
-var exams = [];
-for (var i = 2; i < process.argv.length; i++) {
-  var arg = process.argv[i];
-  if (arg === '--exam' && i + 1 < process.argv.length) {
-    exams.push(process.argv[i + 1].toLowerCase());
-    i++;
-  } else if (!isNaN(parseInt(arg))) {
-    days = parseInt(arg);
-  }
-}
-
-var code = generateCode();
-var expiry = generateExpiry(days);
-var examsField = exams.length > 0 ? '"exams":["' + exams.join('","') + '"],' : '';
-
-console.log('\nNew premium code:');
-console.log('  Code:      ' + code);
-console.log('  Expires:   ' + expiry);
-console.log('  Duration:  ' + days + ' days');
-if (exams.length > 0) {
-  console.log('  Exams:     ' + exams.join(', '));
-} else {
-  console.log('  Exams:     all (unlimited)');
-}
-console.log('\nAdd to Cloudflare CODES env var:');
-console.log('  "' + code + '": {' + examsField + '"plan":"monthly","expiresAt":"' + expiry + '"}');
-console.log('\nExamples:');
-console.log('  node scripts/generate-code.js 30 --exam agniveer');
-console.log('  node scripts/generate-code.js 30 --exam cgl --exam rbi');
-console.log('  node scripts/generate-code.js 30  (all exams)\n');
+console.log('\n=== Paste this into Cloudflare Pages → CODES env var ===\n');
+console.log(JSON.stringify(codes, null, 2));
+console.log('\n=== Codes ===');
+Object.keys(codes).forEach(function(k) {
+  console.log('  ' + k + ' → ' + plan + ', expires ' + codes[k].expiresAt.slice(0, 10) + ', exams: all');
+});
