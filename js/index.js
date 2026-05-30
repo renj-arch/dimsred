@@ -54,14 +54,14 @@
     var container = document.getElementById('examAlertsScroll');
     if (!container) return;
 
-    fetch('/data/notifications.json')
+    fetch('/api/notifications')
         .then(function(r) { if (!r.ok) throw new Error('not found'); return r.json(); })
         .then(function(data) {
             var list = data.notifications || [];
             if (list.length === 0) { container.parentElement.style.display = 'none'; return; }
 
-            var seed = Math.floor(Date.now() / 86400000);
             var ordered = list.slice();
+            var seed = Math.floor(Date.now() / 86400000);
             for (var i = ordered.length - 1; i > 0; i--) {
                 var j = Math.floor((Math.sin(seed * 9301 + i * 49297) - Math.floor(Math.sin(seed * 9301 + i * 49297))) * (i + 1));
                 var tmp = ordered[i]; ordered[i] = ordered[j]; ordered[j] = tmp;
@@ -73,11 +73,13 @@
                 var bottomHtml = '';
                 if (n.link) {
                     bottomHtml = '<div class="exam-card-bottom"><a href="' + n.link + '">View Details →</a><span class="vacancy">' + (n.vacancy || '') + '</span></div>';
+                } else if (n.href) {
+                    bottomHtml = '<div class="exam-card-bottom"><a href="' + n.href + '" target="_blank" rel="noopener">Apply Now →</a><span class="vacancy">' + (n.vacancy || '') + '</span></div>';
                 } else if (n.vacancy) {
                     bottomHtml = '<div class="exam-card-bottom"><span class="vacancy">' + n.vacancy + '</span></div>';
                 }
                 card.innerHTML =
-                    '<div class="exam-card-top"><div class="date-badge"><span class="month">' + n.startMonth + '</span><span class="day">' + n.startDay + '</span><span class="year">' + n.startYear + '</span></div><div class="card-body"><span class="exam-tag" style="background:rgba(167,139,250,.1);color:var(--purple)">' + n.tag + '</span><h3>' + n.title + '</h3><div class="closing">🗓️ Apply by: <span class="urgent">' + n.closing + '</span></div></div><div class="card-shape"></div></div>' + bottomHtml;
+                    '<div class="exam-card-top"><div class="date-badge"><span class="month">' + n.startMonth + '</span><span class="day">' + n.startDay + '</span><span class="year">' + n.startYear + '</span></div><div class="card-body"><span class="exam-tag" style="background:rgba(167,139,250,.1);color:var(--purple)">' + n.tag + '</span><h3>' + (n.title || '').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</h3><div class="closing">🗓️ Apply by: <span class="urgent">' + (n.closing || 'Check website') + '</span></div></div><div class="card-shape"></div></div>' + bottomHtml;
                 container.appendChild(card);
             });
         })
