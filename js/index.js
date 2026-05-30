@@ -21,19 +21,21 @@
 
         if (!spanEl) {
             spanEl = document.createElement('span');
+            spanEl.textContent = headlines[pick];
             spanEl.className = 'active';
             tickerEl.appendChild(spanEl);
         } else {
             spanEl.className = 'exit';
             var old = spanEl;
             spanEl = document.createElement('span');
+            spanEl.textContent = headlines[pick];
             tickerEl.appendChild(spanEl);
+            void spanEl.offsetHeight;
+            spanEl.className = 'active';
             setTimeout(function() {
-                spanEl.className = 'active';
                 if (old.parentNode) old.remove();
-            }, 50);
+            }, 500);
         }
-        spanEl.textContent = headlines[pick];
     }
 
     var pool = [];
