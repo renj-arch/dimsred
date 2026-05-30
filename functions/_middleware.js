@@ -45,5 +45,5 @@ async function logVisit(supabaseUrl, serviceKey, log) {
     await fetch(supabaseUrl + '/rest/v1/visits?created_at=lt.' + cutoff, {
       method: 'DELETE', headers: h
     });
-  } catch (e) { /* fail silently */ }
+  } catch (e) { console.log('VISIT_LOG_ERR: ' + e.message + ' | URL: ' + supabaseUrl); }
 }
