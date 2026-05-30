@@ -114,6 +114,9 @@ function run() {
     console.log(card);
     console.log('');
   }
+
+  // Regenerate calendar data for all exams
+  require('./generate-calendar-data.js');
 }
 
 run();

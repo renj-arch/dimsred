@@ -64,6 +64,10 @@ jobs:
         if: steps.batch.outputs.exams != 'skip'
         run: node scripts/generate-papers.js
 
+      - name: Generate calendar data
+        if: steps.batch.outputs.exams != 'skip'
+        run: node scripts/generate-calendar-data.js
+
       - name: Build weekly PDF digest
         if: steps.batch.outputs.exams != 'skip'
         env:
