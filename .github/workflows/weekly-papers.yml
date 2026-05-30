@@ -2,8 +2,15 @@ name: Auto-Generate Practice Papers
 
 on:
   schedule:
-    - cron: '0 0 * * 1'
+    - cron: '0 6 * * 1'
+    - cron: '0 6 * * 3'
+    - cron: '0 6 * * 5'
   workflow_dispatch:
+    inputs:
+      exams:
+        description: 'Exams to generate (space-separated, default: all)'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -22,31 +29,59 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Determine today batch
+        id: batch
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ -n "${{ github.event.inputs.exams }}" ]; then
+              echo "exams=${{ github.event.inputs.exams }}" >> $GITHUB_OUTPUT
+            else
+              echo "exams=all" >> $GITHUB_OUTPUT
+            fi
+          else
+            DAY=$(date +%u)
+            if [ "$DAY" = "1" ]; then
+              echo "exams=cgl rbi jee" >> $GITHUB_OUTPUT
+            elif [ "$DAY" = "3" ]; then
+              echo "exams=neet gate agniveer" >> $GITHUB_OUTPUT
+            elif [ "$DAY" = "5" ]; then
+              echo "exams=upsc ibps-po sbi-clerk ssc-gd ctet" >> $GITHUB_OUTPUT
+            else
+              echo "exams=skip" >> $GITHUB_OUTPUT
+            fi
+          fi
+
       - name: Generate new AI questions
+        if: steps.batch.outputs.exams != 'skip'
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-        run: node scripts/generate-ai-questions.js all --count=15
+        run: node scripts/generate-ai-questions.js ${{ steps.batch.outputs.exams }} --count=5
 
       - name: Clean up PDFs older than 2 weeks
         run: find pdfs -name "weekly-*.pdf" -mtime +13 -delete
 
       - name: Build practice papers
+        if: steps.batch.outputs.exams != 'skip'
         run: node scripts/generate-papers.js
 
       - name: Build weekly PDF digest
+        if: steps.batch.outputs.exams != 'skip'
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: node scripts/build-weekly-pdf.js
 
       - name: Update sitemap
+        if: steps.batch.outputs.exams != 'skip'
         run: node scripts/generate-sitemap.js
 
       - name: Ping search engines
+        if: steps.batch.outputs.exams != 'skip'
         run: |
-          curl -s -o /dev/null -w "%{http_code}" "https://www.google.com/ping?sitemap=https://vlymbooq.qzz.io/sitemap.xml"
-          curl -s -o /dev/null -w "%{http_code}" "https://www.bing.com/ping?siteMap=https://vlymbooq.qzz.io/sitemap.xml"
+          curl -s -o /dev/null "https://www.google.com/ping?sitemap=https://vlymbooq.qzz.io/sitemap.xml"
+          curl -s -o /dev/null "https://www.bing.com/ping?siteMap=https://vlymbooq.qzz.io/sitemap.xml"
 
       - name: Commit and push
+        if: steps.batch.outputs.exams != 'skip'
         run: |
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
