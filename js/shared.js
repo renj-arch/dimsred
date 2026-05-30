@@ -221,7 +221,28 @@
     return streak;
   }
 
-  // ========== 5. ACHIEVEMENT BADGES ==========
+  // ========== 5. XP / LEVELING ==========
+  var XP_KEY = 'studypro_xp';
+  var XP_PER_CORRECT = 10;
+  var XP_PER_WRONG = 3;
+  var XP_COMPLETION_BONUS = 50;
+  function updateXP(correct, wrong) {
+    var xp = parseInt(localStorage.getItem(XP_KEY) || '0', 10);
+    xp += correct * XP_PER_CORRECT + wrong * XP_PER_WRONG + XP_COMPLETION_BONUS;
+    var streak = JSON.parse(localStorage.getItem(STREAK_KEY) || '{"current":0}');
+    xp += (streak.current || 0) * 5;
+    localStorage.setItem(XP_KEY, xp);
+    if (typeof window.syncXP === 'function') window.syncXP(xp);
+  }
+  window.getXP = function() {
+    return parseInt(localStorage.getItem(XP_KEY) || '0', 10);
+  };
+  window.getLevel = function(xp) {
+    var total = xp || window.getXP();
+    return { level: Math.floor(total / 200) + 1, xp: total, nextAt: (Math.floor(total / 200) + 1) * 200 };
+  };
+
+  // ========== 6. ACHIEVEMENT BADGES ==========
   function checkBadges() {
     var badges = JSON.parse(localStorage.getItem(BADGES_KEY) || '[]');
     var results = JSON.parse(localStorage.getItem(RESULTS_KEY) || '[]');
@@ -337,6 +358,7 @@
       if (hist.length > 50) hist = hist.slice(0, 50);
       localStorage.setItem(RESULTS_KEY, JSON.stringify(hist));
       updateStreak();
+      updateXP(correct, wrong);
       var newBadges = checkBadges();
       updateGoalProgress();
       if (typeof window.syncResult === 'function') window.syncResult(result);
@@ -370,6 +392,13 @@
       html += '<span>🏆 Best: <strong>' + streak.longest + '</strong> days</span>';
       html += '</div>';
     }
+
+    var xpTotal = window.getXP ? window.getXP() : 0;
+    var lvl = window.getLevel ? window.getLevel(xpTotal) : { level: 1, nextAt: 200 };
+    html += '<div style="margin-top:12px;font-size:.82em;color:#a1a1aa">';
+    html += '<span>🎮 Level <strong>' + lvl.level + '</strong> · ' + xpTotal + ' / ' + lvl.nextAt + ' XP</span>';
+    html += '<div style="height:4px;background:rgba(255,255,255,.06);border-radius:100px;margin-top:4px;overflow:hidden">';
+    html += '<div style="height:100%;width:' + Math.min(100, xpTotal % 200 / 200 * 100) + '%;background:linear-gradient(90deg,#a78bfa,#fbbf24);border-radius:100px"></div></div></div>';
 
     if (goals.papersPerWeek) {
       var goalPct = Math.min(100, Math.round(goals.completed / goals.papersPerWeek * 100));

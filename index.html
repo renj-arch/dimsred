@@ -632,6 +632,7 @@
         }
         /* ===== Live Theme transition ===== */
         .theme-shift,.theme-shift .exam-card,.theme-shift .stat-card,
+        :root.light{--bg:#f8f9fa;--bg-elevated:#fff;--bg-card:#fff;--bg-hover:#f1f3f5;--border:rgba(0,0,0,.08);--border-hover:rgba(0,0,0,.12);--text:#18181b;--text-secondary:#52525b;--text-muted:#a1a1aa}
         .theme-shift .feat-card,.theme-shift .daily-card,.theme-shift .fortune-card{
             transition:background .8s ease,border-color .8s ease;
         }
@@ -687,6 +688,7 @@
                 <a href="lab.html"><i data-lucide="flask-conical" style="width:14px;height:14px;vertical-align:middle;margin-right:2px"></i> Lab</a>
                 <a href="premium.html" style="border:1px solid rgba(167,139,250,.25);padding:6px 14px;font-size:.78em"><i data-lucide="crown" style="width:13px;height:13px;vertical-align:middle;margin-right:2px"></i> Premium</a>
                 <a href="leaderboard.html" style="padding:6px 10px;font-size:.78em"><i data-lucide="trophy" style="width:14px;height:14px;vertical-align:middle"></i></a>
+                <button id="themeToggle" style="background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);padding:6px 10px;border-radius:100px;font-size:.82em;cursor:pointer;transition:all .2s;line-height:1" title="Toggle theme">🌙</button>
                 <a href="badges.html" style="padding:6px 10px;font-size:.78em"><i data-lucide="award" style="width:14px;height:14px;vertical-align:middle"></i></a>
                 <a class="auth-btn" href="#" style="background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none">🚀 Unlock Lab</a>
             </div>
@@ -750,6 +752,17 @@
                 </div>
             </div>
         </div>
+
+        <!-- Paper of the Day -->
+        <section class="section" data-aos="fade-up" id="paperOfDay">
+            <div class="section-header">
+                <h2>📅 Paper of the <span>Day</span></h2>
+                <p>One recommended paper to practice today</p>
+            </div>
+            <div id="podContent" style="min-height:100px">
+                <div style="text-align:center;padding:20px;color:#52525b">Loading...</div>
+            </div>
+        </section>
 
         <!-- Stats -->
         <section class="section" data-aos="fade-up" id="stats">
@@ -1271,6 +1284,7 @@
     </svg>
 </div>
 
+<script src="js/theme.js"></script>
 <script src="js/index.js" defer></script>
 </body>
 </html>

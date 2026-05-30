@@ -333,3 +333,47 @@ AOS.init({duration:600,once:true,offset:40});
     StudyBuddy.init();
     window.StudyBuddy = StudyBuddy;
 })();
+
+// ---- Paper of the Day ----
+(function() {
+    var examList = [
+        { id:'cgl', label:'SSC CGL', count:12 },
+        { id:'rbi', label:'RBI Grade B', count:14 },
+        { id:'jee', label:'JEE Main', count:3 },
+        { id:'neet', label:'NEET UG', count:9 },
+        { id:'gate', label:'GATE', count:9 },
+        { id:'agniveer', label:'Agniveer', count:11 },
+        { id:'upsc', label:'UPSC CSE', count:2 },
+        { id:'ibps-po', label:'IBPS PO', count:2 },
+        { id:'sbi-clerk', label:'SBI Clerk', count:2 },
+        { id:'ssc-gd', label:'SSC GD', count:3 },
+        { id:'ctet', label:'CTET', count:2 }
+    ];
+    var totalPapers = 0;
+    examList.forEach(function(e){ totalPapers += e.count; });
+    var today = new Date();
+    var dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
+    var paperIdx = dayOfYear % totalPapers;
+    var cumulative = 0;
+    var chosen;
+    for (var i = 0; i < examList.length; i++) {
+        cumulative += examList[i].count;
+        if (paperIdx < cumulative) {
+            chosen = examList[i];
+            break;
+        }
+    }
+    var setNum = paperIdx - (cumulative - chosen.count) + 1;
+    var setStr = setNum < 10 ? '0' + setNum : '' + setNum;
+    var paperPath = '/' + chosen.id + '/papers/practice-set-' + setStr + '.html';
+    var color = (i === 0 ? '#a78bfa' : i === 1 ? '#34d399' : i === 2 ? '#60a5fa' : i === 3 ? '#34d399' : i === 4 ? '#f59e0b' : i === 5 ? '#ef4444' : i === 6 ? '#8b5cf6' : i === 7 ? '#06b6d4' : i === 8 ? '#ec4899' : i === 9 ? '#84cc16' : '#f97316');
+
+    var el = document.getElementById('podContent');
+    if (el) {
+        el.innerHTML = '<a href="' + paperPath + '" style="display:flex;align-items:center;gap:16px;padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor=\'rgba(167,139,250,.3)\';this.style.background=\'rgba(167,139,250,.06)\'" onmouseout="this.style.borderColor=\'rgba(255,255,255,.06)\';this.style.background=\'rgba(255,255,255,.02)\'">' +
+            '<div style="font-size:2em;flex-shrink:0;width:50px;text-align:center">📋</div>' +
+            '<div style="flex:1"><div style="font-size:.85em;color:' + color + ';font-weight:600;margin-bottom:2px">' + chosen.label + ' — Practice Set ' + setNum + '</div>' +
+            '<div style="font-size:.78em;color:#71717a">' + setNum * 15 + '+ questions · ' + (chosen.count === 1 ? '1 paper' : chosen.count + ' papers total') + '</div></div>' +
+            '<div style="font-size:1.2em;color:#a78bfa">→</div></a>';
+    }
+})();

@@ -22,7 +22,8 @@ function makeRedirectUrl() {
   return encodeURIComponent('https://' + host + window.location.pathname);
 }
 window.supabaseLogin = function () {
-  window.location.href = SUPABASE_URL + '/auth/v1/authorize?provider=google&redirect_to=' + encodeURIComponent('https://' + (window.location.host.indexOf('localhost') >= 0 ? 'vlymbooq.qzz.io' : window.location.host) + '/lab.html');
+  sessionStorage.setItem('login_redirect', window.location.pathname);
+  window.location.href = getLoginUrl(window.location.pathname);
 };
 
 window.supabaseLogout = function () {
@@ -44,6 +45,12 @@ function handleAuthRedirect() {
       localStorage.setItem('sb_access_token', token);
       if (refresh) localStorage.setItem('sb_refresh_token', refresh);
       window.location.hash = '';
+      var redirect = sessionStorage.getItem('login_redirect');
+      sessionStorage.removeItem('login_redirect');
+      if (redirect && redirect !== window.location.pathname) {
+        window.location.replace(redirect);
+        return true;
+      }
       window.history.replaceState(null, '', window.location.pathname);
       return true;
     }
@@ -199,6 +206,15 @@ window.syncStreak = async function (streak) {
   });
 };
 
+window.syncXP = async function (xp) {
+  var tok = getToken();
+  if (!tok) return;
+  await fetch(SUPABASE_URL + '/rest/v1/profiles?id=eq.' + supabaseUser.id, {
+    method: 'PATCH', headers: sbHeaders(tok),
+    body: JSON.stringify({ xp: xp })
+  });
+};
+
 window.syncBadges = async function (badges) {
   var tok = getToken();
   if (!tok) return;
@@ -257,14 +273,15 @@ window.getLeaderboard = async function (examFilter, callback) {
 };
 
 // ========== UI UPDATE ==========
-function labRedirectUrl() {
+function getLoginUrl(returnPath) {
   var host = window.location.host;
   if (host.indexOf('localhost') >= 0 || host.indexOf('127.0.0.1') >= 0) host = 'vlymbooq.qzz.io';
-  return encodeURIComponent('https://' + host + '/lab.html');
+  var path = returnPath || window.location.pathname;
+  return SUPABASE_URL + '/auth/v1/authorize?provider=google&redirect_to=' + encodeURIComponent('https://' + host + path);
 }
 
 function updateAuthUI() {
-  var loginUrl = SUPABASE_URL + '/auth/v1/authorize?provider=google&redirect_to=' + labRedirectUrl();
+  var loginUrl = getLoginUrl();
   document.querySelectorAll('.auth-btn').forEach(function (el) {
     if (supabaseUser) {
       var name = supabaseUser.user_metadata?.full_name || supabaseUser.email?.split('@')[0] || 'User';

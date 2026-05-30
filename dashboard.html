@@ -20,6 +20,7 @@
             --purple:#a78bfa;--purple-dark:#8b5cf6;--emerald:#34d399;
             --radius:12px;--radius-lg:16px;--radius-full:100px;
         }
+        :root.light{--bg:#f8f9fa;--bg-elevated:#fff;--bg-card:#fff;--bg-hover:#f1f3f5;--border:rgba(0,0,0,.08);--border-hover:rgba(0,0,0,.12);--text:#18181b;--text-secondary:#52525b;--text-muted:#a1a1aa}
         html{scroll-behavior:smooth}
         body{
             font-family:'Inter',-apple-system,sans-serif;
@@ -242,6 +243,7 @@
                 <a href="dashboard.html" class="active">📊 Dashboard</a>
                 <a href="lab.html">🧪 Lab</a>
                 <a href="leaderboard.html">🏆</a>
+                <button id="themeToggle" style="background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);padding:6px 10px;border-radius:100px;font-size:.82em;cursor:pointer;transition:all .2s;line-height:1" title="Toggle theme">🌙</button>
                 <a class="auth-btn" href="#" style="background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none">🚀 Unlock Lab</a>
             </div>
         </div>
@@ -251,6 +253,7 @@
         <!-- Placeholder: populated by JS -->
     </div>
 
+<script src="js/theme.js"></script>
 <script src="js/supabase.js?v=20260529b"></script>
 <script src="js/dashboard.js" defer></script>
 </body>

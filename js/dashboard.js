@@ -20,6 +20,9 @@
                 local.streak = { current: supabaseData.profile.streak_current || 0, longest: supabaseData.profile.streak_longest || 0, lastDate: supabaseData.profile.streak_last_date };
                 local.badges = supabaseData.profile.badges || [];
                 local.goals = supabaseData.profile.goals || {};
+                if (supabaseData.profile.xp) {
+                    localStorage.setItem('studypro_xp', supabaseData.profile.xp);
+                }
             }
             if (supabaseData.results && supabaseData.results.length > 0) {
                 local.results = supabaseData.results;
@@ -102,6 +105,19 @@
         html += '<a href="index.html" class="btn btn-ghost btn-sm">← Home</a>';
         html += '</div></div>';
 
+        var xpTotal = window.getXP ? window.getXP() : 0;
+        var lvl = window.getLevel ? window.getLevel(xpTotal) : { level: 1, nextAt: 200 };
+        if (xpTotal > 0) {
+            html += '<div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding:12px 16px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:12px">';
+            html += '<span style="font-size:1.3em">🎮</span>';
+            html += '<div style="flex:1"><div style="display:flex;justify-content:space-between;font-size:.82em;color:#a1a1aa;margin-bottom:3px">';
+            html += '<span>Level <strong style="color:var(--text)">' + lvl.level + '</strong></span>';
+            html += '<span>' + (xpTotal % 200) + ' / 200 XP</span></div>';
+            html += '<div style="height:5px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden">';
+            html += '<div style="height:100%;width:' + Math.min(100, xpTotal % 200 / 200 * 100) + '%;background:linear-gradient(90deg,#a78bfa,#fbbf24);border-radius:100px"></div></div></div>';
+            html += '</div>';
+        }
+
         if (!isLoggedIn && r.length === 0) {
             html += '<div class="dash-login-prompt">';
             html += '<span class="empty-state icon">🔐</span>';
@@ -123,6 +139,34 @@
         html += '<div class="stat-card"><div class="num" style="color:var(--emerald)">' + bestPct + '%</div><div class="label">Best Score</div></div>';
         html += '<div class="stat-card"><div class="num" style="color:#fbbf24">' + totalCorrect + '</div><div class="label">Correct</div></div>';
         html += '</div>';
+
+        // Calendar widget
+        var practiceDates = {};
+        r.forEach(function(x){ if (x.date) { practiceDates[x.date.slice(0,10)] = true; } });
+        var now2 = new Date();
+        var year = now2.getFullYear();
+        var month = now2.getMonth();
+        var firstDay = new Date(year, month, 1).getDay();
+        var daysInMonth = new Date(year, month + 1, 0).getDate();
+        var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        html += '<div class="section"><div class="section-header"><h2>📅 <span>' + monthNames[month] + ' ' + year + '</span></h2></div>';
+        html += '<div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:12px;padding:16px">';
+        html += '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:.72em;color:#71717a;margin-bottom:6px">';
+        html += '<div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>';
+        html += '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center">';
+        for (var d = 0; d < firstDay; d++) { html += '<div></div>'; }
+        var practicedCount = 0;
+        for (var d = 1; d <= daysInMonth; d++) {
+            var dateStr = year + '-' + (month < 9 ? '0' : '') + (month + 1) + '-' + (d < 10 ? '0' : '') + d;
+            var hasPaper = practiceDates[dateStr];
+            if (hasPaper) practicedCount++;
+            html += '<div style="padding:6px 0;font-size:.78em;border-radius:6px;' + (hasPaper ? 'background:rgba(52,211,399,.12);color:#34d399;font-weight:600' : 'color:#52525b') + '">' + d + '</div>';
+        }
+        html += '</div>';
+        html += '<div style="display:flex;gap:12px;margin-top:10px;font-size:.75em;color:#71717a">';
+        html += '<span>✅ <strong style="color:var(--text)">' + practicedCount + '</strong> days practiced</span>';
+        html += '<span>🔥 <strong style="color:var(--text)">' + streak.current + '</strong> day streak</span>';
+        html += '</div></div></div>';
 
         if (lastPaper && lastPaper.url) {
             html += '<div class="section"><div class="section-header"><h2>▶ Continue <span>Where You Left Off</span></h2></div>';
