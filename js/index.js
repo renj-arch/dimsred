@@ -370,7 +370,7 @@ AOS.init({duration:600,once:true,offset:40});
 
     var el = document.getElementById('podContent');
     if (el) {
-        el.innerHTML = '<a href="' + paperPath + '" style="display:flex;align-items:center;gap:16px;padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);text-decoration:none;transition:all .2s" onmouseover="this.style.borderColor=\'rgba(167,139,250,.3)\';this.style.background=\'rgba(167,139,250,.06)\'" onmouseout="this.style.borderColor=\'rgba(255,255,255,.06)\';this.style.background=\'rgba(255,255,255,.02)\'">' +
+        el.innerHTML = '<a href="' + paperPath + '" class="pod-card" style="display:flex;align-items:center;gap:16px;padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);text-decoration:none;transition:all .2s">' +
             '<div style="font-size:2em;flex-shrink:0;width:50px;text-align:center">📋</div>' +
             '<div style="flex:1"><div style="font-size:.85em;color:' + color + ';font-weight:600;margin-bottom:2px">' + chosen.label + ' — Practice Set ' + setNum + '</div>' +
             '<div style="font-size:.78em;color:#71717a">' + setNum * 15 + '+ questions · ' + (chosen.count === 1 ? '1 paper' : chosen.count + ' papers total') + '</div></div>' +
