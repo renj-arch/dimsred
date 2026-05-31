@@ -252,7 +252,7 @@ function addToBank(exam, newQuestions) {
 
 function getApiKey(name) {
   if (process.env[name]) return process.env[name];
-  var FILE_MAP = { GROQ_API_KEY: '.groq-key', GEMINI_API_KEY: '.gemini-key', HUGGINGFACE_API_KEY: '.hf-key' };
+  var FILE_MAP = { GROQ_API_KEY: '.groq-key', GEMINI_API_KEY: '.gemini-key', HUGGINGFACE_API_KEY: '.hf-key', OPENROUTER_API_KEY: '.openrouter-key' };
   var keyFile = path.join(root, FILE_MAP[name] || '');
   if (fs.existsSync(keyFile)) return fs.readFileSync(keyFile, 'utf-8').trim();
   return null;
@@ -296,6 +296,26 @@ async function callGemini(apiKey, prompt) {
   return null;
 }
 
+async function callOpenRouter(apiKey, prompt) {
+  var models = ['deepseek/deepseek-chat', 'openai/gpt-4o-mini', 'openrouter/free'];
+  for (var m = 0; m < models.length; m++) {
+    for (var r = 0; r < 3; r++) {
+      try {
+        var resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: models[m], messages: [{ role: 'user', content: prompt }], temperature: 0.7, max_tokens: 8192 })
+        });
+        if (resp.status === 429) { console.log('  Rate limited, waiting 15s...'); await new Promise(function(r) { setTimeout(r, 15000); }); continue; }
+        if (!resp.ok) { await new Promise(function(r) { setTimeout(r, 3000); }); continue; }
+        var data = await resp.json();
+        return (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '';
+      } catch (e) { await new Promise(function(r) { setTimeout(r, 3000); }); }
+    }
+  }
+  return null;
+}
+
 async function callHuggingFace(apiKey, prompt) {
   var models = ['mistralai/Mistral-7B-Instruct-v0.3', 'HuggingFaceH4/zephyr-7b-beta', 'microsoft/Phi-3-mini-4k-instruct'];
   var body = JSON.stringify({ inputs: prompt, parameters: { temperature: 0.7, max_new_tokens: 8192, return_full_text: false } });
@@ -318,6 +338,7 @@ async function generateQuestions(exam, count) {
   var groqKey = getApiKey('GROQ_API_KEY');
   var geminiKey = getApiKey('GEMINI_API_KEY');
   var hfKey = getApiKey('HUGGINGFACE_API_KEY');
+  var openRouterKey = getApiKey('OPENROUTER_API_KEY');
 
   var prompt = buildPrompt(exam, count);
   if (!prompt) return;
@@ -326,6 +347,7 @@ async function generateQuestions(exam, count) {
 
   var providers = [];
   if (groqKey) providers.push({ name: 'Groq', fn: function(p) { return callGroq(groqKey, p); } });
+  if (openRouterKey) providers.push({ name: 'OpenRouter', fn: function(p) { return callOpenRouter(openRouterKey, p); } });
   if (geminiKey) providers.push({ name: 'Gemini', fn: function(p) { return callGemini(geminiKey, p); } });
   if (hfKey) providers.push({ name: 'HuggingFace', fn: function(p) { return callHuggingFace(hfKey, p); } });
 
