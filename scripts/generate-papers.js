@@ -85,6 +85,13 @@ function updateIndexPage(folder, title, slug, count) {
   }
 
   var html = fs.readFileSync(indexPath, 'utf-8');
+
+  // Skip if card already exists
+  if (html.indexOf('papers/' + slug + '.html') !== -1) {
+    console.log('  SKIPPED: ' + slug + ' already exists in ' + folder + '/index.html');
+    return;
+  }
+
   var cardHtml = '\n            <div class="paper-card">\n                <div>\n                    <div class="title">' + title.replace(/"/g, '&quot;') + '</div>\n                    <div class="meta">' + count + ' Q \u00B7 ' + count + ' min \u00B7 Solved with answers</div>\n                </div>\n                <a href="papers/' + slug + '.html" class="btn">View Paper</a>\n            </div>';
 
   // Insert card before pagination controls or before closing </section>

@@ -3,8 +3,16 @@ name: Daily Paper Generation
 on:
   schedule:
     - cron: '0 4 * * *'
+    - cron: '30 4 * * *'
     - cron: '0 5 * * *'
+    - cron: '30 5 * * *'
     - cron: '0 6 * * *'
+    - cron: '30 6 * * *'
+    - cron: '0 7 * * *'
+    - cron: '30 7 * * *'
+    - cron: '0 8 * * *'
+    - cron: '30 8 * * *'
+    - cron: '0 9 * * *'
   workflow_dispatch:
     inputs:
       exams:
@@ -29,10 +37,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Pull latest changes (in case prior batch just ran)
-        run: git pull --rebase
-
-      - name: Determine today batch
+      - name: Determine exam for this slot
         id: batch
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
@@ -42,17 +47,23 @@ jobs:
               echo "exams=all" >> $GITHUB_OUTPUT
             fi
           else
-            HOUR=$(date +%H)
-            if [ "$HOUR" = "04" ]; then
-              echo "exams=cgl rbi jee" >> $GITHUB_OUTPUT
-            elif [ "$HOUR" = "05" ]; then
-              echo "exams=neet gate agniveer" >> $GITHUB_OUTPUT
-            elif [ "$HOUR" = "06" ]; then
-              echo "exams=upsc ibps-po sbi-clerk ssc-gd ctet" >> $GITHUB_OUTPUT
-            else
-              echo "exams=skip" >> $GITHUB_OUTPUT
-            fi
-          fi
+            H=$(date +%H)
+            M=$(date +%M)
+            case "$H:$M" in
+              04:0[0-9]|04:1[0-5]) echo "exams=cgl" ;;
+              04:3[0-9]|04:4[0-5]) echo "exams=rbi" ;;
+              05:0[0-9]|05:1[0-5]) echo "exams=jee" ;;
+              05:3[0-9]|05:4[0-5]) echo "exams=neet" ;;
+              06:0[0-9]|06:1[0-5]) echo "exams=gate" ;;
+              06:3[0-9]|06:4[0-5]) echo "exams=agniveer" ;;
+              07:0[0-9]|07:1[0-5]) echo "exams=upsc" ;;
+              07:3[0-9]|07:4[0-5]) echo "exams=ibps-po" ;;
+              08:0[0-9]|08:1[0-5]) echo "exams=sbi-clerk" ;;
+              08:3[0-9]|08:4[0-5]) echo "exams=ssc-gd" ;;
+              09:0[0-9]|09:1[0-5]) echo "exams=ctet" ;;
+              *) echo "exams=skip" ;;
+            esac
+          fi >> $GITHUB_OUTPUT
 
       - name: Generate new AI questions
         if: steps.batch.outputs.exams != 'skip'
@@ -63,10 +74,7 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: node scripts/generate-ai-questions.js ${{ steps.batch.outputs.exams }} --count=15
 
-      - name: Clean up PDFs older than 4 weeks
-        run: find pdfs -name "weekly-*.pdf" -mtime +27 -delete
-
-      - name: Build practice papers
+      - name: Build practice paper
         if: steps.batch.outputs.exams != 'skip'
         run: node scripts/generate-papers.js ${{ steps.batch.outputs.exams }}
 
@@ -87,6 +95,7 @@ jobs:
       - name: Commit and push
         if: steps.batch.outputs.exams != 'skip'
         run: |
+          git pull --rebase
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git add -A
