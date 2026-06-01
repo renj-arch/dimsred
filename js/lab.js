@@ -26,6 +26,43 @@ var PAPERS = {
         { id:'2025-ec', title:'GATE 2025 EC', path:'gate/papers/2025-ec.html' },
         { id:'2025-me', title:'GATE 2025 ME', path:'gate/papers/2025-me.html' },
         { id:'2025-ce', title:'GATE 2025 CE', path:'gate/papers/2025-ce.html' }
+    ],
+    upsc: [
+        { id:'practice-01', title:'UPSC Practice 01', path:'upsc/papers/practice-set-01.html' },
+        { id:'practice-02', title:'UPSC Practice 02', path:'upsc/papers/practice-set-02.html' },
+        { id:'practice-03', title:'UPSC Practice 03', path:'upsc/papers/practice-set-03.html' },
+        { id:'practice-04', title:'UPSC Practice 04', path:'upsc/papers/practice-set-04.html' }
+    ],
+    'ibps-po': [
+        { id:'practice-01', title:'IBPS PO Practice 01', path:'ibps-po/papers/practice-set-01.html' },
+        { id:'practice-02', title:'IBPS PO Practice 02', path:'ibps-po/papers/practice-set-02.html' },
+        { id:'practice-03', title:'IBPS PO Practice 03', path:'ibps-po/papers/practice-set-03.html' },
+        { id:'practice-04', title:'IBPS PO Practice 04', path:'ibps-po/papers/practice-set-04.html' }
+    ],
+    'sbi-clerk': [
+        { id:'practice-01', title:'SBI Clerk Practice 01', path:'sbi-clerk/papers/practice-set-01.html' },
+        { id:'practice-02', title:'SBI Clerk Practice 02', path:'sbi-clerk/papers/practice-set-02.html' },
+        { id:'practice-03', title:'SBI Clerk Practice 03', path:'sbi-clerk/papers/practice-set-03.html' },
+        { id:'practice-04', title:'SBI Clerk Practice 04', path:'sbi-clerk/papers/practice-set-04.html' }
+    ],
+    'ssc-gd': [
+        { id:'practice-01', title:'SSC GD Practice 01', path:'ssc-gd/papers/practice-set-01.html' },
+        { id:'practice-02', title:'SSC GD Practice 02', path:'ssc-gd/papers/practice-set-02.html' },
+        { id:'practice-03', title:'SSC GD Practice 03', path:'ssc-gd/papers/practice-set-03.html' },
+        { id:'practice-04', title:'SSC GD Practice 04', path:'ssc-gd/papers/practice-set-04.html' },
+        { id:'practice-05', title:'SSC GD Practice 05', path:'ssc-gd/papers/practice-set-05.html' }
+    ],
+    ctet: [
+        { id:'practice-01', title:'CTET Practice 01', path:'ctet/papers/practice-set-01.html' },
+        { id:'practice-02', title:'CTET Practice 02', path:'ctet/papers/practice-set-02.html' },
+        { id:'practice-03', title:'CTET Practice 03', path:'ctet/papers/practice-set-03.html' },
+        { id:'practice-04', title:'CTET Practice 04', path:'ctet/papers/practice-set-04.html' }
+    ],
+    agniveer: [
+        { id:'practice-01', title:'Agniveer Practice 01', path:'agniveer/papers/practice-set-01.html' },
+        { id:'practice-02', title:'Agniveer Practice 02', path:'agniveer/papers/practice-set-02.html' },
+        { id:'practice-03', title:'Agniveer Practice 03', path:'agniveer/papers/practice-set-03.html' },
+        { id:'practice-04', title:'Agniveer Practice 04', path:'agniveer/papers/practice-set-04.html' }
     ]
 };
 
@@ -39,7 +76,16 @@ var SECTIONS = {
     'ibps-po': ['Reasoning','Quantitative Aptitude','English','General Awareness'],
     'sbi-clerk': ['Reasoning','Quantitative Aptitude','English','General Awareness'],
     'ssc-gd': ['General Knowledge','Mathematics','Reasoning','English'],
-    ctet: ['Child Development & Pedagogy','Mathematics','Environmental Studies','Language']
+    ctet: ['Child Development & Pedagogy','Mathematics','Environmental Studies','Language'],
+    agniveer: ['General Knowledge','Mathematics','Science','Reasoning']
+};
+
+var TOPICS = {
+    gate: {
+        'General Aptitude': ['Aptitude', 'General Aptitude'],
+        'Core Subject': ['Structural', 'Geotechnical', 'Water', 'Thermodynamics', 'Thermo', 'Strength of Materials', 'Strength', 'Production', 'Networks', 'Analog', 'Digital', 'DS & Algo', 'DS & Algorithms', 'Data Structures & Algorithms', 'CO & OS', 'Computer Organization & OS', 'Theory of Computation', 'Theory'],
+        'Engineering Mathematics': ['Engineering Mathematics']
+    }
 };
 
 function esc(s) { return String(s).replace(/[&<>"']/g, function(c) { return '&#' + c.charCodeAt(0) + ';'; }); }
@@ -64,10 +110,64 @@ document.querySelectorAll('.lab-tab').forEach(function(tab){
 });
 
 // === TOPIC DRILL ===
+function showSectionTopics(section, active, containerId, updateFn){
+    var topicContainer = document.getElementById(containerId);
+    var exam = document.getElementById(containerId === 'drill-topics' ? 'drill-exam' : 'mock-exam').value;
+    var examTopics = TOPICS[exam];
+    if (!examTopics || !examTopics[section]) return;
+    if (active) {
+        var existing = topicContainer.querySelector('.chip-group-label[data-section="' + section + '"]');
+        if (!existing) {
+            var label = document.createElement('div');
+            label.className = 'chip-group-label';
+            label.style.cssText = 'font-size:.78em;color:#71717a;margin:6px 0 2px;width:100%';
+            label.textContent = section + ' topics:';
+            label.dataset.section = section;
+            topicContainer.appendChild(label);
+            examTopics[section].forEach(function(t){
+                var tc = document.createElement('span');
+                tc.className = 'chip green';
+                tc.textContent = t;
+                tc.dataset.section = section;
+                tc.dataset.topic = t;
+                tc.addEventListener('click', function(){ this.classList.toggle('active'); if (updateFn) updateFn(); });
+                topicContainer.appendChild(tc);
+            });
+        }
+        topicContainer.style.display = 'block';
+    } else {
+        var toRemove = topicContainer.querySelectorAll('[data-section="' + section + '"]');
+        toRemove.forEach(function(el){ el.remove(); });
+        if (topicContainer.children.length === 0) topicContainer.style.display = 'none';
+    }
+}
+
+function getSelectedTopics(){
+    var topics = [];
+    document.querySelectorAll('#drill-sections .chip.active').forEach(function(c){
+        var sec = c.getAttribute('data-section') || c.textContent;
+        var exam = document.getElementById('drill-exam').value;
+        var examTopics = TOPICS[exam];
+        if (examTopics && examTopics[sec]) {
+            var selectedTopics = document.querySelectorAll('#drill-topics .chip[data-section="' + sec + '"].active');
+            if (selectedTopics.length > 0) {
+                selectedTopics.forEach(function(t){ topics.push(t.getAttribute('data-topic') || t.textContent); });
+            } else {
+                examTopics[sec].forEach(function(t){ topics.push(t); });
+            }
+        } else {
+            topics.push(sec);
+        }
+    });
+    return topics;
+}
+
 document.getElementById('drill-exam').addEventListener('change', function(){
     var exam = this.value;
     var container = document.getElementById('drill-sections');
     container.innerHTML = '';
+    document.getElementById('drill-topics').innerHTML = '';
+    document.getElementById('drill-area').innerHTML = '';
     document.getElementById('drill-start').disabled = true;
     if (!exam) return;
     var secs = SECTIONS[exam] || [];
@@ -78,9 +178,13 @@ document.getElementById('drill-exam').addEventListener('change', function(){
         chip.dataset.section = s;
         chip.addEventListener('click', function(){
             this.classList.toggle('active');
+            showSectionTopics(s, this.classList.contains('active'), 'drill-topics', updateDrillStart);
             updateDrillStart();
         });
         container.appendChild(chip);
+        if (i === 0 && TOPICS[exam] && TOPICS[exam][s]) {
+            showSectionTopics(s, true, 'drill-topics', updateDrillStart);
+        }
     });
     updateDrillStart();
 });
@@ -93,10 +197,7 @@ function updateDrillStart(){
 
 document.getElementById('drill-start').addEventListener('click', async function(){
     var exam = document.getElementById('drill-exam').value;
-    var activeSections = [];
-    document.querySelectorAll('#drill-sections .chip.active').forEach(function(c){
-        activeSections.push(c.getAttribute('data-section') || c.textContent);
-    });
+    var activeTopics = getSelectedTopics();
     var papers = PAPERS[exam] || [];
     if (papers.length === 0) return;
     var randomPaper = papers[Math.floor(Math.random() * papers.length)];
@@ -112,7 +213,7 @@ document.getElementById('drill-start').addEventListener('click', async function(
         allQs.forEach(function(q){
             var secBadge = q.querySelector('.section-badge');
             var section = secBadge ? secBadge.textContent.trim() : '';
-            if (activeSections.some(function(s){ return section.indexOf(s) >= 0 || s.indexOf(section) >= 0; })) {
+            if (activeTopics.some(function(t){ return section.indexOf(t) >= 0 || t.indexOf(section) >= 0; })) {
                 drillQuestions.push(parseQuestion(q, randomPaper.id));
             }
         });
@@ -182,10 +283,32 @@ function renderDrill(){
 }
 
 // === CUSTOM MOCK ===
+function getMockSelectedTopics(){
+    var topics = [];
+    document.querySelectorAll('#mock-sections .chip.active').forEach(function(c){
+        var sec = c.getAttribute('data-section') || c.textContent;
+        var exam = document.getElementById('mock-exam').value;
+        var examTopics = TOPICS[exam];
+        if (examTopics && examTopics[sec]) {
+            var selectedTopics = document.querySelectorAll('#mock-topics .chip[data-section="' + sec + '"].active');
+            if (selectedTopics.length > 0) {
+                selectedTopics.forEach(function(t){ topics.push(t.getAttribute('data-topic') || t.textContent); });
+            } else {
+                examTopics[sec].forEach(function(t){ topics.push(t); });
+            }
+        } else {
+            topics.push(sec);
+        }
+    });
+    return topics;
+}
+
 document.getElementById('mock-exam').addEventListener('change', function(){
     var exam = this.value;
     var container = document.getElementById('mock-sections');
     container.innerHTML = '';
+    document.getElementById('mock-topics').innerHTML = '';
+    document.getElementById('mock-area').innerHTML = '';
     document.getElementById('mock-start').disabled = true;
     if (!exam) return;
     var secs = SECTIONS[exam] || [];
@@ -196,9 +319,13 @@ document.getElementById('mock-exam').addEventListener('change', function(){
         chip.dataset.section = s;
         chip.addEventListener('click', function(){
             this.classList.toggle('active');
+            showSectionTopics(s, this.classList.contains('active'), 'mock-topics', updateMockStart);
             updateMockStart();
         });
         container.appendChild(chip);
+        if (i === 0 && TOPICS[exam] && TOPICS[exam][s]) {
+            showSectionTopics(s, true, 'mock-topics', updateMockStart);
+        }
     });
     updateMockStart();
 });
@@ -227,10 +354,7 @@ document.getElementById('mock-start').addEventListener('click', async function()
     if (!checkMockAllowed()) { alert('You have used all 5 free mocks this month. Go Premium for unlimited mocks!'); this.textContent='Go Premium ?'; this.onclick=function(){location.href='premium.html'}; return; }
     if (mockTimer) { clearInterval(mockTimer); mockTimer = null; }
     var exam = document.getElementById('mock-exam').value;
-    var activeSections = [];
-    document.querySelectorAll('#mock-sections .chip.active').forEach(function(c){
-        activeSections.push(c.getAttribute('data-section') || c.textContent);
-    });
+    var activeTopics = getMockSelectedTopics();
     var count = parseInt(document.getElementById('mock-count').value);
     var diff = document.getElementById('mock-difficulty').value;
     var timeLimit = parseInt(document.getElementById('mock-time').value);
@@ -249,7 +373,7 @@ document.getElementById('mock-start').addEventListener('click', async function()
             doc.querySelectorAll('.question').forEach(function(q){
                 var secBadge = q.querySelector('.section-badge');
                 var section = secBadge ? secBadge.textContent.trim() : '';
-                if (activeSections.some(function(s){ return section.indexOf(s) >= 0 || s.indexOf(section) >= 0; })) {
+                if (activeTopics.some(function(t){ return section.indexOf(t) >= 0 || t.indexOf(section) >= 0; })) {
                     var parsed = parseQuestion(q, papers[pi].id);
                     if (diff === 'all' || parsed.difficulty === diff) {
                         allQuestions.push(parsed);
