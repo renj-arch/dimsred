@@ -72,7 +72,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: node scripts/generate-ai-questions.js ${{ steps.batch.outputs.exams }} --count=15
+        run: node scripts/generate-ai-questions.js ${{ steps.batch.outputs.exams }} --count=50
 
       - name: Build practice paper
         if: steps.batch.outputs.exams != 'skip'
