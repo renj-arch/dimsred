@@ -131,8 +131,8 @@ function genPage(which) {
   h += '    <title>' + esc(title) + '</title>\n';
   h += '    <meta name="description" content="' + esc(desc) + '">\n';
   h += '    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">\n';
-  h += '    <link rel="icon" type="image/svg+xml" href="../favicon.svg">\n';
-  h += '    <link rel="icon" type="image/png" href="../logo.png">\n';
+  h += '    <link rel="icon" type="image/svg+xml" href="/favicon.svg">\n';
+  h += '    <link rel="icon" type="image/png" href="/logo.png">\n';
   h += '    <link rel="canonical" href="https://vlymbooq.qzz.io/jee/chapters/' + fileName + '">\n';
   h += '    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"' + esc(title) + '","description":"' + esc(desc) + '","url":"https://vlymbooq.qzz.io/jee/chapters/' + fileName + '","educationalLevel":"Competitive Exam","audience":{"@type":"EducationalAudience","educationalRole":"student"},"publisher":{"@type":"Organization","name":"vlymbooq","url":"https://vlymbooq.qzz.io"}}</script>\n';
   h += '    <style>\n';
@@ -194,7 +194,7 @@ function genPage(which) {
   h += '        .score-bar .btn-reset:hover{background:rgba(255,255,255,.08)}\n';
   h += '        @media print{.nav,.score-bar,.pdf-download,.chapters-list{display:none}.q-card .q-soln{display:block!important}}\n';
   h += '    </style>\n</head>\n<body>\n';
-  h += '    <nav class="nav"><div class="nav-inner"><a href="../index.html" class="brand"><img src="../logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../index.html">Home</a><a href="../dashboard.html">Dashboard</a><a href="../community.html">Community</a><a href="../neet/index.html">NEET</a><a href="../jee/index.html" class="active">JEE</a><a href="../cgl/index.html">CGL</a></div></div></nav>\n';
+  h += '    <nav class="nav"><div class="nav-inner"><a href="../index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../index.html">Home</a><a href="../dashboard.html">Dashboard</a><a href="../community.html">Community</a><a href="../neet/index.html">NEET</a><a href="../jee/index.html" class="active">JEE</a><a href="../cgl/index.html">CGL</a></div></div></nav>\n';
   h += '    <div class="container">\n';
   h += '        <div class="chapters-list">\n';
   for (var i = 0; i < pages.length; i++) {

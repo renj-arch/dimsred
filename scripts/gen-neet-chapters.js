@@ -315,8 +315,8 @@ function genHTML(ch) {
   h += '    <title>NEET Biology Chapter ' + ch.num + ': ' + esc(ch.name) + ' MCQ with Answers</title>\n';
   h += '    <meta name="description" content="Free NEET Biology Chapter ' + ch.num + ' (' + esc(ch.name) + ') MCQ with solutions. 30+ practice questions.\">\n';
   h += '    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">\n';
-  h += '    <link rel="icon" type="image/svg+xml" href="../favicon.svg">\n';
-  h += '    <link rel="icon" type="image/png" href="../logo.png">\n';
+  h += '    <link rel="icon" type="image/svg+xml" href="/favicon.svg">\n';
+  h += '    <link rel="icon" type="image/png" href="/logo.png">\n';
   h += '    <link rel="canonical" href="https://vlymbooq.qzz.io/neet/chapters/biology-chapter-' + ch.num + '-' + ch.slug + '.html">\n';
   h += '    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"NEET Biology Chapter ' + ch.num + ': ' + esc(ch.name) + ' MCQ","description":"Free NEET Biology Chapter ' + ch.num + ' ' + esc(ch.name) + ' MCQ with solutions. 30+ practice questions.","url":"https://vlymbooq.qzz.io/neet/chapters/biology-chapter-' + ch.num + '-' + ch.slug + '.html","educationalLevel":"Competitive Exam","audience":{"@type":"EducationalAudience","educationalRole":"student"},"publisher":{"@type":"Organization","name":"vlymbooq","url":"https://vlymbooq.qzz.io"}}</script>\n';
   h += '    <style>\n';
@@ -371,7 +371,7 @@ function genHTML(ch) {
   h += '        .score-bar button{padding:6px 16px;border-radius:100px;background:rgba(255,255,255,.04);color:var(--text-sec);border:1px solid var(--border);cursor:pointer;font-size:.78em}\n';
   h += '        @media print{.nav,.score-bar,.pdf-dl,.ch-list{display:none}.q-card .q-soln{display:block!important}}\n';
   h += '    </style>\n</head>\n<body>\n';
-  h += '    <nav class="nav"><div class="nav-inner"><a href="../index.html" class="brand"><img src="../logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../index.html">Home</a><a href="../dashboard.html">Dashboard</a><a href="../community.html">Community</a><a href="../neet/index.html" class="active">NEET</a><a href="../jee/index.html">JEE</a></div></div></nav>\n';
+  h += '    <nav class="nav"><div class="nav-inner"><a href="../index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../index.html">Home</a><a href="../dashboard.html">Dashboard</a><a href="../community.html">Community</a><a href="../neet/index.html" class="active">NEET</a><a href="../jee/index.html">JEE</a></div></div></nav>\n';
   h += '    <div class="container">\n';
   h += '        <div class="ch-list">\n';
   for (var i = 1; i <= 10; i++) {
