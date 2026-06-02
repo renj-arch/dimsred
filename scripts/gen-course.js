@@ -14,13 +14,15 @@ function esc(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');
 }
 
-function head(exam, examDir, examName, title, desc, canonical, extra) {
+function head(exam, examDir, examName, title, desc, canonical, extra, depth) {
+  depth = depth || 2;
+  var p = Array(depth).fill('..').join('/');
   var h = '<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width,initial-scale=1.0">\n';
   h += '    <title>' + esc(title) + '</title>\n';
   h += '    <meta name="description" content="' + esc(desc) + '">\n';
   h += '    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">\n';
-  h += '    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">\n';
-  h += '    <link rel="icon" type="image/png" href="../../logo.png">\n';
+  h += '    <link rel="icon" type="image/svg+xml" href="' + p + '/favicon.svg">\n';
+  h += '    <link rel="icon" type="image/png" href="' + p + '/logo.png">\n';
   h += '    <link rel="canonical" href="https://vlymbooq.qzz.io/' + canonical + '">\n';
   h += '    <style>\n';
   h += '        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");\n';
@@ -90,7 +92,7 @@ function head(exam, examDir, examName, title, desc, canonical, extra) {
   h += '        @media print{.nav,.sidebar-nav{display:none}}\n';
   if (extra) h += extra;
   h += '    </style>\n</head>\n<body>\n';
-  h += '    <nav class="nav"><div class="nav-inner"><a href="../../index.html" class="brand"><img src="../../logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../index.html">Home</a><a href="../../dashboard.html">Dashboard</a><a href="../../community.html">Community</a><a href="../index.html">' + examName + '</a><a href="index.html" class="active">Course</a></div></div></nav>\n';
+  h += '    <nav class="nav"><div class="nav-inner"><a href="' + p + '/index.html" class="brand"><img src="' + p + '/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="' + p + '/index.html">Home</a><a href="' + p + '/dashboard.html">Dashboard</a><a href="' + p + '/community.html">Community</a><a href="../index.html">' + examName + '</a><a href="index.html" class="active">Course</a></div></div></nav>\n';
   h += '    <div class="container">\n';
   return h;
 }
@@ -161,7 +163,7 @@ function generateExam(examKey) {
 
   // ========== COURSE INDEX PAGE ==========
   var idx = '';
-  idx += head(cfg.examName, cfg.dir, cfg.examName, cfg.metaTitle, cfg.metaDesc, cfg.canonical);
+  idx += head(cfg.examName, cfg.dir, cfg.examName, cfg.metaTitle, cfg.metaDesc, cfg.canonical, null, 2);
   idx += '        <div class="course-header">\n';
   idx += '            <div class="badge">' + esc(cfg.badge) + '</div>\n';
   idx += '            <h1>' + esc(cfg.siteTitle) + '</h1>\n';
@@ -231,7 +233,7 @@ function generateExam(examKey) {
       var title = lesson.title + ' — ' + cfg.examName + ' ' + mod.name + ' Lesson | vlymbooq';
       var desc = 'Free ' + cfg.examName + ' ' + mod.name + ' ' + lesson.title + ' lesson with theory, solved examples, shortcut tricks, and practice MCQs.';
 
-      var h = head(cfg.examName, cfg.dir, cfg.examName, title, desc, canonicalPath);
+      var h = head(cfg.examName, cfg.dir, cfg.examName, title, desc, canonicalPath, null, 3);
 
       h += '        <div class="flex-row">\n';
       h += '            <div class="side">\n';
