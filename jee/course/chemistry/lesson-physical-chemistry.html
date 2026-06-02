@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Physical Chemistry — JEE Chemistry Lesson | vlymbooq</title>
+    <meta name="description" content="Free JEE Chemistry Physical Chemistry lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="icon" type="image/png" href="../../logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/jee/course/chemistry/lesson-physical-chemistry.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--purple,#a78bfa);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
+        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
+        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
+        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
+        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
+        .module-card:hover{border-color:rgba(255,255,255,.12)}
+        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
+        .module-card .m-desc{font-size:.85em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
+        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
+        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.78em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
+        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
+        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body p{color:var(--text-sec);font-size:.9em;line-height:1.7;margin-bottom:10px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
+        .example-box .ex-title{font-weight:600;font-size:.85em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.85em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .tip-box .tip-title{font-weight:600;font-size:.85em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.85em;color:var(--text-sec);line-height:1.5}
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.82em;color:var(--text-sec)}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
+        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        @media print{.nav,.sidebar-nav{display:none}}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="../../index.html" class="brand"><img src="../../logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../index.html">Home</a><a href="../../dashboard.html">Dashboard</a><a href="../../community.html">Community</a><a href="../index.html">JEE</a><a href="index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div style="font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Chemistry</div>
+                    <a href="lesson-physical-chemistry.html" class="active">Physical Chemistry</a>
+                    <a href="lesson-organic-chemistry.html">Organic Chemistry</a>
+                    <a href="lesson-inorganic-chemistry.html">Inorganic Chemistry</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 2 &middot; JEE Chemistry</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Physical Chemistry</h1>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Mole concept, atomic structure, chemical bonding, thermodynamics, equilibrium, kinetics, electrochemistry.</div>
+                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                        <span style="font-size:.75em;color:var(--text-muted)">Mole Concept · Atomic Structure · Bonding · Equilibrium · Kinetics · Electrochemistry</span>
+                    </div>
+                </div>
+                <div class="lesson-body">
+                    <h3>Learning Objectives</h3>
+                    <ul>
+                        <li>Understand the fundamental concepts of Physical Chemistry</li>
+                        <li>Apply key formulas and techniques to solve problems</li>
+                        <li>Practice with exam-level questions to build speed and accuracy</li>
+                    </ul>
+                    <h3>Key Concepts</h3>
+<h3>What is Physical Chemistry?</h3><p>Physical chemistry combines principles of physics and chemistry to study the physical properties of molecules, the forces that act upon them, and the energy changes that accompany chemical reactions. For NEET, key topics include mole concept, thermodynamics, chemical kinetics, equilibrium, electrochemistry, and solutions. Mastering numerical problem-solving is essential for this branch.</p><h3>Key Concepts</h3><p><strong>Mole Concept:</strong> Number of moles n = mass/molar mass = N/N<sub>A</sub> = V/22.4 L (at STP). <strong>Thermodynamics:</strong> &Delta;H = &Delta;U + &Delta;nRT. <strong>Chemical Kinetics:</strong> Rate = k[A]<sup>x</sup>[B]<sup>y</sup>, Arrhenius equation k = Ae<sup>-Ea/RT</sup>. <strong>Chemical Equilibrium:</strong> K<sub>c</sub> = [C]<sup>c</sup>[D]<sup>d</sup>/[A]<sup>a</sup>[B]<sup>b</sup>. <strong>Electrochemistry:</strong> Nernst equation E = E&deg; - (0.0591/n) log Q. <strong>Solutions:</strong> Molarity = moles/L, molality = moles/kg solvent, Raoult's law P = P&deg;X.</p><h3>Solved Examples</h3><div class="example-box"><div class="ex-title">Example 1</div><div class="ex-text">Calculate the number of molecules in 36 g of water. (N<sub>A</sub> = 6.022 &times; 10<sup>23</sup>)<br><br>a) 6.022 &times; 10<sup>23</sup> b) 1.204 &times; 10<sup>24</sup> c) 3.011 &times; 10<sup>23</sup> d) 2.408 &times; 10<sup>24</sup></div><div class="ex-soln"><strong>Solution:</strong> Molar mass of water = 18 g/mol. Number of moles = 36/18 = 2 moles. Number of molecules = 2 &times; 6.022 &times; 10<sup>23</sup> = 1.204 &times; 10<sup>24</sup>. Hence option (b) is correct.</div></div><div class="example-box"><div class="ex-title">Example 2</div><div class="ex-text">The rate constant of a reaction is 2.0 &times; 10<sup>-3</sup> s<sup>-1</sup> at 300 K and 8.0 &times; 10<sup>-3</sup> s<sup>-1</sup> at 320 K. Find the activation energy. (R = 8.314 J/mol-K)<br><br>a) 55.4 kJ/mol b) 27.7 kJ/mol c) 42.1 kJ/mol d) 33.6 kJ/mol</div><div class="ex-soln"><strong>Solution:</strong> Using the two-point form of Arrhenius equation: log(k<sub>2</sub>/k<sub>1</sub>) = Ea/(2.303R)(1/T<sub>1</sub> - 1/T<sub>2</sub>). log(8/2) = Ea/(2.303 &times; 8.314)(1/300 - 1/320). log(4) = Ea/19.147 &times; (0.00333 - 0.003125). 0.602 = Ea/19.147 &times; 0.0002083. Ea = (0.602 &times; 19.147)/0.0002083 = 55360 J/mol = 55.4 kJ/mol. Hence option (a) is correct.</div></div><div class="example-box"><div class="ex-title">Example 3</div><div class="ex-text">Calculate the pH of a 0.01 M HCl solution.<br><br>a) 1 b) 2 c) 3 d) 4</div><div class="ex-soln"><strong>Solution:</strong> HCl is a strong acid that dissociates completely. [H<sup>+</sup>] = 0.01 M = 10<sup>-2</sup> M. pH = -log[H<sup>+</sup>] = -log(10<sup>-2</sup>) = 2. Hence option (b) is correct.</div></div><h3>Shortcut Techniques</h3><ul><li>For pH calculations: pH + pOH = 14, and [H<sup>+</sup>][OH<sup>-</sup>] = 10<sup>-14</sup> at 25&deg;C.</li><li>For mole concept problems, always convert given quantities to moles first before applying stoichiometric ratios.</li><li>For first-order kinetics, the half-life is independent of initial concentration: t<sub>1/2</sub> = 0.693/k.</li><li>In electrochemistry, remember that oxidation occurs at anode and reduction at cathode. The mnemonic is AnOx-RedCat.</li></ul><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">For NEET, practice logarithm values of common numbers (log 2 = 0.301, log 3 = 0.477, log 5 = 0.699). These will save precious time in pH and Nernst equation problems.</div></div>                </div>
+                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
+                <div id="practice-qs"></div>
+                <div style="display:flex;gap:10px;margin-top:10px">
+                    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
+                    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                    <span></span>
+                    <a href="lesson-organic-chemistry.html" class="btn btn-success">Organic Chemistry &#x2192;</a>
+                </div>
+            </div>
+        </div>
+        <script>
+        var practiceQs = [{"id":20001,"text":"How many moles are present in 11.2 L of CO₂ gas at STP?","options":[{"l":"a","t":"0.25 mol","c":false},{"l":"b","t":"0.5 mol","c":true},{"l":"c","t":"1.0 mol","c":false},{"l":"d","t":"2.0 mol","c":false}],"sol":"At STP, 1 mole of any gas occupies 22.4 L. Moles = 11.2/22.4 = 0.5 mol."},{"id":20002,"text":"For a first-order reaction, the rate constant k = 2.0 × 10⁻³ s⁻¹. What is its half-life?","options":[{"l":"a","t":"693 s","c":false},{"l":"b","t":"346.5 s","c":true},{"l":"c","t":"1386 s","c":false},{"l":"d","t":"173.25 s","c":false}],"sol":"t₁/₂ = 0.693/k = 0.693/(2.0×10⁻³) = 346.5 s."},{"id":20003,"text":"What is the pH of 0.001 M NaOH solution?","options":[{"l":"a","t":"3","c":false},{"l":"b","t":"7","c":false},{"l":"c","t":"11","c":true},{"l":"d","t":"14","c":false}],"sol":"NaOH is a strong base. [OH⁻] = 0.001 = 10⁻³. pOH = -log(10⁻³) = 3. pH = 14 - 3 = 11."},{"id":20004,"text":"For the reaction N₂ + 3H₂ ⇌ 2NH₃, Kc = 16 at 400 K. What is Kc for ½N₂ + ³⁄₂H₂ ⇌ NH₃?","options":[{"l":"a","t":"4","c":true},{"l":"b","t":"8","c":false},{"l":"c","t":"16","c":false},{"l":"d","t":"32","c":false}],"sol":"The second equation is half of the first. When equation is multiplied by ½, Kc' = (Kc)^½ = √16 = 4."},{"id":20005,"text":"The emf of a cell is 0.59 V at 298 K. For the cell reaction involving n = 2, find ΔG°. (1 F = 96500 C)","options":[{"l":"a","t":"-113.87 kJ","c":true},{"l":"b","t":"-56.94 kJ","c":false},{"l":"c","t":"113.87 kJ","c":false},{"l":"d","t":"56.94 kJ","c":false}],"sol":"ΔG° = -nFE° = -2 × 96500 × 0.59 = -113870 J = -113.87 kJ."}];
+        var answered={},correctCount=0,lessonSlug="physical-chemistry";
+        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
+        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
+        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
+        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.85em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
+        function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
+        function markComplete(){try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("jee-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
+        renderPractice();
+        try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
+        </script>
+    </div>
+</body>
+</html>

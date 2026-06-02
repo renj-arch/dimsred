@@ -28,24 +28,36 @@ var PAPERS = {
         { id:'2025-ce', title:'GATE 2025 CE', path:'gate/papers/2025-ce.html' }
     ],
     upsc: [
+        { id:'upsc-2025', title:'UPSC 2025 Prelims', path:'upsc/papers/2025-prelims.html' },
+        { id:'upsc-2024', title:'UPSC 2024 Prelims', path:'upsc/papers/2024-prelims.html' },
+        { id:'upsc-2023', title:'UPSC 2023 Prelims', path:'upsc/papers/2023-prelims.html' },
         { id:'practice-01', title:'UPSC Practice 01', path:'upsc/papers/practice-set-01.html' },
         { id:'practice-02', title:'UPSC Practice 02', path:'upsc/papers/practice-set-02.html' },
         { id:'practice-03', title:'UPSC Practice 03', path:'upsc/papers/practice-set-03.html' },
         { id:'practice-04', title:'UPSC Practice 04', path:'upsc/papers/practice-set-04.html' }
     ],
     'ibps-po': [
+        { id:'ibps-po-2025', title:'IBPS PO 2025 Prelims', path:'ibps-po/papers/2025-prelims.html' },
+        { id:'ibps-po-2024', title:'IBPS PO 2024 Prelims', path:'ibps-po/papers/2024-prelims.html' },
+        { id:'ibps-po-2023', title:'IBPS PO 2023 Prelims', path:'ibps-po/papers/2023-prelims.html' },
         { id:'practice-01', title:'IBPS PO Practice 01', path:'ibps-po/papers/practice-set-01.html' },
         { id:'practice-02', title:'IBPS PO Practice 02', path:'ibps-po/papers/practice-set-02.html' },
         { id:'practice-03', title:'IBPS PO Practice 03', path:'ibps-po/papers/practice-set-03.html' },
         { id:'practice-04', title:'IBPS PO Practice 04', path:'ibps-po/papers/practice-set-04.html' }
     ],
     'sbi-clerk': [
+        { id:'sbi-clerk-2025', title:'SBI Clerk 2025 Prelims', path:'sbi-clerk/papers/2025-prelims.html' },
+        { id:'sbi-clerk-2024', title:'SBI Clerk 2024 Prelims', path:'sbi-clerk/papers/2024-prelims.html' },
+        { id:'sbi-clerk-2023', title:'SBI Clerk 2023 Prelims', path:'sbi-clerk/papers/2023-prelims.html' },
         { id:'practice-01', title:'SBI Clerk Practice 01', path:'sbi-clerk/papers/practice-set-01.html' },
         { id:'practice-02', title:'SBI Clerk Practice 02', path:'sbi-clerk/papers/practice-set-02.html' },
         { id:'practice-03', title:'SBI Clerk Practice 03', path:'sbi-clerk/papers/practice-set-03.html' },
         { id:'practice-04', title:'SBI Clerk Practice 04', path:'sbi-clerk/papers/practice-set-04.html' }
     ],
     'ssc-gd': [
+        { id:'ssc-gd-2025', title:'SSC GD 2025', path:'ssc-gd/papers/2025-paper.html' },
+        { id:'ssc-gd-2024', title:'SSC GD 2024', path:'ssc-gd/papers/2024-paper.html' },
+        { id:'ssc-gd-2023', title:'SSC GD 2023', path:'ssc-gd/papers/2023-paper.html' },
         { id:'practice-01', title:'SSC GD Practice 01', path:'ssc-gd/papers/practice-set-01.html' },
         { id:'practice-02', title:'SSC GD Practice 02', path:'ssc-gd/papers/practice-set-02.html' },
         { id:'practice-03', title:'SSC GD Practice 03', path:'ssc-gd/papers/practice-set-03.html' },
@@ -53,16 +65,31 @@ var PAPERS = {
         { id:'practice-05', title:'SSC GD Practice 05', path:'ssc-gd/papers/practice-set-05.html' }
     ],
     ctet: [
+        { id:'ctet-2025', title:'CTET 2025 Paper 1', path:'ctet/papers/2025-paper1.html' },
+        { id:'ctet-2024', title:'CTET 2024 Paper 1', path:'ctet/papers/2024-paper1.html' },
+        { id:'ctet-2023', title:'CTET 2023 Paper 1', path:'ctet/papers/2023-paper1.html' },
         { id:'practice-01', title:'CTET Practice 01', path:'ctet/papers/practice-set-01.html' },
         { id:'practice-02', title:'CTET Practice 02', path:'ctet/papers/practice-set-02.html' },
         { id:'practice-03', title:'CTET Practice 03', path:'ctet/papers/practice-set-03.html' },
         { id:'practice-04', title:'CTET Practice 04', path:'ctet/papers/practice-set-04.html' }
     ],
     agniveer: [
+        { id:'agniveer-2025', title:'Agniveer 2025', path:'agniveer/papers/2025-paper.html' },
+        { id:'agniveer-2024', title:'Agniveer 2024', path:'agniveer/papers/2024-paper.html' },
+        { id:'agniveer-2023', title:'Agniveer 2023', path:'agniveer/papers/2023-paper.html' },
         { id:'practice-01', title:'Agniveer Practice 01', path:'agniveer/papers/practice-set-01.html' },
         { id:'practice-02', title:'Agniveer Practice 02', path:'agniveer/papers/practice-set-02.html' },
         { id:'practice-03', title:'Agniveer Practice 03', path:'agniveer/papers/practice-set-03.html' },
-        { id:'practice-04', title:'Agniveer Practice 04', path:'agniveer/papers/practice-set-04.html' }
+        { id:'practice-04', title:'Agniveer Practice 04', path:'agniveer/papers/practice-set-04.html' },
+        { id:'practice-05', title:'Agniveer Practice 05', path:'agniveer/papers/practice-set-05.html' },
+        { id:'practice-06', title:'Agniveer Practice 06', path:'agniveer/papers/practice-set-06.html' },
+        { id:'practice-07', title:'Agniveer Practice 07', path:'agniveer/papers/practice-set-07.html' },
+        { id:'practice-08', title:'Agniveer Practice 08', path:'agniveer/papers/practice-set-08.html' },
+        { id:'practice-09', title:'Agniveer Practice 09', path:'agniveer/papers/practice-set-09.html' },
+        { id:'practice-10', title:'Agniveer Practice 10', path:'agniveer/papers/practice-set-10.html' },
+        { id:'practice-11', title:'Agniveer Practice 11', path:'agniveer/papers/practice-set-11.html' },
+        { id:'practice-12', title:'Agniveer Practice 12', path:'agniveer/papers/practice-set-12.html' },
+        { id:'practice-13', title:'Agniveer Practice 13', path:'agniveer/papers/practice-set-13.html' }
     ]
 };
 

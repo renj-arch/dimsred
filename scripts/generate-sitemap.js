@@ -17,7 +17,8 @@ var staticPages = [
   { loc: '/', priority: '1.0' },
   { loc: '/privacy.html', priority: '0.6' },
   { loc: '/lab.html', priority: '0.7' },
-  { loc: '/dashboard.html', priority: '0.5' },
+  { loc: '/dashboard.html', priority: '0.8' },
+  { loc: '/community.html', priority: '0.8' },
   { loc: '/leaderboard.html', priority: '0.5' },
   { loc: '/mistakes.html', priority: '0.5' },
   { loc: '/premium.html', priority: '0.7' },
@@ -40,6 +41,15 @@ EXAMS.forEach(function(e) {
   files.forEach(function(f) {
     urls.push({ loc: BASE + '/' + e + '/papers/' + f, priority: '0.8' });
   });
+
+  // Chapter-wise pages
+  var chaptersDir = path.join(root, '..', e, 'chapters');
+  if (fs.existsSync(chaptersDir)) {
+    var chFiles = fs.readdirSync(chaptersDir).filter(function(f) { return f.endsWith('.html'); }).sort();
+    chFiles.forEach(function(f) {
+      urls.push({ loc: BASE + '/' + e + '/chapters/' + f, priority: '0.8' });
+    });
+  }
 });
 
 // PDF listing pages or latest.json reference

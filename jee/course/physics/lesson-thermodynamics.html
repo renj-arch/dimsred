@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Thermodynamics — JEE Physics Lesson | vlymbooq</title>
+    <meta name="description" content="Free JEE Physics Thermodynamics lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="icon" type="image/png" href="../../logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/jee/course/physics/lesson-thermodynamics.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--purple,#a78bfa);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
+        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
+        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
+        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
+        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
+        .module-card:hover{border-color:rgba(255,255,255,.12)}
+        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
+        .module-card .m-desc{font-size:.85em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
+        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
+        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.78em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
+        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
+        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body p{color:var(--text-sec);font-size:.9em;line-height:1.7;margin-bottom:10px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
+        .example-box .ex-title{font-weight:600;font-size:.85em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.85em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .tip-box .tip-title{font-weight:600;font-size:.85em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.85em;color:var(--text-sec);line-height:1.5}
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.82em;color:var(--text-sec)}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
+        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        @media print{.nav,.sidebar-nav{display:none}}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="../../index.html" class="brand"><img src="../../logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../index.html">Home</a><a href="../../dashboard.html">Dashboard</a><a href="../../community.html">Community</a><a href="../index.html">JEE</a><a href="index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div style="font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Physics</div>
+                    <a href="lesson-mechanics.html">Mechanics</a>
+                    <a href="lesson-thermodynamics.html" class="active">Thermodynamics</a>
+                    <a href="lesson-optics.html">Optics</a>
+                    <a href="lesson-electrostatics.html">Electrostatics & Current</a>
+                    <a href="lesson-magnetism.html">Magnetism & EMI</a>
+                    <a href="lesson-modern-physics.html">Modern Physics</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 1 &middot; JEE Physics</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Thermodynamics</h1>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Thermal expansion, calorimetry, laws of thermodynamics, heat engines, kinetic theory.</div>
+                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                        <span style="font-size:.75em;color:var(--text-muted)">Thermal Expansion · Calorimetry · TD Laws · Heat Engines · Kinetic Theory</span>
+                    </div>
+                </div>
+                <div class="lesson-body">
+                    <h3>Learning Objectives</h3>
+                    <ul>
+                        <li>Understand the fundamental concepts of Thermodynamics</li>
+                        <li>Apply key formulas and techniques to solve problems</li>
+                        <li>Practice with exam-level questions to build speed and accuracy</li>
+                    </ul>
+                    <h3>Key Concepts</h3>
+<h3>What is Thermodynamics?</h3><p>Thermodynamics is the branch of physics that deals with heat, work, temperature, and the conversion of energy between different forms. It explains how thermal energy is transferred and how it affects matter. Key concepts for NEET include the laws of thermodynamics, specific heat capacity, calorimetry, heat engines, and entropy. Thermodynamics is crucial for understanding processes in engines, refrigerators, and natural phenomena.</p><h3>Key Concepts</h3><p><strong>Zeroth Law:</strong> If two systems are each in thermal equilibrium with a third system, they are in thermal equilibrium with each other. <strong>First Law of Thermodynamics:</strong> &Delta;U = Q - W, where &Delta;U is change in internal energy, Q is heat added, and W is work done by the system. <strong>Second Law:</strong> Heat cannot spontaneously flow from a colder body to a hotter body. <strong>Specific Heat:</strong> c = Q/(m&Delta;T). <strong>Molar Specific Heats:</strong> C<sub>v</sub> = (f/2)R and C<sub>p</sub> = C<sub>v</sub> + R, where f is degrees of freedom. <strong>Efficiency of Heat Engine:</strong> &eta; = 1 - T<sub>c</sub>/T<sub>h</sub> (Carnot efficiency).</p><h3>Solved Examples</h3><div class="example-box"><div class="ex-title">Example 1</div><div class="ex-text">A gas is compressed by doing 500 J of work on it, and it absorbs 300 J of heat. Find the change in internal energy of the gas.<br><br>a) 200 J b) 800 J c) -200 J d) -800 J</div><div class="ex-soln"><strong>Solution:</strong> Using first law &Delta;U = Q - W. Since work is done ON the system, W = -500 J (negative). Heat absorbed Q = +300 J. So &Delta;U = 300 - (-500) = 300 + 500 = 800 J. Hence option (b) is correct.</div></div><div class="example-box"><div class="ex-title">Example 2</div><div class="ex-text">A Carnot engine operates between 127&deg;C and 27&deg;C. Find its efficiency.<br><br>a) 25% b) 50% c) 75% d) 33.3%</div><div class="ex-soln"><strong>Solution:</strong> Convert temperatures to Kelvin: T<sub>h</sub> = 127 + 273 = 400 K, T<sub>c</sub> = 27 + 273 = 300 K. Efficiency &eta; = 1 - T<sub>c</sub>/T<sub>h</sub> = 1 - 300/400 = 1 - 0.75 = 0.25 = 25%. Hence option (a) is correct.</div></div><div class="example-box"><div class="ex-title">Example 3</div><div class="ex-text">Calculate the work done when 2 moles of an ideal gas expand isothermally at 300 K from a volume of 10 L to 20 L. (R = 8.314 J/mol-K)<br><br>a) 3456 J b) 4157 J c) 4988 J d) 2885 J</div><div class="ex-soln"><strong>Solution:</strong> For isothermal expansion, W = nRT ln(V<sub>2</sub>/V<sub>1</sub>). W = 2 &times; 8.314 &times; 300 &times; ln(20/10) = 2 &times; 8.314 &times; 300 &times; ln(2) = 2 &times; 8.314 &times; 300 &times; 0.693 = 3456 J. Hence option (a) is correct.</div></div><h3>Shortcut Techniques</h3><ul><li>For adiabatic processes, remember PV<sup>&gamma;</sup> = constant and use &gamma; = C<sub>p</sub>/C<sub>v</sub>.</li><li>In calorimetry problems, apply heat lost = heat gained. Always check the final equilibrium phase (ice/water/steam).</li><li>For efficiency problems, always convert Celsius to Kelvin before using formulas.</li><li>In cyclic processes, &Delta;U = 0, so net work = net heat (Q<sub>in</sub> - Q<sub>out</sub>).</li></ul><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">For NEET, remember that the first law is essentially conservation of energy. The sign convention is crucial: work done BY the system is positive, work done ON the system is negative. Practice with sign conventions to avoid mistakes in exams.</div></div>                </div>
+                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
+                <div id="practice-qs"></div>
+                <div style="display:flex;gap:10px;margin-top:10px">
+                    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
+                    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                    <a href="lesson-mechanics.html" class="btn btn-primary">&#x2190; Mechanics</a>
+                    <a href="lesson-optics.html" class="btn btn-success">Optics &#x2192;</a>
+                </div>
+            </div>
+        </div>
+        <script>
+        var practiceQs = [{"id":10006,"text":"A system absorbs 600 J of heat and performs 150 J of work. What is the change in internal energy?","options":[{"l":"a","t":"150 J","c":false},{"l":"b","t":"450 J","c":true},{"l":"c","t":"600 J","c":false},{"l":"d","t":"750 J","c":false}],"sol":"From first law ΔU = Q - W = 600 - 150 = 450 J."},{"id":10007,"text":"What is the efficiency of a Carnot engine operating between 227°C and 127°C?","options":[{"l":"a","t":"10%","c":false},{"l":"b","t":"20%","c":true},{"l":"c","t":"30%","c":false},{"l":"d","t":"40%","c":false}],"sol":"T₁ = 227 + 273 = 500 K, T₂ = 127 + 273 = 400 K. η = 1 - T₂/T₁ = 1 - 400/500 = 0.2 = 20%."},{"id":10008,"text":"The molar heat capacity at constant volume for a monatomic gas is:","options":[{"l":"a","t":"½R","c":false},{"l":"b","t":"R","c":false},{"l":"c","t":"³⁄₂R","c":true},{"l":"d","t":"⁵⁄₂R","c":false}],"sol":"For a monatomic gas, f = 3 (translational only). Cv = (f/2)R = (3/2)R = ³⁄₂R."},{"id":10009,"text":"In an adiabatic process, which quantity remains constant?","options":[{"l":"a","t":"Temperature","c":false},{"l":"b","t":"Pressure","c":false},{"l":"c","t":"Heat","c":false},{"l":"d","t":"PV^γ","c":true}],"sol":"In an adiabatic process, no heat exchange occurs (Q = 0). The relation PV^γ = constant holds."},{"id":10010,"text":"A Carnot engine has efficiency 50%. If the temperature of the sink is 300 K, find the temperature of the source.","options":[{"l":"a","t":"450 K","c":false},{"l":"b","t":"500 K","c":false},{"l":"c","t":"600 K","c":true},{"l":"d","t":"750 K","c":false}],"sol":"η = 1 - T₂/T₁ = 0.5. So T₂/T₁ = 0.5, T₁ = T₂/0.5 = 300/0.5 = 600 K."}];
+        var answered={},correctCount=0,lessonSlug="thermodynamics";
+        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
+        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
+        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
+        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.85em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
+        function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
+        function markComplete(){try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("jee-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
+        renderPractice();
+        try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
+        </script>
+    </div>
+</body>
+</html>

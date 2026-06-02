@@ -3,258 +3,441 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Dashboard — vlymbooq</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com https://unpkg.com; script-src 'self' https://pagead2.googlesyndication.com https://www.gstatic.com https://apis.google.com https://unpkg.com https://static.cloudflareinsights.com https://ep2.adtrafficquality.google https://*.adtrafficquality.google; connect-src 'self' https://krvlufonfbcabgcjomvs.supabase.co https://pagead2.googlesyndication.com https://ep2.adtrafficquality.google https://static.cloudflareinsights.com https://apis.google.com https://www.gstatic.com https://www.google.com https://googleads.g.doubleclick.net; frame-src 'self' https://googleads.g.doubleclick.net https://ep2.adtrafficquality.google https://www.google.com; upgrade-insecure-requests">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7363013795551054" crossorigin="anonymous"></script>
-    <meta name="description" content="Your personal performance dashboard showing accuracy, history, and exam breakdown on vlymbooq.">
+    <title>Study Dashboard — Daily Quiz, Current Affairs, Mock Tests | vlymbooq</title>
+        <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Study Dashboard — Daily Quiz, Current Affairs, Mock Tests","description":"Daily quiz, current affairs, weekly mock countdown, progress tracking for competitive exam preparation.","url":"https://vlymbooq.qzz.io/dashboard.html","educationalLevel":"Competitive Exam","audience":{"@type":"EducationalAudience","educationalRole":"student"},"publisher":{"@type":"Organization","name":"vlymbooq","url":"https://vlymbooq.qzz.io"}}</script>
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="logo.png">
     <link rel="canonical" href="https://vlymbooq.qzz.io/dashboard.html">
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Dashboard — vlymbooq","description":"Your personal performance dashboard showing accuracy, history, and exam breakdown on vlymbooq.","url":"https://vlymbooq.qzz.io/dashboard.html","educationalLevel":"Competitive Exam","audience":{"@type":"EducationalAudience","educationalRole":"student"},"publisher":{"@type":"Organization","name":"vlymbooq","url":"https://vlymbooq.qzz.io"}}</script>
+    <meta name="description" content="Daily quiz, current affairs, weekly mock tests, and progress tracking for SSC CGL, NEET, JEE, UPSC & more. Build your study streak!">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{
-            --bg:#09090b;--bg-elevated:#0c0c0f;--bg-card:#111113;--bg-hover:#18181b;
-            --border:rgba(255,255,255,.06);--border-hover:rgba(255,255,255,.1);
-            --text:#fafafa;--text-secondary:#a1a1aa;--text-muted:#52525b;
-            --purple:#a78bfa;--purple-dark:#8b5cf6;--emerald:#34d399;
-            --radius:12px;--radius-lg:16px;--radius-full:100px;
-        }
-        :root.light{--bg:#f8f9fa;--bg-elevated:#fff;--bg-card:#fff;--bg-hover:#f1f3f5;--border:rgba(0,0,0,.08);--border-hover:rgba(0,0,0,.12);--text:#18181b;--text-secondary:#52525b;--text-muted:#a1a1aa;--nav-bg:rgba(248,249,250,.9);--btn-bg:rgba(0,0,0,.06);--btn-text:#18181b;--btn-border:rgba(0,0,0,.1)}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-hover:#18181b;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--red:#ef4444;--amber:#f59e0b;--radius:12px}
         html{scroll-behavior:smooth}
-        body{
-            font-family:'Inter',-apple-system,sans-serif;
-            background:var(--bg);color:var(--text);
-            min-height:100vh;overflow-x:hidden;
-            -webkit-font-smoothing:antialiased;
-        }
+        body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
         a{color:var(--text);text-decoration:none}
-        ::selection{background:rgba(139,92,246,.3);color:#fff}
-
-        .bg-grid{
-            position:fixed;inset:0;z-index:0;pointer-events:none;
-            background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
-                linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
-            background-size:60px 60px;
-        }
-        .bg-glow{
-            position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;
-        }
-        .bg-glow.purple{width:500px;height:500px;background:rgba(139,92,246,.06);top:-200px;right:-150px}
-        .bg-glow.emerald{width:400px;height:400px;background:rgba(16,185,129,.04);bottom:-180px;left:-120px}
-
-        .nav{
-            position:sticky;top:0;z-index:100;
-            padding:14px 24px;
-            background:var(--nav-bg,rgba(9,9,11,.85));-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
-            border-bottom:1px solid var(--border);
-        }
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
         .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
-        .brand{display:flex;align-items:center;gap:8px;text-decoration:none}
-        .brand-icon{width:28px;height:28px;flex-shrink:0}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.02em}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
-        .nav-links a{
-            padding:7px 14px;border-radius:var(--radius-full);
-            font-size:.82em;font-weight:500;color:var(--text-secondary);
-            transition:all .2s;white-space:nowrap;
-        }
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:var(--text-sec);transition:all .2s;white-space:nowrap}
         .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
         .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1100px;margin:0 auto;padding:24px;position:relative}
 
-        .container{max-width:960px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+        .greeting{font-size:1.5em;font-weight:800;margin-bottom:4px}
+        .greeting-sub{color:var(--text-muted);font-size:.9em;margin-bottom:24px}
 
-        /* -- Dashboard Header -- */
-        .dash-header{
-            padding:48px 0 32px;
-            display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
-        }
-        .dash-greeting{display:flex;align-items:center;gap:14px}
-        .dash-avatar{
-            width:48px;height:48px;border-radius:50%;
-            background:rgba(139,92,246,.1);border:2px solid rgba(139,92,246,.15);
-            display:flex;align-items:center;justify-content:center;
-            font-size:1.1em;font-weight:700;overflow:hidden;flex-shrink:0;
-        }
-        .dash-avatar img{width:100%;height:100%;object-fit:cover}
-        .dash-greeting h1{font-size:1.3em;font-weight:800;line-height:1.2}
-        .dash-greeting .sub{font-size:.8em;color:var(--text-muted)}
-        .dash-login-prompt{
-            padding:40px 24px;text-align:center;
-            border:1px solid var(--border);border-radius:var(--radius-lg);
-            background:var(--bg-card);max-width:420px;margin:60px auto;
-        }
-        .dash-login-prompt h2{font-size:1.2em;font-weight:700;margin-bottom:8px}
-        .dash-login-prompt p{font-size:.85em;color:var(--text-secondary);margin-bottom:20px}
+        .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+        .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+        @media(max-width:768px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
 
-        .btn{
-            display:inline-flex;align-items:center;gap:8px;
-            padding:12px 24px;border-radius:var(--radius-full);
-            font-size:.88em;font-weight:600;border:none;cursor:pointer;
-            text-decoration:none;transition:all .25s;
-        }
-        .btn-primary{
-            background:linear-gradient(135deg,var(--purple),var(--purple-dark));
-            color:#fff;box-shadow:0 4px 20px rgba(139,92,246,.25);
-        }
-        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(139,92,246,.35)}
-        .btn-ghost{
-            border:1px solid var(--border);color:var(--text);
-            background:rgba(255,255,255,.03);
-        }
-        .btn-ghost:hover{background:rgba(255,255,255,.06);transform:translateY(-2px)}
-        .btn-sm{padding:8px 16px;font-size:.8em}
+        .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:border-color .2s}
+        .card:hover{border-color:rgba(255,255,255,.1)}
+        .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px}
+        .card-title{font-size:.95em;font-weight:700;display:flex;align-items:center;gap:8px}
+        .card-title .icon{font-size:1.2em}
+        .card-badge{font-size:.7em;padding:3px 8px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple);font-weight:600}
+        .card-badge.green{background:rgba(52,211,153,.12);color:var(--emerald)}
+        .card-badge.amber{background:rgba(245,158,11,.12);color:var(--amber)}
 
-        /* -- Stats row -- */
-        .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px}
-        .stat-card{
-            padding:20px 16px;border-radius:var(--radius);
-            border:1px solid var(--border);background:var(--bg-card);
-            text-align:center;transition:all .2s;
-        }
-        .stat-card:hover{border-color:var(--border-hover);transform:translateY(-1px)}
-        .stat-card .num{font-size:1.6em;font-weight:900;line-height:1;margin-bottom:4px}
-        .stat-card .label{font-size:.75em;color:var(--text-secondary);font-weight:500}
+        .streak-bar{display:flex;gap:6px;margin:12px 0}
+        .streak-day{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.7em;font-weight:700;background:rgba(255,255,255,.04);color:var(--text-muted)}
+        .streak-day.done{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .streak-day.today{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+        .streak-count{font-size:1.8em;font-weight:900;color:var(--emerald);line-height:1}
+        .streak-label{font-size:.75em;color:var(--text-muted)}
 
-        /* -- Section -- */
-        .section{margin-bottom:28px}
-        .section-header{
-            display:flex;align-items:center;justify-content:space-between;
-            margin-bottom:14px;flex-wrap:wrap;gap:8px;
-        }
-        .section-header h2{font-size:1.05em;font-weight:700;display:flex;align-items:center;gap:8px}
-        .section-header h2 span{background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .section-header .action{font-size:.78em;color:var(--purple);font-weight:600}
+        .daily-q{padding:16px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.1);border-radius:10px;margin-bottom:0}
+        .daily-q .q-meta{font-size:.75em;color:var(--text-muted);margin-bottom:6px}
+        .daily-q .q-text{font-size:.95em;margin-bottom:12px;line-height:1.6}
+        .daily-q .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:480px){.daily-q .q-opts{grid-template-columns:1fr}}
+        .daily-q .q-opt{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.06);cursor:pointer;font-size:.85em;transition:all .15s}
+        .daily-q .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .daily-q .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .daily-q .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1)}
+        .daily-q .q-soln{display:none;margin-top:10px;padding:10px;background:rgba(139,92,246,.06);border-radius:8px;font-size:.85em;color:var(--text-sec)}
+        .daily-q .q-soln.show{display:block}
 
-        /* -- Resume card -- */
-        .resume-card{
-            padding:20px 24px;border-radius:var(--radius-lg);
-            border:1px solid rgba(139,92,246,.12);
-            background:linear-gradient(135deg,rgba(139,92,246,.04),rgba(52,211,153,.02));
-            display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
-        }
-        .resume-card .info{flex:1;min-width:200px}
-        .resume-card .info h3{font-size:.95em;font-weight:700;margin-bottom:2px}
-        .resume-card .info p{font-size:.78em;color:var(--text-muted)}
-        .resume-bar{
-            height:4px;background:rgba(255,255,255,.06);border-radius:100px;
-            overflow:hidden;margin-top:8px;max-width:200px;
-        }
-        .resume-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--emerald));border-radius:100px}
+        .mock-countdown{text-align:center;padding:10px}
+        .mock-countdown .days{font-size:2.5em;font-weight:900;color:var(--purple);line-height:1}
+        .mock-countdown .label{font-size:.8em;color:var(--text-muted)}
 
-        /* -- History chart -- */
-        .history-list{}
-        .history-row{
-            display:grid;grid-template-columns:80px 1fr 80px;
-            align-items:center;gap:14px;padding:10px 0;
-            border-bottom:1px solid var(--border);
-        }
-        .history-row:last-child{border:none}
-        .history-date{font-size:.75em;color:var(--text-muted);white-space:nowrap}
-        .history-bar-wrapper{height:28px;background:rgba(255,255,255,.03);border-radius:6px;overflow:hidden;position:relative}
-        .history-bar-fill{
-            height:100%;border-radius:6px;
-            transition:width .6s cubic-bezier(.22,1,.36,1);
-            min-width:4px;
-        }
-        .history-bar-fill.good{background:linear-gradient(90deg,rgba(52,211,153,.4),var(--emerald))}
-        .history-bar-fill.ok{background:linear-gradient(90deg,rgba(251,191,36,.3),var(--warning, #f59e0b))}
-        .history-bar-fill.bad{background:linear-gradient(90deg,rgba(239,68,68,.3),#ef4444)}
-        .history-pct{font-size:.82em;font-weight:700;text-align:right}
-        .history-pct.good{color:var(--emerald)}.history-pct.ok{color:#fbbf24}.history-pct.bad{color:#ef4444}
+        .social-links{display:flex;gap:8px;flex-wrap:wrap}
+        .social-btn{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:100px;font-size:.82em;font-weight:600;border:none;cursor:pointer;transition:all .2s;text-decoration:none}
+        .social-btn.telegram{background:#1d93d2;color:#fff}
+        .social-btn.whatsapp{background:#25d366;color:#fff}
+        .social-btn.instagram{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:#fff}
+        .social-btn.youtube{background:#ff0000;color:#fff}
+        .social-btn:hover{transform:translateY(-2px);opacity:.9}
 
-        /* -- Exam breakdown -- */
-        .exam-breakdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
-        .exam-stat{
-            padding:18px;border-radius:var(--radius);
-            border:1px solid var(--border);background:var(--bg-card);
-        }
-        .exam-stat .name{font-size:.85em;font-weight:600;color:var(--text);margin-bottom:8px}
-        .exam-stat .stat-line{display:flex;justify-content:space-between;font-size:.78em;color:var(--text-secondary);padding:3px 0}
-        .exam-stat .stat-line .val{font-weight:600;color:var(--text)}
+        .stat-circle{text-align:center;padding:12px}
+        .stat-circle .num{font-size:1.6em;font-weight:800}
+        .stat-circle .num.purple{color:var(--purple)}
+        .stat-circle .num.emerald{color:var(--emerald)}
+        .stat-circle .num.amber{color:var(--amber)}
+        .stat-circle .label{font-size:.75em;color:var(--text-muted);margin-top:2px}
 
-        /* -- Weak areas -- */
-        .weak-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
-        .weak-card{
-            padding:16px 18px;border-radius:var(--radius);
-            border:1px solid rgba(239,68,68,.1);background:rgba(239,68,68,.02);
-        }
-        .weak-card .w-title{font-size:.85em;font-weight:600;margin-bottom:6px;color:var(--text)}
-        .weak-card .w-detail{font-size:.75em;color:var(--text-muted)}
+        .ca-item{padding:12px;border-bottom:1px solid var(--border);font-size:.85em}
+        .ca-item:last-child{border-bottom:none}
+        .ca-item .date{font-size:.75em;color:var(--text-muted);margin-bottom:2px}
+        .ca-item .headline{color:var(--text);line-height:1.5}
 
-        .empty-state{
-            text-align:center;padding:48px 24px;color:var(--text-muted);
-        }
-        .empty-state .icon{font-size:2.5em;margin-bottom:12px;display:block}
-        .empty-state p{font-size:.9em;margin-bottom:16px}
+        .exam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px}
+        .exam-chip{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--border);font-size:.82em;font-weight:500;transition:all .15s}
+        .exam-chip:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12)}
+        .exam-chip .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-        /* -- Quick actions -- */
-        .quick-actions{display:flex;gap:10px;flex-wrap:wrap}
+        .progress-bar{height:6px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden;margin:8px 0}
+        .progress-bar .fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--purple),var(--emerald));transition:width .5s}
 
-        /* -- Streak badge -- */
-        .streak-chip{
-            display:inline-flex;align-items:center;gap:6px;
-            padding:6px 14px;border-radius:var(--radius-full);
-            font-size:.78em;font-weight:600;
-            background:rgba(251,191,36,.08);color:#fbbf24;
-            border:1px solid rgba(251,191,36,.12);
-        }
+        .empty-state{text-align:center;padding:40px 20px;color:var(--text-muted)}
+        .empty-state .icon{font-size:2.5em;margin-bottom:8px}
 
-        @media(max-width:768px){
-            .dash-header{padding:32px 0 24px}
-            .stats-row{grid-template-columns:repeat(2,1fr);gap:8px}
-            .history-row{grid-template-columns:60px 1fr 60px;gap:8px}
-            .nav{padding:12px 16px}
-            .nav-links a{padding:5px 10px;font-size:.75em}
-        }
-        @media(max-width:480px){
-            .stats-row{grid-template-columns:1fr 1fr;gap:6px}
-            .stat-card{padding:14px 10px}
-            .stat-card .num{font-size:1.3em}
-            .exam-breakdown{grid-template-columns:1fr}
-            .container{padding:0 16px}
-            .weak-grid{grid-template-columns:1fr}
-        }
+        .quiz-result{display:none;margin-top:8px;padding:10px;border-radius:8px;font-size:.85em;font-weight:600}
+        .quiz-result.show{display:block}
+        .quiz-result.correct{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .quiz-result.wrong{background:rgba(239,68,68,.1);color:var(--red)}
+
+        .badge-dot{display:inline-flex;width:8px;height:8px;border-radius:50%;margin-right:4px}
+        .badge-dot.green{background:var(--emerald)}
+        .badge-dot.purple{background:var(--purple)}
+        .badge-dot.amber{background:var(--amber)}
+
+        .sec-title{font-size:1.1em;font-weight:700;margin:20px 0 12px;display:flex;align-items:center;gap:8px}
+        .sec-line{flex:1;height:1px;background:var(--border)}
+
+        @media(max-width:480px){.nav-inner{flex-wrap:wrap;justify-content:center}.container{padding:16px}}
     </style>
-<script src="js/redirect.js" async></script>
 </head>
 <body>
-    <div class="bg-grid"></div>
-    <div class="bg-glow purple"></div>
-    <div class="bg-glow emerald"></div>
-
     <nav class="nav">
         <div class="nav-inner">
-            <a href="index.html" class="brand">
-                <svg class="brand-icon" viewBox="0 0 40 40" fill="none">
-                    <defs><linearGradient id="vx" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#34d399"/></linearGradient></defs>
-                    <path d="M20 36 C17 28 10 18 5 13 C3 11 3 10 6 9" stroke="url(#vx)" stroke-width="2.8" stroke-linecap="round"/>
-                    <path d="M20 36 C23 28 30 18 35 13 C37 11 37 10 34 9" stroke="url(#vx)" stroke-width="2.8" stroke-linecap="round"/>
-                    <path d="M20 34 L22 36 L20 38 L18 36 Z" fill="url(#vx)"/>
-                    <circle cx="20" cy="5" r="2.5" fill="#a78bfa"/>
-                    <circle cx="20" cy="5" r="5" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.35"/>
-                    <circle cx="10" cy="16" r="1.2" fill="#a78bfa" opacity="0.45"/>
-                    <circle cx="30" cy="16" r="1.2" fill="#34d399" opacity="0.45"/>
-                </svg>
-                <span class="brand-text">vlymbooq</span>
-            </a>
+            <a href="index.html" class="brand"><img src="logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a>
             <div class="nav-links">
                 <a href="index.html">Home</a>
-                <a href="dashboard.html" class="active">📊 Dashboard</a>
-                <a href="lab.html">🧪 Lab</a>
-                <a href="leaderboard.html">🏆</a>
-                <button id="themeToggle" style="background:var(--btn-bg,rgba(255,255,255,.06));color:var(--btn-text,#fff);border:1px solid var(--btn-border,rgba(255,255,255,.1));padding:6px 10px;border-radius:100px;font-size:.82em;cursor:pointer;transition:all .2s;line-height:1" title="Toggle theme">🌙</button>
-                <a class="auth-btn" href="#" style="background:var(--btn-bg,rgba(255,255,255,.06));color:var(--btn-text,#fff);border:1px solid var(--btn-border,rgba(255,255,255,.1));padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none">🚀 Unlock Lab</a>
+                <a href="dashboard.html" class="active">Dashboard</a>
+                <a href="lab.html">Lab</a>
+                <a href="community.html">Community</a>
+                <a href="cgl/index.html">CGL</a>
+                <a href="neet/index.html">NEET</a>
+                <a href="jee/index.html">JEE</a>
+                <a href="upsc/index.html">UPSC</a>
+                <a href="gate/index.html">GATE</a>
+                <a href="rbi/index.html">RBI</a>
             </div>
         </div>
     </nav>
 
     <div class="container" id="app">
-        <!-- Placeholder: populated by JS -->
+        <div class="greeting" id="greeting">Good Morning, Student</div>
+        <div class="greeting-sub" id="today-date"></div>
+
+        <div class="grid-4" style="margin-bottom:16px">
+            <div class="card">
+                <div class="stat-circle">
+                    <div class="num emerald" id="streak-num">0</div>
+                    <div class="label">Day Streak</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="stat-circle">
+                    <div class="num purple" id="solved-num">0</div>
+                    <div class="label">Questions Solved</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="stat-circle">
+                    <div class="num amber" id="accuracy-num">0%</div>
+                    <div class="label">Accuracy</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="stat-circle">
+                    <div class="num" style="color:var(--emerald)" id="mocks-num">0</div>
+                    <div class="label">Mocks Taken</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">&#x1f9d0;</span> Daily Quiz</div>
+                    <span class="card-badge green">Today</span>
+                </div>
+                <div id="daily-quiz"><div class="empty-state"><div class="icon">&#x1f4ac;</div><p>Loading today's question...</p></div></div>
+                <div class="quiz-result" id="quiz-result"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">&#x1f4f0;</span> Daily Current Affairs</div>
+                    <span class="card-badge amber">New</span>
+                </div>
+                <div id="current-affairs">
+                    <div class="ca-item"><div class="date">2 Jun 2026</div><div class="headline">India launches AI-powered education platform for rural schools, covering 50,000 villages in Phase 1.</div></div>
+                    <div class="ca-item"><div class="date">1 Jun 2026</div><div class="headline">RBI keeps repo rate unchanged at 6.25% for third consecutive quarter, citing stable inflation.</div></div>
+                    <div class="ca-item"><div class="date">31 May 2026</div><div class="headline">NEET UG 2026 application correction window opens June 5, says NTA official notice.</div></div>
+                    <div class="ca-item"><div class="date">30 May 2026</div><div class="headline">SSC CGL Tier I 2026 notification expected in July; 8,000+ vacancies estimated.</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-2" style="margin-top:16px">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">&#x1f3c6;</span> Weekly Mock Test</div>
+                    <span class="card-badge">Prep</span>
+                </div>
+                <div class="mock-countdown">
+                    <div class="days" id="mock-countdown">--</div>
+                    <div class="label">days until next weekly mock</div>
+                    <div style="margin-top:14px">
+                        <a href="lab.html" class="social-btn" style="display:inline-flex;background:rgba(167,139,250,.12);color:var(--purple);padding:8px 20px;font-size:.82em">Start Latest Mock</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">&#x1f517;</span> Study Streak</div>
+                    <span class="card-badge green">Keep going!</span>
+                </div>
+                <div class="streak-bar" id="streak-bar"></div>
+                <div style="display:flex;gap:16px;margin-top:8px">
+                    <div><div class="streak-count" id="streak-count">0</div><div class="streak-label">day streak</div></div>
+                    <div><div class="streak-count" style="color:var(--purple)" id="best-streak">0</div><div class="streak-label">best streak</div></div>
+                </div>
+                <div style="margin-top:12px;font-size:.8em;color:var(--text-muted)">Solve the daily quiz to keep your streak alive!</div>
+            </div>
+        </div>
+
+        <div class="sec-title"><span>&#x1f3eb;</span> Quick Practice<span class="sec-line"></span></div>
+        <div class="exam-grid" id="exam-grid">
+            <a href="cgl/index.html" class="exam-chip"><span class="dot" style="background:#a78bfa"></span>SSC CGL</a>
+            <a href="neet/index.html" class="exam-chip"><span class="dot" style="background:#34d399"></span>NEET UG</a>
+            <a href="jee/index.html" class="exam-chip"><span class="dot" style="background:#6366f1"></span>JEE Main</a>
+            <a href="upsc/index.html" class="exam-chip"><span class="dot" style="background:#f59e0b"></span>UPSC CSE</a>
+            <a href="gate/index.html" class="exam-chip"><span class="dot" style="background:#ef4444"></span>GATE</a>
+            <a href="rbi/index.html" class="exam-chip"><span class="dot" style="background:#06b6d4"></span>RBI Grade B</a>
+            <a href="agniveer/index.html" class="exam-chip"><span class="dot" style="background:#a855f7"></span>Agniveer</a>
+            <a href="ibps-po/index.html" class="exam-chip"><span class="dot" style="background:#ec4899"></span>IBPS PO</a>
+            <a href="sbi-clerk/index.html" class="exam-chip"><span class="dot" style="background:#14b8a6"></span>SBI Clerk</a>
+            <a href="ssc-gd/index.html" class="exam-chip"><span class="dot" style="background:#f97316"></span>SSC GD</a>
+            <a href="ctet/index.html" class="exam-chip"><span class="dot" style="background:#eab308"></span>CTET</a>
+        </div>
+
+        <div class="sec-title" style="margin-top:24px"><span>&#x1f91d;</span> Join the Community<span class="sec-line"></span></div>
+        <div class="card">
+            <div class="social-links">
+                <a href="https://t.me/vlymbooq" target="_blank" rel="noopener" class="social-btn telegram">&#x1f4e2; Telegram</a>
+                <a href="https://whatsapp.com/channel/0029VbDMGFY8PgsQkn2IN62D" target="_blank" rel="noopener" class="social-btn whatsapp">&#x1f4ac; WhatsApp</a>
+                <a href="https://instagram.com/vlymbooq" target="_blank" rel="noopener" class="social-btn instagram">&#x1f4f7; Instagram</a>
+                <a href="https://youtube.com/@vlymbooq" target="_blank" rel="noopener" class="social-btn youtube">&#x25b6;&#xfe0f; YouTube</a>
+                <a href="community.html" class="social-btn" style="display:inline-flex;border:1px solid var(--border);color:var(--text)">Learn More</a>
+            </div>
+        </div>
     </div>
 
-<script src="js/theme.js"></script>
-<script src="js/supabase.js?v=20260529b"></script>
-<script src="js/dashboard.js" defer></script>
+    <script>
+    // ---- Progress tracking with localStorage ----
+    var STORAGE_KEY = 'vlymbooq_progress';
+
+    function getProgress() {
+        try {
+            var d = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            if (d) return d;
+        } catch(e) {}
+        return { streak:0, bestStreak:0, solved:0, correct:0, mocks:0, lastActive:null, history:[] };
+    }
+
+    function saveProgress(p) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+    }
+
+    function getDateStr(d) {
+        return d.toISOString().split('T')[0];
+    }
+
+    function updateStreak() {
+        var p = getProgress();
+        var today = getDateStr(new Date());
+        var yesterday = getDateStr(new Date(Date.now() - 86400000));
+
+        if (p.lastActive === today) {
+            // Already active today
+        } else if (p.lastActive === yesterday) {
+            p.streak++;
+        } else if (p.lastActive !== today) {
+            p.streak = 1;
+        }
+        p.lastActive = today;
+        if (p.streak > p.bestStreak) p.bestStreak = p.streak;
+        saveProgress(p);
+        return p;
+    }
+
+    function renderStreak(p) {
+        var bar = document.getElementById('streak-bar');
+        bar.innerHTML = '';
+        var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+        var today = new Date().getDay();
+        var pStreak = p.streak || 0;
+        for (var i = 6; i >= 0; i--) {
+            var dayIdx = (today - i + 7) % 7;
+            var el = document.createElement('div');
+            el.className = 'streak-day';
+            el.textContent = days[dayIdx].slice(0,2);
+            if (i === 0) el.className += ' today';
+            else if (i < pStreak) el.className += ' done';
+            bar.appendChild(el);
+        }
+        document.getElementById('streak-num').textContent = pStreak || 0;
+        document.getElementById('streak-count').textContent = pStreak || 0;
+        document.getElementById('best-streak').textContent = p.bestStreak || 0;
+        document.getElementById('solved-num').textContent = p.solved || 0;
+        var acc = p.solved > 0 ? Math.round(p.correct / p.solved * 100) : 0;
+        document.getElementById('accuracy-num').textContent = acc + '%';
+        document.getElementById('mocks-num').textContent = p.mocks || 0;
+    }
+
+    // ---- Greeting & Date ----
+    var h = new Date().getHours();
+    var g = 'Good ' + (h < 12 ? 'Morning' : h < 17 ? 'Afternoon' : 'Evening') + ', Student';
+    document.getElementById('greeting').textContent = g;
+    var now = new Date();
+    var opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+    document.getElementById('today-date').textContent = now.toLocaleDateString('en-IN', opts);
+
+    // ---- Daily Quiz ----
+    var ALL_QUESTIONS = [];
+    var currentDailyQ = null;
+
+    function fetchAllQuestions() {
+        var questionFiles = [
+            'question-bank/neet.json',
+            'question-bank/cgl.json',
+            'question-bank/jee.json',
+            'question-bank/gate.json',
+            'question-bank/upsc.json',
+            'question-bank/agniveer.json'
+        ];
+        var promises = questionFiles.map(function(url) {
+            return fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+                if (data && data.questions) {
+                    ALL_QUESTIONS = ALL_QUESTIONS.concat(data.questions.map(function(q) {
+                        q.exam = data.exam || data.folder || 'Unknown';
+                        return q;
+                    }));
+                }
+            }).catch(function() {});
+        });
+        Promise.all(promises).then(function() {
+            loadDailyQuiz();
+        }).catch(function() {
+            loadDailyQuiz();
+        });
+    }
+
+    function loadDailyQuiz() {
+        if (ALL_QUESTIONS.length === 0) {
+            // Fallback questions
+            ALL_QUESTIONS = [
+                { id:1, section:'Physics', text:'What is the SI unit of electric current?', options:[{label:'A',text:'Volt',correct:false},{label:'B',text:'Ampere',correct:true},{label:'C',text:'Ohm',correct:false},{label:'D',text:'Watt',correct:false}], exam:'NEET UG' },
+                { id:2, section:'Maths', text:'If x + 1/x = 3, find x² + 1/x².', options:[{label:'A',text:'5',correct:false},{label:'B',text:'7',correct:true},{label:'C',text:'9',correct:false},{label:'D',text:'11',correct:false}], exam:'SSC CGL' },
+                { id:3, section:'Chemistry', text:'Which element has the highest electronegativity?', options:[{label:'A',text:'Oxygen',correct:false},{label:'B',text:'Chlorine',correct:false},{label:'C',text:'Fluorine',correct:true},{label:'D',text:'Nitrogen',correct:false}], exam:'JEE Main' },
+                { id:4, section:'Biology', text:'Which organelle is known as the "powerhouse of the cell"?', options:[{label:'A',text:'Nucleus',correct:false},{label:'B',text:'Ribosome',correct:false},{label:'C',text:'Mitochondria',correct:true},{label:'D',text:'Golgi body',correct:false}], exam:'NEET UG' },
+                { id:5, section:'Reasoning', text:'What comes next in the series: 2, 6, 12, 20, ?', options:[{label:'A',text:'28',correct:false},{label:'B',text:'30',correct:true},{label:'C',text:'32',correct:false},{label:'D',text:'36',correct:false}], exam:'SSC CGL' },
+                { id:6, section:'General Awareness', text:'Who is known as the "Father of the Indian Constitution"?', options:[{label:'A',text:'Mahatma Gandhi',correct:false},{label:'B',text:'Jawaharlal Nehru',correct:false},{label:'C',text:'B.R. Ambedkar',correct:true},{label:'D',text:'Sardar Patel',correct:false}], exam:'UPSC CSE' }
+            ];
+        }
+
+        // Pick question based on today's date
+        var dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000);
+        var idx = dayOfYear % ALL_QUESTIONS.length;
+        currentDailyQ = ALL_QUESTIONS[idx];
+        renderDailyQuiz(currentDailyQ);
+    }
+
+    function renderDailyQuiz(q) {
+        var el = document.getElementById('daily-quiz');
+        var optsHtml = '';
+        for (var i = 0; i < q.options.length; i++) {
+            optsHtml += '<div class="q-opt" data-idx="' + i + '" onclick="selectDailyOpt(' + i + ')">' + q.options[i].label + '. ' + q.options[i].text + '</div>';
+        }
+        el.innerHTML = '<div class="daily-q"><div class="q-meta">' + (q.exam || 'Practice') + ' &middot; ' + (q.section || 'General') + '</div><div class="q-text">' + q.text + '</div><div class="q-opts">' + optsHtml + '</div><div class="q-soln" id="daily-soln"><strong>Correct Answer:</strong> ' + q.options.filter(function(o){return o.correct})[0].label + '<br><span style="color:#a1a1aa">Daily quiz resets in 24 hours. Come back tomorrow!</span></div></div>';
+    }
+
+    function selectDailyOpt(idx) {
+        var q = currentDailyQ;
+        if (!q) return;
+        var opts = document.querySelectorAll('.daily-q .q-opt');
+        for (var i = 0; i < opts.length; i++) opts[i].style.pointerEvents = 'none';
+        var isCorrect = q.options[idx].correct;
+        opts[idx].className += isCorrect ? ' correct' : ' wrong';
+        if (!isCorrect) {
+            for (var i = 0; i < q.options.length; i++) {
+                if (q.options[i].correct) opts[i].className += ' correct';
+            }
+        }
+        document.getElementById('daily-soln').className = 'q-soln show';
+        var resultEl = document.getElementById('quiz-result');
+        if (isCorrect) {
+            resultEl.textContent = ' Correct! +1 point';
+            resultEl.className = 'quiz-result show correct';
+        } else {
+            resultEl.textContent = ' Incorrect. Keep practicing!';
+            resultEl.className = 'quiz-result show wrong';
+        }
+
+        // Update progress
+        var p = getProgress();
+        p.solved = (p.solved || 0) + 1;
+        if (isCorrect) p.correct = (p.correct || 0) + 1;
+        if (p.history) {
+            var today = getDateStr(new Date());
+            var found = false;
+            for (var i = 0; i < p.history.length; i++) {
+                if (p.history[i].date === today) { found = true; break; }
+            }
+            if (!found) p.history.push({date:today, solved:1, correct:isCorrect?1:0});
+        }
+        p.streak = updateStreak().streak;
+        saveProgress(p);
+        renderStreak(p);
+    }
+
+    // ---- Weekly Mock Countdown ----
+    function calcNextSaturday() {
+        var now = new Date();
+        var day = now.getDay();
+        var daysUntilSaturday = (6 - day + 7) % 7;
+        if (daysUntilSaturday === 0) daysUntilSaturday = 7;
+        var nextSat = new Date(now);
+        nextSat.setDate(now.getDate() + daysUntilSaturday);
+        nextSat.setHours(10,0,0,0);
+        return nextSat;
+    }
+
+    function updateCountdown() {
+        var target = calcNextSaturday();
+        var diff = target - new Date();
+        var days = Math.ceil(diff / 86400000);
+        document.getElementById('mock-countdown').textContent = days + 'd';
+    }
+
+    // ---- Init ----
+    updateStreak();
+    renderStreak(getProgress());
+    updateCountdown();
+    setInterval(updateCountdown, 3600000);
+    fetchAllQuestions();
+    </script>
 </body>
 </html>
