@@ -8,6 +8,80 @@ function q(id, text, topic, opts, sol) {
 }
 function op(l, t, c) { return { l:l, t:t, c:c }; }
 
+// Chapter 1: The Living World
+chapters.push({ num:1, name:'The Living World', slug:'the-living-world', topics:'Taxonomy, Nomenclature, Classification, Systematics',
+  desc:'30 NEET-level MCQs on The Living World covering taxonomy, nomenclature, classification, systematics, and taxonomic aids.',
+  qs:[
+    q(1,'Who proposed the binomial nomenclature?','Taxonomy',[op('A','Linnaeus',true),op('B','Darwin'),op('C','Aristotle'),op('D','Whittaker')],'Carolus Linnaeus proposed binomial nomenclature in his book Species Plantarum (1753).'),
+    q(2,'The basic unit of classification is:','Taxonomy',[op('A','Genus'),op('B','Species',true),op('C','Family'),op('D','Order')],'Species is the fundamental unit of classification, defined as a group of organisms capable of interbreeding.'),
+    q(3,'Which is the correct hierarchical order?','Taxonomy',[op('A','Kingdom-Phylum-Class-Order-Family-Genus-Species',true),op('B','Kingdom-Class-Phylum-Order-Family-Genus-Species'),op('C','Phylum-Kingdom-Class-Order-Family-Genus-Species'),op('D','Kingdom-Phylum-Order-Class-Family-Genus-Species')],'The correct hierarchy: Kingdom → Phylum → Class → Order → Family → Genus → Species.'),
+    q(4,'ICBN stands for:','Nomenclature',[op('A','International Code of Botanical Nomenclature',true),op('B','Indian Council of Botanical Names'),op('C','International Commission of Biological Names'),op('D','Institute of Classification and Botanical Nomenclature')],'ICBN governs the naming of plants. It has now been replaced by ICN (International Code of Nomenclature for algae, fungi, and plants).'),
+    q(5,'Which is NOT a characteristic of living organisms?','Taxonomy',[op('A','Growth'),op('B','Reproduction'),op('C','Consciousness'),op('D','Inertness',true)],'Inertness is not a characteristic of living organisms. Growth, reproduction, metabolism, and consciousness are defining features.'),
+    q(6,'The father of taxonomy is:','Taxonomy',[op('A','Darwin'),op('B','Linnaeus',true),op('C','Aristotle'),op('D','Theophrastus')],'Carolus Linnaeus is known as the Father of Taxonomy for his system of classification and nomenclature.'),
+    q(7,'Taxonomic category \'order\' is between:','Taxonomy',[op('A','Class and Family',true),op('B','Family and Genus'),op('C','Phylum and Class'),op('D','Genus and Species')],'Order is a taxonomic category between Class and Family.'),
+    q(8,'Which of the following is a taxonomic aid?','Taxonomy',[op('A','Herbarium',true),op('B','Zoo'),op('C','Museum'),op('D','Botanical garden')],'All are taxonomic aids, but herbarium (preserved plant specimens) is specifically mentioned as a key aid.'),
+    q(9,'Biological concept of species was given by:','Taxonomy',[op('A','Mayr',true),op('B','Linnaeus'),op('C','Darwin'),op('D','Lamarck')],'Ernst Mayr proposed the biological species concept: groups of interbreeding natural populations.'),
+    q(10,'ICZN is for:','Nomenclature',[op('A','Animals',true),op('B','Plants'),op('C','Bacteria'),op('D','Fungi')],'ICZN = International Code of Zoological Nomenclature for animals.'),
+    q(11,'A group of related families constitutes:','Taxonomy',[op('A','Order',true),op('B','Class'),op('C','Phylum'),op('D','Genus')],'Related families are grouped into an Order.'),
+    q(12,'Taxonomy deals with:','Taxonomy',[op('A','Classification, nomenclature, identification',true),op('B','Only naming'),op('C','Only evolution'),op('D','Only ecology')],'Taxonomy includes classification, nomenclature, and identification of organisms.'),
+    q(13,'Which kingdom includes bacteria?','Classification',[op('A','Monera',true),op('B','Protista'),op('C','Fungi'),op('D','Plantae')],'Kingdom Monera includes all prokaryotic organisms like bacteria.'),
+    q(14,'Two-word naming system is called:','Nomenclature',[op('A','Binomial nomenclature',true),op('B','Trinomial nomenclature'),op('C','Polynomial nomenclature'),op('D','Common nomenclature')],'Binomial nomenclature uses genus and species (two words) for naming organisms.'),
+    q(15,'In binomial nomenclature, the first word represents:','Nomenclature',[op('A','Genus',true),op('B','Species'),op('C','Family'),op('D','Order')],'The first word is the genus name (capitalized), the second is the species epithet (lowercase).'),
+    q(16,'Keys are used for:','Taxonomy',[op('A','Identification',true),op('B','Naming'),op('C','Classification'),op('D','Evolution')],'Taxonomic keys are used for identification of organisms based on contrasting characters.'),
+    q(17,'The term \'taxon\' refers to:','Taxonomy',[op('A','A taxonomic category',true),op('B','A rank only'),op('C','A species only'),op('D','A genus only')],'Taxon (plural: taxa) refers to any taxonomic category or rank.'),
+    q(18,'A group of related classes constitutes:','Taxonomy',[op('A','Phylum',true),op('B','Order'),op('C','Family'),op('D','Genus')],'Related classes are grouped into a Phylum (in animals) or Division (in plants).'),
+    q(19,'Which is NOT a type of taxonomic aid?','Taxonomy',[op('A','Flora'),op('B','Monograph'),op('C','Manuscript',true),op('D','Manual')],'Manuscript is not a taxonomic aid. Flora, monographs, and manuals are aids.'),
+    q(20,'Museum specimens are preserved in:','Taxonomy',[op('A','Formalin',true),op('B','Alcohol'),op('C','Both formalin and alcohol'),op('D','Water')],'Specimens in museums are preserved in formalin or alcohol solutions.'),
+    q(21,'The highest taxonomic category is:','Taxonomy',[op('A','Kingdom',true),op('B','Phylum'),op('C','Domain'),op('D','Class')],'Kingdom is the highest taxonomic category (though Domain is higher in modern systems).'),
+    q(22,'Systematics is:','Taxonomy',[op('A','Study of diversity and relationships',true),op('B','Only classification'),op('C','Only naming'),op('D','Only evolution')],'Systematics encompasses classification, nomenclature, evolution, and relationships among organisms.'),
+    q(23,'Herbarium contains:','Taxonomy',[op('A','Dried and pressed plant specimens',true),op('B','Live plants'),op('C','Animal specimens'),op('D','Fossils')],'Herbarium = collection of dried, pressed, and preserved plant specimens on sheets.'),
+    q(24,'Botanical gardens maintain:','Taxonomy',[op('A','Live plant collections',true),op('B','Dried specimens'),op('C','Animal collections'),op('D','Fossil collections')],'Botanical gardens have live plant collections for research, conservation, and display.'),
+    q(25,'Type specimen is:','Taxonomy',[op('A','Original specimen used for description',true),op('B','A preserved fossil'),op('C','A common specimen'),op('D','A cultured specimen')],'Type specimen is the original preserved specimen on which a species description is based.'),
+    q(26,'Three-domain system was given by:','Classification',[op('A','Woese',true),op('B','Whittaker'),op('C','Linnaeus'),op('D','Haeckel')],'Carl Woese proposed the three-domain system (Bacteria, Archaea, Eukarya).'),
+    q(27,'Growth in non-living objects is:','Taxonomy',[op('A','Accumulation of matter',true),op('B','Internal cell division'),op('C','Metabolic process'),op('D','Reproduction')],'Non-living things grow by accumulation of matter on their surface (external growth), not by cell division.'),
+    q(28,'Reproduction is NOT a defining property of:','Taxonomy',[op('A','All living organisms'),op('B','Mules and worker bees',true),op('C','Plants'),op('D','Animals')],'Mules, worker bees, and sterile organisms do not reproduce, but are still considered living.'),
+    q(29,'Metabolism is:','Taxonomy',[op('A','Sum of all chemical reactions in body',true),op('B','Only digestion'),op('C','Only respiration'),op('D','Only excretion')],'Metabolism = total of all anabolic and catabolic chemical reactions in an organism.'),
+    q(30,'Consciousness is a defining feature of:','Taxonomy',[op('A','All living organisms',true),op('B','Only animals'),op('C','Only humans'),op('D','Only plants')],'Consciousness (ability to sense environment) is present in all living organisms to varying degrees.')
+  ]
+});
+
+// Chapter 2: Biological Classification
+chapters.push({ num:2, name:'Biological Classification', slug:'biological-classification', topics:'Five Kingdom Classification, Monera, Protista, Fungi, Viruses',
+  desc:'30 NEET-level MCQs on Biological Classification covering five kingdom system, monera, protista, fungi, plantae, animalia, viruses, and lichens.',
+  qs:[
+    q(1,'Five kingdom classification was proposed by:','Classification',[op('A','Whittaker',true),op('B','Linnaeus'),op('C','Haeckel'),op('D','Woese')],'R.H. Whittaker (1969) proposed the Five Kingdom Classification: Monera, Protista, Fungi, Plantae, Animalia.'),
+    q(2,'Which kingdom includes prokaryotes?','Monera',[op('A','Monera',true),op('B','Protista'),op('C','Fungi'),op('D','Plantae')],'Kingdom Monera includes all prokaryotic organisms (bacteria, cyanobacteria).'),
+    q(3,'Cell wall in bacteria is made of:','Monera',[op('A','Peptidoglycan',true),op('B','Cellulose'),op('C','Chitin'),op('D','Pectin')],'Bacterial cell wall is composed of peptidoglycan (murein).'),
+    q(4,'Which bacteria are used in biogas production?','Monera',[op('A','Methanogens',true),op('B','Nitrogen fixers'),op('C','Sulfur bacteria'),op('D','Cyanobacteria')],'Methanogens (e.g., Methanobacterium) produce methane during anaerobic digestion.'),
+    q(5,'Diatoms have cell wall made of:','Protista',[op('A','Silica',true),op('B','Calcium carbonate'),op('C','Cellulose'),op('D','Chitin')],'Diatoms have siliceous cell walls (frustules) composed of silicon dioxide.'),
+    q(6,'Slime molds belong to:','Protista',[op('A','Protista',true),op('B','Fungi'),op('C','Monera'),op('D','Plantae')],'Slime molds (Myxomycetes) are classified under Kingdom Protista.'),
+    q(7,'Fungi are characterized by:','Fungi',[op('A','Chitin cell wall',true),op('B','Cellulose cell wall'),op('C','Peptidoglycan cell wall'),op('D','No cell wall')],'Fungal cell walls are made of chitin (a polysaccharide).'),
+    q(8,'Which fungus is used in cheese production?','Fungi',[op('A','Penicillium',true),op('B','Aspergillus'),op('C','Yeast'),op('D','Agaricus')],'Penicillium species are used in cheese production (Roquefort, Camembert).'),
+    q(9,'Lichens represent symbiotic association between:','Fungi',[op('A','Fungus and algae',true),op('B','Fungus and bacteria'),op('C','Algae and bacteria'),op('D','Two fungi')],'Lichens = mutualistic association between a fungus (mycobiont) and an alga (phycobiont).'),
+    q(10,'Viruses are:','Viruses',[op('A','Obligate intracellular parasites',true),op('B','Free-living organisms'),op('C','Cellular organisms'),op('D','Prokaryotes')],'Viruses are obligate intracellular parasites, cannot replicate outside host cells.'),
+    q(11,'Who discovered viruses?','Viruses',[op('A','Ivanowsky',true),op('B','Pasteur'),op('C','Koch'),op('D','Jenner')],'Dmitri Ivanowsky (1892) discovered viruses while studying tobacco mosaic disease.'),
+    q(12,'TMV stands for:','Viruses',[op('A','Tobacco Mosaic Virus',true),op('B','Tomato Mosaic Virus'),op('C','Tobacco Mildew Virus'),op('D','Transmitted Mosaic Virus')],'TMV = Tobacco Mosaic Virus, the first virus to be discovered.'),
+    q(13,'Archaebacteria live in:','Monera',[op('A','Extreme environments',true),op('B','Only soil'),op('C','Only water'),op('D','Only air')],'Archaebacteria inhabit extreme environments (hot springs, salt lakes, marshy areas).'),
+    q(14,'Cyanobacteria are also called:','Monera',[op('A','Blue-green algae',true),op('B','Green algae'),op('C','Red algae'),op('D','Brown algae')],'Cyanobacteria are photosynthetic prokaryotes, also known as blue-green algae.'),
+    q(15,'Mycoplasma lack:','Monera',[op('A','Cell wall',true),op('B','Cell membrane'),op('C','DNA'),op('D','Ribosomes')],'Mycoplasma are the smallest living cells, lacking a cell wall, making them pleomorphic.'),
+    q(16,'Dinoflagellates belong to:','Protista',[op('A','Protista',true),op('B','Monera'),op('C','Fungi'),op('D','Plantae')],'Dinoflagellates (e.g., Gonyaulax) are unicellular protists with two flagella.'),
+    q(17,'Red tide is caused by:','Protista',[op('A','Dinoflagellates',true),op('B','Diatoms'),op('C','Euglenoids'),op('D','Slime molds')],'Red tide is caused by rapid multiplication of dinoflagellates (e.g., Gonyaulax) in seawater.'),
+    q(18,'Euglena has:','Protista',[op('A','Both plant and animal features',true),op('B','Only plant features'),op('C','Only animal features'),op('D','Neither')],'Euglena has photosynthetic ability (plant-like) and motility (animal-like).'),
+    q(19,'Basidiomycetes are also called:','Fungi',[op('A','Club fungi',true),op('B','Sac fungi'),op('C','Imperfect fungi'),op('D','Algal fungi')],'Basidiomycetes are club fungi (e.g., mushrooms, puffballs) with basidiospores.'),
+    q(20,'Ascomycetes include:','Fungi',[op('A','Yeast and morels',true),op('B','Mushrooms'),op('C','Rusts'),op('D','Smuts')],'Ascomycetes (sac fungi) include yeasts (Saccharomyces), morels (Morchella), and truffles.'),
+    q(21,'Phycomycetes are:','Fungi',[op('A','Algal fungi',true),op('B','Sac fungi'),op('C','Club fungi'),op('D','Imperfect fungi')],'Phycomycetes are lower fungi (algal fungi), e.g., Rhizopus (bread mold).'),
+    q(22,'Deuteromycetes are called:','Fungi',[op('A','Imperfect fungi',true),op('B','Perfect fungi'),op('C','Sac fungi'),op('D','Club fungi')],'Deuteromycetes are imperfect fungi (no sexual stage known), e.g., Alternaria.'),
+    q(23,'Mycorrhiza is symbiosis between:','Fungi',[op('A','Fungus and plant roots',true),op('B','Fungus and algae'),op('C','Fungus and bacteria'),op('D','Two fungi')],'Mycorrhiza = mutualistic association between fungi and plant roots for nutrient exchange.'),
+    q(24,'Viroids differ from viruses in lacking:','Viruses',[op('A','Protein coat',true),op('B','Nucleic acid'),op('C','RNA'),op('D','Infectivity')],'Viroids are infectious RNA particles lacking a protein coat (discovered by T.O. Diener).'),
+    q(25,'Prions are infectious:','Viruses',[op('A','Proteins',true),op('B','DNA'),op('C','RNA'),op('D','Carbohydrates')],'Prions are infectious protein particles causing diseases like mad cow disease (Stanley Prusiner).'),
+    q(26,'Which is NOT a characteristic of Kingdom Monera?','Monera',[op('A','Absence of membrane-bound organelles'),op('B','Presence of membrane-bound nucleus',true),op('C','70S ribosomes'),op('D','Asexual reproduction by binary fission')],'Monera are prokaryotes lacking membrane-bound nucleus and membrane-bound organelles.'),
+    q(27,'Heterocyst in cyanobacteria is for:','Monera',[op('A','Nitrogen fixation',true),op('B','Photosynthesis'),op('C','Reproduction'),op('D','Resistance')],'Heterocysts are specialized cells in cyanobacteria for nitrogen fixation under aerobic conditions.'),
+    q(28,'Paramecium belongs to:','Protista',[op('A','Ciliates',true),op('B','Flagellates'),op('C','Sporozoans'),op('D','Amoeboids')],'Paramecium is a ciliate protist (phylum Ciliophora) with cilia for movement.'),
+    q(29,'Malaria is caused by:','Protista',[op('A','Plasmodium',true),op('B','Paramecium'),op('C','Amoeba'),op('D','Euglena')],'Plasmodium (a sporozoan protist) causes malaria transmitted by Anopheles mosquitoes.'),
+    q(30,'Which group reproduces by conjugation?','Protista',[op('A','Ciliates',true),op('B','Flagellates'),op('C','Sporozoans'),op('D','Dinoflagellates')],'Ciliates (Paramecium) undergo conjugation for genetic exchange.')
+  ]
+});
+
 // Chapter 3: Plant Kingdom
 chapters.push({ num:3, name:'Plant Kingdom', slug:'plant-kingdom', topics:'Algae, Bryophytes, Pteridophytes, Gymnosperms',
   desc:'30 NEET-level MCQs on Plant Kingdom covering algae, bryophytes, pteridophytes, gymnosperms, angiosperms, and plant life cycles.',
@@ -304,6 +378,11 @@ chapters.push({ num:10, name:'Cell Cycle & Cell Division', slug:'cell-cycle-and-
   ]
 });
 
+var extraChapters = require('./neet-chapters-11-22-data.js');
+for (var ei = 0; ei < extraChapters.length; ei++) {
+  chapters.push(extraChapters[ei]);
+}
+
 var ROOT = path.resolve(__dirname, '..');
 
 function esc(s) {
@@ -373,18 +452,27 @@ function genHTML(ch) {
   h += '    </style>\n</head>\n<body>\n';
   h += '    <nav class="nav"><div class="nav-inner"><a href="../index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../index.html">Home</a><a href="../dashboard.html">Dashboard</a><a href="../community.html">Community</a><a href="../neet/index.html" class="active">NEET</a><a href="../jee/index.html">JEE</a></div></div></nav>\n';
   h += '    <div class="container">\n';
+   var c11 = chapters.filter(function(cv){return (cv.classNum||11)===11});
+  var c12 = chapters.filter(function(cv){return cv.classNum===12});
   h += '        <div class="ch-list">\n';
-  for (var i = 1; i <= 10; i++) {
-    if (i === ch.num) h += '            <a href="biology-chapter-' + i + '-' + chapters.filter(function(c){return c.num===i})[0].slug + '.html" class="active">Ch ' + i + '</a>\n';
-    else {
-      var c = chapters.filter(function(cv){return cv.num===i})[0];
-      if (c) h += '            <a href="biology-chapter-' + i + '-' + c.slug + '.html">Ch ' + i + '</a>\n';
-      else h += '            <a href="#">Ch ' + i + '</a>\n';
+  h += '            <div style="font-size:.7em;color:var(--text-muted);width:100%;margin-bottom:4px">Class 11</div>\n';
+  for (var i = 0; i < c11.length; i++) {
+    var cc = c11[i];
+    if (cc.num === ch.num) h += '            <a href="biology-chapter-' + cc.num + '-' + cc.slug + '.html" class="active">Ch ' + cc.num + '</a>\n';
+    else h += '            <a href="biology-chapter-' + cc.num + '-' + cc.slug + '.html">Ch ' + cc.num + '</a>\n';
+  }
+  if (c12.length > 0) {
+    h += '            <div style="font-size:.7em;color:var(--text-muted);width:100%;margin:6px 0 4px">Class 12</div>\n';
+    for (var i = 0; i < c12.length; i++) {
+      var cc = c12[i];
+      var label = 'Ch ' + (cc.num - 22);
+      if (cc.num === ch.num) h += '            <a href="biology-chapter-' + cc.num + '-' + cc.slug + '.html" class="active">' + label + '</a>\n';
+      else h += '            <a href="biology-chapter-' + cc.num + '-' + cc.slug + '.html">' + label + '</a>\n';
     }
   }
   h += '        </div>\n';
   h += '        <div class="chapter-header">\n';
-  h += '            <div class="badge">NEET Biology &middot; NCERT Class 11</div>\n';
+  h += '            <div class="badge">NEET Biology &middot; NCERT Class ' + (ch.classNum || 11) + '</div>\n';
   h += '            <h1>Chapter ' + ch.num + ': ' + esc(ch.name) + ' &mdash; MCQ with Answers</h1>\n';
   h += '            <div class="sub">' + esc(ch.desc) + '</div>\n';
   h += '            <div class="meta"><span>30 Questions</span><span>30 Minutes</span><span>+4, -1 Marking</span><span>NCERT Based</span></div>\n';

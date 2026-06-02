@@ -87,7 +87,12 @@ function head(exam, examDir, examName, title, desc, canonical, extra, depth) {
   h += '        .flex-row .main{flex:1;min-width:0}\n';
   h += '        .flex-row .side{width:220px;flex-shrink:0}\n';
   h += '        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}\n';
-  h += '        @media print{.nav,.sidebar-nav{display:none}}\n';
+  h += '        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}\n';
+  h += '        .diagram-box svg{max-width:100%;height:auto}\n';
+  h += '        .diagram-box .diagram-caption{font-size:.78em;color:var(--text-muted);margin-top:8px}\n';
+  h += '        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}\n';
+  h += '        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}\n';
+  h += '        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}\n';
   if (extra) h += extra;
   h += '    </style>\n</head>\n<body>\n';
   h += '    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/community.html">Community</a><a href="../index.html">' + examName + '</a><a href="index.html" class="active">Course</a></div></div></nav>\n';
@@ -146,18 +151,6 @@ function generateExam(examKey) {
   var modules = cfg.modules;
   var totalLessons = 0;
   modKeys.forEach(function(mk){totalLessons += modules[mk].lessons.length;});
-
-  // Build content/practice lookup from CGL data
-  function findContent(mk, slug) {
-    var key = mk + '/' + slug;
-    if (cglContent && cglContent[key]) return cglContent[key];
-    // Try alternate module key mappings for shared content
-    var altKeys = {reasoning:'reasoning',quant:'quant',english:'english',ga:'ga',gk:'ga',maths:'quant',aptitude:'reasoning'};
-    var altMk = altKeys[mk] || mk;
-    if (altMk !== mk && cglContent && cglContent[altMk + '/' + slug]) return cglContent[altMk + '/' + slug];
-    if (altMk !== mk && cglPractice && cglPractice[altMk + '/' + slug]) return cglPractice[altMk + '/' + slug];
-    return null;
-  }
 
   // ========== COURSE INDEX PAGE ==========
   var idx = '';
@@ -251,6 +244,10 @@ function generateExam(examKey) {
       h += '                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">' + esc(lesson.desc) + '</div>\n';
       h += '                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">\n';
       h += '                        <span style="font-size:.75em;color:var(--text-muted)">' + lesson.topics.split(',').map(function(t){return t.trim()}).join(' · ') + '</span>\n';
+      h += '                    </div>\n';
+      h += '                    <div style="display:flex;gap:8px;margin-top:10px">\n';
+      h += '                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>\n';
+      h += '                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>\n';
       h += '                    </div>\n';
       h += '                </div>\n';
 
