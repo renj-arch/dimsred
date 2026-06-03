@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Classification and Odd One Out — Agniveer Reasoning</title>
+    <meta name="description" content="This chapter covers classification and odd one out problems commonly found in the Agniveer exam, focusing on logical reasoning skills to identify patterns, similarities, and differences among given it">
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="icon" type="image/png" href="../../logo.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:Inter,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
+        a{color:#a78bfa;text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
+        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover,.nav-links a.active{color:#fafafa;background:rgba(255,255,255,.06)}
+        .container{max-width:920px;margin:0 auto;padding:24px}
+        .ch-list{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+        .ch-list a{padding:6px 14px;border-radius:100px;font-size:.8em;border:1px solid rgba(255,255,255,.06);color:#a1a1aa;transition:all .2s}
+        .ch-list a:hover,.ch-list a.active{border-color:#a78bfa;color:#a78bfa;background:rgba(167,139,250,.1)}
+        .header{padding:20px 0;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:24px}
+        .header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:#a78bfa;font-size:.75em;font-weight:600;margin-bottom:8px}
+        .header h1{font-size:1.6em;font-weight:900;margin-bottom:6px;line-height:1.2}
+        .header .sub{color:#a1a1aa;font-size:.9em;line-height:1.6}
+        .lesson-section{margin-bottom:28px}
+        .lesson-h2{font-size:1.2em;font-weight:700;color:#a78bfa;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.06)}
+        .lesson-body{font-size:.92em;line-height:1.8;color:#d4d4d8}
+        .lesson-body p{margin-bottom:12px}
+        .lesson-body ul,.lesson-body ol{margin:8px 0 12px 20px}
+        .lesson-body li{margin-bottom:6px}
+        .lesson-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:18px;margin-bottom:24px}
+        .lesson-box h3{font-size:1em;font-weight:700;color:#34d399;margin-bottom:10px}
+        .lesson-box ul{list-style:none;padding:0}
+        .lesson-box ul li{padding:6px 0;padding-left:20px;position:relative;font-size:.88em;color:#d4d4d8}
+        .lesson-box ul li::before{content:"\25B8";position:absolute;left:0;color:#34d399}
+        .ex-card{background:rgba(255,255,255,.03);border-radius:8px;padding:14px;margin-bottom:10px}
+        .ex-q{font-size:.9em;margin-bottom:6px;color:#fafafa}
+        .ex-sol{font-size:.85em;color:#a1a1aa;line-height:1.5}
+        .q-card{background:#111113;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;margin-bottom:12px}
+        .q-card .q-num{font-size:.78em;color:#52525b;margin-bottom:4px;display:flex;justify-content:space-between}
+        .q-card .q-topic{font-size:.7em;padding:2px 8px;border-radius:100px;background:rgba(167,139,250,.1);color:#a78bfa}
+        .q-card .q-text{font-size:.93em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.06);cursor:pointer;font-size:.82em;transition:all .15s;display:flex;align-items:center;gap:6px}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:#34d399;background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt .opt-letter{color:#52525b;font-weight:600;min-width:16px}
+        .q-card .q-soln{display:none;margin-top:10px;padding:10px;background:rgba(139,92,246,.06);border-radius:8px;font-size:.82em;color:#a1a1aa;line-height:1.5}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:#34d399}
+        .pn-links{display:flex;justify-content:space-between;margin:24px 0;gap:12px}
+        .pn-links a{padding:10px 20px;border-radius:100px;border:1px solid rgba(255,255,255,.06);font-size:.85em;transition:all .2s}
+        .pn-links a:hover{border-color:#a78bfa;color:#a78bfa}
+        h3{font-size:1.05em;font-weight:700;color:#fafafa;margin:20px 0 10px}
+        table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.88em}
+        th,td{padding:8px 12px;border:1px solid rgba(255,255,255,.06);text-align:left}
+        th{background:rgba(167,139,250,.1);color:#a78bfa;font-weight:600}
+        td{color:#d4d4d8}
+        code{background:rgba(255,255,255,.04);padding:2px 6px;border-radius:4px;font-size:.9em;color:#34d399}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="../../index.html" class="brand"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../agniveer/index.html">Home</a><a href="../../dashboard.html">Dashboard</a><a href="../../agniveer/course/index.html" class="active">Agniveer Reasoning</a></div></div></nav>
+    <div class="container">
+        <div class="ch-list"><a href="agniveer-reasoning-chapter-1-analogies-verbal-and-non-verbal.html" class="">Ch 1</a>
+<a href="agniveer-reasoning-chapter-2-number-series-letter-series-alpha-numeri.html" class="">Ch 2</a>
+<a href="agniveer-reasoning-chapter-3-classification-and-odd-one-out.html" class="active">Ch 3</a>
+<a href="agniveer-reasoning-chapter-4-coding-decoding.html" class="">Ch 4</a>
+<a href="agniveer-reasoning-chapter-5-blood-relations-and-family-trees.html" class="">Ch 5</a>
+<a href="agniveer-reasoning-chapter-6-direction-sense-and-distance.html" class="">Ch 6</a>
+<a href="agniveer-reasoning-chapter-7-puzzles-and-seating-arrangements.html" class="">Ch 7</a>
+<a href="agniveer-reasoning-chapter-8-syllogisms-and-statements.html" class="">Ch 8</a>
+</div>
+        <div class="header">
+            <div class="badge">Agniveer &middot; Reasoning</div>
+            <h1>Chapter 3: Classification and Odd One Out</h1>
+            <div class="sub">This chapter covers classification and odd one out problems commonly found in the Agniveer exam, focusing on logical reasoning skills to identify patterns, similarities, and differences among given items. It helps candidates develop analytical thinking required for intelligence and reasoning sections of the examination.</div>
+        </div>
+        
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Introduction</h2>
+                <div class="lesson-body"><p>Classification and Odd One Out is a fundamental topic in logical reasoning that tests your ability to identify patterns, similarities, and differences among various items. In this type of question, you are given a group of items and asked to find the item that doesn't belong to the group based on certain common characteristics. This skill is essential for the Agniveer exam as it evaluates your analytical thinking and problem-solving abilities.</p></div>
+            </div>
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Types of Classification</h2>
+                <div class="lesson-body"><p><strong>Classification</strong> can be broadly categorized into several types:</p><ul><li><strong>Alphabetical Classification:</strong> Items are classified based on letters of the alphabet, their positions, or formations</li><li><strong>Word Classification:</strong> Based on meanings, parts of speech, or semantic relationships</li><li><li><strong>Number Classification:</strong> Items classified based on numerical properties like even/odd, prime/composite numbers</li><li><strong>Image Classification:</strong> Based on visual characteristics, shapes, colors, or patterns</li><li><strong>Mixed Classification:</strong> Combination of different types of items requiring multiple analytical approaches</li></ul></div>
+            </div>
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Odd One Out Concepts</h2>
+                <div class="lesson-body"><p>The <strong>Odd One Out</strong> concept involves identifying an item that differs significantly from others in a group. Key principles include:</p><ul><li>Look for <strong>common attributes</strong> among most items - shared properties, categories, or characteristics</li><li>Check <strong>numerical patterns</strong> - size, quantity, mathematical relationships</li><li>Identify <strong>functional relationships</strong> - purpose, use, or role of items</li><li>Consider <strong>temporal aspects</strong> - time periods, historical context, or sequence</li><li>Examine <strong>physical properties</strong> - color, shape, texture, or structural features</li></ul><p>The item that deviates from the established pattern is the odd one out.</p></div>
+            </div>
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Common Patterns and Categories</h2>
+                <div class="lesson-body"><p>Understanding common classification patterns helps solve these problems efficiently:</p><ul><li><strong>Semantic Categories:</strong> Items belonging to the same category (e.g., fruits, animals, tools)</li><li><strong>Familial Relationships:</strong> Family members, professional relationships, or hierarchical structures</li><li><strong>Geographical Classification:</strong> States, cities, countries, or regions with shared characteristics</li><li><strong>Scientific Classification:</strong> Elements, compounds, organisms, or chemical properties</li><li><strong>Cultural/Historical:</strong> Festivals, monuments, historical figures, or traditions</li></ul><p>Always consider multiple dimensions: <code>Category + Property + Function = Classification Pattern</code></p></div>
+            </div>
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Strategies for Solving Problems</h2>
+                <div class="lesson-body"><p>Follow these systematic approaches to solve classification and odd one out problems:</p><ul><li><strong>Step 1:</strong> Identify what the majority of items have in common</li><li><strong>Step 2:</strong> Check if there's a secondary pattern or property</li><li><li><strong>Step 3:</strong> Eliminate items that clearly fit the identified pattern</li><li><strong>Step 4:</strong> Compare remaining items against the established criteria</li><li><strong>Step 5:</strong> Consider alternative classifications if initial approach fails</li></ul><p><strong>Time Management Tip:</strong> Spend no more than 30-45 seconds per question. If unable to find a clear pattern, mark and move on.</p></div>
+            </div>
+        
+            <div class="lesson-box key-points">
+                <h3>Key Points to Remember</h3>
+                <ul><li>Always start by identifying the common characteristic shared by most items in the group</li><li>Consider multiple classification bases: semantic, functional, numerical, and physical properties</li><li>Practice with diverse categories including Indian geography, culture, and current affairs</li><li>Develop speed and accuracy through regular practice of pattern recognition</li><li>When stuck, try reverse engineering - see if one item clearly doesn't fit any reasonable pattern</li></ul></div>
+        
+            <div class="lesson-box examples">
+                <h3>Solved Examples</h3><div class="ex-card"><p class="ex-q"><strong>Example 1:</strong> Find the odd one out: Apple, Mango, Carrot, Banana, Grapes</p><p class="ex-sol"><strong>Solution:</strong> Step 1: Analyze all items - Apple, Mango, Banana, Grapes are all fruits<br>Step 2: Carrot is a vegetable while others are fruits<br>Step 3: Therefore, Carrot is the odd one out as it belongs to a different food category</p></div><div class="ex-card"><p class="ex-q"><strong>Example 2:</strong> Choose the odd one out: Delhi, Mumbai, Kolkata, Bangalore, Chennai</p><p class="ex-sol"><strong>Solution:</strong> Step 1: All cities are major metropolitan cities in India<br>Step 2: Check capital status - Delhi is the National Capital, others are state capitals<br>Step 3: However, all except one share another common feature<br>Step 4: Delhi, Mumbai, Kolkata, Chennai are among the oldest cities; Bangalore was developed later<br>Step 5: Therefore, Bangalore is the odd one out based on historical development</p></div><div class="ex-card"><p class="ex-q"><strong>Example 3:</strong> Identify the odd one: Teacher, Doctor, Engineer, Lawyer, Student</p><p class="ex-sol"><strong>Solution:</strong> Step 1: Teacher, Doctor, Engineer, Lawyer are all professions<br>Step 2: Student represents an educational status, not a profession<br>Step 3: All professionals provide services to others<br>Step 4: Student is primarily a learner, not a service provider<br>Step 5: Student is the odd one out as it denotes a role rather than a profession</p></div></div>
+        <h3>Practice Questions</h3>
+        
+            <div class="q-card" data-q="0">
+                <div class="q-num"><span>Question 1</span><span class="q-topic">Classification and Odd One Out</span></div>
+                <div class="q-text">Find the odd one out: Mercury, Venus, Earth, Mars, Moon</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Mercury</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Venus</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Earth</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Moon</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: D</strong><br>Mercury, Venus, Earth, and Mars are all planets in our solar system. The Moon is a natural satellite, not a planet. Hence, Moon is the odd one out.</div>
+            </div>
+            <div class="q-card" data-q="1">
+                <div class="q-num"><span>Question 2</span><span class="q-topic">Classification and Odd One Out</span></div>
+                <div class="q-text">Which word does not belong to the group? Rose, Tulip, Lotus, Marigold, Crocus</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Rose</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Tulip</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Lotus</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Crocus</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: D</strong><br>Rose, Tulip, Lotus, and Marigold are all well-known flowering plants commonly cultivated in gardens. Crocus is less commonly known and has different seasonal blooming patterns. However, actually all are flowers. Let's reconsider: Lotus is aquatic while others are terrestrial flowers. Therefore, Lotus is the odd one out.</div>
+            </div>
+            <div class="q-card" data-q="2">
+                <div class="q-num"><span>Question 3</span><span class="q-topic">Classification and Odd One Out</span></div>
+                <div class="q-text">Identify the odd one out: Hockey, Football, Basketball, Tennis, Cricket</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Hockey</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Football</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Basketball</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Cricket</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: D</strong><br>Hockey, Football, Basketball, and Tennis are all sports that originated primarily in Western countries. Cricket has its origins in England but is predominantly associated with Commonwealth nations, especially India. However, all are sports. Re-evaluating: Hockey, Football, Basketball, and Tennis can be played indoors or outdoors, while Cricket is primarily an outdoor sport. Actually, Cricket is the odd one out because it's the only sport played with a bat and ball where the ball is typically hard and can cause injury.</div>
+            </div>
+            <div class="q-card" data-q="3">
+                <div class="q-num"><span>Question 4</span><span class="q-topic">Classification and Odd One Out</span></div>
+                <div class="q-text">Which number is different from the rest? 8, 27, 64, 125, 343</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">8</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">27</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">64</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">125</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'E')"><span class="opt-letter">E.</span> <span class="opt-text">343</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: E</strong><br>8 = 2³, 27 = 3³, 64 = 4³, 125 = 5³. These are consecutive cubes. 343 = 7³, which breaks the sequence. Therefore, 343 is the odd one out.</div>
+            </div>
+            <div class="q-card" data-q="4">
+                <div class="q-num"><span>Question 5</span><span class="q-topic">Classification and Odd One Out</span></div>
+                <div class="q-text">Find the odd one: January, March, May, July, August</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">January</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">March</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">May</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">August</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: D</strong><br>January, March, May, and July are all months with 31 days that begin with the letter 'J' except March and May. Actually, January, March, May, July are odd-numbered months (1st, 3rd, 5th, 7th), while August is the 8th month (even position). Therefore, August is the odd one out.</div>
+            </div>
+            <div class="q-card" data-q="5">
+                <div class="q-num"><span>Question 6</span><span class="q-topic">Classification and Odd One Out</span></div>
+                <div class="q-text">Which is the odd one out? Red Fort, Qutub Minar, Taj Mahal, India Gate, Charminar</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Red Fort</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Qutub Minar</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Taj Mahal</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">India Gate</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: D</strong><br>Red Fort, Qutub Minar, Taj Mahal, and Charminar are all historical monuments built during the medieval period or earlier. India Gate was built in the 20th century (1921) as a war memorial, making it the odd one out based on historical period.</div>
+            </div>
+            <div class="q-card" data-q="6">
+                <div class="q-num"><span>Question 7</span><span class="q-topic">Classification and Odd One Out</span></div>
+                <div class="q-text">Identify the item that doesn't belong: Tiger, Lion, Elephant, Leopard, Cheetah</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Tiger</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Lion</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Elephant</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Leopard</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: C</strong><br>Tiger, Lion, Leopard, and Cheetah are all big cats belonging to the Felidae family. Elephant belongs to the Elephantidae family and is not a carnivorous feline. Therefore, Elephant is the odd one out.</div>
+            </div>
+            <div class="q-card" data-q="7">
+                <div class="q-num"><span>Question 8</span><span class="q-topic">Classification and Odd One Out</span></div>
+                <div class="q-text">Which word is different? Winter, Summer, Monsoon, Autumn, Spring</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Winter</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Summer</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Monsoon</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Autumn</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: C</strong><br>Winter, Summer, Autumn, and Spring are the four traditional seasons. Monsoon is a seasonal wind pattern and weather phenomenon, not a season itself. Therefore, Monsoon is the odd one out.</div>
+            </div>
+            <div class="q-card" data-q="8">
+                <div class="q-num"><span>Question 9</span><span class="q-topic">Classification and Odd One Out</span></div>
+                <div class="q-text">Find the odd one out: Oxygen, Nitrogen, Hydrogen, Carbon, Water</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Oxygen</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Nitrogen</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Hydrogen</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Water</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: D</strong><br>Oxygen, Nitrogen, Hydrogen, and Carbon are all chemical elements. Water is a compound (H₂O) made up of hydrogen and oxygen. Therefore, Water is the odd one out.</div>
+            </div>
+            <div class="q-card" data-q="9">
+                <div class="q-num"><span>Question 10</span><span class="q-topic">Classification and Odd One Out</span></div>
+                <div class="q-text">Which is the odd one? Sachin, Kapil, Dhoni, Kohli, Anand</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Sachin</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Kapil</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Dhoni</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Anand</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: D</strong><br>Sachin (Tendulkar), Kapil (Dev), Dhoni, and Kohli are all legendary Indian cricketers who have captained the Indian cricket team. Anand refers to Viswanathan Anand, who is a chess grandmaster and former World Chess Champion. Therefore, Anand is the odd one out.</div>
+            </div>
+        <div class="pn-links">
+            <a href="agniveer-reasoning-chapter-2-number-series-letter-series-alpha-numeri.html">&larr; Previous</a>
+            <a href="agniveer-reasoning-chapter-4-coding-decoding.html">Next &rarr;</a>
+        </div>
+    </div>
+    <script>
+    function checkOpt(el,ltr){var p=el.closest('.q-card');if(p.dataset.locked)return;p.dataset.locked=1;var sol=p.querySelector('.q-soln');sol.classList.add('show');var opts=p.querySelectorAll('.q-opt');opts.forEach(function(o){o.style.pointerEvents='none'});if(el.dataset.correct){el.classList.add('correct')}else{el.classList.add('wrong');opts.forEach(function(o){if(o.dataset.correct)o.classList.add('correct')})}}
+    </script>
+</body>
+</html>

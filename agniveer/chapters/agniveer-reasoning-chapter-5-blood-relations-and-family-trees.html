@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Blood Relations and Family Trees — Agniveer Reasoning</title>
+    <meta name="description" content="This chapter covers the fundamentals of blood relations, methods to construct family trees, and strategies to solve related aptitude questions frequently asked in the Agniveer exam.">
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="icon" type="image/png" href="../../logo.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:Inter,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
+        a{color:#a78bfa;text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
+        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover,.nav-links a.active{color:#fafafa;background:rgba(255,255,255,.06)}
+        .container{max-width:920px;margin:0 auto;padding:24px}
+        .ch-list{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+        .ch-list a{padding:6px 14px;border-radius:100px;font-size:.8em;border:1px solid rgba(255,255,255,.06);color:#a1a1aa;transition:all .2s}
+        .ch-list a:hover,.ch-list a.active{border-color:#a78bfa;color:#a78bfa;background:rgba(167,139,250,.1)}
+        .header{padding:20px 0;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:24px}
+        .header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:#a78bfa;font-size:.75em;font-weight:600;margin-bottom:8px}
+        .header h1{font-size:1.6em;font-weight:900;margin-bottom:6px;line-height:1.2}
+        .header .sub{color:#a1a1aa;font-size:.9em;line-height:1.6}
+        .lesson-section{margin-bottom:28px}
+        .lesson-h2{font-size:1.2em;font-weight:700;color:#a78bfa;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.06)}
+        .lesson-body{font-size:.92em;line-height:1.8;color:#d4d4d8}
+        .lesson-body p{margin-bottom:12px}
+        .lesson-body ul,.lesson-body ol{margin:8px 0 12px 20px}
+        .lesson-body li{margin-bottom:6px}
+        .lesson-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:18px;margin-bottom:24px}
+        .lesson-box h3{font-size:1em;font-weight:700;color:#34d399;margin-bottom:10px}
+        .lesson-box ul{list-style:none;padding:0}
+        .lesson-box ul li{padding:6px 0;padding-left:20px;position:relative;font-size:.88em;color:#d4d4d8}
+        .lesson-box ul li::before{content:"\25B8";position:absolute;left:0;color:#34d399}
+        .ex-card{background:rgba(255,255,255,.03);border-radius:8px;padding:14px;margin-bottom:10px}
+        .ex-q{font-size:.9em;margin-bottom:6px;color:#fafafa}
+        .ex-sol{font-size:.85em;color:#a1a1aa;line-height:1.5}
+        .q-card{background:#111113;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;margin-bottom:12px}
+        .q-card .q-num{font-size:.78em;color:#52525b;margin-bottom:4px;display:flex;justify-content:space-between}
+        .q-card .q-topic{font-size:.7em;padding:2px 8px;border-radius:100px;background:rgba(167,139,250,.1);color:#a78bfa}
+        .q-card .q-text{font-size:.93em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.06);cursor:pointer;font-size:.82em;transition:all .15s;display:flex;align-items:center;gap:6px}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:#34d399;background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt .opt-letter{color:#52525b;font-weight:600;min-width:16px}
+        .q-card .q-soln{display:none;margin-top:10px;padding:10px;background:rgba(139,92,246,.06);border-radius:8px;font-size:.82em;color:#a1a1aa;line-height:1.5}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:#34d399}
+        .pn-links{display:flex;justify-content:space-between;margin:24px 0;gap:12px}
+        .pn-links a{padding:10px 20px;border-radius:100px;border:1px solid rgba(255,255,255,.06);font-size:.85em;transition:all .2s}
+        .pn-links a:hover{border-color:#a78bfa;color:#a78bfa}
+        h3{font-size:1.05em;font-weight:700;color:#fafafa;margin:20px 0 10px}
+        table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.88em}
+        th,td{padding:8px 12px;border:1px solid rgba(255,255,255,.06);text-align:left}
+        th{background:rgba(167,139,250,.1);color:#a78bfa;font-weight:600}
+        td{color:#d4d4d8}
+        code{background:rgba(255,255,255,.04);padding:2px 6px;border-radius:4px;font-size:.9em;color:#34d399}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="../../index.html" class="brand"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../agniveer/index.html">Home</a><a href="../../dashboard.html">Dashboard</a><a href="../../agniveer/course/index.html" class="active">Agniveer Reasoning</a></div></div></nav>
+    <div class="container">
+        <div class="ch-list"><a href="agniveer-reasoning-chapter-1-analogies-verbal-and-non-verbal.html" class="">Ch 1</a>
+<a href="agniveer-reasoning-chapter-2-number-series-letter-series-alpha-numeri.html" class="">Ch 2</a>
+<a href="agniveer-reasoning-chapter-3-classification-and-odd-one-out.html" class="">Ch 3</a>
+<a href="agniveer-reasoning-chapter-4-coding-decoding.html" class="">Ch 4</a>
+<a href="agniveer-reasoning-chapter-5-blood-relations-and-family-trees.html" class="active">Ch 5</a>
+<a href="agniveer-reasoning-chapter-6-direction-sense-and-distance.html" class="">Ch 6</a>
+<a href="agniveer-reasoning-chapter-7-puzzles-and-seating-arrangements.html" class="">Ch 7</a>
+<a href="agniveer-reasoning-chapter-8-syllogisms-and-statements.html" class="">Ch 8</a>
+</div>
+        <div class="header">
+            <div class="badge">Agniveer &middot; Reasoning</div>
+            <h1>Chapter 5: Blood Relations and Family Trees</h1>
+            <div class="sub">This chapter covers the fundamentals of blood relations, methods to construct family trees, and strategies to solve related aptitude questions frequently asked in the Agniveer exam.</div>
+        </div>
+        
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Introduction</h2>
+                <div class="lesson-body"><p>The Blood Relations and Family Tree chapter forms an integral part of the reasoning section in the Agniveer recruitment exam. Understanding kinship patterns helps in quickly decoding complex family scenarios presented in multiple‑choice questions.</p></div>
+            </div>
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Blood Relations Basics</h2>
+                <div class="lesson-body"><p>Key familial terms include <strong>mother, father, son, daughter, brother, sister, uncle, aunt, cousin</strong>. These relationships can be categorized into <em>direct</em> (parent‑child) and <em>collateral</em> (siblings, cousins). <ul><li>Direct line: Each generation is one step away.</li><li>Collateral: Relations within the same generation.</li></ul> The gender‑specific terms are crucial for accurate interpretation.</p></div>
+            </div>
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Family Tree Construction</h2>
+                <div class="lesson-body"><p>To build a family tree, start with the oldest known generation at the top and expand downward. Use a systematic approach:</p><ol><li>Identify the reference person.</li><li>Mark parents above and children below.</li><li>Connect siblings horizontally.</li></ol><p>Example layout:</p><table border="1" cellpadding="5"><tr><th>Generation</th><td>Grandparents</td></tr><tr><td>Parents</td><td>Father, Mother</td></tr><tr><td>Children</td><td>Brother, Sister</td></tr></table></div>
+            </div>
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Solving Complex Relations</h2>
+                <div class="lesson-body"><p>Complex questions often involve multiple generations and gender clues. Use the following <code>logic flow</code>:</p><ul><li>Step 1: Identify the reference individual.</li><li>Step 2: Trace upward to locate parents/grandparents.</li><li>Step 3: Move laterally to siblings or cousins.</li><li>Step 4: Apply gender indicators (e.g., “brother of” vs “sister of”).</li></ul><p>Remember the rule: <code>Brother of father = paternal uncle</code> and <code>Sister of mother = maternal aunt</code>.</p></div>
+            </div>
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Tips and Common Mistakes</h2>
+                <div class="lesson-body"><p>Effective strategies for the Agniveer exam include:</p><ul><li><strong>Sketch quickly</strong>: Draw a mini‑tree on the answer sheet.</li><li><strong>Focus on gender</strong>: Misreading “brother” as “sister” leads to wrong answers.</li><li><strong>Eliminate impossible options</strong> using generational gaps.</li><li>Avoid assuming relationships not explicitly stated.</li></ul> Regular practice with varied examples improves speed and accuracy.</p></div>
+            </div>
+        
+            <div class="lesson-box key-points">
+                <h3>Key Points to Remember</h3>
+                <ul><li>Direct relations are parent‑child; collateral relations are siblings, cousins, uncles, aunts.</li><li>Always note gender-specific terms (brother, sister, uncle, aunt).</li><li>Start family‑tree construction from the oldest known generation.</li><li>Use upward tracing (parents) then lateral movement (siblings) for complex queries.</li><li>Sketch a quick mini‑tree to visualise relationships and avoid errors.</li></ul></div>
+        
+            <div class="lesson-box examples">
+                <h3>Solved Examples</h3><div class="ex-card"><p class="ex-q"><strong>Example 1:</strong> If X is the brother of Y and Y is the mother of Z, how is X related to Z?</p><p class="ex-sol"><strong>Solution:</strong> Y is the mother of Z, and X is Y's brother. A brother of one's mother is the maternal uncle. Hence, X is the maternal uncle of Z.</p></div><div class="ex-card"><p class="ex-q"><strong>Example 2:</strong> In a family, P is the only child of Q. R is Q's brother. How is P related to R?</p><p class="ex-sol"><strong>Solution:</strong> Q's brother is R, making R the uncle of P. Therefore, P is the niece/nephew of R (gender‑neutral in the question).</p></div><div class="ex-card"><p class="ex-q"><strong>Example 3:</strong> A is the son of B. C is the sister of D. D is the father of B. How is A related to C?</p><p class="ex-sol"><strong>Solution:</strong> D is the father of B, so B is D's child. C is the sister of D, making C B's aunt (paternal aunt). Since A is B's son, A is the niece/nephew of C.</p></div></div>
+        <h3>Practice Questions</h3>
+        
+            <div class="q-card" data-q="0">
+                <div class="q-num"><span>Question 1</span><span class="q-topic">Blood Relations and Family Tree</span></div>
+                <div class="q-text">If A is the sister of B and B is the father of C, how is A related to C?</div>
+                <div class="q-opts"><div class="q-opt" data-correct="1" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Aunt</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Sister</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Mother</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Cousin</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: A</strong><br>A is the sister of B (the father of C). A sister of one's father is an aunt. Hence, A is the aunt of C.</div>
+            </div>
+            <div class="q-card" data-q="1">
+                <div class="q-num"><span>Question 2</span><span class="q-topic">Blood Relations and Family Tree</span></div>
+                <div class="q-text">X is the only son of Y. Z is Y's brother. What is the relationship of X to Z?</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Cousin</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Uncle</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Nephew</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Brother</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: C</strong><br>Y's brother is Z, making Z the uncle of Y. Since X is Y's son, X is the nephew of Z.</div>
+            </div>
+            <div class="q-card" data-q="2">
+                <div class="q-num"><span>Question 3</span><span class="q-topic">Blood Relations and Family Tree</span></div>
+                <div class="q-text">In a family tree, P is the grandfather of Q. R is the daughter of Q. How is R related to P?</div>
+                <div class="q-opts"><div class="q-opt" data-correct="1" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Granddaughter</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Grandson</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Daughter</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Mother</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: A</strong><br>P is the grandfather of Q, so Q is P's grandchild. R is Q's daughter, making R the granddaughter of P.</div>
+            </div>
+            <div class="q-card" data-q="3">
+                <div class="q-num"><span>Question 4</span><span class="q-topic">Blood Relations and Family Tree</span></div>
+                <div class="q-text">If M is the mother of N and N is the brother of O, then O is the?</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Aunt</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Uncle</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Cousin</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Sister</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: B</strong><br>N is the brother of O, so O is N's sibling. Since M is N's mother, M is also O's mother. Therefore, O is the son/daughter of M, and O is the sibling of N. O is the brother of N, making O the uncle of N's children. In this context, O is the uncle of N's sibling relationship, so O is the uncle of N, thus O is the uncle of N's sibling, which makes O the uncle of N. However, the question asks what O is to N, answer is Uncle.</div>
+            </div>
+            <div class="q-card" data-q="4">
+                <div class="q-num"><span>Question 5</span><span class="q-topic">Blood Relations and Family Tree</span></div>
+                <div class="q-text">If S is the sister of T. T is the father of U. What is the relation of S to U?</div>
+                <div class="q-opts"><div class="q-opt" data-correct="1" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Aunt</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Mother</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Sister</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Grandmother</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: A</strong><br>T is the father of U, making S (T's sister) the aunt of U. Hence, S is the aunt of U.</div>
+            </div>
+            <div class="q-card" data-q="5">
+                <div class="q-num"><span>Question 6</span><span class="q-topic">Blood Relations and Family Tree</span></div>
+                <div class="q-text">In a family, L is the only child of K and K is the brother of M. Then L is related to M as?</div>
+                <div class="q-opts"><div class="q-opt" data-correct="1" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Nephew</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Aunt</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Cousin</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Uncle</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: A</strong><br>K is the brother of M, making K M's sibling. L is K's only child, thus L is the niece/nephew of M. Therefore, L is the nephew of M.</div>
+            </div>
+            <div class="q-card" data-q="6">
+                <div class="q-num"><span>Question 7</span><span class="q-topic">Blood Relations and Family Tree</span></div>
+                <div class="q-text">If D is the uncle of E and E is the mother of F, then D is the?</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Grandfather</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Granduncle</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Great‑uncle</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Great‑grandfather</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: C</strong><br>D is the uncle of E, so D is one generation above E. Since E is the mother of F, D is two generations above F, making D the great‑uncle of F.</div>
+            </div>
+            <div class="q-card" data-q="7">
+                <div class="q-num"><span>Question 8</span><span class="q-topic">Blood Relations and Family Tree</span></div>
+                <div class="q-text">In a family, G is the brother of H. I is the daughter of H. What is the relationship of G to I?</div>
+                <div class="q-opts"><div class="q-opt" data-correct="1" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Uncle</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Father</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Brother</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Cousin</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: A</strong><br>H is the parent of I, and G is H's brother. Therefore, G is the uncle of I.</div>
+            </div>
+        <div class="pn-links">
+            <a href="agniveer-reasoning-chapter-4-coding-decoding.html">&larr; Previous</a>
+            <a href="agniveer-reasoning-chapter-6-direction-sense-and-distance.html">Next &rarr;</a>
+        </div>
+    </div>
+    <script>
+    function checkOpt(el,ltr){var p=el.closest('.q-card');if(p.dataset.locked)return;p.dataset.locked=1;var sol=p.querySelector('.q-soln');sol.classList.add('show');var opts=p.querySelectorAll('.q-opt');opts.forEach(function(o){o.style.pointerEvents='none'});if(el.dataset.correct){el.classList.add('correct')}else{el.classList.add('wrong');opts.forEach(function(o){if(o.dataset.correct)o.classList.add('correct')})}}
+    </script>
+</body>
+</html>

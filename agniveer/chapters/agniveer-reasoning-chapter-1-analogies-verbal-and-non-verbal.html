@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Analogies - Verbal and Non-verbal — Agniveer Reasoning</title>
+    <meta name="description" content="This chapter explores how analogies bridge verbal and non-verbal communication, enhancing understanding through relatable comparisons.">
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="icon" type="image/png" href="../../logo.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:Inter,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
+        a{color:#a78bfa;text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
+        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover,.nav-links a.active{color:#fafafa;background:rgba(255,255,255,.06)}
+        .container{max-width:920px;margin:0 auto;padding:24px}
+        .ch-list{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+        .ch-list a{padding:6px 14px;border-radius:100px;font-size:.8em;border:1px solid rgba(255,255,255,.06);color:#a1a1aa;transition:all .2s}
+        .ch-list a:hover,.ch-list a.active{border-color:#a78bfa;color:#a78bfa;background:rgba(167,139,250,.1)}
+        .header{padding:20px 0;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:24px}
+        .header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:#a78bfa;font-size:.75em;font-weight:600;margin-bottom:8px}
+        .header h1{font-size:1.6em;font-weight:900;margin-bottom:6px;line-height:1.2}
+        .header .sub{color:#a1a1aa;font-size:.9em;line-height:1.6}
+        .lesson-section{margin-bottom:28px}
+        .lesson-h2{font-size:1.2em;font-weight:700;color:#a78bfa;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.06)}
+        .lesson-body{font-size:.92em;line-height:1.8;color:#d4d4d8}
+        .lesson-body p{margin-bottom:12px}
+        .lesson-body ul,.lesson-body ol{margin:8px 0 12px 20px}
+        .lesson-body li{margin-bottom:6px}
+        .lesson-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:18px;margin-bottom:24px}
+        .lesson-box h3{font-size:1em;font-weight:700;color:#34d399;margin-bottom:10px}
+        .lesson-box ul{list-style:none;padding:0}
+        .lesson-box ul li{padding:6px 0;padding-left:20px;position:relative;font-size:.88em;color:#d4d4d8}
+        .lesson-box ul li::before{content:"\25B8";position:absolute;left:0;color:#34d399}
+        .ex-card{background:rgba(255,255,255,.03);border-radius:8px;padding:14px;margin-bottom:10px}
+        .ex-q{font-size:.9em;margin-bottom:6px;color:#fafafa}
+        .ex-sol{font-size:.85em;color:#a1a1aa;line-height:1.5}
+        .q-card{background:#111113;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;margin-bottom:12px}
+        .q-card .q-num{font-size:.78em;color:#52525b;margin-bottom:4px;display:flex;justify-content:space-between}
+        .q-card .q-topic{font-size:.7em;padding:2px 8px;border-radius:100px;background:rgba(167,139,250,.1);color:#a78bfa}
+        .q-card .q-text{font-size:.93em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.06);cursor:pointer;font-size:.82em;transition:all .15s;display:flex;align-items:center;gap:6px}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:#34d399;background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt .opt-letter{color:#52525b;font-weight:600;min-width:16px}
+        .q-card .q-soln{display:none;margin-top:10px;padding:10px;background:rgba(139,92,246,.06);border-radius:8px;font-size:.82em;color:#a1a1aa;line-height:1.5}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:#34d399}
+        .pn-links{display:flex;justify-content:space-between;margin:24px 0;gap:12px}
+        .pn-links a{padding:10px 20px;border-radius:100px;border:1px solid rgba(255,255,255,.06);font-size:.85em;transition:all .2s}
+        .pn-links a:hover{border-color:#a78bfa;color:#a78bfa}
+        h3{font-size:1.05em;font-weight:700;color:#fafafa;margin:20px 0 10px}
+        table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.88em}
+        th,td{padding:8px 12px;border:1px solid rgba(255,255,255,.06);text-align:left}
+        th{background:rgba(167,139,250,.1);color:#a78bfa;font-weight:600}
+        td{color:#d4d4d8}
+        code{background:rgba(255,255,255,.04);padding:2px 6px;border-radius:4px;font-size:.9em;color:#34d399}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="../../index.html" class="brand"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../agniveer/index.html">Home</a><a href="../../dashboard.html">Dashboard</a><a href="../../agniveer/course/index.html" class="active">Agniveer Reasoning</a></div></div></nav>
+    <div class="container">
+        <div class="ch-list"><a href="agniveer-reasoning-chapter-1-analogies-verbal-and-non-verbal.html" class="active">Ch 1</a>
+<a href="agniveer-reasoning-chapter-2-number-series-letter-series-alpha-numeri.html" class="">Ch 2</a>
+<a href="agniveer-reasoning-chapter-3-classification-and-odd-one-out.html" class="">Ch 3</a>
+<a href="agniveer-reasoning-chapter-4-coding-decoding.html" class="">Ch 4</a>
+<a href="agniveer-reasoning-chapter-5-blood-relations-and-family-trees.html" class="">Ch 5</a>
+<a href="agniveer-reasoning-chapter-6-direction-sense-and-distance.html" class="">Ch 6</a>
+<a href="agniveer-reasoning-chapter-7-puzzles-and-seating-arrangements.html" class="">Ch 7</a>
+<a href="agniveer-reasoning-chapter-8-syllogisms-and-statements.html" class="">Ch 8</a>
+</div>
+        <div class="header">
+            <div class="badge">Agniveer &middot; Reasoning</div>
+            <h1>Chapter 1: Analogies - Verbal and Non-verbal</h1>
+            <div class="sub">This chapter explores how analogies bridge verbal and non-verbal communication, enhancing understanding through relatable comparisons.</div>
+        </div>
+        
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Introduction</h2>
+                <div class="lesson-body">Analogies are fundamental tools for connecting abstract concepts to familiar experiences, shaping effective communication in diverse contexts.</div>
+            </div>
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Verbal Analogies</h2>
+                <div class="lesson-body">These involve comparing two distinct entities using terms like 'like' or 'as,' requiring precise articulation and comprehension.</div>
+            </div>
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Non-Verbal Analogies</h2>
+                <div class="lesson-body">Visual or physical cues, such as gestures or objects, convey meaning independently of language, tested through observation.</div>
+            </div>
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Application</h2>
+                <div class="lesson-body">Applying analogies improves problem-solving by leveraging existing knowledge structures for new scenarios.</div>
+            </div>
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Conclusion</h2>
+                <div class="lesson-body">Mastering analogies strengthens analytical skills and adaptability in both academic and professional settings.</div>
+            </div>
+        
+            <div class="lesson-box key-points">
+                <h3>Key Points to Remember</h3>
+                <ul><li>Analogies link disparate concepts through familiar frameworks.</li><li>They enhance memory retention via relatable imagery.</li><li>Effective use requires attention to context and clarity.</li><li>Non-verbal analogies rely on universal cues.</li><li>Balancing both types ensures comprehensive understanding.</li></ul></div>
+        
+            <div class="lesson-box examples">
+                <h3>Solved Examples</h3><div class="ex-card"><p class="ex-q"><strong>Example 1:</strong> Why use 'A bird is like a butterfly?'</p><p class="ex-sol"><strong>Solution:</strong> Explain the analogy's purpose and interpretation.</p></div><div class="ex-card"><p class="ex-q"><strong>Example 2:</strong> How do gestures indicate 'happiness'?</p><p class="ex-sol"><strong>Solution:</strong> Describe the gesture's physicality and cultural context.</p></div><div class="ex-card"><p class="ex-q"><strong>Example 3:</strong> Compare 'apple banana' to 'pear apple'</p><p class="ex-sol"><strong>Solution:</strong> Analyze how slight word swaps affect meaning.</p></div></div>
+        <h3>Practice Questions</h3>
+        
+            <div class="q-card" data-q="0">
+                <div class="q-num"><span>Question 1</span><span class="q-topic">Analogies - Verbal and Non-verbal</span></div>
+                <div class="q-text">Can a dog be compared to a cat?</div>
+                <div class="q-opts"><div class="q-opt" data-correct="1" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">True</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">False</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Neutral</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: True</strong><br></div>
+            </div>
+        <div class="pn-links">
+            <span></span>
+            <a href="agniveer-reasoning-chapter-2-number-series-letter-series-alpha-numeri.html">Next &rarr;</a>
+        </div>
+    </div>
+    <script>
+    function checkOpt(el,ltr){var p=el.closest('.q-card');if(p.dataset.locked)return;p.dataset.locked=1;var sol=p.querySelector('.q-soln');sol.classList.add('show');var opts=p.querySelectorAll('.q-opt');opts.forEach(function(o){o.style.pointerEvents='none'});if(el.dataset.correct){el.classList.add('correct')}else{el.classList.add('wrong');opts.forEach(function(o){if(o.dataset.correct)o.classList.add('correct')})}}
+    </script>
+</body>
+</html>
