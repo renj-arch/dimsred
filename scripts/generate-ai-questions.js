@@ -161,6 +161,47 @@ var EXAM_CONFIG = {
       'Environmental Studies: Family, Food, Shelter, Water, Travel, Natural resources, Pedagogy',
       'Language: Grammar, Comprehension, Pedagogy of language development'
     ]
+  },
+  nda: {
+    name: 'NDA (National Defence Academy)',
+    subjects: {
+      Mathematics: '#6366f1',
+      'General Ability Test': '#a855f7'
+    },
+    topics: [
+      'Mathematics: Algebra, Trigonometry, Calculus, Statistics, Probability, Matrices, Determinants, Vector Algebra, Coordinate Geometry, Complex Numbers, Differential Equations',
+      'General Ability Test: English (Vocabulary, Grammar, Comprehension), General Knowledge (History, Geography, Polity, Economy, Science, Current Affairs, Environment)'
+    ]
+  },
+  cds: {
+    name: 'CDS (Combined Defence Services)',
+    subjects: {
+      English: '#34d399',
+      'General Knowledge': '#a855f7',
+      Mathematics: '#6366f1'
+    },
+    topics: [
+      'English: Grammar, Vocabulary, Comprehension, Fillers, Error spotting, Sentence improvement, Para jumbles, Cloze test',
+      'General Knowledge: Indian History, Geography, Polity, Economy, Science, Current Affairs, Environment, Sports, Awards',
+      'Mathematics: Algebra, Trigonometry, Calculus, Geometry, Mensuration, Statistics, Probability, Number system, Percentage, Profit & Loss, Time & Work, Speed & Distance'
+    ]
+  },
+  clat: {
+    name: 'CLAT (Common Law Admission Test)',
+    subjects: {
+      English: '#34d399',
+      'Current Affairs & GK': '#f59e0b',
+      'Legal Reasoning': '#8b5cf6',
+      'Logical Reasoning': '#60a5fa',
+      'Quantitative Techniques': '#ef4444'
+    },
+    topics: [
+      'English: Reading comprehension, Grammar, Vocabulary, Sentence correction, Fill in the blanks',
+      'Current Affairs & GK: National & International events, Government schemes, Legal GK, Static GK, Awards, Sports, Appointments, Summits',
+      'Legal Reasoning: Legal principles, Legal maxims, Landmark judgments, Torts, Contracts, Criminal law, Constitutional law, Family law, Legal GK',
+      'Logical Reasoning: Critical reasoning, Analogies, Arguments, Assumptions, Inferences, Strengthening & Weakening arguments, Cause & Effect',
+      'Quantitative Techniques: Arithmetic, Data interpretation, Graphs & charts, Ratio & Proportion, Percentage, Profit & Loss, Number system, Algebra basics'
+    ]
   }
 };
 
@@ -396,7 +437,7 @@ async function run() {
   var args = process.argv.slice(2);
   if (args.length === 0) {
     console.log('Usage: node scripts/generate-ai-questions.js <exam1> [exam2] ...');
-    console.log('Exams: neet, jee, gate, rbi, cgl, agniveer, upsc, ibps-po, sbi-clerk, ssc-gd, ctet');
+    console.log('Exams: neet, jee, gate, rbi, cgl, agniveer, upsc, ibps-po, sbi-clerk, ssc-gd, ctet, nda, cds, clat');
     console.log('Use "all" to generate for all exams');
     console.log('Set count with --count=N (default 15)');
     return;

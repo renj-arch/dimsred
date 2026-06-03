@@ -13,6 +13,10 @@ on:
     - cron: '0 8 * * *'
     - cron: '30 8 * * *'
     - cron: '0 9 * * *'
+    - cron: '30 9 * * *'
+    - cron: '0 10 * * *'
+    - cron: '30 10 * * *'
+    - cron: '0 11 * * *'
   workflow_dispatch:
     inputs:
       exams:
@@ -61,6 +65,9 @@ jobs:
               08:0[0-9]|08:1[0-5]) echo "exams=sbi-clerk" ;;
               08:3[0-9]|08:4[0-5]) echo "exams=ssc-gd" ;;
               09:0[0-9]|09:1[0-5]) echo "exams=ctet" ;;
+              09:3[0-9]|09:4[0-5]) echo "exams=nda" ;;
+              10:0[0-9]|10:1[0-5]) echo "exams=cds" ;;
+              10:3[0-9]|10:4[0-5]) echo "exams=clat" ;;
               *) echo "exams=skip" ;;
             esac
           fi >> $GITHUB_OUTPUT

@@ -37,32 +37,19 @@ var PAPERS = {
         { id:'practice-04', title:'UPSC Practice 04', path:'upsc/papers/practice-set-04.html' }
     ],
     'ibps-po': [
-        { id:'ibps-po-2025', title:'IBPS PO 2025 Prelims', path:'ibps-po/papers/2025-prelims.html' },
-        { id:'ibps-po-2024', title:'IBPS PO 2024 Prelims', path:'ibps-po/papers/2024-prelims.html' },
-        { id:'ibps-po-2023', title:'IBPS PO 2023 Prelims', path:'ibps-po/papers/2023-prelims.html' },
-        { id:'practice-01', title:'IBPS PO Practice 01', path:'ibps-po/papers/practice-set-01.html' },
-        { id:'practice-02', title:'IBPS PO Practice 02', path:'ibps-po/papers/practice-set-02.html' },
-        { id:'practice-03', title:'IBPS PO Practice 03', path:'ibps-po/papers/practice-set-03.html' },
-        { id:'practice-04', title:'IBPS PO Practice 04', path:'ibps-po/papers/practice-set-04.html' }
+        { id:'ibps-po-2025', title:'IBPS PO 2025', path:'ibps-po/papers/2025-prelims.html' },
+        { id:'ibps-po-2024', title:'IBPS PO 2024', path:'ibps-po/papers/2024-prelims.html' },
+        { id:'ibps-po-2023', title:'IBPS PO 2023', path:'ibps-po/papers/2023-prelims.html' }
     ],
     'sbi-clerk': [
-        { id:'sbi-clerk-2025', title:'SBI Clerk 2025 Prelims', path:'sbi-clerk/papers/2025-prelims.html' },
-        { id:'sbi-clerk-2024', title:'SBI Clerk 2024 Prelims', path:'sbi-clerk/papers/2024-prelims.html' },
-        { id:'sbi-clerk-2023', title:'SBI Clerk 2023 Prelims', path:'sbi-clerk/papers/2023-prelims.html' },
-        { id:'practice-01', title:'SBI Clerk Practice 01', path:'sbi-clerk/papers/practice-set-01.html' },
-        { id:'practice-02', title:'SBI Clerk Practice 02', path:'sbi-clerk/papers/practice-set-02.html' },
-        { id:'practice-03', title:'SBI Clerk Practice 03', path:'sbi-clerk/papers/practice-set-03.html' },
-        { id:'practice-04', title:'SBI Clerk Practice 04', path:'sbi-clerk/papers/practice-set-04.html' }
+        { id:'sbi-clerk-2025', title:'SBI Clerk 2025', path:'sbi-clerk/papers/2025-prelims.html' },
+        { id:'sbi-clerk-2024', title:'SBI Clerk 2024', path:'sbi-clerk/papers/2024-prelims.html' },
+        { id:'sbi-clerk-2023', title:'SBI Clerk 2023', path:'sbi-clerk/papers/2023-prelims.html' }
     ],
     'ssc-gd': [
         { id:'ssc-gd-2025', title:'SSC GD 2025', path:'ssc-gd/papers/2025-paper.html' },
         { id:'ssc-gd-2024', title:'SSC GD 2024', path:'ssc-gd/papers/2024-paper.html' },
-        { id:'ssc-gd-2023', title:'SSC GD 2023', path:'ssc-gd/papers/2023-paper.html' },
-        { id:'practice-01', title:'SSC GD Practice 01', path:'ssc-gd/papers/practice-set-01.html' },
-        { id:'practice-02', title:'SSC GD Practice 02', path:'ssc-gd/papers/practice-set-02.html' },
-        { id:'practice-03', title:'SSC GD Practice 03', path:'ssc-gd/papers/practice-set-03.html' },
-        { id:'practice-04', title:'SSC GD Practice 04', path:'ssc-gd/papers/practice-set-04.html' },
-        { id:'practice-05', title:'SSC GD Practice 05', path:'ssc-gd/papers/practice-set-05.html' }
+        { id:'ssc-gd-2023', title:'SSC GD 2023', path:'ssc-gd/papers/2023-paper.html' }
     ],
     ctet: [
         { id:'ctet-2025', title:'CTET 2025 Paper 1', path:'ctet/papers/2025-paper1.html' },

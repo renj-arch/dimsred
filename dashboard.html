@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="js/auth-guard.js"></script>
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Study Dashboard — Daily Quiz, Current Affairs, Mock Tests | vlymbooq</title>
         <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Study Dashboard — Daily Quiz, Current Affairs, Mock Tests","description":"Daily quiz, current affairs, weekly mock countdown, progress tracking for competitive exam preparation.","url":"https://vlymbooq.qzz.io/dashboard.html","educationalLevel":"Competitive Exam","audience":{"@type":"EducationalAudience","educationalRole":"student"},"publisher":{"@type":"Organization","name":"vlymbooq","url":"https://vlymbooq.qzz.io"}}</script>
@@ -180,12 +181,40 @@
                     <div class="card-title"><span class="icon">&#x1f4f0;</span> Daily Current Affairs</div>
                     <span class="card-badge amber">New</span>
                 </div>
-                <div id="current-affairs">
-                    <div class="ca-item"><div class="date">2 Jun 2026</div><div class="headline">India launches AI-powered education platform for rural schools, covering 50,000 villages in Phase 1.</div></div>
-                    <div class="ca-item"><div class="date">1 Jun 2026</div><div class="headline">RBI keeps repo rate unchanged at 6.25% for third consecutive quarter, citing stable inflation.</div></div>
-                    <div class="ca-item"><div class="date">31 May 2026</div><div class="headline">NEET UG 2026 application correction window opens June 5, says NTA official notice.</div></div>
-                    <div class="ca-item"><div class="date">30 May 2026</div><div class="headline">SSC CGL Tier I 2026 notification expected in July; 8,000+ vacancies estimated.</div></div>
-                </div>
+                <div id="current-affairs"><div class="ca-loading">Loading...</div></div>
+                <script>
+                (function() {
+                    var container = document.getElementById('current-affairs');
+                    function render(items) {
+                        if (!items || items.length === 0) {
+                            container.innerHTML = '<div class="ca-item"><div class="headline" style="color:#a1a1aa">No recent current affairs.</div></div>';
+                            return;
+                        }
+                        container.innerHTML = '';
+                        for (var i = 0; i < items.length; i++) {
+                            var item = items[i];
+                            var el = document.createElement('div');
+                            el.className = 'ca-item';
+                            el.innerHTML = '<div class="date">' + item.day + ' ' + item.month + ' ' + item.year + '</div><div class="headline">' + item.headline + '</div>';
+                            container.appendChild(el);
+                        }
+                    }
+                    var fallback = [
+                        { day:2, month:'Jun', year:2026, headline:'India launches AI-powered education platform for rural schools, covering 50,000 villages in Phase 1.' },
+                        { day:1, month:'Jun', year:2026, headline:'RBI keeps repo rate unchanged at 6.25% for third consecutive quarter, citing stable inflation.' },
+                        { day:31, month:'May', year:2026, headline:'NEET UG 2026 application correction window opens June 5, says NTA official notice.' },
+                        { day:30, month:'May', year:2026, headline:'SSC CGL Tier I 2026 notification expected in July; 8,000+ vacancies estimated.' }
+                    ];
+                    fetch('/data/current-affairs.json').then(function(r) {
+                        if (!r.ok) throw new Error('Not found');
+                        return r.json();
+                    }).then(function(data) {
+                        render(data.items || data);
+                    }).catch(function() {
+                        render(fallback);
+                    });
+                })();
+                </script>
             </div>
         </div>
 

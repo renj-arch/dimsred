@@ -5,9 +5,9 @@ var root = path.resolve(__dirname, '..');
 var bankDir = path.join(root, 'question-bank');
 var dataDir = path.join(root, 'papers-data');
 
-var QUESTION_COUNTS = { cgl: 15, rbi: 15, jee: 15, neet: 15, gate: 15, agniveer: 15, upsc: 15, 'ibps-po': 15, 'sbi-clerk': 15, 'ssc-gd': 15, ctet: 15 };
-var MIN_BANK_SIZE = { cgl: 30, rbi: 30, jee: 30, neet: 30, gate: 30, agniveer: 30, upsc: 30, 'ibps-po': 30, 'sbi-clerk': 30, 'ssc-gd': 30, ctet: 30 };
-var EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer', 'upsc', 'ibps-po', 'sbi-clerk', 'ssc-gd', 'ctet'];
+var QUESTION_COUNTS = { cgl: 15, rbi: 15, jee: 15, neet: 15, gate: 15, agniveer: 15, upsc: 15, 'ibps-po': 15, 'sbi-clerk': 15, 'ssc-gd': 15, ctet: 15, nda: 15, cds: 15, clat: 15 };
+var MIN_BANK_SIZE = { cgl: 30, rbi: 30, jee: 30, neet: 30, gate: 30, agniveer: 30, upsc: 30, 'ibps-po': 30, 'sbi-clerk': 30, 'ssc-gd': 30, ctet: 30, nda: 30, cds: 30, clat: 30 };
+var EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer', 'upsc', 'ibps-po', 'sbi-clerk', 'ssc-gd', 'ctet', 'nda', 'cds', 'clat'];
 
 function shuffle(arr) {
   for (var i = arr.length - 1; i > 0; i--) {
