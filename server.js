@@ -10,6 +10,22 @@ const PORT = process.env.PORT || 3000;
 app.use(compression());
 app.use(morgan('dev'));
 
+// Guest token — set via env var GUEST_TOKEN (e.g., "MY-SECRET-123")
+// Give someone a link like: https://vlymbooq.qzz.io/guest-login.html?token=MY-SECRET-123
+const GUEST_TOKEN = process.env.GUEST_TOKEN || null;
+
+// API: Verify a guest access token
+app.get('/api/verify-guest', (req, res) => {
+  const token = req.query.token;
+  if (!token || !GUEST_TOKEN) {
+    return res.json({ valid: false });
+  }
+  if (token === GUEST_TOKEN) {
+    return res.json({ valid: true });
+  }
+  res.json({ valid: false });
+});
+
 // Custom file resolver:
 // /dashboard -> dashboard.html
 // /cgl       -> cgl/index.html

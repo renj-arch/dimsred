@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Guest Access — vlymbooq</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',system-ui,sans-serif;background:#09090b;color:#fafafa;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+        .card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:32px;max-width:400px;width:100%;text-align:center}
+        h1{font-size:1.3em;font-weight:800;margin-bottom:8px}
+        p{color:#a1a1aa;font-size:.9em;margin-bottom:20px;line-height:1.5}
+        .spinner{width:24px;height:24px;border:3px solid rgba(139,92,246,.2);border-top-color:#a78bfa;border-radius:50%;margin:20px auto}
+        .error{color:#ef4444;font-size:.85em;margin-top:12px}
+        .success{color:#34d399;font-size:.85em;margin-top:12px}
+        .btn{display:inline-block;padding:10px 24px;border-radius:100px;font-size:.85em;font-weight:600;border:none;cursor:pointer;text-decoration:none;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;margin-top:16px}
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🔑 Guest Access</h1>
+        <div id="status">Verifying access token...</div>
+        <div class="spinner" id="spinner"></div>
+        <div id="error" class="error" style="display:none"></div>
+    </div>
+
+    <script>
+    (function(){
+        var params = new URLSearchParams(window.location.search);
+        var token = params.get('token');
+
+        if (!token) {
+            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('status').textContent = 'No access token provided.';
+            return;
+        }
+
+        fetch('/api/verify-guest?token=' + encodeURIComponent(token))
+            .then(function(r){ return r.json(); })
+            .then(function(data){
+                document.getElementById('spinner').style.display = 'none';
+                if (data.valid) {
+                    localStorage.setItem('sb_guest_token', token);
+                    document.getElementById('status').innerHTML = '✅ Access granted! Redirecting...';
+                    setTimeout(function(){ window.location.replace('/lab.html'); }, 1000);
+                } else {
+                    document.getElementById('status').textContent = 'Invalid or expired access token.';
+                    document.getElementById('error').style.display = 'block';
+                    document.getElementById('error').textContent = 'Please contact the site owner for a valid link.';
+                }
+            })
+            .catch(function(err){
+                document.getElementById('spinner').style.display = 'none';
+                document.getElementById('status').textContent = 'Verification failed.';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error').textContent = 'Network error. Try again later.';
+            });
+    })();
+    </script>
+</body>
+</html>
