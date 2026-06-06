@@ -9,14 +9,14 @@ const PORT = process.env.PORT || 3000;
 
 app.use(compression());
 app.use(morgan('dev'));
+app.use(express.json());
 
-// Guest token — set via env var GUEST_TOKEN (e.g., "MY-SECRET-123")
-// Give someone a link like: https://vlymbooq.qzz.io/guest-login.html?token=MY-SECRET-123
+// Guest token — set via env var GUEST_TOKEN
 const GUEST_TOKEN = process.env.GUEST_TOKEN || null;
 
-// API: Verify a guest access token
-app.get('/api/verify-guest', (req, res) => {
-  const token = req.query.token;
+// API: Verify a guest access token (POST with JSON body)
+app.post('/api/verify-guest', (req, res) => {
+  const token = req.body?.token;
   if (!token || !GUEST_TOKEN) {
     return res.json({ valid: false });
   }
