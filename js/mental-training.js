@@ -1381,12 +1381,14 @@ function generatePuzzle(diff) {
       // For diff >= 3, add floor-person clue
       if (diff >= 3) clues.push('The person on floor ' + floors[n-1] + ' is ' + names[n-1] + '.');
 
-      opts = [];
       if (qType === 2) {
-        // for "how many between" — answer is 0 to n-2
+        opts = [];
         for (d = 0; d <= n - 2; d++) opts.push(d);
+      } else if (typeof ans === 'string') {
+        opts = [ans];
+        while (opts.length < 4) { var rn = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rn) < 0) opts.push(rn); }
       } else {
-        opts.push(ans);
+        opts = [ans];
         while (opts.length < 4) { d = ans + rand(-2, 2); if (d >= 1 && d <= n+2 && opts.indexOf(d) < 0) opts.push(d); }
       }
       shuffle(opts);
@@ -1455,15 +1457,14 @@ function generatePuzzle(diff) {
       // Clue 6: right-end for diff>=3
       if (diff >= 3) clues.push(names[n-1] + ' sits at the extreme right end.');
 
-      opts = [ans];
-      while (opts.length < 4) { d = ans + rand(-2, 2); if (d >= 1 && d <= n+1 && opts.indexOf(d) < 0) opts.push(d); }
-      shuffle(opts);
-      // If ans is a name string, options need to be names
       if (typeof ans === 'string') {
         opts = [ans];
         while (opts.length < 4) { var rname = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rname) < 0) opts.push(rname); }
-        shuffle(opts);
+      } else {
+        opts = [ans];
+        while (opts.length < 4) { d = ans + rand(-2, 2); if (d >= 1 && d <= n+1 && opts.indexOf(d) < 0) opts.push(d); }
       }
+      shuffle(opts);
       return {
         type: 'puzzle', clueBlock: clues,
         preamble: n + ' persons ' + names.join(', ') + ' sit in a row facing North. Positions are numbered 1 (leftmost) to ' + n + ' (rightmost).',
@@ -1640,7 +1641,7 @@ function generatePuzzle(diff) {
 GENERATORS.puzzle = generatePuzzle;
 var _origMixed = GENERATORS.mixed;
 GENERATORS.mixed = function(diff) {
-  var types = ['math', 'chain', 'pattern', 'trap', 'trap', 'puzzle', 'puzzle'];
+  var types = ['math', 'chain', 'pattern', 'pattern', 'puzzle', 'puzzle', 'recognize'];
   return GENERATORS[types[rand(0, types.length - 1)]](diff);
 };
 
