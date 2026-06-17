@@ -950,11 +950,12 @@ generatePatternQuestion = function(diff, focusType) {
   return _origGeneratePattern(diff, focusType);
 };
 
-// Also update generateRecognitionQuestion to use procedural generators
+// Quick Solve — generate a real question from any type, user must SOLVE it fast
 var _origGenerateRecognition = generateRecognitionQuestion;
 generateRecognitionQuestion = function(diff) {
   try {
-    var type = PATTERN_TYPES[rand(0, PATTERN_TYPES.length - 1)];
+    var types = ['Analogy','Classification','Series','Coding','Syllogism','Inequality','Direction','Blood Relation'];
+    var type = types[rand(0, types.length - 1)];
     var genMap = {
       'Analogy': generateAnalogyQuestion,
       'Classification': generateClassificationQuestion,
@@ -963,31 +964,29 @@ generateRecognitionQuestion = function(diff) {
       'Syllogism': generateSyllogismQuestion,
       'Inequality': generateInequalityQuestion,
       'Direction': generateDirectionQuestion,
-      'Blood Relation': generateBloodRelationQuestion,
-      'Data Sufficiency': generateDataSufficiencyQuestion
+      'Blood Relation': generateBloodRelationQuestion
     };
     var gen = genMap[type];
     if (gen) {
       var q = gen(diff);
-      var distractors = PATTERN_TYPES.filter(function(t){ return t !== type; });
-      shuffle(distractors);
-      var typeOpts = [type].concat(distractors.slice(0, 3));
-      shuffle(typeOpts);
       var cleanQ = q.question.replace(/^\([^)]+\)\s*/, '');
+      var opts = q.options || [];
       var qAns = q.answer || '';
       var qSol = q.solution || '';
+      // Short time limit — speed practice
+      var secs = diff <= 1 ? 10 : (diff <= 3 ? 7 : 5);
       return {
         question: cleanQ,
-        answer: type,
-        options: typeOpts,
-        hint: 'Read the question structure, not the content',
-        timeLimit: diff <= 1 ? 10 : (diff <= 3 ? 8 : 6),
+        answer: qAns,
+        options: opts,
+        hint: 'Read fast, trust your first instinct',
+        timeLimit: secs,
         type: 'recognize',
         patternLabel: type,
-        techniqueLabel: 'Identify the pattern TYPE — then learn how to solve it',
-        drillLine1: '"' + cleanQ.substring(0, 50) + '..."',
-        drillLine2: 'Pattern type: ' + type + ' | Answer: ' + qAns,
-        solution: 'Pattern type: ' + type + '. ' + qAns + ' — ' + qSol.substring(0, 200)
+        techniqueLabel: 'Solve in ' + secs + 's — spot the pattern, pick the answer',
+        drillLine1: '⚡ ' + type + ' — ' + cleanQ.substring(0, 45) + '...',
+        drillLine2: 'Answer: ' + qAns + ' (' + type + ')',
+        solution: '[' + type + '] ' + qAns + ' — ' + qSol.substring(0, 200)
       };
     }
   } catch(e) { /* fallback */ }
