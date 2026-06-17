@@ -299,6 +299,7 @@ window.submitMentalAnswer = function(session, question, selectedAnswer, timeRema
 
   var correct = String(selectedAnswer) === String(question.answer);
   var timeLimit = question.timeLimit;
+  var timeTaken = timeLimit - timeRemaining;
   var bonus = correct ? Math.round((timeRemaining / timeLimit) * 5) : 0;
   var basePoints = correct ? (question.difficulty || state.difficulty.level) * 2 : 0;
   var hardMult = session.hardMode ? 2 : 1;
@@ -335,7 +336,9 @@ window.submitMentalAnswer = function(session, question, selectedAnswer, timeRema
       techniqueLabel: question.techniqueLabel || '',
       drillLine1: question.drillLine1 || '',
       options: question.options || [],
-      solution: question.solution || ''
+      solution: question.solution || '',
+      timeTaken: timeTaken,
+      timeLimit: timeLimit
     });
   }
 
