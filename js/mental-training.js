@@ -1032,7 +1032,10 @@ window.startMentalSession = function(mode, opts) {
   };
   if (mode === 'puzzle') {
     session.puzzles = [];
-    for (var i = 0; i < totalQ; i++) { session.puzzles.push(GENERATORS.puzzle(state.difficulty.level)); }
+    for (var i = 0; i < totalQ; i++) {
+      try { session.puzzles.push(GENERATORS.puzzle(state.difficulty.level)); }
+      catch(e) { session.puzzles.push(fallbackPuzzle(state.difficulty.level)); }
+    }
     session.puzzleIndex = 0;
   }
   return session;
@@ -1278,7 +1281,33 @@ function puzShuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = rand(0
 
 function pick(arr) { return arr[rand(0, arr.length - 1)]; }
 
+function fallbackPuzzle(diff) {
+  var persons = [['P',22],['Q',28],['R',31],['S',19]];
+  shuffle(persons);
+  var target = persons[rand(0, persons.length - 1)];
+  var others = persons.filter(function(p) { return p[0] !== target[0]; });
+  return {
+    type: 'puzzle',
+    clueBlock: [
+      target[0] + ' does not belong to Tripura.',
+      target[0] + ' and the one who is ' + others[0][1] + ' yrs old belong to the same state.',
+      others[1][0] + ' is elder than ' + others[2][0] + '.',
+      'The minimum age is 18 yrs.',
+      'The one who is ' + persons[0][1] + ' yrs belongs to Manipur.'
+    ],
+    preamble: '4 persons P, Q, R, S belongs to two different states (Tripura, Manipur) of different ages. Not more than 3 and not less than 1 persons belong to each state.',
+    questionText: 'What is the age of ' + target[0] + '?',
+    answer: target[1],
+    options: (function(){ var o = [target[1]]; shuffle(persons); persons.forEach(function(p){ if(p[0]!==target[0] && o.indexOf(p[1])<0) o.push(p[1]); }); while(o.length<4){ var d=rand(18,50); if(o.indexOf(d)<0) o.push(d); } shuffle(o); return o; })(),
+    target: target[0],
+    totalClues: 5,
+    timeLimit: 40 + diff * 5,
+    hint: 'Start with strong clues. Build the grid: person × state + age.'
+  };
+}
+
 function generatePuzzle(diff) {
+  try {
   var n = Math.min(9, 4 + Math.floor(diff * 0.5));
   var all = PUZ.labels.slice(0, n).split('');
   var numS = n <= 5 ? 2 : 3;
@@ -1547,6 +1576,7 @@ function generatePuzzle(diff) {
     timeLimit: 40 + diff * 5,
     hint: 'Start with strong clues (negatives & direct). Build the grid: person × state + age.'
   };
+  } catch(e) { return fallbackPuzzle(diff); }
 }
 
 // Register puzzle generator (all clues at once, like real exam)
