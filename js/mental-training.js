@@ -152,11 +152,8 @@ window.startMentalSession = function(mode) {
   var totalQ = (mode === 'puzzle') ? 5 : 10;
   var session = { mode: mode, questionIndex: 0, totalQuestions: totalQ, correct: 0, startTime: Date.now(), active: true };
   if (mode === 'puzzle') {
-    // Generate all puzzles upfront
     session.puzzles = [];
     for (var i = 0; i < totalQ; i++) { session.puzzles.push(GENERATORS.puzzle(state.difficulty.level)); }
-    session.puzzlePhase = 'clue';
-    session.clueIndex = 0;
     session.puzzleIndex = 0;
   }
   return session;
@@ -170,33 +167,27 @@ window.getMentalQuestion = function(session) {
   if (session.mode === 'puzzle') {
     var puzzle = session.puzzles[session.puzzleIndex];
     if (!puzzle) return null;
-    if (session.puzzlePhase === 'clue') {
-      var clueText = puzzle.clues[session.clueIndex];
-      return {
-        displayType: 'puzzle_clue',
-        clueText: clueText,
-        clueNum: session.clueIndex + 1,
-        totalClues: puzzle.totalClues,
-        index: session.puzzleIndex,
-        total: session.totalQuestions,
-        progress: Math.round(session.puzzleIndex / session.totalQuestions * 100),
-        timeLimit: puzzle.clueTimeLimit,
-        hint: puzzle.hint
-      };
-    } else {
-      return {
-        displayType: 'puzzle_question',
-        question: puzzle.questionText,
-        options: puzzle.options,
-        answer: puzzle.answer,
-        target: puzzle.target,
-        index: session.puzzleIndex,
-        total: session.totalQuestions,
-        progress: Math.round(session.puzzleIndex / session.totalQuestions * 100),
-        timeLimit: puzzle.timeLimit,
-        hint: puzzle.hint
-      };
-    }
+    // Build full puzzle text (all clues at once, like real exam)
+    var clueLines = puzzle.clueBlock.map(function(c, i) { return (i + 1) + '. ' + c; });
+    var fullText = '<div style="text-align:left;font-size:.85em;line-height:1.7">'
+      + '<p style="margin-bottom:8px;color:var(--text-sec)">' + puzzle.preamble + '</p>'
+      + '<div style="margin:8px 0;padding:8px 12px;background:rgba(167,139,250,.04);border-radius:8px">'
+      + clueLines.join('<br>')
+      + '</div>'
+      + '<p style="margin-top:8px;font-weight:700;font-size:1.05em">' + puzzle.questionText + '</p>'
+      + '</div>';
+    return {
+      displayType: 'puzzle',
+      question: fullText,
+      options: puzzle.options,
+      answer: puzzle.answer,
+      target: puzzle.target,
+      index: session.puzzleIndex,
+      total: session.totalQuestions,
+      progress: Math.round(session.puzzleIndex / session.totalQuestions * 100),
+      timeLimit: puzzle.timeLimit,
+      hint: puzzle.hint
+    };
   }
 
   var q = GENERATORS[session.mode](diff);
@@ -308,290 +299,286 @@ window.resetMentalStats = function() {
   return JSON.parse(JSON.stringify(defaultState));
 };
 
-// ====== GRID PUZZLE GENERATOR (Person × State + Age) ======
-var PUZZLE_STATES = ['Tripura', 'Manipur', 'Assam'];
-var PUZZLE_LABELS = 'PQRSTUVWXYZ';
-var PUZZLE_AGE_MIN = 18;
-var PUZZLE_AGE_MAX = 65;
+// ====== EXAM-STYLE PUZZLE GENERATOR (all clues at once) ======
+var PUZ = { states: ['Tripura', 'Manipur', 'Assam'], labels: 'PQRSTUVWX', ageMax: 65 };
 
-function genPuzzleSolution(labels) {
-  var numS = labels.length <= 5 ? 2 : 3;
-  var active = PUZZLE_STATES.slice(0, numS);
-  var stateOf = {}, ages = {}, used = [];
-  // Distribute: not more than 4, not less than 2 per state
-  var shuf = shuffle(labels.slice());
-  var per = Math.floor(labels.length / numS);
-  var ext = labels.length % numS;
-  var idx = 0;
-  active.forEach(function(st, si) {
-    var cnt = per + (si < ext ? 1 : 0);
-    if (cnt < 2) cnt = 2;
-    if (cnt > 4) cnt = 4;
-    for (var i = 0; i < cnt && idx < shuf.length; i++) {
-      stateOf[shuf[idx++]] = st;
+function puzShuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = rand(0, i); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
+function pick(arr) { return arr[rand(0, arr.length - 1)]; }
+
+function generatePuzzle(diff) {
+  var n = Math.min(9, 4 + Math.floor(diff * 0.5));
+  var all = PUZ.labels.slice(0, n).split('');
+  var numS = n <= 5 ? 2 : 3;
+  var states = PUZ.states.slice(0, numS);
+  
+  // --- ASSIGN STATES (2-4 per state) ---
+  var stateOf = {};
+  var shuf = puzShuffle(all.slice());
+  var per = Math.floor(n / numS), extra = n % numS, idx = 0;
+  states.forEach(function(st, si) {
+    var cnt = per + (si < extra ? 1 : 0);
+    if (cnt < 2) cnt = 2; if (cnt > 4) cnt = 4;
+    for (var i = 0; i < cnt && idx < shuf.length; i++) stateOf[shuf[idx++]] = st;
+  });
+  while (idx < shuf.length) { stateOf[shuf[idx++]] = states[idx % states.length]; }
+  
+  function entsIn(st) { return all.filter(function(l) { return stateOf[l] === st; }); }
+
+  // --- DESIGN AGES with deliberate mathematical relationships ---
+  var ageOf = {}, usedAges = [18];
+  
+  // Helper: pick an entity not yet assigned an age and not equal to exclude
+  function freeEnt(exclude) {
+    var pool = all.filter(function(l) { return ageOf[l] === undefined && l !== exclude; });
+    return pool.length > 0 ? pool[rand(0, pool.length - 1)] : null;
+  }
+  
+  // Priority: assign 18 to some entity
+  var minEnt = all[0]; ageOf[minEnt] = 18;
+  
+  // Pick answer target (the entity whose age we'll ask)
+  var target = all[rand(1, all.length - 1)]; // not the 18-year-old
+  
+  // Create ratio pair: one age = 2 × another
+  var ratioBig, ratioSmall;
+  if (n >= 4) {
+    var base = rand(12, 20);
+    ratioBig = freeEnt(target);
+    if (ratioBig) {
+      ageOf[ratioBig] = base * 2;
+      usedAges.push(base * 2);
+      ratioSmall = freeEnt(ratioBig);
+      if (ratioSmall) { ageOf[ratioSmall] = base; usedAges.push(base); }
+    }
+  }
+  
+  // Create difference pair involving target: target = X ± diffVal
+  var diffVal = pick([3, 5, 7, 9, 11]);
+  var diffOther = freeEnt(target);
+  if (diffOther && ageOf[target] === undefined) {
+    // target is diffVal more than diffOther
+    ageOf[target] = 18 + diffVal + rand(1, 5); // ensure reasonable
+    ageOf[diffOther] = ageOf[target] - diffVal;
+    usedAges.push(ageOf[target], ageOf[diffOther]);
+  } else if (diffOther && ageOf[target] !== undefined) {
+    // create diff between two other entities
+    var baseAge = 18 + rand(1, 10);
+    ageOf[diffOther] = baseAge + diffVal;
+    usedAges.push(baseAge + diffVal);
+  }
+  
+  // Fill remaining entities with unique ages
+  all.forEach(function(l) {
+    if (ageOf[l] === undefined) {
+      var a;
+      do { a = rand(19, 64); } while (usedAges.indexOf(a) >= 0);
+      usedAges.push(a); ageOf[l] = a;
     }
   });
-  // Reassign any leftover (balance)
-  while (idx < shuf.length) {
-    var st2 = active[idx % active.length];
-    stateOf[shuf[idx++]] = st2;
-  }
-  // Assign ages (unique, between 18-65)
-  shuf.forEach(function(l) {
-    var a;
-    do { a = rand(PUZZLE_AGE_MIN, PUZZLE_AGE_MAX); } while (used.indexOf(a) >= 0);
-    used.push(a);
-    ages[l] = a;
-  });
-  return {
-    labels: labels, states: active, stateOf: stateOf, ageOf: ages,
-    entitiesIn: function(st) { return labels.filter(function(l) { return stateOf[l] === st; }); }
-  };
-}
-
-function clueSameState(sol, a, b) {
-  if (sol.stateOf[a] === sol.stateOf[b]) return a + ' and ' + b + ' belong to the same state.';
-  return '';
-}
-function clueDiffState(sol, a, b) {
-  if (sol.stateOf[a] !== sol.stateOf[b]) return a + ' and ' + b + ' do not belong to the same state.';
-  return '';
-}
-function clueEldest(sol, a) {
-  var same = sol.entitiesIn(sol.stateOf[a]);
-  var ages = same.map(function(l) { return sol.ageOf[l]; });
-  var max = Math.max.apply(null, ages);
-  if (sol.ageOf[a] === max) return a + ' is the eldest person in ' + sol.stateOf[a] + '.';
-  return '';
-}
-function clueYoungest(sol, a) {
-  var same = sol.entitiesIn(sol.stateOf[a]);
-  var ages = same.map(function(l) { return sol.ageOf[l]; });
-  var min = Math.min.apply(null, ages);
-  if (sol.ageOf[a] === min) return a + ' is the youngest person in ' + sol.stateOf[a] + '.';
-  return '';
-}
-function clueSpecificAgeState(sol, age, state) {
-  for (var l in sol.ageOf) { if (sol.ageOf[l] === age) { if (sol.stateOf[l] === state) return 'The one who is ' + age + ' yrs belongs to ' + state + '.'; } }
-  return '';
-}
-function clueAgeDiff(sol, a, b, diff) {
-  if (sol.ageOf[a] - sol.ageOf[b] === diff) return a + "'s age is " + diff + ' yrs more than ' + b + "'s age.";
-  if (sol.ageOf[b] - sol.ageOf[a] === diff) return b + "'s age is " + diff + ' yrs more than ' + a + "'s age.";
-  return '';
-}
-function clueAgeRatio(sol, a, b, ratio) {
-  if (Math.abs(sol.ageOf[a] / sol.ageOf[b] - ratio) < 0.01) return a + "'s age is " + ratio + ' times ' + b + "'s age.";
-  return '';
-}
-function clueElderThan(sol, a, b) {
-  if (sol.ageOf[a] > sol.ageOf[b]) return a + ' is elder than ' + b + '.';
-  if (sol.ageOf[b] > sol.ageOf[a]) return b + ' is elder than ' + a + '.';
-  return '';
-}
-function clueNotState(sol, a, excludeStates) {
-  var st = sol.stateOf[a];
-  var others = excludeStates.filter(function(s) { return s !== st; });
-  if (others.length === excludeStates.length - 1) {
-    return a + ' does not belong to ' + others.join(' and ') + '.';
-  }
-  return '';
-}
-function clueSameStateOnlyTwo(sol, a, b) {
-  if (sol.stateOf[a] === sol.stateOf[b]) {
-    var same = sol.entitiesIn(sol.stateOf[a]);
-    if (same.length === 2) return a + ' and the one who is ' + sol.ageOf[b] + ' yrs old belong to the same state and these are the only persons belonging to that state.';
-  }
-  return '';
-}
-function clueSameStateAgeRef(sol, a, ageVal) {
-  for (var l in sol.ageOf) {
-    if (sol.ageOf[l] === ageVal && sol.stateOf[l] === sol.stateOf[a] && l !== a) {
-      return a + ' and the one who is ' + ageVal + ' yrs old belong to the same state.';
-    }
-  }
-  return '';
-}
-function clueParity(sol, a) {
-  if (sol.ageOf[a] % 2 === 0) return a + "'s age is an even number.";
-  return a + "'s age is an odd number.";
-}
-function clueMinAge(sol, minAge) {
-  var allAges = Object.keys(sol.ageOf).map(function(k) { return sol.ageOf[k]; });
-  var min = Math.min.apply(null, allAges);
-  if (min === minAge) return 'The minimum age is ' + minAge + ' yrs.';
-  return '';
-}
-function clueSpecificAgeStateReverse(sol, state, ageVal) {
-  for (var l in sol.ageOf) {
-    if (sol.ageOf[l] === ageVal && sol.stateOf[l] === state) {
-      return l + ' is ' + ageVal + ' yrs old and belongs to ' + state + '.';
-    }
-  }
-  return '';
-}
-function clueNotYoungest(sol, a) {
-  var allAges = Object.keys(sol.ageOf).map(function(k) { return sol.ageOf[k]; });
-  var min = Math.min.apply(null, allAges);
-  if (sol.ageOf[a] !== min) return a + ' is not the youngest person.';
-  return '';
-}
-function clueSameStateWithOrder(sol, a, b) {
-  if (sol.stateOf[a] === sol.stateOf[b]) {
-    var elder = sol.ageOf[a] > sol.ageOf[b] ? a : b;
-    var younger = sol.ageOf[a] > sol.ageOf[b] ? b : a;
-    return elder + ' and ' + younger + ' belong to the same state where ' + elder + ' is elder than ' + younger + '.';
-  }
-  return '';
-}
-
-function generatePuzzleClues(sol) {
+  
+  // Ensure target has age
+  if (ageOf[target] === undefined) ageOf[target] = usedAges.length > 0 ? usedAges[0] + 1 : 30;
+  if (usedAges.indexOf(ageOf[target]) < 0) usedAges.push(ageOf[target]);
+  
+  var answer = ageOf[target];
+  
+  // --- GENERATE CLUES (authentic exam patterns) ---
   var clues = [];
-  var labels = sol.labels;
-  // Direct state clues (from age references)
-  var usedAges = [];
-  labels.forEach(function(l) { usedAges.push(sol.ageOf[l]); });
-  shuffle(usedAges);
-  // Pick 2-3 age→state specific clues
-  var numDirect = Math.min(usedAges.length, 2 + rand(0, 1));
-  for (var i = 0; i < numDirect; i++) {
-    var c = clueSpecificAgeStateReverse(sol, sol.stateOf[labels[i % labels.length]], sol.ageOf[labels[i % labels.length]]);
-    if (c) clues.push(c);
+  
+  // 1. Negative elimination: "S does not belong to Tripura and Assam" → S belongs to remaining
+  var elimEnt = all[rand(0, all.length - 1)];
+  if (states.length === 3) {
+    var others = states.filter(function(s) { return s !== stateOf[elimEnt]; });
+    clues.push(elimEnt + ' does not belong to ' + others.join(' and ') + '.');
   }
-  // Same state pairs (use 2-3)
-  var pairs = [];
-  for (var i = 0; i < labels.length; i++) {
-    for (var j = i + 1; j < labels.length; j++) {
-      if (sol.stateOf[labels[i]] === sol.stateOf[labels[j]]) pairs.push([labels[i], labels[j]]);
-    }
-  }
-  shuffle(pairs);
-  for (var i = 0; i < Math.min(pairs.length, 3); i++) {
-    clues.push(clueSameState(sol, pairs[i][0], pairs[i][1]));
-  }
-  // Different state pairs (use 2)
-  var diffPairs = [];
-  for (var i = 0; i < labels.length; i++) {
-    for (var j = i + 1; j < labels.length; j++) {
-      if (sol.stateOf[labels[i]] !== sol.stateOf[labels[j]]) diffPairs.push([labels[i], labels[j]]);
-    }
-  }
-  shuffle(diffPairs);
-  for (var i = 0; i < Math.min(diffPairs.length, 2); i++) {
-    clues.push(clueDiffState(sol, diffPairs[i][0], diffPairs[i][1]));
-  }
-  // Age relationships
-  var agePairs = [];
-  for (var i = 0; i < labels.length; i++) {
-    for (var j = i + 1; j < labels.length; j++) {
-      var diff = Math.abs(sol.ageOf[labels[i]] - sol.ageOf[labels[j]]);
-      if (diff >= 3 && diff <= 12) agePairs.push([labels[i], labels[j], diff]);
-    }
-  }
-  shuffle(agePairs);
-  if (agePairs.length > 0) {
-    var ap = agePairs[0];
-    clues.push(clueAgeDiff(sol, ap[0], ap[1], ap[2]));
-  }
-  // Elder/younger (1 clue)
-  var orderPairs = [];
-  for (var i = 0; i < labels.length; i++) {
-    for (var j = i + 1; j < labels.length; j++) {
-      orderPairs.push([labels[i], labels[j]]);
-    }
-  }
-  shuffle(orderPairs);
-  if (orderPairs.length > 0) clues.push(clueElderThan(sol, orderPairs[0][0], orderPairs[0][1]));
-  // Extremum (eldest in state)
-  shuffle(labels);
-  for (var i = 0; i < labels.length; i++) {
-    var c3 = clueEldest(sol, labels[i]);
-    if (c3) { clues.push(c3); break; }
-  }
-  // Same state with order
-  shuffle(pairs);
-  if (pairs.length > 0) {
-    var c4 = clueSameStateWithOrder(sol, pairs[0][0], pairs[0][1]);
-    if (c4) clues.push(c4);
-  }
-  // Age parity
-  clues.push(clueParity(sol, labels[rand(0, labels.length - 1)]));
-  // Not youngest
-  shuffle(labels);
-  for (var i = 0; i < labels.length; i++) {
-    var c5 = clueNotYoungest(sol, labels[i]);
-    if (c5) { clues.push(c5); break; }
-  }
-  // Minimum age
-  clues.push(clueMinAge(sol, 18));
-  // Negative state (X does not belong to A and B → belongs to C)
-  shuffle(labels);
-  for (var i = 0; i < labels.length; i++) {
-    var others = sol.states.filter(function(s) { return s !== sol.stateOf[labels[i]]; });
-    if (others.length === 2) {
-      clues.push(labels[i] + ' does not belong to ' + others.join(' and ') + '.');
-      break;
-    }
-  }
-
-  // Deduplicate and shuffle
-  var seen = {};
-  var uniq = [];
-  clues.forEach(function(c) {
-    if (c && c.length > 5 && !seen[c]) { seen[c] = true; uniq.push(c); }
+  
+  // 2. Age-reference grouping: "X and the one who is N yrs old belong to the same state"
+  var ageRefPairs = [];
+  all.forEach(function(l) {
+    all.forEach(function(m) {
+      if (l !== m && stateOf[l] === stateOf[m]) {
+        ageRefPairs.push({ a: l, ageVal: ageOf[m] });
+      }
+    });
   });
-  shuffle(uniq);
-  return uniq;
-}
-
-function pickPuzzleQuestion(sol, clues) {
-  // Pick a random entity and ask their age
-  var labels = sol.labels.slice();
-  shuffle(labels);
-  var target = labels[0];
-  var answer = sol.ageOf[target];
-
+  puzShuffle(ageRefPairs);
+  var usedInGroup = {};
+  var refClues = 0;
+  for (var i = 0; i < ageRefPairs.length && refClues < (n >= 7 ? 4 : 3); i++) {
+    var p = ageRefPairs[i];
+    if (usedInGroup[p.a]) continue;
+    clues.push(p.a + ' and the one who is ' + p.ageVal + ' yrs old belong to the same state.');
+    usedInGroup[p.a] = true;
+    refClues++;
+  }
+  
+  // 3. Uniqueness qualifier (for a 2-person state)
+  states.forEach(function(st) {
+    var ents = entsIn(st);
+    if (ents.length === 2) {
+      clues.push(ents[0] + ' and the one who is ' + ageOf[ents[1]] + ' yrs old belong to the same state and these are the only persons belonging to that state.');
+    }
+  });
+  
+  // 4. "X and Y do not belong to the same state" (negative grouping)
+  var negPairs = [];
+  for (var i = 0; i < all.length; i++) {
+    for (var j = i + 1; j < all.length; j++) {
+      if (stateOf[all[i]] !== stateOf[all[j]]) negPairs.push([all[i], all[j]]);
+    }
+  }
+  puzShuffle(negPairs);
+  for (var i = 0; i < Math.min(negPairs.length, 2); i++) {
+    clues.push(negPairs[i][0] + ' and ' + negPairs[i][1] + ' do not belong to the same state.');
+  }
+  
+  // 5. Eldest/youngest in state
+  states.forEach(function(st) {
+    var ents = entsIn(st);
+    var ages = ents.map(function(l) { return ageOf[l]; });
+    var maxE = ents[ages.indexOf(Math.max.apply(null, ages))];
+    var minE = ents[ages.indexOf(Math.min.apply(null, ages))];
+    if (ents.length > 1) {
+      if (rand(0, 1)) clues.push(maxE + ' is the eldest person in ' + st + '.');
+      else clues.push(minE + ' is the youngest person in ' + st + '.');
+    }
+  });
+  
+  // 6. Age difference
+  var diffFound = false;
+  for (var i = 0; i < all.length && !diffFound; i++) {
+    for (var j = i + 1; j < all.length && !diffFound; j++) {
+      var d = Math.abs(ageOf[all[i]] - ageOf[all[j]]);
+      if (d >= 3 && d <= 12 && Math.random() < 0.5) {
+        clues.push(clueAgeDiff2(all[i], all[j], ageOf));
+        diffFound = true;
+      }
+    }
+  }
+  
+  function clueAgeDiff2(a, b, ages) {
+    if (ages[a] > ages[b]) return a + "'s age is " + (ages[a] - ages[b]) + ' yrs more than ' + b + "'s age.";
+    return b + "'s age is " + (ages[b] - ages[a]) + ' yrs more than ' + a + "'s age.";
+  }
+  
+  // 7. Ratio clue: "S age is twice of Q"
+  for (var i = 0; i < all.length; i++) {
+    for (var j = i + 1; j < all.length; j++) {
+      if (Math.abs(ageOf[all[i]] / ageOf[all[j]] - 2) < 0.01) {
+        clues.push(all[i] + "'s age is twice of " + all[j] + ".");
+        break;
+      }
+    }
+    if (clues.length > 0) break;
+  }
+  
+  // 8. Elder/younger ordering
+  var ePairs = [];
+  for (var i = 0; i < all.length; i++) {
+    for (var j = i + 1; j < all.length; j++) {
+      ePairs.push([all[i], all[j]]);
+    }
+  }
+  puzShuffle(ePairs);
+  for (var i = 0; i < Math.min(ePairs.length, 2); i++) {
+    var a = ePairs[i][0], b = ePairs[i][1];
+    if (ageOf[a] > ageOf[b]) clues.push(a + ' is elder than ' + b + '.');
+    else if (ageOf[b] > ageOf[a]) clues.push(b + ' is elder than ' + a + '.');
+  }
+  
+  // 9. Specific age→state: "The one who is N yrs belongs to State X"
+  var refAge = pick(all.filter(function(l) { return l !== target; }));
+  if (refAge) clues.push('The one who is ' + ageOf[refAge] + ' yrs belongs to ' + stateOf[refAge] + '.');
+  
+  // 10. Age parity
+  var pEnt = all[rand(0, all.length - 1)];
+  clues.push(pEnt + "'s age is " + (ageOf[pEnt] % 2 === 0 ? 'an even' : 'an odd') + ' number.');
+  
+  // 11. Not youngest
+  var notY = all.filter(function(l) { return ageOf[l] !== 18; });
+  if (notY.length > 0) clues.push(pick(notY) + ' is not the youngest person.');
+  
+  // 12. Minimum age
+  clues.push('The minimum age is 18 yrs.');
+  
+  // 13. Same-state with order: "X and Y belong to the same state where X is elder than Y"
+  states.forEach(function(st) {
+    var ents = entsIn(st);
+    if (ents.length >= 2) {
+      for (var i = 0; i < ents.length; i++) {
+        for (var j = i + 1; j < ents.length; j++) {
+          var elder = ageOf[ents[i]] > ageOf[ents[j]] ? ents[i] : ents[j];
+          var younger = ageOf[ents[i]] > ageOf[ents[j]] ? ents[j] : ents[i];
+          clues.push(elder + ' and ' + younger + ' belong to the same state where ' + elder + ' is elder than ' + younger + '.');
+        }
+      }
+    }
+  });
+  
+  // 14. Compound clue: "X is N yrs elder than Y and one of the ages is M"
+  if (diffFound) {
+    // reuse the diff pair from clue #6
+    for (var i = 0; i < all.length; i++) {
+      for (var j = i + 1; j < all.length; j++) {
+        var d = Math.abs(ageOf[all[i]] - ageOf[all[j]]);
+        if (d >= 3 && d <= 12) {
+          var elder = ageOf[all[i]] > ageOf[all[j]] ? all[i] : all[j];
+          var younger = ageOf[all[i]] > ageOf[all[j]] ? all[j] : all[i];
+          clues.push(elder + ' is ' + d + ' yrs elder than ' + younger + ' and one of the ages is ' + ageOf[elder] + ' yrs.');
+          break;
+        }
+      }
+      if (clues.length > 0) break;
+    }
+  }
+  
+  // 15. "P and S do not belong to the same state" (additional negative)
+  var moreNeg = [];
+  for (var i = 0; i < all.length; i++) {
+    for (var j = i + 1; j < all.length; j++) {
+      if (stateOf[all[i]] !== stateOf[all[j]]) moreNeg.push([all[i], all[j]]);
+    }
+  }
+  puzShuffle(moreNeg);
+  if (moreNeg.length > 0) {
+    var mn = moreNeg[0];
+    clues.push(mn[0] + ' and ' + mn[1] + ' do not belong to the same state.');
+  }
+  
+  // --- DEDUPLICATE ---
+  var seen = {}, uniq = [];
+  clues.forEach(function(c) { if (c && c.length > 3 && !seen[c]) { seen[c] = true; uniq.push(c); } });
+  
+  // --- BUILD PREAMBLE ---
+  var preamble = n + ' persons ' + all.join(' to ') + ' belongs to three different states (' + states.join(', ') + ') of different ages. Not more than 4 and not less than 2 persons belong to each state.';
+  preamble += ' If it is given for example B and the one who is 10yrs belong to the same state then that means B is not 10 years.';
+  
+  // --- BUILD OPTIONS ---
   var opts = [answer];
   while (opts.length < 4) {
-    var d = answer + rand(-5, 5);
+    var d = answer + pick([-3, -2, -1, 1, 2, 3, 5, 7]);
     if (opts.indexOf(d) < 0 && d >= 18 && d <= 65) opts.push(d);
   }
-  shuffle(opts);
-
-  var clueCount = clues.length;
+  puzShuffle(opts);
+  
+  // --- RETURN ---
   return {
-    text: 'What is the age of ' + target + '?',
+    type: 'puzzle',
+    clueBlock: uniq,
+    preamble: preamble,
+    questionText: 'What is the age of ' + target + '?',
     answer: answer,
     options: opts,
     target: target,
-    totalClues: clueCount
+    totalClues: uniq.length,
+    timeLimit: 40 + diff * 5,
+    hint: 'Start with strong clues (negatives & direct). Build the grid: person × state + age.'
   };
 }
 
-function generatePuzzleQuestion(diff) {
-  var numEntities = Math.min(9, 4 + Math.floor(diff * 0.55));
-  var labels = PUZZLE_LABELS.slice(0, numEntities).split('');
-  var sol = genPuzzleSolution(labels);
-  var clues = generatePuzzleClues(sol);
-  var q = pickPuzzleQuestion(sol, clues);
-  return {
-    type: 'puzzle',
-    entities: labels,
-    states: sol.states,
-    clues: clues,
-    questionText: q.text,
-    answer: q.answer,
-    options: q.options,
-    target: q.target,
-    totalClues: q.totalClues,
-    timeLimit: 20 + diff * 2,
-    clueTimeLimit: Math.max(5, 12 - Math.floor(diff / 2)),
-    hint: 'Build a mental grid: ' + labels.join(', ') + ' × [' + sol.states.join(', ') + ']. Picture each clue as filling cells.'
-  };
-}
-
-// Override mixed to include puzzle
-GENERATORS.puzzle = generatePuzzleQuestion;
+// Register puzzle generator (all clues at once, like real exam)
+GENERATORS.puzzle = generatePuzzle;
 var _origMixed = GENERATORS.mixed;
 GENERATORS.mixed = function(diff) {
   var types = ['math', 'chain', 'pattern', 'trap', 'puzzle'];

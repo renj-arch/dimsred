@@ -102,8 +102,6 @@
         .session-item .s-acc.ok{color:var(--amber)}
         .session-item .s-acc.bad{color:var(--red)}
 
-        .puzzle-clue-text{font-size:clamp(1rem,2.2vw,1.25rem);font-weight:600;line-height:1.7;padding:8px 4px;font-family:'JetBrains Mono',monospace;letter-spacing:.01em;color:var(--text);background:rgba(167,139,250,.04);border-radius:8px;border-left:3px solid var(--purple);text-align:left}
-        .puzzle-grid-hint{font-size:.72em;color:var(--text-muted);margin-top:4px;line-height:1.5}
         .hidden{display:none!important}
     </style>
 </head>
@@ -181,13 +179,6 @@
 
                 <div class="timer-circle" id="timerCircle">10</div>
 
-                <!-- PUZZLE CLUE AREA (shown during puzzle clue reveal phase) -->
-                <div id="puzzleClueArea" class="hidden">
-                    <div style="font-size:.78em;color:var(--text-muted);margin-bottom:8px">Clue <span id="clueNum">1</span> / <span id="clueTotal">8</span></div>
-                    <div class="puzzle-clue-text" id="clueText"></div>
-                    <div style="font-size:.72em;color:var(--purple);margin-top:12px">Update your mental grid...</div>
-                </div>
-
                 <div class="q-text" id="qText">Loading...</div>
 
                 <div class="q-hint" id="qHint" onclick="toggleHint()">💡 Show hint
@@ -219,7 +210,6 @@
     var timerInterval = null;
     var answered = false;
     var hasHint = false;
-    var inPuzzleCluePhase = false;
 
     // ====== RANK & STATS UPDATE ======
     function updateUI() {
@@ -267,18 +257,6 @@
         { name:'Master Genius', minPoints:800, icon:'🏆' }
     ];
 
-    // ====== PUZZLE MODE STATE ======
-    function advancePuzzleClue() {
-        if (!session || !session.puzzles) return;
-        session.clueIndex++;
-        var puzzle = session.puzzles[session.puzzleIndex];
-        if (!puzzle) { endTraining(); return; }
-        if (session.clueIndex >= puzzle.totalClues) {
-            session.puzzlePhase = 'question';
-        }
-        loadQuestion();
-    }
-
     // ====== TRAINING FLOW ======
     function startTraining(mode) {
         session = window.startMentalSession(mode);
@@ -296,83 +274,30 @@
         if (!q) { endTraining(); return; }
         currentQuestion = q;
 
-        var pcArea = document.getElementById('puzzleClueArea');
-        var qText = document.getElementById('qText');
-        var qHint = document.getElementById('qHint');
-        var optGrid = document.getElementById('optGrid');
-
-        document.getElementById('qNum').textContent = (q.displayType === 'puzzle_clue' ? 'Puzzle ' + (q.index + 1) : 'Q ' + (q.index + 1)) + ' / ' + q.total;
+        document.getElementById('qNum').textContent = 'Q ' + (q.index + 1) + ' / ' + q.total;
         document.getElementById('qProgress').style.width = q.progress + '%';
+        document.getElementById('qText').innerHTML = q.question;
+        document.getElementById('hintText').textContent = q.hint || '';
+        document.getElementById('hintText').classList.remove('show');
+        hasHint = false;
+
+        var og = document.getElementById('optGrid');
+        og.innerHTML = '';
+        q.options.forEach(function(o, i){
+            var b = document.createElement('div');
+            b.className = 'opt-btn';
+            b.textContent = o;
+            b.onclick = function(){ selectOption(i); };
+            og.appendChild(b);
+        });
+
         answered = false;
         document.getElementById('nextBtn').classList.add('hidden');
         document.getElementById('resultFlash').className = 'result-flash';
-        hasHint = false;
-
-        if (q.displayType === 'puzzle_clue') {
-            inPuzzleCluePhase = true;
-            pcArea.classList.remove('hidden');
-            qText.classList.add('hidden');
-            qHint.classList.add('hidden');
-            optGrid.classList.add('hidden');
-
-            document.getElementById('clueNum').textContent = q.clueNum;
-            document.getElementById('clueTotal').textContent = q.totalClues;
-            document.getElementById('clueText').textContent = q.clueText;
-
-            var tc = document.getElementById('timerCircle');
-            tc.textContent = q.timeLimit;
-            tc.className = 'timer-circle';
-            startPuzzleClueTimer(q.timeLimit);
-        } else if (q.displayType === 'puzzle_question') {
-            inPuzzleCluePhase = false;
-            pcArea.classList.add('hidden');
-            qText.classList.remove('hidden');
-            qHint.classList.remove('hidden');
-            optGrid.classList.remove('hidden');
-
-            qText.innerHTML = q.question;
-            document.getElementById('hintText').textContent = q.hint || '';
-            document.getElementById('hintText').classList.remove('show');
-
-            optGrid.innerHTML = '';
-            q.options.forEach(function(o, i){
-                var b = document.createElement('div');
-                b.className = 'opt-btn';
-                b.textContent = o;
-                b.onclick = function(){ selectOption(i); };
-                optGrid.appendChild(b);
-            });
-
-            var tc = document.getElementById('timerCircle');
-            tc.textContent = q.timeLimit;
-            tc.className = 'timer-circle';
-            startTimer(q.timeLimit);
-        } else {
-            // Normal mode
-            inPuzzleCluePhase = false;
-            pcArea.classList.add('hidden');
-            qText.classList.remove('hidden');
-            qHint.classList.remove('hidden');
-            optGrid.classList.remove('hidden');
-
-            qText.innerHTML = q.question;
-            document.getElementById('hintText').textContent = q.hint || '';
-            document.getElementById('hintText').classList.remove('show');
-
-            optGrid.innerHTML = '';
-            q.options.forEach(function(o, i){
-                var b = document.createElement('div');
-                b.className = 'opt-btn';
-                b.textContent = o;
-                b.onclick = function(){ selectOption(i); };
-                optGrid.appendChild(b);
-            });
-
-            var tc = document.getElementById('timerCircle');
-            tc.textContent = q.timeLimit;
-            tc.className = 'timer-circle';
-            startTimer(q.timeLimit);
-        }
+        var tc = document.getElementById('timerCircle');
+        tc.textContent = q.timeLimit;
+        tc.className = 'timer-circle';
+        startTimer(q.timeLimit);
     }
 
     function startTimer(sec) {
@@ -391,24 +316,8 @@
         }, 1000);
     }
 
-    function startPuzzleClueTimer(sec) {
-        var left = sec;
-        clearInterval(timerInterval);
-        var tc = document.getElementById('timerCircle');
-        timerInterval = setInterval(function(){
-            left--;
-            tc.textContent = left;
-            if (left <= 3) tc.className = 'timer-circle urgent';
-            else if (left <= 5) tc.className = 'timer-circle warning';
-            if (left <= 0) {
-                clearInterval(timerInterval);
-                advancePuzzleClue();
-            }
-        }, 1000);
-    }
-
     function selectOption(idx) {
-        if (answered || inPuzzleCluePhase) return;
+        if (answered) return;
         answered = true;
         clearInterval(timerInterval);
 
@@ -447,12 +356,6 @@
     }
 
     function nextQuestion() {
-        // If puzzle mode, advance to next puzzle's clue phase
-        if (session && session.mode === 'puzzle' && session.puzzles) {
-            session.puzzleIndex++;
-            session.puzzlePhase = 'clue';
-            session.clueIndex = 0;
-        }
         loadQuestion();
     }
 
@@ -462,7 +365,6 @@
         document.getElementById('arena').classList.remove('active');
         document.getElementById('modeSelect').style.display = 'block';
         session = null;
-        inPuzzleCluePhase = false;
         updateUI();
     }
 
@@ -517,7 +419,7 @@
 
     // ====== KEYBOARD SHORTCUTS ======
     document.addEventListener('keydown', function(e){
-        if (session && session.active && !answered && !inPuzzleCluePhase) {
+        if (session && session.active && !answered) {
             if (e.key >= '1' && e.key <= '4') {
                 var idx = parseInt(e.key) - 1;
                 var btns = document.querySelectorAll('.opt-btn');
