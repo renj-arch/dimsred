@@ -1288,7 +1288,7 @@ function fallbackPuzzle(diff) {
   var target = names[rand(0, names.length - 1)];
   var ans = assign[target];
   var opts = [ans];
-  while (opts.length < 4) { var d = ans + rand(-2, 2); if (d >= 1 && d <= 10 && opts.indexOf(d) < 0) opts.push(d); }
+  while (opts.length < 4) { var d = rand(1, 10); if (opts.indexOf(d) < 0) opts.push(d); }
   shuffle(opts);
   return {
     type: 'puzzle',
@@ -1384,12 +1384,13 @@ function generatePuzzle(diff) {
       if (qType === 2) {
         opts = [];
         for (d = 0; d <= n - 2; d++) opts.push(d);
+        while (opts.length < 4) { d = rand(1, n); if (opts.indexOf(d) < 0) opts.push(d); }
       } else if (typeof ans === 'string') {
         opts = [ans];
         while (opts.length < 4) { var rn = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rn) < 0) opts.push(rn); }
       } else {
         opts = [ans];
-        while (opts.length < 4) { d = ans + rand(-2, 2); if (d >= 1 && d <= n+2 && opts.indexOf(d) < 0) opts.push(d); }
+        while (opts.length < 4) { d = rand(1, n + 2); if (opts.indexOf(d) < 0) opts.push(d); }
       }
       shuffle(opts);
       return {
@@ -1440,12 +1441,16 @@ function generatePuzzle(diff) {
         left = seatOf[names[ni]] < seatOf[names[(ni+1) % n]] ? names[ni] : names[(ni+1) % n];
         right = seatOf[names[ni]] < seatOf[names[(ni+1) % n]] ? names[(ni+1) % n] : names[ni];
         clues.push(left + ' sits to the immediate left of ' + right + '.');
+      } else {
+        // Fallback: generic relative clue
+        clues.push(names[ni] + ' sits somewhere to the left of ' + names[(ni+1) % n] + '.');
       }
       // Clue 3: positional reference
       clues.push(names[2 % n] + ' sits at position ' + seatOf[names[2 % n]] + ' from the left.');
       // Clue 4: negative "does not sit at"
       notPos = positions[rand(0, n - 1)];
-      if (seatOf[names[n-1]] !== notPos) clues.push(names[n-1] + ' does not sit at position ' + notPos + '.');
+      while (notPos === seatOf[names[n-1]]) { notPos = positions[rand(0, n - 1)]; }
+      clues.push(names[n-1] + ' does not sit at position ' + notPos + '.');
       // Clue 5: "X sits between Y and Z" (exam pattern)
       if (n >= 5) {
         var betA = 0 % n, betB = (betA + 2) % n;
@@ -1462,7 +1467,7 @@ function generatePuzzle(diff) {
         while (opts.length < 4) { var rname = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rname) < 0) opts.push(rname); }
       } else {
         opts = [ans];
-        while (opts.length < 4) { d = ans + rand(-2, 2); if (d >= 1 && d <= n+1 && opts.indexOf(d) < 0) opts.push(d); }
+        while (opts.length < 4) { d = rand(1, n + 1); if (opts.indexOf(d) < 0) opts.push(d); }
       }
       shuffle(opts);
       return {
@@ -1545,7 +1550,7 @@ function generatePuzzle(diff) {
       var ansIsName = typeof ans === 'string';
       if (!ansIsName) {
         opts = [ans];
-        while (opts.length < 4) { d = ans + rand(-2, 2); if (d >= 1 && d <= n+1 && opts.indexOf(d) < 0) opts.push(d); }
+        while (opts.length < 4) { d = rand(1, n + 1); if (opts.indexOf(d) < 0) opts.push(d); }
       } else {
         opts = [ans];
         while (opts.length < 4) { var rn = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rn) < 0) opts.push(rn); }
@@ -1619,7 +1624,7 @@ function generatePuzzle(diff) {
       var ansIsName = typeof ans === 'string';
       if (!ansIsName) {
         opts = [ans];
-        while (opts.length < 4) { var d2 = ans + rand(-2, 2); if (d2 >= 1 && d2 <= n+1 && opts.indexOf(d2) < 0) opts.push(d2); }
+        while (opts.length < 4) { var d2 = rand(1, n + 1); if (opts.indexOf(d2) < 0) opts.push(d2); }
       } else {
         opts = [ans];
         while (opts.length < 4) { var rn = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rn) < 0) opts.push(rn); }
