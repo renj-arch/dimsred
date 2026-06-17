@@ -111,6 +111,10 @@
         .speed-tip{font-size:.72em;color:var(--text-sec);margin-top:4px;padding:6px 10px;border-radius:6px;background:rgba(167,139,250,.06);display:none}
         .speed-tip.show{display:block}
         .speed-tip .st-label{color:var(--purple);font-weight:700}
+
+        .solution-box{font-size:.72em;color:var(--text-sec);margin-top:4px;padding:8px 10px;border-radius:6px;background:rgba(52,211,153,.05);border:1px solid rgba(52,211,153,.1);display:none;line-height:1.5;text-align:left}
+        .solution-box.show{display:block}
+
         .hidden{display:none!important}
 
         .mastery-row{display:flex;align-items:center;gap:6px;padding:4px 0;font-size:.72em}
@@ -243,6 +247,7 @@
 
             <div class="result-flash" id="resultFlash"></div>
             <div class="speed-tip" id="speedTip"><span class="st-label">⚡ Speed Tip</span> <span id="speedTipText"></span></div>
+            <div class="solution-box" id="solutionDisplay"></div>
 
             <button class="action-btn primary hidden" id="nextBtn" onclick="nextQuestion()">Next →</button>
             <button class="action-btn secondary" id="quitBtn" onclick="endTraining()">✕ End Session</button>
@@ -396,6 +401,7 @@
         document.getElementById('nextBtn').classList.add('hidden');
         document.getElementById('resultFlash').className = 'result-flash';
         document.getElementById('speedTip').className = 'speed-tip';
+        document.getElementById('solutionDisplay').className = 'solution-box';
 
         // Skip technique flash in hard mode
         if (session.hardMode || !q.drillLine1) {
@@ -496,6 +502,15 @@
             st.className = 'speed-tip';
         }
 
+        // Show solution explanation
+        var solEl = document.getElementById('solutionDisplay');
+        if (q.solution) {
+            solEl.innerHTML = '📖 ' + q.solution;
+            solEl.className = 'solution-box show';
+        } else {
+            solEl.className = 'solution-box';
+        }
+
         if (result.isComplete) {
             setTimeout(showResults, 800);
         } else {
@@ -573,6 +588,7 @@
                         + '<div style="color:var(--red)">✕ You: ' + String(r.yourAnswer || '—') + '</div>'
                         + '<div style="color:var(--emerald)">✓ Answer: ' + r.correctAnswer + '</div>'
                         + (r.techniqueLabel ? '<div style="color:var(--purple);margin-top:2px">⚡ ' + r.techniqueLabel.substring(0, 70) + '</div>' : '')
+                        + (r.solution ? '<div style="color:var(--text-sec);margin-top:3px;font-size:.9em">📖 ' + r.solution + '</div>' : '')
                         + '</div>';
                 });
                 h += '</div>';
