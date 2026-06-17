@@ -98,7 +98,7 @@ function generatePatternQuestion(diff) {
     'Syllogism': ['All cats are mammals. All mammals are animals. Conclusion: All cats are animals.','Some doctors are teachers. All teachers are educated. Conclusion: Some doctors are educated.','No fish are birds. All penguins are birds. Conclusion: Some penguins are fish.'],
     'Inequality': ['A > B, B > C, C > D. Which is the largest?','P \u2265 Q, Q = R, R > S. Which is definitely true?','X < Y, Y \u2264 Z, Z = W. What can be said about X and W?'],
     'Direction': ['A walks 5km North, turns right, walks 3km, turns right, walks 5km. How far from start?','A walks 4km East, turns left, walks 3km. Direction from start?','A walks 2km South, turns right, walks 5km, turns right, walks 2km. Direction from start?'],
-    'Blood Relation': ['A is B\ns father. B is C\ns sister. How is A related to C?','P is Q\ns brother. Q is R\ns mother. How is P related to R?','X is Y\ns mother. Y is Z\ns wife. How is X related to Z?'],
+    'Blood Relation': ['A is B\'s father. B is C\'s sister. How is A related to C?','P is Q\'s brother. Q is R\'s mother. How is P related to R?','X is Y\'s mother. Y is Z\'s wife. How is X related to Z?'],
     'Puzzle': ['Five friends P,Q,R,S,T sit in a row facing North. P is at left end. R is to the immediate right of P. T is to the immediate left of S. Q is between R and T. Who is in the middle?','Three boxes Red, Blue, Green are stacked. Red is above Blue. Green is below Blue. Which box is in the middle?','Four books Physics, Chemistry, Maths, Biology are on a shelf. Physics is left of Chemistry. Maths is right of Chemistry. Biology is between Physics and Chemistry. Which book is second from left?'],
     'Data Sufficiency': ['Is X > Y? Statement 1: X + Y = 10. Statement 2: X = 2Y.','What is the age of A? Statement 1: A is 5 years older than B. Statement 2: B is 20 years old.','Is triangle PQR right-angled at Q? Statement 1: PQ\u00B2 + QR\u00B2 = PR\u00B2. Statement 2: PQ = 3, QR = 4.']
   };
@@ -126,9 +126,9 @@ function generatePatternQuestion(diff) {
     'A walks 5km North, turns right, walks 3km, turns right, walks 5km. How far from start?': { answer:'3 km', opts:['3 km','5 km','8 km','13 km'] },
     'A walks 4km East, turns left, walks 3km. Direction from start?': { answer:'North-East', opts:['North-East','East','South-East','North'] },
     'A walks 2km South, turns right, walks 5km, turns right, walks 2km. Direction from start?': { answer:'West', opts:['West','East','North','South'] },
-    'A is B\ns father. B is C\ns sister. How is A related to C?': { answer:'Father', opts:['Father','Uncle','Brother','Grandfather'] },
-    'P is Q\ns brother. Q is R\ns mother. How is P related to R?': { answer:'Uncle', opts:['Uncle','Father','Brother','Grandfather'] },
-    'X is Y\ns mother. Y is Z\ns wife. How is X related to Z?': { answer:'Mother-in-law', opts:['Mother-in-law','Mother','Sister','Aunt'] },
+    'A is B\'s father. B is C\'s sister. How is A related to C?': { answer:'Father', opts:['Father','Uncle','Brother','Grandfather'] },
+    'P is Q\'s brother. Q is R\'s mother. How is P related to R?': { answer:'Uncle', opts:['Uncle','Father','Brother','Grandfather'] },
+    'X is Y\'s mother. Y is Z\'s wife. How is X related to Z?': { answer:'Mother-in-law', opts:['Mother-in-law','Mother','Sister','Aunt'] },
     'Five friends P,Q,R,S,T sit in a row facing North. P is at left end. R is to the immediate right of P. T is to the immediate left of S. Q is between R and T. Who is in the middle?': { answer:'Q', opts:['Q','R','T','Cannot determine'] },
     'Three boxes Red, Blue, Green are stacked. Red is above Blue. Green is below Blue. Which box is in the middle?': { answer:'Blue', opts:['Blue','Red','Green','Cannot determine'] },
     'Four books Physics, Chemistry, Maths, Biology are on a shelf. Physics is left of Chemistry. Maths is right of Chemistry. Biology is between Physics and Chemistry. Which book is second from left?': { answer:'Biology', opts:['Biology','Physics','Chemistry','Maths'] },
