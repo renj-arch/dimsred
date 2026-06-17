@@ -1310,97 +1310,327 @@ function fallbackPuzzle(diff) {
 
 function generatePuzzle(diff) {
   try {
-    // Decide puzzle type
-    var isFloor = rand(0, 1);
-    var n = 4 + rand(0, Math.min(2, diff));
+    var choices = ['floor','linear','circular','comparison'];
+    var puzType = choices[rand(0, choices.length - 1)];
+    // diff 0-1=4-5 persons, 2-3=5-6, 4-5=6-8
+    var n = diff <= 1 ? 4 + rand(0, 1) : diff <= 3 ? 5 + rand(0, 1) : 6 + rand(0, 2);
     var names = PUZ_NAMES.slice(0, n);
     shuffle(names);
 
-    if (isFloor) {
-      // FLOOR PUZZLE — assign people to floors 1..N (never hangs)
-      var floors = [];
-      for (var i = 1; i <= n; i++) floors.push(i);
-      shuffle(floors);
-      var assign = {};
-      for (var i = 0; i < n; i++) assign[names[i]] = floors[i];
-      var target = names[rand(0, n - 1)];
-      var ans = assign[target];
+    // Helper: return index in [0..n-1] wrapping
+    function modIdx(i) { return ((i % n) + n) % n; }
 
-      var clues = [];
-      // 1. Direct floor: "X lives on floor N"
-      if (n > 3) clues.push(names[0] + ' lives on floor ' + assign[names[0]] + '.');
-      // 2. Above/below: "Y lives above W but below Z"
-      var aIdx = 1 % n, bIdx = 2 % n, cIdx = 3 % n;
-      if (assign[names[aIdx]] > assign[names[bIdx]]) {
-        if (assign[names[aIdx]] < assign[names[cIdx]]) clues.push(names[aIdx] + ' lives above ' + names[bIdx] + ' but below ' + names[cIdx] + '.');
+    // Helper: ordinal word
+    var ORD = ['','first','second','third','fourth','fifth','sixth','seventh','eighth','ninth','tenth'];
+
+    if (puzType === 'floor') {
+      // Exam-style floor puzzle: assign persons to floors 1..n
+      var floors = [], opts, clues, i, d, aIdx, bIdx, cIdx, negFloor;
+      for (i = 1; i <= n; i++) floors.push(i);
+      shuffle(floors);
+      var liveOn = {};
+      for (i = 0; i < n; i++) liveOn[names[i]] = floors[i];
+      // Pick a question target with varied question types
+      var qType = rand(0, 2); // 0=whichFloor, 1=whoOnFloor, 2=between
+      var target, ans, qText;
+      if (qType === 0) {
+        target = names[rand(0, n - 1)];
+        ans = liveOn[target];
+        qText = 'On which floor does ' + target + ' live?';
+      } else if (qType === 1) {
+        ans = names[rand(0, n - 1)];
+        var floorNum = liveOn[ans];
+        qText = 'Who lives on floor ' + floorNum + '?';
+        target = ans;
+      } else {
+        // "How many persons live between X and Y?"
+        var b1 = rand(0, n - 1), b2 = rand(0, n - 1);
+        if (b1 === b2) b2 = (b1 + 1) % n;
+        var f1 = liveOn[names[b1]], f2 = liveOn[names[b2]];
+        if (f1 > f2) { var tmp = f1; f1 = f2; f2 = tmp; }
+        ans = f2 - f1 - 1;
+        qText = 'How many persons live between ' + names[b1] + ' and ' + names[b2] + '?';
+      }
+      clues = [];
+      // Clue 1: direct floor
+      clues.push(names[0] + ' lives on floor ' + liveOn[names[0]] + '.');
+      // Clue 2: above/below chain
+      aIdx = 1 % n; bIdx = 2 % n; cIdx = 3 % n;
+      if (liveOn[names[aIdx]] > liveOn[names[bIdx]]) {
+        if (liveOn[names[aIdx]] < liveOn[names[cIdx]])
+          clues.push(names[aIdx] + ' lives above ' + names[bIdx] + ' but below ' + names[cIdx] + '.');
         else clues.push(names[aIdx] + ' lives above ' + names[bIdx] + '.');
-      } else if (assign[names[aIdx]] < assign[names[bIdx]]) {
-        if (assign[names[aIdx]] > assign[names[cIdx]]) clues.push(names[aIdx] + ' lives below ' + names[bIdx] + ' but above ' + names[cIdx] + '.');
+      } else if (liveOn[names[aIdx]] < liveOn[names[bIdx]]) {
+        if (liveOn[names[aIdx]] > liveOn[names[cIdx]])
+          clues.push(names[aIdx] + ' lives below ' + names[bIdx] + ' but above ' + names[cIdx] + '.');
         else clues.push(names[aIdx] + ' lives below ' + names[bIdx] + '.');
       }
-      // 3. Negative: "X does not live on floor N"
-      var negFloor = floors[rand(0, n - 1)];
-      if (assign[names[n-1]] !== negFloor) clues.push(names[n-1] + ' does not live on floor ' + negFloor + '.');
-      // 4. Floor→person: "The person on floor N is X"
-      clues.push('The person on floor ' + floors[n-1] + ' is ' + names[n-1] + '.');
+      // Clue 3: two-floor gap (exam style: "X lives two floors above Y")
+      if (n >= 4) {
+        var gapA = 2 % n, gapB = (gapA + 2) % n;
+        if (liveOn[names[gapA]] > liveOn[names[gapB]]) clues.push(names[gapA] + ' lives two floors above ' + names[gapB] + '.');
+        else if (liveOn[names[gapA]] < liveOn[names[gapB]]) clues.push(names[gapB] + ' lives two floors above ' + names[gapA] + '.');
+      }
+      // Clue 4: negative clue
+      negFloor = floors[rand(0, n - 1)];
+      if (liveOn[names[n-1]] !== negFloor) clues.push(names[n-1] + ' does not live on floor ' + negFloor + '.');
+      // Clue 5: even/odd clue (exam pattern)
+      var eoIdx = 3 % n;
+      if (liveOn[names[eoIdx]] % 2 === 0) clues.push(names[eoIdx] + ' lives on an even-numbered floor.');
+      else clues.push(names[eoIdx] + ' lives on an odd-numbered floor.');
+      // For diff >= 3, add floor-person clue
+      if (diff >= 3) clues.push('The person on floor ' + floors[n-1] + ' is ' + names[n-1] + '.');
 
-      var opts = [ans];
-      while (opts.length < 4) { var d = ans + rand(-2, 2); if (d >= 1 && d <= n+2 && opts.indexOf(d) < 0) opts.push(d); }
+      opts = [];
+      if (qType === 2) {
+        // for "how many between" — answer is 0 to n-2
+        for (d = 0; d <= n - 2; d++) opts.push(d);
+      } else {
+        opts.push(ans);
+        while (opts.length < 4) { d = ans + rand(-2, 2); if (d >= 1 && d <= n+2 && opts.indexOf(d) < 0) opts.push(d); }
+      }
       shuffle(opts);
-
       return {
-        type: 'puzzle',
-        clueBlock: clues,
-        preamble: n + ' persons ' + names.join(', ') + ' live in a ' + n + '-storey building (1=ground). Each lives on a different floor.',
-        questionText: 'Which floor does ' + target + ' live on?',
-        answer: String(ans),
-        answerIndex: ans,
-        options: opts,
-        timeLimit: 40 + diff * 5,
-        hint: 'Draw floors 1 to ' + n + '. Fill names as you read each clue.'
+        type: 'puzzle', clueBlock: clues,
+        preamble: n + ' persons ' + names.join(', ') + ' live in a ' + n + '-storey building (ground floor=1). Each lives on a different floor.',
+        questionText: qText, answer: String(ans),
+        options: opts, timeLimit: 45 + diff * 8,
+        hint: 'Draw a vertical building. Floor 1 at bottom. Mark names from clues.'
       };
-    } else {
-      // SEATING PUZZLE — linear row (never hangs)
-      var positions = [];
-      for (var i = 1; i <= n; i++) positions.push(i);
+    } else if (puzType === 'linear') {
+      //EXAM-STYLE LINEAR ROW — left to right positions 1..n
+      var positions = [], opts, clues, i, d, ni, posDiff, left, right, notPos;
+      for (i = 1; i <= n; i++) positions.push(i);
       shuffle(positions);
       var seatOf = {};
-      for (var i = 0; i < n; i++) seatOf[names[i]] = positions[i];
-      var target = names[rand(0, n - 1)];
-      var ans = seatOf[target];
-
-      var clues = [];
-      // 1. End position
-      clues.push(names[0] + ' sits at one of the ends.');
-      // 2. Immediate neighbor
-      var ni = 1 % n;
-      var posDiff = seatOf[names[ni]] - seatOf[names[(ni+1) % n]];
+      for (i = 0; i < n; i++) seatOf[names[i]] = positions[i];
+      // Question variety
+      var qType = rand(0, 2);
+      var target, ans, qText;
+      if (qType === 0) {
+        target = names[rand(0, n - 1)];
+        ans = seatOf[target];
+        qText = 'What is the position of ' + target + ' from the left end?';
+      } else if (qType === 1) {
+        // "Who sits second to the right of X?"
+        target = names[rand(0, n - 1)];
+        var offset = 1 + rand(0, Math.min(1, n - 2));
+        var tPos = seatOf[target];
+        var rightPos = tPos + offset;
+        if (rightPos > n) rightPos = tPos - offset;
+        ans = null;
+        for (var ni2 = 0; ni2 < n; ni2++) { if (seatOf[names[ni2]] === rightPos) { ans = names[ni2]; break; } }
+        if (!ans) { ans = names[(n - 1) % n]; }
+        qText = 'Who sits ' + ORD[offset + 1] + ' to the right of ' + target + '?';
+      } else {
+        target = names[rand(0, n - 1)];
+        ans = seatOf[target];
+        qText = 'What is the position of ' + target + ' from the right end?';
+        ans = n - ans + 1;
+      }
+      clues = [];
+      // Clue 1: end person
+      clues.push(names[0] + ' sits at the extreme left end.');
+      // Clue 2: immediate neighbor
+      ni = 1 % n;
+      posDiff = seatOf[names[ni]] - seatOf[names[(ni+1) % n]];
       if (Math.abs(posDiff) === 1) {
-        var left = seatOf[names[ni]] < seatOf[names[(ni+1) % n]] ? names[ni] : names[(ni+1) % n];
-        var right = seatOf[names[ni]] < seatOf[names[(ni+1) % n]] ? names[(ni+1) % n] : names[ni];
+        left = seatOf[names[ni]] < seatOf[names[(ni+1) % n]] ? names[ni] : names[(ni+1) % n];
+        right = seatOf[names[ni]] < seatOf[names[(ni+1) % n]] ? names[(ni+1) % n] : names[ni];
         clues.push(left + ' sits to the immediate left of ' + right + '.');
       }
-      // 3. Position relative
-      clues.push(names[2 % n] + ' sits at position ' + seatOf[names[2 % n]] + '.');
-      // 4. Not at position
-      var notPos = positions[rand(0, n - 1)];
+      // Clue 3: positional reference
+      clues.push(names[2 % n] + ' sits at position ' + seatOf[names[2 % n]] + ' from the left.');
+      // Clue 4: negative "does not sit at"
+      notPos = positions[rand(0, n - 1)];
       if (seatOf[names[n-1]] !== notPos) clues.push(names[n-1] + ' does not sit at position ' + notPos + '.');
+      // Clue 5: "X sits between Y and Z" (exam pattern)
+      if (n >= 5) {
+        var betA = 0 % n, betB = (betA + 2) % n;
+        if (Math.abs(seatOf[names[betA]] - seatOf[names[betB]]) === 2) {
+          var midPos = (seatOf[names[betA]] + seatOf[names[betB]]) / 2;
+          for (var mi = 0; mi < n; mi++) { if (seatOf[names[mi]] === midPos) { clues.push(names[mi] + ' sits between ' + names[betA] + ' and ' + names[betB] + '.'); break; } }
+        }
+      }
+      // Clue 6: right-end for diff>=3
+      if (diff >= 3) clues.push(names[n-1] + ' sits at the extreme right end.');
 
-      var opts = [ans];
-      while (opts.length < 4) { var d = ans + rand(-2, 2); if (d >= 1 && d <= n+1 && opts.indexOf(d) < 0) opts.push(d); }
+      opts = [ans];
+      while (opts.length < 4) { d = ans + rand(-2, 2); if (d >= 1 && d <= n+1 && opts.indexOf(d) < 0) opts.push(d); }
       shuffle(opts);
-
-      var posWords = ['','first','second','third','fourth','fifth','sixth','seventh'];
+      // If ans is a name string, options need to be names
+      if (typeof ans === 'string') {
+        opts = [ans];
+        while (opts.length < 4) { var rname = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rname) < 0) opts.push(rname); }
+        shuffle(opts);
+      }
       return {
-        type: 'puzzle',
-        clueBlock: clues,
-        preamble: n + ' persons ' + names.join(', ') + ' sit in a row facing North. Each sits at a different position from 1 (left) to ' + n + ' (right).',
-        questionText: 'At which position does ' + target + ' sit?',
-        answer: posWords[ans] || String(ans),
-        answerIndex: ans,
-        options: opts,
-        timeLimit: 40 + diff * 5,
-        hint: 'Draw positions 1 to ' + n + ' left to right. Fill names as you read.'
+        type: 'puzzle', clueBlock: clues,
+        preamble: n + ' persons ' + names.join(', ') + ' sit in a row facing North. Positions are numbered 1 (leftmost) to ' + n + ' (rightmost).',
+        questionText: qText, answer: String(ans),
+        options: opts, timeLimit: 50 + diff * 8,
+        hint: 'Draw 1 to ' + n + ' left to right. Fill names from clues.'
+      };
+    } else if (puzType === 'circular') {
+      //EXAM-STYLE CIRCULAR SEATING — positions 1..n clockwise, facing center
+      var positions = [], opts, clues, i, d, ni;
+      for (i = 1; i <= n; i++) positions.push(i);
+      shuffle(positions);
+      var circSeat = {};
+      for (i = 0; i < n; i++) circSeat[names[i]] = positions[i];
+      // Question variety
+      var qType = rand(0, 2);
+      var target, ans, qText;
+      if (qType === 0) {
+        target = names[rand(0, n - 1)];
+        ans = circSeat[target];
+        qText = 'At which position does ' + target + ' sit? (Position 1 is at the top, numbered clockwise)';
+      } else if (qType === 1) {
+        // "Who sits third to the left of X?"
+        target = names[rand(0, n - 1)];
+        var offset = 1 + rand(0, Math.min(2, n - 2));
+        var tPos = circSeat[target];
+        var leftPos = ((tPos - offset - 1 + n) % n) + 1;
+        ans = null;
+        for (var ci = 0; ci < n; ci++) { if (circSeat[names[ci]] === leftPos) { ans = names[ci]; break; } }
+        if (!ans) ans = names[(tPos + offset) % n];
+        var offsetWord = offset === 1 ? 'immediate' : ORD[offset + 1];
+        qText = 'Who sits to the ' + offsetWord + ' left of ' + target + '?';
+      } else {
+        // "Who is opposite X?"
+        target = names[rand(0, n - 1)];
+        var tPos2 = circSeat[target];
+        var oppPos = ((tPos2 - 1 + n/2) % n) + 1;
+        if (n % 2 !== 0) oppPos = ((tPos2 - 1 + Math.floor(n/2)) % n) + 1;
+        ans = null;
+        for (ci = 0; ci < n; ci++) { if (circSeat[names[ci]] === oppPos) { ans = names[ci]; break; } }
+        if (!ans) ans = names[(tPos2 + 1) % n];
+        qText = 'Who sits opposite ' + target + '?';
+      }
+      clues = [];
+      // Clue 1: "X sits second to the left of Y"
+      ni = 0 % n;
+      var ni2 = (ni + 2) % n;
+      clues.push(names[ni] + ' sits second to the left of ' + names[ni2] + '.');
+      // Clue 2: "X sits to the immediate right of Y"
+      if (n >= 3) {
+        var ri = 1 % n;
+        var riNext = (ri + 1) % n;
+        clues.push(names[ri] + ' sits to the immediate right of ' + names[riNext] + '.');
+      }
+      // Clue 3: "X and Y are opposite" (only for even n)
+      if (n >= 4 && n % 2 === 0) {
+        var opp1 = 2 % n;
+        var opp2 = (opp1 + n/2) % n;
+        clues.push(names[opp1] + ' and ' + names[opp2] + ' are opposite each other.');
+      }
+      // Clue 4: negative neighbor
+      var nx = n - 1;
+      var nx2 = (nx - 2 + n) % n;
+      clues.push(names[nx] + ' does not sit next to ' + names[nx2] + '.');
+      // Clue 5: "X sits three places away from Y" (exam style for diff>=3)
+      if (diff >= 3 && n >= 5) {
+        var fa = 3 % n, fb = (fa + 3) % n;
+        clues.push(names[fa] + ' sits three places away from ' + names[fb] + '.');
+      }
+      // Clue 6: "X sits exactly between Y and Z"
+      if (n >= 5) {
+        var da = 0 % n, db = (da + 2) % n;
+        if (Math.abs(circSeat[names[da]] - circSeat[names[db]]) === 2 ||
+            (Math.abs(circSeat[names[da]] - circSeat[names[db]]) === n - 2)) {
+          clues.push(names[(da + 1) % n] + ' sits exactly between ' + names[da] + ' and ' + names[db] + '.');
+        }
+      }
+      var ansIsName = typeof ans === 'string';
+      if (!ansIsName) {
+        opts = [ans];
+        while (opts.length < 4) { d = ans + rand(-2, 2); if (d >= 1 && d <= n+1 && opts.indexOf(d) < 0) opts.push(d); }
+      } else {
+        opts = [ans];
+        while (opts.length < 4) { var rn = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rn) < 0) opts.push(rn); }
+      }
+      shuffle(opts);
+      var posWords = ['','1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th'];
+      return {
+        type: 'puzzle', clueBlock: clues,
+        preamble: n + ' persons ' + names.join(', ') + ' sit around a circular table facing the centre. Positions numbered 1 to ' + n + ' clockwise. (Left = anti-clockwise, Right = clockwise)',
+        questionText: qText, answer: String(ans),
+        options: opts, timeLimit: 55 + diff * 10,
+        hint: 'Draw a circle, mark 12-o\'clock as position 1, go clockwise. Fill names.'
+      };
+    } else {
+      //EXAM-STYLE COMPARISON RANKING — height/age/weight/marks
+      var order = [];
+      for (var i = 0; i < n; i++) order.push(i);
+      shuffle(order);
+      var valRank = {};
+      for (var i = 0; i < n; i++) valRank[names[order[i]]] = i;
+      // Pick comparison domain
+      var domains = ['taller','older','heavier','scored higher'];
+      var domain = domains[rand(0, domains.length - 1)];
+      var dWord = domain; // "taller", "older" etc
+      var dAdj = domain === 'taller' ? 'shortest' : domain === 'older' ? 'youngest' : domain === 'heavier' ? 'lightest' : 'lowest';
+      var dSuper = domain === 'taller' ? 'tallest' : domain === 'older' ? 'oldest' : domain === 'heavier' ? 'heaviest' : 'highest';
+      // Question variety
+      var qType = rand(0, 2);
+      var target, ans, qText;
+      if (qType === 0) {
+        target = names[rand(0, n - 1)];
+        ans = valRank[target] + 1;
+        qText = 'What is the rank of ' + target + ' from the top (1=' + dSuper + ')?';
+      } else if (qType === 1) {
+        // "Who is the X-th tallest?"
+        var rankVal = rand(1, n);
+        ans = null;
+        for (var ri = 0; ri < n; ri++) { if (valRank[names[ri]] + 1 === rankVal) { ans = names[ri]; break; } }
+        if (!ans) ans = names[rand(0, n - 1)];
+        qText = 'Who is the ' + ORD[rankVal] + ' ' + dSuper + '?';
+      } else {
+        // "Who is taller: X or Y?"
+        var a = rand(0, n - 1), b = rand(0, n - 1);
+        if (a === b) b = (a + 1) % n;
+        if (valRank[names[a]] < valRank[names[b]]) {
+          ans = names[a];
+          qText = 'Who is ' + domain + ': ' + names[a] + ' or ' + names[b] + '?';
+        } else {
+          ans = names[b];
+          qText = 'Who is ' + domain + ': ' + names[a] + ' or ' + names[b] + '?';
+        }
+      }
+      var clues = [];
+      // Clue 1: chain "X is taller than Y but shorter than Z"
+      var c1 = order[0], c2 = order[1], c3 = order[2];
+      clues.push(names[c1] + ' is ' + domain + ' than ' + names[c2] + ' but ' + dAdj + ' than ' + names[c3] + '.');
+      // Clue 2: plus sign comparison
+      if (valRank[names[c1]] > valRank[names[c3]]) clues.push(names[c1] + ' is ' + dAdj + ' than ' + names[c3] + '.');
+      else clues.push(names[c1] + ' is ' + domain + ' than ' + names[c3] + '.');
+      // Clue 3: extreme
+      clues.push(names[order[0]] + ' is the ' + dSuper + ' among them.');
+      clues.push(names[order[n-1]] + ' is the ' + dAdj + ' among them.');
+      // Clue 4: mid-person
+      var mid = order[Math.floor(n/2)];
+      if (mid !== order[0] && mid !== order[n-1]) clues.push(names[mid] + ' is neither the ' + dSuper + ' nor the ' + dAdj + '.');
+      // Clue 5: additional chain for diff>=3
+      if (diff >= 3 && n >= 5) {
+        var c4 = order[Math.min(3, n-1)], c5 = order[Math.min(4, n-1)];
+        if (c4 !== c5) clues.push(names[c4] + ' is ' + domain + ' than ' + names[c5] + '.');
+      }
+      var ansIsName = typeof ans === 'string';
+      if (!ansIsName) {
+        opts = [ans];
+        while (opts.length < 4) { var d2 = ans + rand(-2, 2); if (d2 >= 1 && d2 <= n+1 && opts.indexOf(d2) < 0) opts.push(d2); }
+      } else {
+        opts = [ans];
+        while (opts.length < 4) { var rn = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rn) < 0) opts.push(rn); }
+      }
+      shuffle(opts);
+      var rankWords = ['','first','second','third','fourth','fifth','sixth','seventh','eighth','ninth','tenth'];
+      return {
+        type: 'puzzle', clueBlock: clues,
+        preamble: n + ' persons ' + names.join(', ') + ' have different ' + (domain === 'taller' ? 'heights' : domain === 'older' ? 'ages' : domain === 'heavier' ? 'weights' : 'marks') + '. Rank 1 = ' + dSuper + ', Rank ' + n + ' = ' + dAdj + '.',
+        questionText: qText, answer: String(ans),
+        options: opts, timeLimit: 45 + diff * 8,
+        hint: 'List 1=' + dSuper + ' to ' + n + '=' + dAdj + '. Fill names from clues.'
       };
     }
   } catch(e) { return fallbackPuzzle(diff); }
@@ -1410,8 +1640,8 @@ function generatePuzzle(diff) {
 GENERATORS.puzzle = generatePuzzle;
 var _origMixed = GENERATORS.mixed;
 GENERATORS.mixed = function(diff) {
-  var types = ['math', 'chain', 'pattern', 'trap', 'puzzle'];
-  return GENERATORS[types[rand(0, 4)]](diff);
+  var types = ['math', 'chain', 'pattern', 'trap', 'trap', 'puzzle', 'puzzle'];
+  return GENERATORS[types[rand(0, types.length - 1)]](diff);
 };
 
 // Expose mistake bank for UI
