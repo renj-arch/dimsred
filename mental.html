@@ -102,6 +102,15 @@
         .session-item .s-acc.ok{color:var(--amber)}
         .session-item .s-acc.bad{color:var(--red)}
 
+        .tech-flash{padding:24px 16px;text-align:center;display:none;animation:fadeIn .3s}
+        .tech-flash.show{display:block}
+        .tech-flash .tf-line1{font-size:1.6em;font-weight:900;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+        .tech-flash .tf-line2{font-size:.82em;color:var(--text-sec);line-height:1.5}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+        .speed-tip{font-size:.72em;color:var(--text-sec);margin-top:4px;padding:6px 10px;border-radius:6px;background:rgba(167,139,250,.06);display:none}
+        .speed-tip.show{display:block}
+        .speed-tip .st-label{color:var(--purple);font-weight:700}
         .hidden{display:none!important}
     </style>
 </head>
@@ -179,7 +188,12 @@
 
                 <div class="timer-circle" id="timerCircle">10</div>
 
-                <div class="q-text" id="qText">Loading...</div>
+                <div class="tech-flash" id="techFlash">
+                    <div class="tf-line1" id="tfLine1"></div>
+                    <div class="tf-line2" id="tfLine2"></div>
+                </div>
+
+                <div class="q-text" id="qText" style="display:none">Loading...</div>
 
                 <div class="q-hint" id="qHint" onclick="toggleHint()">💡 Show hint
                     <div class="hint-text" id="hintText"></div>
@@ -189,6 +203,7 @@
             </div>
 
             <div class="result-flash" id="resultFlash"></div>
+            <div class="speed-tip" id="speedTip"><span class="st-label">⚡ Speed Tip</span> <span id="speedTipText"></span></div>
 
             <button class="action-btn primary hidden" id="nextBtn" onclick="nextQuestion()">Next →</button>
             <button class="action-btn secondary" id="quitBtn" onclick="endTraining()">✕ End Session</button>
@@ -210,6 +225,7 @@
     var timerInterval = null;
     var answered = false;
     var hasHint = false;
+    var questionLoadTime = 0;
 
     // ====== RANK & STATS UPDATE ======
     function updateUI() {
@@ -276,10 +292,40 @@
 
         document.getElementById('qNum').textContent = 'Q ' + (q.index + 1) + ' / ' + q.total;
         document.getElementById('qProgress').style.width = q.progress + '%';
-        document.getElementById('qText').innerHTML = q.question;
         document.getElementById('hintText').textContent = q.hint || '';
         document.getElementById('hintText').classList.remove('show');
         hasHint = false;
+
+        // Hide question area, show technique flash
+        document.getElementById('qText').style.display = 'none';
+        document.getElementById('optGrid').innerHTML = '';
+        document.getElementById('timerCircle').textContent = '--';
+        document.getElementById('timerCircle').className = 'timer-circle';
+        document.getElementById('nextBtn').classList.add('hidden');
+        document.getElementById('resultFlash').className = 'result-flash';
+        document.getElementById('speedTip').className = 'speed-tip';
+
+        var tf = document.getElementById('techFlash');
+        if (q.drillLine1) {
+            document.getElementById('tfLine1').textContent = q.drillLine1;
+            document.getElementById('tfLine2').textContent = q.drillLine2 || '';
+            tf.className = 'tech-flash show';
+        } else {
+            tf.className = 'tech-flash';
+            showQuestion(q);
+            return;
+        }
+
+        // Show question after 1.5s technique flash
+        setTimeout(function(){
+            showQuestion(q);
+        }, 1500);
+    }
+
+    function showQuestion(q) {
+        document.getElementById('techFlash').className = 'tech-flash';
+        document.getElementById('qText').innerHTML = q.question;
+        document.getElementById('qText').style.display = 'block';
 
         var og = document.getElementById('optGrid');
         og.innerHTML = '';
@@ -292,11 +338,10 @@
         });
 
         answered = false;
-        document.getElementById('nextBtn').classList.add('hidden');
-        document.getElementById('resultFlash').className = 'result-flash';
         var tc = document.getElementById('timerCircle');
         tc.textContent = q.timeLimit;
         tc.className = 'timer-circle';
+        questionLoadTime = Date.now();
         startTimer(q.timeLimit);
     }
 
@@ -326,6 +371,9 @@
         var q = currentQuestion;
         if (!q) return;
 
+        var reactionMs = Date.now() - questionLoadTime;
+        var reactionSec = (reactionMs / 1000).toFixed(1);
+
         var btns = document.querySelectorAll('.opt-btn');
         btns.forEach(function(b, i){ b.style.pointerEvents = 'none'; });
         if (idx >= 0) btns[idx].classList.add('selected');
@@ -340,11 +388,20 @@
 
         var rf = document.getElementById('resultFlash');
         if (result.correct) {
-            rf.textContent = '✓ Correct! +' + result.points + ' pts' + (result.bonus > 0 ? ' (speed bonus: +' + result.bonus + ')' : '');
+            rf.textContent = '✓ Correct! +' + result.points + ' pts' + (result.bonus > 0 ? ' (speed bonus: +' + result.bonus + ')' : '') + ' | ⏱ ' + reactionSec + 's';
             rf.className = 'result-flash show correct';
         } else {
-            rf.textContent = '✕ Wrong. Answer: ' + q.answer;
+            rf.textContent = '✕ Wrong. Answer: ' + q.answer + ' | ⏱ ' + reactionSec + 's';
             rf.className = 'result-flash show wrong';
+        }
+
+        // Show speed tip
+        var st = document.getElementById('speedTip');
+        if (q.techniqueLabel) {
+            document.getElementById('speedTipText').textContent = q.techniqueLabel;
+            st.className = 'speed-tip show';
+        } else {
+            st.className = 'speed-tip';
         }
 
         if (result.isComplete) {

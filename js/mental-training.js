@@ -22,6 +22,32 @@ var RANKS = [
 var PATTERN_TYPES = ['Analogy','Classification','Series','Coding','Syllogism','Inequality','Direction','Blood Relation','Puzzle','Data Sufficiency'];
 var TRAP_WORDS = ['except','not','incorrect','false','never','least','excluding','but not'];
 
+var SPEED_TECHNIQUES = {
+  'Analogy': 'Find the relationship in Q1, apply same to Q2. Action→Place, Part→Whole, Cause→Effect',
+  'Classification': 'Check divisibility, symmetry, category. Odd one breaks the pattern — find the rule first',
+  'Series': 'Check difference → gap grows = multiply, constant = add. Square/cube only if diff jumps sharply',
+  'Coding': 'Letter position (A=1) → sum. If 2-digit → 2-digit answer. Z=26, reverse if letters shrink',
+  'Syllogism': 'Draw circles: All=A inside B, Some=overlap, No=separate. Ignore text, use Venn overlap',
+  'Inequality': 'Chain symbols in same direction: A>B>C → A is largest. If signs flip, stop — cannot combine',
+  'Direction': 'Track N/S separate from E/W. Right=clockwise 90°. Pythagoras only if BOTH x AND y changed',
+  'Blood Relation': 'Draw 4-level tree: GP → Parent → Me → Child. Parent→sibling = same level. Wife/husband = = connector',
+  'Puzzle': 'Make table: rows=entities, fill confirmed cells. "Between" = exactly 1 on each side. Deduce gaps',
+  'Data Sufficiency': 'Stmt 1 alone? → A/D. Stmt 2 alone? → B/D. Both needed → C. Neither → E. Check NOT numbers but sufficiency'
+};
+
+var TECHNIQUE_DRILLS = {
+  'Syllogism': { line1: 'Venn circles', line2: '1s — All A are B + All B are C = All A are C. Some + All = Some. No + All = No' },
+  'Inequality': { line1: 'Chain same-direction', line2: '1.5s — A>B>C>D → A is largest. P≥Q=R>S → P>S (≥ not >). If sign flips → stop' },
+  'Direction': { line1: 'Track axes separately', line2: '3s — N=+y, S=-y, E=+x, W=-x. Right=clockwise. Pythagoras only if both axes nonzero' },
+  'Blood Relation': { line1: '4-level family tree', line2: '5s — GP/Parent/Me/Child. Same level = sibling. Mother/father = up 1. Son/daughter = down 1' },
+  'Analogy': { line1: 'Find the 1st relation', line2: '3s — Doctor:Hospital = function→place. Hand:Glove = part→covering. Match the SAME relation type' },
+  'Classification': { line1: 'Find the rule', line2: '2s — Odd one breaks the group rule. Try: divisible by? all shapes? all squares? category match?' },
+  'Series': { line1: 'Diff or ratio?', line2: '4s — Constant diff = add. Doubling = multiply. Diffs increasing = multiplier. Check gap of gaps if unclear' },
+  'Coding': { line1: 'Letter → number', line2: '3s — A=1 to Z=26. Sum positions. If code = sum×position, check CAT=3+1+20=24 pattern' },
+  'Puzzle': { line1: 'Table + fill slots', line2: '10s — Draw row/stack. "Immediate"=adjacent. "Between"=1 each side. Fill known, deduce unknown' },
+  'Data Sufficiency': { line1: 'Check each alone first', line2: '4s — Stmt1 enough? → A/D. Stmt2 enough? → B/D. Both? → C. Neither? → E. THE formula' }
+};
+
 function load() {
   try { return JSON.parse(localStorage.getItem(KEY)) || JSON.parse(JSON.stringify(defaultState)); }
   catch(e) { return JSON.parse(JSON.stringify(defaultState)); }
@@ -60,7 +86,7 @@ function generateMathQuestion(diff) {
   var opts = [data.a];
   while (opts.length < 4) { var d = rand(-5, 5) + data.a; if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
   shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: diff <= 1 ? 10 : (diff <= 3 ? 8 : 6), type: 'math' };
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: diff <= 1 ? 10 : (diff <= 3 ? 8 : 6), type: 'math', techniqueLabel: 'Mental math: break, compute, combine. Square→(a+b)², Percent→10% first then scale' };
 }
 
 function generateChainQuestion(diff) {
@@ -84,7 +110,8 @@ function generateChainQuestion(diff) {
     hint: 'Do each step in your head. Total ' + steps + ' steps.',
     timeLimit: diff <= 1 ? 30 : (diff <= 3 ? 25 : 20),
     type: 'chain',
-    steps: chain
+    steps: chain,
+    techniqueLabel: 'Chain: do one step at a time. Keep running total in head, don\'t re-read'
   };
 }
 
@@ -141,6 +168,7 @@ function generatePatternQuestion(diff) {
   var entry = answerMap[text] || { answer:'Option B', opts:['Option B','None','Both','Cannot determine'] };
   var opts = entry.opts.slice();
   shuffle(opts);
+  var drill = TECHNIQUE_DRILLS[pattern] || { line1:'Look for the pattern', line2:'Identify type, apply rule' };
   return {
     question: '(' + pattern + ') ' + text,
     answer: entry.answer,
@@ -148,7 +176,10 @@ function generatePatternQuestion(diff) {
     hint: 'Identify the pattern type first: ' + pattern,
     timeLimit: diff <= 1 ? 15 : (diff <= 3 ? 12 : 10),
     type: 'pattern',
-    patternLabel: pattern
+    patternLabel: pattern,
+    techniqueLabel: SPEED_TECHNIQUES[pattern] || 'Solve using pattern rules',
+    drillLine1: drill.line1,
+    drillLine2: drill.line2
   };
 }
 
@@ -169,7 +200,8 @@ function generateTrapQuestion(diff) {
     options: opts,
     hint: 'Watch for keywords like "' + word + '" that change the logic.',
     timeLimit: diff <= 1 ? 15 : (diff <= 3 ? 12 : 10),
-    type: 'trap'
+    type: 'trap',
+    techniqueLabel: 'Trap-spotting: circle the qualifier (except/not/false/least). The trap is ALWAYS in that word'
   };
 }
 
