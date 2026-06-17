@@ -19,7 +19,7 @@ var RANKS = [
   { name:'Master Genius', minPoints:800, icon:'🏆' }
 ];
 
-var PATTERN_TYPES = ['Analogy','Classification','Series','Coding'];
+var PATTERN_TYPES = ['Analogy','Classification','Series','Coding','Syllogism','Inequality','Direction','Blood Relation','Puzzle','Data Sufficiency'];
 var TRAP_WORDS = ['except','not','incorrect','false','never','least','excluding','but not'];
 
 function load() {
@@ -94,7 +94,13 @@ function generatePatternQuestion(diff) {
     'Analogy': ['Doctor : Hospital :: Teacher : ?','Book : Page :: Tree : ?','Hand : Glove :: Foot : ?','Pen : Write :: Knife : ?'],
     'Classification': ['Find odd one: 12, 24, 36, 51, 48','Find odd one: Square, Triangle, Circle, Rectangle','Find odd one: 121, 144, 169, 196, 200'],
     'Series': ['2, 6, 12, 20, ?','3, 9, 27, 81, ?','1, 4, 9, 16, 25, ?','3, 5, 8, 13, 21, ?'],
-    'Coding': ['If CAT = 24, DOG = 26, then BAT = ?','If A=1, B=2, what is ZEBRA?','In a code, MAN = 182, then WOMAN = ?']
+    'Coding': ['If CAT = 24, DOG = 26, then BAT = ?','If A=1, B=2, what is ZEBRA?','In a code, MAN = 182, then WOMAN = ?'],
+    'Syllogism': ['All cats are mammals. All mammals are animals. Conclusion: All cats are animals.','Some doctors are teachers. All teachers are educated. Conclusion: Some doctors are educated.','No fish are birds. All penguins are birds. Conclusion: Some penguins are fish.'],
+    'Inequality': ['A > B, B > C, C > D. Which is the largest?','P \u2265 Q, Q = R, R > S. Which is definitely true?','X < Y, Y \u2264 Z, Z = W. What can be said about X and W?'],
+    'Direction': ['A walks 5km North, turns right, walks 3km, turns right, walks 5km. How far from start?','A walks 4km East, turns left, walks 3km. Direction from start?','A walks 2km South, turns right, walks 5km, turns right, walks 2km. Direction from start?'],
+    'Blood Relation': ['A is B\ns father. B is C\ns sister. How is A related to C?','P is Q\ns brother. Q is R\ns mother. How is P related to R?','X is Y\ns mother. Y is Z\ns wife. How is X related to Z?'],
+    'Puzzle': ['Five friends P,Q,R,S,T sit in a row facing North. P is at left end. R is to the immediate right of P. T is to the immediate left of S. Q is between R and T. Who is in the middle?','Three boxes Red, Blue, Green are stacked. Red is above Blue. Green is below Blue. Which box is in the middle?','Four books Physics, Chemistry, Maths, Biology are on a shelf. Physics is left of Chemistry. Maths is right of Chemistry. Biology is between Physics and Chemistry. Which book is second from left?'],
+    'Data Sufficiency': ['Is X > Y? Statement 1: X + Y = 10. Statement 2: X = 2Y.','What is the age of A? Statement 1: A is 5 years older than B. Statement 2: B is 20 years old.','Is triangle PQR right-angled at Q? Statement 1: PQ\u00B2 + QR\u00B2 = PR\u00B2. Statement 2: PQ = 3, QR = 4.']
   };
   var answerMap = {
     'Doctor : Hospital :: Teacher : ?': { answer:'School', opts:['School','College','Hospital','Factory'] },
@@ -110,7 +116,25 @@ function generatePatternQuestion(diff) {
     '3, 5, 8, 13, 21, ?': { answer:'34', opts:['34','33','29','55'] },
     'If CAT = 24, DOG = 26, then BAT = ?': { answer:'23', opts:['23','21','25','20'] },
     'If A=1, B=2, what is ZEBRA?': { answer:'56', opts:['56','48','52','44'] },
-    'In a code, MAN = 182, then WOMAN = ?': { answer:'307', opts:['307','315','298','312'] }
+    'In a code, MAN = 182, then WOMAN = ?': { answer:'307', opts:['307','315','298','312'] },
+    'All cats are mammals. All mammals are animals. Conclusion: All cats are animals.': { answer:'True', opts:['True','False','Cannot determine','Depends'] },
+    'Some doctors are teachers. All teachers are educated. Conclusion: Some doctors are educated.': { answer:'True', opts:['True','False','Cannot determine','Depends'] },
+    'No fish are birds. All penguins are birds. Conclusion: Some penguins are fish.': { answer:'False', opts:['True','False','Cannot determine','Depends'] },
+    'A > B, B > C, C > D. Which is the largest?': { answer:'A', opts:['A','B','C','Cannot determine'] },
+    'P \u2265 Q, Q = R, R > S. Which is definitely true?': { answer:'P > S', opts:['P > S','P = S','P < S','Cannot determine'] },
+    'X < Y, Y \u2264 Z, Z = W. What can be said about X and W?': { answer:'X < W', opts:['X < W','X > W','X = W','Cannot determine'] },
+    'A walks 5km North, turns right, walks 3km, turns right, walks 5km. How far from start?': { answer:'3 km', opts:['3 km','5 km','8 km','13 km'] },
+    'A walks 4km East, turns left, walks 3km. Direction from start?': { answer:'North-East', opts:['North-East','East','South-East','North'] },
+    'A walks 2km South, turns right, walks 5km, turns right, walks 2km. Direction from start?': { answer:'West', opts:['West','East','North','South'] },
+    'A is B\ns father. B is C\ns sister. How is A related to C?': { answer:'Father', opts:['Father','Uncle','Brother','Grandfather'] },
+    'P is Q\ns brother. Q is R\ns mother. How is P related to R?': { answer:'Uncle', opts:['Uncle','Father','Brother','Grandfather'] },
+    'X is Y\ns mother. Y is Z\ns wife. How is X related to Z?': { answer:'Mother-in-law', opts:['Mother-in-law','Mother','Sister','Aunt'] },
+    'Five friends P,Q,R,S,T sit in a row facing North. P is at left end. R is to the immediate right of P. T is to the immediate left of S. Q is between R and T. Who is in the middle?': { answer:'Q', opts:['Q','R','T','Cannot determine'] },
+    'Three boxes Red, Blue, Green are stacked. Red is above Blue. Green is below Blue. Which box is in the middle?': { answer:'Blue', opts:['Blue','Red','Green','Cannot determine'] },
+    'Four books Physics, Chemistry, Maths, Biology are on a shelf. Physics is left of Chemistry. Maths is right of Chemistry. Biology is between Physics and Chemistry. Which book is second from left?': { answer:'Biology', opts:['Biology','Physics','Chemistry','Maths'] },
+    'Is X > Y? Statement 1: X + Y = 10. Statement 2: X = 2Y.': { answer:'Both statements', opts:['Statement 1 alone','Statement 2 alone','Both statements','Neither statement'] },
+    'What is the age of A? Statement 1: A is 5 years older than B. Statement 2: B is 20 years old.': { answer:'Both statements', opts:['Statement 1 alone','Statement 2 alone','Both statements','Neither statement'] },
+    'Is triangle PQR right-angled at Q? Statement 1: PQ\u00B2 + QR\u00B2 = PR\u00B2. Statement 2: PQ = 3, QR = 4.': { answer:'Statement 1 alone', opts:['Statement 1 alone','Statement 2 alone','Both statements','Neither statement'] }
   };
   var pool = texts[pattern];
   var text = pool[rand(0, pool.length - 1)];
