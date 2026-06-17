@@ -1310,7 +1310,7 @@ function fallbackPuzzle(diff) {
 
 function generatePuzzle(diff) {
   try {
-    var choices = ['floor','linear','circular','comparison'];
+    var choices = ['floor','linear','circular','comparison','blood','direction'];
     var puzType = choices[rand(0, choices.length - 1)];
     // diff 0-1=4-5 persons, 2-3=5-6, 4-5=6-8
     var n = diff <= 1 ? 4 + rand(0, 1) : diff <= 3 ? 5 + rand(0, 1) : 6 + rand(0, 2);
@@ -1564,8 +1564,7 @@ function generatePuzzle(diff) {
         options: opts, timeLimit: 55 + diff * 10,
         hint: 'Draw a circle, mark 12-o\'clock as position 1, go clockwise. Fill names.'
       };
-    } else {
-      //EXAM-STYLE COMPARISON RANKING — height/age/weight/marks
+    } else if (puzType === 'comparison') {
       var order = [];
       for (var i = 0; i < n; i++) order.push(i);
       shuffle(order);
@@ -1638,6 +1637,112 @@ function generatePuzzle(diff) {
         options: opts, timeLimit: 45 + diff * 8,
         hint: 'List 1=' + dSuper + ' to ' + n + '=' + dAdj + '. Fill names from clues.'
       };
+    } else if (puzType === 'blood') {
+      // BLOOD RELATION PUZZLE — family tree from generated relations
+      var REL = ['father','mother','brother','sister','uncle','aunt','grandfather','grandmother','cousin','nephew','niece'];
+      var REL_REV = {father:'son',mother:'daughter',brother:'sister',sister:'brother',uncle:'nephew',aunt:'niece','grandfather':'grandson','grandmother':'granddaughter','cousin':'cousin','nephew':'uncle','niece':'aunt'};
+      // Build a 3-generation family tree
+      var family = {};
+      var famNames = PUZ_NAMES.slice(0, 6 + rand(0, Math.min(2, diff)));
+      shuffle(famNames);
+      // Pick roles: gen0 = grandparents, gen1 = parents, gen2 = children
+      var gen0 = famNames.slice(0, 2); // grandfather, grandmother
+      var gen1 = famNames.slice(2, 5); // father, mother, uncle/aunt
+      var gen2 = famNames.slice(5); // children
+      // Assign genders
+      var male = [gen0[0], gen1[0], gen2[0], gen2[2]];
+      var female = [gen0[1], gen1[1], gen1[2], gen2[1], gen2[3]].filter(Boolean);
+      var clues = [];
+      // Chain: "X is the father of Y"
+      if (gen0[0] && gen1[0]) clues.push(gen0[0] + ' is the father of ' + gen1[0] + '.');
+      if (gen0[1] && gen1[0]) clues.push(gen0[1] + ' is the mother of ' + gen1[0] + '.');
+      if (gen1[0] && gen2[0]) clues.push(gen1[0] + ' is the father of ' + gen2[0] + '.');
+      if (gen1[1] && gen2[0]) clues.push(gen1[1] + ' is the mother of ' + gen2[0] + '.');
+      if (gen1[0] && gen1[1]) clues.push(gen1[0] + ' is the husband of ' + gen1[1] + '.');
+      if (gen1[2] && gen2[1]) clues.push(gen1[2] + ' is the mother of ' + gen2[1] + '.');
+      // Pick question: relationship between two members
+      var pairs = [];
+      if (gen2[0] && gen0[0]) pairs.push({a:gen2[0], b:gen0[0], rel:'grandson'});
+      if (gen2[0] && gen1[2]) pairs.push({a:gen2[0], b:gen1[2], rel:'nephew'});
+      if (gen2[0] && gen2[1]) pairs.push({a:gen2[0], b:gen2[1], rel:'cousin'});
+      if (gen1[0] && gen1[2]) pairs.push({a:gen1[0], b:gen1[2], rel:'brother'});
+      if (gen1[1] && gen1[2]) pairs.push({a:gen1[1], b:gen0[1], rel:'daughter'});
+      if (gen2[0] && gen2[2]) pairs.push({a:gen2[0], b:gen2[2], rel:'brother'});
+      if (pairs.length === 0) pairs.push({a:famNames[0], b:famNames[1], rel:'cousin'});
+      var chosen = pairs[rand(0, pairs.length - 1)];
+      var target = chosen.a;
+      var target2 = chosen.b;
+      var ans = chosen.rel;
+      var qText = 'How is ' + target + ' related to ' + target2 + '?';
+      opts = [ans];
+      var otherRels = REL.filter(function(r){ return r !== ans; });
+      shuffle(otherRels);
+      while (opts.length < 4) { if (otherRels.length) { var ro = otherRels.pop(); opts.push(ro); } else { opts.push(REL[rand(0, REL.length - 1)]); } }
+      shuffle(opts);
+      return {
+        type: 'puzzle', clueBlock: clues,
+        preamble: 'Study the following family relationships:',
+        questionText: qText, answer: ans,
+        options: opts, timeLimit: 45 + diff * 8,
+        hint: 'Draw a family tree. Parents above children. Label each person.'
+      };
+    } else {
+      // DIRECTION & DISTANCE PUZZLE — multi-leg path tracking
+      var DIRS = ['North','South','East','West'];
+      var OPP = {North:'South',South:'North',East:'West',West:'East'};
+      var legs = 3 + rand(0, Math.min(2, diff));
+      var x = 0, y = 0;
+      var clues = [];
+      var path = [];
+      for (var di = 0; di < legs; di++) {
+        var dir = DIRS[rand(0, 3)];
+        var dist = 2 + rand(0, 5);
+        path.push({dir:dir, dist:dist});
+        clues.push('walks ' + dist + ' km towards ' + dir + '.');
+        if (dir === 'North') y += dist;
+        else if (dir === 'South') y -= dist;
+        else if (dir === 'East') x += dist;
+        else if (dir === 'West') x -= dist;
+      }
+      // Question: final direction and distance from origin
+      var absX = Math.abs(x), absY = Math.abs(y);
+      var finalDir = '';
+      if (x >= 0 && y >= 0) finalDir = x >= y ? 'East' : 'North';
+      else if (x >= 0 && y < 0) finalDir = x >= absY ? 'East' : 'South';
+      else if (x < 0 && y >= 0) finalDir = absX >= y ? 'West' : 'North';
+      else finalDir = absX >= absY ? 'West' : 'South';
+      var finalDist = Math.round(Math.sqrt(x*x + y*y));
+      if (finalDist === 0) finalDist = 1;
+      // Pick question type
+      var qType = rand(0, 2);
+      if (qType === 0) {
+        // "In which direction is he from start?"
+        var wrongDirs = DIRS.filter(function(d){ return d !== finalDir; });
+        shuffle(wrongDirs);
+        opts = [finalDir];
+        while (opts.length < 4) { opts.push(wrongDirs.pop() || DIRS[rand(0, 3)]); }
+        shuffle(opts);
+        return {
+          type: 'puzzle', clueBlock: clues,
+          preamble: 'A person starts from point A and follows this path:',
+          questionText: 'In which direction is he from the starting point?', answer: finalDir,
+          options: opts, timeLimit: 40 + diff * 5,
+          hint: 'Draw a grid. Mark each leg with direction and distance. Calculate net displacement.'
+        };
+      } else {
+        // "How far is he from the starting point?"
+        var minDist = Math.max(1, finalDist - 4), maxDist = finalDist + 4;
+        opts = [String(finalDist)];
+        while (opts.length < 4) { var d2 = rand(minDist, maxDist); if (opts.indexOf(String(d2)) < 0) opts.push(String(d2)); }
+        shuffle(opts);
+        return {
+          type: 'puzzle', clueBlock: clues,
+          preamble: 'A person starts from point A and follows this path:',
+          questionText: 'How far is he from the starting point (in km)?', answer: String(finalDist),
+          options: opts, timeLimit: 50 + diff * 8,
+          hint: 'Track net North-South and East-West displacement. Use Pythagoras: d = \u221a(x\u00b2 + y\u00b2)'
+        };
+      }
     }
   } catch(e) { return fallbackPuzzle(diff); }
 }
