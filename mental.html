@@ -122,6 +122,17 @@
         .mastery-row .m-bar{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden}
         .mastery-row .m-bar .m-fill{height:100%;border-radius:100px;transition:width .5s}
         .mastery-row .m-pct{width:30px;text-align:right;flex-shrink:0;font-weight:700}
+        .speed-row{display:flex;align-items:center;gap:6px;padding:4px 0;font-size:.72em}
+        .speed-row .s-label{width:80px;flex-shrink:0;font-weight:600}
+        .speed-row .s-bar{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden;position:relative}
+        .speed-row .s-bar .s-fill{height:100%;border-radius:100px;transition:width .3s}
+        .speed-row .s-bar .s-marker{position:absolute;top:-2px;width:2px;height:10px;background:var(--emerald);border-radius:2px}
+        .speed-row .s-time{width:42px;text-align:right;flex-shrink:0;font-weight:700;font-family:'JetBrains Mono',monospace}
+        .speed-grade{display:inline-block;width:18px;height:18px;line-height:18px;text-align:center;border-radius:50%;font-size:.7em;font-weight:800;flex-shrink:0}
+        .speed-grade.A{background:rgba(52,211,153,.2);color:var(--emerald)}
+        .speed-grade.B{background:rgba(245,158,11,.2);color:var(--amber)}
+        .speed-grade.C{background:rgba(245,158,11,.1);color:var(--amber)}
+        .speed-grade.D{background:rgba(239,68,68,.2);color:var(--red)}
 
         .hard-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;padding:4px}
         .hard-toggle input{display:none}
@@ -156,6 +167,7 @@
                 <div class="streak" id="streakDisplay">🔥 <span id="streakNum">0</span></div>
                 <div class="rank-next" id="rankNext">Next: 50 pts</div>
                 <div id="hardCount" style="font-size:.68em;color:var(--red);margin-top:2px;display:none"></div>
+                <div id="mistakeCount" style="font-size:.68em;color:var(--amber);margin-top:2px;display:none">📁 <span id="mistakeNum">0</span> mistakes to retry</div>
             </div>
         </div>
 
@@ -192,6 +204,12 @@
                     <div class="desc">Person × State + Age — visual grid</div>
                     <div class="stat" id="stat-puzzle">0 solved</div>
                 </div>
+                <div class="mode-card" data-mode="recognize" onclick="startTraining('recognize')" style="border-color:rgba(255,165,0,.4)">
+                    <div class="icon">👁️</div>
+                    <div class="name">Recognition Reflex</div>
+                    <div class="desc">Identify pattern TYPES in 5s — no solving</div>
+                    <div class="stat" id="stat-recognize">0 solved</div>
+                </div>
             </div>
 
             <!-- MASTERY PROGRESS -->
@@ -201,6 +219,15 @@
                     <span id="masteryOverall" style="color:var(--purple)">0%</span>
                 </div>
                 <div id="masteryGrid"></div>
+            </div>
+
+            <!-- SPEED BENCHMARKS -->
+            <div id="speedSection" style="margin-top:12px;display:none">
+                <div style="font-size:.78em;font-weight:700;color:var(--text-sec);margin-bottom:6px;display:flex;justify-content:space-between">
+                    <span>⚡ Speed Benchmarks</span>
+                    <span id="speedOverall" style="color:var(--amber)">—</span>
+                </div>
+                <div id="speedGrid"></div>
             </div>
 
             <div style="display:flex;gap:8px;margin-top:12px;align-items:center;flex-wrap:wrap">
@@ -315,6 +342,16 @@
         if (stats.hardSessions > 0) { hc.textContent = '🔥 ' + stats.hardSessions + ' hard sessions'; hc.style.display = 'block'; }
         else { hc.style.display = 'none'; }
 
+        // Mistake bank count
+        var mc = document.getElementById('mistakeCount');
+        if (window.getMistakeCount) {
+            var mCount = window.getMistakeCount();
+            if (mCount > 0) {
+                document.getElementById('mistakeNum').textContent = mCount;
+                mc.style.display = 'block';
+            } else { mc.style.display = 'none'; }
+        }
+
         var sh = document.getElementById('sessionHistory');
         if (stats.sessions.length > 0) {
             var h = '<div class="session-log"><div class="title">Recent Sessions</div>';
@@ -357,6 +394,45 @@
             }
         } else {
             ms.style.display = 'none';
+        }
+
+        // Speed benchmarks
+        var ss = document.getElementById('speedSection');
+        var sg = document.getElementById('speedGrid');
+        if (window.getSpeedGrades && window.SPEED_TARGETS) {
+            var grades = window.getSpeedGrades();
+            sg.innerHTML = '';
+            var count = 0, totalGrade = 0, gradeCount = 0, gradesMap = { A: 4, B: 3, C: 2, D: 1 };
+            var types = ['Analogy','Classification','Series','Coding','Syllogism','Inequality','Direction','Blood Relation','Puzzle','Data Sufficiency'];
+            types.forEach(function(t){
+                var g = grades[t];
+                if (!g) return;
+                count++;
+                var pct = g.topper > 0 ? Math.round(g.avg / g.topper * 100) : 100;
+                var color = g.grade === 'A' ? 'var(--emerald)' : (g.grade === 'B' ? 'var(--amber)' : (g.grade === 'C' ? 'var(--amber)' : 'var(--red)'));
+                var targetLabel = g.grade === 'A' ? 'Topper' : (g.avg <= g.good ? 'Good' : 'Needs work');
+                totalGrade += gradesMap[g.grade] || 0;
+                gradeCount++;
+                sg.innerHTML += '<div class="speed-row">'
+                    + '<span class="s-label">' + t + '</span>'
+                    + '<div class="s-bar">'
+                    + '<div class="s-fill" style="width:' + Math.min(100, pct) + '%;background:' + color + '"></div>'
+                    + '<div class="s-marker" style="left:' + Math.round(g.topper / g.topper * 30) + '%" title="Topper: ' + g.topper + 's"></div>'
+                    + '</div>'
+                    + '<span class="speed-grade ' + g.grade + '">' + g.grade + '</span>'
+                    + '<span class="speed-time" style="color:' + color + '">' + g.avg + 's</span>'
+                    + '</div>';
+            });
+            if (count > 0) {
+                var avgGrade = gradeCount > 0 ? Math.round(totalGrade / gradeCount) : 0;
+                var avgLabel = avgGrade >= 4 ? 'A' : (avgGrade >= 3 ? 'B' : (avgGrade >= 2 ? 'C' : 'D'));
+                document.getElementById('speedOverall').textContent = 'Avg: ' + avgLabel + ' (' + count + ' types)';
+                ss.style.display = 'block';
+            } else {
+                ss.style.display = 'none';
+            }
+        } else {
+            ss.style.display = 'none';
         }
     }
 
