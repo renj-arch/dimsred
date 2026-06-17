@@ -239,7 +239,7 @@ window.startMentalSession = function(mode, opts) {
   opts = opts || {};
   if (!mode || !GENERATORS[mode]) mode = 'mixed';
   var totalQ = (mode === 'puzzle') ? 5 : 10;
-  var session = { mode: mode, questionIndex: 0, totalQuestions: totalQ, correct: 0, startTime: Date.now(), active: true, hardMode: !!opts.hardMode, focusType: opts.focusType || null };
+  var session = { mode: mode, questionIndex: 0, totalQuestions: totalQ, correct: 0, startTime: Date.now(), active: true, hardMode: !!opts.hardMode, focusType: opts.focusType || null, review: [] };
   if (mode === 'puzzle') {
     session.puzzles = [];
     for (var i = 0; i < totalQ; i++) { session.puzzles.push(GENERATORS.puzzle(state.difficulty.level)); }
@@ -321,6 +321,20 @@ window.submitMentalAnswer = function(session, question, selectedAnswer, timeRema
   if (mode === 'pattern' && question.patternLabel && state.patternStats[question.patternLabel]) {
     state.patternStats[question.patternLabel].attempts++;
     if (correct) state.patternStats[question.patternLabel].correct++;
+  }
+
+  // Record for session review
+  if (session.review) {
+    session.review.push({
+      question: question.question,
+      yourAnswer: selectedAnswer,
+      correctAnswer: question.answer,
+      isCorrect: correct,
+      patternLabel: question.patternLabel || '',
+      techniqueLabel: question.techniqueLabel || '',
+      drillLine1: question.drillLine1 || '',
+      options: question.options || []
+    });
   }
 
   // Track streak
