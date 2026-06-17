@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="js/auth-guard.js"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Mental Solving — vlymbooq</title>
+    <meta name="description" content="Train your brain to solve Quant and Reasoning problems purely mentally. No pen, no paper — just your mind. Fastest path to exam speed mastery.">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/mental.html">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7363013795551054" crossorigin="anonymous"></script>
+    <script src="js/mental-training.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--red:#ef4444;--amber:#f59e0b;--radius:12px}
+        body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--text);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:var(--text-sec);transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:700px;margin:0 auto;padding:24px;position:relative}
+
+        .rank-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px}
+        .rank-bar .rank-info{display:flex;align-items:center;gap:8px}
+        .rank-bar .rank-icon{font-size:1.5em}
+        .rank-bar .rank-name{font-weight:700;font-size:.9em}
+        .rank-bar .rank-pts{font-size:.75em;color:var(--text-muted)}
+        .rank-bar .rank-next{font-size:.72em;color:var(--text-sec)}
+        .rank-bar .streak{display:flex;align-items:center;gap:4px;font-size:.82em;color:var(--amber)}
+        .rank-bar .streak.fire{animation:pulse 1s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+        .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+        @media(max-width:480px){.mode-grid{grid-template-columns:1fr}}
+        .mode-card{padding:20px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);cursor:pointer;transition:all .2s;text-align:center}
+        .mode-card:hover{border-color:rgba(255,255,255,.15);transform:translateY(-2px)}
+        .mode-card .icon{font-size:2em;margin-bottom:6px}
+        .mode-card .name{font-weight:700;font-size:.9em;margin-bottom:2px}
+        .mode-card .desc{font-size:.75em;color:var(--text-muted)}
+        .mode-card .stat{font-size:.7em;color:var(--purple);margin-top:6px}
+
+        .arena{display:none}
+        .arena.active{display:block}
+
+        .question-card{padding:32px 24px 24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);margin-bottom:16px;text-align:center}
+        .question-card .q-num{font-size:.72em;color:var(--text-muted);margin-bottom:4px}
+        .question-card .q-progress{height:3px;background:rgba(255,255,255,.06);border-radius:100px;margin-bottom:16px;overflow:hidden}
+        .question-card .q-progress .fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--emerald));border-radius:100px;transition:width .3s}
+        .question-card .q-text{font-size:clamp(1.1rem,2.5vw,1.35rem);font-weight:700;line-height:1.6;margin-bottom:16px;font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
+        .question-card .q-hint{font-size:.78em;color:var(--text-muted);margin-bottom:16px;cursor:pointer;user-select:none}
+        .question-card .q-hint:hover{color:var(--text-sec)}
+        .question-card .q-hint .hint-text{display:none;margin-top:4px;color:var(--purple);font-size:.92em}
+        .question-card .q-hint .hint-text.show{display:block}
+
+        .timer-circle{width:72px;height:72px;border-radius:50%;border:3px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'JetBrains Mono',monospace;font-size:1.4em;font-weight:700;transition:border-color .3s}
+        .timer-circle.urgent{border-color:var(--red);color:var(--red)}
+        .timer-circle.warning{border-color:var(--amber);color:var(--amber)}
+
+        .opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:500px;margin:0 auto}
+        @media(max-width:400px){.opt-grid{grid-template-columns:1fr}}
+        .opt-btn{padding:14px 16px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;font-size:.95em;font-weight:600;transition:all .15s;text-align:center;font-family:'JetBrains Mono',monospace}
+        .opt-btn:hover{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.04)}
+        .opt-btn.selected{border-color:var(--purple);background:rgba(167,139,250,.1);color:var(--purple)}
+        .opt-btn.correct{border-color:var(--emerald);background:rgba(52,211,153,.1);color:var(--emerald)}
+        .opt-btn.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .opt-btn:disabled{cursor:default;opacity:.7}
+
+        .result-flash{padding:16px;border-radius:10px;text-align:center;margin-bottom:12px;font-weight:700;font-size:1em;display:none}
+        .result-flash.show{display:block}
+        .result-flash.correct{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);color:var(--emerald)}
+        .result-flash.wrong{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:var(--red)}
+
+        .action-btn{display:block;width:100%;padding:14px;border-radius:100px;border:none;font-weight:700;font-size:.95em;cursor:pointer;transition:all .2s;text-align:center;margin-top:12px}
+        .action-btn.primary{background:linear-gradient(135deg,var(--purple),var(--emerald));color:#fff}
+        .action-btn.primary:hover{opacity:.9;transform:translateY(-1px)}
+        .action-btn.secondary{background:rgba(255,255,255,.06);color:var(--text)}
+        .action-btn.secondary:hover{background:rgba(255,255,255,.1)}
+
+        .results-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;background:rgba(9,9,11,.95);display:none;align-items:center;justify-content:center;padding:24px}
+        .results-overlay.show{display:flex}
+        .results-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;max-width:400px;width:100%;text-align:center}
+        .results-card .big-num{font-size:3em;font-weight:900;margin:8px 0}
+        .results-card .big-num.good{color:var(--emerald)}
+        .results-card .big-num.ok{color:var(--amber)}
+        .results-card .big-num.bad{color:var(--red)}
+        .results-card .label{font-size:.82em;color:var(--text-muted)}
+        .results-card .detail-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:.85em}
+        .results-card .detail-row:last-child{border-bottom:none}
+        .results-card .rank-up{font-size:3em;margin:8px 0;animation:bounce .5s}
+        @keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+
+        .session-log{margin-top:16px}
+        .session-log .title{font-size:.82em;font-weight:700;margin-bottom:8px;color:var(--text-sec)}
+        .session-item{display:flex;justify-content:space-between;padding:8px 12px;border-radius:6px;background:rgba(255,255,255,.02);margin-bottom:4px;font-size:.78em}
+        .session-item .s-mode{color:var(--purple);font-weight:600}
+        .session-item .s-acc.good{color:var(--emerald)}
+        .session-item .s-acc.ok{color:var(--amber)}
+        .session-item .s-acc.bad{color:var(--red)}
+
+        .hidden{display:none!important}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand"><img src="logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="lab.html">Lab</a>
+                <a href="smart.html">Smart</a>
+                <a href="guides/index.html">Guides</a>
+                <a href="mental.html" class="active" style="color:var(--text);background:rgba(255,255,255,.06)">Mental</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- RANK BAR -->
+        <div class="rank-bar" id="rankBar">
+            <div class="rank-info">
+                <span class="rank-icon" id="rankIcon">🥉</span>
+                <div><div class="rank-name" id="rankName">Bronze Brains</div><div class="rank-pts" id="rankPts">0 pts</div></div>
+            </div>
+            <div style="text-align:right">
+                <div class="streak" id="streakDisplay">🔥 <span id="streakNum">0</span></div>
+                <div class="rank-next" id="rankNext">Next: 50 pts</div>
+            </div>
+        </div>
+
+        <!-- MODE SELECTION -->
+        <div id="modeSelect">
+            <div class="mode-grid">
+                <div class="mode-card" data-mode="math" onclick="startTraining('math')">
+                    <div class="icon">🔢</div>
+                    <div class="name">Math Sprint</div>
+                    <div class="desc">Squares, %, fractions — 10s each</div>
+                    <div class="stat" id="stat-math">0 solved</div>
+                </div>
+                <div class="mode-card" data-mode="chain" onclick="startTraining('chain')">
+                    <div class="icon">⛓️</div>
+                    <div class="name">Computation Chain</div>
+                    <div class="desc">Multi-step mental chains</div>
+                    <div class="stat" id="stat-chain">0 solved</div>
+                </div>
+                <div class="mode-card" data-mode="pattern" onclick="startTraining('pattern')">
+                    <div class="icon">🧩</div>
+                    <div class="name">Pattern Flash</div>
+                    <div class="desc">Identify patterns in 5s</div>
+                    <div class="stat" id="stat-pattern">0 solved</div>
+                </div>
+                <div class="mode-card" data-mode="trap" onclick="startTraining('trap')">
+                    <div class="icon">⚠️</div>
+                    <div class="name">Trap Dodge</div>
+                    <div class="desc">Spot the hidden traps</div>
+                    <div class="stat" id="stat-trap">0 solved</div>
+                </div>
+            </div>
+
+            <div id="sessionHistory"></div>
+        </div>
+
+        <!-- TRAINING ARENA -->
+        <div class="arena" id="arena">
+            <div class="question-card" id="questionCard">
+                <div class="q-num" id="qNum">Q 1 / 10</div>
+                <div class="q-progress"><div class="fill" id="qProgress" style="width:0%"></div></div>
+
+                <div class="timer-circle" id="timerCircle">10</div>
+
+                <div class="q-text" id="qText">Loading...</div>
+
+                <div class="q-hint" id="qHint" onclick="toggleHint()">💡 Show hint
+                    <div class="hint-text" id="hintText"></div>
+                </div>
+
+                <div class="opt-grid" id="optGrid"></div>
+            </div>
+
+            <div class="result-flash" id="resultFlash"></div>
+
+            <button class="action-btn primary hidden" id="nextBtn" onclick="nextQuestion()">Next →</button>
+            <button class="action-btn secondary" id="quitBtn" onclick="endTraining()">✕ End Session</button>
+        </div>
+
+        <!-- RESULTS OVERLAY -->
+        <div class="results-overlay" id="resultsOverlay">
+            <div class="results-card">
+                <div id="resultsContent"></div>
+                <button class="action-btn primary" onclick="closeResults()" style="margin-top:16px">Train Again</button>
+                <button class="action-btn secondary" onclick="backToMenu()">Back to Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    var session = null;
+    var currentQuestion = null;
+    var timerInterval = null;
+    var answered = false;
+    var hasHint = false;
+
+    // ====== RANK & STATS UPDATE ======
+    function updateUI() {
+        var stats = window.getMentalStats();
+        if (!stats) return;
+        document.getElementById('rankIcon').textContent = stats.rank.icon;
+        document.getElementById('rankName').textContent = stats.rank.name;
+        document.getElementById('rankPts').textContent = stats.points + ' pts';
+        document.getElementById('streakNum').textContent = stats.streak;
+
+        var next = RANKS.find(function(r){ return r.minPoints > stats.points; });
+        document.getElementById('rankNext').textContent = next ? 'Next: ' + next.minPoints + ' pts' : 'Max Rank!';
+
+        var sd = document.getElementById('streakDisplay');
+        if (stats.streak >= 3) sd.className = 'streak fire'; else sd.className = 'streak';
+
+        // Mode stats
+        for (var m in stats.stats) {
+            var el = document.getElementById('stat-' + m);
+            if (el) {
+                var s = stats.stats[m];
+                el.textContent = s.attempts + ' solved' + (s.attempts > 0 ? ' (' + Math.round(s.correct / s.attempts * 100) + '%)' : '');
+            }
+        }
+
+        // Session history
+        var sh = document.getElementById('sessionHistory');
+        if (stats.sessions.length > 0) {
+            var h = '<div class="session-log"><div class="title">Recent Sessions</div>';
+            stats.sessions.slice(0, 5).forEach(function(s){
+                var accClass = s.accuracy >= 70 ? 'good' : (s.accuracy >= 40 ? 'ok' : 'bad');
+                h += '<div class="session-item"><span class="s-mode">' + s.mode.charAt(0).toUpperCase() + s.mode.slice(1) + '</span><span>' + s.correct + '/' + s.total + '</span><span class="s-acc ' + accClass + '">' + s.accuracy + '%</span><span style="color:var(--text-muted)">' + s.time + 's</span></div>';
+            });
+            h += '</div>';
+            sh.innerHTML = h;
+        } else {
+            sh.innerHTML = '';
+        }
+    }
+
+    var RANKS = [
+        { name:'Bronze Brains', minPoints:0, icon:'🥉' },
+        { name:'Silver Thinker', minPoints:50, icon:'🥈' },
+        { name:'Gold Mind', minPoints:150, icon:'🥇' },
+        { name:'Platinum Processor', minPoints:300, icon:'💎' },
+        { name:'Diamond Calculator', minPoints:500, icon:'🔷' },
+        { name:'Master Genius', minPoints:800, icon:'🏆' }
+    ];
+
+    // ====== TRAINING FLOW ======
+    function startTraining(mode) {
+        session = window.startMentalSession(mode);
+        document.getElementById('modeSelect').style.display = 'none';
+        document.getElementById('arena').classList.add('active');
+        answered = false;
+        hasHint = false;
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        if (!session || !session.active) { endTraining(); return; }
+        var q = window.getMentalQuestion(session);
+        if (!q) { endTraining(); return; }
+        currentQuestion = q;
+
+        document.getElementById('qNum').textContent = 'Q ' + (q.index + 1) + ' / ' + q.total;
+        document.getElementById('qProgress').style.width = q.progress + '%';
+        document.getElementById('qText').innerHTML = q.question;
+        document.getElementById('hintText').textContent = q.hint || '';
+        document.getElementById('hintText').classList.remove('show');
+        document.getElementById('qHint').querySelector('span') && document.getElementById('qHint').removeChild(document.getElementById('qHint').querySelector('span'));
+        hasHint = false;
+
+        var og = document.getElementById('optGrid');
+        og.innerHTML = '';
+        q.options.forEach(function(o, i){
+            var b = document.createElement('div');
+            b.className = 'opt-btn';
+            b.textContent = o;
+            b.onclick = function(){ selectOption(i); };
+            og.appendChild(b);
+        });
+
+        answered = false;
+        document.getElementById('nextBtn').classList.add('hidden');
+        document.getElementById('resultFlash').className = 'result-flash';
+        var tc = document.getElementById('timerCircle');
+        tc.textContent = q.timeLimit;
+        tc.className = 'timer-circle';
+        startTimer(q.timeLimit);
+    }
+
+    function startTimer(sec) {
+        var left = sec;
+        clearInterval(timerInterval);
+        var tc = document.getElementById('timerCircle');
+        timerInterval = setInterval(function(){
+            left--;
+            tc.textContent = left;
+            if (left <= 3) tc.className = 'timer-circle urgent';
+            else if (left <= 5) tc.className = 'timer-circle warning';
+            if (left <= 0) {
+                clearInterval(timerInterval);
+                if (!answered) selectOption(-1);
+            }
+        }, 1000);
+    }
+
+    function selectOption(idx) {
+        if (answered) return;
+        answered = true;
+        clearInterval(timerInterval);
+
+        var tc = document.getElementById('timerCircle');
+        var timeLeft = parseInt(tc.textContent);
+        var q = currentQuestion;
+        if (!q) return;
+
+        // Show selected
+        var btns = document.querySelectorAll('.opt-btn');
+        btns.forEach(function(b, i){ b.style.pointerEvents = 'none'; });
+        if (idx >= 0) btns[idx].classList.add('selected');
+
+        // Submit
+        var selectedVal = idx >= 0 ? q.options[idx] : null;
+        var result = window.submitMentalAnswer(session, q, selectedVal, timeLeft);
+        if (!result) return;
+
+        // Show correct/wrong
+        var correctIdx = q.options.indexOf(q.answer);
+        if (correctIdx >= 0 && correctIdx < btns.length) btns[correctIdx].classList.add('correct');
+        if (idx >= 0 && !result.correct && idx !== correctIdx) btns[idx].classList.add('wrong');
+
+        // Flash
+        var rf = document.getElementById('resultFlash');
+        if (result.correct) {
+            rf.textContent = '✓ Correct! +' + result.points + ' pts' + (result.bonus > 0 ? ' (speed bonus: +' + result.bonus + ')' : '');
+            rf.className = 'result-flash show correct';
+        } else {
+            rf.textContent = '✕ Wrong. Answer: ' + q.answer;
+            rf.className = 'result-flash show wrong';
+        }
+
+        if (result.isComplete) {
+            setTimeout(showResults, 800);
+        } else {
+            document.getElementById('nextBtn').classList.remove('hidden');
+        }
+
+        updateUI();
+    }
+
+    function nextQuestion() {
+        loadQuestion();
+    }
+
+    function endTraining() {
+        if (session) session.active = false;
+        clearInterval(timerInterval);
+        document.getElementById('arena').classList.remove('active');
+        document.getElementById('modeSelect').style.display = 'block';
+        session = null;
+        updateUI();
+    }
+
+    function showResults() {
+        var r = document.getElementById('resultsContent');
+        var stats = window.getMentalStats();
+        var lastSession = stats.sessions[0];
+        if (!lastSession) { backToMenu(); return; }
+        var accClass = lastSession.accuracy >= 70 ? 'good' : (lastSession.accuracy >= 40 ? 'ok' : 'bad');
+
+        var h = '';
+        h += '<div class="big-num ' + accClass + '">' + lastSession.accuracy + '%</div>';
+        h += '<div class="label">Accuracy</div>';
+        if (lastSession.correct >= 8) h += '<div style="font-size:1.2em;margin:4px 0">🔥 Great session!</div>';
+        else if (lastSession.correct >= 5) h += '<div style="font-size:1em;margin:4px 0">Keep going!</div>';
+        else h += '<div style="font-size:1em;margin:4px 0">More practice needed</div>';
+
+        h += '<div style="margin:12px 0">';
+        h += '<div class="detail-row"><span>Correct</span><span style="color:var(--emerald)">' + lastSession.correct + '/' + lastSession.total + '</span></div>';
+        h += '<div class="detail-row"><span>Time</span><span>' + lastSession.time + 's</span></div>';
+        h += '<div class="detail-row"><span>Mode</span><span style="color:var(--purple)">' + lastSession.mode.charAt(0).toUpperCase() + lastSession.mode.slice(1) + '</span></div>';
+        h += '<div class="detail-row"><span>Total Points</span><span style="color:var(--amber)">' + stats.points + '</span></div>';
+        h += '<div class="detail-row"><span>Streak</span><span style="color:var(--amber)">' + stats.streak + '🔥</span></div>';
+        h += '</div>';
+
+        if (stats.rank.icon === '🥉' && stats.points >= 50) {
+            h += '<div class="rank-up">🥈</div><div style="color:var(--emerald);font-weight:700">Rank Up! Silver Thinker!</div>';
+        } else if (stats.rank.icon === '🥈' && stats.points >= 150) {
+            h += '<div class="rank-up">🥇</div><div style="color:var(--emerald);font-weight:700">Rank Up! Gold Mind!</div>';
+        }
+
+        r.innerHTML = h;
+        document.getElementById('resultsOverlay').classList.add('show');
+    }
+
+    function closeResults() {
+        document.getElementById('resultsOverlay').classList.remove('show');
+        endTraining();
+        startTraining(session ? session.mode : 'mixed');
+    }
+
+    function backToMenu() {
+        document.getElementById('resultsOverlay').classList.remove('show');
+        endTraining();
+    }
+
+    function toggleHint() {
+        var ht = document.getElementById('hintText');
+        var trigger = document.querySelector('.q-hint');
+        if (hasHint) { ht.classList.remove('show'); hasHint = false; }
+        else { ht.classList.add('show'); hasHint = true; }
+    }
+
+    // ====== KEYBOARD SHORTCUTS ======
+    document.addEventListener('keydown', function(e){
+        if (session && session.active && !answered) {
+            if (e.key >= '1' && e.key <= '4') {
+                var idx = parseInt(e.key) - 1;
+                var btns = document.querySelectorAll('.opt-btn');
+                if (btns[idx]) btns[idx].click();
+            }
+            if (e.key === 'h' || e.key === 'H') toggleHint();
+        }
+        if (e.key === 'Enter' && !document.getElementById('nextBtn').classList.contains('hidden')) {
+            nextQuestion();
+        }
+        if (e.key === 'Escape') {
+            if (document.getElementById('resultsOverlay').classList.contains('show')) backToMenu();
+            else if (session && session.active) endTraining();
+        }
+    });
+
+    // ====== INIT ======
+    setTimeout(function init(){
+        if (typeof window.getMentalStats !== 'function') { setTimeout(init, 300); return; }
+        updateUI();
+    }, 500);
+    </script>
+</body>
+</html>
