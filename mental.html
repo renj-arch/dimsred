@@ -113,6 +113,12 @@
         .speed-tip .st-label{color:var(--purple);font-weight:700}
         .hidden{display:none!important}
 
+        .mastery-row{display:flex;align-items:center;gap:6px;padding:4px 0;font-size:.72em}
+        .mastery-row .m-label{width:80px;flex-shrink:0;font-weight:600}
+        .mastery-row .m-bar{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden}
+        .mastery-row .m-bar .m-fill{height:100%;border-radius:100px;transition:width .5s}
+        .mastery-row .m-pct{width:30px;text-align:right;flex-shrink:0;font-weight:700}
+
         .hard-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;padding:4px}
         .hard-toggle input{display:none}
         .toggle-slider{width:36px;height:20px;background:rgba(255,255,255,.1);border-radius:100px;position:relative;transition:background .2s;flex-shrink:0}
@@ -182,6 +188,15 @@
                     <div class="desc">Person × State + Age — visual grid</div>
                     <div class="stat" id="stat-puzzle">0 solved</div>
                 </div>
+            </div>
+
+            <!-- MASTERY PROGRESS -->
+            <div id="masterySection" style="margin-top:12px;display:none">
+                <div style="font-size:.78em;font-weight:700;color:var(--text-sec);margin-bottom:6px;display:flex;justify-content:space-between">
+                    <span>🎯 Mastery Progress</span>
+                    <span id="masteryOverall" style="color:var(--purple)">0%</span>
+                </div>
+                <div id="masteryGrid"></div>
             </div>
 
             <div style="display:flex;gap:8px;margin-top:12px;align-items:center;flex-wrap:wrap">
@@ -307,6 +322,36 @@
             sh.innerHTML = h;
         } else {
             sh.innerHTML = '';
+        }
+
+        // Mastery progress
+        var ms = document.getElementById('masterySection');
+        var mg = document.getElementById('masteryGrid');
+        if (stats.patternStats) {
+            var totalAcc = 0, countAcc = 0;
+            mg.innerHTML = '';
+            var types = ['Analogy','Classification','Series','Coding','Syllogism','Inequality','Direction','Blood Relation','Puzzle','Data Sufficiency'];
+            types.forEach(function(t){
+                var s = stats.patternStats[t];
+                if (!s || s.attempts === 0) return;
+                var a = Math.round(s.correct / s.attempts * 100);
+                var c = a >= 90 ? 'var(--emerald)' : a >= 60 ? 'var(--amber)' : 'var(--red)';
+                totalAcc += a; countAcc++;
+                mg.innerHTML += '<div class="mastery-row">'
+                    + '<span class="m-label">' + t + '</span>'
+                    + '<div class="m-bar"><div class="m-fill" style="width:' + a + '%;background:' + c + '"></div></div>'
+                    + '<span class="m-pct" style="color:' + c + '">' + a + '%</span>'
+                    + '</div>';
+            });
+            if (countAcc > 0) {
+                var avg = Math.round(totalAcc / countAcc);
+                document.getElementById('masteryOverall').textContent = avg + '%';
+                ms.style.display = 'block';
+            } else {
+                ms.style.display = 'none';
+            }
+        } else {
+            ms.style.display = 'none';
         }
     }
 
