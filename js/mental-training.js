@@ -19,7 +19,7 @@ var RANKS = [
   { name:'Master Genius', minPoints:800, icon:'🏆' }
 ];
 
-var PATTERN_TYPES = ['Analogy','Classification','Series','Coding','Syllogism','Inequality','Direction','Blood Relation','Puzzle','Data Sufficiency'];
+var PATTERN_TYPES = ['Analogy','Classification','Series','Coding'];
 var TRAP_WORDS = ['except','not','incorrect','false','never','least','excluding','but not'];
 
 function load() {
@@ -96,20 +96,30 @@ function generatePatternQuestion(diff) {
     'Series': ['2, 6, 12, 20, ?','3, 9, 27, 81, ?','1, 4, 9, 16, 25, ?','3, 5, 8, 13, 21, ?'],
     'Coding': ['If CAT = 24, DOG = 26, then BAT = ?','If A=1, B=2, what is ZEBRA?','In a code, MAN = 182, then WOMAN = ?']
   };
-  var pool = texts[pattern] || ['Identify the pattern type for this question'];
+  var answerMap = {
+    'Doctor : Hospital :: Teacher : ?': { answer:'School', opts:['School','College','Hospital','Factory'] },
+    'Book : Page :: Tree : ?': { answer:'Leaf', opts:['Leaf','Root','Branch','Fruit'] },
+    'Hand : Glove :: Foot : ?': { answer:'Sock', opts:['Sock','Shoe','Sandal','Boot'] },
+    'Pen : Write :: Knife : ?': { answer:'Cut', opts:['Cut','Sharpen','Slice','Stab'] },
+    'Find odd one: 12, 24, 36, 51, 48': { answer:'51', opts:['51','12','36','48'] },
+    'Find odd one: Square, Triangle, Circle, Rectangle': { answer:'Circle', opts:['Circle','Square','Triangle','Rectangle'] },
+    'Find odd one: 121, 144, 169, 196, 200': { answer:'200', opts:['200','121','144','169'] },
+    '2, 6, 12, 20, ?': { answer:'30', opts:['30','28','32','26'] },
+    '3, 9, 27, 81, ?': { answer:'243', opts:['243','162','324','81'] },
+    '1, 4, 9, 16, 25, ?': { answer:'36', opts:['36','35','49','30'] },
+    '3, 5, 8, 13, 21, ?': { answer:'34', opts:['34','33','29','55'] },
+    'If CAT = 24, DOG = 26, then BAT = ?': { answer:'23', opts:['23','21','25','20'] },
+    'If A=1, B=2, what is ZEBRA?': { answer:'56', opts:['56','48','52','44'] },
+    'In a code, MAN = 182, then WOMAN = ?': { answer:'307', opts:['307','315','298','312'] }
+  };
+  var pool = texts[pattern];
   var text = pool[rand(0, pool.length - 1)];
-  var answers = { 'Analogy':'School', 'Classification':'Circle', 'Series':30, 'Coding':23 };
-  var answerMap = { 'Doctor : Hospital :: Teacher : ?':'School', 'Book : Page :: Tree : ?':'Leaf', 'Hand : Glove :: Foot : ?':'Sock', 'Pen : Write :: Knife : ?':'Cut', 'Find odd one: 12, 24, 36, 51, 48':'51', 'Find odd one: Square, Triangle, Circle, Rectangle':'Circle', 'Find odd one: 121, 144, 169, 196, 200':'200', '2, 6, 12, 20, ?':'30', '3, 9, 27, 81, ?':'243', '1, 4, 9, 16, 25, ?':'36', '3, 5, 8, 13, 21, ?':'34', 'If CAT = 24, DOG = 26, then BAT = ?':'23', 'If A=1, B=2, what is ZEBRA?':'56', 'In a code, MAN = 182, then WOMAN = ?':'307' };
-  var ans = answerMap[text] || 'Option B';
-  var opts = [ans, 'None', 'Both', 'Cannot determine'];
-  if (typeof ans === 'number') {
-    opts = [ans, ans + 1, ans - 1, ans + 2];
-    if (ans <= 1) opts = [ans, ans+1, ans+2, ans+3];
-  }
+  var entry = answerMap[text] || { answer:'Option B', opts:['Option B','None','Both','Cannot determine'] };
+  var opts = entry.opts.slice();
   shuffle(opts);
   return {
     question: '(' + pattern + ') ' + text,
-    answer: ans,
+    answer: entry.answer,
     options: opts,
     hint: 'Identify the pattern type first: ' + pattern,
     timeLimit: diff <= 1 ? 15 : (diff <= 3 ? 12 : 10),
