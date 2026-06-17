@@ -973,18 +973,21 @@ generateRecognitionQuestion = function(diff) {
       shuffle(distractors);
       var typeOpts = [type].concat(distractors.slice(0, 3));
       shuffle(typeOpts);
+      var cleanQ = q.question.replace(/^\([^)]+\)\s*/, '');
+      var qAns = q.answer || '';
+      var qSol = q.solution || '';
       return {
-        question: q.question.replace(/^\([^)]+\)\s*/, ''),
+        question: cleanQ,
         answer: type,
         options: typeOpts,
         hint: 'Read the question structure, not the content',
-        timeLimit: diff <= 1 ? 8 : (diff <= 3 ? 6 : 5),
+        timeLimit: diff <= 1 ? 10 : (diff <= 3 ? 8 : 6),
         type: 'recognize',
         patternLabel: type,
-        techniqueLabel: 'Spot the pattern TYPE by structure',
-        drillLine1: '"' + (q.question.replace(/^\([^)]+\)\s*/, '').substring(0, 40)) + '..."',
-        drillLine2: 'This is a "' + type + '" pattern',
-        solution: 'Pattern type: ' + type + '. Apply ' + type + ' solving rules.'
+        techniqueLabel: 'Identify the pattern TYPE — then learn how to solve it',
+        drillLine1: '"' + cleanQ.substring(0, 50) + '..."',
+        drillLine2: 'Pattern type: ' + type + ' | Answer: ' + qAns,
+        solution: 'Pattern type: ' + type + '. ' + qAns + ' — ' + qSol.substring(0, 200)
       };
     }
   } catch(e) { /* fallback */ }
