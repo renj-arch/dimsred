@@ -11,10 +11,6 @@
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="canonical" href="https://vlymbooq.qzz.io/dashboard.html">
     <script src="js/ai-analysis.js" defer></script>
-    <script src="js/smart-english.js" defer></script>
-    <script src="js/smart-quant.js" defer></script>
-    <script src="js/smart-reasoning.js" defer></script>
-    <script src="js/smart-cross.js" defer></script>
     <script src="js/study-planner.js" defer></script>
     <meta name="description" content="Daily quiz, current affairs, weekly mock tests, and progress tracking for SSC CGL, NEET, JEE, UPSC & more. Build your study streak!">
     <style>
@@ -130,7 +126,6 @@
                 <a href="index.html">Home</a>
                 <a href="dashboard.html" class="active">Dashboard</a>
                 <a href="lab.html">Lab</a>
-                <a href="smart.html">Smart</a>
                 <a href="mental.html">Mental</a>
                 <a href="guides/index.html">Guides</a>
                 <a href="community.html">Community</a>
@@ -175,7 +170,7 @@
             </div>
         </div>
 
-        <!-- Ad unit between stats and smart badges -->
+        <!-- Ad unit -->
         <ins class="adsbygoogle"
              style="display:block"
              data-ad-client="ca-pub-7363013795551054"
@@ -185,24 +180,6 @@
         <script>
              (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
-
-        <div class="grid-3" id="smart-badges" style="margin-bottom:16px">
-            <div class="card" style="text-align:center;padding:14px">
-                <div style="font-size:.72em;color:var(--text-muted);text-transform:uppercase;letter-spacing:.02em">📖 English</div>
-                <div id="sb-en" style="font-size:1.2em;font-weight:800;color:var(--text-muted);margin:4px 0">—</div>
-                <div id="sb-en-label" style="font-size:.65em;color:var(--text-muted)">No data</div>
-            </div>
-            <div class="card" style="text-align:center;padding:14px">
-                <div style="font-size:.72em;color:var(--text-muted);text-transform:uppercase;letter-spacing:.02em">🔢 Quant</div>
-                <div id="sb-qt" style="font-size:1.2em;font-weight:800;color:var(--text-muted);margin:4px 0">—</div>
-                <div id="sb-qt-label" style="font-size:.65em;color:var(--text-muted)">No data</div>
-            </div>
-            <div class="card" style="text-align:center;padding:14px">
-                <div style="font-size:.72em;color:var(--text-muted);text-transform:uppercase;letter-spacing:.02em">🧩 Reasoning</div>
-                <div id="sb-rs" style="font-size:1.2em;font-weight:800;color:var(--text-muted);margin:4px 0">—</div>
-                <div id="sb-rs-label" style="font-size:.65em;color:var(--text-muted)">No data</div>
-            </div>
-        </div>
 
         <div class="grid-2">
             <div class="card">
@@ -531,44 +508,12 @@
         document.getElementById('mock-countdown').textContent = days + 'd';
     }
 
-    // ---- Smart Engine Badges ----
-    function updateSmartBadges() {
-      setTimeout(function() {
-        if (typeof window.getCrossAnalysis !== 'function') return;
-        var cross = window.getCrossAnalysis();
-        if (!cross) return;
-
-        function applyBadge(id, numId, labelId, level) {
-          var color = '#52525b';
-          if (level && level.score > 0) {
-            if (level.score >= 70) color = '#34d399';
-            else if (level.score >= 50) color = '#fbbf24';
-            else color = '#ef4444';
-          }
-          var numEl = document.getElementById(numId);
-          var labelEl = document.getElementById(labelId);
-          if (numEl) { numEl.textContent = (level && level.score > 0) ? level.level + ' ' + level.score : '—'; numEl.style.color = color; }
-          if (labelEl) { labelEl.textContent = (level && level.score > 0) ? level.label : 'No data'; }
-        }
-
-        applyBadge('sb-en', 'sb-en', 'sb-en-label', cross.levels.english);
-        applyBadge('sb-qt', 'sb-qt', 'sb-qt-label', cross.levels.quant);
-        applyBadge('sb-rs', 'sb-rs', 'sb-rs-label', cross.levels.reasoning);
-
-        // Also run engines to warm caches
-        if (typeof window.runEnglishEngine === 'function') window.runEnglishEngine();
-        if (typeof window.runQuantEngine === 'function') window.runQuantEngine();
-        if (typeof window.runReasoningEngine === 'function') window.runReasoningEngine();
-      }, 800);
-    }
-
     // ---- Init ----
     updateStreak();
     renderStreak(getProgress());
     updateCountdown();
     setInterval(updateCountdown, 3600000);
     fetchAllQuestions();
-    updateSmartBadges();
     </script>
 </body>
 </html>

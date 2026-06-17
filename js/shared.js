@@ -366,32 +366,6 @@
       localStorage.setItem(RESULTS_KEY, JSON.stringify(hist));
     }
 
-    // Feed question data to smart engines
-    if (typeof window.trackEnglishQuestion === 'function') {
-      document.querySelectorAll('.question.answered').forEach(function(q) {
-        var qText = q.querySelector('.q-text') ? q.querySelector('.q-text').textContent.trim() : '';
-        var section = q.querySelector('.section-badge') ? q.querySelector('.section-badge').textContent.trim() : 'General';
-        var correctEl = q.querySelector('.q-option[data-correct]');
-        var wrongEl = q.querySelector('.q-option.wrong');
-        var correctAns = correctEl ? correctEl.textContent.trim() : '';
-        var chosenAns = wrongEl ? wrongEl.textContent.trim() : (correctEl ? correctEl.textContent.trim() : '');
-        var isCorrect = !wrongEl;
-        var secLower = section.toLowerCase();
-
-        if (secLower.indexOf('english') >= 0 || secLower.indexOf('grammar') >= 0 || secLower.indexOf('vocab') >= 0 || secLower.indexOf('comprehension') >= 0) {
-          window.trackEnglishQuestion(qText, chosenAns, correctAns, [], null, 0);
-        } else if (secLower.indexOf('quant') >= 0 || secLower.indexOf('math') >= 0 || secLower.indexOf('arithmetic') >= 0 || secLower.indexOf('numerical') >= 0) {
-          window.trackQuantQuestion(section, qText.substring(0, 20), 30, isCorrect, false);
-        } else if (secLower.indexOf('reasoning') >= 0 || secLower.indexOf('logical') >= 0 || secLower.indexOf('puzzle') >= 0) {
-          window.trackReasoningQuestion('puzzle', 30, isCorrect, false, true);
-        }
-      });
-      // Refresh engine analysis caches
-      if (typeof window.runEnglishEngine === 'function') setTimeout(function(){ window.runEnglishEngine(true); }, 100);
-      if (typeof window.runQuantEngine === 'function') setTimeout(function(){ window.runQuantEngine(true); }, 200);
-      if (typeof window.runReasoningEngine === 'function') setTimeout(function(){ window.runReasoningEngine(true); }, 300);
-    }
-
     var weakTopics = [];
     for (var s in sectionData) {
       var sp = sectionData[s].total > 0 ? Math.round(sectionData[s].correct / sectionData[s].total * 100) : 0;
