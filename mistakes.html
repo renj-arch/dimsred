@@ -13,6 +13,7 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="canonical" href="https://vlymbooq.qzz.io/mistakes.html">
+    <script src="js/ai-analysis.js" defer></script>
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Review Mistakes 📖 vlymbooq","description":"Review and master your mistakes with spaced repetition on vlymbooq.","url":"https://vlymbooq.qzz.io/mistakes.html","educationalLevel":"Competitive Exam","audience":{"@type":"EducationalAudience","educationalRole":"student"},"publisher":{"@type":"Organization","name":"vlymbooq","url":"https://vlymbooq.qzz.io"}}</script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
@@ -216,6 +217,7 @@
                 <a href="dashboard.html">Dashboard</a>
                 <a href="lab.html">Lab</a>
                 <a href="leaderboard.html">🏆 Leaderboard</a>
+                <a href="smart.html">🧠 Smart</a>
                 <a href="mistakes.html" class="active">📖 Mistakes</a>
             </div>
         </div>
@@ -239,6 +241,8 @@
             <button class="clear-btn" id="clearAllBtn">🗑️ Clear All</button>
         </div>
 
+        <div id="aiInsights" style="margin-bottom:16px"></div>
+
         <div class="count-label" id="countLabel"></div>
         <div id="list"></div>
     </div>
@@ -246,6 +250,22 @@
     <script>
     var STORAGE_KEY = 'studypro_wrong';
     var currentFilter = 'all';
+
+    // AI Analysis — runs once per session unless new mistakes added
+    var aiRunKey = 'studypro_ai_ran_' + new Date().toISOString().slice(0, 10);
+    var lastCount = localStorage.getItem('studypro_ai_last_count') || '0';
+
+    function runAI() {
+      var list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      var currentCount = String(list.length);
+      if (list.length === 0) return;
+      if (localStorage.getItem(aiRunKey) && lastCount === currentCount) return;
+      localStorage.setItem(aiRunKey, '1');
+      localStorage.setItem('studypro_ai_last_count', currentCount);
+      if (typeof window.renderAIInsights === 'function') {
+        window.renderAIInsights('aiInsights', list);
+      }
+    }
 
     function getDaysSince(dateStr) {
         var d = new Date(dateStr);
@@ -341,6 +361,9 @@
         el.innerHTML = html;
     }
 
+    // Run AI analysis after render
+    runAI();
+
     document.querySelectorAll('.filter-btn').forEach(function(btn){
         btn.addEventListener('click', function(){
             document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
@@ -353,6 +376,9 @@
     function clearAll(){
         if (confirm('Delete all saved mistakes?')) {
             localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem(aiRunKey);
+            localStorage.removeItem('studypro_ai_analysis');
+            document.getElementById('aiInsights').innerHTML = '';
             render();
         }
     }
@@ -380,6 +406,7 @@
             list[idx].reviewCount = (list[idx].reviewCount || 0) + 1;
             list[idx].date = new Date().toISOString();
             localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+            localStorage.removeItem(aiRunKey);
             render();
         }
         card.classList.remove('processing');

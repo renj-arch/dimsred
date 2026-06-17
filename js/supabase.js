@@ -256,8 +256,55 @@ window.loadUserData = async function (callback) {
     var r = await resR.json(); if (r) data.results = r;
     var w = await wrongR.json(); if (w) data.wrongAnswers = w;
     var b = await bmR.json(); if (b) data.bookmarks = b;
+    window.loadSmartCaches();
     if (callback) callback(data);
   } catch (e) { if (callback) callback(null); }
+};
+
+// ========== SMART ENGINE SYNC ==========
+window.syncSmartCache = async function (engine, cacheKey) {
+  var tok = getToken();
+  if (!tok || !supabaseUser) return;
+  var data = localStorage.getItem(cacheKey);
+  if (!data) return;
+  try {
+    var existing = await fetch(SUPABASE_URL + '/rest/v1/smart_cache?user_id=eq.' + supabaseUser.id + '&engine=eq.' + engine, { headers: sbHeaders(tok) });
+    var existingData = await existing.json();
+    if (existingData && existingData.length > 0) {
+      await fetch(SUPABASE_URL + '/rest/v1/smart_cache?user_id=eq.' + supabaseUser.id + '&engine=eq.' + engine, {
+        method: 'PATCH', headers: sbHeaders(tok),
+        body: JSON.stringify({ cache: data, updated_at: new Date().toISOString() })
+      });
+    } else {
+      await fetch(SUPABASE_URL + '/rest/v1/smart_cache', {
+        method: 'POST', headers: sbHeaders(tok),
+        body: JSON.stringify({ user_id: supabaseUser.id, engine: engine, cache: data, updated_at: new Date().toISOString() })
+      });
+    }
+  } catch(e) { /* silent */ }
+};
+
+window.syncAllSmartCaches = async function () {
+  window.syncSmartCache('english', 'smart_en_cache');
+  window.syncSmartCache('quant', 'smart_qt_cache');
+  window.syncSmartCache('reasoning', 'smart_rs_cache');
+  window.syncSmartCache('cross', 'smart_cross_cache');
+};
+
+window.loadSmartCaches = async function () {
+  var tok = getToken();
+  if (!tok || !supabaseUser) return;
+  try {
+    var r = await fetch(SUPABASE_URL + '/rest/v1/smart_cache?user_id=eq.' + supabaseUser.id, { headers: sbHeaders(tok) });
+    var data = await r.json();
+    if (data && data.length > 0) {
+      data.forEach(function(item){
+        if (item.cache) {
+          try { localStorage.setItem(item.engine === 'english' ? 'smart_en_cache' : item.engine === 'quant' ? 'smart_qt_cache' : item.engine === 'reasoning' ? 'smart_rs_cache' : 'smart_cross_cache', item.cache); } catch(e) {}
+        }
+      });
+    }
+  } catch(e) { /* silent */ }
 };
 
 // ========== LEADERBOARD ==========

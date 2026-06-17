@@ -11,8 +11,25 @@ app.use(compression());
 app.use(morgan('dev'));
 app.use(express.json());
 
-// Guest token — set via env var GUEST_TOKEN
-const GUEST_TOKEN = process.env.GUEST_TOKEN || null;
+// ========== AI Mistake Analysis ==========
+// Pattern definitions for client-side analysis
+// This data helps the client-side engine classify errors
+var AI_PATTERNS = {
+  negation_keywords: ['except','not ','incorrect','false','wrong','never','least','excluding'],
+  section_synonyms: {
+    'Reasoning': ['logical','puzzle','analogy','syllogism','coding','blood','direction','order'],
+    'Quantitative Aptitude': ['math','percentage','ratio','profit','loss','interest','speed','time','work','average'],
+    'General Awareness': ['gk','current','history','polity','geography','science','economy','sports'],
+    'English Comprehension': ['grammar','vocab','passage','comprehension','error','sentence']
+  }
+};
+
+app.get('/api/ai/patterns', function(req, res) {
+  res.json(AI_PATTERNS);
+});
+
+// ========== Guest token ==========
+var GUEST_TOKEN = process.env.GUEST_TOKEN || null;
 
 // API: Verify a guest access token (POST with JSON body)
 app.post('/api/verify-guest', (req, res) => {

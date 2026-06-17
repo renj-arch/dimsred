@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="js/auth-guard.js"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Smart Performance — vlymbooq</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' https://pagead2.googlesyndication.com https://www.gstatic.com https://apis.google.com; connect-src 'self' https://krvlufonfbcabgcjomvs.supabase.co https://pagead2.googlesyndication.com https://ep2.adtrafficquality.google https://static.cloudflareinsights.com https://apis.google.com https://www.gstatic.com https://www.google.com https://googleads.g.doubleclick.net; frame-src 'self' https://googleads.g.doubleclick.net; upgrade-insecure-requests">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/smart.html">
+    <script src="js/ai-analysis.js" defer></script>
+    <script src="js/smart-english.js" defer></script>
+    <script src="js/smart-quant.js" defer></script>
+    <script src="js/smart-reasoning.js" defer></script>
+    <script src="js/smart-cross.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-hover:#18181b;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--red:#ef4444;--amber:#f59e0b;--radius:12px}
+        html{scroll-behavior:smooth}
+        body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--text);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px;text-decoration:none}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:var(--text-sec);transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:900px;margin:0 auto;padding:24px;position:relative}
+
+        .hero{text-align:center;padding:32px 0 24px}
+        .hero h1{font-size:clamp(1.4rem,3vw,1.8rem);font-weight:900;letter-spacing:-.03em;margin-bottom:6px}
+        .hero h1 span{background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .hero p{color:var(--text-sec);font-size:.88em;max-width:600px;margin:0 auto}
+
+        .tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:0;overflow-x:auto}
+        .tab{padding:10px 18px;font-size:.82em;font-weight:600;border:none;background:transparent;color:var(--text-muted);cursor:pointer;transition:all .2s;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-1px}
+        .tab:hover{color:var(--text-sec)}
+        .tab.active{color:var(--purple);border-bottom-color:var(--purple)}
+
+        .tab-content{display:none}
+        .tab-content.active{display:block}
+
+        .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
+        .card:hover{border-color:rgba(255,255,255,.1)}
+        .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px;flex-wrap:wrap}
+        .card-title{font-size:.95em;font-weight:700;display:flex;align-items:center;gap:8px}
+        .card-badge{font-size:.7em;padding:3px 8px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple);font-weight:600}
+        .card-badge.green{background:rgba(52,211,153,.12);color:var(--emerald)}
+        .card-badge.amber{background:rgba(245,158,11,.12);color:var(--amber)}
+
+        .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+        @media(max-width:600px){.detail-grid{grid-template-columns:1fr}}
+        .detail-item{padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.02)}
+        .detail-item .label{font-size:.7em;color:var(--text-muted);text-transform:uppercase;letter-spacing:.02em}
+        .detail-item .value{font-size:1em;font-weight:700;margin-top:2px}
+
+        .rec-item{padding:8px 12px;border-radius:6px;margin-bottom:4px;background:rgba(255,255,255,.02);font-size:.78em;color:var(--text-sec);line-height:1.5;border-left:3px solid var(--purple)}
+
+        .progress-bar{height:6px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden;margin:8px 0}
+        .progress-bar .fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--purple),var(--emerald));transition:width .5s}
+
+        .rule-chip{display:inline-block;padding:3px 10px;border-radius:100px;font-size:.7em;font-weight:600;margin:2px}
+        .rule-chip.easy{background:rgba(52,211,153,.12);color:#34d399}
+        .rule-chip.medium{background:rgba(251,191,36,.12);color:#fbbf24}
+        .rule-chip.hard{background:rgba(239,68,68,.12);color:#ef4444}
+
+        .empty-state{text-align:center;padding:40px 20px;color:var(--text-muted)}
+        .empty-state .icon{font-size:2.5em;margin-bottom:8px}
+
+        @media(max-width:480px){.nav-inner{flex-wrap:wrap;justify-content:center}.container{padding:16px}.tabs{gap:2px}.tab{padding:8px 12px;font-size:.75em}}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand"><img src="logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="lab.html">Lab</a>
+                <a href="mistakes.html">Mistakes</a>
+                <a href="smart.html" class="active">Smart</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1>🧠 <span>Smart Performance</span></h1>
+            <p>Intelligent analysis across English, Quant &amp; Reasoning — optimizes selection probability through speed, accuracy, pattern recognition, and memory retention.</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="overview">📊 Overview</button>
+            <button class="tab" data-tab="english">📖 English</button>
+            <button class="tab" data-tab="quant">🔢 Quant</button>
+            <button class="tab" data-tab="reasoning">🧩 Reasoning</button>
+        </div>
+
+        <!-- OVERVIEW -->
+        <div class="tab-content active" id="tab-overview"><div id="crossDashboard"></div></div>
+
+        <!-- ENGLISH -->
+        <div class="tab-content" id="tab-english">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span>📖</span> English Intelligence</div>
+                    <span class="card-badge">Performance Analyzer</span>
+                </div>
+                <div id="enLevel" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px"></div>
+                <div id="enFingerprint"></div>
+                <div id="enDrills"></div>
+                <div id="enRecs"></div>
+            </div>
+        </div>
+
+        <!-- QUANT -->
+        <div class="tab-content" id="tab-quant">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span>🔢</span> Quant Speed Engine</div>
+                    <span class="card-badge">Speed Optimizer</span>
+                </div>
+                <div id="qtLevel" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px"></div>
+                <div id="qtSignature"></div>
+                <div id="qtBottlenecks"></div>
+                <div id="qtDrills"></div>
+                <div id="qtRecs"></div>
+            </div>
+        </div>
+
+        <!-- REASONING -->
+        <div class="tab-content" id="tab-reasoning">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span>🧩</span> Reasoning Pattern Engine</div>
+                    <span class="card-badge">Pattern Trainer</span>
+                </div>
+                <div id="rsLevel" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px"></div>
+                <div id="rsPatterns"></div>
+                <div id="rsDrills"></div>
+                <div id="rsRecs"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ====== TAB SWITCHING ======
+    document.querySelectorAll('.tab').forEach(function(tab){
+        tab.addEventListener('click', function(){
+            document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+            document.querySelectorAll('.tab-content').forEach(function(tc){ tc.classList.remove('active'); });
+            this.classList.add('active');
+            var target = this.getAttribute('data-tab');
+            document.getElementById('tab-' + target).classList.add('active');
+            if (target === 'overview') renderOverview();
+            else if (target === 'english') renderEnglish();
+            else if (target === 'quant') renderQuant();
+            else if (target === 'reasoning') renderReasoning();
+        });
+    });
+
+    // ====== RENDER HELPERS ======
+    function renderOverview() { window.renderSmartDashboard('crossDashboard'); }
+    function renderEnglish() { renderEnglishTab(); }
+    function renderQuant() { renderQuantTab(); }
+    function renderReasoning() { renderReasoningTab(); }
+
+    // ====== RENDER ENGLISH TAB ======
+    function renderEnglishTab() {
+        var analysis = window.getEnglishAnalysis();
+        if (!analysis) {
+            document.getElementById('enLevel').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text-muted)">📖 No English data yet. Practice English papers to unlock analysis.</div>';
+            document.getElementById('enFingerprint').innerHTML = '';
+            document.getElementById('enDrills').innerHTML = '';
+            document.getElementById('enRecs').innerHTML = '';
+            return;
+        }
+        var fp = analysis.fingerprint || {};
+        var level = analysis.level || {};
+
+        // Level
+        document.getElementById('enLevel').innerHTML =
+            '<div class="detail-item"><div class="label">Level</div><div class="value">' + level.level + ' ' + level.label + '</div><div class="label" style="margin-top:4px;font-size:.72em;color:var(--purple)">Score: ' + level.score + '</div></div>' +
+            '<div class="detail-item"><div class="label">Grammar Misfire</div><div class="value" style="color:' + (parseFloat(analysis.grammarMisfireRate) > 30 ? '#ef4444' : '#34d399') + '">' + analysis.grammarMisfireRate + '</div></div>' +
+            '<div class="detail-item"><div class="label">Vocab Retention</div><div class="value" style="color:' + (parseFloat(analysis.vocabRetention) < 50 ? '#ef4444' : '#34d399') + '">' + analysis.vocabRetention + '</div></div>' +
+            '<div class="detail-item"><div class="label">Reading Speed</div><div class="value">' + analysis.readingAvgWPM + ' WPM</div><div class="label" style="font-size:.65em;color:var(--text-muted)">Acc: ' + analysis.readingAvgAcc + '</div></div>';
+
+        // Fingerprint
+        var fpHtml = '<div style="margin-bottom:14px">';
+        fpHtml += '<div style="font-size:.82em;font-weight:700;margin-bottom:6px">🔍 Error Fingerprint</div>';
+        if (fp.topErrors && fp.topErrors.length > 0) {
+            fpHtml += '<div style="font-size:.82em;color:var(--text-sec);margin-bottom:6px">Top error rules:</div>';
+            fp.topErrors.forEach(function(e){
+                var gr = (typeof window.getEnglishState === 'function') ? window.getEnglishState().grammarErrors : [];
+                fpHtml += '<div style="padding:6px 10px;border-radius:6px;margin-bottom:3px;background:rgba(239,68,68,.04);display:flex;justify-content:space-between;font-size:.78em"><span>' + e.rule + '</span><span style="color:#ef4444;font-weight:600">' + e.count + 'x</span></div>';
+            });
+        } else {
+            fpHtml += '<div style="font-size:.78em;color:var(--text-muted)">Not enough data for fingerprint. Complete more questions.</div>';
+        }
+
+        if (fp.weakRules && fp.weakRules.length > 0) {
+            fpHtml += '<div style="margin-top:8px;font-size:.78em;color:var(--text-sec)">Weak rules: ';
+            fp.weakRules.forEach(function(w){
+                var diff = w.errorRate > 0.7 ? 'hard' : 'medium';
+                fpHtml += '<span class="rule-chip ' + diff + '">' + w.label + '</span> ';
+            });
+            fpHtml += '</div>';
+        }
+
+        if (fp.confidenceAccuracyGap !== undefined) {
+            fpHtml += '<div style="margin-top:8px;font-size:.72em;color:var(--text-muted)">Confidence-Accuracy Gap: ' + analysis.confidenceGap + '</div>';
+        }
+        fpHtml += '</div>';
+        document.getElementById('enFingerprint').innerHTML = fpHtml;
+
+        // Drills
+        var drills = analysis.drills || {};
+        var drillHtml = '<div style="margin-bottom:12px"><div style="font-size:.82em;font-weight:700;margin-bottom:6px">🎯 Recommended Drills</div>';
+        if (drills.micro && drills.micro.length > 0) {
+            drillHtml += '<div style="font-size:.75em;color:var(--text-sec);margin-bottom:4px">• ' + drills.micro.length + ' micro drills for "' + drills.micro[0].label + '"</div>';
+        }
+        if (drills.traps && drills.traps.length > 0) {
+            drillHtml += '<div style="font-size:.75em;color:var(--text-sec);margin-bottom:4px">• ' + drills.traps.length + ' trap sentence sets</div>';
+        }
+        if (drills.vocab && drills.vocab.length > 0) {
+            drillHtml += '<div style="font-size:.75em;color:var(--text-sec);margin-bottom:4px">• ' + drills.vocab.length + ' vocabulary words due for review</div>';
+        }
+        if (drills.reading) {
+            drillHtml += '<div style="font-size:.75em;color:var(--text-sec);margin-bottom:4px">• Reading passage: ' + drills.reading.wordCount + ' words (' + drills.reading.level + ')</div>';
+        }
+        drillHtml += '</div>';
+        document.getElementById('enDrills').innerHTML = drillHtml;
+
+        // Recommendations
+        var recHtml = '';
+        if (analysis.recommendations && analysis.recommendations.length > 0) {
+            recHtml += '<div style="font-size:.82em;font-weight:700;margin-bottom:6px">💡 Recommendations</div>';
+            analysis.recommendations.forEach(function(r){
+                recHtml += '<div class="rec-item">' + r + '</div>';
+            });
+        }
+        document.getElementById('enRecs').innerHTML = recHtml;
+    }
+
+    // ====== RENDER QUANT TAB ======
+    function renderQuantTab() {
+        var analysis = window.getQuantAnalysis();
+        if (!analysis) {
+            document.getElementById('qtLevel').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text-muted)">🔢 No Quant data yet. Practice Quant papers to unlock analysis.</div>';
+            document.getElementById('qtSignature').innerHTML = ''; document.getElementById('qtBottlenecks').innerHTML = ''; document.getElementById('qtDrills').innerHTML = ''; document.getElementById('qtRecs').innerHTML = '';
+            return;
+        }
+        var sig = analysis.speedSignature || {};
+        var level = analysis.level || {};
+
+        document.getElementById('qtLevel').innerHTML =
+            '<div class="detail-item"><div class="label">Level</div><div class="value">' + level.level + ' ' + level.label + '</div><div class="label" style="margin-top:4px;font-size:.72em;color:var(--purple)">Score: ' + level.score + '</div></div>' +
+            '<div class="detail-item"><div class="label">Avg Calc Time</div><div class="value" style="color:' + (sig.avgCalcTime > 30 ? '#ef4444' : '#34d399') + '">' + analysis.avgCalcTime + '</div></div>' +
+            '<div class="detail-item"><div class="label">Marks/Min</div><div class="value">' + analysis.marksPerMinute + '</div></div>' +
+            '<div class="detail-item"><div class="label">Shortcut Adoption</div><div class="value" style="color:' + (parseFloat(analysis.shortcutAdoption) < 30 ? '#ef4444' : '#34d399') + '">' + analysis.shortcutAdoption + '</div></div>';
+
+        // Bottlenecks
+        if (analysis.bottlenecks && analysis.bottlenecks.length > 0) {
+            var botHtml = '<div style="margin-bottom:12px"><div style="font-size:.82em;font-weight:700;margin-bottom:6px">🚧 Bottlenecks</div>';
+            analysis.bottlenecks.forEach(function(b){
+                botHtml += '<div style="padding:8px 12px;border-radius:6px;margin-bottom:4px;border-left:3px solid ' + (b.severity === 'high' ? '#ef4444' : '#fbbf24') + ';background:rgba(255,255,255,.02)">';
+                botHtml += '<div style="display:flex;justify-content:space-between;font-size:.78em"><span>' + b.message + '</span><span style="color:' + (b.severity === 'high' ? '#ef4444' : '#fbbf24') + ';font-weight:600;white-space:nowrap">' + b.metric + '</span></div></div>';
+            });
+            botHtml += '</div>';
+            document.getElementById('qtBottlenecks').innerHTML = botHtml;
+        }
+
+        // Unknown shortcuts
+        if (analysis.unknownShortcuts && analysis.unknownShortcuts.length > 0) {
+            var scHtml = '<div style="margin-bottom:12px"><div style="font-size:.82em;font-weight:700;margin-bottom:6px">⚡ Unmastered Shortcuts</div>';
+            analysis.unknownShortcuts.forEach(function(s){
+                var shortcuts = window.getShortcuts ? window.getShortcuts() : {};
+                var info = shortcuts[s] || {};
+                scHtml += '<div style="padding:6px 10px;margin-bottom:3px;border-radius:6px;background:rgba(251,191,36,.04);font-size:.75em">';
+                scHtml += '<span style="font-weight:600">' + (info.name || s) + '</span> — saves ' + (info.saves || 'time') + ': ' + (info.description || '') + '</div>';
+            });
+            scHtml += '</div>';
+            document.getElementById('qtDrills').innerHTML = scHtml;
+        }
+
+        // Recommendations
+        if (analysis.recommendations && analysis.recommendations.length > 0) {
+            var recHtml = '<div style="font-size:.82em;font-weight:700;margin-bottom:6px">💡 Recommendations</div>';
+            analysis.recommendations.forEach(function(r){
+                recHtml += '<div class="rec-item">' + r + '</div>';
+            });
+            document.getElementById('qtRecs').innerHTML = recHtml;
+        }
+    }
+
+    // ====== RENDER REASONING TAB ======
+    function renderReasoningTab() {
+        var analysis = window.getReasoningAnalysis();
+        if (!analysis) {
+            document.getElementById('rsLevel').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text-muted)">🧩 No Reasoning data yet. Practice Reasoning papers to unlock analysis.</div>';
+            document.getElementById('rsPatterns').innerHTML = ''; document.getElementById('rsDrills').innerHTML = ''; document.getElementById('rsRecs').innerHTML = '';
+            return;
+        }
+        var level = analysis.level || {};
+
+        document.getElementById('rsLevel').innerHTML =
+            '<div class="detail-item"><div class="label">Level</div><div class="value">' + level.level + ' ' + level.label + '</div><div class="label" style="margin-top:4px;font-size:.72em;color:var(--purple)">Score: ' + level.score + '</div></div>' +
+            '<div class="detail-item"><div class="label">First-Look Rate</div><div class="value" style="color:' + (parseFloat(analysis.firstLookRate) < 50 ? '#ef4444' : '#34d399') + '">' + analysis.firstLookRate + '</div></div>' +
+            '<div class="detail-item"><div class="label">Style</div><div class="value">' + (analysis.stylePreference === 'visual' ? '👁️ Visual' : analysis.stylePreference === 'logical' ? '🧠 Logical' : '⚖️ Balanced') + '</div></div>' +
+            '<div class="detail-item"><div class="label">Impulsivity</div><div class="value" style="color:' + (parseFloat(analysis.impulsivityScore) > 30 ? '#ef4444' : '#34d399') + '">' + analysis.impulsivityScore + '</div></div>';
+
+        // Pattern breakdown
+        if (analysis.patternBreakdown && analysis.patternBreakdown.length > 0) {
+            var patHtml = '<div style="margin-bottom:12px"><div style="font-size:.82em;font-weight:700;margin-bottom:6px">📊 Pattern Breakdown</div>';
+            analysis.patternBreakdown.slice(0, 8).forEach(function(p){
+                var color = p.accuracy >= 80 ? '#34d399' : (p.accuracy >= 60 ? '#fbbf24' : '#ef4444');
+                patHtml += '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;margin-bottom:2px;border-radius:6px;background:rgba(255,255,255,.02);font-size:.75em">';
+                patHtml += '<span>' + p.label + '</span>';
+                patHtml += '<div style="display:flex;gap:8px;align-items:center">';
+                patHtml += '<span style="color:' + color + ';font-weight:600">' + p.accuracy + '%</span>';
+                patHtml += '<span style="color:var(--text-muted);font-size:.9em">' + p.avgTime + 's</span>';
+                patHtml += '<span class="rule-chip ' + (p.difficulty <= 1 ? 'easy' : p.difficulty <= 2 ? 'medium' : 'hard') + '" style="font-size:.65em">' + (p.difficulty <= 1 ? 'Easy' : p.difficulty <= 2 ? 'Med' : 'Hard') + '</span>';
+                patHtml += '</div></div>';
+            });
+            patHtml += '</div>';
+            document.getElementById('rsPatterns').innerHTML = patHtml;
+        }
+
+        // Trap awareness
+        var ta = analysis.trapAwareness;
+        if (ta && ta.totalTrapsSeen > 0) {
+            var trapHtml = '<div style="margin-bottom:12px"><div style="font-size:.82em;font-weight:700;margin-bottom:6px">⚠️ Trap Awareness</div>';
+            trapHtml += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">';
+            trapHtml += '<div class="detail-item"><div class="label">Traps Seen</div><div class="value">' + ta.totalTrapsSeen + '</div></div>';
+            trapHtml += '<div class="detail-item"><div class="label">Caught</div><div class="value" style="color:#34d399">' + Math.round(ta.trapCaughtRate * 100) + '%</div></div>';
+            trapHtml += '<div class="detail-item"><div class="label">Missed</div><div class="value" style="color:#ef4444">' + Math.round(ta.trapMissRate * 100) + '%</div></div>';
+            trapHtml += '</div></div>';
+            document.getElementById('rsDrills').innerHTML = trapHtml;
+        }
+
+        // Recommendations
+        if (analysis.recommendations && analysis.recommendations.length > 0) {
+            var recHtml = '<div style="font-size:.82em;font-weight:700;margin-bottom:6px">💡 Recommendations</div>';
+            analysis.recommendations.forEach(function(r){
+                recHtml += '<div class="rec-item">' + r + '</div>';
+            });
+            document.getElementById('rsRecs').innerHTML = recHtml;
+        }
+    }
+
+    // ====== INIT ======
+    function init() {
+        // Check if engines are loaded
+        if (typeof window.getEnglishAnalysis !== 'function' || typeof window.getQuantAnalysis !== 'function' || typeof window.getReasoningAnalysis !== 'function') {
+            setTimeout(init, 300);
+            return;
+        }
+        renderOverview();
+    }
+    setTimeout(init, 600);
+    </script>
+</body>
+</html>

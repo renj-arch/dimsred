@@ -314,6 +314,33 @@ function submitTest() {
   if (MOCK.hasNegative) score -= wrong * parseFloat(MOCK.negativeMarking);
   var accuracy = total > 0 ? Math.round(correct / total * 100) : 0;
 
+  // Feed to smart engines
+  if (typeof window.trackEnglishQuestion === 'function' || typeof window.trackQuantQuestion === 'function' || typeof window.trackReasoningQuestion === 'function') {
+    flatQs.forEach(function(q){
+      var ans = state.answers[q.id];
+      var isCorrect = ans !== undefined && q.options[ans].correct;
+      var chosen = ans !== undefined ? q.options[ans].text : '';
+      var correctText = '';
+      q.options.forEach(function(o){ if (o.correct) correctText = o.text; });
+      var secLower = (q.section || '').toLowerCase();
+
+      if (secLower.indexOf('english') >= 0 || secLower.indexOf('grammar') >= 0 || secLower.indexOf('vocab') >= 0 || secLower.indexOf('comprehension') >= 0) {
+        if (typeof window.trackEnglishQuestion === 'function') window.trackEnglishQuestion(q.text, chosen, correctText, [], null, 0);
+      } else if (secLower.indexOf('quant') >= 0 || secLower.indexOf('math') >= 0 || secLower.indexOf('arithmetic') >= 0 || secLower.indexOf('numerical') >= 0) {
+        if (typeof window.trackQuantQuestion === 'function') window.trackQuantQuestion(q.section, (q.text || '').substring(0, 20), 30, isCorrect, false);
+      } else if (secLower.indexOf('reasoning') >= 0 || secLower.indexOf('logical') >= 0 || secLower.indexOf('puzzle') >= 0) {
+        if (typeof window.trackReasoningQuestion === 'function') window.trackReasoningQuestion('puzzle', 30, isCorrect, false, true);
+      }
+    });
+    // Refresh engine analysis caches
+    if (typeof window.runEnglishEngine === 'function') setTimeout(function(){ window.runEnglishEngine(true); }, 100);
+    if (typeof window.runQuantEngine === 'function') setTimeout(function(){ window.runQuantEngine(true); }, 200);
+    if (typeof window.runReasoningEngine === 'function') setTimeout(function(){ window.runReasoningEngine(true); }, 300);
+  }
+
+  // Sync smart caches to Supabase
+  if (typeof window.syncAllSmartCaches === 'function') setTimeout(window.syncAllSmartCaches, 500);
+
   // Render results
   var root = document.getElementById('mt-results');
   if (!root) return;
