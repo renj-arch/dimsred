@@ -274,6 +274,23 @@
             }
         }
 
+        // Show weak-spot suggestion on pattern card
+        var patStatEl = document.getElementById('stat-pattern');
+        if (stats.patternStats) {
+            var weakType = null, weakAcc = 101;
+            for (var t2 in stats.patternStats) {
+                var s2 = stats.patternStats[t2];
+                if (s2.attempts >= 3) {
+                    var a2 = Math.round(s2.correct / s2.attempts * 100);
+                    if (a2 < weakAcc) { weakAcc = a2; weakType = t2; }
+                }
+            }
+            if (weakType && weakAcc < 60 && patStatEl) {
+                patStatEl.textContent = '🎯 Focus: ' + weakType + ' (' + weakAcc + '%)';
+                patStatEl.style.color = 'var(--red)';
+            }
+        }
+
         var hc = document.getElementById('hardCount');
         if (stats.hardSessions > 0) { hc.textContent = '🔥 ' + stats.hardSessions + ' hard sessions'; hc.style.display = 'block'; }
         else { hc.style.display = 'none'; }
@@ -480,17 +497,22 @@
 
         // Pattern mode: show per-type breakdown
         if (lastSession.mode === 'pattern') {
+            var ps = stats.patternStats;
             h += '<div style="margin:8px 0;font-size:.78em;text-align:left">';
             h += '<div style="font-weight:700;margin-bottom:4px;color:var(--text-sec);text-align:center">Per-Type Breakdown</div>';
-            var ps = stats.patternStats;
+            var weakest = null, weakestAcc = 101;
             for (var t in ps) {
                 if (ps[t].attempts > 0) {
                     var a = Math.round(ps[t].correct / ps[t].attempts * 100);
                     var c = a >= 70 ? 'var(--emerald)' : a >= 40 ? 'var(--amber)' : 'var(--red)';
                     h += '<div class="detail-row"><span>' + t + '</span><span style="color:' + c + '">' + a + '%</span></div>';
+                    if (a < weakestAcc) { weakestAcc = a; weakest = t; }
                 }
             }
             h += '</div>';
+            if (weakest && weakestAcc < 70) {
+                h += '<button class="action-btn primary" onclick="startFocus(\'' + weakest + '\', ' + (lastSession.hardMode ? 'true' : 'false') + ')" style="font-size:.85em;padding:10px;margin-top:4px">🎯 Focus: ' + weakest + ' (' + weakestAcc + '%)</button>';
+            }
         }
 
         if (stats.rank.icon === 'Bronze Brains' && stats.points >= 50) {
@@ -518,6 +540,19 @@
         var ht = document.getElementById('hintText');
         if (hasHint) { ht.classList.remove('show'); hasHint = false; }
         else { ht.classList.add('show'); hasHint = true; }
+    }
+
+    // ====== FOCUS DRILL ======
+    function startFocus(type, hard) {
+        closeResults();
+        document.getElementById('hardModeToggle').checked = hard;
+        session = window.startMentalSession('pattern', { hardMode: hard, focusType: type });
+        document.getElementById('modeSelect').style.display = 'none';
+        document.getElementById('arena').classList.add('active');
+        document.getElementById('qNum').textContent = '🎯 ' + type;
+        answered = false;
+        hasHint = false;
+        loadQuestion();
     }
 
     // ====== TECHNIQUE CHEAT SHEET ======

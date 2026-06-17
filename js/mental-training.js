@@ -119,8 +119,8 @@ function generateChainQuestion(diff) {
   };
 }
 
-function generatePatternQuestion(diff) {
-  var pattern = PATTERN_TYPES[rand(0, PATTERN_TYPES.length - 1)];
+function generatePatternQuestion(diff, focusType) {
+  var pattern = focusType || PATTERN_TYPES[rand(0, PATTERN_TYPES.length - 1)];
   var texts = {
     'Analogy': ['Doctor : Hospital :: Teacher : ?','Book : Page :: Tree : ?','Hand : Glove :: Foot : ?','Pen : Write :: Knife : ?'],
     'Classification': ['Find odd one: 12, 24, 36, 51, 48','Find odd one: Square, Triangle, Circle, Rectangle','Find odd one: 121, 144, 169, 196, 200'],
@@ -221,7 +221,7 @@ window.startMentalSession = function(mode, opts) {
   opts = opts || {};
   if (!mode || !GENERATORS[mode]) mode = 'mixed';
   var totalQ = (mode === 'puzzle') ? 5 : 10;
-  var session = { mode: mode, questionIndex: 0, totalQuestions: totalQ, correct: 0, startTime: Date.now(), active: true, hardMode: !!opts.hardMode };
+  var session = { mode: mode, questionIndex: 0, totalQuestions: totalQ, correct: 0, startTime: Date.now(), active: true, hardMode: !!opts.hardMode, focusType: opts.focusType || null };
   if (mode === 'puzzle') {
     session.puzzles = [];
     for (var i = 0; i < totalQ; i++) { session.puzzles.push(GENERATORS.puzzle(state.difficulty.level)); }
@@ -261,7 +261,9 @@ window.getMentalQuestion = function(session) {
     };
   }
 
-  var q = GENERATORS[session.mode](diff);
+  var q = session.mode === 'pattern' && session.focusType
+    ? generatePatternQuestion(diff, session.focusType)
+    : GENERATORS[session.mode](diff);
   q.displayType = 'normal';
   q.index = session.questionIndex;
   q.total = session.totalQuestions;
