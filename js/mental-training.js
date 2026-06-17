@@ -6,6 +6,7 @@ var defaultState = {
   sessions: [],
   streaks: { current:0, best:0 },
   stats: { math: { attempts:0, correct:0 }, chain: { attempts:0, correct:0 }, pattern: { attempts:0, correct:0 }, trap: { attempts:0, correct:0 }, mixed: { attempts:0, correct:0 }, puzzle: { attempts:0, correct:0 } },
+  patternStats: { Analogy:{attempts:0,correct:0},Classification:{attempts:0,correct:0},Series:{attempts:0,correct:0},Coding:{attempts:0,correct:0},Syllogism:{attempts:0,correct:0},Inequality:{attempts:0,correct:0},Direction:{attempts:0,correct:0},'Blood Relation':{attempts:0,correct:0},Puzzle:{attempts:0,correct:0},'Data Sufficiency':{attempts:0,correct:0} },
   difficulty: { level: 1, accuracy: 0.5, questionsAtLevel: 0 },
   badges: []
 };
@@ -47,6 +48,9 @@ var TECHNIQUE_DRILLS = {
   'Puzzle': { line1: 'Table + fill slots', line2: '10s — Draw row/stack. "Immediate"=adjacent. "Between"=1 each side. Fill known, deduce unknown' },
   'Data Sufficiency': { line1: 'Check each alone first', line2: '4s — Stmt1 enough? → A/D. Stmt2 enough? → B/D. Both? → C. Neither? → E. THE formula' }
 };
+
+window.SPEED_TECHNIQUES = SPEED_TECHNIQUES;
+window.TECHNIQUE_DRILLS = TECHNIQUE_DRILLS;
 
 function load() {
   try { return JSON.parse(localStorage.getItem(KEY)) || JSON.parse(JSON.stringify(defaultState)); }
@@ -212,11 +216,12 @@ function generateMixedQuestion(diff) {
 }
 
 // ====== MAIN TRAINING FUNCTIONS ======
-window.startMentalSession = function(mode) {
+window.startMentalSession = function(mode, opts) {
   var state = load();
+  opts = opts || {};
   if (!mode || !GENERATORS[mode]) mode = 'mixed';
   var totalQ = (mode === 'puzzle') ? 5 : 10;
-  var session = { mode: mode, questionIndex: 0, totalQuestions: totalQ, correct: 0, startTime: Date.now(), active: true };
+  var session = { mode: mode, questionIndex: 0, totalQuestions: totalQ, correct: 0, startTime: Date.now(), active: true, hardMode: !!opts.hardMode };
   if (mode === 'puzzle') {
     session.puzzles = [];
     for (var i = 0; i < totalQ; i++) { session.puzzles.push(GENERATORS.puzzle(state.difficulty.level)); }
@@ -261,6 +266,9 @@ window.getMentalQuestion = function(session) {
   q.index = session.questionIndex;
   q.total = session.totalQuestions;
   q.progress = Math.round(session.questionIndex / session.totalQuestions * 100);
+  if (session.hardMode) {
+    q.timeLimit = Math.max(3, Math.round(q.timeLimit * 0.55));
+  }
   return q;
 };
 
@@ -272,7 +280,8 @@ window.submitMentalAnswer = function(session, question, selectedAnswer, timeRema
   var timeLimit = question.timeLimit;
   var bonus = correct ? Math.round((timeRemaining / timeLimit) * 5) : 0;
   var basePoints = correct ? (question.difficulty || state.difficulty.level) * 2 : 0;
-  var points = basePoints + bonus;
+  var hardMult = session.hardMode ? 2 : 1;
+  var points = (basePoints + bonus) * hardMult;
 
   // Puzzle mode uses puzzleIndex to track progress
   if (session.mode === 'puzzle' && session.puzzles) {
@@ -286,6 +295,12 @@ window.submitMentalAnswer = function(session, question, selectedAnswer, timeRema
   if (state.stats[mode]) {
     state.stats[mode].attempts++;
     if (correct) state.stats[mode].correct++;
+  }
+
+  // Track per-pattern stats (only for pattern mode)
+  if (mode === 'pattern' && question.patternLabel && state.patternStats[question.patternLabel]) {
+    state.patternStats[question.patternLabel].attempts++;
+    if (correct) state.patternStats[question.patternLabel].correct++;
   }
 
   // Track streak
@@ -316,7 +331,7 @@ window.submitMentalAnswer = function(session, question, selectedAnswer, timeRema
     session.active = false;
     var elapsed = Math.round((Date.now() - session.startTime) / 1000);
     var accuracy = session.totalQuestions > 0 ? Math.round(session.correct / session.totalQuestions * 100) : 0;
-    state.sessions.push({ mode: session.mode, correct: session.correct, total: session.totalQuestions, accuracy: accuracy, time: elapsed, date: new Date().toISOString() });
+    state.sessions.push({ mode: session.mode, correct: session.correct, total: session.totalQuestions, accuracy: accuracy, time: elapsed, date: new Date().toISOString(), hardMode: !!session.hardMode });
     if (state.sessions.length > 50) state.sessions = state.sessions.slice(-50);
   }
 
@@ -345,6 +360,8 @@ window.getMentalStats = function() {
     streak: state.streaks.current,
     bestStreak: state.streaks.best,
     stats: state.stats,
+    patternStats: state.patternStats,
+    hardSessions: state.sessions.filter(function(s){ return s.hardMode; }).length,
     sessions: state.sessions.slice(-10).reverse(),
     difficulty: state.difficulty,
     totalSessions: state.sessions.length,

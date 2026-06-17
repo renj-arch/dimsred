@@ -112,6 +112,13 @@
         .speed-tip.show{display:block}
         .speed-tip .st-label{color:var(--purple);font-weight:700}
         .hidden{display:none!important}
+
+        .hard-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;padding:4px}
+        .hard-toggle input{display:none}
+        .toggle-slider{width:36px;height:20px;background:rgba(255,255,255,.1);border-radius:100px;position:relative;transition:background .2s;flex-shrink:0}
+        .toggle-slider::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#52525b;transition:all .2s}
+        .hard-toggle input:checked + .toggle-slider{background:rgba(239,68,68,.3)}
+        .hard-toggle input:checked + .toggle-slider::after{background:var(--red);transform:translateX(16px)}
     </style>
 </head>
 <body>
@@ -138,6 +145,7 @@
             <div style="text-align:right">
                 <div class="streak" id="streakDisplay">🔥 <span id="streakNum">0</span></div>
                 <div class="rank-next" id="rankNext">Next: 50 pts</div>
+                <div id="hardCount" style="font-size:.68em;color:var(--red);margin-top:2px;display:none"></div>
             </div>
         </div>
 
@@ -176,7 +184,24 @@
                 </div>
             </div>
 
+            <div style="display:flex;gap:8px;margin-top:12px;align-items:center;flex-wrap:wrap">
+                <button class="action-btn secondary" onclick="showTechSheet()" style="flex:1;padding:10px;font-size:.85em">📖 All Techniques</button>
+                <label class="hard-toggle" title="No technique flash, 45% less time, 2x points">
+                    <input type="checkbox" id="hardModeToggle">
+                    <span class="toggle-slider"></span>
+                    <span style="font-size:.78em;color:var(--text-sec);white-space:nowrap">🔥 Hard Mode</span>
+                </label>
+            </div>
             <div id="sessionHistory"></div>
+        </div>
+
+        <!-- TECHNIQUE CHEAT SHEET OVERLAY -->
+        <div class="results-overlay" id="techSheet">
+            <div class="results-card" style="max-width:600px;max-height:80vh;overflow-y:auto;text-align:left">
+                <div style="font-size:1.1em;font-weight:800;margin-bottom:12px;text-align:center">📖 Speed Technique Reference</div>
+                <div id="techSheetGrid"></div>
+                <button class="action-btn primary" onclick="closeTechSheet()" style="margin-top:12px">Got it</button>
+            </div>
         </div>
 
         <!-- TRAINING ARENA -->
@@ -249,12 +274,17 @@
             }
         }
 
+        var hc = document.getElementById('hardCount');
+        if (stats.hardSessions > 0) { hc.textContent = '🔥 ' + stats.hardSessions + ' hard sessions'; hc.style.display = 'block'; }
+        else { hc.style.display = 'none'; }
+
         var sh = document.getElementById('sessionHistory');
         if (stats.sessions.length > 0) {
             var h = '<div class="session-log"><div class="title">Recent Sessions</div>';
             stats.sessions.slice(0, 5).forEach(function(s){
                 var accClass = s.accuracy >= 70 ? 'good' : (s.accuracy >= 40 ? 'ok' : 'bad');
-                h += '<div class="session-item"><span class="s-mode">' + s.mode.charAt(0).toUpperCase() + s.mode.slice(1) + '</span><span>' + s.correct + '/' + s.total + '</span><span class="s-acc ' + accClass + '">' + s.accuracy + '%</span><span style="color:var(--text-muted)">' + s.time + 's</span></div>';
+                var hm = s.hardMode ? '<span style="color:var(--red);font-size:.7em;font-weight:700;margin-left:2px">🔥</span>' : '';
+                h += '<div class="session-item"><span class="s-mode">' + s.mode.charAt(0).toUpperCase() + s.mode.slice(1) + hm + '</span><span>' + s.correct + '/' + s.total + '</span><span class="s-acc ' + accClass + '">' + s.accuracy + '%</span><span style="color:var(--text-muted)">' + s.time + 's</span></div>';
             });
             h += '</div>';
             sh.innerHTML = h;
@@ -274,7 +304,8 @@
 
     // ====== TRAINING FLOW ======
     function startTraining(mode) {
-        session = window.startMentalSession(mode);
+        var hardMode = document.getElementById('hardModeToggle').checked;
+        session = window.startMentalSession(mode, { hardMode: hardMode });
         document.getElementById('modeSelect').style.display = 'none';
         document.getElementById('arena').classList.add('active');
         answered = false;
@@ -304,16 +335,16 @@
         document.getElementById('resultFlash').className = 'result-flash';
         document.getElementById('speedTip').className = 'speed-tip';
 
-        var tf = document.getElementById('techFlash');
-        if (q.drillLine1) {
-            document.getElementById('tfLine1').textContent = q.drillLine1;
-            document.getElementById('tfLine2').textContent = q.drillLine2 || '';
-            tf.className = 'tech-flash show';
-        } else {
-            tf.className = 'tech-flash';
+        // Skip technique flash in hard mode
+        if (session.hardMode || !q.drillLine1) {
+            document.getElementById('techFlash').className = 'tech-flash';
             showQuestion(q);
             return;
         }
+
+        document.getElementById('tfLine1').textContent = q.drillLine1;
+        document.getElementById('tfLine2').textContent = q.drillLine2 || '';
+        document.getElementById('techFlash').className = 'tech-flash show';
 
         // Show question after 1.5s technique flash
         setTimeout(function(){
@@ -442,9 +473,25 @@
         h += '<div class="detail-row"><span>Correct</span><span style="color:var(--emerald)">' + lastSession.correct + '/' + lastSession.total + '</span></div>';
         h += '<div class="detail-row"><span>Time</span><span>' + lastSession.time + 's</span></div>';
         h += '<div class="detail-row"><span>Mode</span><span style="color:var(--purple)">' + lastSession.mode.charAt(0).toUpperCase() + lastSession.mode.slice(1) + '</span></div>';
+        if (lastSession.hardMode) h += '<div class="detail-row"><span>Difficulty</span><span style="color:var(--red);font-weight:700">🔥 Hard</span></div>';
         h += '<div class="detail-row"><span>Total Points</span><span style="color:var(--amber)">' + stats.points + '</span></div>';
         h += '<div class="detail-row"><span>Streak</span><span style="color:var(--amber)">' + stats.streak + '🔥</span></div>';
         h += '</div>';
+
+        // Pattern mode: show per-type breakdown
+        if (lastSession.mode === 'pattern') {
+            h += '<div style="margin:8px 0;font-size:.78em;text-align:left">';
+            h += '<div style="font-weight:700;margin-bottom:4px;color:var(--text-sec);text-align:center">Per-Type Breakdown</div>';
+            var ps = stats.patternStats;
+            for (var t in ps) {
+                if (ps[t].attempts > 0) {
+                    var a = Math.round(ps[t].correct / ps[t].attempts * 100);
+                    var c = a >= 70 ? 'var(--emerald)' : a >= 40 ? 'var(--amber)' : 'var(--red)';
+                    h += '<div class="detail-row"><span>' + t + '</span><span style="color:' + c + '">' + a + '%</span></div>';
+                }
+            }
+            h += '</div>';
+        }
 
         if (stats.rank.icon === 'Bronze Brains' && stats.points >= 50) {
             h += '<div class="rank-up">🥈</div><div style="color:var(--emerald);font-weight:700">Rank Up! Silver Thinker!</div>';
@@ -471,6 +518,31 @@
         var ht = document.getElementById('hintText');
         if (hasHint) { ht.classList.remove('show'); hasHint = false; }
         else { ht.classList.add('show'); hasHint = true; }
+    }
+
+    // ====== TECHNIQUE CHEAT SHEET ======
+    function showTechSheet() {
+        var grid = document.getElementById('techSheetGrid');
+        grid.innerHTML = '';
+        var types = ['Syllogism','Inequality','Direction','Blood Relation','Analogy','Classification','Series','Coding','Puzzle','Data Sufficiency'];
+        types.forEach(function(t){
+            var drill = window.TECHNIQUE_DRILLS[t] || { line1:'—', line2:'' };
+            var label = window.SPEED_TECHNIQUES[t] || '';
+            var ps = window.getMentalStats().patternStats[t];
+            var acc = ps && ps.attempts > 0 ? Math.round(ps.correct / ps.attempts * 100) : null;
+            grid.innerHTML += '<div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;text-align:left">'
+                + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">'
+                + '<span style="font-weight:700;font-size:.9em">' + t + '</span>'
+                + (acc !== null ? '<span style="font-size:.78em;color:' + (acc >= 70 ? 'var(--emerald)' : acc >= 40 ? 'var(--amber)' : 'var(--red)') + '">' + acc + '%</span>' : '')
+                + '</div>'
+                + '<div style="font-size:.78em;color:var(--purple);font-weight:600;margin-bottom:1px">' + drill.line1 + '</div>'
+                + '<div style="font-size:.72em;color:var(--text-sec);line-height:1.4">' + drill.line2 + '</div>'
+                + '</div>';
+        });
+        document.getElementById('techSheet').classList.add('show');
+    }
+    function closeTechSheet() {
+        document.getElementById('techSheet').classList.remove('show');
     }
 
     // ====== KEYBOARD SHORTCUTS ======
