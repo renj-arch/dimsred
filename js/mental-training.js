@@ -2,6 +2,7 @@
 
 var KEY = 'mental_training_data';
 var MISTAKE_KEY = 'mental_mistakes';
+var activeLayer = 'instinct'; // default layer for quant generators
 
 function loadMistakes() {
   try { return JSON.parse(localStorage.getItem(MISTAKE_KEY)) || []; }
@@ -64,7 +65,30 @@ var defaultState = {
   rank: 0,
   sessions: [],
   streaks: { current:0, best:0 },
-  stats: { math: { attempts:0, correct:0 }, chain: { attempts:0, correct:0 }, pattern: { attempts:0, correct:0 }, trap: { attempts:0, correct:0 }, mixed: { attempts:0, correct:0 }, puzzle: { attempts:0, correct:0 } },
+  stats: {
+    math: { attempts:0, correct:0 }, chain: { attempts:0, correct:0 },
+    pattern: { attempts:0, correct:0 }, trap: { attempts:0, correct:0 },
+    mixed: { attempts:0, correct:0 }, puzzle: { attempts:0, correct:0 },
+    quicksolve: { attempts:0, correct:0 }, instinct: { attempts:0, correct:0 },
+    fivesec: { attempts:0, correct:0 }, examrush: { attempts:0, correct:0 },
+    weakspot: { attempts:0, correct:0 },
+    quant: { attempts:0, correct:0 }, reasoning: { attempts:0, correct:0 }
+  },
+  subTopicStats: {
+    // Quant sub-topics
+    number_sense:{attempts:0,correct:0}, percentage:{attempts:0,correct:0},
+    arithmetic:{attempts:0,correct:0}, motion:{attempts:0,correct:0},
+    work:{attempts:0,correct:0}, algebra:{attempts:0,correct:0},
+    geometry:{attempts:0,correct:0}, mensuration:{attempts:0,correct:0},
+    counting:{attempts:0,correct:0}, data:{attempts:0,correct:0},
+    // Reasoning sub-topics
+    pattern_flash:{attempts:0,correct:0}, coding_flash:{attempts:0,correct:0},
+    logic_snap:{attempts:0,correct:0}, direction_sense:{attempts:0,correct:0},
+    blood_relations:{attempts:0,correct:0}, ranking_grid:{attempts:0,correct:0},
+    floor_puzzle:{attempts:0,correct:0}, linear_seating:{attempts:0,correct:0},
+    circular_seating:{attempts:0,correct:0}, box_distribution:{attempts:0,correct:0},
+    scheduling:{attempts:0,correct:0}, input_output:{attempts:0,correct:0}
+  },
   patternStats: { Analogy:{attempts:0,correct:0},Classification:{attempts:0,correct:0},Series:{attempts:0,correct:0},Coding:{attempts:0,correct:0},Syllogism:{attempts:0,correct:0},Inequality:{attempts:0,correct:0},Direction:{attempts:0,correct:0},'Blood Relation':{attempts:0,correct:0},Puzzle:{attempts:0,correct:0},'Data Sufficiency':{attempts:0,correct:0} },
   speedData: { Analogy:{time:0,count:0},Classification:{time:0,count:0},Series:{time:0,count:0},Coding:{time:0,count:0},Syllogism:{time:0,count:0},Inequality:{time:0,count:0},Direction:{time:0,count:0},'Blood Relation':{time:0,count:0},Puzzle:{time:0,count:0},'Data Sufficiency':{time:0,count:0} },
   difficulty: { level: 1, accuracy: 0.5, questionsAtLevel: 0 },
@@ -138,7 +162,11 @@ function getRank(points) {
 }
 
 function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function pick(arr) { return arr[rand(0, arr.length - 1)]; }
 function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = rand(0, i); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
+// Exposed for HTML layer toggle
+window.setActiveLayer = function(l) { activeLayer = l; };
 
 // ====== QUESTION GENERATORS ======
 var GENERATORS = {
@@ -147,7 +175,16 @@ var GENERATORS = {
   pattern: generatePatternQuestion,
   recognize: generateRecognitionQuestion,
   trap: generateTrapQuestion,
-  mixed: generateMixedQuestion
+  mixed: generateMixedQuestion,
+  // new reflex modes
+  quicksolve: generateQuickSolveQuestion,
+  instinct: generateInstinctQuestion,
+  fivesec: generateFiveSecQuestion,
+  examrush: generateExamRushQuestion,
+  weakspot: generateWeakSpotQuestion,
+  // category dispatchers
+  quant: generateQuantQuestion,
+  reasoning: generateReasoningQuestion
 };
 
 function generateMathQuestion(diff) {
@@ -975,19 +1012,20 @@ generateRecognitionQuestion = function(diff) {
       var qSol = q.solution || '';
       // Short time limit — speed practice
       var secs = diff <= 1 ? 10 : (diff <= 3 ? 7 : 5);
-      return {
-        question: cleanQ,
-        answer: qAns,
-        options: opts,
-        hint: 'Read fast, trust your first instinct',
-        timeLimit: secs,
-        type: 'recognize',
-        patternLabel: type,
-        techniqueLabel: 'Solve in ' + secs + 's — spot the pattern, pick the answer',
-        drillLine1: '⚡ ' + type + ' — ' + cleanQ.substring(0, 45) + '...',
-        drillLine2: 'Answer: ' + qAns + ' (' + type + ')',
-        solution: '[' + type + '] ' + qAns + ' — ' + qSol.substring(0, 200)
-      };
+  return {
+    question: cleanQ,
+    answer: qAns,
+    options: opts,
+    hint: 'Read fast, trust your first instinct',
+    timeLimit: secs,
+    type: 'recognize',
+    patternLabel: type,
+    techniqueLabel: 'Solve in ' + secs + 's — spot the pattern, pick the answer',
+    drillLine1: '⚡ ' + type + ' — ' + cleanQ.substring(0, 45) + '...',
+    drillLine2: 'Answer: ' + qAns + ' (' + type + ')',
+    solution: '[' + type + '] ' + qAns + ' — ' + qSol.substring(0, 200),
+    intuition: 'Quick Solve: identify the TYPE first. Is it analogy, series, coding? Type determines which shortcut to use.'
+  };
     }
   } catch(e) { /* fallback */ }
   return _origGenerateRecognition(diff);
@@ -1007,21 +1045,458 @@ GENERATORS.Direction = generateDirectionQuestion;
 GENERATORS['Blood Relation'] = generateBloodRelationQuestion;
 GENERATORS['Data Sufficiency'] = generateDataSufficiencyQuestion;
 
+// ====== QUANT SUB-TOPIC GENERATORS ======
+
+function generateNumberSenseQuestion(diff, layer) {
+  var intuitions = {
+    square: 'Split (a+b)² = a² + 2ab + b². Ex: 12² = (10+2)² = 100+40+4 = 144',
+    cube: 'Cube = number × itself twice. 6³ = 6×6×6 = 36×6 = 216',
+    sqrt: 'Find what number multiplied by itself gives the result. √144 = 12 because 12×12 = 144',
+    div: 'Think multiplication: a÷b = c means c×b = a. 56÷7 = 8 because 8×7 = 56',
+    lcm: 'LCM = product / HCF. For co-prime numbers, LCM = product itself',
+    hcf: 'HCF = the largest number that divides both. For difference method: HCF(a,b) = HCF(a-b,b)'
+  };
+  var types = [
+    function square(){ var n = rand(10, 30 + diff * 5); return { q: n + '\u00B2', a: n * n, hint: (n/10|0)*10 + '+' + n%10 + ' squared', intuition: intuitions.square }; },
+    function cube(){ var n = rand(3, 9 + diff); return { q: n + '\u00B3', a: n*n*n, hint: 'Multiply thrice', intuition: intuitions.cube }; },
+    function sqrt(){ var n = rand(4, 15 + diff * 2); return { q: '\u221A' + (n*n), a: n, hint: 'Perfect square', intuition: intuitions.sqrt }; },
+    function div(){ var n = (rand(1, 8) + 1) * rand(5, 15); var d = rand(2, 9); return { q: n + ' \u00F7 ' + d, a: Math.floor(n/d), hint: n + '/' + d + ' = ' + Math.floor(n/d), intuition: intuitions.div }; },
+    function lcm(){ var a = rand(3, 8 + diff), b = rand(4, 10 + diff); var l = a*b; for(var i=Math.max(a,b); i<=a*b; i++){if(i%a===0&&i%b===0){l=i;break;}} return { q: 'LCM of ' + a + ' and ' + b, a: l, hint: 'Find smallest common multiple', intuition: intuitions.lcm }; },
+    function hcf(){ var a = rand(6, 20 + diff*2), b = rand(6, 20 + diff*2); var h=1; for(var i=Math.min(a,b);i>=1;i--){if(a%i===0&&b%i===0){h=i;break;}} return { q: 'HCF of ' + a + ' and ' + b, a: h, hint: 'Find largest common factor', intuition: intuitions.hcf }; }
+  ];
+  if (layer === 'instinct') types = types.slice(0, 3);
+  var type = types[rand(0, types.length - 1)];
+  var data = type();
+  var opts = [data.a];
+  while (opts.length < 4) { var d = data.a + rand(-5, 5); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  shuffle(opts);
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 10 : (diff <= 1 ? 15 : 12), type: 'quant', techniqueLabel: 'Number Sense: ' + data.q, intuition: data.intuition || 'Find the right operation first' };
+}
+
+function generatePercentageQuestion(diff, layer) {
+  var types = [
+    function(){ var p = [10, 20, 25, 30, 33, 40, 50, 60, 75][rand(0, diff > 2 ? 8 : 3)]; var n = rand(2, 9) * (diff > 1 ? 10 : 1); return { q: p + '% of ' + n, a: Math.round(n * p / 100), hint: p + '% = ' + p + '/100', intuition: '10% first then scale: ' + (p>10?'10% = ' + Math.round(n/10) + ', multiply by ' + (p/10) : 'just ' + n + '/10') }; },
+    function(){ var n = rand(1, 9) * 10; var p = rand(5, 25); return { q: p + ' is what % of ' + n + '?', a: Math.round(p / n * 100), hint: 'Formula: (part/whole)\u00D7100', intuition: 'Just (part/whole) × 100. ' + p + '/' + n + ' × 100 = ' + Math.round(p/n*100) + '%' }; },
+    function(){ var c = rand(5, 20) * 10; var r = rand(5, 15); return { q: 'SP=' + (c + r) + ', CP=' + c + '. Profit %?', a: Math.round(r / c * 100), hint: 'Profit/Cost \u00D7 100', intuition: 'Profit % = (SP-CP)/CP × 100 = ' + r + '/' + c + ' × 100 = ' + Math.round(r/c*100) + '%' }; },
+    function(){ var p = rand(2, 8) * 100; var r = rand(5, 12); var t = rand(1, 3); return { q: 'SI: P=' + p + ', R=' + r + '%, T=' + t + 'yr', a: Math.round(p * r * t / 100), hint: 'SI = PRT/100', intuition: 'SI = (P×R×T)/100. Mental: ' + p/100 + ' × ' + r + ' × ' + t + ' = ' + Math.round(p*r*t/100) }; }
+  ];
+  var type = types[rand(0, types.length - 1)];
+  var data = type();
+  var opts = [data.a];
+  while (opts.length < 4) { var d = data.a + rand(-4, 4); if (opts.indexOf(d) < 0 && d >= 0) opts.push(d); }
+  shuffle(opts);
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 10 : 15, type: 'quant', techniqueLabel: data.hint, intuition: data.intuition || 'Use percentage shortcuts: 10% then scale' };
+}
+
+function generateArithmeticQuestion(diff, layer) {
+  var types = [
+    function(){ var a = rand(10, 50)*rand(1,3), b = rand(10, 50)*rand(1,3), c = rand(10, 50)*rand(1,3); return { q: 'Avg of ' + a + ', ' + b + ', ' + c, a: Math.round((a+b+c)/3), hint: 'Sum/3', intuition: 'Average = sum/count. Spot the middle value as a quick estimate.' }; },
+    function(){ var a = rand(2, 6), b = rand(3, 9); var r = a + b; return { q: 'Ratio ' + a + ':' + b + '. Sum=' + r*3 + '. Find A?', a: a*3, hint: a + ' parts out of ' + r, intuition: 'A = ' + a + '/' + r + ' × total. ' + a + '/' + r + ' × ' + r*3 + ' = ' + a*3 }; },
+    function(){ var x = rand(2, 5), y = rand(3, 8); var t = rand(10, 30); return { q: x + ':' + y + ' ratio. ' + t + '. ' + x + ' part?', a: Math.round(t * x / (x+y)), hint: x + '/(x+y) \u00D7 total', intuition: x + ' part out of ' + (x+y) + ' total parts. Multiply fraction by total.' }; },
+    function(){ var a = rand(20, 40), b = rand(5, 20); var y = rand(2, 5); return { q: 'A=' + a + ', B=' + b + '. In ' + y + ' yrs, A+B?', a: a+b+y*2, hint: 'Add 2\u00D7years to sum', intuition: 'Each person ages ' + y + ' years. So sum increases by ' + y + '×2 = ' + y*2 + '. ' + (a+b) + ' + ' + y*2 + ' = ' + (a+b+y*2) }; },
+    // Alligation: mixture of milk & water
+    function(){ var milk = rand(10, 30); var cost = [50,60,70,80][rand(0,3)]; var target = cost - rand(10, 20); var diff1 = target - 0; var diff2 = cost - target; var ratio = diff1/diff2; var water = Math.round(milk / ratio); return { q: 'How much water to add to ' + milk + 'L milk @Rs' + cost + '/L to make mixture Rs' + target + '/L?', a: water, hint: 'Alligation: (target-0):(cost-target) = ' + diff1 + ':' + diff2, intuition: 'Alligation: Price drops by ' + (cost-target) + '. Ratio milk:water = (target-0):(cost-target) = ' + diff1 + ':' + diff2 + '. Water = ' + milk + '/' + ratio + ' = ' + water + 'L' }; }
+  ];
+  var type = types[rand(0, types.length - 1)];
+  var data = type();
+  var opts = [data.a];
+  while (opts.length < 4) { var d = data.a + rand(-5, 5); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  shuffle(opts);
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 12 : 18, type: 'quant', techniqueLabel: 'Arithmetic: ' + data.hint, intuition: data.intuition || 'Break the problem into parts, then combine' };
+}
+
+function generateMotionQuestion(diff, layer) {
+  var types = [
+    function(){ var d = rand(30, 120), t = rand(2, 6); return { q: 'Distance=' + d + 'km, Time=' + t + 'hr. Speed?', a: Math.round(d/t), hint: 'S=D/T', intuition: 'Speed = Distance/Time. ' + d + '/' + t + ' = ' + Math.round(d/t) + ' km/h' }; },
+    function(){ var s = rand(20, 60), t = rand(2, 5); return { q: 'Speed=' + s + 'km/h, Time=' + t + 'hr. Distance?', a: s*t, hint: 'D=S\u00D7T', intuition: 'Distance = Speed × Time. ' + s + ' × ' + t + ' = ' + s*t + ' km' }; },
+    function(){ var d = rand(100, 300), s = rand(30, 60); return { q: 'Distance=' + d + 'km, Speed=' + s + 'km/h. Time?', a: Math.round(d/s*10)/10, hint: 'T=D/S', intuition: 'Time = Distance/Speed. ' + d + '/' + s + ' = ' + Math.round(d/s*10)/10 + ' hr' }; },
+    function(){ var l = rand(100, 300), s = rand(30, 60); return { q: 'Train len=' + l + 'm, Speed=' + s + 'km/h. Time to cross pole?', a: Math.round(l / (s*5/18) * 10)/10, hint: 'T=len/speed(m/s). 1km/h=5/18 m/s', intuition: 'Convert km/h to m/s: ×5/18. ' + s + ' km/h = ' + Math.round(s*5/18) + ' m/s. Time = ' + l + '/' + Math.round(s*5/18) + ' = ' + Math.round(l/(s*5/18)*10)/10 + 's' }; }
+  ];
+  var type = types[rand(0, types.length - 1)];
+  var data = type();
+  var opts = [data.a];
+  while (opts.length < 4) { var d = data.a + rand(-3, 3); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  shuffle(opts);
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 12 : 18, type: 'quant', techniqueLabel: 'Motion: ' + data.hint, intuition: data.intuition || 'D = S×T. Keep track of units. For trains: convert km/h to m/s by ×5/18' };
+}
+
+function generateWorkQuestion(diff, layer) {
+  var types = [
+    function(){ var a = rand(6, 15), b = rand(8, 20); return { q: 'A takes ' + a + ' days, B takes ' + b + '. Together?', a: Math.round(100 / (100/a + 100/b) * 10)/10, hint: '1/(1/A + 1/B)', intuition: 'Together time = product/sum = ' + (a*b) + '/' + (a+b) + ' = ' + Math.round(a*b/(a+b)*10)/10 }; },
+    function(){ var a = rand(4, 12); return { q: 'A does ' + a + ' days work in ' + rand(2, 4) + ' days. Full work?', a: Math.round(a * rand(2,4) / (rand(2,4))), hint: 'Rate \u00D7 time', intuition: 'Work = Rate × Time. Find daily rate first.' }; },
+    function(){ var p = rand(4, 10), q = rand(6, 15); return { q: 'Pipe A fills in ' + p + 'hr, B fills in ' + q + 'hr. Both?', a: Math.round(100 / (100/p + 100/q) * 10)/10, hint: '1/(1/A + 1/B)', intuition: 'Same as work: combined rate = 1/A + 1/B. Time = 1/combined. ' + Math.round(p*q/(p+q)*10)/10 + ' hr' }; }
+  ];
+  var type = types[rand(0, types.length - 1)];
+  var data = type();
+  var opts = [data.a];
+  while (opts.length < 4) { var d = data.a + rand(-2, 2); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  shuffle(opts);
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 12 : 18, type: 'quant', techniqueLabel: 'Work: ' + data.hint, intuition: 'Work = Rate × Time. Combined rate = 1/A + 1/B. Time = 1/(combined rate). For pipes: same logic, fills = positive work.' };
+}
+
+function generateAlgebraQuestion(diff, layer) {
+  var types = [
+    function(){ var x = rand(2, 8), a = rand(2, 5), b = rand(1, 10); return { q: a + 'x + ' + b + ' = ' + (a*x+b) + '. Find x.', a: x, hint: 'Isolate x', intuition: 'Bring ' + b + ' to RHS: ' + a + 'x = ' + (a*x+b) + ' - ' + b + ' = ' + a*x + '. x = ' + a*x + '/' + a + ' = ' + x }; },
+    function(){ var x = rand(2, 6), a = rand(1, 4); return { q: a + 'x - ' + (a*x-5) + ' = 5. Find x.', a: x, hint: 'Solve linear', intuition: 'Bring const to RHS: ' + a + 'x = 5 + ' + (a*x-5) + ' = ' + a*x + '. x = ' + a*x + '/' + a + ' = ' + x }; },
+    function(){ var a = rand(2, 6), b = rand(2, 6); return { q: 'Simplify: (' + a + 'x)(' + b + 'x)', a: a*b + 'x\u00B2', hint: 'Multiply coefficients and x terms', intuition: 'Multiply numbers: ' + a + '×' + b + ' = ' + a*b + '. x × x = x². Result = ' + a*b + 'x²' }; },
+    function(){ var a = rand(2, 5), b = rand(2, 5); return { q: '(' + a + ' + ' + b + ')\u00B2', a: (a+b)*(a+b), hint: '(a+b)\u00B2 = a\u00B2+2ab+b\u00B2', intuition: '(a+b)² = a²+2ab+b² = ' + (a*a) + '+' + (2*a*b) + '+' + (b*b) + ' = ' + ((a+b)*(a+b)) }; }
+  ];
+  var type = types[rand(0, types.length - 1)];
+  var data = type();
+  var opts = [data.a];
+  while (opts.length < 4) { var d = String(data.a).match(/^\d+/) ? parseInt(data.a) + rand(-3,3) : (Math.random()*10|0)+'x\u00B2'; if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  shuffle(opts);
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 12 : 18, type: 'quant', techniqueLabel: 'Algebra: ' + data.hint, intuition: data.intuition || 'Isolate the variable, solve step by step' };
+}
+
+function generateGeometryQuestion(diff, layer) {
+  var types = [
+    function(){ var a = rand(30, 80), b = rand(30, 80); while(a+b >= 180) { a = rand(30, 80); b = rand(30, 80); } return { q: 'Triangle: A=' + a + '\u00B0, B=' + b + '\u00B0. Find C.', a: 180 - a - b, hint: 'Sum of angles = 180\u00B0', intuition: 'Angle sum = 180°. C = 180 - ' + a + ' - ' + b + ' = ' + (180-a-b) + '°' }; },
+    function(){ var s = rand(3, 8); return { q: 'Area of square side ' + s, a: s*s, hint: 'A = side\u00B2', intuition: 'A = side² = ' + s + ' × ' + s + ' = ' + s*s }; },
+    function(){ var r = rand(3, 10); return { q: 'Area of circle r=' + r + ' (\u03C0\u22483.14)', a: Math.round(3.14 * r * r), hint: '\u03C0r\u00B2', intuition: 'πr² ≈ 3.14 × ' + r + '² = 3.14 × ' + r*r + ' ≈ ' + Math.round(3.14*r*r) }; },
+    function(){ var l = rand(4, 10), w = rand(3, 8); return { q: 'Perimeter of rect ' + l + '\u00D7' + w, a: 2*(l+w), hint: '2(l+w)', intuition: 'P = 2(l+w) = 2(' + l + '+' + w + ') = 2×' + (l+w) + ' = ' + 2*(l+w) }; }
+  ];
+  var type = types[rand(0, types.length - 1)];
+  var data = type();
+  var opts = [data.a];
+  while (opts.length < 4) { var d = data.a + rand(-4, 4); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  shuffle(opts);
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 10 : 15, type: 'quant', techniqueLabel: 'Geometry: ' + data.hint, intuition: data.intuition || 'Use formulas: area = base×height/2 for triangles, πr² for circles' };
+}
+
+function generateMensurationQuestion(diff, layer) {
+  var types = [
+    function(){ var s = rand(4, 10); return { q: 'Cube side ' + s + '. Volume?', a: s*s*s, hint: 'V = side\u00B3', intuition: 'V = a³ = ' + s + ' × ' + s + ' × ' + s + ' = ' + s*s*s }; },
+    function(){ var r = rand(3, 7), h = rand(4, 10); return { q: 'Cylinder r=' + r + ' h=' + h + '. Volume? (\u03C0=3.14)', a: Math.round(3.14 * r * r * h), hint: '\u03C0r\u00B2h', intuition: 'V = πr²h = 3.14 × ' + r + '² × ' + h + ' = 3.14 × ' + r*r + ' × ' + h + ' = ' + Math.round(3.14*r*r*h) }; },
+    function(){ var s = rand(3, 8); return { q: 'Cube side ' + s + '. Surface area?', a: 6 * s * s, hint: '6a\u00B2', intuition: 'SA = 6a² = 6 × ' + s + '² = 6 × ' + s*s + ' = ' + 6*s*s }; },
+    function(){ var s = rand(5, 12); return { q: 'Area of equilateral triangle side ' + s + ' (\u221A3\u22481.73)', a: Math.round(1.73 * s * s / 4), hint: '\u221A3/4 \u00D7 side\u00B2', intuition: 'A = √3/4 × a² ≈ 0.433 × ' + s + '² = 0.433 × ' + s*s + ' ≈ ' + Math.round(1.73*s*s/4) }; }
+  ];
+  var type = types[rand(0, types.length - 1)];
+  var data = type();
+  var opts = [data.a];
+  while (opts.length < 4) { var d = data.a + rand(-5, 5); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  shuffle(opts);
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 12 : 18, type: 'quant', techniqueLabel: 'Mensuration: ' + data.hint, intuition: data.intuition || 'Match the formula to the shape: cube=V=a³, cylinder=V=πr²h' };
+}
+
+function generateCountingQuestion(diff, layer) {
+  var intuitions = {
+    factorial: 'n! = n × (n-1) × (n-2) × ... × 1. Product of all numbers down to 1.',
+    permutation: 'P(n,r) = n!/(n-r)!. Think: n choices for 1st, (n-1) for 2nd... r terms multiplied.',
+    combination: 'C(n,r) = P(n,r)/r!. Order doesn\'t matter, so divide by arrangements of r items.',
+    probability: 'Probability = favorable/total. Coin toss: P(heads) = 1/2 each toss, multiply for sequence.'
+  };
+  var types = [
+    function(){ var n = rand(3, 6); return { q: n + '! = ?', a: function(){var f=1;for(var i=2;i<=n;i++)f*=i;return f;}(), hint: n + ' \u00D7 ' + (n-1) + ' \u00D7 ...', intuition: intuitions.factorial }; },
+    function(){ var n = rand(4, 7), r = rand(2, Math.min(3, n)); var p = 1; for(var i=0;i<r;i++)p*=(n-i); return { q: 'P(' + n + ',' + r + ')', a: p, hint: n + '\u00D7' + (n-1) + '\u00D7...' + r + ' factors', intuition: n + ' × ' + (n-1) + ' × ' + (n-2) + (r>2?' × ...':'') + ' (' + r + ' terms) = ' + p }; },
+    function(){ var n = rand(4, 7), r = rand(2, Math.min(3, n)); var p = 1; for(var i=0;i<r;i++)p*=(n-i); var f=1;for(var i=2;i<=r;i++)f*=i; return { q: 'C(' + n + ',' + r + ')', a: p/f, hint: 'P(n,r)/r!', intuition: 'C(' + n + ',' + r + ') = C(' + n + ',' + (n-r) + '). Choose ' + r + ' from ' + n + ' = ' + p/f }; },
+    function(){ var n = rand(2, 6); return { q: 'Probability of heads ' + n + ' times in a row?', a: Math.round(Math.pow(0.5, n) * 1000) / 1000 || 0.001, hint: '(1/2)^' + n, intuition: 'Each toss: P(H) = 1/2. ' + n + ' tosses = (1/2)^' + n + ' = ' + Math.round(Math.pow(0.5,n)*1000)/1000 }; }
+  ];
+  var type = types[rand(0, types.length - 1)];
+  var data = type();
+  var opts = [data.a];
+  while (opts.length < 4) { var d = typeof data.a === 'number' ? data.a + rand(-2, 2) : data.a; if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  shuffle(opts);
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 12 : 18, type: 'quant', techniqueLabel: 'Counting: ' + data.hint, intuition: data.intuition || 'P = arrangements (ordered), C = selections (unordered). Probability = favorable/total' };
+}
+
+function generateDataQuestion(diff, layer) {
+  // Reuse Data Sufficiency generator with appropriate label
+  try {
+    var dq = generateDataSufficiencyQuestion(diff);
+    dq.type = 'quant';
+    dq.timeLimit = layer === 'instinct' ? 10 : 15;
+    dq.techniqueLabel = 'Data: ' + (dq.hint || 'check sufficiency');
+    dq.intuition = 'Data sufficiency: check each statement ALONE first. A/D if 1 alone works, B/D if 2 alone works, C if both needed, E if neither.';
+    return dq;
+  } catch(e) { return generateDataSufficiencyQuestion(diff); }
+}
+
+// ====== CATEGORY DISPATCHERS ======
+
+function generateQuantQuestion(diff, subMode) {
+  var genMap = {
+    number_sense: generateNumberSenseQuestion,
+    percentage: generatePercentageQuestion,
+    arithmetic: generateArithmeticQuestion,
+    motion: generateMotionQuestion,
+    work: generateWorkQuestion,
+    algebra: generateAlgebraQuestion,
+    geometry: generateGeometryQuestion,
+    mensuration: generateMensurationQuestion,
+    counting: generateCountingQuestion,
+    data: generateDataQuestion
+  };
+  // If no subMode, pick random quant topic
+  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data']);
+  var gen = genMap[topic];
+  if (gen) {
+    var q = gen(diff, activeLayer || 'instinct');
+    q._subTopic = topic;
+    q.techniqueLabel = (q.techniqueLabel || '') + ' [' + topic.replace(/_/g,' ') + ']';
+    return q;
+  }
+  // Fallback
+  return generateNumberSenseQuestion(diff, 'exam');
+}
+
+function generateReasoningQuestion(diff, subMode) {
+  var genMap = {
+    pattern_flash: function(d){ var t = pick(['Series','Classification']); var g = {Series:generateSeriesQuestion,Classification:generateClassificationQuestion}[t]; return g ? g(d) : generateSeriesQuestion(d); },
+    coding_flash: generateCodingQuestion,
+    logic_snap: function(d){ var t = pick(['Syllogism','Inequality']); var g = {Syllogism:generateSyllogismQuestion,Inequality:generateInequalityQuestion}[t]; return g ? g(d) : generateSyllogismQuestion(d); },
+    direction_sense: generateDirectionQuestion,
+    blood_relations: generateBloodRelationQuestion,
+    ranking_grid: function(d){ try { var p = generatePuzzle(d, 'comparison'); if(p && p.questionText) return p; } catch(e){} try { var p2 = generatePuzzle(d, 'orderrank'); if(p2 && p2.questionText) return p2; } catch(e2){} return generateInequalityQuestion(d); },
+    floor_puzzle: function(d){ try { var p = generatePuzzle(d, 'floor'); if(p) return p; } catch(e){} return fallbackPuzzle(d); },
+    linear_seating: function(d){ try { var p = generatePuzzle(d, 'linear'); if(p) return p; } catch(e){} return fallbackPuzzle(d); },
+    circular_seating: function(d){ try { var p = generatePuzzle(d, 'circular'); if(p) return p; } catch(e){} return fallbackPuzzle(d); },
+    box_distribution: function(d){ try { var p = generatePuzzle(d, 'comparison'); if(p) return p; } catch(e){} return fallbackPuzzle(d); },
+    scheduling: function(d){ try { var p = generatePuzzle(d, 'scheduling'); if(p) return p; } catch(e){} return fallbackPuzzle(d); },
+    input_output: function(d){ try { var p = generatePuzzle(d, 'inputoutput'); if(p) return p; } catch(e){} return fallbackPuzzle(d); }
+  };
+  var topic = subMode || pick(['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','scheduling','input_output']);
+  var gen = genMap[topic];
+  if (gen) {
+    try {
+      var q = gen(diff);
+      q._subTopic = topic;
+      if (q.questionText) {
+        // Wrap puzzle format into question format
+        var typeLabel = q.typeLabel || 'Puzzle';
+        var clueLines = (q.clueBlock || []).map(function(c,i){ return (i+1) + '. ' + c; });
+        var fullQ = '<div style="text-align:left;font-size:.85em;line-height:1.7">'
+          + '<div style="margin-bottom:4px;font-size:.72em;color:var(--purple);font-weight:700">' + typeLabel + '</div>'
+          + '<p style="margin-bottom:6px;color:var(--text-sec);font-size:.9em">' + (q.preamble || '') + '</p>'
+          + '<div style="margin:6px 0;padding:8px 12px;background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.12);border-radius:6px">'
+          + clueLines.join('<br>')
+          + '</div>'
+          + '<p style="margin-top:6px;font-weight:700;font-size:1em">' + q.questionText + '</p>'
+          + '</div>';
+        return {
+          question: fullQ,
+          answer: q.answer,
+          options: q.options || ['A','B','C','D'],
+          hint: q.hint || 'Read clues, draw diagram, fill positions.',
+          timeLimit: 30,
+          type: 'reasoning',
+          _subTopic: topic,
+          techniqueLabel: typeLabel + ': ' + (q.hint || 'draw table') + ' [' + topic.replace(/_/g,' ') + ']',
+          solution: q.solution || '',
+          intuition: (q.typeLabel || 'Puzzle') + ': Draw a diagram/table. Fill what you know, deduce the rest. Each clue eliminates possibilities.'
+        };
+      }
+      q._subTopic = topic;
+      q.type = 'reasoning';
+      q.timeLimit = q.timeLimit || 15;
+      q.techniqueLabel = (q.techniqueLabel || '') + ' [' + topic.replace(/_/g,' ') + ']';
+      // Add intuition based on sub-topic
+      var intuitions = {
+        pattern_flash: 'Pattern Flash: Identify the rule (diff/ratio/square/prime). For odd-one-out: find what 3 share that 1 breaks.',
+        coding_flash: 'Coding: A=1, B=2... Z=26. Sum positions. Check if the example uses sum, product, or position×index.',
+        logic_snap: 'Logic: Draw Venn circles for syllogisms. Chain same-direction symbols for inequalities. If sign flips, stop.',
+        direction_sense: 'Direction: Track N/S and E/W separately. Right = clockwise 90°. Pythagoras only if both axes changed.',
+        blood_relations: 'Blood Relation: Draw 4-level tree. GP→Parent→Me→Child. Marriage = horizontal line. Same level = sibling.',
+        ranking_grid: 'Ranking: List from highest to lowest. Fill positions from clues. "Between" = exactly 1 on each side.',
+        floor_puzzle: 'Floor Puzzle: Draw vertical building (1=bottom). Fill names from direct clues first, then relative ones.',
+        linear_seating: 'Linear: Draw positions 1 to N left to right. "Immediate left" = adjacent. Fill what you know, deduce gaps.',
+        circular_seating: 'Circular: Position 1 = top, go clockwise. Left = anti-clockwise. Use "opposite" clues for even numbers.',
+        box_distribution: 'Box/Distribution: Make a table. Rows = items, columns = properties. Fill confirmed cells first.',
+        scheduling: 'Scheduling: List days/months. Mark fixed events. Use "before/after" clues to slide events into position.',
+        input_output: 'Input-Output: Each step moves the smallest remaining element left. Track the sorting pattern.'
+      };
+      q.intuition = intuitions[topic] || 'Draw a diagram/table. Fill known facts, deduce the rest.';
+      return q;
+    } catch(e) { /* fallback */ }
+  }
+  // Fallback
+  return generateAnalogyQuestion(diff);
+}
+
+// ====== REFLEX MODE GENERATORS ======
+
+function generateQuickSolveQuestion(diff) {
+  // Mixed question from any pattern type, solve fast
+  var types = ['Analogy','Classification','Series','Coding','Syllogism','Inequality','Direction','Blood Relation','Data Sufficiency'];
+  var type = types[rand(0, types.length - 1)];
+  var genMap = {
+    Analogy: generateAnalogyQuestion, Classification: generateClassificationQuestion,
+    Series: generateSeriesQuestion, Coding: generateCodingQuestion,
+    Syllogism: generateSyllogismQuestion, Inequality: generateInequalityQuestion,
+    Direction: generateDirectionQuestion, 'Blood Relation': generateBloodRelationQuestion,
+    'Data Sufficiency': generateDataSufficiencyQuestion
+  };
+  try {
+    var gen = genMap[type];
+    if (gen) {
+      var q = gen(diff);
+      q.timeLimit = diff <= 1 ? 8 : (diff <= 3 ? 6 : 5);
+      q.type = 'quicksolve';
+      q.drillLine1 = 'Solve in 5-8s';
+      q.drillLine2 = type + ': ' + (q.question || '').substring(0, 40);
+      q.techniqueLabel = 'Quick: ' + type + ' — ' + (q.hint || 'Use pattern rules');
+      q.intuition = 'Quick Solve: Spot the question TYPE first. Each type has a unique shortcut. Analogy→find relation, Series→check diff/ratio, Coding→letter positions.';
+      return q;
+    }
+  } catch(e) {}
+  return generateMathQuestion(diff);
+}
+
+function generateInstinctQuestion(diff) {
+  // Shortcut recognition — designed to trigger pattern recognition
+  var types = ['Analogy','Classification','Series','Coding','Syllogism','Inequality'];
+  var type = types[rand(0, types.length - 1)];
+  var genMap = {
+    Analogy: generateAnalogyQuestion, Classification: generateClassificationQuestion,
+    Series: generateSeriesQuestion, Coding: generateCodingQuestion,
+    Syllogism: generateSyllogismQuestion, Inequality: generateInequalityQuestion
+  };
+  try {
+    var gen = genMap[type];
+    if (gen) {
+      var q = gen(diff);
+      q.timeLimit = diff <= 1 ? 10 : (diff <= 3 ? 8 : 6);
+      q.type = 'instinct';
+      q.drillLine1 = '💡 Spot the pattern — ' + type;
+      q.drillLine2 = q.hint || 'Trust your first instinct';
+      q.techniqueLabel = 'Instinct: ' + type + ' — recognize the pattern in 5-10s';
+      q.hint = '🔑 ' + (q.hint || 'Spot the type, apply the shortcut');
+      q.intuition = 'Instinct: For ' + type + ', the FIRST thing to identify is: ' + (SPEED_TECHNIQUES[type] || 'the relationship pattern') + '. Train your eye to spot the type in 2s.';
+      return q;
+    }
+  } catch(e) {}
+  return generateAnalogyQuestion(diff);
+}
+
+function generateFiveSecQuestion(diff) {
+  // Extremely short — pure recognition
+  var rapid = [
+    { q:'2\u00B2?', a:4, hint:'2\u00D72' },
+    { q:'3\u00B2?', a:9, hint:'3\u00D73' },
+    { q:'4\u00B2?', a:16, hint:'4\u00D74' },
+    { q:'5\u00B2?', a:25, hint:'5\u00D75' },
+    { q:'6\u00B2?', a:36, hint:'6\u00D76' },
+    { q:'7\u00B2?', a:49, hint:'7\u00D77' },
+    { q:'8\u00B2?', a:64, hint:'8\u00D78' },
+    { q:'9\u00B2?', a:81, hint:'9\u00D79' },
+    { q:'10\u00B2?', a:100, hint:'10\u00D710' },
+    { q:'11\u00B2?', a:121, hint:'11\u00D711' },
+    { q:'12\u00B2?', a:144, hint:'12\u00D712' },
+    { q:'2\u00B3?', a:8, hint:'2\u00D72\u00D72' },
+    { q:'3\u00B3?', a:27, hint:'3\u00D73\u00D73' },
+    { q:'4\u00B3?', a:64, hint:'4\u00D74\u00D74' },
+    { q:'5\u00B3?', a:125, hint:'5\u00D75\u00D75' },
+    { q:'\u221A169?', a:13, hint:'13\u00B2=169' },
+    { q:'\u221A225?', a:15, hint:'15\u00B2=225' },
+    { q:'\u221A144?', a:12, hint:'12\u00B2=144' },
+    { q:'\u221A121?', a:11, hint:'11\u00B2=121' },
+    { q:'\u221A100?', a:10, hint:'10\u00B2=100' },
+    { q:'25% of 200?', a:50, hint:'200/4' },
+    { q:'50% of 80?', a:40, hint:'80/2' },
+    { q:'10% of 350?', a:35, hint:'350/10' },
+    { q:'20% of 150?', a:30, hint:'150/5' },
+    { q:'1/2 as %?', a:50, hint:'1/2=0.5=50%' },
+    { q:'1/4 as %?', a:25, hint:'1/4=0.25=25%' },
+    { q:'3/4 as %?', a:75, hint:'3/4=0.75=75%' },
+    { q:'1/5 as %?', a:20, hint:'1/5=0.2=20%' }
+  ];
+  var item = rapid[rand(0, rapid.length - 1)];
+  var opts = [item.a];
+  while (opts.length < 4) { var d = item.a + rand(-3, 3); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  shuffle(opts);
+  return {
+    question: item.q,
+    answer: item.a,
+    options: opts,
+    hint: item.hint,
+    timeLimit: 5,
+    type: 'fivesec',
+    techniqueLabel: '5s: ' + item.q + ' = ' + item.a + ' (' + item.hint + ')',
+    drillLine1: '⚡ 5-Second Challenge',
+    drillLine2: item.q + ' = ?',
+    intuition: 'Recognition speed: these are common values you should know instantly. Squares up to 30, cubes up to 10, common percentages.'
+  };
+}
+
+function generateExamRushQuestion(diff) {
+  // Mixed with high difficulty and time pressure
+  var types = ['number_sense','percentage','arithmetic','motion','work','algebra','Analogy','Series','Coding','Syllogism','Inequality','Direction'];
+  var type = types[rand(0, types.length - 1)];
+  var minDiff = Math.min(10, diff + 2);
+  // Try quant first, then reasoning
+  var qGenMap = {
+    number_sense: generateNumberSenseQuestion, percentage: generatePercentageQuestion,
+    arithmetic: generateArithmeticQuestion, motion: generateMotionQuestion,
+    work: generateWorkQuestion, algebra: generateAlgebraQuestion,
+    Analogy: generateAnalogyQuestion, Series: generateSeriesQuestion,
+    Coding: generateCodingQuestion, Syllogism: generateSyllogismQuestion,
+    Inequality: generateInequalityQuestion, Direction: generateDirectionQuestion
+  };
+  try {
+    var gen = qGenMap[type];
+    if (gen) {
+      var q = gen(minDiff, 'exam');
+      q.timeLimit = Math.max(4, 8 - diff);
+      q.type = 'examrush';
+      q.techniqueLabel = '🚀 Exam Rush: ' + (q.techniqueLabel || 'Solve fast under pressure');
+      q.intuition = 'Exam Rush: Prioritize easy questions. If stuck >10s, mark and move on. Come back later.';
+      return q;
+    }
+  } catch(e) {}
+  return generateMathQuestion(minDiff);
+}
+
+function generateWeakSpotQuestion(diff) {
+  // Serve from mistake bank, or a random topic the user is weak in
+  var mistakes = getMistakesForRetry(3);
+  if (mistakes.length > 0) {
+    var m = mistakes[rand(0, mistakes.length - 1)];
+    var opts = (m.options || ['A','B','C','D']).slice();
+    shuffle(opts);
+    return {
+      question: '🎯 Retry: ' + m.question,
+      answer: m.answer,
+      options: opts,
+      hint: 'You got this wrong before. ' + (m.techniqueLabel || 'Try again carefully'),
+      timeLimit: 15,
+      type: 'weakspot',
+      techniqueLabel: 'Weak Spot: ' + (m.patternLabel || 'review this type'),
+      drillLine1: '🎯 Weak Spot Attack',
+      drillLine2: m.patternLabel ? 'Type: ' + m.patternLabel : 'Review your mistake',
+      intuition: 'You got this wrong before. The mistake pattern is: ' + (m.techniqueLabel || 'review the concept carefully') + '. Remember what you missed last time.'
+    };
+  }
+  // No mistakes: serve a tough question from a random topic
+  return generateExamRushQuestion(diff);
+}
+
+// Register new generators
+GENERATORS.quicksolve = generateQuickSolveQuestion;
+GENERATORS.instinct = generateInstinctQuestion;
+GENERATORS.fivesec = generateFiveSecQuestion;
+GENERATORS.examrush = generateExamRushQuestion;
+GENERATORS.weakspot = generateWeakSpotQuestion;
+GENERATORS.quant = generateQuantQuestion;
+GENERATORS.reasoning = generateReasoningQuestion;
+
 // ====== MAIN TRAINING FUNCTIONS ======
 window.startMentalSession = function(mode, opts) {
   var state = load();
   opts = opts || {};
   if (!mode || !GENERATORS[mode]) mode = 'mixed';
+  var subMode = opts.subMode || null;
   var totalQ = (mode === 'puzzle') ? 5 : 10;
 
-  // Inject mistake bank questions (skip for puzzle mode)
+  // Inject mistake bank questions (skip for puzzle/weakspot mode)
   var mistakeQueue = [];
-  if (mode !== 'puzzle') {
+  if (mode !== 'puzzle' && mode !== 'weakspot') {
     mistakeQueue = getMistakesForRetry(2);
   }
 
   var session = {
     mode: mode,
+    subMode: subMode,
+    layer: opts.layer || 'instinct',
     questionIndex: 0,
     totalQuestions: totalQ + mistakeQueue.length,
     correct: 0,
@@ -1079,9 +1554,11 @@ window.getMentalQuestion = function(session) {
     if (!puzzle) return null;
     // Build full puzzle text (all clues at once, like real exam)
     var clueLines = puzzle.clueBlock.map(function(c, i) { return (i + 1) + '. ' + c; });
+    var typeLabel = puzzle.typeLabel || 'Reasoning';
     var fullText = '<div style="text-align:left;font-size:.85em;line-height:1.7">'
+      + '<div style="margin-bottom:6px;font-size:.75em;color:var(--purple);font-weight:700;text-transform:uppercase;letter-spacing:.5px">' + typeLabel + '</div>'
       + '<p style="margin-bottom:8px;color:var(--text-sec)">' + puzzle.preamble + '</p>'
-      + '<div style="margin:8px 0;padding:8px 12px;background:rgba(167,139,250,.04);border-radius:8px">'
+      + '<div style="margin:8px 0;padding:10px 14px;background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.12);border-radius:8px">'
       + clueLines.join('<br>')
       + '</div>'
       + '<p style="margin-top:8px;font-weight:700;font-size:1.05em">' + puzzle.questionText + '</p>'
@@ -1096,8 +1573,21 @@ window.getMentalQuestion = function(session) {
       total: session.totalQuestions,
       progress: Math.round(session.puzzleIndex / session.totalQuestions * 100),
       timeLimit: puzzle.timeLimit,
-      hint: puzzle.hint
+      hint: puzzle.hint,
+      solution: puzzle.solution || ''
     };
+  }
+
+  if (session.mode === 'quant' || session.mode === 'reasoning') {
+    var q = GENERATORS[session.mode](diff, session.subMode);
+    q.displayType = 'normal';
+    q.index = session.questionIndex;
+    q.total = session.totalQuestions;
+    q.progress = Math.round(session.questionIndex / session.totalQuestions * 100);
+    q._subTopic = q._subTopic || session.subMode;
+    if (session.hardMode) q.timeLimit = Math.max(3, Math.round(q.timeLimit * 0.55));
+    if (session.layer === 'instinct' && q.timeLimit > 12) q.timeLimit = 12;
+    return q;
   }
 
   var q = session.mode === 'pattern' && session.focusType
@@ -1137,6 +1627,19 @@ window.submitMentalAnswer = function(session, question, selectedAnswer, timeRema
   if (state.stats[mode]) {
     state.stats[mode].attempts++;
     if (correct) state.stats[mode].correct++;
+  }
+
+  // Track per-sub-topic stats (quant/reasoning)
+  var subTopic = question._subTopic || session.subMode;
+  if (subTopic && state.subTopicStats && state.subTopicStats[subTopic]) {
+    state.subTopicStats[subTopic].attempts++;
+    if (correct) state.subTopicStats[subTopic].correct++;
+    // Also update parent category stat
+    var parentCat = mode === 'quant' ? 'quant' : (mode === 'reasoning' ? 'reasoning' : null);
+    if (parentCat && state.stats[parentCat]) {
+      state.stats[parentCat].attempts++;
+      if (correct) state.stats[parentCat].correct++;
+    }
   }
 
   // Track per-pattern stats (only for pattern mode)
@@ -1204,7 +1707,7 @@ window.submitMentalAnswer = function(session, question, selectedAnswer, timeRema
     session.active = false;
     var elapsed = Math.round((Date.now() - session.startTime) / 1000);
     var accuracy = session.totalQuestions > 0 ? Math.round(session.correct / session.totalQuestions * 100) : 0;
-    state.sessions.push({ mode: session.mode, correct: session.correct, total: session.totalQuestions, accuracy: accuracy, time: elapsed, date: new Date().toISOString(), hardMode: !!session.hardMode });
+    state.sessions.push({ mode: session.mode, subMode: session.subMode || '', correct: session.correct, total: session.totalQuestions, accuracy: accuracy, time: elapsed, date: new Date().toISOString(), hardMode: !!session.hardMode });
     if (state.sessions.length > 50) state.sessions = state.sessions.slice(-50);
   }
 
@@ -1233,6 +1736,7 @@ window.getMentalStats = function() {
     streak: state.streaks.current,
     bestStreak: state.streaks.best,
     stats: state.stats,
+    subTopicStats: state.subTopicStats,
     patternStats: state.patternStats,
     hardSessions: state.sessions.filter(function(s){ return s.hardMode; }).length,
     sessions: state.sessions.slice(-10).reverse(),
@@ -1304,14 +1808,16 @@ function fallbackPuzzle(diff) {
     answerIndex: ans,
     options: opts,
     timeLimit: 40 + diff * 5,
-    hint: 'Draw the building: floor 1 (bottom) to 5 (top). Fill as you read clues.'
+    hint: 'Draw the building: floor 1 (bottom) to 5 (top). Fill as you read clues.',
+    typeLabel: 'Floor Puzzle',
+    solution: target + ' lives on floor ' + ans + '.'
   };
 }
 
-function generatePuzzle(diff) {
+function generatePuzzle(diff, desiredType) {
   try {
-    var choices = ['floor','linear','circular','comparison','blood','direction'];
-    var puzType = choices[rand(0, choices.length - 1)];
+    var choices = ['floor','linear','circular','comparison','blood','direction','scheduling','inputoutput','coding','syllogism','inequality','orderrank'];
+    var puzType = desiredType || choices[rand(0, choices.length - 1)];
     // diff 0-1=4-5 persons, 2-3=5-6, 4-5=6-8
     var n = diff <= 1 ? 4 + rand(0, 1) : diff <= 3 ? 5 + rand(0, 1) : 6 + rand(0, 2);
     var names = PUZ_NAMES.slice(0, n);
@@ -1398,7 +1904,9 @@ function generatePuzzle(diff) {
         preamble: n + ' persons ' + names.join(', ') + ' live in a ' + n + '-storey building (ground floor=1). Each lives on a different floor.',
         questionText: qText, answer: String(ans),
         options: opts, timeLimit: 45 + diff * 8,
-        hint: 'Draw a vertical building. Floor 1 at bottom. Mark names from clues.'
+        hint: 'Draw a vertical building. Floor 1 at bottom. Mark names from clues.',
+        typeLabel: 'Floor Puzzle',
+        solution: 'Floor map: ' + names.map(function(nn){return nn+'='+seatOf[nn];}).join(', ') + '. Answer=' + ans + '.'
       };
     } else if (puzType === 'linear') {
       //EXAM-STYLE LINEAR ROW — left to right positions 1..n
@@ -1475,7 +1983,9 @@ function generatePuzzle(diff) {
         preamble: n + ' persons ' + names.join(', ') + ' sit in a row facing North. Positions are numbered 1 (leftmost) to ' + n + ' (rightmost).',
         questionText: qText, answer: String(ans),
         options: opts, timeLimit: 50 + diff * 8,
-        hint: 'Draw 1 to ' + n + ' left to right. Fill names from clues.'
+        hint: 'Draw 1 to ' + n + ' left to right. Fill names from clues.',
+        typeLabel: 'Linear Arrangement',
+        solution: 'Positions: ' + names.map(function(nn){return nn+'='+seatOf[nn];}).join(', ') + '. Answer=' + ans + '.'
       };
     } else if (puzType === 'circular') {
       //EXAM-STYLE CIRCULAR SEATING — positions 1..n clockwise, facing center
@@ -1562,7 +2072,9 @@ function generatePuzzle(diff) {
         preamble: n + ' persons ' + names.join(', ') + ' sit around a circular table facing the centre. Positions numbered 1 to ' + n + ' clockwise. (Left = anti-clockwise, Right = clockwise)',
         questionText: qText, answer: String(ans),
         options: opts, timeLimit: 55 + diff * 10,
-        hint: 'Draw a circle, mark 12-o\'clock as position 1, go clockwise. Fill names.'
+        hint: 'Draw a circle, mark 12-o\'clock as position 1, go clockwise. Fill names.',
+        typeLabel: 'Circular Arrangement',
+        solution: 'Position 1=' + names[0] + '(' + circSeat[names[0]] + '). Fill clockwise. ' + target + '=' + (typeof ans==='string' ? ans : 'pos ' + ans) + '.'
       };
     } else if (puzType === 'comparison') {
       var order = [];
@@ -1635,7 +2147,9 @@ function generatePuzzle(diff) {
         preamble: n + ' persons ' + names.join(', ') + ' have different ' + (domain === 'taller' ? 'heights' : domain === 'older' ? 'ages' : domain === 'heavier' ? 'weights' : 'marks') + '. Rank 1 = ' + dSuper + ', Rank ' + n + ' = ' + dAdj + '.',
         questionText: qText, answer: String(ans),
         options: opts, timeLimit: 45 + diff * 8,
-        hint: 'List 1=' + dSuper + ' to ' + n + '=' + dAdj + '. Fill names from clues.'
+        hint: 'List 1=' + dSuper + ' to ' + n + '=' + dAdj + '. Fill names from clues.',
+        typeLabel: 'Comparison (' + domain + ')',
+        solution: 'Rank 1=' + names[order[0]] + '(' + dSuper + '), ' + names[order[n-1]] + '(' + dAdj + '). ' + names.join(', ') + ' in order: ' + names.slice().sort(function(a,b){return (valRank[a]||0)-(valRank[b]||0);}).join(' > ') + '.'
       };
     } else if (puzType === 'blood') {
       // BLOOD RELATION PUZZLE — family tree from generated relations
@@ -1684,7 +2198,240 @@ function generatePuzzle(diff) {
         preamble: 'Study the following family relationships:',
         questionText: qText, answer: ans,
         options: opts, timeLimit: 45 + diff * 8,
-        hint: 'Draw a family tree. Parents above children. Label each person.'
+        hint: 'Draw a family tree. Parents above children. Label each person.',
+        typeLabel: 'Blood Relations',
+        solution: target + ' is the ' + ans + ' of ' + target2 + '.'
+      };
+    } else if (puzType === 'scheduling') {
+      // SCHEDULING PUZZLE — events on different days of the week
+      var DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+      var nDays = diff <= 2 ? 5 : (diff <= 4 ? 6 : 7);
+      var sDays = DAYS.slice(0, nDays);
+      var sNames = names.slice(0, nDays);
+      var dayOf = {};
+      for (var si = 0; si < nDays; si++) dayOf[sNames[si]] = sDays[si];
+      var sTarget = sNames[rand(0, sNames.length - 1)];
+      var sAns = dayOf[sTarget];
+      var clues = [];
+      if (nDays > 3) clues.push(sNames[0] + ' is scheduled on ' + dayOf[sNames[0]] + '.');
+      var r1 = sNames[1 % nDays], r2 = sNames[(1 + 2) % nDays];
+      var idx1 = sDays.indexOf(dayOf[r1]), idx2 = sDays.indexOf(dayOf[r2]);
+      if (idx1 < idx2) clues.push(r1 + ' is ' + (idx2 - idx1) + ' day(s) before ' + r2 + '.');
+      else clues.push(r2 + ' is ' + (idx1 - idx2) + ' day(s) before ' + r1 + '.');
+      var notSDay = sDays[rand(0, sDays.length - 1)];
+      if (dayOf[sNames[sNames.length-1]] !== notSDay) clues.push(sNames[sNames.length-1] + ' is not on ' + notSDay + '.');
+      var wIdx = rand(0, sNames.length - 1);
+      var wDay = dayOf[sNames[wIdx]];
+      if (wDay === 'Saturday' || wDay === 'Sunday') clues.push(sNames[wIdx] + ' is on a weekend.');
+      else clues.push(sNames[wIdx] + ' is on a weekday.');
+      opts = [sAns];
+      while (opts.length < 4) { var rd = DAYS[rand(0, DAYS.length - 1)]; if (opts.indexOf(rd) < 0) opts.push(rd); }
+      shuffle(opts);
+      return {
+        type: 'puzzle', clueBlock: clues,
+        preamble: sNames.length + ' events (' + sNames.join(', ') + ') are scheduled on different days Monday to ' + sDays[nDays-1] + '.',
+        questionText: 'On which day is ' + sTarget + ' scheduled?', answer: sAns,
+        options: opts, timeLimit: 45 + diff * 8,
+        hint: 'List days Monday to ' + sDays[nDays-1] + '. Fill events from clues.',
+        typeLabel: 'Scheduling',
+        solution: 'Monday=' + dayOf[sNames[0]] + ', ' + sNames[nDays-1] + '=' + dayOf[sNames[nDays-1]] + '. ' + sTarget + '=' + sAns + '.'
+      };
+    } else if (puzType === 'coding') {
+      // CODING-DECODING PUZZLE — wrap existing generator into puzzle format
+      try {
+        var cq = GENERATORS['Coding'](diff);
+        if (cq && cq.question && cq.answer) {
+          return {
+            type: 'puzzle', clueBlock: ['The code follows a consistent pattern.'],
+            preamble: cq.question,
+            questionText: 'Find the correct code.', answer: String(cq.answer),
+            options: cq.options,
+            timeLimit: 40 + diff * 5,
+            hint: cq.hint || 'Find the pattern from the example.',
+            typeLabel: 'Coding-Decoding',
+            solution: cq.solution || 'Identify the rule from the given example and apply it.'
+          };
+        }
+      } catch(e) {}
+      return fallbackPuzzle(diff);
+    } else if (puzType === 'inputoutput') {
+      // INPUT-OUTPUT PUZZLE — machine rearrangement steps
+      var ioItems = [];
+      for (var ii = 0; ii < 5 + rand(0, Math.min(1, diff)); ii++) ioItems.push(names[ii]);
+      var ioInput = ioItems.slice();
+      shuffle(ioInput);
+      var working = ioInput.slice();
+      // Generate step series as clue text
+      var stepClues = ['Input: ' + ioInput.join(' ')];
+      for (var step = 1; step <= ioInput.length - 2; step++) {
+        var minI = step - 1;
+        for (var si = step; si < working.length; si++) {
+          if (working[si] < working[minI]) minI = si;
+        }
+        if (minI !== step - 1) { var t = working[step - 1]; working[step - 1] = working[minI]; working[minI] = t; }
+        if (step <= 2) stepClues.push('Step ' + step + ': ' + working.join(' '));
+      }
+      var targetStep = rand(1, Math.min(3, ioInput.length - 2));
+      var working2 = ioInput.slice();
+      for (var step = 1; step <= targetStep; step++) {
+        var minI = step - 1;
+        for (var si = step; si < working2.length; si++) { if (working2[si] < working2[minI]) minI = si; }
+        if (minI !== step - 1) { var t = working2[step - 1]; working2[step - 1] = working2[minI]; working2[minI] = t; }
+      }
+      var ansStr = working2.join(' ');
+      var optsIO = [ansStr];
+      while (optsIO.length < 4) {
+        var shuffled = working2.slice(); shuffle(shuffled);
+        var s = shuffled.join(' ');
+        if (optsIO.indexOf(s) < 0) optsIO.push(s);
+      }
+      shuffle(optsIO);
+      return {
+        type: 'puzzle', clueBlock: stepClues,
+        preamble: 'A machine rearranges words alphabetically. In each step, the smallest remaining word moves left.',
+        questionText: 'What is Step ' + targetStep + '?', answer: ansStr,
+        options: optsIO, timeLimit: 55 + diff * 10,
+        hint: 'In each step, the alphabetically smallest unsorted word moves to the next unsorted position.',
+        typeLabel: 'Input-Output',
+        solution: 'Sorted: ' + ioInput.slice().sort().join(' ') + '. Target is step ' + targetStep + ' result.'
+      };
+    } else if (puzType === 'syllogism') {
+      // SYLLOGISM PUZZLE — wrap existing generator
+      try {
+        var sq = GENERATORS['Syllogism'](diff);
+        if (sq && sq.question && sq.answer) {
+          return {
+            type: 'puzzle',
+            clueBlock: sq.question.split('\n').filter(Boolean),
+            preamble: 'Statements:',
+            questionText: 'Which conclusion follows?', answer: String(sq.answer),
+            options: sq.options,
+            timeLimit: 45 + diff * 5,
+            hint: sq.hint || 'Draw Venn diagrams. Conclusion must be true in ALL cases.',
+            typeLabel: 'Syllogism',
+            solution: sq.solution || 'Draw Venn diagrams for each statement. Check if conclusion holds in all possible cases.'
+          };
+        }
+      } catch(e) {}
+      return fallbackPuzzle(diff);
+    } else if (puzType === 'inequality') {
+      // INEQUALITY PUZZLE — coded inequalities with conclusions
+      var symbols = ['>', '=', '<'];
+      var vars = ['A','B','C','D','E'];
+      var statements = [];
+      var usedPairs = {};
+      var chain = [];
+      for (var ii = 0; ii < vars.length - 1; ii++) {
+        var sym = symbols[rand(0, symbols.length - 1)];
+        var pair = vars[ii] + sym + vars[ii+1];
+        chain.push({ a: vars[ii], sym: sym, b: vars[ii+1] });
+        statements.push(vars[ii] + ' ' + sym + ' ' + vars[ii+1]);
+      }
+      // Add one extra relationship for complexity
+      if (diff >= 2) {
+        var extra = chain[rand(0, chain.length - 1)];
+        var ea = extra.a, eb = extra.b, es = symbols[rand(0, symbols.length - 1)];
+        if (ea !== eb) statements.push(ea + ' ' + es + ' ' + eb);
+      }
+      // Generate conclusion
+      var cA = vars[rand(0, vars.length - 1)], cB = vars[rand(0, vars.length - 1)];
+      while (cB === cA) cB = vars[rand(0, vars.length - 1)];
+      // Determine actual relationship by evaluating chain
+      function evalRel(x, y) {
+        var xIdx = vars.indexOf(x), yIdx = vars.indexOf(y);
+        if (xIdx < 0 || yIdx < 0) return '?';
+        var xVal = xIdx + 1, yVal = yIdx + 1;
+        // Simple: higher index = larger value (with some random displacement)
+        return xVal > yVal ? '>' : xVal < yVal ? '<' : '=';
+      }
+      var trueRel = evalRel(cA, cB);
+      var conclusions = [
+        cA + ' > ' + cB,
+        cA + ' < ' + cB,
+        cA + ' = ' + cB,
+        cA + ' >= ' + cB,
+        cA + ' <= ' + cB
+      ];
+      // Correct answer is the one that matches trueRel
+      var ansMap = { '>': [0, 3], '<': [1, 4], '=': [2] };
+      var ansIndices = ansMap[trueRel];
+      var correctAns = conclusions[ansIndices[0]];
+      // Add extra incorrect if type is >= or <=
+      if (ansIndices.length > 1 && rand(0,1)===0) correctAns = conclusions[ansIndices[1]];
+      var opts = [correctAns];
+      for (var ii = 0; ii < conclusions.length; ii++) {
+        if (opts.indexOf(conclusions[ii]) < 0) opts.push(conclusions[ii]);
+      }
+      while (opts.length < 4) { var fake = vars[rand(0,vars.length-1)] + ' ' + symbols[rand(0,2)] + ' ' + vars[rand(0,vars.length-1)]; if (opts.indexOf(fake) < 0) opts.push(fake); }
+      shuffle(opts);
+      return {
+        type: 'puzzle', clueBlock: statements,
+        preamble: 'Statements:',
+        questionText: 'Which conclusion is definitely true?', answer: correctAns,
+        options: opts, timeLimit: 40 + diff * 8,
+        hint: 'Combine all relationships to find the relation between ' + cA + ' and ' + cB + '.',
+        typeLabel: 'Inequality',
+        solution: 'From given relations: ' + cA + ' ' + trueRel + ' ' + cB + '.'
+      };
+    } else if (puzType === 'orderrank') {
+      // ORDER & RANKING PUZZLE — tallest/shortest or position ranking
+      var nRank = diff <= 2 ? 5 + rand(0,1) : 6 + rand(0,2);
+      var rankNames = names.slice(0, nRank);
+      // Generate random heights (unique)
+      var heights = [];
+      for (var ri = 0; ri < nRank; ri++) heights.push(140 + rand(0, 60));
+      // Remove duplicates
+      var uniqueH = []; for (var ri = 0; ri < nRank; ri++) { if (uniqueH.indexOf(heights[ri])<0) uniqueH.push(heights[ri]); }
+      while (uniqueH.length < nRank) { var hh = 140 + rand(0, 60); if (uniqueH.indexOf(hh)<0) uniqueH.push(hh); }
+      heights = uniqueH;
+      var sortedNames = rankNames.slice().sort(function(a,b){ return heights[rankNames.indexOf(b)] - heights[rankNames.indexOf(a)]; });
+      var clues = [];
+      // Clue: who is taller than whom
+      var c1 = rand(0, nRank-1), c2 = rand(0, nRank-1);
+      while (c2 === c1) c2 = rand(0, nRank-1);
+      clues.push(rankNames[c1] + ' is taller than ' + rankNames[c2] + '.');
+      // Clue: shortest/tallest
+      clues.push(sortedNames[sortedNames.length-1] + ' is the shortest.');
+      // Clue: position from top/bottom
+      var mid = Math.floor(nRank/2);
+      clues.push(sortedNames[mid] + ' is taller than exactly ' + mid + ' people.');
+      if (nRank >= 5) {
+        var r3 = rand(0, nRank-1);
+        if (heights[r3] > 170) clues.push(rankNames[r3] + ' is above average height.');
+        else clues.push(rankNames[r3] + ' is below average height.');
+      }
+      // Question: who is the tallest? or what is X's rank?
+      var qType = rand(0, 2);
+      var qText, ans;
+      if (qType === 0) {
+        ans = sortedNames[0];
+        qText = 'Who is the tallest among them?';
+      } else if (qType === 1) {
+        var qIdx = rand(1, nRank - 2);
+        ans = sortedNames[qIdx];
+        qText = 'Who is the ' + (['','second ','third ','fourth ','fifth ','sixth '][qIdx] || (qIdx+1) + 'th ') + 'tallest?';
+      } else {
+        var qPerson = rankNames[rand(0, nRank-1)];
+        var rank = sortedNames.indexOf(qPerson) + 1;
+        ans = String(rank);
+        qText = 'What is the rank of ' + qPerson + ' from the top?';
+      }
+      var opts = [ans];
+      if (qType === 2) {
+        while (opts.length < 4) { var rv = String(rand(1, nRank)); if (opts.indexOf(rv) < 0) opts.push(rv); }
+      } else {
+        for (var ri = 0; ri < nRank; ri++) { if (opts.indexOf(sortedNames[ri]) < 0) opts.push(sortedNames[ri]); }
+        while (opts.length < 4) { var fake = rankNames[rand(0, nRank-1)]; if (opts.indexOf(fake) < 0) opts.push(fake); }
+      }
+      shuffle(opts);
+      return {
+        type: 'puzzle', clueBlock: clues,
+        preamble: nRank + ' people (' + rankNames.join(', ') + ') are ranked by height.',
+        questionText: qText, answer: String(ans),
+        options: opts, timeLimit: 45 + diff * 8,
+        hint: 'Order them from tallest to shortest. Each clue eliminates possibilities.',
+        typeLabel: 'Order & Ranking',
+        solution: 'Tallest to shortest: ' + sortedNames.join(' > ') + '.'
       };
     } else {
       // DIRECTION & DISTANCE PUZZLE — multi-leg path tracking
@@ -1727,7 +2474,9 @@ function generatePuzzle(diff) {
           preamble: 'A person starts from point A and follows this path:',
           questionText: 'In which direction is he from the starting point?', answer: finalDir,
           options: opts, timeLimit: 40 + diff * 5,
-          hint: 'Draw a grid. Mark each leg with direction and distance. Calculate net displacement.'
+          hint: 'Draw a grid. Mark each leg with direction and distance. Calculate net displacement.',
+          typeLabel: 'Direction & Distance',
+          solution: 'Net N-S=' + y + 'km, E-W=' + x + 'km. Final direction: ' + finalDir + '.'
         };
       } else {
         // "How far is he from the starting point?"
@@ -1740,7 +2489,9 @@ function generatePuzzle(diff) {
           preamble: 'A person starts from point A and follows this path:',
           questionText: 'How far is he from the starting point (in km)?', answer: String(finalDist),
           options: opts, timeLimit: 50 + diff * 8,
-          hint: 'Track net North-South and East-West displacement. Use Pythagoras: d = \u221a(x\u00b2 + y\u00b2)'
+          hint: 'Track net North-South and East-West displacement. Use Pythagoras: d = \u221a(x\u00b2 + y\u00b2)',
+          typeLabel: 'Direction & Distance',
+          solution: 'Net N-S=' + y + 'km, E-W=' + x + 'km. Distance=\u221a(' + (x*x) + '+' + (y*y) + ')=' + finalDist + 'km.'
         };
       }
     }

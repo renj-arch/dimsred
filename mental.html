@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <script src="js/auth-guard.js"></script>
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Mental Solving — vlymbooq</title>
-    <meta name="description" content="Train your brain to solve Quant and Reasoning problems purely mentally. No pen, no paper — just your mind. Fastest path to exam speed mastery.">
+    <title>Quant Reflex & Reasoning Reflex — vlymbooq</title>
+    <meta name="description" content="Train Quant (Number Sense, Percentage, Arithmetic, Algebra, Geometry, Mensuration) and Reasoning (Puzzles, Coding, Syllogism, Direction, Blood Relation) — Instinct & Exam layers.">
     <link rel="canonical" href="https://vlymbooq.qzz.io/mental.html">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7363013795551054" crossorigin="anonymous"></script>
     <script src="js/mental-training.js" defer></script>
@@ -114,6 +114,10 @@
 
         .solution-box{font-size:.72em;color:var(--text-sec);margin-top:4px;padding:8px 10px;border-radius:6px;background:rgba(52,211,153,.05);border:1px solid rgba(52,211,153,.1);display:none;line-height:1.5;text-align:left}
         .solution-box.show{display:block}
+        .intuition-box{font-size:.78em;color:var(--amber);margin-top:4px;padding:10px 12px;border-radius:8px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);display:none;line-height:1.6;text-align:left}
+        .intuition-box.show{display:block}
+        .intuition-box .ib-icon{font-size:1.1em;margin-right:4px}
+        .intuition-box .ib-label{font-weight:700;color:var(--amber);display:block;margin-bottom:3px}
 
         .hidden{display:none!important}
 
@@ -173,36 +177,68 @@
 
         <!-- MODE SELECTION -->
         <div id="modeSelect">
+
+            <!-- LAYER TOGGLE: Instinct / Exam -->
+            <div style="display:flex;gap:6px;margin-bottom:14px;align-items:center;justify-content:center">
+                <span style="font-size:.78em;color:var(--text-sec);font-weight:600">🧠 Layer:</span>
+                <button class="layer-btn active" id="layerInstinct" onclick="setLayer('instinct')" style="padding:5px 14px;border-radius:100px;border:1px solid var(--border);background:rgba(167,139,250,.15);color:var(--purple);font-size:.78em;font-weight:700;cursor:pointer">⚡ Instinct (5-15s)</button>
+                <button class="layer-btn" id="layerExam" onclick="setLayer('exam')" style="padding:5px 14px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-sec);font-size:.78em;font-weight:600;cursor:pointer">📚 Exam (Full)</button>
+            </div>
+
+            <!-- 🔢 QUANT REFLEX CATEGORY -->
+            <div class="category-card" onclick="toggleCategory('quant')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s">
+                <span style="font-size:1.4em">🔢</span>
+                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Quant Reflex</div><div style="font-size:.72em;color:var(--text-muted)">10 topics — Number Sense, Percentage, Algebra, Geometry & more</div></div>
+                <span class="cat-arrow" id="catArrowQuant" style="color:var(--text-muted);font-size:.8em">▶</span>
+                <div class="stat" id="stat-quant" style="font-size:.7em;color:var(--purple);white-space:nowrap">0 solved</div>
+            </div>
+            <div id="quantTopics" class="topic-grid" style="display:none;grid-template-columns:1fr 1fr;gap:6px;padding:8px 0 12px 0"></div>
+
+            <!-- 🧠 REASONING REFLEX CATEGORY -->
+            <div class="category-card" onclick="toggleCategory('reasoning')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s;margin-top:6px">
+                <span style="font-size:1.4em">🧠</span>
+                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Reasoning Reflex</div><div style="font-size:.72em;color:var(--text-muted)">12 topics — Puzzles, Coding, Syllogism, Direction, Blood Relation & more</div></div>
+                <span class="cat-arrow" id="catArrowReasoning" style="color:var(--text-muted);font-size:.8em">▶</span>
+                <div class="stat" id="stat-reasoning" style="font-size:.7em;color:var(--purple);white-space:nowrap">0 solved</div>
+            </div>
+            <div id="reasoningTopics" class="topic-grid" style="display:none;grid-template-columns:1fr 1fr;gap:6px;padding:8px 0 12px 0"></div>
+
+            <!-- ⚡ REFLEX MODES -->
+            <div style="display:flex;align-items:center;gap:8px;margin:10px 0 8px 0">
+                <span style="font-size:1.1em">⚡</span>
+                <span style="font-weight:800;font-size:.85em;color:var(--text-sec)">Reflex Modes</span>
+                <span style="font-size:.68em;color:var(--text-muted)">— these train speed, not topics</span>
+            </div>
             <div class="mode-grid">
-                <div class="mode-card" data-mode="math" onclick="startTraining('math')">
-                    <div class="icon">🔢</div>
-                    <div class="name">Math Sprint</div>
-                    <div class="desc">Squares, %, fractions — 10s each</div>
-                    <div class="stat" id="stat-math">0 solved</div>
-                </div>
-                <div class="mode-card" data-mode="chain" onclick="startTraining('chain')">
-                    <div class="icon">⛓️</div>
-                    <div class="name">Computation Chain</div>
-                    <div class="desc">Multi-step mental chains</div>
-                    <div class="stat" id="stat-chain">0 solved</div>
-                </div>
-                <div class="mode-card" data-mode="pattern" onclick="startTraining('pattern')">
-                    <div class="icon">🧩</div>
-                    <div class="name">Pattern Flash</div>
-                    <div class="desc">Identify patterns in 5s</div>
-                    <div class="stat" id="stat-pattern">0 solved</div>
-                </div>
-                <div class="mode-card" data-mode="puzzle" onclick="startTraining('puzzle')">
-                    <div class="icon">🧠</div>
-                    <div class="name">Reasoning Puzzles</div>
-                    <div class="desc">Floor, circular, linear, comparison — all exam patterns</div>
-                    <div class="stat" id="stat-puzzle">0 solved</div>
-                </div>
-                <div class="mode-card" data-mode="recognize" onclick="startTraining('recognize')">
+                <div class="mode-card" data-mode="quicksolve" onclick="startTraining('quicksolve')">
                     <div class="icon">⚡</div>
                     <div class="name">Quick Solve</div>
-                    <div class="desc">Speed practice — any type in 5-8s</div>
-                    <div class="stat" id="stat-recognize">0 solved</div>
+                    <div class="desc">Mixed questions — any type in 5-8s</div>
+                    <div class="stat" id="stat-quicksolve">0 solved</div>
+                </div>
+                <div class="mode-card" data-mode="instinct" onclick="startTraining('instinct')">
+                    <div class="icon">💡</div>
+                    <div class="name">Instinct Mode</div>
+                    <div class="desc">Shortcut recognition — 5-15s per question</div>
+                    <div class="stat" id="stat-instinct">0 solved</div>
+                </div>
+                <div class="mode-card" data-mode="fivesec" onclick="startTraining('fivesec')">
+                    <div class="icon">⏱️</div>
+                    <div class="name">5-Second Challenge</div>
+                    <div class="desc">Very short recognition-based questions</div>
+                    <div class="stat" id="stat-fivesec">0 solved</div>
+                </div>
+                <div class="mode-card" data-mode="examrush" onclick="startTraining('examrush')">
+                    <div class="icon">🚀</div>
+                    <div class="name">Exam Rush</div>
+                    <div class="desc">Timed mixed sets — full exam pressure</div>
+                    <div class="stat" id="stat-examrush">0 solved</div>
+                </div>
+                <div class="mode-card" data-mode="weakspot" onclick="startTraining('weakspot')">
+                    <div class="icon">🎯</div>
+                    <div class="name">Weak Spot Attack</div>
+                    <div class="desc">Targets your mistake patterns</div>
+                    <div class="stat" id="stat-weakspot">0 solved</div>
                 </div>
             </div>
 
@@ -268,6 +304,7 @@
 
             <div class="result-flash" id="resultFlash"></div>
             <div class="speed-tip" id="speedTip"><span class="st-label">⚡ Speed Tip</span> <span id="speedTipText"></span></div>
+            <div class="intuition-box" id="intuitionDisplay"><span class="ib-label">⚡ Intuition Method</span> <span id="intuitionText"></span></div>
             <div class="solution-box" id="solutionDisplay"></div>
 
             <button class="action-btn primary hidden" id="nextBtn" onclick="nextQuestion()">Next →</button>
@@ -291,6 +328,74 @@
     var answered = false;
     var hasHint = false;
     var questionLoadTime = 0;
+    var activeLayer = 'instinct'; // 'instinct' or 'exam'
+
+    // ====== TOPIC DEFINITIONS ======
+    var QUANT_TOPICS = [
+        { key:'number_sense', icon:'🔢', name:'Number Sense', desc:'Squares, Cubes, Roots, Divisibility, LCM/HCF' },
+        { key:'percentage', icon:'%', name:'Percentage Lab', desc:'%, Fraction↔%, Profit & Loss, SI/CI' },
+        { key:'arithmetic', icon:'📊', name:'Arithmetic Sprint', desc:'Average, Ratio, Mixture, Ages' },
+        { key:'motion', icon:'🚄', name:'Motion Math', desc:'TSD, Trains, Boats, Relative Speed' },
+        { key:'work', icon:'⚙️', name:'Work Logic', desc:'Time & Work, Pipes, Efficiency' },
+        { key:'algebra', icon:'✏️', name:'Algebra Flash', desc:'Equations, Identities, Simplification' },
+        { key:'geometry', icon:'△', name:'Geometry Vision', desc:'Angles, Triangles, Circles, Coord' },
+        { key:'mensuration', icon:'📐', name:'Mensuration Snap', desc:'2D, 3D, Surface Area, Volume' },
+        { key:'counting', icon:'🎲', name:'Counting Lab', desc:'Permutation, Combination, Probability' },
+        { key:'data', icon:'📋', name:'Data Master', desc:'Tables, Charts, Graphs, Sufficiency' }
+    ];
+    var REASONING_TOPICS = [
+        { key:'pattern_flash', icon:'🔢', name:'Pattern Flash', desc:'Number/Letter Series, Odd One Out' },
+        { key:'coding_flash', icon:'🔐', name:'Coding Flash', desc:'Coding-Decoding, Symbol Logic' },
+        { key:'logic_snap', icon:'🧮', name:'Logic Snap', desc:'Syllogism, Inequality, Arguments' },
+        { key:'direction_sense', icon:'🧭', name:'Direction Sense', desc:'Direction, Distance, Orientation' },
+        { key:'blood_relations', icon:'👨‍👩‍👧', name:'Blood Relations', desc:'Family Tree, Generation Logic' },
+        { key:'ranking_grid', icon:'🏅', name:'Ranking Grid', desc:'Rank, Order, Comparison' },
+        { key:'floor_puzzle', icon:'🏢', name:'Floor Puzzle', desc:'Floor & Building Arrangements' },
+        { key:'linear_seating', icon:'🪑', name:'Linear Seating', desc:'Single & Double Row Arrangements' },
+        { key:'circular_seating', icon:'🔄', name:'Circular Seating', desc:'Circle, Square, Polygon' },
+        { key:'box_distribution', icon:'📦', name:'Box & Distribution', desc:'Box Puzzles & Distribution' },
+        { key:'scheduling', icon:'📅', name:'Scheduling', desc:'Day, Month, Date, Timetable' },
+        { key:'input_output', icon:'⏩', name:'Input-Output', desc:'Banking Pattern Machine' }
+    ];
+
+    // ====== CATEGORY TOGGLE ======
+    var categoryOpen = {};
+    function toggleCategory(cat) {
+        var el = document.getElementById(cat + 'Topics');
+        var arrow = document.getElementById('catArrow' + cat.charAt(0).toUpperCase() + cat.slice(1));
+        if (!el) return;
+        var isOpen = el.style.display !== 'none';
+        el.style.display = isOpen ? 'none' : 'grid';
+        if (arrow) arrow.textContent = isOpen ? '▶' : '▼';
+        categoryOpen[cat] = !isOpen;
+        if (!isOpen && el.children.length === 0) buildTopicGrid(cat);
+    }
+
+    function buildTopicGrid(cat) {
+        var el = document.getElementById(cat + 'Topics');
+        var topics = cat === 'quant' ? QUANT_TOPICS : REASONING_TOPICS;
+        el.innerHTML = '';
+        topics.forEach(function(t){
+            var statId = 'stat-' + cat + '-' + t.key;
+            el.innerHTML += '<div class="topic-card" onclick="startTraining(\'' + cat + '\', \'' + t.key + '\')" style="padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:8px">'
+                + '<span style="font-size:1.1em">' + t.icon + '</span>'
+                + '<div style="flex:1;min-width:0"><div style="font-weight:700;font-size:.78em">' + t.name + '</div><div style="font-size:.65em;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + t.desc + '</div></div>'
+                + '<div class="stat" id="' + statId + '" style="font-size:.65em;color:var(--purple);white-space:nowrap">0</div>'
+                + '</div>';
+        });
+    }
+
+    // ====== LAYER SWITCHING ======
+    function setLayer(layer) {
+        activeLayer = layer;
+        if (window.setActiveLayer) window.setActiveLayer(layer);
+        document.getElementById('layerInstinct').className = 'layer-btn' + (layer === 'instinct' ? ' active' : '');
+        document.getElementById('layerExam').className = 'layer-btn' + (layer === 'exam' ? ' active' : '');
+        document.getElementById('layerInstinct').style.background = layer === 'instinct' ? 'rgba(167,139,250,.15)' : 'transparent';
+        document.getElementById('layerInstinct').style.color = layer === 'instinct' ? 'var(--purple)' : 'var(--text-sec)';
+        document.getElementById('layerExam').style.background = layer === 'exam' ? 'rgba(167,139,250,.15)' : 'transparent';
+        document.getElementById('layerExam').style.color = layer === 'exam' ? 'var(--purple)' : 'var(--text-sec)';
+    }
 
     // ====== RANK & STATS UPDATE ======
     function updateUI() {
@@ -312,6 +417,16 @@
             if (el) {
                 var s = stats.stats[m];
                 el.textContent = s.attempts + ' solved' + (s.attempts > 0 ? ' (' + Math.round(s.correct / s.attempts * 100) + '%)' : '');
+            }
+        }
+        // Quant/reasoning sub-topic stats
+        if (stats.subTopicStats) {
+            for (var st in stats.subTopicStats) {
+                var el2 = document.getElementById('stat-quant-' + st) || document.getElementById('stat-reasoning-' + st);
+                if (el2) {
+                    var ss = stats.subTopicStats[st];
+                    el2.textContent = ss.attempts > 0 ? Math.round(ss.correct / ss.attempts * 100) + '%' : '0';
+                }
             }
         }
 
@@ -352,7 +467,8 @@
             stats.sessions.slice(0, 5).forEach(function(s){
                 var accClass = s.accuracy >= 70 ? 'good' : (s.accuracy >= 40 ? 'ok' : 'bad');
                 var hm = s.hardMode ? '<span style="color:var(--red);font-size:.7em;font-weight:700;margin-left:2px">🔥</span>' : '';
-                h += '<div class="session-item"><span class="s-mode">' + s.mode.charAt(0).toUpperCase() + s.mode.slice(1) + hm + '</span><span>' + s.correct + '/' + s.total + '</span><span class="s-acc ' + accClass + '">' + s.accuracy + '%</span><span style="color:var(--text-muted)">' + s.time + 's</span></div>';
+                var subLabel = s.subMode ? ' <span style="color:var(--text-muted);font-size:.85em">| ' + s.subMode.replace(/_/g,' ') + '</span>' : '';
+                h += '<div class="session-item"><span class="s-mode">' + (s.mode.charAt(0).toUpperCase() + s.mode.slice(1)) + subLabel + hm + '</span><span>' + s.correct + '/' + s.total + '</span><span class="s-acc ' + accClass + '">' + s.accuracy + '%</span><span style="color:var(--text-muted)">' + s.time + 's</span></div>';
             });
             h += '</div>';
             sh.innerHTML = h;
@@ -440,9 +556,9 @@
     ];
 
     // ====== TRAINING FLOW ======
-    function startTraining(mode) {
+    function startTraining(mode, subTopic) {
         var hardMode = document.getElementById('hardModeToggle').checked;
-        session = window.startMentalSession(mode, { hardMode: hardMode });
+        session = window.startMentalSession(mode, { hardMode: hardMode, subMode: subTopic || null, layer: activeLayer });
         document.getElementById('modeSelect').style.display = 'none';
         document.getElementById('arena').classList.add('active');
         answered = false;
@@ -550,7 +666,7 @@
         var result = window.submitMentalAnswer(session, q, selectedVal, timeLeft);
         if (!result) return;
 
-        var correctIdx = q.options.indexOf(q.answer);
+        var correctIdx = q.options.findIndex(function(o){ return String(o) === String(q.answer); });
         if (correctIdx >= 0 && correctIdx < btns.length) btns[correctIdx].classList.add('correct');
         if (idx >= 0 && !result.correct && idx !== correctIdx) btns[idx].classList.add('wrong');
 
@@ -570,6 +686,16 @@
             st.className = 'speed-tip show';
         } else {
             st.className = 'speed-tip';
+        }
+
+        // Show intuition method
+        var intuEl = document.getElementById('intuitionDisplay');
+        var intuText = document.getElementById('intuitionText');
+        if (q.intuition) {
+            intuText.textContent = q.intuition;
+            intuEl.className = 'intuition-box show';
+        } else {
+            intuEl.className = 'intuition-box';
         }
 
         // Show solution explanation
