@@ -11,11 +11,7 @@ var EXAM_LABELS = { cgl: 'SSC CGL', rbi: 'RBI Grade B', jee: 'JEE Main', neet: '
 
 function getApiKey(name) {
   if (!name) name = 'GROQ_API_KEY';
-  if (process.env[name]) return process.env[name];
-  var FILE_MAP = { GROQ_API_KEY: '.groq-key', GEMINI_API_KEY: '.gemini-key', HUGGINGFACE_API_KEY: '.hf-key' };
-  var keyFile = path.join(root, FILE_MAP[name] || '');
-  if (fs.existsSync(keyFile)) return fs.readFileSync(keyFile, 'utf-8').trim();
-  return null;
+  return process.env[name] || null;
 }
 
 function getMonday(d) {

@@ -292,11 +292,7 @@ function addToBank(exam, newQuestions) {
 }
 
 function getApiKey(name) {
-  if (process.env[name]) return process.env[name];
-  var FILE_MAP = { GROQ_API_KEY: '.groq-key', GEMINI_API_KEY: '.gemini-key', HUGGINGFACE_API_KEY: '.hf-key', OPENROUTER_API_KEY: '.openrouter-key' };
-  var keyFile = path.join(root, FILE_MAP[name] || '');
-  if (fs.existsSync(keyFile)) return fs.readFileSync(keyFile, 'utf-8').trim();
-  return null;
+  return process.env[name] || null;
 }
 
 async function callGroq(apiKey, prompt) {
