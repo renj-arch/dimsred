@@ -777,22 +777,43 @@
         h += '</div>';
 
         // Pattern mode: show per-type breakdown
+        // Per-type breakdown for pattern mode; per-sub-topic for quant/reasoning
+        var ps = stats.patternStats;
+        var ss = stats.subTopicStats;
+        var hasBreakdown = false;
+        var breakdownHtml = '';
+        var weakest = null, weakestAcc = 101;
+
         if (lastSession.mode === 'pattern') {
-            var ps = stats.patternStats;
-            h += '<div style="margin:8px 0;font-size:.78em;text-align:left">';
-            h += '<div style="font-weight:700;margin-bottom:4px;color:var(--text-sec);text-align:center">Per-Type Breakdown</div>';
-            var weakest = null, weakestAcc = 101;
             for (var t in ps) {
                 if (ps[t].attempts > 0) {
+                    hasBreakdown = true;
                     var a = Math.round(ps[t].correct / ps[t].attempts * 100);
                     var c = a >= 70 ? 'var(--emerald)' : a >= 40 ? 'var(--amber)' : 'var(--red)';
-                    h += '<div class="detail-row"><span>' + t + '</span><span style="color:' + c + '">' + a + '%</span></div>';
+                    breakdownHtml += '<div class="detail-row"><span>' + t + '</span><span style="color:' + c + '">' + a + '%</span></div>';
                     if (a < weakestAcc) { weakestAcc = a; weakest = t; }
                 }
             }
+        } else if ((lastSession.mode === 'quant' || lastSession.mode === 'reasoning') && lastSession.subMode) {
+            var key = lastSession.subMode;
+            if (ss && ss[key] && ss[key].attempts > 0) {
+                hasBreakdown = true;
+                var a = Math.round(ss[key].correct / ss[key].attempts * 100);
+                var c = a >= 70 ? 'var(--emerald)' : a >= 40 ? 'var(--amber)' : 'var(--red)';
+                var label = key.replace(/_/g, ' ').replace(/\b\w/g, function(l){ return l.toUpperCase(); });
+                breakdownHtml += '<div class="detail-row"><span>' + label + '</span><span style="color:' + c + '">' + a + '% (' + ss[key].correct + '/' + ss[key].attempts + ')</span></div>';
+                if (a < weakestAcc) { weakestAcc = a; weakest = key; }
+            }
+        }
+
+        if (hasBreakdown) {
+            h += '<div style="margin:8px 0;font-size:.78em;text-align:left">';
+            h += '<div style="font-weight:700;margin-bottom:4px;color:var(--text-sec);text-align:center">' + (lastSession.mode === 'pattern' ? 'Per-Type' : 'Topic') + ' Breakdown</div>';
+            h += breakdownHtml;
             h += '</div>';
             if (weakest && weakestAcc < 70) {
-                h += '<button class="action-btn primary" onclick="startFocus(\'' + weakest + '\', ' + (lastSession.hardMode ? 'true' : 'false') + ')" style="font-size:.85em;padding:10px;margin-top:4px">🎯 Focus: ' + weakest + ' (' + weakestAcc + '%)</button>';
+                var focusType = lastSession.mode === 'pattern' ? weakest : '';
+                h += '<button class="action-btn primary" onclick="startFocus(\'' + focusType + '\', ' + (lastSession.hardMode ? 'true' : 'false') + ')" style="font-size:.85em;padding:10px;margin-top:4px">🎯 Focus: ' + (lastSession.mode === 'pattern' ? weakest + ' (' + weakestAcc + '%)' : 'Improve ' + weakestAcc + '%') + '</button>';
             }
         }
 

@@ -66,11 +66,22 @@ function removeMistake(question) {
 function getMistakesForRetry(count) {
   var arr = loadMistakes();
   if (arr.length === 0) return [];
-  // Sort by most attempts first (hardest ones), then by longest time since last wrong
-  arr.sort(function(a, b) {
-    if (a.attempts !== b.attempts) return b.attempts - a.attempts;
-    return (a.lastWrong || 0) - (b.lastWrong || 0);
-  });
+  var now = Date.now();
+  // Spaced repetition: score each mistake by review urgency.
+  // Higher score = more urgent to review.
+  for (var i = 0; i < arr.length; i++) {
+    var m = arr[i];
+    var hoursSinceLast = (now - (m.lastWrong || 0)) / 3600000;
+    // Ideal intervals: 1st repeat after 4h, 2nd after 24h, 3rd+ after 72h
+    var idealHours = m.attempts === 1 ? 4 : (m.attempts === 2 ? 24 : 72);
+    // Urgency = how overdue (hours since / ideal hours). Cap at 3x to avoid old mistakes dominating.
+    var urgency = Math.min(hoursSinceLast / idealHours, 3);
+    // Boost weight for frequently wrong items
+    var attemptWeight = 1 + (m.attempts - 1) * 0.5;
+    m._srScore = urgency * attemptWeight;
+  }
+  // Sort by spaced repetition score descending (most urgent first)
+  arr.sort(function(a, b) { return (b._srScore || 0) - (a._srScore || 0); });
   var out = [];
   for (var i = 0; i < Math.min(count, arr.length); i++) {
     out.push(arr[i]);
