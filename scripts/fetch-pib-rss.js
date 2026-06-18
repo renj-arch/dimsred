@@ -3,13 +3,17 @@ var path = require('path');
 var Parser = require('rss-parser');
 
 var parser = new Parser({
-  timeout: 15000,
-  headers: { 'User-Agent': 'Mozilla/5.0 (compatible; vlymbooq-bot/1.0)' }
+  timeout: 20000,
+  headers: {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+    'Accept': 'application/rss+xml, application/xml, text/xml, */*',
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Referer': 'https://pib.gov.in/'
+  }
 });
 
 var FEEDS = [
-  { url: 'https://pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=20', category: 'PIB Press Releases' },
-  { url: 'https://pib.gov.in/RssMain.aspx?ModId=8&Lang=1&Regid=20', category: 'PIB Photos' }
+  { url: 'https://www.pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3', category: 'PIB Press Releases' }
 ];
 
 var dataDir = path.resolve(__dirname, '..', 'data');
@@ -20,13 +24,22 @@ async function fetchAll() {
 
   for (var f of FEEDS) {
     try {
-      var feed = await parser.parseURL(f.url);
+      var resp = await fetch(f.url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          'Accept': 'application/rss+xml, text/xml, */*',
+          'Accept-Language': 'en-US,en;q=0.9',
+          'Referer': 'https://pib.gov.in/'
+        }
+      });
+      if (!resp.ok) { console.error('HTTP ' + resp.status + ' for ' + f.url); continue; }
+      var xml = await resp.text();
+      var feed = await parser.parseString(xml);
       var items = (feed.items || []).slice(0, 20);
       for (var item of items) {
         var guid = item.guid || item.link || item.title;
         if (seen.has(guid)) continue;
         seen.add(guid);
-
         var pubDate = item.pubDate ? new Date(item.pubDate) : new Date();
         allItems.push({
           id: guid,
@@ -38,20 +51,22 @@ async function fetchAll() {
           source: 'PIB'
         });
       }
+      console.log('Fetched ' + items.length + ' items from ' + f.url);
     } catch (e) {
       console.error('Failed to fetch ' + f.url + ': ' + e.message);
     }
   }
 
-  // Sort by date descending
   allItems.sort(function(a, b) { return new Date(b.pubDate) - new Date(a.pubDate); });
 
-  // Merge with existing data if any
   var existingPath = path.join(dataDir, 'pib-feed.json');
   var existing = [];
   if (fs.existsSync(existingPath)) {
-    try { existing = JSON.parse(fs.readFileSync(existingPath, 'utf-8')); }
-    catch(e) {}
+    try {
+      var parsed = JSON.parse(fs.readFileSync(existingPath, 'utf-8'));
+      existing = (parsed && parsed.items && Array.isArray(parsed.items)) ? parsed.items : [];
+    }
+    catch(e) { existing = []; }
   }
 
   var existingSeen = new Set();
@@ -64,11 +79,8 @@ async function fetchAll() {
     }
   }
 
-  // Keep last 7 days of items
   var weekAgo = Date.now() - 7 * 86400000;
   existing = existing.filter(function(i) { return new Date(i.pubDate).getTime() > weekAgo; });
-
-  // Limit to 100 items
   if (existing.length > 100) existing = existing.slice(0, 100);
 
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
