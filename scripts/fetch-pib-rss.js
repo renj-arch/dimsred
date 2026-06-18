@@ -127,13 +127,15 @@ async function fetchAll() {
   }
   for (var n of merged) {
     if (!existingSeen.has(n.id)) {
-      existing.unshift(n);
+      existing.push(n);
     }
   }
 
   // Keep last 30 days
   var monthAgo = Date.now() - 30 * 86400000;
   existing = existing.filter(function(i) { return new Date(i.pubDate).getTime() > monthAgo; });
+  // Sort by date descending (newest first), then cap at 200
+  existing.sort(function(a, b) { return new Date(b.pubDate) - new Date(a.pubDate); });
   if (existing.length > 200) existing = existing.slice(0, 200);
 
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
