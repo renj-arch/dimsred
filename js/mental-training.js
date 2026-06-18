@@ -1454,7 +1454,7 @@ function generateWeakSpotQuestion(diff) {
     var opts = (m.options || ['A','B','C','D']).slice();
     shuffle(opts);
     return {
-      question: '🎯 Retry: ' + m.question,
+      question: '🎯 Retry: ' + (m.question || 'What comes next? (Answer: ' + m.answer + ')'),
       answer: m.answer,
       options: opts,
       hint: 'You got this wrong before. ' + (m.techniqueLabel || 'Try again carefully'),
@@ -1487,9 +1487,9 @@ window.startMentalSession = function(mode, opts) {
   var subMode = opts.subMode || null;
   var totalQ = (mode === 'puzzle') ? 5 : 10;
 
-  // Inject mistake bank questions (skip for puzzle/weakspot mode)
+  // Inject mistake bank questions (skip for puzzle/weakspot mode and when a specific sub-topic is chosen)
   var mistakeQueue = [];
-  if (mode !== 'puzzle' && mode !== 'weakspot') {
+  if (mode !== 'puzzle' && mode !== 'weakspot' && !subMode) {
     mistakeQueue = getMistakesForRetry(2);
   }
 
@@ -1530,7 +1530,7 @@ window.getMentalQuestion = function(session) {
     shuffle(opts);
     return {
       displayType: 'mistake',
-      question: '&#128221; Retry: ' + m.question,
+      question: '&#128221; Retry: ' + (m.question || 'What comes next? (Answer: ' + m.answer + ')'),
       answer: m.answer,
       options: opts,
       hint: 'You got this wrong before. Use the technique.',
@@ -1545,7 +1545,7 @@ window.getMentalQuestion = function(session) {
       total: session.totalQuestions,
       progress: Math.round(session.questionIndex / session.totalQuestions * 100),
       isMistakeRetry: true,
-      _mistakeQuestion: m.question  // original question text for bank lookup
+      _mistakeQuestion: m.question  // original question text for bank lookup; null indicates no stored original
     };
   }
 
