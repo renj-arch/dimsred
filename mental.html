@@ -8,7 +8,7 @@
     <meta name="description" content="Train Quant (Number Sense, Percentage, Arithmetic, Algebra, Geometry, Mensuration) and Reasoning (Puzzles, Coding, Syllogism, Direction, Blood Relation) — Instinct & Exam layers.">
     <link rel="canonical" href="https://vlymbooq.qzz.io/mental.html">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7363013795551054" crossorigin="anonymous"></script>
-    <script src="js/mental-training.js" defer></script>
+    <script src="js/mental-training.js?v=20260618" defer></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}
@@ -188,7 +188,7 @@
             <!-- 🔢 QUANT REFLEX CATEGORY -->
             <div class="category-card" onclick="toggleCategory('quant')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s">
                 <span style="font-size:1.4em">🔢</span>
-                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Quant Reflex</div><div style="font-size:.72em;color:var(--text-muted)">10 topics — Number Sense, Percentage, Algebra, Geometry & more</div></div>
+                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Quant Reflex</div><div style="font-size:.72em;color:var(--text-muted)">18 topics — Number Sense, Algebra, Geometry, CI, DI & more</div></div>
                 <span class="cat-arrow" id="catArrowQuant" style="color:var(--text-muted);font-size:.8em">▶</span>
                 <div class="stat" id="stat-quant" style="font-size:.7em;color:var(--purple);white-space:nowrap">0 solved</div>
             </div>
@@ -197,7 +197,7 @@
             <!-- 🧠 REASONING REFLEX CATEGORY -->
             <div class="category-card" onclick="toggleCategory('reasoning')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s;margin-top:6px">
                 <span style="font-size:1.4em">🧠</span>
-                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Reasoning Reflex</div><div style="font-size:.72em;color:var(--text-muted)">12 topics — Puzzles, Coding, Syllogism, Direction, Blood Relation & more</div></div>
+                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Reasoning Reflex</div><div style="font-size:.72em;color:var(--text-muted)">20 topics — Puzzles, Coding, Syllogism, Clock, Calendar, Critical & more</div></div>
                 <span class="cat-arrow" id="catArrowReasoning" style="color:var(--text-muted);font-size:.8em">▶</span>
                 <div class="stat" id="stat-reasoning" style="font-size:.7em;color:var(--purple);white-space:nowrap">0 solved</div>
             </div>
@@ -341,7 +341,15 @@
         { key:'geometry', icon:'△', name:'Geometry Vision', desc:'Angles, Triangles, Circles, Coord' },
         { key:'mensuration', icon:'📐', name:'Mensuration Snap', desc:'2D, 3D, Surface Area, Volume' },
         { key:'counting', icon:'🎲', name:'Counting Lab', desc:'Permutation, Combination, Probability' },
-        { key:'data', icon:'📋', name:'Data Master', desc:'Tables, Charts, Graphs, Sufficiency' }
+        { key:'data', icon:'📋', name:'Data Master', desc:'Tables, Charts, Graphs, Sufficiency' },
+        { key:'number_system', icon:'#️⃣', name:'Number System', desc:'Remainder, Cyclicity, Unit Digit, Surds' },
+        { key:'simplification', icon:'🧮', name:'Simplification', desc:'BODMAS, Approximation, Indices' },
+        { key:'quadratic', icon:'📈', name:'Quadratic Eq', desc:'Roots, Discriminant, Nature of Roots' },
+        { key:'partnership', icon:'🤝', name:'Partnership', desc:'Profit Ratio, Investment, Time' },
+        { key:'compound_interest', icon:'💰', name:'Compound Interest', desc:'CI, CI-SI Diff, Installments' },
+        { key:'discount', icon:'🏷️', name:'Discount', desc:'Single, Successive, MP-SP-CP' },
+        { key:'races', icon:'🏃', name:'Races & Games', desc:'Linear Races, Circular Tracks' },
+        { key:'data_interpretation', icon:'📊', name:'Data Interp.', desc:'Tables, Bar & Pie Charts' }
     ];
     var REASONING_TOPICS = [
         { key:'pattern_flash', icon:'🔢', name:'Pattern Flash', desc:'Number/Letter Series, Odd One Out' },
@@ -355,7 +363,15 @@
         { key:'circular_seating', icon:'🔄', name:'Circular Seating', desc:'Circle, Square, Polygon' },
         { key:'box_distribution', icon:'📦', name:'Box & Distribution', desc:'Box Puzzles & Distribution' },
         { key:'scheduling', icon:'📅', name:'Scheduling', desc:'Day, Month, Date, Timetable' },
-        { key:'input_output', icon:'⏩', name:'Input-Output', desc:'Banking Pattern Machine' }
+        { key:'input_output', icon:'⏩', name:'Input-Output', desc:'Banking Pattern Machine' },
+        { key:'mirror_image', icon:'🪞', name:'Mirror & Water', desc:'Mirror Images, Embedded Figures, Paper Folding' },
+        { key:'dice_cube', icon:'🎲', name:'Dice & Cube', desc:'Dice Counting, Cube Painting, Unfolded Dice' },
+        { key:'calendar', icon:'📅', name:'Calendar', desc:'Day Finder, Dates, Leap Years' },
+        { key:'clock', icon:'🕐', name:'Clock', desc:'Angle, Reflection, Hands Overlap' },
+        { key:'alphabet_arrange', icon:'🔤', name:'Word & Alphabet', desc:'Word Formation, Dictionary, Letter Arrangement' },
+        { key:'critical_reasoning', icon:'⚖️', name:'Critical Reason', desc:'Assumptions, Courses of Action, Cause-Effect' },
+        { key:'decision_making', icon:'✅', name:'Decision Making', desc:'Eligibility, Condition-Based' },
+        { key:'venn_diagram', icon:'🔄', name:'Venn Diagram', desc:'Set Theory, Overlapping Groups' }
     ];
 
     // ====== CATEGORY TOGGLE ======
@@ -852,19 +868,42 @@
     function showTechSheet() {
         var grid = document.getElementById('techSheetGrid');
         grid.innerHTML = '';
-        var types = ['Syllogism','Inequality','Direction','Blood Relation','Analogy','Classification','Series','Coding','Puzzle','Data Sufficiency'];
-        types.forEach(function(t){
+        // Show Quant topics first
+        grid.innerHTML += '<div style="font-size:.9em;font-weight:700;margin:8px 0 4px;color:var(--cyan)">🔢 Quant Reflex</div>';
+        var quantTopics = ['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','partnership','compound_interest','discount','races','data_interpretation'];
+        quantTopics.forEach(function(t){
+            var label = t.replace(/_/g,' ');
             var drill = window.TECHNIQUE_DRILLS[t] || { line1:'—', line2:'' };
-            var label = window.SPEED_TECHNIQUES[t] || '';
-            var ps = window.getMentalStats().patternStats[t];
-            var acc = ps && ps.attempts > 0 ? Math.round(ps.correct / ps.attempts * 100) : null;
-            grid.innerHTML += '<div style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;text-align:left">'
-                + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">'
-                + '<span style="font-weight:700;font-size:.9em">' + t + '</span>'
-                + (acc !== null ? '<span style="font-size:.78em;color:' + (acc >= 70 ? 'var(--emerald)' : acc >= 40 ? 'var(--amber)' : 'var(--red)') + '">' + acc + '%</span>' : '')
-                + '</div>'
-                + '<div style="font-size:.78em;color:var(--purple);font-weight:600;margin-bottom:1px">' + drill.line1 + '</div>'
-                + '<div style="font-size:.72em;color:var(--text-sec);line-height:1.4">' + drill.line2 + '</div>'
+            var tech = window.SPEED_TECHNIQUES[t] || '';
+            grid.innerHTML += '<div style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-bottom:4px;text-align:left">'
+                + '<div style="font-weight:700;font-size:.82em;margin-bottom:1px">' + label + '</div>'
+                + '<div style="font-size:.72em;color:var(--purple);font-weight:600">' + drill.line1 + '</div>'
+                + '<div style="font-size:.68em;color:var(--text-sec);line-height:1.4">' + drill.line2 + '</div>'
+                + '</div>';
+        });
+        // Show Reasoning topics
+        grid.innerHTML += '<div style="font-size:.9em;font-weight:700;margin:10px 0 4px;color:var(--violet)">🧠 Reasoning Reflex</div>';
+        var reasTopics = ['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','box_distribution','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram'];
+        reasTopics.forEach(function(t){
+            var label = t.replace(/_/g,' ');
+            var drill = window.TECHNIQUE_DRILLS[t] || { line1:'—', line2:'' };
+            var tech = window.SPEED_TECHNIQUES[t] || '';
+            grid.innerHTML += '<div style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-bottom:4px;text-align:left">'
+                + '<div style="font-weight:700;font-size:.82em;margin-bottom:1px">' + label + '</div>'
+                + '<div style="font-size:.72em;color:var(--purple);font-weight:600">' + drill.line1 + '</div>'
+                + '<div style="font-size:.68em;color:var(--text-sec);line-height:1.4">' + drill.line2 + '</div>'
+                + '</div>';
+        });
+        // Show old pattern types (still used by Pattern/Recognize modes)
+        grid.innerHTML += '<div style="font-size:.9em;font-weight:700;margin:10px 0 4px;color:var(--amber)">⚡ Pattern Puzzles</div>';
+        var patternTypes = ['Syllogism','Inequality','Direction','Blood Relation','Analogy','Classification','Series','Coding','Puzzle','Data Sufficiency'];
+        patternTypes.forEach(function(t){
+            var drill = window.TECHNIQUE_DRILLS[t] || { line1:'—', line2:'' };
+            var tech = window.SPEED_TECHNIQUES[t] || '';
+            grid.innerHTML += '<div style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-bottom:4px;text-align:left">'
+                + '<div style="font-weight:700;font-size:.82em;margin-bottom:1px">' + t + '</div>'
+                + '<div style="font-size:.72em;color:var(--purple);font-weight:600">' + drill.line1 + '</div>'
+                + '<div style="font-size:.68em;color:var(--text-sec);line-height:1.4">' + drill.line2 + '</div>'
                 + '</div>';
         });
         document.getElementById('techSheet').classList.add('show');
