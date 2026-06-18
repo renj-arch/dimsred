@@ -1244,7 +1244,11 @@ function generateWorkQuestion(diff, layer) {
     // A is X times as efficient as B
     function(){var a=rand(10,30), x=[2,3,4][rand(0,2)]; return { q: 'A is '+x+'× as efficient as B. A finishes in '+a+' days. B alone?', a: a*x, hint: 'B takes '+x+'× longer', intuition: 'Efficiency ∝ 1/time. '+x+'× efficient → 1/'+x+'× time. B takes '+a+'×'+x+'='+(a*x)+' days' }; },
     // Wages distribution by work ratio
-    function(){var a=rand(6,15), b=rand(10,20), w=rand(2000,5000); return { q: 'A takes '+a+' days, B '+b+' days. Total wage Rs'+w+'. A share?', a: Math.round(w*b/(a+b)*10)/10, hint: 'Ratio 1/A:1/B = B:A', intuition: 'Wage ratio = 1/'+a+' : 1/'+b+' = '+b+' : '+a+'. A share = '+b+'/'+(a+b)+'×'+w+' = '+Math.round(w*b/(a+b)) }; }
+    function(){var a=rand(6,15), b=rand(10,20), w=rand(2000,5000); return { q: 'A takes '+a+' days, B '+b+' days. Total wage Rs'+w+'. A share?', a: Math.round(w*b/(a+b)*10)/10, hint: 'Ratio 1/A:1/B = B:A', intuition: 'Wage ratio = 1/'+a+' : 1/'+b+' = '+b+' : '+a+'. A share = '+b+'/'+(a+b)+'×'+w+' = '+Math.round(w*b/(a+b)) }; },
+    // Reverse: A+B together= X, A alone = Y. Find B alone (IndiaBix style)
+    function(){var a=rand(8,18), b=rand(10,22); var together=Math.round(a*b/(a+b)*10)/10; return { q: 'A+B finish in '+together+' days. A alone in '+a+' days. B alone?', a: Math.round(1/(1/together-1/a)*10)/10, hint: '1/B = 1/'+together+' - 1/'+a, intuition: '1/B = 1/total - 1/A = 1/'+together+' - 1/'+a+' = '+(1/together-1/a).toFixed(4)+'. B = '+(1/(1/together-1/a)).toFixed(1)+' days' }; },
+    // Reverse: Pipe A fills in X, both fill in Y. Find pipe B alone
+    function(){var a=rand(4,10), b=rand(a+2,16); var together=Math.round(a*b/(a+b)*10)/10; return { q: 'Pipe A fills in '+a+'hr. Both pipes fill in '+together+'hr. Pipe B alone?', a: Math.round(1/(1/together-1/a)*10)/10, hint: '1/B = 1/'+together+' - 1/'+a, intuition: '1/B = 1/'+together+' - 1/'+a+' = '+(1/together-1/a).toFixed(4)+'. B = '+Math.round(1/(1/together-1/a)*10)/10+' hr' }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1407,7 +1411,11 @@ function generatePartnershipQuestion(diff, layer) {
   var ty = [
     function(){ var a=rand(2,8)*1000, b=rand(3,9)*1000, p=rand(1,5)*1000; return { q: 'A invests Rs' + a + ', B Rs' + b + '. Profit Rs' + p + '. B\'s share?', a: Math.round(b*p/(a+b)), hint: 'Ratio ' + a + ':' + b + ', share = ' + b + '/' + (a+b) + '×' + p, intuition: 'Profit ratio = investment ratio. B share = ' + b + '/(' + a + '+' + b + ') × ' + p + ' = ' + b + '/' + (a+b) + ' × ' + p + ' = ' + Math.round(b*p/(a+b)) }; },
     function(){ var a=rand(1,5)*1000, b=rand(2,6)*1000, pa=rand(1,4), pb=rand(2,5); return { q: 'A Rs' + a + ' for ' + pa + 'mo, B Rs' + b + ' for ' + pb + 'mo. Profit share ratio?', a: (a*pa) + ':' + (b*pb), hint: 'Multiply capital×time: ' + a*pa + ' : ' + b*pb, intuition: 'Ratio = (A capital × A time) : (B capital × B time) = ' + a*pa + ' : ' + b*pb }; },
-    function(){ var a=rand(2,5)*1000, b=rand(3,6)*1000; var ap=rand(1,3); return { q: 'A Rs' + a + ', B Rs' + b + ' after ' + ap + 'mo joins. Profit Rs' + (a+b)*2 + '. A\'s share?', a: Math.round((a*(12)) * (a+b)*2 / (a*12 + b*(12-ap))), hint: 'A for 12mo, B for ' + (12-ap) + 'mo', intuition: 'A: ' + a + '×12=' + a*12 + ', B: ' + b + '×' + (12-ap) + '=' + b*(12-ap) + '. A share = ' + a*12 + '/' + (a*12+b*(12-ap)) + ' × total' }; }
+    function(){ var a=rand(2,5)*1000, b=rand(3,6)*1000; var ap=rand(1,3); return { q: 'A Rs' + a + ', B Rs' + b + ' after ' + ap + 'mo joins. Profit Rs' + (a+b)*2 + '. A\'s share?', a: Math.round((a*(12)) * (a+b)*2 / (a*12 + b*(12-ap))), hint: 'A for 12mo, B for ' + (12-ap) + 'mo', intuition: 'A: ' + a + '×12=' + a*12 + ', B: ' + b + '×' + (12-ap) + '=' + b*(12-ap) + '. A share = ' + a*12 + '/' + (a*12+b*(12-ap)) + ' × total' }; },
+    // Reverse: find B's investment given A's investment, total profit, and A's share
+    function(){ var a=rand(2,6)*1000, b=rand(3,7)*1000, p=rand(2,6)*1000; var aShare=Math.round(a*p/(a+b)); return { q: 'A invests Rs' + a + ', total profit Rs' + p + ', A gets Rs' + aShare + '. B\'s investment?', a: Math.round(a*(p-aShare)/aShare), hint: 'Profit ratio = investment ratio. A:B = ' + aShare + ':' + (p-aShare), intuition: 'Profit ratio = investment ratio. A:B = ' + aShare + ':' + (p-aShare) + '. B = ' + a + ' × ' + (p-aShare) + '/' + aShare + ' = ' + Math.round(a*(p-aShare)/aShare) }; },
+    // Reverse: find B's time given A's investment+time, B's investment, profit ratio
+    function(){ var a=rand(2,5)*1000, b=rand(3,6)*1000, pa=rand(2,6); var pr=rand(2,4); var pb=Math.round(pr); return { q: 'A Rs' + a + ' for ' + pa + 'mo, B Rs' + b + '. Profit ratio ' + pr + ':' + pb + '. B\'s time?', a: Math.round(a*pa*pb/(b*pr)), hint: 'Ratio = (A×timeA):(B×timeB) = ' + (a*pa) + ':' + (b*pb), intuition: 'A:B = ' + (a*pa) + ':' + (b*pb) + '. Wait, given ratio ' + pr + ':' + pb + '. B time = (' + b + '×' + pb + ')/( ' + a + '×' + pa + ' ) = solving: B time = ' + Math.round(a*pa*pb/(b*pr)) + ' months' }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1421,7 +1429,11 @@ function generateCompoundInterestQuestion(diff, layer) {
     function(){ var p=rand(2,8)*1000; return { q: 'CI on Rs' + p + ' at 10% for 2yr', a: Math.round(p*0.21), hint: 'CI = P[(1+r)^t-1] = ' + p + '×(1.21-1)', intuition: 'CI = P(1+r/100)^t - P. 10% for 2yr: effective = 10+10+1=21%. CI = ' + p + '×21% = ' + Math.round(p*0.21) }; },
     function(){ var p=rand(1,5)*1000, r=[5,8,12,15][rand(0,3)]; return { q: 'Amount of Rs' + p + ' at ' + r + '% CI for 2yr', a: Math.round(p * Math.pow(1+r/100, 2)), hint: 'A = P(1+r/100)^t', intuition: 'A = ' + p + '×(1+' + r + '/100)² = ' + p + '×(' + (1+r/100) + ')² = ' + Math.round(p*Math.pow(1+r/100,2)) }; },
     function(){ var p=rand(2,6)*1000; return { q: 'CI - SI diff for Rs' + p + ' at 10% for 2yr', a: Math.round(p*0.01), hint: 'Diff = P(r/100)² for 2yr', intuition: 'CI-SI diff at 10% for 2yr = P(r/100)² = ' + p + '×(0.1)² = ' + p + '×0.01 = ' + Math.round(p*0.01) }; },
-    function(){ var p=rand(1,4)*10000; return { q: 'CI on Rs' + p + ' at 10% for 3yr', a: Math.round(p*0.331), hint: '3yr CI: 10+10+1+10+3+0.1 = ~33.1%', intuition: '3yr CI%: 10+10+1=21, 21+10+2.1=33.1%. CI = ' + p + '×33.1% = ' + Math.round(p*0.331) }; }
+    function(){ var p=rand(1,4)*10000; return { q: 'CI on Rs' + p + ' at 10% for 3yr', a: Math.round(p*0.331), hint: '3yr CI: 10+10+1+10+3+0.1 = ~33.1%', intuition: '3yr CI%: 10+10+1=21, 21+10+2.1=33.1%. CI = ' + p + '×33.1% = ' + Math.round(p*0.331) }; },
+    // Reverse: find P given CI amount at r% for t years
+    function(){ var p=rand(2,6)*1000, r=[5,8,10,12][rand(0,3)]; var amt=Math.round(p*Math.pow(1+r/100,2)); return { q: 'Amount Rs' + amt + ' at ' + r + '% CI for 2yr. Principal?', a: p, hint: 'P = A/(1+r/100)^t = ' + amt + '/(' + (1+r/100) + ')²', intuition: 'P = A/(1+r/100)^t = ' + amt + '/(1+' + r/100 + ')² = ' + amt + '/' + Math.round(Math.pow(1+r/100,2)*100)/100 + ' = ' + p }; },
+    // Reverse: find rate given CI-SI diff for 2yr and principal
+    function(){ var p=rand(3,8)*1000; var r=[5,8,10,12,15][rand(0,4)]; var diff=Math.round(p*Math.pow(r/100,2)); return { q: 'CI-SI diff = Rs' + diff + ' for Rs' + p + ' at r% for 2yr. Find r?', a: r, hint: 'Diff = P(r/100)² → r = 100√(diff/P)', intuition: 'Diff = P(r/100)² → (r/100)² = ' + diff + '/' + p + ' = ' + (diff/p).toFixed(4) + ', r/100 = ' + Math.round(Math.sqrt(diff/p)*100)/100 + ', r = ' + Math.round(Math.sqrt(diff/p)*100) + '%' }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1435,7 +1447,11 @@ function generateDiscountQuestion(diff, layer) {
     function(){ var m=rand(5,20)*100, d=rand(5,30); return { q: 'Discount ' + d + '% on MP Rs' + m + '. SP?', a: Math.round(m*(100-d)/100), hint: 'SP = MP × (100-d)/100', intuition: d + '% off → pay ' + (100-d) + '%. SP = ' + m + ' × ' + (100-d) + '% = ' + Math.round(m*(100-d)/100) }; },
     function(){ var m=rand(5,20)*100, d1=rand(10,20), d2=rand(5,15); return { q: 'Successive ' + d1 + '% then ' + d2 + '% on Rs' + m + '. Net SP?', a: Math.round(m*(100-d1)/100*(100-d2)/100), hint: 'Apply discounts one after another', intuition: 'After ' + d1 + '%: ' + (100-d1) + '% = ' + Math.round(m*(100-d1)/100) + '. Then ' + d2 + '%%: ×' + (100-d2)/100 + ' = ' + Math.round(m*(100-d1)/100*(100-d2)/100) }; },
     function(){ var c=rand(5,15)*100, p=rand(15,40); return { q: 'Single discount equivalent to ' + p + '% + 10%', a: 100 - (100-p)*90/100, hint: 'Net = 100 - (100-d1)(100-d2)/100', intuition: 'Net discount = d1 + d2 - d1×d2/100 = ' + p + ' + 10 - ' + (p*10/100) + ' = ' + (100 - (100-p)*90/100 | 0) + '%' }; },
-    function(){ var cp=rand(3,10)*100, g=rand(10,30); return { q: 'CP Rs' + cp + ', gain ' + g + '%. Mark up ' + (g+10) + '% above CP. Discount %?', a: Math.round(100 - (100+g)/(100+g+10)*100), hint: 'SP=CP(' + (100+g) + '%), MP=CP(' + (100+g+10) + '%), discount = (MP-SP)/MP', intuition: 'SP = ' + (100+g) + '% of CP, MP = ' + (100+g+10) + '% of CP. Discount = (MP-SP)/MP × 100' }; }
+    function(){ var cp=rand(3,10)*100, g=rand(10,30); return { q: 'CP Rs' + cp + ', gain ' + g + '%. Mark up ' + (g+10) + '% above CP. Discount %?', a: Math.round(100 - (100+g)/(100+g+10)*100), hint: 'SP=CP(' + (100+g) + '%), MP=CP(' + (100+g+10) + '%), discount = (MP-SP)/MP', intuition: 'SP = ' + (100+g) + '% of CP, MP = ' + (100+g+10) + '% of CP. Discount = (MP-SP)/MP × 100' }; },
+    // Reverse: find MP given SP and discount %
+    function(){ var m=rand(5,20)*100, d=rand(5,25); var sp=Math.round(m*(100-d)/100); return { q: 'SP=Rs' + sp + ', discount ' + d + '%. MP?', a: m, hint: 'MP = SP × 100/(100-d)', intuition: 'MP = ' + sp + ' × 100/' + (100-d) + ' = ' + sp + ' × ' + Math.round(100/(100-d)*100)/100 + ' = ' + m }; },
+    // Reverse: find CP given MP, discount%, and profit%
+    function(){ var cp=rand(20,60)*10, d=rand(10,25), g=rand(8,20); var mp=Math.round(cp*(100+g+d)/100); var sp=Math.round(mp*(100-d)/100); return { q: 'MP=Rs' + mp + ', discount ' + d + '%, profit ' + g + '%. CP?', a: cp, hint: 'CP = SP × 100/(100+g). SP = MP × (100-d)/100', intuition: 'SP = ' + mp + ' × ' + (100-d) + '% = ' + sp + '. CP = ' + sp + ' × 100/' + (100+g) + ' = Rs' + cp }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
