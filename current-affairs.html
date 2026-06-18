@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <script src="js/auth-guard.js"></script>
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Daily Current Affairs — vlymbooq</title>
-    <meta name="description" content="Daily current affairs news feed and MCQ quiz for competitive exams. IndiaBix-style practice with real news updates.">
+    <title>GK Current Affairs — vlymbooq</title>
+    <meta name="description" content="Free GK & Current Affairs quiz for competitive exams. Procedurally generated MCQs on Constitution, Schemes, Sports, Books, Space & more.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="canonical" href="https://vlymbooq.qzz.io/current-affairs.html">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#09090b;--bg-card:#111113;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--red:#ef4444;--amber:#f59e0b;--radius:12px}
+        :root{--bg:#09090b;--bg-card:#111113;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--red:#ef4444;--amber:#f59e0b;--cyan:#22d3ee;--radius:12px}
         body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
         a{color:var(--text);text-decoration:none}
         .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
@@ -28,30 +28,32 @@
         @media(max-width:480px){.container{padding:16px}}
 
         .page-title{font-size:1.6em;font-weight:900;margin-bottom:4px}
-        .page-sub{color:var(--text-muted);font-size:.85em;margin-bottom:20px}
-        .page-sub .badge{display:inline-block;padding:2px 10px;border-radius:100px;background:rgba(52,211,153,.1);color:var(--emerald);font-size:.85em;margin-left:6px}
+        .page-sub{color:var(--text-muted);font-size:.82em;margin-bottom:20px}
+        .page-sub .badge{display:inline-block;padding:2px 10px;border-radius:100px;background:rgba(34,211,238,.1);color:var(--cyan);font-size:.78em;margin-left:6px}
 
-        .tab-bar{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
-        .tab-btn{padding:8px 20px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-sec);font-size:.85em;font-weight:600;cursor:pointer;transition:all .2s}
-        .tab-btn:hover{border-color:rgba(255,255,255,.15);color:var(--text)}
-        .tab-btn.active{background:rgba(167,139,250,.12);border-color:var(--purple);color:var(--purple)}
-        .tab-content{display:none}
-        .tab-content.active{display:block}
+        .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+        @media(max-width:480px){.cat-grid{grid-template-columns:1fr}}
+        .cat-btn{padding:14px 16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);cursor:pointer;transition:all .2s;text-align:center}
+        .cat-btn:hover{border-color:rgba(255,255,255,.15);transform:translateY(-2px)}
+        .cat-btn .cat-icon{font-size:1.6em;margin-bottom:4px}
+        .cat-btn .cat-name{font-weight:700;font-size:.85em;margin-bottom:2px}
+        .cat-btn .cat-desc{font-size:.68em;color:var(--text-muted)}
+        .cat-btn.active{background:rgba(167,139,250,.1);border-color:var(--purple)}
 
-        .news-card{padding:16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);margin-bottom:10px;transition:border-color .2s}
-        .news-card:hover{border-color:rgba(255,255,255,.12)}
-        .news-card .n-date{font-size:.7em;color:var(--text-muted);margin-bottom:4px}
-        .news-card .n-headline{font-size:.88em;font-weight:600;line-height:1.5;margin-bottom:4px}
-        .news-card .n-source{font-size:.72em;color:var(--purple)}
-        .news-card .n-link{font-size:.72em;color:var(--emerald);display:inline-block;margin-top:4px}
+        .q-area{display:none}
+        .q-area.active{display:block}
 
-        .date-group{margin-bottom:20px}
-        .date-group .dg-label{font-size:.85em;font-weight:700;color:var(--text-sec);padding:6px 0 8px;border-bottom:1px solid var(--border);margin-bottom:10px}
+        .q-card{padding:28px 24px 24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);margin-bottom:14px;text-align:center}
+        .q-card .q-num{font-size:.72em;color:var(--text-muted);margin-bottom:4px}
+        .q-card .q-progress{height:3px;background:rgba(255,255,255,.06);border-radius:100px;margin-bottom:16px;overflow:hidden}
+        .q-card .q-progress .fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--emerald));border-radius:100px;transition:width .3s}
+        .q-card .q-cat-tag{display:inline-block;padding:2px 10px;border-radius:100px;background:rgba(34,211,238,.08);color:var(--cyan);font-size:.68em;font-weight:600;margin-bottom:8px}
+        .q-card .q-text{font-size:1.1em;font-weight:700;line-height:1.6;margin-bottom:18px;font-family:'JetBrains Mono',monospace}
+        .q-card .q-hint{font-size:.75em;color:var(--text-muted);margin-bottom:14px;cursor:pointer;user-select:none}
+        .q-card .q-hint .hint-text{display:none;margin-top:4px;color:var(--purple);font-size:.92em}
+        .q-card .q-hint .hint-text.show{display:block}
 
-        .q-card{padding:24px 20px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);margin-bottom:14px;text-align:center}
-        .q-card .q-label{font-size:.72em;color:var(--text-muted);margin-bottom:6px}
-        .q-card .q-text{font-size:1.05em;font-weight:700;line-height:1.6;margin-bottom:14px;font-family:'JetBrains Mono',monospace}
-        .q-opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:500px;margin:0 auto}
+        .q-opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:520px;margin:0 auto}
         @media(max-width:400px){.q-opt-grid{grid-template-columns:1fr}}
         .q-opt{padding:12px 14px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;font-size:.9em;font-weight:600;transition:all .15s;text-align:center;font-family:'JetBrains Mono',monospace}
         .q-opt:hover{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.04)}
@@ -60,28 +62,29 @@
         .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
         .q-opt:disabled{cursor:default;opacity:.7}
 
-        .action-btn{display:block;width:100%;padding:12px;border-radius:100px;border:none;font-weight:700;font-size:.9em;cursor:pointer;transition:all .2s;text-align:center;margin-top:12px}
-        .action-btn.primary{background:linear-gradient(135deg,var(--purple),var(--emerald));color:#fff}
-        .action-btn.primary:hover{opacity:.9;transform:translateY(-1px)}
-        .action-btn.secondary{background:rgba(255,255,255,.06);color:var(--text)}
-        .action-btn.secondary:hover{background:rgba(255,255,255,.1)}
-
-        .quiz-score{padding:16px;border-radius:var(--radius);text-align:center;background:rgba(52,211,153,.05);border:1px solid rgba(52,211,153,.15);margin-bottom:14px;display:none}
-        .quiz-score.show{display:block}
-        .quiz-score .num{font-size:2em;font-weight:900;color:var(--emerald)}
-        .quiz-score .lbl{font-size:.85em;color:var(--text-sec)}
-
-        .loading{text-align:center;padding:60px 20px;color:var(--text-muted);font-size:.9em}
-        .loading .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
-        @keyframes spin{to{transform:rotate(360deg)}}
-
         .result-flash{padding:12px;border-radius:8px;text-align:center;font-weight:700;font-size:.9em;margin-bottom:10px;display:none}
         .result-flash.show{display:block}
         .result-flash.correct{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);color:var(--emerald)}
         .result-flash.wrong{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:var(--red)}
 
-        .refresh-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-sec);font-size:.78em;cursor:pointer;transition:all .2s;margin-bottom:12px}
-        .refresh-btn:hover{border-color:rgba(255,255,255,.15);color:var(--text)}
+        .action-btn{display:block;width:100%;padding:14px;border-radius:100px;border:none;font-weight:700;font-size:.95em;cursor:pointer;transition:all .2s;text-align:center;margin-top:12px}
+        .action-btn.primary{background:linear-gradient(135deg,var(--purple),var(--emerald));color:#fff}
+        .action-btn.primary:hover{opacity:.9;transform:translateY(-1px)}
+        .action-btn.secondary{background:rgba(255,255,255,.06);color:var(--text)}
+        .action-btn.secondary:hover{background:rgba(255,255,255,.1)}
+
+        .score-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);margin-bottom:14px;display:none;flex-wrap:wrap;gap:6px}
+        .score-bar.show{display:flex}
+        .score-bar .num{font-size:1.1em;font-weight:800;color:var(--emerald)}
+        .score-bar .streak{font-size:.78em;color:var(--amber)}
+
+        .welcome-card{padding:40px 24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);text-align:center;margin-bottom:20px}
+        .welcome-card .icon{font-size:3em;margin-bottom:12px}
+        .welcome-card .title{font-size:1.3em;font-weight:800;margin-bottom:6px}
+        .welcome-card .desc{font-size:.85em;color:var(--text-sec);line-height:1.6;margin-bottom:16px}
+        .gk-intro{font-size:.82em;color:var(--text-sec);line-height:1.7;margin-bottom:16px;text-align:center}
+
+        .hidden{display:none!important}
     </style>
 </head>
 <body>
@@ -107,7 +110,7 @@
                 <a href="cds/index.html">CDS</a>
                 <a href="clat/index.html">CLAT</a>
                 <a href="mental.html"><i data-lucide="brain" style="width:14px;height:14px;vertical-align:middle;margin-right:2px"></i> Mental</a>
-                <a href="current-affairs.html" class="active">📰 Current Affairs</a>
+                <a href="current-affairs.html" class="active">📰 GK</a>
                 <a href="lab.html"><i data-lucide="flask-conical" style="width:14px;height:14px;vertical-align:middle;margin-right:2px"></i> Lab</a>
                 <a href="premium.html" style="border:1px solid rgba(167,139,250,.25);padding:6px 14px;font-size:.78em"><i data-lucide="crown" style="width:13px;height:13px;vertical-align:middle;margin-right:2px"></i> Premium</a>
                 <a class="auth-btn" href="#" style="background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none">🚀 Login</a>
@@ -116,240 +119,554 @@
     </nav>
 
     <div class="container">
-        <div class="page-title">📰 Daily Current Affairs</div>
-        <div class="page-sub">Auto-fetched daily from Google News India <span class="badge" id="updateBadge">updating...</span></div>
+        <div class="page-title">📰 GK & Current Affairs</div>
+        <div class="page-sub">Original MCQs — no scraping, no external content <span class="badge">12 categories</span></div>
 
-        <div class="tab-bar">
-            <button class="tab-btn active" onclick="switchTab('feed',this)">📰 News Feed</button>
-            <button class="tab-btn" onclick="switchTab('quiz',this)">🧠 MCQ Quiz</button>
+        <div id="welcome">
+            <div class="welcome-card">
+                <div class="icon">📖</div>
+                <div class="title">General Knowledge Quiz</div>
+                <div class="desc">Pick a category below to start. All questions are procedurally generated — original content, no external sources.</div>
+            </div>
+            <p class="gk-intro">Covering Indian Constitution, Government Schemes, Sports, Books & Authors, ISRO & Space, Defence, National Parks, Dance Forms, International Organizations, Awards, Dams & Rivers, and more — designed for SSC CGL, UPSC, RBI, IBPS, and all competitive exams.</p>
         </div>
 
-        <div class="tab-content active" id="tab-feed"></div>
-        <div class="tab-content" id="tab-quiz"></div>
+        <div class="cat-grid" id="catGrid"></div>
+
+        <div class="q-area" id="qArea">
+            <div class="score-bar" id="scoreBar">
+                <div><span class="num" id="correctNum">0</span> / <span id="totalNum">0</span> correct</div>
+                <div class="streak" id="streakDisplay">🔥 <span id="streakNum">0</span> streak</div>
+            </div>
+            <div class="q-card">
+                <div class="q-num" id="qNum"></div>
+                <div class="q-progress"><div class="fill" id="qProgress" style="width:0%"></div></div>
+                <div class="q-cat-tag" id="catTag"></div>
+                <div class="q-text" id="qText">Loading...</div>
+                <div class="q-hint" id="qHint" onclick="toggleHint()">💡 Hint
+                    <div class="hint-text" id="hintText"></div>
+                </div>
+                <div class="q-opt-grid" id="optGrid"></div>
+            </div>
+            <div class="result-flash" id="resultFlash"></div>
+            <div id="intuitionDisplay" style="font-size:.78em;color:var(--amber);margin-top:4px;padding:10px 12px;border-radius:8px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);display:none;line-height:1.6;text-align:left"><span style="font-weight:700;color:var(--amber);display:block;margin-bottom:3px">⚡ Quick Fact</span><span id="intuitionText"></span></div>
+            <button class="action-btn primary hidden" id="nextBtn" onclick="nextQuestion()">Next →</button>
+            <button class="action-btn secondary" id="backBtn" onclick="backToMenu()">← Back to Categories</button>
+        </div>
     </div>
 
     <script>
-        var items = [];
-        var quizAnswered = {};
+        // ===== GK CATEGORIES & GENERATORS =====
+        var CATEGORIES = [
+            { id:'constitution', icon:'⚖️', name:'Constitution', desc:'Amendments, articles, schedules' },
+            { id:'schemes', icon:'🏛️', name:'Govt Schemes', desc:'Ayushman, PM-KISAN, Jal Jeevan & more' },
+            { id:'sports', icon:'🏆', name:'Sports', desc:'Trophies, tournaments, venues' },
+            { id:'books', icon:'📚', name:'Books & Authors', desc:'Famous books and their writers' },
+            { id:'space', icon:'🚀', name:'ISRO & Space', desc:'Missions, satellites, firsts' },
+            { id:'defence', icon:'⚔️', name:'Defence', desc:'Exercises, missiles, wings' },
+            { id:'national_parks', icon:'🌲', name:'National Parks', desc:'Parks, sanctuaries, tigers' },
+            { id:'dance', icon:'💃', name:'Dance Forms', desc:'Classical & folk dances of India' },
+            { id:'orgs', icon:'🌐', name:'International', desc:'UN, BRICS, WHO, IMF & more' },
+            { id:'awards', icon:'🎖️', name:'Awards & Honours', desc:'Bharat Ratna, Nobel, Padma, Oscars' },
+            { id:'dams', icon:'🌊', name:'Dams & Rivers', desc:'Major dams, rivers, projects' },
+            { id:'important_days', icon:'📅', name:'Important Days', desc:'National & international days' }
+        ];
 
-        function loadAffairs() {
-            document.getElementById('tab-feed').innerHTML = '<div class="loading"><div class="spinner"></div>Loading current affairs...</div>';
-            document.getElementById('tab-quiz').innerHTML = '';
-            var x = new XMLHttpRequest();
-            x.open('GET', 'data/current-affairs.json?v=' + Date.now(), true);
-            x.onload = function() {
-                try {
-                    var data = JSON.parse(x.responseText);
-                    items = data.items || [];
-                    document.getElementById('updateBadge').textContent = 'updated ' + (data.updatedAt ? new Date(data.updatedAt).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '');
-                    renderFeed();
-                    renderQuiz();
-                } catch(e) {
-                    document.getElementById('tab-feed').innerHTML = '<div class="loading">Failed to load current affairs. <button class="refresh-btn" onclick="loadAffairs()">Retry</button></div>';
-                }
-            };
-            x.onerror = function() {
-                document.getElementById('tab-feed').innerHTML = '<div class="loading">Failed to load. <button class="refresh-btn" onclick="loadAffairs()">Retry</button></div>';
-            };
-            x.send();
+        // ===== HELPER FUNCTIONS =====
+        function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+        function pick(arr) { return arr[rand(0, arr.length - 1)]; }
+        function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = rand(0, i); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
+        // ===== GK GENERATORS =====
+        var GK_GENERATORS = {};
+
+        GK_GENERATORS.constitution = function() {
+            var types = [
+                function() { var art=[52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78]; var n=pick(art); var map={52:'President of India',53:'executive power of Union',54:'election of President',55:'manner of Presidential election',56:'term of President (5 yrs)',61:'impeachment of President',63:'Vice President',64:'VP as Rajya Sabha chair',66:'election of VP',74:'Council of Ministers with PM',75:'appointment of PM & Ministers',76:'Attorney General',112:'Annual budget',123:'ordinance by President',124:'Supreme Court establishment',148:'CAG',155:'Governor appointment',170:'Legislative Assembly composition',213:'ordinance by Governor',280:'Finance Commission',324:'Election Commission'}; var desc=map[n]||'constitutional provision'; return {q:'Article ' + n + ' of Indian Constitution deals with?',a:desc,hint:'Articles in Part V cover Union Executive',fact:'Article ' + n + ': ' + desc}; },
+                function() { var amends=[ ['1st','1951','land reforms, freedom of speech restrictions'], ['7th','1956','reorganisation of states on linguistic lines'], ['10th','1961','Dadra & Nagar Haveli integration'], ['12th','1962','Goa, Daman & Diu incorporation'], ['13th','1963','creation of Nagaland'], ['21st','1967','Sindhi added to 8th Schedule'], ['24th','1971','power to amend fundamental rights'], ['25th','1971','property rights curtailment'], ['26th','1971','abolition of privy purses'], ['31st','1973','Lok Sabha seats increase'], ['36th','1975','Sikkim as full state'], ['42nd','1976','Fundamental Duties, preamble amended, "socialist secular" added'], ['44th','1978','right to property removed from FRs'], ['52nd','1985','anti-defection law'], ['61st','1988','voting age 21 to 18'], ['69th','1991','Delhi as NCT with assembly'], ['71st','1992','Konkani, Manipuri, Nepali added to 8th'], ['73rd','1992','Panchayati Raj'], ['74th','1992','urban local bodies/Nagarpalika'], ['86th','2002','RTE as fundamental right (Art 21A)'], ['91st','2003','ministerial strength capped'], ['97th','2011','cooperative societies'], ['101st','2016','GST'], ['102nd','2018','NCMC for OBC quota'], ['103rd','2019','10% EWS quota'], ['104th','2020','SC/ST seat extension'], ['105th','2021','OBC state list restoration'], ['106th','2023','women reservation 33% in Lok Sabha & Assemblies'] ]; var a=pick(amends); return {q:'The ' + a[0] + ' Constitutional Amendment (' + a[1] + ') is about?',a:a[2],hint:'Think major amendments: 42nd="mini constitution", 73rd=Panchayati Raj',fact:a[0] + ' Amendment (' + a[1] + '): ' + a[2]}; },
+                function() { var e=pick([ ['1st Schedule','lists states & UTs'], ['2nd Schedule','salaries of President, Governors, CJI'], ['3rd Schedule','oath of office forms'], ['4th Schedule','Rajya Sabha seat allocation per state'], ['5th Schedule','scheduled areas & tribes admin'], ['6th Schedule','tribal areas in NE states admin'], ['7th Schedule','Union List, State List, Concurrent List (3 lists)'], ['8th Schedule','official languages (22 languages)'], ['9th Schedule','land reforms acts (protected from review)'], ['10th Schedule','anti-defection provisions'] ]); return {q:e[0] + ' of Indian Constitution deals with?',a:e[1],hint:'12 Schedules appended to Constitution',fact:e[0] + ': ' + e[1]}; }
+            ];
+            var d = pick(types)();
+            return d;
+        };
+
+        GK_GENERATORS.schemes = function() {
+            var schemes = [
+                ['Ayushman Bharat','health insurance of Rs 5 lakh/family/year','2018','PM-JAY'],
+                ['PM-KISAN','Rs 6000/yr income support to farmers','2019','Pradhan Mantri Kisan Samman Nidhi'],
+                ['Jal Jeevan Mission','tap water to every rural household by 2024','2019','JJM'],
+                ['Swachh Bharat Mission','open defecation free India, sanitation','2014','SBM'],
+                ['Make in India','promote manufacturing, FDI in 25 sectors','2014',null],
+                ['Digital India','digital infrastructure, e-governance, internet','2015',null],
+                ['PM Awas Yojana','Housing for All by 2022','2015','PMAY'],
+                ['PM Ujjwala Yojana','free LPG connections to poor households','2016','PMUY'],
+                ['PM Jan Dhan Yojana','financial inclusion, bank accounts for all','2014','PMJDY'],
+                ['Beti Bachao Beti Padhao','girl child education & survival','2015','BBBP'],
+                ['Skill India Mission','skill training to 40 crore youth by 2022','2015',null],
+                ['Startup India','ecosystem for startups, tax benefits, funding','2016',null],
+                ['PM Fasal Bima Yojana','crop insurance at low premiums','2016','PMFBY'],
+                ['Atal Pension Yojana','pension for unorganised sector workers','2015','APY'],
+                ['National Education Policy 2020','new 5+3+3+4 system, flexible curriculum','2020','NEP'],
+                ['One Nation One Ration Card','portable food security across states','2020',null],
+                ['PM SVANidhi','micro-credit for street vendors','2020',null],
+                ['National Digital Health Mission','digital health IDs for all citizens','2020','NDHM'],
+                ['GST','one nation one tax, indirect tax reform','2017',null],
+                ['RERA','real estate regulation, buyer protection','2016',null]
+            ];
+            var s = pick(schemes);
+            var types = [
+                function(){ return {q:'Which scheme provides ' + s[1] + '?',a:s[0],hint:'Launched in ' + s[2] + (s[3]?' ('+s[3]+')':''),fact:s[0] + ' was launched in ' + s[2] + (s[3]?' aka '+s[3]:'') + '. ' + s[1]}; },
+                function(){ return {q:s[0] + ' (' + s[2] + ') is related to?',a:s[1],hint:'Think about the scheme name — ' + s[0].toLowerCase().replace(/ /g,' ') + ' usually indicates its purpose',fact:s[3] ? s[0] + ' is also known as ' + s[3] : s[0] + ' launched in ' + s[2]}; }
+            ];
+            var d = pick(types)();
+            return d;
+        };
+
+        GK_GENERATORS.sports = function() {
+            var data = [
+                ['World Cup Cricket','ODI cricket world championship','England','1975','Australia (6 titles)'],
+                ['T20 World Cup','T20 cricket world championship','South Africa','2007','India (1st winner)'],
+                ['Olympics','multi-sport global event','Athens (modern)','1896','USA most medals'],
+                ['Asian Games','continental multi-sport','New Delhi 1951','1951','China dominates'],
+                ['Commonwealth Games','commonwealth multi-sport','Hamilton 1930','1930','Australia leads'],
+                ['FIFA World Cup','football world championship','Uruguay 1930','1930','Brazil (5 titles)'],
+                ['Wimbledon','oldest tennis grand slam','London','1877','Roger Federer (8 men)'],
+                ['ICC Champions Trophy','ODI cricket tournament','Bangladesh 1998','1998','India 2013 winner'],
+                ['Davis Cup','men\'s tennis international team','USA 1900','1900','USA most wins'],
+                ['Thomas Cup','badminton men\'s team world','England 1949','1949','Indonesia most'],
+                ['Uber Cup','badminton women\'s team world','England 1957','1957','China most'],
+                ['Sudirman Cup','badminton mixed team world','Indonesia 1989','1989','China most'],
+                ['Hockey World Cup','field hockey world championship','1971','1971','Netherlands most'],
+                ['BWF World Championships','badminton individual world','1977','1977','China dominates'],
+                ['World Athletics Championships','track & field world','Helsinki 1983','1983','USA dominates'],
+                ['Kabaddi World Cup','kabaddi world championship','2004','2004','India dominates']
+            ];
+            var s = pick(data);
+            var types = [
+                function(){ return {q:'Where was the first ' + s[0] + ' held?',a:s[2],hint:'The first edition sets the host',fact:s[0] + ' started in ' + s[3] + '. First host: ' + s[2]}; },
+                function(){ return {q:'The ' + s[0] + ' is associated with which sport?',a:s[1].split(' ')[0] + (s[1].includes('cricket')?' cricket':''),hint:s[1],fact:s[0] + ': the first ' + s[1] + ' championship.'}; },
+                function(){ var trophyData = [['Cricket World Cup','ODI','ICC'],['T20 World Cup','T20','ICC'],['Wimbledon','Lawn Tennis','AELTC'],['FIFA World Cup','Football','FIFA'],['Thomas Cup','Badminton (Men\'s)','BWF'],['Uber Cup','Badminton (Women\'s)','BWF'],['Sudirman Cup','Badminton (Mixed)','BWF'],['Davis Cup','Tennis (Men\'s)','ITF'],['Hockey World Cup','Field Hockey','FIH'],['BFA World Cup','Football (Beach)','BFA'],['Asia Cup','Cricket','ACC'],['Champions Trophy','Cricket (ODI)','ICC']]; var t=pick(trophyData); return {q:'The ' + t[0] + ' is associated with?',a:t[1],hint:'Think of the governing body: ' + t[2],fact:t[0] + ' is governed by ' + t[2] + ' for ' + t[1]}; }
+            ];
+            return pick(types)();
+        };
+
+        GK_GENERATORS.books = function() {
+            var ba = [
+                ['Discovery of India','Jawaharlal Nehru','Indian history & culture'],
+                ['Hind Swaraj','Mahatma Gandhi','Indian self-rule critique'],
+                ['My Experiments with Truth','Mahatma Gandhi','Gandhi\'s autobiography'],
+                ['Anandamath','Bankim Chandra Chatterjee','nationalist novel (Vande Mataram origin)'],
+                ['Gitanjali','Rabindranath Tagore','poems (won Nobel 1913)'],
+                ['God of Small Things','Arundhati Roy','Booker Prize 1997'],
+                ['Midnight\'s Children','Salman Rushdie','Booker Prize 1981, post-colonial India'],
+                ['The White Tiger','Aravind Adiga','Booker Prize 2008, class divide'],
+                ['Malgudi Days','R. K. Narayan','fictional Malgudi town stories'],
+                ['The Guide','R. K. Narayan','classic Indian English novel'],
+                ['Train to Pakistan','Khushwant Singh','Partition of India'],
+                ['India After Gandhi','Ramachandra Guha','post-independence Indian history'],
+                ['Jinnah: India-Partition-Independence','Jaswant Singh','Jinnah\'s role in partition'],
+                ['The Argumentative Indian','Amartya Sen','Indian intellectual tradition'],
+                ['Ignited Minds','APJ Abdul Kalam','youth empowerment & vision'],
+                ['Wings of Fire','APJ Abdul Kalam','autobiography of Kalam'],
+                ['We the People','Nani Palkhivala','Indian Constitution commentary'],
+                ['The Great Indian Novel','Shashi Tharoor','Mahabharata reimagined as politics'],
+                ['Why I Am a Hindu','Shashi Tharoor','Hinduism\'s pluralism'],
+                ['India: A Million Mutinies Now','V.S. Naipaul','complexities of Indian society'],
+                ['A Suitable Boy','Vikram Seth','post-independence India family saga'],
+                ['The Inheritance of Loss','Kiran Desai','Booker 2006, globalisation themes'],
+                ['Sea of Poppies','Amitav Ghosh','opium trade colonial era'],
+                ['Interpreter of Maladies','Jhumpa Lahiri','Pulitzer 2000, diaspora stories'],
+                ['Shiva Trilogy','Amish Tripathi','mythological fiction series'],
+                ['2 States','Chetan Bhagat','cross-cultural love story']
+            ];
+            var b = pick(ba);
+            var types = [
+                function(){ return {q:'Who wrote "' + b[0] + '"?',a:b[1],hint:'Think of major Indian authors: ' + b[2],fact:'"' + b[0] + '" is about ' + b[2]}; },
+                function(){ return {q:'"' + b[0] + '" is about?',a:b[2],hint:'The title often hints at the theme',fact:'Written by ' + b[1] + ', ' + b[0] + ' covers ' + b[2]}; }
+            ];
+            return pick(types)();
+        };
+
+        GK_GENERATORS.space = function() {
+            var types = [
+                function(){ var m=[['Aryabhata','first Indian satellite (1975)'],['Bhaskara','Earth observation (1979)'],['Rohini','first Indian-made satellite launch (1980)'],['IRS-1A','first Indian remote sensing satellite (1988)'],['INSAT-1B','first Indian communication satellite (1983)'],['Chandrayaan-1','first Moon mission (2008, found water ice)'],['Mangalyaan','Mars Orbiter Mission (2013, first Asian Mars mission)'],['Chandrayaan-2','lunar orbiter+lander+rover (2019)'],['Chandrayaan-3','lunar landing at south pole (2023, first ever)'],['Aditya-L1','first solar mission (2023)'],['Astrosat','first multi-wavelength space observatory (2015)'],['GSAT series','communication satellites series'],['RISAT series','radar imaging satellites'],['NISAR','joint NASA-ISRO Earth observation satellite'],['GSLV','geosynchronous launch vehicle'],['PSLV','workhorse launch vehicle (most successful)'],['Gaganyaan','first Indian human spaceflight mission (upcoming)'],['XPoSat','X-ray polarimetry satellite (2024)'],['SPADEX','space docking experiment (upcoming)']]; var s=pick(m); return {q:s[0] + ' is associated with?',a:s[1],hint:'Think of India\'s space milestones',fact:'ISRO launched ' + s[0] + '. ' + s[1]}; },
+                function(){ var f=[['Vikram Sarabhai','father of Indian space programme'],['Satish Dhawan','ISRO chairman, PSLV development'],['APJ Abdul Kalam','missile man, SLV-3 developer'],['K Sivan','Chandrayaan-2 & 3 architect'],['S Somanath','current ISRO chairman, LVM3 development'],['Mylswamy Annadurai','Chandrayaan-1 director'],['Ritu Karidhal','Mangalyaan deputy director']]; var s=pick(f); return {q:s[0] + ' is known for?',a:s[1],hint:'Key figures in Indian space history',fact:s[0] + ' was instrumental in ' + s[1]}; },
+                function(){ return {q:'Which launch vehicle put Chandrayaan-3 into orbit?',a:'LVM3 (formerly GSLV Mk III)',hint:'It\'s ISRO\'s heaviest launcher',fact:'LVM3 (Launch Vehicle Mark 3) is a three-stage heavy-lift launcher capable of putting 4 ton class satellites into GTO.'}; }
+            ];
+            return pick(types)();
+        };
+
+        GK_GENERATORS.defence = function() {
+            var types = [
+                function(){ var exercises=[['Garuda','India-France','air exercise'],['Shakti','India-France','army exercise'],['Varuna','India-France','naval exercise'],['Malabar','India-USA-Japan-Australia','quad naval exercise'],['Yudh Abhyas','India-USA','army exercise'],['Cope India','India-USA','air exercise'],['Maitree','India-Thailand','army exercise'],['Surya Kiran','India-Nepal','army exercise'],['Maitri','India-Indonesia','army exercise'],['Samudra Shakti','India-Indonesia','naval exercise'],['Milan','multi-nation','Andaman & Nicobar naval exercise'],['RIMPAC','global','Hawaii naval exercise (India participates)'],['Tarang Shakti','India-multi','air exercise (hosted by India 2024)'],['Bold Kurukshetra','India-Singapore','army exercise'],['Agni Warrior','India-Singapore','army exercise'],['Dosti','India-Maldives-Sri Lanka','naval exercise'],['Sahyog-Hyog','India-Indonesia','coast guard exercise']]; var e=pick(exercises); return {q:e[0] + ' is a joint military exercise between India and which country?',a:e[1],hint:'Check which partner India regularly exercises with',fact:e[0] + ' is a ' + e[2] + ' between India and ' + e[1]}; },
+                function(){ var missiles=[['Agni','ICBM (5,000-8,000 km range)','DRDO'],['Prithvi','SRBM (150-300 km)','DRDO'],['Brahmos','supersonic cruise missile (290-500 km)','DRDO-NPO Mashinostroyeniya'],['Nirbhay','subsonic cruise missile (1,000 km)','DRDO'],['Akash','medium-range SAM (25 km)','DRDO'],['Nag','anti-tank guided missile (4-7 km)','DRDO'],['Trishul','short-range SAM (9 km)','DRDO'],['Pinaka','multi-barrel rocket launcher (40-70 km)','DRDO'],['Prahaar','tactical battlefield missile (150 km)','DRDO'],['K-15 Sagarika','submarine-launched ballistic (700 km)','DRDO'],['K-4','submarine-launched ballistic (3,500 km)','DRDO'],['ASTRA','BVR air-to-air missile (110 km)','DRDO']]; var m=pick(missiles); return {q:m[0] + ' missile is developed by?',a:m[2],hint:'DRDO develops most Indian missiles',fact:m[0] + ': ' + m[1] + ' (' + m[2] + ')'}; },
+                function(){ var wings=[['Indian Army','land warfare, largest component'],['Indian Navy','maritime warfare, blue water capability'],['Indian Air Force','aerial warfare, air defence'],['Indian Coast Guard','maritime patrol, SAR under MoD'],['Border Security Force','border guarding, under MHA'],['CRPF','internal security, counter-insurgency'],['CISF','industrial security, VIP protection'],['ITBP','Himalayan border security'],['SSB','Indo-Nepal, Indo-Bhutan border'],['NSG','counter-terrorism, black cats'],['SPG','PM security detail'],['R&AW','external intelligence'],['IB','internal intelligence']]; var w=pick(wings); return {q:w[0] + ' is responsible for?',a:w[1],hint:'Think about the force type: army/navy/air vs police/intel',fact:w[0] + ': ' + w[1]}; }
+            ];
+            return pick(types)();
+        };
+
+        GK_GENERATORS.national_parks = function() {
+            var parks = [
+                ['Jim Corbett','Uttarakhand','1936','oldest national park, Bengal tiger'],
+                ['Kanha','Madhya Pradesh','1955','Barsingha, Kipling\'s Jungle Book'},
+                ['Bandhavgarh','Madhya Pradesh','1968','highest tiger density'],
+                ['Sundarbans','West Bengal','1984','largest mangrove forest, Royal Bengal Tiger'],
+                ['Kaziranga','Assam','1974','one-horned rhinoceros, UNESCO'],
+                ['Ranthambore','Rajasthan','1980','tiger reserve, historic fort'],
+                ['Sariska','Rajasthan','1955','tiger reserve, abandoned by tigers 2004-08'],
+                ['Periyar','Kerala','1982','elephant and tiger reserve, lake'],
+                ['Gir','Gujarat','1965','only home of Asiatic lions'],
+                ['Dudhwa','Uttar Pradesh','1977','swamp deer, tiger reserve'],
+                ['Nagarhole','Karnataka','1988','Bandipur reserve, Kabini river'],
+                ['Bandipur','Karnataka','1974','part of Nilgiri Biosphere'],
+                ['Sundarbans','West Bengal','1984','UNESCO World Heritage, tiger habitat'],
+                ['Bhitarkanika','Odisha','1988','mangrove forest, saltwater crocs'],
+                ['Keoladeo','Rajasthan','1981','bird sanctuary (formerly Bharatpur, UNESCO)'],
+                ['Manas','Assam','1990','tiger, pygmy hog, UNESCO site'],
+                ['Namdapha','Arunachal','1983','largest park in NE India, 4 big cats'],
+                ['Mudumalai','Tamil Nadu','1990','elephant reserve, Nilgiris part']
+            ];
+            var p = pick(parks);
+            var types = [
+                function(){ return {q:p[0] + ' National Park is located in which state?',a:p[1],hint:'Think about famous parks: Corbett=Uttarakhand, Kaziranga=Assam',fact:p[0] + ' (' + p[1] + ') established ' + p[2] + '. Known for: ' + p[3]}; },
+                function(){ return {q:'Which national park is known for ' + p[3] + '?',a:p[0],hint:'Match the animal/fact to the park: Kaziranga=rhino, Gir=lion',fact:p[0] + ' is in ' + p[1] + ', est. ' + p[2]}; }
+            ];
+            return pick(types)();
+        };
+
+        GK_GENERATORS.dance = function() {
+            var dances = [
+                ['Bharatanatyam','Tamil Nadu','classical','oldest classical dance form'],
+                ['Kathakali','Kerala','classical','elaborate makeup, stories of Krishna'],
+                ['Kathak','Uttar Pradesh','classical','storytelling through footwork and spins'],
+                ['Kuchipudi','Andhra Pradesh','classical','dance-drama tradition'],
+                ['Odissi','Odisha','classical','sculpturesque poses, temple dance'],
+                ['Manipuri','Manipur','classical','gentle, lyrical, Ras Leela themes'],
+                ['Mohiniyattam','Kerala','classical','solo dance by women, graceful'],
+                ['Sattriya','Assam','classical','Vaishnavite monastery tradition'],
+                ['Bhangra','Punjab','folk','harvest dance, energetic'],
+                ['Garba','Gujarat','folk','Navratri dance, circular form'],
+                ['Dandiya','Rajasthan/Gujarat','folk','stick dance, colorful costumes'],
+                ['Bihu','Assam','folk','spring harvest festival dance'],
+                ['Chhau','Jharkhand/WB/Odisha','folk','mask dance, martial movements'],
+                ['Ghoomar','Rajasthan','folk','whirling dance by women'],
+                ['Lavani','Maharashtra','folk','powerful beats, folk theatre'],
+                ['Yakshagana','Karnataka','folk','night-long dance drama'],
+                ['Kalbelia','Rajasthan','folk','snake charmers dance (UNESCO)'],
+                ['Rouf','Jammu & Kashmir','folk','Kashmiri women dance, slow graceful']
+            ];
+            var d = pick(dances);
+            var types = [
+                function(){ return {q:d[0] + ' is a ' + d[2] + ' dance form from which state?',a:d[1],hint:'Classical dances have specific origins: Kathakali=Kerala, Odissi=Odisha',fact:d[0] + ' is a ' + d[2] + ' dance from ' + d[1] + '. ' + d[3]}; },
+                function(){ return {q:'Which dance form is known as "' + d[3].toLowerCase() + '"?',a:d[0],hint:'Descriptive clue: classical/folk, region, style',fact:d[0] + ' (' + d[1] + '): ' + d[2] + ' dance. ' + d[3]}; }
+            ];
+            return pick(types)();
+        };
+
+        GK_GENERATORS.orgs = function() {
+            var data = [
+                ['United Nations (UN)','international peace & security','1945','San Francisco','193 member states'],
+                ['World Health Organization (WHO)','global public health','1948','Geneva','194 member states'],
+                ['International Monetary Fund (IMF)','monetary cooperation, financial stability','1944','Washington DC','190 countries'],
+                ['World Bank','development loans to developing nations','1944','Washington DC','189 members'],
+                ['UNESCO','education, science, culture','1945','Paris','193 members'],
+                ['WTO','international trade rules','1995','Geneva','164 members'],
+                ['BRICS','economic cooperation among 5 major nations','2009','Russia (1st summit)','5 members'],
+                ['SAARC','regional cooperation in South Asia','1985','Dhaka','8 members'],
+                ['ASEAN','Southeast Asian regional integration','1967','Bangkok','10 members'],
+                ['European Union (EU)','political & economic union','1993','Maastricht Treaty','27 members'],
+                ['NATO','collective defence alliance','1949','Washington','31 members'],
+                ['OPEC','petroleum exporting countries coordination','1960','Baghdad','13 members'],
+                ['World Economic Forum (WEF)','public-private cooperation','1971','Geneva','annual Davos meet'],
+                ['INTERPOL','international police cooperation','1923','Lyon','195 members'],
+                ['IAEA','peaceful use of nuclear energy','1957','Vienna','171 members'],
+                ['UNICEF','children\'s welfare','1946','New York','190+ countries'],
+                ['ILO','labour rights & standards','1919','Geneva','187 members'],
+                ['World Food Programme (WFP)','food aid, hunger elimination','1961','Rome','80+ countries'],
+                ['FAO','food & agriculture','1945','Rome','194 members']
+            ];
+            var o = pick(data);
+            var types = [
+                function(){ return {q:o[0] + ' is headquartered in?',a:o[3],hint:'UN=NYC, WHO=Geneva, IMF=Washington',fact:o[0] + ' HQ: ' + o[3] + '. Founded ' + o[2] + '. Members: ' + o[4]}; },
+                function(){ return {q:o[0] + ' works for?',a:o[1],hint:'The name usually indicates the purpose',fact:o[0] + ': ' + o[1] + '. HQ: ' + o[3]}; }
+            ];
+            return pick(types)();
+        };
+
+        GK_GENERATORS.awards = function() {
+            var data = [
+                ['Bharat Ratna','India\'s highest civilian award','1954','any field'],
+                ['Padma Vibhushan','second highest civilian award','1954','any field'],
+                ['Padma Bhushan','third highest civilian award','1954','any field'],
+                ['Padma Shri','fourth highest civilian award','1954','any field'],
+                ['Param Vir Chakra','highest military decoration (wartime)','1950','gallantry'],
+                ['Ashok Chakra','highest peacetime military award','1952','gallantry'],
+                ['Maha Vir Chakra','second highest military (wartime)','1950','gallantry'],
+                ['Kirti Chakra','second highest peacetime gallantry','1952','gallantry'],
+                ['Nobel Prize','six categories: Physics, Chemistry, Medicine, Literature, Peace, Economics','1901','global'],
+                ['Oscar Awards','Academy Awards for motion pictures','1929','Hollywood'],
+                ['Booker Prize','English fiction literary award','1969','Commonwealth nations'],
+                ['Pulitzer Prize','American journalism, letters, music','1917','USA'],
+                ['Dadasaheb Phalke','India\'s highest film award','1969','lifetime contribution'],
+                ['National Film Awards','India\'s top film honours','1954','multiple categories'],
+                ['Jnanpith Award','India\'s highest literary award','1961','Indian literature'],
+                ['Sahitya Akademi Award','Indian literary honour','1954','Indian languages'],
+                ['Khel Ratna','India\'s highest sporting honour','1991-92','sports'],
+                ['Arjuna Award','sports excellence award','1961','sports'],
+                ['Dronacharya Award','coaching excellence','1985','sports'],
+                ['Ramon Magsaysay','Asian equivalent of Nobel','1957','public service'],
+                ['Templeton Prize','progress in religion/spirituality','1972','global'],
+                ['Gandhi Peace Prize','social, economic, political transformation','1995','global'],
+                ['Grammy Awards','music industry excellence','1959','USA'],
+                ['Emmy Awards','television excellence','1949','USA'],
+                ['Tony Awards','theatre excellence','1947','USA']
+            ];
+            var a = pick(data);
+            var types = [
+                function(){ return {q:a[0] + ' is awarded for?',a:a[3],hint:'The name often indicates the domain',fact:a[0] + ' (since ' + a[2] + '): ' + a[3] + '. Category: ' + a[1]}; },
+                function(){ return {q:'Which award is India\'s highest award for ' + (a[3].includes('civilian')?'civilians':'') + (a[3].includes('military')?'gallantry':'') + (a[3].includes('film')?'cinema':'') + (a[3].includes('sport')?'sports':'') + (a[3].includes('literary')?'literature':'') + '?',a:a[0],hint:'Bharat Ratna=civilian, Param Vir Chakra=military',fact:a[0] + ': ' + a[1] + ' since ' + a[2]}; }
+            ];
+            return pick(types)();
+        };
+
+        GK_GENERATORS.dams = function() {
+            var dams = [
+                ['Tehri Dam','Uttarakhand','Bhagirathi River','highest dam in India (260m)'],
+                ['Bhakra Nangal','Himachal/Punjab','Sutlej River','second tallest, green revolution backbone'],
+                ['Hirakud Dam','Odisha','Mahanadi River','longest dam in India (4.8 km)'],
+                ['Nagarjuna Sagar','Telangana','Krishna River','world\'s largest masonry dam'],
+                ['Sardar Sarovar','Gujarat','Narmada River','part of Narmada Valley Project'],
+                ['Damodar Valley Corp','Jharkhand/WB','Damodar River','series of 4 dams (flood control)'],
+                ['Indira Sagar','Madhya Pradesh','Narmada River','largest reservoir in India'],
+                ['Mettur Dam','Tamil Nadu','Kaveri River','Stanley Reservoir'],
+                ['Krishna Raja Sagara','Karnataka','Kaveri River','supplies water to Mysuru/Bengaluru'],
+                ['Almatti Dam','Karnataka','Krishna River','hydroelectric & irrigation'],
+                ['Tungabhadra Dam','Karnataka','Tungabhadra River','multipurpose project'],
+                ['Pandoh Dam','Himachal','Beas River','part of Beas-Sutlej link'],
+                ['Dantiwada Dam','Gujarat','Banas River','irrigation & flood control'],
+                ['Rihand Dam','UP','Rihand River','Govind Ballabh Pant Sagar reservoir'],
+                ['Upper Krishna','Karnataka','Krishna River','major irrigation project'],
+                ['Koyna Dam','Maharashtra','Koyna River','hydropower, earthquake concerns'],
+                ['Idukki Dam','Kerala','Periyar River','arch dam, hydropower'],
+                ['Mullaperiyar Dam','Kerala/TN','Periyar River','oldest, controversy over safety']
+            ];
+            var d = pick(dams);
+            var types = [
+                function(){ return {q:d[0] + ' dam is built on which river?',a:d[2],hint:'Match the dam to its known river: Bhakra=Sutlej, Hirakud=Mahanadi',fact:d[0] + ' dam is on the ' + d[2] + ' in ' + d[1] + '. ' + d[3]}; },
+                function(){ return {q:d[0] + ' dam is located in which state?',a:d[1],hint:'Think about the river\'s course: which state does it flow through?',fact:d[0] + ': ' + d[1] + ', river ' + d[2] + '. ' + d[3]}; }
+            ];
+            return pick(types)();
+        };
+
+        GK_GENERATORS.important_days = function() {
+            var days = [
+                ['Republic Day','Jan 26','Indian Constitution adoption 1950'],
+                ['Independence Day','Aug 15','1947 freedom from British rule'],
+                ['Gandhi Jayanti','Oct 2','Mahatma Gandhi birthday (also International Day of Non-Violence)'],
+                ['Children\'s Day','Nov 14','Jawaharlal Nehru birthday'],
+                ['Teachers\' Day','Sep 5','Dr Sarvepalli Radhakrishnan birthday'],
+                ['National Youth Day','Jan 12','Swami Vivekananda birthday'],
+                ['National Science Day','Feb 28','Raman effect discovery (1930)'],
+                ['National Voters Day','Jan 25','voter awareness, foundation of EC'],
+                ['National Mathematics Day','Dec 22','Srinivasa Ramanujan birthday'],
+                ['Constitution Day','Nov 26','Constituent Assembly adoption (1949)'],
+                ['National Sports Day','Aug 29','Dhyan Chand birthday'],
+                ['World Environment Day','June 5','UN awareness for environmental protection'],
+                ['World Health Day','Apr 7','WHO foundation (1948)'],
+                ['World Water Day','Mar 22','freshwater importance'],
+                ['World AIDS Day','Dec 1','HIV/AIDS awareness'],
+                ['International Yoga Day','June 21','PM Modi proposal, UN adoption'],
+                ['UN Day','Oct 24','UN Charter effective (1945)'],
+                ['Human Rights Day','Dec 10','Universal Declaration of Human Rights (1948)'],
+                ['World Population Day','July 11','population awareness'],
+                ['National Education Day','Nov 11','Maulana Azad birthday'],
+                ['Quit India Day','Aug 9','1942 Quit India Movement launch'],
+                ['National Unity Day','Oct 31','Sardar Patel birthday']
+            ];
+            var day = pick(days);
+            var types = [
+                function(){ return {q:'Which day is celebrated on ' + day[1] + '?',a:day[0],hint:'Think about major national/international observances',fact:day[0] + ' (' + day[1] + '): ' + day[2]}; },
+                function(){ return {q:day[0] + ' is celebrated on?',a:day[1],hint:'Remember key dates: Republic Day=Jan 26, Independence Day=Aug 15',fact:day[0] + ': ' + day[1] + '. ' + day[2]}; }
+            ];
+            return pick(types)();
+        };
+
+        // ===== QUIZ STATE =====
+        var state = { cat: null, questions: [], idx: 0, correct: 0, streak: 0, answered: false, categoryName: '' };
+
+        function init() {
+            var grid = document.getElementById('catGrid');
+            CATEGORIES.forEach(function(c) {
+                grid.innerHTML += '<div class="cat-btn" data-cat="' + c.id + '" onclick="startCategory(\'' + c.id + '\',\'' + c.name + '\')">'
+                    + '<div class="cat-icon">' + c.icon + '</div>'
+                    + '<div class="cat-name">' + c.name + '</div>'
+                    + '<div class="cat-desc">' + c.desc + '</div>'
+                    + '</div>';
+            });
         }
 
-        function renderFeed() {
-            var byDate = {};
-            items.forEach(function(it) {
-                var key = it.day + ' ' + it.month + ' ' + it.year;
-                if (!byDate[key]) byDate[key] = [];
-                byDate[key].push(it);
-            });
-            var dates = Object.keys(byDate).sort(function(a,b) {
-                var da = new Date(a), db = new Date(b);
-                return db - da;
-            });
-            var html = '';
-            if (items.length === 0) {
-                html = '<div class="loading">No current affairs yet. The daily fetch runs at 5 AM.</div>';
-            } else {
-                html += '<button class="refresh-btn" onclick="loadAffairs()">⟳ Refresh</button>';
-                dates.forEach(function(date) {
-                    html += '<div class="date-group"><div class="dg-label">' + date + '</div>';
-                    byDate[date].forEach(function(it) {
-                        var headline = it.headline.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
-                        var source = it.source.replace(/&amp;/g,'&');
-                        html += '<div class="news-card">'
-                            + '<div class="n-date">' + date + '</div>'
-                            + '<div class="n-headline">' + headline + '</div>'
-                            + '<div class="n-source">' + source + '</div>'
-                            + (it.link ? '<a class="n-link" href="' + it.link + '" target="_blank" rel="noopener">Read full →</a>' : '')
-                            + '</div>';
-                    });
-                    html += '</div>';
-                });
+        function startCategory(id, name) {
+            state.cat = id;
+            state.categoryName = name;
+            state.idx = 0;
+            state.correct = 0;
+            state.streak = 0;
+            state.answered = false;
+            state.questions = [];
+            // generate 8 questions
+            var gen = GK_GENERATORS[id];
+            if (!gen) return;
+            for (var i = 0; i < 8; i++) {
+                var q = gen();
+                q.opts = buildOptions(q.a);
+                state.questions.push(q);
             }
-            document.getElementById('tab-feed').innerHTML = html;
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('qArea').classList.add('active');
+            document.getElementById('scoreBar').classList.add('show');
+            showQuestion();
         }
 
-        // === MCQ Quiz Generator from news items ===
-        function shuffle(a) {
-            for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
-            return a;
+        function buildOptions(correct) {
+            var opts = [correct];
+            var pool = GK_DISTRACTORS[state.cat] || [];
+            var shuffled = shuffle(pool.slice());
+            for (var i = 0; i < shuffled.length && opts.length < 4; i++) {
+                if (opts.indexOf(shuffled[i]) < 0) opts.push(shuffled[i]);
+            }
+            while (opts.length < 4) opts.push('None of the above');
+            shuffle(opts);
+            return opts;
         }
-        function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
-        function uniq(a) { var r = []; a.forEach(function(v) { if (r.indexOf(v) < 0) r.push(v); }); return r; }
 
-        function renderQuiz() {
-            if (items.length < 2) {
-                document.getElementById('tab-quiz').innerHTML = '<div class="loading">Need at least 2 news items to generate quiz. Check back after the daily fetch.</div>';
+        var GK_DISTRACTORS = {
+            constitution: ['Union Executive','Fundamental Rights','Directive Principles','Supreme Court','Parliament','President','Governor','Prime Minister','Judicial Review','Writ Jurisdiction','Amendment Procedure','Emergency Provisions','Finance Commission','Election Commission','Public Service Commission','Official Language','Trade & Commerce','Services under Union'],
+            schemes: ['Digital India','Swachh Bharat','PM Awas Yojana','Skill India','Beti Bachao Beti Padhao','PM Jan Dhan','Make in India','Startup India','Ayushman Bharat','PM-KISAN','Jal Jeevan Mission','National Education Policy 2020','GST','RERA','One Nation One Ration Card'],
+            sports: ['Cricket','Football','Hockey','Badminton','Tennis','Athletics','Kabaddi','Volleyball','Basketball','Table Tennis','Boxing','Wrestling','Shooting','Chess','Golf','Olympics','Asian Games','Commonwealth Games'],
+            books: ['Jawaharlal Nehru','Mahatma Gandhi','Rabindranath Tagore','R K Narayan','Amartya Sen','APJ Abdul Kalam','Shashi Tharoor','Arundhati Roy','Salman Rushdie','Chetan Bhagat','Amish Tripathi','Ramachandra Guha','Jhumpa Lahiri','Amitav Ghosh','Vikram Seth','Kiran Desai','V S Naipaul','Khushwant Singh'],
+            space: ['ISRO','DRDO','NASA','ESA','Roscosmos','CNSA','satellite','launch vehicle','Moon mission','Mars mission','Earth observation','communication satellite','PSLV','GSLV','LVM3','Aryabhata','Chandrayaan','Mangalyaan','Aditya L1','Gaganyaan'],
+            defence: ['India-France','India-USA','India-Russia','India-UK','India-Japan','India-Australia','India-Singapore','India-Nepal','India-Indonesia','India-Thailand','India-Bangladesh','India-Maldives','DRDO','Army','Navy','Air Force','Coast Guard','ICBM','cruise missile','surface-to-air','anti-tank'],
+            national_parks: ['Madhya Pradesh','Uttarakhand','Assam','Kerala','Rajasthan','Gujarat','West Bengal','Karnataka','Tamil Nadu','Odisha','Arunachal Pradesh','Uttar Pradesh','Maharashtra','Bihar','Himachal Pradesh','tiger','lion','elephant','rhino','crocodile','bird sanctuary'],
+            dance: ['Kerala','Tamil Nadu','Odisha','Uttar Pradesh','Andhra Pradesh','Manipur','Assam','Punjab','Gujarat','Rajasthan','Maharashtra','Jammu & Kashmir','Jharkhand','classical','folk','temple dance','martial dance'],
+            orgs: ['New York','Geneva','Washington DC','Paris','Rome','Vienna','London','Brussels','Moscow','Beijing','1945','1948','1957','1967','1995','peace','health','trade','development','labour rights','children'],
+            awards: ['civilian','military','gallantry','literature','sports','cinema','music','journalism','1954','1961','1969','global','India','USA','United Kingdom'],
+            dams: ['Ganga','Yamuna','Sutlej','Brahmaputra','Narmada','Krishna','Godavari','Mahanadi','Kaveri','Tungabhadra','Beas','Rihand','Periyar','Uttarakhand','Himachal','Odisha','Telangana','Gujarat','Karnataka','Tamil Nadu','Madhya Pradesh'],
+            important_days: ['Jan 26','Aug 15','Oct 2','Nov 14','Sep 5','Jan 12','Feb 28','Nov 26','June 5','Apr 7','Mar 22','Dec 1','June 21','Dec 10','July 11','Republic Day','Independence Day','Gandhi Jayanti','Children\'s Day','Teachers\' Day']
+        };
+
+        function showQuestion() {
+            if (state.idx >= state.questions.length) {
+                showEnd();
                 return;
             }
-            var questions = generateQuestions();
-            quizAnswered = {};
-            var html = '<div style="text-align:center;margin-bottom:12px"><span style="font-size:.82em;color:var(--text-sec)">' + questions.length + ' questions from today\'s news</span></div>';
-            html += '<div id="quizScore" class="quiz-score"></div>';
-            html += '<div id="quizList">';
-            questions.forEach(function(q, i) {
-                html += '<div class="q-card" id="qcard-' + i + '">'
-                    + '<div class="q-label">Q' + (i + 1) + ' of ' + questions.length + '</div>'
-                    + '<div class="q-text">' + q.q + '</div>'
-                    + '<div class="q-opt-grid" id="qopts-' + i + '">';
-                q.opts.forEach(function(o, j) {
-                    html += '<div class="q-opt" data-qi="' + i + '" data-val="' + o.replace(/"/g,'&quot;') + '" onclick="answerQuiz(' + i + ',this)">' + o + '</div>';
-                });
-                html += '</div><div class="result-flash" id="qflash-' + i + '"></div></div>';
+            state.answered = false;
+            var q = state.questions[state.idx];
+            document.getElementById('qNum').textContent = 'Q ' + (state.idx + 1) + ' / ' + state.questions.length;
+            document.getElementById('qProgress').style.width = ((state.idx / state.questions.length) * 100) + '%';
+            document.getElementById('catTag').textContent = state.categoryName;
+            document.getElementById('qText').textContent = q.q;
+            document.getElementById('hintText').textContent = q.hint || 'Think carefully about the options';
+            document.getElementById('hintText').classList.remove('show');
+            document.getElementById('resultFlash').className = 'result-flash';
+            document.getElementById('resultFlash').style.display = 'none';
+            document.getElementById('nextBtn').classList.add('hidden');
+            document.getElementById('intuitionDisplay').style.display = 'none';
+
+            var grid = document.getElementById('optGrid');
+            grid.innerHTML = '';
+            q.opts.forEach(function(o) {
+                var el = document.createElement('div');
+                el.className = 'q-opt';
+                el.textContent = o;
+                el.setAttribute('data-val', o);
+                el.onclick = function() { answerQuestion(this); };
+                grid.appendChild(el);
             });
-            html += '</div><button class="action-btn secondary" onclick="resetQuiz()">🔄 New Quiz</button>';
-            document.getElementById('tab-quiz').innerHTML = html;
         }
 
-        function generateQuestions() {
-            var qs = [];
-            var used = {};
-
-            // Type 1: Source match — "Which organization reported: [headline]?"
-            var sources = uniq(items.map(function(it) { return it.source.replace(/&amp;/g,'&'); }));
-            shuffle(items);
-            var count = Math.min(5, items.length);
-            var added = 0;
-            for (var i = 0; i < items.length && added < count; i++) {
-                var it = items[i];
-                var headline = it.headline.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/ - .*$/,'').trim();
-                if (headline.length < 10) headline = it.headline.replace(/&amp;/g,'&').substring(0, 80);
-                if (headline.length > 80) headline = headline.substring(0, 77) + '...';
-                var source = it.source.replace(/&amp;/g,'&');
-                var dist = sources.filter(function(s) { return s !== source; });
-                shuffle(dist);
-                var opts = uniq([source].concat(dist.slice(0, 3)));
-                while (opts.length < 4) { opts.push('Unknown Source'); }
-                shuffle(opts);
-                var key = 'src_' + i;
-                if (!used[key]) {
-                    qs.push({ q: 'Which organization reported: "' + headline + '"?', a: source, opts: opts });
-                    used[key] = true;
-                    added++;
-                }
-            }
-
-            // Type 2: Odd headline out — "Which of these is NOT among recent headlines?"
-            if (items.length >= 4) {
-                shuffle(items);
-                var realOnes = items.slice(0, 3);
-                var fake = 'Breaking: ' + pick(['Global summit on AI regulation concludes in Paris','India launches new semiconductor plant in Gujarat','RBI keeps repo rate unchanged at 6.5%','ISRO successfully launches communication satellite','World Health Organization declares new pandemic alert','India wins 5 medals at Asian Games','New test series announced for WTC final','Supreme Court issues landmark verdict on data privacy']);
-                var fakes = [fake, fake.replace(/^Breaking: /,'')];
-                var fakeChoice = pick(fakes);
-                var opts = realOnes.map(function(r) { return r.headline.replace(/&amp;/g,'&').substring(0, 60) + (r.headline.length > 60 ? '...' : ''); }).concat([fakeChoice]);
-                shuffle(opts);
-                qs.push({ q: 'Which of these is NOT from today\'s current affairs?', a: fakeChoice, opts: opts });
-            }
-
-            // Type 3: Date match — "On which date was this published?"
-            if (items.length >= 3) {
-                shuffle(items);
-                var target = items[0];
-                var headline = target.headline.replace(/&amp;/g,'&').substring(0, 60) + (target.headline.length > 60 ? '...' : '');
-                var correctDate = target.day + ' ' + target.month + ' ' + target.year;
-                var otherDates = items.slice(1).map(function(it) { return it.day + ' ' + it.month + ' ' + it.year; });
-                var dateOpts = uniq([correctDate].concat(otherDates.slice(0, 3)));
-                while (dateOpts.length < 4) { dateOpts.push('15 Jun 2026'); }
-                dateOpts = uniq(dateOpts).slice(0, 4);
-                shuffle(dateOpts);
-                qs.push({ q: 'On which date was this published: "' + headline + '"?', a: correctDate, opts: dateOpts });
-            }
-
-            shuffle(qs);
-            return qs.slice(0, Math.min(6, qs.length));
-        }
-
-        function answerQuiz(idx, el) {
-            if (quizAnswered[idx]) return;
-            var cards = document.querySelectorAll('#qopts-' + idx + ' .q-opt');
-            cards.forEach(function(c) { c.style.pointerEvents = 'none'; });
+        function answerQuestion(el) {
+            if (state.answered) return;
+            state.answered = true;
+            var q = state.questions[state.idx];
             var val = el.getAttribute('data-val');
-            var q = document.getElementById('qcard-' + idx);
-            var flash = document.getElementById('qflash-' + idx);
-            var questions = window._currentQuizQuestions || [];
-            if (!window._currentQuizQuestions || !window._currentQuizQuestions[idx]) return;
-            var correct = window._currentQuizQuestions[idx].a;
-            cards.forEach(function(c) {
-                if (c.getAttribute('data-val') === correct) c.classList.add('correct');
+            var correct = q.a;
+            var opts = document.querySelectorAll('#optGrid .q-opt');
+            opts.forEach(function(o) { o.style.pointerEvents = 'none'; });
+            opts.forEach(function(o) {
+                if (o.getAttribute('data-val') === correct) o.classList.add('correct');
             });
+            var flash = document.getElementById('resultFlash');
+            flash.style.display = 'block';
             if (val === correct) {
                 el.classList.add('correct');
-                quizAnswered[idx] = true;
-                flash.textContent = '✅ Correct!';
+                state.correct++;
+                state.streak++;
                 flash.className = 'result-flash show correct';
+                flash.textContent = '✅ Correct!';
             } else {
                 el.classList.add('wrong');
-                quizAnswered[idx] = false;
-                flash.textContent = '❌ Wrong. Answer: ' + correct;
+                state.streak = 0;
                 flash.className = 'result-flash show wrong';
+                flash.textContent = '❌ Answer: ' + correct;
             }
-            updateQuizScore();
-        }
+            document.getElementById('correctNum').textContent = state.correct;
+            document.getElementById('totalNum').textContent = state.questions.length;
+            document.getElementById('streakNum').textContent = state.streak;
 
-        function updateQuizScore() {
-            var total = window._currentQuizQuestions ? window._currentQuizQuestions.length : 0;
-            var correct = 0;
-            for (var k in quizAnswered) { if (quizAnswered[k]) correct++; }
-            var el = document.getElementById('quizScore');
-            if (total > 0) {
-                el.innerHTML = '<span class="num">' + correct + '</span><span class="lbl"> / ' + total + ' correct</span>';
-                el.className = 'quiz-score show';
+            // Show quick fact
+            if (q.fact) {
+                document.getElementById('intuitionText').textContent = q.fact;
+                document.getElementById('intuitionDisplay').style.display = 'block';
             }
+            // Enable hint click
+            document.getElementById('qHint').onclick = function() {
+                document.getElementById('hintText').classList.toggle('show');
+            };
+            setTimeout(function() {
+                document.getElementById('nextBtn').classList.remove('hidden');
+            }, 600);
         }
 
-        function resetQuiz() {
-            window._currentQuizQuestions = generateQuestions();
-            quizAnswered = {};
-            var questions = window._currentQuizQuestions;
-            var html = '<div style="text-align:center;margin-bottom:12px"><span style="font-size:.82em;color:var(--text-sec)">' + questions.length + ' questions from today\'s news</span></div>';
-            html += '<div id="quizScore" class="quiz-score"></div><div id="quizList">';
-            questions.forEach(function(q, i) {
-                html += '<div class="q-card" id="qcard-' + i + '">'
-                    + '<div class="q-label">Q' + (i + 1) + ' of ' + questions.length + '</div>'
-                    + '<div class="q-text">' + q.q + '</div>'
-                    + '<div class="q-opt-grid" id="qopts-' + i + '">';
-                q.opts.forEach(function(o, j) {
-                    html += '<div class="q-opt" data-qi="' + i + '" data-val="' + o.replace(/"/g,'&quot;') + '" onclick="answerQuiz(' + i + ',this)">' + o + '</div>';
-                });
-                html += '</div><div class="result-flash" id="qflash-' + i + '"></div></div>';
-            });
-            html += '</div><button class="action-btn secondary" onclick="resetQuiz()">🔄 New Quiz</button>';
-            document.getElementById('tab-quiz').innerHTML = html;
-            document.getElementById('quizScore').innerHTML = '';
-            document.getElementById('quizScore').className = 'quiz-score';
+        function nextQuestion() {
+            state.idx++;
+            showQuestion();
         }
 
-        function switchTab(tab, btn) {
-            document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
-            document.querySelectorAll('.tab-content').forEach(function(t) { t.classList.remove('active'); });
-            btn.classList.add('active');
-            document.getElementById('tab-' + tab).classList.add('active');
-            if (tab === 'quiz' && !window._currentQuizQuestions) {
-                window._currentQuizQuestions = generateQuestions();
-                renderQuiz();
-            }
+        function showEnd() {
+            var pct = Math.round((state.correct / state.questions.length) * 100);
+            var grade = pct >= 80 ? '🌟 Excellent!' : (pct >= 60 ? '👏 Good!' : (pct >= 40 ? '💪 Keep going!' : '📚 Review needed'));
+            document.getElementById('qNum').textContent = 'Session Complete';
+            document.getElementById('qProgress').style.width = '100%';
+            document.getElementById('catTag').textContent = '';
+            document.getElementById('qText').textContent = grade + ' You got ' + state.correct + '/' + state.questions.length + ' (' + pct + '%) in ' + state.categoryName + '.';
+            document.getElementById('qHint').style.display = 'none';
+            document.getElementById('optGrid').innerHTML = '';
+            document.getElementById('resultFlash').className = 'result-flash';
+            document.getElementById('resultFlash').style.display = 'none';
+            document.getElementById('nextBtn').classList.add('hidden');
+            document.getElementById('intuitionDisplay').style.display = 'none';
+            document.getElementById('nextBtn').textContent = '🔄 Try Again';
+            document.getElementById('nextBtn').classList.remove('hidden');
+            document.getElementById('nextBtn').onclick = function() {
+                startCategory(state.cat, state.categoryName);
+                this.onclick = function() { nextQuestion(); };
+                this.textContent = 'Next →';
+            };
         }
 
-        loadAffairs();
+        function toggleHint() {
+            document.getElementById('hintText').classList.toggle('show');
+        }
+
+        function backToMenu() {
+            document.getElementById('welcome').style.display = 'block';
+            document.getElementById('qArea').classList.remove('active');
+            document.getElementById('scoreBar').classList.remove('show');
+            state.questions = [];
+            state.idx = 0;
+        }
+
+        init();
     </script>
     <script src="https://unpkg.com/lucide@0.468.0"></script>
     <script>lucide.createIcons();</script>
