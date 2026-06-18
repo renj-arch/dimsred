@@ -2,13 +2,30 @@
 
 var KEY = 'mental_training_data';
 var MISTAKE_KEY = 'mental_mistakes';
+var SESSION_CACHE_KEY = 'mental_session_cache';
 var activeLayer = 'instinct'; // default layer for quant generators
+var _questionCache = null; // caches last generated question to avoid re-generation
 
 function loadMistakes() {
   try { return JSON.parse(localStorage.getItem(MISTAKE_KEY)) || []; }
   catch(e) { return []; }
 }
 function saveMistakes(arr) { localStorage.setItem(MISTAKE_KEY, JSON.stringify(arr)); }
+
+// Cache session state in sessionStorage so page refresh can resume
+function cacheSession(session) {
+  if (!session) return;
+  try { sessionStorage.setItem(SESSION_CACHE_KEY, JSON.stringify({ active: true, mode: session.mode, subMode: session.subMode, questionIndex: session.questionIndex, totalQuestions: session.totalQuestions, hardMode: session.hardMode, layer: session.layer, focusType: session.focusType, mistakeQueue: session.mistakeQueue || [], review: session.review || [] })); }
+  catch(e) {}
+}
+function restoreCachedSession() {
+  try { var d = JSON.parse(sessionStorage.getItem(SESSION_CACHE_KEY)); if (d && d.active) { sessionStorage.removeItem(SESSION_CACHE_KEY); return d; } }
+  catch(e) {}
+  return null;
+}
+function clearSessionCache() {
+  try { sessionStorage.removeItem(SESSION_CACHE_KEY); } catch(e) {}
+}
 
 function getMistakeCount() {
   var arr = loadMistakes();
@@ -1971,6 +1988,32 @@ GENERATORS.reasoning = generateReasoningQuestion;
 window.startMentalSession = function(mode, opts) {
   var state = load();
   opts = opts || {};
+
+  // Check for cached session to resume (prevents data loss on page refresh).
+  // Only restore if mode matches or user didn't specify a specific mode.
+  var cached = restoreCachedSession();
+  if (cached && cached.mode && cached.active && (!mode || mode === cached.mode)) {
+    var resume = {
+      mode: cached.mode,
+      subMode: cached.subMode || null,
+      layer: cached.layer || 'instinct',
+      questionIndex: cached.questionIndex || 0,
+      totalQuestions: cached.totalQuestions || 10,
+      correct: 0,
+      startTime: Date.now(),
+      active: true,
+      hardMode: !!cached.hardMode,
+      focusType: cached.focusType || null,
+      review: cached.review || [],
+      mistakeQueue: cached.mistakeQueue || []
+    };
+    if (cached.mode === 'puzzle' && cached.puzzles) {
+      resume.puzzles = cached.puzzles;
+      resume.puzzleIndex = cached.puzzleIndex || 0;
+    }
+    return resume;
+  }
+
   if (!mode || !GENERATORS[mode]) mode = 'mixed';
   var subMode = opts.subMode || null;
   var totalQ = (mode === 'puzzle') ? 5 : 10;
@@ -2200,6 +2243,10 @@ window.submitMentalAnswer = function(session, question, selectedAnswer, timeRema
   }
 
   save(state);
+
+  // Cache session state so page refresh can resume
+  if (!isComplete) cacheSession(session);
+  else clearSessionCache();
 
   return {
     correct: correct,
@@ -2999,6 +3046,10 @@ window.getMistakeCount = getMistakeCount;
 
 // Expose generators for testing
 window.getMentalGenerators = function() { return GENERATORS; };
+
+// Expose session cache (resume on page refresh)
+window.hasCachedSession = function() { try { return !!sessionStorage.getItem(SESSION_CACHE_KEY); } catch(e) { return false; } };
+window.clearCachedSession = function() { clearSessionCache(); };
 
 })();
 
