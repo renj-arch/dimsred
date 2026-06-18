@@ -1,8 +1,8 @@
-name: Daily Exam Notification Fetcher
+name: Daily PIB Feed
 
 on:
   schedule:
-    - cron: '30 2 * * *'
+    - cron: '0 6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -19,14 +19,16 @@ jobs:
         with:
           node-version: 20
 
-      - name: Fetch exam notifications from RSS
-        id: notify
-        run: node scripts/fetch-rss-notifications.js
+      - name: Install dependencies
+        run: npm install
+
+      - name: Fetch PIB RSS feed
+        run: node scripts/fetch-pib-rss.js
 
       - name: Commit and push
         run: |
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git add -A
-          git diff --staged --quiet || git commit -m "Update exam notifications $(date +'%Y-%m-%d')"
+          git diff --staged --quiet || git commit -m "Daily PIB feed update $(date +'%Y-%m-%d')"
           git push
