@@ -788,10 +788,28 @@
             fetch('/data/pib-feed.json')
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
-                    var items = (data.items || []).slice(0, 200);
+                    var items = (data.items || []);
                     if (items.length === 0) return;
                     _pibFeedData = items;
-                    renderPibFeed(items.slice(0, 10));
+
+                    // Find unique dates, sorted descending
+                    var dateSet = {};
+                    items.forEach(function(i) { if (i.pubDate) dateSet[i.pubDate.slice(0,10)] = true; });
+                    var dates = Object.keys(dateSet).sort().reverse();
+                    var latestDate = dates[0] || '';
+
+                    // Set date picker to latest available date & auto-filter
+                    var picker = document.getElementById('pibDateFilter');
+                    if (picker && latestDate) picker.value = latestDate;
+
+                    // Show filtered by latest date
+                    var forDate = items.filter(function(i) { return i.pubDate && i.pubDate.slice(0,10) === latestDate; });
+                    renderPibFeed(forDate.slice(0, 30));
+
+                    // Show available date range
+                    var info = document.getElementById('pibFilterInfo');
+                    if (info && dates.length > 1) info.textContent = dates[0] + ' to ' + dates[dates.length-1] + ' (' + dates.length + ' days, ' + items.length + ' items)';
+
                     section.style.display = 'block';
                 })
                 .catch(function() {});
@@ -800,7 +818,7 @@
         function renderPibFeed(items) {
             var list = document.getElementById('pibFeedList');
             var info = document.getElementById('pibFilterInfo');
-            if (items.length === 0) { list.innerHTML = '<div style="font-size:.8em;color:var(--text-muted);text-align:center;padding:12px">No news for this date</div>'; if (info) info.textContent = ''; return; }
+            if (items.length === 0) { list.innerHTML = '<div style="font-size:.8em;color:var(--text-muted);text-align:center;padding:12px">No PIB news for this date</div>'; return; }
             var today = new Date().toISOString().slice(0,10);
             var html = '';
             items.forEach(function(item) {
@@ -817,7 +835,7 @@
                     + '</a>';
             });
             list.innerHTML = html;
-            if (info) info.textContent = 'Showing ' + items.length + ' items';
+            if (info) info.textContent = 'Showing ' + items.length + ' items for ' + items[0].pubDate.slice(0,10);
         }
 
         function filterPibFeed() {
@@ -826,12 +844,18 @@
             var filtered = _pibFeedData.filter(function(item) {
                 return item.pubDate && item.pubDate.slice(0,10) === dateVal;
             });
-            renderPibFeed(filtered.slice(0, 20));
+            renderPibFeed(filtered.slice(0, 30));
         }
 
         function resetPibFilter() {
-            document.getElementById('pibDateFilter').value = '';
-            if (_pibFeedData) renderPibFeed(_pibFeedData.slice(0, 10));
+            var picker = document.getElementById('pibDateFilter');
+            if (_pibFeedData) {
+                // Re-set to latest available
+                var latestDate = '';
+                _pibFeedData.forEach(function(i) { if (i.pubDate) { var d = i.pubDate.slice(0,10); if (d > latestDate) latestDate = d; } });
+                if (picker && latestDate) picker.value = latestDate;
+                filterPibFeed();
+            }
         }
 
         function backToMenu() {
