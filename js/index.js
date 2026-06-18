@@ -1,4 +1,4 @@
-// ---- Viral Currents Ticker (horizontal marquee, fetches 3 every 2min) ----
+// ---- Viral Currents Ticker (static motivational quotes, no external fetching) ----
 (function() { try {
     var tickerEl = document.getElementById('tickerText');
     if (!tickerEl) return;
@@ -6,6 +6,17 @@
     var track = document.createElement('div');
     track.className = 'marquee-track';
     tickerEl.appendChild(track);
+
+    var items = [
+        'Stay consistent with daily practice 📚',
+        'Master one topic at a time 🎯',
+        'Review mistakes to improve fast 💡',
+        'Focus on weak areas for maximum gains ⚡',
+        'Speed comes with repetition 🏃',
+        'Clear concepts beat rote memorization 🧠',
+        'Daily GK reading builds awareness 📰',
+        'Mock tests reveal real preparation level 📝'
+    ];
 
     function buildContent(items) {
         var html = '';
@@ -16,37 +27,9 @@
         return html;
     }
 
-    function setItems(items) {
-        if (items.length === 0) return;
-        var content = buildContent(items);
-        track.innerHTML = content + content;
-        track.classList.remove('paused');
-        void track.offsetHeight;
-    }
-
-    function fetchNews() {
-        track.classList.add('paused');
-        fetch('/api/headlines')
-            .then(function(r) { if (!r.ok) throw new Error('fail'); return r.json(); })
-            .then(function(data) {
-                var fresh = data.headlines || [];
-                var emoji = data.emoji || '';
-                var items = fresh.map(function(h) {
-                    return (emoji && h.indexOf(emoji) !== 0 ? emoji + ' ' : '') + h;
-                });
-                setItems(items);
-            })
-            .catch(function() {
-                track.classList.remove('paused');
-                if (track.children.length === 0) {
-                    var fallback = ['Stay updated with current affairs 📡', 'Practice daily for exam success 🎯', 'Read newspapers for GK preparation 📚'];
-                    setItems(fallback);
-                }
-            });
-    }
-
-    fetchNews();
-    setInterval(fetchNews, 120000);
+    var content = buildContent(items);
+    track.innerHTML = content + content;
+    track.classList.remove('paused');
 } catch(e) {} })();
 
 // ---- Upcoming Exam Notifications ----
