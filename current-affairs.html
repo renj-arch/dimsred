@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="js/auth-guard.js"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Daily Current Affairs — vlymbooq</title>
+    <meta name="description" content="Daily current affairs news feed and MCQ quiz for competitive exams. IndiaBix-style practice with real news updates.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/current-affairs.html">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--red:#ef4444;--amber:#f59e0b;--radius:12px}
+        body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--text);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:var(--text-sec);transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:800px;margin:0 auto;padding:24px;position:relative}
+        @media(max-width:480px){.container{padding:16px}}
+
+        .page-title{font-size:1.6em;font-weight:900;margin-bottom:4px}
+        .page-sub{color:var(--text-muted);font-size:.85em;margin-bottom:20px}
+        .page-sub .badge{display:inline-block;padding:2px 10px;border-radius:100px;background:rgba(52,211,153,.1);color:var(--emerald);font-size:.85em;margin-left:6px}
+
+        .tab-bar{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+        .tab-btn{padding:8px 20px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-sec);font-size:.85em;font-weight:600;cursor:pointer;transition:all .2s}
+        .tab-btn:hover{border-color:rgba(255,255,255,.15);color:var(--text)}
+        .tab-btn.active{background:rgba(167,139,250,.12);border-color:var(--purple);color:var(--purple)}
+        .tab-content{display:none}
+        .tab-content.active{display:block}
+
+        .news-card{padding:16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);margin-bottom:10px;transition:border-color .2s}
+        .news-card:hover{border-color:rgba(255,255,255,.12)}
+        .news-card .n-date{font-size:.7em;color:var(--text-muted);margin-bottom:4px}
+        .news-card .n-headline{font-size:.88em;font-weight:600;line-height:1.5;margin-bottom:4px}
+        .news-card .n-source{font-size:.72em;color:var(--purple)}
+        .news-card .n-link{font-size:.72em;color:var(--emerald);display:inline-block;margin-top:4px}
+
+        .date-group{margin-bottom:20px}
+        .date-group .dg-label{font-size:.85em;font-weight:700;color:var(--text-sec);padding:6px 0 8px;border-bottom:1px solid var(--border);margin-bottom:10px}
+
+        .q-card{padding:24px 20px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);margin-bottom:14px;text-align:center}
+        .q-card .q-label{font-size:.72em;color:var(--text-muted);margin-bottom:6px}
+        .q-card .q-text{font-size:1.05em;font-weight:700;line-height:1.6;margin-bottom:14px;font-family:'JetBrains Mono',monospace}
+        .q-opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:500px;margin:0 auto}
+        @media(max-width:400px){.q-opt-grid{grid-template-columns:1fr}}
+        .q-opt{padding:12px 14px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;font-size:.9em;font-weight:600;transition:all .15s;text-align:center;font-family:'JetBrains Mono',monospace}
+        .q-opt:hover{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.04)}
+        .q-opt.selected{border-color:var(--purple);background:rgba(167,139,250,.1);color:var(--purple)}
+        .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1);color:var(--emerald)}
+        .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-opt:disabled{cursor:default;opacity:.7}
+
+        .action-btn{display:block;width:100%;padding:12px;border-radius:100px;border:none;font-weight:700;font-size:.9em;cursor:pointer;transition:all .2s;text-align:center;margin-top:12px}
+        .action-btn.primary{background:linear-gradient(135deg,var(--purple),var(--emerald));color:#fff}
+        .action-btn.primary:hover{opacity:.9;transform:translateY(-1px)}
+        .action-btn.secondary{background:rgba(255,255,255,.06);color:var(--text)}
+        .action-btn.secondary:hover{background:rgba(255,255,255,.1)}
+
+        .quiz-score{padding:16px;border-radius:var(--radius);text-align:center;background:rgba(52,211,153,.05);border:1px solid rgba(52,211,153,.15);margin-bottom:14px;display:none}
+        .quiz-score.show{display:block}
+        .quiz-score .num{font-size:2em;font-weight:900;color:var(--emerald)}
+        .quiz-score .lbl{font-size:.85em;color:var(--text-sec)}
+
+        .loading{text-align:center;padding:60px 20px;color:var(--text-muted);font-size:.9em}
+        .loading .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        .result-flash{padding:12px;border-radius:8px;text-align:center;font-weight:700;font-size:.9em;margin-bottom:10px;display:none}
+        .result-flash.show{display:block}
+        .result-flash.correct{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);color:var(--emerald)}
+        .result-flash.wrong{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:var(--red)}
+
+        .refresh-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-sec);font-size:.78em;cursor:pointer;transition:all .2s;margin-bottom:12px}
+        .refresh-btn:hover{border-color:rgba(255,255,255,.15);color:var(--text)}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand"><img src="logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="community.html">Community</a>
+                <a href="cgl/index.html">CGL</a>
+                <a href="rbi/index.html">RBI</a>
+                <a href="jee/index.html">JEE</a>
+                <a href="neet/index.html">NEET</a>
+                <a href="gate/index.html">GATE</a>
+                <a href="agniveer/index.html">Agniveer</a>
+                <a href="upsc/index.html">UPSC</a>
+                <a href="ibps-po/index.html">IBPS PO</a>
+                <a href="sbi-clerk/index.html">SBI Clerk</a>
+                <a href="ssc-gd/index.html">SSC GD</a>
+                <a href="ctet/index.html">CTET</a>
+                <a href="nda/index.html">NDA</a>
+                <a href="cds/index.html">CDS</a>
+                <a href="clat/index.html">CLAT</a>
+                <a href="mental.html"><i data-lucide="brain" style="width:14px;height:14px;vertical-align:middle;margin-right:2px"></i> Mental</a>
+                <a href="current-affairs.html" class="active">📰 Current Affairs</a>
+                <a href="lab.html"><i data-lucide="flask-conical" style="width:14px;height:14px;vertical-align:middle;margin-right:2px"></i> Lab</a>
+                <a href="premium.html" style="border:1px solid rgba(167,139,250,.25);padding:6px 14px;font-size:.78em"><i data-lucide="crown" style="width:13px;height:13px;vertical-align:middle;margin-right:2px"></i> Premium</a>
+                <a class="auth-btn" href="#" style="background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none">🚀 Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-title">📰 Daily Current Affairs</div>
+        <div class="page-sub">Auto-fetched daily from Google News India <span class="badge" id="updateBadge">updating...</span></div>
+
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab('feed',this)">📰 News Feed</button>
+            <button class="tab-btn" onclick="switchTab('quiz',this)">🧠 MCQ Quiz</button>
+        </div>
+
+        <div class="tab-content active" id="tab-feed"></div>
+        <div class="tab-content" id="tab-quiz"></div>
+    </div>
+
+    <script>
+        var items = [];
+        var quizAnswered = {};
+
+        function loadAffairs() {
+            document.getElementById('tab-feed').innerHTML = '<div class="loading"><div class="spinner"></div>Loading current affairs...</div>';
+            document.getElementById('tab-quiz').innerHTML = '';
+            var x = new XMLHttpRequest();
+            x.open('GET', 'data/current-affairs.json?v=' + Date.now(), true);
+            x.onload = function() {
+                try {
+                    var data = JSON.parse(x.responseText);
+                    items = data.items || [];
+                    document.getElementById('updateBadge').textContent = 'updated ' + (data.updatedAt ? new Date(data.updatedAt).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '');
+                    renderFeed();
+                    renderQuiz();
+                } catch(e) {
+                    document.getElementById('tab-feed').innerHTML = '<div class="loading">Failed to load current affairs. <button class="refresh-btn" onclick="loadAffairs()">Retry</button></div>';
+                }
+            };
+            x.onerror = function() {
+                document.getElementById('tab-feed').innerHTML = '<div class="loading">Failed to load. <button class="refresh-btn" onclick="loadAffairs()">Retry</button></div>';
+            };
+            x.send();
+        }
+
+        function renderFeed() {
+            var byDate = {};
+            items.forEach(function(it) {
+                var key = it.day + ' ' + it.month + ' ' + it.year;
+                if (!byDate[key]) byDate[key] = [];
+                byDate[key].push(it);
+            });
+            var dates = Object.keys(byDate).sort(function(a,b) {
+                var da = new Date(a), db = new Date(b);
+                return db - da;
+            });
+            var html = '';
+            if (items.length === 0) {
+                html = '<div class="loading">No current affairs yet. The daily fetch runs at 5 AM.</div>';
+            } else {
+                html += '<button class="refresh-btn" onclick="loadAffairs()">⟳ Refresh</button>';
+                dates.forEach(function(date) {
+                    html += '<div class="date-group"><div class="dg-label">' + date + '</div>';
+                    byDate[date].forEach(function(it) {
+                        var headline = it.headline.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
+                        var source = it.source.replace(/&amp;/g,'&');
+                        html += '<div class="news-card">'
+                            + '<div class="n-date">' + date + '</div>'
+                            + '<div class="n-headline">' + headline + '</div>'
+                            + '<div class="n-source">' + source + '</div>'
+                            + (it.link ? '<a class="n-link" href="' + it.link + '" target="_blank" rel="noopener">Read full →</a>' : '')
+                            + '</div>';
+                    });
+                    html += '</div>';
+                });
+            }
+            document.getElementById('tab-feed').innerHTML = html;
+        }
+
+        // === MCQ Quiz Generator from news items ===
+        function shuffle(a) {
+            for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+            return a;
+        }
+        function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+        function uniq(a) { var r = []; a.forEach(function(v) { if (r.indexOf(v) < 0) r.push(v); }); return r; }
+
+        function renderQuiz() {
+            if (items.length < 2) {
+                document.getElementById('tab-quiz').innerHTML = '<div class="loading">Need at least 2 news items to generate quiz. Check back after the daily fetch.</div>';
+                return;
+            }
+            var questions = generateQuestions();
+            quizAnswered = {};
+            var html = '<div style="text-align:center;margin-bottom:12px"><span style="font-size:.82em;color:var(--text-sec)">' + questions.length + ' questions from today\'s news</span></div>';
+            html += '<div id="quizScore" class="quiz-score"></div>';
+            html += '<div id="quizList">';
+            questions.forEach(function(q, i) {
+                html += '<div class="q-card" id="qcard-' + i + '">'
+                    + '<div class="q-label">Q' + (i + 1) + ' of ' + questions.length + '</div>'
+                    + '<div class="q-text">' + q.q + '</div>'
+                    + '<div class="q-opt-grid" id="qopts-' + i + '">';
+                q.opts.forEach(function(o, j) {
+                    html += '<div class="q-opt" data-qi="' + i + '" data-val="' + o.replace(/"/g,'&quot;') + '" onclick="answerQuiz(' + i + ',this)">' + o + '</div>';
+                });
+                html += '</div><div class="result-flash" id="qflash-' + i + '"></div></div>';
+            });
+            html += '</div><button class="action-btn secondary" onclick="resetQuiz()">🔄 New Quiz</button>';
+            document.getElementById('tab-quiz').innerHTML = html;
+        }
+
+        function generateQuestions() {
+            var qs = [];
+            var used = {};
+
+            // Type 1: Source match — "Which organization reported: [headline]?"
+            var sources = uniq(items.map(function(it) { return it.source.replace(/&amp;/g,'&'); }));
+            shuffle(items);
+            var count = Math.min(5, items.length);
+            var added = 0;
+            for (var i = 0; i < items.length && added < count; i++) {
+                var it = items[i];
+                var headline = it.headline.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/ - .*$/,'').trim();
+                if (headline.length < 10) headline = it.headline.replace(/&amp;/g,'&').substring(0, 80);
+                if (headline.length > 80) headline = headline.substring(0, 77) + '...';
+                var source = it.source.replace(/&amp;/g,'&');
+                var dist = sources.filter(function(s) { return s !== source; });
+                shuffle(dist);
+                var opts = uniq([source].concat(dist.slice(0, 3)));
+                while (opts.length < 4) { opts.push('Unknown Source'); }
+                shuffle(opts);
+                var key = 'src_' + i;
+                if (!used[key]) {
+                    qs.push({ q: 'Which organization reported: "' + headline + '"?', a: source, opts: opts });
+                    used[key] = true;
+                    added++;
+                }
+            }
+
+            // Type 2: Odd headline out — "Which of these is NOT among recent headlines?"
+            if (items.length >= 4) {
+                shuffle(items);
+                var realOnes = items.slice(0, 3);
+                var fake = 'Breaking: ' + pick(['Global summit on AI regulation concludes in Paris','India launches new semiconductor plant in Gujarat','RBI keeps repo rate unchanged at 6.5%','ISRO successfully launches communication satellite','World Health Organization declares new pandemic alert','India wins 5 medals at Asian Games','New test series announced for WTC final','Supreme Court issues landmark verdict on data privacy']);
+                var fakes = [fake, fake.replace(/^Breaking: /,'')];
+                var fakeChoice = pick(fakes);
+                var opts = realOnes.map(function(r) { return r.headline.replace(/&amp;/g,'&').substring(0, 60) + (r.headline.length > 60 ? '...' : ''); }).concat([fakeChoice]);
+                shuffle(opts);
+                qs.push({ q: 'Which of these is NOT from today\'s current affairs?', a: fakeChoice, opts: opts });
+            }
+
+            // Type 3: Date match — "On which date was this published?"
+            if (items.length >= 3) {
+                shuffle(items);
+                var target = items[0];
+                var headline = target.headline.replace(/&amp;/g,'&').substring(0, 60) + (target.headline.length > 60 ? '...' : '');
+                var correctDate = target.day + ' ' + target.month + ' ' + target.year;
+                var otherDates = items.slice(1).map(function(it) { return it.day + ' ' + it.month + ' ' + it.year; });
+                var dateOpts = uniq([correctDate].concat(otherDates.slice(0, 3)));
+                while (dateOpts.length < 4) { dateOpts.push('15 Jun 2026'); }
+                dateOpts = uniq(dateOpts).slice(0, 4);
+                shuffle(dateOpts);
+                qs.push({ q: 'On which date was this published: "' + headline + '"?', a: correctDate, opts: dateOpts });
+            }
+
+            shuffle(qs);
+            return qs.slice(0, Math.min(6, qs.length));
+        }
+
+        function answerQuiz(idx, el) {
+            if (quizAnswered[idx]) return;
+            var cards = document.querySelectorAll('#qopts-' + idx + ' .q-opt');
+            cards.forEach(function(c) { c.style.pointerEvents = 'none'; });
+            var val = el.getAttribute('data-val');
+            var q = document.getElementById('qcard-' + idx);
+            var flash = document.getElementById('qflash-' + idx);
+            var questions = window._currentQuizQuestions || [];
+            if (!window._currentQuizQuestions || !window._currentQuizQuestions[idx]) return;
+            var correct = window._currentQuizQuestions[idx].a;
+            cards.forEach(function(c) {
+                if (c.getAttribute('data-val') === correct) c.classList.add('correct');
+            });
+            if (val === correct) {
+                el.classList.add('correct');
+                quizAnswered[idx] = true;
+                flash.textContent = '✅ Correct!';
+                flash.className = 'result-flash show correct';
+            } else {
+                el.classList.add('wrong');
+                quizAnswered[idx] = false;
+                flash.textContent = '❌ Wrong. Answer: ' + correct;
+                flash.className = 'result-flash show wrong';
+            }
+            updateQuizScore();
+        }
+
+        function updateQuizScore() {
+            var total = window._currentQuizQuestions ? window._currentQuizQuestions.length : 0;
+            var correct = 0;
+            for (var k in quizAnswered) { if (quizAnswered[k]) correct++; }
+            var el = document.getElementById('quizScore');
+            if (total > 0) {
+                el.innerHTML = '<span class="num">' + correct + '</span><span class="lbl"> / ' + total + ' correct</span>';
+                el.className = 'quiz-score show';
+            }
+        }
+
+        function resetQuiz() {
+            window._currentQuizQuestions = generateQuestions();
+            quizAnswered = {};
+            var questions = window._currentQuizQuestions;
+            var html = '<div style="text-align:center;margin-bottom:12px"><span style="font-size:.82em;color:var(--text-sec)">' + questions.length + ' questions from today\'s news</span></div>';
+            html += '<div id="quizScore" class="quiz-score"></div><div id="quizList">';
+            questions.forEach(function(q, i) {
+                html += '<div class="q-card" id="qcard-' + i + '">'
+                    + '<div class="q-label">Q' + (i + 1) + ' of ' + questions.length + '</div>'
+                    + '<div class="q-text">' + q.q + '</div>'
+                    + '<div class="q-opt-grid" id="qopts-' + i + '">';
+                q.opts.forEach(function(o, j) {
+                    html += '<div class="q-opt" data-qi="' + i + '" data-val="' + o.replace(/"/g,'&quot;') + '" onclick="answerQuiz(' + i + ',this)">' + o + '</div>';
+                });
+                html += '</div><div class="result-flash" id="qflash-' + i + '"></div></div>';
+            });
+            html += '</div><button class="action-btn secondary" onclick="resetQuiz()">🔄 New Quiz</button>';
+            document.getElementById('tab-quiz').innerHTML = html;
+            document.getElementById('quizScore').innerHTML = '';
+            document.getElementById('quizScore').className = 'quiz-score';
+        }
+
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+            document.querySelectorAll('.tab-content').forEach(function(t) { t.classList.remove('active'); });
+            btn.classList.add('active');
+            document.getElementById('tab-' + tab).classList.add('active');
+            if (tab === 'quiz' && !window._currentQuizQuestions) {
+                window._currentQuizQuestions = generateQuestions();
+                renderQuiz();
+            }
+        }
+
+        loadAffairs();
+    </script>
+    <script src="https://unpkg.com/lucide@0.468.0"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
