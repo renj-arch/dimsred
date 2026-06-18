@@ -529,7 +529,15 @@ var ANALOGY_CATS = [
   { pairs: [['Fish','School'],['Birds','Flock'],['Bees','Swarm'],['Wolves','Pack'],['Cattle','Herd'],['Ants','Colony'],['Lions','Pride'],['Dolphins','Pod'],['Sheep','Flock'],['Geese','Gaggle']], rel:'animal?group' },
   { pairs: [['Eye','See'],['Ear','Hear'],['Nose','Smell'],['Tongue','Taste'],['Skin','Feel'],['Lungs','Breathe'],['Heart','Pump'],['Brain','Think']], rel:'organ?function' },
   { pairs: [['Wood','Furniture'],['Flour','Bread'],['Iron','Tool'],['Cotton','Fabric'],['Clay','Pot'],['Milk','Cheese'],['Grapes','Wine'],['Wool','Sweater']], rel:'raw?product' },
-  { pairs: [['Victory','Joy'],['Loss','Sadness'],['Danger','Fear'],['Gift','Happiness'],['Insult','Anger'],['Surprise','Shock'],['Success','Pride'],['Failure','Disappointment']], rel:'event?emotion' }
+  { pairs: [['Victory','Joy'],['Loss','Sadness'],['Danger','Fear'],['Gift','Happiness'],['Insult','Anger'],['Surprise','Shock'],['Success','Pride'],['Failure','Disappointment']], rel:'event?emotion' },
+  // Hard: number-based analogies (IndiaBix-style)
+  { pairs: [['2','4'],['3','9'],['4','16'],['5','25'],['6','36'],['7','49'],['8','64'],['9','81'],['10','100'],['12','144']], rel:'number?square' },
+  { pairs: [['2','8'],['3','27'],['4','64'],['5','125'],['6','216'],['7','343'],['8','512'],['9','729'],['10','1000']], rel:'number?cube' },
+  { pairs: [['A','1'],['B','2'],['C','3'],['D','4'],['E','5'],['F','6'],['G','7'],['H','8'],['I','9'],['J','10'],['K','11'],['L','12'],['M','13']], rel:'letter?position' },
+  { pairs: [['ACE','BDF'],['BDF','CEG'],['CEG','DFH'],['DFH','EGI'],['EGI','FHJ'],['FHJ','GIK']], rel:'skip?one' },
+  { pairs: [['2','6'],['3','12'],['4','20'],['5','30'],['6','42'],['7','56'],['8','72'],['9','90'],['10','110']], rel:'number?n(n+1)' },
+  { pairs: [['1','0'],['2','1'],['3','2'],['4','3'],['5','4'],['6','5'],['7','6'],['8','7'],['9','8'],['10','9']], rel:'number?predecessor' },
+  { pairs: [['3','5'],['5','7'],['11','13'],['17','19'],['29','31'],['41','43'],['59','61'],['71','73']], rel:'prime?twin' }
 ];
 
 function generateAnalogyQuestion(diff) {
@@ -630,6 +638,39 @@ function generateClassificationQuestion(diff) {
       var items = [same[0][0], same[1][0], intruder, pick(shapes.slice(3))[0]];
       shuffle(items);
       return { items: items, answer: intruder, expl: intruder + ' is ' + diff[0][1] + ', others are ' + same[0][1] };
+    },
+    // Hard: letter pattern — vowel vs consonant
+    function() {
+      var vowels=['A','E','I','O','U']; var cons=['B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z'];
+      var items=[];
+      var v=pick(vowels); var c1=pick(cons), c2=pick(cons), c3=pick(cons);
+      items=[v,c1,c2,c3]; shuffle(items);
+      return { items: items, answer: v, expl: v + ' is a vowel, others are consonants' };
+    },
+    // Hard: perfect squares vs non-square
+    function() {
+      var sq=[4,9,16,25,36,49,64,81,100]; var ns=[5,10,17,20,26,33,40,50,65,72,82,90,101];
+      var items=[sq[rand(0,sq.length-1)], sq[rand(0,sq.length-1)], sq[rand(0,sq.length-1)], ns[rand(0,ns.length-1)]];
+      shuffle(items);
+      var ans = items.filter(function(x){return sq.indexOf(x)<0;})[0];
+      return { items: items, answer: ans, expl: ans + ' is not a perfect square, others are' };
+    },
+    // Hard: alphabet position — even position vs odd
+    function() {
+      function letter(p){return String.fromCharCode(64+p);}
+      var odd=[letter(1),letter(3),letter(5),letter(7),letter(9),letter(11),letter(13),letter(15),letter(17),letter(19),letter(21),letter(23),letter(25)];
+      var even=[letter(2),letter(4),letter(6),letter(8),letter(10),letter(12),letter(14),letter(16),letter(18),letter(20),letter(22),letter(24),letter(26)];
+      var items=[pick(odd),pick(odd),pick(odd),pick(even)]; shuffle(items);
+      var ans=items.filter(function(x){return even.indexOf(x)>=0;})[0];
+      return { items: items, answer: ans, expl: ans + ' is at even position in alphabet, others are at odd positions' };
+    },
+    // Hard: divisibility — all divisible by 3 except one
+    function() {
+      var mult3=[function(){return rand(2,12)*3;}];
+      for(var i=0;i<3;i++){var n;do{n=rand(2,12)*3;}while(mult3.indexOf(n)>=0);mult3.push(n);}
+      var wrong;do{wrong=rand(5,40);}while(wrong%3===0||mult3.indexOf(wrong)>=0);
+      var pos=rand(0,3); var ans=mult3.splice(pos,1,wrong)[0];
+      return { items: mult3, answer: wrong, expl: wrong + ' is not divisible by 3, others are' };
     }
   ];
   var fn = rules[rand(0, rules.length - 1)];
@@ -677,19 +718,34 @@ function generateSeriesQuestion(diff) {
     // primes
     function() { var primes = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61]; var s = rand(0, 6); var n = 5; var seq = []; for (var i = 0; i < n; i++) { seq.push(primes[s + i]); } var ans = primes[s + n]; var pattern = 'Prime numbers'; var hint = 'Prime numbers in increasing order'; return { seq: seq, answer: ans, pattern: pattern, hint: hint }; },
     // multiplied + add
-    function() { var a = rand(2, 4); var b = rand(1, 5); var s = rand(1, 5); var n = 5; var seq = [s]; for (var i = 0; i < n; i++) { seq.push(seq[i] * a + b); } var ans = seq[seq.length - 1] * a + b; var pattern = 'Multiply by ' + a + ' + ' + b; var hint = 'Each term = previous � ' + a + ' + ' + b; return { seq: seq, answer: ans, pattern: pattern, hint: hint }; }
+    function() { var a = rand(2, 4); var b = rand(1, 5); var s = rand(1, 5); var n = 5; var seq = [s]; for (var i = 0; i < n; i++) { seq.push(seq[i] * a + b); } var ans = seq[seq.length - 1] * a + b; var pattern = 'Multiply by ' + a + ' + ' + b; var hint = 'Each term = previous � ' + a + ' + ' + b; return { seq: seq, answer: ans, pattern: pattern, hint: hint }; },
+    // Hard: n² + c pattern
+    function() { var s=rand(2,5), c=rand(1,5), n=5; var seq=[]; for(var i=0;i<n;i++){seq.push((s+i)*(s+i)+c);} var ans=(s+n)*(s+n)+c; var pattern='n²+'+c; var hint='Squares starting from ' + s + ', plus ' + c; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; },
+    // Hard: alternate signs (+a, -a, +a, ...)
+    function() { var s=rand(20,50), a=rand(4,10), n=5; var seq=[s]; for(var i=0;i<n;i++){seq.push(seq[i]+(i%2===0?-a:a));} var ans=seq[seq.length-1]+(n%2===0?-a:a); var pattern='Alternate ±'+a; var hint='Alternate adding and subtracting ' + a; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; },
+    // Hard: product of consecutive numbers
+    function() { var s=rand(2,6), n=5; var seq=[]; for(var i=0;i<n;i++){seq.push((s+i)*(s+i+1));} var ans=(s+n)*(s+n+1); var pattern='n×(n+1)'; var hint='Product of consecutive numbers: ' + s + '×' + (s+1) + ', ' + (s+1) + '×' + (s+2) + ', ...'; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; },
+    // Hard: n³ + 1
+    function() { var s=rand(2,5), n=4; var seq=[]; for(var i=0;i<n;i++){seq.push((s+i)*(s+i)*(s+i)+1);} var ans=(s+n)*(s+n)*(s+n)+1; var pattern='n³+1'; var hint='Cubes + 1: ' + s + '³+1=' + seq[0] + ', then ' + (s+1) + '³+1, ...'; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; },
+    // Hard: letter series — A, C, F, J, ...
+    function() { var s=rand(0,2), n=4; var seq=[], st=1+s; for(var i=0;i<n;i++){st+=i; seq.push(String.fromCharCode(64+Math.min(st,26)));} var ns=Math.min(st+n,26); var ans=String.fromCharCode(64+ns); var pattern='Increasing gap letters'; var hint='Gap increases by 1 each step: +1, +2, +3, ...'; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; }
   ];
 
   var type = types[rand(0, types.length - 1)];
   var data = type();
-  // trim answer to an integer
-  var answer = Math.round(data.answer);
+  var isLetter = typeof data.answer === 'string' && data.answer.length === 1 && data.answer >= 'A' && data.answer <= 'Z';
+  var answer = isLetter ? data.answer : Math.round(data.answer);
   // generate options
   var opts = [answer];
-  var spread = Math.max(1, Math.round(answer * 0.1));
-  while (opts.length < 4) {
-    var d = answer + rand(-spread * 3, spread * 3);
-    if (opts.indexOf(d) < 0 && d > 0 && d < 10000) opts.push(d);
+  if (isLetter) {
+    var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    while (opts.length < 4) { var l=letters[rand(0,25)]; if (opts.indexOf(l) < 0) opts.push(l); }
+  } else {
+    var spread = Math.max(1, Math.round(answer * 0.1));
+    while (opts.length < 4) {
+      var d = answer + rand(-spread * 3, spread * 3);
+      if (opts.indexOf(d) < 0 && d > 0 && d < 10000) opts.push(d);
+    }
   }
   shuffle(opts);
 
@@ -1148,7 +1204,9 @@ function generateNumberSenseQuestion(diff, layer) {
     // Approximation: 47×53 ≈ ?
     function(){ var a=rand(4,8), b=rand(a+1,9); var n1=a*10+rand(1,9), n2=b*10+rand(1,9); return { q: 'Approx: ' + n1 + ' × ' + n2 + ' (closest to?)', a: Math.round(n1*n2/100)*100, hint: 'Round: ' + Math.round(n1/10)*10 + ' × ' + Math.round(n2/10)*10, intuition: 'Round to nearest 10: ' + Math.round(n1/10)*10 + ' × ' + Math.round(n2/10)*10 + ' = ' + (Math.round(n1/10)*10*Math.round(n2/10)*10) + '. Actual ≈ ' + n1*n2 }; },
     // VBODMAS: 12 + 6 × 3 ÷ 2 - 4
-    function(){ var a=rand(2,8), b=rand(2,6), c=rand(2,5), d=rand(1,4); return { q: 'Solve: ' + a + ' + ' + b + ' × ' + c + ' ÷ ' + d + ' - ' + rand(1,3), a: a + b*c/d - rand(1,3) | 0, hint: 'BODMAS: ×÷ before +-', intuition: b + ' × ' + c + ' ÷ ' + d + ' = ' + (b*c/d) + '. Then ' + a + ' + ' + (b*c/d|0) + ' - ' + rand(1,3) + ' = ' + (a + (b*c/d|0) - rand(1,3)) }; }
+    function(){ var a=rand(2,8), b=rand(2,6), c=rand(2,5), d=rand(1,4); return { q: 'Solve: ' + a + ' + ' + b + ' × ' + c + ' ÷ ' + d + ' - ' + rand(1,3), a: a + b*c/d - rand(1,3) | 0, hint: 'BODMAS: ×÷ before +-', intuition: b + ' × ' + c + ' ÷ ' + d + ' = ' + (b*c/d) + '. Then ' + a + ' + ' + (b*c/d|0) + ' - ' + rand(1,3) + ' = ' + (a + (b*c/d|0) - rand(1,3)) }, },
+    // Hard: compound approximation — 17% of 283 + 34% of 129 ≈ ?
+    function(){ var p1=[11,12,13,14,15,16,17,18,19][rand(0,8)], n1=rand(150,400), p2=[21,22,23,24,25,26,27,28,29,31,32,33,34,35][rand(0,13)], n2=rand(100,300); return { q: 'Approx: ' + p1 + '% of ' + n1 + ' + ' + p2 + '% of ' + n2, a: Math.round((p1*n1 + p2*n2)/100/10)*10, hint: 'Compute each % separately then add', intuition: p1 + '% × ' + n1 + ' = ' + Math.round(p1*n1/100) + ', ' + p2 + '% × ' + n2 + ' = ' + Math.round(p2*n2/100) + '. Sum ≈ ' + Math.round((p1*n1 + p2*n2)/100/10)*10 }; }
   ];
   if (layer === 'instinct') types = types.slice(0, 3);
   var type = types[rand(0, types.length - 1)];
@@ -1266,7 +1324,9 @@ function generateAlgebraQuestion(diff, layer) {
     // Fraction with numerator/denominator
     function(){ var n=rand(1,5), d=rand(n+1,9); return { q: 'Denominator > numerator by ' + (d-n) + '. Sum = ' + (n+d) + '. Fraction?', a: n + '/' + d, hint: 'Let num=x, den=x+' + (d-n) + '. x+x+' + (d-n) + '=' + (n+d), intuition: 'x + (x+' + (d-n) + ') = ' + (n+d) + ', 2x = ' + (n+d-(d-n)) + ' = ' + (2*n) + ', x = ' + n + '. Fraction = ' + n + '/' + d }; },
     // Quadratic from exam: find roots
-    function(){ var r1=rand(2,7), r2=rand(-5,-1); return { q: 'Roots of x² ' + (-r1-r2>=0?'+':'') + (-r1-r2) + 'x ' + (r1*r2>=0?'+':'') + (r1*r2) + ' = 0', a: r1 + ',' + r2, hint: 'Sum=' + (r1+r2) + ', product=' + (r1*r2), intuition: 'Sum of roots = ' + (r1+r2) + ' (sign flipped), product = ' + (r1*r2) + '. Find factors of ' + (r1*r2) + ' that sum to ' + (r1+r2) + ': ' + r1 + ', ' + r2 }; }
+    function(){ var r1=rand(2,7), r2=rand(-5,-1); return { q: 'Roots of x² ' + (-r1-r2>=0?'+':'') + (-r1-r2) + 'x ' + (r1*r2>=0?'+':'') + (r1*r2) + ' = 0', a: r1 + ',' + r2, hint: 'Sum=' + (r1+r2) + ', product=' + (r1*r2), intuition: 'Sum of roots = ' + (r1+r2) + ' (sign flipped), product = ' + (r1*r2) + '. Find factors of ' + (r1*r2) + ' that sum to ' + (r1+r2) + ': ' + r1 + ', ' + r2 }; },
+    // Hard: 3-person ages
+    function(){ var b=rand(8,15), c=rand(3,7); var a=[2,3,4][rand(0,2)]*b; var sum=a+b+c; return { q: 'A is ' + (a/b|0) + '× B\'s age. C is ' + c + '. Sum=' + sum + '. Find A?', a: a, hint: 'Let B=x, A=' + (a/b|0) + 'x, C=' + c + '. ' + (a/b|0+1) + 'x + ' + c + ' = ' + sum, intuition: 'Equation: ' + (a/b|0) + 'x + x + ' + c + ' = ' + sum + ', ' + (a/b|0+1) + 'x = ' + (sum-c) + ', x = ' + ((sum-c)/(a/b|0+1)|0) + '. A = ' + (a/b|0) + ' × ' + ((sum-c)/(a/b|0+1)|0) + ' = ' + a }; }
   ];
   var type = types[rand(0, types.length - 1)];
   var data = type();
@@ -1333,7 +1393,11 @@ function generateCountingQuestion(diff, layer) {
     // Letter arrangement (VOWEL, etc.)
     function(){ var w=['LEADER','BANANA','CIVIL'][rand(0,2)]; var l=w.length; var reps={}; for(var i=0;i<w.length;i++)reps[w[i]]=(reps[w[i]]||0)+1; var denom=1; for(var k in reps)if(reps[k]>1)denom*=function(){var f=1;for(var i=2;i<=reps[k];i++)f*=i;return f;}(); var total=function(){var f=1;for(var i=2;i<=l;i++)f*=i;return f;}; return { q: 'Ways to arrange "' + w + '" (' + l + ' letters)?', a: total() / denom, hint: l + '! / (repeat factors)', intuition: l + '! = ' + total() + ', divide by ' + denom + ' for repeated letters = ' + total()/denom }; },
     // Selection committee
-    function(){ var n=rand(4,8), r=rand(2,Math.min(3,n)); var p=1;for(var i=0;i<r;i++)p*=(n-i); var f=1;for(var i=2;i<=r;i++)f*=i; return { q: 'Committee of ' + r + ' from ' + n + ' people. Ways?', a: p/f, hint: 'C(' + n + ',' + r + ') = ' + p + '/' + f, intuition: 'Order doesn\'t matter: C(' + n + ',' + r + ') = ' + n + 'C' + r + ' = ' + p/f + ' ways' }; }
+    function(){ var n=rand(4,8), r=rand(2,Math.min(3,n)); var p=1;for(var i=0;i<r;i++)p*=(n-i); var f=1;for(var i=2;i<=r;i++)f*=i; return { q: 'Committee of ' + r + ' from ' + n + ' people. Ways?', a: p/f, hint: 'C(' + n + ',' + r + ') = ' + p + '/' + f, intuition: 'Order doesn\'t matter: C(' + n + ',' + r + ') = ' + n + 'C' + r + ' = ' + p/f + ' ways' }; },
+    // Hard: ball picking (without replacement)
+    function(){ var r=rand(3,6), b=rand(3,6); var t=r+b; return { q: 'Bag: ' + r + ' red, ' + b + ' blue. Pick 2. Both red?', a: Math.round(r*(r-1)/(t*(t-1))*1000)/1000, hint: 'P = (first red × second red) = ' + r + '/' + t + ' × ' + (r-1) + '/' + (t-1), intuition: 'Without replacement: P = ' + r + '/' + t + ' × ' + (r-1) + '/' + (t-1) + ' = ' + (r*(r-1)/(t*(t-1))).toFixed(4) }; },
+    // Hard: "at least one" probability
+    function(){ var r=rand(2,4), b=rand(2,4); var t=r+b; var p=1 - (b*(b-1))/(t*(t-1)); return { q: 'Bag: ' + r + ' red, ' + b + ' blue. Pick 2. At least 1 red?', a: Math.round(p*1000)/1000, hint: '1 - P(both blue) = 1 - ' + b + '/' + t + ' × ' + (b-1) + '/' + (t-1), intuition: 'At least 1 red = 1 - P(both blue) = 1 - ' + b + '/' + t + ' × ' + (b-1) + '/' + (t-1) + ' = ' + Math.round(p*1000)/1000 }; }
   ];
   var type = types[rand(0, types.length - 1)];
   var data = type();
@@ -1384,7 +1448,11 @@ function generateSimplificationQuestion(diff, layer) {
     function(){ var a=rand(2,5); return { q: 'Approx: √' + (a*a+rand(1, a*2)), a: a, hint: 'Nearest perfect square ' + a*a, intuition: '√' + (a*a+rand(1,a*2)) + ' is close to ' + a + ' because ' + a + '²=' + a*a }; },
     function(){ var a=rand(2,7), b=rand(1,4); return { q: 'Simplify (x^' + a + ')(x^' + b + ') [coefficient=1]', a: a+b, hint: 'Add exponents: x^(a+b)', intuition: 'x^' + a + ' × x^' + b + ' = x^(' + a + '+' + b + ') = x^' + (a+b) }; },
     function(){ var a=rand(2,5), b=rand(1,3); return { q: 'Simplify (x^' + a + ')÷(x^' + b + ')', a: a-b, hint: 'Subtract exponents', intuition: 'x^' + a + ' / x^' + b + ' = x^(' + a + '-' + b + ') = x^' + (a-b) }; },
-    function(){ var a=rand(2,6), b=rand(1,4); return { q: '√(' + (a*a*b) + ')', a: a + '√' + b, hint: 'Factor: √(' + a*a + '×' + b + ')', intuition: '√' + (a*a*b) + ' = √(' + a*a + ' × ' + b + ') = ' + a + '√' + b }; }
+    function(){ var a=rand(2,6), b=rand(1,4); return { q: '√(' + (a*a*b) + ')', a: a + '√' + b, hint: 'Factor: √(' + a*a + '×' + b + ')', intuition: '√' + (a*a*b) + ' = √(' + a*a + ' × ' + b + ') = ' + a + '√' + b }; },
+    // Hard: nested brackets
+    function(){ var a=rand(2,5), b=rand(2,5), c=rand(1,4); return { q: 'Simplify: ' + a + ' × [' + b + ' + { ' + c + ' + ' + (b-c+rand(1,3)) + ' }]', a: a * (b + c + (b-c+rand(1,3))), hint: 'Inner brackets first: { } then [ ]', intuition: 'Solve innermost: { ' + c + ' + ' + (b-c+rand(1,3)) + ' } = ' + (c+b-c+rand(1,3)) + '. Then [ ' + b + ' + ' + (c+b-c+rand(1,3)) + ' ] = ' + (b+c+b-c+rand(1,3)) + '. Then ' + a + ' × ' + (b+c+b-c+rand(1,3)) + ' = ' + (a*(b+c+b-c+rand(1,3))) }; },
+    // Hard: surd rationalization
+    function(){ var a=rand(2,5), b=rand(3,8); return { q: 'Rationalize: 1/(√' + (a*a*b) + ' - ' + b + ')', a: Math.round((Math.sqrt(a*a*b)+b)/(a*a*b-b*b)*10)/10, hint: 'Multiply numerator & denominator by conjugate (√N + ' + b + ')', intuition: 'Conjugate: (√' + (a*a*b) + ' + ' + b + ')/((' + (a*a*b) + ') - ' + (b*b) + ') = (√' + (a*a*b) + ' + ' + b + ')/' + (a*a*b-b*b) + ' = simplified' }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1464,7 +1532,9 @@ function generateRacesQuestion(diff, layer) {
   var ty = [
     function(){ var d=rand(50,200)*10, a=rand(4,10); return { q: 'A runs ' + d + 'm at ' + a + 'm/s. Beat B by ' + (a*rand(2,5)) + 'm. B speed?', a: Math.round(a * (d - a*rand(2,5)) / d * 10) / 10, hint: 'B time = A time, B distance = ' + (d - a*rand(2,5)), intuition: 'A takes ' + (d/a) + 's. B runs ' + (d - a*rand(2,5)) + 'm in same time. B speed = distance/time' }; },
     function(){ var a=rand(5,12), h=rand(2,5); return { q: 'A gives B ' + h + 'm start in 100m race. A beats B by ' + rand(1,3) + 's. A speed=' + a + 'm/s. B speed?', a: Math.round((100-h)/(100/a+rand(1,3))*10)/10, hint: 'B runs ' + (100-h) + 'm in A time + ' + rand(1,3) + 's', intuition: 'A time = ' + 100/a + 's. B time = ' + (100/a+rand(1,3)) + 's. B runs ' + (100-h) + 'm, speed = ' + (100-h) + '/' + (100/a+rand(1,3)) }; },
-    function(){ var l=rand(2,6)*200; return { q: 'A and B on circular track ' + l + 'm. Speeds ' + rand(3,6) + ' and ' + rand(2,5) + 'm/s. Meet first time?', a: Math.round(l / Math.abs(rand(3,6)-rand(2,5))), hint: 'Time = track length ÷ relative speed', intuition: 'Relative speed = ' + Math.abs(rand(3,6)-rand(2,5)) + 'm/s. Time to meet = ' + l + '/' + Math.abs(rand(3,6)-rand(2,5)) + ' = ' + Math.round(l/Math.abs(rand(3,6)-rand(2,5))) + 's' }; }
+    function(){ var l=rand(2,6)*200; return { q: 'A and B on circular track ' + l + 'm. Speeds ' + rand(3,6) + ' and ' + rand(2,5) + 'm/s. Meet first time?', a: Math.round(l / Math.abs(rand(3,6)-rand(2,5))), hint: 'Time = track length ÷ relative speed', intuition: 'Relative speed = ' + Math.abs(rand(3,6)-rand(2,5)) + 'm/s. Time to meet = ' + l + '/' + Math.abs(rand(3,6)-rand(2,5)) + ' = ' + Math.round(l/Math.abs(rand(3,6)-rand(2,5))) + 's' }; },
+    // Hard: A beats B by X m in Y m race, find by how much A beats C
+    function(){ var d=rand(100,200); var b=rand(5,15); var c=b+rand(3,8); return { q: 'A beats B by ' + b + 'm in ' + d + 'm race. A beats C by ' + c + 'm. By how much does B beat C in ' + d + 'm?', a: Math.round(d - (d-b)*(d-c)/d), hint: 'B distance = ' + (d-b) + ' when A at ' + d + '. C distance = ' + (d-c) + '. B vs C: ratio = ' + (d-b) + ':' + (d-c), intuition: 'When A finishes ' + d + 'm: B at ' + (d-b) + 'm, C at ' + (d-c) + 'm. B beats C by ' + d + ' - ' + (d-b)*(d-c)/d + ' = ' + Math.round(d - (d-b)*(d-c)/d) + 'm' }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1478,7 +1548,11 @@ function generateDataInterpretationQuestion(diff, layer) {
     function(){ var a=rand(30,80), b=rand(20,60), c=rand(10,40); return { q: 'Table: A=' + a + ', B=' + b + ', C=' + c + '. Total?', a: a+b+c, hint: 'A+B+C', intuition: 'Total = ' + a + '+' + b + '+' + c + ' = ' + (a+b+c) }; },
     function(){ var a=rand(20,50), b=rand(15,40), c=rand(10,30), d=rand(5,20); return { q: 'Sales: Q1=' + a + ', Q2=' + b + ', Q3=' + c + ', Q4=' + d + '. Avg/Q?', a: Math.round((a+b+c+d)/4), hint: 'Sum ÷ 4', intuition: 'Average = (' + a + '+' + b + '+' + c + '+' + d + ')/4 = ' + (a+b+c+d) + '/4 = ' + Math.round((a+b+c+d)/4) }; },
     function(){ var m=rand(40,80), f=rand(20,50); return { q: 'Men=' + m + ', Women=' + f + '. % women?', a: Math.round(f*100/(m+f)), hint: 'women/total × 100', intuition: f + '/' + (m+f) + ' × 100 = ' + Math.round(f*100/(m+f)) + '%' }; },
-    function(){ var y=rand(3,7)*1000; return { q: 'Revenue ' + y + ', expense ' + (y-rand(2,5)*100) + '. Profit %?', a: Math.round((y-(y-rand(2,5)*100))*100/y), hint: '(R-E)/R × 100', intuition: 'P% = (R-E)/R × 100 = ' + (rand(2,5)*100) + '/' + y + ' × 100 = ' + Math.round((rand(2,5)*100)*100/y) + '%' }; }
+    function(){ var y=rand(3,7)*1000; return { q: 'Revenue ' + y + ', expense ' + (y-rand(2,5)*100) + '. Profit %?', a: Math.round((y-(y-rand(2,5)*100))*100/y), hint: '(R-E)/R × 100', intuition: 'P% = (R-E)/R × 100 = ' + (rand(2,5)*100) + '/' + y + ' × 100 = ' + Math.round((rand(2,5)*100)*100/y) + '%' }; },
+    // Hard: growth rate year-over-year
+    function(){ var y1=rand(400,800), y2=y1+rand(50,200); return { q: 'Revenue Y1=' + y1 + ', Y2=' + y2 + '. Growth %?', a: Math.round((y2-y1)/y1*100), hint: 'Growth = (Y2-Y1)/Y1 × 100', intuition: 'Growth = ' + (y2-y1) + '/' + y1 + ' × 100 = ' + Math.round((y2-y1)/y1*100) + '%' }; },
+    // Hard: two-table comparison (production across years)
+    function(){ var p1=rand(200,500), p2=rand(300,600), p3=rand(250,550); return { q: 'Production: 2019=' + p1 + ', 2020=' + p2 + ', 2021=' + p3 + '. % change 2019→2021?', a: Math.round((p3-p1)/p1*100), hint: '(2021-2019)/2019 × 100', intuition: 'Change = ' + (p3-p1) + '/' + p1 + ' × 100 = ' + Math.round((p3-p1)/p1*100) + '%' }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1493,7 +1567,11 @@ function generateMirrorImageQuestion(diff) {
   var ty = [
     function(){ var l=rand(2,5); return { q: 'How many mirrors needed for ' + l + ' images of an object placed at 60° between them?', a: Math.round(360/60)-1, hint: 'n = 360/θ - 1', intuition: 'n = 360/θ - 1 = 360/'+60+'-1 = '+(6-1)+' mirrors' }; },
     function(){ var fig=['L','G','H','K','M','Q'][rand(0,5)]; return { q: 'Which of these is NOT symmetrical? (' + ['L','G','H','K','M','Q'].join(',') + ')', a: ['G','Q'][rand(0,1)], hint: 'Check vertical mirror axis', intuition: 'Vertical symmetry: left=right mirror copy. Letters like A,H,I,M,O,T,U,V,W,X,Y are vertically symmetrical.' }; },
-    function(){ var w=['MOM','WOW','HIM','MADAM'][rand(0,3)]; return { q: 'Water image of "' + w + '" is same as original? (Y/N)', a: w==='MOM'||w==='MADAM'?'Y':'N', hint: 'Check top-bottom reversal', intuition: 'Water image = top-bottom flip. Words that read same upside-down: MOM, WOW, MADAM are symmetrical vertically.' }; }
+    function(){ var w=['MOM','WOW','HIM','MADAM'][rand(0,3)]; return { q: 'Water image of "' + w + '" is same as original? (Y/N)', a: w==='MOM'||w==='MADAM'?'Y':'N', hint: 'Check top-bottom reversal', intuition: 'Water image = top-bottom flip. Words that read same upside-down: MOM, WOW, MADAM are symmetrical vertically.' }; },
+    // Hard: figure counting (triangles in a pattern)
+    function(){ var n=rand(2,4); var count=n*n; return { q: 'How many squares in a ' + n + '×' + n + ' grid?', a: n*n + (n-1)*(n-1) + (n>2?(n-2)*(n-2):0) + (n>3?1:0), hint: 'Count squares of each size: 1×1, 2×2, etc.', intuition: 'Total = 1² + 2² + ... + ' + n + '² = ' + n + '×' + (n+1) + '×' + (2*n+1) + '/6 = ' + Math.round(n*(n+1)*(2*n+1)/6) }; },
+    // Hard: cube counting in 3D
+    function(){ var n=rand(2,4); return { q: 'How many small cubes in a ' + n + '×' + n + '×' + n + ' cube?', a: n*n*n, hint: 'Volume = n³', intuition: n + ' × ' + n + ' × ' + n + ' = ' + n*n*n + ' small cubes. Subtract hidden ones for painted faces problems.' }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1572,7 +1650,9 @@ function generateDecisionMakingQuestion(diff) {
   var ty = [
     function(){ var age=rand(18,30), cond=['degree','diploma','12th'][rand(0,2)]; return { q: 'Eligibility: Age ' + age + ', ' + cond + '. Min req: age>21 & graduate. Eligible?', a: age>21 && cond==='degree' ? 'Yes' : 'No', hint: 'Both conditions must be met', intuition: 'Read ALL conditions. AND means ALL must be true. OR means ANY can be true. Mark yes only if every condition is satisfied.' }; },
     function(){ var score=rand(60,95); return { q: 'Cutoff: 75% in English (60% min), 70% overall. Score=' + score + '%. Allowed?', a: score>=60&&score>=75?'Yes':(score>=60?'No':'No'), hint: 'Check min in each subject', intuition: 'Check each condition separately. Min in each subject AND overall cutoff BOTH must be met. Failing even one = rejected.' }; },
-    function(){ var exp=rand(1,8); return { q: 'Job: ' + exp + 'yr exp. Need 3yr exp & degree. Eligible?', a: exp>=3?'Yes':'No', hint: 'Experience '+exp+'yr vs need 3yr', intuition: 'Compare each requirement individually. The lowest common denominator determines eligibility.' }; }
+    function(){ var exp=rand(1,8); return { q: 'Job: ' + exp + 'yr exp. Need 3yr exp & degree. Eligible?', a: exp>=3?'Yes':'No', hint: 'Experience '+exp+'yr vs need 3yr', intuition: 'Compare each requirement individually. The lowest common denominator determines eligibility.' }; },
+    // Hard: multi-criteria — age, education, experience, medical all needed
+    function(){ var age=rand(25,40), deg=['BSc','BA','BCom'][rand(0,2)], exp=rand(2,7), med=['fit','unfit'][rand(0,1)]; return { q: 'Post: age ' + age + ', ' + deg + ', ' + exp + 'yr exp, ' + med + '. Need: age≥21, BSc/BE, ≥3yr exp, fit. Eligible?', a: age>=21 && (deg==='BSc') && exp>=3 && med==='fit' ? 'Yes' : 'No', hint: 'ALL 4 conditions must be met', intuition: 'Break into 4 checks: age=' + (age>=21?'✓':'✗') + ', degree=' + ((deg==='BSc')?'✓':'✗') + ', exp=' + (exp>=3?'✓':'✗') + ', medical=' + (med==='fit'?'✓':'✗') + '. One fail=rejected.' }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1585,7 +1665,9 @@ function generateVennDiagramQuestion(diff) {
   var ty = [
     function(){ var n=rand(30,60), a=rand(10,30), b=rand(10,30); var both=rand(5, Math.min(a,b)); return { q: 'Total=' + n + ', like A=' + a + ', like B=' + b + ', both=' + both + '. Neither?', a: n - (a+b-both), hint: 'Total - (A + B - both)', intuition: 'Neither = Total - (A + B - both). ' + n + ' - (' + a + '+' + b + '-' + both + ') = ' + (n - (a+b-both)) }; },
     function(){ var a=rand(20,40), b=rand(15,30), both=rand(5, Math.min(a,b)); return { q: 'A=' + a + ', B=' + b + ', both=' + both + '. Only A?', a: a-both, hint: 'A only = A - both', intuition: 'Only A = A - both = ' + a + '-' + both + ' = ' + (a-both) }; },
-    function(){ var total=rand(50,100), none=rand(5,15); return { q: 'Survey: ' + total + ' people, ' + none + ' like neither. Either A or B?', a: total-none, hint: 'People who like at least one = total - neither', intuition: 'At least one = total - neither = ' + total + '-' + none + ' = ' + (total-none) }; }
+    function(){ var total=rand(50,100), none=rand(5,15); return { q: 'Survey: ' + total + ' people, ' + none + ' like neither. Either A or B?', a: total-none, hint: 'People who like at least one = total - neither', intuition: 'At least one = total - neither = ' + total + '-' + none + ' = ' + (total-none) }; },
+    // Hard: 3-set Venn — A=40, B=30, C=20, exactly two=15, all three=5, total=80. Neither?
+    function(){ var na=rand(20,40), nb=rand(15,35), nc=rand(10,25), two=rand(8,18), three=rand(3,8); var t=na+nb+nc-two-2*three+rand(5,20); return { q: 'n(A)=' + na + ' n(B)=' + nb + ' n(C)=' + nc + ', exactly two=' + two + ', all three=' + three + ', total=' + t + '. Neither?', a: t - (na+nb+nc - two - 2*three), hint: 'Total - (A+B+C - exactly_two - 2×all_three)', intuition: 'Formula: Neither = Total - (A+B+C - exactly 2 - 2×all 3). Compute: ' + t + ' - (' + (na+nb+nc) + ' - ' + two + ' - ' + (2*three) + ') = ' + (t-(na+nb+nc-two-2*three)) }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
