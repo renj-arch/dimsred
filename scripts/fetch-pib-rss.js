@@ -107,6 +107,16 @@ async function fetchAll() {
     }
   }
 
+  // Remove Hindi-language items (Devanagari Unicode range)
+  merged = merged.filter(function(item) {
+    if (!item.title) return false;
+    for (var i = 0; i < item.title.length; i++) {
+      var code = item.title.charCodeAt(i);
+      if (code >= 0x0900 && code <= 0x097F) return false;
+    }
+    return true;
+  });
+
   // Sort by date descending
   merged.sort(function(a, b) { return new Date(b.pubDate) - new Date(a.pubDate); });
 
@@ -120,6 +130,16 @@ async function fetchAll() {
     }
     catch(e) { existing = []; }
   }
+
+  // Remove Hindi from existing data too (filtering persisted only from merged previously)
+  existing = existing.filter(function(item) {
+    if (!item.title) return false;
+    for (var i = 0; i < item.title.length; i++) {
+      var code = item.title.charCodeAt(i);
+      if (code >= 0x0900 && code <= 0x097F) return false;
+    }
+    return true;
+  });
 
   var existingSeen = new Set();
   for (var x of existing) {
