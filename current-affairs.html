@@ -618,7 +618,7 @@
             document.getElementById('qNum').textContent = 'Q ' + (state.idx + 1) + ' / ' + state.questions.length;
             document.getElementById('qProgress').style.width = ((state.idx / state.questions.length) * 100) + '%';
             document.getElementById('catTag').textContent = state.categoryName;
-            document.getElementById('qText').textContent = q.q;
+            document.getElementById('qText').innerHTML = q.q.replace(/\n/g, '<br>');
             document.getElementById('hintText').textContent = q.hint || 'Think carefully about the options';
             document.getElementById('hintText').classList.remove('show');
             document.getElementById('resultFlash').className = 'result-flash';
@@ -837,27 +837,42 @@
             var dates = Object.keys(byDate).sort();
             if (dates.length === 0) { alert('No PIB news in that date range.'); return; }
 
-            // Create questions: pick random headline per date, 3 wrong headlines as distractors
+            // Collect all headlines as a pool for distractors
             var allTitles = _pibFeedData.map(function(i) { return i.title; }).filter(Boolean);
+
             dates.forEach(function(date) {
                 var items = byDate[date];
                 if (items.length === 0) return;
                 var correct = pick(items);
-                // Pick 3 wrong headlines from other dates
-                var wrongPool = allTitles.filter(function(t) { return t !== correct.title; });
-                var shuffled = shuffle(wrongPool.slice());
-                var opts = [correct.title];
-                for (var i = 0; i < shuffled.length && opts.length < 4; i++) {
-                    if (opts.indexOf(shuffled[i]) < 0) opts.push(shuffled[i]);
+
+                // Randomly pick format: 60% headline→date, 40% date→headline
+                if (Math.random() < 0.6) {
+                    // Format: Show headline → which date?
+                    var dateOpts = buildDateOptions(dates, date);
+                    state.questions.push({
+                        q: 'On which date was this PIB headline published?\n\n"' + correct.title + '"',
+                        a: date,
+                        opts: dateOpts,
+                        hint: 'Check the PIB feed section for the date range',
+                        fact: correct.link ? 'Source: ' + correct.link : ''
+                    });
+                } else {
+                    // Format: Show date → which headline?
+                    var wrongPool = allTitles.filter(function(t) { return t !== correct.title; });
+                    var shuffled = shuffle(wrongPool.slice());
+                    var opts = [correct.title];
+                    for (var i = 0; i < shuffled.length && opts.length < 4; i++) {
+                        if (opts.indexOf(shuffled[i]) < 0) opts.push(shuffled[i]);
+                    }
+                    shuffle(opts);
+                    state.questions.push({
+                        q: 'Which headline was published by PIB on ' + date + '?',
+                        a: correct.title,
+                        opts: opts,
+                        hint: 'Check the PIB feed section for that date',
+                        fact: correct.link ? 'Source: ' + correct.link : ''
+                    });
                 }
-                shuffle(opts);
-                state.questions.push({
-                    q: 'Which headline was published by PIB on ' + date + '?',
-                    a: correct.title,
-                    opts: opts,
-                    hint: 'Look at the news feed above for clues',
-                    fact: correct.link ? 'Source: PIB release — ' + correct.link : ''
-                });
             });
 
             if (state.questions.length === 0) { alert('No questions could be generated.'); return; }
@@ -866,6 +881,22 @@
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('pibQuizPanel').style.display = 'none';
             showQuestion();
+        }
+
+        function buildDateOptions(allDates, correctDate) {
+            // Return 4 date options (1 correct + 3 wrong) drawn from actual dates in range
+            var pool = allDates.filter(function(d) { return d !== correctDate; });
+            var shuffled = shuffle(pool.slice());
+            var opts = [correctDate];
+            for (var i = 0; i < shuffled.length && opts.length < 4; i++) {
+                if (opts.indexOf(shuffled[i]) < 0) opts.push(shuffled[i]);
+            }
+            // Pad with fake dates if not enough real ones
+            while (opts.length < 4) {
+                var fake = '2026-06-' + String(rand(1, 30)).padStart(2, '0');
+                if (opts.indexOf(fake) < 0) opts.push(fake);
+            }
+            return shuffle(opts);
         }
 
         var _pibFeedData = null;
