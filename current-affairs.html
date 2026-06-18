@@ -151,6 +151,20 @@
                 </div>
             </div>
 
+            <div style="margin:12px 0 6px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
+                <button class="action-btn secondary" onclick="showPibQuizPanel()" style="flex:1;min-width:160px;padding:12px">📡 PIB Current Affairs Quiz</button>
+            </div>
+            <div id="pibQuizPanel" style="display:none;margin-bottom:16px;padding:14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);text-align:center">
+                <div style="font-size:.85em;font-weight:600;margin-bottom:10px;color:var(--text-sec)">PIB Headline Quiz — pick a date range</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center">
+                    <input type="date" id="pibQuizStart" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.8em;font-family:inherit">
+                    <span style="font-size:.78em;color:var(--text-muted)">to</span>
+                    <input type="date" id="pibQuizEnd" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.8em;font-family:inherit">
+                    <button class="action-btn primary" onclick="startPibQuiz()" style="padding:8px 20px;font-size:.82em">Start Quiz</button>
+                </div>
+                <div style="font-size:.7em;color:var(--text-muted);margin-top:8px">Questions show a PIB date — pick the correct headline from 4 options</div>
+            </div>
+
             <p class="gk-intro">Covering Indian Constitution, Government Schemes, Sports, Books & Authors, ISRO & Space, Defence, National Parks, Dance Forms, International Organizations, Awards, Dams & Rivers, and more — designed for SSC CGL, UPSC, RBI, IBPS, and all competitive exams.</p>
         </div>
 
@@ -777,6 +791,80 @@
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('timedQuizOptions').style.display = 'none';
+            showQuestion();
+        }
+
+        function showPibQuizPanel() {
+            var panel = document.getElementById('pibQuizPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            // Pre-fill with PIB's available date range
+            if (_pibFeedData && panel.style.display === 'block') {
+                var dates = {};
+                _pibFeedData.forEach(function(i) { if (i.pubDate) dates[i.pubDate.slice(0,10)] = true; });
+                var sorted = Object.keys(dates).sort();
+                var startEl = document.getElementById('pibQuizStart');
+                var endEl = document.getElementById('pibQuizEnd');
+                if (sorted.length > 0) { startEl.value = sorted[0]; endEl.value = sorted[sorted.length-1]; }
+            }
+        }
+
+        function startPibQuiz() {
+            if (!_pibFeedData || _pibFeedData.length < 4) { alert('Not enough PIB data loaded. Wait for the feed to load.'); return; }
+            var startVal = document.getElementById('pibQuizStart').value;
+            var endVal = document.getElementById('pibQuizEnd').value;
+            if (!startVal || !endVal) { alert('Pick a date range first.'); return; }
+            if (startVal > endVal) { alert('Start date must be before end date.'); return; }
+
+            state.cat = 'pib';
+            state.categoryName = 'PIB: ' + startVal.slice(5) + ' to ' + endVal.slice(5);
+            state.idx = 0;
+            state.correct = 0;
+            state.streak = 0;
+            state.answered = false;
+            state.questions = [];
+
+            // Group PIB items by date within range
+            var byDate = {};
+            _pibFeedData.forEach(function(i) {
+                if (!i.pubDate || !i.title) return;
+                var d = i.pubDate.slice(0,10);
+                if (d >= startVal && d <= endVal) {
+                    if (!byDate[d]) byDate[d] = [];
+                    byDate[d].push(i);
+                }
+            });
+
+            var dates = Object.keys(byDate).sort();
+            if (dates.length === 0) { alert('No PIB news in that date range.'); return; }
+
+            // Create questions: pick random headline per date, 3 wrong headlines as distractors
+            var allTitles = _pibFeedData.map(function(i) { return i.title; }).filter(Boolean);
+            dates.forEach(function(date) {
+                var items = byDate[date];
+                if (items.length === 0) return;
+                var correct = pick(items);
+                // Pick 3 wrong headlines from other dates
+                var wrongPool = allTitles.filter(function(t) { return t !== correct.title; });
+                var shuffled = shuffle(wrongPool.slice());
+                var opts = [correct.title];
+                for (var i = 0; i < shuffled.length && opts.length < 4; i++) {
+                    if (opts.indexOf(shuffled[i]) < 0) opts.push(shuffled[i]);
+                }
+                shuffle(opts);
+                state.questions.push({
+                    q: 'Which headline was published by PIB on ' + date + '?',
+                    a: correct.title,
+                    opts: opts,
+                    hint: 'Look at the news feed above for clues',
+                    fact: correct.link ? 'Source: PIB release — ' + correct.link : ''
+                });
+            });
+
+            if (state.questions.length === 0) { alert('No questions could be generated.'); return; }
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('qArea').classList.add('active');
+            document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('pibQuizPanel').style.display = 'none';
             showQuestion();
         }
 
