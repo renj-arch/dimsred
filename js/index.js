@@ -32,53 +32,6 @@
     track.classList.remove('paused');
 } catch(e) {} })();
 
-// ---- Upcoming Exam Notifications ----
-(function() { try {
-    var container = document.getElementById('examAlertsScroll');
-    if (!container) return;
-
-    function renderNotifications(list) {
-        if (list.length === 0) { container.parentElement.style.display = 'none'; return; }
-        var seed = Math.floor(Date.now() / 86400000);
-        var ordered = list.slice();
-        for (var i = ordered.length - 1; i > 0; i--) {
-            var j = Math.floor((Math.sin(seed * 9301 + i * 49297) - Math.floor(Math.sin(seed * 9301 + i * 49297))) * (i + 1));
-            var tmp = ordered[i]; ordered[i] = ordered[j]; ordered[j] = tmp;
-        }
-        ordered.forEach(function(n) {
-            var card = document.createElement('div');
-            card.className = 'exam-card';
-            var bottomHtml = '';
-            var title = (n.title || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-            if (n.link) {
-                bottomHtml = '<div class="exam-card-bottom"><a href="' + n.link + '">View Details →</a><span class="vacancy">' + (n.vacancy || '') + '</span></div>';
-            } else if (n.vacancy) {
-                bottomHtml = '<div class="exam-card-bottom"><span class="vacancy">' + n.vacancy + '</span></div>';
-            }
-            card.innerHTML =
-                '<div class="exam-card-top"><div class="date-badge"><span class="month">' + n.startMonth + '</span><span class="day">' + n.startDay + '</span><span class="year">' + n.startYear + '</span></div><div class="card-body"><span class="exam-tag" style="background:rgba(167,139,250,.1);color:var(--purple)">' + n.tag + '</span><h3>' + title + '</h3><div class="closing">🗓️ Apply by: <span class="urgent">' + (n.closing || 'Check website') + '</span></div></div><div class="card-shape"></div></div>' + bottomHtml;
-            container.appendChild(card);
-        });
-    }
-
-    function isExpired(closing) {
-        if (!closing) return false;
-        var parts = closing.split('/');
-        if (parts.length !== 3) return false;
-        var d = new Date(parts[2], parts[1] - 1, parts[0]);
-        return d < new Date();
-    }
-
-    fetch('/data/notifications.json')
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-            var list = (data.notifications || []).filter(function(n) { return !isExpired(n.closing); });
-            if (list.length > 0) { renderNotifications(list); }
-            else { container.parentElement.style.display = 'none'; }
-        })
-        .catch(function() { container.parentElement.style.display = 'none'; });
-} catch(e) {} })();
-
 // ---- Daily Question ----
 (function() { try {
     var dailyQs = [
