@@ -162,7 +162,7 @@
                     <input type="date" id="pibQuizEnd" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.8em;font-family:inherit">
                     <button class="action-btn primary" onclick="startPibQuiz()" style="padding:8px 20px;font-size:.82em">Start Quiz</button>
                 </div>
-                <div style="font-size:.7em;color:var(--text-muted);margin-top:8px">Questions show a PIB date — pick the correct headline from 4 options</div>
+                <div style="font-size:.7em;color:var(--text-muted);margin-top:8px">Shows a PIB headline — identify which sector/ministry it belongs to (Defence, Economy, Health, etc.)</div>
             </div>
 
             <p class="gk-intro">Covering Indian Constitution, Government Schemes, Sports, Books & Authors, ISRO & Space, Defence, National Parks, Dance Forms, International Organizations, Awards, Dams & Rivers, and more — designed for SSC CGL, UPSC, RBI, IBPS, and all competitive exams.</p>
@@ -823,80 +823,72 @@
             state.answered = false;
             state.questions = [];
 
-            // Group PIB items by date within range
-            var byDate = {};
-            _pibFeedData.forEach(function(i) {
-                if (!i.pubDate || !i.title) return;
-                var d = i.pubDate.slice(0,10);
-                if (d >= startVal && d <= endVal) {
-                    if (!byDate[d]) byDate[d] = [];
-                    byDate[d].push(i);
+            // Get items within date range
+            var rangeItems = _pibFeedData.filter(function(i) {
+                return i.pubDate && i.title && i.pubDate.slice(0,10) >= startVal && i.pubDate.slice(0,10) <= endVal;
+            });
+            if (rangeItems.length < 4) { alert('Not enough PIB news in that date range (need at least 4).'); return; }
+
+            // Sector classification by keywords
+            var sectors = [
+                { id:'defence', label:'Defence & Security', keywords:['army','navy','air force','defence','missile','rifle','ammunition','soldier','border','security','galantry','medal','military','war','cyber','intelligence','counter','terror','nuclear','weapon','battalion','regiment','naval','aircraft','drone','sensor','radar','surveillance','firing','exercise','opera', 'ship','submarine','fighter','commando','dgsi','bns','icg','coast guard','armoured','infantry','artillery','munitions','explosive','ordnance'] },
+                { id:'economy', label:'Economy & Finance', keywords:['economy','finance','gdp','inflation','budget','fiscal','monetary','tax','gst','revenue','expenditure','investment','fdi','trade','export','import','rupee','market','stock','banking','insurance','rbi','sebi','npci','fiscal','deficit','surplus','credit','loan','msme','startup','fintech','bond','sovereign','pension','insurance','capital','equity','ipo','dividend','interest','rate','inr','forex','reserve','monet'] },
+                { id:'infra', label:'Infrastructure & Transport', keywords:['road','highway','railway','bridge','tunnel','metro','airport','port','shipping','logistics','pipeline','power','grid','transmission','distribution','renewable','solar','wind','hydro','energy','electric','vehicle','ev','charging','fuel','petrol','diesel','gas','lng','coal','mining','steel','cement','construction','housing','urban','smart','city','infrastructure','corridor','dedicated','freight','expressway','nhai','pmgsy','sagarmala','bharatnet','digital','connect'] },
+                { id:'science', label:'Science & Technology', keywords:['science','technology','research','innovation','space','isro','nasa','satellite','rocket','launch','chandrayaan','mangalyaan','gaganyaan','lvm','pslv','gslv','nuclear','atomic','biotech','genome','dna','crispr','vaccine','pharma','drug','ai','artificial','intelligence','robot','quantum','computing','blockchain','cyber','digital','5g','6g','semiconductor','chip','nano','lab','telescope','observatory','fusion','plasma','laser','radar','sonar','drone','autonomous','supercomputer'] },
+                { id:'health', label:'Health & Family Welfare', keywords:['health','hospital','doctor','nurse','patient','disease','medicine','drug','vaccine','immunisation','ayushman','pmjay','ayurveda','yoga','ayush','medical','pharmacy','clinical','surgery','organ','transplant','cancer','diabetes','tuberculosis','tb','malaria','covid','pandemic','epidemic','nutrition','poshan','icmr','who','maternal','infant','child','family','welfare','sanitation','hygiene','healthcare','telemedicine','diagnostic','screening'] },
+                { id:'agriculture', label:'Agriculture & Rural', keywords:['agriculture','farmer','crop','irrigation','soil','seed','fertilizer','pesticide','harvest','mandi','pmkisan','kisan','fasal','bima','food','security','grain','wheat','rice','pulses','oilseed','sugarcane','cotton','horticulture','dairy','livestock','fishery','animal','husbandry','rural','panchayat','mgnrega','nrega',' Gram','gaon','krishi','mandi','apmc','cooperative','organic','natural','farming','sustainable','agri','food processing','cold storage'] },
+                { id:'education', label:'Education & Skill Development', keywords:['education','school','college','university','teacher','student','exam','nep','national education','skill','training','apprenticeship','vocational','literacy','scholarship','fellowship','research','institute','iit','iim','niti','aicte','ugc','cbse','ncert','digital','learning','online','course','degree','diploma','phd','enrollment','gross','enrolment','mid-day','meal','akshay','patra','library','knowledge'] },
+                { id:'diplomacy', label:'International Relations', keywords:['india and','india-','agreement','treaty','mou','bilateral','diplomatic','ambassador','high commissioner','visit','delegation','summit','g7','g20','brics','saarc','united nations','un ','world bank','imf','wto','who','unesco','foreign','overseas','consulate','embassy','country','partner','strategic','cooperation','trade deal','fta','cea','foreign minister','external','ministry of external','MEA','global south','nations','visit of','meeting with','call on'] },
+                { id:'environment', label:'Environment & Climate', keywords:['environment','climate','forest','tree','plantation','wildlife','animal','bird','tiger','elephant','lion','leopard','rhino','crocodile','sanctuary','national park','biodiversity','ecosystem','conservation','pollution','air','water','waste','recycle','green','carbon','emission','net zero','sustainable','renewable','energy','global warming','ozone','wetland','river','clean','ganga','yamuna','swachh','greenhouse','climate change','disaster','cyclone','flood','drought','earthquake','resilience'] },
+                { id:'social', label:'Social Justice & Welfare', keywords:['women','girl','boy','child','senior','disabled','divyang','tribe','tribal','sc','st','obc','minority','backward','poverty','hunger','food','nutrition','housing','pmay','pension','social','justice','empower','schedule','caste','welfare','labour','worker','migrant','street','vendor','transgender','lgbtq','equality','right','entitlement','awareness','campaign','mission',' abhiyaan'] },
+                { id:'sports', label:'Sports & Culture', keywords:['sport','game','player','tournament','championship','olympic','asian','commonwealth','cricket','football','hockey','badminton','tennis','athlete','medal','stadium','coach','khel','yuva','youth','culture','art','music','dance','film','festival','heritage','museum','monument','archive','library','tradition','folk','classical','award','honour','fellowship','padma','rashtrapati','president\'s'] }
+            ];
+
+            // Classify a headline into sectors
+            function classifyHeadline(title) {
+                var t = title.toLowerCase();
+                var matches = [];
+                sectors.forEach(function(s) {
+                    var score = 0;
+                    s.keywords.forEach(function(k) {
+                        if (t.indexOf(k) >= 0) score++;
+                    });
+                    if (score > 0) matches.push({ sector: s, score: score });
+                });
+                matches.sort(function(a, b) { return b.score - a.score; });
+                return matches.length > 0 ? matches[0].sector : null;
+            }
+
+            // Build questions: 1 per headline, ask which sector it belongs to
+            var sectorOptions = sectors.map(function(s) { return s.label; });
+            rangeItems.forEach(function(item) {
+                var correctSector = classifyHeadline(item.title);
+                if (!correctSector) return;
+
+                // 3 wrong sector labels as distractors
+                var wrongPool = sectorOptions.filter(function(s) { return s !== correctSector.label; });
+                var shuffled = shuffle(wrongPool.slice());
+                var opts = [correctSector.label];
+                for (var i = 0; i < shuffled.length && opts.length < 4; i++) {
+                    if (opts.indexOf(shuffled[i]) < 0) opts.push(shuffled[i]);
                 }
+                shuffle(opts);
+
+                state.questions.push({
+                    q: 'Which sector does this PIB news belong to?\n\n' + item.title,
+                    a: correctSector.label,
+                    opts: opts,
+                    hint: 'Think about which ministry would handle this',
+                    fact: 'Published on ' + (item.pubDate ? item.pubDate.slice(0,10) : '') + (item.link ? '\nSource: ' + item.link : '')
+                });
             });
 
-            var dates = Object.keys(byDate).sort();
-            if (dates.length === 0) { alert('No PIB news in that date range.'); return; }
-
-            // Collect all headlines as a pool for distractors
-            var allTitles = _pibFeedData.map(function(i) { return i.title; }).filter(Boolean);
-
-            dates.forEach(function(date) {
-                var items = byDate[date];
-                if (items.length === 0) return;
-                var correct = pick(items);
-
-                // Randomly pick format: 60% headline→date, 40% date→headline
-                if (Math.random() < 0.6) {
-                    // Format: Show headline → which date?
-                    var dateOpts = buildDateOptions(dates, date);
-                    state.questions.push({
-                        q: 'On which date was this PIB headline published?\n\n"' + correct.title + '"',
-                        a: date,
-                        opts: dateOpts,
-                        hint: 'Check the PIB feed section for the date range',
-                        fact: correct.link ? 'Source: ' + correct.link : ''
-                    });
-                } else {
-                    // Format: Show date → which headline?
-                    var wrongPool = allTitles.filter(function(t) { return t !== correct.title; });
-                    var shuffled = shuffle(wrongPool.slice());
-                    var opts = [correct.title];
-                    for (var i = 0; i < shuffled.length && opts.length < 4; i++) {
-                        if (opts.indexOf(shuffled[i]) < 0) opts.push(shuffled[i]);
-                    }
-                    shuffle(opts);
-                    state.questions.push({
-                        q: 'Which headline was published by PIB on ' + date + '?',
-                        a: correct.title,
-                        opts: opts,
-                        hint: 'Check the PIB feed section for that date',
-                        fact: correct.link ? 'Source: ' + correct.link : ''
-                    });
-                }
-            });
-
-            if (state.questions.length === 0) { alert('No questions could be generated.'); return; }
+            if (state.questions.length < 3) { alert('Could not categorize enough headlines. Try a wider date range.'); return; }
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('pibQuizPanel').style.display = 'none';
             showQuestion();
-        }
-
-        function buildDateOptions(allDates, correctDate) {
-            // Return 4 date options (1 correct + 3 wrong) drawn from actual dates in range
-            var pool = allDates.filter(function(d) { return d !== correctDate; });
-            var shuffled = shuffle(pool.slice());
-            var opts = [correctDate];
-            for (var i = 0; i < shuffled.length && opts.length < 4; i++) {
-                if (opts.indexOf(shuffled[i]) < 0) opts.push(shuffled[i]);
-            }
-            // Pad with fake dates if not enough real ones
-            while (opts.length < 4) {
-                var fake = '2026-06-' + String(rand(1, 30)).padStart(2, '0');
-                if (opts.indexOf(fake) < 0) opts.push(fake);
-            }
-            return shuffle(opts);
         }
 
         var _pibFeedData = null;
