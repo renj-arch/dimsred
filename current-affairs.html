@@ -62,6 +62,12 @@
         .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
         .q-opt:disabled{cursor:default;opacity:.7}
 
+        .study-card{padding:24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);margin-bottom:14px}
+        .study-content b{color:var(--purple)}
+        .study-content u{color:var(--cyan)}
+        .study-content::-webkit-scrollbar{width:4px}
+        .study-content::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:100px}
+
         .result-flash{padding:12px;border-radius:8px;text-align:center;font-weight:700;font-size:.9em;margin-bottom:10px;display:none}
         .result-flash.show{display:block}
         .result-flash.correct{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);color:var(--emerald)}
@@ -128,6 +134,12 @@
                 <div class="icon">📖</div>
                 <div class="title">General Knowledge Quiz</div>
                 <div class="desc">Pick a category below or try a mixed quiz. All questions are procedurally generated — original content, no external sources.</div>
+            </div>
+
+            <!-- Mode Toggle -->
+            <div style="display:flex;gap:4px;margin:12px 0 8px;padding:4px;border-radius:100px;background:rgba(255,255,255,.04);max-width:240px;margin-left:auto;margin-right:auto">
+                <button id="modeQuizBtn" class="mode-btn active" onclick="setMode('quiz')" style="flex:1;padding:7px 14px;border-radius:100px;border:none;font-weight:600;font-size:.78em;cursor:pointer;transition:all .2s;background:var(--purple);color:#fff">📝 Quiz</button>
+                <button id="modeStudyBtn" class="mode-btn" onclick="setMode('study')" style="flex:1;padding:7px 14px;border-radius:100px;border:none;font-weight:600;font-size:.78em;cursor:pointer;transition:all .2s;background:transparent;color:var(--text-sec)">📖 Study</button>
             </div>
 
             <!-- Quiz Mode Selector + Start -->
@@ -206,6 +218,27 @@
             <button class="action-btn primary hidden" id="nextBtn" onclick="nextQuestion()">Next →</button>
             <button class="action-btn secondary" id="backBtn" onclick="backToMenu()">← Back to Categories</button>
         </div>
+
+        <!-- Study View -->
+        <div class="study-area" id="studyArea" style="display:none">
+            <div class="study-card">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                    <span id="studyIcon" style="font-size:1.6em"></span>
+                    <div>
+                        <div class="study-title" id="studyTitle" style="font-size:1.3em;font-weight:800"></div>
+                        <div class="study-sub" id="studySub" style="font-size:.72em;color:var(--text-muted)">Study Notes for Competitive Exams</div>
+                    </div>
+                </div>
+                <div class="study-content" id="studyContent" style="font-size:.85em;line-height:1.7;max-height:60vh;overflow-y:auto;padding-right:8px;margin-top:8px"></div>
+                <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+                    <button class="action-btn primary" onclick="startCategory(currentStudyCat, currentStudyName)" style="flex:1;padding:10px;font-size:.85em">📝 Take Quiz on this Topic</button>
+                    <button class="action-btn secondary" onclick="backToStudyMenu()" style="flex:0;padding:10px 16px;font-size:.85em">← All Topics</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Study Topic Grid -->
+        <div id="studyGrid" style="display:none" class="cat-grid"></div>
     </div>
 
     <script>
@@ -224,6 +257,566 @@
             { id:'dams', icon:'🌊', name:'Dams & Rivers', desc:'Major dams, rivers, projects' },
             { id:'important_days', icon:'📅', name:'Important Days', desc:'National & international days' }
         ];
+
+        // ===== STUDY MATERIAL =====
+        var GK_LEARN = {
+            constitution: {
+                title: 'Indian Constitution',
+                icon: '⚖️',
+                content: '<b>Sources:</b> UK (Parliamentary system, Rule of Law), USA (Fundamental Rights, Judicial Review), Ireland (DPSP), Canada (Federalism), Australia (Concurrent List), USSR (Fundamental Duties), Germany (Emergency provisions), South Africa (Amendment process), Japan (Procedure Established by Law)<br><br>'
+                + '<b>Key Articles:</b><br>• Article 1 — Name & territory of Union<br>• Article 14 — Equality before law<br>• Article 19 — Six freedoms<br>• Article 21 — Right to life & personal liberty<br>• Article 32 — Right to Constitutional Remedies (Heart of Constitution)<br>• Article 44 — Uniform Civil Code (DPSP)<br>• Article 51A — Fundamental Duties<br>• Article 72 — President\'s pardoning power<br>• Article 352 — National Emergency<br>• Article 356 — President\'s Rule (State Emergency)<br>• Article 360 — Financial Emergency<br><br>'
+                + '<b>Parts (25):</b> Part I — Union & Territory | Part III — Fundamental Rights (Art 12-35) | Part IV — DPSP (Art 36-51) | Part IVA — Fundamental Duties (Art 51A) | Part V — Union Executive | Part VI — State Executive | Part IX — Panchayats | Part IXA — Municipalities<br><br>'
+                + '<b>Schedules (12):</b> 1st — States & UTs | 2nd — Salaries of President, Governors, etc. | 3rd — Oaths & Affirmations | 4th — Rajya Sabha seat allocation | 5th — Scheduled Areas & Tribes | 6th — Tribal Areas (Assam, Meghalaya, etc.) | 7th — Union, State, Concurrent Lists | 8th — Official Languages (22) | 9th — Land Reforms (added by 1st Amendment) | 10th — Anti-Defection | 11th — Panchayat powers (73rd Amendment) | 12th — Municipal powers (74th Amendment)<br><br>'
+                + '<b>Important Amendments:</b><br>• 1st (1951) — Added 9th Schedule for land reforms<br>• 7th (1956) — Reorganisation of states on linguistic basis<br>• 42nd (1976) — Added Fundamental Duties & Preamble amendments (Socialist, Secular, Integrity)<br>• 44th (1978) — Removed Right to Property from FR, made it legal right<br>• 52nd (1985) — Anti-Defection law<br>• 61st (1989) — Voting age reduced from 21 to 18<br>• 73rd (1992) — Panchayati Raj<br>• 74th (1992) — Urban Local Bodies<br>• 86th (2002) — Elementary education as fundamental right (Art 21A)<br>• 101st (2016) — GST<br>• 103rd (2019) — 10% reservation for EWS<br>• 106th (2023) — Women reservation in Lok Sabha & Assemblies (33%)<br><br>'
+                + '<b>Misc:</b><br>• Constituent Assembly formed: Dec 9, 1946 | President: Dr Rajendra Prasad | Chairman of Drafting Committee: Dr B R Ambedkar<br>• Constitution adopted: Nov 26, 1949 | Enforced: Jan 26, 1950<br>• Preamble keywords: Sovereign, Socialist, Secular, Democratic, Republic, Justice, Liberty, Equality, Fraternity<br>• Basic Structure Doctrine: Kesavananda Bharati case (1973) — Parliament cannot amend basic features<br>• Types of Writs: Habeas Corpus, Mandamus, Prohibition, Certiorari, Quo Warranto'
+            },
+            schemes: {
+                title: 'Government Schemes',
+                icon: '🏛️',
+                content: '<b>Major Central Schemes (with launch year & ministry):</b><br><br>'
+                + '• <b>Ayushman Bharat-PMJAY</b> (2018, Health) — World\'s largest health insurance, ₹5 lakh/family/yr, 10 cr+ families<br>'
+                + '• <b>PM-KISAN</b> (2019, Agriculture) — ₹6,000/yr to farmers in 3 installments<br>'
+                + '• <b>PM Awas Yojana (Urban)</b> (2015, Housing) — Housing for all by 2022 (extended)<br>'
+                + '• <b>PM Awas Yojana (Gramin)</b> (renamed from IAY) — Rural housing<br>'
+                + '• <b>Jal Jeevan Mission</b> (2019, Jal Shakti) — Tap water connection to every rural household by 2024<br>'
+                + '• <b>Swachh Bharat Mission</b> (2014, Drinking Water & Sanitation) — Open Defecation Free (ODF) India<br>'
+                + '• <b>Ujjwala Yojana</b> (2016, Petroleum) — Free LPG connections to BPL families<br>'
+                + '• <b>PM Jan Dhan Yojana</b> (2014, Finance) — Financial inclusion, zero-balance accounts<br>'
+                + '• <b>Make in India</b> (2014, Commerce) — Boost manufacturing, 25 sectors<br>'
+                + '• <b>Digital India</b> (2015, Electronics & IT) — Digital infrastructure, e-governance<br>'
+                + '• <b>Skill India</b> (2015, Skill Dev) — Training 40 cr people by 2022<br>'
+                + '• <b>Startup India</b> (2016, Commerce) — Tax holidays, funding, easier compliance<br>'
+                + '• <b>Stand-Up India</b> (2016) — Bank loans to SC/ST/women entrepreneurs<br>'
+                + '• <b>Beti Bachao Beti Padhao</b> (2015, Women & Child) — Improve child sex ratio<br>'
+                + '• <b>POSHAN Abhiyaan</b> (2018, Women & Child) — Reduce malnutrition/stunting<br>'
+                + '• <b>PM Mudra Yojana</b> (2015, Finance) — Loans up to ₹10L for micro enterprises (Shishu, Kishor, Tarun)<br>'
+                + '• <b>PM Fasal Bima Yojana</b> (2016, Agriculture) — Crop insurance at low premium<br>'
+                + '• <b>PM Kisan Maan Dhan Yojana</b> (2019) — Pension ₹3,000/month for small farmers after 60<br>'
+                + '• <b>Rashtriya Swasthya Bima Yojana (RSBY)</b> — Health insurance for BPL<br>'
+                + '• <b>Sansad Adarsh Gram Yojana</b> (2014) — MPs adopt villages for model development<br>'
+                + '• <b>PM Poshan Shakti Nirman (Mid-Day Meal)</b> — Hot cooked meals in govt schools<br>'
+                + '• <b>One Nation One Ration Card</b> (2019) — Nationwide portability of food security<br>'
+                + '• <b>National Education Policy 2020</b> — 5+3+3+4 system, multiple entry/exit<br>'
+                + '• <b>AMRUT</b> (2015, Housing & Urban) — Basic infrastructure in 500 cities<br>'
+                + '• <b>Smart Cities Mission</b> (2015) — 100 smart cities<br>'
+                + '• <b>SAGARMALA</b> (2015, Shipping) — Port-led development<br>'
+                + '• <b>Bharatmala Pariyojana</b> (2017, Road Transport) — Highway development (~65,000 km)<br>'
+                + '• <b>PM Gati Shakti</b> (2021) — National Master Plan for connectivity<br>'
+                + '• <b>National Hydrogen Mission</b> (2021) — Green hydrogen production'
+            },
+            sports: {
+                title: 'Sports',
+                icon: '🏆',
+                content: '<b>Major Tournaments & Trophies:</b><br>'
+                + '• Cricket — World Cup (ODI/T20), Champions Trophy, Ashes (Eng-Aus), Ranji Trophy (domestic), Irani Cup, Duleep Trophy, Vijay Hazare Trophy<br>'
+                + '• Football — FIFA World Cup, Asian Cup, Durand Cup (India\'s oldest), Santosh Trophy, I-League, ISL<br>'
+                + '• Hockey — Hockey World Cup, Sultan Azlan Shah Cup, Champions Trophy, Asia Cup<br>'
+                + '• Tennis — Grand Slams: Australian Open, French Open, Wimbledon, US Open; Davis Cup, Fed Cup<br>'
+                + '• Badminton — Thomas Cup (men\'s team), Uber Cup (women\'s team), Sudirman Cup (mixed), BWF World Championships<br>'
+                + '• Olympics — Modern Olympics started 1896 (Athens); IOC HQ: Lausanne; Motto: Citius-Altius-Fortius<br>'
+                + '• Asian Games — Started 1951 (New Delhi); OCA HQ: Kuwait<br>'
+                + '• Commonwealth Games — Started 1930; CGF HQ: London<br>'
+                + '• Khelo India — National programme for grassroots sports development<br><br>'
+                + '<b>Major Sports Awards:</b><br>'
+                + '• Major Dhyan Chand Khel Ratna (earlier Rajiv Gandhi Khel Ratna) — Highest sports award<br>'
+                + '• Arjuna Award — Consistent performance over 4 years<br>'
+                + '• Dronacharya Award — Excellence in coaching<br>'
+                + '• Dhyan Chand Award — Lifetime achievement<br>'
+                + '• Maulana Abul Kalam Azad Trophy — Best overall university<br><br>'
+                + '<b>National Sports Days:</b><br>'
+                + '• National Sports Day — August 29 (Dhyan Chand\'s birthday)<br>'
+                + '• National Youth Day — January 12 (Swami Vivekananda\'s birthday)<br>'
+                + '• International Yoga Day — June 21<br><br>'
+                + '<b>Important Venues:</b><br>'
+                + '• Narendra Modi Stadium, Ahmedabad — World\'s largest (1.32L capacity)<br>'
+                + '• Eden Gardens, Kolkata — Largest cricket stadium originally<br>'
+                + '• Wankhede Stadium, Mumbai<br>'
+                + '• MA Chidambaram Stadium, Chennai<br>'
+                + '• Major Dhyan Chand Stadium, New Delhi (hockey)<br>'
+                + '• SAI centres across India<br><br>'
+                + '<b>Sports Terms:</b> Deuce (tennis), Love (tennis), LBW (cricket), Stalemate (chess), Checkmate (chess), Hat-trick, Grand Slam, Century, Golden Duck, Silly Point (cricket), Birdie/Bogie (golf), KO (boxing), Volley (football/tennis), Dribble (football/basketball), Clean sweep'
+            },
+            books: {
+                title: 'Books & Authors',
+                icon: '📚',
+                content: '<b>Famous Indian Writers & Their Works:</b><br>'
+                + '• <b>Rabindranath Tagore</b> — Gitanjali (Nobel 1913), Ghare-Baire, The Home and the World<br>'
+                + '• <b>Mahatma Gandhi</b> — The Story of My Experiments with Truth (autobiography), Hind Swaraj<br>'
+                + '• <b>Jawaharlal Nehru</b> — The Discovery of India, An Autobiography, Glimpses of World History<br>'
+                + '• <b>Dr B R Ambedkar</b> — Annihilation of Caste, The Buddha and His Dhamma, Pakistan or Partition<br>'
+                + '• <b>RK Narayan</b> — Malgudi Days, Swami and Friends, The Guide (Sahitya Akademi Award)<br>'
+                + '• <b>Amartya Sen</b> — The Argumentative Indian, Development as Freedom, Poverty and Famines<br>'
+                + '• <b>APJ Abdul Kalam</b> — Wings of Fire (autobiography), Ignited Minds, India 2020<br>'
+                + '• <b>Shashi Tharoor</b> — The Great Indian Novel, An Era of Darkness, Inglorious Empire<br>'
+                + '• <b>Arundhati Roy</b> — The God of Small Things (Booker Prize 1997)<br>'
+                + '• <b>Salman Rushdie</b> — Midnight\'s Children (Booker Prize 1981, Booker of Bookers), The Satanic Verses<br>'
+                + '• <b>Vikram Seth</b> — A Suitable Boy (one of longest novels in English), The Golden Gate<br>'
+                + '• <b>VS Naipaul</b> — A House for Mr Biswas, India: A Wounded Civilization (Nobel 2001)<br>'
+                + '• <b>Amish Tripathi</b> — The Immortals of Meluha (Shiva Trilogy), Ram Chandra Series<br>'
+                + '• <b>Chetan Bhagat</b> — Five Point Someone, One Night @ the Call Center, The 3 Mistakes of My Life<br>'
+                + '• <b>Arvind Adiga</b> — The White Tiger (Booker Prize 2008)<br>'
+                + '• <b>Jhumpa Lahiri</b> — Interpreter of Maladies (Pulitzer), The Namesake<br>'
+                + '• <b>Kiran Desai</b> — The Inheritance of Loss (Booker Prize 2006)<br>'
+                + '• <b>Amitav Ghosh</b> — The Shadow Lines, The Glass Palace, Ibis Trilogy<br>'
+                + '• <b>Ramachandra Guha</b> — India After Gandhi, Gandhi: The Years That Changed the World<br>'
+                + '• <b>Ruskin Bond</b> — The Blue Umbrella, Our Trees Still Grow in Dehra<br><br>'
+                + '<b>Sahitya Akademi Award:</b> India\'s highest literary honour, established 1954<br><br>'
+                + '<b>Important Ancient Texts:</b><br>'
+                + '• Vedas: Rig (oldest), Yajur, Sama, Atharva<br>'
+                + '• Upavedas: Ayurveda, Dhanurveda, Gandharvaveda, Sthapatyaveda<br>'
+                + '• Upanishads: 108, main 13 (Ish, Kena, Katha, Prashna, Mundaka, etc.)<br>'
+                + '• Epics: Ramayana (Valmiki), Mahabharata (Ved Vyasa)<br>'
+                + '• Puranas: 18 Mahapuranas, 18 Upapuranas<br>'
+                + '• Arthashastra — Chanakya/Kautilya<br>'
+                + '• Ashtadhyayi — Panini (Sanskrit grammar)<br>'
+                + '• Rajatarangini — Kalhana (Kashmir history)'
+            },
+            space: {
+                title: 'ISRO & Space',
+                icon: '🚀',
+                content: '<b>ISRO — Indian Space Research Organisation</b><br>'
+                + '• Founded: 1969 | HQ: Bengaluru | Chairman: S Somanath (as of 2024)<br>'
+                + '• Vision: Harness space tech for national development<br>'
+                + '• Department of Space (DOS) under PMO<br><br>'
+                + '<b>Key Milestones:</b><br>'
+                + '• 1963: First sounding rocket (Nike-Apache) from Thumba, Kerala<br>'
+                + '• 1975: First Indian satellite — Aryabhata (launched by USSR)<br>'
+                + '• 1979: First experimental flight — SLV-3 (partial success)<br>'
+                + '• 1980: SLV-3 success — India became 6th country in space<br>'
+                + '• 1983: INSAT-1B — First multipurpose communication satellite<br>'
+                + '• 1993: PSLV maiden flight (partial failure)<br>'
+                + '• 1994: PSLV-G fully successful<br>'
+                + '• 2001: GSLV maiden flight<br>'
+                + '• 2008: Chandrayaan-1 — Discovered water molecules on Moon<br>'
+                + '• 2013: Mangalyaan (MOM) — India first Asian country to reach Mars, 4th in world<br>'
+                + '• 2017: PSLV-C37 — Launched 104 satellites in single mission (world record)<br>'
+                + '• 2019: Chandrayaan-2 — Orbiter successful, lander Vikram crashed<br>'
+                + '• 2023: Chandrayaan-3 — First country to soft-land near Moon\'s south pole!<br>'
+                + '• 2023: Aditya-L1 — India\'s first solar mission<br>'
+                + '• 2024: Gaganyaan test flights — India\'s first human spaceflight program<br><br>'
+                + '<b>Launch Vehicles:</b><br>'
+                + '• SLV-3 — India\'s first (retired)<br>'
+                + '• ASLV — Augmented (retired)<br>'
+                + '• PSLV — Workhorse, 50+ flights, most reliable<br>'
+                + '• GSLV — Geosynchronous, cryogenic upper stage<br>'
+                + '• GSLV Mk III / LVM3 — Heavy lift, can carry 4T to GTO<br>'
+                + '• SSLV — Small satellite launcher (new)<br>'
+                + '• NGLV — Next Generation (under development)<br><br>'
+                + '<b>Satellite Series:</b><br>'
+                + '• INSAT — Communication (geostationary)<br>'
+                + '• IRS — Remote sensing<br>'
+                + '• CARTOSAT — Earth observation<br>'
+                + '• NAVIC (IRNSS) — India\'s own GPS (7 satellites)<br>'
+                + '• GSAT — Communication satellites<br>'
+                + '• RISAT — Radar imaging<br>'
+                + '• Oceansat — Oceanography<br><br>'
+                + '<b>Space Centres:</b><br>'
+                + '• VSSC — Thumba (launch vehicles)<br>'
+                + '• SDSC-SHAR — Sriharikota (launch site)<br>'
+                + '• URSC — Bengaluru (satellites)<br>'
+                + '• SAC — Ahmedabad (payloads)<br>'
+                + '• LPSC — Valiamala (propulsion)<br>'
+                + '• IIST — Trivandrum (space education)<br>'
+                + '• NE-SAC — Shillong (North East applications)<br>'
+                + '• ISTRAC — Bengaluru (tracking)<br><br>'
+                + '<b>Other Space Agencies:</b> NASA (USA, 1958), Roscosmos (Russia), ESA (Europe), CNSA (China), JAXA (Japan)'
+            },
+            defence: {
+                title: 'Defence',
+                icon: '⚔️',
+                content: '<b>Indian Armed Forces:</b><br>'
+                + '• Army (Chief: Gen. Upendra Dwivedi) — HQ: New Delhi<br>'
+                + '• Navy (Chief: Adm. Dinesh K Tripathi) — HQ: New Delhi<br>'
+                + '• Air Force (Chief: ACM V R Chaudhari) — HQ: New Delhi<br>'
+                + '• Indian Coast Guard (DG: Rakesh Pal) — Under Ministry of Defence<br>'
+                + '• Integrated Defence Staff (IDS) — Tri-services coordination<br>'
+                + '• CDS (Chief of Defence Staff) — Anil Chauhan (first: Gen Bipin Rawat)<br><br>'
+                + '<b>Commands:</b><br>'
+                + '<u>Army (7):</u> Northern, Western, Eastern, Southern, Central, South Western, ARTRAC (Training)<br>'
+                + '<u>Navy (3):</u> Western (Mumbai), Eastern (Visakhapatnam), Southern (Kochi)<br>'
+                + '<u>Air Force (7):</u> Western, Eastern, Central, Southern, South Western, Training, Maintenance<br>'
+                + '<u>Joint (2):</u> Andaman & Nicobar Command (India\'s only tri-service), Strategic Forces Command (nuclear)<br><br>'
+                + '<b>Missiles of India (IMDSS):</b><br>'
+                + '• Agni — ICBM/IRBM (Agni-5: 5000+ km, MIRV capable)<br>'
+                + '• Prithvi — Short-range (I: 150km, II: 250km, III: 350km)<br>'
+                + '• Akash — Medium-range SAM (Surface-to-Air)<br>'
+                + '• Nag — Anti-tank guided missile (fire & forget)<br>'
+                + '• BrahMos — Supersonic cruise missile (Jt venture with Russia), 290-1500km range<br>'
+                + '• Nirbhay — Subsonic cruise missile (1000km)<br>'
+                + '• Astra — Beyond visual range air-to-air missile<br>'
+                + '• Barak-8 (LR-SAM) — Joint with Israel<br>'
+                + '• K-4, K-5 — Submarine-launched ballistic missiles<br>'
+                + '• Pinaka — Multi-barrel rocket launcher<br>'
+                + '• QRSAM — Quick Reaction SAM<br><br>'
+                + '<b>Military Exercises:</b><br>'
+                + '• India-France: Shakti, Varuna (navy), Garuda (air)<br>'
+                + '• India-USA: Yudh Abhyas, Red Flag, Cope India, Malabar (navy, with Japan & Australia)<br>'
+                + '• India-UK: Ajeya Warrior, Indradhanush (air)<br>'
+                + '• India-Russia: Indra, Avia Indra<br>'
+                + '• India-Japan: Dharma Guardian, Shinyuu Maitri (air)<br>'
+                + '• India-Australia: AUSTRA HIND, Pitch Black (air)<br>'
+                + '• India-Singapore: SIMBEX (navy, oldest naval exercise)<br>'
+                + '• India-Maldives: Ekuverin<br>'
+                + '• India-Nepal: Surya Kiran<br>'
+                + '• India-Bangladesh: Sampriti<br>'
+                + '• India-Mongolia: Nomadic Elephant<br>'
+                + '• India-Thailand: Maitree<br>'
+                + '• India-Indonesia: Garuda Shakti<br>'
+                + '• India-Kazakhstan: Prabal Dostyk<br><br>'
+                + '<b>Defence Production:</b><br>'
+                + '• DRDO — Research & development<br>'
+                + '• HAL — Aircraft (Tejas, Dhruv, LCH Prachand)<br>'
+                + '• BEL — Electronics<br>'
+                + '• MDL, GRSE, CSL — Shipbuilding<br>'
+                + '• OFB (now 7 DPSUs) — Ordnance & ammunition<br>'
+                + '• SIDM — (Society of Indian Defence Manufacturers)<br>'
+                + '• iDEX — Innovation for Defence Excellence'
+            },
+            national_parks: {
+                title: 'National Parks & Wildlife',
+                icon: '🌲',
+                content: '<b>Key National Parks by State:</b><br>'
+                + '• <b>Andhra Pradesh:</b> Sri Venkateswara, Papikonda<br>'
+                + '• <b>Arunachal Pradesh:</b> Namdapha, Mouling<br>'
+                + '• <b>Assam:</b> Kaziranga (One-horned Rhino), Manas (Tiger, UNESCO), Dibru-Saikhowa, Nameri, Rajiv Gandhi (Orang)<br>'
+                + '• <b>Bihar:</b> Valmiki Tiger Reserve<br>'
+                + '• <b>Goa:</b> Bhagwan Mahavir, Mollem<br>'
+                + '• <b>Gujarat:</b> Gir (Asiatic Lion — only home), Marine (Gulf of Kutch), Velavadar (Blackbuck)<br>'
+                + '• <b>Haryana:</b> Sultanpur (birds), Kalesar<br>'
+                + '• <b>Himachal Pradesh:</b> Great Himalayan, Pin Valley, Khirganga<br>'
+                + '• <b>Jharkhand:</b> Betla, Palamau<br>'
+                + '• <b>Karnataka:</b> Bandipur (Tiger), Nagarhole (Tiger), Bannerghatta, Anshi, Kudremukh<br>'
+                + '• <b>Kerala:</b> Periyar (Tiger, elephant), Silent Valley, Eravikulam (Nilgiri Tahr), Anamudi Shola<br>'
+                + '• <b>Madhya Pradesh:</b> Bandhavgarh (Tiger), Kanha (Tiger, Jungle Book inspiration), Pench, Satpura, Panna, Sanjay, Mandla Plant, Van Vihar<br>'
+                + '• <b>Maharashtra:</b> Tadoba (Tiger), Sanjay Gandhi (Borivali), Chandoli, Gugamal, Nawegaon<br>'
+                + '• <b>Manipur:</b> Keibul Lamjao (Floating park, Sangai deer)<br>'
+                + '• <b>Meghalaya:</b> Nokrek Ridge (Red Panda), Balphakram<br>'
+                + '• <b>Mizoram:</b> Murlen, Phawngpui (Blue Mountain)<br>'
+                + '• <b>Nagaland:</b> Intanki<br>'
+                + '• <b>Odisha:</b> Simlipal (Tiger, elephant), Bhitarkanika (crocodile, mangroves), Nandankanan (zoo + sanctuary)<br>'
+                + '• <b>Rajasthan:</b> Ranthambore (Tiger), Sariska (Tiger), Keoladeo (Bharatpur — birds, UNESCO), Desert (Jaisalmer)<br>'
+                + '• <b>Sikkim:</b> Khangchendzonga (UNESCO)<br>'
+                + '• <b>Tamil Nadu:</b> Mudumalai (Tiger, elephant), Indira Gandhi (Annamalai), Guindy (Chennai), Gulf of Mannar Marine<br>'
+                + '• <b>Telangana:</b> Kasu Brahmananda Reddy, Mahavir Harina Vanasthali<br>'
+                + '• <b>Uttarakhand:</b> Jim Corbett (India\'s oldest, est. 1936), Nanda Devi (UNESCO), Rajaji, Valley of Flowers (UNESCO)<br>'
+                + '• <b>Uttar Pradesh:</b> Dudhwa (Tiger)<br>'
+                + '• <b>West Bengal:</b> Sundarbans (Tiger, mangrove, UNESCO), Gorumara, Neora Valley, Singalila, Buxa<br><br>'
+                + '<b>Project Tiger:</b> Launched 1973 from Corbett. India has ~55 tiger reserves. Tiger census 2022: 3,167 tigers (75% of global population)<br><br>'
+                + '<b>Project Elephant:</b> 1992, ~30 elephant reserves<br><br>'
+                + '<b>Biosphere Reserves (UNESCO):</b> 18 in India — Nilgiri (first), Gulf of Mannar, Sundarbans, Nanda Devi, Nokrek, Pachmarhi, Simlipal, Great Nicobar, Kutch, etc.<br><br>'
+                + '<b>Wildlife Sanctuaries vs National Parks:</b> NPs have higher protection, no grazing/allowed entry; WS permits limited activities<br><br>'
+                + '<b>Conservation Status:</b> IUCN Red List categories — Extinct, Extinct in Wild, Critically Endangered, Endangered, Vulnerable, Near Threatened, Least Concern'
+            },
+            dance: {
+                title: 'Dance Forms',
+                icon: '💃',
+                content: '<b>Classical Dances of India (8 Sangeet Natak Akademi recognized):</b><br><br>'
+                + '1. <b>Bharatanatyam</b> — Tamil Nadu. Features: fixed upper torso, bent legs, intricate footwork, expressive gestures (mudras). Pioneers: Rukmini Devi Arundale<br>'
+                + '2. <b>Kathak</b> — Uttar Pradesh. Features: fast spins (chakkars), rhythmic footwork, storytelling. Lucknow, Jaipur, Raigarh gharanas. Birju Maharaj<br>'
+                + '3. <b>Kathakali</b> — Kerala. Features: Elaborate makeup (green/red/black), eye movements, storytelling from epics. Costume-heavy<br>'
+                + '4. <b>Kuchipudi</b> — Andhra Pradesh. Features: Singing + dancing, fast rhythms, copper pot balance. Gone with the Wind<br>'
+                + '5. <b>Odissi</b> — Odisha. Features: Tribhangi (three-bend posture), fluid upper body, independent footwork. Gotipua tradition<br>'
+                + '6. <b>Manipuri</b> — Manipur. Features: Graceful, soft movements, no heavy ankle bells, circular patterns. Rasleela themes<br>'
+                + '7. <b>Mohiniyattam</b> — Kerala. Features: Feminine (Mohini=celestial enchantress), gentle swaying, white & gold costume<br>'
+                + '8. <b>Sattriya</b> — Assam. Features: Monastic origin, fast rhythmic patterns, from Vaishnavite monasteries (Sattras)<br><br>'
+                + '<b>Also recognized as classical:</b> Chhau (Odisha/Jharkhand/WB — mask dance)<br><br>'
+                + '<b>Folk Dances of India:</b><br>'
+                + '• <b>Jammu & Kashmir:</b> Rouf, Hafiza, Dumhal, Hikat<br>'
+                + '• <b>Himachal:</b> Nati, Kullu, Kinnauri<br>'
+                + '• <b>Punjab:</b> Bhangra, Giddha (women)<br>'
+                + '• <b>Haryana:</b> Phag, Guga, Jhumar<br>'
+                + '• <b>Rajasthan:</b> Ghoomar, Kalbeliya, Bhavai, Kacchi Ghodi, Chakri<br>'
+                + '• <b>Gujarat:</b> Garba, Dandiya Raas, Bhavai<br>'
+                + '• <b>Maharashtra:</b> Lavani, Tamasha, Powada, Koli<br>'
+                + '• <b>Goa:</b> Mando, Fugdi, Dhalo<br>'
+                + '• <b>Madhya Pradesh:</b> Matki, Jawara, Tertali, Maanch<br>'
+                + '• <b>Bihar:</b> Jat-Jatin, Bidesia, Chhau (mask)<br>'
+                + '• <b>Jharkhand:</b> Chhau (Seraikella), Paika<br>'
+                + '• <b>West Bengal:</b> Chhau (Purulia), Jatra, Brita, Gambhira<br>'
+                + '• <b>Odisha:</b> Ghumura, Chhau (Mayurbhanj), Dalkhai, Sambalpuri<br>'
+                + '• <b>Assam:</b> Bihu, Borgeet, Jhumur<br>'
+                + '• <b>Meghalaya:</b> Laho, Nongkrem<br>'
+                + '• <b>Nagaland:</b> Hornbill Dance, Zeliang<br>'
+                + '• <b>Manipur:</b> Lai Haraoba, Thang Ta (martial)<br>'
+                + '• <b>Tamil Nadu:</b> Karagattam, Kummi, Mayilattam (peacock), Oyilattam<br>'
+                + '• <b>Kerala:</b> Theyyam, Thiruvathira, Kaikottikali<br>'
+                + '• <b>Karnataka:</b> Yakshagana, Dollu Kunitha, Huttari, Suggi<br>'
+                + '• <b>Andhra/Telangana:</b> Kuchipudi (classical), Perini Natyam, Bhamakalpam, Dappu, Tappeta<br>'
+                + '• <b>Lakshadweep:</b> Lava dance<br>'
+                + '• <b>Andaman:</b> Nicobari dance'
+            },
+            orgs: {
+                title: 'International Organizations',
+                icon: '🌐',
+                content: '<b>United Nations (UN):</b> Founded 1945 | HQ: New York | Members: 193<br>'
+                + '• UN Charter signed June 26, 1945 (San Francisco) | Effective Oct 24, 1945 (UN Day)<br>'
+                + '• <u>Principal Organs:</u> General Assembly (all members), Security Council (15 — 5P+10E), ECOSOC (54), ICJ (15 judges, The Hague), Secretariat (SG), Trusteeship Council (inactive)<br>'
+                + '• <u>Security Council P5:</u> USA, UK, France, Russia, China (veto powers)<br>'
+                + '• UN Secretaries-General: Guterres (Portugal, current), Ban Ki-Moon, Kofi Annan, Boutros-Ghali, Perez de Cuellar, Waldheim, Thant, U Thant (only Asian), Hammarskjöld<br>'
+                + '• India at UN: Founding member, supports expansion of SC, G4 member (India, Brazil, Germany, Japan)<br><br>'
+                + '<b>UN Agencies & Reports:</b><br>'
+                + '• WHO (1948, Geneva) — World Health Report, World Health Statistics<br>'
+                + '• UNESCO (1945, Paris) — Education for All, World Heritage Sites<br>'
+                + '• UNDP (1965, NY) — Human Development Index (HDI), Human Development Report<br>'
+                + '• UNEP (1972, Nairobi) — Emissions Gap Report, Global Environment Outlook<br>'
+                + '• UNFCCC (1992, Bonn) — Climate change framework, COP conferences<br>'
+                + '• IMF (1944, Washington DC) — World Economic Outlook, Article IV consultations<br>'
+                + '• World Bank (1944, Washington DC) — World Development Report, Ease of Doing Business<br>'
+                + '• WTO (1995, Geneva) — World Trade Report, Trade Policy Review<br>'
+                + '• ILO (1919, Geneva) — World Employment and Social Outlook, International Labour Standards<br>'
+                + '• FAO (1945, Rome) — State of Food Security and Nutrition, Food Price Index<br>'
+                + '• IAEA (1957, Vienna) — Atoms for Peace, nuclear safeguards<br>'
+                + '• UNICEF (1946, NY) — State of the World\'s Children<br>'
+                + '• UNHCR (1950, Geneva) — Global Trends Report, refugees<br>'
+                + '• WFP (1961, Rome) — Food aid, hunger eradication<br>'
+                + '• UNODC (1997, Vienna) — World Drug Report, Crime<br>'
+                + '• ITU (1865, Geneva) — Global Connectivity Report<br>'
+                + '• UPU (1874, Bern) — Postal development<br><br>'
+                + '<b>Other Key Organizations:</b><br>'
+                + '• <b>NATO</b> (1949, Brussels) — 32 members, military alliance<br>'
+                + '• <b>European Union</b> (1951/93, Brussels) — 27 members<br>'
+                + '• <b>BRICS</b> (2009) — Brazil, Russia, India, China, South Africa, +5 new (2024: Egypt, Ethiopia, Iran, Saudi, UAE)<br>'
+                + '• <b>SAARC</b> (1985, Kathmandu) — 8 South Asian nations<br>'
+                + '• <b>SCO</b> (2001, Beijing) — Security & economic cooperation (8 members)<br>'
+                + '• <b>G7</b> — Canada, France, Germany, Italy, Japan, UK, USA + EU<br>'
+                + '• <b>G20</b> (1999) — 19 countries + EU + AU<br>'
+                + '• <b>OPEC</b> (1960, Vienna) — 13 oil-exporting countries<br>'
+                + '• <b>OPEC+</b> — OPEC + 10 allies including Russia<br>'
+                + '• <b>ASEAN</b> (1967, Jakarta) — 10 SE Asian nations<br>'
+                + '• <b>Commonwealth</b> (1931/49, London) — 56 nations, former British Empire<br>'
+                + '• <b>AIBA/OCA/IPC</b> — Sports bodies<br>'
+                + '• <b>IAEA</b> — Atomic energy<br>'
+                + '• <b>Interpol</b> (1923, Lyon) — International police<br>'
+                + '• <b>ICJ</b> — UN judicial organ<br>'
+                + '• <b>ICC</b> (2002, The Hague) — War crimes, genocide<br>'
+                + '• <b>WHO</b> — Health<br>'
+                + '• <b>WMO</b> (1950, Geneva) — Weather, climate, water<br>'
+                + '• <b>WIPO</b> (1967, Geneva) — Intellectual property'
+            },
+            awards: {
+                title: 'Awards & Honours',
+                icon: '🎖️',
+                content: '<b>Civilian Awards (India):</b><br>'
+                + 'Established 1954. Categories: Bharat Ratna → Padma Vibhushan → Padma Bhushan → Padma Shri<br>'
+                + '• <b>Bharat Ratna</b> — Highest civilian award. No community/occupation restriction. Recent: LK Advani, MS Swaminathan (2024), Karpoori Thakur (2024)<br>'
+                + '• <b>Padma Vibhushan</b> — Second highest<br>'
+                + '• <b>Padma Bhushan</b> — Third highest<br>'
+                + '• <b>Padma Shri</b> — Fourth highest<br><br>'
+                + '<b>Gallantry Awards (India):</b><br>'
+                + '• Param Vir Chakra (PVC) — Highest wartime gallantry<br>'
+                + '• Ashok Chakra — Highest peacetime gallantry<br>'
+                + '• Maha Vir Chakra — Second highest wartime<br>'
+                + '• Kirti Chakra — Second highest peacetime<br>'
+                + '• Vir Chakra — Third highest wartime<br>'
+                + '• Shaurya Chakra — Third highest peacetime<br>'
+                + '• Sena/Naau Sena/Vayu Sena Medal — Service medals<br>'
+                + '• Mention in Despatches — Gallantry recognition<br><br>'
+                + '<b>Nobel Prize:</b><br>'
+                + '• Categories: Physics, Chemistry, Medicine, Literature, Peace, Economics (since 1969)<br>'
+                + '• Awarded by: Royal Swedish Academy of Sciences (Physics, Chemistry, Economics), Karolinska Institute (Medicine), Swedish Academy (Literature), Norwegian Nobel Committee (Peace)<br>'
+                + '• Indian Nobel Laureates: Tagore (Literature 1913), Raman (Physics 1930), Amartya Sen (Economics 1998), V S Naipaul (Literature 2001, Indian origin), Venkatraman Ramakrishnan (Chemistry 2009, Indian origin), Kailash Satyarthi (Peace 2014), Abhijit Banerjee (Economics 2019, Indian origin)<br><br>'
+                + '<b>Oscars (Academy Awards):</b> Best Picture, Director, Actor, Actress. Indian presence: Bhanu Athaiya (costume, Gandhi 1982), Satyajit Ray (Honorary 1992), AR Rahman (Slumdog Millionaire, 2009), The Elephant Whisperers (Best Short Doc 2023), Naatu Naatu (Best Song 2023, RRR)<br><br>'
+                + '<b>Other International Awards:</b><br>'
+                + '• Pulitzer — Journalism, Literature, Music<br>'
+                + '• Booker — Fiction (English)<br>'
+                + '• Man Booker International<br>'
+                + '• Sahitya Akademi Award — India\'s highest literary award<br>'
+                + '• Jnanpith — India\'s highest literary award<br>'
+                + '• Dadasaheb Phalke — India\'s highest cinema award<br>'
+                + '• National Film Awards (1954) — Golden Lotus, Silver Lotus<br>'
+                + '• Ramon Magsaysay (Asia\'s Nobel)<br>'
+                + '• Right Livelihood (Alternate Nobel)<br>'
+                + '• Templeton Prize — Science & religion<br>'
+                + '• Fields Medal (Math, under 40)<br>'
+                + '• Abel Prize (Math)<br>'
+                + '• Turing Award (Computer Science)<br>'
+                + '• Grammy (Music)<br>'
+                + '• Emmy (Television)<br>'
+                + '• Tony (Theatre)'
+            },
+            dams: {
+                title: 'Dams & Rivers',
+                icon: '🌊',
+                content: '<b>Major Dams in India (River → Dam → State):</b><br><br>'
+                + '<b>Northern India:</b><br>'
+                + '• Bhakra Dam — Sutlej River — Himachal (India\'s highest gravity dam, 226m)<br>'
+                + '• Tehri Dam — Bhagirathi — Uttarakhand (India\'s tallest, 260m)<br>'
+                + '• Pong Dam — Beas — Himachal<br>'
+                + '• Pandoh Dam — Beas — Himachal<br>'
+                + '• Ranjit Sagar Dam — Ravi — Punjab<br>'
+                + '• Baglihar Dam — Chenab — Jammu & Kashmir<br>'
+                + '• Kishanganga Dam — Kishanganga — J&K<br>'
+                + '• Salal Dam — Chenab — J&K<br><br>'
+                + '<b>Eastern & North-Eastern:</b><br>'
+                + '• Hirakud Dam — Mahanadi — Odisha (Longest dam in India, 4.8km)<br>'
+                + '• Rengali Dam — Brahmani — Odisha<br>'
+                + '• Farakka Barrage — Ganga — West Bengal<br>'
+                + '• Koyna Dam — Koyna — Maharashtra<br>'
+                + '• Subarnarekha Dam — Subarnarekha — Jharkhand<br>'
+                + '• Maithon Dam — Barakar — Jharkhand<br>'
+                + '• Panchet Dam — Damodar — Jharkhand<br>'
+                + '• Dumka/ Massanjore Dam — Mayurakshi — Jharkhand<br>'
+                + '• Tipaimukh Dam — Barak — Manipur<br>'
+                + '• Doyang Dam — Doyang — Nagaland<br><br>'
+                + '<b>Western & Central India:</b><br>'
+                + '• Sardar Sarovar Dam — Narmada — Gujarat (Largest in India by volume)<br>'
+                + '• Indira Sagar Dam — Narmada — Madhya Pradesh (Largest by reservoir capacity)<br>'
+                + '• Omkareshwar Dam — Narmada — MP<br>'
+                + '• Tawa Dam — Tawa (Narmada trib) — MP<br>'
+                + '• Gandhi Sagar Dam — Chambal — MP<br>'
+                + '• Rana Pratap Sagar Dam — Chambal — Rajasthan<br>'
+                + '• Jawahar Sagar Dam — Chambal — Rajasthan<br>'
+                + '• Ukai Dam — Tapi — Gujarat<br>'
+                + '• Kadana Dam — Mahi — Gujarat<br>'
+                + '• Dantiwada Dam — Banas — Gujarat<br>'
+                + '• Jayakwadi Dam — Godavari — Maharashtra<br>'
+                + '• Bhatsa Dam — Bhatsa — Maharashtra<br>'
+                + '• Mulshi Dam — Mula-Mutha — Maharashtra<br>'
+                + '• Mula Dam — Mula — Maharashtra<br><br>'
+                + '<b>Southern India:</b><br>'
+                + '• Nagarjuna Sagar Dam — Krishna — Telangana/AP (Masonry: world\'s tallest)<br>'
+                + '• Srisailam Dam — Krishna — AP (Hydroelectric)<br>'
+                + '• Tungabhadra Dam — Tungabhadra — Karnataka<br>'
+                + '• Almatti Dam — Krishna — Karnataka<br>'
+                + '• Supa Dam — Kali — Karnataka<br>'
+                + '• Linganamakki Dam — Sharavathi — Karnataka<br>'
+                + '• Mettur Dam — Cauvery — Tamil Nadu<br>'
+                + '• Amaravati Dam — Amaravati — Tamil Nadu<br>'
+                + '• Parambikulam Dam — Parambikulam — Tamil Nadu/Kerala<br>'
+                + '• Idukki Dam — Periyar — Kerala (Arch dam, Asia\'s highest arch)<br>'
+                + '• Mullaperiyar Dam — Periyar — Kerala/TN (century-old)<br>'
+                + '• Kallanai (Grand Anicut) — Cauvery — TN (World\'s oldest, built by Karikala Chola, ~2,000 years)<br>'
+                + '• Polavaram — Godavari — AP (under construction)<br><br>'
+                + '<b>River-Linking Projects:</b><br>'
+                + '• Ken-Betwa (UP/MP) — First under river-linking program<br>'
+                + '• Damanganga-Pinjal (Mah/Guj)<br>'
+                + '• Godavari-Cauvery (via Krishna-Pennar)<br><br>'
+                + '<b>National Waterways:</b><br>'
+                + '• NW-1: Ganga (Allahabad-Haldia)<br>'
+                + '• NW-2: Brahmaputra (Sadiya-Dhubri)<br>'
+                + '• NW-3: Kollam-Kottapuram (Kerala backwaters)<br>'
+                + '• NW-4: Godavari-Krishna-Pennar-Cauvery (linked)<br>'
+                + '• NW-5: Brahmani-Mahanadi delta<br>'
+                + '• NW-10: Baitarani<br><br>'
+                + '<b>River Systems:</b><br>'
+                + '• Indus (Sindhu) — 5 tributaries: Jhelum, Chenab, Ravi, Beas, Sutlej (Indus Water Treaty 1960 with Pakistan)<br>'
+                + '• Ganga — Bhagirathi + Alaknanda at Devprayag. Tribs: Yamuna, Ghaghara, Gandak, Kosi, Son<br>'
+                + '• Brahmaputra — Origin: Tibet (as Tsangpo). Tribs: Dibang, Lohit, Subansiri, Manas, Sankosh<br>'
+                + '• Peninsular: Narmada (west-flowing), Tapi (west), Godavari (largest peninsular), Krishna, Cauvery, Mahanadi, Pennar, Sabarmati, Mahi'
+            },
+            important_days: {
+                title: 'Important Days',
+                icon: '📅',
+                content: '<b>National Days (India):</b><br>'
+                + '• January 26 — Republic Day (Constitution came into effect 1950)<br>'
+                + '• August 15 — Independence Day (1947)<br>'
+                + '• October 2 — Gandhi Jayanti (also International Day of Non-Violence)<br>'
+                + '• November 14 — Children\'s Day (Jawaharlal Nehru\'s birthday)<br>'
+                + '• January 12 — National Youth Day (Swami Vivekananda\'s birthday)<br>'
+                + '• February 28 — National Science Day (Raman effect discovery)<br>'
+                + '• April 5 — National Maritime Day<br>'
+                + '• May 11 — National Technology Day (1998 nuclear tests)<br>'
+                + '• July 26 — Kargil Vijay Diwas (1999)<br>'
+                + '• August 29 — National Sports Day (Dhyan Chand\'s birthday)<br>'
+                + '• September 5 — Teachers\' Day (Sarvepalli Radhakrishnan\'s birthday)<br>'
+                + '• September 17 — Vishwakarma Day<br>'
+                + '• October 31 — National Unity Day (Sardar Patel\'s birthday)<br>'
+                + '• November 7 — National Cancer Awareness Day<br>'
+                + '• November 26 — Constitution Day (Samvidhan Diwas, adopted 1949)<br>'
+                + '• December 4 — Navy Day<br>'
+                + '• December 19 — Goa Liberation Day<br><br>'
+                + '<b>International Days (UN & global):</b><br>'
+                + '• January 1 — Global Family Day<br>'
+                + '• January 24 — International Day of Education<br>'
+                + '• January 27 — International Holocaust Remembrance Day<br>'
+                + '• February 2 — World Wetlands Day<br>'
+                + '• February 4 — World Cancer Day<br>'
+                + '• February 13 — World Radio Day<br>'
+                + '• February 20 — World Day of Social Justice<br>'
+                + '• March 3 — World Wildlife Day<br>'
+                + '• March 8 — International Women\'s Day<br>'
+                + '• March 14 — International Day of Rivers<br>'
+                + '• March 20 — World Sparrow Day / International Day of Happiness<br>'
+                + '• March 21 — World Forestry Day / World Down Syndrome Day<br>'
+                + '• March 22 — World Water Day<br>'
+                + '• March 23 — World Meteorological Day<br>'
+                + '• March 24 — World TB Day<br>'
+                + '• April 2 — World Autism Awareness Day<br>'
+                + '• April 7 — World Health Day (WHO founded 1948)<br>'
+                + '• April 18 — World Heritage Day<br>'
+                + '• April 22 — Earth Day<br>'
+                + '• April 23 — World Book & Copyright Day<br>'
+                + '• April 25 — World Malaria Day<br>'
+                + '• May 1 — International Labour Day (Antarrashtriya Shramik Diwas)<br>'
+                + '• May 3 — World Press Freedom Day<br>'
+                + '• May 8 — World Red Cross Day<br>'
+                + '• May 15 — International Day of Families<br>'
+                + '• May 17 — World Telecommunication Day<br>'
+                + '• May 22 — International Day for Biological Diversity<br>'
+                + '• May 29 — International Day of UN Peacekeepers<br>'
+                + '• May 31 — World No Tobacco Day<br>'
+                + '• June 3 — World Bicycle Day<br>'
+                + '• June 5 — World Environment Day<br>'
+                + '• June 7 — World Food Safety Day<br>'
+                + '• June 8 — World Oceans Day<br>'
+                + '• June 12 — World Day Against Child Labour<br>'
+                + '• June 14 — World Blood Donor Day<br>'
+                + '• June 15 — World Elder Abuse Awareness Day<br>'
+                + '• June 17 — World Day to Combat Desertification & Drought<br>'
+                + '• June 20 — World Refugee Day<br>'
+                + '• June 21 — International Yoga Day (proposed by PM Modi, UN 2014)<br>'
+                + '• June 23 — International Olympic Day / UN Public Service Day<br>'
+                + '• June 26 — International Day Against Drug Abuse<br>'
+                + '• July 11 — World Population Day<br>'
+                + '• July 18 — Nelson Mandela International Day<br>'
+                + '• July 28 — World Hepatitis Day<br>'
+                + '• July 30 — International Day of Friendship<br>'
+                + '• August 9 — International Day of World\'s Indigenous Peoples<br>'
+                + '• August 12 — International Youth Day<br>'
+                + '• August 19 — World Photography Day<br>'
+                + '• August 23 — International Day for Remembrance of Slave Trade<br>'
+                + '• September 8 — International Literacy Day<br>'
+                + '• September 15 — International Day of Democracy<br>'
+                + '• September 16 — World Ozone Day<br>'
+                + '• September 21 — International Day of Peace<br>'
+                + '• September 27 — World Tourism Day<br>'
+                + '• September 29 — International Day of Awareness of Food Loss & Waste<br>'
+                + '• October 1 — International Day of Older Persons<br>'
+                + '• October 5 — World Teachers\' Day<br>'
+                + '• October 9 — World Postal Day<br>'
+                + '• October 10 — World Mental Health Day<br>'
+                + '• October 13 — International Day for Disaster Reduction<br>'
+                + '• October 15 — Global Handwashing Day / White Cane Day<br>'
+                + '• October 16 — World Food Day (FAO founded)<br>'
+                + '• October 17 — International Day for Eradication of Poverty<br>'
+                + '• October 24 — UN Day<br>'
+                + '• October 27 — World Day for Audiovisual Heritage<br>'
+                + '• October 31 — World Cities Day<br>'
+                + '• November 1 — World Vegan Day<br>'
+                + '• November 5 — World Tsunami Awareness Day<br>'
+                + '• November 8 — International Day of Radiology<br>'
+                + '• November 9 — Legal Services Day (India) / World Animals Day<br>'
+                + '• November 10 — World Science Day<br>'
+                + '• November 14 — World Diabetes Day<br>'
+                + '• November 16 — International Day for Tolerance<br>'
+                + '• November 19 — World Toilet Day<br>'
+                + '• November 20 — Universal Children\'s Day / Africa Industrialization Day<br>'
+                + '• November 21 — World Television Day<br>'
+                + '• November 25 — International Day for Elimination of Violence against Women<br>'
+                + '• December 1 — World AIDS Day<br>'
+                + '• December 2 — World Computer Literacy Day<br>'
+                + '• December 3 — International Day of Disabled Persons<br>'
+                + '• December 5 — World Soil Day<br>'
+                + '• December 7 — Armed Forces Flag Day<br>'
+                + '• December 9 — International Anti-Corruption Day<br>'
+                + '• December 10 — Human Rights Day (UDHR 1948)<br>'
+                + '• December 11 — International Mountain Day<br>'
+                + '• December 14 — National Energy Conservation Day<br>'
+                + '• December 18 — Minorities Rights Day (India) / International Migrants Day<br>'
+                + '• December 22 — National Mathematics Day (Ramanujan\'s birthday)<br>'
+                + '• December 23 — National Farmers\' Day (Kisan Diwas, Chaudhary Charan Singh\'s birthday)'
+            }
+        };
 
         // ===== HELPER FUNCTIONS =====
         function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
@@ -548,6 +1141,7 @@
         var state = { cat: null, questions: [], idx: 0, correct: 0, streak: 0, answered: false, categoryName: '' };
 
         function init() {
+            // Quiz grid
             var grid = document.getElementById('catGrid');
             CATEGORIES.forEach(function(c) {
                 grid.innerHTML += '<div class="cat-btn" data-cat="' + c.id + '" onclick="startCategory(\'' + c.id + '\',\'' + c.name + '\')">'
@@ -556,6 +1150,8 @@
                     + '<div class="cat-desc">' + c.desc + '</div>'
                     + '</div>';
             });
+            // Study grid
+            initCatGrid('study');
             loadPibFeed();
         }
 
@@ -984,11 +1580,78 @@
         }
 
         function backToMenu() {
+            if (currentMode === 'study') {
+                document.getElementById('studyGrid').style.display = 'grid';
+                document.getElementById('studyArea').style.display = 'none';
+                document.getElementById('qArea').classList.remove('active');
+                document.getElementById('scoreBar').classList.remove('show');
+                state.questions = [];
+                state.idx = 0;
+                return;
+            }
             document.getElementById('welcome').style.display = 'block';
             document.getElementById('qArea').classList.remove('active');
             document.getElementById('scoreBar').classList.remove('show');
             state.questions = [];
             state.idx = 0;
+        }
+
+        var currentMode = 'quiz';
+        var currentStudyCat = null;
+        var currentStudyName = null;
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('modeQuizBtn').style.background = mode === 'quiz' ? 'var(--purple)' : 'transparent';
+            document.getElementById('modeQuizBtn').style.color = mode === 'quiz' ? '#fff' : 'var(--text-sec)';
+            document.getElementById('modeStudyBtn').style.background = mode === 'study' ? 'var(--purple)' : 'transparent';
+            document.getElementById('modeStudyBtn').style.color = mode === 'study' ? '#fff' : 'var(--text-sec)';
+            if (mode === 'study') {
+                document.getElementById('welcome').style.display = 'none';
+                document.getElementById('qArea').classList.remove('active');
+                document.getElementById('studyGrid').style.display = 'grid';
+                document.getElementById('studyArea').style.display = 'none';
+            } else {
+                document.getElementById('welcome').style.display = 'block';
+                document.getElementById('studyGrid').style.display = 'none';
+                document.getElementById('studyArea').style.display = 'none';
+            }
+        }
+
+        function initCatGrid(mode) {
+            var grid = document.getElementById(mode === 'study' ? 'studyGrid' : 'catGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            CATEGORIES.forEach(function(c) {
+                var btn = document.createElement('div');
+                btn.className = 'cat-btn';
+                btn.innerHTML = '<div class="cat-icon">' + c.icon + '</div>'
+                    + '<div class="cat-name">' + c.name + '</div>'
+                    + '<div class="cat-desc">' + c.desc + '</div>';
+                btn.onclick = function() {
+                    if (mode === 'study') showStudy(c.id, c.name, c.icon);
+                    else startCategory(c.id, c.name);
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function showStudy(catId, catName, icon) {
+            currentStudyCat = catId;
+            currentStudyName = catName;
+            var data = GK_LEARN[catId];
+            if (!data) { alert('Study material not yet available for this topic.'); return; }
+            document.getElementById('studyGrid').style.display = 'none';
+            document.getElementById('studyArea').style.display = 'block';
+            document.getElementById('studyIcon').textContent = icon || '📖';
+            document.getElementById('studyTitle').textContent = data.title || catName;
+            document.getElementById('studySub').textContent = 'Study Notes for Competitive Exams';
+            document.getElementById('studyContent').innerHTML = data.content;
+        }
+
+        function backToStudyMenu() {
+            document.getElementById('studyArea').style.display = 'none';
+            document.getElementById('studyGrid').style.display = 'grid';
         }
 
         init();
