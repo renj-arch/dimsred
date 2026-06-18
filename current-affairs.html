@@ -823,156 +823,81 @@
             state.answered = false;
             state.questions = [];
 
-            // Get items within date range
             var rangeItems = _pibFeedData.filter(function(i) {
                 return i.pubDate && i.title && i.pubDate.slice(0,10) >= startVal && i.pubDate.slice(0,10) <= endVal;
             });
             if (rangeItems.length < 4) { alert('Not enough PIB news in that date range (need at least 4).'); return; }
 
-            // Sector classification by keywords
-            var sectors = [
-                { id:'defence', label:'Defence & Security', keywords:['army','navy','air force','defence','missile','rifle','ammunition','soldier','border','security','galantry','medal','military','war','cyber','intelligence','counter','terror','nuclear','weapon','battalion','regiment','naval','aircraft','drone','sensor','radar','surveillance','firing','exercise','opera', 'ship','submarine','fighter','commando','dgsi','bns','icg','coast guard','armoured','infantry','artillery','munitions','explosive','ordnance'] },
-                { id:'economy', label:'Economy & Finance', keywords:['economy','finance','gdp','inflation','budget','fiscal','monetary','tax','gst','revenue','expenditure','investment','fdi','trade','export','import','rupee','market','stock','banking','insurance','rbi','sebi','npci','fiscal','deficit','surplus','credit','loan','msme','startup','fintech','bond','sovereign','pension','insurance','capital','equity','ipo','dividend','interest','rate','inr','forex','reserve','monet'] },
-                { id:'infra', label:'Infrastructure & Transport', keywords:['road','highway','railway','bridge','tunnel','metro','airport','port','shipping','logistics','pipeline','power','grid','transmission','distribution','renewable','solar','wind','hydro','energy','electric','vehicle','ev','charging','fuel','petrol','diesel','gas','lng','coal','mining','steel','cement','construction','housing','urban','smart','city','infrastructure','corridor','dedicated','freight','expressway','nhai','pmgsy','sagarmala','bharatnet','digital','connect'] },
-                { id:'science', label:'Science & Technology', keywords:['science','technology','research','innovation','space','isro','nasa','satellite','rocket','launch','chandrayaan','mangalyaan','gaganyaan','lvm','pslv','gslv','nuclear','atomic','biotech','genome','dna','crispr','vaccine','pharma','drug','ai','artificial','intelligence','robot','quantum','computing','blockchain','cyber','digital','5g','6g','semiconductor','chip','nano','lab','telescope','observatory','fusion','plasma','laser','radar','sonar','drone','autonomous','supercomputer'] },
-                { id:'health', label:'Health & Family Welfare', keywords:['health','hospital','doctor','nurse','patient','disease','medicine','drug','vaccine','immunisation','ayushman','pmjay','ayurveda','yoga','ayush','medical','pharmacy','clinical','surgery','organ','transplant','cancer','diabetes','tuberculosis','tb','malaria','covid','pandemic','epidemic','nutrition','poshan','icmr','who','maternal','infant','child','family','welfare','sanitation','hygiene','healthcare','telemedicine','diagnostic','screening'] },
-                { id:'agriculture', label:'Agriculture & Rural', keywords:['agriculture','farmer','crop','irrigation','soil','seed','fertilizer','pesticide','harvest','mandi','pmkisan','kisan','fasal','bima','food','security','grain','wheat','rice','pulses','oilseed','sugarcane','cotton','horticulture','dairy','livestock','fishery','animal','husbandry','rural','panchayat','mgnrega','nrega',' Gram','gaon','krishi','mandi','apmc','cooperative','organic','natural','farming','sustainable','agri','food processing','cold storage'] },
-                { id:'education', label:'Education & Skill Development', keywords:['education','school','college','university','teacher','student','exam','nep','national education','skill','training','apprenticeship','vocational','literacy','scholarship','fellowship','research','institute','iit','iim','niti','aicte','ugc','cbse','ncert','digital','learning','online','course','degree','diploma','phd','enrollment','gross','enrolment','mid-day','meal','akshay','patra','library','knowledge'] },
-                { id:'diplomacy', label:'International Relations', keywords:['india and','india-','agreement','treaty','mou','bilateral','diplomatic','ambassador','high commissioner','visit','delegation','summit','g7','g20','brics','saarc','united nations','un ','world bank','imf','wto','who','unesco','foreign','overseas','consulate','embassy','country','partner','strategic','cooperation','trade deal','fta','cea','foreign minister','external','ministry of external','MEA','global south','nations','visit of','meeting with','call on'] },
-                { id:'environment', label:'Environment & Climate', keywords:['environment','climate','forest','tree','plantation','wildlife','animal','bird','tiger','elephant','lion','leopard','rhino','crocodile','sanctuary','national park','biodiversity','ecosystem','conservation','pollution','air','water','waste','recycle','green','carbon','emission','net zero','sustainable','renewable','energy','global warming','ozone','wetland','river','clean','ganga','yamuna','swachh','greenhouse','climate change','disaster','cyclone','flood','drought','earthquake','resilience'] },
-                { id:'social', label:'Social Justice & Welfare', keywords:['women','girl','boy','child','senior','disabled','divyang','tribe','tribal','sc','st','obc','minority','backward','poverty','hunger','food','nutrition','housing','pmay','pension','social','justice','empower','schedule','caste','welfare','labour','worker','migrant','street','vendor','transgender','lgbtq','equality','right','entitlement','awareness','campaign','mission',' abhiyaan'] },
-                { id:'sports', label:'Sports & Culture', keywords:['sport','game','player','tournament','championship','olympic','asian','commonwealth','cricket','football','hockey','badminton','tennis','athlete','medal','stadium','coach','khel','yuva','youth','culture','art','music','dance','film','festival','heritage','museum','monument','archive','library','tradition','folk','classical','award','honour','fellowship','padma','rashtrapati','president\'s'] }
-            ];
+            // Generic words NEVER to pick as the answer
+            var skip = {
+                'the':1,'and':1,'for':1,'with':1,'from':1,'this':1,'that':1,'were':1,'has':1,'had':1,'not':1,'are':1,'was':1,'but':1,'its':1,'their':1,'been':1,'will':1,'over':1,'into':1,'about':1,'than':1,'after':1,'before':1,'under':1,'through':1,'between':1,'against':1,'during':1,'without':1,'within':1,'along':1,'among':1,'upon':1,'across':1,'beyond':1,'toward':1,'also':1,'more':1,'most':1,'much':1,'many':1,'some':1,'such':1,'all':1,'each':1,'every':1,'both':1,'few':1,'own':1,'same':1,'so':1,'than':1,'too':1,'very':1,'just':1,'now':1,'here':1,'there':1,'then':1,'well':1,'back':1,'still':1,'already':1,'yet':1,'once':1,'again':1,'ever':1,'never':1,'always':1,'even':1,'though':1,'while':1,'since':1,'until':1,'because':1,'if':1,'when':1,'where':1,'how':1,'what':1,'who':1,'whom':1,'which':1,'whether':1,'why':1,
+                'minister':1,'ministers':1,'prime':1,'president':1,'vice':1,'chairman':1,'secretary':1,'government':1,'committee':1,'commission':1,'authority':1,'board':1,'council':1,'bureau':1,'department':1,'ministry':1,'chief':1,'general':1,'national':1,'international':1,'global':1,'central':1,'state':1,'union':1,'review':1,'meeting':1,'conference':1,'summit':1,'visit':1,'discuss':1,'holds':1,'held':1,'sign':1,'signed':1,'launch':1,'launched':1,'announce':1,'announced':1,'approve':1,'approved':1,'release':1,'released':1,'issue':1,'issued':1,'inaugurate':1,'inaugurated':1,'organize':1,'organizes':1,'organized':1,'participate':1,'participates':1,'participated':1,'host':1,'hosts':1,'hosted':1,'address':1,'addresses':1,'addressed':1,'call':1,'calls':1,'called':1,'speak':1,'speaks':1,'spoke':1,'deliver':1,'delivers':1,'delivered':1,'present':1,'presents':1,'presented':1,'new':1,'special':1,'first':1,'second':1,'third':1,'annual':1,'joint':1,'high':1,'level':1,'press':1,'information':1,'affairs':1,'external':1,'home':1,'finance':1,'defence':1,'health':1,'education':1,'rural':1,'urban':1,'power':1,'water':1,'road':1,'railway':1,'civil':1,'aviation':1,'commerce':1,'industry':1,'agriculture':1,'environment':1,'forest':1,'climate':1,'science':1,'technology':1,'development':1,                'programme':1,'project':1,'scheme':1,'initiative':1,'mission':1,'task':1,'force':1,'group':1,'team':1,'award':1,'honour':1,'fellowship':1,'scholarship':1,'day':1,'week':1,'month':1,'year':1,'session':1,'edition':1,'agreement':1,'agreements':1,'cooperation':1,'collaboration':1,'partnership':1,'initiative':1,'program':1,'programmes':1,'projects':1,'operation':1,'operations':1,
+                'january':1,'february':1,'march':1,'april':1,'may':1,'june':1,'july':1,'august':1,'september':1,'october':1,'november':1,'december':1,
+                'india':1,'indian':1,'govt':1,'government':1,'centre':1,'center':1,'parliament':1,'supreme':1,'court':1,'president':1,'pm':1,'modi':1
+            };
 
-            // Classify a headline into sectors
-            function classifyHeadline(title) {
-                var t = title.toLowerCase();
-                var matches = [];
-                sectors.forEach(function(s) {
-                    var score = 0;
-                    s.keywords.forEach(function(k) {
-                        if (t.indexOf(k) >= 0) score++;
-                    });
-                    if (score > 0) matches.push({ sector: s, score: score });
-                });
-                matches.sort(function(a, b) { return b.score - a.score; });
-                return matches.length > 0 ? matches[0].sector : null;
-            }
+            // Extract the key entity from a headline (the last meaningful proper noun/acronym)
+            function pickEntity(title) {
+                var raw = title.replace(/[–—•·′″]/g, ' ').split(' ');
+                var candidates = [];
 
-            // Get significant keywords from a headline (non-stop, capitalized, >=4 chars)
-            function headlineKeywords(title) {
-                var stop = { 'the':1,'and':1,'for':1,'with':1,'from':1,'this':1,'that':1,'were':1,'has':1,'had':1,'not':1,'are':1,'was':1,'but':1,'its':1,'their':1,'been':1,'will':1,'over':1,'into':1,'about':1,'than':1,'after':1,'before':1,'under':1,'through':1,'between':1,'against':1,'during':1,'without':1,'within':1,'along':1,'among':1,'upon':1,'across':1,'beyond':1,'toward':1};
-                var words = title.split(' ');
-                var sig = [];
-                words.forEach(function(w) {
-                    var clean = w.replace(/[^a-zA-Z0-9\u0900-\u097F-]/g,'');
-                    if (clean.length < 4) return;
-                    if (stop[clean.toLowerCase()]) return;
-                    sig.push(clean);
-                });
-                return sig;
-            }
+                for (var i = raw.length - 1; i >= 0; i--) {
+                    var w = raw[i].replace(/[^a-zA-Z0-9\u0900-\u097F+]/g, '');
+                    if (w.length < 3) continue;
+                    if (/^\d+$/.test(w)) continue;
+                    var lower = w.toLowerCase();
+                    if (skip[lower]) continue;
 
-            var sectorOptions = sectors.map(function(s) { return s.label; });
+                    // Prefer: acronyms (all caps, >=3), proper nouns (capitalized not at i=0)
+                    var isAcronym = w === w.toUpperCase() && /[A-Z]/.test(w) && w.length >= 3;
+                    var isProper = w[0] === w[0].toUpperCase() && w[0] !== w[0].toLowerCase() && i > 0;
+                    var isName = i > 0 && w[0] === w[0].toUpperCase() && !(w === w.toUpperCase() && w.length === 3 && 'THE AND FOR THE'.indexOf(w) < 0);
 
-            // Group items by sector for odd-one-out questions
-            var bySector = {};
-            rangeItems.forEach(function(item) {
-                var s = classifyHeadline(item.title);
-                if (s) {
-                    if (!bySector[s.id]) bySector[s.id] = [];
-                    bySector[s.id].push(item);
+                    if (isAcronym || isProper) {
+                        candidates.push({ word: w, index: i, raw: raw[i], score: (isAcronym ? 5 : 3) + (i / raw.length * 2) });
+                    }
                 }
+
+                if (candidates.length === 0) return null;
+                candidates.sort(function(a, b) { return b.score - a.score; });
+                return candidates[0];
+            }
+
+            // Build entity pool from all headlines
+            var entityPool = [];
+            rangeItems.forEach(function(item) {
+                var e = pickEntity(item.title);
+                if (e) entityPool.push(e.word);
             });
 
-            // Collect all topic keywords from each sector for distractor pool
-            var sectorKeywords = {};
-            sectors.forEach(function(s) { sectorKeywords[s.id] = s.keywords; });
+            rangeItems.forEach(function(item) {
+                var e = pickEntity(item.title);
+                if (!e) return;
 
-            function pickWrongSectorOptions(correctLabel) {
-                var pool = sectorOptions.filter(function(s) { return s !== correctLabel; });
-                var sh = shuffle(pool.slice());
-                var out = [];
-                for (var i = 0; i < sh.length && out.length < 3; i++) out.push(sh[i]);
-                return out;
-            }
+                // Build blanked headline
+                var words = item.title.replace(/[–—•·′″]/g, ' ').split(' ');
+                words[e.index] = '______';
+                var blanked = words.join(' ');
 
-            function buildOptions(correct, wrongPool) {
-                var sh = shuffle(wrongPool.slice());
-                var opts = [correct];
+                // Options: correct entity + 3 wrong from entity pool
+                var wrong = entityPool.filter(function(w) { return w !== e.word; });
+                var sh = shuffle(wrong.slice());
+                var opts = [e.word];
                 for (var i = 0; i < sh.length && opts.length < 4; i++) {
                     if (opts.indexOf(sh[i]) < 0) opts.push(sh[i]);
                 }
-                return shuffle(opts);
-            }
+                shuffle(opts);
 
-            // Generate mixed question types
-            var qTypes = []; // 0=sector, 1=keyword, 2=oddone
-            rangeItems.forEach(function(item, idx) {
-                var correctSector = classifyHeadline(item.title);
-                if (!correctSector) return;
-
-                var type = rand(0, 2);
-                if (type === 0) {
-                    // Sector identification
-                    state.questions.push({
-                        q: 'Which sector does this PIB news belong to?\n\n' + item.title,
-                        a: correctSector.label,
-                        opts: buildOptions(correctSector.label, pickWrongSectorOptions(correctSector.label)),
-                        hint: 'Think about which ministry would handle this',
-                        fact: 'PIB | ' + (item.pubDate ? item.pubDate.slice(0,10) : '') + (item.link ? '\n' + item.link : '')
-                    });
-                } else if (type === 1) {
-                    // Keyword/topic detection: which topic word appears in the headline?
-                    var sig = headlineKeywords(item.title);
-                    var correctKW = null;
-                    for (var i = 0; i < sig.length; i++) {
-                        if (sig[i].length >= 4) { correctKW = sig[i]; break; }
-                    }
-                    if (correctKW) {
-                        // Distractors: keywords from other sectors + random padded
-                        var allKW = [];
-                        sectors.forEach(function(s) { allKW = allKW.concat(s.keywords); });
-                        var cl = correctKW.toLowerCase();
-                        var wrongPool = allKW.filter(function(k) { return k !== cl && k.length >= 4 && k !== correctKW; });
-                        var kwOpts = buildOptions(correctKW, wrongPool);
-                        state.questions.push({
-                            q: 'Which of these topics is mentioned in this PIB headline?\n\n' + item.title,
-                            a: correctKW,
-                            opts: kwOpts,
-                            hint: 'Look for the key subject word in the headline',
-                            fact: 'PIB | ' + (item.pubDate ? item.pubDate.slice(0,10) : '') + (item.link ? '\n' + item.link : '')
-                        });
-                    }
-                } else if (type === 2 && Object.keys(bySector).length >= 2) {
-                    // Odd-one-out: 4 headlines, 3 from same sector, 1 different
-                    var sectorIds = Object.keys(bySector);
-                    var mainSectorId = pick(sectorIds);
-                    var mainItems = bySector[mainSectorId];
-                    if (mainItems && mainItems.length >= 3) {
-                        var otherSectorIds = sectorIds.filter(function(s) { return s !== mainSectorId; });
-                        if (otherSectorIds.length > 0) {
-                            var otherId = pick(otherSectorIds);
-                            var otherItems = bySector[otherId];
-                            if (otherItems && otherItems.length > 0) {
-                                var three = shuffle(mainItems.slice()).slice(0, 3);
-                                var one = pick(otherItems);
-                                var allFour = shuffle(three.concat([one]));
-                                var correctSectorName = classifyHeadline(one.title).label;
-                                state.questions.push({
-                                    q: 'Three of these headlines belong to the same sector. Which one is from a DIFFERENT sector?',
-                                    a: one.title,
-                                    opts: allFour.map(function(i) { return i.title; }),
-                                    hint: 'Identify the sector each news belongs to',
-                                    fact: '"' + one.title + '" belongs to ' + correctSectorName + (one.link ? '\n' + one.link : '')
-                                });
-                            }
-                        }
-                    }
-                }
+                state.questions.push({
+                    q: blanked,
+                    a: e.word,
+                    opts: opts,
+                    hint: 'Look for the key entity — a country, person, place, or organization',
+                    fact: (item.pubDate ? item.pubDate.slice(0,10) : '') + (item.link ? '\n' + item.link : '')
+                });
             });
 
-            if (state.questions.length < 3) { alert('Could not categorize enough headlines. Try a wider date range.'); return; }
+            if (state.questions.length < 3) { alert('Could not generate enough questions from this range.'); return; }
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
