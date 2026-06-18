@@ -859,28 +859,117 @@
                 return matches.length > 0 ? matches[0].sector : null;
             }
 
-            // Build questions: 1 per headline, ask which sector it belongs to
+            // Get significant keywords from a headline (non-stop, capitalized, >=4 chars)
+            function headlineKeywords(title) {
+                var stop = { 'the':1,'and':1,'for':1,'with':1,'from':1,'this':1,'that':1,'were':1,'has':1,'had':1,'not':1,'are':1,'was':1,'but':1,'its':1,'their':1,'been':1,'will':1,'over':1,'into':1,'about':1,'than':1,'after':1,'before':1,'under':1,'through':1,'between':1,'against':1,'during':1,'without':1,'within':1,'along':1,'among':1,'upon':1,'across':1,'beyond':1,'toward':1};
+                var words = title.split(' ');
+                var sig = [];
+                words.forEach(function(w) {
+                    var clean = w.replace(/[^a-zA-Z0-9\u0900-\u097F-]/g,'');
+                    if (clean.length < 4) return;
+                    if (stop[clean.toLowerCase()]) return;
+                    sig.push(clean);
+                });
+                return sig;
+            }
+
             var sectorOptions = sectors.map(function(s) { return s.label; });
+
+            // Group items by sector for odd-one-out questions
+            var bySector = {};
             rangeItems.forEach(function(item) {
+                var s = classifyHeadline(item.title);
+                if (s) {
+                    if (!bySector[s.id]) bySector[s.id] = [];
+                    bySector[s.id].push(item);
+                }
+            });
+
+            // Collect all topic keywords from each sector for distractor pool
+            var sectorKeywords = {};
+            sectors.forEach(function(s) { sectorKeywords[s.id] = s.keywords; });
+
+            function pickWrongSectorOptions(correctLabel) {
+                var pool = sectorOptions.filter(function(s) { return s !== correctLabel; });
+                var sh = shuffle(pool.slice());
+                var out = [];
+                for (var i = 0; i < sh.length && out.length < 3; i++) out.push(sh[i]);
+                return out;
+            }
+
+            function buildOptions(correct, wrongPool) {
+                var sh = shuffle(wrongPool.slice());
+                var opts = [correct];
+                for (var i = 0; i < sh.length && opts.length < 4; i++) {
+                    if (opts.indexOf(sh[i]) < 0) opts.push(sh[i]);
+                }
+                return shuffle(opts);
+            }
+
+            // Generate mixed question types
+            var qTypes = []; // 0=sector, 1=keyword, 2=oddone
+            rangeItems.forEach(function(item, idx) {
                 var correctSector = classifyHeadline(item.title);
                 if (!correctSector) return;
 
-                // 3 wrong sector labels as distractors
-                var wrongPool = sectorOptions.filter(function(s) { return s !== correctSector.label; });
-                var shuffled = shuffle(wrongPool.slice());
-                var opts = [correctSector.label];
-                for (var i = 0; i < shuffled.length && opts.length < 4; i++) {
-                    if (opts.indexOf(shuffled[i]) < 0) opts.push(shuffled[i]);
+                var type = rand(0, 2);
+                if (type === 0) {
+                    // Sector identification
+                    state.questions.push({
+                        q: 'Which sector does this PIB news belong to?\n\n' + item.title,
+                        a: correctSector.label,
+                        opts: buildOptions(correctSector.label, pickWrongSectorOptions(correctSector.label)),
+                        hint: 'Think about which ministry would handle this',
+                        fact: 'PIB | ' + (item.pubDate ? item.pubDate.slice(0,10) : '') + (item.link ? '\n' + item.link : '')
+                    });
+                } else if (type === 1) {
+                    // Keyword/topic detection: which topic word appears in the headline?
+                    var sig = headlineKeywords(item.title);
+                    var correctKW = null;
+                    for (var i = 0; i < sig.length; i++) {
+                        if (sig[i].length >= 4) { correctKW = sig[i]; break; }
+                    }
+                    if (correctKW) {
+                        // Distractors: keywords from other sectors + random padded
+                        var allKW = [];
+                        sectors.forEach(function(s) { allKW = allKW.concat(s.keywords); });
+                        var cl = correctKW.toLowerCase();
+                        var wrongPool = allKW.filter(function(k) { return k !== cl && k.length >= 4 && k !== correctKW; });
+                        var kwOpts = buildOptions(correctKW, wrongPool);
+                        state.questions.push({
+                            q: 'Which of these topics is mentioned in this PIB headline?\n\n' + item.title,
+                            a: correctKW,
+                            opts: kwOpts,
+                            hint: 'Look for the key subject word in the headline',
+                            fact: 'PIB | ' + (item.pubDate ? item.pubDate.slice(0,10) : '') + (item.link ? '\n' + item.link : '')
+                        });
+                    }
+                } else if (type === 2 && Object.keys(bySector).length >= 2) {
+                    // Odd-one-out: 4 headlines, 3 from same sector, 1 different
+                    var sectorIds = Object.keys(bySector);
+                    var mainSectorId = pick(sectorIds);
+                    var mainItems = bySector[mainSectorId];
+                    if (mainItems && mainItems.length >= 3) {
+                        var otherSectorIds = sectorIds.filter(function(s) { return s !== mainSectorId; });
+                        if (otherSectorIds.length > 0) {
+                            var otherId = pick(otherSectorIds);
+                            var otherItems = bySector[otherId];
+                            if (otherItems && otherItems.length > 0) {
+                                var three = shuffle(mainItems.slice()).slice(0, 3);
+                                var one = pick(otherItems);
+                                var allFour = shuffle(three.concat([one]));
+                                var correctSectorName = classifyHeadline(one.title).label;
+                                state.questions.push({
+                                    q: 'Three of these headlines belong to the same sector. Which one is from a DIFFERENT sector?',
+                                    a: one.title,
+                                    opts: allFour.map(function(i) { return i.title; }),
+                                    hint: 'Identify the sector each news belongs to',
+                                    fact: '"' + one.title + '" belongs to ' + correctSectorName + (one.link ? '\n' + one.link : '')
+                                });
+                            }
+                        }
+                    }
                 }
-                shuffle(opts);
-
-                state.questions.push({
-                    q: 'Which sector does this PIB news belong to?\n\n' + item.title,
-                    a: correctSector.label,
-                    opts: opts,
-                    hint: 'Think about which ministry would handle this',
-                    fact: 'Published on ' + (item.pubDate ? item.pubDate.slice(0,10) : '') + (item.link ? '\nSource: ' + item.link : '')
-                });
             });
 
             if (state.questions.length < 3) { alert('Could not categorize enough headlines. Try a wider date range.'); return; }
