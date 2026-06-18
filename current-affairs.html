@@ -64,10 +64,7 @@
         .q-opt:disabled{cursor:default;opacity:.7}
 
         .study-card{padding:24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);margin-bottom:14px}
-        .study-content b{color:var(--purple)}
-        .study-content u{color:var(--cyan)}
-        .study-content::-webkit-scrollbar{width:4px}
-        .study-content::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:100px}
+        .study-sec-b b{color:var(--purple)}
 
         .result-flash{padding:12px;border-radius:8px;text-align:center;font-weight:700;font-size:.9em;margin-bottom:10px;display:none}
         .result-flash.show{display:block}
@@ -93,6 +90,69 @@
 
         .hidden{display:none!important}
         #pibFeedList a:hover{border-color:rgba(255,255,255,.15)!important;background:rgba(255,255,255,.04)!important}
+
+        /* === Study Mode Enhancements === */
+        .study-bc{font-size:.75em;color:var(--text-muted);margin-bottom:8px;padding:0 4px}
+        .study-bc span{color:var(--purple)}
+        .study-tb{display:flex;align-items:center;gap:8px;margin:12px 0;flex-wrap:wrap}
+        .study-tb .fs-c{display:flex;align-items:center;gap:4px}
+        .study-tb .fs-c button{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:.8em;font-weight:700;transition:all .15s;line-height:1}
+        .study-tb .fs-c button:hover{background:rgba(255,255,255,.06)}
+        .study-tb .fs-c .fs-lbl{font-size:.72em;color:var(--text-muted);min-width:32px;text-align:center}
+        .study-search{flex:1;min-width:100px}
+        .study-search input{width:100%;padding:6px 12px;border-radius:100px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font-size:.82em;font-family:inherit;outline:none;transition:border .2s}
+        .study-search input:focus{border-color:var(--purple);background:rgba(167,139,250,.06)}
+        .study-search input::placeholder{color:var(--text-muted)}
+        .study-pb{height:4px;background:rgba(255,255,255,.06);border-radius:100px;margin:8px 0;overflow:hidden}
+        .study-pb .fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--emerald));border-radius:100px;transition:width .3s}
+        .study-pt{font-size:.7em;color:var(--text-muted);margin-bottom:8px}
+        .study-sn{display:flex;gap:4px;flex-wrap:wrap;margin:8px 0 12px}
+        .study-sn button{padding:5px 12px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-sec);cursor:pointer;font-size:.72em;font-weight:600;transition:all .15s}
+        .study-sn button:hover{border-color:rgba(255,255,255,.15);color:var(--text)}
+        .study-sn button.act{border-color:var(--purple);background:rgba(167,139,250,.12);color:var(--purple)}
+        .study-sn button.done{position:relative}
+        .study-sn button.done::after{content:'✓';position:absolute;top:-3px;right:-3px;font-size:9px;color:var(--emerald)}
+        .study-vt{display:flex;gap:2px;margin:0 0 12px;padding:3px;border-radius:100px;background:rgba(255,255,255,.04);max-width:320px}
+        .study-vt button{flex:1;padding:6px 12px;border-radius:100px;border:none;background:transparent;color:var(--text-sec);cursor:pointer;font-size:.75em;font-weight:600;transition:all .15s}
+        .study-vt button.act{background:var(--bg-card);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.2)}
+        .study-sec{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;transition:all .2s}
+        .study-sec-h{padding:10px 14px;display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;transition:background .15s}
+        .study-sec-h:hover{background:rgba(255,255,255,.02)}
+        .study-sec-h .arrow{font-size:.7em;color:var(--text-muted);transition:transform .2s;flex-shrink:0}
+        .study-sec-h .arrow.o{transform:rotate(90deg)}
+        .study-sec-h .st{flex:1;font-weight:600;font-size:.82em}
+        .study-sec-h .chk{width:16px;height:16px;border-radius:4px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s;font-size:10px}
+        .study-sec-h .chk.d{background:var(--emerald);border-color:var(--emerald);color:#fff}
+        .study-sec-b{padding:0 14px 14px;font-size:.85em;line-height:1.7;display:none}
+        .study-sec-b.o{display:block}
+        .study-sec-b b{color:var(--purple)}
+        .study-sec-b u{color:var(--cyan)}
+        .study-sec-b ul{margin:4px 0 4px 14px;list-style:none}
+        .study-sec-b ul li::before{content:'• ';color:var(--purple)}
+        .fc-area{padding:12px 0}
+        .fc-card{min-height:160px;border-radius:var(--radius);border:1px solid var(--border);background:rgba(255,255,255,.02);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;cursor:pointer;transition:all .3s;user-select:none;text-align:center}
+        .fc-card:hover{border-color:rgba(255,255,255,.12)}
+        .fc-card .q{font-size:1em;font-weight:700;margin-bottom:12px;line-height:1.5}
+        .fc-card .a{font-size:.9em;color:var(--text-sec);line-height:1.6;display:none}
+        .fc-card .a.show{display:block}
+        .fc-card .tap{font-size:.7em;color:var(--text-muted);margin-top:12px}
+        .fc-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:14px}
+        .fc-nav button{padding:8px 18px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:.8em;font-weight:600;transition:all .15s}
+        .fc-nav button:hover{background:rgba(255,255,255,.06)}
+        .fc-nav .cnt{font-size:.78em;color:var(--text-muted)}
+        .fc-nav button:disabled{opacity:.3;cursor:default}
+        .summary-area{padding:4px 0}
+        .summary-area .s-item{padding:10px 14px;margin-bottom:6px;border-radius:8px;border-left:3px solid var(--purple);background:rgba(167,139,250,.04);font-size:.82em;line-height:1.5}
+        .sr-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding-top:60px}
+        .sr-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);max-width:500px;width:90%;max-height:70vh;overflow-y:auto;padding:20px}
+        .sr-box .sr-title{font-weight:700;font-size:.95em;margin-bottom:12px}
+        .sr-box .sr-item{padding:10px 12px;border-radius:8px;border:1px solid var(--border);margin-bottom:6px;cursor:pointer;transition:all .15s}
+        .sr-box .sr-item:hover{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12)}
+        .sr-box .sr-item .cat{font-size:.68em;color:var(--text-muted);margin-bottom:2px}
+        .sr-box .sr-item .snippet{font-size:.82em;line-height:1.5}
+        .sr-box .sr-item .snippet b{color:var(--purple)}
+        .sr-close{position:absolute;top:66px;right:calc(50% - 220px);background:var(--bg-card);border:1px solid var(--border);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:1.1em}
+        @media(max-width:500px){.sr-close{right:12px}}
     </style>
 </head>
 <body>
@@ -222,17 +282,52 @@
 
         <!-- Study View -->
         <div class="study-area" id="studyArea" style="display:none">
-            <div class="study-card">
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-                    <span id="studyIcon" style="font-size:1.6em"></span>
-                    <div>
-                        <div class="study-title" id="studyTitle" style="font-size:1.3em;font-weight:800"></div>
+            <div class="study-bc">← <a href="#" onclick="backToStudyMenu();return false" style="color:var(--text-muted);text-decoration:none">All Topics</a> / <span id="studyBcTopic">Topic</span></div>
+            <div class="study-card" style="padding:20px 24px">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+                    <span id="studyIcon" style="font-size:1.8em"></span>
+                    <div style="flex:1">
+                        <div class="study-title" id="studyTitle" style="font-size:1.25em;font-weight:800"></div>
                         <div class="study-sub" id="studySub" style="font-size:.72em;color:var(--text-muted)">Study Notes for Competitive Exams</div>
                     </div>
                 </div>
-                <div class="study-content" id="studyContent" style="font-size:.85em;line-height:1.7;max-height:60vh;overflow-y:auto;padding-right:8px;margin-top:8px"></div>
+
+                <!-- Toolbar: font size + search -->
+                <div class="study-tb">
+                    <div class="fs-c">
+                        <button onclick="changeFs(-1)" title="Smaller">A−</button>
+                        <span class="fs-lbl" id="fsLbl">100%</span>
+                        <button onclick="changeFs(1)" title="Larger">A+</button>
+                    </div>
+                    <div class="study-search">
+                        <input type="text" id="studySearch" placeholder="Search across all topics..." oninput="studySearch(this.value)">
+                    </div>
+                </div>
+
+                <!-- Progress bar -->
+                <div class="study-pb"><div class="fill" id="studyProgFill" style="width:0%"></div></div>
+                <div class="study-pt" id="studyProgTxt">0 / 0 sections completed</div>
+
+                <!-- Section navigation pills -->
+                <div class="study-sn" id="studySecNav"></div>
+
+                <!-- View toggle -->
+                <div class="study-vt">
+                    <button class="act" data-view="notes" onclick="setStudyView('notes')">📝 Notes</button>
+                    <button data-view="flashcards" onclick="setStudyView('flashcards')">🃏 Flashcards</button>
+                    <button data-view="summary" onclick="setStudyView('summary')">📋 Summary</button>
+                </div>
+
+                <!-- Notes view -->
+                <div id="studyNotes" style="font-size:100%"></div>
+                <!-- Flashcards view -->
+                <div id="studyFC" style="display:none"></div>
+                <!-- Summary view -->
+                <div id="studySum" style="display:none"></div>
+
+                <!-- Bottom buttons -->
                 <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
-                    <button class="action-btn primary" onclick="startCategory(currentStudyCat, currentStudyName)" style="flex:1;padding:10px;font-size:.85em">📝 Take Quiz on this Topic</button>
+                    <button class="action-btn primary" onclick="startCategory(currentStudyCat, currentStudyName)" style="flex:1;padding:10px;font-size:.85em">📝 Take Quiz on This Topic</button>
                     <button class="action-btn secondary" onclick="backToStudyMenu()" style="flex:0;padding:10px 16px;font-size:.85em">← All Topics</button>
                 </div>
             </div>
@@ -272,7 +367,9 @@
                 + '<b>Parts (25):</b> Part I — Union & Territory | Part III — Fundamental Rights (Art 12-35) | Part IV — DPSP (Art 36-51) | Part IVA — Fundamental Duties (Art 51A) | Part V — Union Executive | Part VI — State Executive | Part IX — Panchayats | Part IXA — Municipalities<br><br>'
                 + '<b>Schedules (12):</b> 1st — States & UTs | 2nd — Salaries of President, Governors, etc. | 3rd — Oaths & Affirmations | 4th — Rajya Sabha seat allocation | 5th — Scheduled Areas & Tribes | 6th — Tribal Areas (Assam, Meghalaya, etc.) | 7th — Union, State, Concurrent Lists | 8th — Official Languages (22) | 9th — Land Reforms (added by 1st Amendment) | 10th — Anti-Defection | 11th — Panchayat powers (73rd Amendment) | 12th — Municipal powers (74th Amendment)<br><br>'
                 + '<b>Important Amendments:</b><br>• 1st (1951) — Added 9th Schedule for land reforms<br>• 7th (1956) — Reorganisation of states on linguistic basis<br>• 42nd (1976) — Added Fundamental Duties & Preamble amendments (Socialist, Secular, Integrity)<br>• 44th (1978) — Removed Right to Property from FR, made it legal right<br>• 52nd (1985) — Anti-Defection law<br>• 61st (1989) — Voting age reduced from 21 to 18<br>• 73rd (1992) — Panchayati Raj<br>• 74th (1992) — Urban Local Bodies<br>• 86th (2002) — Elementary education as fundamental right (Art 21A)<br>• 101st (2016) — GST<br>• 103rd (2019) — 10% reservation for EWS<br>• 106th (2023) — Women reservation in Lok Sabha & Assemblies (33%)<br><br>'
-                + '<b>Misc:</b><br>• Constituent Assembly formed: Dec 9, 1946 | President: Dr Rajendra Prasad | Chairman of Drafting Committee: Dr B R Ambedkar<br>• Constitution adopted: Nov 26, 1949 | Enforced: Jan 26, 1950<br>• Preamble keywords: Sovereign, Socialist, Secular, Democratic, Republic, Justice, Liberty, Equality, Fraternity<br>• Basic Structure Doctrine: Kesavananda Bharati case (1973) — Parliament cannot amend basic features<br>• Types of Writs: Habeas Corpus, Mandamus, Prohibition, Certiorari, Quo Warranto'
+                + '<b>Misc:</b><br>• Constituent Assembly formed: Dec 9, 1946 | President: Dr Rajendra Prasad | Chairman of Drafting Committee: Dr B R Ambedkar<br>• Constitution adopted: Nov 26, 1949 | Enforced: Jan 26, 1950<br>• Preamble keywords: Sovereign, Socialist, Secular, Democratic, Republic, Justice, Liberty, Equality, Fraternity<br>• Basic Structure Doctrine: Kesavananda Bharati case (1973) — Parliament cannot amend basic features<br>• Types of Writs: Habeas Corpus, Mandamus, Prohibition, Certiorari, Quo Warranto<br><br>'
+                + '<b>Landmark Supreme Court Cases:</b><br>• Kesavananda Bharati (1973) — Basic Structure Doctrine<br>• Maneka Gandhi (1978) — Art 21 expanded, procedure must be fair, just, reasonable<br>• Minerva Mills (1980) — Parliament cannot destroy basic structure, limited amendment power<br>• SR Bommai (1994) — Art 356 (President\'s Rule) subject to judicial review<br>• Indra Sawhney (1992) — 50% cap on reservations, creamy layer concept<br>• Vishaka (1997) — Guidelines against sexual harassment at workplace<br>• IR Coelho (2007) — 9th Schedule laws open to basic structure review<br>• NJAC (2015) — Strikes down NJAC Act, restores collegium system<br>• Aadhaar (2018) — Upheld as constitutional, but limited private sector use<br>• Sabarimala (2018) — Ban on women entry unconstitutional<br>• Section 377 (2018) — Decriminalised homosexuality<br>• Ayodhya (2019) — Land title to Ram Mandir trust, alternate land for mosque<br>• Article 370 (2023) — Supreme Court upheld abrogation of Art 370<br><br>'
+                + '<b>Constitutional Bodies:</b><br>• Election Commission (Art 324) — Superintends elections<br>• UPSC (Art 315-323) — Central recruiting agency<br>• Finance Commission (Art 280) — Revenue distribution between Centre & states<br>• CAG (Art 148) — Audits govt accounts<br>• Attorney General (Art 76) — Govt\'s top law officer<br>• Advocate General (Art 165) — State\'s top law officer<br>• National Commission for SCs (Art 338)<br>• National Commission for STs (Art 338A)<br>• Special Officer for Linguistic Minorities (Art 350B)<br>• Comptroller & Auditor General (Art 148)'
             },
             schemes: {
                 title: 'Government Schemes',
@@ -306,7 +403,19 @@
                 + '• <b>SAGARMALA</b> (2015, Shipping) — Port-led development<br>'
                 + '• <b>Bharatmala Pariyojana</b> (2017, Road Transport) — Highway development (~65,000 km)<br>'
                 + '• <b>PM Gati Shakti</b> (2021) — National Master Plan for connectivity<br>'
-                + '• <b>National Hydrogen Mission</b> (2021) — Green hydrogen production'
+                + '• <b>National Hydrogen Mission</b> (2021) — Green hydrogen production<br>'
+                + '• <b>Pradhan Mantri Vishwakarma</b> (2023) — Support for traditional artisans & craftspeople<br>'
+                + '• <b>PM-JAY (Ayushman Bharat)</b> expanded — Free health cover to all 70+ citizens<br>'
+                + '• <b>PM Surya Ghar: Muft Bijli Yojana</b> (2024) — Solar power for 1 crore households<br>'
+                + '• <b>PM Schools for Rising India (PM SHRI)</b> (2022) — Upgrade 14,500+ schools<br>'
+                + '• <b>Missions under NEP 2020:</b> NIPUN Bharat (foundational literacy), DIKSHA, SWAYAM, Academic Bank of Credit<br>'
+                + '• <b>PM e-Bus Sewa</b> (2022) — 10,000 e-buses for city transport<br>'
+                + '• <b>PM Janjati Adivasi Nyaya Maha Abhiyan (PM-JANMAN)</b> (2023) — Tribal welfare<br>'
+                + '• <b>Aspirational Districts Programme</b> (2018) — Development of 112 backward districts<br>'
+                + '• <b>Aspirational Blocks Programme</b> (2022) — Block-level development<br>'
+                + '• <b>SVAMITVA</b> (2020) — Property card via drone survey for rural areas<br>'
+                + '• <b>PM Street Vendor\'s AtmaNirbhar Nidhi (PM SVANidhi)</b> — Working capital for street vendors<br>'
+                + '• <b>National Migrant Information System (NMIS)</b> — Tracking of migrant workers<br>'
             },
             sports: {
                 title: 'Sports',
@@ -338,7 +447,32 @@
                 + '• MA Chidambaram Stadium, Chennai<br>'
                 + '• Major Dhyan Chand Stadium, New Delhi (hockey)<br>'
                 + '• SAI centres across India<br><br>'
-                + '<b>Sports Terms:</b> Deuce (tennis), Love (tennis), LBW (cricket), Stalemate (chess), Checkmate (chess), Hat-trick, Grand Slam, Century, Golden Duck, Silly Point (cricket), Birdie/Bogie (golf), KO (boxing), Volley (football/tennis), Dribble (football/basketball), Clean sweep'
+                + '<b>Sports Terms:</b> Deuce (tennis), Love (tennis), LBW (cricket), Stalemate (chess), Checkmate (chess), Hat-trick, Grand Slam, Century, Golden Duck, Silly Point (cricket), Birdie/Bogie (golf), KO (boxing), Volley (football/tennis), Dribble (football/basketball), Clean sweep<br><br>'
+                + '<b>India\'s Olympic Medals (by sport):</b><br>'
+                + '• Hockey: 8 gold, 1 silver, 4 bronze (most successful)<br>'
+                + '• Shooting: 1 gold (Abhinav Bindra, 2008), 5 silver, 5 bronze<br>'
+                + '• Wrestling: 7 medals (Sushil Kumar, Bajrang Punia, Ravi Dahiya, Sakshi Malik, etc.)<br>'
+                + '• Badminton: 3 medals (Saina Nehwal, PV Sindhu, etc.)<br>'
+                + '• Boxing: 3 medals (Vijender Singh, MC Mary Kom, Lovlina Borgohain)<br>'
+                + '• Athletics: Neeraj Chopra — gold (javelin, 2020), silver (2024)<br>'
+                + '• Weightlifting: 2 medals (Karnam Malleswari, Mirabai Chanu)<br>'
+                + '• Tennis: 1 medal (Leander Paes)<br>'
+                + '• Total: 10 gold, 10 silver, 21 bronze = 41 medals (as of 2024)<br><br>'
+                + '<b>Major Indian Sporting Firsts:</b><br>'
+                + '• First Olympic gold (individual): Abhinav Bindra (2008, 10m air rifle)<br>'
+                + '• First Olympic medal: Norman Pritchard (1900, athletics, 2 silver)<br>'
+                + '• First cricket World Cup win: 1983 (Kapil Dev)<br>'
+                + '• First T20 World Cup win: 2007 (MS Dhoni)<br>'
+                + '• First Chess Grandmaster: Viswanathan Anand (1988)<br>'
+                + '• First Indian woman to win an Olympic medal: Karnam Malleswari (2000)<br>'
+                + '• First Asian Games host: New Delhi 1951<br><br>'
+                + '<b>Chess in India:</b><br>'
+                + '• Viswanathan Anand — 5-time World Champion (2000, 2007, 2008, 2010, 2012)<br>'
+                + '• D Gukesh — Youngest undisputed world champion (2024, age 18)<br>'
+                + '• R Praggnanandhaa, Arjun Erigaisi, Vidit Gujrathi — top Indian GMs<br>'
+                + '• Humpy Koneru, Harika Dronavalli — top women GMs<br>'
+                + '• India won Chess Olympiad gold 2024 (both men\'s & women\'s teams)<br>'
+                + '• 85+ Grandmasters in India (as of 2024)'
             },
             books: {
                 title: 'Books & Authors',
@@ -373,7 +507,31 @@
                 + '• Puranas: 18 Mahapuranas, 18 Upapuranas<br>'
                 + '• Arthashastra — Chanakya/Kautilya<br>'
                 + '• Ashtadhyayi — Panini (Sanskrit grammar)<br>'
-                + '• Rajatarangini — Kalhana (Kashmir history)'
+                + '• Rajatarangini — Kalhana (Kashmir history)<br><br>'
+                + '<b>Other Notable Writers & Works:</b><br>'
+                + '• <b>Mulk Raj Anand</b> — Coolie, Untouchable (social realism)<br>'
+                + '• <b>Raja Rao</b> — Kanthapura, The Serpent and the Rope<br>'
+                + '• <b>Khushwant Singh</b> — Train to Pakistan, A History of the Sikhs<br>'
+                + '• <b>Mahasweta Devi</b> — Hajar Churashir Maa, Breast Stories (tribal rights)<br>'
+                + '• <b>Vijaydan Detha</b> — Rajasthani folk tales (Padma Shri 2023)<br>'
+                + '• <b>Namita Gokhale</b> — Paro: Dreams of Passion, Things to Leave Behind<br>'
+                + '• <b>Chitra Banerjee Divakaruni</b> — The Palace of Illusions (Mahabharata from Draupadi\'s view)<br>'
+                + '• <b>Anita Desai</b> — Clear Light of Day, Fasting, Feasting<br>'
+                + '• <b>William Dalrymple</b> — The Last Mughal, White Mughals (British historian on India)<br>'
+                + '• <b>Dominique Lapierre</b> — The City of Joy (Kolkata)<br><br>'
+                + '<b>Indian Literature Awards (recent):</b><br>'
+                + '• Jnanpith 2023: Damodar Mauzo (Konkani), 2024: Gulzar (Urdu)<br>'
+                + '• Sahitya Akademi 2023: Neelam Sachdeva (English, The Lost Country)<br>'
+                + '• International Booker 2023: Geetanjali Shree (Tomb of Sand — Hindi)<br>'
+                + '• DSC Prize for South Asian Literature<br><br>'
+                + '<b>Key Literary Terms:</b><br>'
+                + '• Autobiography — self-written life story<br>'
+                + '• Biography — life story written by another<br>'
+                + '• Memoir — focused on specific events/memories<br>'
+                + '• Anthology — collection of works<br>'
+                + '• Magnum opus — greatest work of an author<br>'
+                + '• Posthumous — published after author\'s death<br>'
+                + '• Pseudonym — pen name (e.g., Mark Twain = Samuel Clemens)'
             },
             space: {
                 title: 'ISRO & Space',
@@ -423,7 +581,18 @@
                 + '• IIST — Trivandrum (space education)<br>'
                 + '• NE-SAC — Shillong (North East applications)<br>'
                 + '• ISTRAC — Bengaluru (tracking)<br><br>'
-                + '<b>Other Space Agencies:</b> NASA (USA, 1958), Roscosmos (Russia), ESA (Europe), CNSA (China), JAXA (Japan)'
+                + '<b>Other Space Agencies:</b> NASA (USA, 1958), Roscosmos (Russia), ESA (Europe), CNSA (China), JAXA (Japan)<br><br>'
+                + '<b>Recent & Upcoming (2024-25):</b><br>'
+                + '• Gaganyaan — First unmanned test flight (TV-D1) completed Oct 2023, manned H1 2025<br>'
+                + '• NISAR — NASA-ISRO Earth observation satellite, 2025<br>'
+                + '• SPADEX — Space docking experiment (Dec 2024)<br>'
+                + '• Chandrayaan-4 — Lunar sample return (planned)<br>'
+                + '• Venus Orbiter (Shukrayaan) — Planned after 2025<br>'
+                + '• Bharatiya Antariksha Station — India\'s space station by 2035<br>'
+                + '• Indian Moon landing by 2040<br>'
+                + '• XPoSat — X-ray polarimetry (Jan 2024)<br>'
+                + '• INSAT-3DS — Weather satellite (Feb 2024)<br>'
+                + '• Startups: Skyroot, Agnikul, Pixxel, Digantara — private space revolution'
             },
             defence: {
                 title: 'Defence',
@@ -474,7 +643,24 @@
                 + '• MDL, GRSE, CSL — Shipbuilding<br>'
                 + '• OFB (now 7 DPSUs) — Ordnance & ammunition<br>'
                 + '• SIDM — (Society of Indian Defence Manufacturers)<br>'
-                + '• iDEX — Innovation for Defence Excellence'
+                + '• iDEX — Innovation for Defence Excellence<br><br>'
+                + '<b>Indian Defence Achievements:</b><br>'
+                + '• INS Vikrant — First indigenous aircraft carrier (2022)<br>'
+                + '• INS Arihant — First nuclear-powered submarine (SSBN)<br>'
+                + '• INS Arighaat — Second SSBN (2024)<br>'
+                + '• INS Nilgiri — First of 7 stealth frigates (Project 17A)<br>'
+                + '• LCA Tejas — Indigenous fighter jet, Mk1A 97 on order<br>'
+                + '• LCH Prachand — Light combat helicopter (2022)<br>'
+                + '• HAL Dhruv — ALH, exported to multiple countries<br>'
+                + '• Akash missile — SAM system, export to Philippines<br>'
+                + '• Pinaka — Extended range rocket system (75 km)<br>'
+                + '• Rafale — 36 fighter jets (2016 deal)<br>'
+                + '• S-400 Triumf — Russian air defence system<br>'
+                + '• Defence exports: ₹21,083 cr (FY24) — 23x in 10 yrs<br>'
+                + '• Agnipath Scheme — Short-term recruitment (2022)<br>'
+                + '• Women fighter pilots — IAF, Army, Navy expanding roles<br>'
+                + '• NCC — National Cadet Corps<br>'
+                + '• NDA, IMA, OTA, AFA, INA — Training academies'
             },
             national_parks: {
                 title: 'National Parks & Wildlife',
@@ -509,7 +695,26 @@
                 + '<b>Project Elephant:</b> 1992, ~30 elephant reserves<br><br>'
                 + '<b>Biosphere Reserves (UNESCO):</b> 18 in India — Nilgiri (first), Gulf of Mannar, Sundarbans, Nanda Devi, Nokrek, Pachmarhi, Simlipal, Great Nicobar, Kutch, etc.<br><br>'
                 + '<b>Wildlife Sanctuaries vs National Parks:</b> NPs have higher protection, no grazing/allowed entry; WS permits limited activities<br><br>'
-                + '<b>Conservation Status:</b> IUCN Red List categories — Extinct, Extinct in Wild, Critically Endangered, Endangered, Vulnerable, Near Threatened, Least Concern'
+                + '<b>Conservation Status:</b> IUCN Red List categories — Extinct, Extinct in Wild, Critically Endangered, Endangered, Vulnerable, Near Threatened, Least Concern<br><br>'
+                + '<b>Exam-Focused Wildlife Facts:</b><br>'
+                + '• One-horned Rhino: Kaziranga, Manas (Assam), Jaldapara (WB)<br>'
+                + '• Asiatic Lion: Only in Gir (Gujarat)<br>'
+                + '• Bengal Tiger: 55 reserves, highest in MP (Bandhavgarh, Kanha)<br>'
+                + '• Indian Elephant: 30 reserves, highest in Karnataka<br>'
+                + '• Snow Leopard: Hemis (Ladakh), Great Himalayan (HP)<br>'
+                + '• Red Panda: Nokrek (Meghalaya), Singalila (WB)<br>'
+                + '• Sangai Deer: Keibul Lamjao (Manipur) — only floating park<br>'
+                + '• Nilgiri Tahr: Eravikulam (Kerala)<br>'
+                + '• Gharial: National Chambal Sanctuary (UP/MP/Raj)<br>'
+                + '• Olive Ridley: Gahirmatha (Odisha) — largest rookery<br>'
+                + '• Great Indian Bustard: Desert NP (Raj) — critically endangered<br>'
+                + '• Lion-tailed Macaque: Silent Valley, Anamalai (Kerala/TN)<br>'
+                + '• Dugong: Gulf of Mannar — marine mammal<br>'
+                + '• Gangetic Dolphin: National Aquatic Animal<br>'
+                + '• Peacock: National Bird<br>'
+                + '• Tiger: National Animal (Project Tiger 1973)<br>'
+                + '• Elephant: National Heritage Animal<br>'
+                + '• Wildlife Week: Oct 2-8 | World Wildlife Day: Mar 3'
             },
             dance: {
                 title: 'Dance Forms',
@@ -595,7 +800,24 @@
                 + '• <b>ICC</b> (2002, The Hague) — War crimes, genocide<br>'
                 + '• <b>WHO</b> — Health<br>'
                 + '• <b>WMO</b> (1950, Geneva) — Weather, climate, water<br>'
-                + '• <b>WIPO</b> (1967, Geneva) — Intellectual property'
+                + '• <b>WIPO</b> (1967, Geneva) — Intellectual property<br><br>'
+                + '<b>India\'s Role in Key Organizations:</b><br>'
+                + '• UN: Founding member, G4 member (for SC expansion)<br>'
+                + '• BRICS: Founding member, hosts BRICS CCI<br>'
+                + '• SCO: Full member (2017)<br>'
+                + '• SAARC: Founding member<br>'
+                + '• G20: Member, hosted 2023 summit in New Delhi<br>'
+                + '• Commonwealth: Member since 1947<br>'
+                + '• ASEAN: Summit partner, Act East Policy<br>'
+                + '• BIMSTEC: Bay of Bengal initiative<br>'
+                + '• IORA: Indian Ocean Rim Association<br>'
+                + '• ADB: Founding member, HQ Manila<br>'
+                + '• AIIB: Founding member, HQ Beijing<br>'
+                + '• NDB: BRICS New Development Bank, HQ Shanghai<br>'
+                + '• FATF: Member since 2010 (combat money laundering)<br>'
+                + '• MTCR: Member since 2016 (missile technology control)<br>'
+                + '• Wassenaar Arrangement: Member (2017)<br>'
+                + '• Australia Group: Member (2018)'
             },
             awards: {
                 title: 'Awards & Honours',
@@ -636,7 +858,17 @@
                 + '• Turing Award (Computer Science)<br>'
                 + '• Grammy (Music)<br>'
                 + '• Emmy (Television)<br>'
-                + '• Tony (Theatre)'
+                + '• Tony (Theatre)<br><br>'
+                + '<b>Recent Award Winners (2023-24):</b><br>'
+                + '• Bharat Ratna 2024: LK Advani, MS Swaminathan, Karpoori Thakur, Ch Charan Singh, PV Narasimha Rao<br>'
+                + '• Nobel Peace 2024: Nihon Hidankyo (Japanese atomic bomb survivors)<br>'
+                + '• Nobel Physics 2024: John Hopfield, Geoffrey Hinton (neural networks)<br>'
+                + '• Nobel Medicine 2024: Victor Ambros, Gary Ruvkun (microRNA)<br>'
+                + '• Booker 2024: Samantha Harvey (Orbital)<br>'
+                + '• Padma 2024: 132 awardees (5 Vibhushan, 17 Bhushan, 110 Shri)<br>'
+                + '• Dadasaheb Phalke 2023: Mithun Chakraborty<br>'
+                + '• Jnanpith 2024: Gulzar (Urdu)<br>'
+                + '• Sahitya Akademi 2024: 24 writers across languages'
             },
             dams: {
                 title: 'Dams & Rivers',
@@ -1145,17 +1377,10 @@
         var state = { cat: null, questions: [], idx: 0, correct: 0, streak: 0, answered: false, categoryName: '' };
 
         function init() {
-            // Quiz grid
-            var grid = document.getElementById('catGrid');
-            CATEGORIES.forEach(function(c) {
-                grid.innerHTML += '<div class="cat-btn" data-cat="' + c.id + '" onclick="startCategory(\'' + c.id + '\',\'' + c.name + '\')">'
-                    + '<div class="cat-icon">' + c.icon + '</div>'
-                    + '<div class="cat-name">' + c.name + '</div>'
-                    + '<div class="cat-desc">' + c.desc + '</div>'
-                    + '</div>';
-            });
-            // Study grid
             initCatGrid('study');
+            initCatGrid('quiz');
+            // Pre-parse all study content
+            Object.keys(GK_LEARN).forEach(function(cid){ studyData[cid] = _parseStudyContent(cid); });
             loadPibFeed();
         }
 
@@ -1615,10 +1840,12 @@
                 document.getElementById('qArea').classList.remove('active');
                 document.getElementById('studyGrid').style.display = 'block';
                 document.getElementById('studyArea').style.display = 'none';
+                closeSearch();
             } else {
                 document.getElementById('welcome').style.display = 'block';
                 document.getElementById('studyGrid').style.display = 'none';
                 document.getElementById('studyArea').style.display = 'none';
+                closeSearch();
             }
         }
 
@@ -1642,17 +1869,368 @@
             });
         }
 
+        // ===== STUDY MODE ENGINE =====
+        var studyData = {};
+        var studyState = { view:'notes', fs:100, fcIdx:0, fcRevealed:false, fcShuffled:[] };
+
+        function _parseStudyContent(catId) {
+            var raw = GK_LEARN[catId];
+            if (!raw) return null;
+            var content = raw.content || '';
+            var parts = content.split(/(<b>[^<]+<\/b>)/);
+            var sections = [];
+            var currentTitle = 'Introduction';
+            var currentText = '';
+            for (var i = 0; i < parts.length; i++) {
+                var p = parts[i];
+                if (p.startsWith('<b>') && p.endsWith('</b>')) {
+                    if (currentText.trim()) {
+                        sections.push({ id:'s'+sections.length, title:currentTitle, content:currentText.trim() });
+                    }
+                    currentTitle = p.replace(/<[^>]+>/g,'').replace(/:$/,'').trim();
+                    currentText = '';
+                } else {
+                    currentText += p;
+                }
+            }
+            if (currentText.trim()) {
+                sections.push({ id:'s'+sections.length, title:currentTitle, content:currentText.trim() });
+            }
+            if (sections.length === 0) {
+                sections.push({ id:'s0', title:'Full Notes', content:content });
+            }
+
+            // Generate flashcards from bullet points with — or :
+            var flashcards = [];
+            var lines = content.split(/<br>/);
+            for (var li = 0; li < lines.length; li++) {
+                var line = lines[li].replace(/<[^>]+>/g,'').trim();
+                if (line.startsWith('•') || line.startsWith('-')) {
+                    var text = line.replace(/^[•\-\s]+/,'').trim();
+                    if (text.indexOf('—') > 0) {
+                        var fp = text.split('—');
+                        var fq = fp[0].trim();
+                        var fa = fp.slice(1).join('—').trim();
+                        if (fq && fa && fq.length > 5 && fa.length > 3 && flashcards.length < 40) {
+                            flashcards.push({ q:fq, a:fa });
+                        }
+                    } else if (text.indexOf(':') > 0 && text.indexOf(':') < text.length-3) {
+                        var ci = text.indexOf(':');
+                        var fq = text.substring(0,ci).trim();
+                        var fa = text.substring(ci+1).trim();
+                        if (fq && fa && fq.length > 3 && fa.length > 3 && fq.length < 80 && flashcards.length < 40) {
+                            flashcards.push({ q:fq, a:fa });
+                        }
+                    }
+                }
+            }
+            // If few flashcards, extract bold terms
+            if (flashcards.length < 4) {
+                var bolds = content.match(/<b>([^<]+)<\/b>/g) || [];
+                for (var bi = 0; bi < bolds.length && flashcards.length < 20; bi++) {
+                    var term = bolds[bi].replace(/<[^>]+>/g,'').replace(/:$/,'').trim();
+                    if (term.length > 2 && term.length < 60) {
+                        flashcards.push({ q:'What is ' + term + '?', a:term });
+                    }
+                }
+            }
+
+            // Generate summary bullets
+            var summary = [];
+            if (sections.length > 0) {
+                for (var si = 0; si < sections.length; si++) {
+                    var sec = sections[si];
+                    var plainText = sec.content.replace(/<[^>]+>/g,'');
+                    var bullets = plainText.split('\n').filter(function(l){ return l.trim().startsWith('•') || l.trim().startsWith('-'); });
+                    if (bullets.length > 0) {
+                        var picks = [];
+                        for (var bi2 = 0; bi2 < Math.min(3, bullets.length); bi2++) {
+                            picks.push(bullets[bi2].replace(/^[•\-\s]+/,'').split('—')[0].trim());
+                        }
+                        summary.push(sec.title + ': ' + picks.join(', '));
+                    } else {
+                        var firstSent = plainText.replace(/<br>/g,' ').split(/[.;]/)[0].trim();
+                        if (firstSent.length > 10) summary.push(sec.title + ': ' + firstSent.substring(0,120));
+                    }
+                }
+            }
+            if (summary.length === 0) {
+                summary.push('Study notes for ' + raw.title + ' — ' + sections.length + ' sections available.');
+            }
+
+            return {
+                title: raw.title,
+                icon: raw.icon,
+                sections: sections,
+                flashcards: flashcards,
+                summary: summary
+            };
+        }
+
         function showStudy(catId, catName, icon) {
             currentStudyCat = catId;
             currentStudyName = catName;
-            var data = GK_LEARN[catId];
+            var data = studyData[catId] || _parseStudyContent(catId);
             if (!data) { alert('Study material not yet available for this topic.'); return; }
+            studyData[catId] = data;
+
             document.getElementById('studyGrid').style.display = 'none';
             document.getElementById('studyArea').style.display = 'block';
-            document.getElementById('studyIcon').textContent = icon || '📖';
+            document.getElementById('studyBcTopic').textContent = data.title || catName;
+            document.getElementById('studyIcon').textContent = icon || GK_LEARN[catId]?.icon || '📖';
             document.getElementById('studyTitle').textContent = data.title || catName;
             document.getElementById('studySub').textContent = 'Study Notes for Competitive Exams';
-            document.getElementById('studyContent').innerHTML = data.content;
+
+            studyState.view = 'notes';
+            studyState.fcIdx = 0;
+            studyState.fcRevealed = false;
+            studyState.fs = 100;
+            document.getElementById('fsLbl').textContent = '100%';
+            document.getElementById('studyNotes').style.fontSize = '100%';
+
+            _buildSections(data);
+            _buildProgress(data);
+            _setView('notes');
+            _buildFC(data);
+            _buildSummary(data);
+        }
+
+        function _buildSections(data) {
+            var nav = document.getElementById('studySecNav');
+            var notes = document.getElementById('studyNotes');
+            nav.innerHTML = '';
+            notes.innerHTML = '';
+            var prog = JSON.parse(localStorage.getItem('study_prog_' + currentStudyCat) || '{}');
+
+            data.sections.forEach(function(s, i) {
+                var btn = document.createElement('button');
+                btn.textContent = s.title;
+                btn.onclick = function(){ _scrollToSec(s.id); };
+                if (i === 0) btn.className = 'act';
+                if (prog[s.id]) btn.className = 'done';
+                btn.id = 'sn_' + s.id;
+                nav.appendChild(btn);
+
+                var sec = document.createElement('div');
+                sec.className = 'study-sec';
+                sec.id = 'sec_' + s.id;
+                sec.innerHTML =
+                    '<div class="study-sec-h" onclick="_toggleSec(this)">'
+                    + '<span class="arrow">▶</span>'
+                    + '<span class="st">' + s.title + '</span>'
+                    + '<span class="chk' + (prog[s.id] ? ' d' : '') + '" id="chk_' + s.id + '" onclick="event.stopPropagation();_toggleChk(\'' + s.id + '\')">✓</span>'
+                    + '</div>'
+                    + '<div class="study-sec-b o" id="secb_' + s.id + '">' + s.content + '</div>';
+                notes.appendChild(sec);
+            });
+        }
+
+        function _buildProgress(data) {
+            var prog = JSON.parse(localStorage.getItem('study_prog_' + currentStudyCat) || '{}');
+            var done = 0;
+            data.sections.forEach(function(s) { if (prog[s.id]) done++; });
+            var total = data.sections.length;
+            document.getElementById('studyProgFill').style.width = (total ? (done / total * 100) : 0) + '%';
+            document.getElementById('studyProgTxt').textContent = done + ' / ' + total + ' sections completed';
+        }
+
+        function _toggleSec(el) {
+            var content = el.nextElementSibling;
+            var arrow = el.querySelector('.arrow');
+            content.classList.toggle('o');
+            arrow.classList.toggle('o');
+        }
+
+        function _toggleChk(id) {
+            var chk = document.getElementById('chk_' + id);
+            if (!chk) return;
+            chk.classList.toggle('d');
+            var prog = JSON.parse(localStorage.getItem('study_prog_' + currentStudyCat) || '{}');
+            if (chk.classList.contains('d')) prog[id] = true;
+            else delete prog[id];
+            localStorage.setItem('study_prog_' + currentStudyCat, JSON.stringify(prog));
+            var data = studyData[currentStudyCat];
+            if (data) {
+                _buildProgress(data);
+                data.sections.forEach(function(s) {
+                    var btn = document.getElementById('sn_' + s.id);
+                    if (btn) { btn.classList.toggle('done', !!prog[s.id]); }
+                });
+            }
+        }
+
+        function _scrollToSec(id) {
+            var el = document.getElementById('sec_' + id);
+            if (el) {
+                var content = el.querySelector('.study-sec-b');
+                var arrow = el.querySelector('.arrow');
+                if (content) content.classList.add('o');
+                if (arrow) arrow.classList.add('o');
+                el.scrollIntoView({ behavior:'smooth', block:'center' });
+            }
+            document.querySelectorAll('#studySecNav button').forEach(function(b){ b.classList.remove('act'); });
+            var btn = document.getElementById('sn_' + id);
+            if (btn) btn.classList.add('act');
+        }
+
+        function setStudyView(view) { _setView(view); }
+
+        function _setView(view) {
+            studyState.view = view;
+            document.querySelectorAll('.study-vt button').forEach(function(b){
+                b.classList.toggle('act', b.getAttribute('data-view') === view);
+            });
+            ['studyNotes','studyFC','studySum'].forEach(function(id){
+                document.getElementById(id).style.display = (id === 'studyNotes' && view === 'notes')
+                    || (id === 'studyFC' && view === 'flashcards')
+                    || (id === 'studySum' && view === 'summary') ? 'block' : 'none';
+            });
+        }
+
+        function _buildFC(data) {
+            var fc = data.flashcards;
+            var area = document.getElementById('studyFC');
+            if (fc.length === 0) {
+                area.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:.85em">No flashcards auto-generated for this topic. Use Notes view to study.</div>';
+                studyState.fcShuffled = [];
+                return;
+            }
+            studyState.fcShuffled = fc.slice();
+            // Fisher-Yates shuffle
+            for (var i = studyState.fcShuffled.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var t = studyState.fcShuffled[i];
+                studyState.fcShuffled[i] = studyState.fcShuffled[j];
+                studyState.fcShuffled[j] = t;
+            }
+            area.innerHTML =
+                '<div class="fc-area">'
+                + '<div class="fc-card" onclick="_revealFC()">'
+                + '<div class="q" id="fcQ"></div>'
+                + '<div class="a" id="fcA"></div>'
+                + '<div class="tap" id="fcTap">👆 Tap to reveal answer</div>'
+                + '</div>'
+                + '<div class="fc-nav">'
+                + '<button id="fcPrev" onclick="_prevFC()">← Previous</button>'
+                + '<span class="cnt" id="fcCnt"></span>'
+                + '<button id="fcNext" onclick="_nextFC()">Next →</button>'
+                + '</div>'
+                + '<div style="text-align:center;margin-top:8px">'
+                + '<button onclick="_reshuffleFC()" style="padding:4px 12px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-sec);cursor:pointer;font-size:.72em">🔀 Shuffle</button>'
+                + '</div>'
+                + '</div>';
+            studyState.fcIdx = 0;
+            studyState.fcRevealed = false;
+            _showFC();
+        }
+
+        function _showFC() {
+            var list = studyState.fcShuffled;
+            if (!list || !list.length) return;
+            if (studyState.fcIdx >= list.length) studyState.fcIdx = list.length - 1;
+            if (studyState.fcIdx < 0) studyState.fcIdx = 0;
+            studyState.fcRevealed = false;
+            var card = list[studyState.fcIdx];
+            document.getElementById('fcQ').textContent = card.q;
+            document.getElementById('fcA').textContent = card.a;
+            document.getElementById('fcA').classList.remove('show');
+            document.getElementById('fcTap').textContent = '👆 Tap to reveal answer';
+            document.getElementById('fcCnt').textContent = (studyState.fcIdx + 1) + ' / ' + list.length;
+            document.getElementById('fcPrev').disabled = studyState.fcIdx === 0;
+            document.getElementById('fcNext').disabled = studyState.fcIdx === list.length - 1;
+        }
+
+        function _revealFC() {
+            studyState.fcRevealed = !studyState.fcRevealed;
+            if (studyState.fcRevealed) {
+                document.getElementById('fcA').classList.add('show');
+                document.getElementById('fcTap').textContent = '🔄 Tap to hide answer';
+            } else {
+                document.getElementById('fcA').classList.remove('show');
+                document.getElementById('fcTap').textContent = '👆 Tap to reveal answer';
+            }
+        }
+
+        function _prevFC() { if (studyState.fcIdx > 0) { studyState.fcIdx--; _showFC(); } }
+        function _nextFC() {
+            var list = studyState.fcShuffled;
+            if (list && studyState.fcIdx < list.length - 1) { studyState.fcIdx++; _showFC(); }
+        }
+        function _reshuffleFC() {
+            var data = studyData[currentStudyCat];
+            if (data) _buildFC(data);
+        }
+
+        function _buildSummary(data) {
+            var sum = document.getElementById('studySum');
+            if (!data.summary || data.summary.length === 0) {
+                sum.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:.85em">No summary available.</div>';
+                return;
+            }
+            sum.innerHTML = '<div class="summary-area">' + data.summary.map(function(s){
+                return '<div class="s-item">' + s + '</div>';
+            }).join('') + '</div>';
+        }
+
+        function changeFs(delta) {
+            studyState.fs = Math.max(70, Math.min(150, studyState.fs + delta * 10));
+            document.getElementById('fsLbl').textContent = studyState.fs + '%';
+            document.getElementById('studyNotes').style.fontSize = studyState.fs + '%';
+        }
+
+        function backToStudyMenu() {
+            closeSearch();
+            document.getElementById('studyArea').style.display = 'none';
+            document.getElementById('studyGrid').style.display = 'block';
+        }
+
+        // Search across all categories
+        var _searchTimeout = null;
+        function studySearch(q) {
+            if (_searchTimeout) clearTimeout(_searchTimeout);
+            _searchTimeout = setTimeout(function(){ _doStudySearch(q); }, 300);
+        }
+        function _doStudySearch(q) {
+            var existing = document.getElementById('studySearchResults');
+            if (existing) existing.remove();
+            q = q.trim();
+            if (q.length < 2) return;
+
+            var results = [];
+            CATEGORIES.forEach(function(cat) {
+                var raw = GK_LEARN[cat.id];
+                if (!raw || !raw.content) return;
+                var text = raw.content.replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').toLowerCase();
+                var idx = text.indexOf(q.toLowerCase());
+                if (idx >= 0) {
+                    var snippet = raw.content.replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').substring(Math.max(0, idx - 40), idx + q.length + 80);
+                    results.push({ catId:cat.id, catName:raw.title, icon:raw.icon || cat.icon, snippet:snippet });
+                }
+            });
+
+            if (results.length === 0) return;
+
+            var overlay = document.createElement('div');
+            overlay.className = 'sr-overlay';
+            overlay.id = 'studySearchResults';
+            overlay.innerHTML =
+                '<div class="sr-box">'
+                + '<div class="sr-title">🔍 ' + results.length + ' result' + (results.length > 1 ? 's' : '') + ' for "' + q + '"</div>'
+                + results.map(function(r){
+                    return '<div class="sr-item" onclick="closeSearch();showStudy(\'' + r.catId + '\',\'' + r.catName.replace(/'/g,"\\'") + '\',\'' + (r.icon || '📖') + '\')">'
+                    + '<div class="cat">' + r.catName + '</div>'
+                    + '<div class="snippet">' + r.snippet + '</div>'
+                    + '</div>';
+                }).join('')
+                + '</div>'
+                + '<div class="sr-close" onclick="closeSearch()">✕</div>';
+            overlay.addEventListener('click', function(e) { if (e.target === overlay) closeSearch(); });
+            document.body.appendChild(overlay);
+        }
+        function closeSearch() {
+            var el = document.getElementById('studySearchResults');
+            if (el) el.remove();
+            document.getElementById('studySearch').value = '';
         }
 
         function backToStudyMenu() {
