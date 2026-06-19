@@ -1400,7 +1400,9 @@ function generateMotionQuestion(diff, layer) {
     // Type 9: Find train speed (given length + time to pass man running same direction) — IndiaBix Q2 style
     function(){ var l=rand(125,200), t=rand(8,15), ms=rand(3,6); return { q: 'Train '+l+'m passes man running '+ms+'m/s same dir in '+t+'s. Train speed (m/s)?', a: Math.round(l/t+ms), hint: 'Rel speed = '+l+'/'+t+'='+Math.round(l/t)+'. Train = rel + man', intuition: 'Relative speed = '+l+'/'+t+'='+Math.round(l/t)+'m/s. Train speed = rel + man speed = '+Math.round(l/t)+'+'+ms+'='+Math.round(l/t+ms)+'m/s' }; },
     // Type 10: Find platform length (given speed + man-time + platform-time) — IndiaBix Q5 style
-    function(){ var s=[45,54,60,72][rand(0,3)]; var ms=s*5/18; var tm=rand(15,25); var tp=rand(tm+8, tm+25); var trainLen=Math.round(ms*tm); var total=Math.round(ms*tp); var plat=total-trainLen; if(plat<50)plat=rand(150,350); return { q: 'Train at '+s+'km/h passes man in '+tm+'s, platform in '+tp+'s. Platform length?', a: plat, hint: 'Train len='+Math.round(ms)+'×'+tm+'='+trainLen+'. Total='+Math.round(ms)+'×'+tp+'='+total+'. Platform='+total+'-'+trainLen, intuition: 'Train length = '+Math.round(ms)+'×'+tm+'='+trainLen+'m. Total platform+cross = '+Math.round(ms)+'×'+tp+'='+total+'m. Platform = '+total+'-'+trainLen+'='+plat+'m' }; }
+    function(){ var s=[45,54,60,72][rand(0,3)]; var ms=s*5/18; var tm=rand(15,25); var tp=rand(tm+8, tm+25); var trainLen=Math.round(ms*tm); var total=Math.round(ms*tp); var plat=total-trainLen; if(plat<50)plat=rand(150,350); return { q: 'Train at '+s+'km/h passes man in '+tm+'s, platform in '+tp+'s. Platform length?', a: plat, hint: 'Train len='+Math.round(ms)+'×'+tm+'='+trainLen+'. Total='+Math.round(ms)+'×'+tp+'='+total+'. Platform='+total+'-'+trainLen, intuition: 'Train length = '+Math.round(ms)+'×'+tm+'='+trainLen+'m. Total platform+cross = '+Math.round(ms)+'×'+tp+'='+total+'m. Platform = '+total+'-'+trainLen+'='+plat+'m' }; },
+    // Type 11: Multi-step IndiaBIX — find Train B speed from platform/man crossing + length ratio + opposite crossing
+    function(){ var v1ms=[10,12,15,18,20,25][rand(0,5)]; var t2=rand(6,12); var t1gap=rand(8,16); var P=v1ms*t1gap; var L1=v1ms*t2; var t1=t2+t1gap; var v1kmh=Math.round(v1ms*3.6*10)/10; var ratio=[1.5,2,2.5][rand(0,2)]; var L2=Math.round(L1*ratio); var maxT3=Math.floor(t2*(1+ratio)*0.75); var t3=rand(8,Math.max(8,maxT3)); var relV=(L1+L2)/t3; var v2ms=Math.round((relV-v1ms)*10)/10; var v2kmh=Math.round(v2ms*3.6*10)/10; if(v2ms<=0){v2ms=rand(5,10);v2kmh=Math.round(v2ms*3.6*10)/10;} return { q: 'Train A crosses '+P+'m platform in '+t1+'s & a man in '+t2+'s. Train B (len ratio '+ratio+':1) crosses A opposite in '+t3+'s. B speed (km/h)?', a: v2kmh, hint: 'A speed via platform-man diff, then A length='+L1+', then rel speed', intuition: 'Step1: A speed='+P+'/('+t1+'-'+t2+')='+v1ms+'m/s='+v1kmh+'km/h. Step2: A len='+v1ms+'×'+t2+'='+L1+'m. Step3: B len='+ratio+'×'+L1+'='+L2+'m. Step4: Rel speed opp=('+L1+'+'+L2+')/'+t3+'='+relV.toFixed(1)+'m/s. Step5: B speed='+relV.toFixed(1)+'-'+v1ms+'='+v2ms+'m/s×3.6='+v2kmh+'km/h' }; }
   ];
   var type = types[rand(0, types.length - 1)];
   var data = type();
@@ -1445,7 +1447,13 @@ function generateAlgebraQuestion(diff, layer) {
     // Quadratic from exam: find roots
     function(){ var r1=rand(2,7), r2=rand(-5,-1); return { q: 'Roots of x² ' + (-r1-r2>=0?'+':'') + (-r1-r2) + 'x ' + (r1*r2>=0?'+':'') + (r1*r2) + ' = 0', a: r1 + ',' + r2, hint: 'Sum=' + (r1+r2) + ', product=' + (r1*r2), intuition: 'Sum of roots = ' + (r1+r2) + ' (sign flipped), product = ' + (r1*r2) + '. Find factors of ' + (r1*r2) + ' that sum to ' + (r1+r2) + ': ' + r1 + ', ' + r2 }; },
     // Hard: 3-person ages
-    function(){ var b=rand(8,15), c=rand(3,7); var a=[2,3,4][rand(0,2)]*b; var sum=a+b+c; return { q: 'A is ' + (a/b|0) + '× B\'s age. C is ' + c + '. Sum=' + sum + '. Find A?', a: a, hint: 'Let B=x, A=' + (a/b|0) + 'x, C=' + c + '. ' + (a/b|0+1) + 'x + ' + c + ' = ' + sum, intuition: 'Equation: ' + (a/b|0) + 'x + x + ' + c + ' = ' + sum + ', ' + (a/b|0+1) + 'x = ' + (sum-c) + ', x = ' + ((sum-c)/(a/b|0+1)|0) + '. A = ' + (a/b|0) + ' × ' + ((sum-c)/(a/b|0+1)|0) + ' = ' + a }; }
+    function(){ var b=rand(8,15), c=rand(3,7); var a=[2,3,4][rand(0,2)]*b; var sum=a+b+c; return { q: 'A is ' + (a/b|0) + '× B\'s age. C is ' + c + '. Sum=' + sum + '. Find A?', a: a, hint: 'Let B=x, A=' + (a/b|0) + 'x, C=' + c + '. ' + (a/b|0+1) + 'x + ' + c + ' = ' + sum, intuition: 'Equation: ' + (a/b|0) + 'x + x + ' + c + ' = ' + sum + ', ' + (a/b|0+1) + 'x = ' + (sum-c) + ', x = ' + ((sum-c)/(a/b|0+1)|0) + '. A = ' + (a/b|0) + ' × ' + ((sum-c)/(a/b|0+1)|0) + ' = ' + a }; },
+    // 3 consecutive numbers sum
+    function(){ var n=rand(5,20); return { q: 'Sum of 3 consecutive numbers = ' + (3*n+3) + '. Largest?', a: n+2, hint: 'Let x, x+1, x+2. Sum = 3x+3 = ' + (3*n+3), intuition: '3x+3 = ' + (3*n+3) + ', 3x = ' + (3*n) + ', x = ' + n + '. Numbers: ' + n + ', ' + (n+1) + ', ' + (n+2) + '. Largest = ' + (n+2) }; },
+    // Fraction where numerator+denominator = X, denominator = numerator + Y
+    function(){ var n=rand(2,6), d=n+rand(2,5); return { q: 'Numerator + denominator = ' + (n+d) + ', denominator exceeds numerator by ' + (d-n) + '. Fraction?', a: n + '/' + d, hint: 'Let num=x, den=x+' + (d-n) + '. x+(x+' + (d-n) + ')=' + (n+d), intuition: '2x+' + (d-n) + '=' + (n+d) + ', 2x=' + (n+d-(d-n)) + '=' + (2*n) + ', x=' + n + '. Fraction=' + n + '/' + d }; },
+    // Two-variable: 2x+3y type
+    function(){ var x=rand(2,8), y=rand(2,6); var a=rand(2,4), b=rand(2,4); return { q: 'Solve: ' + a + 'x + ' + b + 'y = ' + (a*x+b*y) + ' and ' + (a+1) + 'x + ' + (b+1) + 'y = ' + ((a+1)*x+(b+1)*y) + '. Find x+y?', a: x+y, hint: 'Subtract equations to eliminate variables', intuition: 'Subtract: (' + (a+1) + '-' + a + ')x + (' + (b+1) + '-' + b + ')y = ' + ((a+1)*x+(b+1)*y - (a*x+b*y)) + ' → x+y=' + ((a+1)*x+(b+1)*y - (a*x+b*y)) + '. Check: x=' + x + ', y=' + y }; }
   ];
   var type = types[rand(0, types.length - 1)];
   var data = type();
@@ -1466,14 +1474,20 @@ function generateGeometryQuestion(diff, layer) {
     // Complementary angles in right triangle
     function(){ var a=rand(20,70); return { q: 'Right triangle: angle A=' + a + '°. Angle C?', a: 90-a, hint: 'Sum of acute angles = 90° in right triangle', intuition: 'Right triangle: acute angles sum to 90°. C = 90 - ' + a + ' = ' + (90-a) + '°' }; },
     // Exterior angle = sum of opposite interior angles
-    function(){ var a=rand(30,60), b=rand(30,60); return { q: 'Triangle: interior A=' + a + '°, B=' + b + '°. Exterior at C?', a: a+b, hint: 'Exterior angle = sum of opposite interior', intuition: 'Exterior angle = sum of 2 opposite interior = ' + a + '+' + b + ' = ' + (a+b) + '°' }; }
+    function(){ var a=rand(30,60), b=rand(30,60); return { q: 'Triangle: interior A=' + a + '°, B=' + b + '°. Exterior at C?', a: a+b, hint: 'Exterior angle = sum of opposite interior', intuition: 'Exterior angle = sum of 2 opposite interior = ' + a + '+' + b + ' = ' + (a+b) + '°' }; },
+    // Find angle in triangle given two angles
+    function(){ var a=rand(30,70), b=rand(30,60); var c=180-a-b; return { q: 'Triangle: A=' + a + '°, B=' + b + '°. Angle C?', a: c, hint: 'Sum of angles = 180°', intuition: 'A + B + C = 180°, C = 180 - ' + a + ' - ' + b + ' = ' + c + '°' }; },
+    // Parallel lines with transversal: interior angles on same side
+    function(){ var a=rand(40,80); return { q: 'Two ∥ lines cut by transversal. One interior angle = ' + a + '°. Interior angle on same side?', a: 180-a, hint: 'Interior angles on same side sum to 180°', intuition: 'Same-side interior angles are SUPPLEMENTARY (sum 180°). Other = 180 - ' + a + ' = ' + (180-a) + '°' }; },
+    // Polygon interior angle sum
+    function(){ var n=rand(3,8); return { q: 'Sum of interior angles of a ' + n + '-sided polygon?', a: (n-2)*180, hint: 'Formula: (n-2)×180°', intuition: 'Sum = (n-2)×180° = (' + n + '-2)×180 = ' + (n-2) + '×180 = ' + (n-2)*180 + '°' }; }
   ];
   var type = types[rand(0, types.length - 1)];
   var data = type();
   var opts = [data.a];
   while (opts.length < 4) { var d = data.a + rand(-8, 8); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
   shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 15 : 20, type: 'quant', techniqueLabel: 'Geometry: ' + data.hint, intuition: data.intuition || '∥ lines → equal alternate/corresponding angles. Triangle: sum=180°. Pythagoras: a²+b²=c².' };
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 15 : 20, type: 'quant', techniqueLabel: 'Geometry: ' + data.hint, intuition: data.intuition || '∥ lines → equal alternate/corresponding, same-side interior sum=180°. Triangle: sum=180°. Pythagoras: a²+b²=c². Polygon: (n-2)×180°.' };
 }
 
 function generateMensurationQuestion(diff, layer) {
@@ -1487,14 +1501,18 @@ function generateMensurationQuestion(diff, layer) {
     // Sphere surface area
     function(){ var r=rand(3,8); return { q: 'Sphere r=' + r + '. Surface area? (π=3.14)', a: Math.round(4*3.14*r*r), hint: 'SA = 4πr²', intuition: 'SA = 4πr² = 4×3.14×' + r + '² = 4×3.14×' + r*r + ' = ' + Math.round(4*3.14*r*r) }; },
     // Rectangular path inside/outside
-    function(){ var l=rand(20,40), w=rand(15,30), p=rand(1,4); return { q: 'Garden ' + l + 'm×' + w + 'm. Path ' + p + 'm wide around inside. Path area?', a: l*w - (l-2*p)*(w-2*p), hint: 'Big area minus small area', intuition: 'Outer=' + l + '×' + w + '=' + (l*w) + ', inner=' + (l-2*p) + '×' + (w-2*p) + '=' + ((l-2*p)*(w-2*p)) + '. Path = ' + (l*w) + ' - ' + ((l-2*p)*(w-2*p)) + ' = ' + (l*w-(l-2*p)*(w-2*p)) + 'm²' }; }
+    function(){ var l=rand(20,40), w=rand(15,30), p=rand(1,4); return { q: 'Garden ' + l + 'm×' + w + 'm. Path ' + p + 'm wide around inside. Path area?', a: l*w - (l-2*p)*(w-2*p), hint: 'Big area minus small area', intuition: 'Outer=' + l + '×' + w + '=' + (l*w) + ', inner=' + (l-2*p) + '×' + (w-2*p) + '=' + ((l-2*p)*(w-2*p)) + '. Path = ' + (l*w) + ' - ' + ((l-2*p)*(w-2*p)) + ' = ' + (l*w-(l-2*p)*(w-2*p)) + 'm²' }; },
+    // Cylinder volume
+    function(){ var r=rand(3,7), h=rand(5,12); return { q: 'Cylinder r=' + r + ', h=' + h + '. Volume? (π=3.14)', a: Math.round(3.14*r*r*h), hint: 'V = πr²h', intuition: 'V = πr²h = 3.14×' + r + '²×' + h + ' = 3.14×' + r*r + '×' + h + ' = ' + Math.round(3.14*r*r*h) }; },
+    // Rectangle perimeter given area and one side
+    function(){ var l=rand(5,15), w=rand(4,12); return { q: 'Rectangle area=' + (l*w) + ', one side=' + l + '. Perimeter?', a: 2*(l+w), hint: 'Other side = area/side = ' + (l*w) + '/' + l + ' = ' + w, intuition: 'Other side = ' + (l*w) + '/' + l + ' = ' + w + '. Perimeter = 2(' + l + '+' + w + ') = ' + 2*(l+w) }; }
   ];
   var type = types[rand(0, types.length - 1)];
   var data = type();
   var opts = [data.a];
   while (opts.length < 4) { var d = data.a + rand(-10, 10); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
   shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 15 : 20, type: 'quant', techniqueLabel: 'Mensuration: ' + data.hint, intuition: data.intuition || 'Path area = outer - inner. TSA cylinder = 2πr(r+h). Volume cone = πr²h/3.' };
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 15 : 20, type: 'quant', techniqueLabel: 'Mensuration: ' + data.hint, intuition: data.intuition || 'Path area = outer - inner. V cylinder = πr²h. V cone = πr²h/3. SA sphere = 4πr².' };
 }
 
 function generateCountingQuestion(diff, layer) {
@@ -1516,7 +1534,13 @@ function generateCountingQuestion(diff, layer) {
     // Hard: ball picking (without replacement)
     function(){ var r=rand(3,6), b=rand(3,6); var t=r+b; return { q: 'Bag: ' + r + ' red, ' + b + ' blue. Pick 2. Both red?', a: Math.round(r*(r-1)/(t*(t-1))*1000)/1000, hint: 'P = (first red × second red) = ' + r + '/' + t + ' × ' + (r-1) + '/' + (t-1), intuition: 'Without replacement: P = ' + r + '/' + t + ' × ' + (r-1) + '/' + (t-1) + ' = ' + (r*(r-1)/(t*(t-1))).toFixed(4) }; },
     // Hard: "at least one" probability
-    function(){ var r=rand(2,4), b=rand(2,4); var t=r+b; var p=1 - (b*(b-1))/(t*(t-1)); return { q: 'Bag: ' + r + ' red, ' + b + ' blue. Pick 2. At least 1 red?', a: Math.round(p*1000)/1000, hint: '1 - P(both blue) = 1 - ' + b + '/' + t + ' × ' + (b-1) + '/' + (t-1), intuition: 'At least 1 red = 1 - P(both blue) = 1 - ' + b + '/' + t + ' × ' + (b-1) + '/' + (t-1) + ' = ' + Math.round(p*1000)/1000 }; }
+    function(){ var r=rand(2,4), b=rand(2,4); var t=r+b; var p=1 - (b*(b-1))/(t*(t-1)); return { q: 'Bag: ' + r + ' red, ' + b + ' blue. Pick 2. At least 1 red?', a: Math.round(p*1000)/1000, hint: '1 - P(both blue) = 1 - ' + b + '/' + t + ' × ' + (b-1) + '/' + (t-1), intuition: 'At least 1 red = 1 - P(both blue) = 1 - ' + b + '/' + t + ' × ' + (b-1) + '/' + (t-1) + ' = ' + Math.round(p*1000)/1000 }; },
+    // Permutation: arrangement of distinct objects
+    function(){ var n=rand(4,7), r=rand(2,3); var p=1; for(var i=0;i<r;i++)p*=(n-i); return { q: 'Ways to arrange ' + r + ' different books from ' + n + ' on a shelf?', a: p, hint: 'P(' + n + ',' + r + ') = ' + n + 'P' + r, intuition: 'Order matters: P(' + n + ',' + r + ') = ' + n + '×' + (n-1) + (r>2?'×'+(n-2):'') + (r>3?'×'+(n-3):'') + ' = ' + p }; },
+    // Coin toss probability
+    function(){ var n=rand(2,4); return { q: 'Coin tossed ' + n + ' times. P(all heads)?', a: Math.round(Math.pow(1/2,n)*1000)/1000, hint: 'Each toss: P(H)=1/2. Total = (1/2)^' + n, intuition: 'Each toss independent. P(all H) = (1/2)^' + n + ' = 1/' + Math.pow(2,n) + ' = ' + Math.round(Math.pow(0.5,n)*1000)/1000 }; },
+    // Birthday probability concept: P(no shared birthday)
+    function(){ var n=rand(3,5); var p=1; var terms=[]; for(var i=0;i<n;i++){p*=(365-i)/365; terms.push('('+(365-i)+'/365)');} return { q: n + ' people. P(no shared birthday)? (approx)', a: Math.round(p*1000)/1000, hint: terms.join('×'), intuition: 'P = product of ' + n + ' terms: ' + terms.join('×') + ' = ' + Math.round(p*1000)/1000 }; }
   ];
   var type = types[rand(0, types.length - 1)];
   var data = type();
@@ -1535,14 +1559,20 @@ function generateDataQuestion(diff, layer) {
     // Weighted average
     function(){ var g1=rand(60,80), g2=rand(70,95), s1=[30,40,50][rand(0,2)], s2=100-s1; return { q: 'Section A avg=' + g1 + '(' + s1 + ' students), B avg=' + g2 + '(' + s2 + '). Combined avg?', a: Math.round((g1*s1+g2*s2)/(s1+s2)), hint: 'Weighted average = (sum of scores)/(total students)', intuition: 'Weighted = (' + g1 + '×' + s1 + ' + ' + g2 + '×' + s2 + ')/(' + s1 + '+' + s2 + ') = ' + (g1*s1+g2*s2) + '/' + (s1+s2) + ' = ' + Math.round((g1*s1+g2*s2)/(s1+s2)) }; },
     // Mean deviation or find missing number from average
-    function(){ var nums=[]; for(var i=0;i<4;i++)nums.push(rand(10,90)); var avg=rand(30,70); var sum=avg*5; var miss=sum - nums.reduce(function(a,b){return a+b},0); return { q: 'Average of 5 numbers = ' + avg + '. Four are ' + nums.join(', ') + '. Missing?', a: miss, hint: 'Sum = ' + avg + '×5 = ' + sum + ', missing = ' + sum + ' - ' + nums.join('+'), intuition: 'Sum of 5 = ' + avg + '×5 = ' + sum + '. Known sum = ' + nums.join('+') + ' = ' + nums.reduce(function(a,b){return a+b},0) + '. Missing = ' + sum + ' - ' + nums.reduce(function(a,b){return a+b},0) + ' = ' + miss }; }
+    function(){ var nums=[]; for(var i=0;i<4;i++)nums.push(rand(10,90)); var avg=rand(30,70); var sum=avg*5; var miss=sum - nums.reduce(function(a,b){return a+b},0); return { q: 'Average of 5 numbers = ' + avg + '. Four are ' + nums.join(', ') + '. Missing?', a: miss, hint: 'Sum = ' + avg + '×5 = ' + sum + ', missing = ' + sum + ' - ' + nums.join('+'), intuition: 'Sum of 5 = ' + avg + '×5 = ' + sum + '. Known sum = ' + nums.join('+') + ' = ' + nums.reduce(function(a,b){return a+b},0) + '. Missing = ' + sum + ' - ' + nums.reduce(function(a,b){return a+b},0) + ' = ' + miss }; },
+    // Mode (most frequent value)
+    function(){ var vals=[]; var m=rand(20,60); for(var i=0;i<4;i++)vals.push(rand(10,80)); vals.push(m); vals.push(m); vals.push(m); shuffle(vals); return { q: 'Mode of: ' + vals.join(', '), a: m, hint: 'Mode = most frequent value. Count occurrences of each.', intuition: 'Count: ' + vals.join(', ') + '. ' + m + ' appears 3 times — most frequent. Mode = ' + m }; },
+    // Mean of first N natural numbers
+    function(){ var n=rand(5,20); return { q: 'Mean of first ' + n + ' natural numbers?', a: (n+1)/2, hint: 'Sum = n(n+1)/2, divide by n', intuition: 'Mean = (n+1)/2 = (' + n + '+1)/2 = ' + (n+1)/2 }; },
+    // Average speed (total distance/total time)
+    function(){ var d1=rand(40,100), s1=rand(30,60), s2=rand(40,70); var t1=Math.round(d1/s1*10)/10; var t2=Math.round(d1/s2*10)/10; return { q: 'Car goes ' + d1 + 'km at ' + s1 + 'km/h, returns at ' + s2 + 'km/h. Avg speed?', a: Math.round(2*d1/(d1/s1+d1/s2)*10)/10, hint: 'Avg speed = total dist / total time = ' + (2*d1) + '/' + (d1/s1+d1/s2).toFixed(2), intuition: 'Total dist = ' + (2*d1) + 'km. Time = ' + (d1/s1).toFixed(2) + '+' + (d1/s2).toFixed(2) + '=' + (d1/s1+d1/s2).toFixed(2) + 'h. Avg = ' + (2*d1/(d1/s1+d1/s2)).toFixed(2) + 'km/h' }; }
   ];
   var type = types[rand(0, types.length - 1)];
   var data = type();
   var opts = [data.a];
   while (opts.length < 4) { var d = data.a + rand(-5, 5); if (opts.indexOf(d) < 0 && d >= 0) opts.push(d); }
   shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 15 : 20, type: 'quant', techniqueLabel: 'Data: ' + data.hint, intuition: data.intuition || 'Sort for median. Range = max-min. Avg = sum/n. Weighted avg weighs each group by count.' };
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 15 : 20, type: 'quant', techniqueLabel: 'Data: ' + data.hint, intuition: data.intuition || 'Sort for median. Range = max-min. Avg = sum/n. Weighted avg weighs each group by count. Mode = most frequent. Avg speed = 2ab/(a+b).' };
 }
 
 function generateNumberSystemQuestion(diff, layer) {
@@ -1552,7 +1582,13 @@ function generateNumberSystemQuestion(diff, layer) {
     function(){ var a = rand(12, 99), b = rand(2, 9); return { q: 'Remainder of ' + a + ' ÷ ' + b, a: a % b, hint: 'Divide ' + a + ' by ' + b, intuition: 'Just find remainder: ' + b + '×' + Math.floor(a/b) + ' = ' + (b*Math.floor(a/b)) + ', remainder = ' + (a-b*Math.floor(a/b)) }; },
     function(){ var n = rand(3, 9); return { q: 'Simplify \u221A' + (n*n*2), a: n + '\u221A2', hint: 'Factor out perfect square', intuition: '√' + (n*n*2) + ' = √(' + n + '²×2) = ' + n + '√2' }; },
     function(){ var n = rand(3, 6); return { q: 'Simplify \u221B' + (n*n*n*3), a: n + '\u221B3', hint: 'Factor out perfect cube', intuition: '∛' + (n*n*n*3) + ' = ∛(' + n + '³×3) = ' + n + '∛3' }; },
-    function(){ var n = rand(10, 20); return { q: 'Divisibility: Is ' + (n*7) + ' divisible by 7? (Y/N)', a: 'Y', hint: n + '×7 = ' + n*7, intuition: n + ' × 7 = ' + n*7 + ', so yes. Double the last digit and subtract from rest to check divisibility by 7.' }; }
+    function(){ var n = rand(10, 20); return { q: 'Divisibility: Is ' + (n*7) + ' divisible by 7? (Y/N)', a: 'Y', hint: n + '×7 = ' + n*7, intuition: n + ' × 7 = ' + n*7 + ', so yes. Double the last digit and subtract from rest to check divisibility by 7.' }; },
+    // Sum of digits
+    function(){ var n = rand(100, 999); var s=0; var t=n; while(t>0){s+=t%10;t=Math.floor(t/10);} return { q: 'Sum of digits of ' + n, a: s, hint: 'Add each digit: ' + String(n).split('').join('+'), intuition: n + ' → sum = ' + s }; },
+    // Number of factors
+    function(){ var p2=[2,3,5,7]; var a=p2[rand(0,3)], b=p2[rand(0,3)]; while(b===a)b=p2[rand(0,3)]; var n=a*a*b; return { q: 'Number of factors of ' + n, a: 6, hint: n + ' = ' + a + '²×' + b + ', factors = (2+1)(1+1)=6', intuition: 'Prime factors: ' + a + '²×' + b + '. Factor count = (2+1)(1+1) = 6' }; },
+    // Remainder theorem find divisor
+    function(){ var d=rand(3,9), q=rand(5,15), r=rand(1,d-1); return { q: 'Number = ' + d + '×' + q + ' + ' + r + '. What is the number?', a: d*q+r, hint: 'Number = divisor×quotient + remainder', intuition: d + '×' + q + '+' + r + ' = ' + (d*q+r) }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1571,7 +1607,13 @@ function generateSimplificationQuestion(diff, layer) {
     // Hard: nested brackets
     function(){ var a=rand(2,5), b=rand(2,5), c=rand(1,4); return { q: 'Simplify: ' + a + ' × [' + b + ' + { ' + c + ' + ' + (b-c+rand(1,3)) + ' }]', a: a * (b + c + (b-c+rand(1,3))), hint: 'Inner brackets first: { } then [ ]', intuition: 'Solve innermost: { ' + c + ' + ' + (b-c+rand(1,3)) + ' } = ' + (c+b-c+rand(1,3)) + '. Then [ ' + b + ' + ' + (c+b-c+rand(1,3)) + ' ] = ' + (b+c+b-c+rand(1,3)) + '. Then ' + a + ' × ' + (b+c+b-c+rand(1,3)) + ' = ' + (a*(b+c+b-c+rand(1,3))) }; },
     // Hard: surd rationalization
-    function(){ var a=rand(2,5), b=rand(3,8); return { q: 'Rationalize: 1/(√' + (a*a*b) + ' - ' + b + ')', a: Math.round((Math.sqrt(a*a*b)+b)/(a*a*b-b*b)*10)/10, hint: 'Multiply numerator & denominator by conjugate (√N + ' + b + ')', intuition: 'Conjugate: (√' + (a*a*b) + ' + ' + b + ')/((' + (a*a*b) + ') - ' + (b*b) + ') = (√' + (a*a*b) + ' + ' + b + ')/' + (a*a*b-b*b) + ' = simplified' }; }
+    function(){ var a=rand(2,5), b=rand(3,8); return { q: 'Rationalize: 1/(√' + (a*a*b) + ' - ' + b + ')', a: Math.round((Math.sqrt(a*a*b)+b)/(a*a*b-b*b)*10)/10, hint: 'Multiply numerator & denominator by conjugate (√N + ' + b + ')', intuition: 'Conjugate: (√' + (a*a*b) + ' + ' + b + ')/((' + (a*a*b) + ') - ' + (b*b) + ') = (√' + (a*a*b) + ' + ' + b + ')/' + (a*a*b-b*b) + ' = simplified' }; },
+    // Fraction simplification chain
+    function(){ var a=rand(2,5), b=rand(a+1,9), c=rand(2,6); return { q: 'Simplify: ' + a + '/' + b + ' + ' + c + '/' + (b*2), a: Math.round((2*a + c)/(2*b)*10)/10, hint: 'LCM denominator = ' + (2*b) + ', = (' + (2*a) + '+' + c + ')/' + (2*b), intuition: 'LCM = ' + (2*b) + '. = (' + a + '×2 + ' + c + ')/' + (2*b) + ' = (' + (2*a) + '+' + c + ')/' + (2*b) + ' = ' + Math.round((2*a+c)/(2*b)*10)/10 }; },
+    // Mixed BODMAS with fractions
+    function(){ var a=rand(2,5), b=rand(3,7), c=rand(2,4); return { q: 'Solve: (' + a + '/' + b + ') × ' + c + ' - ' + rand(1,3) + '/' + rand(2,5), a: Math.round((a*c)/b - rand(1,3)/rand(2,5)*10)/10, hint: 'First multiply fraction by ' + c + ', then subtract', intuition: '(' + a + '/' + b + ') × ' + c + ' = ' + (a*c) + '/' + b + ' = ' + Math.round(a*c/b*10)/10 + '. Then subtract = ' + Math.round(a*c/b*10)/10 + ' - ' + Math.round(rand(1,3)/rand(2,5)*10)/10 + ' = ' + Math.round((a*c)/b - rand(1,3)/rand(2,5)*10)/10 }; },
+    // Surd simplification (add surds)
+    function(){ var a=rand(2,5); return { q: 'Simplify: ' + a + '√2 + ' + (a*2) + '√2', a: (3*a) + '√2', hint: 'Add coefficients of like surds: ' + a + '+' + (a*2) + ' = ' + (3*a), intuition: 'Like surds: add coefficients. ' + a + '√2 + ' + (a*2) + '√2 = (' + a + '+' + (a*2) + ')√2 = ' + (3*a) + '√2' }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1585,7 +1627,11 @@ function generateQuadraticQuestion(diff, layer) {
     function(){ var r1=rand(2,6), r2=rand(2,6); return { q: 'Roots of x² - ' + (r1+r2) + 'x + ' + (r1*r2) + ' = 0', a: r1 + ',' + r2, hint: 'Find two numbers that sum to ' + (r1+r2) + ', product ' + (r1*r2), intuition: 'Find factors of ' + (r1*r2) + ' that add to ' + (r1+r2) + ': ' + r1 + ' and ' + r2 }; },
     function(){ var r1=rand(-5,-1), r2=rand(2,5); return { q: 'Roots of x² + ' + (-r1-r2) + 'x + ' + (r1*r2) + ' = 0', a: r1 + ',' + r2, hint: 'Signs: sum=' + (-r1-r2) + ', product=' + (r1*r2), intuition: 'Product ' + (r1*r2) + ' (negative → roots have opposite signs). Factors that sum to ' + (-r1-r2) + ': ' + r1 + ' and ' + r2 }; },
     function(){ var a=rand(1,3), b=rand(2,5), c=rand(1,5); var d=b*b-4*a*c; if(d<0) d=0; return { q: 'Discriminant of ' + a + 'x²+' + b + 'x+' + c + '=0', a: d, hint: 'D = b² - 4ac = ' + b*b + ' - ' + (4*a*c), intuition: 'D = ' + b + '² - 4×' + a + '×' + c + ' = ' + (b*b-4*a*c) + '. D>0→real, D=0→equal, D<0→imaginary' }; },
-    function(){ var n=rand(2,5); return { q: 'Nature of roots: x² - ' + (n+n) + 'x + ' + (n*n) + ' = 0', a: 'Equal', hint: 'Check D = b²-4ac', intuition: 'D = ' + (n+n) + '² - 4×1×' + n*n + ' = ' + (4*n*n-4*n*n) + ' = 0 → roots are equal (repeated)' }; }
+    function(){ var n=rand(2,5); return { q: 'Nature of roots: x² - ' + (n+n) + 'x + ' + (n*n) + ' = 0', a: 'Equal', hint: 'Check D = b²-4ac', intuition: 'D = ' + (n+n) + '² - 4×1×' + n*n + ' = ' + (4*n*n-4*n*n) + ' = 0 → roots are equal (repeated)' }; },
+    // Find quadratic given roots
+    function(){ var r1=rand(2,5), r2=rand(3,7); return { q: 'Find quadratic with roots ' + r1 + ' and ' + r2, a: 'x² - ' + (r1+r2) + 'x + ' + (r1*r2) + ' = 0', hint: 'Sum=' + (r1+r2) + ', product=' + (r1*r2), intuition: 'Quadratic: x² - (sum)x + product = 0. Sum=' + (r1+r2) + ', product=' + (r1*r2) }; },
+    // Word problem: area of rectangle forms quadratic
+    function(){ var l=rand(8,15), w=rand(4,8); var area=l*w; var extra=rand(1,3); return { q: 'Rectangle: length ' + l + ', width ' + w + '. If length increased by ' + extra + ', area becomes ' + ((l+extra)*w) + '. Find original area?', a: area, hint: 'New area = (l+'+extra+')×w = ' + ((l+extra)*w) + ', check original area', intuition: 'Original area = ' + l + '×' + w + ' = ' + area + '. (L+'+extra+')W = ' + ((l+extra)*w) + ' → area = ' + ((l+extra)*w) + '. Actually original is ' + area }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1602,7 +1648,11 @@ function generatePartnershipQuestion(diff, layer) {
     // Reverse: find B's investment given A's investment, total profit, and A's share
     function(){ var a=rand(2,6)*1000, b=rand(3,7)*1000, p=rand(2,6)*1000; var aShare=Math.round(a*p/(a+b)); return { q: 'A invests Rs' + a + ', total profit Rs' + p + ', A gets Rs' + aShare + '. B\'s investment?', a: Math.round(a*(p-aShare)/aShare), hint: 'Profit ratio = investment ratio. A:B = ' + aShare + ':' + (p-aShare), intuition: 'Profit ratio = investment ratio. A:B = ' + aShare + ':' + (p-aShare) + '. B = ' + a + ' × ' + (p-aShare) + '/' + aShare + ' = ' + Math.round(a*(p-aShare)/aShare) }; },
     // Reverse: find B's time given A's investment+time, B's investment, profit ratio
-    function(){ var a=rand(2,5)*1000, b=rand(3,6)*1000, pa=rand(2,6); var pr=rand(2,4); var pb=Math.round(pr); return { q: 'A Rs' + a + ' for ' + pa + 'mo, B Rs' + b + '. Profit ratio ' + pr + ':' + pb + '. B\'s time?', a: Math.round(a*pa*pb/(b*pr)), hint: 'Ratio = (A×timeA):(B×timeB) = ' + (a*pa) + ':' + (b*pb), intuition: 'A:B = ' + (a*pa) + ':' + (b*pb) + '. Wait, given ratio ' + pr + ':' + pb + '. B time = (' + b + '×' + pb + ')/( ' + a + '×' + pa + ' ) = solving: B time = ' + Math.round(a*pa*pb/(b*pr)) + ' months' }; }
+    function(){ var a=rand(2,5)*1000, b=rand(3,6)*1000, pa=rand(2,6); var pr=rand(2,4); var pb=Math.round(pr); return { q: 'A Rs' + a + ' for ' + pa + 'mo, B Rs' + b + '. Profit ratio ' + pr + ':' + pb + '. B\'s time?', a: Math.round(a*pa*pb/(b*pr)), hint: 'Ratio = (A×timeA):(B×timeB) = ' + (a*pa) + ':' + (b*pb), intuition: 'A:B = ' + (a*pa) + ':' + (b*pb) + '. Wait, given ratio ' + pr + ':' + pb + '. B time = (' + b + '×' + pb + ')/( ' + a + '×' + pa + ' ) = solving: B time = ' + Math.round(a*pa*pb/(b*pr)) + ' months' }; },
+    // Three partners
+    function(){ var a=rand(2,5)*1000, b=rand(3,6)*1000, c=rand(1,4)*1000, p=rand(3,9)*1000; return { q: 'A:Rs' + a + ', B:Rs' + b + ', C:Rs' + c + '. Profit Rs' + p + '. C\'s share?', a: Math.round(c*p/(a+b+c)), hint: 'C share = ' + c + '/' + (a+b+c) + '×' + p, intuition: 'Total capital = ' + (a+b+c) + '. C share = ' + c + '/' + (a+b+c) + ' × ' + p + ' = ' + Math.round(c*p/(a+b+c)) }; },
+    // Partner early withdrawal
+    function(){ var a=rand(3,6)*1000, b=rand(2,5)*1000; var wd=rand(2,5); return { q: 'A invests Rs' + a + ' for full year. B invests Rs' + b + ' but withdraws after ' + wd + 'mo. Profit Rs' + ((a+b)*2) + '. B\'s share?', a: Math.round(b*wd * (a+b)*2 / (a*12 + b*wd)), hint: 'A: ' + a + '×12, B: ' + b + '×' + wd, intuition: 'A: ' + a + '×12=' + (a*12) + ', B: ' + b + '×' + wd + '=' + (b*wd) + '. B share = ' + (b*wd) + '/' + (a*12+b*wd) + '×' + ((a+b)*2) + ' = ' + Math.round(b*wd*(a+b)*2/(a*12+b*wd)) }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1620,7 +1670,11 @@ function generateCompoundInterestQuestion(diff, layer) {
     // Reverse: find P given CI amount at r% for t years
     function(){ var p=rand(2,6)*1000, r=[5,8,10,12][rand(0,3)]; var amt=Math.round(p*Math.pow(1+r/100,2)); return { q: 'Amount Rs' + amt + ' at ' + r + '% CI for 2yr. Principal?', a: p, hint: 'P = A/(1+r/100)^t = ' + amt + '/(' + (1+r/100) + ')²', intuition: 'P = A/(1+r/100)^t = ' + amt + '/(1+' + r/100 + ')² = ' + amt + '/' + Math.round(Math.pow(1+r/100,2)*100)/100 + ' = ' + p }; },
     // Reverse: find rate given CI-SI diff for 2yr and principal
-    function(){ var p=rand(3,8)*1000; var r=[5,8,10,12,15][rand(0,4)]; var diff=Math.round(p*Math.pow(r/100,2)); return { q: 'CI-SI diff = Rs' + diff + ' for Rs' + p + ' at r% for 2yr. Find r?', a: r, hint: 'Diff = P(r/100)² → r = 100√(diff/P)', intuition: 'Diff = P(r/100)² → (r/100)² = ' + diff + '/' + p + ' = ' + (diff/p).toFixed(4) + ', r/100 = ' + Math.round(Math.sqrt(diff/p)*100)/100 + ', r = ' + Math.round(Math.sqrt(diff/p)*100) + '%' }; }
+    function(){ var p=rand(3,8)*1000; var r=[5,8,10,12,15][rand(0,4)]; var diff=Math.round(p*Math.pow(r/100,2)); return { q: 'CI-SI diff = Rs' + diff + ' for Rs' + p + ' at r% for 2yr. Find r?', a: r, hint: 'Diff = P(r/100)² → r = 100√(diff/P)', intuition: 'Diff = P(r/100)² → (r/100)² = ' + diff + '/' + p + ' = ' + (diff/p).toFixed(4) + ', r/100 = ' + Math.round(Math.sqrt(diff/p)*100)/100 + ', r = ' + Math.round(Math.sqrt(diff/p)*100) + '%' }; },
+    // Half-yearly compounding
+    function(){ var p=rand(2,6)*1000; return { q: 'CI on Rs' + p + ' at 10% compounded half-yearly for 1yr', a: Math.round(p*Math.pow(1+5/100,2)-p), hint: 'Half-yearly: r/2=5%, t×2=2 periods', intuition: 'Rate per period=5%, 2 periods. Amount=' + p + '(1.05)²=' + Math.round(p*1.1025) + '. CI=' + Math.round(p*0.1025) }; },
+    // Find rate given CI amount and time
+    function(){ var p=rand(2,5)*1000, r=[5,8,10,12][rand(0,3)]; var amt=Math.round(p*Math.pow(1+r/100,2)); return { q: 'Rs' + p + ' becomes Rs' + amt + ' in 2yr CI. Rate?', a: r, hint: 'A = P(1+r/100)² → r = 100(√(A/P)-1)', intuition: 'A/P = ' + amt + '/' + p + ' = ' + (amt/p).toFixed(3) + '. √(A/P) = ' + Math.round(Math.sqrt(amt/p)*1000)/1000 + '. r = ' + r + '%' }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1638,7 +1692,11 @@ function generateDiscountQuestion(diff, layer) {
     // Reverse: find MP given SP and discount %
     function(){ var m=rand(5,20)*100, d=rand(5,25); var sp=Math.round(m*(100-d)/100); return { q: 'SP=Rs' + sp + ', discount ' + d + '%. MP?', a: m, hint: 'MP = SP × 100/(100-d)', intuition: 'MP = ' + sp + ' × 100/' + (100-d) + ' = ' + sp + ' × ' + Math.round(100/(100-d)*100)/100 + ' = ' + m }; },
     // Reverse: find CP given MP, discount%, and profit%
-    function(){ var cp=rand(20,60)*10, d=rand(10,25), g=rand(8,20); var mp=Math.round(cp*(100+g+d)/100); var sp=Math.round(mp*(100-d)/100); return { q: 'MP=Rs' + mp + ', discount ' + d + '%, profit ' + g + '%. CP?', a: cp, hint: 'CP = SP × 100/(100+g). SP = MP × (100-d)/100', intuition: 'SP = ' + mp + ' × ' + (100-d) + '% = ' + sp + '. CP = ' + sp + ' × 100/' + (100+g) + ' = Rs' + cp }; }
+    function(){ var cp=rand(20,60)*10, d=rand(10,25), g=rand(8,20); var mp=Math.round(cp*(100+g+d)/100); var sp=Math.round(mp*(100-d)/100); return { q: 'MP=Rs' + mp + ', discount ' + d + '%, profit ' + g + '%. CP?', a: cp, hint: 'CP = SP × 100/(100+g). SP = MP × (100-d)/100', intuition: 'SP = ' + mp + ' × ' + (100-d) + '% = ' + sp + '. CP = ' + sp + ' × 100/' + (100+g) + ' = Rs' + cp }; },
+    // Discount% to gain a specific profit%
+    function(){ var cp=rand(20,50)*10, g=rand(10,20), mp=cp+rand(10,30)*10; return { q: 'CP=Rs' + cp + ', wants ' + g + '% profit. MP=Rs' + mp + '. Discount %?', a: Math.round(100 - (cp*(100+g)/100)/mp*100), hint: 'SP = CP(' + (100+g) + '%), discount = (MP-SP)/MP×100', intuition: 'SP = ' + cp + '×' + (100+g) + '% = ' + Math.round(cp*(100+g)/100) + '. Discount = (MP-SP)/MP = (' + mp + '-' + Math.round(cp*(100+g)/100) + ')/' + mp + ' = ' + Math.round(100 - (cp*(100+g)/100)/mp*100) + '%' }; },
+    // Find discount% given MP and SP
+    function(){ var mp=rand(10,30)*10, d=rand(10,35); return { q: 'MP=Rs' + mp + ', SP=Rs' + Math.round(mp*(100-d)/100) + '. Discount %?', a: d, hint: 'Discount = (MP-SP)/MP × 100', intuition: 'Discount = (' + mp + '-' + Math.round(mp*(100-d)/100) + ')/' + mp + ' × 100 = ' + Math.round((mp-Math.round(mp*(100-d)/100))/mp*100) + '%' }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1653,7 +1711,11 @@ function generateRacesQuestion(diff, layer) {
     function(){ var a=rand(5,12), h=rand(2,5); return { q: 'A gives B ' + h + 'm start in 100m race. A beats B by ' + rand(1,3) + 's. A speed=' + a + 'm/s. B speed?', a: Math.round((100-h)/(100/a+rand(1,3))*10)/10, hint: 'B runs ' + (100-h) + 'm in A time + ' + rand(1,3) + 's', intuition: 'A time = ' + 100/a + 's. B time = ' + (100/a+rand(1,3)) + 's. B runs ' + (100-h) + 'm, speed = ' + (100-h) + '/' + (100/a+rand(1,3)) }; },
     function(){ var l=rand(2,6)*200; return { q: 'A and B on circular track ' + l + 'm. Speeds ' + rand(3,6) + ' and ' + rand(2,5) + 'm/s. Meet first time?', a: Math.round(l / Math.abs(rand(3,6)-rand(2,5))), hint: 'Time = track length ÷ relative speed', intuition: 'Relative speed = ' + Math.abs(rand(3,6)-rand(2,5)) + 'm/s. Time to meet = ' + l + '/' + Math.abs(rand(3,6)-rand(2,5)) + ' = ' + Math.round(l/Math.abs(rand(3,6)-rand(2,5))) + 's' }; },
     // Hard: A beats B by X m in Y m race, find by how much A beats C
-    function(){ var d=rand(100,200); var b=rand(5,15); var c=b+rand(3,8); return { q: 'A beats B by ' + b + 'm in ' + d + 'm race. A beats C by ' + c + 'm. By how much does B beat C in ' + d + 'm?', a: Math.round(d - (d-b)*(d-c)/d), hint: 'B distance = ' + (d-b) + ' when A at ' + d + '. C distance = ' + (d-c) + '. B vs C: ratio = ' + (d-b) + ':' + (d-c), intuition: 'When A finishes ' + d + 'm: B at ' + (d-b) + 'm, C at ' + (d-c) + 'm. B beats C by ' + d + ' - ' + (d-b)*(d-c)/d + ' = ' + Math.round(d - (d-b)*(d-c)/d) + 'm' }; }
+    function(){ var d=rand(100,200); var b=rand(5,15); var c=b+rand(3,8); return { q: 'A beats B by ' + b + 'm in ' + d + 'm race. A beats C by ' + c + 'm. By how much does B beat C in ' + d + 'm?', a: Math.round(d - (d-b)*(d-c)/d), hint: 'B distance = ' + (d-b) + ' when A at ' + d + '. C distance = ' + (d-c) + '. B vs C: ratio = ' + (d-b) + ':' + (d-c), intuition: 'When A finishes ' + d + 'm: B at ' + (d-b) + 'm, C at ' + (d-c) + 'm. B beats C by ' + d + ' - ' + (d-b)*(d-c)/d + ' = ' + Math.round(d - (d-b)*(d-c)/d) + 'm' }; },
+    // Head start: A gives B X m start
+    function(){ var d=rand(100,200), sa=rand(6,12), sb=rand(4,8); var tA=d/sa; var bDist=tA*sb; var start=Math.round(d-bDist); if(start<5)start=rand(10,30); return { q: 'A speed=' + sa + 'm/s, B speed=' + sb + 'm/s in ' + d + 'm race. What start should A give B for a tie?', a: start, hint: 'Time same: d/sa = (d-start)/sb', intuition: 'Time A = ' + d + '/' + sa + ' = ' + tA.toFixed(2) + 's. B distance in same time = ' + tA.toFixed(2) + '×' + sb + ' = ' + bDist.toFixed(1) + 'm. Start = ' + d + ' - ' + bDist.toFixed(1) + ' = ' + start + 'm' }; },
+    // Circular race: number of laps
+    function(){ var l=rand(2,5)*200; var sa=rand(5,9), sb=rand(3,6); return { q: 'Circular track ' + l + 'm. A at ' + sa + 'm/s, B at ' + sb + 'm/s (same dir). Laps before A overtakes B?', a: Math.round(sa/(sa-sb)), hint: 'Relative speed = ' + (sa-sb) + '. A overtakes B when A gains 1 lap. Laps = sa/(sa-sb)', intuition: 'Time to overtake = ' + l + '/' + (sa-sb) + '=' + Math.round(l/(sa-sb)) + 's. Laps by A = ' + Math.round(l/(sa-sb)) + '×' + sa + '/' + l + ' = ' + Math.round(sa/(sa-sb)) + ' laps' }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1671,7 +1733,11 @@ function generateDataInterpretationQuestion(diff, layer) {
     // Hard: growth rate year-over-year
     function(){ var y1=rand(400,800), y2=y1+rand(50,200); return { q: 'Revenue Y1=' + y1 + ', Y2=' + y2 + '. Growth %?', a: Math.round((y2-y1)/y1*100), hint: 'Growth = (Y2-Y1)/Y1 × 100', intuition: 'Growth = ' + (y2-y1) + '/' + y1 + ' × 100 = ' + Math.round((y2-y1)/y1*100) + '%' }; },
     // Hard: two-table comparison (production across years)
-    function(){ var p1=rand(200,500), p2=rand(300,600), p3=rand(250,550); return { q: 'Production: 2019=' + p1 + ', 2020=' + p2 + ', 2021=' + p3 + '. % change 2019→2021?', a: Math.round((p3-p1)/p1*100), hint: '(2021-2019)/2019 × 100', intuition: 'Change = ' + (p3-p1) + '/' + p1 + ' × 100 = ' + Math.round((p3-p1)/p1*100) + '%' }; }
+    function(){ var p1=rand(200,500), p2=rand(300,600), p3=rand(250,550); return { q: 'Production: 2019=' + p1 + ', 2020=' + p2 + ', 2021=' + p3 + '. % change 2019→2021?', a: Math.round((p3-p1)/p1*100), hint: '(2021-2019)/2019 × 100', intuition: 'Change = ' + (p3-p1) + '/' + p1 + ' × 100 = ' + Math.round((p3-p1)/p1*100) + '%' }; },
+    // Pie chart angle calculation
+    function(){ var a=rand(20,40), b=rand(15,30), c=100-a-b; return { q: 'Pie chart: A=' + a + '%, B=' + b + '%, C=' + c + '%. Angle for C?', a: c*3.6, hint: 'Angle = percentage × 3.6°', intuition: '100% = 360°, so 1% = 3.6°. C = ' + c + '% → angle = ' + c + '×3.6 = ' + (c*3.6) + '°' }; },
+    // Percentage change from table
+    function(){ var v1=rand(300,700), v2=v1+rand(50,200); return { q: 'Sales: 2023=' + v1 + ', 2024=' + v2 + '. % increase?', a: Math.round((v2-v1)/v1*100), hint: '((new-old)/old) × 100', intuition: '% change = (' + v2 + '-' + v1 + ')/' + v1 + ' × 100 = ' + Math.round((v2-v1)/v1*100) + '%' }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1803,7 +1869,13 @@ function generateProfitLossQuestion(diff, layer) {
     function(){ var sp=rand(100,300), p=rand(5,25); return { q:'SP=₹'+sp+', profit='+p+'%. CP?', a:Math.round(sp*100/(100+p)), hint:'CP=SP×100/(100+P%)' }; },
     function(){ var cp=rand(80,300), l=rand(5,20); return { q:'CP=₹'+cp+', loss='+l+'%. SP?', a:Math.round(cp*(100-l)/100), hint:'SP=CP×(100-L%)/100' }; },
     function(){ var cp=rand(50,150), sp=cp+rand(10,40); return { q:'CP=₹'+cp+', SP=₹'+sp+'. Profit%?', a:Math.round((sp-cp)/cp*100), hint:'P%=(SP-CP)/CP×100' }; },
-    function(){ var mp=rand(200,500), d=rand(10,30), p=rand(5,15); var sp=Math.round(mp*(100-d)/100); var cp=Math.round(sp*100/(100+p)); return { q:'MP=₹'+mp+', discount='+d+'%, profit='+p+'%. CP?', a:cp, hint:'Find SP from MP, then CP from SP' }; }
+    function(){ var mp=rand(200,500), d=rand(10,30), p=rand(5,15); var sp=Math.round(mp*(100-d)/100); var cp=Math.round(sp*100/(100+p)); return { q:'MP=₹'+mp+', discount='+d+'%, profit='+p+'%. CP?', a:cp, hint:'Find SP from MP, then CP from SP' }; },
+    // False weight profit%
+    function(){ var w=rand(800,950); return { q:'Shopkeeper uses ' + w + 'g weight instead of 1000g. Profit%?', a:Math.round((1000-w)/w*10000)/100, hint:'Profit% = (true-false)/false × 100', intuition:'Profit% = (1000-' + w + ')/' + w + ' × 100 = ' + (1000-w) + '/' + w + ' × 100 = ' + Math.round((1000-w)/w*10000)/100 + '%' }; },
+    // Successive transactions
+    function(){ var cp=rand(100,300), g1=rand(5,15), g2=rand(5,15); return { q:'A buys at ₹' + cp + ', sells to B at ' + g1 + '% profit. B sells to C at ' + g2 + '% profit. C\'s CP?', a:Math.round(cp*(100+g1)/100*(100+g2)/100), hint:'Apply profit% successively: ×' + (100+g1)/100 + ' ×' + (100+g2)/100, intuition:'C CP = ' + cp + ' × ' + (100+g1)/100 + ' × ' + (100+g2)/100 + ' = ' + Math.round(cp*(100+g1)/100*(100+g2)/100) }; },
+    // Compare two transactions
+    function(){ var cp=rand(100,200); var p1=rand(10,20), p2=rand(5,15); var sp1=Math.round(cp*(100+p1)/100); var sp2=Math.round(cp*(100+p2)/100); var diff=sp1-sp2; return { q:'CP=₹' + cp + '. Profit P1=' + p1 + '%, P2=' + p2 + '%. Difference in SP?', a:diff, hint:'SP1-SP2 = CP(' + (100+p1) + '% - ' + (100+p2) + '%)', intuition:'SP1=' + cp + '×' + (100+p1) + '%=' + sp1 + '. SP2=' + cp + '×' + (100+p2) + '%=' + sp2 + '. Diff=' + diff }; }
   ];
   var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-20,20); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'P&L: '+d.hint, intuition:'SP=CP×(100±P%)/100. For discount: SP=MP×(100-D%)/100. Then find CP from SP.' };
@@ -1836,7 +1908,11 @@ function generateAlligationQuestion(diff, layer) {
   var ty = [
     function(){ var p1=rand(5,15), p2=rand(20,40), m=rand(p1+3,p2-3); return { q:'Mix '+(p1*10)+'% and '+(p2*10)+'% to get '+(m*10)+'%? Ratio?', a:(p2-m)+':'+(m-p1), hint:'(mean-low):(high-mean)' }; },
     function(){ var c1=rand(20,50), c2=c1+rand(15,40), r1=rand(1,4), r2=rand(1,4); var m=Math.round((c1*r1+c2*r2)/(r1+r2)); return { q:'₹'+c1+'/kg (qty '+r1+'kg) + ₹'+c2+'/kg (qty '+r2+'kg). Avg price?', a:m, hint:'Avg = (C1×Q1+C2×Q2)/(Q1+Q2)' }; },
-    function(){ var w=rand(5,15), c=rand(2,5); return { q:'Water: Milk = '+w+':'+c+' in '+(w+c)*2+'L mixture. Milk quantity?', a:Math.round((w+c)*2*c/(w+c)), hint:'Milk = total × part/total_parts' }; }
+    function(){ var w=rand(5,15), c=rand(2,5); return { q:'Water: Milk = '+w+':'+c+' in '+(w+c)*2+'L mixture. Milk quantity?', a:Math.round((w+c)*2*c/(w+c)), hint:'Milk = total × part/total_parts' }; },
+    // Replacement of mixture
+    function(){ var m=rand(10,30); return { q:'' + m + 'L of milk, ' + rand(3,6) + 'L water added then ' + rand(2,4) + 'L mixture removed. Milk left?', a:Math.round(m*(m/(m+rand(3,6)))), hint:'Milk fraction = ' + m + '/' + (m+rand(3,6)) + ', milk removed = fraction × removed qty', intuition:'Initial milk=' + m + 'L, total=' + (m+rand(3,6)) + 'L. Milk fraction = ' + m + '/' + (m+rand(3,6)) + '. After removal, milk = ' + m + ' - ' + Math.round(m*(m/(m+rand(3,6)))) + ' = ' + Math.round(m*(m/(m+rand(3,6)))) + 'L' }; },
+    // Mixing two types of rice/grain
+    function(){ var c1=rand(20,40), c2=rand(45,60), m=rand(c1+5,c2-5); return { q:'Rice type1 ₹'+c1+'/kg, type2 ₹'+c2+'/kg. Mixture ₹'+m+'/kg. Ratio?', a:(c2-m)+':'+(m-c1), hint:'Cheaper:dearer = (dearer-mean):(mean-cheaper)', intuition:'Ratio = (' + c2 + '-' + m + '):(' + m + '-' + c1 + ') = ' + (c2-m) + ':' + (m-c1) }; }
   ];
   var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){if(typeof d.a==='string'){var parts=d.a.split(':').map(Number);var v=parts[0]+rand(1,3)+':'+(parts[1]+rand(1,3));if(v!==d.a)o.push(v);}else{var v=d.a+rand(-5,5);if(o.indexOf(v)<0&&v>0)o.push(v);}} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Alligation: '+d.hint, intuition:'Alligation: (mean-low):(high-mean). Cheaper qty : dearer qty = (dearer-mean):(mean-cheaper).' };
@@ -1847,7 +1923,11 @@ function generateSurdsIndicesQuestion(diff, layer) {
     function(){ var a=rand(2,5), b=rand(2,4); return { q:'Simplify: '+a+'^'+b+' × '+a+'^'+(b+1), a:Math.pow(a,2*b+1), hint:'Add exponents: a^m × a^n = a^(m+n)' }; },
     function(){ var a=rand(2,5), b=rand(2,4); return { q:'Simplify: ('+a+'^'+b+')^'+(b+1), a:Math.pow(a,b*(b+1)), hint:'(a^m)^n = a^(m×n)' }; },
     function(){ var a=rand(4,9), b=rand(2,4); return { q:'Simplify: '+Math.pow(a,b)+' ÷ '+Math.pow(a,b-1), a:a, hint:'a^m ÷ a^n = a^(m-n)' }; },
-    function(){ var a=[2,3,5,6,7][rand(0,4)], b=rand(2,3); return { q:'√'+(a*a*b)+' = ?', a:a*Math.round(Math.sqrt(b)), hint:'√(a²b) = a√b. Split into perfect square × rest.' }; }
+    function(){ var a=[2,3,5,6,7][rand(0,4)], b=rand(2,3); return { q:'√'+(a*a*b)+' = ?', a:a*Math.round(Math.sqrt(b)), hint:'√(a²b) = a√b. Split into perfect square × rest.' }; },
+    // Rationalizing denominator
+    function(){ var a=rand(2,4), b=rand(3,7); return { q:'Rationalize: 1/(√' + a + ' + ' + b + ')', a:Math.round((Math.sqrt(a)-b)/(a-b*b)*10)/10, hint:'Multiply by conjugate: (√'+a+' - '+b+')/((√'+a+')² - '+b+'²)', intuition:'Conjugate = √' + a + ' - ' + b + '. = (√' + a + ' - ' + b + ')/(' + a + ' - ' + (b*b) + ') = ' + Math.round((Math.sqrt(a)-b)/(a-b*b)*10)/10 }; },
+    // Comparing surds
+    function(){ var a=rand(2,5), b=rand(a+1,8); return { q:'Which is larger? √' + (a*a*2) + ' or √' + (b*b*2), a:Math.max(a*Math.round(Math.sqrt(2)),b*Math.round(Math.sqrt(2))), hint:'Simplify to ' + a + '√2 and ' + b + '√2, compare coefficients', intuition:'√' + (a*a*2) + ' = ' + a + '√2, √' + (b*b*2) + ' = ' + b + '√2. Since ' + a + ' < ' + b + ', √' + (b*b*2) + ' is larger' }; }
   ];
   var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-5,5); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Surds: '+d.hint, intuition:'a^m×a^n=a^(m+n), (a^m)^n=a^(mn), a^m÷a^n=a^(m-n). √(a²b)=a√b.' };
@@ -1891,7 +1971,13 @@ function generateLetterSymbolSeriesQuestion(diff, layer) {
   var ty = [
     function(){ var letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var start=rand(0,20); var step=rand(1,4); return { q:'Next: '+letters[start]+', '+letters[start+step]+', '+letters[start+2*step]+', '+letters[start+3*step]+'?', a:letters[start+4*step], hint:'Each step +'+(step*2)+' positions' }; },
     function(){ var letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var start=rand(1,15); var steps=[[2,3,4],[1,2,1],[3,5,7],[1,3,5]]; var s=steps[rand(0,3)]; return { q:'Series: '+letters[start]+', '+letters[start+s[0]]+', '+letters[start+s[0]+s[1]]+', '+letters[start+s[0]+s[1]+s[2]]+'?', a:letters[start+s[0]+s[1]+s[2]+s[s.length-1]], hint:'Find the pattern in letter positions' }; },
-    function(){ var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var pos=rand(4,20); return { q:'Next: AZ, BY, CX, DW?', a:'EV', hint:'First letter +1, second letter -1 each step' }; }
+    function(){ var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var pos=rand(4,20); return { q:'Next: AZ, BY, CX, DW?', a:'EV', hint:'First letter +1, second letter -1 each step' }; },
+    // Mixed letter-number series
+    function(){ var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var s=rand(0,18); return { q:'Next: ' + l[s] + '2, ' + l[s+2] + '4, ' + l[s+4] + '6, ' + l[s+6] + '8?', a:l[s+8] + '10', hint:'Letters +2, numbers +2 each step', intuition:'Letters: ' + l[s] + '→' + l[s+2] + '→' + l[s+4] + '→' + l[s+6] + ' (+2 each). Numbers: 2→4→6→8 (+2 each). Next: ' + l[s+8] + '10' }; },
+    // Skip pattern
+    function(){ var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var s=rand(0,14); return { q:'Next: ' + l[s] + ', ' + l[s+2] + ', ' + l[s+5] + ', ' + l[s+9] + '?', a:l[s+14], hint:'Gaps increase by 1: +2, +3, +4, +5', intuition:'Gaps: ' + l[s] + '→' + l[s+2] + ' (+2), →' + l[s+5] + ' (+3), →' + l[s+9] + ' (+4). Next gap +5: ' + l[s+14] }; },
+    // Reverse pattern
+    function(){ var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var s=rand(5,22); return { q:'Next: ' + l[s] + ', ' + l[s-1] + ', ' + l[s-3] + ', ' + l[s-6] + '?', a:l[s-10], hint:'Gaps increasing backwards: -1, -2, -3, -4', intuition:'Positions: ' + s + ', ' + (s-1) + ', ' + (s-3) + ', ' + (s-6) + '. Gaps -1, -2, -3. Next gap -4: pos ' + (s-10) + ' = ' + l[s-10] }; }
   ];
   var d=ty[rand(0,ty.length-1)](); var o=[d.a]; ['AB','CD','EF','GH','IJ','KL','MN','OP','QR','ST','UV','WX','YZ','EV','FU','GT'].forEach(function(l){if(l!==d.a&&o.indexOf(l)<0)o.push(l);}); while(o.length<4){var v=String.fromCharCode(65+rand(0,25));if(o.indexOf(v)<0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:12, type:'reasoning', techniqueLabel:'Letter Series: '+d.hint, intuition:'Convert letters to positions (A=1). Find the step pattern. Convert back.' };
@@ -2003,7 +2089,14 @@ var SYNONYM_BANK = [
   {w:'Gregarious',s:['Sociable','Shy','Angry','Lonely']},{w:'Hinder',s:['Obstruct','Help','Speed','Build']},
   {w:'Immaculate',s:['Spotless','Dirty','Broken','Rough']},{w:'Jubilant',s:['Joyful','Sad','Calm','Tired']},
   {w:'Keen',s:['Eager','Dull','Slow','Weak']},{w:'Lethargic',s:['Sluggish','Energetic','Quick','Bright']},
-  {w:'Malicious',s:['Spiteful','Kind','Gentle','Loving']},{w:'Novel',s:['New','Old','Broken','Simple']}
+  {w:'Malicious',s:['Spiteful','Kind','Gentle','Loving']},{w:'Novel',s:['New','Old','Broken','Simple']},
+  {w:'Obscure',s:['Unknown','Famous','Bright','Simple']},{w:'Persevere',s:['Persist','Give up','Rest','Pause']},
+  {w:'Querulous',s:['Complaining','Happy','Quiet','Content']},{w:'Resilient',s:['Tough','Fragile','Weak','Brittle']},
+  {w:'Succinct',s:['Concise','Wordy','Long','Verbose']},{w:'Tenacious',s:['Determined','Weak','Lazy','Timid']},
+  {w:'Ubiquitous',s:['Omnipresent','Rare','Absent','Scarce']},{w:'Versatile',s:['Adaptable','Inflexible','Limited','Narrow']},
+  {w:'Whimsical',s:['Fanciful','Serious','Strict','Dull']},{w:'Zealous',s:['Passionate','Apathetic','Lazy','Indifferent']},
+  {w:'Audacious',s:['Bold','Timid','Shy','Quiet']},{w:'Brevity',s:['Conciseness','Length','Verbosity','Expansion']},
+  {w:'Capricious',s:['Unpredictable','Stable','Reliable','Steady']},{w:'Deleterious',s:['Harmful','Beneficial','Helpful','Healthy']}
 ];
 
 var ANTONYM_BANK = [
@@ -2011,7 +2104,12 @@ var ANTONYM_BANK = [
   {w:'Cautious',a:['Reckless','Careful','Slow','Quiet']},{w:'Dense',a:['Sparse','Thick','Heavy','Solid']},
   {w:'Expand',a:['Contract','Grow','Spread','Rise']},{w:'Fragile',a:['Sturdy','Weak','Brittle','Light']},
   {w:'Generous',a:['Stingy','Kind','Rich','Helpful']},{w:'Humane',a:['Cruel','Gentle','Loving','Caring']},
-  {w:'Innocent',a:['Guilty','Pure','Honest','Childlike']},{w:'Justice',a:['Injustice','Fairness','Equality','Truth']}
+  {w:'Innocent',a:['Guilty','Pure','Honest','Childlike']},{w:'Justice',a:['Injustice','Fairness','Equality','Truth']},
+  {w:'Knowledge',a:['Ignorance','Wisdom','Learning','Intelligence']},{w:'Loyal',a:['Disloyal','Faithful','Devoted','True']},
+  {w:'Mature',a:['Immature','Adult','Grown','Ripe']},{w:'Noble',a:['Ignoble','Dignified','Honorable','Royal']},
+  {w:'Optimistic',a:['Pessimistic','Hopeful','Positive','Cheerful']},{w:'Permanent',a:['Temporary','Lasting','Eternal','Constant']},
+  {w:'Reluctant',a:['Eager','Unwilling','Hesitant','Slow']},{w:'Sincere',a:['Insincere','Honest','Genuine','Truthful']},
+  {w:'Tranquil',a:['Agitated','Calm','Peaceful','Serene']},{w:'Voracious',a:['Uninterested','Hungry','Greedy','Eager']}
 ];
 
 function generateSynonymQuestion(diff) {
@@ -2182,7 +2280,11 @@ function generateHeightDistanceQuestion(diff, layer) {
   var ty = [
     function(){ var h=rand(10,50), a=[30,45,60][rand(0,2)]; var t=Math.round(h/Math.tan(a*Math.PI/180)); return { q:'Pole height='+h+'m, sun elevation='+a+'°. Shadow length?', a:t, hint:'tan'+a+' = height/shadow, shadow = height/tan'+a }; },
     function(){ var d=rand(10,40), a=[30,45,60][rand(0,2)]; var t=Math.round(d*Math.tan(a*Math.PI/180)); return { q:'Shadow='+d+'m, sun elevation='+a+'°. Height?', a:t, hint:'Height = shadow × tan'+a }; },
-    function(){ var h=rand(20,80), d=rand(10,40); var deg=Math.round(Math.atan(h/d)*180/Math.PI); return { q:'Tower height='+h+'m, distance='+d+'m. Elevation angle?', a:deg+'°', hint:'tan⁻¹(height/distance) = tan⁻¹('+h+'/'+d+')' }; }
+    function(){ var h=rand(20,80), d=rand(10,40); var deg=Math.round(Math.atan(h/d)*180/Math.PI); return { q:'Tower height='+h+'m, distance='+d+'m. Elevation angle?', a:deg+'°', hint:'tan⁻¹(height/distance) = tan⁻¹('+h+'/'+d+')' }; },
+    // Two-pole problem
+    function(){ var h1=rand(20,40), h2=rand(10,h1-5), d=rand(10,30); return { q:'Two poles ' + h1 + 'm and ' + h2 + 'm, distance ' + d + 'm. Difference of top heights?', a:Math.round(Math.sqrt(d*d+(h1-h2)*(h1-h2))*10)/10, hint:'Use Pythagoras: √(d²+(h1-h2)²)', intuition:'Pythagoras: √(' + d + '² + (' + h1 + '-' + h2 + ')²) = √(' + (d*d) + '+' + ((h1-h2)*(h1-h2)) + ') = ' + Math.round(Math.sqrt(d*d+(h1-h2)*(h1-h2))*10)/10 + 'm' }; },
+    // Angle of depression
+    function(){ var h=rand(30,80), d=rand(20,60); return { q:'From cliff ' + h + 'm high, boat at distance ' + d + 'm. Angle of depression?', a:Math.round(Math.atan(h/d)*180/Math.PI) + '°', hint:'tan(angle) = height/distance = ' + h + '/' + d, intuition:'tan θ = ' + h + '/' + d + ' = ' + (h/d).toFixed(2) + ', θ = tan⁻¹(' + (h/d).toFixed(2) + ') = ' + Math.round(Math.atan(h/d)*180/Math.PI) + '°' }; }
   ];
   var d=ty[rand(0,ty.length-1)](); var o=[d.a]; if(typeof d.a==='string'){var n=parseInt(d.a);for(var i=-2;i<=2;i++){var v=(n+i)+'°';if(v!==d.a&&o.indexOf(v)<0)o.push(v);}}else{for(var i=-5;i<=5;i+=2){var v=d.a+i;if(v>0&&o.indexOf(v)<0)o.push(v);}} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Height & Distance: '+d.hint, intuition:'tan(angle) = height/distance. sin(angle) = opposite/hypotenuse. cos(angle) = adjacent/hypotenuse.' };
@@ -2192,7 +2294,11 @@ function generateDecimalFractionQuestion(diff, layer) {
   var ty = [
     function(){ var n=rand(1,9), d=rand(2,9); return { q:(n/d).toFixed(3)+' = ? (fraction)', a:n+'/'+d, hint:'Convert decimal to fraction: write as numerator/denominator, simplify' }; },
     function(){ var n=rand(2,99); return { q:n+'/'+(100)+' = ? (decimal)', a:(n/100).toFixed(2), hint:'Divide numerator by denominator' }; },
-    function(){ var a=rand(1,9), b=rand(1,9); return { q:'Arrange: '+(a/b).toFixed(3)+', '+(b/a).toFixed(3)+', 1.000 — smallest?', a:String(Math.min(a/b,b/a,1).toFixed(3)), hint:'Convert to decimal, then compare' }; }
+    function(){ var a=rand(1,9), b=rand(1,9); return { q:'Arrange: '+(a/b).toFixed(3)+', '+(b/a).toFixed(3)+', 1.000 — smallest?', a:String(Math.min(a/b,b/a,1).toFixed(3)), hint:'Convert to decimal, then compare' }; },
+    // Recurring decimal to fraction
+    function(){ var n=rand(1,9); return { q:'0.'+n+''+n+''+n+'... (recurring) = ?', a:n+'/9', hint:'0.abcabc... = abc/999. Single digit repeat = digit/9', intuition:'0.' + n + '... = ' + n + '/9 (single digit recurring). Multiply by 10: 10x=' + n + '.' + n + '..., subtract x: 9x=' + n + ', x=' + n + '/9' }; },
+    // Decimal ordering
+    function(){ var a=rand(1,9)/10, b=rand(1,9)/100, c=rand(1,9)/1000; return { q:'Order: ' + a.toFixed(3) + ', ' + b.toFixed(3) + ', ' + c.toFixed(3) + ' — largest?', a:Math.max(a,b,c).toFixed(3), hint:'Compare place values: tenths > hundredths > thousandths', intuition:'Compare tenths digit first. ' + Math.max(a,b,c).toFixed(3) + ' is largest' }; }
   ];
   var d=ty[rand(0,ty.length-1)](); var o=[d.a]; if(typeof d.a==='string'){o.push((rand(1,9))+'/'+(rand(2,9)));o.push((rand(1,9))+'/'+(rand(2,9)));o.push((rand(1,9))+'/'+(rand(2,9)));}else{o.push((rand(10,99)/100).toFixed(2));o.push((rand(10,99)/100).toFixed(2));o.push((rand(10,99)/100).toFixed(2));} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:12, type:'quant', techniqueLabel:'Decimal Fraction', intuition:'To convert fraction→decimal: divide numerator by denominator. To convert decimal→fraction: write as decimal/1 and simplify.' };
@@ -2202,7 +2308,11 @@ function generateChainRuleQuestion(diff, layer) {
   var ty = [
     function(){ var m=rand(5,15), d=rand(10,20); return { q:m+' men do work in '+d+' days. '+(m+rand(3,8))+' men?', a:Math.round(m*d/(m+rand(3,8))), hint:'M1×D1 = M2×D2. Less men = more days' }; },
     function(){ var m=rand(5,12), d=rand(6,15), w=rand(2,4); return { q:m+' men do '+(w-1)+'× work in '+d+' days. '+w+'× work, '+m+' men?', a:Math.round(d*w/(w-1)), hint:'Work ∝ men × days. More work = more days' }; },
-    function(){ var h=rand(6,12), d=rand(4,10); return { q:h+' horses eat in '+d+' days. '+(h+rand(2,5))+' horses?', a:Math.round(h*d/(h+rand(2,5))), hint:'H1×D1 = H2×D2. More animals = fewer days' }; }
+    function(){ var h=rand(6,12), d=rand(4,10); return { q:h+' horses eat in '+d+' days. '+(h+rand(2,5))+' horses?', a:Math.round(h*d/(h+rand(2,5))), hint:'H1×D1 = H2×D2. More animals = fewer days' }; },
+    // Food consumption with varying people/days
+    function(){ var m=rand(10,30), d=rand(5,15), f=rand(5,15); return { q:f+' men eat ' + (m*f) + 'kg rice in ' + d + ' days. ' + (f+rand(3,7)) + ' men need for ' + (d+rand(2,5)) + ' days?', a:Math.round(m*(f+rand(3,7))*(d+rand(2,5))/f/d), hint:'Total food = men × days × daily_ration. More men & days = more food', intuition:'Daily ration per man = ' + m + 'kg/' + f + '/' + d + ' = ' + Math.round(m/f/d*100)/100 + '. For ' + (f+rand(3,7)) + ' men × ' + (d+rand(2,5)) + ' days = ' + Math.round(m*(f+rand(3,7))*(d+rand(2,5))/f/d) + 'kg' }; },
+    // Work with multiple variables
+    function(){ var m=rand(6,12), d=rand(8,16), h=rand(6,10); return { q:m+' men working ' + h + 'hr/day finish in ' + d + ' days. ' + (m+rand(2,5)) + ' men, ' + (h+rand(1,3)) + 'hr/day?', a:Math.round(m*d*h/((m+rand(2,5))*(h+rand(1,3)))), hint:'Work = men × days × hours. Same work: M1×D1×H1 = M2×D2×H2', intuition:'M1×D1×H1 = ' + m + '×' + d + '×' + h + ' = ' + (m*d*h) + '. D2 = ' + (m*d*h) + '/(' + (m+rand(2,5)) + '×' + (h+rand(1,3)) + ') = ' + Math.round(m*d*h/((m+rand(2,5))*(h+rand(1,3)))) + ' days' }; }
   ];
   var d=ty[rand(0,ty.length-1)](); var o=[d.a]; for(var i=-3;i<=4;i+=2){var v=d.a+i;if(v>0&&o.indexOf(v)<0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'Chain Rule: '+d.hint, intuition:'If more = less (inverse proportion): M1×D1 = M2×D2. If more = more (direct): divide then multiply.' };
@@ -2212,7 +2322,11 @@ function generateLogarithmQuestion(diff, layer) {
   var ty = [
     function(){ var b=[2,3,5,10][rand(0,3)], n=Math.pow(b,rand(2,4)); return { q:'log_'+b+'('+n+') = ?', a:Math.round(Math.log(n)/Math.log(b)), hint:'log_b(n) = x means b^x = n' }; },
     function(){ var a=rand(2,5), n=Math.pow(a,rand(2,4)); return { q:'log('+n+') / log('+a+') = ?', a:Math.round(Math.log(n)/Math.log(a)), hint:'log_b(a) = log(a)/log(b). This gives log_'+a+'('+n+')' }; },
-    function(){ var a=rand(2,4), b=rand(2,4), n=Math.pow(a,rand(2,3))*Math.pow(b,rand(2,3)); return { q:'log('+a*b+') = log('+a+') + log(?)', a:b, hint:'log(xy) = log(x) + log(y)' }; }
+    function(){ var a=rand(2,4), b=rand(2,4), n=Math.pow(a,rand(2,3))*Math.pow(b,rand(2,3)); return { q:'log('+a*b+') = log('+a+') + log(?)', a:b, hint:'log(xy) = log(x) + log(y)' }; },
+    // Change of base
+    function(){ var a=rand(2,5), b=rand(2,5); while(b===a)b=rand(2,5); var n=Math.pow(a,rand(2,3)); return { q:'log_'+a+'('+n+') / log_'+b+'('+n+') = ?', a:Math.round(Math.log(b)/Math.log(a)*100)/100, hint:'Change base: log_a(N)/log_b(N) = log_b(a)', intuition:'log_'+a+'('+n+')/log_'+b+'('+n+') = log_'+a+'('+n+') × log_'+n+'('+b+') = log_'+a+'('+b+') = log('+b+')/log('+a+') = ' + Math.round(Math.log(b)/Math.log(a)*100)/100 }; },
+    // Solving log equations
+    function(){ var n=rand(3,8); return { q:'Solve: log(x) + log(' + n + ') = log(' + (n*5) + ')', a:'5', hint:'log(x) + log(' + n + ') = log(' + n + 'x) = log(' + (n*5) + '). So ' + n + 'x = ' + (n*5), intuition:'log(x' + n + ') = log(' + (n*5) + ') → ' + n + 'x = ' + (n*5) + ' → x = 5' }; }
   ];
   var d=ty[rand(0,ty.length-1)](); var o=[d.a]; for(var i=-2;i<=3;i++){var v=d.a+i;if(v!==d.a&&v>0&&o.indexOf(v)<0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Logarithms: '+d.hint, intuition:'log_b(x)=y means b^y=x. log(xy)=log(x)+log(y). log(x/y)=log(x)-log(y). log(x^n)=n×log(x).' };
@@ -2223,7 +2337,10 @@ function generateMakingJudgmentsQuestion(diff) {
   var items=[
     {s:'You want to buy a reliable used car under ₹5 lakh.',o:['A 2018 model with 80k km service history','A 2022 model with 0 service records','A 2005 model fully restored','A damaged car at auction'],a:0},
     {s:'You need to improve your English speaking skills quickly.',o:['Practice speaking daily with a friend','Read only textbooks','Watch movies without subtitles','Take a 3-year course'],a:0},
-    {s:'You want to save money on electricity bills.',o:['Switch to LED bulbs and unplug idle devices','Keep all lights on 24/7','Buy new appliances every month','Run AC at 16°C always'],a:0}
+    {s:'You want to save money on electricity bills.',o:['Switch to LED bulbs and unplug idle devices','Keep all lights on 24/7','Buy new appliances every month','Run AC at 16°C always'],a:0},
+    {s:'You need to choose a healthy breakfast option.',o:['Oatmeal with fruits and nuts','A sugary cereal with milk','A deep-fried samosa','A can of soda'],a:0},
+    {s:'You want to prepare for a competitive exam in 6 months.',o:['Create a study schedule and follow daily','Cram everything in the last month','Only study on weekends','Skip mock tests'],a:0},
+    {s:'You need to resolve a disagreement with a coworker.',o:['Talk calmly and find common ground','Ignore the problem','Shout and argue your point','Complain to the boss first'],a:0}
   ];
   var it=items[rand(0,items.length-1)];
   return { question:'Best course of action: "'+it.s+'"<br>'+it.o.map(function(x,i){return (i+1)+'. '+x;}).join('<br>'), answer:it.o[it.a], options:it.o.slice(), hint:'Choose the most practical and effective option', timeLimit:12, type:'reasoning', techniqueLabel:'Making Judgments', intuition:'Evaluate each option for effectiveness, cost, and feasibility. The best choice directly achieves the goal with minimal drawbacks.' };
@@ -2232,7 +2349,13 @@ function generateMakingJudgmentsQuestion(diff) {
 function generateLogicalProblemsQuestion(diff) {
   var items=[
     function(){var colors=['Red','Blue','Green','Yellow'];shuffle(colors);return {q:'4 friends — A says "I don\'t wear Red", B says "I wear Blue", C says "I don\'t wear Blue", D says "I wear Red or Green". Only one is lying. Who wears Yellow?',a:colors[3],o:colors};},
-    function(){var n=['Alice','Bob','Charlie','Diana'];shuffle(n);return {q:n[0]+', '+n[1]+', '+n[2]+', '+n[3]+' sit in a row. '+n[0]+' sits at an end. '+n[1]+' sits next to '+n[2]+'. '+n[3]+' sits between '+n[0]+' and '+n[1]+'. Who is at the other end?',a:n[2],o:n};}
+    function(){var n=['Alice','Bob','Charlie','Diana'];shuffle(n);return {q:n[0]+', '+n[1]+', '+n[2]+', '+n[3]+' sit in a row. '+n[0]+' sits at an end. '+n[1]+' sits next to '+n[2]+'. '+n[3]+' sits between '+n[0]+' and '+n[1]+'. Who is at the other end?',a:n[2],o:n};},
+    // Truth-teller puzzle
+    function(){return {q:'You meet two people. A says "B is a liar." B says "We are both truth-tellers." One speaks truth, one lies. Who is the truth-teller?',a:'A',o:['A','B','Neither','Both'],hint:'Assume A truth → B liar → B lies about "both truth-tellers" → works'};},
+    // Matching pairs
+    function(){var n=['Raj','Simran','Amit','Priya'];var c=['Doctor','Engineer','Teacher','Artist'];shuffle(n);shuffle(c);return {q:n[0]+' is not the Doctor. '+n[1]+' is the Engineer. '+n[2]+' is not the Artist. '+n[3]+' is the Teacher. Who is the Doctor?',a:function(){for(var i=0;i<4;i++){if(n[i]!==n[0]&&n[i]!==n[1]&&n[i]!==n[3])return n[i];}return n[2];}(),o:n};},
+    // Order-based puzzle
+    function(){var n=['A','B','C','D','E'];shuffle(n);return {q:'5 people: '+n[0]+' > '+n[1]+', '+n[2]+' < '+n[3]+', '+n[4]+' sits between '+n[0]+' and '+n[2]+'. Who is tallest?',a:n[0],o:n};}
   ];
   var d=items[rand(0,items.length-1)](); var o=d.o; shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:'List possibilities and eliminate contradictions', timeLimit:25, type:'reasoning', techniqueLabel:'Logical Problems', intuition:'Track what each statement rules out. If only one is lying, check which scenario makes exactly one false.' };
@@ -2251,7 +2374,10 @@ function generateAnalyzingArgumentsQuestion(diff) {
   var items=[
     {p:'"All swans I have seen are white. Therefore, all swans are white."',f:'Hasty generalization (insufficient sample)',o:['Hasty generalization','Circular reasoning','False cause','Appeal to authority']},
     {p:'"If you don\'t study, you\'ll fail. You didn\'t study, so you will fail."',f:'Valid deductive argument',o:['False analogy','Valid deductive argument','Slippery slope','Straw man']},
-    {p:'"Everyone believes the earth is round, so it must be round."',f:'Appeal to popularity (argumentum ad populum)',o:['Appeal to popularity','Ad hominem','Red herring','False dilemma']}
+    {p:'"Everyone believes the earth is round, so it must be round."',f:'Appeal to popularity (argumentum ad populum)',o:['Appeal to popularity','Ad hominem','Red herring','False dilemma']},
+    {p:'"You are either with us or against us."',f:'False dilemma (black-and-white fallacy)',o:['False dilemma','Slippery slope','Straw man','Hasty generalization']},
+    {p:'"If we allow same-sex marriage, next people will marry animals."',f:'Slippery slope',o:['Slippery slope','Circular reasoning','Ad hominem','False cause']},
+    {p:'"My opponent wants to cut education funding. Clearly, he hates children."',f:'Straw man (misrepresenting the argument)',o:['Straw man','Appeal to authority','False dilemma','Red herring']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:'Identify the flaw:<br>"'+it.p+'"', answer:it.f, options:it.o, hint:'What logical error does this argument make?', timeLimit:15, type:'reasoning', techniqueLabel:'Analyzing Arguments', intuition:'Hasty generalization = small sample. Circular = premise assumes conclusion. Ad populum = everyone believes it. False cause = correlation ≠ causation.' };
@@ -2261,7 +2387,11 @@ function generateLogicalDeductionQuestion(diff) {
   var items=[
     {p:'All mammals are warm-blooded. Whales are mammals.',c:'Whales are warm-blooded',o:['Whales are warm-blooded','Whales live in water','Mammals have fur','Whales are fish']},
     {p:'No honest person lies. John is honest.',c:'John does not lie',o:['John does not lie','John is rich','Everyone lies','Honest people are rare']},
-    {p:'All squares have 4 equal sides. This shape has 4 equal sides.',c:'This shape could be a square',o:['This shape is definitely a square','This shape could be a square','This shape is not a square','All 4-sided shapes are squares']}
+    {p:'All squares have 4 equal sides. This shape has 4 equal sides.',c:'This shape could be a square',o:['This shape is definitely a square','This shape could be a square','This shape is not a square','All 4-sided shapes are squares']},
+    // Some/all/no combinations
+    {p:'All doctors are educated. Some educated people are rich.',c:'Some doctors might be rich',o:['All doctors are rich','No doctors are rich','Some doctors might be rich','Some educated people are doctors']},
+    // Possibility vs certainty
+    {p:'Either Ravi is lying or Sita is telling the truth. Ravi is telling the truth.',c:'Sita is telling the truth',o:['Ravi is lying','Sita is lying','Sita is telling the truth','Cannot be determined']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:'What logically follows?<br>"'+it.p+'"', answer:it.c, options:it.o, hint:'Apply deductive reasoning. If ALL X are Y and this is X, then this is Y.', timeLimit:12, type:'reasoning', techniqueLabel:'Logical Deduction', intuition:'Deduction: All A are B. C is A. Therefore C is B. If ALL: certain. If SOME: possible. If NO: certain negative.' };
@@ -2272,7 +2402,11 @@ function generateCharacterPuzzlesQuestion(diff) {
   var items=[
     function(){var a=rand(2,5),b=rand(2,5),c=rand(2,5);return {q:'Find missing: <br>'+(a*3)+'  '+(b*3)+'  '+(c*3)+'<br>'+(a*2)+'  '+(b*2)+'  '+(c*2)+'<br>'+(a*5)+'  '+(b*5)+'  ?',a:String(c*5),o:[String(c*5),String(c*4),String(c*6),String(c*7)],hint:'Each column follows the same pattern.'};},
     function(){return {q:'Find missing: <br>2  5  8<br>3  6  9<br>4  7  ?',a:'10',o:['10','11','12','13'],hint:'Rows: each number increases by 3 from previous.'};},
-    function(){var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ';var p=rand(0,20);return {q:'Find missing: <br>'+l[p]+'  '+l[p+1]+'  '+l[p+2]+'<br>'+l[p+3]+'  '+l[p+4]+'  '+l[p+5]+'<br>'+l[p+6]+'  '+l[p+7]+'  ?',a:l[p+8],o:[l[p+8],l[p+6],l[p+9],l[p+10]],hint:'Each row/column follows alphabetical order.'};}
+    function(){var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ';var p=rand(0,20);return {q:'Find missing: <br>'+l[p]+'  '+l[p+1]+'  '+l[p+2]+'<br>'+l[p+3]+'  '+l[p+4]+'  '+l[p+5]+'<br>'+l[p+6]+'  '+l[p+7]+'  ?',a:l[p+8],o:[l[p+8],l[p+6],l[p+9],l[p+10]],hint:'Each row/column follows alphabetical order.'};},
+    // Number-based character grid
+    function(){return {q:'Find missing: <br>3  6  12<br>4  8  16<br>5  10  ?',a:'20',o:['15','18','20','25'],hint:'Each row: first×2=second, second×2=third'};},
+    // Letter with positional logic
+    function(){var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ';var p=rand(0,22);return {q:'Find missing: <br>'+l[p]+'  '+(p+1)+'  '+(p+1)*(p+1)+'<br>'+l[p+1]+'  '+(p+2)+'  '+(p+2)*(p+2)+'<br>'+l[p+2]+'  '+(p+3)+'  ?',a:String((p+3)*(p+3)),o:[String((p+3)*(p+3)),String((p+3)*(p+4)),String((p+4)*(p+4)),String((p+2)*(p+3))],hint:'Col1=letter, Col2=position, Col3=position²'};}
   ];
   var d=items[rand(0,items.length-1)](); var o=d.o; shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint||'Find the pattern in columns and rows', timeLimit:20, type:'reasoning', techniqueLabel:'Character Puzzles', intuition:'Look for patterns column-wise and row-wise. The same operation should apply to all.' };
@@ -2282,7 +2416,9 @@ function generateVerificationTruthQuestion(diff) {
   var items=[
     {f:'A father has 4 children. Each daughter has the same number of brothers as sisters, but each son has twice as many sisters as brothers.',q:'How many daughters?',a:'3',o:['1','2','3','4']},
     {f:'In a row of trees, one tree is 7th from left and 9th from right.',q:'Total trees?',a:'15',o:['13','14','15','16']},
-    {f:'A says "B is lying". B says "C is lying". C says "A and B are both lying".',q:'Who is telling the truth?',a:'C',o:['A','B','C','None']}
+    {f:'A says "B is lying". B says "C is lying". C says "A and B are both lying".',q:'Who is telling the truth?',a:'C',o:['A','B','C','None']},
+    {f:'In a family of 6, each son has the same number of brothers as sisters. Each daughter has twice as many brothers as sisters.',q:'How many sons?',a:'4',o:['2','3','4','5']},
+    {f:'Five friends — A, B, C, D, E. A is taller than B. C is taller than D but shorter than E. B is taller than C.',q:'Who is the second tallest?',a:'A',o:['A','B','C','D']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:it.f+'<br>'+it.q, answer:it.a, options:it.o, hint:'Test each possibility against the given facts', timeLimit:20, type:'reasoning', techniqueLabel:'Verification of Truth', intuition:'Assume one statement is true and check if it leads to contradictions. Only one scenario works with all facts.' };
@@ -2292,7 +2428,11 @@ function generateVerificationTruthQuestion(diff) {
 function generateAnalyticalReasoningQuestion(diff) {
   var items=[
     function(){var n=rand(3,6);return {q:'A square is divided into '+(n*n)+' small squares by '+(n-1)+' horizontal and '+(n-1)+' vertical lines. Total squares?',a:Math.round(n*(n+1)*(2*n+1)/6),o:[String(n*n),String(2*n),String(Math.round(n*(n+1)*(2*n+1)/6)),String(n*2)],hint:'Also count squares of different sizes, not just the smallest.'};},
-    function(){return {q:'In a triangle, lines are drawn from one vertex to the opposite side dividing it into '+(rand(3,6))+' parts. How many triangles total?',a:String(rand(3,6)),o:[String(rand(3,6)),String(rand(3,6)*2),String(rand(3,6)+1),String(rand(3,6)*3)],hint:'Count all triangles of different sizes.'};}
+    function(){return {q:'In a triangle, lines are drawn from one vertex to the opposite side dividing it into '+(rand(3,6))+' parts. How many triangles total?',a:String(rand(3,6)),o:[String(rand(3,6)),String(rand(3,6)*2),String(rand(3,6)+1),String(rand(3,6)*3)],hint:'Count all triangles of different sizes.'};},
+    // Count rectangles in grid
+    function(){var n=rand(2,4), m=rand(2,4); var rects=Math.round(n*(n+1)*m*(m+1)/4); return {q:'Rectangles in a '+n+'×'+m+' grid?',a:String(rects),o:[String(rects),String(n*m),String(2*rects),String(Math.round(rects/2))],hint:'Formula: n(n+1)×m(m+1)/4'};},
+    // Count triangles in complex figure
+    function(){var n=rand(2,4); var count=n*n; return {q:'An equilateral triangle divided into '+n+'×'+n+' small triangles. Total triangles?',a:String(count),o:[String(count),String(2*count),String(Math.round(count/2)),String(count+2)],hint:'Count of small triangles = n²'};}
   ];
   var d=items[rand(0,items.length-1)](); var o=d.o; shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint||'Count systematically — all sizes, not just the obvious ones', timeLimit:20, type:'reasoning', techniqueLabel:'Analytical Reasoning', intuition:'Count systematically: smallest first, then larger ones. For squares in a grid: sum of n² from 1 to N.' };
@@ -2313,7 +2453,9 @@ function generateShapeConstructionQuestion(diff) {
   var items=[
     {q:'Which pieces can form a square?',a:'Two identical right triangles',o:['Two identical right triangles','A circle and a triangle','Three different rectangles','Four small circles']},
     {q:'Which can form a rectangle?',a:'Two identical rectangles placed side by side',o:['Two identical rectangles placed side by side','A square and a circle','A triangle and a line','Three squares in a row']},
-    {q:'How many equilateral triangles of side 1 can fit in an equilateral triangle of side 3?',a:'9',o:['3','6','9','12']}
+    {q:'How many equilateral triangles of side 1 can fit in an equilateral triangle of side 3?',a:'9',o:['3','6','9','12']},
+    {q:'Move 2 matchsticks to make 5 squares from 6 (arranged as 2×3). How to start?',a:'Remove inner match of middle row',o:['Remove inner match of middle row','Remove all corner matches','Add new matches','Move all matches to corners']},
+    {q:'Which net folds into a cube?',a:'A cross shape of 6 squares (1 center, 4 around, 1 attached to one)',o:['A cross shape of 6 squares','A line of 6 squares','A T-shape of 6 squares','An L-shape of 6 squares']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:it.q, answer:it.a, options:it.o, hint:'Think about how shapes combine to form the target shape', timeLimit:15, type:'reasoning', techniqueLabel:'Shape Construction', intuition:'Shapes combine by matching edges. Two identical right triangles form a square/rectangle. Area of similar shapes scales by square of side ratio.' };
@@ -2332,7 +2474,15 @@ var COMMON_IDIOMS = [
   {i:'Cost an arm and a leg',m:'Be very expensive'},
   {i:'Under the weather',m:'Feeling ill'},
   {i:'Cut corners',m:'Do something poorly to save time/money'},
-  {i:'Speak of the devil',m:'Someone appears just when you talk about them'}
+  {i:'Speak of the devil',m:'Someone appears just when you talk about them'},
+  {i:'Beat around the bush',m:'Avoid the main topic; talk indirectly'},
+  {i:'The ball is in your court',m:'It\'s your turn to make a decision'},
+  {i:'When pigs fly',m:'Something that will never happen'},
+  {i:'A blessing in disguise',m:'Something bad that turns out to be good'},
+  {i:'Hit the sack',m:'Go to sleep'},
+  {i:'Put all your eggs in one basket',m:'Risk everything on one venture'},
+  {i:'The best of both worlds',m:'Enjoy two different advantages at once'},
+  {i:'A picture is worth a thousand words',m:'Visual images convey more than words'}
 ];
 
 var ONE_WORD_SUBS = [
@@ -2345,7 +2495,15 @@ var ONE_WORD_SUBS = [
   {p:'A remedy for all diseases',w:'Panacea'},
   {p:'One who loves books',w:'Bibliophile'},
   {p:'A life story written by oneself',w:'Autobiography'},
-  {p:'A group of ships',w:'Fleet'}
+  {p:'A group of ships',w:'Fleet'},
+  {p:'One who hates women',w:'Misogynist'},
+  {p:'A government by the rich',w:'Plutocracy'},
+  {p:'One who talks in sleep',w:'Somniloquist'},
+  {p:'That which cannot be corrected',w:'Incorrigible'},
+  {p:'A place where weapons are stored',w:'Arsenal'},
+  {p:'One who is all-powerful',w:'Omnipotent'},
+  {p:'The practice of marrying one person at a time',w:'Monogamy'},
+  {p:'Killing of a race or community',w:'Genocide'}
 ];
 
 function generateSpottingErrorsQuestion(diff) {
@@ -2354,7 +2512,10 @@ function generateSpottingErrorsQuestion(diff) {
     {s:'She go to school everyday.',e:'go → goes',o:['go → goes','to → for','everyday → every day','No error']},
     {s:'They has completed the work.',e:'has → have',o:['has → have','the → a','work → works','No error']},
     {s:'I am loving this weather.',e:'am loving → love',o:['am loving → love','this → these','weather → weathers','No error']},
-    {s:'Neither the teacher nor the students was present.',e:'was → were',o:['was → were','Neither → Either','the → a','No error']}
+    {s:'Neither the teacher nor the students was present.',e:'was → were',o:['was → were','Neither → Either','the → a','No error']},
+    {s:'He is angry on me for no reason.',e:'on → with',o:['on → with','He → Him','me → myself','No error']},
+    {s:'She is an university professor.',e:'an → a',o:['an → a','She → Her','university → universities','No error']},
+    {s:'Everyone should bring their own lunch.',e:'their → his/her (pronoun agreement)',o:['their → his/her','Everyone → Every','bring → brings','No error']}
   ];
   var it=items[rand(0,items.length-1)];
   return { question:'Spot the error: "'+it.s+'"', answer:it.e, options:it.o, hint:'Check subject-verb agreement, tense, and word form', timeLimit:10, type:'verbal', techniqueLabel:'Spotting Errors', intuition:'Common errors: subject-verb agreement (he goes), tense consistency (I love not I am loving), neither-nor verb follows closest subject.' };
@@ -2368,7 +2529,12 @@ function generateSpellingsQuestion(diff) {
     {c:'Separate',w:['Seperate','Separate','Separete','Saperate'],a:1},
     {c:'Embarrass',w:['Embarass','Embarrass','Embaras','Embarras'],a:1},
     {c:'Independent',w:['Independant','Indepentent','Independent','Indipendent'],a:2},
-    {c:'Occurrence',w:['Occurence','Occurance','Occurrence','Ocurrence'],a:2}
+    {c:'Occurrence',w:['Occurence','Occurance','Occurrence','Ocurrence'],a:2},
+    {c:'Guarantee',w:['Guarantee','Gurantee','Gaurantee','Garantee'],a:0},
+    {c:'Harass',w:['Harass','Harrass','Haras','Harras'],a:0},
+    {c:'Millennium',w:['Millennium','Millenium','Milennium','Milenium'],a:0},
+    {c:'Privilege',w:['Privilege','Priviledge','Privelege','Privilige'],a:0},
+    {c:'Rhythm',w:['Rhythm','Rythm','Rythym','Rhythim'],a:0}
   ];
   var it=items[rand(0,items.length-1)]; var opts=it.w.slice(); shuffle(opts);
   return { question:'Correct spelling?', answer:it.c, options:opts, hint:'Think about how the word sounds and common spelling rules', timeLimit:8, type:'verbal', techniqueLabel:'Spellings', intuition:'Double consonants (accommodation, embarrass), -ance vs -ence (maintenance), -able vs -ible.' };
@@ -2378,7 +2544,10 @@ function generateSentenceCorrectionQuestion(diff) {
   var items=[
     {s:'The committee have decided to postpone the meeting.',c:'The committee has decided to postpone the meeting',o:['The committee have decided to postpone the meeting','The committee has decided to postpone the meeting','The committee have decide to postpone the meeting','The committee has decide to postpone the meeting']},
     {s:'Each of the students were given a certificate.',c:'Each of the students was given a certificate',o:['Each of the students were given a certificate','Each of the students was given a certificate','Each of the student were given a certificate','Every of the students were given a certificate']},
-    {s:'I have been working here since five years.',c:'I have been working here for five years',o:['I have been working here since five years','I have been working here for five years','I am working here since five years','I worked here since five years']}
+    {s:'I have been working here since five years.',c:'I have been working here for five years',o:['I have been working here since five years','I have been working here for five years','I am working here since five years','I worked here since five years']},
+    {s:'Walking down the street, the flowers looked beautiful.',c:'Walking down the street, I saw beautiful flowers (misplaced modifier)',o:['Walking down the street, the flowers looked beautiful','Walking down the street, I saw beautiful flowers','The flowers walking down the street looked beautiful','Walking the street, flowers looked beautiful']},
+    {s:'She likes swimming, to run, and dance.',c:'She likes swimming, running, and dancing',o:['She likes swimming, to run, and dance','She likes swimming, running, and dancing','She likes to swim, to run, and dancing','She likes swim, run, dance']},
+    {s:'Being a rainy day, the picnic was cancelled.',c:'It being a rainy day, the picnic was cancelled (dangling participle)',o:['Being a rainy day, the picnic was cancelled','It being a rainy day, the picnic was cancelled','The picnic being a rainy day was cancelled','A rainy day being, the picnic cancelled']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:'Correct: "'+it.s+'"', answer:it.c, options:it.o, hint:'Check subject-verb agreement, tense, prepositions', timeLimit:12, type:'verbal', techniqueLabel:'Sentence Correction', intuition:'Collective nouns (committee) take singular verb. Each + singular. Since + point in time, For + duration.' };
@@ -2397,7 +2566,9 @@ function generateSentenceImprovementQuestion(diff) {
 function generateClosetTestQuestion(diff) {
   var items=[
     {p:'The _____ of technology has transformed education. Students can now access information from anywhere. This has made learning more _____ than ever before. However, it also _____ challenges like screen addiction.',blanks:['advancement','accessible','poses'],q:'Blank 2?',a:'accessible',o:['accessible','difficult','expensive','boring']},
-    {p:'Air pollution is a serious _____ in many cities. It causes respiratory problems and _____ the environment. Planting more trees can help _____ the air quality.',blanks:['problem','harms','improve'],q:'Blank 1?',a:'problem',o:['solution','problem','benefit','ignored']}
+    {p:'Air pollution is a serious _____ in many cities. It causes respiratory problems and _____ the environment. Planting more trees can help _____ the air quality.',blanks:['problem','harms','improve'],q:'Blank 1?',a:'problem',o:['solution','problem','benefit','ignored']},
+    {p:'Social media has a powerful _____ on young minds. While it helps them stay _____, excessive use can lead to addiction and anxiety. Parents must _____ their children\'s usage.',blanks:['impact','connected','monitor'],q:'Blank 2?',a:'connected',o:['connected','isolated','ignorant','bored']},
+    {p:'The _____ of electric vehicles is growing rapidly. They are more _____ than petrol cars and produce zero emissions. However, the lack of charging _____ remains a challenge.',blanks:['adoption','efficient','infrastructure'],q:'Blank 3?',a:'infrastructure',o:['infrastructure','batteries','drivers','roads']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:'<span style="font-size:.85em">'+it.p+'</span><br><br>'+it.q, answer:it.a, options:it.o, hint:'Read the full passage for context. The correct word makes sense in the overall meaning.', timeLimit:20, type:'verbal', techniqueLabel:'Closet Test', intuition:'Read the entire passage first. The missing word must fit the context, grammar, and overall meaning.' };
@@ -2424,7 +2595,10 @@ function generateChangeVoiceQuestion(diff) {
     {a:'The cat chased the mouse.',p:'The mouse was chased by the cat',o:['The mouse was chased by the cat','The mouse is chased by the cat','The mouse was being chased','The mouse had been chased']},
     {a:'She writes a letter.',p:'A letter is written by her',o:['A letter is written by her','A letter was written by her','A letter has been written','A letter writes by her']},
     {p:'The work was done by John.',a:'John did the work',o:['John did the work','John does the work','John was doing the work','John had done the work']},
-    {a:'They will build a bridge.',p:'A bridge will be built by them',o:['A bridge will be built by them','A bridge will build by them','A bridge would be built','A bridge is built by them']}
+    {a:'They will build a bridge.',p:'A bridge will be built by them',o:['A bridge will be built by them','A bridge will build by them','A bridge would be built','A bridge is built by them']},
+    {a:'She has finished the work.',p:'The work has been finished by her',o:['The work has been finished by her','The work has finished by her','She has been finished the work','The work had been finished by her']},
+    {a:'You must obey the rules.',p:'The rules must be obeyed by you',o:['The rules must be obeyed by you','The rules must obey by you','You must be obeyed the rules','The rules are obeyed by you']},
+    {a:'Please open the door.',p:'You are requested to open the door',o:['You are requested to open the door','The door is opened please','Let the door be opened','Please the door be opened']}
   ];
   var it=items[rand(0,items.length-1)];
   return { question:'Change voice: "'+it.a||it.p+'"', answer:it.p||it.a, options:it.o, hint:'Active→Passive: object becomes subject, verb becomes be+past participle, subject becomes by+agent', timeLimit:15, type:'verbal', techniqueLabel:'Change of Voice', intuition:'Active: subject does action. Passive: subject receives action. Verb changes: do→is done, did→was done, will do→will be done.' };
@@ -2434,7 +2608,10 @@ function generateChangeSpeechQuestion(diff) {
   var items=[
     {d:'She said, "I am happy."',i:'She said that she was happy',o:['She said that she was happy','She said that I am happy','She said that she is happy','She said she is happy']},
     {d:'He said, "I will come tomorrow."',i:'He said that he would come the next day',o:['He said that he would come the next day','He said that he will come tomorrow','He said he will come tomorrow','He said that he would come tomorrow']},
-    {d:'"Please help me," she said.',i:'She requested me to help her',o:['She requested me to help her','She said please help me','She ordered me to help her','She said to help me']}
+    {d:'"Please help me," she said.',i:'She requested me to help her',o:['She requested me to help her','She said please help me','She ordered me to help her','She said to help me']},
+    {d:'He asked, "Are you coming?"',i:'He asked if I was coming',o:['He asked if I was coming','He asked that I am coming','He asked are you coming','He asked that you are coming']},
+    {d:'She said, "What a beautiful day!"',i:'She exclaimed that it was a beautiful day',o:['She exclaimed that it was a beautiful day','She said what a beautiful day','She asked what a beautiful day','She exclaimed what a day']},
+    {d:'The teacher said, "The Earth revolves around the Sun."',i:'The teacher said that the Earth revolves around the Sun',o:['The teacher said that the Earth revolves around the Sun','The teacher said that the Earth revolved around the Sun','The teacher said that the Earth is revolving around the Sun','The teacher said the Earth revolved around the Sun']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:'Change to indirect speech:<br>"'+it.d+'"', answer:it.i, options:it.o, hint:'Remove quotes, change pronouns, adjust tense (present→past, will→would, tomorrow→next day)', timeLimit:15, type:'verbal', techniqueLabel:'Change of Speech', intuition:'Reporting verb + that clause. Present→past. will→would. today→that day. tomorrow→next day. Commands become to+verb. Questions become if/whether.' };
