@@ -1016,7 +1016,10 @@ function generateInequalityQuestion(diff) {
   var qTypes = [
     function() { return { q: 'Which is the largest?', ans: first, opts: [first, last, 'Cannot determine', 'None'], desc: 'Largest in chain' }; },
     function() { return { q: 'Which is the smallest?', ans: last, opts: [last, first, 'Cannot determine', 'None'], desc: 'Smallest in chain' }; },
-    function() { return { q: 'What can be said about ' + first + ' and ' + last + '?', ans: allPositive ? first + ' > ' + last : (allNegative ? first + ' < ' + last : 'Cannot determine'), opts: [first + ' > ' + last, first + ' = ' + last, first + ' < ' + last, 'Cannot determine'], desc: 'Relation between ends' }; }
+    function() { return { q: 'What can be said about ' + first + ' and ' + last + '?', ans: allPositive ? first + ' > ' + last : (allNegative ? first + ' < ' + last : 'Cannot determine'), opts: [first + ' > ' + last, first + ' = ' + last, first + ' < ' + last, 'Cannot determine'], desc: 'Relation between ends' }; },
+    function() { var mid = usedVars[Math.floor(usedVars.length/2)]; var eqMid = chain[Math.floor(chain.length/2)] === '='; return { q: 'Is ' + mid + ' definitely greater than ' + last + '?', ans: allPositive && !eqMid ? 'Yes' : (allPositive && eqMid ? 'Yes, if ' + mid + ' ≠ ' + last : 'Cannot determine'), opts: ['Yes', 'No', 'Cannot determine', 'Yes, if ' + mid + ' ≠ ' + last], desc: 'Equality-aware comparison' }; },
+    function() { var hasMixed = false; for (var i = 1; i < chain.length; i++) { if ((chain[i] === '>' && chain[i-1] === '<') || (chain[i] === '<' && chain[i-1] === '>')) hasMixed = true; } return { q: 'If the chain has mixed directions, which statement is necessarily true?', ans: hasMixed ? 'Direction flips, no direct relation' : (allPositive ? first + ' > ' + last : first + ' < ' + last), opts: [first + ' > ' + last, first + ' < ' + last, first + ' = ' + last, 'Direction flips, no direct relation'], desc: 'Mixed direction detection' }; },
+    function() { var maxVal = usedVars[0]; var minVal = usedVars[0]; for (var i = 1; i < usedVars.length; i++) { if (chain[i-1] === '>' || chain[i-1] === '=') { maxVal = usedVars[i]; } else { minVal = usedVars[i]; } } return { q: 'Arrange ' + first + ', ' + last + ', and the middle variable in order.', ans: allPositive ? (first + ' > ' + usedVars[Math.ceil(usedVars.length/2)-1] + ' > ' + last) : (allNegative ? (last + ' > ' + usedVars[Math.ceil(usedVars.length/2)-1] + ' > ' + first) : 'Cannot determine'), opts: [first + ' > ' + last, last + ' > ' + first, first + ' > ' + usedVars[Math.ceil(usedVars.length/2)-1] + ' > ' + last, 'Cannot determine'], desc: 'Three-variable ordering' }; }
   ];
 
   var q = qTypes[rand(0, qTypes.length - 1)]();
@@ -1769,7 +1772,10 @@ function generateDiceCubeQuestion(diff) {
   var ty = [
     function(){ var faces = {A:['Top','Bottom','Front','Back','Left','Right']}; var f=['Top','Bottom','Front','Back','Left','Right']; shuffle(f); return { q: 'Dice: ' + f[0] + '=' + rand(1,6) + ', ' + f[1] + '=' + rand(1,6) + '. ' + f[5] + '?', a: 7-Math.abs(rand(1,6)), hint: 'Opposite faces sum to 7', intuition: 'Key: opposite faces sum to 7. If top=n, bottom=7-n. Adjacent are never opposite.' }; },
     function(){ var n=[rand(2,6), rand(2,6)]; while(n[1]===n[0]||n[1]===7-n[0])n[1]=rand(2,6); return { q: 'Two positions of same dice show ' + n[0] + ' & ' + n[1] + '. ' + (7-n[0]) + ' is opposite?', a: 7-n[1], hint: 'Common numbers share face', intuition: 'Compare two positions: the number NOT seen in either position is the one on the hidden face.' }; },
-    function(){ var c=rand(1,5); return { q: 'Cube painted all faces, cut into 27 small cubes. Cubes with ' + c + ' faces painted?', a: c===0?1:(c===1?6:(c===2?12:(c===3?8:0))), hint: '0-face=center('+(c===0?1:'')+'), 1-face=face centers(6), 2-face=edge centers(12), 3-face=corners(8)', intuition: 'For n³ cubes: 0-face=(n-2)³, 1-face=6(n-2)², 2-face=12(n-2), 3-face=8 always. Here n=3: ' + (c===0?'1':c===1?'6':c===2?'12':c===3?'8':'0') }; }
+    function(){ var c=rand(1,5); return { q: 'Cube painted all faces, cut into 27 small cubes. Cubes with ' + c + ' faces painted?', a: c===0?1:(c===1?6:(c===2?12:(c===3?8:0))), hint: '0-face=center('+(c===0?1:'')+'), 1-face=face centers(6), 2-face=edge centers(12), 3-face=corners(8)', intuition: 'For n³ cubes: 0-face=(n-2)³, 1-face=6(n-2)², 2-face=12(n-2), 3-face=8 always. Here n=3: ' + (c===0?'1':c===1?'6':c===2?'12':c===3?'8':'0') }; },
+    function(){ var cols=['Red','Blue','Green','Yellow','White','Black']; shuffle(cols); var top=rand(1,6), shown=[top]; shown.push(7-top); var side=rand(1,6); while(shown.indexOf(side)>=0)side=rand(1,6); shown.push(side); shown.push(7-side); var ci=rand(0,3); return { q: 'Dice colored: ' + cols[0] + '=' + shown[0] + ', ' + cols[1] + '=' + shown[1] + ', ' + cols[2] + '=' + shown[2] + '. Color of face opposite ' + cols[ci] + '?', a: cols[shown.indexOf(7-shown[ci])], hint: 'Opposite colors have numbers summing to 7', intuition: 'First find opposite numbers (sum 7), then map to colors. ' + cols[ci] + '=' + shown[ci] + ', opposite=' + (7-shown[ci]) + '=' + cols[shown.indexOf(7-shown[ci])] }; },
+    function(){ var nums=[1,2,3,4,5,6]; shuffle(nums); var net=[nums[0],nums[1],nums[2],nums[3],nums[4],nums[5]]; var n1=net[0], n2=net[1], n3=net[2]; return { q: 'Dice net shows: top=' + n1 + ', bottom=' + n2 + ', left=' + n3 + '. Which net can form this dice?', a: n1 + ' opposite ' + (7-n1) + ', ' + n2 + ' opposite ' + (7-n2), hint: 'In a net, adjacent in net may not be adjacent on cube', intuition: 'Check which net respects opposite-sum=7. ' + n1 + ' opposite ' + (7-n1) + ', ' + n2 + ' opposite ' + (7-n2) + ', ' + n3 + ' opposite ' + (7-n3) }; },
+    function(){ var pos1=rand(1,6), pos2=rand(1,6); while(pos2===pos1||pos2===7-pos1)pos2=rand(1,6); var common=rand(1,6); while(common===pos1||common===pos2||common===7-pos1||common===7-pos2)common=rand(1,6); return { q: 'Position 1: ' + pos1 + ' top, ' + common + ' front. Position 2: ' + pos2 + ' top, ' + common + ' front. What is opposite ' + pos1 + '?', a: 7-pos1, hint: 'Same dice shows common front face in both positions', intuition: 'Since front=' + common + ' in both, the top faces differ. Opposite of top=' + pos1 + ' is always 7-' + pos1 + '=' + (7-pos1) }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1783,7 +1789,10 @@ function generateCalendarQuestion(diff) {
   var ty = [
     function(){ var m=rand(1,12), d=rand(1,28), y=2024; var date = new Date(y+'/'+m+'/'+d); var ans=date.getDay(); return { q: 'Day of ' + d + '/' + m + '/' + y + '?', a: days[ans], hint: '2024 is leap year', intuition: 'Reference: Jan 1 2024 = Mon. Count days offset. Year 2024 is leap (Feb 29).' }; },
     function(){ var y=rand(2024,2030); var odd=0; for(var i=2024;i<y;i++)odd+=((i%400)===0||((i%4)===0&&(i%100)!=0))?2:1; return { q: 'Odd days from 2024 to '+y+'?', a: odd%7, hint: 'Each year=1 odd day, leap=2', intuition: 'Normal year=1 odd day, leap=2 odd days. Sum mod 7 tells day shift. From 2024 to '+y+': '+odd+' odd days, '+(odd%7)+' days ahead.' }; },
-    function(){ var y=rand(2000,2024); var odd=0; for(var i=2000;i<y;i++)odd+=((i%400)===0||((i%4)===0&&(i%100)!=0))?2:1; return { q: 'Day shift from 2000 to ' + y + '?', a: odd%7, hint: 'Count odd days mod 7', intuition: '2000 was leap but 2000/1/1 = Sat. Odd days from years: ' + odd + '. Shift = ' + (odd%7) + ' days forward.' }; }
+    function(){ var y=rand(2000,2024); var odd=0; for(var i=2000;i<y;i++)odd+=((i%400)===0||((i%4)===0&&(i%100)!=0))?2:1; return { q: 'Day shift from 2000 to ' + y + '?', a: odd%7, hint: 'Count odd days mod 7', intuition: '2000 was leap but 2000/1/1 = Sat. Odd days from years: ' + odd + '. Shift = ' + (odd%7) + ' days forward.' }; },
+    function(){ var m=rand(1,12), y=2025; var firstDay=new Date(y+'/'+m+'/1').getDay(); var nth=rand(1,4); var targetDay=rand(0,6); var dayOffset=(targetDay-firstDay+7)%7; var date=nth*7+dayOffset-6; if(date<1||date>31){date=rand(1,15)+7*(nth-1);} var ansDate=date; return { q: 'Date of ' + days[targetDay] + ' ' + nth + ' of ' + m + '/' + y + '?', a: String(ansDate), hint: 'First ' + days[targetDay] + ' is on ' + (dayOffset+1) + 'th', intuition: 'Find first ' + days[targetDay] + ', then add ' + (nth-1) + ' weeks. First of month=' + days[firstDay] + '. First ' + days[targetDay] + '=' + (dayOffset+1) + 'th. ' + nth + days[targetDay] + '=' + ansDate + 'th.' }; },
+    function(){ var m=rand(1,12), y=2025; var daysInMonth=[31,(y%4===0?29:28),31,30,31,30,31,31,30,31,30,31][m-1]; var firstDay=new Date(y+'/'+m+'/1').getDay(); var targetDay=rand(0,6); var count=0; for(var dt=1;dt<=daysInMonth;dt++){if(new Date(y+'/'+m+'/'+dt).getDay()===targetDay)count++;} return { q: 'How many ' + days[targetDay] + 's in ' + m + '/' + y + '?', a: String(count), hint: 'First day=' + days[firstDay] + ', month has ' + daysInMonth + ' days', intuition: 'Count ' + days[targetDay] + 's: first ' + days[targetDay] + ' on ' + ((targetDay-firstDay+7)%7+1) + 'th, then every 7 days. Total=' + count }; },
+    function(){ var y1=rand(2020,2023), y2=rand(y1+1,2028); var odd=0; for(var i=y1;i<y2;i++)odd+=((i%400)===0||((i%4)===0&&(i%100)!=0))?2:1; return { q: 'Odd days between ' + y1 + ' and ' + y2 + '?', a: odd%7, hint: 'Sum odd days of each year mod 7', intuition: 'From ' + y1 + ' to ' + y2 + ': count odd days per year. Normal=1, leap=2. Sum=' + odd + ', mod 7=' + (odd%7) }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1796,7 +1805,10 @@ function generateClockQuestion(diff) {
   var ty = [
     function(){ var h=rand(1,11); return { q: 'Angle between hands at ' + h + ':00?', a: h*30, hint: 'Hour hand at ' + h + '×30°', intuition: 'At ' + h + ':00, min hand at 0°, hr hand at ' + h + '×30° = ' + h*30 + '°. Formula: |30H - 5.5M|' }; },
     function(){ var h=rand(1,11), m=[15,20,25,30,35,40,45][rand(0,6)]; var a=Math.abs(30*h - 5.5*m); var an = a>180?360-a:a; return { q: 'Angle at ' + h + ':' + m + '?', a: Math.round(an), hint: 'Formula: |30H - 5.5M|', intuition: 'Formula: |30×' + h + ' - 5.5×' + m + '| = |' + (30*h) + ' - ' + (5.5*m) + '| = ' + Math.round(a) + '°' + (a>180?'. Smaller angle = '+Math.round(an):'') }; },
-    function(){ var h=rand(0,10); return { q: 'When do hands overlap between ' + h + ':00 and ' + (h+1) + ':00?', a: (h*60/11).toFixed(1), hint: 'Overlap at (60H)/11 min past H', intuition: 'Hands overlap formula: time = 60H/11 min past H. At ' + h + ':00 = ' + (h*60/11).toFixed(1) + ' min past ' + h }; }
+    function(){ var h=rand(0,10); return { q: 'When do hands overlap between ' + h + ':00 and ' + (h+1) + ':00?', a: (h*60/11).toFixed(1), hint: 'Overlap at (60H)/11 min past H', intuition: 'Hands overlap formula: time = 60H/11 min past H. At ' + h + ':00 = ' + (h*60/11).toFixed(1) + ' min past ' + h }; },
+    function(){ var h=rand(0,10); var m=((60*h+30)/11).toFixed(1); return { q: 'When are hands opposite (180°) between ' + h + ':00 and ' + (h+1) + ':00?', a: m, hint: 'Opposite at (60H+30)/11 min past H', intuition: 'Opposite formula: (60H+30)/11 min past H. At ' + h + ':00, opposite at ' + m + ' min past ' + h }; },
+    function(){ var h=rand(1,11), m=rand(0,11)*5+rand(0,4); var a=Math.abs(30*h - 5.5*m); var an=a>180?360-a:a; return { q: 'Find the smaller angle between hands at ' + h + ':' + (m<10?'0':'') + m + '?', a: Math.round(an), hint: '|30H - 5.5M|, take smaller angle if >180°', intuition: 'Angle = |30×' + h + ' - 5.5×' + m + '| = ' + Math.round(a) + '°' + (a>180?'. Smaller='+Math.round(an):'') }; },
+    function(){ var h=rand(0,10); var m1=((60*h-90)/11).toFixed(1); var m2=((60*h+90)/11).toFixed(1); if(m1<0)m1=((60*h+270)/11).toFixed(1); return { q: 'When do hands form right angle (90°) between ' + h + ':00 and ' + (h+1) + ':00? (earlier time)', a: m1, hint: 'Right angle at (60H±90)/11 min past H', intuition: 'Right angle formula: (60H ± 90)/11. At ' + h + ':00, earlier=' + m1 + ' min past ' + h + (m2>0&&m2<60?', later='+m2+' min past '+h:'') }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1809,7 +1821,10 @@ function generateAlphabetArrangeQuestion(diff) {
   var ty = [
     function(){ var w=['MONKEY','TIGER','BEAR','LION','ZEBRA','HORSE'][rand(0,5)]; var s=w.split('').sort(); return { q: 'Alphabetical order: "' + w + '". ' + s[0] + ' comes first?', a: s[0], hint: 'Sort letters A→Z', intuition: 'Just arrange letters A to Z. Smallest letter comes first.' }; },
     function(){ var w=['APPLE','MANGO','BANANA','GRAPE','ORANGE'][rand(0,4)]; var wr=[...new Set(w.split('').sort())]; return { q: 'How many meaningful words in "' + w + '" using all letters?', a: 1, hint: 'Only 1 arrangement is meaningful', intuition: 'Most letter combinations form only 1 meaningful word. Use patterns: if word has repeated letters, fewer arrangements are valid.' }; },
-    function(){ var pair = [['AB','ZY'],['MN','NM'],['PQ','QP'],['BC','CB']][rand(0,3)]; return { q: 'What comes next: ' + pair[0] + ', ' + pair[1] + ', ...?', a: pair[0].charCodeAt(0)+1|0, hint: 'Pair reverses and shifts', intuition: 'Letter pattern: AB→ZY (reverse+ahead), MN→NM (reverse). Next pair reverses the pattern.' }; }
+    function(){ var pair = [['AB','ZY'],['MN','NM'],['PQ','QP'],['BC','CB']][rand(0,3)]; return { q: 'What comes next: ' + pair[0] + ', ' + pair[1] + ', ...?', a: pair[0].charCodeAt(0)+1|0, hint: 'Pair reverses and shifts', intuition: 'Letter pattern: AB→ZY (reverse+ahead), MN→NM (reverse). Next pair reverses the pattern.' }; },
+    function(){ var phrase=['The quick brown fox','A quick brown dog','Smart work pays','Code is fun'][rand(0,3)]; var words=phrase.split(' '); var result=''; for(var wi=0;wi<words.length;wi++){result+=words[wi][rand(0,words[wi].length-1)];} return { q: 'Word formed by picking the 2nd letter of each word: "' + phrase + '"?', a: result, hint: 'Take the nth letter of each word and combine', intuition: 'Extract specified position letters from each word: ' + result }; },
+    function(){ var w=['CREATION','HOSPITAL','EDUCATION','MOUNTAIN'][rand(0,3)]; var sub=['TRAIN','SOAP','CITE','MOUNT'][rand(0,3)]; while(sub.length>w.length)sub=['CATION','SHIP','DATE','TAIN'][rand(0,3)]; var canForm=true; var wc={};for(var ci=0;ci<w.length;ci++){wc[w[ci]]=(wc[w[ci]]||0)+1;} for(var ci=0;ci<sub.length;ci++){if(!wc[sub[ci]]||wc[sub[ci]]<=0){canForm=false;break;}wc[sub[ci]]--;} return { q: 'Can "' + sub + '" be formed from letters of "' + w + '"?', a: canForm?'Yes':'No', hint: 'Check each letter count in the source word', intuition: 'Count letters in "'+w+'", check if "'+sub+'" uses only those with enough copies.' }; },
+    function(){ var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var p1=rand(0,23), p2=rand(p1+2,25); var gap=p2-p1; var gp1=rand(0,25-gap); var gp2=gp1+gap; return { q: 'Which pair has the same gap as ' + l[p1] + '-' + l[p2] + ' (' + gap + ' letters apart)?', a: l[gp1] + l[gp2], hint: 'Gap = ' + gap + '. Find another pair ' + gap + ' apart.', intuition: l[p1] + '→' + l[p2] + ' = ' + gap + ' letters apart. ' + l[gp1] + '→' + l[gp2] + ' also ' + gap + ' apart.' }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1822,7 +1837,10 @@ function generateCriticalReasoningQuestion(diff) {
   var ty = [
     function(){ return { q: 'Statement: "All educated people are successful." Conclusion: "Uneducated people are never successful." This is:', a: 'Invalid', hint: 'Statement only talks about educated', intuition: 'The statement says nothing about uneducated people. You cannot conclude about uneducated from info about educated only.' }; },
     function(){ var topics=['pollution','crime','illiteracy','unemployment'][rand(0,3)]; return { q: 'Course of action: "' + topics + ' is rising. Should government spend more?" Which strengthens?', a: 'Yes, it\'s a serious issue needing funds', hint: 'Action must address the problem', intuition: 'Course of action must directly solve the stated problem. "More spending" is valid if problem is serious and funds are needed.' }; },
-    function(){ var words=['Rain','Strike','Accident','Power cut'][rand(0,3)]; return { q: 'Effect: Trains delayed. Cause? "' + words + '" Which is a valid cause?', a: words === 'Rain' ? 'Yes' : (words === 'Strike' ? 'Yes' : (words === 'Accident' ? 'Yes' : 'Yes')), hint: 'Any of these can delay trains', intuition: 'Multiple causes can lead to same effect. Check if the cause naturally leads to the stated effect without gaps.' }; }
+    function(){ var words=['Rain','Strike','Accident','Power cut'][rand(0,3)]; return { q: 'Effect: Trains delayed. Cause? "' + words + '" Which is a valid cause?', a: words === 'Rain' ? 'Yes' : (words === 'Strike' ? 'Yes' : (words === 'Accident' ? 'Yes' : 'Yes')), hint: 'Any of these can delay trains', intuition: 'Multiple causes can lead to same effect. Check if the cause naturally leads to the stated effect without gaps.' }; },
+    function(){ var passages=[{p:'Regular exercise improves cardiovascular health and reduces the risk of chronic diseases. Studies show that even 30 minutes of daily activity can extend life expectancy.',c:'Exercise is beneficial for long-term health.'},{p:'The rise of electric vehicles has led to decreased demand for oil. Many countries are investing in charging infrastructure to support this transition.',c:'Electric vehicles are reducing oil dependence.'},{p:'Social media algorithms tend to show users content they already agree with, creating echo chambers that reinforce existing beliefs.',c:'Social media may contribute to political polarization.'}]; var p=passages[rand(0,2)]; return { q: 'Passage: "' + p.p + '"<br>Which conclusion follows?', a: p.c, hint: 'The conclusion must be directly supported by the passage', intuition: 'Read the passage and identify what MUST be true based on the evidence given. Avoid conclusions that go beyond the passage.' }; },
+    function(){ var flaws=[{s:'All students in this class passed. Therefore, all students in the school will pass.',f:'Hasty generalization — one class does not represent entire school'},{s:'Every swan I have seen is white. Therefore, all swans are white.',f:'Hasty generalization — insufficient evidence to conclude all'},{s:'If you study hard, you will get good grades. John got good grades, so he studied hard.',f:'Affirming the consequent — good grades can come from other causes'}]; var f=flaws[rand(0,2)]; return { q: 'What is the flaw? "' + f.s + '"', a: f.f, hint: 'Identify the logical error in reasoning', intuition: 'Look for common fallacies: hasty generalization, false cause, circular reasoning, affirming the consequent.' }; },
+    function(){ var infs=[{s:'All mammals are warm-blooded. Whales are mammals.',i:'Whales are warm-blooded'},{s:'No bird can swim underwater. A penguin is a bird.',i:'Penguins cannot swim underwater (false — inference contradicts known fact so it may be invalid)'},{s:'If it rains, the ground will be wet. The ground is wet.',i:'It may have rained, but other causes are possible'}]; var inf=infs[rand(0,2)]; return { q: 'From "' + inf.s + '", which is a valid inference?', a: inf.i, hint: 'An inference must necessarily follow from the statements', intuition: 'Apply deductive reasoning. If the premise is true, the conclusion must be true. Check if any other possibility exists.' }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1837,7 +1855,11 @@ function generateDecisionMakingQuestion(diff) {
     function(){ var score=rand(60,95); return { q: 'Cutoff: 75% in English (60% min), 70% overall. Score=' + score + '%. Allowed?', a: score>=60&&score>=75?'Yes':(score>=60?'No':'No'), hint: 'Check min in each subject', intuition: 'Check each condition separately. Min in each subject AND overall cutoff BOTH must be met. Failing even one = rejected.' }; },
     function(){ var exp=rand(1,8); return { q: 'Job: ' + exp + 'yr exp. Need 3yr exp & degree. Eligible?', a: exp>=3?'Yes':'No', hint: 'Experience '+exp+'yr vs need 3yr', intuition: 'Compare each requirement individually. The lowest common denominator determines eligibility.' }; },
     // Hard: multi-criteria — age, education, experience, medical all needed
-    function(){ var age=rand(25,40), deg=['BSc','BA','BCom'][rand(0,2)], exp=rand(2,7), med=['fit','unfit'][rand(0,1)]; return { q: 'Post: age ' + age + ', ' + deg + ', ' + exp + 'yr exp, ' + med + '. Need: age≥21, BSc/BE, ≥3yr exp, fit. Eligible?', a: age>=21 && (deg==='BSc') && exp>=3 && med==='fit' ? 'Yes' : 'No', hint: 'ALL 4 conditions must be met', intuition: 'Break into 4 checks: age=' + (age>=21?'✓':'✗') + ', degree=' + ((deg==='BSc')?'✓':'✗') + ', exp=' + (exp>=3?'✓':'✗') + ', medical=' + (med==='fit'?'✓':'✗') + '. One fail=rejected.' }; }
+    function(){ var age=rand(25,40), deg=['BSc','BA','BCom'][rand(0,2)], exp=rand(2,7), med=['fit','unfit'][rand(0,1)]; return { q: 'Post: age ' + age + ', ' + deg + ', ' + exp + 'yr exp, ' + med + '. Need: age≥21, BSc/BE, ≥3yr exp, fit. Eligible?', a: age>=21 && (deg==='BSc') && exp>=3 && med==='fit' ? 'Yes' : 'No', hint: 'ALL 4 conditions must be met', intuition: 'Break into 4 checks: age=' + (age>=21?'✓':'✗') + ', degree=' + ((deg==='BSc')?'✓':'✗') + ', exp=' + (exp>=3?'✓':'✗') + ', medical=' + (med==='fit'?'✓':'✗') + '. One fail=rejected.' }; },
+    // Budget allocation under constraints
+    function(){ var budget=rand(50,100)*100, itemA=rand(10,30)*100, itemB=rand(15,35)*100, needBoth=rand(0,1); var canBuy=budget>=(needBoth?itemA+itemB:itemA); return { q: 'Budget=₹' + budget + '. Item X=₹' + itemA + ', Item Y=₹' + itemB + '. ' + (needBoth?'Need both':'Need X') + '. Can buy?', a: canBuy?'Yes':'No', hint: 'Total cost must be within budget', intuition: 'X+Y=' + (itemA+itemB) + ', Budget=' + budget + '. ' + (canBuy?'Within budget':'Over budget') }; },
+    // Team selection with conditions
+    function(){ var exp=rand(2,7), skill=rand(3,9), avail=[0,1][rand(0,1)]; var reqExp=rand(3,5), reqSkill=rand(5,7); return { q: 'Candidate: ' + exp + 'yr exp, skill rating ' + skill + '/10, ' + (avail?'available':'unavailable') + '. Need: exp≥' + reqExp + ', skill≥' + reqSkill + ', available. Select?', a: exp>=reqExp && skill>=reqSkill && avail ? 'Yes' : 'No', hint: 'All three conditions must be satisfied', intuition: 'exp=' + (exp>=reqExp?'✓':'✗') + ', skill=' + (skill>=reqSkill?'✓':'✗') + ', avail=' + (avail?'✓':'✗') }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1852,7 +1874,11 @@ function generateVennDiagramQuestion(diff) {
     function(){ var a=rand(20,40), b=rand(15,30), both=rand(5, Math.min(a,b)); return { q: 'A=' + a + ', B=' + b + ', both=' + both + '. Only A?', a: a-both, hint: 'A only = A - both', intuition: 'Only A = A - both = ' + a + '-' + both + ' = ' + (a-both) }; },
     function(){ var total=rand(50,100), none=rand(5,15); return { q: 'Survey: ' + total + ' people, ' + none + ' like neither. Either A or B?', a: total-none, hint: 'People who like at least one = total - neither', intuition: 'At least one = total - neither = ' + total + '-' + none + ' = ' + (total-none) }; },
     // Hard: 3-set Venn — A=40, B=30, C=20, exactly two=15, all three=5, total=80. Neither?
-    function(){ var na=rand(20,40), nb=rand(15,35), nc=rand(10,25), two=rand(8,18), three=rand(3,8); var t=na+nb+nc-two-2*three+rand(5,20); return { q: 'n(A)=' + na + ' n(B)=' + nb + ' n(C)=' + nc + ', exactly two=' + two + ', all three=' + three + ', total=' + t + '. Neither?', a: t - (na+nb+nc - two - 2*three), hint: 'Total - (A+B+C - exactly_two - 2×all_three)', intuition: 'Formula: Neither = Total - (A+B+C - exactly 2 - 2×all 3). Compute: ' + t + ' - (' + (na+nb+nc) + ' - ' + two + ' - ' + (2*three) + ') = ' + (t-(na+nb+nc-two-2*three)) }; }
+    function(){ var na=rand(20,40), nb=rand(15,35), nc=rand(10,25), two=rand(8,18), three=rand(3,8); var t=na+nb+nc-two-2*three+rand(5,20); return { q: 'n(A)=' + na + ' n(B)=' + nb + ' n(C)=' + nc + ', exactly two=' + two + ', all three=' + three + ', total=' + t + '. Neither?', a: t - (na+nb+nc - two - 2*three), hint: 'Total - (A+B+C - exactly_two - 2×all_three)', intuition: 'Formula: Neither = Total - (A+B+C - exactly 2 - 2×all 3). Compute: ' + t + ' - (' + (na+nb+nc) + ' - ' + two + ' - ' + (2*three) + ') = ' + (t-(na+nb+nc-two-2*three)) }; },
+    // Given Venn percentages, find value in region
+    function(){ var pA=rand(30,60), pB=rand(20,50), pBoth=rand(5, Math.min(pA,pB)-5); return { q: 'In a survey, ' + pA + '% like A, ' + pB + '% like B, ' + pBoth + '% like both. % who like exactly one?', a: (pA-pBoth)+(pB-pBoth), hint: 'Exactly one = (A-both) + (B-both)', intuition: 'Only A=' + (pA-pBoth) + '%, Only B=' + (pB-pBoth) + '%. Exactly one = ' + ((pA-pBoth)+(pB-pBoth)) + '%' }; },
+    // Relate categories — doctors, men, Indians
+    function(){ var total=rand(200,500), d=rand(30,80), m=rand(60,120), ind=rand(40,100), dAndM=rand(10,Math.min(d,m)-5), mAndInd=rand(10,Math.min(m,ind)-5), dAndInd=rand(8,Math.min(d,ind)-5), all=rand(3,Math.min(dAndM,mAndInd,dAndInd)-2); var region=rand(0,2); var cats=[{label:'only doctors',val:d-dAndM-dAndInd+all},{label:'only men',val:m-dAndM-mAndInd+all},{label:'only Indians',val:ind-dAndInd-mAndInd+all}]; var pick=cats[region]; return { q: 'Total=' + total + '. Doctors=' + d + ', Men=' + m + ', Indians=' + ind + '. D&M=' + dAndM + ', M&Ind=' + mAndInd + ', D&Ind=' + dAndInd + ', all three=' + all + '. ' + pick.label + '?', a: pick.val, hint: 'Subtract overlapping regions. ' + pick.label + ' = ' + pick.val, intuition: 'Use inclusion-exclusion. ' + pick.label + ' = ' + pick.val }; }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
@@ -1886,7 +1912,11 @@ function generatePipesCisternsQuestion(diff, layer) {
     function(){ var a=rand(4,10), b=rand(a+2,15); return { q:'Pipe A fills in '+a+'h, B in '+b+'h. Together?', a:Math.round(a*b/(a+b)), hint:'Together = a×b/(a+b)' }; },
     function(){ var a=rand(3,8), b=rand(4,10), c=rand(6,12); return { q:'A fills in '+a+'h, B in '+b+'h, C empties in '+c+'h. Net time?', a:Math.round(1/(1/a+1/b-1/c)), hint:'1/t = 1/a + 1/b - 1/c' }; },
     function(){ var a=rand(5,15), b=rand(a+2,20); var t=Math.round(a*b/(a+b)); return { q:'A fills in '+a+'h. A+B together in '+t+'h. B alone?', a:Math.round(a*t/(a-t)), hint:'B = A×T/(A−T)' }; },
-    function(){ var a=rand(4,12), l=rand(2,5); return { q:'Pipe fills in '+a+'h, leakage empties in '+l*2+'h. Net time?', a:Math.round(1/(1/a-1/(l*2))), hint:'Net = 1/(1/a - 1/leak_time)' }; }
+    function(){ var a=rand(4,12), l=rand(2,5); return { q:'Pipe fills in '+a+'h, leakage empties in '+l*2+'h. Net time?', a:Math.round(1/(1/a-1/(l*2))), hint:'Net = 1/(1/a - 1/leak_time)' }; },
+    // Pipe A fills, B empties, C fills — combined
+    function(){ var a=rand(4,8), b=rand(5,10), c=rand(6,12); return { q:'A fills in '+a+'h, B empties in '+b+'h, C fills in '+c+'h. All open together?', a:Math.round(1/(1/a-1/b+1/c)), hint:'1/t = 1/a - 1/b + 1/c', intuition:'Fill rates positive, empty rates negative. 1/t = 1/'+a+' - 1/'+b+' + 1/'+c+' = ' + Math.round(1/(1/a-1/b+1/c)) + 'h' }; },
+    // Two pipes fill with leak
+    function(){ var a=rand(3,7), b=rand(4,9), l=rand(6,15); return { q:'A fills in '+a+'h, B fills in '+b+'h. Leak empties full tank in '+l+'h. All three open?', a:Math.round(1/(1/a+1/b-1/l)), hint:'1/t = 1/a + 1/b - 1/l', intuition:'Combined fill: 1/'+a+'+1/'+b+'-1/'+l+' = ' + (1/a+1/b-1/l).toFixed(4) + '. Time=' + Math.round(1/(1/a+1/b-1/l)) + 'h' }; }
   ];
   var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-3,3); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Pipes: '+d.hint, intuition:'Together rate = sum of rates. Opposite directions subtract. Time = 1/rate.' };
@@ -1937,7 +1967,10 @@ function generateBankersDiscountQuestion(diff, layer) {
   var ty = [
     function(){ var b=rand(1000,5000), r=rand(5,12), t=rand(1,3); return { q:'BD on ₹'+b+' at '+r+'% for '+t+'yr?', a:Math.round(b*r*t/100), hint:'BD = FaceValue × Rate × Time / 100' }; },
     function(){ var b=rand(1000,4000), r=rand(6,10), t=rand(2,4); var td=Math.round(b*r*t/(100+r*t)); return { q:'TD on ₹'+b+' at '+r+'% for '+t+'yr?', a:td, hint:'TD = (F×R×T)/(100+R×T)' }; },
-    function(){ var b=rand(2000,6000), r=rand(5,10), t=rand(1,3); var bd=Math.round(b*r*t/100); var td=Math.round(b*r*t/(100+r*t)); return { q:'BG (BD-TD) on ₹'+b+' at '+r+'% for '+t+'yr?', a:bd-td, hint:'BG = BD - TD' }; }
+    function(){ var b=rand(2000,6000), r=rand(5,10), t=rand(1,3); var bd=Math.round(b*r*t/100); var td=Math.round(b*r*t/(100+r*t)); return { q:'BG (BD-TD) on ₹'+b+' at '+r+'% for '+t+'yr?', a:bd-td, hint:'BG = BD - TD' }; },
+    function(){ var b=rand(2000,5000), t=rand(2,4), bd=rand(200,600), td=Math.round(bd*100/(100+(bd*100/(b*t))*t)); var r=Math.round(bd*100/(b*t)*10)/10; return { q:'BD=₹'+bd+', FV=₹'+b+', time='+t+'yr. Rate%?', a:r, hint:'R = (BD×100)/(FV×T)', intuition:'R = ' + bd + '×100/(' + b + '×' + t + ') = ' + r + '%' }; },
+    function(){ var b=rand(3000,8000), r=rand(6,10), t=rand(2,3); var bd=Math.round(b*r*t/100); return { q:'Find bill amount if BD=₹'+bd+', rate='+r+'%, time='+t+'yr?', a:b, hint:'FV = (BD×100)/(R×T)', intuition:'FV = ' + bd + '×100/(' + r + '×' + t + ') = ' + b }; },
+    function(){ var b=rand(2000,5000), r=rand(5,10), t=rand(1,3); var bd=Math.round(b*r*t/100); var td=Math.round(b*r*t/(100+r*t)); return { q:'BD=₹'+bd+', TD=₹'+td+'. Difference (BG) on ₹'+b+' at '+r+'% for '+t+'yr?', a:bd-td, hint:'BG = BD - TD = BD²/(100+BD) or simply subtract', intuition:'BG = ' + bd + ' - ' + td + ' = ' + (bd-td) + '. This is the gain the banker makes.' }; }
   ];
   var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-100,100); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Banker\'s Discount: '+d.hint, intuition:'BD=FV×R×T/100. TD=BD×100/(100+R×T). BG=BD-TD.' };
@@ -1947,7 +1980,10 @@ function generateStocksSharesQuestion(diff, layer) {
   var ty = [
     function(){ var fv=rand(50,100), mv=rand(fv-20,fv+30), d=rand(5,12); return { q:'Face=₹'+fv+', Mkt=₹'+mv+', dividend='+d+'%. Yield?', a:Math.round(d*fv/mv*100)/100, hint:'Yield% = (Dividend%/Face)/Market × 100' }; },
     function(){ var fv=rand(50,100), mv=rand(fv-10,fv+20), d=rand(6,15), inv=rand(5000,20000); var shares=Math.floor(inv/mv); return { q:'Face=₹'+fv+', Mkt=₹'+mv+', dividend='+d+'%. Invest ₹'+inv+', income?', a:shares*d*fv/100, hint:'Income = (Investment/Market) × Dividend% × Face' }; },
-    function(){ var fv=100, d=rand(8,18), r=rand(6,12); return { q:'₹'+fv+' stock, '+d+'% dividend yields '+r+'%. Market price?', a:Math.round(d*fv/r), hint:'MV = (Dividend% × FV) / Yield%' }; }
+    function(){ var fv=100, d=rand(8,18), r=rand(6,12); return { q:'₹'+fv+' stock, '+d+'% dividend yields '+r+'%. Market price?', a:Math.round(d*fv/r), hint:'MV = (Dividend% × FV) / Yield%' }; },
+    function(){ var fv=rand(50,100), mv=rand(fv-15,fv+25), d=rand(6,14); var yield1=Math.round(d*fv*100/(fv*100)*100)/100; var yield2=Math.round(d*fv*100/(mv*100)*100)/100; return { q:'Face=₹'+fv+', Mkt=₹'+mv+', dividend='+d+'%. Compare yield at face vs market?', a:yield2<yield1?'Lower at market':(yield2>yield1?'Higher at market':'Same'), hint:'Yield = dividend×face/market × 100', intuition:'Yield at face=' + yield1 + '%, at market=' + yield2 + '%' }; },
+    function(){ var stks=[{f:50,m:60,d:8},{f:100,m:120,d:10},{f:10,m:15,d:12}][rand(0,2)]; var q1=rand(10,50), q2=rand(10,50); var inv1=q1*stks.m, inv2=q2*stks.m; var inc1=Math.round(q1*stks.d*stks.f/100), inc2=Math.round(q2*stks.d*stks.f/100); return { q:'Buy ' + q1 + ' shares (F=₹' + stks.f + ', M=₹' + stks.m + ', div=' + stks.d + '%) and ' + q2 + ' shares same. Total annual income?', a:inc1+inc2, hint:'Income = shares × div% × face / 100 for each, then sum', intuition:'Income = ' + q1 + '×' + stks.d + '%×' + stks.f + ' + ' + q2 + '×' + stks.d + '%×' + stks.f + ' = ' + inc1 + ' + ' + inc2 + ' = ' + (inc1+inc2) }; },
+    function(){ var fv=rand(50,100), mv=rand(fv-10,fv+20), d=rand(8,16), inv=rand(10000,30000); var shares=Math.floor(inv/mv); var income=Math.round(shares*d*fv/100); return { q:'Invest ₹'+inv+' in ₹'+fv+' shares at ₹'+mv+', dividend '+d+'%. Annual income?', a:income, hint:'Shares='+shares+', income=shares×div%×face/100', intuition:'Shares = ' + inv + '/' + mv + ' = ' + shares + '. Income = ' + shares + '×' + d + '%×' + fv + ' = ₹' + income }; }
   ];
   var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=typeof d.a==='number'?Math.round(d.a+rand(-2,2)):(d.a+rand(-2,2)); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Stocks: '+d.hint, intuition:'Yield = Dividend/MV × 100. Income = Shares × Dividend% × FV. MV = (D%×FV)/Yield%.' };
@@ -1958,7 +1994,11 @@ function generateOddManOutQuestion(diff, layer) {
     function(){ var a=rand(2,5), b=a+rand(1,2); return { q:'Which is odd? 4, 9, 16, '+(a*a+1)+', 36', a:'+'+(a*a+1)+'', hint:'All are perfect squares except one' }; },
     function(){ var n=rand(10,30); var nums=[n*2, n*3, n*4, n*5, n*7]; shuffle(nums); var correct=n*7; return { q:'Which is odd? '+nums.join(', '), a:String(correct), hint:'Four are multiples of '+(n)+', one is not' }; },
     function(){ var primes=[2,3,5,7,11,13,17,19,23,29]; shuffle(primes); var picks=primes.slice(0,5); var nonPrime=picks[4]; while(isPrime(nonPrime))nonPrime=picks[rand(0,3)]+rand(1,3); if(!isPrime(nonPrime)){picks[4]=nonPrime;} else {picks[rand(0,4)]=8;} shuffle(picks); return { q:'Which is odd? '+picks.join(', '), a:String(picks.filter(function(p){return p===nonPrime||!isPrime(p)})[0]||8), hint:'Four are prime numbers, one is not' }; },
-    function(){ var a=rand(3,8); return { q:'Which is odd? '+a*1+', '+a*3+', '+a*5+', '+(a*6)+', '+a*7, a:String(a*6), hint:'Four are multiples of '+a+' by odd numbers' }; }
+    function(){ var a=rand(3,8); return { q:'Which is odd? '+a*1+', '+a*3+', '+a*5+', '+(a*6)+', '+a*7, a:String(a*6), hint:'Four are multiples of '+a+' by odd numbers' }; },
+    // Prime vs composite odd-one-out
+    function(){ var primes=[13,17,19,23,29,31,37,41,43,47]; shuffle(primes); var picks=primes.slice(0,4); var comps=[15,21,25,27,33,35,39,45,49]; shuffle(comps); picks.push(comps[0]); shuffle(picks); return { q:'Which is odd? '+picks.join(', '), a:String(picks.filter(function(p){return comps.indexOf(p)>=0||!isPrime(p)})[0]), hint:'Four are prime numbers, one is composite' }; },
+    // Geographical/cultural odd-one-out
+    function(){ var sets=[['India','China','Japan','Brazil','Nepal'],['Amazon','Nile','Ganges','Alps','Yangtze'],['Dollar','Euro','Yen','Pound','Paris'],['Tiger','Lion','Leopard','Eagle','Cheetah']]; var set=sets[rand(0,3)]; var odd=set[3]; shuffle(set); return { q:'Which is odd? '+set.join(', '), a:odd, hint:'Four belong to the same category, one does not' }; }
   ];
   function isPrime(n){if(n<2)return false;for(var i=2;i*i<=n;i++){if(n%i===0)return false;}return true;}
   var d=ty[rand(0,ty.length-1)](); var o=[d.a]; var picks=d.q.split('? ')[1].split(', '); picks.forEach(function(p){if(p!==d.a&&o.indexOf(p)<0)o.push(p);}); while(o.length<4){var v=String(rand(10,99));if(o.indexOf(v)<0)o.push(v);} shuffle(o);
@@ -2048,7 +2088,9 @@ function generateThemeDetectionQuestion(diff, layer) {
     {t:'The rapid advancement of technology has transformed every aspect of modern life. From smartphones that connect us globally to AI that automates complex tasks, innovation continues to reshape how we work, communicate, and live.',ans:'Impact of technology on modern life'},
     {t:'Millions of tons of plastic waste enter our oceans every year, harming marine life and entering the food chain. Reducing single-use plastics and improving recycling systems are critical steps to address this crisis.',ans:'Plastic pollution in oceans and solutions'},
     {t:'Regular exercise combined with a balanced diet is the foundation of good health. Studies show that just 30 minutes of moderate activity daily can significantly reduce the risk of chronic diseases.',ans:'Benefits of exercise and healthy diet'},
-    {t:'Education empowers individuals and drives economic growth. Countries that invest in quality education see higher productivity, lower poverty rates, and greater social stability.',ans:'Importance of education for development'}
+    {t:'Education empowers individuals and drives economic growth. Countries that invest in quality education see higher productivity, lower poverty rates, and greater social stability.',ans:'Importance of education for development'},
+    {t:'Artificial intelligence and automation are replacing routine jobs while creating new roles in data science and machine learning. Workers must continuously upskill to remain relevant in this changing landscape.',ans:'Technology reshaping the job market and need for upskilling'},
+    {t:'Social media has changed how people form opinions and engage with news. Algorithm-driven content feeds can create echo chambers that reinforce existing beliefs rather than presenting diverse perspectives.',ans:'Impact of social media on opinion formation and echo chambers'}
   ];
   var p=passages[rand(0,passages.length-1)];
   var opts=[p.ans,'Historical background of the topic','Biography of a famous person','Step-by-step instructions']; shuffle(opts);
@@ -2059,33 +2101,61 @@ function generateStatementArgumentQuestion(diff, layer) {
   var items=[
     {stmt:'Should the government ban smoking in public places?',strong:'Yes, it harms non-smokers through second-hand smoke',weak:'No, people have the right to do what they want'},
     {stmt:'Should schools have a dress code?',strong:'Yes, it reduces social pressure and distractions',weak:'No, students should express their personality'},
-    {stmt:'Should the retirement age be increased?',strong:'Yes, people are living longer and healthier lives',weak:'No, old people should enjoy their life'}
+    {stmt:'Should the retirement age be increased?',strong:'Yes, people are living longer and healthier lives',weak:'No, old people should enjoy their life'},
+    {stmt:'Should animal testing be banned?',args:['Yes, it causes unnecessary suffering to animals','No, it is essential for medical research','Yes, alternatives like computer models exist'],correct:0,desc:'Two arguments — which one is stronger?'},
+    {stmt:'Road accidents are increasing due to drunk driving.',action:['Strictly enforce traffic rules and increase penalties','Ban alcohol sales entirely','Run awareness campaigns on TV'],best:0,desc:'Best course of action'}
   ];
   var item=items[rand(0,items.length-1)];
-  var opts=[item.strong, item.weak, 'Both are strong', 'Neither is strong']; shuffle(opts);
-  return { question:'Statement: '+item.stmt+'<br>Which argument is strong?', answer:item.strong, options:opts, hint:'A strong argument is directly relevant and substantial', timeLimit:12, type:'reasoning', techniqueLabel:'Statement Argument', intuition:'Strong arguments are directly relevant, significant, and based on facts. Weak arguments are vague, emotional, or irrelevant.' };
+  var opts, answer, qText;
+  if (item.args) {
+    opts = item.args.slice(); answer = item.args[item.correct]; shuffle(opts);
+    qText = 'Statement: '+item.stmt+'<br>Which argument follows?';
+  } else if (item.action) {
+    opts = item.action.slice(); answer = item.action[item.best]; shuffle(opts);
+    qText = 'Problem: '+item.stmt+'<br>Best course of action?';
+  } else {
+    opts=[item.strong, item.weak, 'Both are strong', 'Neither is strong']; shuffle(opts);
+    answer=item.strong; qText='Statement: '+item.stmt+'<br>Which argument is strong?';
+  }
+  return { question:qText, answer:answer, options:opts, hint:'A strong argument is directly relevant and substantial', timeLimit:12, type:'reasoning', techniqueLabel:'Statement Argument', intuition:'Strong arguments are directly relevant, significant, and based on facts. Weak arguments are vague, emotional, or irrelevant.' };
 }
 
 function generateStatementAssumptionQuestion(diff, layer) {
   var items=[
     {stmt:'The company has announced a 20% discount on all products this weekend.',assume:'People will buy more due to the discount'},
     {stmt:'The government has launched a new app for filing taxes online.',assume:'People have access to smartphones or computers'},
-    {stmt:'All schools will remain closed tomorrow due to heavy rain warning.',assume:'The rain will be heavy enough to make travel unsafe'}
+    {stmt:'All schools will remain closed tomorrow due to heavy rain warning.',assume:'The rain will be heavy enough to make travel unsafe'},
+    {stmt:'Our toothpaste is recommended by 9 out of 10 dentists.',assume:'Dentists are qualified to evaluate toothpaste',multi:true,options:['Dentists are qualified to evaluate toothpaste','Only 10 dentists were surveyed','Toothpaste is the best in the market','All dentists recommend it']},
+    {stmt:'Buy one get one free on all shoes this weekend!',assume:'The offer will attract more customers',multi:true,options:['The offer will attract more customers','Shoes are expensive','The store is closing down','Everyone needs shoes']}
   ];
   var item=items[rand(0,items.length-1)];
-  var opts=[item.assume, 'The company is losing money', 'The government is forcing people to use apps', 'The rain will stop by tomorrow']; shuffle(opts);
-  return { question:'Statement: "'+item.stmt+'"<br>What is implicit?', answer:item.assume, options:opts, hint:'What must be true for the statement to make sense?', timeLimit:12, type:'reasoning', techniqueLabel:'Statement Assumption', intuition:'An assumption is something taken for granted without proof. It must be necessarily true for the statement to be valid.' };
+  var opts, ans;
+  if (item.multi) {
+    opts = item.options.slice(); ans = item.assume; shuffle(opts);
+  } else {
+    opts=[item.assume, 'The company is losing money', 'The government is forcing people to use apps', 'The rain will stop by tomorrow']; shuffle(opts);
+    ans=item.assume;
+  }
+  return { question:'Statement: "'+item.stmt+'"<br>What is implicit?', answer:ans, options:opts, hint:'What must be true for the statement to make sense?', timeLimit:12, type:'reasoning', techniqueLabel:'Statement Assumption', intuition:'An assumption is something taken for granted without proof. It must be necessarily true for the statement to be valid.' };
 }
 
 function generateStatementConclusionQuestion(diff, layer) {
   var items=[
     {stmt:'All birds have wings. A penguin is a bird.',conc:'Penguins have wings'},
     {stmt:'All metals expand when heated. Iron is a metal.',conc:'Iron expands when heated'},
-    {stmt:'No student who failed the exam passed the interview. John passed the interview.',conc:'John did not fail the exam'}
+    {stmt:'No student who failed the exam passed the interview. John passed the interview.',conc:'John did not fail the exam'},
+    {stmt:'Some fruits are sweet. All sweet things are tasty.',conc:'Some fruits are tasty',multi:true,options:['Some fruits are tasty','All fruits are tasty','No fruits are tasty','Fruits are always sweet']},
+    {stmt:'If it rains, the match will be cancelled. The match was not cancelled.',conc:'It did not rain',multi:true,different:true,options:['It did not rain','It rained lightly','The match was postponed','The ground was dry']}
   ];
   var item=items[rand(0,items.length-1)];
-  var opts=[item.conc, 'Penguins cannot fly', 'Heat changes everything', 'John is a student']; shuffle(opts);
-  return { question:'Statements: "'+item.stmt+'"<br>Which conclusion follows?', answer:item.conc, options:opts, hint:'Apply the given statements logically. What must be true based on them?', timeLimit:10, type:'reasoning', techniqueLabel:'Statement Conclusion', intuition:'A valid conclusion is one that MUST follow from the given statements. If it could be false, it does not follow.' };
+  var opts, ans;
+  if (item.multi) {
+    opts = item.options.slice(); ans = item.conc; shuffle(opts);
+  } else {
+    opts=[item.conc, 'Penguins cannot fly', 'Heat changes everything', 'John is a student']; shuffle(opts);
+    ans=item.conc;
+  }
+  return { question:'Statements: "'+item.stmt+'"<br>Which conclusion follows?', answer:ans, options:opts, hint:'Apply the given statements logically. What must be true based on them?', timeLimit:10, type:'reasoning', techniqueLabel:'Statement Conclusion', intuition:'A valid conclusion is one that MUST follow from the given statements. If it could be false, it does not follow.' };
 }
 
 // ====== VERBAL REASONING GENERATORS ======
@@ -2185,7 +2255,9 @@ function generateComprehensionQuestion(diff) {
   var items=[
     {p:'Trees are essential for life on Earth. They produce oxygen, absorb carbon dioxide, and provide habitat for countless species. Deforestation threatens this delicate balance. Planting more trees is one of the simplest ways to combat climate change.',q:'Why are trees essential?',a:'They produce oxygen and absorb carbon dioxide',o:['They provide wood for furniture','They produce oxygen and absorb carbon dioxide','They make the landscape beautiful','They provide shade in summer']},
     {p:'Water covers about 71% of Earth\'s surface, but only 2.5% is freshwater. Of that, less than 1% is accessible for human use. Conservation of water is therefore critical for sustainable development.',q:'What percentage of Earth\'s water is accessible freshwater?',a:'Less than 1%',o:['About 71%','About 2.5%','Less than 1%','About 10%']},
-    {p:'The human brain contains approximately 86 billion neurons. Each neuron can form thousands of connections, creating an incredibly complex network. This complexity enables learning, memory, and consciousness.',q:'How many neurons does the human brain have?',a:'86 billion',o:['86 million','86 billion','86 trillion','860 million']}
+    {p:'The human brain contains approximately 86 billion neurons. Each neuron can form thousands of connections, creating an incredibly complex network. This complexity enables learning, memory, and consciousness.',q:'How many neurons does the human brain have?',a:'86 billion',o:['86 million','86 billion','86 trillion','860 million']},
+    {p:'Photosynthesis is the process by which green plants use sunlight to synthesize nutrients from carbon dioxide and water. Chlorophyll, the green pigment in leaves, captures light energy which is then converted into chemical energy stored as glucose. Oxygen is released as a byproduct of this process.',q:'What is released as a byproduct of photosynthesis?',a:'Oxygen',o:['Carbon dioxide','Oxygen','Glucose','Chlorophyll']},
+    {p:'The term "biodiversity" refers to the variety of life forms on Earth, including plants, animals, and microorganisms. It encompasses genetic diversity within species, species diversity in ecosystems, and ecosystem diversity across landscapes. High biodiversity makes ecosystems more resilient to environmental changes.',q:'What does the word "encompasses" most closely mean in this passage?',a:'Includes',o:['Excludes','Includes','Surrounds','Replaces']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:'<span style="font-size:.85em">'+it.p+'</span><br><br>'+it.q, answer:it.a, options:it.o, hint:'Read the passage carefully. The answer is directly stated.', timeLimit:20, type:'verbal', techniqueLabel:'Comprehension', intuition:'Read the passage, then find the sentence that directly answers the question.' };
@@ -2198,7 +2270,9 @@ function generateEmbeddedImagesQuestion(diff) {
     {fig:'A circle with a small triangle inside',emb:'A large square containing concentric circles, with a small triangle in the innermost circle',not:'A large triangle divided into smaller triangles'},
     {fig:'A star shape',emb:'A rectangle containing a circle, inside which there is a star',not:'A pentagon containing a smaller pentagon'},
     {fig:'A diamond (rotated square)',emb:'A complex figure with a hexagon containing a diamond at its center',not:'A simple circle with a dot'},
-    {fig:'A cross shape (+)',emb:'A square grid pattern where a cross appears at the intersection of lines',not:'A triangle with a dot inside'}
+    {fig:'A cross shape (+)',emb:'A square grid pattern where a cross appears at the intersection of lines',not:'A triangle with a dot inside'},
+    {fig:'A small circle',emb:'A large star-shaped polygon with a small circle at its exact center',not:'A rectangle with diagonal lines'},
+    {fig:'An equilateral triangle',emb:'A complex geometric mandala with an equilateral triangle inscribed in the outermost ring',not:'A random scribble with no symmetry'}
   ];
   var it=items[rand(0,items.length-1)];
   var opts=[it.emb, it.not, 'A figure containing only straight lines', 'A figure with curved boundaries only']; shuffle(opts);
@@ -2210,7 +2284,9 @@ function generateFigureMatrixQuestion(diff) {
     {r:'Circle, Triangle, Square<br>Red, Blue, ?',a:'Green',o:['Green','Yellow','Purple','Orange']},
     {r:'1x1, 2x2, 3x3<br>4, 8, ?',a:'12',o:['16','12','10','14']},
     {r:'△, ○, □<br>▲, ●, ?',a:'■',o:['○','□','■','△']},
-    {r:'2,4,8<br>3,6,12<br>4,8,?',a:'16',o:['12','14','16','10']}
+    {r:'2,4,8<br>3,6,12<br>4,8,?',a:'16',o:['12','14','16','10']},
+    {r:'→, ↗, ↑<br>↗, ↑, ?<br>↑, ?, ←',a:'↖',o:['↖','↗','↙','↘']},
+    {r:'◐, ◑, ◒<br>◑, ◒, ?<br>◒, ?, ◐',a:'◓',o:['◓','◒','◑','◐']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:'Complete the matrix:<br><span style="font-size:1.2em;line-height:1.8">'+it.r+'</span>', answer:it.a, options:it.o, hint:'Find the pattern in rows and columns', timeLimit:15, type:'reasoning', techniqueLabel:'Figure Matrix', intuition:'Look for the pattern row-wise and column-wise. The same operation/logic should apply to all rows.' };
@@ -2221,7 +2297,9 @@ function generatePaperFoldingQuestion(diff) {
     {d:'A square paper is folded in half vertically, then folded in half horizontally. A small triangle is cut from the bottom-right corner of the folded paper. How many holes when unfolded?',a:'4 holes',o:['1 hole','2 holes','4 holes','8 holes']},
     {d:'A circular paper is folded in half once. A small square is cut from the center of the folded edge. How many holes when unfolded?',a:'2 holes',o:['1 hole','2 holes','3 holes','4 holes']},
     {d:'A rectangular paper is folded in half three times. A small circle is cut from the corner of the folded paper. How many holes when unfolded?',a:'8 holes',o:['2 holes','4 holes','6 holes','8 holes']},
-    {d:'A square paper is folded diagonally once. A small semicircle is cut from the folded edge near the corner. How many holes when unfolded?',a:'2 holes',o:['1 hole','2 holes','3 holes','4 holes']}
+    {d:'A square paper is folded diagonally once. A small semicircle is cut from the folded edge near the corner. How many holes when unfolded?',a:'2 holes',o:['1 hole','2 holes','3 holes','4 holes']},
+    {d:'A square paper is folded in half, then folded in half again, then folded in half a third time. A small circle is punched through all layers at the corner. How many holes when unfolded?',a:'8 holes',o:['2 holes','4 holes','6 holes','8 holes']},
+    {d:'A rectangular paper is folded in half vertically. The top-right corner of the folded paper is cut off at a 45° angle. When unfolded, which corners of the original paper will be missing?',a:'Top-right and top-left corners',o:['Top-right only','Top-right and top-left corners','All four corners','Bottom-right only']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:it.d, answer:it.a, options:it.o, hint:'Each fold doubles the layers. The number of holes = number of layers × number of cuts', timeLimit:20, type:'reasoning', techniqueLabel:'Paper Folding', intuition:'Each fold doubles the paper layers. When cut, each layer gets a hole. Unfold symmetrically.' };
@@ -2231,7 +2309,9 @@ function generatePaperCuttingQuestion(diff) {
   var items=[
     {d:'A paper folded and cut as shown opens to reveal a pattern of 4 symmetrical circles. Which shape do the cuts make?',a:'4 circles in a square pattern',o:['4 circles in a line','4 circles in a square pattern','2 large circles','6 small circles']},
     {d:'A folded paper is cut along the folded edge creating a zigzag pattern. When unfolded, the pattern will be:',a:'Symmetric zigzag on both sides',o:['Random zigzag pattern','Symmetric zigzag on both sides','Straight line only','No pattern visible']},
-    {d:'A square paper folded twice and a triangle cut from the corner is unfolded. The resulting shape has:',a:'4 triangular cutouts',o:['1 triangular cutout','2 triangular cutouts','4 triangular cutouts','8 triangular cutouts']}
+    {d:'A square paper folded twice and a triangle cut from the corner is unfolded. The resulting shape has:',a:'4 triangular cutouts',o:['1 triangular cutout','2 triangular cutouts','4 triangular cutouts','8 triangular cutouts']},
+    {d:'A rectangular paper is folded in half three times — first vertically, then horizontally, then vertically again. A small diamond is cut from the center of the folded edge. When completely unfolded, how many diamond-shaped holes appear?',a:'8 diamond holes',o:['4 diamond holes','6 diamond holes','8 diamond holes','12 diamond holes']},
+    {d:'A square paper is folded in half diagonally, then folded again creating a smaller triangle. A curved semicircle is cut from the non-folded edge. When unfolded, the resulting pattern shows:',a:'4 curved cutouts arranged symmetrically',o:['2 curved cutouts opposite each other','4 curved cutouts arranged symmetrically','1 large curved cutout','8 curved cutouts in a circle']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:it.d, answer:it.a, options:it.o, hint:'The cut pattern repeats symmetrically across fold lines', timeLimit:20, type:'reasoning', techniqueLabel:'Paper Cutting', intuition:'Each fold creates a mirror. When cut and unfolded, the cut pattern is reflected across each fold line.' };
@@ -2241,7 +2321,9 @@ function generateRuleDetectionQuestion(diff) {
   var items=[
     {r:'Figures with an even number of sides are shaded',ex:['Square (shaded) ●', 'Triangle (not shaded) ○', 'Hexagon (shaded) ●'],not:'Pentagon (shaded) ●',a:'Pentagon (shaded) ● breaks rule'},
     {r:'Figures containing a right angle are marked with a dot',ex:['Right triangle ●', 'Rectangle ●', 'Circle ○'],not:'Acute triangle ○',a:'Acute triangle ○ breaks rule'},
-    {r:'Figures with more than 4 sides have double outline',ex:['Hexagon =', 'Octagon =', 'Square |'],not:'Triangle =',a:'Triangle = breaks rule'}
+    {r:'Figures with more than 4 sides have double outline',ex:['Hexagon =', 'Octagon =', 'Square |'],not:'Triangle =',a:'Triangle = breaks rule'},
+    {r:'The pattern follows: each number is the previous number multiplied by 2',ex:['2', '4', '8'],not:'6',a:'6 does not follow the pattern'},
+    {r:'Letters alternate between consonants and vowels',ex:['B', 'E', 'F', 'I'],not:'J (consonant follows F consonant)',a:'J breaks rule'}
   ];
   var it=items[rand(0,items.length-1)];
   return { question:'Rule: '+it.r+'<br>Which figure does NOT follow the rule?<br>'+it.ex.concat(it.not).join(', '), answer:it.not.split(' ')[0], options:it.ex.concat(it.not).map(function(s){return s.split(' ')[0];}), hint:'Check each figure against the rule', timeLimit:15, type:'reasoning', techniqueLabel:'Rule Detection', intuition:'Apply the given rule to each figure. The one that violates the rule is the answer.' };
@@ -2251,7 +2333,9 @@ function generateGroupingImagesQuestion(diff) {
   var items=[
     {g:'Group A: Triangle, Square, Pentagon (polygons)<br>Group B: Circle, Oval, Semicircle (curved)',q:'Which group does a Hexagon belong to?',a:'Group A',o:['Group A','Group B','Neither','Both']},
     {g:'Group 1: Red, Blue, Yellow (primary colors)<br>Group 2: Green, Purple, Orange (secondary colors)',q:'Which group does Violet belong to?',a:'Group 2',o:['Group 1','Group 2','Neither','Both']},
-    {g:'Set X: 2,4,6,8 (even numbers)<br>Set Y: 3,6,9,12 (multiples of 3)',q:'Which set does 10 belong to?',a:'Set X',o:['Set X','Set Y','Both','Neither']}
+    {g:'Set X: 2,4,6,8 (even numbers)<br>Set Y: 3,6,9,12 (multiples of 3)',q:'Which set does 10 belong to?',a:'Set X',o:['Set X','Set Y','Both','Neither']},
+    {g:'Group A: Triangle (3 sides), Square (4 sides), Hexagon (6 sides)<br>Group B: Pentagon (5), Heptagon (7), Octagon (8)',q:'Which group does a Nonagon (9 sides) belong to?',a:'Group B',o:['Group A','Group B','Neither','Both']},
+    {g:'Set 1: A, H, I, M, O (vertically symmetrical)<br>Set 2: B, C, D, E, K (horizontally symmetrical)',q:'Which set does X belong to?',a:'Set 1',o:['Set 1','Set 2','Both','Neither']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:it.g+'<br>'+it.q, answer:it.a, options:it.o, hint:'Identify the common property of each group', timeLimit:12, type:'reasoning', techniqueLabel:'Grouping Images', intuition:'Find the shared attribute within each group, then check which group the new item fits into.' };
@@ -2262,7 +2346,9 @@ function generateImageAnalysisQuestion(diff) {
     {d:'A rectangle is divided into 4 equal parts. One part is shaded. How many parts are unshaded?',a:'3',o:['1','2','3','4']},
     {d:'A square contains 9 smaller squares. The corner squares are black. How many white squares?',a:'5',o:['4','5','6','7']},
     {d:'A triangle is divided into 3 smaller triangles by lines from one vertex. How many triangles total?',a:'3',o:['2','3','4','5']},
-    {d:'A 3×3 grid has all edge cells shaded. How many unshaded cells remain?',a:'1',o:['0','1','2','3']}
+    {d:'A 3×3 grid has all edge cells shaded. How many unshaded cells remain?',a:'1',o:['0','1','2','3']},
+    {d:'The word "IMAGE" is shown normally. Which of the following is its mirror image (lateral inversion)?',a:'ƐϱA⅂I',o:['ƐϱA⅂I','IMΛGE','ƐϱA⅂Ɛ','I⅂ΛMI']},
+    {d:'A circle with a missing quarter-piece is shown. The complete figure should be:',a:'A full circle with one quarter missing at 45°',o:['A full circle','A circle with half missing','A full circle with one quarter missing at 45°','A circle with two opposite quarters missing']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:it.d, answer:it.a, options:it.o, hint:'Count carefully. Draw a mental picture.', timeLimit:12, type:'reasoning', techniqueLabel:'Image Analysis', intuition:'Visualize the figure in your mind. Count the elements methodically.' };
@@ -2275,7 +2361,9 @@ function generateWaterImagesQuestion(diff) {
   var items=[
     function(){var l=letters[rand(0,25)]; var isVert=symVert.indexOf(l)>=0; var inWater=symTopBottom.indexOf(l)>=0?l:'upside-down '+l; return {q:'Water image of "'+l+'" ?',a:isVert?'Looks the same':'Appears inverted vertically',o:['Looks the same','Appears inverted vertically','Appears mirrored horizontally','Completely different']};},
     function(){var word='';for(var i=0;i<3;i++){word+=letters[rand(0,25)];} return {q:'Water image of "'+word+'" appears:',a:'Vertically inverted',o:['The same','Vertically inverted','Horizontally mirrored','Reversed order']};},
-    function(){var w='';while(w.length<3){var l=letters[rand(0,25)];if(symTopBottom.indexOf(l)>=0)w+=l;} if(w.length<3){w='HIX';} return {q:'Water image of "'+w+'" ?',a:'Same as original (symmetrical)',o:['Same as original (symmetrical)','Completely different','Left-right reversed','Upside down']};}
+    function(){var w='';while(w.length<3){var l=letters[rand(0,25)];if(symTopBottom.indexOf(l)>=0)w+=l;} if(w.length<3){w='HIX';} return {q:'Water image of "'+w+'" ?',a:'Same as original (symmetrical)',o:['Same as original (symmetrical)','Completely different','Left-right reversed','Upside down']};},
+    function(){var shapes=['△','□','○','☆','♢']; var s=shapes[rand(0,shapes.length-1)]; return {q:'Water image of "'+s+'" looks like:',a:s+' flipped vertically',o:['Same as original',s+' flipped vertically',s+' flipped horizontally','Rotated 90°']};},
+    function(){var n1=rand(10,99), n2=rand(10,99); return {q:'Water image of the number '+(n1)+' appears as which among the following?',a:'Vertically inverted digits of '+(n1),o:['The same number',String(n1)+' reversed',String(n1)+' upside down','Vertically inverted digits of '+String(n1)]};}
   ];
   var d=items[rand(0,items.length-1)](); var opts=d.o; shuffle(opts);
   return { question:d.q, answer:d.a, options:opts, hint:'Water reflection flips vertically (top becomes bottom)', timeLimit:10, type:'reasoning', techniqueLabel:'Water Images', intuition:'Water image = vertical mirror. What is on top appears at the bottom in the reflection.' };
@@ -2285,7 +2373,9 @@ function generateDotSituationQuestion(diff) {
   var items=[
     {d:'Three circles overlap creating 4 regions. A dot placed in region common to all 3 circles. How many circles contain the dot?',a:'3',o:['1','2','3','4']},
     {d:'A square and a circle overlap in 2 regions. A dot is where they overlap. Which shapes contain it?',a:'Both square and circle',o:['Square only','Circle only','Both square and circle','Neither']},
-    {d:'Two circles intersect creating 3 regions. A dot is outside both circles. It is:',a:'In neither circle',o:['In circle 1 only','In circle 2 only','In both circles','In neither circle']}
+    {d:'Two circles intersect creating 3 regions. A dot is outside both circles. It is:',a:'In neither circle',o:['In circle 1 only','In circle 2 only','In both circles','In neither circle']},
+    {d:'A square is folded in half, then a dot is placed at the folded corner. When unfolded, how many dots appear?',a:'2 dots',o:['1 dot','2 dots','4 dots','8 dots']},
+    {d:'A triangle overlaps a circle creating 5 distinct regions. A dot lies in the region that is inside the triangle but outside the circle. The dot is:',a:'In triangle only',o:['In circle only','In triangle only','In both','In neither']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:it.d, answer:it.a, options:it.o, hint:'Identify which regions are common to which shapes', timeLimit:12, type:'reasoning', techniqueLabel:'Dot Situation', intuition:'Each region in a Venn-like diagram belongs to a specific set of shapes. Find which shapes share the dot\'s region.' };
@@ -2329,7 +2419,9 @@ function generateChainRuleQuestion(diff, layer) {
     // Food consumption with varying people/days
     function(){ var m=rand(10,30), d=rand(5,15), f=rand(5,15); return { q:f+' men eat ' + (m*f) + 'kg rice in ' + d + ' days. ' + (f+rand(3,7)) + ' men need for ' + (d+rand(2,5)) + ' days?', a:Math.round(m*(f+rand(3,7))*(d+rand(2,5))/f/d), hint:'Total food = men × days × daily_ration. More men & days = more food', intuition:'Daily ration per man = ' + m + 'kg/' + f + '/' + d + ' = ' + Math.round(m/f/d*100)/100 + '. For ' + (f+rand(3,7)) + ' men × ' + (d+rand(2,5)) + ' days = ' + Math.round(m*(f+rand(3,7))*(d+rand(2,5))/f/d) + 'kg' }; },
     // Work with multiple variables
-    function(){ var m=rand(6,12), d=rand(8,16), h=rand(6,10); return { q:m+' men working ' + h + 'hr/day finish in ' + d + ' days. ' + (m+rand(2,5)) + ' men, ' + (h+rand(1,3)) + 'hr/day?', a:Math.round(m*d*h/((m+rand(2,5))*(h+rand(1,3)))), hint:'Work = men × days × hours. Same work: M1×D1×H1 = M2×D2×H2', intuition:'M1×D1×H1 = ' + m + '×' + d + '×' + h + ' = ' + (m*d*h) + '. D2 = ' + (m*d*h) + '/(' + (m+rand(2,5)) + '×' + (h+rand(1,3)) + ') = ' + Math.round(m*d*h/((m+rand(2,5))*(h+rand(1,3)))) + ' days' }; }
+    function(){ var m=rand(6,12), d=rand(8,16), h=rand(6,10); return { q:m+' men working ' + h + 'hr/day finish in ' + d + ' days. ' + (m+rand(2,5)) + ' men, ' + (h+rand(1,3)) + 'hr/day?', a:Math.round(m*d*h/((m+rand(2,5))*(h+rand(1,3)))), hint:'Work = men × days × hours. Same work: M1×D1×H1 = M2×D2×H2', intuition:'M1×D1×H1 = ' + m + '×' + d + '×' + h + ' = ' + (m*d*h) + '. D2 = ' + (m*d*h) + '/(' + (m+rand(2,5)) + '×' + (h+rand(1,3)) + ') = ' + Math.round(m*d*h/((m+rand(2,5))*(h+rand(1,3)))) + ' days' }; },
+    // Food supply with varying consumers
+    function(){ var p=rand(30,60), d=rand(10,20), r=rand(400,800); var newP=p+rand(10,20); return { q:r+'kg rice feeds ' + p + ' people for ' + d + ' days. ' + newP + ' people, same rice, how many days?', a:Math.round(p*d/newP), hint:'Total consumption = people × days. Same total food: P1×D1 = P2×D2', intuition:'Total rice per person per day = ' + r + '/' + p + '/' + d + ' = ' + Math.round(r/p/d*100)/100 + '. Days for ' + newP + ' people = ' + p + '×' + d + '/' + newP + ' = ' + Math.round(p*d/newP) }; }
   ];
   var d=ty[rand(0,ty.length-1)](); var o=[d.a]; for(var i=-3;i<=4;i+=2){var v=d.a+i;if(v>0&&o.indexOf(v)<0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'Chain Rule: '+d.hint, intuition:'If more = less (inverse proportion): M1×D1 = M2×D2. If more = more (direct): divide then multiply.' };
@@ -2459,7 +2551,11 @@ function generateAnalyticalReasoningQuestion(diff) {
     // Count rectangles in grid
     function(){var n=rand(2,4), m=rand(2,4); var rects=Math.round(n*(n+1)*m*(m+1)/4); return {q:'Rectangles in a '+n+'×'+m+' grid?',a:String(rects),o:[String(rects),String(n*m),String(2*rects),String(Math.round(rects/2))],hint:'Formula: n(n+1)×m(m+1)/4'};},
     // Count triangles in complex figure
-    function(){var n=rand(2,4); var count=n*n; return {q:'An equilateral triangle divided into '+n+'×'+n+' small triangles. Total triangles?',a:String(count),o:[String(count),String(2*count),String(Math.round(count/2)),String(count+2)],hint:'Count of small triangles = n²'};}
+    function(){var n=rand(2,4); var count=n*n; return {q:'An equilateral triangle divided into '+n+'×'+n+' small triangles. Total triangles?',a:String(count),o:[String(count),String(2*count),String(Math.round(count/2)),String(count+2)],hint:'Count of small triangles = n²'};},
+    // Count cubes in 3D stack
+    function(){var l=rand(2,4), w=rand(2,4), h=rand(2,4); var cubes=l*w*h; return {q:'A cuboid is made by stacking small cubes in a '+l+'×'+w+'×'+h+' arrangement. Total small cubes?',a:String(cubes),o:[String(cubes),String(l+w+h),String(Math.round(cubes/2)),String(cubes*2)],hint:'Total cubes = length × width × height'};},
+    // Count parallelograms in intersecting lines
+    function(){var m=rand(2,4), n=rand(2,4); var pCount=Math.round(m*(m+1)*n*(n+1)/4); return {q:'A figure has '+m+' parallel horizontal lines intersecting '+n+' parallel slant lines. Total parallelograms?',a:String(pCount),o:[String(pCount),String(m*n),String(Math.round(pCount/2)),String(pCount*2)],hint:'Formula: m(m+1)×n(n+1)/4 where m=horizontal lines-1, n=slant lines-1'};}
   ];
   var d=items[rand(0,items.length-1)](); var o=d.o; shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint||'Count systematically — all sizes, not just the obvious ones', timeLimit:20, type:'reasoning', techniqueLabel:'Analytical Reasoning', intuition:'Count systematically: smallest first, then larger ones. For squares in a grid: sum of n² from 1 to N.' };
@@ -2470,7 +2566,9 @@ function generatePatternCompletionQuestion(diff) {
     {d:'△ ○ □<br>○ □ △<br>□ △ ?',a:'○',o:['△','○','□','◇']},
     {d:'R G B<br>G B R<br>B R ?',a:'G',o:['R','G','B','Y']},
     {d:'1 2 3<br>2 3 4<br>3 4 ?',a:'5',o:['5','6','7','8']},
-    {d:'A B C<br>C A B<br>B C ?',a:'A',o:['A','B','C','D']}
+    {d:'A B C<br>C A B<br>B C ?',a:'A',o:['A','B','C','D']},
+    {d:'2 4 6<br>4 6 8<br>6 8 ?',a:'10',o:['8','9','10','12']},
+    {d:'A 1 B<br>2 C 3<br>D 4 ?',a:'E',o:['E','5','F','6']}
   ];
   var it=items[rand(0,items.length-1)]; var opts=it.o; shuffle(opts);
   return { question:'Complete the pattern:<br>'+it.d, answer:it.a, options:opts, hint:'Look for repeating cycle in rows and columns', timeLimit:15, type:'reasoning', techniqueLabel:'Pattern Completion', intuition:'The pattern repeats in a cycle. Check what element is missing from the cycle in that position.' };
@@ -2584,7 +2682,9 @@ function generateSentenceImprovementQuestion(diff) {
   var items=[
     {s:'He is too weak that he cannot walk.',i:'He is so weak that he cannot walk',o:['He is too weak that he cannot walk','He is so weak that he cannot walk','He is too weak to cannot walk','He is very weak that he cannot walk']},
     {s:'No sooner had he arrived than the meeting started.',i:'No sooner had he arrived than the meeting started (correct)',o:['No sooner had he arrived than the meeting started','No sooner he arrived than the meeting started','No sooner had he arrived when the meeting started','No sooner did he arrive than the meeting had started']},
-    {s:'I prefer coffee than tea.',i:'I prefer coffee to tea',o:['I prefer coffee than tea','I prefer coffee to tea','I prefer coffee over tea','I prefer coffee from tea']}
+    {s:'I prefer coffee than tea.',i:'I prefer coffee to tea',o:['I prefer coffee than tea','I prefer coffee to tea','I prefer coffee over tea','I prefer coffee from tea']},
+    {s:'Walking through the park, the flowers looked beautiful.',i:'Walking through the park, she saw that the flowers looked beautiful',o:['Walking through the park, the flowers looked beautiful','Walking through the park, she saw that the flowers looked beautiful','Walking through the park, beautiful flowers were seen','The park walking, flowers looked beautiful']},
+    {s:'She likes swimming, to run, and dancing.',i:'She likes swimming, running, and dancing',o:['She likes swimming, to run, and dancing','She likes swimming, running, and dancing','She likes to swim, to run, to dance','She likes to swim, running, and dance']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:'Improve: "'+it.s+'"', answer:it.i, options:it.o, hint:'Replace the incorrect word/phrase with the correct one', timeLimit:12, type:'verbal', techniqueLabel:'Sentence Improvement', intuition:'too...to (infinitive), so...that (clause). Prefer A to B. No sooner...than. Scarcely...when.' };
@@ -2595,7 +2695,9 @@ function generateClosetTestQuestion(diff) {
     {p:'The _____ of technology has transformed education. Students can now access information from anywhere. This has made learning more _____ than ever before. However, it also _____ challenges like screen addiction.',blanks:['advancement','accessible','poses'],q:'Blank 2?',a:'accessible',o:['accessible','difficult','expensive','boring']},
     {p:'Air pollution is a serious _____ in many cities. It causes respiratory problems and _____ the environment. Planting more trees can help _____ the air quality.',blanks:['problem','harms','improve'],q:'Blank 1?',a:'problem',o:['solution','problem','benefit','ignored']},
     {p:'Social media has a powerful _____ on young minds. While it helps them stay _____, excessive use can lead to addiction and anxiety. Parents must _____ their children\'s usage.',blanks:['impact','connected','monitor'],q:'Blank 2?',a:'connected',o:['connected','isolated','ignorant','bored']},
-    {p:'The _____ of electric vehicles is growing rapidly. They are more _____ than petrol cars and produce zero emissions. However, the lack of charging _____ remains a challenge.',blanks:['adoption','efficient','infrastructure'],q:'Blank 3?',a:'infrastructure',o:['infrastructure','batteries','drivers','roads']}
+    {p:'The _____ of electric vehicles is growing rapidly. They are more _____ than petrol cars and produce zero emissions. However, the lack of charging _____ remains a challenge.',blanks:['adoption','efficient','infrastructure'],q:'Blank 3?',a:'infrastructure',o:['infrastructure','batteries','drivers','roads']},
+    {p:'Regular exercise and a _____ diet are essential for good health. Physical activity strengthens the heart and improves blood _____. Eating plenty of fruits and vegetables helps _____ the immune system.',blanks:['balanced','circulation','boost'],q:'Blank 1?',a:'balanced',o:['balanced','spicy','expensive','limited']},
+    {p:'Skill development programs help workers _____ to changing job markets. Learning new technologies makes employees more _____ and opens up better career _____. Governments and companies must invest in continuous training.',blanks:['adapt','versatile','opportunities'],q:'Blank 2?',a:'versatile',o:['versatile','lazy','dependent','rigid']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:'<span style="font-size:.85em">'+it.p+'</span><br><br>'+it.q, answer:it.a, options:it.o, hint:'Read the full passage for context. The correct word makes sense in the overall meaning.', timeLimit:20, type:'verbal', techniqueLabel:'Closet Test', intuition:'Read the entire passage first. The missing word must fit the context, grammar, and overall meaning.' };
