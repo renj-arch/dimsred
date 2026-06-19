@@ -116,7 +116,9 @@ var defaultState = {
     profit_loss:{attempts:0,correct:0}, pipes_cisterns:{attempts:0,correct:0},
     boats_streams:{attempts:0,correct:0}, alligation:{attempts:0,correct:0},
     surds_indices:{attempts:0,correct:0}, bankers_discount:{attempts:0,correct:0},
-    stocks_shares:{attempts:0,correct:0}, odd_man_out:{attempts:0,correct:0},
+    stocks_shares:{attempts:0,correct:0},     odd_man_out:{attempts:0,correct:0},
+    height_distance:{attempts:0,correct:0}, decimal_fraction:{attempts:0,correct:0},
+    chain_rule:{attempts:0,correct:0}, logarithm:{attempts:0,correct:0},
     // Reasoning sub-topics
     pattern_flash:{attempts:0,correct:0}, coding_flash:{attempts:0,correct:0},
     logic_snap:{attempts:0,correct:0}, direction_sense:{attempts:0,correct:0},
@@ -141,7 +143,18 @@ var defaultState = {
     paper_folding:{attempts:0,correct:0}, paper_cutting:{attempts:0,correct:0},
     rule_detection:{attempts:0,correct:0}, grouping_images:{attempts:0,correct:0},
     image_analysis:{attempts:0,correct:0}, water_images:{attempts:0,correct:0},
-    dot_situation:{attempts:0,correct:0}
+    dot_situation:{attempts:0,correct:0},
+    making_judgments:{attempts:0,correct:0}, logical_problems:{attempts:0,correct:0},
+    logical_games:{attempts:0,correct:0}, analyzing_arguments:{attempts:0,correct:0},
+    logical_deduction:{attempts:0,correct:0},
+    character_puzzles:{attempts:0,correct:0}, verification_truth:{attempts:0,correct:0},
+    analytical_reasoning:{attempts:0,correct:0}, pattern_completion:{attempts:0,correct:0},
+    shape_construction:{attempts:0,correct:0},
+    spotting_errors:{attempts:0,correct:0}, spellings:{attempts:0,correct:0},
+    sentence_correction:{attempts:0,correct:0}, sentence_improvement:{attempts:0,correct:0},
+    closet_test:{attempts:0,correct:0}, one_word_subs:{attempts:0,correct:0},
+    idioms_phrases:{attempts:0,correct:0}, change_voice:{attempts:0,correct:0},
+    change_speech:{attempts:0,correct:0}
   },
   patternStats: { Analogy:{attempts:0,correct:0},Classification:{attempts:0,correct:0},Series:{attempts:0,correct:0},Coding:{attempts:0,correct:0},Syllogism:{attempts:0,correct:0},Inequality:{attempts:0,correct:0},Direction:{attempts:0,correct:0},'Blood Relation':{attempts:0,correct:0},Puzzle:{attempts:0,correct:0},'Data Sufficiency':{attempts:0,correct:0} },
   speedData: { Analogy:{time:0,count:0},Classification:{time:0,count:0},Series:{time:0,count:0},Coding:{time:0,count:0},Syllogism:{time:0,count:0},Inequality:{time:0,count:0},Direction:{time:0,count:0},'Blood Relation':{time:0,count:0},Puzzle:{time:0,count:0},'Data Sufficiency':{time:0,count:0} },
@@ -261,7 +274,30 @@ var SPEED_TECHNIQUES = {
   'grouping_images': 'Find the shared attribute in each group. Match the new item to the right group.',
   'image_analysis': 'Visualize the figure mentally. Count elements carefully.',
   'water_images': 'Water image = vertical mirror. Top becomes bottom. Left-right stays same.',
-  'dot_situation': 'Each region belongs to specific shapes. Find which shapes share the dot\'s region.'
+  'dot_situation': 'Each region belongs to specific shapes. Find which shapes share the dot\'s region.',
+  'height_distance': 'tan(angle)=height/distance. sin=opp/hyp. cos=adj/hyp. Common angles: 30°,45°,60°.',
+  'decimal_fraction': 'Fraction→decimal: divide numerator by denominator. Decimal→fraction: write over power of 10, simplify.',
+  'chain_rule': 'More men = fewer days (inverse). More work = more days (direct). M1×D1×W2 = M2×D2×W1.',
+  'logarithm': 'log_b(x)=y → b^y=x. log(xy)=log(x)+log(y). log(x/y)=log(x)-log(y). log(x^n)=n×log(x).',
+  'making_judgments': 'Evaluate options for effectiveness, cost, feasibility. Best choice directly achieves the goal.',
+  'logical_problems': 'List all possibilities. Eliminate contradictions. Only one scenario works with all clues.',
+  'logical_games': 'Nim: leave multiple of (max+1) for opponent. Weighing: divide into 3 groups.',
+  'analyzing_arguments': 'Hasty generalization=small sample. Circular=premise assumes conclusion. Ad populum=popularity.',
+  'logical_deduction': 'All A are B, C is A → C is B. If ALL=certain. If SOME=possible. If NO=certain negative.',
+  'character_puzzles': 'Find pattern in columns/rows. Same operation applies to all.',
+  'verification_truth': 'Assume one true, check for contradictions. Only one scenario fits all facts.',
+  'analytical_reasoning': 'Count systematically: smallest first, then larger. For squares: sum n² from 1 to N.',
+  'pattern_completion': 'Pattern repeats in a cycle. Check what element is missing from the cycle.',
+  'shape_construction': 'Two identical right triangles form a square. Area scales by square of side ratio.',
+  'spotting_errors': 'Check: subject-verb agreement, tense, prepositions, word form, singular/plural.',
+  'spellings': 'Double consonants (accommodation). -ance (maintenance). -ible vs -able. i before e except after c.',
+  'sentence_correction': 'Subject-verb agreement. Tense consistency. Each=singular. Since+point, For+duration.',
+  'sentence_improvement': 'too...to (infinitive), so...that (clause). Prefer A to B. No sooner...than.',
+  'closet_test': 'Read entire passage first. Missing word must fit context and grammar.',
+  'one_word_subs': 'Think of the specific single-word term. Latin/Greek roots help.',
+  'idioms_phrases': 'Idioms have figurative meanings. Cannot be understood literally.',
+  'change_voice': 'Active→Passive: object→subject, be+past participle, subject→by+agent.',
+  'change_speech': 'Remove quotes. Present→past. will→would. today→that day. Commands→to+verb.'
 };
 
 var TECHNIQUE_DRILLS = {
@@ -2140,6 +2176,270 @@ function generateDotSituationQuestion(diff) {
   return { question:it.d, answer:it.a, options:it.o, hint:'Identify which regions are common to which shapes', timeLimit:12, type:'reasoning', techniqueLabel:'Dot Situation', intuition:'Each region in a Venn-like diagram belongs to a specific set of shapes. Find which shapes share the dot\'s region.' };
 }
 
+// ====== ADDITIONAL INDIA BIX COVERAGE ======
+
+function generateHeightDistanceQuestion(diff, layer) {
+  var ty = [
+    function(){ var h=rand(10,50), a=[30,45,60][rand(0,2)]; var t=Math.round(h/Math.tan(a*Math.PI/180)); return { q:'Pole height='+h+'m, sun elevation='+a+'°. Shadow length?', a:t, hint:'tan'+a+' = height/shadow, shadow = height/tan'+a }; },
+    function(){ var d=rand(10,40), a=[30,45,60][rand(0,2)]; var t=Math.round(d*Math.tan(a*Math.PI/180)); return { q:'Shadow='+d+'m, sun elevation='+a+'°. Height?', a:t, hint:'Height = shadow × tan'+a }; },
+    function(){ var h=rand(20,80), d=rand(10,40); var deg=Math.round(Math.atan(h/d)*180/Math.PI); return { q:'Tower height='+h+'m, distance='+d+'m. Elevation angle?', a:deg+'°', hint:'tan⁻¹(height/distance) = tan⁻¹('+h+'/'+d+')' }; }
+  ];
+  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; if(typeof d.a==='string'){var n=parseInt(d.a);for(var i=-2;i<=2;i++){var v=(n+i)+'°';if(v!==d.a&&o.indexOf(v)<0)o.push(v);}}else{for(var i=-5;i<=5;i+=2){var v=d.a+i;if(v>0&&o.indexOf(v)<0)o.push(v);}} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Height & Distance: '+d.hint, intuition:'tan(angle) = height/distance. sin(angle) = opposite/hypotenuse. cos(angle) = adjacent/hypotenuse.' };
+}
+
+function generateDecimalFractionQuestion(diff, layer) {
+  var ty = [
+    function(){ var n=rand(1,9), d=rand(2,9); return { q:(n/d).toFixed(3)+' = ? (fraction)', a:n+'/'+d, hint:'Convert decimal to fraction: write as numerator/denominator, simplify' }; },
+    function(){ var n=rand(2,99); return { q:n+'/'+(100)+' = ? (decimal)', a:(n/100).toFixed(2), hint:'Divide numerator by denominator' }; },
+    function(){ var a=rand(1,9), b=rand(1,9); return { q:'Arrange: '+(a/b).toFixed(3)+', '+(b/a).toFixed(3)+', 1.000 — smallest?', a:String(Math.min(a/b,b/a,1).toFixed(3)), hint:'Convert to decimal, then compare' }; }
+  ];
+  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; if(typeof d.a==='string'){o.push((rand(1,9))+'/'+(rand(2,9)));o.push((rand(1,9))+'/'+(rand(2,9)));o.push((rand(1,9))+'/'+(rand(2,9)));}else{o.push((rand(10,99)/100).toFixed(2));o.push((rand(10,99)/100).toFixed(2));o.push((rand(10,99)/100).toFixed(2));} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:12, type:'quant', techniqueLabel:'Decimal Fraction', intuition:'To convert fraction→decimal: divide numerator by denominator. To convert decimal→fraction: write as decimal/1 and simplify.' };
+}
+
+function generateChainRuleQuestion(diff, layer) {
+  var ty = [
+    function(){ var m=rand(5,15), d=rand(10,20); return { q:m+' men do work in '+d+' days. '+(m+rand(3,8))+' men?', a:Math.round(m*d/(m+rand(3,8))), hint:'M1×D1 = M2×D2. Less men = more days' }; },
+    function(){ var m=rand(5,12), d=rand(6,15), w=rand(2,4); return { q:m+' men do '+(w-1)+'× work in '+d+' days. '+w+'× work, '+m+' men?', a:Math.round(d*w/(w-1)), hint:'Work ∝ men × days. More work = more days' }; },
+    function(){ var h=rand(6,12), d=rand(4,10); return { q:h+' horses eat in '+d+' days. '+(h+rand(2,5))+' horses?', a:Math.round(h*d/(h+rand(2,5))), hint:'H1×D1 = H2×D2. More animals = fewer days' }; }
+  ];
+  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; for(var i=-3;i<=4;i+=2){var v=d.a+i;if(v>0&&o.indexOf(v)<0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'Chain Rule: '+d.hint, intuition:'If more = less (inverse proportion): M1×D1 = M2×D2. If more = more (direct): divide then multiply.' };
+}
+
+function generateLogarithmQuestion(diff, layer) {
+  var ty = [
+    function(){ var b=[2,3,5,10][rand(0,3)], n=Math.pow(b,rand(2,4)); return { q:'log_'+b+'('+n+') = ?', a:Math.round(Math.log(n)/Math.log(b)), hint:'log_b(n) = x means b^x = n' }; },
+    function(){ var a=rand(2,5), n=Math.pow(a,rand(2,4)); return { q:'log('+n+') / log('+a+') = ?', a:Math.round(Math.log(n)/Math.log(a)), hint:'log_b(a) = log(a)/log(b). This gives log_'+a+'('+n+')' }; },
+    function(){ var a=rand(2,4), b=rand(2,4), n=Math.pow(a,rand(2,3))*Math.pow(b,rand(2,3)); return { q:'log('+a*b+') = log('+a+') + log(?)', a:b, hint:'log(xy) = log(x) + log(y)' }; }
+  ];
+  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; for(var i=-2;i<=3;i++){var v=d.a+i;if(v!==d.a&&v>0&&o.indexOf(v)<0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Logarithms: '+d.hint, intuition:'log_b(x)=y means b^y=x. log(xy)=log(x)+log(y). log(x/y)=log(x)-log(y). log(x^n)=n×log(x).' };
+}
+
+// Logical Reasoning missing topics
+function generateMakingJudgmentsQuestion(diff) {
+  var items=[
+    {s:'You want to buy a reliable used car under ₹5 lakh.',o:['A 2018 model with 80k km service history','A 2022 model with 0 service records','A 2005 model fully restored','A damaged car at auction'],a:0},
+    {s:'You need to improve your English speaking skills quickly.',o:['Practice speaking daily with a friend','Read only textbooks','Watch movies without subtitles','Take a 3-year course'],a:0},
+    {s:'You want to save money on electricity bills.',o:['Switch to LED bulbs and unplug idle devices','Keep all lights on 24/7','Buy new appliances every month','Run AC at 16°C always'],a:0}
+  ];
+  var it=items[rand(0,items.length-1)];
+  return { question:'Best course of action: "'+it.s+'"<br>'+it.o.map(function(x,i){return (i+1)+'. '+x;}).join('<br>'), answer:it.o[it.a], options:it.o.slice(), hint:'Choose the most practical and effective option', timeLimit:12, type:'reasoning', techniqueLabel:'Making Judgments', intuition:'Evaluate each option for effectiveness, cost, and feasibility. The best choice directly achieves the goal with minimal drawbacks.' };
+}
+
+function generateLogicalProblemsQuestion(diff) {
+  var items=[
+    function(){var colors=['Red','Blue','Green','Yellow'];shuffle(colors);return {q:'4 friends — A says "I don\'t wear Red", B says "I wear Blue", C says "I don\'t wear Blue", D says "I wear Red or Green". Only one is lying. Who wears Yellow?',a:colors[3],o:colors};},
+    function(){var n=['Alice','Bob','Charlie','Diana'];shuffle(n);return {q:n[0]+', '+n[1]+', '+n[2]+', '+n[3]+' sit in a row. '+n[0]+' sits at an end. '+n[1]+' sits next to '+n[2]+'. '+n[3]+' sits between '+n[0]+' and '+n[1]+'. Who is at the other end?',a:n[2],o:n};}
+  ];
+  var d=items[rand(0,items.length-1)](); var o=d.o; shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:'List possibilities and eliminate contradictions', timeLimit:25, type:'reasoning', techniqueLabel:'Logical Problems', intuition:'Track what each statement rules out. If only one is lying, check which scenario makes exactly one false.' };
+}
+
+function generateLogicalGamesQuestion(diff) {
+  var items=[
+    function(){return {q:'Two players take turns removing 1-3 stones from a pile of '+(rand(8,15))+'. The player who takes the last stone wins. How many should the first player take?',a:String((rand(8,15))%4||1),o:['1','2','3','4'],hint:'Winning strategy: leave a multiple of 4 after your turn.'};},
+    function(){return {q:'You have 9 coins, one is counterfeit (lighter). You have a balance scale. Min weighings to find it?',a:'2',o:['1','2','3','4'],hint:'Divide into 3 groups of 3. Weigh two groups.'};}
+  ];
+  var d=items[rand(0,items.length-1)](); var o=d.o; shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint||'Think about the minimum worst-case scenario', timeLimit:20, type:'reasoning', techniqueLabel:'Logical Games', intuition:'For Nim-like games, leave opponent at a multiple of (max pick+1). For weighing, divide into 3 groups.' };
+}
+
+function generateAnalyzingArgumentsQuestion(diff) {
+  var items=[
+    {p:'"All swans I have seen are white. Therefore, all swans are white."',f:'Hasty generalization (insufficient sample)',o:['Hasty generalization','Circular reasoning','False cause','Appeal to authority']},
+    {p:'"If you don\'t study, you\'ll fail. You didn\'t study, so you will fail."',f:'Valid deductive argument',o:['False analogy','Valid deductive argument','Slippery slope','Straw man']},
+    {p:'"Everyone believes the earth is round, so it must be round."',f:'Appeal to popularity (argumentum ad populum)',o:['Appeal to popularity','Ad hominem','Red herring','False dilemma']}
+  ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:'Identify the flaw:<br>"'+it.p+'"', answer:it.f, options:it.o, hint:'What logical error does this argument make?', timeLimit:15, type:'reasoning', techniqueLabel:'Analyzing Arguments', intuition:'Hasty generalization = small sample. Circular = premise assumes conclusion. Ad populum = everyone believes it. False cause = correlation ≠ causation.' };
+}
+
+function generateLogicalDeductionQuestion(diff) {
+  var items=[
+    {p:'All mammals are warm-blooded. Whales are mammals.',c:'Whales are warm-blooded',o:['Whales are warm-blooded','Whales live in water','Mammals have fur','Whales are fish']},
+    {p:'No honest person lies. John is honest.',c:'John does not lie',o:['John does not lie','John is rich','Everyone lies','Honest people are rare']},
+    {p:'All squares have 4 equal sides. This shape has 4 equal sides.',c:'This shape could be a square',o:['This shape is definitely a square','This shape could be a square','This shape is not a square','All 4-sided shapes are squares']}
+  ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:'What logically follows?<br>"'+it.p+'"', answer:it.c, options:it.o, hint:'Apply deductive reasoning. If ALL X are Y and this is X, then this is Y.', timeLimit:12, type:'reasoning', techniqueLabel:'Logical Deduction', intuition:'Deduction: All A are B. C is A. Therefore C is B. If ALL: certain. If SOME: possible. If NO: certain negative.' };
+}
+
+// Verbal Reasoning missing
+function generateCharacterPuzzlesQuestion(diff) {
+  var items=[
+    function(){var a=rand(2,5),b=rand(2,5),c=rand(2,5);return {q:'Find missing: <br>'+(a*3)+'  '+(b*3)+'  '+(c*3)+'<br>'+(a*2)+'  '+(b*2)+'  '+(c*2)+'<br>'+(a*5)+'  '+(b*5)+'  ?',a:String(c*5),o:[String(c*5),String(c*4),String(c*6),String(c*7)],hint:'Each column follows the same pattern.'};},
+    function(){return {q:'Find missing: <br>2  5  8<br>3  6  9<br>4  7  ?',a:'10',o:['10','11','12','13'],hint:'Rows: each number increases by 3 from previous.'};},
+    function(){var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ';var p=rand(0,20);return {q:'Find missing: <br>'+l[p]+'  '+l[p+1]+'  '+l[p+2]+'<br>'+l[p+3]+'  '+l[p+4]+'  '+l[p+5]+'<br>'+l[p+6]+'  '+l[p+7]+'  ?',a:l[p+8],o:[l[p+8],l[p+6],l[p+9],l[p+10]],hint:'Each row/column follows alphabetical order.'};}
+  ];
+  var d=items[rand(0,items.length-1)](); var o=d.o; shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint||'Find the pattern in columns and rows', timeLimit:20, type:'reasoning', techniqueLabel:'Character Puzzles', intuition:'Look for patterns column-wise and row-wise. The same operation should apply to all.' };
+}
+
+function generateVerificationTruthQuestion(diff) {
+  var items=[
+    {f:'A father has 4 children. Each daughter has the same number of brothers as sisters, but each son has twice as many sisters as brothers.',q:'How many daughters?',a:'3',o:['1','2','3','4']},
+    {f:'In a row of trees, one tree is 7th from left and 9th from right.',q:'Total trees?',a:'15',o:['13','14','15','16']},
+    {f:'A says "B is lying". B says "C is lying". C says "A and B are both lying".',q:'Who is telling the truth?',a:'C',o:['A','B','C','None']}
+  ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:it.f+'<br>'+it.q, answer:it.a, options:it.o, hint:'Test each possibility against the given facts', timeLimit:20, type:'reasoning', techniqueLabel:'Verification of Truth', intuition:'Assume one statement is true and check if it leads to contradictions. Only one scenario works with all facts.' };
+}
+
+// Non-Verbal Reasoning missing
+function generateAnalyticalReasoningQuestion(diff) {
+  var items=[
+    function(){var n=rand(3,6);return {q:'A square is divided into '+(n*n)+' small squares by '+(n-1)+' horizontal and '+(n-1)+' vertical lines. Total squares?',a:Math.round(n*(n+1)*(2*n+1)/6),o:[String(n*n),String(2*n),String(Math.round(n*(n+1)*(2*n+1)/6)),String(n*2)],hint:'Also count squares of different sizes, not just the smallest.'};},
+    function(){return {q:'In a triangle, lines are drawn from one vertex to the opposite side dividing it into '+(rand(3,6))+' parts. How many triangles total?',a:String(rand(3,6)),o:[String(rand(3,6)),String(rand(3,6)*2),String(rand(3,6)+1),String(rand(3,6)*3)],hint:'Count all triangles of different sizes.'};}
+  ];
+  var d=items[rand(0,items.length-1)](); var o=d.o; shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint||'Count systematically — all sizes, not just the obvious ones', timeLimit:20, type:'reasoning', techniqueLabel:'Analytical Reasoning', intuition:'Count systematically: smallest first, then larger ones. For squares in a grid: sum of n² from 1 to N.' };
+}
+
+function generatePatternCompletionQuestion(diff) {
+  var items=[
+    {d:'△ ○ □<br>○ □ △<br>□ △ ?',a:'○',o:['△','○','□','◇']},
+    {d:'R G B<br>G B R<br>B R ?',a:'G',o:['R','G','B','Y']},
+    {d:'1 2 3<br>2 3 4<br>3 4 ?',a:'5',o:['5','6','7','8']},
+    {d:'A B C<br>C A B<br>B C ?',a:'A',o:['A','B','C','D']}
+  ];
+  var it=items[rand(0,items.length-1)]; var opts=it.o; shuffle(opts);
+  return { question:'Complete the pattern:<br>'+it.d, answer:it.a, options:opts, hint:'Look for repeating cycle in rows and columns', timeLimit:15, type:'reasoning', techniqueLabel:'Pattern Completion', intuition:'The pattern repeats in a cycle. Check what element is missing from the cycle in that position.' };
+}
+
+function generateShapeConstructionQuestion(diff) {
+  var items=[
+    {q:'Which pieces can form a square?',a:'Two identical right triangles',o:['Two identical right triangles','A circle and a triangle','Three different rectangles','Four small circles']},
+    {q:'Which can form a rectangle?',a:'Two identical rectangles placed side by side',o:['Two identical rectangles placed side by side','A square and a circle','A triangle and a line','Three squares in a row']},
+    {q:'How many equilateral triangles of side 1 can fit in an equilateral triangle of side 3?',a:'9',o:['3','6','9','12']}
+  ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:it.q, answer:it.a, options:it.o, hint:'Think about how shapes combine to form the target shape', timeLimit:15, type:'reasoning', techniqueLabel:'Shape Construction', intuition:'Shapes combine by matching edges. Two identical right triangles form a square/rectangle. Area of similar shapes scales by square of side ratio.' };
+}
+
+// Verbal Ability missing
+var COMMON_IDIOMS = [
+  {i:'Break the ice',m:'Start a conversation in a social setting'},
+  {i:'Hit the nail on the head',m:'Describe exactly what is causing a situation'},
+  {i:'Piece of cake',m:'Very easy'},
+  {i:'Once in a blue moon',m:'Very rarely'},
+  {i:'Bite the bullet',m:'Face a difficult situation bravely'},
+  {i:'Burn the midnight oil',m:'Work late into the night'},
+  {i:'Let the cat out of the bag',m:'Reveal a secret accidentally'},
+  {i:'Steal someone\'s thunder',m:'Take credit for someone else\'s work'},
+  {i:'Cost an arm and a leg',m:'Be very expensive'},
+  {i:'Under the weather',m:'Feeling ill'},
+  {i:'Cut corners',m:'Do something poorly to save time/money'},
+  {i:'Speak of the devil',m:'Someone appears just when you talk about them'}
+];
+
+var ONE_WORD_SUBS = [
+  {p:'One who cannot read or write',w:'Illiterate'},
+  {p:'A speech without preparation',w:'Extempore'},
+  {p:'One who knows everything',w:'Omniscient'},
+  {p:'That which cannot be seen through',w:'Opaque'},
+  {p:'A place where birds are kept',w:'Aviary'},
+  {p:'One who walks in sleep',w:'Somnambulist'},
+  {p:'A remedy for all diseases',w:'Panacea'},
+  {p:'One who loves books',w:'Bibliophile'},
+  {p:'A life story written by oneself',w:'Autobiography'},
+  {p:'A group of ships',w:'Fleet'}
+];
+
+function generateSpottingErrorsQuestion(diff) {
+  var items=[
+    {s:'He don\'t like coffee.',e:'don\'t → doesn\'t',o:['don\'t → doesn\'t','He → Him','coffee → coffees','No error']},
+    {s:'She go to school everyday.',e:'go → goes',o:['go → goes','to → for','everyday → every day','No error']},
+    {s:'They has completed the work.',e:'has → have',o:['has → have','the → a','work → works','No error']},
+    {s:'I am loving this weather.',e:'am loving → love',o:['am loving → love','this → these','weather → weathers','No error']},
+    {s:'Neither the teacher nor the students was present.',e:'was → were',o:['was → were','Neither → Either','the → a','No error']}
+  ];
+  var it=items[rand(0,items.length-1)];
+  return { question:'Spot the error: "'+it.s+'"', answer:it.e, options:it.o, hint:'Check subject-verb agreement, tense, and word form', timeLimit:10, type:'verbal', techniqueLabel:'Spotting Errors', intuition:'Common errors: subject-verb agreement (he goes), tense consistency (I love not I am loving), neither-nor verb follows closest subject.' };
+}
+
+function generateSpellingsQuestion(diff) {
+  var items=[
+    {c:'Accommodation',w:['Acommodation','Accomodation','Accommodation','Acomodation'],a:2},
+    {c:'Necessary',w:['Neccessary','Necessary','Neccesary','Nessessary'],a:1},
+    {c:'Maintenance',w:['Maintanance','Maintainance','Maintenance','Maintence'],a:2},
+    {c:'Separate',w:['Seperate','Separate','Separete','Saperate'],a:1},
+    {c:'Embarrass',w:['Embarass','Embarrass','Embaras','Embarras'],a:1},
+    {c:'Independent',w:['Independant','Indepentent','Independent','Indipendent'],a:2},
+    {c:'Occurrence',w:['Occurence','Occurance','Occurrence','Ocurrence'],a:2}
+  ];
+  var it=items[rand(0,items.length-1)]; var opts=it.w.slice(); shuffle(opts);
+  return { question:'Correct spelling?', answer:it.c, options:opts, hint:'Think about how the word sounds and common spelling rules', timeLimit:8, type:'verbal', techniqueLabel:'Spellings', intuition:'Double consonants (accommodation, embarrass), -ance vs -ence (maintenance), -able vs -ible.' };
+}
+
+function generateSentenceCorrectionQuestion(diff) {
+  var items=[
+    {s:'The committee have decided to postpone the meeting.',c:'The committee has decided to postpone the meeting',o:['The committee have decided to postpone the meeting','The committee has decided to postpone the meeting','The committee have decide to postpone the meeting','The committee has decide to postpone the meeting']},
+    {s:'Each of the students were given a certificate.',c:'Each of the students was given a certificate',o:['Each of the students were given a certificate','Each of the students was given a certificate','Each of the student were given a certificate','Every of the students were given a certificate']},
+    {s:'I have been working here since five years.',c:'I have been working here for five years',o:['I have been working here since five years','I have been working here for five years','I am working here since five years','I worked here since five years']}
+  ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:'Correct: "'+it.s+'"', answer:it.c, options:it.o, hint:'Check subject-verb agreement, tense, prepositions', timeLimit:12, type:'verbal', techniqueLabel:'Sentence Correction', intuition:'Collective nouns (committee) take singular verb. Each + singular. Since + point in time, For + duration.' };
+}
+
+function generateSentenceImprovementQuestion(diff) {
+  var items=[
+    {s:'He is too weak that he cannot walk.',i:'He is so weak that he cannot walk',o:['He is too weak that he cannot walk','He is so weak that he cannot walk','He is too weak to cannot walk','He is very weak that he cannot walk']},
+    {s:'No sooner had he arrived than the meeting started.',i:'No sooner had he arrived than the meeting started (correct)',o:['No sooner had he arrived than the meeting started','No sooner he arrived than the meeting started','No sooner had he arrived when the meeting started','No sooner did he arrive than the meeting had started']},
+    {s:'I prefer coffee than tea.',i:'I prefer coffee to tea',o:['I prefer coffee than tea','I prefer coffee to tea','I prefer coffee over tea','I prefer coffee from tea']}
+  ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:'Improve: "'+it.s+'"', answer:it.i, options:it.o, hint:'Replace the incorrect word/phrase with the correct one', timeLimit:12, type:'verbal', techniqueLabel:'Sentence Improvement', intuition:'too...to (infinitive), so...that (clause). Prefer A to B. No sooner...than. Scarcely...when.' };
+}
+
+function generateClosetTestQuestion(diff) {
+  var items=[
+    {p:'The _____ of technology has transformed education. Students can now access information from anywhere. This has made learning more _____ than ever before. However, it also _____ challenges like screen addiction.',blanks:['advancement','accessible','poses'],q:'Blank 2?',a:'accessible',o:['accessible','difficult','expensive','boring']},
+    {p:'Air pollution is a serious _____ in many cities. It causes respiratory problems and _____ the environment. Planting more trees can help _____ the air quality.',blanks:['problem','harms','improve'],q:'Blank 1?',a:'problem',o:['solution','problem','benefit','ignored']}
+  ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:'<span style="font-size:.85em">'+it.p+'</span><br><br>'+it.q, answer:it.a, options:it.o, hint:'Read the full passage for context. The correct word makes sense in the overall meaning.', timeLimit:20, type:'verbal', techniqueLabel:'Closet Test', intuition:'Read the entire passage first. The missing word must fit the context, grammar, and overall meaning.' };
+}
+
+function generateOneWordSubstitutesQuestion(diff) {
+  var it=ONE_WORD_SUBS[rand(0,ONE_WORD_SUBS.length-1)]; var opts=[it.w];
+  var allWords=ONE_WORD_SUBS.map(function(x){return x.w;}).filter(function(x){return x!==it.w;});
+  shuffle(allWords); while(opts.length<4&&allWords.length){var w=allWords.pop();if(opts.indexOf(w)<0)opts.push(w);}
+  shuffle(opts);
+  return { question:'One word for: "'+it.p+'"', answer:it.w, options:opts, hint:'Think of the specific term used for this description', timeLimit:10, type:'verbal', techniqueLabel:'One Word Substitutes', intuition:'Many concepts have specific single-word terms. Think about Latin/Greek roots and common prefixes.' };
+}
+
+function generateIdiomsPhrasesQuestion(diff) {
+  var it=COMMON_IDIOMS[rand(0,COMMON_IDIOMS.length-1)]; var opts=[it.m];
+  var allMeanings=COMMON_IDIOMS.map(function(x){return x.m;}).filter(function(x){return x!==it.m;});
+  shuffle(allMeanings); while(opts.length<4&&allMeanings.length){var m=allMeanings.pop();if(opts.indexOf(m)<0)opts.push(m);}
+  shuffle(opts);
+  return { question:'Meaning of "'+it.i+'" ?', answer:it.m, options:opts, hint:'Idioms have figurative meanings different from literal', timeLimit:8, type:'verbal', techniqueLabel:'Idioms & Phrases', intuition:'Idioms cannot be understood literally. Learn their conventional meanings through exposure and context.' };
+}
+
+function generateChangeVoiceQuestion(diff) {
+  var items=[
+    {a:'The cat chased the mouse.',p:'The mouse was chased by the cat',o:['The mouse was chased by the cat','The mouse is chased by the cat','The mouse was being chased','The mouse had been chased']},
+    {a:'She writes a letter.',p:'A letter is written by her',o:['A letter is written by her','A letter was written by her','A letter has been written','A letter writes by her']},
+    {p:'The work was done by John.',a:'John did the work',o:['John did the work','John does the work','John was doing the work','John had done the work']},
+    {a:'They will build a bridge.',p:'A bridge will be built by them',o:['A bridge will be built by them','A bridge will build by them','A bridge would be built','A bridge is built by them']}
+  ];
+  var it=items[rand(0,items.length-1)];
+  return { question:'Change voice: "'+it.a||it.p+'"', answer:it.p||it.a, options:it.o, hint:'Active→Passive: object becomes subject, verb becomes be+past participle, subject becomes by+agent', timeLimit:15, type:'verbal', techniqueLabel:'Change of Voice', intuition:'Active: subject does action. Passive: subject receives action. Verb changes: do→is done, did→was done, will do→will be done.' };
+}
+
+function generateChangeSpeechQuestion(diff) {
+  var items=[
+    {d:'She said, "I am happy."',i:'She said that she was happy',o:['She said that she was happy','She said that I am happy','She said that she is happy','She said she is happy']},
+    {d:'He said, "I will come tomorrow."',i:'He said that he would come the next day',o:['He said that he would come the next day','He said that he will come tomorrow','He said he will come tomorrow','He said that he would come tomorrow']},
+    {d:'"Please help me," she said.',i:'She requested me to help her',o:['She requested me to help her','She said please help me','She ordered me to help her','She said to help me']}
+  ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:'Change to indirect speech:<br>"'+it.d+'"', answer:it.i, options:it.o, hint:'Remove quotes, change pronouns, adjust tense (present→past, will→would, tomorrow→next day)', timeLimit:15, type:'verbal', techniqueLabel:'Change of Speech', intuition:'Reporting verb + that clause. Present→past. will→would. today→that day. tomorrow→next day. Commands become to+verb. Questions become if/whether.' };
+}
+
 // ====== CATEGORY DISPATCHERS ======
 
 function generateQuantQuestion(diff, subMode) {
@@ -2169,10 +2469,14 @@ function generateQuantQuestion(diff, subMode) {
     surds_indices: generateSurdsIndicesQuestion,
     bankers_discount: generateBankersDiscountQuestion,
     stocks_shares: generateStocksSharesQuestion,
-    odd_man_out: generateOddManOutQuestion
+    odd_man_out: generateOddManOutQuestion,
+    height_distance: generateHeightDistanceQuestion,
+    decimal_fraction: generateDecimalFractionQuestion,
+    chain_rule: generateChainRuleQuestion,
+    logarithm: generateLogarithmQuestion
   };
   // If no subMode, pick random quant topic
-  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','partnership','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out']);
+  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','partnership','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out','height_distance','decimal_fraction','chain_rule','logarithm']);
   var gen = genMap[topic];
   if (gen) {
     var q = gen(diff, activeLayer || 'instinct');
@@ -2233,9 +2537,28 @@ function generateReasoningQuestion(diff, subMode) {
     grouping_images: generateGroupingImagesQuestion,
     image_analysis: generateImageAnalysisQuestion,
     water_images: generateWaterImagesQuestion,
-    dot_situation: generateDotSituationQuestion
+    dot_situation: generateDotSituationQuestion,
+    making_judgments: generateMakingJudgmentsQuestion,
+    logical_problems: generateLogicalProblemsQuestion,
+    logical_games: generateLogicalGamesQuestion,
+    analyzing_arguments: generateAnalyzingArgumentsQuestion,
+    logical_deduction: generateLogicalDeductionQuestion,
+    character_puzzles: generateCharacterPuzzlesQuestion,
+    verification_truth: generateVerificationTruthQuestion,
+    analytical_reasoning: generateAnalyticalReasoningQuestion,
+    pattern_completion: generatePatternCompletionQuestion,
+    shape_construction: generateShapeConstructionQuestion,
+    spotting_errors: generateSpottingErrorsQuestion,
+    spellings: generateSpellingsQuestion,
+    sentence_correction: generateSentenceCorrectionQuestion,
+    sentence_improvement: generateSentenceImprovementQuestion,
+    closet_test: generateClosetTestQuestion,
+    one_word_subs: generateOneWordSubstitutesQuestion,
+    idioms_phrases: generateIdiomsPhrasesQuestion,
+    change_voice: generateChangeVoiceQuestion,
+    change_speech: generateChangeSpeechQuestion
   };
-  var topic = subMode || pick(['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram','letter_symbol_series','artificial_language','matching_definitions','cause_effect','essential_part','theme_detection','statement_argument','statement_assumption','statement_conclusion','synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','embedded_images','figure_matrix','paper_folding','paper_cutting','rule_detection','grouping_images','image_analysis','water_images','dot_situation']);
+  var topic = subMode || pick(['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram','letter_symbol_series','artificial_language','matching_definitions','cause_effect','essential_part','theme_detection','statement_argument','statement_assumption','statement_conclusion','synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','embedded_images','figure_matrix','paper_folding','paper_cutting','rule_detection','grouping_images','image_analysis','water_images','dot_situation','making_judgments','logical_problems','logical_games','analyzing_arguments','logical_deduction','character_puzzles','verification_truth','analytical_reasoning','pattern_completion','shape_construction','spotting_errors','spellings','sentence_correction','sentence_improvement','closet_test','one_word_subs','idioms_phrases','change_voice','change_speech']);
   var gen = genMap[topic];
   if (gen) {
     try {
@@ -2316,7 +2639,26 @@ function generateReasoningQuestion(diff, subMode) {
         grouping_images: 'Find the shared attribute within each group.',
         image_analysis: 'Visualize the figure mentally. Count carefully.',
         water_images: 'Water image = vertical mirror. Top becomes bottom.',
-        dot_situation: 'Each region belongs to specific shapes. Find which shapes share the dot\'s region.'
+        dot_situation: 'Each region belongs to specific shapes. Find which shapes share the dot\'s region.',
+        making_judgments: 'Evaluate each option. Best choice directly achieves the goal with minimum drawbacks.',
+        logical_problems: 'List possibilities, eliminate contradictions. Only one scenario fits all clues.',
+        logical_games: 'Nim: leave multiple of max+1. Weighing: divide into 3 groups.',
+        analyzing_arguments: 'Identify reasoning flaws: hasty generalization, circular, ad populum, false cause.',
+        logical_deduction: 'All A are B + C is A → C is B. Certain: ALL. Possible: SOME. Negative: NO.',
+        character_puzzles: 'Find pattern in columns/rows. Same operation applied consistently.',
+        verification_truth: 'Assume one is true, check for contradictions. Only one scenario works.',
+        analytical_reasoning: 'Count systematically. Include all sizes, not just the obvious ones.',
+        pattern_completion: 'Pattern cycles. Find what is missing from the repeating sequence.',
+        shape_construction: 'Match edges. Two right triangles make a square. Area scales with square of ratio.',
+        spotting_errors: 'Check verb agreement, tense, prepositions, singular/plural, word form.',
+        spellings: 'Double consonants, -ance/-ence, i before e except after c.',
+        sentence_correction: 'Each + singular. Since + point, For + duration. Collective nouns = singular.',
+        sentence_improvement: 'too+to, so+that, prefer+to, no sooner+than, not only+but also.',
+        closet_test: 'Read whole passage. Choose word that fits context AND grammar.',
+        one_word_subs: 'Find the specific single word. Common prefixes/suffixes help.',
+        idioms_phrases: 'Idioms have figurative meanings. Learn by exposure.',
+        change_voice: 'Active: subject does. Passive: subject receives. Object becomes subject.',
+        change_speech: 'Quotes→that clause. Present→past. will→would. Commands→to+verb.'
       };
       q.intuition = intuitions[topic] || 'Draw a diagram/table. Fill known facts, deduce the rest.';
       return q;
