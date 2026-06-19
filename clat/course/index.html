@@ -160,5 +160,170 @@
         </script>
 <div style="text-align:center;padding:30px 0"><a href="../index.html" class="btn btn-success">&#x2190; Back to CLAT Home</a> <a href="../../dashboard.html" class="btn btn-primary">&#x1f4ca; Dashboard</a></div>
     </div>
+<script  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<script src="../../js/auth-guard.js"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>CLAT Full Course — Free Complete Study Material | vlymbooq</title>
+    <meta name="description" content="Complete CLAT free study course covering all 5 sections: English, Current Affairs, Legal Reasoning, Logical Reasoning, and Quantitative Techniques.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/clat/course/index.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--purple,#a78bfa);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
+        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
+        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
+        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
+        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
+        .module-card:hover{border-color:rgba(255,255,255,.12)}
+        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
+        .module-card .m-desc{font-size:.85em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
+        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
+        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.78em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
+        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
+        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body p{color:var(--text-sec);font-size:.9em;line-height:1.7;margin-bottom:10px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
+        .example-box .ex-title{font-weight:600;font-size:.85em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.85em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .tip-box .tip-title{font-weight:600;font-size:.85em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.85em;color:var(--text-sec);line-height:1.5}
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.82em;color:var(--text-sec)}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
+        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .diagram-box svg{max-width:100%;height:auto}
+        .diagram-box .diagram-caption{font-size:.78em;color:var(--text-muted);margin-top:8px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/community.html">Community</a><a href="../index.html">CLAT</a><a href="index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="course-header">
+            <div class="badge">CLAT (Law) · Free Full Course</div>
+            <h1>CLAT Full Course — Free Complete Study Material</h1>
+            <div class="sub">Complete CLAT free study course covering English, Current Affairs, Legal Reasoning, Logical Reasoning, and Quantitative Techniques. Topic-wise lessons with theory, examples, and practice.</div>
+            <div class="progress-bar"><div class="fill" id="course-progress" style="width:0%"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:.78em;color:var(--text-muted)"><span id="progress-text">0 of 17 lessons complete</span></div>
+        </div>
+        <div class="module-card">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <span style="font-size:1.4em">📝</span>
+                <div class="m-title" style="color:#a78bfa">Module 1: English Language</div>
+            </div>
+            <div class="m-desc">English for CLAT covering reading comprehension, grammar, vocabulary, and verbal reasoning.</div>
+            <div class="m-topics">
+                <a href="english/lesson-reading-comprehension.html">Reading Comprehension</a>
+                <a href="english/lesson-grammar.html">Grammar &amp; Usage</a>
+                <a href="english/lesson-vocabulary.html">Vocabulary</a>
+                <a href="english/lesson-sentence-correction.html">Sentence Correction</a>
+            </div>
+        </div>
+        <div class="module-card">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <span style="font-size:1.4em">🌍</span>
+                <div class="m-title" style="color:#f59e0b">Module 2: Current Affairs &amp; GK</div>
+            </div>
+            <div class="m-desc">Current Affairs and General Knowledge for CLAT covering national &amp; international events, legal GK, and static GK.</div>
+            <div class="m-topics">
+                <a href="gk/lesson-current-affairs.html">Current Affairs</a>
+                <a href="gk/lesson-legal-gk.html">Legal General Knowledge</a>
+                <a href="gk/lesson-static-gk.html">Static GK</a>
+            </div>
+        </div>
+        <div class="module-card">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <span style="font-size:1.4em">⚖️</span>
+                <div class="m-title" style="color:#f87171">Module 3: Legal Reasoning</div>
+            </div>
+            <div class="m-desc">Legal Reasoning for CLAT covering legal principles, case studies, legal maxims, and application of law to facts.</div>
+            <div class="m-topics">
+                <a href="legal/lesson-legal-principles.html">Legal Principles</a>
+                <a href="legal/lesson-legal-maxims.html">Legal Maxims &amp; Terms</a>
+                <a href="legal/lesson-case-studies.html">Case Studies &amp; Application</a>
+            </div>
+        </div>
+        <div class="module-card">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <span style="font-size:1.4em">🧠</span>
+                <div class="m-title" style="color:#60a5fa">Module 4: Logical Reasoning</div>
+            </div>
+            <div class="m-desc">Logical Reasoning for CLAT covering arguments, assumptions, inferences, syllogisms, and puzzles.</div>
+            <div class="m-topics">
+                <a href="reasoning/lesson-arguments.html">Arguments &amp; Assumptions</a>
+                <a href="reasoning/lesson-inferences.html">Inferences &amp; Syllogisms</a>
+                <a href="reasoning/lesson-puzzles.html">Puzzles &amp; Arrangements</a>
+                <a href="reasoning/lesson-analogy-series.html">Analogy &amp; Series</a>
+            </div>
+        </div>
+        <div class="module-card">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <span style="font-size:1.4em">📐</span>
+                <div class="m-title" style="color:#34d399">Module 5: Quantitative Techniques</div>
+            </div>
+            <div class="m-desc">Quantitative Techniques for CLAT covering data interpretation, numerical ability, and basic mathematics.</div>
+            <div class="m-topics">
+                <a href="quant/lesson-data-interpretation.html">Data Interpretation</a>
+                <a href="quant/lesson-numerical-ability.html">Numerical Ability</a>
+                <a href="quant/lesson-basic-maths.html">Basic Mathematics</a>
+            </div>
+        </div>
+        <script>
+        try{var done=JSON.parse(localStorage.getItem("clat-course-done")||"[]");document.getElementById("course-progress").style.width=(done.length/17*100)+"%";document.getElementById("progress-text").textContent=done.length+" of 17 lessons complete"}catch(e){}
+        </script>
+<div style="text-align:center;padding:30px 0"><a href="../index.html" class="btn btn-success">&#x2190; Back to CLAT Home</a> <a href="../../dashboard.html" class="btn btn-primary">&#x1f4ca; Dashboard</a></div>
+    </div>
+<script src="..\..\js/theme.js"></script>
+</body>
+</html>.Groups[0].Value -replace '\\', '/' ></script>
 </body>
 </html>

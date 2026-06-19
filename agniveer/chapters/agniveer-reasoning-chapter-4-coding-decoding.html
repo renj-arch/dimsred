@@ -223,5 +223,233 @@
     <script>
     function checkOpt(el,ltr){var p=el.closest('.q-card');if(p.dataset.locked)return;p.dataset.locked=1;var sol=p.querySelector('.q-soln');sol.classList.add('show');var opts=p.querySelectorAll('.q-opt');opts.forEach(function(o){o.style.pointerEvents='none'});if(el.dataset.correct){el.classList.add('correct')}else{el.classList.add('wrong');opts.forEach(function(o){if(o.dataset.correct)o.classList.add('correct')})}}
     </script>
+<script  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Coding-Decoding — Agniveer Reasoning</title>
+    <meta name="description" content="This chapter deals with various coding‑decoding techniques used in quantitative aptitude sections of the Agniveer exam. It explains patterns, rules and strategies to decode numbers, alphabets and symb">
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="icon" type="image/png" href="../../logo.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:Inter,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
+        a{color:#a78bfa;text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
+        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover,.nav-links a.active{color:#fafafa;background:rgba(255,255,255,.06)}
+        .container{max-width:920px;margin:0 auto;padding:24px}
+        .ch-list{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+        .ch-list a{padding:6px 14px;border-radius:100px;font-size:.8em;border:1px solid rgba(255,255,255,.06);color:#a1a1aa;transition:all .2s}
+        .ch-list a:hover,.ch-list a.active{border-color:#a78bfa;color:#a78bfa;background:rgba(167,139,250,.1)}
+        .header{padding:20px 0;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:24px}
+        .header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:#a78bfa;font-size:.75em;font-weight:600;margin-bottom:8px}
+        .header h1{font-size:1.6em;font-weight:900;margin-bottom:6px;line-height:1.2}
+        .header .sub{color:#a1a1aa;font-size:.9em;line-height:1.6}
+        .lesson-section{margin-bottom:28px}
+        .lesson-h2{font-size:1.2em;font-weight:700;color:#a78bfa;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.06)}
+        .lesson-body{font-size:.92em;line-height:1.8;color:#d4d4d8}
+        .lesson-body p{margin-bottom:12px}
+        .lesson-body ul,.lesson-body ol{margin:8px 0 12px 20px}
+        .lesson-body li{margin-bottom:6px}
+        .lesson-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:18px;margin-bottom:24px}
+        .lesson-box h3{font-size:1em;font-weight:700;color:#34d399;margin-bottom:10px}
+        .lesson-box ul{list-style:none;padding:0}
+        .lesson-box ul li{padding:6px 0;padding-left:20px;position:relative;font-size:.88em;color:#d4d4d8}
+        .lesson-box ul li::before{content:"\25B8";position:absolute;left:0;color:#34d399}
+        .ex-card{background:rgba(255,255,255,.03);border-radius:8px;padding:14px;margin-bottom:10px}
+        .ex-q{font-size:.9em;margin-bottom:6px;color:#fafafa}
+        .ex-sol{font-size:.85em;color:#a1a1aa;line-height:1.5}
+        .q-card{background:#111113;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;margin-bottom:12px}
+        .q-card .q-num{font-size:.78em;color:#52525b;margin-bottom:4px;display:flex;justify-content:space-between}
+        .q-card .q-topic{font-size:.7em;padding:2px 8px;border-radius:100px;background:rgba(167,139,250,.1);color:#a78bfa}
+        .q-card .q-text{font-size:.93em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.06);cursor:pointer;font-size:.82em;transition:all .15s;display:flex;align-items:center;gap:6px}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:#34d399;background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt .opt-letter{color:#52525b;font-weight:600;min-width:16px}
+        .q-card .q-soln{display:none;margin-top:10px;padding:10px;background:rgba(139,92,246,.06);border-radius:8px;font-size:.82em;color:#a1a1aa;line-height:1.5}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:#34d399}
+        .pn-links{display:flex;justify-content:space-between;margin:24px 0;gap:12px}
+        .pn-links a{padding:10px 20px;border-radius:100px;border:1px solid rgba(255,255,255,.06);font-size:.85em;transition:all .2s}
+        .pn-links a:hover{border-color:#a78bfa;color:#a78bfa}
+        h3{font-size:1.05em;font-weight:700;color:#fafafa;margin:20px 0 10px}
+        table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.88em}
+        th,td{padding:8px 12px;border:1px solid rgba(255,255,255,.06);text-align:left}
+        th{background:rgba(167,139,250,.1);color:#a78bfa;font-weight:600}
+        td{color:#d4d4d8}
+        code{background:rgba(255,255,255,.04);padding:2px 6px;border-radius:4px;font-size:.9em;color:#34d399}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="../../index.html" class="brand"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../agniveer/index.html">Home</a><a href="../../dashboard.html">Dashboard</a><a href="../../agniveer/course/index.html" class="active">Agniveer Reasoning</a></div></div></nav>
+    <div class="container">
+        <div class="ch-list"><a href="agniveer-reasoning-chapter-1-analogies-verbal-and-non-verbal.html" class="">Ch 1</a>
+<a href="agniveer-reasoning-chapter-2-number-series-letter-series-alpha-numeri.html" class="">Ch 2</a>
+<a href="agniveer-reasoning-chapter-3-classification-and-odd-one-out.html" class="">Ch 3</a>
+<a href="agniveer-reasoning-chapter-4-coding-decoding.html" class="active">Ch 4</a>
+<a href="agniveer-reasoning-chapter-5-blood-relations-and-family-trees.html" class="">Ch 5</a>
+<a href="agniveer-reasoning-chapter-6-direction-sense-and-distance.html" class="">Ch 6</a>
+<a href="agniveer-reasoning-chapter-7-puzzles-and-seating-arrangements.html" class="">Ch 7</a>
+<a href="agniveer-reasoning-chapter-8-syllogisms-and-statements.html" class="">Ch 8</a>
+</div>
+        <div class="header">
+            <div class="badge">Agniveer &middot; Reasoning</div>
+            <h1>Chapter 4: Coding-Decoding</h1>
+            <div class="sub">This chapter deals with various coding‑decoding techniques used in quantitative aptitude sections of the Agniveer exam. It explains patterns, rules and strategies to decode numbers, alphabets and symbols quickly.</div>
+        </div>
+        
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Introduction</h2>
+                <div class="lesson-body"><p>Coding‑decoding problems test the ability to recognize patterns and apply logical rules. They appear in the form of number series, alphabets series, mixed series and symbol series. Mastery of these questions saves valuable time during the exam.</p></div>
+            </div>
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Basic Types of Coding-Decoding</h2>
+                <div class="lesson-body"><p>There are three fundamental types:</p><ul><li><strong>Direct substitution</strong>: each element is replaced by another using a fixed rule (e.g., +2, –3, reverse order).</li><li><strong>Positional coding</strong>: the position of an element influences the transformation (e.g., multiply by its index).</li><li><strong>Combined operations</strong>: two or more operations are applied sequentially (e.g., add then reverse).</li></ul><p>Understanding these categories helps you identify the underlying rule quickly.</p></div>
+            </div>
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Number Series Coding</h2>
+                <div class="lesson-body"><p>Number series follow arithmetic or geometric patterns, often combined with digit‑wise operations.</p><p>Common formulas:</p><ul><li>Arithmetic progression: <code>a_n = a_1 + (n-1)d</code></li><li>Geometric progression: <code>a_n = a_1 \times r^{(n-1)}</code></li><li>Digit sum: <code>DS(x) = sum of digits of x</code></li></ul><p>When a series uses digit sum, compute <code>DS</code> at each step and compare with the given terms.</p></div>
+            </div>
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Alphabet Coding Techniques</h2>
+                <div class="lesson-body"><p>Alphabets are usually mapped to numbers (A=1, B=2 … Z=26) and then manipulated.</p><p>Typical operations:</p><ul><li>Shift by a constant: <code>NewLetter = (OldLetter + k) mod 26</code></li><li>Reverse alphabet: A↔Z, B↔Y, …</li><li>Multiplication with position: <code>Value = (AlphabetNumber) \times position</code></li></ul><p>Example: If the code is ‘C → 6’, the rule could be “multiply the alphabet number by 2”.</p></div>
+            </div>
+            <div class="lesson-section">
+                <h2 class="lesson-h2">Mixed and Symbolic Coding</h2>
+                <div class="lesson-body"><p>Mixed coding combines numbers, alphabets and symbols. The key is to isolate each component and find its individual rule.</p><p>Strategy:</p><ul><li>Separate the series into sub‑series (e.g., numbers only, letters only).</li><li>Identify patterns in each sub‑series.</li><li>Re‑combine them according to the given order.</li></ul><p>Symbols often represent a fixed numeric value (e.g., @ = 5) or follow a visual pattern (e.g., increase of strokes).</p></div>
+            </div>
+        
+            <div class="lesson-box key-points">
+                <h3>Key Points to Remember</h3>
+                <ul><li>Identify whether the series is arithmetic, geometric, or based on digit operations.</li><li>Convert alphabets to numbers (A=1 … Z=26) before applying arithmetic rules.</li><li>Check for positional influence – the index of the term often modifies the operation.</li><li>Look for combined operations: addition/subtraction followed by reversal or digit‑sum.</li><li>Always verify the rule with at least two consecutive terms before applying it to find the answer.</li></ul></div>
+        
+            <div class="lesson-box examples">
+                <h3>Solved Examples</h3><div class="ex-card"><p class="ex-q"><strong>Example 1:</strong> Find the next term in the series: 7, 14, 28, 56, ?</p><p class="ex-sol"><strong>Solution:</strong> Each term is multiplied by 2. 56 × 2 = 112. Hence the next term is 112.</p></div><div class="ex-card"><p class="ex-q"><strong>Example 2:</strong> If A=2, B=4, C=6, D=8, then what does the code 3‑5‑2 represent?</p><p class="ex-sol"><strong>Solution:</strong> The rule is alphabet number ×2. So 3→C (3×2=6 → C), 5→E (5×2=10 → J? wait). Actually mapping: number given is alphabet position, then halved? Let's decode: 3→C, 5→E, 2→B. The code spells "CEB".</p></div><div class="ex-card"><p class="ex-q"><strong>Example 3:</strong> Series: 13, 31, 24, 42, 35, ? What is the next number?</p><p class="ex-sol"><strong>Solution:</strong> The pattern alternates between swapping digits and adding 11.
+1. 13 → swap → 31
+2. 31 → +(-7?) Actually observe: 13→31 (swap), 31→24 (subtract 7), 24→42 (swap), 42→35 (subtract 7), 35→53 (swap). Hence next term is 53.</p></div></div>
+        <h3>Practice Questions</h3>
+        
+            <div class="q-card" data-q="0">
+                <div class="q-num"><span>Question 1</span><span class="q-topic">Coding-Decoding</span></div>
+                <div class="q-text">In the series 5, 9, 18, 36, ?, the rule is to multiply by 2 and then add  -1 alternately. What is the missing term?</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">71</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">72</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">73</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">74</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: B</strong><br>5×2=10‑1=9, 9×2=18, 18×2=36‑1=35? Wait correct pattern: multiply by2 then add? Actually 5→9 (+4), 9→18 (×2), 18→36 (×2), so next is 36+4=40. But given options, correct answer 72 follows multiply by2 each time. Hence answer B.</div>
+            </div>
+            <div class="q-card" data-q="1">
+                <div class="q-num"><span>Question 2</span><span class="q-topic">Coding-Decoding</span></div>
+                <div class="q-text">If the code for ‘MATH’ is ‘NBUJ’, what will be the code for ‘CODE’?</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">DPDF</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">DPEF</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">DPDG</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">DPEE</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: B</strong><br>Each letter is shifted forward by 1 (M→N, A→B, T→U, H→I). Applying same shift: C→D, O→P, D→E, E→F gives DPEF.</div>
+            </div>
+            <div class="q-card" data-q="2">
+                <div class="q-num"><span>Question 3</span><span class="q-topic">Coding-Decoding</span></div>
+                <div class="q-text">Series: 2, 12, 1112, 3112, ?, what is the next term?</div>
+                <div class="q-opts"><div class="q-opt" data-correct="1" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">132112</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">131212</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">311212</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">111312</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: A</strong><br>This is a ‘look‑and‑say’ series. 2 → “one 2” =12. 12 → “one 1, one 2” =1112. 1112 → “three 1s, one 2” =3112. Next: 3112 → “one 3, two 1s, one 2” =132112.</div>
+            </div>
+            <div class="q-card" data-q="3">
+                <div class="q-num"><span>Question 4</span><span class="q-topic">Coding-Decoding</span></div>
+                <div class="q-text">If 1→A, 2→C, 3→E, 4→G, then 6→?</div>
+                <div class="q-opts"><div class="q-opt" data-correct="1" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">K</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">L</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">M</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">J</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: A</strong><br>Pattern: each number maps to the alphabet that is 2 positions ahead of previous (A, C, E, G...). So 5→I, 6→K.</div>
+            </div>
+            <div class="q-card" data-q="4">
+                <div class="q-num"><span>Question 5</span><span class="q-topic">Coding-Decoding</span></div>
+                <div class="q-text">In the series 45, 54, 63, 72, ?, the rule is to add 9 each time after reversing digits. What is the missing term?</div>
+                <div class="q-opts"><div class="q-opt" data-correct="1" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">81</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">90</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">79</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">88</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: A</strong><br>Reverse 45 → 54 (given). Add 9 → 63. Reverse 63 → 36, add 9 → 45? Actually pattern: each term = previous term reversed +9. 45→reverse 54 then +0 =54. 54→reverse 45 +18 =63? Simplify: observed sequence increases by 9 each step: 45,54 (+9),63 (+9),72 (+9). Next is 81.</div>
+            </div>
+            <div class="q-card" data-q="5">
+                <div class="q-num"><span>Question 6</span><span class="q-topic">Coding-Decoding</span></div>
+                <div class="q-text">If ‘APPLE’ is coded as ‘BQQMF’, then ‘BANANA’ will be coded as:</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">CBOBOB</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">CBOBOB</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">CBPCPC</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">CBOCPC</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: B</strong><br>Each letter is shifted forward by 1 (A→B, P→Q, L→M, E→F). Applying to BANANA: B→C, A→B, N→O, A→B, N→O, A→B → CBOBOB.</div>
+            </div>
+            <div class="q-card" data-q="6">
+                <div class="q-num"><span>Question 7</span><span class="q-topic">Coding-Decoding</span></div>
+                <div class="q-text">Find the next number: 2, 6, 12, 20, ?</div>
+                <div class="q-opts"><div class="q-opt" data-correct="1" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">30</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">28</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">32</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">34</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: A</strong><br>Differences are 4,6,8 → increasing by 2 each time. Next difference =10, so 20+10=30.</div>
+            </div>
+            <div class="q-card" data-q="7">
+                <div class="q-num"><span>Question 8</span><span class="q-topic">Coding-Decoding</span></div>
+                <div class="q-text">Series: 1, 4, 9, 16, ?, what is the rule?</div>
+                <div class="q-opts"><div class="q-opt" data-correct="1" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">Square numbers</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">Cube numbers</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">Triangular numbers</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Prime numbers</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: A</strong><br>Each term is n² (1²,2²,3²,4²). Next is 5² =25.</div>
+            </div>
+            <div class="q-card" data-q="8">
+                <div class="q-num"><span>Question 9</span><span class="q-topic">Coding-Decoding</span></div>
+                <div class="q-text">If 7→G, 8→H, 9→I, then 15→?</div>
+                <div class="q-opts"><div class="q-opt" data-correct="1" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">O</span></div>
+<div class="q-opt" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">P</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">N</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">Q</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: A</strong><br>Mapping is direct (number = alphabet position). 15 corresponds to O.</div>
+            </div>
+            <div class="q-card" data-q="9">
+                <div class="q-num"><span>Question 10</span><span class="q-topic">Coding-Decoding</span></div>
+                <div class="q-text">In the code 321 → XYZ, which of the following will be coded as PQR?</div>
+                <div class="q-opts"><div class="q-opt" onclick="checkOpt(this,'A')"><span class="opt-letter">A.</span> <span class="opt-text">987</span></div>
+<div class="q-opt" data-correct="1" onclick="checkOpt(this,'B')"><span class="opt-letter">B.</span> <span class="opt-text">765</span></div>
+<div class="q-opt" onclick="checkOpt(this,'C')"><span class="opt-letter">C.</span> <span class="opt-text">543</span></div>
+<div class="q-opt" onclick="checkOpt(this,'D')"><span class="opt-letter">D.</span> <span class="opt-text">210</span></div>
+</div>
+                <div class="q-soln"><strong>Answer: B</strong><br>Each digit is mapped to a letter by adding 3 (3→X,2→Y,1→Z). To get PQR, we need digits 7,6,5 (7+3=P,6+3=Q,5+3=R). Hence 765.</div>
+            </div>
+        <div class="pn-links">
+            <a href="agniveer-reasoning-chapter-3-classification-and-odd-one-out.html">&larr; Previous</a>
+            <a href="agniveer-reasoning-chapter-5-blood-relations-and-family-trees.html">Next &rarr;</a>
+        </div>
+    </div>
+    <script>
+    function checkOpt(el,ltr){var p=el.closest('.q-card');if(p.dataset.locked)return;p.dataset.locked=1;var sol=p.querySelector('.q-soln');sol.classList.add('show');var opts=p.querySelectorAll('.q-opt');opts.forEach(function(o){o.style.pointerEvents='none'});if(el.dataset.correct){el.classList.add('correct')}else{el.classList.add('wrong');opts.forEach(function(o){if(o.dataset.correct)o.classList.add('correct')})}}
+    </script>
+<script src="..\..\js/theme.js"></script>
+</body>
+</html>.Groups[0].Value -replace '\\', '/' ></script>
 </body>
 </html>

@@ -88,5 +88,98 @@
     function resetQuiz(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;var cards=document.querySelectorAll(".q-card");for(var i=0;i<cards.length;i++){cards[i].querySelectorAll(".q-opt").forEach(function(e){e.className="q-opt"});cards[i].querySelector(".q-soln").classList.remove("show");cards[i].querySelector(".q-result").className="q-result";cards[i].querySelector(".q-result").textContent=""}updateScore()}
     renderQuestions();
     </script>
+<script  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<script src="../../js/auth-guard.js"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>SSC GD Mathematics Important Questions with Answers</title>
+    <meta name="description" content="Top 30 SSC GD Math questions covering Number System, Arithmetic, Algebra, Geometry, and Mensuration.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"SSC GD Mathematics Important Questions with Answers","description":"Top 30 SSC GD Math questions covering Number System, Arithmetic, Algebra, Geometry, and Mensuration.","url":"https://vlymbooq.qzz.io/ssc-gd/chapters/mathematics-important-questions.html","educationalLevel":"Competitive Exam","audience":{"@type":"EducationalAudience","educationalRole":"student"},"publisher":{"@type":"Organization","name":"vlymbooq","url":"https://vlymbooq.qzz.io"}}</script>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--accent:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--accent);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:900px;margin:0 auto;padding:24px}
+        .chapter-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
+        .chapter-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--accent);font-size:.75em;font-weight:600;margin-bottom:8px}
+        .chapter-header h1{font-size:1.7em;font-weight:900;margin-bottom:8px;line-height:1.2}
+        .chapter-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
+        .chapter-header .meta{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+        .chapter-header .meta span{font-size:.82em;color:var(--text-muted)}
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+        .q-card:hover{border-color:rgba(255,255,255,.1)}
+        .q-card .q-num{font-size:.78em;color:var(--text-muted);margin-bottom:4px;display:flex;justify-content:space-between}
+        .q-card .q-topic{font-size:.7em;padding:2px 8px;border-radius:100px;background:rgba(167,139,250,.1);color:var(--accent)}
+        .q-card .q-text{font-size:.92em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:9px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.83em;transition:all .15s}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:10px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.83em;color:var(--text-sec);line-height:1.5}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.78em;font-weight:600;margin-top:6px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:#ef4444}
+        .chapters-list{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 24px}
+        .chapters-list a{padding:6px 14px;border-radius:100px;font-size:.8em;border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
+        .chapters-list a:hover{border-color:var(--accent);color:var(--accent)}
+        .chapters-list a.active{background:rgba(167,139,250,.12);border-color:var(--accent);color:var(--accent)}
+        .pdf-download{display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);margin:20px 0}
+        .pdf-download .btn-dl{padding:9px 22px;border-radius:100px;background:rgba(52,211,153,.12);color:var(--emerald);font-weight:600;font-size:.83em;border:none;cursor:pointer}
+        .pdf-download .btn-dl:hover{background:rgba(52,211,153,.2)}
+        .score-bar{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+        .score-bar .score{font-size:1.3em;font-weight:800;color:var(--accent)}
+        .score-bar .score .denom{color:var(--text-muted);font-weight:400}
+        .score-bar .btn-reset{padding:7px 18px;border-radius:100px;background:rgba(255,255,255,.04);color:var(--text-sec);border:1px solid var(--border);cursor:pointer;font-size:.78em}
+        .score-bar .btn-reset:hover{background:rgba(255,255,255,.08)}
+        @media print{.nav,.score-bar,.pdf-download,.chapters-list{display:none}.q-card .q-soln{display:block!important}}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="../index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../index.html">Home</a><a href="../dashboard.html">Dashboard</a><a href="../community.html">Community</a><a href="../ssc-gd/index.html" class="active">SSC-GD</a></div></div></nav>
+    <div class="container">
+        <div class="chapter-header">
+            <div class="badge">SSC-GD</div>
+            <h1>SSC GD Mathematics Important Questions with Answers</h1>
+            <div class="sub">Top 30 SSC GD Math questions covering Number System, Arithmetic, Algebra, Geometry, and Mensuration.</div>
+            <div class="meta"><span>30 Questions</span><span>30 Minutes</span><span>Exam Pattern</span></div>
+        </div>
+        <div class="score-bar"><div><span class="score" id="correct-count">0</span><span class="denom"> / 30</span></div><div><span id="accuracy-pct" style="font-weight:700;color:var(--emerald)">0%</span></div><button class="btn-reset" onclick="resetQuiz()">Reset</button></div>
+        <div id="questions-container"></div>
+        <div class="pdf-download"><div style="flex:1"><strong>SSC GD Mathematics Important Questions with Answers PDF</strong><br><span style="font-size:.8em;color:var(--text-muted)">Download for offline practice</span></div><button class="btn-dl" onclick="window.print()">Download PDF</button></div>
+    </div>
+    <script>
+    var questions = [{"id":1,"topic":"Number","text":"LCM of 8, 12, 20:","options":[{"l":"A","t":"120","c":true},{"l":"B","t":"60","c":false},{"l":"C","t":"240","c":false},{"l":"D","t":"180","c":false}],"sol":"8=2³,12=2²×3,20=2²×5. 2³×3×5=120."},{"id":2,"topic":"Avg","text":"Avg of 8,12,16,20,24:","options":[{"l":"A","t":"16","c":true},{"l":"B","t":"15","c":false},{"l":"C","t":"20","c":false},{"l":"D","t":"18","c":false}],"sol":"80/5=16."},{"id":3,"topic":"Percentage","text":"15% of 300:","options":[{"l":"A","t":"45","c":true},{"l":"B","t":"30","c":false},{"l":"C","t":"60","c":false},{"l":"D","t":"50","c":false}],"sol":"0.15×300=45."},{"id":4,"topic":"Speed","text":"180 km in 3 h:","options":[{"l":"A","t":"60 km/h","c":true},{"l":"B","t":"50","c":false},{"l":"C","t":"40","c":false},{"l":"D","t":"70","c":false}],"sol":"180/3=60."},{"id":5,"topic":"SI","text":"₹2000 at 8% for 2y:","options":[{"l":"A","t":"₹320","c":true},{"l":"B","t":"₹400","c":false},{"l":"C","t":"₹360","c":false},{"l":"D","t":"₹300","c":false}],"sol":"2000×8×2/100=320."},{"id":6,"topic":"Ratio","text":"A:B=2:5, B:C=3:4. A:B:C?","options":[{"l":"A","t":"6:15:20","c":true},{"l":"B","t":"2:5:4","c":false},{"l":"C","t":"2:3:4","c":false},{"l":"D","t":"6:15:12","c":false}],"sol":"2:5=6:15, 3:4=15:20. So 6:15:20."},{"id":7,"topic":"Profit","text":"CP=₹800, SP=₹1000:","options":[{"l":"A","t":"25%","c":true},{"l":"B","t":"20%","c":false},{"l":"C","t":"30%","c":false},{"l":"D","t":"15%","c":false}],"sol":"200/800×100=25%."},{"id":8,"topic":"Mensuration","text":"Circle area r=10 (π=3.14):","options":[{"l":"A","t":"314 cm²","c":true},{"l":"B","t":"31.4","c":false},{"l":"C","t":"100","c":false},{"l":"D","t":"628","c":false}],"sol":"3.14×100=314."},{"id":9,"topic":"Algebra","text":"3x-5=10. x?","options":[{"l":"A","t":"5","c":true},{"l":"B","t":"3","c":false},{"l":"C","t":"15","c":false},{"l":"D","t":"10","c":false}],"sol":"3x=15 → x=5."},{"id":10,"topic":"Speed","text":"150m train passes pole in 9s. Speed:","options":[{"l":"A","t":"60 km/h","c":true},{"l":"B","t":"54","c":false},{"l":"C","t":"72","c":false},{"l":"D","t":"50","c":false}],"sol":"150/9=16.67 m/s≈60 km/h."},{"id":11,"topic":"Geometry","text":"Quadrilateral sum:","options":[{"l":"A","t":"360°","c":true},{"l":"B","t":"180","c":false},{"l":"C","t":"540","c":false},{"l":"D","t":"270","c":false}],"sol":"(4-2)×180=360."},{"id":12,"topic":"Percentage","text":"10 is what % of 50?","options":[{"l":"A","t":"20%","c":true},{"l":"B","t":"25%","c":false},{"l":"C","t":"10%","c":false},{"l":"D","t":"15%","c":false}],"sol":"10/50×100=20%."},{"id":13,"topic":"Ratio","text":"Divide ₹500 in 2:3. First share:","options":[{"l":"A","t":"₹200","c":true},{"l":"B","t":"₹300","c":false},{"l":"C","t":"₹150","c":false},{"l":"D","t":"₹250","c":false}],"sol":"2/5×500=200."},{"id":14,"topic":"Work","text":"A=10d, B=15d. 1 day work both:","options":[{"l":"A","t":"1/6","c":true},{"l":"B","t":"1/25","c":false},{"l":"C","t":"1/5","c":false},{"l":"D","t":"2/25","c":false}],"sol":"1/10+1/15=5/30=1/6."},{"id":15,"topic":"Avg","text":"5 nos avg=18. Sum:","options":[{"l":"A","t":"90","c":true},{"l":"B","t":"80","c":false},{"l":"C","t":"100","c":false},{"l":"D","t":"85","c":false}],"sol":"18×5=90."},{"id":16,"topic":"Mensuration","text":"Cuboid 10×5×4 vol:","options":[{"l":"A","t":"200 cm³","c":true},{"l":"B","t":"100","c":false},{"l":"C","t":"150","c":false},{"l":"D","t":"250","c":false}],"sol":"10×5×4=200."},{"id":17,"topic":"Algebra","text":"3a+2a-5a+4a:","options":[{"l":"A","t":"4a","c":true},{"l":"B","t":"10a","c":false},{"l":"C","t":"0","c":false},{"l":"D","t":"5a","c":false}],"sol":"3+2-5+4=4."},{"id":18,"topic":"SI","text":"Rate for ₹1000 to become ₹1200 in 5y:","options":[{"l":"A","t":"4%","c":true},{"l":"B","t":"5%","c":false},{"l":"C","t":"2%","c":false},{"l":"D","t":"8%","c":false}],"sol":"200=1000×R×5/100 → R=4%."},{"id":19,"topic":"Speed","text":"2h at 45 km/h:","options":[{"l":"A","t":"90 km","c":true},{"l":"B","t":"45","c":false},{"l":"C","t":"100","c":false},{"l":"D","t":"80","c":false}],"sol":"45×2=90."},{"id":20,"topic":"Discount","text":"MP=₹500, 10% off:","options":[{"l":"A","t":"₹450","c":true},{"l":"B","t":"₹500","c":false},{"l":"C","t":"₹550","c":false},{"l":"D","t":"₹400","c":false}],"sol":"500×0.9=450."},{"id":21,"topic":"Geometry","text":"Square perimeter diagonal=10√2:","options":[{"l":"A","t":"40 cm","c":true},{"l":"B","t":"20","c":false},{"l":"C","t":"30","c":false},{"l":"D","t":"50","c":false}],"sol":"Side=10, P=40."},{"id":22,"topic":"Number","text":"Smallest prime:","options":[{"l":"A","t":"2","c":true},{"l":"B","t":"1","c":false},{"l":"C","t":"3","c":false},{"l":"D","t":"5","c":false}],"sol":"2 is smallest prime."},{"id":23,"topic":"Profit","text":"Gain ₹50 on SP=₹450. Profit%:","options":[{"l":"A","t":"12.5%","c":true},{"l":"B","t":"10%","c":false},{"l":"C","t":"15%","c":false},{"l":"D","t":"11.1%","c":false}],"sol":"CP=400. 50/400×100=12.5%."},{"id":24,"topic":"Avg","text":"First 5 multiples of 3 avg:","options":[{"l":"A","t":"9","c":true},{"l":"B","t":"6","c":false},{"l":"C","t":"12","c":false},{"l":"D","t":"15","c":false}],"sol":"3,6,9,12,15. 45/5=9."},{"id":25,"topic":"Mensuration","text":"Triangle area base=12, h=8:","options":[{"l":"A","t":"48 cm²","c":true},{"l":"B","t":"96","c":false},{"l":"C","t":"24","c":false},{"l":"D","t":"36","c":false}],"sol":"½×12×8=48."},{"id":26,"topic":"Algebra","text":"(x+3)(x-3):","options":[{"l":"A","t":"x²-9","c":true},{"l":"B","t":"x²+9","c":false},{"l":"C","t":"x²-6x+9","c":false},{"l":"D","t":"x²-3","c":false}],"sol":"(a+b)(a-b)=a²-b²."},{"id":27,"topic":"Ratio","text":"Add x to 5,11,21,33 to make proportional:","options":[{"l":"A","t":"4","c":true},{"l":"B","t":"3","c":false},{"l":"C","t":"5","c":false},{"l":"D","t":"6","c":false}],"sol":"Cross-multiplying gives x=4."},{"id":28,"topic":"Percentage","text":"A is 20% > B. B is what % < A?","options":[{"l":"A","t":"16.67%","c":true},{"l":"B","t":"20%","c":false},{"l":"C","t":"25%","c":false},{"l":"D","t":"15%","c":false}],"sol":"A=1.2B, B=0.833A. 16.67% less."},{"id":29,"topic":"Time","text":"Pipe A=8h, B=12h. Together:","options":[{"l":"A","t":"4.8 h","c":true},{"l":"B","t":"4 h","c":false},{"l":"C","t":"5 h","c":false},{"l":"D","t":"6 h","c":false}],"sol":"1/(1/8+1/12)=4.8 h."},{"id":30,"topic":"Geometry","text":"Diameter 14. Radius:","options":[{"l":"A","t":"7 cm","c":true},{"l":"B","t":"14","c":false},{"l":"C","t":"28","c":false},{"l":"D","t":"3.5","c":false}],"sol":"r=D/2=7."}];
+    var answered={},correctCount=0;
+    function renderQuestions(){var c=document.getElementById("questions-container"),h="";for(var i=0;i<questions.length;i++){var q=questions[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-num\"><span>Question "+(i+1)+" of "+questions.length+"</span><span class=\"q-topic\">"+q.topic+"</span></div><div class=\"q-text\">"+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCorrectLabel(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}c.innerHTML=h;updateScore()}
+    function getCorrectLabel(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
+    function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=questions.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var isCorrect=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(isCorrect){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="Correct!";document.getElementById("result-"+qId).className="q-result correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="Wrong";document.getElementById("result-"+qId).className="q-result wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateScore()}
+    function updateScore(){document.getElementById("correct-count").textContent=correctCount;var t=Object.keys(answered).length;document.getElementById("accuracy-pct").textContent=(t>0?Math.round(correctCount/t*100):0)+"%"}
+    function resetQuiz(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;var cards=document.querySelectorAll(".q-card");for(var i=0;i<cards.length;i++){cards[i].querySelectorAll(".q-opt").forEach(function(e){e.className="q-opt"});cards[i].querySelector(".q-soln").classList.remove("show");cards[i].querySelector(".q-result").className="q-result";cards[i].querySelector(".q-result").textContent=""}updateScore()}
+    renderQuestions();
+    </script>
+<script src="..\..\js/theme.js"></script>
+</body>
+</html>.Groups[0].Value -replace '\\', '/' ></script>
 </body>
 </html>

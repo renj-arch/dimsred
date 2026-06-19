@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -153,5 +153,164 @@
             }
         }, 500);
     </script>
+<script  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="../js/auth-guard.js"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>JEE Main & Advanced Complete Crash Course - vlymbooq</title>
+    <meta name="description" content="Complete crash course for JEE Main & Advanced with interactive study notes, formulas, examples, and expert tips.">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/jee/crash-course.html">
+    <script src="../js/study-content.js" defer></script>
+    <script src="../js/study-engine.js" defer></script>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-hover:#18181b;--border:rgba(255,255,255,.06);--text:#fafafa;--text2:#a1a1aa;--text3:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--radius:12px;--radius-f:100px}
+        html{scroll-behavior:smooth}
+        body{font-family:"Inter",-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+        a{color:var(--text);text-decoration:none}
+        ::selection{background:rgba(139,92,246,.3);color:#fff}
+        .bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:60px 60px}
+        .bg-glow{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;width:500px;height:500px;background:rgba(139,92,246,.08);top:-200px;right:-150px}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:var(--radius-f);font-size:.82em;font-weight:500;color:var(--text2);transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:900px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+        .hero{padding:60px 0 40px;text-align:center}
+        .hero h1{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:900;line-height:1.1;margin-bottom:12px;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .hero p{color:var(--text2);font-size:.95em;max-width:600px;margin:0 auto}
+        .cc-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:14px}
+        .cc-section-title{font-size:1.15em;font-weight:800;cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between;color:var(--purple)}
+        .cc-section-title:hover{opacity:.8}
+        .collapse-icon{font-size:.8em;color:var(--text3);transition:transform .2s}
+        .cc-topics{display:block}
+        .cc-topic-card{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden}
+        .cc-topic-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;cursor:pointer;user-select:none;transition:background .15s}
+        .cc-topic-header:hover{background:rgba(255,255,255,.03)}
+        .cc-topic-name{font-size:.88em;font-weight:600;color:var(--text)}
+        .cc-topic-body{display:none;padding:0 16px 16px;border-top:1px solid var(--border)}
+        .cc-topic-body.show{display:block}
+        .cc-subtopics{font-size:.82em;color:var(--text2);margin:10px 0 8px}
+        .cc-notes ul{list-style:none;padding:0;margin:6px 0}
+        .cc-notes li{padding:4px 0 4px 16px;font-size:.82em;color:var(--text2);position:relative}
+        .cc-notes li::before{content:"â€¢";position:absolute;left:0;color:var(--purple)}
+        .cc-formula-list{display:flex;flex-direction:column;gap:4px;margin:6px 0}
+        .cc-formula-item{padding:6px 10px;background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.12);border-radius:6px;font-size:.82em;color:var(--emerald);font-family:'Courier New',monospace}
+        .cc-example-item{padding:8px 12px;background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:6px;margin-bottom:6px}
+        .cc-example-q{font-size:.82em;color:var(--text);margin-bottom:2px}
+        .cc-example-a{font-size:.8em;color:var(--emerald)}
+        .cc-tips ul{list-style:none;padding:0;margin:6px 0}
+        .cc-tips li{padding:4px 0 4px 16px;font-size:.8em;color:var(--amber);position:relative}
+        .cc-tips li::before{content:"ðŸ’¡";position:absolute;left:-4px;top:3px;font-size:.7em}
+        .cc-practice-btn{display:inline-block;padding:8px 18px;border-radius:var(--radius-f);font-size:.8em;font-weight:600;background:linear-gradient(135deg,var(--purple),#8b5cf6);color:#fff;margin-top:8px;transition:all .2s}
+        .cc-practice-btn:hover{transform:translateY(-1px);box-shadow:0 4px 15px rgba(139,92,246,.3)}
+        .cc-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px}
+        .cc-card h3{font-size:1.1em;font-weight:700;margin-bottom:12px}
+        .cc-plan-list{list-style:none;padding:0}
+        .cc-plan-list li{padding:8px 0;font-size:.88em;color:var(--text2);border-bottom:1px solid var(--border)}
+        .cc-plan-list li:last-child{border-bottom:none}
+        .cc-plan-list li strong{color:var(--text)}
+        .cc-cta{text-align:center;padding:40px 0;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+        .cc-cta .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:var(--radius-f);font-size:.9em;font-weight:700;background:linear-gradient(135deg,var(--purple),#8b5cf6);color:#fff;text-decoration:none;transition:all .3s}
+        .cc-cta .btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(139,92,246,.3)}
+        .cc-cta .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text2)}
+        .cc-cta .btn-outline:hover{background:var(--bg-hover);color:var(--text)}
+        .section-stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+        .section-stat{padding:10px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;flex:1;min-width:120px;text-align:center}
+        .section-stat .num{font-size:1.4em;font-weight:800;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .section-stat .label{font-size:.72em;color:var(--text3);margin-top:2px}
+        .search-bar{width:100%;max-width:400px;padding:10px 16px;border-radius:var(--radius-f);border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.85em;outline:none;transition:all .2s;margin:0 auto 20px;display:block}
+        .search-bar:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(167,139,250,.15)}
+        .footer{border-top:1px solid var(--border);padding:24px 0;text-align:center;color:var(--text3);font-size:.82em}
+        @media(max-width:640px){.nav{padding:12px 16px}.cc-cta{flex-direction:column}.cc-cta .btn{justify-content:center}}
+    </style>
+</head>
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow purple"></div>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand"><svg width="28" height="28" viewBox="0 0 28 28" fill="none"><defs><linearGradient id="vx" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#a78bfa"/><stop offset="48%" stop-color="#a78bfa"/><stop offset="52%" stop-color="#34d399"/><stop offset="100%" stop-color="#34d399"/></linearGradient></defs><path d="M6 5 L14 24 L22 5" stroke="url(#vx)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="14" cy="4" r="1.2" fill="#a78bfa"/></svg><span class="brand-text">vlymbooq</span></a>
+            <div class="nav-links"><a href='../index.html'>Home</a><a href='../cgl/index.html'>CGL</a><a href='../rbi/index.html'>RBI</a><a href='../neet/index.html'>NEET</a><a href='../gate/index.html'>GATE</a><a href='../agniveer/index.html'>Agniveer</a><a href='../upsc/index.html'>UPSC</a><a href='../ibps-po/index.html'>IBPS PO</a><a href='../sbi-clerk/index.html'>SBI Clerk</a><a href='../ssc-gd/index.html'>SSC GD</a><a href='../ctet/index.html'>CTET</a><a href='../cds/index.html'>CDS</a><a href='../nda/index.html'>NDA</a><a href='../clat/index.html'>CLAT</a><a href='../lab.html'>Lab</a><a href='../leaderboard.html'>ðŸ†</a></div>
+        </div>
+    </nav>
+    <div class="container">
+        <section class="hero">
+            <h1>JEE Main & Advanced Complete Crash Course</h1>
+            <p>Complete crash course for JEE Main & Advanced with comprehensive syllabus coverage, study plan, and expert tips</p>
+        </section>
+        <input class="search-bar" type="text" placeholder="Search topics, formulas, or keywords..." oninput="filterTopics(this.value)">
+        <div class="section-stats">
+            <div class="section-stat"><div class="num" id="statSections">-</div><div class="label">Sections</div></div>
+            <div class="section-stat"><div class="num" id="statTopics">-</div><div class="label">Topics</div></div>
+            <div class="section-stat"><div class="num" id="statFormulas">-</div><div class="label">Formulas</div></div>
+            <div class="section-stat"><div class="num" id="statExamples">-</div><div class="label">Examples</div></div>
+        </div>
+        <section id="studyContent"></section>
+        <section>
+            <div class="cc-card"><h3>ðŸ“… 30-Day Study Plan</h3><ul class="cc-plan-list"><li><strong>Week 1:</strong> Cover all basic concepts - NCERT level for each subject</li><li><strong>Week 2:</strong> Advanced topics and problem-solving techniques</li><li><strong>Week 3:</strong> Practice with previous year papers and mock tests</li><li><strong>Week 4:</strong> Revision, weak area focus, and full-length mocks</li></ul></div>
+            <div class="cc-card"><h3>ðŸ’¡ Expert Tips</h3><ul class="cc-plan-list"><li><strong>Time Management:</strong> Allocate time based on section weightage</li><li><strong>Revision:</strong> Revise each topic at least 3 times with spaced repetition</li><li><strong>Practice:</strong> Solve at least 10 previous year papers and 20 practice sets</li><li><strong>Analysis:</strong> Track mistakes with Mental Training â€” auto-detects weak areas</li><li><strong>Health:</strong> Take breaks every 60 min, stay hydrated, sleep 7-8 hours</li></ul></div>
+        </section>
+        <section class="cc-cta">
+            <a href="papers/2025-paper.html" class="btn">Start Practicing Now â†’</a>
+            <a href="../mental.html" class="btn btn-outline">ðŸ§  Mental Training â†’</a>
+            <a href="mock-tests/index.html" class="btn btn-outline">ðŸ“‹ Mock Tests â†’</a>
+        </section>
+    </div>
+    <footer class="footer"><p>JEE Main & Advanced Complete Crash Course â€” vlymbooq</p></footer>
+    <script>
+        function filterTopics(q) {
+            q = q.toLowerCase().trim();
+            var cards = document.querySelectorAll('.cc-topic-card');
+            cards.forEach(function(c) {
+                var text = c.textContent.toLowerCase();
+                c.style.display = !q || text.indexOf(q) >= 0 ? '' : 'none';
+            });
+            var sections = document.querySelectorAll('.cc-section');
+            sections.forEach(function(s) {
+                var visible = 0;
+                s.querySelectorAll('.cc-topic-card').forEach(function(c) { if (c.style.display !== 'none') visible++; });
+                s.style.display = visible > 0 || !q ? '' : 'none';
+            });
+        }
+        function updateStats(data) {
+            var topics = 0, formulas = 0, examples = 0;
+            data.sections.forEach(function(s) {
+                s.topics.forEach(function(t) {
+                    topics++;
+                    if (t.formulas) formulas += t.formulas.length;
+                    if (t.examples) examples += t.examples.length;
+                });
+            });
+            document.getElementById('statSections').textContent = data.sections.length;
+            document.getElementById('statTopics').textContent = topics;
+            document.getElementById('statFormulas').textContent = formulas;
+            document.getElementById('statExamples').textContent = examples;
+        }
+        setTimeout(function init() {
+            if (typeof STUDY_DATA === 'undefined' || typeof renderStudyContent !== 'function') {
+                setTimeout(init, 300);
+                return;
+            }
+            var data = STUDY_DATA.jee;
+            if (data) {
+                renderStudyContent(data);
+                updateStats(data);
+            } else {
+                document.getElementById('studyContent').innerHTML = '<div class="cc-card" style="text-align:center;padding:40px"><h3>ðŸ“š Content Coming Soon</h3><p style="color:var(--text2);margin-top:8px">Detailed study material for JEE Main & Advanced is being prepared. Check back soon!</p></div>';
+            }
+        }, 500);
+    </script>
+<script src="..\js/theme.js"></script>
+</body>
+</html>
+.Groups[0].Value -replace '\\', '/' ></script>
 </body>
 </html>

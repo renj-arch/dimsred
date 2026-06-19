@@ -204,48 +204,22 @@ try { AOS.init({duration:600,once:true,offset:40}); } catch(e) {}
     document.getElementById('fortuneTip').innerHTML = '💡 ' + f.tip;
 } catch(e) {} })();
 
-// ===== Study Vibe Switcher =====
+// ===== Study Vibe Switcher UI =====
 (function() { try {
-    var vibes = [
-        { id: 'rainy', label: '🌧️ Rainy Study', bg: '#0a0a1a', bgCard: '#12121e', purple: '#7c9bfc', emerald: '#5eead4' },
-        { id: 'library', label: '📚 Library', bg: '#0d0b09', bgCard: '#141110', purple: '#d4a574', emerald: '#a8b59a' },
-        { id: 'coffee', label: '☕ Coffee Shop', bg: '#120e0a', bgCard: '#1a1410', purple: '#e8a87c', emerald: '#b5a88a' },
-        { id: 'nightowl', label: '🦉 Night Owl', bg: '#050508', bgCard: '#0a0a0e', purple: '#7c6ff0', emerald: '#4ade80' }
-    ];
+    var vibes = window.vibes;
+    if (!vibes) return;
     var saved = localStorage.getItem('studypro_vibe');
-    var activeVibe = saved || null;
-    
-    function applyVibe(vibeId) {
-        var v = null;
-        for (var i = 0; i < vibes.length; i++) {
-            if (vibes[i].id === vibeId) { v = vibes[i]; break; }
-        }
-        if (!v) return;
-        var r = document.documentElement;
-        r.style.setProperty('--bg', v.bg);
-        r.style.setProperty('--bg-card', v.bgCard);
-        r.style.setProperty('--purple', v.purple);
-        r.style.setProperty('--emerald', v.emerald);
-        localStorage.setItem('studypro_vibe', vibeId);
-        var opts = document.querySelectorAll('.vibe-opt');
-        for (var i = 0; i < opts.length; i++) {
-            opts[i].classList.toggle('active', opts[i].getAttribute('data-vibe') === vibeId);
-        }
-        var overlay = document.getElementById('vibeOverlay');
-        overlay.style.background = v.bg;
-        overlay.classList.add('active');
-        setTimeout(function() { overlay.classList.remove('active'); }, 800);
-    }
     
     var panel = document.getElementById('vibePanel');
+    if (!panel) return;
     for (var i = 0; i < vibes.length; i++) {
         (function(v) {
             var btn = document.createElement('button');
-            btn.className = 'vibe-opt' + (activeVibe === v.id ? ' active' : '');
+            btn.className = 'vibe-opt' + (saved === v.id ? ' active' : '');
             btn.setAttribute('data-vibe', v.id);
             btn.textContent = v.label;
             btn.addEventListener('click', function() {
-                applyVibe(v.id);
+                window.applyVibe(v.id);
                 document.getElementById('vibeToggle').textContent = '🎨';
                 panel.classList.remove('open');
             });
@@ -253,17 +227,15 @@ try { AOS.init({duration:600,once:true,offset:40}); } catch(e) {}
         })(vibes[i]);
     }
     
-    document.getElementById('vibeToggle').addEventListener('click', function() {
-        panel.classList.toggle('open');
-    });
-    
+    var toggle = document.getElementById('vibeToggle');
+    if (toggle) {
+        toggle.addEventListener('click', function() { panel.classList.toggle('open'); });
+    }
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.vibe-panel') && !e.target.closest('.vibe-toggle')) {
             panel.classList.remove('open');
         }
     });
-    
-    if (activeVibe) { applyVibe(activeVibe); }
 } catch(e) {} })();
 
 // ===== StudyBuddy Mascot Controller =====
