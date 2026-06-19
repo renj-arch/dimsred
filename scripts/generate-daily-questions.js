@@ -280,10 +280,13 @@ function run() {
   }
 
   var count = 15;
+  var minUnused = 0; // 0 = use default threshold (count * 2)
   var exams = [];
   for (var i = 0; i < args.length; i++) {
     var m = args[i].match(/^--count=(\d+)$/);
     if (m) { count = parseInt(m[1]); continue; }
+    var n = args[i].match(/^--min=(\d+)$/);
+    if (n) { minUnused = parseInt(n[1]); continue; }
     exams.push(args[i].toLowerCase());
   }
 
@@ -312,8 +315,9 @@ function run() {
     }
     var unused = questions.filter(function(q) { return usedIds.indexOf(q.id) === -1; });
 
-    // Only generate if bank is running low
-    var needRefill = unused.length < count * 2;
+    // Only generate if bank is running low (use minUnused when specified, e.g. for mock tests)
+    var threshold = minUnused > 0 ? minUnused : count * 2;
+    var needRefill = unused.length < threshold;
     if (!needRefill) {
       console.log(exam + ': ' + unused.length + ' unused, skipping (threshold ' + (count * 2) + ')');
       continue;

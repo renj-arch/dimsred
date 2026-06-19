@@ -1,0 +1,41 @@
+name: Weekly Mock Tests
+
+on:
+  schedule:
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate weekly mock tests for all exams
+        run: node scripts/generate-weekly-mocks.js
+
+      - name: Commit and push
+        run: |
+          git pull --rebase
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Weekly mock tests $(date +'%Y-%m-%d') — all 14 exams"
+            git push
+          else
+            echo "No changes to commit"
+          fi

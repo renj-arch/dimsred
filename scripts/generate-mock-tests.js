@@ -73,7 +73,7 @@ function generateMockTest(examKey) {
   var MOCK_DIR = path.join(EXAM_DIR, 'mock-tests');
   if (!fs.existsSync(MOCK_DIR)) fs.mkdirSync(MOCK_DIR, {recursive:true});
 
-  // Pick questions for each section
+  // Pick questions for each section (in-memory dedup only — mock tests can reuse questions from practice papers)
   var usedIds = {};
   var selectedQs = [];
   pattern.sections.forEach(function(sec){
