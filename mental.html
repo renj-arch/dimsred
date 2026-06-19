@@ -8,7 +8,7 @@
     <title>Quant Reflex & Reasoning Reflex — vlymbooq</title>
     <meta name="description" content="Train Quant (Number Sense, Percentage, Arithmetic, Algebra, Geometry, Mensuration, P&L, Pipes, Boats, Alligation, Surds, BD, Stocks, Odd Man) and Reasoning (Puzzles, Coding, Syllogism, Direction, Blood Relation, Verbal, Non-Verbal) — Instinct & Exam layers.">
     <link rel="canonical" href="https://vlymbooq.qzz.io/mental.html">
-    <script src="js/mental-training.js?v=20260619b" defer></script>
+    <script src="js/mental-training.js?v=20260619c" defer></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}
@@ -694,6 +694,12 @@
             b.onclick = function(){ selectOption(i); };
             og.appendChild(b);
         });
+
+        // Reset feedback panels
+        document.getElementById('resultFlash').className = 'result-flash';
+        document.getElementById('speedTip').className = 'speed-tip';
+        document.getElementById('intuitionDisplay').className = 'intuition-box';
+        document.getElementById('solutionDisplay').className = 'solution-box';
 
         answered = false;
         var tc = document.getElementById('timerCircle');
