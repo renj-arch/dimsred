@@ -30,6 +30,7 @@ self.addEventListener('fetch', function(e) {
   e.respondWith(
     caches.match(e.request).then(function(cached) {
       if (cached) return cached;
+      if (e.request.method !== 'GET') return fetch(e.request);
       return fetch(e.request).then(function(resp) {
         if (resp && resp.ok && resp.type === 'basic') {
           var clone = resp.clone();
