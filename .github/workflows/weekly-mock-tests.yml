@@ -29,7 +29,9 @@ jobs:
 
       - name: Commit and push
         run: |
+          git stash --include-untracked
           git pull --rebase
+          git stash pop || true
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git add -A
