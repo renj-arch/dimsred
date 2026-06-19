@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel='stylesheet' href='css/style.css'>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Guest Access — vlymbooq</title>
@@ -44,7 +46,7 @@
         if (localStorage.getItem('sb_guest_token')) {
             successEl.style.display = 'block';
             successEl.textContent = 'You already have access. Redirecting...';
-            setTimeout(function(){ window.location.replace('/lab.html'); }, 1000);
+            setTimeout(function(){ window.location.replace('/micro-test.html'); }, 1000);
         }
 
         form.addEventListener('submit', function(e) {
@@ -69,7 +71,7 @@
                     successEl.style.display = 'block';
                     successEl.textContent = '✅ Access granted! Redirecting...';
                     submitBtn.textContent = 'Redirecting...';
-                    setTimeout(function(){ window.location.replace('/lab.html'); }, 1000);
+                    setTimeout(function(){ window.location.replace('/micro-test.html'); }, 1000);
                 } else {
                     errorEl.style.display = 'block';
                     errorEl.textContent = 'Invalid code. Please try again.';
@@ -87,6 +89,9 @@
             });
         });
     </script>
-<script src="js/theme.js"></script>
+<script src="js/bundles/core.js"></script>
+    <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}</script>
 </body>
 </html>
+
+

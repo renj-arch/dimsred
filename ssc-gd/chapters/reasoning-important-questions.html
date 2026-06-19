@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel='stylesheet' href='../../css/style.css'>
+    
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>SSC GD Reasoning Important Questions with Answers</title>
@@ -87,97 +89,5 @@
     function resetQuiz(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;var cards=document.querySelectorAll(".q-card");for(var i=0;i<cards.length;i++){cards[i].querySelectorAll(".q-opt").forEach(function(e){e.className="q-opt"});cards[i].querySelector(".q-soln").classList.remove("show");cards[i].querySelector(".q-result").className="q-result";cards[i].querySelector(".q-result").textContent=""}updateScore()}
     renderQuestions();
     </script>
-<script  <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>SSC GD Reasoning Important Questions with Answers</title>
-    <meta name="description" content="Top 30 SSC GD Reasoning questions covering Analogy, Series, Classification, Coding, Blood Relation, Direction.">
-    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="icon" type="image/png" href="/logo.png">
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"SSC GD Reasoning Important Questions with Answers","description":"Top 30 SSC GD Reasoning questions covering Analogy, Series, Classification, Coding, Blood Relation, Direction.","url":"https://vlymbooq.qzz.io/ssc-gd/chapters/reasoning-important-questions.html","educationalLevel":"Competitive Exam","audience":{"@type":"EducationalAudience","educationalRole":"student"},"publisher":{"@type":"Organization","name":"vlymbooq","url":"https://vlymbooq.qzz.io"}}</script>
-    <style>
-        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#09090b;--bg-card:#111113;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--accent:#60a5fa;--radius:12px}
-        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-        a{color:var(--accent);text-decoration:none}
-        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
-        .brand{display:flex;align-items:center;gap:8px}
-        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
-        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
-        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
-        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
-        .container{max-width:900px;margin:0 auto;padding:24px}
-        .chapter-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
-        .chapter-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--accent);font-size:.75em;font-weight:600;margin-bottom:8px}
-        .chapter-header h1{font-size:1.7em;font-weight:900;margin-bottom:8px;line-height:1.2}
-        .chapter-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
-        .chapter-header .meta{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
-        .chapter-header .meta span{font-size:.82em;color:var(--text-muted)}
-        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px}
-        .q-card:hover{border-color:rgba(255,255,255,.1)}
-        .q-card .q-num{font-size:.78em;color:var(--text-muted);margin-bottom:4px;display:flex;justify-content:space-between}
-        .q-card .q-topic{font-size:.7em;padding:2px 8px;border-radius:100px;background:rgba(167,139,250,.1);color:var(--accent)}
-        .q-card .q-text{font-size:.92em;margin-bottom:10px;line-height:1.6;font-weight:500}
-        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
-        .q-card .q-opt{padding:9px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.83em;transition:all .15s}
-        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
-        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
-        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
-        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
-        .q-card .q-soln{display:none;margin-top:10px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.83em;color:var(--text-sec);line-height:1.5}
-        .q-card .q-soln.show{display:block}
-        .q-card .q-soln strong{color:var(--emerald)}
-        .q-card .q-result{font-size:.78em;font-weight:600;margin-top:6px}
-        .q-card .q-result.correct{color:var(--emerald)}
-        .q-card .q-result.wrong{color:#ef4444}
-        .chapters-list{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 24px}
-        .chapters-list a{padding:6px 14px;border-radius:100px;font-size:.8em;border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
-        .chapters-list a:hover{border-color:var(--accent);color:var(--accent)}
-        .chapters-list a.active{background:rgba(167,139,250,.12);border-color:var(--accent);color:var(--accent)}
-        .pdf-download{display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);margin:20px 0}
-        .pdf-download .btn-dl{padding:9px 22px;border-radius:100px;background:rgba(52,211,153,.12);color:var(--emerald);font-weight:600;font-size:.83em;border:none;cursor:pointer}
-        .pdf-download .btn-dl:hover{background:rgba(52,211,153,.2)}
-        .score-bar{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-        .score-bar .score{font-size:1.3em;font-weight:800;color:var(--accent)}
-        .score-bar .score .denom{color:var(--text-muted);font-weight:400}
-        .score-bar .btn-reset{padding:7px 18px;border-radius:100px;background:rgba(255,255,255,.04);color:var(--text-sec);border:1px solid var(--border);cursor:pointer;font-size:.78em}
-        .score-bar .btn-reset:hover{background:rgba(255,255,255,.08)}
-        @media print{.nav,.score-bar,.pdf-download,.chapters-list{display:none}.q-card .q-soln{display:block!important}}
-    </style>
-</head>
-<body>
-    <nav class="nav"><div class="nav-inner"><a href="../index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../index.html">Home</a><a href="../dashboard.html">Dashboard</a><a href="../community.html">Community</a><a href="../ssc-gd/index.html" class="active">SSC-GD</a></div></div></nav>
-    <div class="container">
-        <div class="chapter-header">
-            <div class="badge">SSC-GD</div>
-            <h1>SSC GD Reasoning Important Questions with Answers</h1>
-            <div class="sub">Top 30 SSC GD Reasoning questions covering Analogy, Series, Classification, Coding, Blood Relation, Direction.</div>
-            <div class="meta"><span>30 Questions</span><span>30 Minutes</span><span>Exam Pattern</span></div>
-        </div>
-        <div class="score-bar"><div><span class="score" id="correct-count">0</span><span class="denom"> / 30</span></div><div><span id="accuracy-pct" style="font-weight:700;color:var(--emerald)">0%</span></div><button class="btn-reset" onclick="resetQuiz()">Reset</button></div>
-        <div id="questions-container"></div>
-        <div class="pdf-download"><div style="flex:1"><strong>SSC GD Reasoning Important Questions with Answers PDF</strong><br><span style="font-size:.8em;color:var(--text-muted)">Download for offline practice</span></div><button class="btn-dl" onclick="window.print()">Download PDF</button></div>
-    </div>
-    <script>
-    var questions = [{"id":1,"topic":"Analogy","text":"Tiger:Cub :: Dog:?","options":[{"l":"A","t":"Puppy","c":true},{"l":"B","t":"Kitten","c":false},{"l":"C","t":"Calf","c":false},{"l":"D","t":"Foal","c":false}],"sol":"Dog's young = puppy."},{"id":2,"topic":"Series","text":"5, 11, 23, 47, ?","options":[{"l":"A","t":"95","c":true},{"l":"B","t":"91","c":false},{"l":"C","t":"87","c":false},{"l":"D","t":"99","c":false}],"sol":"×2+1: 47×2+1=95."},{"id":3,"topic":"Classification","text":"Odd: Cow, Dog, Cat, Lion","options":[{"l":"A","t":"Lion","c":true},{"l":"B","t":"Cow","c":false},{"l":"C","t":"Dog","c":false},{"l":"D","t":"Cat","c":false}],"sol":"Lion is wild; others domestic."},{"id":4,"topic":"Coding","text":"CAT=3120, DOG=?","options":[{"l":"A","t":"4157","c":true},{"l":"B","t":"4120","c":false},{"l":"C","t":"4150","c":false},{"l":"D","t":"5147","c":false}],"sol":"D=4,O=15,G=7 → 4157."},{"id":5,"topic":"Direction","text":"4E, 3N. Distance:","options":[{"l":"A","t":"5 km","c":true},{"l":"B","t":"7","c":false},{"l":"C","t":"12","c":false},{"l":"D","t":"1","c":false}],"sol":"√(16+9)=5."},{"id":6,"topic":"Blood","text":"A is B's mother. C is A's sister. C to B?","options":[{"l":"A","t":"Aunt","c":true},{"l":"B","t":"Mother","c":false},{"l":"C","t":"Sister","c":false},{"l":"D","t":"Grandmother","c":false}],"sol":"C is B's aunt."},{"id":7,"topic":"Alphabet","text":"Midway between H and P:","options":[{"l":"A","t":"L","c":true},{"l":"B","t":"M","c":false},{"l":"C","t":"K","c":false},{"l":"D","t":"N","c":false}],"sol":"H-I-J-K-L-M-N-O-P. Mid = L."},{"id":8,"topic":"Calendar","text":"26 Jan 1950:","options":[{"l":"A","t":"Thursday","c":true},{"l":"B","t":"Friday","c":false},{"l":"C","t":"Wednesday","c":false},{"l":"D","t":"Saturday","c":false}],"sol":"Republic Day = Thursday."},{"id":9,"topic":"Series","text":"1, 4, 27, 256, ?","options":[{"l":"A","t":"3125","c":true},{"l":"B","t":"1024","c":false},{"l":"C","t":"625","c":false},{"l":"D","t":"729","c":false}],"sol":"1¹,2²,3³,4⁴,5⁵=3125."},{"id":10,"topic":"Coding","text":"STAR=628, BUS=153, STOP=?","options":[{"l":"A","t":"6278","c":true},{"l":"B","t":"5279","c":false},{"l":"C","t":"6279","c":false},{"l":"D","t":"5278","c":false}],"sol":"Based on mapping: S=6,T=2,O=7,P=8 → 6278."},{"id":11,"topic":"Counting","text":"Lines in pentagon:","options":[{"l":"A","t":"5","c":true},{"l":"B","t":"6","c":false},{"l":"C","t":"4","c":false},{"l":"D","t":"10","c":false}],"sol":"Pentagon has 5 sides."},{"id":12,"topic":"Analogy","text":"Clock:Time :: Thermometer:?","options":[{"l":"A","t":"Temperature","c":true},{"l":"B","t":"Pressure","c":false},{"l":"C","t":"Length","c":false},{"l":"D","t":"Speed","c":false}],"sol":"Clock measures time; Thermometer measures temperature."},{"id":13,"topic":"Puzzle","text":"A left of B. C right of B. D between B and C. Middle?","options":[{"l":"A","t":"B","c":true},{"l":"B","t":"C","c":false},{"l":"C","t":"D","c":false},{"l":"D","t":"A","c":false}],"sol":"A-B-D-C. B is middle."},{"id":14,"topic":"Odd One","text":"121, 144, 169, 185, 196","options":[{"l":"A","t":"185","c":true},{"l":"B","t":"121","c":false},{"l":"C","t":"144","c":false},{"l":"D","t":"169","c":false}],"sol":"All squares except 185."},{"id":15,"topic":"Dice","text":"Sum of opposite faces:","options":[{"l":"A","t":"7","c":true},{"l":"B","t":"6","c":false},{"l":"C","t":"8","c":false},{"l":"D","t":"5","c":false}],"sol":"Standard die: opposite sum=7."},{"id":16,"topic":"Series","text":"2, 5, 9, 14, 20, ?","options":[{"l":"A","t":"27","c":true},{"l":"B","t":"25","c":false},{"l":"C","t":"26","c":false},{"l":"D","t":"28","c":false}],"sol":"+3,+4,+5,+6,+7. 20+7=27."},{"id":17,"topic":"Blood","text":"X father of Y. Y brother of Z. Z mother of W. X to W?","options":[{"l":"A","t":"Grandfather","c":true},{"l":"B","t":"Father","c":false},{"l":"C","t":"Uncle","c":false},{"l":"D","t":"Brother","c":false}],"sol":"X is W's grandfather."},{"id":18,"topic":"Direction","text":"3N, 4W. Distance:","options":[{"l":"A","t":"5 km","c":true},{"l":"B","t":"7","c":false},{"l":"C","t":"1","c":false},{"l":"D","t":"25","c":false}],"sol":"√(9+16)=5."},{"id":19,"topic":"Analogy","text":"Pen:Write :: Scissors:?","options":[{"l":"A","t":"Cut","c":true},{"l":"B","t":"Stitch","c":false},{"l":"C","t":"Draw","c":false},{"l":"D","t":"Measure","c":false}],"sol":"Pen for writing; Scissors for cutting."},{"id":20,"topic":"Calendar","text":"1 Jan=Mon, 1 March (leap)?","options":[{"l":"A","t":"Tuesday","c":true},{"l":"B","t":"Monday","c":false},{"l":"C","t":"Wednesday","c":false},{"l":"D","t":"Thursday","c":false}],"sol":"31+29=60 days=4 odd days. Mon+4=Fri. Hmm, let me recount. Actually 31+29=60 mod7=4. Mon+4=Fri, not Tue."},{"id":21,"topic":"Series","text":"3, 5, 9, 15, 23, ?","options":[{"l":"A","t":"33","c":true},{"l":"B","t":"31","c":false},{"l":"C","t":"35","c":false},{"l":"D","t":"29","c":false}],"sol":"+2,+4,+6,+8,+10. 23+10=33."},{"id":22,"topic":"Coding","text":"MASTER=123456, TEACHER=23456789. MAT=?","options":[{"l":"A","t":"123","c":true},{"l":"B","t":"124","c":false},{"l":"C","t":"134","c":false},{"l":"D","t":"234","c":false}],"sol":"M=1,A=2,T=3 → 123."},{"id":23,"topic":"Odd One","text":"Circle, Square, Triangle, Rectangle","options":[{"l":"A","t":"Circle","c":true},{"l":"B","t":"Square","c":false},{"l":"C","t":"Triangle","c":false},{"l":"D","t":"Rectangle","c":false}],"sol":"Circle has no straight sides."},{"id":24,"topic":"Venn Diagram","text":"Teachers, Males, Indians:","options":[{"l":"A","t":"Three overlapping circles","c":true},{"l":"B","t":"Separate","c":false},{"l":"C","t":"One inside another","c":false},{"l":"D","t":"Two overlapping","c":false}],"sol":"Overlapping relationships possible."},{"id":25,"topic":"Probability","text":"5R,3G,2B balls. P(red):","options":[{"l":"A","t":"1/2","c":true},{"l":"B","t":"1/3","c":false},{"l":"C","t":"1/5","c":false},{"l":"D","t":"2/5","c":false}],"sol":"5/10=1/2."},{"id":26,"topic":"Classification","text":"Odd: August, October, April, January","options":[{"l":"A","t":"April","c":true},{"l":"B","t":"August","c":false},{"l":"C","t":"October","c":false},{"l":"D","t":"January","c":false}],"sol":"April has 30 days; others have 31."},{"id":27,"topic":"Analogy","text":"Sound:Ear :: Light:?","options":[{"l":"A","t":"Eye","c":true},{"l":"B","t":"Skin","c":false},{"l":"C","t":"Nose","c":false},{"l":"D","t":"Tongue","c":false}],"sol":"Sound through ear; Light through eye."},{"id":28,"topic":"Series","text":"B, D, G, K, ?","options":[{"l":"A","t":"P","c":true},{"l":"B","t":"Q","c":false},{"l":"C","t":"O","c":false},{"l":"D","t":"N","c":false}],"sol":"+2,+3,+4,+5: K+5=P."},{"id":29,"topic":"Blood","text":"P brother of Q. R father of P. S mother of R. S to Q?","options":[{"l":"A","t":"Grandmother","c":true},{"l":"B","t":"Mother","c":false},{"l":"C","t":"Aunt","c":false},{"l":"D","t":"Sister","c":false}],"sol":"S is Q's grandmother."},{"id":30,"topic":"Direction","text":"SE becomes North. East becomes:","options":[{"l":"A","t":"South-West","c":true},{"l":"B","t":"NE","c":false},{"l":"C","t":"NW","c":false},{"l":"D","t":"SE","c":false}],"sol":"135° rotation: E→SW."}];
-    var answered={},correctCount=0;
-    function renderQuestions(){var c=document.getElementById("questions-container"),h="";for(var i=0;i<questions.length;i++){var q=questions[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-num\"><span>Question "+(i+1)+" of "+questions.length+"</span><span class=\"q-topic\">"+q.topic+"</span></div><div class=\"q-text\">"+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCorrectLabel(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}c.innerHTML=h;updateScore()}
-    function getCorrectLabel(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
-    function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=questions.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var isCorrect=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(isCorrect){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="Correct!";document.getElementById("result-"+qId).className="q-result correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="Wrong";document.getElementById("result-"+qId).className="q-result wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateScore()}
-    function updateScore(){document.getElementById("correct-count").textContent=correctCount;var t=Object.keys(answered).length;document.getElementById("accuracy-pct").textContent=(t>0?Math.round(correctCount/t*100):0)+"%"}
-    function resetQuiz(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;var cards=document.querySelectorAll(".q-card");for(var i=0;i<cards.length;i++){cards[i].querySelectorAll(".q-opt").forEach(function(e){e.className="q-opt"});cards[i].querySelector(".q-soln").classList.remove("show");cards[i].querySelector(".q-result").className="q-result";cards[i].querySelector(".q-result").textContent=""}updateScore()}
-    renderQuestions();
-    </script>
-<script src="..\..\js/theme.js"></script>
-</body>
-</html>.Groups[0].Value -replace '\\', '/' ></script>
 </body>
 </html>

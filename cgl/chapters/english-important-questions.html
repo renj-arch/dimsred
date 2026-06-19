@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel='stylesheet' href='../../css/style.css'>
+    
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>SSC CGL English Important Questions with Answers</title>
@@ -87,97 +89,5 @@
     function resetQuiz(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;var cards=document.querySelectorAll(".q-card");for(var i=0;i<cards.length;i++){cards[i].querySelectorAll(".q-opt").forEach(function(e){e.className="q-opt"});cards[i].querySelector(".q-soln").classList.remove("show");cards[i].querySelector(".q-result").className="q-result";cards[i].querySelector(".q-result").textContent=""}updateScore()}
     renderQuestions();
     </script>
-<script  <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>SSC CGL English Important Questions with Answers</title>
-    <meta name="description" content="Top 30 SSC CGL English important questions covering Grammar, Vocabulary, Reading Comprehension, Sentence Correction, and Idioms.">
-    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="icon" type="image/png" href="/logo.png">
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"SSC CGL English Important Questions with Answers","description":"Top 30 SSC CGL English important questions covering Grammar, Vocabulary, Reading Comprehension, Sentence Correction, and Idioms.","url":"https://vlymbooq.qzz.io/cgl/chapters/english-important-questions.html","educationalLevel":"Competitive Exam","audience":{"@type":"EducationalAudience","educationalRole":"student"},"publisher":{"@type":"Organization","name":"vlymbooq","url":"https://vlymbooq.qzz.io"}}</script>
-    <style>
-        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#09090b;--bg-card:#111113;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--accent:#a78bfa;--radius:12px}
-        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-        a{color:var(--accent);text-decoration:none}
-        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
-        .brand{display:flex;align-items:center;gap:8px}
-        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
-        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
-        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
-        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
-        .container{max-width:900px;margin:0 auto;padding:24px}
-        .chapter-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
-        .chapter-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--accent);font-size:.75em;font-weight:600;margin-bottom:8px}
-        .chapter-header h1{font-size:1.7em;font-weight:900;margin-bottom:8px;line-height:1.2}
-        .chapter-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
-        .chapter-header .meta{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
-        .chapter-header .meta span{font-size:.82em;color:var(--text-muted)}
-        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px}
-        .q-card:hover{border-color:rgba(255,255,255,.1)}
-        .q-card .q-num{font-size:.78em;color:var(--text-muted);margin-bottom:4px;display:flex;justify-content:space-between}
-        .q-card .q-topic{font-size:.7em;padding:2px 8px;border-radius:100px;background:rgba(167,139,250,.1);color:var(--accent)}
-        .q-card .q-text{font-size:.92em;margin-bottom:10px;line-height:1.6;font-weight:500}
-        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
-        .q-card .q-opt{padding:9px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.83em;transition:all .15s}
-        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
-        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
-        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
-        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
-        .q-card .q-soln{display:none;margin-top:10px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.83em;color:var(--text-sec);line-height:1.5}
-        .q-card .q-soln.show{display:block}
-        .q-card .q-soln strong{color:var(--emerald)}
-        .q-card .q-result{font-size:.78em;font-weight:600;margin-top:6px}
-        .q-card .q-result.correct{color:var(--emerald)}
-        .q-card .q-result.wrong{color:#ef4444}
-        .chapters-list{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 24px}
-        .chapters-list a{padding:6px 14px;border-radius:100px;font-size:.8em;border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
-        .chapters-list a:hover{border-color:var(--accent);color:var(--accent)}
-        .chapters-list a.active{background:rgba(167,139,250,.12);border-color:var(--accent);color:var(--accent)}
-        .pdf-download{display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);margin:20px 0}
-        .pdf-download .btn-dl{padding:9px 22px;border-radius:100px;background:rgba(52,211,153,.12);color:var(--emerald);font-weight:600;font-size:.83em;border:none;cursor:pointer}
-        .pdf-download .btn-dl:hover{background:rgba(52,211,153,.2)}
-        .score-bar{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-        .score-bar .score{font-size:1.3em;font-weight:800;color:var(--accent)}
-        .score-bar .score .denom{color:var(--text-muted);font-weight:400}
-        .score-bar .btn-reset{padding:7px 18px;border-radius:100px;background:rgba(255,255,255,.04);color:var(--text-sec);border:1px solid var(--border);cursor:pointer;font-size:.78em}
-        .score-bar .btn-reset:hover{background:rgba(255,255,255,.08)}
-        @media print{.nav,.score-bar,.pdf-download,.chapters-list{display:none}.q-card .q-soln{display:block!important}}
-    </style>
-</head>
-<body>
-    <nav class="nav"><div class="nav-inner"><a href="../index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../index.html">Home</a><a href="../dashboard.html">Dashboard</a><a href="../community.html">Community</a><a href="../cgl/index.html" class="active">CGL</a></div></div></nav>
-    <div class="container">
-        <div class="chapter-header">
-            <div class="badge">CGL</div>
-            <h1>SSC CGL English Important Questions with Answers</h1>
-            <div class="sub">Top 30 SSC CGL English important questions covering Grammar, Vocabulary, Reading Comprehension, Sentence Correction, and Idioms.</div>
-            <div class="meta"><span>30 Questions</span><span>30 Minutes</span><span>Exam Pattern</span></div>
-        </div>
-        <div class="score-bar"><div><span class="score" id="correct-count">0</span><span class="denom"> / 30</span></div><div><span id="accuracy-pct" style="font-weight:700;color:var(--emerald)">0%</span></div><button class="btn-reset" onclick="resetQuiz()">Reset</button></div>
-        <div id="questions-container"></div>
-        <div class="pdf-download"><div style="flex:1"><strong>SSC CGL English Important Questions with Answers PDF</strong><br><span style="font-size:.8em;color:var(--text-muted)">Download for offline practice</span></div><button class="btn-dl" onclick="window.print()">Download PDF</button></div>
-    </div>
-    <script>
-    var questions = [{"id":1,"topic":"Grammar","text":"Choose the correct sentence:","options":[{"l":"A","t":"He is taller than I","c":true},{"l":"B","t":"He is taller than me","c":false},{"l":"C","t":"He is more taller than I","c":false},{"l":"D","t":"He is tallest than I","c":false}],"sol":"\"Than\" is a conjunction; the correct form is \"taller than I (am)\"."},{"id":2,"topic":"Vocabulary","text":"Synonym of \"Abundant\":","options":[{"l":"A","t":"Plentiful","c":true},{"l":"B","t":"Scarce","c":false},{"l":"C","t":"Rare","c":false},{"l":"D","t":"Limited","c":false}],"sol":"Abundant = Plentiful (available in large quantities)."},{"id":3,"topic":"Grammar","text":"Choose the passive voice: \"The cat chased the mouse.\"","options":[{"l":"A","t":"The mouse was chased by the cat","c":true},{"l":"B","t":"The mouse is chased by the cat","c":false},{"l":"C","t":"The mouse has been chased","c":false},{"l":"D","t":"The cat was chased by mouse","c":false}],"sol":"Passive: Object + was/were + past participle + by + subject."},{"id":4,"topic":"Vocabulary","text":"Antonym of \"Generous\":","options":[{"l":"A","t":"Stingy","c":true},{"l":"B","t":"Kind","c":false},{"l":"C","t":"Giving","c":false},{"l":"D","t":"Charitable","c":false}],"sol":"Generous (giving) × Stingy (unwilling to give)."},{"id":5,"topic":"Grammar","text":"Identify the error: \"He has went to market.\"","options":[{"l":"A","t":"Use \"gone\" instead of \"went\"","c":true},{"l":"B","t":"Use \"go\" instead of \"went\"","c":false},{"l":"C","t":"No error","c":false},{"l":"D","t":"Use \"going\"","c":false}],"sol":"Present perfect = have/has + past participle (gone). Went = simple past."},{"id":6,"topic":"Comprehension","text":"The phrase \"break the ice\" means:","options":[{"l":"A","t":"Start a conversation","c":true},{"l":"B","t":"Break something","c":false},{"l":"C","t":"End a relationship","c":false},{"l":"D","t":"Make a mistake","c":false}],"sol":"\"Break the ice\" = to initiate conversation in a formal setting."},{"id":7,"topic":"Grammar","text":"Which is correct?","options":[{"l":"A","t":"Each of the boys are smart","c":false},{"l":"B","t":"Each of the boys is smart","c":true},{"l":"C","t":"Each of the boy are smart","c":false},{"l":"D","t":"Each boy are smart","c":false}],"sol":"\"Each\" takes a singular verb. \"Each of the boys is smart.\""},{"id":8,"topic":"Vocabulary","text":"Meaning of \"Ephemeral\":","options":[{"l":"A","t":"Short-lived","c":true},{"l":"B","t":"Eternal","c":false},{"l":"C","t":"Powerful","c":false},{"l":"D","t":"Beautiful","c":false}],"sol":"Ephemeral = lasting for a very short time."},{"id":9,"topic":"Grammar","text":"Choose the correct preposition: \"He died ___ cancer.\"","options":[{"l":"A","t":"of","c":true},{"l":"B","t":"from","c":false},{"l":"C","t":"by","c":false},{"l":"D","t":"with","c":false}],"sol":"Die of (disease/cause). Die from (something). \"He died of cancer.\""},{"id":10,"topic":"Vocabulary","text":"One word for \"a person who loves books\":","options":[{"l":"A","t":"Bibliophile","c":true},{"l":"B","t":"Philanderer","c":false},{"l":"C","t":"Philanthropist","c":false},{"l":"D","t":"Bibliophobe","c":false}],"sol":"Bibliophile = lover of books. Bibliophobe = hater of books."},{"id":11,"topic":"Grammar","text":"Change to indirect: She said, \"I am happy.\"","options":[{"l":"A","t":"She said that she was happy","c":true},{"l":"B","t":"She said that she is happy","c":false},{"l":"C","t":"She said I am happy","c":false},{"l":"D","t":"She said she will be happy","c":false}],"sol":"Indirect: She said that she was happy. (Tense changes to past.)"},{"id":12,"topic":"Comprehension","text":"Idiom \"Once in a blue moon\":","options":[{"l":"A","t":"Very rarely","c":true},{"l":"B","t":"Often","c":false},{"l":"C","t":"Never","c":false},{"l":"D","t":"Always","c":false}],"sol":"\"Once in a blue moon\" = very rarely (literally a second full moon in a month)."},{"id":13,"topic":"Grammar","text":"Identify the type: \"She runs fast.\"","options":[{"l":"A","t":"Simple Present","c":true},{"l":"B","t":"Present Continuous","c":false},{"l":"C","t":"Present Perfect","c":false},{"l":"D","t":"Simple Past","c":false}],"sol":"\"Runs\" is simple present tense (habitual action)."},{"id":14,"topic":"Vocabulary","text":"Synonym of \"Brilliant\":","options":[{"l":"A","t":"Intelligent","c":true},{"l":"B","t":"Dull","c":false},{"l":"C","t":"Slow","c":false},{"l":"D","t":"Weak","c":false}],"sol":"Brilliant = extremely intelligent or bright."},{"id":15,"topic":"Grammar","text":"Choose the correct spelling:","options":[{"l":"A","t":"Accommodation","c":true},{"l":"B","t":"Acommodation","c":false},{"l":"C","t":"Accomodation","c":false},{"l":"D","t":"Acomodation","c":false}],"sol":"Correct spelling: Accommodation (double c, double m)."},{"id":16,"topic":"Vocabulary","text":"Antonym of \"Ancient\":","options":[{"l":"A","t":"Modern","c":true},{"l":"B","t":"Old","c":false},{"l":"C","t":"Historic","c":false},{"l":"D","t":"Aged","c":false}],"sol":"Ancient × Modern."},{"id":17,"topic":"Grammar","text":"Fill: \"Neither the teacher ___ the students were present.\"","options":[{"l":"A","t":"nor","c":true},{"l":"B","t":"or","c":false},{"l":"C","t":"and","c":false},{"l":"D","t":"but","c":false}],"sol":"Neither... nor... (correlative conjunction)."},{"id":18,"topic":"Comprehension","text":"The word \"meticulous\" means:","options":[{"l":"A","t":"Very careful and precise","c":true},{"l":"B","t":"Careless","c":false},{"l":"C","t":"Lazy","c":false},{"l":"D","t":"Angry","c":false}],"sol":"Meticulous = showing great attention to detail; very careful."},{"id":19,"topic":"Grammar","text":"Convert to plural: \"The child is playing.\"","options":[{"l":"A","t":"The children are playing","c":true},{"l":"B","t":"The childs are playing","c":false},{"l":"C","t":"The children is playing","c":false},{"l":"D","t":"The child are playing","c":false}],"sol":"Child → Children (irregular plural). Verb changes to \"are\"."},{"id":20,"topic":"Vocabulary","text":"Meaning of \"Ambiguous\":","options":[{"l":"A","t":"Having multiple meanings","c":true},{"l":"B","t":"Clear","c":false},{"l":"C","t":"Direct","c":false},{"l":"D","t":"Simple","c":false}],"sol":"Ambiguous = open to more than one interpretation; unclear."},{"id":21,"topic":"Grammar","text":"Which sentence uses \"effect\" correctly?","options":[{"l":"A","t":"The effect of the medicine was immediate","c":true},{"l":"B","t":"The medicine will effect the body","c":false},{"l":"C","t":"The affect was clear","c":false},{"l":"D","t":"He tried to effect her decision","c":false}],"sol":"Effect (noun) = result. Affect (verb) = to influence."},{"id":22,"topic":"Comprehension","text":"\"To bury the hatchet\" means:","options":[{"l":"A","t":"Make peace","c":true},{"l":"B","t":"Start a fight","c":false},{"l":"C","t":"Dig a hole","c":false},{"l":"D","t":"Hide something","c":false}],"sol":"\"Bury the hatchet\" = to end a quarrel and make peace."},{"id":23,"topic":"Grammar","text":"Correct the sentence: \"She don't like coffee.\"","options":[{"l":"A","t":"She doesn't like coffee","c":true},{"l":"B","t":"She don't likes coffee","c":false},{"l":"C","t":"She not like coffee","c":false},{"l":"D","t":"She doesn't likes coffee","c":false}],"sol":"Third person singular = doesn't (does + not)."},{"id":24,"topic":"Vocabulary","text":"One word for \"government by one person\":","options":[{"l":"A","t":"Autocracy","c":true},{"l":"B","t":"Democracy","c":false},{"l":"C","t":"Plutocracy","c":false},{"l":"D","t":"Oligarchy","c":false}],"sol":"Autocracy = rule by one. Democracy = rule by people."},{"id":25,"topic":"Grammar","text":"Choose the correct article: \"___ apple a day keeps the doctor away.\"","options":[{"l":"A","t":"An","c":true},{"l":"B","t":"A","c":false},{"l":"C","t":"The","c":false},{"l":"D","t":"No article","c":false}],"sol":"\"An\" before vowel sound (apple)."},{"id":26,"topic":"Vocabulary","text":"Synonym of \"Courageous\":","options":[{"l":"A","t":"Brave","c":true},{"l":"B","t":"Cowardly","c":false},{"l":"C","t":"Weak","c":false},{"l":"D","t":"Timid","c":false}],"sol":"Courageous = Brave (willing to face danger)."},{"id":27,"topic":"Comprehension","text":"\"Spill the beans\" means:","options":[{"l":"A","t":"Reveal a secret","c":true},{"l":"B","t":"Make a mess","c":false},{"l":"C","t":"Cook food","c":false},{"l":"D","t":"Drop something","c":false}],"sol":"\"Spill the beans\" = to disclose a secret or reveal information."},{"id":28,"topic":"Grammar","text":"What is the superlative of \"good\"?","options":[{"l":"A","t":"Best","c":true},{"l":"B","t":"Better","c":false},{"l":"C","t":"Goodest","c":false},{"l":"D","t":"Most good","c":false}],"sol":"Irregular: good → better (comparative) → best (superlative)."},{"id":29,"topic":"Vocabulary","text":"Antonym of \"Optimistic\":","options":[{"l":"A","t":"Pessimistic","c":true},{"l":"B","t":"Hopeful","c":false},{"l":"C","t":"Positive","c":false},{"l":"D","t":"Cheerful","c":false}],"sol":"Optimistic (hopeful) × Pessimistic (expecting the worst)."},{"id":30,"topic":"Grammar","text":"Identify the clause: \"I know that he is honest.\"","options":[{"l":"A","t":"Noun clause","c":true},{"l":"B","t":"Adjective clause","c":false},{"l":"C","t":"Adverb clause","c":false},{"l":"D","t":"Main clause","c":false}],"sol":"\"That he is honest\" acts as a noun (object of the verb \"know\")."}];
-    var answered={},correctCount=0;
-    function renderQuestions(){var c=document.getElementById("questions-container"),h="";for(var i=0;i<questions.length;i++){var q=questions[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-num\"><span>Question "+(i+1)+" of "+questions.length+"</span><span class=\"q-topic\">"+q.topic+"</span></div><div class=\"q-text\">"+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCorrectLabel(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}c.innerHTML=h;updateScore()}
-    function getCorrectLabel(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
-    function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=questions.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var isCorrect=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(isCorrect){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="Correct!";document.getElementById("result-"+qId).className="q-result correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="Wrong";document.getElementById("result-"+qId).className="q-result wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateScore()}
-    function updateScore(){document.getElementById("correct-count").textContent=correctCount;var t=Object.keys(answered).length;document.getElementById("accuracy-pct").textContent=(t>0?Math.round(correctCount/t*100):0)+"%"}
-    function resetQuiz(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;var cards=document.querySelectorAll(".q-card");for(var i=0;i<cards.length;i++){cards[i].querySelectorAll(".q-opt").forEach(function(e){e.className="q-opt"});cards[i].querySelector(".q-soln").classList.remove("show");cards[i].querySelector(".q-result").className="q-result";cards[i].querySelector(".q-result").textContent=""}updateScore()}
-    renderQuestions();
-    </script>
-<script src="..\..\js/theme.js"></script>
-</body>
-</html>.Groups[0].Value -replace '\\', '/' ></script>
 </body>
 </html>

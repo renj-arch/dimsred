@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel='stylesheet' href='css/style.css'>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Study Dashboard — Daily Quiz, Current Affairs, Mock Tests | vlymbooq</title>
@@ -9,8 +11,7 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="canonical" href="https://vlymbooq.qzz.io/dashboard.html">
-    <script src="js/ai-analysis.js" defer></script>
-    <script src="js/study-planner.js" defer></script>
+
     <meta name="description" content="Daily quiz, current affairs, weekly mock tests, and progress tracking for SSC CGL, NEET, JEE, UPSC & more. Build your study streak!">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
@@ -124,7 +125,7 @@
             <div class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="dashboard.html" class="active">Dashboard</a>
-                <a href="lab.html">Lab</a>
+                <a href="micro-test.html">Lab</a>
                 <a href="mental.html">Mental</a>
                 <a href="guides/index.html">Guides</a>
                 <a href="community.html">Community</a>
@@ -168,11 +169,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Ad unit -->
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
 
         <div class="grid-2">
             <div class="card">
@@ -236,7 +232,7 @@
                     <div class="days" id="mock-countdown">--</div>
                     <div class="label">days until next weekly mock</div>
                     <div style="margin-top:14px">
-                        <a href="lab.html" class="social-btn" style="display:inline-flex;background:rgba(167,139,250,.12);color:var(--purple);padding:8px 20px;font-size:.82em">Start Latest Mock</a>
+                        <a href="micro-test.html" class="social-btn" style="display:inline-flex;background:rgba(167,139,250,.12);color:var(--purple);padding:8px 20px;font-size:.82em">Start Latest Mock</a>
                     </div>
                 </div>
             </div>
@@ -252,20 +248,6 @@
                     <div><div class="streak-count" style="color:var(--purple)" id="best-streak">0</div><div class="streak-label">best streak</div></div>
                 </div>
                 <div style="margin-top:12px;font-size:.8em;color:var(--text-muted)">Solve the daily quiz to keep your streak alive!</div>
-            </div>
-        </div>
-
-        <div style="margin-top:16px">
-            <div class="card" id="aiInsightsCard" style="margin-bottom:16px;display:none">
-                <div class="card-header">
-                    <div class="card-title"><span class="icon">&#x1f916;</span> AI Insights</div>
-                    <span class="card-badge green">Powered by your data</span>
-                </div>
-                <div id="aiInsights"></div>
-            </div>
-
-            <div class="card" id="aiPlanCard" style="display:none">
-                <div id="aiPlan"></div>
             </div>
         </div>
 
@@ -297,23 +279,6 @@
     </div>
 
     <script>
-    // ---- AI Insights & Study Plan ----
-    function initAI() {
-      if (typeof window.renderAIInsights !== 'function' || typeof window.loadStudyPlan !== 'function') {
-        setTimeout(initAI, 300);
-        return;
-      }
-      var list = JSON.parse(localStorage.getItem('studypro_wrong') || '[]');
-      if (list.length >= 3) {
-        document.getElementById('aiInsightsCard').style.display = '';
-        window.renderAIInsights('aiInsights', list);
-        var plan = window.loadStudyPlan();
-        if (plan) document.getElementById('aiPlanCard').style.display = '';
-      }
-    }
-    // Wait for ai-analysis.js and study-planner.js to load
-    setTimeout(initAI, 500);
-
     // ---- Progress tracking with localStorage ----
     var STORAGE_KEY = 'vlymbooq_progress';
 
@@ -507,6 +472,9 @@
     setInterval(updateCountdown, 3600000);
     fetchAllQuestions();
     </script>
-<script src="js/theme.js"></script>
+<script src="js/bundles/core.js"></script>
+    <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}</script>
 </body>
 </html>
+
+

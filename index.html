@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel='stylesheet' href='css/style.css'>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>vlymbooq — Smart Practice for Competitive Exams</title>
@@ -782,8 +784,7 @@
             .mascot-wrap{transform:scale(.75);transform-origin:bottom right}
         }
     </style>
-    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
-<script src="js/redirect.js" async></script>
+    <script src="js/redirect.js" async></script>
 </head>
 <body class="page-fade">
     <div class="particle-field">
@@ -823,11 +824,9 @@
                 <a href="micro-test.html">🎯 Drill</a>
                 <a href="mental.html"><i data-lucide="brain" style="width:14px;height:14px;vertical-align:middle;margin-right:2px"></i> Mental</a>
                 <a href="current-affairs.html">📰 GK</a>
-                <a href="lab.html"><i data-lucide="flask-conical" style="width:14px;height:14px;vertical-align:middle;margin-right:2px"></i> Lab</a>
+                <a href="micro-test.html"><i data-lucide="flask-conical" style="width:14px;height:14px;vertical-align:middle;margin-right:2px"></i> Lab</a>
                 <a href="premium.html" style="border:1px solid rgba(167,139,250,.25);padding:6px 14px;font-size:.78em"><i data-lucide="crown" style="width:13px;height:13px;vertical-align:middle;margin-right:2px"></i> Premium</a>
                 <a href="leaderboard.html" style="padding:6px 10px;font-size:.78em"><i data-lucide="trophy" style="width:14px;height:14px;vertical-align:middle"></i></a>
-
-                <a href="badges.html" style="padding:6px 10px;font-size:.78em"><i data-lucide="award" style="width:14px;height:14px;vertical-align:middle"></i></a>
             </div>
         </div>
     </nav>
@@ -850,7 +849,7 @@
                     <i data-lucide="arrow-right" style="width:18px;height:18px"></i>
                     Browse Papers
                 </a>
-                <a href="lab.html" class="btn btn-ghost ripple">
+                <a href="micro-test.html" class="btn btn-ghost ripple">
                     <i data-lucide="flask-conical" style="width:18px;height:18px"></i>
                     Study Lab
                 </a>
@@ -1126,7 +1125,7 @@
                 </div>
             </div>
             <div style="text-align:center;margin-top:20px">
-                <a href="lab.html" class="btn btn-primary ripple"><i data-lucide="flask-conical" style="width:16px;height:16px"></i> Open Study Lab</a>
+                <a href="micro-test.html" class="btn btn-primary ripple"><i data-lucide="flask-conical" style="width:16px;height:16px"></i> Open Study Lab</a>
             </div>
             <div class="doodle doodle-l doodle-think doodle-anim-sway purple" data-aos="fade-right" data-aos-duration="800" data-aos-delay="200" style="top:0;left:-20px">
                 <svg viewBox="0 0 110 130">
@@ -1245,7 +1244,7 @@
                     <a href="clat/index.html" class="btn btn-ghost ripple">CLAT</a>
                 </div>
                 <div style="margin-top:14px">
-                    <a href="lab.html" class="btn btn-ghost" style="font-size:.85em">🧪 Or explore the Study Lab →</a>
+                    <a href="micro-test.html" class="btn btn-ghost" style="font-size:.85em">🧪 Or explore the Study Lab →</a>
                 </div>
             </div>
         </section>
@@ -1286,11 +1285,10 @@
                 </div>
                 <div class="footer-col">
                     <h4>Tools</h4>
-                    <a href="lab.html">Study Lab</a>
+                    <a href="micro-test.html">Study Lab</a>
                     <a href="premium.html">Go Premium</a>
                     <a href="dashboard.html">Dashboard</a>
                     <a href="leaderboard.html">Leaderboard</a>
-                    <a href="badges.html">Badges</a>
                     <a href="mistakes.html">Mistake Review</a>
                     <a href="mental.html">Mental Training</a>
                     <a href="guides/index.html">Study Guides</a>
@@ -1373,8 +1371,11 @@
     </svg>
 </div>
 
-<script src="js/theme.js"></script>
-<script src="js/index.js" defer></script>
+<script src="js/bundles/core.js"></script>
+    <script src="js/index.js" defer></script>
 
+
+<script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}</script>
 </body>
 </html>
+

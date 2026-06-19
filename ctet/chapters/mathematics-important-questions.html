@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel='stylesheet' href='../../css/style.css'>
+    
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>CTET Mathematics Important Questions with Answers</title>
@@ -87,97 +89,5 @@
     function resetQuiz(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;var cards=document.querySelectorAll(".q-card");for(var i=0;i<cards.length;i++){cards[i].querySelectorAll(".q-opt").forEach(function(e){e.className="q-opt"});cards[i].querySelector(".q-soln").classList.remove("show");cards[i].querySelector(".q-result").className="q-result";cards[i].querySelector(".q-result").textContent=""}updateScore()}
     renderQuestions();
     </script>
-<script  <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>CTET Mathematics Important Questions with Answers</title>
-    <meta name="description" content="Top 30 CTET Mathematics important questions covering Number System, Geometry, Measurement, Data Handling, and Pedagogy.">
-    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="icon" type="image/png" href="/logo.png">
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"CTET Mathematics Important Questions with Answers","description":"Top 30 CTET Mathematics important questions covering Number System, Geometry, Measurement, Data Handling, and Pedagogy.","url":"https://vlymbooq.qzz.io/ctet/chapters/mathematics-important-questions.html","educationalLevel":"Competitive Exam","audience":{"@type":"EducationalAudience","educationalRole":"student"},"publisher":{"@type":"Organization","name":"vlymbooq","url":"https://vlymbooq.qzz.io"}}</script>
-    <style>
-        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#09090b;--bg-card:#111113;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--accent:#34d399;--radius:12px}
-        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-        a{color:var(--accent);text-decoration:none}
-        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
-        .brand{display:flex;align-items:center;gap:8px}
-        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
-        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
-        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
-        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
-        .container{max-width:900px;margin:0 auto;padding:24px}
-        .chapter-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
-        .chapter-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--accent);font-size:.75em;font-weight:600;margin-bottom:8px}
-        .chapter-header h1{font-size:1.7em;font-weight:900;margin-bottom:8px;line-height:1.2}
-        .chapter-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
-        .chapter-header .meta{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
-        .chapter-header .meta span{font-size:.82em;color:var(--text-muted)}
-        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px}
-        .q-card:hover{border-color:rgba(255,255,255,.1)}
-        .q-card .q-num{font-size:.78em;color:var(--text-muted);margin-bottom:4px;display:flex;justify-content:space-between}
-        .q-card .q-topic{font-size:.7em;padding:2px 8px;border-radius:100px;background:rgba(167,139,250,.1);color:var(--accent)}
-        .q-card .q-text{font-size:.92em;margin-bottom:10px;line-height:1.6;font-weight:500}
-        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
-        .q-card .q-opt{padding:9px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.83em;transition:all .15s}
-        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
-        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
-        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
-        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
-        .q-card .q-soln{display:none;margin-top:10px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.83em;color:var(--text-sec);line-height:1.5}
-        .q-card .q-soln.show{display:block}
-        .q-card .q-soln strong{color:var(--emerald)}
-        .q-card .q-result{font-size:.78em;font-weight:600;margin-top:6px}
-        .q-card .q-result.correct{color:var(--emerald)}
-        .q-card .q-result.wrong{color:#ef4444}
-        .chapters-list{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 24px}
-        .chapters-list a{padding:6px 14px;border-radius:100px;font-size:.8em;border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
-        .chapters-list a:hover{border-color:var(--accent);color:var(--accent)}
-        .chapters-list a.active{background:rgba(167,139,250,.12);border-color:var(--accent);color:var(--accent)}
-        .pdf-download{display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);margin:20px 0}
-        .pdf-download .btn-dl{padding:9px 22px;border-radius:100px;background:rgba(52,211,153,.12);color:var(--emerald);font-weight:600;font-size:.83em;border:none;cursor:pointer}
-        .pdf-download .btn-dl:hover{background:rgba(52,211,153,.2)}
-        .score-bar{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-        .score-bar .score{font-size:1.3em;font-weight:800;color:var(--accent)}
-        .score-bar .score .denom{color:var(--text-muted);font-weight:400}
-        .score-bar .btn-reset{padding:7px 18px;border-radius:100px;background:rgba(255,255,255,.04);color:var(--text-sec);border:1px solid var(--border);cursor:pointer;font-size:.78em}
-        .score-bar .btn-reset:hover{background:rgba(255,255,255,.08)}
-        @media print{.nav,.score-bar,.pdf-download,.chapters-list{display:none}.q-card .q-soln{display:block!important}}
-    </style>
-</head>
-<body>
-    <nav class="nav"><div class="nav-inner"><a href="../index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../index.html">Home</a><a href="../dashboard.html">Dashboard</a><a href="../community.html">Community</a><a href="../ctet/index.html" class="active">CTET</a></div></div></nav>
-    <div class="container">
-        <div class="chapter-header">
-            <div class="badge">CTET</div>
-            <h1>CTET Mathematics Important Questions with Answers</h1>
-            <div class="sub">Top 30 CTET Mathematics important questions covering Number System, Geometry, Measurement, Data Handling, and Pedagogy.</div>
-            <div class="meta"><span>30 Questions</span><span>30 Minutes</span><span>Exam Pattern</span></div>
-        </div>
-        <div class="score-bar"><div><span class="score" id="correct-count">0</span><span class="denom"> / 30</span></div><div><span id="accuracy-pct" style="font-weight:700;color:var(--emerald)">0%</span></div><button class="btn-reset" onclick="resetQuiz()">Reset</button></div>
-        <div id="questions-container"></div>
-        <div class="pdf-download"><div style="flex:1"><strong>CTET Mathematics Important Questions with Answers PDF</strong><br><span style="font-size:.8em;color:var(--text-muted)">Download for offline practice</span></div><button class="btn-dl" onclick="window.print()">Download PDF</button></div>
-    </div>
-    <script>
-    var questions = [{"id":1,"topic":"Number","text":"The LCM of 12, 15, and 20 is:","options":[{"l":"A","t":"60","c":true},{"l":"B","t":"120","c":false},{"l":"C","t":"180","c":false},{"l":"D","t":"90","c":false}],"sol":"LCM(12,15,20) = 60. 12=2²×3, 15=3×5, 20=2²×5 → 2²×3×5=60."},{"id":2,"topic":"Fraction","text":"3/4 + 5/6 = ?","options":[{"l":"A","t":"19/12","c":true},{"l":"B","t":"8/10","c":false},{"l":"C","t":"17/12","c":false},{"l":"D","t":"7/6","c":false}],"sol":"LCM=12: 9/12+10/12=19/12."},{"id":3,"topic":"Geometry","text":"How many sides does a hexagon have?","options":[{"l":"A","t":"6","c":true},{"l":"B","t":"5","c":false},{"l":"C","t":"7","c":false},{"l":"D","t":"8","c":false}],"sol":"A hexagon has 6 sides."},{"id":4,"topic":"Area","text":"Area of a rectangle with length 8 cm and breadth 5 cm:","options":[{"l":"A","t":"40 cm²","c":true},{"l":"B","t":"13 cm²","c":false},{"l":"C","t":"26 cm²","c":false},{"l":"D","t":"45 cm²","c":false}],"sol":"Area = 8 × 5 = 40 cm²."},{"id":5,"topic":"Pedagogy","text":"According to NCF 2005, mathematics teaching should:","options":[{"l":"A","t":"Focus on problem-solving and reasoning","c":true},{"l":"B","t":"Emphasize rote memorization","c":false},{"l":"C","t":"Only teach formulas","c":false},{"l":"D","t":"Avoid practical examples","c":false}],"sol":"NCF 2005 emphasizes conceptual understanding and problem-solving in math."},{"id":6,"topic":"Decimal","text":"0.25 + 0.75 = ?","options":[{"l":"A","t":"1.00","c":true},{"l":"B","t":"0.90","c":false},{"l":"C","t":"1.50","c":false},{"l":"D","t":"0.85","c":false}],"sol":"0.25+0.75=1.00."},{"id":7,"topic":"Percentage","text":"25% of 200 =","options":[{"l":"A","t":"50","c":true},{"l":"B","t":"25","c":false},{"l":"C","t":"75","c":false},{"l":"D","t":"100","c":false}],"sol":"0.25×200=50."},{"id":8,"topic":"Volume","text":"Volume of a cube with side 4 cm:","options":[{"l":"A","t":"64 cm³","c":true},{"l":"B","t":"16 cm³","c":false},{"l":"C","t":"32 cm³","c":false},{"l":"D","t":"48 cm³","c":false}],"sol":"Volume = 4³ = 64 cm³."},{"id":9,"topic":"Data","text":"The mode of the data 2,3,5,3,4,3,6 is:","options":[{"l":"A","t":"3","c":true},{"l":"B","t":"2","c":false},{"l":"C","t":"4","c":false},{"l":"D","t":"5","c":false}],"sol":"Mode = most frequent value = 3 (appears 3 times)."},{"id":10,"topic":"Profit","text":"If CP = ₹500 and SP = ₹600, profit % is:","options":[{"l":"A","t":"20%","c":true},{"l":"B","t":"10%","c":false},{"l":"C","t":"25%","c":false},{"l":"D","t":"15%","c":false}],"sol":"Profit = 100/500×100=20%."},{"id":11,"topic":"Algebra","text":"If x + 5 = 12, then x =","options":[{"l":"A","t":"7","c":true},{"l":"B","t":"17","c":false},{"l":"C","t":"6","c":false},{"l":"D","t":"8","c":false}],"sol":"x = 12-5 = 7."},{"id":12,"topic":"Perimeter","text":"Perimeter of a square with side 6 cm:","options":[{"l":"A","t":"24 cm","c":true},{"l":"B","t":"12 cm","c":false},{"l":"C","t":"36 cm","c":false},{"l":"D","t":"18 cm","c":false}],"sol":"Perimeter = 4×6 = 24 cm."},{"id":13,"topic":"Average","text":"Average of 15, 20, 25 is:","options":[{"l":"A","t":"20","c":true},{"l":"B","t":"15","c":false},{"l":"C","t":"25","c":false},{"l":"D","t":"30","c":false}],"sol":"Average = (15+20+25)/3 = 60/3 = 20."},{"id":14,"topic":"Ratio","text":"Divide 100 in ratio 2:3:","options":[{"l":"A","t":"40,60","c":true},{"l":"B","t":"50,50","c":false},{"l":"C","t":"30,70","c":false},{"l":"D","t":"45,55","c":false}],"sol":"First = 2/5×100=40, Second = 3/5×100=60."},{"id":15,"topic":"Time","text":"A bus travels 120 km in 2 hours. Speed:","options":[{"l":"A","t":"60 km/h","c":true},{"l":"B","t":"50 km/h","c":false},{"l":"C","t":"70 km/h","c":false},{"l":"D","t":"40 km/h","c":false}],"sol":"Speed = 120/2 = 60 km/h."},{"id":16,"topic":"Angles","text":"Sum of angles in a triangle:","options":[{"l":"A","t":"180°","c":true},{"l":"B","t":"360°","c":false},{"l":"C","t":"270°","c":false},{"l":"D","t":"90°","c":false}],"sol":"Sum of interior angles of a triangle = 180°."},{"id":17,"topic":"Factorization","text":"Prime factorization of 72:","options":[{"l":"A","t":"2³×3²","c":true},{"l":"B","t":"2²×3³","c":false},{"l":"C","t":"2⁴×3","c":false},{"l":"D","t":"2×3⁴","c":false}],"sol":"72 = 8×9 = 2³×3²."},{"id":18,"topic":"Circle","text":"Circumference of circle radius 7 cm (π=22/7):","options":[{"l":"A","t":"44 cm","c":true},{"l":"B","t":"22 cm","c":false},{"l":"C","t":"88 cm","c":false},{"l":"D","t":"66 cm","c":false}],"sol":"C = 2×22/7×7 = 44 cm."},{"id":19,"topic":"Place Value","text":"Place value of 6 in 3,65,421:","options":[{"l":"A","t":"60,000","c":true},{"l":"B","t":"6,000","c":false},{"l":"C","t":"600","c":false},{"l":"D","t":"6","c":false}],"sol":"6 is in ten-thousands place: 6×10,000 = 60,000."},{"id":20,"topic":"Fraction","text":"Which fraction is largest? 1/2, 3/4, 2/5, 5/8","options":[{"l":"A","t":"3/4","c":true},{"l":"B","t":"1/2","c":false},{"l":"C","t":"2/5","c":false},{"l":"D","t":"5/8","c":false}],"sol":"3/4 = 0.75, 5/8 = 0.625, 1/2 = 0.5, 2/5 = 0.4."},{"id":21,"topic":"Simple Interest","text":"SI on ₹2000 at 5% for 3 years:","options":[{"l":"A","t":"₹300","c":true},{"l":"B","t":"₹200","c":false},{"l":"C","t":"₹400","c":false},{"l":"D","t":"₹350","c":false}],"sol":"SI = 2000×5×3/100 = ₹300."},{"id":22,"topic":"Number System","text":"Which is a prime number?","options":[{"l":"A","t":"29","c":true},{"l":"B","t":"27","c":false},{"l":"C","t":"21","c":false},{"l":"D","t":"33","c":false}],"sol":"29 is prime (factors: 1 and 29)."},{"id":23,"topic":"Mensuration","text":"Area of a triangle with base 10 cm and height 6 cm:","options":[{"l":"A","t":"30 cm²","c":true},{"l":"B","t":"60 cm²","c":false},{"l":"C","t":"20 cm²","c":false},{"l":"D","t":"16 cm²","c":false}],"sol":"Area = ½×10×6 = 30 cm²."},{"id":24,"topic":"Pedagogy","text":"Concrete operational stage (Piaget) is best for learning:","options":[{"l":"A","t":"Logical thinking with concrete objects","c":true},{"l":"B","t":"Abstract reasoning","c":false},{"l":"C","t":"Symbolic play","c":false},{"l":"D","t":"Formal operations","c":false}],"sol":"Concrete operational (7-11 yrs): logical thinking with concrete materials."},{"id":25,"topic":"Graph","text":"A pictograph uses:","options":[{"l":"A","t":"Pictures to represent data","c":true},{"l":"B","t":"Bars to represent data","c":false},{"l":"C","t":"Lines to represent data","c":false},{"l":"D","t":"Circles to represent data","c":false}],"sol":"A pictograph uses symbols/pictures to show data."},{"id":26,"topic":"Weight","text":"1 kilogram = _____ grams","options":[{"l":"A","t":"1000","c":true},{"l":"B","t":"100","c":false},{"l":"C","t":"10,000","c":false},{"l":"D","t":"500","c":false}],"sol":"1 kg = 1000 g."},{"id":27,"topic":"Time Conversion","text":"2 hours 30 minutes = _____ minutes","options":[{"l":"A","t":"150","c":true},{"l":"B","t":"120","c":false},{"l":"C","t":"90","c":false},{"l":"D","t":"180","c":false}],"sol":"2×60+30=150 minutes."},{"id":28,"topic":"Symmetry","text":"How many lines of symmetry does a square have?","options":[{"l":"A","t":"4","c":true},{"l":"B","t":"2","c":false},{"l":"C","t":"1","c":false},{"l":"D","t":"0","c":false}],"sol":"A square has 4 lines of symmetry."},{"id":29,"topic":"Area vs Perimeter","text":"A rectangle has L=8, B=3. Compare area and perimeter:","options":[{"l":"A","t":"Area > Perimeter","c":true},{"l":"B","t":"Area = Perimeter","c":false},{"l":"C","t":"Area < Perimeter","c":false},{"l":"D","t":"Cannot compare","c":false}],"sol":"Area=24, Perimeter=22. Area > Perimeter."},{"id":30,"topic":"Pedagogy","text":"Teaching mathematics through stories:","options":[{"l":"A","t":"Makes learning meaningful and contextual","c":true},{"l":"B","t":"Is a waste of time","c":false},{"l":"C","t":"Only for young children","c":false},{"l":"D","t":"Avoids calculations","c":false}],"sol":"Story-based math teaching makes concepts relatable and engaging."}];
-    var answered={},correctCount=0;
-    function renderQuestions(){var c=document.getElementById("questions-container"),h="";for(var i=0;i<questions.length;i++){var q=questions[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-num\"><span>Question "+(i+1)+" of "+questions.length+"</span><span class=\"q-topic\">"+q.topic+"</span></div><div class=\"q-text\">"+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCorrectLabel(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}c.innerHTML=h;updateScore()}
-    function getCorrectLabel(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
-    function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=questions.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var isCorrect=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(isCorrect){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="Correct!";document.getElementById("result-"+qId).className="q-result correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="Wrong";document.getElementById("result-"+qId).className="q-result wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateScore()}
-    function updateScore(){document.getElementById("correct-count").textContent=correctCount;var t=Object.keys(answered).length;document.getElementById("accuracy-pct").textContent=(t>0?Math.round(correctCount/t*100):0)+"%"}
-    function resetQuiz(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;var cards=document.querySelectorAll(".q-card");for(var i=0;i<cards.length;i++){cards[i].querySelectorAll(".q-opt").forEach(function(e){e.className="q-opt"});cards[i].querySelector(".q-soln").classList.remove("show");cards[i].querySelector(".q-result").className="q-result";cards[i].querySelector(".q-result").textContent=""}updateScore()}
-    renderQuestions();
-    </script>
-<script src="..\..\js/theme.js"></script>
-</body>
-</html>.Groups[0].Value -replace '\\', '/' ></script>
 </body>
 </html>

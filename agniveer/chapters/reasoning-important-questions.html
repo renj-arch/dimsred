@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel='stylesheet' href='../../css/style.css'>
+    
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Agniveer Reasoning Important Questions with Answers</title>
@@ -87,97 +89,5 @@
     function resetQuiz(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;var cards=document.querySelectorAll(".q-card");for(var i=0;i<cards.length;i++){cards[i].querySelectorAll(".q-opt").forEach(function(e){e.className="q-opt"});cards[i].querySelector(".q-soln").classList.remove("show");cards[i].querySelector(".q-result").className="q-result";cards[i].querySelector(".q-result").textContent=""}updateScore()}
     renderQuestions();
     </script>
-<script  <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Agniveer Reasoning Important Questions with Answers</title>
-    <meta name="description" content="Top 30 Agniveer Reasoning important questions covering Analogies, Series, Classification, Coding-Decoding, and Puzzles.">
-    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="icon" type="image/png" href="/logo.png">
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Agniveer Reasoning Important Questions with Answers","description":"Top 30 Agniveer Reasoning important questions covering Analogies, Series, Classification, Coding-Decoding, and Puzzles.","url":"https://vlymbooq.qzz.io/agniveer/chapters/reasoning-important-questions.html","educationalLevel":"Competitive Exam","audience":{"@type":"EducationalAudience","educationalRole":"student"},"publisher":{"@type":"Organization","name":"vlymbooq","url":"https://vlymbooq.qzz.io"}}</script>
-    <style>
-        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#09090b;--bg-card:#111113;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--accent:#60a5fa;--radius:12px}
-        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-        a{color:var(--accent);text-decoration:none}
-        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
-        .brand{display:flex;align-items:center;gap:8px}
-        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
-        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
-        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
-        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
-        .container{max-width:900px;margin:0 auto;padding:24px}
-        .chapter-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
-        .chapter-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--accent);font-size:.75em;font-weight:600;margin-bottom:8px}
-        .chapter-header h1{font-size:1.7em;font-weight:900;margin-bottom:8px;line-height:1.2}
-        .chapter-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
-        .chapter-header .meta{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
-        .chapter-header .meta span{font-size:.82em;color:var(--text-muted)}
-        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px}
-        .q-card:hover{border-color:rgba(255,255,255,.1)}
-        .q-card .q-num{font-size:.78em;color:var(--text-muted);margin-bottom:4px;display:flex;justify-content:space-between}
-        .q-card .q-topic{font-size:.7em;padding:2px 8px;border-radius:100px;background:rgba(167,139,250,.1);color:var(--accent)}
-        .q-card .q-text{font-size:.92em;margin-bottom:10px;line-height:1.6;font-weight:500}
-        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
-        .q-card .q-opt{padding:9px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.83em;transition:all .15s}
-        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
-        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
-        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
-        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
-        .q-card .q-soln{display:none;margin-top:10px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.83em;color:var(--text-sec);line-height:1.5}
-        .q-card .q-soln.show{display:block}
-        .q-card .q-soln strong{color:var(--emerald)}
-        .q-card .q-result{font-size:.78em;font-weight:600;margin-top:6px}
-        .q-card .q-result.correct{color:var(--emerald)}
-        .q-card .q-result.wrong{color:#ef4444}
-        .chapters-list{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 24px}
-        .chapters-list a{padding:6px 14px;border-radius:100px;font-size:.8em;border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
-        .chapters-list a:hover{border-color:var(--accent);color:var(--accent)}
-        .chapters-list a.active{background:rgba(167,139,250,.12);border-color:var(--accent);color:var(--accent)}
-        .pdf-download{display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);margin:20px 0}
-        .pdf-download .btn-dl{padding:9px 22px;border-radius:100px;background:rgba(52,211,153,.12);color:var(--emerald);font-weight:600;font-size:.83em;border:none;cursor:pointer}
-        .pdf-download .btn-dl:hover{background:rgba(52,211,153,.2)}
-        .score-bar{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-        .score-bar .score{font-size:1.3em;font-weight:800;color:var(--accent)}
-        .score-bar .score .denom{color:var(--text-muted);font-weight:400}
-        .score-bar .btn-reset{padding:7px 18px;border-radius:100px;background:rgba(255,255,255,.04);color:var(--text-sec);border:1px solid var(--border);cursor:pointer;font-size:.78em}
-        .score-bar .btn-reset:hover{background:rgba(255,255,255,.08)}
-        @media print{.nav,.score-bar,.pdf-download,.chapters-list{display:none}.q-card .q-soln{display:block!important}}
-    </style>
-</head>
-<body>
-    <nav class="nav"><div class="nav-inner"><a href="../index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../index.html">Home</a><a href="../dashboard.html">Dashboard</a><a href="../community.html">Community</a><a href="../agniveer/index.html" class="active">AGNIVEER</a></div></div></nav>
-    <div class="container">
-        <div class="chapter-header">
-            <div class="badge">AGNIVEER</div>
-            <h1>Agniveer Reasoning Important Questions with Answers</h1>
-            <div class="sub">Top 30 Agniveer Reasoning important questions covering Analogies, Series, Classification, Coding-Decoding, and Puzzles.</div>
-            <div class="meta"><span>30 Questions</span><span>30 Minutes</span><span>Exam Pattern</span></div>
-        </div>
-        <div class="score-bar"><div><span class="score" id="correct-count">0</span><span class="denom"> / 30</span></div><div><span id="accuracy-pct" style="font-weight:700;color:var(--emerald)">0%</span></div><button class="btn-reset" onclick="resetQuiz()">Reset</button></div>
-        <div id="questions-container"></div>
-        <div class="pdf-download"><div style="flex:1"><strong>Agniveer Reasoning Important Questions with Answers PDF</strong><br><span style="font-size:.8em;color:var(--text-muted)">Download for offline practice</span></div><button class="btn-dl" onclick="window.print()">Download PDF</button></div>
-    </div>
-    <script>
-    var questions = [{"id":1,"topic":"Analogy","text":"Find the analogy: Bird : Feather :: Fish : ?","options":[{"l":"A","t":"Scale","c":true},{"l":"B","t":"Fin","c":false},{"l":"C","t":"Gill","c":false},{"l":"D","t":"Water","c":false}],"sol":"Birds have feathers; Fish have scales."},{"id":2,"topic":"Series","text":"What comes next: 3, 6, 11, 18, 27, ?","options":[{"l":"A","t":"36","c":false},{"l":"B","t":"38","c":true},{"l":"C","t":"40","c":false},{"l":"D","t":"35","c":false}],"sol":"Pattern: +3, +5, +7, +9, +11. 27+11=38."},{"id":3,"topic":"Classification","text":"Odd one out:","options":[{"l":"A","t":"Triangle","c":false},{"l":"B","t":"Square","c":false},{"l":"C","t":"Circle","c":false},{"l":"D","t":"Cone","c":true}],"sol":"Cone is a 3D shape; others are 2D."},{"id":4,"topic":"Coding","text":"If DOG = 26, CAT = 24, then BAT = ?","options":[{"l":"A","t":"22","c":false},{"l":"B","t":"23","c":true},{"l":"C","t":"21","c":false},{"l":"D","t":"25","c":false}],"sol":"D=4,O=15,G=7 → 4+15+7=26. C=3,A=1,T=20 → 3+1+20=24. B=2,A=1,T=20 → 2+1+20=23."},{"id":5,"topic":"Direction","text":"A man walks 3 km North, 4 km East. Distance from start:","options":[{"l":"A","t":"5 km","c":true},{"l":"B","t":"7 km","c":false},{"l":"C","t":"1 km","c":false},{"l":"D","t":"25 km","c":false}],"sol":"√(3²+4²)=√25=5 km using Pythagoras theorem."},{"id":6,"topic":"Number Puzzle","text":"If 5×3=28, 6×4=40, then 7×5=?","options":[{"l":"A","t":"54","c":true},{"l":"B","t":"56","c":false},{"l":"C","t":"52","c":false},{"l":"D","t":"58","c":false}],"sol":"Pattern: a×b = a×(a+b-2). 5×3=5×(5+3-2)=5×6=30, no. Try: a²+b²-? 25+9=34, no. Try: a²+b²-6=25+9-6=28. 36+16-12=40. 49+25-20=54. Or: a×b + (a+b) = 15+8=23, no. Let me check: 5×3=28 (5×5+3=28), 6×4=40 (6×6+4=40), 7×5=54 (7×7+5=54). Pattern: a²+b. 5²+3=28, 6²+4=40, 7²+5=54."},{"id":7,"topic":"Blood Relation","text":"Ravi's mother is the sister of Raju's father. How is Ravi related to Raju?","options":[{"l":"A","t":"Brother","c":false},{"l":"B","t":"Cousin","c":true},{"l":"C","t":"Nephew","c":false},{"l":"D","t":"Uncle","c":false}],"sol":"Ravi's mother and Raju's father are siblings. Ravi and Raju are cousins."},{"id":8,"topic":"Alphabet","text":"Find the next: A, C, F, J, ?","options":[{"l":"A","t":"M","c":false},{"l":"B","t":"O","c":true},{"l":"C","t":"L","c":false},{"l":"D","t":"N","c":false}],"sol":"Pattern: +2, +3, +4, +5. J+5=O."},{"id":9,"topic":"Calendar","text":"If 1st Jan is Monday, what is 31st Jan?","options":[{"l":"A","t":"Tuesday","c":false},{"l":"B","t":"Wednesday","c":true},{"l":"C","t":"Thursday","c":false},{"l":"D","t":"Friday","c":false}],"sol":"30 days later: 30 mod 7 = 2. Monday + 2 days = Wednesday."},{"id":10,"topic":"Clock","text":"How many times do hands of clock overlap in 12 hours?","options":[{"l":"A","t":"11","c":true},{"l":"B","t":"12","c":false},{"l":"C","t":"10","c":false},{"l":"D","t":"13","c":false}],"sol":"The hands overlap 11 times in 12 hours (once per hour except between 11-12 and 12-1)."},{"id":11,"topic":"Counting","text":"How many squares in a 2×2 grid?","options":[{"l":"A","t":"4","c":false},{"l":"B","t":"5","c":true},{"l":"C","t":"6","c":false},{"l":"D","t":"7","c":false}],"sol":"1×1: 4 squares. 2×2: 1 square. Total=5."},{"id":12,"topic":"Analogy","text":"Candle : Wax :: Book : ?","options":[{"l":"A","t":"Paper","c":true},{"l":"B","t":"Read","c":false},{"l":"C","t":"Library","c":false},{"l":"D","t":"Print","c":false}],"sol":"Candle is made of wax; Book is made of paper."},{"id":13,"topic":"Series","text":"Find missing: 1, 1, 2, 6, 24, ?","options":[{"l":"A","t":"120","c":true},{"l":"B","t":"100","c":false},{"l":"C","t":"144","c":false},{"l":"D","t":"96","c":false}],"sol":"Pattern: ×1, ×2, ×3, ×4, ×5. 24×5=120 (factorial sequence)."},{"id":14,"topic":"Odd One","text":"Which is different?","options":[{"l":"A","t":"Kilogram","c":false},{"l":"B","t":"Metre","c":false},{"l":"C","t":"Second","c":false},{"l":"D","t":"Pascal","c":true}],"sol":"Pascal is a derived unit (pressure); others are base SI units."},{"id":15,"topic":"Venn","text":"Which diagram: Boys, Athletes, Students?","options":[{"l":"A","t":"Three overlapping circles","c":true},{"l":"B","t":"One inside another","c":false},{"l":"C","t":"All separate","c":false},{"l":"D","t":"Two circles","c":false}],"sol":"Some boys are athletes, some are students; all overlap possible."},{"id":16,"topic":"Coding","text":"If MONTH is coded as NPOUI, then DAY is:","options":[{"l":"A","t":"EBZ","c":true},{"l":"B","t":"ECZ","c":false},{"l":"C","t":"EAZ","c":false},{"l":"D","t":"DBZ","c":false}],"sol":"Each letter +1: M→N, O→P, N→O, T→U, H→I. D→E, A→B, Y→Z = EBZ."},{"id":17,"topic":"Puzzle","text":"A is taller than B. C is shorter than B. Who is shortest?","options":[{"l":"A","t":"A","c":false},{"l":"B","t":"B","c":false},{"l":"C","t":"C","c":true},{"l":"D","t":"Cannot say","c":false}],"sol":"A > B > C. C is the shortest."},{"id":18,"topic":"Dice","text":"Which number is opposite to 1 on a standard die?","options":[{"l":"A","t":"4","c":false},{"l":"B","t":"5","c":false},{"l":"C","t":"6","c":true},{"l":"D","t":"2","c":false}],"sol":"Standard die: opposite faces sum to 7. Opposite of 1 is 6."},{"id":19,"topic":"Matrix","text":"Find missing: 5×3=15, 7×4=28, 9×5=?","options":[{"l":"A","t":"45","c":true},{"l":"B","t":"40","c":false},{"l":"C","t":"54","c":false},{"l":"D","t":"50","c":false}],"sol":"9×5=45."},{"id":20,"topic":"Analogy","text":"Electricity : Wire :: Water : ?","options":[{"l":"A","t":"Pipe","c":true},{"l":"B","t":"River","c":false},{"l":"C","t":"Bottle","c":false},{"l":"D","t":"Tap","c":false}],"sol":"Electricity flows through wire; water flows through pipe."},{"id":21,"topic":"Series","text":"AZ, CX, EV, ?","options":[{"l":"A","t":"GT","c":true},{"l":"B","t":"GU","c":false},{"l":"C","t":"FT","c":false},{"l":"D","t":"GS","c":false}],"sol":"First: A→C→E→G (+2). Second: Z→X→V→T (-2). So GT."},{"id":22,"topic":"Odd One","text":"Which is different?","options":[{"l":"A","t":"Rose","c":false},{"l":"B","t":"Lotus","c":false},{"l":"C","t":"Tulip","c":false},{"l":"D","t":"Mango","c":true}],"sol":"Mango is a fruit; others are flowers."},{"id":23,"topic":"Direction","text":"If East becomes North, then North becomes:","options":[{"l":"A","t":"West","c":true},{"l":"B","t":"East","c":false},{"l":"C","t":"South","c":false},{"l":"D","t":"North-east","c":false}],"sol":"Rotation of 90° anticlockwise: East→North, North→West."},{"id":24,"topic":"Arrangement","text":"Five P, Q, R, S, T in a row. P is left of Q, R is right of S, T is between P and R. Who is in middle?","options":[{"l":"A","t":"P","c":false},{"l":"B","t":"T","c":true},{"l":"C","t":"Q","c":false},{"l":"D","t":"R","c":false}],"sol":"Arrangement: P-T-R with S left of R and Q right of P. Likely: P,T,R,S,Q or S,P,T,R,Q. T is between P and R = middle."},{"id":25,"topic":"Analogy","text":"Book : Chapter :: Tree : ?","options":[{"l":"A","t":"Branch","c":true},{"l":"B","t":"Leaves","c":false},{"l":"C","t":"Root","c":false},{"l":"D","t":"Wood","c":false}],"sol":"A book is divided into chapters; a tree is divided into branches."},{"id":26,"topic":"Assumption","text":"Ad: \"This soap kills 99.9% germs.\" Assumption: Germs are harmful.","options":[{"l":"A","t":"Implicit","c":true},{"l":"B","t":"Not implicit","c":false},{"l":"C","t":"Partly","c":false},{"l":"D","t":"Cannot say","c":false}],"sol":"The ad implicitly assumes germs are harmful, which is why killing them is desirable."},{"id":27,"topic":"Series","text":"2, 5, 10, 17, 26, ?","options":[{"l":"A","t":"37","c":true},{"l":"B","t":"36","c":false},{"l":"C","t":"38","c":false},{"l":"D","t":"35","c":false}],"sol":"1²+1=2, 2²+1=5, 3²+1=10, 4²+1=17, 5²+1=26, 6²+1=37."},{"id":28,"topic":"Coding","text":"If LAPTOP = 722, then COMPUTER = ?","options":[{"l":"A","t":"114","c":false},{"l":"B","t":"112","c":true},{"l":"C","t":"120","c":false},{"l":"D","t":"108","c":false}],"sol":"A=1,B=2... L=12,A=1,P=16,T=20,O=15,P=16 → sum=12+1+16+20+15+16=80? Not 722. Try alphabetic position numbers concatenated: L=12,A=1,P=16,T=20,O=15,P=16 → 12116201516? No. Try letter positions squared? 144+1+256+400+225+256=1282. Not matching. Given options, answer B. 112 (based on some known coding pattern: letter position sum × 2 = 80×2=160... hmm. Actually LAPTOP=722: L=12→12²=144, A=1→1, P=16→256, T=20→(20...). Let me just go with given options: B. 112 seems right based on pattern."},{"id":29,"topic":"Number Series","text":"Find next: 1, 4, 27, 256, ?","options":[{"l":"A","t":"3125","c":true},{"l":"B","t":"1024","c":false},{"l":"C","t":"625","c":false},{"l":"D","t":"729","c":false}],"sol":"Pattern: 1¹=1, 2²=4, 3³=27, 4⁴=256, 5⁵=3125."},{"id":30,"topic":"Mirror Image","text":"Mirror image of the word \"EXAM\":","options":[{"l":"A","t":"MAXE","c":true},{"l":"B","t":"EXMA","c":false},{"l":"C","t":"XAME","c":false},{"l":"D","t":"MAXX","c":false}],"sol":"Mirror image reverses left-right: EXAM → MAXE."}];
-    var answered={},correctCount=0;
-    function renderQuestions(){var c=document.getElementById("questions-container"),h="";for(var i=0;i<questions.length;i++){var q=questions[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-num\"><span>Question "+(i+1)+" of "+questions.length+"</span><span class=\"q-topic\">"+q.topic+"</span></div><div class=\"q-text\">"+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCorrectLabel(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}c.innerHTML=h;updateScore()}
-    function getCorrectLabel(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
-    function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=questions.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var isCorrect=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(isCorrect){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="Correct!";document.getElementById("result-"+qId).className="q-result correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="Wrong";document.getElementById("result-"+qId).className="q-result wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateScore()}
-    function updateScore(){document.getElementById("correct-count").textContent=correctCount;var t=Object.keys(answered).length;document.getElementById("accuracy-pct").textContent=(t>0?Math.round(correctCount/t*100):0)+"%"}
-    function resetQuiz(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;var cards=document.querySelectorAll(".q-card");for(var i=0;i<cards.length;i++){cards[i].querySelectorAll(".q-opt").forEach(function(e){e.className="q-opt"});cards[i].querySelector(".q-soln").classList.remove("show");cards[i].querySelector(".q-result").className="q-result";cards[i].querySelector(".q-result").textContent=""}updateScore()}
-    renderQuestions();
-    </script>
-<script src="..\..\js/theme.js"></script>
-</body>
-</html>.Groups[0].Value -replace '\\', '/' ></script>
 </body>
 </html>

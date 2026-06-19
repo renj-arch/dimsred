@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel='stylesheet' href='../css/style.css'>
+    
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com https://unpkg.com; script-src 'self' https://pagead2.googlesyndication.com https://www.gstatic.com https://apis.google.com https://unpkg.com https://static.cloudflareinsights.com https://ep2.adtrafficquality.google https://*.adtrafficquality.google; connect-src 'self' https://pagead2.googlesyndication.com https://ep2.adtrafficquality.google https://static.cloudflareinsights.com https://apis.google.com https://www.gstatic.com https://www.google.com https://googleads.g.doubleclick.net; frame-src 'self' https://googleads.g.doubleclick.net https://ep2.adtrafficquality.google https://www.google.com; upgrade-insecure-requests">
     <script src="js/redirect.js" async></script>
     <meta charset="UTF-8">
@@ -199,7 +201,7 @@
                 <a href="../sbi-clerk/index.html">SBI Clerk</a>
                 <a href="../ssc-gd/index.html">SSC GD</a>
                 <a href="../ctet/index.html">CTET</a>
-                <a href="../lab.html">Lab</a>
+                <a href="../micro-test.html">Lab</a>
             <a href="../terms.html">Terms</a>
                 <a href="../leaderboard.html">🏆</a>
             </div>
@@ -408,7 +410,7 @@
                     <div class="ftitle">Admit Card &amp; Result</div>
                     <div class="fdesc">Download admit card &amp; check results.</div>
                 </a>
-                <a href="../lab.html" class="feat-card" style="text-decoration:none">
+                <a href="../micro-test.html" class="feat-card" style="text-decoration:none">
                     <span class="icon">🔬</span>
                     <div class="ftitle">Study Lab</div>
                     <div class="fdesc">Topic drills, mock tests &amp; mistake review.</div>
@@ -482,7 +484,7 @@
         <p>Agniveer Pro  Free practice resources for Indian Army Agniveer exam. Not affiliated with Indian Army.</p>
         <div class="links">
             <a href="../privacy.html">Privacy</a>
-            <a href="../lab.html">Lab</a>
+            <a href="../micro-test.html">Lab</a>
             <a href="../terms.html">Terms</a>
             <a href="../mistakes.html">Mistakes</a>
             <a href="../dashboard.html">Dashboard</a>
@@ -491,10 +493,9 @@
     </footer>
 
     <script src="js/main.js"></script>
-<script src="../js/shared.js?v=20260529b"></script>
-
-    <script src="../js/calendar.js"></script>
-    <script src="../js/pagination.js"></script>
-<script src="../js/theme.js"></script>
+<script src="../js/bundles/core.js"></script>
+    <script src="../js/bundles/exam.js"></script>
+    <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}</script>
 </body>
 </html>
+

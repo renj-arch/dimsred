@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel='stylesheet' href='../../css/style.css'>
+    
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>SSC GD General Knowledge Important Questions with Answers</title>
@@ -87,97 +89,5 @@
     function resetQuiz(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;var cards=document.querySelectorAll(".q-card");for(var i=0;i<cards.length;i++){cards[i].querySelectorAll(".q-opt").forEach(function(e){e.className="q-opt"});cards[i].querySelector(".q-soln").classList.remove("show");cards[i].querySelector(".q-result").className="q-result";cards[i].querySelector(".q-result").textContent=""}updateScore()}
     renderQuestions();
     </script>
-<script  <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>SSC GD General Knowledge Important Questions with Answers</title>
-    <meta name="description" content="Top 30 SSC GD GK questions covering History, Geography, Polity, Science, and Current Affairs.">
-    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="icon" type="image/png" href="/logo.png">
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"SSC GD General Knowledge Important Questions with Answers","description":"Top 30 SSC GD GK questions covering History, Geography, Polity, Science, and Current Affairs.","url":"https://vlymbooq.qzz.io/ssc-gd/chapters/general-knowledge-important-questions.html","educationalLevel":"Competitive Exam","audience":{"@type":"EducationalAudience","educationalRole":"student"},"publisher":{"@type":"Organization","name":"vlymbooq","url":"https://vlymbooq.qzz.io"}}</script>
-    <style>
-        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#09090b;--bg-card:#111113;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--accent:#f59e0b;--radius:12px}
-        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-        a{color:var(--accent);text-decoration:none}
-        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
-        .brand{display:flex;align-items:center;gap:8px}
-        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
-        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
-        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
-        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
-        .container{max-width:900px;margin:0 auto;padding:24px}
-        .chapter-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
-        .chapter-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--accent);font-size:.75em;font-weight:600;margin-bottom:8px}
-        .chapter-header h1{font-size:1.7em;font-weight:900;margin-bottom:8px;line-height:1.2}
-        .chapter-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
-        .chapter-header .meta{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
-        .chapter-header .meta span{font-size:.82em;color:var(--text-muted)}
-        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:12px}
-        .q-card:hover{border-color:rgba(255,255,255,.1)}
-        .q-card .q-num{font-size:.78em;color:var(--text-muted);margin-bottom:4px;display:flex;justify-content:space-between}
-        .q-card .q-topic{font-size:.7em;padding:2px 8px;border-radius:100px;background:rgba(167,139,250,.1);color:var(--accent)}
-        .q-card .q-text{font-size:.92em;margin-bottom:10px;line-height:1.6;font-weight:500}
-        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
-        .q-card .q-opt{padding:9px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.83em;transition:all .15s}
-        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
-        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
-        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
-        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
-        .q-card .q-soln{display:none;margin-top:10px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.83em;color:var(--text-sec);line-height:1.5}
-        .q-card .q-soln.show{display:block}
-        .q-card .q-soln strong{color:var(--emerald)}
-        .q-card .q-result{font-size:.78em;font-weight:600;margin-top:6px}
-        .q-card .q-result.correct{color:var(--emerald)}
-        .q-card .q-result.wrong{color:#ef4444}
-        .chapters-list{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 24px}
-        .chapters-list a{padding:6px 14px;border-radius:100px;font-size:.8em;border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
-        .chapters-list a:hover{border-color:var(--accent);color:var(--accent)}
-        .chapters-list a.active{background:rgba(167,139,250,.12);border-color:var(--accent);color:var(--accent)}
-        .pdf-download{display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);margin:20px 0}
-        .pdf-download .btn-dl{padding:9px 22px;border-radius:100px;background:rgba(52,211,153,.12);color:var(--emerald);font-weight:600;font-size:.83em;border:none;cursor:pointer}
-        .pdf-download .btn-dl:hover{background:rgba(52,211,153,.2)}
-        .score-bar{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-        .score-bar .score{font-size:1.3em;font-weight:800;color:var(--accent)}
-        .score-bar .score .denom{color:var(--text-muted);font-weight:400}
-        .score-bar .btn-reset{padding:7px 18px;border-radius:100px;background:rgba(255,255,255,.04);color:var(--text-sec);border:1px solid var(--border);cursor:pointer;font-size:.78em}
-        .score-bar .btn-reset:hover{background:rgba(255,255,255,.08)}
-        @media print{.nav,.score-bar,.pdf-download,.chapters-list{display:none}.q-card .q-soln{display:block!important}}
-    </style>
-</head>
-<body>
-    <nav class="nav"><div class="nav-inner"><a href="../index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../index.html">Home</a><a href="../dashboard.html">Dashboard</a><a href="../community.html">Community</a><a href="../ssc-gd/index.html" class="active">SSC-GD</a></div></div></nav>
-    <div class="container">
-        <div class="chapter-header">
-            <div class="badge">SSC-GD</div>
-            <h1>SSC GD General Knowledge Important Questions with Answers</h1>
-            <div class="sub">Top 30 SSC GD GK questions covering History, Geography, Polity, Science, and Current Affairs.</div>
-            <div class="meta"><span>30 Questions</span><span>30 Minutes</span><span>Exam Pattern</span></div>
-        </div>
-        <div class="score-bar"><div><span class="score" id="correct-count">0</span><span class="denom"> / 30</span></div><div><span id="accuracy-pct" style="font-weight:700;color:var(--emerald)">0%</span></div><button class="btn-reset" onclick="resetQuiz()">Reset</button></div>
-        <div id="questions-container"></div>
-        <div class="pdf-download"><div style="flex:1"><strong>SSC GD General Knowledge Important Questions with Answers PDF</strong><br><span style="font-size:.8em;color:var(--text-muted)">Download for offline practice</span></div><button class="btn-dl" onclick="window.print()">Download PDF</button></div>
-    </div>
-    <script>
-    var questions = [{"id":1,"topic":"History","text":"First Governor-General of India:","options":[{"l":"A","t":"Warren Hastings","c":true},{"l":"B","t":"Lord Clive","c":false},{"l":"C","t":"William Bentinck","c":false},{"l":"D","t":"Cornwallis","c":false}],"sol":"Warren Hastings was first Governor-General of Bengal (1773)."},{"id":2,"topic":"Geography","text":"Largest state by population:","options":[{"l":"A","t":"Uttar Pradesh","c":true},{"l":"B","t":"Maharashtra","c":false},{"l":"C","t":"Bihar","c":false},{"l":"D","t":"West Bengal","c":false}],"sol":"UP has the largest population."},{"id":3,"topic":"Polity","text":"India is a:","options":[{"l":"A","t":"Sovereign Socialist Secular Democratic Republic","c":true},{"l":"B","t":"Theocracy","c":false},{"l":"C","t":"Communist State","c":false},{"l":"D","t":"Monarchy","c":false}],"sol":"As described in the Preamble."},{"id":4,"topic":"Science","text":"Gas in fire extinguishers:","options":[{"l":"A","t":"CO₂","c":true},{"l":"B","t":"O₂","c":false},{"l":"C","t":"N₂","c":false},{"l":"D","t":"H₂","c":false}],"sol":"CO₂ displaces oxygen and smothers fire."},{"id":5,"topic":"History","text":"INC founded in:","options":[{"l":"A","t":"1885","c":true},{"l":"B","t":"1905","c":false},{"l":"C","t":"1919","c":false},{"l":"D","t":"1947","c":false}],"sol":"Indian National Congress founded 1885."},{"id":6,"topic":"Geography","text":"Longest South Indian river:","options":[{"l":"A","t":"Godavari","c":true},{"l":"B","t":"Krishna","c":false},{"l":"C","t":"Kaveri","c":false},{"l":"D","t":"Mahanadi","c":false}],"sol":"Godavari (1,465 km)."},{"id":7,"topic":"Polity","text":"Supreme Commander of Armed Forces:","options":[{"l":"A","t":"President","c":true},{"l":"B","t":"PM","c":false},{"l":"C","t":"Defence Minister","c":false},{"l":"D","t":"COAS","c":false}],"sol":"President is Supreme Commander."},{"id":8,"topic":"Science","text":"Unit of electric power:","options":[{"l":"A","t":"Watt","c":true},{"l":"B","t":"Volt","c":false},{"l":"C","t":"Ampere","c":false},{"l":"D","t":"Ohm","c":false}],"sol":"Watt (Joule/second)."},{"id":9,"topic":"History","text":"Mughal capital:","options":[{"l":"A","t":"Delhi","c":true},{"l":"B","t":"Agra","c":false},{"l":"C","t":"Lahore","c":false},{"l":"D","t":"Fatehpur Sikri","c":false}],"sol":"Delhi was the Mughal capital."},{"id":10,"topic":"Geography","text":"Tropic of Cancer passes through:","options":[{"l":"A","t":"Madhya Pradesh","c":true},{"l":"B","t":"Kerala","c":false},{"l":"C","t":"TN","c":false},{"l":"D","t":"Odisha","c":false}],"sol":"Passes through 8 Indian states."},{"id":11,"topic":"Polity","text":"President nominates to Rajya Sabha:","options":[{"l":"A","t":"12","c":true},{"l":"B","t":"10","c":false},{"l":"C","t":"14","c":false},{"l":"D","t":"16","c":false}],"sol":"12 nominated members for expertise."},{"id":12,"topic":"Science","text":"Vitamin for wound healing:","options":[{"l":"A","t":"Vitamin C","c":true},{"l":"B","t":"A","c":false},{"l":"C","t":"B","c":false},{"l":"D","t":"K","c":false}],"sol":"Vitamin C for collagen formation."},{"id":13,"topic":"History","text":"Battle of Panipat 1761:","options":[{"l":"A","t":"Marathas vs Abdali","c":true},{"l":"B","t":"Mughals vs Marathas","c":false},{"l":"C","t":"British vs Marathas","c":false},{"l":"D","t":"Afghans vs Mughals","c":false}],"sol":"Third Battle of Panipat."},{"id":14,"topic":"Geography","text":"Largest delta:","options":[{"l":"A","t":"Sunderbans","c":true},{"l":"B","t":"Amazon","c":false},{"l":"C","t":"Mekong","c":false},{"l":"D","t":"Nile","c":false}],"sol":"Sunderbans Delta (Ganges-Brahmaputra)."},{"id":15,"topic":"Polity","text":"First Lok Sabha elections:","options":[{"l":"A","t":"1951-52","c":true},{"l":"B","t":"1950","c":false},{"l":"C","t":"1953","c":false},{"l":"D","t":"1947","c":false}],"sol":"Oct 1951 to Feb 1952."},{"id":16,"topic":"Science","text":"Best conductor of electricity:","options":[{"l":"A","t":"Silver","c":true},{"l":"B","t":"Copper","c":false},{"l":"C","t":"Gold","c":false},{"l":"D","t":"Iron","c":false}],"sol":"Silver is the best conductor."},{"id":17,"topic":"History","text":"Harappan seals material:","options":[{"l":"A","t":"Steatite","c":true},{"l":"B","t":"Gold","c":false},{"l":"C","t":"Copper","c":false},{"l":"D","t":"Clay","c":false}],"sol":"Most seals were steatite (soft stone)."},{"id":18,"topic":"Geography","text":"Highest waterfall in India:","options":[{"l":"A","t":"Jog Falls","c":true},{"l":"B","t":"Kempty","c":false},{"l":"C","t":"Dhuandhar","c":false},{"l":"D","t":"Horsetail","c":false}],"sol":"Jog Falls (253 m) in Karnataka."},{"id":19,"topic":"Polity","text":"Fundamental Rights in Part:","options":[{"l":"A","t":"Part III","c":true},{"l":"B","t":"II","c":false},{"l":"C","t":"IV","c":false},{"l":"D","t":"I","c":false}],"sol":"Part III (Articles 12-35)."},{"id":20,"topic":"Science","text":"Chemical symbol of Iron:","options":[{"l":"A","t":"Fe","c":true},{"l":"B","t":"Ir","c":false},{"l":"C","t":"In","c":false},{"l":"D","t":"I","c":false}],"sol":"Fe (Latin: Ferrum)."},{"id":21,"topic":"History","text":"\"Iron Man of India\":","options":[{"l":"A","t":"Sardar Patel","c":true},{"l":"B","t":"Gandhi","c":false},{"l":"C","t":"Bose","c":false},{"l":"D","t":"Tilak","c":false}],"sol":"Sardar Vallabhbhai Patel."},{"id":22,"topic":"Geography","text":"River from Himalayas to Arabian Sea:","options":[{"l":"A","t":"Narmada","c":true},{"l":"B","t":"Ganga","c":false},{"l":"C","t":"Yamuna","c":false},{"l":"D","t":"Brahmaputra","c":false}],"sol":"Narmada flows into Arabian Sea."},{"id":23,"topic":"Polity","text":"Voting age in India:","options":[{"l":"A","t":"18","c":true},{"l":"B","t":"21","c":false},{"l":"C","t":"16","c":false},{"l":"D","t":"25","c":false}],"sol":"61st Amendment (1988) reduced from 21 to 18."},{"id":24,"topic":"Science","text":"Hardest natural substance:","options":[{"l":"A","t":"Diamond","c":true},{"l":"B","t":"Graphite","c":false},{"l":"C","t":"Gold","c":false},{"l":"D","t":"Platinum","c":false}],"sol":"Diamond is hardest known."},{"id":25,"topic":"History","text":"Queen of Jhansi:","options":[{"l":"A","t":"Rani Lakshmibai","c":true},{"l":"B","t":"Rani Rudramadevi","c":false},{"l":"C","t":"Rani Chennamma","c":false},{"l":"D","t":"Rani Durgavati","c":false}],"sol":"Rani Lakshmibai fought in 1857."},{"id":26,"topic":"Geography","text":"Closest planet to Sun:","options":[{"l":"A","t":"Mercury","c":true},{"l":"B","t":"Venus","c":false},{"l":"C","t":"Mars","c":false},{"l":"D","t":"Earth","c":false}],"sol":"Mercury (57.9 M km)."},{"id":27,"topic":"Polity","text":"CM appointed by:","options":[{"l":"A","t":"Governor","c":true},{"l":"B","t":"President","c":false},{"l":"C","t":"PM","c":false},{"l":"D","t":"CJI","c":false}],"sol":"Governor appoints CM (majority leader)."},{"id":28,"topic":"Science","text":"pH of acid:","options":[{"l":"A","t":"< 7","c":true},{"l":"B","t":"> 7","c":false},{"l":"C","t":"= 7","c":false},{"l":"D","t":"None","c":false}],"sol":"pH < 7 = acidic."},{"id":29,"topic":"History","text":"1857 revolt also called:","options":[{"l":"A","t":"First War of Independence","c":true},{"l":"B","t":"Swadeshi Movement","c":false},{"l":"C","t":"Quit India","c":false},{"l":"D","t":"Non-Cooperation","c":false}],"sol":"First War of Indian Independence."},{"id":30,"topic":"Geography","text":"Longest coastline country:","options":[{"l":"A","t":"Canada","c":true},{"l":"B","t":"Australia","c":false},{"l":"C","t":"Russia","c":false},{"l":"D","t":"USA","c":false}],"sol":"Canada (202,080 km)."}];
-    var answered={},correctCount=0;
-    function renderQuestions(){var c=document.getElementById("questions-container"),h="";for(var i=0;i<questions.length;i++){var q=questions[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-num\"><span>Question "+(i+1)+" of "+questions.length+"</span><span class=\"q-topic\">"+q.topic+"</span></div><div class=\"q-text\">"+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCorrectLabel(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}c.innerHTML=h;updateScore()}
-    function getCorrectLabel(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
-    function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=questions.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var isCorrect=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(isCorrect){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="Correct!";document.getElementById("result-"+qId).className="q-result correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="Wrong";document.getElementById("result-"+qId).className="q-result wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateScore()}
-    function updateScore(){document.getElementById("correct-count").textContent=correctCount;var t=Object.keys(answered).length;document.getElementById("accuracy-pct").textContent=(t>0?Math.round(correctCount/t*100):0)+"%"}
-    function resetQuiz(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;var cards=document.querySelectorAll(".q-card");for(var i=0;i<cards.length;i++){cards[i].querySelectorAll(".q-opt").forEach(function(e){e.className="q-opt"});cards[i].querySelector(".q-soln").classList.remove("show");cards[i].querySelector(".q-result").className="q-result";cards[i].querySelector(".q-result").textContent=""}updateScore()}
-    renderQuestions();
-    </script>
-<script src="..\..\js/theme.js"></script>
-</body>
-</html>.Groups[0].Value -replace '\\', '/' ></script>
 </body>
 </html>
