@@ -1984,23 +1984,57 @@ function generateRacesQuestion(diff, layer) {
 }
 
 function generateDataInterpretationQuestion(diff, layer) {
-  var ctx = pick(['Study the table:', 'The chart shows:', 'Given data:']);
+  function tableHtml(headers, rows) {
+    var h = headers.map(function(h){return '<th style="padding:4px 10px;border:1px solid rgba(255,255,255,.15);font-size:.82em;background:rgba(167,139,250,.12)">' + h + '</th>';}).join('');
+    var r = rows.map(function(row){
+      return '<tr>' + row.map(function(c){return '<td style="padding:4px 10px;border:1px solid rgba(255,255,255,.08);font-size:.82em;text-align:center">' + c + '</td>';}).join('') + '</tr>';
+    }).join('');
+    return '<table style="border-collapse:collapse;margin:8px 0;width:100%"><thead><tr>' + h + '</tr></thead><tbody>' + r + '</tbody></table>';
+  }
   var ty = [
-    function(){ var a=rand(30,80), b=rand(20,60), c=rand(10,40); return { q: ctx + ' A=' + a + ', B=' + b + ', C=' + c + '. Total of all?', a: a+b+c, hint: 'A+B+C', intuition: 'Total = ' + a + '+' + b + '+' + c + ' = ' + (a+b+c) }; },
-    function(){ var a=rand(20,50), b=rand(15,40), c=rand(10,30), d=rand(5,20); return { q: ctx + ' Q1=' + a + ', Q2=' + b + ', Q3=' + c + ', Q4=' + d + '. Average per quarter?', a: Math.round((a+b+c+d)/4), hint: 'Sum ÷ 4', intuition: 'Average = (' + a + '+' + b + '+' + c + '+' + d + ')/4 = ' + (a+b+c+d) + '/4 = ' + Math.round((a+b+c+d)/4) }; },
-    function(){ var m=rand(40,80), f=rand(20,50); return { q: ctx + ' Men=' + m + ', Women=' + f + '. % women?', a: Math.round(f*100/(m+f)), hint: 'women/total × 100', intuition: f + '/' + (m+f) + ' × 100 = ' + Math.round(f*100/(m+f)) + '%' }; },
-    function(){ var y=rand(3,7)*1000; var e=y-rand(2,5)*100; return { q: ctx + ' Revenue=₹' + y + ', Expense=₹' + e + '. Profit %?', a: Math.round((y-e)*100/y), hint: '(R-E)/R × 100', intuition: 'P% = (R-E)/R × 100 = ' + (y-e) + '/' + y + ' × 100 = ' + Math.round((y-e)*100/y) + '%' }; },
-    function(){ var y1=rand(400,800), y2=y1+rand(50,200); return { q: ctx + ' Revenue: Y1=₹' + y1 + 'cr, Y2=₹' + y2 + 'cr. % growth?', a: Math.round((y2-y1)/y1*100), hint: '(Y2-Y1)/Y1 × 100', intuition: 'Growth = ' + (y2-y1) + '/' + y1 + ' × 100 = ' + Math.round((y2-y1)/y1*100) + '%' }; },
-    function(){ var p1=rand(200,500), p2=rand(300,600), p3=rand(250,550); return { q: ctx + ' Production: 2019=' + p1 + 't, 2020=' + p2 + 't, 2021=' + p3 + 't. % change 2019→2021?', a: Math.round((p3-p1)/p1*100), hint: '(2021-2019)/2019 × 100', intuition: 'Change = ' + (p3-p1) + '/' + p1 + ' × 100 = ' + Math.round((p3-p1)/p1*100) + '%' }; },
-    function(){ var a=rand(20,40), b=rand(15,30), c=100-a-b; return { q: ctx + ' A=' + a + '%, B=' + b + '%, C=' + c + '%. Central angle for C?', a: c*3.6, hint: 'Angle = % × 3.6°', intuition: '100% = 360°, so 1% = 3.6°. C = ' + c + '% → angle = ' + c + '×3.6 = ' + (c*3.6) + '°' }; },
-    function(){ var v=[rand(200,400), rand(300,500), rand(250,450)]; var yrs=[2018,2019,2020]; var i=rand(0,2), j=rand(0,2); while(j===i)j=rand(0,2); return { q: ctx + ' ' + yrs[i] + '=' + v[i] + ', ' + yrs[j] + '=' + v[j] + '. Ratio of ' + yrs[i] + ' : ' + yrs[j] + '?', a: (function(a,b){var g=function(x,y){return y?g(y,x%y):x;}; var d=g(a,b); return (a/d)+':'+(b/d);})(v[i],v[j]), hint: 'Find HCF and divide both', intuition: 'Ratio = ' + v[i] + ':' + v[j] + ' = simplified ' + (function(a,b){var g=function(x,y){return y?g(y,x%y):x;}; var d=g(a,b); return (a/d)+':'+(b/d);})(v[i],v[j]) }; },
-    function(){ var t=rand(500,2000), a=rand(20,60), b=100-a; return { q: ctx + ' Total=₹' + t + 'cr. Dept A=' + a + '%, B=' + b + '%. Dept A expenditure?', a: Math.round(t*a/100), hint: 'Total × A%/100', intuition: 'A = ' + a + '% of ' + t + ' = ' + t + '×' + a + '/100 = ' + Math.round(t*a/100) }; }
+    function(){
+      var a=rand(30,80), b=rand(20,60), c=rand(10,40);
+      return { tbl: tableHtml(['Item','Value'], [['A',a],['B',b],['C',c]]), q: 'Total of all items?', a: a+b+c, hint: 'A+B+C', intuition: 'Total = ' + a + '+' + b + '+' + c + ' = ' + (a+b+c) };
+    },
+    function(){
+      var a=rand(20,50), b=rand(15,40), c=rand(10,30), d=rand(5,20);
+      return { tbl: tableHtml(['Quarter','Sales'], [['Q1',a],['Q2',b],['Q3',c],['Q4',d]]), q: 'Average sales per quarter?', a: Math.round((a+b+c+d)/4), hint: 'Sum ÷ 4', intuition: 'Average = (' + a + '+' + b + '+' + c + '+' + d + ')/4 = ' + (a+b+c+d) + '/4 = ' + Math.round((a+b+c+d)/4) };
+    },
+    function(){
+      var m=rand(40,80), f=rand(20,50);
+      return { tbl: tableHtml(['Category','Count'], [['Men',m],['Women',f]]), q: 'What % are women?', a: Math.round(f*100/(m+f)), hint: 'women/total × 100', intuition: f + '/' + (m+f) + ' × 100 = ' + Math.round(f*100/(m+f)) + '%' };
+    },
+    function(){
+      var y=rand(3,7)*1000; var e=y-rand(2,5)*100;
+      return { tbl: tableHtml(['Item','Amount (₹)'], [['Revenue',y],['Expense',e]]), q: 'Profit %?', a: Math.round((y-e)*100/y), hint: '(R-E)/R × 100', intuition: 'P% = (R-E)/R × 100 = ' + (y-e) + '/' + y + ' × 100 = ' + Math.round((y-e)*100/y) + '%' };
+    },
+    function(){
+      var y1=rand(400,800), y2=y1+rand(50,200);
+      return { tbl: tableHtml(['Year','Revenue (₹cr)'], [['Y1',y1],['Y2',y2]]), q: '% growth from Y1 to Y2?', a: Math.round((y2-y1)/y1*100), hint: '(Y2-Y1)/Y1 × 100', intuition: 'Growth = ' + (y2-y1) + '/' + y1 + ' × 100 = ' + Math.round((y2-y1)/y1*100) + '%' };
+    },
+    function(){
+      var p1=rand(200,500), p2=rand(300,600), p3=rand(250,550);
+      return { tbl: tableHtml(['Year','Production (t)'], [['2019',p1],['2020',p2],['2021',p3]]), q: '% change in production from 2019 to 2021?', a: Math.round((p3-p1)/p1*100), hint: '(2021-2019)/2019 × 100', intuition: 'Change = ' + (p3-p1) + '/' + p1 + ' × 100 = ' + Math.round((p3-p1)/p1*100) + '%' };
+    },
+    function(){
+      var a=rand(20,40), b=rand(15,30), c=100-a-b;
+      return { tbl: tableHtml(['Sector','Share (%)'], [['A',a+'%'],['B',b+'%'],['C',c+'%']]), q: 'Central angle of sector C?', a: c*3.6, hint: 'Angle = % × 3.6°', intuition: '100% = 360°, so 1% = 3.6°. C = ' + c + '% → angle = ' + c + '×3.6 = ' + (c*3.6) + '°' };
+    },
+    function(){
+      var v=[rand(200,400), rand(300,500), rand(250,450)]; var yrs=[2018,2019,2020]; var i=rand(0,2), j=rand(0,2); while(j===i)j=rand(0,2);
+      return { tbl: tableHtml(['Year','Value'], [[yrs[i],v[i]],[yrs[j],v[j]]]), q: 'Ratio of ' + yrs[i] + ' : ' + yrs[j] + '?', a: (function(a,b){var g=function(x,y){return y?g(y,x%y):x;}; var d=g(a,b); return (a/d)+':'+(b/d);})(v[i],v[j]), hint: 'Find HCF and divide both', intuition: 'Ratio = ' + v[i] + ':' + v[j] + ' = simplified ' + (function(a,b){var g=function(x,y){return y?g(y,x%y):x;}; var d=g(a,b); return (a/d)+':'+(b/d);})(v[i],v[j]) };
+    },
+    function(){
+      var t=rand(500,2000), a=rand(20,60), b=100-a;
+      return { tbl: tableHtml(['Department','Share (%)'], [['A',a+'%'],['B',b+'%']]) + '<div style="font-size:.82em;margin-top:4px">Total expenditure: ₹' + t + 'cr</div>', q: 'Expenditure of Dept A?', a: Math.round(t*a/100), hint: 'Total × A%/100', intuition: 'A = ' + a + '% of ' + t + ' = ' + t + '×' + a + '/100 = ' + Math.round(t*a/100) };
+    }
   ];
   var t = ty[rand(0, ty.length - 1)];
   var d = t();
+  var q = (d.tbl || '') + '<div style="margin-top:8px;font-weight:600">' + d.q + '</div>';
   var o = [d.a]; while(o.length<4){var v=d.a+rand(-8,8); if(o.indexOf(v)<0&&v>0)o.push(v);}
   shuffle(o);
-  return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: layer==='instinct'?15:20, type:'quant', techniqueLabel:'DI: '+d.hint, intuition: d.intuition||'Read data carefully. Identify what the question asks (total/average/percentage) before computing.' };
+  return { question: q, answer: d.a, options: o, hint: d.hint, timeLimit: layer==='instinct'?15:20, type:'quant', techniqueLabel:'DI: '+d.hint, intuition: d.intuition||'Read data carefully. Identify what the question asks (total/average/percentage) before computing.' };
 }
 
 // ====== NEW REASONING GENERATORS ======
