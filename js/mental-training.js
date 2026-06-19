@@ -382,40 +382,44 @@ window.setActiveLayer = function(l) { activeLayer = l; };
 // =============================================
 var QM = {
   _f: {}, _ctx: {}, _runs: 0,
+  // Variable type inference: suffix → type category
+  _vt: { _kmh:'speed', _m_s:'speed', _ms:'speed', _m:'length', _s:'time', _days:'time', _yr:'time', _rs:'money', _pct:'pct', _p:'pct' },
+  _typeOf: function(v) { for (var k in this._vt) { if (v.indexOf(k) >= 0) return this._vt[k]; } return 'other'; },
   def: function(name, def) {
     this._f[name] = def;
     this._ctx[name] = def.ctx || { _: {} };
     return this;
   },
-  // Pick value from domain spec
   _val: function(d) {
     if (d.vals) return d.vals[rand(0, d.vals.length - 1)];
     return rand(d.min, d.max);
   },
-  // Format value with optional display conversion + unit
   _fmt: function(v, k, ctx) {
     var c = this._ctx[ctx] || {};
-    var dk = (c[k] && c[k].display) || (c._ && c._[k] && c._[k].display);
+    var dk = (c[k] && typeof c[k].display === 'function' && c[k].display) || (c._ && c._[k] && typeof c._[k].display === 'function' && c._[k].display);
     var uk = (c[k] && c[k].unit) || (c._ && c._[k] && c._[k].unit);
     var val = dk ? dk(v) : v;
     var s = Math.round(val * 100) / 100 + '';
     if (uk) s += uk;
     return s;
   },
-  // Generate question from formula by specifying which var to find
-  gen: function(name, find) {
+  // Generate question finding a specific variable
+  gen: function(name, find, fixedVals) {
     var def = this._f[name]; if (!def) return null;
     var f = def.formula; if (!f[find]) return null;
     var knowns = def.vars.filter(function(v) { return v !== find; });
     var vals = {};
     for (var i = 0; i < knowns.length; i++) {
-      var d = def.domains[knowns[i]];
-      vals[knowns[i]] = d !== undefined ? this._val(d) : 1;
+      if (fixedVals && fixedVals[knowns[i]] !== undefined) {
+        vals[knowns[i]] = fixedVals[knowns[i]];
+      } else {
+        var d = def.domains[knowns[i]];
+        vals[knowns[i]] = d !== undefined ? this._val(d) : 1;
+      }
     }
     var result = f[find](vals);
     var ans = Math.round(result[find] * 100) / 100;
     var ctx = def.ctx;
-    // Build question text
     var parts = [];
     for (var i = 0; i < knowns.length; i++) {
       parts.push(knowns[i] + '=' + this._fmt(vals[knowns[i]], knowns[i], name));
@@ -426,13 +430,11 @@ var QM = {
       return s;
     })(ctx[find].tpl, vals, name) : autoTpl;
     var hint = knowns.map(function(k) { return k + '=' + QM._fmt(vals[k], k, name); }).join(', ') + ' → ' + find + '=' + QM._fmt(ans, find, name);
-    // Options
     var opts = [ans]; var r = def.optRange || 5;
     while (opts.length < 4) { var d = Math.round((ans + rand(-r, r)) * 100) / 100; if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
     shuffle(opts);
-    return { q: qText, a: ans, options: opts, hint: hint, timeLimit: 15, type: 'quant', techniqueLabel: name + ': ' + hint.substring(0, 35), intuition: hint, _meta: true };
+    return { q: qText, a: ans, options: opts, hint: hint, timeLimit: 15, type: 'quant', techniqueLabel: name + ': ' + hint.substring(0, 35), intuition: hint, _meta: true, _formula: name, _find: find, _vals: vals, _result: result };
   },
-  // Generate using random formula + random unknown (only solvable ones)
   any: function() {
     var names = Object.keys(this._f);
     for (var t = 0; t < 20; t++) {
@@ -443,6 +445,54 @@ var QM = {
       var find = solvableVars[rand(0, solvableVars.length - 1)];
       var r = this.gen(n, find);
       if (r) return r;
+    }
+    return null;
+  },
+  // Auto-discover chain: generate formula A, pipe its answer into formula B
+  // by matching variable types. Produces infinite combinatoric chains dynamically.
+  genChain: function() {
+    var names = Object.keys(this._f);
+    for (var tries = 0; tries < 30; tries++) {
+      var nA = names[rand(0, names.length - 1)];
+      var nB = names[rand(0, names.length - 1)];
+      if (nA === nB) continue;
+      var defA = this._f[nA], defB = this._f[nB];
+      var solA = defA.vars.filter(function(v) { return defA.formula[v]; });
+      if (solA.length === 0) continue;
+      var findA = solA[rand(0, solA.length - 1)];
+      var qA = this.gen(nA, findA);
+      if (!qA) continue;
+      var ansA = qA.a; var typeA = this._typeOf(findA);
+      var compatB = defB.vars.filter(function(v) {
+        return defB.formula[v] && QM._typeOf(v) === typeA;
+      });
+      if (compatB.length === 0) continue;
+      var bridgeVar = compatB[rand(0, compatB.length - 1)];
+      var d = defB.domains[bridgeVar];
+      if (d) {
+        if (d.min !== undefined && ansA < d.min * 0.5) continue;
+        if (d.max !== undefined && ansA > d.max * 1.5) continue;
+        if (d.vals) {
+          var ok = false;
+          for (var vi = 0; vi < d.vals.length; vi++) {
+            if (Math.abs(d.vals[vi] - ansA) / Math.max(1, d.vals[vi]) < 0.3) { ok = true; break; }
+          }
+          if (!ok) continue;
+        }
+      }
+      // Generate B with bridgeVar fixed to ansA
+      var fixed = {}; fixed[bridgeVar] = ansA;
+      var qB = this.gen(nB, bridgeVar, fixed);
+      if (!qB) continue;
+      // Combine into a composite question
+      var chainLabel = nA + '→' + nB;
+      var step1Hint = qA.hint.split(' → ').pop() || String(ansA);
+      var compositeQ = 'Step 1: ' + qA.q + ' (ans: ' + ansA + ') Then: ' + qB.q;
+      // Build options from qB's answer
+      var opts = [qB.a]; var r = defB.optRange || 5;
+      while (opts.length < 4) { var d2 = Math.round((qB.a + rand(-r, r)) * 100) / 100; if (opts.indexOf(d2) < 0 && d2 > 0) opts.push(d2); }
+      shuffle(opts);
+      return { q: compositeQ, a: qB.a, options: opts, hint: qB.hint, timeLimit: 25, type: 'quant', techniqueLabel: 'Chain: ' + chainLabel, intuition: qA.intuition + ' | ' + qB.intuition, _meta: true, _chain: true };
     }
     return null;
   }
@@ -528,9 +578,9 @@ QM.def('profit_loss', {
   domains: { cp_rs: { min: 100, max: 500 }, profit_pct: { min: 5, max: 25 }, sp_rs: { min: 120, max: 600 } },
   optRange: 20,
   ctx: {
-    sp_rs: { tpl: 'CP=₹{cp_rs}, profit={profit_pct}%. SP?', unit: '₹', display: { profit_pct: function(v) { return Math.round(v); } } },
+    sp_rs: { tpl: 'CP=₹{cp_rs}, profit={profit_pct}%. SP?', unit: '₹' },
     cp_rs: { tpl: 'SP=₹{sp_rs}, profit={profit_pct}%. CP?', unit: '₹' },
-    profit_pct: { tpl: 'CP=₹{cp_rs}, SP=₹{sp_rs}. Profit%?', unit: '%' }
+    profit_pct: { tpl: 'CP=₹{cp_rs}, SP=₹{sp_rs}. Profit%?', unit: '%', display: function(v) { return Math.round(v); } }
   }
 });
 
@@ -568,68 +618,11 @@ QM.def('discount', {
   }
 });
 
-// --- Auto-chain: generate multi-step by composing two formulas ---
-// Picks two formulas where one's output feeds into another's input
-function generateChainedMeta() {
-  var chains = [
-    // Speed from distance/time → use that speed for platform crossing
-    function() {
-      var dist = rand(100, 300), t = rand(6, 15);
-      var spd = dist / t;  // m/s
-      var plat = rand(200, 350), train = rand(100, 200);
-      var crossT = (train + plat) / spd;
-      var qText = 'A train covers ' + dist + 'm in ' + t + 's. It then crosses a ' + plat + 'm platform. Time to cross platform?';
-      var a = Math.round(crossT * 10) / 10;
-      var opts = [a]; while (opts.length < 4) { var d = Math.round((a + rand(-4, 4)) * 10) / 10; if (opts.indexOf(d) < 0 && d > 0) opts.push(d); } shuffle(opts);
-      return { q: qText, a: a, options: opts, hint: 'Speed=' + Math.round(spd * 10) / 10 + 'm/s, total=' + (train + plat) + 'm. Time=' + Math.round((train+plat)/spd*10)/10 + 's', timeLimit: 20, type: 'quant', techniqueLabel: 'Chain: speed→platform', intuition: 'Step1: speed=' + dist + '/' + t + '=' + Math.round(spd * 10) / 10 + 'm/s=' + Math.round(spd * 3.6 * 10) / 10 + 'km/h. Step2: total=' + train + '+' + plat + '=' + (train+plat) + 'm. Time=' + Math.round((train+plat)/spd*10)/10 + 's', _meta: true };
-    },
-    // Work: A + B together → then with C
-    function() {
-      var a = rand(8, 16), b = rand(10, 20);
-      var together = Math.round(a * b / (a + b) * 10) / 10;
-      var c = rand(12, 24);
-      var allThree = Math.round(1 / (1/a + 1/b + 1/c) * 10) / 10;
-      var qText = 'A takes ' + a + ' days, B ' + b + ' days. Together=? Then C joins (C=' + c + ' days). All three together?';
-      var a1 = together, a2 = allThree;
-      var ansStr = a1 + ', ' + a2;
-      var opts = [ansStr];
-      var alt1 = Math.round(a1 + rand(-2, 2) * 10) / 10 + ', ' + Math.round(a2 + rand(-2, 2) * 10) / 10;
-      if (alt1 !== ansStr) opts.push(alt1);
-      while (opts.length < 4) { var v = Math.round(a1 + rand(-3, 3) * 10) / 10 + ', ' + Math.round(a2 + rand(-3, 3) * 10) / 10; if (opts.indexOf(v) < 0) opts.push(v); }
-      shuffle(opts);
-      return { q: qText, a: ansStr, options: opts, hint: 'A+B=' + together + ' days. All three=' + allThree + ' days', timeLimit: 25, type: 'quant', techniqueLabel: 'Chain: work multipliers', intuition: 'A+B=' + a + '×' + b + '/(' + a + '+' + b + ')=' + together + '. With C: 1/' + a + '+1/' + b + '+1/' + c + '=' + 1/allThree + '. All three=' + allThree + ' days', _meta: true };
-    },
-    // P/L: Find CP from SP+profit, then find SP after discount
-    function() {
-      var cp = rand(200, 500), p = rand(8, 20);
-      var sp1 = Math.round(cp * (100 + p) / 100);
-      var d = rand(10, 25);
-      var mp = Math.round(sp1 * 100 / (100 - d));
-      var qText = 'CP=₹' + cp + ', profit=' + p + '%. SP=? This SP is after ' + d + '% discount on MP. MP?';
-      var a = mp;
-      var opts = [a]; while (opts.length < 4) { var d2 = Math.round(a + rand(-40, 40)); if (opts.indexOf(d2) < 0 && d2 > 0) opts.push(d2); } shuffle(opts);
-      return { q: qText, a: a, options: opts, hint: 'SP=CP×(100+P%)=₹' + sp1 + '. MP=SP×100/(100-D%)', timeLimit: 25, type: 'quant', techniqueLabel: 'Chain: P/L→discount', intuition: 'SP=' + cp + '×' + (100+p) + '%=' + sp1 + '. MP=' + sp1 + '×100/' + (100-d) + '=' + mp, _meta: true };
-    },
-    // Speed-distance-time: find distance, then time for another speed
-    function() {
-      var s1 = rand(5, 15), t1 = rand(10, 30);
-      var d = Math.round(s1 * t1);
-      var s2 = rand(8, 20);
-      var t2 = Math.round(d / s2 * 10) / 10;
-      var qText = 'Runner at ' + s1 + 'm/s runs for ' + t1 + 's. Same distance at ' + s2 + 'm/s takes?';
-      var a = t2;
-      var opts = [a]; while (opts.length < 4) { var d2 = Math.round((a + rand(-3, 3)) * 10) / 10; if (opts.indexOf(d2) < 0 && d2 > 0) opts.push(d2); } shuffle(opts);
-      return { q: qText, a: a, options: opts, hint: 'Distance=' + s1 + '×' + t1 + '=' + d + 'm. Time=' + d + '/' + s2 + '=' + t2 + 's', timeLimit: 20, type: 'quant', techniqueLabel: 'Chain: distance→time', intuition: 'Distance=' + d + 'm. At ' + s2 + 'm/s: time=' + d + '/' + s2 + '=' + t2 + 's', _meta: true };
-    }
-  ];
-  return chains[rand(0, chains.length - 1)]();
-}
-
-// Public meta-generator: uses formula bank + occasional chains
+// Public meta-generator: uses formula bank + dynamic chains
 function generateMetaQuestion(diff, layer) {
-  // 20% chance of chain, 80% single formula
+  // 20% chance of chain (dynamically composed from any compatible pair)
   if (rand(1, 5) <= 1) {
-    var c = generateChainedMeta();
+    var c = QM.genChain();
     if (c) { c.timeLimit = (layer === 'instinct') ? 15 : 20; return c; }
   }
   var q = QM.any();
