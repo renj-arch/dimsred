@@ -72,14 +72,9 @@ jobs:
             esac
           fi >> $GITHUB_OUTPUT
 
-      - name: Generate new AI questions
+      - name: Generate procedural questions (no AI)
         if: steps.batch.outputs.exams != 'skip'
-        env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: node scripts/generate-ai-questions.js ${{ steps.batch.outputs.exams }} --count=50
+        run: node scripts/generate-daily-questions.js ${{ steps.batch.outputs.exams }} --count=15
 
       - name: Build practice paper
         if: steps.batch.outputs.exams != 'skip'
