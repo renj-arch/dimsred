@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="js/auth-guard.js"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Topic Micro-Tests — vlymbooq</title>
+    <meta name="description" content="Pick a topic, take a quick 5-15 question micro-test. Focus on weak areas for SSC CGL, RBI, JEE, NEET, GATE, UPSC & more.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/micro-test.html">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--red:#ef4444;--amber:#f59e0b;--cyan:#22d3ee;--radius:12px}
+        body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--text);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:var(--text-sec);transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:800px;margin:0 auto;padding:24px;position:relative}
+        @media(max-width:640px){.nav{padding:10px 12px}.nav-links{flex-wrap:nowrap;overflow-x:auto;gap:0;scrollbar-width:none}.nav-links::-webkit-scrollbar{display:none}.nav-links a{padding:5px 10px;font-size:.7em}.brand-text{font-size:.85em}}
+        @media(max-width:480px){.container{padding:12px}.page-title{font-size:1.2em}}
+
+        .page-title{font-size:1.6em;font-weight:900;margin-bottom:4px}
+        .page-sub{color:var(--text-muted);font-size:.82em;margin-bottom:20px}
+        .page-sub .badge{display:inline-block;padding:2px 10px;border-radius:100px;background:rgba(34,211,238,.1);color:var(--cyan);font-size:.78em;margin-left:6px}
+
+        .step-card{padding:28px 24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);margin-bottom:16px}
+        .step-title{font-size:.85em;font-weight:700;color:var(--text-muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+        .step-title .num{display:inline-flex;width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;font-size:.75em;align-items:center;justify-content:center;flex-shrink:0}
+        .step-title .num.done{background:var(--emerald)}
+
+        .exam-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+        @media(max-width:600px){.exam-grid{grid-template-columns:1fr 1fr}}
+        .exam-btn{padding:12px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;font-size:.78em;font-weight:600;transition:all .15s;text-align:center}
+        .exam-btn:hover{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.04)}
+        .exam-btn.selected{border-color:var(--purple);background:rgba(167,139,250,.1);color:var(--purple)}
+        .exam-btn .count{display:block;font-size:.65em;font-weight:400;color:var(--text-muted);margin-top:2px}
+
+        .topic-list{display:flex;flex-direction:column;gap:4px}
+        .topic-btn{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;font-size:.82em;font-weight:500;transition:all .15s}
+        .topic-btn:hover{border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.04)}
+        .topic-btn.selected{border-color:var(--purple);background:rgba(167,139,250,.1);color:var(--purple)}
+        .topic-btn .t-count{font-size:.75em;color:var(--text-muted);font-weight:400}
+
+        .pick-count{display:flex;gap:8px}
+        .count-btn{padding:10px 20px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;font-size:.82em;font-weight:600;transition:all .15s}
+        .count-btn:hover{border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.04)}
+        .count-btn.selected{border-color:var(--purple);background:rgba(167,139,250,.1);color:var(--purple)}
+        .count-btn:disabled{opacity:.3;cursor:default}
+
+        .action-btn{display:block;width:100%;padding:14px;border-radius:100px;border:none;font-weight:700;font-size:.95em;cursor:pointer;transition:all .2s;text-align:center;margin-top:12px}
+        .action-btn.primary{background:linear-gradient(135deg,var(--purple),var(--emerald));color:#fff}
+        .action-btn.primary:hover{opacity:.9;transform:translateY(-1px)}
+        .action-btn.primary:disabled{opacity:.4;cursor:default;transform:none}
+        .action-btn.secondary{background:rgba(255,255,255,.06);color:var(--text)}
+        .action-btn.secondary:hover{background:rgba(255,255,255,.1)}
+
+        .q-section{display:none}
+        .q-section.active{display:block}
+
+        .q-card{padding:28px 24px 24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);margin-bottom:14px}
+        .q-card .q-num{font-size:.72em;color:var(--text-muted);margin-bottom:4px}
+        .q-card .q-progress{height:3px;background:rgba(255,255,255,.06);border-radius:100px;margin-bottom:16px;overflow:hidden}
+        .q-card .q-progress .fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--emerald));border-radius:100px;transition:width .3s}
+        .q-card .q-topic-tag{display:inline-block;padding:2px 10px;border-radius:100px;background:rgba(34,211,238,.08);color:var(--cyan);font-size:.68em;font-weight:600;margin-bottom:8px}
+        .q-card .q-text{font-size:1em;font-weight:600;line-height:1.6;margin-bottom:16px}
+        .q-opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:400px){.q-opt-grid{grid-template-columns:1fr}}
+        .q-opt{padding:11px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;font-size:.85em;font-weight:500;transition:all .15s;text-align:center}
+        .q-opt:hover{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.04)}
+        .q-opt.selected{border-color:var(--purple);background:rgba(167,139,250,.1);color:var(--purple)}
+        .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1);color:var(--emerald)}
+        .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-opt:disabled{cursor:default;opacity:.7}
+        .q-opt.show-correct{border-color:var(--emerald);background:rgba(52,211,153,.04);color:var(--emerald)}
+
+        .result-card{padding:28px 24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);text-align:center}
+        .result-card .score-big{font-size:3em;font-weight:900;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .result-card .score-label{font-size:.82em;color:var(--text-muted);margin-bottom:16px}
+        .result-card .stat-row{display:flex;justify-content:center;gap:24px;margin-bottom:16px;flex-wrap:wrap}
+        .result-card .stat{text-align:center}
+        .result-card .stat .val{font-size:1.1em;font-weight:700}
+        .result-card .stat .lbl{font-size:.72em;color:var(--text-muted)}
+        .result-card .stat .val.green{color:var(--emerald)}
+        .result-card .stat .val.red{color:var(--red)}
+        .result-card .stat .val.amber{color:var(--amber)}
+
+        .rev-item{padding:16px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.02);margin-bottom:8px;text-align:left}
+        .rev-item .rev-q{font-size:.85em;font-weight:600;margin-bottom:8px}
+        .rev-item .rev-ans{font-size:.78em;margin-bottom:4px}
+        .rev-item .rev-ans .ck{color:var(--emerald)}
+        .rev-item .rev-ans .cr{color:var(--red)}
+        .rev-item .rev-sol{font-size:.72em;color:var(--text-muted);padding:8px;border-radius:6px;background:rgba(255,255,255,.02);margin-top:4px}
+
+        .hidden{display:none}
+        .mt-12{margin-top:12px}
+        .mb-12{margin-bottom:12px}
+        .ta-center{text-align:center}
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-inner">
+        <a href="index.html" class="brand">
+            <img src="logo.png" alt="" class="brand-icon">
+            <span class="brand-text">vlymbooq</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="lab.html">Lab</a>
+            <a href="micro-test.html" class="active">🎯 Drill</a>
+            <a href="mental.html">Mental</a>
+            <a href="current-affairs.html">📰 GK</a>
+            <a href="premium.html">Premium</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h1 class="page-title">🎯 Topic Micro-Tests</h1>
+    <p class="page-sub">Pick an exam, choose a topic, and drill 5&ndash;15 questions. Focus on what matters.</p>
+
+    <!-- Step 1: Pick Exam -->
+    <div id="stepExam" class="step-card">
+        <div class="step-title"><span class="num" id="num1">1</span> Select Exam</div>
+        <div class="exam-grid" id="examGrid"></div>
+    </div>
+
+    <!-- Step 2: Pick Topic -->
+    <div id="stepTopic" class="step-card" style="display:none">
+        <div class="step-title"><span class="num" id="num2">2</span> Select Topic</div>
+        <div class="topic-list" id="topicList"></div>
+        <button class="action-btn secondary mt-12" id="backToExamBtn" style="width:auto;display:inline-block;padding:8px 20px">← Back to exams</button>
+    </div>
+
+    <!-- Step 3: Pick Count -->
+    <div id="stepCount" class="step-card" style="display:none">
+        <div class="step-title"><span class="num" id="num3">3</span> Questions</div>
+        <p style="font-size:.82em;color:var(--text-sec);margin-bottom:10px" id="topicSummary"></p>
+        <div class="pick-count" id="countGrid"></div>
+        <button class="action-btn primary" id="startBtn" disabled>Start Test</button>
+        <button class="action-btn secondary mt-12" id="backToTopicBtn" style="width:auto;display:inline-block;padding:8px 20px">← Back to topics</button>
+    </div>
+
+    <!-- Quiz -->
+    <div id="stepQuiz" class="q-section" style="display:none">
+        <div id="resultArea" class="hidden"></div>
+        <div id="qCard" class="q-card">
+            <div class="q-num" id="qNumDisplay"></div>
+            <div class="q-progress"><div class="fill" id="qProgressFill" style="width:0%"></div></div>
+            <div class="q-topic-tag" id="qTopicTag"></div>
+            <div class="q-text" id="qText"></div>
+            <div class="q-opt-grid" id="qOptions"></div>
+            <button class="action-btn primary" id="nextBtn" disabled>Next Question</button>
+        </div>
+        <div class="result-card hidden" id="resultCard">
+            <div class="score-big" id="scorePct">0%</div>
+            <div class="score-label">Score</div>
+            <div class="stat-row">
+                <div class="stat"><div class="val green" id="correctCount">0</div><div class="lbl">Correct</div></div>
+                <div class="stat"><div class="val red" id="wrongCount">0</div><div class="lbl">Wrong</div></div>
+                <div class="stat"><div class="val amber" id="accuracyDisplay">0%</div><div class="lbl">Accuracy</div></div>
+            </div>
+            <div id="reviewList"></div>
+            <button class="action-btn primary" id="retryBtn" style="margin-top:12px">Try Another Topic</button>
+            <button class="action-btn secondary" id="homeBtn">Back to Topics</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/micro-test.js"></script>
+</body>
+</html>
