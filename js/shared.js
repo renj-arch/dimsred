@@ -281,6 +281,7 @@
   function showGoalPrompt() {
     var goals = JSON.parse(localStorage.getItem(GOALS_KEY) || '{}');
     if (goals.papersPerWeek) return;
+    if (document.getElementById('goalOverlay')) return;
     var html = '<div class="goal-overlay" id="goalOverlay"><div class="goal-modal">';
     html += '<h3 style="margin:0 0 12px">🎯 Set Your Weekly Goal</h3>';
     html += '<p style="font-size:.85em;color:#a1a1aa;margin-bottom:16px">How many papers do you want to complete this week?</p>';
