@@ -113,6 +113,10 @@ var defaultState = {
     quadratic:{attempts:0,correct:0}, partnership:{attempts:0,correct:0},
     compound_interest:{attempts:0,correct:0}, discount:{attempts:0,correct:0},
     races:{attempts:0,correct:0}, data_interpretation:{attempts:0,correct:0},
+    profit_loss:{attempts:0,correct:0}, pipes_cisterns:{attempts:0,correct:0},
+    boats_streams:{attempts:0,correct:0}, alligation:{attempts:0,correct:0},
+    surds_indices:{attempts:0,correct:0}, bankers_discount:{attempts:0,correct:0},
+    stocks_shares:{attempts:0,correct:0}, odd_man_out:{attempts:0,correct:0},
     // Reasoning sub-topics
     pattern_flash:{attempts:0,correct:0}, coding_flash:{attempts:0,correct:0},
     logic_snap:{attempts:0,correct:0}, direction_sense:{attempts:0,correct:0},
@@ -123,7 +127,21 @@ var defaultState = {
     mirror_image:{attempts:0,correct:0}, dice_cube:{attempts:0,correct:0},
     calendar:{attempts:0,correct:0}, clock:{attempts:0,correct:0},
     alphabet_arrange:{attempts:0,correct:0}, critical_reasoning:{attempts:0,correct:0},
-    decision_making:{attempts:0,correct:0}, venn_diagram:{attempts:0,correct:0}
+    decision_making:{attempts:0,correct:0}, venn_diagram:{attempts:0,correct:0},
+    letter_symbol_series:{attempts:0,correct:0}, artificial_language:{attempts:0,correct:0},
+    matching_definitions:{attempts:0,correct:0}, cause_effect:{attempts:0,correct:0},
+    essential_part:{attempts:0,correct:0}, theme_detection:{attempts:0,correct:0},
+    statement_argument:{attempts:0,correct:0}, statement_assumption:{attempts:0,correct:0},
+    statement_conclusion:{attempts:0,correct:0},
+    synonym:{attempts:0,correct:0}, antonym:{attempts:0,correct:0},
+    sentence_completion:{attempts:0,correct:0}, word_ordering:{attempts:0,correct:0},
+    sentence_ordering:{attempts:0,correct:0}, paragraph_formation:{attempts:0,correct:0},
+    comprehension:{attempts:0,correct:0},
+    embedded_images:{attempts:0,correct:0}, figure_matrix:{attempts:0,correct:0},
+    paper_folding:{attempts:0,correct:0}, paper_cutting:{attempts:0,correct:0},
+    rule_detection:{attempts:0,correct:0}, grouping_images:{attempts:0,correct:0},
+    image_analysis:{attempts:0,correct:0}, water_images:{attempts:0,correct:0},
+    dot_situation:{attempts:0,correct:0}
   },
   patternStats: { Analogy:{attempts:0,correct:0},Classification:{attempts:0,correct:0},Series:{attempts:0,correct:0},Coding:{attempts:0,correct:0},Syllogism:{attempts:0,correct:0},Inequality:{attempts:0,correct:0},Direction:{attempts:0,correct:0},'Blood Relation':{attempts:0,correct:0},Puzzle:{attempts:0,correct:0},'Data Sufficiency':{attempts:0,correct:0} },
   speedData: { Analogy:{time:0,count:0},Classification:{time:0,count:0},Series:{time:0,count:0},Coding:{time:0,count:0},Syllogism:{time:0,count:0},Inequality:{time:0,count:0},Direction:{time:0,count:0},'Blood Relation':{time:0,count:0},Puzzle:{time:0,count:0},'Data Sufficiency':{time:0,count:0} },
@@ -206,7 +224,44 @@ var SPEED_TECHNIQUES = {
   'alphabet_arrange': 'Position: A=1 to Z=26. For next/find pattern, check diff between consecutive letter positions.',
   'critical_reasoning': 'Assumption what MUST be true. Course of action must solve problem. Cause must precede effect.',
   'decision_making': 'Check each condition independently. AND=all pass. OR=any passes. Cannot determine if info missing.',
-  'venn_diagram': 'Only A = A-both. Neither = total - (A+B-both). Draw overlapping circles. Total = Aonly + Bonly + both + neither.'
+  'venn_diagram': 'Only A = A-both. Neither = total - (A+B-both). Draw overlapping circles. Total = Aonly + Bonly + both + neither.',
+  // New quant
+  'profit_loss': 'SP=CP×(100+P%)/100 for profit. For loss: SP=CP×(100-L%)/100. Discount: SP=MP×(100-D%)/100.',
+  'pipes_cisterns': 'Together = a×b/(a+b). Net = 1/(1/a+1/b-1/c) for fill+fill+empty. Time = work/rate.',
+  'boats_streams': 'Downstream=boat+stream. Upstream=boat-stream. Boat=(DS+US)/2. Stream=(DS-US)/2.',
+  'alligation': '(mean-low):(high-mean). Cheaper:Dearer = (Dearer-Mean):(Mean-Cheaper). Avg = Σ(value×qty)/Σqty.',
+  'surds_indices': 'a^m×a^n=a^(m+n). (a^m)^n=a^(mn). a^m÷a^n=a^(m-n). √(a²b)=a√b. a^0=1.',
+  'bankers_discount': 'BD=FV×R×T/100. TD=BD×100/(100+R×T). BG=BD-TD. PW=100×TD/(R×T).',
+  'stocks_shares': 'Yield=D%/MV×100. Income=Shares×D%×FV. MV=(D%×FV)/Yield%. Investment=Shares×MV.',
+  'odd_man_out': 'Find the common property (squares/primes/multiples/pattern). The odd one breaks the rule.',
+  // New reasoning
+  'letter_symbol_series': 'Convert letters to positions (A=1). Find step pattern. Convert back to letter.',
+  'artificial_language': 'Each 3-letter chunk maps to one English word. Find mapping from the two given translations.',
+  'matching_definitions': 'Read definition carefully. Eliminate options that don\'t match keywords exactly.',
+  'cause_effect': 'Cause happens first and produces the effect. Look for temporal/logical sequence.',
+  'essential_part': 'Identify the part without which the thing cannot function at all.',
+  'theme_detection': 'Theme = central idea. Ignore details. Find what summarizes the entire passage.',
+  'statement_argument': 'Strong arguments are directly relevant, significant, fact-based. Weak are vague/emotional.',
+  'statement_assumption': 'Assumption is taken for granted. Must be necessarily true for statement to be valid.',
+  'statement_conclusion': 'Valid conclusion MUST follow from statements. If it could be false, it does not follow.',
+  // Verbal
+  'synonym': 'A synonym has same or nearly same meaning. Eliminate opposites first.',
+  'antonym': 'An antonym is opposite in meaning. Look for the word that means the reverse.',
+  'sentence_completion': 'Read for context clues. Correct word must make logical and grammatical sense.',
+  'word_ordering': 'Find subject first, then verb, then object. Form a meaningful sentence.',
+  'sentence_ordering': 'Put events in chronological order. Start with what happened first.',
+  'paragraph_formation': 'Start with main idea, then supporting points, then conclusion.',
+  'comprehension': 'Read the passage. Find the sentence that directly answers the question.',
+  // Non-verbal
+  'embedded_images': 'The figure may be rotated/scaled/obscured. Look for the exact shape within the larger figure.',
+  'figure_matrix': 'Find the pattern in rows AND columns. Same logic applies to all rows.',
+  'paper_folding': 'Each fold doubles layers. Number of holes = layers × cuts. Unfold symmetrically.',
+  'paper_cutting': 'Cut pattern repeats symmetrically across each fold line.',
+  'rule_detection': 'Apply the rule to each figure. The one that violates it is the answer.',
+  'grouping_images': 'Find the shared attribute in each group. Match the new item to the right group.',
+  'image_analysis': 'Visualize the figure mentally. Count elements carefully.',
+  'water_images': 'Water image = vertical mirror. Top becomes bottom. Left-right stays same.',
+  'dot_situation': 'Each region belongs to specific shapes. Find which shapes share the dot\'s region.'
 };
 
 var TECHNIQUE_DRILLS = {
@@ -1704,6 +1759,387 @@ function generateVennDiagramQuestion(diff) {
   return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: 15, type:'reasoning', techniqueLabel:'Venn: '+d.hint, intuition: d.intuition||'Venn: Only A = A-both. Only B = B-both. Neither = total - (A+B-both). Total = Only A + Only B + both + neither.' };
 }
 
+// ====== NEW QUANT GENERATORS (IndiaBIX coverage) ======
+
+function generateProfitLossQuestion(diff, layer) {
+  var ty = [
+    function(){ var cp=rand(50,200), p=rand(5,30); return { q:'CP=₹'+cp+', profit='+p+'%. SP?', a:Math.round(cp*(100+p)/100), hint:'SP=CP×(100+P%)/100' }; },
+    function(){ var sp=rand(100,300), p=rand(5,25); return { q:'SP=₹'+sp+', profit='+p+'%. CP?', a:Math.round(sp*100/(100+p)), hint:'CP=SP×100/(100+P%)' }; },
+    function(){ var cp=rand(80,300), l=rand(5,20); return { q:'CP=₹'+cp+', loss='+l+'%. SP?', a:Math.round(cp*(100-l)/100), hint:'SP=CP×(100-L%)/100' }; },
+    function(){ var cp=rand(50,150), sp=cp+rand(10,40); return { q:'CP=₹'+cp+', SP=₹'+sp+'. Profit%?', a:Math.round((sp-cp)/cp*100), hint:'P%=(SP-CP)/CP×100' }; },
+    function(){ var mp=rand(200,500), d=rand(10,30), p=rand(5,15); var sp=Math.round(mp*(100-d)/100); var cp=Math.round(sp*100/(100+p)); return { q:'MP=₹'+mp+', discount='+d+'%, profit='+p+'%. CP?', a:cp, hint:'Find SP from MP, then CP from SP' }; }
+  ];
+  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-20,20); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'P&L: '+d.hint, intuition:'SP=CP×(100±P%)/100. For discount: SP=MP×(100-D%)/100. Then find CP from SP.' };
+}
+
+function generatePipesCisternsQuestion(diff, layer) {
+  var ty = [
+    function(){ var a=rand(4,10), b=rand(a+2,15); return { q:'Pipe A fills in '+a+'h, B in '+b+'h. Together?', a:Math.round(a*b/(a+b)), hint:'Together = a×b/(a+b)' }; },
+    function(){ var a=rand(3,8), b=rand(4,10), c=rand(6,12); return { q:'A fills in '+a+'h, B in '+b+'h, C empties in '+c+'h. Net time?', a:Math.round(1/(1/a+1/b-1/c)), hint:'1/t = 1/a + 1/b - 1/c' }; },
+    function(){ var a=rand(5,15), b=rand(a+2,20); var t=Math.round(a*b/(a+b)); return { q:'A fills in '+a+'h. A+B together in '+t+'h. B alone?', a:Math.round(a*t/(a-t)), hint:'B = A×T/(A−T)' }; },
+    function(){ var a=rand(4,12), l=rand(2,5); return { q:'Pipe fills in '+a+'h, leakage empties in '+l*2+'h. Net time?', a:Math.round(1/(1/a-1/(l*2))), hint:'Net = 1/(1/a - 1/leak_time)' }; }
+  ];
+  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-3,3); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Pipes: '+d.hint, intuition:'Together rate = sum of rates. Opposite directions subtract. Time = 1/rate.' };
+}
+
+function generateBoatsStreamsQuestion(diff, layer) {
+  var ty = [
+    function(){ var b=rand(8,15), s=rand(2,5); return { q:'Speed in still water='+b+'km/h, stream='+s+'km/h. Downstream?', a:b+s, hint:'Downstream = boat + stream' }; },
+    function(){ var b=rand(8,15), s=rand(2,5); return { q:'Speed in still water='+b+'km/h, stream='+s+'km/h. Upstream?', a:b-s, hint:'Upstream = boat - stream' }; },
+    function(){ var ds=rand(12,20), us=rand(6,11); return { q:'Downstream='+ds+'km/h, upstream='+us+'km/h. Boat speed?', a:Math.round((ds+us)/2), hint:'Boat = (downstream + upstream)/2' }; },
+    function(){ var ds=rand(12,20), us=rand(6,11); return { q:'Downstream='+ds+'km/h, upstream='+us+'km/h. Stream speed?', a:Math.round((ds-us)/2), hint:'Stream = (downstream - upstream)/2' }; },
+    function(){ var b=rand(10,18), s=rand(2,4), d=rand(30,80); return { q:'Boat='+b+'km/h, stream='+s+'km/h. Time downstream for '+d+'km?', a:Math.round(d/(b+s)), hint:'Time = distance / downstream speed' }; }
+  ];
+  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-3,3)+(d.a>5?0:1); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'Boats: '+d.hint, intuition:'Downstream=boat+stream. Upstream=boat-stream. Boat=(DS+US)/2. Stream=(DS-US)/2.' };
+}
+
+function generateAlligationQuestion(diff, layer) {
+  var ty = [
+    function(){ var p1=rand(5,15), p2=rand(20,40), m=rand(p1+3,p2-3); return { q:'Mix '+(p1*10)+'% and '+(p2*10)+'% to get '+(m*10)+'%? Ratio?', a:(p2-m)+':'+(m-p1), hint:'(mean-low):(high-mean)' }; },
+    function(){ var c1=rand(20,50), c2=c1+rand(15,40), r1=rand(1,4), r2=rand(1,4); var m=Math.round((c1*r1+c2*r2)/(r1+r2)); return { q:'₹'+c1+'/kg (qty '+r1+'kg) + ₹'+c2+'/kg (qty '+r2+'kg). Avg price?', a:m, hint:'Avg = (C1×Q1+C2×Q2)/(Q1+Q2)' }; },
+    function(){ var w=rand(5,15), c=rand(2,5); return { q:'Water: Milk = '+w+':'+c+' in '+(w+c)*2+'L mixture. Milk quantity?', a:Math.round((w+c)*2*c/(w+c)), hint:'Milk = total × part/total_parts' }; }
+  ];
+  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){if(typeof d.a==='string'){var parts=d.a.split(':').map(Number);var v=parts[0]+rand(1,3)+':'+(parts[1]+rand(1,3));if(v!==d.a)o.push(v);}else{var v=d.a+rand(-5,5);if(o.indexOf(v)<0&&v>0)o.push(v);}} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Alligation: '+d.hint, intuition:'Alligation: (mean-low):(high-mean). Cheaper qty : dearer qty = (dearer-mean):(mean-cheaper).' };
+}
+
+function generateSurdsIndicesQuestion(diff, layer) {
+  var ty = [
+    function(){ var a=rand(2,5), b=rand(2,4); return { q:'Simplify: '+a+'^'+b+' × '+a+'^'+(b+1), a:Math.pow(a,2*b+1), hint:'Add exponents: a^m × a^n = a^(m+n)' }; },
+    function(){ var a=rand(2,5), b=rand(2,4); return { q:'Simplify: ('+a+'^'+b+')^'+(b+1), a:Math.pow(a,b*(b+1)), hint:'(a^m)^n = a^(m×n)' }; },
+    function(){ var a=rand(4,9), b=rand(2,4); return { q:'Simplify: '+Math.pow(a,b)+' ÷ '+Math.pow(a,b-1), a:a, hint:'a^m ÷ a^n = a^(m-n)' }; },
+    function(){ var a=[2,3,5,6,7][rand(0,4)], b=rand(2,3); return { q:'√'+(a*a*b)+' = ?', a:a*Math.round(Math.sqrt(b)), hint:'√(a²b) = a√b. Split into perfect square × rest.' }; }
+  ];
+  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-5,5); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Surds: '+d.hint, intuition:'a^m×a^n=a^(m+n), (a^m)^n=a^(mn), a^m÷a^n=a^(m-n). √(a²b)=a√b.' };
+}
+
+function generateBankersDiscountQuestion(diff, layer) {
+  var ty = [
+    function(){ var b=rand(1000,5000), r=rand(5,12), t=rand(1,3); return { q:'BD on ₹'+b+' at '+r+'% for '+t+'yr?', a:Math.round(b*r*t/100), hint:'BD = FaceValue × Rate × Time / 100' }; },
+    function(){ var b=rand(1000,4000), r=rand(6,10), t=rand(2,4); var td=Math.round(b*r*t/(100+r*t)); return { q:'TD on ₹'+b+' at '+r+'% for '+t+'yr?', a:td, hint:'TD = (F×R×T)/(100+R×T)' }; },
+    function(){ var b=rand(2000,6000), r=rand(5,10), t=rand(1,3); var bd=Math.round(b*r*t/100); var td=Math.round(b*r*t/(100+r*t)); return { q:'BG (BD-TD) on ₹'+b+' at '+r+'% for '+t+'yr?', a:bd-td, hint:'BG = BD - TD' }; }
+  ];
+  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-100,100); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Banker\'s Discount: '+d.hint, intuition:'BD=FV×R×T/100. TD=BD×100/(100+R×T). BG=BD-TD.' };
+}
+
+function generateStocksSharesQuestion(diff, layer) {
+  var ty = [
+    function(){ var fv=rand(50,100), mv=rand(fv-20,fv+30), d=rand(5,12); return { q:'Face=₹'+fv+', Mkt=₹'+mv+', dividend='+d+'%. Yield?', a:Math.round(d*fv/mv*100)/100, hint:'Yield% = (Dividend%/Face)/Market × 100' }; },
+    function(){ var fv=rand(50,100), mv=rand(fv-10,fv+20), d=rand(6,15), inv=rand(5000,20000); var shares=Math.floor(inv/mv); return { q:'Face=₹'+fv+', Mkt=₹'+mv+', dividend='+d+'%. Invest ₹'+inv+', income?', a:shares*d*fv/100, hint:'Income = (Investment/Market) × Dividend% × Face' }; },
+    function(){ var fv=100, d=rand(8,18), r=rand(6,12); return { q:'₹'+fv+' stock, '+d+'% dividend yields '+r+'%. Market price?', a:Math.round(d*fv/r), hint:'MV = (Dividend% × FV) / Yield%' }; }
+  ];
+  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=typeof d.a==='number'?Math.round(d.a+rand(-2,2)):(d.a+rand(-2,2)); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Stocks: '+d.hint, intuition:'Yield = Dividend/MV × 100. Income = Shares × Dividend% × FV. MV = (D%×FV)/Yield%.' };
+}
+
+function generateOddManOutQuestion(diff, layer) {
+  var ty = [
+    function(){ var a=rand(2,5), b=a+rand(1,2); return { q:'Which is odd? 4, 9, 16, '+(a*a+1)+', 36', a:'+'+(a*a+1)+'', hint:'All are perfect squares except one' }; },
+    function(){ var n=rand(10,30); var nums=[n*2, n*3, n*4, n*5, n*7]; shuffle(nums); var correct=n*7; return { q:'Which is odd? '+nums.join(', '), a:String(correct), hint:'Four are multiples of '+(n)+', one is not' }; },
+    function(){ var primes=[2,3,5,7,11,13,17,19,23,29]; shuffle(primes); var picks=primes.slice(0,5); var nonPrime=picks[4]; while(isPrime(nonPrime))nonPrime=picks[rand(0,3)]+rand(1,3); if(!isPrime(nonPrime)){picks[4]=nonPrime;} else {picks[rand(0,4)]=8;} shuffle(picks); return { q:'Which is odd? '+picks.join(', '), a:String(picks.filter(function(p){return p===nonPrime||!isPrime(p)})[0]||8), hint:'Four are prime numbers, one is not' }; },
+    function(){ var a=rand(3,8); return { q:'Which is odd? '+a*1+', '+a*3+', '+a*5+', '+(a*6)+', '+a*7, a:String(a*6), hint:'Four are multiples of '+a+' by odd numbers' }; }
+  ];
+  function isPrime(n){if(n<2)return false;for(var i=2;i*i<=n;i++){if(n%i===0)return false;}return true;}
+  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; var picks=d.q.split('? ')[1].split(', '); picks.forEach(function(p){if(p!==d.a&&o.indexOf(p)<0)o.push(p);}); while(o.length<4){var v=String(rand(10,99));if(o.indexOf(v)<0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:12, type:'quant', techniqueLabel:'Odd Man Out: '+d.hint, intuition:'Find the common property (squares, primes, multiples). The one that breaks the rule is the answer.' };
+}
+
+// ====== NEW REASONING GENERATORS (IndiaBIX coverage) ======
+
+function generateLetterSymbolSeriesQuestion(diff, layer) {
+  var ty = [
+    function(){ var letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var start=rand(0,20); var step=rand(1,4); return { q:'Next: '+letters[start]+', '+letters[start+step]+', '+letters[start+2*step]+', '+letters[start+3*step]+'?', a:letters[start+4*step], hint:'Each step +'+(step*2)+' positions' }; },
+    function(){ var letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var start=rand(1,15); var steps=[[2,3,4],[1,2,1],[3,5,7],[1,3,5]]; var s=steps[rand(0,3)]; return { q:'Series: '+letters[start]+', '+letters[start+s[0]]+', '+letters[start+s[0]+s[1]]+', '+letters[start+s[0]+s[1]+s[2]]+'?', a:letters[start+s[0]+s[1]+s[2]+s[s.length-1]], hint:'Find the pattern in letter positions' }; },
+    function(){ var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var pos=rand(4,20); return { q:'Next: AZ, BY, CX, DW?', a:'EV', hint:'First letter +1, second letter -1 each step' }; }
+  ];
+  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; ['AB','CD','EF','GH','IJ','KL','MN','OP','QR','ST','UV','WX','YZ','EV','FU','GT'].forEach(function(l){if(l!==d.a&&o.indexOf(l)<0)o.push(l);}); while(o.length<4){var v=String.fromCharCode(65+rand(0,25));if(o.indexOf(v)<0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:12, type:'reasoning', techniqueLabel:'Letter Series: '+d.hint, intuition:'Convert letters to positions (A=1). Find the step pattern. Convert back.' };
+}
+
+function generateArtificialLanguageQuestion(diff, layer) {
+  var ty = [
+    function(){ var words=[['mig','hel','bim','trig']]; var roots={mig:'sky',hel:'blue',bim:'big',trig:'tree'}; var w1='mighel', w2='bimtrig'; shuffle(words[0]); var qw=words[0][0]+words[0][1]; return { q:'If "'+w1+'" means "sky blue" and "'+w2+'" means "big tree", what is "'+qw+'" ?', a:roots[qw.substring(0,3)]+' '+roots[qw.substring(3)], hint:'Split word into two 3-letter roots' }; },
+    function(){ var map={tam:'run',pok:'fast',lun:'dog',nir:'black',vok:'cat',zed:'white'}; var keys=Object.keys(map); shuffle(keys); var k1=keys[0],k2=keys[1]; var w=k1+k2; return { q:'If "'+k1+keys[1]+'" means "'+map[k1]+' '+map[keys[1]]+'" and "'+keys[2]+keys[3]+'" means "'+map[keys[2]]+' '+map[keys[3]]+'", what is "'+w+'" ?', a:map[k1]+' '+map[k2], hint:'Each 3-letter segment maps to one word' }; }
+  ];
+  var d=ty[rand(0,ty.length-1)](); var dex=[d.a]; var allPhrases='sky blue big tree run fast dog black cat white'.split(' '); for(var di=0;di<allPhrases.length-1;di+=2){var p=allPhrases[di]+' '+allPhrases[di+1];if(p!==d.a&&dex.indexOf(p)<0)dex.push(p);} while(dex.length<4){dex.push('red green');} shuffle(dex);
+  return { question:d.q, answer:d.a, options:dex, hint:d.hint, timeLimit:20, type:'reasoning', techniqueLabel:'Artificial Language: '+d.hint, intuition:'Each 3-letter chunk maps to one English word. Find the mapping from the two given translations.' };
+}
+
+function generateMatchingDefinitionsQuestion(diff, layer) {
+  var defs=[
+    {d:'A tool used for cutting wood',ex:['A hammer', 'A saw', 'A screwdriver', 'A drill'],ans:1},
+    {d:'An animal that lives in water',ex:['A lion that hunts in a forest', 'A fish that swims in the ocean', 'An eagle that flies in the sky', 'A snake that slithers on land'],ans:1},
+    {d:'Something used to measure time',ex:['A compass that shows direction', 'A clock that ticks every second', 'A thermometer that reads temperature', 'A barometer that measures pressure'],ans:1},
+    {d:'A place where books are kept',ex:['A gym where people exercise', 'A library where people read', 'A kitchen where food is cooked', 'A garden where flowers bloom'],ans:1},
+    {d:'A vehicle that travels on water',ex:['A car driving on the highway', 'A boat sailing across the lake', 'A plane flying above the clouds', 'A train moving along the tracks'],ans:1}
+  ];
+  var d=defs[rand(0,defs.length-1)]; shuffle(d.ex);
+  return { question:'Which matches "'+d.d+'" ?', answer:d.ex[0], options:d.ex, hint:'Find the option that fits the definition exactly', timeLimit:10, type:'reasoning', techniqueLabel:'Matching Definitions: '+d.d, intuition:'Read the definition carefully. Eliminate options that don\'t match all keywords.' };
+}
+
+function generateCauseEffectQuestion(diff, layer) {
+  var pairs=[
+    {c:'The government announced free education for all children',e:'School enrollment rates increased significantly across the country'},
+    {c:'There was a severe drought in the region',e:'Farmers faced huge crop losses and water shortages'},
+    {c:'The company launched a new advertising campaign',e:'Sales of their product increased by 40%'},
+    {c:'Heavy rain caused flooding in the city',e:'Many roads were closed and traffic came to a standstill'},
+    {c:'The factory installed new pollution control equipment',e:'Air quality in the surrounding area improved noticeably'}
+  ];
+  var p=pairs[rand(0,pairs.length-1)];
+  var opts=['A: '+(rand(0,1)?p.c:p.e),'B: '+(rand(0,1)?p.e:p.c),'C: Both are independent','D: Both are effects of a common cause'];
+  var isCFirst=opts[0].indexOf(p.c)>=0||opts[0].indexOf(p.e)>=0;
+  var ansIdx=(isCFirst&&opts[0].indexOf(p.c)>=0&&opts[1].indexOf(p.e)>=0)||(!isCFirst&&opts[1].indexOf(p.c)>=0&&opts[0].indexOf(p.e)>=0)?0:1;
+  // Simplified: A is cause B is effect
+  shuffle(opts);
+  return { question:'Statement I: '+p.c+'<br>Statement II: '+p.e+'<br>Which is cause, which is effect?', answer:'A is the cause, B is the effect', options:['A is cause, B is effect','B is cause, A is effect','Both independent','Both from common cause'], hint:'The cause happens first and leads to the effect', timeLimit:15, type:'reasoning', techniqueLabel:'Cause & Effect', intuition:'The cause precedes and produces the effect. Look for temporal/logical sequence.' };
+}
+
+function generateEssentialPartQuestion(diff, layer) {
+  var items=[
+    {t:'Painting',parts:['Canvas','Brush','Paint','Easel','Frame'],correct:2},
+    {t:'Bicycle',parts:['Wheels','Bell','Chain','Handlebars','Seat'],correct:0},
+    {t:'Book',parts:['Cover','Pages','Illustrations','Index','Bookmark'],correct:1},
+    {t:'Camera',parts:['Lens','Flash','Tripod','Filter','Case'],correct:0},
+    {t:'Shoes',parts:['Sole','Laces','Logo','Insole','Box'],correct:0},
+    {t:'Newspaper',parts:['Headlines','Photos','Paper','Advertisements','Comics'],correct:2}
+  ];
+  var item=items[rand(0,items.length-1)];
+  var opts=item.parts; var ans=opts[item.correct]; shuffle(opts);
+  return { question:'Without which part can a "'+item.t+'" still function?', answer:ans, options:opts, hint:'Which part is NOT essential for basic function?', timeLimit:10, type:'reasoning', techniqueLabel:'Essential Part: '+item.t, intuition:'Identify the part without which the thing cannot function at all.' };
+}
+
+function generateThemeDetectionQuestion(diff, layer) {
+  var passages=[
+    {t:'The rapid advancement of technology has transformed every aspect of modern life. From smartphones that connect us globally to AI that automates complex tasks, innovation continues to reshape how we work, communicate, and live.',ans:'Impact of technology on modern life'},
+    {t:'Millions of tons of plastic waste enter our oceans every year, harming marine life and entering the food chain. Reducing single-use plastics and improving recycling systems are critical steps to address this crisis.',ans:'Plastic pollution in oceans and solutions'},
+    {t:'Regular exercise combined with a balanced diet is the foundation of good health. Studies show that just 30 minutes of moderate activity daily can significantly reduce the risk of chronic diseases.',ans:'Benefits of exercise and healthy diet'},
+    {t:'Education empowers individuals and drives economic growth. Countries that invest in quality education see higher productivity, lower poverty rates, and greater social stability.',ans:'Importance of education for development'}
+  ];
+  var p=passages[rand(0,passages.length-1)];
+  var opts=[p.ans,'Historical background of the topic','Biography of a famous person','Step-by-step instructions']; shuffle(opts);
+  return { question:'Main theme?<br><span style="font-size:.85em">'+p.t+'</span>', answer:p.ans, options:opts, hint:'What is the passage mostly about?', timeLimit:15, type:'reasoning', techniqueLabel:'Theme Detection', intuition:'The theme is the central idea. Ignore details and find the one sentence that summarizes the entire passage.' };
+}
+
+function generateStatementArgumentQuestion(diff, layer) {
+  var items=[
+    {stmt:'Should the government ban smoking in public places?',strong:'Yes, it harms non-smokers through second-hand smoke',weak:'No, people have the right to do what they want'},
+    {stmt:'Should schools have a dress code?',strong:'Yes, it reduces social pressure and distractions',weak:'No, students should express their personality'},
+    {stmt:'Should the retirement age be increased?',strong:'Yes, people are living longer and healthier lives',weak:'No, old people should enjoy their life'}
+  ];
+  var item=items[rand(0,items.length-1)];
+  var opts=[item.strong, item.weak, 'Both are strong', 'Neither is strong']; shuffle(opts);
+  return { question:'Statement: '+item.stmt+'<br>Which argument is strong?', answer:item.strong, options:opts, hint:'A strong argument is directly relevant and substantial', timeLimit:12, type:'reasoning', techniqueLabel:'Statement Argument', intuition:'Strong arguments are directly relevant, significant, and based on facts. Weak arguments are vague, emotional, or irrelevant.' };
+}
+
+function generateStatementAssumptionQuestion(diff, layer) {
+  var items=[
+    {stmt:'The company has announced a 20% discount on all products this weekend.',assume:'People will buy more due to the discount'},
+    {stmt:'The government has launched a new app for filing taxes online.',assume:'People have access to smartphones or computers'},
+    {stmt:'All schools will remain closed tomorrow due to heavy rain warning.',assume:'The rain will be heavy enough to make travel unsafe'}
+  ];
+  var item=items[rand(0,items.length-1)];
+  var opts=[item.assume, 'The company is losing money', 'The government is forcing people to use apps', 'The rain will stop by tomorrow']; shuffle(opts);
+  return { question:'Statement: "'+item.stmt+'"<br>What is implicit?', answer:item.assume, options:opts, hint:'What must be true for the statement to make sense?', timeLimit:12, type:'reasoning', techniqueLabel:'Statement Assumption', intuition:'An assumption is something taken for granted without proof. It must be necessarily true for the statement to be valid.' };
+}
+
+function generateStatementConclusionQuestion(diff, layer) {
+  var items=[
+    {stmt:'All birds have wings. A penguin is a bird.',conc:'Penguins have wings'},
+    {stmt:'All metals expand when heated. Iron is a metal.',conc:'Iron expands when heated'},
+    {stmt:'No student who failed the exam passed the interview. John passed the interview.',conc:'John did not fail the exam'}
+  ];
+  var item=items[rand(0,items.length-1)];
+  var opts=[item.conc, 'Penguins cannot fly', 'Heat changes everything', 'John is a student']; shuffle(opts);
+  return { question:'Statements: "'+item.stmt+'"<br>Which conclusion follows?', answer:item.conc, options:opts, hint:'Apply the given statements logically. What must be true based on them?', timeLimit:10, type:'reasoning', techniqueLabel:'Statement Conclusion', intuition:'A valid conclusion is one that MUST follow from the given statements. If it could be false, it does not follow.' };
+}
+
+// ====== VERBAL REASONING GENERATORS ======
+
+var SYNONYM_BANK = [
+  {w:'Abundant',s:['Plentiful','Rare','Small','Weak']},{w:'Benevolent',s:['Kind','Cruel','Strict','Lazy']},
+  {w:'Candid',s:['Honest','Secret','Rude','Slow']},{w:'Diligent',s:['Hardworking','Lazy','Careless','Weak']},
+  {w:'Eloquent',s:['Fluent','Quiet','Clumsy','Rough']},{w:'Frugal',s:['Economical','Wasteful','Generous','Rich']},
+  {w:'Gregarious',s:['Sociable','Shy','Angry','Lonely']},{w:'Hinder',s:['Obstruct','Help','Speed','Build']},
+  {w:'Immaculate',s:['Spotless','Dirty','Broken','Rough']},{w:'Jubilant',s:['Joyful','Sad','Calm','Tired']},
+  {w:'Keen',s:['Eager','Dull','Slow','Weak']},{w:'Lethargic',s:['Sluggish','Energetic','Quick','Bright']},
+  {w:'Malicious',s:['Spiteful','Kind','Gentle','Loving']},{w:'Novel',s:['New','Old','Broken','Simple']}
+];
+
+var ANTONYM_BANK = [
+  {w:'Abundant',a:['Scarce','Plentiful','Full','Large']},{w:'Bold',a:['Timid','Brave','Strong','Loud']},
+  {w:'Cautious',a:['Reckless','Careful','Slow','Quiet']},{w:'Dense',a:['Sparse','Thick','Heavy','Solid']},
+  {w:'Expand',a:['Contract','Grow','Spread','Rise']},{w:'Fragile',a:['Sturdy','Weak','Brittle','Light']},
+  {w:'Generous',a:['Stingy','Kind','Rich','Helpful']},{w:'Humane',a:['Cruel','Gentle','Loving','Caring']},
+  {w:'Innocent',a:['Guilty','Pure','Honest','Childlike']},{w:'Justice',a:['Injustice','Fairness','Equality','Truth']}
+];
+
+function generateSynonymQuestion(diff) {
+  var w=SYNONYM_BANK[rand(0,SYNONYM_BANK.length-1)]; var opts=w.s.slice(); shuffle(opts);
+  return { question:'Synonym of "'+w.w+'" ?', answer:w.s[0], options:opts, hint:'Think of words with similar meaning', timeLimit:8, type:'verbal', techniqueLabel:'Synonyms: '+w.w, intuition:'A synonym is a word that has the same or nearly the same meaning as another word.' };
+}
+
+function generateAntonymQuestion(diff) {
+  var w=ANTONYM_BANK[rand(0,ANTONYM_BANK.length-1)]; var opts=w.a.slice(); shuffle(opts);
+  return { question:'Antonym of "'+w.w+'" ?', answer:w.a[0], options:opts, hint:'Think of words with opposite meaning', timeLimit:8, type:'verbal', techniqueLabel:'Antonyms: '+w.w, intuition:'An antonym is a word opposite in meaning to another word.' };
+}
+
+function generateSentenceCompletionQuestion(diff) {
+  var items=[
+    {q:'Despite the heavy rain, the match _______ as scheduled.',a:'went ahead',o:['was cancelled','went ahead','was postponed','was delayed']},
+    {q:'She is so _______ that she can solve any problem in minutes.',a:'intelligent',o:['lazy','intelligent','careless','nervous']},
+    {q:'The scientist made a _______ discovery that changed the world.',a:'groundbreaking',o:['minor','groundbreaking','ordinary','useless']},
+    {q:'He was _______ for his role in the conspiracy.',a:'convicted',o:['praised','convicted','promoted','awarded']},
+    {q:'The _______ of medical technology has saved countless lives.',a:'advancement',o:['decline','advancement','absence','failure']}
+  ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:'Fill the blank: "'+it.q+'"', answer:it.a, options:it.o, hint:'Which word makes the sentence meaningful?', timeLimit:10, type:'verbal', techniqueLabel:'Sentence Completion', intuition:'Read the sentence for context clues. The correct word must make logical and grammatical sense.' };
+}
+
+function generateWordOrderingQuestion(diff) {
+  var items=[
+    {w:['the','quick','brown','fox','jumps'],s:'the quick brown fox jumps'},
+    {w:['education','is','the','key','to','success'],s:'education is the key to success'},
+    {w:['practice','makes','a','man','perfect'],s:'practice makes a man perfect'},
+    {w:['honesty','is','the','best','policy'],s:'honesty is the best policy'},
+    {w:['united','we','stand','divided','we','fall'],s:'united we stand divided we fall'}
+  ];
+  var it=items[rand(0,items.length-1)]; var jumbled=it.w.slice(); shuffle(jumbled);
+  return { question:'Arrange: "'+jumbled.join(' ')+'"', answer:it.s, options:[it.s, jumbled.slice().reverse().join(' '), [jumbled[0],jumbled[jumbled.length-1],jumbled[2],jumbled[1],jumbled[3]].join(' '), [jumbled[jumbled.length-1],jumbled[0],jumbled[2],jumbled[1],jumbled[3]].join(' ')], hint:'Find the logical sequence', timeLimit:15, type:'verbal', techniqueLabel:'Word Ordering', intuition:'Try to form a meaningful sentence. Look for the subject first, then verb, then object.' };
+}
+
+function generateSentenceOrderingQuestion(diff) {
+  var items=[
+    {s:['People rushed to hospitals.','A massive earthquake struck the city.','Rescue operations began immediately.','The government declared an emergency.']},
+    {s:['They decided to open a café.','The friends noticed a lack of good coffee shops.','The café became popular within months.','They saved money and found a location.']}
+  ];
+  var it=items[rand(0,items.length-1)]; var j=it.s.slice(); shuffle(j);
+  return { question:'Order the sentences:<br>'+j.map(function(s,i){return (i+1)+'. '+s;}).join('<br>'), answer:it.s.join(' → '), options:[it.s.join(' → '), j.slice().reverse().join(' → '), [it.s[1],it.s[0],it.s[3],it.s[2]].join(' → '), [it.s[2],it.s[3],it.s[0],it.s[1]].join(' → ')], hint:'Find the chronological or logical sequence', timeLimit:20, type:'verbal', techniqueLabel:'Sentence Ordering', intuition:'Put events in chronological order. Start with what happened first, then follow logically.' };
+}
+
+function generateParagraphFormationQuestion(diff) {
+  var items=[
+    {s:['In addition, regular exercise boosts mental health.','It is well known that physical activity improves overall health.','Therefore, everyone should exercise daily.','Furthermore, it helps prevent chronic diseases.'],order:'It is well known that physical activity improves overall health. In addition, regular exercise boosts mental health. Furthermore, it helps prevent chronic diseases. Therefore, everyone should exercise daily.'},
+    {s:['As a result, many students are choosing online courses.','Online education has become increasingly popular in recent years.','This convenience allows them to learn at their own pace.','Additionally, it is often more affordable than traditional education.'],order:'Online education has become increasingly popular in recent years. This convenience allows them to learn at their own pace. Additionally, it is often more affordable than traditional education. As a result, many students are choosing online courses.'}
+  ];
+  var it=items[rand(0,items.length-1)];
+  return { question:'Form a paragraph:<br>'+it.s.map(function(s,i){return (i+1)+'. '+s;}).join('<br>'), answer:it.order, options:[it.order, it.s.slice().reverse().join(' '), [it.s[2],it.s[0],it.s[3],it.s[1]].join(' '), [it.s[3],it.s[1],it.s[2],it.s[0]].join(' ')], hint:'Find the opening statement, then supporting points, then conclusion', timeLimit:25, type:'verbal', techniqueLabel:'Paragraph Formation', intuition:'Start with the main idea, then supporting details, then transitions, then conclusion.' };
+}
+
+function generateComprehensionQuestion(diff) {
+  var items=[
+    {p:'Trees are essential for life on Earth. They produce oxygen, absorb carbon dioxide, and provide habitat for countless species. Deforestation threatens this delicate balance. Planting more trees is one of the simplest ways to combat climate change.',q:'Why are trees essential?',a:'They produce oxygen and absorb carbon dioxide',o:['They provide wood for furniture','They produce oxygen and absorb carbon dioxide','They make the landscape beautiful','They provide shade in summer']},
+    {p:'Water covers about 71% of Earth\'s surface, but only 2.5% is freshwater. Of that, less than 1% is accessible for human use. Conservation of water is therefore critical for sustainable development.',q:'What percentage of Earth\'s water is accessible freshwater?',a:'Less than 1%',o:['About 71%','About 2.5%','Less than 1%','About 10%']},
+    {p:'The human brain contains approximately 86 billion neurons. Each neuron can form thousands of connections, creating an incredibly complex network. This complexity enables learning, memory, and consciousness.',q:'How many neurons does the human brain have?',a:'86 billion',o:['86 million','86 billion','86 trillion','860 million']}
+  ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:'<span style="font-size:.85em">'+it.p+'</span><br><br>'+it.q, answer:it.a, options:it.o, hint:'Read the passage carefully. The answer is directly stated.', timeLimit:20, type:'verbal', techniqueLabel:'Comprehension', intuition:'Read the passage, then find the sentence that directly answers the question.' };
+}
+
+// ====== NON-VERBAL REASONING GENERATORS ======
+
+function generateEmbeddedImagesQuestion(diff) {
+  var items=[
+    {fig:'A circle with a small triangle inside',emb:'A large square containing concentric circles, with a small triangle in the innermost circle',not:'A large triangle divided into smaller triangles'},
+    {fig:'A star shape',emb:'A rectangle containing a circle, inside which there is a star',not:'A pentagon containing a smaller pentagon'},
+    {fig:'A diamond (rotated square)',emb:'A complex figure with a hexagon containing a diamond at its center',not:'A simple circle with a dot'},
+    {fig:'A cross shape (+)',emb:'A square grid pattern where a cross appears at the intersection of lines',not:'A triangle with a dot inside'}
+  ];
+  var it=items[rand(0,items.length-1)];
+  var opts=[it.emb, it.not, 'A figure containing only straight lines', 'A figure with curved boundaries only']; shuffle(opts);
+  return { question:'Which figure contains a "'+it.fig+'" embedded in it?<br><span style="font-size:.8em;color:var(--text-sec)">(described in words)</span>', answer:it.emb, options:opts, hint:'Look for the given shape hidden inside a larger figure', timeLimit:15, type:'reasoning', techniqueLabel:'Embedded Images', intuition:'The embedded figure may be rotated, scaled, or partially obscured. Look for the exact shape within the larger figure.' };
+}
+
+function generateFigureMatrixQuestion(diff) {
+  var items=[
+    {r:'Circle, Triangle, Square<br>Red, Blue, ?',a:'Green',o:['Green','Yellow','Purple','Orange']},
+    {r:'1x1, 2x2, 3x3<br>4, 8, ?',a:'12',o:['16','12','10','14']},
+    {r:'△, ○, □<br>▲, ●, ?',a:'■',o:['○','□','■','△']},
+    {r:'2,4,8<br>3,6,12<br>4,8,?',a:'16',o:['12','14','16','10']}
+  ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:'Complete the matrix:<br><span style="font-size:1.2em;line-height:1.8">'+it.r+'</span>', answer:it.a, options:it.o, hint:'Find the pattern in rows and columns', timeLimit:15, type:'reasoning', techniqueLabel:'Figure Matrix', intuition:'Look for the pattern row-wise and column-wise. The same operation/logic should apply to all rows.' };
+}
+
+function generatePaperFoldingQuestion(diff) {
+  var items=[
+    {d:'A square paper is folded in half vertically, then folded in half horizontally. A small triangle is cut from the bottom-right corner of the folded paper. How many holes when unfolded?',a:'4 holes',o:['1 hole','2 holes','4 holes','8 holes']},
+    {d:'A circular paper is folded in half once. A small square is cut from the center of the folded edge. How many holes when unfolded?',a:'2 holes',o:['1 hole','2 holes','3 holes','4 holes']},
+    {d:'A rectangular paper is folded in half three times. A small circle is cut from the corner of the folded paper. How many holes when unfolded?',a:'8 holes',o:['2 holes','4 holes','6 holes','8 holes']},
+    {d:'A square paper is folded diagonally once. A small semicircle is cut from the folded edge near the corner. How many holes when unfolded?',a:'2 holes',o:['1 hole','2 holes','3 holes','4 holes']}
+  ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:it.d, answer:it.a, options:it.o, hint:'Each fold doubles the layers. The number of holes = number of layers × number of cuts', timeLimit:20, type:'reasoning', techniqueLabel:'Paper Folding', intuition:'Each fold doubles the paper layers. When cut, each layer gets a hole. Unfold symmetrically.' };
+}
+
+function generatePaperCuttingQuestion(diff) {
+  var items=[
+    {d:'A paper folded and cut as shown opens to reveal a pattern of 4 symmetrical circles. Which shape do the cuts make?',a:'4 circles in a square pattern',o:['4 circles in a line','4 circles in a square pattern','2 large circles','6 small circles']},
+    {d:'A folded paper is cut along the folded edge creating a zigzag pattern. When unfolded, the pattern will be:',a:'Symmetric zigzag on both sides',o:['Random zigzag pattern','Symmetric zigzag on both sides','Straight line only','No pattern visible']},
+    {d:'A square paper folded twice and a triangle cut from the corner is unfolded. The resulting shape has:',a:'4 triangular cutouts',o:['1 triangular cutout','2 triangular cutouts','4 triangular cutouts','8 triangular cutouts']}
+  ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:it.d, answer:it.a, options:it.o, hint:'The cut pattern repeats symmetrically across fold lines', timeLimit:20, type:'reasoning', techniqueLabel:'Paper Cutting', intuition:'Each fold creates a mirror. When cut and unfolded, the cut pattern is reflected across each fold line.' };
+}
+
+function generateRuleDetectionQuestion(diff) {
+  var items=[
+    {r:'Figures with an even number of sides are shaded',ex:['Square (shaded) ●', 'Triangle (not shaded) ○', 'Hexagon (shaded) ●'],not:'Pentagon (shaded) ●',a:'Pentagon (shaded) ● breaks rule'},
+    {r:'Figures containing a right angle are marked with a dot',ex:['Right triangle ●', 'Rectangle ●', 'Circle ○'],not:'Acute triangle ○',a:'Acute triangle ○ breaks rule'},
+    {r:'Figures with more than 4 sides have double outline',ex:['Hexagon =', 'Octagon =', 'Square |'],not:'Triangle =',a:'Triangle = breaks rule'}
+  ];
+  var it=items[rand(0,items.length-1)];
+  return { question:'Rule: '+it.r+'<br>Which figure does NOT follow the rule?<br>'+it.ex.concat(it.not).join(', '), answer:it.not.split(' ')[0], options:it.ex.concat(it.not).map(function(s){return s.split(' ')[0];}), hint:'Check each figure against the rule', timeLimit:15, type:'reasoning', techniqueLabel:'Rule Detection', intuition:'Apply the given rule to each figure. The one that violates the rule is the answer.' };
+}
+
+function generateGroupingImagesQuestion(diff) {
+  var items=[
+    {g:'Group A: Triangle, Square, Pentagon (polygons)<br>Group B: Circle, Oval, Semicircle (curved)',q:'Which group does a Hexagon belong to?',a:'Group A',o:['Group A','Group B','Neither','Both']},
+    {g:'Group 1: Red, Blue, Yellow (primary colors)<br>Group 2: Green, Purple, Orange (secondary colors)',q:'Which group does Violet belong to?',a:'Group 2',o:['Group 1','Group 2','Neither','Both']},
+    {g:'Set X: 2,4,6,8 (even numbers)<br>Set Y: 3,6,9,12 (multiples of 3)',q:'Which set does 10 belong to?',a:'Set X',o:['Set X','Set Y','Both','Neither']}
+  ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:it.g+'<br>'+it.q, answer:it.a, options:it.o, hint:'Identify the common property of each group', timeLimit:12, type:'reasoning', techniqueLabel:'Grouping Images', intuition:'Find the shared attribute within each group, then check which group the new item fits into.' };
+}
+
+function generateImageAnalysisQuestion(diff) {
+  var items=[
+    {d:'A rectangle is divided into 4 equal parts. One part is shaded. How many parts are unshaded?',a:'3',o:['1','2','3','4']},
+    {d:'A square contains 9 smaller squares. The corner squares are black. How many white squares?',a:'5',o:['4','5','6','7']},
+    {d:'A triangle is divided into 3 smaller triangles by lines from one vertex. How many triangles total?',a:'3',o:['2','3','4','5']},
+    {d:'A 3×3 grid has all edge cells shaded. How many unshaded cells remain?',a:'1',o:['0','1','2','3']}
+  ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:it.d, answer:it.a, options:it.o, hint:'Count carefully. Draw a mental picture.', timeLimit:12, type:'reasoning', techniqueLabel:'Image Analysis', intuition:'Visualize the figure in your mind. Count the elements methodically.' };
+}
+
+function generateWaterImagesQuestion(diff) {
+  var letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  var symTopBottom=['B','C','D','E','H','I','K','O','X'];
+  var symVert=['A','H','I','M','O','T','U','V','W','X','Y'];
+  var items=[
+    function(){var l=letters[rand(0,25)]; var isVert=symVert.indexOf(l)>=0; var inWater=symTopBottom.indexOf(l)>=0?l:'upside-down '+l; return {q:'Water image of "'+l+'" ?',a:isVert?'Looks the same':'Appears inverted vertically',o:['Looks the same','Appears inverted vertically','Appears mirrored horizontally','Completely different']};},
+    function(){var word='';for(var i=0;i<3;i++){word+=letters[rand(0,25)];} return {q:'Water image of "'+word+'" appears:',a:'Vertically inverted',o:['The same','Vertically inverted','Horizontally mirrored','Reversed order']};},
+    function(){var w='';while(w.length<3){var l=letters[rand(0,25)];if(symTopBottom.indexOf(l)>=0)w+=l;} if(w.length<3){w='HIX';} return {q:'Water image of "'+w+'" ?',a:'Same as original (symmetrical)',o:['Same as original (symmetrical)','Completely different','Left-right reversed','Upside down']};}
+  ];
+  var d=items[rand(0,items.length-1)](); var opts=d.o; shuffle(opts);
+  return { question:d.q, answer:d.a, options:opts, hint:'Water reflection flips vertically (top becomes bottom)', timeLimit:10, type:'reasoning', techniqueLabel:'Water Images', intuition:'Water image = vertical mirror. What is on top appears at the bottom in the reflection.' };
+}
+
+function generateDotSituationQuestion(diff) {
+  var items=[
+    {d:'Three circles overlap creating 4 regions. A dot placed in region common to all 3 circles. How many circles contain the dot?',a:'3',o:['1','2','3','4']},
+    {d:'A square and a circle overlap in 2 regions. A dot is where they overlap. Which shapes contain it?',a:'Both square and circle',o:['Square only','Circle only','Both square and circle','Neither']},
+    {d:'Two circles intersect creating 3 regions. A dot is outside both circles. It is:',a:'In neither circle',o:['In circle 1 only','In circle 2 only','In both circles','In neither circle']}
+  ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:it.d, answer:it.a, options:it.o, hint:'Identify which regions are common to which shapes', timeLimit:12, type:'reasoning', techniqueLabel:'Dot Situation', intuition:'Each region in a Venn-like diagram belongs to a specific set of shapes. Find which shapes share the dot\'s region.' };
+}
+
 // ====== CATEGORY DISPATCHERS ======
 
 function generateQuantQuestion(diff, subMode) {
@@ -1725,10 +2161,18 @@ function generateQuantQuestion(diff, subMode) {
     compound_interest: generateCompoundInterestQuestion,
     discount: generateDiscountQuestion,
     races: generateRacesQuestion,
-    data_interpretation: generateDataInterpretationQuestion
+    data_interpretation: generateDataInterpretationQuestion,
+    profit_loss: generateProfitLossQuestion,
+    pipes_cisterns: generatePipesCisternsQuestion,
+    boats_streams: generateBoatsStreamsQuestion,
+    alligation: generateAlligationQuestion,
+    surds_indices: generateSurdsIndicesQuestion,
+    bankers_discount: generateBankersDiscountQuestion,
+    stocks_shares: generateStocksSharesQuestion,
+    odd_man_out: generateOddManOutQuestion
   };
   // If no subMode, pick random quant topic
-  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','partnership','compound_interest','discount','races','data_interpretation']);
+  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','partnership','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out']);
   var gen = genMap[topic];
   if (gen) {
     var q = gen(diff, activeLayer || 'instinct');
@@ -1761,9 +2205,37 @@ function generateReasoningQuestion(diff, subMode) {
     alphabet_arrange: generateAlphabetArrangeQuestion,
     critical_reasoning: generateCriticalReasoningQuestion,
     decision_making: generateDecisionMakingQuestion,
-    venn_diagram: generateVennDiagramQuestion
+    venn_diagram: generateVennDiagramQuestion,
+    // New reasoning
+    letter_symbol_series: generateLetterSymbolSeriesQuestion,
+    artificial_language: generateArtificialLanguageQuestion,
+    matching_definitions: generateMatchingDefinitionsQuestion,
+    cause_effect: generateCauseEffectQuestion,
+    essential_part: generateEssentialPartQuestion,
+    theme_detection: generateThemeDetectionQuestion,
+    statement_argument: generateStatementArgumentQuestion,
+    statement_assumption: generateStatementAssumptionQuestion,
+    statement_conclusion: generateStatementConclusionQuestion,
+    // Verbal
+    synonym: generateSynonymQuestion,
+    antonym: generateAntonymQuestion,
+    sentence_completion: generateSentenceCompletionQuestion,
+    word_ordering: generateWordOrderingQuestion,
+    sentence_ordering: generateSentenceOrderingQuestion,
+    paragraph_formation: generateParagraphFormationQuestion,
+    comprehension: generateComprehensionQuestion,
+    // Non-verbal
+    embedded_images: generateEmbeddedImagesQuestion,
+    figure_matrix: generateFigureMatrixQuestion,
+    paper_folding: generatePaperFoldingQuestion,
+    paper_cutting: generatePaperCuttingQuestion,
+    rule_detection: generateRuleDetectionQuestion,
+    grouping_images: generateGroupingImagesQuestion,
+    image_analysis: generateImageAnalysisQuestion,
+    water_images: generateWaterImagesQuestion,
+    dot_situation: generateDotSituationQuestion
   };
-  var topic = subMode || pick(['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram']);
+  var topic = subMode || pick(['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram','letter_symbol_series','artificial_language','matching_definitions','cause_effect','essential_part','theme_detection','statement_argument','statement_assumption','statement_conclusion','synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','embedded_images','figure_matrix','paper_folding','paper_cutting','rule_detection','grouping_images','image_analysis','water_images','dot_situation']);
   var gen = genMap[topic];
   if (gen) {
     try {
@@ -1819,7 +2291,32 @@ function generateReasoningQuestion(diff, subMode) {
         alphabet_arrange: 'Position: A=1 to Z=26. For next/find pattern, check diff between consecutive letters.',
         critical_reasoning: 'Assumption what MUST be true. Course of action must solve the problem. Cause must precede effect.',
         decision_making: 'Check each condition independently. AND=all pass. OR=any passes. Mark "cannot determine" if info missing.',
-        venn_diagram: 'Only A = A-both. Neither = total - (A+B-both). Draw overlapping circles.'
+        venn_diagram: 'Only A = A-both. Neither = total - (A+B-both). Draw overlapping circles.',
+        letter_symbol_series: 'Convert letters to positions (A=1). Find the step pattern. Convert back.',
+        artificial_language: 'Each 3-letter chunk = one English word. Find mapping from translations.',
+        matching_definitions: 'Match the definition exactly. All keywords must fit.',
+        cause_effect: 'Cause happens first and produces the effect. Look for temporal sequence.',
+        essential_part: 'Without which part can the thing NOT function? That is essential.',
+        theme_detection: 'Theme = central idea. What is the passage mostly about?',
+        statement_argument: 'Strong argument = directly relevant, substantial, fact-based.',
+        statement_assumption: 'What must be true for the statement to make sense? That is implicit.',
+        statement_conclusion: 'What MUST follow from the statements? If it could be false, it does not follow.',
+        synonym: 'Find the word with the same or nearly the same meaning.',
+        antonym: 'Find the word opposite in meaning to the given word.',
+        sentence_completion: 'Read for context. The correct word makes logical and grammatical sense.',
+        word_ordering: 'Arrange to form a meaningful sentence. Look for subject → verb → object.',
+        sentence_ordering: 'Put sentences in chronological/logical order. Start with what happened first.',
+        paragraph_formation: 'Start with the main idea, then supporting details, then conclusion.',
+        comprehension: 'Read the passage. The answer is directly stated in the text.',
+        embedded_images: 'The figure may be rotated/scaled. Look for the exact shape within the larger figure.',
+        figure_matrix: 'Find the pattern in rows and columns. Same logic applies to all.',
+        paper_folding: 'Each fold doubles layers. Holes = layers × cuts. Unfold symmetrically.',
+        paper_cutting: 'The cut pattern repeats symmetrically across each fold line.',
+        rule_detection: 'Apply the rule to each figure. The one that violates it is the answer.',
+        grouping_images: 'Find the shared attribute within each group.',
+        image_analysis: 'Visualize the figure mentally. Count carefully.',
+        water_images: 'Water image = vertical mirror. Top becomes bottom.',
+        dot_situation: 'Each region belongs to specific shapes. Find which shapes share the dot\'s region.'
       };
       q.intuition = intuitions[topic] || 'Draw a diagram/table. Fill known facts, deduce the rest.';
       return q;
