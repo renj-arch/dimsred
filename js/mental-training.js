@@ -119,6 +119,7 @@ var defaultState = {
     stocks_shares:{attempts:0,correct:0},     odd_man_out:{attempts:0,correct:0},
     height_distance:{attempts:0,correct:0}, decimal_fraction:{attempts:0,correct:0},
     chain_rule:{attempts:0,correct:0}, logarithm:{attempts:0,correct:0},
+    meta:{attempts:0,correct:0},
     // Reasoning sub-topics
     pattern_flash:{attempts:0,correct:0}, coding_flash:{attempts:0,correct:0},
     logic_snap:{attempts:0,correct:0}, direction_sense:{attempts:0,correct:0},
@@ -374,6 +375,268 @@ function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = rand(0, i
 
 // Exposed for HTML layer toggle
 window.setActiveLayer = function(l) { activeLayer = l; };
+
+// =============================================
+// Question Meta-Engine — self-deriving question generator
+// Define a formula ONCE; all 3 permutations + chains auto-generated
+// =============================================
+var QM = {
+  _f: {}, _ctx: {}, _runs: 0,
+  def: function(name, def) {
+    this._f[name] = def;
+    this._ctx[name] = def.ctx || { _: {} };
+    return this;
+  },
+  // Pick value from domain spec
+  _val: function(d) {
+    if (d.vals) return d.vals[rand(0, d.vals.length - 1)];
+    return rand(d.min, d.max);
+  },
+  // Format value with optional display conversion + unit
+  _fmt: function(v, k, ctx) {
+    var c = this._ctx[ctx] || {};
+    var dk = (c[k] && c[k].display) || (c._ && c._[k] && c._[k].display);
+    var uk = (c[k] && c[k].unit) || (c._ && c._[k] && c._[k].unit);
+    var val = dk ? dk(v) : v;
+    var s = Math.round(val * 100) / 100 + '';
+    if (uk) s += uk;
+    return s;
+  },
+  // Generate question from formula by specifying which var to find
+  gen: function(name, find) {
+    var def = this._f[name]; if (!def) return null;
+    var f = def.formula; if (!f[find]) return null;
+    var knowns = def.vars.filter(function(v) { return v !== find; });
+    var vals = {};
+    for (var i = 0; i < knowns.length; i++) {
+      var d = def.domains[knowns[i]];
+      vals[knowns[i]] = d !== undefined ? this._val(d) : 1;
+    }
+    var result = f[find](vals);
+    var ans = Math.round(result[find] * 100) / 100;
+    var ctx = def.ctx;
+    // Build question text
+    var parts = [];
+    for (var i = 0; i < knowns.length; i++) {
+      parts.push(knowns[i] + '=' + this._fmt(vals[knowns[i]], knowns[i], name));
+    }
+    var autoTpl = parts.join(', ') + '. Find ' + find + '?';
+    var qText = (ctx && ctx[find] && ctx[find].tpl) ? (function(tpl,v,ctx2,nm){
+      var s=tpl; for(var k in v)s=s.replace(new RegExp('\\{'+k+'\\}','g'),QM._fmt(v[k],k,nm));
+      return s;
+    })(ctx[find].tpl, vals, name) : autoTpl;
+    var hint = knowns.map(function(k) { return k + '=' + QM._fmt(vals[k], k, name); }).join(', ') + ' → ' + find + '=' + QM._fmt(ans, find, name);
+    // Options
+    var opts = [ans]; var r = def.optRange || 5;
+    while (opts.length < 4) { var d = Math.round((ans + rand(-r, r)) * 100) / 100; if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+    shuffle(opts);
+    return { q: qText, a: ans, options: opts, hint: hint, timeLimit: 15, type: 'quant', techniqueLabel: name + ': ' + hint.substring(0, 35), intuition: hint, _meta: true };
+  },
+  // Generate using random formula + random unknown (only solvable ones)
+  any: function() {
+    var names = Object.keys(this._f);
+    for (var t = 0; t < 20; t++) {
+      var n = names[rand(0, names.length - 1)];
+      var def = this._f[n];
+      var solvableVars = def.vars.filter(function(v) { return def.formula[v]; });
+      if (solvableVars.length === 0) continue;
+      var find = solvableVars[rand(0, solvableVars.length - 1)];
+      var r = this.gen(n, find);
+      if (r) return r;
+    }
+    return null;
+  }
+};
+
+// --- Formula definitions ---
+// Each formula: vars, formula (solver for each var), domains, optRange, ctx (templates)
+// Auto-derivation: just define the formula with ALL vars as solvers — any can be the unknown
+
+QM.def('train_pole', {
+  vars: ['length_m', 'speed_kmh', 'time_s'],
+  formula: {
+    time_s: function(v) { var ms = v.speed_kmh * 5 / 18; return { time_s: v.length_m / ms }; },
+    length_m: function(v) { var ms = v.speed_kmh * 5 / 18; return { length_m: ms * v.time_s }; },
+    speed_kmh: function(v) { var ms = v.length_m / v.time_s; return { speed_kmh: ms * 18 / 5 }; }
+  },
+  domains: { length_m: { min: 100, max: 300 }, speed_kmh: { vals: [36,45,54,60,72,90] }, time_s: { min: 6, max: 15 } },
+  optRange: 4,
+  ctx: {
+    time_s: { tpl: 'Train {length_m}m at {speed_kmh}km/h crosses a pole in?', unit: 's' },
+    length_m: { tpl: 'Train at {speed_kmh}km/h crosses a pole in {time_s}s. Length?', unit: 'm' },
+    speed_kmh: { tpl: 'Train {length_m}m crosses a pole in {time_s}s. Speed?', unit: 'km/h' }
+  }
+});
+
+QM.def('train_platform', {
+  vars: ['train_m', 'plat_m', 'speed_kmh', 'time_s'],
+  formula: {
+    time_s: function(v) { var ms = v.speed_kmh * 5 / 18; return { time_s: (v.train_m + v.plat_m) / ms }; },
+    train_m: function(v) { var ms = v.speed_kmh * 5 / 18; return { train_m: ms * v.time_s - v.plat_m }; },
+    plat_m: function(v) { var ms = v.speed_kmh * 5 / 18; return { plat_m: ms * v.time_s - v.train_m }; },
+    speed_kmh: function(v) { var ms = (v.train_m + v.plat_m) / v.time_s; return { speed_kmh: ms * 18 / 5 }; }
+  },
+  domains: { train_m: { min: 100, max: 200 }, plat_m: { min: 200, max: 400 }, speed_kmh: { vals: [45,54,60,72] }, time_s: { min: 12, max: 35 } },
+  optRange: 8,
+  ctx: {
+    time_s: { tpl: 'Train {train_m}m at {speed_kmh}km/h crosses {plat_m}m platform in?', unit: 's' },
+    train_m: { tpl: 'Train at {speed_kmh}km/h crosses {plat_m}m platform in {time_s}s. Length?', unit: 'm' },
+    plat_m: { tpl: 'Train {train_m}m at {speed_kmh}km/h crosses platform in {time_s}s. Platform?', unit: 'm' },
+    speed_kmh: { tpl: 'Train {train_m}m crosses {plat_m}m platform in {time_s}s. Speed?', unit: 'km/h' }
+  }
+});
+
+QM.def('train_opposite', {
+  vars: ['l1_m', 'l2_m', 'v1_kmh', 'v2_kmh', 'time_s'],
+  formula: {
+    time_s: function(v) { return { time_s: (v.l1_m + v.l2_m) / ((v.v1_kmh + v.v2_kmh) * 5 / 18) }; },
+    v2_kmh: function(v) { var rel = (v.l1_m + v.l2_m) / v.time_s; return { v2_kmh: rel * 18 / 5 - v.v1_kmh }; },
+    l2_m: function(v) { return { l2_m: ((v.v1_kmh + v.v2_kmh) * 5 / 18) * v.time_s - v.l1_m }; }
+  },
+  domains: { l1_m: { min: 100, max: 250 }, l2_m: { min: 100, max: 250 }, v1_kmh: { vals: [36,45,54] }, v2_kmh: { vals: [45,54,60] }, time_s: { min: 6, max: 18 } },
+  optRange: 3,
+  ctx: {
+    time_s: { tpl: 'Two trains {l1_m}m & {l2_m}m at {v1_kmh} & {v2_kmh} km/h cross opposite in?', unit: 's' },
+    v2_kmh: { tpl: 'Train1 {l1_m}m at {v1_kmh}km/h. Train2 {l2_m}m. Cross opposite in {time_s}s. Train2 speed?', unit: 'km/h' },
+    l2_m: { tpl: 'Two trains at {v1_kmh} & {v2_kmh}km/h cross opposite in {time_s}s. Train1={l1_m}m. Train2 length?', unit: 'm' }
+  }
+});
+
+QM.def('work_together', {
+  vars: ['a_days', 'b_days', 'total_days'],
+  formula: {
+    total_days: function(v) { return { total_days: v.a_days * v.b_days / (v.a_days + v.b_days) }; },
+    a_days: function(v) { return { a_days: v.total_days * v.b_days / (v.b_days - v.total_days) }; },
+    b_days: function(v) { return { b_days: v.total_days * v.a_days / (v.a_days - v.total_days) }; }
+  },
+  domains: { a_days: { min: 6, max: 18 }, b_days: { min: 10, max: 25 }, total_days: { min: 3, max: 12 } },
+  optRange: 3,
+  ctx: {
+    total_days: { tpl: 'A completes in {a_days} days, B in {b_days} days. Together?', unit: ' days' },
+    a_days: { tpl: 'A+B finish in {total_days} days. B alone in {b_days} days. A alone?', unit: ' days' },
+    b_days: { tpl: 'A+B finish in {total_days} days. A alone in {a_days} days. B alone?', unit: ' days' }
+  }
+});
+
+QM.def('profit_loss', {
+  vars: ['cp_rs', 'profit_pct', 'sp_rs'],
+  formula: {
+    sp_rs: function(v) { return { sp_rs: v.cp_rs * (100 + v.profit_pct) / 100 }; },
+    cp_rs: function(v) { return { cp_rs: v.sp_rs * 100 / (100 + v.profit_pct) }; },
+    profit_pct: function(v) { return { profit_pct: (v.sp_rs - v.cp_rs) / v.cp_rs * 100 }; }
+  },
+  domains: { cp_rs: { min: 100, max: 500 }, profit_pct: { min: 5, max: 25 }, sp_rs: { min: 120, max: 600 } },
+  optRange: 20,
+  ctx: {
+    sp_rs: { tpl: 'CP=₹{cp_rs}, profit={profit_pct}%. SP?', unit: '₹', display: { profit_pct: function(v) { return Math.round(v); } } },
+    cp_rs: { tpl: 'SP=₹{sp_rs}, profit={profit_pct}%. CP?', unit: '₹' },
+    profit_pct: { tpl: 'CP=₹{cp_rs}, SP=₹{sp_rs}. Profit%?', unit: '%' }
+  }
+});
+
+QM.def('si', {
+  vars: ['p_rs', 'rate_pct', 'time_yr', 'si_rs'],
+  formula: {
+    si_rs: function(v) { return { si_rs: v.p_rs * v.rate_pct * v.time_yr / 100 }; },
+    p_rs: function(v) { return { p_rs: v.si_rs * 100 / (v.rate_pct * v.time_yr) }; },
+    rate_pct: function(v) { return { rate_pct: v.si_rs * 100 / (v.p_rs * v.time_yr) }; },
+    time_yr: function(v) { return { time_yr: v.si_rs * 100 / (v.p_rs * v.rate_pct) }; }
+  },
+  domains: { p_rs: { min: 1000, max: 10000 }, rate_pct: { vals: [5,6,8,10,12] }, time_yr: { vals: [1,2,3,4,5] }, si_rs: { min: 100, max: 2000 } },
+  optRange: 200,
+  ctx: {
+    si_rs: { tpl: 'P=₹{p_rs}, R={rate_pct}%, T={time_yr}yr. SI?', unit: '₹' },
+    p_rs: { tpl: 'SI=₹{si_rs}, R={rate_pct}%, T={time_yr}yr. Principal?', unit: '₹' },
+    rate_pct: { tpl: 'P=₹{p_rs}, SI=₹{si_rs}, T={time_yr}yr. Rate?', unit: '%' },
+    time_yr: { tpl: 'P=₹{p_rs}, R={rate_pct}%, SI=₹{si_rs}. Time?', unit: ' yr' }
+  }
+});
+
+QM.def('discount', {
+  vars: ['mp_rs', 'disc_pct', 'sp_rs'],
+  formula: {
+    sp_rs: function(v) { return { sp_rs: v.mp_rs * (100 - v.disc_pct) / 100 }; },
+    mp_rs: function(v) { return { mp_rs: v.sp_rs * 100 / (100 - v.disc_pct) }; },
+    disc_pct: function(v) { return { disc_pct: (v.mp_rs - v.sp_rs) / v.mp_rs * 100 }; }
+  },
+  domains: { mp_rs: { min: 200, max: 800 }, disc_pct: { min: 10, max: 40 }, sp_rs: { min: 150, max: 600 } },
+  optRange: 30,
+  ctx: {
+    sp_rs: { tpl: 'MP=₹{mp_rs}, discount={disc_pct}%. SP?', unit: '₹' },
+    mp_rs: { tpl: 'SP=₹{sp_rs}, discount={disc_pct}%. MP?', unit: '₹' },
+    disc_pct: { tpl: 'MP=₹{mp_rs}, SP=₹{sp_rs}. Discount%?', unit: '%' }
+  }
+});
+
+// --- Auto-chain: generate multi-step by composing two formulas ---
+// Picks two formulas where one's output feeds into another's input
+function generateChainedMeta() {
+  var chains = [
+    // Speed from distance/time → use that speed for platform crossing
+    function() {
+      var dist = rand(100, 300), t = rand(6, 15);
+      var spd = dist / t;  // m/s
+      var plat = rand(200, 350), train = rand(100, 200);
+      var crossT = (train + plat) / spd;
+      var qText = 'A train covers ' + dist + 'm in ' + t + 's. It then crosses a ' + plat + 'm platform. Time to cross platform?';
+      var a = Math.round(crossT * 10) / 10;
+      var opts = [a]; while (opts.length < 4) { var d = Math.round((a + rand(-4, 4)) * 10) / 10; if (opts.indexOf(d) < 0 && d > 0) opts.push(d); } shuffle(opts);
+      return { q: qText, a: a, options: opts, hint: 'Speed=' + Math.round(spd * 10) / 10 + 'm/s, total=' + (train + plat) + 'm. Time=' + Math.round((train+plat)/spd*10)/10 + 's', timeLimit: 20, type: 'quant', techniqueLabel: 'Chain: speed→platform', intuition: 'Step1: speed=' + dist + '/' + t + '=' + Math.round(spd * 10) / 10 + 'm/s=' + Math.round(spd * 3.6 * 10) / 10 + 'km/h. Step2: total=' + train + '+' + plat + '=' + (train+plat) + 'm. Time=' + Math.round((train+plat)/spd*10)/10 + 's', _meta: true };
+    },
+    // Work: A + B together → then with C
+    function() {
+      var a = rand(8, 16), b = rand(10, 20);
+      var together = Math.round(a * b / (a + b) * 10) / 10;
+      var c = rand(12, 24);
+      var allThree = Math.round(1 / (1/a + 1/b + 1/c) * 10) / 10;
+      var qText = 'A takes ' + a + ' days, B ' + b + ' days. Together=? Then C joins (C=' + c + ' days). All three together?';
+      var a1 = together, a2 = allThree;
+      var ansStr = a1 + ', ' + a2;
+      var opts = [ansStr];
+      var alt1 = Math.round(a1 + rand(-2, 2) * 10) / 10 + ', ' + Math.round(a2 + rand(-2, 2) * 10) / 10;
+      if (alt1 !== ansStr) opts.push(alt1);
+      while (opts.length < 4) { var v = Math.round(a1 + rand(-3, 3) * 10) / 10 + ', ' + Math.round(a2 + rand(-3, 3) * 10) / 10; if (opts.indexOf(v) < 0) opts.push(v); }
+      shuffle(opts);
+      return { q: qText, a: ansStr, options: opts, hint: 'A+B=' + together + ' days. All three=' + allThree + ' days', timeLimit: 25, type: 'quant', techniqueLabel: 'Chain: work multipliers', intuition: 'A+B=' + a + '×' + b + '/(' + a + '+' + b + ')=' + together + '. With C: 1/' + a + '+1/' + b + '+1/' + c + '=' + 1/allThree + '. All three=' + allThree + ' days', _meta: true };
+    },
+    // P/L: Find CP from SP+profit, then find SP after discount
+    function() {
+      var cp = rand(200, 500), p = rand(8, 20);
+      var sp1 = Math.round(cp * (100 + p) / 100);
+      var d = rand(10, 25);
+      var mp = Math.round(sp1 * 100 / (100 - d));
+      var qText = 'CP=₹' + cp + ', profit=' + p + '%. SP=? This SP is after ' + d + '% discount on MP. MP?';
+      var a = mp;
+      var opts = [a]; while (opts.length < 4) { var d2 = Math.round(a + rand(-40, 40)); if (opts.indexOf(d2) < 0 && d2 > 0) opts.push(d2); } shuffle(opts);
+      return { q: qText, a: a, options: opts, hint: 'SP=CP×(100+P%)=₹' + sp1 + '. MP=SP×100/(100-D%)', timeLimit: 25, type: 'quant', techniqueLabel: 'Chain: P/L→discount', intuition: 'SP=' + cp + '×' + (100+p) + '%=' + sp1 + '. MP=' + sp1 + '×100/' + (100-d) + '=' + mp, _meta: true };
+    },
+    // Speed-distance-time: find distance, then time for another speed
+    function() {
+      var s1 = rand(5, 15), t1 = rand(10, 30);
+      var d = Math.round(s1 * t1);
+      var s2 = rand(8, 20);
+      var t2 = Math.round(d / s2 * 10) / 10;
+      var qText = 'Runner at ' + s1 + 'm/s runs for ' + t1 + 's. Same distance at ' + s2 + 'm/s takes?';
+      var a = t2;
+      var opts = [a]; while (opts.length < 4) { var d2 = Math.round((a + rand(-3, 3)) * 10) / 10; if (opts.indexOf(d2) < 0 && d2 > 0) opts.push(d2); } shuffle(opts);
+      return { q: qText, a: a, options: opts, hint: 'Distance=' + s1 + '×' + t1 + '=' + d + 'm. Time=' + d + '/' + s2 + '=' + t2 + 's', timeLimit: 20, type: 'quant', techniqueLabel: 'Chain: distance→time', intuition: 'Distance=' + d + 'm. At ' + s2 + 'm/s: time=' + d + '/' + s2 + '=' + t2 + 's', _meta: true };
+    }
+  ];
+  return chains[rand(0, chains.length - 1)]();
+}
+
+// Public meta-generator: uses formula bank + occasional chains
+function generateMetaQuestion(diff, layer) {
+  // 20% chance of chain, 80% single formula
+  if (rand(1, 5) <= 1) {
+    var c = generateChainedMeta();
+    if (c) { c.timeLimit = (layer === 'instinct') ? 15 : 20; return c; }
+  }
+  var q = QM.any();
+  if (!q) return generateNumberSenseQuestion(diff, layer || 'exam');
+  q.timeLimit = (layer === 'instinct') ? 15 : 20;
+  return q;
+}
 
 // ====== QUESTION GENERATORS ======
 var GENERATORS = {
@@ -2779,10 +3042,11 @@ function generateQuantQuestion(diff, subMode) {
     height_distance: generateHeightDistanceQuestion,
     decimal_fraction: generateDecimalFractionQuestion,
     chain_rule: generateChainRuleQuestion,
-    logarithm: generateLogarithmQuestion
+    logarithm: generateLogarithmQuestion,
+    meta: generateMetaQuestion
   };
   // If no subMode, pick random quant topic
-  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','partnership','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out','height_distance','decimal_fraction','chain_rule','logarithm']);
+  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','partnership','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out','height_distance','decimal_fraction','chain_rule','logarithm','meta','meta','meta']);
   var gen = genMap[topic];
   if (gen) {
     var q = gen(diff, activeLayer || 'instinct');
