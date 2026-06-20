@@ -1652,6 +1652,292 @@
                     + '<b>Western:</b> Socrates (question everything, unexamined life not worth living), Plato (justice as harmony, ideal state, philosopher-king), Aristotle (virtue ethics, golden mean, polis), Kant (deontology, categorical imperative), Bentham (utilitarianism, pleasure-pain calculation), Mill (rule-utilitarianism, liberty, harm principle), Rawls (justice as fairness, difference principle), Nozick (minimal state, entitlement), Sen (capabilities, development as freedom), Singer (effective altruism, animal liberation). <b>Indian:</b> Buddha (middle path, compassion, non-harm, mindfulness), Mahavira (ahimsa paramo dharma, anekantavada, aparigraha), Gandhi (satyagraha, non-violence, trusteeship, swadeshi, simple living, sarvodaya), Vivekananda (universal brotherhood, practical Vedanta, service to man = service to God), Tagore (humanism, universalism, nationalism critique), Ambedkar (social justice, constitutional morality, annihilation of caste), Sri Aurobindo (integral yoga, evolution of consciousness), Jiddu Krishnamurti (radical freedom, self-knowledge, no authority). <b>Comparative:</b> duty (Kant) vs consequences (Bentham) — applied to public administration. Indian ethos: dharma (righteous duty), karma (action without attachment to results - Gita), lokasangraha (welfare of all), vasudhaiva kutumbakam (world as family), sarvodaya (uplift of all, Gandhi), antodaya (uplift of last person).<br>'
             }
             };
+        }
+
+        // ===== STRUCTURED STUDY DATA (rendered via _studyRender) =====
+        var _studyExtra = {};
+
+        _studyExtra.computers = [
+            { h:'Programming Languages by Paradigm', b:[
+                ['Procedural','C, Pascal, FORTRAN — step-by-step instructions'],
+                ['Object-Oriented','Java, C++, Python, C# — classes & objects, inheritance, polymorphism'],
+                ['Functional','Haskell, Lisp, Scala — pure functions, no side effects, immutability'],
+                ['Scripting','Python, JavaScript, Ruby, PHP, Perl — interpreted, dynamic typing, rapid dev'],
+                ['Query','SQL, GraphQL — database querying'],
+                ['Markup','HTML, XML, Markdown — document structure, not programming'],
+                ['Assembly','low-level, mnemonics for machine instructions, hardware-specific']
+            ]},
+            { h:'Database Concepts', b:[
+                ['DBMS','Software to store/retrieve/manage data (MySQL, Oracle, MongoDB)'],
+                ['RDBMS','relational DBMS with tables, rows, columns, foreign keys (MySQL, PostgreSQL)'],
+                ['NoSQL','non-relational: document (MongoDB), key-value (Redis), graph (Neo4j), column (Cassandra)'],
+                ['ACID','Atomicity, Consistency, Isolation, Durability — ensures reliable transactions'],
+                ['CAP Theorem','Consistency, Availability, Partition Tolerance — only 2 of 3 achievable in distributed systems'],
+                ['SQL vs NoSQL','SQL: structured schema, joins, vertical scaling. NoSQL: flexible schema, horizontal scaling, high throughput'],
+                ['Data Warehouse','large centralized repo for analytics (Snowflake, Redshift, BigQuery)'],
+                ['Data Lake','raw data storage in native format (AWS S3, Azure Data Lake, Hadoop HDFS)']
+            ]},
+            { h:'Networking Protocols & Models', b:[
+                ['OSI Model (7 layers)','Physical, Data Link, Network, Transport, Session, Presentation, Application'],
+                ['TCP/IP Model (4 layers)','Network Interface, Internet (IP), Transport (TCP/UDP), Application'],
+                ['HTTP/HTTPS','HyperText Transfer Protocol (port 80), HTTPS = encrypted with SSL/TLS (port 443)'],
+                ['DNS','Domain Name System — translates domain names (google.com) to IP addresses (142.250.xx)'],
+                ['DHCP','Dynamic Host Configuration Protocol — auto-assigns IP to devices on network'],
+                ['NAT','Network Address Translation — maps private IPs to public IP, conserves IPv4 addresses'],
+                ['VPN','Virtual Private Network — encrypted tunnel over public internet, secure remote access'],
+                ['CDN','Content Delivery Network — distributed servers caching content closer to users (Cloudflare, Akamai)'],
+                ['Load Balancer','distributes traffic across multiple servers for high availability (NGINX, AWS ELB)']
+            ]},
+            { h:'Software Development Concepts', b:[
+                ['SDLC','Software Development Life Cycle: Requirement → Design → Development → Testing → Deployment → Maintenance'],
+                ['Waterfall','sequential phases, rigid, no backtracking — suitable for simple projects'],
+                ['Agile','iterative, sprints (2-4 weeks), continuous feedback — Scrum, Kanban, XP'],
+                ['DevOps','development + operations integration, CI/CD pipeline, automation, Docker, Kubernetes'],
+                ['Version Control','Git (distributed), SVN (centralized) — tracks code changes, enables collaboration'],
+                ['CI/CD','Continuous Integration (auto-build/test), Continuous Deployment (auto-release)'],
+                ['Testing levels','Unit (function), Integration (module), System (whole app), Acceptance (user), Regression (existing)'],
+                ['API','Application Programming Interface — REST (stateless, HTTP methods), GraphQL (flexible querying), SOAP (XML)']
+            ]}
+        ];
+
+        _studyExtra.world_geo = [
+            { h:'Major International Organizations HQ', b:[
+                ['UN (United Nations)','New York, USA — founded 1945, 193 members, peace/security/human rights/development'],
+                ['UNESCO','Paris, France — education, science, culture, World Heritage sites'],
+                ['WHO','Geneva, Switzerland — global public health'],
+                ['IMF','Washington DC — financial stability, loans to countries with balance-of-payments issues'],
+                ['World Bank','Washington DC — loans for development projects (poverty reduction)'],
+                ['WTO','Geneva, Switzerland — global trade rules, dispute resolution'],
+                ['ILO','Geneva, Switzerland — labour standards, workers\' rights'],
+                ['FAO','Rome, Italy — food & agriculture, hunger reduction'],
+                ['IAEA','Vienna, Austria — peaceful use of nuclear energy, safeguards'],
+                ['OPEC','Vienna, Austria — coordinating oil production among member states'],
+                ['INTERPOL','Lyon, France — international police cooperation'],
+                ['NATO','Brussels, Belgium — military alliance, collective defence (Art 5)'],
+                ['EU','Brussels, Belgium (Commission), Strasbourg (Parliament) — 27 member states, single market'],
+                ['ASEAN','Jakarta, Indonesia — 10 members, Southeast Asian economic/political cooperation'],
+                ['SAARC','Kathmandu, Nepal — 8 South Asian nations for regional cooperation'],
+                ['BRICS','Shanghai (New Development Bank) — Brazil, Russia, India, China, South Africa + new members'],
+                ['G7','rotating — Canada, France, Germany, Italy, Japan, UK, USA (plus EU)'],
+                ['G20','rotating — 19 countries + EU, global economic governance'],
+                ['SCO','Beijing, China — security/economic cooperation (China, Russia, India, Pakistan, Central Asia)'],
+                ['ADB','Manila, Philippines — Asian development loans & technical assistance'],
+                ['AIIB','Beijing, China — infrastructure investment in Asia'],
+                ['Commonwealth','London, UK — 54 nations, mostly former British colonies, voluntary association']
+            ]},
+            { h:'Regional Conflicts & Disputed Territories (2020s)', b:[
+                ['Russia-Ukraine War','2022-ongoing: Russia invaded Feb 2022, Crimea annexed 2014, Donbas/Luhansk conflict, Western sanctions'],
+                ['Israel-Palestine Conflict','Gaza War Oct 2023-ongoing: Hamas attack Oct 7, Israel response in Gaza, West Bank tensions, two-state solution debate'],
+                ['South China Sea','China claims 90% of SCS via nine-dash line; Philippines/Vietnam/Malaysia/Brunei/Taiwan competing claims; Spratly/Paracel islands militarization'],
+                ['Taiwan Strait','China considers Taiwan a breakaway province; US maintains One-China policy but arms Taiwan; PLA exercises around Taiwan'],
+                ['Myanmar Civil War','2021 coup by Tatmadaw (Min Aung Hlaing); ongoing civil war with ethnic armed groups & PDF; Arakan Army, TNLA, KIA active'],
+                ['Sudan Civil War','2023-ongoing: SAF (Burhan) vs RSF (Hemedti); Khartoum devastated, Darfur genocide risk; 10M+ displaced'],
+                ['Nagorno-Karabakh','Azerbaijan recaptured region Sep 2023; 100K+ Armenians fled; Russia peacekeepers withdrew; Armenia-Azerbaijan peace talks'],
+                ['Yemen War','2014-ongoing: Houthis (Iran-backed) vs Saudi-led coalition; humanitarian crisis 20M+ food insecure; Red Sea/Houthi attacks on shipping 2023-24'],
+                ['Syrian Civil War','2011-ongoing: Assad regime (Russia/Iran) vs rebels/Kurds/ISIS; Idlib last rebel stronghold; 500K+ dead, 13M displaced'],
+                ['Western Sahara','Morocco vs Polisario Front (Sahrawi Republic); Algeria supports Polisario; 1991 ceasefire broken 2020; US/Israel recognized Moroccan sovereignty'],
+                ['Ethiopia-Tigray War','2020-22: Tigray (TPLF) vs Ethiopian govt (Abiy); Pretoria Peace Agreement Nov 2022; 600K+ dead, mass atrocities'],
+                ['Kashmir','India-Pakistan disputed since 1947; Art 370 abrogated Aug 2019; Pakistan downgraded diplomatic ties; LoC ceasefire holding since 2021'],
+                ['Korean Peninsula','North Korea nuclear/missile tests (2023-24 more frequent); US-ROK joint exercises; Kim Jong Un-Russia military cooperation; DMZ remains heavily fortified']
+            ]},
+            { h:'Important Geographical Facts — Quick Reference', b:[
+                ['Largest continent','Asia (44.6M km²)'],
+                ['Smallest continent','Australia (8.6M km²)'],
+                ['Largest country','Russia (17.1M km²)'],
+                ['Smallest country','Vatican City (0.44 km²)'],
+                ['Largest ocean','Pacific (165M km²)'],
+                ['Smallest ocean','Arctic (14M km²)'],
+                ['Deepest point','Mariana Trench (Challenger Deep, ~11km)'],
+                ['Highest point','Mount Everest (8,848m)'],
+                ['Longest mountain range','Andes (7,000km, South America)'],
+                ['Longest river','Nile (6,650km, Africa)'],
+                ['Largest freshwater lake','Lake Superior (82,100 km², USA-Canada)'],
+                ['Deepest lake','Lake Baikal (1,642m, Russia)'],
+                ['Largest desert','Sahara (9.2M km², Africa)'],
+                ['Largest island','Greenland (2.1M km², Denmark)'],
+                ['Highest waterfall','Angel Falls (979m, Venezuela)'],
+                ['Largest delta','Sunderbans (Ganga-Brahmaputra, India-Bangladesh)'],
+                ['Highest capital','La Paz (3,640m, Bolivia)'],
+                ['Lowest point','Dead Sea (-430m, Israel-Jordan)'],
+                ['Longest border','USA-Canada (8,891km)'],
+                ['Most populous city','Tokyo (37M)'],
+                ['Largest democracy','India (1.4B population)'],
+                ['Most spoken language','English (1.5B speakers total, including L2)'],
+                ['Most time zones','France (12, including overseas territories)'],
+                ['Largest coral reef','Great Barrier Reef (2,300km, Australia)']
+            ]}
+        ];
+
+        _studyExtra.personalities = [
+            { h:'Key Chief Ministers of India (2024-25)', b:[
+                ['N. Chandrababu Naidu','Andhra Pradesh — TDP, 4th term, focused on IT, Amaravati capital, industrial corridors'],
+                ['Himanta Biswa Sarma','Assam — BJP, aggressive on illegal immigration, NRC, education reforms'],
+                ['Nitish Kumar','Bihar — JD(U), longest-serving CM (9th term), prohibition, caste census, social justice'],
+                ['Yogi Adityanath','Uttar Pradesh — BJP, 2nd term, law & order focus, Ram temple, Kumbh Mela infra'],
+                ['Mamata Banerjee','West Bengal — TMC, 3rd term, women welfare (Kanyashree, Lakshmir Bhandar), opposition unity'],
+                ['M.K. Stalin','Tamil Nadu — DMK, son of M. Karunanidhi, Dravidian politics, welfare schemes, anti-Hindi'],
+                ['Pinarayi Vijayan','Kerala — CPI(M), 2nd term, LDF, health infra (Kudumbashree, Kerala model), disaster mgmt'],
+                ['Siddaramaiah','Karnataka — INC, 2nd term, guarantee schemes (Gruha Lakshmi, Anna Bhagya), AHINDA'],
+                ['Revanth Reddy','Telangana — INC, first Congress CM of Telangana, welfare focus, six guarantees'],
+                ['Bhagwant Mann','Punjab — AAP, first AAP CM, free electricity & bus for women, alcohol prohibition partial'],
+                ['Hemant Soren','Jharkhand — JMM, tribal rights, land rights, Santal identity, jailed/arrest/reinstated 2024'],
+                ['Vishnu Deo Sai','Chhattisgarh — BJP, tribal CM, 9% religious tax policy, Naxal-affected area focus'],
+                ['Pema Khandu','Arunachal Pradesh — BJP, longest-serving Arunachal CM, infrastructure, tourism, China border'],
+                ['Neiphiu Rio','Nagaland — NPF, pro-Naga peace settlement, Hornbill Festival, infrastructure in NE'],
+                ['Prem Singh Tamang','Sikkim — SKM, organic state, tourism, Sikkim Himalayan, border area development'],
+                ['Manik Saha','Tripura — BJP, 2nd term, insurgency down, bamboo economy, border infra improvement'],
+                ['Conrad Sangma','Meghalaya — NPP, 2nd term, ILR implementation, tourism, coal mining ban impact management'],
+                ['Lalduhoma','Mizoram — ZPM, former IPS, non-Congress/BJP, anti-liquor, Bru/Reang repatriation'],
+                ['Bhajan Lal Sharma','Rajasthan — BJP, first-time CM, Bhajan Lal (former CM) nephew, welfare schemes'],
+                ['Mohan Charan Majhi','Odisha — BJP, first BJP CM, tribal CM, 5T (transformation) governance model'],
+                ['Mohan Yadav','Madhya Pradesh — BJP, OBC CM, Smart City Bhopal, Narmada conservation, religious tourism'],
+                ['Pushkar Singh Dhami','Uttarakhand — BJP, UCC implementation, Char Dham all-weather road, Uniform Civil Code'],
+                ['Eknath Shinde','Maharashtra — Shiv Sena, split from Uddhav faction, Ladki Bahin scheme, Mumbai infra'],
+                ['Nayab Singh Saini','Haryana — BJP, OBC CM, farmer welfare, sports infra, law & order'],
+                ['Sukhvinder Singh Sukhu','Himachal Pradesh — INC, apple belt focus, disaster recovery (2023 floods), OPS revived'],
+                ['Pramod Sawant','Goa — BJP, 2nd term, mining revival, tourism diversification, Mhadei dispute'],
+                ['Manohar Lal Khattar (ex)','Haryana — longest BJP CM tenure, parivar pehchan patra, anti-corruption, now MP']
+            ]},
+            { h:'Union Ministers of India (2024-25)', b:[
+                ['Narendra Modi','Prime Minister — BJP, 3rd term, Modi 3.0, also Personnel/Public Grievances/Atomic Energy/Space'],
+                ['Amit Shah','Home Minister — 2nd term, J&K integration, internal security, NIA expansion, CAA implementation'],
+                ['Rajnath Singh','Defence Minister — 2nd term, Atmanirbhar Bharat in defence, Agnipath, Tejas, defence exports'],
+                ['Nirmala Sitharaman','Finance Minister — 2nd term, economic growth, GST, PLI schemes, fiscal consolidation'],
+                ['S. Jaishankar','External Affairs Minister — 2nd term, G20 presidency, India-US ties, China border, Quad, BRICS'],
+                ['Piyush Goyal','Commerce & Industry — trade deals (India-EFTA, UK, EU), PLI, startups, consumer affairs'],
+                ['Nitin Gadkari','Road Transport & Highways — 2nd term, national highway expansion (NH model), green fuel, ropeways'],
+                ['Dharmendra Pradhan','Education — 2nd term, NEP 2020 implementation, IIT expansion, Skill India, digital education'],
+                ['Mansukh Mandaviya','Health & Chemicals — Ayushman Bharat expansion, PLI for pharma, Covid management, Jan Aushadhi'],
+                ['Arjun Munda','Tribal Affairs — PM-JANMAN, Eklavya schools, PVTG development, tribal rights forest land'],
+                ['Giriraj Singh','Rural Development & Panchayati Raj — MGNREGA reforms, PM Awas Yojana, rural livelihoods'],
+                ['Shivraj Singh Chouhan','Agriculture — PM-KISAN, MSP increase, natural farming, oilseeds/Nutrient mission, pulses production'],
+                ['Hardeep Singh Puri','Petroleum & Natural Gas + Housing — energy transition, PM Awas Yojana, ethanol blending, CNG expansion'],
+                ['Kiren Rijiju','Parliamentary Affairs — 2nd term (now Minority Affairs), BJP northeast face, border infrastructure'],
+                ['Bhupender Yadav','Environment & Labour — climate commitments, LiFE mission, green hydrogen, labour codes implementation'],
+                ['Ashwini Vaishnaw','Railways, IT & Communications — Vande Bharat, Amrit Bharat, 5G rollout, semiconductor policy, Data Protection'],
+                ['Jyotiraditya Scindia','Telecom & Development NE Region — 4G coverage in NE, telecom reforms, BharatNet, NE tourism'],
+                ['Smriti Irani','Women & Child Development — Poshan Abhiyaan, Mission Shakti, Beti Bachao Beti Padhao expansion'],
+                ['Gajendra Singh Shekhawat','Culture & Tourism — Kashi Vishwanath Corridor, museums revamp, tourism promotions, Somnath/Ayodhya'],
+                ['Anurag Thakur','Information & Broadcasting — 2nd term, Film facilitation office, Prasar Bharati reforms, sports events'],
+                ['Sarbananda Sonowal','Ports & Shipping + AYUSH — port modernization, Sagarmala, inland waterways, Ayurveda global promotion'],
+                ['Kishan Reddy','Coal & Mines — Coal gasification, mineral auction, critical minerals mission, exploration policy']
+            ]},
+            { h:'Important Governors (2024-25)', b:[
+                ['C.V. Ananda Bose','West Bengal — controversial with Mamata Banerjee, conflict with state govt on many bills'],
+                ['R.N. Ravi','Tamil Nadu — NEET issue, Governor-TN govt friction, bills pending for President\'s approval'],
+                ['Anandiben Patel','Uttar Pradesh — former Gujarat CM, first woman UP Governor, administrative experience'],
+                ['Arif Mohammad Khan','Kerala — sharp critic of state govt, Soorya festival vs state, opposition to textbook changes'],
+                ['S. Abdul Nazeer','Andhra Pradesh — former SC judge (Ram Mandir verdict, 377 verdict part of bench)'],
+                ['Rajendra Arlekar','Bihar — former Goa CM, RSS background, Governor roles in various states'],
+                ['La. Ganesan','Nagaland — DMK politician turned Governor, NE experience'],
+                ['Bandaru Dattatreya','Haryana — former Union Minister, 2nd term as Haryana Governor'],
+                ['Thaawar Chand Gehlot','Karnataka — former Social Justice Minister, SC community background'],
+                ['Gulab Chand Kataria','Punjab — former Rajasthan Home Minister, tough law & order stance'],
+                ['Lakshman Prasad Acharya','Assam — former Tripura Governor, academic background, Sikkim/Assam experience'],
+                ['Mangubhai Patel','Madhya Pradesh — 2nd term, former Gujarat minister, administrative governance focus'],
+                ['Om Prakash Mathur','Sikkim — former Union Minister, Rajasthan politician'],
+                ['Raghubar Das','Odisha — former Jharkhand CM, first non-tribal Jharkhand CM, industrial background'],
+                ['Ramesh Bais','Maharashtra — 2nd gubernatorial term (earlier Tripura/Chhattisgarh), RSS background'],
+                ['Santosh Gangwar','Jharkhand — former Union Minister (Labour), Bareilly MP, OBC politician'],
+                ['Shiv Pratap Shukla','Himachal Pradesh — former MoS Finance, RSS/ABVP background, BJP organization'],
+                ['Indrasena Reddy Nallu','Tripura — JDS leader from Karnataka, retired IPS officer, first Karnataka JDS member as Governor'],
+                ['C.H. Vijayashankar','Meghalaya — former Chief Secretary of Karnataka, first Karnataka CS as Governor']
+            ]}
+        ];
+
+        _studyExtra.society = [
+            { h:'Key Social Legislation in India', b:[
+                ['Protection of Civil Rights Act 1955','enforces Art 17 (abolition of untouchability), penalizes preaching/practicing untouchability'],
+                ['Scheduled Castes & STs (Prevention of Atrocities) Act 1989','special courts, exclusive offences list for atrocities against SCs/STs, time-bound trials'],
+                ['Protection of Women from Domestic Violence Act 2005','civil law covering physical/emotional/economic/sexual abuse, protection orders, residence rights'],
+                ['Sexual Harassment of Women at Workplace (POSH) Act 2013','internal complaints committee, ICC mandatory at all workplaces, Vishaka guidelines codified'],
+                ['Prohibition of Child Marriage Act 2006','minimum age 18 (girls) / 21 (boys), voidable marriage, punishment for parents/priests'],
+                ['Protection of Children from Sexual Offences (POCSO) Act 2012','gender-neutral, special courts, child-friendly procedures, mandatory reporting'],
+                ['Child Labour (Prohibition & Regulation) Amendment Act 2016','completely prohibits <14 yrs, restricts adolescents (14-18) in hazardous occupations'],
+                ['Right to Education (RTE) Act 2009','free & compulsory education 6-14 yrs, 25% reservation in private schools for disadvantaged'],
+                ['Maternity Benefit (Amendment) Act 2017','26 weeks paid maternity leave, crèche facility mandatory for 50+ employees, work from home'],
+                ['Transgender Persons (Protection of Rights) Act 2019','prohibits discrimination, right to self-perceived gender identity, certificate from district magistrate'],
+                ['Rights of Persons with Disabilities (RPwD) Act 2016','21 disabilities covered (up from 7), 5% govt job quota, 4% education quota, accessibility'],
+                ['Maintenance & Welfare of Parents & Senior Citizens Act 2007','maintenance tribunal, children/grandchildren liable, state obligation for aged care homes'],
+                ['Forest Rights Act (FRA) 2006','individual & community forest rights for STs & forest dwellers, Gram Sabha empowered'],
+                ['Right to Fair Compensation & Land Rehabilitation Act (LARR) 2013','consent clause (80% private, 70% PPP), SIA mandatory, 4x market value compensation'],
+                ['National Food Security Act (NFSA) 2013','legal right to subsidized food (5kg wheat/rice at ₹2-3/kg), 67% population coverage'],
+                ['MGNREGA 2005','100 days guaranteed wage employment to rural households, legal guarantee, 60:40 wage-material ratio']
+            ]},
+            { h:'Social Security Schemes — Quick Details', b:[
+                ['PM Jan Dhan Yojana (2014)','financial inclusion, zero-balance account, overdraft ₹10K, accident insurance ₹1L, Rupay card'],
+                ['PM Jeevan Jyoti Bima Yojana (2015)','life insurance ₹2L, annual premium ₹330, 18-50 yrs, auto-debit from bank account'],
+                ['PM Suraksha Bima Yojana (2015)','accidental insurance ₹2L, annual premium ₹20, 18-70 yrs, universal coverage'],
+                ['Atal Pension Yojana (2015)','guaranteed pension ₹1K-5K/month from 60 yrs, govt co-contributes 50% for 5 yrs for lower income'],
+                ['Pradhan Mantri Shram Yogi Maandhan (2019)','pension ₹3K/month for unorganized workers (shopkeepers, street vendors, etc.), 60% govt contribution'],
+                ['PM-KISAN (2019)','₹6,000/yr income support to all farmers, in 3 installments, DBT, ~11 crore beneficiaries'],
+                ['PM Awas Yojana (2015)','Housing for All by 2022 (extended), ₹1.2L-2.67L subsidy on home loan interest, PMAY-U + PMAY-G'],
+                ['Ayushman Bharat PM-JAY (2018)','₹5L/family/yr health cover, 10Cr+ families, no age/gender restriction, cashless, portable nationally'],
+                ['PM Ujjwala Yojana (2016)','free LPG connection to BPL households, 10Cr+ connections, women empowerment, clean cooking fuel'],
+                ['PM SVANidhi (2020)','working capital loan up to ₹10K for street vendors, no collateral, interest subsidy 7%'],
+                ['PM Mudra Yojana (2015)','loans up to ₹10L for non-corporate small businesses: Shishu (₹50K), Kishor (₹5L), Tarun (₹10L)'],
+                ['National Social Assistance Programme (NSAP)','pension for elderly (60+/65+), widow, disabled — ₹200-500/month, central sector scheme'],
+                ['PM Garib Kalyan Anna Yojana (2020)','free 5kg foodgrains/person/month (over NFSA), extended multiple times, during COVID + beyond'],
+                ['Deendayal Antyodaya Yojana-NRLM','SHG based poverty reduction, 10Cr+ women in SHGs, bank linkage, livelihood diversification'],
+                ['Mission Indradhanush','full immunization of children & pregnant women against 12 vaccine-preventable diseases'],
+                ['Poshan Abhiyaan (2017)','reduce stunting/underweight/anemia (0-6 yrs + adolescent girls), technology-based monitoring']
+            ]},
+            { h:'Census 2011 Key Demographic Indicators', b:[
+                ['Total population','1.21 billion (623M male, 586M female)'],
+                ['Population density','382 persons/km²'],
+                ['Sex ratio','940 females per 1000 males'],
+                ['Child sex ratio (0-6)','918 females per 1000 males'],
+                ['Literacy rate','74.04% (male 82.14%, female 65.46%)'],
+                ['Rural population','68.84% (833M)'],
+                ['Urban population','31.16% (377M)'],
+                ['Decadal growth (2001-11)','17.64% (declining trend)'],
+                ['Highest literacy','Kerala (93.91%)'],
+                ['Lowest literacy','Bihar (63.82%)'],
+                ['Highest sex ratio','Kerala (1084)'],
+                ['Lowest sex ratio','Haryana (879)'],
+                ['Highest population','UP (199.8M)'],
+                ['Lowest population','Sikkim (610K)'],
+                ['SC population','16.6% (201M)'],
+                ['ST population','8.6% (104M)'],
+                ['Most urbanized','Goa (62.2%)'],
+                ['Least urbanized','Himachal (10%)'],
+                ['Workforce participation','39.8% (main + marginal workers)'],
+                ['Houseless population','1.77 million']
+            ]}
+        ];
+
+        _studyExtra.ethics = [
+            { h:'Important Case Studies for UPSC GS-IV', b:[
+                ['Water shortage crisis','As DM of drought-prone district, how do you allocate limited water between farmers, industry, and domestic use? — apply utilitarian (maximize overall good) + Rawlsian (prioritize worst-off: domestic)'],
+                ['Corruption allegation','Your senior asks you to overlook a tender irregularity. What do you do? — deontology (duty to follow rules) vs consequences (losing job, harming public interest), follow Conduct Rules, report via proper channel'],
+                ['Communal tension','You\'re the DM when a religious procession clashes with another community. Immediate steps + long-term community harmony measures — neutrality, transparency, FIR against all perpetrators, peace committee, interfaith dialogue'],
+                ['Land acquisition vs tribals','Mining project will bring jobs & revenue but displace tribal community with sacred forest — apply capabilities approach (Sen), ensure informed consent (FRA 2006), better rehabilitation, share benefits, minimize displacement'],
+                ['Whistleblower dilemma','You discover financial fraud in your department. Colleagues warn against reporting. — deontology (duty to report), ethics of justice (public funds), Whistleblower Protection Act 2014, proper channel reporting'],
+                ['Nepotism in transfers','Minister pressures you to transfer an officer. Officer is competent. — impartiality as core value, follow transfer policy, written record of pressure, if unavoidable, transfer but document reasons'],
+                ['Humanitarian vs rules','During flood, you use disaster relief funds to help neighbouring district without approval. — Gilligan\'s care ethics (relationships, context), administrative discretion, later seek ex-post approval, show results'],
+                ['Caste discrimination','Your subordinate refuses to work under a Dalit senior. — PoA Act 1989 provisions, progressive discipline, sensitization training, uphold constitutional values of equality and dignity'],
+                ['Media trial vs investigation','High profile case, media demanding immediate arrest. Evidence insufficient. — rule of law, due process, resist pressure, transparent updates without compromising investigation'],
+                ['Inclusive development','PVTG hamlet inside tiger reserve. Forest Department says no development. — FRA 2006 rights, tribal livelihood + conservation balance, eco-development committee, PM-JANMAN scheme, PVTG-specific approach']
+            ]},
+            { h:'Key Philosophers & Thinkers for GS-IV', b:[
+                ['Plato (428-348 BC)','Justice as harmony (individual + state), philosopher-king, ideal state, allegory of cave — rule by wisdom, not majority'],
+                ['Aristotle (384-322 BC)','Virtue ethics — golden mean, eudaimonia (flourishing), phronesis (practical wisdom), man is political animal, distributive justice'],
+                ['Immanuel Kant (1724-1804)','Deontology — categorical imperative, good will, treat humanity as end not means, duty-based ethics, universalizability'],
+                ['Jeremy Bentham (1748-1832)','Utilitarianism — greatest good for greatest number, felicific calculus, hedonistic (pleasure is good), quantitative'],
+                ['John Stuart Mill (1806-1873)','Utilitarianism refined — qualitative distinction (higher/lower pleasures), harm principle, liberty, women\'s rights'],
+                ['John Rawls (1921-2002)','Justice as fairness — veil of ignorance, original position, difference principle (inequality OK only if helps worst-off), two principles'],
+                ['Robert Nozick (1938-2002)','Libertarianism — minimal state (night-watchman), entitlement theory (justice in acquisition/transfer/remedy), self-ownership'],
+                ['Amartya Sen (1933-)','Capabilities approach — development as freedom, what people are able to do/be, not just income/utility, Niti vs Nyaya'],
+                ['Martha Nussbaum (1947-)','Capabilities list (10 central capabilities: life, health, senses, imagination, thought, emotions, affiliation, play, control)'],
+                ['Mahatma Gandhi (1869-1948)','Satyagraha (truth force), ahimsa (non-violence), trusteeship, swadeshi, sarvodaya (welfare of all), simple living, ends-means unity'],
+                ['Swami Vivekananda (1863-1902)','Universal brotherhood, practical Vedanta, service to man = service to God, fearlessness, character building, youth empowerment'],
+                ['B.R. Ambedkar (1891-1956)','Social justice, constitutional morality, annihilation of caste, liberty/equality/fraternity, Buddhist navayana, state as welfare promoter'],
+                ['Buddha (563-483 BC)','Middle path, eightfold path (right view/intent/speech/action/livelihood/effort/mindfulness/concentration), compassion (karuna), mindfulness'],
+                ['Confucius (551-479 BC)','Li (ritual propriety), Ren (benevolence/humaneness), Yi (righteousness), Junzi (noble person), five constant relationships'],
+                ['Carol Gilligan (1936-)','Care ethics — women\'s moral development focuses on care/relationships/responsibility vs abstract principles, different voice'],
+                ['Ayn Rand (1905-1982)','Objectivism — rational self-interest, individualism, laissez-faire capitalism, altruism is immoral, virtue of selfishness']
+            ]}
+        ];
 
         // ===== HELPER FUNCTIONS =====
         function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
@@ -4055,10 +4341,28 @@
         var studyData = {};
         var studyState = { view:'notes', fs:100, fcIdx:0, fcRevealed:false, fcShuffled:[] };
 
+        function _studyRender(data) {
+            var html = '';
+            for (var gi = 0; gi < data.length; gi++) {
+                var group = data[gi];
+                html += '<b>' + group.h + ':</b><br>';
+                for (var bi = 0; bi < group.b.length; bi++) {
+                    var b = group.b[bi];
+                    html += '• <b>' + b[0] + '</b> — ' + b[1] + '<br>';
+                }
+                html += '<br>';
+            }
+            return html;
+        }
+
         function _parseStudyContent(catId) {
             var raw = GK_LEARN[catId];
             if (!raw) return null;
             var content = raw.content || '';
+            // Append structured extra data if available
+            if (_studyExtra[catId]) {
+                content += '<br>' + _studyRender(_studyExtra[catId]);
+            }
             var parts = content.split(/(<b>[^<]+<\/b>)/);
             var sections = [];
             var currentTitle = 'Introduction';
