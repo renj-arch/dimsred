@@ -227,6 +227,31 @@
 
             <div style="margin:12px 0 6px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
                 <button class="action-btn secondary" onclick="showPibQuizPanel()" style="flex:1;min-width:160px;padding:12px">📡 PIB Current Affairs Quiz</button>
+                <button class="action-btn secondary" id="sebiQuizBtn" onclick="startFeedQuiz('sebi','SEBI Quiz')" style="flex:1;min-width:140px;padding:12px">📊 SEBI Quiz</button>
+                <button class="action-btn secondary" id="scQuizBtn" onclick="startFeedQuiz('scjudgments','SC Judgments Quiz')" style="flex:1;min-width:140px;padding:12px">⚖️ SC Judgments Quiz</button>
+            </div>
+            <div style="margin:0 0 6px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
+                <button class="action-btn secondary" id="isroQuizBtn" onclick="startFeedQuiz('isro','ISRO Quiz')" style="flex:1;min-width:140px;padding:12px">🛰️ ISRO Quiz</button>
+                <button class="action-btn secondary" id="meaQuizBtn" onclick="startFeedQuiz('mea','MEA Quiz')" style="flex:1;min-width:140px;padding:12px">🌍 MEA Quiz</button>
+            </div>
+            <div style="margin:0 0 6px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
+                <button class="action-btn secondary" id="rbiQuizBtn" onclick="startFeedQuiz('rbi','RBI Quiz')" style="flex:1;min-width:140px;padding:12px">🏦 RBI Quiz</button>
+                <button class="action-btn secondary" id="defenceQuizBtn" onclick="startFeedQuiz('defence','Defence Quiz')" style="flex:1;min-width:140px;padding:12px">⚔️ Defence Quiz</button>
+                <button class="action-btn secondary" id="envQuizBtn" onclick="startFeedQuiz('environment','Environment Quiz')" style="flex:1;min-width:140px;padding:12px">🌿 Environment Quiz</button>
+            </div>
+            <div style="margin:0 0 6px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
+                <button class="action-btn secondary" id="sportsQuizBtn" onclick="startFeedQuiz('sports','Sports Quiz')" style="flex:1;min-width:140px;padding:12px">🏅 Sports Quiz</button>
+                <button class="action-btn secondary" id="econQuizBtn" onclick="startFeedQuiz('economics','Economics Quiz')" style="flex:1;min-width:140px;padding:12px">📈 Economics Quiz</button>
+            </div>
+            <div style="margin:0 0 6px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
+                <button class="action-btn secondary" id="polityQuizBtn" onclick="startFeedQuiz('polity','Polity Quiz')" style="flex:1;min-width:140px;padding:12px">🏛️ Polity Quiz</button>
+                <button class="action-btn secondary" id="sciTechQuizBtn" onclick="startFeedQuiz('sciTech','Science & Tech Quiz')" style="flex:1;min-width:140px;padding:12px">🔬 Sci-Tech Quiz</button>
+                <button class="action-btn secondary" id="healthQuizBtn" onclick="startFeedQuiz('health','Health Quiz')" style="flex:1;min-width:140px;padding:12px">🏥 Health Quiz</button>
+            </div>
+            <div style="margin:0 0 6px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
+                <button class="action-btn secondary" id="educationQuizBtn" onclick="startFeedQuiz('education','Education Quiz')" style="flex:1;min-width:140px;padding:12px">📚 Education Quiz</button>
+                <button class="action-btn secondary" id="agriQuizBtn" onclick="startFeedQuiz('agriculture','Agriculture Quiz')" style="flex:1;min-width:140px;padding:12px">🌾 Agriculture Quiz</button>
+                <button class="action-btn secondary" id="energyQuizBtn" onclick="startFeedQuiz('energy','Energy Quiz')" style="flex:1;min-width:140px;padding:12px">⚡ Energy Quiz</button>
             </div>
             <div id="pibQuizPanel" style="display:none;margin-bottom:16px;padding:14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);text-align:center">
                 <div style="font-size:.85em;font-weight:600;margin-bottom:10px;color:var(--text-sec)">PIB Headline Quiz — pick a date range</div>
@@ -3070,7 +3095,480 @@
             return pick(types)();
         };
 
-        // ===== QUIZ STATE =====
+        // ---- PIB Current Affairs procedural generator ----
+        var _pibUsed = {};
+        var _pibDateRange = null;
+
+        function _extractPibQAs(title) {
+            var results = [];
+            if (!title || title.length < 10) return results;
+            var clean = title.replace(/[–—•·′″]/g, ' ').trim();
+            var display = '<small>"' + clean + '"</small>';
+
+            // 1. Scheme: look for Yojana / Mission / Scheme names
+            var m = clean.match(/(Pradhan Mantri [A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/);
+            if (!m) m = clean.match(/(PM [A-Z][a-z]+(?:\s+[A-Z][a-z]+)*? Yojana)/);
+            if (!m) m = clean.match(/([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*? Yojana)/);
+            if (!m) m = clean.match(/([A-Z][a-z]+ Mission)/);
+            if (m) results.push({ t:'scheme', q:'Which government scheme/program is mentioned?<br>' + display, a:m[1].trim().replace('PM ','Pradhan Mantri '), hint:'Look for Yojana/Mission names — PM-KISAN, Ayushman, etc.' });
+
+            // 2. Ministry: "Minister for/of X", "Ministry of X reviews/launches/announces"
+            m = clean.match(/(?:Minister for|Minister of|Ministry of)\s+([A-Z][A-Za-z &]+?)(?:\s+(?:reviews?|launch(?:es|ed)?|announces?|inaugurat(?:es|ed)|holds?|held|sign(?:s|ed)?|approves?|releases?|issues?|organis(?:es|ed)|participat(?:es|ed)|present(?:s|ed)|delivers?|address(?:es|ed)))/);
+            if (!m) m = clean.match(/(?:Minister for|Minister of|Ministry of)\s+([A-Z][A-Za-z &]+?)(?:\s+\d+|:|,|$)/);
+            if (m) {
+                var min = m[1].trim().replace(/&/g, 'and');
+                if (min.length < 40) results.push({ t:'ministry', q:'Which ministry is associated with this PIB headline?<br>' + display, a:min, hint:'Look for "Minister for/of" or "Ministry of"' });
+            }
+
+            // 3. Person/Dignitary
+            m = clean.match(/(Prime Minister(?: Shri [A-Z][a-z]+ [A-Z][a-z]+)?)/);
+            if (!m) m = clean.match(/(President of India)/);
+            if (!m) m = clean.match(/(Lok Sabha Speaker)/);
+            if (!m) m = clean.match(/(Vice President)/);
+            if (!m) m = clean.match(/(Union Minister Shri [A-Z][a-z]+ [A-Z][a-z]+)/);
+            if (!m) m = clean.match(/Shri ([A-Z][a-z]+ [A-Z][a-z]+)(?:\s+reviews|\s+launches|\s+announces|\s+inaugurates|\s+addresses|\s+chairs|\s+holds)/);
+            if (m) results.push({ t:'person', q:'Who is the key dignitary in this PIB headline?<br>' + display, a:m[1].trim(), hint:'Look for PM, President, Speaker, Union Minister' });
+
+            // 4. Country/International: "INDIA AND X" or "India-X"
+            m = clean.match(/INDIA (?:AND|&|WITH)\s+([A-Z][A-Z ]+?)(?:\s+(?:SHARE|SIGN|AGREE|DISCUSS|TO|:))/);
+            if (m) results.push({ t:'country', q:'Which country/organization is India partnering with?<br>' + display, a:m[1].trim(), hint:'Look for "India and X" patterns' });
+            m = clean.match(/India[-–]([A-Z][a-zA-Z ]+?)(?:\s|$|,)/);
+            if (m && m[1].length < 30) results.push({ t:'country', q:'Which country is India mentioned with?<br>' + display, a:m[1].trim(), hint:'Look for "India-X" in the headline' });
+            m = clean.match(/(?:Republic of |Government of )([A-Z][a-zA-Z ]+?)(?:\s|,|\.)/);
+            if (m && m[1].length < 25 && m[1] !== 'India' && !m[1].toLowerCase().includes('india')) {
+                var c = m[1].trim();
+                if (c.length > 4) results.push({ t:'country', q:'Which country/government is mentioned alongside India?<br>' + display, a:c, hint:'Think about international partners' });
+            }
+
+            // 5. Amount
+            m = clean.match(/[₹₹]\s*([0-9,]+)\s*(crore|lakh|lakh crore)/i);
+            if (m) results.push({ t:'amount', q:'What financial amount is mentioned in this PIB release?<br>' + display, a:'₹' + m[1] + ' ' + m[2].toLowerCase(), hint:'Look for ₹ allocations in the headline' });
+
+            // 6. Event/Day
+            m = clean.match(/((?:International|World|National) [A-Za-z][A-Za-z ]+? Day(?:\s+Commemoration)?)/);
+            if (m) results.push({ t:'event', q:'Which event/observance is featured?<br>' + display, a:m[1].trim(), hint:'Look for Day, Commemoration, or Summit keywords' });
+
+            // 7. State/Region
+            var states = ['Madhya Pradesh','Uttar Pradesh','Tamil Nadu','Andhra Pradesh','Arunachal Pradesh','Himachal Pradesh','Jammu & Kashmir','Andaman & Nicobar','West Bengal','Jharkhand','Chhattisgarh','Uttarakhand','Karnataka','Maharashtra','Telangana','Rajasthan','Gujarat','Haryana','Punjab','Odisha','Bihar','Kerala','Assam','Manipur','Meghalaya','Mizoram','Nagaland','Sikkim','Tripura','Goa','Delhi','Ladakh'];
+            for (var si = 0; si < states.length; si++) {
+                if (clean.indexOf(states[si]) !== -1) {
+                    results.push({ t:'state', q:'Which Indian state/UT is mentioned in this PIB headline?<br>' + display, a:states[si], hint:'State mentioned — often in context of review, visit, or project' });
+                    break;
+                }
+            }
+
+            // 8. Fallback: key entity (acronym or proper noun)
+            var words = clean.split(' ');
+            var best = null, bestScore = 0;
+            var skip = {'the':1,'and':1,'for':1,'with':1,'from':1,'this':1,'that':1,'were':1,'has':1,'had':1,'not':1,'are':1,'was':1,'but':1,'its':1,'their':1,'been':1,'will':1,'over':1,'into':1,'about':1,'than':1,'after':1,'before':1,'under':1,'through':1,'between':1,'against':1,'during':1,'without':1,'within':1,'along':1,'among':1,'upon':1,'across':1,'beyond':1,'toward':1,'also':1,'more':1,'most':1,'much':1,'many':1,'some':1,'such':1,'all':1,'each':1,'every':1,'both':1,'few':1,'own':1,'same':1,'just':1,'now':1,'here':1,'there':1,'then':1,'well':1,'back':1,'still':1,'already':1,'yet':1,'once':1,'again':1,'ever':1,'never':1,'always':1,'even':1,'though':1,'while':1,'since':1,'until':1,'because':1,'if':1,'when':1,'where':1,'how':1,'what':1,'who':1,'whom':1,'which':1,'whether':1,'why':1,'minister':1,'ministers':1,'prime':1,'president':1,'vice':1,'chairman':1,'secretary':1,'government':1,'committee':1,'commission':1,'authority':1,'board':1,'council':1,'bureau':1,'department':1,'ministry':1,'chief':1,'general':1,'national':1,'international':1,'global':1,'central':1,'state':1,'union':1,'review':1,'meeting':1,'conference':1,'summit':1,'visit':1,'discuss':1,'holds':1,'held':1,'sign':1,'signed':1,'launch':1,'launched':1,'announce':1,'announced':1,'approve':1,'approved':1,'release':1,'released':1,'issue':1,'issued':1,'inaugurate':1,'inaugurated':1,'organize':1,'organized':1,'participate':1,'participated':1,'host':1,'hosts':1,'hosted':1,'address':1,'addressed':1,'call':1,'calls':1,'called':1,'speak':1,'spoke':1,'deliver':1,'delivers':1,'delivered':1,'present':1,'presents':1,'presented':1,'new':1,'special':1,'first':1,'second':1,'third':1,'annual':1,'joint':1,'high':1,'level':1,'press':1,'information':1,'affairs':1,'external':1,'home':1,'finance':1,'defence':1,'health':1,'education':1,'rural':1,'urban':1,'power':1,'water':1,'road':1,'railway':1,'civil':1,'aviation':1,'commerce':1,'industry':1,'agriculture':1,'environment':1,'forest':1,'climate':1,'science':1,'technology':1,'development':1,'programme':1,'project':1,'scheme':1,'initiative':1,'mission':1,'task':1,'force':1,'group':1,'team':1,'award':1,'honour':1,'fellowship':1,'scholarship':1,'day':1,'week':1,'month':1,'year':1,'session':1,'edition':1,'agreement':1,'agreements':1,'cooperation':1,'collaboration':1,'partnership':1,'initiative':1,'program':1,'programmes':1,'projects':1,'operation':1,'operations':1,'january':1,'february':1,'march':1,'april':1,'may':1,'june':1,'july':1,'august':1,'september':1,'october':1,'november':1,'december':1,'india':1,'indian':1,'govt':1,'centre':1,'center':1,'parliament':1,'supreme':1,'court':1,'modi':1};
+            for (var wi = words.length - 1; wi >= 0; wi--) {
+                var w = words[wi].replace(/[^a-zA-Z0-9\u0900-\u097F+]/g, '');
+                if (w.length < 3) continue;
+                if (/^\d+$/.test(w)) continue;
+                var lower = w.toLowerCase();
+                if (skip[lower]) continue;
+                var isAcronym = w === w.toUpperCase() && /[A-Z]/.test(w) && w.length >= 3;
+                var isProper = w[0] === w[0].toUpperCase() && w[0] !== w[0].toLowerCase();
+                var score = (isAcronym ? 5 : isProper ? 3 : 1) + (wi / words.length * 2);
+                if (score > bestScore) { bestScore = score; best = w; }
+            }
+            if (best) {
+                var blanked = clean.replace(best, '______');
+                results.push({ t:'entity', q:'What entity is blanked in this PIB headline?<br><small>"' + blanked + '"</small>', a:best, hint:'Think about the key proper noun or acronym' });
+            }
+
+            return results;
+        }
+
+        // Save static generators before feed-based override for combined quiz
+        var _staticGen_sports = GK_GENERATORS.sports;
+        var _staticGen_defence = GK_GENERATORS.defence;
+        var _staticGen_environment = GK_GENERATORS.environment;
+        var _staticGen_polity = GK_GENERATORS.polity;
+
+        GK_GENERATORS.pib = function() {
+            if (!_pibFeedData || _pibFeedData.length < 3) {
+                return { q:'PIB feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
+            }
+
+            var items = _pibFeedData;
+            if (_pibDateRange) {
+                items = items.filter(function(i) {
+                    return i.pubDate && i.pubDate.slice(0,10) >= _pibDateRange.start && i.pubDate.slice(0,10) <= _pibDateRange.end;
+                });
+            }
+            if (items.length < 3) items = _pibFeedData;
+
+            // Build full Q&A pool from all filtered items
+            var qaPool = [];
+            items.forEach(function(item) {
+                var qas = _extractPibQAs(item.title);
+                qas.forEach(function(qa) {
+                    qa.link = item.link || '';
+                    qaPool.push(qa);
+                });
+            });
+
+            if (qaPool.length === 0) {
+                return { q:'Could not generate question from PIB data.', a:'N/A', opts:['N/A','A','B','C'], hint:'', fact:'' };
+            }
+
+            // Find an unused question
+            var available = qaPool.filter(function(q) { return !_pibUsed[q.q + q.a]; });
+            if (available.length === 0) { _pibUsed = {}; available = qaPool; }
+            if (available.length === 0) available = qaPool;
+
+            var selected = pick(available);
+            _pibUsed[selected.q + selected.a] = true;
+
+            // Build options from entity pool + distractors
+            var entityPool = [];
+            items.forEach(function(item) {
+                var words = (item.title || '').replace(/[–—•·′″]/g, ' ').split(' ');
+                words.forEach(function(w) {
+                    var clean = w.replace(/[^a-zA-Z0-9+]/g, '');
+                    if (clean.length >= 3 && /[A-Z]/.test(clean[0])) {
+                        if (entityPool.indexOf(clean) < 0) entityPool.push(clean);
+                    }
+                });
+            });
+            var pool = (GK_DISTRACTORS.pib || []).filter(function(e) { return e !== selected.a; });
+            var combined = shuffle(entityPool.concat(pool));
+            var opts = [selected.a];
+            for (var i = 0; i < combined.length && opts.length < 4; i++) {
+                if (opts.indexOf(combined[i]) < 0 && combined[i].length > 1) opts.push(combined[i]);
+            }
+            while (opts.length < 4) opts.push('None of the above');
+            shuffle(opts);
+
+            return {
+                q: selected.q,
+                a: selected.a,
+                opts: opts,
+                hint: selected.hint,
+                fact: selected.fact
+            };
+        };
+        // ---- SEBI procedural generator ----
+        var _sebiUsed = {};
+
+        GK_GENERATORS.sebi = function() {
+            if (!_sebiFeedData || _sebiFeedData.length < 2) {
+                return { q:'SEBI feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
+            }
+            // Keep only exam-relevant SEBI items
+            var relevant = _sebiFeedData.filter(function(i) {
+                var t = i.title.toUpperCase();
+                return t.indexOf('BOARD MEETING') !== -1 || t.indexOf('CIRCULAR') !== -1
+                    || t.indexOf('FRAMEWORK') !== -1 || t.indexOf('GUIDELINES') !== -1
+                    || t.indexOf('REGULATIONS') !== -1 || t.indexOf('PRESS RELEASE') !== -1
+                    || t.indexOf('KEY DECISIONS') !== -1 || t.indexOf('CONSULTATION') !== -1
+                    || t.indexOf('AMENDMENT') !== -1 || t.indexOf('REFORMS') !== -1;
+            });
+            if (relevant.length < 2) {
+                // Fall back to any SEBI items with useful-looking titles
+                relevant = _sebiFeedData.filter(function(i) {
+                    var t = i.title.toUpperCase();
+                    return t.length > 20 && !t.match(/RELEASE ORDER|RECOVERY CERTIFICATE|COMPLETION OF|NOTICE OF DEMAND/);
+                });
+            }
+            if (relevant.length < 2) relevant = _sebiFeedData;
+            var available = relevant.filter(function(q) { return !_sebiUsed[q.id]; });
+            if (available.length === 0) { _sebiUsed = {}; available = relevant; }
+            var selected = pick(available);
+            _sebiUsed[selected.id] = true;
+            var title = selected.title || '';
+            var clean = title.replace(/[–—•·′″]/g, ' ').trim();
+            // Blank out key terms for the question
+            var terms = ['SEBI','Securities and Exchange Board of India','Board Meeting','Circular','Framework','Guidelines'];
+            var blanked = null;
+            var answer = null;
+            for (var ti = 0; ti < terms.length; ti++) {
+                var idx = clean.toUpperCase().indexOf(terms[ti].toUpperCase());
+                if (idx !== -1) {
+                    answer = terms[ti];
+                    blanked = clean.slice(0, idx) + '______' + clean.slice(idx + terms[ti].length);
+                    break;
+                }
+            }
+            if (!blanked) {
+                var w = _extractKeyEntity(clean);
+                if (w) { blanked = clean.replace(w, '______'); answer = w; }
+            }
+            if (!blanked) {
+                blanked = clean;
+                answer = 'SEBI';
+            }
+            var optsArr = [answer];
+            var pool = (GK_DISTRACTORS.sebi || []).filter(function(e) { return e !== answer; });
+            var combined = shuffle(pool);
+            for (var i = 0; i < combined.length && optsArr.length < 4; i++) {
+                if (optsArr.indexOf(combined[i]) < 0) optsArr.push(combined[i]);
+            }
+            while (optsArr.length < 4) optsArr.push('None of the above');
+            shuffle(optsArr);
+            return {
+                q: 'Which term is blanked in this SEBI headline?<br><small>"' + blanked + '"</small>',
+                a: answer,
+                opts: optsArr,
+                hint: 'Look for SEBI-related keywords: regulations, board decisions, circulars',
+                fact: selected.link ? 'Source: <a href="' + selected.link + '" target="_blank" style="color:var(--cyan)">View release</a>' : ''
+            };
+        };
+
+        // ---- SC Judgments procedural generator ----
+        var _scUsed = {};
+
+        function _extractLegalIssue(desc) {
+            if (!desc) return null;
+            var text = desc.replace(/<[^>]+>/g, ' ').trim();
+            // Look for key legal phrases
+            var patterns = [
+                /(?:relates? to|arising out of|under\s+the\s+)([A-Z][A-Za-z\s]+?)(?:\.|,|Act|,|;)/,
+                /(?:under\s+)(?:Section\s+\d+|Article\s+\d+)(?:\s+of\s+the\s+([A-Z][A-Za-z\s]+?))(?:\s|\.|,)/,
+                /(?:appeal|petition|suit|complaint)(?:\s+against|\s+relating to|\s+under)\s+([A-Z][A-Za-z\s]+?)(?:\.|,|;|\s+before|\s+filed)/i
+            ];
+            for (var pi = 0; pi < patterns.length; pi++) {
+                var m = text.match(patterns[pi]);
+                if (m && m[1] && m[1].length < 60) return m[1].trim();
+            }
+            // Fallback: extract key legal terms
+            var legalTerms = ['Consumer Protection','Motor Accident','Land Acquisition','Service Matter','Criminal Appeal','Civil Appeal','Family Law','Property Dispute','Tax Appeal','Service Law','Labour Law','Arbitration','Insurance Claim','Education','Election','Environmental','Constitutional','Corporate','Banking','Contract','Tort','Human Rights','Immigration','Customs','Excise','Income Tax'];
+            for (var li = 0; li < legalTerms.length; li++) {
+                if (text.indexOf(legalTerms[li]) !== -1) return legalTerms[li];
+            }
+            return null;
+        }
+
+        function _extractKeyEntity(text) {
+            var words = text.split(' ');
+            var best = null, bestScore = 0;
+            var skip = {'the':1,'and':1,'for':1,'with':1,'from':1,'this':1,'that':1,'were':1,'has':1,'had':1,'not':1,'are':1,'was':1,'but':1,'its':1,'their':1,'been':1,'will':1,'over':1,'into':1,'about':1,'than':1,'after':1,'before':1,'under':1,'through':1,'between':1,'against':1,'during':1,'without':1,'within':1,'along':1,'among':1,'upon':1,'across':1,'beyond':1,'toward':1,'also':1,'more':1,'most':1,'much':1,'many':1,'some':1,'such':1,'all':1,'each':1,'every':1,'both':1,'few':1,'own':1,'same':1,'just':1,'now':1,'here':1,'there':1,'then':1,'well':1,'back':1,'still':1,'already':1,'yet':1,'once':1,'again':1,'ever':1,'never':1,'always':1,'even':1,'though':1,'while':1,'since':1,'until':1,'because':1,'if':1,'when':1,'where':1,'how':1,'what':1,'who':1,'whom':1,'which':1,'whether':1,'why':1,'vs':1,'v.':1,'versus':1,'on':1,'in':1,'of':1,'to':1,'no':1};
+            for (var wi = words.length - 1; wi >= 0; wi--) {
+                var w = words[wi].replace(/[^a-zA-Z0-9]/g, '');
+                if (w.length < 3) continue;
+                if (/^\d+$/.test(w)) continue;
+                if (skip[w.toLowerCase()]) continue;
+                var score = (w === w.toUpperCase() && /[A-Z]/.test(w) && w.length >= 2 ? 4 : w[0] === w[0].toUpperCase() ? 2 : 1) + (wi / words.length * 2);
+                if (score > bestScore) { bestScore = score; best = w; }
+            }
+            return best;
+        }
+
+        GK_GENERATORS.scjudgments = function() {
+            if (!_scJudgmentData || _scJudgmentData.length < 2) {
+                return { q:'SC Judgments feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
+            }
+            var items = _scJudgmentData;
+            var available = items.filter(function(q) { return !_scUsed[q.id]; });
+            if (available.length === 0) { _scUsed = {}; available = items; }
+            var selected = pick(available);
+            _scUsed[selected.id] = true;
+            var title = selected.title || '';
+            var desc = selected.description || '';
+            // Clean the title: remove date suffix
+            var caseName = title.replace(/\s+on\s+\d+\s+\w+\s*,\s*\d+$/, '').trim();
+            // Try to extract legal issue from description
+            var issue = _extractLegalIssue(desc);
+            var optsArr, answer, question;
+            if (issue) {
+                answer = issue;
+                question = 'Which legal area does this recent Supreme Court judgment relate to?<br><small>"' + caseName + '"</small>';
+                optsArr = [answer];
+                var pool = (GK_DISTRACTORS.scjudgments || []).filter(function(e) { return e !== answer && e.length > 2; });
+                var combined = shuffle(pool);
+                for (var i = 0; i < combined.length && optsArr.length < 4; i++) {
+                    if (optsArr.indexOf(combined[i]) < 0) optsArr.push(combined[i]);
+                }
+                while (optsArr.length < 4) optsArr.push('Supreme Court');
+                shuffle(optsArr);
+            } else {
+                // Fallback: blank out a party name
+                var parts = caseName.split(' vs ');
+                if (parts.length >= 2) {
+                    var side = pick(['Appellant','Respondent','Petitioner']);
+                    var isAppellant = side === 'Appellant' || side === 'Petitioner';
+                    var name = isAppellant ? parts[0].trim() : parts[1].trim();
+                    name = name.replace(/\s+@\s+.*$/, '').replace(/\s+And\s+.*$/, '').replace(/\s+Etc\s+.*$/i, '').trim();
+                    var blanked = isAppellant ? '______ vs ' + parts[1].trim() : parts[0].trim() + ' vs ______';
+                    answer = name;
+                    question = 'Who filed this case in the Supreme Court?<br><small>"' + blanked + '" (' + selected.pubDate.slice(0,10) + ')</small>';
+                    optsArr = [answer];
+                    var namePool = [];
+                    items.forEach(function(it) {
+                        var pt = (it.title || '').split(' vs ');
+                        pt.forEach(function(p) {
+                            var c = p.replace(/@.*$/, '').replace(/\s+on\s+.*$/, '').trim();
+                            if (c.length > 3 && c !== answer && namePool.indexOf(c) < 0) namePool.push(c);
+                        });
+                    });
+                    var combined = shuffle(namePool);
+                    for (var i = 0; i < combined.length && optsArr.length < 4; i++) {
+                        if (optsArr.indexOf(combined[i]) < 0) optsArr.push(combined[i]);
+                    }
+                    while (optsArr.length < 4) optsArr.push('Supreme Court');
+                    shuffle(optsArr);
+                } else {
+                    var entity = _extractKeyEntity(title);
+                    if (entity) {
+                        answer = entity;
+                        var blanked = title.replace(entity, '______');
+                        question = 'What entity is blanked in this Supreme Court case?<br><small>"' + blanked + '"</small>';
+                        optsArr = [answer];
+                        var pool = (GK_DISTRACTORS.scjudgments || []).filter(function(e) { return e !== answer; });
+                        var combined = shuffle(pool);
+                        for (var i = 0; i < combined.length && optsArr.length < 4; i++) {
+                            if (optsArr.indexOf(combined[i]) < 0) optsArr.push(combined[i]);
+                        }
+                        while (optsArr.length < 4) optsArr.push('Supreme Court');
+                        shuffle(optsArr);
+                    } else {
+                        return { q:'Could not generate question from SC data.', a:'N/A', opts:['N/A','A','B','C'], hint:'', fact:'' };
+                    }
+                }
+            }
+            return { q: question, a: answer, opts: optsArr, hint: 'Think about the subject matter of the case', fact: selected.link ? '<a href="' + selected.link + '" target="_blank" style="color:var(--cyan)">Read full judgment</a>' : '' };
+        };
+        // ---- ISRO procedural generator (reuses PIB extraction patterns) ----
+        GK_GENERATORS.isro = function() {
+            if (!_isroFeedData || _isroFeedData.length < 2) {
+                return { q:'ISRO feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
+            }
+            return _feedGenHelper(_isroFeedData, 'isro');
+        };
+        // ---- MEA procedural generator (reuses PIB extraction patterns) ----
+        GK_GENERATORS.mea = function() {
+            if (!_meaFeedData || _meaFeedData.length < 2) {
+                return { q:'MEA feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
+            }
+            return _feedGenHelper(_meaFeedData, 'mea');
+        };
+        function _buildVirtualFeed(items, keywords) {
+            if (!items || !keywords) return [];
+            var lower = keywords.map(function(k) { return k.toLowerCase(); });
+            return items.filter(function(i) {
+                var text = ((i.title || '') + ' ' + (i.description || '')).toLowerCase();
+                return lower.some(function(k) { return text.indexOf(k) >= 0; });
+            });
+        }
+        // ---- RBI procedural generator ----
+        GK_GENERATORS.rbi = function() {
+            if (!_rbiFeedData || _rbiFeedData.length < 2) {
+                return { q:'RBI feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
+            }
+            return _feedGenHelper(_rbiFeedData, 'rbi');
+        };
+        // ---- Defence combined (static + feed) generator ----
+        GK_GENERATORS.defence = function() {
+            var feedAvailable = _defenceFeedData && _defenceFeedData.length >= 2;
+            if (feedAvailable && Math.random() < 0.5) return _feedGenHelper(_defenceFeedData, 'defence');
+            if (_staticGen_defence) return _staticGen_defence();
+            if (feedAvailable) return _feedGenHelper(_defenceFeedData, 'defence');
+            return { q:'Defence questions not available.', a:'N/A', opts:['N/A','A','B','C'], hint:'', fact:'' };
+        };
+        // ---- Environment combined (static + feed) generator ----
+        GK_GENERATORS.environment = function() {
+            var feedAvailable = _envFeedData && _envFeedData.length >= 2;
+            if (feedAvailable && Math.random() < 0.5) return _feedGenHelper(_envFeedData, 'environment');
+            if (_staticGen_environment) return _staticGen_environment();
+            if (feedAvailable) return _feedGenHelper(_envFeedData, 'environment');
+            return { q:'Environment questions not available.', a:'N/A', opts:['N/A','A','B','C'], hint:'', fact:'' };
+        };
+        // ---- Sports combined (static + feed) generator ----
+        GK_GENERATORS.sports = function() {
+            var feedAvailable = _sportsFeedData && _sportsFeedData.length >= 2;
+            if (feedAvailable && Math.random() < 0.5) return _feedGenHelper(_sportsFeedData, 'sports');
+            if (_staticGen_sports) return _staticGen_sports();
+            if (feedAvailable) return _feedGenHelper(_sportsFeedData, 'sports');
+            return { q:'Sports questions not available.', a:'N/A', opts:['N/A','A','B','C'], hint:'', fact:'' };
+        };
+        // ---- Economics virtual-feed generator ----
+        GK_GENERATORS.economics = function() {
+            if (!_econFeedData || _econFeedData.length < 2) {
+                return { q:'Economics feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
+            }
+            return _feedGenHelper(_econFeedData, 'economics');
+        };
+        // ---- Polity combined (static + feed) generator ----
+        GK_GENERATORS.polity = function() {
+            var feedAvailable = _polityFeedData && _polityFeedData.length >= 2;
+            if (feedAvailable && Math.random() < 0.5) return _feedGenHelper(_polityFeedData, 'polity');
+            if (_staticGen_polity) return _staticGen_polity();
+            if (feedAvailable) return _feedGenHelper(_polityFeedData, 'polity');
+            return { q:'Polity questions not available.', a:'N/A', opts:['N/A','A','B','C'], hint:'', fact:'' };
+        };
+        // ---- Science & Tech virtual-feed generator ----
+        GK_GENERATORS.sciTech = function() {
+            if (!_sciTechFeedData || _sciTechFeedData.length < 2) {
+                return { q:'Science & Tech feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
+            }
+            return _feedGenHelper(_sciTechFeedData, 'sciTech');
+        };
+        // ---- Health virtual-feed generator ----
+        GK_GENERATORS.health = function() {
+            if (!_healthFeedData || _healthFeedData.length < 2) {
+                return { q:'Health feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
+            }
+            return _feedGenHelper(_healthFeedData, 'health');
+        };
+        // ---- Education virtual-feed generator ----
+        GK_GENERATORS.education = function() {
+            if (!_educationFeedData || _educationFeedData.length < 2) {
+                return { q:'Education feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
+            }
+            return _feedGenHelper(_educationFeedData, 'education');
+        };
+        // ---- Agriculture virtual-feed generator ----
+        GK_GENERATORS.agriculture = function() {
+            if (!_agriFeedData || _agriFeedData.length < 2) {
+                return { q:'Agriculture feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
+            }
+            return _feedGenHelper(_agriFeedData, 'agriculture');
+        };
+        // ---- Energy virtual-feed generator ----
+        GK_GENERATORS.energy = function() {
+            if (!_energyFeedData || _energyFeedData.length < 2) {
+                return { q:'Energy feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
+            }
+            return _feedGenHelper(_energyFeedData, 'energy');
+        };
+        function _feedGenHelper(feedData, cat) {
+            var usedKey = '_' + cat + 'Used';
+            if (!window[usedKey]) window[usedKey] = {};
+            var used = window[usedKey];
+            var items = feedData;
+            var available = items.filter(function(item) { return !used[item.id]; });
+            if (available.length === 0) { for (var k in used) delete used[k]; available = items; }
+            var selected = pick(available);
+            used[selected.id] = true;
+            var title = selected.title || '';
+            var qas = _extractPibQAs(title);
+            var qa = qas.length > 0 ? pick(qas) : null;
+            if (qa) {
+                var optsArr = [qa.a];
+                var pool = (GK_DISTRACTORS[cat] || []).filter(function(e) { return e !== qa.a; });
+                var combined = shuffle(pool);
+                for (var i = 0; i < combined.length && optsArr.length < 4; i++) {
+                    if (optsArr.indexOf(combined[i]) < 0) optsArr.push(combined[i]);
+                }
+                while (optsArr.length < 4) optsArr.push('None of the above');
+                shuffle(optsArr);
+                return { q: qa.q, a: qa.a, opts: optsArr, hint: qa.hint || 'Read the headline carefully', fact: selected.link ? '<a href="' + selected.link + '" target="_blank" style="color:var(--cyan)">View source</a>' : '' };
+            }
+            // Fallback: blank-out entity
+            var entity = _extractKeyEntity(title);
+            if (!entity) entity = cat === 'isro' ? 'ISRO' : 'MEA';
+            var blanked = title.replace(entity, '______');
+            var optsArr = [entity];
+            var pool = (GK_DISTRACTORS[cat] || []).filter(function(e) { return e !== entity; });
+            var combined = shuffle(pool);
+            for (var i = 0; i < combined.length && optsArr.length < 4; i++) {
+                if (optsArr.indexOf(combined[i]) < 0) optsArr.push(combined[i]);
+            }
+            while (optsArr.length < 4) optsArr.push('None of the above');
+            shuffle(optsArr);
+            return { q: 'What entity is blanked in this headline?<br><small>"' + blanked + '"</small>', a: entity, opts: optsArr, hint: 'Think about the key organization or entity', fact: selected.link ? '<a href="' + selected.link + '" target="_blank" style="color:var(--cyan)">View source</a>' : '' };
+        }
         var state = { cat: null, questions: [], idx: 0, correct: 0, streak: 0, answered: false, categoryName: '' };
 
         function init() {
@@ -3094,7 +3592,7 @@
             if (!gen) return;
             for (var i = 0; i < 8; i++) {
                 var q = gen();
-                q.opts = buildOptions(q.a);
+                q.opts = q.opts || buildOptions(q.a);
                 state.questions.push(q);
             }
             document.getElementById('welcome').style.display = 'none';
@@ -3141,9 +3639,24 @@
             personalities: ['Mahatma Gandhi','Jawaharlal Nehru','Sardar Patel','Subhas Chandra Bose','B.R. Ambedkar','Bhagat Singh','Rani Lakshmibai','Tipu Sultan','Mangal Pandey','Dadabhai Naoroji','Gopal Krishna Gokhale','Bal Gangadhar Tilak','Lala Lajpat Rai','Jinnah','Rajendra Prasad','Sarvepalli Radhakrishnan','Zakir Hussain','V.V. Giri','Fakhruddin Ali Ahmed','Neelam Sanjiva Reddy','Giani Zail Singh','R. Venkataraman','Shankar Dayal Sharma','K.R. Narayanan','A.P.J. Abdul Kalam','Pratibha Patil','Pranab Mukherjee','Ram Nath Kovind','Droupadi Murmu','Indira Gandhi','Rajiv Gandhi','P.V. Narasimha Rao','Atal Bihari Vajpayee','Manmohan Singh','Narendra Modi','Vajpayee','Lal Bahadur Shastri','C.V. Raman','Hargobind Khorana','Mother Teresa','Subrahmanyan Chandrasekhar','Amartya Sen','Venkatraman Ramakrishnan','Kailash Satyarthi','Abhijit Banerjee','Sachin Tendulkar','Kapil Dev','M.S. Dhoni','Virat Kohli','P.V. Sindhu','Neeraj Chopra','Mary Kom','Abhinav Bindra','Vishwanathan Anand','Saina Nehwal','Leander Paes','P.T. Usha','Dhyan Chand','Milkha Singh','Ramanujan','Lata Mangeshkar','M.S. Subbulakshmi','Raja Ram Mohan Roy','Vivekananda','Dayanand Saraswati','Ishwar Chandra Vidyasagar','Jyotiba Phule','Savitribai Phule','Periyar','Vinoba Bhave','Baba Amte','Anna Hazare','Medha Patkar','Aruna Roy','Ravi Shankar','Bismillah Khan','Birju Maharaj','Satyajit Ray','M.F. Husain','Raja Ravi Varma','Amrita Sher-Gil','Tagore','Premchand','Mahadevi Verma','Harivansh Rai Bachchan','Salman Rushdie','Arundhati Roy','Vikram Seth','Jhumpa Lahiri','Ruskin Bond','Amish Tripathi','Mulk Raj Anand','R.K. Narayan','Kiron Bedi','J.R.D. Tata','Dhirubhai Ambani','N.R. Narayana Murthy','Azim Premji','Ratan Tata','Mukesh Ambani','Gautam Adani','Shiv Nadar','Kiran Mazumdar-Shaw','Vijay Shekhar Sharma','Falguni Nayar','Nithin Kamath','Bhavish Aggarwal','Deepinder Goyal','Byju Raveendran','Nambi Narayanan','Ritu Karidhal','Tessy Thomas','Somanath','K. Sivan','Homi Bhabha','Vikram Sarabhai','Meghnad Saha','Satyendra Bose','Salim Ali','Birbal Sahni','M.S. Swaminathan','J.C. Bose'],
             ir: ['Quad','SAARC','BRICS','G20','SCO','ASEAN','BIMSTEC','NAM','UNSC','ISA','IORA','NDB','AIIB','IPEF','RCEP','INSTC','WTO','IMF','World Bank','WHO','UNESCO','IAEA','UNEP','ILO','UNHCR','FATF','NSG','MTCR','Wassenaar','Australia Group','Panchsheel','Neighbourhood First','Act East','SAGAR','Think West','Project Mausam','Connect Central Asia','Vaccine Maitri','India-Pakistan','India-China','India-Nepal','India-Bhutan','India-Bangladesh','India-Myanmar','India-Sri Lanka','India-USA','India-Russia','India-France','India-Japan','India-UK','India-Australia','India-Germany','India-Afghanistan','Chabahar','Simla Agreement','Indus Water Treaty','Lahore Declaration','NSG waiver','UNSC reform','G4','L69 Group','NDC','Panchamrit','UNFCCC','Kyoto','Paris Agreement','Kigali Amendment','Minamata','CTBT','NPT','disarmament','Indian Ocean','Indo-Pacific','maritime security','counter-terrorism','soft power','Gujral Doctrine','diaspora diplomacy','vaccine diplomacy','climate diplomacy','energy security','FTA','CEPA','ECTA','BECA','LEMOA','COMCASA','GSOMIA','2+2 dialogue','defence cooperation','nuclear deal','strategic autonomy','non-alignment','multi-alignment','Global South','middle power','Quad Plus','I2U2','RIC','JAI','FIPIC','IBSA','India-EFTA','DMIC','BRI'],
             society: ['caste system','Varna','Jati','Scheduled Caste','Schedule Tribe','OBC','creamy layer','Mandal Commission','reservation 27%','poverty line','Tendulkar','Rangarajan','multidimensional poverty','MPI','Gini coefficient','inequality','urbanization','rural-urban','migration','internal migration','interstate migration','COVID reverse migration','shramik special','slums','urban poor','smart city','AMRUT','74th Amendment','urban local body','demographic dividend','median age','dependency ratio','TFR','fertility rate','NFHS-5','stunting','wasting','anaemia','malnutrition','life expectancy','IMR','MMR','literacy rate','GER','higher education','NEP 2020','5+3+3+4','RTE','learning poverty','ASER','girl child','child marriage','POCSO','juvenile justice','child labour','women empowerment','sex ratio','child sex ratio','female LFPR','maternal mortality','dowry','domestic violence','POSH','triple talaq','PC&PNDT','female feticide','106th Amendment','women reservation 33%','SHG','self-help group','NRLM','communalism','secularism','UCC','uniform civil code','Places of Worship Act','anti-conversion','NRC','CAA','minority rights','SC/ST PoA Act','forest rights','FRA 2006','PESA 1996','PVTG','PM-JANMAN','tribal displacement','Naxalism','Red Corridor','LWE','regionalism','linguistic diversity','classical languages','river water dispute','Cauvery','Krishna','Narmada','NE insurgency','Bodo','NLFT','NSCN','Framework Agreement','6th Schedule','autonomous council','Gorkhaland','Bodoland','Telangana','LGBTQ+','Section 377','Navtej Johar','NALSA','transgender','disability rights','RPwD Act','senior citizen','old age pension','NSAP','migrant worker','NMIS','social movement','Chipko','NBA','RTI movement','farmers protest','#MeToo','Shaheen Bagh','Bhim Koregaon','Rohith Vemula','self-respect movement','bahujan','dalit','adivasi','minority','social justice','inclusive growth','human development index','SECC','caste census','Global Hunger Index'],
-            ethics: ['integrity','honesty','truthfulness','impartiality','objectivity','non-partisanship','transparency','accountability','responsibility','empathy','compassion','tolerance','courage','fortitude','justice','fairness','equity','selflessness','dedication','public service','probity','rule of law','Utilitarianism','Bentham','Mill','Deontology','Kant','Categorical Imperative','Virtue Ethics','Aristotle','Golden Mean','Phronesis','Rights Theory','Locke','Ross','Prima Facie Duties','Justice as Fairness','Rawls','Veil of Ignorance','Original Position','Difference Principle','Nozick','Libertarianism','Entitlement Theory','Capabilities Approach','Sen','Nussbaum','Care Ethics','Gilligan','Noddings','Satyagraha','Gandhi','Ahimsa','Trusteeship','Sarvodaya','Antyodaya','Servant Leadership','Constitutional Morality','Nolan Principles','2nd ARC','corruption','bribe','graft','nepotism','favouritism','cronyism','conflict of interest','whistleblower','Prevention of Corruption Act','RTI Act','Official Secrets Act','Lokpal','Lokayukta','CVC','CBI','Citizens Charter','Right to Service','Social Audit','DBT','e-governance','probity in governance','ethical dilemma','case study','ethical reasoning','stakeholder analysis','moral philosophy','applied ethics','normative ethics','business ethics','medical ethics','ethics committee','code of conduct','code of ethics','service rules','AIS Conduct Rules','CCS Rules','disciplinary action','vigilance','asset declaration','political neutrality','civil service neutrality','conscience','duty','obligation','moral responsibility','public interest','national interest','self-interest','emotional intelligence','self-awareness','self-regulation','social skills','motivation','Goleman','moral dilemma','right vs right','right vs wrong','ethical audit','integrity pact','e-procurement','GeM','corruption index','UNCAC','FATF','Bribery Act','moral development','Kohlberg','Gilligan','Kantian','utilitarian','virtue-based','consequentialism','deontological','means vs ends','commission vs omission','double effect','slippery slope','greatest good','harm principle','autonomy','dignity','human rights','social contract','common good','public good','tragedy of commons','collective action']
+            ethics: ['integrity','honesty','truthfulness','impartiality','objectivity','non-partisanship','transparency','accountability','responsibility','empathy','compassion','tolerance','courage','fortitude','justice','fairness','equity','selflessness','dedication','public service','probity','rule of law','Utilitarianism','Bentham','Mill','Deontology','Kant','Categorical Imperative','Virtue Ethics','Aristotle','Golden Mean','Phronesis','Rights Theory','Locke','Ross','Prima Facie Duties','Justice as Fairness','Rawls','Veil of Ignorance','Original Position','Difference Principle','Nozick','Libertarianism','Entitlement Theory','Capabilities Approach','Sen','Nussbaum','Care Ethics','Gilligan','Noddings','Satyagraha','Gandhi','Ahimsa','Trusteeship','Sarvodaya','Antyodaya','Servant Leadership','Constitutional Morality','Nolan Principles','2nd ARC','corruption','bribe','graft','nepotism','favouritism','cronyism','conflict of interest','whistleblower','Prevention of Corruption Act','RTI Act','Official Secrets Act','Lokpal','Lokayukta','CVC','CBI','Citizens Charter','Right to Service','Social Audit','DBT','e-governance','probity in governance','ethical dilemma','case study','ethical reasoning','stakeholder analysis','moral philosophy','applied ethics','normative ethics','business ethics','medical ethics','ethics committee','code of conduct','code of ethics','service rules','AIS Conduct Rules','CCS Rules','disciplinary action','vigilance','asset declaration','political neutrality','civil service neutrality','conscience','duty','obligation','moral responsibility','public interest','national interest','self-interest','emotional intelligence','self-awareness','self-regulation','social skills','motivation','Goleman','moral dilemma','right vs right','right vs wrong','ethical audit','integrity pact','e-procurement','GeM','corruption index','UNCAC','FATF','Bribery Act','moral development','Kohlberg','Gilligan','Kantian','utilitarian','virtue-based','consequentialism','deontological','means vs ends','commission vs omission','double effect','slippery slope','greatest good','harm principle','autonomy','dignity','human rights','social contract','common good','public good','tragedy of commons','collective action'],
+            pib: ['PM-KISAN','Ayushman Bharat','PM Jan Dhan','Swachh Bharat','Make in India','Skill India','Digital India','Jal Jeevan Mission','PM Mudra','PM Fasal Bima','PM Ujjwala','MGNREGA','POSHAN Abhiyaan','PM Gati Shakti','FAME','PLI','PM SVANidhi','AMRUT','Smart Cities','SAGARMALA','Bharatmala','UDAN','Khelo India','Home Affairs','Defence','Finance','External Affairs','Health','Education','Agriculture','Rural Development','Urban Development','Power','Railways','Road Transport','Commerce','MSME','Environment','Science & Technology','Law & Justice','Tribal Affairs','Social Justice','Culture','Jal Shakti','PM Modi','President Droupadi Murmu','Amit Shah','Rajnath Singh','Nirmala Sitharaman','S Jaishankar','Shaktikanta Das','United Nations','WHO','World Bank','IMF','BRICS','SCO','Quad','ASEAN','SAARC','ADB','AIIB','OPEC','WTO','G20','UNESCO','ILO','IAEA','USA','Russia','China','France','Japan','UK','Australia','South Korea','UAE','Saudi Arabia','Nepal','Bhutan','Bangladesh','Sri Lanka','Maldives','Singapore','Indonesia','Vietnam','Iran','Brazil','South Africa','Germany','International Yoga Day','World Environment Day','World Health Day','World Water Day','World Food Day','International Women\'s Day','MoU','Agreement','Partnership','Summit','Bilateral','Joint Exercise','Defence Cooperation','Trade Agreement','Madhya Pradesh','Uttar Pradesh','Tamil Nadu','Andhra Pradesh','Karnataka','Kerala','Maharashtra','Gujarat','Rajasthan','Bihar','Odisha','West Bengal','Assam','Punjab','Telangana','Delhi','Jammu & Kashmir','Ladakh','₹1,000 crore','₹2,400 crore','₹500 crore','₹10,000 crore','₹100 crore','Repo Rate','CRR','SLR','MSF','Bank Rate','MPC','Monetary Policy','Inflation','WPI','CPI','GDP Growth','Forex Reserves','Current Account','Fiscal Deficit','GST Collection','Industrial Production','Sovereign Gold Bond','Government Stock','Auction Results','Open Market Operation','Variable Rate Repo','Liquidity Adjustment','Standing Deposit Facility','Marginal Standing Facility','Bank Credit','Money Supply','Consumer Confidence','Balance of Payments','External Commercial Borrowings','Foreign Direct Investment'],
+            sebi: ['SEBI','Board Meeting','Circular','Framework','Guidelines','Regulations','Press Release','Key Decisions','Consultation Paper','Amendment','Reforms','Capital Market','Securities Market','Mutual Fund','IPO','FPO','FII','FPI','Market Intermediary','Stock Exchange','Clearing Corporation','Depository','Derivatives','F&O','Commodity Derivatives','ETF','REIT','InvIT','AIF','Venture Capital','Portfolio Manager','Research Analyst','Investment Adviser','KYC','PAN','Dematerialisation','Rights Issue','Bonus Issue','Buyback','Share Split','Delisting','Takeover Code','Insider Trading','Prohibition of Insider Trading','SAST','Substantial Acquisition','SEBI Act','SCRA','Depositories Act','Enforcement','Adjudication','Settlement','Consent Order','SRO','Market Making','Stabilisation','Green Shoe Option','Book Building','ASBA','UPI','T+1 Settlement','Instant Settlement','Trading Member','Clearing Member','Custodian','Banker to Issue','Debenture Trustee','Credit Rating Agency','Securities Lending','Margin Trading','Short Selling','Arbitration','Investor Protection','Investor Education','Financial Literacy','Securities Appellate Tribunal','SAT','SEBI Grade A','SEBI Registered','Regulatory Sandbox','Fintech','Sustainable Finance','ESG','Green Bonds','Social Bonds','Sustainability Reporting','Corporate Governance','Stewardship Code','Related Party Transactions','Independent Director','Board Composition','Audit Committee','Nomination Committee','Remuneration Committee','Whistleblower Policy','Vigil Mechanism'],
+            scjudgments: ['Constitutional Law','Criminal Law','Civil Law','Family Law','Property Law','Contract Law','Tort Law','Consumer Protection','Motor Accident Claims','Service Law','Labour Law','Tax Law','Corporate Law','Environmental Law','Human Rights','Arbitration','Insurance Law','Election Law','Education Law','Land Acquisition','Revenue Law','Customs Law','Excise Law','Income Tax','GST Law','Banking Law','Negotiable Instruments','IPR','Copyright','Patent','Trademark','Medical Negligence','Professional Negligence','Legal Ethics','Writ Jurisdiction','Public Interest Litigation','Judicial Review','Fundamental Rights','Directive Principles','Basic Structure Doctrine','Preventive Detention','Bail','Anticipatory Bail','Criminal Procedure','Civil Procedure','Evidence Act','Indian Penal Code','Limitation Act','Specific Relief','Transfer of Property','Succession','Adoption','Guardianship','Divorce','Maintenance','Domestic Violence','Matrimonial Disputes','Child Custody','Rent Control','Tenancy Law','Partnership','Company Law','Insolvency and Bankruptcy','IBC','NCLT','NCLAT','Competition Law','CCI','Securities Law','SEBI','RBI','Banking Regulation','SARFAESI','Debt Recovery','DRT','DRAT','MACT','Workmen Compensation','Employees Insurance','Provident Fund','Gratuity','Payment of Wages','Minimum Wages','Industrial Disputes','Trade Union','Factories Act','Labour Codes','Administrative Law','Award','Appeal','Revision','Review','Curative Petition','Contempt of Court','PIL','Quo Warranto','Mandamus','Prohibition','Certiorari','Habeas Corpus','Supreme Court','High Court','District Court','Chief Justice','Collegium','Transfer of Case','Inherent Powers','Res Judicata','Stare Decisis','Obiter Dicta','Ratio Decidendi','Per Incuriam','Sub Judice','Locus Standi','Cause of Action'],
+            isro: ['ISRO','DRDO','NASA','ESA','Roscosmos','CNSA','JAXA','satellite','launch vehicle','Moon mission','Mars mission','Earth observation','communication satellite','PSLV','GSLV','LVM3','SSLV','Aryabhata','Chandrayaan','Mangalyaan','Aditya L1','Gaganyaan','Astrosat','XPoSat','INSAT','IRS','RISAT','CARTOSAT','NAVIC','GSAT','Oceansat','SLV-3','ASLV','NISAR','SPADEX','Vikram Sarabhai','Satish Dhawan','APJ Abdul Kalam','K Sivan','S Somanath','Ritu Karidhal','Nambi Narayanan','U R Rao','K Kasturirangan','cryogenic engine','geosynchronous orbit','polar orbit','space station','Third Launch Pad','RLV','REX','SCRAMJET','HysIS','Microsat','Novespace','Zero Gravity','Human Spaceflight','Astronaut','Gaganyatri','IIST','VSSC','LPSC','SDSC','URSC','SAC','IN-SPACe','NewSpace India','Antrix','PSLV-C','GSLV-F','LVM3-M','SSLV-D','PAM','CE20','Vikas Engine','Semi-cryo','ISRO Propulsion','Space Docking','SPADEX','Bhartrix','NGE','Mangalyaan-2','Chandrayaan-4','Shukrayaan','XPOSAT','Insat-3DS','NISAR-ISRO','Lunar Polar','Venus Mission','Solar Mission','Aditya Solar','XpoSat','AstroSat-2'],
+            mea: ['Ministry of External Affairs','External Affairs Minister','S Jaishankar','V Muraleedharan','V K Singh','Prime Minister','Foreign Secretary','High Commissioner','Ambassador','Consul','Diplomat','Bilateral','Multilateral','Summit','Visit','Delegation','Agreement','MoU','Treaty','Joint Statement','Joint Communique','Joint Exercise','Strategic Partnership','Comprehensive Partnership','Diplomatic Relations','Consular Services','Passport','Visa','OCIs','PIO','NRI','Indian Diaspora','Embassy','High Commission','Consulate','Permanent Mission','UN','United Nations','UNSC','UNGA','G20','BRICS','SCO','Quad','ASEAN','SAARC','BIMSTEC','IORA','NAM','ISA','CDRI','Global South','Neighbourhood First','Act East','SAGAR','Connect Central Asia','Indo-Pacific','Quad Plus','I2U2','IPEF','India-France','India-USA','India-Russia','India-Japan','India-UK','India-Australia','India-Germany','India-EU','India-UAE','India-Saudi','India-Iran','India-Israel','India-Bangladesh','India-Nepal','India-Bhutan','India-Sri Lanka','India-Maldives','India-Myanmar','India-Afghanistan','India-Mongolia','MEA Quiz','Bharat Matters','Videsh','Madad','eMigrate','Passport Seva','e-FRRO','Global Indian','Development Partnership','Foreign Aid','Line of Credit','Grant','Capacity Building','ITEC','ICCR','Cultural Diplomacy','Public Diplomacy','Foreign Policy','Strategic Autonomy','Multi-alignment','Panchsheel','Vaccine Maitri','Operation Ganga','Operation Devi Shakti','Operation Kaveri','Evacuation'],
+            rbi: ['RBI','Reserve Bank of India','Repo Rate','Reverse Repo Rate','CRR','SLR','MSF','Bank Rate','Liquidity Adjustment Facility','LAF','Standing Deposit Facility','SDF','Marginal Standing Facility','Open Market Operations','OMO','OMO Purchase','OMO Sale','G-Sec','Government Securities','T-Bill','Treasury Bill','Dated Security','State Development Loan','SDL','Cash Reserve Ratio','Statutory Liquidity Ratio','Capital Adequacy Ratio','CAR','CRAR','Asset Quality Review','AQR','Non-Performing Asset','NPA','Gross NPA','Net NPA','Provision Coverage Ratio','PCR','Return on Assets','RoA','Return on Equity','RoE','Net Interest Margin','NIM','Base Rate','MCLR','External Benchmark','Repo Rate Linked','Consumer Price Index','CPI','Wholesale Price Index','WPI','Inflation','Retail Inflation','Food Inflation','Core Inflation','Monetary Policy','Monetary Policy Committee','MPC','Governor','Deputy Governor','Shaktikanta Das','Sanjay Malhotra','Monetary Policy Statement','Bi-monthly Policy','Off-cycle','Policy Pause','Policy Repo Rate','Standing Facilities','URC','Urban Cooperative Banks','RRB','Regional Rural Bank','NBFC','Non-Banking Financial Company','HFC','Housing Finance Company','Payment Bank','Small Finance Bank','Payments Infrastructure','UPI','Unified Payments Interface','IMPS','NEFT','RTGS','Digital Payment','CBDC','Central Bank Digital Currency','Digital Rupee','e-Rupee','Financial Stability','Financial Stability Report','FSR','Financial Inclusion','PMJDY','Pradhan Mantri Jan Dhan Yojana','KYC','Know Your Customer','AML','Anti-Money Laundering','CFT','Counter Financing of Terrorism','Basel III','Basel Norms','Capital Conservation Buffer','CCB','Countercyclical Buffer','LCR','Liquidity Coverage Ratio','NSFR','Net Stable Funding Ratio','Leverage Ratio','D-SIB','Domestic Systemically Important Bank','Too Big to Fail','Resolution Framework','Insolvency','Bankruptcy','IBC','NCLT','Debt Recovery','SARFAESI','ARC','Asset Reconstruction Company','Securitisation','Priority Sector Lending','PSL','Agriculture Credit','MSME Credit','Education Loan','Housing Loan','Export Credit','Foreign Exchange','Forex Reserve','FEMA','Current Account Deficit','CAD','Capital Account','Foreign Portfolio Investment','FPI','Foreign Direct Investment','FDI','ECB','External Commercial Borrowing','NRI Deposit','FCNR(B)','NRE','NRO','Remittance','Money Transfer','Cross-Border Payment','Payment System','Cheque Truncation','CTS','NPCI','National Payments Corporation','RuPay','BHIM','AEPS','Aadhaar Enabled Payment'],
+            defence: ['Ministry of Defence','Raksha Mantri','Rajnath Singh','Sanjay Seth','Chief of Defence Staff','CDS','General','Lieutenant General','Major General','Brigadier','Colonel','Major','Captain','Lieutenant','Subedar','Naik','Sepoy','Admiral','Vice Admiral','Rear Admiral','Commodore','Captain','Commander','Air Chief Marshal','Air Marshal','Air Vice Marshal','Air Commodore','Group Captain','Wing Commander','Squadron Leader','Flight Lieutenant','Flying Officer','Indian Army','Indian Navy','Indian Air Force','DRDO','Defence Research and Development','HAL','Hindustan Aeronautics','BEL','Bharat Electronics','BDL','Bharat Dynamics','MDL','Mazagon Dock','GRSE','Garden Reach','CSL','Cochin Shipyard','HSL','Hindustan Shipyard','Ordnance Factory','OFB','Munitions India','Armoured Vehicle','Missile','Agni Missile','Prithvi Missile','Brahmos Missile','Akash Missile','Nag Missile','ASTRA Missile','PINAKA Rocket','Radar','Sonar','Frigate','Destroyer','Corvette','Submarine','Aircraft Carrier','INS Vikrant','INS Vikramaditya','INS Arihant','INS Chakra','Nuclear Submarine','Nuclear Triad','Tank','Arjun Tank','BMP','Infantry Combat Vehicle','Howitzer','Artillery','Dhanush Gun','ATAGS','Rifle','INSAS','AK-203','Carbine','Bulletproof Jacket','Helmet','Night Vision','Thermal Imaging','Drone','UAV','Unmanned Aerial Vehicle','Heron','Harpy','Drishti','Netra','Rustom','Tapas','Predator','MQ-9B','Swordship','Stealth','Electronic Warfare','EW Suite','Cyber Command','Cyber Warfare','Space Command','Aerospace','Air Defence','SAM','Surface to Air Missile','Ballistic Missile','Cruise Missile','Anti-Ship','Anti-Submarine','Torpedo','Decoy','Countermeasure','Chaff','Flare','Jamming','NCC','National Cadet Corps','Coast Guard','Border Security','Territorial Army','Para','Special Forces','Ghatak','MARCOS','Garud','Agniveer','Agneepath Scheme','Military Engineering','Military Hospital','Army Base','Naval Base','Air Base','Strategic Command','Northern Command','Eastern Command','Western Command','Southern Command','Central Command','Andaman Command','Armed Forces Tribunal','Court Martial','Court of Inquiry','Defence Budget','Capital Expenditure','Revenue Expenditure','Modernisation','Upgradation','Indigenisation','Atmanirbhar Bharat','Make in India Defence','Defence Export','Defence Corridor','Uttar Pradesh Defence Corridor','Tamil Nadu Defence Corridor','Defence Minister','Defence Secretary','Defence Production','Defence Acquisition','Defence Procurement','Strategic Partnership Model','Buy Indian','Buy Global'],
+            environment: ['Ministry of Environment','Forest and Climate Change','MoEFCC','Environment Minister','Bhupender Yadav','Kirti Vardhan Singh','Forest Minister','Climate Change','Global Warming','Greenhouse Gas','GHG','Carbon Emission','Carbon Footprint','Carbon Neutral','Net Zero','Carbon Sink','Carbon Credit','Carbon Trading','Carbon Tax','Green Hydrogen','Green Energy','Renewable Energy','Solar Power','Wind Power','Hydro Power','Biomass','Biofuel','Ethanol','Biodiesel','Waste to Energy','Energy Transition','Clean Energy','Fossil Fuel','Coal','Petroleum','Natural Gas','Climate Adaptation','Climate Mitigation','Climate Resilience','UNFCCC','COP','COP26','COP27','COP28','COP29','Paris Agreement','Kyoto Protocol','Montreal Protocol','Vienna Convention','Convention on Biodiversity','CBD','UNCCD','IPCC','Intergovernmental Panel on Climate Change','NDC','Nationally Determined Contribution','Net Zero by 2070','Climate Finance','Green Climate Fund','GCF','Adaptation Fund','Loss and Damage Fund','Air Quality','AQI','Air Pollution','Smog','Particulate Matter','PM2.5','PM10','National Clean Air Programme','NCAP','Water Pollution','River Pollution','Ganga Pollution','Yamuna Pollution','Namami Gange','Clean Ganga','National River Conservation','Water Body','Lake Conservation','Wetland','Ramsar Site','Conservation Reserve','Community Reserve','Marine Protected Area','Coral Reef','Mangrove','Coral Bleaching','Ocean Warming','Sea Level Rise','Glacier Melting','Himalayan Glacier','Arctic Ice','Ozone Layer','Ozone Depletion','Ozone Hole','Deforestation','Afforestation','Reforestation','Forest Cover','Tree Cover','Green Cover','Forest Survey','State of Forest Report','Forest Rights Act','FRA','Wildlife','Wildlife Protection','Wildlife Act','National Park','Tiger Reserve','Project Tiger','Elephant Reserve','Project Elephant','Rhino','One Horned Rhino','Project Rhino','Snow Leopard','Project Snow Leopard','Great Indian Bustard','Vulture Conservation','Gir Lion','Asiatic Lion','Lion Project','Dolphin','Gangetic Dolphin','Sea Turtle','Olive Ridley','Crocodile','Gharial','Biodiversity Hotspot','Endemic Species','Endangered Species','Critically Endangered','IUCN','Red List','CITES','Wildlife Crime','Poaching','Wildlife Smuggling','Sanctuary','Biosphere Reserve','UNESCO Biosphere','World Heritage Site','Natural Heritage','Eco-sensitive Zone','ESZ','Environmental Clearance','EC','Environmental Impact Assessment','EIA','Environmental Audit','Green Tribunal','National Green Tribunal','NGT','Environment Court','Environment Law','Forest Conservation Act','Wildlife Protection Act','Environment Protection Act','Air Act','Water Act','Hazardous Waste','Bio-medical Waste','Plastic Waste','E-waste','Solid Waste Management','Swachh Bharat','Waste Segregation','Recycling','Landfill'],
+            sports: ['Ministry of Youth Affairs and Sports','Sports Minister','Mansukh Mandaviya','Raksha Khadse','Secretary Sports','Director General Sports','Sports Authority of India','SAI','Khelo India','Khelo India Youth Games','Khelo India University Games','Khelo India Winter Games','National Sports Awards','Major Dhyan Chand Khel Ratna','Arjuna Award','Dronacharya Award','Rashtriya Khel Protsahan Puruskar','Maulana Abul Kalam Azad Trophy','Olympic Games','Summer Olympics','Winter Olympics','Youth Olympics','Paralympic Games','Asian Games','Commonwealth Games','World Championship','World Cup','Cricket','ICC Cricket World Cup','T20 World Cup','BCCI','Indian Cricket Team','Test Match','ODI','T20','IPL','Indian Premier League','Hockey','Hockey India','Field Hockey','FIH Hockey','Hockey World Cup','Football','FIFA','AFC','Asian Cup','ISL','Indian Super League','Indian Football Team','Badminton','BWF','Thomas Cup','Uber Cup','Sudirman Cup','PV Sindhu','Saina Nehwal','Lakshya Sen','Satwiksairaj Rankireddy','Chirag Shetty','Tennis','Grand Slam','Wimbledon','Australian Open','French Open','US Open','Davis Cup','Wrestling','Freestyle Wrestling','Greco-Roman Wrestling','UWW','Pro Wrestling','Bajrang Punia','Ravi Kumar Dahiya','Vinesh Phogat','Sakshi Malik','Boxing','IBA','AIBA','World Boxing','Olympic Boxing','Professional Boxing','Nikhat Zareen','Lovlina Borgohain','MC Mary Kom','Shooting','ISSF','World Shooting','Olympic Shooting','Jitu Rai','Abhinav Bindra','Manu Bhaker','Saurabh Chaudhary','Archery','World Archery','Olympic Archery','Compound Bow','Recurve Bow','Deepika Kumari','Atanu Das','Weightlifting','IWF','Olympic Weightlifting','Mirabai Chanu','Athletics','Track and Field','Olympic Athletics','World Athletics','Neeraj Chopra','Javelin Throw','Avinash Sable','Steeplechase','Hima Das','Dutee Chand','Judo','Taekwondo','Karate','Fencing','Rowing','Canoeing','Kayaking','Sailing','Equestrian','Dressage','Show Jumping','Eventing','Gymnastics','Artistic Gymnastics','Rhythmic Gymnastics','Swimming','Diving','Synchronised Swimming','Water Polo','Triathlon','Modern Pentathlon','Cycling','Track Cycling','Road Cycling','BMX','Mountain Biking','Table Tennis','TT','Chess','Grandmaster','FIDE','World Chess Championship','Viswanathan Anand','D Gukesh','R Praggnanandhaa','Kabaddi','Pro Kabaddi','Volleyball','Beach Volleyball','Basketball','Handball','Rugby','Baseball','Softball','Squash','Golf','Bowling','Billards','Snooker','Skating','Roller Skating','Speed Skating','Figure Skating','Mountaineering','Rock Climbing','Sport Climbing','Yoga','Fit India Movement'],
+            economics: ['GDP','Gross Domestic Product','GVA','Gross Value Added','GDP Growth Rate','Economic Growth','GDP Deflator','Nominal GDP','Real GDP','Per Capita Income','National Income','NNP','Net National Product','NDP','Net Domestic Product','Inflation','Price Rise','Consumer Price Index','CPI','CPI-IW','CPI-AL','CPI-RL','Wholesale Price Index','WPI','Inflation Rate','Headline Inflation','Core Inflation','Food Inflation','Retail Inflation','RBI','Reserve Bank of India','Monetary Policy','Monetary Policy Committee','MPC','Repo Rate','Reverse Repo','CRR','SLR','MSF','Bank Rate','Liquidity','Money Supply','M1','M2','M3','Broad Money','Narrow Money','Fiscal Policy','Budget','Union Budget','Interim Budget','Full Budget','Budget Session','Finance Minister','Nirmala Sitharaman','Pankaj Chaudhary','Finance Secretary','Economic Survey','Fiscal Deficit','Revenue Deficit','Primary Deficit','Effective Revenue Deficit','Capital Expenditure','Revenue Expenditure','Plan Expenditure','Non-Plan Expenditure','Direct Tax','Indirect Tax','Income Tax','Corporate Tax','Personal Income Tax','TDS','TCS','GST','Goods and Services Tax','GST Council','CGST','SGST','IGST','Customs Duty','Excise Duty','Wealth Tax','Gift Tax','Estate Duty','Securities Transaction Tax','STT','Minimum Alternate Tax','MAT','Dividend Distribution Tax','DDT','Tax Revenue','Non-Tax Revenue','Disinvestment','Strategic Disinvestment','PSU','Public Sector Undertaking','CPSE','Navratna','Miniratna','Maharatna','Trade','Export','Import','Balance of Trade','Trade Deficit','Trade Surplus','Current Account','Current Account Deficit','CAD','Capital Account','Capital Account Surplus','Balance of Payments','BOP','Forex','Foreign Exchange','Foreign Exchange Reserve','Foreign Direct Investment','FDI','Foreign Portfolio Investment','FPI','ECB','External Commercial Borrowing','Rupee','Dollar','Exchange Rate','Currency','Depreciation','Appreciation','Devaluation','Revaluation','Purchasing Power Parity','PPP','Industrial Production','IIP','Index of Industrial Production','Eight Core Industries','Manufacturing','Mining','Electricity','Construction','Services Sector','PMI','Purchasing Managers Index','Index of Services Production','Employment','Unemployment','Labour Force','Labour Force Participation Rate','LFPR','Worker Population Ratio','WPR','Unemployment Rate','PLFS','Periodic Labour Force Survey','Employment Generation','MGNREGA','National Rural Employment','Skill India','Skill Development','Apprenticeship','Startup India','Startup','Unicorn','Entrepreneurship','MSME','Micro Enterprise','Small Enterprise','Medium Enterprise','Make in India','Production Linked Incentive','PLI Scheme','Infrastructure','Infrastructure Investment','National Infrastructure Pipeline','NIP','Gati Shakti','National Master Plan','Road','Highway','Railway','Rail Budget','Metro','Airport','Port','Inland Waterway','Digital Infrastructure','Broadband','5G','6G','Digital India','Financial Inclusion','Pradhan Mantri Jan Dhan Yojana','PMJDY','Aadhaar','Direct Benefit Transfer','DBT','Subsidy','Food Subsidy','Fertiliser Subsidy','Fuel Subsidy','PDS','Public Distribution System','Food Security','NFSA','National Food Security Act','Agriculture','Farm Sector','Agricultural GDP','Kharif','Rabi','Zaid','Crop Production','Food Grain Production','Minimum Support Price','MSP','PM-KISAN','PM Kisan Samman Nidhi','Kisan Credit Card','PMFBY','Pradhan Mantri Fasal Bima','Agriculture Export','Agri-Export','e-NAM','National Agriculture Market','Farmer Producer Organisation','FPO','Animal Husbandry','Dairying','Fisheries','Blue Revolution','White Revolution','Operation Flood','Horticulture','Food Processing','Food Processing Industry','Poultry','Meat','Social Sector','Health','Education','Housing','Rural Development','Urban Development','Smart City','AMRUT','Swachh Bharat','Housing for All','PM Awas Yojana','Jal Jeevan Mission','Ujjwala','Saubhagya','Electricity Access','Clean Fuel'],
+            polity: ['Constitution of India','Preamble','Fundamental Rights','Right to Equality','Right to Freedom','Right against Exploitation','Right to Freedom of Religion','Cultural and Educational Rights','Right to Constitutional Remedies','Fundamental Duties','Directive Principles of State Policy','DPSP','Parliament','Lok Sabha','Rajya Sabha','President of India','Vice President','Prime Minister','Council of Ministers','Union Cabinet','Chief Minister','State Legislature','Vidhan Sabha','Vidhan Parishad','Governor','Supreme Court','High Court','District Court','Judicial Review','Judicial Activism','Writ','Habeas Corpus','Mandamus','Prohibition','Certiorari','Quo Warranto','Public Interest Litigation','PIL','Election Commission','EVM','VVPAT','Parliamentary Committee','CAG','Comptroller and Auditor General','Finance Commission','NITI Aayog','Union Public Service Commission','UPSC','State Public Service Commission','Attorney General','Solicitor General','Advocate General','Election Petition','By-election','Anti-Defection Law','10th Schedule','Speaker','Deputy Speaker','Chairman','Deputy Chairman','Whip','Party Whip','Floor Leader','Ruling Party','Opposition','Leader of Opposition','Coalition Government','Confidence Motion','No-confidence Motion','Censure Motion','Adjournment Motion','Calling Attention','Question Hour','Zero Hour','Short Duration Discussion','Private Member Bill','Government Bill','Money Bill','Finance Bill','Appropriation Bill','Ordinance','President Rule','President Assent','Emergency','National Emergency','State Emergency','Financial Emergency','Article 356','Article 360','Pardon','Commutation','Remission','Respite','Reprieve','Central List','State List','Concurrent List','Union List','Residuary Power','Centre-State Relations','Federal System','Unitary Features','Bicameral','Unicameral','Seventh Schedule','Amendment of Constitution','Basic Structure','Basic Structure Doctrine','Kesavananda Bharati','Minerva Mills','S R Bommai','L Chandra Kumar','Panchayati Raj','73rd Amendment','74th Amendment','Gram Panchayat','Panchayat Samiti','Zila Parishad','Municipality','Municipal Corporation','Mayor','Commissioner','Ward','Nagar Palika','Nagar Nigam','Scheduled Castes','Scheduled Tribes','Other Backward Classes','OBC','Minority','National Commission for SC','National Commission for ST','National Commission for OBC','National Commission for Minorities','National Commission for Women','NCW','NHRC','National Human Rights Commission','SHRC','CVC','Central Vigilance Commission','CIC','Central Information Commission','Lokpal','Lokayukta','Election Symbols','Recognised Party','National Party','State Party','Official Language','Hindi','English','Eighth Schedule','Classical Language','Official Language Act','RTI','Right to Information','Citizenship','Citizenship Act','NRI','PIO','OCI','CAA','NRC','National Register of Citizens','NDA','UPA'],
+            sciTech: ['Science','Technology','Innovation','Research','R&D','Patent','IPR','Intellectual Property','Copyright','Trademark','Design','GI Tag','Geographical Indication','Mars Orbiter Mission','Mangalyaan','Chandrayaan','Aditya L1','Gaganyaan','Astrosat','XPoSat','NISAR','ISRO','DRDO','CSIR','ICMR','DBT','DST','SERB','INSPIRE','Ramanujan Fellowship','Swarnajayanti Fellowship','Shanti Swarup Bhatnagar','Bhatnagar Award','Infosys Prize','Homi Bhabha','C V Raman','Raman Effect','Nobel Prize','Fields Medal','Abel Prize','Turing Award','BARC','Bhabha Atomic Research','Nuclear Power','Atomic Energy','Thorium','Uranium','Plutonium','Nuclear Reactor','PHWR','PFBR','Fast Breeder','Kudankulam','ITER','Tokamak','Plasma','Cyclotron','Synchrotron','Indus-1','Indus-2','LIGO','Gravitational Wave','CERN','Large Hadron Collider','Dark Matter','Dark Energy','Antimatter','Quantum','Quantum Computing','Superconductor','Superconductivity','AI','Artificial Intelligence','Machine Learning','Deep Learning','Neural Network','NLP','Natural Language Processing','Computer Vision','Robotics','Automation','Drone','UAV','Chatbot','GPT','Large Language Model','Generative AI','Data Science','Big Data','Blockchain','Cryptocurrency','Bitcoin','Cloud Computing','Edge Computing','IoT','Internet of Things','5G','6G','Optical Fibre','Satellite Communication','NavIC','IRNSS','GAGAN','LiDAR','RADAR','SONAR','Remote Sensing','GIS','Supercomputer','Param','Mihir','Pratyush','AIRAWAT','Semiconductor','Microchip','Processor','VLSI','FPGA','Nano','Nanotechnology','Graphene','Carbon Nanotube','Biotechnology','Biotech','Bioinformatics','Genomics','Genome','Gene Sequencing','CRISPR','Gene Editing','DNA','RNA','mRNA','Biofuel','Bioethanol','Biodiesel','Synthetic Biology','Stem Cell','Regenerative Medicine','mRNA Vaccine','Covaxin','Covishield','ZyCoV-D','Corbevax'],
+            health: ['Health','Healthcare','Medical','Medicine','Pharmaceutical','Drug','Vaccine','Vaccination','Immunisation','Immunization','Hospital','Clinic','Primary Health','Ayushman','PM-JAY','Ayushman Bharat','Health Insurance','NHM','National Health Mission','Ayush','AYUSH','Yoga','Homeopathy','Ayurveda','Unani','Siddha','Diet','Exercise','Fitness','Wellness','Mental Health','Depression','Anxiety','Stress','COVID','Coronavirus','SARS','Dengue','Malaria','Chikungunya','Tuberculosis','TB','HIV','AIDS','Cancer','Tumour','Oncology','Cardiovascular','Heart Disease','Stroke','Hypertension','Diabetes','Thyroid','Kidney Disease','Liver Disease','Hepatitis','Asthma','COPD','Pneumonia','Diarrhoea','Typhoid','Cholera','NCD','Non-Communicable','Lifestyle Disease','Malnutrition','Anaemia','Nutrition','Poshan','ICDS','Integrated Child Development','Mid-Day Meal','Maternal Health','Childbirth','Neonatal','Infant','Child Health','Routine Immunisation','UIP','Mission Indradhanush','Polio','Pulse Polio','Measles','Rubella','HPV','Cervical Cancer','Cancer Screening','Public Health','Community Health','ASHA','ANM','Auxiliary Nurse','PHC','Primary Health Centre','CHC','Community Health Centre','Medical College','AIIMS','NIMHANS','PGI','JIPMER','ICMR','Indian Council of Medical Research','Clinical Trial','Generic Medicine','Jan Aushadhi','PMBJP','NPPA','National Pharmaceutical Pricing Authority','Essential Medicine','WHO','World Health Organization','Global Health','National Health Policy','Health Minister','CT Scan','MRI','X-Ray','Ultrasound','ECG','EEG','Pathology','Telemedicine','e-Sanjeevani','Digital Health','ABDM','Ayushman Bharat Digital Mission','Organ Donation','Organ Transplant','Blood Donation','Blood Bank','Thalassemia','Sickle Cell','Rare Disease','Drug Price Control'],
+            education: ['Education','School','College','University','Institute','Student','Teacher','Professor','Lecturer','Vice Chancellor','Dean','Principal','Headmaster','Exam','Examination','Board Exam','CBSE','ICSE','ISC','State Board','NCERT','Curriculum','Syllabus','Textbook','Scholarship','Fellowship','Research Grant','Higher Education','Technical Education','Engineering','Medical Education','Distance Education','Open University','IGNOU','Online Learning','e-Learning','SWAYAM','DIKSHA','National Education Policy','NEP 2020','NEP','Education Policy','National Curriculum Framework','NCF','FLN','Foundational Literacy','Numeracy','Early Childhood','Anganwadi','Primary School','Middle School','Secondary School','Senior Secondary','Class 10','Class 12','Board Result','Admission','Merit List','Cut-off','Seat Allotment','Skill Development','Vocational','Skill India','Apprenticeship','Internship','ITI','IIT','NIT','IIIT','IIM','AIIMS','Central University','State University','Deemed University','Private University','Autonomous College','Accreditation','NAAC','NBA','NIRF','Ranking','Research Publication','Journal','Impact Factor','Atal Tinkering Lab','ATL','Smart Classroom','Digital Classroom','Mid-Day Meal','Free Education','Right to Education','RTE Act','CCE','Continuous Comprehensive Evaluation','Grade','Marks','Percentage','CGPA','Degree','Diploma','Certificate','PhD','Doctorate','Masters','Bachelors','Graduate','Post Graduate','Under Graduate','JRF','Junior Research Fellow','SRF','Senior Research Fellow','Education Budget','Education Minister','Literacy Rate','GER','Gross Enrollment Ratio','NER','Net Enrollment Rate','Teacher Training','Pedagogy','Semester System','CBCS','Choice Based Credit','Credit Transfer'],
+            agriculture: ['Agriculture','Farmer','Kisan','Crop','Food Grain','Wheat','Rice','Paddy','Millet','Bajra','Jowar','Ragi','Maize','Corn','Pulses','Tur','Moong','Urad','Chana','Masur','Soybean','Groundnut','Mustard','Rapeseed','Sunflower','Coconut','Sugarcane','Cotton','Jute','Tea','Coffee','Rubber','Cardamom','Pepper','Turmeric','Ginger','Onion','Potato','Tomato','Mango','Banana','Apple','Grape','Orange','Pomegranate','Guava','Horticulture','Vegetable','Fruit','Milk','Dairy','Animal Husbandry','Livestock','Poultry','Chicken','Egg','Fish','Fishery','Aquaculture','Shrimp','Operation Flood','White Revolution','Blue Revolution','Yellow Revolution','Fertiliser','Urea','DAP','MOP','NPK','Bio-fertilizer','Compost','Pesticide','Insecticide','Bio-pesticide','Seed','Hybrid Seed','GM Seed','Genetically Modified','Bt Cotton','Irrigation','Canal Irrigation','Well Irrigation','Drip Irrigation','Sprinkler Irrigation','Micro Irrigation','Rainwater Harvesting','PMKSY','Pradhan Mantri Krishi Sinchayee','Per Drop More Crop','Soil Health','Soil Health Card','Soil Testing','PM-KISAN','PM Kisan Samman Nidhi','Kisan Credit Card','KCC','PMFBY','Pradhan Mantri Fasal Bima','Crop Insurance','MSP','Minimum Support Price','Procurement','PDS','Public Distribution','FCI','Food Corporation of India','Food Subsidy','Buffer Stock','Cold Storage','APMC','e-NAM','National Agriculture Market','FPO','Farmer Producer Organisation','Agri-Startup','Farm Mechanisation','Tractor','Harvester','Combine','Happy Seeder','Zero Tillage','Agriculture Reform','Farm Law','Agriculture Budget','Agriculture GDP','Agriculture Credit','PM-KMY','PM-AASHA','Krishi Vigyan Kendra','KVK','ICAR','Indian Council of Agricultural Research','Natural Farming','Zero Budget Natural Farming','Organic Farming','IPM','Integrated Pest Management','Food Security','NFSA','National Food Security Act','Agriculture Export','GI Tag','Doubling Farmer Income','Kisan Kalyan'],
+            energy: ['Energy','Power','Electricity','Coal','Oil','Petroleum','Natural Gas','LNG','CNG','Renewable Energy','Solar Energy','Solar Power','Solar Panel','Solar Park','Rooftop Solar','Solar Cell','Photovoltaic','Wind Energy','Wind Power','Wind Farm','Wind Turbine','Hydro Power','Hydel','Hydroelectric','Small Hydro','Pumped Storage','Biomass','Biogas','Compressed Biogas','CBG','Biofuel','Ethanol','Ethanol Blending','Biodiesel','SAF','Sustainable Aviation Fuel','Waste to Energy','Tidal Energy','Wave Energy','Geothermal Energy','Geothermal','Green Hydrogen','Grey Hydrogen','Blue Hydrogen','Electrolyser','Fuel Cell','Hydrogen Fuel Cell','National Hydrogen Mission','Green Ammonia','Thermal Power','Coal Power','Supercritical','Ultra Supercritical','Gas Power','Electricity Grid','Smart Grid','Microgrid','Transmission Line','Power Transmission','Substation','Distribution','Discom','AT&C Loss','T&D Loss','Smart Meter','Net Metering','Electricity Tariff','PPA','Power Purchase Agreement','UDAY','RDSS','Electricity Act','Energy Conservation Act','Energy Efficiency','Perform Achieve Trade','PAT Scheme','BEE','Bureau of Energy Efficiency','Energy Audit','Star Rating','Green Building','Energy Mix','Energy Transition','Energy Security','Strategic Oil Reserve','Strategic Petroleum Reserve','IOCL','Indian Oil','ONGC','GAIL','Oil India','BPCL','HPCL','Coal India','Singareni','NLC','Refinery','KG Basin','Bombay High','Coal Block','Coal Auction','Power Minister','MNRE','Ministry of New and Renewable Energy','ISA','International Solar Alliance','450 GW Renewable','500 GW Renewable','RPO','Renewable Purchase Obligation','REC','Renewable Energy Certificate','Carbon Credit','Carbon Trading','Green Credit','PLI for Solar','PLI for Battery','Solar Module','Solar Cell','Ingot','Wafer','Polysilicon','Energy Storage','Battery Energy Storage','BESS','Lithium-ion','Electric Vehicle','EV Charging','Charging Infrastructure','FAME','Bharat Stage','BS6','Emission Norm']
         };
-
         function showQuestion() {
             if (state.idx >= state.questions.length) {
                 showEnd();
@@ -3262,7 +3775,7 @@
                 var gen = GK_GENERATORS[pick(allCats)];
                 if (!gen) continue;
                 var q = gen();
-                q.opts = buildOptions(q.a);
+                q.opts = q.opts || buildOptions(q.a);
                 state.questions.push(q);
             }
             document.getElementById('welcome').style.display = 'none';
@@ -3292,7 +3805,7 @@
                 var gen = GK_GENERATORS[pick(allCats)];
                 if (!gen) continue;
                 var q = gen();
-                q.opts = buildOptions(q.a);
+                q.opts = q.opts || buildOptions(q.a);
                 state.questions.push(q);
             }
             document.getElementById('welcome').style.display = 'none';
@@ -3320,7 +3833,7 @@
                 var gen = GK_GENERATORS[pick(allCats)];
                 if (!gen) continue;
                 var q = gen();
-                q.opts = buildOptions(q.a);
+                q.opts = q.opts || buildOptions(q.a);
                 state.questions.push(q);
             }
             document.getElementById('welcome').style.display = 'none';
@@ -3345,103 +3858,46 @@
         }
 
         function startPibQuiz() {
-            if (!_pibFeedData || _pibFeedData.length < 4) { alert('Not enough PIB data loaded. Wait for the feed to load.'); return; }
+            if (!_pibFeedData || _pibFeedData.length < 3) { alert('Not enough PIB data loaded. Wait for the feed to load.'); return; }
             var startVal = document.getElementById('pibQuizStart').value;
             var endVal = document.getElementById('pibQuizEnd').value;
             if (!startVal || !endVal) { alert('Pick a date range first.'); return; }
             if (startVal > endVal) { alert('Start date must be before end date.'); return; }
 
-            state.cat = 'pib';
-            state.categoryName = 'PIB: ' + startVal.slice(5) + ' to ' + endVal.slice(5);
-            state.idx = 0;
-            state.correct = 0;
-            state.streak = 0;
-            state.answered = false;
-            state.questions = [];
-
             var rangeItems = _pibFeedData.filter(function(i) {
                 return i.pubDate && i.title && i.pubDate.slice(0,10) >= startVal && i.pubDate.slice(0,10) <= endVal;
             });
-            if (rangeItems.length < 4) { alert('Not enough PIB news in that date range (need at least 4).'); return; }
+            if (rangeItems.length < 3) { alert('Not enough PIB news in that date range (need at least 3).'); return; }
 
-            // Generic words NEVER to pick as the answer
-            var skip = {
-                'the':1,'and':1,'for':1,'with':1,'from':1,'this':1,'that':1,'were':1,'has':1,'had':1,'not':1,'are':1,'was':1,'but':1,'its':1,'their':1,'been':1,'will':1,'over':1,'into':1,'about':1,'than':1,'after':1,'before':1,'under':1,'through':1,'between':1,'against':1,'during':1,'without':1,'within':1,'along':1,'among':1,'upon':1,'across':1,'beyond':1,'toward':1,'also':1,'more':1,'most':1,'much':1,'many':1,'some':1,'such':1,'all':1,'each':1,'every':1,'both':1,'few':1,'own':1,'same':1,'so':1,'than':1,'too':1,'very':1,'just':1,'now':1,'here':1,'there':1,'then':1,'well':1,'back':1,'still':1,'already':1,'yet':1,'once':1,'again':1,'ever':1,'never':1,'always':1,'even':1,'though':1,'while':1,'since':1,'until':1,'because':1,'if':1,'when':1,'where':1,'how':1,'what':1,'who':1,'whom':1,'which':1,'whether':1,'why':1,
-                'minister':1,'ministers':1,'prime':1,'president':1,'vice':1,'chairman':1,'secretary':1,'government':1,'committee':1,'commission':1,'authority':1,'board':1,'council':1,'bureau':1,'department':1,'ministry':1,'chief':1,'general':1,'national':1,'international':1,'global':1,'central':1,'state':1,'union':1,'review':1,'meeting':1,'conference':1,'summit':1,'visit':1,'discuss':1,'holds':1,'held':1,'sign':1,'signed':1,'launch':1,'launched':1,'announce':1,'announced':1,'approve':1,'approved':1,'release':1,'released':1,'issue':1,'issued':1,'inaugurate':1,'inaugurated':1,'organize':1,'organizes':1,'organized':1,'participate':1,'participates':1,'participated':1,'host':1,'hosts':1,'hosted':1,'address':1,'addresses':1,'addressed':1,'call':1,'calls':1,'called':1,'speak':1,'speaks':1,'spoke':1,'deliver':1,'delivers':1,'delivered':1,'present':1,'presents':1,'presented':1,'new':1,'special':1,'first':1,'second':1,'third':1,'annual':1,'joint':1,'high':1,'level':1,'press':1,'information':1,'affairs':1,'external':1,'home':1,'finance':1,'defence':1,'health':1,'education':1,'rural':1,'urban':1,'power':1,'water':1,'road':1,'railway':1,'civil':1,'aviation':1,'commerce':1,'industry':1,'agriculture':1,'environment':1,'forest':1,'climate':1,'science':1,'technology':1,'development':1,                'programme':1,'project':1,'scheme':1,'initiative':1,'mission':1,'task':1,'force':1,'group':1,'team':1,'award':1,'honour':1,'fellowship':1,'scholarship':1,'day':1,'week':1,'month':1,'year':1,'session':1,'edition':1,'agreement':1,'agreements':1,'cooperation':1,'collaboration':1,'partnership':1,'initiative':1,'program':1,'programmes':1,'projects':1,'operation':1,'operations':1,
-                'january':1,'february':1,'march':1,'april':1,'may':1,'june':1,'july':1,'august':1,'september':1,'october':1,'november':1,'december':1,
-                'india':1,'indian':1,'govt':1,'government':1,'centre':1,'center':1,'parliament':1,'supreme':1,'court':1,'president':1,'pm':1,'modi':1
-            };
-
-            // Extract the key entity from a headline (the last meaningful proper noun/acronym)
-            function pickEntity(title) {
-                var raw = title.replace(/[–—•·′″]/g, ' ').split(' ');
-                var candidates = [];
-
-                for (var i = raw.length - 1; i >= 0; i--) {
-                    var w = raw[i].replace(/[^a-zA-Z0-9\u0900-\u097F+]/g, '');
-                    if (w.length < 3) continue;
-                    if (/^\d+$/.test(w)) continue;
-                    var lower = w.toLowerCase();
-                    if (skip[lower]) continue;
-
-                    // Prefer: acronyms (all caps, >=3), proper nouns (capitalized not at i=0)
-                    var isAcronym = w === w.toUpperCase() && /[A-Z]/.test(w) && w.length >= 3;
-                    var isProper = w[0] === w[0].toUpperCase() && w[0] !== w[0].toLowerCase() && i > 0;
-                    var isName = i > 0 && w[0] === w[0].toUpperCase() && !(w === w.toUpperCase() && w.length === 3 && 'THE AND FOR THE'.indexOf(w) < 0);
-
-                    if (isAcronym || isProper) {
-                        candidates.push({ word: w, index: i, raw: raw[i], score: (isAcronym ? 5 : 3) + (i / raw.length * 2) });
-                    }
-                }
-
-                if (candidates.length === 0) return null;
-                candidates.sort(function(a, b) { return b.score - a.score; });
-                return candidates[0];
-            }
-
-            // Build entity pool from all headlines
-            var entityPool = [];
-            rangeItems.forEach(function(item) {
-                var e = pickEntity(item.title);
-                if (e) entityPool.push(e.word);
-            });
-
-            rangeItems.forEach(function(item) {
-                var e = pickEntity(item.title);
-                if (!e) return;
-
-                // Build blanked headline
-                var words = item.title.replace(/[–—•·′″]/g, ' ').split(' ');
-                words[e.index] = '______';
-                var blanked = words.join(' ');
-
-                // Options: correct entity + 3 wrong from entity pool
-                var wrong = entityPool.filter(function(w) { return w !== e.word; });
-                var sh = shuffle(wrong.slice());
-                var opts = [e.word];
-                for (var i = 0; i < sh.length && opts.length < 4; i++) {
-                    if (opts.indexOf(sh[i]) < 0) opts.push(sh[i]);
-                }
-                shuffle(opts);
-
-                state.questions.push({
-                    q: blanked,
-                    a: e.word,
-                    opts: opts,
-                    hint: 'Look for the key entity — a country, person, place, or organization',
-                    fact: (item.pubDate ? item.pubDate.slice(0,10) : '') + (item.link ? '\n' + item.link : '')
-                });
-            });
-
-            if (state.questions.length < 3) { alert('Could not generate enough questions from this range.'); return; }
-            document.getElementById('welcome').style.display = 'none';
-            document.getElementById('qArea').classList.add('active');
-            document.getElementById('scoreBar').classList.add('show');
+            _pibDateRange = { start: startVal, end: endVal };
+            _pibUsed = {};
             document.getElementById('pibQuizPanel').style.display = 'none';
-            showQuestion();
+            startCategory('pib', 'PIB: ' + startVal.slice(5) + ' to ' + endVal.slice(5));
         }
 
         var _pibFeedData = null;
+        var _sebiFeedData = null;
+        var _scJudgmentData = null;
+        var _isroFeedData = null;
+        var _meaFeedData = null;
+        var _rbiFeedData = null;
+        var _defenceFeedData = null;
+        var _envFeedData = null;
+        var _sportsFeedData = null;
+        var _econFeedData = null;
+        var _polityFeedData = null;
+        var _sciTechFeedData = null;
+        var _healthFeedData = null;
+        var _educationFeedData = null;
+        var _agriFeedData = null;
+        var _energyFeedData = null;
+
+        function startFeedQuiz(cat, label) {
+            if (!_pibFeedData || _pibFeedData.length < 5) { alert('News feed not loaded yet. Please wait.'); return; }
+            var feedVar = cat === 'sebi' ? _sebiFeedData : cat === 'scjudgments' ? _scJudgmentData : cat === 'isro' ? _isroFeedData : cat === 'mea' ? _meaFeedData : cat === 'rbi' ? _rbiFeedData : cat === 'defence' ? _defenceFeedData : cat === 'environment' ? _envFeedData : cat === 'sports' ? _sportsFeedData : cat === 'economics' ? _econFeedData : cat === 'polity' ? _polityFeedData : cat === 'sciTech' ? _sciTechFeedData : cat === 'health' ? _healthFeedData : cat === 'education' ? _educationFeedData : cat === 'agriculture' ? _agriFeedData : cat === 'energy' ? _energyFeedData : null;
+            if (!feedVar || feedVar.length < 2) { alert('Not enough items for "' + label + '" in current feed.'); return; }
+            startCategory(cat, label);
+        }
 
         function loadPibFeed() {
             var section = document.getElementById('pibFeedSection');
@@ -3452,6 +3908,21 @@
                     var items = (data.items || []);
                     if (items.length === 0) return;
                     _pibFeedData = items;
+                    _sebiFeedData = items.filter(function(i) { return i.source === 'SEBI'; });
+                    _scJudgmentData = items.filter(function(i) { return i.source === 'SC'; });
+                    _isroFeedData = items.filter(function(i) { return i.source === 'ISRO'; });
+                    _meaFeedData = items.filter(function(i) { return i.source === 'MEA'; });
+                    _rbiFeedData = items.filter(function(i) { return i.source === 'RBI'; });
+                    _defenceFeedData = _buildVirtualFeed(items, ['Defence','Defense','Army','Navy','Air Force','DRDO','DRDO\'s','Military','Indian Army','Indian Navy','Indian Air Force','Soldier','Border','Missile','Submarine','Warship','Aircraft','Raksha','Mantralaya','Ex-Servicemen','Bharat Electronics','BDL','BEL','HAL','Ordnance','Counter-Insurgency','Insurgency','Terrorism','National Security','Cyber Security','Agni','Prithvi','Brahmos','Akash','Nag','ASTRA','PINAKA','Radar','Sonar','Frigate','Destroyer','Corvette','Patrol Vessel','Landing Craft','Dock Ship','Submarine','Tank','Artillery','Rifle','Carbine','Bulletproof','Armoured','Battalion','Regiment','Brigade','Division','Command','NCC','Coast Guard','Paramilitary','CAPF','CISF','BSF','CRPF','ITBP','SSB','Assam Rifles','Army Chief','Navy Chief','Air Chief','CDS','Chief of Defence','Rajnath','Defence Minister','Raksha Mantri','Defence Secretary','Defence Production','Defence Acquisition','Defence Procurement','Make in India Defence','Defence Corridor','Defence Export','Agniveer','Agneepath','Armed Forces','Tri-Service','Strategic Partnership','Defence Pact','Joint Exercise','Military Exercise','Surya Kiran','Garuda','Maitree','Shakti','Varuna','Malabar','Yudh Abhyas','Hand in Hand','Mitra Shakti','SAMPRITI','Ekuverin','LAMITIYE','Naseem Al Bahr','Al Mohed Al Hindi','Zayed Talwar','Konkan','Bold Kurukshetra','Prasthan','Poorvi Prahar','Vijay Prahar','Desert Storm','Desert Knight','Gagan Shakti','Vayu Shakti','TROPEX','Milan Exercise','RIMPAC','Tsunami Relief','Humanitarian Assistance','Disaster Relief','HADR','Peacekeeping','UN Peacekeeping']);
+                    _envFeedData = _buildVirtualFeed(items, ['Environment','Climate','Forest','Wildlife','Pollution','Ecology','Green','Renewable','Emission','Carbon','Biodiversity','Conservation','Ecosystem','Endangered','Species','Wetland','River','Lake','Ocean','Coastal','Disaster','Cyclone','Flood','Drought','MoEFCC','Environment Minister','Forest Minister','Climate Change','Global Warming','Paris Agreement','COP','UNFCCC','IPCC','Greenhouse','Emissions','Net Zero','Carbon Neutral','Carbon Credit','Carbon Trading','Green Hydrogen','Solar Energy','Wind Energy','Biomass','Waste Management','Solid Waste','Plastic Waste','E-Waste','Hazardous Waste','Clean Energy','Energy Transition','Sustainable Development','SDG','National Park','Tiger Reserve','Wildlife Sanctuary','Biosphere Reserve','Eco-Sensitive Zone','Mangrove','Coral Reef','Glacier','Himalayan','Ganga','Yamuna','Clean Ganga','Namami Gange','Air Quality','AQI','Water Quality','Swachh Bharat','Tree Plantation','Green India','REDD','Afforestation','Deforestation','Desertification','Land Degradation','National Action Plan','State Action Plan','Environmental Clearance','Environmental Impact','Forest Rights','Wildlife Crime','Poaching','Smuggling','Endangered Species','Elephant','Tiger','Lion','Leopard','Rhinoceros','Snow Leopard','Gangetic Dolphin','Great Indian Bustard','Vulture','Sea Turtle','Olive Ridley']);
+                    _sportsFeedData = _buildVirtualFeed(items, ['Sports','Sport','Olympic','Olympics','Paralympic','World Cup','Tournament','Medal','Athlete','Championship','Cricket','Football','Hockey','Badminton','Tennis','Wrestling','Boxing','Shooting','Archery','Weightlifting','Table Tennis','Chess','Kabaddi','Asian Games','Commonwealth','Khelo India','National Games','Sports Minister','Khel Ratna','Arjuna Award','Dronacharya Award','Major Dhyan Chand','Olympian','Gold Medal','Silver Medal','Bronze Medal','World Championship','World Record','Asian Record','National Record','Squad','Team India','Indian Team','Captain','Coach','Selector','Umpire','Referee','Stadium','Venue','FIFA','ICC','BCCI','IOA','SAI','Sports Authority','Fit India','Yoga Day','Fitness','Marathon','Cycling','Rowing','Canoeing','Kayaking','Sailing','Equestrian','Gymnastics','Judo','Taekwondo','Karate','Fencing','Volleyball','Basketball','Handball','Rugby','Baseball','Softball','Squash','Racquetball','Snooker','Billiards','Golf','Skating','Swimming','Diving','Water Polo','Athletics','Track and Field','Race Walk','Long Jump','High Jump','Triple Jump','Pole Vault','Javelin','Discus','Hammer','Shot Put','Decathlon','Heptathlon']);
+                    _econFeedData = _buildVirtualFeed(items, ['Economy','Economic','GDP','GVA','Inflation','Budget','Fiscal','Monetary','Finance','Financial','Trade','Export','Import','Investment','Infrastructure','Tax','GST','Income Tax','Corporate Tax','Customs','Excise','Revenue','Expenditure','Deficit','Fiscal Deficit','Revenue Deficit','Primary Deficit','Current Account','CAD','Forex','Foreign Exchange','Reserve Bank','RBI','Repo Rate','Reverse Repo','CRR','SLR','MSF','Bank Rate','Liquidity','Money Supply','Industrial Production','IIP','Manufacturing','Services','PMI','Consumer Price Index','CPI','Wholesale Price Index','WPI','Food Inflation','Retail Inflation','Core Inflation','Growth Rate','Economic Growth','Development','Employment','Unemployment','Labour Force','Job Creation','Startup','Entrepreneurship','MSME','Small Business','Make in India','Digital India','Skill India','Ease of Doing Business','Business Reforms','Investment Promotion','FDI','Foreign Direct Investment','FPI','Portfolio Investment','Merger','Acquisition','Insolvency','Bankruptcy','IBC','NCLT','NCLAT','Competition','Monopoly','Market Share','Tariff','Non-Tariff','WTO','Trade Agreement','FTA','Free Trade','Economic Corridor','Industrial Corridor','Economic Zone','SEZ','Special Economic Zone','Smart City','Urban Development','Rural Development','Agriculture','Farmers','Agri-Export','Food Processing','PDS','Public Distribution','Subsidy','Welfare Scheme','Direct Benefit','DBT','Aadhaar','Financial Inclusion','Jan Dhan','Insurance','Pension','Social Security']);
+                    _polityFeedData = _buildVirtualFeed(items, ['Constitution','Constitutional','Parliament','Lok Sabha','Rajya Sabha','Member of Parliament','MP','MLA','Legislative','Assembly','Election','Voter','Voting','Electoral','EVM','VVPAT','Election Commission','ECI','President','Vice President','Prime Minister','Chief Minister','Governor','Union Minister','Cabinet','Council of Ministers','Ministry','Department','Government','Bill','Act','Legislation','Ordinance','Amendment','Article','Fundamental Right','Directive Principle','DPSP','Fundamental Duty','Supreme Court','High Court','District Court','Judiciary','Judge','Chief Justice','Justice','Tribunal','NCLT','NCLAT','SAT','Appellate','Writ','PIL','Public Interest Litigation','Judicial Review','Judicial Activism','Collegium','Parliamentary Committee','Standing Committee','Select Committee','Joint Committee','Public Accounts Committee','PAC','Estimates Committee','Committee on Public Undertakings','CAG','Comptroller and Auditor General','Finance Commission','NITI Aayog','Planning Commission','Interim Budget','Vote on Account','Money Bill','Finance Bill','Appropriation Bill','Ordinance','President Rule','Emergency','National Emergency','State Emergency','Financial Emergency','Article 356','Article 360','Centre-State','Federal','Unitary','Panchayat','Municipality','73rd Amendment','74th Amendment','Local Government','Rural Development','Urban Development','Delhi','Union Territory','UT','Statehood','Bifurcation','Reorganisation','Official Language','Eighth Schedule','Scheduled Caste','SC','ST','Scheduled Tribe','OBC','Other Backward Class','Minority','Reservation','Affirmative Action','Secularism','Socialism','Sovereign','Democratic','Republic','Preamble','Citizenship','Overseas Citizen','OC','NRI','PIO','Election Petition','Byelection','Anti-defection','10th Schedule','Speaker','Deputy Speaker','Chairman','Deputy Chairman','Rajya Sabha Chairman','Upper House','Lower House','Joint Session','Budget Session','Monsoon Session','Winter Session','Question Hour','Zero Hour','Adjournment','Prorogation','Dissolution','Quorum','Whip','Party','Coalition','Alliance','NDA','UPA','National Party','State Party','RPA','Representation of People Act','Election Symbol','Model Code of Conduct','Poll','Counting','Voter Turnout','Political Party','Ideology','Manifesto','President Address','Motion of Thanks','No-confidence','Confidence','Censure','Adjournment Motion','Calling Attention','Short Duration Discussion','Private Member','Private Member Bill','Government Bill','Lapsing of Bill','Ordinance Promulgation','Ordinance Re-promulgation','Governor','Chief Minister','Council of Ministers','State Legislature','Vidhan Sabha','Vidhan Parishad','Legislative Council','Governor Address','State Election','Municipal Election','Panchayat Election','District Planning','Zila Parishad','Panchayat Samiti','Gram Panchayat','Gram Sabha','Nagar Palika','Nagar Nigam','Municipal Corporation','Mayor','Commissioner','Ward','Ward Committee']);
+                    _sciTechFeedData = _buildVirtualFeed(items, ['Science','Scientific','Technology','Technological','Innovation','Patent','Copyright','Trademark','IPR','Intellectual Property','Research','Development','R&D','Laboratory','Lab','Experiment','Discovery','Invention','Breakthrough','Mars Mission','Moon Mission','Space','Satellite','Rocket','Launch','Nuclear','Atomic','Fusion','Fission','Reactor','Radiation','Radioactive','Uranium','Plutonium','Thorium','Cyclotron','Synchrotron','Particle Accelerator','CERN','LIGO','Gravitational Wave','Quantum','Computing','Quantum Computing','Supercomputer','AI','Artificial Intelligence','Machine Learning','Deep Learning','Neural Network','Robotics','Automation','Drone','UAV','Chatbot','GPT','Large Language Model','LLM','Blockchain','Cryptocurrency','Bitcoin','Web3','Metaverse','AR','VR','Augmented Reality','Virtual Reality','IoT','Internet of Things','5G','6G','Telecommunication','Broadband','Optical Fibre','Li-Fi','Wi-Fi','Bluetooth','NFC','RFID','GPS','Navigation','GIS','Remote Sensing','Genomics','Genome','DNA','RNA','Gene Editing','CRISPR','Biotechnology','Biotech','Biofuel','Biogas','Nanotechnology','Nano','Material Science','Composite','Graphene','Carbon Fibre','Superconductor','Semiconductor','Chip','Processor','Microchip','Fab','Foundry','Electronics','Photonics','Laser','LED','OLED','Solar Cell','Photovoltaic','Turbine','Engine','Propulsion','Cryogenic','Semi-cryogenic','Electric Vehicle','EV','Battery','Lithium-ion','Solid State Battery','Hydrogen Fuel Cell','Green Hydrogen','Hydrogen Economy','Renewable Energy','Solar','Wind','Tidal','Geothermal','Biomass','Energy Storage','Grid','Smart Grid','Microgrid','Cybersecurity','Encryption','Firewall','IT','Information Technology','Software','Hardware','Algorithm','Data Science','Big Data','Cloud Computing','Edge Computing','Digital Twin','3D Printing','Additive Manufacturing','Drone','Counter-Drone','Anti-Drone','Missile Technology','Ballistic Missile','Cruise Missile','Hypersonic','Stealth','Radar','Sonar','LIDAR','Sensors','Defence Technology','Military Tech','Space Tech','Civil Aviation','Aircraft','Jet Engine','Turbofan','Turbojet','Turboprop']);
+                    _healthFeedData = _buildVirtualFeed(items, ['Health','Healthcare','Medical','Medicine','Pharmaceutical','Drug','Vaccine','Vaccination','Immunisation','Immunization','Hospital','Clinic','Primary Health','Ayushman','PM-JAY','Ayushman Bharat','Health Insurance','Medical Insurance','Insurance Cover','Health Scheme','NHM','National Health Mission','Ayush','AYUSH','Yoga','Homeopathy','Ayurveda','Unani','Siddha','Naturopathy','Disease','Epidemic','Pandemic','COVID','Coronavirus','SARS','H1N1','Zika','Dengue','Malaria','Chikungunya','Tuberculosis','TB','HIV','AIDS','Cancer','Diabetes','Hypertension','Blood Pressure','Heart Disease','Cardiovascular','Stroke','Kidney','Liver','Hepatitis','Child Health','Maternal Health','Infant Mortality','IMR','MMR','Maternal Mortality','Child Mortality','Malnutrition','Anaemia','Nutrition','Poshan','ICDS','Integrated Child Development','Mid-Day Meal','School Health','Sanitation','Swachh Bharat','Cleanliness','Hygiene','WASH','Water Sanitation','Disease Surveillance','Epidemiology','Vector Borne','Communicable','Non-Communicable','NCD','Lifestyle Disease','Mental Health','Depression','Anxiety','Wellness','Fitness','Physical Activity','Organ Donation','Organ Transplant','Blood Donation','Blood Bank','National Health Policy','Health Minister','Health Secretary','AIIMS','PGI','NIMHANS','Medical College','Nursing','ASHA Worker','ANM','Auxiliary Nurse','Midwife','Health Worker','Community Health','Public Health','Family Planning','Contraception','Reproductive Health','Childbirth','Caesarean','Neonatal','Pediatric','Geriatric','Palliative Care','Hospice','Emergency Care','Trauma Care','Ambulance','108 Service','Dial 108','Telemedicine','e-Sanjeevani','Digital Health','ABDM','Ayushman Bharat Digital Mission','Health ID','Health Record','Generic Medicine','Jan Aushadhi','Pradhan Mantri Bhartiya Janaushadhi','Kendra','Cheap Medicine','Affordable Medicine','Biological','Biologic','Biosimilar','Clinical Trial','Drug Controller','CDSCO','FDA','WHO','World Health Organization','Global Health','International Health','Health Research','Medical Research','Medical Device','Diagnostic','Test Kit','RT-PCR','Rapid Antigen','CT Scan','MRI','X-Ray','Ultrasound','ECG','EEG','Pathology','Laboratory','Pharmacy','Pharmacist','Doctor','Physician','Surgeon','Specialist','Nurse','Dispensary','Primary Care','Secondary Care','Tertiary Care']);
+                    _educationFeedData = _buildVirtualFeed(items, ['Education','School','College','University','Institute','Educational','Academic','Student','Teacher','Professor','Lecturer','Vice Chancellor','Dean','Principal','Exam','Examination','Board Exam','CBSE','ICSE','State Board','NCERT','Curriculum','Syllabus','Textbook','Scholarship','Fellowship','Research Grant','Higher Education','Technical Education','Engineering','Medical Education','Management Education','Law Education','Distance Education','Open University','IGNOU','Online Learning','e-Learning','Digital Learning','SWAYAM','DIKSHA','National Education Policy','NEP 2020','NEP','Education Policy','New Education','National Curriculum Framework','NCF','Foundational Literacy','Numeracy','FLN','Early Childhood','Anganwadi','Pre-school','Primary School','Middle School','Secondary School','Senior Secondary','Higher Secondary','Class 10','Class 12','Board Result','Admission','Merit List','Cut-off','Seat Allotment','Reservation in Education','Education Cess','Education Loan','Skill Development','Vocational','Skill India','Skill Training','Apprenticeship','Internship','On-the-Job Training','Technical Training','Engineering College','Medical College','IIT','Indian Institute of Technology','NIT','National Institute of Technology','IIIT','Indian Institute of Information Technology','IIM','Indian Institute of Management','AIIMS','NITIE','SP Jain','XLRI','ISB','Central University','State University','Deemed University','Private University','Autonomous College','Affiliated College','Constituent College','Accreditation','NAAC','NBA','NIRF','Ranking','Q1','Research Publication','Journal','Impact Factor','Citation','Patent Filed','Startup','Innovation Hub','Incubation','Entrepreneurship Cell','E-Cell','Idea Lab','Tinkering Lab','Atal Tinkering Lab','ATL','School Innovation','Smart Classroom','Digital Classroom','ICT in Education','Mid-Day Meal','School Lunch','School Uniform','Free Textbook','Free Education','Right to Education','RTE Act','75% Attendance','No-Detention','Continuous Comprehensive','Evaluation','CCE','Report Card','Grade','Marks','Percentage','CGPA','Degree','Diploma','Certificate','PhD','Doctorate','MPhil','Masters','Bachelors','Graduate','Post Graduate','Under Graduate','Doctoral','Research Scholar','Post Doctoral','Fellowship','JRF','Junior Research Fellow','SRF','Senior Research Fellow','Professor of Practice','Guest Faculty','Adjunct Faculty','Visiting Professor','Education Budget','Education Minister','School Education','Higher Education','Literacy Rate','Gross Enrollment','GER','Net Enrollment','NEP Implementation','Academic Calendar','Summer Vacation','Winter Break','Holiday List','Teacher Training','In-service Training','Continuous Professional Development','Pedagogy','Teaching Method','Learning Outcome','Student Assessment','Evaluation System']);
+                    _agriFeedData = _buildVirtualFeed(items, ['Agriculture','Agriculture Minister','Farmer','Farmers','Kisan','Crop','Food Grain','Foodgrains','Wheat','Rice','Paddy','Millet','Bajra','Jowar','Ragi','Maize','Corn','Pulses','Tur','Arhar','Moong','Urad','Chana','Masur','Gram','Pea','Soybean','Groundnut','Mustard','Rapeseed','Sunflower','Sesame','Coconut','Sugarcane','Cotton','Jute','Mesta','Tea','Coffee','Rubber','Spice','Horticulture','Vegetable','Fruit','Mango','Banana','Apple','Grape','Onion','Potato','Tomato','Milk','Dairy','Animal Husbandry','Poultry','Meat','Egg','Fish','Fishery','Aquaculture','Shrimp','Prawn','Fertiliser','Fertilizer','Urea','DAP','NPK','Potash','Phosphate','Pesticide','Insecticide','Herbicide','Seed','Hybrid Seed','GM Seed','Genetically Modified','Bt Cotton','Bt Brinjal','High Yielding','HYV','Irrigation','Canal','Well','Tube Well','Drip','Sprinkler','Water Harvesting','Rainwater','Farm Pond','Check Dam','Soil Health','Soil Health Card','Soil Testing','Land Resource','Land Record','Digital Land Record','DILRMP','PM-KISAN','PM Kisan Samman Nidhi','Kisan Credit Card','KCC','PMFBY','Pradhan Mantri Fasal Bima','Crop Insurance','Weather Insurance','MSP','Minimum Support Price','Procurement','PDS','Public Distribution','Food Corporation','FCI','Food Subsidy','Buffer Stock','Open Market Sale','Warehousing','Cold Storage','Silo','Farm Gate','Mand','APMC','e-NAM','National Agriculture Market','Warehouse Receipt','Negotiable Warehouse','Receipt','FPO','Farmer Producer Organisation','Farmer Producer Company','Agri-Startup','Agri-Tech','Farm Mechanisation','Tractor','Harvester','Thresher','Combine','Power Tiller','Zero Tillage','Conservation Agriculture','Natural Farming','Organic Farming','Chemical-free','Pesticide-free','Integrated Pest Management','Integrated Nutrient Management','Crop Diversification','Multi-cropping','Inter-cropping','Crop Rotation','Fallow Land','Cultivable Land','Gross Cropped Area','Net Sown Area','Cropping Intensity','Yield','Productivity','Production','Output','Food Security','Nutritional Security','National Food Security','NFSA','Food Bill','Subsidy Reform','Agriculture Export','Agri-Export','Horticulture Export','Marine Product','Seafood','Organic Export','Geographical Indication','GI Tag','GI Tagged','Agriculture Infrastructure','Agri Infra Fund','Agriculture Marketing','Agriculture Reform','Farm Law','Farm Act','Farmers Protest','Agriculture Budget','Agriculture GDP','Agriculture Credit','Farm Loan','Loan Waiver','Debt Waiver','PM-KMY','Pradhan Mantri Kisan Maan Dhan','PM-AASHA','Price Support','Market Intervention','Pradhan Mantri Krishi Sinchai','PMKSY','Per Drop More Crop','Bharatnet','Digital Agriculture','Agri-Stack','Farmer Database','Krishi Vigyan Kendra','KVK','Agriculture University','ICAR','Indian Council of Agricultural','Agriculture Research','Extension Service','Farm Advisory','Weather Advisory','Mobile App for Farmers','Crop Loan','Kisan Call Centre','Soil Moisture','Evapotranspiration','Drought Proofing','Climate Resilient Agriculture']);
+                    _energyFeedData = _buildVirtualFeed(items, ['Energy','Power','Electricity','Coal','Oil','Petroleum','Natural Gas','LNG','Gas','Renewable','Solar','Solar Power','Solar Energy','Solar Panel','Solar Park','Solar Cell','Photovoltaic','Rooftop Solar','Wind','Wind Power','Wind Energy','Wind Farm','Turbine','Hydro','Hydro Power','Hydel','Hydroelectric','Small Hydro','Biomass','Biogas','Biofuel','Ethanol','Biodiesel','Waste to Energy','Energy from Waste','Tidal Power','Wave Energy','Geothermal','Hydrogen','Green Hydrogen','Grey Hydrogen','Blue Hydrogen','Hydrogen Fuel','Hydrogen Mission','National Hydrogen','Power Plant','Thermal Power','Thermal Plant','Coal Plant','Coal Power','Gas Plant','Gas Based','Diesel Generator','Captive Power','Cogeneration','Tri-generation','Electricity Generation','Electricity Production','Power Generation','Installed Capacity','Generation Capacity','Peak Demand','Electricity Demand','Power Shortage','Power Deficit','Power Surplus','Grid','National Grid','Smart Grid','Microgrid','Green Grid','Transmission','Power Transmission','Transmission Line','Tower','Substation','Distribution','Power Distribution','Discom','Electricity Distribution','Distribution Company','AT&C Loss','Aggregate Technical and Commercial','Loss','T&D Loss','Transmission and Distribution','Power Theft','Electricity Theft','Tariff','Electricity Tariff','Power Tariff','Tariff Hike','Tariff Revision','Power Purchase','PPA','Power Purchase Agreement','UDAY','Ujwal DISCOM Assurance','Yojana','Revamped Distribution','RDSS','Power Minister','Electricity Minister','Energy Minister','Power Secretary','Electricity Act','Energy Act','Energy Policy','National Energy Policy','Integrated Energy Policy','Energy Mix','Power Mix','Energy Transition','Decarbonisation','Net Zero','Carbon Neutral','Energy Efficiency','Energy Conservation','Energy Saving','Perform Achieve Trade','PAT Scheme','Star Rating','BEE','Bureau of Energy Efficiency','EC Act','Energy Conservation Act','Green Building','Energy Audit','Energy Management','Nuclear Power','Nuclear Energy','Atomic Energy','Nuclear Plant','Nuclear Reactor','Atomic Power','Uranium','Thorium','Nuclear Fuel','Spent Fuel','Nuclear Waste','Radiation Protection','NPCIL','Nuclear Power Corporation','BHAVINI','Fast Breeder','PFBR','Prototype Fast Breeder','Kudankulam','Tarapur','Kaiga','Rawatbhata','Kakrapar','Narora','Kalpakkam','Energy Security','Energy Independence','Strategic Reserve','Oil Reserve','Petroleum Reserve','Strategic Petroleum','SPR','Indian Oil','ONGC','Oil and Natural Gas','GAIL','Oil India','Coal India','Singareni','NLC','Neyveli Lignite','Power Grid','PFC','Power Finance','REC','Rural Electrification','Saubhagya','Pradhan Mantri Sahaj Bijli','Deendayal Upadhyaya Gram Jyoti','DDUGJY','Integrated Power Development','IPDS','Electric Vehicle','EV Charging','Charging Station','Fast Charging','Battery','Energy Storage','Battery Storage','Pumped Hydro','Pumped Storage','Clean Energy Fund','Green Energy Corridor','International Solar Alliance','ISA','Global Biofuel Alliance','100 GW Solar','450 GW Renewable','500 GW Renewable','Renewable Purchase Obligation','RPO','REC','Renewable Energy Certificate','Energy Certificate','Carbon Credit','Carbon Trading','Green Credit']);
 
                     // Find unique dates, sorted descending
                     var dateSet = {};
