@@ -2558,7 +2558,7 @@
                 ['Functional','Haskell, Lisp, Scala — pure functions, no side effects, immutability'],
                 ['Scripting','Python, JavaScript, Ruby, PHP, Perl — interpreted, dynamic typing, rapid dev'],
                 ['Query','SQL, GraphQL — database querying'],
-                ['Markup','HTML, XML, Markdown — document structure, not programming'],
+                ['Markup','HTML, XML, Markdown — document structure'],
                 ['Assembly','low-level, mnemonics for machine instructions, hardware-specific']
             ]},
             { h:'Database Concepts', b:[
@@ -2567,30 +2567,47 @@
                 ['NoSQL','non-relational: document (MongoDB), key-value (Redis), graph (Neo4j), column (Cassandra)'],
                 ['ACID','Atomicity, Consistency, Isolation, Durability — ensures reliable transactions'],
                 ['CAP Theorem','Consistency, Availability, Partition Tolerance — only 2 of 3 achievable in distributed systems'],
-                ['SQL vs NoSQL','SQL: structured schema, joins, vertical scaling. NoSQL: flexible schema, horizontal scaling, high throughput'],
                 ['Data Warehouse','large centralized repo for analytics (Snowflake, Redshift, BigQuery)'],
-                ['Data Lake','raw data storage in native format (AWS S3, Azure Data Lake, Hadoop HDFS)']
+                ['Data Lake','raw data storage in native format (AWS S3, Hadoop HDFS)']
             ]},
             { h:'Networking Protocols & Models', b:[
                 ['OSI Model (7 layers)','Physical, Data Link, Network, Transport, Session, Presentation, Application'],
                 ['TCP/IP Model (4 layers)','Network Interface, Internet (IP), Transport (TCP/UDP), Application'],
                 ['HTTP/HTTPS','HyperText Transfer Protocol (port 80), HTTPS = encrypted with SSL/TLS (port 443)'],
-                ['DNS','Domain Name System — translates domain names (google.com) to IP addresses (142.250.xx)'],
+                ['DNS','Domain Name System — translates domain names to IP addresses'],
                 ['DHCP','Dynamic Host Configuration Protocol — auto-assigns IP to devices on network'],
-                ['NAT','Network Address Translation — maps private IPs to public IP, conserves IPv4 addresses'],
-                ['VPN','Virtual Private Network — encrypted tunnel over public internet, secure remote access'],
+                ['NAT','Network Address Translation — maps private IPs to public IP'],
+                ['VPN','Virtual Private Network — encrypted tunnel over public internet'],
                 ['CDN','Content Delivery Network — distributed servers caching content closer to users (Cloudflare, Akamai)'],
                 ['Load Balancer','distributes traffic across multiple servers for high availability (NGINX, AWS ELB)']
             ]},
             { h:'Software Development Concepts', b:[
                 ['SDLC','Software Development Life Cycle: Requirement → Design → Development → Testing → Deployment → Maintenance'],
-                ['Waterfall','sequential phases, rigid, no backtracking — suitable for simple projects'],
                 ['Agile','iterative, sprints (2-4 weeks), continuous feedback — Scrum, Kanban, XP'],
                 ['DevOps','development + operations integration, CI/CD pipeline, automation, Docker, Kubernetes'],
-                ['Version Control','Git (distributed), SVN (centralized) — tracks code changes, enables collaboration'],
                 ['CI/CD','Continuous Integration (auto-build/test), Continuous Deployment (auto-release)'],
-                ['Testing levels','Unit (function), Integration (module), System (whole app), Acceptance (user), Regression (existing)'],
-                ['API','Application Programming Interface — REST (stateless, HTTP methods), GraphQL (flexible querying), SOAP (XML)']
+                ['Testing levels','Unit (function), Integration (module), System (whole app), Acceptance (user)']
+            ]},
+            { h:'AI, Machine Learning & Data Science', b:[
+                ['AI vs ML vs DL','AI: machines simulating human intelligence. ML: learning from data (algorithms). DL: neural networks with multiple layers. GenAI: generating content (ChatGPT, DALL-E, Bard/Gemini)'],
+                ['ML Types','Supervised (labeled data, classification/regression — random forest, SVM, XGBoost). Unsupervised (unlabeled, clustering — K-means, DBSCAN, PCA). Reinforcement (reward-based learning — AlphaGo, robotics)'],
+                ['Neural Networks & DL','Perceptron (single). CNN (image recognition, ResNet, YOLO). RNN/LSTM (sequential, NLP, speech). Transformer (GPT, BERT — attention mechanism). GAN (image generation, deepfakes). ANN (artificial NN)'],
+                ['NLP & Computer Vision','NLP: text classification, sentiment, translation, chatbots, NER. Transformers: self-attention, BERT/GPT/T5. Computer Vision: image classification, object detection, segmentation, OCR. YOLO for real-time detection. Vision Transformer (ViT)'],
+                ['GenAI — LLMs & Diffusion','GPT (OpenAI, GPT-4o), Gemini (Google), Claude (Anthropic), Llama (Meta/Meta AI). Diffusion models (DALL-E, Stable Diffusion, Midjourney). RAG (Retrieval Augmented Generation). Fine-tuning vs RAG. Hallucination in LLMs. Prompt engineering. AI Ethics: bias, fairness, explainability (XAI), alignment'],
+                ['ML Frameworks & Tools','TensorFlow (Google), PyTorch (Meta), Scikit-learn, Hugging Face Transformers, LangChain, LlamaIndex. GPU (NVIDIA CUDA). TPU (Google). MLOps: MLflow, Kubeflow, DVC. Data versioning (DVC). ML pipeline: collect->clean->train->eval->deploy->monitor']
+            ]},
+            { h:'Cybersecurity Fundamentals', b:[
+                ['Common Threats & Attacks','Malware (virus, worm, trojan, ransomware, spyware). Phishing (spear, whaling, smishing, vishing). DDoS (Distributed Denial of Service). Man-in-the-Middle (MITM). SQL Injection. Zero-day exploit. XSS (Cross-Site Scripting). CSRF. Supply chain attack. Ransomware: WannaCry 2017, Petya, LockBit, REvil'],
+                ['Cyber Defence Mechanisms','Firewall (packet filter, stateful, NGFW). IDS/IPS (Snort, Suricata, Zeek). Antivirus/Antimalware. EDR (CrowdStrike, SentinelOne). SIEM (Splunk, QRadar). SOAR. SOC (Security Operations Centre). Zero Trust Architecture (NIST). Multi-factor Auth (MFA). SSO. Password Manager. 2FA. Biometrics. Encryption (AES-256, RSA, ECC). PKI (Public Key Infrastructure). TLS/SSL certificates. Hashing (SHA-256, bcrypt). Blockchain for security. Digital signature'],
+                ['Cyber Laws & Frameworks','IT Act 2000 (India): data protection, cyber crimes, certification of digital signatures. IT Amendment 2008: cyber terrorism, data breach, intermediary liability. DPDP Act 2023: digital personal data protection, consent, data fidiciary, Data Protection Board. NIST framework: identify, protect, detect, respond, recover. ISO 27001: ISMS. GDPR (Europe). RBI Cyber Security Framework for Banks. CERT-In (India, mandatory incident reporting 6 hrs)'],
+                ['Blockchain & Cryptography','Blockchain: distributed ledger, immutable, consensus (PoW, PoS, PBFT). Bitcoin (2008, Satoshi Nakamoto). Ethereum (smart contracts, DeFi). Cryptocurrency: digital currency, no central bank (but India: CBDC e-Rupee). Zero-knowledge proofs (zk-SNARKs). Homomorphic encryption. Post-quantum cryptography (CRYSTALS-Kyber/Dilithium). Web3, DAO, NFT. Indian Crypto tax: 30%+1% TDS (2022). RBI ban (2018) -> SC struck down (2020)']
+            ]},
+            { h:'Cloud Computing & System Design', b:[
+                ['Cloud Models','IaaS (infrastructure: AWS EC2, Azure VM), PaaS (platform: Heroku, GAE), SaaS (software: Gmail, Salesforce). FaaS/Serverless (AWS Lambda, Cloud Functions). Public/Private/Hybrid/Multi-cloud. On-prem vs cloud (CAPEX vs OPEX)'],
+                ['Cloud Providers','AWS (Amazon, 2006, 200+ services, 34% market share). Azure (Microsoft, 23%, strong enterprise). GCP (Google, 11%, AI, BigQuery). Others: Oracle, IBM, Alibaba Cloud, DigitalOcean'],
+                ['Virtualization & Containers','VMware (hypervisor, KVM, Hyper-V). Docker (container, lightweight, OCI). Kubernetes (K8s, orchestration, CNCF). Podman, containerd. Microservices (independent services, API gateway, message queue). Monolith vs Microservices. Service mesh (Istio, Linkerd). Helm charts'],
+                ['Distributed Systems & Architectures','Microservices, Event-driven (Kafka, RabbitMQ, SQS). REST vs gRPC (Protocol Buffers). GraphQL (Flexible queries, Facebook). ACID vs BASE (Basically Available, Soft state, Eventual consistency). CQRS (Command Query Responsibility Segregation). Event sourcing. Replication (Leader-follower, Multi-leader, Quorum). Sharding (horizontal partitioning). CAP theorem. PACELC. Consensus (Raft, Paxos). Distributed tracing (Jaeger, Zipkin). Observability (logs, metrics, traces - Three Pillars)'],
+                ['Data Structures & Algorithms','Array, LinkedList, Stack, Queue, HashMap/HashTable, Tree (Binary, BST, AVL, Red-Black, B-Tree), Graph (DFS, BFS, Dijkstra, A*), Heap, Trie, Segment Tree, Fenwick Tree. Sorting: Quick, Merge, Heap, Radix. DP (knapsack, LCS, LIS). Two pointers, Sliding window, Backtracking. Big O Notation (time & space complexity). NP-Complete. System design: Scalability (vertical vs horizontal), Caching (Redis, Memcached), CDN, Load balancer, Database indexing, Sharding, Message queues (Kafka, RabbitMQ), Rate limiting, Bloom filter, Consistent hashing']
             ]}
         ];
 
@@ -3656,7 +3673,46 @@
                 ['Mission Vatsalya (2018)','Child protection, juvenile justice, sponsorship, adoption'],
                 ['PM Matsya Sampada (2020)','Blue Revolution 2.0, fish production doubling to 22 MMT'],
                 ['National Logistics Policy (2022)','Logistics cost reduction from 14% to <10% GDP, COMPASS framework'],
-                ['Tele Mental Health (2022)','23 centres (NIMHANS nodal), helpline 14416']
+                ['Tele Mental Health (2022)','23 centres (NIMHANS nodal), helpline 14416'],
+                ['PM Schools for Rising India (PM SHRI, 2022)','14,500+ model schools by 2026, NEP 2020 implementation, ₹27,360 Cr'],
+                ['National Digital Health Mission (NDHM, 2020)','Digital health IDs, registries, ABDM (Ayushman Bharat Digital Mission)'],
+                ['SVAMITVA (2020)','Property cards for rural India, drone survey, bank loan access, legal ownership'],
+                ['One Nation One Ration Card (2019)','Portable food security, NFSA beneficiaries lift rations anywhere in India'],
+                ['PM Swamitva Yojana (2020)','Same as SVAMITVA — property mapping via drones in villages']
+            ]},
+            { h:'Health & Nutrition Schemes', b:[
+                ['Ayushman Bharat PM-JAY (2018)','₹5L/family/yr health cover, 10Cr+ families (bottom 40%), cashless, portable, 1,500+ procedures, empanelled hospitals, PM-JAY for senior citizens 70+ (2024, ₹5L top-up)'],
+                ['PM Jan Aushadhi Yojana (2008)','Generic medicines at affordable prices, 9,000+ Jan Aushadhi Kendras, 1,800+ medicines, 300+ surgical items, 50-80% cheaper than branded'],
+                ['Mission Indradhanush (2014)','Full immunization of children & pregnant women, Intensified MI (2017), 90%+ full immunization coverage achieved, 12 vaccine-preventable diseases covered'],
+                ['POSHAN Abhiyaan (2017)','National Nutrition Mission, reduce stunting/underweight/anemia by 2%/yr, Poshan Vatikas, MAA (Mother\'s Absolute Affection), ICDS CAS (Common Application Software), Poshan Tracker'],
+                ['PM Matru Vandana Yojana (2017)','Maternity benefit ₹6,000 in 3 installments for first live birth, conditional on antenatal checkup & immunization, cash transfer to bank account'],
+                ['National Health Mission (2013)','NRHM (rural) + NUHM (urban). Janani Suraksha Yojana (cash for institutional delivery). Janani Shishu Suraksha Karyakaram (free care). 1.5L Health & Wellness Centres (HWCs) under AB-HWCs'],
+                ['Rashtriya Bal Swasthya Karyakram (RBSK)','Child health screening for 4 Ds (Defects at birth, Diseases, Deficiencies, Developmental delays), 0-18 yrs, mobile health teams, referral/treatment free'],
+                ['Pradhan Mantri TB Mukt Bharat Abhiyan (2022)','End TB by 2025, Ni-kshay Mitra (community support), nutritional support ₹500/month, intensified case finding, free diagnostic & treatment'],
+                ['Ayushman Arogya Mandir (AB-HWC)','1.5L sub-centres upgraded to HWCs, CPHC (Comprehensive Primary Health Care), near home, free screening for NCDs, teleconsultation, yoga & wellness']
+            ]},
+            { h:'Education & Skill Development Schemes', b:[
+                ['NEP 2020','National Education Policy: 5+3+3+4 structure, vocational from class 6, multilingual, no hard streams in 11-12, 4-year B.Ed., 6% GDP target, PARAKH (assessment), NCF 2023'],
+                ['Samagra Shiksha Abhiyan (2018)','School education from pre-school to class 12, erstwhile Sarva Shiksha (SSA) + RMSA + TE merged, inclusive education, RTE implementation, Kasturba Gandhi Balika Vidyalayas'],
+                ['Mid-Day Meal (PM-POSHAN, 1925/2001, rebranded 2021)','Hot cooked meals to all school children (class 1-8). Nutritional norms (700 cal upper primary). 11Cr+ beneficiaries. Cooking cost ₹5.27-8.50/child/day. Best hot cooked meal in world'],
+                ['National Scholarship Portal (NSP)','Central schemes (post-matric for SCs/STs/OBCs, merit-cum-means, up to ₹20K/yr). Single portal, DBT, Aadhaar-linked. 100+ schemes, 2Cr+ beneficiaries'],
+                ['Skill India (2015)','PMKVY (Pradhan Mantri Kaushal Vikas Yojana): skill training, certified, monetary reward (₹8K avg). NSQF (National Skills Qualification Framework). 40Cr trained by 2022. ITIs upgraded to Centre of Excellence. Apprenticeship Act amended 2014'],
+                ['Digital India (2015)','Broadband highways, universal mobile connectivity, public internet access, e-Governance (e-Kranti), electronics manufacturing. Common Service Centres (CSCs, 5L+ rural kiosks). DigiLocker, UMANG, Aarogya Setu, CoWin. India Stack: Aadhaar, UPI, e-Sign, Account Aggregator, ONDC'],
+                ['National Apprenticeship Promotion Scheme (NAPS)','Stipend reimbursement to employers (25% up to ₹1,500/month). Target 5M apprentices. NAPS 2.0 (2022): expanded scope'],
+                ['Pradhan Mantri Uchchatar Shiksha Abhiyan (PM-USHA)','formerly RUSA (2013), state higher education institutions development, target GER 50% by 2035, quality research, multidisciplinary education']
+            ]},
+            { h:'Social Welfare & Empowerment Schemes', b:[
+                ['PM Jan Dhan Yojana (2014)','Financial inclusion: zero-balance account, overdraft ₹10K, Rupay card, accident insurance ₹1L (now ₹2L). 50Cr+ accounts, ₹2L Cr+ balance. World\'s largest financial inclusion drive'],
+                ['PM Jeevan Jyoti Bima (2015)','Life insurance ₹2L, premium ₹330/yr (18-50 yrs), auto-debit, PM Suraksha Bima (accident ₹2L, ₹20/yr, 18-70 yrs). Pradhan Mantri Fasal Bima (crop insurance, 2-5% premium)'],
+                ['Atal Pension Yojana (2015)','Guaranteed pension ₹1K-5K/month from 60 yrs. Age 18-40. Govt co-contribution 50% up to ₹1K/yr for 5 yrs for less privileged. 5Cr+ subscribers'],
+                ['PM Awas Yojana (2015)','Housing for All by 2024 (missed deadline, extended). PMAY-U: interest subsidy 3-6.67%, credit linked. PMAY-G: ₹1.2L (plain)/₹1.3L (hilly) unit cost. 3Cr+ houses built. PMSUNI (street vendor housing)'],
+                ['MGNREGA (2005)','100 days guaranteed rural wage employment, legal guarantee, 60:40 wage-material ratio, women 33% (achieved 55%), wage linked to CPI-AL, social audit mandatory, Gram Sabha role. ₹6/day unemployment allowance'],
+                ['National Food Security Act (NFSA 2013)','Legal right to subsidized foodgrains: 5kg/person/month at ₹2-3/kg for priority households. 75% rural + 50% urban coverage. Antyodaya (poorest 35kg/month). PMGKAY (free 5kg during COVID, merged into NFSA Oct 2023)'],
+                ['PM Kisan Maan Dhan Yojana (2019)','Pension ₹3,000/month for small/poor farmers (60 yrs, 18-40). Contribution ₹55-200/month. Govt matches equally. PM Kisan (2019): ₹6,000/yr direct income support to farmers'],
+                ['National Social Assistance Programme (NSAP)','Indira Gandhi National Old Age Pension (60-79: ₹200, 80+: ₹500). Widow Pension (₹300). Disability Pension (₹300). NSAP Scheme under DBT, Centre-State cost sharing 75:25'],
+                ['Stand-Up India (2016)','Bank loans ₹10L-1Cr to SC/ST & women entrepreneurs. 25% margin money. 1.5L+ beneficiaries. Start-up India (2016): tax holiday, self-certification, fund of funds ₹10,000 Cr, GI hub'],
+                ['PM DAKSH (2020)','Skill development for SC/ST/OBC, job-oriented training, placement linked. Target: 2.7L candidates. Venture Capital Fund for SCs (₹1,000 Cr)'],
+                ['PM CARES Fund (2020)','Prime Minister\'s Citizen Assistance & Relief in Emergency Situations Fund. Donation-based, used for COVID-19, child welfare, natural disasters. Tax exempt. PM CARES for Children (2,500+ orphans supported)']
             ]},
             { h:'Flagship Schemes by Ministry', b:[
                 ['Health','Ayushman Bharat-PMJAY (₹5L cover), PM Jan Aushadhi (generic medicines), Mission Indradhanush (vaccination)'],
@@ -3664,9 +3720,10 @@
                 ['Agriculture','PM-KISAN (₹6,000/yr), PM Fasal Bima (crop insurance), e-NAM, Soil Health Card'],
                 ['Housing & Urban','PM Awas Yojana (Urban+Gramin), Smart Cities (100), AMRUT (500 cities), PM SVANidhi'],
                 ['Rural Development','MGNREGA (100 days), DAY-NRLM (SHG bank linkage), PM Sadak Yojana (rural roads)'],
-                ['Women & Child','Beti Bachao Beti Padhao, PM Matru Vandana (₹6,000 maternity), POSHAN 2.0'],
+                ['Women & Child','Beti Bachao Beti Padhao (BBBP), PM Matru Vandana (₹6,000 maternity), POSHAN 2.0'],
                 ['Social Justice','PM DAKSH (SC/ST skill), Stand-Up India, Venture Capital Fund for SCs'],
-                ['Tribal Affairs','PM-JANMAN (PVTGs), Eklavya Schools (740+ by 2026), Van Dhan Yojana']
+                ['Tribal Affairs','PM-JANMAN (PVTGs), Eklavya Schools (740+ by 2026), Van Dhan Yojana'],
+                ['Other Sectors','Tourism: Swadesh Darshan (5 circuits), PRASHAD (pilgrimage rejuvenation). MSME: PM Mudra Yojana (Shishu/Kishor/Tarun), Credit Guarantee Fund. Power: Saubhagya (free connections), UDAY (discom revival), Jal Jeevan Mission (tap water to every rural household)']
             ]}
         ];
 
@@ -3674,34 +3731,47 @@
             { h:'ISRO Missions — Lunar, Mars, Solar, Human', b:[
                 ['Chandrayaan-1 (2008)','First lunar mission — discovered water molecules on Moon, PSLV-C11, intentionally crashed'],
                 ['Chandrayaan-2 (2019)','Orbiter+orbiter successful (still operational), lander crash-landed (braking glitch). GSLV Mk-III'],
-                ['Chandrayaan-3 (2023)','SUCCESSFUL soft landing near South Pole (Aug 23). India = 4th country, FIRST at South Pole. Confirmed Sulphur, Al, Ca, Fe, O₂. LVM3-M4'],
-                ['Mangalyaan/MOM (2013)','India\'s first interplanetary mission — 1st country to succeed first attempt. PSLV-C25. Lost contact 2022'],
-                ['Gaganyaan','India\'s first crewed mission — 3 crew, 3-7 days LEO (400km). Uncrewed tests G1 (2025), G2 (2026). Vyommitra robot. LVM3 launch'],
+                ['Chandrayaan-3 (2023)','SUCCESSFUL soft landing near South Pole (Aug 23). India = 4th country, FIRST at South Pole. Confirmed Sulphur, Al, Ca, Fe, O₂. LVM3-M4. Pragyan rover deployed'],
+                ['Mangalyaan/MOM (2013)','India\'s first interplanetary mission — 1st country to succeed first attempt. PSLV-C25. Lost contact 2022. Cost: ₹450 Cr ($73M, cheapest Mars mission ever)'],
+                ['Gaganyaan','India\'s first crewed mission — 3 crew, 3-7 days LEO (400km). Uncrewed tests G1 (2025), G2 (2026). Vyommitra robot. LVM3 launch. ISRO+IAF+DRDO+academia joint effort. Target 2025-26'],
                 ['Aditya-L1 (2023)','India\'s first solar mission — L1 point (1.5M km). 7 payloads, corona dynamics, CME studies. PSLV-C57. Reached L1 Jan 2024'],
                 ['XPoSat (2024)','X-ray Polarimeter — pulsars, neutron stars, black holes. PSLV-C58'],
-                ['AstroSat (2015)','India\'s first multi-wavelength space observatory — UV/X-ray/visible, still operational'],
-                ['Shukrayaan-1','Venus Orbiter — approved 2024, launch 2028 window, 16 Indian + 2 intl payloads'],
-                ['NISAR (2024-25)','NASA-ISRO joint Earth obs — S-band + L-band SAR, 12-day repeat, climate/ecosystem']
+                ['AstroSat (2015)','India\'s first multi-wavelength space observatory — UV/X-ray/visible, still operational, 5 yrs+ life'],
+                ['Shukrayaan-1','Venus Orbiter — approved 2024, launch 2028 window, 16 Indian + 2 intl payloads. Study Venus atmosphere, surface, interaction with solar wind'],
+                ['NISAR (2025)','NASA-ISRO joint Earth obs — S-band + L-band SAR, 12-day repeat, climate/ecosystem. GSFC-ISRO shared development. Launch from India'],
+                ['LUPEX (2026+)','Lunar Polar Exploration — JAXA-ISRO joint. JAXA provides lander/rover, ISRO provides launcher. Target south pole, water-ice drilling. Follow-up to Chandrayaan-3'],
+                ['Bharatiya Antariksh Station (BAS)','Indian space station — Phase 1 by 2028 (5 ton module), full 25 ton by 2035. BAS 1 uncrewed test 2028. Crew transfer via Gaganyaan. Orbit ~400km, 3-4 crew, 15-20 days']
             ]},
             { h:'PSLV, GSLV, SSLV & Satellite Series', b:[
-                ['PSLV','Workhorse — 4 stages, PSLV-C37 (104 satellites world record), XL/CA variants'],
-                ['GSLV Mk-III (LVM3)','Heavy lift — 4-ton to GTO, CE-20 cryo, Chandrayaan-2/3, Gaganyaan. First flight 2014'],
-                ['SSLV','Small Satellite — 500kg to 500km LEO, on-demand. SSLV-D2 successful 2023'],
-                ['INSAT/GSAT','Communication satellites — geo-stationary, 200+ transponders. GSAT-7 (Navy)'],
-                ['NavIC (IRNSS)','Navigation — 7 satellites, L5+S-band, <10m accuracy, independent system'],
-                ['Cartosat','Cartography — 0.25m (Cartosat-3 highest civilian resolution), urban planning/defence'],
-                ['RISAT','Radar Imaging — C-band/X-band SAR, night/cloud imaging, agriculture/disaster mgmt'],
-                ['ISRO Timeline','1962 INCOSPAR, 1969 ISRO founded, 1975 Aryabhata, 1980 SLV-3, 1994 PSLV, 2001 GSLV, 2008 Chandrayaan-1, 2014 Mangalyaan, 2023 Chandrayaan-3, Aditya-L1']
+                ['PSLV','Workhorse — 4 stages (solid+liquid+solid+liquid), PSLV-C37 (104 satellites world record), XL/CA/DL/QL variants. 60+ successful flights. PSLV-CA (core alone), PSLV-XL (strap-ons). Most reliable launcher'],
+                ['GSLV Mk-II','3-stage — GS1 (solid) + GS2 (liquid) + CUS (cryo 4th stage). 2 ton to GTO. CE-7.5 cryogenic engine. Geosynchronous missions. Limited flights'],
+                ['GSLV Mk-III (LVM3)','Heavy lift — S200 (solid strap-ons) + L110 (liquid core) + C25 (cryo upper). 10 ton to LEO, 4 ton to GTO. CE-20 cryo (20 ton thrust). Chandrayaan-2/3, Gaganyaan. First flight 2014. Human-rated LVM3-G for Gaganyaan'],
+                ['SSLV','Small Satellite Launcher — 500kg to 500km LEO, 3 solid stages + VTM (velocity trimming module). On-demand, low cost. SSLV-D1 (failure 2022, sensor anomaly), SSLV-D2 (successful Feb 2023), SSLV-D3 (Aug 2024 successful). SSLV-D3 = EOS-08'],
+                ['Reusable Launch Vehicle (RLV)','RLV-TD (2016, test vehicle): HEX (hypersonic flight). Pushpak (RLV-LEX, 2023/2024): landing experiment, autonomous runway landing. Aim: fully reusable 2-stage to orbit. Scramjet engine tested (ATV-D01, 2016)'],
+                ['INSAT/GSAT','Communication satellites — geostationary (36,000 km). 200+ transponders. GSAT-7 (Navy Rukmini), GSAT-7A (IAF), GSAT-6 (Army). GSAT-20/GSAT-N2 (2024, launch via SpaceX Falcon 9). INSAT-3DS (2024, meteorology)'],
+                ['NavIC (IRNSS)','Navigation with Indian Constellation — 7 satellites (3 geostationary + 4 geosynchronous). L5 (civil) + S-band (encrypted). <10m accuracy. Standard Positioning Service (SPS) free. Regional coverage 1,500 km from border. L1 signal for civilian use (forthcoming)'],
+                ['Cartosat','Earth observation — cartography (0.25m resolution Cartosat-3 highest civilian). Urban planning, military surveillance, infrastructure, land use. Stereo imaging (3D)'],
+                ['RISAT','Radar Imaging — C-band (RISAT-1) + X-band (RISAT-2). SAR (Synthetic Aperture Radar), night/cloud imaging. Agriculture, disaster management, defence. RISAT-2BR1 (2019)'],
+                ['Other EO satellites','Oceansat (ocean colour, wind), Resourcesat (land resources, agriculture), Scatsat (wind scatterometer, cyclone). Weather: INSAT-3DR, INSAT-3D (atmospheric sounding). Hyper-spectral: HySIS (2018). Microsat/R (experimental)'],
+                ['ISRO Timeline','1962 INCOSPAR, 1969 ISRO formed (Vikram Sarabhai), 1975 Aryabhata (first Indian satellite, USSR launch), 1979 SLV-3 partial failure, 1980 SLV-3 success (Rohini), 1993 PSLV D1 failure, 1994 PSLV success, 2001 GSLV, 2008 Chandrayaan-1, 2014 Mangalyaan, 2017 PSLV-C37 (104 sat record), 2019 Chandrayaan-2, 2023 Chandrayaan-3, Aditya-L1, 2024 SSLV-D3 success']
+            ]},
+            { h:'ISRO — Organisation, Centres & Private Sector', b:[
+                ['Space Policy 2023','IN-SPACe (Indian National Space Promotion & Authorization Centre): single-window clearance for private space sector. NSIL (NewSpace India Limited): commercial arm of ISRO, PSLV/GSLV production transfer. Private launch vehicles: Agnikul (Agnibaan), Skyroot (Vikram series), Bellatrix. Satellites: Pixxel (hyperspectral), Dhruva. Space Parks (Vikram Sarabhai Space Park, TN). ISRO now focuses on R&D, private on production/operations'],
+                ['Vikram Sarabhai Space Centre (VSSC, Thiruvananthapuram)','Design & development of launch vehicles. PSLV, GSLV, SSLV, RLV. Solid & liquid propulsion. Largest ISRO centre. Thumba Equatorial Rocket Launching Station (TERLS) nearby'],
+                ['UR Rao Satellite Centre (URSC, Bengaluru)','Satellite design, fabrication, testing, integration. All ISRO satellites built here. Earlier ISAC (ISRO Satellite Centre). 100+ satellites built'],
+                ['Satyish Dhawan Space Centre (SDSC-SHAR, Sriharikota, AP)','Launch site — PSLV, GSLV, SSLV launches. Two launch pads (FLP & SLP). No third launch pad. Sounding rocket facility. Vehicle assembly, propellant filling, tracking. 80km north of Chennai'],
+                ['Space Applications Centre (SAC, Ahmedabad)','Satellite payloads (communication, navigation, remote sensing). Bhuvan (Indian geo-platform). NavIC payloads. Satellite communication applications (telemedicine, tele-education, disaster support)'],
+                ['Other ISRO Centres','LPSC (Liquid Propulsion Systems Centre, Valiamala+Mahendragiri). ISTRAC (ISRO Telemetry Tracking & Command Network, Bengaluru). IIST (Indian Institute of Space Science & Technology, Thiruvananthapuram). Space Museum. MCF (Master Control Facility, Bhopal+Hassan)'],
+                ['Foreign Launch Sites Used by India','Russia (Aryabhata, IRS series). French Guiana (GSAT series via Ariane 5). USA (SpaceX Falcon 9 for GSAT-20 2024, because GSAT-20 >4 ton exceeded Indian launcher capacity to GTO)']
             ]},
             { h:'Foreign Space Agencies & Key Missions', b:[
                 ['NASA (USA, 1958)','Apollo 11 (1969 moon landing), Space Shuttle (1981-2011), Hubble/James Webb telescopes, Artemis (2025 moon return), Mars Perseverance'],
-                ['Roscosmos (Russia)','Soyuz (oldest crewed), Mir station, ISS partner. Luna-25 (2023 crashed), declining budget since 1990s'],
+                ['Roscosmos (Russia)','Soyuz (oldest crewed), Mir station, ISS partner. Luna-25 (2023 crashed)'],
                 ['ESA (European, 1975)','Ariane (launcher), Rosetta (comet), Gaia (star map), Mars Express, ExoMars. HQ Paris'],
-                ['CNSA (China, 1993)','Chang\'e (lunar samples 2020), Tiangong space station, Tianwen-1 (Mars lander 2021), BeiDou navigation system'],
-                ['JAXA (Japan, 2003)','Hayabusa (asteroid samples), SLIM (precision lunar landing 2024), Kibo module (ISS)'],
-                ['SpaceX (USA, private)','Falcon 9 (reusable), Dragon (crew/cargo), Starlink (6,000+ satellites), Starship (largest rocket, 2024 test)'],
-                ['Blue Origin (USA, private)','New Shepard (suborbital), New Glenn (heavy lift), BE-4 engine, lunar lander Blue Moon'],
-                ['Astronauts of Indian origin','Rakesh Sharma (1984, Soviet Soyuz T-11, "Saare Jahan Se Achha"). Kalpana Chawla (STS-107 Columbia 2003, died). Sunita Williams (STS-116 2006, longest woman spaceflight 195 days)']
+                ['CNSA (China, 1993)','Chang\'e (lunar samples 2020), Tiangong space station, Tianwen-1 (Mars lander 2021), BeiDou navigation'],
+                ['JAXA (Japan, 2003)','Hayabusa (asteroid samples), SLIM (precision lunar landing 2024), Kibo module (ISS). XRISM (X-ray telescope)'],
+                ['SpaceX (USA, private)','Falcon 9 (reusable, 300+ landings), Dragon (crew/cargo), Starlink (6,000+ sats), Starship (largest rocket)'],
+                ['Astronauts of Indian origin','Rakesh Sharma (1984, Soyuz T-11). Kalpana Chawla (STS-107 Columbia 2003). Sunita Williams (195 days longest single woman spaceflight)']
             ]}
         ];
 
