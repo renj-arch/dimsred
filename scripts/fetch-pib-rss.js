@@ -138,7 +138,7 @@ async function fetchISRO() {
     var html = await resp.text();
     var items = [];
     // Match all year tabs (2016-2025) + special 2022 tab1
-    var yearPanels = html.match(/<div class="tab-pane[^"]*fade[^"]*show[^"]*"[^>]*id="(tab\d+|tab1)"[^>]*>[\s\S]*?<table[\s\S]*?<\/table>/g);
+    var yearPanels = html.match(/<div class="tab-pane[^"]*"[^>]*id="(tab\d+|tab1)"[^>]*>[\s\S]*?<table[\s\S]*?<\/table>/g);
     if (!yearPanels) return [];
     yearPanels.forEach(function(panel) {
       var rows = panel.match(/<tr>[\s\S]*?<\/tr>/g);
@@ -184,7 +184,7 @@ async function fetchMEA() {
     if (!resp.ok) { console.error('MEA AJAX HTTP ' + resp.status); return []; }
     var html = await resp.text();
     var items = [];
-    var regex = /<div class="pressRelesastBox">[\s\S]*?<span class="date">([^<]*)<\/span>[\s\S]*?<h3 class="pressTitle"><a href="([^"]*)"[^>]*>([\s\S]*?)<\/a><\/h3>/g;
+    var regex = /<div class="pressRelesastBox">[\s\S]*?<span class="date">([^<]*)<\/span>[\s\S]*?<h3 class="pressTitle">[\s\S]*?<a href="([^"]*)"[^>]*>([\s\S]*?)<\/a>[\s\S]*?<\/h3>/g;
     var match;
     while ((match = regex.exec(html)) !== null) {
       var title = (match[3] || '').replace(/<[^>]+>/g, '').trim();
