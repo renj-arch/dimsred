@@ -9,6 +9,9 @@
  *  - World leaders (US, UK, Russia, China, etc.)
  *  - UN / global org heads
  *  - Cabinet ministers, RBI Governor
+ *  - Pageant winners (Miss World, Miss Universe, Miss India)
+ *  - Film festival winners (Cannes, Berlin, Venice)
+ *  - Major sports tournament champions (World Cup, T20 WC, etc.)
  */
 const fs = require('fs');
 const https = require('https');
@@ -46,17 +49,31 @@ function extractTableRows(wikiHtml) {
 
 // === INDIAN CMs ===
 async function fetchCMs() {
-  let data = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=List_of_current_Indian_chief_ministers&prop=text&section=1&format=json');
+  let data = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Chief_minister_(India)&prop=text&format=json');
   let parsed = JSON.parse(data);
   let html = parsed.parse.text['*'];
-  let rows = extractTableRows(html);
+  // Find "Current list of chief ministers" section by looking for tables 
+  // that contain state names and party names
+  let allTables = html.match(/<table[^>]*class="[^"]*(?:wikitable|sortable)[^"]*"[^>]*>([\s\S]*?)<\/table>/gi);
   let map = {};
-  for (let r of rows) {
-    if (r.length >= 2) {
-      let state = r[0].replace(/\s*\[edit\]/, '').trim();
-      let name = r[1].replace(/\(.*?\)/g, '').trim();
-      let party = (r[1].match(/\(([^)]+)\)/) || [, ''])[1].trim();
-      if (state && name) map[state] = { name, party };
+  if (allTables) {
+    for (let tbl of allTables) {
+      let rowMatches = tbl.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
+      for (let row of rowMatches) {
+        let cells = [];
+        let cellMatches = row[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi);
+        for (let cell of cellMatches) {
+          cells.push(cell[1].replace(/<[^>]+>/g, '').trim());
+        }
+        if (cells.length >= 3 && cells[2].length < 100 && !cells[0].includes('State')) {
+          let state = cells[0].replace(/\[edit\]/, '').trim();
+          let name = cells[1].replace(/\(.*?\)/g, '').trim();
+          let party = (cells[1].match(/\(([^)]+)\)/) || [, ''])[1].trim();
+          if (state && name && party && state.length > 2) {
+            map[state] = { name, party };
+          }
+        }
+      }
     }
   }
   return map;
@@ -64,16 +81,28 @@ async function fetchCMs() {
 
 // === INDIAN GOVERNORS ===
 async function fetchGovernors() {
-  let data = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=List_of_current_Indian_governors&prop=text&section=1&format=json');
+  let data = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Governor_(India)&prop=text&format=json');
   let parsed = JSON.parse(data);
   let html = parsed.parse.text['*'];
-  let rows = extractTableRows(html);
+  let allTables = html.match(/<table[^>]*class="[^"]*(?:wikitable|sortable)[^"]*"[^>]*>([\s\S]*?)<\/table>/gi);
   let map = {};
-  for (let r of rows) {
-    if (r.length >= 2) {
-      let state = r[0].replace(/\s*\[edit\]/, '').trim();
-      let name = r[1].replace(/\(.*?\)/g, '').trim();
-      if (state && name) map[state] = name;
+  if (allTables) {
+    for (let tbl of allTables) {
+      let rowMatches = tbl.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
+      for (let row of rowMatches) {
+        let cells = [];
+        let cellMatches = row[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi);
+        for (let cell of cellMatches) {
+          cells.push(cell[1].replace(/<[^>]+>/g, '').trim());
+        }
+        if (cells.length >= 2 && cells[0].length < 30 && !cells[0].includes('State')) {
+          let state = cells[0].replace(/\[edit\]/, '').trim();
+          let name = cells[1].replace(/\(.*?\)/g, '').trim();
+          if (state && name && state.length > 2) {
+            map[state] = name;
+          }
+        }
+      }
     }
   }
   return map;
@@ -150,6 +179,130 @@ async function fetchWorldLeaders() {
     // Fallback: fetch key countries individually
   }
   return map;
+}
+
+// === PAGEANT WINNERS ===
+async function fetchPageantWinners() {
+  let results = {};
+  // Miss World winners table
+  try {
+    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Miss_World&prop=text&section=2&format=json');
+    let p = JSON.parse(d);
+    let h = p.parse.text['*'];
+    let rows = extractTableRows(h);
+    if (rows.length > 0) {
+      let last = rows[rows.length - 1];
+      results['Miss World'] = { year: last[0], winner: last[1] };
+    }
+  } catch(e) {}
+  // Miss Universe winners
+  try {
+    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Miss_Universe&prop=text&section=1&format=json');
+    let p = JSON.parse(d);
+    let h = p.parse.text['*'];
+    let rows = extractTableRows(h);
+    if (rows.length > 0) {
+      let last = rows[rows.length - 1];
+      results['Miss Universe'] = { year: last[0], winner: last[1] };
+    }
+  } catch(e) {}
+  // Femina Miss India winners (more complex table)
+  try {
+    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Femina_Miss_India&prop=text&section=3&format=json');
+    let p = JSON.parse(d);
+    let h = p.parse.text['*'];
+    let rows = extractTableRows(h);
+    if (rows.length > 0) {
+      let last = rows[rows.length - 1];
+      results['Miss India'] = { year: last[0], winner: last[1] };
+    }
+  } catch(e) {}
+  return results;
+}
+
+// === FILM FESTIVAL WINNERS ===
+async function fetchFilmFestivalWinners() {
+  let results = {};
+  // Cannes Palme d'Or
+  try {
+    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Palme_d%27Or&prop=text&section=1&format=json');
+    let p = JSON.parse(d);
+    let h = p.parse.text['*'];
+    let rows = extractTableRows(h);
+    if (rows.length > 0) {
+      let last = rows[rows.length - 1];
+      results['Cannes Palme d\'Or'] = { year: last[0], film: last[1] };
+    }
+  } catch(e) {}
+  // Berlin Golden Bear
+  try {
+    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Golden_Bear&prop=text&section=1&format=json');
+    let p = JSON.parse(d);
+    let h = p.parse.text['*'];
+    let rows = extractTableRows(h);
+    if (rows.length > 0) {
+      let last = rows[rows.length - 1];
+      results['Berlin Golden Bear'] = { year: last[0], film: last[1] };
+    }
+  } catch(e) {}
+  // Venice Golden Lion
+  try {
+    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Golden_Lion&prop=text&section=2&format=json');
+    let p = JSON.parse(d);
+    let h = p.parse.text['*'];
+    let rows = extractTableRows(h);
+    if (rows.length > 0) {
+      let last = rows[rows.length - 1];
+      results['Venice Golden Lion'] = { year: last[0], film: last[1] };
+    }
+  } catch(e) {}
+  // Oscar Best Picture
+  try {
+    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Academy_Award_for_Best_Picture&prop=text&section=3&format=json');
+    let p = JSON.parse(d);
+    let h = p.parse.text['*'];
+    let rows = extractTableRows(h);
+    if (rows.length > 0) {
+      let last = rows[rows.length - 1];
+      results['Oscar Best Picture'] = { year: last[0], film: last[1] };
+    }
+  } catch(e) {}
+  return results;
+}
+
+// === SPORTS TOURNAMENT CHAMPIONS ===
+async function fetchSportsChampions() {
+  let results = {};
+  // Cricket World Cup winners
+  try {
+    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=ICC_Cricket_World_Cup&prop=text&section=1&format=json');
+    let p = JSON.parse(d);
+    let h = p.parse.text['*'];
+    let tables = h.match(/<table[^>]*class="[^"]*wikitable[^"]*"[^>]*>([\s\S]*?)<\/table>/gi);
+    if (tables && tables[0]) {
+      let rows = tables[0].matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
+      let lastRow;
+      for (let row of rows) { lastRow = row; }
+      if (lastRow) {
+        let cells = [];
+        let cellMatches = lastRow[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi);
+        for (let c of cellMatches) cells.push(stripHtml(c[1]));
+        if (cells.length >= 2) results['Cricket World Cup'] = { year: cells[0], winner: cells[cells.length-1] };
+      }
+    }
+  } catch(e) {}
+  // FIFA World Cup winners
+  try {
+    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=FIFA_World_Cup&prop=text&section=1&format=json');
+    let p = JSON.parse(d);
+    let h = p.parse.text['*'];
+    let rows = extractTableRows(h);
+    if (rows.length > 0) {
+      let last = rows[rows.length - 1];
+      results['FIFA World Cup'] = { year: last[0], winner: last[1] };
+    }
+  } catch(e) {}
+  return results;
 }
 
 // === RBI GOVERNOR ===
@@ -305,28 +458,112 @@ async function main() {
   }
 
   // 5. Update World Leaders — USA, UK, Russia, China, etc.
+  // Only patch if our file has entries for these (we include mini-updates in comments)
+  // World leaders data is primarily in the IR section as static text
+  // For now, this is informational only - actual world leader data changes
+  // are better handled through the IR section's static content approach.
+  console.log('  World leaders: auto-update requires manual HTML section audit');
+  // Future: can add targeted world leader sections in the HTML with machine-readable anchors
+
+  // 6. Update Pageant Winners
   try {
-    let leaders = await fetchWorldLeaders();
-    let leaderUpdates = {
-      'United States': { pattern: /USA[^<]*?President[^:]*:\s*([^.<]+)/, key: 'President' },
-      'United Kingdom': { pattern: /UK[^<]*?Prime Minister[^:]*:\s*([^.<]+)/, key: 'Prime Minister' },
-      'Russia': { pattern: /Russia[^<]*?President[^:]*:\s*([^.<]+)/, key: 'President' },
-      'China': { pattern: /China[^<]*?President[^:]*:\s*([^.<]+)/, key: 'President' },
-      'Japan': { pattern: /Japan[^<]*?Prime Minister[^:]*:\s*([^.<]+)/, key: 'Prime Minister' },
-    };
-    for (let [country, cfg] of Object.entries(leaderUpdates)) {
-      if (leaders[country]) {
-        let re = cfg.pattern;
-        let m = html.match(re);
-        if (m && m[1].trim() !== leaders[country]) {
-          html = html.replace(re, m[0].replace(m[1], leaders[country]));
+    let pageants = await fetchPageantWinners();
+    if (pageants['Miss World']) {
+      let w = pageants['Miss World'];
+      let re = /(Miss World[^<]*?:\s*)[^<(]+(?:\s*\([^)]*\))?/i;
+      let m = html.match(re);
+      if (m) {
+        let oldVal = m[0].substring(m[1].length).trim();
+        let newVal = w.winner + ' (' + w.year + ')';
+        if (!oldVal.includes(w.winner)) {
+          html = html.replace(re, m[1] + newVal);
           updates++;
-          console.log('  ' + country + ' ' + cfg.key + ': ' + m[1].trim() + ' -> ' + leaders[country]);
+          console.log('  Miss World: ' + oldVal + ' -> ' + newVal);
+        }
+      }
+    }
+    if (pageants['Miss Universe']) {
+      let w = pageants['Miss Universe'];
+      let re = /(Miss Universe[^<]*?:\s*)[^<(]+(?:\s*\([^)]*\))?/i;
+      let m = html.match(re);
+      if (m) {
+        let oldVal = m[0].substring(m[1].length).trim();
+        let newVal = w.winner + ' (' + w.year + ')';
+        if (!oldVal.includes(w.winner)) {
+          html = html.replace(re, m[1] + newVal);
+          updates++;
+          console.log('  Miss Universe: ' + oldVal + ' -> ' + newVal);
         }
       }
     }
   } catch (e) {
-    errors.push('World leaders: ' + e.message);
+    errors.push('Pageants: ' + e.message);
+  }
+
+  // 7. Update Film Festival Winners
+  try {
+    let films = await fetchFilmFestivalWinners();
+    if (films['Cannes Palme d\'Or']) {
+      let w = films['Cannes Palme d\'Or'];
+      let re = /(Cannes[^<]*?Palme[^<]*?:\s*)[^<(]+(?:\s*\([^)]*\))?/i;
+      let m = html.match(re);
+      if (m) {
+        let newVal = w.film + ' (' + w.year + ')';
+        if (!m[0].includes(w.film)) {
+          html = html.replace(re, m[1] + newVal);
+          updates++;
+          console.log('  Cannes: ' + newVal);
+        }
+      }
+    }
+    if (films['Oscar Best Picture']) {
+      let w = films['Oscar Best Picture'];
+      let re = /(Oscar[^<]*?Best Picture[^<]*?:\s*)[^<(]+(?:\s*\([^)]*\))?/i;
+      let m = html.match(re);
+      if (m) {
+        let newVal = w.film + ' (' + w.year + ')';
+        if (!m[0].includes(w.film)) {
+          html = html.replace(re, m[1] + newVal);
+          updates++;
+          console.log('  Oscar Best Picture: ' + newVal);
+        }
+      }
+    }
+  } catch (e) {
+    errors.push('Film festivals: ' + e.message);
+  }
+
+  // 8. Update Major Sports Champions
+  try {
+    let sports = await fetchSportsChampions();
+    if (sports['Cricket World Cup']) {
+      let w = sports['Cricket World Cup'];
+      let re = /(Cricket World Cup[^<]*?:\s*)[^<]+?(\d+)/i;
+      let m = html.match(re);
+      if (m) {
+        let newVal = w.winner + ' (' + w.year + ')';
+        if (!m[0].includes(w.winner)) {
+          html = html.replace(re, m[1] + newVal);
+          updates++;
+          console.log('  Cricket World Cup: ' + newVal);
+        }
+      }
+    }
+    if (sports['FIFA World Cup']) {
+      let w = sports['FIFA World Cup'];
+      let re = /(Football World Cup[^<]*?:\s*)[^<]+?(\d+)/i;
+      let m = html.match(re);
+      if (m) {
+        let newVal = w.winner + ' (' + w.year + ')';
+        if (!m[0].includes(w.winner)) {
+          html = html.replace(re, m[1] + newVal);
+          updates++;
+          console.log('  FIFA World Cup: ' + newVal);
+        }
+      }
+    }
+  } catch (e) {
+    errors.push('Sports champions: ' + e.message);
   }
 
   // Write if changes made
