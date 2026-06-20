@@ -1,4 +1,4 @@
-name: Update Sensitive GK Data
+name: Update All Sensitive GK Data
 
 on:
   schedule:
@@ -14,8 +14,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Fetch & update CMs, Governors, constitutional posts
-        run: node scripts/update-sensitive-gk.js
+      - name: Fetch & update all time-sensitive GK data
+        run: node scripts/update-all-gk.js
+      - name: Verify syntax
+        run: |
+          node -e "
+            const fs = require('fs');
+            const html = fs.readFileSync('current-affairs.html', 'utf8');
+            const matches = html.match(/<script>([\s\S]*?)<\/script>/g);
+            const scripts = matches.map(m => m.replace(/<\/?script>/g, '')).join('\n');
+            fs.writeFileSync('__temp_check.js', scripts);
+            require('child_process').execSync('node --check __temp_check.js', { stdio: 'pipe' });
+            new Function(scripts);
+            fs.unlinkSync('__temp_check.js');
+            console.log('Syntax verified: PASS');
+          "
       - name: Check for changes
         id: git-check
         run: |
@@ -26,5 +39,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add current-affairs.html
-          git commit -m "chore: update CMs/Governors/Constitutional posts [auto]"
+          git commit -m "chore: update time-sensitive GK data [auto]"
           git push
