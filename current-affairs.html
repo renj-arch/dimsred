@@ -1651,7 +1651,7 @@
                     + '<b>Ethical Thinkers & Philosophers:</b><br>'
                     + '<b>Western:</b> Socrates (question everything, unexamined life not worth living), Plato (justice as harmony, ideal state, philosopher-king), Aristotle (virtue ethics, golden mean, polis), Kant (deontology, categorical imperative), Bentham (utilitarianism, pleasure-pain calculation), Mill (rule-utilitarianism, liberty, harm principle), Rawls (justice as fairness, difference principle), Nozick (minimal state, entitlement), Sen (capabilities, development as freedom), Singer (effective altruism, animal liberation). <b>Indian:</b> Buddha (middle path, compassion, non-harm, mindfulness), Mahavira (ahimsa paramo dharma, anekantavada, aparigraha), Gandhi (satyagraha, non-violence, trusteeship, swadeshi, simple living, sarvodaya), Vivekananda (universal brotherhood, practical Vedanta, service to man = service to God), Tagore (humanism, universalism, nationalism critique), Ambedkar (social justice, constitutional morality, annihilation of caste), Sri Aurobindo (integral yoga, evolution of consciousness), Jiddu Krishnamurti (radical freedom, self-knowledge, no authority). <b>Comparative:</b> duty (Kant) vs consequences (Bentham) — applied to public administration. Indian ethos: dharma (righteous duty), karma (action without attachment to results - Gita), lokasangraha (welfare of all), vasudhaiva kutumbakam (world as family), sarvodaya (uplift of all, Gandhi), antodaya (uplift of last person).<br>'
             }
-            };
+        };
 
         // ===== STRUCTURED STUDY DATA (rendered via _studyRender) =====
         var _studyExtra = {};
@@ -6901,7 +6901,7 @@
             initCatGrid('study');
             initCatGrid('quiz');
             // Pre-parse all study content
-            Object.keys(GK_LEARN).forEach(function(cid){ studyData[cid] = _parseStudyContent(cid); });
+            Object.keys(GK_LEARN).forEach(function(cid){ try { studyData[cid] = _parseStudyContent(cid); } catch(e) { studyData[cid] = null; } });
             loadPibFeed();
         }
 
@@ -7383,11 +7383,14 @@
 
         function _studyRender(data) {
             var html = '';
+            if (!data || !data.length) return html;
             for (var gi = 0; gi < data.length; gi++) {
                 var group = data[gi];
+                if (!group || !group.h || !group.b || !group.b.length) continue;
                 html += '<b>' + group.h + ':</b><br>';
                 for (var bi = 0; bi < group.b.length; bi++) {
                     var b = group.b[bi];
+                    if (!b || b.length < 2) continue;
                     html += '• <b>' + b[0] + '</b> — ' + b[1] + '<br>';
                 }
                 html += '<br>';
