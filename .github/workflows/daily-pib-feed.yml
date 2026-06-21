@@ -30,6 +30,9 @@ jobs:
       - name: Generate quiz questions
         run: node scripts/generate-quiz.js
 
+      - name: Generate knowledge base from study notes
+        run: node scripts/generate-knowledge-base.js
+
       - name: Commit and push
         run: |
           git stash --include-untracked
