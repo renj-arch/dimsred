@@ -17,6 +17,17 @@ var RBI_RSS_URL = 'https://www.rbi.org.in/pressreleases_rss.xml';
 var SEBI_RSS_URL = 'https://www.sebi.gov.in/sebirss.xml';
 var SC_JUDGMENTS_RSS_URL = 'https://indiankanoon.org/feeds/latest/supremecourt/';
 
+// News RSS feeds (headlines + links only, standard syndication)
+var NEWS_FEEDS = [
+  { url:'https://news.google.com/rss/search?q=sports+India+cricket+football+hockey+olympics+medal&hl=en-IN&gl=IN&ceid=IN:en', source:'Sports', cat:'Sports' },
+  { url:'https://news.google.com/rss/search?q=awards+honours+India+prize+winner+recipient&hl=en-IN&gl=IN&ceid=IN:en', source:'Awards', cat:'Awards & Honours' },
+  { url:'https://news.google.com/rss/search?q=appointment+cabinet+secretary+chief+director+governor+India&hl=en-IN&gl=IN&ceid=IN:en', source:'Appointments', cat:'Appointments' },
+  { url:'https://news.google.com/rss/search?q=obituary+died+passed+away+India+former+remembering&hl=en-IN&gl=IN&ceid=IN:en', source:'Obituaries', cat:'Obituaries' },
+  { url:'https://news.google.com/rss/search?q=entertainment+cinema+movies+music+bollywood+India+culture&hl=en-IN&gl=IN&ceid=IN:en', source:'Entertainment', cat:'Entertainment & Culture' },
+  { url:'https://news.google.com/rss/search?q=disaster+accident+flood+earthquake+cyclone+casualty+India&hl=en-IN&gl=IN&ceid=IN:en', source:'Disasters', cat:'Disasters & Accidents' },
+  { url:'https://news.google.com/rss/search?q=India+business+economy+market+finance+stocks&hl=en-IN&gl=IN&ceid=IN:en', source:'Business', cat:'Business & Economy' },
+  { url:'https://news.google.com/rss/search?q=technology+science+digital+innovation+India&hl=en-IN&gl=IN&ceid=IN:en', source:'Tech', cat:'Science & Tech' }
+];
 
 var dataDir = path.resolve(__dirname, '..', 'data');
 
@@ -237,6 +248,41 @@ async function fetchSCJudgments() {
   }
 }
 
+async function fetchNewsFeeds() {
+  var allItems = [];
+  for (var i = 0; i < NEWS_FEEDS.length; i++) {
+    var cfg = NEWS_FEEDS[i];
+    try {
+      var feed = await parser.parseURL(cfg.url);
+      var items = (feed.items || []).slice(0, 10);
+      items.forEach(function(item) {
+        var pubDate = item.pubDate ? new Date(item.pubDate) : new Date();
+        if (isNaN(pubDate.getTime())) pubDate = new Date();
+        var title = (item.title || '').replace(/<[^>]+>/g,'').trim();
+        if (!title || title.length < 10) return;
+        allItems.push({
+          id: item.guid || item.link || title,
+          title: title,
+          link: item.link || '',
+          description: '',
+          category: cfg.cat,
+          pubDate: pubDate.toISOString(),
+          source: cfg.source
+        });
+      });
+    } catch (e) {
+      console.error(cfg.source + ' RSS failed: ' + e.message);
+    }
+  }
+  var seen = new Set();
+  return allItems.filter(function(i) {
+    var k = i.title.slice(0, 60);
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}
+
 async function fetchAll() {
   console.log('Fetching PIB English HTML page...');
   var englishItems = await fetchEnglish();
@@ -265,6 +311,10 @@ async function fetchAll() {
   console.log('Fetching MEA press releases...');
   var meaItems = await fetchMEA();
   console.log('MEA items: ' + meaItems.length);
+
+  console.log('Fetching news topic RSS feeds...');
+  var newsItems = await fetchNewsFeeds();
+  console.log('News topic items: ' + newsItems.length);
 
   // Merge: English items first (primary), RSS items fill gaps
   var seen = new Set();
@@ -307,6 +357,12 @@ async function fetchAll() {
     }
   }
   for (var item of meaItems) {
+    if (!seen.has(item.id)) {
+      seen.add(item.id);
+      merged.push(item);
+    }
+  }
+  for (var item of newsItems) {
     if (!seen.has(item.id)) {
       seen.add(item.id);
       merged.push(item);
@@ -364,8 +420,8 @@ async function fetchAll() {
   if (existing.length > 200) existing = existing.slice(0, 200);
 
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-  fs.writeFileSync(existingPath, JSON.stringify({ items: existing, updatedAt: new Date().toISOString(), note: 'PIB + RBI + SEBI + SC + ISRO + MEA' }, null, 2), 'utf-8');
-  console.log('Feed saved: ' + existing.length + ' items (PIB English ' + englishItems.length + ' + PIB RSS ' + rssItems.length + ' + RBI ' + rbiItems.length + ' + SEBI ' + sebiItems.length + ' + SC ' + scItems.length + ' + ISRO ' + isroItems.length + ' + MEA ' + meaItems.length + ')');
+  fs.writeFileSync(existingPath, JSON.stringify({ items: existing, updatedAt: new Date().toISOString(), note: 'PIB + RBI + SEBI + SC + ISRO + MEA + Sports + Awards + Appointments + Obituaries + Entertainment + Disasters + Business + Tech' }, null, 2), 'utf-8');
+  console.log('Feed saved: ' + existing.length + ' items (PIB English ' + englishItems.length + ' + PIB RSS ' + rssItems.length + ' + RBI ' + rbiItems.length + ' + SEBI ' + sebiItems.length + ' + SC ' + scItems.length + ' + ISRO ' + isroItems.length + ' + MEA ' + meaItems.length + ' + News ' + newsItems.length + ')');
 }
 
 fetchAll().catch(function(e) { console.error(e.message); process.exit(1); });
