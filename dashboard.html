@@ -91,6 +91,25 @@
         .ca-item .date{font-size:.75em;color:var(--text-muted);margin-bottom:2px}
         .ca-item .headline{color:var(--text);line-height:1.5}
 
+        .caq-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:12px}
+        .caq-card:last-child{margin-bottom:0}
+        .caq-q{font-size:.92em;font-weight:500;line-height:1.5;margin-bottom:10px}
+        .caq-opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+        .caq-opt{padding:6px 14px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid var(--border);font-size:.82em;cursor:pointer;transition:all .2s;color:var(--text-sec)}
+        .caq-opt:hover{background:rgba(255,255,255,.08);color:var(--text);border-color:rgba(255,255,255,.12)}
+        .caq-opt.correct{background:rgba(52,211,153,.12);border-color:var(--emerald);color:var(--emerald)}
+        .caq-opt.wrong{background:rgba(239,68,68,.12);border-color:var(--red);color:var(--red)}
+        .caq-true{display:flex;gap:8px;margin-top:8px}
+        .caq-true span{padding:6px 18px;border-radius:6px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .2s;color:var(--text-sec)}
+        .caq-true span:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12)}
+        .caq-true span.correct{background:rgba(52,211,153,.12);border-color:var(--emerald);color:var(--emerald)}
+        .caq-true span.wrong{background:rgba(239,68,68,.12);border-color:var(--red);color:var(--red)}
+        .caq-fill{margin-top:8px;display:flex;gap:8px;align-items:center}
+        .caq-fill input{padding:6px 12px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid var(--border);font-size:.85em;color:var(--text);font-family:'Inter',sans-serif;width:180px;max-width:100%;outline:none}
+        .caq-fill input:focus{border-color:var(--purple)}
+        .caq-fill button{padding:6px 14px;border-radius:6px;border:none;background:var(--purple);color:#fff;font-size:.82em;cursor:pointer;font-weight:600}
+        .caq-fill .check-result{font-size:.82em;font-weight:600}
+
         .exam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px}
         .exam-chip{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--border);font-size:.82em;font-weight:500;transition:all .15s}
         .exam-chip:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12)}
@@ -276,6 +295,12 @@
             <a href="sbi-clerk/index.html" class="exam-chip"><span class="dot" style="background:#14b8a6"></span>SBI Clerk</a>
             <a href="ssc-gd/index.html" class="exam-chip"><span class="dot" style="background:#f97316"></span>SSC GD</a>
             <a href="ctet/index.html" class="exam-chip"><span class="dot" style="background:#eab308"></span>CTET</a>
+        </div>
+
+        <div class="sec-title" style="margin-top:24px"><span>&#x1f4dd;</span> Current Affairs Quiz<span class="sec-line"></span></div>
+        <div id="ca-quiz-container"></div>
+        <div style="text-align:center;margin-top:12px">
+            <a href="current-affairs.html" class="social-btn" style="display:inline-flex;background:rgba(245,158,11,.12);color:var(--amber);padding:8px 20px;font-size:.82em">Read Today's Current Affairs</a>
         </div>
 
         <div class="sec-title" style="margin-top:24px"><span>&#x1f91d;</span> Join the Community<span class="sec-line"></span></div>
@@ -483,7 +508,115 @@
     updateCountdown();
     setInterval(updateCountdown, 3600000);
     fetchAllQuestions();
-    </script>
+
+    // ---- Current Affairs Quiz from quiz.json ----
+    (function() {
+        var container = document.getElementById('ca-quiz-container');
+        if (!container) return;
+        var quizState = {};
+
+        function loadQuiz() {
+            fetch('/data/quiz.json').then(function(r) {
+                if (!r.ok) throw new Error('Not found');
+                return r.json();
+            }).then(function(data) {
+                var all = data && data.questions ? data.questions : [];
+                if (all.length === 0) { container.innerHTML = '<div class="empty-state"><div class="icon">&#x1f4ac;</div><p>No quiz questions available yet.</p></div>'; return; }
+
+                // Pick 5 questions using today's date offset
+                var dayOffset = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000);
+                var selected = [];
+                for (var i = 0; i < Math.min(5, all.length); i++) {
+                    var idx = (dayOffset + i * 7) % all.length;
+                    selected.push(all[idx]);
+                }
+                renderQuiz(selected);
+            }).catch(function() {
+                container.innerHTML = '<div class="empty-state"><div class="icon">&#x26a0;</div><p>Could not load quiz.</p></div>';
+            });
+        }
+
+        function renderQuiz(questions) {
+            var scoreEl = '<div class="caq-score" id="caq-score"><span>&#x1f3af;</span> <strong>Score:</strong> <span id="caq-correct">0</span>/<span id="caq-total">' + questions.length + '</span> <span style="color:var(--text-muted);margin-left:4px">&#x2022; Click options to answer</span></div>';
+            var html = scoreEl;
+            for (var i = 0; i < questions.length; i++) {
+                var q = questions[i];
+                var qid = 'caq-' + i;
+                quizState[qid] = { answered: false, correct: false, q: q };
+                html += '<div class="caq-card" id="' + qid + '"><div class="caq-q">Q' + (i+1) + '. ' + q.question.replace(/</g,'&lt;') + '</div>';
+
+                if (q.type === 'true_false') {
+                    html += '<div class="caq-true"><span data-qid="' + qid + '" data-val="True" onclick="caqAnswer(this)">True</span><span data-qid="' + qid + '" data-val="False" onclick="caqAnswer(this)">False</span></div>';
+                } else if (q.type === 'fill_blank') {
+                    html += '<div class="caq-fill"><input type="text" data-qid="' + qid + '" placeholder="Type your answer..." onkeydown="if(event.key===\'Enter\')caqCheckFill(this)"><button onclick="caqCheckFill(this.previousElementSibling)">Check</button><span class="check-result" id="' + qid + '-result"></span></div>';
+                } else {
+                    // Multiple choice
+                    html += '<div class="caq-opts">';
+                    var opts = q.options || [];
+                    for (var j = 0; j < opts.length; j++) {
+                        var opt = opts[j];
+                        html += '<span class="caq-opt" data-qid="' + qid + '" data-val="' + opt.replace(/"/g,'&quot;') + '" onclick="caqAnswer(this)">' + opt.replace(/</g,'&lt;') + '</span>';
+                    }
+                    html += '</div>';
+                }
+                html += '</div>';
+            }
+            container.innerHTML = html;
+        }
+
+        window.caqAnswer = function(el) {
+            var qid = el.getAttribute('data-qid');
+            var val = el.getAttribute('data-val');
+            var state = quizState[qid];
+            if (!state || state.answered) return;
+            var q = state.q;
+            var isCorrect = (val === q.answer);
+            state.answered = true;
+            state.correct = isCorrect;
+
+            var card = document.getElementById(qid);
+            var allOpts = card.querySelectorAll('.caq-opt, .caq-true span');
+            for (var i = 0; i < allOpts.length; i++) {
+                allOpts[i].style.pointerEvents = 'none';
+                var av = allOpts[i].getAttribute('data-val');
+                if (av === q.answer) allOpts[i].className = 'correct';
+                else if (av === val && !isCorrect) allOpts[i].className = 'wrong';
+            }
+
+            updateCAQScore();
+        };
+
+        window.caqCheckFill = function(input) {
+            var qid = input.getAttribute('data-qid');
+            var state = quizState[qid];
+            if (!state || state.answered) return;
+            var q = state.q;
+            var userAnswer = input.value.trim().toLowerCase();
+            var correctAnswer = q.answer.trim().toLowerCase();
+            var resultEl = document.getElementById(qid + '-result');
+            var isCorrect = userAnswer === correctAnswer;
+            state.answered = true;
+            state.correct = isCorrect;
+
+            input.disabled = true;
+            input.style.borderColor = isCorrect ? 'var(--emerald)' : 'var(--red)';
+            resultEl.textContent = isCorrect ? 'Correct!' : 'Answer: ' + q.answer;
+            resultEl.style.color = isCorrect ? 'var(--emerald)' : 'var(--amber)';
+
+            updateCAQScore();
+        };
+
+        function updateCAQScore() {
+            var correct = 0, total = 0;
+            for (var k in quizState) {
+                if (quizState[k].answered) { total++; if (quizState[k].correct) correct++; }
+            }
+            var el = document.getElementById('caq-correct');
+            if (el) el.textContent = correct;
+        }
+
+        loadQuiz();
+    })();
 <script src="js/bundles/core.js"></script>
     <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}</script>
 </body>
