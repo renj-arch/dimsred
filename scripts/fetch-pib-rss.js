@@ -16,6 +16,17 @@ var PIB_ENGLISH_URL = 'https://www.pib.gov.in/AllRelease.aspx?MenuId=4&lang=1&re
 var RBI_RSS_URL = 'https://www.rbi.org.in/pressreleases_rss.xml';
 var SEBI_RSS_URL = 'https://www.sebi.gov.in/sebirss.xml';
 var SC_JUDGMENTS_RSS_URL = 'https://indiankanoon.org/feeds/latest/supremecourt/';
+var GENERAL_NEWS_RSS = [
+  { url:'https://news.google.com/rss?hl=en-IN&gl=IN&ceid=IN:en', source:'Google News', cat:'General News' },
+  { url:'https://news.google.com/rss/search?q=India&hl=en-IN&gl=IN&ceid=IN:en', source:'Google News India', cat:'General News' },
+  { url:'https://feeds.bbci.co.uk/news/world/asia/india/rss.xml', source:'BBC India', cat:'General News' },
+  { url:'https://www.thehindu.com/news/national/feeder/default.rss', source:'The Hindu', cat:'General News' },
+  { url:'https://timesofindia.indiatimes.com/rssfeeds/-2128936835.cms', source:'TOI', cat:'General News' },
+  { url:'https://indianexpress.com/feed/', source:'Indian Express', cat:'General News' },
+  { url:'https://www.livemint.com/rss/opinion', source:'Livemint Opinion', cat:'Business' },
+  { url:'https://economictimes.indiatimes.com/rssfeeds/13352306.cms', source:'Economic Times', cat:'Business' },
+  { url:'https://www.hindustantimes.com/feeds/rss/india-news/rssfeed.xml', source:'Hindustan Times', cat:'General News' }
+];
 
 var dataDir = path.resolve(__dirname, '..', 'data');
 
@@ -236,6 +247,40 @@ async function fetchSCJudgments() {
   }
 }
 
+async function fetchGeneralNews() {
+  var allItems = [];
+  for (var i = 0; i < GENERAL_NEWS_RSS.length; i++) {
+    var feedCfg = GENERAL_NEWS_RSS[i];
+    try {
+      var feed = await parser.parseURL(feedCfg.url);
+      var items = (feed.items || []).slice(0, 15);
+      items.forEach(function(item) {
+        var pubDate = item.pubDate ? new Date(item.pubDate) : new Date();
+        if (isNaN(pubDate.getTime())) pubDate = new Date();
+        allItems.push({
+          id: item.guid || item.link || item.title,
+          title: (item.title || '').replace(/<[^>]+>/g,'').trim(),
+          link: item.link || '',
+          description: (item.contentSnippet || item.content || '').trim().slice(0, 500),
+          category: feedCfg.cat,
+          pubDate: pubDate.toISOString(),
+          source: feedCfg.source
+        });
+      });
+    } catch (e) {
+      console.error(feedCfg.source + ' RSS failed: ' + e.message);
+    }
+  }
+  // Deduplicate by title
+  var seen = new Set();
+  return allItems.filter(function(i) {
+    var key = i.title.slice(0, 60);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 async function fetchAll() {
   console.log('Fetching PIB English HTML page...');
   var englishItems = await fetchEnglish();
@@ -264,6 +309,10 @@ async function fetchAll() {
   console.log('Fetching MEA press releases...');
   var meaItems = await fetchMEA();
   console.log('MEA items: ' + meaItems.length);
+
+  console.log('Fetching general news RSS feeds...');
+  var generalItems = await fetchGeneralNews();
+  console.log('General news items: ' + generalItems.length);
 
   // Merge: English items first (primary), RSS items fill gaps
   var seen = new Set();
@@ -306,6 +355,12 @@ async function fetchAll() {
     }
   }
   for (var item of meaItems) {
+    if (!seen.has(item.id)) {
+      seen.add(item.id);
+      merged.push(item);
+    }
+  }
+  for (var item of generalItems) {
     if (!seen.has(item.id)) {
       seen.add(item.id);
       merged.push(item);
@@ -364,8 +419,8 @@ async function fetchAll() {
   if (existing.length > 200) existing = existing.slice(0, 200);
 
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-  fs.writeFileSync(existingPath, JSON.stringify({ items: existing, updatedAt: new Date().toISOString(), note: 'PIB + RBI + SEBI + SC + ISRO + MEA' }, null, 2), 'utf-8');
-  console.log('Feed saved: ' + existing.length + ' items (PIB English ' + englishItems.length + ' + PIB RSS ' + rssItems.length + ' + RBI ' + rbiItems.length + ' + SEBI ' + sebiItems.length + ' + SC ' + scItems.length + ' + ISRO ' + isroItems.length + ' + MEA ' + meaItems.length + ')');
+  fs.writeFileSync(existingPath, JSON.stringify({ items: existing, updatedAt: new Date().toISOString(), note: 'PIB + RBI + SEBI + SC + ISRO + MEA + General News' }, null, 2), 'utf-8');
+  console.log('Feed saved: ' + existing.length + ' items (PIB English ' + englishItems.length + ' + PIB RSS ' + rssItems.length + ' + RBI ' + rbiItems.length + ' + SEBI ' + sebiItems.length + ' + SC ' + scItems.length + ' + ISRO ' + isroItems.length + ' + MEA ' + meaItems.length + ' + General ' + generalItems.length + ')');
 }
 
 fetchAll().catch(function(e) { console.error(e.message); process.exit(1); });
