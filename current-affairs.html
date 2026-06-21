@@ -7720,13 +7720,45 @@
             // Inject current affairs news from feed (retry if feed not yet loaded)
             var _tryInjectCA = function(retries) {
                 var caItems = _getFeedForCategory(catId);
-                if (caItems) { _injectStudyCurrentAffairs(caItems, catId); return; }
+                if (caItems) {
+                    // Push feed items into all study views
+                    _injectStudyCurrentAffairs(caItems, catId);
+                    _injectStudyFlashcards(caItems, data);
+                    _injectStudySummary(caItems, data);
+                    return;
+                }
                 if (retries > 0) setTimeout(function() { _tryInjectCA(retries - 1); }, 500);
             };
             _tryInjectCA(5);
             _setView('notes');
             _buildFC(data);
             _buildSummary(data);
+        }
+
+        function _injectStudyFlashcards(items, data) {
+            items.slice(0, 8).forEach(function(it) {
+                var t = it.title || '';
+                // Extract scheme/entity name as flashcard Q
+                var schemeM = t.match(/((?:Pradhan Mantri|PM|National|Bharat|Ayushman|Jan|Digital|Smart|Skill|Swachh)\s+[\w\s]{2,40}?(?:Yojana|Scheme|Mission|Abhiyan|Programme|Policy|Vision|Niryat|Rozgar|Kisan|Awas|Bank|Suraksha|Shakti|Seva|Sathi))/i);
+                if (schemeM) {
+                    var after = t.substring(t.indexOf(schemeM[1]) + schemeM[1].length).replace(/^\s+/, '').replace(/['']/g, '');
+                    data.flashcards.push({ q: 'What recent update on ' + schemeM[1].trim() + '?', a: after.length > 80 ? after.substring(0, 77) + '...' : after });
+                    return;
+                }
+                var numM = t.match(/(?:Rs|₹|USD)?\s*[\d,]+(?:\s*(?:crore|lakh|million|billion|thousand))?/i);
+                if (numM) {
+                    data.flashcards.push({ q: t.replace(numM[0], '_____').replace(/['']/g, ''), a: numM[0].trim() });
+                    return;
+                }
+                data.flashcards.push({ q: t.substring(0, 60).replace(/['']/g, '') + '...', a: t.substring(60, 120).replace(/['']/g, '') || 'Key development' });
+            });
+        }
+
+        function _injectStudySummary(items, data) {
+            items.slice(0, 5).forEach(function(it) {
+                var s = _formatStudyBullet(it, currentStudyCat).replace(/<[^>]+>/g, '');
+                data.summary.push('📰 ' + s);
+            });
         }
 
         function _buildSections(data) {
