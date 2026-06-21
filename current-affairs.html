@@ -7276,17 +7276,18 @@
                         + '<span class="cat-chip active" id="catChipAll" onclick="filterByCategory(this,\'\')">All</span>'
                         + cats.map(function(c) { return '<span class="cat-chip" onclick="filterByCategory(this,\'' + c.replace(/'/g,'') + '\')">' + c.replace(/&/g,'&amp;') + '</span>'; }).join('');
                     }
-                    // Build region filter bar
+                    // Build region filter bar (all 36 states/UTs)
                     var regionMap = {};
                     items.forEach(function(i) { if (i.region) regionMap[i.region] = (regionMap[i.region] || 0) + 1; });
-                    var regions = Object.keys(regionMap).sort();
+                    var ALL_REGIONS = ['Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Andaman & Nicobar','Chandigarh','Dadra & Nagar Haveli and Daman & Diu','Delhi','Jammu & Kashmir','Ladakh','Lakshadweep','Puducherry'];
                     var rbar = document.getElementById('regionFilterBar');
-                    if (regions.length > 0) {
-                      rbar.style.display = 'flex';
-                      rbar.innerHTML = '<span style="font-size:.72em;color:var(--text-muted);margin-right:4px;align-self:center">State/UT:</span>'
-                        + '<span class="cat-chip active" id="regionChipAll" onclick="filterByRegion(this,\'\')">All</span>'
-                        + regions.map(function(r) { return '<span class="cat-chip" onclick="filterByRegion(this,\'' + r.replace(/'/g,'') + '\')">' + r.replace(/&/g,'&amp;') + '</span>'; }).join('');
-                    }
+                    rbar.style.display = 'flex';
+                    rbar.innerHTML = '<span style="font-size:.72em;color:var(--text-muted);margin-right:4px;align-self:center">State/UT:</span>'
+                      + '<span class="cat-chip active" id="regionChipAll" onclick="filterByRegion(this,\'\')">All</span>'
+                      + ALL_REGIONS.map(function(r) {
+                          var count = regionMap[r] || 0;
+                          return '<span class="cat-chip" onclick="filterByRegion(this,\'' + r.replace(/'/g,'') + '\')" style="' + (count === 0 ? 'opacity:.4' : '') + '">' + r.replace(/&/g,'&amp;') + '</span>';
+                        }).join('');
 
                     // Show filtered by latest date
                     var forDate = items.filter(function(i) { return i.pubDate && i.pubDate.slice(0,10) === latestDate; });
