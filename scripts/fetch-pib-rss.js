@@ -473,7 +473,7 @@ async function fetchGoogleNewsForState(state, query) {
       return {
         id: item.guid || item.link || title + state,
         title: title,
-        link: item.link || '',
+        link: '',
         description: desc,
         category: categorizeItem(title, desc),
         region: state,
