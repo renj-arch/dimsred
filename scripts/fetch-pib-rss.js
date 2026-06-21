@@ -619,28 +619,74 @@ async function fetchAll() {
     }
   }
 
-  // Filter out non-news junk (greetings, speech transcripts, routine observances, film fests, etc.)
+  // Filter out non-news junk — routine events, speeches, greetings, observances, quotes, business meetings
   var JUNK_PATTERNS = [
-    /yoga\s*(day|celebration|sangam)/i, /international day of yoga/i,
-    /english rendering of/i, /address\s+at\s+\d+(th|rd|nd)\s+international/i,
-    /extends?\s+(birthday|festival|greeting|wishes|greetings)/i,
-    /expresses?\s+grief/i, /pays?\s+(tribute|floral|respect)/i,
-    /offers?\s+prayers/i, /shares?\s+highlights\s+from/i,
-    /screened\s+at\s+miff/i, /miff\s+2026/i, /miff\s+open\s+forum/i,
-    /miff\s+honours/i, /documentary\s+celebrates/i, /short\s+film\s+['\u2018]/i,
-    /when\s+technology\s+becomes/i, /ai\s+can\s+make\s+filmmaking/i,
-    /timeless\s+classic/i, /soul\s+of\s+film/i,
-    /oscar-winning\s+short/i, /swiss\s+documentary/i,
-    /celebrating\s+a\s+century\s+of\s+wildlife/i,
-    /participates?\s+in\s+(programme|event|celebration|function)/i,
-    /leads?\s+the\s+national\s+observance/i, /celebrates?\s+/i,
-    /observe\s+\d+(th|rd|nd)\s+international/i,
-    /invites?\s+citizens?\s+to\s+join/i,
-    /^prime minister\s+(extends|expresses|pays|offers|shares|visits|offers\s+prayers)/i,
-    /^president\s+of\s+india\s+and\s+the\s+prime\s+minister/i,
-    /completion\s+of\s+two\s+years/i, /marking\s+completion/i,
+    // Yoga / observances
+    /yoga/i,
+    /international\s+day\s+of/i,
+    /observ(e|ance)\s+\d+(th|rd|nd)/i,
+    /world\s+\w+\s+day/i, /sickle\s+cell\s+day/i,
+    // Speech transcripts / texts
+    /english\s+(rendering|translation)\s+of/i,
+    /text\s+of\s+(pm|prime minister|president)'?s?\s+address/i,
+    /address\s+at\s+\d+(th|rd|nd)\s+international/i,
+    /addresses\s+the\s+session\s+on/i,
+    // Greetings / condolences
+    /extends?\s+(birthday|festival|greeting|wishes|greetings|heartfelt)/i,
+    /expresses?\s+(grief|condolence|sorrow)/i,
+    /condoles?\s+the\s+passing/i,
+    /pays?\s+(tribute|floral|respect|homage)/i,
+    /offers?\s+prayers/i,
+    /expresses?\s+deep\s+sorrow/i,
+    /condolence/i,
+    // Routine PM visits / participation (not substantive)
+    /^prime minister\s+(extends|expresses|pays|offers|shares|visits|participates|graces|exchanges?\s+views|interacts?|highlights?\s+efforts|highlights?\s+growing|highlights?\s+opportunities|condoles|meets?\s+president\s+of\s+the\s+united\s+states|meets?\s+\w+\s+ceo)/i,
+    /^pm\s+to\s+visit/i,
+    /^prime minister\s+to\s+visit/i,
+    /^prime minister\s+shares?\s+highlights/i,
+    /^prime minister\s+expresses?\s+grief/i,
+    /^prime minister\s+discusses?\s+maritime/i,
+    /^prime minister\s+discusses?\s+expanding/i,
+    // Routine VP / President events
+    /^president\s+of\s+india\s+(graces|participates)/i,
+    /president\s+of\s+india\s+and\s+the\s+prime\s+minister\s+participate/i,
+    /^vice.?president\s+[\w\s.-]{1,60}?to\s+visit/i,
+    /^vice.?president\s+(visits?|lauds?|commends?)/i,
+    // Film festivals (MIFF)
+    /miff/i, /film\s+festival/i, /short\s+film/i, /documentary/i,
+    /alice\s+in\s+wonderland/i, /oscar-winning/i,
+    /student\s+films?\s+from/i,
+    // Quotes
+    /^["\u201C\u2018\u2019].*["\u201D\u2019]/i,
+    /^['\u2018\u2019].*['\u2018\u2019]/i,
+    /^\u201C.*\u201D\s+\w+\s+\w+/i,
+    /jain\s+saints/i,
+    // Divas (regional celebration days)
+    /pas\w*im(?:banga)?\s+divas/i,
+    // Generic conference / symposium notices  
+    /participants?\s+of\s+founding\s+batch/i,
+    // IIT ancient knowledge
+    /iits?\s+have\s+carried/i, /ancient\s+knowledge/i,
+    // Foundation day / anniversary
+    /marks?\s+\d+(th|rd|nd)\s+foundation\s+day/i,
+    // Business meetings (PM meets CEOs)
+    /exchanges?\s+(views|ideas)\s+with/i,
+    /ceo\s+/i, /chairman\s+/i,
+    // Ceremonial foundation stones (generic)
+    /foundation\s+stone\s+(ceremony|laying\s+ceremony)/i,
+    // Op-eds / generic titles (no news value)
+    /^naxal-free\s+india/i, /^securing\s+the\s+nation/i,
+    /^ashtalakshmi/i,
     /^technological\s+agility/i,
-    /^as\s+(artists|filmmakers)/i
+    // Hackathon / student programs
+    /hackathon/i,
+    // Address to Indian community abroad
+    /addresses?\s+the\s+indian\s+community/i,
+    /indian\s+community\s+event/i,
+    // Program marking completion of X years
+    /programme\s+marking\s+completion/i,
+    /marking\s+completion\s+of/i,
+    /completion\s+of\s+two\s+years/i,
   ];
   deduped = deduped.filter(function(i) {
     if (i.source === 'SEBI' && /(?:recovery certificate|release order|notice of demand|rc\s*\d|demand notice)/i.test(i.title)) return false;
