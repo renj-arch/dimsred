@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <link rel='stylesheet' href='../../../css/style.css'>
@@ -14,21 +14,21 @@
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--red:#ef4444;--amber:#f59e0b;--cyan:#22d3ee;--radius:12px}
         body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-        a{color:var(--purple,#a78bfa);text-decoration:none}
+        a{color:var(--purple);text-decoration:none}
         .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
         .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
         .brand{display:flex;align-items:center;gap:8px}
         .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
         .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
-        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:var(--text-sec);transition:all .2s;white-space:nowrap}
         .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
         .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
         .container{max-width:1000px;margin:0 auto;padding:24px}
         .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
-        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
+        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple);font-size:.75em;font-weight:600;margin-bottom:8px}
         .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
         .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
         .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
@@ -37,19 +37,32 @@
         .module-card .m-desc{font-size:.85em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
         .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
         .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.78em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
-        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
+        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple);color:var(--purple)}
         .lesson-body{padding:20px 0}
-        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
-        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
-        .lesson-body p{color:var(--text-sec);font-size:.9em;line-height:1.7;margin-bottom:10px}
-        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
-        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
-        .example-box .ex-title{font-weight:600;font-size:.85em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .lesson-body h2{font-size:1.35em;font-weight:700;margin:28px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+        .lesson-body h3{font-size:1.08em;font-weight:600;margin:20px 0 8px;color:var(--cyan)}
+        .lesson-body h4{font-size:.95em;font-weight:600;margin:14px 0 6px;color:var(--amber)}
+        .lesson-body p{color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:10px}
+        .lesson-body ul{padding-left:22px;color:var(--text-sec);font-size:.9em;line-height:1.9;margin-bottom:12px}
+        .lesson-body ol{padding-left:22px;color:var(--text-sec);font-size:.9em;line-height:1.9;margin-bottom:12px}
+        .lesson-body li{margin-bottom:3px}
+        .lesson-body strong{color:var(--text)}
+        .lesson-body .highlight{color:var(--purple);font-weight:600}
+        .example-box{background:rgba(167,139,250,.04);border-left:3px solid var(--purple);padding:14px 16px;margin:14px 0;border-radius:0 8px 8px 0}
+        .example-box .ex-title{font-weight:600;font-size:.85em;color:var(--purple);margin-bottom:4px}
         .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.6}
         .example-box .ex-soln{font-size:.85em;color:var(--emerald);margin-top:6px;font-weight:500}
         .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
         .tip-box .tip-title{font-weight:600;font-size:.85em;color:var(--emerald);margin-bottom:4px}
         .tip-box .tip-text{font-size:.85em;color:var(--text-sec);line-height:1.5}
+        .warn-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .warn-box .warn-title{font-weight:600;font-size:.85em;color:var(--amber);margin-bottom:4px}
+        .warn-box .warn-text{font-size:.85em;color:var(--text-sec);line-height:1.5}
+        .table-wrap{overflow-x:auto;margin:14px 0}
+        table{width:100%;border-collapse:collapse;font-size:.85em}
+        th{background:rgba(167,139,250,.1);color:var(--purple);font-weight:600;padding:10px 12px;border:1px solid var(--border);text-align:left}
+        td{padding:8px 12px;border:1px solid var(--border);color:var(--text-sec)}
+        tr:nth-child(even){background:rgba(255,255,255,.02)}
         .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
         .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
         .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
@@ -82,9 +95,11 @@
         .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
         .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
         @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+        body{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+        body{-webkit-touch-callout:none}
     </style>
 </head>
-<body>
+<body oncontextmenu="return false">
     <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="../index.html">UPSC</a><a href="index.html" class="active">Course</a></div></div></nav>
     <div class="container">
         <div class="flex-row">
@@ -108,20 +123,294 @@
                     <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
                         <span style="font-size:.75em;color:var(--text-muted)">Ecology · Biodiversity · Climate Change · Pollution · Conservation</span>
                     </div>
-                    <div style="display:flex;gap:8px;margin-top:10px">
-                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
-                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
-                    </div>
+
                 </div>
                 <div class="lesson-body">
-                    <h3>Learning Objectives</h3>
-                    <ul>
-                        <li>Understand the fundamental concepts of Environment &amp; Ecology</li>
-                        <li>Apply key formulas and techniques to solve problems</li>
-                        <li>Practice with exam-level questions to build speed and accuracy</li>
-                    </ul>
-                    <h3>Key Concepts</h3>
-<h3>What are Environment & Ecology?</h3><p>Environment and Ecology is a significant topic in UPSC Civil Services Examination prelims and mains. It covers the study of ecosystems, biodiversity, conservation, environmental pollution, climate change, and related international conventions. Questions range from basic ecological concepts to current environmental issues and policies.</p><h3>Key Concepts in Ecology</h3><p><strong>1. Ecosystem Structure and Function:</strong> An ecosystem includes all living organisms (biotic) and non-living components (abiotic) interacting in a defined area. Key functions: energy flow (10% law), nutrient cycling (carbon, nitrogen, phosphorus cycles), food chains (producer → primary consumer → secondary consumer → decomposer) and food webs.</p><p><strong>2. Biomes of the World:</strong> Tropical rainforests (Amazon, Congo), temperate forests, taiga/tundra, grasslands (savanna, steppe, prairie), deserts (hot/cold), aquatic biomes (marine, freshwater, estuarine). Each biome has characteristic climate, vegetation, and animal life.</p><p><strong>3. Biodiversity and its Levels:</strong> Genetic diversity (variation within species), species diversity (variety of species in an area), ecosystem diversity (variety of habitats). India is one of 17 megadiverse countries with 4 biodiversity hotspots: Western Ghats, Eastern Himalayas, Indo-Burma, Sundaland.</p><p><strong>4. Conservation Approaches:</strong> In-situ conservation (protected areas — national parks, wildlife sanctuaries, biosphere reserves, UNESCO World Heritage sites) and ex-situ conservation (zoos, botanical gardens, gene banks, seed banks). Important: Project Tiger (1973), Project Elephant (1992), Project Rhino, Gir Lion Project.</p><p><strong>5. Environmental Pollution:</strong> Air pollution (PM2.5, PM10, SOx, NOx, ozone), water pollution (BOD, COD, eutrophication), soil pollution, noise pollution, and plastic pollution. National Air Quality Index (AQI), National Clean Air Programme (NCAP).</p><p><strong>6. Climate Change:</strong> Greenhouse gases (CO2, CH4, N2O, CFCs), global warming, IPCC reports, UNFCCC, Kyoto Protocol, Paris Agreement (2015, goal to limit warming to 1.5°C), carbon footprint, carbon offsetting, INDCs (Nationally Determined Contributions).</p><p><strong>7. Indian Environmental Laws:</strong> Wildlife Protection Act (1972), Forest Conservation Act (1980), Environment Protection Act (1986), Air Act (1981), Water Act (1974), National Green Tribunal Act (2010), Coastal Regulation Zone (CRZ) notification.</p><h3>Solved Examples</h3><div class="example-box"><div class="ex-title">Example 1</div><div class="ex-text">Which of the following is the correct sequence in a food chain?<br><br>a) Grass → Frog → Grasshopper → Snake → Eagle b) Grass → Grasshopper → Frog → Snake → Eagle c) Grass → Snake → Frog → Grasshopper → Eagle d) Grass → Eagle → Snake → Frog → Grasshopper</div><div class="ex-soln"><strong>Solution:</strong> b) The correct food chain is Grass (producer) → Grasshopper (primary consumer) → Frog (secondary consumer) → Snake (tertiary consumer) → Eagle (apex predator).</div></div><div class="example-box"><div class="ex-title">Example 2</div><div class="ex-text">Which Indian state has the largest forest cover by area?<br><br>a) Arunachal Pradesh b) Madhya Pradesh c) Chhattisgarh d) Odisha</div><div class="ex-soln"><strong>Solution:</strong> b) Madhya Pradesh has the largest forest cover in India by area, followed by Arunachal Pradesh, Chhattisgarh, Odisha, and Maharashtra (according to ISFR reports).</div></div><div class="example-box"><div class="ex-title">Example 3</div><div class="ex-text">The term '10% law' in ecology refers to:<br><br>a) Only 10% of solar energy is captured by plants b) Only 10% of energy is transferred from one trophic level to the next c) Only 10% of species survive extinction events d) Only 10% of forests remain undisturbed</div><div class="ex-soln"><strong>Solution:</strong> b) The 10% law, proposed by Lindeman, states that only about 10% of energy from one trophic level is transferred to the next level. The remaining 90% is lost as heat, respiration, and other metabolic processes.</div></div><h3>Shortcut Techniques</h3><ul><li>Create mind maps linking related topics — e.g., link national parks with their states, important species found there, and conservation projects.</li><li>For environmental conventions, create a timeline: Stockholm (1972) → Montreal Protocol (1987) → Rio Earth Summit (1992) → Kyoto (1997) → Paris (2015) → Glasgow COP26 (2021).</li><li>Learn Indian biodiversity hotspots by region: Western Ghats (Maharashtra to Kerala), Eastern Himalayas (Darjeeling, Sikkim, Arunachal), Indo-Burma (Northeast hill states).</li><li>Use ISFR (India State of Forest Report) data for UPSC-specific facts — forest cover trends, carbon stock, mangrove cover.</li></ul><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">In UPSC prelims, environment questions are increasingly application-based rather than rote memorization. Focus on understanding ecological processes (succession, nutrient cycling, energy flow) and current environmental issues (climate change, biodiversity loss, pollution) rather than just static facts.</div></div><h3>Priority Topics</h3><p>Based on previous year analysis: Current Affairs (40%), Static GK (15%), Polity (15%), Economy (15%), Science (10%), Environment (5%).</p><h3>Memory Techniques</h3><p>Use mnemonics, acronyms, and mind maps. Create weekly revision notes in question-answer format.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Revise current affairs every Sunday. Spaced repetition ensures long-term retention without cramming.</div></div><h3>Priority Topics</h3><p>Based on previous year analysis: Current Affairs (40%), Static GK (15%), Polity (15%), Economy (15%), Science (10%), Environment (5%).</p><h3>Memory Techniques</h3><p>Use mnemonics, acronyms, and mind maps. Create weekly revision notes in question-answer format.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Revise current affairs every Sunday. Spaced repetition ensures long-term retention without cramming.</div></div><h3>Priority Topics</h3><p>Based on previous year analysis: Current Affairs (40%), Static GK (15%), Polity (15%), Economy (15%), Science (10%), Environment (5%).</p><h3>Memory Techniques</h3><p>Use mnemonics, acronyms, and mind maps. Create weekly revision notes in question-answer format.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Revise current affairs every Sunday. Spaced repetition ensures long-term retention without cramming.</div></div><h3>Priority Topics</h3><p>Based on previous year analysis: Current Affairs (40%), Static GK (15%), Polity (15%), Economy (15%), Science (10%), Environment (5%).</p><h3>Memory Techniques</h3><p>Use mnemonics, acronyms, and mind maps. Create weekly revision notes in question-answer format.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Revise current affairs every Sunday. Spaced repetition ensures long-term retention without cramming.</div></div>                </div>
+<h2 id="ecology-basics">1. Ecology — Basic Concepts</h2>
+
+<h3>Ecosystem: Definition and Structure</h3>
+<p>An <span class="highlight">ecosystem</span> is a functional unit of nature where living organisms (biotic) interact with non-living (abiotic) components. Term coined by <strong>A.G. Tansley (1935)</strong>. Biotic components include producers (autotrophs), consumers (heterotrophs — primary, secondary, tertiary), and decomposers (bacteria, fungi). Abiotic components include sunlight, temperature, water, soil, and air.</p>
+
+<h4>Types of Ecosystems</h4>
+<p><strong>Terrestrial ecosystems:</strong> Forests, grasslands, deserts, tundra. <strong>Aquatic ecosystems:</strong> Freshwater (lentic — lakes, ponds; lotic — rivers, streams) and marine (oceans, estuaries, coral reefs, mangroves). <strong>Man-made ecosystems:</strong> Agricultural fields, urban areas, dams, aquariums. India has 10 biogeographic zones ranging from the Trans-Himalayan cold desert to the tropical wet evergreen forests of the Western Ghats and the coral reefs of the Andaman and Lakshadweep.</p>
+
+<h3>Food Chain and Food Web</h3>
+<p>A <strong>food chain</strong> is a linear sequence of who eats whom: Grass → Grasshopper → Frog → Snake → Eagle. Only about <strong>10% of energy</strong> is transferred between trophic levels (Lindeman's 10% Law, 1942). A <strong>food web</strong> is an interconnected network of multiple food chains, which provides greater stability to the ecosystem. There are two main types of food chains: <strong>Grazing food chain</strong> (based on living plants) and <strong>Detritus food chain</strong> (based on dead organic matter — more important in forests).</p>
+
+<div class="tip-box"><div class="tip-title">UPSC Tip: Ecological Pyramids</div><div class="tip-text">Ecological pyramids can be of three types: (1) <strong>Pyramid of Numbers</strong> — may be upright (grassland) or inverted (tree-insect-bird). (2) <strong>Pyramid of Biomass</strong> — usually upright; inverted in aquatic ecosystems (phytoplankton have less biomass than consumers). (3) <strong>Pyramid of Energy</strong> — always upright (energy decreases at each level). Energy pyramids are the most fundamental because energy cannot be created or destroyed (First Law of Thermodynamics), and energy transfer is always inefficient (Second Law).</div></div>
+
+<h3>Energy Flow and Productivity</h3>
+<p><strong>Primary productivity</strong> is the rate at which plants capture solar energy. <strong>Gross Primary Productivity (GPP)</strong> = total photosynthesis. <strong>Net Primary Productivity (NPP)</strong> = GPP — respiration (energy available to consumers). The most productive ecosystems are tropical rainforests and estuaries. The least productive are deserts and deep oceans. <strong>Standing crop</strong> is the total biomass at a given time; <strong>turnover rate</strong> is the rate of replacement.</p>
+
+<div class="example-box"><div class="ex-title">Key Data: Productivity of Indian Ecosystems</div><div class="ex-text">Tropical forests in India have NPP of 1,200-2,500 g/m²/yr. Agricultural land has 650-1,000 g/m²/yr. Grasslands: 200-1,500. Deserts: less than 100. The <strong>Indian Ocean</strong> has relatively low productivity compared to the Atlantic and Pacific due to limited nutrient upwelling. The <strong>Sundarbans mangrove ecosystem</strong> has very high productivity (2,500 g/m²/yr), making it one of the world's most productive ecosystems.</div></div>
+
+<h3>Nutrient Cycles (Biogeochemical Cycles)</h3>
+
+<h4>Carbon Cycle</h4>
+<p>Atmospheric CO₂ (0.04%) → photosynthesis → organic compounds → respiration/decomposition → CO₂ back. Human disruption: burning fossil fuels releases ~9.5 GtC/yr, causing the greenhouse effect. Oceans absorb ~30% of anthropogenic CO₂, causing <strong>ocean acidification</strong> (pH dropped from 8.2 to 8.1 — a 26% increase in acidity).</p>
+
+<h4>Nitrogen Cycle</h4>
+<p>Atmospheric N₂ (78%) → nitrogen fixation (Rhizobium bacteria, Azotobacter, lightning) → ammonia → nitrification (Nitrosomonas, Nitrobacter) → nitrate → assimilation by plants → denitrification (Pseudomonas) → N₂ back. The <strong>Haber-Bosch process</strong> (industrial N fixation for fertilisers) has doubled the global nitrogen cycle — causing eutrophication and nitrous oxide pollution.</p>
+
+<h4>Phosphorus Cycle</h4>
+<p>No atmospheric component — sedimentary cycle. Weathering of rocks → phosphate → absorbed by plants → consumed → returned via decomposition. <strong>Limiting nutrient</strong> in most ecosystems. Excess phosphate from fertilisers causes <strong>eutrophication</strong> in lakes and ponds (algal bloom → oxygen depletion → fish kills). The <strong>dead zones</strong> in the Gulf of Mexico and the Baltic Sea are caused by N and P runoff.</p>
+
+<h4>Water Cycle (Hydrological Cycle)</h4>
+<p>Evaporation (86% from oceans) → condensation → precipitation → runoff. Only 2.5% of Earth's water is freshwater; only 0.3% is accessible in rivers, lakes, and groundwater. India extracts 250 BCM of groundwater annually — the highest in the world — causing rapid depletion in Punjab, Haryana, and Rajasthan.</p>
+
+<h4>Sulphur Cycle</h4>
+<p>Sulphur is released from volcanic eruptions, fossil fuel burning, and decomposition. Bacteria convert sulphate to hydrogen sulphide. Burning of coal and oil releases SO₂ → causes <strong>acid rain</strong> (pH below 5.6). Acid rain damages Taj Mahal (sulphur dioxide from Mathura refinery causes "marble cancer" — CaCO₃ converted to CaSO₄).</p>
+
+<h3>Ecological Succession</h3>
+<p>The orderly process of change in species composition over time. <strong>Primary succession</strong> occurs on bare rock/new substrates (takes centuries — mosses → grasses → shrubs → trees). <strong>Secondary succession</strong> occurs on previously vegetated land after disturbance (takes decades — faster due to existing soil). The final stable community is called the <strong>climax community</strong>. <strong>Hydrosere</strong> (succession in water) → phytoplankton → submerged plants → reeds → swamp → woodland. <strong>Xerosere</strong> (succession on dry rock) → crustose lichens → foliose lichens → mosses → herbs → shrubs → forest.</p>
+
+<div class="warn-box"><div class="warn-title">UPSC Focus: Ecological Succession and Climate Change</div><div class="warn-text">Climate change is altering succession patterns globally. In the Indian Himalayas, the <strong>timberline</strong> is shifting upward at 10-30 m per decade — alpine meadows are being replaced by birch and rhododendron forests. This threatens endemic alpine species and the traditional pastoral economy (Gaddi, Bhotia communities). The phenomenon is tracked by the Indian Forest Service and reported in the ISFR.</div></div>
+
+<h3>Biomes of the World</h3>
+<div class="table-wrap"><table>
+<tr><th>Biome</th><th>Key Features</th><th>Location</th></tr>
+<tr><td><strong>Tropical Rainforest</strong></td><td>High rainfall (200-400 cm), high biodiversity, layered canopy</td><td>Amazon, Congo, SE Asia, Western Ghats</td></tr>
+<tr><td><strong>Tropical Deciduous</strong></td><td>150-200 cm rainfall, seasonal leaf fall, teak/sal</td><td>India, Indochina, parts of Africa</td></tr>
+<tr><td><strong>Savanna (Tropical Grassland)</strong></td><td>75-150 cm, dry season, acacia/baobab trees</td><td>Africa, Brazil, India (Deccan)</td></tr>
+<tr><td><strong>Temperate Grassland</strong></td><td>25-75 cm, no trees, fertile soil (chernozem)</td><td>Steppes (Russia), Prairies (USA), Pampas (Argentina), Veld (Africa)</td></tr>
+<tr><td><strong>Taiga (Boreal Forest)</strong></td><td>Long cold winters, conifers (spruce, fir, pine)</td><td>Canada, Russia, Scandinavia</td></tr>
+<tr><td><strong>Tundra</strong></td><td>Permafrost, low vegetation, short growing season</td><td>Arctic, Siberian, Alpine regions</td></tr>
+<tr><td><strong>Desert</strong></td><td>Less than 25 cm rainfall, xerophytic vegetation</td><td>Sahara, Thar, Gobi, Kalahari, Atacama</td></tr>
+<tr><td><strong>Mediterranean</strong></td><td>Mild wet winters, hot dry summers, scrub vegetation</td><td>California, Chile, Cape Town, Mediterranean coast</td></tr>
+</table></div>
+
+<h3>Population Ecology</h3>
+<p><strong>Carrying capacity (K)</strong> = maximum population size an environment can sustain. <strong>r-selected species</strong> (unstable environments — high reproduction, small size, short lifespan — e.g., insects, rodents). <strong>K-selected species</strong> (stable environments — low reproduction, large size, long lifespan — e.g., elephants, whales, humans). India's human population at ~1.43 billion is approaching or exceeding carrying capacity in several regions (groundwater depletion, land fragmentation, urban congestion).</p>
+
+<h2 id="biodiversity">2. Biodiversity</h2>
+
+<h3>Levels of Biodiversity</h3>
+<p><strong>Genetic diversity:</strong> Variation within species — India's 50,000+ rice varieties, 1,000+ mango varieties. The Green Revolution reduced genetic diversity by replacing traditional varieties with HYVs (the "genetic erosion" problem).</p>
+<p><strong>Species diversity:</strong> Variety of species — India has ~91,000 animal species and ~47,000 plant species (8% of global biodiversity on 2.4% of land area).</p>
+<p><strong>Ecosystem diversity:</strong> Variety of habitats — India has 10 biogeographic zones, from trans-Himalayan cold deserts to tropical rainforests to coral reefs.</p>
+
+<h3>Biodiversity Hotspots in India</h3>
+<p>India has <strong>4 biodiversity hotspots</strong> (out of 36 globally):</p>
+<ul>
+<li><strong>Western Ghats and Sri Lanka:</strong> 5,000+ endemic plant species, 80% amphibians endemic. UNESCO World Heritage Site (39 properties). Key species: Nilgiri tahr, lion-tailed macaque, Malabar giant squirrel, King cobra, Purple frog.</li>
+<li><strong>Eastern Himalayas:</strong> High endemism in plants (rhododendrons, orchids), birds, and butterflies. Key species: Red panda, clouded leopard, Bengal tiger, Asian elephant, Takin. Threatened by deforestation, hydropower dams, and shifting cultivation.</li>
+<li><strong>Indo-Burma (Northeast India):</strong> Includes all 8 northeastern states and the Andaman Islands. Key species: Hoolock gibbon (India's only ape), golden langur, pygmy hog, hispid hare, wild water buffalo, white-winged wood duck. Highest mammal endemism among Indian hotspots.</li>
+<li><strong>Sundaland (Nicobar Islands):</strong> Includes the Nicobar group. Key species: Nicobar megapode, Nicobar shrew, giant robber crab, coral reefs. The Nicobar islands were severely affected by the 2004 tsunami (the Car Nicobar coast subsided by 1-2 m).</li>
+</ul>
+
+<h3>Megadiverse Countries</h3>
+<p><strong>17 megadiverse countries</strong> host ~70% of global biodiversity. India is one of them (along with Brazil, Colombia, China, Indonesia, Mexico, South Africa, etc.). India's status as a megadiverse country is due to its unique biogeographic position: it spans from the Himalayan alpine zone in the north to tropical rainforests in the south, and includes deserts, grasslands, mangroves, and coral reefs.</p>
+
+<h3>IUCN Red List Categories</h3>
+<p>The International Union for Conservation of Nature (IUCN) classifies species into: <strong>Extinct (EX)</strong>, <strong>Extinct in the Wild (EW)</strong>, <strong>Critically Endangered (CR)</strong>, <strong>Endangered (EN)</strong>, <strong>Vulnerable (VU)</strong>, <strong>Near Threatened (NT)</strong>, <strong>Least Concern (LC)</strong>. Indian species on the IUCN Red List: <strong>Critically Endangered</strong> — Great Indian Bustard, Gharial, Pygmy Hog, Himalayan Quail, White-rumped and Indian vultures. <strong>Endangered</strong> — Bengal Tiger, Asiatic Lion, Snow Leopard, One-horned Rhinoceros, Nilgiri Tahr, Lion-tailed Macaque, Red Panda, Wild Water Buffalo, Swamp Deer.</p>
+
+<div class="example-box"><div class="ex-title">Key Stat: Species Extinction Crisis</div><div class="ex-text">The <strong>IPBES Global Assessment (2019)</strong> found that 1 million species are threatened with extinction globally. In India, the Great Indian Bustard has declined from 1,200 (1980) to fewer than 150 individuals today. The Indian vulture population has crashed by 99.9% since the 1990s due to the veterinary drug <strong>diclofenac</strong> — banned in 2006, but recovery is slow due to continued multi-drug use (aceclofenac, ketoprofen). The <strong>Javan Rhino</strong> and <strong>Yangtze River Dolphin</strong> are globally extinct in India (the latter is "functionally extinct" — declared in 2006).</div></div>
+
+<h3>Keystone, Flagship, and Umbrella Species</h3>
+<p><strong>Keystone species</strong> have a disproportionate effect on its environment relative to its abundance. Examples: Tiger (apex predator), Sea star (controls mussel population), Elephants (create clearings for grasslands). <strong>Flagship species</strong> are charismatic species used to raise conservation funds: Bengal Tiger, Giant Panda, Snow Leopard, One-horned Rhino. <strong>Umbrella species</strong> have large home ranges whose protection benefits many others: Tiger, Elephant, Great Indian Bustard. India's <strong>Project Tiger</strong> is an umbrella approach — protecting tiger habitats protects the entire ecosystem.</p>
+
+<h2 id="conservation">3. Conservation</h2>
+
+<h3>In-Situ Conservation</h3>
+<p>India's protected area network covers <strong>5.28% of the country's total geographical area</strong>:</p>
+
+<h4>National Parks (106)</h4>
+<p>No human activity allowed. Highest level of protection. Notable: Jim Corbett (1936 — India's first, Uttarakhand), Kaziranga (Assam — one-horned rhino), Sundarbans (WB — tiger, mangrove), Kanha (MP — tiger, barasingha), Bandipur (Karnataka — tiger, elephant), Ranthambore (Rajasthan — tiger), Gir (Gujarat — Asiatic lion), Manas (Assam — UNESCO World Heritage), Periyar (Kerala — elephant, tiger), Dudhwa (UP — swamp deer, rhino reintroduction), Sariska (Rajasthan — tiger reintroduction 2008), Nagarhole (Karnataka — tiger, elephant), Tadoba-Andhari (Maharashtra — tiger), Pench (MP — tiger), Satpura (MP), Mukundara (Rajasthan — tiger, 2013), Kaziranga (highest tiger density in India).</p>
+
+<h4>Wildlife Sanctuaries (573)</h4>
+<p>Some human activity permitted. Include: Bharatpur/K Keoladeo Ghana (Rajasthan — UNESCO World Heritage, bird sanctuary), Sultanpur (Haryana), Vedanthangal (Tamil Nadu — oldest bird sanctuary in India), Chilika (Odisha — migratory birds), Nal Sarovar (Gujarat), Dandeli (Karnataka), Mudumalai (Tamil Nadu), Sasan Gir, Govind Sagar, Kutch Desert.</p>
+
+<h4>Biosphere Reserves (18)</h4>
+<p>12 UNESCO recognised. Core zone (strict protection), Buffer zone (research), Transition zone (sustainable development). List: Nilgiri (first, 1986 — Western Ghats), Nokrek (Meghalaya — red panda), Great Nicobar (Andaman), Gulf of Mannar (Tamil Nadu), Manas (Assam), Simlipal (Odisha — tiger, elephant), Sundarbans (WB — tiger), Nanda Devi (Uttarakhand — UNESCO World Heritage), Kanchenjunga (Sikkim), Agasthyamala (Kerala), Pachmarhi (MP), Achanakmar-Amarkantak (MP/CG), Seshachalam (AP — first in 2010), Panna (MP), Bhitarkanika (Odisha — saltwater crocodile, mangrove), Cold Desert (HP), Dibru-Saikhowa (Assam), Kutch (Gujarat).</p>
+
+<h4>Tiger Reserves (53)</h4>
+<p>Project Tiger (1973) — 3,167 tigers (2022 census, 75% of global wild tigers). Highest density: Kaziranga. Largest population: Corbett (260+). Key reserves: Corbett, Kaziranga, Sundarbans, Kanha, Ranthambore, Bandipur, Nagarhole, Tadoba, Pench, Sariska, Dudhwa, Valmiki, Panna, Simlipal, Satpura, Melghat, etc.</p>
+
+<h4>Elephant Reserves (33)</h4>
+<p>Project Elephant (1992) — ~27,000 elephants. Largest: Singhbhum (Jharkhand). Oldest: Mayurbhanj (Odisha). Southern and northeastern corridors are most critical.</p>
+
+<h4>Marine Protected Areas (MPAs)</h4>
+<p>31 MPAs including Gulf of Mannar National Park, Mahatma Gandhi Marine National Park (Andaman), Sundarbans Marine National Park. India's coral reefs cover ~2,500 sq km (Lakshadweep, Andaman, Gulf of Mannar, Gulf of Kutch).</p>
+
+<div class="table-wrap"><table>
+<tr><th>National Park</th><th>State</th><th>Famous For</th></tr>
+<tr><td>Jim Corbett</td><td>Uttarakhand</td><td>Oldest NP (1936), highest tiger population</td></tr>
+<tr><td>Kaziranga</td><td>Assam</td><td>One-horned rhino (2,400+), UNESCO World Heritage</td></tr>
+<tr><td>Gir</td><td>Gujarat</td><td>Asiatic lion (674, 2020 census)</td></tr>
+<tr><td>Sundarbans</td><td>West Bengal</td><td>Royal Bengal tiger, largest mangrove forest</td></tr>
+<tr><td>Kanha</td><td>Madhya Pradesh</td><td>Tiger, barasingha (swamp deer) recovery</td></tr>
+<tr><td>Ranthambore</td><td>Rajasthan</td><td>Famous tiger sightings (Machli, etc.)</td></tr>
+<tr><td>Periyar</td><td>Kerala</td><td>Elephant, tiger, lake ecosystem</td></tr>
+<tr><td>Bandipur</td><td>Karnataka</td><td>Tiger, elephant — part of Nilgiri BR</td></tr>
+<tr><td>Manas</td><td>Assam</td><td>UNESCO World Heritage, tiger, pygmy hog</td></tr>
+<tr><td>Nagarhole</td><td>Karnataka</td><td>Tiger, elephant — highest prey density</td></tr>
+<tr><td>Dudhwa</td><td>Uttar Pradesh</td><td>Swamp deer, rhino reintroduction (1984)</td></tr>
+<tr><td>Sariska</td><td>Rajasthan</td><td>Tiger reintroduced (2008 after local extinction)</td></tr>
+<tr><td>Mudumalai</td><td>Tamil Nadu</td><td>Elephant, tiger, part of Nilgiri BR</td></tr>
+<tr><td>Satpura</td><td>Madhya Pradesh</td><td>Unique walking safari, high biodiversity</td></tr>
+<tr><td>Valmiki</td><td>Bihar</td><td>Tiger, only NP in Bihar</td></tr>
+<tr><td>Great Himalayan</td><td>Himachal Pradesh</td><td>Snow leopard, western tragopan, alpine</td></tr>
+</table></div>
+
+<h3>Ex-Situ Conservation</h3>
+<p><strong>Zoos:</strong> Central Zoo Authority (CZA) regulates 164 zoos. Major ones: Delhi Zoo (National Zoological Park), Mysuru Zoo (oldest — 1892), Alipore Zoo (Kolkata), Nandankanan (Odisha — white tiger), Arignar Anna (Chennai). <strong>Botanical gardens:</strong> Indian Botanic Garden (Kolkata — 200+ year old, great banyan tree), Lal Bagh (Bengaluru), Lloyd's Garden (Darjeeling). <strong>Gene banks:</strong> National Bureau of Plant Genetic Resources (NBPGR, Delhi), National Bureau of Animal Genetic Resources (NBAGR, Karnal). <strong>Seed banks:</strong> Svalbard Global Seed Vault (Norway — in case of catastrophe), Seed banks at NBPGR.</p>
+
+<h3>Species Recovery Programmes</h3>
+
+<h4>Project Tiger (1973)</h4>
+<p>India's most successful conservation programme. 53 reserves, 3,167 tigers (2022) — up from ~1,800 in 2006 (the lowest count ever). The 2018 census showed 33% increase over 2014. Madhya Pradesh has the most (526), followed by Karnataka (524), Uttarakhand (442), Maharashtra (421). The <strong>Global Tiger Recovery Programme</strong> targets doubling tiger numbers by 2022 (the "Tx2" goal — India achieved it ahead of schedule).</p>
+
+<h4>Project Elephant (1992)</h4>
+<p>33 elephant reserves, ~27,000 elephants. Major threat: habitat fragmentation, rail/road kills (76 elephant deaths in train accidents in 2019-21), human-elephant conflict (500+ people and 100 elephants killed annually). The <strong>Elephant Task Force (2010)</strong> recommended declaring the elephant a National Heritage Animal (done in 2010).</p>
+
+<h4>Project Rhino (2005)</h4>
+<p>One-horned rhinoceros — population recovered from ~200 (1900s) to 3,700+ (2022) in Assam (Kaziranga, Pobitora, Orang, Manas). Translocations to Dudhwa, Manas (Bodo peace accord 2020 helped). Poaching remains a threat (6 rhinos poached in 2021).</p>
+
+<h4>Gir Lion Project</h4>
+<p>Asiatic lion population increased from 20 (1913) to 674 (2020). The only wild population in the world — restricted to Gir Wildlife Sanctuary and surrounding areas. The <strong>lion translocation to Kuno</strong> is pending SC clearance. In 2022, 5 lions died due to canine distemper virus, raising concerns.</p>
+
+<h4>Crocodile Conservation</h4>
+<p>Started in 1975 — gharial (critically endangered), saltwater crocodile, mugger. Success in Odisha (Bhitarkanika, Satkosia), Uttar Pradesh (National Chambal Sanctuary), KZN Tamil Nadu. The gharial population recovered from 200 to 1,500+.</p>
+
+<h4>Vulture Conservation</h4>
+<p>Breeding centres at Pinjore (Haryana), Buxa (WB), Rani (Assam). Diclofenac banned in 2006, but ketoprofen and aceclofenac are also nephrotoxic. The vulture population has stabilised but not recovered — from 40 million to fewer than 100,000 today. The <strong>Vulture Conservation Breeding Programme</strong> has bred 300+ vultures in captivity.</p>
+
+<h4>Project Snow Leopard (2009)</h4>
+<p>Hemis (Ladakh), Kibber (HP), Nanda Devi (Uttarakhand). Estimated 500-700 snow leopards in India. The <strong>Snow Leopard Population Assessment (SPAI) 2019-21</strong> used camera traps to estimate 718 individuals across 5 states.</p>
+
+<h4>Great Indian Bustard Conservation</h4>
+<p>On the brink of extinction — fewer than 150 birds (Rajasthan, Gujarat, Maharashtra, Karnataka). The 2022 Supreme Court ordered the undergrounding of power lines to prevent collision deaths. The <strong>GIB recovery programme</strong> includes captive breeding at Jodhpur and Kota.</p>
+
+<div class="warn-box"><div class="warn-title">UPSC Focus: The Wildlife Protection Act 1972 — Six Schedules</div><div class="warn-text">Schedule I and II — Absolute protection; offences carry highest penalties (poaching a tiger: 3-7 years imprisonment, fine up to Rs 25,000). Schedule III and IV — Protected but lower penalties. Schedule V — Vermin (can be hunted: common crow, fruit bats, rats). Schedule VI — Specified plants (endangered, cultivation restricted). The Act was amended in 2022 to implement CITES provisions. The <strong>National Board for Wildlife</strong> (NBWL) chaired by the PM, and the <strong>Standing Committee of NBWL</strong> (chaired by the Union Environment Minister) clear projects in protected areas. The <strong>State Board for Wildlife</strong> chaired by the CM. The <strong>Wildlife Crime Control Bureau (WCCB)</strong> was established in 2006 to combat wildlife trafficking.</div></div>
+
+<h3>Key Environment Acts in India</h3>
+<div class="table-wrap"><table>
+<tr><th>Act</th><th>Year</th><th>Purpose</th></tr>
+<tr><td>Wildlife Protection Act (WPA)</td><td>1972</td><td>Protection of wild animals, plants, and their habitats</td></tr>
+<tr><td>Water (P&CP) Act</td><td>1974</td><td>Prevention and control of water pollution</td></tr>
+<tr><td>Forest Conservation Act (FCA)</td><td>1980</td><td>Restriction on diversion of forest land for non-forest purposes</td></tr>
+<tr><td>Air (P&CP) Act</td><td>1981</td><td>Prevention and control of air pollution</td></tr>
+<tr><td>Environment Protection Act (EPA)</td><td>1986</td><td>Umbrella legislation; empowers central govt to take measures</td></tr>
+<tr><td>Biological Diversity Act</td><td>2002</td><td>Conserve biodiversity, regulate access to genetic resources (Nagoya Protocol implementation)</td></tr>
+<tr><td>Scheduled Tribes & Forest Dwellers Act (FRA)</td><td>2006</td><td>Recognise forest rights of tribal communities</td></tr>
+<tr><td>National Green Tribunal Act</td><td>2010</td><td>Establish NGT for speedy disposal of environment cases</td></tr>
+<tr><td>Compensatory Afforestation Fund Act (CAMPA)</td><td>2016</td><td>Pool money for compensatory afforestation (~Rs 54,000 crore)</td></tr>
+</table></div>
+
+<h2 id="climate-change">4. Climate Change</h2>
+
+<h3>Greenhouse Gases and Global Warming</h3>
+<p><strong>Major GHGs:</strong> CO₂ (76% of warming), Methane (16%, 28x more potent than CO₂ over 100 years), Nitrous Oxide (6%, 265x more potent), F-gases (HFCs, PFCs, SF₆ — up to 23,000x more potent). Pre-industrial CO₂: 280 ppm. Current (2023): ~420 ppm — the highest in at least 2 million years. Global average temperature has risen by 1.2°C above pre-industrial levels. The <strong>Paris Agreement</strong> aims to limit warming to well below 2°C (preferably 1.5°C). The <strong>IPCC AR6 (2021)</strong> states that 1.5°C will likely be reached by 2040 under all scenarios.</p>
+
+<h3>IPCC Reports and India</h3>
+<p>The <strong>IPCC Sixth Assessment Report (AR6, 2021-23)</strong> — "Code Red for Humanity" (UN Secretary-General). Key findings for India: (1) The Indian monsoon will become more intense and erratic — extreme rainfall events projected to increase 2-4x by 2100. (2) The Himalayas will lose 30-50% of glacier volume by 2050 under SSP2-4.5. (3) Heatwaves in India will increase in frequency, intensity, and duration — the 2022 heatwave (March-April, the hottest in 122 years) caused crop losses of Rs 40,000 crore and 90+ deaths. (4) Sea-level rise of 0.3-0.5 m by 2100 will affect the Sundarbans, Mumbai, Chennai, and Kochi. (5) The Indian Ocean is warming the fastest of all oceans — causing more intense cyclones (Cyclone Tauktae 2021, Cyclone Amphan 2020 — the costliest cyclone in North Indian Ocean history, $14 billion damage).</p>
+
+<h3>International Climate Framework</h3>
+<ul>
+<li><strong>UNFCCC (1992):</strong> Rio Earth Summit — framework convention, entered into force 1994. 198 parties. Principle of "Common But Differentiated Responsibilities and Respective Capabilities" (CBDR-RC). Annual COP meetings.</li>
+<li><strong>Kyoto Protocol (1997):</strong> Legally binding emission reduction targets for developed countries (Annex I). First commitment period 2008-2012, second 2013-2020. Two flexibility mechanisms: Clean Development Mechanism (CDM) and Joint Implementation (JI). Paris Agreement replaced Kyoto from 2020.</li>
+<li><strong>Paris Agreement (2015, COP21):</strong> 196 parties. Goal: keep warming below 2°C, pursue 1.5°C. <strong>Nationally Determined Contributions (NDCs)</strong> — each country sets its own targets, updated every 5 years (Global Stocktake). Developed countries to provide $100 billion/yr in climate finance (not yet met — $83 billion in 2020). Loss and Damage mechanism established at COP27 (Sharm el-Sheikh, 2022).</li>
+<li><strong>COP26 (Glasgow, 2021):</strong> India's PM Modi announced <strong>Panchamrit</strong> commitments: (1) 500 GW non-fossil capacity by 2030, (2) 50% energy from renewables by 2030, (3) 1 billion tonnes CO₂ reduction by 2030, (4) emissions intensity reduction of 45% by 2030 (from 2005 levels), (5) Net-zero by 2070. The <strong>Glasgow Climate Pact</strong> included "phase down of unabated coal power" (last-minute change from "phase out" — India and China insisted).</li>
+<li><strong>COP27 (Sharm el-Sheikh, 2022):</strong> Loss and Damage Fund agreed — historic breakthrough for vulnerable countries. India submitted its updated <strong>Long-Term Low Emission Development Strategy (LT-LEDS)</strong> — reiterated net-zero 2070, focused on green hydrogen, EV transition, and carbon capture.</li>
+<li><strong>COP28 (Dubai, 2023):</strong> First Global Stocktake — called for "transitioning away from fossil fuels" (landmark first mention). Operationalisation of Loss and Damage Fund. India argued for climate justice and CBDR-RC principles.</li>
+</ul>
+
+<div class="tip-box"><div class="tip-title">UPSC Tip: India's NDC and Net-Zero Pathways</div><div class="tip-text">India's NDC targets are some of the most ambitious among major economies given India's development stage. Key policies driving the targets: (1) <strong>National Hydrogen Mission (2021)</strong> — grey hydrogen (from fossil fuels), green hydrogen (from renewables) — target 5 MMTPA by 2030. (2) <strong>PM-KUSUM</strong> — 30.8 GW solar capacity from farming. (3) <strong>FAST (Faster Adoption of Electric Vehicles)</strong> — 30% EV target by 2030. (4) <strong>Battery swapping policy (2022)</strong>. (5) <strong>National Green Hydrogen Mission (Jan 2023)</strong> — Rs 19,744 crore, target 5 MMT green H₂ by 2030. India's renewable energy capacity reached 175 GW in 2022 — the 4th largest in the world.</div></div>
+
+<h3>National Action Plan on Climate Change (NAPCC)</h3>
+<p>Launched in <strong>2008</strong>, NAPCC has <strong>8 National Missions</strong>: (1) <strong>National Solar Mission</strong> — Jawaharlal Nehru National Solar Mission (JNNSM) — target 100 GW solar by 2022 (achieved ~70 GW). (2) <strong>National Mission for Enhanced Energy Efficiency</strong> — Perform, Achieve, and Trade (PAT) scheme. (3) <strong>National Mission on Sustainable Habitat</strong> — energy-efficient buildings, waste management. (4) <strong>National Water Mission</strong> — 20% improvement in water use efficiency. (5) <strong>National Mission for Sustaining the Himalayan Ecosystem</strong> — monitor glacier retreat, biodiversity. (6) <strong>National Mission for a Green India</strong> — increase forest cover by 5 million ha. (7) <strong>National Mission for Sustainable Agriculture</strong> — climate-resilient crops. (8) <strong>National Mission on Strategic Knowledge for Climate Change</strong> — research and capacity-building.</p>
+<p><strong>State Action Plans on Climate Change (SAPCCs)</strong> — all 36 states/UTs have SAPCCs aligned with NAPCC. Gujarat was the first state (2009). Key state initiatives: <strong>Himachal Pradesh</strong> — "Green H.P." target (100% green energy by 2025). <strong>Delhi</strong> — EV policy 2020 (target 25% EVs by 2024). <strong>Karnataka</strong> — solar park (Pavagada, 2,050 MW). <strong>Rajasthan</strong> — Bhadla Solar Park (2,245 MW, the largest solar park in the world).</p>
+
+<div class="warn-box"><div class="warn-title">UPSC Focus: Climate Finance and Carbon Markets</div><div class="warn-text">Climate finance is the foundational issue of international climate negotiations. Developed countries committed $100 billion/year by 2020 (never achieved — $83.3 billion in 2020). The <strong>Green Climate Fund (GCF)</strong> — established 2010, headquartered in Songdo, South Korea — is the main multilateral climate fund. India is a recipient ($200 million approved for India's projects). <strong>Adaptation Fund</strong> — under Kyoto Protocol/Paris Agreement. <strong>Carbon trading</strong>: Article 6 of Paris Agreement allows countries to trade emission reductions. The <strong>Carbon Credit Trading Scheme (CCTS) 2023</strong> — India's domestic carbon market will start soon. <strong>Energy Conservation (Amendment) Act 2022</strong> empowers the central government to establish a carbon trading scheme. India's carbon credit market is projected to be worth $10 billion by 2030.</div></div>
+
+<h2 id="pollution">5. Environmental Pollution</h2>
+
+<h3>Air Pollution</h3>
+<p>India has <strong>20 of the world's 30 most polluted cities</strong> (WHO 2022). Key pollutants: <strong>PM2.5</strong> (fine particulate matter — penetrates lungs, enters bloodstream), <strong>PM10</strong>, <strong>SO₂</strong>, <strong>NOx</strong>, <strong>Ozone</strong> (ground-level — harmful), <strong>CO</strong>, <strong>Lead</strong>. Sources: vehicles (27%), industrial emissions (18%), biomass burning (17%), dust (15%), diesel generators, construction. The <strong>National Air Quality Index (AQI)</strong> — launched 2014, 6 categories (Good to Severe), 8 pollutants. <strong>National Clean Air Programme (NCAP) 2019</strong> — target 20-30% reduction in PM2.5/PM10 by 2024 (extended to 2026). 132 non-attainment cities identified. <strong>BS-VI norms (2020)</strong> — leapfrogged from BS-IV to BS-VI, equivalent to Euro 6. <strong>Odd-even scheme</strong> in Delhi (2016 onward). <strong>Graded Response Action Plan (GRAP)</strong> — implemented in Delhi-NCR since 2017 for graded emergency measures. The <strong>Commission for Air Quality Management (CAQM) 2021</strong> — replaced EPCA, covers Delhi-NCR. The <strong>Delhi winter smog</strong> is caused by crop stubble burning in Punjab and Haryana (October-November) — the Supreme Court called it a "public health emergency" in 2019. India's <strong>Pusa Biodecomposer</strong> is a microbial solution to decompose paddy stubble (developed by ICAR-IARI).</p>
+
+<h3>Water Pollution</h3>
+<p><strong>Rivers in India:</strong> 70% of surface water is polluted. The <strong>Ganga</strong> carries 1.3 billion litres of untreated sewage daily. <strong>Namami Gange Programme (2014)</strong> — flagship programme with over Rs 30,000 crore. <strong>Ganga Action Plan Phase I (1985)</strong> and Phase II (1993) — limited success. The National Mission for Clean Ganga (NMCG) implements Namami Gange. <strong>BOD (Biochemical Oxygen Demand)</strong> — indicator of organic pollution; clean river < 3 mg/L, Ganga at Kanpur: 15-20 mg/L. <strong>COD (Chemical Oxygen Demand)</strong> — higher than BOD indicates toxic pollution. <strong>Eutrophication</strong> — caused by N and P from fertilisers, detergents, sewage; leads to algal blooms, dead zones (example: Chilika Lake, Dal Lake). The <strong>Yamuna</strong> in Delhi is one of the most polluted rivers in the world (residential BOD 0 — dissolved oxygen is effectively zero at several stretches). The Clean Yamuna Mission has spent Rs 10,000+ crore with limited results. <strong>National Water Mission</strong> targets 20% water use efficiency improvement.</p>
+
+<h3>Soil Pollution</h3>
+<p>India loses <strong>5,000 million tonnes of soil annually</strong> due to erosion — the highest in the world. <strong>Land degradation</strong> affects 30% of India's geographical area (~96 million ha). Causes: deforestation, overgrazing, faulty irrigation (waterlogging and salinisation — 7 Mha), chemical fertiliser overuse. <strong>Desertification</strong> — 26% of India's land is undergoing desertification (ISRO report). Rajasthan, Gujarat, and Jammu & Kashmir are most affected. The <strong>UNCCD (United Nations Convention to Combat Desertification)</strong> — India is a signatory and reports regularly. The <strong>National Action Programme to Combat Desertification</strong> was launched in 2001. <strong>Soil Health Card Scheme (2015)</strong> — 23 million soil health cards issued, provides customised fertiliser recommendations to prevent over-fertilisation and soil degradation.</p>
+
+<h3>Noise Pollution</h3>
+<p>Noise Pollution Rules 2000 (under EPA 1986). Permissible limits: Industrial area: 75 dB (day), 70 dB (night). Commercial: 65/55 dB. Residential: 55/45 dB. Silence zone (50 m around hospitals, courts, schools): 50/40 dB. Honking in Delhi-NCR is the highest in India — the Supreme Court declared the "free honking" culture a health hazard in 2020. <strong>Noise mapping</strong> is done by CPCB in 7 cities. <strong>NIHL (Noise-Induced Hearing Loss)</strong> affects 8% of India's industrial workers.</p>
+
+<h3>Plastic Pollution</h3>
+<p>India generates <strong>26,000 tonnes of plastic waste daily</strong> — only 60% is recycled. The <strong>Plastic Waste Management Rules (2016)</strong> — amended 2018, 2021. <strong>Ban on single-use plastics (SUPs)</strong> — effective 1 July 2022 — bans 19 categories of SUPs (including straws, cutlery, plates, cups, stirrers, earbuds, candy sticks, plastic wraps, invitation cards, cigarette packs). The ban is enforced by state pollution control boards, but compliance is uneven. India has banned <strong>carry bags below 75 microns</strong> (from 2022) and <strong>below 120 microns</strong> (from 2024). The <strong>Swachh Bharat Mission</strong> includes waste management targets. <strong>Extended Producer Responsibility (EPR)</strong> requires producers to take back plastic packaging. The <strong>Global Plastic Treaty</strong> is being negotiated (2022-2024) — India supports a framework that addresses the entire lifecycle of plastics.</p>
+
+<div class="warn-box"><div class="warn-title">UPSC Focus: National Green Tribunal — Composition and Powers</div><div class="warn-text">The <strong>NGT (2010)</strong> is a specialised tribunal for speedy disposal of environment cases. Composition: Chairperson (retired SC/HC judge), Judicial Member, Expert Members (environmental scientists). Principal Bench in Delhi, 5 Regional Benches (Pune, Kolkata, Chennai, Bhopal, Nainital). Powers: (1) Civil jurisdiction over all environment-related matters (EPA, Forest Act, Wildlife Act, Water Act, Air Act, Biodiversity Act). (2) Can award compensation and restitution. (3) No appeal lies against NGT orders — SC can hear appeals under Article 136. (4) Self-triggering mechanism (can take suo motu cognizance). Landmark NGT cases: (1) Ban on 10+ year old diesel vehicles in Delhi-NCR. (2) Ban on plastic in several states. (3) Yakub Memon death penalty — NGT declined jurisdiction (criminal matter). (4) 2022 — imposed Rs 10,000 crore fine on Volkswagen for "cheating device" in diesel cars. (5) 2023 — ban on pet coke and furnace oil in NCR. The <strong>NGT is considered one of the most proactive environmental tribunals in the world.</strong></div></div>
+
+<h2 id="international-conventions">6. International Conventions and Summits</h2>
+
+<div class="table-wrap"><table>
+<tr><th>Convention/Treaty</th><th>Year</th><th>Key Provisions</th></tr>
+<tr><td>Stockholm Conference</td><td>1972</td><td>First UN conference on human environment. Led to creation of UNEP. Declaration of 26 principles including the "right to a healthy environment."</td></tr>
+<tr><td>Rio Earth Summit</td><td>1992</td><td>Agenda 21, Rio Declaration, Forest Principles. Three conventions: UNFCCC, CBD, UNCCD. The most important environmental summit in history.</td></tr>
+<tr><td>Johannesburg Summit (Rio+10)</td><td>2002</td><td>Focused on implementation gap. Water, energy, health, agriculture, biodiversity (WEHAB).</td></tr>
+<tr><td>Rio+20</td><td>2012</td><td>The Future We Want. Launch of Sustainable Development Goals (SDGs) process. Green Economy.</td></tr>
+<tr><td>Montreal Protocol</td><td>1987</td><td>Phase out of Ozone Depleting Substances (CFCs, halons, etc.). Most successful environmental treaty — 99% of ODS phased out. <strong>Kigali Amendment (2016)</strong> — phase down HFCs (potent GHGs). India ratified Kigali in 2021.</td></tr>
+<tr><td>Ramsar Convention</td><td>1971</td><td>Conservation and wise use of wetlands. India has <strong>75+ Ramsar sites</strong> (as of 2023) — the highest in South Asia. Large increase from 26 sites in 2010 (thanks to the Namami Gange programme and state initiatives). Key sites: Chilika (Odisha), Keoladeo (Rajasthan), Sambhar (Rajasthan), Loktak (Manipur), Wular (J&K), Asthamudi (Kerala), Bhitarkanika (Odisha), Sundarbans (WB). Chilika and Keoladeo are also UNESCO World Heritage.</td></tr>
+<tr><td>CITES (Washington Convention)</td><td>1973</td><td>Regulates international trade in endangered species. 3 Appendices: Appendix I (trade banned), Appendix II (controlled), Appendix III (regulated). India: a CITES signatory, WPA 1972 implements CITES in India.</td></tr>
+<tr><td>Bonn Convention (CMS)</td><td>1979</td><td>Conservation of migratory species across national boundaries. India signed MoUs for Amur falcon (Nagaland), Snow leopard, Dugong, Siberian crane, Marine turtles.</td></tr>
+<tr><td>UNCCD</td><td>1994</td><td>Combat desertification. India is a party, reports biennially. The <strong>Desertification and Land Degradation Atlas of India</strong> (ISRO) tracks the issue.</td></tr>
+<tr><td>Convention on Biological Diversity (CBD)</td><td>1992</td><td>3 objectives: conservation of biodiversity, sustainable use, fair sharing of genetic resources. <strong>Nagoya Protocol (2010)</strong> — Access and Benefit Sharing (ABS). <strong>Cartagena Protocol (2000)</strong> — biosafety (LMOs/GMOs). <strong>Post-2020 Global Biodiversity Framework (Kunming-Montreal, 2022)</strong> — "30x30" target (30% land and sea protected by 2030).</td></tr>
+<tr><td>Vienna Convention</td><td>1985</td><td>Protection of the ozone layer. Framework convention that led to the Montreal Protocol.</td></tr>
+<tr><td>Bali Principles</td><td>2007</td><td>Climate Change Conference (COP13). Bali Action Plan for post-2012 climate regime.</td></tr>
+<tr><td>Basel Convention</td><td>1989</td><td>Control of transboundary movement of hazardous wastes. India ratified. The <strong>Plastic Waste Amendments (2019)</strong> bring plastic waste under Basel.</td></tr>
+<tr><td>Rotterdam Convention</td><td>1998</td><td>Prior Informed Consent (PIC) for hazardous chemicals in international trade.</td></tr>
+<tr><td>Stockholm Convention</td><td>2001</td><td>Elimination of Persistent Organic Pollutants (POPs). 12 initial POPs ("Dirty Dozen" — DDT, PCBs, dioxins). New additions: dicofol (2021). India has a National Implementation Plan (NIP).</td></tr>
+<tr><td>Minamata Convention</td><td>2013</td><td>Control of mercury pollution. India ratified in 2018. Phasing out mercury-based products (thermometers, dental amalgam, CFLs).</td></tr>
+</table></div>
+
+<h2 id="forests">7. Forests and Deforestation</h2>
+
+<h3>Forest Cover in India</h3>
+<p>The <strong>India State of Forest Report (ISFR) 2021</strong> (published biennially by FSI): Total forest and tree cover: <strong>80.9 million ha (24.62% of GA)</strong>. Forest cover: 71.3 million ha (21.71%). <strong>Very Dense Forest</strong> (>70% canopy): 12.4%. <strong>Moderately Dense</strong> (40-70%): 44.5%. <strong>Open Forest</strong> (10-40%): 43.1%. States with highest forest cover: MP (77,482 sq km), Arunachal (66,688), Chhattisgarh (55,611), Odisha (52,156), Maharashtra (50,653). States with highest percentage: Mizoram (84.53%), Arunachal (79.63%), Meghalaya (76%), Manipur (74.34%), Nagaland (74%). The "green wash" debate: ISFR methodology has been criticised because increased "forest cover" is mostly open forest and plantations (not dense natural forests). The <strong>National Forest Policy 1988</strong> targets 33% forest cover for India.</p>
+
+<h3>Types of Forests in India</h3>
+<ul>
+<li><strong>Tropical Evergreen/Rainforest:</strong> >200 cm rainfall, Western Ghats, Andaman, NE India. 3-tier stratification. Species: rosewood, ebony, mahogany, dipterocarps, canes, bamboos, orchids. Highest biodiversity.</li>
+<li><strong>Tropical Deciduous:</strong> 100-200 cm, most widespread type. Sub-types: Moist Deciduous (150-200 cm, teak, sal, shisham — teak is the "King" — most valuable timber) and Dry Deciduous (100-150 cm, central/southern Deccan). Most important for timber industry.</li>
+<li><strong>Thorn Forests/Scrub:</strong> <50 cm, Rajasthan, Gujarat, Haryana, Deccan rain-shadow. Xerophytic: acacia, cactus, euphorbia, prosopis juliflora (invasive).</li>
+<li><strong>Montane Forests:</strong> Himalayas — subtropical (1,000-2,000 m: oak, chestnut, pine), temperate (2,000-3,500 m: deodar, spruce, fir, blue pine — the "Deodar" is the state tree of HP), sub-alpine (3,000-4,000 m: birch, rhododendron, juniper), alpine (4,000-4,500 m: dwarf shrubs, sedges, "bugyals" of Uttarakhand).</li>
+<li><strong>Mangroves:</strong> Total: 4,992 sq km (ISFR 2021). Sundarbans (42%), followed by Gujarat/Kutch (23%), Andaman (12%), Odisha (9%). Sundarbans: largest mangrove forest in the world. Mangroves are highly productive, protect against cyclones/tsunamis ("Mangrove Shield"), and are carbon sinks ("Blue Carbon" — 3-5x more carbon per ha than terrestrial forests).</li>
+</ul>
+
+<h3>REDD+ and REDD++</h3>
+<p><strong>REDD+</strong> (Reducing Emissions from Deforestation and Forest Degradation) — UN programme providing incentives for developing countries to reduce deforestation. India submitted its <strong>REDD+ National Strategy</strong> in 2022. India has been implementing REDD+ through: (1) Joint Forest Management (JFM) — 22 million ha managed by 100,000+ JFM committees. (2) Green India Mission. (3) Compensatory Afforestation (CAMPA). REDD++ includes conservation, sustainable management, and enhancement of forest carbon stocks.</p>
+
+<h3>Compensatory Afforestation and CAMPA</h3>
+<p>The <strong>Compensatory Afforestation Fund Act (2016)</strong> established the National CAMPA and State CAMPAs. The fund collects Net Present Value (NPV) of forest land diverted for non-forest purposes. Total collected: ~Rs 54,000 crore. The money is used for compensatory afforestation on degraded land. Criticised for not achieving genuine forest restoration — plantations are not equivalent to native forests. The <strong>Compensatory Afforestation (CA) rules</strong> require 1:1 plantation in same state, and if no land is available, double the forest land in another state.</p>
+
+<h2 id="current-issues">8. Current Environmental Issues in India</h2>
+
+<h3>Delhi Air Pollution — The Winter Crisis</h3>
+<p>Every winter (October-February), Delhi NCR experiences severe smog episodes (PM2.5 > 300-500 µg/m³ — 20-30x WHO safe limit of 15 µg/m³). Causes: (1) <strong>Crop stubble burning</strong> in Punjab and Haryana (contributing 30-40% of PM2.5 during peak season — Oct-Nov). About 23 million tonnes of paddy stubble is burnt annually. (2) <strong>Vehicular emissions</strong> — 10 million+ vehicles in NCR. (3) <strong>Industrial emissions</strong> — 1,500+ industries in NCR. (4) <strong>Construction dust</strong> — from 800+ construction projects. (5) <strong>Meteorological conditions</strong> — temperature inversion traps pollutants. The <strong>GRAP (Graded Response Action Plan)</strong> is implemented by the CAQM. Measures include: ban on construction, odd-even, ban on entry of trucks, school closures. Long-term solutions: <strong>Pusa decomposer</strong> (stubble management), BS-VI vehicles, EV policy, city-wide smog towers, artificial rain (controversial — not tried yet in 2022-23).</p>
+
+<h3>Western Ghats Conservation</h3>
+<p>Two major reports: <strong>Gadgil Committee (2011)</strong> — proposed Western Ghats Ecology Authority, 37% of WG as Ecologically Sensitive Area (ESA), very strict regulation. Not accepted due to protests from states (Kerala, Karnataka, Goa). <strong>Kasturirangan Committee (2013)</strong> — recommended only 9.9% of WG as ESA (60,000 sq km), less strict. Accepted in principle by MoEFCC but not fully implemented. The <strong>Supreme Court in 2022</strong> directed states to implement ESA notification within 6 months. The issue involves balancing biodiversity with the rights of local communities (the Kerala-Karnataka border is a hotbed of political conflict over mining, dams, and plantations).</p>
+
+<h3>Coastal Regulation Zone (CRZ) 2019</h3>
+<p>The <strong>CRZ Notification 2019</strong> replaced the 2011 notification. Categories: CRZ-I (ecologically sensitive — no construction), CRZ-II (built-up areas), CRZ-III (rural areas — less construction allowed), CRZ-IV (territorial waters). Key changes in 2019: (1) Relaxation for tourism infrastructure in CRZ-III (allows construction on 50% of the plot versus 33% earlier). (2) FSI permissible increased from 1.33 to 2 for CRZ-II. (3) <strong>No-Development Zone (NDZ)</strong> reduced from 200 m to 50 m in CRZ-III. (4) CRZ clearance for CRZ-I B reduced from 4 months to 59 days. Critics argue the 2019 notification dilutes coastal protection. The <strong>2022 amendment</strong> further relaxed norms for coastal tourism and construction.</p>
+
+<h3>Himalayan Glacier Retreat</h3>
+<p>The Himalayan glaciers are retreating at 10-30 m/year on average (5x faster than 50 years ago). The <strong>Siachen Glacier</strong> — the highest battlefield — has retreated 2.5 km since 1980. The <strong>Gangotri Glacier</strong> — source of the Ganga — is retreating at 20 m/year. The <strong>Zemu Glacier</strong> (Sikkim) is the largest in India (26 km long). The <strong>GLOFs (Glacial Lake Outburst Floods)</strong> are becoming more frequent — the 2013 Kedarnath flood was partly caused by a GLOF. The 2021 Chamoli disaster (flash flood) involved a rock and ice avalanche that killed 200+ people and damaged two hydropower dams. The <strong>NDMA guidelines on glacial floods</strong> emphasise early warning systems and monitored lakes. India has 9,575 glacial lakes (ISRO 2021) — 200+ are potentially dangerous. The Army's Siachen Glacier monitoring (since 2000) is the longest continuous glacier monitoring in the Himalayas.</p>
+
+<h3>Climate Migration in the Sundarbans</h3>
+<p>The <strong>Sundarbans delta</strong> is ground zero for climate migration in India. Over 200 sq km of land has disappeared since 1950 due to sea-level rise and coastal erosion. The population in the Indian Sundarbans (4.5 million) faces: (1) Saline intrusion into drinking water and agricultural land. (2) Increased frequency of cyclones (Amphan 2020, Yaas 2021, Bulbul 2019). (3) Loss of land — each family loses 0.5-1 m of coast annually. (4) Collapse of agriculture and fisheries. An estimated 700,000 Sundarbans villagers have migrated to Kolkata and other cities since 2000. The government's response includes: <strong>Cyclone shelters</strong> (400+ constructed), <strong>mangrove restoration</strong> (10,000 ha), <strong>MGNREGA</strong> for alternative livelihoods, <strong>Integral Rural Development of Sundarbans (IRDS)</strong>.</p>
+
+<h3>Heat Action Plans</h3>
+<p>India has experienced <strong>deadly heatwaves</strong> — 2022 (the hottest year in India since 1901). The 2022 heatwave affected 1.5 billion people across India-Pakistan-Bangladesh. Impacts: crop losses (wheat yield decline of 10-20%), coal stocks depletion (demand for cooling), 90+ heat-related deaths. <strong>Ahmedabad became the first South Asian city (2013)</strong> to develop a Heat Action Plan (HAP). Today, 23+ states have HAPs. Measures: (1) Early warning systems and public alerts. (2) Cool roofs programme. (3) Heat stroke treatment protocols in hospitals. (4) Red Cross training. The <strong>National Disaster Management Authority (NDMA)</strong> has a heatwave management guideline. Critical gap: HAPs are not locally funded and have limited enforcement.</p>
+
+<div class="tip-box"><div class="tip-title">UPSC Tip: Most Important Environment Topics for Prelims</div><div class="tip-text">The most frequently asked UPSC Prelims topics in Environment: (1) Protected Areas (NP, WLS, BR, TR) — their location, rivers, species. (2) IUCN Red List species. (3) International conventions (Ramsar, CITES, Montreal, UNFCCC, Kyoto, Paris, CBD). (4) Climate change — India's NDCs, Panchamrit targets, COP outcomes. (5) Acts — EPA, FCA, WPA, CAMPA, NGT. (6) Current issues — NCAP, CRZ, EIA, heatwaves, stubble burning, plastic ban, AfCF/Cs of India. (7) Pollution — AQI, BOD/COD, eutrophication. (8) Biogeochemical cycles — C, N, P cycles. <strong>Study geography + environment together for better results — 40% of questions overlap.</strong> Use the <strong>Down To Earth</strong> magazine and <strong>Environment Ministry annual reports</strong> for current data.</div></div>
+
+<div class="example-box"><div class="ex-title">Case Study: The Bhopal Gas Tragedy — India's Environmental Turning Point</div><div class="ex-text">The <strong>Bhopal Gas Tragedy (1984)</strong> — the world's worst industrial disaster — killed 3,500+ immediately and has caused 15,000+ subsequent deaths. MIC gas leaked from Union Carbide plant in Bhopal. The tragedy directly led to: (1) The <strong>Environment Protection Act 1986</strong> (comprehensive environmental legislation). (2) The creation of the <strong>MoEFCC</strong> (Ministry of Environment, Forest and Climate Change) — then DoE, now full ministry. (3) The <strong>Hazardous Waste Management Rules</strong>. (4) Public interest litigation (PIL) in environmental matters. (5) The <strong>Bhopal gas tragedy reminds</strong> that industrial safety and environmental governance are intrinsically linked. The contaminated site is still not fully remediated (2023 — 39 years later). The CBI court sentencing of 7 employees in 2010 (2 years imprisonment) was criticised as insufficient. The <strong>Curative Petition (2023)</strong> in SC seeks further compensation and remediation.</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
                 <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
                 <div id="practice-qs"></div>
                 <div style="display:flex;gap:10px;margin-top:10px">
