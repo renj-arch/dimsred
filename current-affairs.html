@@ -284,7 +284,8 @@
                 <button class="action-btn secondary" onclick="resetPibFilter()" style="padding:6px 14px;font-size:.78em">Clear</button>
                 <span id="pibFilterInfo" style="font-size:.72em;color:var(--text-muted)"></span>
             </div>
-            <div id="catFilterBar" style="display:none;gap:6px;margin-bottom:10px;flex-wrap:wrap"></div>
+            <div id="catFilterBar" style="display:none;gap:6px;margin-bottom:6px;flex-wrap:wrap"></div>
+            <div id="regionFilterBar" style="display:none;gap:6px;margin-bottom:10px;flex-wrap:wrap"></div>
             <div id="pibFeedList" style="display:flex;flex-direction:column;gap:6px"></div>
         </div>
 
@@ -7275,6 +7276,17 @@
                         + '<span class="cat-chip active" id="catChipAll" onclick="filterByCategory(this,\'\')">All</span>'
                         + cats.map(function(c) { return '<span class="cat-chip" onclick="filterByCategory(this,\'' + c.replace(/'/g,'') + '\')">' + c.replace(/&/g,'&amp;') + '</span>'; }).join('');
                     }
+                    // Build region filter bar
+                    var regionMap = {};
+                    items.forEach(function(i) { if (i.region) regionMap[i.region] = (regionMap[i.region] || 0) + 1; });
+                    var regions = Object.keys(regionMap).sort();
+                    var rbar = document.getElementById('regionFilterBar');
+                    if (regions.length > 0) {
+                      rbar.style.display = 'flex';
+                      rbar.innerHTML = '<span style="font-size:.72em;color:var(--text-muted);margin-right:4px;align-self:center">State/UT:</span>'
+                        + '<span class="cat-chip active" id="regionChipAll" onclick="filterByRegion(this,\'\')">All</span>'
+                        + regions.map(function(r) { return '<span class="cat-chip" onclick="filterByRegion(this,\'' + r.replace(/'/g,'') + '\')">' + r.replace(/&/g,'&amp;') + '</span>'; }).join('');
+                    }
 
                     // Show filtered by latest date
                     var forDate = items.filter(function(i) { return i.pubDate && i.pubDate.slice(0,10) === latestDate; });
@@ -7314,29 +7326,37 @@
         }
 
         var _activeCatFilter = '';
+        var _activeRegionFilter = '';
 
-        function filterPibFeed() {
+        function applyFilters() {
             var dateVal = document.getElementById('pibDateFilter').value;
-            if (!dateVal || !_pibFeedData) return;
+            if (!dateVal || !_pibFeedData) return [];
             var filtered = _pibFeedData.filter(function(item) {
                 return item.pubDate && item.pubDate.slice(0,10) === dateVal;
             });
             if (_activeCatFilter) filtered = filtered.filter(function(i) { return i.category === _activeCatFilter; });
-            renderPibFeed(filtered.slice(0, 30));
+            if (_activeRegionFilter) filtered = filtered.filter(function(i) { return i.region === _activeRegionFilter; });
+            return filtered;
+        }
+
+        function filterPibFeed() {
+            renderPibFeed(applyFilters().slice(0, 30));
         }
 
         function filterByCategory(el, cat) {
-            var chips = document.querySelectorAll('.cat-chip');
+            var chips = document.querySelectorAll('#catFilterBar .cat-chip');
             chips.forEach(function(c) { c.classList.remove('active'); });
             el.classList.add('active');
             _activeCatFilter = cat || '';
-            var dateVal = document.getElementById('pibDateFilter').value;
-            if (!dateVal || !_pibFeedData) { filterPibFeed(); return; }
-            var filtered = _pibFeedData.filter(function(item) {
-                return item.pubDate && item.pubDate.slice(0,10) === dateVal;
-            });
-            if (_activeCatFilter) filtered = filtered.filter(function(i) { return i.category === _activeCatFilter; });
-            renderPibFeed(filtered.slice(0, 30));
+            filterPibFeed();
+        }
+
+        function filterByRegion(el, region) {
+            var chips = document.querySelectorAll('#regionFilterBar .cat-chip');
+            chips.forEach(function(c) { c.classList.remove('active'); });
+            el.classList.add('active');
+            _activeRegionFilter = region || '';
+            filterPibFeed();
         }
 
         function resetPibFilter() {
@@ -7345,12 +7365,14 @@
                 var latestDate = '';
                 _pibFeedData.forEach(function(i) { if (i.pubDate) { var d = i.pubDate.slice(0,10); if (d > latestDate) latestDate = d; } });
                 if (picker && latestDate) picker.value = latestDate;
-                // Reset category filter
+                // Reset all filters
                 _activeCatFilter = '';
-                var chips = document.querySelectorAll('.cat-chip');
-                chips.forEach(function(c) { c.classList.remove('active'); });
-                var allChip = document.getElementById('catChipAll');
-                if (allChip) allChip.classList.add('active');
+                _activeRegionFilter = '';
+                document.querySelectorAll('#catFilterBar .cat-chip, #regionFilterBar .cat-chip').forEach(function(c) { c.classList.remove('active'); });
+                var allCat = document.getElementById('catChipAll');
+                if (allCat) allCat.classList.add('active');
+                var allReg = document.getElementById('regionChipAll');
+                if (allReg) allReg.classList.add('active');
                 filterPibFeed();
             }
         }

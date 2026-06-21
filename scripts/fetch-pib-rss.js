@@ -40,6 +40,51 @@ function categorizeItem(title, desc) {
   return 'PIB Press Releases';
 }
 
+function extractRegion(title, desc) {
+  var t = (title + ' ' + (desc || '')).toLowerCase().replace(/[.,]/g, '');
+  // States
+  if (/\bandhra\b/.test(t) && /\bpradesh\b/.test(t)) return 'Andhra Pradesh';
+  if (/\barunachal\b/.test(t) && /\bpradesh\b/.test(t)) return 'Arunachal Pradesh';
+  if (/\bassam\b/.test(t)) return 'Assam';
+  if (/\bbihar\b/.test(t)) return 'Bihar';
+  if (/\bchhattisgarh\b/.test(t)) return 'Chhattisgarh';
+  if (/\bgoa\b/.test(t)) return 'Goa';
+  if (/\bgujarat\b/.test(t)) return 'Gujarat';
+  if (/\bharyana\b/.test(t)) return 'Haryana';
+  if (/\bhimachal\b/.test(t) && /\bpradesh\b/.test(t)) return 'Himachal Pradesh';
+  if (/\bjharkhand\b/.test(t)) return 'Jharkhand';
+  if (/\bkarnataka\b/.test(t)) return 'Karnataka';
+  if (/\bkerala\b/.test(t)) return 'Kerala';
+  if (/\bmadhya\b/.test(t) && /\bpradesh\b/.test(t)) return 'Madhya Pradesh';
+  if (/\bmaharashtra\b/.test(t)) return 'Maharashtra';
+  if (/\bmanipur\b/.test(t)) return 'Manipur';
+  if (/\bmeghalaya\b/.test(t)) return 'Meghalaya';
+  if (/\bmizoram\b/.test(t)) return 'Mizoram';
+  if (/\bnagaland\b/.test(t)) return 'Nagaland';
+  if (/\bodisha\b/.test(t)) return 'Odisha';
+  if (/\bpunjab\b/.test(t)) return 'Punjab';
+  if (/\brajasthan\b/.test(t)) return 'Rajasthan';
+  if (/\bsikkim\b/.test(t)) return 'Sikkim';
+  if (/\btamil\b/.test(t) && /\bnadu\b/.test(t)) return 'Tamil Nadu';
+  if (/\btelangana\b/.test(t)) return 'Telangana';
+  if (/\btripura\b/.test(t)) return 'Tripura';
+  if (/\bwest\b/.test(t) && /\bbengal\b/.test(t)) return 'West Bengal';
+  if (/\buttar\b/.test(t)) {
+    if (/\bpradesh\b/.test(t)) return 'Uttar Pradesh';
+    if (/\brakhand\b/.test(t)) return 'Uttarakhand';
+  }
+  // UTs
+  if (/\bandaman\b/.test(t) && /\bnicobar\b/.test(t)) return 'Andaman & Nicobar';
+  if (/\bchandigarh\b/.test(t)) return 'Chandigarh';
+  if (/\bdaman\b/.test(t) && /\bdiu\b/.test(t)) return 'Dadra & Nagar Haveli and Daman & Diu';
+  if (/\bdelhi\b/.test(t)) return 'Delhi';
+  if (/\bjammu\b/.test(t) && /\bkashmir\b/.test(t)) return 'Jammu & Kashmir';
+  if (/\bladakh\b/.test(t)) return 'Ladakh';
+  if (/\blakshadweep\b/.test(t)) return 'Lakshadweep';
+  if (/\bpuducherry\b/.test(t) || /\bpondicherry\b/.test(t)) return 'Puducherry';
+  return '';
+}
+
 function parseEnglishHtml(html) {
   var items = [];
   var regex = /<a[^>]*title='([^']*)'[^>]*href='([^']*)'[^>]*>([^<]*)<\/a><span[^>]*>Posted on:\s*(\d{1,2}\s+\w+\s+\d{4})/g;
@@ -57,6 +102,7 @@ function parseEnglishHtml(html) {
       link: link,
       description: '',
       category: categorizeItem(title, ''),
+      region: extractRegion(title, ''),
       pubDate: pubDate.toISOString(),
       source: 'PIB'
     });
@@ -78,6 +124,7 @@ async function fetchRss() {
         link: item.link || '',
         description: desc,
         category: categorizeItem(title, desc),
+        region: extractRegion(title, desc),
         pubDate: pubDate.toISOString(),
         source: 'PIB_RSS'
       };
@@ -366,6 +413,7 @@ async function fetchAll() {
     }
     if (item.source === 'PIB' || item.source === 'PIB_RSS') {
       item.category = categorizeItem(item.title, item.description || '');
+      item.region = extractRegion(item.title, item.description || '');
     }
     return true;
   });
