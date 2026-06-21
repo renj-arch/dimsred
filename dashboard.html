@@ -211,8 +211,8 @@
                     }).then(function(data) {
                         var all = (data.items || []);
                         var main = [], seen = {};
-                        var caps = { PIB:3, RBI:2, ISRO:1, MEA:1, SEBI:1, SC:1, Sports:1, Awards:1, Appointments:1, Obituaries:1, Entertainment:1, Disasters:1, Business:1, Tech:1 };
-                        for (var i = 0; i < all.length && main.length < 10; i++) {
+                        var caps = { PIB:3, RBI:2, ISRO:1, MEA:1, SEBI:1, SC:1 };
+                        for (var i = 0; i < all.length && main.length < 8; i++) {
                             var it = all[i];
                             if (!it || !it.title) continue;
                             if (it.source === 'SEBI' && it.title.indexOf('Recovery') >= 0) continue;
