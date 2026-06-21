@@ -209,8 +209,21 @@
                         if (!r.ok) throw new Error('Not found');
                         return r.json();
                     }).then(function(data) {
-                        var items = (data.items || []).slice(0, 10);
-                        render(items);
+                        var all = (data.items || []);
+                        var main = [], seen = {};
+                        var caps = { PIB:3, RBI:2, ISRO:1, MEA:1, SEBI:1, SC:1 };
+                        for (var i = 0; i < all.length && main.length < 8; i++) {
+                            var it = all[i];
+                            if (!it || !it.title) continue;
+                            if (it.source === 'SEBI' && it.title.indexOf('Recovery') >= 0) continue;
+                            var s = it.source || '';
+                            if (!caps[s] || caps[s] <= 0) continue;
+                            var k = s + it.title.slice(0, 50);
+                            if (seen[k]) continue;
+                            seen[k] = 1; caps[s]--;
+                            main.push(it);
+                        }
+                        render(main.length ? main : all.slice(0, 5));
                     }).catch(function() {
                         container.innerHTML = '<div class="ca-item"><div class="headline" style="color:#a1a1aa">Could not load current affairs.</div></div>';
                     });
