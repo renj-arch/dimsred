@@ -360,6 +360,8 @@
                     <button class="action-btn primary" onclick="startCategory(currentStudyCat, currentStudyName)" style="flex:1;padding:10px;font-size:.85em">📝 Take Quiz on This Topic</button>
                     <button class="action-btn secondary" onclick="backToStudyMenu()" style="flex:0;padding:10px 16px;font-size:.85em">← All Topics</button>
                 </div>
+                <!-- Deep links to exam lesson pages -->
+                <div id="studyDeepLinks" style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap"></div>
             </div>
         </div>
 
@@ -401,6 +403,36 @@
             { id:'society', icon:'👥', name:'Indian Society', desc:'Caste, poverty, urbanization, women, demography' },
             { id:'ethics', icon:'🎯', name:'Ethics & Integrity', desc:'GS-IV: ethics, integrity, probity, case studies' }
         ];
+
+        // ===== DEEP LINKS to detailed lesson pages =====
+        var DEEP_LINKS = {
+            constitution: [{ label:'UPSC Polity', url:'upsc/course/gs/lesson-indian-polity.html' }, { label:'CGL Polity', url:'cgl/course/ga/lesson-indian-polity.html' }, { label:'SSC GD Polity', url:'ssc-gd/course/gk/lesson-indian-polity.html' }, { label:'NDA Polity', url:'nda/course/gat/lesson-indian-polity.html' }, { label:'CDS Polity', url:'cds/course/gk/lesson-indian-polity.html' }],
+            schemes: [{ label:'UPSC Economy', url:'upsc/course/gs/lesson-indian-economy.html' }, { label:'CGL Economy', url:'cgl/course/ga/lesson-indian-economy.html' }, { label:'RBI GA', url:'rbi/course/ga/lesson-indian-economy.html' }, { label:'IBPS Economy', url:'ibps-po/course/ga/lesson-indian-economy.html' }],
+            sports: [{ label:'Agniveer GK', url:'agniveer/course/gk/lesson-sports.html' }],
+            books: [{ label:'UPSC Current Affairs', url:'upsc/course/gs/lesson-current-affairs.html' }],
+            space: [{ label:'UPSC Science', url:'upsc/course/gs/lesson-general-science.html' }, { label:'NDA Science', url:'nda/course/gat/lesson-general-science.html' }],
+            defence: [{ label:'Agniveer GK', url:'agniveer/course/gk/lesson-indian-polity.html' }, { label:'NDA GAT', url:'nda/course/gat/lesson-current-affairs.html' }, { label:'CDS GK', url:'cds/course/gk/lesson-current-affairs.html' }],
+            national_parks: [{ label:'UPSC Geography', url:'upsc/course/gs/lesson-indian-geography.html' }, { label:'CGL Geography', url:'cgl/course/ga/lesson-indian-geography.html' }],
+            dance: [{ label:'UPSC Art & Culture', url:'upsc/course/gs/lesson-current-affairs.html' }],
+            orgs: [{ label:'UPSC IR', url:'upsc/course/gs/lesson-current-affairs.html' }],
+            awards: [{ label:'UPSC Current Affairs', url:'upsc/course/gs/lesson-current-affairs.html' }],
+            dams: [{ label:'UPSC Geography', url:'upsc/course/gs/lesson-indian-geography.html' }, { label:'CGL Geography', url:'cgl/course/ga/lesson-indian-geography.html' }],
+            important_days: [{ label:'UPSC Current Affairs', url:'upsc/course/gs/lesson-current-affairs.html' }],
+            history: [{ label:'UPSC History', url:'upsc/course/gs/lesson-indian-history.html' }, { label:'CGL History', url:'cgl/course/ga/lesson-indian-history.html' }, { label:'SSC GD History', url:'ssc-gd/course/gk/lesson-indian-history.html' }, { label:'NDA History', url:'nda/course/gat/lesson-indian-history.html' }, { label:'CDS History', url:'cds/course/gk/lesson-indian-history.html' }],
+            geography: [{ label:'UPSC Geography', url:'upsc/course/gs/lesson-indian-geography.html' }, { label:'CGL Geography', url:'cgl/course/ga/lesson-indian-geography.html' }, { label:'SSC GD Geography', url:'ssc-gd/course/gk/lesson-indian-geography.html' }, { label:'NDA Geography', url:'nda/course/gat/lesson-geography.html' }, { label:'CDS Geography', url:'cds/course/gk/lesson-indian-geography.html' }],
+            economy: [{ label:'UPSC Economy', url:'upsc/course/gs/lesson-indian-economy.html' }, { label:'CGL Economy', url:'cgl/course/ga/lesson-indian-economy.html' }, { label:'RBI Economy', url:'rbi/course/ga/lesson-indian-economy.html' }, { label:'IBPS Economy', url:'ibps-po/course/ga/lesson-indian-economy.html' }, { label:'SBI Economy', url:'sbi-clerk/course/ga/lesson-banking-awareness.html' }],
+            science: [{ label:'UPSC Science', url:'upsc/course/gs/lesson-general-science.html' }, { label:'CGL Science', url:'cgl/course/ga/lesson-general-science.html' }, { label:'SSC GD Science', url:'ssc-gd/course/gk/lesson-general-science.html' }, { label:'NDA Science', url:'nda/course/gat/lesson-general-science.html' }, { label:'Agniveer Science', url:'agniveer/course/science/lesson-physics-basics.html' }],
+            environment: [{ label:'UPSC Environment', url:'upsc/course/gs/lesson-environment-ecology.html' }, { label:'CGL Science', url:'cgl/course/ga/lesson-general-science.html' }],
+            culture: [{ label:'UPSC Art & Culture', url:'upsc/course/gs/lesson-current-affairs.html' }],
+            world_geo: [{ label:'UPSC Geography', url:'upsc/course/gs/lesson-indian-geography.html' }],
+            computers: [{ label:'UPSC Science', url:'upsc/course/gs/lesson-general-science.html' }],
+            polity: [{ label:'UPSC Polity', url:'upsc/course/gs/lesson-indian-polity.html' }, { label:'CGL Polity', url:'cgl/course/ga/lesson-indian-polity.html' }, { label:'SSC GD Polity', url:'ssc-gd/course/gk/lesson-indian-polity.html' }, { label:'NDA Polity', url:'nda/course/gat/lesson-indian-polity.html' }, { label:'CDS Polity', url:'cds/course/gk/lesson-indian-polity.html' }],
+            state_gk: [{ label:'UPSC Geography', url:'upsc/course/gs/lesson-indian-geography.html' }, { label:'SSC GD GK', url:'ssc-gd/course/gk/lesson-current-affairs.html' }],
+            personalities: [{ label:'UPSC History', url:'upsc/course/gs/lesson-indian-history.html' }, { label:'CGL History', url:'cgl/course/ga/lesson-indian-history.html' }],
+            ir: [{ label:'UPSC Current Affairs', url:'upsc/course/gs/lesson-current-affairs.html' }],
+            society: [{ label:'UPSC Polity', url:'upsc/course/gs/lesson-indian-polity.html' }],
+            ethics: [{ label:'UPSC Polity', url:'upsc/course/gs/lesson-indian-polity.html' }]
+        };
 
         // ===== STUDY MATERIAL (loaded from JSON at runtime) =====
         var GK_LEARN = {};
@@ -6488,6 +6520,20 @@
             _setView('notes');
             _buildFC(data);
             _buildSummary(data);
+            // Render deep links to exam lesson pages
+            _renderDeepLinks(catId);
+        }
+
+        function _renderDeepLinks(catId) {
+            var container = document.getElementById('studyDeepLinks');
+            container.innerHTML = '';
+            var links = DEEP_LINKS[catId];
+            if (!links || links.length === 0) return;
+            var label = links.length === 1 ? 'Full Lesson' : 'Full Lessons';
+            container.innerHTML = '<span style="font-size:.75em;color:var(--text-muted);padding:4px 0">📘 ' + label + ':</span> '
+                + links.map(function(l) {
+                    return '<a href="' + l.url + '" style="padding:5px 12px;border-radius:100px;border:1px solid var(--border);font-size:.75em;font-weight:600;color:var(--purple);transition:all .15s;white-space:nowrap" onmouseover="this.style.borderColor=\'var(--purple)\';this.style.background=\'rgba(167,139,250,.08)\'" onmouseout="this.style.borderColor=\'\';this.style.background=\'\'">' + l.label + ' →</a>';
+                }).join('');
         }
 
         function _injectStudyFlashcards(items, data) {
