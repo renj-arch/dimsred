@@ -17,7 +17,16 @@ var RBI_RSS_URL = 'https://www.rbi.org.in/pressreleases_rss.xml';
 var SEBI_RSS_URL = 'https://www.sebi.gov.in/sebirss.xml';
 var SC_JUDGMENTS_RSS_URL = 'https://indiankanoon.org/feeds/latest/supremecourt/';
 
-var dataDir = path.resolve(__dirname, '..', 'data');
+var STATE_RSS_FEEDS = [
+  { state: 'Telangana', url: 'https://www.telangana.gov.in/feed' },
+  { state: 'Goa', url: 'https://dip.goa.gov.in/feed/' },
+  { state: 'Assam', url: 'https://assam.gov.in/rss.xml' },
+  { state: 'Odisha', url: 'https://odisha.gov.in/rss.xml' },
+  { state: 'Puducherry', url: 'https://py.gov.in/rss.xml' },
+  { state: null, url: 'https://www.mygov.in/rss.xml' },
+  { state: 'Kerala', url: 'https://prd.kerala.gov.in/rss.xml' },
+  { state: 'Meghalaya', url: 'https://meghalaya.gov.in/rss.xml' }
+];
 
 var dataDir = path.resolve(__dirname, '..', 'data');
 
@@ -42,7 +51,6 @@ function categorizeItem(title, desc) {
 
 function extractRegion(title, desc) {
   var t = (title + ' ' + (desc || '')).toLowerCase().replace(/[.,]/g, '');
-  // States
   if (/\bandhra\b/.test(t) && /\bpradesh\b/.test(t)) return 'Andhra Pradesh';
   if (/\barunachal\b/.test(t) && /\bpradesh\b/.test(t)) return 'Arunachal Pradesh';
   if (/\bassam\b/.test(t)) return 'Assam';
@@ -73,7 +81,6 @@ function extractRegion(title, desc) {
     if (/\bpradesh\b/.test(t)) return 'Uttar Pradesh';
     if (/\brakhand\b/.test(t)) return 'Uttarakhand';
   }
-  // UTs
   if (/\bandaman\b/.test(t) && /\bnicobar\b/.test(t)) return 'Andaman & Nicobar';
   if (/\bchandigarh\b/.test(t)) return 'Chandigarh';
   if (/\bdaman\b/.test(t) && /\bdiu\b/.test(t)) return 'Dadra & Nagar Haveli and Daman & Diu';
@@ -83,6 +90,44 @@ function extractRegion(title, desc) {
   if (/\blakshadweep\b/.test(t)) return 'Lakshadweep';
   if (/\bpuducherry\b/.test(t) || /\bpondicherry\b/.test(t)) return 'Puducherry';
   return '';
+}
+
+function isEnglishText(text) {
+  if (!text) return false;
+  var latin = 0, other = 0;
+  for (var i = 0; i < text.length; i++) {
+    var code = text.charCodeAt(i);
+    if (code > 0x007F && code !== 0x200B && code !== 0x200C && code !== 0x200D) other++;
+    else if (code <= 0x007F && code >= 0x0020) latin++;
+  }
+  return other === 0 || (latin / Math.max(latin + other, 1)) > 0.4;
+}
+
+function rewriteItem(item) {
+  var title = (item.title || '').trim();
+  var desc = (item.description || '').trim();
+
+  title = title.replace(/\s*[-–—]\s*[A-Z][A-Za-z\s.&]+$/g, '').trim();
+  title = title.replace(/^(Press Release|PRESS RELEASE|Press Information Bureau|PIB|Release)\s*[:–-]\s*/i, '').trim();
+
+  title = title.replace(/\bPMModi\b/g, 'Prime Minister Narendra Modi');
+  title = title.replace(/\bPM\b(?!\s+of\s+India)/g, 'Prime Minister');
+  title = title.replace(/\bCJI\b/g, 'Chief Justice of India');
+  title = title.replace(/\bVP\b/g, 'Vice President');
+  title = title.replace(/\bFM\b/g, 'Finance Minister');
+  title = title.replace(/\bHM\b(?!\s+of)/g, 'Home Minister');
+  title = title.replace(/\bRM\b/g, 'Defence Minister');
+  title = title.replace(/\bRBI\b/g, 'RBI (Reserve Bank of India)');
+  title = title.replace(/\bSEBI\b/g, 'SEBI (Securities and Exchange Board of India)');
+  title = title.replace(/\bISRO\b/g, 'ISRO (Indian Space Research Organisation)');
+
+  desc = desc.replace(/<[^>]+>/g, '').trim();
+  if (desc.length > 200) desc = desc.slice(0, 200) + '...';
+  if (!desc || desc.length < 10) desc = title;
+
+  item.title = title;
+  item.description = desc;
+  return item;
 }
 
 function parseEnglishHtml(html) {
@@ -138,11 +183,7 @@ async function fetchRss() {
 async function fetchEnglish() {
   try {
     var resp = await fetch(PIB_ENGLISH_URL, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Accept': 'text/html, */*',
-        'Accept-Language': 'en-US,en;q=0.9'
-      }
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': 'text/html, */*', 'Accept-Language': 'en-US,en;q=0.9' }
     });
     if (!resp.ok) { console.error('English page HTTP ' + resp.status); return []; }
     var html = await resp.text();
@@ -206,7 +247,6 @@ async function fetchISRO() {
     if (!resp.ok) { console.error('ISRO page HTTP ' + resp.status); return []; }
     var html = await resp.text();
     var items = [];
-    // Match all year tabs (2016-2025) + special 2022 tab1
     var yearPanels = html.match(/<div class="tab-pane[^"]*"[^>]*id="(tab\d+|tab1)"[^>]*>[\s\S]*?<table[\s\S]*?<\/table>/g);
     if (!yearPanels) return [];
     yearPanels.forEach(function(panel) {
@@ -235,7 +275,6 @@ async function fetchISRO() {
         });
       });
     });
-    // Cap to latest 50 items (newest first)
     items.sort(function(a, b) { return new Date(b.pubDate) - new Date(a.pubDate); });
     items = items.slice(0, 50);
     return items;
@@ -305,6 +344,232 @@ async function fetchSCJudgments() {
   }
 }
 
+async function concurrentMap(items, fn, limit) {
+  var results = [];
+  var queue = items.slice();
+  async function worker() {
+    while (queue.length > 0) {
+      var item = queue.shift();
+      try {
+        var r = await fn(item);
+        if (r && r.length) results = results.concat(r);
+      } catch (e) {}
+    }
+  }
+  var workers = [];
+  for (var i = 0; i < Math.min(limit, items.length); i++) { workers.push(worker()); }
+  await Promise.all(workers);
+  return results;
+}
+
+async function fetchGoogleNewsForState(state, query) {
+  try {
+    var url = GOOGLE_NEWS_TPL.replace('{q}', encodeURIComponent(query));
+    var feed = await parser.parseURL(url);
+    return (feed.items || []).slice(0, 3).map(function(item) {
+      var pubDate = item.pubDate ? new Date(item.pubDate) : new Date();
+      var title = (item.title || '').trim();
+      var desc = (item.contentSnippet || '').trim().slice(0, 200);
+      return {
+        id: item.guid || item.link || title + state,
+        title: title,
+        link: item.link || '',
+        description: desc,
+        category: categorizeItem(title, desc),
+        region: state,
+        pubDate: pubDate.toISOString(),
+        source: 'GoogleNews'
+      };
+    });
+  } catch (e) {
+    return [];
+  }
+}
+
+async function fetchAllGoogleNews() {
+  console.log('Fetching Google News for ' + STATE_QUERIES.length + ' states/UTs...');
+  var items = await concurrentMap(STATE_QUERIES, function(q) {
+    return fetchGoogleNewsForState(q.state, q.q);
+  }, 5);
+  console.log('Google News items: ' + items.length);
+  return items;
+}
+
+async function fetchStateRSSFeed(config) {
+  try {
+    var feed = await parser.parseURL(config.url);
+    return (feed.items || []).slice(0, 10).map(function(item) {
+      var pubDate = item.pubDate ? new Date(item.pubDate) : new Date();
+      var title = (item.title || '').trim();
+      var desc = (item.contentSnippet || item.content || '').trim().slice(0, 200);
+      var region = config.state ? extractRegion(title + ' ' + desc) || config.state : extractRegion(title, desc);
+      return {
+        id: item.guid || item.link || title + (config.state || ''),
+        title: title,
+        link: item.link || '',
+        description: desc,
+        category: categorizeItem(title, desc),
+        region: region,
+        pubDate: pubDate.toISOString(),
+        source: 'StateRSS'
+      };
+    });
+  } catch (e) {
+    console.error('StateRSS fetch failed for ' + (config.state || config.url) + ': ' + e.message);
+    return [];
+  }
+}
+
+async function fetchAllStateRSS() {
+  console.log('Fetching ' + STATE_RSS_FEEDS.length + ' state RSS feeds...');
+  var items = await concurrentMap(STATE_RSS_FEEDS, function(feed) {
+    return fetchStateRSSFeed(feed);
+  }, 3);
+  console.log('State RSS items: ' + items.length);
+  return items;
+}
+
+async function fetchDelhiGov() {
+  try {
+    var resp = await fetch('https://delhi.gov.in/whats-new', {
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': 'text/html, */*' }
+    });
+    if (!resp.ok) return [];
+    var html = await resp.text();
+    var items = [];
+    var itemRegex = /<li>[\s\S]*?<div class="notification-view">[\s\S]*?<div class="tab-title">([\s\S]*?)<\/div>[\s\S]*?<div class="tab-date">[^D]*Date\s*:\s*(\d{2}[-/]\d{2}[-/]\d{4})[\s\S]*?<\/div>[\s\S]*?<a[^>]*title="([\s\S]*?)"[^>]*href="([^"]*)"[^>]*>/g;
+    var match;
+    while ((match = itemRegex.exec(html)) !== null) {
+      var title = (match[1] || match[3] || '').replace(/<[^>]+>/g, '').trim();
+      var link = match[4] || '';
+      var dateStr = match[2] || '';
+      if (!title || title.length < 5) continue;
+      if (link && !link.startsWith('http')) link = 'https://delhi.gov.in' + link;
+      var parts = dateStr.split(/[-/]/);
+      var pubDate = new Date(parts[2], parts[1] - 1, parts[0]);
+      if (isNaN(pubDate.getTime())) pubDate = new Date();
+      items.push({
+        id: link || title + 'Delhi',
+        title: title,
+        link: link,
+        description: 'Notification from Delhi Government — ' + title,
+        category: categorizeItem(title, ''),
+        region: 'Delhi',
+        pubDate: pubDate.toISOString(),
+        source: 'DelhiGov'
+      });
+    }
+    items.sort(function(a, b) { return new Date(b.pubDate) - new Date(a.pubDate); });
+    return items.slice(0, 10);
+  } catch (e) {
+    console.error('DelhiGov fetch failed: ' + e.message);
+    return [];
+  }
+}
+
+async function scrapeGenericGovSite(url, region, linkPrefix, sourceName) {
+  try {
+    var resp = await fetch(url, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': 'text/html, */*' }
+    });
+    if (!resp.ok) return [];
+    var html = await resp.text();
+    var items = [];
+    var links = html.match(/<a[^>]*href="([^"]*)"[^>]*>([^<]{10,})<\/a>/g) || [];
+    var seen = {};
+    links.forEach(function(anchor) {
+      var hrefMatch = anchor.match(/href="([^"]*)"/);
+      var textMatch = anchor.match(/>([^<]{10,})<\/a>/);
+      if (!hrefMatch || !textMatch) return;
+      var href = hrefMatch[1];
+      var text = textMatch[1].trim();
+      if (text.length < 10 || text.length > 150) return;
+      if (href === '#' || href.startsWith('javascript') || href.startsWith('mailto')) return;
+      if (seen[text]) return;
+      seen[text] = true;
+      if (href && !href.startsWith('http')) href = linkPrefix + href;
+      var pubDate = new Date();
+      var dateMatch = html.match(new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '.{0,200}(\\d{1,2}[-/]\\w+[-/]\\d{2,4})', 'i'));
+      if (dateMatch) {
+        pubDate = new Date(dateMatch[1]);
+        if (isNaN(pubDate.getTime())) pubDate = new Date();
+      }
+      items.push({
+        id: href || text + region,
+        title: text,
+        link: href || '',
+        description: 'Announcement from ' + region + ' Government — ' + text,
+        category: categorizeItem(text, ''),
+        region: region,
+        pubDate: pubDate.toISOString(),
+        source: sourceName || region.replace(/\s+/g, '') + 'Gov'
+      });
+    });
+    items.sort(function(a, b) { return new Date(b.pubDate) - new Date(a.pubDate); });
+    return items.slice(0, 10);
+  } catch (e) {
+    console.error(region + ' scrape failed: ' + e.message);
+    return [];
+  }
+}
+
+var STATE_SCRAPE_CONFIGS = [
+  { state: 'Delhi', source: 'StateGov', urls: ['https://delhi.gov.in/whats-new'] },
+  { state: 'Ladakh', source: 'StateGov', urls: ['https://ladakh.gov.in'] },
+  { state: 'Dadra & Nagar Haveli and Daman & Diu', source: 'StateGov', urls: ['https://dnh.gov.in'] },
+  { state: 'Punjab', source: 'StateGov', urls: ['https://punjab.gov.in/news', 'https://punjab.gov.in'] },
+  { state: 'Maharashtra', source: 'StateGov', urls: ['https://maharashtra.gov.in'] },
+  { state: 'Andhra Pradesh', source: 'StateGov', urls: ['https://ap.gov.in'] },
+  { state: 'Arunachal Pradesh', source: 'StateGov', urls: ['https://arunachal.gov.in', 'https://arunachalpradesh.gov.in', 'https://arun.nic.in'] },
+  { state: 'Bihar', source: 'StateGov', urls: ['https://bihar.gov.in', 'https://state.bihar.gov.in', 'https://gov.bih.nic.in'] },
+  { state: 'Chhattisgarh', source: 'StateGov', urls: ['https://cgstate.gov.in', 'https://dpr.cg.gov.in', 'https://cg.nic.in'] },
+  { state: 'Gujarat', source: 'StateGov', urls: ['https://gujarat.gov.in', 'https://gujaratinformation.gujarat.gov.in', 'https://guj.nic.in'] },
+  { state: 'Haryana', source: 'StateGov', urls: ['https://haryana.gov.in/whats-new', 'https://haryana.gov.in'] },
+  { state: 'Himachal Pradesh', source: 'StateGov', urls: ['https://himachal.gov.in/whats-new', 'https://himachal.gov.in'] },
+  { state: 'Jharkhand', source: 'StateGov', urls: ['https://jharkhand.gov.in'] },
+  { state: 'Karnataka', source: 'StateGov', urls: ['https://karnataka.gov.in'] },
+  { state: 'Madhya Pradesh', source: 'StateGov', urls: ['https://mp.gov.in/whats-new', 'https://mp.gov.in'] },
+  { state: 'Manipur', source: 'StateGov', urls: ['https://manipur.gov.in'] },
+  { state: 'Mizoram', source: 'StateGov', urls: ['https://mizoram.gov.in'] },
+  { state: 'Nagaland', source: 'StateGov', urls: ['https://nagaland.gov.in'] },
+  { state: 'Rajasthan', source: 'StateGov', urls: ['https://rajasthan.gov.in/whats-new', 'https://rajasthan.gov.in'] },
+  { state: 'Sikkim', source: 'StateGov', urls: ['https://sikkim.gov.in'] },
+  { state: 'Tamil Nadu', source: 'StateGov', urls: ['https://tn.gov.in'] },
+  { state: 'Tripura', source: 'StateGov', urls: ['https://tripura.gov.in'] },
+  { state: 'Uttar Pradesh', source: 'StateGov', urls: ['https://up.gov.in'] },
+  { state: 'Uttarakhand', source: 'StateGov', urls: ['https://uk.gov.in', 'https://pmuk.gov.in', 'https://uk.nic.in'] },
+  { state: 'West Bengal', source: 'StateGov', urls: ['https://wb.gov.in'] },
+  { state: 'Jammu & Kashmir', source: 'StateGov', urls: ['https://jkgad.gov.in', 'https://jk.gov.in', 'https://dipr.jk.gov.in', 'https://jk.nic.in'] },
+  { state: 'Chandigarh', source: 'StateGov', urls: ['https://chandigarh.gov.in', 'https://chd.nic.in'] },
+  { state: 'Lakshadweep', source: 'StateGov', urls: ['https://lakshadweep.gov.in/whats-new', 'https://lakshadweep.gov.in'] },
+  { state: 'Andaman & Nicobar', source: 'StateGov', urls: ['https://andaman.gov.in', 'https://and.nic.in'] }
+];
+
+async function fetchAllHtmlScraped() {
+  console.log('Fetching HTML-scraped state pages (' + STATE_SCRAPE_CONFIGS.length + ' states)...');
+  var scrapers = STATE_SCRAPE_CONFIGS.map(function(c) {
+    if (c.state === 'Delhi') return fetchDelhiGov();
+    return (async function() {
+      for (var i = 0; i < c.urls.length; i++) {
+        var items = await scrapeGenericGovSite(c.urls[i], c.state, c.urls[i].replace(/\/[^/]*$/, '/'), c.source);
+        if (items.length > 0) return items;
+      }
+      return [];
+    })();
+  });
+  var results = await Promise.allSettled(scrapers);
+  var total = 0;
+  var all = [];
+  results.forEach(function(r) {
+    if (r.status === 'fulfilled' && r.value && r.value.length) {
+      total += r.value.length;
+      all = all.concat(r.value);
+    }
+  });
+  console.log('HTML scraped items: ' + total);
+  return all;
+}
+
 async function fetchAll() {
   console.log('Fetching PIB English HTML page...');
   var englishItems = await fetchEnglish();
@@ -334,61 +599,39 @@ async function fetchAll() {
   var meaItems = await fetchMEA();
   console.log('MEA items: ' + meaItems.length);
 
-  // Merge: English items first (primary), RSS items fill gaps
+  var stateRssItems = await fetchAllStateRSS();
+  var htmlScrapedItems = await fetchAllHtmlScraped();
+
+  // Merge all items
   var seen = new Set();
   var merged = [];
 
-  for (var item of englishItems) {
-    if (!seen.has(item.id)) {
-      seen.add(item.id);
-      merged.push(item);
+  function addItems(items) {
+    for (var item of items) {
+      if (!seen.has(item.id)) {
+        seen.add(item.id);
+        merged.push(item);
+      }
     }
   }
-  for (var item of rssItems) {
-    if (!seen.has(item.id)) {
-      seen.add(item.id);
-      merged.push(item);
-    }
-  }
-  for (var item of rbiItems) {
-    if (!seen.has(item.id)) {
-      seen.add(item.id);
-      merged.push(item);
-    }
-  }
-  for (var item of sebiItems) {
-    if (!seen.has(item.id)) {
-      seen.add(item.id);
-      merged.push(item);
-    }
-  }
-  for (var item of scItems) {
-    if (!seen.has(item.id)) {
-      seen.add(item.id);
-      merged.push(item);
-    }
-  }
-  for (var item of isroItems) {
-    if (!seen.has(item.id)) {
-      seen.add(item.id);
-      merged.push(item);
-    }
-  }
-  for (var item of meaItems) {
-    if (!seen.has(item.id)) {
-      seen.add(item.id);
-      merged.push(item);
-    }
-  }
-  // Remove Hindi-language items (Devanagari Unicode range)
+
+  addItems(englishItems);
+  addItems(rssItems);
+  addItems(rbiItems);
+  addItems(sebiItems);
+  addItems(scItems);
+  addItems(isroItems);
+  addItems(meaItems);
+  addItems(stateRssItems);
+  addItems(htmlScrapedItems);
+
+  // Remove non-English items (check title)
   merged = merged.filter(function(item) {
-    if (!item.title) return false;
-    for (var i = 0; i < item.title.length; i++) {
-      var code = item.title.charCodeAt(i);
-      if (code >= 0x0900 && code <= 0x097F) return false;
-    }
-    return true;
+    return item.title && isEnglishText(item.title);
   });
+
+  // Apply content rewriting to all items
+  merged = merged.map(rewriteItem);
 
   // Sort by date descending
   merged.sort(function(a, b) { return new Date(b.pubDate) - new Date(a.pubDate); });
@@ -404,13 +647,10 @@ async function fetchAll() {
     catch(e) { existing = []; }
   }
 
-  // Remove Hindi and re-categorize PIB items
+  // Filter existing: remove non-English, re-categorize old PIB items
   existing = existing.filter(function(item) {
     if (!item.title) return false;
-    for (var i = 0; i < item.title.length; i++) {
-      var code = item.title.charCodeAt(i);
-      if (code >= 0x0900 && code <= 0x097F) return false;
-    }
+    if (!isEnglishText(item.title)) return false;
     if (item.source === 'PIB' || item.source === 'PIB_RSS') {
       item.category = categorizeItem(item.title, item.description || '');
       item.region = extractRegion(item.title, item.description || '');
@@ -418,10 +658,9 @@ async function fetchAll() {
     return true;
   });
 
+  // Add new items not already in existing
   var existingSeen = new Set();
-  for (var x of existing) {
-    if (x.id) existingSeen.add(x.id);
-  }
+  for (var x of existing) { if (x.id) existingSeen.add(x.id); }
   for (var n of merged) {
     if (!existingSeen.has(n.id)) {
       existing.push(n);
@@ -431,13 +670,21 @@ async function fetchAll() {
   // Keep last 30 days
   var monthAgo = Date.now() - 30 * 86400000;
   existing = existing.filter(function(i) { return new Date(i.pubDate).getTime() > monthAgo; });
-  // Sort by date descending (newest first), then cap at 200
+  // Sort by date descending, cap at 200
   existing.sort(function(a, b) { return new Date(b.pubDate) - new Date(a.pubDate); });
   if (existing.length > 200) existing = existing.slice(0, 200);
 
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-  fs.writeFileSync(existingPath, JSON.stringify({ items: existing, updatedAt: new Date().toISOString(), note: 'PIB + RBI + SEBI + SC + ISRO + MEA — PIB items auto-categorized by keyword (Sports, Awards, Appointments, Obituaries, Entertainment, Disasters, Business, Tech, Health, Defence, Education, Agriculture, Energy, Environment)' }, null, 2), 'utf-8');
-  console.log('Feed saved: ' + existing.length + ' items (PIB English ' + englishItems.length + ' + PIB RSS ' + rssItems.length + ' + RBI ' + rbiItems.length + ' + SEBI ' + sebiItems.length + ' + SC ' + scItems.length + ' + ISRO ' + isroItems.length + ' + MEA ' + meaItems.length + ')');
+  fs.writeFileSync(existingPath, JSON.stringify({
+    items: existing,
+    updatedAt: new Date().toISOString(),
+    note: 'PIB + RBI + SEBI + SC + ISRO + MEA + StateRSS + HTML scraped — original summaries for educational/commercial use (government public sources + rewritten content)'
+  }, null, 2), 'utf-8');
+
+  console.log('Feed saved: ' + existing.length + ' items');
+  var srcCounts = {};
+  existing.forEach(function(i) { srcCounts[i.source] = (srcCounts[i.source] || 0) + 1; });
+  console.log('Source breakdown:', JSON.stringify(srcCounts));
 }
 
 fetchAll().catch(function(e) { console.error(e.message); process.exit(1); });
