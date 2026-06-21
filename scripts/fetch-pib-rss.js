@@ -553,10 +553,12 @@ async function fetchAll() {
     return item.title && isEnglishText(item.title);
   });
 
+  // Strip all links — this site shows content only, no external navigation
+  merged = merged.map(function(item) { item.link = ''; return item; });
+
   // Apply rewriting: PIB stays original, others get hand-written summaries
   merged = merged.map(function(item) {
     if (item.source === 'PIB' || item.source === 'PIB_RSS') {
-      // Keep PIB original — just clean HTML from description
       if (item.description) item.description = item.description.replace(/<[^>]+>/g, '').trim().slice(0, 300);
       return item;
     }
@@ -585,13 +587,13 @@ async function fetchAll() {
     catch(e) { existing = []; }
   }
 
-  // Filter existing: remove non-English, remove deprecated sources, re-categorize, rewrite non-PIB
+  // Filter existing: remove non-English, remove deprecated sources, re-categorize, strip links, rewrite non-PIB
   existing = existing.filter(function(item) {
     if (!item.title) return false;
     if (!isEnglishText(item.title)) return false;
-    // Remove items from scraper sources that are no longer active
     if (item.source === 'StateGov' || item.source === 'StateRSS' || item.source === 'DelhiGov') return false;
     if (item.source && /Gov$/.test(item.source) && item.source !== 'StateGov') return false;
+    item.link = '';
     item.category = categorizeItem(item.title, item.description || '');
     item.region = extractRegion(item.title, item.description || '');
     return true;
