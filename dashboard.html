@@ -189,6 +189,7 @@
                 <script>
                 (function() {
                     var container = document.getElementById('current-affairs');
+                    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
                     function render(items) {
                         if (!items || items.length === 0) {
                             container.innerHTML = '<div class="ca-item"><div class="headline" style="color:#a1a1aa">No recent current affairs.</div></div>';
@@ -197,25 +198,21 @@
                         container.innerHTML = '';
                         for (var i = 0; i < items.length; i++) {
                             var item = items[i];
+                            var d = new Date(item.pubDate);
                             var el = document.createElement('div');
                             el.className = 'ca-item';
-                            el.innerHTML = '<div class="date">' + item.day + ' ' + item.month + ' ' + item.year + '</div><div class="headline">' + item.headline + '</div>';
+                            el.innerHTML = '<div class="date">' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() + '</div><div class="headline">' + item.title.replace(/</g,'&lt;') + '</div>';
                             container.appendChild(el);
                         }
                     }
-                    var fallback = [
-                        { day:2, month:'Jun', year:2026, headline:'India launches AI-powered education platform for rural schools, covering 50,000 villages in Phase 1.' },
-                        { day:1, month:'Jun', year:2026, headline:'RBI keeps repo rate unchanged at 6.25% for third consecutive quarter, citing stable inflation.' },
-                        { day:31, month:'May', year:2026, headline:'NEET UG 2026 application correction window opens June 5, says NTA official notice.' },
-                        { day:30, month:'May', year:2026, headline:'SSC CGL Tier I 2026 notification expected in July; 8,000+ vacancies estimated.' }
-                    ];
-                    fetch('/data/current-affairs.json').then(function(r) {
+                    fetch('/data/pib-feed.json').then(function(r) {
                         if (!r.ok) throw new Error('Not found');
                         return r.json();
                     }).then(function(data) {
-                        render(data.items || data);
+                        var items = (data.items || []).slice(0, 10);
+                        render(items);
                     }).catch(function() {
-                        render(fallback);
+                        container.innerHTML = '<div class="ca-item"><div class="headline" style="color:#a1a1aa">Could not load current affairs.</div></div>';
                     });
                 })();
                 </script>
