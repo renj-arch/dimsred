@@ -21,9 +21,27 @@ var dataDir = path.resolve(__dirname, '..', 'data');
 
 var dataDir = path.resolve(__dirname, '..', 'data');
 
+function categorizeItem(title, desc) {
+  var t = (title + ' ' + (desc || '')).toLowerCase();
+  if (/(?:passes away|demise |condolence|cremated|mortal remains|funeral |tributes |death |departed|last rites|state funeral)/.test(t)) return 'Obituaries';
+  if (/(?:sport|athlete|olympi|medal |khelo|hockey|football|cricket|badminton|wrestl|fencing|rower|runner|championship|asian games|world cup|player |coach |fitness|fit india|sports minister|youth affairs|sports board|dope|anti.?doping|stadium|yogasana|world championship|tournament|national games)/.test(t)) return 'Sports';
+  if (/(?:award|padma|honou|felicitat|recognition|prize |puraskar|gallantry|decorated|honored)/.test(t)) return 'Awards';
+  if (/(?:appointed|takes charge|assumes charge|assumes office|sworn in|oath |secretary|chairperson|chairman|board of|committee formed|nominated)/.test(t)) return 'Appointments';
+  if (/(?:flood|earthquake|cyclone|disaster|relief |rescue |emergency|landslide|storm |drought|tsunami|avalanche|heatwave|havoc|devastat)/.test(t)) return 'Disasters';
+  if (/(?:film |cinema|movie |festival|culture |cultural|music |dance |drama |art |museum|heritage|exhibition|theatre|actor|actress|entertainment|folk |tribal art|handicraft)/.test(t)) return 'Entertainment';
+  if (/(?:technology|digital |it\s|computer|software|ai\s|artificial intelli|space |satellite|innovation|internet|cyber |drone |semiconductor|5g |startup |electronic|robotics|supercomputer|quantum)/.test(t)) return 'Tech & Science';
+  if (/(?:economy|gdp |gva |trade |budget |investment|commerce|industry|market|finance|tax |gst |banking|manufacturing|export |import |economic|fdi |inflation|fiscal|monetary|revenue)/.test(t)) return 'Business & Economy';
+  if (/(?:health |hospital|medical |doctor |patient|disease|ayushman|medicine|vaccine|pharma|drug |nutrition|wellness|healthcare|ayush|dengue|malaria|tuberculosis)/.test(t)) return 'Health';
+  if (/(?:defence|defense|army |navy |air force|drdo|military|soldier|border |missile|submarine|warship|security|terrorism|insurgency|coast guard|paramilitary|peacekeeping)/.test(t)) return 'Defence & Security';
+  if (/(?:education|school |college|university|student |teacher |exam |scholarship|fellowship|ncert|nep |new education|skill development|vocational)/.test(t)) return 'Education';
+  if (/(?:agriculture|farmer|kisan|crop |food grain|wheat|rice |paddy|fertiliser|irrigation|soil health|msp |minimum support|horticulture|dairy |fisher)/.test(t)) return 'Agriculture';
+  if (/(?:energy|electricity|coal |oil |petroleum|natural gas|solar |wind |renewable|hydrogen|biofuel|ethanol|power project|power plant|power sector|power generation|power capacity)/.test(t)) return 'Energy';
+  if (/(?:environment|climate|forest|wildlife|pollution|ecology|green |emission|carbon |biodiversity|conservation|wetland|river |ganga |swachh)/.test(t)) return 'Environment & Climate';
+  return 'PIB Press Releases';
+}
+
 function parseEnglishHtml(html) {
   var items = [];
-  // Structure: <li><a title='...' href='/PressReleseDetail.aspx?PRID=...'>TITLE </a><span class='publishdatesmall'>Posted on: DD Mon YYYY</li>
   var regex = /<a[^>]*title='([^']*)'[^>]*href='([^']*)'[^>]*>([^<]*)<\/a><span[^>]*>Posted on:\s*(\d{1,2}\s+\w+\s+\d{4})/g;
   var match;
   while ((match = regex.exec(html)) !== null) {
@@ -38,7 +56,7 @@ function parseEnglishHtml(html) {
       title: title,
       link: link,
       description: '',
-      category: 'PIB Press Releases',
+      category: categorizeItem(title, ''),
       pubDate: pubDate.toISOString(),
       source: 'PIB'
     });
@@ -52,12 +70,14 @@ async function fetchRss() {
     var items = (feed.items || []).slice(0, 20);
     return items.map(function(item) {
       var pubDate = item.pubDate ? new Date(item.pubDate) : new Date();
+      var title = (item.title || '').trim();
+      var desc = (item.contentSnippet || item.content || '').trim().slice(0, 500);
       return {
-        id: item.guid || item.link || item.title,
-        title: (item.title || '').trim(),
+        id: item.guid || item.link || title,
+        title: title,
         link: item.link || '',
-        description: (item.contentSnippet || item.content || '').trim().slice(0, 500),
-        category: 'PIB Press Releases',
+        description: desc,
+        category: categorizeItem(title, desc),
         pubDate: pubDate.toISOString(),
         source: 'PIB_RSS'
       };
@@ -337,12 +357,15 @@ async function fetchAll() {
     catch(e) { existing = []; }
   }
 
-  // Remove Hindi from existing data too (filtering persisted only from merged previously)
+  // Remove Hindi and re-categorize PIB items
   existing = existing.filter(function(item) {
     if (!item.title) return false;
     for (var i = 0; i < item.title.length; i++) {
       var code = item.title.charCodeAt(i);
       if (code >= 0x0900 && code <= 0x097F) return false;
+    }
+    if (item.source === 'PIB' || item.source === 'PIB_RSS') {
+      item.category = categorizeItem(item.title, item.description || '');
     }
     return true;
   });
@@ -365,7 +388,7 @@ async function fetchAll() {
   if (existing.length > 200) existing = existing.slice(0, 200);
 
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-  fs.writeFileSync(existingPath, JSON.stringify({ items: existing, updatedAt: new Date().toISOString(), note: 'PIB + RBI + SEBI + SC + ISRO + MEA + Sports + Awards + Appointments + Obituaries + Entertainment + Disasters + Business + Tech' }, null, 2), 'utf-8');
+  fs.writeFileSync(existingPath, JSON.stringify({ items: existing, updatedAt: new Date().toISOString(), note: 'PIB + RBI + SEBI + SC + ISRO + MEA — PIB items auto-categorized by keyword (Sports, Awards, Appointments, Obituaries, Entertainment, Disasters, Business, Tech, Health, Defence, Education, Agriculture, Energy, Environment)' }, null, 2), 'utf-8');
   console.log('Feed saved: ' + existing.length + ' items (PIB English ' + englishItems.length + ' + PIB RSS ' + rssItems.length + ' + RBI ' + rbiItems.length + ' + SEBI ' + sebiItems.length + ' + SC ' + scItems.length + ' + ISRO ' + isroItems.length + ' + MEA ' + meaItems.length + ')');
 }
 

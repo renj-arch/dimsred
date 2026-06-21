@@ -201,7 +201,9 @@
                             var d = new Date(item.pubDate);
                             var el = document.createElement('div');
                             el.className = 'ca-item';
-                            el.innerHTML = '<div class="date">' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() + '</div><div class="headline">' + item.title.replace(/</g,'&lt;') + '</div>';
+                            var cat = item.category && item.category !== 'PIB Press Releases' ? item.category : '';
+                            var catTag = cat ? '<span style="display:inline-block;font-size:.65em;padding:1px 7px;border-radius:4px;background:rgba(167,139,250,.15);color:var(--purple);margin-bottom:4px">' + cat.replace(/&/g,'&amp;') + '</span>' : '';
+                            el.innerHTML = '<div class="date">' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() + '</div><div class="headline">' + catTag + item.title.replace(/</g,'&lt;') + '</div>';
                             container.appendChild(el);
                         }
                     }
