@@ -620,16 +620,17 @@
         }
 
         function renderSubjectChips(filteredQuestions) {
-            var chipsEl = document.getElementById('caq-subjects');
-            // Get unique subjects with emoji
-            var subjects = {};
-            filteredQuestions.forEach(function(q) {
-                if (q.subject) {
-                    var key = q.subject;
-                    if (!subjects[key]) subjects[key] = { name: key, emoji: q.emoji || '', count: 0 };
-                    subjects[key].count++;
-                }
-            });
+        var chipsEl = document.getElementById('caq-subjects');
+        var SUBJECT_CATEGORY_MAP = {'Constitution':'constitution','Govt Schemes':'schemes','Sports':'sports','Books & Authors':'books','ISRO & Space':'space','Defence':'defence','National Parks & Wildlife':'national_parks','Dance Forms':'dance','International':'orgs','Awards & Honours':'awards','Dams & Rivers':'dams','Important Days':'important_days','Indian History':'history','Geography':'geography','Indian Economy':'economy','General Science':'science','Environment & Ecology':'environment','Art & Culture':'culture','World Geography':'world_geo','Computer & IT':'computers','Polity':'polity','State GK':'state_gk','Famous Personalities':'personalities','International Relations':'ir','Indian Society':'society','Ethics & Integrity':'ethics'};
+        var sorted = Object.keys(subjects).sort(function(a,b) { return subjects[b].count - subjects[a].count; });
+        var html = '<button class="caq-subject all-btn' + (currentSubject === 'All' ? ' active' : '') + '" onclick="caqSetSubject(\'All\')">All (' + filteredQuestions.length + ')</button>';
+        sorted.forEach(function(key) {
+            var s = subjects[key];
+            var isActive = currentSubject === key;
+            var catId = SUBJECT_CATEGORY_MAP[key] || '';
+            var studyLink = catId ? ' <a href="/current-affairs.html?topic=' + encodeURIComponent(key) + '" style="font-size:.75em;text-decoration:none;opacity:.5" title="Study notes">&#x1f4d6;</a>' : '';
+            html += '<button class="caq-subject' + (isActive ? ' active' : '') + '" onclick="caqSetSubject(\'' + key.replace(/'/g,"\\'") + '\')">' + s.emoji + ' ' + s.name + ' (' + s.count + ')' + studyLink + '</button>';
+        });
             var sorted = Object.keys(subjects).sort(function(a,b) { return subjects[b].count - subjects[a].count; });
             var html = '<button class="caq-subject all-btn' + (currentSubject === 'All' ? ' active' : '') + '" onclick="caqSetSubject(\'All\')">All (' + filteredQuestions.length + ')</button>';
             sorted.forEach(function(key) {

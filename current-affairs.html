@@ -6908,6 +6908,24 @@
             // Pre-parse all study content
             Object.keys(GK_LEARN).forEach(function(cid){ try { studyData[cid] = _parseStudyContent(cid); } catch(e) { studyData[cid] = null; } });
             loadPibFeed();
+            // Check for ?topic= parameter to auto-open study mode
+            var topicParam = location.search.match(/[?&]topic=([^&]+)/);
+            if (topicParam) {
+                var topicName = decodeURIComponent(topicParam[1]);
+                var found = CATEGORIES.find(function(c) { return c.name === topicName; });
+                if (found) {
+                    // Wait for feed + study data to be ready, then open
+                    var checkReady = function(tries) {
+                        if (studyData[found.id] && _pibFeedData) {
+                            setMode('study');
+                            showStudy(found.id, found.name, found.icon);
+                            return;
+                        }
+                        if (tries > 0) setTimeout(function() { checkReady(tries - 1); }, 300);
+                    };
+                    checkReady(15);
+                }
+            }
         }
 
         function startCategory(id, name) {
@@ -7228,35 +7246,95 @@
 
         function _getFeedForCategory(catId) {
             if (!_pibFeedData || _pibFeedData.length === 0) return null;
+            // Use client-side determineSubject for consistent categorization with quiz.json
+            var cat = CATEGORIES.find(function(c) { return c.id === catId; });
+            var targetName = cat ? cat.name : '';
+            if (!targetName) return _buildVirtualFeed(_pibFeedData, ['Scheme','Yojana']);
+            var items = _pibFeedData.filter(function(item) {
+                var subj = _determineSubject(item.title, item.category, item.source);
+                return subj && subj.subject === targetName;
+            });
+            return items;
+        }
 
-            // Reuse existing sub-feeds where available
-            var feedVar = catId === 'defence' ? _defenceFeedData : catId === 'environment' ? _envFeedData : catId === 'sports' ? _sportsFeedData : catId === 'economy' ? _econFeedData : catId === 'polity' ? _polityFeedData : catId === 'science' ? _sciTechFeedData : catId === 'health' ? _healthFeedData : catId === 'education' ? _educationFeedData : catId === 'agriculture' ? _agriFeedData : catId === 'energy' ? _energyFeedData : null;
-            if (feedVar && feedVar.length > 0) return feedVar;
+        function _determineSubject(text, category, source) {
+            var t = text + ' ' + (category || '');
+            if (/(?:Constitution|Amendment|Article\s+\d+|Fundamental\s+(?:Right|Duty)|Directive\s+Principle|Scheduled\s+(?:Caste|Tribe)|Panchayati\s+Raj|73rd|74th\s+Amendment)/i.test(t))
+                return { subject: 'Constitution', emoji: '⚖️' };
+            if (/ISRO|Chandrayaan|Mangalyaan|Gaganyaan|Aditya|NASA|Space\s+Station|Satellite|Orbit|Rocket|Launch\s+Vehicle/i.test(t))
+                return { subject: 'ISRO & Space', emoji: '🚀' };
+            if (/Defence|Army|Navy|Air\s+Force|Missile|Exercise|Raksha\s+Mantri|Indigenous\s+Weapon|DRDO|BEML|Warship|Submarine|INS\s+\w+/i.test(t))
+                return { subject: 'Defence', emoji: '⚔️' };
+            if (/Olympics|Asian\s+Games|Commonwealth|Cricket|World\s+Cup|Medal|Tournament|Championship|Athlete|Saina|Koneru|Grandmaster/i.test(t))
+                return { subject: 'Sports', emoji: '🏆' };
+            if (/National\s+Park|Tiger\s+Reserve|Wildlife\s+Sanctuary|Biosphere|Ramsar|UNESCO\s+World\s+Heritage|Elephant|Leopard|Endangered\s+Species/i.test(t))
+                return { subject: 'National Parks & Wildlife', emoji: '🌲' };
+            if (/Dance|Folk\s+Dance|Classical\s+Dance|Kathak|Bharatanatyam|Odissi|Kuchipudi|Manipuri|Mohiniyattam|Sattriya/i.test(t))
+                return { subject: 'Dance Forms', emoji: '💃' };
+            if (/Bharat\s+Ratna|Padma\s+(?:Shri|Bhushan|Vibhushan)|Nobel|Oscar|Grammy|Booker|Dadasaheb|National\s+Film\s+Award|Arjuna|Khel\s+Ratna|Dronacharya/i.test(t))
+                return { subject: 'Awards & Honours', emoji: '🎖️' };
+            if (/Dam|River\s+Project|Hydroelectric|Irrigation\s+Project|Bhakra|Hirakud|Tehri|Sardar\s+Sarovar|Narmada|Godavari|Krishna|Cauvery/i.test(t))
+                return { subject: 'Dams & Rivers', emoji: '🌊' };
+            if (/Important\s+Day|World\s+\w+\s+Day|National\s+\w+\s+Day|International\s+Day|Observance/i.test(t))
+                return { subject: 'Important Days', emoji: '📅' };
+            if (/Ancient|Medieval|Mughal|Maurya|Gupta|Indus\s+Valley|Vedic|Freedom\s+Struggle|Independence|1857|Jallianwala|Satyagraha|Quit\s+India/i.test(t))
+                return { subject: 'Indian History', emoji: '📜' };
+            if (/Climate|Environment|Pollution|Emissions|Greenhouse|Global\s+Warming|Carbon|Renewable\s+Energy|Solar\s+Energy|Wind\s+Energy|Electric\s+Vehicle|Green\s+Hydrogen/i.test(t))
+                return { subject: 'Environment & Ecology', emoji: '🌿' };
+            if (/Foreign|Embassy|Diplomatic|Consulate|Envoy|Ambassador|High\s+Commissioner/i.test(t))
+                return { subject: 'International Relations', emoji: '🤝' };
+            if (/\bUN\b|United\s+Nations|BRICS|SAARC|WTO|IMF|World\s+Bank|G20|\bQUAD\b|Indo-Pacific|Bilateral|Foreign\s+Policy|Summit|Treaty|Pact/i.test(t))
+                return { subject: 'International', emoji: '🌐' };
+            if (/Computer|\bAI\b|Artificial\s+Intelligence|Cyber|Digital|Internet|Software|\bIT\b|Blockchain|Data\s+Protection|Semiconductor|5G/i.test(t))
+                return { subject: 'Computer & IT', emoji: '💻' };
+            if (/Science|Research|Innovation|Patent|Invention|Discovery|Laboratory|Nuclear|Biotechnology|Nanotechnology|Gene|Genome|Vaccine/i.test(t))
+                return { subject: 'General Science', emoji: '🔬' };
+            if (/Economy|GDP|Inflation|Budget|Fiscal|Monetary|Banking|\bRBI\b|\bSEBI\b|Market|Stock|Investment|GST|Tax|Tariff|Trade|Export|Import/i.test(t))
+                return { subject: 'Indian Economy', emoji: '💰' };
+            if (/Geography|Climate|Monsoon|Crop|Soil|Mineral|Map|Latitude|Longitude|Physiographic|Himalaya|Peninsula|Coast|Island/i.test(t))
+                return { subject: 'Geography', emoji: '🌍' };
+            if (/Ayushman|PM-KISAN|Jal\s+Jeevan|Ujjwala|Awas|Rozgar|Jan\s+Dhan|Mudra|Skill\s+India|Digital\s+India|Make\s+in\s+India|Mission|Yojana|Abhiyan|Scheme|Policy/i.test(t))
+                return { subject: 'Govt Schemes', emoji: '🏛️' };
+            if (/Education|School|College|University|NEP|Scholarship|Student|Teacher|Faculty|National\s+Education/i.test(t))
+                return { subject: 'Govt Schemes', emoji: '🏛️' };
+            if (/Health|Hospital|Medicine|Drug|Pharma|Medical|Ayurveda|Disease|Epidemic|Pandemic/i.test(t))
+                return { subject: 'Govt Schemes', emoji: '🏛️' };
+            if (/Agriculture|Farmer|Crop|Kisan|Mandi|Food|Fertilizer|Seed|Irrigation|Organic|FPO|Horticulture/i.test(t))
+                return { subject: 'Geography', emoji: '🌍' };
+            if (/Culture|Heritage|Museum|Painting|Sculpture|Music|Festival|Theatre|Cinema|Film|Monument|Temple|Mosque|Church|Architecture/i.test(t))
+                return { subject: 'Art & Culture', emoji: '🎭' };
+            if (/Country|Capital|Currency|Wonders|Continent|Ocean|Sea|Mountain|Desert/i.test(t))
+                return { subject: 'World Geography', emoji: '🗺️' };
+            if (/Parliament|Election|Bill|Legislation|Judiciary|Supreme\s+Court|Governor|Chief\s+Minister|Election\s+Commission|Appointment|Assumes\s+Charge|Takes\s+Over\s+as|Oath|Sworn|Secretary|Commissioner|Committee/i.test(t))
+                return { subject: 'Polity', emoji: '🏛️' };
+            if (source === 'RBI' || source === 'SEBI') return { subject: 'Indian Economy', emoji: '💰' };
+            if (source === 'ISRO') return { subject: 'ISRO & Space', emoji: '🚀' };
+            if (source === 'MEA') return { subject: 'International Relations', emoji: '🤝' };
+            return { subject: 'Govt Schemes', emoji: '🏛️' };
+        }
 
-            // Keyword-based for remaining categories
-            var kwMap = {
-                constitution: ['Constitution','Amendment','Article','Fundamental Right','Directive Principle','Supreme Court judgment','Constitutional body','Election Commission','CAG','Finance Commission'],
-                schemes: ['Scheme','Yojana','Mission','Abhiyan','PM-','Pradhan Mantri','Ayushman','PM-KISAN','Jal Jeevan','Ujjwala','Awas','Rozgar','Jan Dhan','Mudra','Skill India','Digital India','Make in India','Startup India','National Mission','Bharat','Kisan','Suraksha','Seva','Sathi'],
-                space: ['ISRO','Space','Satellite','Chandrayaan','Gaganyaan','Aditya','Rocket','Launch','Orbit','NASA','Mars','Moon Mission','Space Station'],
-                national_parks: ['National Park','Tiger Reserve','Wildlife Sanctuary','Biosphere','Ramsar','UNESCO World Heritage','Elephant','Leopard','Endangered Species','Forest'],
-                dance: ['Dance','Folk Dance','Classical Dance','Kathak','Bharatanatyam','Odissi','Kuchipudi','Music Festival'],
-                orgs: ['UN','United Nations','BRICS','SAARC','WTO','IMF','World Bank','G20','QUAD','Indo-Pacific','Bilateral','Summit','Treaty','Pact'],
-                awards: ['Award','Padma','Bharat Ratna','Nobel','Oscar','Grammy','Booker','Dadasaheb','National Film Award','Arjuna','Khel Ratna','Dronacharya'],
-                dams: ['Dam','River Project','Hydroelectric','Irrigation','Bhakra','Hirakud','Tehri','Sardar Sarovar','Narmada','Godavari'],
-                important_days: ['Day','World ','International ','National ','Observance','Anniversary'],
-                history: ['Ancient','Medieval','Mughal','Maurya','Gupta','Indus Valley','Freedom Struggle','Independence','1857','Satyagraha','Jallianwala'],
-                geography: ['Geography','Climate','Monsoon','Crop','Soil','Mineral','Map','Himalaya','Peninsula','Coast','Island'],
-                culture: ['Culture','Heritage','Museum','Painting','Sculpture','Music','Festival','Theatre','Cinema','Film','Monument','Temple','Architecture'],
-                world_geo: ['Country','Capital','Currency','Continent','Ocean','Sea','Mountain','Desert','World'],
-                computers: ['Computer','AI','Artificial Intelligence','Cyber','Digital','Internet','Software','IT','Blockchain','Data Protection','Semiconductor','5G'],
-                state_gk: ['State','UT','Union Territory','CM','Chief Minister','Governor','Capital','Foundation Day'],
-                personalities: ['President','Prime Minister','Chief Minister','Governor','Appointment','Assumes Charge'],
-                ir: ['Foreign','Embassy','Diplomatic','Consulate','Envoy','Ambassador','High Commissioner','Minister of External Affairs','External Affairs','MEA'],
-                society: ['Caste','Poverty','Urbanization','Women','Demography','Census','Social','Welfare','SC','ST','OBC','Minority','Tribal'],
-                ethics: ['Ethics','Integrity','Probity','Corruption','Vigilance','CVC','Ombudsman','Lokpal','Lokayukta','RTI','Citizen Charter','Code of Conduct']
-            };
-            var keywords = kwMap[catId] || ['Scheme','Yojana'];
-            return _buildVirtualFeed(_pibFeedData, keywords);
+        function _formatStudyBullet(item, catId) {
+            var t = item.title || '';
+            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            var d = item.pubDate ? new Date(item.pubDate) : new Date();
+            var dateTag = '[' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() + ']';
+
+            // Scheme: bold the scheme name
+            var schemeM = t.match(/((?:Pradhan Mantri|PM|National|Bharat|Ayushman|Jan|Digital|Smart|Skill|Swachh)\s+[\w\s]{2,40}?(?:Yojana|Scheme|Mission|Abhiyan|Programme|Policy|Vision|Niryat|Rozgar|Kisan|Awas|Bank|Suraksha|Shakti|Seva|Sathi))/i);
+            if (schemeM) {
+                var before = t.substring(0, t.indexOf(schemeM[1]));
+                var after = t.substring(t.indexOf(schemeM[1]) + schemeM[1].length);
+                return '<b>' + schemeM[1].trim() + '</b> —' + after.replace(/^\s+/,'').replace(/['']/g,'') + ' <span style="color:var(--text-muted);font-size:.82em">' + dateTag + '</span>';
+            }
+
+            // Amount/number highlight: bold the number
+            var numM = t.match(/(?:Rs|₹|USD)?\s*[\d,]+(?:\s*(?:crore|lakh|million|billion|thousand))?/i);
+            if (numM) {
+                return t.replace(numM[0], '<b>' + numM[0] + '</b>').replace(/['']/g,'') + ' <span style="color:var(--text-muted);font-size:.82em">' + dateTag + '</span>';
+            }
+
+            if (t.length > 80) t = t.substring(0, 77) + '...';
+            return t.replace(/['']/g,'') + ' <span style="color:var(--text-muted);font-size:.82em">' + dateTag + '</span>';
         }
 
         function _injectStudyCurrentAffairs(items, catId) {
@@ -7267,28 +7345,15 @@
             var icon = cat ? cat.icon : '📰';
             var name = cat ? cat.name : 'Current Affairs';
 
-            var html = '<div class="study-sec" id="sec_ca"><div class="study-sec-h" onclick="_toggleSec(this)"><span class="arrow">▶</span><span class="st">' + icon + ' Latest ' + name + ' News</span><span class="chk" onclick="event.stopPropagation();this.classList.toggle(\'d\')">✓</span></div><div class="study-sec-b o" id="secb_ca" style="padding:8px 0">';
-            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-            var maxShow = Math.min(8, items.length);
+            var html = '<div class="study-sec" id="sec_ca"><div class="study-sec-h" onclick="_toggleSec(this)"><span class="arrow">▶</span><span class="st">' + icon + ' Latest ' + name + ' News</span><span class="chk" onclick="event.stopPropagation();this.classList.toggle(\'d\')">✓</span></div><div class="study-sec-b o" id="secb_ca" style="padding:4px 0">';
+            var maxShow = Math.min(10, items.length);
             for (var i = 0; i < maxShow; i++) {
                 var it = items[i];
-                var d = it.pubDate ? new Date(it.pubDate) : new Date();
-                var dateStr = d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
-                var srcBadge = '';
-                if (it.source === 'PIB') srcBadge = '<span style="display:inline-block;font-size:.6em;padding:1px 6px;border-radius:3px;background:rgba(52,211,153,.12);color:var(--emerald);margin-right:4px">PIB</span>';
-                else if (it.source === 'RBI') srcBadge = '<span style="display:inline-block;font-size:.6em;padding:1px 6px;border-radius:3px;background:rgba(6,182,212,.12);color:#06b6d4;margin-right:4px">RBI</span>';
-                else if (it.source === 'MEA') srcBadge = '<span style="display:inline-block;font-size:.6em;padding:1px 6px;border-radius:3px;background:rgba(245,158,11,.12);color:var(--amber);margin-right:4px">MEA</span>';
-                html += '<div style="padding:8px 12px;border-bottom:1px solid var(--border);font-size:.82em;line-height:1.5">'
-                    + '<div style="display:flex;gap:6px;align-items:center;margin-bottom:2px">'
-                    + srcBadge
-                    + '<span style="font-size:.7em;color:var(--text-muted)">' + dateStr + '</span>'
-                    + (it.region ? '<span style="font-size:.7em;color:var(--text-muted)">· ' + it.region + '</span>' : '')
-                    + '</div>'
-                    + '<div style="color:var(--text)">' + it.title.replace(/</g,'&lt;') + '</div>'
-                    + '</div>';
+                var bullet = _formatStudyBullet(it, catId);
+                html += '<div style="padding:5px 14px;border-bottom:1px solid var(--border);font-size:.82em;line-height:1.6">• ' + bullet + '</div>';
             }
             if (items.length > maxShow) {
-                html += '<div style="padding:6px 12px;font-size:.75em;color:var(--text-muted);text-align:center">+' + (items.length - maxShow) + ' more items</div>';
+                html += '<div style="padding:6px 14px;font-size:.75em;color:var(--text-muted);text-align:center">+' + (items.length - maxShow) + ' more items</div>';
             }
             html += '</div></div>';
             notes.insertAdjacentHTML('beforeend', html);
