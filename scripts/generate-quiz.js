@@ -41,6 +41,62 @@ function extractNamedEntity(text) {
 
 function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
+function determineSubject(text, category, source) {
+  var t = text + ' ' + (category || '');
+  if (/(?:Constitution|Amendment|Article\s+\d+|Fundamental\s+(?:Right|Duty)|Directive\s+Principle|Scheduled\s+(?:Caste|Tribe)|Panchayati\s+Raj|73rd|74th\s+Amendment)/i.test(t))
+    return { subject: 'Constitution', emoji: '⚖️' };
+  if (/ISRO|Chandrayaan|Mangalyaan|Gaganyaan|Aditya|NASA|Space\s+Station|Satellite|Orbit|Rocket|Launch\s+Vehicle/i.test(t))
+    return { subject: 'ISRO & Space', emoji: '🚀' };
+  if (/Defence|Army|Navy|Air\s+Force|Missile|Exercise|Raksha\s+Mantri|Indigenous\s+Weapon|DRDO|BEML|Warship|Submarine|INS\s+\w+/i.test(t))
+    return { subject: 'Defence', emoji: '⚔️' };
+  if (/Olympics|Asian\s+Games|Commonwealth|Cricket|World\s+Cup|Medal|Tournament|Championship|Athlete|Saina|Koneru|Grandmaster/i.test(t))
+    return { subject: 'Sports', emoji: '🏆' };
+  if (/National\s+Park|Tiger\s+Reserve|Wildlife\s+Sanctuary|Biosphere|Ramsar|UNESCO\s+World\s+Heritage|Elephant|Leopard|Endangered\s+Species/i.test(t))
+    return { subject: 'National Parks & Wildlife', emoji: '🌲' };
+  if (/Dance|Folk\s+Dance|Classical\s+Dance|Kathak|Bharatanatyam|Odissi|Kuchipudi|Manipuri|Mohiniyattam|Sattriya/i.test(t))
+    return { subject: 'Dance Forms', emoji: '💃' };
+  if (/Bharat\s+Ratna|Padma\s+(?:Shri|Bhushan|Vibhushan)|Nobel|Oscar|Grammy|Booker|Dadasaheb|National\s+Film\s+Award|Arjuna|Khel\s+Ratna|Dronacharya/i.test(t))
+    return { subject: 'Awards & Honours', emoji: '🎖️' };
+  if (/Dam|River\s+Project|Hydroelectric|Irrigation\s+Project|Bhakra|Hirakud|Tehri|Sardar\s+Sarovar|Narmada|Godavari|Krishna|Cauvery/i.test(t))
+    return { subject: 'Dams & Rivers', emoji: '🌊' };
+  if (/Important\s+Day|World\s+\w+\s+Day|National\s+\w+\s+Day|International\s+Day|Observance/i.test(t))
+    return { subject: 'Important Days', emoji: '📅' };
+  if (/Ancient|Medieval|Mughal|Maurya|Gupta|Indus\s+Valley|Vedic|Freedom\s+Struggle|Independence|1857|Jallianwala|Satyagraha|Quit\s+India/i.test(t))
+    return { subject: 'Indian History', emoji: '📜' };
+  if (/Climate|Environment|Pollution|Emissions|Greenhouse|Global\s+Warming|Carbon|Renewable\s+Energy|Solar\s+Energy|Wind\s+Energy|Electric\s+Vehicle|Green\s+Hydrogen/i.test(t))
+    return { subject: 'Environment & Ecology', emoji: '🌿' };
+  if (/Foreign|Embassy|Diplomatic|Consulate|Envoy|Ambassador|High\s+Commissioner/i.test(t))
+    return { subject: 'International Relations', emoji: '🤝' };
+  if (/\bUN\b|United\s+Nations|BRICS|SAARC|WTO|IMF|World\s+Bank|G20|\bQUAD\b|Indo-Pacific|Bilateral|Foreign\s+Policy|Summit|Treaty|Pact/i.test(t))
+    return { subject: 'International', emoji: '🌐' };
+  if (/Computer|\bAI\b|Artificial\s+Intelligence|Cyber|Digital|Internet|Software|\bIT\b|Blockchain|Data\s+Protection|Semiconductor|5G/i.test(t))
+    return { subject: 'Computer & IT', emoji: '💻' };
+  if (/Science|Research|Innovation|Patent|Invention|Discovery|Laboratory|Nuclear|Biotechnology|Nanotechnology|Gene|Genome|Vaccine/i.test(t))
+    return { subject: 'General Science', emoji: '🔬' };
+  if (/Economy|GDP|Inflation|Budget|Fiscal|Monetary|Banking|\bRBI\b|\bSEBI\b|Market|Stock|Investment|GST|Tax|Tariff|Trade|Export|Import/i.test(t))
+    return { subject: 'Indian Economy', emoji: '💰' };
+  if (/Geography|Climate|Monsoon|Crop|Soil|Mineral|Map|Latitude|Longitude|Physiographic|Himalaya|Peninsula|Coast|Island/i.test(t))
+    return { subject: 'Geography', emoji: '🌍' };
+  if (/Ayushman|PM-KISAN|Jal\s+Jeevan|Ujjwala|Awas|Rozgar|Jan\s+Dhan|Mudra|Skill\s+India|Digital\s+India|Make\s+in\s+India|Mission|Yojana|Abhiyan|Scheme|Policy/i.test(t))
+    return { subject: 'Govt Schemes', emoji: '🏛️' };
+  if (/Education|School|College|University|NEP|Scholarship|Student|Teacher|Faculty|National\s+Education/i.test(t))
+    return { subject: 'Govt Schemes', emoji: '🏛️' };
+  if (/Health|Hospital|Medicine|Drug|Pharma|Medical|Ayurveda|Disease|Epidemic|Pandemic/i.test(t))
+    return { subject: 'Govt Schemes', emoji: '🏛️' };
+  if (/Agriculture|Farmer|Crop|Kisan|Mandi|Food|Fertilizer|Seed|Irrigation|Organic|FPO|Horticulture/i.test(t))
+    return { subject: 'Geography', emoji: '🌍' };
+  if (/Culture|Heritage|Museum|Painting|Sculpture|Music|Festival|Theatre|Cinema|Film|Monument|Temple|Mosque|Church|Architecture/i.test(t))
+    return { subject: 'Art & Culture', emoji: '🎭' };
+  if (/Country|Capital|Currency|Wonders|Continent|Ocean|Sea|Mountain|Desert/i.test(t))
+    return { subject: 'World Geography', emoji: '🗺️' };
+  if (/Parliament|Election|Bill|Legislation|Judiciary|Supreme\s+Court|Governor|Chief\s+Minister|Election\s+Commission|Appointment|Assumes\s+Charge|Takes\s+Over\s+as|Oath|Sworn|Secretary|Commissioner|Committee/i.test(t))
+    return { subject: 'Polity', emoji: '🏛️' };
+  if (source === 'RBI' || source === 'SEBI') return { subject: 'Indian Economy', emoji: '💰' };
+  if (source === 'ISRO') return { subject: 'ISRO & Space', emoji: '🚀' };
+  if (source === 'MEA') return { subject: 'International Relations', emoji: '🤝' };
+  return { subject: 'Govt Schemes', emoji: '🏛️' };
+}
+
 function shuffle(arr) {
   var a = arr.slice();
   for (var i = a.length - 1; i > 0; i--) {
@@ -100,9 +156,11 @@ function generateQuiz(items) {
           if (dist.indexOf(v) === -1) dist.push(v);
         }
         while (dist.length < 3) { dist.push('None'); }
+        var subj = determineSubject(t, item.category, item.source);
         questions.push({
           id: item.id + '-num', type: 'fill_blank', category: item.category,
           region: item.region || '', source: item.source, pubDate: item.pubDate,
+          subject: subj.subject, emoji: subj.emoji,
           question: blankText, answer: displayNum,
           options: shuffle([displayNum].concat(dist.slice(0, 3)))
         });
@@ -118,9 +176,11 @@ function generateQuiz(items) {
       var pool = named.type === 'ministry' ? allMinistries : named.type === 'scheme' ? allSchemes : allPersons;
       var dist = shuffle(pool.filter(function(v) { return v !== answer; }));
       if (named.type === 'ministry') {
+        var subj = determineSubject(t, item.category, item.source);
         questions.push({
           id: item.id + '-min', type: 'who', category: item.category,
           region: item.region || '', source: item.source, pubDate: item.pubDate,
+          subject: subj.subject, emoji: subj.emoji,
           question: 'Which ministry/organisation is associated with this news?\n"' + t.substring(0, 120) + '"',
           answer: answer, options: shuffle([answer].concat(dist.slice(0, 3)).concat(['None']))
         });
@@ -130,9 +190,11 @@ function generateQuiz(items) {
       if (named.type === 'scheme' || named.type === 'person') {
         var blankQ = t.replace(named.value, '_____');
         if (blankQ !== t) {
+          var subj = determineSubject(t, item.category, item.source);
           questions.push({
             id: item.id + '-ent', type: 'fill_blank', category: item.category,
             region: item.region || '', source: item.source, pubDate: item.pubDate,
+            subject: subj.subject, emoji: subj.emoji,
             question: blankQ, answer: answer,
             options: shuffle([answer].concat(dist.slice(0, 3)).concat(['None']))
           });
@@ -147,9 +209,11 @@ function generateQuiz(items) {
       var isTrue = Math.random() > 0.5;
       var text = t.substring(0, 120);
       if (isTrue) {
+        var subj = determineSubject(t, item.category, item.source);
         questions.push({
           id: item.id + '-tf', type: 'true_false', category: item.category,
           region: item.region || '', source: item.source, pubDate: item.pubDate,
+          subject: subj.subject, emoji: subj.emoji,
           question: 'True or False: ' + text.replace(/\.$/, '') + '.',
           answer: 'True', options: ['True', 'False']
         });
@@ -169,9 +233,11 @@ function generateQuiz(items) {
           swapped = t.replace(/\b(will|has|is|was)\s+(announced|approved|launched|sanctioned|released|inaugurated|notified|introduced|partners|facilitates|reviews|commissions|disburses|chairs|holds|organises|signs|flags|marks|invites|addresses)/i, '$1 NOT $2');
         }
         if (swapped === t) return;
+        var subj = determineSubject(t, item.category, item.source);
         questions.push({
           id: item.id + '-tf', type: 'true_false', category: item.category,
           region: item.region || '', source: item.source, pubDate: item.pubDate,
+          subject: subj.subject, emoji: subj.emoji,
           question: 'True or False: ' + swapped.substring(0, 120).replace(/\.$/, '') + '.',
           answer: 'False', options: ['True', 'False']
         });
@@ -200,6 +266,12 @@ function main() {
 
   var todayKey = new Date().toISOString().substring(0, 10);
   existing = existing.filter(function(q) { return q.pubDate.substring(0, 10) !== todayKey; });
+  // Re-evaluate subject for all existing questions (in case subject logic improved)
+  existing = existing.map(function(q) {
+    var subj = determineSubject(q.question, q.category, q.source);
+    q.subject = subj.subject; q.emoji = subj.emoji;
+    return q;
+  });
   existing = questions.concat(existing);
   if (existing.length > 100) existing = existing.slice(0, 100);
 

@@ -120,6 +120,12 @@
         .caq-date:focus{border-color:var(--purple)}
         .caq-go{padding:5px 16px;border-radius:6px;border:none;background:var(--purple);color:#fff;font-size:.78em;cursor:pointer;font-family:inherit;font-weight:600}
 
+        .caq-subjects{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+        .caq-subject{padding:4px 12px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-sec);font-size:.78em;cursor:pointer;transition:all .2s;font-family:inherit;font-weight:500}
+        .caq-subject:hover{border-color:rgba(167,139,250,.3);color:var(--text)}
+        .caq-subject.active{background:rgba(167,139,250,.12);border-color:var(--purple);color:var(--purple)}
+        .caq-subject.all-btn{border-style:dashed;border-color:rgba(255,255,255,.12)}
+
         .exam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px}
         .exam-chip{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--border);font-size:.82em;font-weight:500;transition:all .15s}
         .exam-chip:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12)}
@@ -322,6 +328,7 @@
                 <button class="caq-go" onclick="caqGoCustom()">Go</button>
             </div>
         </div>
+        <div class="caq-subjects" id="caq-subjects"></div>
         <div id="ca-quiz-container"></div>
         <div style="text-align:center;margin-top:12px">
             <a href="current-affairs.html" class="social-btn" style="display:inline-flex;background:rgba(245,158,11,.12);color:var(--amber);padding:8px 20px;font-size:.82em">Read Today's Current Affairs</a>
@@ -540,7 +547,9 @@
         if (!container) return;
         var quizState = {};
         var allQuestions = [];
-        var currentRange = { start: null, end: null };
+        var currentSubject = 'All';
+        var currentStart = '';
+        var currentEnd = '';
         var todayStr = new Date().toISOString().slice(0, 10);
 
         // Set date inputs to today
@@ -561,6 +570,8 @@
             var end = todayStr;
             document.getElementById('caq-start').value = start;
             document.getElementById('caq-end').value = end;
+            currentStart = start; currentEnd = end;
+            if (days === 0) currentSubject = 'All';
             filterAndRender(start, end);
         };
 
@@ -569,6 +580,7 @@
             var start = document.getElementById('caq-start').value;
             var end = document.getElementById('caq-end').value;
             if (!start || !end) return;
+            currentStart = start; currentEnd = end;
             filterAndRender(start, end);
         };
 
@@ -580,18 +592,58 @@
             });
             if (filtered.length === 0) {
                 container.innerHTML = '<div class="empty-state" style="margin-top:0"><div class="icon">&#x1f4da;</div><p>No quiz questions for ' + startDate + ' to ' + endDate + '.<br>Try a wider range.</p></div>';
+                document.getElementById('caq-subjects').innerHTML = '';
                 return;
             }
-            // Pick 5 (or fewer if not enough) - deterministic by date
-            var count = Math.min(5, filtered.length);
-            var selected = [];
-            var dayOffset = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000);
-            for (var i = 0; i < count; i++) {
-                var idx = (dayOffset + i * 7) % filtered.length;
-                selected.push(filtered[idx]);
+            // Build subject chips from date-filtered set
+            renderSubjectChips(filtered);
+
+            // Further filter by selected subject
+            if (currentSubject !== 'All') {
+                filtered = filtered.filter(function(q) { return q.subject === currentSubject; });
+                if (filtered.length === 0) {
+                    container.innerHTML = '<div class="empty-state" style="margin-top:0"><div class="icon">&#x1f50d;</div><p>No ' + currentSubject + ' questions in this date range.<br>Try another subject or wider range.</p></div>';
+                    return;
+                }
             }
+            // Pick 5 (or fewer if not enough) - deterministic by seeded shuffle
+            var count = Math.min(5, filtered.length);
+            var dayOffset = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000);
+            var indices = filtered.map(function(_, i) { return i; });
+            // Seeded shuffle using dayOffset
+            for (var i = indices.length - 1; i > 0; i--) {
+                var j = (dayOffset + i * 7) % (i + 1);
+                var tmp = indices[i]; indices[i] = indices[j]; indices[j] = tmp;
+            }
+            var selected = indices.slice(0, count).map(function(idx) { return filtered[idx]; });
             renderQuiz(selected);
         }
+
+        function renderSubjectChips(filteredQuestions) {
+            var chipsEl = document.getElementById('caq-subjects');
+            // Get unique subjects with emoji
+            var subjects = {};
+            filteredQuestions.forEach(function(q) {
+                if (q.subject) {
+                    var key = q.subject;
+                    if (!subjects[key]) subjects[key] = { name: key, emoji: q.emoji || '', count: 0 };
+                    subjects[key].count++;
+                }
+            });
+            var sorted = Object.keys(subjects).sort(function(a,b) { return subjects[b].count - subjects[a].count; });
+            var html = '<button class="caq-subject all-btn' + (currentSubject === 'All' ? ' active' : '') + '" onclick="caqSetSubject(\'All\')">All (' + filteredQuestions.length + ')</button>';
+            sorted.forEach(function(key) {
+                var s = subjects[key];
+                var isActive = currentSubject === key;
+                html += '<button class="caq-subject' + (isActive ? ' active' : '') + '" onclick="caqSetSubject(\'' + key.replace(/'/g,"\\'") + '\')">' + s.emoji + ' ' + s.name + ' (' + s.count + ')</button>';
+            });
+            chipsEl.innerHTML = html;
+        }
+
+        window.caqSetSubject = function(subject) {
+            currentSubject = subject;
+            filterAndRender(currentStart || todayStr, currentEnd || todayStr);
+        };
 
         function loadQuiz() {
             fetch('/data/quiz.json').then(function(r) {
@@ -604,6 +656,7 @@
                     if (controls) controls.style.display = 'none';
                     return;
                 }
+                currentStart = todayStr; currentEnd = todayStr;
                 // Default: Today
                 caqSetRange(0);
             }).catch(function() {
@@ -619,7 +672,8 @@
                 var q = questions[i];
                 var qid = 'caq-' + i;
                 quizState[qid] = { answered: false, correct: false, q: q };
-                html += '<div class="caq-card" id="' + qid + '"><div class="caq-q">Q' + (i+1) + '. ' + q.question.replace(/</g,'&lt;') + '</div>';
+                var subjectTag = q.subject && q.emoji ? '<span style="display:inline-block;font-size:.7em;padding:1px 8px;border-radius:4px;background:rgba(167,139,250,.1);color:var(--purple);margin-bottom:5px">' + q.emoji + ' ' + q.subject.replace(/</g,'&lt;') + '</span>' : '';
+                html += '<div class="caq-card" id="' + qid + '"><div class="caq-q">' + subjectTag + 'Q' + (i+1) + '. ' + q.question.replace(/</g,'&lt;') + '</div>';
 
                 if (q.type === 'true_false') {
                     html += '<div class="caq-true"><span data-qid="' + qid + '" data-val="True" onclick="caqAnswer(this)">True</span><span data-qid="' + qid + '" data-val="False" onclick="caqAnswer(this)">False</span></div>';
