@@ -17,15 +17,45 @@ var RBI_RSS_URL = 'https://www.rbi.org.in/pressreleases_rss.xml';
 var SEBI_RSS_URL = 'https://www.sebi.gov.in/sebirss.xml';
 var SC_JUDGMENTS_RSS_URL = 'https://indiankanoon.org/feeds/latest/supremecourt/';
 
-var STATE_RSS_FEEDS = [
-  { state: 'Telangana', url: 'https://www.telangana.gov.in/feed' },
-  { state: 'Goa', url: 'https://dip.goa.gov.in/feed/' },
-  { state: 'Assam', url: 'https://assam.gov.in/rss.xml' },
-  { state: 'Odisha', url: 'https://odisha.gov.in/rss.xml' },
-  { state: 'Puducherry', url: 'https://py.gov.in/rss.xml' },
-  { state: null, url: 'https://www.mygov.in/rss.xml' },
-  { state: 'Kerala', url: 'https://prd.kerala.gov.in/rss.xml' },
-  { state: 'Meghalaya', url: 'https://meghalaya.gov.in/rss.xml' }
+var GOOGLE_NEWS_TPL = 'https://news.google.com/rss/search?q={q}&hl=en-IN&gl=IN&ceid=IN:en';
+
+var STATE_QUERIES = [
+  { state: 'Andhra Pradesh', q: 'Andhra Pradesh government news' },
+  { state: 'Arunachal Pradesh', q: 'Arunachal Pradesh government' },
+  { state: 'Assam', q: 'Assam government news' },
+  { state: 'Bihar', q: 'Bihar government news' },
+  { state: 'Chhattisgarh', q: 'Chhattisgarh government news' },
+  { state: 'Goa', q: 'Goa government news' },
+  { state: 'Gujarat', q: 'Gujarat government news' },
+  { state: 'Haryana', q: 'Haryana government news scheme' },
+  { state: 'Himachal Pradesh', q: 'Himachal Pradesh government news' },
+  { state: 'Jharkhand', q: 'Jharkhand government news' },
+  { state: 'Karnataka', q: 'Karnataka government news' },
+  { state: 'Kerala', q: 'Kerala government news' },
+  { state: 'Madhya Pradesh', q: 'Madhya Pradesh government news' },
+  { state: 'Maharashtra', q: 'Maharashtra government news' },
+  { state: 'Manipur', q: 'Manipur government news' },
+  { state: 'Meghalaya', q: 'Meghalaya government news' },
+  { state: 'Mizoram', q: 'Mizoram government news' },
+  { state: 'Nagaland', q: 'Nagaland government news' },
+  { state: 'Odisha', q: 'Odisha government scheme news' },
+  { state: 'Punjab', q: 'Punjab government news' },
+  { state: 'Rajasthan', q: 'Rajasthan government news' },
+  { state: 'Sikkim', q: 'Sikkim government news' },
+  { state: 'Tamil Nadu', q: 'Tamil Nadu government news' },
+  { state: 'Telangana', q: 'Telangana government news' },
+  { state: 'Tripura', q: 'Tripura government news' },
+  { state: 'Uttar Pradesh', q: 'Uttar Pradesh government news' },
+  { state: 'Uttarakhand', q: 'Uttarakhand government news' },
+  { state: 'West Bengal', q: 'West Bengal government news' },
+  { state: 'Delhi', q: 'Delhi government news' },
+  { state: 'Jammu & Kashmir', q: 'Jammu Kashmir government news' },
+  { state: 'Ladakh', q: 'Ladakh government news' },
+  { state: 'Puducherry', q: 'Puducherry government news' },
+  { state: 'Chandigarh', q: 'Chandigarh government news' },
+  { state: 'Andaman & Nicobar', q: 'Andaman Nicobar government news' },
+  { state: 'Lakshadweep', q: 'Lakshadweep government news' },
+  { state: 'Dadra & Nagar Haveli and Daman & Diu', q: 'Daman Diu Dadra Nagar Haveli government news' }
 ];
 
 var dataDir = path.resolve(__dirname, '..', 'data');
@@ -46,7 +76,7 @@ function categorizeItem(title, desc) {
   if (/(?:agriculture|farmer|kisan|crop |food grain|wheat|rice |paddy|fertiliser|irrigation|soil health|msp |minimum support|horticulture|dairy |fisher)/.test(t)) return 'Agriculture';
   if (/(?:energy|electricity|coal |oil |petroleum|natural gas|solar |wind |renewable|hydrogen|biofuel|ethanol|power project|power plant|power sector|power generation|power capacity)/.test(t)) return 'Energy';
   if (/(?:environment|climate|forest|wildlife|pollution|ecology|green |emission|carbon |biodiversity|conservation|wetland|river |ganga |swachh)/.test(t)) return 'Environment & Climate';
-  return 'PIB Press Releases';
+  return 'Announcements';
 }
 
 function extractRegion(title, desc) {
@@ -103,6 +133,77 @@ function isEnglishText(text) {
   return other === 0 || (latin / Math.max(latin + other, 1)) > 0.4;
 }
 
+var TEMPLATES = {
+  'Agriculture': [ 'In a key development for the farm sector, ', '. This move aims to strengthen agricultural productivity and farmer welfare.' ],
+  'Awards': [ 'In recognition of outstanding contributions, ', '. The honour underscores excellence in the respective field.' ],
+  'Appointments': [ 'In a significant administrative move, ', '. The appointment is expected to bring fresh leadership to the position.' ],
+  'Business & Economy': [ 'In a major economic development, ', '. The decision is set to impact the broader economic landscape.' ],
+  'Defence & Security': [ 'On the defence and security front, ', '. The move reinforces India\'s preparedness and strategic capabilities.' ],
+  'Disasters': [ 'In a concerning development, ', '. Relief and rescue operations are underway.' ],
+  'Education': [ 'In the education sector, ', '. The initiative aims to enhance learning outcomes and access to quality education.' ],
+  'Energy': [ 'In the energy sector, ', '. This contributes to India\'s energy security and sustainability goals.' ],
+  'Entertainment': [ 'In the world of arts and culture, ', '. The development highlights India\'s vibrant creative landscape.' ],
+  'Environment & Climate': [ 'On the environmental front, ', '. This step aligns with India\'s commitment to sustainable development.' ],
+  'Health': [ 'In the healthcare domain, ', '. The measure is expected to benefit public health outcomes.' ],
+  'Obituaries': [ 'It is with deep sorrow that, ', '. The nation mourns the loss.' ],
+  'Sports': [ 'In the world of sports, ', '. The achievement celebrates India\'s sporting spirit.' ],
+  'Tech & Science': [ 'In science and technology, ', '. The advancement marks a significant step in India\'s technological progress.' ],
+  'default': [ 'In a recent development, ', '.' ]
+};
+
+var TEMPLATE_SOURCE = {
+  'PIB': 'According to the Press Information Bureau (PIB), ',
+  'PIB_RSS': 'As per the Press Information Bureau, ',
+  'RBI': 'The Reserve Bank of India (RBI) has announced that ',
+  'SEBI': 'The Securities and Exchange Board of India (SEBI) has ',
+  'ISRO': 'The Indian Space Research Organisation (ISRO) has ',
+  'MEA': 'The Ministry of External Affairs (MEA) has ',
+  'SC': 'The Supreme Court of India has '
+};
+
+function smartCase(str) {
+  // Convert all-caps to readable title case, preserve acronyms
+  if (str !== str.toUpperCase()) return str;
+  var words = str.split(/\s+/);
+  var result = [];
+  for (var w = 0; w < words.length; w++) {
+    var word = words[w];
+    if (word.length <= 3 && /^[A-Z]+$/.test(word)) { result.push(word); continue; } // keep short acronyms
+    if (/^[A-Z]{2,}[s]?$/.test(word)) { result.push(word); continue; } // keep acronyms like IITs
+    result.push(word.charAt(0).toUpperCase() + word.slice(1).toLowerCase());
+  }
+  return result.join(' ');
+}
+
+function handWriteSummary(title, source, category) {
+  var t = title;
+  var cat = category || 'default';
+
+  // Clean all-caps titles (common in PIB)
+  if (t === t.toUpperCase() && t.length > 15) {
+    t = smartCase(t);
+  }
+  // Remove quotes at start/end
+  t = t.replace(/^["\u201C\u201D\u2018\u2019]+|["\u201C\u201D\u2018\u2019]+$/g, '').trim();
+  // Remove trailing source attribution like ": Lok Sabha Speaker"
+  t = t.replace(/\s*:\s*[A-Z][A-Za-z\s.&]+\s*\([^)]+\)\s*$/g, '').trim();
+  t = t.replace(/\s*:\s*[A-Z][A-Za-z\s.&]+\s*$/g, '').trim();
+
+  var tmpl = TEMPLATES[cat] || TEMPLATES['default'];
+  var src = TEMPLATE_SOURCE[source];
+  var lead = src || tmpl[0];
+
+  // Strip redundant official prefixes for cleaner flow
+  var body = t;
+  body = body.replace(/^(Prime Minister|PM|President|President of India|Vice President|Union Minister|Home Minister|Finance Minister|Defence Minister|Education Minister|Health Minister)\s+(Shri|Smt|Dr)\s+/i, '').trim();
+  body = body.replace(/^(Shri|Smt|Dr)\s+/i, '').trim();
+  body = body.replace(/^of\s+/i, '').trim();
+
+  var summary = lead + body + '.';
+  if (summary.length > 200) summary = summary.slice(0, 197) + '...';
+  return summary;
+}
+
 function rewriteItem(item) {
   var title = (item.title || '').trim();
   var desc = (item.description || '').trim();
@@ -117,13 +218,12 @@ function rewriteItem(item) {
   title = title.replace(/\bFM\b/g, 'Finance Minister');
   title = title.replace(/\bHM\b(?!\s+of)/g, 'Home Minister');
   title = title.replace(/\bRM\b/g, 'Defence Minister');
-  title = title.replace(/\bRBI\b/g, 'RBI (Reserve Bank of India)');
-  title = title.replace(/\bSEBI\b/g, 'SEBI (Securities and Exchange Board of India)');
-  title = title.replace(/\bISRO\b/g, 'ISRO (Indian Space Research Organisation)');
 
   desc = desc.replace(/<[^>]+>/g, '').trim();
   if (desc.length > 200) desc = desc.slice(0, 200) + '...';
-  if (!desc || desc.length < 10) desc = title;
+
+  // Always generate hand-written summary
+  desc = handWriteSummary(title, item.source, item.category);
 
   item.title = title;
   item.description = desc;
@@ -395,181 +495,6 @@ async function fetchAllGoogleNews() {
   return items;
 }
 
-async function fetchStateRSSFeed(config) {
-  try {
-    var feed = await parser.parseURL(config.url);
-    return (feed.items || []).slice(0, 10).map(function(item) {
-      var pubDate = item.pubDate ? new Date(item.pubDate) : new Date();
-      var title = (item.title || '').trim();
-      var desc = (item.contentSnippet || item.content || '').trim().slice(0, 200);
-      var region = config.state ? extractRegion(title + ' ' + desc) || config.state : extractRegion(title, desc);
-      return {
-        id: item.guid || item.link || title + (config.state || ''),
-        title: title,
-        link: item.link || '',
-        description: desc,
-        category: categorizeItem(title, desc),
-        region: region,
-        pubDate: pubDate.toISOString(),
-        source: 'StateRSS'
-      };
-    });
-  } catch (e) {
-    console.error('StateRSS fetch failed for ' + (config.state || config.url) + ': ' + e.message);
-    return [];
-  }
-}
-
-async function fetchAllStateRSS() {
-  console.log('Fetching ' + STATE_RSS_FEEDS.length + ' state RSS feeds...');
-  var items = await concurrentMap(STATE_RSS_FEEDS, function(feed) {
-    return fetchStateRSSFeed(feed);
-  }, 3);
-  console.log('State RSS items: ' + items.length);
-  return items;
-}
-
-async function fetchDelhiGov() {
-  try {
-    var resp = await fetch('https://delhi.gov.in/whats-new', {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': 'text/html, */*' }
-    });
-    if (!resp.ok) return [];
-    var html = await resp.text();
-    var items = [];
-    var itemRegex = /<li>[\s\S]*?<div class="notification-view">[\s\S]*?<div class="tab-title">([\s\S]*?)<\/div>[\s\S]*?<div class="tab-date">[^D]*Date\s*:\s*(\d{2}[-/]\d{2}[-/]\d{4})[\s\S]*?<\/div>[\s\S]*?<a[^>]*title="([\s\S]*?)"[^>]*href="([^"]*)"[^>]*>/g;
-    var match;
-    while ((match = itemRegex.exec(html)) !== null) {
-      var title = (match[1] || match[3] || '').replace(/<[^>]+>/g, '').trim();
-      var link = match[4] || '';
-      var dateStr = match[2] || '';
-      if (!title || title.length < 5) continue;
-      if (link && !link.startsWith('http')) link = 'https://delhi.gov.in' + link;
-      var parts = dateStr.split(/[-/]/);
-      var pubDate = new Date(parts[2], parts[1] - 1, parts[0]);
-      if (isNaN(pubDate.getTime())) pubDate = new Date();
-      items.push({
-        id: link || title + 'Delhi',
-        title: title,
-        link: link,
-        description: 'Notification from Delhi Government — ' + title,
-        category: categorizeItem(title, ''),
-        region: 'Delhi',
-        pubDate: pubDate.toISOString(),
-        source: 'DelhiGov'
-      });
-    }
-    items.sort(function(a, b) { return new Date(b.pubDate) - new Date(a.pubDate); });
-    return items.slice(0, 10);
-  } catch (e) {
-    console.error('DelhiGov fetch failed: ' + e.message);
-    return [];
-  }
-}
-
-async function scrapeGenericGovSite(url, region, linkPrefix, sourceName) {
-  try {
-    var resp = await fetch(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': 'text/html, */*' }
-    });
-    if (!resp.ok) return [];
-    var html = await resp.text();
-    var items = [];
-    var links = html.match(/<a[^>]*href="([^"]*)"[^>]*>([^<]{10,})<\/a>/g) || [];
-    var seen = {};
-    links.forEach(function(anchor) {
-      var hrefMatch = anchor.match(/href="([^"]*)"/);
-      var textMatch = anchor.match(/>([^<]{10,})<\/a>/);
-      if (!hrefMatch || !textMatch) return;
-      var href = hrefMatch[1];
-      var text = textMatch[1].trim();
-      if (text.length < 10 || text.length > 150) return;
-      if (href === '#' || href.startsWith('javascript') || href.startsWith('mailto')) return;
-      if (seen[text]) return;
-      seen[text] = true;
-      if (href && !href.startsWith('http')) href = linkPrefix + href;
-      var pubDate = new Date();
-      var dateMatch = html.match(new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '.{0,200}(\\d{1,2}[-/]\\w+[-/]\\d{2,4})', 'i'));
-      if (dateMatch) {
-        pubDate = new Date(dateMatch[1]);
-        if (isNaN(pubDate.getTime())) pubDate = new Date();
-      }
-      items.push({
-        id: href || text + region,
-        title: text,
-        link: href || '',
-        description: 'Announcement from ' + region + ' Government — ' + text,
-        category: categorizeItem(text, ''),
-        region: region,
-        pubDate: pubDate.toISOString(),
-        source: sourceName || region.replace(/\s+/g, '') + 'Gov'
-      });
-    });
-    items.sort(function(a, b) { return new Date(b.pubDate) - new Date(a.pubDate); });
-    return items.slice(0, 10);
-  } catch (e) {
-    console.error(region + ' scrape failed: ' + e.message);
-    return [];
-  }
-}
-
-var STATE_SCRAPE_CONFIGS = [
-  { state: 'Delhi', source: 'StateGov', urls: ['https://delhi.gov.in/whats-new'] },
-  { state: 'Ladakh', source: 'StateGov', urls: ['https://ladakh.gov.in'] },
-  { state: 'Dadra & Nagar Haveli and Daman & Diu', source: 'StateGov', urls: ['https://dnh.gov.in'] },
-  { state: 'Punjab', source: 'StateGov', urls: ['https://punjab.gov.in/news', 'https://punjab.gov.in'] },
-  { state: 'Maharashtra', source: 'StateGov', urls: ['https://maharashtra.gov.in'] },
-  { state: 'Andhra Pradesh', source: 'StateGov', urls: ['https://ap.gov.in'] },
-  { state: 'Arunachal Pradesh', source: 'StateGov', urls: ['https://arunachal.gov.in', 'https://arunachalpradesh.gov.in', 'https://arun.nic.in'] },
-  { state: 'Bihar', source: 'StateGov', urls: ['https://bihar.gov.in', 'https://state.bihar.gov.in', 'https://gov.bih.nic.in'] },
-  { state: 'Chhattisgarh', source: 'StateGov', urls: ['https://cgstate.gov.in', 'https://dpr.cg.gov.in', 'https://cg.nic.in'] },
-  { state: 'Gujarat', source: 'StateGov', urls: ['https://gujarat.gov.in', 'https://gujaratinformation.gujarat.gov.in', 'https://guj.nic.in'] },
-  { state: 'Haryana', source: 'StateGov', urls: ['https://haryana.gov.in/whats-new', 'https://haryana.gov.in'] },
-  { state: 'Himachal Pradesh', source: 'StateGov', urls: ['https://himachal.gov.in/whats-new', 'https://himachal.gov.in'] },
-  { state: 'Jharkhand', source: 'StateGov', urls: ['https://jharkhand.gov.in'] },
-  { state: 'Karnataka', source: 'StateGov', urls: ['https://karnataka.gov.in'] },
-  { state: 'Madhya Pradesh', source: 'StateGov', urls: ['https://mp.gov.in/whats-new', 'https://mp.gov.in'] },
-  { state: 'Manipur', source: 'StateGov', urls: ['https://manipur.gov.in'] },
-  { state: 'Mizoram', source: 'StateGov', urls: ['https://mizoram.gov.in'] },
-  { state: 'Nagaland', source: 'StateGov', urls: ['https://nagaland.gov.in'] },
-  { state: 'Rajasthan', source: 'StateGov', urls: ['https://rajasthan.gov.in/whats-new', 'https://rajasthan.gov.in'] },
-  { state: 'Sikkim', source: 'StateGov', urls: ['https://sikkim.gov.in'] },
-  { state: 'Tamil Nadu', source: 'StateGov', urls: ['https://tn.gov.in'] },
-  { state: 'Tripura', source: 'StateGov', urls: ['https://tripura.gov.in'] },
-  { state: 'Uttar Pradesh', source: 'StateGov', urls: ['https://up.gov.in'] },
-  { state: 'Uttarakhand', source: 'StateGov', urls: ['https://uk.gov.in', 'https://pmuk.gov.in', 'https://uk.nic.in'] },
-  { state: 'West Bengal', source: 'StateGov', urls: ['https://wb.gov.in'] },
-  { state: 'Jammu & Kashmir', source: 'StateGov', urls: ['https://jkgad.gov.in', 'https://jk.gov.in', 'https://dipr.jk.gov.in', 'https://jk.nic.in'] },
-  { state: 'Chandigarh', source: 'StateGov', urls: ['https://chandigarh.gov.in', 'https://chd.nic.in'] },
-  { state: 'Lakshadweep', source: 'StateGov', urls: ['https://lakshadweep.gov.in/whats-new', 'https://lakshadweep.gov.in'] },
-  { state: 'Andaman & Nicobar', source: 'StateGov', urls: ['https://andaman.gov.in', 'https://and.nic.in'] }
-];
-
-async function fetchAllHtmlScraped() {
-  console.log('Fetching HTML-scraped state pages (' + STATE_SCRAPE_CONFIGS.length + ' states)...');
-  var scrapers = STATE_SCRAPE_CONFIGS.map(function(c) {
-    if (c.state === 'Delhi') return fetchDelhiGov();
-    return (async function() {
-      for (var i = 0; i < c.urls.length; i++) {
-        var items = await scrapeGenericGovSite(c.urls[i], c.state, c.urls[i].replace(/\/[^/]*$/, '/'), c.source);
-        if (items.length > 0) return items;
-      }
-      return [];
-    })();
-  });
-  var results = await Promise.allSettled(scrapers);
-  var total = 0;
-  var all = [];
-  results.forEach(function(r) {
-    if (r.status === 'fulfilled' && r.value && r.value.length) {
-      total += r.value.length;
-      all = all.concat(r.value);
-    }
-  });
-  console.log('HTML scraped items: ' + total);
-  return all;
-}
-
 async function fetchAll() {
   console.log('Fetching PIB English HTML page...');
   var englishItems = await fetchEnglish();
@@ -599,8 +524,7 @@ async function fetchAll() {
   var meaItems = await fetchMEA();
   console.log('MEA items: ' + meaItems.length);
 
-  var stateRssItems = await fetchAllStateRSS();
-  var htmlScrapedItems = await fetchAllHtmlScraped();
+  var googleNewsItems = await fetchAllGoogleNews();
 
   // Merge all items
   var seen = new Set();
@@ -622,19 +546,33 @@ async function fetchAll() {
   addItems(scItems);
   addItems(isroItems);
   addItems(meaItems);
-  addItems(stateRssItems);
-  addItems(htmlScrapedItems);
+  addItems(googleNewsItems);
 
   // Remove non-English items (check title)
   merged = merged.filter(function(item) {
     return item.title && isEnglishText(item.title);
   });
 
-  // Apply content rewriting to all items
-  merged = merged.map(rewriteItem);
+  // Apply rewriting: PIB stays original, others get hand-written summaries
+  merged = merged.map(function(item) {
+    if (item.source === 'PIB' || item.source === 'PIB_RSS') {
+      // Keep PIB original — just clean HTML from description
+      if (item.description) item.description = item.description.replace(/<[^>]+>/g, '').trim().slice(0, 300);
+      return item;
+    }
+    return rewriteItem(item);
+  });
 
-  // Sort by date descending
-  merged.sort(function(a, b) { return new Date(b.pubDate) - new Date(a.pubDate); });
+  // Priority-weighted sort: PIB/RBI/ISRO/MEA get time boost so they rank above same-age scraped items
+  function getSortScore(item) {
+    var d = new Date(item.pubDate).getTime();
+    var boost = 0;
+    if (item.source === 'PIB' || item.source === 'PIB_RSS') boost = 24 * 3600000;
+    else if (item.source === 'RBI' || item.source === 'ISRO' || item.source === 'MEA' || item.source === 'SC') boost = 18 * 3600000;
+    else if (item.source === 'SEBI') boost = 12 * 3600000;
+    return d + boost;
+  }
+  merged.sort(function(a, b) { return getSortScore(b) - getSortScore(a); });
 
   // Merge with existing data
   var existingPath = path.join(dataDir, 'pib-feed.json');
@@ -647,38 +585,84 @@ async function fetchAll() {
     catch(e) { existing = []; }
   }
 
-  // Filter existing: remove non-English, re-categorize old PIB items
+  // Filter existing: remove non-English, remove deprecated sources, re-categorize, rewrite non-PIB
   existing = existing.filter(function(item) {
     if (!item.title) return false;
     if (!isEnglishText(item.title)) return false;
+    // Remove items from scraper sources that are no longer active
+    if (item.source === 'StateGov' || item.source === 'StateRSS' || item.source === 'DelhiGov') return false;
+    if (item.source && /Gov$/.test(item.source) && item.source !== 'StateGov') return false;
+    item.category = categorizeItem(item.title, item.description || '');
+    item.region = extractRegion(item.title, item.description || '');
+    return true;
+  });
+  existing = existing.map(function(item) {
     if (item.source === 'PIB' || item.source === 'PIB_RSS') {
-      item.category = categorizeItem(item.title, item.description || '');
-      item.region = extractRegion(item.title, item.description || '');
+      if (item.description) item.description = item.description.replace(/<[^>]+>/g, '').trim().slice(0, 300);
+      return item;
+    }
+    return rewriteItem(item);
+  });
+
+  // Combine: new items first (so same-date items favor new over existing)
+  var allItems = merged.concat(existing);
+
+  // Dedup by id (keep first occurrence = new items)
+  var seenIds = new Set();
+  var deduped = [];
+  for (var item of allItems) {
+    if (item.id && !seenIds.has(item.id)) {
+      seenIds.add(item.id);
+      deduped.push(item);
+    }
+  }
+
+  // Filter out non-news junk (greetings, speech transcripts, routine observances, film fests, etc.)
+  var JUNK_PATTERNS = [
+    /yoga\s*(day|celebration|sangam)/i, /international day of yoga/i,
+    /english rendering of/i, /address\s+at\s+\d+(th|rd|nd)\s+international/i,
+    /extends?\s+(birthday|festival|greeting|wishes|greetings)/i,
+    /expresses?\s+grief/i, /pays?\s+(tribute|floral|respect)/i,
+    /offers?\s+prayers/i, /shares?\s+highlights\s+from/i,
+    /screened\s+at\s+miff/i, /miff\s+2026/i, /miff\s+open\s+forum/i,
+    /miff\s+honours/i, /documentary\s+celebrates/i, /short\s+film\s+['\u2018]/i,
+    /when\s+technology\s+becomes/i, /ai\s+can\s+make\s+filmmaking/i,
+    /timeless\s+classic/i, /soul\s+of\s+film/i,
+    /oscar-winning\s+short/i, /swiss\s+documentary/i,
+    /celebrating\s+a\s+century\s+of\s+wildlife/i,
+    /participates?\s+in\s+(programme|event|celebration|function)/i,
+    /leads?\s+the\s+national\s+observance/i, /celebrates?\s+/i,
+    /observe\s+\d+(th|rd|nd)\s+international/i,
+    /invites?\s+citizens?\s+to\s+join/i,
+    /^prime minister\s+(extends|expresses|pays|offers|shares|visits|offers\s+prayers)/i,
+    /^president\s+of\s+india\s+and\s+the\s+prime\s+minister/i,
+    /completion\s+of\s+two\s+years/i, /marking\s+completion/i,
+    /^technological\s+agility/i,
+    /^as\s+(artists|filmmakers)/i
+  ];
+  deduped = deduped.filter(function(i) {
+    if (i.source === 'SEBI' && /(?:recovery certificate|release order|notice of demand|rc\s*\d|demand notice)/i.test(i.title)) return false;
+    if (i.source === 'PIB' || i.source === 'PIB_RSS') {
+      for (var j = 0; j < JUNK_PATTERNS.length; j++) {
+        if (JUNK_PATTERNS[j].test(i.title)) return false;
+      }
     }
     return true;
   });
 
-  // Add new items not already in existing
-  var existingSeen = new Set();
-  for (var x of existing) { if (x.id) existingSeen.add(x.id); }
-  for (var n of merged) {
-    if (!existingSeen.has(n.id)) {
-      existing.push(n);
-    }
-  }
-
   // Keep last 30 days
   var monthAgo = Date.now() - 30 * 86400000;
-  existing = existing.filter(function(i) { return new Date(i.pubDate).getTime() > monthAgo; });
-  // Sort by date descending, cap at 200
-  existing.sort(function(a, b) { return new Date(b.pubDate) - new Date(a.pubDate); });
-  if (existing.length > 200) existing = existing.slice(0, 200);
+  deduped = deduped.filter(function(i) { return new Date(i.pubDate).getTime() > monthAgo; });
+  // Sort by priority-weighted score descending, cap at 200
+  deduped.sort(function(a, b) { return getSortScore(b) - getSortScore(a); });
+  if (deduped.length > 200) deduped = deduped.slice(0, 200);
+  var existing = deduped;
 
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
   fs.writeFileSync(existingPath, JSON.stringify({
     items: existing,
     updatedAt: new Date().toISOString(),
-    note: 'PIB + RBI + SEBI + SC + ISRO + MEA + StateRSS + HTML scraped — original summaries for educational/commercial use (government public sources + rewritten content)'
+    note: 'PIB + RBI + SEBI + SC + ISRO + MEA + Google News — rewritten regional coverage, original PIB content for educational/commercial use'
   }, null, 2), 'utf-8');
 
   console.log('Feed saved: ' + existing.length + ' items');
