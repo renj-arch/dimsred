@@ -53,9 +53,9 @@ var STATE_QUERIES = [
   { state: 'Ladakh', q: 'Ladakh government news' },
   { state: 'Puducherry', q: 'Puducherry government news' },
   { state: 'Chandigarh', q: 'Chandigarh government news' },
-  { state: 'Andaman & Nicobar', q: 'Andaman Nicobar government news' },
-  { state: 'Lakshadweep', q: 'Lakshadweep government news' },
-  { state: 'Dadra & Nagar Haveli and Daman & Diu', q: 'Daman Diu Dadra Nagar Haveli government news' }
+  { state: 'Andaman & Nicobar', q: 'Andaman Nicobar Islands tourism development' },
+  { state: 'Lakshadweep', q: 'Lakshadweep Islands India scheme' },
+  { state: 'Dadra & Nagar Haveli and Daman & Diu', q: 'Daman Diu Dadra Nagar Haveli tourism' }
 ];
 
 var dataDir = path.resolve(__dirname, '..', 'data');
@@ -466,7 +466,7 @@ async function fetchGoogleNewsForState(state, query) {
   try {
     var url = GOOGLE_NEWS_TPL.replace('{q}', encodeURIComponent(query));
     var feed = await parser.parseURL(url);
-    return (feed.items || []).slice(0, 3).map(function(item) {
+    return (feed.items || []).slice(0, 4).map(function(item) {
       var pubDate = item.pubDate ? new Date(item.pubDate) : new Date();
       var title = (item.title || '').trim();
       var desc = (item.contentSnippet || '').trim().slice(0, 200);
