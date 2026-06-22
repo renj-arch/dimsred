@@ -2162,112 +2162,145 @@ function generateNumberSenseQuestion(diff, layer) {
 
 function generatePercentageQuestion(diff, layer) {
   var types = [
-    // Successive discount / increase: net % change with formula
-    function(){ var a=rand(5,30), b=rand(5,20); return { q: 'Successive increase ' + a + '% then ' + b + '%. Net % change?', a: Math.round((a+b+a*b/100)*10)/10, hint: 'a + b + ab/100', intuition: 'Formula: x + y + xy/100. ' + a + '+' + b + '+' + (a*b/100) + ' = ' + Math.round((a+b+a*b/100)*10)/10 + '%' }; },
-    // Estimate percentage: 47 is what % of 78? — real exam style
-    function(){ var n=rand(30,90), w=rand(60,150); return { q: 'What % of ' + w + ' is ' + n + '? (approx)', a: Math.round(n/w*100), hint: 'Round to nearest 10: ' + (Math.round(n/10)*10) + '/' + (Math.round(w/10)*10) + ' × 100', intuition: 'Approx: ' + n + '/' + w + ' × 100 ≈ ' + Math.round(n/w*100) + '%' }; },
-    // Profit/Loss: find CP when SP & profit% given
-    function(){ var cp=rand(30,80)*10, p=[8,12,15,20,25][rand(0,4)]; return { q: 'SP=Rs' + Math.round(cp*(100+p)/100) + ', profit ' + p + '%. CP?', a: cp, hint: 'CP = SP × 100/(100+p)', intuition: 'CP = ' + Math.round(cp*(100+p)/100) + ' × 100/' + (100+p) + ' = ' + cp }; },
-    // Population increase/decrease
-    function(){ var p=[25000,35000,50000,60000,80000,100000,120000,150000][rand(0,7)], r=rand(4,15); return { q: 'Pop=' + p + ', increases ' + r + '% yearly. Pop after 2yr?', a: Math.round(p * (1+r/100) * (1+r/100)), hint: 'Multiply by (1 + r/100) each year', intuition: 'Year1: ' + p + ' × ' + (1+r/100) + ' = ' + Math.round(p*(1+r/100)) + '. Year2: × ' + (1+r/100) + ' = ' + Math.round(p*(1+r/100)*(1+r/100)) }; },
-    // Marked Price → discount → profit: find discount %
-    function(){ var cp=rand(20,50)*10, gp=[10,15,20,25][rand(0,3)], md=[15,20,25,30][rand(0,3)]; return { q: 'CP=Rs' + cp + ', gain ' + gp + '%, MP ' + md + '% above CP. Discount %?', a: Math.round(100 - (100+gp)/(100+md)*100), hint: 'SP=' + (100+gp) + '% of CP, MP=' + (100+md) + '% of CP', intuition: 'SP/MP = (' + (100+gp) + ')/(' + (100+md) + '). Discount = 1 - ' + (100+gp) + '/' + (100+md) + ' = ' + Math.round(100 - (100+gp)/(100+md)*100) + '%' }; },
-    // Three-successive percentage change
-    function(){ var a=rand(5,15), b=rand(5,15), c=rand(5,15); var net=((100+a)/100*(100+b)/100*(100+c)/100-1)*100; return { q: 'Three successive increases: ' + a + '%, ' + b + '%, ' + c + '%. Net % change?', a: Math.round(net*10)/10, hint: 'Multiply (1+' + a + '/100)(1+' + b + '/100)(1+' + c + '/100) - 1', intuition: 'Net = [(1+' + a + '/100)(1+' + b + '/100)(1+' + c + '/100)-1]×100 = ' + Math.round(net*10)/10 + '%' }; },
-    // Fraction to percentage (recurring)
-    function(){ var n=rand(1,8), d=rand(2,9); while(d<=n)d=rand(2,9); return { q: 'Express ' + n + '/' + d + ' as % (approx)', a: Math.round(n/d*1000)/10, hint: 'Multiply by 100: ' + n + '/' + d + '×100 = ' + Math.round(n/d*1000)/10 + '%', intuition: n + '/' + d + ' = ' + Math.round(n/d*1000)/100 + ' (as decimal). ×100 = ' + Math.round(n/d*1000)/10 + '%' }; },
-    // Election percentage problem
-    function(){ var t=rand(5000,20000), w=rand(40,60); var l=(100-w); var maj=Math.round(t*(w-l)/100); return { q: 'Total votes ' + t + ', winner gets ' + w + '%. Majority?', a: maj, hint: 'Majority = winner - loser = ' + w + '% - ' + l + '% = ' + (w-l) + '% of total', intuition: 'Winner = ' + w + '%, Loser = ' + l + '%. Majority = ' + Math.round(t*(w-l)/100) + ' votes' }; }
+    // --- Basic (diff 1-2) ---
+    // [difficulty, generator]
+    [1, function(){ var n=rand(30,90), w=rand(60,150); return { q: 'What % of ' + w + ' is ' + n + '? (approx)', a: Math.round(n/w*100), hint: 'Round to nearest 10: ' + (Math.round(n/10)*10) + '/' + (Math.round(w/10)*10) + ' × 100' }; }],
+    [1, function(){ var n=rand(1,8), d=rand(2,9); while(d<=n)d=rand(2,9); return { q: 'Express ' + n + '/' + d + ' as % (approx)', a: Math.round(n/d*1000)/10, hint: '×100: ' + n + '/' + d + '×100 = ' + Math.round(n/d*1000)/10 + '%' }; }],
+    [1, function(){ var cp=rand(30,80)*10, p=[8,12,15,20,25][rand(0,4)]; return { q: 'SP=Rs' + Math.round(cp*(100+p)/100) + ', profit ' + p + '%. CP?', a: cp, hint: 'CP = SP × 100/(100+p)' }; }],
+    [2, function(){ var a=rand(5,30), b=rand(5,20); return { q: 'Successive increase ' + a + '% then ' + b + '%. Net % change?', a: Math.round((a+b+a*b/100)*10)/10, hint: 'a + b + ab/100' }; }],
+    [2, function(){ var p=[25000,35000,50000,60000,80000,100000][rand(0,5)], r=rand(4,15); return { q: 'Pop=' + p + ', increases ' + r + '% yearly. Pop after 2yr?', a: Math.round(p*(1+r/100)*(1+r/100)), hint: 'Multiply by (1+r/100) each year' }; }],
+    [2, function(){ var t=rand(5000,20000), w=rand(40,60); return { q: 'Total votes ' + t + ', winner gets ' + w + '%. Majority?', a: Math.round(t*(w-(100-w))/100), hint: 'Majority = (win%-lose%) of total' }; }],
+    // --- SSC CGL Medium (diff 3) ---
+    [3, function(){ var cp=rand(20,50)*10, gp=[10,15,20,25][rand(0,3)], md=[15,20,25,30][rand(0,3)]; return { q: 'CP=Rs' + cp + ', gain ' + gp + '%, MP ' + md + '% above CP. Discount %?', a: Math.round(100-(100+gp)/(100+md)*100), hint: 'SP='+(100+gp)+'% of CP, MP='+(100+md)+'% of CP' }; }],
+    [3, function(){ var a=rand(5,15), b=rand(5,15), c=rand(5,15); var net=((100+a)/100*(100+b)/100*(100+c)/100-1)*100; return { q: 'Three successive increases: '+a+'%, '+b+'%, '+c+'%. Net % change?', a: Math.round(net*10)/10, hint: '(1+a/100)(1+b/100)(1+c/100)-1' }; }],
+    [3, function(){ var t=rand(3000,10000), inc=rand(5,20); var dec=rand(5,15); var first=Math.round(t*inc/100); var r1=t+first; var second=Math.round(r1*dec/100); return { q: 'Price Rs' + t + ' increased ' + inc + '%, then decreased ' + dec + '%. Final price?', a: Math.round(t*(100+inc)/100*(100-dec)/100), hint: '×'+(100+inc)/100+' then ×'+(100-dec)/100 }; }],
+    [3, function(){ var max=rand(50,100), obt=rand(Number(Math.round(max*0.3)|30),Number(Math.round(max*0.8)|50)); return { q: 'Student scores ' + obt + '/' + max + '. % if max was ' + (max+rand(10,30)) + '?', a: Math.round(obt/(max+rand(10,30))*100*10)/10, hint: 'New % = same marks / new max × 100' }; }],
+    // --- SSC CGL Hard (diff 4) ---
+    [4, function(){ var sal=rand(15000,40000), hike=rand(8,20); var newSal=Math.round(sal*(100+hike)/100); return { q: 'Salary increased ' + hike + '% to Rs' + newSal + '. Original salary?', a: sal, hint: 'Original = new × 100/(100+increase)' }; }],
+    [4, function(){ var a=rand(20,45), b=rand(10,30); return { q: 'A\'s income is ' + a + '% more than B. B\'s income is what % less than A?', a: Math.round(a/(100+a)*100*10)/10, hint: 'Required % = A_more/(100+A_more)×100' }; }],
+    [4, function(){ var t=rand(5000,25000), w=rand(48,55); return { q: 'Winning candidate gets ' + w + '% votes, wins by ' + Math.round(t*(w-(100-w))/100) + ' margin. Total votes?', a: t, hint: 'Margin = total×(win%-lose%) → total = margin/(' + w + '%-' + (100-w) + '%)' }; }],
+    [4, function(){ var m=rand(400,900), f=rand(200,500); var tot=m+f; var mp=rand(40,70); return { q: 'Boys=' + m + ', Girls=' + f + '. ' + mp + '% boys pass. Overall pass%=' + Math.round((mp*m+(70+rand(-10,10))*f/100)/tot*100*10)/10 + '. Girls pass%?', a: 70+rand(-10,10), hint: 'Use weighted avg: overall = (boys_pass%×boys + girls_pass%×girls)/total' }; }],
+    // --- Hard (diff 5) ---
+    [5, function(){ var a=rand(10,30), b=rand(5,20); var net = (100+a)/100 * (100-b)/100; return { q: 'Salary first increased ' + a + '%, then decreased ' + b + '%. Net change?', a: Math.round((net-1)*100*10)/10, hint: 'Net = (1+a/100)(1-b/100)-1. Negative = decrease' }; }],
+    [5, function(){ var cost=rand(80,200); var sp1=cost-rand(5,20); var sp2=cost+rand(10,40); return { q: 'Two articles sold at Rs' + sp1 + ' (loss ' + Math.round((cost-sp1)/cost*100) + '%) and Rs' + sp2 + ' (profit ' + Math.round((sp2-cost)/cost*100) + '%). Overall profit/loss %?', a: Math.round(((sp2+sp1-2*cost)/(2*cost)*100)*10)/10, hint: 'Total SP - Total CP over Total CP × 100' }; }],
+    [5, function(){ var p=rand(20000,80000), r=rand(5,15); return { q: 'Population ' + p + ', growth ' + r + '% for 2yr then ' + (r-rand(2,5)) + '% decline in 3rd yr. Pop after 3yr?', a: Math.round(p*(1+r/100)*(1+r/100)*(1-(r-rand(2,5))/100)), hint: 'Growth × (1+r/100)², decline × (1-d/100)' }; }]
   ];
-  var type = types[rand(0, types.length - 1)];
-  var data = type();
+  var matched = types.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = types;
+  var chosen = matched[rand(0, matched.length - 1)];
+  var data = chosen[1]();
   var opts = [data.a];
-  while (opts.length < 4) { var d = data.a + rand(-6, 6); if (opts.indexOf(d) < 0 && d >= 0) opts.push(Math.round(d)); }
+  var spread = Math.max(2, Math.abs(data.a * 0.1));
+  while (opts.length < 4) { var d = Math.round(data.a + rand(-spread, spread)); if (opts.indexOf(d) < 0 && d >= 0) opts.push(d); }
   shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 15 : 20, type: 'quant', techniqueLabel: 'Percentage: ' + data.hint, intuition: data.intuition || 'Successive %: x + y + xy/100. Profit: (SP-CP)/CP×100. Population: multiply by (1+r/100)^n' };
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer==='instinct'?12:18, type:'quant', techniqueLabel:'%: '+data.hint, intuition: data.intuition||'Key: successive x+y+xy/100. CP=SP×100/(100+p). Weighted avg for mixed groups.' };
 }
 
 function generateArithmeticQuestion(diff, layer) {
   var types = [
-    // Age problem: ratio ages with future/past
-    function(){ var a=rand(3,6), b=rand(2,Math.max(1,a-2)); var f=rand(3,8); return { q: 'Ratio of ages ' + a + ':' + b + '. In ' + f + ' yrs ratio becomes ' + (a+f) + ':' + (b+f) + '. Find A\'s present age?', a: a*Math.round(f*(a-b)/( (a+f)*(b) - (b+f)*a )), hint: 'Use difference of ratios method', intuition: 'Age ratio method: difference in = ' + f + '×(ratio diff). Or solve (A+' + f + ')/' + (a+f) + ' = (B+' + f + ')/' + (b+f) }; },
-    // Alligation: milk-water mixture strong type
-    function(){ var c1=[50,60,70,80][rand(0,3)], c2=[20,25,30][rand(0,3)]; var m=c1-c2; var t=c2+rand(5, Math.min(15, c1-c2-1)); var r1=t-c2; var r2=c1-t; var total=rand(20,50); return { q: 'Milk Rs' + c1 + '/L mixed with water. Mean Rs' + t + '/L. Milk:water ratio?', a: r1 + ':' + r2, hint: 'Alligation: (mean-low):(high-mean) = ' + r1 + ':' + r2, intuition: 'Alligation: Draw a cross. ' + c1 + ' (top) - ' + t + ' (mean) = ' + r1 + ' (bottom right). ' + c2 + ' (bottom) - ' + t + ' = ' + r2 + ' (top left). Ratio = ' + r1 + ':' + r2 }; },
-    // Pipe A fills, B fills, C empties
-    function(){ var a=rand(3,8), b=rand(4,10), c=rand(a+1, b+a+5); return { q: 'Pipe A fills in ' + a + 'hr, B in ' + b + 'hr, C empties in ' + c + 'hr. All open?', a: Math.round(1/(1/a+1/b-1/c)*10)/10, hint: 'Net = 1/A + 1/B - 1/C', intuition: 'Rate = 1/' + a + ' + 1/' + b + ' - 1/' + c + ' = ' + (1/a+1/b-1/c).toFixed(4) + '. Time = ' + Math.round(1/(1/a+1/b-1/c)*10)/10 + ' hr' }; },
-    // Work-time with efficiency ratio
-    function(){ var a=rand(9,18), eff=rand(2,4); return { q: 'A takes ' + a + ' days. B is ' + eff + '× efficient. Together?', a: Math.round(a/(1+eff)*10)/10, hint: 'B rate = ' + eff + '/A, combined = ' + (1+eff) + '/A', intuition: 'B is ' + eff + '× faster → B does ' + eff + '/day when A does 1/' + a + '/day. Combined = ' + (1+eff) + '/' + a + '. Time = ' + a + '/' + (1+eff) + ' = ' + Math.round(a/(1+eff)*10)/10 + ' days' }; },
-    // Sum of money distributed in ratio
-    function(){ var r1=rand(2,6), r2=rand(3,7), r3=rand(1,4); var total=Math.round((r1+r2+r3)*rand(10,30)); return { q: 'Rs' + total + ' divided ' + r1 + ':' + r2 + ':' + r3 + '. B\'s share?', a: Math.round(total * r2 / (r1+r2+r3)), hint: r2 + ' parts out of ' + (r1+r2+r3), intuition: 'Total parts = ' + (r1+r2+r3) + '. B = ' + r2 + '/' + (r1+r2+r3) + ' × ' + total + ' = ' + Math.round(total*r2/(r1+r2+r3)) }; },
-    // Installment payment problem
-    function(){ var p=rand(2000,8000), r=rand(5,12), n=rand(3,5); var inst=Math.round(p*Math.pow(1+r/100,n)*r/100/(Math.pow(1+r/100,n)-1)*100)/100; return { q: 'Rs' + p + ' loan at ' + r + '% CI, ' + n + ' equal annual installments. Each installment?', a: inst, hint: 'Installment = P×r×(1+r)^n/((1+r)^n-1)', intuition: 'Using formula: installment = ' + p + '×' + (r/100) + '×(1+' + r/100 + ')^' + n + '/((1+' + r/100 + ')^' + n + '-1) = Rs' + inst }; },
-    // Age with fractional relation
-    function(){ var a=rand(20,40), frac=[1/3,1/4,1/5,2/3][rand(0,3)]; var diff=rand(2,8); return { q: 'A is ' + Math.round(frac*100) + '% of B\'s age. In ' + diff + ' years, A will be ' + Math.round((frac*100+5)) + '% of B. A\'s current age?', a: a, hint: 'Let B=x, A=' + (frac*100|0) + '%x. Then ' + (frac*100|0) + '%x+' + diff + ' = ' + Math.round((frac*100+5)) + '%(x+' + diff + ')', intuition: 'Equation: ' + (frac*100|0) + '%x + ' + diff + ' = ' + Math.round((frac*100+5)) + '%(x+' + diff + '). Solve: x=' + Math.round(a/frac) + ', A=' + a }; }
+    // --- Basic (diff 1-2) ---
+    [1, function(){ var r1=rand(2,6), r2=rand(3,7), r3=rand(1,4); var total=Math.round((r1+r2+r3)*rand(10,30)); return { q: 'Rs' + total + ' divided ' + r1 + ':' + r2 + ':' + r3 + '. B\'s share?', a: Math.round(total * r2 / (r1+r2+r3)), hint: r2 + ' parts of ' + (r1+r2+r3) }; }],
+    [1, function(){ var n=rand(5,20); return { q: 'Sum of 3 consecutive numbers = ' + (3*n+3) + '. Largest?', a: n+2, hint: 'x+(x+1)+(x+2)=3x+3' }; }],
+    [1, function(){ var a=rand(8,15), f=rand(2,6); return { q: 'A=' + a + ', B=' + (a-f) + '. After ' + f + ' yrs, A=B?', a: a+f, hint: 'After t years both age increases by t' }; }],
+    // --- Medium (diff 2-3) ---
+    [2, function(){ var a=rand(3,6), b=rand(2,Math.max(1,a-2)); var f=rand(3,8); var nowA = a*Math.round(f*(a-b)/( (a+f)*(b) - (b+f)*a )); if (!nowA || nowA<2) nowA = a*rand(2,6); return { q: 'Ratio of ages ' + a + ':' + b + '. In ' + f + ' yrs ratio ' + (a+f) + ':' + (b+f) + '. A\'s present age?', a: nowA, hint: 'Use difference of ratios method' }; }],
+    [2, function(){ var a=rand(20,40), frac=[1/3,1/4,1/5,2/3][rand(0,3)]; var diff=rand(2,8); return { q: 'A is ' + Math.round(frac*100) + '% of B. In ' + diff + ' yrs, A is ' + Math.round((frac*100+5)) + '% of B. A now?', a: a, hint: 'Equation: ' + Math.round(frac*100) + '%x+' + diff + '=' + Math.round((frac*100+5)) + '%(x+' + diff + ')' }; }],
+    [2, function(){ var c1=[50,60,70,80][rand(0,3)], c2=[20,25,30][rand(0,3)]; var t=c2+rand(5,Math.min(15,c1-c2-1)); var r1=t-c2; var r2=c1-t; return { q: 'Milk Rs' + c1 + '/L mixed with water. Mean Rs' + t + '/L. Milk:water ratio?', a: r1 + ':' + r2, hint: '(mean-low):(high-mean)' }; }],
+    // --- SSC CGL (diff 3-4) ---
+    [3, function(){ var a=rand(50,100), b=rand(20,a-10); return { q: 'A+B=' + (a+b) + ', A-B=' + (a-b) + '. A/B?', a: Math.round(a/b*100)/100, hint: 'A=(sum+diff)/2=' + a + ', B=(sum-diff)/2=' + b }; }],
+    [3, function(){ var p=rand(2000,8000), r=rand(5,12), n=rand(3,5); var inst=Math.round(p*Math.pow(1+r/100,n)*r/100/(Math.pow(1+r/100,n)-1)*100)/100; return { q: 'Rs' + p + ' at ' + r + '% CI in ' + n + ' installments. Each?', a: inst, hint: 'Installment = P×r(1+r)^n/((1+r)^n-1)' }; }],
+    [3, function(){ var total=rand(3000,8000), r1=rand(2,5), r2=rand(3,7); return { q: 'Rs' + total + ' split at ' + r1 + '% and ' + r2 + '%. Total SI after 2yr = Rs' + Math.round(total*r2*2/100+rand(-50,50)) + '. Part at ' + r1 + '%?', a: Math.round((total*2*r2-(Math.round(total*r2*2/100+rand(-50,50)))*100)/(2*(r2-r1))/10)*10, hint: 'Let x at r1, (total-x) at r2. Sum SI = x*r1*2/100 + (total-x)*r2*2/100' }; }],
+    [3, function(){ var a=rand(8,20), b=rand(a+2,a+10); var t1=rand(2,5), t2=rand(1,3); var w1=a*t1; var w2=b*t2; return { q: 'A works ' + t1 + 'h/day does in ' + a + 'd. B works ' + t2 + 'h/day. Work ratio A:B per hour?', a: Math.round(w2*10/w1)/10 + ':' + '1', hint: 'Total work = days×hours. Ratio = total_work_B/total_work_A : 1' }; }],
+    [4, function(){ var a=rand(3,7), b=rand(2,5); return { q: 'A is ' + a + '× older than B. In ' + rand(4,10) + ' yrs, A is ' + (a-1) + '× B. B\'s age?', a: rand(4,10)*(a-1)-rand(4,10), hint: 'Let B=x, A=' + a + 'x. ' + a + 'x+y=' + (a-1) + '(x+y). Solve x=y(' + (a-1) + '-1)/(' + a + '-' + (a-1) + ')' }; }],
+    [4, function(){ var a=rand(2,5)*500, b=rand(3,6)*500; var ap=rand(1,4); var bp=rand(2,6); return { q: 'A Rs' + a + ' for ' + ap + 'mo, B Rs' + b + ' for ' + bp + 'mo. Profit share ratio?', a: (a*ap) + ':' + (b*bp), hint: 'Capital×time ratio' }; }],
+    [4, function(){ var x=rand(1,5), y=rand(2,6); var k=rand(3,5); return { q: 'A:B=' + x + ':' + y + ', B:C=' + y + ':' + k + '. A:C?', a: (x*k) + ':' + (y*k*10/y|0), hint: 'Make B common. A:B=' + x + ':' + y + ', B:C=' + y + ':' + k + ' → A:C=' + x + ':' + k }; }],
+    [4, function(){ var t=rand(100,500); var a=rand(t/5|0, t/3|0); var b=t-a; return { q: 'Total=' + t + ', A did on ' + a + ' days, rest B in ' + (t-a) + ' days. B\'s days if alone?', a: Math.round(b/((t-a)/(1/(a+rand(10,20))*20|0))/10|0), hint: 'A rate = A_done/days, remaining work = total - A_done' }; }],
+    // --- Hard (diff 5) ---
+    [5, function(){ var a=rand(4,8), f=rand(3,7); return { q: (a*10) + ' yrs ago, A was ' + (a*2-1) + '× B. In ' + f + ' yrs, A is ' + 2 + '× B. Present ages?', a: Math.round((a*10*(a*2-1-2)+f*(2-(a*2-1)))/(2-(a*2-1))), hint: 'Let present A=p, B=q. p-' + (a*10) + '=' + (a*2-1) + '(q-' + (a*10) + '), p+' + f + '=2(q+' + f + '). Solve simultaneously.' }; }],
+    [5, function(){ var c=rand(30,60); var q=c+rand(10,30); return { q: 'Rs' + c + '/kg type1, Rs' + q + '/kg type2. ' + (c+rand(5,15)) + '/kg mixture in ' + rand(20,50) + 'kg. Ratio?', a: (q-(c+rand(5,15))) + ':' + ((c+rand(5,15))-c), hint: 'Alligation: (cost_high-mean):(mean-cost_low)' }; }],
+    [5, function(){ var x=rand(100,500), y=rand(200,600); var gain=rand(5,20); return { q: 'A+B = ' + (x+y) + '. If A increases ' + (gain+5) + '%, B decreases ' + gain + '%, total becomes ' + Math.round(x*1.25+y*0.85) + '. Find A?', a: x, hint: 'A×' + (100+gain+5)/100 + ' + (' + (x+y) + '-A)×' + (100-gain)/100 + ' = ' + Math.round(x*1.25+y*0.85) }; }]
   ];
-  var type = types[rand(0, types.length - 1)];
-  var data = type();
+  var matched = types.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = types;
+  var chosen = matched[rand(0, matched.length - 1)];
+  var data = chosen[1]();
   var opts = [data.a];
-  while (opts.length < 4) { var d = typeof data.a === 'string' ? data.a.split(':')[0] + ':' + (parseInt(data.a.split(':')[1])+rand(-1,1)) : data.a + rand(-5, 5); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  if (typeof data.a === 'string' && data.a.indexOf(':') > 0) {
+    var parts = data.a.split(':');
+    var num = parseInt(parts[0]), den = parseInt(parts[1]);
+    while (opts.length < 4) { var d = (num+rand(-1,1)) + ':' + (den+rand(-1,1)); if (opts.indexOf(d) < 0 && d !== '0:0') opts.push(d); }
+  } else {
+    var spread = Math.max(2, Math.abs(data.a * 0.15));
+    while (opts.length < 4) { var d = (typeof data.a === 'number' ? Math.round(data.a + rand(-spread, spread)) : data.a + rand(-spread, spread)); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  }
   shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 15 : 20, type: 'quant', techniqueLabel: 'Arithmetic: ' + data.hint, intuition: data.intuition || 'Alligation: (mean-low):(high-mean). Ages: ratio difference method. Work: add rates.' };
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer==='instinct'?12:18, type:'quant', techniqueLabel: data.hint, intuition: data.intuition||'Ages: equation from conditions. Alligation: (mean-low):(high-mean). Installment: P×r(1+r)^n/((1+r)^n-1).' };
 }
 
 function generateMotionQuestion(diff, layer) {
   var types = [
-    // Type 1: Time to cross pole (given length + speed)
-    function(){ var l=rand(100,300), s=[36,45,54,60,72,90][rand(0,5)]; var ms=s*5/18; return { q: 'Train len='+l+'m at '+s+'km/h crosses a pole in?', a: Math.round(l/ms*10)/10, hint: 'Speed m/s='+s+'×5/18='+Math.round(ms)+', time='+l+'/'+Math.round(ms), intuition: 'km/h→m/s: ×5/18. '+s+'×5/18='+Math.round(ms)+'m/s. Time='+l+'/'+Math.round(ms)+'='+Math.round(l/ms*10)/10+'s' }; },
-    // Type 2: Time to cross platform (given train length + platform length + speed)
-    function(){ var l=rand(100,200), p=rand(200,400), s=[45,54,60,72][rand(0,3)]; var ms=s*5/18; return { q: 'Train '+l+'m at '+s+'km/h crosses '+p+'m platform in?', a: Math.round((l+p)/ms*10)/10, hint: 'Total='+(l+p)+'m, speed='+Math.round(ms)+'m/s', intuition: 'Add lengths. Total='+(l+p)+'m, speed='+Math.round(ms)+'m/s. Time='+(l+p)+'/'+Math.round(ms)+'='+Math.round((l+p)/ms*10)/10+'s' }; },
-    // Type 3: Two trains opposite direction → time to cross each other
-    function(){ var l1=rand(100,250), l2=rand(100,250), v1=[36,45,54][rand(0,2)], v2=[45,54,60][rand(0,2)]; return { q: 'Two trains '+l1+'m & '+l2+'m at '+v1+' & '+v2+' km/h cross each other (opposite) in?', a: Math.round((l1+l2)/((v1+v2)*5/18)*10)/10, hint: 'Rel speed='+(v1+v2)+'km/h='+Math.round((v1+v2)*5/18)+'m/s', intuition: 'Opposite: ADD speeds. Rel='+(v1+v2)+'km/h='+Math.round((v1+v2)*5/18)+'m/s. Time='+(l1+l2)+'/'+Math.round((v1+v2)*5/18)+'='+Math.round((l1+l2)/((v1+v2)*5/18)*10)/10+'s' }; },
-    // Type 4: Same direction overtake → time
-    function(){ var v1=[54,60,72,90][rand(0,3)], v2=[36,45,54][rand(0,3)]; if(v1<=v2){var t=v1;v1=v2;v2=t;} var l1=rand(150,300), l2=rand(100,200); return { q: 'Train1 '+l1+'m at '+v1+'km/h overtakes Train2 '+l2+'m at '+v2+'km/h (same dir). Time?', a: Math.round((l1+l2)/((v1-v2)*5/18)*10)/10, hint: 'Rel speed='+(v1-v2)+'km/h='+Math.round((v1-v2)*5/18)+'m/s', intuition: 'Same dir: SUBTRACT speeds. Rel='+(v1-v2)+'km/h='+Math.round((v1-v2)*5/18)+'m/s. Time='+(l1+l2)+'/'+Math.round((v1-v2)*5/18)+'='+Math.round((l1+l2)/((v1-v2)*5/18)*10)/10+'s' }; },
-    // Type 5: Train passes man running same direction → time
-    function(){ var l=rand(100,200), ts=[45,54,60][rand(0,3)], ms=[3,5,7,9][rand(0,3)]; if(ts<=ms)ts+=10; return { q: 'Train '+l+'m at '+ts+'km/h passes man running '+ms+'km/h same dir in?', a: Math.round(l/((ts-ms)*5/18)*10)/10, hint: 'Rel speed='+(ts-ms)+'km/h='+Math.round((ts-ms)*5/18)+'m/s', intuition: 'Rel speed='+ts+'-'+ms+'='+(ts-ms)+'km/h='+Math.round((ts-ms)*5/18)+'m/s. Time='+l+'/'+Math.round((ts-ms)*5/18)+'='+Math.round(l/((ts-ms)*5/18)*10)/10+'s' }; },
-    // Type 6: m/min → km/h conversion
-    function(){ var d=rand(300,900), t=rand(2,5); return { q: 'Person covers '+d+'m in '+t+'min. Speed in km/h?', a: Math.round(d/(t*60)*18/5*10)/10, hint: 'm/s→km/h: ×18/5', intuition: 'Speed='+d+'/'+(t*60)+'='+Math.round(d/(t*60)*100)/100+'m/s. ×18/5='+Math.round(d/(t*60)*18/5*10)/10+'km/h' }; },
-    // === INDIABIX-STYLE REVERSE VARIANTS ===
-    // Type 7: Reverse — find train length (given speed + time to cross pole)
-    function(){ var s=[36,45,54,60,72,90][rand(0,5)]; var t=rand(6,15); var ms=s*5/18; return { q: 'Train at '+s+'km/h crosses a pole in '+t+'s. Length?', a: Math.round(ms*t), hint: 'Length = speed(m/s) × time = '+Math.round(ms)+'×'+t, intuition: 'km/h→m/s: ×5/18. '+s+'×5/18='+Math.round(ms)+'m/s. Length='+Math.round(ms)+'×'+t+'='+Math.round(ms*t)+'m' }; },
-    // Type 8: Reverse — find bridge length (given train length + speed + time)
-    function(){ var l=rand(100,200), s=[45,54,60,72][rand(0,3)], t=rand(18,40); var ms=s*5/18; var total=Math.round(ms*t); var bridge=total-l; if(bridge<50)bridge=rand(200,400); return { q: 'Train '+l+'m at '+s+'km/h crosses bridge in '+t+'s. Bridge length?', a: bridge, hint: 'Total distance='+Math.round(ms)+'×'+t+'='+Math.round(ms*t)+', subtract train '+l, intuition: 'Speed m/s='+Math.round(ms)+'. Total='+Math.round(ms)+'×'+t+'='+Math.round(ms*t)+'m. Bridge='+Math.round(ms*t)+'-'+l+'='+bridge+'m' }; },
-    // Type 9: Reverse — find train speed (given length + time to pass man running same direction)
-    function(){ var l=rand(125,200), t=rand(8,15), ms=rand(3,6); return { q: 'Train '+l+'m passes man running '+ms+'m/s same dir in '+t+'s. Train speed (m/s)?', a: Math.round(l/t+ms), hint: 'Rel speed = '+l+'/'+t+'='+Math.round(l/t)+'. Train = rel + man', intuition: 'Relative speed = '+l+'/'+t+'='+Math.round(l/t)+'m/s. Train speed = rel + man speed = '+Math.round(l/t)+'+'+ms+'='+Math.round(l/t+ms)+'m/s' }; },
-    // Type 10: Reverse — find platform length (given speed + man-time + platform-time)
-    function(){ var s=[45,54,60,72][rand(0,3)]; var ms=s*5/18; var tm=rand(15,25); var tp=rand(tm+8, tm+25); var trainLen=Math.round(ms*tm); var total=Math.round(ms*tp); var plat=total-trainLen; if(plat<50)plat=rand(150,350); return { q: 'Train at '+s+'km/h passes man in '+tm+'s, platform in '+tp+'s. Platform length?', a: plat, hint: 'Train len='+Math.round(ms)+'×'+tm+'='+trainLen+'. Total='+Math.round(ms)+'×'+tp+'='+total+'. Platform='+total+'-'+trainLen, intuition: 'Train length = '+Math.round(ms)+'×'+tm+'='+trainLen+'m. Total platform+cross = '+Math.round(ms)+'×'+tp+'='+total+'m. Platform = '+total+'-'+trainLen+'='+plat+'m' }; },
-    // Type 11: Multi-step — find Train B speed from platform/man crossing + length ratio + opposite crossing
-    function(){ var v1ms=[10,12,15,18,20,25][rand(0,5)]; var t2=rand(6,12); var t1gap=rand(8,16); var P=v1ms*t1gap; var L1=v1ms*t2; var t1=t2+t1gap; var v1kmh=Math.round(v1ms*3.6*10)/10; var ratio=[1.5,2,2.5][rand(0,2)]; var L2=Math.round(L1*ratio); var maxT3=Math.floor(t2*(1+ratio)*0.75); var t3=rand(8,Math.max(8,maxT3)); var relV=(L1+L2)/t3; var v2ms=Math.round((relV-v1ms)*10)/10; var v2kmh=Math.round(v2ms*3.6*10)/10; if(v2ms<=0){v2ms=rand(5,10);v2kmh=Math.round(v2ms*3.6*10)/10;} return { q: 'Train A crosses '+P+'m platform in '+t1+'s & a man in '+t2+'s. Train B (len ratio '+ratio+':1) crosses A opposite in '+t3+'s. B speed (km/h)?', a: v2kmh, hint: 'A speed via platform-man diff, then A length='+L1+', then rel speed', intuition: 'Step1: A speed='+P+'/('+t1+'-'+t2+')='+v1ms+'m/s='+v1kmh+'km/h. Step2: A len='+v1ms+'×'+t2+'='+L1+'m. Step3: B len='+ratio+'×'+L1+'='+L2+'m. Step4: Rel speed opp=('+L1+'+'+L2+')/'+t3+'='+relV.toFixed(1)+'m/s. Step5: B speed='+relV.toFixed(1)+'-'+v1ms+'='+v2ms+'m/s×3.6='+v2kmh+'km/h' }; }
+    // --- Basic (diff 1-2) ---
+    [1, function(){ var d=rand(300,900), t=rand(2,5); return { q:'Speed for '+d+'m in '+t+'min (km/h)?', a:Math.round(d/(t*60)*3.6*10)/10, hint:'m/s→km/h: ×3.6' }; }],
+    [1, function(){ var l=rand(100,300), s=[36,45,54,60,72,90][rand(0,5)]; return { q:'Train '+l+'m at '+s+'km/h crosses pole in?', a:Math.round(l/(s*5/18)*10)/10, hint:'km/h→m/s: ×5/18='+Math.round(s*5/18)}; }],
+    [1, function(){ var l=rand(100,200), p=rand(200,400), s=[45,54,60,72][rand(0,3)]; return { q:'Train '+l+'m at '+s+'km/h crosses '+p+'m platform in?', a:Math.round((l+p)/(s*5/18)*10)/10, hint:'Total='+(l+p)+', speed='+Math.round(s*5/18)+'m/s'}; }],
+    [2, function(){ var s=[36,45,54,60][rand(0,3)], t=rand(6,15); return { q:'Train at '+s+'km/h crosses pole in '+t+'s. Length?', a:Math.round(s*5/18*t), hint:'L=speed(m/s)×time'}; }],
+    [2, function(){ var l=rand(100,200), s=[45,54,60][rand(0,3)], t=rand(18,40); var total=Math.round(s*5/18*t); var bridge=total-l; if(bridge<50)bridge=rand(200,400); return { q:'Train '+l+'m at '+s+'km/h crosses bridge in '+t+'s. Bridge?', a:bridge, hint:'Total='+total+', minus train '+l}; }],
+    [2, function(){ var l1=rand(100,250), l2=rand(100,250), v1=[36,45,54][rand(0,2)], v2=[45,54,60][rand(0,2)]; return { q:'Trains '+l1+'m & '+l2+'m at '+v1+' & '+v2+' km/h cross (opposite) in?', a:Math.round((l1+l2)/((v1+v2)*5/18)*10)/10, hint:'Rel speed='+(v1+v2)+'km/h'}; }],
+    // --- Medium (diff 3) ---
+    [3, function(){ var v1=[54,60,72][rand(0,2)], v2=[36,45,54][rand(0,2)]; if(v1<=v2){var t=v1;v1=v2;v2=t;} var l1=rand(150,300), l2=rand(100,200); return { q:'Train1 '+l1+'m at '+v1+' overtakes Train2 '+l2+'m at '+v2+' (same dir). Time?', a:Math.round((l1+l2)/((v1-v2)*5/18)*10)/10, hint:'Rel speed='+(v1-v2)+'km/h'}; }],
+    [3, function(){ var l=rand(100,200), ts=[45,54,60][rand(0,2)], ms=[3,5,7,9][rand(0,3)]; if(ts<=ms)ts+=10; return { q:'Train '+l+'m at '+ts+'km/h passes man at '+ms+'km/h same dir in?', a:Math.round(l/((ts-ms)*5/18)*10)/10, hint:'Rel speed='+(ts-ms)+'km/h'}; }],
+    [3, function(){ var d=rand(20,60), t1=rand(3,6), t2=rand(4,8); return { q:'A to B at '+t1+'m/s returns at '+t2+'m/s. Dist='+d+'km. Avg speed?', a:Math.round(2*t1*t2/(t1+t2)*10)/10, hint:'Avg speed = 2ab/(a+b) for same distance'}; }],
+    [3, function(){ var u=rand(4,10), d=rand(2,5), s=rand(20,40); return { q:'Boat upstream '+(u-d)+'km/h, downstream '+(u+d)+'km/h. Dist='+s+'km each way. Total time?', a:Math.round(s/(u-d)+s/(u+d)*10)/10, hint:'Time up + time down'}; }],
+    // --- SSC CGL (diff 4) ---
+    [4, function(){ var l1=rand(100,250), l2=rand(100,250); var v1=rand(5,15), v2=rand(3,10); if(v1<=v2){var t=v1;v1=v2;v2=t;} return { q:'Trains '+l1+'m & '+l2+'m at '+Math.round(v1*3.6*10)/10+' & '+Math.round(v2*3.6*10)/10+' km/h (same dir). Overtake time?', a:Math.round((l1+l2)/(v1-v2)*10)/10, hint:'Rel speed='+(v1-v2)+'m/s='+Math.round((v1-v2)*3.6*10)/10+'km/h'}; }],
+    [4, function(){ var d=rand(60,120), s=rand(20,40); return { q:'Car covers '+d+'km at '+s+'km/h, returns at '+(s+rand(5,15))+'km/h. Avg speed?', a:Math.round(2*s*(s+rand(5,15))/(s+s+rand(5,15))*10)/10, hint:'Avg speed = 2ab/(a+b)'}; }],
+    [4, function(){ var u=rand(5,10), d=rand(8,15); var dist=rand(40,80); return { q:'Speed down='+d+'km/h, up='+u+'km/h. Dist='+dist+'km each way. Avg speed?', a:Math.round(2*d*u/(d+u)*10)/10, hint:'Avg=2ab/(a+b)'}; }],
+    [4, function(){ var l=rand(150,300), s=[45,54,60,72][rand(0,3)], t=rand(20,35); var total=Math.round(s*5/18*t); if(total<=l)total=l+rand(100,300); return { q:'Train '+l+'m at '+s+'km/h crosses man in '+rand(8,15)+'s, platform in '+t+'s. Platform?', a:total-l, hint:'Train L='+l+', total='+total+'. Platform='+(total-l)}; }],
+    // --- Hard (diff 5) ---
+    [5, function(){ var v1=rand(10,20), v2=rand(6,12); var l1=rand(150,300), l2=rand(100,250); return { q:'Trains A(len='+l1+',speed='+v1+'m/s) and B(len='+l2+',speed='+v2+'m/s) opposite. Time to cross? Platform length if B crosses it in '+(rand(10,15))+'s?', a:Math.round((l1+l2)/(v1+v2)*10)/10, hint:'Opposite: add speeds. Time = (L1+L2)/(v1+v2)'}; }],
+    [5, function(){ var d=rand(300,600); return { q:'A to B at '+rand(3,6)+'m/s, B to A at '+rand(4,8)+'m/s. Total time '+d+'s. Distance?', a:Math.round(d/(1/rand(3,6)+1/rand(4,8))/60/60*10)/10, hint:'d = total_time/(1/v1 + 1/v2)'}; }],
+    [5, function(){ var r=[20,36,45,60][rand(0,3)]; var x=rand(2,5), y=rand(4,8); return { q:'Walking at '+x+'km/h, person reaches '+(y-x)+'km/h destination '+rand(5,15)+'min late. At '+y+'km/h, early '+rand(5,15)+'min. Distance?', a:Math.round(((rand(5,15)/60+rand(5,15)/60)/(1/x-1/y))*10|0), hint:'d = (t_late+t_early)/(1/v1-1/v2)'}; }],
+    [5, function(){ var d=rand(30,80), a=rand(3,6), b=rand(4,8); return { q:'Half dist at '+a+'km/h, other half at '+b+'km/h. Avg speed?', a:Math.round(2*a*b/(a+b)*10)/10, hint:'Avg = 2ab/(a+b) for two equal halves'}; }]
   ];
-  var type = types[rand(0, types.length - 1)];
-  var data = type();
+  var matched = types.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = types;
+  var chosen = matched[rand(0, matched.length - 1)];
+  var data = chosen[1]();
   var opts = [data.a];
-  while (opts.length < 4) { var d = Math.round(data.a*10)/10+rand(-4,4); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  var spread = Math.max(1, Math.abs(data.a * 0.1));
+  while (opts.length < 4) { var d = Math.round((Math.round(data.a*10)/10 + rand(-spread, spread))*10)/10; if (opts.indexOf(d) < 0 && d >= 0) opts.push(d); }
   shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 15 : 20, type: 'quant', techniqueLabel: 'Motion: '+data.hint, intuition: data.intuition||'Key shortcut: km/h × 5/18 = m/s. Train crossing pole = just train length. Train crossing platform = add both lengths.' };
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer==='instinct'?10:15, type:'quant', techniqueLabel: 'TSD: '+data.hint, intuition: data.intuition||'km/h→m/s: ×5/18. Train-pole = L, train-platform = L+P. Avg speed = 2ab/(a+b).' };
 }
 
 function generateWorkQuestion(diff, layer) {
   var ty = [
-    // A+B together
-    function(){var a=rand(6,20), b=rand(8,25); return { q: 'A completes work in '+a+' days, B in '+b+' days. Together?', a: Math.round(a*b/(a+b)*10)/10, hint: 'Together = product/sum = '+(a*b)+'/'+(a+b), intuition: 'Shortcut: product/sum. '+a+'×'+b+'/'+(a+b)+' = '+Math.round(a*b/(a+b)*10)/10+' days' }; },
-    // A+B then A leaves: remaining work by B
-    function(){var a=rand(8,15), b=rand(10,20); var together = Math.round(a*b/(a+b)); var d=rand(2, Math.max(1, together-2)); return { q: 'A & B together take '+together+' days. A leaves '+d+' days before finish. B alone finishes in?', a: Math.round((1 - d/a) / (1/b) * 10)/10, hint: 'Work left after A leaves = '+d+'/'+a, intuition: 'A absent last '+d+' days → work left = A\'s portion = '+d+'/'+a+'. Time for B alone = work left / B\'s rate' }; },
-    // Pipe A fills, pipe B empties (ensuring fill < empty so net positive)
-    function(){var a=rand(4,8), b=rand(a+2,15); return { q: 'Pipe A fills tank in '+a+'hr, pipe B empties in '+b+'hr. Both open?', a: Math.round(a*b/(b-a)*10)/10, hint: 'Net = 1/'+a+' - 1/'+b+' = '+(b-a)+'/'+(a*b), intuition: 'Fill - empty net: 1/'+a+' - 1/'+b+' = '+(b-a)+'/'+(a*b)+'. Time = '+a*b+'/'+(b-a)+' = '+Math.round(a*b/(b-a)*10)/10+' hr' }; },
-    // A is X times as efficient as B
-    function(){var a=rand(10,30), x=[2,3,4][rand(0,2)]; return { q: 'A is '+x+'× as efficient as B. A finishes in '+a+' days. B alone?', a: a*x, hint: 'B takes '+x+'× longer', intuition: 'Efficiency ∝ 1/time. '+x+'× efficient → 1/'+x+'× time. B takes '+a+'×'+x+'='+(a*x)+' days' }; },
-    // Wages distribution by work ratio
-    function(){var a=rand(6,15), b=rand(10,20), w=rand(2000,5000); return { q: 'A takes '+a+' days, B '+b+' days. Total wage Rs'+w+'. A share?', a: Math.round(w*b/(a+b)*10)/10, hint: 'Ratio 1/A:1/B = B:A', intuition: 'Wage ratio = 1/'+a+' : 1/'+b+' = '+b+' : '+a+'. A share = '+b+'/'+(a+b)+'×'+w+' = '+Math.round(w*b/(a+b)) }; },
-    // Reverse: A+B together= X, A alone = Y. Find B alone
-    function(){var a=rand(8,18), b=rand(10,22); var together=Math.round(a*b/(a+b)*10)/10; return { q: 'A+B finish in '+together+' days. A alone in '+a+' days. B alone?', a: Math.round(1/(1/together-1/a)*10)/10, hint: '1/B = 1/'+together+' - 1/'+a, intuition: '1/B = 1/total - 1/A = 1/'+together+' - 1/'+a+' = '+(1/together-1/a).toFixed(4)+'. B = '+(1/(1/together-1/a)).toFixed(1)+' days' }; },
-    // Reverse: Pipe A fills in X, both fill in Y. Find pipe B alone
-    function(){var a=rand(4,10), b=rand(a+2,16); var together=Math.round(a*b/(a+b)*10)/10; return { q: 'Pipe A fills in '+a+'hr. Both pipes fill in '+together+'hr. Pipe B alone?', a: Math.round(1/(1/together-1/a)*10)/10, hint: '1/B = 1/'+together+' - 1/'+a, intuition: '1/B = 1/'+together+' - 1/'+a+' = '+(1/together-1/a).toFixed(4)+'. B = '+Math.round(1/(1/together-1/a)*10)/10+' hr' }; }
+    [1, function(){var a=rand(6,20), b=rand(8,25); return { q:'A in '+a+'d, B in '+b+'d. Together?', a:Math.round(a*b/(a+b)*10)/10, hint:'product/sum'}; }],
+    [1, function(){var a=rand(4,8), b=rand(a+2,15); return { q:'Pipe A fills in '+a+'hr, B empties in '+b+'hr. Both open?', a:Math.round(a*b/(b-a)*10)/10, hint:'Net=1/A-1/B'}; }],
+    [1, function(){var a=rand(10,30), x=[2,3,4][rand(0,2)]; return { q:'A is '+x+'× efficient. A in '+a+'d. B alone?', a:a*x, hint:'B='+x+'×'+a}; }],
+    [2, function(){var a=rand(6,15), b=rand(10,20), w=rand(2000,5000); return { q:'A in '+a+'d, B in '+b+'d. Wage Rs'+w+'. A share?', a:Math.round(w*b/(a+b)), hint:'Ratio B:A = '+b+':'+a}; }],
+    [2, function(){var a=rand(8,18), b=rand(10,22); var t=Math.round(a*b/(a+b)*10)/10; return { q:'A+B in '+t+'d. A alone '+a+'d. B alone?', a:Math.round(1/(1/t-1/a)*10)/10, hint:'1/B=1/t-1/A'}; }],
+    [2, function(){var a=rand(8,15), b=rand(10,20); var t=Math.round(a*b/(a+b)); var d=rand(2,Math.max(1,t-2)); return { q:'A+B take '+t+'d. A leaves '+d+'d before end. Days to finish?', a:Math.round((1-d/a)/(1/b)*10)/10, hint:'Work left after A leaves = '+d+'/'+a}; }],
+    // --- Medium (diff 3) ---
+    [3, function(){var a=rand(6,12), b=rand(8,16), c=rand(12,24); return { q:'A in '+a+'d, B in '+b+'d, C in '+c+'d. All 3 together?', a:Math.round(1/(1/a+1/b+1/c)*10)/10, hint:'Sum of rates: 1/'+a+'+1/'+b+'+1/'+c}; }],
+    [3, function(){var a=rand(8,16), x=rand(2,3), y=rand(1,2); var b=Math.round(a*x/y); return { q:'A is '+x+'× B, A+B complete in '+Math.round(a*b/(a+b)*10)/10+'d. A alone?', a:a, hint:'Let B='+x+'A? No, A='+x+'B => B=xA? Wait: A='+x+'B means 1/A='+x+'/B'}; }],
+    [3, function(){var a=rand(4,8), b=rand(a+1,12), c=rand(8,15); return { q:'Pipe A fills in '+a+'h, B in '+b+'h, C empties in '+c+'h. All 3 open?', a:Math.round(1/(1/a+1/b-1/c)*10)/10, hint:'Net = 1/A+1/B-1/C'}; }],
+    // --- SSC CGL (diff 4) ---
+    [4, function(){var a=rand(8,16), b=rand(12,20), x=rand(2,5); var total=x*Math.round(a*b/(a+b)); return { q:'A+B earn Rs'+total+' for a job. A in '+a+'d, B in '+b+'d. A leaves after '+rand(3,5)+'d. B gets?', a:Math.round(total*(1-rand(3,5)/a)), hint:'A done='+rand(3,5)+'/'+a+', remaining by B'}; }],
+    [4, function(){var a=rand(2,5), b=rand(3,6), c=rand(4,8); return { q:'A in '+a+'h, B in '+b+'h, C in '+c+'h. Alternating A→B→C→... Time to fill?', a:Math.round((1/a+1/b+1/c)+rand(1,3)*10|0), hint:'Each cycle of 3h: sum of rates'}; }],
+    [4, function(){var m=rand(10,30), w=rand(15,35), c=rand(5,15); return { q:'Men='+m+' finish in '+rand(12,20)+'d. '+w+' women = '+m+' men? women done?', a:Math.round(w*rand(12,20)/m*10)/10, hint:'Work = men×days'}; }],
+    // --- Hard (diff 5) ---
+    [5, function(){var a=rand(4,8), b=rand(6,12); var leak=rand(a+2,b+5); return { q:'Pipe fills in '+a+'h. Leak empties in '+leak+'h. Both open '+(rand(3,6))+'h, then leak closed. Total time?', a:Math.round(rand(3,6)+1/(1/a-(1/leak-1/a))*10|0), hint:'First phase: fill-leak for Xh. Then fill alone for remaining.'}; }],
+    [5, function(){var a=rand(6,14), b=rand(8,18), c=rand(12,24); return { q:'A in '+a+'d, B in '+b+'d, C in '+c+'d. A+B for '+rand(3,5)+'d, then A+C for '+rand(2,4)+'d. Remaining by B?', a:Math.round((1-(rand(3,5)/a+rand(3,5)/b)-(rand(2,4)/a+rand(2,4)/c))/(1/b)*10)/10, hint:'Work done: A+B for X days + A+C for Y days. Remaining = 1 - sum'}; }]
   ];
-  var t = ty[rand(0, ty.length - 1)];
-  var d = t();
-  var o = [d.a]; while(o.length<4){var v=Math.round(d.a*10)/10+rand(-2,2); if(o.indexOf(v)<0&&v>0)o.push(v);}
+  var matched = ty.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = ty;
+  var t = matched[rand(0, matched.length - 1)];
+  var d = t[1]();
+  var o = [d.a]; var spread = Math.max(0.5, Math.abs(d.a*0.08));
+  while(o.length<4){var v=Math.round((d.a+rand(-spread,spread))*10)/10; if(o.indexOf(v)<0&&v>0)o.push(v);}
   shuffle(o);
-  return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: layer==='instinct'?15:20, type:'quant', techniqueLabel:'Work: '+d.hint, intuition: d.intuition||'Key: total work = LCM of days. Combined rate work = product/sum = a×b/(a+b).' };
+  return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: layer==='instinct'?12:18, type:'quant', techniqueLabel:'Work: '+d.hint, intuition: d.intuition||'Product/sum = combined. Efficiency ratio. Wages proportional to work.' };
 }
 
 function generateAlgebraQuestion(diff, layer) {
@@ -2411,24 +2444,30 @@ function generateDataQuestion(diff, layer) {
 
 function generateNumberSystemQuestion(diff, layer) {
   var ty = [
-    function(){ var n = [[2,4],[3,4],[2,5],[7,4],[3,7],[8,3],[9,2],[4,7]][rand(0,7)]; return { q: 'Unit digit of ' + n[0] + '^' + n[1], a: Math.pow(n[0]%10, n[1]%4||4) % 10, hint: 'Cyclicity: ' + n[0] + ' repeats every 4', intuition: 'Cyclicity: ' + n[0] + '^n repeats every 4. ' + n[0] + '^' + n[1] + ' = ' + n[0] + '^' + (n[1]%4||4) + ', unit digit = ' + (Math.pow(n[0]%10,n[1]%4||4)%10) }; },
-    function(){ var d = rand(7, 18); var n = rand(2, 6); return { q: 'Remainder when ' + d + '^' + n + ' divided by 5', a: Math.pow(d%5, n%4||4) % 5, hint: 'Use mod 5 cyclicity', intuition: 'Mod cyclicity: ' + d + ' mod 5 = ' + (d%5) + '. (' + (d%5) + ')^' + n + ' mod 5 = ' + Math.pow(d%5,n%4||4)%5 }; },
-    function(){ var a = rand(12, 99), b = rand(2, 9); return { q: 'Remainder of ' + a + ' ÷ ' + b, a: a % b, hint: 'Divide ' + a + ' by ' + b, intuition: 'Just find remainder: ' + b + '×' + Math.floor(a/b) + ' = ' + (b*Math.floor(a/b)) + ', remainder = ' + (a-b*Math.floor(a/b)) }; },
-    function(){ var n = rand(3, 9); return { q: 'Simplify \u221A' + (n*n*2), a: n + '\u221A2', hint: 'Factor out perfect square', intuition: '√' + (n*n*2) + ' = √(' + n + '²×2) = ' + n + '√2' }; },
-    function(){ var n = rand(3, 6); return { q: 'Simplify \u221B' + (n*n*n*3), a: n + '\u221B3', hint: 'Factor out perfect cube', intuition: '∛' + (n*n*n*3) + ' = ∛(' + n + '³×3) = ' + n + '∛3' }; },
-    function(){ var n = rand(10, 20); return { q: 'Divisibility: Is ' + (n*7) + ' divisible by 7? (Y/N)', a: 'Y', hint: n + '×7 = ' + n*7, intuition: n + ' × 7 = ' + n*7 + ', so yes. Double the last digit and subtract from rest to check divisibility by 7.' }; },
-    // Sum of digits
-    function(){ var n = rand(100, 999); var s=0; var t=n; while(t>0){s+=t%10;t=Math.floor(t/10);} return { q: 'Sum of digits of ' + n, a: s, hint: 'Add each digit: ' + String(n).split('').join('+'), intuition: n + ' → sum = ' + s }; },
-    // Number of factors
-    function(){ var p2=[2,3,5,7]; var a=p2[rand(0,3)], b=p2[rand(0,3)]; while(b===a)b=p2[rand(0,3)]; var n=a*a*b; return { q: 'Number of factors of ' + n, a: 6, hint: n + ' = ' + a + '²×' + b + ', factors = (2+1)(1+1)=6', intuition: 'Prime factors: ' + a + '²×' + b + '. Factor count = (2+1)(1+1) = 6' }; },
-    // Remainder theorem find divisor
-    function(){ var d=rand(3,9), q=rand(5,15), r=rand(1,d-1); return { q: 'Number = ' + d + '×' + q + ' + ' + r + '. What is the number?', a: d*q+r, hint: 'Number = divisor×quotient + remainder', intuition: d + '×' + q + '+' + r + ' = ' + (d*q+r) }; }
+    [1, function(){ var n=rand(100,999); var s=String(n).split('').reduce(function(a,c){return a+ +c;},0); return { q:'Sum of digits of '+n, a:s, hint:'Add each digit' }; }],
+    [1, function(){ var d=rand(3,9), q=rand(5,15), r=rand(1,d-1); return { q:'Number = '+d+'×'+q+' + '+r+'. What number?', a:d*q+r, hint:'Div×Q+R' }; }],
+    [1, function(){ var n=rand(10,99); var rev=0,t=n; while(t>0){rev=rev*10+t%10;t=Math.floor(t/10);} return { q:'Reverse of '+n, a:rev, hint:'Reverse digits' }; }],
+    [2, function(){ var n=[[2,4],[3,4],[2,5],[7,4],[3,7],[8,3],[9,2],[4,7]][rand(0,7)]; return { q:'Unit digit of '+n[0]+'^'+n[1], a:Math.pow(n[0]%10,n[1]%4||4)%10, hint:'Cyclicity: '+n[0]}; }],
+    [2, function(){ var a=rand(2,9), b=rand(a+1,15); var hcf=(function(x,y){while(y){var t=y;y=x%y;x=t;}return x;})(a,b); return { q:'HCF of '+a+' and '+b, a:hcf, hint:'Euclidean algorithm'}; }],
+    [2, function(){ var a=rand(2,9), b=rand(a+1,12); var hcf=(function(x,y){while(y){var t=y;y=x%y;x=t;}return x;})(a,b); return { q:'LCM of '+a+' and '+b, a:a*b/hcf, hint:'a×b/HCF'}; }],
+    [3, function(){ var p2=[2,3,5,7]; var a=p2[rand(0,3)], b=p2[rand(0,3)]; while(b===a)b=p2[rand(0,3)]; return { q:'Factors of '+a*a*b+'?', a:6, hint:a+'²×'+b+' → (2+1)(1+1)=6'}; }],
+    [3, function(){ var d=rand(7,18), n=rand(2,6); return { q:'Remainder: '+d+'^'+n+' ÷ 5', a:Math.pow(d%5,n%4||4)%5, hint:'Mod 5 cyclicity'}; }],
+    [3, function(){ var n=rand(100,999); return { q:'Is '+n+' ÷ 3? (Y/N)', a:n%3===0?'Y':'N', hint:'Sum of digits check'}; }],
+    [4, function(){ var p2=[2,3,5,7,11]; var a=p2[rand(0,4)],b=p2[rand(0,4)],c=p2[rand(0,4)]; while(b===a)b=p2[rand(0,4)];while(c===a||c===b)c=p2[rand(0,4)]; return { q:'Factors of '+a*a*b*c+'?', a:(2+1)*(1+1)*(1+1), hint:a+'²'+b+'¹'+c+'¹ → (2+1)(1+1)(1+1)'}; }],
+    [4, function(){ var a=rand(1000,9999); var rev=0,t=a; while(t>0){rev=rev*10+t%10;t=Math.floor(t/10);} return { q:'Diff between '+a+' and reverse?', a:Math.abs(a-rev), hint:'Subtract reverse'}; }],
+    [4, function(){ var a=rand(2,6), b=rand(a+1,2*a); var hcf=(function(x,y){while(y){var t=y;y=x%y;x=t;}return x;})(a,b); return { q:'Product='+a*b+', HCF='+hcf+'. LCM?', a:a*b/hcf, hint:'HCF×LCM=Product'}; }],
+    [5, function(){ var n=[0,1,2,3,4,5,6,7,8,9][rand(0,9)]; var cyc=[1,1,4,4,2,1,1,4,4,2]; return { q:'Cyclicity of unit digit for '+n+'^n?', a:cyc[n], hint:'0:1,1:1,2:4,3:4,4:2,5:1,6:1,7:4,8:4,9:2'}; }],
+    [5, function(){ var n=rand(1000,9999); return { q:'Digital sum of '+n, a:(function(x){while(x>9){var s=0;while(x>0){s+=x%10;x=Math.floor(x/10);}x=s;}return x;})(n), hint:'Sum digits until 1 digit'}; }],
+    [5, function(){ var a=rand(100,999), b=rand(100,999); var hcf=(function(x,y){while(y){var t=y;y=x%y;x=t;}return x;})(a,b); return { q:'HCF of '+a+' and '+b+'?', a:hcf, hint:'Euclidean algorithm'}; }]
   ];
-  var t = ty[rand(0, ty.length - 1)];
-  var d = t();
-  var o = [d.a]; while(o.length<4){var v=(typeof d.a==='string'?['Y','N'][rand(0,1)]:Math.abs(d.a)+rand(-3,3)); if(o.indexOf(v)<0&&(typeof v==='string'||v>=0))o.push(v);}
+  var matched = ty.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = ty;
+  var t = matched[rand(0, matched.length - 1)];
+  var d = t[1]();
+  var o = [d.a]; var spread = Math.max(1, typeof d.a==='number'?Math.abs(d.a*0.15):5);
+  while(o.length<4){var v=typeof d.a==='number'?Math.round(d.a+rand(-spread,spread)):['Y','N'][rand(0,1)]; if(o.indexOf(v)<0&&(typeof v==='string'||v>=0))o.push(v);}
   shuffle(o);
-  return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: layer==='instinct'?12:18, type:'quant', techniqueLabel:'Number System: '+d.hint, intuition: d.intuition||'Use cyclicity for unit digit, mod for remainders' };
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:layer==='instinct'?12:18, type:'quant', techniqueLabel:'NumSys: '+d.hint, intuition:'Unit digit cyclicity. HCF×LCM=Product. Factors=Π(ei+1). Digital sum.' };
 }
 
 function generateSimplificationQuestion(diff, layer) {
@@ -2826,20 +2865,30 @@ function generateVennDiagramQuestion(diff) {
 
 function generateProfitLossQuestion(diff, layer) {
   var ty = [
-    function(){ var cp=rand(50,200), p=rand(5,30); return { q:'CP=₹'+cp+', profit='+p+'%. SP?', a:Math.round(cp*(100+p)/100), hint:'SP=CP×(100+P%)/100' }; },
-    function(){ var sp=rand(100,300), p=rand(5,25); return { q:'SP=₹'+sp+', profit='+p+'%. CP?', a:Math.round(sp*100/(100+p)), hint:'CP=SP×100/(100+P%)' }; },
-    function(){ var cp=rand(80,300), l=rand(5,20); return { q:'CP=₹'+cp+', loss='+l+'%. SP?', a:Math.round(cp*(100-l)/100), hint:'SP=CP×(100-L%)/100' }; },
-    function(){ var cp=rand(50,150), sp=cp+rand(10,40); return { q:'CP=₹'+cp+', SP=₹'+sp+'. Profit%?', a:Math.round((sp-cp)/cp*100), hint:'P%=(SP-CP)/CP×100' }; },
-    function(){ var mp=rand(200,500), d=rand(10,30), p=rand(5,15); var sp=Math.round(mp*(100-d)/100); var cp=Math.round(sp*100/(100+p)); return { q:'MP=₹'+mp+', discount='+d+'%, profit='+p+'%. CP?', a:cp, hint:'Find SP from MP, then CP from SP' }; },
-    // False weight profit%
-    function(){ var w=rand(800,950); return { q:'Shopkeeper uses ' + w + 'g weight instead of 1000g. Profit%?', a:Math.round((1000-w)/w*10000)/100, hint:'Profit% = (true-false)/false × 100', intuition:'Profit% = (1000-' + w + ')/' + w + ' × 100 = ' + (1000-w) + '/' + w + ' × 100 = ' + Math.round((1000-w)/w*10000)/100 + '%' }; },
-    // Successive transactions
-    function(){ var cp=rand(100,300), g1=rand(5,15), g2=rand(5,15); return { q:'A buys at ₹' + cp + ', sells to B at ' + g1 + '% profit. B sells to C at ' + g2 + '% profit. C\'s CP?', a:Math.round(cp*(100+g1)/100*(100+g2)/100), hint:'Apply profit% successively: ×' + (100+g1)/100 + ' ×' + (100+g2)/100, intuition:'C CP = ' + cp + ' × ' + (100+g1)/100 + ' × ' + (100+g2)/100 + ' = ' + Math.round(cp*(100+g1)/100*(100+g2)/100) }; },
-    // Compare two transactions
-    function(){ var cp=rand(100,200); var p1=rand(10,20), p2=rand(5,15); var sp1=Math.round(cp*(100+p1)/100); var sp2=Math.round(cp*(100+p2)/100); var diff=sp1-sp2; return { q:'CP=₹' + cp + '. Profit P1=' + p1 + '%, P2=' + p2 + '%. Difference in SP?', a:diff, hint:'SP1-SP2 = CP(' + (100+p1) + '% - ' + (100+p2) + '%)', intuition:'SP1=' + cp + '×' + (100+p1) + '%=' + sp1 + '. SP2=' + cp + '×' + (100+p2) + '%=' + sp2 + '. Diff=' + diff }; }
+    [1, function(){ var cp=rand(50,200), p=rand(5,30); return { q:'CP=₹'+cp+', profit='+p+'%. SP?', a:Math.round(cp*(100+p)/100), hint:'SP=CP×(100+P%)/100' }; }],
+    [1, function(){ var sp=rand(100,300), l=rand(5,20); return { q:'SP=₹'+sp+', loss='+l+'%. CP?', a:Math.round(sp*100/(100-l)), hint:'CP=SP×100/(100-L%)' }; }],
+    [1, function(){ var cp=rand(50,150), sp=cp+rand(10,40); return { q:'CP=₹'+cp+', SP=₹'+sp+'. Profit%?', a:Math.round((sp-cp)/cp*100), hint:'P%=(SP-CP)/CP×100' }; }],
+    [2, function(){ var mp=rand(200,500), d=rand(10,30), p=rand(5,15); var sp=Math.round(mp*(100-d)/100); var cp=Math.round(sp*100/(100+p)); return { q:'MP=₹'+mp+', discount='+d+'%, profit='+p+'%. CP?', a:cp, hint:'SP from MP, then CP from SP' }; }],
+    [2, function(){ var cp=rand(100,300), g1=rand(5,15), g2=rand(5,15); return { q:'A buys ₹'+cp+', sells to B at '+g1+'% profit. B to C at '+g2+'% profit. C CP?', a:Math.round(cp*(100+g1)/100*(100+g2)/100), hint:'Successive ×'+(100+g1)/100+' ×'+(100+g2)/100}; }],
+    [2, function(){ var cp=rand(100,200); var p1=rand(10,20), p2=rand(5,15); return { q:'CP=₹'+cp+'. Profit P1='+p1+'%, P2='+p2+'%. SP diff?', a:Math.round(cp*(p1-p2)/100), hint:'CP×('+p1+'%-'+p2+'%)'}; }],
+    // --- Medium (diff 3) ---
+    [3, function(){ var w=rand(800,950); return { q:'Uses '+w+'g weight instead of 1000g. Profit%?', a:Math.round((1000-w)/w*10000)/100, hint:'= (1000-'+w+')/'+w+'×100'}; }],
+    [3, function(){ var cp1=rand(200,500), g=rand(8,20); var cp2=Math.round(cp1*(100-g)/100); return { q:'Sold two items: one at '+g+'% profit, other at '+g+'% loss. Both SP same ₹'+Math.round(cp1*(100+g)/100)+'. Overall P/L?', a:Math.round(-(cp1*g*g/10000)*100)/100, hint:'Always LOSS: -(gain%)²/100. Net loss%='+Math.round(g*g/100*10)/10+'%'}; }],
+    [3, function(){ var cp=rand(200,500), d=rand(10,25); return { q:'MP=₹'+Math.round(cp*(100+d)/100)+', discount '+d+'% on MP, profit '+rand(5,15)+'%. CP?', a:cp, hint:'SP=MP×(100-D)%, then CP=SP×100/(100+P%)'}; }],
+    // --- SSC CGL (diff 4) ---
+    [4, function(){ var cp=rand(200,600), m=rand(15,35); var sp=Math.round(cp*(100+m)/100); var d=rand(5,20); var mp=Math.round(sp*100/(100-d)); return { q:'CP=₹'+cp+', gain '+m+'% after discount '+d+'%. MP?', a:mp, hint:'SP=CP×'+(100+m)+'%, then MP=SP×100/'+(100-d)}; }],
+    [4, function(){ var m=rand(100,300), n=rand(6,15); var spPer=Math.round(m/n*10)/10; var cpPer=Math.round(spPer*(100+rand(5,20))/100*10)/10; return { q:''+n+' articles for ₹'+m+' (SP per article). If CP per article ₹'+cpPer+', overall P/L%?', a:Math.round((spPer-cpPer)/cpPer*1000)/10, hint:'Find per-article SP, compare with per-article CP'}; }],
+    // --- Hard (diff 5) ---
+    [5, function(){ var cp=rand(200,500), m=rand(20,40), d=rand(10,20); return { q:'CP=₹'+cp+', MP '+m+'% above CP, discount '+d+'%. Profit%?', a:Math.round((100+m)*(100-d)/100-1000)/10, hint:'Net% = ((100+M%)(100-D%)/100)-100'}; }],
+    [5, function(){ var cp=rand(150,400), d=rand(10,25), g=rand(5,12); return { q:'CP=₹'+cp+', wants '+g+'% profit after discount '+d+'%. MP?', a:Math.round(cp*(100+g)/100*100/(100-d)), hint:'MP = CP(100+G%)/100 × 100/(100-D%)'}; }],
+    [5, function(){ var r=rand(5,15); return { q:'Selling price same. One sold at '+r+'% gain, other at '+r+'% loss. Net loss%?', a:Math.round(r*r/100*10)/10, hint:'Always loss = (gain%)²/100. Here '+r+'²/100='+Math.round(r*r/100*10)/10+'%'}; }]
   ];
-  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-20,20); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
-  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'P&L: '+d.hint, intuition:'SP=CP×(100±P%)/100. For discount: SP=MP×(100-D%)/100. Then find CP from SP.' };
+  var matched = ty.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = ty;
+  var d = matched[rand(0, matched.length - 1)][1]();
+  var o = [d.a]; var spread = Math.max(5, Math.abs(d.a*0.1));
+  while(o.length<4){var v=Math.round(d.a+rand(-spread,spread)); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'P&L: '+d.hint, intuition:'SP=CP×(100±P%)/100. Discount: SP=MP×(100-D%)/100. Successive: multiply factors.' };
 }
 
 function generatePipesCisternsQuestion(diff, layer) {
