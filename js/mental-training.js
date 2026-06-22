@@ -2305,81 +2305,98 @@ function generateWorkQuestion(diff, layer) {
 
 function generateAlgebraQuestion(diff, layer) {
   var types = [
-    // Age problem: A is 3x B. In 5 yrs, A=2x B
-    function(){ var b=rand(3,8), m=rand(2,4); var a=m*b; var f=rand(3,8); return { q: 'A is ' + m + '× B\'s age. In ' + f + ' yrs, A = ' + (m-1) + '× B. B now?', a: f*(m-1) - f, hint: 'Let B=x, A=' + m + 'x. Then ' + m + 'x+' + f + '=' + (m-1) + '(x+' + f + ')', intuition: 'Equation: ' + m + 'x + ' + f + ' = ' + (m-1) + '(x + ' + f + '). Solve: ' + m + 'x + ' + f + ' = ' + (m-1) + 'x + ' + ((m-1)*f) + ', ' + m + 'x - ' + (m-1) + 'x = ' + ((m-1)*f-f) + ', x = ' + ((m-1)*f-f) }; },
-    // Two-variable: sum and difference
-    function(){ var x=rand(15,40), y=rand(5,Math.max(1,x-10)); return { q: 'Sum of two numbers = ' + (x+y) + ', difference = ' + (x-y) + '. Larger number?', a: x, hint: 'Larger = (sum + diff)/2', intuition: 'Larger = (sum + diff)/2 = (' + (x+y) + '+' + (x-y) + ')/2 = ' + (2*x) + '/2 = ' + x + '. Smaller = (sum - diff)/2 = ' + y }; },
-    // Fraction with numerator/denominator
-    function(){ var n=rand(1,5), d=rand(n+1,9); return { q: 'Denominator > numerator by ' + (d-n) + '. Sum = ' + (n+d) + '. Fraction?', a: n + '/' + d, hint: 'Let num=x, den=x+' + (d-n) + '. x+x+' + (d-n) + '=' + (n+d), intuition: 'x + (x+' + (d-n) + ') = ' + (n+d) + ', 2x = ' + (n+d-(d-n)) + ' = ' + (2*n) + ', x = ' + n + '. Fraction = ' + n + '/' + d }; },
-    // Quadratic from exam: find roots
-    function(){ var r1=rand(2,7), r2=rand(-5,-1); return { q: 'Roots of x² ' + (-r1-r2>=0?'+':'') + (-r1-r2) + 'x ' + (r1*r2>=0?'+':'') + (r1*r2) + ' = 0', a: r1 + ',' + r2, hint: 'Sum=' + (r1+r2) + ', product=' + (r1*r2), intuition: 'Sum of roots = ' + (r1+r2) + ' (sign flipped), product = ' + (r1*r2) + '. Find factors of ' + (r1*r2) + ' that sum to ' + (r1+r2) + ': ' + r1 + ', ' + r2 }; },
-    // Hard: 3-person ages
-    function(){ var b=rand(8,15), c=rand(3,7); var a=[2,3,4][rand(0,2)]*b; var sum=a+b+c; return { q: 'A is ' + (a/b|0) + '× B\'s age. C is ' + c + '. Sum=' + sum + '. Find A?', a: a, hint: 'Let B=x, A=' + (a/b|0) + 'x, C=' + c + '. ' + (a/b|0+1) + 'x + ' + c + ' = ' + sum, intuition: 'Equation: ' + (a/b|0) + 'x + x + ' + c + ' = ' + sum + ', ' + (a/b|0+1) + 'x = ' + (sum-c) + ', x = ' + ((sum-c)/(a/b|0+1)|0) + '. A = ' + (a/b|0) + ' × ' + ((sum-c)/(a/b|0+1)|0) + ' = ' + a }; },
-    // 3 consecutive numbers sum
-    function(){ var n=rand(5,20); return { q: 'Sum of 3 consecutive numbers = ' + (3*n+3) + '. Largest?', a: n+2, hint: 'Let x, x+1, x+2. Sum = 3x+3 = ' + (3*n+3), intuition: '3x+3 = ' + (3*n+3) + ', 3x = ' + (3*n) + ', x = ' + n + '. Numbers: ' + n + ', ' + (n+1) + ', ' + (n+2) + '. Largest = ' + (n+2) }; },
-    // Fraction where numerator+denominator = X, denominator = numerator + Y
-    function(){ var n=rand(2,6), d=n+rand(2,5); return { q: 'Numerator + denominator = ' + (n+d) + ', denominator exceeds numerator by ' + (d-n) + '. Fraction?', a: n + '/' + d, hint: 'Let num=x, den=x+' + (d-n) + '. x+(x+' + (d-n) + ')=' + (n+d), intuition: '2x+' + (d-n) + '=' + (n+d) + ', 2x=' + (n+d-(d-n)) + '=' + (2*n) + ', x=' + n + '. Fraction=' + n + '/' + d }; },
-    // Two-variable: 2x+3y type
-    function(){ var x=rand(2,8), y=rand(2,6); var a=rand(2,4), b=rand(2,4); return { q: 'Solve: ' + a + 'x + ' + b + 'y = ' + (a*x+b*y) + ' and ' + (a+1) + 'x + ' + (b+1) + 'y = ' + ((a+1)*x+(b+1)*y) + '. Find x+y?', a: x+y, hint: 'Subtract equations to eliminate variables', intuition: 'Subtract: (' + (a+1) + '-' + a + ')x + (' + (b+1) + '-' + b + ')y = ' + ((a+1)*x+(b+1)*y - (a*x+b*y)) + ' → x+y=' + ((a+1)*x+(b+1)*y - (a*x+b*y)) + '. Check: x=' + x + ', y=' + y }; }
+    [1, function(){ var x=rand(15,40), y=rand(5,Math.max(1,x-10)); return { q:'Sum='+(x+y)+', diff='+(x-y)+'. Larger?', a:x, hint:'(sum+diff)/2'}; }],
+    [1, function(){ var n=rand(2,6), d=n+rand(2,5); return { q:'Num+den='+(n+d)+', den>num by '+(d-n)+'. Fraction?', a:n+'/'+d, hint:'x+(x+'+(d-n)+')='+(n+d)}; }],
+    [1, function(){ var n=rand(5,20); return { q:'3 consecutive sum='+(3*n+3)+'. Largest?', a:n+2, hint:'3x+3='+(3*n+3)}; }],
+    [2, function(){ var m=rand(2,4), f=rand(3,8); return { q:'A='+m+'×B. In '+f+'yr, A='+(m-1)+'×B. B now?', a:f*(m-1)-f, hint:'Let B=x, A='+m+'x. '+m+'x+'+f+'='+(m-1)+'(x+'+f+')'}; }],
+    [2, function(){ var a=rand(2,4), b=rand(2,4), x=rand(2,8), y=rand(2,6); return { q:'Solve: '+a+'x+'+b+'y='+(a*x+b*y)+' and '+(a+1)+'x+'+(b+1)+'y='+((a+1)*x+(b+1)*y)+'. x+y?', a:x+y, hint:'Subtract equations: x+y='+((a+1)*x+(b+1)*y-(a*x+b*y))}; }],
+    [2, function(){ var a=rand(3,8), b=rand(a+1,a+5); return { q:'If x+'+(b)+'='+a+', x²+1/x²?', a:((a)*a-2), hint:'Square both sides: x²+1/x²=(x+1/x)²-2'}; }],
+    // --- Medium (diff 3) ---
+    [3, function(){ var a=rand(2,7), b=rand(2,6), x=rand(2,5); return { q:'Solve: '+a+'x+'+b+'='+(a*x+b)+' and '+(a+1)+'x+'+(b-1)+'='+((a+1)*x+b-1)+'. x?', a:x, hint:'From first: x='+(a*x+b-a)+'/'+a}; }],
+    [3, function(){ var r1=rand(2,7), r2=rand(-5,-1); return { q:'Roots of x²'+(-r1-r2>=0?'+':'')+(-r1-r2)+'x'+(r1*r2>=0?'+':'')+(r1*r2)+'=0', a:r1+','+r2, hint:'Sum='+(r1+r2)+', product='+(r1*r2)}; }],
+    [3, function(){ var a=rand(2,6), b=rand(1,5); return { q:'Value of ('+a+'√'+b+')²', a:a*a*b, hint:'(a√b)² = a²b'}; }],
+    // --- SSC CGL (diff 4) ---
+    [4, function(){ var a=rand(2,5); return { q:'If x+1/x='+a+', find x³+1/x³?', a:a*a*a-3*a, hint:'x³+1/x³=(x+1/x)³-3(x+1/x)='+a+'³-3×'+a}; }],
+    [4, function(){ var a=rand(2,7); return { q:'Simplify: ('+a+'-√'+a+')(√'+a+'+1)/('+a+'-1)', a:Math.sqrt(a), hint:'(a-√a)(√a+1)/(a-1) = √a(√a-1)(√a+1)/(a-1) = √a(a-1)/(a-1) = √'+a}; }],
+    [4, function(){ var a=rand(2,6), b=rand(a+1,a+4); return { q:'If a+b='+b+', ab='+(a*(b-a))+', find a²+b²?', a:a*a+(b-a)*(b-a), hint:'a²+b²=(a+b)²-2ab'}; }],
+    [4, function(){ var a=rand(2,5), b=rand(1,3); return { q:'Simplify: ('+a+'x+'+b+')('+a+'x-'+b+')', a:a*a+'x²-'+b*b, hint:'(ax+b)(ax-b) = a²x²-b²'}; }],
+    // --- Hard (diff 5) ---
+    [5, function(){ var a=rand(2,8); return { q:'If x='+a+', find x⁴+1/x⁴ given x+1/x='+((a+1/a)|0), a:((a+1/a)*(a+1/a)-2)*((a+1/a)*(a+1/a)-2)-2, hint:'x²+1/x²=(x+1/x)²-2, then x⁴+1/x⁴=(x²+1/x²)²-2'}; }],
+    [5, function(){ var a=rand(2,4), b=rand(3,6); return { q:'Solve: √'+a+'x + √'+b+' = √'+(a*b)+'. Find x?', a:Math.round((Math.sqrt(a*b)-Math.sqrt(b))/Math.sqrt(a)*10)/10, hint:'Isolate √'+a+'x, then square both sides'}; }],
+    [5, function(){ var a=rand(2,5), b=rand(1,4); return { q:'Simplify: (x^'+(a+b)+' + x^'+a+')/(x^'+(b+1)+' + x)', a:'x^'+(a-1), hint:'Factor x^'+a+'(x^'+b+'+1)/x(x^'+b+'+1) = x^'+(a-1)}; }]
   ];
-  var type = types[rand(0, types.length - 1)];
-  var data = type();
+  var matched = types.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = types;
+  var chosen = matched[rand(0, matched.length - 1)];
+  var data = chosen[1]();
   var opts = [data.a];
-  while (opts.length < 4) { var d = typeof data.a === 'string' ? (parseInt(data.a)+rand(-1,1)) + '/' + (parseInt(data.a.split('/')[1])+rand(-1,1)) : data.a + rand(-3, 3); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  if (typeof data.a === 'string' && data.a.indexOf(',') > 0) {
+    var parts = data.a.split(',');
+    while (opts.length < 4) { var d = (parseInt(parts[0])+rand(-1,1)) + ',' + (parseInt(parts[1])+rand(-1,1)); if (opts.indexOf(d) < 0) opts.push(d); }
+  } else {
+    var spread = Math.max(1, Math.abs(data.a * 0.15));
+    while (opts.length < 4) { var d = Math.round(data.a + rand(-spread, spread)); if (opts.indexOf(d) < 0 && (typeof d==='string'||d>=0)) opts.push(typeof data.a==='string'?d:Math.round(d)); }
+  }
   shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 15 : 20, type: 'quant', techniqueLabel: 'Algebra: ' + data.hint, intuition: data.intuition || 'Age: let unknown=x, write equation from condition. Sum/diff: larger=(sum+diff)/2.' };
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer==='instinct'?12:18, type:'quant', techniqueLabel:'Algebra: '+data.hint, intuition:'Key: (a+b)²=a²+2ab+b², (a-b)²=a²-2ab+b², x+1/x→x²+1/x²→x⁴+1/x⁴.' };
 }
 
 function generateGeometryQuestion(diff, layer) {
   var types = [
-    // Parallel lines: angle chase (corresponding, alternate)
-    function(){ var a=rand(30,70), t=pick(['alternate','corresponding']); return { q: 'Lines L1∥L2. An ' + t + ' angle = ' + a + '°. Find the ' + (t==='alternate'?'corresponding':'alternate') + ' angle.', a: a, hint: t + ' angles are equal when lines ∥', intuition: t.charAt(0).toUpperCase() + t.slice(1) + ' angles of parallel lines are EQUAL. So the ' + (t==='alternate'?'corresponding':'alternate') + ' angle = ' + a + '° too.' }; },
-    // Triangle: right angle with Pythagoras
-    function(){ var a=rand(3,6), b=rand(4,8); return { q: 'Right triangle legs ' + a + ' & ' + b + '. Hypotenuse?', a: Math.round(Math.sqrt(a*a+b*b)*10)/10, hint: 'Pythagoras: h² = ' + a + '² + ' + b + '² = ' + (a*a+b*b), intuition: 'Pythagoras: h = √(' + a + '²+' + b + '²) = √(' + (a*a) + '+' + (b*b) + ') = √' + (a*a+b*b) + ' = ' + Math.round(Math.sqrt(a*a+b*b)*10)/10 }; },
-    // Circle: inscribed angle theorem
-    function(){ var a=rand(20,70); return { q: 'Inscribed angle subtending arc = ' + (2*a) + '°. Find inscribed angle.', a: a, hint: 'Inscribed angle = half central angle', intuition: 'Inscribed angle = half the central angle subtending the same arc = ' + (2*a) + '/2 = ' + a + '°' }; },
-    // Complementary angles in right triangle
-    function(){ var a=rand(20,70); return { q: 'Right triangle: angle A=' + a + '°. Angle C?', a: 90-a, hint: 'Sum of acute angles = 90° in right triangle', intuition: 'Right triangle: acute angles sum to 90°. C = 90 - ' + a + ' = ' + (90-a) + '°' }; },
-    // Exterior angle = sum of opposite interior angles
-    function(){ var a=rand(30,60), b=rand(30,60); return { q: 'Triangle: interior A=' + a + '°, B=' + b + '°. Exterior at C?', a: a+b, hint: 'Exterior angle = sum of opposite interior', intuition: 'Exterior angle = sum of 2 opposite interior = ' + a + '+' + b + ' = ' + (a+b) + '°' }; },
-    // Find angle in triangle given two angles
-    function(){ var a=rand(30,70), b=rand(30,60); var c=180-a-b; return { q: 'Triangle: A=' + a + '°, B=' + b + '°. Angle C?', a: c, hint: 'Sum of angles = 180°', intuition: 'A + B + C = 180°, C = 180 - ' + a + ' - ' + b + ' = ' + c + '°' }; },
-    // Parallel lines with transversal: interior angles on same side
-    function(){ var a=rand(40,80); return { q: 'Two ∥ lines cut by transversal. One interior angle = ' + a + '°. Interior angle on same side?', a: 180-a, hint: 'Interior angles on same side sum to 180°', intuition: 'Same-side interior angles are SUPPLEMENTARY (sum 180°). Other = 180 - ' + a + ' = ' + (180-a) + '°' }; },
-    // Polygon interior angle sum
-    function(){ var n=rand(3,8); return { q: 'Sum of interior angles of a ' + n + '-sided polygon?', a: (n-2)*180, hint: 'Formula: (n-2)×180°', intuition: 'Sum = (n-2)×180° = (' + n + '-2)×180 = ' + (n-2) + '×180 = ' + (n-2)*180 + '°' }; }
+    [1, function(){ var a=rand(30,70), b=rand(30,60); return { q:'Triangle A='+a+'°, B='+b+'°. C?', a:180-a-b, hint:'Sum=180°'}; }],
+    [1, function(){ var a=rand(20,70); return { q:'Right triangle A='+a+'°. Other acute?', a:90-a, hint:'Sum=90°'}; }],
+    [1, function(){ var a=rand(30,70), t=pick(['alternate','corresponding']); return { q:'∥ lines. '+t.charAt(0).toUpperCase()+t.slice(1)+' = '+a+'°. Find other?', a:a, hint:t+' angles equal'}; }],
+    [2, function(){ var a=rand(3,6), b=rand(4,8); return { q:'Right triangle legs '+a+' & '+b+'. Hypotenuse?', a:Math.round(Math.sqrt(a*a+b*b)*10)/10, hint:'Pythagoras'}; }],
+    [2, function(){ var a=rand(40,80); return { q:'∥ lines, one interior='+a+'°. Same side interior?', a:180-a, hint:'Supplementary (sum=180°)'}; }],
+    [2, function(){ var a=rand(30,60), b=rand(30,60); return { q:'Triangle A='+a+'°, B='+b+'°. Exterior at C?', a:a+b, hint:'Exterior = sum opposite interior'}; }],
+    [3, function(){ var n=rand(3,8); return { q:'Sum interior angles of '+n+'-sided polygon?', a:(n-2)*180, hint:'(n-2)×180°'}; }],
+    [3, function(){ var a=rand(20,70); return { q:'Inscribed angle, central='+(2*a)+'°. Inscribed angle?', a:a, hint:'Half of central'}; }],
+    [3, function(){ var a=rand(3,8); return { q:'Each interior angle of regular '+a+'-gon?', a:Math.round((a-2)*180/a*10)/10, hint:'((n-2)×180)/n'}; }],
+    [4, function(){ var a=rand(3,6), b=rand(4,8); return { q:'Circle radius '+a+'. Chord length at distance '+b+' from center?', a:Math.round(2*Math.sqrt(a*a-b*b)*10)/10, hint:'Chord=2√(r²-d²)'}; }],
+    [4, function(){ var a=rand(3,7), b=rand(2,5); return { q:'Cyclic quadrilateral, angle A='+(a*10)+'°. Opposite angle C?', a:180-a*10, hint:'Opposite angles supplementary in cyclic quadrilateral'}; }],
+    [4, function(){ var a=rand(3,8); return { q:'Number of diagonals in '+a+'-sided polygon?', a:a*(a-3)/2, hint:'n(n-3)/2'}; }],
+    [5, function(){ var r=rand(4,10); return { q:'Area of circle inscribed in equilateral triangle of side '+r+'? (π=3.14)', a:Math.round(3.14*Math.pow(r/(2*Math.sqrt(3)),2)*10)/10, hint:'Inradius = side/(2√3)'}; }],
+    [5, function(){ var a=rand(3,7); return { q:'Tangent length from point '+a+'cm away from circle of radius '+rand(3,5)+'cm?', a:Math.round(Math.sqrt(a*a-rand(3,5)*rand(3,5))*10)/10, hint:'Tangent² = dist² - r²'}; }],
+    [5, function(){ var a=rand(6,12); return { q:'Area of equilateral triangle side '+a+'?', a:Math.round(Math.sqrt(3)/4*a*a*10)/10, hint:'√3/4 × side²'}; }]
   ];
-  var type = types[rand(0, types.length - 1)];
-  var data = type();
+  var matched = types.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = types;
+  var chosen = matched[rand(0, matched.length - 1)];
+  var data = chosen[1]();
   var opts = [data.a];
-  while (opts.length < 4) { var d = data.a + rand(-8, 8); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  var spread = Math.max(1, Math.abs(data.a*0.12));
+  while (opts.length < 4) { var d = Math.round((Math.round(data.a*10)/10 + rand(-spread, spread))*10)/10; if (opts.indexOf(d) < 0 && d >= 0) opts.push(d); }
   shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 15 : 20, type: 'quant', techniqueLabel: 'Geometry: ' + data.hint, intuition: data.intuition || '∥ lines → equal alternate/corresponding, same-side interior sum=180°. Triangle: sum=180°. Pythagoras: a²+b²=c². Polygon: (n-2)×180°.' };
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer==='instinct'?12:18, type:'quant', techniqueLabel:'Geometry: '+data.hint, intuition:'Triangle: sum=180°, exterior=opposite sum. Circle: inscribed=½central, chord=2√(r²-d²). Poly: (n-2)×180°, diag=n(n-3)/2.' };
 }
 
 function generateMensurationQuestion(diff, layer) {
   var types = [
-    // Rectangular field fencing cost
-    function(){ var l=rand(20,60), w=rand(15,40); var c=[15,20,25,30][rand(0,3)]; return { q: 'Field ' + l + 'm×' + w + 'm. Fence cost Rs' + c + '/m. Total cost?', a: 2*(l+w)*c, hint: 'Perimeter = 2(l+w) = ' + 2*(l+w) + ', × cost/m', intuition: 'Perimeter = 2(' + l + '+' + w + ') = ' + 2*(l+w) + 'm. Cost = ' + 2*(l+w) + ' × ' + c + ' = Rs' + 2*(l+w)*c }; },
-    // Cylinder volume with cost
-    function(){ var r=rand(3,7), h=rand(5,12); var c=[5,8,10,12][rand(0,3)]; return { q: 'Cylindrical tank r=' + r + 'm h=' + h + 'm. Paint cost Rs' + c + '/m². Total surface area (π=3.14)?', a: Math.round(2*3.14*r*(r+h)), hint: 'TSA = 2πr(r+h), multiply by cost', intuition: 'TSA = 2πr(r+h) = 2×3.14×' + r + '×(' + r + '+' + h + ') = ' + Math.round(2*3.14*r*(r+h)) + 'm²' }; },
-    // Cone volume
-    function(){ var r=rand(3,6), h=rand(6,12); return { q: 'Cone r=' + r + ', h=' + h + '. Volume? (π=3.14)', a: Math.round(3.14*r*r*h/3), hint: 'V = πr²h/3', intuition: 'V = πr²h/3 = 3.14×' + r + '²×' + h + '/3 = 3.14×' + r*r + '×' + h/3 + ' = ' + Math.round(3.14*r*r*h/3) }; },
-    // Sphere surface area
-    function(){ var r=rand(3,8); return { q: 'Sphere r=' + r + '. Surface area? (π=3.14)', a: Math.round(4*3.14*r*r), hint: 'SA = 4πr²', intuition: 'SA = 4πr² = 4×3.14×' + r + '² = 4×3.14×' + r*r + ' = ' + Math.round(4*3.14*r*r) }; },
-    // Rectangular path inside/outside
-    function(){ var l=rand(20,40), w=rand(15,30), p=rand(1,4); return { q: 'Garden ' + l + 'm×' + w + 'm. Path ' + p + 'm wide around inside. Path area?', a: l*w - (l-2*p)*(w-2*p), hint: 'Big area minus small area', intuition: 'Outer=' + l + '×' + w + '=' + (l*w) + ', inner=' + (l-2*p) + '×' + (w-2*p) + '=' + ((l-2*p)*(w-2*p)) + '. Path = ' + (l*w) + ' - ' + ((l-2*p)*(w-2*p)) + ' = ' + (l*w-(l-2*p)*(w-2*p)) + 'm²' }; },
-    // Cylinder volume
-    function(){ var r=rand(3,7), h=rand(5,12); return { q: 'Cylinder r=' + r + ', h=' + h + '. Volume? (π=3.14)', a: Math.round(3.14*r*r*h), hint: 'V = πr²h', intuition: 'V = πr²h = 3.14×' + r + '²×' + h + ' = 3.14×' + r*r + '×' + h + ' = ' + Math.round(3.14*r*r*h) }; },
-    // Rectangle perimeter given area and one side
-    function(){ var l=rand(5,15), w=rand(4,12); return { q: 'Rectangle area=' + (l*w) + ', one side=' + l + '. Perimeter?', a: 2*(l+w), hint: 'Other side = area/side = ' + (l*w) + '/' + l + ' = ' + w, intuition: 'Other side = ' + (l*w) + '/' + l + ' = ' + w + '. Perimeter = 2(' + l + '+' + w + ') = ' + 2*(l+w) }; }
+    [1, function(){ var l=rand(20,60), w=rand(15,40), c=[15,20,25,30][rand(0,3)]; return { q:'Field '+l+'×'+w+'m. Fence cost Rs'+c+'/m?', a:2*(l+w)*c, hint:'Perimeter×cost'}; }],
+    [1, function(){ var r=rand(3,7), h=rand(5,12); return { q:'Cylinder r='+r+', h='+h+'. Volume (π=3.14)?', a:Math.round(3.14*r*r*h), hint:'πr²h'}; }],
+    [1, function(){ var l=rand(5,15), w=rand(4,12); return { q:'Rectangle area='+(l*w)+', side='+l+'. Perimeter?', a:2*(l+w), hint:'Other side=area/side'}; }],
+    [2, function(){ var r=rand(3,6), h=rand(6,12); return { q:'Cone r='+r+', h='+h+'. Volume (π=3.14)?', a:Math.round(3.14*r*r*h/3), hint:'πr²h/3'}; }],
+    [2, function(){ var l=rand(20,40), w=rand(15,30), p=rand(1,4); return { q:'Garden '+l+'×'+w+'m. Path '+p+'m wide inside. Path area?', a:l*w-(l-2*p)*(w-2*p), hint:'Outer-inner'}; }],
+    [2, function(){ var r=rand(3,8); return { q:'Sphere r='+r+'. SA (π=3.14)?', a:Math.round(4*3.14*r*r), hint:'4πr²'}; }],
+    [3, function(){ var r=rand(3,7), h=rand(5,12), c=[5,8,10,12][rand(0,3)]; return { q:'Cylinder r='+r+', h='+h+'. Paint cost Rs'+c+'/m². TSA?', a:Math.round(2*3.14*r*(r+h)), hint:'2πr(r+h)'}; }],
+    [3, function(){ var l=rand(10,20), b=rand(8,15), h=rand(5,12); return { q:'Cuboid '+l+'×'+b+'×'+h+'m. Volume?', a:l*b*h, hint:'l×b×h'}; }],
+    [3, function(){ var r=rand(4,10), h=rand(8,15); return { q:'Cylinder r='+r+', h='+h+'. CSA (π=3.14)?', a:Math.round(2*3.14*r*h), hint:'2πrh'}; }],
+    [4, function(){ var r=rand(4,9); return { q:'Circle area='+Math.round(3.14*r*r)+'. Circle radius?', a:r, hint:'r = √(area/π)'}; }],
+    [4, function(){ var a=rand(5,12), b=rand(4,10); return { q:'Triangle base='+a+', height='+b+'. Area?', a:Math.round(0.5*a*b*10)/10, hint:'½×base×height'}; }],
+    [4, function(){ var l=rand(10,20), b=rand(8,15), c=[10,15,20][rand(0,2)]; return { q:'Cuboid '+l+'×'+b+'×'+rand(5,12)+'m. Paint at Rs'+c+'/m². Total cost?', a:2*(l*b+b*rand(5,12)+l*rand(5,12))*c, hint:'TSA=2(lb+bh+lh)×cost'}; }],
+    [5, function(){ var r=rand(3,6), h=rand(6,12); return { q:'Cone r='+r+', h='+h+'. Slant height? (approx)', a:Math.round(Math.sqrt(r*r+h*h)*10)/10, hint:'l = √(r²+h²)'}; }],
+    [5, function(){ var a=rand(20,40), b=rand(15,30), p=rand(2,5); return { q:'Park '+a+'×'+b+'m. Path '+p+'m wide outside. Path area?', a:(a+2*p)*(b+2*p)-a*b, hint:'(L+2p)(B+2p)-LB'}; }],
+    [5, function(){ var r=rand(4,10), h=rand(6,14); return { q:'Cylinder r='+r+', h='+h+'. CSA = TSA/2? Find TSA?', a:Math.round(2*3.14*r*(r+h)*10)/10, hint:'If CSA=TSA/2, then r=h. Else use 2πr(r+h)'}; }]
   ];
-  var type = types[rand(0, types.length - 1)];
-  var data = type();
+  var matched = types.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = types;
+  var chosen = matched[rand(0, matched.length - 1)];
+  var data = chosen[1]();
   var opts = [data.a];
-  while (opts.length < 4) { var d = data.a + rand(-10, 10); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  var spread = Math.max(2, Math.abs(data.a*0.1));
+  while (opts.length < 4) { var d = Math.round(data.a + rand(-spread, spread)); if (opts.indexOf(d) < 0 && d >= 0) opts.push(d); }
   shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 15 : 20, type: 'quant', techniqueLabel: 'Mensuration: ' + data.hint, intuition: data.intuition || 'Path area = outer - inner. V cylinder = πr²h. V cone = πr²h/3. SA sphere = 4πr².' };
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer==='instinct'?12:18, type:'quant', techniqueLabel:'Mens: '+data.hint, intuition:'V=πr²h, SA=4πr², TSA=2πr(r+h), CSA=2πrh. Cuboid volume=l×b×h. Path area=outer-inner.' };
 }
 
 function generateCountingQuestion(diff, layer) {
@@ -2636,50 +2653,35 @@ function generateDataInterpretationQuestion(diff, layer) {
     }).join('');
     return '<table style="border-collapse:collapse;margin:8px 0;width:100%"><thead><tr>' + h + '</tr></thead><tbody>' + r + '</tbody></table>';
   }
-  var ty = [
-    function(){
-      var a=rand(30,80), b=rand(20,60), c=rand(10,40);
-      return { tbl: tableHtml(['Item','Value'], [['A',a],['B',b],['C',c]]), q: 'Total of all items?', a: a+b+c, hint: 'A+B+C', intuition: 'Total = ' + a + '+' + b + '+' + c + ' = ' + (a+b+c) };
-    },
-    function(){
-      var a=rand(20,50), b=rand(15,40), c=rand(10,30), d=rand(5,20);
-      return { tbl: tableHtml(['Quarter','Sales'], [['Q1',a],['Q2',b],['Q3',c],['Q4',d]]), q: 'Average sales per quarter?', a: Math.round((a+b+c+d)/4), hint: 'Sum ÷ 4', intuition: 'Average = (' + a + '+' + b + '+' + c + '+' + d + ')/4 = ' + (a+b+c+d) + '/4 = ' + Math.round((a+b+c+d)/4) };
-    },
-    function(){
-      var m=rand(40,80), f=rand(20,50);
-      return { tbl: tableHtml(['Category','Count'], [['Men',m],['Women',f]]), q: 'What % are women?', a: Math.round(f*100/(m+f)), hint: 'women/total × 100', intuition: f + '/' + (m+f) + ' × 100 = ' + Math.round(f*100/(m+f)) + '%' };
-    },
-    function(){
-      var y=rand(3,7)*1000; var e=y-rand(2,5)*100;
-      return { tbl: tableHtml(['Item','Amount (₹)'], [['Revenue',y],['Expense',e]]), q: 'Profit %?', a: Math.round((y-e)*100/y), hint: '(R-E)/R × 100', intuition: 'P% = (R-E)/R × 100 = ' + (y-e) + '/' + y + ' × 100 = ' + Math.round((y-e)*100/y) + '%' };
-    },
-    function(){
-      var y1=rand(400,800), y2=y1+rand(50,200);
-      return { tbl: tableHtml(['Year','Revenue (₹cr)'], [['Y1',y1],['Y2',y2]]), q: '% growth from Y1 to Y2?', a: Math.round((y2-y1)/y1*100), hint: '(Y2-Y1)/Y1 × 100', intuition: 'Growth = ' + (y2-y1) + '/' + y1 + ' × 100 = ' + Math.round((y2-y1)/y1*100) + '%' };
-    },
-    function(){
-      var p1=rand(200,500), p2=rand(300,600), p3=rand(250,550);
-      return { tbl: tableHtml(['Year','Production (t)'], [['2019',p1],['2020',p2],['2021',p3]]), q: '% change in production from 2019 to 2021?', a: Math.round((p3-p1)/p1*100), hint: '(2021-2019)/2019 × 100', intuition: 'Change = ' + (p3-p1) + '/' + p1 + ' × 100 = ' + Math.round((p3-p1)/p1*100) + '%' };
-    },
-    function(){
-      var a=rand(20,40), b=rand(15,30), c=100-a-b;
-      return { tbl: tableHtml(['Sector','Share (%)'], [['A',a+'%'],['B',b+'%'],['C',c+'%']]), q: 'Central angle of sector C?', a: c*3.6, hint: 'Angle = % × 3.6°', intuition: '100% = 360°, so 1% = 3.6°. C = ' + c + '% → angle = ' + c + '×3.6 = ' + (c*3.6) + '°' };
-    },
-    function(){
-      var v=[rand(200,400), rand(300,500), rand(250,450)]; var yrs=[2018,2019,2020]; var i=rand(0,2), j=rand(0,2); while(j===i)j=rand(0,2);
-      return { tbl: tableHtml(['Year','Value'], [[yrs[i],v[i]],[yrs[j],v[j]]]), q: 'Ratio of ' + yrs[i] + ' : ' + yrs[j] + '?', a: (function(a,b){var g=function(x,y){return y?g(y,x%y):x;}; var d=g(a,b); return (a/d)+':'+(b/d);})(v[i],v[j]), hint: 'Find HCF and divide both', intuition: 'Ratio = ' + v[i] + ':' + v[j] + ' = simplified ' + (function(a,b){var g=function(x,y){return y?g(y,x%y):x;}; var d=g(a,b); return (a/d)+':'+(b/d);})(v[i],v[j]) };
-    },
-    function(){
-      var t=rand(500,2000), a=rand(20,60), b=100-a;
-      return { tbl: tableHtml(['Department','Share (%)'], [['A',a+'%'],['B',b+'%']]) + '<div style="font-size:.82em;margin-top:4px">Total expenditure: ₹' + t + 'cr</div>', q: 'Expenditure of Dept A?', a: Math.round(t*a/100), hint: 'Total × A%/100', intuition: 'A = ' + a + '% of ' + t + ' = ' + t + '×' + a + '/100 = ' + Math.round(t*a/100) };
-    }
+  var types = [
+    [1, function(){ var a=rand(30,80), b=rand(20,60), c=rand(10,40); return { tbl:tableHtml(['Item','Value'],[['A',a],['B',b],['C',c]]), q:'Total of all?', a:a+b+c, hint:'A+B+C'}; }],
+    [1, function(){ var m=rand(40,80), f=rand(20,50); return { tbl:tableHtml(['Category','Count'],[['Men',m],['Women',f]]), q:'% women?', a:Math.round(f*100/(m+f)), hint:'women/total×100'}; }],
+    [1, function(){ var a=rand(20,50), b=rand(15,40), c=rand(10,30), d=rand(5,20); return { tbl:tableHtml(['Quarter','Sales'],[['Q1',a],['Q2',b],['Q3',c],['Q4',d]]), q:'Avg sales/quarter?', a:Math.round((a+b+c+d)/4), hint:'Sum÷4'}; }],
+    [2, function(){ var y1=rand(400,800), y2=y1+rand(50,200); return { tbl:tableHtml(['Year','Rev (₹cr)'],[['Y1',y1],['Y2',y2]]), q:'% growth?', a:Math.round((y2-y1)/y1*100), hint:'(Y2-Y1)/Y1×100'}; }],
+    [2, function(){ var a=rand(20,40), b=rand(15,30), c=100-a-b; return { tbl:tableHtml(['Sector','Share (%)'],[['A',a+'%'],['B',b+'%'],['C',c+'%']]), q:'Central angle of C?', a:Math.round(c*3.6*10)/10, hint:'%×3.6°'}; }],
+    [2, function(){ var y=rand(3000,8000), e=y-rand(200,500); return { tbl:tableHtml(['Item','Amt (₹)'],[['Revenue',y],['Expense',e]]), q:'Profit %?', a:Math.round((y-e)*100/y), hint:'(R-E)/R×100'}; }],
+    [3, function(){ var v=[rand(200,400), rand(300,500), rand(250,450)], yrs=[2018,2019,2020], i=rand(0,2), j=rand(0,2); while(j===i)j=rand(0,2); var g=function(x,y){return y?g(y,x%y):x;}, d=g(v[i],v[j]); return { tbl:tableHtml(['Year','Value'],[[yrs[i],v[i]],[yrs[j],v[j]]]), q:'Ratio '+yrs[i]+':'+yrs[j]+'?', a:(v[i]/d)+':'+(v[j]/d), hint:'Find HCF'}; }],
+    [3, function(){ var t=rand(500,2000), a=rand(20,60), b=100-a; return { tbl:tableHtml(['Dept','Share (%)'],[['A',a+'%'],['B',b+'%']])+'<div style="font-size:.82em;margin-top:4px">Total: ₹'+t+'cr</div>', q:'Expenditure of A?', a:Math.round(t*a/100), hint:'Total×A%'}; }],
+    [3, function(){ var p1=rand(200,500), p2=rand(300,600), p3=rand(250,550); return { tbl:tableHtml(['Year','Prod (t)'],[['2019',p1],['2020',p2],['2021',p3]]), q:'% change 2019→2021?', a:Math.round((p3-p1)/p1*100), hint:'(2021-2019)/2019×100'}; }],
+    [4, function(){ var vals=[rand(50,90), rand(40,80), rand(30,70), rand(20,60), rand(10,50)], labels, ans; if(diff>=4){ labels=['','','','','']; for(var k=0;k<5;k++)labels[k]='City'+String.fromCharCode(65+k); } else labels=['A','B','C','D','E']; var idx=rand(0,4), idx2=rand(0,4); while(idx2===idx)idx2=rand(0,4); ans=Math.round(vals[idx]*100/vals[idx2]); return { tbl:tableHtml(['City','Pop (000)'],labels.map(function(l,i){return[l,vals[i]];})), q:labels[idx]+' is what % of '+labels[idx2]+'?', a:ans, hint:labels[idx]+'/'+labels[idx2]+'×100'}; }],
+    [4, function(){ var s1=rand(200,500), s2=rand(150,400), s3=rand(100,300); var growth1to2=Math.round((s2-s1)/s1*100), growth2to3=Math.round((s3-s2)/s2*100); return { tbl:tableHtml(['Year','Sales (₹L)'],[['2020',s1],['2021',s2],['2022',s3]]), q:'Which yr had higher % growth?', a:growth1to2>=growth2to3?'2020-21':'2021-22', hint:'Compute both growth rates', technical:hint}; }],
+    [4, function(){ var a=rand(25,45), b=rand(15,35), c=100-a-b; var tot=rand(800,2000); return { tbl:tableHtml(['Sector','%'],[['Agri',a+'%'],['Ind',b+'%'],['Serv',c+'%']])+'<div style="font-size:.82em">Total GDP: ₹'+tot+'cr</div>', q:'Diff b/w Agri & Serv GDP?', a:Math.round(tot*(Math.abs(a-c))/100), hint:'|Agri-Serv|%×total'}; }],
+    [5, function(){ var companies=4; var profits=[]; for(var k=0;k<companies;k++)profits.push(rand(200,600)); var sum=profits.reduce(function(a,b){return a+b;},0); var c=rand(0,companies-1); return { tbl:tableHtml(['Co','Profit (₹L)'],profits.map(function(p,i){return['Co'+(i+1),p];})), q:'Co'+(c+1)+' profit share % of total?', a:Math.round(profits[c]*100/sum), hint:'Co'+(c+1)+'/total×100'}; }],
+    [5, function(){ var labels=['Jan','Feb','Mar','Apr','May','Jun']; var revs=labels.map(function(){return rand(100,500);}); var costs=labels.map(function(){return rand(50,300);}); var totals=revs.map(function(r,i){return r-costs[i];}); var maxP=Math.max.apply(null,totals), minP=Math.min.apply(null,totals); var maxI=totals.indexOf(maxP), minI=totals.indexOf(minP); return { tbl:tableHtml(['Month','Rev','Cost'],[['Jan',revs[0],costs[0]],['Feb',revs[1],costs[1]],['Mar',revs[2],costs[2]],['Apr',revs[3],costs[3]],['May',revs[4],costs[4]],['Jun',revs[5],costs[5]]]), q:'Max profit month & min profit month?', a:labels[maxP]+' & '+labels[minP], hint:'Profit=Rev-Cost for each month', technical:hint}; }]
   ];
-  var t = ty[rand(0, ty.length - 1)];
-  var d = t();
-  var q = (d.tbl || '') + '<div style="margin-top:8px;font-weight:600">' + d.q + '</div>';
-  var o = [d.a]; while(o.length<4){var v=d.a+rand(-8,8); if(o.indexOf(v)<0&&v>0)o.push(v);}
-  shuffle(o);
-  return { question: q, answer: d.a, options: o, hint: d.hint, timeLimit: layer==='instinct'?15:20, type:'quant', techniqueLabel:'DI: '+d.hint, intuition: d.intuition||'Read data carefully. Identify what the question asks (total/average/percentage) before computing.' };
+  var matched = types.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = types;
+  var chosen = matched[rand(0, matched.length - 1)];
+  var data = chosen[1]();
+  var q = (data.tbl || '') + '<div style="margin-top:8px;font-weight:600">' + data.q + '</div>';
+  var opts = [data.a];
+  var spread = typeof data.a==='number' ? Math.max(2, Math.abs(data.a*0.12)) : 3;
+  while (opts.length < 4) {
+    var v = typeof data.a==='number' ? Math.round(data.a + rand(-spread, spread)) : data.a;
+    if (opts.indexOf(v) < 0 && (typeof v!=='number'||v>=0)) opts.push(v);
+  }
+  shuffle(opts);
+  return { question: q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer==='instinct'?15:20, type:'quant', techniqueLabel:'DI: '+data.hint, intuition:'Read table carefully. Identify total/avg/%, compute stepwise. For pie: central angle = % × 3.6°. For growth: (new-old)/old×100.' };
 }
 
 // ====== NEW REASONING GENERATORS ======
