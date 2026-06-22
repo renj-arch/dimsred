@@ -41,8 +41,14 @@
         .lesson-body{padding:20px 0}
         .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
         .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body h4{font-size:0.95em;font-weight:600;margin:12px 0 6px;color:var(--purple,#a78bfa)}
         .lesson-body p{color:var(--text-sec);font-size:.9em;line-height:1.7;margin-bottom:10px}
         .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .lesson-body ol{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .lesson-body table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.85em;color:var(--text-sec)}
+        .lesson-body table th{background:rgba(167,139,250,.1);color:var(--text);padding:8px 12px;text-align:left;font-weight:600;border:1px solid var(--border)}
+        .lesson-body table td{padding:8px 12px;border:1px solid var(--border)}
+        .lesson-body table tr:nth-child(even){background:rgba(255,255,255,.02)}
         .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
         .example-box .ex-title{font-weight:600;font-size:.85em;color:var(--pureple,#a78bfa);margin-bottom:4px}
         .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.6}
@@ -104,7 +110,7 @@
                     <h1 style="font-size:1.5em;font-weight:900">Calculus</h1>
                     <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Limits, continuity, differentiation, integration, differential equations.</div>
                     <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
-                        <span style="font-size:.75em;color:var(--text-muted)">Limits · Differentiation · Integration · Differential Equations</span>
+                        <span style="font-size:.75em;color:var(--text-muted)">Limits &middot; Differentiation &middot; Integration &middot; Differential Equations</span>
                     </div>
                     <div style="display:flex;gap:8px;margin-top:10px">
                         <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
@@ -112,14 +118,736 @@
                     </div>
                 </div>
                 <div class="lesson-body">
-                    <h3>Learning Objectives</h3>
+                    <h2 id="limits">1. Limits</h2>
+                    <p>The concept of limit is the foundation of calculus. For a function f(x), we say <strong>lim<sub>x&rarr;a</sub> f(x) = L</strong> if f(x) gets arbitrarily close to L when x is sufficiently close to a (but not equal to a). Limits are used to define derivatives, continuity, and integrals.</p>
+
+                    <h3>Basic Limits &amp; Indeterminate Forms</h3>
+                    <p>When evaluating limits, we may encounter forms that are not immediately determinate. These require algebraic manipulation, standard limit formulas, or L'Hopital's Rule.</p>
+
+                    <h4>Indeterminate Forms</h4>
+                    <p>The following seven forms are indeterminate. Further analysis is required to evaluate limits that produce these forms. When you directly substitute the limiting value and obtain one of these forms, it means the limit cannot be determined without additional work.</p>
+
+                    <h4>Rationalization Method</h4>
+                    <p>When the limit involves square roots, rationalizing the numerator or denominator often resolves the 0/0 form. Multiply by the conjugate to eliminate the radical.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 1 | NDA Practice</div>
+                        <div class="ex-text">Evaluate: lim<sub>x&rarr;0</sub> (&radic;(1 + x) &minus; 1)/x</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Multiply numerator and denominator by (&radic;(1 + x) + 1): = lim<sub>x&rarr;0</sub> [(1+x) &minus; 1]/[x(&radic;(1+x) + 1)] = lim<sub>x&rarr;0</sub> x/[x(&radic;(1+x) + 1)] = lim<sub>x&rarr;0</sub> 1/(&radic;(1+x) + 1) = 1/(1+1) = <strong>1/2</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Conjugate Multiplication</div>
+                        <div class="tip-text">When you see &radic;(a + x) &minus; &radic;a or similar forms, always multiply by the conjugate. The formula (&radic;A &minus; &radic;B)(&radic;A + &radic;B) = A &minus; B eliminates the radicals. This is a very common technique in NDA limit problems.</div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr><th>Indeterminate Form</th><th>Example</th><th>Technique</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>0/0</td><td>lim<sub>x&rarr;0</sub> (sin x)/x</td><td>Factorisation, standard limits, L'Hopital</td></tr>
+                            <tr><td>&infin;/&infin;</td><td>lim<sub>x&rarr;&infin;</sub> e<sup>x</sup>/x</td><td>Divide by highest power, L'Hopital</td></tr>
+                            <tr><td>0 &times; &infin;</td><td>lim<sub>x&rarr;0+</sub> x ln x</td><td>Rewrite as 0/0 or &infin;/&infin;</td></tr>
+                            <tr><td>&infin; &minus; &infin;</td><td>lim<sub>x&rarr;0</sub> (1/x &minus; 1/sin x)</td><td>Combine fractions, rationalise</td></tr>
+                            <tr><td>0<sup>0</sup></td><td>lim<sub>x&rarr;0+</sub> x<sup>x</sup></td><td>Take ln, use L'Hopital</td></tr>
+                            <tr><td>&infin;<sup>0</sup></td><td>lim<sub>x&rarr;&infin;</sub> x<sup>1/x</sup></td><td>Take ln, use L'Hopital</td></tr>
+                            <tr><td>1<sup>&infin;</sup></td><td>lim<sub>x&rarr;0</sub> (1 + x)<sup>1/x</sup></td><td>Use standard exponential limit</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 2 | NDA 2019</div>
+                        <div class="ex-text">Evaluate: lim<sub>x&rarr;0</sub> (1 &minus; cos 2x)/x<sup>2</sup></div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using 1 &minus; cos 2x = 2 sin<sup>2</sup>x, we get lim<sub>x&rarr;0</sub> 2 sin<sup>2</sup>x / x<sup>2</sup> = 2 &times; (lim<sub>x&rarr;0</sub> sin x / x)<sup>2</sup> = 2 &times; 1<sup>2</sup> = <strong>2</strong>.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 3 | NDA 2020</div>
+                        <div class="ex-text">Evaluate: lim<sub>x&rarr;2</sub> (x<sup>2</sup> &minus; 4)/(x &minus; 2)</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Factorise numerator: x<sup>2</sup> &minus; 4 = (x &minus; 2)(x + 2). Cancel (x &minus; 2) to get lim<sub>x&rarr;2</sub> (x + 2) = <strong>4</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: 0/0 Forms</div>
+                        <div class="tip-text">For rational 0/0 limits, always try factorisation first. If the numerator and denominator are polynomials, check if (x &minus; a) is a common factor before applying L'Hopital. This saves time in NDA exams.</div>
+                    </div>
+
+                    <h3>Standard Limits</h3>
+                    <p>Memorising standard limits is essential for quick evaluation in NDA exams. The following tables list the most frequently tested limits.</p>
+
+                    <h4>Trigonometric Limits</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Limit Formula</th><th>Result</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>lim<sub>x&rarr;0</sub> sin x / x</td><td>1</td></tr>
+                            <tr><td>lim<sub>x&rarr;0</sub> tan x / x</td><td>1</td></tr>
+                            <tr><td>lim<sub>x&rarr;0</sub> (1 &minus; cos x) / x<sup>2</sup></td><td>1/2</td></tr>
+                            <tr><td>lim<sub>x&rarr;0</sub> sin<sup>&minus;1</sup> x / x</td><td>1</td></tr>
+                            <tr><td>lim<sub>x&rarr;0</sub> tan<sup>&minus;1</sup> x / x</td><td>1</td></tr>
+                            <tr><td>lim<sub>x&rarr;a</sub> (sin x &minus; sin a) / (x &minus; a)</td><td>cos a</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 4 | NDA 2018</div>
+                        <div class="ex-text">Evaluate: lim<sub>x&rarr;0</sub> (tan 3x)/x</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Write as 3 &times; (tan 3x)/(3x). Using lim<sub>&theta;&rarr;0</sub> tan &theta; / &theta; = 1, we get 3 &times; 1 = <strong>3</strong>.</div>
+                    </div>
+
+                    <h4>Exponential &amp; Logarithmic Limits</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Limit Formula</th><th>Result</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>lim<sub>x&rarr;0</sub> (e<sup>x</sup> &minus; 1) / x</td><td>1</td></tr>
+                            <tr><td>lim<sub>x&rarr;0</sub> (a<sup>x</sup> &minus; 1) / x</td><td>ln a</td></tr>
+                            <tr><td>lim<sub>x&rarr;0</sub> (1 + x)<sup>1/x</sup></td><td>e</td></tr>
+                            <tr><td>lim<sub>x&rarr;&infin;</sub> (1 + 1/x)<sup>x</sup></td><td>e</td></tr>
+                            <tr><td>lim<sub>x&rarr;0</sub> ln(1 + x) / x</td><td>1</td></tr>
+                            <tr><td>lim<sub>x&rarr;0</sub> (e<sup>ax</sup> &minus; 1) / x</td><td>a</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 5 | NDA 2019</div>
+                        <div class="ex-text">Evaluate: lim<sub>x&rarr;0</sub> (e<sup>2x</sup> &minus; 1)/x</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using the standard limit lim<sub>x&rarr;0</sub> (e<sup>ax</sup> &minus; 1)/x = a, we get <strong>2</strong>. Alternatively, apply L'Hopital's rule: (2e<sup>2x</sup>)/1 &rarr; 2.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Exponential Limits</div>
+                        <div class="tip-text">For limits of the form lim<sub>x&rarr;0</sub> (e<sup>ax</sup> &minus; 1)/(bx), the answer is a/b. Similarly, lim<sub>x&rarr;0</sub> (a<sup>x</sup> &minus; 1)/x = ln a. These direct formulas save 2&minus;3 steps.</div>
+                    </div>
+
+                    <h3>Series Expansions for Limits</h3>
+                    <p>Standard series expansions are powerful tools for evaluating limits, especially when L'Hopital's rule becomes tedious. These expansions represent functions as infinite polynomials around x = 0.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Function</th><th>Series Expansion (Maclaurin)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>e<sup>x</sup></td><td>1 + x + x<sup>2</sup>/2! + x<sup>3</sup>/3! + ...</td></tr>
+                            <tr><td>sin x</td><td>x &minus; x<sup>3</sup>/3! + x<sup>5</sup>/5! &minus; ...</td></tr>
+                            <tr><td>cos x</td><td>1 &minus; x<sup>2</sup>/2! + x<sup>4</sup>/4! &minus; ...</td></tr>
+                            <tr><td>tan x</td><td>x + x<sup>3</sup>/3 + 2x<sup>5</sup>/15 + ...</td></tr>
+                            <tr><td>ln(1 + x)</td><td>x &minus; x<sup>2</sup>/2 + x<sup>3</sup>/3 &minus; x<sup>4</sup>/4 + ...</td></tr>
+                            <tr><td>(1 + x)<sup>n</sup></td><td>1 + nx + n(n&minus;1)x<sup>2</sup>/2! + ...</td></tr>
+                            <tr><td>sin<sup>&minus;1</sup> x</td><td>x + x<sup>3</sup>/6 + 3x<sup>5</sup>/40 + ...</td></tr>
+                            <tr><td>tan<sup>&minus;1</sup> x</td><td>x &minus; x<sup>3</sup>/3 + x<sup>5</sup>/5 &minus; ...</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 6 | NDA Practice</div>
+                        <div class="ex-text">Evaluate using series: lim<sub>x&rarr;0</sub> (sin x &minus; x)/x<sup>3</sup></div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using sin x = x &minus; x<sup>3</sup>/3! + x<sup>5</sup>/5! &minus; ..., we have sin x &minus; x = &minus;x<sup>3</sup>/6 + x<sup>5</sup>/120 &minus; ... Dividing by x<sup>3</sup>: (sin x &minus; x)/x<sup>3</sup> = &minus;1/6 + x<sup>2</sup>/120 &minus; ... As x&rarr;0, the limit is <strong>&minus;1/6</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Series vs L'Hopital</div>
+                        <div class="tip-text">For limits involving combinations of sin, cos, e<sup>x</sup>, and ln(1+x), series expansion often gives the answer in one step compared to repeated L'Hopital. Memorise the first 2&minus;3 terms of e<sup>x</sup>, sin x, cos x, and ln(1+x).</div>
+                    </div>
+
+                    <h3>L'Hopital's Rule</h3>
+                    <p>If lim<sub>x&rarr;a</sub> f(x)/g(x) gives 0/0 or &infin;/&infin;, then <strong>lim<sub>x&rarr;a</sub> f(x)/g(x) = lim<sub>x&rarr;a</sub> f'(x)/g'(x)</strong>, provided the limit exists. The rule can be applied repeatedly until a determinate form is obtained.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Condition</th><th>Action</th><th>Example</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>0/0 form</td><td>Differentiate numerator and denominator separately</td><td>lim<sub>x&rarr;0</sub> (e<sup>x</sup> &minus; 1)/x = lim<sub>x&rarr;0</sub> e<sup>x</sup>/1 = 1</td></tr>
+                            <tr><td>&infin;/&infin; form</td><td>Differentiate numerator and denominator separately</td><td>lim<sub>x&rarr;&infin;</sub> x/e<sup>x</sup> = lim<sub>x&rarr;&infin;</sub> 1/e<sup>x</sup> = 0</td></tr>
+                            <tr><td>0 &times; &infin; form</td><td>Rewrite as 0/0 or &infin;/&infin; first</td><td>lim<sub>x&rarr;0+</sub> x ln x = lim<sub>x&rarr;0+</sub> (ln x)/(1/x) = 0</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 7 | NDA 2020</div>
+                        <div class="ex-text">Evaluate: lim<sub>x&rarr;0</sub> (e<sup>x</sup> &minus; 1 &minus; x)/x<sup>2</sup></div>
+                        <div class="ex-soln"><strong>Solution:</strong> This is 0/0 form. Apply L'Hopital's rule: lim<sub>x&rarr;0</sub> (e<sup>x</sup> &minus; 1)/(2x). Still 0/0. Apply again: lim<sub>x&rarr;0</sub> e<sup>x</sup>/2 = 1/2. So the answer is <strong>1/2</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: L'Hopital Verification</div>
+                        <div class="tip-text">Before applying L'Hopital, always verify that the form is truly 0/0 or &infin;/&infin;. If not, L'Hopital gives wrong answers. In NDA exams, check by substituting the limiting value first.</div>
+                    </div>
+
+                    <h2 id="continuity">2. Continuity &amp; Differentiability</h2>
+
+                    <h3>Continuity at a Point</h3>
+                    <p>A function f(x) is <strong>continuous at x = a</strong> if lim<sub>x&rarr;a</sub> f(x) = f(a). This requires three conditions:</p>
+                    <ol>
+                        <li>f(a) is defined (a belongs to the domain)</li>
+                        <li>lim<sub>x&rarr;a</sub> f(x) exists (LHL = RHL)</li>
+                        <li>lim<sub>x&rarr;a</sub> f(x) = f(a)</li>
+                    </ol>
+                    <p>If any condition fails, f is discontinuous at x = a.</p>
+
+                    <h4>Properties of Continuous Functions</h4>
+                    <p>Continuous functions have several important properties that are frequently tested in NDA exams:</p>
                     <ul>
-                        <li>Understand the fundamental concepts of Calculus</li>
-                        <li>Apply key formulas and techniques to solve problems</li>
-                        <li>Practice with exam-level questions to build speed and accuracy</li>
+                        <li>The sum, difference, product, and quotient (with non-zero denominator) of continuous functions are continuous.</li>
+                        <li>Polynomials, trigonometric functions, exponential functions, and logarithmic functions are continuous on their domains.</li>
+                        <li>The composition of two continuous functions is continuous.</li>
+                        <li>If f is continuous on [a, b] and f(a) &middot; f(b) &lt; 0, then there exists c &isin; (a, b) such that f(c) = 0 (Intermediate Value Theorem).</li>
+                        <li>A continuous function on a closed interval attains its maximum and minimum values (Extreme Value Theorem).</li>
                     </ul>
-                    <h3>Key Concepts</h3>
-<h3>What is Calculus?</h3><p>Calculus is the mathematical study of continuous change, divided into differential calculus (rates of change and slopes) and integral calculus (accumulation and areas). For JEE Main & Advanced, calculus carries the highest weightage (~35% of the maths paper). Key topics include limits, continuity, differentiability, differentiation, integration, differential equations, and area under curves.</p><h3>Key Concepts</h3><p><strong>1. Limits & Continuity:</strong> A function f(x) has limit L as x approaches a if f(x) gets arbitrarily close to L. Standard limits: lim(x→0) sin x / x = 1, lim(x→0) (e^x - 1)/x = 1, lim(x→0) (1+x)^(1/x) = e. A function is continuous at x = a if lim(x→a) f(x) = f(a). L'Hôpital's rule: if limit gives 0/0 or ∞/∞, differentiate numerator and denominator separately.</p><p><strong>2. Differentiation:</strong> Derivative f'(x) = dy/dx = lim(h→0) [f(x+h) - f(x)]/h. Standard derivatives: d/dx(x^n) = nx^(n-1), d/dx(sin x) = cos x, d/dx(e^x) = e^x, d/dx(log x) = 1/x. Chain rule: dy/dx = (dy/du)(du/dx). Product rule: (uv)' = u'v + uv'. Quotient rule: (u/v)' = (u'v - uv')/v^2.</p><p><strong>3. Application of Derivatives:</strong> Tangent slope = f'(x₀). Normal slope = -1/f'(x₀). For maxima/minima: f'(x) = 0 (critical points), f''(x) > 0 → local minima, f''(x) < 0 → local maxima. Rate of change: dy/dt = (dy/dx)(dx/dt). Increasing function if f'(x) > 0, decreasing if f'(x) < 0.</p><p><strong>4. Integration:</strong> ∫x^n dx = x^(n+1)/(n+1) + C (n ≠ -1). ∫(1/x) dx = log|x| + C. ∫sin x dx = -cos x + C. ∫e^x dx = e^x + C. Methods: substitution, integration by parts (∫u dv = uv - ∫v du), partial fractions. Definite integral: ∫(a to b) f(x) dx = F(b) - F(a). Properties: ∫(a to b) f(x) dx = ∫(a to b) f(a+b-x) dx, ∫(-a to a) f(x) dx = 0 if f is odd, 2∫(0 to a) f(x) dx if f is even.</p><p><strong>5. Area Under Curve:</strong> Area bounded by y = f(x), x-axis, x = a, x = b is ∫(a to b) |f(x)| dx. Area between two curves = ∫(a to b) |f(x) - g(x)| dx.</p><p><strong>6. Differential Equations:</strong> Order = highest derivative. Degree = power of highest derivative. Variable separable: dy/dx = f(x)g(y) → ∫dy/g(y) = ∫f(x)dx. Linear DE: dy/dx + Py = Q → integrating factor IF = e^(∫P dx), solution: y(IF) = ∫Q(IF) dx.</p><h3>Solved Examples</h3><div class="example-box"><div class="ex-title">Example 1 (Limit using L'Hôpital)</div><div class="ex-text">Evaluate: lim(x→0) (sin²x - x²)/(x⁴)<br><br>a) -1/3 b) 1/3 c) -1/6 d) 1/6</div><div class="ex-soln"><strong>Solution:</strong> a) -1/3. Apply L'Hôpital's rule 4 times. First: (2 sin x cos x - 2x)/(4x³) = (sin 2x - 2x)/(4x³). Second: (2 cos 2x - 2)/(12x²) = -2(1 - cos 2x)/(12x²) = -(2·2 sin²x)/(12x²) = -4 sin²x/(12x²). Third: -8 sin x cos x/(24x) = -4 sin 2x/(24x). Fourth: -8 cos 2x/24 = -1/3.</div></div><div class="example-box"><div class="ex-title">Example 2 (Maxima-Minima)</div><div class="ex-text">Find the maximum value of f(x) = x³ - 6x² + 9x + 15 in [0,5].<br><br>a) 15 b) 19 c) 35 d) 29</div><div class="ex-soln"><strong>Solution:</strong> c) 35. f'(x) = 3x² - 12x + 9 = 3(x² - 4x + 3) = 3(x-1)(x-3). Critical points: x = 1, 3. f''(x) = 6x - 12. At x=1: f'' = -6 < 0 → local max, f(1) = 1-6+9+15 = 19. At x=3: f'' = 6 > 0 → local min, f(3) = 27-54+27+15 = 15. At endpoints: f(0) = 15, f(5) = 125-150+45+15 = 35. Global maximum in [0,5] is 35 at x=5.</div></div><div class="example-box"><div class="ex-title">Example 3 (Integration by Parts)</div><div class="ex-text">Evaluate: ∫e^x sin x dx<br><br>a) (e^x/2)(sin x - cos x) + C b) (e^x/2)(sin x + cos x) + C c) e^x(sin x - cos x)/2 + C d) Both a and c</div><div class="ex-soln"><strong>Solution:</strong> d) Both a and c are the same. Let I = ∫e^x sin x dx. Using integration by parts: I = e^x sin x - ∫e^x cos x dx = e^x sin x - [e^x cos x + ∫e^x sin x dx] = e^x sin x - e^x cos x - I. So 2I = e^x(sin x - cos x) → I = (e^x/2)(sin x - cos x) + C.</div></div><h3>Shortcut Techniques</h3><ul><li>For 0/0 or ∞/∞ limits, always try L'Hôpital's rule first — differentiate numerator and denominator separately until you get a determinate form.</li><li>Memorise standard expansions: e^x = 1 + x + x²/2! + ..., sin x = x - x³/3! + ..., cos x = 1 - x²/2! + ... for limits with series.</li><li>For maxima-minima word problems, write the function to optimise in one variable using the given constraint, then differentiate.</li><li>Integration shortcut: ∫e^{ax} sin(bx) dx = e^{ax}(a sin bx - b cos bx)/(a²+b²) + C.</li><li>Area shortcut: area between parabola y² = 4ax and its latus rectum x = a is (8a²/3).</li></ul><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">For JEE Advanced, calculus questions often combine multiple concepts — e.g., area under curve with differential equations, or limits with expansion series. Practice mixed-concept problems from previous years. Maintain a formula sheet for quick revision of all standard limits, derivatives, and integration formulas.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div>                </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 8 | NDA 2019</div>
+                        <div class="ex-text">Check continuity of f(x) = |x &minus; 3| at x = 3.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> LHL = lim<sub>x&rarr;3<sup>&minus;</sup></sub> |x &minus; 3| = 0. RHL = lim<sub>x&rarr;3<sup>+</sup></sub> |x &minus; 3| = 0. f(3) = 0. Since LHL = RHL = f(3), f is <strong>continuous</strong> at x = 3.</div>
+                    </div>
+
+                    <h3>Types of Discontinuities</h3>
+                    <table>
+                        <thead>
+                            <tr><th>Type</th><th>Description</th><th>Example</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Removable</td><td>lim<sub>x&rarr;a</sub> f(x) exists but &ne; f(a) or f(a) undefined</td><td>f(x) = (x<sup>2</sup> &minus; 1)/(x &minus; 1) at x = 1</td></tr>
+                            <tr><td>Jump</td><td>LHL and RHL exist but are not equal</td><td>f(x) = { x, x &lt; 0; x + 1, x &ge; 0 } at x = 0</td></tr>
+                            <tr><td>Infinite</td><td>At least one one-sided limit is &infin; or &minus;&infin;</td><td>f(x) = 1/x at x = 0</td></tr>
+                            <tr><td>Oscillatory</td><td>Limit does not exist due to oscillation</td><td>f(x) = sin(1/x) at x = 0</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Differentiability</h3>
+                    <p>A function f is <strong>differentiable at x = a</strong> if the derivative f'(a) = lim<sub>h&rarr;0</sub> [f(a + h) &minus; f(a)]/h exists (LHD = RHD). Differentiability implies continuity, but the converse is not true.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 9 | NDA 2020</div>
+                        <div class="ex-text">Is f(x) = |x &minus; 3| differentiable at x = 3?</div>
+                        <div class="ex-soln"><strong>Solution:</strong> LHD = lim<sub>h&rarr;0<sup>&minus;</sup></sub> (|3+h&minus;3| &minus; 0)/h = lim<sub>h&rarr;0<sup>&minus;</sup></sub> |h|/h = &minus;1. RHD = lim<sub>h&rarr;0<sup>+</sup></sub> |h|/h = 1. Since LHD &ne; RHD, f is <strong>not differentiable</strong> at x = 3, though it is continuous.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Continuity vs Differentiability</div>
+                        <div class="tip-text">For NDA, remember: all differentiable functions are continuous, but not all continuous functions are differentiable. Modulus functions (|x|) and functions with sharp corners are classic examples of continuous but non-differentiable functions.</div>
+                    </div>
+
+                    <h2 id="differentiation">3. Differentiation</h2>
+
+                    <h3>Basic Rules &amp; Formulas</h3>
+                    <p>The derivative represents the rate of change. Geometrically, f'(x) is the slope of the tangent at point (x, f(x)).</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Function</th><th>Derivative</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>x<sup>n</sup></td><td>nx<sup>n&minus;1</sup></td></tr>
+                            <tr><td>e<sup>x</sup></td><td>e<sup>x</sup></td></tr>
+                            <tr><td>a<sup>x</sup></td><td>a<sup>x</sup> ln a</td></tr>
+                            <tr><td>ln x</td><td>1/x</td></tr>
+                            <tr><td>log<sub>a</sub> x</td><td>1/(x ln a)</td></tr>
+                            <tr><td>sin x</td><td>cos x</td></tr>
+                            <tr><td>cos x</td><td>&minus;sin x</td></tr>
+                            <tr><td>tan x</td><td>sec<sup>2</sup> x</td></tr>
+                            <tr><td>sec x</td><td>sec x tan x</td></tr>
+                            <tr><td>cosec x</td><td>&minus;cosec x cot x</td></tr>
+                            <tr><td>cot x</td><td>&minus;cosec<sup>2</sup> x</td></tr>
+                            <tr><td>sin<sup>&minus;1</sup> x</td><td>1/&radic;(1 &minus; x<sup>2</sup>)</td></tr>
+                            <tr><td>cos<sup>&minus;1</sup> x</td><td>&minus;1/&radic;(1 &minus; x<sup>2</sup>)</td></tr>
+                            <tr><td>tan<sup>&minus;1</sup> x</td><td>1/(1 + x<sup>2</sup>)</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Chain Rule, Product Rule, Quotient Rule</h3>
+                    <p><strong>Chain Rule:</strong> If y = f(u) and u = g(x), then dy/dx = (dy/du) &times; (du/dx).</p>
+                    <p><strong>Product Rule:</strong> (uv)' = u'v + uv'.</p>
+                    <p><strong>Quotient Rule:</strong> (u/v)' = (u'v &minus; uv')/v<sup>2</sup>.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 10 | NDA 2018</div>
+                        <div class="ex-text">Differentiate y = sin(ln x) with respect to x.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using chain rule, dy/dx = cos(ln x) &times; d/dx(ln x) = <strong>cos(ln x)/x</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Chain Rule</div>
+                        <div class="tip-text">For nested functions, differentiate from outside to inside. In NDA exams, chain rule problems often involve trigonometric, exponential, and logarithmic compositions. Remember: derivative of f(g(x)) = f'(g(x)) &times; g'(x).</div>
+                    </div>
+
+                    <h3>Implicit Differentiation</h3>
+                    <p>When y cannot be expressed explicitly as a function of x, differentiate both sides of the equation with respect to x, treating y as a function of x and using the chain rule (dy/dx appears).</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 11 | NDA 2019</div>
+                        <div class="ex-text">Find dy/dx if x<sup>3</sup> + y<sup>3</sup> = 3xy.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Differentiate both sides: 3x<sup>2</sup> + 3y<sup>2</sup>(dy/dx) = 3y + 3x(dy/dx). Rearranging: 3y<sup>2</sup>(dy/dx) &minus; 3x(dy/dx) = 3y &minus; 3x<sup>2</sup>. So dy/dx = (y &minus; x<sup>2</sup>)/(y<sup>2</sup> &minus; x).</div>
+                    </div>
+
+                    <h3>Logarithmic Differentiation</h3>
+                    <p>Used when the function is of the form [f(x)]<sup>g(x)</sup> or a product/quotient of many functions. Take natural log on both sides and then differentiate.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 12 | NDA 2020</div>
+                        <div class="ex-text">Find dy/dx if y = x<sup>x</sup>.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Take ln on both sides: ln y = x ln x. Differentiate: (1/y)(dy/dx) = ln x + x(1/x) = ln x + 1. So dy/dx = y(ln x + 1) = <strong>x<sup>x</sup>(ln x + 1)</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Logarithmic Differentiation</div>
+                        <div class="tip-text">For y = [f(x)]<sup>g(x)</sup>, the formula is: dy/dx = [f(x)]<sup>g(x)</sup> &times; [g'(x) ln f(x) + g(x) f'(x)/f(x)]. Memorise this to avoid re-deriving each time.</div>
+                    </div>
+
+                    <h3>Second Order Derivatives</h3>
+                    <p>The second derivative f''(x) or d<sup>2</sup>y/dx<sup>2</sup> is the derivative of the first derivative. It represents the rate of change of slope and is used to determine concavity and classify critical points.</p>
+                    <p>If f''(x) &gt; 0 on an interval, the function is <strong>concave up</strong> (holds water). If f''(x) &lt; 0, the function is <strong>concave down</strong> (spills water). Points where concavity changes are called <strong>points of inflection</strong> (f''(x) = 0).</p>
+
+                    <h3>Successive Differentiation (n<sup>th</sup> Derivatives)</h3>
+                    <p>Successive differentiation involves finding higher-order derivatives. Some standard formulas for n<sup>th</sup> derivatives are useful in NDA exams:</p>
+                    <table>
+                        <thead>
+                            <tr><th>f(x)</th><th>f<sup>(n)</sup>(x)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>x<sup>m</sup></td><td>m(m&minus;1)...(m&minus;n+1) x<sup>m&minus;n</sup></td></tr>
+                            <tr><td>e<sup>ax</sup></td><td>a<sup>n</sup> e<sup>ax</sup></td></tr>
+                            <tr><td>sin(ax + b)</td><td>a<sup>n</sup> sin(ax + b + n&pi;/2)</td></tr>
+                            <tr><td>cos(ax + b)</td><td>a<sup>n</sup> cos(ax + b + n&pi;/2)</td></tr>
+                            <tr><td>ln(ax + b)</td><td>(&minus;1)<sup>n&minus;1</sup> (n&minus;1)! a<sup>n</sup>/(ax + b)<sup>n</sup></td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 13 | NDA 2018</div>
+                        <div class="ex-text">If y = e<sup>x</sup> sin x, find d<sup>2</sup>y/dx<sup>2</sup>.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> dy/dx = e<sup>x</sup> sin x + e<sup>x</sup> cos x = e<sup>x</sup>(sin x + cos x). d<sup>2</sup>y/dx<sup>2</sup> = e<sup>x</sup>(sin x + cos x) + e<sup>x</sup>(cos x &minus; sin x) = <strong>2e<sup>x</sup> cos x</strong>.</div>
+                    </div>
+
+                    <h2 id="applications">4. Applications of Derivatives</h2>
+
+                    <h3>Rate of Change</h3>
+                    <p>The derivative dy/dx gives the rate of change of y with respect to x. In NDA problems, this is often used with time as the independent variable: dy/dt = (dy/dx)(dx/dt). Related rates problems involve finding the rate at which one quantity changes with respect to time given the rate of another related quantity.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 14 | NDA 2019</div>
+                        <div class="ex-text">The radius of a sphere is increasing at 2 cm/s. Find the rate of increase of volume when radius = 3 cm.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> V = (4/3)&pi;r<sup>3</sup>. dV/dt = 4&pi;r<sup>2</sup> &times; dr/dt = 4&pi;(9) &times; 2 = <strong>72&pi; cm<sup>3</sup>/s</strong>.</div>
+                    </div>
+
+                    <h3>Increasing/Decreasing Functions</h3>
+                    <p>A function f(x) is <strong>increasing</strong> if f'(x) &gt; 0 and <strong>decreasing</strong> if f'(x) &lt; 0. If f'(x) = 0, the function may have a stationary point.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 15 | NDA 2020</div>
+                        <div class="ex-text">Find the interval where f(x) = x<sup>3</sup> &minus; 3x + 2 is increasing.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> f'(x) = 3x<sup>2</sup> &minus; 3 = 3(x &minus; 1)(x + 1). f'(x) &gt; 0 when x &lt; &minus;1 or x &gt; 1. So f is increasing on <strong>(&minus;&infin;, &minus;1) &cup; (1, &infin;)</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Monotonicity</div>
+                        <div class="tip-text">To quickly determine increasing/decreasing intervals, factorise f'(x) and check the sign using the number line test. For quadratic f'(x), the sign alternates between roots.</div>
+                    </div>
+
+                    <h3>Tangents &amp; Normals</h3>
+                    <p><strong>Tangent:</strong> Equation at (x<sub>0</sub>, y<sub>0</sub>) is y &minus; y<sub>0</sub> = f'(x<sub>0</sub>)(x &minus; x<sub>0</sub>). The slope of the tangent gives the instantaneous rate of change at that point.</p>
+                    <p><strong>Normal:</strong> Equation is y &minus; y<sub>0</sub> = &minus;1/f'(x<sub>0</sub>) &times; (x &minus; x<sub>0</sub>), provided f'(x<sub>0</sub>) &ne; 0. The normal is perpendicular to the tangent (product of slopes = &minus;1).</p>
+                    <p><strong>Lengths:</strong> The length of tangent = |y<sub>0</sub> &radic;(1 + (f'(x<sub>0</sub>))<sup>2</sup>)/f'(x<sub>0</sub>)|. The length of normal = |y<sub>0</sub> &radic;(1 + (f'(x<sub>0</sub>))<sup>2</sup>)|. The sub-tangent = |y<sub>0</sub>/f'(x<sub>0</sub>)|. The sub-normal = |y<sub>0</sub> f'(x<sub>0</sub>)|.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 16 | NDA 2018</div>
+                        <div class="ex-text">Find the equation of tangent to y = x<sup>2</sup> at (1, 1).</div>
+                        <div class="ex-soln"><strong>Solution:</strong> dy/dx = 2x, so slope at (1,1) = 2. Equation: y &minus; 1 = 2(x &minus; 1) &rArr; <strong>y = 2x &minus; 1</strong>.</div>
+                    </div>
+
+                    <h3>Mean Value Theorem &amp; Rolle's Theorem</h3>
+                    <p><strong>Rolle's Theorem:</strong> If f is continuous on [a, b] and differentiable on (a, b), and f(a) = f(b), then there exists c &isin; (a, b) such that f'(c) = 0.</p>
+                    <p><strong>Lagrange's Mean Value Theorem (LMVT):</strong> If f is continuous on [a, b] and differentiable on (a, b), then there exists c &isin; (a, b) such that f'(c) = [f(b) &minus; f(a)]/(b &minus; a).</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 17 | NDA 2019</div>
+                        <div class="ex-text">Verify Rolle's Theorem for f(x) = x<sup>2</sup> &minus; 4x + 3 on [1, 3].</div>
+                        <div class="ex-soln"><strong>Solution:</strong> f(1) = 1 &minus; 4 + 3 = 0, f(3) = 9 &minus; 12 + 3 = 0. So f(1) = f(3). f'(x) = 2x &minus; 4. Setting f'(c) = 0 gives 2c &minus; 4 = 0 &rArr; c = 2 &isin; (1, 3). Hence Rolle's Theorem is verified. <strong>c = 2</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: MVT Applications</div>
+                        <div class="tip-text">In NDA exams, Rolle's Theorem is tested by verifying f(a)=f(b) and finding c where f'(c)=0. LMVT is tested by finding c such that f'(c) equals the average rate of change. Both are used to prove inequalities.</div>
+                    </div>
+
+                    <h3>Maxima &amp; Minima</h3>
+                    <p><strong>First Derivative Test:</strong> Find critical points (f'(x) = 0). If f' changes from + to &minus;, it is a local maximum; if &minus; to +, local minimum.</p>
+                    <p><strong>Second Derivative Test:</strong> At a critical point, if f''(x) &gt; 0, local minima; if f''(x) &lt; 0, local maxima; if f''(x) = 0, test fails.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Condition</th><th>Conclusion</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>f'(c) = 0 and f''(c) &gt; 0</td><td>Local minimum at x = c</td></tr>
+                            <tr><td>f'(c) = 0 and f''(c) &lt; 0</td><td>Local maximum at x = c</td></tr>
+                            <tr><td>f'(c) = 0 and f''(c) = 0</td><td>Test inconclusive (use first derivative test)</td></tr>
+                            <tr><td>f'(x) &gt; 0 on both sides of c</td><td>Point of inflection</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 18 | NDA 2020</div>
+                        <div class="ex-text">Find the local maxima/minima of f(x) = 2x<sup>3</sup> &minus; 9x<sup>2</sup> + 12x &minus; 3.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> f'(x) = 6x<sup>2</sup> &minus; 18x + 12 = 6(x<sup>2</sup> &minus; 3x + 2) = 6(x &minus; 1)(x &minus; 2). Critical points: x = 1, 2. f''(x) = 12x &minus; 18. f''(1) = &minus;6 &lt; 0 &rArr; local maximum at x = 1, f(1) = 2. f''(2) = 6 &gt; 0 &rArr; local minimum at x = 2, f(2) = 1.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Maxima/Minima</div>
+                        <div class="tip-text">For NDA objective questions, after finding critical points, instantly check f''(x) sign. If only one critical point exists and it is a maximum, it is the global maximum for the given interval. Similarly for minimum.</div>
+                    </div>
+
+                    <h3>Approximations &amp; Differentials</h3>
+                    <p>Using differentials: f(x + &Delta;x) &asymp; f(x) + f'(x)&Delta;x. This is useful for approximate calculations when &Delta;x is small. The error in approximation is proportional to (&Delta;x)<sup>2</sup>.</p>
+
+                    <p><strong>Absolute Error:</strong> |&Delta;y| &asymp; |f'(x) &Delta;x|. <strong>Relative Error:</strong> |&Delta;y/y| &asymp; |f'(x)/f(x) &Delta;x|. <strong>Percentage Error:</strong> (|&Delta;y/y|) &times; 100%.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 19 | NDA 2019</div>
+                        <div class="ex-text">Find the approximate value of &radic;25.2.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Let f(x) = &radic;x, f'(x) = 1/(2&radic;x). Take x = 25, &Delta;x = 0.2. f(25.2) &asymp; f(25) + f'(25) &times; 0.2 = 5 + 1/(10) &times; 0.2 = 5 + 0.02 = <strong>5.02</strong>.</div>
+                    </div>
+
+                    <h2 id="integration">5. Integration</h2>
+
+                    <h3>Indefinite Integrals</h3>
+                    <p>Integration is the inverse process of differentiation. The indefinite integral &int; f(x) dx = F(x) + C, where F'(x) = f(x) and C is the constant of integration. Every differentiation formula gives rise to a corresponding integration formula.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Method</th><th>When to Use</th><th>Example</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Direct Formula</td><td>Standard forms (power, trig, exponential)</td><td>&int; x<sup>2</sup> dx = x<sup>3</sup>/3 + C</td></tr>
+                            <tr><td>Substitution</td><td>Composite functions, integrand contains f'(x)</td><td>&int; 2x cos(x<sup>2</sup>) dx</td></tr>
+                            <tr><td>Integration by Parts</td><td>Product of two dissimilar functions</td><td>&int; x e<sup>x</sup> dx</td></tr>
+                            <tr><td>Partial Fractions</td><td>Rational functions P(x)/Q(x)</td><td>&int; 1/(x<sup>2</sup>&minus;4) dx</td></tr>
+                            <tr><td>Trigonometric Identities</td><td>Powers of sin, cos, tan</td><td>&int; sin<sup>2</sup>x dx = &int; (1&minus;cos 2x)/2 dx</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Basic Formulas</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Integral</th><th>Result</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>&int; x<sup>n</sup> dx</td><td>x<sup>n+1</sup>/(n+1) + C, n &ne; &minus;1</td></tr>
+                            <tr><td>&int; (1/x) dx</td><td>ln |x| + C</td></tr>
+                            <tr><td>&int; e<sup>x</sup> dx</td><td>e<sup>x</sup> + C</td></tr>
+                            <tr><td>&int; a<sup>x</sup> dx</td><td>a<sup>x</sup>/ln a + C</td></tr>
+                            <tr><td>&int; sin x dx</td><td>&minus;cos x + C</td></tr>
+                            <tr><td>&int; cos x dx</td><td>sin x + C</td></tr>
+                            <tr><td>&int; sec<sup>2</sup> x dx</td><td>tan x + C</td></tr>
+                            <tr><td>&int; cosec<sup>2</sup> x dx</td><td>&minus;cot x + C</td></tr>
+                            <tr><td>&int; sec x tan x dx</td><td>sec x + C</td></tr>
+                            <tr><td>&int; cosec x cot x dx</td><td>&minus;cosec x + C</td></tr>
+                            <tr><td>&int; 1/(1 + x<sup>2</sup>) dx</td><td>tan<sup>&minus;1</sup> x + C</td></tr>
+                            <tr><td>&int; 1/&radic;(1 &minus; x<sup>2</sup>) dx</td><td>sin<sup>&minus;1</sup> x + C</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Substitution Method</h4>
+                    <p>If the integrand contains a composite function, substitute u = g(x) so that du = g'(x) dx and the integral simplifies to &int; f(u) du. Common substitutions include u = sin x, cos x, tan x, e<sup>x</sup>, or algebraic expressions under radicals.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Integrand Contains</th><th>Substitution</th><th>Result</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>&radic;(a<sup>2</sup> &minus; x<sup>2</sup>)</td><td>x = a sin &theta;</td><td>a cos &theta; d&theta;</td></tr>
+                            <tr><td>&radic;(x<sup>2</sup> + a<sup>2</sup>)</td><td>x = a tan &theta;</td><td>a sec<sup>2</sup>&theta; d&theta;</td></tr>
+                            <tr><td>&radic;(x<sup>2</sup> &minus; a<sup>2</sup>)</td><td>x = a sec &theta;</td><td>a sec &theta; tan &theta; d&theta;</td></tr>
+                            <tr><td>a<sup>2</sup> &minus; x<sup>2</sup> in denominator</td><td>x = a sin &theta;</td><td>a cos &theta; d&theta;</td></tr>
+                            <tr><td>a<sup>2</sup> + x<sup>2</sup> in denominator</td><td>x = a tan &theta;</td><td>a sec<sup>2</sup>&theta; d&theta;</td></tr>
+                            <tr><td>&radic;(a &minus; x)/(a + x)</td><td>x = a cos 2&theta;</td><td>Trigonometric simplification</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 20 | NDA 2020</div>
+                        <div class="ex-text">Evaluate: &int; 2x cos(x<sup>2</sup>) dx</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Let u = x<sup>2</sup>, du = 2x dx. The integral becomes &int; cos u du = sin u + C = <strong>sin(x<sup>2</sup>) + C</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Substitution Recognition</div>
+                        <div class="tip-text">Look for integrands where one part is the derivative of another. For example, if the integrand contains f'(x) &times; g(f(x)), substitute u = f(x). Common patterns: x cos(x<sup>2</sup>), e<sup>x</sup> sin(e<sup>x</sup>), etc.</div>
+                    </div>
+
+                    <h4>Integration by Parts</h4>
+                    <p>Using the formula: &int; u dv = uv &minus; &int; v du. Choose u and dv using the <strong>LIATE</strong> rule (Logarithmic, Inverse trig, Algebraic, Trigonometric, Exponential) where u is chosen from the first category.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 21 | NDA 2019</div>
+                        <div class="ex-text">Evaluate: &int; x e<sup>x</sup> dx</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using integration by parts with u = x, dv = e<sup>x</sup>dx: du = dx, v = e<sup>x</sup>. &int; x e<sup>x</sup> dx = x e<sup>x</sup> &minus; &int; e<sup>x</sup> dx = <strong>x e<sup>x</sup> &minus; e<sup>x</sup> + C</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: LIATE Rule</div>
+                        <div class="tip-text">LIATE gives the priority for u in integration by parts: Logarithmic &gt; Inverse trig &gt; Algebraic &gt; Trigonometric &gt; Exponential. The remaining factor becomes dv. For products like x<sup>n</sup> e<sup>x</sup>, choose u = x<sup>n</sup>.</div>
+                    </div>
+
+                    <h4>Partial Fractions</h4>
+                    <p>Used to integrate rational functions P(x)/Q(x). Decompose the fraction into simpler terms based on the factors of Q(x).</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Factor in Denominator</th><th>Partial Fraction Form</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>(ax + b)</td><td>A/(ax + b)</td></tr>
+                            <tr><td>(ax + b)<sup>n</sup></td><td>A<sub>1</sub>/(ax+b) + A<sub>2</sub>/(ax+b)<sup>2</sup> + ... + A<sub>n</sub>/(ax+b)<sup>n</sup></td></tr>
+                            <tr><td>ax<sup>2</sup> + bx + c (non-repeated)</td><td>(Ax + B)/(ax<sup>2</sup> + bx + c)</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 22 | NDA 2020</div>
+                        <div class="ex-text">Evaluate: &int; 1/(x<sup>2</sup> &minus; 4) dx</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using partial fractions: 1/(x<sup>2</sup> &minus; 4) = 1/[(x&minus;2)(x+2)] = (1/4)[1/(x&minus;2) &minus; 1/(x+2)]. Integrating: (1/4)[ln|x&minus;2| &minus; ln|x+2|] + C = <strong>(1/4) ln|(x&minus;2)/(x+2)| + C</strong>.</div>
+                    </div>
+
+                    <h4>Integration Using Trigonometric Identities</h4>
+                    <p>Trigonometric identities simplify integrals involving products of sine and cosine, powers of trigonometric functions, and rational trigonometric expressions.</p>
+                    <ul>
+                        <li>sin<sup>2</sup>x = (1 &minus; cos 2x)/2, cos<sup>2</sup>x = (1 + cos 2x)/2</li>
+                        <li>sin 3x = 3 sin x &minus; 4 sin<sup>3</sup>x, cos 3x = 4 cos<sup>3</sup>x &minus; 3 cos x</li>
+                        <li>2 sin A cos B = sin(A+B) + sin(A&minus;B)</li>
+                        <li>2 cos A cos B = cos(A+B) + cos(A&minus;B)</li>
+                        <li>2 sin A sin B = cos(A&minus;B) &minus; cos(A+B)</li>
+                    </ul>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 23 | NDA Practice</div>
+                        <div class="ex-text">Evaluate: &int; sin 3x cos 2x dx</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using 2 sin A cos B = sin(A+B) + sin(A&minus;B): &int; sin 3x cos 2x dx = (1/2) &int; (sin 5x + sin x) dx = (1/2)[&minus;cos 5x/5 &minus; cos x] + C = <strong>&minus;cos 5x/10 &minus; cos x/2 + C</strong>.</div>
+                    </div>
+
+                    <h4>Integration of Special Functions</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Integral</th><th>Result</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>&int; 1/(x<sup>2</sup> + a<sup>2</sup>) dx</td><td>(1/a) tan<sup>&minus;1</sup>(x/a) + C</td></tr>
+                            <tr><td>&int; 1/(x<sup>2</sup> &minus; a<sup>2</sup>) dx</td><td>(1/2a) ln |(x&minus;a)/(x+a)| + C</td></tr>
+                            <tr><td>&int; 1/&radic;(a<sup>2</sup> &minus; x<sup>2</sup>) dx</td><td>sin<sup>&minus;1</sup>(x/a) + C</td></tr>
+                            <tr><td>&int; 1/&radic;(x<sup>2</sup> + a<sup>2</sup>) dx</td><td>sinh<sup>&minus;1</sup>(x/a) + C</td></tr>
+                            <tr><td>&int; 1/&radic;(x<sup>2</sup> &minus; a<sup>2</sup>) dx</td><td>ln |x + &radic;(x<sup>2</sup> &minus; a<sup>2</sup>)| + C</td></tr>
+                            <tr><td>&int; &radic;(a<sup>2</sup> &minus; x<sup>2</sup>) dx</td><td>(x/2)&radic;(a<sup>2</sup>&minus;x<sup>2</sup>) + (a<sup>2</sup>/2) sin<sup>&minus;1</sup>(x/a) + C</td></tr>
+                            <tr><td>&int; tan x dx</td><td>ln |sec x| + C</td></tr>
+                            <tr><td>&int; cot x dx</td><td>ln |sin x| + C</td></tr>
+                            <tr><td>&int; sec x dx</td><td>ln |sec x + tan x| + C</td></tr>
+                            <tr><td>&int; cosec x dx</td><td>ln |cosec x &minus; cot x| + C</td></tr>
+                            <tr><td>&int; e<sup>ax</sup> sin(bx) dx</td><td>e<sup>ax</sup>(a sin bx &minus; b cos bx)/(a<sup>2</sup> + b<sup>2</sup>) + C</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Integration Speed Tricks</div>
+                        <div class="tip-text">For &int; e<sup>ax</sup> sin(bx) dx and &int; e<sup>ax</sup> cos(bx) dx, use the direct formula: e<sup>ax</sup>(a sin bx &minus; b cos bx)/(a<sup>2</sup>+b<sup>2</sup>) and e<sup>ax</sup>(a cos bx + b sin bx)/(a<sup>2</sup>+b<sup>2</sup>) respectively. No need to integrate by parts twice.</div>
+                    </div>
+
+                    <h4>Reduction Formulas (for NDA Advanced Problems)</h4>
+                    <p>Reduction formulas express an integral involving powers of functions in terms of lower powers. These are useful for integrals like &int; sin<sup>n</sup>x dx and &int; cos<sup>n</sup>x dx.</p>
+
+                    <table>
+                        <thead>
+                            <tr><th>Reduction Formula</th><th>Result</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>&int; sin<sup>n</sup>x dx</td><td>&minus;(1/n) sin<sup>n&minus;1</sup>x cos x + ((n&minus;1)/n) &int; sin<sup>n&minus;2</sup>x dx</td></tr>
+                            <tr><td>&int; cos<sup>n</sup>x dx</td><td>(1/n) cos<sup>n&minus;1</sup>x sin x + ((n&minus;1)/n) &int; cos<sup>n&minus;2</sup>x dx</td></tr>
+                            <tr><td>&int; tan<sup>n</sup>x dx</td><td>tan<sup>n&minus;1</sup>x/(n&minus;1) &minus; &int; tan<sup>n&minus;2</sup>x dx</td></tr>
+                            <tr><td>&int; sec<sup>n</sup>x dx</td><td>(1/(n&minus;1)) sec<sup>n&minus;2</sup>x tan x + ((n&minus;2)/(n&minus;1)) &int; sec<sup>n&minus;2</sup>x dx</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 24 | NDA Practice</div>
+                        <div class="ex-text">Use the reduction formula to find &int; sin<sup>2</sup>x dx.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using the reduction formula with n=2: &int; sin<sup>2</sup>x dx = &minus;(1/2) sin x cos x + (1/2) &int; sin<sup>0</sup>x dx = &minus;(1/2) sin x cos x + x/2 + C = <strong>(x &minus; sin x cos x)/2 + C</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Even Powers of sin/cos</div>
+                        <div class="tip-text">For sin<sup>2</sup>x and cos<sup>2</sup>x, use the double-angle identities directly: sin<sup>2</sup>x = (1&minus;cos 2x)/2 and cos<sup>2</sup>x = (1+cos 2x)/2. This is faster than the reduction formula for n=2.</div>
+                    </div>
+
+                    <h3>Definite Integrals</h3>
+                    <p>The definite integral &int;<sub>a</sub><sup>b</sup> f(x) dx = F(b) &minus; F(a), where F'(x) = f(x). It represents the signed area under the curve y = f(x) from x = a to x = b.</p>
+
+                    <h4>Properties of Definite Integrals</h4>
+                    <table>
+                        <thead>
+                            <tr><th>Property</th><th>Formula</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Reversal of limits</td><td>&int;<sub>a</sub><sup>b</sup> f(x) dx = &minus;&int;<sub>b</sub><sup>a</sup> f(x) dx</td></tr>
+                            <tr><td>Zero width</td><td>&int;<sub>a</sub><sup>a</sup> f(x) dx = 0</td></tr>
+                            <tr><td>Additivity</td><td>&int;<sub>a</sub><sup>b</sup> f(x) dx = &int;<sub>a</sub><sup>c</sup> f(x) dx + &int;<sub>c</sub><sup>b</sup> f(x) dx</td></tr>
+                            <tr><td>King's property</td><td>&int;<sub>a</sub><sup>b</sup> f(x) dx = &int;<sub>a</sub><sup>b</sup> f(a + b &minus; x) dx</td></tr>
+                            <tr><td>Odd function</td><td>&int;<sub>&minus;a</sub><sup>a</sup> f(x) dx = 0 if f is odd</td></tr>
+                            <tr><td>Even function</td><td>&int;<sub>&minus;a</sub><sup>a</sup> f(x) dx = 2 &int;<sub>0</sub><sup>a</sup> f(x) dx if f is even</td></tr>
+                            <tr><td>Periodic function</td><td>&int;<sub>0</sub><sup>nT</sup> f(x) dx = n &int;<sub>0</sub><sup>T</sup> f(x) dx if period = T</td></tr>
+                            <tr><td>I = &int;<sub>a</sub><sup>b</sup> f(x) dx = &int;<sub>a</sub><sup>b</sup> f(a+b&minus;x) dx</td><td>Adding: 2I = &int;<sub>a</sub><sup>b</sup> [f(x)+f(a+b&minus;x)] dx</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 25 | NDA 2020</div>
+                        <div class="ex-text">Evaluate: &int;<sub>0</sub><sup>&pi;/2</sup> sin x/(sin x + cos x) dx</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Let I = &int;<sub>0</sub><sup>&pi;/2</sup> sin x/(sin x + cos x) dx. Using King's property: I = &int;<sub>0</sub><sup>&pi;/2</sup> cos x/(cos x + sin x) dx. Adding: 2I = &int;<sub>0</sub><sup>&pi;/2</sup> 1 dx = &pi;/2. So I = <strong>&pi;/4</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: King's Property</div>
+                        <div class="tip-text">For definite integrals with limits a and b, replace x by a+b&minus;x and add the two integrals. This is a powerful trick for NDA problems involving sin and cos ratios.</div>
+                    </div>
+
+                    <h4>Inequalities &amp; Estimation of Definite Integrals</h4>
+                    <p>Several important inequalities help estimate definite integrals without evaluating them exactly:</p>
+                    <ul>
+                        <li>If m &le; f(x) &le; M on [a, b], then m(b &minus; a) &le; &int;<sub>a</sub><sup>b</sup> f(x) dx &le; M(b &minus; a).</li>
+                        <li><strong>Cauchy-Schwarz Inequality:</strong> (&int;<sub>a</sub><sup>b</sup> f(x)g(x) dx)<sup>2</sup> &le; &int;<sub>a</sub><sup>b</sup> [f(x)]<sup>2</sup> dx &middot; &int;<sub>a</sub><sup>b</sup> [g(x)]<sup>2</sup> dx.</li>
+                        <li><strong>Triangle Inequality:</strong> |&int;<sub>a</sub><sup>b</sup> f(x) dx| &le; &int;<sub>a</sub><sup>b</sup> |f(x)| dx.</li>
+                        <li><strong>Mean Value Theorem for Integrals:</strong> There exists c &isin; [a, b] such that &int;<sub>a</sub><sup>b</sup> f(x) dx = f(c)(b &minus; a).</li>
+                    </ul>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 26 | NDA Practice</div>
+                        <div class="ex-text">Find the average value of f(x) = x<sup>2</sup> on [0, 2].</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Average value = (1/(b&minus;a)) &int;<sub>a</sub><sup>b</sup> f(x) dx = (1/2) &int;<sub>0</sub><sup>2</sup> x<sup>2</sup> dx = (1/2)[x<sup>3</sup>/3]<sub>0</sub><sup>2</sup> = (1/2)(8/3) = <strong>4/3</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Average Value</div>
+                        <div class="tip-text">Average value of a function on [a, b] is (1/(b&minus;a)) times the definite integral. For NDA problems asking "average value", use this formula directly. Common functions have simple averages.</div>
+                    </div>
+
+                    <h4>Area Under Curves</h4>
+                    <p>The area bounded by y = f(x), x-axis, x = a, x = b is given by &int;<sub>a</sub><sup>b</sup> |f(x)| dx. The area between two curves y = f(x) and y = g(x) is &int;<sub>a</sub><sup>b</sup> |f(x) &minus; g(x)| dx.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 27 | NDA 2018</div>
+                        <div class="ex-text">Find the area bounded by the curves y = x<sup>2</sup> and y = 2x.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Intersection: x<sup>2</sup> = 2x &rArr; x<sup>2</sup> &minus; 2x = 0 &rArr; x(x &minus; 2) = 0, so x = 0, 2. Area = &int;<sub>0</sub><sup>2</sup> (2x &minus; x<sup>2</sup>) dx = [x<sup>2</sup> &minus; x<sup>3</sup>/3]<sub>0</sub><sup>2</sup> = (4 &minus; 8/3) &minus; (0) = <strong>4/3 sq. units</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Area Between Curves</div>
+                        <div class="tip-text">Quickly identify the upper and lower curves by testing a point between intersection points. The upper curve minus lower curve gives the positive integrand. Common NDA areas: parabola &minus; line, circle &minus; parabola.</div>
+                    </div>
+
+                    <h2 id="differential-equations">6. Differential Equations</h2>
+
+                    <h3>Order &amp; Degree</h3>
+                    <p><strong>Order</strong> is the highest derivative present. <strong>Degree</strong> is the power of the highest derivative after removing radicals and fractions. A differential equation is <strong>linear</strong> if the dependent variable and its derivatives appear in the first degree. If the DE involves products or powers of the dependent variable or its derivatives, it is non-linear.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 28 | NDA 2019</div>
+                        <div class="ex-text">Find the order and degree of (d<sup>2</sup>y/dx<sup>2</sup>)<sup>3</sup> + (dy/dx)<sup>2</sup> + y = 0.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Highest derivative is d<sup>2</sup>y/dx<sup>2</sup> (order 2). Its power is 3 (degree 3). There are no radicals or fractions. So <strong>order = 2, degree = 3</strong>.</div>
+                    </div>
+
+                    <h3>Variable Separable</h3>
+                    <p>A DE of the form dy/dx = f(x)g(y) can be solved by separating variables: &int; dy/g(y) = &int; f(x) dx.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 29 | NDA 2020</div>
+                        <div class="ex-text">Solve: dy/dx = y/x</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Separate variables: dy/y = dx/x. Integrate: ln|y| = ln|x| + C &rArr; ln|y| = ln|x| + ln K &rArr; y = Kx. So <strong>y = Cx</strong>, where C is a constant.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Variable Separable</div>
+                        <div class="tip-text">In NDA exams, variable separable DEs often come in the form dy/dx = f(x)/g(y). Rearrange to g(y) dy = f(x) dx and integrate directly. Always add the constant of integration on one side.</div>
+                    </div>
+
+                    <h3>Homogeneous DE</h3>
+                    <p>A DE of the form dy/dx = F(y/x) is homogeneous. Substitute y = vx, then dy/dx = v + x(dv/dx) to convert it to a variable separable equation.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 30 | NDA 2018</div>
+                        <div class="ex-text">Solve: (x<sup>2</sup> + y<sup>2</sup>) dx = 2xy dy</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Rewrite as dy/dx = (x<sup>2</sup> + y<sup>2</sup>)/(2xy). Divide numerator and denominator by x<sup>2</sup>: dy/dx = (1 + (y/x)<sup>2</sup>)/(2(y/x)). Substitute y = vx: v + x(dv/dx) = (1 + v<sup>2</sup>)/(2v). Simplify: x(dv/dx) = (1 + v<sup>2</sup>)/(2v) &minus; v = (1 &minus; v<sup>2</sup>)/(2v). Separate: (2v/(1&minus;v<sup>2</sup>)) dv = dx/x. Integrate: &minus;ln|1&minus;v<sup>2</sup>| = ln|x| + C &rArr; 1/(1&minus;v<sup>2</sup>) = Kx &rArr; <strong>x<sup>2</sup> &minus; y<sup>2</sup> = Cx</strong>.</div>
+                    </div>
+
+                    <h3>Linear DE</h3>
+                    <p>A first-order linear DE is of the form dy/dx + P(x)y = Q(x). The integrating factor (IF) is e<sup>&int; P dx</sup>. The solution is y(IF) = &int; Q(IF) dx + C. Linear DEs appear frequently in NDA exams and can be identified by the dependent variable y and its derivative dy/dx appearing only in the first degree without any product terms.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 31 | NDA 2020</div>
+                        <div class="ex-text">Solve: dy/dx + (2/x)y = x</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Here P = 2/x, Q = x. IF = e<sup>&int; (2/x) dx</sup> = e<sup>2 ln x</sup> = x<sup>2</sup>. Solution: y &times; x<sup>2</sup> = &int; x &times; x<sup>2</sup> dx = &int; x<sup>3</sup> dx = x<sup>4</sup>/4 + C. So <strong>y = x<sup>2</sup>/4 + C/x<sup>2</sup></strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Linear DE</div>
+                        <div class="tip-text">The integrating factor IF = e<sup>&int; P dx</sup>. Once found, the solution is always y(IF) = &int; Q(IF) dx + C. For NDA, common P forms are 2/x, tan x, cot x, etc. Memorise: e<sup>&int; (1/x) dx</sup> = x, e<sup>&int; (2/x) dx</sup> = x<sup>2</sup>.</div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr><th>Type of DE</th><th>Standard Form</th><th>Solution Method</th><th>Example</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Variable Separable</td><td>dy/dx = f(x)g(y)</td><td>&int; dy/g(y) = &int; f(x) dx</td><td>dy/dx = xy</td></tr>
+                            <tr><td>Homogeneous</td><td>dy/dx = F(y/x)</td><td>y = vx, separate variables</td><td>(x+y) dx = x dy</td></tr>
+                            <tr><td>Linear (first order)</td><td>dy/dx + Py = Q</td><td>IF = e<sup>&int; P dx</sup></td><td>dy/dx + y = x</td></tr>
+                            <tr><td>Bernoulli</td><td>dy/dx + Py = Qy<sup>n</sup></td><td>Substitute v = y<sup>1&minus;n</sup></td><td>dy/dx + y = xy<sup>2</sup></td></tr>
+                            <tr><td>Exact</td><td>M dx + N dy = 0</td><td>&part;M/&part;y = &part;N/&part;x</td><td>(y)dx + (x)dy = 0</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 32 | NDA 2019</div>
+                        <div class="ex-text">Solve the linear DE: dy/dx + y tan x = sec x</div>
+                        <div class="ex-soln"><strong>Solution:</strong> P = tan x, Q = sec x. IF = e<sup>&int; tan x dx</sup> = e<sup>ln|sec x|</sup> = sec x. Solution: y sec x = &int; sec x &times; sec x dx = &int; sec<sup>2</sup> x dx = tan x + C. So <strong>y = cos x (tan x + C) = sin x + C cos x</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Quick DE Identification</div>
+                        <div class="tip-text">In the NDA exam, quickly identify the type of DE: if variables separate easily, it is variable separable; if dy/dx = f(y/x), it is homogeneous; if dy/dx + Py = Q, it is linear. This saves precious time.</div>
+                    </div>
+
+                    <h3>Bernoulli's Differential Equation</h3>
+                    <p>A Bernoulli DE has the form dy/dx + P(x)y = Q(x)y<sup>n</sup> where n &ne; 0, 1. To solve, substitute v = y<sup>1&minus;n</sup>. This reduces it to a linear DE in v.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 33 | NDA Practice</div>
+                        <div class="ex-text">Solve: dy/dx + y = xy<sup>2</sup></div>
+                        <div class="ex-soln"><strong>Solution:</strong> Here n = 2. Substitute v = y<sup>1&minus;2</sup> = y<sup>&minus;1</sup>. Then dv/dx = &minus;y<sup>&minus;2</sup> dy/dx. Multiply the original DE by &minus;y<sup>&minus;2</sup>: &minus;y<sup>&minus;2</sup> dy/dx &minus; y<sup>&minus;1</sup> = &minus;x. This gives dv/dx &minus; v = &minus;x. This is linear in v. P = &minus;1, Q = &minus;x. IF = e<sup>&int; &minus;1 dx</sup> = e<sup>&minus;x</sup>. Solution: v e<sup>&minus;x</sup> = &int; &minus;x e<sup>&minus;x</sup> dx = x e<sup>&minus;x</sup> + e<sup>&minus;x</sup> + C. So v = x + 1 + Ce<sup>x</sup>. Substituting back: 1/y = x + 1 + Ce<sup>x</sup>. Hence <strong>y = 1/(x + 1 + Ce<sup>x</sup>)</strong>.</div>
+                    </div>
+
+                    <h3>Exact Differential Equations</h3>
+                    <p>A DE of the form M(x,y) dx + N(x,y) dy = 0 is exact if &part;M/&part;y = &part;N/&part;x. The solution is &int; M dx + &int; (terms of N not containing x) dy = C.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 34 | NDA Practice</div>
+                        <div class="ex-text">Solve: (2xy + y) dx + (x<sup>2</sup> + x) dy = 0</div>
+                        <div class="ex-soln"><strong>Solution:</strong> M = 2xy + y, N = x<sup>2</sup> + x. &part;M/&part;y = 2x + 1, &part;N/&part;x = 2x + 1. Since they are equal, the DE is exact. Solution: &int; M dx = &int; (2xy + y) dx = x<sup>2</sup>y + xy + f(y). Then &part;/&part;y of this = x<sup>2</sup> + x + f'(y) = N = x<sup>2</sup> + x. So f'(y) = 0 &rArr; f(y) = C. Hence <strong>x<sup>2</sup>y + xy = C</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">&#x26a1; NDA Shortcut: Exact DE Check</div>
+                        <div class="tip-text">To quickly check if a DE is exact, compute &part;M/&part;y and &part;N/&part;x. If equal, it is exact. The solution is simply &int; M dx + &int; (N &minus; &part;/&part;y &int; M dx) dy = C.</div>
+                    </div>
+
+                    <h3>Applications of Differential Equations</h3>
+                    <p>Differential equations model real-world phenomena including growth, decay, cooling, and motion. In NDA exams, application problems often involve Newton's Law of Cooling, population growth, and radioactive decay.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 35 | NDA 2020</div>
+                        <div class="ex-text">The rate of decay of a radioactive substance is proportional to its mass. If half-life is 10 years, find the fraction remaining after 20 years.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Let dm/dt = &minus;km. Then dm/m = &minus;k dt. Integrating: ln m = &minus;kt + C. m = m<sub>0</sub> e<sup>&minus;kt</sup>. Half-life means m = m<sub>0</sub>/2 when t = 10. So 1/2 = e<sup>&minus;10k</sup> &rArr; k = (ln 2)/10. After 20 years: m = m<sub>0</sub> e<sup>&minus;20(ln 2)/10</sup> = m<sub>0</sub> e<sup>&minus;2 ln 2</sup> = m<sub>0</sub>/4. So <strong>1/4 of the original mass remains</strong>.</div>
+                    </div>
+                </div>
                 <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
                 <div id="practice-qs"></div>
                 <div style="display:flex;gap:10px;margin-top:10px">
@@ -133,7 +861,7 @@
             </div>
         </div>
         <script>
-        var practiceQs = [{"id":40001,"text":"Evaluate: lim(x→0) (e^x - 1 - x)/x²","options":[{"l":"a","t":"0","c":false},{"l":"b","t":"1/2","c":true},{"l":"c","t":"1","c":false},{"l":"d","t":"Does not exist","c":false}],"sol":"Using L'Hôpital's rule: first (e^x - 1)/(2x), second e^x/2 → 1/2. Alternatively, use series expansion: e^x = 1 + x + x²/2! + ... so (e^x-1-x)/x² = 1/2! + x/3! + ... → 1/2 as x→0."},{"id":40002,"text":"If f(x) = |x-2|, at x = 2 the function is:","options":[{"l":"a","t":"Continuous and differentiable","c":false},{"l":"b","t":"Continuous but not differentiable","c":true},{"l":"c","t":"Not continuous but differentiable","c":false},{"l":"d","t":"Neither continuous nor differentiable","c":false}],"sol":"|x-2| has a sharp corner at x=2. Left-hand limit = right-hand limit = 0 = f(2), so it is continuous. But LHD = -1 and RHD = +1, so it is not differentiable at x=2."},{"id":40003,"text":"Find the integral: ∫x·e^x dx","options":[{"l":"a","t":"e^x(x-1) + C","c":false},{"l":"b","t":"e^x(x+1) + C","c":false},{"l":"c","t":"x·e^x - e^x + C","c":true},{"l":"d","t":"x·e^x + e^x + C","c":false}],"sol":"Using integration by parts: ∫x·e^x dx = x·e^x - ∫e^x·1 dx = x·e^x - e^x + C = e^x(x-1) + C. Option c matches as x·e^x - e^x + C."},{"id":40004,"text":"The area bounded by y = x² and y = x is:","options":[{"l":"a","t":"1/6","c":false},{"l":"b","t":"1/3","c":false},{"l":"c","t":"1/2","c":false},{"l":"d","t":"1/12","c":true}],"sol":"Intersection: x² = x → x(x-1) = 0 → x=0,1. Area = ∫(0 to 1) (x - x²)dx = [x²/2 - x³/3](0 to 1) = 1/2 - 1/3 = 1/6. Wait, upper curve is y=x, lower is y=x². Area = ∫(x - x²)dx = 1/2 - 1/3 = 1/6. But option d says 1/12. Let me recheck: ∫₀¹(x-x²)dx = [x²/2 - x³/3]₀¹ = 1/2-1/3 = 1/6. Hmm, option a is 1/6. So answer is a) 1/6."},{"id":40005,"text":"The order and degree of the differential equation (d²y/dx²)³ + (dy/dx)² + y = 0 are:","options":[{"l":"a","t":"Order 2, degree 3","c":true},{"l":"b","t":"Order 3, degree 2","c":false},{"l":"c","t":"Order 2, degree 2","c":false},{"l":"d","t":"Order 3, degree 1","c":false}],"sol":"The highest derivative is d²y/dx² (order 2). Its power is 3 (degree 3). So order = 2, degree = 3."},{"id":80691,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":80692,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":80693,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":80694,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":80695,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":80696,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":80697,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":80698,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":80699,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":80700,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":80701,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":80702,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":80703,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":80704,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":80705,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."},{"id":82791,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":82792,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":82793,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":82794,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":82795,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":82796,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":82797,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":82798,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":82799,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":82800,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":82801,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":82802,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":82803,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":82804,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":82805,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."},{"id":82806,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":82807,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":82808,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":82809,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":82810,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":82811,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":82812,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":82813,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":82814,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":82815,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":82816,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":82817,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":82818,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":82819,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":82820,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."}];
+        var practiceQs = [{"id":40001,"text":"Evaluate: lim<sub>x&rarr;0</sub> (sin 2x + sin x)/x","options":[{"l":"a","t":"0","c":false},{"l":"b","t":"1","c":false},{"l":"c","t":"2","c":false},{"l":"d","t":"3","c":true}],"sol":"lim (sin 2x)/x + lim (sin x)/x = 2 + 1 = 3."},{"id":40002,"text":"If f(x) = |x &minus; 1|, at x = 1 the function is:","options":[{"l":"a","t":"Continuous and differentiable","c":false},{"l":"b","t":"Continuous but not differentiable","c":true},{"l":"c","t":"Not continuous but differentiable","c":false},{"l":"d","t":"Neither continuous nor differentiable","c":false}],"sol":"|x-1| has a sharp corner at x=1. LHL=RHL=f(1)=0, so continuous. But LHD=-1, RHD=1, so not differentiable."},{"id":40003,"text":"Find dy/dx if y = x<sup>x</sup>:","options":[{"l":"a","t":"x<sup>x</sup> &middot; ln x","c":false},{"l":"b","t":"x<sup>x</sup> (1 + ln x)","c":true},{"l":"c","t":"x &middot; x<sup>x-1</sup>","c":false},{"l":"d","t":"x<sup>x</sup> &middot; x","c":false}],"sol":"ln y = x ln x. Differentiate: (1/y) dy/dx = ln x + 1. So dy/dx = x<sup>x</sup>(ln x + 1)."},{"id":40004,"text":"Evaluate: &int; e<sup>x</sup> sin x dx","options":[{"l":"a","t":"(e<sup>x</sup>/2)(sin x &minus; cos x) + C","c":true},{"l":"b","t":"(e<sup>x</sup>/2)(sin x + cos x) + C","c":false},{"l":"c","t":"e<sup>x</sup> cos x + C","c":false},{"l":"d","t":"e<sup>x</sup> sin x + C","c":false}],"sol":"Using integration by parts twice: &int; e<sup>x</sup> sin x dx = e<sup>x</sup>(sin x - cos x)/2 + C."},{"id":40005,"text":"The area bounded by y = x<sup>2</sup> and y = 2x is:","options":[{"l":"a","t":"4/3","c":true},{"l":"b","t":"2/3","c":false},{"l":"c","t":"8/3","c":false},{"l":"d","t":"1/3","c":false}],"sol":"Intersection: x<sup>2</sup> = 2x &rArr; x=0,2. Area = &int;<sub>0</sub><sup>2</sup> (2x &minus; x<sup>2</sup>) dx = [x<sup>2</sup> &minus; x<sup>3</sup>/3]<sub>0</sub><sup>2</sup> = 4 &minus; 8/3 = 4/3."},{"id":40006,"text":"Order and degree of (y''')<sup>2</sup> + y' = 0 are:","options":[{"l":"a","t":"Order 3, degree 2","c":true},{"l":"b","t":"Order 2, degree 3","c":false},{"l":"c","t":"Order 3, degree 1","c":false},{"l":"d","t":"Order 2, degree 2","c":false}],"sol":"Highest derivative is y''' (order 3). Its power is 2 (degree 2)."},{"id":40007,"text":"Evaluate: lim<sub>x&rarr;0</sub> (1 &minus; cos x)/x<sup>2</sup>","options":[{"l":"a","t":"0","c":false},{"l":"b","t":"1","c":false},{"l":"c","t":"1/2","c":true},{"l":"d","t":"2","c":false}],"sol":"Using 1 &minus; cos x = 2 sin<sup>2</sup>(x/2): lim 2 sin<sup>2</sup>(x/2)/x<sup>2</sup> = (1/2) &times; 1<sup>2</sup> = 1/2."},{"id":40008,"text":"The function f(x) = x|x| at x = 0 is:","options":[{"l":"a","t":"Neither continuous nor differentiable","c":false},{"l":"b","t":"Continuous but not differentiable","c":false},{"l":"c","t":"Differentiable but not continuous","c":false},{"l":"d","t":"Both continuous and differentiable","c":true}],"sol":"lim<sub>x&rarr;0</sub> x|x| = 0 = f(0), so continuous. f'(0) = lim<sub>h&rarr;0</sub> h|h|/h = lim |h| = 0, so differentiable."},{"id":40009,"text":"Find &int; 1/(1 + cos x) dx","options":[{"l":"a","t":"tan(x/2) + C","c":true},{"l":"b","t":"cot(x/2) + C","c":false},{"l":"c","t":"sec(x/2) + C","c":false},{"l":"d","t":"tan x + C","c":false}],"sol":"&int; 1/(1+cos x) dx = &int; 1/(2 cos<sup>2</sup>(x/2)) dx = (1/2) &int; sec<sup>2</sup>(x/2) dx = tan(x/2) + C."},{"id":40010,"text":"Find the local maximum of f(x) = 2x<sup>3</sup> &minus; 9x<sup>2</sup> + 12x &minus; 3:","options":[{"l":"a","t":"1 at x = 2","c":false},{"l":"b","t":"2 at x = 1","c":true},{"l":"c","t":"3 at x = 0","c":false},{"l":"d","t":"0 at x = 3","c":false}],"sol":"f'(x) = 6x<sup>2</sup>&minus;18x+12 = 6(x&minus;1)(x&minus;2). f''(1) = &minus;6 &lt; 0 &rArr; local max, f(1) = 2."},{"id":40011,"text":"Slope of tangent to y = x<sup>3</sup> at (1,1) is:","options":[{"l":"a","t":"1","c":false},{"l":"b","t":"2","c":false},{"l":"c","t":"3","c":true},{"l":"d","t":"0","c":false}],"sol":"dy/dx = 3x<sup>2</sup>. At x=1, slope = 3(1) = 3."},{"id":40012,"text":"Solve: dy/dx = y/x, y(1) = 2","options":[{"l":"a","t":"y = 2x","c":true},{"l":"b","t":"y = x<sup>2</sup>","c":false},{"l":"c","t":"y = 2/x","c":false},{"l":"d","t":"y = x + 1","c":false}],"sol":"Separate: dy/y = dx/x. ln y = ln x + C. y = Cx. Using y(1)=2: C=2, so y=2x."},{"id":40013,"text":"Evaluate: &int;<sub>0</sub><sup>&pi;/2</sup> cos x/(sin x + cos x) dx","options":[{"l":"a","t":"&pi;/2","c":false},{"l":"b","t":"&pi;/4","c":true},{"l":"c","t":"&pi;/6","c":false},{"l":"d","t":"&pi;/3","c":false}],"sol":"I = &int;<sub>0</sub><sup>&pi;/2</sup> cos x/(cos x + sin x) dx. Adding with the sin version: 2I = &int;<sub>0</sub><sup>&pi;/2</sup> 1 dx = &pi;/2, so I = &pi;/4."},{"id":40014,"text":"The integrating factor of dy/dx + (1/x)y = x is:","options":[{"l":"a","t":"x","c":true},{"l":"b","t":"1/x","c":false},{"l":"c","t":"ln x","c":false},{"l":"d","t":"e<sup>x</sup>","c":false}],"sol":"P = 1/x. IF = e<sup>&int; (1/x) dx</sup> = e<sup>ln x</sup> = x."},{"id":40015,"text":"Evaluate: lim<sub>x&rarr;0</sub> (e<sup>3x</sup> &minus; 1)/(2x)","options":[{"l":"a","t":"1","c":false},{"l":"b","t":"1/2","c":false},{"l":"c","t":"3/2","c":true},{"l":"d","t":"3","c":false}],"sol":"Using formula lim (e<sup>ax</sup>-1)/(bx) = a/b: 3/2 = 1.5."},{"id":40016,"text":"If f(x) = { x+1, x&lt;2; 5, x=2; 3x-1, x&gt;2 }, at x=2:","options":[{"l":"a","t":"Continuous","c":false},{"l":"b","t":"Removable discontinuity","c":false},{"l":"c","t":"Jump discontinuity","c":true},{"l":"d","t":"Infinite discontinuity","c":false}],"sol":"LHL=3, RHL=5, f(2)=5. Since LHL &ne; RHL, jump discontinuity at x=2."},{"id":40017,"text":"Find d<sup>2</sup>y/dx<sup>2</sup> if y = x<sup>3</sup> + 2x<sup>2</sup> + 1","options":[{"l":"a","t":"3x + 4","c":false},{"l":"b","t":"6x + 4","c":true},{"l":"c","t":"3x<sup>2</sup> + 4x","c":false},{"l":"d","t":"6x + 2","c":false}],"sol":"dy/dx = 3x<sup>2</sup> + 4x. d<sup>2</sup>y/dx<sup>2</sup> = 6x + 4."},{"id":40018,"text":"The radius of a circle is increasing at 1 cm/s. Rate of area increase when r=2 cm:","options":[{"l":"a","t":"2&pi;","c":false},{"l":"b","t":"4&pi;","c":true},{"l":"c","t":"&pi;","c":false},{"l":"d","t":"8&pi;","c":false}],"sol":"A = &pi;r<sup>2</sup>. dA/dt = 2&pi;r dr/dt = 2&pi;(2)(1) = 4&pi; cm<sup>2</sup>/s."},{"id":40019,"text":"Solve: dy/dx = x/y","options":[{"l":"a","t":"y = x<sup>2</sup>/2 + C","c":false},{"l":"b","t":"y<sup>2</sup> = x<sup>2</sup> + C","c":true},{"l":"c","t":"y = x + C","c":false},{"l":"d","t":"y<sup>2</sup> = 2x + C","c":false}],"sol":"y dy = x dx. y<sup>2</sup>/2 = x<sup>2</sup>/2 + C. y<sup>2</sup> = x<sup>2</sup> + K."},{"id":40020,"text":"Find &int; sec x (sec x + tan x) dx","options":[{"l":"a","t":"tan x + sec x + C","c":true},{"l":"b","t":"tan x + C","c":false},{"l":"c","t":"sec x + C","c":false},{"l":"d","t":"sin x + C","c":false}],"sol":"&int; (sec<sup>2</sup>x + sec x tan x) dx = tan x + sec x + C."},{"id":40021,"text":"Evaluate: lim<sub>x&rarr;0</sub> (sin 3x)/(2x)","options":[{"l":"a","t":"1","c":false},{"l":"b","t":"3/2","c":true},{"l":"c","t":"2/3","c":false},{"l":"d","t":"0","c":false}],"sol":"lim (sin 3x)/(2x) = (3/2) &times; lim (sin 3x)/(3x) = 3/2 &times; 1 = 3/2."},{"id":40022,"text":"The function f(x) = x<sup>2</sup> is:","options":[{"l":"a","t":"Increasing on (&minus;&infin;, &infin;)","c":false},{"l":"b","t":"Decreasing on (&minus;&infin;, 0) and increasing on (0, &infin;)","c":true},{"l":"c","t":"Decreasing on (&minus;&infin;, &infin;)","c":false},{"l":"d","t":"Increasing on (&minus;&infin;, 0) and decreasing on (0, &infin;)","c":false}],"sol":"f'(x) = 2x. f'(x) &lt; 0 for x &lt; 0 (decreasing), f'(x) &gt; 0 for x &gt; 0 (increasing)."},{"id":40023,"text":"Find &int; 1/(1 + x<sup>2</sup>) dx","options":[{"l":"a","t":"tan x + C","c":false},{"l":"b","t":"tan<sup>&minus;1</sup> x + C","c":true},{"l":"c","t":"sin<sup>&minus;1</sup> x + C","c":false},{"l":"d","t":"cot x + C","c":false}],"sol":"Standard formula: &int; 1/(1 + x<sup>2</sup>) dx = tan<sup>&minus;1</sup> x + C."},{"id":40024,"text":"Equation of normal to y = x<sup>2</sup> at (1,1) is:","options":[{"l":"a","t":"x + 2y = 3","c":false},{"l":"b","t":"x + 2y = 1","c":false},{"l":"c","t":"2x + y = 3","c":false},{"l":"d","t":"2y + x = 3","c":true}],"sol":"Slope of tangent = 2, so slope of normal = &minus;1/2. Equation: y &minus; 1 = (&minus;1/2)(x &minus; 1). 2y &minus; 2 = &minus;x + 1. x + 2y = 3."},{"id":40025,"text":"Evaluate: &int;<sub>0</sub><sup>1</sup> (x<sup>2</sup> + 1) dx","options":[{"l":"a","t":"2/3","c":false},{"l":"b","t":"4/3","c":true},{"l":"c","t":"1","c":false},{"l":"d","t":"5/3","c":false}],"sol":"&int;<sub>0</sub><sup>1</sup> (x<sup>2</sup> + 1) dx = [x<sup>3</sup>/3 + x]<sub>0</sub><sup>1</sup> = (1/3 + 1) = 4/3."},{"id":40026,"text":"The degree of (d<sup>3</sup>y/dx<sup>3</sup>)<sup>2/3</sup> + y = 0 after removing radicals is:","options":[{"l":"a","t":"2","c":true},{"l":"b","t":"3","c":false},{"l":"c","t":"2/3","c":false},{"l":"d","t":"1","c":false}],"sol":"Remove the radical by cubing both sides: (d<sup>3</sup>y/dx<sup>3</sup>)<sup>2</sup> + y<sup>3</sup> = 0. The power of highest derivative is 2. So degree = 2."},{"id":40027,"text":"If y = sin(ax), find d<sup>2</sup>y/dx<sup>2</sup>","options":[{"l":"a","t":"a cos(ax)","c":false},{"l":"b","t":"a<sup>2</sup> sin(ax)","c":false},{"l":"c","t":"&minus;a<sup>2</sup> sin(ax)","c":true},{"l":"d","t":"&minus;a sin(ax)","c":false}],"sol":"dy/dx = a cos(ax). d<sup>2</sup>y/dx<sup>2</sup> = &minus;a<sup>2</sup> sin(ax)."},{"id":40028,"text":"Evaluate: lim<sub>x&rarr;&infin;</sub> (1 + 2/x)<sup>x</sup>","options":[{"l":"a","t":"e","c":false},{"l":"b","t":"e<sup>2</sup>","c":true},{"l":"c","t":"2e","c":false},{"l":"d","t":"e<sup>&minus;2</sup>","c":false}],"sol":"Using lim<sub>x&rarr;&infin;</sub> (1 + a/x)<sup>x</sup> = e<sup>a</sup>, we get e<sup>2</sup>."},{"id":40029,"text":"The integrating factor of dy/dx + y cot x = x is:","options":[{"l":"a","t":"sin x","c":true},{"l":"b","t":"cos x","c":false},{"l":"c","t":"tan x","c":false},{"l":"d","t":"sec x","c":false}],"sol":"P = cot x. IF = e<sup>&int; cot x dx</sup> = e<sup>ln|sin x|</sup> = sin x."},{"id":40030,"text":"Find &int; (2x)/(x<sup>2</sup> + 1) dx","options":[{"l":"a","t":"ln(x<sup>2</sup> + 1) + C","c":true},{"l":"b","t":"tan<sup>&minus;1</sup> x + C","c":false},{"l":"c","t":"ln x + C","c":false},{"l":"d","t":"x/(x<sup>2</sup>+1) + C","c":false}],"sol":"Let u = x<sup>2</sup> + 1, du = 2x dx. &int; du/u = ln|u| + C = ln(x<sup>2</sup> + 1) + C."},{"id":40031,"text":"Find the area enclosed by y = x and y = x<sup>3</sup>","options":[{"l":"a","t":"1/2","c":false},{"l":"b","t":"1/4","c":true},{"l":"c","t":"1/3","c":false},{"l":"d","t":"1/6","c":false}],"sol":"Intersection: x = x<sup>3</sup> &rArr; x(1&minus;x<sup>2</sup>)=0 &rArr; x=0,&plusmn;1. Area from 0 to 1: &int;<sub>0</sub><sup>1</sup> (x &minus; x<sup>3</sup>) dx = [x<sup>2</sup>/2 &minus; x<sup>4</sup>/4]<sub>0</sub><sup>1</sup> = 1/2 &minus; 1/4 = 1/4. Total area of both symmetric parts = 2 &times; 1/4 = 1/2."},{"id":40032,"text":"Evaluate: lim<sub>x&rarr;0</sub> (e<sup>x</sup> &minus; 1)/sin x","options":[{"l":"a","t":"0","c":false},{"l":"b","t":"1","c":true},{"l":"c","t":"&infin;","c":false},{"l":"d","t":"&minus;1","c":false}],"sol":"Using L'Hopital: lim e<sup>x</sup>/cos x = 1/1 = 1."},{"id":40033,"text":"If f(x) = cos x, then f'(x) at x = &pi;/2 is:","options":[{"l":"a","t":"0","c":false},{"l":"b","t":"&minus;1","c":true},{"l":"c","t":"1","c":false},{"l":"d","t":"&pi;/2","c":false}],"sol":"f'(x) = &minus;sin x. f'(&pi;/2) = &minus;sin(&pi;/2) = &minus;1."},{"id":40034,"text":"The order of the DE d<sup>3</sup>y/dx<sup>3</sup> + x(dy/dx)<sup>2</sup> = y is:","options":[{"l":"a","t":"1","c":false},{"l":"b","t":"2","c":false},{"l":"c","t":"3","c":true},{"l":"d","t":"4","c":false}],"sol":"The highest derivative is d<sup>3</sup>y/dx<sup>3</sup> (order 3)."},{"id":40035,"text":"Find &int; cos<sup>2</sup>x dx","options":[{"l":"a","t":"(x + sin 2x)/2 + C","c":false},{"l":"b","t":"(x + sin 2x)/4 + C","c":false},{"l":"c","t":"(x + sin 2x/2)/2 + C","c":true},{"l":"d","t":"(x &minus; sin 2x)/2 + C","c":false}],"sol":"cos<sup>2</sup>x = (1+cos 2x)/2. &int; (1+cos 2x)/2 dx = x/2 + sin 2x/4 + C = (2x + sin 2x)/4 + C."},{"id":40036,"text":"Evaluate: &int;<sub>&minus;1</sub><sup>1</sup> x<sup>3</sup> dx","options":[{"l":"a","t":"0","c":true},{"l":"b","t":"2","c":false},{"l":"c","t":"1","c":false},{"l":"d","t":"&minus;1","c":false}],"sol":"x<sup>3</sup> is an odd function. &int;<sub>&minus;a</sub><sup>a</sup> odd function dx = 0."},{"id":40037,"text":"The value of lim<sub>x&rarr;&infin;</sub> (1 + 1/x)<sup>2x</sup> is:","options":[{"l":"a","t":"e","c":false},{"l":"b","t":"e<sup>2</sup>","c":true},{"l":"c","t":"2e","c":false},{"l":"d","t":"e<sup>&minus;2</sup>","c":false}],"sol":"lim (1 + 1/x)<sup>2x</sup> = [lim (1 + 1/x)<sup>x</sup>]<sup>2</sup> = e<sup>2</sup>."},{"id":40038,"text":"If y = ln(sin x), then dy/dx is:","options":[{"l":"a","t":"cot x","c":false},{"l":"b","t":"tan x","c":false},{"l":"c","t":"&minus;cot x","c":false},{"l":"d","t":"cos x/sin x","c":true}],"sol":"Using chain rule: dy/dx = (1/sin x) &times; cos x = cot x = cos x/sin x."},{"id":40039,"text":"The area under y = e<sup>x</sup> from x = 0 to x = 1 is:","options":[{"l":"a","t":"e &minus; 1","c":true},{"l":"b","t":"e","c":false},{"l":"c","t":"1 &minus; e","c":false},{"l":"d","t":"e + 1","c":false}],"sol":"&int;<sub>0</sub><sup>1</sup> e<sup>x</sup> dx = [e<sup>x</sup>]<sub>0</sub><sup>1</sup> = e &minus; e<sup>0</sup> = e &minus; 1."},{"id":40040,"text":"The solution of dy/dx = e<sup>x+y</sup> is:","options":[{"l":"a","t":"e<sup>x</sup> + e<sup>&minus;y</sup> = C","c":true},{"l":"b","t":"e<sup>x</sup> + e<sup>y</sup> = C","c":false},{"l":"c","t":"e<sup>x</sup> &minus; e<sup>y</sup> = C","c":false},{"l":"d","t":"e<sup>&minus;x</sup> + e<sup>y</sup> = C","c":false}],"sol":"dy/dx = e<sup>x</sup> &middot; e<sup>y</sup>. Separate: e<sup>&minus;y</sup> dy = e<sup>x</sup> dx. Integrate: &minus;e<sup>&minus;y</sup> = e<sup>x</sup> + C. e<sup>x</sup> + e<sup>&minus;y</sup> = K."},{"id":40041,"text":"Find &int; 1/(x ln x) dx","options":[{"l":"a","t":"ln(ln x) + C","c":true},{"l":"b","t":"ln x + C","c":false},{"l":"c","t":"1/ln x + C","c":false},{"l":"d","t":"x ln x + C","c":false}],"sol":"Let u = ln x, du = dx/x. &int; du/u = ln|u| + C = ln|ln x| + C."},{"id":40042,"text":"Evaluate: lim<sub>x&rarr;0</sub> (tan x &minus; sin x)/x<sup>3</sup>","options":[{"l":"a","t":"0","c":false},{"l":"b","t":"1/2","c":true},{"l":"c","t":"1","c":false},{"l":"d","t":"&minus;1/2","c":false}],"sol":"tan x = x + x<sup>3</sup>/3 + ..., sin x = x &minus; x<sup>3</sup>/6 + .... tan x &minus; sin x = x<sup>3</sup>(1/3 + 1/6) = x<sup>3</sup>/2. Limit = 1/2."},{"id":40043,"text":"If f(x) = x<sup>3</sup>, then the value of c in (0,2) by LMVT is:","options":[{"l":"a","t":"1","c":false},{"l":"b","t":"2/&radic;3","c":true},{"l":"c","t":"&radic;3","c":false},{"l":"d","t":"4/3","c":false}],"sol":"f(2)=8, f(0)=0. f'(c)=3c<sup>2</sup>. By LMVT: 3c<sup>2</sup> = (8&minus;0)/(2&minus;0) = 4. c<sup>2</sup>=4/3, so c = 2/&radic;3."},{"id":40044,"text":"The area between y = sin x and x-axis from 0 to &pi; is:","options":[{"l":"a","t":"0","c":false},{"l":"b","t":"1","c":false},{"l":"c","t":"2","c":true},{"l":"d","t":"&pi;","c":false}],"sol":"&int;<sub>0</sub><sup>&pi;</sup> sin x dx = [&minus;cos x]<sub>0</sub><sup>&pi;</sup> = &minus;cos &pi; + cos 0 = &minus;(&minus;1) + 1 = 2."},{"id":40045,"text":"Find &int; dx/(4 + x<sup>2</sup>)","options":[{"l":"a","t":"(1/4) tan<sup>&minus;1</sup>(x/2) + C","c":false},{"l":"b","t":"(1/2) tan<sup>&minus;1</sup>(x/2) + C","c":true},{"l":"c","t":"tan<sup>&minus;1</sup>(x/2) + C","c":false},{"l":"d","t":"(1/4) tan<sup>&minus;1</sup>x + C","c":false}],"sol":"&int; dx/(a<sup>2</sup> + x<sup>2</sup>) = (1/a) tan<sup>&minus;1</sup>(x/a) + C. Here a=2, so (1/2) tan<sup>&minus;1</sup>(x/2) + C."},{"id":40046,"text":"The value of lim<sub>x&rarr;0</sub> |x|/x is:","options":[{"l":"a","t":"1","c":false},{"l":"b","t":"&minus;1","c":false},{"l":"c","t":"0","c":false},{"l":"d","t":"Does not exist","c":true}],"sol":"LHL = lim<sub>x&rarr;0<sup>&minus;</sup></sub> (&minus;x)/x = &minus;1. RHL = lim<sub>x&rarr;0<sup>+</sup></sub> x/x = 1. LHL &ne; RHL, so limit does not exist."},{"id":40047,"text":"If y = x<sup>2</sup> e<sup>x</sup>, find dy/dx","options":[{"l":"a","t":"2x e<sup>x</sup>","c":false},{"l":"b","t":"x e<sup>x</sup>(x + 2)","c":true},{"l":"c","t":"x<sup>2</sup> e<sup>x</sup>","c":false},{"l":"d","t":"e<sup>x</sup>(x<sup>2</sup> + 1)","c":false}],"sol":"Using product rule: dy/dx = 2x e<sup>x</sup> + x<sup>2</sup> e<sup>x</sup> = x e<sup>x</sup>(2 + x)."},{"id":40048,"text":"Evaluate: &int; sin 2x dx","options":[{"l":"a","t":"&minus;cos 2x + C","c":false},{"l":"b","t":"&minus;(1/2) cos 2x + C","c":true},{"l":"c","t":"cos 2x + C","c":false},{"l":"d","t":"(1/2) cos 2x + C","c":false}],"sol":"&int; sin 2x dx = &minus;(1/2) cos 2x + C."},{"id":40049,"text":"The differential equation dy/dx = (x + y)/x is:","options":[{"l":"a","t":"Variable separable","c":false},{"l":"b","t":"Homogeneous","c":true},{"l":"c","t":"Linear","c":false},{"l":"d","t":"Exact","c":false}],"sol":"dy/dx = 1 + y/x = F(y/x). So it is homogeneous."},{"id":40050,"text":"Find the global minimum of f(x) = x<sup>2</sup> on [&minus;1, 2]","options":[{"l":"a","t":"0","c":true},{"l":"b","t":"1","c":false},{"l":"c","t":"4","c":false},{"l":"d","t":"&minus;1","c":false}],"sol":"f'(x) = 2x = 0 &rArr; x = 0. f(0) = 0, f(&minus;1) = 1, f(2) = 4. Global minimum is 0 at x = 0."},{"id":40051,"text":"Evaluate: &int; 1/&radic;(1 &minus; x<sup>2</sup>) dx","options":[{"l":"a","t":"sin<sup>&minus;1</sup> x + C","c":true},{"l":"b","t":"cos<sup>&minus;1</sup> x + C","c":false},{"l":"c","t":"tan<sup>&minus;1</sup> x + C","c":false},{"l":"d","t":"sec<sup>&minus;1</sup> x + C","c":false}],"sol":"Standard formula: &int; 1/&radic;(1 &minus; x<sup>2</sup>) dx = sin<sup>&minus;1</sup> x + C."},{"id":40052,"text":"The second derivative of x<sup>3</sup> at x = 2 is:","options":[{"l":"a","t":"6","c":false},{"l":"b","t":"12","c":true},{"l":"c","t":"24","c":false},{"l":"d","t":"3","c":false}],"sol":"f'(x) = 3x<sup>2</sup>, f''(x) = 6x. f''(2) = 12."},{"id":40053,"text":"If f(x) = x + 1/x, the interval where f is decreasing is:","options":[{"l":"a","t":"(0, &infin;)","c":false},{"l":"b","t":"(&minus;1, 1)","c":false},{"l":"c","t":"(&minus;&infin;, &minus;1) &cup; (0, 1)","c":false},{"l":"d","t":"(&minus;1, 0) &cup; (0, 1)","c":true}],"sol":"f'(x) = 1 &minus; 1/x<sup>2</sup>. f'(x) &lt; 0 when 1 &minus; 1/x<sup>2</sup> &lt; 0 &rArr; x<sup>2</sup> &lt; 1 &rArr; &minus;1 &lt; x &lt; 1. Excluding x=0: (&minus;1, 0) &cup; (0, 1)."},{"id":40054,"text":"The solution of dy/dx = x<sup>2</sup>/y<sup>2</sup> is:","options":[{"l":"a","t":"y<sup>3</sup> = x<sup>3</sup> + C","c":true},{"l":"b","t":"y = x + C","c":false},{"l":"c","t":"y<sup>2</sup> = x<sup>2</sup> + C","c":false},{"l":"d","t":"y<sup>3</sup> &minus; x<sup>3</sup> = C","c":false}],"sol":"y<sup>2</sup> dy = x<sup>2</sup> dx. y<sup>3</sup>/3 = x<sup>3</sup>/3 + C. y<sup>3</sup> = x<sup>3</sup> + K."},{"id":40055,"text":"Evaluate: &int;<sub>0</sub><sup>&pi;/2</sup> sin<sup>2</sup>x dx","options":[{"l":"a","t":"&pi;/4","c":true},{"l":"b","t":"&pi;/2","c":false},{"l":"c","t":"&pi;/6","c":false},{"l":"d","t":"&pi;/3","c":false}],"sol":"&int;<sub>0</sub><sup>&pi;/2</sup> (1&minus;cos 2x)/2 dx = (1/2)[x &minus; sin 2x/2]<sub>0</sub><sup>&pi;/2</sup> = (1/2)(&pi;/2 &minus; 0) = &pi;/4."},{"id":40056,"text":"The area between y = x<sup>2</sup> and y = x<sup>3</sup> is:","options":[{"l":"a","t":"1/12","c":true},{"l":"b","t":"1/6","c":false},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/3","c":false}],"sol":"Intersection: x<sup>2</sup> = x<sup>3</sup> &rArr; x<sup>2</sup>(1&minus;x)=0 &rArr; x=0,1. Area = &int;<sub>0</sub><sup>1</sup> (x<sup>2</sup> &minus; x<sup>3</sup>) dx = [x<sup>3</sup>/3 &minus; x<sup>4</sup>/4]<sub>0</sub><sup>1</sup> = 1/3 &minus; 1/4 = 1/12."},{"id":40057,"text":"Find lim<sub>x&rarr;0</sub> (cos x &minus; 1)/x","options":[{"l":"a","t":"0","c":true},{"l":"b","t":"&minus;1","c":false},{"l":"c","t":"1","c":false},{"l":"d","t":"Does not exist","c":false}],"sol":"Using cos x &minus; 1 = &minus;2 sin<sup>2</sup>(x/2): lim (&minus;2 sin<sup>2</sup>(x/2))/x = 0. Alternatively, L'Hopital: lim (&minus;sin x)/1 = 0."},{"id":40058,"text":"If y = ln(x<sup>2</sup> + 1), dy/dx is:","options":[{"l":"a","t":"2x/(x<sup>2</sup> + 1)","c":true},{"l":"b","t":"1/(x<sup>2</sup> + 1)","c":false},{"l":"c","t":"2x","c":false},{"l":"d","t":"x/(x<sup>2</sup> + 1)","c":false}],"sol":"Chain rule: dy/dx = (1/(x<sup>2</sup>+1)) &times; 2x = 2x/(x<sup>2</sup>+1)."},{"id":40059,"text":"The value of &int; e<sup>x</sup>(sin x + cos x) dx is:","options":[{"l":"a","t":"e<sup>x</sup> sin x + C","c":true},{"l":"b","t":"e<sup>x</sup> cos x + C","c":false},{"l":"c","t":"e<sup>x</sup>(sin x + cos x) + C","c":false},{"l":"d","t":"e<sup>x</sup>(sin x &minus; cos x) + C","c":false}],"sol":"d/dx(e<sup>x</sup> sin x) = e<sup>x</sup> sin x + e<sup>x</sup> cos x = e<sup>x</sup>(sin x + cos x). So &int; e<sup>x</sup>(sin x + cos x) dx = e<sup>x</sup> sin x + C."},{"id":40060,"text":"Find the equation of the normal to y = x<sup>3</sup> at (1,1)","options":[{"l":"a","t":"x + 3y = 4","c":true},{"l":"b","t":"3x + y = 4","c":false},{"l":"c","t":"x + y = 2","c":false},{"l":"d","t":"x &minus; 3y = &minus;2","c":false}],"sol":"dy/dx = 3x<sup>2</sup>, slope at (1,1) = 3. Normal slope = &minus;1/3. Equation: y &minus; 1 = (&minus;1/3)(x &minus; 1). 3y &minus; 3 = &minus;x + 1. x + 3y = 4."},{"id":40061,"text":"The value of &int;<sub>0</sub><sup>1</sup> x(1 &minus; x)<sup>5</sup> dx is:","options":[{"l":"a","t":"1/42","c":true},{"l":"b","t":"1/21","c":false},{"l":"c","t":"1/7","c":false},{"l":"d","t":"1/6","c":false}],"sol":"Using Beta function: &int;<sub>0</sub><sup>1</sup> x<sup>m&minus;1</sup>(1&minus;x)<sup>n&minus;1</sup> dx = B(m,n) = &Gamma;(m)&Gamma;(n)/&Gamma;(m+n). Here m=2, n=6. B(2,6) = 1!5!/7! = 120/5040 = 1/42."},{"id":40062,"text":"If y = sin<sup>&minus;1</sup>(x), find dy/dx","options":[{"l":"a","t":"1/&radic;(1 &minus; x<sup>2</sup>)","c":true},{"l":"b","t":"&minus;1/&radic;(1 &minus; x<sup>2</sup>)","c":false},{"l":"c","t":"1/(1 + x<sup>2</sup>)","c":false},{"l":"d","t":"cos x","c":false}],"sol":"Standard formula: d/dx(sin<sup>&minus;1</sup>x) = 1/&radic;(1 &minus; x<sup>2</sup>)."},{"id":40063,"text":"Evaluate: lim<sub>x&rarr;&infin;</sub> (3x<sup>2</sup> + 2)/(2x<sup>2</sup> &minus; 1)","options":[{"l":"a","t":"3/2","c":true},{"l":"b","t":"2/3","c":false},{"l":"c","t":"&infin;","c":false},{"l":"d","t":"1","c":false}],"sol":"Divide numerator and denominator by x<sup>2</sup>: lim (3 + 2/x<sup>2</sup>)/(2 &minus; 1/x<sup>2</sup>) = 3/2."}];
         var answered={},correctCount=0,lessonSlug="calculus";
         function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
         function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
@@ -147,3 +875,7 @@
     </div>
 </body>
 </html>
+
+
+
+

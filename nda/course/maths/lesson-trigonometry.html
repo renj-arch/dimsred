@@ -41,6 +41,7 @@
         .lesson-body{padding:20px 0}
         .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
         .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body h4{font-size:.95em;font-weight:600;margin:12px 0 6px;color:var(--text)}
         .lesson-body p{color:var(--text-sec);font-size:.9em;line-height:1.7;margin-bottom:10px}
         .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
         .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
@@ -82,6 +83,15 @@
         .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
         .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
         @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+        .lesson-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.85em;background:var(--bg-card);border-radius:var(--radius);overflow:hidden}
+        .lesson-table th,.lesson-table td{padding:10px 12px;text-align:center;border:1px solid var(--border)}
+        .lesson-table th{background:rgba(167,139,250,.1);color:var(--purple,#a78bfa);font-weight:600}
+        .lesson-table td{color:var(--text-sec)}
+        .lesson-table tr:hover td{background:rgba(255,255,255,.02)}
+        .katex-display{overflow-x:auto;overflow-y:hidden}
+        .summary-box{background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .summary-box .s-title{font-weight:600;font-size:.85em;color:var(--purple,#a78bfa);margin-bottom:4px}
+        .summary-box .s-text{font-size:.84em;color:var(--text-sec);line-height:1.5}
     </style>
 </head>
 <body>
@@ -112,28 +122,641 @@
                     </div>
                 </div>
                 <div class="lesson-body">
-                    <h3>Learning Objectives</h3>
+
+                    <h2 id="angles">1. Angles &amp; Trigonometric Ratios</h2>
+                    <p>Trigonometry is the study of relationships between angles and sides of triangles. For NDA Paper 1, approximately 6 to 8 questions (15 to 20 marks) appear from this topic. Mastery of angle measure, standard ratios, and the sign convention is essential for scoring full marks in this section. Trigonometry is also a prerequisite for calculus and coordinate geometry topics in the NDA syllabus.</p>
+
+                    <h3>Degree &amp; Radian Measure</h3>
+                    <p>Angles can be measured in two systems: the sexagesimal system (degrees, minutes, seconds) and the circular system (radians). The fundamental relationship that links the two systems is based on the fact that a full circle measures 360 degrees or 2&pi; radians.</p>
+                    <p><strong>&pi; radians = 180&deg;</strong> &rarr; <strong>1 radian = 180&deg;/&pi; &asymp; 57.2958&deg;</strong></p>
+                    <p>To convert from degrees to radians, multiply the degree measure by <strong>&pi;/180</strong>. To convert from radians to degrees, multiply the radian measure by <strong>180/&pi;</strong>.</p>
+                    <p>Common angle conversions that every NDA candidate must memorise: 0&deg; = 0 rad, 30&deg; = &pi;/6 rad, 45&deg; = &pi;/4 rad, 60&deg; = &pi;/3 rad, 90&deg; = &pi;/2 rad, 180&deg; = &pi; rad, 270&deg; = 3&pi;/2 rad, 360&deg; = 2&pi; rad. Additionally, 15&deg; = &pi;/12 rad, 75&deg; = 5&pi;/12 rad, and 120&deg; = 2&pi;/3 rad are also useful.</p>
+
+                    <h4>Arc Length and Sector Area</h4>
+                    <p>In a circle of radius r, if an angle &theta; (measured in radians) subtends an arc at the centre, the length of the arc is given by <strong>L = r&theta;</strong>. The area of the corresponding sector is <strong>A = &frac12; r&sup2;&theta;</strong>. These formulas are valid only when &theta; is expressed in radians, not degrees.</p>
+                    <p>For NDA, problems involving arc length or sector area typically give the angle in degrees first, requiring conversion to radians before applying the formulas. The perimeter of a sector is 2r + r&theta;.</p>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut</div>
+                        <div class="tip-text">Memorise the radian equivalents of 0&deg;, 30&deg;, 45&deg;, 60&deg;, 90&deg;, 180&deg;, 270&deg;, 360&deg;. NDA often asks direct conversion questions (e.g., "Convert 150&deg; to radians" or "Convert 3&pi;/4 to degrees"). The pattern 0, &pi;/6, &pi;/4, &pi;/3, &pi;/2, &pi;, 3&pi;/2, 2&pi; must be on your fingertips for instant recall.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 1 — Degree-Radian Conversion</div>
+                        <div class="ex-text">(a) Convert 150&deg; to radians. (b) Convert 5&pi;/4 radians to degrees. (c) What is the radian measure of 240&deg;?</div>
+                        <div class="ex-soln"><strong>Solution:</strong> (a) 150&deg; &times; (&pi;/180) = 150&pi;/180 = 5&pi;/6 rad. (b) 5&pi;/4 &times; (180/&pi;) = (5 &times; 180)/4 = 900/4 = 225&deg;. (c) 240&deg; &times; (&pi;/180) = 4&pi;/3 rad.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 2 — Arc Length</div>
+                        <div class="ex-text">Find the length of an arc of a circle of radius 14 cm that subtends an angle of 60&deg; at the centre.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> First convert 60&deg; to radians: 60&deg; = &pi;/3 rad. Arc length L = r&theta; = 14 &times; &pi;/3 = 14&pi;/3 cm &asymp; 14.67 cm.</div>
+                    </div>
+
+                    <h3>Trigonometric Ratios and Identities</h3>
+                    <p>The six fundamental trigonometric ratios are defined using the unit circle (a circle of radius 1 centred at the origin) or a right-angled triangle. On the unit circle, the x-coordinate gives cos &theta;, the y-coordinate gives sin &theta;, and their ratio gives tan &theta;.</p>
                     <ul>
-                        <li>Understand the fundamental concepts of Trigonometry</li>
-                        <li>Apply key formulas and techniques to solve problems</li>
-                        <li>Practice with exam-level questions to build speed and accuracy</li>
+                        <li><strong>sin &theta;</strong> = opposite side / hypotenuse = y-coordinate on the unit circle</li>
+                        <li><strong>cos &theta;</strong> = adjacent side / hypotenuse = x-coordinate on the unit circle</li>
+                        <li><strong>tan &theta;</strong> = sin &theta; / cos &theta; = opposite side / adjacent side</li>
+                        <li><strong>cot &theta;</strong> = cos &theta; / sin &theta; = 1 / tan &theta;</li>
+                        <li><strong>sec &theta;</strong> = 1 / cos &theta; = hypotenuse / adjacent side</li>
+                        <li><strong>cosec &theta;</strong> = 1 / sin &theta; = hypotenuse / opposite side</li>
                     </ul>
-                    <h3>Key Concepts</h3>
-<h3>What is Trigonometry?</h3><p>Trigonometry deals with relationships between angles and sides of triangles. In JEE, it covers trigonometric functions, identities, inverse trigonometry, trigonometric equations, and height & distance problems. Weightage is approximately 6-8% in JEE Main.</p><h3>Key Concepts</h3><p><strong>1. Trigonometric Functions:</strong> sinθ, cosθ, tanθ, cotθ, secθ, cosecθ defined using unit circle. Signs in quadrants: All (I) sin+cos+, Sin (II) sin+others-, Tan (III) tan+cot+, Cos (IV) cos+sec+. Standard angles: 0°,30°,45°,60°,90° values must be memorised.</p><p><strong>2. Identities:</strong> sin²θ+cos²θ=1, 1+tan²θ=sec²θ, 1+cot²θ=cosec²θ. Compound angles: sin(A±B)=sinAcosB±cosAsinB, cos(A±B)=cosAcosB∓sinAsinB, tan(A±B)=(tanA±tanB)/(1∓tanAtanB). Double angle: sin2A=2sinAcosA, cos2A=cos²A-sin²A=2cos²A-1=1-2sin²A, tan2A=2tanA/(1-tan²A).</p><p><strong>3. Transformation Formulas:</strong> 2sinAcosB=sin(A+B)+sin(A-B). 2cosAsinB=sin(A+B)-sin(A-B). 2cosAcosB=cos(A+B)+cos(A-B). 2sinAsinB=cos(A-B)-cos(A+B). Sum→product: sinC+sinD=2sin(C+D)/2 cos(C-D)/2. sinC-sinD=2cos(C+D)/2 sin(C-D)/2.</p><p><strong>4. Inverse Trigonometry:</strong> sin⁻¹x + cos⁻¹x = π/2, tan⁻¹x + cot⁻¹x = π/2, sec⁻¹x + cosec⁻¹x = π/2. Properties: tan⁻¹x + tan⁻¹y = tan⁻¹[(x+y)/(1-xy)] for xy<1. sin⁻¹(-x) = -sin⁻¹x, cos⁻¹(-x) = π - cos⁻¹x.</p><p><strong>5. Trigonometric Equations:</strong> General solutions: sinθ=sinα → θ=nπ+(-1)ⁿα. cosθ=cosα → θ=2nπ±α. tanθ=tanα → θ=nπ+α. Always find principal solutions first (0 to 2π).</p><h3>Solved Examples</h3><div class="example-box"><div class="ex-title">Example 1 (Identity — Product to Sum)</div><div class="ex-text">Find the value of cos 20° cos 40° cos 80°.<br><br>a) 1/4 b) 1/8 c) 1/2 d) 1/16</div><div class="ex-soln"><strong>Solution:</strong> b) 1/8. Multiply numerator and denominator by 2 sin 20°: (2 sin 20° cos 20°) cos 40° cos 80°/(2 sin 20°) = (sin 40° cos 40° cos 80°)/(2 sin 20°) = (sin 80° cos 80°)/(4 sin 20°) = sin 160°/(8 sin 20°) = sin(180°-20°)/(8 sin 20°) = sin 20°/(8 sin 20°) = 1/8.</div></div><div class="example-box"><div class="ex-title">Example 2 (Inverse Trigonometry)</div><div class="ex-text">Find the value of tan⁻¹(1/2) + tan⁻¹(1/3).<br><br>a) 30° b) 45° c) 60° d) 90°</div><div class="ex-soln"><strong>Solution:</strong> b) 45°. tan⁻¹(1/2) + tan⁻¹(1/3) = tan⁻¹[(1/2+1/3)/(1-1/2·1/3)] = tan⁻¹[(5/6)/(5/6)] = tan⁻¹(1) = 45°.</div></div><div class="example-box"><div class="ex-title">Example 3 (Trigonometric Equation)</div><div class="ex-text">Solve: 2sin²θ + sinθ - 1 = 0 for θ in [0, 2π).<br><br>a) π/6, 5π/6, 3π/2 b) π/6, 3π/2 c) π/6, 5π/6, π/2 d) π/3, 2π/3, 3π/2</div><div class="ex-soln"><strong>Solution:</strong> a) π/6, 5π/6, 3π/2. Let t = sinθ. 2t² + t - 1 = 0 → (2t-1)(t+1) = 0 → t = 1/2 or t = -1. sinθ = 1/2 → θ = π/6, 5π/6. sinθ = -1 → θ = 3π/2. So solutions: π/6, 5π/6, 3π/2.</div></div><h3>Shortcut Techniques</h3><ul><li>For product-to-sum problems, multiply by appropriate sine/cosine terms to create a telescoping chain — as in the cos20°cos40°cos80° example.</li><li>Use the 'R formula': a sinθ + b cosθ = R sin(θ+φ) where R = √(a²+b²), φ = tan⁻¹(b/a) — this helps find maximum/minimum values.</li><li>Memorise sin18° = (√5-1)/4 and cos36° = (√5+1)/4 — these are frequently tested in JEE.</li><li>For inverse trig problems, always check the domain and range of the inverse function before applying formulas.</li><li>In trigonometric equations, check for extraneous roots by substituting back into the original equation.</li></ul><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Trigonometry is the backbone of many JEE calculus problems (integration of trig functions, limits with trig expressions). Master the identities thoroughly — being able to quickly transform expressions using product-to-sum or sum-to-product formulas saves significant time in exams.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div>                </div>
-                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
-                <div id="practice-qs"></div>
-                <div style="display:flex;gap:10px;margin-top:10px">
-                    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
-                    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
-                </div>
-                <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
-                    <a href="lesson-calculus.html" class="btn btn-primary">&#x2190; Calculus</a>
-                    <a href="lesson-coordinate-geometry.html" class="btn btn-success">Coordinate Geometry &#x2192;</a>
+
+                    <h4>Standard Angle Values</h4>
+                    <p>The following table of standard angle values must be memorised completely. NDA frequently tests these values directly as well as in compound-angle and multiple-angle problems. Pay special attention to the pattern: sin increases from 0 to 1 as cos decreases from 1 to 0.</p>
+                    <table class="lesson-table">
+                        <thead>
+                            <tr>
+                                <th>Angle &theta;</th>
+                                <th>0&deg; (0)</th>
+                                <th>30&deg; (&pi;/6)</th>
+                                <th>45&deg; (&pi;/4)</th>
+                                <th>60&deg; (&pi;/3)</th>
+                                <th>90&deg; (&pi;/2)</th>
+                                <th>180&deg; (&pi;)</th>
+                                <th>270&deg; (3&pi;/2)</th>
+                                <th>360&deg; (2&pi;)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>sin &theta;</strong></td>
+                                <td>0</td><td>1/2</td><td>1/&radic;2</td><td>&radic;3/2</td><td>1</td><td>0</td><td>&minus;1</td><td>0</td>
+                            </tr>
+                            <tr>
+                                <td><strong>cos &theta;</strong></td>
+                                <td>1</td><td>&radic;3/2</td><td>1/&radic;2</td><td>1/2</td><td>0</td><td>&minus;1</td><td>0</td><td>1</td>
+                            </tr>
+                            <tr>
+                                <td><strong>tan &theta;</strong></td>
+                                <td>0</td><td>1/&radic;3</td><td>1</td><td>&radic;3</td><td>&infin; (undefined)</td><td>0</td><td>&infin; (undefined)</td><td>0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut</div>
+                        <div class="tip-text">A quick way to remember sin values for 0&deg;, 30&deg;, 45&deg;, 60&deg;, 90&deg;: write &radic;0/2 = 0, &radic;1/2 = 1/2, &radic;2/2 = 1/&radic;2, &radic;3/2, &radic;4/2 = 1. Cos values are the same sequence in reverse. This pattern saves you from rote memorisation and helps in solving NDA problems faster.</div>
+                    </div>
+
+                    <h4>Complementary Angle Relations</h4>
+                    <p>When two angles add up to 90&deg; (&pi;/2), they are called complementary. The trigonometric ratios of complementary angles follow a simple interchange pattern:</p>
+                    <table class="lesson-table">
+                        <thead>
+                            <tr><th>Complementary Pair</th><th>Relation</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>sin(90&deg; &minus; &theta;)</td><td>= cos &theta;</td></tr>
+                            <tr><td>cos(90&deg; &minus; &theta;)</td><td>= sin &theta;</td></tr>
+                            <tr><td>tan(90&deg; &minus; &theta;)</td><td>= cot &theta;</td></tr>
+                            <tr><td>cot(90&deg; &minus; &theta;)</td><td>= tan &theta;</td></tr>
+                            <tr><td>sec(90&deg; &minus; &theta;)</td><td>= cosec &theta;</td></tr>
+                            <tr><td>cosec(90&deg; &minus; &theta;)</td><td>= sec &theta;</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Fundamental Trigonometric Identities</h4>
+                    <p>The three Pythagorean identities form the foundation of all trigonometric simplifications:</p>
+                    <ul>
+                        <li><strong>sin&sup2;&theta; + cos&sup2;&theta; = 1</strong> &mdash; Dividing by cos&sup2;&theta; gives 1 + tan&sup2;&theta; = sec&sup2;&theta;</li>
+                        <li><strong>1 + tan&sup2;&theta; = sec&sup2;&theta;</strong> &mdash; Valid for all &theta; where cos &theta; &ne; 0</li>
+                        <li><strong>1 + cot&sup2;&theta; = cosec&sup2;&theta;</strong> &mdash; Valid for all &theta; where sin &theta; &ne; 0</li>
+                    </ul>
+                    <p><strong>Reciprocal Identities:</strong> sin &theta; &middot; cosec &theta; = 1, cos &theta; &middot; sec &theta; = 1, tan &theta; &middot; cot &theta; = 1.</p>
+                    <p><strong>Quotient Identities:</strong> tan &theta; = sin &theta; / cos &theta;, cot &theta; = cos &theta; / sin &theta;.</p>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut</div>
+                        <div class="tip-text">The identity sin&sup2;&theta; + cos&sup2;&theta; = 1 is the single most used trigonometric identity in NDA. Whenever you see an expression like 1 &minus; sin&sup2;&theta; or 1 &minus; cos&sup2;&theta;, immediately replace it with cos&sup2;&theta; or sin&sup2;&theta; respectively. To derive the other two Pythagorean identities, simply divide sin&sup2; + cos&sup2; = 1 by cos&sup2; or sin&sup2;.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 3 — NDA 2020</div>
+                        <div class="ex-text">If sin &theta; = 3/5 and &theta; is acute, find the value of tan &theta; + sec &theta;.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using sin&sup2;&theta; + cos&sup2;&theta; = 1, we get cos&sup2;&theta; = 1 &minus; 9/25 = 16/25. Therefore cos &theta; = 4/5 (positive since &theta; is acute). Then tan &theta; = sin &theta; / cos &theta; = (3/5)/(4/5) = 3/4. Sec &theta; = 1 / cos &theta; = 5/4. The required sum = 3/4 + 5/4 = 8/4 = <strong>2</strong>. This is a classic NDA problem that tests the fundamental identity and ratio definitions together.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 4 — Identity Proof</div>
+                        <div class="ex-text">Prove that (1 + tan&sup2;&theta;)(1 &minus; sin &theta;)(1 + sin &theta;) = 1.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> (1 + tan&sup2;&theta;) = sec&sup2;&theta;. (1 &minus; sin &theta;)(1 + sin &theta;) = 1 &minus; sin&sup2;&theta; = cos&sup2;&theta;. Therefore LHS = sec&sup2;&theta; &middot; cos&sup2;&theta; = (1/cos&sup2;&theta;) &middot; cos&sup2;&theta; = 1 = RHS. Hence proved.</div>
+                    </div>
+
+                    <h3>Sign Convention (ASTC Rule)</h3>
+                    <p>The sign of each trigonometric function depends on the quadrant in which the terminal side of the angle lies. The ASTC rule helps in remembering which functions are positive in each quadrant. The mnemonic stands for All, Sin, Tan, Cos &mdash; going counterclockwise from Quadrant I.</p>
+                    <ul>
+                        <li><strong>Quadrant I (0&deg; to 90&deg;):</strong> <strong>A</strong>ll six trigonometric functions are positive.</li>
+                        <li><strong>Quadrant II (90&deg; to 180&deg;):</strong> Only <strong>S</strong>in and cosec are positive; cos, tan, cot, sec are negative.</li>
+                        <li><strong>Quadrant III (180&deg; to 270&deg;):</strong> Only <strong>T</strong>an and cot are positive; sin, cos, sec, cosec are negative.</li>
+                        <li><strong>Quadrant IV (270&deg; to 360&deg;):</strong> Only <strong>C</strong>os and sec are positive; sin, tan, cot, cosec are negative.</li>
+                    </ul>
+
+                    <h4>Trigonometric Functions of Allied Angles</h4>
+                    <p>Allied angles are angles of the form n&pi;/2 &plusmn; &theta; where n is an integer. The trigonometric ratios of such angles can be reduced to those of &theta; using the following rules. Note the pattern: if n is odd, the function co-functions (sin &harr; cos, tan &harr; cot, sec &harr; cosec); if n is even, the function stays the same. The sign is determined by the ASTC rule for the quadrant in which the angle lies.</p>
+                    <table class="lesson-table">
+                        <thead>
+                            <tr><th>Angle</th><th>sin</th><th>cos</th><th>tan</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>&minus;&theta;</td><td>&minus;sin &theta;</td><td>cos &theta;</td><td>&minus;tan &theta;</td></tr>
+                            <tr><td>90&deg; &minus; &theta;</td><td>cos &theta;</td><td>sin &theta;</td><td>cot &theta;</td></tr>
+                            <tr><td>90&deg; + &theta;</td><td>cos &theta;</td><td>&minus;sin &theta;</td><td>&minus;cot &theta;</td></tr>
+                            <tr><td>180&deg; &minus; &theta;</td><td>sin &theta;</td><td>&minus;cos &theta;</td><td>&minus;tan &theta;</td></tr>
+                            <tr><td>180&deg; + &theta;</td><td>&minus;sin &theta;</td><td>&minus;cos &theta;</td><td>tan &theta;</td></tr>
+                            <tr><td>270&deg; &minus; &theta;</td><td>&minus;cos &theta;</td><td>&minus;sin &theta;</td><td>cot &theta;</td></tr>
+                            <tr><td>270&deg; + &theta;</td><td>&minus;cos &theta;</td><td>sin &theta;</td><td>&minus;cot &theta;</td></tr>
+                            <tr><td>360&deg; &minus; &theta;</td><td>&minus;sin &theta;</td><td>cos &theta;</td><td>&minus;tan &theta;</td></tr>
+                            <tr><td>360&deg; + &theta;</td><td>sin &theta;</td><td>cos &theta;</td><td>tan &theta;</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut</div>
+                        <div class="tip-text">For allied angles of the form (90&deg;n &plusmn; &theta;): Step 1 — If n is odd, change the function (sin &harr; cos, tan &harr; cot, sec &harr; cosec). If n is even, keep the same function. Step 2 — Determine the quadrant of the original angle and assign the correct sign using ASTC. This two-step method never fails.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 5 — Allied Angles</div>
+                        <div class="ex-text">Find the values of (a) sin 210&deg; (b) cos 315&deg; (c) tan 120&deg; using allied angle formulas.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> (a) sin 210&deg; = sin(180&deg; + 30&deg;) = &minus;sin 30&deg; = &minus;1/2. (b) cos 315&deg; = cos(360&deg; &minus; 45&deg;) = cos 45&deg; = 1/&radic;2. (c) tan 120&deg; = tan(180&deg; &minus; 60&deg;) = &minus;tan 60&deg; = &minus;&radic;3.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 6 — Sign Convention Problem</div>
+                        <div class="ex-text">If sin &theta; = &minus;1/2 and &theta; lies in the third quadrant, find cos &theta; and tan &theta; without using a calculator.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> In QIII, both cos and sin are negative, while tan is positive. The reference angle whose sine is 1/2 is 30&deg;. Since the angle is in QIII, &theta; = 180&deg; + 30&deg; = 210&deg;. Therefore cos 210&deg; = &minus;cos 30&deg; = &minus;&radic;3/2, and tan 210&deg; = tan 30&deg; = 1/&radic;3.</div>
+                    </div>
+
+                    <h2 id="trig-equations">2. Trigonometric Equations</h2>
+                    <p>Trigonometric equations involve unknown angles that satisfy a given trigonometric relation. NDA frequently tests general solutions and principal values with 2 to 3 questions per paper. The key is to first reduce the given equation to one of the standard forms and then apply the general solution formula.</p>
+
+                    <h3>Principal Values</h3>
+                    <p>The principal solution is the solution that lies within the principal value range of the corresponding inverse trigonometric function. For NDA problems, the principal solution is typically sought in the interval [0, 2&pi;). To find the principal solutions:</p>
+                    <p>Step 1: Find the acute reference angle &alpha; using the inverse function of the absolute value (e.g., &alpha; = sin<sup>&minus;1</sup>(|k|)).<br>Step 2: Determine the quadrants in which the given function is positive or negative using the ASTC rule.<br>Step 3: For each applicable quadrant, express the angle in terms of &alpha;. In QI: &theta; = &alpha;. In QII: &theta; = &pi; &minus; &alpha;. In QIII: &theta; = &pi; + &alpha;. In QIV: &theta; = 2&pi; &minus; &alpha;.</p>
+
+                    <h3>General Solutions</h3>
+                    <p>The general solution accounts for all possible angles that satisfy the equation by adding integer multiples of the fundamental period of the function. The standard forms are:</p>
+                    <table class="lesson-table">
+                        <thead>
+                            <tr>
+                                <th>Equation</th>
+                                <th>General Solution</th>
+                                <th>Condition / Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>sin &theta; = sin &alpha;</td>
+                                <td>&theta; = n&pi; + (&minus;1)<sup>n</sup> &alpha;</td>
+                                <td>n &isin; Z, also written as &theta; = n&pi; + (&minus;1)<sup>n</sup>&alpha;</td>
+                            </tr>
+                            <tr>
+                                <td>cos &theta; = cos &alpha;</td>
+                                <td>&theta; = 2n&pi; &plusmn; &alpha;</td>
+                                <td>n &isin; Z, &alpha; &isin; [0, &pi;]</td>
+                            </tr>
+                            <tr>
+                                <td>tan &theta; = tan &alpha;</td>
+                                <td>&theta; = n&pi; + &alpha;</td>
+                                <td>n &isin; Z, &alpha; &ne; (2k+1)&pi;/2</td>
+                            </tr>
+                            <tr>
+                                <td>sin &theta; = 0</td>
+                                <td>&theta; = n&pi;</td>
+                                <td>n &isin; Z</td>
+                            </tr>
+                            <tr>
+                                <td>cos &theta; = 0</td>
+                                <td>&theta; = (2n + 1)&pi;/2</td>
+                                <td>n &isin; Z</td>
+                            </tr>
+                            <tr>
+                                <td>tan &theta; = 0</td>
+                                <td>&theta; = n&pi;</td>
+                                <td>n &isin; Z</td>
+                            </tr>
+                            <tr>
+                                <td>sin &theta; = 1</td>
+                                <td>&theta; = (4n + 1)&pi;/2</td>
+                                <td>n &isin; Z</td>
+                            </tr>
+                            <tr>
+                                <td>cos &theta; = 1</td>
+                                <td>&theta; = 2n&pi;</td>
+                                <td>n &isin; Z</td>
+                            </tr>
+                            <tr>
+                                <td>sin&sup2;&theta; = sin&sup2;&alpha;</td>
+                                <td>&theta; = n&pi; &plusmn; &alpha;</td>
+                                <td>n &isin; Z</td>
+                            </tr>
+                            <tr>
+                                <td>cos&sup2;&theta; = cos&sup2;&alpha;</td>
+                                <td>&theta; = n&pi; &plusmn; &alpha;</td>
+                                <td>n &isin; Z</td>
+                            </tr>
+                            <tr>
+                                <td>tan&sup2;&theta; = tan&sup2;&alpha;</td>
+                                <td>&theta; = n&pi; &plusmn; &alpha;</td>
+                                <td>n &isin; Z</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Systematic Strategy for Solving Trigonometric Equations in NDA</h4>
+                    <p>Step 1: Simplify the equation by applying identities to convert it into a single trigonometric function if possible.<br>Step 2: If the equation is quadratic in sin &theta; or cos &theta;, substitute t = sin &theta; or t = cos &theta; and solve the quadratic.<br>Step 3: For each solution of the form sin &theta; = k or cos &theta; = k or tan &theta; = k, identify the reference angle &alpha; and determine the quadrants using the sign of k.<br>Step 4: Write the principal solutions in [0, 2&pi;) by expressing angles in the appropriate quadrants.<br>Step 5: If the general solution is required, apply the standard formula for the respective trigonometric function.</p>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut</div>
+                        <div class="tip-text">When solving trig equations in NDA, always find the acute reference angle first using inverse functions. Then use the CAST (ASTC) rule to determine the quadrants where the solutions lie. For general solutions, simply plug into the formula &mdash; no need to derive each time. This approach cuts solving time by half.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 7 — NDA 2019</div>
+                        <div class="ex-text">Find the general solution of 2 sin&sup2;&theta; &minus; sin &theta; &minus; 1 = 0.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Let t = sin &theta;. Then 2t&sup2; &minus; t &minus; 1 = 0. Factoring: (2t + 1)(t &minus; 1) = 0, so t = 1 or t = &minus;1/2.<br>Case 1: sin &theta; = 1 &rarr; &theta; = (4n + 1)&pi;/2, n &isin; Z.<br>Case 2: sin &theta; = &minus;1/2 = sin(&minus;&pi;/6). Using GS formula: &theta; = n&pi; + (&minus;1)<sup>n</sup>(&minus;&pi;/6) = n&pi; + (&minus;1)<sup>n+1</sup>&pi;/6, n &isin; Z.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 8 — Principal Solutions</div>
+                        <div class="ex-text">Find the principal solutions of tan &theta; = &minus;&radic;3 in the interval [0, 2&pi;).</div>
+                        <div class="ex-soln"><strong>Solution:</strong> The reference angle &alpha; = tan<sup>&minus;1</sup>(&radic;3) = 60&deg; = &pi;/3. Since tan is negative in QII and QIV: In QII: &theta; = &pi; &minus; &pi;/3 = 2&pi;/3. In QIV: &theta; = 2&pi; &minus; &pi;/3 = 5&pi;/3. Therefore the principal solutions are <strong>2&pi;/3</strong> and <strong>5&pi;/3</strong>.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 9 — Quadratic in Trigonometric Form</div>
+                        <div class="ex-text">Solve 3 cos&sup2;&theta; + 2 sin &theta; &minus; 3 = 0 for &theta; &isin; [0, 2&pi;).</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using cos&sup2;&theta; = 1 &minus; sin&sup2;&theta;: 3(1 &minus; sin&sup2;&theta;) + 2 sin &theta; &minus; 3 = 0 &rarr; &minus;3 sin&sup2;&theta; + 2 sin &theta; = 0 &rarr; sin &theta;(2 &minus; 3 sin &theta;) = 0. Therefore sin &theta; = 0 or sin &theta; = 2/3. For sin &theta; = 0: &theta; = 0, &pi;. For sin &theta; = 2/3: &theta; = sin<sup>&minus;1</sup>(2/3) and &pi; &minus; sin<sup>&minus;1</sup>(2/3).</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut</div>
+                        <div class="tip-text">For equations involving both sin and cos, always convert to a single function using sin&sup2; + cos&sup2; = 1. If the equation is of the form a sin &theta; + b cos &theta; = c, use the auxiliary method: write it as R sin(&theta; + &phi;) where R = &radic;(a&sup2; + b&sup2;) and &phi; = tan<sup>&minus;1</sup>(b/a). This is a powerful NDA trick.</div>
+                    </div>
+
+                    <h2 id="inverse">3. Inverse Trigonometric Functions</h2>
+                    <p>Inverse trigonometric functions give the angle corresponding to a given trigonometric ratio. Since trigonometric functions are periodic and not one-to-one, their domains are restricted to define the inverse functions uniquely. NDA regularly tests domain, range, properties, and simple evaluations of inverse trigonometric expressions.</p>
+
+                    <h3>Domain and Range</h3>
+                    <p>Each inverse function has a restricted principal value branch to ensure that the function is one-to-one and onto. The following table summarises the domain and range (principal value) for each inverse trigonometric function:</p>
+                    <table class="lesson-table">
+                        <thead>
+                            <tr>
+                                <th>Function</th>
+                                <th>Domain</th>
+                                <th>Range (Principal Value Branch)</th>
+                                <th>Nature</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>sin<sup>&minus;1</sup> x</td>
+                                <td>[&minus;1, 1]</td>
+                                <td>[&minus;&pi;/2, &pi;/2]</td>
+                                <td>Increasing</td>
+                            </tr>
+                            <tr>
+                                <td>cos<sup>&minus;1</sup> x</td>
+                                <td>[&minus;1, 1]</td>
+                                <td>[0, &pi;]</td>
+                                <td>Decreasing</td>
+                            </tr>
+                            <tr>
+                                <td>tan<sup>&minus;1</sup> x</td>
+                                <td>(&minus;&infin;, &infin;)</td>
+                                <td>(&minus;&pi;/2, &pi;/2)</td>
+                                <td>Increasing</td>
+                            </tr>
+                            <tr>
+                                <td>cot<sup>&minus;1</sup> x</td>
+                                <td>(&minus;&infin;, &infin;)</td>
+                                <td>(0, &pi;)</td>
+                                <td>Decreasing</td>
+                            </tr>
+                            <tr>
+                                <td>sec<sup>&minus;1</sup> x</td>
+                                <td>(&minus;&infin;, &minus;1] &cup; [1, &infin;)</td>
+                                <td>[0, &pi;] &minus; {&pi;/2}</td>
+                                <td>Increasing in each branch</td>
+                            </tr>
+                            <tr>
+                                <td>cosec<sup>&minus;1</sup> x</td>
+                                <td>(&minus;&infin;, &minus;1] &cup; [1, &infin;)</td>
+                                <td>[&minus;&pi;/2, &pi;/2] &minus; {0}</td>
+                                <td>Decreasing in each branch</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Properties and Identities</h3>
+                    <h4>Complementary Relations (Most Frequently Tested in NDA)</h4>
+                    <p>For any x in the respective domain, the sum of a function and its co-function equals &pi;/2:</p>
+                    <ul>
+                        <li>sin<sup>&minus;1</sup> x + cos<sup>&minus;1</sup> x = &pi;/2 for x &isin; [&minus;1, 1]</li>
+                        <li>tan<sup>&minus;1</sup> x + cot<sup>&minus;1</sup> x = &pi;/2 for x &isin; R</li>
+                        <li>sec<sup>&minus;1</sup> x + cosec<sup>&minus;1</sup> x = &pi;/2 for x &isin; (&minus;&infin;, &minus;1] &cup; [1, &infin;)</li>
+                    </ul>
+
+                    <h4>Negative Arguments</h4>
+                    <ul>
+                        <li>sin<sup>&minus;1</sup>(&minus;x) = &minus;sin<sup>&minus;1</sup> x &mdash; odd function</li>
+                        <li>cos<sup>&minus;1</sup>(&minus;x) = &pi; &minus; cos<sup>&minus;1</sup> x &mdash; neither even nor odd</li>
+                        <li>tan<sup>&minus;1</sup>(&minus;x) = &minus;tan<sup>&minus;1</sup> x &mdash; odd function</li>
+                        <li>cot<sup>&minus;1</sup>(&minus;x) = &pi; &minus; cot<sup>&minus;1</sup> x</li>
+                        <li>sec<sup>&minus;1</sup>(&minus;x) = &pi; &minus; sec<sup>&minus;1</sup> x</li>
+                        <li>cosec<sup>&minus;1</sup>(&minus;x) = &minus;cosec<sup>&minus;1</sup> x</li>
+                    </ul>
+
+                    <h4>Sum and Difference of Arctangents</h4>
+                    <ul>
+                        <li>tan<sup>&minus;1</sup> x + tan<sup>&minus;1</sup> y = tan<sup>&minus;1</sup>[(x + y)/(1 &minus; xy)] &mdash; when xy &lt; 1</li>
+                        <li>tan<sup>&minus;1</sup> x + tan<sup>&minus;1</sup> y = &pi; + tan<sup>&minus;1</sup>[(x + y)/(1 &minus; xy)] &mdash; when xy &gt; 1 and x, y &gt; 0</li>
+                        <li>tan<sup>&minus;1</sup> x + tan<sup>&minus;1</sup> y = &minus;&pi; + tan<sup>&minus;1</sup>[(x + y)/(1 &minus; xy)] &mdash; when xy &gt; 1 and x, y &lt; 0</li>
+                        <li>tan<sup>&minus;1</sup> x &minus; tan<sup>&minus;1</sup> y = tan<sup>&minus;1</sup>[(x &minus; y)/(1 + xy)] &mdash; for all x, y</li>
+                    </ul>
+
+                    <h4>Inverse of Trigonometric Functions</h4>
+                    <ul>
+                        <li>sin<sup>&minus;1</sup>(sin x) = x &mdash; only when x &isin; [&minus;&pi;/2, &pi;/2]</li>
+                        <li>cos<sup>&minus;1</sup>(cos x) = x &mdash; only when x &isin; [0, &pi;]</li>
+                        <li>tan<sup>&minus;1</sup>(tan x) = x &mdash; only when x &isin; (&minus;&pi;/2, &pi;/2)</li>
+                        <li>sin(sin<sup>&minus;1</sup> x) = x &mdash; for all x &isin; [&minus;1, 1]</li>
+                        <li>cos(cos<sup>&minus;1</sup> x) = x &mdash; for all x &isin; [&minus;1, 1]</li>
+                        <li>tan(tan<sup>&minus;1</sup> x) = x &mdash; for all x &isin; R</li>
+                    </ul>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut</div>
+                        <div class="tip-text">The complementary relations (sum = &pi;/2) are the most frequently tested inverse trig property in NDA. Also, to evaluate expressions like sin(cos<sup>&minus;1</sup> x) or cos(tan<sup>&minus;1</sup> x), use the right-triangle method: draw a triangle where the given ratio matches the inner inverse function, then read off the required ratio directly.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 10 — NDA 2021</div>
+                        <div class="ex-text">Find the value of tan<sup>&minus;1</sup>(1) + tan<sup>&minus;1</sup>(2) + tan<sup>&minus;1</sup>(3).</div>
+                        <div class="ex-soln"><strong>Solution:</strong> tan<sup>&minus;1</sup> 1 = &pi;/4. Let S = tan<sup>&minus;1</sup> 2 + tan<sup>&minus;1</sup> 3. Here xy = 2 &times; 3 = 6 &gt; 1 and both x, y &gt; 0, so we use the second formula: S = &pi; + tan<sup>&minus;1</sup>[(2 + 3)/(1 &minus; 6)] = &pi; + tan<sup>&minus;1</sup>(&minus;1) = &pi; &minus; &pi;/4 = 3&pi;/4. Therefore total = &pi;/4 + 3&pi;/4 = <strong>&pi;</strong>. This is a classic NDA problem.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 11 — Domain of Inverse Functions</div>
+                        <div class="ex-text">Find the domain of f(x) = sin<sup>&minus;1</sup>(2x &minus; 1) + cos<sup>&minus;1</sup>(x/2).</div>
+                        <div class="ex-soln"><strong>Solution:</strong> For sin<sup>&minus;1</sup>(2x &minus; 1): domain requires &minus;1 &le; 2x &minus; 1 &le; 1. Adding 1: 0 &le; 2x &le; 2. Dividing by 2: 0 &le; x &le; 1. For cos<sup>&minus;1</sup>(x/2): domain requires &minus;1 &le; x/2 &le; 1. Multiplying by 2: &minus;2 &le; x &le; 2. The domain of f(x) is the intersection of the two domains: <strong>[0, 1]</strong>.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 12 — Triangle Method</div>
+                        <div class="ex-text">Evaluate sin(cos<sup>&minus;1</sup>(3/5)).</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Let &alpha; = cos<sup>&minus;1</sup>(3/5). Then cos &alpha; = 3/5, and &alpha; &isin; [0, &pi;]. Using the triangle method: draw a right triangle with adjacent = 3 and hypotenuse = 5. By Pythagoras, opposite = &radic;(25 &minus; 9) = &radic;16 = 4. Since &alpha; is in [0, &pi;], sin &alpha; is non-negative. Therefore sin(cos<sup>&minus;1</sup>(3/5)) = sin &alpha; = opposite/hypotenuse = <strong>4/5</strong>.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 13 — Inverse Property</div>
+                        <div class="ex-text">Find the value of sin<sup>&minus;1</sup>(sin(5&pi;/6)).</div>
+                        <div class="ex-soln"><strong>Solution:</strong> We cannot directly say sin<sup>&minus;1</sup>(sin(5&pi;/6)) = 5&pi;/6 because 5&pi;/6 &notin; [&minus;&pi;/2, &pi;/2]. First, sin(5&pi;/6) = sin(&pi; &minus; &pi;/6) = sin(&pi;/6) = 1/2. Then sin<sup>&minus;1</sup>(1/2) = &pi;/6 (principal value). Therefore sin<sup>&minus;1</sup>(sin(5&pi;/6)) = <strong>&pi;/6</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut</div>
+                        <div class="tip-text">Remember: sin<sup>&minus;1</sup>(sin x) = x only when x is in [&minus;&pi;/2, &pi;/2]. Similarly cos<sup>&minus;1</sup>(cos x) = x only when x is in [0, &pi;]. NDA often tests this property by giving angles outside these ranges. The trick is to first reduce the angle to an equivalent angle within the principal range using allied angle formulas.</div>
+                    </div>
+
+                    <h2 id="heights">4. Heights and Distances</h2>
+                    <p>Heights and distances problems use trigonometric ratios to measure inaccessible heights and distances without direct measurement. This is one of the most practical applications of trigonometry and appears regularly in NDA Paper 1 with 1 to 2 questions. These problems typically involve angles of elevation, depression, and bearings.</p>
+
+                    <h3>Angle of Elevation and Depression</h3>
+                    <p><strong>Angle of Elevation:</strong> When an observer looks up at an object, the angle between the horizontal line of sight and the line joining the observer's eye to the object is called the angle of elevation.</p>
+                    <p><strong>Angle of Depression:</strong> When an observer looks down at an object, the angle between the horizontal line of sight and the line joining the observer's eye to the object is called the angle of depression.</p>
+                    <p>The fundamental relationship in all such problems is: <strong>tan(angle) = opposite/adjacent = height/distance</strong>. In a right triangle formed by the observer, the base, and the object: tan &theta; = h / d, where h is the height (vertical difference) and d is the horizontal distance.</p>
+
+                    <h3>Application Problems</h3>
+                    <p>The standard types of problems that appear in NDA include:</p>
+                    <ul>
+                        <li><strong>Single angle problems:</strong> Given the angle of elevation/depression and one side, find the other side using tan &theta;.</li>
+                        <li><strong>Two-angle problems:</strong> The observer moves towards or away from the object, giving two different angles. Set up two equations and solve for the unknown height or distance.</li>
+                        <li><strong>Problems with two objects:</strong> From a high point, two objects are observed at different angles of depression. Find the distance between them.</li>
+                        <li><strong>Bearing problems:</strong> Directions are given as bearings (angles measured from north). These require combining trigonometry with geometry.</li>
+                    </ul>
+
+                    <p><strong>General strategy for solving heights and distances problems:</strong></p>
+                    <p>Step 1: Draw a clear diagram representing the situation. Label all known and unknown quantities.<br>Step 2: Identify the right triangles formed. For each triangle, write the tangent ratio: tan(angle) = opposite/adjacent.<br>Step 3: Set up equations based on the given information. If there are two unknowns, you generally need two equations.<br>Step 4: Solve the equations simultaneously. Use standard trigonometric values for common angles.<br>Step 5: Check if the answer is reasonable and in the correct units.</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 14 — NDA 2020</div>
+                        <div class="ex-text">From the top of a 75 m high lighthouse, the angles of depression of two ships are 30&deg; and 45&deg; respectively. If both ships are on the same side of the lighthouse, find the distance between the two ships.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Let the lighthouse base be point O, and the ships be at points A (nearer) and B (farther). Let OA = d<sub>1</sub>, OB = d<sub>2</sub>. From the top, angle of depression of the nearer ship is 45&deg;, so tan 45&deg; = 75/d<sub>1</sub> &rarr; 1 = 75/d<sub>1</sub> &rarr; d<sub>1</sub> = 75 m. For the farther ship, angle of depression is 30&deg;, so tan 30&deg; = 75/d<sub>2</sub> &rarr; 1/&radic;3 = 75/d<sub>2</sub> &rarr; d<sub>2</sub> = 75&radic;3 m. The distance between the ships = d<sub>2</sub> &minus; d<sub>1</sub> = 75(&radic;3 &minus; 1) m &asymp; 75(1.732 &minus; 1) = 75 &times; 0.732 = <strong>54.9 m</strong>.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 15 — Moving Object Problem</div>
+                        <div class="ex-text">A man on the top of a tower observes a car approaching the tower at a uniform speed. When the car is at point P, the angle of depression is 30&deg;. After 6 seconds, when the car reaches point Q, the angle of depression becomes 60&deg;. Find the total time taken by the car to reach the tower from point P.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Let the tower height be h. At P (initial position): d<sub>1</sub> = h cot 30&deg; = h&radic;3. At Q (after 6 sec): d<sub>2</sub> = h cot 60&deg; = h/&radic;3. Distance covered in 6 seconds = d<sub>1</sub> &minus; d<sub>2</sub> = h(&radic;3 &minus; 1/&radic;3) = h(2/&radic;3). Remaining distance from Q to the tower = d<sub>2</sub> = h/&radic;3. Since speed is constant: time remaining = 6 &times; (h/&radic;3) / (h(2/&radic;3)) = 6 &times; (1/2) = 3 seconds. Total time from P to tower = 6 + 3 = <strong>9 seconds</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut</div>
+                        <div class="tip-text">For moving object problems in heights and distances, the distance covered in a given time interval is proportional to (cot &theta;<sub>1</sub> &minus; cot &theta;<sub>2</sub>), where &theta;<sub>1</sub> and &theta;<sub>2</sub> are the angles of depression/elevation. Set up a direct proportion to find unknown time without computing the height explicitly. This saves precious minutes in the exam.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 16 — Two Positions, Same Object</div>
+                        <div class="ex-text">From a point on the ground, the angle of elevation of the top of a tower is 30&deg;. After walking 40 metres towards the tower, the angle of elevation becomes 60&deg;. Find the height of the tower.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Let the height of the tower be h metres. Let the distance from the second observation point to the base of the tower be x metres. From the first position (distance = x + 40): tan 30&deg; = h/(x + 40) &rarr; 1/&radic;3 = h/(x + 40) &rarr; h = (x + 40)/&radic;3. From the second position (distance = x): tan 60&deg; = h/x &rarr; &radic;3 = h/x &rarr; h = &radic;3 x. Equating: (x + 40)/&radic;3 = &radic;3 x &rarr; x + 40 = 3x &rarr; 2x = 40 &rarr; x = 20 m. Therefore h = &radic;3 &times; 20 = <strong>20&radic;3 metres</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut</div>
+                        <div class="tip-text">In two-position problems (where the observer moves), always let the distance from the second (nearer) position to the base be x. Then express the height h in two ways using tan of each angle. Equate the two expressions to solve for x, then find h. This approach avoids dealing with two unknown variables simultaneously and reduces algebraic errors.</div>
+                    </div>
+
+                    <h2 id="formulas">5. Trigonometric Formulas and Transformations</h2>
+                    <p>Formula-based problems form the backbone of trigonometry in NDA. Compound angles, multiple angles, and sum-to-product identities are heavily tested. Students must be able to apply these formulas fluently to simplify expressions, prove identities, and solve equations.</p>
+
+                    <h3>Compound Angle Formulas</h3>
+                    <p>Compound angle formulas express the trigonometric functions of sums or differences of two angles in terms of functions of the individual angles:</p>
+                    <ul>
+                        <li>sin(A + B) = sin A cos B + cos A sin B</li>
+                        <li>sin(A &minus; B) = sin A cos B &minus; cos A sin B</li>
+                        <li>cos(A + B) = cos A cos B &minus; sin A sin B</li>
+                        <li>cos(A &minus; B) = cos A cos B + sin A sin B</li>
+                        <li>tan(A + B) = (tan A + tan B) / (1 &minus; tan A tan B)</li>
+                        <li>tan(A &minus; B) = (tan A &minus; tan B) / (1 + tan A tan B)</li>
+                        <li>cot(A + B) = (cot A cot B &minus; 1) / (cot B + cot A)</li>
+                        <li>cot(A &minus; B) = (cot A cot B + 1) / (cot B &minus; cot A)</li>
+                    </ul>
+
+                    <h3>Multiple and Submultiple Angle Formulas</h3>
+                    <h4>Double Angle Formulas</h4>
+                    <ul>
+                        <li>sin 2A = 2 sin A cos A = 2 tan A / (1 + tan&sup2; A)</li>
+                        <li>cos 2A = cos&sup2; A &minus; sin&sup2; A = 2 cos&sup2; A &minus; 1 = 1 &minus; 2 sin&sup2; A = (1 &minus; tan&sup2; A) / (1 + tan&sup2; A)</li>
+                        <li>tan 2A = 2 tan A / (1 &minus; tan&sup2; A)</li>
+                    </ul>
+                    <h4>Triple Angle Formulas</h4>
+                    <ul>
+                        <li>sin 3A = 3 sin A &minus; 4 sin&sup3; A</li>
+                        <li>cos 3A = 4 cos&sup3; A &minus; 3 cos A</li>
+                        <li>tan 3A = (3 tan A &minus; tan&sup3; A) / (1 &minus; 3 tan&sup2; A)</li>
+                    </ul>
+                    <h4>Submultiple Angle Formulas</h4>
+                    <ul>
+                        <li>sin A = 2 sin(A/2) cos(A/2) &mdash; derived from sin 2&theta; = 2 sin &theta; cos &theta; with &theta; = A/2</li>
+                        <li>cos A = cos&sup2;(A/2) &minus; sin&sup2;(A/2) = 2 cos&sup2;(A/2) &minus; 1 = 1 &minus; 2 sin&sup2;(A/2)</li>
+                        <li>tan A = 2 tan(A/2) / (1 &minus; tan&sup2;(A/2))</li>
+                        <li>sin A = 2 tan(A/2) / (1 + tan&sup2;(A/2)) &mdash; t-formula</li>
+                        <li>cos A = (1 &minus; tan&sup2;(A/2)) / (1 + tan&sup2;(A/2)) &mdash; t-formula</li>
+                    </ul>
+
+                    <h3>Sum-to-Product and Product-to-Sum Formulas</h3>
+                    <h4>Product-to-Sum Formulas</h4>
+                    <p>These formulas convert products of trigonometric functions into sums or differences. They are especially useful for evaluating products of cosines and for integration:</p>
+                    <ul>
+                        <li>2 sin A cos B = sin(A + B) + sin(A &minus; B)</li>
+                        <li>2 cos A sin B = sin(A + B) &minus; sin(A &minus; B)</li>
+                        <li>2 cos A cos B = cos(A + B) + cos(A &minus; B)</li>
+                        <li>2 sin A sin B = cos(A &minus; B) &minus; cos(A + B)</li>
+                    </ul>
+                    <h4>Sum-to-Product Formulas</h4>
+                    <p>These formulas convert sums or differences of trigonometric functions into products. They are useful for solving equations and simplifying expressions:</p>
+                    <ul>
+                        <li>sin C + sin D = 2 sin[(C + D)/2] cos[(C &minus; D)/2]</li>
+                        <li>sin C &minus; sin D = 2 cos[(C + D)/2] sin[(C &minus; D)/2]</li>
+                        <li>cos C + cos D = 2 cos[(C + D)/2] cos[(C &minus; D)/2]</li>
+                        <li>cos C &minus; cos D = &minus;2 sin[(C + D)/2] sin[(C &minus; D)/2]</li>
+                    </ul>
+
+                    <h4>Comprehensive Formula Reference Table</h4>
+                    <table class="lesson-table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Formula</th>
+                                <th>Typical NDA Application</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Compound</strong></td>
+                                <td>sin(A + B) = sin A cos B + cos A sin B</td>
+                                <td>Evaluating sin 75&deg;, cos 15&deg; etc.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Compound</strong></td>
+                                <td>cos(A + B) = cos A cos B &minus; sin A sin B</td>
+                                <td>Finding exact trigonometric values</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Compound</strong></td>
+                                <td>tan(A + B) = (tan A + tan B)/(1 &minus; tan A tan B)</td>
+                                <td>Proof of &pi;/4 + tan<sup>&minus;1</sup>x type problems</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Double Angle</strong></td>
+                                <td>sin 2A = 2 sin A cos A</td>
+                                <td>Simplifying product expressions</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Double Angle</strong></td>
+                                <td>cos 2A = 2 cos&sup2; A &minus; 1 = 1 &minus; 2 sin&sup2; A</td>
+                                <td>Converting between powers of sin and cos</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Double Angle</strong></td>
+                                <td>tan 2A = 2 tan A / (1 &minus; tan&sup2; A)</td>
+                                <td>Trigonometric equations</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Triple Angle</strong></td>
+                                <td>sin 3A = 3 sin A &minus; 4 sin&sup3; A</td>
+                                <td>Cubic trigonometric equations</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Triple Angle</strong></td>
+                                <td>cos 3A = 4 cos&sup3; A &minus; 3 cos A</td>
+                                <td>Identity proof problems</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Product&rarr;Sum</strong></td>
+                                <td>2 sin A cos B = sin(A+B) + sin(A&minus;B)</td>
+                                <td>Evaluating products of sines and cosines</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Product&rarr;Sum</strong></td>
+                                <td>2 cos A cos B = cos(A+B) + cos(A&minus;B)</td>
+                                <td>Converting product to sum for integration</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sum&rarr;Product</strong></td>
+                                <td>sin C + sin D = 2 sin((C+D)/2) cos((C&minus;D)/2)</td>
+                                <td>Solving equations with sums of trig functions</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sum&rarr;Product</strong></td>
+                                <td>cos C &minus; cos D = &minus;2 sin((C+D)/2) sin((C&minus;D)/2)</td>
+                                <td>Simplifying difference of cosines</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut</div>
+                        <div class="tip-text">The double-angle formula cos 2A = 2 cos&sup2;A &minus; 1 = 1 &minus; 2 sin&sup2;A is extremely useful for converting between squared and linear trigonometric terms. Also, the product-to-sum trick (multiply and divide by 2 sin of the smallest angle) solves problems like cos 20&deg; cos 40&deg; cos 80&deg; in just a few steps.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 17 — Product-to-Sum (Classic NDA Problem)</div>
+                        <div class="ex-text">Find the value of cos 20&deg; cos 40&deg; cos 80&deg;.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Multiply numerator and denominator by 2 sin 20&deg;: (2 sin 20&deg; cos 20&deg;) cos 40&deg; cos 80&deg; / (2 sin 20&deg;) = (sin 40&deg; cos 40&deg; cos 80&deg;) / (2 sin 20&deg;) = (sin 80&deg; cos 80&deg;) / (4 sin 20&deg;) = sin 160&deg; / (8 sin 20&deg;) = sin(180&deg; &minus; 20&deg;) / (8 sin 20&deg;) = sin 20&deg; / (8 sin 20&deg;) = <strong>1/8</strong>. This technique is essential for NDA.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 18 — Compound Angle Application</div>
+                        <div class="ex-text">If sin A = 3/5 and cos B = 5/13, with A and B both acute, find (a) sin(A + B) and (b) tan(A &minus; B).</div>
+                        <div class="ex-soln"><strong>Solution:</strong> First find cos A = &radic;(1 &minus; 9/25) = 4/5. sin B = &radic;(1 &minus; 25/169) = 12/13.<br>(a) sin(A+B) = sinA cosB + cosA sinB = (3/5)(5/13) + (4/5)(12/13) = 15/65 + 48/65 = 63/65.<br>(b) tan A = 3/4, tan B = 5/12. tan(A&minus;B) = (tanA &minus; tanB)/(1 + tanA tanB) = (3/4 &minus; 5/12)/(1 + (3/4)(5/12)) = (9/12 &minus; 5/12)/(1 + 15/48) = (4/12)/(63/48) = (1/3)/(21/16) = 16/63.</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">Example 19 — Sum-to-Product</div>
+                        <div class="ex-text">Express sin 7&theta; + sin 5&theta; as a product and find its value when &theta; = &pi;/12.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Using sin C + sin D = 2 sin((C+D)/2) cos((C&minus;D)/2): sin 7&theta; + sin 5&theta; = 2 sin(6&theta;) cos(&theta;). At &theta; = &pi;/12: 2 sin(&pi;/2) cos(&pi;/12) = 2(1) cos(&pi;/12) = 2 cos(&pi;/12). Since cos(&pi;/12) = cos 15&deg; = (&radic;6 + &radic;2)/4, the value is 2 &times; (&radic;6 + &radic;2)/4 = <strong>(&radic;6 + &radic;2)/2</strong>.</div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-title">NDA Shortcut</div>
+                        <div class="tip-text">When applying sum-to-product formulas, the average (C + D)/2 and half-difference (C &minus; D)/2 follow naturally from the original angles. A common NDA trap: the formula for cos C &minus; cos D includes a negative sign, which many students forget. Always double-check the sign in this formula.</div>
+                    </div>
+
+                    <div class="summary-box">
+                        <div class="s-title">Key Formula Summary for NDA Trigonometry</div>
+                        <div class="s-text">
+                            <strong>Pythagorean Identities:</strong> sin&sup2;&theta; + cos&sup2;&theta; = 1, 1 + tan&sup2;&theta; = sec&sup2;&theta;, 1 + cot&sup2;&theta; = cosec&sup2;&theta;.<br>
+                            <strong>Compound Angles:</strong> sin(A &plusmn; B) = sin A cos B &plusmn; cos A sin B; cos(A &plusmn; B) = cos A cos B &minus; sin A sin B; tan(A &plusmn; B) = (tan A &plusmn; tan B)/(1 &minus; tan A tan B).<br>
+                            <strong>Double Angle:</strong> sin 2A = 2 sin A cos A; cos 2A = 2 cos&sup2;A &minus; 1 = 1 &minus; 2 sin&sup2;A; tan 2A = 2 tan A/(1 &minus; tan&sup2;A).<br>
+                            <strong>Triple Angle:</strong> sin 3A = 3 sin A &minus; 4 sin&sup3;A; cos 3A = 4 cos&sup3;A &minus; 3 cos A.<br>
+                            <strong>Product to Sum:</strong> 2 sin A cos B = sin(A+B) + sin(A&minus;B); 2 cos A cos B = cos(A+B) + cos(A&minus;B); 2 sin A sin B = cos(A&minus;B) &minus; cos(A+B).<br>
+                            <strong>Sum to Product:</strong> sin C + sin D = 2 sin((C+D)/2) cos((C&minus;D)/2); cos C + cos D = 2 cos((C+D)/2) cos((C&minus;D)/2); cos C &minus; cos D = &minus;2 sin((C+D)/2) sin((C&minus;D)/2).<br>
+                            <strong>General Solutions:</strong> sin &theta; = sin &alpha; &rarr; &theta; = n&pi; + (&minus;1)<sup>n</sup>&alpha;; cos &theta; = cos &alpha; &rarr; &theta; = 2n&pi; &plusmn; &alpha;; tan &theta; = tan &alpha; &rarr; &theta; = n&pi; + &alpha;.<br>
+                            <strong>Inverse Trig Properties:</strong> sin<sup>&minus;1</sup>x + cos<sup>&minus;1</sup>x = &pi;/2; tan<sup>&minus;1</sup>x + cot<sup>&minus;1</sup>x = &pi;/2; tan<sup>&minus;1</sup>x + tan<sup>&minus;1</sup>y formula with xy condition.<br>
+                            <strong>Heights and Distances:</strong> tan &theta; = height/distance; always draw a clear diagram first; use cot for distance when height is known.
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
+                    <div id="practice-qs"></div>
+                    <div style="display:flex;gap:10px;margin-top:10px">
+                        <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
+                        <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                        <a href="lesson-calculus.html" class="btn btn-primary">&#x2190; Calculus</a>
+                        <a href="lesson-coordinate-geometry.html" class="btn btn-success">Coordinate Geometry &#x2192;</a>
+                    </div>
+
                 </div>
             </div>
         </div>
         <script>
-        var practiceQs = [{"id":40021,"text":"If sinθ = 3/5 and θ is acute, find cosθ.","options":[{"l":"a","t":"4/5","c":true},{"l":"b","t":"-4/5","c":false},{"l":"c","t":"3/4","c":false},{"l":"d","t":"5/4","c":false}],"sol":"sin²θ+cos²θ=1 → cos²θ = 1-9/25 = 16/25 → cosθ = ±4/5. Since θ is acute (0<θ<90°), cosθ is positive, so cosθ = 4/5."},{"id":40022,"text":"Find the value of sin 75°.","options":[{"l":"a","t":"(√3+1)/(2√2)","c":true},{"l":"b","t":"(√3-1)/(2√2)","c":false},{"l":"c","t":"(√6+√2)/4","c":false},{"l":"d","t":"Both a and c","c":false}],"sol":"sin75° = sin(45°+30°) = sin45°cos30°+cos45°sin30° = (1/√2)(√3/2)+(1/√2)(1/2) = (√3+1)/(2√2) = (√6+√2)/4. Both a and c are equivalent. Option a is the simplified form."},{"id":40023,"text":"The general solution of sinθ = 1/2 is:","options":[{"l":"a","t":"θ = nπ + (-1)ⁿπ/6","c":true},{"l":"b","t":"θ = nπ + π/6","c":false},{"l":"c","t":"θ = 2nπ ± π/3","c":false},{"l":"d","t":"θ = nπ + (-1)ⁿπ/3","c":false}],"sol":"sinθ = 1/2 → θ = π/6 (principal value). General solution: θ = nπ + (-1)ⁿ·π/6."},{"id":40024,"text":"If tanθ = 1, then secθ + cosecθ = ?","options":[{"l":"a","t":"√2","c":false},{"l":"b","t":"2√2","c":true},{"l":"c","t":"3√2","c":false},{"l":"d","t":"2","c":false}],"sol":"tanθ = 1 → θ = 45°. sec45° = √2, cosec45° = √2. Sum = 2√2."},{"id":40025,"text":"The maximum value of 3 sinθ + 4 cosθ is:","options":[{"l":"a","t":"5","c":true},{"l":"b","t":"7","c":false},{"l":"c","t":"25","c":false},{"l":"d","t":"3","c":false}],"sol":"Max of a sinθ + b cosθ = √(a²+b²) = √(9+16) = √25 = 5."},{"id":80751,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":80752,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":80753,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":80754,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":80755,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":80756,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":80757,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":80758,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":80759,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":80760,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":80761,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":80762,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":80763,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":80764,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":80765,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."},{"id":82911,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":82912,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":82913,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":82914,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":82915,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":82916,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":82917,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":82918,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":82919,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":82920,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":82921,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":82922,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":82923,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":82924,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":82925,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."},{"id":82926,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":82927,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":82928,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":82929,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":82930,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":82931,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":82932,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":82933,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":82934,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":82935,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":82936,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":82937,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":82938,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":82939,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":82940,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."}];
+        var practiceQs = [{"id":40021,"text":"If sin\u03b8 = 3/5 and \u03b8 is acute, find tan\u03b8 + sec\u03b8.","options":[{"l":"a","t":"4/5","c":false},{"l":"b","t":"5/4","c":false},{"l":"c","t":"2","c":true},{"l":"d","t":"8/5","c":false}],"sol":"sin\u03b8 = 3/5 \u2192 cos = \u221a(1-9/25) = 4/5. tan = 3/4, sec = 5/4. Sum = 3/4+5/4 = 2."},{"id":40022,"text":"Find sin 75\u00b0 + cos 75\u00b0.","options":[{"l":"a","t":"\u221a3/2","c":false},{"l":"b","t":"\u221a(3/2)","c":true},{"l":"c","t":"1/\u221a2","c":false},{"l":"d","t":"\u221a6/2","c":false}],"sol":"sin75\u00b0 = (\u221a3+1)/(2\u221a2), cos75\u00b0 = (\u221a3-1)/(2\u221a2). Sum = 2\u221a3/(2\u221a2) = \u221a(3/2)."},{"id":40023,"text":"General solution of sin\u03b8 = -1/2 is:","options":[{"l":"a","t":"n\u03c0 + (-1)^n \u03c0/6","c":false},{"l":"b","t":"n\u03c0 + (-1)^(n+1) \u03c0/6","c":true},{"l":"c","t":"2n\u03c0 \u00b1 \u03c0/3","c":false},{"l":"d","t":"n\u03c0 + \u03c0/3","c":false}],"sol":"sin\u03b8 = -1/2 = sin(-\u03c0/6). GS: \u03b8 = n\u03c0 + (-1)^n(-\u03c0/6) = n\u03c0 + (-1)^(n+1)\u03c0/6."},{"id":40024,"text":"Max value of 5 sin\u03b8 + 12 cos\u03b8 is:","options":[{"l":"a","t":"13","c":true},{"l":"b","t":"17","c":false},{"l":"c","t":"120","c":false},{"l":"d","t":"7","c":false}],"sol":"Max of a sin\u03b8 + b cos\u03b8 = \u221a(a\u00b2+b\u00b2) = \u221a(25+144) = 13."},{"id":40025,"text":"If tan\u03b8 = 3/4 and \u03b8 in QIII, find cos\u03b8.","options":[{"l":"a","t":"4/5","c":false},{"l":"b","t":"-4/5","c":true},{"l":"c","t":"-3/5","c":false},{"l":"d","t":"3/5","c":false}],"sol":"QIII: cos is negative. tan = 3/4 = opp/adj, hyp = 5. cos = adj/hyp = -4/5."},{"id":40026,"text":"Principal value of cos\u207b\u00b9(-1/2) is:","options":[{"l":"a","t":"\u03c0/3","c":false},{"l":"b","t":"2\u03c0/3","c":true},{"l":"c","t":"-\u03c0/3","c":false},{"l":"d","t":"4\u03c0/3","c":false}],"sol":"cos\u207b\u00b9(-1/2) = \u03c0 - cos\u207b\u00b9(1/2) = \u03c0 - \u03c0/3 = 2\u03c0/3."},{"id":40027,"text":"sin\u207b\u00b9(1/2) + cos\u207b\u00b9(1/2) equals:","options":[{"l":"a","t":"\u03c0/3","c":false},{"l":"b","t":"\u03c0/2","c":true},{"l":"c","t":"\u03c0","c":false},{"l":"d","t":"0","c":false}],"sol":"sin\u207b\u00b9(1/2) = \u03c0/6, cos\u207b\u00b9(1/2) = \u03c0/3. Sum = \u03c0/6 + \u03c0/3 = \u03c0/2."},{"id":40028,"text":"Angle of elevation of a tower top from 30 m away is 60\u00b0. Height = ?","options":[{"l":"a","t":"30\u221a3 m","c":true},{"l":"b","t":"30 m","c":false},{"l":"c","t":"15\u221a3 m","c":false},{"l":"d","t":"60 m","c":false}],"sol":"tan 60\u00b0 = h/30 \u2192 h = 30\u221a3 m."},{"id":40029,"text":"If sin A = 4/5, sin B = 5/13, A and B acute, find sin(A - B).","options":[{"l":"a","t":"33/65","c":true},{"l":"b","t":"16/65","c":false},{"l":"c","t":"56/65","c":false},{"l":"d","t":"63/65","c":false}],"sol":"cos A = 3/5, cos B = 12/13. sin(A-B) = sinA cosB - cosA sinB = 48/65 - 15/65 = 33/65."},{"id":40030,"text":"General solution of cos 3\u03b8 = 1/2 is:","options":[{"l":"a","t":"2n\u03c0/3 \u00b1 \u03c0/9","c":true},{"l":"b","t":"n\u03c0 \u00b1 \u03c0/9","c":false},{"l":"c","t":"2n\u03c0 \u00b1 \u03c0/9","c":false},{"l":"d","t":"n\u03c0/3 \u00b1 \u03c0/9","c":false}],"sol":"cos 3\u03b8 = cos(\u03c0/3). 3\u03b8 = 2n\u03c0 \u00b1 \u03c0/3 \u2192 \u03b8 = 2n\u03c0/3 \u00b1 \u03c0/9."},{"id":40031,"text":"If tan\u03b8 + cot\u03b8 = 2, find sin 2\u03b8.","options":[{"l":"a","t":"0","c":false},{"l":"b","t":"1/2","c":false},{"l":"c","t":"1","c":true},{"l":"d","t":"2","c":false}],"sol":"tan\u03b8 + cot\u03b8 = sin\u03b8/cos\u03b8 + cos\u03b8/sin\u03b8 = 1/(sin\u03b8 cos\u03b8) = 2/sin2\u03b8 = 2 \u2192 sin2\u03b8 = 1."},{"id":40032,"text":"sin\u207b\u00b9(3/5) + sin\u207b\u00b9(4/5) equals:","options":[{"l":"a","t":"\u03c0/3","c":false},{"l":"b","t":"\u03c0/2","c":true},{"l":"c","t":"\u03c0","c":false},{"l":"d","t":"\u03c0/4","c":false}],"sol":"Let \u03b1 = sin\u207b\u00b9(3/5), \u03b2 = sin\u207b\u00b9(4/5). Then sin(\u03b1+\u03b2) = (3/5)(3/5)+(4/5)(4/5) = 1 \u2192 \u03b1+\u03b2 = \u03c0/2."},{"id":40033,"text":"If cosec\u03b8 + cot\u03b8 = 3, find sec\u03b8.","options":[{"l":"a","t":"5/3","c":true},{"l":"b","t":"5/4","c":false},{"l":"c","t":"4/5","c":false},{"l":"d","t":"3/5","c":false}],"sol":"(cosec\u03b8+cot\u03b8)(cosec\u03b8-cot\u03b8) = 1 \u2192 cosec\u03b8-cot\u03b8 = 1/3. Adding: 2cosec\u03b8 = 10/3 \u2192 cosec\u03b8 = 5/3 \u2192 sin\u03b8 = 3/5 \u2192 cos\u03b8 = 4/5 \u2192 sec\u03b8 = 5/3."},{"id":40034,"text":"tan 15\u00b0 equals:","options":[{"l":"a","t":"2 - \u221a3","c":true},{"l":"b","t":"2 + \u221a3","c":false},{"l":"c","t":"\u221a3 - 2","c":false},{"l":"d","t":"(\u221a3-1)/(\u221a3+1)","c":false}],"sol":"tan15\u00b0 = tan(45\u00b0-30\u00b0) = (1-1/\u221a3)/(1+1/\u221a3) = (\u221a3-1)/(\u221a3+1) = 2-\u221a3."},{"id":40035,"text":"From a point 50 m from a tower, angle of elevation of the top is 45\u00b0. Height = ?","options":[{"l":"a","t":"50 m","c":true},{"l":"b","t":"50\u221a3 m","c":false},{"l":"c","t":"25\u221a3 m","c":false},{"l":"d","t":"25 m","c":false}],"sol":"tan 45\u00b0 = 1 = h/50 \u2192 h = 50 m."},{"id":40036,"text":"If cos\u03b8 = 12/13 and \u03b8 is acute, find cot\u03b8.","options":[{"l":"a","t":"12/5","c":true},{"l":"b","t":"5/12","c":false},{"l":"c","t":"13/12","c":false},{"l":"d","t":"13/5","c":false}],"sol":"sin\u03b8 = \u221a(1-144/169) = \u221a(25/169) = 5/13. cot\u03b8 = cos/sin = (12/13)/(5/13) = 12/5."},{"id":40037,"text":"Find the value of sin(45\u00b0 + A) sin(45\u00b0 - A).","options":[{"l":"a","t":"cos2A","c":false},{"l":"b","t":"(1-cos2A)/2","c":true},{"l":"c","t":"(1+cos2A)/2","c":false},{"l":"d","t":"sin2A","c":false}],"sol":"sin(45+A)sin(45-A) = sin\u00b245\u00b0 - sin\u00b2A = 1/2 - sin\u00b2A = (1-2sin\u00b2A)/2 = (1-cos2A)/2."},{"id":40038,"text":"The number of solutions of sin\u03b8 = sin2\u03b8 in [0, 2\u03c0) is:","options":[{"l":"a","t":"2","c":false},{"l":"b","t":"3","c":false},{"l":"c","t":"4","c":true},{"l":"d","t":"5","c":false}],"sol":"General solution: 2\u03b8 = n\u03c0 + (-1)^n \u03b8. For n even: 2\u03b8 = 2k\u03c0 + \u03b8 \u2192 \u03b8 = 2k\u03c0 \u2192 \u03b8 = 0 (only in [0,2\u03c0)). For n odd: 2\u03b8 = (2k+1)\u03c0 - \u03b8 \u2192 3\u03b8 = (2k+1)\u03c0 \u2192 \u03b8 = (2k+1)\u03c0/3 \u2192 k=0:\u03c0/3, k=1:\u03c0, k=2:5\u03c0/3. Total 4 solutions: 0, \u03c0/3, \u03c0, 5\u03c0/3."}];
         var answered={},correctCount=0,lessonSlug="trigonometry";
         function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
         function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}

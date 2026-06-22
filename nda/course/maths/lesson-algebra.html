@@ -111,15 +111,754 @@
                         <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
                     </div>
                 </div>
-                <div class="lesson-body">
-                    <h3>Learning Objectives</h3>
-                    <ul>
-                        <li>Understand the fundamental concepts of Algebra</li>
-                        <li>Apply key formulas and techniques to solve problems</li>
-                        <li>Practice with exam-level questions to build speed and accuracy</li>
-                    </ul>
-                    <h3>Key Concepts</h3>
-<h3>Algebra for Competitive Exams</h3><p>Algebra deals with mathematical symbols and the rules for manipulating them. Topics include algebraic expressions, identities, linear and quadratic equations, polynomials, sequences and series. Algebra is tested across JEE Main (detailed, high-level), SSC/CGL (intermediate), and CTET (basic upper-primary level).</p><h3>Key Concepts</h3><p><strong>Basic Identities:</strong> (a+b)² = a²+2ab+b², (a-b)² = a²-2ab+b², (a+b)(a-b) = a²-b², (a+b)³ = a³+3a²b+3ab²+b³, (a-b)³ = a³-3a²b+3ab²-b³, a³+b³ = (a+b)(a²-ab+b²), a³-b³ = (a-b)(a²+ab+b²). <strong>Polynomials:</strong> Degree, leading coefficient, zeroes. Remainder theorem: if p(x) is divided by (x-a), remainder = p(a). Factor theorem: if p(a)=0, then (x-a) is a factor. <strong>Linear Equations:</strong> Solving ax+b=0; systems of linear equations in 2 variables (elimination/substitution). <strong>Quadratic Equations:</strong> ax²+bx+c=0. Roots: x = [-b ± √(b²-4ac)]/2a. Discriminant D=b²-4ac: D>0 real distinct, D=0 real equal, D<0 complex. Sum of roots = -b/a, Product = c/a. <strong>Sequences & Series:</strong> AP (a, a+d, a+2d...), nth term = a+(n-1)d, sum = n/2[2a+(n-1)d]. GP (a, ar, ar²...), nth term = ar^(n-1), sum = a(r^n-1)/(r-1) for |r|≠1. <strong>Permutations & Combinations:</strong> nPr = n!/(n-r)!, nCr = n!/[r!(n-r)!], nC0 + nC1 + ... + nCn = 2^n. <strong>Binomial Theorem:</strong> (1+x)^n = Σ nCr x^r. General term T_(r+1) = nCr x^r.</p><h3>Solved Examples</h3><div class="example-box"><div class="ex-title">Example 1</div><div class="ex-text">If x+1/x = 3, find x²+1/x².<br><br>a) 5 b) 7 c) 9 d) 11</div><div class="ex-soln"><strong>Solution:</strong> b) 7. (x+1/x)² = x²+2+1/x² = 9. So x²+1/x² = 7.</div></div>                </div>
+                <div class="lesson-body">                <h3>Learning Objectives</h3>
+                <ul>
+                    <li>Master set theory, complex numbers, quadratic equations, and sequences for NDA Paper 1</li>
+                    <li>Apply shortcut techniques to solve algebra MCQs in under 45 seconds</li>
+                    <li>Recognise NDA-specific question patterns and elimination strategies</li>
+                    <li>Build speed through practice with 15+ topic-wise solved examples and 12 practice MCQs</li>
+                </ul>
+
+                <div class="tip-box">
+                    <div class="tip-title">&#x1f3af; NDA Exam Strategy � Algebra</div>
+                    <div class="tip-text">NDA Maths (Paper 1) has 120 questions for 300 marks in 2.5 hours. Algebra typically contributes 25�30 questions. The key to scoring is <strong>formula recall speed</strong> and <strong>elimination</strong>. Never spend more than 60 seconds on a single MCQ. Use option substitution, dimensional analysis, and boundary-value testing to skip lengthy derivations. Mark and skip if a question takes more than 90 seconds � come back to it if time permits.</div>
+                </div>
+
+                <h2 id="sets">1. Sets &amp; Relations</h2>
+                <p>Sets form the foundational language of mathematics. In NDA exams, set theory is tested through questions on set operations, Venn diagrams, cardinality of unions and intersections, and De Morgan&rsquo;s laws. Relations and functions appear as interconnected topics with moderate weightage.</p>
+
+                <h3>Set Theory Basics</h3>
+                <h4>Definitions &amp; Terminology</h4>
+                <p>A <strong>set</strong> is a well-defined collection of distinct objects called <strong>elements</strong> (or members). Sets are denoted by capital letters (<em>A</em>, <em>B</em>, <em>C</em>, &hellip;) and elements by lowercase letters. The notation <em>a</em> &isin; <em>A</em> means <em>a</em> belongs to set <em>A</em>. Sets can be described in <strong>roster form</strong> (listing elements within curly braces) or <strong>set-builder form</strong> (stating the property that defines membership).</p>
+
+                <h4>Types of Sets � Complete Classification</h4>
+                <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:.85em;color:var(--text-sec)">
+                    <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)">
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Type</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Definition</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Example</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">NDA Note</th>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Empty / Null Set</td>
+                        <td style="padding:8px 10px">Set with no elements</td>
+                        <td style="padding:8px 10px">&phi; or { }</td>
+                        <td style="padding:8px 10px">&phi; &ne; {0}</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Singleton Set</td>
+                        <td style="padding:8px 10px">Exactly one element</td>
+                        <td style="padding:8px 10px">{5}</td>
+                        <td style="padding:8px 10px">Cardinality = 1</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Finite Set</td>
+                        <td style="padding:8px 10px">Countable number of elements</td>
+                        <td style="padding:8px 10px">{1, 2, 3, 4}</td>
+                        <td style="padding:8px 10px">|A| = n</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Infinite Set</td>
+                        <td style="padding:8px 10px">Uncountable elements</td>
+                        <td style="padding:8px 10px">&#x2115; = {1, 2, 3, &hellip;}</td>
+                        <td style="padding:8px 10px">Natural numbers</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Equal Sets</td>
+                        <td style="padding:8px 10px">Exactly the same elements</td>
+                        <td style="padding:8px 10px">{1,2} = {2,1}</td>
+                        <td style="padding:8px 10px">Order irrelevant</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Equivalent Sets</td>
+                        <td style="padding:8px 10px">Same cardinality</td>
+                        <td style="padding:8px 10px">{a,b} ~ {1,2}</td>
+                        <td style="padding:8px 10px">n(A) = n(B)</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Subset</td>
+                        <td style="padding:8px 10px">Every element of A is in B</td>
+                        <td style="padding:8px 10px">{1} &sube; {1,2}</td>
+                        <td style="padding:8px 10px">&empty; &sube; every set</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Proper Subset</td>
+                        <td style="padding:8px 10px">A &sube; B and A &ne; B</td>
+                        <td style="padding:8px 10px">{1} &sub; {1,2}</td>
+                        <td style="padding:8px 10px">Strict subset</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Power Set</td>
+                        <td style="padding:8px 10px">Set of all subsets of A</td>
+                        <td style="padding:8px 10px">P({a}) = {&phi;, {a}}</td>
+                        <td style="padding:8px 10px">|P(A)| = 2<sup>n</sup></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 10px">Universal Set</td>
+                        <td style="padding:8px 10px">All elements under discussion</td>
+                        <td style="padding:8px 10px"><em>U</em></td>
+                        <td style="padding:8px 10px">Context-dependent</td>
+                    </tr>
+                </table>
+
+                <h4>Subsets, Power Set &amp; Cardinality Formulas</h4>
+                <p>If |<em>A</em>| = <em>n</em>, then:<br>
+                &bull; Number of subsets = 2<sup><em>n</em></sup><br>
+                &bull; Number of proper subsets = 2<sup><em>n</em></sup> &minus; 1<br>
+                &bull; Number of non-empty subsets = 2<sup><em>n</em></sup> &minus; 1<br>
+                &bull; Number of non-empty proper subsets = 2<sup><em>n</em></sup> &minus; 2</p>
+
+                <h3>Venn Diagrams &amp; Set Operations</h3>
+                <p>Venn diagrams use overlapping circles to visually represent relationships between sets. They are particularly useful for solving NDA word problems involving surveys, preferences, and group memberships.</p>
+
+                <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:.85em;color:var(--text-sec)">
+                    <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)">
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Operation</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Symbol</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Set-Builder</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Venn Region</th>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Union</td>
+                        <td style="padding:8px 10px"><em>A</em> &cup; <em>B</em></td>
+                        <td style="padding:8px 10px">{<em>x</em> | <em>x</em> &isin; <em>A</em> or <em>x</em> &isin; <em>B</em>}</td>
+                        <td style="padding:8px 10px">Entire shaded area</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Intersection</td>
+                        <td style="padding:8px 10px"><em>A</em> &cap; <em>B</em></td>
+                        <td style="padding:8px 10px">{<em>x</em> | <em>x</em> &isin; <em>A</em> and <em>x</em> &isin; <em>B</em>}</td>
+                        <td style="padding:8px 10px">Overlapping region</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Difference</td>
+                        <td style="padding:8px 10px"><em>A</em> &minus; <em>B</em></td>
+                        <td style="padding:8px 10px">{<em>x</em> | <em>x</em> &isin; <em>A</em> and <em>x</em> &notin; <em>B</em>}</td>
+                        <td style="padding:8px 10px"><em>A</em> only</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Complement</td>
+                        <td style="padding:8px 10px"><em>A</em>&prime; or <em>A</em><sup>c</sup></td>
+                        <td style="padding:8px 10px">{<em>x</em> | <em>x</em> &isin; <em>U</em> and <em>x</em> &notin; <em>A</em>}</td>
+                        <td style="padding:8px 10px">Outside circle <em>A</em></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 10px">Symmetric Diff.</td>
+                        <td style="padding:8px 10px"><em>A</em> &Delta; <em>B</em></td>
+                        <td style="padding:8px 10px">(<em>A</em> &minus; <em>B</em>) &cup; (<em>B</em> &minus; <em>A</em>)</td>
+                        <td style="padding:8px 10px">Non-overlapping parts</td>
+                    </tr>
+                </table>
+
+                <h4>Key Cardinality Formulas</h4>
+                <p><strong>Two sets:</strong> <em>n</em>(<em>A</em> &cup; <em>B</em>) = <em>n</em>(<em>A</em>) + <em>n</em>(<em>B</em>) &minus; <em>n</em>(<em>A</em> &cap; <em>B</em>)</p>
+                <p><strong>Three sets:</strong> <em>n</em>(<em>A</em> &cup; <em>B</em> &cup; <em>C</em>) = <em>n</em>(<em>A</em>) + <em>n</em>(<em>B</em>) + <em>n</em>(<em>C</em>) &minus; <em>n</em>(<em>A</em> &cap; <em>B</em>) &minus; <em>n</em>(<em>B</em> &cap; <em>C</em>) &minus; <em>n</em>(<em>C</em> &cap; <em>A</em>) + <em>n</em>(<em>A</em> &cap; <em>B</em> &cap; <em>C</em>)</p>
+
+                <h4>De Morgan&rsquo;s Laws</h4>
+                <ul>
+                    <li>(<em>A</em> &cup; <em>B</em>)&prime; = <em>A</em>&prime; &cap; <em>B</em>&prime;</li>
+                    <li>(<em>A</em> &cap; <em>B</em>)&prime; = <em>A</em>&prime; &cup; <em>B</em>&prime;</li>
+                </ul>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 1.1 � NDA 2020 Pattern</div>
+                    <div class="ex-text">In a class of 100 students, 55 like Mathematics, 60 like Physics, and 35 like both. How many like neither subject?<br><br>a) 10 &nbsp;&nbsp; b) 15 &nbsp;&nbsp; c) 20 &nbsp;&nbsp; d) 25</div>
+                    <div class="ex-soln"><strong>Solution:</strong> c) 20. <em>n</em>(M &cup; P) = 55 + 60 &minus; 35 = 80. Neither = 100 &minus; 80 = 20. <strong>NDA Approach:</strong> Draw a 2-circle Venn. Fill the intersection (35) first, then the remaining parts of each circle, and finally the outside region.</div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 1.2 � De Morgan&rsquo;s Law</div>
+                    <div class="ex-text">If <em>U</em> = {1,2,3,4,5,6}, <em>A</em> = {1,2,3}, <em>B</em> = {3,4,5}, verify (<em>A</em> &cup; <em>B</em>)&prime; = <em>A</em>&prime; &cap; <em>B</em>&prime;.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> <em>A</em> &cup; <em>B</em> = {1,2,3,4,5}, so (<em>A</em> &cup; <em>B</em>)&prime; = {6}. <em>A</em>&prime; = {4,5,6}, <em>B</em>&prime; = {1,2,6}. <em>A</em>&prime; &cap; <em>B</em>&prime; = {6}. Verified. This is a common NDA verification question.</div>
+                </div>
+
+                <div class="tip-box">
+                    <div class="tip-title">&#x26a1; NDA Shortcut � Set Cardinality</div>
+                    <div class="tip-text">When asked &ldquo;how many like neither&rdquo;, always compute <em>n</em>(A &cup; B) first then subtract from total. Drawing a quick 2-circle Venn in the margin takes 10 seconds and prevents mistakes. For &ldquo;exactly one&rdquo; questions, use: <em>n</em>(only A) + <em>n</em>(only B) = <em>n</em>(A) + <em>n</em>(B) &minus; 2&middot;<em>n</em>(A &cap; B).</div>
+                </div>
+
+                <h3>Relations &amp; Functions � NDA Essentials</h3>
+                <p>A <strong>relation</strong> from set <em>A</em> to set <em>B</em> is a subset of <em>A</em> &times; <em>B</em> (Cartesian product). A <strong>function</strong> <em>f</em>: <em>A</em> &rarr; <em>B</em> is a special relation where each element of <em>A</em> has exactly one image in <em>B</em>. Key function types tested in NDA:</p>
+                <ul>
+                    <li><strong>One-one (injective):</strong> <em>f</em>(<em>x</em><sub>1</sub>) = <em>f</em>(<em>x</em><sub>2</sub>) &rArr; <em>x</em><sub>1</sub> = <em>x</em><sub>2</sub></li>
+                    <li><strong>Onto (surjective):</strong> For every <em>y</em> &isin; <em>B</em>, there exists <em>x</em> &isin; <em>A</em> with <em>f</em>(<em>x</em>) = <em>y</em></li>
+                    <li><strong>Bijective:</strong> Both one-one and onto</li>
+                    <li><strong>Even function:</strong> <em>f</em>(&minus;<em>x</em>) = <em>f</em>(<em>x</em>) � symmetric about y-axis</li>
+                    <li><strong>Odd function:</strong> <em>f</em>(&minus;<em>x</em>) = &minus;<em>f</em>(<em>x</em>) � symmetric about origin</li>
+                </ul>
+                <div class="tip-box">
+                    <div class="tip-title">&#x26a1; NDA Shortcut � Even/Odd Functions</div>
+                    <div class="tip-text">To test if a function is even, odd, or neither, substitute &minus;x and simplify. If <em>f</em>(&minus;x) = <em>f</em>(x) ? even; if <em>f</em>(&minus;x) = &minus;<em>f</em>(x) ? odd; otherwise ? neither. Memorise: cos x, x� are even; sin x, x� are odd.</div>
+                </div>
+
+                <h2 id="complex">2. Complex Numbers</h2>
+                <p>Complex numbers extend the real number system to include solutions of equations like <em>x</em><sup>2</sup> + 1 = 0. A complex number is written as <em>z</em> = <em>a</em> + <em>ib</em>, where <em>i</em> = &radic;(&minus;1). The real part is Re(<em>z</em>) = <em>a</em> and the imaginary part is Im(<em>z</em>) = <em>b</em>. NDA consistently tests modulus, argument, polar form, De Moivre&rsquo;s theorem, and cube roots of unity.</p>
+
+                <h3>Argand Plane &amp; Modulus</h3>
+                <h4>Geometric Representation</h4>
+                <p>Every complex number <em>z</em> = <em>x</em> + <em>iy</em> corresponds uniquely to a point (<em>x</em>, <em>y</em>) in the <strong>Argand plane</strong> (also called the complex plane). The x-axis is the real axis and the y-axis is the imaginary axis.</p>
+
+                <h4>Modulus, Argument &amp; Conjugate</h4>
+                <ul>
+                    <li><strong>Modulus:</strong> |<em>z</em>| = &radic;(<em>x</em><sup>2</sup> + <em>y</em><sup>2</sup>) � distance from origin</li>
+                    <li><strong>Argument:</strong> arg(<em>z</em>) = tan<sup>&minus;1</sup>(<em>y</em>/<em>x</em>) � angle with positive real axis, range (&minus;&pi;, &pi;]</li>
+                    <li><strong>Conjugate:</strong> <em>z</em>&#773; = <em>x</em> &minus; <em>iy</em> � reflection across the real axis</li>
+                </ul>
+
+                <h4>Three Representations of Complex Numbers</h4>
+                <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:.85em;color:var(--text-sec)">
+                    <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)">
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Form</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Expression</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Best For</th>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Cartesian (Rectangular)</td>
+                        <td style="padding:8px 10px"><em>z</em> = <em>x</em> + <em>iy</em></td>
+                        <td style="padding:8px 10px">Addition, subtraction, conjugate</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Polar (Trigonometric)</td>
+                        <td style="padding:8px 10px"><em>z</em> = <em>r</em>(cos &theta; + <em>i</em> sin &theta;)</td>
+                        <td style="padding:8px 10px">Multiplication, division, powers</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 10px">Exponential (Euler)</td>
+                        <td style="padding:8px 10px"><em>z</em> = <em>re</em><sup><em>i</em>&theta;</sup></td>
+                        <td style="padding:8px 10px">De Moivre, roots of unity</td>
+                    </tr>
+                </table>
+
+                <h4>Properties of Modulus and Conjugate</h4>
+                <ul>
+                    <li>|<em>z</em><sub>1</sub> <em>z</em><sub>2</sub>| = |<em>z</em><sub>1</sub>| &middot; |<em>z</em><sub>2</sub>|</li>
+                    <li>|<em>z</em><sub>1</sub> / <em>z</em><sub>2</sub>| = |<em>z</em><sub>1</sub>| / |<em>z</em><sub>2</sub>| (<em>z</em><sub>2</sub> &ne; 0)</li>
+                    <li>|<em>z</em><sub>1</sub> + <em>z</em><sub>2</sub>| &le; |<em>z</em><sub>1</sub>| + |<em>z</em><sub>2</sub>| (Triangle inequality)</li>
+                    <li>|<em>z</em><sub>1</sub> &minus; <em>z</em><sub>2</sub>| &ge; ||<em>z</em><sub>1</sub>| &minus; |<em>z</em><sub>2</sub>||</li>
+                    <li><em>z</em><em>z</em>&#773; = |<em>z</em>|<sup>2</sup></li>
+                    <li><span style="text-decoration:overline"><em>z</em><sub>1</sub> + <em>z</em><sub>2</sub></span> = <em>z</em>&#773;<sub>1</sub> + <em>z</em>&#773;<sub>2</sub></li>
+                    <li><span style="text-decoration:overline"><em>z</em><sub>1</sub> <em>z</em><sub>2</sub></span> = <em>z</em>&#773;<sub>1</sub> &middot; <em>z</em>&#773;<sub>2</sub></li>
+                </ul>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 2.1 � NDA 2019</div>
+                    <div class="ex-text">If |<em>z</em> &minus; 1| = |<em>z</em> + 1|, then <em>z</em> lies on which of the following?<br><br>a) The real axis &nbsp;&nbsp; b) The imaginary axis &nbsp;&nbsp; c) A circle &nbsp;&nbsp; d) The line <em>y</em> = <em>x</em></div>
+                    <div class="ex-soln"><strong>Solution:</strong> b) The imaginary axis. Let <em>z</em> = <em>x</em> + <em>iy</em>. Then |<em>x</em> &minus; 1 + <em>iy</em>| = |<em>x</em> + 1 + <em>iy</em>| &rArr; (<em>x</em> &minus; 1)<sup>2</sup> + <em>y</em><sup>2</sup> = (<em>x</em> + 1)<sup>2</sup> + <em>y</em><sup>2</sup> &rArr; 4<em>x</em> = 0 &rArr; <em>x</em> = 0. So <em>z</em> lies on the imaginary axis (y-axis).</div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 2.2 � Modulus Calculation</div>
+                    <div class="ex-text">Find |(3 + 4i)(1 &minus; 2i)|.<br><br>a) 5&radic;5 &nbsp;&nbsp; b) 25 &nbsp;&nbsp; c) 5 &nbsp;&nbsp; d) &radic;5</div>
+                    <div class="ex-soln"><strong>Solution:</strong> a) 5&radic;5. |3+4i| = &radic;(9+16) = 5, |1&minus;2i| = &radic;(1+4) = &radic;5. By product property, |(3+4i)(1&minus;2i)| = 5 &times; &radic;5 = 5&radic;5. <strong>NDA Approach:</strong> Use |z<sub>1</sub>z<sub>2</sub>| = |z<sub>1</sub>|&middot;|z<sub>2</sub>| instead of expanding � saves 30 seconds.</div>
+                </div>
+
+                <h3>Polar Form &amp; De Moivre&rsquo;s Theorem</h3>
+                <p>To convert to polar form: <em>z</em> = <em>r</em>(cos &theta; + <em>i</em> sin &theta;), where <em>r</em> = |<em>z</em>| and &theta; = arg(<em>z</em>).</p>
+                <p><strong>De Moivre&rsquo;s Theorem:</strong> (cos &theta; + <em>i</em> sin &theta;)<sup><em>n</em></sup> = cos(<em>n</em>&theta;) + <em>i</em> sin(<em>n</em>&theta;) for integer <em>n</em>.</p>
+                <p>To find <em>n</em><sup>th</sup> roots: <em>z</em><sup>1/<em>n</em></sup> = <em>r</em><sup>1/<em>n</em></sup>[cos((&theta; + 2&pi;<em>k</em>)/<em>n</em>) + <em>i</em> sin((&theta; + 2&pi;<em>k</em>)/<em>n</em>)], for <em>k</em> = 0, 1, &hellip;, <em>n</em>&minus;1.</p>
+                <div class="tip-box">
+                    <div class="tip-title">&#x26a1; NDA Shortcut � Modulus of Sum/Difference</div>
+                    <div class="tip-text">For NDA, when you see |<em>z</em><sub>1</sub> &plusmn; <em>z</em><sub>2</sub>|, square both sides and use |<em>z</em>|<sup>2</sup> = <em>z</em><em>z</em>&#773;. Avoid expanding into <em>x</em> + <em>iy</em> unless necessary. Using properties instead of brute expansion saves 30+ seconds per question � critical for NDA pace.</div>
+                </div>
+
+                <h3>Cube Roots of Unity</h3>
+                <p>The cube roots of unity are the three solutions of <em>z</em><sup>3</sup> = 1: 1, &omega;, &omega;<sup>2</sup>, where &omega; = (&minus;1 + <em>i</em>&radic;3)/2 and &omega;<sup>2</sup> = (&minus;1 &minus; <em>i</em>&radic;3)/2.</p>
+                <p><strong>Essential Properties (memorise for NDA):</strong></p>
+                <ul>
+                    <li>1 + &omega; + &omega;<sup>2</sup> = 0</li>
+                    <li>&omega;<sup>3</sup> = 1 and (&omega;<sup>2</sup>)<sup>3</sup> = 1</li>
+                    <li>&omega;<sup>3<em>k</em></sup> = 1, &omega;<sup>3<em>k</em>+1</sup> = &omega;, &omega;<sup>3<em>k</em>+2</sup> = &omega;<sup>2</sup></li>
+                    <li>&omega; and &omega;<sup>2</sup> are complex conjugates</li>
+                </ul>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 2.3 � NDA 2021</div>
+                    <div class="ex-text">Evaluate (1 + &omega; + &omega;<sup>2</sup>)<sup>100</sup>, where &omega; is a cube root of unity.<br><br>a) 1 &nbsp;&nbsp; b) 0 &nbsp;&nbsp; c) &omega; &nbsp;&nbsp; d) &omega;<sup>2</sup></div>
+                    <div class="ex-soln"><strong>Solution:</strong> b) 0. Since 1 + &omega; + &omega;<sup>2</sup> = 0, we have 0<sup>100</sup> = 0. This is a direct application of the fundamental property.</div>
+                </div>
+
+                <h2 id="quadratics">3. Quadratic Equations</h2>
+                <p>A quadratic equation in <em>x</em> is of the form <em>ax</em><sup>2</sup> + <em>bx</em> + <em>c</em> = 0, where <em>a</em>, <em>b</em>, <em>c</em> are real and <em>a</em> &ne; 0. NDA tests nature of roots, sum and product relations, formation of equations, and common root conditions.</p>
+
+                <h3>Standard Form &amp; Quadratic Formula</h3>
+                <p>The roots are given by: <em>x</em> = [&minus;<em>b</em> &plusmn; &radic;(<em>b</em><sup>2</sup> &minus; 4<em>ac</em>)] / 2<em>a</em>. The discriminant <em>D</em> = <em>b</em><sup>2</sup> &minus; 4<em>ac</em> determines the nature.</p>
+
+                <h3>Nature of Roots � Complete Classification</h3>
+                <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:.85em;color:var(--text-sec)">
+                    <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)">
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Discriminant</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Nature of Roots</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Example</th>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px"><em>D</em> &gt; 0, perfect square</td>
+                        <td style="padding:8px 10px">Real, distinct, rational</td>
+                        <td style="padding:8px 10px"><em>x</em><sup>2</sup> &minus; 5<em>x</em> + 6 = 0</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px"><em>D</em> &gt; 0, not perfect square</td>
+                        <td style="padding:8px 10px">Real, distinct, irrational</td>
+                        <td style="padding:8px 10px"><em>x</em><sup>2</sup> &minus; 4<em>x</em> + 2 = 0</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px"><em>D</em> = 0</td>
+                        <td style="padding:8px 10px">Real and equal (repeated)</td>
+                        <td style="padding:8px 10px"><em>x</em><sup>2</sup> &minus; 4<em>x</em> + 4 = 0</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 10px"><em>D</em> &lt; 0</td>
+                        <td style="padding:8px 10px">Complex conjugate pair</td>
+                        <td style="padding:8px 10px"><em>x</em><sup>2</sup> + <em>x</em> + 1 = 0</td>
+                    </tr>
+                </table>
+
+                <h4>Sum &amp; Product of Roots</h4>
+                <p>If &alpha; and &beta; are roots, then:<br>
+                <strong>Sum:</strong> &alpha; + &beta; = &minus;<em>b</em>/<em>a</em><br>
+                <strong>Product:</strong> &alpha;&beta; = <em>c</em>/<em>a</em><br>
+                <strong>Form equation:</strong> <em>x</em><sup>2</sup> &minus; (&alpha;+&beta;)<em>x</em> + &alpha;&beta; = 0</p>
+
+                <h4>Useful Expressions</h4>
+                <ul>
+                    <li>&alpha;<sup>2</sup> + &beta;<sup>2</sup> = (&alpha; + &beta;)<sup>2</sup> &minus; 2&alpha;&beta;</li>
+                    <li>&alpha;<sup>3</sup> + &beta;<sup>3</sup> = (&alpha; + &beta;)<sup>3</sup> &minus; 3&alpha;&beta;(&alpha; + &beta;)</li>
+                    <li>|&alpha; &minus; &beta;| = &radic;<em>D</em> / |<em>a</em>|</li>
+                </ul>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 3.1 � NDA 2018</div>
+                    <div class="ex-text">If &alpha; and &beta; are roots of <em>x</em><sup>2</sup> &minus; 3<em>x</em> + 2 = 0, find &alpha;<sup>2</sup>&beta; + &alpha;&beta;<sup>2</sup>.<br><br>a) 4 &nbsp;&nbsp; b) 6 &nbsp;&nbsp; c) 8 &nbsp;&nbsp; d) 10</div>
+                    <div class="ex-soln"><strong>Solution:</strong> b) 6. &alpha;+&beta; = 3, &alpha;&beta; = 2. Then &alpha;<sup>2</sup>&beta; + &alpha;&beta;<sup>2</sup> = &alpha;&beta;(&alpha;+&beta;) = 2&times;3 = 6. <strong>NDA Approach:</strong> Use sum and product directly � no need to find actual roots.</div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 3.2 � Equal Roots Condition</div>
+                    <div class="ex-text">For what <em>k</em> does <em>kx</em><sup>2</sup> &minus; 6<em>x</em> + 1 = 0 have equal roots?<br><br>a) 9 &nbsp;&nbsp; b) 3 &nbsp;&nbsp; c) 6 &nbsp;&nbsp; d) 0</div>
+                    <div class="ex-soln"><strong>Solution:</strong> a) 9. Set D = 0: 36 &minus; 4<em>k</em>(1) = 0 &rArr; <em>k</em> = 9.</div>
+                </div>
+
+                <h3>Common Roots</h3>
+                <p><strong>One common root:</strong> Condition: (<em>c</em><sub>1</sub><em>a</em><sub>2</sub> &minus; <em>c</em><sub>2</sub><em>a</em><sub>1</sub>)<sup>2</sup> = (<em>a</em><sub>1</sub><em>b</em><sub>2</sub> &minus; <em>a</em><sub>2</sub><em>b</em><sub>1</sub>)(<em>b</em><sub>1</sub><em>c</em><sub>2</sub> &minus; <em>b</em><sub>2</sub><em>c</em><sub>1</sub>). <strong>Both roots common:</strong> <em>a</em><sub>1</sub>/<em>a</em><sub>2</sub> = <em>b</em><sub>1</sub>/<em>b</em><sub>2</sub> = <em>c</em><sub>1</sub>/<em>c</em><sub>2</sub>.</p>
+
+                <div class="tip-box">
+                    <div class="tip-title">&#x26a1; NDA Shortcut � Common Root Substitution</div>
+                    <div class="tip-text">For &ldquo;common root&rdquo; questions, let &alpha; be the common root and substitute into both equations. Eliminate &alpha;<sup>2</sup> by subtraction. This avoids memorising the complicated condition and is faster in an exam.</div>
+                </div>
+
+                <h3>Graphical Interpretation</h3>
+                <p>The parabola <em>y</em> = <em>ax</em><sup>2</sup> + <em>bx</em> + <em>c</em> opens upward if <em>a</em> &gt; 0, downward if <em>a</em> &lt; 0. Vertex at <em>x</em> = &minus;<em>b</em>/2<em>a</em>. If <em>a</em> &gt; 0 and <em>D</em> &lt; 0, expression is always positive; if <em>a</em> &lt; 0 and <em>D</em> &lt; 0, always negative.</p>
+
+                <h2 id="sequences">4. Sequences &amp; Series</h2>
+                <p>A sequence is an ordered list of numbers following a pattern (e.g., 2, 4, 6, 8, &hellip;). A series is the sum of terms. NDA tests AP, GP, HP, and standard summation formulas.</p>
+
+                <h3>Arithmetic Progression (AP)</h3>
+                <p>General form: <em>a</em>, <em>a</em>+<em>d</em>, <em>a</em>+2<em>d</em>, &hellip; Common difference = <em>d</em>.</p>
+                <ul>
+                    <li><strong>n<sup>th</sup> term:</strong> <em>T<sub>n</sub></em> = <em>a</em> + (<em>n</em> &minus; 1)<em>d</em></li>
+                    <li><strong>Sum:</strong> <em>S<sub>n</sub></em> = <em>n</em>/2 [2<em>a</em> + (<em>n</em> &minus; 1)<em>d</em>] = <em>n</em>/2 (<em>a</em> + <em>l</em>)</li>
+                    <li><strong>Arithmetic Mean:</strong> AM of <em>a</em>, <em>b</em> = (<em>a</em> + <em>b</em>)/2</li>
+                </ul>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 4.1 � NDA 2020</div>
+                    <div class="ex-text">The 5<sup>th</sup> term of an AP is 17 and the 10<sup>th</sup> term is 32. Find <em>d</em>.<br><br>a) 2 &nbsp;&nbsp; b) 3 &nbsp;&nbsp; c) 4 &nbsp;&nbsp; d) 5</div>
+                    <div class="ex-soln"><strong>Solution:</strong> b) 3. <em>T</em><sub>5</sub> = <em>a</em>+4<em>d</em> = 17, <em>T</em><sub>10</sub> = <em>a</em>+9<em>d</em> = 32. Subtract: 5<em>d</em> = 15 &rArr; <em>d</em> = 3.</div>
+                </div>
+
+                <h3>Geometric Progression (GP)</h3>
+                <p>General form: <em>a</em>, <em>ar</em>, <em>ar</em><sup>2</sup>, &hellip; Common ratio = <em>r</em>.</p>
+                <ul>
+                    <li><strong>n<sup>th</sup> term:</strong> <em>T<sub>n</sub></em> = <em>ar</em><sup><em>n</em>&minus;1</sup></li>
+                    <li><strong>Sum (<em>n</em> terms):</strong> <em>S<sub>n</sub></em> = <em>a</em>(<em>r</em><sup><em>n</em></sup> &minus; 1)/(<em>r</em> &minus; 1), <em>r</em> &ne; 1</li>
+                    <li><strong>Sum (&infin;):</strong> <em>S</em><sub>&infin;</sub> = <em>a</em>/(1 &minus; <em>r</em>), |<em>r</em>| &lt; 1</li>
+                    <li><strong>Geometric Mean:</strong> GM of <em>a</em>, <em>b</em> = &radic;(<em>ab</em>)</li>
+                </ul>
+
+                <div class="tip-box">
+                    <div class="tip-title">&#x26a1; NDA Shortcut � Infinite GP &amp; Recurring Decimals</div>
+                    <div class="tip-text">For recurring decimals: 0.<span style="text-decoration:overline">3</span> = 3/10 + 3/100 + &hellip; = (3/10)/(1&minus;1/10) = 1/3. Same principle for any recurring decimal � split into a GP and use S<sub>&infin;</sub>.</div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 4.2 � NDA 2019</div>
+                    <div class="ex-text">Find sum of infinite GP: 1 + 1/3 + 1/9 + 1/27 + &hellip;<br><br>a) 4/3 &nbsp;&nbsp; b) 3/2 &nbsp;&nbsp; c) 2 &nbsp;&nbsp; d) 3</div>
+                    <div class="ex-soln"><strong>Solution:</strong> b) 3/2. <em>a</em> = 1, <em>r</em> = 1/3. <em>S</em><sub>&infin;</sub> = 1/(1 &minus; 1/3) = 1/(2/3) = 3/2.</div>
+                </div>
+
+                <h3>Harmonic Progression (HP)</h3>
+                <p>Reciprocals of terms form an AP. HM of <em>a</em>, <em>b</em> = 2<em>ab</em>/(<em>a</em>+<em>b</em>). <strong>Key relationship:</strong> AM &ge; GM &ge; HM (equality when numbers are equal).</p>
+
+                <h3>Sum of Special Series</h3>
+                <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:.85em;color:var(--text-sec)">
+                    <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)">
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Series</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Sum of First <em>n</em> Terms</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Memory Aid</th>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">1 + 2 + 3 + &hellip; + <em>n</em></td>
+                        <td style="padding:8px 10px"><em>n</em>(<em>n</em> + 1)/2</td>
+                        <td style="padding:8px 10px">&ldquo;n n plus one by two&rdquo;</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">1<sup>2</sup> + 2<sup>2</sup> + &hellip; + <em>n</em><sup>2</sup></td>
+                        <td style="padding:8px 10px"><em>n</em>(<em>n</em>+1)(2<em>n</em>+1)/6</td>
+                        <td style="padding:8px 10px">&ldquo;n n+1 2n+1 by six&rdquo;</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">1<sup>3</sup> + 2<sup>3</sup> + &hellip; + <em>n</em><sup>3</sup></td>
+                        <td style="padding:8px 10px">[<em>n</em>(<em>n</em>+1)/2]<sup>2</sup></td>
+                        <td style="padding:8px 10px">&ldquo;Square of the sum&rdquo;</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 10px">1 + 3 + 5 + &hellip; + (2<em>n</em>&minus;1)</td>
+                        <td style="padding:8px 10px"><em>n</em><sup>2</sup></td>
+                        <td style="padding:8px 10px">&ldquo;Sum of odds = n<sup>2</sup>&rdquo;</td>
+                    </tr>
+                </table>
+
+                <div class="tip-box">
+                    <div class="tip-title">&#x26a1; NDA Shortcut � Series with General Term</div>
+                    <div class="tip-text">Given <em>T<sub>n</sub></em>, split into standard forms: &Sigma;(<em>n</em><sup>2</sup>+3<em>n</em>+1) = &Sigma;<em>n</em><sup>2</sup> + 3&Sigma;<em>n</em> + &Sigma;1. Apply formulas individually. Do NOT expand fully.</div>
+                </div>
+                <h2 id="permutations">5. Permutations &amp; Combinations</h2>
+                <p>Permutations count arrangements (order matters), combinations count selections (order does not). High-weightage topic in NDA with 4&ndash;6 questions on word arrangements, committee formation, and geometric counting.</p>
+
+                <h3>Fundamental Principle of Counting</h3>
+                <p><strong>Multiplication:</strong> If event 1 in <em>m</em> ways and event 2 in <em>n</em> ways, both occur together in <em>m</em> &times; <em>n</em> ways.<br>
+                <strong>Addition:</strong> If events are mutually exclusive, total = <em>m</em> + <em>n</em>.</p>
+
+                <h3>nPr &amp; nCr Formulas</h3>
+                <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:.85em;color:var(--text-sec)">
+                    <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)">
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Concept</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Formula</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Example</th>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Permutation</td>
+                        <td style="padding:8px 10px"><sup><em>n</em></sup><em>P</em><sub><em>r</em></sub> = <em>n</em>!/(<em>n</em>&minus;<em>r</em>)!</td>
+                        <td style="padding:8px 10px"><sup>5</sup><em>P</em><sub>3</sub> = 60</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Combination</td>
+                        <td style="padding:8px 10px"><sup><em>n</em></sup><em>C</em><sub><em>r</em></sub> = <em>n</em>!/[<em>r</em>!(<em>n</em>&minus;<em>r</em>)!]</td>
+                        <td style="padding:8px 10px"><sup>5</sup><em>C</em><sub>3</sub> = 10</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">All distinct</td>
+                        <td style="padding:8px 10px"><em>n</em>!</td>
+                        <td style="padding:8px 10px">5! = 120</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">With repetitions</td>
+                        <td style="padding:8px 10px"><em>n</em>!/(<em>p</em>!<em>q</em>!<em>r</em>!&hellip;)</td>
+                        <td style="padding:8px 10px">MISSISSIPPI: 11!/(4!4!2!)</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 10px">Combination identity</td>
+                        <td style="padding:8px 10px"><sup><em>n</em></sup><em>C</em><sub><em>r</em></sub> = <sup><em>n</em></sup><em>C</em><sub><em>n</em>&minus;<em>r</em></sub></td>
+                        <td style="padding:8px 10px"><sup>7</sup><em>C</em><sub>4</sub> = <sup>7</sup><em>C</em><sub>3</sub> = 35</td>
+                    </tr>
+                </table>
+
+                <div class="tip-box">
+                    <div class="tip-title">&#x26a1; NDA Shortcut � Combination Identity</div>
+                    <div class="tip-text">Always check <sup><em>n</em></sup><em>C</em><sub><em>r</em></sub> = <sup><em>n</em></sup><em>C</em><sub><em>n</em>&minus;<em>r</em></sub>. Example: <sup>100</sup><em>C</em><sub>98</sub> = <sup>100</sup><em>C</em><sub>2</sub> = 4950. Also memorise: <sup><em>n</em></sup><em>C</em><sub>0</sub> = <sup><em>n</em></sup><em>C</em><sub><em>n</em></sub> = 1, <sup><em>n</em></sup><em>C</em><sub>1</sub> = <sup><em>n</em></sup><em>C</em><sub><em>n</em>&minus;1</sub> = <em>n</em>.</div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 5.1 � NDA 2019</div>
+                    <div class="ex-text">How many 3-digit numbers using digits 1&ndash;5 without repetition?<br><br>a) 60 &nbsp;&nbsp; b) 120 &nbsp;&nbsp; c) 20 &nbsp;&nbsp; d) 125</div>
+                    <div class="ex-soln"><strong>Solution:</strong> a) 60. <sup>5</sup><em>P</em><sub>3</sub> = 5!/2! = 60. <strong>NDA Approach:</strong> 5 choices &times; 4 &times; 3 = 60. Direct multiplication is often faster than formula.</div>
+                </div>
+
+                <h3>Circular Permutations</h3>
+                <p>&bull; Distinct objects around circle: (<em>n</em> &minus; 1)!<br>
+                &bull; Necklace/garland (clockwise = anticlockwise): (<em>n</em> &minus; 1)! / 2</p>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 5.2 � Circular</div>
+                    <div class="ex-text">Ways to seat 5 people around a circular table?<br><br>a) 120 &nbsp;&nbsp; b) 24 &nbsp;&nbsp; c) 60 &nbsp;&nbsp; d) 12</div>
+                    <div class="ex-soln"><strong>Solution:</strong> b) 24. (5 &minus; 1)! = 4! = 24.</div>
+                </div>
+
+                <h2 id="binomial">6. Binomial Theorem</h2>
+                <p>The binomial theorem expands (<em>x</em> + <em>y</em>)<sup><em>n</em></sup> for positive integer <em>n</em>. NDA tests general term, middle term, term independent of <em>x</em>, and coefficient properties.</p>
+
+                <h3>Statement &amp; Expansion</h3>
+                <p>(<em>x</em> + <em>y</em>)<sup><em>n</em></sup> = &Sigma; <sup><em>n</em></sup><em>C</em><sub><em>r</em></sub> <em>x</em><sup><em>n</em>&minus;<em>r</em></sup> <em>y</em><sup><em>r</em></sup>, where <em>r</em> = 0 to <em>n</em>. The expansion has (<em>n</em>+1) terms.</p>
+
+                <h3>General Term &amp; Middle Term</h3>
+                <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:.85em;color:var(--text-sec)">
+                    <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)">
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Term Type</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Formula</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Condition</th>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">General term (<em>r</em>+1)<sup>th</sup></td>
+                        <td style="padding:8px 10px"><em>T</em><sub><em>r</em>+1</sub> = <sup><em>n</em></sup><em>C</em><sub><em>r</em></sub> <em>x</em><sup><em>n</em>&minus;<em>r</em></sup> <em>y</em><sup><em>r</em></sup></td>
+                        <td style="padding:8px 10px">0 &le; <em>r</em> &le; <em>n</em></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Middle term (<em>n</em> even)</td>
+                        <td style="padding:8px 10px"><em>T</em><sub><em>n</em>/2+1</sub></td>
+                        <td style="padding:8px 10px">One middle term</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Middle terms (<em>n</em> odd)</td>
+                        <td style="padding:8px 10px"><em>T</em><sub>(<em>n</em>+1)/2</sub> and <em>T</em><sub>(<em>n</em>+3)/2</sub></td>
+                        <td style="padding:8px 10px">Two middle terms</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 10px">Independent of <em>x</em></td>
+                        <td style="padding:8px 10px">Set exponent of <em>x</em> = 0</td>
+                        <td style="padding:8px 10px">Solve for <em>r</em></td>
+                    </tr>
+                </table>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 6.1 � NDA 2021</div>
+                    <div class="ex-text">Coefficient of <em>x</em><sup>3</sup> in (1+<em>x</em>)<sup>7</sup>?<br><br>a) 21 &nbsp;&nbsp; b) 35 &nbsp;&nbsp; c) 28 &nbsp;&nbsp; d) 15</div>
+                    <div class="ex-soln"><strong>Solution:</strong> b) 35. <em>T</em><sub><em>r</em>+1</sub> = <sup>7</sup><em>C</em><sub><em>r</em></sub> <em>x</em><sup><em>r</em></sup>. For <em>x</em><sup>3</sup>, <em>r</em> = 3. Coefficient = <sup>7</sup><em>C</em><sub>3</sub> = 35.</div>
+                </div>
+
+                <h3>Binomial Coefficients Properties</h3>
+                <ul>
+                    <li><sup><em>n</em></sup><em>C</em><sub>0</sub> + <sup><em>n</em></sup><em>C</em><sub>1</sub> + &hellip; + <sup><em>n</em></sup><em>C</em><sub><em>n</em></sub> = 2<sup><em>n</em></sup></li>
+                    <li><sup><em>n</em></sup><em>C</em><sub>0</sub> &minus; <sup><em>n</em></sup><em>C</em><sub>1</sub> + &hellip; + (&minus;1)<sup><em>n</em></sup> <sup><em>n</em></sup><em>C</em><sub><em>n</em></sub> = 0</li>
+                    <li>Sum of even-indexed coefficients = Sum of odd-indexed coefficients = 2<sup><em>n</em>&minus;1</sup></li>
+                    <li><sup><em>n</em></sup><em>C</em><sub><em>r</em></sub> + <sup><em>n</em></sup><em>C</em><sub><em>r</em>&minus;1</sub> = <sup><em>n</em>+1</sup><em>C</em><sub><em>r</em></sub> (Pascal&rsquo;s rule)</li>
+                </ul>
+
+                <div class="tip-box">
+                    <div class="tip-title">&#x26a1; NDA Shortcut � Substitution Method</div>
+                    <div class="tip-text">For &Sigma; <sup><em>n</em></sup><em>C</em><sub><em>r</em></sub> = 2<sup><em>n</em></sup>, substitute <em>x</em> = 1 in (1+<em>x</em>)<sup><em>n</em></sup>. For alternating sum, substitute <em>x</em> = &minus;1. This substitution trick handles all NDA binomial summation problems in seconds.</div>
+                </div>
+
+                <h2 id="matrices">7. Matrices &amp; Determinants</h2>
+                <p>A matrix is a rectangular array of numbers (rows &times; columns). Determinants are scalars for square matrices. NDA tests operations, determinant properties, and Cramer&rsquo;s rule.</p>
+
+                <h3>Matrix Operations</h3>
+                <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:.85em;color:var(--text-sec)">
+                    <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)">
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Operation</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Rule</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Note</th>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Addition</td>
+                        <td style="padding:8px 10px">Element-wise (same order)</td>
+                        <td style="padding:8px 10px">Commutative</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Scalar Multiplication</td>
+                        <td style="padding:8px 10px">Each element &times; scalar</td>
+                        <td style="padding:8px 10px">Distributive</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Multiplication</td>
+                        <td style="padding:8px 10px">Row &times; Column (dot product)</td>
+                        <td style="padding:8px 10px">NOT commutative</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Transpose</td>
+                        <td style="padding:8px 10px">Swap rows &amp; columns</td>
+                        <td style="padding:8px 10px">(<em>AB</em>)<sup><em>T</em></sup> = <em>B</em><sup><em>T</em></sup><em>A</em><sup><em>T</em></sup></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 10px">Inverse (2&times;2)</td>
+                        <td style="padding:8px 10px"><em>A</em><sup>&minus;1</sup> = (1/det <em>A</em>) adj(<em>A</em>)</td>
+                        <td style="padding:8px 10px">det <em>A</em> &ne; 0</td>
+                    </tr>
+                </table>
+                <h4>Matrix Properties</h4>
+                <ul>
+                    <li><em>AB</em> &ne; <em>BA</em> (non-commutative)</li>
+                    <li>(<em>AB</em>)<em>C</em> = <em>A</em>(<em>BC</em>) (associative)</li>
+                    <li><em>A</em>(<em>B</em>+<em>C</em>) = <em>AB</em> + <em>AC</em> (distributive)</li>
+                    <li>(<em>AB</em>)<sup>&minus;1</sup> = <em>B</em><sup>&minus;1</sup><em>A</em><sup>&minus;1</sup></li>
+                </ul>
+
+                <h3>Determinant Properties</h3>
+                <ul>
+                    <li>det(<em>kA</em>) = <em>k</em><sup><em>n</em></sup> det(<em>A</em>) for <em>n</em>&times;<em>n</em> matrix</li>
+                    <li>det(<em>AB</em>) = det(<em>A</em>) &middot; det(<em>B</em>)</li>
+                    <li>det(<em>A</em><sup><em>T</em></sup>) = det(<em>A</em>)</li>
+                    <li>Two identical rows/columns &rArr; det = 0</li>
+                    <li>Row interchange changes sign of det</li>
+                    <li>det(<em>A</em><sup>&minus;1</sup>) = 1 / det(<em>A</em>)</li>
+                    <li>Triangular matrix: det = product of diagonal entries</li>
+                </ul>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 7.1 � NDA 2020</div>
+                    <div class="ex-text">Find det of [[1,2],[3,4]].<br><br>a) &minus;2 &nbsp;&nbsp; b) 2 &nbsp;&nbsp; c) &minus;1 &nbsp;&nbsp; d) 4</div>
+                    <div class="ex-soln"><strong>Solution:</strong> a) &minus;2. det = (1&times;4) &minus; (2&times;3) = 4 &minus; 6 = &minus;2.</div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 7.2 � Singular Matrix</div>
+                    <div class="ex-text">For what <em>k</em> is [[<em>k</em>,2],[4,8]] singular?<br><br>a) 1 &nbsp;&nbsp; b) 2 &nbsp;&nbsp; c) 0 &nbsp;&nbsp; d) &minus;1</div>
+                    <div class="ex-soln"><strong>Solution:</strong> a) 1. det = 8<em>k</em> &minus; 8 = 0 &rArr; <em>k</em> = 1.</div>
+                </div>
+
+                <h3>Cramer&rsquo;s Rule</h3>
+                <p>For <em>a</em><sub>1</sub><em>x</em> + <em>b</em><sub>1</sub><em>y</em> = <em>c</em><sub>1</sub>, <em>a</em><sub>2</sub><em>x</em> + <em>b</em><sub>2</sub><em>y</em> = <em>c</em><sub>2</sub>:<br>
+                <em>D</em> = det[[<em>a</em><sub>1</sub>,<em>b</em><sub>1</sub>],[<em>a</em><sub>2</sub>,<em>b</em><sub>2</sub>]], <em>D<sub>x</sub></em> = det[[<em>c</em><sub>1</sub>,<em>b</em><sub>1</sub>],[<em>c</em><sub>2</sub>,<em>b</em><sub>2</sub>]], <em>D<sub>y</sub></em> = det[[<em>a</em><sub>1</sub>,<em>c</em><sub>1</sub>],[<em>a</em><sub>2</sub>,<em>c</em><sub>2</sub>]]<br>
+                <em>x</em> = <em>D<sub>x</sub></em>/<em>D</em>, <em>y</em> = <em>D<sub>y</sub></em>/<em>D</em> (provided <em>D</em> &ne; 0).</p>
+
+                <div class="tip-box">
+                    <div class="tip-title">&#x26a1; NDA Shortcut � Singular Matrix</div>
+                    <div class="tip-text">A matrix with determinant = 0 is singular (no inverse). NDA often gives a matrix with a variable and asks for the value making it singular. Just set det = 0 and solve. This is a 10-second question.</div>
+                </div>
+
+                <h2 id="inequalities">8. Linear Inequalities</h2>
+                <p>Linear inequalities involve &gt;, &ge;, &lt;, &le;. NDA tests solving, interval representation, and sign reversal rules.</p>
+
+                <h3>Interval Notation</h3>
+                <ul>
+                    <li>(<em>a</em>, <em>b</em>) &rarr; <em>a</em> &lt; <em>x</em> &lt; <em>b</em></li>
+                    <li>[<em>a</em>, <em>b</em>] &rarr; <em>a</em> &le; <em>x</em> &le; <em>b</em></li>
+                    <li>(<em>a</em>, &infin;) &rarr; <em>x</em> &gt; <em>a</em></li>
+                    <li>(&minus;&infin;, <em>b</em>] &rarr; <em>x</em> &le; <em>b</em></li>
+                </ul>
+
+                <h3>Solving Rules</h3>
+                <ul>
+                    <li>Adding/subtracting preserves inequality</li>
+                    <li>Multiplying/dividing by positive preserves inequality</li>
+                    <li>Multiplying/dividing by <strong>negative reverses</strong> the inequality</li>
+                    <li>Never multiply/divide by a variable with unknown sign</li>
+                </ul>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 8.1 � NDA 2019</div>
+                    <div class="ex-text">Solve 3<em>x</em> &minus; 7 &gt; 2<em>x</em> + 1.<br><br>a) <em>x</em> &gt; 8 &nbsp;&nbsp; b) <em>x</em> &gt; 6 &nbsp;&nbsp; c) <em>x</em> &lt; 8 &nbsp;&nbsp; d) <em>x</em> &lt; 6</div>
+                    <div class="ex-soln"><strong>Solution:</strong> a) <em>x</em> &gt; 8. 3<em>x</em> &minus; 2<em>x</em> &gt; 1+7 &rArr; <em>x</em> &gt; 8.</div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 8.2 � Negative Coefficient</div>
+                    <div class="ex-text">Solve &minus;2<em>x</em> + 5 &le; 9.<br><br>a) <em>x</em> &ge; &minus;2 &nbsp;&nbsp; b) <em>x</em> &le; &minus;2 &nbsp;&nbsp; c) <em>x</em> &ge; 2 &nbsp;&nbsp; d) <em>x</em> &le; 2</div>
+                    <div class="ex-soln"><strong>Solution:</strong> a) <em>x</em> &ge; &minus;2. &minus;2<em>x</em> &le; 4 &rArr; <em>x</em> &ge; &minus;2 (sign reversed).</div>
+                </div>
+
+                <div class="tip-box">
+                    <div class="tip-title">&#x26a1; NDA Shortcut � Sign Reversal Trap</div>
+                    <div class="tip-text">Whenever you multiply/divide by a negative, flip the inequality sign. NDA sets traps here. Example: &minus;3<em>x</em> &lt; 9 &rArr; <em>x</em> &gt; &minus;3, NOT <em>x</em> &lt; &minus;3.</div>
+                </div>
+
+                <h2 id="probability">9. Probability</h2>
+                <p>Probability ranges from 0 to 1. NDA tests classical probability, conditional probability, and Bayes&rsquo; theorem at a basic level.</p>
+
+                <h3>Basic Terminology</h3>
+                <ul>
+                    <li><strong>Experiment:</strong> Process with well-defined outcomes (rolling a die)</li>
+                    <li><strong>Sample Space (<em>S</em>):</strong> All possible outcomes; <em>n</em>(<em>S</em>) = total count</li>
+                    <li><strong>Event (<em>E</em>):</strong> Subset of <em>S</em>; <em>n</em>(<em>E</em>) = favourable count</li>
+                    <li><strong>Probability:</strong> <em>P</em>(<em>E</em>) = <em>n</em>(<em>E</em>)/<em>n</em>(<em>S</em>), 0 &le; <em>P</em>(<em>E</em>) &le; 1</li>
+                </ul>
+
+                <h3>Key Formulas</h3>
+                <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:.85em;color:var(--text-sec)">
+                    <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)">
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Concept</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Formula</th>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Union</td>
+                        <td style="padding:8px 10px"><em>P</em>(<em>A</em>&cup;<em>B</em>) = <em>P</em>(<em>A</em>) + <em>P</em>(<em>B</em>) &minus; <em>P</em>(<em>A</em>&cap;<em>B</em>)</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Complement</td>
+                        <td style="padding:8px 10px"><em>P</em>(<em>A</em>&prime;) = 1 &minus; <em>P</em>(<em>A</em>)</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Conditional</td>
+                        <td style="padding:8px 10px"><em>P</em>(<em>A</em>|<em>B</em>) = <em>P</em>(<em>A</em>&cap;<em>B</em>)/<em>P</em>(<em>B</em>)</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Independent</td>
+                        <td style="padding:8px 10px"><em>P</em>(<em>A</em>&cap;<em>B</em>) = <em>P</em>(<em>A</em>)&middot;<em>P</em>(<em>B</em>)</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 10px">Mutually Exclusive</td>
+                        <td style="padding:8px 10px"><em>P</em>(<em>A</em>&cap;<em>B</em>) = 0</td>
+                    </tr>
+                </table>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 9.1 � NDA 2021</div>
+                    <div class="ex-text">Two dice rolled. Probability of sum 7?<br><br>a) 1/6 &nbsp;&nbsp; b) 1/12 &nbsp;&nbsp; c) 5/36 &nbsp;&nbsp; d) 1/9</div>
+                    <div class="ex-soln"><strong>Solution:</strong> a) 1/6. Total = 36. Favourable: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) = 6. P = 6/36 = 1/6.</div>
+                </div>
+
+                <div class="tip-box">
+                    <div class="tip-title">&#x26a1; NDA Shortcut � Dice Distribution</div>
+                    <div class="tip-text">For two dice, sum frequencies: 2?1, 3?2, 4?3, 5?4, 6?5, 7?6, 8?5, 9?4, 10?3, 11?2, 12?1. Sum 7 has max probability (1/6). This triangular distribution helps eliminate options instantly.</div>
+                </div>
+
+                <h2 id="statistics">10. Statistics (basic)</h2>
+                <p>Statistics covers collection, organisation, and analysis of data. NDA tests mean, median, mode, variance, and standard deviation.</p>
+
+                <h3>Measures of Central Tendency</h3>
+                <ul>
+                    <li><strong>Mean (&#x1D465;):</strong> For ungrouped: (&Sigma;<em>x<sub>i</sub></em>)/<em>n</em>. For grouped: (&Sigma;<em>f<sub>i</sub>x<sub>i</sub></em>)/(&Sigma;<em>f<sub>i</sub></em>)</li>
+                    <li><strong>Median:</strong> Middle value when sorted. <em>n</em> odd: (<em>n</em>+1)/2<sup>th</sup> term. <em>n</em> even: average of <em>n</em>/2<sup>th</sup> and (<em>n</em>/2+1)<sup>th</sup> terms</li>
+                    <li><strong>Mode:</strong> Most frequent value</li>
+                </ul>
+
+                <h3>Measures of Dispersion</h3>
+                <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:.85em;color:var(--text-sec)">
+                    <tr style="border-bottom:1px solid var(--border);background:rgba(255,255,255,.02)">
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Measure</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Definition</th>
+                        <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text)">Formula</th>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Range</td>
+                        <td style="padding:8px 10px">Max &minus; Min</td>
+                        <td style="padding:8px 10px">&mdash;</td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Variance (&sigma;<sup>2</sup>)</td>
+                        <td style="padding:8px 10px">Avg of squared deviations</td>
+                        <td style="padding:8px 10px">&Sigma;(<em>x<sub>i</sub></em>&minus;&#x1D465;)<sup>2</sup>/<em>n</em></td>
+                    </tr>
+                    <tr style="border-bottom:1px solid var(--border)">
+                        <td style="padding:8px 10px">Std Dev (&sigma;)</td>
+                        <td style="padding:8px 10px">&radic;(variance)</td>
+                        <td style="padding:8px 10px">&radic;[&Sigma;(<em>x<sub>i</sub></em>&minus;&#x1D465;)<sup>2</sup>/<em>n</em>]</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 10px">Coeff of Variation</td>
+                        <td style="padding:8px 10px">Relative dispersion</td>
+                        <td style="padding:8px 10px">(&sigma;/&#x1D465;) &times; 100%</td>
+                    </tr>
+                </table>
+
+                <h4>Computational Formula for Variance</h4>
+                <p>&sigma;<sup>2</sup> = [&Sigma;<em>x<sub>i</sub></em><sup>2</sup>/<em>n</em>] &minus; (&#x1D465;)<sup>2</sup>. This avoids individual deviations and is much faster for NDA.</p>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 10.1 � NDA 2018</div>
+                    <div class="ex-text">Find the mean of 4, 8, 12, 16, 20.<br><br>a) 10 &nbsp;&nbsp; b) 12 &nbsp;&nbsp; c) 14 &nbsp;&nbsp; d) 16</div>
+                    <div class="ex-soln"><strong>Solution:</strong> b) 12. Sum = 60, Mean = 60/5 = 12.</div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-title">Example 10.2 � Standard Deviation</div>
+                    <div class="ex-text">Find SD of 2, 4, 6, 8.<br><br>a) &radic;5 &nbsp;&nbsp; b) &radic;6 &nbsp;&nbsp; c) 5 &nbsp;&nbsp; d) 2&radic;2</div>
+                    <div class="ex-soln"><strong>Solution:</strong> a) &radic;5. Mean = 5. &Sigma;(<em>x<sub>i</sub></em>&minus;5)<sup>2</sup> = 9+1+1+9 = 20. Variance = 20/4 = 5. SD = &radic;5.</div>
+                </div>
+
+                <div class="tip-box">
+                    <div class="tip-title">&#x26a1; NDA Shortcut � Variance by Computation</div>
+                    <div class="tip-text">Use &sigma;<sup>2</sup> = (&Sigma;<em>x<sub>i</sub></em><sup>2</sup>/<em>n</em>) &minus; (&#x1D465;)<sup>2</sup>. For 2,4,6,8: &Sigma;<em>x<sub>i</sub></em><sup>2</sup> = 120, and = 30, &#x1D465; = 5, &#x1D465;<sup>2</sup> = 25, so &sigma;<sup>2</sup> = 30&minus;25 = 5. This is 3x faster than computing deviations.</div>
+                </div>
+            </div>
                 <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
                 <div id="practice-qs"></div>
                 <div style="display:flex;gap:10px;margin-top:10px">
@@ -128,12 +867,12 @@
                 </div>
                 <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
                     <span></span>
-                    <a href="lesson-calculus.html" class="btn btn-success">Calculus &#x2192;</a>
+                    <a href="lesson-calculus.html" class="btn btn-success">Calculus →</a>
                 </div>
             </div>
         </div>
         <script>
-        var practiceQs = [{"id":1041,"text":"If x + 1/x = 5, find x² + 1/x².","options":[{"l":"a","t":"23","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"27","c":false},{"l":"d","t":"21","c":false}],"sol":"x² + 1/x² = (x + 1/x)² - 2 = 25 - 2 = 23."},{"id":1042,"text":"If a + b + c = 0, find the value of (a²/bc) + (b²/ca) + (c²/ab).","options":[{"l":"a","t":"1","c":false},{"l":"b","t":"3","c":true},{"l":"c","t":"0","c":false},{"l":"d","t":"abc","c":false}],"sol":"a+b+c = 0 => a³+b³+c³ = 3abc. So (a²/bc + b²/ca + c²/ab) = (a³+b³+c³)/abc = 3abc/abc = 3."},{"id":1043,"text":"If x = 2 + √3, find the value of x + 1/x.","options":[{"l":"a","t":"2","c":false},{"l":"b","t":"4","c":true},{"l":"c","t":"2√3","c":false},{"l":"d","t":"3","c":false}],"sol":"1/x = 1/(2+√3) = (2-√3)/(4-3) = 2-√3. So x + 1/x = (2+√3)+(2-√3) = 4."},{"id":1044,"text":"If x² - 5x + 6 = 0, find the sum of squares of the roots.","options":[{"l":"a","t":"13","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"10","c":false},{"l":"d","t":"17","c":false}],"sol":"For ax²+bx+c=0, sum of roots = -b/a = 5, product = c/a = 6. Sum of squares = (sum)² - 2(product) = 25 - 12 = 13."},{"id":1045,"text":"If a³ - b³ = 56 and a - b = 2, find ab.","options":[{"l":"a","t":"6","c":true},{"l":"b","t":"8","c":false},{"l":"c","t":"4","c":false},{"l":"d","t":"10","c":false}],"sol":"a³-b³ = (a-b)(a²+ab+b²) = 2(a²+ab+b²) = 56 => a²+ab+b² = 28. Also (a-b)² = a²-2ab+b² = 4. Subtracting: (a²+ab+b²)-(a²-2ab+b²)=28-4 => 3ab=24 => ab=8."},{"id":80241,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":80242,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":80243,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":80244,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":80245,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":80246,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":80247,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":80248,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":80249,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":80250,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":80251,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":80252,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":80253,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":80254,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":80255,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."},{"id":81891,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":81892,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":81893,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":81894,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":81895,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":81896,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":81897,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":81898,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":81899,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":81900,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":81901,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":81902,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":81903,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":81904,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":81905,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."},{"id":81906,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":81907,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":81908,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":81909,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":81910,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":81911,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":81912,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":81913,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":81914,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":81915,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":81916,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":81917,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":81918,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":81919,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":81920,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."}];
+        var practiceQs = [{"id":2001,"text":"If n(A) = 40, n(B) = 60, and n(A ∪ B) = 80, find n(A ∩ B).","options":[{"l":"a","t":"10","c":false},{"l":"b","t":"20","c":true},{"l":"c","t":"30","c":false},{"l":"d","t":"40","c":false}],"sol":"n(A ∪ B) = n(A) + n(B) − n(A ∩ B) ⇒ 80 = 40 + 60 − n(A ∩ B) ⇒ n(A ∩ B) = 20."},{"id":2002,"text":"Find the modulus of (3 + 4i)(1 − 2i).","options":[{"l":"a","t":"5√5","c":true},{"l":"b","t":"5","c":false},{"l":"c","t":"25","c":false},{"l":"d","t":"√5","c":false}],"sol":"|3+4i| = 5, |1−2i| = √5. Using product property, we get 5√5."},{"id":2003,"text":"If ω is a cube root of unity, find 1 + ω + ω².","options":[{"l":"a","t":"0","c":true},{"l":"b","t":"1","c":false},{"l":"c","t":"ω","c":false},{"l":"d","t":"−1","c":false}],"sol":"1 + ω + ω² = 0."},{"id":2004,"text":"Nature of roots of 2x² − 4x + 3 = 0?","options":[{"l":"a","t":"Real distinct","c":false},{"l":"b","t":"Real equal","c":false},{"l":"c","t":"Complex","c":true},{"l":"d","t":"Rational","c":false}],"sol":"D = 16 − 24 = −8 < 0, so complex conjugate roots."},{"id":2005,"text":"If α, β are roots of x² − 5x + 6 = 0, find α² + β².","options":[{"l":"a","t":"13","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"10","c":false},{"l":"d","t":"17","c":false}],"sol":"α+β = 5, αβ = 6. α²+β² = 25 − 12 = 13."},{"id":2006,"text":"5th term of AP is 17, 10th term is 32. Find d.","options":[{"l":"a","t":"2","c":false},{"l":"b","t":"3","c":true},{"l":"c","t":"4","c":false},{"l":"d","t":"5","c":false}],"sol":"a+4d=17, a+9d=32. Subtract: 5d=15 ⇒ d=3."},{"id":2007,"text":"Sum of infinite GP: 1 + 1/2 + 1/4 + ...","options":[{"l":"a","t":"2","c":true},{"l":"b","t":"3","c":false},{"l":"c","t":"1.5","c":false},{"l":"d","t":"4","c":false}],"sol":"S∞ = a/(1−r) = 1/(1−½) = 2."},{"id":2008,"text":"How many 3-digit numbers from digits 1-5 without repetition?","options":[{"l":"a","t":"60","c":true},{"l":"b","t":"120","c":false},{"l":"c","t":"20","c":false},{"l":"d","t":"125","c":false}],"sol":"5×4×3 = 60."},{"id":2009,"text":"Coefficient of x³ in (1 + x)⁷?","options":[{"l":"a","t":"35","c":true},{"l":"b","t":"21","c":false},{"l":"c","t":"28","c":false},{"l":"d","t":"15","c":false}],"sol":"⁷C₃ = 35."},{"id":2010,"text":"Determinant of [[2,3],[1,4]]?","options":[{"l":"a","t":"5","c":true},{"l":"b","t":"11","c":false},{"l":"c","t":"−5","c":false},{"l":"d","t":"10","c":false}],"sol":"det = 8−3 = 5."},{"id":2011,"text":"Probability of sum 7 with two dice?","options":[{"l":"a","t":"1/6","c":true},{"l":"b","t":"1/12","c":false},{"l":"c","t":"5/36","c":false},{"l":"d","t":"1/9","c":false}],"sol":"6/36 = 1/6."},{"id":2012,"text":"Mean of 2, 4, 6, 8, 10?","options":[{"l":"a","t":"4","c":false},{"l":"b","t":"5","c":false},{"l":"c","t":"6","c":true},{"l":"d","t":"7","c":false}],"sol":"Sum = 30, mean = 6."}];
         var answered={},correctCount=0,lessonSlug="algebra";
         function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
         function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}

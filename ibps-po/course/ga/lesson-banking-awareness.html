@@ -82,9 +82,11 @@
         .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
         .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
         @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+        body{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+        body{-webkit-touch-callout:none}
     </style>
 </head>
-<body>
+<body oncontextmenu="return false">
     <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="../index.html">IBPS PO</a><a href="index.html" class="active">Course</a></div></div></nav>
     <div class="container">
         <div class="flex-row">
@@ -105,10 +107,7 @@
                     <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
                         <span style="font-size:.75em;color:var(--text-muted)">Banking System · RBI · Financial Terms · Regulations · Schemes</span>
                     </div>
-                    <div style="display:flex;gap:8px;margin-top:10px">
-                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
-                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
-                    </div>
+
                 </div>
                 <div class="lesson-body">
                     <h3>Learning Objectives</h3>
