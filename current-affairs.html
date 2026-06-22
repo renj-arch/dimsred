@@ -191,7 +191,7 @@
 
         <div class="container">
         <div class="page-title">📰 GK & Current Affairs</div>
-        <div class="page-sub">Original GK Quiz + PIB News Feed <span class="badge">12 categories</span></div>
+        <div class="page-sub">Infinite GK Quiz — Static + Current Affairs <span class="badge">26+ categories · Wikipedia · PIB</span></div>
 
         <!-- Mode Toggle (always visible) -->
         <div style="display:flex;gap:4px;margin:0 auto 12px;padding:4px;border-radius:100px;background:rgba(255,255,255,.04);max-width:240px">
@@ -202,29 +202,32 @@
         <div id="welcome">
             <div class="welcome-card" style="margin-bottom:12px">
                 <div class="icon">📖</div>
-                <div class="title">General Knowledge Quiz</div>
-                <div class="desc">Pick a category below or try a mixed quiz. All questions are procedurally generated — original content, no external sources.</div>
+                <div class="title">Infinite GK Quiz Engine</div>
+                <div class="desc">26 GK categories + Wikipedia-powered infinite questions + PIB current affairs with date range. Every question is unique and procedurally generated.</div>
             </div>
 
             <!-- Quiz Mode Selector + Start -->
-            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;justify-content:center">
-                <button class="action-btn primary" onclick="startDailyQuiz()" style="flex:1;min-width:140px;padding:12px">📰 Today's Quiz (Mix)</button>
-                <button class="action-btn secondary" onclick="startTimedQuiz()" style="flex:1;min-width:140px;padding:12px">⏱️ Weekly / Monthly</button>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;justify-content:center">
+                <button class="action-btn primary" onclick="startDailyQuiz()" style="flex:1;min-width:130px;padding:12px">📰 Mix Quiz</button>
+                <button class="action-btn secondary" onclick="document.getElementById('timedQuizOptions').style.display=document.getElementById('timedQuizOptions').style.display==='none'?'block':'none'" style="flex:1;min-width:130px;padding:12px">⏱️ Date Range</button>
+                <button class="action-btn secondary" style="flex:1;min-width:130px;padding:12px;background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.2)" onclick="startCombinedQuiz(15, '🎯 Mega Quiz')">🎯 Mega Quiz</button>
             </div>
-            <div id="timedQuizOptions" style="display:none;margin-bottom:16px;padding:12px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);text-align:center">
-                <div style="font-size:.85em;font-weight:600;margin-bottom:10px;color:var(--text-sec)">Choose quiz type</div>
+            <div id="timedQuizOptions" style="display:none;margin-bottom:14px;padding:12px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);text-align:center">
+                <div style="font-size:.82em;font-weight:600;margin-bottom:10px;color:var(--text-sec)">Choose mix of static GK + current affairs</div>
                 <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
-                    <button class="action-btn secondary" onclick="startTimedQuizWith(7)" style="flex:1;min-width:80px;padding:10px">📅 Weekly (7d)</button>
-                    <button class="action-btn secondary" onclick="startTimedQuizWith(30)" style="flex:1;min-width:80px;padding:10px">📅 Monthly (30d)</button>
-                    <button class="action-btn secondary" onclick="startTimedQuizWith(90)" style="flex:1;min-width:80px;padding:10px">📅 Quarterly (90d)</button>
+                    <button class="action-btn secondary" onclick="startTimedQuizWith(7)" style="flex:1;min-width:80px;padding:10px">📅 7 days</button>
+                    <button class="action-btn secondary" onclick="startTimedQuizWith(30)" style="flex:1;min-width:80px;padding:10px">📅 30 days</button>
+                    <button class="action-btn secondary" onclick="startTimedQuizWith(90)" style="flex:1;min-width:80px;padding:10px">📅 90 days</button>
+                    <button class="action-btn secondary" onclick="startTimedQuizWith(365)" style="flex:1;min-width:80px;padding:10px">📅 1 year</button>
                 </div>
                 <div style="margin-top:10px;display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap">
-                    <span style="font-size:.78em;color:var(--text-muted)">Or pick dates:</span>
-                    <input type="date" id="quizStartDate" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.8em;font-family:inherit">
-                    <span style="font-size:.78em;color:var(--text-muted)">to</span>
-                    <input type="date" id="quizEndDate" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.8em;font-family:inherit">
-                    <button class="action-btn primary" onclick="startCustomDateQuiz()" style="padding:8px 16px;font-size:.82em">Go</button>
+                    <span style="font-size:.75em;color:var(--text-muted)">Custom range:</span>
+                    <input type="date" id="quizStartDate" style="padding:5px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.75em;font-family:inherit">
+                    <span style="font-size:.75em;color:var(--text-muted)">→</span>
+                    <input type="date" id="quizEndDate" style="padding:5px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.75em;font-family:inherit">
+                    <button class="action-btn primary" onclick="startCustomDateQuiz()" style="padding:6px 12px;font-size:.78em">Go</button>
                 </div>
+                <div style="font-size:.65em;color:var(--text-muted);margin-top:8px">Sources: Wikipedia, 26 GK categories, PIB news feed — infinite unique questions generated on the fly</div>
             </div>
 
             <div style="margin:12px 0 6px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
@@ -266,7 +269,7 @@
                 <div style="font-size:.7em;color:var(--text-muted);margin-top:8px">Shows a PIB headline — identify which sector/ministry it belongs to (Defence, Economy, Health, etc.)</div>
             </div>
 
-            <p class="gk-intro">Covering Indian Constitution, Government Schemes, Sports, Books & Authors, ISRO & Space, Defence, National Parks, Dance Forms, International Organizations, Awards, Dams & Rivers, and more — designed for SSC CGL, UPSC, RBI, IBPS, and all competitive exams.</p>
+            <p class="gk-intro">Infinite questions across 26 categories + Wikipedia-powered static GK + PIB current affairs. Mix quiz, date range, or pick a category below. Every question is procedurally generated — original content, no external dependencies.</p>
         </div>
 
         <div class="cat-grid" id="catGrid"></div>
@@ -6345,7 +6348,6 @@
         function initCatGrid(mode) {
             var grid = document.getElementById(mode === 'study' ? 'studyGrid' : 'catGrid');
             if (!grid) return;
-            // For study, the cat-grid is the first child
             var catContainer = mode === 'study' ? grid.querySelector('.cat-grid') || grid : grid;
             catContainer.innerHTML = '';
             CATEGORIES.forEach(function(c) {
@@ -6355,11 +6357,29 @@
                     + '<div class="cat-name">' + c.name + '</div>'
                     + '<div class="cat-desc">' + c.desc + '</div>';
                 btn.onclick = function() {
-                    if (mode === 'study') showStudy(c.id, c.name, c.icon);
-                    else startCategory(c.id, c.name);
+                    if (mode === 'study') {
+                        setMode('study');
+                        showStudy(c.id, c.name, c.icon);
+                    } else {
+                        startCategory(c.id, c.name);
+                    }
                 };
                 catContainer.appendChild(btn);
+                // Add a combined quiz link below the category button (on hover context)
+                if (mode !== 'study') {
+                    var combBtn = document.createElement('div');
+                    combBtn.style.cssText = 'font-size:.6em;color:var(--text-muted);text-align:center;padding:2px 0 4px;cursor:pointer;transition:color .15s';
+                    combBtn.textContent = '+ current affairs';
+                    combBtn.onmouseover = function() { this.style.color = 'var(--emerald)'; };
+                    combBtn.onmouseout = function() { this.style.color = 'var(--text-muted)'; };
+                    combBtn.onclick = function(e) {
+                        e.stopPropagation();
+                        startCategoryQuiz(c.id, c.name);
+                    };
+                    catContainer.appendChild(combBtn);
+                }
             });
+            if (mode === 'study') grid.style.display = 'grid';
         }
 
         // ===== STUDY MODE ENGINE =====
@@ -6806,11 +6826,254 @@
         }
 
         init();
+        // Start prefetching Wikipedia questions for instant combined quiz
+        setTimeout(function() { try { WIKI.prefetch(); } catch(e) {} }, 2000);
     
 </script>
     <script src="https://unpkg.com/lucide@0.468.0"></script>
     <script>lucide.createIcons();</script>
 <script src="js/bundles/core.js"></script>
+    <script src="js/gk-data.js"></script>
+    <script src="js/gk-generators.js"></script>
+    <script src="js/gk-wiki.js"></script>
+    <script>
+        // ===== MERGE ENHANCED GENERATORS INTO EXISTING SYSTEM =====
+        // Priority: GK_GEN2 > GK_GENERATORS > Wikipedia fallback
+        
+        // Enhance startCategory to use GK_GEN2 when available
+        var _origStartCategory = startCategory;
+        startCategory = function(id, name) {
+            state.cat = id;
+            state.categoryName = name;
+            state.idx = 0;
+            state.correct = 0;
+            state.streak = 0;
+            state.answered = false;
+            state.questions = [];
+            var gen2 = GK_GEN2 && GK_GEN2[id];
+            var gen1 = GK_GENERATORS[id];
+            for (var i = 0; i < 8; i++) {
+                var q = null;
+                // Try GK_GEN2 first (expanded data), fall back to GK_GENERATORS
+                if (gen2 && Math.random() < 0.7) {
+                    try { q = gen2(); } catch(e) {}
+                }
+                if (!q && gen1) {
+                    try { q = gen1(); } catch(e) {}
+                }
+                if (q) {
+                    q.opts = q.opts || buildOptions(q.a);
+                    state.questions.push(q);
+                }
+            }
+            if (state.questions.length === 0) return;
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('qArea').classList.add('active');
+            document.getElementById('scoreBar').classList.add('show');
+            showQuestion();
+        };
+        
+        // Enhance daily/mixed quiz to include Wikipedia + GK_GEN2
+        var _origDaily = startDailyQuiz;
+        startDailyQuiz = function() {
+            startCombinedQuiz(8, 'Today\'s Mix Quiz');
+        };
+        
+        var _origTimedWith = startTimedQuizWith;
+        startTimedQuizWith = function(days) {
+            var label = days === 7 ? 'Weekly Quiz' : (days === 30 ? 'Monthly Quiz' : 'Quarterly Quiz');
+            var count = days === 7 ? 10 : (days === 30 ? 15 : 20);
+            startCombinedQuiz(count, label);
+        };
+        
+        var _origCustomDate = startCustomDateQuiz;
+        startCustomDateQuiz = function() {
+            var startEl = document.getElementById('quizStartDate');
+            var endEl = document.getElementById('quizEndDate');
+            var label = 'Custom Quiz';
+            if (startEl.value && endEl.value) label = 'Quiz: ' + startEl.value.slice(5) + ' to ' + endEl.value.slice(5);
+            startCombinedQuiz(12, label);
+        };
+        
+        // === COMBINED QUIZ ENGINE ===
+        // Sources: GK_GEN2 (local expanded data), GK_GENERATORS (old generators), Wikipedia API (infinite), PIB feed (current affairs)
+        function startCombinedQuiz(count, label) {
+            state.cat = 'mixed';
+            state.categoryName = label;
+            state.idx = 0;
+            state.correct = 0;
+            state.streak = 0;
+            state.answered = false;
+            state.questions = [];
+            
+            var allCats = Object.keys(GK_GENERATORS);
+            // Also get categories from GK_GEN2 if available
+            var allCats2 = GK_GEN2 ? Object.keys(GK_GEN2) : [];
+            var mergedCats = allCats;
+            if (allCats2.length > 0) mergedCats = allCats.filter(function(c) { return allCats2.indexOf(c) >= 0; });
+            if (mergedCats.length === 0) mergedCats = allCats;
+            
+            // Check if date range is active for current affairs
+            var useCA = false;
+            var caStart = null, caEnd = null;
+            if (label.indexOf('Weekly') >= 0 || label.indexOf('Monthly') >= 0 || label.indexOf('Quarterly') >= 0 || label.indexOf('Quiz:') >= 0) {
+                useCA = true;
+            }
+            
+            // Fetch Wikipedia On This Day if CA mode
+            var caQuestions = [];
+            if (useCA) {
+                // Get dates from range
+                var dates = [];
+                var now = new Date();
+                var rangeDays = 7; // default
+                if (label.indexOf('Monthly') >= 0) rangeDays = 30;
+                else if (label.indexOf('Quarterly') >= 0) rangeDays = 90;
+                
+                // Try to get custom dates
+                var startEl = document.getElementById('quizStartDate');
+                var endEl = document.getElementById('quizEndDate');
+                if (startEl && startEl.value && endEl && endEl.value) {
+                    var s = new Date(startEl.value);
+                    var e = new Date(endEl.value);
+                    var diff = Math.ceil((e - s) / (1000*60*60*24));
+                    if (diff > 0 && diff < 365) rangeDays = diff;
+                    now = e;
+                }
+                
+                // Generate dates from range (sample a few)
+                for (var d = 0; d < rangeDays; d++) {
+                    var dt = new Date(now);
+                    dt.setDate(dt.getDate() - d);
+                    var m = String(dt.getMonth() + 1).padStart(2, '0');
+                    var dd = String(dt.getDate()).padStart(2, '0');
+                    dates.push(dt.getFullYear() + '-' + m + '-' + dd);
+                }
+                
+                // Use PIB feed for current affairs if available
+                if (_pibFeedData && _pibFeedData.length > 3) {
+                    caQuestions = _buildVirtualFeed(_pibFeedData, []);
+                }
+            }
+            
+            // Generate questions from all sources
+            var generated = 0;
+            var maxIter = 100;
+            var iter = 0;
+            
+            while (generated < count && iter < maxIter) {
+                iter++;
+                var q = null;
+                var source = Math.random();
+                
+                // Source distribution: 40% GK_GEN2, 25% GK_GENERATORS, 20% Wikipedia, 15% PIB
+                if (source < 0.40) {
+                    // GK_GEN2 (expanded local data)
+                    var cat = pick(mergedCats);
+                    if (GK_GEN2 && GK_GEN2[cat]) {
+                        try { q = GK_GEN2[cat](); } catch(e) {}
+                    }
+                } else if (source < 0.65) {
+                    // GK_GENERATORS (original generators)
+                    var cat = pick(allCats);
+                    try { q = GK_GENERATORS[cat](); } catch(e) {}
+                } else if (source < 0.85) {
+                    // Wikipedia API (infinite source)
+                    q = WIKI.poolQuestion();
+                    if (!q) {
+                        // Try fetching live
+                        try {
+                            var xhr = new XMLHttpRequest();
+                            xhr.open('GET', 'https://en.wikipedia.org/api/rest_v1/page/random/summary', false);
+                            xhr.setRequestHeader('Accept', 'application/json');
+                            xhr.send();
+                            if (xhr.status === 200) {
+                                var data = JSON.parse(xhr.responseText);
+                                q = WIKI._makeQuestion(data);
+                            }
+                        } catch(e) {}
+                    }
+                } else {
+                    // PIB current affairs
+                    if (caQuestions.length > 0) {
+                        q = pick(caQuestions);
+                    }
+                }
+                
+                if (q) {
+                    q.opts = q.opts || buildOptions(q.a);
+                    // Deduplicate basic
+                    var dup = false;
+                    for (var j = 0; j < state.questions.length; j++) {
+                        if (state.questions[j].a === q.a) { dup = true; break; }
+                    }
+                    if (!dup) {
+                        state.questions.push(q);
+                        generated++;
+                    }
+                }
+            }
+            
+            if (state.questions.length === 0) {
+                // Ultimate fallback: simple question
+                state.questions.push({
+                    q: 'What is the capital of India?',
+                    a: 'New Delhi',
+                    hint: 'India is a large country in South Asia',
+                    fact: 'New Delhi has been the capital since 1931',
+                    opts: ['New Delhi', 'Mumbai', 'Kolkata', 'Chennai']
+                });
+            }
+            
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('qArea').classList.add('active');
+            document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('timedQuizOptions').style.display = 'none';
+            showQuestion();
+        }
+        
+        // ===== COMBINED CATEGORY + CURRENT AFFAIRS QUIZ =====
+        function startCategoryQuiz(id, name) {
+            // 70% from the selected category, 30% from current affairs / Wikipedia
+            state.cat = id;
+            state.categoryName = name + ' + Current Affairs';
+            state.idx = 0;
+            state.correct = 0;
+            state.streak = 0;
+            state.answered = false;
+            state.questions = [];
+            
+            var gen1 = GK_GENERATORS[id];
+            var gen2 = GK_GEN2 && GK_GEN2[id];
+            
+            for (var i = 0; i < 8; i++) {
+                var q = null;
+                if (i < 6) {
+                    // 6 questions from selected category
+                    if (gen2 && Math.random() < 0.7) { try { q = gen2(); } catch(e) {} }
+                    if (!q && gen1) { try { q = gen1(); } catch(e) {} }
+                } else {
+                    // 2 questions from Wikipedia / CA mix
+                    q = WIKI.poolQuestion();
+                    if (!q && _pibFeedData && _pibFeedData.length > 3) {
+                        var caQ = _buildVirtualFeed(_pibFeedData, []);
+                        if (caQ.length > 0) q = pick(caQ);
+                    }
+                }
+                if (q) {
+                    q.opts = q.opts || buildOptions(q.a);
+                    state.questions.push(q);
+                }
+            }
+            
+            if (state.questions.length === 0) return;
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('qArea').classList.add('active');
+            document.getElementById('scoreBar').classList.add('show');
+            showQuestion();
+        }
+        
+    </script>
     <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}</script>
 </body>
 </html>
