@@ -191,7 +191,7 @@
 
         <div class="container">
         <div class="page-title">📰 GK & Current Affairs</div>
-        <div class="page-sub">Infinite GK Quiz — Static + Current Affairs <span class="badge">26+ categories · Wikipedia · PIB</span></div>
+        <div class="page-sub">GK Quiz — Static + Current Affairs <span class="badge">26 categories · PIB</span></div>
 
         <!-- Mode Toggle (always visible) -->
         <div style="display:flex;gap:4px;margin:0 auto 12px;padding:4px;border-radius:100px;background:rgba(255,255,255,.04);max-width:240px">
@@ -203,7 +203,7 @@
             <div class="welcome-card" style="margin-bottom:12px">
                 <div class="icon">📖</div>
                 <div class="title">Infinite GK Quiz Engine</div>
-                <div class="desc">26 GK categories + Wikipedia-powered infinite questions + PIB current affairs with date range. Every question is unique and procedurally generated.</div>
+                <div class="desc">26 GK categories + PIB current affairs with date range. Every question is procedurally generated from verified static data.</div>
             </div>
 
             <!-- Quiz Mode Selector + Start -->
@@ -227,7 +227,7 @@
                     <input type="date" id="quizEndDate" style="padding:5px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.75em;font-family:inherit">
                     <button class="action-btn primary" onclick="startCustomDateQuiz()" style="padding:6px 12px;font-size:.78em">Go</button>
                 </div>
-                <div style="font-size:.65em;color:var(--text-muted);margin-top:8px">Sources: Wikipedia, 26 GK categories, PIB news feed — infinite unique questions generated on the fly</div>
+                <div style="font-size:.65em;color:var(--text-muted);margin-top:8px">Sources: 26 GK categories, PIB news feed</div>
             </div>
 
             <div style="margin:12px 0 6px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
@@ -269,7 +269,7 @@
                 <div style="font-size:.7em;color:var(--text-muted);margin-top:8px">Shows a PIB headline — identify which sector/ministry it belongs to (Defence, Economy, Health, etc.)</div>
             </div>
 
-            <p class="gk-intro">Infinite questions across 26 categories + Wikipedia-powered static GK + PIB current affairs. Mix quiz, date range, or pick a category below. Every question is procedurally generated — original content, no external dependencies.</p>
+            <p class="gk-intro">GK questions across 26 categories + PIB current affairs. Mix quiz, date range, or pick a category below. Every question is drawn from a verified static database of 1,100+ items.</p>
         </div>
 
         <div class="cat-grid" id="catGrid"></div>
@@ -5726,8 +5726,8 @@
             state.streak = 0;
             state.answered = false;
             state.questions = [];
-            var gen1 = GK_GENERATORS[id];
             var gen2 = GK_GEN2 && GK_GEN2[id];
+            var gen1 = GK_GENERATORS[id];
             for (var i = 0; i < 8; i++) {
                 var q = null;
                 if (gen2 && Math.random() < 0.6) { try { q = gen2(); } catch(e) {} }
@@ -6831,7 +6831,6 @@
         }
 
         init();
-        // Start prefetching Wikipedia questions for instant combined quiz
         setTimeout(function() { try { WIKI.prefetch(); } catch(e) {} }, 2000);
     
 </script>
@@ -6843,42 +6842,9 @@
     <script src="js/gk-wiki.js"></script>
     <script>
         // ===== MERGE ENHANCED GENERATORS INTO EXISTING SYSTEM =====
-        // Priority: GK_GEN2 > GK_GENERATORS > Wikipedia fallback
+        // Priority: GK_GEN2 > GK_GENERATORS
         
-        // Enhance startCategory to use GK_GEN2 when available
-        var _origStartCategory = startCategory;
-        startCategory = function(id, name) {
-            state.cat = id;
-            state.categoryName = name;
-            state.idx = 0;
-            state.correct = 0;
-            state.streak = 0;
-            state.answered = false;
-            state.questions = [];
-            var gen2 = GK_GEN2 && GK_GEN2[id];
-            var gen1 = GK_GENERATORS[id];
-            for (var i = 0; i < 8; i++) {
-                var q = null;
-                // Try GK_GEN2 first (expanded data), fall back to GK_GENERATORS
-                if (gen2 && Math.random() < 0.7) {
-                    try { q = gen2(); } catch(e) {}
-                }
-                if (!q && gen1) {
-                    try { q = gen1(); } catch(e) {}
-                }
-                if (q) {
-                    q.opts = q.opts || buildOptions(q.a);
-                    state.questions.push(q);
-                }
-            }
-            if (state.questions.length === 0) return;
-            document.getElementById('welcome').style.display = 'none';
-            document.getElementById('qArea').classList.add('active');
-            document.getElementById('scoreBar').classList.add('show');
-            showQuestion();
-        };
-        
-        // Enhance daily/mixed quiz to include Wikipedia + GK_GEN2
+        // daily/mixed quiz, date range, and combined quiz
         var _origDaily = startDailyQuiz;
         startDailyQuiz = function() {
             startCombinedQuiz(8, 'Today\'s Mix Quiz');
@@ -6901,7 +6867,7 @@
         };
         
         // === COMBINED QUIZ ENGINE ===
-        // Sources: GK_GEN2 (local expanded data), GK_GENERATORS (old generators), Wikipedia API (infinite), PIB feed (current affairs)
+        // Sources: GK_GEN2 (expanded local data), GK_GENERATORS (original generators), PIB feed (current affairs)
         function startCombinedQuiz(count, label) {
             state.cat = 'mixed';
             state.categoryName = label;
@@ -6925,7 +6891,6 @@
                 useCA = true;
             }
             
-            // Fetch Wikipedia On This Day if CA mode
             var caQuestions = [];
             if (useCA) {
                 // Get dates from range
@@ -6971,38 +6936,17 @@
                 var q = null;
                 var source = Math.random();
                 
-                // Source distribution: 40% GK_GEN2, 25% GK_GENERATORS, 20% Wikipedia, 15% PIB
-                if (source < 0.40) {
-                    // GK_GEN2 (expanded local data)
+                if (source < 0.45) {
                     var cat = pick(mergedCats);
-                    if (GK_GEN2 && GK_GEN2[cat]) {
-                        try { q = GK_GEN2[cat](); } catch(e) {}
-                    }
-                } else if (source < 0.65) {
-                    // GK_GENERATORS (original generators)
+                    if (GK_GEN2 && GK_GEN2[cat]) { try { q = GK_GEN2[cat](); } catch(e) {} }
+                    if (!q) { try { q = GK_GENERATORS[cat](); } catch(e) {} }
+                } else if (source < 0.70) {
                     var cat = pick(allCats);
                     try { q = GK_GENERATORS[cat](); } catch(e) {}
                 } else if (source < 0.85) {
-                    // Wikipedia API (infinite source)
-                    q = WIKI.poolQuestion();
-                    if (!q) {
-                        // Try fetching live
-                        try {
-                            var xhr = new XMLHttpRequest();
-                            xhr.open('GET', 'https://en.wikipedia.org/api/rest_v1/page/random/summary', false);
-                            xhr.setRequestHeader('Accept', 'application/json');
-                            xhr.send();
-                            if (xhr.status === 200) {
-                                var data = JSON.parse(xhr.responseText);
-                                q = WIKI._makeQuestion(data);
-                            }
-                        } catch(e) {}
-                    }
+                    if (typeof WIKI !== 'undefined') { try { q = WIKI.poolQuestion(); } catch(e) {} }
                 } else {
-                    // PIB current affairs
-                    if (caQuestions.length > 0) {
-                        q = pick(caQuestions);
-                    }
+                    if (caQuestions.length > 0) { q = pick(caQuestions); }
                 }
                 
                 if (q) {
@@ -7039,7 +6983,6 @@
         
         // ===== COMBINED CATEGORY + CURRENT AFFAIRS QUIZ =====
         function startCategoryQuiz(id, name) {
-            // 70% from the selected category, 30% from current affairs / Wikipedia
             state.cat = id;
             state.categoryName = name + ' + Current Affairs';
             state.idx = 0;
@@ -7054,12 +6997,10 @@
             for (var i = 0; i < 8; i++) {
                 var q = null;
                 if (i < 6) {
-                    // 6 questions from selected category
                     if (gen2 && Math.random() < 0.7) { try { q = gen2(); } catch(e) {} }
                     if (!q && gen1) { try { q = gen1(); } catch(e) {} }
                 } else {
-                    // 2 questions from Wikipedia / CA mix
-                    q = WIKI.poolQuestion();
+                    if (typeof WIKI !== 'undefined') { try { q = WIKI.poolQuestion(); } catch(e) {} }
                     if (!q && _pibFeedData && _pibFeedData.length > 3) {
                         var caQ = _buildVirtualFeed(_pibFeedData, []);
                         if (caQ.length > 0) q = pick(caQ);
