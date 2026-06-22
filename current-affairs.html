@@ -5726,14 +5726,19 @@
             state.streak = 0;
             state.answered = false;
             state.questions = [];
-            // generate 8 questions
-            var gen = GK_GENERATORS[id];
-            if (!gen) return;
+            var gen1 = GK_GENERATORS[id];
+            var gen2 = GK_GEN2 && GK_GEN2[id];
             for (var i = 0; i < 8; i++) {
-                var q = gen();
-                q.opts = q.opts || buildOptions(q.a);
-                state.questions.push(q);
+                var q = null;
+                if (gen2 && Math.random() < 0.6) { try { q = gen2(); } catch(e) {} }
+                if (!q && gen1) { try { q = gen1(); } catch(e) {} }
+                if (!q && typeof WIKI !== 'undefined') { try { q = WIKI.poolQuestion(); } catch(e) {} }
+                if (q) {
+                    q.opts = q.opts || buildOptions(q.a);
+                    state.questions.push(q);
+                }
             }
+            if (state.questions.length === 0) return;
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
