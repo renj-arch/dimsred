@@ -5658,7 +5658,7 @@
             shuffle(optsArr);
             return { q: 'What entity is blanked in this headline?<br><small>"' + blanked + '"</small>', a: entity, opts: optsArr, hint: 'Think about the key organization or entity', fact: selected.link ? '<a href="' + selected.link + '" target="_blank" style="color:var(--cyan)">View source</a>' : '' };
         }
-        var state = { cat: null, questions: [], idx: 0, correct: 0, streak: 0, answered: false, categoryName: '' };
+        var state = { cat: null, questions: [], idx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null };
 
         function _initStudyData() {
             Object.keys(GK_LEARN).forEach(function(cid){ try { studyData[cid] = _parseStudyContent(cid); } catch(e) { studyData[cid] = null; } });
@@ -5700,6 +5700,7 @@
             state.streak = 0;
             state.answered = false;
             state.questions = [];
+            state.restartFn = function() { startCategory(id, name); };
             var gen2 = GK_GEN2 && GK_GEN2[id];
             var gen1 = GK_GENERATORS[id];
             for (var i = 0; i < 8; i++) {
@@ -5854,6 +5855,27 @@
         }
 
         function showEnd() {
+            if (state.questions.length === 0) {
+                document.getElementById('qNum').textContent = 'Session Complete';
+                document.getElementById('qProgress').style.width = '100%';
+                document.getElementById('catTag').textContent = '';
+                document.getElementById('qText').textContent = '📚 Review needed in ' + state.categoryName + '.';
+                document.getElementById('qHint').style.display = 'none';
+                document.getElementById('optGrid').innerHTML = '';
+                document.getElementById('resultFlash').className = 'result-flash';
+                document.getElementById('resultFlash').style.display = 'none';
+                document.getElementById('nextBtn').classList.add('hidden');
+                document.getElementById('intuitionDisplay').style.display = 'none';
+                document.getElementById('nextBtn').textContent = '🔄 Try Again';
+                document.getElementById('nextBtn').classList.remove('hidden');
+                document.getElementById('nextBtn').onclick = function() {
+                    if (state.restartFn) state.restartFn();
+                    else startCategory(state.cat, state.categoryName);
+                    this.onclick = function() { nextQuestion(); };
+                    this.textContent = 'Next →';
+                };
+                return;
+            }
             var pct = Math.round((state.correct / state.questions.length) * 100);
             var grade = pct >= 80 ? '🌟 Excellent!' : (pct >= 60 ? '👏 Good!' : (pct >= 40 ? '💪 Keep going!' : '📚 Review needed'));
             document.getElementById('qNum').textContent = 'Session Complete';
@@ -5869,7 +5891,8 @@
             document.getElementById('nextBtn').textContent = '🔄 Try Again';
             document.getElementById('nextBtn').classList.remove('hidden');
             document.getElementById('nextBtn').onclick = function() {
-                startCategory(state.cat, state.categoryName);
+                if (state.restartFn) state.restartFn();
+                else startCategory(state.cat, state.categoryName);
                 this.onclick = function() { nextQuestion(); };
                 this.textContent = 'Next →';
             };
@@ -5888,6 +5911,7 @@
             state.streak = 0;
             state.answered = false;
             state.questions = [];
+            state.restartFn = function() { startDailyQuiz(); };
             var allCats = Object.keys(GK_GENERATORS);
             for (var i = 0; i < count; i++) {
                 var gen = GK_GENERATORS[pick(allCats)];
@@ -5917,6 +5941,7 @@
             state.streak = 0;
             state.answered = false;
             state.questions = [];
+            state.restartFn = function() { startTimedQuizWith(days); };
             var allCats = Object.keys(GK_GENERATORS);
             var count = days === 7 ? 10 : (days === 30 ? 15 : 20);
             for (var i = 0; i < count; i++) {
@@ -5945,6 +5970,7 @@
             state.streak = 0;
             state.answered = false;
             state.questions = [];
+            state.restartFn = function() { startCustomDateQuiz(); };
             var allCats = Object.keys(GK_GENERATORS);
             var count = 12;
             for (var i = 0; i < count; i++) {
@@ -6850,6 +6876,7 @@
             state.streak = 0;
             state.answered = false;
             state.questions = [];
+            state.restartFn = function() { startCombinedQuiz(count, label); };
             
             var allCats = Object.keys(GK_GENERATORS);
             // Also get categories from GK_GEN2 if available
@@ -6964,6 +6991,7 @@
             state.streak = 0;
             state.answered = false;
             state.questions = [];
+            state.restartFn = function() { startCategoryQuiz(id, name); };
             
             var gen1 = GK_GENERATORS[id];
             var gen2 = GK_GEN2 && GK_GEN2[id];
