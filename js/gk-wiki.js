@@ -135,6 +135,8 @@ WIKI._makeQuestions = function(data) {
   var firstSentence = extract.split('.')[0] || extract;
   var lower = extract.toLowerCase();
 
+  if (extract.length < 100) return [];
+
   WIKI._seenTitles.push(title);
   if (WIKI._seenTitles.length > 200) WIKI._seenTitles.shift();
 
@@ -151,6 +153,10 @@ WIKI._makeQuestions = function(data) {
 
   function pushQ(q) {
     if (!q) return;
+    var a = String(q.a);
+    var aLower = a.toLowerCase();
+    if (aLower.indexOf('various') >= 0 || aLower.indexOf('multiple') >= 0 || aLower.indexOf('unknown') >= 0 || aLower.indexOf('none') >= 0) return;
+    if (a.length < 3) return;
     q._source = 'wiki';
     q._wikiCat = catName;
     results.push(q);
@@ -161,7 +167,13 @@ WIKI._makeQuestions = function(data) {
     return d.indexOf('born') >= 0 || d.indexOf(' was a ') >= 0 || d.indexOf(' is a ') >= 0 || d.indexOf('known for') >= 0 || d.indexOf('king') >= 0 || d.indexOf('queen') >= 0 || d.indexOf('president') >= 0 || d.indexOf('scientist') >= 0 || d.indexOf('author') >= 0 || d.indexOf('artist') >= 0 || d.indexOf('leader') >= 0 || d.indexOf('philosopher') >= 0 || d.indexOf('founder') >= 0 || d.indexOf('inventor') >= 0;
   }
 
+  function isPlace(t) {
+    var d = (desc + ' ' + firstSentence).toLowerCase();
+    return d.indexOf('city') >= 0 || d.indexOf('country') >= 0 || d.indexOf('town') >= 0 || d.indexOf('village') >= 0 || d.indexOf('region') >= 0 || d.indexOf('state') >= 0 || d.indexOf('river') >= 0 || d.indexOf('mountain') >= 0 || d.indexOf('island') >= 0 || d.indexOf('continent') >= 0 || d.indexOf('lake') >= 0 || d.indexOf('ocean') >= 0 || d.indexOf('sea') >= 0 || d.indexOf('desert') >= 0 || d.indexOf('national park') >= 0 || d.indexOf('located') >= 0 || d.indexOf('capital') >= 0 || d.indexOf('province') >= 0;
+  }
+
   var isPersonFlag = isPerson(title);
+  var isPlaceFlag = isPlace(title);
   var factSentences = [title];
   if (desc) factSentences.push(desc);
   var siMax = Math.min(sentences.length, 15);
@@ -173,6 +185,7 @@ WIKI._makeQuestions = function(data) {
 
   // ── YEAR / WHEN QUESTIONS ────────────────────────────────────
   (function() {
+    if (isPersonFlag) return;
     var seen = {};
     for (var yi = 0; yi < years.length; yi++) {
       var y = years[yi];
@@ -199,6 +212,7 @@ WIKI._makeQuestions = function(data) {
 
   // ── LOCATION / WHERE QUESTIONS ───────────────────────────────
   (function() {
+    if (isPersonFlag) return;
     var locAnswers = [];
     if (desc && desc.length < 200) locAnswers.push(desc);
     var locSent = firstSentence.length > 80 ? firstSentence.substr(0, 80) + '...' : firstSentence;
