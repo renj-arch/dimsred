@@ -4131,7 +4131,7 @@
                 ['Namdapha','Arunachal Pradesh','1983','largest park in NE, only park with 4 big cat species'],
                 ['Mudumalai','Tamil Nadu','1990','elephant reserve, part of Nilgiri Biosphere'],
                 ['Great Himalayan','Himachal Pradesh','1984','snow leopard, alpine flora, UNESCO'],
-                ['Valley of Flowers','Uttarakhand','1982','endemic alpine flowers, UNESCO World Heritage'],
+                ['Valley of Flowers','Uttarakhand','1982','Established in 1982 as India\'s 18th national park. Located in Chamoli district of Uttarakhand in the Western Himalayas at 3,600m altitude. Famous for over 600 species of endemic alpine flowers including Brahma Kamal, Blue Poppy, and Cobra Lily. Designated a UNESCO World Heritage Site in 2005 as part of Nanda Devi and Valley of Flowers National Parks. Spreads across 87.5 km² and forms the core zone of Nanda Devi Biosphere Reserve. Best visited from July to September when the valley blooms after monsoon.'],
                 ['Nanda Devi','Uttarakhand','1982','Nanda Devi peak, UNESCO biosphere reserve'],
                 ['Silent Valley','Kerala','1984','tropical rainforest, lion-tailed macaque'],
                 ['Eravikulam','Kerala','1978','Nilgiri Tahr, Neelakurinji flowers (bloom every 12 yrs)'],
@@ -5795,13 +5795,23 @@
         };
         function showQuestion() {
             if (state.idx >= state.questions.length) {
-                showEnd();
-                return;
+                if (state.infinite) {
+                    generateMoreQuestions(5);
+                    if (state.questions.length === 0) { showEnd(); return; }
+                } else {
+                    showEnd();
+                    return;
+                }
             }
             state.answered = false;
             var q = state.questions[state.idx];
-            document.getElementById('qNum').textContent = 'Q ' + (state.idx + 1) + ' / ' + state.questions.length;
-            document.getElementById('qProgress').style.width = ((state.idx / state.questions.length) * 100) + '%';
+            if (state.infinite) {
+                document.getElementById('qNum').textContent = 'Q ' + (state.idx + 1);
+                document.getElementById('qProgress').style.width = ((state.correct / Math.max(state.idx, 1)) * 100) + '%';
+            } else {
+                document.getElementById('qNum').textContent = 'Q ' + (state.idx + 1) + ' / ' + state.questions.length;
+                document.getElementById('qProgress').style.width = ((state.idx / state.questions.length) * 100) + '%';
+            }
             document.getElementById('catTag').textContent = state.categoryName;
             document.getElementById('qText').innerHTML = q.q.replace(/\n/g, '<br>');
             document.getElementById('hintText').textContent = q.hint || 'Think carefully about the options';
@@ -5849,14 +5859,12 @@
                 flash.textContent = '❌ Answer: ' + correct;
             }
             document.getElementById('correctNum').textContent = state.correct;
-            document.getElementById('totalNum').textContent = state.questions.length;
+            document.getElementById('totalNum').textContent = state.infinite ? (state.idx + 1) : state.questions.length;
             document.getElementById('streakNum').textContent = state.streak;
 
             // Show quick fact
-            if (q.fact) {
-                document.getElementById('intuitionText').textContent = q.fact;
-                document.getElementById('intuitionDisplay').style.display = 'block';
-            }
+            document.getElementById('intuitionText').textContent = q.fact || q.q;
+            document.getElementById('intuitionDisplay').style.display = 'block';
             // Enable hint click
             document.getElementById('qHint').onclick = function() {
                 document.getElementById('hintText').classList.toggle('show');
@@ -5868,10 +5876,22 @@
 
         function nextQuestion() {
             state.idx++;
+            // Pre-fetch more questions when running low in infinite mode
+            if (state.infinite && state.idx >= state.questions.length - 3) {
+                generateMoreQuestions(5);
+            }
             showQuestion();
         }
 
         function showEnd() {
+            // In infinite mode, never end — just generate more questions
+            if (state.infinite) {
+                generateMoreQuestions(10);
+                if (state.questions.length > 0) {
+                    showQuestion();
+                    return;
+                }
+            }
             if (state.questions.length === 0) {
                 document.getElementById('qNum').textContent = 'Session Complete';
                 document.getElementById('qProgress').style.width = '100%';
@@ -6886,104 +6906,59 @@
         
         // === COMBINED QUIZ ENGINE ===
         // Sources: GK_GEN2 (expanded local data), GK_GENERATORS (original generators), PIB feed (current affairs)
-        function startCombinedQuiz(count, label) {
-            state.cat = 'mixed';
-            state.categoryName = label;
-            state.idx = 0;
-            state.correct = 0;
-            state.streak = 0;
-            state.answered = false;
-            state.questions = [];
-            state.restartFn = function() { startCombinedQuiz(count, label); };
-            
+        function generateOneQuestion() {
             var allCats = Object.keys(GK_GENERATORS);
-            // Also get categories from GK_GEN2 if available
             var allCats2 = GK_GEN2 ? Object.keys(GK_GEN2) : [];
             var mergedCats = allCats;
             if (allCats2.length > 0) mergedCats = allCats.filter(function(c) { return allCats2.indexOf(c) >= 0; });
             if (mergedCats.length === 0) mergedCats = allCats;
-            
-            // Check if date range is active for current affairs
-            var useCA = false;
-            var caStart = null, caEnd = null;
-            if (label.indexOf('Weekly') >= 0 || label.indexOf('Monthly') >= 0 || label.indexOf('Quarterly') >= 0 || label.indexOf('Quiz:') >= 0) {
-                useCA = true;
+
+            if (typeof WIKI !== 'undefined') {
+                try { WIKI.prefetch(); } catch(e) {}
             }
-            
+
             var caQuestions = [];
-            if (useCA) {
-                // Get dates from range
-                var dates = [];
-                var now = new Date();
-                var rangeDays = 7; // default
-                if (label.indexOf('Monthly') >= 0) rangeDays = 30;
-                else if (label.indexOf('Quarterly') >= 0) rangeDays = 90;
-                
-                // Try to get custom dates
-                var startEl = document.getElementById('quizStartDate');
-                var endEl = document.getElementById('quizEndDate');
-                if (startEl && startEl.value && endEl && endEl.value) {
-                    var s = new Date(startEl.value);
-                    var e = new Date(endEl.value);
-                    var diff = Math.ceil((e - s) / (1000*60*60*24));
-                    if (diff > 0 && diff < 365) rangeDays = diff;
-                    now = e;
-                }
-                
-                // Generate dates from range (sample a few)
-                for (var d = 0; d < rangeDays; d++) {
-                    var dt = new Date(now);
-                    dt.setDate(dt.getDate() - d);
-                    var m = String(dt.getMonth() + 1).padStart(2, '0');
-                    var dd = String(dt.getDate()).padStart(2, '0');
-                    dates.push(dt.getFullYear() + '-' + m + '-' + dd);
-                }
-                
-                // Use PIB feed for current affairs if available
-                if (_pibFeedData && _pibFeedData.length > 3) {
-                    caQuestions = _buildVirtualFeed(_pibFeedData, []);
+            if (_pibFeedData && _pibFeedData.length > 3) {
+                caQuestions = _buildVirtualFeed(_pibFeedData, []);
+            }
+
+            var q = null;
+            var source = Math.random();
+
+            if (source < 0.40) {
+                var cat = pick(mergedCats);
+                if (GK_GEN2 && GK_GEN2[cat]) { try { q = GK_GEN2[cat](); } catch(e) {} }
+                if (!q) { try { q = GK_GENERATORS[cat](); } catch(e) {} }
+            } else if (source < 0.70) {
+                var cat = pick(allCats);
+                try { q = GK_GENERATORS[cat](); } catch(e) {}
+            } else if (source < 0.90) {
+                if (typeof WIKI !== 'undefined') { try { q = WIKI.poolQuestion(); } catch(e) {} }
+            } else {
+                if (caQuestions.length > 0) { q = pick(caQuestions); }
+            }
+
+            if (q) {
+                q.opts = q.opts || buildOptions(q.a);
+                if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
+                for (var j = 0; j < state.questions.length; j++) {
+                    if (state.questions[j].a === q.a) return null;
                 }
             }
-            
-            // Generate questions from all sources
-            var generated = 0;
-            var maxIter = 100;
-            var iter = 0;
-            
-            while (generated < count && iter < maxIter) {
-                iter++;
-                var q = null;
-                var source = Math.random();
-                
-                if (source < 0.45) {
-                    var cat = pick(mergedCats);
-                    if (GK_GEN2 && GK_GEN2[cat]) { try { q = GK_GEN2[cat](); } catch(e) {} }
-                    if (!q) { try { q = GK_GENERATORS[cat](); } catch(e) {} }
-                } else if (source < 0.70) {
-                    var cat = pick(allCats);
-                    try { q = GK_GENERATORS[cat](); } catch(e) {}
-                } else if (source < 0.85) {
-                    if (typeof WIKI !== 'undefined') { try { q = WIKI.poolQuestion(); } catch(e) {} }
-                } else {
-                    if (caQuestions.length > 0) { q = pick(caQuestions); }
-                }
-                
+            return q;
+        }
+
+        function generateMoreQuestions(count) {
+            var added = 0;
+            var maxTries = count * 10;
+            for (var i = 0; i < maxTries && added < count; i++) {
+                var q = generateOneQuestion();
                 if (q) {
-                    q.opts = q.opts || buildOptions(q.a);
-                    // Deduplicate basic
-                    var dup = false;
-                    for (var j = 0; j < state.questions.length; j++) {
-                        if (state.questions[j].a === q.a) { dup = true; break; }
-                    }
-                    if (!dup) {
-                        state.questions.push(q);
-                        generated++;
-                    }
+                    state.questions.push(q);
+                    added++;
                 }
             }
-            
-            if (state.questions.length === 0) {
-                // Ultimate fallback: simple question
+            if (added === 0) {
                 state.questions.push({
                     q: 'What is the capital of India?',
                     a: 'New Delhi',
@@ -6992,6 +6967,21 @@
                     opts: ['New Delhi', 'Mumbai', 'Kolkata', 'Chennai']
                 });
             }
+        }
+
+        function startCombinedQuiz(count, label) {
+            state.cat = 'mixed';
+            state.categoryName = label;
+            state.idx = 0;
+            state.correct = 0;
+            state.streak = 0;
+            state.answered = false;
+            state.questions = [];
+            state.infinite = true;
+            state.restartFn = function() { startCombinedQuiz(count, label); };
+            
+            // Generate first batch for instant play
+            generateMoreQuestions(5);
             
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
