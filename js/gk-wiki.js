@@ -164,10 +164,10 @@ WIKI._makeQuestions = function(data) {
   var isPersonFlag = isPerson(title);
   var factSentences = [title];
   if (desc) factSentences.push(desc);
-  var siMax = Math.min(sentences.length, 3);
+  var siMax = Math.min(sentences.length, 6);
   for (var fi = 0; fi < siMax; fi++) {
     var sf = sentences[fi].trim();
-    if (sf.length > 15 && factSentences.join('. ').length + sf.length < 600) factSentences.push(sf);
+    if (sf.length > 15 && factSentences.join('. ').length + sf.length < 1200) factSentences.push(sf);
   }
   var richFact = factSentences.join('. ');
 
