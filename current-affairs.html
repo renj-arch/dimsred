@@ -5347,7 +5347,7 @@
             shuffle(opts);
 
             return {
-                q: selected.q,
+                q: selected.q + '<br><small>' + (selected.fact || '') + '</small>',
                 a: selected.a,
                 opts: opts,
                 hint: selected.hint,
@@ -5658,7 +5658,7 @@
                 }
                 while (optsArr.length < 4) optsArr.push('None of the above');
                 shuffle(optsArr);
-                return { q: qa.q, a: qa.a, opts: optsArr, hint: qa.hint || 'Read the headline carefully', fact: selected.link ? '<a href="' + selected.link + '" target="_blank" style="color:var(--cyan)">View source</a>' : '' };
+                return { q: qa.q + '<br><small>"' + title + '"</small>', a: qa.a, opts: optsArr, hint: qa.hint || 'Read the headline carefully', fact: (qa.fact || '') + (selected.link ? ' <a href="' + selected.link + '" target="_blank" style="color:var(--cyan)">Source</a>' : '') };
             }
             // Fallback: blank-out entity
             var entity = _extractKeyEntity(title);
@@ -5672,7 +5672,13 @@
             }
             while (optsArr.length < 4) optsArr.push('None of the above');
             shuffle(optsArr);
-            return { q: 'What entity is blanked in this headline?<br><small>"' + blanked + '"</small>', a: entity, opts: optsArr, hint: 'Think about the key organization or entity', fact: selected.link ? '<a href="' + selected.link + '" target="_blank" style="color:var(--cyan)">View source</a>' : '' };
+            return { q: 'What entity is blanked in this headline?<br><small>"' + blanked + '"</small>', a: entity, opts: optsArr, hint: 'Think about the key organization or entity', fact: ('PIB: ' + title) + (selected.link ? ' <a href="' + selected.link + '" target="_blank" style="color:var(--cyan)">Source</a>' : '') };
+        }
+        function isValidAnswer(a) {
+            if (!a) return false;
+            var l = String(a).toLowerCase();
+            if (l.indexOf('various') >= 0 || l.indexOf('multiple') >= 0 || l.indexOf('unknown') >= 0) return false;
+            return a.length >= 3;
         }
         var state = { cat: null, questions: [], idx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null };
 
@@ -5727,6 +5733,7 @@
                 if (q) {
                     q.opts = q.opts || buildOptions(q.a);
                     if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
+                    if (!isValidAnswer(q.a)) continue;
                     state.questions.push(q);
                 }
             }
@@ -5737,7 +5744,6 @@
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
         }
-
         function buildOptions(correct) {
             var opts = [correct];
             var pool = GK_DISTRACTORS[state.cat] || [];
@@ -6942,6 +6948,7 @@
             if (q) {
                 q.opts = q.opts || buildOptions(q.a);
                 if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
+                if (!isValidAnswer(q.a)) return null;
                 for (var j = 0; j < state.questions.length; j++) {
                     if (state.questions[j].a === q.a) return null;
                 }
@@ -7021,6 +7028,7 @@
                 if (q) {
                     q.opts = q.opts || buildOptions(q.a);
                     if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
+                    if (!isValidAnswer(q.a)) continue;
                     state.questions.push(q);
                 }
             }
