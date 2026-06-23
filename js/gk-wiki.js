@@ -48,12 +48,32 @@ WIKI._buildOpts = function(correct) {
   return opts;
 };
 
+WIKI._examTopics = ['India history','Geography of India','Indian Constitution','Indian economy','Indian culture','Indian art','Indian literature','Indian music','Indian dance','Indian architecture','Physics','Chemistry','Biology','World history','United Nations','Climate change','Computer science','Indian astronomy','Indian mathematics','Indian philosophy','Indian independence movement','Indian freedom fighters','World wars','Indian scientists','Indian Nobel laureates','Indian rivers','Himalayas','Indian agriculture','Indian defence','Indian space program','Indian democracy','Indian elections','Indian government','Indian judiciary','Indian education','Indian tribes','Biodiversity','Indian national parks','Indian states','Indian dance forms','Indian music instruments','Indian festivals','Indian temples','Indian monuments','Indian literature works','Indian authors','Indian sports','Olympics'];
+
 WIKI.randomQuestion = function() {
   return fetch('https://en.wikipedia.org/api/rest_v1/page/random/summary')
     .then(function(r) { return r.json(); })
     .then(function(data) {
       if (!data || !data.title) return WIKI.randomQuestion();
       return WIKI._makeQuestions(data);
+    })
+    .catch(function() { return []; });
+};
+
+WIKI.searchQuestion = function() {
+  var topic = pick(WIKI._examTopics);
+  return fetch('https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=' + encodeURIComponent(topic) + '&srlimit=50&format=json&origin=*')
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      var pages = res && res.query && res.query.search;
+      if (!pages || pages.length === 0) return [];
+      var selected = pick(pages);
+      return fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(selected.title))
+        .then(function(r2) { return r2.json(); })
+        .then(function(data) {
+          if (!data || !data.title) return [];
+          return WIKI._makeQuestions(data);
+        });
     })
     .catch(function() { return []; });
 };
@@ -118,9 +138,22 @@ WIKI.prefetch = function() {
     }).catch(function() {});
   }
 
-  // Launch both
+  function fetchSearch() {
+    if (WIKI._pool.length >= WIKI._poolSize) return;
+    WIKI.searchQuestion().then(function(qs) {
+      if (qs && qs.length) {
+        for (var i = 0; i < qs.length; i++) {
+          if (WIKI._pool.length < WIKI._poolSize) WIKI._pool.push(qs[i]);
+        }
+      }
+      if (WIKI._pool.length < WIKI._poolSize) setTimeout(fetchSearch, 100);
+    }).catch(function() { setTimeout(fetchSearch, 300); });
+  }
+
+  // Launch all sources
   fetchOnThisDay();
   for (var pi = 0; pi < 3; pi++) { setTimeout(fetchOne, pi * 50); }
+  for (var si = 0; si < 2; si++) { setTimeout(fetchSearch, 200 + si * 100); }
 };
 
 WIKI.poolQuestion = function() {
