@@ -163,12 +163,13 @@ WIKI.poolQuestion = function() {
 
 WIKI._makeQuestions = function(data) {
   var title = data.title;
-  var extract = data.extract || '';
+  var extract = (data.extract || '').replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
   var desc = data.description || '';
   var firstSentence = extract.split('.')[0] || extract;
   var lower = extract.toLowerCase();
 
   if (extract.length < 100) return [];
+  if (/^Outline of/i.test(title)) return [];
 
   WIKI._seenTitles.push(title);
   if (WIKI._seenTitles.length > 200) WIKI._seenTitles.shift();
@@ -186,7 +187,9 @@ WIKI._makeQuestions = function(data) {
 
   function pushQ(q) {
     if (!q) return;
-    var a = String(q.a);
+    var a = String(q.a).replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+    if (a.length > 80) a = a.substr(0, 77) + '...';
+    q.a = a;
     var aLower = a.toLowerCase();
     if (aLower.indexOf('various') >= 0 || aLower.indexOf('multiple') >= 0 || aLower.indexOf('unknown') >= 0 || aLower.indexOf('none') >= 0) return;
     if (a.length < 3) return;
