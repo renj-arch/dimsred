@@ -1164,237 +1164,104 @@ function isPrime(n) {
 
 function generateSeriesQuestion(diff) {
   var types = [
-    // arithmetic
-    function() { var s = rand(1, 10); var d = rand(2, 5 + diff); var n = 5; var seq = []; for (var i = 0; i < n; i++) { seq.push(s + i * d); } var ans = s + n * d; var pattern = 'Arithmetic (+' + d + ')'; var hint = 'Constant difference of ' + d; return { seq: seq, answer: ans, pattern: pattern, hint: hint }; },
-    // geometric
-    function() { var s = rand(1, 5); var r = rand(2, 4); var n = 5; var seq = []; for (var i = 0; i < n; i++) { seq.push(s * Math.pow(r, i)); } var ans = s * Math.pow(r, n); var pattern = 'Geometric (�' + r + ')'; var hint = 'Multiply by ' + r + ' each step'; return { seq: seq, answer: ans, pattern: pattern, hint: hint }; },
-    // squares
-    function() { var s = rand(3, 7 + diff); var n = 5; var seq = []; for (var i = 0; i < n; i++) { seq.push((s + i) * (s + i)); } var ans = (s + n) * (s + n); var pattern = 'Squares'; var hint = 'Squares of consecutive numbers starting from ' + s; return { seq: seq, answer: ans, pattern: pattern, hint: hint }; },
-    // cubes
-    function() { var s = rand(2, 5); var n = 4; var seq = []; for (var i = 0; i < n; i++) { seq.push(Math.pow(s + i, 3)); } var ans = Math.pow(s + n, 3); var pattern = 'Cubes'; var hint = 'Cubes of consecutive numbers starting from ' + s; return { seq: seq, answer: ans, pattern: pattern, hint: hint }; },
-    // Fibonacci-like
-    function() { var a = rand(1, 5); var b = rand(1, 5); var n = 6; var seq = [a, b]; for (var i = 2; i < n; i++) { seq.push(seq[i-1] + seq[i-2]); } var ans = seq[seq.length - 1] + seq[seq.length - 2]; var pattern = 'Fibonacci-like'; var hint = 'Each term = sum of previous two terms'; return { seq: seq, answer: ans, pattern: pattern, hint: hint }; },
-    // alternating: +a, +a+2, +a+4, ...
-    function() { var s = rand(5, 20); var d = rand(2, 5); var n = 5; var seq = [s]; for (var i = 0; i < n; i++) { seq.push(seq[i] + d + i * 2); } var ans = seq[seq.length - 1] + d + n * 2; var pattern = 'Increasing difference'; var hint = 'Differences increase by 2 each step: +' + d + ', +' + (d+2) + ', ...'; return { seq: seq, answer: ans, pattern: pattern, hint: hint }; },
-    // subtract pattern
-    function() { var s = rand(50, 100); var d = rand(5, 12); var n = 5; var seq = [s]; for (var i = 0; i < n; i++) { seq.push(seq[i] - d); } var ans = seq[seq.length - 1] - d; var pattern = 'Arithmetic (-' + d + ')'; var hint = 'Subtract ' + d + ' each step'; return { seq: seq, answer: ans, pattern: pattern, hint: hint }; },
-    // primes
-    function() { var primes = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61]; var s = rand(0, 6); var n = 5; var seq = []; for (var i = 0; i < n; i++) { seq.push(primes[s + i]); } var ans = primes[s + n]; var pattern = 'Prime numbers'; var hint = 'Prime numbers in increasing order'; return { seq: seq, answer: ans, pattern: pattern, hint: hint }; },
-    // multiplied + add
-    function() { var a = rand(2, 4); var b = rand(1, 5); var s = rand(1, 5); var n = 5; var seq = [s]; for (var i = 0; i < n; i++) { seq.push(seq[i] * a + b); } var ans = seq[seq.length - 1] * a + b; var pattern = 'Multiply by ' + a + ' + ' + b; var hint = 'Each term = previous � ' + a + ' + ' + b; return { seq: seq, answer: ans, pattern: pattern, hint: hint }; },
-    // Hard: n² + c pattern
-    function() { var s=rand(2,5), c=rand(1,5), n=5; var seq=[]; for(var i=0;i<n;i++){seq.push((s+i)*(s+i)+c);} var ans=(s+n)*(s+n)+c; var pattern='n²+'+c; var hint='Squares starting from ' + s + ', plus ' + c; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; },
-    // Hard: alternate signs (+a, -a, +a, ...)
-    function() { var s=rand(20,50), a=rand(4,10), n=5; var seq=[s]; for(var i=0;i<n;i++){seq.push(seq[i]+(i%2===0?-a:a));} var ans=seq[seq.length-1]+(n%2===0?-a:a); var pattern='Alternate ±'+a; var hint='Alternate adding and subtracting ' + a; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; },
-    // Hard: product of consecutive numbers
-    function() { var s=rand(2,6), n=5; var seq=[]; for(var i=0;i<n;i++){seq.push((s+i)*(s+i+1));} var ans=(s+n)*(s+n+1); var pattern='n×(n+1)'; var hint='Product of consecutive numbers: ' + s + '×' + (s+1) + ', ' + (s+1) + '×' + (s+2) + ', ...'; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; },
-    // Hard: n³ + 1
-    function() { var s=rand(2,5), n=4; var seq=[]; for(var i=0;i<n;i++){seq.push((s+i)*(s+i)*(s+i)+1);} var ans=(s+n)*(s+n)*(s+n)+1; var pattern='n³+1'; var hint='Cubes + 1: ' + s + '³+1=' + seq[0] + ', then ' + (s+1) + '³+1, ...'; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; },
-    // Hard: letter series — A, C, F, J, ...
-    function() { var s=rand(0,2), n=4; var seq=[], st=1+s; for(var i=0;i<n;i++){st+=i; seq.push(String.fromCharCode(64+Math.min(st,26)));} var ns=Math.min(st+n,26); var ans=String.fromCharCode(64+ns); var pattern='Increasing gap letters'; var hint='Gap increases by 1 each step: +1, +2, +3, ...'; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; },
-    // Hard: decimal series — 0.5, 1.0, 2.0, 4.0, ...
-    function() { var s=rand(1,5), r=rand(2,4), n=5; var seq=[]; for(var i=0;i<n;i++){seq.push((s*Math.pow(r,i))/2);} var ans=(s*Math.pow(r,n))/2; var pattern='Decimal (×'+r+'/2)'; var hint='Multiply by '+r+' then divide by 2 each step'; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; },
-    // Hard: alternating dual series (two interleaved patterns)
-    function() {
-      var a1=rand(2,6), d1=rand(2,5), a2=rand(10,20), d2=rand(-5,-2);
-      var seq=[], n=8;
-      for(var i=0;i<n;i+=2){
-        var t1=a1+(i/2)*d1;
-        var t2=a2+(i/2)*d2;
-        seq.push(t1,t2);
-      }
-      var ans = (n%2===0) ? a2+(n/2)*d2 : a1+(n/2)*d1;
-      var pattern='Dual alternating series';
-      var hint='Two interleaved sequences: +'+d1+' and '+d2;
-      return {seq:seq,answer:ans,pattern:pattern,hint:hint};
-    },
-    // Hard: n² + n (n(n+1))
-    function() { var s=rand(2,7), n=5; var seq=[]; for(var i=0;i<n;i++){var v=(s+i)*((s+i)+1);seq.push(v);} var ans=(s+n)*((s+n)+1); var pattern='n(n+1)'; var hint='Product of n and n+1: '+seq[0]+', '+seq[1]+', ... pattern'; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; },
-    // Hard: n² - 1
-    function() { var s=rand(3,8), n=5; var seq=[]; for(var i=0;i<n;i++){seq.push((s+i)*(s+i)-1);} var ans=(s+n)*(s+n)-1; var pattern='n²-1'; var hint='Squares minus 1: '+(s*s-1)+', '+((s+1)*(s+1)-1)+', ...'; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; },
-    // Hard: 2^n + n
-    function() { var s=rand(1,4), n=5; var seq=[]; for(var i=0;i<n;i++){seq.push(Math.pow(2,s+i)+(s+i));} var ans=Math.pow(2,s+n)+(s+n); var pattern='2ⁿ+n'; var hint='Powers of 2 plus index: '+(Math.pow(2,s)+s)+', '+(Math.pow(2,s+1)+s+1)+', ...'; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; },
-    // Hard: fractional pattern — 1/2, 1/4, 1/6, ...
-    function() { var s=rand(1,3), n=5; var seq=[]; for(var i=0;i<n;i++){seq.push('1/'+(2*(s+i)));} var ans='1/'+(2*(s+n)); var pattern='Unit fractions'; var hint='Denominator increases by 2: 1/'+(s*2)+', 1/'+((s+1)*2)+', ...'; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; },
-    // Hard: mixed operation (×a + b)
-    function() { var a=rand(2,4), b=rand(1,5), s=rand(2,6), n=5; var seq=[s]; for(var i=0;i<n;i++){seq.push(seq[i]*a+b);} var ans=seq[seq.length-1]*a+b; var pattern='×'+a+'+'+b+' pattern'; var hint='Each term = previous × '+a+' + '+b; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; },
-    // Hard: alternating operation pattern (×2, +3, ×2, +3, ...)
-    function() { var s=rand(2,5), n=7; var seq=[s]; for(var i=0;i<n;i++){if(i%2===0)seq.push(seq[i]*2);else seq.push(seq[i]+3);} var ans=n%2===0?seq[seq.length-1]+3:seq[seq.length-1]*2; var pattern='Alternate ×2 +3'; var hint='Alternate: multiply by 2, then add 3'; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; },
-    // Hard: sum of digits pattern — 13→4, 22→4, 31→4, ...
-    function() { var base=rand(10,50), ds=base.toString().split('').reduce(function(a,c){return a+ +c;},0), n=5; var seq=[base]; for(var i=0;i<n;i++){seq.push(seq[i]+9);} var ans=seq[seq.length-1]+9; var pattern='Digit sum constant'; var hint='Adding 9 preserves digit sum. Digit sum always '+ds; return {seq:seq,answer:ans,pattern:pattern,hint:hint}; }
+    [1, function() { var s=rand(1,10), d=rand(2,5); var n=5,seq=[]; for(var i=0;i<n;i++)seq.push(s+i*d); return {seq:seq,ans:s+n*d,pat:'AP +'+d,hint:'Const diff'}; }],
+    [1, function() { var s=rand(50,100), d=rand(5,12); var n=5,seq=[s]; for(var i=0;i<n;i++)seq.push(seq[i]-d); return {seq:seq,ans:seq[n]-d,pat:'AP -'+d,hint:'Sub ' + d}; }],
+    [1, function() { var s=rand(1,5), r=rand(2,3); var n=5,seq=[]; for(var i=0;i<n;i++)seq.push(s*Math.pow(r,i)); return {seq:seq,ans:s*Math.pow(r,n),pat:'GP ×'+r,hint:'×' + r}; }],
+    [2, function() { var s=rand(3,7); var n=5,seq=[]; for(var i=0;i<n;i++)seq.push((s+i)*(s+i)); return {seq:seq,ans:(s+n)*(s+n),pat:'Squares',hint:'Squares from '+s}; }],
+    [2, function() { var primes=[2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61]; var s=rand(0,6),n=5,seq=[]; for(var i=0;i<n;i++)seq.push(primes[s+i]); return {seq:seq,ans:primes[s+n],pat:'Primes',hint:'Prime numbers'}; }],
+    [2, function() { var s=rand(5,20), d=rand(2,5), n=5,seq=[s]; for(var i=0;i<n;i++)seq.push(seq[i]+d+i*2); return {seq:seq,ans:seq[n]+d+n*2,pat:'Inc diff',hint:'+'+d+',+'+(d+2)+'...'}; }],
+    [3, function() { var a=rand(1,5), b=rand(1,5), n=6,seq=[a,b]; for(var i=2;i<n;i++)seq.push(seq[i-1]+seq[i-2]); return {seq:seq,ans:seq[n-1]+seq[n-2],pat:'Fib',hint:'Sum prev 2'}; }],
+    [3, function() { var s=rand(2,5); var n=4,seq=[]; for(var i=0;i<n;i++)seq.push(Math.pow(s+i,3)); return {seq:seq,ans:Math.pow(s+n,3),pat:'Cubes',hint:'Cubes from '+s}; }],
+    [3, function() { var s=rand(20,50), a=rand(4,10), n=5,seq=[s]; for(var i=0;i<n;i++)seq.push(seq[i]+(i%2===0?-a:a)); return {seq:seq,ans:seq[n]+(n%2===0?-a:a),pat:'Alt ±'+a,hint:'Alt add/sub ' + a}; }],
+    [3, function() { var base=rand(10,50), n=5,seq=[base]; for(var i=0;i<n;i++)seq.push(seq[i]+9); return {seq:seq,ans:seq[n]+9,pat:'Digit sum const',hint:'+9 preserves digit sum'}; }],
+    [4, function() { var s=rand(2,5), c=rand(1,5), n=5,seq=[]; for(var i=0;i<n;i++)seq.push((s+i)*(s+i)+c); return {seq:seq,ans:(s+n)*(s+n)+c,pat:'n²+'+c,hint:'Squares+'+c}; }],
+    [4, function() { var s=rand(2,6), n=5,seq=[]; for(var i=0;i<n;i++)seq.push((s+i)*(s+i+1)); return {seq:seq,ans:(s+n)*(s+n+1),pat:'n(n+1)',hint:'Prod consecutive'}; }],
+    [4, function() { var a1=rand(2,6), d1=rand(2,5), a2=rand(10,20), d2=rand(-5,-2), n=8,seq=[]; for(var i=0;i<n;i+=2){seq.push(a1+(i/2)*d1,a2+(i/2)*d2);} return {seq:seq,ans:a2+(n/2)*d2,pat:'Dual alternating',hint:'Two interleaved: +'+d1+' and '+d2}; }],
+    [4, function() { var s=rand(0,2), n=4,seq=[],st=1+s; for(var i=0;i<n;i++){st+=i;seq.push(String.fromCharCode(64+Math.min(st,26)));} return {seq:seq,ans:String.fromCharCode(64+Math.min(st+n,26)),pat:'Letter inc gap',hint:'Gap +1,+2,...'}; }],
+    [4, function() { var s=rand(1,4), n=5,seq=[]; for(var i=0;i<n;i++)seq.push(Math.pow(2,s+i)+(s+i)); return {seq:seq,ans:Math.pow(2,s+n)+(s+n),pat:'2ⁿ+n',hint:'Pow 2 + index'}; }],
+    [5, function() { var s=rand(2,5), n=4,seq=[]; for(var i=0;i<n;i++)seq.push(Math.pow(s+i,3)+1); return {seq:seq,ans:Math.pow(s+n,3)+1,pat:'n³+1',hint:'Cubes+1'}; }],
+    [5, function() { var a=rand(2,4), b=rand(1,5), s=rand(2,6), n=5,seq=[s]; for(var i=0;i<n;i++)seq.push(seq[i]*a+b); return {seq:seq,ans:seq[n]*a+b,pat:'×'+a+'+'+b,hint:'Prev ×'+a+'+'+b}; }],
+    [5, function() { var s=rand(2,5), n=7,seq=[s]; for(var i=0;i<n;i++){if(i%2===0)seq.push(seq[i]*2);else seq.push(seq[i]+3);} return {seq:seq,ans:n%2===0?seq[n]+3:seq[n]*2,pat:'Alt ×2+3',hint:'×2 then +3 then ×2...'}; }],
+    [5, function() { var s=rand(3,8), n=5,seq=[]; for(var i=0;i<n;i++)seq.push((s+i)*(s+i)-1); return {seq:seq,ans:(s+n)*(s+n)-1,pat:'n²-1',hint:'Squares-1'}; }],
+    [5, function() { var s=rand(2,7), n=5,seq=[]; for(var i=0;i<n;i++)seq.push((s+i)*((s+i)+1)); return {seq:seq,ans:(s+n)*((s+n)+1),pat:'n(n+1)²',hint:'n×(n+1)'}; }]
   ];
-
-  var type = types[rand(0, types.length - 1)];
-  var data = type();
-  var isLetter = typeof data.answer === 'string' && data.answer.length === 1 && data.answer >= 'A' && data.answer <= 'Z';
-  var isFraction = typeof data.answer === 'string' && data.answer.indexOf('/') >= 0;
-  var answer = isLetter ? data.answer : (isFraction ? data.answer : Math.round(data.answer));
+  var matched = types.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = types;
+  var chosen = matched[rand(0, matched.length - 1)];
+  var data = chosen[1]();
+  var isLetter = typeof data.ans === 'string' && /^[A-Z]$/.test(data.ans);
+  var isFrac = typeof data.ans === 'string' && data.ans.indexOf('/')>=0;
+  var answer = isLetter ? data.ans : (isFrac ? data.ans : Math.round(data.ans));
   var opts = [answer];
-  if (isLetter) {
-    var letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    while (opts.length < 4) { var l=letters[rand(0,25)]; if (opts.indexOf(l) < 0) opts.push(l); }
-  } else if (isFraction) {
-    var denom = parseInt(data.answer.split('/')[1]);
-    while (opts.length < 4) { var d = '1/' + (denom + rand(-3, 3)); if (opts.indexOf(d) < 0 && d !== '1/0' && d.indexOf('-') < 0) opts.push(d); }
-  } else {
-    var spread = Math.max(1, Math.round(answer * 0.1));
-    while (opts.length < 4) {
-      var d = answer + rand(-spread * 3, spread * 3);
-      if (opts.indexOf(d) < 0 && d > 0 && d < 10000) opts.push(d);
-    }
-  }
+  if (isLetter) { var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''); while(opts.length<4){var x=l[rand(0,25)];if(opts.indexOf(x)<0)opts.push(x);} }
+  else if (isFrac) { var den=parseInt(data.ans.split('/')[1]); while(opts.length<4){var d='1/'+(den+rand(-3,3));if(opts.indexOf(d)<0&&d.indexOf('-')<0)opts.push(d);} }
+  else { var sp=Math.max(1,Math.round(answer*0.15)); while(opts.length<4){var d=answer+rand(-sp*3,sp*3);if(opts.indexOf(d)<0&&d>0)opts.push(d);} }
   shuffle(opts);
-
-  return {
-    question: data.seq.join(', ') + ', ?',
-    answer: answer,
-    options: opts,
-    hint: data.hint + '. ' + data.pattern,
-    timeLimit: diff <= 1 ? 15 : (diff <= 3 ? 12 : 10),
-    type: 'pattern',
-    patternLabel: 'Series',
-    techniqueLabel: 'Series: ' + data.pattern + '. ' + data.hint,
-    drillLine1: 'Pattern: ' + data.pattern,
-    drillLine2: data.seq.join(' ? ') + ' ? ' + answer,
-    solution: 'Series type: ' + data.pattern + '. Next term = ' + answer
-  };
+  return { question: data.seq.join(', ')+', ?', answer: answer, options: opts, hint: data.hint+'. '+data.pat, timeLimit: diff<=1?15:(diff<=3?12:10), type:'pattern', patternLabel:'Series', techniqueLabel:'Series: '+data.pat+'. '+data.hint, drillLine1:'Pattern: '+data.pat, drillLine2:data.seq.join(' ? ')+' ? '+answer, solution:'Series: '+data.pat+'. Next = '+answer };
 }
 
 function generateCodingQuestion(diff) {
-  var words = ['CAT','DOG','BAT','RAT','SUN','FAN','BAG','HAT','PEN','CUP','BED','FOG','JAM','KIT','LIP','MAP','NET','OAK','POT','RUG','SAP','TAP','URN','VAN','WAX','YAK','ZIP','BOW','COW','FOX','HEN','ICE','KEY','MAN','OWL','PIG','RAM','TOY','URN','VOW','WEB','AXE','ELF','INK','OAR','URN','ANT','BEE','CAT','DOG','EMU','FLY','GNU','HEN','IBIS','JAY','KIT','LYNX','MOO','OWL','PIG','RAM','SWAN','TROUT','URCHIN','VIXEN','WOLF','YAK','ZEBRA'];
-  var codes = [
-    // A=1, B=2, ... sum positions
-    function(w) { var sum = 0; for (var i = 0; i < w.length; i++) { sum += w.charCodeAt(i) - 64; } return { answer: sum, desc: 'A=1, B=2... sum of positions', scheme: 'Sum of letter positions' }; },
-    // A=1, B=2, ... product of positions
-    function(w) { var prod = 1; for (var i = 0; i < w.length; i++) { prod *= w.charCodeAt(i) - 64; } return { answer: prod, desc: 'A=1, B=2... multiply all positions', scheme: 'Product of letter positions' }; },
-    // A=26, B=25, ... sum (reverse)
-    function(w) { var sum = 0; for (var i = 0; i < w.length; i++) { sum += 27 - (w.charCodeAt(i) - 64); } return { answer: sum, desc: 'A=26, B=25... sum of reverse positions', scheme: 'Reverse letter positions (A=26)' }; },
-    // square of sum
-    function(w) { var sum = 0; for (var i = 0; i < w.length; i++) { sum += w.charCodeAt(i) - 64; } return { answer: sum * sum, desc: 'Sum of positions, then square the result', scheme: '(Sum of positions)�' }; },
-    // sum of squares
-    function(w) { var sum = 0; for (var i = 0; i < w.length; i++) { var p = w.charCodeAt(i) - 64; sum += p * p; } return { answer: sum, desc: 'Sum of squares of each letter\'s position', scheme: 'Sum of squares of positions' }; },
-    // position * index sum
-    function(w) { var sum = 0; for (var i = 0; i < w.length; i++) { sum += (w.charCodeAt(i) - 64) * (i + 1); } return { answer: sum, desc: 'Letter position � its index (1-based)', scheme: 'Position � index sum' }; }
+  var words = ['CAT','DOG','BAT','RAT','SUN','FAN','BAG','HAT','PEN','CUP','BED','FOG','JAM','KIT','LIP','MAP','NET','OAK','POT','RUG','SAP','TAP','URN','VAN','WAX','YAK','ZIP','BOW','COW','FOX','HEN','ICE','KEY','MAN','OWL','PIG','RAM','TOY','URN','VOW','WEB','AXE','ELF','INK','OAR','URN','ANT','BEE','EMU','FLY','GNU','JAY','LYNX','MOO','SWAN','TROUT','VIXEN','WOLF','ZEBRA'];
+  var schemes = [
+    [1, function(w){ var s=0; for(var i=0;i<w.length;i++)s+=w.charCodeAt(i)-64; return {ans:s,desc:'A=1... sum positions',sch:'Sum of pos'}; }],
+    [1, function(w){ var p=1; for(var i=0;i<w.length;i++)p*=w.charCodeAt(i)-64; return {ans:p,desc:'A=1... product positions',sch:'Product of pos'}; }],
+    [2, function(w){ var s=0; for(var i=0;i<w.length;i++)s+=27-(w.charCodeAt(i)-64); return {ans:s,desc:'A=26,B=25... sum rev',sch:'Rev pos sum'}; }],
+    [2, function(w){ var s=0; for(var i=0;i<w.length;i++)s+=w.charCodeAt(i)-64; return {ans:s*s,desc:'Sum pos then square',sch:'(Sum pos)²'}; }],
+    [3, function(w){ var s=0; for(var i=0;i<w.length;i++){var p=w.charCodeAt(i)-64;s+=p*p;} return {ans:s,desc:'Sum squares of pos',sch:'Sum pos²'}; }],
+    [3, function(w){ var s=0; for(var i=0;i<w.length;i++)s+=(w.charCodeAt(i)-64)*(i+1); return {ans:s,desc:'Pos×index sum',sch:'Pos×idx'}; }],
+    [4, function(w){ var s=''; for(var i=0;i<w.length;i++){var c=w.charCodeAt(i)-64+rand(1,3);if(c>26)c-=26; s+=String.fromCharCode(64+c);} return {ans:s,desc:'Each letter shifted +'+(rand(1,3))+' positions',sch:'Letter shift +'+(rand(1,3))}; }],
+    [4, function(w){ var s=''; for(var i=w.length-1;i>=0;i--)s+=w[i]; return {ans:s,desc:'Word reversed',sch:'Reverse word'}; }],
+    [5, function(w){ var vowelPos={'A':1,'E':2,'I':3,'O':4,'U':5}; var s=0; for(var i=0;i<w.length;i++){if(vowelPos[w[i]])s+=vowelPos[w[i]]*2; else s+=w.charCodeAt(i)-64;} return {ans:s,desc:'Vowels ×2, consonants as is',sch:'Vowel double'}; }],
+    [5, function(w){ var s=''; for(var i=0;i<w.length;i++){var c=String.fromCharCode(65+rand(0,25));s+=c;} return {ans:s,desc:'Each letter replaced by code letter',sch:'Substitution code'}; }]
   ];
-
-  var scheme = codes[rand(0, codes.length - 1)];
+  var matched = schemes.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = schemes;
+  var scheme = matched[rand(0, matched.length - 1)];
   var word = words[rand(0, words.length - 1)];
-
-  // For the example pair, use a different word
   var exWord = words[rand(0, words.length - 1)];
   while (exWord === word) exWord = words[rand(0, words.length - 1)];
-  var exResult = scheme(exWord);
-
-  var data = scheme(word);
-  var answer = data.answer;
-
+  var exResult = scheme[1](exWord);
+  var data = scheme[1](word);
+  var answer = data.ans;
   var opts = [answer];
   var spread = Math.max(1, Math.round(answer * 0.2));
-  while (opts.length < 4) {
-    var d = answer + rand(-spread - 2, spread + 2);
-    if (opts.indexOf(d) < 0 && d > 0 && d < 100000) opts.push(d);
-  }
+  while (opts.length < 4) { var d = answer + rand(-spread - 2, spread + 2); if (opts.indexOf(d) < 0 && d > 0 && d < 100000) opts.push(d); }
   shuffle(opts);
-
-  return {
-    question: 'If ' + exWord + ' = ' + exResult.answer + ', then ' + word + ' = ?',
-    answer: answer,
-    options: opts,
-    hint: exResult.desc + '. Apply same rule to ' + word,
-    timeLimit: diff <= 1 ? 15 : (diff <= 3 ? 12 : 10),
-    type: 'pattern',
-    patternLabel: 'Coding',
-    techniqueLabel: 'Coding: ' + data.scheme + '. Find the rule from the example, apply to ' + word,
-    drillLine1: exWord + ' = ' + exResult.answer + ' ? ' + data.scheme,
-    drillLine2: word + ' = ' + answer + ' (applying same scheme)',
-    solution: data.scheme + '. ' + word + ': ' + word.split('').map(function(l) { return l + '=' + (l.charCodeAt(0)-64); }).join(', ') + ' ? ' + answer
-  };
+  return { question: 'If ' + exWord + ' = ' + exResult.ans + ', then ' + word + ' = ?', answer: answer, options: opts, hint: exResult.desc + '. Apply same to ' + word, timeLimit: diff<=1?15:(diff<=3?12:10), type:'pattern', patternLabel:'Coding', techniqueLabel:'Coding: '+data.sch+'. Find rule from example.', drillLine1: exWord + ' = ' + exResult.ans + ' ? ' + data.sch, drillLine2: word + ' = ' + answer, solution: data.sch + '. ' + word + ': ' + word.split('').map(function(l){return l+'='+(l.charCodeAt(0)-64);}).join(', ') + ' → ' + answer };
 }
 
 function generateSyllogismQuestion(diff) {
   var sets = ['Cats','Dogs','Birds','Fish','Mammals','Reptiles','Insects','Animals','Plants','Trees','Flowers','Fruits','Humans','Robots','Cars','Planes','Boats','Bicycles','Computers','Phones','Books','Chairs','Tables','Artists','Doctors','Engineers','Teachers','Writers','Dancers','Singers','Actors','Lawyers','Athletes','Scientists','Politicians','Students','Men','Women'];
   shuffle(sets);
   var A = sets[0], B = sets[1], C = sets[2], D = sets[3];
-  var cats = ['A','B','C'];(function(){if(A.length>5){cats=['X','Y','Z'];}else{cats=[A,B,C];}})();
-
-  var patterns = [];
-
-  // Basic patterns (1-8)
-  patterns.push({ stmt: 'All ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '.', conc: 'All ' + A + ' are ' + C + '.', answer: 'True', sol: 'All+All=All chain. Valid syllogism.' });
-  patterns.push({ stmt: 'All ' + A + ' are ' + B + '. Some ' + B + ' are ' + C + '.', conc: 'Some ' + A + ' are ' + C + '.', answer: 'Cannot determine', sol: 'All+Some = nothing guaranteed. Those ' + B + ' that are ' + C + ' may not include any ' + A });
-  patterns.push({ stmt: 'No ' + A + ' are ' + B + '. All ' + C + ' are ' + B + '.', conc: 'No ' + C + ' are ' + A + '.', answer: 'True', sol: 'No+All=No. ' + C + ' subset of ' + B + ', ' + B + ' disjoint from ' + A });
-  patterns.push({ stmt: 'No ' + A + ' are ' + B + '. All ' + C + ' are ' + A + '.', conc: 'Some ' + C + ' are ' + B + '.', answer: 'False', sol: 'C subset of A, A∩B=∅ → C∩B=∅. No ' + C + ' can be ' + B });
-  patterns.push({ stmt: 'Some ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '.', conc: 'Some ' + A + ' are ' + C + '.', answer: 'True', sol: 'Some+All=Some. Valid: the ' + A + ' that are ' + B + ' are also ' + C });
-  patterns.push({ stmt: 'Some ' + A + ' are ' + B + '. Some ' + B + ' are ' + C + '.', conc: 'Some ' + A + ' are ' + C + '.', answer: 'Cannot determine', sol: 'Some+Some = no guaranteed relation. Different subsets of ' + B });
-  patterns.push({ stmt: 'All ' + A + ' are ' + B + '. No ' + B + ' are ' + C + '.', conc: 'No ' + A + ' are ' + C + '.', answer: 'True', sol: 'All+No=No. ' + A + ' subset of ' + B + ', ' + B + '∩' + C + '=∅ → ' + A + '∩' + C + '=∅' });
-  patterns.push({ stmt: 'No ' + A + ' are ' + B + '. Some ' + B + ' are ' + C + '.', conc: 'Some ' + C + ' are ' + A + '.', answer: 'Cannot determine', sol: 'No+Some = nothing guaranteed. ' + A + ' and ' + B + ' separate, ' + C + ' could overlap with either' });
-
-  // Advanced patterns: "Only a few" = Some + Some not
-  patterns.push({ stmt: 'Only a few ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '.', conc: 'Some ' + A + ' are not ' + C + '.', answer: 'Cannot determine', sol: 'Only a few = Some are + Some are not. Those that are ' + B + ' are ' + C + ', but the ones not ' + B + ' may or may not be ' + C });
-  patterns.push({ stmt: 'Only a few ' + A + ' are ' + B + '. No ' + B + ' are ' + C + '.', conc: 'Some ' + A + ' are not ' + C + '.', answer: 'True', sol: 'Only a few = Some are + Some are not ' + B + '. Those ' + A + ' that are ' + B + ' are not ' + C + ' (since no B is C). So at least some ' + A + ' are not ' + C });
-  patterns.push({ stmt: 'Only a few ' + A + ' are ' + B + '. All ' + A + ' are ' + C + '.', conc: 'Some ' + C + ' are not ' + B + '.', answer: 'True', sol: 'Only a few ' + A + ' are ' + B + ' → some ' + A + ' are not ' + B + '. Since all ' + A + ' are ' + C + ', those not-' + B + ' ' + A + ' are ' + C + ' but not ' + B });
-  patterns.push({ stmt: 'Only a few ' + A + ' are ' + B + '. Only a few ' + B + ' are ' + C + '.', conc: 'Some ' + A + ' are ' + C + '.', answer: 'Cannot determine', sol: 'Only a few + Only a few = no guaranteed relation between A and C' });
-
-  // "Almost all" / "Most" = All + Some (almost all = some, but with high probability)
-  patterns.push({ stmt: 'Almost all ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '.', conc: 'Some ' + A + ' are ' + C + '.', answer: 'True', sol: 'Almost all = most = at least some. Some+All=Some → valid' });
-  patterns.push({ stmt: 'Almost all ' + A + ' are ' + B + '. No ' + B + ' are ' + C + '.', conc: 'Some ' + A + ' are not ' + C + '.', answer: 'True', sol: 'Almost all ' + A + ' are ' + B + ' → at least some ' + A + ' are ' + B + ' (and those are not C). So some A are not C' });
-  patterns.push({ stmt: 'Almost all ' + A + ' are ' + B + '. Almost all ' + B + ' are ' + C + '.', conc: 'Some ' + A + ' are ' + C + '.', answer: 'Cannot determine', sol: 'Almost all + Almost all. The ones that are not ' + B + ' could be all ' + A + ', or the ones not ' + C + ' could be all those ' + A + ' that are ' + B });
-
-  // "Not all" = Some not
-  patterns.push({ stmt: 'Not all ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '.', conc: 'Some ' + A + ' are not ' + C + '.', answer: 'Cannot determine', sol: 'Not all = Some are not ' + B + '. Those not-B may or may not be C' });
-  patterns.push({ stmt: 'Not all ' + A + ' are ' + B + '. No ' + B + ' are ' + C + '.', conc: 'Some ' + A + ' are not ' + C + '.', answer: 'True', sol: 'Not all = Some ' + A + ' are not ' + B + '. But those ' + A + ' that are ' + B + ' are not ' + C + '. The ones not-B could be C or not. Unclear. Actually: if some A are not B and all B are not C, we know the A that are B are not C, so at least some A are not C' });
-
-  // Mixed: All + Not all
-  patterns.push({ stmt: 'All ' + A + ' are ' + B + '. Not all ' + B + ' are ' + C + '.', conc: 'Some ' + A + ' are not ' + C + '.', answer: 'Cannot determine', sol: 'Not all B are C → Some B are not C. But the ones that are not C might not include any ' + A });
-  patterns.push({ stmt: 'No ' + A + ' are ' + B + '. Not all ' + B + ' are ' + C + '.', conc: 'No ' + A + ' is ' + C + '.', answer: 'Cannot determine', sol: 'No relation between A and C can be concluded from these statements' });
-
-  // "At least some" = Some
-  patterns.push({ stmt: 'At least some ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '.', conc: 'At least some ' + A + ' are ' + C + '.', answer: 'True', sol: 'At least some = Some. Some+All=Some → valid' });
-
-  // "At most some" = No
-  patterns.push({ stmt: 'At most some ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '.', conc: 'Some ' + A + ' are ' + C + '.', answer: 'Cannot determine', sol: 'At most some = No/negligible. "At most some" is confusing. Actually it means at best some (could be zero). So no definite conclusion' });
-
-  // Possibility-based conclusions
-  patterns.push({ stmt: 'All ' + A + ' are ' + B + '. Some ' + B + ' are not ' + C + '.', conc: 'It is possible that some ' + A + ' are not ' + C + '.', answer: 'True', sol: 'Possibility: since some B are not C and all A are B, it is possible (though not definite) that some A are among those B that are not C' });
-  patterns.push({ stmt: 'No ' + A + ' are ' + B + '. All ' + C + ' are ' + B + '.', conc: 'It is possible that no ' + C + ' is ' + A + '.', answer: 'True', sol: 'Since C ⊆ B and A∩B=∅, definitely no C is A. So "possible" is also true (actually it is definite)' });
-  patterns.push({ stmt: 'Some ' + A + ' are ' + B + '. No ' + B + ' are ' + C + '.', conc: 'All ' + C + ' are ' + A + '.', answer: 'False', sol: 'Some A are B and B∩C=∅. This tells us nothing about whether C is in A' });
-
-  // Possibility: "can never be" type
-  patterns.push({ stmt: 'All ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '.', conc: 'Can never be true: No ' + A + ' is ' + C + '.', answer: 'True (can never be)', sol: 'Since all A are C (All+All), "No A is C" can never be true' });
-
-  // 3-statement syllogisms (exam level)
-  patterns.push({ stmt: 'All ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '. Some ' + D + ' are ' + C + '.', conc: 'Some ' + D + ' are ' + A + '.', answer: 'Cannot determine', sol: 'D and A have no direct relation. The Some D that are C may not include any ' + A });
-  patterns.push({ stmt: 'All ' + A + ' are ' + B + '. Some ' + B + ' are ' + C + '. No ' + C + ' are ' + D + '.', conc: 'Some ' + A + ' are not ' + D + '.', answer: 'Cannot determine', sol: 'The Some B that are C may or may not include ' + A + '. Even if they do, we know those are not D, but other ' + A + ' might be D' });
-  patterns.push({ stmt: 'Some ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '. No ' + C + ' are ' + D + '.', conc: 'Some ' + A + ' are not ' + D + '.', answer: 'True', sol: 'Some A are B → those A are C. No C is D → those A are not D. Hence some A are not D' });
-
-  // Either-or conclusions
-  patterns.push({ stmt: 'All ' + A + ' are ' + B + '. No ' + C + ' are ' + B + '.', conc: 'Either no ' + A + ' are ' + C + ' or some ' + A + ' are not ' + C + '.', answer: 'True', sol: 'A ⊆ B and C∩B=∅ → A∩C=∅. So definitely no A is C. Either-or holds (first part is true)' });
-
-  // Coded syllogisms (Deductive)
-  var codeWords = {All:'All',Some:'Some',No:'No'};
-  var codeOpts = ['Definitely true','Definitely false','Probably true','Cannot determine'];
-
-  var p = patterns[rand(0, patterns.length - 1)];
-  // Mix with possibility questions
-  var isPossibility = p.conc.indexOf('It is possible') >= 0 || p.conc.indexOf('Can never') >= 0;
-  var opts = isPossibility ? ['True','False','Cannot determine','Depends'] : ['Definitely true','Definitely false','Probably true','Cannot determine'];
+  var patterns = [
+    [1, 'All ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '.', 'All ' + A + ' are ' + C + '.', 'True', 'All+All=All chain. Valid.' ],
+    [1, 'All ' + A + ' are ' + B + '. Some ' + B + ' are ' + C + '.', 'Some ' + A + ' are ' + C + '.', 'Cannot determine', 'Those B=C may not include A' ],
+    [1, 'No ' + A + ' are ' + B + '. All ' + C + ' are ' + B + '.', 'No ' + C + ' are ' + A + '.', 'True', 'C⊆B, B∩A=∅ → C∩A=∅' ],
+    [1, 'Some ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '.', 'Some ' + A + ' are ' + C + '.', 'True', 'Some+All=Some. Valid.' ],
+    [2, 'No ' + A + ' are ' + B + '. All ' + C + ' are ' + A + '.', 'Some ' + C + ' are ' + B + '.', 'False', 'C⊆A, A∩B=∅ → no C is B' ],
+    [2, 'Some ' + A + ' are ' + B + '. Some ' + B + ' are ' + C + '.', 'Some ' + A + ' are ' + C + '.', 'Cannot determine', 'Some+Some=no guarantee' ],
+    [2, 'All ' + A + ' are ' + B + '. No ' + B + ' are ' + C + '.', 'No ' + A + ' are ' + C + '.', 'True', 'A⊆B, B∩C=∅ → A∩C=∅' ],
+    [2, 'No ' + A + ' are ' + B + '. Some ' + B + ' are ' + C + '.', 'Some ' + C + ' are ' + A + '.', 'Cannot determine', 'C could overlap with A or not' ],
+    [3, 'Not all ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '.', 'Some ' + A + ' are not ' + C + '.', 'Cannot determine', 'Not-B may or may not be C' ],
+    [3, 'Not all ' + A + ' are ' + B + '. No ' + B + ' are ' + C + '.', 'Some ' + A + ' are not ' + C + '.', 'True', 'Some A are B, those B are not C' ],
+    [3, 'All ' + A + ' are ' + B + '. Not all ' + B + ' are ' + C + '.', 'Some ' + A + ' are not ' + C + '.', 'Cannot determine', 'Not-C B may exclude A' ],
+    [3, 'Only a few ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '.', 'Some ' + A + ' are not ' + C + '.', 'Cannot determine', 'Only a few = some+some not' ],
+    [4, 'Only a few ' + A + ' are ' + B + '. No ' + B + ' are ' + C + '.', 'Some ' + A + ' are not ' + C + '.', 'True', 'A that are B are not C' ],
+    [4, 'All ' + A + ' are ' + B + '. Some ' + B + ' are not ' + C + '.', 'Possibly some ' + A + ' are not ' + C + '.', 'True', 'Possible, not definite' ],
+    [4, 'Some ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '. No ' + C + ' are ' + D + '.', 'Some ' + A + ' are not ' + D + '.', 'True', 'Some A=B=C, not D' ],
+    [4, 'All ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '. Some ' + D + ' are ' + C + '.', 'Some ' + D + ' are ' + A + '.', 'Cannot determine', 'D and A have no direct link' ],
+    [5, 'Some ' + A + ' are ' + B + '. Some ' + B + ' are ' + C + '. All ' + C + ' are ' + D + '.', 'Some ' + A + ' are ' + D + '.', 'Cannot determine', 'A and D have no guaranteed link' ],
+    [5, 'All ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '. Can never be true: No ' + A + ' is ' + C + '.', 'True (can never be)', 'Since all A are C, "no A is C" is impossible' ],
+    [5, 'All ' + A + ' are ' + B + '. No ' + C + ' are ' + B + '.', 'Either no ' + A + ' are ' + C + ' or some ' + A + ' are not ' + C + '.', 'True', 'A⊆B, C∩B=∅ → A∩C=∅' ]
+  ];
+  var p = patterns.filter(function(x){return x[0] <= diff;});
+  if (p.length === 0) p = patterns;
+  var chosen = p[rand(0, p.length - 1)];
+  var isPoss = chosen[3].indexOf('can never') >= 0;
+  var opts = isPoss ? ['True','False','Cannot determine','Depends'] : ['Definitely true','Definitely false','Probably true','Cannot determine'];
   shuffle(opts);
-
-  var qTime = p.stmt.length > 80 ? 25 : (diff <= 1 ? 20 : (diff <= 3 ? 15 : 12));
-
-  return {
-    question: 'Statements: ' + p.stmt + ' Conclusion: ' + p.conc,
-    answer: p.answer,
-    options: opts,
-    hint: 'Draw Venn. ' + (isPossibility ? 'Check if the possibility CAN exist' : 'Check if it definitely follows'),
-    timeLimit: qTime,
-    type: 'pattern',
-    patternLabel: 'Syllogism',
-    techniqueLabel: 'Syllogism: ' + (isPossibility ? 'check possibility' : 'draw circles. All=⊆, Some=∩, No=∅'),
-    drillLine1: p.stmt,
-    drillLine2: 'Conclusion: ' + p.conc + ' — ' + p.answer,
-    solution: p.sol
-  };
+  return { question: 'Statements: ' + chosen[1] + ' Conclusion: ' + chosen[2], answer: chosen[3], options: opts, hint: isPoss ? 'Check if the statement CAN be true' : 'Draw Venn. Check if conclusion definitely follows.', timeLimit: chosen[1].length>80?25:(diff<=1?20:15), type:'pattern', patternLabel:'Syllogism', techniqueLabel:'Syllogism: draw circles. All=⊆, Some=∩, No=∅', drillLine1: chosen[1], drillLine2: 'Conclusion: '+chosen[2]+' → '+chosen[3], solution: chosen[4] };
 }
 
 function generateInequalityQuestion(diff) {
@@ -2180,10 +2047,10 @@ function generatePercentageQuestion(diff, layer) {
     [4, function(){ var a=rand(20,45), b=rand(10,30); return { q: 'A\'s income is ' + a + '% more than B. B\'s income is what % less than A?', a: Math.round(a/(100+a)*100*10)/10, hint: 'Required % = A_more/(100+A_more)×100' }; }],
     [4, function(){ var t=rand(5000,25000), w=rand(48,55); return { q: 'Winning candidate gets ' + w + '% votes, wins by ' + Math.round(t*(w-(100-w))/100) + ' margin. Total votes?', a: t, hint: 'Margin = total×(win%-lose%) → total = margin/(' + w + '%-' + (100-w) + '%)' }; }],
     [4, function(){ var m=rand(400,900), f=rand(200,500); var tot=m+f; var mp=rand(40,70); return { q: 'Boys=' + m + ', Girls=' + f + '. ' + mp + '% boys pass. Overall pass%=' + Math.round((mp*m+(70+rand(-10,10))*f/100)/tot*100*10)/10 + '. Girls pass%?', a: 70+rand(-10,10), hint: 'Use weighted avg: overall = (boys_pass%×boys + girls_pass%×girls)/total' }; }],
-    // --- Hard (diff 5) ---
-    [5, function(){ var a=rand(10,30), b=rand(5,20); var net = (100+a)/100 * (100-b)/100; return { q: 'Salary first increased ' + a + '%, then decreased ' + b + '%. Net change?', a: Math.round((net-1)*100*10)/10, hint: 'Net = (1+a/100)(1-b/100)-1. Negative = decrease' }; }],
-    [5, function(){ var cost=rand(80,200); var sp1=cost-rand(5,20); var sp2=cost+rand(10,40); return { q: 'Two articles sold at Rs' + sp1 + ' (loss ' + Math.round((cost-sp1)/cost*100) + '%) and Rs' + sp2 + ' (profit ' + Math.round((sp2-cost)/cost*100) + '%). Overall profit/loss %?', a: Math.round(((sp2+sp1-2*cost)/(2*cost)*100)*10)/10, hint: 'Total SP - Total CP over Total CP × 100' }; }],
-    [5, function(){ var p=rand(20000,80000), r=rand(5,15); return { q: 'Population ' + p + ', growth ' + r + '% for 2yr then ' + (r-rand(2,5)) + '% decline in 3rd yr. Pop after 3yr?', a: Math.round(p*(1+r/100)*(1+r/100)*(1-(r-rand(2,5))/100)), hint: 'Growth × (1+r/100)², decline × (1-d/100)' }; }]
+    // --- SBI PO Hard (diff 5) ---
+    [5, function(){ var a=rand(20,40), b=rand(30,50); var net = (100+a)/100*(100+b)/100*(100-rand(10,25))/100-1; return { q: 'Salary inc '+a+'%, then '+b+'%, then dec '+rand(10,25)+'%. Net change?', a: Math.round(net*1000)/10, hint: 'Successive: ×'+((100+a)/100)+'×'+((100+b)/100)+'×'+(1-rand(10,25)/100)+'-1' }; }],
+    [5, function(){ var m=rand(3000,8000), f=rand(2000,6000); var mp=rand(55,80), fp=rand(40,65); return { q:'Men='+m+', women='+f+'. '+mp+'% men & '+fp+'% women pass. Overall pass%?', a:Math.round((m*mp/100+f*fp/100)/(m+f)*1000)/10, hint:'Total passed/total×100'}; }],
+    [5, function(){ var a=rand(25,45), b=rand(15,30); return { q:'A spends '+a+'% on food, '+b+'% on rent, 20% of remaining on travel, saves Rs'+rand(5000,15000)+'. Income?', a:Math.round(rand(5000,15000)/(1-(a+b+(100-a-b)*20/100)/100)), hint:'Savings=fraction left after all expenses'}; }]
   ];
   var matched = types.filter(function(t){ return t[0] <= diff; });
   if (matched.length === 0) matched = types;
@@ -2215,10 +2082,10 @@ function generateArithmeticQuestion(diff, layer) {
     [4, function(){ var a=rand(2,5)*500, b=rand(3,6)*500; var ap=rand(1,4); var bp=rand(2,6); return { q: 'A Rs' + a + ' for ' + ap + 'mo, B Rs' + b + ' for ' + bp + 'mo. Profit share ratio?', a: (a*ap) + ':' + (b*bp), hint: 'Capital×time ratio' }; }],
     [4, function(){ var x=rand(1,5), y=rand(2,6); var k=rand(3,5); return { q: 'A:B=' + x + ':' + y + ', B:C=' + y + ':' + k + '. A:C?', a: (x*k) + ':' + (y*k*10/y|0), hint: 'Make B common. A:B=' + x + ':' + y + ', B:C=' + y + ':' + k + ' → A:C=' + x + ':' + k }; }],
     [4, function(){ var t=rand(100,500); var a=rand(t/5|0, t/3|0); var b=t-a; return { q: 'Total=' + t + ', A did on ' + a + ' days, rest B in ' + (t-a) + ' days. B\'s days if alone?', a: Math.round(b/((t-a)/(1/(a+rand(10,20))*20|0))/10|0), hint: 'A rate = A_done/days, remaining work = total - A_done' }; }],
-    // --- Hard (diff 5) ---
-    [5, function(){ var a=rand(4,8), f=rand(3,7); return { q: (a*10) + ' yrs ago, A was ' + (a*2-1) + '× B. In ' + f + ' yrs, A is ' + 2 + '× B. Present ages?', a: Math.round((a*10*(a*2-1-2)+f*(2-(a*2-1)))/(2-(a*2-1))), hint: 'Let present A=p, B=q. p-' + (a*10) + '=' + (a*2-1) + '(q-' + (a*10) + '), p+' + f + '=2(q+' + f + '). Solve simultaneously.' }; }],
-    [5, function(){ var c=rand(30,60); var q=c+rand(10,30); return { q: 'Rs' + c + '/kg type1, Rs' + q + '/kg type2. ' + (c+rand(5,15)) + '/kg mixture in ' + rand(20,50) + 'kg. Ratio?', a: (q-(c+rand(5,15))) + ':' + ((c+rand(5,15))-c), hint: 'Alligation: (cost_high-mean):(mean-cost_low)' }; }],
-    [5, function(){ var x=rand(100,500), y=rand(200,600); var gain=rand(5,20); return { q: 'A+B = ' + (x+y) + '. If A increases ' + (gain+5) + '%, B decreases ' + gain + '%, total becomes ' + Math.round(x*1.25+y*0.85) + '. Find A?', a: x, hint: 'A×' + (100+gain+5)/100 + ' + (' + (x+y) + '-A)×' + (100-gain)/100 + ' = ' + Math.round(x*1.25+y*0.85) }; }]
+    // --- SBI PO Hard (diff 5) ---
+    [5, function(){ var a=rand(3,7), f1=rand(3,7), f2=rand(4,10); return { q: f1+' yrs ago, A:B=3:4. In '+f2+' yrs, A:B=5:6. Present B?', a:Math.round((f1*4*(5-3)+f2*6*(4-3))/(4*5-3*6)*10/10)|0, hint:'Let A=3k-'+f1+',B=4k-'+f1+'. Then (3k+'+f2+'):(4k+'+f2+')=5:6. Find k then B.'}; }],
+    [5, function(){ var x=rand(2,5), y=rand(3,7), a=rand(5,10), b=rand(6,12); return { q:'A:'+rand(10,30)+', B:'+rand(15,40)+', C joins after '+rand(2,4)+'mo with Rs'+rand(20,60)+'k. Profit share after 1yr?', a:(a*12)+':'+(b*12)+':'+((a+b)*rand(8,12)), hint:'A×12 : B×12 : C×(12-joined_mo)'}; }],
+    [5, function(){ var d=rand(2,8); return { q:'If x:y='+d+':'+(d+1)+', y:z='+(d+1)+':'+(d+2)+'. x:y:z?', a:d*(d+1)+':'+(d+1)*(d+1)+':'+(d+2)*(d+1)/d|0, hint:'Make y common. LCM of y parts='+(d+1)}; }]
   ];
   var matched = types.filter(function(t){ return t[0] <= diff; });
   if (matched.length === 0) matched = types;
@@ -2256,226 +2123,12 @@ function generateMotionQuestion(diff, layer) {
     [4, function(){ var d=rand(60,120), s=rand(20,40); return { q:'Car covers '+d+'km at '+s+'km/h, returns at '+(s+rand(5,15))+'km/h. Avg speed?', a:Math.round(2*s*(s+rand(5,15))/(s+s+rand(5,15))*10)/10, hint:'Avg speed = 2ab/(a+b)'}; }],
     [4, function(){ var u=rand(5,10), d=rand(8,15); var dist=rand(40,80); return { q:'Speed down='+d+'km/h, up='+u+'km/h. Dist='+dist+'km each way. Avg speed?', a:Math.round(2*d*u/(d+u)*10)/10, hint:'Avg=2ab/(a+b)'}; }],
     [4, function(){ var l=rand(150,300), s=[45,54,60,72][rand(0,3)], t=rand(20,35); var total=Math.round(s*5/18*t); if(total<=l)total=l+rand(100,300); return { q:'Train '+l+'m at '+s+'km/h crosses man in '+rand(8,15)+'s, platform in '+t+'s. Platform?', a:total-l, hint:'Train L='+l+', total='+total+'. Platform='+(total-l)}; }],
-    // --- Hard (diff 5) ---
-    [5, function(){ var v1=rand(10,20), v2=rand(6,12); var l1=rand(150,300), l2=rand(100,250); return { q:'Trains A(len='+l1+',speed='+v1+'m/s) and B(len='+l2+',speed='+v2+'m/s) opposite. Time to cross? Platform length if B crosses it in '+(rand(10,15))+'s?', a:Math.round((l1+l2)/(v1+v2)*10)/10, hint:'Opposite: add speeds. Time = (L1+L2)/(v1+v2)'}; }],
-    [5, function(){ var d=rand(300,600); return { q:'A to B at '+rand(3,6)+'m/s, B to A at '+rand(4,8)+'m/s. Total time '+d+'s. Distance?', a:Math.round(d/(1/rand(3,6)+1/rand(4,8))/60/60*10)/10, hint:'d = total_time/(1/v1 + 1/v2)'}; }],
-    [5, function(){ var r=[20,36,45,60][rand(0,3)]; var x=rand(2,5), y=rand(4,8); return { q:'Walking at '+x+'km/h, person reaches '+(y-x)+'km/h destination '+rand(5,15)+'min late. At '+y+'km/h, early '+rand(5,15)+'min. Distance?', a:Math.round(((rand(5,15)/60+rand(5,15)/60)/(1/x-1/y))*10|0), hint:'d = (t_late+t_early)/(1/v1-1/v2)'}; }],
-    [5, function(){ var d=rand(30,80), a=rand(3,6), b=rand(4,8); return { q:'Half dist at '+a+'km/h, other half at '+b+'km/h. Avg speed?', a:Math.round(2*a*b/(a+b)*10)/10, hint:'Avg = 2ab/(a+b) for two equal halves'}; }]
-  ];
-  var matched = types.filter(function(t){ return t[0] <= diff; });
-  if (matched.length === 0) matched = types;
-  var chosen = matched[rand(0, matched.length - 1)];
-  var data = chosen[1]();
-  var opts = [data.a];
-  var spread = Math.max(1, Math.abs(data.a * 0.1));
-  while (opts.length < 4) { var d = Math.round((Math.round(data.a*10)/10 + rand(-spread, spread))*10)/10; if (opts.indexOf(d) < 0 && d >= 0) opts.push(d); }
-  shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer==='instinct'?10:15, type:'quant', techniqueLabel: 'TSD: '+data.hint, intuition: data.intuition||'km/h→m/s: ×5/18. Train-pole = L, train-platform = L+P. Avg speed = 2ab/(a+b).' };
-}
-
-function generateWorkQuestion(diff, layer) {
-  var ty = [
-    [1, function(){var a=rand(6,20), b=rand(8,25); return { q:'A in '+a+'d, B in '+b+'d. Together?', a:Math.round(a*b/(a+b)*10)/10, hint:'product/sum'}; }],
-    [1, function(){var a=rand(4,8), b=rand(a+2,15); return { q:'Pipe A fills in '+a+'hr, B empties in '+b+'hr. Both open?', a:Math.round(a*b/(b-a)*10)/10, hint:'Net=1/A-1/B'}; }],
-    [1, function(){var a=rand(10,30), x=[2,3,4][rand(0,2)]; return { q:'A is '+x+'× efficient. A in '+a+'d. B alone?', a:a*x, hint:'B='+x+'×'+a}; }],
-    [2, function(){var a=rand(6,15), b=rand(10,20), w=rand(2000,5000); return { q:'A in '+a+'d, B in '+b+'d. Wage Rs'+w+'. A share?', a:Math.round(w*b/(a+b)), hint:'Ratio B:A = '+b+':'+a}; }],
-    [2, function(){var a=rand(8,18), b=rand(10,22); var t=Math.round(a*b/(a+b)*10)/10; return { q:'A+B in '+t+'d. A alone '+a+'d. B alone?', a:Math.round(1/(1/t-1/a)*10)/10, hint:'1/B=1/t-1/A'}; }],
-    [2, function(){var a=rand(8,15), b=rand(10,20); var t=Math.round(a*b/(a+b)); var d=rand(2,Math.max(1,t-2)); return { q:'A+B take '+t+'d. A leaves '+d+'d before end. Days to finish?', a:Math.round((1-d/a)/(1/b)*10)/10, hint:'Work left after A leaves = '+d+'/'+a}; }],
-    // --- Medium (diff 3) ---
-    [3, function(){var a=rand(6,12), b=rand(8,16), c=rand(12,24); return { q:'A in '+a+'d, B in '+b+'d, C in '+c+'d. All 3 together?', a:Math.round(1/(1/a+1/b+1/c)*10)/10, hint:'Sum of rates: 1/'+a+'+1/'+b+'+1/'+c}; }],
-    [3, function(){var a=rand(8,16), x=rand(2,3), y=rand(1,2); var b=Math.round(a*x/y); return { q:'A is '+x+'× B, A+B complete in '+Math.round(a*b/(a+b)*10)/10+'d. A alone?', a:a, hint:'Let B='+x+'A? No, A='+x+'B => B=xA? Wait: A='+x+'B means 1/A='+x+'/B'}; }],
-    [3, function(){var a=rand(4,8), b=rand(a+1,12), c=rand(8,15); return { q:'Pipe A fills in '+a+'h, B in '+b+'h, C empties in '+c+'h. All 3 open?', a:Math.round(1/(1/a+1/b-1/c)*10)/10, hint:'Net = 1/A+1/B-1/C'}; }],
-    // --- SSC CGL (diff 4) ---
-    [4, function(){var a=rand(8,16), b=rand(12,20), x=rand(2,5); var total=x*Math.round(a*b/(a+b)); return { q:'A+B earn Rs'+total+' for a job. A in '+a+'d, B in '+b+'d. A leaves after '+rand(3,5)+'d. B gets?', a:Math.round(total*(1-rand(3,5)/a)), hint:'A done='+rand(3,5)+'/'+a+', remaining by B'}; }],
-    [4, function(){var a=rand(2,5), b=rand(3,6), c=rand(4,8); return { q:'A in '+a+'h, B in '+b+'h, C in '+c+'h. Alternating A→B→C→... Time to fill?', a:Math.round((1/a+1/b+1/c)+rand(1,3)*10|0), hint:'Each cycle of 3h: sum of rates'}; }],
-    [4, function(){var m=rand(10,30), w=rand(15,35), c=rand(5,15); return { q:'Men='+m+' finish in '+rand(12,20)+'d. '+w+' women = '+m+' men? women done?', a:Math.round(w*rand(12,20)/m*10)/10, hint:'Work = men×days'}; }],
-    // --- Hard (diff 5) ---
-    [5, function(){var a=rand(4,8), b=rand(6,12); var leak=rand(a+2,b+5); return { q:'Pipe fills in '+a+'h. Leak empties in '+leak+'h. Both open '+(rand(3,6))+'h, then leak closed. Total time?', a:Math.round(rand(3,6)+1/(1/a-(1/leak-1/a))*10|0), hint:'First phase: fill-leak for Xh. Then fill alone for remaining.'}; }],
-    [5, function(){var a=rand(6,14), b=rand(8,18), c=rand(12,24); return { q:'A in '+a+'d, B in '+b+'d, C in '+c+'d. A+B for '+rand(3,5)+'d, then A+C for '+rand(2,4)+'d. Remaining by B?', a:Math.round((1-(rand(3,5)/a+rand(3,5)/b)-(rand(2,4)/a+rand(2,4)/c))/(1/b)*10)/10, hint:'Work done: A+B for X days + A+C for Y days. Remaining = 1 - sum'}; }]
-  ];
-  var matched = ty.filter(function(t){ return t[0] <= diff; });
-  if (matched.length === 0) matched = ty;
-  var t = matched[rand(0, matched.length - 1)];
-  var d = t[1]();
-  var o = [d.a]; var spread = Math.max(0.5, Math.abs(d.a*0.08));
-  while(o.length<4){var v=Math.round((d.a+rand(-spread,spread))*10)/10; if(o.indexOf(v)<0&&v>0)o.push(v);}
-  shuffle(o);
-  return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: layer==='instinct'?12:18, type:'quant', techniqueLabel:'Work: '+d.hint, intuition: d.intuition||'Product/sum = combined. Efficiency ratio. Wages proportional to work.' };
-}
-
-function generateAlgebraQuestion(diff, layer) {
-  var types = [
-    [1, function(){ var x=rand(15,40), y=rand(5,Math.max(1,x-10)); return { q:'Sum='+(x+y)+', diff='+(x-y)+'. Larger?', a:x, hint:'(sum+diff)/2'}; }],
-    [1, function(){ var n=rand(2,6), d=n+rand(2,5); return { q:'Num+den='+(n+d)+', den>num by '+(d-n)+'. Fraction?', a:n+'/'+d, hint:'x+(x+'+(d-n)+')='+(n+d)}; }],
-    [1, function(){ var n=rand(5,20); return { q:'3 consecutive sum='+(3*n+3)+'. Largest?', a:n+2, hint:'3x+3='+(3*n+3)}; }],
-    [2, function(){ var m=rand(2,4), f=rand(3,8); return { q:'A='+m+'×B. In '+f+'yr, A='+(m-1)+'×B. B now?', a:f*(m-1)-f, hint:'Let B=x, A='+m+'x. '+m+'x+'+f+'='+(m-1)+'(x+'+f+')'}; }],
-    [2, function(){ var a=rand(2,4), b=rand(2,4), x=rand(2,8), y=rand(2,6); return { q:'Solve: '+a+'x+'+b+'y='+(a*x+b*y)+' and '+(a+1)+'x+'+(b+1)+'y='+((a+1)*x+(b+1)*y)+'. x+y?', a:x+y, hint:'Subtract equations: x+y='+((a+1)*x+(b+1)*y-(a*x+b*y))}; }],
-    [2, function(){ var a=rand(3,8), b=rand(a+1,a+5); return { q:'If x+'+(b)+'='+a+', x²+1/x²?', a:((a)*a-2), hint:'Square both sides: x²+1/x²=(x+1/x)²-2'}; }],
-    // --- Medium (diff 3) ---
-    [3, function(){ var a=rand(2,7), b=rand(2,6), x=rand(2,5); return { q:'Solve: '+a+'x+'+b+'='+(a*x+b)+' and '+(a+1)+'x+'+(b-1)+'='+((a+1)*x+b-1)+'. x?', a:x, hint:'From first: x='+(a*x+b-a)+'/'+a}; }],
-    [3, function(){ var r1=rand(2,7), r2=rand(-5,-1); return { q:'Roots of x²'+(-r1-r2>=0?'+':'')+(-r1-r2)+'x'+(r1*r2>=0?'+':'')+(r1*r2)+'=0', a:r1+','+r2, hint:'Sum='+(r1+r2)+', product='+(r1*r2)}; }],
-    [3, function(){ var a=rand(2,6), b=rand(1,5); return { q:'Value of ('+a+'√'+b+')²', a:a*a*b, hint:'(a√b)² = a²b'}; }],
-    // --- SSC CGL (diff 4) ---
-    [4, function(){ var a=rand(2,5); return { q:'If x+1/x='+a+', find x³+1/x³?', a:a*a*a-3*a, hint:'x³+1/x³=(x+1/x)³-3(x+1/x)='+a+'³-3×'+a}; }],
-    [4, function(){ var a=rand(2,7); return { q:'Simplify: ('+a+'-√'+a+')(√'+a+'+1)/('+a+'-1)', a:Math.sqrt(a), hint:'(a-√a)(√a+1)/(a-1) = √a(√a-1)(√a+1)/(a-1) = √a(a-1)/(a-1) = √'+a}; }],
-    [4, function(){ var a=rand(2,6), b=rand(a+1,a+4); return { q:'If a+b='+b+', ab='+(a*(b-a))+', find a²+b²?', a:a*a+(b-a)*(b-a), hint:'a²+b²=(a+b)²-2ab'}; }],
-    [4, function(){ var a=rand(2,5), b=rand(1,3); return { q:'Simplify: ('+a+'x+'+b+')('+a+'x-'+b+')', a:a*a+'x²-'+b*b, hint:'(ax+b)(ax-b) = a²x²-b²'}; }],
-    // --- Hard (diff 5) ---
-    [5, function(){ var a=rand(2,8); return { q:'If x='+a+', find x⁴+1/x⁴ given x+1/x='+((a+1/a)|0), a:((a+1/a)*(a+1/a)-2)*((a+1/a)*(a+1/a)-2)-2, hint:'x²+1/x²=(x+1/x)²-2, then x⁴+1/x⁴=(x²+1/x²)²-2'}; }],
-    [5, function(){ var a=rand(2,4), b=rand(3,6); return { q:'Solve: √'+a+'x + √'+b+' = √'+(a*b)+'. Find x?', a:Math.round((Math.sqrt(a*b)-Math.sqrt(b))/Math.sqrt(a)*10)/10, hint:'Isolate √'+a+'x, then square both sides'}; }],
-    [5, function(){ var a=rand(2,5), b=rand(1,4); return { q:'Simplify: (x^'+(a+b)+' + x^'+a+')/(x^'+(b+1)+' + x)', a:'x^'+(a-1), hint:'Factor x^'+a+'(x^'+b+'+1)/x(x^'+b+'+1) = x^'+(a-1)}; }]
-  ];
-  var matched = types.filter(function(t){ return t[0] <= diff; });
-  if (matched.length === 0) matched = types;
-  var chosen = matched[rand(0, matched.length - 1)];
-  var data = chosen[1]();
-  var opts = [data.a];
-  if (typeof data.a === 'string' && data.a.indexOf(',') > 0) {
-    var parts = data.a.split(',');
-    while (opts.length < 4) { var d = (parseInt(parts[0])+rand(-1,1)) + ',' + (parseInt(parts[1])+rand(-1,1)); if (opts.indexOf(d) < 0) opts.push(d); }
-  } else {
-    var spread = Math.max(1, Math.abs(data.a * 0.15));
-    while (opts.length < 4) { var d = Math.round(data.a + rand(-spread, spread)); if (opts.indexOf(d) < 0 && (typeof d==='string'||d>=0)) opts.push(typeof data.a==='string'?d:Math.round(d)); }
-  }
-  shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer==='instinct'?12:18, type:'quant', techniqueLabel:'Algebra: '+data.hint, intuition:'Key: (a+b)²=a²+2ab+b², (a-b)²=a²-2ab+b², x+1/x→x²+1/x²→x⁴+1/x⁴.' };
-}
-
-function generateGeometryQuestion(diff, layer) {
-  var types = [
-    [1, function(){ var a=rand(30,70), b=rand(30,60); return { q:'Triangle A='+a+'°, B='+b+'°. C?', a:180-a-b, hint:'Sum=180°'}; }],
-    [1, function(){ var a=rand(20,70); return { q:'Right triangle A='+a+'°. Other acute?', a:90-a, hint:'Sum=90°'}; }],
-    [1, function(){ var a=rand(30,70), t=pick(['alternate','corresponding']); return { q:'∥ lines. '+t.charAt(0).toUpperCase()+t.slice(1)+' = '+a+'°. Find other?', a:a, hint:t+' angles equal'}; }],
-    [2, function(){ var a=rand(3,6), b=rand(4,8); return { q:'Right triangle legs '+a+' & '+b+'. Hypotenuse?', a:Math.round(Math.sqrt(a*a+b*b)*10)/10, hint:'Pythagoras'}; }],
-    [2, function(){ var a=rand(40,80); return { q:'∥ lines, one interior='+a+'°. Same side interior?', a:180-a, hint:'Supplementary (sum=180°)'}; }],
-    [2, function(){ var a=rand(30,60), b=rand(30,60); return { q:'Triangle A='+a+'°, B='+b+'°. Exterior at C?', a:a+b, hint:'Exterior = sum opposite interior'}; }],
-    [3, function(){ var n=rand(3,8); return { q:'Sum interior angles of '+n+'-sided polygon?', a:(n-2)*180, hint:'(n-2)×180°'}; }],
-    [3, function(){ var a=rand(20,70); return { q:'Inscribed angle, central='+(2*a)+'°. Inscribed angle?', a:a, hint:'Half of central'}; }],
-    [3, function(){ var a=rand(3,8); return { q:'Each interior angle of regular '+a+'-gon?', a:Math.round((a-2)*180/a*10)/10, hint:'((n-2)×180)/n'}; }],
-    [4, function(){ var a=rand(3,6), b=rand(4,8); return { q:'Circle radius '+a+'. Chord length at distance '+b+' from center?', a:Math.round(2*Math.sqrt(a*a-b*b)*10)/10, hint:'Chord=2√(r²-d²)'}; }],
-    [4, function(){ var a=rand(3,7), b=rand(2,5); return { q:'Cyclic quadrilateral, angle A='+(a*10)+'°. Opposite angle C?', a:180-a*10, hint:'Opposite angles supplementary in cyclic quadrilateral'}; }],
-    [4, function(){ var a=rand(3,8); return { q:'Number of diagonals in '+a+'-sided polygon?', a:a*(a-3)/2, hint:'n(n-3)/2'}; }],
-    [5, function(){ var r=rand(4,10); return { q:'Area of circle inscribed in equilateral triangle of side '+r+'? (π=3.14)', a:Math.round(3.14*Math.pow(r/(2*Math.sqrt(3)),2)*10)/10, hint:'Inradius = side/(2√3)'}; }],
-    [5, function(){ var a=rand(3,7); return { q:'Tangent length from point '+a+'cm away from circle of radius '+rand(3,5)+'cm?', a:Math.round(Math.sqrt(a*a-rand(3,5)*rand(3,5))*10)/10, hint:'Tangent² = dist² - r²'}; }],
-    [5, function(){ var a=rand(6,12); return { q:'Area of equilateral triangle side '+a+'?', a:Math.round(Math.sqrt(3)/4*a*a*10)/10, hint:'√3/4 × side²'}; }]
-  ];
-  var matched = types.filter(function(t){ return t[0] <= diff; });
-  if (matched.length === 0) matched = types;
-  var chosen = matched[rand(0, matched.length - 1)];
-  var data = chosen[1]();
-  var opts = [data.a];
-  var spread = Math.max(1, Math.abs(data.a*0.12));
-  while (opts.length < 4) { var d = Math.round((Math.round(data.a*10)/10 + rand(-spread, spread))*10)/10; if (opts.indexOf(d) < 0 && d >= 0) opts.push(d); }
-  shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer==='instinct'?12:18, type:'quant', techniqueLabel:'Geometry: '+data.hint, intuition:'Triangle: sum=180°, exterior=opposite sum. Circle: inscribed=½central, chord=2√(r²-d²). Poly: (n-2)×180°, diag=n(n-3)/2.' };
-}
-
-function generateMensurationQuestion(diff, layer) {
-  var types = [
-    [1, function(){ var l=rand(20,60), w=rand(15,40), c=[15,20,25,30][rand(0,3)]; return { q:'Field '+l+'×'+w+'m. Fence cost Rs'+c+'/m?', a:2*(l+w)*c, hint:'Perimeter×cost'}; }],
-    [1, function(){ var r=rand(3,7), h=rand(5,12); return { q:'Cylinder r='+r+', h='+h+'. Volume (π=3.14)?', a:Math.round(3.14*r*r*h), hint:'πr²h'}; }],
-    [1, function(){ var l=rand(5,15), w=rand(4,12); return { q:'Rectangle area='+(l*w)+', side='+l+'. Perimeter?', a:2*(l+w), hint:'Other side=area/side'}; }],
-    [2, function(){ var r=rand(3,6), h=rand(6,12); return { q:'Cone r='+r+', h='+h+'. Volume (π=3.14)?', a:Math.round(3.14*r*r*h/3), hint:'πr²h/3'}; }],
-    [2, function(){ var l=rand(20,40), w=rand(15,30), p=rand(1,4); return { q:'Garden '+l+'×'+w+'m. Path '+p+'m wide inside. Path area?', a:l*w-(l-2*p)*(w-2*p), hint:'Outer-inner'}; }],
-    [2, function(){ var r=rand(3,8); return { q:'Sphere r='+r+'. SA (π=3.14)?', a:Math.round(4*3.14*r*r), hint:'4πr²'}; }],
-    [3, function(){ var r=rand(3,7), h=rand(5,12), c=[5,8,10,12][rand(0,3)]; return { q:'Cylinder r='+r+', h='+h+'. Paint cost Rs'+c+'/m². TSA?', a:Math.round(2*3.14*r*(r+h)), hint:'2πr(r+h)'}; }],
-    [3, function(){ var l=rand(10,20), b=rand(8,15), h=rand(5,12); return { q:'Cuboid '+l+'×'+b+'×'+h+'m. Volume?', a:l*b*h, hint:'l×b×h'}; }],
-    [3, function(){ var r=rand(4,10), h=rand(8,15); return { q:'Cylinder r='+r+', h='+h+'. CSA (π=3.14)?', a:Math.round(2*3.14*r*h), hint:'2πrh'}; }],
-    [4, function(){ var r=rand(4,9); return { q:'Circle area='+Math.round(3.14*r*r)+'. Circle radius?', a:r, hint:'r = √(area/π)'}; }],
-    [4, function(){ var a=rand(5,12), b=rand(4,10); return { q:'Triangle base='+a+', height='+b+'. Area?', a:Math.round(0.5*a*b*10)/10, hint:'½×base×height'}; }],
-    [4, function(){ var l=rand(10,20), b=rand(8,15), c=[10,15,20][rand(0,2)]; return { q:'Cuboid '+l+'×'+b+'×'+rand(5,12)+'m. Paint at Rs'+c+'/m². Total cost?', a:2*(l*b+b*rand(5,12)+l*rand(5,12))*c, hint:'TSA=2(lb+bh+lh)×cost'}; }],
-    [5, function(){ var r=rand(3,6), h=rand(6,12); return { q:'Cone r='+r+', h='+h+'. Slant height? (approx)', a:Math.round(Math.sqrt(r*r+h*h)*10)/10, hint:'l = √(r²+h²)'}; }],
-    [5, function(){ var a=rand(20,40), b=rand(15,30), p=rand(2,5); return { q:'Park '+a+'×'+b+'m. Path '+p+'m wide outside. Path area?', a:(a+2*p)*(b+2*p)-a*b, hint:'(L+2p)(B+2p)-LB'}; }],
-    [5, function(){ var r=rand(4,10), h=rand(6,14); return { q:'Cylinder r='+r+', h='+h+'. CSA = TSA/2? Find TSA?', a:Math.round(2*3.14*r*(r+h)*10)/10, hint:'If CSA=TSA/2, then r=h. Else use 2πr(r+h)'}; }]
-  ];
-  var matched = types.filter(function(t){ return t[0] <= diff; });
-  if (matched.length === 0) matched = types;
-  var chosen = matched[rand(0, matched.length - 1)];
-  var data = chosen[1]();
-  var opts = [data.a];
-  var spread = Math.max(2, Math.abs(data.a*0.1));
-  while (opts.length < 4) { var d = Math.round(data.a + rand(-spread, spread)); if (opts.indexOf(d) < 0 && d >= 0) opts.push(d); }
-  shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer==='instinct'?12:18, type:'quant', techniqueLabel:'Mens: '+data.hint, intuition:'V=πr²h, SA=4πr², TSA=2πr(r+h), CSA=2πrh. Cuboid volume=l×b×h. Path area=outer-inner.' };
-}
-
-function generateCountingQuestion(diff, layer) {
-  var intuitions = {
-    factorial: 'n! = n × (n-1) × (n-2) × ... × 1. Product of all numbers down to 1.',
-    permutation: 'P(n,r) = n!/(n-r)!. Think: n choices for 1st, (n-1) for 2nd... r terms multiplied.',
-    combination: 'C(n,r) = P(n,r)/r!. Order doesn\'t matter, so divide by arrangements of r items.',
-    probability: 'Probability = favorable/total. Die: P(each) = 1/6. Cards: P(each) = 1/52.'
-  };
-  var types = [
-    // Die roll probability
-    function(){ var d=rand(1,6); return { q: 'Die rolled twice. Sum = ' + d + '?', a: Math.max(0, d-1)/36, hint: 'Favorable pairs: (1,'+(d-1)+')...('+(d-1)+',1). Count='+Math.max(0,d-1), intuition: 'Die 1×Die 2 = 36 outcomes. Favorable for sum '+d+': '+Math.max(0,d-1)+' pairs. P = '+Math.max(0,d-1)+'/36 = '+(Math.max(0,d-1)/36).toFixed(4) }; },
-    // Card probability
-    function(){ var t=['heart','spade','club','diamond'][rand(0,3)]; return { q: 'Card from 52. P(' + t + ')?', a: 13/52, hint: '13 ' + t + 's out of 52', intuition: '13 ' + t + 's in 52 cards. P = 13/52 = 1/4 = 0.25' }; },
-    // Letter arrangement (VOWEL, etc.)
-    function(){ var w=['LEADER','BANANA','CIVIL','MISSISSIPPI','COMMITTEE','DIVISIBLE','TATTERED','BALLOONED'][rand(0,7)]; var l=w.length; var reps={}; for(var i=0;i<w.length;i++)reps[w[i]]=(reps[w[i]]||0)+1; var denom=1; for(var k in reps)if(reps[k]>1)denom*=function(){var f=1;for(var i=2;i<=reps[k];i++)f*=i;return f;}(); var total=function(){var f=1;for(var i=2;i<=l;i++)f*=i;return f;}; return { q: 'Ways to arrange "' + w + '" (' + l + ' letters)?', a: total() / denom, hint: l + '! / (repeat factors)', intuition: l + '! = ' + total() + ', divide by ' + denom + ' for repeated letters = ' + total()/denom }; },
-    // Selection committee
-    function(){ var n=rand(4,8), r=rand(2,Math.min(3,n)); var p=1;for(var i=0;i<r;i++)p*=(n-i); var f=1;for(var i=2;i<=r;i++)f*=i; return { q: 'Committee of ' + r + ' from ' + n + ' people. Ways?', a: p/f, hint: 'C(' + n + ',' + r + ') = ' + p + '/' + f, intuition: 'Order doesn\'t matter: C(' + n + ',' + r + ') = ' + n + 'C' + r + ' = ' + p/f + ' ways' }; },
-    // Hard: ball picking (without replacement)
-    function(){ var r=rand(3,6), b=rand(3,6); var t=r+b; return { q: 'Bag: ' + r + ' red, ' + b + ' blue. Pick 2. Both red?', a: Math.round(r*(r-1)/(t*(t-1))*1000)/1000, hint: 'P = (first red × second red) = ' + r + '/' + t + ' × ' + (r-1) + '/' + (t-1), intuition: 'Without replacement: P = ' + r + '/' + t + ' × ' + (r-1) + '/' + (t-1) + ' = ' + (r*(r-1)/(t*(t-1))).toFixed(4) }; },
-    // Hard: "at least one" probability
-    function(){ var r=rand(2,4), b=rand(2,4); var t=r+b; var p=1 - (b*(b-1))/(t*(t-1)); return { q: 'Bag: ' + r + ' red, ' + b + ' blue. Pick 2. At least 1 red?', a: Math.round(p*1000)/1000, hint: '1 - P(both blue) = 1 - ' + b + '/' + t + ' × ' + (b-1) + '/' + (t-1), intuition: 'At least 1 red = 1 - P(both blue) = 1 - ' + b + '/' + t + ' × ' + (b-1) + '/' + (t-1) + ' = ' + Math.round(p*1000)/1000 }; },
-    // Permutation: arrangement of distinct objects
-    function(){ var n=rand(4,7), r=rand(2,3); var p=1; for(var i=0;i<r;i++)p*=(n-i); return { q: 'Ways to arrange ' + r + ' different books from ' + n + ' on a shelf?', a: p, hint: 'P(' + n + ',' + r + ') = ' + n + 'P' + r, intuition: 'Order matters: P(' + n + ',' + r + ') = ' + n + '×' + (n-1) + (r>2?'×'+(n-2):'') + (r>3?'×'+(n-3):'') + ' = ' + p }; },
-    // Coin toss probability
-    function(){ var n=rand(2,4); return { q: 'Coin tossed ' + n + ' times. P(all heads)?', a: Math.round(Math.pow(1/2,n)*1000)/1000, hint: 'Each toss: P(H)=1/2. Total = (1/2)^' + n, intuition: 'Each toss independent. P(all H) = (1/2)^' + n + ' = 1/' + Math.pow(2,n) + ' = ' + Math.round(Math.pow(0.5,n)*1000)/1000 }; },
-    // Birthday probability concept: P(no shared birthday)
-    function(){ var n=rand(3,5); var p=1; var terms=[]; for(var i=0;i<n;i++){p*=(365-i)/365; terms.push('('+(365-i)+'/365)');} return { q: n + ' people. P(no shared birthday)? (approx)', a: Math.round(p*1000)/1000, hint: terms.join('×'), intuition: 'P = product of ' + n + ' terms: ' + terms.join('×') + ' = ' + Math.round(p*1000)/1000 }; }
-  ];
-  var type = types[rand(0, types.length - 1)];
-  var data = type();
-  var opts = [data.a];
-  while (opts.length < 4) { var d = typeof data.a === 'number' ? Math.round((data.a + rand(-1, 1))*100)/100 : data.a; if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
-  shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 15 : 20, type: 'quant', techniqueLabel: 'Counting: ' + data.hint, intuition: data.intuition || 'P = arrangements (ordered), C = selections (unordered). Die: 6 faces. Cards: 52 total, 4 suits.' };
-}
-
-function generateDataQuestion(diff, layer) {
-  var types = [
-    // Median
-    function(){ var n=[rand(10,50), rand(20,60), rand(30,70), rand(5,40), rand(15,55)]; n.sort(function(a,b){return a-b}); return { q: 'Find median: ' + n.join(', '), a: n[2], hint: 'Sort and pick middle', intuition: 'Sort values: ' + n.join(', ') + '. Odd count → median = middle = ' + n[2] }; },
-    // Range
-    function(){ var vals=[]; for(var i=0;i<5;i++)vals.push(rand(5,95)); vals.sort(function(a,b){return a-b}); return { q: 'Range of: ' + vals.join(', '), a: vals[4]-vals[0], hint: 'Max - min', intuition: 'Highest = ' + vals[4] + ', lowest = ' + vals[0] + '. Range = ' + vals[4] + ' - ' + vals[0] + ' = ' + (vals[4]-vals[0]) }; },
-    // Weighted average
-    function(){ var g1=rand(55,88), g2=rand(68,98), s1=[20,25,30,35,40,45,50,55][rand(0,7)], s2=100-s1; return { q: 'Section A avg=' + g1 + '(' + s1 + ' students), B avg=' + g2 + '(' + s2 + '). Combined avg?', a: Math.round((g1*s1+g2*s2)/(s1+s2)), hint: 'Weighted average = (sum of scores)/(total students)', intuition: 'Weighted = (' + g1 + '×' + s1 + ' + ' + g2 + '×' + s2 + ')/(' + s1 + '+' + s2 + ') = ' + (g1*s1+g2*s2) + '/' + (s1+s2) + ' = ' + Math.round((g1*s1+g2*s2)/(s1+s2)) }; },
-    // Mean deviation or find missing number from average
-    function(){ var nums=[]; for(var i=0;i<4;i++)nums.push(rand(10,90)); var avg=rand(30,70); var sum=avg*5; var miss=sum - nums.reduce(function(a,b){return a+b},0); return { q: 'Average of 5 numbers = ' + avg + '. Four are ' + nums.join(', ') + '. Missing?', a: miss, hint: 'Sum = ' + avg + '×5 = ' + sum + ', missing = ' + sum + ' - ' + nums.join('+'), intuition: 'Sum of 5 = ' + avg + '×5 = ' + sum + '. Known sum = ' + nums.join('+') + ' = ' + nums.reduce(function(a,b){return a+b},0) + '. Missing = ' + sum + ' - ' + nums.reduce(function(a,b){return a+b},0) + ' = ' + miss }; },
-    // Mode (most frequent value)
-    function(){ var vals=[]; var m=rand(20,60); for(var i=0;i<4;i++)vals.push(rand(10,80)); vals.push(m); vals.push(m); vals.push(m); shuffle(vals); return { q: 'Mode of: ' + vals.join(', '), a: m, hint: 'Mode = most frequent value. Count occurrences of each.', intuition: 'Count: ' + vals.join(', ') + '. ' + m + ' appears 3 times — most frequent. Mode = ' + m }; },
-    // Mean of first N natural numbers
-    function(){ var n=rand(5,20); return { q: 'Mean of first ' + n + ' natural numbers?', a: (n+1)/2, hint: 'Sum = n(n+1)/2, divide by n', intuition: 'Mean = (n+1)/2 = (' + n + '+1)/2 = ' + (n+1)/2 }; },
-    // Average speed (total distance/total time)
-    function(){ var d1=rand(40,100), s1=rand(30,60), s2=rand(40,70); var t1=Math.round(d1/s1*10)/10; var t2=Math.round(d1/s2*10)/10; return { q: 'Car goes ' + d1 + 'km at ' + s1 + 'km/h, returns at ' + s2 + 'km/h. Avg speed?', a: Math.round(2*d1/(d1/s1+d1/s2)*10)/10, hint: 'Avg speed = total dist / total time = ' + (2*d1) + '/' + (d1/s1+d1/s2).toFixed(2), intuition: 'Total dist = ' + (2*d1) + 'km. Time = ' + (d1/s1).toFixed(2) + '+' + (d1/s2).toFixed(2) + '=' + (d1/s1+d1/s2).toFixed(2) + 'h. Avg = ' + (2*d1/(d1/s1+d1/s2)).toFixed(2) + 'km/h' }; }
-  ];
-  var type = types[rand(0, types.length - 1)];
-  var data = type();
-  var opts = [data.a];
-  while (opts.length < 4) { var d = data.a + rand(-5, 5); if (opts.indexOf(d) < 0 && d >= 0) opts.push(d); }
-  shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 15 : 20, type: 'quant', techniqueLabel: 'Data: ' + data.hint, intuition: data.intuition || 'Sort for median. Range = max-min. Avg = sum/n. Weighted avg weighs each group by count. Mode = most frequent. Avg speed = 2ab/(a+b).' };
-}
-
-function generateNumberSystemQuestion(diff, layer) {
-  var ty = [
-    [1, function(){ var n=rand(100,999); var s=String(n).split('').reduce(function(a,c){return a+ +c;},0); return { q:'Sum of digits of '+n, a:s, hint:'Add each digit' }; }],
-    [1, function(){ var d=rand(3,9), q=rand(5,15), r=rand(1,d-1); return { q:'Number = '+d+'×'+q+' + '+r+'. What number?', a:d*q+r, hint:'Div×Q+R' }; }],
-    [1, function(){ var n=rand(10,99); var rev=0,t=n; while(t>0){rev=rev*10+t%10;t=Math.floor(t/10);} return { q:'Reverse of '+n, a:rev, hint:'Reverse digits' }; }],
-    [2, function(){ var n=[[2,4],[3,4],[2,5],[7,4],[3,7],[8,3],[9,2],[4,7]][rand(0,7)]; return { q:'Unit digit of '+n[0]+'^'+n[1], a:Math.pow(n[0]%10,n[1]%4||4)%10, hint:'Cyclicity: '+n[0]}; }],
-    [2, function(){ var a=rand(2,9), b=rand(a+1,15); var hcf=(function(x,y){while(y){var t=y;y=x%y;x=t;}return x;})(a,b); return { q:'HCF of '+a+' and '+b, a:hcf, hint:'Euclidean algorithm'}; }],
-    [2, function(){ var a=rand(2,9), b=rand(a+1,12); var hcf=(function(x,y){while(y){var t=y;y=x%y;x=t;}return x;})(a,b); return { q:'LCM of '+a+' and '+b, a:a*b/hcf, hint:'a×b/HCF'}; }],
-    [3, function(){ var p2=[2,3,5,7]; var a=p2[rand(0,3)], b=p2[rand(0,3)]; while(b===a)b=p2[rand(0,3)]; return { q:'Factors of '+a*a*b+'?', a:6, hint:a+'²×'+b+' → (2+1)(1+1)=6'}; }],
-    [3, function(){ var d=rand(7,18), n=rand(2,6); return { q:'Remainder: '+d+'^'+n+' ÷ 5', a:Math.pow(d%5,n%4||4)%5, hint:'Mod 5 cyclicity'}; }],
-    [3, function(){ var n=rand(100,999); return { q:'Is '+n+' ÷ 3? (Y/N)', a:n%3===0?'Y':'N', hint:'Sum of digits check'}; }],
-    [4, function(){ var p2=[2,3,5,7,11]; var a=p2[rand(0,4)],b=p2[rand(0,4)],c=p2[rand(0,4)]; while(b===a)b=p2[rand(0,4)];while(c===a||c===b)c=p2[rand(0,4)]; return { q:'Factors of '+a*a*b*c+'?', a:(2+1)*(1+1)*(1+1), hint:a+'²'+b+'¹'+c+'¹ → (2+1)(1+1)(1+1)'}; }],
-    [4, function(){ var a=rand(1000,9999); var rev=0,t=a; while(t>0){rev=rev*10+t%10;t=Math.floor(t/10);} return { q:'Diff between '+a+' and reverse?', a:Math.abs(a-rev), hint:'Subtract reverse'}; }],
-    [4, function(){ var a=rand(2,6), b=rand(a+1,2*a); var hcf=(function(x,y){while(y){var t=y;y=x%y;x=t;}return x;})(a,b); return { q:'Product='+a*b+', HCF='+hcf+'. LCM?', a:a*b/hcf, hint:'HCF×LCM=Product'}; }],
+    // --- SBI PO Hard (diff 5) ---
     [5, function(){ var n=[0,1,2,3,4,5,6,7,8,9][rand(0,9)]; var cyc=[1,1,4,4,2,1,1,4,4,2]; return { q:'Cyclicity of unit digit for '+n+'^n?', a:cyc[n], hint:'0:1,1:1,2:4,3:4,4:2,5:1,6:1,7:4,8:4,9:2'}; }],
     [5, function(){ var n=rand(1000,9999); return { q:'Digital sum of '+n, a:(function(x){while(x>9){var s=0;while(x>0){s+=x%10;x=Math.floor(x/10);}x=s;}return x;})(n), hint:'Sum digits until 1 digit'}; }],
-    [5, function(){ var a=rand(100,999), b=rand(100,999); var hcf=(function(x,y){while(y){var t=y;y=x%y;x=t;}return x;})(a,b); return { q:'HCF of '+a+' and '+b+'?', a:hcf, hint:'Euclidean algorithm'}; }]
+    [5, function(){ var a=rand(100,999), b=rand(100,999); var hcf=(function(x,y){while(y){var t=y;y=x%y;x=t;}return x;})(a,b); return { q:'HCF of '+a+' and '+b+'?', a:hcf, hint:'Euclidean algorithm'}; }],
+    [5, function(){ var d=rand(5,9), r=rand(1,d-1); return { q:'Remainder when '+(rand(100,999))+' is divided by '+d+'?', a:(rand(100,999))%d, hint:'Just check divisibility'}; }],
+    [5, function(){ var n=rand(100,999), m=rand(2,9); return { q:'Largest '+m+'-digit number divisible by '+n+'?', a:(function(x,y){var p=Math.pow(10,m)-1; return p-p%x;})(n,m), hint:'Largest '+m+'-digit=10^'+m+'-1. Subtract remainder'}; }]
   ];
   var matched = ty.filter(function(t){ return t[0] <= diff; });
   if (matched.length === 0) matched = ty;
@@ -2721,57 +2374,46 @@ function generateDiceCubeQuestion(diff) {
 
 function generateCalendarQuestion(diff) {
   var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  var ty = [
-    // Basic: day of a specific date (using a known reference)
-    function(){ var m=rand(1,12), d=rand(1,28), y=2024; var date = new Date(y+'/'+m+'/'+d); var ans=date.getDay(); return { q: 'Day of ' + d + '/' + m + '/' + y + '?', a: days[ans], hint: '2024 is leap year', intuition: 'Reference: Jan 1 2024 = Mon. Count days offset. Year 2024 is leap (Feb 29).' }; },
-    // Count odd days between years
-    function(){ var y=rand(2024,2030); var odd=0; for(var i=2024;i<y;i++)odd+=((i%400)===0||((i%4)===0&&(i%100)!=0))?2:1; return { q: 'Odd days from 2024 to '+y+'?', a: odd%7, hint: 'Each year=1 odd day, leap=2', intuition: 'Normal year=1 odd day, leap=2 odd days. Sum mod 7 tells day shift. From 2024 to '+y+': '+odd+' odd days, '+(odd%7)+' days ahead.' }; },
-    // Day shift from a reference year
-    function(){ var y=rand(2000,2024); var odd=0; for(var i=2000;i<y;i++)odd+=((i%400)===0||((i%4)===0&&(i%100)!=0))?2:1; return { q: 'Day shift from 2000 to ' + y + '?', a: odd%7, hint: 'Count odd days mod 7', intuition: '2000 was leap but 2000/1/1 = Sat. Odd days from years: ' + odd + '. Shift = ' + (odd%7) + ' days forward.' }; },
-    // Nth X-day of a month
-    function(){ var m=rand(1,12), y=2025; var firstDay=new Date(y+'/'+m+'/1').getDay(); var nth=rand(1,4); var targetDay=rand(0,6); var dayOffset=(targetDay-firstDay+7)%7; var date=nth*7+dayOffset-6; if(date<1||date>31){date=rand(1,15)+7*(nth-1);} var ansDate=date; return { q: 'Date of ' + days[targetDay] + ' ' + nth + ' of ' + m + '/' + y + '?', a: String(ansDate), hint: 'First ' + days[targetDay] + ' is on ' + (dayOffset+1) + 'th', intuition: 'Find first ' + days[targetDay] + ', then add ' + (nth-1) + ' weeks. First of month=' + days[firstDay] + '. First ' + days[targetDay] + '=' + (dayOffset+1) + 'th. ' + nth + days[targetDay] + '=' + ansDate + 'th.' }; },
-    // Count specific weekdays in a month
-    function(){ var m=rand(1,12), y=2025; var daysInMonth=[31,(y%4===0?29:28),31,30,31,30,31,31,30,31,30,31][m-1]; var firstDay=new Date(y+'/'+m+'/1').getDay(); var targetDay=rand(0,6); var count=0; for(var dt=1;dt<=daysInMonth;dt++){if(new Date(y+'/'+m+'/'+dt).getDay()===targetDay)count++;} return { q: 'How many ' + days[targetDay] + 's in ' + m + '/' + y + '?', a: String(count), hint: 'First day=' + days[firstDay] + ', month has ' + daysInMonth + ' days', intuition: 'Count ' + days[targetDay] + 's: first ' + days[targetDay] + ' on ' + ((targetDay-firstDay+7)%7+1) + 'th, then every 7 days. Total=' + count }; },
-    // Odd days between two arbitrary years
-    function(){ var y1=rand(2020,2023), y2=rand(y1+1,2028); var odd=0; for(var i=y1;i<y2;i++)odd+=((i%400)===0||((i%4)===0&&(i%100)!=0))?2:1; return { q: 'Odd days between ' + y1 + ' and ' + y2 + '?', a: odd%7, hint: 'Sum odd days of each year mod 7', intuition: 'From ' + y1 + ' to ' + y2 + ': count odd days per year. Normal=1, leap=2. Sum=' + odd + ', mod 7=' + (odd%7) }; },
-    // Complex: Find day of date given another date's day (exam style)
-    function(){ var refM=rand(1,12), refD=rand(1,28), refY=Math.floor(rand(2020,2028)); var refDate=new Date(refY+'/'+refM+'/'+refD); var refDayIdx=refDate.getDay(); var tarM=rand(1,12), tarD=rand(1,28), tarY=Math.floor(rand(2020,2028)); while(tarY===refY&&tarM===refM&&tarD===refD){tarM=rand(1,12); tarD=rand(1,28); tarY=Math.floor(rand(2020,2028));} var tarDate=new Date(tarY+'/'+tarM+'/'+tarD); var diffDays=Math.round((tarDate-refDate)/(24*60*60*1000)); var ansIdx=(refDayIdx+diffDays%7+7*7)%7; return { q: 'If ' + refD + '/' + refM + '/' + refY + ' is ' + days[refDayIdx] + ', what day is ' + tarD + '/' + tarM + '/' + tarY + '?', a: days[ansIdx], hint: 'Find days difference, take mod 7', intuition: refD + '/' + refM + '/' + refY + ' = ' + days[refDayIdx] + '. ' + tarD + '/' + tarM + '/' + tarY + ' has ' + diffDays + ' days difference. ' + diffDays + ' mod 7 = ' + (diffDays%7) + '. ' + days[refDayIdx] + ' + ' + (diffDays%7) + ' = ' + days[ansIdx] + '.' }; },
-    // Complex: Same calendar year (same day-date pattern)
-    function(){ var y=rand(2024,2035); var odd=0; var cy=y; do{odd+=((cy%400)===0||((cy%4)===0&&(cy%100)!=0))?2:1; cy++;}while(odd%7!==0&&cy<y+12); if(odd%7===0){ return { q: 'Which year has the same calendar as ' + y + '?', a: String(cy), hint: 'Sum odd days must be multiple of 7. Leap year repeats in 28yrs.', intuition: 'Sum odd days from ' + y + ' to ' + cy + ' = ' + odd + ' (multiple of 7). ' + cy + ' has same calendar.' }; } else { return { q: 'Which year repeats the calendar of ' + y + '?', a: String(y+((y%4===0&&(y%100!==0||y%400===0))?28:6)), hint: 'Leap year repeats in 28 years, normal in 6 or 11 years', intuition: 'Leap year calendar repeats in 28 years. Normal year can repeat in 6 or 11 years.' }; } },
-    // Complex: Century leap year rule
-    function(){ var c=rand(1,4)*100+rand(0,99); var isLeap=(c%400)===0; return { q: 'Is year ' + c + ' a leap year?', a: isLeap?'Yes':'No', hint: 'Century years divisible by 400 only', intuition: c + ' is a century year. ' + c + '%400=' + (c%400) + '. ' + (isLeap?'Divisible by 400 → Leap':'Not divisible by 400 → Not leap') }; }
+  var types = [
+    [1, function(){ var m=rand(1,12), d=rand(1,28), y=2024; var date=new Date(y+'/'+m+'/'+d); return {q:'Day of '+d+'/'+m+'/'+y+'?',a:days[date.getDay()],hint:'2024 leap yr'}; }],
+    [1, function(){ var y=rand(2024,2030), odd=0; for(var i=2024;i<y;i++)odd+=((i%400)===0||((i%4)===0&&(i%100)!=0))?2:1; return {q:'Odd days 2024→'+y+'?',a:odd%7,hint:'Normal=1, leap=2 odd days'}; }],
+    [2, function(){ var y=rand(2000,2024), odd=0; for(var i=2000;i<y;i++)odd+=((i%400)===0||((i%4)===0&&(i%100)!=0))?2:1; return {q:'Odd days 2000→'+y+'?',a:odd%7,hint:'Count odd days mod 7'}; }],
+    [2, function(){ var m=rand(1,12), y=2025; var firstDay=new Date(y+'/'+m+'/1').getDay(); var nth=rand(1,4); var targetDay=rand(0,6); var dayOffset=(targetDay-firstDay+7)%7; var date=nth*7+dayOffset-6; if(date<1||date>31)date=rand(1,15)+7*(nth-1); return {q:'Date of '+days[targetDay]+' '+nth+' of '+m+'/'+y+'?',a:String(date),hint:'First '+days[targetDay]+' on '+(dayOffset+1)+'th'}; }],
+    [3, function(){ var m=rand(1,12), y=2025; var dim=[31,(y%4===0?29:28),31,30,31,30,31,31,30,31,30,31][m-1]; var firstDay=new Date(y+'/'+m+'/1').getDay(); var targetDay=rand(0,6); var count=0; for(var dt=1;dt<=dim;dt++){if(new Date(y+'/'+m+'/'+dt).getDay()===targetDay)count++;} return {q:'How many '+days[targetDay]+'s in '+m+'/'+y+'?',a:String(count),hint:'First='+days[firstDay]+', '+dim+' days'}; }],
+    [3, function(){ var y1=rand(2020,2023), y2=rand(y1+1,2028), odd=0; for(var i=y1;i<y2;i++)odd+=((i%400)===0||((i%4)===0&&(i%100)!=0))?2:1; return {q:'Odd days '+y1+'→'+y2+'?',a:odd%7,hint:'Sum odd days mod 7'}; }],
+    [4, function(){ var refM=rand(1,12), refD=rand(1,28), refY=Math.floor(rand(2020,2028)); var refDate=new Date(refY+'/'+refM+'/'+refD); var refDay=refDate.getDay(); var tarM=rand(1,12), tarD=rand(1,28), tarY=Math.floor(rand(2020,2028)); while(tarY===refY&&tarM===refM&&tarD===refD){tarM=rand(1,12); tarD=rand(1,28); tarY=Math.floor(rand(2020,2028));} var tarDate=new Date(tarY+'/'+tarM+'/'+tarD); var diffDays=Math.round((tarDate-refDate)/(24*60*60*1000)); var ans=(refDay+diffDays%7+7*7)%7; return {q:'If '+refD+'/'+refM+'/'+refY+'='+days[refDay]+', day of '+tarD+'/'+tarM+'/'+tarY+'?',a:days[ans],hint:'Diff '+diffDays+' days, mod 7 = '+(diffDays%7)}; }],
+    [4, function(){ var y=rand(2024,2035), odd=0, cy=y; do{odd+=((cy%400)===0||((cy%4)===0&&(cy%100)!=0))?2:1; cy++;}while(odd%7!==0&&cy<y+12); if(odd%7===0)return {q:'Same calendar as '+y+'?',a:String(cy),hint:'Odd days sum='+odd+' (mult of 7)'}; else return {q:'Repeats calendar of '+y+'?',a:String(y+((y%4===0&&(y%100!==0||y%400===0))?28:6)),hint:'Leap→28yr, normal→6/11yr'}; }],
+    [5, function(){ var c=rand(1,4)*100+rand(0,99); var isLeap=(c%400)===0; return {q:'Is '+c+' leap?',a:isLeap?'Yes':'No',hint:'Century÷400 only'}; }]
   ];
-  var t = ty[rand(0, ty.length - 1)];
-  var d = t();
+  var matched = types.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = types;
+  var chosen = matched[rand(0, matched.length - 1)];
+  var d = chosen[1]();
   var o = [d.a]; while(o.length<4){var v=days[rand(0,6)]; if(o.indexOf(v)<0)o.push(v);}
   shuffle(o);
-  return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: diff > 2 ? 25 : 20, type:'reasoning', techniqueLabel:'Calendar: '+d.hint, intuition: d.intuition||'Odd days: normal year=1, leap=2. Day = reference day + odd days. Jan 1 2024 = Monday.' };
+  return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: diff>2?25:20, type:'reasoning', techniqueLabel:'Calendar: '+d.hint, intuition:'Odd days: normal year=1, leap=2. Day = ref + odd days mod 7.' };
 }
 
 function generateClockQuestion(diff) {
-  var ty = [
-    function(){ var h=rand(1,11); return { q: 'Angle between hands at ' + h + ':00?', a: h*30, hint: 'Hour hand at ' + h + '×30°', intuition: 'At ' + h + ':00, min hand at 0°, hr hand at ' + h + '×30° = ' + h*30 + '°. Formula: |30H - 5.5M|' }; },
-    function(){ var h=rand(1,11), m=[15,20,25,30,35,40,45][rand(0,6)]; var a=Math.abs(30*h - 5.5*m); var an = a>180?360-a:a; return { q: 'Angle at ' + h + ':' + m + '?', a: Math.round(an), hint: 'Formula: |30H - 5.5M|', intuition: 'Formula: |30×' + h + ' - 5.5×' + m + '| = |' + (30*h) + ' - ' + (5.5*m) + '| = ' + Math.round(a) + '°' + (a>180?'. Smaller angle = '+Math.round(an):'') }; },
-    function(){ var h=rand(0,10); return { q: 'When do hands overlap between ' + h + ':00 and ' + (h+1) + ':00?', a: (h*60/11).toFixed(1), hint: 'Overlap at (60H)/11 min past H', intuition: 'Hands overlap formula: time = 60H/11 min past H. At ' + h + ':00 = ' + (h*60/11).toFixed(1) + ' min past ' + h }; },
-    function(){ var h=rand(0,10); var m=((60*h+30)/11).toFixed(1); return { q: 'When are hands opposite (180°) between ' + h + ':00 and ' + (h+1) + ':00?', a: m, hint: 'Opposite at (60H+30)/11 min past H', intuition: 'Opposite formula: (60H+30)/11 min past H. At ' + h + ':00, opposite at ' + m + ' min past ' + h }; },
-    function(){ var h=rand(1,11), m=rand(0,11)*5+rand(0,4); var a=Math.abs(30*h - 5.5*m); var an=a>180?360-a:a; return { q: 'Find the smaller angle between hands at ' + h + ':' + (m<10?'0':'') + m + '?', a: Math.round(an), hint: '|30H - 5.5M|, take smaller angle if >180°', intuition: 'Angle = |30×' + h + ' - 5.5×' + m + '| = ' + Math.round(a) + '°' + (a>180?'. Smaller='+Math.round(an):'') }; },
-    function(){ var h=rand(0,10); var m1=((60*h-90)/11).toFixed(1); var m2=((60*h+90)/11).toFixed(1); if(m1<0)m1=((60*h+270)/11).toFixed(1); return { q: 'When do hands form right angle (90°) between ' + h + ':00 and ' + (h+1) + ':00? (earlier time)', a: m1, hint: 'Right angle at (60H±90)/11 min past H', intuition: 'Right angle formula: (60H ± 90)/11. At ' + h + ':00, earlier=' + m1 + ' min past ' + h + (m2>0&&m2<60?', later='+m2+' min past '+h:'') }; },
-    // Mirror image time (exam pattern)
-    function(){ var h=rand(1,11), m=[0,5,10,15,20,25,30,35,40,45,50,55][rand(0,11)]; var rh=11-h, rm=60-m; if(rh<=0)rh+=12; if(rm===60){rm=0;rh++;} if(rh>=12)rh-=12; var ans=rh+':'+(rm<10?'0':'')+rm; return { q: 'Mirror image of ' + h + ':' + (m<10?'0':'') + m + ' shows?', a: ans, hint: 'Subtract from 12:00 or 11:60', intuition: 'Mirror time: 11:' + (60-m) + ' reflected. Formula: 11:60 - ' + h + ':' + (m<10?'0':'') + m + ' = ' + ans }; },
-    // Gain/Loss of clock (how much does a clock gain/lose in a day)
-    function(){ var gainMin=rand(1,10); return { q: 'A clock gains ' + gainMin + ' min every hour. How much does it gain in a day?', a: gainMin*24, hint: 'Gain per hour × 24 hours', intuition: gainMin + ' min/hr × 24 hr = ' + (gainMin*24) + ' min per day' }; },
-    // When do hands form a straight line (0° or 180°)?
-    function(){ var h=rand(0,10); var m1=((60*h)/11).toFixed(1); var m2=((60*h+30)/11).toFixed(1); var times=[]; if(m1<60)times.push(m1); if(m2<60)times.push(m2); var ans=times.length>0?times[rand(0,times.length-1)]:m2; return { q: 'When do hands form a straight line between ' + h + ':00 and ' + (h+1) + ':00? (nearest)', a: ans, hint: 'Straight line at both 0° and 180°: 60H/11 and (60H+30)/11', intuition: 'Straight line occurs twice: overlap (0°) and opposite (180°). At ' + h + ':00, times: ' + (m1<60?m1+' min':'none') + ' and ' + (m2<60?m2+' min':'none') + ' past ' + h }; },
-    // Time when hour and minute hand swap positions
-    function(){ var h=rand(1,10), m=rand(0,11)*5; var swapH=m/5, swapM=h*5+Math.floor(m/12); if(swapH>=12)swapH-=12; var ans=Math.floor(swapH)+':'+(Math.floor(swapM)<10?'0':'')+Math.floor(swapM); return { q: 'If hour and minute hands at ' + h + ':' + (m<10?'0':'') + m + ' swap, what time is shown?', a: ans, hint: 'H=M/5, M=H×5', intuition: 'Swap: new hour = old minute/5 = ' + (m/5) + ', new minute = old hour × 5 = ' + (h*5) + '. Time = ' + ans }; },
-    // Angle at exact minutes (including random minutes, not just multiples of 5)
-    function(){ var h=rand(0,11), m=rand(0,59); var a=Math.abs(30*h - 5.5*m); var an=a>180?360-a:a; return { q: 'Angle between hands at ' + h + ':' + (m<10?'0':'') + m + '?', a: Math.round(an), hint: '|30H - 5.5M| = |'+(30*h)+' - '+(5.5*m)+'|', intuition: 'Use formula: |30×' + h + ' - 5.5×' + m + '| = ' + Math.round(a) + '°' + (a>180?'. Smaller='+Math.round(an):'') }; }
+  var types = [
+    [1, function(){ var h=rand(1,11); return {q:'Angle at '+h+':00?',a:h*30,hint:'Hr hand at '+h+'×30°'}; }],
+    [2, function(){ var h=rand(1,11), m=[15,20,25,30,35,40,45][rand(0,6)]; var a=Math.abs(30*h-5.5*m); a=a>180?360-a:a; return {q:'Angle at '+h+':'+m+'?',a:Math.round(a),hint:'|30H-5.5M|'}; }],
+    [2, function(){ var h=rand(0,10); return {q:'Hands overlap '+h+':00–'+(h+1)+':00?',a:(h*60/11).toFixed(1),hint:'60H/11 min past H'}; }],
+    [3, function(){ var h=rand(0,10); var m=((60*h+30)/11).toFixed(1); return {q:'Hands opposite (180°) '+h+':00–'+(h+1)+':00?',a:m,hint:'(60H+30)/11'}; }],
+    [3, function(){ var h=rand(0,10); var m1=((60*h-90)/11).toFixed(1); var m2=((60*h+90)/11).toFixed(1); if(m1<0)m1=((60*h+270)/11).toFixed(1); return {q:'Right angle (90°) '+h+':00–'+(h+1)+':00?',a:m1,hint:'(60H±90)/11'}; }],
+    [4, function(){ var h=rand(1,11), m=rand(0,59); var a=Math.abs(30*h-5.5*m); a=a>180?360-a:a; return {q:'Smaller angle at '+h+':'+(m<10?'0':'')+m+'?',a:Math.round(a),hint:'|30H-5.5M|, smaller if >180'}; }],
+    [4, function(){ var h=rand(1,11), m=[0,5,10,15,20,25,30,35,40,45,50,55][rand(0,11)]; var rh=11-h, rm=60-m; if(rh<=0)rh+=12; if(rm===60){rm=0;rh++;} if(rh>=12)rh-=12; return {q:'Mirror image of '+h+':'+(m<10?'0':'')+m+'?',a:rh+':'+(rm<10?'0':'')+rm,hint:'11:60 - given time'}; }],
+    [5, function(){ var gainMin=rand(1,10); return {q:'Clock gains '+gainMin+'min/hr. Gain in 24hr?',a:gainMin*24,hint:'×24'}; }],
+    [5, function(){ var h=rand(0,10); var m1=(60*h/11).toFixed(1), m2=((60*h+30)/11).toFixed(1); var times=[]; if(m1<60)times.push(m1); if(m2<60)times.push(m2); return {q:'Straight line between '+h+':00–'+(h+1)+':00?',a:times[rand(0,times.length-1)],hint:'Both 0° and 180°'}; }],
+    [5, function(){ var h=rand(1,10), m=rand(0,11)*5; var sh=m/5, sm=h*5+Math.floor(m/12); if(sh>=12)sh-=12; return {q:'Swapped hands from '+h+':'+(m<10?'0':'')+m+'?',a:Math.floor(sh)+':'+(Math.floor(sm)<10?'0':'')+Math.floor(sm),hint:'New H=M/5, New M=H×5'}; }]
   ];
-  var t = ty[rand(0, ty.length - 1)];
-  var d = t();
-  var o = [d.a]; while(o.length<4){var v=Math.round((Math.abs(30*rand(1,11)-5.5*rand(0,59)))*10)/10; if(o.indexOf(v)<0)o.push(v);}
+  var matched = types.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = types;
+  var chosen = matched[rand(0, matched.length - 1)];
+  var d = chosen[1]();
+  var o = [d.a]; while(o.length<4){var v=Math.round(Math.abs(30*rand(1,11)-5.5*rand(0,59))); if(o.indexOf(v)<0)o.push(v);}
   shuffle(o);
-  return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: diff > 2 ? 25 : 20, type:'reasoning', techniqueLabel:'Clock: '+d.hint, intuition: d.intuition||'Angle = |30H - 5.5M|. If >180°, use 360-result. Overlap: 60H/11 min past H. Mirror: 11:60 - given time.' };
+  return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: diff>2?25:20, type:'reasoning', techniqueLabel:'Clock: '+d.hint, intuition:'Angle=|30H-5.5M|, if >180° use 360-result. Overlap: 60H/11. Mirror: 11:60-time.' };
 }
 
 function generateAlphabetArrangeQuestion(diff) {
@@ -2834,33 +2476,96 @@ function generateDecisionMakingQuestion(diff) {
 }
 
 function generateVennDiagramQuestion(diff) {
-  var ty = [
-    // Basic 2-set: find neither
-    function(){ var n=rand(30,60), a=rand(10,30), b=rand(10,30); var both=rand(5, Math.min(a,b)); return { q: 'Total=' + n + ', like A=' + a + ', like B=' + b + ', both=' + both + '. Neither?', a: n - (a+b-both), hint: 'Total - (A + B - both)', intuition: 'Neither = Total - (A + B - both). ' + n + ' - (' + a + '+' + b + '-' + both + ') = ' + (n - (a+b-both)) }; },
-    // Only A
-    function(){ var a=rand(20,40), b=rand(15,30), both=rand(5, Math.min(a,b)); return { q: 'A=' + a + ', B=' + b + ', both=' + both + '. Only A?', a: a-both, hint: 'A only = A - both', intuition: 'Only A = A - both = ' + a + '-' + both + ' = ' + (a-both) }; },
-    // Either A or B
-    function(){ var total=rand(50,100), none=rand(5,15); return { q: 'Survey: ' + total + ' people, ' + none + ' like neither. Either A or B?', a: total-none, hint: 'People who like at least one = total - neither', intuition: 'At least one = total - neither = ' + total + '-' + none + ' = ' + (total-none) }; },
-    // Hard: 3-set Venn
-    function(){ var na=rand(20,40), nb=rand(15,35), nc=rand(10,25), two=rand(8,18), three=rand(3,8); var t=na+nb+nc-two-2*three+rand(5,20); return { q: 'n(A)=' + na + ' n(B)=' + nb + ' n(C)=' + nc + ', exactly two=' + two + ', all three=' + three + ', total=' + t + '. Neither?', a: t - (na+nb+nc - two - 2*three), hint: 'Total - (A+B+C - exactly_two - 2×all_three)', intuition: 'Neither = Total - (A+B+C - exactly 2 - 2×all 3). Compute: ' + t + ' - (' + (na+nb+nc) + ' - ' + two + ' - ' + (2*three) + ') = ' + (t-(na+nb+nc-two-2*three)) }; },
-    // Given Venn percentages, find exactly one
-    function(){ var pA=rand(30,60), pB=rand(20,50), pBoth=rand(5, Math.min(pA,pB)-5); return { q: 'In a survey, ' + pA + '% like A, ' + pB + '% like B, ' + pBoth + '% like both. % who like exactly one?', a: (pA-pBoth)+(pB-pBoth), hint: 'Exactly one = (A-both) + (B-both)', intuition: 'Only A=' + (pA-pBoth) + '%, Only B=' + (pB-pBoth) + '%. Exactly one = ' + ((pA-pBoth)+(pB-pBoth)) + '%' }; },
-    // 3-category: doctors, men, Indians
-    function(){ var total=rand(200,500), d=rand(30,80), m=rand(60,120), ind=rand(40,100), dAndM=rand(10,Math.min(d,m)-5), mAndInd=rand(10,Math.min(m,ind)-5), dAndInd=rand(8,Math.min(d,ind)-5), all=rand(3,Math.min(dAndM,mAndInd,dAndInd)-2); var region=rand(0,2); var cats=[{label:'only doctors',val:d-dAndM-dAndInd+all},{label:'only men',val:m-dAndM-mAndInd+all},{label:'only Indians',val:ind-dAndInd-mAndInd+all}]; var pick=cats[region]; return { q: 'Total=' + total + '. Doctors=' + d + ', Men=' + m + ', Indians=' + ind + '. D&M=' + dAndM + ', M&Ind=' + mAndInd + ', D&Ind=' + dAndInd + ', all three=' + all + '. ' + pick.label + '?', a: pick.val, hint: 'Subtract overlapping regions. ' + pick.label + ' = ' + pick.val, intuition: 'Use inclusion-exclusion. ' + pick.label + ' = ' + pick.val }; },
-    // Venn word problem: students taking subjects
-    function(){ var total=rand(80,150), math=rand(30,50), phys=rand(25,45), chem=rand(20,40), mp=rand(8,Math.min(math,phys)-3), pc=rand(5,Math.min(phys,chem)-3), mc=rand(5,Math.min(math,chem)-3), all=rand(2,Math.min(mp,pc,mc)-1); return { q: total + ' students. Math=' + math + ', Physics=' + phys + ', Chemistry=' + chem + '. M&P=' + mp + ', P&C=' + pc + ', M&C=' + mc + ', all three=' + all + '. Only Math?', a: math-mp-mc+all, hint: 'Only Math = Math - (M&P + M&C) + all three', intuition: 'Only Math = ' + math + ' - (' + mp + '+' + mc + ') + ' + all + ' = ' + (math-mp-mc+all) }; },
-    // Venn representation: which diagram shows relationship (exam pattern)
-    function(){ var rels=[{q:'Doctors, Men, Indians → which diagram?',a:'Three overlapping circles',hint:'Some doctors are men, some are Indian, but not all'},{q:'Tigers, Lions, Animals → which diagram?',a:'Two circles inside larger circle',hint:'Tigers and Lions are subsets of Animals'},{q:'Prime numbers, Even numbers, Integers → which diagram?',a:'Two overlapping circles inside larger circle',hint:'Prime and Even overlap (2 is even prime), both are Integers'},{q:'Fruits, Apples, Oranges → which diagram?',a:'Two separate circles inside larger circle',hint:'Apples and Oranges are disjoint subsets of Fruits'}]; var r=rels[rand(0,rels.length-1)]; return { q: r.q, a: r.a, hint: r.hint, intuition: 'Draw Venn diagram showing category relationships. Subsets go inside larger sets. Overlapping if they share elements.' }; },
-    // Maximum/Minimum Venn (exam pattern)
-    function(){ var total=rand(50,100), a=rand(20,40), b=rand(15,35); var maxBoth=Math.min(a,b); var minBoth=Math.max(0,a+b-total); return { q: total + ' people. ' + a + ' like A, ' + b + ' like B. Maximum who like both?', a: maxBoth, hint: 'Max both = smaller of A and B', intuition: 'Maximum overlap = min(A,B) = ' + maxBoth + '. All ' + maxBoth + ' people who like the smaller set could also like the larger.' }; },
-    // 3-set find exactly two
-    function(){ var na=rand(20,35), nb=rand(15,30), nc=rand(10,25), ab=rand(5,Math.min(na,nb)-3), bc=rand(4,Math.min(nb,nc)-2), ac=rand(4,Math.min(na,nc)-2), abc=rand(2,Math.min(ab,bc,ac)-1); var exactlyTwo=(ab-abc)+(bc-abc)+(ac-abc); return { q: 'n(A)=' + na + ', n(B)=' + nb + ', n(C)=' + nc + '. A&B=' + ab + ', B&C=' + bc + ', A&C=' + ac + ', A&B&C=' + abc + '. Exactly two?', a: exactlyTwo, hint: '(A&B - abc) + (B&C - abc) + (A&C - abc)', intuition: 'Exactly two = (A&B - all) + (B&C - all) + (A&C - all) = (' + ab + '-' + abc + ')+(' + bc + '-' + abc + ')+(' + ac + '-' + abc + ') = ' + exactlyTwo }; }
+  var types = [
+    [1, function(){ var n=rand(30,60), a=rand(10,30), b=rand(10,30), both=rand(5,Math.min(a,b)); return {q:'Total='+n+', A='+a+', B='+b+', both='+both+'. Neither?',a:n-(a+b-both),hint:'Total-(A+B-both)'}; }],
+    [1, function(){ var a=rand(20,40), b=rand(15,30), both=rand(5,Math.min(a,b)); return {q:'A='+a+', B='+b+', both='+both+'. Only A?',a:a-both,hint:'A-only=A-both'}; }],
+    [2, function(){ var total=rand(50,100), none=rand(5,15); return {q:'Survey: '+total+' people, '+none+' like neither. Either A or B?',a:total-none,hint:'Total-neither'}; }],
+    [2, function(){ var pA=rand(30,60), pB=rand(20,50), pBoth=rand(5,Math.min(pA,pB)-5); return {q:pA+'% like A, '+pB+'% like B, '+pBoth+'% both. % exactly one?',a:(pA-pBoth)+(pB-pBoth),hint:'(A-both)+(B-both)'}; }],
+    [3, function(){ var total=rand(50,100), a=rand(20,40), b=rand(15,35); return {q:total+' people. '+a+' like A, '+b+' like B. Max who like both?',a:Math.min(a,b),hint:'Max both=min(A,B)'}; }],
+    [3, function(){ var total=rand(50,100), a=rand(20,40), b=rand(15,35); var minBoth=Math.max(0,a+b-total); return {q:total+' people. '+a+' like A, '+b+' like B. Min who like both?',a:minBoth,hint:'Min both = max(0, A+B-total)'}; }],
+    [4, function(){ var na=rand(20,40), nb=rand(15,35), nc=rand(10,25), two=rand(8,18), three=rand(3,8); var t=na+nb+nc-two-2*three+rand(5,20); return {q:'n(A)='+na+' n(B)='+nb+' n(C)='+nc+', exactly two='+two+', all three='+three+', total='+t+'. Neither?',a:t-(na+nb+nc-two-2*three),hint:'Total-(A+B+C-exact2-2×all3)'}; }],
+    [4, function(){ var total=rand(200,500), d=rand(30,80), m=rand(60,120), ind=rand(40,100), dM=rand(10,Math.min(d,m)-5), mInd=rand(10,Math.min(m,ind)-5), dInd=rand(8,Math.min(d,ind)-5), all=rand(3,Math.min(dM,mInd,dInd)-2); var cats=[{l:'only doctors',v:d-dM-dInd+all},{l:'only men',v:m-dM-mInd+all},{l:'only Indians',v:ind-dInd-mInd+all}]; var pick=cats[rand(0,2)]; return {q:'Total='+total+'. Doctors='+d+', Men='+m+', Indians='+ind+'. D&M='+dM+', M&Ind='+mInd+', D&Ind='+dInd+', all='+all+'. '+pick.l+'?',a:pick.v,hint:'Subtract overlaps'}; }],
+    [5, function(){ var na=rand(20,35), nb=rand(15,30), nc=rand(10,25), ab=rand(5,Math.min(na,nb)-3), bc=rand(4,Math.min(nb,nc)-2), ac=rand(4,Math.min(na,nc)-2), abc=rand(2,Math.min(ab,bc,ac)-1); return {q:'n(A)='+na+', n(B)='+nb+', n(C)='+nc+'. A&B='+ab+', B&C='+bc+', A&C='+ac+', A&B&C='+abc+'. Exactly two?',a:(ab-abc)+(bc-abc)+(ac-abc),hint:'(AB-all)+(BC-all)+(AC-all)'}; }],
+    [5, function(){ var rels=[{q:'Doctors, Men, Indians → diagram?',a:'Three overlapping circles',hint:'Some overlap, none fully contain'},{q:'Tigers, Lions, Animals → diagram?',a:'Two circles inside larger',hint:'Tigers/Lions ⊆ Animals'},{q:'Prime, Even, Integers → diagram?',a:'Two overlapping inside larger',hint:'2 is even prime'},{q:'Fruits, Apples, Oranges → diagram?',a:'Two separate inside larger',hint:'Apples≠Oranges, both⊆Fruits'}]; var r=rels[rand(0,rels.length-1)]; return {q:r.q,a:r.a,hint:r.hint}; }]
   ];
-  var t = ty[rand(0, ty.length - 1)];
-  var d = t();
-  var o = [d.a]; while(o.length<4){var v=d.a+rand(-10,10); if(o.indexOf(v)<0&&v>=0)o.push(v);}
+  var matched = types.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = types;
+  var chosen = matched[rand(0, matched.length - 1)];
+  var d = chosen[1]();
+  var o = [d.a]; while(o.length<4){var v=typeof d.a==='string'?['A','B','C','D'][rand(0,3)]:d.a+rand(-10,10); if(o.indexOf(v)<0)o.push(v);}
   shuffle(o);
-  return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: diff > 2 ? 20 : 15, type:'reasoning', techniqueLabel:'Venn: '+d.hint, intuition: d.intuition||'Venn: Only A = A-both. Only B = B-both. Neither = total - (A+B-both). Total = Only A + Only B + both + neither.' };
+  return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: diff>2?20:15, type:'reasoning', techniqueLabel:'Venn: '+d.hint, intuition:'Only A = A-both. Neither = total-(A+B-both). 3-set: inc-exc principle.' };
+}
+
+// ====== SBI PO-SPECIFIC GENERATORS ======
+
+function generateQuadraticComparisonQuestion(diff) {
+  var eqs = [];
+  for (var qc = 0; qc < 2; qc++) {
+    var a = rand(1, 4), b = rand(-12, 12), c = rand(-12, 12);
+    if (b === 0) b = 1; if (c === 0) c = 1;
+    var d = b*b - 4*a*c;
+    var r1 = d >= 0 ? Math.round((-b + Math.sqrt(d))/(2*a)*100)/100 : null;
+    var r2 = d >= 0 ? Math.round((-b - Math.sqrt(d))/(2*a)*100)/100 : null;
+    eqs.push({eq: a+'x²'+(b>=0?'+':'')+b+'x'+(c>=0?'+':'')+c+'=0', r1:r1, r2:r2, a:a, b:b, c:c});
+  }
+  var comps = [
+    function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (eqs[0].r1 > eqs[1].r1 ? 'I > II' : (eqs[0].r1 < eqs[1].r1 ? 'I < II' : (eqs[0].r1 === eqs[1].r1 ? 'I = II' : 'Cannot compare'))) : 'Cannot compare'; return {a:v, hint:'Compare the larger roots'}; },
+    function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (eqs[0].r2 > eqs[1].r2 ? 'I > II' : (eqs[0].r2 < eqs[1].r2 ? 'I < II' : (eqs[0].r2 === eqs[1].r2 ? 'I = II' : 'Cannot compare'))) : 'Cannot compare'; return {a:v, hint:'Compare the smaller roots'}; },
+    function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (eqs[0].r1*eqs[0].r2 > eqs[1].r1*eqs[1].r2 ? 'I > II' : (eqs[0].r1*eqs[0].r2 < eqs[1].r1*eqs[1].r2 ? 'I < II' : 'I = II')) : 'Cannot compare'; return {a:v, hint:'Compare product of roots (c/a)'}; }
+  ];
+  var comp = comps[rand(0, comps.length - 1)];
+  var data = comp();
+  var opts = ['I > II','I < II','I = II','Cannot compare'];
+  shuffle(opts);
+  return { question: 'I: '+eqs[0].eq+'<br>II: '+eqs[1].eq+'<br>Compare x (I) and y (II)?', answer: data.a, options: opts, hint: data.hint, timeLimit: 20, type:'quant', techniqueLabel:'Quad Comparison: solve both, compare', intuition:'Solve each quadratic. Compare the values asked (larger/smaller root or product).' };
+}
+
+function generateInputOutputQuestion(diff) {
+  var nums = [];
+  for (var ioi = 0; ioi < 8; ioi++) nums.push(rand(10, 99));
+  var steps = [
+    function(arr){ var sorted=arr.slice().sort(function(a,b){return a-b;}); var out=arr.slice(); for(var si=0;si<arr.length;si++){if(arr[si]===sorted[0]){out.splice(si,1);out.unshift(sorted[0]);break;}} return out; },
+    function(arr){ var sorted=arr.slice().sort(function(a,b){return b-a;}); var out=arr.slice(); for(var si=0;si<arr.length;si++){if(arr[si]===sorted[0]){out.splice(si,1);out.unshift(sorted[0]);break;}} return out; },
+    function(arr){ var max=Math.max.apply(null,arr); var idx=arr.indexOf(max); var out=arr.slice(); out.splice(idx,1); out.push(max); return out; },
+    function(arr){ var min=Math.min.apply(null,arr); var idx=arr.indexOf(min); var out=arr.slice(); out.splice(idx,1); out.push(min); return out; }
+  ];
+  var opDesc = ['smallest moved left','largest moved left','largest moved right','smallest moved right'];
+  var si = rand(0, steps.length - 1);
+  var step1 = steps[si](nums);
+  var step2 = steps[si](step1);
+  var step3 = steps[si](step2);
+  var stepsArr = [nums.join(' '), step1.join(' '), step2.join(' '), step3.join(' ')];
+  var qType = rand(0, 2);
+  var q, a, hint;
+  if (qType === 0) {
+    var stepN = rand(2, 4);
+    q = 'Input: '+nums.join(' ')+'<br>Step 1: '+step1.join(' ')+'<br>Step 2: '+step2.join(' ')+'<br>What is Step '+stepN+'?';
+    a = stepsArr[stepN];
+    hint = 'Each step, the '+opDesc[si]+'. Continue the pattern.';
+  } else if (qType === 1) {
+    var ts = rand(1, 3);
+    q = 'Input: '+nums.join(' ')+'<br>Step '+ts+': '+stepsArr[ts]+'<br>What is the input?';
+    a = stepsArr[0];
+    hint = 'Reverse the operation. The '+opDesc[si]+' is moved back.';
+  } else {
+    q = 'Input: '+nums.join(' ')+'<br>Step 1: '+step1.join(' ')+'<br>Step 2: '+step2.join(' ')+'<br>Step 3: '+step3.join(' ')+'<br>How many steps to fully sort '+(si<2?'ascending':'descending')+'?';
+    var c = stepsArr.length - 1;
+    for (var ci = stepsArr.length - 1; ci >= 0; ci--) {
+      var sortedCopy = stepsArr[ci].split(' ').map(Number);
+      var isSorted = true;
+      for (var cj = 1; cj < sortedCopy.length; cj++) {
+        if (si < 2 ? sortedCopy[cj-1] > sortedCopy[cj] : sortedCopy[cj-1] < sortedCopy[cj]) { isSorted = false; break; }
+      }
+      if (isSorted) c = ci;
+    }
+    a = String(c);
+    hint = 'Track when the sequence becomes fully sorted.';
+  }
+  var opts = [a];
+  while (opts.length < 4) { var r = a + rand(-5, 5); if (opts.indexOf(r) < 0 && r > 0) opts.push(r); }
+  shuffle(opts);
+  return { question: q, answer: a, options: opts, hint: hint, timeLimit: 30, type:'reasoning', techniqueLabel:'Input-Output: '+opDesc[si], intuition:'Each step reverses or applies a consistent operation. Track one element to find the pattern.' };
 }
 
 // ====== ADDITIONAL QUANT GENERATORS ======
@@ -2880,10 +2585,12 @@ function generateProfitLossQuestion(diff, layer) {
     // --- SSC CGL (diff 4) ---
     [4, function(){ var cp=rand(200,600), m=rand(15,35); var sp=Math.round(cp*(100+m)/100); var d=rand(5,20); var mp=Math.round(sp*100/(100-d)); return { q:'CP=₹'+cp+', gain '+m+'% after discount '+d+'%. MP?', a:mp, hint:'SP=CP×'+(100+m)+'%, then MP=SP×100/'+(100-d)}; }],
     [4, function(){ var m=rand(100,300), n=rand(6,15); var spPer=Math.round(m/n*10)/10; var cpPer=Math.round(spPer*(100+rand(5,20))/100*10)/10; return { q:''+n+' articles for ₹'+m+' (SP per article). If CP per article ₹'+cpPer+', overall P/L%?', a:Math.round((spPer-cpPer)/cpPer*1000)/10, hint:'Find per-article SP, compare with per-article CP'}; }],
-    // --- Hard (diff 5) ---
-    [5, function(){ var cp=rand(200,500), m=rand(20,40), d=rand(10,20); return { q:'CP=₹'+cp+', MP '+m+'% above CP, discount '+d+'%. Profit%?', a:Math.round((100+m)*(100-d)/100-1000)/10, hint:'Net% = ((100+M%)(100-D%)/100)-100'}; }],
+    // --- SBI PO Hard (diff 5) ---
+    [5, function(){ var cp=rand(200,500), m=rand(20,40), d=rand(10,20); return { q:'CP=₹'+cp+', MP '+m+'% above CP, discount '+d+'%. Profit%?', a:Math.round(((100+m)*(100-d)/100-100)*10)/10, hint:'Net% = ((100+M%)(100-D%)/100)-100'}; }],
     [5, function(){ var cp=rand(150,400), d=rand(10,25), g=rand(5,12); return { q:'CP=₹'+cp+', wants '+g+'% profit after discount '+d+'%. MP?', a:Math.round(cp*(100+g)/100*100/(100-d)), hint:'MP = CP(100+G%)/100 × 100/(100-D%)'}; }],
-    [5, function(){ var r=rand(5,15); return { q:'Selling price same. One sold at '+r+'% gain, other at '+r+'% loss. Net loss%?', a:Math.round(r*r/100*10)/10, hint:'Always loss = (gain%)²/100. Here '+r+'²/100='+Math.round(r*r/100*10)/10+'%'}; }]
+    [5, function(){ var r=rand(5,15); return { q:'Same SP. One at '+r+'% gain, other at '+r+'% loss. Net loss%?', a:Math.round(r*r/100*10)/10, hint:'Loss% = (gain%)²/100 = '+r+'²/100='+Math.round(r*r/100*10)/10+'%'}; }],
+    [5, function(){ var w=rand(800,1200), d=rand(5,15), g=rand(10,25); var cp=w; var sp=Math.round(cp*(100+g)/100); var mp=Math.round(sp*100/(100-d)); return { q:'Article costs Rs'+w+'(incl '+rand(8,12)+'% tax). Wants '+g+'% profit. Markup for '+d+'% discount?', a:mp, hint:'CP(1+tax) then MP=SP/(1-discount)'}; }],
+    [5, function(){ var cp=rand(200,600), a=rand(15,30), b=rand(10,25); return { q:'A buys at Rs'+cp+', spends Rs'+rand(20,60)+' on repairs. Sells to B at '+a+'% profit. Discount '+b+'% on MP. MP?', a:Math.round((cp+rand(20,60))*(100+a)/100*100/(100-b)), hint:'Effective CP=CP+repairs. Then MP = effCP×(100+G%)/100×100/(100-D%)'}; }]
   ];
   var matched = ty.filter(function(t){ return t[0] <= diff; });
   if (matched.length === 0) matched = ty;
@@ -3819,10 +3526,11 @@ function generateQuantQuestion(diff, subMode) {
     decimal_fraction: generateDecimalFractionQuestion,
     chain_rule: generateChainRuleQuestion,
     logarithm: generateLogarithmQuestion,
+    quadratic_comparison: generateQuadraticComparisonQuestion,
     meta: generateMetaQuestion
   };
   // If no subMode, pick random quant topic
-  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','partnership','simple_interest','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out','height_distance','decimal_fraction','chain_rule','logarithm','meta','meta','meta']);
+  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','quadratic_comparison','partnership','simple_interest','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out','height_distance','decimal_fraction','chain_rule','logarithm','meta','meta','meta']);
   var gen = genMap[topic];
   if (gen) {
     var q, attempts = 0;
@@ -3853,7 +3561,7 @@ function generateReasoningQuestion(diff, subMode) {
     circular_seating: function(d){ try { var p = generatePuzzle(d, 'circular'); if(p) return p; } catch(e){} return fallbackPuzzle(d); },
     box_distribution: function(d){ try { var p = generatePuzzle(d, 'distribution'); if(p && p.questionText) return p; } catch(e){} try { var p2 = generatePuzzle(d, 'comparison'); if(p2) return p2; } catch(e2){} return fallbackPuzzle(d); },
     scheduling: function(d){ try { var p = generatePuzzle(d, 'scheduling'); if(p) return p; } catch(e){} return fallbackPuzzle(d); },
-    input_output: function(d){ try { var p = generatePuzzle(d, 'inputoutput'); if(p) return p; } catch(e){} return fallbackPuzzle(d); },
+    input_output: generateInputOutputQuestion,
     mirror_image: generateMirrorImageQuestion,
     dice_cube: generateDiceCubeQuestion,
     calendar: generateCalendarQuestion,
