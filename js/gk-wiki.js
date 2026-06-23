@@ -196,11 +196,12 @@ WIKI._makeQuestions = function(data) {
   var richFact = factSentences.join('. ');
 
   var results = [];
+  var titleLower = title.toLowerCase();
 
   function isValid(a) {
     if (!a) return false;
     var s = String(a).replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-    if (s.length < 3 || s.length > 200) return false;
+    if (s.length < 2 || s.length > 200) return false;
     var sl = s.toLowerCase();
     if (sl.indexOf('various') >= 0 || sl.indexOf('multiple') >= 0 || sl.indexOf('unknown') >= 0 || sl.indexOf('none') >= 0) return false;
     return true;
@@ -208,137 +209,137 @@ WIKI._makeQuestions = function(data) {
 
   function pushQ(q) {
     if (!q) return;
-    if (results.length >= 4) return;
+    if (results.length >= 3) return;
     q.a = String(q.a).replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
     if (!isValid(q.a)) return;
+    if (q.q.toLowerCase().indexOf(q.a.toLowerCase()) >= 0) return; // answer not hidden
     q._source = 'wiki';
     q._wikiCat = catName;
     results.push(q);
   }
 
-  function isPersonLike() {
-    var d = (desc + ' ' + firstSentence + ' ' + extract.substr(0, 500)).toLowerCase();
-    return (d.indexOf('born') >= 0 || d.indexOf('died') >= 0) || d.indexOf('known for') >= 0 || d.indexOf(' was an ') >= 0 || d.indexOf(' was a ') >= 0 || d.indexOf('king ') >= 0 || d.indexOf('queen ') >= 0 || d.indexOf('president ') >= 0 || d.indexOf('scientist') >= 0 || d.indexOf('author') >= 0 || d.indexOf('artist') >= 0 || d.indexOf('philosopher') >= 0 || d.indexOf('founder') >= 0 || d.indexOf('inventor') >= 0;
+  // New approach: find sentences mentioning the title, replace title with What/Who
+  // This makes the user IDENTIFY the topic from its description
+
+  // Build alternate title forms for sentence matching
+  var titleClean = title.replace(/\s*\(.*?\)/g, '').trim();
+  var titleWords = title.split(/\s+/);
+  // Only use last-name matching if distinctive (>4 chars, capitalized, not a common word)
+  var COMMON_WORDS = ['United', 'Nations', 'International', 'National', 'World', 'Global', 'General', 'University', 'Institute', 'Association', 'Committee', 'Commission', 'Organization', 'Government', 'Republic', 'State', 'States', 'Kingdom', 'Democratic', 'Federal', 'Union', 'Party', 'Front', 'Movement', 'Group', 'Council', 'Board', 'Fund', 'Bank', 'Center', 'Centre', 'System', 'Force', 'Force'];
+  var lastName = '';
+  if (titleWords.length > 1) {
+    var last = titleWords[titleWords.length - 1].replace(/[.,()]/g, '');
+    if (last.length > 4 && COMMON_WORDS.indexOf(last) < 0) lastName = last;
   }
+  var titleForms = [title, titleClean];
+  if (lastName) titleForms.push(lastName);
 
-  function isPlaceLike() {
-    var d = (desc + ' ' + firstSentence).toLowerCase();
-    return d.indexOf('city') >= 0 || d.indexOf('country') >= 0 || d.indexOf('town') >= 0 || d.indexOf('village') >= 0 || d.indexOf('region') >= 0 || d.indexOf('state') >= 0 || d.indexOf('river') >= 0 || d.indexOf('mountain') >= 0 || d.indexOf('island') >= 0 || d.indexOf('continent') >= 0 || d.indexOf('lake') >= 0 || d.indexOf('ocean') >= 0 || d.indexOf('sea') >= 0 || d.indexOf('desert') >= 0 || d.indexOf('national park') >= 0 || d.indexOf('located') >= 0 || d.indexOf('capital') >= 0 || d.indexOf('province') >= 0;
-  }
+  for (var si = 0; si < sentences.length && results.length < 3; si++) {
+    var s = sentences[si].trim();
+    if (s.length < 30 || s.length > 250) continue;
 
-  var isPerson = isPersonLike();
-  var isPlace = isPlaceLike();
-
-  // ── WHEN: extract years ──
-  if (!isPerson && years.length > 0) {
-    var uniqY = [];
-    var seenY = {};
-    for (var yi = 0; yi < years.length; yi++) {
-      if (!seenY[years[yi]]) { seenY[years[yi]] = true; uniqY.push(years[yi]); }
+    var sLower = s.toLowerCase();
+    var foundForm = null;
+    for (var tf = 0; tf < titleForms.length; tf++) {
+      if (titleForms[tf].length < 3) continue;
+      if (sLower.indexOf(titleForms[tf].toLowerCase()) >= 0) { foundForm = titleForms[tf]; break; }
     }
-    var whenYear = uniqY[0];
-    var whenVerbs = ['established', 'created', 'founded', 'formed', 'occur', 'happen', 'take place'];
-    var whenV = 'established';
-    for (var wvi = 0; wvi < whenVerbs.length; wvi++) {
-      if (lower.indexOf(whenVerbs[wvi]) >= 0) { whenV = whenVerbs[wvi]; break; }
+    // Skip if sentence is just the title (no additional content)
+    if (!foundForm || s.length - foundForm.length < 15) continue;
+
+    var startIdx = sLower.indexOf(foundForm.toLowerCase());
+    var before = s.substring(0, startIdx).trim();
+    var after = s.substring(startIdx + foundForm.length).trim();
+
+    // Skip lastName matches that appear mid-phrase (part of larger entity name)
+    if (foundForm === lastName && before.length > 0) continue;
+
+    // Strip parenthetical references and trailing punctuation from after
+    after = after.replace(/^\([^)]*\)\s*/, '').trim();
+    after = after.replace(/^[,\s]+/, '').trim();
+
+    // Determine WH-word
+    var wh = 'What';
+    var personCheck = (desc + ' ' + s).toLowerCase();
+    if (personCheck.indexOf('born') >= 0 || personCheck.indexOf(' died') >= 0 || personCheck.indexOf('known for') >= 0 ||
+        personCheck.indexOf(' was a ') >= 0 || personCheck.indexOf(' was an ') >= 0 ||
+        personCheck.indexOf('scientist') >= 0 || personCheck.indexOf('author') >= 0 || personCheck.indexOf('philosopher') >= 0 ||
+        personCheck.indexOf('politician') >= 0 || personCheck.indexOf('prime minister') >= 0 || personCheck.indexOf('president ') >= 0 ||
+        personCheck.indexOf('king ') >= 0 || personCheck.indexOf('queen ') >= 0 || personCheck.indexOf(' leader') >= 0 ||
+        personCheck.indexOf('artist ') >= 0 || personCheck.indexOf('musician') >= 0 || personCheck.indexOf('actor') >= 0) wh = 'Who';
+
+    // Build question: "X is/was a Y" → "What/Who is/was a Y?"
+    var verbMatch = after.match(/^(is|are|was|were)\s+/i);
+    var verb = verbMatch ? verbMatch[0] : '';
+    var rest = after.replace(/^(is|are|was|were)\s+/i, '').trim();
+    var simpleQ = wh + ' ' + verb + rest;
+    simpleQ = simpleQ.replace(/\s+/g, ' ').trim();
+    simpleQ = simpleQ.charAt(0).toUpperCase() + simpleQ.slice(1);
+    if (simpleQ.endsWith('.')) simpleQ = simpleQ.slice(0, -1) + '?';
+    else if (!simpleQ.endsWith('?')) simpleQ += '?';
+    if (simpleQ.length > 20 && simpleQ.length < 130) {
+      pushQ({ q: simpleQ, a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title) });
     }
-    var whenQ = 'When was ' + title + ' ' + whenV + '?';
-    if (whenV === 'occur' || whenV === 'happen') whenQ = 'When did ' + title + ' ' + whenV + '?';
-    if (whenV === 'take place') whenQ = 'When did ' + title + ' take place?';
-    pushQ({ q: whenQ, a: whenYear, hint: 'Historical year', fact: richFact, opts: WIKI._buildOpts(whenYear) });
   }
 
-  // ── WHERE: extract location ──
-  if (!isPerson) {
+  // ── BIRTH/DEATH YEAR (for persons, alternate format) ──
+  if (results.length < 3) {
+    var birthMatch = extract.match(/born\s+(?:\d{1,2}\s+\w+\s+)?(\d{4})/i);
+    var deathMatch = extract.match(/died\s+(?:\d{1,2}\s+\w+\s+)?(\d{4})/i);
+    if (birthMatch) {
+      var ctx = extract.substr(Math.max(0, extract.indexOf(birthMatch[0]) - 10), birthMatch[0].length + 40);
+      if (ctx.toLowerCase().indexOf(titleLower) < 0) {
+        pushQ({ q: 'Who was born in ' + birthMatch[1] + '?', a: title, hint: 'Birth year', fact: richFact, opts: WIKI._buildOpts(title) });
+      }
+    }
+    if (deathMatch && deathMatch[1] !== (birthMatch && birthMatch[1])) {
+      var ctx2 = extract.substr(Math.max(0, extract.indexOf(deathMatch[0]) - 10), deathMatch[0].length + 40);
+      if (ctx2.toLowerCase().indexOf(titleLower) < 0) {
+        pushQ({ q: 'Who died in ' + deathMatch[1] + '?', a: title, hint: 'Death year', fact: richFact, opts: WIKI._buildOpts(title) });
+      }
+    }
+  }
+
+  // ── YEAR + ESTABLISHED (for non-persons) ──
+  if (results.length < 3 && years.length > 0) {
+    var y = years[0];
+    var verb = 'established';
+    if (/founded/i.test(extract)) verb = 'founded';
+    else if (/created/i.test(extract)) verb = 'created';
+    var yCtx = extract.substr(Math.max(0, extract.indexOf(y) - 50), y.length + 60);
+    if (yCtx.toLowerCase().indexOf(titleLower) < 0) {
+      pushQ({ q: 'What was ' + verb + ' in ' + y + '?', a: title, hint: 'Founded ' + y, fact: richFact, opts: WIKI._buildOpts(title) });
+    }
+  }
+
+  // ── LOCATION ──
+  if (results.length < 3) {
     var locPatterns = [
-      /(?:located|based|situated|headquartered|situated)\s+in\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/,
-      /(?:found|native|present|common)\s+in\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/,
-      /(?:of|in)\s+(northern|southern|eastern|western|central|north|south|east|west)\s+([A-Z][a-z]+)/
+      /(?:located|based|situated|headquartered)\s+in\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/,
     ];
-    var locAns = null;
     for (var lpi = 0; lpi < locPatterns.length; lpi++) {
       var lm = extract.match(locPatterns[lpi]);
-      if (lm && lm[1] && lm[1].length < 60) { locAns = lm[1]; break; }
-    }
-    if (locAns) {
-      pushQ({ q: 'Where is ' + title + ' located?', a: locAns, hint: 'Geographical location', fact: richFact, opts: WIKI._buildOpts(locAns) });
-    }
-  }
-
-  // ── WHO: person articles ──
-  if (isPerson) {
-    var whoAns = desc && desc.length < 100 ? desc : firstSentence.substr(0, 100);
-    if (whoAns && whoAns.length > 5) {
-      pushQ({ q: 'Who is ' + title + '?', a: whoAns, hint: 'Notable personality', fact: richFact, opts: WIKI._buildOpts(whoAns) });
-      pushQ({ q: 'What is ' + title + ' known for?', a: whoAns, hint: 'Key achievement', fact: richFact, opts: WIKI._buildOpts(whoAns) });
-    }
-    // When born/died
-    var birthY = extract.match(/born\s+(\d{1,2}\s+\w+\s+)?(\d{4})/i);
-    var deathY = extract.match(/died\s+(\d{1,2}\s+\w+\s+)?(\d{4})/i);
-    if (birthY) pushQ({ q: 'When was ' + title + ' born?', a: birthY[2], hint: 'Birth year', fact: richFact, opts: WIKI._buildOpts(birthY[2]) });
-    if (deathY) pushQ({ q: 'When did ' + title + ' die?', a: deathY[2], hint: 'Death year', fact: richFact, opts: WIKI._buildOpts(deathY[2]) });
-  }
-
-  // ── WHAT: general ──
-  if (desc && desc.length >= 8 && desc.length < 150) {
-    pushQ({ q: 'What is ' + title + '?', a: desc, hint: catName, fact: richFact, opts: WIKI._buildOpts(desc) });
-  }
-
-  // ── WHICH: category ──
-  if (category !== 'general') {
-    pushQ({ q: 'Which field does ' + title + ' belong to?', a: catName, hint: 'Subject area', fact: richFact, opts: WIKI._buildOpts(catName) });
-  }
-
-  // ── HOW: measurements ──
-  (function() {
-    var meas = [
-      { pat: /(\d[\d,]*)\s*(?:km|kilometre|kilometer)/i, unit: 'km', qT: 'far' },
-      { pat: /(\d[\d,]*)\s*(?:m|metre|meter)\b/i, unit: 'm', qT: 'tall' },
-      { pat: /(\d[\d,]*)\s*(?:sq\s*km|km2)/i, unit: 'sq km', qT: 'large' },
-      { pat: /(\d[\d,]*)\s*(?:kg|kilogram)/i, unit: 'kg', qT: 'heavy' },
-      { pat: /(\d[\d,]*)\s*(?:MW|megawatt)/i, unit: 'MW', qT: 'capacity' },
-    ];
-    for (var mi = 0; mi < meas.length; mi++) {
-      var m2 = meas[mi];
-      var match2 = extract.match(m2.pat);
-      if (match2) {
-        var ans2 = match2[1] + ' ' + m2.unit;
-        var qT = m2.qT;
-        pushQ({ q: 'How ' + qT + ' is ' + title + '?', a: ans2, hint: 'Measurement', fact: richFact, opts: WIKI._buildOpts(ans2) });
+      if (lm && lm[1] && lm[1].length < 60) {
+        var loc = lm[1];
+        var locCtx = extract.substr(Math.max(0, extract.indexOf(lm[0]) - 20), lm[0].length + 30);
+        if (locCtx.toLowerCase().indexOf(titleLower) < 0) {
+          pushQ({ q: 'What is headquartered in ' + loc + '?', a: title, hint: 'Location: ' + loc, fact: richFact, opts: WIKI._buildOpts(title) });
+        }
         break;
       }
     }
-    // How many (numbers with context)
-    if (results.length < 3 && numbers.length > 0) {
-      for (var ni2 = 0; ni2 < Math.min(numbers.length, 3); ni2++) {
-        var n2 = numbers[ni2];
-        if (n2.length > 6 || n2 === '0' || n2.indexOf('.') >= 0) continue;
-        var ctx2 = extract.substr(Math.max(0, extract.indexOf(n2) - 40), n2.length + 80).toLowerCase();
-        var hint2 = '';
-        if (ctx2.indexOf('km') >= 0 || ctx2.indexOf('kilometer') >= 0) hint2 = 'distance';
-        else if (ctx2.indexOf('kg') >= 0 || ctx2.indexOf('kilogram') >= 0) hint2 = 'weight';
-        else if (ctx2.indexOf('%') >= 0 || ctx2.indexOf('percent') >= 0) hint2 = 'percentage';
-        else if (ctx2.indexOf('million') >= 0 || ctx2.indexOf('billion') >= 0 || ctx2.indexOf('population') >= 0) hint2 = 'quantity';
-        else if (ctx2.indexOf('year') >= 0 || ctx2.indexOf('century') >= 0) { if (years.indexOf(n2) >= 0) continue; hint2 = 'time'; }
-        else continue;
-        WIKI._seenValues.push(n2);
-        if (WIKI._seenValues.length > 200) WIKI._seenValues.shift();
-        pushQ({ q: 'How many ' + hint2 + ' are associated with ' + title + '?', a: n2 + ' ' + hint2, hint: 'Numerical data', fact: richFact, opts: WIKI._buildOpts(n2 + ' ' + hint2) });
-        break;
-      }
-    }
-  })();
-
-  // ── WHOSE: for person articles ──
-  if (isPerson) {
-    pushQ({ q: 'Whose biography is described by ' + title + '?', a: desc || title, hint: 'Life story', fact: richFact, opts: WIKI._buildOpts(desc || title) });
   }
 
-  // ── CONTENT CARD FALLBACK (only if no template produced questions) ──
+  // ── FALLBACK: description-based clue ──
   if (results.length === 0) {
-    var clue = desc || firstSentence.substr(0, 120);
-    if (!clue || clue.length < 5) clue = extract.substr(0, 100);
-    pushQ({ q: clue, a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title) });
+    if (desc && desc.length >= 10 && desc.length < 150) {
+      var wh2 = desc.toLowerCase().indexOf('born') >= 0 || desc.toLowerCase().indexOf('known for') >= 0 ? 'Who' : 'What';
+      pushQ({ q: wh2 + ' is described as: "' + desc + '"?', a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title) });
+    } else {
+      var clue = firstSentence.substr(0, 120);
+      if (!clue || clue.length < 5) clue = extract.substr(0, 100);
+      pushQ({ q: clue, a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title) });
+    }
   }
 
   return results;
@@ -492,7 +493,6 @@ WIKI._makeEventQuestions = function(ev) {
   var catName = ev.cat || 'current affairs';
   var lower = text.toLowerCase();
   var results = [];
-  var factParts = [text];
 
   function isValid(a) {
     if (!a) return false;
@@ -505,9 +505,11 @@ WIKI._makeEventQuestions = function(ev) {
 
   function pushQ(q) {
     if (!q) return;
-    if (results.length >= 4) return;
+    if (results.length >= 3) return;
     q.a = String(q.a).trim();
     if (!isValid(q.a)) return;
+    // Reject Q == A
+    if (q.q.toLowerCase().indexOf(q.a.toLowerCase()) >= 0) return;
     q._source = 'current_events';
     q._wikiCat = catName;
     results.push(q);
@@ -519,61 +521,57 @@ WIKI._makeEventQuestions = function(ev) {
     if (COMMON_COUNTRIES.indexOf(links[li]) >= 0) { mentionedCountry = links[li]; break; }
   }
 
-  // Numbers in text
   var nums = text.match(/\b(\d{1,3}(?:,\d{3})*)\b/g) || [];
 
-  // ── WHAT happened ──
-  var shortText = text.length > 120 ? text.substr(0, 117) + '...' : text;
-  pushQ({ q: 'What happened? ' + shortText, a: text.substr(0, 150), hint: 'Current event', fact: text, opts: WIKI._buildOpts(text.substr(0, 60)) });
+  function wordBoundRe(word) {
+    return new RegExp('\\b' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'gi');
+  }
 
   // ── WHICH country ──
   if (mentionedCountry) {
-    var whatVerb = 'did this happen';
-    if (lower.indexOf('launch') >= 0 || lower.indexOf('announce') >= 0) whatVerb = 'is involved';
-    if (lower.indexOf('kill') >= 0 || lower.indexOf('attack') >= 0) whatVerb = 'was affected';
-    if (lower.indexOf('elect') >= 0 || lower.indexOf('vote') >= 0) whatVerb = 'held the election';
-    pushQ({ q: 'Which country ' + whatVerb + '? ' + shortText, a: mentionedCountry, hint: 'Country involved', fact: text, opts: WIKI._buildOpts(mentionedCountry) });
+    var masked = text.replace(wordBoundRe(mentionedCountry), '______');
+    var ctx = masked.length > 120 ? masked.substr(0, 117) + '...' : masked;
+    pushQ({ q: 'Which country is involved in this event: "' + ctx + '"?', a: mentionedCountry, hint: 'Country in the news', fact: text, opts: WIKI._buildOpts(mentionedCountry) });
   }
 
   // ── WHERE ──
-  var locMatch = text.match(/(?:in|at|near|off)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/);
-  if (locMatch && locMatch[1] && locMatch[1].length < 50) {
-    pushQ({ q: 'Where did this occur? ' + shortText, a: locMatch[1], hint: 'Location of event', fact: text, opts: WIKI._buildOpts(locMatch[1]) });
+  if (results.length < 3) {
+    var locMatch = text.match(/(?:in|at|near|off)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/);
+    if (locMatch && locMatch[1] && locMatch[1].length < 50 && locMatch[1] !== mentionedCountry) {
+      var loc = locMatch[1];
+      var masked = text.replace(wordBoundRe(loc), '______');
+      var ctx2 = masked.length > 120 ? masked.substr(0, 117) + '...' : masked;
+      pushQ({ q: 'Where did this event take place? "' + ctx2 + '"?', a: loc, hint: 'Location', fact: text, opts: WIKI._buildOpts(loc) });
+    }
   }
 
   // ── HOW MANY ──
-  if (nums.length > 0) {
+  if (results.length < 3 && nums.length > 0) {
     var nContexts = ['killed', 'injured', 'dead', 'people', 'million', 'billion', 'barrel', 'soldier'];
     for (var ni = 0; ni < nums.length; ni++) {
       var n = nums[ni];
-      var ctx = text.substr(Math.max(0, text.indexOf(n) - 30), n.length + 60).toLowerCase();
+      var ctx3 = text.substr(Math.max(0, text.indexOf(n) - 30), n.length + 60).toLowerCase();
       for (var nci = 0; nci < nContexts.length; nci++) {
-        if (ctx.indexOf(nContexts[nci]) >= 0) {
-          pushQ({ q: 'How many ' + nContexts[nci] + ' are reported? ' + shortText, a: n, hint: 'Number reported', fact: text, opts: WIKI._buildOpts(n) });
+        if (ctx3.indexOf(nContexts[nci]) >= 0) {
+          var masked3 = text.replace(wordBoundRe(n), '______');
+          var ctx3short = masked3.length > 120 ? masked3.substr(0, 117) + '...' : masked3;
+          pushQ({ q: 'What number is reported in this event? "' + ctx3short + '"?', a: n, hint: 'Numerical fact', fact: text, opts: WIKI._buildOpts(n) });
           ni = nums.length; break;
         }
       }
     }
   }
 
-  // ── TRUE/FALSE ──
-  if (mentionedCountry) {
-    var falseCountry = null;
-    for (var fi = 0; fi < COMMON_COUNTRIES.length; fi++) {
-      if (COMMON_COUNTRIES[fi] !== mentionedCountry && text.indexOf(COMMON_COUNTRIES[fi]) < 0) {
-        falseCountry = COMMON_COUNTRIES[fi]; break;
-      }
-    }
-    if (falseCountry) {
-      pushQ({ q: 'True or False: ' + falseCountry + ' was involved in this event. ' + shortText, a: 'False', hint: 'Verify the country', fact: text, opts: ['True', 'False'] });
-    }
-  }
-
-  // ── WHO (if person mentioned in links) ──
-  for (var pli = 0; pli < Math.min(links.length, 5); pli++) {
-    var l = links[pli];
-    if (l !== mentionedCountry && l.indexOf(',') < 0 && l.indexOf(' ') > 0 && l.indexOf('(') < 0 && l.length > 5 && l.length < 60) {
-      pushQ({ q: 'Who is mentioned in this event? ' + shortText, a: l, hint: 'Person or entity', fact: text, opts: WIKI._buildOpts(l) });
+  // ── WHO (person/organization name from links) ──
+  if (results.length < 3) {
+    for (var pli = 0; pli < Math.min(links.length, 5); pli++) {
+      var l = links[pli];
+      if (l === mentionedCountry) continue;
+      if (l.match(/^\d/)) continue; // skip year-prefixed titles
+      if (l.length < 5 || text.toLowerCase().indexOf(l.toLowerCase()) < 0) continue;
+      var masked4 = text.replace(wordBoundRe(l), '______');
+      var ctx4 = masked4.length > 120 ? masked4.substr(0, 117) + '...' : masked4;
+      pushQ({ q: 'Who or what organization is mentioned? "' + ctx4 + '"?', a: l, hint: 'Key entity', fact: text, opts: WIKI._buildOpts(l) });
       break;
     }
   }
