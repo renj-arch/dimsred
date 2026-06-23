@@ -165,7 +165,13 @@ WIKI._makeQuestions = function(data) {
   var title = data.title;
   var extract = (data.extract || '').replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
   var desc = data.description || '';
-  var firstSentence = extract.split('.')[0] || extract;
+  var lower = extract.toLowerCase();
+  var allSentences = extract.match(/[^.!?]+[.!?]/g) || [];
+  // Find first real sentence (skip abbreviation fragments)
+  var firstSentence = extract;
+  for (var fsi = 0; fsi < allSentences.length; fsi++) {
+    if (allSentences[fsi].trim().length >= 20) { firstSentence = allSentences[fsi].trim(); break; }
+  }
 
   if (extract.length < 100) return [];
   if (/^Outline of/i.test(title)) return [];
@@ -176,30 +182,165 @@ WIKI._makeQuestions = function(data) {
   var category = WIKI._classify(desc, extract);
   var catName = category ? category.replace(/_/g, ' ') : 'GK';
 
-  // Build rich fact from article extract
   var sentences = extract.match(/[^.!?]+[.!?]/g) || [];
-  var factParts = [title];
-  if (desc) factParts.push(desc);
+  var years = extract.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g) || [];
+  var numbers = extract.match(/\b(\d{1,3}(?:,\d{3})*(?:\.\d+)?|\d+)\b/g) || [];
+
+  var factSentences = [title];
+  if (desc) factSentences.push(desc);
   for (var fi = 0; fi < Math.min(sentences.length, 15); fi++) {
     var sf = sentences[fi].trim();
-    if (sf.length > 15 && factParts.join('. ').length + sf.length < 3000) factParts.push(sf);
+    if (sf.length > 15 && factSentences.join('. ').length + sf.length < 3000) factSentences.push(sf);
   }
-  var richFact = factParts.join('. ');
+  var richFact = factSentences.join('. ');
 
-  // Build a single content card per article — no templated questions
-  var qText = title;
-  if (desc) qText += ' — ' + desc;
-  var shortExtract = extract.length > 400 ? extract.substr(0, 397) + '...' : extract;
+  var results = [];
 
-  return [{
-    q: qText,
-    a: title,
-    hint: catName,
-    fact: richFact,
-    opts: WIKI._buildOpts(title),
-    _source: 'wiki',
-    _wikiCat: catName
-  }];
+  function isValid(a) {
+    if (!a) return false;
+    var s = String(a).replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+    if (s.length < 3 || s.length > 200) return false;
+    var sl = s.toLowerCase();
+    if (sl.indexOf('various') >= 0 || sl.indexOf('multiple') >= 0 || sl.indexOf('unknown') >= 0 || sl.indexOf('none') >= 0) return false;
+    return true;
+  }
+
+  function pushQ(q) {
+    if (!q) return;
+    if (results.length >= 4) return;
+    q.a = String(q.a).replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+    if (!isValid(q.a)) return;
+    q._source = 'wiki';
+    q._wikiCat = catName;
+    results.push(q);
+  }
+
+  function isPersonLike() {
+    var d = (desc + ' ' + firstSentence + ' ' + extract.substr(0, 500)).toLowerCase();
+    return (d.indexOf('born') >= 0 || d.indexOf('died') >= 0) || d.indexOf('known for') >= 0 || d.indexOf(' was an ') >= 0 || d.indexOf(' was a ') >= 0 || d.indexOf('king ') >= 0 || d.indexOf('queen ') >= 0 || d.indexOf('president ') >= 0 || d.indexOf('scientist') >= 0 || d.indexOf('author') >= 0 || d.indexOf('artist') >= 0 || d.indexOf('philosopher') >= 0 || d.indexOf('founder') >= 0 || d.indexOf('inventor') >= 0;
+  }
+
+  function isPlaceLike() {
+    var d = (desc + ' ' + firstSentence).toLowerCase();
+    return d.indexOf('city') >= 0 || d.indexOf('country') >= 0 || d.indexOf('town') >= 0 || d.indexOf('village') >= 0 || d.indexOf('region') >= 0 || d.indexOf('state') >= 0 || d.indexOf('river') >= 0 || d.indexOf('mountain') >= 0 || d.indexOf('island') >= 0 || d.indexOf('continent') >= 0 || d.indexOf('lake') >= 0 || d.indexOf('ocean') >= 0 || d.indexOf('sea') >= 0 || d.indexOf('desert') >= 0 || d.indexOf('national park') >= 0 || d.indexOf('located') >= 0 || d.indexOf('capital') >= 0 || d.indexOf('province') >= 0;
+  }
+
+  var isPerson = isPersonLike();
+  var isPlace = isPlaceLike();
+
+  // ── WHEN: extract years ──
+  if (!isPerson && years.length > 0) {
+    var uniqY = [];
+    var seenY = {};
+    for (var yi = 0; yi < years.length; yi++) {
+      if (!seenY[years[yi]]) { seenY[years[yi]] = true; uniqY.push(years[yi]); }
+    }
+    var whenYear = uniqY[0];
+    var whenVerbs = ['established', 'created', 'founded', 'formed', 'occur', 'happen', 'take place'];
+    var whenV = 'established';
+    for (var wvi = 0; wvi < whenVerbs.length; wvi++) {
+      if (lower.indexOf(whenVerbs[wvi]) >= 0) { whenV = whenVerbs[wvi]; break; }
+    }
+    var whenQ = 'When was ' + title + ' ' + whenV + '?';
+    if (whenV === 'occur' || whenV === 'happen') whenQ = 'When did ' + title + ' ' + whenV + '?';
+    if (whenV === 'take place') whenQ = 'When did ' + title + ' take place?';
+    pushQ({ q: whenQ, a: whenYear, hint: 'Historical year', fact: richFact, opts: WIKI._buildOpts(whenYear) });
+  }
+
+  // ── WHERE: extract location ──
+  if (!isPerson) {
+    var locPatterns = [
+      /(?:located|based|situated|headquartered|situated)\s+in\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/,
+      /(?:found|native|present|common)\s+in\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/,
+      /(?:of|in)\s+(northern|southern|eastern|western|central|north|south|east|west)\s+([A-Z][a-z]+)/
+    ];
+    var locAns = null;
+    for (var lpi = 0; lpi < locPatterns.length; lpi++) {
+      var lm = extract.match(locPatterns[lpi]);
+      if (lm && lm[1] && lm[1].length < 60) { locAns = lm[1]; break; }
+    }
+    if (locAns) {
+      pushQ({ q: 'Where is ' + title + ' located?', a: locAns, hint: 'Geographical location', fact: richFact, opts: WIKI._buildOpts(locAns) });
+    }
+  }
+
+  // ── WHO: person articles ──
+  if (isPerson) {
+    var whoAns = desc && desc.length < 100 ? desc : firstSentence.substr(0, 100);
+    if (whoAns && whoAns.length > 5) {
+      pushQ({ q: 'Who is ' + title + '?', a: whoAns, hint: 'Notable personality', fact: richFact, opts: WIKI._buildOpts(whoAns) });
+      pushQ({ q: 'What is ' + title + ' known for?', a: whoAns, hint: 'Key achievement', fact: richFact, opts: WIKI._buildOpts(whoAns) });
+    }
+    // When born/died
+    var birthY = extract.match(/born\s+(\d{1,2}\s+\w+\s+)?(\d{4})/i);
+    var deathY = extract.match(/died\s+(\d{1,2}\s+\w+\s+)?(\d{4})/i);
+    if (birthY) pushQ({ q: 'When was ' + title + ' born?', a: birthY[2], hint: 'Birth year', fact: richFact, opts: WIKI._buildOpts(birthY[2]) });
+    if (deathY) pushQ({ q: 'When did ' + title + ' die?', a: deathY[2], hint: 'Death year', fact: richFact, opts: WIKI._buildOpts(deathY[2]) });
+  }
+
+  // ── WHAT: general ──
+  if (desc && desc.length >= 8 && desc.length < 150) {
+    pushQ({ q: 'What is ' + title + '?', a: desc, hint: catName, fact: richFact, opts: WIKI._buildOpts(desc) });
+  }
+
+  // ── WHICH: category ──
+  if (category !== 'general') {
+    pushQ({ q: 'Which field does ' + title + ' belong to?', a: catName, hint: 'Subject area', fact: richFact, opts: WIKI._buildOpts(catName) });
+  }
+
+  // ── HOW: measurements ──
+  (function() {
+    var meas = [
+      { pat: /(\d[\d,]*)\s*(?:km|kilometre|kilometer)/i, unit: 'km', qT: 'far' },
+      { pat: /(\d[\d,]*)\s*(?:m|metre|meter)\b/i, unit: 'm', qT: 'tall' },
+      { pat: /(\d[\d,]*)\s*(?:sq\s*km|km2)/i, unit: 'sq km', qT: 'large' },
+      { pat: /(\d[\d,]*)\s*(?:kg|kilogram)/i, unit: 'kg', qT: 'heavy' },
+      { pat: /(\d[\d,]*)\s*(?:MW|megawatt)/i, unit: 'MW', qT: 'capacity' },
+    ];
+    for (var mi = 0; mi < meas.length; mi++) {
+      var m2 = meas[mi];
+      var match2 = extract.match(m2.pat);
+      if (match2) {
+        var ans2 = match2[1] + ' ' + m2.unit;
+        var qT = m2.qT;
+        pushQ({ q: 'How ' + qT + ' is ' + title + '?', a: ans2, hint: 'Measurement', fact: richFact, opts: WIKI._buildOpts(ans2) });
+        break;
+      }
+    }
+    // How many (numbers with context)
+    if (results.length < 3 && numbers.length > 0) {
+      for (var ni2 = 0; ni2 < Math.min(numbers.length, 3); ni2++) {
+        var n2 = numbers[ni2];
+        if (n2.length > 6 || n2 === '0' || n2.indexOf('.') >= 0) continue;
+        var ctx2 = extract.substr(Math.max(0, extract.indexOf(n2) - 40), n2.length + 80).toLowerCase();
+        var hint2 = '';
+        if (ctx2.indexOf('km') >= 0 || ctx2.indexOf('kilometer') >= 0) hint2 = 'distance';
+        else if (ctx2.indexOf('kg') >= 0 || ctx2.indexOf('kilogram') >= 0) hint2 = 'weight';
+        else if (ctx2.indexOf('%') >= 0 || ctx2.indexOf('percent') >= 0) hint2 = 'percentage';
+        else if (ctx2.indexOf('million') >= 0 || ctx2.indexOf('billion') >= 0 || ctx2.indexOf('population') >= 0) hint2 = 'quantity';
+        else if (ctx2.indexOf('year') >= 0 || ctx2.indexOf('century') >= 0) { if (years.indexOf(n2) >= 0) continue; hint2 = 'time'; }
+        else continue;
+        WIKI._seenValues.push(n2);
+        if (WIKI._seenValues.length > 200) WIKI._seenValues.shift();
+        pushQ({ q: 'How many ' + hint2 + ' are associated with ' + title + '?', a: n2 + ' ' + hint2, hint: 'Numerical data', fact: richFact, opts: WIKI._buildOpts(n2 + ' ' + hint2) });
+        break;
+      }
+    }
+  })();
+
+  // ── WHOSE: for person articles ──
+  if (isPerson) {
+    pushQ({ q: 'Whose biography is described by ' + title + '?', a: desc || title, hint: 'Life story', fact: richFact, opts: WIKI._buildOpts(desc || title) });
+  }
+
+  // ── CONTENT CARD FALLBACK (only if no template produced questions) ──
+  if (results.length === 0) {
+    var clue = desc || firstSentence.substr(0, 120);
+    if (!clue || clue.length < 5) clue = extract.substr(0, 100);
+    pushQ({ q: clue, a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title) });
+  }
+
+  return results;
 };
 
 WIKI._makeFromOnThisDay = function(items) {
