@@ -5733,6 +5733,7 @@
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
         }
 
@@ -5940,6 +5941,7 @@
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('timedQuizOptions').style.display = 'none';
+            document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
         }
 
@@ -5971,68 +5973,8 @@
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('timedQuizOptions').style.display = 'none';
+            document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
-        }
-
-        function startCustomDateQuiz() {
-            var startEl = document.getElementById('quizStartDate');
-            var endEl = document.getElementById('quizEndDate');
-            var label = 'Custom Quiz';
-            if (startEl.value && endEl.value) label = 'Quiz: ' + startEl.value.slice(5) + ' to ' + endEl.value.slice(5);
-            state.cat = 'mixed';
-            state.categoryName = label;
-            state.idx = 0;
-            state.correct = 0;
-            state.streak = 0;
-            state.answered = false;
-            state.questions = [];
-            state.restartFn = function() { startCustomDateQuiz(); };
-            var allCats = Object.keys(GK_GENERATORS);
-            var count = 12;
-            for (var i = 0; i < count; i++) {
-                var gen = GK_GENERATORS[pick(allCats)];
-                if (!gen) continue;
-                var q = gen();
-                q.opts = q.opts || buildOptions(q.a);
-                state.questions.push(q);
-            }
-            document.getElementById('welcome').style.display = 'none';
-            document.getElementById('qArea').classList.add('active');
-            document.getElementById('scoreBar').classList.add('show');
-            document.getElementById('timedQuizOptions').style.display = 'none';
-            showQuestion();
-        }
-
-        function showPibQuizPanel() {
-            var panel = document.getElementById('pibQuizPanel');
-            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-            // Pre-fill with PIB's available date range
-            if (_pibFeedData && panel.style.display === 'block') {
-                var dates = {};
-                _pibFeedData.forEach(function(i) { if (i.pubDate) dates[i.pubDate.slice(0,10)] = true; });
-                var sorted = Object.keys(dates).sort();
-                var startEl = document.getElementById('pibQuizStart');
-                var endEl = document.getElementById('pibQuizEnd');
-                if (sorted.length > 0) { startEl.value = sorted[0]; endEl.value = sorted[sorted.length-1]; }
-            }
-        }
-
-        function startPibQuiz() {
-            if (!_pibFeedData || _pibFeedData.length < 3) { alert('Not enough PIB data loaded. Wait for the feed to load.'); return; }
-            var startVal = document.getElementById('pibQuizStart').value;
-            var endVal = document.getElementById('pibQuizEnd').value;
-            if (!startVal || !endVal) { alert('Pick a date range first.'); return; }
-            if (startVal > endVal) { alert('Start date must be before end date.'); return; }
-
-            var rangeItems = _pibFeedData.filter(function(i) {
-                return i.pubDate && i.title && i.pubDate.slice(0,10) >= startVal && i.pubDate.slice(0,10) <= endVal;
-            });
-            if (rangeItems.length < 3) { alert('Not enough PIB news in that date range (need at least 3).'); return; }
-
-            _pibDateRange = { start: startVal, end: endVal };
-            _pibUsed = {};
-            document.getElementById('pibQuizPanel').style.display = 'none';
-            startCategory('pib', 'PIB: ' + startVal.slice(5) + ' to ' + endVal.slice(5));
         }
 
         var _pibFeedData = null;
@@ -6531,6 +6473,7 @@
 
             document.getElementById('studyGrid').style.display = 'none';
             document.getElementById('studyArea').style.display = 'block';
+            document.getElementById('studyArea').scrollIntoView({behavior:'smooth',block:'start'});
             document.getElementById('studyBcTopic').textContent = data.title || catName;
             document.getElementById('studyIcon').textContent = icon || GK_LEARN[catId]?.icon || '📖';
             document.getElementById('studyTitle').textContent = data.title || catName;
@@ -6995,6 +6938,7 @@
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('timedQuizOptions').style.display = 'none';
+            document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
         }
         
@@ -7034,6 +6978,7 @@
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
         }
         
