@@ -152,6 +152,7 @@ WIKI.prefetch = function() {
 
   // Launch all sources
   fetchOnThisDay();
+  WIKI.prefetchCurrentEvents();
   for (var pi = 0; pi < 3; pi++) { setTimeout(fetchOne, pi * 50); }
   for (var si = 0; si < 2; si++) { setTimeout(fetchSearch, 200 + si * 100); }
 };
@@ -422,3 +423,178 @@ WIKI._classify = function(desc, extract) {
   }
   return 'general';
 };
+
+// ── CURRENT EVENTS PORTAL PIPELINE ──
+// Fetches Portal:Current_events, parses daily events, generates WH-questions
+
+var COMMON_COUNTRIES = [
+  'India', 'China', 'United States', 'United Kingdom', 'Russia', 'Japan', 'Brazil',
+  'France', 'Germany', 'Australia', 'Canada', 'Italy', 'South Korea', 'North Korea',
+  'Iran', 'Iraq', 'Israel', 'Pakistan', 'Bangladesh', 'Nepal', 'Sri Lanka', 'Myanmar',
+  'Afghanistan', 'Turkey', 'Syria', 'Saudi Arabia', 'Yemen', 'Egypt', 'Libya', 'Sudan',
+  'South Africa', 'Nigeria', 'Kenya', 'Ethiopia', 'Argentina', 'Mexico', 'Colombia',
+  'Spain', 'Portugal', 'Netherlands', 'Belgium', 'Sweden', 'Norway', 'Poland', 'Ukraine',
+  'Thailand', 'Vietnam', 'Indonesia', 'Malaysia', 'Philippines', 'Singapore'
+];
+
+WIKI.fetchCurrentEvents = function() {
+  return fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Portal:Current_events&prop=text&format=json&origin=*')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var html = data && data.parse && data.parse.text && data.parse.text['*'];
+      if (!html) return [];
+      return WIKI._parseCurrentEvents(html);
+    })
+    .catch(function() { return []; });
+};
+
+WIKI._parseCurrentEvents = function(html) {
+  var events = [];
+  // Remove script/style tags
+  html = html.replace(/<script[^>]*>[\s\S]*?<\/script>/g, '').replace(/<style[^>]*>[\s\S]*?<\/style>/g, '');
+
+  // Split by date navbar markers to get daily blocks
+  var dayBlocks = html.split(/<ul class="current-events-navbar[^>]*>[\s\S]*?<\/ul>/g);
+
+  for (var d = 0; d < dayBlocks.length; d++) {
+    var block = dayBlocks[d];
+    // Match only leaf <li> (no child <li> or <ul>)
+    var leafLi = /<li>((?!<li)[\s\S]*?)<\/li>/g;
+    var match;
+    while ((match = leafLi.exec(block)) !== null) {
+      var raw = match[1];
+      if (raw.indexOf('<li') >= 0 || raw.indexOf('<ul') >= 0) continue;
+      var text = raw.replace(/<[^>]+>/g, '').replace(/&[^;]+;/g, ' ').replace(/\s+/g, ' ').trim();
+      // Filter: too short, navigation, meta
+      if (text.length < 35) continue;
+      if (/^(This portal|Worldwide|Sports events|Recent deaths|Nominate|Topics|Ongoing)/i.test(text)) continue;
+      if (/^\d[\d,]*\s+(barrel|killed|injured|people)/i.test(text) && text.length < 70) continue;
+
+      // Extract linked article titles
+      var links = [];
+      var linkRe = /<a[^>]*href="\/wiki\/([^"#]+)(?:#[^"]*)?"[^>]*>/g;
+      var lm;
+      while ((lm = linkRe.exec(raw)) !== null) {
+        var t = decodeURIComponent(lm[1].replace(/_/g, ' '));
+        if (t.indexOf(':') < 0 && links.indexOf(t) < 0) links.push(t);
+      }
+
+      var cat = WIKI._classify('', text);
+      events.push({ text: text, links: links, cat: cat });
+    }
+  }
+  return events;
+};
+
+WIKI._makeEventQuestions = function(ev) {
+  var text = ev.text;
+  var links = ev.links;
+  var catName = ev.cat || 'current affairs';
+  var lower = text.toLowerCase();
+  var results = [];
+  var factParts = [text];
+
+  function isValid(a) {
+    if (!a) return false;
+    var s = String(a).trim();
+    if (s.length < 2 || s.length > 200) return false;
+    var sl = s.toLowerCase();
+    if (sl.indexOf('various') >= 0 || sl.indexOf('multiple') >= 0 || sl.indexOf('unknown') >= 0) return false;
+    return true;
+  }
+
+  function pushQ(q) {
+    if (!q) return;
+    if (results.length >= 4) return;
+    q.a = String(q.a).trim();
+    if (!isValid(q.a)) return;
+    q._source = 'current_events';
+    q._wikiCat = catName;
+    results.push(q);
+  }
+
+  // Find mentioned country from links
+  var mentionedCountry = null;
+  for (var li = 0; li < links.length; li++) {
+    if (COMMON_COUNTRIES.indexOf(links[li]) >= 0) { mentionedCountry = links[li]; break; }
+  }
+
+  // Numbers in text
+  var nums = text.match(/\b(\d{1,3}(?:,\d{3})*)\b/g) || [];
+
+  // ── WHAT happened ──
+  var shortText = text.length > 120 ? text.substr(0, 117) + '...' : text;
+  pushQ({ q: 'What happened? ' + shortText, a: text.substr(0, 150), hint: 'Current event', fact: text, opts: WIKI._buildOpts(text.substr(0, 60)) });
+
+  // ── WHICH country ──
+  if (mentionedCountry) {
+    var whatVerb = 'did this happen';
+    if (lower.indexOf('launch') >= 0 || lower.indexOf('announce') >= 0) whatVerb = 'is involved';
+    if (lower.indexOf('kill') >= 0 || lower.indexOf('attack') >= 0) whatVerb = 'was affected';
+    if (lower.indexOf('elect') >= 0 || lower.indexOf('vote') >= 0) whatVerb = 'held the election';
+    pushQ({ q: 'Which country ' + whatVerb + '? ' + shortText, a: mentionedCountry, hint: 'Country involved', fact: text, opts: WIKI._buildOpts(mentionedCountry) });
+  }
+
+  // ── WHERE ──
+  var locMatch = text.match(/(?:in|at|near|off)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/);
+  if (locMatch && locMatch[1] && locMatch[1].length < 50) {
+    pushQ({ q: 'Where did this occur? ' + shortText, a: locMatch[1], hint: 'Location of event', fact: text, opts: WIKI._buildOpts(locMatch[1]) });
+  }
+
+  // ── HOW MANY ──
+  if (nums.length > 0) {
+    var nContexts = ['killed', 'injured', 'dead', 'people', 'million', 'billion', 'barrel', 'soldier'];
+    for (var ni = 0; ni < nums.length; ni++) {
+      var n = nums[ni];
+      var ctx = text.substr(Math.max(0, text.indexOf(n) - 30), n.length + 60).toLowerCase();
+      for (var nci = 0; nci < nContexts.length; nci++) {
+        if (ctx.indexOf(nContexts[nci]) >= 0) {
+          pushQ({ q: 'How many ' + nContexts[nci] + ' are reported? ' + shortText, a: n, hint: 'Number reported', fact: text, opts: WIKI._buildOpts(n) });
+          ni = nums.length; break;
+        }
+      }
+    }
+  }
+
+  // ── TRUE/FALSE ──
+  if (mentionedCountry) {
+    var falseCountry = null;
+    for (var fi = 0; fi < COMMON_COUNTRIES.length; fi++) {
+      if (COMMON_COUNTRIES[fi] !== mentionedCountry && text.indexOf(COMMON_COUNTRIES[fi]) < 0) {
+        falseCountry = COMMON_COUNTRIES[fi]; break;
+      }
+    }
+    if (falseCountry) {
+      pushQ({ q: 'True or False: ' + falseCountry + ' was involved in this event. ' + shortText, a: 'False', hint: 'Verify the country', fact: text, opts: ['True', 'False'] });
+    }
+  }
+
+  // ── WHO (if person mentioned in links) ──
+  for (var pli = 0; pli < Math.min(links.length, 5); pli++) {
+    var l = links[pli];
+    if (l !== mentionedCountry && l.indexOf(',') < 0 && l.indexOf(' ') > 0 && l.indexOf('(') < 0 && l.length > 5 && l.length < 60) {
+      pushQ({ q: 'Who is mentioned in this event? ' + shortText, a: l, hint: 'Person or entity', fact: text, opts: WIKI._buildOpts(l) });
+      break;
+    }
+  }
+
+  return results;
+};
+
+WIKI._currentEventCache = [];
+
+WIKI.prefetchCurrentEvents = function() {
+  return WIKI.fetchCurrentEvents().then(function(events) {
+    WIKI._currentEventCache = events;
+    for (var ei = 0; ei < Math.min(events.length, 30); ei++) {
+      var qs = WIKI._makeEventQuestions(events[ei]);
+      for (var qi = 0; qi < qs.length; qi++) {
+        if (WIKI._pool.length < WIKI._poolSize * 2) WIKI._pool.push(qs[qi]);
+      }
+    }
+  }).catch(function() {});
+};
+
+// ── WIKINEWS PIPELINE (reserved for future use) ──
+// Wikinews API tested: recentchanges namespace 0 returns 0 articles.
+// Alternative: parse Wikinews main page for latest headlines.
