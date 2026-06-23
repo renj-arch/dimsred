@@ -5311,24 +5311,39 @@
             var selected = pick(available);
             _pibUsed[selected.q + selected.a] = true;
 
-            // Build options from entity pool + distractors
-            var entityPool = [];
-            items.forEach(function(item) {
-                var words = (item.title || '').replace(/[–—•·′″]/g, ' ').split(' ');
-                words.forEach(function(w) {
-                    var clean = w.replace(/[^a-zA-Z0-9+]/g, '');
-                    if (clean.length >= 3 && /[A-Z]/.test(clean[0])) {
-                        if (entityPool.indexOf(clean) < 0) entityPool.push(clean);
-                    }
-                });
-            });
-            var pool = (GK_DISTRACTORS.pib || []).filter(function(e) { return e !== selected.a; });
-            var combined = shuffle(entityPool.concat(pool));
+            // Build options — type-specific distractors
             var opts = [selected.a];
-            for (var i = 0; i < combined.length && opts.length < 4; i++) {
-                if (opts.indexOf(combined[i]) < 0 && combined[i].length > 1) opts.push(combined[i]);
+            var allStates = ['Madhya Pradesh','Uttar Pradesh','Tamil Nadu','Andhra Pradesh','Arunachal Pradesh','Himachal Pradesh','Jammu & Kashmir','Andaman & Nicobar','West Bengal','Jharkhand','Chhattisgarh','Uttarakhand','Karnataka','Maharashtra','Telangana','Rajasthan','Gujarat','Haryana','Punjab','Odisha','Bihar','Kerala','Assam','Manipur','Meghalaya','Mizoram','Nagaland','Sikkim','Tripura','Goa','Delhi','Ladakh'];
+            var allCountries = ['USA','China','Russia','UK','France','Japan','Germany','Australia','Canada','Brazil','South Africa','Nepal','Sri Lanka','Bangladesh','Pakistan','Myanmar','Maldives','Bhutan','Afghanistan','Iran','Israel','Saudi Arabia','UAE','Qatar','Oman','Kuwait','Egypt','Turkey','Indonesia','Malaysia','Singapore','Thailand','Vietnam','South Korea','North Korea','Italy','Spain','Netherlands','Switzerland','Sweden','Norway','Finland','New Zealand','Argentina','Mexico','Kenya','Nigeria'];
+            var typePool = [];
+            if (selected.t === 'state') {
+                typePool = allStates.filter(function(s) { return s !== selected.a; });
+            } else if (selected.t === 'country') {
+                typePool = allCountries.filter(function(c) { return c !== selected.a; });
+            } else if (selected.t === 'ministry') {
+                typePool = ['Ministry of Finance','Ministry of Defence','Ministry of Home Affairs','Ministry of External Affairs','Ministry of Health','Ministry of Education','Ministry of Agriculture','Ministry of Power','Ministry of Railways','Ministry of Law and Justice','Ministry of Commerce','Ministry of Rural Development'].filter(function(m) { return m !== selected.a; });
             }
-            while (opts.length < 4) opts.push('None of the above');
+            if (typePool.length >= 3) {
+                shuffle(typePool);
+                for (var di = 0; di < 3; di++) opts.push(typePool[di]);
+            } else {
+                var entityPool = [];
+                items.forEach(function(item) {
+                    var words = (item.title || '').replace(/[–—•·′″]/g, ' ').split(' ');
+                    words.forEach(function(w) {
+                        var clean = w.replace(/[^a-zA-Z0-9+]/g, '');
+                        if (clean.length >= 3 && /[A-Z]/.test(clean[0])) {
+                            if (entityPool.indexOf(clean) < 0) entityPool.push(clean);
+                        }
+                    });
+                });
+                var pool = (GK_DISTRACTORS.pib || []).filter(function(e) { return e !== selected.a; });
+                var combined = shuffle(entityPool.concat(pool));
+                for (var di = 0; di < combined.length && opts.length < 4; di++) {
+                    if (opts.indexOf(combined[di]) < 0 && combined[di].length > 1) opts.push(combined[di]);
+                }
+                while (opts.length < 4) opts.push('None of the above');
+            }
             shuffle(opts);
 
             return {
