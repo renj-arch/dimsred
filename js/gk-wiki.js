@@ -249,7 +249,7 @@ WIKI._makeQuestions = function(data) {
     }
     pushQ({ q: 'What is special about ' + title + '?', a: desc || firstSentence.substr(0, 120), hint: 'Unique feature', fact: richFact, opts: WIKI._buildOpts(desc || firstSentence.substr(0, 80)) });
     pushQ({ q: 'What makes ' + title + ' significant?', a: firstSentence.substr(0, 120), hint: 'Its importance', fact: richFact, opts: WIKI._buildOpts(firstSentence.substr(0, 80)) });
-    pushQ({ q: 'What category does ' + title + ' fall under?', a: catName, hint: 'Subject field', fact: richFact, opts: WIKI._buildOpts(catName) });
+      if (category !== 'general') pushQ({ q: 'What category does ' + title + ' fall under?', a: catName, hint: 'Subject field', fact: richFact, opts: WIKI._buildOpts(catName) });
     pushQ({ q: 'For what purpose is ' + title + ' used?', a: desc || firstSentence.substr(0, 100), hint: 'Utility or function', fact: richFact, opts: WIKI._buildOpts(desc || firstSentence.substr(0, 60)) });
   })();
 
@@ -291,8 +291,10 @@ WIKI._makeQuestions = function(data) {
 
   // ── WHICH QUESTIONS ────────────────────────────────────────
   (function() {
-    pushQ({ q: 'Which field is ' + title + ' associated with?', a: catName, hint: 'Subject area', fact: richFact, opts: WIKI._buildOpts(catName) });
-    pushQ({ q: 'Which category best describes ' + title + '?', a: catName, hint: 'Classification', fact: richFact, opts: WIKI._buildOpts(catName) });
+    if (category !== 'general') {
+      pushQ({ q: 'Which field is ' + title + ' associated with?', a: catName, hint: 'Subject area', fact: richFact, opts: WIKI._buildOpts(catName) });
+      pushQ({ q: 'Which category best describes ' + title + '?', a: catName, hint: 'Classification', fact: richFact, opts: WIKI._buildOpts(catName) });
+    }
     pushQ({ q: 'Which of the following is ' + title + '?', a: desc || firstSentence.substr(0, 80), hint: 'Choose the correct description', fact: richFact, opts: WIKI._buildOpts(desc || firstSentence.substr(0, 60)) });
     pushQ({ q: 'Which year is ' + title + ' most closely linked to?', a: years.length > 0 ? years[0] : 'unknown', hint: 'Annual association', fact: richFact, opts: WIKI._buildOpts(years.length > 0 ? years[0] : 'unknown') });
   })();
@@ -362,7 +364,7 @@ WIKI._makeQuestions = function(data) {
 
   // ── IS/ARE/DO/DOES/CAN (YES/NO) QUESTIONS ────────────────
   (function() {
-    if (desc && desc.length < 120) {
+    if (desc && desc.length < 120 && category !== 'general') {
       pushQ({ q: 'Is ' + title + ' a ' + catName + ' topic?', a: 'Yes', hint: 'Category confirmation', fact: richFact, opts: ['Yes', 'No'] });
     }
     var negDesc = desc ? desc.replace(/\bis\b/, 'is not').replace(/\bare\b/, 'are not') : '';
@@ -370,11 +372,11 @@ WIKI._makeQuestions = function(data) {
       pushQ({ q: 'Is it true that ' + negDesc + '?', a: 'No', hint: 'Negated description check', fact: richFact, opts: ['Yes', 'No'] });
     }
     // Can questions
-    if (extract.toLowerCase().indexOf('can be') >= 0) {
+    if (extract.toLowerCase().indexOf('can be') >= 0 && category !== 'general') {
       pushQ({ q: 'Can ' + title + ' be considered part of ' + catName + '?', a: 'Yes', hint: 'Category relevance', fact: richFact, opts: ['Yes', 'No'] });
     }
     // Does questions
-    if (desc && desc.length < 100) {
+    if (desc && desc.length < 100 && category !== 'general') {
       pushQ({ q: 'Does ' + title + ' relate to ' + catName + '?', a: 'Yes', hint: 'Subject relation', fact: richFact, opts: ['Yes', 'No'] });
     }
   })();
@@ -492,6 +494,7 @@ WIKI._makeQuestions = function(data) {
 
   // ── CATEGORY ──────────────────────────────────────────────
   (function() {
+    if (category === 'general') return;
     pushQ({ q: title + ' belongs to which field?', a: catName, hint: 'Subject area', fact: richFact, opts: WIKI._buildOpts(catName) });
     pushQ({ q: 'What subject does ' + title + ' relate to?', a: catName, hint: 'Academic or general field', fact: richFact, opts: WIKI._buildOpts(catName) });
     pushQ({ q: 'Which category does ' + title + ' belong to?', a: catName, hint: 'Classification of ' + title, fact: richFact, opts: WIKI._buildOpts(catName) });
