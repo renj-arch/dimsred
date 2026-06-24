@@ -6973,7 +6973,7 @@
                 var retry = 0;
                 var waiter = setInterval(function() {
                     retry++;
-                    if (WIKI._pool.length > 0 || retry > 50) {
+                    if (WIKI._pool.length > 0 || retry > 25) {
                         clearInterval(waiter);
                         _wikiWaiting = false;
                         if (WIKI._pool.length > 0) {
@@ -6983,9 +6983,13 @@
                                 state.questions.push(wq);
                             }
                         }
-                        if (state.questions.length > 0) showQuestion();
+                        if (state.questions.length > 0) {
+                            showQuestion();
+                        } else {
+                            document.getElementById('qText').innerHTML = 'Could not reach Wikipedia. <button onclick="startCombinedQuiz(15,\'🎯 Mega Quiz\')" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Retry</button>';
+                        }
                     }
-                }, 200);
+                }, 400);
             }
         }
 
@@ -6999,6 +7003,9 @@
             state.questions = [];
             state.infinite = true;
             state.restartFn = function() { startCombinedQuiz(count, label); };
+            
+            // Ensure wiki prefetch is running (reset & retry)
+            if (typeof WIKI !== 'undefined') { try { WIKI._prefetching = false; WIKI.prefetch(); } catch(e) {} }
             
             // Generate first batch — wiki only
             document.getElementById('welcome').style.display = 'none';
