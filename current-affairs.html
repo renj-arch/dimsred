@@ -5729,7 +5729,6 @@
                 var q = null;
                 if (gen2 && Math.random() < 0.6) { try { q = gen2(); } catch(e) {} }
                 if (!q && gen1) { try { q = gen1(); } catch(e) {} }
-                if (!q && typeof WIKI !== 'undefined') { try { q = WIKI.poolQuestion(); } catch(e) {} }
                 if (q) {
                     q.opts = q.opts || buildOptions(q.a);
                     if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
@@ -6876,7 +6875,6 @@
         }
 
         init();
-        setTimeout(function() { try { WIKI.prefetch(); } catch(e) {} }, 2000);
     
 </script>
     <script src="https://unpkg.com/lucide@0.468.0"></script>
@@ -6884,7 +6882,6 @@
 <script src="js/bundles/core.js"></script>
     <script src="js/gk-data.js"></script>
     <script src="js/gk-generators.js"></script>
-    <script src="js/gk-wiki.js"></script>
     <script>
         // ===== MERGE ENHANCED GENERATORS INTO EXISTING SYSTEM =====
         // Priority: GK_GEN2 > GK_GENERATORS
@@ -6920,10 +6917,6 @@
             if (allCats2.length > 0) mergedCats = allCats.filter(function(c) { return allCats2.indexOf(c) >= 0; });
             if (mergedCats.length === 0) mergedCats = allCats;
 
-            if (typeof WIKI !== 'undefined') {
-                try { WIKI.prefetch(); } catch(e) {}
-            }
-
             var caQuestions = [];
             if (_pibFeedData && _pibFeedData.length > 3) {
                 caQuestions = _buildVirtualFeed(_pibFeedData, []);
@@ -6932,15 +6925,13 @@
             var q = null;
             var source = Math.random();
 
-            if (source < 0.40) {
+            if (source < 0.45) {
                 var cat = pick(mergedCats);
                 if (GK_GEN2 && GK_GEN2[cat]) { try { q = GK_GEN2[cat](); } catch(e) {} }
                 if (!q) { try { q = GK_GENERATORS[cat](); } catch(e) {} }
-            } else if (source < 0.70) {
+            } else if (source < 0.75) {
                 var cat = pick(allCats);
                 try { q = GK_GENERATORS[cat](); } catch(e) {}
-            } else if (source < 0.90) {
-                if (typeof WIKI !== 'undefined') { try { q = WIKI.poolQuestion(); } catch(e) {} }
             } else {
                 if (caQuestions.length > 0) { q = pick(caQuestions); }
             }
@@ -7000,12 +6991,11 @@
         }
 
         function generateWikiQuestions(count) {
-            if (typeof WIKI !== 'undefined') { try { WIKI.prefetch(); } catch(e) {} }
             var added = 0;
             var maxTries = count * 10;
             for (var i = 0; i < maxTries && added < count; i++) {
                 var q = null;
-                if (typeof WIKI !== 'undefined') { try { q = WIKI.poolQuestion(); } catch(e) {} }
+                try { q = generateOneQuestion(); } catch(e) {}
                 if (!q) continue;
                 q.opts = q.opts || buildOptions(q.a);
                 if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
@@ -7066,8 +7056,7 @@
                     if (gen2 && Math.random() < 0.7) { try { q = gen2(); } catch(e) {} }
                     if (!q && gen1) { try { q = gen1(); } catch(e) {} }
                 } else {
-                    if (typeof WIKI !== 'undefined') { try { q = WIKI.poolQuestion(); } catch(e) {} }
-                    if (!q && _pibFeedData && _pibFeedData.length > 3) {
+                    if (_pibFeedData && _pibFeedData.length > 3) {
                         var caQ = _buildVirtualFeed(_pibFeedData, []);
                         if (caQ.length > 0) q = pick(caQ);
                     }

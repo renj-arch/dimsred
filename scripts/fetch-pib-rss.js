@@ -17,6 +17,8 @@ var RBI_RSS_URL = 'https://www.rbi.org.in/pressreleases_rss.xml';
 var SEBI_RSS_URL = 'https://www.sebi.gov.in/sebirss.xml';
 var SC_JUDGMENTS_RSS_URL = 'https://indiankanoon.org/feeds/latest/supremecourt/';
 
+var WIKI_CURRENT_EVENTS_URL = 'https://en.wikipedia.org/w/api.php?action=parse&page=Portal:Current_events&prop=text&format=json&origin=*';
+
 var GOOGLE_NEWS_TPL = 'https://news.google.com/rss/search?q={q}&hl=en-IN&gl=IN&ceid=IN:en';
 
 var NATIONAL_NEWS_QUERIES = [
@@ -95,6 +97,20 @@ function categorizeItem(title, desc) {
   if (/(?:energy|electricity|coal |oil |petroleum|natural gas|solar |wind |renewable|hydrogen|biofuel|ethanol|power project|power plant|power sector|power generation|power capacity)/.test(t)) return 'Energy';
   if (/(?:environment|climate|forest|wildlife|pollution|ecology|green |emission|carbon |biodiversity|conservation|wetland|river |ganga |swachh)/.test(t)) return 'Environment & Climate';
   return 'Announcements';
+}
+
+function categorizeWorldItem(title, desc) {
+  var t = (title + ' ' + (desc || '')).toLowerCase();
+  if (/(?:war |military|army |navy |air force|missile|drone |sanctions|ceasefire|troops|conflict|battle|rebel|terror|strike|attack|bomb|invasion)/.test(t)) return 'World: Defence & Conflict';
+  if (/(?:parliament|congress|senate|election|vote |president|prime minister|minister|policy |law |bill |republican|democrat|party|govern|government|political|diplomat|treaty|summit)/.test(t)) return 'World: Politics';
+  if (/(?:trade |tariff|economy|market|stock |inflation|gdp |budget|tax |bank |finance|investment|dollar|currency|debt |interest rate)/.test(t)) return 'World: Economy';
+  if (/(?:climate|emission|carbon|renewable|solar|wind |fossil|pollution|forest|wildlife|ocean|temperature|heatwave|flood|drought|hurricane|earthquake)/.test(t)) return 'World: Environment';
+  if (/(?:health|disease|virus|vaccine|hospital|medical|patient|doctor|ebola|pandemic|outbreak)/.test(t)) return 'World: Health';
+  if (/(?:technology|ai |artificial|space |satellite|rocket|launch|nasa|isro|cyber|digital|computer|robot|quantum|semiconductor)/.test(t)) return 'World: Science & Tech';
+  if (/(?:sport|olympic|world cup|championship|tournament|medal|athlete|player|coach|cricket|football|tennis)/.test(t)) return 'World: Sports';
+  if (/(?:earthquake|flood|cyclone|tsunami|landslide|wildfire|eruption|disaster|rescue|relief)/.test(t)) return 'World: Disaster';
+  if (/(?:film |movie|music |dance |art |museum|exhibition|concert|actor|actress|festival|award|oscar|nobel)/.test(t)) return 'World: Culture';
+  return 'World: General';
 }
 
 function extractRegion(title, desc) {
@@ -522,6 +538,62 @@ async function fetchNationalGoogleNews() {
   return items;
 }
 
+async function fetchWikiCurrentEvents() {
+  try {
+    var resp = await fetch(WIKI_CURRENT_EVENTS_URL, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': 'application/json, */*', 'Accept-Language': 'en-US,en;q=0.9' }
+    });
+    if (!resp.ok) { console.error('Wiki current events HTTP ' + resp.status); return []; }
+    var data = await resp.json();
+    var html = data && data.parse && data.parse.text && data.parse.text['*'];
+    if (!html) { console.error('No wiki content'); return []; }
+
+    html = html.replace(/<script[^>]*>[\s\S]*?<\/script>/g, '').replace(/<style[^>]*>[\s\S]*?<\/style>/g, '');
+    var dayBlocks = html.split(/<ul class="current-events-navbar[^>]*>[\s\S]*?<\/ul>/g);
+
+    var rawItems = [];
+    for (var d = 0; d < dayBlocks.length; d++) {
+      var block = dayBlocks[d];
+      var leafLi = /<li>((?!<li)[\s\S]*?)<\/li>/g;
+      var match;
+      while ((match = leafLi.exec(block)) !== null) {
+        var raw = match[1];
+        if (raw.indexOf('<li') >= 0 || raw.indexOf('<ul') >= 0) continue;
+        var text = raw.replace(/<[^>]+>/g, '').replace(/&[^;]+;/g, ' ').replace(/\s+/g, ' ').trim();
+        if (text.length < 35) continue;
+        if (/^(This portal|Worldwide|Sports events|Recent deaths|Nominate|Topics|Ongoing)/i.test(text)) continue;
+        rawItems.push(text);
+      }
+    }
+
+    var items = [];
+    var seen = new Set();
+    for (var ri = 0; ri < rawItems.length && items.length < 50; ri++) {
+      var text = rawItems[ri];
+      var summary = handWriteSummary(text, 'Wikipedia', categorizeWorldItem(text, ''));
+      if (!summary || summary.length < 20) continue;
+      var key = summary.toLowerCase().slice(0, 60);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      items.push({
+        id: 'world-' + ri + '-' + new Date().toISOString().slice(0, 10),
+        title: summary.length > 120 ? summary.slice(0, 117) + '...' : summary,
+        link: '',
+        description: summary,
+        category: categorizeWorldItem(text, ''),
+        region: '',
+        pubDate: new Date().toISOString(),
+        source: 'Wikipedia'
+      });
+    }
+    console.log('World news items (rewritten): ' + items.length);
+    return items;
+  } catch (e) {
+    console.error('Wiki current events fetch failed: ' + e.message);
+    return [];
+  }
+}
+
 async function fetchAll() {
   console.log('Fetching PIB English HTML page...');
   var englishItems = await fetchEnglish();
@@ -551,6 +623,10 @@ async function fetchAll() {
   var meaItems = await fetchMEA();
   console.log('MEA items: ' + meaItems.length);
 
+  console.log('Fetching Wikipedia current events...');
+  var worldNewsItems = await fetchWikiCurrentEvents();
+  console.log('World news items: ' + worldNewsItems.length);
+
   var googleNewsItems = await fetchAllGoogleNews();
   var nationalNewsItems = await fetchNationalGoogleNews();
 
@@ -574,6 +650,7 @@ async function fetchAll() {
   addItems(scItems);
   addItems(isroItems);
   addItems(meaItems);
+  addItems(worldNewsItems);
   addItems(googleNewsItems);
   addItems(nationalNewsItems);
 
