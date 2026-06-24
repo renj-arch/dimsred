@@ -5809,7 +5809,7 @@
             if (state.idx >= state.questions.length) {
                 if (state.infinite) {
                     generateWikiQuestions(5);
-                    if (state.questions.length === 0) {
+                    if (state.idx >= state.questions.length) {
                         if (_wikiWaiting) { return; }
                         showEnd(); return;
                     }
@@ -5902,7 +5902,7 @@
             // In infinite mode, never end — just generate more questions
             if (state.infinite) {
                 generateWikiQuestions(10);
-                if (state.questions.length > 0) {
+                if (state.idx < state.questions.length) {
                     showQuestion();
                     return;
                 }
