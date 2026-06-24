@@ -5809,7 +5809,10 @@
             if (state.idx >= state.questions.length) {
                 if (state.infinite) {
                     generateWikiQuestions(5);
-                    if (state.questions.length === 0) { showEnd(); return; }
+                    if (state.questions.length === 0) {
+                        if (_wikiWaiting) { return; }
+                        showEnd(); return;
+                    }
                 } else {
                     showEnd();
                     return;
@@ -6945,6 +6948,8 @@
             return null;
         }
 
+        var _wikiWaiting = false;
+
         function generateWikiQuestions(count) {
             var added = 0;
             var maxTries = count * 10;
@@ -6963,9 +6968,24 @@
                 state.questions.push(q);
                 added++;
             }
-            if (added === 0) {
-                var fallback = getFreshFallback();
-                if (fallback) state.questions.push(fallback);
+            if (added === 0 && typeof WIKI !== 'undefined' && WIKI._pool && WIKI._pool.length === 0 && !_wikiWaiting) {
+                _wikiWaiting = true;
+                var retry = 0;
+                var waiter = setInterval(function() {
+                    retry++;
+                    if (WIKI._pool.length > 0 || retry > 50) {
+                        clearInterval(waiter);
+                        _wikiWaiting = false;
+                        if (WIKI._pool.length > 0) {
+                            for (var wi = 0; wi < count && state.questions.length < 50; wi++) {
+                                var wq = WIKI.poolQuestion();
+                                if (!wq) break;
+                                state.questions.push(wq);
+                            }
+                        }
+                        if (state.questions.length > 0) showQuestion();
+                    }
+                }, 200);
             }
         }
 
@@ -6980,15 +7000,18 @@
             state.infinite = true;
             state.restartFn = function() { startCombinedQuiz(count, label); };
             
-            // Generate first batch for instant play — wiki only
-            generateWikiQuestions(5);
-            
+            // Generate first batch — wiki only
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('timedQuizOptions').style.display = 'none';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
-            showQuestion();
+            document.getElementById('qText').innerHTML = 'Loading wiki questions...';
+            document.getElementById('optGrid').innerHTML = '';
+            generateWikiQuestions(5);
+            if (state.questions.length > 0) {
+                showQuestion();
+            }
         }
         
         // ===== COMBINED CATEGORY + CURRENT AFFAIRS QUIZ =====
