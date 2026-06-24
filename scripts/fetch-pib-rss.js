@@ -19,6 +19,24 @@ var SC_JUDGMENTS_RSS_URL = 'https://indiankanoon.org/feeds/latest/supremecourt/'
 
 var GOOGLE_NEWS_TPL = 'https://news.google.com/rss/search?q={q}&hl=en-IN&gl=IN&ceid=IN:en';
 
+var NATIONAL_NEWS_QUERIES = [
+  { category: 'National', q: 'India top news today' },
+  { category: 'National', q: 'India government announcement' },
+  { category: 'National', q: 'Padma award India 2025' },
+  { category: 'National', q: 'India union cabinet decision' },
+  { category: 'National', q: 'India defence news' },
+  { category: 'National', q: 'India space ISRO news' },
+  { category: 'National', q: 'India sports news' },
+  { category: 'National', q: 'India economy finance news' },
+  { category: 'National', q: 'India science technology' },
+  { category: 'National', q: 'India health medical news' },
+  { category: 'National', q: 'India education policy' },
+  { category: 'National', q: 'India environment climate' },
+  { category: 'National', q: 'India culture heritage' },
+  { category: 'National', q: 'India infrastructure development' },
+  { category: 'National', q: 'India railway highway project' }
+];
+
 var STATE_QUERIES = [
   { state: 'Andhra Pradesh', q: 'Andhra Pradesh government news' },
   { state: 'Arunachal Pradesh', q: 'Arunachal Pradesh government' },
@@ -495,6 +513,15 @@ async function fetchAllGoogleNews() {
   return items;
 }
 
+async function fetchNationalGoogleNews() {
+  console.log('Fetching Google News for ' + NATIONAL_NEWS_QUERIES.length + ' national topics...');
+  var items = await concurrentMap(NATIONAL_NEWS_QUERIES, function(q) {
+    return fetchGoogleNewsForState(q.category, q.q);
+  }, 5);
+  console.log('National Google News items: ' + items.length);
+  return items;
+}
+
 async function fetchAll() {
   console.log('Fetching PIB English HTML page...');
   var englishItems = await fetchEnglish();
@@ -525,6 +552,7 @@ async function fetchAll() {
   console.log('MEA items: ' + meaItems.length);
 
   var googleNewsItems = await fetchAllGoogleNews();
+  var nationalNewsItems = await fetchNationalGoogleNews();
 
   // Merge all items
   var seen = new Set();
@@ -547,6 +575,7 @@ async function fetchAll() {
   addItems(isroItems);
   addItems(meaItems);
   addItems(googleNewsItems);
+  addItems(nationalNewsItems);
 
   // Remove non-English items (check title)
   merged = merged.filter(function(item) {

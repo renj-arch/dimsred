@@ -32,6 +32,11 @@ function extractNamedEntity(text) {
     if (m) return { value: (m[1] + ' ' + m[2]).trim(), type: 'person' };
   }
 
+  // Award recipient
+  var awardMatch = text.match(/(?:present(?:s|ed)?|confer(?:s|red)?|award(?:s|ed)?|honour(?:s|ed)?|receives?|gets?|selected\s+for|chosen\s+for)\s+(?:the\s+)?(?:Bharat\s+Ratna|Padma\s+(?:Vibhushan|Bhushan|Shri))\s+(?:upon|to|on)\s+(?:Shri|Smt|Dr|Prof)\.?\s*([A-Z][\w\s.]+?)(?:\s+(?:for|in|by|,|$)|$)/i);
+  if (!awardMatch) awardMatch = text.match(/(?:Bharat\s+Ratna|Padma\s+(?:Vibhushan|Bhushan|Shri))\s+(?:award(?:ed|ee)?|recipient|conferred)\s+(?:upon|to|on|is\s+)(?:Shri|Smt|Dr|Prof)\.?\s*([A-Z][\w\s.]+?)(?:\s+(?:for|in|by|,|$)|$)/i);
+  if (awardMatch) return { value: awardMatch[1].trim(), type: 'person' };
+
   // Scheme
   m = text.match(/((?:Pradhan Mantri|PM|National|Bharat|Ayushman|Jan|Digital|Smart|Skill|Swachh)\s+[\w\s]{2,40}?(?:Yojana|Scheme|Mission|Abhiyan|Programme|Policy|Vision|Niryat|Rozgar|Kisan|Awas|Bank|Suraksha|Shakti|Seva|Sathi))/i);
   if (m) return { value: m[1].trim(), type: 'scheme' };
