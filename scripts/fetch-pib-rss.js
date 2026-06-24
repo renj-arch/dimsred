@@ -182,6 +182,16 @@ var TEMPLATES = {
   'Obituaries': [ 'It is with deep sorrow that, ', '. The nation mourns the loss.' ],
   'Sports': [ 'In the world of sports, ', '. The achievement celebrates India\'s sporting spirit.' ],
   'Tech & Science': [ 'In science and technology, ', '. The advancement marks a significant step in India\'s technological progress.' ],
+  'World: Defence & Conflict': [ 'On the global security front, ', '. The development has drawn international attention.' ],
+  'World: Politics': [ 'In a significant global political development, ', '. The move has implications for international relations.' ],
+  'World: Economy': [ 'In a major global economic development, ', '. The development is expected to impact markets worldwide.' ],
+  'World: Environment': [ 'On the global environmental front, ', '. The development highlights pressing environmental challenges.' ],
+  'World: Health': [ 'In a global health development, ', '. The update has implications for public health worldwide.' ],
+  'World: Science & Tech': [ 'In a global scientific breakthrough, ', '. The achievement advances human knowledge and capability.' ],
+  'World: Sports': [ 'In international sports, ', '. The achievement marks a significant milestone in the sporting world.' ],
+  'World: Disaster': [ 'In a tragic development, ', '. Emergency response efforts are underway in the affected region.' ],
+  'World: Culture': [ 'In the global cultural scene, ', '. The development enriches the world\'s cultural landscape.' ],
+  'World: General': [ 'In a global development, ', '. The news has attracted international interest.' ],
   'default': [ 'In a recent development, ', '.' ]
 };
 
@@ -256,8 +266,11 @@ function rewriteItem(item) {
   desc = desc.replace(/<[^>]+>/g, '').trim();
   if (desc.length > 200) desc = desc.slice(0, 200) + '...';
 
-  // Always generate hand-written summary
-  desc = handWriteSummary(title, item.source, item.category);
+  if (item.source !== 'Wikipedia') {
+    desc = handWriteSummary(title, item.source, item.category);
+  } else {
+    desc = title;
+  }
 
   item.title = title;
   item.description = desc;
