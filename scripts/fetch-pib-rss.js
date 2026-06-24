@@ -585,14 +585,8 @@ async function fetchAll() {
   // Strip all links — this site shows content only, no external navigation
   merged = merged.map(function(item) { item.link = ''; return item; });
 
-  // Apply rewriting: PIB stays original, others get hand-written summaries
-  merged = merged.map(function(item) {
-    if (item.source === 'PIB' || item.source === 'PIB_RSS') {
-      if (item.description) item.description = item.description.replace(/<[^>]+>/g, '').trim().slice(0, 300);
-      return item;
-    }
-    return rewriteItem(item);
-  });
+  // Rewrite all items in own words — no verbatim PIB text
+  merged = merged.map(function(item) { return rewriteItem(item); });
 
   // Priority-weighted sort: PIB/RBI/ISRO/MEA get time boost so they rank above same-age scraped items
   function getSortScore(item) {
@@ -616,7 +610,7 @@ async function fetchAll() {
     catch(e) { existing = []; }
   }
 
-  // Filter existing: remove non-English, remove deprecated sources, re-categorize, strip links, rewrite non-PIB
+  // Filter existing: remove non-English, remove deprecated sources, re-categorize, strip links, rewrite all
   existing = existing.filter(function(item) {
     if (!item.title) return false;
     if (!isEnglishText(item.title)) return false;
@@ -627,13 +621,7 @@ async function fetchAll() {
     item.region = extractRegion(item.title, item.description || '');
     return true;
   });
-  existing = existing.map(function(item) {
-    if (item.source === 'PIB' || item.source === 'PIB_RSS') {
-      if (item.description) item.description = item.description.replace(/<[^>]+>/g, '').trim().slice(0, 300);
-      return item;
-    }
-    return rewriteItem(item);
-  });
+  existing = existing.map(function(item) { return rewriteItem(item); });
 
   // Combine: new items first (so same-date items favor new over existing)
   var allItems = merged.concat(existing);
