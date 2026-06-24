@@ -5745,6 +5745,13 @@
         function buildOptions(correct) {
             var opts = [correct];
             var pool = GK_DISTRACTORS[state.cat] || [];
+            if (pool.length === 0) {
+                for (var k in GK_DISTRACTORS) {
+                    if (GK_DISTRACTORS[k] && GK_DISTRACTORS[k].length > 0) {
+                        pool = pool.concat(GK_DISTRACTORS[k]);
+                    }
+                }
+            }
             var shuffled = shuffle(pool.slice());
             for (var i = 0; i < shuffled.length && opts.length < 4; i++) {
                 if (opts.indexOf(shuffled[i]) < 0) opts.push(shuffled[i]);
@@ -6848,6 +6855,7 @@
         }
 
         init();
+        try { WIKI.prefetch(); } catch(e) {}
     
 </script>
     <script src="https://unpkg.com/lucide@0.468.0"></script>
@@ -6855,6 +6863,7 @@
 <script src="js/bundles/core.js"></script>
     <script src="js/gk-data.js"></script>
     <script src="js/gk-generators.js"></script>
+    <script src="js/gk-wiki.js"></script>
     <script>
         // ===== MERGE ENHANCED GENERATORS INTO EXISTING SYSTEM =====
         // Priority: GK_GEN2 > GK_GENERATORS
@@ -6876,33 +6885,11 @@
             startCombinedQuiz(12, label);
         };
         
-        // === COMBINED QUIZ ENGINE ===
-        // Sources: GK_GEN2 (expanded local data), GK_GENERATORS (original generators), PIB feed (current affairs)
+        // === MEGA QUIZ ENGINE — WIKI ONLY ===
         function generateOneQuestion() {
-            var allCats = Object.keys(GK_GENERATORS);
-            var allCats2 = GK_GEN2 ? Object.keys(GK_GEN2) : [];
-            var mergedCats = allCats;
-            if (allCats2.length > 0) mergedCats = allCats.filter(function(c) { return allCats2.indexOf(c) >= 0; });
-            if (mergedCats.length === 0) mergedCats = allCats;
-
-            var caQuestions = [];
-            if (_pibFeedData && _pibFeedData.length > 3) {
-                caQuestions = _buildVirtualFeed(_pibFeedData, []);
-            }
-
             var q = null;
-            var source = Math.random();
-
-            if (source < 0.45) {
-                var cat = pick(mergedCats);
-                if (GK_GEN2 && GK_GEN2[cat]) { try { q = GK_GEN2[cat](); } catch(e) {} }
-                if (!q) { try { q = GK_GENERATORS[cat](); } catch(e) {} }
-            } else if (source < 0.75) {
-                var cat = pick(allCats);
-                try { q = GK_GENERATORS[cat](); } catch(e) {}
-            } else {
-                if (caQuestions.length > 0) { q = pick(caQuestions); }
-            }
+            try { q = WIKI.poolQuestion(); } catch(e) {}
+            if (!q) return null;
 
             if (q) {
                 q.opts = q.opts || buildOptions(q.a);

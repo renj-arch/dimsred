@@ -1,5 +1,7 @@
 var WIKI = {};
 
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
 WIKI._seenTitles = [];
 WIKI._seenValues = [];
 WIKI._pool = [];
@@ -51,31 +53,58 @@ WIKI._buildOpts = function(correct) {
 WIKI._examTopics = ['India history','Geography of India','Indian Constitution','Indian economy','Indian culture','Indian art','Indian literature','Indian music','Indian dance','Indian architecture','Physics','Chemistry','Biology','World history','United Nations','Climate change','Computer science','Indian astronomy','Indian mathematics','Indian philosophy','Indian independence movement','Indian freedom fighters','World wars','Indian scientists','Indian Nobel laureates','Indian rivers','Himalayas','Indian agriculture','Indian defence','Indian space program','Indian democracy','Indian elections','Indian government','Indian judiciary','Indian education','Indian tribes','Biodiversity','Indian national parks','Indian states','Indian dance forms','Indian music instruments','Indian festivals','Indian temples','Indian monuments','Indian literature works','Indian authors','Indian sports','Olympics'];
 
 WIKI.randomQuestion = function() {
-  return fetch('https://en.wikipedia.org/api/rest_v1/page/random/summary')
+  return WIKI._batchRandom(10);
+};
+
+WIKI._batchRandom = function(count) {
+  return fetch('https://en.wikipedia.org/w/api.php?action=query&list=random&rnlimit=' + count + '&rnnamespace=0&format=json&origin=*')
     .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (!data || !data.title) return WIKI.randomQuestion();
-      return WIKI._makeQuestions(data);
+    .then(function(res) {
+      var pages = res && res.query && res.query.random;
+      if (!pages || pages.length === 0) return [];
+      var titles = pages.map(function(p) { return p.title; }).filter(function(t) { return t && !/^Outline of/i.test(t) && WIKI._seenTitles.indexOf(t) < 0; });
+      if (titles.length === 0) return [];
+      return WIKI._batchSummaries(titles);
+    })
+    .catch(function() { return []; });
+};
+
+WIKI._batchSummaries = function(titles) {
+  return fetch('https://en.wikipedia.org/w/api.php?action=query&prop=extracts|description&exintro&explaintext&exlimit=max&titles=' + encodeURIComponent(titles.join('|')) + '&format=json&origin=*')
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      var pages = res && res.query && res.query.pages;
+      if (!pages) return [];
+      var results = [];
+      for (var id in pages) {
+        var p = pages[id];
+        if (!p || !p.title || id === '-1') continue;
+        var extract = (p.extract || '').replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+        if (extract.length < 60) continue;
+        var qs = WIKI._makeQuestions({ title: p.title, extract: extract, description: p.description || '' });
+        for (var qi = 0; qi < qs.length; qi++) results.push(qs[qi]);
+      }
+      return results;
+    })
+    .catch(function() { return []; });
+};
+
+WIKI._batchSearch = function(topic, count) {
+  return fetch('https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=' + encodeURIComponent(topic) + '&srlimit=' + count + '&format=json&origin=*')
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      var pages = res && res.query && res.query.search;
+      if (!pages || pages.length === 0) return [];
+      var titles = pages.map(function(p) { return p.title; }).filter(function(t) { return t && WIKI._seenTitles.indexOf(t) < 0; });
+      if (titles.length === 0) return [];
+      return WIKI._batchSummaries(titles);
     })
     .catch(function() { return []; });
 };
 
 WIKI.searchQuestion = function() {
   var topic = pick(WIKI._examTopics);
-  return fetch('https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=' + encodeURIComponent(topic) + '&srlimit=50&format=json&origin=*')
-    .then(function(r) { return r.json(); })
-    .then(function(res) {
-      var pages = res && res.query && res.query.search;
-      if (!pages || pages.length === 0) return [];
-      var selected = pick(pages);
-      return fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(selected.title))
-        .then(function(r2) { return r2.json(); })
-        .then(function(data) {
-          if (!data || !data.title) return [];
-          return WIKI._makeQuestions(data);
-        });
-    })
-    .catch(function() { return []; });
+  return WIKI._batchSearch(topic, 10);
 };
 
 WIKI.onThisDay = function(dateStr) {
@@ -109,20 +138,31 @@ WIKI.prefetch = function() {
   if (WIKI._prefetching) return;
   WIKI._prefetching = true;
 
-  // Prime the population by fetching multiple sources
-  function fetchOne() {
+  function fetchBatch() {
     if (WIKI._pool.length >= WIKI._poolSize) return;
-    WIKI.randomQuestion().then(function(qs) {
+    var batchCount = Math.max(5, Math.min(20, WIKI._poolSize - WIKI._pool.length));
+    WIKI._batchRandom(batchCount).then(function(qs) {
       if (qs && qs.length) {
-        for (var i = 0; i < qs.length; i++) {
-          if (WIKI._pool.length < WIKI._poolSize) WIKI._pool.push(qs[i]);
+        for (var i = 0; i < qs.length && WIKI._pool.length < WIKI._poolSize; i++) {
+          WIKI._pool.push(qs[i]);
         }
       }
-      if (WIKI._pool.length < WIKI._poolSize) setTimeout(fetchOne, 100);
-    }).catch(function() { setTimeout(fetchOne, 300); });
+      if (WIKI._pool.length < WIKI._poolSize) setTimeout(fetchBatch, 500);
+    }).catch(function() { setTimeout(fetchBatch, 1000); });
   }
 
-  // Also fetch On This Day in parallel for bulk history questions
+  function fetchSearchBatch() {
+    if (WIKI._pool.length >= WIKI._poolSize) return;
+    var topic = pick(WIKI._examTopics);
+    WIKI._batchSearch(topic, 10).then(function(qs) {
+      if (qs && qs.length) {
+        for (var i = 0; i < qs.length && WIKI._pool.length < WIKI._poolSize; i++) {
+          WIKI._pool.push(qs[i]);
+        }
+      }
+    }).catch(function() {});
+  }
+
   function fetchOnThisDay() {
     var now = new Date();
     var m = String(now.getMonth() + 1).padStart(2, '0');
@@ -138,23 +178,10 @@ WIKI.prefetch = function() {
     }).catch(function() {});
   }
 
-  function fetchSearch() {
-    if (WIKI._pool.length >= WIKI._poolSize) return;
-    WIKI.searchQuestion().then(function(qs) {
-      if (qs && qs.length) {
-        for (var i = 0; i < qs.length; i++) {
-          if (WIKI._pool.length < WIKI._poolSize) WIKI._pool.push(qs[i]);
-        }
-      }
-      if (WIKI._pool.length < WIKI._poolSize) setTimeout(fetchSearch, 100);
-    }).catch(function() { setTimeout(fetchSearch, 300); });
-  }
-
-  // Launch all sources
   fetchOnThisDay();
   WIKI.prefetchCurrentEvents();
-  for (var pi = 0; pi < 3; pi++) { setTimeout(fetchOne, pi * 50); }
-  for (var si = 0; si < 2; si++) { setTimeout(fetchSearch, 200 + si * 100); }
+  fetchBatch();
+  fetchSearchBatch();
 };
 
 WIKI.poolQuestion = function() {
@@ -168,13 +195,12 @@ WIKI._makeQuestions = function(data) {
   var desc = data.description || '';
   var lower = extract.toLowerCase();
   var allSentences = extract.match(/[^.!?]+[.!?]/g) || [];
-  // Find first real sentence (skip abbreviation fragments)
   var firstSentence = extract;
   for (var fsi = 0; fsi < allSentences.length; fsi++) {
     if (allSentences[fsi].trim().length >= 20) { firstSentence = allSentences[fsi].trim(); break; }
   }
 
-  if (extract.length < 100) return [];
+  if (extract.length < 60) return [];
   if (/^Outline of/i.test(title)) return [];
 
   WIKI._seenTitles.push(title);
@@ -185,7 +211,6 @@ WIKI._makeQuestions = function(data) {
 
   var sentences = extract.match(/[^.!?]+[.!?]/g) || [];
   var years = extract.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g) || [];
-  var numbers = extract.match(/\b(\d{1,3}(?:,\d{3})*(?:\.\d+)?|\d+)\b/g) || [];
 
   var factSentences = [title];
   if (desc) factSentences.push(desc);
@@ -212,19 +237,15 @@ WIKI._makeQuestions = function(data) {
     if (results.length >= 3) return;
     q.a = String(q.a).replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
     if (!isValid(q.a)) return;
-    if (q.q.toLowerCase().indexOf(q.a.toLowerCase()) >= 0) return; // answer not hidden
+    if (q.q.toLowerCase().indexOf(q.a.toLowerCase()) >= 0) return;
     q._source = 'wiki';
     q._wikiCat = catName;
     results.push(q);
   }
 
-  // New approach: find sentences mentioning the title, replace title with What/Who
-  // This makes the user IDENTIFY the topic from its description
-
   // Build alternate title forms for sentence matching
   var titleClean = title.replace(/\s*\(.*?\)/g, '').trim();
   var titleWords = title.split(/\s+/);
-  // Only use last-name matching if distinctive (>4 chars, capitalized, not a common word)
   var COMMON_WORDS = ['United', 'Nations', 'International', 'National', 'World', 'Global', 'General', 'University', 'Institute', 'Association', 'Committee', 'Commission', 'Organization', 'Government', 'Republic', 'State', 'States', 'Kingdom', 'Democratic', 'Federal', 'Union', 'Party', 'Front', 'Movement', 'Group', 'Council', 'Board', 'Fund', 'Bank', 'Center', 'Centre', 'System', 'Force', 'Force'];
   var lastName = '';
   if (titleWords.length > 1) {
@@ -244,21 +265,17 @@ WIKI._makeQuestions = function(data) {
       if (titleForms[tf].length < 3) continue;
       if (sLower.indexOf(titleForms[tf].toLowerCase()) >= 0) { foundForm = titleForms[tf]; break; }
     }
-    // Skip if sentence is just the title (no additional content)
     if (!foundForm || s.length - foundForm.length < 15) continue;
 
     var startIdx = sLower.indexOf(foundForm.toLowerCase());
     var before = s.substring(0, startIdx).trim();
     var after = s.substring(startIdx + foundForm.length).trim();
 
-    // Skip lastName matches that appear mid-phrase (part of larger entity name)
     if (foundForm === lastName && before.length > 0) continue;
 
-    // Strip parenthetical references and trailing punctuation from after
     after = after.replace(/^\([^)]*\)\s*/, '').trim();
     after = after.replace(/^[,\s]+/, '').trim();
 
-    // Determine WH-word
     var wh = 'What';
     var personCheck = (desc + ' ' + s).toLowerCase();
     if (personCheck.indexOf('born') >= 0 || personCheck.indexOf(' died') >= 0 || personCheck.indexOf('known for') >= 0 ||
@@ -268,7 +285,6 @@ WIKI._makeQuestions = function(data) {
         personCheck.indexOf('king ') >= 0 || personCheck.indexOf('queen ') >= 0 || personCheck.indexOf(' leader') >= 0 ||
         personCheck.indexOf('artist ') >= 0 || personCheck.indexOf('musician') >= 0 || personCheck.indexOf('actor') >= 0) wh = 'Who';
 
-    // Build question: "X is/was a Y" → "What/Who is/was a Y?"
     var verbMatch = after.match(/^(is|are|was|were)\s+/i);
     var verb = verbMatch ? verbMatch[0] : '';
     var rest = after.replace(/^(is|are|was|were)\s+/i, '').trim();
@@ -282,7 +298,7 @@ WIKI._makeQuestions = function(data) {
     }
   }
 
-  // ── BIRTH/DEATH YEAR (for persons, alternate format) ──
+  // BIRTH/DEATH YEAR
   if (results.length < 3) {
     var birthMatch = extract.match(/born\s+(?:\d{1,2}\s+\w+\s+)?(\d{4})/i);
     var deathMatch = extract.match(/died\s+(?:\d{1,2}\s+\w+\s+)?(\d{4})/i);
@@ -300,7 +316,7 @@ WIKI._makeQuestions = function(data) {
     }
   }
 
-  // ── YEAR + ESTABLISHED (for non-persons) ──
+  // YEAR + ESTABLISHED
   if (results.length < 3 && years.length > 0) {
     var y = years[0];
     var verb = 'established';
@@ -312,7 +328,7 @@ WIKI._makeQuestions = function(data) {
     }
   }
 
-  // ── LOCATION ──
+  // LOCATION
   if (results.length < 3) {
     var locPatterns = [
       /(?:located|based|situated|headquartered)\s+in\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/,
@@ -330,256 +346,193 @@ WIKI._makeQuestions = function(data) {
     }
   }
 
-  // ── FALLBACK: description-based clue ──
+  // FALLBACK: blank-based question from first sentence or description
   if (results.length === 0) {
+    var blank = '______';
+    var sourceText = '';
     if (desc && desc.length >= 10 && desc.length < 150) {
-      var wh2 = desc.toLowerCase().indexOf('born') >= 0 || desc.toLowerCase().indexOf('known for') >= 0 ? 'Who' : 'What';
-      pushQ({ q: wh2 + ' is described as: "' + desc + '"?', a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title) });
+      sourceText = desc;
     } else {
-      var clue = firstSentence.substr(0, 120);
-      if (!clue || clue.length < 5) clue = extract.substr(0, 100);
-      pushQ({ q: clue, a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title) });
+      sourceText = firstSentence.length > 30 ? firstSentence : extract.substring(0, 200);
+    }
+    var blanked = sourceText.replace(new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), blank);
+    if (blanked !== sourceText) {
+      blanked = blanked.replace(/\s+/g, ' ').trim();
+      if (blanked.length > 20 && blanked.length < 200) {
+        pushQ({ q: blanked, a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title) });
+      }
+    } else {
+      pushQ({ q: 'What is ' + title + '?', a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title) });
     }
   }
 
   return results;
 };
 
+WIKI._classify = function(desc, extract) {
+  var l = (desc + ' ' + extract).toLowerCase();
+  var cats = {
+    biology: ['biology','species','plant','animal','organism','cell','genetic','evolution','ecology','bacteria','virus','protein','dna','gene','enzyme','hormone','mammal','bird','fish','insect','fungus','flower','tree','leaf','seed','root','photosynthesis','pollination','antibody','vaccine','chromosome','mitosis','meiosis','metabolism','habitat','predator','prey','ecosystem','biodiversity','conservation','extinct','endangered','ornithology','botany','zoology','mycology','entomology','marine biology','microbiology','neuroscience','anatomy','physiology'],
+    chemistry: ['chemistry','chemical','element','compound','molecule','atom','reaction','acid','base','salt','oxidation','reduction','catalyst','enzyme','polymer','organic','inorganic','periodic table','isotope','ion','bond','electron','proton','neutron','ph','solution','concentration','distillation','chromatography','spectroscopy','nuclear','radioactive','alkali','halogen','noble gas','metal','nonmetal','metalloid','covalent','ionic','metallic'],
+    physics: ['physics','quantum','relativity','gravity','electromagnetism','thermodynamics','nuclear','particle','wave','optics','mechanics','energy','force','motion','velocity','acceleration','momentum','angular','frequency','wavelength','amplitude','diffraction','interference','polarization','laser','photon','electron','proton','neutron','quark','lepton','boson','fermion','string theory','dark matter','dark energy','cosmology','astrophysics','plasma','superconductor','semiconductor','transistor','capacitor','inductor','resistor','circuit','voltage','current'],
+    history: ['history','historical','century','ancient','medieval','modern','empire','kingdom','dynasty','revolution','war','battle','treaty','invasion','colonization','independence','civilization','archaeology','prehistoric','stone age','bronze age','iron age','renaissance','reformation','enlightenment','industrial','world war','cold war','genocide','holocaust','dictator','monarchy','republic','democracy','communism','fascism','nationalism','imperialism','colonialism','feudalism','slavery','abolition','suffrage','civil rights','apartheid','migration','nomad','barbarian','crusade','exploration','age of discovery'],
+    geography: ['geography','geological','mountain','river','ocean','sea','lake','desert','forest','tundra','taiga','savanna','grassland','rainforest','coral reef','island','continent','country','capital','city','population','climate','weather','latitude','longitude','equator','tropic','arctic','antarctic','monsoon','hurricane','tornado','earthquake','volcano','tsunami','erosion','glacier','plateau','peninsula','gulf','bay','strait','isthmus','delta','archipelago','atoll','fjord','canyon','valley','plain','basin','watershed','border','province','state','region','zone'],
+    culture: ['culture','art','music','dance','literature','poetry','novel','painting','sculpture','architecture','theatre','film','cinema','photography','language','religion','philosophy','mythology','folklore','tradition','festival','cuisine','fashion','craft','pottery','weaving','embroidery','calligraphy','origami','martial arts','yoga','meditation','ritual','ceremony','symbol','icon','heritage','museum','gallery','exhibition','performance','orchestra','symphony','opera','ballet','jazz','blues','rock','pop','folk','classical','modern','contemporary','abstract','realism','impressionism','cubism','surrealism'],
+    technology: ['technology','computer','software','hardware','internet','digital','data','algorithm','programming','coding','database','network','cybersecurity','artificial intelligence','machine learning','robotics','automation','electronics','engineering','telecommunication','smartphone','tablet','laptop','wearable','cloud computing','blockchain','cryptocurrency','virtual reality','augmented reality','quantum computing','nanotechnology','biotechnology','renewable energy','solar','wind','hydroelectric','nuclear','battery','electric vehicle','autonomous','drone','satellite','gps','iot','5g','broadband','wifi','bluetooth','nfc','rfid','sensor','actuator','microcontroller','arduino','raspberry pi','linux','python','javascript','html','css','api','microservice','docker','kubernetes'],
+    sports: ['sports','athlete','olympic','world cup','championship','tournament','league','football','cricket','hockey','tennis','badminton','kabaddi','wrestling','boxing','weightlifting','gymnastics','swimming','athletics','running','jumping','throwing','cycling','skiing','skating','surfing','sailing','rowing','canoeing','equestrian','archery','shooting','fencing','taekwondo','judo','karate','basketball','volleyball','baseball','rugby','golf','snooker','darts','chess','esports','marathon','sprint','relay','decathlon','triathlon','biathlon','coach','manager','umpire','referee','stadium','arena','pitch','court','track','field','medal','trophy'],
+    polity: ['politics','government','parliament','constitution','democracy','election','president','prime minister','cabinet','minister','senate','congress','legislature','judiciary','supreme court','high court','law','bill','act','amendment','rights','fundamental','directive','federal','unitary','sovereign','socialist','secular','republic','panchayat','municipality','autonomous','commission','committee','bureau','authority','board','council','assembly','party','coalition','opposition','majority','minority','veto','impeachment','referendum','plebiscite','diplomacy','embassy','consulate','treaty','alliance','sanction','embargo','tariff','subsidy','welfare','taxation','budget','audit','ombudsman','vigilance','corruption','transparency'],
+    economics: ['economics','economy','finance','banking','market','trade','commerce','industry','manufacturing','agriculture','service','gdp','growth','inflation','recession','depression','deflation','unemployment','employment','labor','wage','salary','income','wealth','poverty','inequality','tax','budget','deficit','surplus','debt','bond','stock','share','dividend','interest','rate','exchange','currency','export','import','tariff','quota','subsidy','monopoly','oligopoly','competition','regulation','deregulation','privatization','nationalization','globalization','liberalization','investment','saving','consumption','production','supply','demand','elasticity','utility','marginal','opportunity cost','comparative advantage','protectionism','fiscal','monetary','central bank','reserve','inflation targeting','cpi','wpi','purchasing power'],
+    space: ['space','astronomy','astrophysics','planet','star','galaxy','moon','satellite','asteroid','comet','meteor','telescope','observatory','rocket','launch','orbit','spacecraft','astronaut','cosmonaut','space station','solar system','black hole','neutron star','supernova','nebula','constellation','exoplanet','dark matter','dark energy','big bang','cosmic','celestial','lunar','solar','martian','jovian','saturnian','uranian','neptunian','plutonian','interstellar','intergalactic','milky way','andromeda','gravity','relativity','quantum gravity','cosmology','nasa','isro','esa','roscosmos','spacex','blue origin','virgin galactic','hubble','james webb','chandrayaan','mangalyaan','gaganyaan','artemis','apollo','voyager','cassini','new horizons'],
+    environment: ['environment','ecology','conservation','pollution','climate change','global warming','greenhouse gas','carbon','emission','renewable','sustainable','biodiversity','ecosystem','deforestation','reforestation','afforestation','wetland','mangrove','coral reef','endangered','extinct','national park','wildlife sanctuary','biosphere reserve','ramsar','unesco','wildlife','forestation','recycling','composting','waste management','water conservation','air quality','carbon footprint','carbon neutral','net zero','climate action','green energy','solar power','wind power','hydropower','geothermal','biomass','biofuel','electric vehicle','public transport','green building','organic farming','permaculture','agroforestry','ecotourism','environmental impact','sustainable development','sdg','unfccc','ipcc','kyoto protocol','paris agreement','montreal protocol','cbd','unep','wwf','greenpeace'],
+    defence: ['defence','military','army','navy','air force','marine','soldier','weapon','missile','tank','aircraft','ship','submarine','drone','nuclear','warfare','strategy','tactics','intelligence','security','border','patrol','surveillance','reconnaissance','commando','special forces','peacekeeping','alliance','nato','joint exercise','arms','ammunition','artillery','infantry','cavalry','battalion','brigade','division','corps','commander','general','admiral','marshal','chief of staff','ministry of defence','defence budget','indigenous','manufacturing','research','laboratory','drdo','hal','bel','ordnance','shipyard','aerospace','radar','sonar','electronic warfare','cyber warfare','space defence','ballistic missile','cruise missile','interceptor','air defence','anti-tank','anti-ship','anti-submarine'],
+    personalities: ['born','died','known for','was a','was an','scientist','author','philosopher','politician','prime minister','president','king','queen','leader','artist','musician','actor','actress','singer','dancer','painter','sculptor','writer','poet','novelist','playwright','composer','conductor','inventor','explorer','entrepreneur','philanthropist','reformer','activist','revolutionary','freedom fighter','spiritual','guru','saint','philosopher','mathematician','physicist','chemist','biologist','engineer','architect','doctor','surgeon','nobel','award','prize','medal','honour','achievement','contribution','legacy','influence','biography','autobiography','memoir','profile','portrait','career','life','work']
+  };
+  for (var c in cats) {
+    for (var ci = 0; ci < cats[c].length; ci++) {
+      if (l.indexOf(cats[c][ci]) >= 0) return c;
+    }
+  }
+  return null;
+};
+
 WIKI._makeFromOnThisDay = function(items) {
   var questions = [];
-  for (var i = 0; i < items.length; i++) {
+  var langHints = {
+    'event': 'Historical event',
+    'birth': 'Birth anniversary',
+    'death': 'Death anniversary'
+  };
+  for (var i = 0; i < items.length && questions.length < 15; i++) {
     var item = items[i];
-    var label = item.text;
-    var year = item.year || '';
     var pages = item.pages || [];
-    var pageTitle = pages.length > 0 ? pages[0].title || pages[0].displaytitle || '' : '';
+    if (pages.length === 0) continue;
+    var firstPage = pages[0];
+    if (!firstPage || !firstPage.text) continue;
+    var t = firstPage.text;
+    if (WIKI._seenValues.indexOf(t) >= 0 || WIKI._seenTitles.indexOf(t) >= 0) continue;
+    WIKI._seenValues.push(t);
+    if (WIKI._seenValues.length > 200) WIKI._seenValues.shift();
 
-    if (!label || label.length < 10) continue;
+    var year = item.year;
+    var text = item.text.replace(/<[^>]+>/g, '').trim();
+    if (!year || !text || text.length < 10) continue;
 
-    // Event/birth/death year question
-    if (year) {
-      var q = {
-        q: 'In which year did this happen? ' + label.substr(0, 80),
-        a: year,
-        hint: 'Event: ' + label.substr(0, 60),
-        fact: year + ': ' + label,
+    var hint = langHints[item.type] || 'On this day';
+    var detail = item.type === 'event' ? (year + ': ' + text.substring(0, 120)) : (t + ' - ' + text.substring(0, 120));
+    var fact = t + ' - ' + hint + ' (' + year + '): ' + text.substring(0, 200);
+
+    if (item.type === 'event') {
+      var shortText = text.substring(0, 100);
+      if (shortText.length > 15 && year) {
+        questions.push({
+          q: 'What happened in ' + year + '?',
+          a: shortText,
+          hint: hint + ' related to ' + t,
+          fact: fact,
+          _source: 'wiki',
+          _wikiCat: 'history',
+          opts: WIKI._buildOpts(shortText)
+        });
+      }
+    } else if (item.type === 'birth') {
+      questions.push({
+        q: 'Who was born in ' + year + '?',
+        a: t,
+        hint: 'Birth: ' + text.substring(0, 80),
+        fact: fact,
         _source: 'wiki',
-        _wikiCat: 'history',
-        opts: WIKI._buildOpts(year)
-      };
-      questions.push(q);
-    }
-
-    // Shortened clue
-    var shortLabel = label.length > 100 ? label.substr(0, 100) + '...' : label;
-    var clues = [
-      { q: 'What happened on this day? ' + shortLabel, a: year + ' — ' + (pageTitle || 'historical event'), hint: 'A notable event in history', fact: year + ': ' + label },
-      { q: 'When did this event occur? ' + shortLabel, a: year, hint: 'The year of the event', fact: year + ': ' + label },
-      { q: 'Why is this date significant? ' + shortLabel, a: year + ' — ' + (pageTitle || 'historical event'), hint: 'Historical importance', fact: year + ': ' + label },
-    ];
-    if (pageTitle) {
-      clues.push({ q: 'Who/what is associated with this event? ' + shortLabel, a: pageTitle, hint: 'Think about the key person/place involved', fact: pageTitle + ' — ' + year + ': ' + label });
-      clues.push({ q: 'By whom/what is this event remembered? ' + shortLabel, a: pageTitle, hint: 'Key figure or location linked to the event', fact: pageTitle + ' — ' + year + ': ' + label });
-      clues.push({ q: 'Whose birth/death is noted? ' + shortLabel, a: pageTitle, hint: 'Person linked to this date', fact: pageTitle + ' — ' + year + ': ' + label });
-    }
-    for (var ci = 0; ci < clues.length; ci++) {
-      var clueQ = clues[ci];
-      clueQ._source = 'wiki';
-      clueQ._wikiCat = 'history';
-      clueQ.opts = WIKI._buildOpts(clueQ.a);
-      questions.push(clueQ);
+        _wikiCat: 'personalities',
+        opts: WIKI._buildOpts(t)
+      });
+    } else if (item.type === 'death') {
+      questions.push({
+        q: 'Who died in ' + year + '?',
+        a: t,
+        hint: 'Death: ' + text.substring(0, 80),
+        fact: fact,
+        _source: 'wiki',
+        _wikiCat: 'personalities',
+        opts: WIKI._buildOpts(t)
+      });
     }
   }
   return questions;
 };
 
-WIKI._classify = function(desc, extract) {
-  var text = (desc + ' ' + extract).toLowerCase();
-  var categories = [
-    { id: 'history', keywords: ['history', 'historical', 'century', 'medieval', 'ancient', 'war', 'battle', 'kingdom', 'empire', 'dynasty', 'revolution', 'independence', 'colonial', 'freedom'] },
-    { id: 'geography', keywords: ['geography', 'river', 'mountain', 'country', 'city', 'capital', 'ocean', 'sea', 'lake', 'island', 'desert', 'forest', 'climate', 'region', 'continent', 'national park'] },
-    { id: 'polity', keywords: ['constitution', 'parliament', 'government', 'politics', 'election', 'president', 'prime minister', 'legislature', 'judiciary', 'law', 'amendment', 'federal', 'democracy'] },
-    { id: 'economy', keywords: ['economy', 'economic', 'gdp', 'inflation', 'budget', 'tax', 'bank', 'finance', 'trade', 'market', 'industry', 'business', 'commerce', 'currency'] },
-    { id: 'science', keywords: ['science', 'physics', 'chemistry', 'biology', 'scientist', 'invention', 'discovery', 'element', 'molecule', 'cell', 'gene', 'quantum', 'nuclear', 'laboratory'] },
-    { id: 'space', keywords: ['space', 'satellite', 'rocket', 'isro', 'nasa', 'moon', 'mars', 'planet', 'astronomy', 'telescope', 'orbit', 'launch', 'astronaut', 'cosmos'] },
-    { id: 'environment', keywords: ['environment', 'climate', 'pollution', 'forest', 'wildlife', 'species', 'endangered', 'conservation', 'ecology', 'biodiversity', 'greenhouse', 'emission'] },
-    { id: 'culture', keywords: ['culture', 'art', 'music', 'dance', 'painting', 'architecture', 'temple', 'festival', 'heritage', 'tradition', 'classical', 'folk', 'literature'] },
-    { id: 'sports', keywords: ['sport', 'game', 'olympic', 'cricket', 'football', 'tennis', 'athlete', 'champion', 'tournament', 'medal', 'world cup', 'stadium'] },
-    { id: 'ir', keywords: ['international', 'foreign', 'diplomacy', 'treaty', 'alliance', 'united nations', 'bilateral', 'multilateral', 'embassy', 'global'] },
-    { id: 'computers', keywords: ['computer', 'software', 'hardware', 'programming', 'internet', 'digital', 'cyber', 'data', 'algorithm', 'artificial intelligence', 'technology', 'electronic'] },
-    { id: 'personalities', keywords: ['born', 'died', 'known for', 'biography', 'award', 'achievement', 'founder', 'leader', 'scientist', 'author', 'artist', 'philosopher'] },
-    { id: 'books', keywords: ['book', 'novel', 'author', 'writer', 'poem', 'literature', 'fiction', 'non-fiction', 'biography', 'memoir', 'publish', 'chapter'] },
-    { id: 'awards', keywords: ['award', 'prize', 'medal', 'honour', 'nobel', 'padma', 'bharat ratna', 'oscar', 'academy award', 'winner', 'laureate'] },
-    { id: 'defence', keywords: ['defence', 'military', 'army', 'navy', 'air force', 'missile', 'weapon', 'soldier', 'war', 'border', 'security', 'drdo'] },
-    { id: 'dams', keywords: ['dam', 'river', 'reservoir', 'irrigation', 'hydroelectric', 'canal', 'water', 'project', 'barrage'] },
-  ];
-
-  for (var i = 0; i < categories.length; i++) {
-    var cat = categories[i];
-    for (var j = 0; j < cat.keywords.length; j++) {
-      if (text.indexOf(cat.keywords[j]) >= 0) {
-        return cat.id;
-      }
-    }
-  }
-  return 'general';
-};
-
-// ── CURRENT EVENTS PORTAL PIPELINE ──
-// Fetches Portal:Current_events, parses daily events, generates WH-questions
-
-var COMMON_COUNTRIES = [
-  'India', 'China', 'United States', 'United Kingdom', 'Russia', 'Japan', 'Brazil',
-  'France', 'Germany', 'Australia', 'Canada', 'Italy', 'South Korea', 'North Korea',
-  'Iran', 'Iraq', 'Israel', 'Pakistan', 'Bangladesh', 'Nepal', 'Sri Lanka', 'Myanmar',
-  'Afghanistan', 'Turkey', 'Syria', 'Saudi Arabia', 'Yemen', 'Egypt', 'Libya', 'Sudan',
-  'South Africa', 'Nigeria', 'Kenya', 'Ethiopia', 'Argentina', 'Mexico', 'Colombia',
-  'Spain', 'Portugal', 'Netherlands', 'Belgium', 'Sweden', 'Norway', 'Poland', 'Ukraine',
-  'Thailand', 'Vietnam', 'Indonesia', 'Malaysia', 'Philippines', 'Singapore'
-];
-
 WIKI.fetchCurrentEvents = function() {
   return fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Portal:Current_events&prop=text&format=json&origin=*')
     .then(function(r) { return r.json(); })
     .then(function(data) {
-      var html = data && data.parse && data.parse.text && data.parse.text['*'];
-      if (!html) return [];
-      return WIKI._parseCurrentEvents(html);
+      if (!data || !data.parse || !data.parse.text) return [];
+      var html = data.parse.text['*'] || '';
+      // Extract list items from current events portal
+      var items = [];
+      var listRe = /<li>(.*?)<\/li>/g;
+      var m;
+      while ((m = listRe.exec(html)) !== null) {
+        var txt = m[1].replace(/<[^>]+>/g, '').trim();
+        if (txt.length > 30 && txt.length < 300) items.push(txt);
+      }
+      return items;
     })
     .catch(function() { return []; });
 };
 
-WIKI._parseCurrentEvents = function(html) {
-  var events = [];
-  // Remove script/style tags
-  html = html.replace(/<script[^>]*>[\s\S]*?<\/script>/g, '').replace(/<style[^>]*>[\s\S]*?<\/style>/g, '');
-
-  // Split by date navbar markers to get daily blocks
-  var dayBlocks = html.split(/<ul class="current-events-navbar[^>]*>[\s\S]*?<\/ul>/g);
-
-  for (var d = 0; d < dayBlocks.length; d++) {
-    var block = dayBlocks[d];
-    // Match only leaf <li> (no child <li> or <ul>)
-    var leafLi = /<li>((?!<li)[\s\S]*?)<\/li>/g;
-    var match;
-    while ((match = leafLi.exec(block)) !== null) {
-      var raw = match[1];
-      if (raw.indexOf('<li') >= 0 || raw.indexOf('<ul') >= 0) continue;
-      var text = raw.replace(/<[^>]+>/g, '').replace(/&[^;]+;/g, ' ').replace(/\s+/g, ' ').trim();
-      // Filter: too short, navigation, meta
-      if (text.length < 35) continue;
-      if (/^(This portal|Worldwide|Sports events|Recent deaths|Nominate|Topics|Ongoing)/i.test(text)) continue;
-      if (/^\d[\d,]*\s+(barrel|killed|injured|people)/i.test(text) && text.length < 70) continue;
-
-      // Extract linked article titles
-      var links = [];
-      var linkRe = /<a[^>]*href="\/wiki\/([^"#]+)(?:#[^"]*)?"[^>]*>/g;
-      var lm;
-      while ((lm = linkRe.exec(raw)) !== null) {
-        var t = decodeURIComponent(lm[1].replace(/_/g, ' '));
-        if (t.indexOf(':') < 0 && links.indexOf(t) < 0) links.push(t);
-      }
-
-      var cat = WIKI._classify('', text);
-      events.push({ text: text, links: links, cat: cat });
-    }
-  }
-  return events;
-};
-
-WIKI._makeEventQuestions = function(ev) {
-  var text = ev.text;
-  var links = ev.links;
-  var catName = ev.cat || 'current affairs';
-  var lower = text.toLowerCase();
+WIKI._makeEventQuestions = function(eventText) {
   var results = [];
+  if (!eventText || eventText.length < 30) return results;
 
-  function isValid(a) {
-    if (!a) return false;
-    var s = String(a).trim();
-    if (s.length < 2 || s.length > 200) return false;
-    var sl = s.toLowerCase();
-    if (sl.indexOf('various') >= 0 || sl.indexOf('multiple') >= 0 || sl.indexOf('unknown') >= 0) return false;
-    return true;
+  var linkRe = /<a[^>]*href="\/wiki\/([^"#]+)(?:#[^"]*)?"[^>]*>/g;
+  var links = [];
+  var lm;
+  while ((lm = linkRe.exec(eventText)) !== null) {
+    var pageTitle = decodeURIComponent(lm[1].replace(/_/g, ' '));
+    if (pageTitle.length > 2 && pageTitle.length < 80) links.push(pageTitle);
   }
 
-  function pushQ(q) {
-    if (!q) return;
-    if (results.length >= 3) return;
-    q.a = String(q.a).trim();
-    if (!isValid(q.a)) return;
-    // Reject Q == A
-    if (q.q.toLowerCase().indexOf(q.a.toLowerCase()) >= 0) return;
-    q._source = 'current_events';
-    q._wikiCat = catName;
-    results.push(q);
-  }
+  var cleanText = eventText.replace(/<[^>]+>/g, '').trim();
+  var sentences = cleanText.match(/[^.!?]+[.!?]/g) || [];
+  if (sentences.length === 0) sentences = [cleanText];
 
-  // Find mentioned country from links
-  var mentionedCountry = null;
-  for (var li = 0; li < links.length; li++) {
-    if (COMMON_COUNTRIES.indexOf(links[li]) >= 0) { mentionedCountry = links[li]; break; }
-  }
+  for (var si = 0; si < sentences.length && results.length < 2; si++) {
+    var s = sentences[si].trim();
+    if (s.length < 30 || s.length > 250) continue;
 
-  var nums = text.match(/\b(\d{1,3}(?:,\d{3})*)\b/g) || [];
+    // Extract year from sentence
+    var yearMatch = s.match(/\b(1[0-9]{3}|20[0-9]{2})\b/);
+    var year = yearMatch ? yearMatch[0] : null;
 
-  function wordBoundRe(word) {
-    return new RegExp('\\b' + word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'gi');
-  }
-
-  // ── WHICH country ──
-  if (mentionedCountry) {
-    var masked = text.replace(wordBoundRe(mentionedCountry), '______');
-    var ctx = masked.length > 120 ? masked.substr(0, 117) + '...' : masked;
-    pushQ({ q: 'Which country is involved in this event: "' + ctx + '"?', a: mentionedCountry, hint: 'Country in the news', fact: text, opts: WIKI._buildOpts(mentionedCountry) });
-  }
-
-  // ── WHERE ──
-  if (results.length < 3) {
-    var locMatch = text.match(/(?:in|at|near|off)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/);
-    if (locMatch && locMatch[1] && locMatch[1].length < 50 && locMatch[1] !== mentionedCountry) {
-      var loc = locMatch[1];
-      var masked = text.replace(wordBoundRe(loc), '______');
-      var ctx2 = masked.length > 120 ? masked.substr(0, 117) + '...' : masked;
-      pushQ({ q: 'Where did this event take place? "' + ctx2 + '"?', a: loc, hint: 'Location', fact: text, opts: WIKI._buildOpts(loc) });
-    }
-  }
-
-  // ── HOW MANY ──
-  if (results.length < 3 && nums.length > 0) {
-    var nContexts = ['killed', 'injured', 'dead', 'people', 'million', 'billion', 'barrel', 'soldier'];
-    for (var ni = 0; ni < nums.length; ni++) {
-      var n = nums[ni];
-      var ctx3 = text.substr(Math.max(0, text.indexOf(n) - 30), n.length + 60).toLowerCase();
-      for (var nci = 0; nci < nContexts.length; nci++) {
-        if (ctx3.indexOf(nContexts[nci]) >= 0) {
-          var masked3 = text.replace(wordBoundRe(n), '______');
-          var ctx3short = masked3.length > 120 ? masked3.substr(0, 117) + '...' : masked3;
-          pushQ({ q: 'What number is reported in this event? "' + ctx3short + '"?', a: n, hint: 'Numerical fact', fact: text, opts: WIKI._buildOpts(n) });
-          ni = nums.length; break;
-        }
+    // Try to create a "who/what/where" from the sentence + link entity
+    if (links.length > 0) {
+      var entity = links[0];
+      if (WIKI._seenTitles.indexOf(entity) < 0 && entity.length > 3) {
+        WIKI._seenTitles.push(entity);
+        var prefix = year ? (' in ' + year) : '';
+        results.push({
+          q: 'Which current event is described' + prefix + ': "' + s.substring(0, 80) + '..."?',
+          a: entity,
+          hint: 'Current affairs: ' + entity,
+          fact: cleanText.substring(0, 200),
+          _source: 'wiki',
+          _wikiCat: catName || 'current_events',
+          opts: WIKI._buildOpts(entity)
+        });
       }
+    } else {
+      if (!year) continue;
+      results.push({
+        q: year ? ('What recent event happened in ' + year + '?') : 'What recent event is described?',
+        a: s.substring(0, 80),
+        hint: 'Current events',
+        fact: cleanText.substring(0, 200),
+        _source: 'wiki',
+        _wikiCat: 'current_events',
+        opts: WIKI._buildOpts(s.substring(0, 80))
+      });
     }
   }
-
-  // ── WHO (person/organization name from links) ──
-  if (results.length < 3) {
-    for (var pli = 0; pli < Math.min(links.length, 5); pli++) {
-      var l = links[pli];
-      if (l === mentionedCountry) continue;
-      if (l.match(/^\d/)) continue; // skip year-prefixed titles
-      if (l.length < 5 || text.toLowerCase().indexOf(l.toLowerCase()) < 0) continue;
-      var masked4 = text.replace(wordBoundRe(l), '______');
-      var ctx4 = masked4.length > 120 ? masked4.substr(0, 117) + '...' : masked4;
-      pushQ({ q: 'Who or what organization is mentioned? "' + ctx4 + '"?', a: l, hint: 'Key entity', fact: text, opts: WIKI._buildOpts(l) });
-      break;
-    }
-  }
-
   return results;
 };
-
-WIKI._currentEventCache = [];
 
 WIKI.prefetchCurrentEvents = function() {
   return WIKI.fetchCurrentEvents().then(function(events) {
@@ -592,7 +545,3 @@ WIKI.prefetchCurrentEvents = function() {
     }
   }).catch(function() {});
 };
-
-// ── WIKINEWS PIPELINE (reserved for future use) ──
-// Wikinews API tested: recentchanges namespace 0 returns 0 articles.
-// Alternative: parse Wikinews main page for latest headlines.
