@@ -5810,7 +5810,11 @@
                 if (state.infinite) {
                     generateWikiQuestions(5);
                     if (state.idx >= state.questions.length) {
-                        if (_wikiWaiting) { return; }
+                        if (_wikiWaiting) {
+                            document.getElementById('qText').innerHTML = 'Loading more questions...';
+                            document.getElementById('optGrid').innerHTML = '';
+                            return;
+                        }
                         showEnd(); return;
                     }
                 } else {
@@ -5890,6 +5894,7 @@
         }
 
         function nextQuestion() {
+            if (_wikiWaiting) return;
             state.idx++;
             // Pre-fetch more questions when running low in infinite mode
             if (state.infinite && state.idx >= state.questions.length - 3) {
