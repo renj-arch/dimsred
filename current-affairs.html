@@ -6950,7 +6950,7 @@
                 if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
                 if (!isValidAnswer(q.a)) return null;
                 for (var j = 0; j < state.questions.length; j++) {
-                    if (state.questions[j].a === q.a) return null;
+                    if (state.questions[j].a === q.a || state.questions[j].q === q.q) return null;
                 }
             }
             return q;
@@ -6967,14 +6967,36 @@
                 }
             }
             if (added === 0) {
-                state.questions.push({
-                    q: 'What is the capital of India?',
-                    a: 'New Delhi',
-                    hint: 'India is a large country in South Asia',
-                    fact: 'New Delhi has been the capital since 1931',
-                    opts: ['New Delhi', 'Mumbai', 'Kolkata', 'Chennai']
-                });
+                var fallback = getFreshFallback();
+                if (fallback) state.questions.push(fallback);
             }
+        }
+
+        function getFreshFallback() {
+            var pool = [
+                { q: 'What is the capital of India?', a: 'New Delhi', hint: 'India is a large country in South Asia', fact: 'New Delhi has been the capital since 1931', opts: ['New Delhi', 'Mumbai', 'Kolkata', 'Chennai'] },
+                { q: 'Which planet is known as the Red Planet?', a: 'Mars', hint: 'It is the fourth planet from the Sun', fact: 'Mars is named after the Roman god of war', opts: ['Mars', 'Venus', 'Jupiter', 'Saturn'] },
+                { q: 'What is the chemical symbol for water?', a: 'H2O', hint: 'Two hydrogen atoms and one oxygen atom', fact: 'Water covers about 71% of Earth\'s surface', opts: ['H2O', 'CO2', 'NaCl', 'O2'] },
+                { q: 'Who wrote the Indian national anthem?', a: 'Rabindranath Tagore', hint: 'He was a Bengali poet and Nobel laureate', fact: 'Jana Gana Mana was adopted in 1950', opts: ['Rabindranath Tagore', 'Mahatma Gandhi', 'Bankim Chandra Chatterjee', 'Sarojini Naidu'] },
+                { q: 'What is the largest ocean in the world?', a: 'Pacific Ocean', hint: 'It covers about 63 million square miles', fact: 'The Pacific is the deepest ocean too', opts: ['Pacific Ocean', 'Atlantic Ocean', 'Indian Ocean', 'Arctic Ocean'] },
+                { q: 'Which gas do plants absorb from the atmosphere?', a: 'Carbon dioxide', hint: 'It is used in photosynthesis', fact: 'Plants convert CO2 into oxygen', opts: ['Carbon dioxide', 'Oxygen', 'Nitrogen', 'Hydrogen'] },
+                { q: 'What is the currency of Japan?', a: 'Yen', hint: 'It is symbolized by ¥', fact: 'The yen is the third most traded currency', opts: ['Yen', 'Won', 'Dollar', 'Euro'] },
+                { q: 'Which is the largest animal on Earth?', a: 'Blue whale', hint: 'It can grow up to 100 feet long', fact: 'A blue whale\'s heart is the size of a car', opts: ['Blue whale', 'African elephant', 'Giraffe', 'Hippopotamus'] },
+                { q: 'In which year did India gain independence?', a: '1947', hint: 'It was a mid-20th century event', fact: 'India became independent on August 15, 1947', opts: ['1947', '1950', '1945', '1942'] },
+                { q: 'What is the hardest natural substance?', a: 'Diamond', hint: 'It is a form of carbon', fact: 'Diamonds are used in cutting tools', opts: ['Diamond', 'Gold', 'Iron', 'Platinum'] }
+            ];
+            for (var fi = 0; fi < pool.length; fi++) {
+                var fq = pool[fi];
+                var exists = false;
+                for (var j = 0; j < state.questions.length; j++) {
+                    if (state.questions[j].q === fq.q || state.questions[j].a === fq.a) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) return fq;
+            }
+            return null;
         }
 
         function generateWikiQuestions(count) {
@@ -6990,20 +7012,15 @@
                 if (!isValidAnswer(q.a)) continue;
                 var dup = false;
                 for (var j = 0; j < state.questions.length; j++) {
-                    if (state.questions[j].a === q.a) { dup = true; break; }
+                    if (state.questions[j].a === q.a || state.questions[j].q === q.q) { dup = true; break; }
                 }
                 if (dup) continue;
                 state.questions.push(q);
                 added++;
             }
             if (added === 0) {
-                state.questions.push({
-                    q: 'What is the capital of India?',
-                    a: 'New Delhi',
-                    hint: 'India is a large country in South Asia',
-                    fact: 'New Delhi has been the capital since 1931',
-                    opts: ['New Delhi', 'Mumbai', 'Kolkata', 'Chennai']
-                });
+                var fallback = getFreshFallback();
+                if (fallback) state.questions.push(fallback);
             }
         }
 
