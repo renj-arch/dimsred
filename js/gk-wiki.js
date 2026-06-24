@@ -96,7 +96,7 @@ WIKI._batchSearch = function(topic, count) {
     .then(function(res) {
       var pages = res && res.query && res.query.search;
       if (!pages || pages.length === 0) return [];
-      var titles = pages.map(function(p) { return p.title; }).filter(function(t) { return t && WIKI._seenTitles.indexOf(t) < 0; });
+      var titles = pages.map(function(p) { return p.title; }).filter(function(t) { return t && WIKI._seenTitles.indexOf(t) < 0 && WIKI._isKnown(t); });
       if (titles.length === 0) return [];
       return WIKI._batchSummaries(titles);
     })
@@ -135,9 +135,32 @@ WIKI.onThisDay = function(dateStr) {
     .catch(function(e) { console.error('[WIKI] _batchRandom fetch failed:', e); return []; });
 };
 
+WIKI._loadKnown = function() {
+  if (WIKI._known) return;
+  WIKI._known = {};
+  if (typeof GK_DISTRACTORS !== 'undefined') {
+    for (var k in GK_DISTRACTORS) {
+      var arr = GK_DISTRACTORS[k];
+      if (arr && arr.length) {
+        for (var i = 0; i < arr.length; i++) {
+          WIKI._known[String(arr[i]).toLowerCase().trim()] = true;
+        }
+      }
+    }
+  }
+};
+
+WIKI._isKnown = function(entity) {
+  if (!entity) return false;
+  var e = String(entity).toLowerCase().replace(/\s*\(.*?\)/g, '').trim();
+  if (WIKI._known && WIKI._known[e]) return true;
+  return false;
+};
+
 WIKI.prefetch = function() {
   if (WIKI._prefetching) { console.log('[WIKI] already prefetching'); return; }
   WIKI._prefetching = true;
+  WIKI._loadKnown();
   console.log('[WIKI] prefetch started, pool size:', WIKI._pool.length);
 
   function fetchBatch() {
@@ -234,6 +257,7 @@ WIKI._makeQuestions = function(data) {
     q.a = String(q.a).replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
     if (!isValid(q.a)) return;
     if (q.q.toLowerCase().indexOf(q.a.toLowerCase()) >= 0) return;
+    if (!WIKI._isKnown(q.a)) return;
     q._source = 'wiki';
     q._wikiCat = catName;
     results.push(q);
