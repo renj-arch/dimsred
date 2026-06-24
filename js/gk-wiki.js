@@ -7,6 +7,7 @@ WIKI._seenValues = [];
 WIKI._pool = [];
 WIKI._poolSize = 100;
 WIKI._prefetching = false;
+WIKI._sourceIndex = 0;
 
 WIKI._genericFallback = [
   'India', 'China', 'United States', 'United Kingdom', 'Russia', 'Japan', 'Brazil', 'France', 'Germany', 'Australia',
@@ -31,6 +32,51 @@ WIKI._genericFallback = [
   'World War I', 'World War II', 'Cold War', 'Industrial Revolution', 'Renaissance',
   'President', 'Prime Minister', 'Governor', 'Chief Minister', 'Speaker', 'Chief Justice',
   'Football World Cup', 'Olympics', 'Asian Games', 'Commonwealth Games', 'Cricket World Cup', 'T20 World Cup'
+];
+
+// Topic banks — each maps to a Wikipedia category for bulk fetching
+WIKI._categoryTopics = [
+  'Category:Indian_civilisation', 'Category:World_history', 'Category:Science',
+  'Category:Technology', 'Category:Geography', 'Category:Culture',
+  'Category:Indian_politics', 'Category:Indian_economy', 'Category:Sports',
+  'Category:Indian_literature', 'Category:Indian_music', 'Category:Indian_dance',
+  'Category:Indian_festivals', 'Category:Indian_temples', 'Category:Indian_monuments',
+  'Category:Indian_Nobel_laureates', 'Category:Indian_scientists',
+  'Category:Ancient_India', 'Category:Medieval_India', 'Category:Modern_India',
+  'Category:World_War_II', 'Category:United_Nations', 'Category:Climate_change',
+  'Category:Computer_science', 'Category:Physics', 'Category:Chemistry', 'Category:Biology',
+  'Category:Astronomy', 'Category:Mathematics', 'Category:Economics',
+  'Category:Indian_rivers', 'Category:Himalayas', 'Category:National_parks_of_India',
+  'Category:Indian_agriculture', 'Category:Indian_space_program',
+  'Category:Olympics', 'Category:Cricket', 'Category:Football',
+  'Category:Indian_constitution', 'Category:Indian_judiciary',
+  'Category:Indian_government', 'Category:Indian_defence',
+  'Category:Indian_education', 'Category:Bollywood',
+  'Category:Indian_authors', 'Category:Indian_art', 'Category:Indian_philosophy',
+  'Category:Indian_mythology', 'Category:World_geography', 'Category:World_politics',
+  'Category:Nobel_laureates', 'Category:Natural_disasters',
+  'Category:Renewable_energy', 'Category:Artificial_intelligence', 'Category:Robotics',
+  'Category:Indian_railways', 'Category:Indian_armed_forces', 'Category:Indian_foreign_relations',
+  'Category:Indian_nuclear_program', 'Category:Indian_companies',
+  'Category:Indian_writers', 'Category:Indian_poets', 'Category:Indian_film_directors',
+  'Category:Indian_actors', 'Category:Indian_singers', 'Category:Indian_entrepreneurs',
+  'Category:Ancient_Egypt', 'Category:Ancient_Greece', 'Category:Roman_Empire',
+  'Category:Mughal_Empire', 'Category:Maratha_Empire', 'Category:British_Empire',
+  'Category:Indian_languages', 'Category:Indian_religions', 'Category:Indian_textiles',
+  'Category:Indian_cuisine', 'Category:Indian_wildlife', 'Category:Indian_coastal_geography',
+  'Category:Indian_astronomy', 'Category:Indian_medicine', 'Category:Indian_meteorology',
+  'Category:Human_body', 'Category:Animal_biology', 'Category:Plant_biology',
+  'Category:Nobel_Peace_Prize_laureates', 'Category:Nobel_Prize_in_Physics',
+  'Category:Nobel_Prize_in_Chemistry', 'Category:Nobel_Prize_in_Physiology_or_Medicine',
+  'Category:Indian_Olympic_medalists', 'Category:Indian_cricketers',
+  'Category:UNESCO_World_Heritage_Sites_in_India', 'Category:Indian_newspapers',
+  'Category:Environmental_issues_in_India', 'Category:Indian_law',
+  'Category:Indian_philanthropists', 'Category:Indian_architects',
+  'Category:Indian_mathematicians', 'Category:Indian_physicists', 'Category:Indian_chemists',
+  'Category:Indian_biologists', 'Category:Indian_engineers',
+  'Category:Indian_classical_musicians', 'Category:Indian_folk_music',
+  'Category:Indian_classical_dancers', 'Category:Indian_sculptors',
+  'Category:Indian_painters', 'Category:Indian_photographers'
 ];
 
 WIKI._buildOpts = function(correct) {
@@ -62,11 +108,44 @@ WIKI._batchRandom = function(count) {
     .then(function(res) {
       var pages = res && res.query && res.query.random;
       if (!pages || pages.length === 0) return [];
-      var titles = pages.map(function(p) { return p.title; }).filter(function(t) { return t && !/^Outline of/i.test(t) && WIKI._seenTitles.indexOf(t) < 0; });
+      var titles = pages.map(function(p) { return p.title; }).filter(function(t) {
+        return t && !/^Outline of/i.test(t) && WIKI._seenTitles.indexOf(t) < 0 && WIKI._isKnown(t);
+      });
       if (titles.length === 0) return [];
       return WIKI._batchSummaries(titles);
     })
     .catch(function(e) { console.error('[WIKI] _batchRandom failed:', e); return []; });
+};
+
+WIKI._batchCategory = function(category, count) {
+  var cat = category.indexOf('Category:') === 0 ? category : 'Category:' + category;
+  return fetch('https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=' + encodeURIComponent(cat) + '&cmlimit=' + count + '&cmtype=page&format=json&origin=*')
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      var pages = res && res.query && res.query.categorymembers;
+      if (!pages || pages.length === 0) return [];
+      var titles = pages.map(function(p) { return p.title; }).filter(function(t) {
+        return t && WIKI._seenTitles.indexOf(t) < 0 && WIKI._isKnown(t);
+      });
+      if (titles.length === 0) return [];
+      return WIKI._batchSummaries(titles);
+    })
+    .catch(function(e) { console.error('[WIKI] _batchCategory failed:', e); return []; });
+};
+
+WIKI._batchRecentChanges = function(count) {
+  return fetch('https://en.wikipedia.org/w/api.php?action=query&list=recentchanges&rcnamespace=0&rcprop=title&rclimit=' + count + '&format=json&origin=*')
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      var pages = res && res.query && res.query.recentchanges;
+      if (!pages || pages.length === 0) return [];
+      var titles = pages.map(function(p) { return p.title; }).filter(function(t) {
+        return t && WIKI._seenTitles.indexOf(t) < 0 && WIKI._isKnown(t);
+      });
+      if (titles.length === 0) return [];
+      return WIKI._batchSummaries(titles);
+    })
+    .catch(function(e) { console.error('[WIKI] _batchRecentChanges failed:', e); return []; });
 };
 
 WIKI._batchSummaries = function(titles) {
@@ -132,28 +211,40 @@ WIKI.onThisDay = function(dateStr) {
       }
       return items;
     })
-    .catch(function(e) { console.error('[WIKI] _batchRandom fetch failed:', e); return []; });
+    .catch(function(e) { console.error('[WIKI] onThisDay failed:', e); return []; });
 };
 
 WIKI._loadKnown = function() {
   if (WIKI._known) return;
   WIKI._known = {};
-  if (typeof GK_DISTRACTORS !== 'undefined') {
-    for (var k in GK_DISTRACTORS) {
-      var arr = GK_DISTRACTORS[k];
-      if (arr && arr.length) {
-        for (var i = 0; i < arr.length; i++) {
-          WIKI._known[String(arr[i]).toLowerCase().trim()] = true;
-        }
+  function add(arr) {
+    if (arr && arr.length) {
+      for (var i = 0; i < arr.length; i++) {
+        WIKI._known[String(arr[i]).toLowerCase().trim()] = true;
       }
     }
   }
+  if (typeof GK_DISTRACTORS !== 'undefined') {
+    for (var k in GK_DISTRACTORS) add(GK_DISTRACTORS[k]);
+  }
+  add(WIKI._genericFallback);
 };
 
 WIKI._isKnown = function(entity) {
   if (!entity) return false;
   var e = String(entity).toLowerCase().replace(/\s*\(.*?\)/g, '').trim();
+  if (!e) return false;
   if (WIKI._known && WIKI._known[e]) return true;
+  var words = e.split(/\s+/);
+  var lastWord = words.length > 1 ? words[words.length - 1] : '';
+  if (lastWord && lastWord.length > 3 && WIKI._known[lastWord]) return true;
+  for (var k in WIKI._known) {
+    if (k.length > 3 && e.indexOf(k) >= 0) {
+      if (k.indexOf(' ') > 0) return true;
+      if (k.length > 6) return true;
+    }
+    if (e.length > 3 && k.indexOf(e) >= 0) return true;
+  }
   return false;
 };
 
@@ -166,19 +257,31 @@ WIKI.prefetch = function() {
   function fetchBatch() {
     var poolFull = WIKI._pool.length >= WIKI._poolSize;
     if (poolFull) { setTimeout(fetchBatch, 500); return; }
-    var topic = pick(WIKI._examTopics);
-    WIKI._batchSearch(topic, 20).then(function(qs) {
+
+    WIKI._sourceIndex = (WIKI._sourceIndex + 1) % 4;
+
+    var promise;
+    if (WIKI._sourceIndex === 0) {
+      var topic = pick(WIKI._examTopics);
+      promise = WIKI._batchSearch(topic, 20);
+    } else if (WIKI._sourceIndex === 1) {
+      promise = WIKI._batchRandom(20);
+    } else if (WIKI._sourceIndex === 2) {
+      var cat = pick(WIKI._categoryTopics);
+      promise = WIKI._batchCategory(cat, 20);
+    } else {
+      promise = WIKI._batchRecentChanges(20);
+    }
+
+    promise.then(function(qs) {
       if (qs && qs.length) {
         for (var i = 0; i < qs.length && WIKI._pool.length < WIKI._poolSize; i++) {
           WIKI._pool.push(qs[i]);
         }
-        if (qs && qs.length > 0) console.log('[WIKI] added', qs.length, 'questions to pool, pool size now:', WIKI._pool.length);
       }
       setTimeout(fetchBatch, 500);
     }).catch(function() { console.error('[WIKI] fetchBatch failed, retrying...'); setTimeout(fetchBatch, 1000); });
   }
-
-  function fetchSearchBatch() { }
 
   function fetchOnThisDay() {
     var now = new Date();
@@ -198,7 +301,6 @@ WIKI.prefetch = function() {
   fetchOnThisDay();
   WIKI.prefetchCurrentEvents();
   fetchBatch();
-  fetchSearchBatch();
 };
 
 WIKI.poolQuestion = function() {
@@ -263,7 +365,6 @@ WIKI._makeQuestions = function(data) {
     results.push(q);
   }
 
-  // Build alternate title forms for sentence matching
   var titleClean = title.replace(/\s*\(.*?\)/g, '').trim();
   var titleWords = title.split(/\s+/);
   var COMMON_WORDS = ['United', 'Nations', 'International', 'National', 'World', 'Global', 'General', 'University', 'Institute', 'Association', 'Committee', 'Commission', 'Organization', 'Government', 'Republic', 'State', 'States', 'Kingdom', 'Democratic', 'Federal', 'Union', 'Party', 'Front', 'Movement', 'Group', 'Council', 'Board', 'Fund', 'Bank', 'Center', 'Centre', 'System', 'Force', 'Force'];
@@ -318,7 +419,6 @@ WIKI._makeQuestions = function(data) {
     }
   }
 
-  // BIRTH/DEATH YEAR
   if (results.length < 3) {
     var birthMatch = extract.match(/born\s+(?:\d{1,2}\s+\w+\s+)?(\d{4})/i);
     var deathMatch = extract.match(/died\s+(?:\d{1,2}\s+\w+\s+)?(\d{4})/i);
@@ -336,7 +436,6 @@ WIKI._makeQuestions = function(data) {
     }
   }
 
-  // YEAR + ESTABLISHED
   if (results.length < 3 && years.length > 0) {
     var y = years[0];
     var verb = 'established';
@@ -348,7 +447,6 @@ WIKI._makeQuestions = function(data) {
     }
   }
 
-  // LOCATION
   if (results.length < 3) {
     var locPatterns = [
       /(?:located|based|situated|headquartered)\s+in\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/,
@@ -366,7 +464,6 @@ WIKI._makeQuestions = function(data) {
     }
   }
 
-  // FALLBACK: blank-based question from description only
   if (results.length === 0 && desc && desc.length >= 15 && desc.length < 120) {
     var blank = '______';
     var blanked = desc.replace(new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), blank);
@@ -475,7 +572,6 @@ WIKI.fetchCurrentEvents = function() {
     .then(function(data) {
       if (!data || !data.parse || !data.parse.text) return [];
       var html = data.parse.text['*'] || '';
-      // Extract list items from current events portal
       var items = [];
       var listRe = /<li>(.*?)<\/li>/g;
       var m;
@@ -485,7 +581,7 @@ WIKI.fetchCurrentEvents = function() {
       }
       return items;
     })
-    .catch(function(e) { console.error('[WIKI] _batchRandom fetch failed:', e); return []; });
+    .catch(function(e) { console.error('[WIKI] fetchCurrentEvents failed:', e); return []; });
 };
 
 WIKI._makeEventQuestions = function(eventText) {
@@ -508,11 +604,9 @@ WIKI._makeEventQuestions = function(eventText) {
     var s = sentences[si].trim();
     if (s.length < 30 || s.length > 250) continue;
 
-    // Extract year from sentence
     var yearMatch = s.match(/\b(1[0-9]{3}|20[0-9]{2})\b/);
     var year = yearMatch ? yearMatch[0] : null;
 
-    // Try to create a "who/what/where" from the sentence + link entity
     if (links.length > 0) {
       var entity = links[0];
       if (WIKI._seenTitles.indexOf(entity) < 0 && entity.length > 3) {
@@ -524,7 +618,7 @@ WIKI._makeEventQuestions = function(eventText) {
           hint: 'Current affairs: ' + entity,
           fact: cleanText.substring(0, 200),
           _source: 'wiki',
-          _wikiCat: catName || 'current_events',
+          _wikiCat: 'current_events',
           opts: WIKI._buildOpts(entity)
         });
       }
