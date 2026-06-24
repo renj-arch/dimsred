@@ -6968,15 +6968,17 @@
                 state.questions.push(q);
                 added++;
             }
-            if (added === 0 && typeof WIKI !== 'undefined' && WIKI._pool && WIKI._pool.length === 0 && !_wikiWaiting) {
+            if (added === 0 && !_wikiWaiting) {
                 _wikiWaiting = true;
+                var _wikiAvailable = typeof WIKI !== 'undefined' && WIKI._pool;
                 var retry = 0;
                 var waiter = setInterval(function() {
                     retry++;
-                    if (WIKI._pool.length > 0 || retry > 25) {
+                    var poolReady = _wikiAvailable && WIKI._pool.length > 0;
+                    if (poolReady || retry > 25) {
                         clearInterval(waiter);
                         _wikiWaiting = false;
-                        if (WIKI._pool.length > 0) {
+                        if (poolReady) {
                             for (var wi = 0; wi < count && state.questions.length < 50; wi++) {
                                 var wq = WIKI.poolQuestion();
                                 if (!wq) break;
@@ -6986,7 +6988,7 @@
                         if (state.questions.length > 0) {
                             showQuestion();
                         } else {
-                            document.getElementById('qText').innerHTML = 'Could not reach Wikipedia. <button onclick="startCombinedQuiz(15,\'🎯 Mega Quiz\')" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Retry</button>';
+                            document.getElementById('qText').innerHTML = 'Could not load Wikipedia questions. <button onclick="startCombinedQuiz(15,\'🎯 Mega Quiz\')" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Retry</button>';
                         }
                     }
                 }, 400);
