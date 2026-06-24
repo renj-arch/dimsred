@@ -34,6 +34,46 @@ WIKI._genericFallback = [
   'Football World Cup', 'Olympics', 'Asian Games', 'Commonwealth Games', 'Cricket World Cup', 'T20 World Cup'
 ];
 
+// Type-specific distractor pools for same-category options
+WIKI._distractorTypes = {
+  person: ['Gandhi', 'Nehru', 'Patel', 'Ambedkar', 'Bose', 'Shastri', 'Vajpayee', 'Modi',
+    'Newton', 'Einstein', 'Shakespeare', 'Plato', 'Aristotle', 'Buddha', 'Alexander', 'Caesar',
+    'Napoleon', 'Lincoln', 'Washington', 'Churchill', 'Mandela', 'Raman', 'Tagore', 'Teresa',
+    'Bhabha', 'Kalam', 'Sachin', 'Lata', 'Premchand', 'Vivekananda', 'Ramanujan', 'Aryabhata',
+    'Chanakya', 'Ashoka', 'Akbar', 'Shivaji', 'Tipu', 'Lakshmibai', 'Bhagat Singh', 'Tilak',
+    'Indira', 'Rajiv', 'Kohli', 'Dhoni', 'Tendulkar', 'Messi', 'Ronaldo', 'Pele', 'Federer', 'Bolt',
+    'Mirabai', 'Kabir', 'Tulsidas', 'Aurobindo', 'Radhakrishnan', 'Susruta', 'Charaka',
+    'President', 'Prime Minister', 'Governor', 'Chief Minister', 'Speaker', 'Chief Justice'],
+  place: ['India', 'China', 'United States', 'United Kingdom', 'Russia', 'Japan', 'Brazil',
+    'France', 'Germany', 'Australia', 'Canada', 'Italy', 'Spain', 'South Korea', 'Indonesia',
+    'Bangladesh', 'Pakistan', 'Nepal', 'Sri Lanka', 'Egypt', 'South Africa', 'Nigeria',
+    'Mumbai', 'Delhi', 'Kolkata', 'Chennai', 'Bengaluru', 'Hyderabad', 'Pune', 'Ahmedabad',
+    'London', 'Paris', 'New York', 'Tokyo', 'Beijing', 'Berlin', 'Rome', 'Moscow', 'Sydney',
+    'Ganga', 'Yamuna', 'Brahmaputra', 'Godavari', 'Krishna', 'Kaveri', 'Narmada', 'Indus',
+    'Nile', 'Amazon', 'Yangtze', 'Mississippi', 'Danube', 'Himalayas', 'Western Ghats',
+    'Thar Desert', 'Deccan Plateau', 'Alps', 'Andes', 'Rockies', 'Everest', 'K2',
+    'Asia', 'Africa', 'Europe', 'South America', 'North America', 'Bay of Bengal',
+    'Pacific Ocean', 'Atlantic Ocean', 'Indian Ocean', 'Arabian Sea', 'Mediterranean'],
+  org: ['United Nations', 'WHO', 'IMF', 'World Bank', 'UNESCO', 'UNICEF', 'NATO', 'WTO',
+    'SAARC', 'BRICS', 'European Union', 'African Union', 'ASEAN', 'OPEC',
+    'ISRO', 'NASA', 'DRDO', 'BARC', 'Supreme Court', 'Parliament', 'Election Commission',
+    'RBI', 'SEBI', 'NITI Aayog', 'UPSC', 'AIIMS', 'IIT', 'IIM',
+    'Amazon', 'Google', 'Microsoft', 'Apple', 'Meta', 'Netflix', 'Tesla', 'Samsung'],
+  event: ['World War I', 'World War II', 'Cold War', 'Industrial Revolution', 'Renaissance',
+    'French Revolution', 'American Revolution', 'Russian Revolution', 'Green Revolution',
+    'Battle of Plassey', 'Battle of Panipat', 'Jallianwala Bagh',
+    'Quit India', 'Salt March', 'Kargil War', 'Gulf War', 'Vietnam War'],
+  concept: ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'Astronomy', 'Geology',
+    'Economics', 'Psychology', 'Sociology', 'Philosophy', 'History', 'Geography',
+    'Democracy', 'Communism', 'Socialism', 'Capitalism', 'Secularism'],
+  living: ['Tiger', 'Lion', 'Elephant', 'Peacock', 'Eagle', 'Shark', 'Whale', 'Dolphin',
+    'Python', 'Cobra', 'Rose', 'Lotus', 'Sandalwood', 'Neem', 'Banyan', 'Peepal'],
+  work: ['Ramayana', 'Mahabharata', 'Bhagavad Gita', 'Vedas', 'Upanishads', 'Arthashastra',
+    'Godan', 'Gitanjali', 'Guide', 'Malgudi Days', 'Harry Potter', '1984', 'Animal Farm'],
+  year: ['1947', '1950', '1962', '1971', '1991', '1998', '2000', '2014', '2016', '2019']
+};
+WIKI._seenTypes = {};
+
 // Topic banks — each maps to a Wikipedia category for bulk fetching
 WIKI._categoryTopics = [
   'Category:Indian_civilisation', 'Category:World_history', 'Category:Science',
@@ -79,9 +119,19 @@ WIKI._categoryTopics = [
   'Category:Indian_painters', 'Category:Indian_photographers'
 ];
 
-WIKI._buildOpts = function(correct) {
+WIKI._buildOpts = function(correct, entityType) {
   var distractors = [];
-  var pool = WIKI._seenTitles.concat(WIKI._seenValues).concat(WIKI._genericFallback);
+  var pool = [];
+
+  // Prefer same-type distractors
+  if (entityType && WIKI._distractorTypes[entityType]) {
+    pool = pool.concat(WIKI._distractorTypes[entityType]);
+  }
+  for (var t in WIKI._seenTypes) {
+    if (WIKI._seenTypes[t] === entityType) pool.push(t);
+  }
+  pool = pool.concat(WIKI._seenTitles).concat(WIKI._seenValues).concat(WIKI._genericFallback);
+
   var shuffled = pool.slice().sort(function() { return Math.random() - 0.5; });
   for (var i = 0; i < shuffled.length && distractors.length < 3; i++) {
     if (String(shuffled[i]) !== String(correct) && distractors.indexOf(shuffled[i]) < 0) {
@@ -358,6 +408,7 @@ WIKI._makeQuestions = function(data) {
   var results = [];
   var titleLower = title.toLowerCase();
   var entityType = WIKI._entityType(desc, firstSentence);
+  WIKI._seenTypes[title] = entityType;
 
   function isValid(a) {
     if (!a) return false;
@@ -387,7 +438,7 @@ WIKI._makeQuestions = function(data) {
     var qText = wh + ' is ' + desc + '?';
     qText = qText.charAt(0).toUpperCase() + qText.slice(1);
     if (qText.length > 15 && qText.length < 130) {
-      pushQ({ q: qText, a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title) });
+      pushQ({ q: qText, a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title, entityType) });
     }
   }
 
@@ -443,7 +494,7 @@ WIKI._makeQuestions = function(data) {
     if (simpleQ.endsWith('.')) simpleQ = simpleQ.slice(0, -1) + '?';
     else if (!simpleQ.endsWith('?')) simpleQ += '?';
     if (simpleQ.length > 20 && simpleQ.length < 130) {
-      pushQ({ q: simpleQ, a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title) });
+      pushQ({ q: simpleQ, a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title, entityType) });
     }
   }
 
@@ -454,13 +505,13 @@ WIKI._makeQuestions = function(data) {
     if (birthMatch) {
       var ctx = extract.substr(Math.max(0, extract.indexOf(birthMatch[0]) - 10), birthMatch[0].length + 40);
       if (ctx.toLowerCase().indexOf(titleLower) < 0) {
-        pushQ({ q: 'Who was born in ' + birthMatch[1] + '?', a: title, hint: 'Birth year', fact: richFact, opts: WIKI._buildOpts(title) });
+        pushQ({ q: 'Who was born in ' + birthMatch[1] + '?', a: title, hint: 'Birth year', fact: richFact, opts: WIKI._buildOpts(title, entityType) });
       }
     }
     if (deathMatch && deathMatch[1] !== (birthMatch && birthMatch[1])) {
       var ctx2 = extract.substr(Math.max(0, extract.indexOf(deathMatch[0]) - 10), deathMatch[0].length + 40);
       if (ctx2.toLowerCase().indexOf(titleLower) < 0) {
-        pushQ({ q: 'Who died in ' + deathMatch[1] + '?', a: title, hint: 'Death year', fact: richFact, opts: WIKI._buildOpts(title) });
+        pushQ({ q: 'Who died in ' + deathMatch[1] + '?', a: title, hint: 'Death year', fact: richFact, opts: WIKI._buildOpts(title, entityType) });
       }
     }
   }
@@ -473,7 +524,7 @@ WIKI._makeQuestions = function(data) {
     else if (/created/i.test(extract)) verb = 'created';
     var yCtx = extract.substr(Math.max(0, extract.indexOf(y) - 50), y.length + 60);
     if (yCtx.toLowerCase().indexOf(titleLower) < 0) {
-      pushQ({ q: 'What was ' + verb + ' in ' + y + '?', a: title, hint: 'Founded ' + y, fact: richFact, opts: WIKI._buildOpts(title) });
+      pushQ({ q: 'What was ' + verb + ' in ' + y + '?', a: title, hint: 'Founded ' + y, fact: richFact, opts: WIKI._buildOpts(title, entityType) });
     }
   }
 
@@ -488,7 +539,7 @@ WIKI._makeQuestions = function(data) {
         var loc = lm[1];
         var locCtx = extract.substr(Math.max(0, extract.indexOf(lm[0]) - 20), lm[0].length + 30);
         if (locCtx.toLowerCase().indexOf(titleLower) < 0) {
-          pushQ({ q: 'What is headquartered in ' + loc + '?', a: title, hint: 'Location: ' + loc, fact: richFact, opts: WIKI._buildOpts(title) });
+          pushQ({ q: 'What is headquartered in ' + loc + '?', a: title, hint: 'Location: ' + loc, fact: richFact, opts: WIKI._buildOpts(title, entityType) });
         }
         break;
       }
@@ -501,7 +552,7 @@ WIKI._makeQuestions = function(data) {
     var blanked = desc.replace(new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), blank);
     if (blanked !== desc && blanked.length > 20 && blanked.length < 150) {
       blanked = blanked.replace(/\s+/g, ' ').trim();
-      pushQ({ q: blanked, a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title) });
+      pushQ({ q: blanked, a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title, entityType) });
     }
   }
 
@@ -561,18 +612,8 @@ WIKI._makeFromOnThisDay = function(items) {
     var fact = t + ' - ' + hint + ' (' + year + '): ' + text.substring(0, 200);
 
     if (item.type === 'event') {
-      var shortText = text.substring(0, 100);
-      if (shortText.length > 15 && year) {
-        questions.push({
-          q: 'What happened in ' + year + '?',
-          a: shortText,
-          hint: hint + ' related to ' + t,
-          fact: fact,
-          _source: 'wiki',
-          _wikiCat: 'history',
-          opts: WIKI._buildOpts(shortText)
-        });
-      }
+      // Skip — "What happened in X" with snippet as answer is weak
+      continue;
     } else if (item.type === 'birth') {
       questions.push({
         q: 'Who was born in ' + year + '?',
@@ -581,7 +622,7 @@ WIKI._makeFromOnThisDay = function(items) {
         fact: fact,
         _source: 'wiki',
         _wikiCat: 'personalities',
-        opts: WIKI._buildOpts(t)
+        opts: WIKI._buildOpts(t, 'person')
       });
     } else if (item.type === 'death') {
       questions.push({
@@ -591,7 +632,7 @@ WIKI._makeFromOnThisDay = function(items) {
         fact: fact,
         _source: 'wiki',
         _wikiCat: 'personalities',
-        opts: WIKI._buildOpts(t)
+        opts: WIKI._buildOpts(t, 'person')
       });
     }
   }
@@ -642,10 +683,12 @@ WIKI._makeEventQuestions = function(eventText) {
     if (links.length > 0) {
       var entity = links[0];
       if (WIKI._seenTitles.indexOf(entity) < 0 && entity.length > 3) {
-        WIKI._seenTitles.push(entity);
-        var prefix = year ? (' in ' + year) : '';
+        // Skip if answer text appears in the question
+        var qText = year ? 'What happened in ' + year + ' involving ' + entity + '?' : '';
+        if (!qText || qText.length < 20 || qText.length > 130) continue;
+        if (qText.toLowerCase().indexOf(entity.toLowerCase()) >= 0) continue;
         results.push({
-          q: 'Which current event is described' + prefix + ': "' + s.substring(0, 80) + '..."?',
+          q: qText,
           a: entity,
           hint: 'Current affairs: ' + entity,
           fact: cleanText.substring(0, 200),
@@ -654,17 +697,6 @@ WIKI._makeEventQuestions = function(eventText) {
           opts: WIKI._buildOpts(entity)
         });
       }
-    } else {
-      if (!year) continue;
-      results.push({
-        q: year ? ('What recent event happened in ' + year + '?') : 'What recent event is described?',
-        a: s.substring(0, 80),
-        hint: 'Current events',
-        fact: cleanText.substring(0, 200),
-        _source: 'wiki',
-        _wikiCat: 'current_events',
-        opts: WIKI._buildOpts(s.substring(0, 80))
-      });
     }
   }
   return results;
