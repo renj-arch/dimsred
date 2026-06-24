@@ -6970,24 +6970,31 @@
             }
             if (added === 0 && !_wikiWaiting) {
                 _wikiWaiting = true;
+                console.log('[QUIZ] wiki pool empty, waiting for prefetch...');
                 var _wikiAvailable = typeof WIKI !== 'undefined' && WIKI._pool;
+                console.log('[QUIZ] WIKI available:', _wikiAvailable);
+                if (typeof WIKI !== 'undefined' && WIKI._pool) console.log('[QUIZ] WIKI._pool.length:', WIKI._pool.length);
                 var retry = 0;
                 var waiter = setInterval(function() {
                     retry++;
                     var poolReady = _wikiAvailable && WIKI._pool.length > 0;
-                    if (poolReady || retry > 25) {
+                    if (retry % 5 === 0 && _wikiAvailable) console.log('[QUIZ] retry', retry, 'pool:', WIKI._pool.length);
+                    if (poolReady || retry > 100) {
                         clearInterval(waiter);
                         _wikiWaiting = false;
                         if (poolReady) {
+                            console.log('[QUIZ] pool ready with', WIKI._pool.length, 'questions');
                             for (var wi = 0; wi < count && state.questions.length < 50; wi++) {
                                 var wq = WIKI.poolQuestion();
                                 if (!wq) break;
                                 state.questions.push(wq);
                             }
+                            console.log('[QUIZ] loaded', state.questions.length, 'questions from pool');
                         }
                         if (state.questions.length > 0) {
                             showQuestion();
                         } else {
+                            console.error('[QUIZ] giving up after', retry, 'retries');
                             document.getElementById('qText').innerHTML = 'Could not load Wikipedia questions. <button onclick="startCombinedQuiz(15,\'🎯 Mega Quiz\')" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Retry</button>';
                         }
                     }

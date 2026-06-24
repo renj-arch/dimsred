@@ -66,7 +66,7 @@ WIKI._batchRandom = function(count) {
       if (titles.length === 0) return [];
       return WIKI._batchSummaries(titles);
     })
-    .catch(function() { return []; });
+    .catch(function(e) { console.error('[WIKI] _batchRandom failed:', e); return []; });
 };
 
 WIKI._batchSummaries = function(titles) {
@@ -86,7 +86,7 @@ WIKI._batchSummaries = function(titles) {
       }
       return results;
     })
-    .catch(function() { return []; });
+    .catch(function(e) { console.error('[WIKI] _batchSummaries failed:', e); return []; });
 };
 
 WIKI._batchSearch = function(topic, count) {
@@ -99,7 +99,7 @@ WIKI._batchSearch = function(topic, count) {
       if (titles.length === 0) return [];
       return WIKI._batchSummaries(titles);
     })
-    .catch(function() { return []; });
+    .catch(function(e) { console.error('[WIKI] _batchSearch failed:', e); return []; });
 };
 
 WIKI.searchQuestion = function() {
@@ -131,12 +131,13 @@ WIKI.onThisDay = function(dateStr) {
       }
       return items;
     })
-    .catch(function() { return []; });
+    .catch(function(e) { console.error('[WIKI] _batchRandom fetch failed:', e); return []; });
 };
 
 WIKI.prefetch = function() {
-  if (WIKI._prefetching) return;
+  if (WIKI._prefetching) { console.log('[WIKI] already prefetching'); return; }
   WIKI._prefetching = true;
+  console.log('[WIKI] prefetch started, pool size:', WIKI._pool.length);
 
   function fetchBatch() {
     if (WIKI._pool.length >= WIKI._poolSize) return;
@@ -147,8 +148,9 @@ WIKI.prefetch = function() {
           WIKI._pool.push(qs[i]);
         }
       }
-      if (WIKI._pool.length < WIKI._poolSize) setTimeout(fetchBatch, 500);
-    }).catch(function() { setTimeout(fetchBatch, 1000); });
+          if (qs && qs.length > 0) console.log('[WIKI] added', qs.length, 'questions to pool, pool size now:', WIKI._pool.length);
+          if (WIKI._pool.length < WIKI._poolSize) setTimeout(fetchBatch, 500);
+    }).catch(function() { console.error('[WIKI] fetchBatch failed, retrying...'); setTimeout(fetchBatch, 1000); });
   }
 
   function fetchSearchBatch() {
@@ -475,7 +477,7 @@ WIKI.fetchCurrentEvents = function() {
       }
       return items;
     })
-    .catch(function() { return []; });
+    .catch(function(e) { console.error('[WIKI] _batchRandom fetch failed:', e); return []; });
 };
 
 WIKI._makeEventQuestions = function(eventText) {
