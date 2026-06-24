@@ -194,8 +194,10 @@ WIKI._makeQuestions = function(data) {
     if (allSentences[fsi].trim().length >= 20) { firstSentence = allSentences[fsi].trim(); break; }
   }
 
-  if (extract.length < 60) return [];
+  if (extract.length < 120) return [];
+  if (title.length > 60) return [];
   if (/^Outline of/i.test(title)) return [];
+  if (/^(List of|Timeline of)/i.test(title)) return [];
 
   WIKI._seenTitles.push(title);
   if (WIKI._seenTitles.length > 200) WIKI._seenTitles.shift();
@@ -340,23 +342,13 @@ WIKI._makeQuestions = function(data) {
     }
   }
 
-  // FALLBACK: blank-based question from first sentence or description
-  if (results.length === 0) {
+  // FALLBACK: blank-based question from description only
+  if (results.length === 0 && desc && desc.length >= 15 && desc.length < 120) {
     var blank = '______';
-    var sourceText = '';
-    if (desc && desc.length >= 10 && desc.length < 150) {
-      sourceText = desc;
-    } else {
-      sourceText = firstSentence.length > 30 ? firstSentence : extract.substring(0, 200);
-    }
-    var blanked = sourceText.replace(new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), blank);
-    if (blanked !== sourceText) {
+    var blanked = desc.replace(new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), blank);
+    if (blanked !== desc && blanked.length > 20 && blanked.length < 150) {
       blanked = blanked.replace(/\s+/g, ' ').trim();
-      if (blanked.length > 20 && blanked.length < 200) {
-        pushQ({ q: blanked, a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title) });
-      }
-    } else {
-      pushQ({ q: 'What is ' + title + '?', a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title) });
+      pushQ({ q: blanked, a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title) });
     }
   }
 
