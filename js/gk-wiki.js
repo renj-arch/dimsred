@@ -308,6 +308,20 @@ WIKI.poolQuestion = function() {
   return null;
 };
 
+WIKI._entityType = function(desc, firstSentence) {
+  var c = (desc + ' ' + firstSentence).toLowerCase();
+  if (/(was a|was an|born|died|known for|scientist|politician|author|actor|artist|musician|philosopher|king |queen |leader|engineer|physicist|chemist|biologist|mathematician|poet|writer|novelist|painter|sculptor|composer|singer|dancer|inventor|explorer|entrepreneur|philanthropist|reformer|activist|freedom fighter|guru|saint|prime minister|president |governor|chief minister|minister|judge|lawyer|doctor|surgeon|nobel laureate|athlete|cricketer|footballer|sportsman|sportswoman|general|admiral|marshal|chief)/.test(c)) return 'person';
+  if (/(country|city|town|village|state|province|region|island|river|mountain|lake|ocean|sea|capital|located in|situated in|flows through|lies in|peninsula|bay|gulf|desert|plateau|valley|continent|archipelago|delta|strait|canyon|basin|border|zone|plain|hill)/.test(c)) return 'place';
+  if (/(organization|company|agency|institute|university|college|committee|commission|bureau|council|board|fund|bank|party|association|society|ministry|department|corporation|firm|foundation|centre|center|mission|programme|program|initiative|authority|forum|group|club|union|league)/.test(c)) return 'org';
+  if (/(war|battle|conflict|revolution|movement|disaster|earthquake|flood|storm|pandemic|epidemic|treaty|conference|summit|festival|event|incident|accident|invasion|rebellion|uprising|campaign|expedition|crusade|siege|massacre|genocide|holocaust|famine|drought|tsunami|hurricane|tornado|explosion|attack)/.test(c)) return 'event';
+  if (/(species|genus|mammal|bird|fish|insect|reptile|amphibian|plant|tree|flower|animal|organism|fungus|bacteria|virus|breed|variety|cultivar)/.test(c)) return 'living';
+  if (/(book|novel|poem|play|film|movie|painting|sculpture|song|album|article|essay|story|literature|work|composition|biography|autobiography|memoir)/.test(c)) return 'work';
+  if (/(is a|refers to|concept|theory|principle|law|effect|phenomenon|process|method|technique|system|field|branch|discipline|science|art|practice)/.test(c)) return 'concept';
+  return 'other';
+};
+
+WIKI._ARTICLE_WORDS = { 'a':1, 'an':1, 'the':1, 'and':1, 'of':1, 'in':1, 'for':1, 'on':1, 'at':1, 'by':1, 'to':1, 'from':1, 'with':1 };
+
 WIKI._makeQuestions = function(data) {
   var title = data.title;
   var extract = (data.extract || '').replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
@@ -343,6 +357,7 @@ WIKI._makeQuestions = function(data) {
 
   var results = [];
   var titleLower = title.toLowerCase();
+  var entityType = WIKI._entityType(desc, firstSentence);
 
   function isValid(a) {
     if (!a) return false;
@@ -365,13 +380,24 @@ WIKI._makeQuestions = function(data) {
     results.push(q);
   }
 
+  // — PRIORITY 1: Description-based direct question —
+  // Wikipedia descriptions are clean phrases like "Indian physicist" or "River in South India"
+  if (desc && desc.length >= 5 && desc.length < 120 && desc.toLowerCase().indexOf(titleLower) < 0) {
+    var wh = entityType === 'person' ? 'Who' : 'What';
+    var qText = wh + ' is ' + desc + '?';
+    qText = qText.charAt(0).toUpperCase() + qText.slice(1);
+    if (qText.length > 15 && qText.length < 130) {
+      pushQ({ q: qText, a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title) });
+    }
+  }
+
+  // — PRIORITY 2: Type-specific sentence extraction —
   var titleClean = title.replace(/\s*\(.*?\)/g, '').trim();
   var titleWords = title.split(/\s+/);
-  var COMMON_WORDS = ['United', 'Nations', 'International', 'National', 'World', 'Global', 'General', 'University', 'Institute', 'Association', 'Committee', 'Commission', 'Organization', 'Government', 'Republic', 'State', 'States', 'Kingdom', 'Democratic', 'Federal', 'Union', 'Party', 'Front', 'Movement', 'Group', 'Council', 'Board', 'Fund', 'Bank', 'Center', 'Centre', 'System', 'Force', 'Force'];
   var lastName = '';
   if (titleWords.length > 1) {
     var last = titleWords[titleWords.length - 1].replace(/[.,()]/g, '');
-    if (last.length > 4 && COMMON_WORDS.indexOf(last) < 0) lastName = last;
+    if (last.length > 4 && !WIKI._ARTICLE_WORDS[last.toLowerCase()]) lastName = last;
   }
   var titleForms = [title, titleClean];
   if (lastName) titleForms.push(lastName);
@@ -398,13 +424,15 @@ WIKI._makeQuestions = function(data) {
     after = after.replace(/^[,\s]+/, '').trim();
 
     var wh = 'What';
-    var personCheck = (desc + ' ' + s).toLowerCase();
-    if (personCheck.indexOf('born') >= 0 || personCheck.indexOf(' died') >= 0 || personCheck.indexOf('known for') >= 0 ||
-        personCheck.indexOf(' was a ') >= 0 || personCheck.indexOf(' was an ') >= 0 ||
-        personCheck.indexOf('scientist') >= 0 || personCheck.indexOf('author') >= 0 || personCheck.indexOf('philosopher') >= 0 ||
-        personCheck.indexOf('politician') >= 0 || personCheck.indexOf('prime minister') >= 0 || personCheck.indexOf('president ') >= 0 ||
-        personCheck.indexOf('king ') >= 0 || personCheck.indexOf('queen ') >= 0 || personCheck.indexOf(' leader') >= 0 ||
-        personCheck.indexOf('artist ') >= 0 || personCheck.indexOf('musician') >= 0 || personCheck.indexOf('actor') >= 0) wh = 'Who';
+    if (entityType === 'person' || /^(was a|was an|is a|is an|born|died|known for|scientist|politician|author|actor|artist|musician|philosopher|king|queen|leader|engineer|physicist|chemist|biologist|mathematician|prime minister|president|governor|minister|judge|doctor|singer|dancer|poet|writer|nobel)/i.test(after)) {
+      wh = 'Who';
+    } else if (entityType === 'place' || /located in|situated in|flows|lies in|found in/i.test(after)) {
+      wh = 'Where';
+    } else if (entityType === 'org' || /headquartered|based in|founded|established/i.test(after)) {
+      wh = 'Which organization';
+    } else if (entityType === 'event' || /occurred|happened|took place|began|ended|started/i.test(after)) {
+      wh = 'What';
+    }
 
     var verbMatch = after.match(/^(is|are|was|were)\s+/i);
     var verb = verbMatch ? verbMatch[0] : '';
@@ -419,6 +447,7 @@ WIKI._makeQuestions = function(data) {
     }
   }
 
+  // — PRIORITY 3: Birth / death year —
   if (results.length < 3) {
     var birthMatch = extract.match(/born\s+(?:\d{1,2}\s+\w+\s+)?(\d{4})/i);
     var deathMatch = extract.match(/died\s+(?:\d{1,2}\s+\w+\s+)?(\d{4})/i);
@@ -436,6 +465,7 @@ WIKI._makeQuestions = function(data) {
     }
   }
 
+  // — PRIORITY 4: Established / founded year —
   if (results.length < 3 && years.length > 0) {
     var y = years[0];
     var verb = 'established';
@@ -447,6 +477,7 @@ WIKI._makeQuestions = function(data) {
     }
   }
 
+  // — PRIORITY 5: Location / headquartered —
   if (results.length < 3) {
     var locPatterns = [
       /(?:located|based|situated|headquartered)\s+in\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})/,
@@ -464,6 +495,7 @@ WIKI._makeQuestions = function(data) {
     }
   }
 
+  // — PRIORITY 6: Description blanking —
   if (results.length === 0 && desc && desc.length >= 15 && desc.length < 120) {
     var blank = '______';
     var blanked = desc.replace(new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), blank);
