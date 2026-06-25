@@ -312,10 +312,11 @@
                     <div class="hint-text" id="hintText"></div>
                 </div>
                 <div class="q-opt-grid" id="optGrid"></div>
+                <div style="font-size:.65em;color:var(--text-muted);margin-top:8px;text-align:center">Keys: <kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">1</kbd>-<kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">4</kbd> to answer · <kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">→</kbd> next</div>
             </div>
             <div class="result-flash" id="resultFlash"></div>
             <div id="intuitionDisplay" style="font-size:.78em;color:var(--amber);margin-top:4px;padding:10px 12px;border-radius:8px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);display:none;line-height:1.6;text-align:left"><span style="font-weight:700;color:var(--amber);display:block;margin-bottom:3px">⚡ Quick Fact</span><span id="intuitionText"></span></div>
-            <button class="action-btn primary hidden" id="nextBtn" onclick="nextQuestion()">Next →</button>
+            <button class="action-btn primary hidden" id="nextBtn" onclick="nextQuestion()">Next <span style="font-size:.7em;opacity:.6">→</span></button>
             <button class="action-btn secondary" id="backBtn" onclick="backToMenu()">← Back to Categories</button>
         </div>
 
@@ -5635,6 +5636,21 @@
             }
         });
 
+        document.addEventListener('keydown', function(e) {
+            if (!document.getElementById('qArea').classList.contains('active')) return;
+            if (e.key >= '1' && e.key <= '4') {
+                var opts = document.querySelectorAll('#optGrid .q-opt');
+                var idx = parseInt(e.key) - 1;
+                if (opts[idx] && !opts[idx].disabled) opts[idx].click();
+                e.preventDefault();
+            }
+            if (e.key === 'ArrowRight') {
+                var nextBtn = document.getElementById('nextBtn');
+                if (!nextBtn.classList.contains('hidden')) nextBtn.click();
+                e.preventDefault();
+            }
+        });
+
         function _initStudyData() {
             Object.keys(GK_LEARN).forEach(function(cid){ try { studyData[cid] = _parseStudyContent(cid); } catch(e) { studyData[cid] = null; } });
             // Check for ?topic= parameter to auto-open study mode
@@ -5809,12 +5825,13 @@
             document.getElementById('nextBtn').classList.add('hidden');
             document.getElementById('intuitionDisplay').style.display = 'none';
 
+            var keyLabels = ['1','2','3','4'];
             var grid = document.getElementById('optGrid');
             grid.innerHTML = '';
-            q.opts.forEach(function(o) {
+            q.opts.forEach(function(o, i) {
                 var el = document.createElement('div');
                 el.className = 'q-opt';
-                el.textContent = o;
+                el.innerHTML = '<span style="font-size:.65em;color:var(--text-muted);margin-right:6px">' + keyLabels[i] + '</span>' + o;
                 el.setAttribute('data-val', o);
                 el.onclick = function() { answerQuestion(this); };
                 grid.appendChild(el);
