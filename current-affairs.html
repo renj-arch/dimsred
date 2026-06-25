@@ -6298,6 +6298,9 @@
         }
 
         function backToMenu() {
+            if (state.answered || state.idx > 0) {
+                if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
+            }
             if (currentMode === 'study') {
                 document.getElementById('studyGrid').style.display = 'block';
                 document.getElementById('studyArea').style.display = 'none';
