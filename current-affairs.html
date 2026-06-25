@@ -5609,6 +5609,32 @@
         }
         var state = { cat: null, questions: [], idx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null };
 
+        function isQuizActive() {
+            return state.questions.length > 0 || document.getElementById('qArea').classList.contains('active');
+        }
+        function confirmAbandonQuiz() {
+            if (isQuizActive()) {
+                return confirm('A quiz is in progress. Leave and lose your progress?');
+            }
+            return true;
+        }
+
+        window.addEventListener('beforeunload', function(e) {
+            if (isQuizActive()) {
+                e.preventDefault();
+                e.returnValue = 'You have a quiz in progress. Are you sure you want to leave?';
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            var link = e.target.closest('.nav-links a');
+            if (link && isQuizActive()) {
+                if (!confirm('A quiz is in progress. Leave and lose your progress?')) {
+                    e.preventDefault();
+                }
+            }
+        });
+
         function _initStudyData() {
             Object.keys(GK_LEARN).forEach(function(cid){ try { studyData[cid] = _parseStudyContent(cid); } catch(e) { studyData[cid] = null; } });
             // Check for ?topic= parameter to auto-open study mode
@@ -5642,6 +5668,7 @@
         }
 
         function startCategory(id, name) {
+            if (!confirmAbandonQuiz()) return;
             state.cat = id;
             state.categoryName = name;
             state.idx = 0;
@@ -5906,6 +5933,7 @@
         }
 
         function startTimedQuizWith(days) {
+            if (!confirmAbandonQuiz()) return;
             var label = days === 7 ? 'Weekly Quiz' : (days === 30 ? 'Monthly Quiz' : 'Quarterly Quiz');
             state.cat = 'mixed';
             state.categoryName = label;
@@ -5935,6 +5963,7 @@
         }
 
         function startCustomDateQuiz() {
+            if (!confirmAbandonQuiz()) return;
             var startEl = document.getElementById('quizStartDate');
             var endEl = document.getElementById('quizEndDate');
             var label = 'Custom Quiz';
@@ -5985,6 +6014,7 @@
         window.togglePibPanel = _togglePibPanel;
 
         function startPibQuiz() {
+            if (!confirmAbandonQuiz()) return;
             if (!_pibFeedData || _pibFeedData.length < 3) { alert('Not enough PIB data loaded. Wait for the feed to load.'); return; }
             var startVal = document.getElementById('pibQuizStart').value;
             var endVal = document.getElementById('pibQuizEnd').value;
@@ -6143,6 +6173,7 @@
         }
 
         function startFeedQuiz(cat, label) {
+            if (!confirmAbandonQuiz()) return;
             if (!_pibFeedData || _pibFeedData.length < 5) { alert('News feed not loaded yet. Please wait.'); return; }
             var feedVar = cat === 'sebi' ? _sebiFeedData : cat === 'scjudgments' ? _scJudgmentData : cat === 'isro' ? _isroFeedData : cat === 'mea' ? _meaFeedData : cat === 'rbi' ? _rbiFeedData : cat === 'defence' ? _defenceFeedData : cat === 'environment' ? _envFeedData : cat === 'sports' ? _sportsFeedData : cat === 'economics' ? _econFeedData : cat === 'polity' ? _polityFeedData : cat === 'sciTech' ? _sciTechFeedData : cat === 'health' ? _healthFeedData : cat === 'education' ? _educationFeedData : cat === 'agriculture' ? _agriFeedData : cat === 'energy' ? _energyFeedData : null;
             if (!feedVar || feedVar.length < 2) { alert('Not enough items for "' + label + '" in current feed.'); return; }
@@ -6322,6 +6353,7 @@
         var currentStudyName = null;
 
         function setMode(mode) {
+            if (mode !== currentMode && !confirmAbandonQuiz()) return;
             currentMode = mode;
             document.getElementById('modeQuizBtn').style.background = mode === 'quiz' ? 'var(--purple)' : 'transparent';
             document.getElementById('modeQuizBtn').style.color = mode === 'quiz' ? '#fff' : 'var(--text-sec)';
@@ -7011,6 +7043,7 @@
         }
 
         function startCombinedQuiz(count, label) {
+            if (!confirmAbandonQuiz()) return;
             state.cat = 'mixed';
             state.categoryName = label;
             state.idx = 0;
@@ -7042,6 +7075,7 @@
         
         // ===== COMBINED CATEGORY + CURRENT AFFAIRS QUIZ =====
         function startCategoryQuiz(id, name) {
+            if (!confirmAbandonQuiz()) return;
             state.cat = id;
             state.categoryName = name + ' + Current Affairs';
             state.idx = 0;
