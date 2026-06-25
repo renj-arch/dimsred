@@ -296,6 +296,7 @@
             <div class="score-bar" id="scoreBar">
                 <div><span class="num" id="correctNum">0</span> / <span id="totalNum">0</span> correct</div>
                 <div class="streak" id="streakDisplay">🔥 <span id="streakNum">0</span> streak</div>
+                <button id="restartBtn" onclick="if(state.restartFn)state.restartFn()" style="display:none;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:.72em">↻ Restart</button>
             </div>
             <div class="q-card">
                 <div class="q-num" id="qNum"></div>
@@ -5657,10 +5658,11 @@
                     state.questions.push(q);
                 }
             }
-            if (state.questions.length === 0) return;
+            if (state.questions.length === 0) { alert('No questions available for this category right now. The data feed may still be loading.'); return; }
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('restartBtn').style.display = 'inline-block';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
         }
@@ -5733,10 +5735,17 @@
                     generateWikiQuestions(5);
                     if (state.idx >= state.questions.length) {
                         if (_wikiWaiting) {
-                            document.getElementById('qText').innerHTML = 'Loading more questions...';
+                            _loadingRetry++;
+                            if (_loadingRetry > 4) {
+                                document.getElementById('qText').innerHTML = 'Taking too long. <button onclick="' + (state.restartFn ? 'state.restartFn()' : 'location.reload()') + '" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Restart Quiz</button>';
+                                document.getElementById('optGrid').innerHTML = '';
+                                _wikiWaiting = false;
+                                _loadingRetry = 0;
+                                return;
+                            }
+                            document.getElementById('qText').innerHTML = 'Loading more questions...<br><span style="font-size:.72em;color:var(--text-muted)">still working...</span>';
                             document.getElementById('optGrid').innerHTML = '';
                             setTimeout(function() {
-                                if (_wikiWaiting) return;
                                 showQuestion();
                             }, 1500);
                             return;
@@ -5748,6 +5757,7 @@
                     return;
                 }
             }
+            _loadingRetry = 0;
             state.answered = false;
             var q = state.questions[state.idx];
             if (state.infinite) {
@@ -5911,6 +5921,7 @@
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('restartBtn').style.display = 'inline-block';
             document.getElementById('timedQuizOptions').style.display = 'none';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
@@ -5941,6 +5952,7 @@
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('restartBtn').style.display = 'inline-block';
             document.getElementById('timedQuizOptions').style.display = 'none';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
@@ -5972,6 +5984,12 @@
             _pibDateRange = { start: startVal, end: endVal };
             _pibUsed = {};
             document.getElementById('pibQuizPanel').style.display = 'none';
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('qArea').classList.add('active');
+            document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('restartBtn').style.display = 'inline-block';
+            document.getElementById('qText').innerHTML = 'Loading PIB quiz...';
+            document.getElementById('optGrid').innerHTML = '';
             startCategory('pib', 'PIB: ' + startVal.slice(5) + ' to ' + endVal.slice(5));
         }
 
@@ -6879,6 +6897,10 @@
         }
 
         var _wikiWaiting = false;
+        var _wikiRetryCount = 0;
+
+        // loading-wait count per question batch (resets on successful showQuestion)
+        var _loadingRetry = 0;
 
         function getStaticGkQuestion() {
             var allCats = Object.keys(GK_GENERATORS);
@@ -6928,8 +6950,15 @@
                 state.questions.push(sq);
                 added++;
             }
+            if (added > 0) _wikiRetryCount = 0;
             if (added === 0 && !_wikiWaiting) {
+                if (_wikiRetryCount >= 3) {
+                    document.getElementById('qText').innerHTML = 'Cannot fetch questions right now. <button onclick="' + (state.restartFn ? 'state.restartFn()' : 'location.reload()') + '" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Restart Quiz</button>';
+                    document.getElementById('optGrid').innerHTML = '';
+                    return;
+                }
                 _wikiWaiting = true;
+                _loadingRetry = 0;
                 console.log('[QUIZ] wiki pool empty, waiting for prefetch...');
                 var _wikiAvailable = typeof WIKI !== 'undefined' && WIKI._pool;
                 var retry = 0;
@@ -6941,16 +6970,23 @@
                         clearInterval(waiter);
                         _wikiWaiting = false;
                         if (poolReady) {
+                            _wikiRetryCount = 0;
                             for (var wi = 0; wi < count && state.questions.length < 50; wi++) {
                                 var wq = WIKI.poolQuestion();
                                 if (!wq) break;
                                 state.questions.push(wq);
                             }
+                        } else {
+                            _wikiRetryCount++;
                         }
-                        if (state.questions.length > 0) {
+                        if (state.idx < state.questions.length) {
                             showQuestion();
+                        } else if (state.questions.length > 0) {
+                            document.getElementById('qText').innerHTML = 'Ran out of questions. <button onclick="' + (state.restartFn ? 'state.restartFn()' : 'location.reload()') + '" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Restart Quiz</button>';
+                            document.getElementById('optGrid').innerHTML = '';
                         } else {
                             document.getElementById('qText').innerHTML = 'Could not load Wikipedia questions. <button onclick="startCombinedQuiz(15,\'🎯 Mega Quiz\')" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Retry</button>';
+                            document.getElementById('optGrid').innerHTML = '';
                         }
                     }
                 }, 400);
@@ -6975,6 +7011,7 @@
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('restartBtn').style.display = 'inline-block';
             document.getElementById('timedQuizOptions').style.display = 'none';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             document.getElementById('qText').innerHTML = 'Loading wiki questions...';
@@ -7021,6 +7058,7 @@
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('restartBtn').style.display = 'inline-block';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
         }
