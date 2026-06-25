@@ -231,7 +231,6 @@
             </div>
 
             <div style="margin:12px 0 6px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
-                <button class="action-btn secondary" onclick="showPibQuizPanel()" style="flex:1;min-width:160px;padding:12px">📡 PIB Current Affairs Quiz</button>
                 <button class="action-btn secondary" id="sebiQuizBtn" onclick="startFeedQuiz('sebi','SEBI Quiz')" style="flex:1;min-width:140px;padding:12px">📊 SEBI Quiz</button>
                 <button class="action-btn secondary" id="scQuizBtn" onclick="startFeedQuiz('scjudgments','SC Judgments Quiz')" style="flex:1;min-width:140px;padding:12px">⚖️ SC Judgments Quiz</button>
             </div>
@@ -258,18 +257,23 @@
                 <button class="action-btn secondary" id="agriQuizBtn" onclick="startFeedQuiz('agriculture','Agriculture Quiz')" style="flex:1;min-width:140px;padding:12px">🌾 Agriculture Quiz</button>
                 <button class="action-btn secondary" id="energyQuizBtn" onclick="startFeedQuiz('energy','Energy Quiz')" style="flex:1;min-width:140px;padding:12px">⚡ Energy Quiz</button>
             </div>
-            <div id="pibQuizPanel" style="display:none;margin-bottom:16px;padding:14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);text-align:center">
-                <div style="font-size:.85em;font-weight:600;margin-bottom:10px;color:var(--text-sec)">PIB Headline Quiz — pick a date range</div>
-                <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center">
-                    <input type="date" id="pibQuizStart" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.8em;font-family:inherit">
-                    <span style="font-size:.78em;color:var(--text-muted)">to</span>
-                    <input type="date" id="pibQuizEnd" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.8em;font-family:inherit">
-                    <button class="action-btn primary" onclick="startPibQuiz()" style="padding:8px 20px;font-size:.82em">Start Quiz</button>
-                </div>
-                <div style="font-size:.7em;color:var(--text-muted);margin-top:8px">Shows a PIB headline — identify which sector/ministry it belongs to (Defence, Economy, Health, etc.)</div>
-            </div>
 
             <p class="gk-intro">GK questions across 26 categories + PIB current affairs. Mix quiz, date range, or pick a category below. Every question is drawn from a verified static database of 1,100+ items.</p>
+        </div>
+
+        <!-- PIB quiz panel — persistent outside welcome so it's always accessible -->
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;justify-content:center">
+            <button class="action-btn secondary" onclick="window.showPibQuizPanel()" style="flex:1;min-width:160px;padding:12px">📡 PIB Current Affairs Quiz</button>
+        </div>
+        <div id="pibQuizPanel" style="display:none;margin-bottom:16px;padding:14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);text-align:center">
+            <div style="font-size:.85em;font-weight:600;margin-bottom:10px;color:var(--text-sec)">PIB Headline Quiz — pick a date range</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center">
+                <input type="date" id="pibQuizStart" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.8em;font-family:inherit">
+                <span style="font-size:.78em;color:var(--text-muted)">to</span>
+                <input type="date" id="pibQuizEnd" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.8em;font-family:inherit">
+                <button class="action-btn primary" onclick="startPibQuiz()" style="padding:8px 20px;font-size:.82em">Start Quiz</button>
+            </div>
+            <div style="font-size:.7em;color:var(--text-muted);margin-top:8px">Shows a PIB headline — identify which sector/ministry it belongs to (Defence, Economy, Health, etc.)</div>
         </div>
 
         <div class="cat-grid" id="catGrid"></div>
@@ -297,6 +301,7 @@
                 <div><span class="num" id="correctNum">0</span> / <span id="totalNum">0</span> correct</div>
                 <div class="streak" id="streakDisplay">🔥 <span id="streakNum">0</span> streak</div>
                 <button id="restartBtn" onclick="if(state.restartFn)state.restartFn()" style="display:none;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:.72em">↻ Restart</button>
+                <button id="pibHeaderBtn" onclick="window.togglePibPanel()" style="display:none;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:.72em">📡 PIB Quiz</button>
             </div>
             <div class="q-card">
                 <div class="q-num" id="qNum"></div>
@@ -5663,6 +5668,7 @@
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
+            document.getElementById('pibHeaderBtn').style.display = 'inline-block';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
         }
@@ -5922,6 +5928,7 @@
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
+            document.getElementById('pibHeaderBtn').style.display = 'inline-block';
             document.getElementById('timedQuizOptions').style.display = 'none';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
@@ -5953,15 +5960,18 @@
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
+            document.getElementById('pibHeaderBtn').style.display = 'inline-block';
             document.getElementById('timedQuizOptions').style.display = 'none';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
         }
 
-        function showPibQuizPanel() {
+        function _togglePibPanel() {
             var panel = document.getElementById('pibQuizPanel');
-            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-            if (_pibFeedData && panel.style.display === 'block') {
+            if (!panel) return false;
+            var isHidden = panel.style.display === 'none' || !panel.style.display;
+            panel.style.display = isHidden ? 'block' : 'none';
+            if (_pibFeedData && isHidden) {
                 var dates = {};
                 _pibFeedData.forEach(function(i) { if (i.pubDate) dates[i.pubDate.slice(0,10)] = true; });
                 var sorted = Object.keys(dates).sort();
@@ -5969,7 +5979,10 @@
                 var endEl = document.getElementById('pibQuizEnd');
                 if (sorted.length > 0) { startEl.value = sorted[0]; endEl.value = sorted[sorted.length-1]; }
             }
+            return false;
         }
+        window.showPibQuizPanel = _togglePibPanel;
+        window.togglePibPanel = _togglePibPanel;
 
         function startPibQuiz() {
             if (!_pibFeedData || _pibFeedData.length < 3) { alert('Not enough PIB data loaded. Wait for the feed to load.'); return; }
@@ -5988,6 +6001,7 @@
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
+            document.getElementById('pibHeaderBtn').style.display = 'inline-block';
             document.getElementById('qText').innerHTML = 'Loading PIB quiz...';
             document.getElementById('optGrid').innerHTML = '';
             startCategory('pib', 'PIB: ' + startVal.slice(5) + ' to ' + endVal.slice(5));
@@ -7012,6 +7026,7 @@
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
+            document.getElementById('pibHeaderBtn').style.display = 'inline-block';
             document.getElementById('timedQuizOptions').style.display = 'none';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             document.getElementById('qText').innerHTML = 'Loading wiki questions...';
@@ -7059,6 +7074,7 @@
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
+            document.getElementById('pibHeaderBtn').style.display = 'inline-block';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
         }
