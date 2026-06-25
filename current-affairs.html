@@ -5813,6 +5813,10 @@
                         if (_wikiWaiting) {
                             document.getElementById('qText').innerHTML = 'Loading more questions...';
                             document.getElementById('optGrid').innerHTML = '';
+                            setTimeout(function() {
+                                if (_wikiWaiting) return;
+                                showQuestion();
+                            }, 1500);
                             return;
                         }
                         showEnd(); return;
@@ -5894,7 +5898,6 @@
         }
 
         function nextQuestion() {
-            if (_wikiWaiting) return;
             state.idx++;
             // Pre-fetch more questions when running low in infinite mode
             if (state.infinite && state.idx >= state.questions.length - 3) {
@@ -6955,6 +6958,29 @@
 
         var _wikiWaiting = false;
 
+        function getStaticGkQuestion() {
+            var allCats = Object.keys(GK_GENERATORS);
+            for (var si = 0; si < allCats.length * 2; si++) {
+                var cat = allCats[si % allCats.length];
+                var gen = GK_GENERATORS[cat];
+                if (!gen) continue;
+                try {
+                    var q = gen();
+                    if (!q) continue;
+                    q.opts = q.opts || buildOptions(q.a);
+                    if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
+                    if (!isValidAnswer(q.a)) continue;
+                    var dup = false;
+                    for (var j = 0; j < state.questions.length; j++) {
+                        if (state.questions[j].a === q.a || state.questions[j].q === q.q) { dup = true; break; }
+                    }
+                    if (dup) continue;
+                    return q;
+                } catch(e) {}
+            }
+            return getFreshFallback();
+        }
+
         function generateWikiQuestions(count) {
             var added = 0;
             var maxTries = count * 10;
@@ -6973,33 +6999,35 @@
                 state.questions.push(q);
                 added++;
             }
+            // Immediately fallback to static GK if we don't have enough wiki questions
+            while (added < count) {
+                var sq = getStaticGkQuestion();
+                if (!sq) break;
+                state.questions.push(sq);
+                added++;
+            }
             if (added === 0 && !_wikiWaiting) {
                 _wikiWaiting = true;
                 console.log('[QUIZ] wiki pool empty, waiting for prefetch...');
                 var _wikiAvailable = typeof WIKI !== 'undefined' && WIKI._pool;
-                console.log('[QUIZ] WIKI available:', _wikiAvailable);
-                if (typeof WIKI !== 'undefined' && WIKI._pool) console.log('[QUIZ] WIKI._pool.length:', WIKI._pool.length);
                 var retry = 0;
+                var maxRetries = 8;
                 var waiter = setInterval(function() {
                     retry++;
                     var poolReady = _wikiAvailable && WIKI._pool.length > 0;
-                    if (retry % 5 === 0 && _wikiAvailable) console.log('[QUIZ] retry', retry, 'pool:', WIKI._pool.length);
-                    if (poolReady || retry > 100) {
+                    if (poolReady || retry >= maxRetries) {
                         clearInterval(waiter);
                         _wikiWaiting = false;
                         if (poolReady) {
-                            console.log('[QUIZ] pool ready with', WIKI._pool.length, 'questions');
                             for (var wi = 0; wi < count && state.questions.length < 50; wi++) {
                                 var wq = WIKI.poolQuestion();
                                 if (!wq) break;
                                 state.questions.push(wq);
                             }
-                            console.log('[QUIZ] loaded', state.questions.length, 'questions from pool');
                         }
                         if (state.questions.length > 0) {
                             showQuestion();
                         } else {
-                            console.error('[QUIZ] giving up after', retry, 'retries');
                             document.getElementById('qText').innerHTML = 'Could not load Wikipedia questions. <button onclick="startCombinedQuiz(15,\'🎯 Mega Quiz\')" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Retry</button>';
                         }
                     }

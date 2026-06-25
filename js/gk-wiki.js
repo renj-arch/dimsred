@@ -5,7 +5,7 @@ function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 WIKI._seenTitles = [];
 WIKI._seenValues = [];
 WIKI._pool = [];
-WIKI._poolSize = 100;
+WIKI._poolSize = 200;
 WIKI._prefetching = false;
 WIKI._sourceIndex = 0;
 
@@ -208,9 +208,9 @@ WIKI._batchSummaries = function(titles) {
       for (var id in pages) {
         var p = pages[id];
         if (!p || !p.title || id === '-1') continue;
-        if (!p.description || p.description.length < 5) continue;
+        if (!p.description || p.description.length < 2) continue;
         var extract = (p.extract || '').replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
-        if (extract.length < 60) continue;
+        if (extract.length < 30) continue;
         var qs = WIKI._makeQuestions({ title: p.title, extract: extract, description: p.description || '' });
         for (var qi = 0; qi < qs.length; qi++) results.push(qs[qi]);
       }
@@ -234,7 +234,7 @@ WIKI._batchSearch = function(topic, count) {
 
 WIKI.searchQuestion = function() {
   var topic = pick(WIKI._examTopics);
-  return WIKI._batchSearch(topic, 10);
+  return WIKI._batchSearch(topic, 30);
 };
 
 WIKI.onThisDay = function(dateStr) {
@@ -283,7 +283,9 @@ WIKI._loadKnown = function() {
 WIKI._isKnown = function(entity) {
   if (!entity) return false;
   var e = String(entity).toLowerCase().replace(/\s*\(.*?\)/g, '').trim();
-  if (!e) return false;
+  if (!e || e.length < 2) return false;
+  if (/^(list of|timeline of|outline of)/i.test(e)) return false;
+  // Accept any reasonable entity — the known-set check is a bonus for quality distractors
   if (WIKI._known && WIKI._known[e]) return true;
   var words = e.split(/\s+/);
   var lastWord = words.length > 1 ? words[words.length - 1] : '';
@@ -295,7 +297,9 @@ WIKI._isKnown = function(entity) {
     }
     if (e.length > 3 && k.indexOf(e) >= 0) return true;
   }
-  return false;
+  // Accept any entity that looks like a proper noun (starts with capital) or is long enough
+  if (/^[A-Z]/.test(entity) && entity.length > 3) return true;
+  return entity.length > 5;
 };
 
 WIKI.prefetch = function() {
@@ -306,31 +310,36 @@ WIKI.prefetch = function() {
 
   function fetchBatch() {
     var poolFull = WIKI._pool.length >= WIKI._poolSize;
-    if (poolFull) { setTimeout(fetchBatch, 500); return; }
+    // When pool is low, fetch more aggressively
+    var delay = poolFull ? 500 : 300;
+    if (poolFull) { setTimeout(fetchBatch, delay); return; }
 
+    // Cycle through all 4 sources
     WIKI._sourceIndex = (WIKI._sourceIndex + 1) % 4;
 
     var promise;
     if (WIKI._sourceIndex === 0) {
       var topic = pick(WIKI._examTopics);
-      promise = WIKI._batchSearch(topic, 20);
+      promise = WIKI._batchSearch(topic, 30);
     } else if (WIKI._sourceIndex === 1) {
-      promise = WIKI._batchRandom(20);
+      promise = WIKI._batchRandom(30);
     } else if (WIKI._sourceIndex === 2) {
       var cat = pick(WIKI._categoryTopics);
-      promise = WIKI._batchCategory(cat, 20);
+      promise = WIKI._batchCategory(cat, 30);
     } else {
-      promise = WIKI._batchRecentChanges(20);
+      promise = WIKI._batchRecentChanges(30);
     }
 
     promise.then(function(qs) {
       if (qs && qs.length) {
-        for (var i = 0; i < qs.length && WIKI._pool.length < WIKI._poolSize; i++) {
+        for (var i = 0; i < qs.length && WIKI._pool.length < WIKI._poolSize * 1.5; i++) {
           WIKI._pool.push(qs[i]);
         }
       }
-      setTimeout(fetchBatch, 500);
-    }).catch(function() { console.error('[WIKI] fetchBatch failed, retrying...'); setTimeout(fetchBatch, 1000); });
+      // If pool is still low after fetch, schedule next batch sooner
+      var nextDelay = WIKI._pool.length < 10 ? 200 : delay;
+      setTimeout(fetchBatch, nextDelay);
+    }).catch(function() { console.error('[WIKI] fetchBatch failed, retrying...'); setTimeout(fetchBatch, 800); });
   }
 
   function fetchOnThisDay() {
@@ -342,7 +351,7 @@ WIKI.prefetch = function() {
       if (items && items.length) {
         var otdQuestions = WIKI._makeFromOnThisDay(items);
         for (var i = 0; i < otdQuestions.length; i++) {
-          if (WIKI._pool.length < WIKI._poolSize * 2) WIKI._pool.push(otdQuestions[i]);
+          if (WIKI._pool.length < WIKI._poolSize * 3) WIKI._pool.push(otdQuestions[i]);
         }
       }
     }).catch(function() {});
@@ -383,13 +392,13 @@ WIKI._makeQuestions = function(data) {
     if (allSentences[fsi].trim().length >= 20) { firstSentence = allSentences[fsi].trim(); break; }
   }
 
-  if (extract.length < 120) return [];
+  if (extract.length < 80) return [];
   if (title.length > 60) return [];
   if (/^Outline of/i.test(title)) return [];
   if (/^(List of|Timeline of)/i.test(title)) return [];
 
   WIKI._seenTitles.push(title);
-  if (WIKI._seenTitles.length > 200) WIKI._seenTitles.shift();
+  if (WIKI._seenTitles.length > 500) WIKI._seenTitles.shift();
 
   var category = WIKI._classify(desc, extract);
   var catName = category ? category.replace(/_/g, ' ') : 'GK';
@@ -433,7 +442,7 @@ WIKI._makeQuestions = function(data) {
 
   // — PRIORITY 1: Description-based direct question —
   // Wikipedia descriptions are clean phrases like "Indian physicist" or "River in South India"
-  if (desc && desc.length >= 5 && desc.length < 120 && desc.toLowerCase().indexOf(titleLower) < 0) {
+  if (desc && desc.length >= 2 && desc.length < 120 && desc.toLowerCase().indexOf(titleLower) < 0) {
     var wh = entityType === 'person' ? 'Who' : 'What';
     var qText = wh + ' is ' + desc + '?';
     qText = qText.charAt(0).toUpperCase() + qText.slice(1);
@@ -601,7 +610,7 @@ WIKI._makeFromOnThisDay = function(items) {
     var t = firstPage.text;
     if (WIKI._seenValues.indexOf(t) >= 0 || WIKI._seenTitles.indexOf(t) >= 0) continue;
     WIKI._seenValues.push(t);
-    if (WIKI._seenValues.length > 200) WIKI._seenValues.shift();
+    if (WIKI._seenValues.length > 500) WIKI._seenValues.shift();
 
     var year = item.year;
     var text = item.text.replace(/<[^>]+>/g, '').trim();
@@ -612,8 +621,16 @@ WIKI._makeFromOnThisDay = function(items) {
     var fact = t + ' - ' + hint + ' (' + year + '): ' + text.substring(0, 200);
 
     if (item.type === 'event') {
-      // Skip — "What happened in X" with snippet as answer is weak
-      continue;
+      var eventText = text.substring(0, 120);
+      questions.push({
+        q: 'What happened on this day in ' + year + '?',
+        a: eventText.length > 60 ? eventText.substring(0, 57) + '...' : eventText,
+        hint: 'On this day: ' + year,
+        fact: fact,
+        _source: 'wiki',
+        _wikiCat: 'current_events',
+        opts: WIKI._buildOpts(eventText)
+      });
     } else if (item.type === 'birth') {
       questions.push({
         q: 'Who was born in ' + year + '?',
@@ -708,7 +725,7 @@ WIKI.prefetchCurrentEvents = function() {
     for (var ei = 0; ei < Math.min(events.length, 30); ei++) {
       var qs = WIKI._makeEventQuestions(events[ei]);
       for (var qi = 0; qi < qs.length; qi++) {
-        if (WIKI._pool.length < WIKI._poolSize * 2) WIKI._pool.push(qs[qi]);
+        if (WIKI._pool.length < WIKI._poolSize * 3) WIKI._pool.push(qs[qi]);
       }
     }
   }).catch(function() {});
