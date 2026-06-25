@@ -5276,9 +5276,7 @@
         var _staticGen_polity = GK_GENERATORS.polity;
 
         GK_GENERATORS.pib = function() {
-            if (!_pibFeedData || _pibFeedData.length < 3) {
-                return { q:'PIB feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
-            }
+            if (!_pibFeedData || _pibFeedData.length < 3) return null;
 
             var items = _pibFeedData;
             if (_pibDateRange) {
@@ -5298,9 +5296,7 @@
                 });
             });
 
-            if (qaPool.length === 0) {
-                return { q:'Could not generate question from PIB data.', a:'N/A', opts:['N/A','A','B','C'], hint:'', fact:'' };
-            }
+            if (qaPool.length === 0) return null;
 
             // Find an unused question
             var available = qaPool.filter(function(q) { return !_pibUsed[q.q + q.a]; });
@@ -5357,9 +5353,7 @@
         var _sebiUsed = {};
 
         GK_GENERATORS.sebi = function() {
-            if (!_sebiFeedData || _sebiFeedData.length < 2) {
-                return { q:'SEBI feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
-            }
+            if (!_sebiFeedData || _sebiFeedData.length < 2) return null;
             // Keep only exam-relevant SEBI items
             var relevant = _sebiFeedData.filter(function(i) {
                 var t = i.title.toUpperCase();
@@ -5460,9 +5454,7 @@
         }
 
         GK_GENERATORS.scjudgments = function() {
-            if (!_scJudgmentData || _scJudgmentData.length < 2) {
-                return { q:'SC Judgments feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
-            }
+            if (!_scJudgmentData || _scJudgmentData.length < 2) return null;
             var items = _scJudgmentData;
             var available = items.filter(function(q) { return !_scUsed[q.id]; });
             if (available.length === 0) { _scUsed = {}; available = items; }
@@ -5527,7 +5519,7 @@
                         while (optsArr.length < 4) optsArr.push('Supreme Court');
                         shuffle(optsArr);
                     } else {
-                        return { q:'Could not generate question from SC data.', a:'N/A', opts:['N/A','A','B','C'], hint:'', fact:'' };
+                        return null;
                     }
                 }
             }
@@ -5535,16 +5527,12 @@
         };
         // ---- ISRO procedural generator (reuses PIB extraction patterns) ----
         GK_GENERATORS.isro = function() {
-            if (!_isroFeedData || _isroFeedData.length < 2) {
-                return { q:'ISRO feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
-            }
+            if (!_isroFeedData || _isroFeedData.length < 2) return null;
             return _feedGenHelper(_isroFeedData, 'isro');
         };
         // ---- MEA procedural generator (reuses PIB extraction patterns) ----
         GK_GENERATORS.mea = function() {
-            if (!_meaFeedData || _meaFeedData.length < 2) {
-                return { q:'MEA feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
-            }
+            if (!_meaFeedData || _meaFeedData.length < 2) return null;
             return _feedGenHelper(_meaFeedData, 'mea');
         };
         function _buildVirtualFeed(items, keywords) {
@@ -5557,84 +5545,18 @@
         }
         // ---- RBI procedural generator ----
         GK_GENERATORS.rbi = function() {
-            if (!_rbiFeedData || _rbiFeedData.length < 2) {
-                return { q:'RBI feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
-            }
+            if (!_rbiFeedData || _rbiFeedData.length < 2) return null;
             return _feedGenHelper(_rbiFeedData, 'rbi');
         };
-        // ---- Defence combined (static + feed) generator ----
-        GK_GENERATORS.defence = function() {
-            var feedAvailable = _defenceFeedData && _defenceFeedData.length >= 2;
-            if (feedAvailable && Math.random() < 0.5) return _feedGenHelper(_defenceFeedData, 'defence');
-            if (_staticGen_defence) return _staticGen_defence();
-            if (feedAvailable) return _feedGenHelper(_defenceFeedData, 'defence');
-            return { q:'Defence questions not available.', a:'N/A', opts:['N/A','A','B','C'], hint:'', fact:'' };
+        // ---- ISRO procedural generator ----
+        GK_GENERATORS.isro = function() {
+            if (!_isroFeedData || _isroFeedData.length < 2) return null;
+            return _feedGenHelper(_isroFeedData, 'isro');
         };
-        // ---- Environment combined (static + feed) generator ----
-        GK_GENERATORS.environment = function() {
-            var feedAvailable = _envFeedData && _envFeedData.length >= 2;
-            if (feedAvailable && Math.random() < 0.5) return _feedGenHelper(_envFeedData, 'environment');
-            if (_staticGen_environment) return _staticGen_environment();
-            if (feedAvailable) return _feedGenHelper(_envFeedData, 'environment');
-            return { q:'Environment questions not available.', a:'N/A', opts:['N/A','A','B','C'], hint:'', fact:'' };
-        };
-        // ---- Sports combined (static + feed) generator ----
-        GK_GENERATORS.sports = function() {
-            var feedAvailable = _sportsFeedData && _sportsFeedData.length >= 2;
-            if (feedAvailable && Math.random() < 0.5) return _feedGenHelper(_sportsFeedData, 'sports');
-            if (_staticGen_sports) return _staticGen_sports();
-            if (feedAvailable) return _feedGenHelper(_sportsFeedData, 'sports');
-            return { q:'Sports questions not available.', a:'N/A', opts:['N/A','A','B','C'], hint:'', fact:'' };
-        };
-        // ---- Economics virtual-feed generator ----
-        GK_GENERATORS.economics = function() {
-            if (!_econFeedData || _econFeedData.length < 2) {
-                return { q:'Economics feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
-            }
-            return _feedGenHelper(_econFeedData, 'economics');
-        };
-        // ---- Polity combined (static + feed) generator ----
-        GK_GENERATORS.polity = function() {
-            var feedAvailable = _polityFeedData && _polityFeedData.length >= 2;
-            if (feedAvailable && Math.random() < 0.5) return _feedGenHelper(_polityFeedData, 'polity');
-            if (_staticGen_polity) return _staticGen_polity();
-            if (feedAvailable) return _feedGenHelper(_polityFeedData, 'polity');
-            return { q:'Polity questions not available.', a:'N/A', opts:['N/A','A','B','C'], hint:'', fact:'' };
-        };
-        // ---- Science & Tech virtual-feed generator ----
-        GK_GENERATORS.sciTech = function() {
-            if (!_sciTechFeedData || _sciTechFeedData.length < 2) {
-                return { q:'Science & Tech feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
-            }
-            return _feedGenHelper(_sciTechFeedData, 'sciTech');
-        };
-        // ---- Health virtual-feed generator ----
-        GK_GENERATORS.health = function() {
-            if (!_healthFeedData || _healthFeedData.length < 2) {
-                return { q:'Health feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
-            }
-            return _feedGenHelper(_healthFeedData, 'health');
-        };
-        // ---- Education virtual-feed generator ----
-        GK_GENERATORS.education = function() {
-            if (!_educationFeedData || _educationFeedData.length < 2) {
-                return { q:'Education feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
-            }
-            return _feedGenHelper(_educationFeedData, 'education');
-        };
-        // ---- Agriculture virtual-feed generator ----
-        GK_GENERATORS.agriculture = function() {
-            if (!_agriFeedData || _agriFeedData.length < 2) {
-                return { q:'Agriculture feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
-            }
-            return _feedGenHelper(_agriFeedData, 'agriculture');
-        };
-        // ---- Energy virtual-feed generator ----
-        GK_GENERATORS.energy = function() {
-            if (!_energyFeedData || _energyFeedData.length < 2) {
-                return { q:'Energy feed not loaded yet.', a:'N/A', opts:['N/A','Loading...','A','B'], hint:'', fact:'Please wait for feed to load.' };
-            }
-            return _feedGenHelper(_energyFeedData, 'energy');
+        // ---- MEA procedural generator ----
+        GK_GENERATORS.mea = function() {
+            if (!_meaFeedData || _meaFeedData.length < 2) return null;
+            return _feedGenHelper(_meaFeedData, 'mea');
         };
         function _feedGenHelper(feedData, cat) {
             var usedKey = '_' + cat + 'Used';
@@ -5676,7 +5598,7 @@
         function isValidAnswer(a) {
             if (!a) return false;
             var l = String(a).toLowerCase();
-            if (l.indexOf('various') >= 0 || l.indexOf('multiple') >= 0 || l.indexOf('unknown') >= 0) return false;
+            if (l.indexOf('various') >= 0 || l.indexOf('multiple') >= 0 || l.indexOf('unknown') >= 0 || l.indexOf('n/a') >= 0) return false;
             return a.length >= 3;
         }
         var state = { cat: null, questions: [], idx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null };
