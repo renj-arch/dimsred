@@ -5613,12 +5613,12 @@
 
         function saveQuizSession() {
             if (state.questions.length > 0) {
-                try { sessionStorage.setItem(SESSION_KEY, JSON.stringify({ cat: state.cat, categoryName: state.categoryName, idx: state.idx, correct: state.correct, streak: state.streak, answered: false, questions: state.questions.slice(0, 50), infinite: state.infinite })); } catch(e) {}
+                try { localStorage.setItem(SESSION_KEY, JSON.stringify({ cat: state.cat, categoryName: state.categoryName, idx: state.idx, correct: state.correct, streak: state.streak, answered: false, questions: state.questions.slice(0, 50), infinite: state.infinite })); } catch(e) {}
             }
         }
         function restoreQuizSession() {
             try {
-                var saved = JSON.parse(sessionStorage.getItem(SESSION_KEY));
+                var saved = JSON.parse(localStorage.getItem(SESSION_KEY));
                 if (saved && saved.questions && saved.questions.length > 0) {
                     if (confirm('You have an unfinished quiz from your last visit. Resume it?')) {
                         state.cat = saved.cat;
@@ -6424,7 +6424,7 @@
             document.getElementById('scoreBar').classList.remove('show');
             state.questions = [];
             state.idx = 0;
-            try { sessionStorage.removeItem(SESSION_KEY); } catch(e) {}
+            try { localStorage.removeItem(SESSION_KEY); } catch(e) {}
         }
 
         var currentMode = 'quiz';
