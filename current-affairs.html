@@ -5609,6 +5609,39 @@
             return a.length >= 3;
         }
         var state = { cat: null, questions: [], idx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null };
+        var SESSION_KEY = 'vlym_quiz_state';
+
+        function saveQuizSession() {
+            if (state.questions.length > 0) {
+                try { sessionStorage.setItem(SESSION_KEY, JSON.stringify({ cat: state.cat, categoryName: state.categoryName, idx: state.idx, correct: state.correct, streak: state.streak, answered: false, questions: state.questions.slice(0, 50), infinite: state.infinite })); } catch(e) {}
+            }
+        }
+        function restoreQuizSession() {
+            try {
+                var saved = JSON.parse(sessionStorage.getItem(SESSION_KEY));
+                if (saved && saved.questions && saved.questions.length > 0) {
+                    if (confirm('You have an unfinished quiz from your last visit. Resume it?')) {
+                        state.cat = saved.cat;
+                        state.categoryName = saved.categoryName;
+                        state.idx = saved.idx;
+                        state.correct = saved.correct;
+                        state.streak = saved.streak;
+                        state.answered = false;
+                        state.questions = saved.questions;
+                        state.infinite = saved.infinite || false;
+                        state.restartFn = function() { startCategory(saved.cat, saved.categoryName); };
+                        document.getElementById('welcome').style.display = 'none';
+                        document.getElementById('qArea').classList.add('active');
+                        document.getElementById('scoreBar').classList.add('show');
+                        document.getElementById('restartBtn').style.display = 'inline-block';
+                        document.getElementById('pibHeaderBtn').style.display = 'inline-block';
+                        showQuestion();
+                        return true;
+                    }
+                }
+            } catch(e) {}
+            return false;
+        }
 
         function isQuizActive() {
             return state.questions.length > 0 || document.getElementById('qArea').classList.contains('active');
@@ -5625,6 +5658,10 @@
                 e.preventDefault();
                 e.returnValue = 'You have a quiz in progress. Are you sure you want to leave?';
             }
+        });
+
+        window.addEventListener('pagehide', function() {
+            saveQuizSession();
         });
 
         document.addEventListener('click', function(e) {
@@ -5691,8 +5728,13 @@
         }
 
         function init() {
-            initCatGrid('study');
-            initCatGrid('quiz');
+            if (!restoreQuizSession()) {
+                initCatGrid('study');
+                initCatGrid('quiz');
+            } else {
+                initCatGrid('study');
+                initCatGrid('quiz');
+            }
             // Load knowledge base from external JSON (reduces page size by ~230KB)
             fetch('data/knowledge-base.json')
                 .then(function(r) { return r.json(); })
@@ -5883,6 +5925,7 @@
             }
             document.getElementById('correctNum').textContent = state.correct;
             document.getElementById('totalNum').textContent = state.infinite ? (state.idx + 1) : state.questions.length;
+            saveQuizSession();
             document.getElementById('streakNum').textContent = state.streak;
 
             // Show quick fact
@@ -6381,6 +6424,7 @@
             document.getElementById('scoreBar').classList.remove('show');
             state.questions = [];
             state.idx = 0;
+            try { sessionStorage.removeItem(SESSION_KEY); } catch(e) {}
         }
 
         var currentMode = 'quiz';
