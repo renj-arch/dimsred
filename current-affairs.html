@@ -5535,10 +5535,11 @@ GK_GENERATORS.pib = function() {
                     }
                 }
             }
-            var caseSummary = (desc || '').replace(/<[^>]+>/g, '').trim().substring(0, 300);
+            var caseSummary = (desc || '').replace(/<[^>]+>/g, '').trim().substring(0, 300).replace(/^The Supreme Court of India has\s+/i, '');
             var factParts = [];
             if (caseSummary) factParts.push(caseSummary);
-            if (selected.link) factParts.push('<a href="' + selected.link + '" target="_blank" style="color:var(--cyan)">Read full judgment →</a>');
+            var caseLink = selected.link || selected.id || '';
+            if (caseLink) factParts.push('<a href="' + caseLink + '" target="_blank" style="color:var(--cyan)">Read full judgment →</a>');
             return { q: question, a: answer, opts: optsArr, hint: 'Think about the subject matter of the case', fact: factParts.join('<br><br>') };
         };
         function _buildVirtualFeed(items, keywords) {
