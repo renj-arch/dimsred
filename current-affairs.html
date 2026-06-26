@@ -3930,7 +3930,7 @@
             var s = pick(data);
             var types = [
                 function(){ return {q:'Where was the first ' + s[0] + ' held?',a:s[2],hint:'The first edition sets the host',fact:s[0] + ' started in ' + s[3] + '. First host: ' + s[2]}; },
-                function(){ return {q:'The ' + s[0] + ' is associated with which sport?',a:s[1].split(' ')[0] + (s[1].includes('cricket')?' cricket':''),hint:s[1],fact:s[0] + ': the first ' + s[1] + ' championship.'}; },
+                function(){ var sportKeywords=['cricket','football','tennis','badminton','hockey','golf','kabaddi','cycling','chess','rugby','baseball','bowling','snooker','polo','athletics','boxing','wrestling','shooting','swimming']; var detectedSport='multi-sport event'; for(var ski=0;ski<sportKeywords.length;ski++){if(s[1].indexOf(sportKeywords[ski])>=0){detectedSport=sportKeywords[ski];break;}} var wikiFact=null; try{wikiFact=typeof WIKI!=='undefined'&&WIKI._factCache&&WIKI._factCache[s[0]];}catch(e){} return {q:'The ' + s[0] + ' is associated with which sport?',a:detectedSport,hint:s[1],fact:wikiFact||(s[0]+': '+s[1]+' — first '+s[3]+', '+s[2]+'. '+s[4])}; },
                 function(){ var trophyData = [['Cricket World Cup','ODI cricket','ICC'],['T20 World Cup','T20 cricket','ICC'],['Wimbledon','Lawn Tennis','AELTC'],['FIFA World Cup','Football','FIFA'],['Thomas Cup','Badminton (Men\'s team)','BWF'],['Uber Cup','Badminton (Women\'s team)','BWF'],['Sudirman Cup','Badminton (Mixed team)','BWF'],['Davis Cup','Tennis (Men\'s team)','ITF'],['Hockey World Cup','Field Hockey','FIH'],['Asia Cup','Cricket','ACC'],['Champions Trophy','Cricket (ODI)','ICC'],['World Test Championship','Test cricket','ICC'],['Bharat Ratna','Highest civilian award',null],['Arjuna Award','Sports excellence',null],['Dronacharya Award','Coaching excellence',null],['Khel Ratna','Sports achievement','Sports Ministry'],['Ranji Trophy','Domestic cricket (India)','BCCI'],['Duleep Trophy','Inter-zonal cricket','BCCI'],['Irani Cup','Cricket (Ranji champ vs Rest)','BCCI'],['Vijay Hazare Trophy','Domestic ODI cricket','BCCI'],['Santosh Trophy','Domestic football (India)','AIFF'],['Durand Cup','Football (India\'s oldest)','AIFF'],['Subroto Cup','Football (inter-school)','IAF'],['BCCI Cup','T20 cricket',null],['Sultan Azlan Shah Cup','Hockey','MHC'],['Champions Trophy (Hockey)','Field Hockey','FIH'],['BFA World Cup','Beach Football','BFA'],['FIFA Club World Cup','Football clubs','FIFA'],['Europa League','Football clubs (Europe)','UEFA'],['Copa America','Football (South America)','CONMEBOL'],['Africa Cup of Nations','Football (Africa)','CAF']]; var t=pick(trophyData); return {q:'The ' + t[0] + ' is associated with?',a:t[1],hint:'Think of the governing body: ' + (t[2]||'relevant authority'),fact:t[0] + (t[2]?' is governed by ' + t[2]:'') + ' for ' + t[1]}; },
                 function(){ var v=pick([['Narendra Modi Stadium','Ahmedabad','world\'s largest stadium (1.32L capacity)'],['Eden Gardens','Kolkata','India\'s oldest cricket stadium (1864)'],['Wankhede Stadium','Mumbai','hosted 2011 WC final'],['MA Chidambaram Stadium','Chennai','Chepauk, home of CSK'],['M Chinnaswamy Stadium','Bengaluru','also hosts RCB matches'],['Arun Jaitley Stadium','Delhi','formerly Feroz Shah Kotla'],['Rajiv Gandhi Intl Stadium','Hyderabad','Uppal stadium'],['PCA Stadium','Mohali','IS Bindra Stadium'],['HPCA Stadium','Dharamshala','scenic Himalayan backdrop'],['Sawai Mansingh Stadium','Jaipur','Rajasthan Royals home'],['Ekana Stadium','Lucknow','newest intl cricket venue'],['Salt Lake Stadium','Kolkata','largest football stadium in India'],['Jawaharlal Nehru Stadium','Delhi','multi-sport venue'],['Kalinga Stadium','Bhubaneswar','hockey & football venue'],['Major Dhyan Chand Stadium','Delhi','national hockey stadium'],['Birsa Munda Stadium','Ranchi','football & athletics'],['Indira Gandhi Indoor Stadium','Delhi','indoor sports complex'],['Sardar Vallabhbhai Patel Stadium','Ahmedabad','Motera, multi-sport']]); return {q:v[0] + ' is located in?',a:v[1],hint:'Major sports venues across Indian cities',fact:v[0] + ' (' + v[1] + '): ' + v[2]}; },
                 function(){ var indian=pick([['hockey','Hockey World Cup: India 8 medals. India won 6 Olympic gold (1928-80)'],['cricket','IPL: Mumbai Indians 5, CSK 5 titles. India won 83 WC. T20 WC 2007. Champions Trophy 2013'],['badminton','PV Sindhu Olympic silver/bronze. Srikanth, Lakshya Sen top rank. Thomas Cup 2022 winners'],['wrestling','Bajrang Punia Olympic bronze. Ravi Dahiya silver. Sakshi Malik bronze 2016'],['boxing','MC Mary Kom Olympic bronze (6 world titles). Vijender Singh Olympic bronze 2008. Lovlina Borgohain bronze 2021'],['athletics','Neeraj Chopra Olympic gold (javelin 2021). PT Usha (Asian Games 1986). Milkha Singh (Asian/Commonwealth gold)'],['shooting','Abhinav Bindra Olympic gold 2008 (10m air rifle). 12+ Olympic medals in shooting. Manu Bhaker gold 2024'],['weightlifting','Mirabai Chanu silver 2021 (49kg). Karnam Malleswari bronze 2000 (first Indian woman Olympic medal)'],['tennis','Leander Paes 18 Grand Slams. Sania Mirza 6 GS titles. Wimbledon & Olympic success'],['archery','Deepika Kumari world rank 1. Atanu Das. Abhishek Verma. Yet to win Olympic gold'],['kabaddi','India dominates Asian & World Cups. Pro Kabaddi League (Patna Pirates 3 titles)'],['chess','Viswanathan Anand 5-time World Champion (2000-2013). D Gukesh won 2024 World Championship. Praggnanandhaa top GM. Humpy world rapid champion']]); return {q:'India\'s achievements in ' + indian[0] + '?',a:indian[1],hint:'India excels at hockey (6 Olympic gold), cricket (WC 1983, 2011), badminton (Thomas Cup 2022)',fact:indian[0] + ': ' + indian[1]}; },
@@ -5727,6 +5727,40 @@
             }
         }
 
+        var _quizJsonData = null;
+
+        function loadQuizJson() {
+            fetch('data/quiz.json')
+                .then(function(r) { return r.json(); })
+                .then(function(data) { _quizJsonData = data; })
+                .catch(function() {});
+        }
+
+        function getDateFilteredQuestions(cutoffDate) {
+            var results = [];
+            if (_quizJsonData && _quizJsonData.questions) {
+                _quizJsonData.questions.forEach(function(qa) {
+                    if (qa.pubDate && new Date(qa.pubDate) >= cutoffDate) {
+                        var q = { q: qa.question, a: qa.answer, hint: qa.category || '', fact: qa.question + ' — ' + (qa.answer || '') + ' [' + qa.source + ', ' + qa.pubDate.slice(0,10) + ']', _pubDate: qa.pubDate };
+                        q.opts = qa.options && qa.options.length >= 2 ? qa.options.slice() : null;
+                        if (!q.opts) q.opts = buildOptions(q.a);
+                        if (isValidAnswer(q.a)) results.push(q);
+                    }
+                });
+            }
+            if (_pibFeedData) {
+                _pibFeedData.forEach(function(item) {
+                    if (item.pubDate && new Date(item.pubDate) >= cutoffDate) {
+                        var title = item.title || '';
+                        var q = { q: title, a: title.split(' ').slice(0,3).join(' '), hint: item.source + ' — ' + (item.category || ''), fact: title + ' [' + item.source + ', ' + item.pubDate.slice(0,10) + ']', _pubDate: item.pubDate };
+                        q.opts = buildOptions(q.a);
+                        if (isValidAnswer(q.a) && title.length > 15) results.push(q);
+                    }
+                });
+            }
+            return results;
+        }
+
         function init() {
             if (!restoreQuizSession()) {
                 initCatGrid('study');
@@ -5741,6 +5775,7 @@
                 .then(function(data) { GK_LEARN = data; _initStudyData(); })
                 .catch(function() { _initStudyData(); });
             loadPibFeed();
+            loadQuizJson();
         }
 
         function startCategory(id, name) {
@@ -6944,24 +6979,73 @@
     <script src="js/gk-generators.js"></script>
     <script src="js/gk-wiki.js"></script>
     <script>
+        // Prefetch live Wikipedia facts for Quick Fact display
+        if (typeof WIKI !== 'undefined' && WIKI.prefetchFacts) { try { WIKI.prefetchFacts(); } catch(e) {} }
+        
         // ===== MERGE ENHANCED GENERATORS INTO EXISTING SYSTEM =====
         // Priority: GK_GEN2 > GK_GENERATORS
         
         // date range, and combined quiz
-        var _origTimedWith = startTimedQuizWith;
         startTimedQuizWith = function(days) {
-            var label = days === 7 ? 'Weekly Quiz' : (days === 30 ? 'Monthly Quiz' : 'Quarterly Quiz');
-            var count = days === 7 ? 10 : (days === 30 ? 15 : 20);
-            startCombinedQuiz(count, label);
+            var cutoff = new Date();
+            cutoff.setDate(cutoff.getDate() - days);
+            var label = days === 7 ? '📅 Last 7 days' : (days === 30 ? '📅 Last 30 days' : (days === 90 ? '📅 Last 90 days' : '📅 Last 1 year'));
+            var count = days === 7 ? 10 : (days === 30 ? 15 : (days === 90 ? 20 : 25));
+            _runTimedQuiz(cutoff.toISOString().slice(0,10), null, label, count);
         };
         
-        var _origCustomDate = startCustomDateQuiz;
+        function _runTimedQuiz(startDate, endDate, label, targetCount) {
+            if (!confirmAbandonQuiz()) return;
+            state.cat = 'mixed';
+            state.categoryName = label;
+            state.idx = 0;
+            state.correct = 0;
+            state.streak = 0;
+            state.answered = false;
+            state.questions = [];
+            state.infinite = false;
+            state.restartFn = function() { _runTimedQuiz(startDate, endDate, label, targetCount); };
+            
+            var cutoff = startDate ? new Date(startDate) : new Date(0);
+            var dateQs = getDateFilteredQuestions(cutoff);
+            if (endDate) {
+                var end = new Date(endDate);
+                end.setHours(23,59,59,999);
+                dateQs = dateQs.filter(function(q) { return q._pubDate && new Date(q._pubDate) <= end; });
+            }
+            dateQs = shuffle(dateQs);
+            for (var dqi = 0; dqi < Math.min(dateQs.length, targetCount); dqi++) {
+                state.questions.push(dateQs[dqi]);
+            }
+            
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('qArea').classList.add('active');
+            document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('restartBtn').style.display = 'inline-block';
+            document.getElementById('pibHeaderBtn').style.display = 'inline-block';
+            document.getElementById('timedQuizOptions').style.display = 'none';
+            document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
+            document.getElementById('qText').innerHTML = 'Loading questions...';
+            document.getElementById('optGrid').innerHTML = '';
+            
+            var remaining = targetCount - state.questions.length;
+            if (remaining > 0) {
+                if (typeof WIKI !== 'undefined') { try { WIKI._prefetching = false; WIKI.prefetch(); } catch(e) {} }
+                generateWikiQuestions(remaining);
+            }
+            if (state.questions.length > 0) {
+                showQuestion();
+            } else {
+                document.getElementById('qText').innerHTML = 'No questions found for this period. <button onclick="location.reload()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Retry</button>';
+            }
+        }
+
         startCustomDateQuiz = function() {
             var startEl = document.getElementById('quizStartDate');
             var endEl = document.getElementById('quizEndDate');
             var label = 'Custom Quiz';
-            if (startEl.value && endEl.value) label = 'Quiz: ' + startEl.value.slice(5) + ' to ' + endEl.value.slice(5);
-            startCombinedQuiz(12, label);
+            if (startEl.value && endEl.value) label = '📅 ' + startEl.value.slice(5) + ' to ' + endEl.value.slice(5);
+            _runTimedQuiz(startEl.value, endEl.value, label, 12);
         };
         
         // === MEGA QUIZ ENGINE — WIKI ONLY ===

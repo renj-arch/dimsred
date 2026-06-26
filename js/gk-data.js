@@ -532,7 +532,7 @@ var GK_DATA = {
   ],
   sports: [
     ["Olympic Games","Global multi-sport event","Summer/Winter alternate, every 4 years","Paris 2024, LA 2028"],
-    ["Commonwealth Games","Former British Empire nations","Every 4 years, 1930 first","Birmingham 2022, Victoria 2026"],
+    ["Commonwealth Games","Quadrennial multi-sport event for Commonwealth nations","Every 4 years, 1930 first","Birmingham 2022, Victoria 2026"],
     ["Asian Games","Asia's largest multi-sport event","1951 first, New Delhi","Hangzhou 2022, Aichi 2026"],
     ["Cricket World Cup","ICC ODI World Cup since 1975","India won 1983, 2011","50-over format"],
     ["T20 World Cup","ICC T20 World Cup since 2007","India won 2007, 2024","Twenty20 format"],

@@ -730,3 +730,37 @@ WIKI.prefetchCurrentEvents = function() {
     }
   }).catch(function() {});
 };
+
+// ===== LIVE FACT FETCHING FOR QUIZ QUICK FACTS =====
+WIKI._factCache = {};
+WIKI._factFetching = {};
+
+WIKI.fetchFact = function(title) {
+  if (WIKI._factCache[title]) return Promise.resolve(WIKI._factCache[title]);
+  if (WIKI._factFetching[title]) return WIKI._factFetching[title];
+  var url = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exintro&explaintext&exlimit=1&titles=' + encodeURIComponent(title) + '&format=json&origin=*';
+  WIKI._factFetching[title] = fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+    var pages = data.query && data.query.pages || {};
+    for (var id in pages) {
+      if (id === '-1') continue;
+      var extract = (pages[id].extract || '').replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+      if (extract.length > 30) {
+        var sentences = extract.match(/[^.!?]+[.!?]/g) || [extract];
+        var shortFact = sentences[0] || extract;
+        if (shortFact.length > 300) shortFact = shortFact.substring(0, 300) + '...';
+        WIKI._factCache[title] = shortFact;
+        return shortFact;
+      }
+    }
+    return '';
+  }).catch(function() { return ''; });
+  return WIKI._factFetching[title];
+};
+
+WIKI._factTopics = ['Commonwealth Games','Olympic Games','Asian Games','FIFA World Cup','Wimbledon','Cricket World Cup','Indian Premier League','Thomas Cup','Neeraj Chopra','PV Sindhu','Chess World Championship','Paris 2024 Olympics','Khelo India','IPL 2025'];
+
+WIKI.prefetchFacts = function() {
+  for (var fi = 0; fi < WIKI._factTopics.length; fi++) {
+    WIKI.fetchFact(WIKI._factTopics[fi]);
+  }
+};
