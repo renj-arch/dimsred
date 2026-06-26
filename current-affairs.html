@@ -7378,6 +7378,30 @@
             if (state.questions.length > 0) {
                 showQuestion();
             }
+            
+            // Also pre-fetch recent 3 months of Wikipedia current events in background
+            if (typeof _fetchHistoricalForRange !== 'undefined') {
+                var threeMonthsAgo = new Date();
+                threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+                _fetchHistoricalForRange(threeMonthsAgo.toISOString().slice(0,10), null, function(dayEntries) {
+                    if (dayEntries.length > 0) {
+                        var bgAdded = 0;
+                        shuffle(dayEntries).forEach(function(day) {
+                            shuffle(day.items).forEach(function(txt) {
+                                if (bgAdded >= 50 || state.questions.length >= 300) return;
+                                if (txt.length < 30) return;
+                                var s = (txt.match(/[^.!?]+[.!?]/g) || [txt])[0];
+                                if (!s || s.length < 20) return;
+                                var entity = (txt.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b/g) || []).filter(function(t) { return t.length > 4; })[0];
+                                if (!entity) entity = txt.split(' ').filter(function(w) { return w.length > 5; }).slice(0,2).join(' ');
+                                if (!entity || entity.length < 4) return;
+                                state.questions.push({ q: s, a: entity, fact: txt.substring(0,200), hint: 'Current Affairs', _source: 'wiki_historical', opts: WIKI._buildOpts(entity) });
+                                bgAdded++;
+                            });
+                        });
+                    }
+                });
+            }
         }
         
         // ===== COMBINED CATEGORY + CURRENT AFFAIRS QUIZ =====
