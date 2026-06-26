@@ -5775,12 +5775,12 @@ GK_GENERATORS.pib = function() {
             state.restartFn = function() { startCategory(id, name); };
             var gen2 = GK_GEN2 && GK_GEN2[id];
             var gen1 = GK_GENERATORS[id];
-            if (typeof WIKI !== 'undefined') { try { if (!WIKI._prefetching) WIKI.prefetch(); } catch(e) {} }
+            if (typeof WIKI !== 'undefined') { try { if (!WIKI._prefetching) WIKI.prefetch(); } catch(e) {} try { var _wikiSearchMap = { sebi:'SEBI', scjudgments:'Supreme Court of India', isro:'ISRO', mea:'Ministry of External Affairs India', rbi:'Reserve Bank of India', defence:'Indian Armed Forces', environment:'Environment climate change India', sports:'Sports India', economics:'Indian economy', polity:'Constitution of India', sciTech:'Science technology India', health:'Healthcare India', education:'Education India', agriculture:'Agriculture India', energy:'Energy India' }; if (_wikiSearchMap[id] && typeof WIKI !== 'undefined' && WIKI._batchSearch) WIKI._batchSearch(_wikiSearchMap[id], 15).then(function(qs) { if (qs && qs.length) { for (var si = 0; si < qs.length; si++) { if (WIKI._pool.length < 300) WIKI._pool.push(qs[si]); } } }); } catch(e) {} }
             for (var i = 0; i < 8; i++) {
                 var q = null;
                 if (gen2 && Math.random() < 0.6) { try { q = gen2(); } catch(e) {} }
                 if (!q && gen1) { try { q = gen1(); } catch(e) {} }
-                if (!q && typeof WIKI !== 'undefined') { try { q = WIKI.poolQuestion(); if (q) { q = JSON.parse(JSON.stringify(q)); } } catch(e) {} }
+                if (!q && typeof WIKI !== 'undefined') { try { var _wikiCatMap = { sebi:'economics', scjudgments:'polity', isro:'space', mea:'ir', rbi:'economics', defence:'defence', environment:'environment', sports:'sports', economics:'economics', polity:'polity', sciTech:'science', health:'environment', education:'culture', agriculture:'environment', energy:'environment' }; var _targetCat = _wikiCatMap[id]; if (_targetCat && WIKI._pool && WIKI._pool.length > 0) { for (var pi = 0; pi < WIKI._pool.length; pi++) { if (WIKI._pool[pi]._wikiCat === _targetCat) { q = WIKI._pool.splice(pi, 1)[0]; break; } } } if (!q) { q = WIKI.poolQuestion(); } if (q) { q = JSON.parse(JSON.stringify(q)); } } catch(e) {} }
                 if (q) {
                     q.opts = q.opts || buildOptions(q.a);
                     if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
@@ -5801,8 +5801,11 @@ GK_GENERATORS.pib = function() {
                 var _poolCheck = setInterval(function() {
                     if (WIKI._pool && WIKI._pool.length > 0) {
                         clearInterval(_poolCheck);
+                        var _wikiCatMap = { sebi:'economics', scjudgments:'polity', isro:'space', mea:'ir', rbi:'economics', defence:'defence', environment:'environment', sports:'sports', economics:'economics', polity:'polity', sciTech:'science', health:'environment', education:'culture', agriculture:'environment', energy:'environment' }, _targetCat = _wikiCatMap[id];
                         for (var wi = 0; wi < 8 && state.questions.length < 8; wi++) {
-                            var wq = WIKI.poolQuestion();
+                            var wq = null;
+                            if (_targetCat && WIKI._pool && WIKI._pool.length > 0) { for (var pi = 0; pi < WIKI._pool.length; pi++) { if (WIKI._pool[pi]._wikiCat === _targetCat) { wq = WIKI._pool.splice(pi, 1)[0]; break; } } }
+                            if (!wq) wq = WIKI.poolQuestion();
                             if (wq) { wq.opts = wq.opts || buildOptions(wq.a); if (!wq.fact) wq.fact = wq.q + ' ' + (wq.a || ''); if (isValidAnswer(wq.a)) state.questions.push(wq); }
                         }
                         if (state.questions.length > 0) showQuestion();
