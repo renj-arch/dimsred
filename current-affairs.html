@@ -5986,6 +5986,9 @@
             // Pre-fetch more questions when running low in infinite mode
             if (state.infinite && state.idx >= state.questions.length - 3) {
                 generateWikiQuestions(5);
+                if (typeof _fetchRandomHistoricalMonth !== 'undefined') {
+                    _fetchRandomHistoricalMonth();
+                }
             }
             showQuestion();
         }
@@ -7192,6 +7195,40 @@
             _runTimedQuiz(startEl.value, endEl.value, label + ' (unlimited)', 9999);
         };
         
+        var _historicalFetchCount = 0;
+        function _fetchRandomHistoricalMonth() {
+            if (typeof WIKI === 'undefined' || !WIKI.fetchMonthEvents) return;
+            if (_historicalFetchCount >= 24) return; // max 24 random months fetched
+            _historicalFetchCount++;
+            // Pick a random year/month between 2005 and current
+            var now = new Date();
+            var totalMonths = (now.getFullYear() - 2005) * 12 + now.getMonth(); // 0=Jan
+            var randMonthIdx = Math.floor(Math.random() * totalMonths);
+            var year = 2005 + Math.floor(randMonthIdx / 12);
+            var month = randMonthIdx % 12;
+            if (WIKI._monthEventCache && WIKI._monthEventCache[year + '-' + (month+1)]) return; // already fetched
+            console.log('[MEGA] fetching random month ' + year + '-' + (month+1));
+            WIKI.fetchMonthEvents(year, month + 1).then(function(entries) {
+                if (!entries || entries.length === 0) return;
+                var added = 0;
+                shuffle(entries).forEach(function(txt) {
+                    if (added >= 30 || state.questions.length >= 400) return;
+                    if (txt.length < 30) return;
+                    var s = (txt.match(/[^.!?]+[.!?]/g) || [txt])[0];
+                    if (!s || s.length < 20) return;
+                    var entity = (txt.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b/g) || []).filter(function(t) { return t.length > 5; })[0];
+                    if (!entity) entity = txt.split(' ').filter(function(w) { return w.length > 5; }).slice(0,2).join(' ');
+                    if (!entity || entity.length < 4) return;
+                    for (var j = 0; j < state.questions.length; j++) {
+                        if (state.questions[j].q === s || state.questions[j].a === entity) return;
+                    }
+                    state.questions.push({ q: s, a: entity, fact: txt.substring(0,200), hint: 'Historical (' + year + ')', _source: 'wiki_historical', opts: WIKI._buildOpts ? WIKI._buildOpts(entity) : buildOptions(entity) });
+                    added++;
+                });
+                if (added > 0) console.log('[MEGA] added ' + added + ' questions from ' + year + ' historical');
+            }).catch(function() {});
+        }
+        
         // === MEGA QUIZ ENGINE — WIKI ONLY ===
         function generateOneQuestion() {
             var q = null;
@@ -7379,28 +7416,11 @@
                 showQuestion();
             }
             
-            // Also pre-fetch recent 3 months of Wikipedia current events in background
-            if (typeof _fetchHistoricalForRange !== 'undefined') {
-                var threeMonthsAgo = new Date();
-                threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-                _fetchHistoricalForRange(threeMonthsAgo.toISOString().slice(0,10), null, function(dayEntries) {
-                    if (dayEntries.length > 0) {
-                        var bgAdded = 0;
-                        shuffle(dayEntries).forEach(function(day) {
-                            shuffle(day.items).forEach(function(txt) {
-                                if (bgAdded >= 50 || state.questions.length >= 300) return;
-                                if (txt.length < 30) return;
-                                var s = (txt.match(/[^.!?]+[.!?]/g) || [txt])[0];
-                                if (!s || s.length < 20) return;
-                                var entity = (txt.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b/g) || []).filter(function(t) { return t.length > 4; })[0];
-                                if (!entity) entity = txt.split(' ').filter(function(w) { return w.length > 5; }).slice(0,2).join(' ');
-                                if (!entity || entity.length < 4) return;
-                                state.questions.push({ q: s, a: entity, fact: txt.substring(0,200), hint: 'Current Affairs', _source: 'wiki_historical', opts: WIKI._buildOpts(entity) });
-                                bgAdded++;
-                            });
-                        });
-                    }
-                });
+            // Pre-fetch random historical months from wide range (2005-present)
+            if (typeof WIKI !== 'undefined' && WIKI.fetchMonthEvents) {
+                _fetchRandomHistoricalMonth();
+                setTimeout(function() { _fetchRandomHistoricalMonth(); }, 500);
+                setTimeout(function() { _fetchRandomHistoricalMonth(); }, 1000);
             }
         }
         
