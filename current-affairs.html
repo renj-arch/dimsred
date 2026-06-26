@@ -7022,22 +7022,27 @@
             for (var d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
                 dates.push({ y: d.getFullYear(), m: d.getMonth() + 1, day: d.getDate(), date: new Date(d) });
             }
+            if (dates.length === 0) return callback([]);
             var allDays = [];
-            var fetched = 0;
-            dates.forEach(function(dInfo) {
+            // Fetch sequentially with delay to avoid Wikipedia throttling
+            var di = 0;
+            function fetchNext() {
+                if (di >= dates.length) return callback(allDays);
+                var dInfo = dates[di];
+                di++;
                 WIKI.fetchDayEvents(dInfo.y, dInfo.m, dInfo.day).then(function(items) {
                     if (items.length > 0) {
                         var label = MONTHS[dInfo.m - 1] + ' ' + dInfo.day + ', ' + dInfo.y;
                         allDays.push({ date: label, items: items });
+                        // Update loading status
+                        document.getElementById('qText').innerHTML = 'Fetching news for ' + label + '... (' + di + '/' + dates.length + ')';
                     }
-                    fetched++;
-                    if (fetched >= dates.length) callback(allDays);
+                    setTimeout(fetchNext, 250);
                 }).catch(function() {
-                    fetched++;
-                    if (fetched >= dates.length) callback(allDays);
+                    setTimeout(fetchNext, 250);
                 });
-            });
-            if (dates.length === 0) callback([]);
+            }
+            fetchNext();
         }
 
         function _runTimedQuiz(startDate, endDate, label, targetCount) {
