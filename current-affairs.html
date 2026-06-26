@@ -5792,10 +5792,12 @@ GK_GENERATORS.pib = function() {
             state.restartFn = function() { startCategory(id, name); };
             var gen2 = GK_GEN2 && GK_GEN2[id];
             var gen1 = GK_GENERATORS[id];
+            if (typeof WIKI !== 'undefined') { try { if (!WIKI._prefetching) WIKI.prefetch(); } catch(e) {} }
             for (var i = 0; i < 8; i++) {
                 var q = null;
                 if (gen2 && Math.random() < 0.6) { try { q = gen2(); } catch(e) {} }
                 if (!q && gen1) { try { q = gen1(); } catch(e) {} }
+                if (!q && typeof WIKI !== 'undefined') { try { q = WIKI.poolQuestion(); if (q) { q = JSON.parse(JSON.stringify(q)); } } catch(e) {} }
                 if (q) {
                     q.opts = q.opts || buildOptions(q.a);
                     if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
