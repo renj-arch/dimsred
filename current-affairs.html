@@ -5465,83 +5465,7 @@ GK_GENERATORS.pib = function() {
             return best;
         }
 
-        GK_GENERATORS.scjudgments = function() {
-            if (!_scJudgmentData || _scJudgmentData.length < 2) return null;
-            var items = _scJudgmentData;
-            var available = items.filter(function(q) { return !_scUsed[q.id]; });
-            if (available.length === 0) { _scUsed = {}; available = items; }
-            var selected = pick(available);
-            _scUsed[selected.id] = true;
-            var title = selected.title || '';
-            var desc = selected.description || '';
-            // Clean the title: remove date suffix
-            var caseName = title.replace(/\s+on\s+\d+\s+\w+\s*,\s*\d+$/, '').trim();
-            // Try to extract legal issue from description
-            var issue = _extractLegalIssue(desc);
-            var optsArr, answer, question;
-            if (issue) {
-                answer = issue;
-                question = 'Which legal area does this recent Supreme Court judgment relate to?<br><small>"' + caseName + '"</small>';
-                optsArr = [answer];
-                var pool = (GK_DISTRACTORS.scjudgments || []).filter(function(e) { return e !== answer && e.length > 2; });
-                var combined = shuffle(pool);
-                for (var i = 0; i < combined.length && optsArr.length < 4; i++) {
-                    if (optsArr.indexOf(combined[i]) < 0) optsArr.push(combined[i]);
-                }
-                while (optsArr.length < 4) optsArr.push('Supreme Court');
-                shuffle(optsArr);
-            } else {
-                // Fallback: blank out a party name
-                var parts = caseName.split(' vs ');
-                if (parts.length >= 2) {
-                    var side = pick(['Appellant','Respondent','Petitioner']);
-                    var isAppellant = side === 'Appellant' || side === 'Petitioner';
-                    var name = isAppellant ? parts[0].trim() : parts[1].trim();
-                    name = name.replace(/\s+@\s+.*$/, '').replace(/\s+And\s+.*$/, '').replace(/\s+Etc\s+.*$/i, '').trim();
-                    var blanked = isAppellant ? '______ vs ' + parts[1].trim() : parts[0].trim() + ' vs ______';
-                    answer = name;
-                    question = 'Who filed this case in the Supreme Court?<br><small>"' + blanked + '" (' + selected.pubDate.slice(0,10) + ')</small>';
-                    optsArr = [answer];
-                    var namePool = [];
-                    items.forEach(function(it) {
-                        var pt = (it.title || '').split(' vs ');
-                        pt.forEach(function(p) {
-                            var c = p.replace(/@.*$/, '').replace(/\s+on\s+.*$/, '').trim();
-                            if (c.length > 3 && c !== answer && namePool.indexOf(c) < 0) namePool.push(c);
-                        });
-                    });
-                    var combined = shuffle(namePool);
-                    for (var i = 0; i < combined.length && optsArr.length < 4; i++) {
-                        if (optsArr.indexOf(combined[i]) < 0) optsArr.push(combined[i]);
-                    }
-                    while (optsArr.length < 4) optsArr.push('Supreme Court');
-                    shuffle(optsArr);
-                } else {
-                    var entity = _extractKeyEntity(title);
-                    if (entity) {
-                        answer = entity;
-                        var blanked = title.replace(entity, '______');
-                        question = 'What entity is blanked in this Supreme Court case?<br><small>"' + blanked + '"</small>';
-                        optsArr = [answer];
-                        var pool = (GK_DISTRACTORS.scjudgments || []).filter(function(e) { return e !== answer; });
-                        var combined = shuffle(pool);
-                        for (var i = 0; i < combined.length && optsArr.length < 4; i++) {
-                            if (optsArr.indexOf(combined[i]) < 0) optsArr.push(combined[i]);
-                        }
-                        while (optsArr.length < 4) optsArr.push('Supreme Court');
-                        shuffle(optsArr);
-                    } else {
-                        return null;
-                    }
-                }
-            }
-            var caseSummary = (desc || '').replace(/<[^>]+>/g, '').trim().substring(0, 300).replace(/^The Supreme Court of India has\s+/i, '');
-            var factParts = [];
-            if (caseSummary) factParts.push(caseSummary);
-            var caseLink = selected.link || selected.id || '';
-            if (caseLink) factParts.push('<a href="' + caseLink + '" target="_blank" style="color:var(--cyan)">Read full judgment →</a>');
-            return { q: question, a: answer, opts: optsArr, hint: 'Think about the subject matter of the case', fact: factParts.join('<br><br>') };
-        };
+        GK_GENERATORS.scjudgments = function() { return null; }; // disabled — using Wikipedia instead
         function _buildVirtualFeed(items, keywords) {
             if (!items || !keywords) return [];
             var lower = keywords.map(function(k) { return k.toLowerCase(); });
@@ -5782,7 +5706,7 @@ GK_GENERATORS.pib = function() {
             state.restartFn = function() { startCategory(id, name); };
             var gen2 = GK_GEN2 && GK_GEN2[id];
             var gen1 = GK_GENERATORS[id];
-            if (typeof WIKI !== 'undefined') { try { if (!WIKI._prefetching) WIKI.prefetch(); } catch(e) {} try { var _wikiSearchMap = { sebi:'SEBI', scjudgments:'Supreme Court of India', isro:'ISRO', mea:'Ministry of External Affairs India', rbi:'Reserve Bank of India', defence:'Indian Armed Forces', environment:'Environment climate change India', sports:'Sports India', economics:'Indian economy', polity:'Constitution of India', sciTech:'Science technology India', health:'Healthcare India', education:'Education India', agriculture:'Agriculture India', energy:'Energy India', geography:'Geography of India', history:'History of India' }; if (_wikiSearchMap[id] && typeof WIKI !== 'undefined' && WIKI._batchSearch) WIKI._batchSearch(_wikiSearchMap[id], 15).then(function(qs) { if (qs && qs.length) { for (var si = 0; si < qs.length; si++) { if (WIKI._pool.length < 300) WIKI._pool.push(qs[si]); } } }); } catch(e) {} }
+            if (typeof WIKI !== 'undefined') { try { if (!WIKI._prefetching) WIKI.prefetch(); } catch(e) {} try { var _wikiSearchMap = { sebi:'SEBI', scjudgments:'Supreme Court judgments India landmark cases', isro:'ISRO', mea:'Ministry of External Affairs India', rbi:'Reserve Bank of India', defence:'Indian Armed Forces', environment:'Environment climate change India', sports:'Sports India', economics:'Indian economy', polity:'Constitution of India', sciTech:'Science technology India', health:'Healthcare India', education:'Education India', agriculture:'Agriculture India', energy:'Energy India', geography:'Geography of India', history:'History of India' }; if (_wikiSearchMap[id] && typeof WIKI !== 'undefined' && WIKI._batchSearch) WIKI._batchSearch(_wikiSearchMap[id], 15).then(function(qs) { if (qs && qs.length) { for (var si = 0; si < qs.length; si++) { if (WIKI._pool.length < 300) WIKI._pool.push(qs[si]); } } }); } catch(e) {} }
             for (var i = 0; i < 8; i++) {
                 var q = null;
                 if (typeof WIKI !== 'undefined') { try { var _wikiCatMap = { sebi:'economics', scjudgments:'polity', isro:'space', mea:'ir', rbi:'economics', defence:'defence', environment:'environment', sports:'sports', economics:'economics', polity:'polity', sciTech:'science', health:'health', education:'education', agriculture:'agriculture', energy:'energy', geography:'geography', history:'history' }; var _targetCat = _wikiCatMap[id]; if (_targetCat && WIKI._pool && WIKI._pool.length > 0) { for (var pi = 0; pi < WIKI._pool.length; pi++) { if (WIKI._pool[pi]._wikiCat === _targetCat) { q = WIKI._pool.splice(pi, 1)[0]; break; } } } if (!q) { q = WIKI.poolQuestion(); } if (q) { q = JSON.parse(JSON.stringify(q)); } } catch(e) {} }
