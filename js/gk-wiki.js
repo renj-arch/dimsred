@@ -349,6 +349,8 @@ WIKI.prefetch = function() {
     var todayKey = now.getFullYear() + '-' + m + '-' + d;
     WIKI.onThisDay(todayKey).then(function(items) {
       if (items && items.length) {
+        // Populate cache for Quick Fact additional info
+        WIKI._onThisDayCache = items.slice(0, 30);
         var otdQuestions = WIKI._makeFromOnThisDay(items);
         for (var i = 0; i < otdQuestions.length; i++) {
           if (WIKI._pool.length < WIKI._poolSize * 3) WIKI._pool.push(otdQuestions[i]);
@@ -378,6 +380,9 @@ WIKI._entityType = function(desc, firstSentence) {
   if (/(is a|refers to|concept|theory|principle|law|effect|phenomenon|process|method|technique|system|field|branch|discipline|science|art|practice)/.test(c)) return 'concept';
   return 'other';
 };
+
+WIKI._onThisDayCache = [];
+WIKI._currentEventCache = [];
 
 WIKI._ARTICLE_WORDS = { 'a':1, 'an':1, 'the':1, 'and':1, 'of':1, 'in':1, 'for':1, 'on':1, 'at':1, 'by':1, 'to':1, 'from':1, 'with':1 };
 

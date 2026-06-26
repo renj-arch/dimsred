@@ -5953,8 +5953,24 @@
             saveQuizSession();
             document.getElementById('streakNum').textContent = state.streak;
 
-            // Show quick fact
-            document.getElementById('intuitionText').textContent = q.fact || q.q;
+            // Show quick fact with bonus OnThisDay / CurrentEvents context
+            var factText = q.fact || q.q;
+            if (typeof WIKI !== 'undefined') {
+                var bonus = '';
+                if (WIKI._onThisDayCache && WIKI._onThisDayCache.length > 0) {
+                    var otd = WIKI._onThisDayCache[Math.floor(Math.random() * Math.min(WIKI._onThisDayCache.length, 5))];
+                    if (otd && otd.text) {
+                        var cleanText = otd.text.replace(/<[^>]+>/g, '').trim().substring(0, 120);
+                        if (cleanText.length > 10) bonus += '\n\n📅 On this day (' + (otd.year || '?') + '): ' + cleanText;
+                    }
+                }
+                if (!bonus && WIKI._currentEventCache && WIKI._currentEventCache.length > 0) {
+                    var ce = WIKI._currentEventCache[Math.floor(Math.random() * Math.min(WIKI._currentEventCache.length, 5))];
+                    if (ce && ce.length > 10) bonus += '\n\n📰 Latest: ' + ce.substring(0, 120);
+                }
+                if (bonus) factText += bonus;
+            }
+            document.getElementById('intuitionText').textContent = factText;
             document.getElementById('intuitionDisplay').style.display = 'block';
             // Enable hint click
             document.getElementById('qHint').onclick = function() {
