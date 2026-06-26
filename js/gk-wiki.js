@@ -763,6 +763,30 @@ WIKI.fetchDayEvents = function(year, month, day) {
     .catch(function() { return []; });
 };
 
+WIKI._monthEventCache = {};
+
+WIKI.fetchMonthEvents = function(year, month) {
+  var cacheKey = year + '-' + month;
+  if (WIKI._monthEventCache[cacheKey]) return Promise.resolve(WIKI._monthEventCache[cacheKey]);
+  var page = 'Portal:Current_events/' + MONTHS[month - 1] + '_' + year;
+  return fetch('https://en.wikipedia.org/w/api.php?action=parse&page=' + encodeURIComponent(page) + '&prop=text&format=json&origin=*')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data || !data.parse || !data.parse.text) return [];
+      var html = data.parse.text['*'] || '';
+      var items = [];
+      var liRe = /<li>(.*?)<\/li>/g;
+      var lm;
+      while ((lm = liRe.exec(html)) !== null) {
+        var txt = lm[1].replace(/<[^>]+>/g, '').trim();
+        if (txt.length > 30 && txt.length < 400) items.push(txt);
+      }
+      WIKI._monthEventCache[cacheKey] = items;
+      return items;
+    })
+    .catch(function() { return []; });
+};
+
 // ===== LIVE FACT FETCHING FOR QUIZ QUICK FACTS =====
 WIKI._factCache = {};
 WIKI._factFetching = {};
