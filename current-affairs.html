@@ -7020,7 +7020,7 @@
         function _fetchHistoricalForRange(startDate, endDate, callback) {
             if (typeof WIKI === 'undefined' || !WIKI.fetchDayEvents) { console.log('[HIST] WIKI.fetchDayEvents not available'); return callback([]); }
             var start = new Date(startDate);
-            var end = endDate ? new Date(endDate) : new Date(start);
+            var end = endDate ? new Date(endDate) : new Date();
             console.log('[HIST] Fetching range:', start.toString(), 'to', end.toString());
             var dates = [];
             for (var d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
