@@ -6056,32 +6056,13 @@
 
         function startTimedQuizWith(days) {
             if (!confirmAbandonQuiz()) return;
-            var label = days === 7 ? 'Weekly Quiz' : (days === 30 ? 'Monthly Quiz' : 'Quarterly Quiz');
-            state.cat = 'mixed';
-            state.categoryName = label;
-            state.idx = 0;
-            state.correct = 0;
-            state.streak = 0;
-            state.answered = false;
-            state.questions = [];
-            state.restartFn = function() { startTimedQuizWith(days); };
-            var allCats = Object.keys(GK_GENERATORS);
-            var count = days === 7 ? 10 : (days === 30 ? 15 : 20);
-            for (var i = 0; i < count; i++) {
-                var gen = GK_GENERATORS[pick(allCats)];
-                if (!gen) continue;
-                var q = gen();
-                q.opts = q.opts || buildOptions(q.a);
-                state.questions.push(q);
-            }
-            document.getElementById('welcome').style.display = 'none';
-            document.getElementById('qArea').classList.add('active');
-            document.getElementById('scoreBar').classList.add('show');
-            document.getElementById('restartBtn').style.display = 'inline-block';
-            document.getElementById('pibHeaderBtn').style.display = 'inline-block';
-            document.getElementById('timedQuizOptions').style.display = 'none';
-            document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
-            showQuestion();
+            var label = days === 7 ? 'Weekly Quiz' : (days === 30 ? 'Monthly Quiz' : (days === 365 ? 'Yearly Quiz' : 'Quarterly Quiz'));
+            var now = new Date();
+            var endStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+            var start = new Date(now);
+            start.setDate(start.getDate() - days);
+            var startStr = start.getFullYear() + '-' + String(start.getMonth() + 1).padStart(2, '0') + '-' + String(start.getDate()).padStart(2, '0');
+            _runTimedQuiz(startStr, endStr, label + ' (unlimited)', 9999);
         }
 
         function startCustomDateQuiz() {
