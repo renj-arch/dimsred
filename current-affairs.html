@@ -7000,6 +7000,20 @@
             _runTimedQuiz(cutoff.toISOString().slice(0,10), null, label, count);
         };
         
+        function _getAvailableDateRange() {
+            var minDate = null, maxDate = null;
+            if (_quizJsonData && _quizJsonData.questions) {
+                _quizJsonData.questions.forEach(function(q) {
+                    if (q.pubDate) {
+                        var d = q.pubDate.slice(0,10);
+                        if (!minDate || d < minDate) minDate = d;
+                        if (!maxDate || d > maxDate) maxDate = d;
+                    }
+                });
+            }
+            return { min: minDate || 'N/A', max: maxDate || 'N/A' };
+        }
+
         function _runTimedQuiz(startDate, endDate, label, targetCount) {
             if (!confirmAbandonQuiz()) return;
             state.cat = 'mixed';
@@ -7038,7 +7052,6 @@
             if (remaining > 0) {
                 if (typeof WIKI !== 'undefined') {
                     try {
-                        // Restart prefetch to get recent changes + current events for timeline accuracy
                         WIKI._prefetching = false;
                         WIKI.prefetch();
                     } catch(e) {}
@@ -7048,7 +7061,8 @@
             if (state.questions.length > 0) {
                 showQuestion();
             } else {
-                document.getElementById('qText').innerHTML = 'No questions found for this period. <button onclick="location.reload()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Retry</button>';
+                var dr = _getAvailableDateRange();
+                document.getElementById('qText').innerHTML = 'No news data for this period. Available: ' + dr.min + ' to ' + dr.max + '. <button onclick="location.reload()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Back</button>';
             }
         }
 
