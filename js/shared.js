@@ -553,18 +553,8 @@
     });
   }
 
-  // ========== 11. LAB BUTTON FOR PAPER PAGES ==========
-  if (!document.querySelector('.auth-btn')) {
-    var nav = document.querySelector('.nav-links, .site-nav');
-    if (nav) {
-      var labBtn = document.createElement('a');
-      labBtn.className = 'auth-btn';
-      labBtn.href = 'micro-test.html';
-      labBtn.textContent = 'Lab';
-      labBtn.style.cssText = 'background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none;transition:all .2s';
-      nav.appendChild(labBtn);
-    }
-  }
+  // ========== 11. DRILL LINK FOR PAPER PAGES ==========
+  // Already present in static nav on all pages
 
   // ========== 13. GOAL PROMPT ON FIRST VISIT ==========
   if (!localStorage.getItem(GOALS_KEY)) {
