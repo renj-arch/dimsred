@@ -215,10 +215,11 @@
             <div id="timedQuizOptions" style="display:none;margin-bottom:14px;padding:12px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);text-align:center">
                 <div style="font-size:.82em;font-weight:600;margin-bottom:10px;color:var(--text-sec)">Choose mix of static GK + current affairs</div>
                 <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
-                    <button class="action-btn secondary" onclick="startTimedQuizWith(7)" style="flex:1;min-width:80px;padding:10px">📅 7 days</button>
-                    <button class="action-btn secondary" onclick="startTimedQuizWith(30)" style="flex:1;min-width:80px;padding:10px">📅 30 days</button>
-                    <button class="action-btn secondary" onclick="startTimedQuizWith(90)" style="flex:1;min-width:80px;padding:10px">📅 90 days</button>
-                    <button class="action-btn secondary" onclick="startTimedQuizWith(365)" style="flex:1;min-width:80px;padding:10px">📅 1 year</button>
+                    <button class="action-btn secondary" onclick="startTimedQuizWith(1)" style="flex:1;min-width:60px;padding:10px">📅 Today</button>
+                    <button class="action-btn secondary" onclick="startTimedQuizWith(7)" style="flex:1;min-width:60px;padding:10px">📅 7 days</button>
+                    <button class="action-btn secondary" onclick="startTimedQuizWith(30)" style="flex:1;min-width:60px;padding:10px">📅 30 days</button>
+                    <button class="action-btn secondary" onclick="startTimedQuizWith(90)" style="flex:1;min-width:60px;padding:10px">📅 90 days</button>
+                    <button class="action-btn secondary" onclick="startTimedQuizWith(365)" style="flex:1;min-width:60px;padding:10px">📅 1 year</button>
                 </div>
                 <div style="margin-top:10px;display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap">
                     <span style="font-size:.75em;color:var(--text-muted)">Custom range:</span>
@@ -6056,7 +6057,7 @@
 
         function startTimedQuizWith(days) {
             if (!confirmAbandonQuiz()) return;
-            var label = days === 7 ? 'Weekly Quiz' : (days === 30 ? 'Monthly Quiz' : (days === 365 ? 'Yearly Quiz' : 'Quarterly Quiz'));
+            var label = days === 1 ? 'Today\'s Quiz' : (days === 7 ? 'Weekly Quiz' : (days === 30 ? 'Monthly Quiz' : (days === 365 ? 'Yearly Quiz' : 'Quarterly Quiz')));
             var now = new Date();
             var endStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
             var start = new Date(now);
