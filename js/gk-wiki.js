@@ -736,6 +736,33 @@ WIKI.prefetchCurrentEvents = function() {
   }).catch(function() {});
 };
 
+// ===== HISTORICAL CURRENT EVENTS (Wikipedia per-day archive) =====
+var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+WIKI._dayEventCache = {};
+
+WIKI.fetchDayEvents = function(year, month, day) {
+  var cacheKey = year + '-' + month + '-' + day;
+  if (WIKI._dayEventCache[cacheKey]) return Promise.resolve(WIKI._dayEventCache[cacheKey]);
+  var page = 'Portal:Current+events/' + year + '+' + MONTHS[month - 1] + '+' + day;
+  return fetch('https://en.wikipedia.org/w/api.php?action=parse&page=' + page + '&prop=text&format=json&origin=*')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data || !data.parse || !data.parse.text) return [];
+      var html = data.parse.text['*'] || '';
+      var items = [];
+      var liRe = /<li>(.*?)<\/li>/g;
+      var lm;
+      while ((lm = liRe.exec(html)) !== null) {
+        var txt = lm[1].replace(/<[^>]+>/g, '').trim();
+        if (txt.length > 30 && txt.length < 400) items.push(txt);
+      }
+      WIKI._dayEventCache[cacheKey] = items;
+      return items;
+    })
+    .catch(function() { return []; });
+};
+
 // ===== LIVE FACT FETCHING FOR QUIZ QUICK FACTS =====
 WIKI._factCache = {};
 WIKI._factFetching = {};

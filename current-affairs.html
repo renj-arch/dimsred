@@ -7014,6 +7014,32 @@
             return { min: minDate || 'N/A', max: maxDate || 'N/A' };
         }
 
+        function _fetchHistoricalForRange(startDate, endDate, callback) {
+            if (typeof WIKI === 'undefined' || !WIKI.fetchDayEvents) return callback([]);
+            var start = new Date(startDate);
+            var end = endDate ? new Date(endDate) : new Date(start);
+            var dates = [];
+            for (var d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                dates.push({ y: d.getFullYear(), m: d.getMonth() + 1, day: d.getDate(), date: new Date(d) });
+            }
+            var allDays = [];
+            var fetched = 0;
+            dates.forEach(function(dInfo) {
+                WIKI.fetchDayEvents(dInfo.y, dInfo.m, dInfo.day).then(function(items) {
+                    if (items.length > 0) {
+                        var label = MONTHS[dInfo.m - 1] + ' ' + dInfo.day + ', ' + dInfo.y;
+                        allDays.push({ date: label, items: items });
+                    }
+                    fetched++;
+                    if (fetched >= dates.length) callback(allDays);
+                }).catch(function() {
+                    fetched++;
+                    if (fetched >= dates.length) callback(allDays);
+                });
+            });
+            if (dates.length === 0) callback([]);
+        }
+
         function _runTimedQuiz(startDate, endDate, label, targetCount) {
             if (!confirmAbandonQuiz()) return;
             state.cat = 'mixed';
@@ -7048,21 +7074,58 @@
             document.getElementById('qText').innerHTML = 'Loading questions...';
             document.getElementById('optGrid').innerHTML = '';
             
-            var remaining = targetCount - state.questions.length;
-            if (remaining > 0) {
-                if (typeof WIKI !== 'undefined') {
-                    try {
-                        WIKI._prefetching = false;
-                        WIKI.prefetch();
-                    } catch(e) {}
+            function _finishQuizSetup() {
+                var remaining = targetCount - state.questions.length;
+                if (remaining > 0) {
+                    if (typeof WIKI !== 'undefined') {
+                        try {
+                            WIKI._prefetching = false;
+                            WIKI.prefetch();
+                        } catch(e) {}
+                    }
+                    generateWikiQuestions(remaining);
                 }
-                generateWikiQuestions(remaining);
+                if (state.questions.length > 0) {
+                    showQuestion();
+                } else {
+                    var dr = _getAvailableDateRange();
+                    document.getElementById('qText').innerHTML = 'No news data for this period. Available: ' + dr.min + ' to ' + dr.max + '. <button onclick="location.reload()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Back</button>';
+                }
             }
-            if (state.questions.length > 0) {
-                showQuestion();
+            
+            if (state.questions.length < targetCount && startDate) {
+                _fetchHistoricalForRange(startDate, endDate, function(dayEntries) {
+                    if (dayEntries.length > 0) {
+                        var added = 0;
+                        shuffle(dayEntries).forEach(function(day) {
+                            if (state.questions.length >= targetCount) return;
+                            shuffle(day.items).forEach(function(txt) {
+                                if (state.questions.length >= targetCount) return;
+                                if (txt.length < 30 || txt.length > 250) return;
+                                var sentMatch = txt.match(/[^.!?]+[.!?]/g);
+                                var s = sentMatch ? sentMatch[0] : txt;
+                                if (s.length < 20) return;
+                                var titleMatch = txt.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b/g);
+                                var entity = titleMatch ? titleMatch.filter(function(t) { return t.length > 4 && t.length < 50; })[0] : '';
+                                if (!entity) entity = txt.split(' ').filter(function(w) { return w.length > 5; }).slice(0,2).join(' ');
+                                if (!entity || entity.length < 4) return;
+                                var cat = 'Historical: ' + day.date;
+                                state.questions.push({
+                                    q: s,
+                                    a: entity,
+                                    fact: txt.substring(0, 200),
+                                    hint: cat,
+                                    _source: 'wiki_historical',
+                                    opts: WIKI._buildOpts(entity)
+                                });
+                                added++;
+                            });
+                        });
+                    }
+                    _finishQuizSetup();
+                });
             } else {
-                var dr = _getAvailableDateRange();
-                document.getElementById('qText').innerHTML = 'No news data for this period. Available: ' + dr.min + ' to ' + dr.max + '. <button onclick="location.reload()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Back</button>';
+                _finishQuizSetup();
             }
         }
 
