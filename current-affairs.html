@@ -5765,6 +5765,7 @@ GK_GENERATORS.pib = function() {
 
         function startCategory(id, name) {
             if (!confirmAbandonQuiz()) return;
+            try { localStorage.removeItem(SESSION_KEY); } catch(e) {}
             state.cat = id;
             state.categoryName = name;
             state.idx = 0;
