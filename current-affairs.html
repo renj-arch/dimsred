@@ -5364,67 +5364,7 @@ GK_GENERATORS.pib = function() {
         // ---- SEBI procedural generator ----
         var _sebiUsed = {};
 
-        GK_GENERATORS.sebi = function() {
-            if (!_sebiFeedData || _sebiFeedData.length < 2) return null;
-            // Keep only exam-relevant SEBI items
-            var relevant = _sebiFeedData.filter(function(i) {
-                var t = i.title.toUpperCase();
-                return t.indexOf('BOARD MEETING') !== -1 || t.indexOf('CIRCULAR') !== -1
-                    || t.indexOf('FRAMEWORK') !== -1 || t.indexOf('GUIDELINES') !== -1
-                    || t.indexOf('REGULATIONS') !== -1 || t.indexOf('PRESS RELEASE') !== -1
-                    || t.indexOf('KEY DECISIONS') !== -1 || t.indexOf('CONSULTATION') !== -1
-                    || t.indexOf('AMENDMENT') !== -1 || t.indexOf('REFORMS') !== -1;
-            });
-            if (relevant.length < 2) {
-                // Fall back to any SEBI items with useful-looking titles
-                relevant = _sebiFeedData.filter(function(i) {
-                    var t = i.title.toUpperCase();
-                    return t.length > 20 && !t.match(/RELEASE ORDER|RECOVERY CERTIFICATE|COMPLETION OF|NOTICE OF DEMAND/);
-                });
-            }
-            if (relevant.length < 2) relevant = _sebiFeedData;
-            var available = relevant.filter(function(q) { return !_sebiUsed[q.id]; });
-            if (available.length === 0) { _sebiUsed = {}; available = relevant; }
-            var selected = pick(available);
-            _sebiUsed[selected.id] = true;
-            var title = selected.title || '';
-            var clean = title.replace(/[–—•·′″]/g, ' ').trim();
-            // Blank out key terms for the question
-            var terms = ['SEBI','Securities and Exchange Board of India','Board Meeting','Circular','Framework','Guidelines'];
-            var blanked = null;
-            var answer = null;
-            for (var ti = 0; ti < terms.length; ti++) {
-                var idx = clean.toUpperCase().indexOf(terms[ti].toUpperCase());
-                if (idx !== -1) {
-                    answer = terms[ti];
-                    blanked = clean.slice(0, idx) + '______' + clean.slice(idx + terms[ti].length);
-                    break;
-                }
-            }
-            if (!blanked) {
-                var w = _extractKeyEntity(clean);
-                if (w) { blanked = clean.replace(w, '______'); answer = w; }
-            }
-            if (!blanked) {
-                blanked = clean;
-                answer = 'SEBI';
-            }
-            var optsArr = [answer];
-            var pool = (GK_DISTRACTORS.sebi || []).filter(function(e) { return e !== answer; });
-            var combined = shuffle(pool);
-            for (var i = 0; i < combined.length && optsArr.length < 4; i++) {
-                if (optsArr.indexOf(combined[i]) < 0) optsArr.push(combined[i]);
-            }
-            while (optsArr.length < 4) optsArr.push('None of the above');
-            shuffle(optsArr);
-            return {
-                q: 'Which term is blanked in this SEBI headline?<br><small>"' + blanked + '"</small>',
-                a: answer,
-                opts: optsArr,
-                hint: 'Look for SEBI-related keywords: regulations, board decisions, circulars',
-                fact: selected.link ? 'Source: <a href="' + selected.link + '" target="_blank" style="color:var(--cyan)">View release</a>' : ''
-            };
-        };
+        GK_GENERATORS.sebi = function() { return null; }; // disabled — using Wikipedia instead
 
         // ---- SC Judgments procedural generator ----
         var _scUsed = {};
@@ -5474,21 +5414,9 @@ GK_GENERATORS.pib = function() {
                 return lower.some(function(k) { return text.indexOf(k) >= 0; });
             });
         }
-        // ---- RBI procedural generator ----
-        GK_GENERATORS.rbi = function() {
-            if (!_rbiFeedData || _rbiFeedData.length < 2) return null;
-            return _feedGenHelper(_rbiFeedData, 'rbi');
-        };
-        // ---- ISRO procedural generator ----
-        GK_GENERATORS.isro = function() {
-            if (!_isroFeedData || _isroFeedData.length < 2) return null;
-            return _feedGenHelper(_isroFeedData, 'isro');
-        };
-        // ---- MEA procedural generator ----
-        GK_GENERATORS.mea = function() {
-            if (!_meaFeedData || _meaFeedData.length < 2) return null;
-            return _feedGenHelper(_meaFeedData, 'mea');
-        };
+        GK_GENERATORS.rbi = function() { return null; }; // disabled — using Wikipedia instead
+        GK_GENERATORS.isro = function() { return null; }; // disabled — using Wikipedia instead
+        GK_GENERATORS.mea = function() { return null; }; // disabled — using Wikipedia instead
         function _feedGenHelper(feedData, cat) {
             var usedKey = '_' + cat + 'Used';
             if (!window[usedKey]) window[usedKey] = {};
@@ -5706,7 +5634,7 @@ GK_GENERATORS.pib = function() {
             state.restartFn = function() { startCategory(id, name); };
             var gen2 = GK_GEN2 && GK_GEN2[id];
             var gen1 = GK_GENERATORS[id];
-            if (typeof WIKI !== 'undefined') { try { if (!WIKI._prefetching) WIKI.prefetch(); } catch(e) {} try { var _wikiSearchMap = { sebi:'SEBI', scjudgments:'Supreme Court judgments India landmark cases', isro:'ISRO', mea:'Ministry of External Affairs India', rbi:'Reserve Bank of India', defence:'Indian Armed Forces', environment:'Environment climate change India', sports:'Sports India', economics:'Indian economy', polity:'Constitution of India', sciTech:'Science technology India', health:'Healthcare India', education:'Education India', agriculture:'Agriculture India', energy:'Energy India', geography:'Geography of India', history:'History of India' }; if (_wikiSearchMap[id] && typeof WIKI !== 'undefined' && WIKI._batchSearch) WIKI._batchSearch(_wikiSearchMap[id], 15).then(function(qs) { if (qs && qs.length) { for (var si = 0; si < qs.length; si++) { if (WIKI._pool.length < 300) WIKI._pool.push(qs[si]); } } }); } catch(e) {} }
+            if (typeof WIKI !== 'undefined') { try { if (!WIKI._prefetching) WIKI.prefetch(); } catch(e) {} try { var _wikiSearchMap = { sebi:'Securities and Exchange Board of India SEBI', scjudgments:'Supreme Court judgments India landmark cases', isro:'Indian Space Research Organisation ISRO', mea:'Ministry of External Affairs India MEA', rbi:'Reserve Bank of India RBI', defence:'Indian Armed Forces', environment:'Environment climate change India', sports:'Sports India', economics:'Indian economy', polity:'Constitution of India', sciTech:'Science technology India', health:'Healthcare India', education:'Education India', agriculture:'Agriculture India', energy:'Energy India', geography:'Geography of India', history:'History of India' }; if (_wikiSearchMap[id] && typeof WIKI !== 'undefined' && WIKI._batchSearch) WIKI._batchSearch(_wikiSearchMap[id], 15).then(function(qs) { if (qs && qs.length) { for (var si = 0; si < qs.length; si++) { if (WIKI._pool.length < 300) WIKI._pool.push(qs[si]); } } }); } catch(e) {} }
             for (var i = 0; i < 8; i++) {
                 var q = null;
                 if (typeof WIKI !== 'undefined') { try { var _wikiCatMap = { sebi:'economics', scjudgments:'polity', isro:'space', mea:'ir', rbi:'economics', defence:'defence', environment:'environment', sports:'sports', economics:'economics', polity:'polity', sciTech:'science', health:'health', education:'education', agriculture:'agriculture', energy:'energy', geography:'geography', history:'history' }; var _targetCat = _wikiCatMap[id]; if (_targetCat && WIKI._pool && WIKI._pool.length > 0) { for (var pi = 0; pi < WIKI._pool.length; pi++) { if (WIKI._pool[pi]._wikiCat === _targetCat) { q = WIKI._pool.splice(pi, 1)[0]; break; } } } if (!q) { q = WIKI.poolQuestion(); } if (q) { q = JSON.parse(JSON.stringify(q)); } } catch(e) {} }
