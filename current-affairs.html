@@ -7088,7 +7088,8 @@
                             WIKI.prefetch();
                         } catch(e) {}
                     }
-                    generateWikiQuestions(remaining);
+                    // Cap supplement to at most 15 wiki questions for historical ranges
+                    generateWikiQuestions(Math.min(remaining, 15));
                 }
                 if (state.questions.length > 0) {
                     showQuestion();
@@ -7101,11 +7102,9 @@
             if (state.questions.length < targetCount && startDate) {
                 _fetchHistoricalForRange(startDate, endDate, function(dayEntries) {
                     if (dayEntries.length > 0) {
-                        var added = 0;
                         shuffle(dayEntries).forEach(function(day) {
-                            if (state.questions.length >= targetCount) return;
                             shuffle(day.items).forEach(function(txt) {
-                                if (state.questions.length >= targetCount) return;
+                                if (state.questions.length >= 200) return;
                                 if (txt.length < 30 || txt.length > 250) return;
                                 var sentMatch = txt.match(/[^.!?]+[.!?]/g);
                                 var s = sentMatch ? sentMatch[0] : txt;
@@ -7139,7 +7138,7 @@
             var endEl = document.getElementById('quizEndDate');
             var label = 'Custom Quiz';
             if (startEl.value && endEl.value) label = '📅 ' + startEl.value.slice(5) + ' to ' + endEl.value.slice(5);
-            _runTimedQuiz(startEl.value, endEl.value, label, 12);
+            _runTimedQuiz(startEl.value, endEl.value, label + ' (unlimited)', 9999);
         };
         
         // === MEGA QUIZ ENGINE — WIKI ONLY ===
