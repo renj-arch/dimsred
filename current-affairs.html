@@ -7160,27 +7160,81 @@
             if (state.questions.length < targetCount && startDate) {
                 console.log('[QUIZ] Triggering historical fetch for', startDate, 'to', endDate);
                 _fetchHistoricalForRange(startDate, endDate, function(dayEntries) {
+                    var _allEntities = [];
+                    var _allNumbers = [];
                     if (dayEntries.length > 0) {
+                        dayEntries.forEach(function(day) {
+                            (day.items || []).forEach(function(txt) {
+                                txt.replace(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b/g, function(m) { if (m.length > 4 && _allEntities.indexOf(m) < 0) _allEntities.push(m); });
+                                var numMatch = txt.match(/\b(\d{1,3}(?:,\d{3})*(?:\.\d+)?)\s*(million|billion|trillion|lakh|crore|%|km|kg|MW|GW)?\b/i);
+                                if (numMatch && numMatch[1] && numMatch[1].length < 8) { var nv = numMatch[1] + (numMatch[2] ? ' ' + numMatch[2] : ''); if (_allNumbers.indexOf(nv) < 0) _allNumbers.push(nv); }
+                            });
+                        });
                         shuffle(dayEntries).forEach(function(day) {
                             shuffle(day.items).forEach(function(txt) {
                                 if (state.questions.length >= 200) return;
-                                if (txt.length < 30 || txt.length > 250) return;
-                                var sentMatch = txt.match(/[^.!?]+[.!?]/g);
-                                var s = sentMatch ? sentMatch[0] : txt;
-                                if (s.length < 20) return;
-                                var titleMatch = txt.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b/g);
-                                var entity = titleMatch ? titleMatch.filter(function(t) { return t.length > 4 && t.length < 50; })[0] : '';
-                                if (!entity) entity = txt.split(' ').filter(function(w) { return w.length > 5; }).slice(0,2).join(' ');
-                                if (!entity || entity.length < 4) return;
-                                var cat = 'Historical: ' + day.date;
-                                state.questions.push({
-                                    q: s,
-                                    a: entity,
-                                    fact: txt.substring(0, 200),
-                                    hint: cat,
-                                    _source: 'wiki_historical',
-                                    opts: WIKI._buildOpts(entity)
-                                });
+                                if (txt.length < 30 || txt.length > 300) return;
+                                var sent = txt.replace(/<[^>]+>/g, '').trim();
+                                var catTag = 'News: ' + day.date;
+
+                                // Priority 1: Number fill-in-the-blank
+                                var numM = sent.match(/\b(\d{1,3}(?:,\d{3})*(?:\.\d+)?)\s*(million|billion|trillion|lakh|crore|%|km|kg|MW|GW|MW|votes|people|killed|injured|dead|arrested|new|crore|rupees)?\b/i);
+                                if (numM) {
+                                    var numVal = numM[1];
+                                    var numUnit = numM[2] || '';
+                                    var fullNum = numVal + (numUnit ? ' ' + numUnit : '');
+                                    var blanked = sent.replace(new RegExp(numVal.replace(',', '\\,'), ''), '_____');
+                                    if (blanked !== sent && blanked.length > 20 && blanked.length < 200) {
+                                        var pool = _allNumbers.filter(function(n) { return n !== fullNum; }).slice(0, 5);
+                                        var opts = [fullNum].concat(pool);
+                                        while (opts.length < 4) opts.push('None');
+                                        state.questions.push({ q: blanked, a: fullNum, fact: sent.substring(0, 200), hint: catTag, _source: 'wiki_historical', opts: shuffle(opts) });
+                                        return;
+                                    }
+                                }
+
+                                // Priority 2: True/False by swapping entity
+                                var ents = txt.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b/g);
+                                var goodEnts = ents ? ents.filter(function(e) { return e.length > 4 && e.length < 50; }) : [];
+                                if (goodEnts.length > 0) {
+                                    var chosen = pick(goodEnts);
+                                    var wrongPool = _allEntities.filter(function(e) { return e !== chosen && e.length > 4; });
+                                    var wrongEnt = pick(wrongPool);
+                                    if (wrongEnt && Math.random() < 0.4) {
+                                        var swapped = sent.replace(chosen, wrongEnt);
+                                        if (swapped !== sent) {
+                                            state.questions.push({ q: 'True or False: ' + swapped.substring(0, 150).replace(/\.$/, '') + '.', a: 'False', fact: sent.substring(0, 200), hint: catTag, _source: 'wiki_historical', opts: ['True', 'False'] });
+                                            return;
+                                        }
+                                    }
+                                    // True statement
+                                    if (Math.random() < 0.3) {
+                                        state.questions.push({ q: 'True or False: ' + sent.substring(0, 150).replace(/\.$/, '') + '.', a: 'True', fact: sent.substring(0, 200), hint: catTag, _source: 'wiki_historical', opts: ['True', 'False'] });
+                                        return;
+                                    }
+                                }
+
+                                // Priority 3: Entity fill-in-the-blank
+                                if (goodEnts.length > 0) {
+                                    var e = pick(goodEnts);
+                                    var blankedE = sent.replace(e, '_____');
+                                    if (blankedE !== sent && blankedE.length > 20 && blankedE.length < 200) {
+                                        var ePool = _allEntities.filter(function(x) { return x !== e; }).slice(0, 5);
+                                        var eOpts = [e].concat(ePool);
+                                        while (eOpts.length < 4) eOpts.push('None');
+                                        state.questions.push({ q: blankedE, a: e, fact: sent.substring(0, 200), hint: catTag, _source: 'wiki_historical', opts: shuffle(eOpts) });
+                                        return;
+                                    }
+                                }
+
+                                // Fallback: sentence as question with entity answer
+                                if (goodEnts.length > 0) {
+                                    var e2 = pick(goodEnts);
+                                    var ePool2 = _allEntities.filter(function(x) { return x !== e2; }).slice(0, 5);
+                                    var eOpts2 = [e2].concat(ePool2);
+                                    while (eOpts2.length < 4) eOpts2.push('None');
+                                    state.questions.push({ q: sent.substring(0, 150), a: e2, fact: sent.substring(0, 200), hint: catTag, _source: 'wiki_historical', opts: shuffle(eOpts2) });
+                                }
                             });
                         });
                     }
