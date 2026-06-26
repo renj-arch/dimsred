@@ -7015,30 +7015,38 @@
         }
 
         function _fetchHistoricalForRange(startDate, endDate, callback) {
-            if (typeof WIKI === 'undefined' || !WIKI.fetchDayEvents) return callback([]);
+            if (typeof WIKI === 'undefined' || !WIKI.fetchDayEvents) { console.log('[HIST] WIKI.fetchDayEvents not available'); return callback([]); }
             var start = new Date(startDate);
             var end = endDate ? new Date(endDate) : new Date(start);
+            console.log('[HIST] Fetching range:', start.toString(), 'to', end.toString());
             var dates = [];
             for (var d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
                 dates.push({ y: d.getFullYear(), m: d.getMonth() + 1, day: d.getDate(), date: new Date(d) });
             }
+            console.log('[HIST] Dates to fetch:', dates.length);
             if (dates.length === 0) return callback([]);
             var allDays = [];
             // Fetch sequentially with delay to avoid Wikipedia throttling
             var di = 0;
             function fetchNext() {
-                if (di >= dates.length) return callback(allDays);
+                if (di >= dates.length) {
+                    console.log('[HIST] All fetched, days with data:', allDays.length);
+                    return callback(allDays);
+                }
                 var dInfo = dates[di];
                 di++;
+                var pageUrl = 'https://en.wikipedia.org/w/api.php?action=parse&page=Portal:Current_events/' + dInfo.y + '_' + MONTHS[dInfo.m - 1] + '_' + dInfo.day + '&prop=text&format=json&origin=*';
+                console.log('[HIST] Fetching', dInfo.y, MONTHS[dInfo.m - 1], dInfo.day, 'URL:', pageUrl.substring(0,100));
                 WIKI.fetchDayEvents(dInfo.y, dInfo.m, dInfo.day).then(function(items) {
+                    console.log('[HIST] Got', items.length, 'items for', dInfo.y, MONTHS[dInfo.m - 1], dInfo.day);
                     if (items.length > 0) {
                         var label = MONTHS[dInfo.m - 1] + ' ' + dInfo.day + ', ' + dInfo.y;
                         allDays.push({ date: label, items: items });
-                        // Update loading status
                         document.getElementById('qText').innerHTML = 'Fetching news for ' + label + '... (' + di + '/' + dates.length + ')';
                     }
                     setTimeout(fetchNext, 250);
-                }).catch(function() {
+                }).catch(function(e) {
+                    console.log('[HIST] Fetch failed for', dInfo.y, MONTHS[dInfo.m - 1], dInfo.day, e);
                     setTimeout(fetchNext, 250);
                 });
             }
@@ -7099,7 +7107,9 @@
                 }
             }
             
+            console.log('[QUIZ] Questions from local:', state.questions.length, 'target:', targetCount, 'startDate:', startDate);
             if (state.questions.length < targetCount && startDate) {
+                console.log('[QUIZ] Triggering historical fetch for', startDate, 'to', endDate);
                 _fetchHistoricalForRange(startDate, endDate, function(dayEntries) {
                     if (dayEntries.length > 0) {
                         shuffle(dayEntries).forEach(function(day) {
