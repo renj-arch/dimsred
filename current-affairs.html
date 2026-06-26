@@ -5766,6 +5766,7 @@ GK_GENERATORS.pib = function() {
         function startCategory(id, name) {
             if (!confirmAbandonQuiz()) return;
             try { localStorage.removeItem(SESSION_KEY); } catch(e) {}
+            if (state._poolTimerId) { clearInterval(state._poolTimerId); state._poolTimerId = null; }
             state.cat = id;
             state.categoryName = name;
             state.idx = 0;
@@ -5799,9 +5800,9 @@ GK_GENERATORS.pib = function() {
                 document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
                 document.getElementById('qText').innerHTML = 'Loading questions...<br><span style="font-size:.72em;color:var(--text-muted)">generating questions</span>';
                 document.getElementById('optGrid').innerHTML = '';
-                var _poolCheck = setInterval(function() {
+                state._poolTimerId = setInterval(function() {
                     if (WIKI._pool && WIKI._pool.length > 0) {
-                        clearInterval(_poolCheck);
+                        clearInterval(state._poolTimerId); state._poolTimerId = null;
                         var _wikiCatMap = { sebi:'economics', scjudgments:'polity', isro:'space', mea:'ir', rbi:'economics', defence:'defence', environment:'environment', sports:'sports', economics:'economics', polity:'polity', sciTech:'science', health:'health', education:'education', agriculture:'agriculture', energy:'energy' }, _targetCat = _wikiCatMap[id];
                         for (var wi = 0; wi < 8 && state.questions.length < 8; wi++) {
                             var wq = null;
@@ -5813,7 +5814,7 @@ GK_GENERATORS.pib = function() {
                         else document.getElementById('qText').innerHTML = 'Still loading... <button onclick="' + (state.restartFn ? 'state.restartFn()' : 'location.reload()') + '" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Retry</button>';
                     }
                 }, 800);
-                setTimeout(function() { clearInterval(_poolCheck); if (state.questions.length === 0) document.getElementById('qText').innerHTML = 'Timed out. <button onclick="' + (state.restartFn ? 'state.restartFn()' : 'location.reload()') + '" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Retry</button>'; }, 12000);
+                setTimeout(function() { if (state._poolTimerId) { clearInterval(state._poolTimerId); state._poolTimerId = null; } if (state.questions.length === 0) document.getElementById('qText').innerHTML = 'Timed out. <button onclick="' + (state.restartFn ? 'state.restartFn()' : 'location.reload()') + '" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Retry</button>'; }, 12000);
                 return;
             }
             document.getElementById('welcome').style.display = 'none';
