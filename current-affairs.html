@@ -5911,13 +5911,12 @@
             document.getElementById('nextBtn').classList.add('hidden');
             document.getElementById('intuitionDisplay').style.display = 'none';
 
-            var keyLabels = ['1','2','3','4'];
             var grid = document.getElementById('optGrid');
             grid.innerHTML = '';
             q.opts.forEach(function(o, i) {
                 var el = document.createElement('div');
                 el.className = 'q-opt';
-                el.innerHTML = '<span style="font-size:.65em;color:var(--text-muted);margin-right:6px">' + keyLabels[i] + '</span>' + o;
+                el.innerHTML = '<span style="font-size:.65em;color:var(--text-muted);margin-right:6px">' + (i + 1) + '</span>' + o;
                 el.setAttribute('data-val', o);
                 el.onclick = function() { answerQuestion(this); };
                 grid.appendChild(el);
