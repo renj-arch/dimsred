@@ -744,7 +744,7 @@ WIKI._dayEventCache = {};
 WIKI.fetchDayEvents = function(year, month, day) {
   var cacheKey = year + '-' + month + '-' + day;
   if (WIKI._dayEventCache[cacheKey]) return Promise.resolve(WIKI._dayEventCache[cacheKey]);
-  var page = 'Portal:Current+events/' + year + '+' + MONTHS[month - 1] + '+' + day;
+  var page = 'Portal:Current_events/' + year + '_' + MONTHS[month - 1] + '_' + day;
   return fetch('https://en.wikipedia.org/w/api.php?action=parse&page=' + page + '&prop=text&format=json&origin=*')
     .then(function(r) { return r.json(); })
     .then(function(data) {
