@@ -115,7 +115,7 @@ function genBody(key, cfg) {
   // Footer
   h += '<footer class="site-footer">\n';
   h += '    <p>Free practice resources for ' + esc(cfg.full) + '. Not affiliated with UPSC or any examination body.</p>\n';
-  h += '    <div class="links"><a href="../privacy.html">Privacy</a><a href="../lab.html">Lab</a><a href="../dashboard.html">Dashboard</a></div>\n';
+  h += '    <div class="links"><a href="../privacy.html">Privacy</a><a href="../micro-test.html">🎯 Drill</a><a href="../dashboard.html">Dashboard</a></div>\n';
   h += '</footer>\n';
   h += '<script src="js/main.js"></script>\n';
   h += '<script src="../js/supabase.js?v=20260529b"></script>\n';

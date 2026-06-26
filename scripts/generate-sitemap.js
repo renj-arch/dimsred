@@ -16,7 +16,6 @@ var urls = [];
 var staticPages = [
   { loc: '/', priority: '1.0' },
   { loc: '/privacy.html', priority: '0.6' },
-  { loc: '/lab.html', priority: '0.7' },
   { loc: '/dashboard.html', priority: '0.8' },
   { loc: '/community.html', priority: '0.8' },
   { loc: '/leaderboard.html', priority: '0.5' },

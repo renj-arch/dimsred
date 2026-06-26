@@ -192,7 +192,7 @@
         if (r.length > 10) html += '<span class="action">Last 10 of ' + r.length + '</span>';
         html += '</div>';
         if (r.length === 0) {
-            html += '<div class="empty-state"><span class="icon">📝</span><p>Complete a paper to see your activity here</p><a href="lab.html" class="btn btn-primary btn-sm">Start Practicing</a></div>';
+            html += '<div class="empty-state"><span class="icon">📝</span><p>Complete a paper to see your activity here</p><a href="micro-test.html" class="btn btn-primary btn-sm">Start Practicing</a></div>';
         } else {
             var recent = r.slice(0, 10);
             var maxPct = Math.max.apply(null, recent.map(function(x){ return x.pct || 0; })) || 1;
@@ -249,7 +249,7 @@
         }
 
         html += '<div class="quick-actions" style="margin-top:8px;margin-bottom:40px">';
-        html += '<a href="lab.html" class="btn btn-primary">🧪 Study Lab</a>';
+        html += '<a href="micro-test.html" class="btn btn-primary">🎯 Drill</a>';
         html += '<a href="leaderboard.html" class="btn btn-ghost">🏆 Leaderboard</a>';
         if (wrongCount > 0) {
             html += '<a href="mistakes.html" class="btn btn-ghost">❌ Review Mistakes (' + wrongCount + ')</a>';

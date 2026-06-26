@@ -1,9 +1,9 @@
 var fs = require('fs');
 var root = 'C:\\Users\\Renjith\\Desktop\\icode (2)\\study';
-var exams = ['cgl','rbi','jee','neet','gate','agniveer','upsc','ibps-po','sbi-clerk','ssc-gd','ctet',''];
+var exams = ['cgl','rbi','jee','neet','gate','agniveer','upsc','ibps-po','sbi-clerk','ssc-gd','ctet'];
 
 exams.forEach(function(f) {
-  var p = root + (f ? '/' + f + '/index.html' : '/lab.html');
+  var p = root + '/' + f + '/index.html';
   var content = fs.readFileSync(p, 'utf-8');
 
   var badgeIdx = content.indexOf('class="badge"');

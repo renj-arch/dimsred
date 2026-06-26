@@ -4,9 +4,7 @@ var path = require('path');
 var root = path.resolve(__dirname, '..');
 var EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer', 'upsc', 'ibps-po', 'sbi-clerk', 'ssc-gd', 'ctet'];
 
-// Also handle the lab page
-EXAMS.push('');
-var LAB_PATH = path.join(root, 'lab.html');
+
 
 var CAL_CSS = '\n        .cal-wrap{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-top:16px}\n' +
 '        .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}\n' +

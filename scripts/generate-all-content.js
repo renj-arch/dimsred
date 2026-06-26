@@ -266,7 +266,7 @@ function buildNavLinks(exam, activePage) {
     if (e === exam) links += '<a href="index.html"' + (activePage === 'index' ? ' class="active"' : '') + '>' + NAV_LABELS[e] + '</a>';
     else links += '<a href="../' + e + '/index.html">' + NAV_LABELS[e] + '</a>';
   }
-  links += '<a href="../lab.html">Lab</a>';
+  links += '<a href="../micro-test.html">🎯 Drill</a>';
   links += '<a href="../leaderboard.html">🏆</a>';
   return links;
 }
@@ -470,7 +470,7 @@ function updateExamIndexNav() {
     var html = fs.readFileSync(idxPath, 'utf-8');
 
     // Add quick links section after calendar section
-    var quickLinksSection = '\n        <section class="section">\n            <h2 class="section-title">Quick <span>Links</span></h2>\n            <div class="feat-grid">\n                <a href="exam-info.html" class="feat-card" style="text-decoration:none">\n                    <span class="icon">📋</span>\n                    <div class="ftitle">Exam Information</div>\n                    <div class="fdesc">Pattern, eligibility, dates &amp; selection process.</div>\n                </a>\n                <a href="crash-course.html" class="feat-card" style="text-decoration:none">\n                    <span class="icon">🎓</span>\n                    <div class="ftitle">Crash Course</div>\n                    <div class="fdesc">Complete syllabus &amp; topic-wise study plan.</div>\n                </a>\n                <a href="resources.html" class="feat-card" style="text-decoration:none">\n                    <span class="icon">🎫</span>\n                    <div class="ftitle">Admit Card &amp; Result</div>\n                    <div class="fdesc">Download admit card &amp; check results.</div>\n                </a>\n                <a href="../lab.html" class="feat-card" style="text-decoration:none">\n                    <span class="icon">🔬</span>\n                    <div class="ftitle">Study Lab</div>\n                    <div class="fdesc">Topic drills, mock tests &amp; mistake review.</div>\n                </a>\n            </div>\n        </section>';
+    var quickLinksSection = '\n        <section class="section">\n            <h2 class="section-title">Quick <span>Links</span></h2>\n            <div class="feat-grid">\n                <a href="exam-info.html" class="feat-card" style="text-decoration:none">\n                    <span class="icon">📋</span>\n                    <div class="ftitle">Exam Information</div>\n                    <div class="fdesc">Pattern, eligibility, dates &amp; selection process.</div>\n                </a>\n                <a href="crash-course.html" class="feat-card" style="text-decoration:none">\n                    <span class="icon">🎓</span>\n                    <div class="ftitle">Crash Course</div>\n                    <div class="fdesc">Complete syllabus &amp; topic-wise study plan.</div>\n                </a>\n                <a href="resources.html" class="feat-card" style="text-decoration:none">\n                    <span class="icon">🎫</span>\n                    <div class="ftitle">Admit Card &amp; Result</div>\n                    <div class="fdesc">Download admit card &amp; check results.</div>\n                </a>\n                <a href="../micro-test.html" class="feat-card" style="text-decoration:none">\n                    <span class="icon">🎯</span>\n                    <div class="ftitle">Drill</div>\n                    <div class="fdesc">Topic drills, mock tests &amp; mistake review.</div>\n                </a>\n            </div>\n        </section>';
 
     // Insert after calendar section  
     var calEnd = html.indexOf('</section>', html.indexOf('cal-wrap'));
@@ -486,9 +486,9 @@ function updateExamIndexNav() {
     html = before + quickLinksSection + after;
 
     // Add "Resources" link to nav
-    var labLink = '<a href="../lab.html">Lab</a>';
+    var labLink = '<a href="../micro-test.html">🎯 Drill</a>';
     if (html.indexOf(labLink) !== -1 && html.indexOf('resources.html') === -1) {
-      var resLink = '<a href="../lab.html">Lab</a>\n                <a href="resources.html">Resources</a>';
+      var resLink = '<a href="../micro-test.html">🎯 Drill</a>\n                <a href="resources.html">Resources</a>';
       html = html.replace(labLink, resLink);
     }
 

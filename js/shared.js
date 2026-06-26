@@ -559,7 +559,7 @@
     if (nav) {
       var labBtn = document.createElement('a');
       labBtn.className = 'auth-btn';
-      labBtn.href = 'lab.html';
+      labBtn.href = 'micro-test.html';
       labBtn.textContent = 'Lab';
       labBtn.style.cssText = 'background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.1);padding:6px 14px;border-radius:100px;font-size:.78em;font-weight:500;cursor:pointer;white-space:nowrap;text-decoration:none;transition:all .2s';
       nav.appendChild(labBtn);
