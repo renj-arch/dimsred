@@ -7172,7 +7172,6 @@
                         });
                         shuffle(dayEntries).forEach(function(day) {
                             shuffle(day.items).forEach(function(txt) {
-                                if (state.questions.length >= 200) return;
                                 if (txt.length < 30 || txt.length > 300) return;
                                 var sent = txt.replace(/<[^>]+>/g, '').trim();
                                 var catTag = 'News: ' + day.date;
