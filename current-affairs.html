@@ -6983,10 +6983,13 @@
 <script src="js/bundles/core.js"></script>
     <script src="js/gk-data.js"></script>
     <script src="js/gk-generators.js"></script>
-    <script src="js/gk-wiki.js"></script>
+    <script src="js/gk-wiki.js?t=20260626"></script>
     <script>
         // Prefetch live Wikipedia facts for Quick Fact display
-        if (typeof WIKI !== 'undefined' && WIKI.prefetchFacts) { try { WIKI.prefetchFacts(); } catch(e) {} }
+        if (typeof WIKI !== 'undefined') {
+            console.log('[WIKI] Available methods:', Object.keys(WIKI).filter(function(k) { return typeof WIKI[k] === 'function'; }).join(', '));
+            try { if (WIKI.prefetchFacts) WIKI.prefetchFacts(); } catch(e) {}
+        }
         
         // ===== MERGE ENHANCED GENERATORS INTO EXISTING SYSTEM =====
         // Priority: GK_GEN2 > GK_GENERATORS
