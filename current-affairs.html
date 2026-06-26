@@ -5898,7 +5898,7 @@
                 document.getElementById('qNum').textContent = 'Q ' + (state.idx + 1);
                 document.getElementById('qProgress').style.width = ((state.correct / Math.max(state.idx, 1)) * 100) + '%';
             } else {
-                document.getElementById('qNum').textContent = 'Q ' + (state.idx + 1) + ' / ' + state.questions.length;
+                document.getElementById('qNum').textContent = 'Q ' + (state.idx + 1) + ' / ' + (state.totalFetched || state.questions.length);
                 document.getElementById('qProgress').style.width = ((state.idx / state.questions.length) * 100) + '%';
             }
             document.getElementById('catTag').textContent = state.categoryName;
@@ -7111,6 +7111,7 @@
             state.streak = 0;
             state.answered = false;
             state.questions = [];
+            state.totalFetched = 0;
             state.infinite = false;
             state.restartFn = function() { _runTimedQuiz(startDate, endDate, label, targetCount, maxFetchDays); };
             
@@ -7124,6 +7125,7 @@
             dateQs = shuffle(dateQs);
             for (var dqi = 0; dqi < Math.min(dateQs.length, targetCount); dqi++) {
                 state.questions.push(dateQs[dqi]);
+                state.totalFetched++;
             }
             
             document.getElementById('welcome').style.display = 'none';
@@ -7162,6 +7164,7 @@
                 _fetchHistoricalForRange(startDate, endDate, function(dayEntries) {
                     var _allEntities = [];
                     var _allNumbers = [];
+                    state.totalFetched = 0;
                     if (dayEntries.length > 0) {
                         dayEntries.forEach(function(day) {
                             (day.items || []).forEach(function(txt) {
@@ -7172,6 +7175,7 @@
                         });
                         shuffle(dayEntries).forEach(function(day) {
                             shuffle(day.items).forEach(function(txt) {
+                                state.totalFetched++;
                                 if (txt.length < 30 || txt.length > 300) return;
                                 var sent = txt.replace(/<[^>]+>/g, '').trim();
                                 var catTag = 'News: ' + day.date;
