@@ -5283,13 +5283,6 @@ var _staticGen_defence = GK_GENERATORS.defence;
 var _staticGen_environment = GK_GENERATORS.environment;
 var _staticGen_polity = GK_GENERATORS.polity;
 
-// Create GK_GEN2 for category quiz — 60% chance picks from PIB feed, 40% from static GK
-if (typeof GK_GEN2 === 'undefined') GK_GEN2 = {};
-GK_GEN2.sports = function() {
-    if (!_sportsFeedData || _sportsFeedData.length < 2) return null;
-    return _feedGenHelper(_sportsFeedData, 'sports');
-};
-
 GK_GENERATORS.pib = function() {
             if (!_pibFeedData || _pibFeedData.length < 3) return null;
 
@@ -5543,16 +5536,6 @@ GK_GENERATORS.pib = function() {
             if (caseSummary) factParts.push(caseSummary);
             if (selected.link) factParts.push('<a href="' + selected.link + '" target="_blank" style="color:var(--cyan)">Read full judgment →</a>');
             return { q: question, a: answer, opts: optsArr, hint: 'Think about the subject matter of the case', fact: factParts.join('<br><br>') };
-        };
-        // ---- ISRO procedural generator (reuses PIB extraction patterns) ----
-        GK_GENERATORS.isro = function() {
-            if (!_isroFeedData || _isroFeedData.length < 2) return null;
-            return _feedGenHelper(_isroFeedData, 'isro');
-        };
-        // ---- MEA procedural generator (reuses PIB extraction patterns) ----
-        GK_GENERATORS.mea = function() {
-            if (!_meaFeedData || _meaFeedData.length < 2) return null;
-            return _feedGenHelper(_meaFeedData, 'mea');
         };
         function _buildVirtualFeed(items, keywords) {
             if (!items || !keywords) return [];
