@@ -5748,16 +5748,6 @@
                     }
                 });
             }
-            if (_pibFeedData) {
-                _pibFeedData.forEach(function(item) {
-                    if (item.pubDate && new Date(item.pubDate) >= cutoffDate) {
-                        var title = item.title || '';
-                        var q = { q: title, a: title.split(' ').slice(0,3).join(' '), hint: item.source + ' — ' + (item.category || ''), fact: title + ' [' + item.source + ', ' + item.pubDate.slice(0,10) + ']', _pubDate: item.pubDate };
-                        q.opts = buildOptions(q.a);
-                        if (isValidAnswer(q.a) && title.length > 15) results.push(q);
-                    }
-                });
-            }
             return results;
         }
 
@@ -7030,7 +7020,13 @@
             
             var remaining = targetCount - state.questions.length;
             if (remaining > 0) {
-                if (typeof WIKI !== 'undefined') { try { WIKI._prefetching = false; WIKI.prefetch(); } catch(e) {} }
+                if (typeof WIKI !== 'undefined') {
+                    try {
+                        // Restart prefetch to get recent changes + current events for timeline accuracy
+                        WIKI._prefetching = false;
+                        WIKI.prefetch();
+                    } catch(e) {}
+                }
                 generateWikiQuestions(remaining);
             }
             if (state.questions.length > 0) {
