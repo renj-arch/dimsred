@@ -5277,13 +5277,20 @@
             return results;
         }
 
-        // Save static generators before feed-based override for combined quiz
-        var _staticGen_sports = GK_GENERATORS.sports;
-        var _staticGen_defence = GK_GENERATORS.defence;
-        var _staticGen_environment = GK_GENERATORS.environment;
-        var _staticGen_polity = GK_GENERATORS.polity;
+// Save static generators before feed-based override for combined quiz
+var _staticGen_sports = GK_GENERATORS.sports;
+var _staticGen_defence = GK_GENERATORS.defence;
+var _staticGen_environment = GK_GENERATORS.environment;
+var _staticGen_polity = GK_GENERATORS.polity;
 
-        GK_GENERATORS.pib = function() {
+// Create GK_GEN2 for category quiz — 60% chance picks from PIB feed, 40% from static GK
+if (typeof GK_GEN2 === 'undefined') GK_GEN2 = {};
+GK_GEN2.sports = function() {
+    if (!_sportsFeedData || _sportsFeedData.length < 2) return null;
+    return _feedGenHelper(_sportsFeedData, 'sports');
+};
+
+GK_GENERATORS.pib = function() {
             if (!_pibFeedData || _pibFeedData.length < 3) return null;
 
             var items = _pibFeedData;
