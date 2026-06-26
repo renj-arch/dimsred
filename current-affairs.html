@@ -5788,7 +5788,30 @@ GK_GENERATORS.pib = function() {
                     state.questions.push(q);
                 }
             }
-            if (state.questions.length === 0) { alert('No questions available for this category right now. The data feed may still be loading.'); return; }
+            if (state.questions.length === 0) {
+                if (typeof WIKI === 'undefined' || !WIKI._pool) { alert('No questions available for this category right now. The data feed may still be loading.'); return; }
+                document.getElementById('welcome').style.display = 'none';
+                document.getElementById('qArea').classList.add('active');
+                document.getElementById('scoreBar').classList.add('show');
+                document.getElementById('restartBtn').style.display = 'inline-block';
+                document.getElementById('pibHeaderBtn').style.display = 'inline-block';
+                document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
+                document.getElementById('qText').innerHTML = 'Loading questions...<br><span style="font-size:.72em;color:var(--text-muted)">generating questions</span>';
+                document.getElementById('optGrid').innerHTML = '';
+                var _poolCheck = setInterval(function() {
+                    if (WIKI._pool && WIKI._pool.length > 0) {
+                        clearInterval(_poolCheck);
+                        for (var wi = 0; wi < 8 && state.questions.length < 8; wi++) {
+                            var wq = WIKI.poolQuestion();
+                            if (wq) { wq.opts = wq.opts || buildOptions(wq.a); if (!wq.fact) wq.fact = wq.q + ' ' + (wq.a || ''); if (isValidAnswer(wq.a)) state.questions.push(wq); }
+                        }
+                        if (state.questions.length > 0) showQuestion();
+                        else document.getElementById('qText').innerHTML = 'Still loading... <button onclick="' + (state.restartFn ? 'state.restartFn()' : 'location.reload()') + '" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Retry</button>';
+                    }
+                }, 800);
+                setTimeout(function() { clearInterval(_poolCheck); if (state.questions.length === 0) document.getElementById('qText').innerHTML = 'Timed out. <button onclick="' + (state.restartFn ? 'state.restartFn()' : 'location.reload()') + '" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Retry</button>'; }, 12000);
+                return;
+            }
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
@@ -6275,7 +6298,7 @@ GK_GENERATORS.pib = function() {
             if (!confirmAbandonQuiz()) return;
             if (!_pibFeedData || _pibFeedData.length < 5) { alert('News feed not loaded yet. Please wait.'); return; }
             var feedVar = cat === 'sebi' ? _sebiFeedData : cat === 'scjudgments' ? _scJudgmentData : cat === 'isro' ? _isroFeedData : cat === 'mea' ? _meaFeedData : cat === 'rbi' ? _rbiFeedData : cat === 'defence' ? _defenceFeedData : cat === 'environment' ? _envFeedData : cat === 'sports' ? _sportsFeedData : cat === 'economics' ? _econFeedData : cat === 'polity' ? _polityFeedData : cat === 'sciTech' ? _sciTechFeedData : cat === 'health' ? _healthFeedData : cat === 'education' ? _educationFeedData : cat === 'agriculture' ? _agriFeedData : cat === 'energy' ? _energyFeedData : null;
-            if (!feedVar || feedVar.length < 2) { alert('Not enough items for "' + label + '" in current feed.'); return; }
+            if (!feedVar || feedVar.length < 2) { console.warn('Low feed data for "' + label + '", falling back to Wiki'); }
             startCategory(cat, label);
         }
 
