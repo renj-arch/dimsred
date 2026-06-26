@@ -6158,9 +6158,6 @@ GK_GENERATORS.pib = function() {
 
         function startFeedQuiz(cat, label) {
             if (!confirmAbandonQuiz()) return;
-            if (!_pibFeedData || _pibFeedData.length < 5) { alert('News feed not loaded yet. Please wait.'); return; }
-            var feedVar = cat === 'sebi' ? _sebiFeedData : cat === 'scjudgments' ? _scJudgmentData : cat === 'isro' ? _isroFeedData : cat === 'mea' ? _meaFeedData : cat === 'rbi' ? _rbiFeedData : cat === 'defence' ? _defenceFeedData : cat === 'environment' ? _envFeedData : cat === 'sports' ? _sportsFeedData : cat === 'economics' ? _econFeedData : cat === 'polity' ? _polityFeedData : cat === 'sciTech' ? _sciTechFeedData : cat === 'health' ? _healthFeedData : cat === 'education' ? _educationFeedData : cat === 'agriculture' ? _agriFeedData : cat === 'energy' ? _energyFeedData : null;
-            if (!feedVar || feedVar.length < 2) { console.warn('Low feed data for "' + label + '", falling back to Wiki'); }
             startCategory(cat, label);
         }
 
