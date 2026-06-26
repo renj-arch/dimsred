@@ -7028,7 +7028,11 @@
             
             // For ranges > 15 days, use monthly API (one call per month, covers ALL events)
             if (totalDays > 15) {
-                return _fetchHistoricalByMonth(start, end, callback);
+                if (!WIKI.fetchMonthEvents) {
+                    console.log('[HIST] WIKI.fetchMonthEvents not available, falling back to daily fetch');
+                } else {
+                    return _fetchHistoricalByMonth(start, end, callback);
+                }
             }
             
             // For short ranges, fetch each day
