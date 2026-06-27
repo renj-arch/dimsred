@@ -19,65 +19,6 @@ var SC_JUDGMENTS_RSS_URL = 'https://indiankanoon.org/feeds/latest/supremecourt/'
 
 var WIKI_CURRENT_EVENTS_URL = 'https://en.wikipedia.org/w/api.php?action=parse&page=Portal:Current_events&prop=text&format=json&origin=*';
 
-var GOOGLE_NEWS_TPL = 'https://news.google.com/rss/search?q={q}&hl=en-IN&gl=IN&ceid=IN:en';
-
-var NATIONAL_NEWS_QUERIES = [
-  { category: 'National', q: 'India top news today' },
-  { category: 'National', q: 'India government announcement' },
-  { category: 'National', q: 'Padma award India 2025' },
-  { category: 'National', q: 'India union cabinet decision' },
-  { category: 'National', q: 'India defence news' },
-  { category: 'National', q: 'India space ISRO news' },
-  { category: 'National', q: 'India sports news' },
-  { category: 'National', q: 'India economy finance news' },
-  { category: 'National', q: 'India science technology' },
-  { category: 'National', q: 'India health medical news' },
-  { category: 'National', q: 'India education policy' },
-  { category: 'National', q: 'India environment climate' },
-  { category: 'National', q: 'India culture heritage' },
-  { category: 'National', q: 'India infrastructure development' },
-  { category: 'National', q: 'India railway highway project' }
-];
-
-var STATE_QUERIES = [
-  { state: 'Andhra Pradesh', q: 'Andhra Pradesh government news' },
-  { state: 'Arunachal Pradesh', q: 'Arunachal Pradesh government' },
-  { state: 'Assam', q: 'Assam government news' },
-  { state: 'Bihar', q: 'Bihar government news' },
-  { state: 'Chhattisgarh', q: 'Chhattisgarh government news' },
-  { state: 'Goa', q: 'Goa government news' },
-  { state: 'Gujarat', q: 'Gujarat government news' },
-  { state: 'Haryana', q: 'Haryana government news scheme' },
-  { state: 'Himachal Pradesh', q: 'Himachal Pradesh government news' },
-  { state: 'Jharkhand', q: 'Jharkhand government news' },
-  { state: 'Karnataka', q: 'Karnataka government news' },
-  { state: 'Kerala', q: 'Kerala government news' },
-  { state: 'Madhya Pradesh', q: 'Madhya Pradesh government news' },
-  { state: 'Maharashtra', q: 'Maharashtra government news' },
-  { state: 'Manipur', q: 'Manipur government news' },
-  { state: 'Meghalaya', q: 'Meghalaya government news' },
-  { state: 'Mizoram', q: 'Mizoram government news' },
-  { state: 'Nagaland', q: 'Nagaland government news' },
-  { state: 'Odisha', q: 'Odisha government scheme news' },
-  { state: 'Punjab', q: 'Punjab government news' },
-  { state: 'Rajasthan', q: 'Rajasthan government news' },
-  { state: 'Sikkim', q: 'Sikkim government news' },
-  { state: 'Tamil Nadu', q: 'Tamil Nadu government news' },
-  { state: 'Telangana', q: 'Telangana government news' },
-  { state: 'Tripura', q: 'Tripura government news' },
-  { state: 'Uttar Pradesh', q: 'Uttar Pradesh government news' },
-  { state: 'Uttarakhand', q: 'Uttarakhand government news' },
-  { state: 'West Bengal', q: 'West Bengal government news' },
-  { state: 'Delhi', q: 'Delhi government news' },
-  { state: 'Jammu & Kashmir', q: 'Jammu Kashmir government news' },
-  { state: 'Ladakh', q: 'Ladakh government news' },
-  { state: 'Puducherry', q: 'Puducherry government news' },
-  { state: 'Chandigarh', q: 'Chandigarh government news' },
-  { state: 'Andaman & Nicobar', q: 'Andaman Nicobar Islands tourism development' },
-  { state: 'Lakshadweep', q: 'Lakshadweep Islands India scheme' },
-  { state: 'Dadra & Nagar Haveli and Daman & Diu', q: 'Daman Diu Dadra Nagar Haveli tourism' }
-];
-
 var dataDir = path.resolve(__dirname, '..', 'data');
 
 function categorizeItem(title, desc) {
@@ -509,48 +450,6 @@ async function concurrentMap(items, fn, limit) {
   return results;
 }
 
-async function fetchGoogleNewsForState(state, query) {
-  try {
-    var url = GOOGLE_NEWS_TPL.replace('{q}', encodeURIComponent(query));
-    var feed = await parser.parseURL(url);
-    return (feed.items || []).slice(0, 4).map(function(item) {
-      var pubDate = item.pubDate ? new Date(item.pubDate) : new Date();
-      var title = (item.title || '').trim();
-      var desc = (item.contentSnippet || '').trim().slice(0, 200);
-      return {
-        id: item.guid || item.link || title + state,
-        title: title,
-        link: '',
-        description: desc,
-        category: categorizeItem(title, desc),
-        region: state,
-        pubDate: pubDate.toISOString(),
-        source: 'GoogleNews'
-      };
-    });
-  } catch (e) {
-    return [];
-  }
-}
-
-async function fetchAllGoogleNews() {
-  console.log('Fetching Google News for ' + STATE_QUERIES.length + ' states/UTs...');
-  var items = await concurrentMap(STATE_QUERIES, function(q) {
-    return fetchGoogleNewsForState(q.state, q.q);
-  }, 5);
-  console.log('Google News items: ' + items.length);
-  return items;
-}
-
-async function fetchNationalGoogleNews() {
-  console.log('Fetching Google News for ' + NATIONAL_NEWS_QUERIES.length + ' national topics...');
-  var items = await concurrentMap(NATIONAL_NEWS_QUERIES, function(q) {
-    return fetchGoogleNewsForState(q.category, q.q);
-  }, 5);
-  console.log('National Google News items: ' + items.length);
-  return items;
-}
-
 async function fetchWikiCurrentEvents() {
   try {
     var resp = await fetch(WIKI_CURRENT_EVENTS_URL, {
@@ -640,9 +539,6 @@ async function fetchAll() {
   var worldNewsItems = await fetchWikiCurrentEvents();
   console.log('World news items: ' + worldNewsItems.length);
 
-  var googleNewsItems = await fetchAllGoogleNews();
-  var nationalNewsItems = await fetchNationalGoogleNews();
-
   // Merge all items
   var seen = new Set();
   var merged = [];
@@ -664,8 +560,6 @@ async function fetchAll() {
   addItems(isroItems);
   addItems(meaItems);
   addItems(worldNewsItems);
-  addItems(googleNewsItems);
-  addItems(nationalNewsItems);
 
   // Remove non-English items (check title)
   merged = merged.filter(function(item) {
