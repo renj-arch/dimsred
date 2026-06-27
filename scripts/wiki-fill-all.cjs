@@ -43,23 +43,22 @@ async function fetchArticleExtract(title, retries) {
   return null;
 }
 
+function norm(s) { return (s || '').replace(/\s+/g, ' ').trim().toLowerCase(); }
+
 function getContext(allSentences, sentText, windowSize) {
-  // Find the best matching sentence
   let idx = -1;
   const target = sentText.substring(0, 30).toLowerCase();
   for (let i = 0; i < allSentences.length; i++) {
     if (allSentences[i].toLowerCase().includes(target)) { idx = i; break; }
   }
-  if (idx < 0) {
-    // fallback: just return first 600 chars
-    return allSentences.slice(0, 5).join('. ').substring(0, 1200);
-  }
+  if (idx < 0) return allSentences.slice(0, 5).join('. ').substring(0, 1200);
   const start = Math.max(0, idx - windowSize);
   const end = Math.min(allSentences.length, idx + windowSize + 1);
   return allSentences.slice(start, end).join('. ').substring(0, 1200);
 }
 
 const CATEGORIES = [
+  { name: 'Indian History', topics: ['History of India', 'Indian independence movement', 'Mughal Empire'] },
   { name: 'World History', topics: ['World history', 'Cold War', 'French Revolution'] },
   { name: 'Art & Culture', topics: ['Culture of India', 'Indian classical music', 'Indian architecture'] },
   { name: 'Polity', topics: ['Constitution of India', 'Politics of India', 'Election Commission of India'] },
@@ -78,7 +77,7 @@ const CATEGORIES = [
   { name: 'State GK', topics: ['States and union territories of India', 'Maharashtra', 'Tamil Nadu'] },
   { name: 'Books & Authors', topics: ['Indian literature', 'Rabindranath Tagore', 'Hindi literature'] },
   { name: 'Important Days', topics: ['United Nations observances', 'International days', 'National days of India'] },
-  { name: 'Govt Schemes', topics: ['Government of India', 'Mahatma Gandhi National Rural Employment Guarantee Act', 'Ayushman Bharat'] },
+  { name: 'Govt Schemes', topics: ['Government of India', 'MGNREGA', 'Ayushman Bharat'] },
   { name: 'Awards', topics: ['National awards of India', 'Bharat Ratna', 'Padma awards'] },
   { name: 'Business & Economy', topics: ['Business in India', 'Startup India', 'Make in India'] },
   { name: 'Tech & Science', topics: ['Technology in India', 'Indian scientists', 'Digital India'] },
@@ -90,6 +89,15 @@ const CATEGORIES = [
 
 async function main() {
   const quiz = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8'));
+  const existingQ = new Set(quiz.questions.map(q => norm(q.question)));
+
+  function pushQ(qObj) {
+    if (existingQ.has(norm(qObj.question))) return false;
+    existingQ.add(norm(qObj.question));
+    quiz.questions.push(qObj);
+    return true;
+  }
+
   let totalAdded = 0;
 
   for (const cat of CATEGORIES) {
@@ -115,16 +123,13 @@ async function main() {
       if (desc && desc.length > 5 && desc.length < 150 && added < 10) {
         const isPerson = /(born|died|known for|scientist|politician|author|king|queen|leader|poet|painter)/i.test(desc);
         const q = (isPerson ? 'Who' : 'What') + ' is ' + desc.replace(/^(the\s+)?/i, '').trim() + '?';
-        if (q.length > 15 && q.length < 150) {
-          quiz.questions.push({
-            id: cat.name.substring(0,3).toLowerCase() + added,
-            type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-            pubDate: new Date().toISOString(), subject: cat.name, subSubject: '', emoji: '',
-            question: q, answer: title, hint: '',
-            fact: getContext(allSentences, title, 3),
-          });
-          added++;
-        }
+        if (q.length > 15 && q.length < 150 && pushQ({
+          id: cat.name.substring(0,3).toLowerCase() + added,
+          type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+          pubDate: new Date().toISOString(), subject: cat.name, subSubject: cat.name, emoji: '',
+          question: q, answer: title, hint: '',
+          fact: getContext(allSentences, title, 3),
+        })) added++;
       }
 
       // Year-based
@@ -135,14 +140,13 @@ async function main() {
         const low = sent.toLowerCase();
         if ((low.includes('founded') || low.includes('established') || low.includes('born') || low.includes('died') || low.includes('battle') || low.includes('treaty') || low.includes('act') || low.includes('movement') || low.includes('war') || low.includes('reign') || low.includes('rule') || low.includes('invasion') || low.includes('conquest') || low.includes('launched') || low.includes('created') || low.includes('formed') || low.includes('enacted') || low.includes('adopted') || low.includes('signed') || low.includes('discovered') || low.includes('invented')) && sent.length < 200) {
           const context = sent.replace(years[0], '_____');
-          quiz.questions.push({
+          if (pushQ({
             id: cat.name.substring(0,3).toLowerCase() + added,
             type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-            pubDate: new Date().toISOString(), subject: cat.name, subSubject: '', emoji: '',
+            pubDate: new Date().toISOString(), subject: cat.name, subSubject: cat.name, emoji: '',
             question: context.trim().substring(0, 180), answer: years[0], hint: '',
             fact: getContext(allSentences, sent, 3),
-          });
-          added++;
+          })) added++;
         }
       }
 
@@ -156,100 +160,25 @@ async function main() {
           const term = match[0];
           if (term.length > 5 && term !== title && !term.includes('The ') && !term.includes('It ')) {
             const context = sent.replace(term, '_____');
-            if (context.length > 20 && context.length < 180) {
-              quiz.questions.push({
-                id: cat.name.substring(0,3).toLowerCase() + added,
-                type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-                pubDate: new Date().toISOString(), subject: cat.name, subSubject: '', emoji: '',
-                question: context.trim(), answer: term, hint: '',
-                fact: getContext(allSentences, sent, 3),
-              });
-              added++;
-            }
+            if (context.length > 20 && context.length < 180 && pushQ({
+              id: cat.name.substring(0,3).toLowerCase() + added,
+              type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+              pubDate: new Date().toISOString(), subject: cat.name, subSubject: cat.name, emoji: '',
+              question: context.trim(), answer: term, hint: '',
+              fact: getContext(allSentences, sent, 3),
+            })) added++;
           }
         }
       }
     }
 
-    console.log('  Added ' + added + ' questions for ' + cat.name);
+    console.log('  Added ' + added + ' new questions for ' + cat.name + ' (total: ' + quiz.questions.length + ')');
     totalAdded += added;
-    // Save incrementally
     fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz, null, 2));
   }
 
-  // Add 10 History questions too
-  console.log('\n=== Indian History ===');
-  const histTopics = ['History of India', 'Indian independence movement', 'Mughal Empire'];
-  for (const topic of histTopics) {
-    const a = await fetchArticleExtract(topic);
-    if (a && a.extract.length > 200) {
-      const ext = a.extract;
-      const title = a.title;
-      const desc = a.description;
-      const allSentences = ext.split('.').filter(s => s.trim().length > 20);
-      const sentences = allSentences.filter(s => s.trim().length > 40);
-      let added = 0;
-
-      if (desc && desc.length > 5 && desc.length < 150 && added < 10) {
-        const isPerson = /(born|died|known for|scientist|politician|author|king|queen|leader|poet|painter)/i.test(desc);
-        const q = (isPerson ? 'Who' : 'What') + ' is ' + desc.replace(/^(the\s+)?/i, '').trim() + '?';
-        if (q.length > 15 && q.length < 150) {
-          quiz.questions.push({
-            id: 'hist' + added, type: 'fill_blank', category: 'Indian History', region: '', source: 'Wiki',
-            pubDate: new Date().toISOString(), subject: 'Indian History', subSubject: '', emoji: '',
-            question: q, answer: title, hint: '', fact: getContext(allSentences, title, 3),
-          });
-          added++;
-        }
-      }
-
-      for (let si = 0; si < sentences.length && added < 10; si++) {
-        const sent = sentences[si];
-        const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
-        if (!years) continue;
-        const low = sent.toLowerCase();
-        if ((low.includes('founded') || low.includes('established') || low.includes('born') || low.includes('died') || low.includes('battle') || low.includes('treaty') || low.includes('act') || low.includes('movement') || low.includes('war') || low.includes('reign') || low.includes('rule') || low.includes('invasion') || low.includes('conquest')) && sent.length < 200) {
-          const context = sent.replace(years[0], '_____');
-          quiz.questions.push({
-            id: 'hist' + added, type: 'fill_blank', category: 'Indian History', region: '', source: 'Wiki',
-            pubDate: new Date().toISOString(), subject: 'Indian History', subSubject: '', emoji: '',
-            question: context.trim().substring(0, 180), answer: years[0], hint: '',
-            fact: getContext(allSentences, sent, 3),
-          });
-          added++;
-        }
-      }
-
-      for (let si = 0; si < sentences.length && added < 10; si++) {
-        const sent = sentences[si];
-        const titleEsc = title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        if (new RegExp(titleEsc, 'i').test(sent)) continue;
-        const match = sent.match(/([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3})/);
-        if (match) {
-          const term = match[0];
-          if (term.length > 5 && term !== title && !term.includes('The ') && !term.includes('It ')) {
-            const context = sent.replace(term, '_____');
-            if (context.length > 20 && context.length < 180) {
-              quiz.questions.push({
-                id: 'hist' + added, type: 'fill_blank', category: 'Indian History', region: '', source: 'Wiki',
-                pubDate: new Date().toISOString(), subject: 'Indian History', subSubject: '', emoji: '',
-                question: context.trim(), answer: term, hint: '',
-                fact: getContext(allSentences, sent, 3),
-              });
-              added++;
-            }
-          }
-        }
-      }
-
-      console.log('  Added ' + added + ' questions for Indian History');
-      totalAdded += added;
-    }
-    await delay(3000);
-  }
-
   fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz, null, 2));
-  console.log('\nTotal: ' + totalAdded + ' questions across ' + CATEGORIES.length + ' categories.');
+  console.log('\nTotal new: ' + totalAdded + ', Grand total: ' + quiz.questions.length);
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
