@@ -248,7 +248,7 @@
                     }).then(function(data) {
                         var all = (data.items || []);
                         var main = [], seen = {};
-                        var caps = { PIB:3, RBI:2, ISRO:1, MEA:1, SEBI:1, SC:1, GoogleNews:3 };
+                        var caps = { PIB:3, RBI:2, ISRO:1, MEA:1, SEBI:1, SC:1 };
                         for (var i = 0; i < all.length && main.length < 8; i++) {
                             var it = all[i];
                             if (!it || !it.title) continue;
@@ -675,7 +675,8 @@
                 var qid = 'caq-' + i;
                 quizState[qid] = { answered: false, correct: false, q: q };
                 var subjectTag = q.subject && q.emoji ? '<span style="display:inline-block;font-size:.7em;padding:1px 8px;border-radius:4px;background:rgba(167,139,250,.1);color:var(--purple);margin-bottom:5px">' + q.emoji + ' ' + q.subject.replace(/</g,'&lt;') + '</span>' : '';
-                html += '<div class="caq-card" id="' + qid + '"><div class="caq-q">' + subjectTag + 'Q' + (i+1) + '. ' + q.question.replace(/</g,'&lt;') + '</div>';
+                var yr = q.pubDate ? ' (' + q.pubDate.slice(0,4) + ')' : '';
+html += '<div class="caq-card" id="' + qid + '"><div class="caq-q">' + subjectTag + 'Q' + (i+1) + '. ' + q.question.replace(/</g,'&lt;') + yr + '</div>';
 
                 if (q.type === 'true_false') {
                     html += '<div class="caq-true"><span data-qid="' + qid + '" data-val="True" onclick="caqAnswer(this)">True</span><span data-qid="' + qid + '" data-val="False" onclick="caqAnswer(this)">False</span></div>';

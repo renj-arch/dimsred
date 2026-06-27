@@ -682,7 +682,8 @@
 
     function showQuestion(q) {
         document.getElementById('techFlash').className = 'tech-flash';
-        document.getElementById('qText').innerHTML = q.question;
+        var yr = q.pubDate ? ' (' + q.pubDate.slice(0,4) + ')' : '';
+        document.getElementById('qText').innerHTML = q.question + yr;
         document.getElementById('qText').style.display = 'block';
 
         var og = document.getElementById('optGrid');
@@ -751,11 +752,12 @@
         if (idx >= 0 && !result.correct && idx !== correctIdx) btns[idx].classList.add('wrong');
 
         var rf = document.getElementById('resultFlash');
+        var keyDisplay = correctIdx >= 0 ? ' (Key ' + (correctIdx + 1) + ')' : '';
         if (result.correct) {
-            rf.textContent = '✓ Correct! +' + result.points + ' pts' + (result.bonus > 0 ? ' (speed bonus: +' + result.bonus + ')' : '') + ' | ⏱ ' + reactionSec + 's';
+            rf.textContent = '✓ Correct!' + keyDisplay + ' +' + result.points + ' pts' + (result.bonus > 0 ? ' (speed bonus: +' + result.bonus + ')' : '') + ' | ⏱ ' + reactionSec + 's';
             rf.className = 'result-flash show correct';
         } else {
-            rf.textContent = '✕ Wrong. Answer: ' + q.answer + ' | ⏱ ' + reactionSec + 's';
+            rf.textContent = '✕ Wrong. Answer: ' + q.answer + keyDisplay + ' | ⏱ ' + reactionSec + 's';
             rf.className = 'result-flash show wrong';
         }
 

@@ -5450,6 +5450,19 @@ GK_GENERATORS.pib = function() {
             if (l.indexOf('various') >= 0 || l.indexOf('multiple') >= 0 || l.indexOf('unknown') >= 0 || l.indexOf('n/a') >= 0) return false;
             return a.length >= 3;
         }
+        function isTrash(q) {
+            var text = (q.q || q.question || '') + ' ' + (q.category || q.hint || '') + ' ' + (q.source || '');
+            var patterns = [/Appeal No\.?\s*_{3,}/i,/Money Market Operations as on/i,/Reserve Money for the fortnight/i,/RBI Bulletin.*?_{3,}/i,/Admit Card.*to be Released/i,/Exam City.*Out at/i,/News Live Updates/i,/vs\s+\S+\s+on\s+_{3,}\s+June/i,/Sensex Today Trades Higher/i,/Progress of Area Coverage under Kharif/i,/bus (crashes|overturns|accident)/i,/Adda247/i,/Key decisions taken in the SEBI Board Meeting/i,/Launch of Securities Market TechSprint/i,/Six people are killed/i,/In a global development/i,/Members of Mexico/i,/Scientists confirm that Major Oak/i,/Double Engine Government Advancing Journey/i,/U\.S\. Secretary of State Marco Rubio/i,/Australian Government agrees to pay/i,/Rajasthan CET Notification/i,/Model Private School.*Abu Dhabi/i,/Asian Americans in science/i,/Science and technology in (Germany|Italy|Iran)/i,/Economy of Africa/i,/Islamic economics/i,/Wood science/i,/Alzahra University/i,/Czech Academy of Sciences/i,/School in Abu Dhabi/i,/List of Cornell University/i,/List of TWAS/i,/University College of Science, Technology/i,/National Science Talent Contest.*Pakistan/i,/Pakistan Institute of Nuclear/i,/Public university in Iran/i,/Annual science competition in Pakistan/i,/National laboratory site in Nilore/i,/Complete: List of /i,/"Scientific discipline"/i,/"Academy of sciences"/i,/Overview of (scientific|German|Iran)/i,/Contributions of women/i,/Physics Olympiad coordinator/i,/Secondary education leaving exams in India/i];
+            for (var pi = 0; pi < patterns.length; pi++) { if (patterns[pi].test(text)) return true; }
+            if ((q.q || q.question || '').length < 25) return true;
+            if ((q.a || q.answer || '').length < 3) return true;
+            if (((q.q || q.question || '').match(/_+/g) || []).length > 3) return true;
+            if (/Appeal/i.test(text) && /SEBI|securities/i.test(text)) return true;
+            if (/of Nigeria|of Pakistan|of Indonesia|of Italy|of Mozambique|of the Netherlands|of the Russian|of the United Kingdom|of the United Arab|of the Uzbekistan|of the United States|of Israel|of Bangladesh|of Singapore|of Germany|of Iran|of Africa|Hong Kong/i.test(text)) return true;
+            if (/Cricket ground at Fairplex|Military of Singapore|Sports associated with Western|Hong Kong policy/i.test(text)) return true;
+            if (/birth control in the medieval|ancient history of the African|medieval and early modern history of the African/i.test(text.toLowerCase())) return true;
+            return false;
+        }
         var state = { cat: null, questions: [], idx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null };
         var SESSION_KEY = 'vlym_quiz_state';
 
@@ -5586,7 +5599,7 @@ GK_GENERATORS.pib = function() {
                         var q = { q: qa.question, a: qa.answer, hint: qa.category || '', fact: qa.question + ' — ' + (qa.answer || '') + ' [' + qa.source + ', ' + qa.pubDate.slice(0,10) + ']', _pubDate: qa.pubDate };
                         q.opts = qa.options && qa.options.length >= 2 ? qa.options.slice() : null;
                         if (!q.opts) q.opts = buildOptions(q.a);
-                        if (isValidAnswer(q.a)) results.push(q);
+                        if (isValidAnswer(q.a) && !isTrash(q)) results.push(q);
                     }
                 });
             }
@@ -5633,7 +5646,7 @@ GK_GENERATORS.pib = function() {
                 if (q) {
                     q.opts = q.opts || buildOptions(q.a);
                     if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
-                    if (!isValidAnswer(q.a)) continue;
+                    if (!isValidAnswer(q.a) || isTrash(q)) continue;
                     state.questions.push(q);
                 }
             }
@@ -5655,7 +5668,7 @@ GK_GENERATORS.pib = function() {
                             var wq = null;
                             if (_targetCat && WIKI._pool && WIKI._pool.length > 0) { for (var pi = 0; pi < WIKI._pool.length; pi++) { if (WIKI._pool[pi]._wikiCat === _targetCat) { wq = WIKI._pool.splice(pi, 1)[0]; break; } } }
                             if (!wq) wq = WIKI.poolQuestion();
-                            if (wq) { wq.opts = wq.opts || buildOptions(wq.a); if (!wq.fact) wq.fact = wq.q + ' ' + (wq.a || ''); if (isValidAnswer(wq.a)) state.questions.push(wq); }
+                            if (wq) { wq.opts = wq.opts || buildOptions(wq.a); if (!wq.fact) wq.fact = wq.q + ' ' + (wq.a || ''); if (isValidAnswer(wq.a) && !isTrash(wq)) state.questions.push(wq); }
                         }
                         if (state.questions.length > 0) showQuestion();
                         else document.getElementById('qText').innerHTML = 'Still loading... <button onclick="' + (state.restartFn ? 'state.restartFn()' : 'location.reload()') + '" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Retry</button>';
@@ -5774,7 +5787,8 @@ GK_GENERATORS.pib = function() {
                 document.getElementById('qProgress').style.width = ((state.idx / state.questions.length) * 100) + '%';
             }
             document.getElementById('catTag').textContent = state.categoryName;
-            document.getElementById('qText').innerHTML = q.q.replace(/\n/g, '<br>');
+            var yearStr = q.pubDate ? ' (' + q.pubDate.slice(0,4) + ')' : '';
+            document.getElementById('qText').innerHTML = q.q.replace(/\n/g, '<br>') + yearStr;
             document.getElementById('hintText').textContent = q.hint || 'Think carefully about the options';
             document.getElementById('hintText').classList.remove('show');
             document.getElementById('resultFlash').className = 'result-flash';
@@ -5807,17 +5821,18 @@ GK_GENERATORS.pib = function() {
             });
             var flash = document.getElementById('resultFlash');
             flash.style.display = 'block';
+            var correctKey = q.opts.indexOf(correct) + 1;
             if (val === correct) {
                 el.classList.add('correct');
                 state.correct++;
                 state.streak++;
                 flash.className = 'result-flash show correct';
-                flash.textContent = '✅ Correct!';
+                flash.innerHTML = '✅ Correct! <span style="font-size:.75em;color:var(--text-muted)">(Key ' + correctKey + ')</span>';
             } else {
                 el.classList.add('wrong');
                 state.streak = 0;
                 flash.className = 'result-flash show wrong';
-                flash.textContent = '❌ Answer: ' + correct;
+                flash.innerHTML = '❌ Answer: ' + correct + ' <span style="font-size:.75em;color:var(--text-muted)">(Key ' + correctKey + ')</span>';
             }
             document.getElementById('correctNum').textContent = state.correct;
             document.getElementById('totalNum').textContent = state.infinite ? (state.idx + 1) : state.questions.length;
@@ -7229,7 +7244,7 @@ GK_GENERATORS.pib = function() {
                     if (!q) continue;
                     q.opts = q.opts || buildOptions(q.a);
                     if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
-                    if (!isValidAnswer(q.a)) continue;
+                    if (!isValidAnswer(q.a) || isTrash(q)) continue;
                     var dup = false;
                     for (var j = 0; j < state.questions.length; j++) {
                         if (state.questions[j].a === q.a || state.questions[j].q === q.q) { dup = true; break; }
@@ -7250,7 +7265,7 @@ GK_GENERATORS.pib = function() {
                 if (!q) continue;
                 q.opts = q.opts || buildOptions(q.a);
                 if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
-                if (!isValidAnswer(q.a)) continue;
+                if (!isValidAnswer(q.a) || isTrash(q)) continue;
                 var dup = false;
                 for (var j = 0; j < state.questions.length; j++) {
                     if (state.questions[j].a === q.a || state.questions[j].q === q.q) { dup = true; break; }
@@ -7287,9 +7302,10 @@ GK_GENERATORS.pib = function() {
                         _wikiWaiting = false;
                         if (poolReady) {
                             _wikiRetryCount = 0;
-                            for (var wi = 0; wi < count && state.questions.length < 50; wi++) {
+                            for (var wi = 0, _wa = 0; wi < count && state.questions.length < 50 && _wa < 50; wi++) {
                                 var wq = WIKI.poolQuestion();
                                 if (!wq) break;
+                                if (!isValidAnswer(wq.a) || isTrash(wq)) { wi--; _wa++; continue; }
                                 state.questions.push(wq);
                             }
                         } else {
@@ -7376,7 +7392,7 @@ GK_GENERATORS.pib = function() {
                 if (q) {
                     q.opts = q.opts || buildOptions(q.a);
                     if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
-                    if (!isValidAnswer(q.a)) continue;
+                    if (!isValidAnswer(q.a) || isTrash(q)) continue;
                     state.questions.push(q);
                 }
             }
