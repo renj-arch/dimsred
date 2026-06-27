@@ -675,7 +675,7 @@
                 var qid = 'caq-' + i;
                 quizState[qid] = { answered: false, correct: false, q: q };
                 var subjectTag = q.subject && q.emoji ? '<span style="display:inline-block;font-size:.7em;padding:1px 8px;border-radius:4px;background:rgba(167,139,250,.1);color:var(--purple);margin-bottom:5px">' + q.emoji + ' ' + q.subject.replace(/</g,'&lt;') + '</span>' : '';
-                var yr = q.pubDate ? ' (' + q.pubDate.slice(0,4) + ')' : '';
+                var yr = (q.pubDate || q._pubDate) ? ' (' + ((q.pubDate || q._pubDate)).slice(0,4) + ')' : '';
 html += '<div class="caq-card" id="' + qid + '"><div class="caq-q">' + subjectTag + 'Q' + (i+1) + '. ' + q.question.replace(/</g,'&lt;') + yr + '</div>';
 
                 if (q.type === 'true_false') {

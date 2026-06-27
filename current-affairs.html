@@ -5787,7 +5787,8 @@ GK_GENERATORS.pib = function() {
                 document.getElementById('qProgress').style.width = ((state.idx / state.questions.length) * 100) + '%';
             }
             document.getElementById('catTag').textContent = state.categoryName;
-            var yearStr = q.pubDate ? ' (' + q.pubDate.slice(0,4) + ')' : '';
+            var pd = q.pubDate || q._pubDate;
+            var yearStr = pd ? ' (' + pd.slice(0,4) + ')' : '';
             document.getElementById('qText').innerHTML = q.q.replace(/\n/g, '<br>') + yearStr;
             document.getElementById('hintText').textContent = q.hint || 'Think carefully about the options';
             document.getElementById('hintText').classList.remove('show');
@@ -7160,7 +7161,7 @@ GK_GENERATORS.pib = function() {
                     for (var j = 0; j < state.questions.length; j++) {
                         if (state.questions[j].q === s || state.questions[j].a === entity) return;
                     }
-                    state.questions.push({ q: s, a: entity, fact: txt.substring(0,200), hint: 'Historical (' + year + ')', _source: 'wiki_historical', opts: WIKI._buildOpts ? WIKI._buildOpts(entity) : buildOptions(entity) });
+                    state.questions.push({ q: s, a: entity, fact: txt.substring(0,200), hint: 'Historical (' + year + ')', _source: 'wiki_historical', pubDate: year + '-01-01T00:00:00.000Z', opts: WIKI._buildOpts ? WIKI._buildOpts(entity) : buildOptions(entity) });
                     added++;
                 });
                 if (added > 0) console.log('[MEGA] added ' + added + ' questions from ' + year + ' historical');

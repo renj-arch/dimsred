@@ -442,6 +442,7 @@ WIKI._makeQuestions = function(data) {
     if (!WIKI._isKnown(q.a)) return;
     q._source = 'wiki';
     q._wikiCat = catName;
+    q.pubDate = new Date().toISOString();
     results.push(q);
   }
 

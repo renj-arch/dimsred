@@ -682,7 +682,8 @@
 
     function showQuestion(q) {
         document.getElementById('techFlash').className = 'tech-flash';
-        var yr = q.pubDate ? ' (' + q.pubDate.slice(0,4) + ')' : '';
+        var pd = q.pubDate || q._pubDate;
+        var yr = pd ? ' (' + pd.slice(0,4) + ')' : '';
         document.getElementById('qText').innerHTML = q.question + yr;
         document.getElementById('qText').style.display = 'block';
 
