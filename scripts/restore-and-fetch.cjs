@@ -326,17 +326,20 @@ const QA_DATA = [
 
 // ── Main ──
 async function main() {
-  const fillMultiple = parseInt(process.argv.find(a => a.startsWith('--fill-multiple='))?.split('=')[1] || '1', 10);
   const quiz = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8'));
   const existingQuestions = new Set(quiz.questions.map(q => q.question.replace(/\s+/g, ' ').trim().toLowerCase()));
   const bucketCount = {};
   quiz.questions.filter(q => q.subSubject).forEach(q => { const k = q.category + '||' + q.subSubject; bucketCount[k] = (bucketCount[k] || 0) + 1; });
 
+  // Auto-detect: default to max existing count + 1 (always adds one more per bucket)
+  const argVal = process.argv.find(a => a.startsWith('--fill-multiple='));
+  const fillMultiple = argVal ? parseInt(argVal.split('=')[1], 10) : (Math.max(0, ...Object.values(bucketCount)) + 1);
+
   // Fetch Wikipedia explanations per category (ALL 27 SUB_TAX categories)
   const allCats = ['Indian History','World History','Art & Culture','Polity','Indian Economy','Geography','World Geography','General Science','Defence','Environment & Ecology','International Relations','Constitution','ISRO & Space','Computer & IT','Sports','Society','State GK','Books & Authors','Important Days','Govt Schemes','Awards','Business & Economy','Tech & Science','Ethics','Announcements','RBI Press Releases','Personalities'];
   const categoryFacts = {};
 
-  console.log('Fetching Wikipedia articles for ' + allCats.length + ' categories...');
+  console.log('Target: ' + fillMultiple + ' per bucket. Fetching Wikipedia articles for ' + allCats.length + ' categories...');
   for (let i = 0; i < allCats.length; i++) {
     const cat = allCats[i];
     process.stdout.write('[' + (i+1) + '/' + allCats.length + '] ' + cat + '... ');

@@ -1,9 +1,7 @@
 @echo off
 cd /d "%~dp0"
-set FILL_MULTIPLE=%1
-if "%FILL_MULTIPLE%"=="" set FILL_MULTIPLE=1
-echo === Step 1: Fill subSubjects (--fill-multiple=%FILL_MULTIPLE%) ===
-node scripts/restore-and-fetch.cjs --fill-multiple=%FILL_MULTIPLE%
+echo === Step 1: Fill subSubjects ===
+node scripts/restore-and-fetch.cjs
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo.
 echo === Step 2: Build archive HTML ===
