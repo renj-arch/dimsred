@@ -27,6 +27,9 @@ jobs:
       - name: Rebuild archive
         run: node scripts/build-archive.js
 
+      - name: Generate individual question pages + sitemap
+        run: node scripts/generate-pages.cjs
+
       - name: Commit and push
         run: |
           git config user.name "vlymbooq-bot"

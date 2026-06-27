@@ -390,7 +390,8 @@ function renderQuestion(q, idx) {
     tags += '\n      <span class="tag date-tag">' + d.toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) + '</span>';
   }
   if (emoji) tags += '\n      <span class="tag emoji-tag">' + emoji + '</span>';
-  return '<div class="q-item" data-category="' + esc(q.category||'') + '" data-subject="' + esc(q.subject||'') + '" data-subsub="' + esc(ss) + '" data-type="' + esc(q.type||'') + '">\n    <div class="q-num">#' + (idx+1) + '</div>\n    <div class="q-tags">' + tags + '\n    </div>\n    <div class="q-question">' + qText + '</div>\n    <div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + esc(answer) + '</span></div>\n    <button class="explain-btn" onclick="toggleExplain(this)">\uD83D\uDCD6 Explanation</button>\n    <div class="q-explain">' + esc(makeExplanation(q)).replace(/\n/g,'<br>') + '</div>\n  </div>';
+  const permalink = 'questions/q-' + q.id + '.html';
+  return '<div class="q-item" data-category="' + esc(q.category||'') + '" data-subject="' + esc(q.subject||'') + '" data-subsub="' + esc(ss) + '" data-type="' + esc(q.type||'') + '">\n    <div class="q-num">#' + (idx+1) + '</div>\n    <div class="q-tags">' + tags + '\n    </div>\n    <div class="q-question"><a href="' + permalink + '" style="color:inherit;text-decoration:none">' + qText + '</a></div>\n    <div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + esc(answer) + '</span></div>\n    <button class="explain-btn" onclick="toggleExplain(this)">\uD83D\uDCD6 Explanation</button>\n    <div class="q-explain">' + esc(makeExplanation(q)).replace(/\n/g,'<br>') + '</div>\n    <div style="margin-top:6px;font-size:.72em"><a href="' + permalink + '" style="color:var(--text-muted)">\uD83D\uDD17 Permalink</a></div>\n  </div>';
 }
 
 // ── Generate HTML ──

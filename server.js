@@ -77,6 +77,15 @@ app.get('*', (req, res, next) => {
   next();
 });
 
+// Block script/download files that Google flags as harmful/uncommon
+app.use(function(req, res, next) {
+  var ext = require('path').extname(req.path).toLowerCase();
+  if (['.ps1','.bat','.sh','.exe','.msi','.zip','.jar','.dmg'].indexOf(ext) !== -1) {
+    return res.status(404).end();
+  }
+  next();
+});
+
 // Serve static assets (CSS, JS, images) — no directory redirects
 app.use(express.static(__dirname, {
   redirect: false,

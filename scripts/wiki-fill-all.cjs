@@ -91,9 +91,12 @@ async function main() {
   const quiz = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8'));
   const existingQ = new Set(quiz.questions.map(q => norm(q.question)));
 
+  let nextId = quiz.questions.length;
+
   function pushQ(qObj) {
     if (existingQ.has(norm(qObj.question))) return false;
     existingQ.add(norm(qObj.question));
+    qObj.id = 'q' + (nextId++);
     quiz.questions.push(qObj);
     return true;
   }
