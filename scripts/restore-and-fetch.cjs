@@ -86,56 +86,178 @@ async function fetchCategoryArticle(category, maxRetries) {
 }
 
 // ── Generate Q&A automatically for any subSubject ──
-function autoQA(subSubject, category) {
-  const clean = subSubject.replace(/\([^)]*\)/g, '').replace(/[&,–]/g, '').trim();
-  const name = clean.replace(/s$/, ''); // singularize
+function autoQA(subSubject, category, idx) {
+  const clean = subSubject.replace(/\([^)]*\)/g, '').replace(/[&,–]/g, ' ').replace(/\s+/g, ' ').trim();
+  // Singularize only safely: strip trailing 's' only if word doesn't end in -ics, -ss, -sis, -us
+  const name = /(ics|ss|sis|us|ance|ence|ion|ism|ment)$/i.test(clean) ? clean : clean.replace(/s$/, '');
 
   const templates = {
     'Art & Culture': [
       'Which of the following best describes ' + name + ' in Indian art and culture?',
       'The term ' + name + ' in Indian culture refers to which of the following?',
+      'Which Indian art form is closely associated with ' + name + '?',
+      'Who is considered a notable figure in the field of ' + name + ' in India?',
     ],
     'Awards': [
       'Which category does ' + name + ' fall under in the Indian awards system?',
       'Which of the following is associated with ' + name + '?',
+      'Which Indian award is given for excellence in ' + name + '?',
+      'Who was the first Indian recipient of the ' + name + ' award?',
     ],
     'Books & Authors': [
       'Which of the following is a notable work in the category of ' + name + '?',
       'The term ' + name + ' in literature refers to which of the following?',
+      'Which author is best known for their work in ' + name + '?',
+      'Which book is considered a classic in the genre of ' + name + '?',
     ],
     'Geography': [
       'Which of the following is a key aspect of ' + name + ' in Indian geography?',
       'The concept of ' + name + ' in geography refers to which of the following?',
+      'Which region of India is best known for its ' + name + '?',
+      'What is the primary characteristic of ' + name + ' in a geographical context?',
+    ],
+    'World Geography': [
+      'Which of the following is a key aspect of ' + name + ' in world geography?',
+      'The concept of ' + name + ' in geography refers to which of the following?',
+      'Which continent is most associated with ' + name + '?',
+      'What is the primary characteristic of ' + name + ' in a global geographical context?',
     ],
     'Constitution': [
       'Which article or provision of the Indian Constitution deals with ' + name + '?',
       'The ' + name + ' in the Indian Constitution refers to which of the following?',
+      'Under which part of the Indian Constitution is ' + name + ' addressed?',
+      'Which constitutional amendment is related to ' + name + '?',
     ],
     'Defence': [
       'Which of the following is associated with ' + name + ' in the Indian defence system?',
       'The ' + name + ' plays what role in Indias defence setup?',
+      'Which Indian military exercise is related to ' + name + '?',
+      'Which organization oversees ' + name + ' in India?',
     ],
     'Environment & Ecology': [
       'Which of the following best describes ' + name + ' in the Indian environmental context?',
       'The term ' + name + ' in ecology refers to which of the following?',
+      'Which Indian national park or reserve is known for its ' + name + '?',
+      'What is the primary environmental concern related to ' + name + ' in India?',
     ],
     'Polity': [
       'Which of the following best describes ' + name + ' in Indian Polity?',
       'The ' + name + ' in the Indian political system refers to which of the following?',
+      'Which article of the Indian Constitution is related to ' + name + '?',
+      'Which body or institution handles matters related to ' + name + ' in India?',
     ],
     'General Science': [
       'Which of the following is a fundamental concept in ' + name + '?',
       'The term ' + name + ' in science refers to which of the following?',
+      'Which scientist is most associated with the discovery or development of ' + name + '?',
+      'What is the practical application of ' + name + ' in everyday life?',
+    ],
+    'Sports': [
+      'Which of the following is associated with ' + name + ' in Indian sports?',
+      'Which Indian sportsperson is best known in the field of ' + name + '?',
+      'Which international tournament is related to ' + name + '?',
+      'Which Indian stadium or venue is associated with ' + name + '?',
+    ],
+    'Indian Economy': [
+      'Which of the following best describes ' + name + ' in the Indian economy?',
+      'The term ' + name + ' in economics refers to which of the following?',
+      'Which government policy is related to ' + name + ' in India?',
+      'What is the impact of ' + name + ' on Indias economic growth?',
+    ],
+    'International Relations': [
+      'Which of the following best describes ' + name + ' in international relations?',
+      'The term ' + name + ' in foreign policy refers to which of the following?',
+      'Which international organization deals with ' + name + '?',
+      'Which country is most associated with ' + name + ' in global affairs?',
+    ],
+    'ISRO & Space': [
+      'Which ISRO mission is associated with ' + name + '?',
+      'The term ' + name + ' in space exploration refers to which of the following?',
+      'Which Indian satellite is related to ' + name + '?',
+      'What is the significance of ' + name + ' in Indias space program?',
+    ],
+    'Computer & IT': [
+      'Which of the following best describes ' + name + ' in computing?',
+      'The term ' + name + ' in information technology refers to which of the following?',
+      'Which programming language or technology is associated with ' + name + '?',
+      'What is the primary use of ' + name + ' in the IT industry?',
+    ],
+    'Society': [
+      'Which of the following best describes ' + name + ' in Indian society?',
+      'The term ' + name + ' in a social context refers to which of the following?',
+      'Which social reformer worked on issues related to ' + name + ' in India?',
+      'Which government scheme addresses ' + name + ' in India?',
+    ],
+    'Ethics': [
+      'Which of the following best describes ' + name + ' in ethics?',
+      'The term ' + name + ' in moral philosophy refers to which of the following?',
+      'Which philosopher is most associated with the concept of ' + name + '?',
+      'What is the practical significance of ' + name + ' in ethical decision-making?',
+    ],
+    'State GK': [
+      'Which Indian state is best known for its ' + name + '?',
+      'The ' + name + ' is a key feature of which Indian state?',
+      'Which of the following is true about ' + name + ' in India?',
+      'What is the significance of ' + name + ' in the context of Indian states?',
+    ],
+    'Important Days': [
+      'On which date is ' + name + ' observed?',
+      'The observance of ' + name + ' is associated with which of the following?',
+      'Which organization or body is behind the observance of ' + name + '?',
+      'What is the theme of ' + name + ' in the current or most recent year?',
+    ],
+    'Govt Schemes': [
+      'Which ministry oversees ' + name + '?',
+      'The ' + name + ' scheme is primarily focused on which of the following?',
+      'When was ' + name + ' launched in India?',
+      'What is the main objective of ' + name + ' scheme?',
+    ],
+    'Business & Economy': [
+      'Which sector does ' + name + ' primarily belong to in India?',
+      'The term ' + name + ' in business refers to which of the following?',
+      'Which Indian company is a leader in the field of ' + name + '?',
+      'What is the economic significance of ' + name + ' in India?',
+    ],
+    'Tech & Science': [
+      'Which of the following best describes ' + name + ' in the context of technology?',
+      'The term ' + name + ' in science refers to which of the following?',
+      'Which recent Indian innovation is related to ' + name + '?',
+      'What is the primary application of ' + name + ' in modern technology?',
+    ],
+    'Announcements': [
+      'Which government ministry made the recent announcement regarding ' + name + '?',
+      'The recent announcement about ' + name + ' is related to which of the following?',
+      'What is the purpose of the recent government announcement on ' + name + '?',
+      'Which budget or policy announcement addressed ' + name + '?',
+    ],
+    'RBI Press Releases': [
+      'What is the key highlight of the recent RBI announcement on ' + name + '?',
+      'The RBI directive on ' + name + ' primarily affects which sector?',
+      'Which monetary policy tool is related to ' + name + ' as per RBI?',
+      'What is the impact of the recent RBI decision on ' + name + '?',
+    ],
+    'Personalities': [
+      'Which field is ' + name + ' most associated with?',
+      'The personality ' + name + ' is best known for which of the following?',
+      'Which award or recognition was received by ' + name + '?',
+      'What is the major contribution of ' + name + ' to Indian society?',
     ],
   };
 
   const tpls = templates[category];
   if (tpls) {
-    const q = tpls[Math.floor(Math.random() * tpls.length)];
+    const q = tpls[(idx || 0) % tpls.length];
     return [subSubject, category, q, name];
   }
 
-  return [subSubject, category, 'What is the significance of ' + name + ' in the context of ' + category + '?', name];
+  // Fallback for any category not in templates
+  const fallbacks = [
+    'What is the significance of ' + name + ' in the context of ' + category + '?',
+    'Which of the following best describes ' + name + ' in ' + category + '?',
+    'The term ' + name + ' in ' + category + ' refers to which of the following?',
+    'What is the primary role of ' + name + ' in ' + category + '?',
+  ];
+  return [subSubject, category, fallbacks[(idx || 0) % fallbacks.length], name];
 }
 
 // ── Hardcoded Q&A data for major categories ──
@@ -408,11 +530,11 @@ async function main() {
       added++;
     }
 
-    // Fill remaining via autoQA
+    // Fill remaining via autoQA — pass index for template variety
     const alreadyAdded = bucketCount[key] || 0;
     const stillNeeded = fillMultiple - alreadyAdded;
     for (let i = 0; i < stillNeeded; i++) {
-      const [, , question, answer] = autoQA(subSubject + '_' + (i+1), category);
+      const [, , question, answer] = autoQA(subSubject, category, i);
       const norm = question.replace(/\s+/g, ' ').trim().toLowerCase();
       if (existingQuestions.has(norm)) { skipped++; continue; }
       const fact = categoryFacts[category] || '';
