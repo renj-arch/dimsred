@@ -115,7 +115,7 @@ async function main() {
 
     let added = 0;
     for (const article of articles) {
-      if (added >= 10) break;
+
       const ext = article.extract;
       const title = article.title;
       const desc = article.description;
@@ -123,30 +123,30 @@ async function main() {
       const sentences = allSentences.filter(s => s.trim().length > 40);
 
       // Description-based
-      if (desc && desc.length > 5 && desc.length < 150 && added < 10) {
+      if (desc && desc.length > 5 && desc.length < 150) {
         const isPerson = /(born|died|known for|scientist|politician|author|king|queen|leader|poet|painter)/i.test(desc);
         const q = (isPerson ? 'Who' : 'What') + ' is ' + desc.replace(/^(the\s+)?/i, '').trim() + '?';
         if (q.length > 15 && q.length < 150 && pushQ({
           id: cat.name.substring(0,3).toLowerCase() + added,
           type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-          pubDate: new Date().toISOString(), subject: cat.name, subSubject: cat.name, emoji: '',
-          question: q, answer: title, hint: '',
-          fact: getContext(allSentences, title, 3),
-        })) added++;
-      }
+          pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+           question: q, answer: title, hint: '',
+           fact: getContext(allSentences, title, 3),
+         })) added++;
+       }
 
-      // Year-based
-      for (let si = 0; si < sentences.length && added < 10; si++) {
-        const sent = sentences[si];
-        const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
-        if (!years) continue;
-        const low = sent.toLowerCase();
-        if ((low.includes('founded') || low.includes('established') || low.includes('born') || low.includes('died') || low.includes('battle') || low.includes('treaty') || low.includes('act') || low.includes('movement') || low.includes('war') || low.includes('reign') || low.includes('rule') || low.includes('invasion') || low.includes('conquest') || low.includes('launched') || low.includes('created') || low.includes('formed') || low.includes('enacted') || low.includes('adopted') || low.includes('signed') || low.includes('discovered') || low.includes('invented')) && sent.length < 200) {
-          const context = sent.replace(years[0], '_____');
-          if (pushQ({
-            id: cat.name.substring(0,3).toLowerCase() + added,
-            type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-            pubDate: new Date().toISOString(), subject: cat.name, subSubject: cat.name, emoji: '',
+       // Year-based
+       for (let si = 0; si < sentences.length; si++) {
+         const sent = sentences[si];
+         const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
+         if (!years) continue;
+         const low = sent.toLowerCase();
+         if ((low.includes('founded') || low.includes('established') || low.includes('born') || low.includes('died') || low.includes('battle') || low.includes('treaty') || low.includes('act') || low.includes('movement') || low.includes('war') || low.includes('reign') || low.includes('rule') || low.includes('invasion') || low.includes('conquest') || low.includes('launched') || low.includes('created') || low.includes('formed') || low.includes('enacted') || low.includes('adopted') || low.includes('signed') || low.includes('discovered') || low.includes('invented')) && sent.length < 200) {
+           const context = sent.replace(years[0], '_____');
+           if (pushQ({
+             id: cat.name.substring(0,3).toLowerCase() + added,
+             type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+             pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
             question: context.trim().substring(0, 180), answer: years[0], hint: '',
             fact: getContext(allSentences, sent, 3),
           })) added++;
@@ -154,7 +154,7 @@ async function main() {
       }
 
       // Blank-out key term
-      for (let si = 0; si < sentences.length && added < 10; si++) {
+      for (let si = 0; si < sentences.length; si++) {
         const sent = sentences[si];
         const titleEsc = title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         if (new RegExp(titleEsc, 'i').test(sent)) continue;
@@ -166,9 +166,9 @@ async function main() {
             if (context.length > 20 && context.length < 180 && pushQ({
               id: cat.name.substring(0,3).toLowerCase() + added,
               type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-              pubDate: new Date().toISOString(), subject: cat.name, subSubject: cat.name, emoji: '',
-              question: context.trim(), answer: term, hint: '',
-              fact: getContext(allSentences, sent, 3),
+             pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+               question: context.trim(), answer: term, hint: '',
+               fact: getContext(allSentences, sent, 3),
             })) added++;
           }
         }
