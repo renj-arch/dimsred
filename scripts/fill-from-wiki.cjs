@@ -6,13 +6,22 @@ const WIKI_API = 'https://en.wikipedia.org/w/api.php';
 const QUIZ_PATH = path.join(__dirname, '..', 'data', 'quiz.json');
 
 // ── Fetch helpers (from fetch-wiki-gk.js) ──
-function fetchJSON(url) {
+function fetchJSON(url, retries) {
+  retries = retries || 5;
   return new Promise((resolve, reject) => {
     https.get(url + '&origin=*', { headers: { 'User-Agent': 'FillFromWiki/1.0' } }, (res) => {
       let data = '';
       res.on('data', c => data += c);
       res.on('end', () => {
-        try { resolve(JSON.parse(data)); } catch (e) { reject(e); }
+        try { resolve(JSON.parse(data)); } catch (e) {
+          if (retries > 0 && (data.includes('You are') || data.includes('<html'))) {
+            const wait = (6 - retries) * 10000;
+            console.log('(rate limited, retrying in ' + wait/1000 + 's...)');
+            setTimeout(() => fetchJSON(url, retries - 1).then(resolve, reject), wait);
+          } else {
+            reject(new Error('Invalid JSON: ' + data.substring(0, 80)));
+          }
+        }
       });
     }).on('error', reject);
   });
@@ -25,7 +34,7 @@ function cleanText(text) {
 }
 
 async function fetchArticle(query, maxRetries) {
-  maxRetries = maxRetries || 3;
+  maxRetries = maxRetries || 5;
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       const searchUrl = `${WIKI_API}?action=query&list=search&srsearch=${encodeURIComponent(query)}&srlimit=3&format=json`;
@@ -46,7 +55,7 @@ async function fetchArticle(query, maxRetries) {
       };
     } catch (err) {
       if (err.message.includes('too many requests') && attempt < maxRetries - 1) {
-        const wait = (attempt + 1) * 4000;
+        const wait = (attempt + 1) * 5000;
         console.log('(rate limit, waiting ' + wait + 'ms)');
         await delay(wait);
         continue;
@@ -271,8 +280,14 @@ async function main() {
       failed++;
     }
 
-    // Rate limiting: 2.5s between requests to avoid Wikipedia throttling
-    await delay(2500);
+    // Save progress every 10 questions
+    if (newCount % 10 === 0 && newCount > 0) {
+      fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz, null, 2));
+      console.log('  [saved progress at ' + newCount + ' new questions]');
+    }
+
+    // Rate limiting: 5s between requests to avoid Wikipedia throttling
+    await delay(5000);
   }
 
   // Write updated quiz

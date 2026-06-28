@@ -339,7 +339,7 @@ function classifySub(q, altCat) {
 const tree = {};
 questions.forEach(q => {
   const c = q.category || 'Misc', s = q.subject || 'General';
-  let ss = q.subSubject || classifySub(q);
+  let ss = classifySub(q) || q.subSubject;
   if (!ss && CAT_MAP[c]) {
     for (const mappedCat of CAT_MAP[c]) {
       ss = classifySub(q, mappedCat);
