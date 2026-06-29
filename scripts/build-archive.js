@@ -417,149 +417,194 @@ function renderQuestion(q, idx) {
   return '<div class="q-item" data-category="' + esc(q.category||'') + '" data-subject="' + esc(q.subject||'') + '" data-subsub="' + esc(ss) + '" data-type="' + esc(q.type||'') + '">\n    <div class="q-num">#' + (idx+1) + '</div>\n    <div class="q-tags">' + tags + '\n    </div>\n    <div class="q-question"><a href="' + permalink + '" style="color:inherit;text-decoration:none">' + qText + '</a></div>\n    <div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + esc(answer) + '</span></div>\n    <button class="explain-btn" onclick="toggleExplain(this)">\uD83D\uDCD6 Explanation</button>\n    <div class="q-explain">' + esc(makeExplanation(q)).replace(/\n/g,'<br>') + '</div>\n    <div style="margin-top:6px;font-size:.72em"><a href="' + permalink + '" style="color:var(--text-muted)">\uD83D\uDD17 Permalink</a></div>\n  </div>';
 }
 
-// ── Generate HTML ──
-let html = '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width,initial-scale=1.0">\n<title>GK Current Affairs Archive — vlymbooq</title>\n<meta name="description" content="Complete archive of ' + questions.length + ' GK & Current Affairs questions with explanations. Free practice for competitive exams. Browse by subject tree.">\n<link rel="icon" type="image/svg+xml" href="favicon.svg">\n<link rel="icon" type="image/png" href="logo.png">\n<link rel="canonical" href="https://vlymbooq.qzz.io/archive.html">\n<link rel="stylesheet" href="css/style.css">\n<style>\n@import url(\'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap\');\n*{margin:0;padding:0;box-sizing:border-box}\n:root{--bg:#09090b;--bg-card:#111113;--bg-hover:#18181b;--border:rgba(255,255,255,.06);--border-hover:rgba(255,255,255,.1);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--red:#ef4444;--amber:#f59e0b;--cyan:#22d3ee;--radius:12px;--radius-lg:16px}\nbody{font-family:\'Inter\',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}\na{color:var(--text);text-decoration:none}\n.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}\n.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}\n.brand{display:flex;align-items:center;gap:8px}\n.brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}\n.nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}\n.nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:var(--text-sec);transition:all .2s;white-space:nowrap}\n.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}\n.nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}\n@media(max-width:640px){.nav{padding:10px 12px}.nav-links{flex-wrap:nowrap;overflow-x:auto;gap:0}.nav-links::-webkit-scrollbar{display:none}.nav-links a{padding:5px 10px;font-size:.7em}.brand-text{font-size:.85em}}\n.page-wrap{display:flex;max-width:1200px;margin:0 auto;padding:0;min-height:calc(100vh - 60px)}\n.sidebar{width:280px;flex-shrink:0;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;padding:16px 12px;border-right:1px solid var(--border);background:var(--bg)}\n.sidebar::-webkit-scrollbar{width:4px}\n.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}\n.sidebar-title{font-size:.7em;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);padding:0 10px 12px}\n.sidebar-cat{margin-bottom:2px}\n.sidebar-link{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;font-size:.82em;font-weight:500;color:var(--text-sec);transition:all .15s;cursor:pointer}\n.sidebar-link:hover{background:var(--bg-hover);color:var(--text)}\n.sidebar-link.active{background:rgba(167,139,250,.1);color:var(--purple);font-weight:600}\n.sidebar-link .sidebar-icon{font-size:1em;width:20px;text-align:center;flex-shrink:0}\n.sidebar-link .sidebar-label{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}\n.sidebar-link .sidebar-count{font-size:.75em;color:var(--text-muted);background:rgba(255,255,255,.04);padding:1px 7px;border-radius:100px;flex-shrink:0}\n.sidebar-subjects{margin:0 0 2px 28px;display:none}\n.sidebar-subjects.open{display:block}\n.sidebar-subj-link{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:6px;font-size:.76em;font-weight:400;color:var(--text-sec);transition:all .15s;cursor:pointer}\n.sidebar-subj-link:hover{background:var(--bg-hover);color:var(--text)}\n.sidebar-subj-link.active{color:var(--emerald);font-weight:500}\n.sidebar-subj-link .sidebar-label{flex:1}\n.sidebar-subj-link .sidebar-count{font-size:.72em;color:var(--text-muted)}\n.sidebar-subsubs{margin:0 0 2px 24px;display:none}\n.sidebar-subsubs.open{display:block}\n.sidebar-subsub-link{display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:5px;font-size:.7em;font-weight:400;color:var(--text-muted);transition:all .15s;cursor:pointer}\n.sidebar-subsub-link:hover{background:var(--bg-hover);color:var(--text)}\n.sidebar-subsub-link.active{color:var(--cyan);font-weight:500}\n.sidebar-subsub-link .sidebar-label{flex:1}\n.sidebar-subsub-link .sidebar-count{font-size:.7em;color:var(--text-muted)}\n.main-content{flex:1;min-width:0;padding:24px 32px 40px}\n.main-content .breadcrumb{display:flex;align-items:center;gap:6px;font-size:.78em;color:var(--text-muted);margin-bottom:20px;flex-wrap:wrap}\n.breadcrumb a{color:var(--text-sec);cursor:pointer}\n.breadcrumb a:hover{color:var(--purple)}\n.breadcrumb .sep{color:var(--text-muted);font-size:.7em}\n.breadcrumb .current{color:var(--text);font-weight:500}\n.page-title{font-size:1.5em;font-weight:900;margin-bottom:4px}\n.page-sub{color:var(--text-muted);font-size:.82em;margin-bottom:24px}\n.subj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:24px}\n.subj-card{padding:16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);cursor:pointer;transition:all .2s}\n.subj-card:hover{border-color:var(--border-hover);background:var(--bg-hover);transform:translateY(-1px)}\n.subj-card-name{font-size:.95em;font-weight:700;margin-bottom:4px;color:var(--text)}\n.subj-card-count{font-size:.72em;color:var(--text-muted);margin-bottom:8px}\n.subj-card-preview{font-size:.7em;color:var(--text-sec);line-height:1.6;opacity:.6}\n.question-list{display:grid;grid-template-columns:1fr;gap:6px}\n.question-list .q-item{padding:14px 16px;border-radius:var(--radius);border:1px solid rgba(255,255,255,.04);background:rgba(255,255,255,.02);transition:all .15s}\n.question-list .q-item:hover{border-color:var(--border-hover);background:var(--bg-hover)}\n.q-item .q-num{font-size:.6em;font-weight:600;color:var(--text-muted);margin-bottom:3px}\n.q-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}\n.tag{padding:2px 7px;border-radius:4px;font-size:.6em;font-weight:600;line-height:1.5}\n.cat-tag{background:rgba(34,211,238,.08);color:var(--cyan)}\n.subj-tag{background:rgba(167,139,250,.08);color:var(--purple)}\n.subsub-tag{background:rgba(52,211,153,.08);color:var(--emerald)}\n.tf-tag{background:rgba(245,158,11,.08);color:var(--amber)}\n.date-tag{background:rgba(82,82,91,.2);color:var(--text-muted)}\n.emoji-tag{background:transparent;padding:2px 0;font-size:.85em}\n.q-question{font-size:.88em;font-weight:600;line-height:1.5;margin-bottom:6px;font-family:\'JetBrains Mono\',monospace;color:var(--text)}\n.q-question .blank-placeholder{color:var(--purple);font-weight:700;text-decoration:underline;text-decoration-style:wavy;text-decoration-color:rgba(167,139,250,.3)}\n.q-answer{padding:6px 10px;border-radius:6px;background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.12);display:inline-block}\n.a-label{font-size:.68em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}\n.a-value{font-size:.88em;font-weight:700;color:var(--emerald);margin-left:5px;font-family:\'JetBrains Mono\',monospace}\n.explain-btn{padding:4px 10px;margin-top:8px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-sec);font-size:.72em;font-weight:500;cursor:pointer;transition:all .15s;font-family:inherit}\n.explain-btn:hover{color:var(--cyan);border-color:rgba(34,211,238,.2);background:rgba(34,211,238,.04)}\n.q-explain{display:none;margin-top:8px;padding:10px 12px;border-radius:6px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.1);font-size:.8em;line-height:1.6;color:var(--text-sec)}\n.q-explain.show{display:block}\n@media(max-width:900px){.sidebar{width:220px;padding:12px 8px}.page-wrap{padding:0}.main-content{padding:16px}.page-title{font-size:1.2em}.subj-grid{grid-template-columns:1fr 1fr}}\n@media(max-width:640px){.sidebar{display:none}.main-content{padding:12px}.page-wrap{display:block}.subj-grid{grid-template-columns:1fr}.question-list .q-item{padding:12px}.q-question{font-size:.82em}}';
-html += '\n<\/style>\n<\/head>\n<body>\n';
-html += '\n<nav class="nav"><div class="nav-inner"><div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--purple)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"\/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"\/><\/svg><span class="brand-text">vlymbooq</span><\/div><div class="nav-links"><a href="index.html">Home<\/a><a href="current-affairs.html">Quiz<\/a><a href="dashboard.html">Dashboard<\/a><a class="active" href="archive.html">Archive<\/a><a href="about.html">About<\/a><\/div><\/div><\/nav>';
+// ── Pagination ──
+const Q_PER_PAGE = 5000;
+const totalPages = Math.max(1, Math.ceil(questions.length / Q_PER_PAGE));
 
-// Sidebar
-html += '<div class="page-wrap"><aside class="sidebar"><div class="sidebar-title">Categories</div>';
-const CAT_ICONS = { 'Indian History':'📜','World History':'🌍','Art & Culture':'🎨','Polity':'🏛️','Indian Economy':'📊','Geography':'🗺️','World Geography':'🌏','General Science':'🔬','Defence':'⚔️','Environment & Ecology':'🌿','International Relations':'🤝','Constitution':'📜','ISRO & Space':'🚀','Computer & IT':'💻','Sports':'🏆','Society':'👥','Personalities':'👤','State GK':'🗺️','Books & Authors':'📚','Important Days':'📅','Govt Schemes':'📋','Awards':'🏅','Business & Economy':'💼','Tech & Science':'⚙️','Ethics':'⚖️','Announcements':'📢','RBI Press Releases':'🏦' };
-sortedCats.forEach((c, ci) => {
-  const subs = tree[c];
-  const totalQ = Object.values(subs).reduce((sum, sub) => sum + Object.values(sub).reduce((s, qs) => s + qs.length, 0), 0);
-  html += '<div class="sidebar-cat">';
-  html += '<a href="#" class="sidebar-link" data-cat="' + esc(c) + '" onmouseenter="return selectCategory(' + ci + ')" onclick="return selectCategory(' + ci + ')">';
-  html += '<span class="sidebar-icon">' + (CAT_ICONS[c] || '📌') + '</span>';
-  html += '<span class="sidebar-label">' + esc(c) + '</span>';
-  html += '<span class="sidebar-count">' + totalQ + '</span></a>';
-  html += '<div class="sidebar-subjects" id="subj-' + ci + '">';
-  Object.keys(subs).forEach(subj => {
-    const ssList = subs[subj];
-    const subjQ = Object.values(ssList).reduce((s, qs) => s + qs.length, 0);
-    const subjPair = esc(c) + '||' + esc(subj);
-    html += '<a href="#" class="sidebar-subj-link" data-subj="' + subjPair + '" onmouseenter="return selectSubject(\'' + subjPair + '\')" onclick="return selectSubject(\'' + subjPair + '\')">';
-    html += '<span class="sidebar-label">' + esc(subj) + '</span>';
-    html += '<span class="sidebar-count">' + subjQ + '</span></a>';
-    const safeSubjId = 'ss_' + ci + '_' + esc(c).replace(/[^a-zA-Z0-9]/g,'_') + '_' + esc(subj).replace(/[^a-zA-Z0-9]/g,'_');
-    html += '<div class="sidebar-subsubs" id="' + safeSubjId + '">';
-    Object.keys(ssList).forEach(ss => {
-      const qs = ssList[ss];
-      const ssPair = esc(c) + '||' + esc(subj) + '||' + esc(ss);
-      html += '<a href="#" class="sidebar-subsub-link" data-subsub="' + ssPair + '" onmouseenter="return selectSubSubject(\'' + ssPair + '\')" onclick="return selectSubSubject(\'' + ssPair + '\')">';
-      html += '<span class="sidebar-label">' + esc(ss) + '</span>';
-      html += '<span class="sidebar-count">' + qs.length + '</span></a>';
-    });
-    html += '</div>';
+function renderOnePage(pageIdx) {
+  const startIdx = pageIdx * Q_PER_PAGE;
+  const endIdx = Math.min(startIdx + Q_PER_PAGE, questions.length);
+  const pageQs = questions.slice(startIdx, endIdx);
+  const pageLabel = pageIdx + 1;
+
+  // Build per-page tree for content only
+  const pageTree = {};
+  pageQs.forEach(q => {
+    const c = q.category || 'Misc', s = q.subject || 'General';
+    let ss = classifySub(q) || q.subSubject;
+    if (!ss && CAT_MAP[c]) {
+      for (const mappedCat of CAT_MAP[c]) { ss = classifySub(q, mappedCat); if (ss) break; }
+    }
+    ss = ss || 'General';
+    if (!pageTree[c]) pageTree[c] = {};
+    if (!pageTree[c][s]) pageTree[c][s] = {};
+    if (!pageTree[c][s][ss]) pageTree[c][s][ss] = [];
+    pageTree[c][s][ss].push(q);
   });
-  html += '</div></div>';
-});
-html += '</aside>';
 
-// Main content
-html += '<main class="main-content">';
-html += '<div class="breadcrumb" id="breadcrumb"><a href="#" onclick="return showWelcome()">Archive</a> <span class="sep">›</span> <span class="current">All Categories</span></div>';
+  const sortedPageCats = Object.keys(pageTree).sort();
 
-// Welcome view
-html += '<div class="content-panel" id="view-welcome">';
-html += '<h1 class="page-title">📚 GK Current Affairs Archive</h1>';
-html += '<p class="page-sub">' + questions.length + ' questions across ' + sortedCats.length + ' categories. Hover sidebar to navigate, click for mobile.</p>';
-html += '<div class="subj-grid" data-level="categories">';
-sortedCats.forEach((c, ci) => {
-  const subs = tree[c];
-  const totalQ = Object.values(subs).reduce((sum, sub) => sum + Object.values(sub).reduce((s, qs) => s + qs.length, 0), 0);
-  const preview = Object.values(subs).flatMap(sub => Object.values(sub).flat()).slice(0, 3).map(q => q.question.substring(0, 80)).join('<br>');
-  html += '<div class="subj-card" onmouseenter="return selectCategory(' + ci + ')" onclick="return selectCategory(' + ci + ')">';
-  html += '<div class="subj-card-name">' + (CAT_ICONS[c] || '📌') + ' ' + esc(c) + '</div>';
-  html += '<div class="subj-card-count">' + totalQ + ' question' + (totalQ > 1 ? 's' : '') + '</div>';
-  html += '<div class="subj-card-preview">' + preview + '</div></div>';
-});
-html += '</div></div>';
+  let html = '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width,initial-scale=1.0">\n<title>GK Current Affairs Archive (Page ' + pageLabel + ') — vlymbooq</title>\n<meta name="description" content="Complete archive of ' + questions.length + ' GK & Current Affairs questions with explanations. Free practice for competitive exams. Browse by subject tree.">\n<link rel="icon" type="image/svg+xml" href="favicon.svg">\n<link rel="icon" type="image/png" href="logo.png">\n';
+  if (pageIdx === 0) html += '<link rel="canonical" href="https://vlymbooq.qzz.io/archive.html">\n';
+  html += '<link rel="stylesheet" href="css/style.css">\n<style>\n@import url(\'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap\');\n*{margin:0;padding:0;box-sizing:border-box}\n:root{--bg:#09090b;--bg-card:#111113;--bg-hover:#18181b;--border:rgba(255,255,255,.06);--border-hover:rgba(255,255,255,.1);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--red:#ef4444;--amber:#f59e0b;--cyan:#22d3ee;--radius:12px;--radius-lg:16px}\nbody{font-family:\'Inter\',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}\na{color:var(--text);text-decoration:none}\n.pager{text-align:center;padding:16px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}\n.pager a{display:inline-block;padding:8px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:100px;font-size:.85em;color:var(--text);transition:all .15s}\n.pager a:hover{background:var(--bg-hover);border-color:var(--border-hover);text-decoration:none}\n.pager .active{background:var(--purple);border-color:var(--purple);color:#fff;cursor:default}\n.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}\n.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}\n.brand{display:flex;align-items:center;gap:8px}\n.brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}\n.nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}\n.nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:var(--text-sec);transition:all .2s;white-space:nowrap}\n.nav-links a.active,.nav-links a:hover{background:rgba(167,139,250,.1);color:var(--purple)}.page-wrap{display:flex;max-width:1100px;margin:0 auto;padding:24px;gap:24px}.sidebar{width:280px;flex-shrink:0;position:sticky;top:80px;align-self:flex-start;max-height:calc(100vh-96px);overflow-y:auto}.sidebar-title{font-size:.8em;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:12px}.sidebar-cat{margin-bottom:2px}.sidebar-link,.sidebar-subj-link,.sidebar-subsub-link{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;border-radius:8px;font-size:.85em;color:var(--text-sec);transition:all .12s;cursor:pointer}.sidebar-link:hover,.sidebar-subj-link:hover,.sidebar-subsub-link:hover,.sidebar-link.active,.sidebar-subj-link.active,.sidebar-subsub-link.active{background:rgba(167,139,250,.08);color:var(--text)}.sidebar-link.active{background:rgba(167,139,250,.12)}.sidebar-icon{margin-right:6px}.sidebar-count{font-size:.78em;color:var(--text-muted);padding:1px 6px;border-radius:4px;background:var(--bg-card)}.sidebar-subjects{display:none;margin-left:12px}.sidebar-subjects.open{display:block}.sidebar-subj-link{padding:4px 10px;font-size:.82em}.sidebar-subsubs{display:none;margin-left:12px}.sidebar-subsubs.open{display:block}.sidebar-subsub-link{padding:3px 8px;font-size:.78em}.main-content{flex:1;min-width:0}.breadcrumb{font-size:.85em;color:var(--text-muted);margin-bottom:20px}.breadcrumb a{color:var(--text-sec);cursor:pointer}.breadcrumb .sep{margin:0 6px;color:var(--text-muted)}.breadcrumb .current{color:var(--text)}.page-title{font-size:1.6em;font-weight:800;margin-bottom:4px;letter-spacing:-.5px}.page-sub{color:var(--text-sec);font-size:.9em;margin-bottom:24px}.subj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:24px}.subj-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all .2s}.subj-card:hover{background:var(--bg-hover);border-color:var(--border-hover)}.subj-card-name{font-weight:600;font-size:.95em;margin-bottom:4px}.subj-card-count{font-size:.8em;color:var(--text-muted);margin-bottom:8px}.subj-card-preview{font-size:.75em;color:var(--text-muted);line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}.question-list{display:flex;flex-direction:column;gap:12px}.q-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:all .2s}.q-item:hover{background:var(--bg-hover)}.q-num{font-size:.75em;color:var(--text-muted);margin-bottom:4px}.q-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}.tag{font-size:.7em;padding:2px 8px;border-radius:100px;font-weight:500}.cat-tag{background:rgba(167,139,250,.12);color:var(--purple)}.subj-tag{background:rgba(52,211,153,.1);color:var(--emerald)}.subsub-tag{background:rgba(245,158,11,.1);color:var(--amber)}.date-tag{background:rgba(34,211,238,.08);color:var(--cyan)}.emoji-tag{background:transparent}.tf-tag{background:rgba(239,68,68,.1);color:var(--red)}.q-question{font-size:.95em;font-weight:500;margin-bottom:8px;line-height:1.6}.q-answer{font-size:.85em;margin-bottom:6px}.a-label{color:var(--text-muted)}.a-value{color:var(--emerald);font-weight:600}.explain-btn{background:transparent;border:1px solid var(--border);color:var(--text-sec);padding:5px 12px;border-radius:100px;cursor:pointer;font-size:.78em;transition:all .2s}.explain-btn:hover{background:var(--bg-hover);border-color:var(--border-hover)}.q-explain{background:rgba(167,139,250,.05);border-radius:8px;padding:12px;margin-top:8px;font-size:.82em;color:var(--text-sec);line-height:1.7;display:none}.q-explain.show{display:block}@media(max-width:768px){.sidebar{display:none}.page-wrap{padding:16px;flex-direction:column}.subj-grid{grid-template-columns:1fr}}\n<\/style>\n<\/head>\n<body>\n';
+  html += '\n<nav class="nav"><div class="nav-inner"><div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--purple)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"\/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"\/><\/svg><span class="brand-text">vlymbooq<\/span><\/div><div class="nav-links"><a href="index.html">Home<\/a><a href="current-affairs.html">Quiz<\/a><a href="dashboard.html">Dashboard<\/a><a class="active" href="archive.html">Archive<\/a><a href="about.html">About<\/a><\/div><\/div><\/nav>';
 
-// Category views (subject grid)
-sortedCats.forEach((c, ci) => {
-  const subs = tree[c];
-  html += '<div class="content-panel" id="catView-' + ci + '" style="display:none">';
-  html += '<h2 class="page-title">' + (CAT_ICONS[c] || '📌') + ' ' + esc(c) + '</h2>';
-  html += '<p class="page-sub">Choose a subject:</p>';
-  html += '<div class="subj-grid" data-level="subjects" data-category="' + esc(c) + '">';
-  Object.keys(subs).forEach(subj => {
-    const qs = Object.values(subs[subj]).flat();
-    const preview = qs.slice(0, 3).map(q => q.question.substring(0, 80)).join('<br>');
-    const subjPair = esc(c) + '||' + esc(subj);
-    html += '<div class="subj-card" onmouseenter="return selectSubject(\'' + subjPair + '\')" onclick="return selectSubject(\'' + subjPair + '\')">';
-    html += '<div class="subj-card-name">' + esc(subj) + '</div>';
-    html += '<div class="subj-card-count">' + qs.length + ' question' + (qs.length > 1 ? 's' : '') + '</div>';
+  // Pager
+  html += '<div class="pager">';
+  for (let p = 0; p < totalPages; p++) {
+    const href = p === 0 ? 'archive.html' : 'archive-p' + (p+1) + '.html';
+    const active = p === pageIdx ? ' class="active"' : '';
+    html += '<a href="' + href + '"' + active + '>' + (p+1) + '</a>';
+  }
+  html += '</div>';
+
+  // Sidebar
+  const CAT_ICONS = { 'Indian History':'📜','World History':'🌍','Art & Culture':'🎨','Polity':'🏛️','Indian Economy':'📊','Geography':'🗺️','World Geography':'🌏','General Science':'🔬','Defence':'⚔️','Environment & Ecology':'🌿','International Relations':'🤝','Constitution':'📜','ISRO & Space':'🚀','Computer & IT':'💻','Sports':'🏆','Society':'👥','Personalities':'👤','State GK':'🗺️','Books & Authors':'📚','Important Days':'📅','Govt Schemes':'📋','Awards':'🏅','Business & Economy':'💼','Tech & Science':'⚙️','Ethics':'⚖️','Announcements':'📢','RBI Press Releases':'🏦' };
+  html += '<div class="page-wrap"><aside class="sidebar"><div class="sidebar-title">Categories</div>';
+  sortedCats.forEach((c, ci) => {
+    const subs = tree[c];
+    const totalQ = Object.values(subs).reduce((sum, sub) => sum + Object.values(sub).reduce((s, qs) => s + qs.length, 0), 0);
+    html += '<div class="sidebar-cat">';
+    html += '<a href="#" class="sidebar-link" data-cat="' + esc(c) + '" onmouseenter="return selectCategory(' + ci + ')" onclick="return selectCategory(' + ci + ')">';
+    html += '<span class="sidebar-icon">' + (CAT_ICONS[c] || '📌') + '</span>';
+    html += '<span class="sidebar-label">' + esc(c) + '</span>';
+    html += '<span class="sidebar-count">' + totalQ + '</span></a>';
+    html += '<div class="sidebar-subjects" id="subj-' + ci + '">';
+    Object.keys(subs).forEach(subj => {
+      const ssList = subs[subj];
+      const subjQ = Object.values(ssList).reduce((s, qs) => s + qs.length, 0);
+      const subjPair = esc(c) + '||' + esc(subj);
+      html += '<a href="#" class="sidebar-subj-link" data-subj="' + subjPair + '" onmouseenter="return selectSubject(\'' + subjPair + '\')" onclick="return selectSubject(\'' + subjPair + '\')">';
+      html += '<span class="sidebar-label">' + esc(subj) + '</span>';
+      html += '<span class="sidebar-count">' + subjQ + '</span></a>';
+      const safeSubjId = 'ss_' + ci + '_' + esc(c).replace(/[^a-zA-Z0-9]/g,'_') + '_' + esc(subj).replace(/[^a-zA-Z0-9]/g,'_');
+      html += '<div class="sidebar-subsubs" id="' + safeSubjId + '">';
+      Object.keys(ssList).forEach(ss => {
+        const qs = ssList[ss];
+        const ssPair = esc(c) + '||' + esc(subj) + '||' + esc(ss);
+        html += '<a href="#" class="sidebar-subsub-link" data-subsub="' + ssPair + '" onmouseenter="return selectSubSubject(\'' + ssPair + '\')" onclick="return selectSubSubject(\'' + ssPair + '\')">';
+        html += '<span class="sidebar-label">' + esc(ss) + '</span>';
+        html += '<span class="sidebar-count">' + qs.length + '</span></a>';
+      });
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  html += '</aside>';
+
+  // Main content
+  html += '<main class="main-content">';
+  html += '<div class="breadcrumb" id="breadcrumb"><a href="#" onclick="return showWelcome()">Archive</a> <span class="sep">›</span> <span class="current">All Categories</span></div>';
+
+  // Welcome view
+  html += '<div class="content-panel" id="view-welcome">';
+  html += '<h1 class="page-title">📚 GK Current Affairs Archive</h1>';
+  html += '<p class="page-sub">' + questions.length + ' questions across ' + sortedCats.length + ' categories (Page ' + pageLabel + '/' + totalPages + '). Hover sidebar to navigate.</p>';
+  html += '<div class="subj-grid" data-level="categories">';
+  sortedPageCats.forEach((c, ci) => {
+    const subs = pageTree[c];
+    const totalQ = Object.values(subs).reduce((sum, sub) => sum + Object.values(sub).reduce((s, qs) => s + qs.length, 0), 0);
+    const ciFull = sortedCats.indexOf(c);
+    const preview = Object.values(subs).flatMap(sub => Object.values(sub).flat()).slice(0, 3).map(q => q.question.substring(0, 80)).join('<br>');
+    html += '<div class="subj-card" onmouseenter="return selectCategory(' + ciFull + ')" onclick="return selectCategory(' + ciFull + ')">';
+    html += '<div class="subj-card-name">' + (CAT_ICONS[c] || '📌') + ' ' + esc(c) + '</div>';
+    html += '<div class="subj-card-count">' + totalQ + ' question' + (totalQ > 1 ? 's' : '') + '</div>';
     html += '<div class="subj-card-preview">' + preview + '</div></div>';
   });
   html += '</div></div>';
-});
 
-// Subject views (subSubject grid)
-sortedCats.forEach((c, ci) => {
-  const subs = tree[c];
-  Object.keys(subs).forEach(subj => {
-    const ssList = subs[subj];
-    const subjPair = esc(c) + '||' + esc(subj);
-    html += '<div class="content-panel" id="subjView-' + subjPair + '" style="display:none">';
+  // Category views
+  sortedPageCats.forEach((c, ci) => {
+    const subs = pageTree[c];
+    const ciFull = sortedCats.indexOf(c);
+    html += '<div class="content-panel" id="catView-' + ciFull + '" style="display:none">';
     html += '<h2 class="page-title">' + (CAT_ICONS[c] || '📌') + ' ' + esc(c) + '</h2>';
-    html += '<p class="page-sub">' + esc(subj) + ' — choose a sub-topic:</p>';
-    html += '<div class="subj-grid" data-level="subsubs" data-subject="' + subjPair + '">';
-    Object.keys(ssList).forEach(ss => {
-      const qs = ssList[ss];
+    html += '<p class="page-sub">Choose a subject:</p>';
+    html += '<div class="subj-grid" data-level="subjects" data-category="' + esc(c) + '">';
+    Object.keys(subs).forEach(subj => {
+      const qs = Object.values(subs[subj]).flat();
       const preview = qs.slice(0, 3).map(q => q.question.substring(0, 80)).join('<br>');
-      const ssPair = esc(c) + '||' + esc(subj) + '||' + esc(ss);
-      html += '<div class="subj-card" onmouseenter="return selectSubSubject(\'' + ssPair + '\')" onclick="return selectSubSubject(\'' + ssPair + '\')">';
-      html += '<div class="subj-card-name">' + esc(ss) + '</div>';
+      const subjPair = esc(c) + '||' + esc(subj);
+      html += '<div class="subj-card" onmouseenter="return selectSubject(\'' + subjPair + '\')" onclick="return selectSubject(\'' + subjPair + '\')">';
+      html += '<div class="subj-card-name">' + esc(subj) + '</div>';
       html += '<div class="subj-card-count">' + qs.length + ' question' + (qs.length > 1 ? 's' : '') + '</div>';
       html += '<div class="subj-card-preview">' + preview + '</div></div>';
     });
     html += '</div></div>';
   });
-});
 
-// subSubject views (question lists)
-sortedCats.forEach((c, ci) => {
-  const subs = tree[c];
-  Object.keys(subs).forEach(subj => {
-    const ssList = subs[subj];
-    Object.keys(ssList).forEach(ss => {
-      const qs = ssList[ss];
-      const ssPair = esc(c) + '||' + esc(subj) + '||' + esc(ss);
-      html += '<div class="content-panel" id="ssView-' + ssPair + '" style="display:none">';
-      html += '<h2 class="page-title">' + (CAT_ICONS[c] || '📌') + ' ' + esc(ss) + '</h2>';
-      html += '<p class="page-sub">' + esc(subj) + ' — ' + esc(c) + '</p>';
-      html += '<div class="question-list">';
-      qs.forEach((q, qi) => { html += renderQuestion(q, qi); });
+  // Subject views
+  sortedPageCats.forEach((c, ci) => {
+    const subs = pageTree[c];
+    Object.keys(subs).forEach(subj => {
+      const ssList = subs[subj];
+      const subjPair = esc(c) + '||' + esc(subj);
+      html += '<div class="content-panel" id="subjView-' + subjPair + '" style="display:none">';
+      html += '<h2 class="page-title">' + (CAT_ICONS[c] || '📌') + ' ' + esc(c) + '</h2>';
+      html += '<p class="page-sub">' + esc(subj) + ' — choose a sub-topic:</p>';
+      html += '<div class="subj-grid" data-level="subsubs" data-subject="' + subjPair + '">';
+      Object.keys(ssList).forEach(ss => {
+        const qs = ssList[ss];
+        const preview = qs.slice(0, 3).map(q => q.question.substring(0, 80)).join('<br>');
+        const ssPair = esc(c) + '||' + esc(subj) + '||' + esc(ss);
+        html += '<div class="subj-card" onmouseenter="return selectSubSubject(\'' + ssPair + '\')" onclick="return selectSubSubject(\'' + ssPair + '\')">';
+        html += '<div class="subj-card-name">' + esc(ss) + '</div>';
+        html += '<div class="subj-card-count">' + qs.length + ' question' + (qs.length > 1 ? 's' : '') + '</div>';
+        html += '<div class="subj-card-preview">' + preview + '</div></div>';
+      });
       html += '</div></div>';
     });
   });
-});
 
-html += '</main></div>';
+  // subSubject views (question lists)
+  sortedPageCats.forEach((c, ci) => {
+    const subs = pageTree[c];
+    Object.keys(subs).forEach(subj => {
+      const ssList = subs[subj];
+      Object.keys(ssList).forEach(ss => {
+        const qs = ssList[ss];
+        const ssPair = esc(c) + '||' + esc(subj) + '||' + esc(ss);
+        html += '<div class="content-panel" id="ssView-' + ssPair + '" style="display:none">';
+        html += '<h2 class="page-title">' + (CAT_ICONS[c] || '📌') + ' ' + esc(ss) + '</h2>';
+        html += '<p class="page-sub">' + esc(subj) + ' — ' + esc(c) + '</p>';
+        html += '<div class="question-list">';
+        qs.forEach((q, qi) => { html += renderQuestion(q, qi); });
+        html += '</div></div>';
+      });
+    });
+  });
 
-// Inline JS
-html += '<script>\nvar catData = [';
-sortedCats.forEach((c, i) => { html += (i ? ',' : '') + '\'' + esc(c) + '\''; });
-html += '];\n';
+  html += '</main></div>';
 
-html += 'function selectCategory(ci) {\n  var cat = catData[ci];\n  document.querySelectorAll(\'.sidebar-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subj-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subsub-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subjects\').forEach(function(s){s.classList.remove(\'open\')});\n  document.querySelectorAll(\'.sidebar-subsubs\').forEach(function(s){s.classList.remove(\'open\')});\n  var link = document.querySelector(\'.sidebar-link[data-cat=\"\' + cat + \'\"]\');\n  if(link) link.classList.add(\'active\');\n  var subjs = document.getElementById(\'subj-\' + ci);\n  if(subjs) subjs.classList.add(\'open\');\n  document.getElementById(\'breadcrumb\').innerHTML = \'<a href=\"#\" onclick=\"return showWelcome()\">Archive</a> <span class=\"sep\">›</span> <span class=\"current\">\' + escHtml(cat) + \'</span>\';\n  showView(\'catView-\' + ci);\n  return false;\n}\n';
+  // Inline JS
+  html += '<script>\nvar catData = [';
+  sortedCats.forEach((c, i) => { html += (i ? ',' : '') + '\'' + esc(c) + '\''; });
+  html += '];\n';
 
-html += 'function selectSubject(subjId) {\n  var parts = subjId.split(\'||\');\n  var cat = parts[0], subj = parts[1];\n  var catIdx = catData.indexOf(cat);\n  document.querySelectorAll(\'.sidebar-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subj-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subsub-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subjects\').forEach(function(s){s.classList.remove(\'open\')});\n  document.querySelectorAll(\'.sidebar-subsubs\').forEach(function(s){s.classList.remove(\'open\')});\n  var catLink = document.querySelector(\'.sidebar-link[data-cat=\"\' + cat + \'\"]\');\n  if(catLink) catLink.classList.add(\'active\');\n  var subjsEl = document.getElementById(\'subj-\' + catIdx);\n  if(subjsEl) subjsEl.classList.add(\'open\');\n  var subjLink = document.querySelector(\'.sidebar-subj-link[data-subj=\"\' + subjId + \'\"]\');\n  if(subjLink) subjLink.classList.add(\'active\');\n  var safeSubjId = \'ss_\' + catIdx + \'_\' + cat.replace(/[^a-z0-9]/gi,\'_\') + \'_\' + subj.replace(/[^a-z0-9]/gi,\'_\');\n  var subsubEl = document.getElementById(safeSubjId);\n  if(subsubEl) subsubEl.classList.add(\'open\');\n  document.getElementById(\'breadcrumb\').innerHTML = \'<a href=\"#\" onclick=\"return showWelcome()\">Archive</a> <span class=\"sep\">›</span> <a href=\"#\" onclick=\"return selectCategory(\' + catIdx + \')\">\' + escHtml(cat) + \'</a> <span class=\"sep\">›</span> <span class=\"current\">\' + escHtml(subj) + \'</span>\';\n  showView(\'subjView-\' + subjId);\n  return false;\n}\n';
+  html += 'function selectCategory(ci) {\n  var cat = catData[ci];\n  document.querySelectorAll(\'.sidebar-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subj-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subsub-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subjects\').forEach(function(s){s.classList.remove(\'open\')});\n  document.querySelectorAll(\'.sidebar-subsubs\').forEach(function(s){s.classList.remove(\'open\')});\n  var link = document.querySelector(\'.sidebar-link[data-cat="\' + cat + \'"]\');\n  if(link) link.classList.add(\'active\');\n  var subjs = document.getElementById(\'subj-\' + ci);\n  if(subjs) subjs.classList.add(\'open\');\n  document.getElementById(\'breadcrumb\').innerHTML = \'<a href="#" onclick="return showWelcome()">Archive</a> <span class="sep">›</span> <span class="current">\' + escHtml(cat) + \'</span>\';\n  showView(\'catView-\' + ci);\n  return false;\n}\n';
 
-html += 'function selectSubSubject(ssId) {\n  var parts = ssId.split(\'||\');\n  var cat = parts[0], subj = parts[1], ss = parts[2];\n  var catIdx = catData.indexOf(cat);\n  document.querySelectorAll(\'.sidebar-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subj-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subsub-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subjects\').forEach(function(s){s.classList.remove(\'open\')});\n  document.querySelectorAll(\'.sidebar-subsubs\').forEach(function(s){s.classList.remove(\'open\')});\n  var catLink = document.querySelector(\'.sidebar-link[data-cat=\"\' + cat + \'\"]\');\n  if(catLink) catLink.classList.add(\'active\');\n  var subjsEl = document.getElementById(\'subj-\' + catIdx);\n  if(subjsEl) subjsEl.classList.add(\'open\');\n  var subjLink = document.querySelector(\'.sidebar-subj-link[data-subj=\"\' + cat + \'||\' + subj + \'\"]\');\n  if(subjLink) subjLink.classList.add(\'active\');\n  var safeSubjId = \'ss_\' + catIdx + \'_\' + cat.replace(/[^a-z0-9]/gi,\'_\') + \'_\' + subj.replace(/[^a-z0-9]/gi,\'_\');\n  var subsubEl = document.getElementById(safeSubjId);\n  if(subsubEl) subsubEl.classList.add(\'open\');\n  var ssLink = document.querySelector(\'.sidebar-subsub-link[data-subsub=\"\' + ssId + \'\"]\');\n  if(ssLink) ssLink.classList.add(\'active\');\n  document.getElementById(\'breadcrumb\').innerHTML = \'<a href=\"#\" onclick=\"return showWelcome()\">Archive</a> <span class=\"sep\">›</span> <a href=\"#\" onclick=\"return selectCategory(\' + catIdx + \')\">\' + escHtml(cat) + \'</a> <span class=\"sep\">›</span> <a href=\"#\" onclick=\"return selectSubject(\\\'\' + escHtml(cat + \'||\' + subj) + \'\\\')\">\' + escHtml(subj) + \'</a> <span class=\"sep\">›</span> <span class=\"current\">\' + escHtml(ss) + \'</span>\';\n  showView(\'ssView-\' + ssId);\n  return false;\n}\n';
+  html += 'function selectSubject(subjId) {\n  var parts = subjId.split(\'||\');\n  var cat = parts[0], subj = parts[1];\n  var catIdx = catData.indexOf(cat);\n  document.querySelectorAll(\'.sidebar-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subj-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subsub-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subjects\').forEach(function(s){s.classList.remove(\'open\')});\n  document.querySelectorAll(\'.sidebar-subsubs\').forEach(function(s){s.classList.remove(\'open\')});\n  var catLink = document.querySelector(\'.sidebar-link[data-cat="\' + cat + \'"]\');\n  if(catLink) catLink.classList.add(\'active\');\n  var subjsEl = document.getElementById(\'subj-\' + catIdx);\n  if(subjsEl) subjsEl.classList.add(\'open\');\n  var subjLink = document.querySelector(\'.sidebar-subj-link[data-subj="\' + subjId + \'"]\');\n  if(subjLink) subjLink.classList.add(\'active\');\n  var safeSubjId = \'ss_\' + catIdx + \'_\' + cat.replace(/[^a-z0-9]/gi,\'_\') + \'_\' + subj.replace(/[^a-z0-9]/gi,\'_\');\n  var subsubEl = document.getElementById(safeSubjId);\n  if(subsubEl) subsubEl.classList.add(\'open\');\n  document.getElementById(\'breadcrumb\').innerHTML = \'<a href="#" onclick="return showWelcome()">Archive</a> <span class="sep">›</span> <a href="#" onclick="return selectCategory(\' + catIdx + \')">\' + escHtml(cat) + \'</a> <span class="sep">›</span> <span class="current">\' + escHtml(subj) + \'</span>\';\n  showView(\'subjView-\' + subjId);\n  return false;\n}\n';
 
-html += 'function showWelcome() {\n  document.querySelectorAll(\'.content-panel\').forEach(function(p){p.style.display=\'none\'});\n  document.getElementById(\'view-welcome\').style.display=\'block\';\n  document.querySelectorAll(\'.sidebar-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subj-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subsub-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subjects\').forEach(function(s){s.classList.remove(\'open\')});\n  document.querySelectorAll(\'.sidebar-subsubs\').forEach(function(s){s.classList.remove(\'open\')});\n  document.getElementById(\'breadcrumb\').innerHTML = \'<a href=\"#\" onclick=\"return showWelcome()\">Archive</a> <span class=\"sep\">›</span> <span class=\"current\">All Categories</span>\';\n  return false;\n}\n';
+  html += 'function selectSubSubject(ssId) {\n  var parts = ssId.split(\'||\');\n  var cat = parts[0], subj = parts[1], ss = parts[2];\n  var catIdx = catData.indexOf(cat);\n  document.querySelectorAll(\'.sidebar-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subj-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subsub-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subjects\').forEach(function(s){s.classList.remove(\'open\')});\n  document.querySelectorAll(\'.sidebar-subsubs\').forEach(function(s){s.classList.remove(\'open\')});\n  var catLink = document.querySelector(\'.sidebar-link[data-cat="\' + cat + \'"]\');\n  if(catLink) catLink.classList.add(\'active\');\n  var subjsEl = document.getElementById(\'subj-\' + catIdx);\n  if(subjsEl) subjsEl.classList.add(\'open\');\n  var subjLink = document.querySelector(\'.sidebar-subj-link[data-subj="\' + cat + \'||\' + subj + \'"]\');\n  if(subjLink) subjLink.classList.add(\'active\');\n  var safeSubjId = \'ss_\' + catIdx + \'_\' + cat.replace(/[^a-z0-9]/gi,\'_\') + \'_\' + subj.replace(/[^a-z0-9]/gi,\'_\');\n  var subsubEl = document.getElementById(safeSubjId);\n  if(subsubEl) subsubEl.classList.add(\'open\');\n  var ssLink = document.querySelector(\'.sidebar-subsub-link[data-subsub="\' + ssId + \'"]\');\n  if(ssLink) ssLink.classList.add(\'active\');\n  document.getElementById(\'breadcrumb\').innerHTML = \'<a href="#" onclick="return showWelcome()">Archive</a> <span class="sep">›</span> <a href="#" onclick="return selectCategory(\' + catIdx + \')">\' + escHtml(cat) + \'</a> <span class="sep">›</span> <a href="#" onclick="return selectSubject(\\\'\' + escHtml(cat + \'||\' + subj) + \'\\\')">\' + escHtml(subj) + \'</a> <span class="sep">›</span> <span class="current">\' + escHtml(ss) + \'</span>\';\n  showView(\'ssView-\' + ssId);\n  return false;\n}\n';
 
-html += 'function showView(viewId) {\n  document.querySelectorAll(\'.content-panel\').forEach(function(p){p.style.display=\'none\'});\n  var el = document.getElementById(viewId);\n  if(el) el.style.display=\'block\';\n}\n';
+  html += 'function showWelcome() {\n  document.querySelectorAll(\'.content-panel\').forEach(function(p){p.style.display=\'none\'});\n  document.getElementById(\'view-welcome\').style.display=\'block\';\n  document.querySelectorAll(\'.sidebar-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subj-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subsub-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subjects\').forEach(function(s){s.classList.remove(\'open\')});\n  document.querySelectorAll(\'.sidebar-subsubs\').forEach(function(s){s.classList.remove(\'open\')});\n  document.getElementById(\'breadcrumb\').innerHTML = \'<a href="#" onclick="return showWelcome()">Archive</a> <span class="sep">›</span> <span class="current">All Categories</span>\';\n  return false;\n}\n';
 
-html += 'function escHtml(s) {\n  if(!s) return \'\';\n  return String(s).replace(/&/g,\'&amp;\').replace(/</g,\'&lt;\').replace(/>/g,\'&gt;\').replace(/\"/g,\'&quot;\').replace(/\'/g,\'&#39;\');\n}\n';
+  html += 'function showView(viewId) {\n  document.querySelectorAll(\'.content-panel\').forEach(function(p){p.style.display=\'none\'});\n  var el = document.getElementById(viewId);\n  if(el) el.style.display=\'block\';\n}\n';
 
-html += 'function toggleExplain(btn) {\n  var explain = btn.nextElementSibling;\n  var isOpen = explain.classList.toggle(\'show\');\n  btn.textContent = isOpen ? \'📘 Hide Explanation\' : \'📖 Explanation\';\n}\n';
+  html += 'function escHtml(s) {\n  if(!s) return \'\';\n  return String(s).replace(/&/g,\'&amp;\').replace(/</g,\'&lt;\').replace(/>/g,\'&gt;\').replace(/"/g,\'&quot;\').replace(/\'/g,\'&#39;\');\n}\n';
 
-html += '<\/script>';
-html += '<script>if(\'serviceWorker\' in navigator){navigator.serviceWorker.register(\'/sw.js\').catch(function(){})}<\/script>';
-html += '<\/body>\n<\/html>';
+  html += 'function toggleExplain(btn) {\n  var explain = btn.nextElementSibling;\n  var isOpen = explain.classList.toggle(\'show\');\n  btn.textContent = isOpen ? \'📘 Hide Explanation\' : \'📖 Explanation\';\n}\n';
 
-fs.writeFileSync(outPath, html);
-console.log('Wrote archive.html with ' + questions.length + ' questions across ' + sortedCats.length + ' categories.');
+  html += '<\/script>';
+  html += '<script>if(\'serviceWorker\' in navigator){navigator.serviceWorker.register(\'/sw.js\').catch(function(){})}<\/script>';
+  html += '<\/body>\n<\/html>';
+
+  const fileName = pageIdx === 0 ? 'archive.html' : 'archive-p' + pageLabel + '.html';
+  const filePath = path.join(__dirname, '..', fileName);
+  fs.writeFileSync(filePath, html);
+  const sizeMb = (Buffer.byteLength(html) / 1024 / 1024).toFixed(1);
+  console.log('Wrote ' + fileName + ' — questions ' + (startIdx+1) + '-' + endIdx + ' of ' + questions.length + ' (' + sizeMb + ' MiB)');
+}
+
+for (let p = 0; p < totalPages; p++) renderOnePage(p);
+console.log('Done: ' + totalPages + ' archive page(s) generated.');
