@@ -38,6 +38,6 @@ qs.forEach((q, i) => {
 data.questions = keep;
 data.updatedAt = new Date().toISOString();
 
-fs.writeFileSync('./data/quiz.json', JSON.stringify(data, null, 2), 'utf8');
+fs.writeFileSync('./data/quiz.json', JSON.stringify(data), 'utf8');
 console.log('\nDone. Fixed ' + fixedCount + ' question(s), removed ' + removedCount + ' duplicate(s).');
 console.log('Questions: ' + qs.length + ' -> ' + keep.length);

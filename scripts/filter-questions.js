@@ -48,7 +48,7 @@ const filtered = qs.filter((_, i) => keepIndices.has(i));
 data.questions = filtered;
 data.updatedAt = new Date().toISOString();
 
-fs.writeFileSync('./data/quiz.json', JSON.stringify(data, null, 2), 'utf8');
+fs.writeFileSync('./data/quiz.json', JSON.stringify(data), 'utf8');
 console.log('Before: ' + qs.length + ' questions');
 console.log('After: ' + filtered.length + ' questions');
 console.log('Removed: ' + (qs.length - filtered.length) + ' trash questions');

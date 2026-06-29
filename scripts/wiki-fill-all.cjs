@@ -211,10 +211,10 @@ async function main() {
 
     console.log('  Added ' + added + ' new questions for ' + cat.name + ' (total: ' + quiz.questions.length + ')');
     totalAdded += added;
-    fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz, null, 2));
+    fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz));
   }
 
-  fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz, null, 2));
+  fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz));
   console.log('\nTotal new: ' + totalAdded + ', Grand total: ' + quiz.questions.length);
 }
 
