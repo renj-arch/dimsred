@@ -483,8 +483,11 @@ function renderOnePage(pageIdx) {
   sortedCats.forEach((c, ci) => {
     const subs = tree[c];
     const totalQ = Object.values(subs).reduce((sum, sub) => sum + Object.values(sub).reduce((s, qs) => s + qs.length, 0), 0);
+    const catTag = 'catView-' + ci;
+    const catTarget = viewPageMap[catTag];
+    const catFile = 'archive' + (catTarget ? '-p' + (catTarget+1) : '') + '.html';
     html += '<div class="sidebar-cat">';
-    html += '<a href="#" class="sidebar-link" data-cat="' + esc(c) + '" onclick="return selectCategory(' + ci + ')">';
+    html += '<a href="' + (catTarget === pageIdx ? '#catView-' + ci : catFile + '#' + encodeURIComponent(catTag)) + '" class="sidebar-link" data-cat="' + esc(c) + '"' + (catTarget === pageIdx ? ' onclick="return selectCategory(' + ci + ')"' : '') + '>';
     html += '<span class="sidebar-icon">' + (CAT_ICONS[c] || '📌') + '</span>';
     html += '<span class="sidebar-label">' + esc(c) + '</span>';
     html += '<span class="sidebar-count">' + totalQ + '</span></a>';
@@ -493,7 +496,10 @@ function renderOnePage(pageIdx) {
       const ssList = subs[subj];
       const subjQ = Object.values(ssList).reduce((s, qs) => s + qs.length, 0);
       const subjPair = esc(c) + '||' + esc(subj);
-      html += '<a href="#" class="sidebar-subj-link" data-subj="' + subjPair + '" onclick="return selectSubject(\'' + subjPair + '\')">';
+      const subjTag = 'subjView-' + subjPair;
+      const subjTarget = viewPageMap[subjTag];
+      const subjFile = 'archive' + (subjTarget ? '-p' + (subjTarget+1) : '') + '.html';
+      html += '<a href="' + (subjTarget === pageIdx ? '#subjView-' + encodeURIComponent(subjPair) : subjFile + '#' + encodeURIComponent(subjTag)) + '" class="sidebar-subj-link" data-subj="' + subjPair + '"' + (subjTarget === pageIdx ? ' onclick="return selectSubject(\'' + subjPair + '\')"' : '') + '>';
       html += '<span class="sidebar-label">' + esc(subj) + '</span>';
       html += '<span class="sidebar-count">' + subjQ + '</span></a>';
       const safeSubjId = 'ss_' + ci + '_' + esc(c).replace(/[^a-zA-Z0-9]/g,'_') + '_' + esc(subj).replace(/[^a-zA-Z0-9]/g,'_');
@@ -501,7 +507,10 @@ function renderOnePage(pageIdx) {
       Object.keys(ssList).forEach(ss => {
         const qs = ssList[ss];
         const ssPair = esc(c) + '||' + esc(subj) + '||' + esc(ss);
-        html += '<a href="#" class="sidebar-subsub-link" data-subsub="' + ssPair + '" onclick="return selectSubSubject(\'' + ssPair + '\')">';
+        const ssTag = 'ssView-' + ssPair;
+        const ssTarget = viewPageMap[ssTag];
+        const ssFile = 'archive' + (ssTarget ? '-p' + (ssTarget+1) : '') + '.html';
+        html += '<a href="' + (ssTarget === pageIdx ? '#ssView-' + encodeURIComponent(ssPair) : ssFile + '#' + encodeURIComponent(ssTag)) + '" class="sidebar-subsub-link" data-subsub="' + ssPair + '"' + (ssTarget === pageIdx ? ' onclick="return selectSubSubject(\'' + ssPair + '\')"' : '') + '>';
         html += '<span class="sidebar-label">' + esc(ss) + '</span>';
         html += '<span class="sidebar-count">' + qs.length + '</span></a>';
       });
@@ -524,11 +533,14 @@ function renderOnePage(pageIdx) {
     const subs = pageTree[c];
     const totalQ = Object.values(subs).reduce((sum, sub) => sum + Object.values(sub).reduce((s, qs) => s + qs.length, 0), 0);
     const ciFull = sortedCats.indexOf(c);
+    const _catTag = 'catView-' + ciFull;
+    const _catTarget = viewPageMap[_catTag];
+    const _catFile = 'archive' + (_catTarget ? '-p' + (_catTarget+1) : '') + '.html';
     const preview = Object.values(subs).flatMap(sub => Object.values(sub).flat()).slice(0, 3).map(q => q.question.substring(0, 80)).join('<br>');
-    html += '<div class="subj-card" onclick="return selectCategory(' + ciFull + ')">';
+    html += '<a href="' + (_catTarget === pageIdx ? '#' + _catTag : _catFile + '#' + encodeURIComponent(_catTag)) + '" class="subj-card">';
     html += '<div class="subj-card-name">' + (CAT_ICONS[c] || '📌') + ' ' + esc(c) + '</div>';
     html += '<div class="subj-card-count">' + totalQ + ' question' + (totalQ > 1 ? 's' : '') + '</div>';
-    html += '<div class="subj-card-preview">' + preview + '</div></div>';
+    html += '<div class="subj-card-preview">' + preview + '</div></a>';
   });
   html += '</div></div>';
 
@@ -544,10 +556,11 @@ function renderOnePage(pageIdx) {
       const qs = Object.values(subs[subj]).flat();
       const preview = qs.slice(0, 3).map(q => q.question.substring(0, 80)).join('<br>');
       const subjPair = esc(c) + '||' + esc(subj);
-      html += '<div class="subj-card" onclick="return selectSubject(\'' + subjPair + '\')">';
+      const _subjTag = 'subjView-' + subjPair;
+      html += '<a href="#' + encodeURIComponent(_subjTag) + '" class="subj-card" onclick="return selectSubject(\'' + subjPair + '\')">';
       html += '<div class="subj-card-name">' + esc(subj) + '</div>';
       html += '<div class="subj-card-count">' + qs.length + ' question' + (qs.length > 1 ? 's' : '') + '</div>';
-      html += '<div class="subj-card-preview">' + preview + '</div></div>';
+      html += '<div class="subj-card-preview">' + preview + '</div></a>';
     });
     html += '</div></div>';
   });
@@ -566,10 +579,11 @@ function renderOnePage(pageIdx) {
         const qs = ssList[ss];
         const preview = qs.slice(0, 3).map(q => q.question.substring(0, 80)).join('<br>');
         const ssPair = esc(c) + '||' + esc(subj) + '||' + esc(ss);
-        html += '<div class="subj-card" onclick="return selectSubSubject(\'' + ssPair + '\')">';
+        const _ssTag = 'ssView-' + ssPair;
+        html += '<a href="#' + encodeURIComponent(_ssTag) + '" class="subj-card" onclick="return selectSubSubject(\'' + ssPair + '\')">';
         html += '<div class="subj-card-name">' + esc(ss) + '</div>';
         html += '<div class="subj-card-count">' + qs.length + ' question' + (qs.length > 1 ? 's' : '') + '</div>';
-        html += '<div class="subj-card-preview">' + preview + '</div></div>';
+        html += '<div class="subj-card-preview">' + preview + '</div></a>';
       });
       html += '</div></div>';
     });
@@ -599,17 +613,12 @@ function renderOnePage(pageIdx) {
   html += '<script>\nvar catData = [';
   sortedCats.forEach((c, i) => { html += (i ? ',' : '') + '\'' + esc(c) + '\''; });
   html += '];\n';
-  html += 'var viewPageMap = ' + JSON.stringify(viewPageMap) + ';\n';
-  html += 'var pageIdx = ' + pageIdx + ';\n';
-  html += 'var pageFile = function(p){return p===0?"archive.html":"archive-p"+(p+1)+".html"};\n';
 
-  html += 'function goToPage(tag) {\n  var target = viewPageMap[tag];\n  if (target !== undefined && target !== pageIdx) { window.location.href = pageFile(target) + \'#\' + encodeURIComponent(tag); return false; }\n  return true;\n}\n';
+  html += 'function selectCategory(ci) {\n  var cat = catData[ci];\n  document.querySelectorAll(\'.sidebar-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subj-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subsub-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subjects\').forEach(function(s){s.classList.remove(\'open\')});\n  document.querySelectorAll(\'.sidebar-subsubs\').forEach(function(s){s.classList.remove(\'open\')});\n  var link = document.querySelector(\'.sidebar-link[data-cat="\' + cat + \'"]\');\n  if(link) link.classList.add(\'active\');\n  var subjs = document.getElementById(\'subj-\' + ci);\n  if(subjs) subjs.classList.add(\'open\');\n  document.getElementById(\'breadcrumb\').innerHTML = \'<a href="#" onclick="return showWelcome()">Archive</a> <span class="sep">›</span> <span class="current">\' + escHtml(cat) + \'</span>\';\n  showView(\'catView-\' + ci);\n  return false;\n}\n';
 
-  html += 'function selectCategory(ci) {\n  if (!goToPage(\'catView-\' + ci)) return false;\n  var cat = catData[ci];\n  document.querySelectorAll(\'.sidebar-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subj-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subsub-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subjects\').forEach(function(s){s.classList.remove(\'open\')});\n  document.querySelectorAll(\'.sidebar-subsubs\').forEach(function(s){s.classList.remove(\'open\')});\n  var link = document.querySelector(\'.sidebar-link[data-cat="\' + cat + \'"]\');\n  if(link) link.classList.add(\'active\');\n  var subjs = document.getElementById(\'subj-\' + ci);\n  if(subjs) subjs.classList.add(\'open\');\n  document.getElementById(\'breadcrumb\').innerHTML = \'<a href="#" onclick="return showWelcome()">Archive</a> <span class="sep">›</span> <span class="current">\' + escHtml(cat) + \'</span>\';\n  showView(\'catView-\' + ci);\n  return false;\n}\n';
+  html += 'function selectSubject(subjId) {\n  var _s = subjId.replace(/&amp;/g,\'&\');\n  var parts = _s.split(\'||\');\n  var cat = parts[0], subj = parts[1];\n  var catIdx = catData.indexOf(cat);\n  document.querySelectorAll(\'.sidebar-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subj-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subsub-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subjects\').forEach(function(s){s.classList.remove(\'open\')});\n  document.querySelectorAll(\'.sidebar-subsubs\').forEach(function(s){s.classList.remove(\'open\')});\n  var catLink = document.querySelector(\'.sidebar-link[data-cat="\' + cat + \'"]\');\n  if(catLink) catLink.classList.add(\'active\');\n  var subjsEl = document.getElementById(\'subj-\' + catIdx);\n  if(subjsEl) subjsEl.classList.add(\'open\');\n  var subjLink = document.querySelector(\'.sidebar-subj-link[data-subj="\' + subjId + \'"]\');\n  if(subjLink) subjLink.classList.add(\'active\');\n  var safeSubjId = \'ss_\' + catIdx + \'_\' + cat.replace(/[^a-z0-9]/gi,\'_\') + \'_\' + subj.replace(/[^a-z0-9]/gi,\'_\');\n  var subsubEl = document.getElementById(safeSubjId);\n  if(subsubEl) subsubEl.classList.add(\'open\');\n  document.getElementById(\'breadcrumb\').innerHTML = \'<a href="#" onclick="return showWelcome()">Archive</a> <span class="sep">›</span> <a href="#" onclick="return selectCategory(\' + catIdx + \')">\' + escHtml(cat) + \'</a> <span class="sep">›</span> <span class="current">\' + escHtml(subj) + \'</span>\';\n  showView(\'subjView-\' + _s);\n  return false;\n}\n';
 
-  html += 'function selectSubject(subjId) {\n  var _s = subjId.replace(/&amp;/g,\'&\');\n  if (!goToPage(\'subjView-\' + _s)) return false;\n  var parts = _s.split(\'||\');\n  var cat = parts[0], subj = parts[1];\n  var catIdx = catData.indexOf(cat);\n  document.querySelectorAll(\'.sidebar-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subj-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subsub-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subjects\').forEach(function(s){s.classList.remove(\'open\')});\n  document.querySelectorAll(\'.sidebar-subsubs\').forEach(function(s){s.classList.remove(\'open\')});\n  var catLink = document.querySelector(\'.sidebar-link[data-cat="\' + cat + \'"]\');\n  if(catLink) catLink.classList.add(\'active\');\n  var subjsEl = document.getElementById(\'subj-\' + catIdx);\n  if(subjsEl) subjsEl.classList.add(\'open\');\n  var subjLink = document.querySelector(\'.sidebar-subj-link[data-subj="\' + subjId + \'"]\');\n  if(subjLink) subjLink.classList.add(\'active\');\n  var safeSubjId = \'ss_\' + catIdx + \'_\' + cat.replace(/[^a-z0-9]/gi,\'_\') + \'_\' + subj.replace(/[^a-z0-9]/gi,\'_\');\n  var subsubEl = document.getElementById(safeSubjId);\n  if(subsubEl) subsubEl.classList.add(\'open\');\n  document.getElementById(\'breadcrumb\').innerHTML = \'<a href="#" onclick="return showWelcome()">Archive</a> <span class="sep">›</span> <a href="#" onclick="return selectCategory(\' + catIdx + \')">\' + escHtml(cat) + \'</a> <span class="sep">›</span> <span class="current">\' + escHtml(subj) + \'</span>\';\n  showView(\'subjView-\' + _s);\n  return false;\n}\n';
-
-  html += 'function selectSubSubject(ssId) {\n  var _s = ssId.replace(/&amp;/g,\'&\');\n  if (!goToPage(\'ssView-\' + _s)) return false;\n  var parts = ssId.split(\'||\');\n  var catEnc = parts[0], subjEnc = parts[1], ssEnc = parts[2];\n  var pd = _s.split(\'||\');\n  var cat = pd[0], subj = pd[1], ss = pd[2];\n  var catIdx = catData.indexOf(cat);\n  document.querySelectorAll(\'.sidebar-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subj-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subsub-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subjects\').forEach(function(s){s.classList.remove(\'open\')});\n  document.querySelectorAll(\'.sidebar-subsubs\').forEach(function(s){s.classList.remove(\'open\')});\n  var catLink = document.querySelector(\'.sidebar-link[data-cat="\' + catEnc + \'"]\');\n  if(catLink) catLink.classList.add(\'active\');\n  var subjsEl = document.getElementById(\'subj-\' + catIdx);\n  if(subjsEl) subjsEl.classList.add(\'open\');\n  var subjLink = document.querySelector(\'.sidebar-subj-link[data-subj="\' + catEnc + \'||\' + subjEnc + \'"]\');\n  if(subjLink) subjLink.classList.add(\'active\');\n  var safeSubjId = \'ss_\' + catIdx + \'_\' + cat.replace(/[^a-z0-9]/gi,\'_\') + \'_\' + subj.replace(/[^a-z0-9]/gi,\'_\');\n  var subsubEl = document.getElementById(safeSubjId);\n  if(subsubEl) subsubEl.classList.add(\'open\');\n  var ssLink = document.querySelector(\'.sidebar-subsub-link[data-subsub="\' + ssId + \'"]\');\n  if(ssLink) ssLink.classList.add(\'active\');\n  document.getElementById(\'breadcrumb\').innerHTML = \'<a href="#" onclick="return showWelcome()">Archive</a> <span class="sep">›</span> <a href="#" onclick="return selectCategory(\' + catIdx + \')">\' + escHtml(cat) + \'</a> <span class="sep">›</span> <a href="#" onclick="return selectSubject(\\\'\' + escHtml(cat + \'||\' + subj) + \'\\\')">\' + escHtml(subj) + \'</a> <span class="sep">›</span> <span class="current">\' + escHtml(ss) + \'</span>\';\n  showView(\'ssView-\' + _s);\n  return false;\n}\n';
+  html += 'function selectSubSubject(ssId) {\n  var _s = ssId.replace(/&amp;/g,\'&\');\n  var parts = ssId.split(\'||\');\n  var catEnc = parts[0], subjEnc = parts[1], ssEnc = parts[2];\n  var pd = _s.split(\'||\');\n  var cat = pd[0], subj = pd[1], ss = pd[2];\n  var catIdx = catData.indexOf(cat);\n  document.querySelectorAll(\'.sidebar-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subj-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subsub-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subjects\').forEach(function(s){s.classList.remove(\'open\')});\n  document.querySelectorAll(\'.sidebar-subsubs\').forEach(function(s){s.classList.remove(\'open\')});\n  var catLink = document.querySelector(\'.sidebar-link[data-cat="\' + catEnc + \'"]\');\n  if(catLink) catLink.classList.add(\'active\');\n  var subjsEl = document.getElementById(\'subj-\' + catIdx);\n  if(subjsEl) subjsEl.classList.add(\'open\');\n  var subjLink = document.querySelector(\'.sidebar-subj-link[data-subj="\' + catEnc + \'||\' + subjEnc + \'"]\');\n  if(subjLink) subjLink.classList.add(\'active\');\n  var safeSubjId = \'ss_\' + catIdx + \'_\' + cat.replace(/[^a-z0-9]/gi,\'_\') + \'_\' + subj.replace(/[^a-z0-9]/gi,\'_\');\n  var subsubEl = document.getElementById(safeSubjId);\n  if(subsubEl) subsubEl.classList.add(\'open\');\n  var ssLink = document.querySelector(\'.sidebar-subsub-link[data-subsub="\' + ssId + \'"]\');\n  if(ssLink) ssLink.classList.add(\'active\');\n  document.getElementById(\'breadcrumb\').innerHTML = \'<a href="#" onclick="return showWelcome()">Archive</a> <span class="sep">›</span> <a href="#" onclick="return selectCategory(\' + catIdx + \')">\' + escHtml(cat) + \'</a> <span class="sep">›</span> <a href="#" onclick="return selectSubject(\\\'\' + escHtml(cat + \'||\' + subj) + \'\\\')">\' + escHtml(subj) + \'</a> <span class="sep">›</span> <span class="current">\' + escHtml(ss) + \'</span>\';\n  showView(\'ssView-\' + _s);\n  return false;\n}\n';
 
   html += 'function showWelcome() {\n  document.querySelectorAll(\'.content-panel\').forEach(function(p){p.style.display=\'none\'});\n  document.getElementById(\'view-welcome\').style.display=\'block\';\n  document.querySelectorAll(\'.sidebar-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subj-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subsub-link\').forEach(function(l){l.classList.remove(\'active\')});\n  document.querySelectorAll(\'.sidebar-subjects\').forEach(function(s){s.classList.remove(\'open\')});\n  document.querySelectorAll(\'.sidebar-subsubs\').forEach(function(s){s.classList.remove(\'open\')});\n  document.getElementById(\'breadcrumb\').innerHTML = \'<a href="#" onclick="return showWelcome()">Archive</a> <span class="sep">›</span> <span class="current">All Categories</span>\';\n  return false;\n}\n';
 
