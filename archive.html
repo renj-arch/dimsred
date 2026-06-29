@@ -192,12 +192,12 @@ function loadCategory(ci, cb) {
 }
 function renderQuestionItem(q, i) {
   var date = q.pubDate ? new Date(q.pubDate).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '';
-  return '<div class="q-item"><div class="q-num">#' + (i+1) + '</div>';
-  + '<div class="q-tags"><span class="tag cat-tag">' + escHtml(q.category) + '</span>';
-  + (date ? '<span class="tag date-tag">' + date + '</span>' : '') + '</div>';
-  + '<div class="q-question">' + escHtml(q.question) + '</div>';
-  + '<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + escHtml(q.answer) + '</span></div>';
-  + (q.explain ? '<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">' + escHtml(q.explain) + '</div>' : '') + '</div>';
+  return '<div class="q-item"><div class="q-num">#' + (i+1) + '</div>'
+    + '<div class="q-tags"><span class="tag cat-tag">' + escHtml(q.category) + '</span>'
+    + (date ? '<span class="tag date-tag">' + date + '</span>' : '') + '</div>'
+    + '<div class="q-question">' + escHtml(q.question) + '</div>'
+    + '<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + escHtml(q.answer) + '</span></div>'
+    + (q.explain ? '<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">' + escHtml(q.explain) + '</div>' : '') + '</div>';
 }
 function escHtml(s) {
   if(!s) return '';
