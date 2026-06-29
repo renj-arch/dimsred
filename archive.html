@@ -207,7 +207,7 @@ function renderQuestionItem(q, i) {
     + (date ? '<span class="tag date-tag">' + date + '</span>' : '') + '</div>'
     + '<div class="q-question">' + escHtml(q.question) + '</div>'
     + '<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + escHtml(q.answer) + '</span></div>'
-    + (q.explain ? '<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">' + escHtml(q.explain) + '</div>' : '') + '</div>';
+    + (q.fact ? '<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">' + escHtml(q.fact) + '</div>' : '') + '</div>';
 }
 function escHtml(s) {
   if(!s) return '';

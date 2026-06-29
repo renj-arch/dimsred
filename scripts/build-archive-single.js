@@ -278,7 +278,7 @@ html += '    + \'<div class="q-tags"><span class="tag cat-tag">\' + escHtml(q.ca
 html += '    + (date ? \'<span class="tag date-tag">\' + date + \'</span>\' : \'\') + \'</div>\'\n';
 html += '    + \'<div class="q-question">\' + escHtml(q.question) + \'</div>\'\n';
 html += '    + \'<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">\' + escHtml(q.answer) + \'</span></div>\'\n';
-html += '    + (q.explain ? \'<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">\' + escHtml(q.explain) + \'</div>\' : \'\') + \'</div>\';\n';
+html += '    + (q.fact ? \'<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">\' + escHtml(q.fact) + \'</div>\' : \'\') + \'</div>\';\n';
 html += '}\n';
 
 html += 'function escHtml(s) {\n  if(!s) return \'\';\n  return String(s).replace(/&/g,\'&amp;\').replace(/</g,\'&lt;\').replace(/>/g,\'&gt;\').replace(/"/g,\'&quot;\');\n}\n';
