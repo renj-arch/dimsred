@@ -9,13 +9,21 @@ const quiz = JSON.parse(fs.readFileSync(quizPath, 'utf8'));
 const allQuestions = quiz.questions;
 
 const CAT_ICONS = {
-  'Indian History':'📜','World History':'🌍','Art & Culture':'🎨','Polity':'🏛️',
-  'Indian Economy':'📊','Geography':'🗺️','World Geography':'🌏','General Science':'🔬',
+  'Ancient India':'🏛️','Medieval & Modern India':'👑','Indian History':'🏛️',
+  'World History':'🌍','Indian Geography':'🏔️','World Geography':'🌏',
+  'Polity & Governance':'⚖️','Polity':'⚖️',
+  'Indian Economy':'📊','General Science':'🔬','Science & Technology':'🤖',
+  'Tech & Science':'⚙️','Art & Culture':'🎨','Defence & Security':'⚔️',
   'Defence':'⚔️','Environment & Ecology':'🌿','International Relations':'🤝',
-  'Constitution':'📜','ISRO & Space':'🚀','Computer & IT':'💻','Sports':'🏆',
-  'Society':'👥','Personalities':'👤','State GK':'🗺️','Books & Authors':'📚',
-  'Important Days':'📅','Govt Schemes':'📋','Awards':'🏅','Business & Economy':'💼',
-  'Tech & Science':'⚙️','Ethics':'⚖️','Announcements':'📢','RBI Press Releases':'🏦'
+  'Indian Society':'👥','Society':'👥','Ethics & Integrity':'⚖️',
+  'Ethics':'⚖️','ISRO & Space':'🚀','Sports':'🏆','Books & Authors':'📚',
+  'Awards & Honours':'🏅','Awards':'🏅','Govt Schemes':'📋',
+  'Indian States':'🗺️','State GK':'🗺️','Important Days':'📅',
+  'Personalities':'👤','Disaster Management':'🆘',
+  'Business & Economy':'💼','RBI & Banking':'🏦','RBI Press Releases':'🏦',
+  'Indian National Symbols':'🇮🇳','Agriculture & Food':'🌾',
+  'Health & Medicine':'🏥','Computer & IT':'💻','Constitution':'📜',
+  'General':'📌','Announcements':'📢'
 };
 
 // Group questions by category → subject → subSubject
@@ -83,9 +91,9 @@ function renderQuestion(q, idx) {
   return '<div class="q-item">'
     + '<div class="q-num">#' + (idx + 1) + '</div>'
     + '<div class="q-tags">' + catTag + dateTag + '</div>'
-    + '<div class="q-question">' + esc(q.question || q.question) + '</div>'
+    + '<div class="q-question">' + esc(q.question) + '</div>'
     + '<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + esc(q.answer) + '</span></div>'
-    + (q.explain ? '<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">' + esc(q.explain) + '</div>' : '')
+    + (q.fact ? '<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">' + esc(q.fact) + '</div>' : '')
     + '</div>';
 }
 
