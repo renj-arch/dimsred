@@ -56,6 +56,12 @@ const TRASH_RULES = [
   /Physics Olympiad coordinator/i,
   /Secondary education leaving exams in India/i,
   /Largest Reefs|Highest Mountains.*country|Oceans is a country|Climate Zones.*largest city|Seven Continents.*largest city|UN Member States.*largest city|Largest Islands.*borders/i,
+  /Which term is described as/i,
+  /Belly dance/i,
+  /culture of (?:Albania|Algeria|Angola|Argentina|Australia|Bolivia|Brazil|Cambodia|Cameroon|Canada|Chile|China|Colombia|Croatia|Cuba|Czech|Denmark|Egypt|Estonia|Ethiopia|Finland|France|Germany|Ghana|Greece|Hungary|Iceland|Indonesia|Iran|Iraq|Ireland|Israel|Italy|Japan|Jordan|Kazakhstan|Kenya|Laos|Latvia|Lebanon|Lithuania|Malaysia|Mexico|Morocco|Myanmar|Nepal|Netherlands|New Zealand|Nigeria|Norway|Pakistan|Peru|Philippines|Poland|Portugal|Romania|Russia|Saudi|Serbia|Singapore|South Africa|South Korea|Spain|Sri Lanka|Sudan|Sweden|Switzerland|Syria|Taiwan|Tanzania|Thailand|Tunisia|Turkey|Uganda|Ukraine|United Kingdom|United States|Uzbekistan|Venezuela|Vietnam|Zimbabwe)/i,
+  /economy of (?:Albania|Algeria|Angola|Argentina|Australia|Bolivia|Brazil|Cambodia|Cameroon|Canada|Chile|China|Colombia|Croatia|Cuba|Czech|Denmark|Egypt|Estonia|Ethiopia|Finland|France|Germany|Ghana|Greece|Hungary|Iceland|Indonesia|Iran|Iraq|Ireland|Israel|Italy|Japan|Jordan|Kazakhstan|Kenya|Laos|Latvia|Lebanon|Lithuania|Malaysia|Mexico|Morocco|Myanmar|Nepal|Netherlands|New Zealand|Nigeria|Norway|Pakistan|Peru|Philippines|Poland|Portugal|Romania|Russia|Saudi|Serbia|Singapore|South Africa|South Korea|Spain|Sri Lanka|Sudan|Sweden|Switzerland|Syria|Taiwan|Tanzania|Thailand|Tunisia|Turkey|Uganda|Ukraine|United Kingdom|United States|Uzbekistan|Venezuela|Vietnam|Zimbabwe)/i,
+  /geography of (?:Albania|Algeria|Angola|Argentina|Australia|Bolivia|Brazil|Cambodia|Cameroon|Canada|Chile|China|Colombia|Croatia|Cuba|Czech|Denmark|Egypt|Estonia|Ethiopia|Finland|France|Germany|Ghana|Greece|Hungary|Iceland|Indonesia|Iran|Iraq|Ireland|Israel|Italy|Japan|Jordan|Kazakhstan|Kenya|Laos|Latvia|Lebanon|Lithuania|Malaysia|Mexico|Morocco|Myanmar|Nepal|Netherlands|New Zealand|Nigeria|Norway|Pakistan|Peru|Philippines|Poland|Portugal|Romania|Russia|Saudi|Serbia|Singapore|South Africa|South Korea|Spain|Sri Lanka|Sudan|Sweden|Switzerland|Syria|Taiwan|Tanzania|Thailand|Tunisia|Turkey|Uganda|Ukraine|United Kingdom|United States|Uzbekistan|Venezuela|Vietnam|Zimbabwe)/i,
+  /film (?:career|actress|actor|director|producer|industry|award|festival)|movie|reality (?:tv|show|television|series)/i,
 ];
 
 function isTrash(q) {
@@ -63,6 +69,13 @@ function isTrash(q) {
   if (TRASH_RULES.some(re => re.test(text))) return true;
   if ((q.question.match(/_+/g) || []).length > 3) return true;
   if (q.question.length < 25) return true;
+  // Reject if answer is a year and already appears verbatim in question (blank already filled in)
+  if (/^\d{4}$/.test(q.answer) && q.question.includes(q.answer)) return true;
+  // Reject tautological fact (starts with answer + colon/equals)
+  if (q.fact) {
+    const aEsc = q.answer.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    if (new RegExp('^' + aEsc + '[:,]').test(q.fact)) return true;
+  }
   if (q.source === 'SEBI' && /Appeal/i.test(q.question)) return true;
   if (q.source === 'Wikipedia' && /In a global|Members of Mexico|Major Oak|Six people|bus crashes|bus overturns|Marco Rubio|Australian Government/i.test(q.question)) return true;
   if (q.source === 'Wiki') {
@@ -71,6 +84,16 @@ function isTrash(q) {
     if (/of Nigeria|of Pakistan|of Indonesia|of Italy|of Mozambique|of the Netherlands|of the Russian|of the United Kingdom|of the United Arab|of the Uzbekistan|of the United States|of Israel|of Bangladesh|of Singapore|of Germany|of Iran|of Africa|Hong Kong/i.test(q.subject || q.question)) return true;
     if (/Cricket ground at Fairplex|Military of Singapore|Sports associated with Western|Hong Kong policy/i.test(q.question)) return true;
     if (/birth control in the medieval|ancient history of the African|medieval and early modern history of the African/i.test(q.question.toLowerCase())) return true;
+    // Reject if answer is a year and already appears in question (blank already filled)
+    if (/^\d{4}$/.test(q.answer) && q.question.includes(q.answer)) return true;
+    // Reject tautological fact (starts with "Answer: ")
+    if (q.fact) {
+      const ansEsc = q.answer.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      if (new RegExp('^' + ansEsc + '[:,]').test(q.fact)) return true;
+    }
+    // Reject fragment questions (starts with lowercase or year range)
+    if (/^[a-z]/.test(q.question)) return true;
+    if (/^\d{4}[-–]/.test(q.question)) return true;
   }
   return false;
 }

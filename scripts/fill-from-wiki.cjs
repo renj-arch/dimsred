@@ -84,66 +84,63 @@ function generateQuestion(article, cat, ss) {
   // Try to create a fill-in-the-blank question from the content
   const sentences = text.split(/\.\s+/).filter(s => s.trim().length > 20);
   if (sentences.length === 0) {
-    // Fallback: description-based
-    if (description && description.length > 5) {
-      const qText = 'Which term is described as: "' + description.substring(0, 100) + '"?';
-      return {
-        question: qText,
-        answer: title,
-        fact: title + ': ' + extract.substring(0, 500),
-        hint: '',
-      };
-    }
     return null;
   }
 
   // Pick the best sentence (longer, more informative)
   const bestSent = sentences.sort((a, b) => b.length - a.length)[0];
   
+  let qText, answer, fact;
+  
   // Try to create a fill-in by masking the title within the sentence
   const titleEsc = title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const titleRegex = new RegExp(titleEsc, 'i');
   
   if (titleRegex.test(bestSent)) {
-    // Replace title with blank
-    const qText = bestSent.replace(titleRegex, '_____');
-    return {
-      question: qText,
-      answer: title,
-      fact: extract.substring(0, 600),
-      hint: '',
-    };
+    qText = bestSent.replace(titleRegex, '_____');
+    answer = title;
+    fact = extract.substring(0, 600);
+  } else {
+    // Try extracting a key entity (capitalized word or phrase)
+    const words = bestSent.split(/\s+/);
+    const entities = words.filter(w => /^[A-Z][a-z]+/.test(w) && w.length > 3 && w !== title && !['This', 'The', 'Its', 'They', 'Their', 'These', 'Those'].includes(w));
+    
+    if (entities.length > 0) {
+      const entity = entities[Math.floor(entities.length / 2)];
+      const entityEsc = entity.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      qText = bestSent.replace(new RegExp('\\b' + entityEsc + '\\b'), '_____');
+      answer = entity;
+      fact = extract.substring(0, 600);
+    } else {
+      return null;
+    }
   }
 
-  // Try extracting a key entity (capitalized word or phrase)
-  const words = bestSent.split(/\s+/);
-  const entities = words.filter(w => /^[A-Z][a-z]+/.test(w) && w.length > 3 && w !== title && !['This', 'The', 'Its', 'They', 'Their', 'These', 'Those'].includes(w));
-  
-  if (entities.length > 0) {
-    // Pick a random entity to blank out
-    const entity = entities[Math.floor(entities.length / 2)];
-    const entityEsc = entity.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const qText = bestSent.replace(new RegExp('\\b' + entityEsc + '\\b'), '_____');
-    return {
-      question: qText,
-      answer: entity,
-      fact: extract.substring(0, 600),
-      hint: '',
-    };
-  }
+  // ── Quality filters ──
 
-  // Last resort: description-based
-  if (description && description.length > 5) {
-    const qText = 'Which term is described as: "' + description.substring(0, 100) + '"?';
-    return {
-      question: qText,
-      answer: title,
-      fact: title + ': ' + extract.substring(0, 500),
-      hint: '',
-    };
-  }
+  // Reject if answer is purely numeric (year extracted without context)
+  if (/^\d+$/.test(answer)) return null;
 
-  return null;
+  // Reject if answer is too short
+  if (answer.length < 3) return null;
+
+  // Reject tautological fact (starts with "Answer: " — means fact was just prefixed)
+  const answerEsc = answer.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  if (new RegExp('^' + answerEsc + '[:,]').test(fact)) return null;
+
+  // Reject if category is Indian but article doesn't mention India
+  if (/^Indian/i.test(cat) && !/India/i.test(fact)) return null;
+
+  // Reject fragment-like questions (starts lowercase or date-range)
+  if (/^[a-z]/.test(qText)) return null;
+  if (/^\d{4}[-–]/.test(qText)) return null;
+
+  return {
+    question: qText,
+    answer: answer,
+    fact: fact,
+    hint: '',
+  };
 }
 
 // ── Main ──
