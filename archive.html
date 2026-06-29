@@ -185,8 +185,18 @@ function renderQuestions(ci, si, ssi) {
 function loadCategory(ci, cb) {
   if (_cache[ci]) { cb(); return; }
   var xhr = new XMLHttpRequest();
-  xhr.onload = function() { _cache[ci] = JSON.parse(xhr.responseText); cb(); };
-  xhr.onerror = function() { document.getElementById('view-content').innerHTML = '<div class="loading">Failed to load questions.</div>'; };
+  xhr.onload = function() {
+    if (xhr.status !== 200) {
+      document.getElementById('view-content').innerHTML = '<div class="loading">Failed to load questions (HTTP ' + xhr.status + ').</div>';
+      return;
+    }
+    try { _cache[ci] = JSON.parse(xhr.responseText); } catch(e) {
+      document.getElementById('view-content').innerHTML = '<div class="loading">Failed to parse questions.</div>';
+      return;
+    }
+    cb();
+  };
+  xhr.onerror = function() { document.getElementById('view-content').innerHTML = '<div class="loading">Failed to load questions (network error).</div>'; };
   xhr.open('GET', CAT_INDEX[ci].file, true);
   xhr.send();
 }
