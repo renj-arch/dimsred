@@ -32,8 +32,8 @@ async function fetchArticleExtract(title, retries) {
       }
       return null;
     } catch (err) {
-      if (attempt < retries - 1 && err.message.includes('not valid JSON')) {
-        console.log('  (rate limited, waiting 15s...)');
+      if (attempt < retries - 1 && (err.message.includes('not valid JSON') || err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED')) {
+        console.log('  (' + (err.code || 'rate limited') + ', waiting 15s...)');
         await delay(15000);
         continue;
       }
@@ -117,33 +117,221 @@ function makeDescriptionQuestion(desc, title) {
 }
 
 const CATEGORIES = [
-  { name: 'Indian History', topics: ['History of India', 'Indian independence movement', 'Mughal Empire'] },
-  { name: 'World History', topics: ['World history', 'Cold War', 'French Revolution'] },
-  { name: 'Art & Culture', topics: ['Culture of India', 'Indian classical music', 'Indian architecture'] },
-  { name: 'Polity', topics: ['Constitution of India', 'Politics of India', 'Election Commission of India'] },
-  { name: 'Indian Economy', topics: ['Economy of India', 'Economic liberalisation in India', 'Agriculture in India'] },
-  { name: 'Geography', topics: ['Geography of India', 'Climate of India', 'Rivers of India'] },
-  { name: 'World Geography', topics: ['World geography', 'Continent', 'Climate'] },
-  { name: 'General Science', topics: ['Science', 'Physics', 'Chemistry'] },
-  { name: 'Defence', topics: ['Indian Armed Forces', 'Indian Army', 'Indian Navy'] },
-  { name: 'Environment & Ecology', topics: ['Environment of India', 'Wildlife of India', 'Climate change in India'] },
-  { name: 'International Relations', topics: ['Foreign relations of India', 'United Nations', 'SAARC'] },
-  { name: 'Constitution', topics: ['Constitution of India', 'Fundamental rights in India', 'Judiciary of India'] },
-  { name: 'ISRO & Space', topics: ['ISRO', 'Chandrayaan', 'Mangalyaan'] },
-  { name: 'Computer & IT', topics: ['Information technology in India', 'Computer science', 'Internet in India'] },
-  { name: 'Sports', topics: ['Sports in India', 'Cricket in India', 'Hockey in India'] },
-  { name: 'Society', topics: ['Indian society', 'Caste system in India', 'Education in India'] },
-  { name: 'State GK', topics: ['States and union territories of India', 'Maharashtra', 'Tamil Nadu'] },
-  { name: 'Books & Authors', topics: ['Indian literature', 'Rabindranath Tagore', 'Hindi literature'] },
-  { name: 'Important Days', topics: ['United Nations observances', 'International days', 'National days of India'] },
-  { name: 'Govt Schemes', topics: ['Government of India', 'MGNREGA', 'Ayushman Bharat'] },
-  { name: 'Awards', topics: ['National awards of India', 'Bharat Ratna', 'Padma awards'] },
-  { name: 'Business & Economy', topics: ['Business in India', 'Startup India', 'Make in India'] },
-  { name: 'Tech & Science', topics: ['Technology in India', 'Indian scientists', 'Digital India'] },
-  { name: 'Ethics', topics: ['Ethics', 'Moral philosophy', 'Applied ethics'] },
-  { name: 'Announcements', topics: ['Public policy of India', 'Union budget of India', 'Government of India'] },
-  { name: 'RBI Press Releases', topics: ['Reserve Bank of India', 'Monetary policy of India', 'Banking in India'] },
-  { name: 'Personalities', topics: ['List of Indian leaders', 'Indian independence activists', 'Indian scientists'] },
+  // ───────── Ancient & Medieval India ─────────
+  { name:'Ancient India', topics:[
+    'History of India','Indus Valley Civilisation','Vedic period','Maurya Empire',
+    'Gupta Empire','Chola Empire','Vijayanagara Empire'
+  ]},
+  // ───────── Medieval & Modern India ─────────
+  { name:'Medieval & Modern India', topics:[
+    'Delhi Sultanate','Mughal Empire','Maratha Empire','Sikh Empire',
+    'British Raj','Indian independence movement','Partition of India','History of the Republic of India'
+  ]},
+  // ───────── World History ─────────
+  { name:'World History', topics:[
+    'World history','Ancient Egypt','Ancient Greece','Ancient Rome','French Revolution',
+    'Russian Revolution','Industrial Revolution','World War I','World War II','Cold War',
+    'Great Depression','Renaissance','Age of Discovery','History of China','History of Japan',
+    'Mongol Empire','Ottoman Empire','Decolonization','American Revolution','Nazism',
+    'History of the United Nations'
+  ]},
+  // ───────── Geography of India ─────────
+  { name:'Indian Geography', topics:[
+    'Geography of India','Climate of India','Rivers of India','Soils of India',
+    'Minerals of India','Natural vegetation of India','Agriculture in India',
+    'Population of India','Urbanization in India','Transport in India','Irrigation in India',
+    'Mountain ranges of India','Natural disasters in India'
+  ]},
+  // ───────── World Geography ─────────
+  { name:'World Geography', topics:[
+    'Continent','Climate','Ocean','Atmosphere','Biosphere','Ecosystem','Biome',
+    'Plate tectonics','Volcano','Earthquake','Water cycle','Desert','Rainforest',
+    'List of countries by population','List of countries by area','Tundra','Grassland',
+    'Types of rocks'
+  ]},
+  // ───────── Indian Polity & Governance ─────────
+  { name:'Polity & Governance', topics:[
+    'Constitution of India','Fundamental rights in India','Directive principles of India',
+    'Politics of India','Election Commission of India','Parliament of India',
+    'Supreme Court of India','Panchayati Raj','Local government in India',
+    'Comptroller and Auditor General of India','Union Public Service Commission',
+    'Right to Information','President of India','Prime Minister of India',
+    'Governor (India)','Union Council of Ministers','State governments of India',
+    'Tribunals in India','Elections in India','E-government in India'
+  ]},
+  // ───────── Indian Economy ─────────
+  { name:'Indian Economy', topics:[
+    'Economy of India','Economic liberalisation in India','Agriculture in India',
+    'Five-year plans of India','NITI Aayog','Reserve Bank of India','Banking in India',
+    'Poverty in India','Unemployment in India','Foreign trade of India','Taxation in India',
+    'Budget of India','Infrastructure of India','Energy in India','Insurance in India',
+    'Healthcare in India','Make in India','Startup India','Food security in India',
+    'Green Revolution','White Revolution','Land reforms in India','Public distribution system'
+  ]},
+  // ───────── General Science ─────────
+  { name:'General Science', topics:[
+    'Physics','Chemistry','Biology','Human body','Genetics','Cell biology',
+    'Evolution','Ecology','Nutrition','Disease','Atomic physics','Nuclear physics',
+    'Optics','Electricity','Magnetism','Thermodynamics','Periodic table',
+    'Acid','Base (chemistry)','Organic chemistry','Inorganic chemistry','Biochemistry',
+    'List of inventions','List of scientific discoveries','Microbiology','Immunology'
+  ]},
+  // ───────── Science & Technology ─────────
+  { name:'Science & Technology', topics:[
+    'Science and technology in India','Biotechnology','Nanotechnology',
+    'Renewable energy in India','Nuclear power in India','Robotics','Artificial intelligence',
+    'Information technology in India','Internet in India','Software industry in India',
+    'Telecommunications in India','Cybersecurity','Defence industry of India'
+  ]},
+  // ───────── Art, Culture & Heritage ─────────
+  { name:'Art & Culture', topics:[
+    'Culture of India','Indian classical music','Indian folk music','Indian dance',
+    'Indian painting','Indian sculpture','Indian architecture','Indian theatre',
+    'Indian cinema','Indian clothing','Indian cuisine','Indian literature',
+    'Festivals in India','Fairs in India','Handicrafts of India',
+    'UNESCO Intangible Cultural Heritage','UNESCO World Heritage Sites in India',
+    'Languages of India','Religion in India','Indian philosophy'
+  ]},
+  // ───────── Defence & Internal Security ─────────
+  { name:'Defence & Security', topics:[
+    'Indian Armed Forces','Indian Army','Indian Navy','Indian Air Force',
+    'Indian Coast Guard','Nuclear weapons of India','Defence industry of India',
+    'Internal security of India','Terrorism in India',
+    'Naxalite–Maoist insurgency','Border security of India',
+    'Indian Police Service','Central Armed Police Forces','Paramilitary forces of India',
+    'National security of India','Insurgency in Jammu and Kashmir'
+  ]},
+  // ───────── Environment, Ecology & Climate ─────────
+  { name:'Environment & Ecology', topics:[
+    'Environment of India','Wildlife of India','Climate change in India',
+    'Biodiversity of India','Deforestation in India','Pollution in India',
+    'Waste management in India','National parks of India',
+    'Biosphere reserves of India','Ramsar sites in India',
+    'Wildlife sanctuaries of India','Environmental issues in India',
+    'Water pollution in India','Air pollution in India','Forestry in India',
+    'Endangered species of India','Conservation in India','Climate change'
+  ]},
+  // ───────── International Relations ─────────
+  { name:'International Relations', topics:[
+    'Foreign relations of India','United Nations','SAARC','BRICS','G20',
+    'Shanghai Cooperation Organisation','ASEAN','World Trade Organization',
+    'International Monetary Fund','World Bank','Non-Aligned Movement',
+    'India–United States relations','India–China relations','India–Pakistan relations',
+    'India–Russia relations','India–Japan relations','India–Bangladesh relations',
+    'India–Nepal relations','India–Sri Lanka relations',
+    'South Asia','Indian Ocean','Indian diaspora',
+    'Nuclear Suppliers Group','Missile Technology Control Regime',
+    'Nuclear disarmament','International Atomic Energy Agency'
+  ]},
+  // ───────── Indian Society & Social Issues ─────────
+  { name:'Indian Society', topics:[
+    'Indian society','Caste system in India','Education in India',
+    'Demographics of India','Health in India','Women in India',
+    'Child labour in India','Human rights in India','Hunger in India',
+    'Malnutrition in India','Tribes of India','Religious minorities in India',
+    'Poverty in India','Unemployment in India','Slums in India',
+    'Social issues in India','Public health in India','Sanitation in India',
+    'Gender inequality in India','Dowry system in India','Corruption in India',
+    'Midday Meal Scheme','Integrated Child Development Services'
+  ]},
+  // ───────── Ethics & Integrity ─────────
+  { name:'Ethics & Integrity', topics:[
+    'Ethics','Moral philosophy','Applied ethics','Business ethics',
+    'Medical ethics','Environmental ethics','Corporate governance',
+    'Code of conduct','Conflict of interest','Whistleblower','Transparency (behavior)',
+    'Accountability','Good governance','Civil service','Public administration',
+    'Emotional intelligence','Attitude (psychology)','Aptitude'
+  ]},
+  // ───────── ISRO, Space & Nuclear ─────────
+  { name:'ISRO & Space', topics:[
+    'ISRO','Chandrayaan','Mangalyaan','Gaganyaan','Satellite navigation',
+    'Space research','Indian Space Research Organisation','List of Indian satellites',
+    'Launch vehicles of India','Nuclear power in India','Nuclear programme of India'
+  ]},
+  // ───────── Sports ─────────
+  { name:'Sports', topics:[
+    'Sports in India','Cricket in India','Hockey in India','Football in India',
+    'Olympic Games','Asian Games','Commonwealth Games','Chess','Badminton','Tennis',
+    'Kabbadi','Wrestling in India','Boxing in India','Shooting sports',
+    'History of cricket in India','Indian Premier League','Rugby in India',
+    'National Games of India','Athletics in India'
+  ]},
+  // ───────── Books, Authors & Literature ─────────
+  { name:'Books & Authors', topics:[
+    'Indian literature','Hindi literature','Indian English literature',
+    'Sanskrit literature','Tamil literature','Bengali literature',
+    'Rabindranath Tagore','Mahatma Gandhi','B. R. Ambedkar','Jawaharlal Nehru',
+    'Premchand','Bankim Chandra Chattopadhyay','Kalidasa','Bhagavad Gita',
+    'Constitution of India','Indian epic poetry','Vedas','Upanishads','Puranas'
+  ]},
+  // ───────── Awards & Honours ─────────
+  { name:'Awards & Honours', topics:[
+    'National awards of India','Bharat Ratna','Padma awards','Sahitya Akademi Award',
+    'Jnanpith Award','Dadasaheb Phalke Award','Arjuna Award','Dronacharya Award',
+    'Major Dhyan Chand Khel Ratna','Gallantry awards in India',
+    'Param Vir Chakra','Ashoka Chakra','Nobel Prize','Booker Prize',
+    'Man Booker Prize','Pulitzer Prize','Oscar','Grammy','Academy Awards'
+  ]},
+  // ───────── Government Schemes ─────────
+  { name:'Govt Schemes', topics:[
+    'Government of India','MGNREGA','Ayushman Bharat','Swachh Bharat Mission',
+    'Digital India','Make in India','Startup India','Skill India',
+    'Pradhan Mantri Jan Dhan Yojana','Pradhan Mantri Awas Yojana',
+    'Pradhan Mantri Ujjwala Yojana','Pradhan Mantri Fasal Bima Yojana',
+    'Pradhan Mantri Kisan Samman Nidhi','National Health Mission',
+    'Midday Meal Scheme','Sarva Shiksha Abhiyan','Beti Bachao Beti Padhao',
+    'Atal Pension Yojana','Soil Health Card Scheme','National Food Security Act',
+    'Direct Benefit Transfer','Goods and Services Tax','Demonetisation'
+  ]},
+  // ───────── Indian States ─────────
+  { name:'Indian States', topics:[
+    'States and union territories of India','Maharashtra','Tamil Nadu',
+    'Uttar Pradesh','Karnataka','Kerala','Gujarat','Rajasthan','West Bengal',
+    'Bihar','Madhya Pradesh','Punjab, India','Haryana','Andhra Pradesh',
+    'Telangana','Odisha','Assam','Jharkhand','Chhattisgarh','Uttarakhand',
+    'Himachal Pradesh','Jammu and Kashmir (union territory)','Delhi',
+    'Goa','Puducherry','Chandigarh','Manipur','Mizoram','Nagaland','Tripura',
+    'Meghalaya','Arunachal Pradesh','Sikkim'
+  ]},
+  // ───────── Important Days ─────────
+  { name:'Important Days', topics:[
+    'United Nations observances','International days','National days of India',
+    'List of International Years','Public holidays in India','Indian calendar'
+  ]},
+  // ───────── Personaliies ─────────
+  { name:'Personalities', topics:[
+    'List of Indian leaders','Indian independence activists','Indian scientists',
+    'List of Indian philosophers','List of Indian writers','List of Indian poets',
+    'List of Indian artists','List of Indian musicians','List of Indian film actors',
+    'List of Indian sportspeople','List of Indian inventors',
+    'List of Indian businesspeople','List of Indian economists',
+    'List of Indian social reformers','List of Indian women',
+    'Prime Minister of India','President of India','Chief Minister (India)',
+    'Governor (India)','List of Nobel laureates by country'
+  ]},
+  // ───────── Disaster Management ─────────
+  { name:'Disaster Management', topics:[
+    'Disaster management in India','National Disaster Management Authority',
+    'Floods in India','Cyclones in India','Earthquakes in India',
+    'Drought in India','Tsunami','Landslide','Heat wave','Climate change adaptation',
+    'Disaster risk reduction','Emergency management'
+  ]},
+  // ───────── Business & Economy ─────────
+  { name:'Business & Economy', topics:[
+    'Business in India','Startup India','Make in India','E-commerce in India',
+    'Retail in India','Microfinance in India','Small and medium enterprises',
+    'Stock exchanges in India','Bombay Stock Exchange','National Stock Exchange of India',
+    'Foreign direct investment in India','Outsourcing in India',
+    'Multinational corporations in India','Indian rupee','Cryptocurrency in India'
+  ]},
+  // ───────── RBI & Banking ─────────
+  { name:'RBI & Banking', topics:[
+    'Reserve Bank of India','Monetary policy of India','Banking in India',
+    'National Bank for Agriculture and Rural Development',
+    'Securities and Exchange Board of India','Insurance in India',
+    'Indian Banking system','Demonetisation','Non-performing asset',
+    'Financial inclusion','Digital payment in India','Unified Payments Interface'
+  ]},
 ];
 
 async function main() {
