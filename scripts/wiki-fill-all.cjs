@@ -57,6 +57,46 @@ function getContext(allSentences, sentText, windowSize) {
   return allSentences.slice(start, end).join('. ').substring(0, 1200);
 }
 
+function findBestTerm(sent, title) {
+  const allMatches = [];
+  const re = /([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,4})/g;
+  let m;
+  while ((m = re.exec(sent)) !== null) allMatches.push(m[1]);
+
+  const candidates = allMatches.filter(t => {
+    if (t.length < 4) return false;
+    if (/^(The|This|It|He|She|They|We|I|You|His|Her|Its|Their|An|A)$/i.test(t)) return false;
+    if (t === title) return false;
+    const truncated = /^([A-Z][a-z]+)\s+([A-Z][a-z]+\s+)*[A-Z][a-z]+$/.test(t) && allMatches.some(x => x !== t && x.includes(t + ' '));
+    if (truncated) return false;
+    return true;
+  });
+
+  if (!candidates.length) return null;
+
+  const titleLower = title.toLowerCase();
+  const titleWords = new Set(titleLower.split(/\s+/));
+
+  const scored = candidates.map(t => {
+    const words = t.toLowerCase().split(/\s+/);
+    const overlap = words.filter(w => titleWords.has(w)).length;
+    const pos = sent.indexOf(t);
+    return { term: t, score: overlap * 10 + words.length * 3 - pos * 0.1 };
+  });
+
+  scored.sort((a, b) => b.score - a.score);
+  return scored[0].term;
+}
+
+function makeDescriptionQuestion(desc, title) {
+  const trimmed = desc.replace(/^(the\s+)?/i, '').trim();
+  const isSentence = /^[A-Z].*\w{3,} [a-z]/.test(trimmed);
+  const isPerson = /(born|died|known for|scientist|politician|author|king|queen|leader|poet|painter)/i.test(desc);
+  if (isSentence) return 'What is ' + title + '? ' + trimmed.charAt(0).toUpperCase() + trimmed.slice(1) + '.';
+  if (isPerson) return 'Who is ' + trimmed + '?';
+  return 'What is ' + trimmed + '?';
+}
+
 const CATEGORIES = [
   { name: 'Indian History', topics: ['History of India', 'Indian independence movement', 'Mughal Empire'] },
   { name: 'World History', topics: ['World history', 'Cold War', 'French Revolution'] },
@@ -123,17 +163,16 @@ async function main() {
       const sentences = allSentences.filter(s => s.trim().length > 40);
 
       // Description-based
-      if (desc && desc.length > 5 && desc.length < 150) {
-        const isPerson = /(born|died|known for|scientist|politician|author|king|queen|leader|poet|painter)/i.test(desc);
-        const q = (isPerson ? 'Who' : 'What') + ' is ' + desc.replace(/^(the\s+)?/i, '').trim() + '?';
-        if (q.length > 15 && q.length < 150 && pushQ({
-          id: cat.name.substring(0,3).toLowerCase() + added,
-          type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-          pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
-           question: q, answer: title, hint: '',
-           fact: getContext(allSentences, title, 3),
-         })) added++;
-       }
+       if (desc && desc.length > 5 && desc.length < 200) {
+         const q = makeDescriptionQuestion(desc, title);
+         if (q.length > 15 && q.length < 200 && pushQ({
+           id: cat.name.substring(0,3).toLowerCase() + added,
+           type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+           pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+            question: q, answer: title, hint: '',
+            fact: getContext(allSentences, title, 3),
+          })) added++;
+        }
 
        // Year-based
        for (let si = 0; si < sentences.length; si++) {
@@ -153,26 +192,21 @@ async function main() {
         }
       }
 
-      // Blank-out key term
-      for (let si = 0; si < sentences.length; si++) {
-        const sent = sentences[si];
-        const titleEsc = title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        if (new RegExp(titleEsc, 'i').test(sent)) continue;
-        const match = sent.match(/([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,3})/);
-        if (match) {
-          const term = match[0];
-          if (term.length > 5 && term !== title && !term.includes('The ') && !term.includes('It ')) {
-            const context = sent.replace(term, '_____');
-            if (context.length > 20 && context.length < 180 && pushQ({
-              id: cat.name.substring(0,3).toLowerCase() + added,
-              type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-             pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
-               question: context.trim(), answer: term, hint: '',
-               fact: getContext(allSentences, sent, 3),
-            })) added++;
-          }
-        }
-      }
+      // Blank-out key term (smarter)
+       for (let si = 0; si < sentences.length; si++) {
+         const sent = sentences[si];
+         if (new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(sent)) continue;
+         const bestTerm = findBestTerm(sent, title);
+         if (!bestTerm) continue;
+         const context = sent.replace(bestTerm, '_____');
+         if (context.length > 25 && context.length < 200 && pushQ({
+           id: cat.name.substring(0,3).toLowerCase() + added,
+           type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+          pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+            question: context.trim(), answer: bestTerm, hint: '',
+            fact: getContext(allSentences, sent, 3),
+         })) added++;
+       }
     }
 
     console.log('  Added ' + added + ' new questions for ' + cat.name + ' (total: ' + quiz.questions.length + ')');
