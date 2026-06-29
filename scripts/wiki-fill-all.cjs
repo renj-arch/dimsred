@@ -45,6 +45,34 @@ async function fetchArticleExtract(title, retries) {
 
 function norm(s) { return (s || '').replace(/\s+/g, ' ').trim().toLowerCase(); }
 
+// Detect table/list row fragments: high comma density, starts with year/name, etc.
+function isBadSentence(s) {
+  const t = s.trim();
+  if (t.length < 20) return true;
+  // Comma density > 1 per 15 chars → table row
+  const commaCount = (t.match(/,/g) || []).length;
+  if (commaCount > 0 && t.length / commaCount < 15) return true;
+  // Starts with a year+comma pattern like "1923, Robert..."
+  if (/^\d{4}[,\.]\s/.test(t)) return true;
+  // Starts with "List of" or "This is a list"
+  if (/^(List of|This is a list|The following is a list)/i.test(t)) return true;
+  // Contains "William" "Shakespeare" etc — abbreviation period fragments
+  // e.g. " Robert A" after splitting on "Robert A. Millikan"
+  if (/^[,\s]*[A-Z][a-z]+\s+[A-Z]\.?\s*$/.test(t)) return true;
+  // More than 3 entities separated by commas: "Physics, United States, Nobel"
+  if (commaCount >= 2 && /^[A-Z][a-z]+[\s,]+[A-Z]/.test(t) && t.length < 60) return true;
+  return false;
+}
+
+// Check if Wikipedia extract is a list/table page (not prose)
+function isListPage(extract) {
+  const first500 = extract.substring(0, 500);
+  const commas = (first500.match(/,/g) || []).length;
+  // If comma density > 1 per 20 chars in first 500 → list page
+  if (first500.length > 0 && commas > 0 && first500.length / commas < 20) return true;
+  return false;
+}
+
 function getContext(allSentences, sentText, windowSize) {
   let idx = -1;
   const target = sentText.substring(0, 30).toLowerCase();
@@ -105,6 +133,47 @@ function findBestTerm(sent, title) {
     if (s.term.split(/\s+/).length > 1 || s.term.length > 5) return s.term;
   }
   return scored[0] ? scored[0].term : null;
+}
+
+// Simple paraphrase: shorten to 1-2 most relevant sentences, minor reword
+function paraphrase(text, answer) {
+  if (!text || text.length < 20) return text;
+  const sentences = text.split('.').filter(s => s.trim().length > 15);
+  if (sentences.length === 0) return text.substring(0, 200);
+
+  // Prefer sentences containing the answer
+  const answerLower = (answer || '').toLowerCase();
+  let chosen;
+  if (answerLower) {
+    const matching = sentences.filter(s => s.toLowerCase().includes(answerLower));
+    chosen = matching.length > 0 ? matching.slice(0, 2) : sentences.slice(0, 2);
+  } else {
+    chosen = sentences.slice(0, 2);
+  }
+
+  let result = chosen.join('. ').trim();
+  // Basic rewrites
+  const swaps = {
+    ' was ': ' is ',
+    ' were ': ' are ',
+    ' has been ': ' is ',
+    ' have been ': ' are ',
+    ' established ': ' set up ',
+    ' established.': ' set up.',
+    ' founded ': ' set up ',
+    ' founded.': ' set up.',
+    ' located in ': ' in ',
+    ' situated in ': ' in ',
+    ' known as ': ' called ',
+    ' referred to as ': ' called ',
+  };
+  for (const [from, to] of Object.entries(swaps)) {
+    result = result.split(from).join(to);
+  }
+  if (result.length > 300) result = result.substring(0, 297) + '...';
+  // Ensure it ends with a period
+  if (result.length > 0 && !/[.!?]$/.test(result)) result += '.';
+  return result;
 }
 
 function makeDescriptionQuestion(desc, title) {
@@ -1106,8 +1175,15 @@ async function main() {
       const ext = article.extract;
       const title = article.title;
       const desc = article.description;
-      const allSentences = ext.split('.').filter(s => s.trim().length > 20);
-      const sentences = allSentences.filter(s => s.trim().length > 25);
+
+      // Skip list/table pages — they produce garbled fragments
+      if (isListPage(ext)) {
+        console.log('  (skipping list page: ' + title + ')');
+        continue;
+      }
+
+      const allSentences = ext.split('.').filter(s => s.trim().length > 20 && !isBadSentence(s));
+      const sentences = allSentences.filter(s => s.trim().length > 25 && !isBadSentence(s));
             // Description-based (1 per article)
       if (desc && desc.length > 5 && desc.length < 200) {
         const q = makeDescriptionQuestion(desc, title);
@@ -1116,7 +1192,7 @@ async function main() {
           type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
           pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
           question: q, answer: title, hint: '',
-          fact: getContext(allSentences, title, 3),
+          fact: paraphrase(getContext(allSentences, title, 3), title),
         })) added++;
       }
 
@@ -1134,7 +1210,7 @@ async function main() {
             type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
             pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
             question: context, answer: years[0], hint: '',
-            fact: getContext(allSentences, sent, 3),
+            fact: paraphrase(getContext(allSentences, sent, 3), years[0]),
           })) { added++; made = true; }
         }
 
@@ -1147,8 +1223,8 @@ async function main() {
               id: cat.name.substring(0,3).toLowerCase() + added + 'n',
               type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
               pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
-              question: context, answer: numMatch[1].trim(), hint: '',
-              fact: getContext(allSentences, sent, 3),
+            question: context, answer: numMatch[1].trim(), hint: '',
+            fact: paraphrase(getContext(allSentences, sent, 3), numMatch[1].trim()),
             })) { added++; made = true; }
           }
         }
@@ -1165,8 +1241,8 @@ async function main() {
                 id: cat.name.substring(0,3).toLowerCase() + added + 's',
                 type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
                 pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
-                question: context, answer: numberNearby[1].trim(), hint: '',
-                fact: getContext(allSentences, sent, 3),
+            question: context, answer: numberNearby[1].trim(), hint: '',
+            fact: paraphrase(getContext(allSentences, sent, 3), numberNearby[1].trim()),
               })) { added++; made = true; }
             }
           }
@@ -1183,7 +1259,7 @@ async function main() {
             type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
             pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
             question: context, answer: bestTerm, hint: '',
-            fact: getContext(allSentences, sent, 3),
+            fact: paraphrase(getContext(allSentences, sent, 3), bestTerm),
           })) added++;
         }
       }

@@ -1,43 +1,46 @@
 const fs = require('fs');
+const path = require('path');
 
-const data = JSON.parse(fs.readFileSync('./data/quiz.json', 'utf8'));
-let qs = data.questions;
+const quizPath = path.join(__dirname, '..', 'data', 'quiz.json');
+const quiz = JSON.parse(fs.readFileSync(quizPath, 'utf8'));
+const all = quiz.questions;
 
-// 1. Fix truncated question
-let fixedCount = 0;
-qs.forEach((q, i) => {
-  if (/Gujarat Announces/i.test(q.question) && /for Ex$/i.test(q.question)) {
-    console.log('Fixed Q#' + i + ': "' + q.question + '" -> "Gujarat Announces _____% Reservation for Ex-servicemen"');
-    q.question = 'Gujarat Announces _____% Reservation for Ex-servicemen';
-    fixedCount++;
-  }
-  // Fix double space
-  if (/\s{2,}/.test(q.question)) {
-    const before = q.question;
-    q.question = q.question.replace(/\s{2,}/g, ' ');
-    console.log('Fixed Q#' + i + ': double space "' + before + '" -> "' + q.question + '"');
-    fixedCount++;
-  }
-});
+const before = all.length;
 
-// 2. Remove duplicates (keep first occurrence by question+answer key)
-const seen = new Map();
-const keep = [];
-let removedCount = 0;
-qs.forEach((q, i) => {
-  const key = (q.question + '|||' + q.answer).toLowerCase().trim();
-  if (seen.has(key)) {
-    console.log('Removed Q#' + i + ' (duplicate of Q#' + seen.get(key) + '): "' + q.question.slice(0, 60) + '" -> ' + q.answer);
-    removedCount++;
-  } else {
-    seen.set(key, i);
-    keep.push(q);
-  }
-});
+function isBad(q) {
+  const text = (q.question || '').trim();
 
-data.questions = keep;
-data.updatedAt = new Date().toISOString();
+  // Empty or too short
+  if (text.length < 15) return true;
 
-fs.writeFileSync('./data/quiz.json', JSON.stringify(data), 'utf8');
-console.log('\nDone. Fixed ' + fixedCount + ' question(s), removed ' + removedCount + ' duplicate(s).');
-console.log('Questions: ' + qs.length + ' -> ' + keep.length);
+  // Starts with blank (year/term was at start of table row)
+  if (/^_____/.test(text)) return true;
+
+  // No space at all → fragment
+  if (!/\s/.test(text)) return true;
+
+  // Comma density too high (table row)
+  const commas = (text.match(/,/g) || []).length;
+  if (commas > 0 && text.length / commas < 15) return true;
+
+  // Contains known table fragments (Nobel list patterns)
+  if (/, (Physics|Chemistry|Peace|Literature|Medicine|Economics)(,|$)/.test(text)) return true;
+  if (/^[A-Z][a-z]+,\s*[A-Z][a-z]+,\s*_____/.test(text)) return true;
+
+  // Question is just a fragment: "Robert A" or " Charles G" etc
+  if (/^[A-Z]?[a-z]+\s+[A-Z]\.?\s*$/.test(text)) return true;
+
+  // Less than 3 words
+  const words = text.split(/\s+/);
+  if (words.length < 3) return true;
+
+  return false;
+}
+
+const clean = all.filter(q => !isBad(q));
+
+quiz.questions = clean;
+fs.writeFileSync(quizPath, JSON.stringify(quiz));
+
+const removed = before - clean.length;
+console.log('Cleaned: ' + before + ' → ' + clean.length + ' questions (-' + removed + ' garbage)');

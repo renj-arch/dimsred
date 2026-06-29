@@ -64,17 +64,61 @@ sortedCats.forEach(c => {
     });
   });
 
-  const fileName = c.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.json';
-  const filePath = path.join(outDir, fileName);
-  fs.writeFileSync(filePath, JSON.stringify(catFile));
-  const sizeKb = (Buffer.byteLength(JSON.stringify(catFile)) / 1024).toFixed(0);
-  console.log('Wrote ' + fileName + ' (' + totalQ + ' questions, ' + sizeKb + ' KB)');
+  const baseName = c.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const filePaths = [];
+  const MAX_BYTES = 24 * 1024 * 1024;
+
+  // Flatten to per-subSubject chunks and split if too large
+  function writeSubjPart(subjList, partIndex) {
+    const partFile = {};
+    subjList.forEach(function(entry) {
+      const s = entry.subject, ss = entry.subSubject, qs = entry.questions;
+      if (!partFile[s]) partFile[s] = { subSubjects: {} };
+      partFile[s].subSubjects[ss] = qs;
+    });
+    const partName = baseName + (partIndex > 0 ? '-' + (partIndex + 1) : '') + '.json';
+    const partJson = JSON.stringify(partFile);
+    const partSizeMb = (Buffer.byteLength(partJson) / 1024 / 1024).toFixed(1);
+    fs.writeFileSync(path.join(outDir, partName), partJson);
+    filePaths.push('data/questions/' + partName);
+    console.log('  Part ' + (partIndex + 1) + ': ' + partName + ' (' + partSizeMb + ' MiB)');
+  }
+
+  if (Buffer.byteLength(JSON.stringify(catFile)) > MAX_BYTES) {
+    // Split by subSubject: each entry = {subject, subSubject, questions}
+    var splitEntries = [];
+    Object.keys(subs).forEach(function(s) {
+      Object.keys(subs[s]).forEach(function(ss) {
+        splitEntries.push({ subject: s, subSubject: ss, questions: subs[s][ss] });
+      });
+    });
+    var chunk = [], chunkBytes = 0;
+    var partIdx = 0;
+    console.log('Large category: ' + c + ' (' + totalQ + ' q, ' + splitEntries.length + ' sub-topics, splitting...)');
+    splitEntries.forEach(function(entry, i) {
+      var entryBytes = Buffer.byteLength(JSON.stringify(entry.questions));
+      if (chunk.length > 0 && chunkBytes + entryBytes > MAX_BYTES) {
+        writeSubjPart(chunk, partIdx++);
+        chunk = []; chunkBytes = 0;
+      }
+      chunk.push(entry);
+      chunkBytes += entryBytes;
+    });
+    if (chunk.length > 0) writeSubjPart(chunk, partIdx);
+  } else {
+    writeSubjPart(Object.keys(subs).reduce(function(acc, s) {
+      Object.keys(subs[s]).forEach(function(ss) {
+        acc.push({ subject: s, subSubject: ss, questions: subs[s][ss] });
+      });
+      return acc;
+    }, []), 0);
+  }
 
   catIndex.push({
     name: c,
     total: totalQ,
     icon: CAT_ICONS[c] || '📌',
-    file: 'data/questions/' + fileName,
+    file: filePaths.length === 1 ? filePaths[0] : filePaths,
     subjects: subjList
   });
 });
@@ -263,21 +307,36 @@ html += '}\n';
 
 html += 'function loadCategory(ci, cb) {\n';
 html += '  if (_cache[ci]) { cb(); return; }\n';
-html += '  var xhr = new XMLHttpRequest();\n';
-html += '  xhr.onload = function() {\n';
-html += '    if (xhr.status !== 200) {\n';
-html += '      document.getElementById(\'view-content\').innerHTML = \'<div class="loading">Failed to load questions (HTTP \' + xhr.status + \').</div>\';\n';
-html += '      return;\n';
-html += '    }\n';
-html += '    try { _cache[ci] = JSON.parse(xhr.responseText); } catch(e) {\n';
-html += '      document.getElementById(\'view-content\').innerHTML = \'<div class="loading">Failed to parse questions.</div>\';\n';
-html += '      return;\n';
-html += '    }\n';
-html += '    cb();\n';
-html += '  };\n';
-html += '  xhr.onerror = function() { document.getElementById(\'view-content\').innerHTML = \'<div class="loading">Failed to load questions (network error).</div>\'; };\n';
-html += '  xhr.open(\'GET\', CAT_INDEX[ci].file, true);\n';
-html += '  xhr.send();\n';
+html += '  var files = CAT_INDEX[ci].file;\n';
+html += '  if (!Array.isArray(files)) files = [files];\n';
+html += '  var merged = {};\n';
+html += '  var loaded = 0;\n';
+html += '  files.forEach(function(url, fi) {\n';
+html += '    var xhr = new XMLHttpRequest();\n';
+html += '    xhr.onload = function() {\n';
+html += '      if (xhr.status !== 200) {\n';
+html += '        document.getElementById(\'view-content\').innerHTML = \'<div class="loading">Failed to load questions (HTTP \' + xhr.status + \').</div>\';\n';
+html += '        return;\n';
+html += '      }\n';
+html += '      var data;\n';
+html += '      try { data = JSON.parse(xhr.responseText); } catch(e) {\n';
+html += '        document.getElementById(\'view-content\').innerHTML = \'<div class="loading">Failed to parse questions.</div>\';\n';
+html += '        return;\n';
+html += '      }\n';
+html += '      for (var sk in data) {\n';
+html += '        if (!merged[sk]) merged[sk] = { subSubjects: {} };\n';
+html += '        var ss = data[sk].subSubjects;\n';
+html += '        for (var ssk in ss) {\n';
+html += '          merged[sk].subSubjects[ssk] = ss[ssk];\n';
+html += '        }\n';
+html += '      }\n';
+html += '      loaded++;\n';
+html += '      if (loaded === files.length) { _cache[ci] = merged; cb(); }\n';
+html += '    };\n';
+html += '    xhr.onerror = function() { document.getElementById(\'view-content\').innerHTML = \'<div class="loading">Failed to load questions (network error).</div>\'; };\n';
+html += '    xhr.open(\'GET\', url, true);\n';
+html += '    xhr.send();\n';
+html += '  });\n';
 html += '}\n';
 
 html += 'function renderQuestionItem(q, i) {\n';

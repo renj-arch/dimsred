@@ -27,6 +27,9 @@ jobs:
       - name: Generate questions from Wikipedia
         run: node scripts/wiki-fill-all.cjs
 
+      - name: Remove garbled questions (table rows, fragments)
+        run: node scripts/cleanup-questions.js
+
       - name: Rebuild single archive + per-category data
         run: node scripts/build-archive-single.js
 
