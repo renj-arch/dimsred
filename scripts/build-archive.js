@@ -484,7 +484,7 @@ function renderOnePage(pageIdx) {
     const subs = tree[c];
     const totalQ = Object.values(subs).reduce((sum, sub) => sum + Object.values(sub).reduce((s, qs) => s + qs.length, 0), 0);
     html += '<div class="sidebar-cat">';
-    html += '<a href="#" class="sidebar-link" data-cat="' + esc(c) + '" onmouseenter="return selectCategory(' + ci + ')" onclick="return selectCategory(' + ci + ')">';
+    html += '<a href="#" class="sidebar-link" data-cat="' + esc(c) + '" onclick="return selectCategory(' + ci + ')">';
     html += '<span class="sidebar-icon">' + (CAT_ICONS[c] || '📌') + '</span>';
     html += '<span class="sidebar-label">' + esc(c) + '</span>';
     html += '<span class="sidebar-count">' + totalQ + '</span></a>';
@@ -493,7 +493,7 @@ function renderOnePage(pageIdx) {
       const ssList = subs[subj];
       const subjQ = Object.values(ssList).reduce((s, qs) => s + qs.length, 0);
       const subjPair = esc(c) + '||' + esc(subj);
-      html += '<a href="#" class="sidebar-subj-link" data-subj="' + subjPair + '" onmouseenter="return selectSubject(\'' + subjPair + '\')" onclick="return selectSubject(\'' + subjPair + '\')">';
+      html += '<a href="#" class="sidebar-subj-link" data-subj="' + subjPair + '" onclick="return selectSubject(\'' + subjPair + '\')">';
       html += '<span class="sidebar-label">' + esc(subj) + '</span>';
       html += '<span class="sidebar-count">' + subjQ + '</span></a>';
       const safeSubjId = 'ss_' + ci + '_' + esc(c).replace(/[^a-zA-Z0-9]/g,'_') + '_' + esc(subj).replace(/[^a-zA-Z0-9]/g,'_');
@@ -501,7 +501,7 @@ function renderOnePage(pageIdx) {
       Object.keys(ssList).forEach(ss => {
         const qs = ssList[ss];
         const ssPair = esc(c) + '||' + esc(subj) + '||' + esc(ss);
-        html += '<a href="#" class="sidebar-subsub-link" data-subsub="' + ssPair + '" onmouseenter="return selectSubSubject(\'' + ssPair + '\')" onclick="return selectSubSubject(\'' + ssPair + '\')">';
+        html += '<a href="#" class="sidebar-subsub-link" data-subsub="' + ssPair + '" onclick="return selectSubSubject(\'' + ssPair + '\')">';
         html += '<span class="sidebar-label">' + esc(ss) + '</span>';
         html += '<span class="sidebar-count">' + qs.length + '</span></a>';
       });
@@ -525,7 +525,7 @@ function renderOnePage(pageIdx) {
     const totalQ = Object.values(subs).reduce((sum, sub) => sum + Object.values(sub).reduce((s, qs) => s + qs.length, 0), 0);
     const ciFull = sortedCats.indexOf(c);
     const preview = Object.values(subs).flatMap(sub => Object.values(sub).flat()).slice(0, 3).map(q => q.question.substring(0, 80)).join('<br>');
-    html += '<div class="subj-card" onmouseenter="return selectCategory(' + ciFull + ')" onclick="return selectCategory(' + ciFull + ')">';
+    html += '<div class="subj-card" onclick="return selectCategory(' + ciFull + ')">';
     html += '<div class="subj-card-name">' + (CAT_ICONS[c] || '📌') + ' ' + esc(c) + '</div>';
     html += '<div class="subj-card-count">' + totalQ + ' question' + (totalQ > 1 ? 's' : '') + '</div>';
     html += '<div class="subj-card-preview">' + preview + '</div></div>';
@@ -544,7 +544,7 @@ function renderOnePage(pageIdx) {
       const qs = Object.values(subs[subj]).flat();
       const preview = qs.slice(0, 3).map(q => q.question.substring(0, 80)).join('<br>');
       const subjPair = esc(c) + '||' + esc(subj);
-      html += '<div class="subj-card" onmouseenter="return selectSubject(\'' + subjPair + '\')" onclick="return selectSubject(\'' + subjPair + '\')">';
+      html += '<div class="subj-card" onclick="return selectSubject(\'' + subjPair + '\')">';
       html += '<div class="subj-card-name">' + esc(subj) + '</div>';
       html += '<div class="subj-card-count">' + qs.length + ' question' + (qs.length > 1 ? 's' : '') + '</div>';
       html += '<div class="subj-card-preview">' + preview + '</div></div>';
@@ -566,7 +566,7 @@ function renderOnePage(pageIdx) {
         const qs = ssList[ss];
         const preview = qs.slice(0, 3).map(q => q.question.substring(0, 80)).join('<br>');
         const ssPair = esc(c) + '||' + esc(subj) + '||' + esc(ss);
-        html += '<div class="subj-card" onmouseenter="return selectSubSubject(\'' + ssPair + '\')" onclick="return selectSubSubject(\'' + ssPair + '\')">';
+        html += '<div class="subj-card" onclick="return selectSubSubject(\'' + ssPair + '\')">';
         html += '<div class="subj-card-name">' + esc(ss) + '</div>';
         html += '<div class="subj-card-count">' + qs.length + ' question' + (qs.length > 1 ? 's' : '') + '</div>';
         html += '<div class="subj-card-preview">' + preview + '</div></div>';
