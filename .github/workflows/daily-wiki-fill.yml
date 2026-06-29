@@ -24,11 +24,8 @@ jobs:
       - name: Generate questions from Wikipedia
         run: node scripts/wiki-fill-all.cjs
 
-      - name: Rebuild archive
-        run: node scripts/build-archive.js
-
-      - name: Generate individual question pages + sitemap
-        run: node scripts/generate-pages.cjs
+      - name: Rebuild single archive + per-category data
+        run: node scripts/build-archive-single.js
 
       - name: Commit and push
         run: |

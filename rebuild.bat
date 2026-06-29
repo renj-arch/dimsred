@@ -4,15 +4,11 @@ echo === Step 1: Generate questions from Wikipedia ===
 node scripts/wiki-fill-all.cjs
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo.
-echo === Step 2: Build archive HTML ===
-node scripts/build-archive.js
+echo === Step 2: Build single archive HTML + per-category data ===
+node scripts/build-archive-single.js
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo.
-echo === Step 3: Generate individual question pages + sitemap ===
-node scripts/generate-pages.cjs
-if %errorlevel% neq 0 exit /b %errorlevel%
-echo.
-echo === Step 4: Commit and push ===
+echo === Step 3: Commit and push ===
 git config user.name "vlymbooq-bot"
 git config user.email "bot@vlymbooq.qzz.io"
 git add -A
