@@ -21,11 +21,17 @@ jobs:
         with:
           node-version: 20
 
+      - name: Restore quiz.json from per-category files
+        run: node scripts/rebuild-quiz-json.js
+
       - name: Generate questions from Wikipedia
         run: node scripts/wiki-fill-all.cjs
 
       - name: Rebuild single archive + per-category data
         run: node scripts/build-archive-single.js
+
+      - name: Remove quiz.json (too large for Cloudflare Pages)
+        run: rm -f data/quiz.json
 
       - name: Commit and push
         run: |

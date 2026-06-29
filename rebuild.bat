@@ -1,14 +1,18 @@
 @echo off
 cd /d "%~dp0"
-echo === Step 1: Generate questions from Wikipedia ===
+echo === Step 1: Restore quiz.json from per-category files (if missing) ===
+if not exist "data\quiz.json" node scripts/rebuild-quiz-json.js
+if %errorlevel% neq 0 exit /b %errorlevel%
+echo.
+echo === Step 2: Generate questions from Wikipedia ===
 node scripts/wiki-fill-all.cjs
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo.
-echo === Step 2: Build single archive HTML + per-category data ===
+echo === Step 3: Build single archive HTML + per-category data ===
 node scripts/build-archive-single.js
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo.
-echo === Step 3: Commit and push ===
+echo === Step 4: Commit and push ===
 git config user.name "vlymbooq-bot"
 git config user.email "bot@vlymbooq.qzz.io"
 git add -A
