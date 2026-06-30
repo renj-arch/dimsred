@@ -7372,6 +7372,17 @@ GK_GENERATORS.pib = function() {
             generateMixedQuestions(20);
             if (state.questions.length > 0) {
                 showQuestion();
+            } else {
+                // Pool not populated yet — wait and retry
+                var _waitRetry = 0;
+                var _waitTimer = setInterval(function() {
+                    generateMixedQuestions(10);
+                    if (state.questions.length > 0 || _waitRetry > 20) {
+                        clearInterval(_waitTimer);
+                        if (state.questions.length > 0) showQuestion();
+                    }
+                    _waitRetry++;
+                }, 500);
             }
             
             // Continuously pre-fetch historical months from wide range (BC to CE)
@@ -7418,7 +7429,7 @@ GK_GENERATORS.pib = function() {
                 var source = sources[Math.floor(Math.random() * sources.length)];
                 var q = null;
                 try {
-                    if (source === 'wiki_pool' && typeof WIKI !== 'undefined' && WIKI.pool) {
+                    if (source === 'wiki_pool' && typeof WIKI !== 'undefined' && WIKI.poolQuestion) {
                         q = WIKI.poolQuestion();
                     } else if (source === 'wiki_current_affairs') {
                         q = _generateCurrentAffairsFromWiki();
