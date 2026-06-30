@@ -61,6 +61,24 @@ function isBadSentence(s) {
   if (/^[,\s]*[A-Z][a-z]+\s+[A-Z]\.?\s*$/.test(t)) return true;
   // More than 3 entities separated by commas: "Physics, United States, Nobel"
   if (commaCount >= 2 && /^[A-Z][a-z]+[\s,]+[A-Z]/.test(t) && t.length < 60) return true;
+  // Fragment ending with parenthesized content: "Name Name (year" or "Name ("
+  if (/\([\dA-Z]/.test(t) && t.length < 40) return true;
+  // Starts with a name and comma then another name (list entry)
+  if (/^[A-Z][a-z]+[,\s]+[A-Z][a-z]+[,\s]+/.test(t) && !/\b(?:and|or|the|was|were|is|are|has|have|had)\b/i.test(t)) return true;
+  // Wikipedia section markup ("== See also ==", "== Notes ==", etc.)
+  if (/==\s*\w/.test(t)) return true;
+  // Boilerplate section headers
+  if (/^(See also|References|Notes|External links|Further reading|Bibliography|Sources)\b/i.test(t)) return true;
+  // Citation boilerplate: "Archived from the original", "Retrieved", "Retrieved from"
+  if (/^(Archived from|Retrieved\s|Retrieved from)/i.test(t)) return true;
+  // Citation entry: "Name, Name (date)" or "Surname, Firstname (date)"
+  if (/^[A-Z][a-z]+,\s*[A-Z][a-z]+.*\(\d{4}\)/.test(t)) return true;
+  // "Surname (date)" citation pattern
+  if (/^[A-Z][a-z]+\s+\([12]\d{3}\)/.test(t)) return true;
+  // URL or "Retrieved from" patterns
+  if (/https?:\/\//i.test(t)) return true;
+  // Ends with a parenthesized year like "(2023)" (citation marker)
+  if (/\(\d{4}\)\s*$/.test(t) && t.length < 60) return true;
   return false;
 }
 
@@ -70,6 +88,12 @@ function isListPage(extract) {
   const commas = (first500.match(/,/g) || []).length;
   // If comma density > 1 per 20 chars in first 500 → list page
   if (first500.length > 0 && commas > 0 && first500.length / commas < 20) return true;
+  // "Name, Name (year)" pattern — typical of award/prize lists
+  const nameYearMatches = (extract.match(/[A-Z][a-z]+,\s*[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\s*\(\d{4}\)/g) || []).length;
+  if (nameYearMatches > 3) return true;
+  // "Name (year)" pattern repeated
+  const nameParenYear = (extract.match(/[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\s*\(\d{4}\)/g) || []).length;
+  if (nameParenYear > 8) return true;
   return false;
 }
 
@@ -101,14 +125,20 @@ function findBestTerm(sent, title) {
   while ((m = re.exec(sent)) !== null) allMatches.push(m[1]);
 
   const candidates = allMatches.filter(t => {
-    if (t.length < 3) return false;
-    if (/^(The|This|It|He|She|They|We|I|You|His|Her|Its|Their|An|A|India)$/i.test(t)) return false;
+    if (t.length < 4) return false;
+    if (/^(The|This|It|He|She|They|We|I|You|His|Her|Its|Their|An|A|India|Many|Most|Some|Few|All|Each|Every|Both|Such|These|Those|That|Who|Which|What|When|Where|How|Would|Could|Should|After|Before|During|Until|Since|Within|Without|About|Between|Among|Because|Also|Only|Just|Very|Still|Even|Well|Here|There|Now|Then|One|Two|New|Old|First|Last|Next|Other|Same|Own|Long|Great|High|Large|Small|Big|Good|Bad|Chief|State|Union|Central|National|Public|General|Supreme|Federal|World|Year|Years|Name|Names|Part|Parts|Type|Types|Form|Forms|Group|Groups|List|Lists|Known|Also|Instituted|Established|Founded|Created|Introduced|Developed|Published|Released|Announced|Launched|Appointed|Elected|Awarded|Received|Won|Played|Worked|Studied|Taught|Led|Built|Designed|Invented|Discovered|Proposed|Suggested|Argued|Stated|Noted|Observed|Reported|Described|Explained|Formed|Made|Given|Taken|Held|Shown|Found|Seen|Heard|Considered|Regarded|Believed|Thought|Felt|Wanted|Needed|Used)$/i.test(t)) return false;
     if (t === title) return false;
     // Skip if it's a truncated version of a longer match
     const truncated = allMatches.some(x => x !== t && x.includes(t + ' '));
     if (truncated) return false;
     // Skip pure numeric
     if (/^\d+$/.test(t)) return false;
+    // Skip ordinal-like (1st, 2nd, 3rd, 4th, etc.)
+    if (/^\d+(st|nd|rd|th)$/.test(t)) return false;
+    // Skip if term is just a parenthesized number like "(2014)"
+    if (/^\(\d+\)$/.test(t)) return false;
+    // Skip if term is the first word of the sentence (too obvious)
+    if (new RegExp('^' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[\\s,;:]', 'i').test(sent.trim())) return false;
     return true;
   });
 
@@ -1205,6 +1235,16 @@ async function main() {
         const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
         if (years && sent.length < 240) {
           const context = sent.replace(years[0], '_____').trim().substring(0, 200);
+          // Skip if context is a fragment like "Name (_____)" or "Name, Name (_____)"
+          if (/^[^a-z]*[A-Z][a-z]+[,\s].*\(_____\)\s*$/.test(context)) continue;
+          if (/^\(?_____\)?\s*$/.test(context)) continue;
+          // Skip citation boilerplate: "Archived from the original on _____"
+          if (/^Archived from/i.test(context)) continue;
+          // Skip citation entries: "Name (date)" or "Surname, Name (date)" with blank
+          if (/^[A-Z][a-z]+,\s*[A-Z][a-z]+.*\(\d{4}.*\)/.test(sent)) continue;
+          if (/^[A-Z][a-z]+\s+\([12]\d{3}\)/.test(sent)) continue;
+          // Skip if year is inside a citation parenthetical like "(29 October _____)"
+          if (/\([^)]*_____[^)]*\)/.test(context)) continue;
           if (context.length > 25 && pushQ({
             id: cat.name.substring(0,3).toLowerCase() + added + 'y',
             type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
@@ -1253,6 +1293,8 @@ async function main() {
           if (new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(sent)) continue;
           const bestTerm = findBestTerm(sent, title);
           if (!bestTerm) continue;
+          // Skip if bestTerm is the first word (too obvious — "_____ in 1961")
+          if (new RegExp('^' + bestTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(sent.trim())) continue;
           const context = sent.replace(bestTerm, '_____').trim().substring(0, 200);
           if (context.length > 25 && context.length < 200 && pushQ({
             id: cat.name.substring(0,3).toLowerCase() + added + 't',

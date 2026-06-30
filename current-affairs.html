@@ -5461,6 +5461,16 @@ GK_GENERATORS.pib = function() {
             if (/of Nigeria|of Pakistan|of Indonesia|of Italy|of Mozambique|of the Netherlands|of the Russian|of the United Kingdom|of the United Arab|of the Uzbekistan|of the United States|of Israel|of Bangladesh|of Singapore|of Germany|of Iran|of Africa|Hong Kong/i.test(text)) return true;
             if (/Cricket ground at Fairplex|Military of Singapore|Sports associated with Western|Hong Kong policy/i.test(text)) return true;
             if (/birth control in the medieval|ancient history of the African|medieval and early modern history of the African/i.test(text.toLowerCase())) return true;
+            // Additional archive-style filters
+            var qlen = (q.q || q.question || '').length;
+            var alen = (q.a || q.answer || '').length;
+            if (qlen > 200 || qlen < 10) return true;
+            if (alen < 2 || alen > 100) return true;
+            if (/^[a-z]/.test(q.q || '') && qlen < 30) return true;
+            if (/(?:^|\s)(?:was|is|are|were|the|a|an|it|its|this|that|these|those|they|he|she|we|you)\s{0,10}$/i.test((q.q || '').trim())) return true;
+            if (/^(what|who|which|where|when|how)\s+(is|are|was|were|did|does|do|has|have|had)\s+(a|an|the|some|many|most|all|each|every|this|that|these|those|it|they|he|she|we|you)\s/i.test((q.q || '').trim())) return true;
+            // Filter pure list/catalog answers
+            if (/^(list of|types of|examples of|categories of|classification of)/i.test((q.q || '').trim())) return true;
             return false;
         }
         var state = { cat: null, questions: [], idx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null };
@@ -5751,25 +5761,33 @@ GK_GENERATORS.pib = function() {
         function showQuestion() {
             if (state.idx >= state.questions.length) {
                 if (state.infinite) {
-                    generateWikiQuestions(5);
+                    // Fire off async historical fetches too — any day, any year, BC to CE
+                    if (typeof _fetchRandomHistoricalOnThisDay !== 'undefined') {
+                        _fetchRandomHistoricalOnThisDay();
+                        setTimeout(function() { _fetchRandomHistoricalOnThisDay(); }, 200);
+                    }
+                    generateMixedQuestions(10);
                     if (state.idx >= state.questions.length) {
-                        if (_wikiWaiting) {
-                            _loadingRetry++;
-                            if (_loadingRetry > 4) {
-                                document.getElementById('qText').innerHTML = 'Taking too long. <button onclick="' + (state.restartFn ? 'state.restartFn()' : 'location.reload()') + '" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Restart Quiz</button>';
+                        generateWikiQuestions(10);
+                        if (state.idx >= state.questions.length) {
+                            if (_wikiWaiting) {
+                                _loadingRetry++;
+                                if (_loadingRetry > 4) {
+                                    document.getElementById('qText').innerHTML = 'Taking too long. <button onclick="' + (state.restartFn ? 'state.restartFn()' : 'location.reload()') + '" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Restart Quiz</button>';
+                                    document.getElementById('optGrid').innerHTML = '';
+                                    _wikiWaiting = false;
+                                    _loadingRetry = 0;
+                                    return;
+                                }
+                                document.getElementById('qText').innerHTML = 'Loading more questions...<br><span style="font-size:.72em;color:var(--text-muted)">still working...</span>';
                                 document.getElementById('optGrid').innerHTML = '';
-                                _wikiWaiting = false;
-                                _loadingRetry = 0;
+                                setTimeout(function() {
+                                    showQuestion();
+                                }, 1500);
                                 return;
                             }
-                            document.getElementById('qText').innerHTML = 'Loading more questions...<br><span style="font-size:.72em;color:var(--text-muted)">still working...</span>';
-                            document.getElementById('optGrid').innerHTML = '';
-                            setTimeout(function() {
-                                showQuestion();
-                            }, 1500);
-                            return;
+                            showEnd(); return;
                         }
-                        showEnd(); return;
                     }
                 } else {
                     showEnd();
@@ -5871,10 +5889,20 @@ GK_GENERATORS.pib = function() {
         function nextQuestion() {
             state.idx++;
             // Pre-fetch more questions when running low in infinite mode
-            if (state.infinite && state.idx >= state.questions.length - 3) {
-                generateWikiQuestions(5);
-                if (typeof _fetchRandomHistoricalMonth !== 'undefined') {
-                    _fetchRandomHistoricalMonth();
+            if (state.infinite && state.idx >= state.questions.length - 5) {
+                generateMixedQuestions(15);
+                if (typeof _fetchRandomHistoricalOnThisDay !== 'undefined') {
+                    _fetchRandomHistoricalOnThisDay();
+                    setTimeout(function() { _fetchRandomHistoricalOnThisDay(); }, 300);
+                    setTimeout(function() { _fetchRandomHistoricalOnThisDay(); }, 700);
+                }
+                // Also fetch more current events months proactively
+                if (typeof WIKI !== 'undefined' && WIKI.fetchMonthEvents) {
+                    var now = new Date();
+                    var fetchY = now.getFullYear() - 2;
+                    var fetchM = Math.floor(Math.random() * 12) + 1;
+                    var key = fetchY + '-' + fetchM;
+                    if (!WIKI._monthEventCache || !WIKI._monthEventCache[key]) { WIKI.fetchMonthEvents(fetchY, fetchM); }
                 }
             }
             showQuestion();
@@ -5883,10 +5911,25 @@ GK_GENERATORS.pib = function() {
         function showEnd() {
             // In infinite mode, never end — just generate more questions
             if (state.infinite) {
+                if (typeof _fetchRandomHistoricalOnThisDay !== 'undefined') {
+                    _fetchRandomHistoricalOnThisDay();
+                    setTimeout(function() { _fetchRandomHistoricalOnThisDay(); }, 250);
+                }
+                generateMixedQuestions(10);
                 generateWikiQuestions(10);
                 if (state.idx < state.questions.length) {
                     showQuestion();
                     return;
+                }
+                // Last resort: try fetching a random 2025-2026 month for current affairs
+                if (typeof WIKI !== 'undefined' && WIKI.fetchMonthEvents) {
+                    var now = new Date();
+                    var fy = now.getFullYear() - Math.floor(Math.random() * 2);
+                    var fm = Math.floor(Math.random() * 12) + 1;
+                    WIKI.fetchMonthEvents(fy, fm).then(function() {
+                        generateMixedQuestions(10);
+                        if (state.idx < state.questions.length) showQuestion();
+                    });
                 }
             }
             if (state.questions.length === 0) {
@@ -7121,50 +7164,47 @@ GK_GENERATORS.pib = function() {
             _runTimedQuiz(startEl.value, endEl.value, label + ' (unlimited)', 9999);
         };
         
-        var _historicalFetchCount = 0;
-        function _fetchRandomHistoricalMonth() {
-            if (typeof WIKI === 'undefined' || !WIKI.fetchMonthEvents) return;
-            if (_historicalFetchCount >= 24) return; // max 24 random months fetched
-            _historicalFetchCount++;
-            // Weighted year selection: 20% current, 20% last, 10% before-last, 5% each rest
-            var now = new Date();
-            var curY = now.getFullYear();
-            var year;
-            var r = Math.random() * 100;
-            if (r < 20) {
-                year = curY;
-            } else if (r < 40) {
-                year = curY - 1;
-            } else if (r < 50) {
-                year = curY - 2;
-            } else {
-                // 5% each among 2005..(curY-3)
-                var start = 2005;
-                var end = curY - 3;
-                var poolSize = Math.max(1, end - start + 1);
-                year = start + Math.floor(Math.random() * poolSize);
-            }
-            var month = Math.floor(Math.random() * 12);
-            if (WIKI._monthEventCache && WIKI._monthEventCache[year + '-' + (month+1)]) return; // already fetched
-            console.log('[MEGA] fetching random month ' + year + '-' + (month+1));
-            WIKI.fetchMonthEvents(year, month + 1).then(function(entries) {
-                if (!entries || entries.length === 0) return;
+        function _fetchRandomHistoricalOnThisDay() {
+            if (typeof WIKI === 'undefined' || !WIKI.onThisDay) return;
+            // Pick a random month (1-12) and day (1-28+), covering BC to CE
+            var month = Math.floor(Math.random() * 12) + 1;
+            var maxDay = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+            var day = Math.floor(Math.random() * maxDay) + 1;
+            var mm = String(month).padStart(2, '0');
+            var dd = String(day).padStart(2, '0');
+            var dateKey = '0000-' + mm + '-' + dd; // year unused by API, only month+day matters
+            console.log('[MEGA] fetching on-this-day for ' + mm + '-' + dd);
+            WIKI.onThisDay(dateKey).then(function(items) {
+                if (!items || items.length === 0) return;
                 var added = 0;
-                shuffle(entries).forEach(function(txt) {
-                    if (added >= 30 || state.questions.length >= 400) return;
-                    if (txt.length < 30) return;
-                    var s = (txt.match(/[^.!?]+[.!?]/g) || [txt])[0];
-                    if (!s || s.length < 20) return;
-                    var entity = (txt.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b/g) || []).filter(function(t) { return t.length > 5; })[0];
-                    if (!entity) entity = txt.split(' ').filter(function(w) { return w.length > 5; }).slice(0,2).join(' ');
-                    if (!entity || entity.length < 4) return;
+                shuffle(items).forEach(function(e) {
+                    if (!e || !e.text) return;
+                    if (e.text.length < 30) return;
+                    // Check if we already have this exact event
                     for (var j = 0; j < state.questions.length; j++) {
-                        if (state.questions[j].q === s || state.questions[j].a === entity) return;
+                        if (state.questions[j]._eventYear === e.year && state.questions[j].q === e.text) return;
                     }
-                    state.questions.push({ q: s, a: entity, fact: txt.substring(0,200), hint: 'Historical (' + year + ')', _source: 'wiki_historical', pubDate: year + '-01-01T00:00:00.000Z', opts: WIKI._buildOpts ? WIKI._buildOpts(entity) : buildOptions(entity) });
+                    var cleanText = e.text.replace(/<[^>]+>/g, '').trim();
+                    var entity = (cleanText.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b/g) || []).filter(function(t) { return t.length > 5; })[0];
+                    if (!entity) entity = cleanText.split(' ').filter(function(w) { return w.length > 5; }).slice(0,2).join(' ');
+                    if (!entity || entity.length < 4) return;
+                    var yearStr = (e.year !== undefined && e.year !== null) ? String(e.year) : '?';
+                    var displayYear = yearStr;
+                    if (parseInt(yearStr, 10) < 0) displayYear = Math.abs(parseInt(yearStr, 10)) + ' BC';
+                    else if (parseInt(yearStr, 10) > 0) displayYear = yearStr + ' CE';
+                    state.questions.push({
+                        q: 'What historical entity/event: "' + cleanText.substring(0,120) + '"',
+                        a: entity,
+                        fact: cleanText.substring(0,200) + ' (' + displayYear + ')',
+                        hint: 'Historical ' + e.type + ' (' + displayYear + ')',
+                        _source: 'wiki_historical',
+                        _eventYear: e.year,
+                        pubDate: '0000-01-01T00:00:00.000Z',
+                        opts: buildOptions(entity)
+                    });
                     added++;
                 });
-                if (added > 0) console.log('[MEGA] added ' + added + ' questions from ' + year + ' historical');
+                if (added > 0) console.log('[MEGA] added ' + added + ' questions from ' + mm + '-' + dd + ' (BC to CE)');
             }).catch(function() {});
         }
         
@@ -7337,11 +7377,12 @@ GK_GENERATORS.pib = function() {
             state.questions = [];
             state.infinite = true;
             state.restartFn = function() { startCombinedQuiz(count, label); };
+            state.staticCats = Object.keys(GK_GENERATORS);
             
             // Ensure wiki prefetch is running (reset & retry)
             if (typeof WIKI !== 'undefined') { try { WIKI._prefetching = false; WIKI.prefetch(); } catch(e) {} }
             
-            // Generate first batch — wiki only
+            // Generate first batch from ALL sources
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
@@ -7349,19 +7390,165 @@ GK_GENERATORS.pib = function() {
             document.getElementById('pibHeaderBtn').style.display = 'inline-block';
             document.getElementById('timedQuizOptions').style.display = 'none';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
-            document.getElementById('qText').innerHTML = 'Loading wiki questions...';
+            document.getElementById('qText').innerHTML = 'Loading all GK questions...';
             document.getElementById('optGrid').innerHTML = '';
-            generateWikiQuestions(5);
+            generateMixedQuestions(20);
             if (state.questions.length > 0) {
                 showQuestion();
             }
             
-            // Pre-fetch random historical months from wide range (2005-present)
-            if (typeof WIKI !== 'undefined' && WIKI.fetchMonthEvents) {
-                _fetchRandomHistoricalMonth();
-                setTimeout(function() { _fetchRandomHistoricalMonth(); }, 500);
-                setTimeout(function() { _fetchRandomHistoricalMonth(); }, 1000);
+            // Continuously pre-fetch historical months from wide range (BC to CE)
+            if (typeof WIKI !== 'undefined' && WIKI.onThisDay) {
+                for (var hi = 0; hi < 12; hi++) {
+                    setTimeout(function() { _fetchRandomHistoricalOnThisDay(); }, hi * 300);
+                }
             }
+            // Pre-fetch recent current events months (Portal:Current_events cache)
+            if (typeof WIKI !== 'undefined' && WIKI.fetchMonthEvents) {
+                (function() {
+                    var now = new Date();
+                    var cy = now.getFullYear();
+                    var cm = now.getMonth() + 1;
+                    // Fetch current month immediately
+                    if (!WIKI._monthEventCache || !WIKI._monthEventCache[cy + '-' + cm]) {
+                        WIKI.fetchMonthEvents(cy, cm);
+                    }
+                    // Background fetch rest of recent months
+                    var monthIdx = 0;
+                    for (var y = cy - 1; y <= cy; y++) {
+                        var mx = (y === cy) ? cm - 1 : 12;
+                        for (var m = 1; m <= mx; m++) {
+                            (function(yy, mm) {
+                                setTimeout(function() {
+                                    if (!WIKI._monthEventCache || !WIKI._monthEventCache[yy + '-' + mm]) {
+                                        WIKI.fetchMonthEvents(yy, mm);
+                                    }
+                                }, monthIdx * 400);
+                            })(y, m);
+                            monthIdx++;
+                        }
+                    }
+                })();
+            }
+        }
+
+        function generateMixedQuestions(count) {
+            var sources = ['wiki_pool', 'wiki_current_affairs'];
+            var added = 0;
+            var maxTries = count * 15;
+            // Historical questions (BC to CE) added continuously by background _fetchRandomHistoricalOnThisDay
+            for (var ti = 0; ti < maxTries && added < count; ti++) {
+                var source = sources[Math.floor(Math.random() * sources.length)];
+                var q = null;
+                try {
+                    if (source === 'wiki_pool' && typeof WIKI !== 'undefined' && WIKI.pool) {
+                        q = WIKI.poolQuestion();
+                    } else if (source === 'wiki_current_affairs') {
+                        q = _generateCurrentAffairsFromWiki();
+                    }
+                } catch(e) {}
+                if (!q || !q.q || !q.a) continue;
+                q.opts = q.opts || buildOptions(q.a);
+                if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
+                if (!isValidAnswer(q.a) || isTrash(q)) continue;
+                var dup = false;
+                for (var j = 0; j < state.questions.length; j++) {
+                    if (state.questions[j].a === q.a || (state.questions[j].q === q.q)) { dup = true; break; }
+                }
+                if (dup) continue;
+                state.questions.push(q);
+                added++;
+            }
+        }
+
+        var _curAffMonthIdx = 0;
+        var _curAffMonths = [];
+        function _generateCurrentAffairsFromWiki() {
+            if (typeof WIKI === 'undefined' || !WIKI.fetchMonthEvents) return null;
+            // Build list of recent months to fetch (2025-2026, weighted toward current)
+            if (_curAffMonths.length === 0) {
+                var now = new Date();
+                var curY = now.getFullYear();
+                var curM = now.getMonth() + 1;
+                for (var y = curY - 1; y <= curY; y++) {
+                    var maxM = (y === curY) ? curM : 12;
+                    for (var m = 1; m <= maxM; m++) { _curAffMonths.push({ y: y, m: m }); }
+                }
+                // Shuffle for variety
+                for (var si = _curAffMonths.length - 1; si > 0; si--) {
+                    var sj = Math.floor(Math.random() * (si + 1));
+                    var tmp = _curAffMonths[si]; _curAffMonths[si] = _curAffMonths[sj]; _curAffMonths[sj] = tmp;
+                }
+            }
+            // Try up to 3 different months to find a usable event
+            for (var attempt = 0; attempt < 3; attempt++) {
+                var mInfo = _curAffMonths[_curAffMonthIdx % _curAffMonths.length];
+                _curAffMonthIdx++;
+                var cacheKey = mInfo.y + '-' + mInfo.m;
+                var cached = WIKI._monthEventCache && WIKI._monthEventCache[cacheKey];
+                var items = cached || null;
+                if (!items) {
+                    // Try to fetch synchronously — if not cached, skip and mark for background fetch
+                    if (!WIKI._monthEventCache) continue;
+                    // Trigger background fetch for next time
+                    WIKI.fetchMonthEvents(mInfo.y, mInfo.m);
+                    continue;
+                }
+                if (!items || items.length < 5) continue;
+                var txt = items[Math.floor(Math.random() * items.length)];
+                if (!txt || txt.length < 30 || txt.length > 350) continue;
+                var cleanText = txt.replace(/<[^>]+>/g, '').replace(/\s*\([^)]*\)\s*$/g, '').trim();
+                if (cleanText.length < 25) continue;
+                // Extract main entity: look for capitalized multi-word names, proper nouns
+                var entities = cleanText.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b/g) || [];
+                entities = entities.filter(function(t) { return t.length > 4 && !/^(The|This|That|These|Those|Many|Most|Some|Several|After|Before|During|While|Since|Until|About|Between|Among|Within|Without|Across|Through|Beyond|Under|Over|Above|Below|Upon|Onto|Into|From|With|According|Following|Including|Regarding|Concerning|Despite|Unless|Although|Because|However|Therefore|Moreover|Furthermore|Meanwhile|Nonetheless|Otherwise|Thus|Hence)/i.test(t); });
+                if (entities.length === 0) {
+                    // Fallback: use first proper capitalized word + next word
+                    var words = cleanText.split(' ');
+                    for (var wi = 0; wi < Math.min(words.length, 10); wi++) {
+                        if (/^[A-Z]/.test(words[wi]) && words[wi].length > 3) {
+                            if (wi + 1 < words.length && /^[a-z]/.test(words[wi+1])) { entities.push(words[wi]); break; }
+                            if (wi + 1 < words.length && /^[A-Z]/.test(words[wi+1])) { entities.push(words[wi] + ' ' + words[wi+1]); break; }
+                            entities.push(words[wi]); break;
+                        }
+                    }
+                }
+                if (entities.length === 0) continue;
+                var entity = entities[0];
+                // Format as a proper current affairs question
+                var qText = cleanText;
+                if (qText.length > 150) qText = qText.substring(0, 147) + '...';
+                var monthLabel = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][mInfo.m - 1];
+                return {
+                    q: qText + ' (Which ' + (entity.indexOf(' ') > 0 ? 'entity' : 'term') + ' is related?)',
+                    a: entity,
+                    hint: 'Current affairs ' + monthLabel + ' ' + mInfo.y,
+                    fact: cleanText + ' (' + monthLabel + ' ' + mInfo.y + ')',
+                    _source: 'wiki_current_affairs',
+                    pubDate: mInfo.y + '-' + String(mInfo.m).padStart(2,'0') + '-01T00:00:00.000Z',
+                    opts: buildOptions(entity)
+                };
+            }
+            return null;
+        }
+
+        function _classifyPibItem(title, source) {
+            var t = (title + ' ' + (source || '')).toLowerCase();
+            if (/defence|defense|army|navy|air force|drdo|missile|soldier|border|security|terror/i.test(t)) return { subject: 'Defence' };
+            if (/economy|gdp|budget|finance|bank|rbi|sebi|inflation|trade|export|import|fiscal|tax/gst/i.test(t)) return { subject: 'Economy' };
+            if (/health|hospital|medicine|disease|vaccine|ayushman|medical/i.test(t)) return { subject: 'Health' };
+            if (/education|school|college|university|student|teacher|nep|scholarship/i.test(t)) return { subject: 'Education' };
+            if (/agriculture|farmer|crop|kisan|food|irrigation|mandi|organic/i.test(t)) return { subject: 'Agriculture' };
+            if (/environment|climate|forest|pollution|wildlife|green|emission|wetland|park|sanctuary/i.test(t)) return { subject: 'Environment' };
+            if (/election|parliament|bill|legislation|judiciary|court|governor|minister|appointment|constitution|commissioner/i.test(t)) return { subject: 'Polity' };
+            if (/science|technology|space|isro|nuclear|quantum|ai|robot|computer|innovation|patent/i.test(t)) return { subject: 'Science & Tech' };
+            if (/sports|olympic|world cup|cricket|football|hockey|badminton|chess|medal|athlete/i.test(t)) return { subject: 'Sports' };
+            if (/culture|heritage|museum|music|dance|film|festival|art|tradition|temple|monument|language/i.test(t)) return { subject: 'Culture' };
+            if (/energy|power|electricity|coal|oil|renewable|solar|wind|hydrogen|fuel/i.test(t)) return { subject: 'Energy' };
+            if (/award|honour|prize|medal|nobel|bharat ratna|padma/i.test(t)) return { subject: 'Awards' };
+            if (/isro|space|satellite|chandrayaan|mangalyaan|gaganyaan/i.test(t)) return { subject: 'ISRO & Space' };
+            if (/railway|road|highway|port|airport|infrastructure|bridge|tunnel|transport/i.test(t)) return { subject: 'Infrastructure' };
+            return { subject: 'General' };
         }
         
         // ===== COMBINED CATEGORY + CURRENT AFFAIRS QUIZ =====

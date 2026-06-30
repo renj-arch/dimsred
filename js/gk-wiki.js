@@ -5,7 +5,7 @@ function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 WIKI._seenTitles = [];
 WIKI._seenValues = [];
 WIKI._pool = [];
-WIKI._poolSize = 200;
+WIKI._poolSize = 5000;
 WIKI._prefetching = false;
 WIKI._sourceIndex = 0;
 
@@ -76,47 +76,150 @@ WIKI._seenTypes = {};
 
 // Topic banks — each maps to a Wikipedia category for bulk fetching
 WIKI._categoryTopics = [
-  'Category:Indian_civilisation', 'Category:World_history', 'Category:Science',
-  'Category:Technology', 'Category:Geography', 'Category:Culture',
-  'Category:Indian_politics', 'Category:Indian_economy', 'Category:Sports',
-  'Category:Indian_literature', 'Category:Indian_music', 'Category:Indian_dance',
-  'Category:Indian_festivals', 'Category:Indian_temples', 'Category:Indian_monuments',
-  'Category:Indian_Nobel_laureates', 'Category:Indian_scientists',
-  'Category:Ancient_India', 'Category:Medieval_India', 'Category:Modern_India',
-  'Category:World_War_II', 'Category:United_Nations', 'Category:Climate_change',
-  'Category:Computer_science', 'Category:Physics', 'Category:Chemistry', 'Category:Biology',
-  'Category:Astronomy', 'Category:Mathematics', 'Category:Economics',
-  'Category:Indian_rivers', 'Category:Himalayas', 'Category:National_parks_of_India',
-  'Category:Indian_agriculture', 'Category:Indian_space_program',
-  'Category:Olympics', 'Category:Cricket', 'Category:Football',
-  'Category:Indian_constitution', 'Category:Indian_judiciary',
-  'Category:Indian_government', 'Category:Indian_defence',
-  'Category:Indian_education', 'Category:Bollywood',
-  'Category:Indian_authors', 'Category:Indian_art', 'Category:Indian_philosophy',
-  'Category:Indian_mythology', 'Category:World_geography', 'Category:World_politics',
-  'Category:Nobel_laureates', 'Category:Natural_disasters',
-  'Category:Renewable_energy', 'Category:Artificial_intelligence', 'Category:Robotics',
-  'Category:Indian_railways', 'Category:Indian_armed_forces', 'Category:Indian_foreign_relations',
-  'Category:Indian_nuclear_program', 'Category:Indian_companies',
-  'Category:Indian_writers', 'Category:Indian_poets', 'Category:Indian_film_directors',
-  'Category:Indian_actors', 'Category:Indian_singers', 'Category:Indian_entrepreneurs',
-  'Category:Ancient_Egypt', 'Category:Ancient_Greece', 'Category:Roman_Empire',
-  'Category:Mughal_Empire', 'Category:Maratha_Empire', 'Category:British_Empire',
-  'Category:Indian_languages', 'Category:Indian_religions', 'Category:Indian_textiles',
-  'Category:Indian_cuisine', 'Category:Indian_wildlife', 'Category:Indian_coastal_geography',
-  'Category:Indian_astronomy', 'Category:Indian_medicine', 'Category:Indian_meteorology',
-  'Category:Human_body', 'Category:Animal_biology', 'Category:Plant_biology',
-  'Category:Nobel_Peace_Prize_laureates', 'Category:Nobel_Prize_in_Physics',
-  'Category:Nobel_Prize_in_Chemistry', 'Category:Nobel_Prize_in_Physiology_or_Medicine',
-  'Category:Indian_Olympic_medalists', 'Category:Indian_cricketers',
-  'Category:UNESCO_World_Heritage_Sites_in_India', 'Category:Indian_newspapers',
-  'Category:Environmental_issues_in_India', 'Category:Indian_law',
-  'Category:Indian_philanthropists', 'Category:Indian_architects',
-  'Category:Indian_mathematicians', 'Category:Indian_physicists', 'Category:Indian_chemists',
-  'Category:Indian_biologists', 'Category:Indian_engineers',
-  'Category:Indian_classical_musicians', 'Category:Indian_folk_music',
-  'Category:Indian_classical_dancers', 'Category:Indian_sculptors',
-  'Category:Indian_painters', 'Category:Indian_photographers'
+  // === HISTORY — World ===
+  'Category:World_history','Category:Ancient_history','Category:Medieval_history','Category:Modern_history',
+  'Category:Ancient_Egypt','Category:Ancient_Greece','Category:Ancient_Rome','Category:Roman_Empire',
+  'Category:Byzantine_Empire','Category:Persian_Empire','Category:Mongol_Empire','Category:Ottoman_Empire',
+  'Category:Chinese_dynasties','Category:History_of_China','Category:History_of_Japan','Category:History_of_Russia',
+  'Category:History_of_France','Category:History_of_Germany','Category:History_of_United_Kingdom',
+  'Category:History_of_the_United_States','Category:History_of_Africa','Category:History_of_South_America',
+  'Category:History_of_Australia','Category:History_of_the_Middle_East','Category:European_history',
+  'Category:Asian_history','Category:African_history','Category:American_history',
+  'Category:World_War_I','Category:World_War_II','Category:Cold_War','Category:French_Revolution',
+  'Category:Industrial_Revolution','Category:Renaissance','Category:Age_of_Exploration',
+  'Category:Colonialism','Category:Imperialism','Category:Decolonization',
+  // === HISTORY — India ===
+  'Category:History_of_India','Category:Ancient_India','Category:Medieval_India','Category:Modern_India',
+  'Category:Indus_Valley_Civilisation','Category:Vedic_period','Category:Maurya_Empire','Category:Gupta_Empire',
+  'Category:Delhi_Sultanate','Category:Mughal_Empire','Category:Maratha_Empire','Category:Vijayanagara_Empire',
+  'Category:British_Raj','Category:Indian_independence_movement','Category:Indian_freedom_fighters',
+  'Category:Indian_National_Army','Category:Partition_of_India','Category:Post-independence_history_of_India',
+  // === GEOGRAPHY — World ===
+  'Category:Geography','Category:Physical_geography','Category:Human_geography','Category:Political_geography',
+  'Category:World_geography','Category:Continents','Category:Countries','Category:Capitals',
+  'Category:Rivers','Category:Mountains','Category:Oceans','Category:Seas','Category:Lakes','Category:Islands',
+  'Category:Deserts','Category:Forests','Category:Volcanoes','Category:Peninsulas','Category:Gulfs','Category:Bays',
+  'Category:Straits','Category:Canals','Category:Waterfalls','Category:Glaciers','Category:Caves',
+  'Category:Climate','Category:Biomes','Category:Time_zones','Category:Map_projections',
+  // === GEOGRAPHY — India ===
+  'Category:Geography_of_India','Category:Indian_rivers','Category:Himalayas','Category:Western_Ghats',
+  'Category:Eastern_Ghats','Category:Indian_coastal_geography','Category:Indian_climate','Category:Indian_monsoon',
+  'Category:Indian_soil','Category:Indian_vegetation','Category:Indian_ports','Category:Indian_states_and_territories',
+  'Category:Indian_borders','Category:Indian_geological_regions','Category:Indian_islands',
+  // === SCIENCE — General ===
+  'Category:Science','Category:Scientific_method','Category:History_of_science','Category:Nobel_laureates_in_science',
+  'Category:Physics','Category:Classical_mechanics','Category:Thermodynamics','Category:Electromagnetism',
+  'Category:Quantum_mechanics','Category:Relativity','Category:Nuclear_physics','Category:Particle_physics',
+  'Category:Optics','Category:Acoustics','Category:Fluid_dynamics','Category:Astrophysics',
+  'Category:Chemistry','Category:Organic_chemistry','Category:Inorganic_chemistry','Category:Physical_chemistry',
+  'Category:Analytical_chemistry','Category:Biochemistry','Category:Polymer_chemistry','Category:Environmental_chemistry',
+  'Category:Biology','Category:Cell_biology','Category:Genetics','Category:Evolutionary_biology','Category:Ecology',
+  'Category:Molecular_biology','Category:Microbiology','Category:Zoology','Category:Botany','Category:Anatomy',
+  'Category:Physiology','Category:Neuroscience','Category:Immunology','Category:Virology','Category:Bacteriology',
+  'Category:Human_body','Category:Animal_biology','Category:Plant_biology','Category:Marine_biology',
+  'Category:Astronomy','Category:Solar_System','Category:Stars','Category:Galaxies','Category:Planetary_science',
+  'Category:Cosmology','Category:Space_exploration','Category:Mathematics','Category:Algebra','Category:Geometry',
+  'Category:Calculus','Category:Statistics','Category:Number_theory','Category:Logic',
+  'Category:Geology','Category:Mineralogy','Category:Seismology','Category:Volcanology','Category:Oceanography',
+  'Category:Meteorology','Category:Paleontology','Category:Archaeology','Category:Anthropology',
+  // === TECHNOLOGY ===
+  'Category:Technology','Category:History_of_technology','Category:Inventions','Category:Discoveries',
+  'Category:Computer_science','Category:Artificial_intelligence','Category:Robotics','Category:Machine_learning',
+  'Category:Data_science','Category:Cybersecurity','Category:Telecommunications','Category:Internet',
+  'Category:Software_engineering','Category:Computer_hardware','Category:Programming_languages',
+  'Category:Space_technology','Category:Nuclear_technology','Category:Biotechnology','Category:Nanotechnology',
+  'Category:Renewable_energy','Category:Electrical_engineering','Category:Mechanical_engineering',
+  'Category:Civil_engineering','Category:Chemical_engineering','Category:Aerospace_engineering',
+  'Category:Genetic_engineering','Category:Medical_technology','Category:Digital_technology',
+  // === ECONOMICS & FINANCE ===
+  'Category:Economics','Category:Macroeconomics','Category:Microeconomics','Category:International_economics',
+  'Category:Development_economics','Category:Economic_history','Category:Economic_systems',
+  'Category:Finance','Category:Banking','Category:Stock_market','Category:International_trade',
+  'Category:Taxation','Category:Monetary_policy','Category:Fiscal_policy','Category:Economic_indicators',
+  'Category:Indian_economy','Category:Indian_budget','Category:Indian_banking','Category:Indian_financial_system',
+  'Category:Indian_taxation','Category:Indian_agriculture','Category:Indian_industry','Category:Indian_energy',
+  'Category:Indian_minerals','Category:Indian_companies','Category:Indian_brands','Category:Indian_startups',
+  'Category:RBI','Category:SEBI','Category:NITI_Aayog','Category:Five-Year_Plans_of_India',
+  // === POLITY & POLITICS ===
+  'Category:Political_science','Category:Forms_of_government','Category:Political_ideologies',
+  'Category:Democracy','Category:Dictatorship','Category:Monarchy','Category:Federalism',
+  'Category:International_relations','Category:United_Nations','Category:World_Trade_Organization',
+  'Category:International_Monetary_Fund','Category:World_Bank','Category:NATO','Category:European_Union',
+  'Category:African_Union','Category:ASEAN','Category:SAARC','Category:BRICS','Category:G20','Category:Commonwealth',
+  'Category:Indian_politics','Category:Indian_constitution','Category:Indian_judiciary','Category:Indian_government',
+  'Category:Indian_parliament','Category:Indian_president','Category:Indian_prime_minister',
+  'Category:Indian_elections','Category:Indian_election_commission','Category:Indian_political_parties',
+  'Category:Indian_emergency_provisions','Category:Indian_fundamental_rights','Category:Indian_directive_principles',
+  'Category:Indian_federalism','Category:Indian_local_government','Category:Indian_union_territories',
+  'Category:Indian_law','Category:Indian_foreign_relations','Category:Indian_defence','Category:Indian_armed_forces',
+  'Category:Indian_missiles','Category:Indian_nuclear_program','Category:Indian_borders',
+  'Category:Government_schemes_of_India','Category:Indian_awards','Category:Indian_national_symbols',
+  // === CULTURE — World ===
+  'Category:Culture','Category:World_culture','Category:Philosophy','Category:Religion','Category:Mythology',
+  'Category:Literature','Category:World_literature','Category:Poetry','Category:Drama','Category:Novels',
+  'Category:Music','Category:World_music','Category:Painting','Category:Sculpture','Category:Architecture',
+  'Category:Cinema','Category:Theatre','Category:Dance','Category:Photography','Category:Art_movements',
+  'Category:World_Heritage_Sites','Category:UNESCO','Category:Nobel_Prize_in_Literature',
+  'Category:Nobel_Peace_Prize_laureates',
+  // === CULTURE — India ===
+  'Category:Indian_culture','Category:Indian_art','Category:Indian_architecture','Category:Indian_sculpture',
+  'Category:Indian_painting','Category:Indian_philosophy','Category:Indian_religions','Category:Indian_mythology',
+  'Category:Indian_literature','Category:Indian_writers','Category:Indian_poets','Category:Indian_authors',
+  'Category:Indian_music','Category:Indian_classical_musicians','Category:Indian_folk_music',
+  'Category:Indian_musical_instruments','Category:Indian_dance','Category:Indian_classical_dancers',
+  'Category:Indian_folk_dance','Category:Indian_cinema','Category:Bollywood','Category:Indian_film_directors',
+  'Category:Indian_actors','Category:Indian_singers','Category:Indian_festivals','Category:Indian_temples',
+  'Category:Indian_monuments','Category:Indian_languages','Category:Indian_textiles','Category:Indian_cuisine',
+  'Category:Indian_tribes','Category:Indian_costumes','Category:Indian_jewelry','Category:Indian_calendars',
+  'Category:UNESCO_World_Heritage_Sites_in_India',
+  // === SPORTS ===
+  'Category:Sports','Category:Olympics','Category:Olympic_sports','Category:Olympic_medalists',
+  'Category:Cricket','Category:Football','Category:Tennis','Category:Basketball','Category:Baseball',
+  'Category:Hockey','Category:Badminton','Category:Chess','Category:Athletics','Category:Swimming',
+  'Category:Boxing','Category:Wrestling','Category:Judo','Category:Taekwondo','Category:Weightlifting',
+  'Category:Gymnastics','Category:Cycling','Category:Archery','Category:Shooting','Category:Equestrian',
+  'Category:Rugby','Category:Golf','Category:Formula_One','Category:Motor_sports','Category:Volleyball',
+  'Category:Table_tennis','Category:Kabaddi','Category:Indian_sports','Category:Indian_cricketers',
+  'Category:Indian_Olympic_medalists','Category:Cricket_in_India','Category:Hockey_in_India',
+  'Category:Indian_tennis_players','Category:Indian_badminton','Category:Indian_chess',
+  'Category:Sports_in_India','Category:Indian_sports_personalities',
+  // === ENVIRONMENT & ECOLOGY ===
+  'Category:Environment','Category:Ecology','Category:Biodiversity','Category:Conservation',
+  'Category:Climate_change','Category:Climate_change_in_India','Category:Environmental_issues',
+  'Category:Environmental_issues_in_India','Category:Natural_disasters','Category:Endangered_species',
+  'Category:National_parks','Category:National_parks_of_India','Category:Wildlife_sanctuaries_of_India',
+  'Category:Bird_sanctuaries_of_India','Category:Biosphere_reserves_of_India','Category:Ramsar_sites_in_India',
+  'Category:Indian_wildlife','Category:Indian_forests','Category:Indian_mangroves','Category:Indian_coral_reefs',
+  'Category:Indian_wetlands','Category:Pollution','Category:Air_pollution','Category:Water_pollution',
+  'Category:Deforestation','Category:Global_warming','Category:Renewable_energy_in_India',
+  // === EDUCATION ===
+  'Category:Education','Category:Education_in_India','Category:Indian_education','Category:Indian_schools',
+  'Category:Indian_universities','Category:IIT','Category:IIM','Category:AIIMS','Category:Central_universities_of_India',
+  'Category:Indian_institutes_of_technology','Category:Indian_institutes_of_management',
+  'Category:Medical_colleges_in_India','Category:Indian_educational_boards','Category:NCERT',
+  // === HEALTH & MEDICINE ===
+  'Category:Medicine','Category:Health','Category:Diseases_and_disorders','Category:Public_health',
+  'Category:Health_in_India','Category:Indian_healthcare','Category:Ayurveda','Category:Yoga',
+  'Category:Indian_medicine','Category:Vaccines','Category:Nutrition','Category:Epidemiology',
+  // === TRANSPORT ===
+  'Category:Transport','Category:Railways','Category:Indian_railways','Category:Rail_transport_in_India',
+  'Category:Aviation','Category:Airports_in_India','Category:Indian_airlines',
+  'Category:Road_transport_in_India','Category:Indian_highways','Category:Water_transport_in_India',
+  'Category:Indian_ports_and_harbours','Category:Indian_shipping',
+  // === PERSONALITIES ===
+  'Category:Indian_scientists','Category:Indian_mathematicians','Category:Indian_physicists','Category:Indian_chemists',
+  'Category:Indian_biologists','Category:Indian_engineers','Category:Indian_entrepreneurs',
+  'Category:Indian_Nobel_laureates','Category:Nobel_Prize_in_Physics','Category:Nobel_Prize_in_Chemistry',
+  'Category:Nobel_Prize_in_Physiology_or_Medicine','Category:Nobel_Peace_Prize',
+  'Category:Indian_philanthropists','Category:Indian_architects','Category:Indian_painters',
+  'Category:Indian_sculptors','Category:Indian_photographers',
+  // === CLassical WORLD ===
+  'Category:Ancient_Egyptian_culture','Category:Greek_mythology','Category:Roman_mythology',
+  'Category:Norse_mythology','Category:Hindu_mythology','Category:World_philosophy',
+  'Category:Indian_inventions','Category:Indian_holidays','Category:Indian_media','Category:Indian_newspapers',
+  'Category:Indian_television','Category:Indian_radio','Category:Indian_postal_system',
+  'Category:Indian_census','Category:Indian_demographics','Category:Indian_poverty','Category:Indian_social_issues',
+  'Category:Indian_caste_system','Category:Indian_women','Category:Indian_youth'
 ];
 
 WIKI._buildOpts = function(correct, entityType) {
@@ -146,7 +249,114 @@ WIKI._buildOpts = function(correct, entityType) {
   return opts;
 };
 
-WIKI._examTopics = ['India history','Geography of India','Indian Constitution','Indian economy','Indian culture','Indian art','Indian literature','Indian music','Indian dance','Indian architecture','Physics','Chemistry','Biology','World history','United Nations','Climate change','Computer science','Indian astronomy','Indian mathematics','Indian philosophy','Indian independence movement','Indian freedom fighters','World wars','Indian scientists','Indian Nobel laureates','Indian rivers','Himalayas','Indian agriculture','Indian defence','Indian space program','Indian democracy','Indian elections','Indian government','Indian judiciary','Indian education','Indian tribes','Biodiversity','Indian national parks','Indian states','Indian dance forms','Indian music instruments','Indian festivals','Indian temples','Indian monuments','Indian literature works','Indian authors','Indian sports','Olympics'];
+WIKI._examTopics = [
+  // === HISTORY ===
+  'World history','Ancient history','Medieval history','Modern history','European history','Asian history','African history','American history',
+  'Indian history','Ancient India','Medieval India','Modern India','Indus Valley Civilisation','Vedic period','Maurya Empire','Gupta Empire',
+  'Delhi Sultanate','Mughal Empire','Maratha Empire','Vijayanagara Empire','British Raj','Indian independence movement','Indian freedom fighters',
+  'World War I','World War II','Cold War','French Revolution','Industrial Revolution','Renaissance','Age of Exploration',
+  'Ancient Egypt','Ancient Greece','Ancient Rome','Roman Empire','Byzantine Empire','Persian Empire','Mongol Empire','Ottoman Empire',
+  'Chinese history','Japanese history','Russian history','American Revolution','Colonialism','Imperialism','Decolonization',
+  // === GEOGRAPHY ===
+  'Geography','World geography','Physical geography','Human geography','Political geography',
+  'Continents','Countries and capitals','World currencies','Rivers of the world','Mountains of the world',
+  'Oceans and seas','Lakes of the world','Islands of the world','Deserts of the world','Forests of the world',
+  'Volcanoes','Waterfalls','Glaciers','Climate zones','Biomes','Map reading',
+  'Geography of India','Indian rivers','Himalayas','Western Ghats','Eastern Ghats','Indian coastal geography',
+  'Indian climate','Indian monsoon','Indian soil','Indian vegetation','Indian states and union territories',
+  'Indian ports','Indian borders','Indian islands','Indian geological regions',
+  // === SCIENCE: PHYSICS ===
+  'Physics','Classical mechanics','Thermodynamics','Electromagnetism','Optics','Acoustics','Quantum mechanics',
+  'Relativity','Nuclear physics','Particle physics','Fluid dynamics','Astrophysics','Units and measurements',
+  'Motion and force','Work energy power','Gravitation','Waves','Electricity','Magnetism','Electronic devices',
+  // === SCIENCE: CHEMISTRY ===
+  'Chemistry','Organic chemistry','Inorganic chemistry','Physical chemistry','Analytical chemistry','Biochemistry',
+  'Atomic structure','Chemical bonding','Periodic table','Chemical reactions','Acids bases salts',
+  'Thermochemistry','Electrochemistry','Chemical kinetics','Environmental chemistry','Polymer chemistry',
+  // === SCIENCE: BIOLOGY ===
+  'Biology','Cell biology','Genetics','Evolution','Ecology','Molecular biology','Microbiology',
+  'Zoology','Botany','Anatomy','Physiology','Neuroscience','Immunology','Virology','Bacteriology',
+  'Human body systems','Vitamins and minerals','Diseases and medicines','Nutrition','Plant kingdom','Animal kingdom',
+  'Classification of living organisms','Photosynthesis','Respiration','Reproduction','Biotechnology',
+  // === ASTRONOMY & SPACE ===
+  'Astronomy','Solar system','Stars','Galaxies','Planets','Constellations','Space exploration',
+  'Indian space program','ISRO missions','Indian satellites','Chandrayaan','Mangalyaan','Gaganyaan',
+  'Astronauts','Space missions','Telescopes','Cosmology','Black holes',
+  // === MATHEMATICS ===
+  'Mathematics','Algebra','Geometry','Calculus','Statistics','Number theory','Trigonometry','Probability',
+  'Indian mathematics','Indian mathematicians','Arithmetic','Mathematical symbols',
+  // === TECHNOLOGY ===
+  'Technology','Inventions and discoveries','Computer science','Artificial intelligence','Machine learning',
+  'Robotics','Cybersecurity','Internet','Telecommunications','Software','Hardware',
+  'Indian IT industry','Indian startups','Indian unicorns','Indian digital payment','Indian computer science',
+  'Space technology','Nuclear technology','Biotechnology','Nanotechnology','Renewable energy technology',
+  'Indian nuclear program','Indian missiles','Indian defence technology',
+  // === ECONOMICS ===
+  'Economics','Macroeconomics','Microeconomics','International economics','Development economics',
+  'Indian economy','Indian budget','Indian banking','Indian financial system','Indian taxation','GST',
+  'Indian inflation','Indian GDP','Five Year Plans','NITI Aayog','Indian agriculture economics',
+  'Indian food security','Indian public distribution system','Indian foreign trade',
+  'Indian economic reforms','LPG reforms','Make in India','Digital India','Startup India',
+  'World Bank','IMF','WTO','G20','BRICS','SAARC','ASEAN','European Union',
+  'International trade','Stock market','Banking terms','Monetary policy','Fiscal policy',
+  // === POLITY ===
+  'Political science','Indian constitution','Indian constitution amendments','Indian fundamental rights',
+  'Indian directive principles','Indian fundamental duties','Indian emergency provisions',
+  'Indian president','Indian prime minister','Indian parliament','Indian supreme court',
+  'Indian election commission','Indian political parties','Indian federalism','Indian local government',
+  'Indian judiciary','Indian government','Indian democracy','Indian elections','Indian law',
+  'Indian foreign policy','Indian international relations','Indian neighbours','Defence forces of India',
+  'Indian armed forces','Indian defence','Indian nuclear doctrine','Indian border disputes',
+  'International relations','United Nations','Security Council','International organizations',
+  // === CULTURE ===
+  'Indian culture','Indian art','Indian architecture','Indian sculpture','Indian painting',
+  'Indian literature','Indian authors','Indian poets','Indian literature awards','Indian books',
+  'Indian music','Indian classical music','Indian folk music','Indian musical instruments',
+  'Indian dance','Indian classical dance','Indian folk dance','Indian cinema','Bollywood',
+  'Indian film directors','Indian actors','Indian festivals','Indian temples','Indian monuments',
+  'Indian languages','Indian religions','Indian philosophy','Indian mythology','Indian cuisine',
+  'Indian textiles','Indian costumes','Indian tribes','Indian social customs',
+  'World culture','World literature','World music','World art','World architecture',
+  'World cinema','World heritage sites','UNESCO World Heritage',
+  // === SPORTS ===
+  'Sports','Olympics','Olympic sports','Olympic medalists','Commonwealth Games','Asian Games',
+  'Cricket','World Cup cricket','IPL','Football','World Cup football','Tennis','Grand Slam',
+  'Badminton','Hockey','Chess','Athletics','Swimming','Boxing','Wrestling','Weightlifting',
+  'Archery','Shooting','Kabaddi','Formula One','Golf','Table tennis','Volleyball',
+  'Indian sports','Indian cricketers','Indian Olympic medalists','Indian tennis players',
+  'Indian badminton players','Indian chess players','Indian hockey','Indian sports personalities',
+  'Sports awards','Arjuna Award','Rajiv Gandhi Khel Ratna','Dronacharya Award',
+  // === ENVIRONMENT ===
+  'Environment','Ecology','Biodiversity','Conservation','Climate change','Global warming',
+  'Indian environment','Indian biodiversity','Indian wildlife','Indian national parks',
+  'Indian wildlife sanctuaries','Indian biosphere reserves','Indian wetlands','Ramsar sites',
+  'Indian forests','Indian mangroves','Indian coral reefs','Indian climate change policy',
+  'Natural disasters','Endangered species','Pollution','Air pollution','Water pollution',
+  'Environmental issues in India','National Action Plan on Climate Change',
+  'Renewable energy','Green energy','Environmental treaties','Paris Agreement',
+  // === EDUCATION ===
+  'Education','Education in India','Indian education system','Indian schools','Indian universities',
+  'IIT','IIM','AIIMS','NIT','IIIT','Central universities','Indian institutes',
+  'Scholarships','Higher education','Primary education','Right to Education','NEP 2020',
+  'NCERT','Indian educational boards','Skill development',
+  // === HEALTH ===
+  'Health','Medicine','Diseases','Public health','Health in India','Indian healthcare',
+  'Ayurveda','Yoga','Indian medicine','Vaccines','Nutrition','Epidemiology',
+  'Health schemes of India','Ayushman Bharat','National Health Mission',
+  // === PERSONALITIES ===
+  'Indian scientists','Indian Nobel laureates','Nobel Prize winners',
+  'Indian mathematicians','Indian physicists','Indian chemists','Indian biologists',
+  'Indian engineers','Indian entrepreneurs','Indian philanthropists',
+  'Indian architects','Indian painters','Indian sculptors',
+  'Indian classical musicians','Indian classical dancers','Indian singers',
+  'World scientists','World Nobel laureates','Famous inventors',
+  // === CURRENT AFFAIRS ===
+  'Current events','Recent events India','International current events',
+  'Indian politics current affairs','Indian economy current affairs',
+  'Science and technology current affairs','Sports current affairs',
+  'Environment current affairs','Awards and honours current affairs',
+  'Appointments current affairs','Summits and conferences current affairs'
+];
 
 WIKI.randomQuestion = function() {
   return WIKI._batchRandom(10);
@@ -309,37 +519,34 @@ WIKI.prefetch = function() {
   console.log('[WIKI] prefetch started, pool size:', WIKI._pool.length);
 
   function fetchBatch() {
-    var poolFull = WIKI._pool.length >= WIKI._poolSize;
-    // When pool is low, fetch more aggressively
-    var delay = poolFull ? 500 : 300;
-    if (poolFull) { setTimeout(fetchBatch, delay); return; }
-
-    // Cycle through all 4 sources
-    WIKI._sourceIndex = (WIKI._sourceIndex + 1) % 4;
+    // No limits — always fetch aggressively to fill pool from all GK domains
+    WIKI._sourceIndex = (WIKI._sourceIndex + 1) % 5;
 
     var promise;
     if (WIKI._sourceIndex === 0) {
       var topic = pick(WIKI._examTopics);
-      promise = WIKI._batchSearch(topic, 30);
+      promise = WIKI._batchSearch(topic, 50);
     } else if (WIKI._sourceIndex === 1) {
-      promise = WIKI._batchRandom(30);
+      promise = WIKI._batchRandom(50);
     } else if (WIKI._sourceIndex === 2) {
       var cat = pick(WIKI._categoryTopics);
-      promise = WIKI._batchCategory(cat, 30);
+      promise = WIKI._batchCategory(cat, 50);
+    } else if (WIKI._sourceIndex === 3) {
+      promise = WIKI._batchRecentChanges(50);
     } else {
-      promise = WIKI._batchRecentChanges(30);
+      // Source 4: direct exam topic search (wide coverage)
+      var et = pick(WIKI._examTopics);
+      promise = WIKI._batchSearch(et, 50);
     }
 
     promise.then(function(qs) {
       if (qs && qs.length) {
-        for (var i = 0; i < qs.length && WIKI._pool.length < WIKI._poolSize * 1.5; i++) {
-          WIKI._pool.push(qs[i]);
+        for (var i = 0; i < qs.length; i++) {
+          if (WIKI._pool.length < WIKI._poolSize * 5) WIKI._pool.push(qs[i]);
         }
       }
-      // If pool is still low after fetch, schedule next batch sooner
-      var nextDelay = WIKI._pool.length < 10 ? 200 : delay;
-      setTimeout(fetchBatch, nextDelay);
-    }).catch(function() { console.error('[WIKI] fetchBatch failed, retrying...'); setTimeout(fetchBatch, 800); });
+      setTimeout(fetchBatch, 100);
+    }).catch(function() { console.error('[WIKI] fetchBatch failed, retrying...'); setTimeout(fetchBatch, 300); });
   }
 
   function fetchOnThisDay() {
@@ -361,6 +568,14 @@ WIKI.prefetch = function() {
 
   fetchOnThisDay();
   WIKI.prefetchCurrentEvents();
+  // Kick off background historical on-this-day prefetching (covers BC to CE)
+  if (typeof _fetchRandomHistoricalOnThisDay === 'function') {
+    setTimeout(function() { if (typeof _fetchRandomHistoricalOnThisDay === 'function') _fetchRandomHistoricalOnThisDay(); }, 1000);
+    setTimeout(function() { if (typeof _fetchRandomHistoricalOnThisDay === 'function') _fetchRandomHistoricalOnThisDay(); }, 2500);
+    setTimeout(function() { if (typeof _fetchRandomHistoricalOnThisDay === 'function') _fetchRandomHistoricalOnThisDay(); }, 4000);
+    setTimeout(function() { if (typeof _fetchRandomHistoricalOnThisDay === 'function') _fetchRandomHistoricalOnThisDay(); }, 6000);
+    setTimeout(function() { if (typeof _fetchRandomHistoricalOnThisDay === 'function') _fetchRandomHistoricalOnThisDay(); }, 8000);
+  }
   fetchBatch();
 };
 
