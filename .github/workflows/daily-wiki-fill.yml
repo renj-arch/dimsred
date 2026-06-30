@@ -43,6 +43,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Daily wiki fill $(date +'%Y-%m-%d')"
+            git pull --rebase
             git push
           else
             echo "No new questions to commit"

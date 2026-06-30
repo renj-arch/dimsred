@@ -90,10 +90,15 @@
         .gk-intro{font-size:.82em;color:var(--text-sec);line-height:1.7;margin-bottom:16px;text-align:center}
 
         .hidden{display:none!important}
-        #pibFeedList a:hover{border-color:rgba(255,255,255,.15)!important;background:rgba(255,255,255,.04)!important}
         .cat-chip{cursor:pointer;padding:3px 12px;border-radius:12px;border:1px solid var(--border);font-size:.72em;color:var(--text-muted);background:transparent;transition:all .15s;user-select:none}
         .cat-chip:hover{border-color:var(--purple);color:var(--purple)}
         .cat-chip.active{background:rgba(167,139,250,.2);border-color:var(--purple);color:var(--purple);font-weight:600}
+        .region-chip{cursor:pointer;padding:2px 10px;border-radius:10px;border:1px solid var(--border);font-size:.72em;color:var(--text-muted);background:transparent;transition:all .15s;user-select:none}
+        .region-chip:hover{border-color:var(--emerald);color:var(--emerald)}
+        .region-chip.active{background:rgba(52,211,153,.15);border-color:var(--emerald);color:var(--emerald);font-weight:600}
+        .period-chip{cursor:pointer;padding:2px 10px;border-radius:10px;border:1px solid var(--border);font-size:.72em;color:var(--text-muted);background:transparent;transition:all .15s;user-select:none}
+        .period-chip:hover{border-color:var(--cyan);color:var(--cyan)}
+        .period-chip.active{background:rgba(34,211,238,.15);border-color:var(--cyan);color:var(--cyan);font-weight:600}
 
         /* === Study Mode Enhancements === */
         .study-bc{font-size:.75em;color:var(--text-muted);margin-bottom:8px;padding:0 4px}
@@ -192,7 +197,7 @@
 
         <div class="container">
         <div class="page-title">📰 GK & Current Affairs</div>
-        <div class="page-sub">GK Quiz — Static + Current Affairs <span class="badge">26 categories · PIB</span></div>
+        <div class="page-sub">GK Quiz — Static + Current Affairs</div>
 
         <!-- Mode Toggle (always visible) -->
         <div style="display:flex;gap:4px;margin:0 auto 12px;padding:4px;border-radius:100px;background:rgba(255,255,255,.04);max-width:240px">
@@ -215,38 +220,6 @@
 
             <p class="gk-intro">Live Wikipedia GK or curated static GK across 26 categories. Auto-advances every 4 seconds. Pause anytime.</p>
 
-            <!-- PIB quiz panel -->
-            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;justify-content:center">
-                <button class="action-btn secondary" onclick="window.showPibQuizPanel()" style="flex:1;min-width:160px;padding:12px">📡 PIB Current Affairs Quiz</button>
-            </div>
-            <div id="pibQuizPanel" style="display:none;margin-bottom:16px;padding:14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);text-align:center">
-                <div style="font-size:.85em;font-weight:600;margin-bottom:10px;color:var(--text-sec)">PIB Headline Quiz — pick a date range</div>
-                <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center">
-                    <input type="date" id="pibQuizStart" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.8em;font-family:inherit">
-                    <span style="font-size:.78em;color:var(--text-muted)">to</span>
-                    <input type="date" id="pibQuizEnd" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.8em;font-family:inherit">
-                    <button class="action-btn primary" onclick="startPibQuiz()" style="padding:8px 20px;font-size:.82em">Start Quiz</button>
-                </div>
-                <div style="font-size:.7em;color:var(--text-muted);margin-top:8px">Shows a PIB headline — identify which sector/ministry it belongs to (Defence, Economy, Health, etc.)</div>
-            </div>
-        </div>
-
-        <!-- PIB News Feed -->
-        <div id="pibFeedSection" style="display:none;margin-top:24px;padding:20px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card)">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-                <span style="font-size:1.2em">📡</span>
-                <h3 style="font-size:1em;font-weight:800">Today's PIB News</h3>
-                <span style="font-size:.65em;color:var(--text-muted);margin-left:auto">Source: Press Information Bureau, Govt of India</span>
-            </div>
-            <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
-                <input type="date" id="pibDateFilter" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.8em;font-family:inherit">
-                <button class="action-btn primary" onclick="filterPibFeed()" style="padding:6px 14px;font-size:.78em">Filter</button>
-                <button class="action-btn secondary" onclick="resetPibFilter()" style="padding:6px 14px;font-size:.78em">Clear</button>
-                <span id="pibFilterInfo" style="font-size:.72em;color:var(--text-muted)"></span>
-            </div>
-            <div id="catFilterBar" style="display:none;gap:6px;margin-bottom:6px;flex-wrap:wrap"></div>
-            <div id="regionFilterBar" style="display:none;gap:6px;margin-bottom:10px;flex-wrap:wrap"></div>
-            <div id="pibFeedList" style="display:flex;flex-direction:column;gap:6px"></div>
         </div>
 
         <div class="q-area" id="qArea">
@@ -254,9 +227,8 @@
                 <div><span class="num" id="correctNum">0</span> / <span id="totalNum">0</span> <span id="scoreLabel">correct</span></div>
                 <div class="streak" id="streakDisplay">🔥 <span id="streakNum">0</span> streak</div>
                 <button id="restartBtn" onclick="if(state.restartFn)state.restartFn()" style="display:none;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:.72em">↻ Restart</button>
-                <button id="pibHeaderBtn" onclick="window.togglePibPanel()" style="display:none;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:.72em">📡 PIB Quiz</button>
             </div>
-            <div class="q-card">
+            <div class="q-card" onclick="if(!event.target.closest('button,a,.q-hint,.action-btn'))toggleAutoPlay()">
                 <div class="q-num" id="qNum"></div>
                 <div class="q-progress"><div class="fill" id="qProgress" style="width:0%"></div></div>
                 <div class="q-cat-tag" id="catTag"></div>
@@ -269,6 +241,26 @@
             </div>
             <div class="result-flash" id="resultFlash"></div>
             <div id="intuitionDisplay" style="font-size:.78em;color:var(--amber);margin-top:4px;padding:10px 12px;border-radius:8px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);display:none;line-height:1.6;text-align:left"><span style="font-weight:700;color:var(--amber);display:block;margin-bottom:3px">⚡ Quick Fact</span><span id="intuitionText"></span></div>
+            <div id="regionFilterRow" style="display:none;gap:6px;align-items:center;justify-content:center;margin-top:6px;flex-wrap:wrap">
+                <span style="font-size:.7em;color:var(--text-muted)">Region:</span>
+                <span class="region-chip active" data-val="all" onclick="setRegionFilter('all')">🌏 Both</span>
+                <span class="region-chip" data-val="india" onclick="setRegionFilter('india')">🇮🇳 India</span>
+                <span class="region-chip" data-val="world" onclick="setRegionFilter('world')">🌍 World</span>
+            </div>
+            <div id="timeFilterRow" style="display:none;gap:6px;align-items:center;justify-content:center;margin-top:4px;flex-wrap:wrap">
+                <span style="font-size:.7em;color:var(--text-muted)">Period:</span>
+                <span class="period-chip active" data-val="all" onclick="setTimeFilter('all')">All Time</span>
+                <span class="period-chip" data-val="year" onclick="setTimeFilter('year')">2026</span>
+                <span class="period-chip" data-val="lastyear" onclick="setTimeFilter('lastyear')">2025</span>
+                <span class="period-chip" data-val="recent" onclick="setTimeFilter('recent')">Last 6mo</span>
+                <span class="period-chip" data-val="custom" onclick="setTimeFilter('custom')">Custom</span>
+                <span id="customDateRange" style="display:none;gap:4px;align-items:center;margin-left:4px">
+                    <input type="date" id="timeFrom" onchange="_applyCustomTimeFilter()" style="font-size:.72em;padding:2px 6px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);width:115px">
+                    <span style="font-size:.65em;color:var(--text-muted)">→</span>
+                    <input type="date" id="timeTo" onchange="_applyCustomTimeFilter()" style="font-size:.72em;padding:2px 6px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);width:115px">
+                    <button onclick="_applyCustomTimeFilter();setTimeFilter('custom')" style="padding:2px 10px;border-radius:6px;border:1px solid var(--cyan);background:rgba(34,211,238,.12);color:var(--cyan);cursor:pointer;font-size:.7em;font-weight:600">Apply</button>
+                </span>
+            </div>
             <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-top:8px">
                 <button class="action-btn primary hidden" id="nextBtn" onclick="nextQuestion()">Next <span id="nextCountdown" style="font-size:.7em;opacity:.6">→</span></button>
                 <button class="action-btn secondary hidden" id="pauseBtn" onclick="toggleAutoPlay()" style="font-size:.85em;padding:8px 14px" title="Pause auto-advance">⏸</button>
@@ -5173,145 +5165,11 @@
             return pick(types)();
         };
 
-        // ---- PIB Current Affairs procedural generator ----
-        var _pibUsed = {};
-        var _pibDateRange = null;
-
-        function _extractPibQAs(title) {
-            var results = [];
-            if (!title || title.length < 10) return results;
-            var clean = title.replace(/[–—•·′″]/g, ' ').trim();
-            var ctx = 'PIB: ' + clean;
-
-            var m;
-            m = clean.match(/(Pradhan Mantri [A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/);
-            if (!m) m = clean.match(/(PM [A-Z][a-z]+(?:\s+[A-Z][a-z]+)*? Yojana)/);
-            if (!m) m = clean.match(/([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*? Yojana)/);
-            if (!m) m = clean.match(/([A-Z][a-z]+ Mission)/);
-            if (m) results.push({ t:'scheme', q:'Which govt scheme was in the news recently?', a:m[1].trim().replace('PM ','Pradhan Mantri '), hint:'The headline mentions a scheme by name', fact:ctx });
-
-            m = clean.match(/(?:Minister for|Minister of|Ministry of)\s+([A-Z][A-Za-z &]+?)(?:\s+(?:reviews?|launch(?:es|ed)?|announces?|inaugurat(?:es|ed)|holds?|held|sign(?:s|ed)?|approves?|releases?|issues?|organis(?:es|ed)|participat(?:es|ed)|present(?:s|ed)|delivers?|address(?:es|ed)))/);
-            if (!m) m = clean.match(/(?:Minister for|Minister of|Ministry of)\s+([A-Z][A-Za-z &]+?)(?:\s+\d+|:|,|$)/);
-            if (m) {
-                var min = m[1].trim().replace(/&/g, 'and');
-                if (min.length < 40) results.push({ t:'ministry', q:'Which ministry was in the news?', a:min, hint:'Look for "Minister/Ministry of" in the headline', fact:ctx });
-            }
-
-            m = clean.match(/(Prime Minister(?: Shri [A-Z][a-z]+ [A-Z][a-z]+)?)/);
-            if (!m) m = clean.match(/(President of India)/);
-            if (!m) m = clean.match(/(Lok Sabha Speaker)/);
-            if (!m) m = clean.match(/(Vice President)/);
-            if (!m) m = clean.match(/(Union Minister Shri [A-Z][a-z]+ [A-Z][a-z]+)/);
-            if (!m) m = clean.match(/Shri ([A-Z][a-z]+ [A-Z][a-z]+)(?:\s+reviews|\s+launches|\s+announces|\s+inaugurates|\s+addresses|\s+chairs|\s+holds)/);
-            if (m) results.push({ t:'person', q:'Which dignitary was in the news?', a:m[1].trim(), hint:'Look for PM, President, Speaker, or Union Minister name', fact:ctx });
-
-            m = clean.match(/INDIA (?:AND|&|WITH)\s+([A-Z][A-Z ]+?)(?:\s+(?:SHARE|SIGN|AGREE|DISCUSS|TO|:))/);
-            if (m) results.push({ t:'country', q:'Which country recently engaged with India?', a:m[1].trim(), hint:'Look for "India and X" in the headline', fact:ctx });
-            m = clean.match(/India[-–]([A-Z][a-zA-Z ]+?)(?:\s|$|,)/);
-            if (m && m[1].length < 30) results.push({ t:'country', q:'Which country partnered with India?', a:m[1].trim(), hint:'Look for "India-X" pattern', fact:ctx });
-            m = clean.match(/(?:Republic of |Government of )([A-Z][a-zA-Z ]+?)(?:\s|,|\.)/);
-            if (m && m[1].length < 25 && m[1] !== 'India' && !m[1].toLowerCase().includes('india')) {
-                var c = m[1].trim();
-                if (c.length > 4) results.push({ t:'country', q:'Which country was in the news with India?', a:c, hint:'International partner mentioned', fact:ctx });
-            }
-
-            m = clean.match(/[₹₹]\s*([0-9,]+)\s*(crore|lakh|lakh crore)/i);
-            if (m) results.push({ t:'amount', q:'What amount was allocated?', a:'₹' + m[1] + ' ' + m[2].toLowerCase(), hint:'Look for ₹ amounts in headline', fact:ctx });
-
-            m = clean.match(/((?:International|World|National) [A-Za-z][A-Za-z ]+? Day(?:\s+Commemoration)?)/);
-            if (m) results.push({ t:'event', q:'Which observance day was highlighted?', a:m[1].trim(), hint:'Look for Day/Commemoration keywords', fact:ctx });
-
-            var states = ['Madhya Pradesh','Uttar Pradesh','Tamil Nadu','Andhra Pradesh','Arunachal Pradesh','Himachal Pradesh','Jammu & Kashmir','Andaman & Nicobar','West Bengal','Jharkhand','Chhattisgarh','Uttarakhand','Karnataka','Maharashtra','Telangana','Rajasthan','Gujarat','Haryana','Punjab','Odisha','Bihar','Kerala','Assam','Manipur','Meghalaya','Mizoram','Nagaland','Sikkim','Tripura','Goa','Delhi','Ladakh'];
-            for (var si = 0; si < states.length; si++) {
-                if (clean.indexOf(states[si]) !== -1) {
-                    results.push({ t:'state', q:'Which state/UT was mentioned in the news?', a:states[si], hint:'State/UT name present in the headline', fact:ctx });
-                    break;
-                }
-            }
-
-            return results;
-        }
-
-// Save static generators before feed-based override for combined quiz
+// Save static generators before any override
 var _staticGen_sports = GK_GENERATORS.sports;
 var _staticGen_defence = GK_GENERATORS.defence;
 var _staticGen_environment = GK_GENERATORS.environment;
 var _staticGen_polity = GK_GENERATORS.polity;
-
-GK_GENERATORS.pib = function() {
-            if (!_pibFeedData || _pibFeedData.length < 3) return null;
-
-            var items = _pibFeedData;
-            if (_pibDateRange) {
-                items = items.filter(function(i) {
-                    return i.pubDate && i.pubDate.slice(0,10) >= _pibDateRange.start && i.pubDate.slice(0,10) <= _pibDateRange.end;
-                });
-            }
-            if (items.length < 3) items = _pibFeedData;
-
-            // Build full Q&A pool from all filtered items
-            var qaPool = [];
-            items.forEach(function(item) {
-                var qas = _extractPibQAs(item.title);
-                qas.forEach(function(qa) {
-                    qa.link = item.link || '';
-                    qaPool.push(qa);
-                });
-            });
-
-            if (qaPool.length === 0) return null;
-
-            // Find an unused question
-            var available = qaPool.filter(function(q) { return !_pibUsed[q.q + q.a]; });
-            if (available.length === 0) { _pibUsed = {}; available = qaPool; }
-            if (available.length === 0) available = qaPool;
-
-            var selected = pick(available);
-            _pibUsed[selected.q + selected.a] = true;
-
-            // Build options — type-specific distractors
-            var opts = [selected.a];
-            var allStates = ['Madhya Pradesh','Uttar Pradesh','Tamil Nadu','Andhra Pradesh','Arunachal Pradesh','Himachal Pradesh','Jammu & Kashmir','Andaman & Nicobar','West Bengal','Jharkhand','Chhattisgarh','Uttarakhand','Karnataka','Maharashtra','Telangana','Rajasthan','Gujarat','Haryana','Punjab','Odisha','Bihar','Kerala','Assam','Manipur','Meghalaya','Mizoram','Nagaland','Sikkim','Tripura','Goa','Delhi','Ladakh'];
-            var allCountries = ['USA','China','Russia','UK','France','Japan','Germany','Australia','Canada','Brazil','South Africa','Nepal','Sri Lanka','Bangladesh','Pakistan','Myanmar','Maldives','Bhutan','Afghanistan','Iran','Israel','Saudi Arabia','UAE','Qatar','Oman','Kuwait','Egypt','Turkey','Indonesia','Malaysia','Singapore','Thailand','Vietnam','South Korea','North Korea','Italy','Spain','Netherlands','Switzerland','Sweden','Norway','Finland','New Zealand','Argentina','Mexico','Kenya','Nigeria'];
-            var typePool = [];
-            if (selected.t === 'state') {
-                typePool = allStates.filter(function(s) { return s !== selected.a; });
-            } else if (selected.t === 'country') {
-                typePool = allCountries.filter(function(c) { return c !== selected.a; });
-            } else if (selected.t === 'ministry') {
-                typePool = ['Ministry of Finance','Ministry of Defence','Ministry of Home Affairs','Ministry of External Affairs','Ministry of Health','Ministry of Education','Ministry of Agriculture','Ministry of Power','Ministry of Railways','Ministry of Law and Justice','Ministry of Commerce','Ministry of Rural Development'].filter(function(m) { return m !== selected.a; });
-            }
-            if (typePool.length >= 3) {
-                shuffle(typePool);
-                for (var di = 0; di < 3; di++) opts.push(typePool[di]);
-            } else {
-                var entityPool = [];
-                items.forEach(function(item) {
-                    var words = (item.title || '').replace(/[–—•·′″]/g, ' ').split(' ');
-                    words.forEach(function(w) {
-                        var clean = w.replace(/[^a-zA-Z0-9+]/g, '');
-                        if (clean.length >= 3 && /[A-Z]/.test(clean[0])) {
-                            if (entityPool.indexOf(clean) < 0) entityPool.push(clean);
-                        }
-                    });
-                });
-                var pool = (GK_DISTRACTORS.pib || []).filter(function(e) { return e !== selected.a; });
-                var combined = shuffle(entityPool.concat(pool));
-                for (var di = 0; di < combined.length && opts.length < 4; di++) {
-                    if (opts.indexOf(combined[di]) < 0 && combined[di].length > 1) opts.push(combined[di]);
-                }
-                while (opts.length < 4) opts.push('None of the above');
-            }
-            shuffle(opts);
-
-            return {
-                q: selected.q + '<br><small>' + (selected.fact || '') + '</small>',
-                a: selected.a,
-                opts: opts,
-                hint: selected.hint,
-                fact: selected.fact
-            };
-        };
         // ---- SEBI procedural generator ----
         var _sebiUsed = {};
 
@@ -5341,70 +5199,10 @@ GK_GENERATORS.pib = function() {
             return null;
         }
 
-        function _extractKeyEntity(text) {
-            var words = text.split(' ');
-            var best = null, bestScore = 0;
-            var skip = {'the':1,'and':1,'for':1,'with':1,'from':1,'this':1,'that':1,'were':1,'has':1,'had':1,'not':1,'are':1,'was':1,'but':1,'its':1,'their':1,'been':1,'will':1,'over':1,'into':1,'about':1,'than':1,'after':1,'before':1,'under':1,'through':1,'between':1,'against':1,'during':1,'without':1,'within':1,'along':1,'among':1,'upon':1,'across':1,'beyond':1,'toward':1,'also':1,'more':1,'most':1,'much':1,'many':1,'some':1,'such':1,'all':1,'each':1,'every':1,'both':1,'few':1,'own':1,'same':1,'just':1,'now':1,'here':1,'there':1,'then':1,'well':1,'back':1,'still':1,'already':1,'yet':1,'once':1,'again':1,'ever':1,'never':1,'always':1,'even':1,'though':1,'while':1,'since':1,'until':1,'because':1,'if':1,'when':1,'where':1,'how':1,'what':1,'who':1,'whom':1,'which':1,'whether':1,'why':1,'vs':1,'v.':1,'versus':1,'on':1,'in':1,'of':1,'to':1,'no':1};
-            for (var wi = words.length - 1; wi >= 0; wi--) {
-                var w = words[wi].replace(/[^a-zA-Z0-9]/g, '');
-                if (w.length < 3) continue;
-                if (/^\d+$/.test(w)) continue;
-                if (skip[w.toLowerCase()]) continue;
-                var score = (w === w.toUpperCase() && /[A-Z]/.test(w) && w.length >= 2 ? 4 : w[0] === w[0].toUpperCase() ? 2 : 1) + (wi / words.length * 2);
-                if (score > bestScore) { bestScore = score; best = w; }
-            }
-            return best;
-        }
-
         GK_GENERATORS.scjudgments = function() { return null; }; // disabled — using Wikipedia instead
-        function _buildVirtualFeed(items, keywords) {
-            if (!items || !keywords) return [];
-            var lower = keywords.map(function(k) { return k.toLowerCase(); });
-            return items.filter(function(i) {
-                var text = ((i.title || '') + ' ' + (i.description || '')).toLowerCase();
-                return lower.some(function(k) { return text.indexOf(k) >= 0; });
-            });
-        }
         GK_GENERATORS.rbi = function() { return null; }; // disabled — using Wikipedia instead
         GK_GENERATORS.isro = function() { return null; }; // disabled — using Wikipedia instead
         GK_GENERATORS.mea = function() { return null; }; // disabled — using Wikipedia instead
-        function _feedGenHelper(feedData, cat) {
-            var usedKey = '_' + cat + 'Used';
-            if (!window[usedKey]) window[usedKey] = {};
-            var used = window[usedKey];
-            var items = feedData;
-            var available = items.filter(function(item) { return !used[item.id]; });
-            if (available.length === 0) { for (var k in used) delete used[k]; available = items; }
-            var selected = pick(available);
-            used[selected.id] = true;
-            var title = selected.title || '';
-            var qas = _extractPibQAs(title);
-            var qa = qas.length > 0 ? pick(qas) : null;
-            if (qa) {
-                var optsArr = [qa.a];
-                var pool = (GK_DISTRACTORS[cat] || []).filter(function(e) { return e !== qa.a; });
-                var combined = shuffle(pool);
-                for (var i = 0; i < combined.length && optsArr.length < 4; i++) {
-                    if (optsArr.indexOf(combined[i]) < 0) optsArr.push(combined[i]);
-                }
-                while (optsArr.length < 4) optsArr.push('None of the above');
-                shuffle(optsArr);
-                return { q: qa.q + '<br><small>"' + title + '"</small>', a: qa.a, opts: optsArr, hint: qa.hint || 'Read the headline carefully', fact: (qa.fact || '') + (selected.link ? ' <a href="' + selected.link + '" target="_blank" style="color:var(--cyan)">Source</a>' : '') };
-            }
-            // Fallback: blank-out entity
-            var entity = _extractKeyEntity(title);
-            if (!entity) entity = cat === 'isro' ? 'ISRO' : 'MEA';
-            var blanked = title.replace(entity, '______');
-            var optsArr = [entity];
-            var pool = (GK_DISTRACTORS[cat] || []).filter(function(e) { return e !== entity; });
-            var combined = shuffle(pool);
-            for (var i = 0; i < combined.length && optsArr.length < 4; i++) {
-                if (optsArr.indexOf(combined[i]) < 0) optsArr.push(combined[i]);
-            }
-            while (optsArr.length < 4) optsArr.push('None of the above');
-            shuffle(optsArr);
-            return { q: 'What entity is blanked in this headline?<br><small>"' + blanked + '"</small>', a: entity, opts: optsArr, hint: 'Think about the key organization or entity', fact: ('PIB: ' + title) + (selected.link ? ' <a href="' + selected.link + '" target="_blank" style="color:var(--cyan)">Source</a>' : '') };
-        }
         function isValidAnswer(a) {
             if (!a) return false;
             var l = String(a).toLowerCase();
@@ -5460,7 +5258,7 @@ GK_GENERATORS.pib = function() {
                         document.getElementById('qArea').classList.add('active');
                         document.getElementById('scoreBar').classList.add('show');
                         document.getElementById('restartBtn').style.display = 'inline-block';
-                        document.getElementById('pibHeaderBtn').style.display = 'inline-block';
+
                         showQuestion();
                         return true;
                     }
@@ -5542,7 +5340,7 @@ GK_GENERATORS.pib = function() {
                 var found = CATEGORIES.find(function(c) { return c.name === topicName; });
                 if (found) {
                     var checkReady = function(tries) {
-                        if (studyData[found.id] && _pibFeedData) {
+                        if (studyData[found.id]) {
                             setMode('study');
                             showStudy(found.id, found.name, found.icon);
                             return;
@@ -5591,7 +5389,6 @@ GK_GENERATORS.pib = function() {
                 .then(function(r) { return r.json(); })
                 .then(function(data) { GK_LEARN = data; _initStudyData(); })
                 .catch(function() { _initStudyData(); });
-            loadPibFeed();
             loadQuizJson();
         }
 
@@ -5628,7 +5425,7 @@ GK_GENERATORS.pib = function() {
                 document.getElementById('qArea').classList.add('active');
                 document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
-            document.getElementById('pibHeaderBtn').style.display = 'inline-block';
+
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
                 document.getElementById('qText').innerHTML = 'Loading questions...<br><span style="font-size:.72em;color:var(--text-muted)">generating questions</span>';
                 document.getElementById('optGrid').innerHTML = '';
@@ -5653,7 +5450,7 @@ GK_GENERATORS.pib = function() {
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
-            document.getElementById('pibHeaderBtn').style.display = 'inline-block';
+
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
         }
@@ -6047,341 +5844,20 @@ GK_GENERATORS.pib = function() {
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
-            document.getElementById('pibHeaderBtn').style.display = 'inline-block';
+
             document.getElementById('timedQuizOptions').style.display = 'none';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
         }
 
-        function _togglePibPanel() {
-            var panel = document.getElementById('pibQuizPanel');
-            if (!panel) return false;
-            var isHidden = panel.style.display === 'none' || !panel.style.display;
-            panel.style.display = isHidden ? 'block' : 'none';
-            if (_pibFeedData && isHidden) {
-                var dates = {};
-                _pibFeedData.forEach(function(i) { if (i.pubDate) dates[i.pubDate.slice(0,10)] = true; });
-                var sorted = Object.keys(dates).sort();
-                var startEl = document.getElementById('pibQuizStart');
-                var endEl = document.getElementById('pibQuizEnd');
-                if (sorted.length > 0) { startEl.value = sorted[0]; endEl.value = sorted[sorted.length-1]; }
-            }
-            return false;
-        }
-        window.showPibQuizPanel = _togglePibPanel;
-        window.togglePibPanel = _togglePibPanel;
 
-        function startPibQuiz() {
-            if (!confirmAbandonQuiz()) return;
-            if (!_pibFeedData || _pibFeedData.length < 3) { alert('Not enough PIB data loaded. Wait for the feed to load.'); return; }
-            var startVal = document.getElementById('pibQuizStart').value;
-            var endVal = document.getElementById('pibQuizEnd').value;
-            if (!startVal || !endVal) { alert('Pick a date range first.'); return; }
-            if (startVal > endVal) { alert('Start date must be before end date.'); return; }
-            var rangeItems = _pibFeedData.filter(function(i) {
-                return i.pubDate && i.title && i.pubDate.slice(0,10) >= startVal && i.pubDate.slice(0,10) <= endVal;
-            });
-            if (rangeItems.length < 3) { alert('Not enough PIB news in that date range (need at least 3).'); return; }
-            _pibDateRange = { start: startVal, end: endVal };
-            _pibUsed = {};
-            document.getElementById('pibQuizPanel').style.display = 'none';
-            document.getElementById('welcome').style.display = 'none';
-            document.getElementById('qArea').classList.add('active');
-            document.getElementById('scoreBar').classList.add('show');
-            document.getElementById('restartBtn').style.display = 'inline-block';
-            document.getElementById('pibHeaderBtn').style.display = 'inline-block';
-            document.getElementById('qText').innerHTML = 'Loading PIB quiz...';
-            document.getElementById('optGrid').innerHTML = '';
-            startCategory('pib', 'PIB: ' + startVal.slice(5) + ' to ' + endVal.slice(5));
-        }
 
-        var _pibFeedData = null;
-        var _sebiFeedData = null;
-        var _scJudgmentData = null;
-        var _isroFeedData = null;
-        var _meaFeedData = null;
-        var _rbiFeedData = null;
-        var _defenceFeedData = null;
-        var _envFeedData = null;
-        var _sportsFeedData = null;
-        var _econFeedData = null;
-        var _polityFeedData = null;
-        var _sciTechFeedData = null;
-        var _healthFeedData = null;
-        var _educationFeedData = null;
-        var _agriFeedData = null;
-        var _energyFeedData = null;
 
-        // ---- Study Mode Current Affairs Integration ----
-        var _studyFetchedItems = null;
 
-        function _getFeedForCategory(catId) {
-            if (!_pibFeedData || _pibFeedData.length === 0) return null;
-            // Use client-side determineSubject for consistent categorization with quiz.json
-            var cat = CATEGORIES.find(function(c) { return c.id === catId; });
-            var targetName = cat ? cat.name : '';
-            if (!targetName) return _buildVirtualFeed(_pibFeedData, ['Scheme','Yojana']);
-            var items = _pibFeedData.filter(function(item) {
-                var subj = _determineSubject(item.title, item.category, item.source);
-                return subj && subj.subject === targetName;
-            });
-            return items;
-        }
 
-        function _determineSubject(text, category, source) {
-            var t = text + ' ' + (category || '');
-            if (/(?:Constitution|Amendment|Article\s+\d+|Fundamental\s+(?:Right|Duty)|Directive\s+Principle|Scheduled\s+(?:Caste|Tribe)|Panchayati\s+Raj|73rd|74th\s+Amendment)/i.test(t))
-                return { subject: 'Constitution', emoji: '⚖️' };
-            if (/ISRO|Chandrayaan|Mangalyaan|Gaganyaan|Aditya|NASA|Space\s+Station|Satellite|Orbit|Rocket|Launch\s+Vehicle/i.test(t))
-                return { subject: 'ISRO & Space', emoji: '🚀' };
-            if (/Defence|Army|Navy|Air\s+Force|Missile|Exercise|Raksha\s+Mantri|Indigenous\s+Weapon|DRDO|BEML|Warship|Submarine|INS\s+\w+/i.test(t))
-                return { subject: 'Defence', emoji: '⚔️' };
-            if (/Olympics|Asian\s+Games|Commonwealth|Cricket|World\s+Cup|Medal|Tournament|Championship|Athlete|Saina|Koneru|Grandmaster/i.test(t))
-                return { subject: 'Sports', emoji: '🏆' };
-            if (/National\s+Park|Tiger\s+Reserve|Wildlife\s+Sanctuary|Biosphere|Ramsar|UNESCO\s+World\s+Heritage|Elephant|Leopard|Endangered\s+Species/i.test(t))
-                return { subject: 'National Parks & Wildlife', emoji: '🌲' };
-            if (/Dance|Folk\s+Dance|Classical\s+Dance|Kathak|Bharatanatyam|Odissi|Kuchipudi|Manipuri|Mohiniyattam|Sattriya/i.test(t))
-                return { subject: 'Dance Forms', emoji: '💃' };
-            if (/Bharat\s+Ratna|Padma\s+(?:Shri|Bhushan|Vibhushan)|Nobel|Oscar|Grammy|Booker|Dadasaheb|National\s+Film\s+Award|Arjuna|Khel\s+Ratna|Dronacharya/i.test(t))
-                return { subject: 'Awards & Honours', emoji: '🎖️' };
-            if (/Dam|River\s+Project|Hydroelectric|Irrigation\s+Project|Bhakra|Hirakud|Tehri|Sardar\s+Sarovar|Narmada|Godavari|Krishna|Cauvery/i.test(t))
-                return { subject: 'Dams & Rivers', emoji: '🌊' };
-            if (/Important\s+Day|World\s+\w+\s+Day|National\s+\w+\s+Day|International\s+Day|Observance/i.test(t))
-                return { subject: 'Important Days', emoji: '📅' };
-            if (/Ancient|Medieval|Mughal|Maurya|Gupta|Indus\s+Valley|Vedic|Freedom\s+Struggle|Independence|1857|Jallianwala|Satyagraha|Quit\s+India/i.test(t))
-                return { subject: 'Indian History', emoji: '📜' };
-            if (/Climate|Environment|Pollution|Emissions|Greenhouse|Global\s+Warming|Carbon|Renewable\s+Energy|Solar\s+Energy|Wind\s+Energy|Electric\s+Vehicle|Green\s+Hydrogen/i.test(t))
-                return { subject: 'Environment & Ecology', emoji: '🌿' };
-            if (/Foreign|Embassy|Diplomatic|Consulate|Envoy|Ambassador|High\s+Commissioner/i.test(t))
-                return { subject: 'International Relations', emoji: '🤝' };
-            if (/\bUN\b|United\s+Nations|BRICS|SAARC|WTO|IMF|World\s+Bank|G20|\bQUAD\b|Indo-Pacific|Bilateral|Foreign\s+Policy|Summit|Treaty|Pact/i.test(t))
-                return { subject: 'International', emoji: '🌐' };
-            if (/Computer|\bAI\b|Artificial\s+Intelligence|Cyber|Digital|Internet|Software|\bIT\b|Blockchain|Data\s+Protection|Semiconductor|5G/i.test(t))
-                return { subject: 'Computer & IT', emoji: '💻' };
-            if (/Science|Research|Innovation|Patent|Invention|Discovery|Laboratory|Nuclear|Biotechnology|Nanotechnology|Gene|Genome|Vaccine/i.test(t))
-                return { subject: 'General Science', emoji: '🔬' };
-            if (/Economy|GDP|Inflation|Budget|Fiscal|Monetary|Banking|\bRBI\b|\bSEBI\b|Market|Stock|Investment|GST|Tax|Tariff|Trade|Export|Import/i.test(t))
-                return { subject: 'Indian Economy', emoji: '💰' };
-            if (/Geography|Climate|Monsoon|Crop|Soil|Mineral|Map|Latitude|Longitude|Physiographic|Himalaya|Peninsula|Coast|Island/i.test(t))
-                return { subject: 'Geography', emoji: '🌍' };
-            if (/Ayushman|PM-KISAN|Jal\s+Jeevan|Ujjwala|Awas|Rozgar|Jan\s+Dhan|Mudra|Skill\s+India|Digital\s+India|Make\s+in\s+India|Mission|Yojana|Abhiyan|Scheme|Policy/i.test(t))
-                return { subject: 'Govt Schemes', emoji: '🏛️' };
-            if (/Education|School|College|University|NEP|Scholarship|Student|Teacher|Faculty|National\s+Education/i.test(t))
-                return { subject: 'Govt Schemes', emoji: '🏛️' };
-            if (/Health|Hospital|Medicine|Drug|Pharma|Medical|Ayurveda|Disease|Epidemic|Pandemic/i.test(t))
-                return { subject: 'Govt Schemes', emoji: '🏛️' };
-            if (/Agriculture|Farmer|Crop|Kisan|Mandi|Food|Fertilizer|Seed|Irrigation|Organic|FPO|Horticulture/i.test(t))
-                return { subject: 'Geography', emoji: '🌍' };
-            if (/Culture|Heritage|Museum|Painting|Sculpture|Music|Festival|Theatre|Cinema|Film|Monument|Temple|Mosque|Church|Architecture/i.test(t))
-                return { subject: 'Art & Culture', emoji: '🎭' };
-            if (/Country|Capital|Currency|Wonders|Continent|Ocean|Sea|Mountain|Desert/i.test(t))
-                return { subject: 'World Geography', emoji: '🗺️' };
-            if (/Parliament|Election|Bill|Legislation|Judiciary|Supreme\s+Court|Governor|Chief\s+Minister|Election\s+Commission|Appointment|Assumes\s+Charge|Takes\s+Over\s+as|Oath|Sworn|Secretary|Commissioner|Committee/i.test(t))
-                return { subject: 'Polity', emoji: '🏛️' };
-            if (source === 'RBI' || source === 'SEBI') return { subject: 'Indian Economy', emoji: '💰' };
-            if (source === 'ISRO') return { subject: 'ISRO & Space', emoji: '🚀' };
-            if (source === 'MEA') return { subject: 'International Relations', emoji: '🤝' };
-            return { subject: 'Govt Schemes', emoji: '🏛️' };
-        }
 
-        function _formatStudyBullet(item, catId) {
-            var t = item.title || '';
-            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-            var d = item.pubDate ? new Date(item.pubDate) : new Date();
-            var dateTag = '[' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() + ']';
 
-            // Scheme: bold the scheme name
-            var schemeM = t.match(/((?:Pradhan Mantri|PM|National|Bharat|Ayushman|Jan|Digital|Smart|Skill|Swachh)\s+[\w\s]{2,40}?(?:Yojana|Scheme|Mission|Abhiyan|Programme|Policy|Vision|Niryat|Rozgar|Kisan|Awas|Bank|Suraksha|Shakti|Seva|Sathi))/i);
-            if (schemeM) {
-                var before = t.substring(0, t.indexOf(schemeM[1]));
-                var after = t.substring(t.indexOf(schemeM[1]) + schemeM[1].length);
-                return '<b>' + schemeM[1].trim() + '</b> —' + after.replace(/^\s+/,'').replace(/['']/g,'') + ' <span style="color:var(--text-muted);font-size:.82em">' + dateTag + '</span>';
-            }
 
-            // Amount/number highlight: bold the number
-            var numM = t.match(/(?:Rs|₹|USD)?\s*[\d,]+(?:\s*(?:crore|lakh|million|billion|thousand))?/i);
-            if (numM) {
-                return t.replace(numM[0], '<b>' + numM[0] + '</b>').replace(/['']/g,'') + ' <span style="color:var(--text-muted);font-size:.82em">' + dateTag + '</span>';
-            }
-
-            if (t.length > 80) t = t.substring(0, 77) + '...';
-            return t.replace(/['']/g,'') + ' <span style="color:var(--text-muted);font-size:.82em">' + dateTag + '</span>';
-        }
-
-        function _injectStudyCurrentAffairs(items, catId) {
-            if (!items || items.length === 0) return;
-            var notes = document.getElementById('studyNotes');
-            if (!notes) return;
-            var cat = CATEGORIES.find(function(c) { return c.id === catId; });
-            var icon = cat ? cat.icon : '📰';
-            var name = cat ? cat.name : 'Current Affairs';
-
-            var html = '<div class="study-sec" id="sec_ca"><div class="study-sec-h" onclick="_toggleSec(this)"><span class="arrow">▶</span><span class="st">' + icon + ' Latest ' + name + ' News</span><span class="chk" onclick="event.stopPropagation();this.classList.toggle(\'d\')">✓</span></div><div class="study-sec-b o" id="secb_ca" style="padding:4px 0">';
-            var maxShow = Math.min(10, items.length);
-            for (var i = 0; i < maxShow; i++) {
-                var it = items[i];
-                var bullet = _formatStudyBullet(it, catId);
-                html += '<div style="padding:5px 14px;border-bottom:1px solid var(--border);font-size:.82em;line-height:1.6">• ' + bullet + '</div>';
-            }
-            if (items.length > maxShow) {
-                html += '<div style="padding:6px 14px;font-size:.75em;color:var(--text-muted);text-align:center">+' + (items.length - maxShow) + ' more items</div>';
-            }
-            html += '</div></div>';
-            notes.insertAdjacentHTML('beforeend', html);
-        }
-
-        function startFeedQuiz(cat, label) {
-            if (!confirmAbandonQuiz()) return;
-            startCategory(cat, label);
-        }
-
-        function loadPibFeed() {
-            var section = document.getElementById('pibFeedSection');
-            var list = document.getElementById('pibFeedList');
-            fetch('/data/pib-feed.json')
-                .then(function(r) { return r.json(); })
-                .then(function(data) {
-                    var items = (data.items || []);
-                    if (items.length === 0) return;
-                    _pibFeedData = items;
-                    _sebiFeedData = items.filter(function(i) { return i.source === 'SEBI'; });
-                    _scJudgmentData = items.filter(function(i) { return i.source === 'SC'; });
-                    _isroFeedData = items.filter(function(i) { return i.source === 'ISRO'; });
-                    _meaFeedData = items.filter(function(i) { return i.source === 'MEA'; });
-                    _rbiFeedData = items.filter(function(i) { return i.source === 'RBI'; });
-                    _defenceFeedData = _buildVirtualFeed(items, ['Defence','Defense','Army','Navy','Air Force','DRDO','DRDO\'s','Military','Indian Army','Indian Navy','Indian Air Force','Soldier','Border','Missile','Submarine','Warship','Aircraft','Raksha','Mantralaya','Ex-Servicemen','Bharat Electronics','BDL','BEL','HAL','Ordnance','Counter-Insurgency','Insurgency','Terrorism','National Security','Cyber Security','Agni','Prithvi','Brahmos','Akash','Nag','ASTRA','PINAKA','Radar','Sonar','Frigate','Destroyer','Corvette','Patrol Vessel','Landing Craft','Dock Ship','Submarine','Tank','Artillery','Rifle','Carbine','Bulletproof','Armoured','Battalion','Regiment','Brigade','Division','Command','NCC','Coast Guard','Paramilitary','CAPF','CISF','BSF','CRPF','ITBP','SSB','Assam Rifles','Army Chief','Navy Chief','Air Chief','CDS','Chief of Defence','Rajnath','Defence Minister','Raksha Mantri','Defence Secretary','Defence Production','Defence Acquisition','Defence Procurement','Make in India Defence','Defence Corridor','Defence Export','Agniveer','Agneepath','Armed Forces','Tri-Service','Strategic Partnership','Defence Pact','Joint Exercise','Military Exercise','Surya Kiran','Garuda','Maitree','Shakti','Varuna','Malabar','Yudh Abhyas','Hand in Hand','Mitra Shakti','SAMPRITI','Ekuverin','LAMITIYE','Naseem Al Bahr','Al Mohed Al Hindi','Zayed Talwar','Konkan','Bold Kurukshetra','Prasthan','Poorvi Prahar','Vijay Prahar','Desert Storm','Desert Knight','Gagan Shakti','Vayu Shakti','TROPEX','Milan Exercise','RIMPAC','Tsunami Relief','Humanitarian Assistance','Disaster Relief','HADR','Peacekeeping','UN Peacekeeping']);
-                    _envFeedData = _buildVirtualFeed(items, ['Environment','Climate','Forest','Wildlife','Pollution','Ecology','Green','Renewable','Emission','Carbon','Biodiversity','Conservation','Ecosystem','Endangered','Species','Wetland','River','Lake','Ocean','Coastal','Disaster','Cyclone','Flood','Drought','MoEFCC','Environment Minister','Forest Minister','Climate Change','Global Warming','Paris Agreement','COP','UNFCCC','IPCC','Greenhouse','Emissions','Net Zero','Carbon Neutral','Carbon Credit','Carbon Trading','Green Hydrogen','Solar Energy','Wind Energy','Biomass','Waste Management','Solid Waste','Plastic Waste','E-Waste','Hazardous Waste','Clean Energy','Energy Transition','Sustainable Development','SDG','National Park','Tiger Reserve','Wildlife Sanctuary','Biosphere Reserve','Eco-Sensitive Zone','Mangrove','Coral Reef','Glacier','Himalayan','Ganga','Yamuna','Clean Ganga','Namami Gange','Air Quality','AQI','Water Quality','Swachh Bharat','Tree Plantation','Green India','REDD','Afforestation','Deforestation','Desertification','Land Degradation','National Action Plan','State Action Plan','Environmental Clearance','Environmental Impact','Forest Rights','Wildlife Crime','Poaching','Smuggling','Endangered Species','Elephant','Tiger','Lion','Leopard','Rhinoceros','Snow Leopard','Gangetic Dolphin','Great Indian Bustard','Vulture','Sea Turtle','Olive Ridley']);
-                    _sportsFeedData = _buildVirtualFeed(items, ['Sports','Sport','Olympic','Olympics','Paralympic','World Cup','Tournament','Medal','Athlete','Championship','Cricket','Football','Hockey','Badminton','Tennis','Wrestling','Boxing','Shooting','Archery','Weightlifting','Table Tennis','Chess','Kabaddi','Asian Games','Commonwealth','Khelo India','National Games','Sports Minister','Khel Ratna','Arjuna Award','Dronacharya Award','Major Dhyan Chand','Olympian','Gold Medal','Silver Medal','Bronze Medal','World Championship','World Record','Asian Record','National Record','Squad','Team India','Indian Team','Captain','Coach','Selector','Umpire','Referee','Stadium','Venue','FIFA','ICC','BCCI','IOA','SAI','Sports Authority','Fit India','Yoga Day','Fitness','Marathon','Cycling','Rowing','Canoeing','Kayaking','Sailing','Equestrian','Gymnastics','Judo','Taekwondo','Karate','Fencing','Volleyball','Basketball','Handball','Rugby','Baseball','Softball','Squash','Racquetball','Snooker','Billiards','Golf','Skating','Swimming','Diving','Water Polo','Athletics','Track and Field','Race Walk','Long Jump','High Jump','Triple Jump','Pole Vault','Javelin','Discus','Hammer','Shot Put','Decathlon','Heptathlon']);
-                    _econFeedData = _buildVirtualFeed(items, ['Economy','Economic','GDP','GVA','Inflation','Budget','Fiscal','Monetary','Finance','Financial','Trade','Export','Import','Investment','Infrastructure','Tax','GST','Income Tax','Corporate Tax','Customs','Excise','Revenue','Expenditure','Deficit','Fiscal Deficit','Revenue Deficit','Primary Deficit','Current Account','CAD','Forex','Foreign Exchange','Reserve Bank','RBI','Repo Rate','Reverse Repo','CRR','SLR','MSF','Bank Rate','Liquidity','Money Supply','Industrial Production','IIP','Manufacturing','Services','PMI','Consumer Price Index','CPI','Wholesale Price Index','WPI','Food Inflation','Retail Inflation','Core Inflation','Growth Rate','Economic Growth','Development','Employment','Unemployment','Labour Force','Job Creation','Startup','Entrepreneurship','MSME','Small Business','Make in India','Digital India','Skill India','Ease of Doing Business','Business Reforms','Investment Promotion','FDI','Foreign Direct Investment','FPI','Portfolio Investment','Merger','Acquisition','Insolvency','Bankruptcy','IBC','NCLT','NCLAT','Competition','Monopoly','Market Share','Tariff','Non-Tariff','WTO','Trade Agreement','FTA','Free Trade','Economic Corridor','Industrial Corridor','Economic Zone','SEZ','Special Economic Zone','Smart City','Urban Development','Rural Development','Agriculture','Farmers','Agri-Export','Food Processing','PDS','Public Distribution','Subsidy','Welfare Scheme','Direct Benefit','DBT','Aadhaar','Financial Inclusion','Jan Dhan','Insurance','Pension','Social Security']);
-                    _polityFeedData = _buildVirtualFeed(items, ['Constitution','Constitutional','Parliament','Lok Sabha','Rajya Sabha','Member of Parliament','MP','MLA','Legislative','Assembly','Election','Voter','Voting','Electoral','EVM','VVPAT','Election Commission','ECI','President','Vice President','Prime Minister','Chief Minister','Governor','Union Minister','Cabinet','Council of Ministers','Ministry','Department','Government','Bill','Act','Legislation','Ordinance','Amendment','Article','Fundamental Right','Directive Principle','DPSP','Fundamental Duty','Supreme Court','High Court','District Court','Judiciary','Judge','Chief Justice','Justice','Tribunal','NCLT','NCLAT','SAT','Appellate','Writ','PIL','Public Interest Litigation','Judicial Review','Judicial Activism','Collegium','Parliamentary Committee','Standing Committee','Select Committee','Joint Committee','Public Accounts Committee','PAC','Estimates Committee','Committee on Public Undertakings','CAG','Comptroller and Auditor General','Finance Commission','NITI Aayog','Planning Commission','Interim Budget','Vote on Account','Money Bill','Finance Bill','Appropriation Bill','Ordinance','President Rule','Emergency','National Emergency','State Emergency','Financial Emergency','Article 356','Article 360','Centre-State','Federal','Unitary','Panchayat','Municipality','73rd Amendment','74th Amendment','Local Government','Rural Development','Urban Development','Delhi','Union Territory','UT','Statehood','Bifurcation','Reorganisation','Official Language','Eighth Schedule','Scheduled Caste','SC','ST','Scheduled Tribe','OBC','Other Backward Class','Minority','Reservation','Affirmative Action','Secularism','Socialism','Sovereign','Democratic','Republic','Preamble','Citizenship','Overseas Citizen','OC','NRI','PIO','Election Petition','Byelection','Anti-defection','10th Schedule','Speaker','Deputy Speaker','Chairman','Deputy Chairman','Rajya Sabha Chairman','Upper House','Lower House','Joint Session','Budget Session','Monsoon Session','Winter Session','Question Hour','Zero Hour','Adjournment','Prorogation','Dissolution','Quorum','Whip','Party','Coalition','Alliance','NDA','UPA','National Party','State Party','RPA','Representation of People Act','Election Symbol','Model Code of Conduct','Poll','Counting','Voter Turnout','Political Party','Ideology','Manifesto','President Address','Motion of Thanks','No-confidence','Confidence','Censure','Adjournment Motion','Calling Attention','Short Duration Discussion','Private Member','Private Member Bill','Government Bill','Lapsing of Bill','Ordinance Promulgation','Ordinance Re-promulgation','Governor','Chief Minister','Council of Ministers','State Legislature','Vidhan Sabha','Vidhan Parishad','Legislative Council','Governor Address','State Election','Municipal Election','Panchayat Election','District Planning','Zila Parishad','Panchayat Samiti','Gram Panchayat','Gram Sabha','Nagar Palika','Nagar Nigam','Municipal Corporation','Mayor','Commissioner','Ward','Ward Committee']);
-                    _sciTechFeedData = _buildVirtualFeed(items, ['Science','Scientific','Technology','Technological','Innovation','Patent','Copyright','Trademark','IPR','Intellectual Property','Research','Development','R&D','Laboratory','Lab','Experiment','Discovery','Invention','Breakthrough','Mars Mission','Moon Mission','Space','Satellite','Rocket','Launch','Nuclear','Atomic','Fusion','Fission','Reactor','Radiation','Radioactive','Uranium','Plutonium','Thorium','Cyclotron','Synchrotron','Particle Accelerator','CERN','LIGO','Gravitational Wave','Quantum','Computing','Quantum Computing','Supercomputer','AI','Artificial Intelligence','Machine Learning','Deep Learning','Neural Network','Robotics','Automation','Drone','UAV','Chatbot','GPT','Large Language Model','LLM','Blockchain','Cryptocurrency','Bitcoin','Web3','Metaverse','AR','VR','Augmented Reality','Virtual Reality','IoT','Internet of Things','5G','6G','Telecommunication','Broadband','Optical Fibre','Li-Fi','Wi-Fi','Bluetooth','NFC','RFID','GPS','Navigation','GIS','Remote Sensing','Genomics','Genome','DNA','RNA','Gene Editing','CRISPR','Biotechnology','Biotech','Biofuel','Biogas','Nanotechnology','Nano','Material Science','Composite','Graphene','Carbon Fibre','Superconductor','Semiconductor','Chip','Processor','Microchip','Fab','Foundry','Electronics','Photonics','Laser','LED','OLED','Solar Cell','Photovoltaic','Turbine','Engine','Propulsion','Cryogenic','Semi-cryogenic','Electric Vehicle','EV','Battery','Lithium-ion','Solid State Battery','Hydrogen Fuel Cell','Green Hydrogen','Hydrogen Economy','Renewable Energy','Solar','Wind','Tidal','Geothermal','Biomass','Energy Storage','Grid','Smart Grid','Microgrid','Cybersecurity','Encryption','Firewall','IT','Information Technology','Software','Hardware','Algorithm','Data Science','Big Data','Cloud Computing','Edge Computing','Digital Twin','3D Printing','Additive Manufacturing','Drone','Counter-Drone','Anti-Drone','Missile Technology','Ballistic Missile','Cruise Missile','Hypersonic','Stealth','Radar','Sonar','LIDAR','Sensors','Defence Technology','Military Tech','Space Tech','Civil Aviation','Aircraft','Jet Engine','Turbofan','Turbojet','Turboprop']);
-                    _healthFeedData = _buildVirtualFeed(items, ['Health','Healthcare','Medical','Medicine','Pharmaceutical','Drug','Vaccine','Vaccination','Immunisation','Immunization','Hospital','Clinic','Primary Health','Ayushman','PM-JAY','Ayushman Bharat','Health Insurance','Medical Insurance','Insurance Cover','Health Scheme','NHM','National Health Mission','Ayush','AYUSH','Yoga','Homeopathy','Ayurveda','Unani','Siddha','Naturopathy','Disease','Epidemic','Pandemic','COVID','Coronavirus','SARS','H1N1','Zika','Dengue','Malaria','Chikungunya','Tuberculosis','TB','HIV','AIDS','Cancer','Diabetes','Hypertension','Blood Pressure','Heart Disease','Cardiovascular','Stroke','Kidney','Liver','Hepatitis','Child Health','Maternal Health','Infant Mortality','IMR','MMR','Maternal Mortality','Child Mortality','Malnutrition','Anaemia','Nutrition','Poshan','ICDS','Integrated Child Development','Mid-Day Meal','School Health','Sanitation','Swachh Bharat','Cleanliness','Hygiene','WASH','Water Sanitation','Disease Surveillance','Epidemiology','Vector Borne','Communicable','Non-Communicable','NCD','Lifestyle Disease','Mental Health','Depression','Anxiety','Wellness','Fitness','Physical Activity','Organ Donation','Organ Transplant','Blood Donation','Blood Bank','National Health Policy','Health Minister','Health Secretary','AIIMS','PGI','NIMHANS','Medical College','Nursing','ASHA Worker','ANM','Auxiliary Nurse','Midwife','Health Worker','Community Health','Public Health','Family Planning','Contraception','Reproductive Health','Childbirth','Caesarean','Neonatal','Pediatric','Geriatric','Palliative Care','Hospice','Emergency Care','Trauma Care','Ambulance','108 Service','Dial 108','Telemedicine','e-Sanjeevani','Digital Health','ABDM','Ayushman Bharat Digital Mission','Health ID','Health Record','Generic Medicine','Jan Aushadhi','Pradhan Mantri Bhartiya Janaushadhi','Kendra','Cheap Medicine','Affordable Medicine','Biological','Biologic','Biosimilar','Clinical Trial','Drug Controller','CDSCO','FDA','WHO','World Health Organization','Global Health','International Health','Health Research','Medical Research','Medical Device','Diagnostic','Test Kit','RT-PCR','Rapid Antigen','CT Scan','MRI','X-Ray','Ultrasound','ECG','EEG','Pathology','Laboratory','Pharmacy','Pharmacist','Doctor','Physician','Surgeon','Specialist','Nurse','Dispensary','Primary Care','Secondary Care','Tertiary Care']);
-                    _educationFeedData = _buildVirtualFeed(items, ['Education','School','College','University','Institute','Educational','Academic','Student','Teacher','Professor','Lecturer','Vice Chancellor','Dean','Principal','Exam','Examination','Board Exam','CBSE','ICSE','State Board','NCERT','Curriculum','Syllabus','Textbook','Scholarship','Fellowship','Research Grant','Higher Education','Technical Education','Engineering','Medical Education','Management Education','Law Education','Distance Education','Open University','IGNOU','Online Learning','e-Learning','Digital Learning','SWAYAM','DIKSHA','National Education Policy','NEP 2020','NEP','Education Policy','New Education','National Curriculum Framework','NCF','Foundational Literacy','Numeracy','FLN','Early Childhood','Anganwadi','Pre-school','Primary School','Middle School','Secondary School','Senior Secondary','Higher Secondary','Class 10','Class 12','Board Result','Admission','Merit List','Cut-off','Seat Allotment','Reservation in Education','Education Cess','Education Loan','Skill Development','Vocational','Skill India','Skill Training','Apprenticeship','Internship','On-the-Job Training','Technical Training','Engineering College','Medical College','IIT','Indian Institute of Technology','NIT','National Institute of Technology','IIIT','Indian Institute of Information Technology','IIM','Indian Institute of Management','AIIMS','NITIE','SP Jain','XLRI','ISB','Central University','State University','Deemed University','Private University','Autonomous College','Affiliated College','Constituent College','Accreditation','NAAC','NBA','NIRF','Ranking','Q1','Research Publication','Journal','Impact Factor','Citation','Patent Filed','Startup','Innovation Hub','Incubation','Entrepreneurship Cell','E-Cell','Idea Lab','Tinkering Lab','Atal Tinkering Lab','ATL','School Innovation','Smart Classroom','Digital Classroom','ICT in Education','Mid-Day Meal','School Lunch','School Uniform','Free Textbook','Free Education','Right to Education','RTE Act','75% Attendance','No-Detention','Continuous Comprehensive','Evaluation','CCE','Report Card','Grade','Marks','Percentage','CGPA','Degree','Diploma','Certificate','PhD','Doctorate','MPhil','Masters','Bachelors','Graduate','Post Graduate','Under Graduate','Doctoral','Research Scholar','Post Doctoral','Fellowship','JRF','Junior Research Fellow','SRF','Senior Research Fellow','Professor of Practice','Guest Faculty','Adjunct Faculty','Visiting Professor','Education Budget','Education Minister','School Education','Higher Education','Literacy Rate','Gross Enrollment','GER','Net Enrollment','NEP Implementation','Academic Calendar','Summer Vacation','Winter Break','Holiday List','Teacher Training','In-service Training','Continuous Professional Development','Pedagogy','Teaching Method','Learning Outcome','Student Assessment','Evaluation System']);
-                    _agriFeedData = _buildVirtualFeed(items, ['Agriculture','Agriculture Minister','Farmer','Farmers','Kisan','Crop','Food Grain','Foodgrains','Wheat','Rice','Paddy','Millet','Bajra','Jowar','Ragi','Maize','Corn','Pulses','Tur','Arhar','Moong','Urad','Chana','Masur','Gram','Pea','Soybean','Groundnut','Mustard','Rapeseed','Sunflower','Sesame','Coconut','Sugarcane','Cotton','Jute','Mesta','Tea','Coffee','Rubber','Spice','Horticulture','Vegetable','Fruit','Mango','Banana','Apple','Grape','Onion','Potato','Tomato','Milk','Dairy','Animal Husbandry','Poultry','Meat','Egg','Fish','Fishery','Aquaculture','Shrimp','Prawn','Fertiliser','Fertilizer','Urea','DAP','NPK','Potash','Phosphate','Pesticide','Insecticide','Herbicide','Seed','Hybrid Seed','GM Seed','Genetically Modified','Bt Cotton','Bt Brinjal','High Yielding','HYV','Irrigation','Canal','Well','Tube Well','Drip','Sprinkler','Water Harvesting','Rainwater','Farm Pond','Check Dam','Soil Health','Soil Health Card','Soil Testing','Land Resource','Land Record','Digital Land Record','DILRMP','PM-KISAN','PM Kisan Samman Nidhi','Kisan Credit Card','KCC','PMFBY','Pradhan Mantri Fasal Bima','Crop Insurance','Weather Insurance','MSP','Minimum Support Price','Procurement','PDS','Public Distribution','Food Corporation','FCI','Food Subsidy','Buffer Stock','Open Market Sale','Warehousing','Cold Storage','Silo','Farm Gate','Mand','APMC','e-NAM','National Agriculture Market','Warehouse Receipt','Negotiable Warehouse','Receipt','FPO','Farmer Producer Organisation','Farmer Producer Company','Agri-Startup','Agri-Tech','Farm Mechanisation','Tractor','Harvester','Thresher','Combine','Power Tiller','Zero Tillage','Conservation Agriculture','Natural Farming','Organic Farming','Chemical-free','Pesticide-free','Integrated Pest Management','Integrated Nutrient Management','Crop Diversification','Multi-cropping','Inter-cropping','Crop Rotation','Fallow Land','Cultivable Land','Gross Cropped Area','Net Sown Area','Cropping Intensity','Yield','Productivity','Production','Output','Food Security','Nutritional Security','National Food Security','NFSA','Food Bill','Subsidy Reform','Agriculture Export','Agri-Export','Horticulture Export','Marine Product','Seafood','Organic Export','Geographical Indication','GI Tag','GI Tagged','Agriculture Infrastructure','Agri Infra Fund','Agriculture Marketing','Agriculture Reform','Farm Law','Farm Act','Farmers Protest','Agriculture Budget','Agriculture GDP','Agriculture Credit','Farm Loan','Loan Waiver','Debt Waiver','PM-KMY','Pradhan Mantri Kisan Maan Dhan','PM-AASHA','Price Support','Market Intervention','Pradhan Mantri Krishi Sinchai','PMKSY','Per Drop More Crop','Bharatnet','Digital Agriculture','Agri-Stack','Farmer Database','Krishi Vigyan Kendra','KVK','Agriculture University','ICAR','Indian Council of Agricultural','Agriculture Research','Extension Service','Farm Advisory','Weather Advisory','Mobile App for Farmers','Crop Loan','Kisan Call Centre','Soil Moisture','Evapotranspiration','Drought Proofing','Climate Resilient Agriculture']);
-                    _energyFeedData = _buildVirtualFeed(items, ['Energy','Power','Electricity','Coal','Oil','Petroleum','Natural Gas','LNG','Gas','Renewable','Solar','Solar Power','Solar Energy','Solar Panel','Solar Park','Solar Cell','Photovoltaic','Rooftop Solar','Wind','Wind Power','Wind Energy','Wind Farm','Turbine','Hydro','Hydro Power','Hydel','Hydroelectric','Small Hydro','Biomass','Biogas','Biofuel','Ethanol','Biodiesel','Waste to Energy','Energy from Waste','Tidal Power','Wave Energy','Geothermal','Hydrogen','Green Hydrogen','Grey Hydrogen','Blue Hydrogen','Hydrogen Fuel','Hydrogen Mission','National Hydrogen','Power Plant','Thermal Power','Thermal Plant','Coal Plant','Coal Power','Gas Plant','Gas Based','Diesel Generator','Captive Power','Cogeneration','Tri-generation','Electricity Generation','Electricity Production','Power Generation','Installed Capacity','Generation Capacity','Peak Demand','Electricity Demand','Power Shortage','Power Deficit','Power Surplus','Grid','National Grid','Smart Grid','Microgrid','Green Grid','Transmission','Power Transmission','Transmission Line','Tower','Substation','Distribution','Power Distribution','Discom','Electricity Distribution','Distribution Company','AT&C Loss','Aggregate Technical and Commercial','Loss','T&D Loss','Transmission and Distribution','Power Theft','Electricity Theft','Tariff','Electricity Tariff','Power Tariff','Tariff Hike','Tariff Revision','Power Purchase','PPA','Power Purchase Agreement','UDAY','Ujwal DISCOM Assurance','Yojana','Revamped Distribution','RDSS','Power Minister','Electricity Minister','Energy Minister','Power Secretary','Electricity Act','Energy Act','Energy Policy','National Energy Policy','Integrated Energy Policy','Energy Mix','Power Mix','Energy Transition','Decarbonisation','Net Zero','Carbon Neutral','Energy Efficiency','Energy Conservation','Energy Saving','Perform Achieve Trade','PAT Scheme','Star Rating','BEE','Bureau of Energy Efficiency','EC Act','Energy Conservation Act','Green Building','Energy Audit','Energy Management','Nuclear Power','Nuclear Energy','Atomic Energy','Nuclear Plant','Nuclear Reactor','Atomic Power','Uranium','Thorium','Nuclear Fuel','Spent Fuel','Nuclear Waste','Radiation Protection','NPCIL','Nuclear Power Corporation','BHAVINI','Fast Breeder','PFBR','Prototype Fast Breeder','Kudankulam','Tarapur','Kaiga','Rawatbhata','Kakrapar','Narora','Kalpakkam','Energy Security','Energy Independence','Strategic Reserve','Oil Reserve','Petroleum Reserve','Strategic Petroleum','SPR','Indian Oil','ONGC','Oil and Natural Gas','GAIL','Oil India','Coal India','Singareni','NLC','Neyveli Lignite','Power Grid','PFC','Power Finance','REC','Rural Electrification','Saubhagya','Pradhan Mantri Sahaj Bijli','Deendayal Upadhyaya Gram Jyoti','DDUGJY','Integrated Power Development','IPDS','Electric Vehicle','EV Charging','Charging Station','Fast Charging','Battery','Energy Storage','Battery Storage','Pumped Hydro','Pumped Storage','Clean Energy Fund','Green Energy Corridor','International Solar Alliance','ISA','Global Biofuel Alliance','100 GW Solar','450 GW Renewable','500 GW Renewable','Renewable Purchase Obligation','RPO','REC','Renewable Energy Certificate','Energy Certificate','Carbon Credit','Carbon Trading','Green Credit']);
-
-                    // Find unique dates, sorted descending
-                    var dateSet = {};
-                    items.forEach(function(i) { if (i.pubDate) dateSet[i.pubDate.slice(0,10)] = true; });
-                    var dates = Object.keys(dateSet).sort().reverse();
-                    var latestDate = dates[0] || '';
-
-                    // Set date picker to latest available date & auto-filter
-                    var picker = document.getElementById('pibDateFilter');
-                    if (picker && latestDate) picker.value = latestDate;
-
-                    // Build category filter bar
-                    var catMap = {};
-                    items.forEach(function(i) { if (i.category && i.category !== 'PIB Press Releases') catMap[i.category] = (catMap[i.category] || 0) + 1; });
-                    var cats = Object.keys(catMap).sort();
-                    var bar = document.getElementById('catFilterBar');
-                    if (cats.length > 0) {
-                      bar.style.display = 'flex';
-                      bar.innerHTML = '<span style="font-size:.72em;color:var(--text-muted);margin-right:4px;align-self:center">Category:</span>'
-                        + '<span class="cat-chip active" id="catChipAll" onclick="filterByCategory(this,\'\')">All</span>'
-                        + cats.map(function(c) { return '<span class="cat-chip" onclick="filterByCategory(this,\'' + c.replace(/'/g,'') + '\')">' + c.replace(/&/g,'&amp;') + '</span>'; }).join('');
-                    }
-                    // Build region filter bar (all 36 states/UTs)
-                    var regionMap = {};
-                    items.forEach(function(i) { if (i.region) regionMap[i.region] = (regionMap[i.region] || 0) + 1; });
-                    var ALL_REGIONS = ['Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Andaman & Nicobar','Chandigarh','Dadra & Nagar Haveli and Daman & Diu','Delhi','Jammu & Kashmir','Ladakh','Lakshadweep','Puducherry'];
-                    var rbar = document.getElementById('regionFilterBar');
-                    rbar.style.display = 'flex';
-                    rbar.innerHTML = '<span style="font-size:.72em;color:var(--text-muted);margin-right:4px;align-self:center">State/UT:</span>'
-                      + '<span class="cat-chip active" id="regionChipAll" onclick="filterByRegion(this,\'\')">All</span>'
-                      + ALL_REGIONS.map(function(r) {
-                          var count = regionMap[r] || 0;
-                          return '<span class="cat-chip" onclick="filterByRegion(this,\'' + r.replace(/'/g,'') + '\')" style="' + (count === 0 ? 'opacity:.4' : '') + '">' + r.replace(/&/g,'&amp;') + '</span>';
-                        }).join('');
-
-                    // Show filtered by latest date
-                    var forDate = items.filter(function(i) { return i.pubDate && i.pubDate.slice(0,10) === latestDate; });
-                    renderPibFeed(forDate.slice(0, 30));
-
-                    // Show available date range
-                    var info = document.getElementById('pibFilterInfo');
-                    if (info && dates.length > 1) info.textContent = dates[0] + ' to ' + dates[dates.length-1] + ' (' + dates.length + ' days, ' + items.length + ' items)';
-
-                    section.style.display = 'block';
-                })
-                .catch(function() {});
-        }
-
-        function renderPibFeed(items) {
-            var list = document.getElementById('pibFeedList');
-            var info = document.getElementById('pibFilterInfo');
-            if (items.length === 0) { list.innerHTML = '<div style="font-size:.8em;color:var(--text-muted);text-align:center;padding:12px">No PIB news for this date</div>'; return; }
-            var today = new Date().toISOString().slice(0,10);
-            var html = '';
-            items.forEach(function(item) {
-                var date = item.pubDate ? item.pubDate.slice(0,10) : '';
-                var isToday = date === today;
-                var dateLabel = isToday ? '<span style="color:var(--emerald);font-weight:700">Today</span>' : date;
-                html += '<a href="' + item.link + '" target="_blank" rel="noopener" style="display:block;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.02);text-decoration:none;transition:all .15s">'
-                    + '<div style="display:flex;gap:8px;align-items:flex-start">'
-                    + '<span style="font-size:.7em;color:var(--text-muted);white-space:nowrap;margin-top:1px">' + dateLabel + '</span>'
-                    + '<div style="flex:1;min-width:0">'
-                    + (item.category && item.category !== 'PIB Press Releases' ? '<span style="display:inline-block;font-size:.6em;padding:0 6px;border-radius:3px;background:rgba(167,139,250,.15);color:var(--purple);margin-bottom:3px">' + item.category.replace(/&/g,'&amp;') + '</span>' : '')
-                    + '<div style="font-size:.82em;font-weight:600;color:var(--text);margin-bottom:2px;line-height:1.3">' + (item.title || '').replace(/</g,'&lt;') + '</div>'
-                    + '</div>'
-                    + '</div>'
-                    + '</a>';
-            });
-            list.innerHTML = html;
-            if (info) info.textContent = 'Showing ' + items.length + ' items for ' + items[0].pubDate.slice(0,10);
-        }
-
-        var _activeCatFilter = '';
-        var _activeRegionFilter = '';
-
-        function applyFilters() {
-            var dateVal = document.getElementById('pibDateFilter').value;
-            if (!dateVal || !_pibFeedData) return [];
-            var filtered = _pibFeedData.filter(function(item) {
-                return item.pubDate && item.pubDate.slice(0,10) === dateVal;
-            });
-            if (_activeCatFilter) filtered = filtered.filter(function(i) { return i.category === _activeCatFilter; });
-            if (_activeRegionFilter) filtered = filtered.filter(function(i) { return i.region === _activeRegionFilter; });
-            return filtered;
-        }
-
-        function filterPibFeed() {
-            renderPibFeed(applyFilters().slice(0, 30));
-        }
-
-        function filterByCategory(el, cat) {
-            var chips = document.querySelectorAll('#catFilterBar .cat-chip');
-            chips.forEach(function(c) { c.classList.remove('active'); });
-            el.classList.add('active');
-            _activeCatFilter = cat || '';
-            filterPibFeed();
-        }
-
-        function filterByRegion(el, region) {
-            var chips = document.querySelectorAll('#regionFilterBar .cat-chip');
-            chips.forEach(function(c) { c.classList.remove('active'); });
-            el.classList.add('active');
-            _activeRegionFilter = region || '';
-            filterPibFeed();
-        }
-
-        function resetPibFilter() {
-            var picker = document.getElementById('pibDateFilter');
-            if (_pibFeedData) {
-                var latestDate = '';
-                _pibFeedData.forEach(function(i) { if (i.pubDate) { var d = i.pubDate.slice(0,10); if (d > latestDate) latestDate = d; } });
-                if (picker && latestDate) picker.value = latestDate;
-                // Reset all filters
-                _activeCatFilter = '';
-                _activeRegionFilter = '';
-                document.querySelectorAll('#catFilterBar .cat-chip, #regionFilterBar .cat-chip').forEach(function(c) { c.classList.remove('active'); });
-                var allCat = document.getElementById('catChipAll');
-                if (allCat) allCat.classList.add('active');
-                var allReg = document.getElementById('regionChipAll');
-                if (allReg) allReg.classList.add('active');
-                filterPibFeed();
-            }
-        }
 
         function backToMenu() {
             if (state.answered || state.idx > 0) {
@@ -6399,6 +5875,9 @@ GK_GENERATORS.pib = function() {
             document.getElementById('welcome').style.display = 'block';
             document.getElementById('qArea').classList.remove('active');
             document.getElementById('scoreBar').classList.remove('show');
+            document.getElementById('regionFilterRow').style.display = 'none';
+            document.getElementById('timeFilterRow').style.display = 'none';
+            document.getElementById('customDateRange').style.display = 'none';
             state.questions = [];
             state.idx = 0;
             try { localStorage.removeItem(SESSION_KEY); } catch(e) {}
@@ -6609,19 +6088,6 @@ GK_GENERATORS.pib = function() {
 
             _buildSections(data);
             _buildProgress(data);
-            // Inject current affairs news from feed (retry if feed not yet loaded)
-            var _tryInjectCA = function(retries) {
-                var caItems = _getFeedForCategory(catId);
-                if (caItems) {
-                    // Push feed items into all study views
-                    _injectStudyCurrentAffairs(caItems, catId);
-                    _injectStudyFlashcards(caItems, data);
-                    _injectStudySummary(caItems, data);
-                    return;
-                }
-                if (retries > 0) setTimeout(function() { _tryInjectCA(retries - 1); }, 500);
-            };
-            _tryInjectCA(5);
             _setView('notes');
             _buildFC(data);
             _buildSummary(data);
@@ -6641,31 +6107,7 @@ GK_GENERATORS.pib = function() {
                 }).join('');
         }
 
-        function _injectStudyFlashcards(items, data) {
-            items.slice(0, 8).forEach(function(it) {
-                var t = it.title || '';
-                // Extract scheme/entity name as flashcard Q
-                var schemeM = t.match(/((?:Pradhan Mantri|PM|National|Bharat|Ayushman|Jan|Digital|Smart|Skill|Swachh)\s+[\w\s]{2,40}?(?:Yojana|Scheme|Mission|Abhiyan|Programme|Policy|Vision|Niryat|Rozgar|Kisan|Awas|Bank|Suraksha|Shakti|Seva|Sathi))/i);
-                if (schemeM) {
-                    var after = t.substring(t.indexOf(schemeM[1]) + schemeM[1].length).replace(/^\s+/, '').replace(/['']/g, '');
-                    data.flashcards.push({ q: 'What recent update on ' + schemeM[1].trim() + '?', a: after.length > 80 ? after.substring(0, 77) + '...' : after });
-                    return;
-                }
-                var numM = t.match(/(?:Rs|₹|USD)?\s*[\d,]+(?:\s*(?:crore|lakh|million|billion|thousand))?/i);
-                if (numM) {
-                    data.flashcards.push({ q: t.replace(numM[0], '_____').replace(/['']/g, ''), a: numM[0].trim() });
-                    return;
-                }
-                data.flashcards.push({ q: t.substring(0, 60).replace(/['']/g, '') + '...', a: t.substring(60, 120).replace(/['']/g, '') || 'Key development' });
-            });
-        }
 
-        function _injectStudySummary(items, data) {
-            items.slice(0, 5).forEach(function(it) {
-                var s = _formatStudyBullet(it, currentStudyCat).replace(/<[^>]+>/g, '');
-                data.summary.push('📰 ' + s);
-            });
-        }
 
         function _buildSections(data) {
             var nav = document.getElementById('studySecNav');
@@ -7064,7 +6506,7 @@ GK_GENERATORS.pib = function() {
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
-            document.getElementById('pibHeaderBtn').style.display = 'inline-block';
+
             document.getElementById('timedQuizOptions').style.display = 'none';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             document.getElementById('qText').innerHTML = 'Loading questions...';
@@ -7377,15 +6819,18 @@ GK_GENERATORS.pib = function() {
             state.infinite = false;
             state.restartFn = function() { startStaticGk(); };
             document.getElementById('scoreLabel').textContent = 'topics';
+            document.getElementById('regionFilterRow').style.display = 'none';
+            document.getElementById('timeFilterRow').style.display = 'none';
+            document.getElementById('customDateRange').style.display = 'none';
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
-            document.getElementById('pibHeaderBtn').style.display = 'none';
+
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             document.getElementById('qText').innerHTML = 'Loading Static GK...';
             document.getElementById('optGrid').innerHTML = '';
-            var allCats = Object.keys(GK_GENERATORS).filter(function(k) { return typeof GK_GENERATORS[k] === 'function' && k !== 'pib' && k !== 'sebi' && k !== 'scjudgments' && k !== 'rbi' && k !== 'isro' && k !== 'mea'; });
+            var allCats = Object.keys(GK_GENERATORS).filter(function(k) { return typeof GK_GENERATORS[k] === 'function' && k !== 'sebi' && k !== 'scjudgments' && k !== 'rbi' && k !== 'isro' && k !== 'mea'; });
             var added = 0;
             for (var ci = 0; ci < allCats.length && added < 400; ci++) {
                 try {
@@ -7414,6 +6859,13 @@ GK_GENERATORS.pib = function() {
             state.infinite = true;
             state.restartFn = function() { startCombinedQuiz(count, label); };
             state.staticCats = Object.keys(GK_GENERATORS);
+            state.regionFilter = 'all';
+            document.getElementById('regionFilterRow').style.display = 'flex';
+            document.querySelectorAll('#regionFilterRow .region-chip').forEach(function(el) { el.classList.toggle('active', el.getAttribute('data-val') === 'all'); });
+            state.timeFilter = 'all';
+            document.getElementById('timeFilterRow').style.display = 'flex';
+            document.querySelectorAll('#timeFilterRow .period-chip').forEach(function(el) { el.classList.toggle('active', el.getAttribute('data-val') === 'all'); });
+            document.getElementById('customDateRange').style.display = 'none';
             document.getElementById('scoreLabel').textContent = 'learned';
             
             // Ensure wiki prefetch is running (reset & retry)
@@ -7424,7 +6876,7 @@ GK_GENERATORS.pib = function() {
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
-            document.getElementById('pibHeaderBtn').style.display = 'inline-block';
+
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             document.getElementById('qText').innerHTML = 'Loading Knowledge Booster...';
             document.getElementById('optGrid').innerHTML = '';
@@ -7478,6 +6930,137 @@ GK_GENERATORS.pib = function() {
             }
         }
 
+        function _isIndiaRelated(q) {
+            var text = ((q.q || '') + ' ' + (q.a || '') + ' ' + (q._wikiCat || '') + ' ' + (q.fact || '')).toLowerCase();
+            var indiaPatterns = [
+                /\bindia\b/, /\bindian\b/, /\bbharat\b/, /\bhindu\b/, /\bdelhi\b/, /\bmumbai\b/,
+                /\bkolkata\b/, /\bchennai\b/, /\bbengaluru\b/, /\bhyderabad\b/, /\bahmedabad\b/,
+                /\bpune\b/, /\bjaipur\b/, /\blucknow\b/, /\bpatna\b/, /\bbhopal\b/, /\bchandigarh\b/,
+                /\bisro\b/, /\bchandrayaan\b/, /\bmangalyaan\b/, /\bgaganyaan\b/, /\bnavic\b/,
+                /\birnss\b/, /\bdrdo\b/, /\bhimalaya/, /\bganges\b/, /\bgangotri\b/, /\byamuna\b/,
+                /\bbrahmaputra\b/, /\bgodavari\b/, /\bkrishna\b/, /\bkaveri\b/, /\bnarmada\b/,
+                /\bindus\b/, /\bvedic\b/, /\bmaurya\b/, /\bgupta\b/, /\bmughal\b/, /\bmaratha\b/,
+                /\bsikh\b/, /\brajput\b/, /\bdelhi sultanate\b/, /\bbritish raj\b/, /\bswaraj\b/,
+                /\bsatyagraha\b/, /\bquit india\b/, /\bjallianwala\b/, /\bgandhi\b/, /\bnehru\b/,
+                /\bpatel\b/, /\bambedkar\b/, /\bbose\b/, /\btata\b/, /\bbirla\b/, /\babdul kalam\b/,
+                /\braman\b/, /\btagore\b/, /\bteresa\b/, /\biit\b/, /\biim\b/, /\baiims\b/,
+                /\bniti aayog\b/, /\blok sabha\b/, /\brajya sabha\b/, /\bparliament of india\b/,
+                /\bsupreme court of india\b/, /\belection commission\b/, /\bpresident of india\b/,
+                /\bprime minister of india\b/, /\bchief minister\b/, /\bgovernor\b/,
+                /\bsebi\b/, /\brbi\b/, /\bgst\b/, /\baadhaar\b/, /\bupi\b/, /\bdigital india\b/,
+                /\bmake in india\b/, /\bskill india\b/, /\bswachh bharat\b/, /\bayushman\b/,
+                /\bpm-kisan\b/, /\bpmjay\b/, /\bjal jeevan\b/, /\bujjwala\b/, /\bharass\b/,
+                /\bsaubhagya\b/, /\bstatue of unity\b/, /\bgateway of india\b/, /\btaj mahal\b/,
+                /\bred fort\b/, /\bqutub\b/, /\bhawa mahal\b/, /\bcharminar\b/, /\bgolden temple\b/,
+                /\bpadma shri\b/, /\bpadma bhushan\b/, /\bpadma vibhushan\b/, /\bbharat ratna\b/,
+                /\bparam veer chakra\b/, /\bnational flag\b/, /\bnational anthem\b/,
+                /\bjana gana mana\b/, /\bvande mataram\b/, /\birct\b/, /\bchennai super\b/,
+                /\bmumbai indian\b/, /\bindian premier league\b/, /\bipl\b/, /\bindian cricket\b/
+            ];
+            for (var pi = 0; pi < indiaPatterns.length; pi++) {
+                if (indiaPatterns[pi].test(text)) return true;
+            }
+            return false;
+        }
+
+        function setRegionFilter(mode) {
+            state.regionFilter = mode;
+            document.querySelectorAll('#regionFilterRow .region-chip').forEach(function(el) { el.classList.toggle('active', el.getAttribute('data-val') === mode); });
+            if (state.questions.length === 0) return;
+            // Rebuild question pool to match filter
+            state.questions = state.questions.filter(function(q) {
+                if (mode === 'all') return true;
+                var isIndia = _isIndiaRelated(q);
+                return mode === 'india' ? isIndia : !isIndia;
+            });
+            state.idx = 0;
+            if (state.questions.length === 0) {
+                generateMixedQuestions(20);
+            }
+            showQuestion();
+        }
+
+        function _getQuestionYear(q) {
+            if (q.pubDate && q.pubDate !== '0000-01-01T00:00:00.000Z') {
+                var y = parseInt(q.pubDate.slice(0,4), 10);
+                if (!isNaN(y) && y > 1900) return y;
+            }
+            if (q._pubDate) {
+                var y = parseInt(q._pubDate.slice(0,4), 10);
+                if (!isNaN(y) && y > 1900) return y;
+            }
+            var hint = (q.hint || '') + ' ' + (q.fact || '') + ' ' + (q.q || '');
+            var ym = hint.match(/on this day[:\s]+(\d{4})/i);
+            if (ym) return parseInt(ym[1], 10);
+            var birthMatch = hint.match(/(?:born|birth)\D{1,20}?(\d{4})/i);
+            if (birthMatch) return parseInt(birthMatch[1], 10);
+            var yearMatch = hint.match(/(?:in|since|before|around|year)\s+(\d{4})/i);
+            if (yearMatch) { var y = parseInt(yearMatch[1], 10); if (y > 1000 && y < 2100) return y; }
+            return null;
+        }
+
+        function _matchesTimeFilter(q, mode) {
+            if (mode === 'all') return true;
+            var y = _getQuestionYear(q);
+            var now = new Date();
+            var curY = now.getFullYear();
+            if (mode === 'year') return y !== null && y === curY;
+            if (mode === 'lastyear') return y !== null && y === curY - 1;
+            if (mode === 'recent') {
+                if (y === null) return false;
+                if (y < curY - 1) return false;
+                if (q.pubDate && q.pubDate !== '0000-01-01T00:00:00.000Z') {
+                    var d = new Date(q.pubDate);
+                    var sixMoAgo = new Date(); sixMoAgo.setMonth(sixMoAgo.getMonth() - 6);
+                    return d >= sixMoAgo;
+                }
+                return y >= curY - 1;
+            }
+            if (mode === 'custom') {
+                var fromEl = document.getElementById('timeFrom');
+                var toEl = document.getElementById('timeTo');
+                if (!fromEl || !toEl || !fromEl.value || !toEl.value) return true;
+                if (y === null) return false;
+                var fromY = parseInt(fromEl.value.slice(0,4), 10);
+                var toY = parseInt(toEl.value.slice(0,4), 10);
+                if (isNaN(fromY) || isNaN(toY)) return true;
+                return y >= fromY && y <= toY;
+            }
+            return true;
+        }
+
+        function setTimeFilter(mode) {
+            state.timeFilter = mode;
+            document.querySelectorAll('#timeFilterRow .period-chip').forEach(function(el) { el.classList.toggle('active', el.getAttribute('data-val') === mode); });
+            document.getElementById('customDateRange').style.display = mode === 'custom' ? 'inline-flex' : 'none';
+            if (state.questions.length === 0) return;
+            // Apply time filter to current questions
+            if (mode === 'all') {
+                state.idx = 0;
+                showQuestion();
+                return;
+            }
+            var filtered = state.questions.filter(function(q) { return _matchesTimeFilter(q, mode); });
+            if (filtered.length > 0) {
+                state.questions = filtered;
+                state.idx = 0;
+                showQuestion();
+            } else {
+                generateMixedQuestions(20);
+                state.questions = state.questions.filter(function(q) { return _matchesTimeFilter(q, mode); });
+                state.idx = 0;
+                if (state.questions.length > 0) showQuestion();
+            }
+        }
+
+        var _timeFilterTimer = null;
+        function _applyCustomTimeFilter() {
+            if (_timeFilterTimer) clearTimeout(_timeFilterTimer);
+            _timeFilterTimer = setTimeout(function() {
+                if (state.timeFilter === 'custom') setTimeFilter('custom');
+            }, 400);
+        }
+
         function generateMixedQuestions(count) {
             var sources = ['wiki_pool', 'wiki_current_affairs'];
             var added = 0;
@@ -7502,6 +7085,13 @@ GK_GENERATORS.pib = function() {
                     if (state.questions[j].a === q.a || (state.questions[j].q === q.q)) { dup = true; break; }
                 }
                 if (dup) continue;
+                if (state.timeFilter && state.timeFilter !== 'all') {
+                    if (!_matchesTimeFilter(q, state.timeFilter)) continue;
+                }
+                if (state.regionFilter && state.regionFilter !== 'all') {
+                    var isIndia = _isIndiaRelated(q);
+                    if ((state.regionFilter === 'india' && !isIndia) || (state.regionFilter === 'world' && isIndia)) continue;
+                }
                 state.questions.push(q);
                 added++;
             }
@@ -7614,15 +7204,8 @@ GK_GENERATORS.pib = function() {
             
             for (var i = 0; i < 8; i++) {
                 var q = null;
-                if (i < 6) {
-                    if (gen2 && Math.random() < 0.7) { try { q = gen2(); } catch(e) {} }
-                    if (!q && gen1) { try { q = gen1(); } catch(e) {} }
-                } else {
-                    if (_pibFeedData && _pibFeedData.length > 3) {
-                        var caQ = _buildVirtualFeed(_pibFeedData, []);
-                        if (caQ.length > 0) q = pick(caQ);
-                    }
-                }
+                if (gen2 && Math.random() < 0.7) { try { q = gen2(); } catch(e) {} }
+                if (!q && gen1) { try { q = gen1(); } catch(e) {} }
                 if (q) {
                     q.opts = q.opts || buildOptions(q.a);
                     if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
@@ -7635,7 +7218,7 @@ GK_GENERATORS.pib = function() {
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
-            document.getElementById('pibHeaderBtn').style.display = 'inline-block';
+
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             showQuestion();
         }
