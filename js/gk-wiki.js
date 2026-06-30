@@ -1573,8 +1573,8 @@ WIKI.searchQuestion = function() {
 WIKI.onThisDay = function(dateStr) {
   var parts = dateStr.split('-');
   if (parts.length !== 3) return Promise.resolve([]);
-  var month = parseInt(parts[1], 10);
-  var day = parseInt(parts[2], 10);
+  var month = parts[1];
+  var day = parts[2];
   return fetch('https://en.wikipedia.org/api/rest_v1/feed/onthisday/all/' + month + '/' + day)
     .then(function(r) { if (!r.ok) throw new Error('onThisDay HTTP ' + r.status); return r.json(); })
     .then(function(data) {
