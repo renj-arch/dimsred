@@ -204,74 +204,31 @@
             <div class="welcome-card" style="margin-bottom:12px">
                 <div class="icon">📖</div>
                 <div class="title">Infinite GK Quiz Engine</div>
-                <div class="desc">26 GK categories + PIB current affairs with date range. Every question is procedurally generated from verified static data.</div>
+                <div class="desc">Pure GK from the entire Wikipedia corpus — auto-advances every 4 seconds. Pause anytime.</div>
             </div>
 
-            <!-- Quiz Mode Selector + Start -->
-            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;justify-content:center">
-                <button class="action-btn secondary" onclick="document.getElementById('timedQuizOptions').style.display=document.getElementById('timedQuizOptions').style.display==='none'?'block':'none'" style="flex:1;min-width:130px;padding:12px">⏱️ Date Range</button>
-                <button class="action-btn secondary" style="flex:1;min-width:130px;padding:12px;background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.2)" onclick="startCombinedQuiz(15, '🎯 Mega Quiz')">🎯 Mega Quiz</button>
+            <!-- Mega GK: the only quiz mode -->
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;justify-content:center;flex-direction:column">
+                <button class="action-btn secondary" style="padding:16px;font-size:1.05em;background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.2)" onclick="startCombinedQuiz(15, '🎯 Mega GK')">🎯 Mega GK — Start Infinite GK Quiz</button>
             </div>
-            <div id="timedQuizOptions" style="display:none;margin-bottom:14px;padding:12px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);text-align:center">
-                <div style="font-size:.82em;font-weight:600;margin-bottom:10px;color:var(--text-sec)">Choose mix of static GK + current affairs</div>
-                <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
-                    <button class="action-btn secondary" onclick="startTimedQuizWith(1)" style="flex:1;min-width:60px;padding:10px">📅 Today</button>
-                    <button class="action-btn secondary" onclick="startTimedQuizWith(7)" style="flex:1;min-width:60px;padding:10px">📅 7 days</button>
-                    <button class="action-btn secondary" onclick="startTimedQuizWith(30)" style="flex:1;min-width:60px;padding:10px">📅 30 days</button>
-                    <button class="action-btn secondary" onclick="startTimedQuizWith(90)" style="flex:1;min-width:60px;padding:10px">📅 90 days</button>
-                    <button class="action-btn secondary" onclick="startTimedQuizWith(365)" style="flex:1;min-width:60px;padding:10px">📅 1 year</button>
+
+            <p class="gk-intro">Powered by live Wikipedia data — random articles, categories, search, current events, on-this-day history. Every question is procedurally generated on the fly.</p>
+
+            <!-- PIB quiz panel -->
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;justify-content:center">
+                <button class="action-btn secondary" onclick="window.showPibQuizPanel()" style="flex:1;min-width:160px;padding:12px">📡 PIB Current Affairs Quiz</button>
+            </div>
+            <div id="pibQuizPanel" style="display:none;margin-bottom:16px;padding:14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);text-align:center">
+                <div style="font-size:.85em;font-weight:600;margin-bottom:10px;color:var(--text-sec)">PIB Headline Quiz — pick a date range</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center">
+                    <input type="date" id="pibQuizStart" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.8em;font-family:inherit">
+                    <span style="font-size:.78em;color:var(--text-muted)">to</span>
+                    <input type="date" id="pibQuizEnd" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.8em;font-family:inherit">
+                    <button class="action-btn primary" onclick="startPibQuiz()" style="padding:8px 20px;font-size:.82em">Start Quiz</button>
                 </div>
-                <div style="margin-top:10px;display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap">
-                    <span style="font-size:.75em;color:var(--text-muted)">Custom range:</span>
-                    <input type="date" id="quizStartDate" style="padding:5px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.75em;font-family:inherit">
-                    <span style="font-size:.75em;color:var(--text-muted)">→</span>
-                    <input type="date" id="quizEndDate" style="padding:5px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.75em;font-family:inherit">
-                    <button class="action-btn primary" onclick="startCustomDateQuiz()" style="padding:6px 12px;font-size:.78em">Go</button>
-                </div>
-                <div style="font-size:.65em;color:var(--text-muted);margin-top:8px">Sources: 26 GK categories, PIB news feed</div>
+                <div style="font-size:.7em;color:var(--text-muted);margin-top:8px">Shows a PIB headline — identify which sector/ministry it belongs to (Defence, Economy, Health, etc.)</div>
             </div>
-
-            <div style="margin:12px 0 6px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
-                <button class="action-btn secondary" id="sebiQuizBtn" onclick="startFeedQuiz('sebi','SEBI Quiz')" style="flex:1;min-width:140px;padding:12px">📊 SEBI Quiz</button>
-                <button class="action-btn secondary" id="scQuizBtn" onclick="startFeedQuiz('scjudgments','SC Judgments Quiz')" style="flex:1;min-width:140px;padding:12px">⚖️ SC Judgments Quiz</button>
-            </div>
-            <div style="margin:0 0 6px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
-                <button class="action-btn secondary" id="isroQuizBtn" onclick="startFeedQuiz('isro','ISRO Quiz')" style="flex:1;min-width:140px;padding:12px">🛰️ ISRO Quiz</button>
-                <button class="action-btn secondary" id="meaQuizBtn" onclick="startFeedQuiz('mea','MEA Quiz')" style="flex:1;min-width:140px;padding:12px">🌍 MEA Quiz</button>
-            </div>
-            <div style="margin:0 0 6px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
-                <button class="action-btn secondary" id="rbiQuizBtn" onclick="startFeedQuiz('rbi','RBI Quiz')" style="flex:1;min-width:140px;padding:12px">🏦 RBI Quiz</button>
-                <button class="action-btn secondary" id="econQuizBtn" onclick="startFeedQuiz('economics','Economics Quiz')" style="flex:1;min-width:140px;padding:12px">📈 Economics Quiz</button>
-            </div>
-            <div style="margin:0 0 6px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
-                <button class="action-btn secondary" id="sciTechQuizBtn" onclick="startFeedQuiz('sciTech','Science & Tech Quiz')" style="flex:1;min-width:140px;padding:12px">🔬 Sci-Tech Quiz</button>
-                <button class="action-btn secondary" id="healthQuizBtn" onclick="startFeedQuiz('health','Health Quiz')" style="flex:1;min-width:140px;padding:12px">🏥 Health Quiz</button>
-            </div>
-            <div style="margin:0 0 6px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
-                <button class="action-btn secondary" id="educationQuizBtn" onclick="startFeedQuiz('education','Education Quiz')" style="flex:1;min-width:140px;padding:12px">📚 Education Quiz</button>
-                <button class="action-btn secondary" id="agriQuizBtn" onclick="startFeedQuiz('agriculture','Agriculture Quiz')" style="flex:1;min-width:140px;padding:12px">🌾 Agriculture Quiz</button>
-                <button class="action-btn secondary" id="energyQuizBtn" onclick="startFeedQuiz('energy','Energy Quiz')" style="flex:1;min-width:140px;padding:12px">⚡ Energy Quiz</button>
-            </div>
-
-            <p class="gk-intro">GK questions across 26 categories + PIB current affairs. Mix quiz, date range, or pick a category below. Every question is drawn from a verified static database of 1,100+ items.</p>
         </div>
-
-        <!-- PIB quiz panel — persistent outside welcome so it's always accessible -->
-        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;justify-content:center">
-            <button class="action-btn secondary" onclick="window.showPibQuizPanel()" style="flex:1;min-width:160px;padding:12px">📡 PIB Current Affairs Quiz</button>
-        </div>
-        <div id="pibQuizPanel" style="display:none;margin-bottom:16px;padding:14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);text-align:center">
-            <div style="font-size:.85em;font-weight:600;margin-bottom:10px;color:var(--text-sec)">PIB Headline Quiz — pick a date range</div>
-            <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center">
-                <input type="date" id="pibQuizStart" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.8em;font-family:inherit">
-                <span style="font-size:.78em;color:var(--text-muted)">to</span>
-                <input type="date" id="pibQuizEnd" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.8em;font-family:inherit">
-                <button class="action-btn primary" onclick="startPibQuiz()" style="padding:8px 20px;font-size:.82em">Start Quiz</button>
-            </div>
-            <div style="font-size:.7em;color:var(--text-muted);margin-top:8px">Shows a PIB headline — identify which sector/ministry it belongs to (Defence, Economy, Health, etc.)</div>
-        </div>
-
-        <div class="cat-grid" id="catGrid"></div>
 
         <!-- PIB News Feed -->
         <div id="pibFeedSection" style="display:none;margin-top:24px;padding:20px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card)">
@@ -307,12 +264,15 @@
                     <div class="hint-text" id="hintText"></div>
                 </div>
                 <div class="q-opt-grid" id="optGrid"></div>
-                <div style="font-size:.65em;color:var(--text-muted);margin-top:8px;text-align:center"><span class="kb-hint">Keys: <kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">1</kbd>-<kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">4</kbd> answer · <kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">→</kbd> next</span> <span class="swipe-hint" style="display:none">swipe ← next</span></div>
+                <div style="font-size:.65em;color:var(--text-muted);margin-top:8px;text-align:center"><span class="kb-hint">Keys: <kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">1</kbd>-<kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">4</kbd> answer · <kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">→</kbd> next/unpause · <kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">⏸</kbd> pause</span> <span class="swipe-hint" style="display:none">swipe ← next</span></div>
             </div>
             <div class="result-flash" id="resultFlash"></div>
             <div id="intuitionDisplay" style="font-size:.78em;color:var(--amber);margin-top:4px;padding:10px 12px;border-radius:8px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);display:none;line-height:1.6;text-align:left"><span style="font-weight:700;color:var(--amber);display:block;margin-bottom:3px">⚡ Quick Fact</span><span id="intuitionText"></span></div>
-            <button class="action-btn primary hidden" id="nextBtn" onclick="nextQuestion()">Next <span style="font-size:.7em;opacity:.6">→</span></button>
-            <button class="action-btn secondary" id="backBtn" onclick="backToMenu()">← Back to Categories</button>
+            <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-top:8px">
+                <button class="action-btn primary hidden" id="nextBtn" onclick="nextQuestion()">Next <span id="nextCountdown" style="font-size:.7em;opacity:.6">→</span></button>
+                <button class="action-btn secondary hidden" id="pauseBtn" onclick="toggleAutoPlay()" style="font-size:.85em;padding:8px 14px" title="Pause auto-advance">⏸</button>
+            </div>
+            <button class="action-btn secondary" id="backBtn" onclick="backToMenu()">← Back to Menu</button>
         </div>
 
         <!-- Study View -->
@@ -5473,7 +5433,7 @@ GK_GENERATORS.pib = function() {
             if (/^(list of|types of|examples of|categories of|classification of)/i.test((q.q || '').trim())) return true;
             return false;
         }
-        var state = { cat: null, questions: [], idx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null };
+        var state = { cat: null, questions: [], idx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null, autoTimer: null, autoPaused: false };
         var SESSION_KEY = 'vlym_quiz_state';
 
         function saveQuizSession() {
@@ -5547,6 +5507,7 @@ GK_GENERATORS.pib = function() {
                 e.preventDefault();
             }
             if (e.key === 'ArrowRight') {
+                if (state.autoPaused) { toggleAutoPlay(); }
                 var nextBtn = document.getElementById('nextBtn');
                 if (!nextBtn.classList.contains('hidden')) nextBtn.click();
                 e.preventDefault();
@@ -5759,12 +5720,13 @@ GK_GENERATORS.pib = function() {
             energy: ['Energy','Power','Electricity','Coal','Oil','Petroleum','Natural Gas','LNG','CNG','Renewable Energy','Solar Energy','Solar Power','Solar Panel','Solar Park','Rooftop Solar','Solar Cell','Photovoltaic','Wind Energy','Wind Power','Wind Farm','Wind Turbine','Hydro Power','Hydel','Hydroelectric','Small Hydro','Pumped Storage','Biomass','Biogas','Compressed Biogas','CBG','Biofuel','Ethanol','Ethanol Blending','Biodiesel','SAF','Sustainable Aviation Fuel','Waste to Energy','Tidal Energy','Wave Energy','Geothermal Energy','Geothermal','Green Hydrogen','Grey Hydrogen','Blue Hydrogen','Electrolyser','Fuel Cell','Hydrogen Fuel Cell','National Hydrogen Mission','Green Ammonia','Thermal Power','Coal Power','Supercritical','Ultra Supercritical','Gas Power','Electricity Grid','Smart Grid','Microgrid','Transmission Line','Power Transmission','Substation','Distribution','Discom','AT&C Loss','T&D Loss','Smart Meter','Net Metering','Electricity Tariff','PPA','Power Purchase Agreement','UDAY','RDSS','Electricity Act','Energy Conservation Act','Energy Efficiency','Perform Achieve Trade','PAT Scheme','BEE','Bureau of Energy Efficiency','Energy Audit','Star Rating','Green Building','Energy Mix','Energy Transition','Energy Security','Strategic Oil Reserve','Strategic Petroleum Reserve','IOCL','Indian Oil','ONGC','GAIL','Oil India','BPCL','HPCL','Coal India','Singareni','NLC','Refinery','KG Basin','Bombay High','Coal Block','Coal Auction','Power Minister','MNRE','Ministry of New and Renewable Energy','ISA','International Solar Alliance','450 GW Renewable','500 GW Renewable','RPO','Renewable Purchase Obligation','REC','Renewable Energy Certificate','Carbon Credit','Carbon Trading','Green Credit','PLI for Solar','PLI for Battery','Solar Module','Solar Cell','Ingot','Wafer','Polysilicon','Energy Storage','Battery Energy Storage','BESS','Lithium-ion','Electric Vehicle','EV Charging','Charging Infrastructure','FAME','Bharat Stage','BS6','Emission Norm']
         };
         function showQuestion() {
+            stopAutoTimer();
+            document.getElementById('pauseBtn').classList.add('hidden');
+            state.autoPaused = false;
             if (state.idx >= state.questions.length) {
                 if (state.infinite) {
-                    // Fire off async historical fetches too — any day, any year, BC to CE
                     if (typeof _fetchRandomHistoricalOnThisDay !== 'undefined') {
                         _fetchRandomHistoricalOnThisDay();
-                        setTimeout(function() { _fetchRandomHistoricalOnThisDay(); }, 200);
                     }
                     generateMixedQuestions(10);
                     if (state.idx >= state.questions.length) {
@@ -5882,27 +5844,62 @@ GK_GENERATORS.pib = function() {
                 document.getElementById('hintText').classList.toggle('show');
             };
             setTimeout(function() {
-                document.getElementById('nextBtn').classList.remove('hidden');
+                var nextBtn = document.getElementById('nextBtn');
+                nextBtn.classList.remove('hidden');
+                document.getElementById('pauseBtn').classList.remove('hidden');
+                state.autoPaused = false;
+                startAutoTimer();
             }, 600);
         }
 
+        function startAutoTimer() {
+            if (state.autoTimer) clearInterval(state.autoTimer);
+            var remaining = 4;
+            var cd = document.getElementById('nextCountdown');
+            cd.textContent = '(' + remaining + 's)';
+            state.autoTimer = setInterval(function() {
+                if (state.autoPaused) return;
+                remaining--;
+                if (remaining <= 0) {
+                    clearInterval(state.autoTimer);
+                    state.autoTimer = null;
+                    cd.textContent = '→';
+                    var nextBtn = document.getElementById('nextBtn');
+                    if (!nextBtn.classList.contains('hidden')) nextBtn.click();
+                } else {
+                    cd.textContent = '(' + remaining + 's)';
+                }
+            }, 1000);
+        }
+
+        function stopAutoTimer() {
+            if (state.autoTimer) { clearInterval(state.autoTimer); state.autoTimer = null; }
+            document.getElementById('nextCountdown').textContent = '→';
+        }
+
+        function toggleAutoPlay() {
+            var pauseBtn = document.getElementById('pauseBtn');
+            if (state.autoPaused) {
+                state.autoPaused = false;
+                pauseBtn.textContent = '⏸';
+                pauseBtn.title = 'Pause auto-advance';
+            } else {
+                state.autoPaused = true;
+                pauseBtn.textContent = '▶';
+                pauseBtn.title = 'Resume auto-advance';
+            }
+        }
+
         function nextQuestion() {
+            stopAutoTimer();
+            document.getElementById('pauseBtn').classList.add('hidden');
+            state.autoPaused = false;
             state.idx++;
             // Pre-fetch more questions when running low in infinite mode
             if (state.infinite && state.idx >= state.questions.length - 5) {
                 generateMixedQuestions(15);
                 if (typeof _fetchRandomHistoricalOnThisDay !== 'undefined') {
                     _fetchRandomHistoricalOnThisDay();
-                    setTimeout(function() { _fetchRandomHistoricalOnThisDay(); }, 300);
-                    setTimeout(function() { _fetchRandomHistoricalOnThisDay(); }, 700);
-                }
-                // Also fetch more current events months proactively
-                if (typeof WIKI !== 'undefined' && WIKI.fetchMonthEvents) {
-                    var now = new Date();
-                    var fetchY = now.getFullYear() - 2;
-                    var fetchM = Math.floor(Math.random() * 12) + 1;
-                    var key = fetchY + '-' + fetchM;
-                    if (!WIKI._monthEventCache || !WIKI._monthEventCache[key]) { WIKI.fetchMonthEvents(fetchY, fetchM); }
                 }
             }
             showQuestion();
@@ -5913,7 +5910,6 @@ GK_GENERATORS.pib = function() {
             if (state.infinite) {
                 if (typeof _fetchRandomHistoricalOnThisDay !== 'undefined') {
                     _fetchRandomHistoricalOnThisDay();
-                    setTimeout(function() { _fetchRandomHistoricalOnThisDay(); }, 250);
                 }
                 generateMixedQuestions(10);
                 generateWikiQuestions(10);
@@ -6898,7 +6894,6 @@ GK_GENERATORS.pib = function() {
     <script>
         // Prefetch live Wikipedia facts for Quick Fact display
         if (typeof WIKI !== 'undefined') {
-            console.log('[WIKI] Available methods:', Object.keys(WIKI).filter(function(k) { return typeof WIKI[k] === 'function'; }).join(', '));
             try { if (WIKI.prefetchFacts) WIKI.prefetchFacts(); } catch(e) {}
         }
         
@@ -7173,7 +7168,6 @@ GK_GENERATORS.pib = function() {
             var mm = String(month).padStart(2, '0');
             var dd = String(day).padStart(2, '0');
             var dateKey = '0000-' + mm + '-' + dd; // year unused by API, only month+day matters
-            console.log('[MEGA] fetching on-this-day for ' + mm + '-' + dd);
             WIKI.onThisDay(dateKey).then(function(items) {
                 if (!items || items.length === 0) return;
                 var added = 0;
@@ -7204,7 +7198,6 @@ GK_GENERATORS.pib = function() {
                     });
                     added++;
                 });
-                if (added > 0) console.log('[MEGA] added ' + added + ' questions from ' + mm + '-' + dd + ' (BC to CE)');
             }).catch(function() {});
         }
         
@@ -7335,7 +7328,7 @@ GK_GENERATORS.pib = function() {
                             document.getElementById('qText').innerHTML = 'Ran out of questions. <button onclick="' + (state.restartFn ? 'state.restartFn()' : 'location.reload()') + '" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Restart Quiz</button>';
                             document.getElementById('optGrid').innerHTML = '';
                         } else {
-                            document.getElementById('qText').innerHTML = 'Could not load Wikipedia questions. <button onclick="startCombinedQuiz(15,\'🎯 Mega Quiz\')" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Retry</button>';
+                            document.getElementById('qText').innerHTML = 'Could not load Wikipedia questions. <button onclick="startCombinedQuiz(15,\'🎯 Mega GK\')" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Retry</button>';
                             document.getElementById('optGrid').innerHTML = '';
                         }
                     }
@@ -7392,38 +7385,31 @@ GK_GENERATORS.pib = function() {
                 }, 500);
             }
             
-            // Continuously pre-fetch historical months from wide range (BC to CE)
+            // Pre-fetch historical on-this-day slowly (gk-wiki.js handles bulk background fill)
             if (typeof WIKI !== 'undefined' && WIKI.onThisDay) {
-                for (var hi = 0; hi < 12; hi++) {
-                    setTimeout(function() { _fetchRandomHistoricalOnThisDay(); }, hi * 300);
-                }
+                setTimeout(function() { _fetchRandomHistoricalOnThisDay(); }, 2000);
+                setTimeout(function() { _fetchRandomHistoricalOnThisDay(); }, 5000);
             }
-            // Pre-fetch recent current events months (Portal:Current_events cache)
+            // Pre-fetch recent current events months (Portal:Current_events cache — rate limited)
             if (typeof WIKI !== 'undefined' && WIKI.fetchMonthEvents) {
-                (function() {
-                    var now = new Date();
-                    var cy = now.getFullYear();
-                    var cm = now.getMonth() + 1;
-                    // Fetch current month immediately
-                    if (!WIKI._monthEventCache || !WIKI._monthEventCache[cy + '-' + cm]) {
-                        WIKI.fetchMonthEvents(cy, cm);
-                    }
-                    // Background fetch rest of recent months
-                    var monthIdx = 0;
-                    for (var y = cy - 1; y <= cy; y++) {
-                        var mx = (y === cy) ? cm - 1 : 12;
-                        for (var m = 1; m <= mx; m++) {
-                            (function(yy, mm) {
-                                setTimeout(function() {
-                                    if (!WIKI._monthEventCache || !WIKI._monthEventCache[yy + '-' + mm]) {
-                                        WIKI.fetchMonthEvents(yy, mm);
-                                    }
-                                }, monthIdx * 400);
-                            })(y, m);
-                            monthIdx++;
-                        }
-                    }
-                })();
+                var now = new Date();
+                var cy = now.getFullYear();
+                var cm = now.getMonth() + 1;
+                if (!WIKI._monthEventCache || !WIKI._monthEventCache[cy + '-' + cm]) {
+                    WIKI.fetchMonthEvents(cy, cm);
+                }
+                // Background fetch just last 6 months at 2s intervals
+                for (var mi = 0; mi < 6; mi++) {
+                    (function(mmOff) {
+                        setTimeout(function() {
+                            var m = ((cm - mmOff + 11) % 12) + 1;
+                            var y = cy - (mmOff >= cm ? 1 : 0);
+                            if (!WIKI._monthEventCache || !WIKI._monthEventCache[y + '-' + m]) {
+                                WIKI.fetchMonthEvents(y, m);
+                            }
+                        }, 3000 + mi * 2000);
+                    })(mi + 1);
+                }
             }
         }
 

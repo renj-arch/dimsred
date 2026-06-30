@@ -1576,7 +1576,7 @@ WIKI.onThisDay = function(dateStr) {
   var month = parseInt(parts[1], 10);
   var day = parseInt(parts[2], 10);
   return fetch('https://en.wikipedia.org/api/rest_v1/feed/onthisday/all/' + month + '/' + day)
-    .then(function(r) { return r.json(); })
+    .then(function(r) { if (!r.ok) throw new Error('onThisDay HTTP ' + r.status); return r.json(); })
     .then(function(data) {
       var events = data.events || [];
       var births = data.births || [];
@@ -1641,11 +1641,11 @@ WIKI._isKnown = function(entity) {
 };
 
 WIKI.prefetch = function() {
-  if (WIKI._prefetching) { console.log('[WIKI] already prefetching'); return; }
+  if (WIKI._prefetching) return;
   WIKI._prefetching = true;
   WIKI._loadKnown();
-  console.log('[WIKI] prefetch started, pool size:', WIKI._pool.length);
 
+  var _fetchBackoff = 0;
   function fetchBatch() {
     // Rotate through 12 diverse sources for maximum Wikipedia-wide coverage
     WIKI._sourceIndex = (WIKI._sourceIndex + 1) % 12;
@@ -1689,6 +1689,7 @@ WIKI.prefetch = function() {
     }
 
     promise.then(function(qs) {
+      _fetchBackoff = Math.max(0, _fetchBackoff - 200);
       if (qs && qs.length) {
         for (var i = 0; i < qs.length; i++) {
           if (qs[i] && qs[i].q && qs[i].a) {
@@ -1697,9 +1698,11 @@ WIKI.prefetch = function() {
         }
       }
       // Dynamically adjust fetch speed based on pool fill level
-      var delay = WIKI._pool.length < 1000 ? 50 : (WIKI._pool.length < 5000 ? 80 : 120);
+      var delay = WIKI._pool.length < WIKI._poolSize ? 1500 : 3000;
+      delay += Math.random() * 1000; // jitter
+      delay += _fetchBackoff;
       setTimeout(fetchBatch, delay);
-    }).catch(function() { console.error('[WIKI] fetchBatch failed, retrying...'); setTimeout(fetchBatch, 200); });
+    }).catch(function() { console.error('[WIKI] fetchBatch failed, retrying...'); _fetchBackoff += 1000; setTimeout(fetchBatch, 2000 + Math.random() * 1000 + _fetchBackoff); });
   }
 
   function fetchOnThisDay() {
@@ -1723,30 +1726,14 @@ WIKI.prefetch = function() {
   WIKI._queueAllOnThisDay();
   fetchOnThisDay();
   WIKI.prefetchCurrentEvents();
-  // Kick off background historical on-this-day prefetching (covers BC to CE)
+  // Kick off background historical on-this-day prefetching (covers BC to CE) — throttled
   if (typeof _fetchRandomHistoricalOnThisDay === 'function') {
-    setTimeout(function() { if (typeof _fetchRandomHistoricalOnThisDay === 'function') _fetchRandomHistoricalOnThisDay(); }, 500);
-    setTimeout(function() { if (typeof _fetchRandomHistoricalOnThisDay === 'function') _fetchRandomHistoricalOnThisDay(); }, 1200);
-    setTimeout(function() { if (typeof _fetchRandomHistoricalOnThisDay === 'function') _fetchRandomHistoricalOnThisDay(); }, 2000);
     setTimeout(function() { if (typeof _fetchRandomHistoricalOnThisDay === 'function') _fetchRandomHistoricalOnThisDay(); }, 3000);
-    setTimeout(function() { if (typeof _fetchRandomHistoricalOnThisDay === 'function') _fetchRandomHistoricalOnThisDay(); }, 4000);
-    setTimeout(function() { if (typeof _fetchRandomHistoricalOnThisDay === 'function') _fetchRandomHistoricalOnThisDay(); }, 5000);
-    setTimeout(function() { if (typeof _fetchRandomHistoricalOnThisDay === 'function') _fetchRandomHistoricalOnThisDay(); }, 6000);
-    setTimeout(function() { if (typeof _fetchRandomHistoricalOnThisDay === 'function') _fetchRandomHistoricalOnThisDay(); }, 7000);
     setTimeout(function() { if (typeof _fetchRandomHistoricalOnThisDay === 'function') _fetchRandomHistoricalOnThisDay(); }, 8000);
-    setTimeout(function() { if (typeof _fetchRandomHistoricalOnThisDay === 'function') _fetchRandomHistoricalOnThisDay(); }, 10000);
+    setTimeout(function() { if (typeof _fetchRandomHistoricalOnThisDay === 'function') _fetchRandomHistoricalOnThisDay(); }, 15000);
   }
-  // Fire multiple initial fetch batches to fill pool faster
-  fetchBatch();
-  setTimeout(function() { fetchBatch(); }, 100);
-  setTimeout(function() { fetchBatch(); }, 200);
-  setTimeout(function() { fetchBatch(); }, 350);
-  // Fire additional background category searches across diverse domains
-  setTimeout(function() {
-    for (var di = 0; di < 5; di++) {
-      (function() { var ct = pick(WIKI._categoryTopics); WIKI._batchCategory(ct, 50).then(function(qs) { if (qs) { for (var qi = 0; qi < qs.length; qi++) { if (qs[qi] && qs[qi].q && qs[qi].a && WIKI._pool.length < WIKI._poolSize) WIKI._pool.push(qs[qi]); } } }); })();
-    }
-  }, 500);
+  // Start the rotating fetchBatch cycle (rate-limited internally)
+  setTimeout(function() { fetchBatch(); }, 1500);
 };
 
 WIKI.poolQuestion = function() {
@@ -1794,28 +1781,23 @@ WIKI._queueAllOnThisDay = function() {
 
 WIKI._fetchNextOnThisDay = function() {
   if (WIKI._onThisDayQueue.length === 0) { WIKI._queueAllOnThisDay(); }
-  var maxFetches = Math.min(5, WIKI._onThisDayQueue.length);
-  var promises = [];
-  for (var fi = 0; fi < maxFetches; fi++) {
-    var day = WIKI._onThisDayQueue.shift();
-    if (!day) break;
-    var key = day.m + '-' + day.d;
-    if (WIKI._fetchedOnThisDayDays[key]) continue;
+  if (!WIKI._onThisDayQueue.length) return Promise.resolve([]);
+  var day = WIKI._onThisDayQueue.shift();
+  var key = day.m + '-' + day.d;
+  if (!WIKI._fetchedOnThisDayDays[key]) {
     WIKI._fetchedOnThisDayDays[key] = true;
     var mm = String(day.m).padStart(2, '0');
     var dd = String(day.d).padStart(2, '0');
     var dateKey = '0000-' + mm + '-' + dd;
-    promises.push(
-      WIKI.onThisDay(dateKey).then(function(items) {
-        if (!items || items.length === 0) return;
-        var otdQs = WIKI._makeFromOnThisDay(items);
-        for (var qi = 0; qi < otdQs.length; qi++) {
-          if (WIKI._pool.length < WIKI._poolSize) WIKI._pool.push(otdQs[qi]);
-        }
-      }).catch(function() {})
-    );
+    return WIKI.onThisDay(dateKey).then(function(items) {
+      if (!items || items.length === 0) return;
+      var otdQs = WIKI._makeFromOnThisDay(items);
+      for (var qi = 0; qi < otdQs.length; qi++) {
+        if (WIKI._pool.length < WIKI._poolSize) WIKI._pool.push(otdQs[qi]);
+      }
+    }).catch(function() {});
   }
-  return Promise.all(promises);
+  return Promise.resolve([]);
 };
 
 WIKI._ARTICLE_WORDS = { 'a':1, 'an':1, 'the':1, 'and':1, 'of':1, 'in':1, 'for':1, 'on':1, 'at':1, 'by':1, 'to':1, 'from':1, 'with':1 };
