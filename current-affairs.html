@@ -203,13 +203,13 @@
         <div id="welcome">
             <div class="welcome-card" style="margin-bottom:12px">
                 <div class="icon">📖</div>
-                <div class="title">Mega GK — Learn Anything</div>
-                <div class="desc">Pure GK from the entire Wikipedia corpus — auto-advances every 4 seconds. Pause anytime.</div>
+                <div class="title">Knowledge Booster</div>
+                <div class="desc">Pure GK from Wikipedia — auto-advances every 4 seconds. Pause anytime.</div>
             </div>
 
             <!-- Mega GK: the only quiz mode -->
             <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;justify-content:center;flex-direction:column">
-                <button class="action-btn secondary" style="padding:16px;font-size:1.05em;background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.2)" onclick="startCombinedQuiz(15, '🎯 Mega GK')">🎯 Mega GK — Start Learning</button>
+                <button class="action-btn secondary" style="padding:16px;font-size:1.05em;background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.2)" onclick="startCombinedQuiz(15, '🎯 Mega GK')">🎯 Mega GK — Start</button>
             </div>
 
             <p class="gk-intro">Powered by live Wikipedia data — random articles, categories, search, current events, on-this-day history. Every question is procedurally generated on the fly.</p>
@@ -264,7 +264,7 @@
                     <div class="hint-text" id="hintText"></div>
                 </div>
                 <div class="q-opt-grid" id="optGrid"></div>
-                <div style="font-size:.65em;color:var(--text-muted);margin-top:8px;text-align:center"><span class="kb-hint">Keys: <kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">1</kbd>-<kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">4</kbd> answer · <kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">→</kbd> next/unpause · <kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">⏸</kbd> pause</span> <span class="swipe-hint" style="display:none">swipe ← next</span></div>
+                <div style="font-size:.65em;color:var(--text-muted);margin-top:8px;text-align:center"><span class="kb-hint"><kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">→</kbd> advance · <kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">⏸</kbd> pause</span> <span class="swipe-hint" style="display:none">swipe → next</span></div>
             </div>
             <div class="result-flash" id="resultFlash"></div>
             <div id="intuitionDisplay" style="font-size:.78em;color:var(--amber);margin-top:4px;padding:10px 12px;border-radius:8px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);display:none;line-height:1.6;text-align:left"><span style="font-weight:700;color:var(--amber);display:block;margin-bottom:3px">⚡ Quick Fact</span><span id="intuitionText"></span></div>
@@ -5735,13 +5735,17 @@ GK_GENERATORS.pib = function() {
                             if (_wikiWaiting) {
                                 _loadingRetry++;
                                 if (_loadingRetry > 4) {
-                                    document.getElementById('qText').innerHTML = 'Taking too long. <button onclick="' + (state.restartFn ? 'state.restartFn()' : 'location.reload()') + '" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Restart Quiz</button>';
+                                    document.getElementById('qText').innerHTML = 'Taking too long. <button onclick="' + (state.restartFn ? 'state.restartFn()' : 'location.reload()') + '" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Restart</button>';
+                                    document.getElementById('qText').style.fontSize = '';
+                                    document.getElementById('qText').style.lineHeight = '';
                                     document.getElementById('optGrid').innerHTML = '';
                                     _wikiWaiting = false;
                                     _loadingRetry = 0;
                                     return;
                                 }
-                                document.getElementById('qText').innerHTML = 'Loading more questions...<br><span style="font-size:.72em;color:var(--text-muted)">still working...</span>';
+                                document.getElementById('qText').innerHTML = 'Loading more GK...<br><span style="font-size:.72em;color:var(--text-muted)">still working...</span>';
+                                document.getElementById('qText').style.fontSize = '';
+                                document.getElementById('qText').style.lineHeight = '';
                                 document.getElementById('optGrid').innerHTML = '';
                                 setTimeout(function() {
                                     showQuestion();
@@ -5757,36 +5761,61 @@ GK_GENERATORS.pib = function() {
                 }
             }
             _loadingRetry = 0;
-            state.answered = false;
             var q = state.questions[state.idx];
-            if (state.infinite) {
-                document.getElementById('qNum').textContent = 'Q ' + (state.idx + 1);
-                document.getElementById('qProgress').style.width = ((state.correct / Math.max(state.idx, 1)) * 100) + '%';
+            var isLearning = state.infinite && state.cat === 'mixed';
+            if (isLearning) {
+                state.answered = true; // skip answer interaction
+                document.getElementById('qNum').textContent = (state.idx + 1);
+                document.getElementById('qProgress').style.width = ((state.idx / Math.max(state.questions.length, 1)) * 100) + '%';
+                document.getElementById('catTag').textContent = q._wikiCat ? q._wikiCat.replace(/_/g, ' ') : state.categoryName;
+                var displayText = '<div style="font-size:1.2em;font-weight:700;margin-bottom:8px">' + q.q.replace(/\n/g, '<br>') + '</div>';
+                if (q.a) displayText += '<div style="font-size:1.05em;color:var(--emerald);margin-bottom:10px;padding:8px 12px;border-radius:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15)">→ ' + q.a + '</div>';
+                if (q.fact) displayText += '<div style="font-size:.85em;color:var(--text-sec);line-height:1.7">' + q.fact.replace(/\n/g, '<br>') + '</div>';
+                document.getElementById('qText').innerHTML = displayText;
+                document.getElementById('qText').style.fontSize = '.95em';
+                document.getElementById('qText').style.lineHeight = '1.6';
+                document.getElementById('optGrid').innerHTML = '';
+                document.getElementById('hintText').textContent = '';
+                document.getElementById('resultFlash').className = 'result-flash';
+                document.getElementById('resultFlash').style.display = 'none';
+                document.getElementById('nextBtn').classList.add('hidden');
+                document.getElementById('intuitionDisplay').style.display = 'none';
+                document.getElementById('correctNum').textContent = state.idx + 1;
+                document.getElementById('totalNum').textContent = state.questions.length;
+                setTimeout(function() {
+                    document.getElementById('pauseBtn').classList.remove('hidden');
+                    startAutoTimer();
+                }, 200);
             } else {
-                document.getElementById('qNum').textContent = 'Q ' + (state.idx + 1) + ' / ' + (state.totalFetched || state.questions.length);
+                state.answered = false;
+                document.getElementById('qNum').textContent = 'Q ' + (state.idx + 1);
                 document.getElementById('qProgress').style.width = ((state.idx / state.questions.length) * 100) + '%';
-            }
-            document.getElementById('catTag').textContent = state.categoryName;
-            var pd = q.pubDate || q._pubDate;
-            var yearStr = pd ? ' (' + pd.slice(0,4) + ')' : '';
-            document.getElementById('qText').innerHTML = q.q.replace(/\n/g, '<br>') + yearStr;
-            document.getElementById('hintText').textContent = q.hint || 'Think carefully about the options';
-            document.getElementById('hintText').classList.remove('show');
-            document.getElementById('resultFlash').className = 'result-flash';
-            document.getElementById('resultFlash').style.display = 'none';
-            document.getElementById('nextBtn').classList.add('hidden');
-            document.getElementById('intuitionDisplay').style.display = 'none';
+                document.getElementById('catTag').textContent = state.categoryName;
+                var pd = q.pubDate || q._pubDate;
+                var yearStr = pd ? ' (' + pd.slice(0,4) + ')' : '';
+                document.getElementById('qText').innerHTML = q.q.replace(/\n/g, '<br>') + yearStr;
+                document.getElementById('qText').style.fontSize = '';
+                document.getElementById('qText').style.lineHeight = '';
+                document.getElementById('hintText').textContent = q.hint || 'Think carefully about the options';
+                document.getElementById('hintText').classList.remove('show');
+                document.getElementById('resultFlash').className = 'result-flash';
+                document.getElementById('resultFlash').style.display = 'none';
+                document.getElementById('nextBtn').classList.add('hidden');
+                document.getElementById('intuitionDisplay').style.display = 'none';
 
-            var grid = document.getElementById('optGrid');
-            grid.innerHTML = '';
-            q.opts.forEach(function(o, i) {
-                var el = document.createElement('div');
-                el.className = 'q-opt';
-                el.innerHTML = '<span style="font-size:.65em;color:var(--text-muted);margin-right:6px">' + (i + 1) + '</span>' + o;
-                el.setAttribute('data-val', o);
-                el.onclick = function() { answerQuestion(this); };
-                grid.appendChild(el);
-            });
+                var grid = document.getElementById('optGrid');
+                grid.innerHTML = '';
+                if (q.opts) {
+                    q.opts.forEach(function(o, i) {
+                        var el = document.createElement('div');
+                        el.className = 'q-opt';
+                        el.innerHTML = '<span style="font-size:.65em;color:var(--text-muted);margin-right:6px">' + (i + 1) + '</span>' + o;
+                        el.setAttribute('data-val', o);
+                        el.onclick = function() { answerQuestion(this); };
+                        grid.appendChild(el);
+                    });
+                }
+            }
         }
 
         function answerQuestion(el) {
@@ -5863,9 +5892,8 @@ GK_GENERATORS.pib = function() {
                 if (remaining <= 0) {
                     clearInterval(state.autoTimer);
                     state.autoTimer = null;
-                    cd.textContent = '→';
-                    var nextBtn = document.getElementById('nextBtn');
-                    if (!nextBtn.classList.contains('hidden')) nextBtn.click();
+                    cd.textContent = '';
+                    nextQuestion();
                 } else {
                     cd.textContent = '(' + remaining + 's)';
                 }
@@ -5874,7 +5902,7 @@ GK_GENERATORS.pib = function() {
 
         function stopAutoTimer() {
             if (state.autoTimer) { clearInterval(state.autoTimer); state.autoTimer = null; }
-            document.getElementById('nextCountdown').textContent = '→';
+            document.getElementById('nextCountdown').textContent = '';
         }
 
         function toggleAutoPlay() {
@@ -7361,7 +7389,7 @@ GK_GENERATORS.pib = function() {
             document.getElementById('restartBtn').style.display = 'inline-block';
             document.getElementById('pibHeaderBtn').style.display = 'inline-block';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
-            document.getElementById('qText').innerHTML = 'Loading GK...';
+            document.getElementById('qText').innerHTML = 'Loading Knowledge Booster...';
             document.getElementById('optGrid').innerHTML = '';
             generateMixedQuestions(20);
             console.log('[QUIZ] initial generateMixedQuestions found:', state.questions.length, 'questions, pool:', WIKI._pool ? WIKI._pool.length : 'N/A');
@@ -7370,12 +7398,12 @@ GK_GENERATORS.pib = function() {
             } else {
                 // Pool not populated yet — wait and retry
                 console.log('[QUIZ] no questions yet, waiting for pool to fill...');
-                document.getElementById('qText').innerHTML = 'Loading all GK questions... (pool: 0)';
+                document.getElementById('qText').innerHTML = 'Loading Knowledge Booster... (pool: 0)';
                 var _waitRetry = 0;
                 var _waitTimer = setInterval(function() {
                     generateMixedQuestions(10);
                     var poolSize = (typeof WIKI !== 'undefined' && WIKI._pool) ? WIKI._pool.length : 0;
-                    document.getElementById('qText').innerHTML = 'Loading all GK questions... (pool: ' + poolSize + ')';
+                    document.getElementById('qText').innerHTML = 'Loading Knowledge Booster... (pool: ' + poolSize + ')';
                     console.log('[QUIZ] retry', _waitRetry, 'pool size:', poolSize, 'questions loaded:', state.questions.length);
                     if (state.questions.length > 0 || _waitRetry > 20) {
                         clearInterval(_waitTimer);
