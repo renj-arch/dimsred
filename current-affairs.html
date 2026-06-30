@@ -7345,6 +7345,7 @@ GK_GENERATORS.pib = function() {
 
         function startCombinedQuiz(count, label) {
             if (!confirmAbandonQuiz()) return;
+            console.log('[QUIZ] startCombinedQuiz called, WIKI available:', typeof WIKI !== 'undefined', 'WIKI._pool:', WIKI._pool ? WIKI._pool.length : 'N/A');
             state.cat = 'mixed';
             state.categoryName = label;
             state.idx = 0;
@@ -7370,13 +7371,19 @@ GK_GENERATORS.pib = function() {
             document.getElementById('qText').innerHTML = 'Loading all GK questions...';
             document.getElementById('optGrid').innerHTML = '';
             generateMixedQuestions(20);
+            console.log('[QUIZ] initial generateMixedQuestions found:', state.questions.length, 'questions, pool:', WIKI._pool ? WIKI._pool.length : 'N/A');
             if (state.questions.length > 0) {
                 showQuestion();
             } else {
                 // Pool not populated yet — wait and retry
+                console.log('[QUIZ] no questions yet, waiting for pool to fill...');
+                document.getElementById('qText').innerHTML = 'Loading all GK questions... (pool: 0)';
                 var _waitRetry = 0;
                 var _waitTimer = setInterval(function() {
                     generateMixedQuestions(10);
+                    var poolSize = (typeof WIKI !== 'undefined' && WIKI._pool) ? WIKI._pool.length : 0;
+                    document.getElementById('qText').innerHTML = 'Loading all GK questions... (pool: ' + poolSize + ')';
+                    console.log('[QUIZ] retry', _waitRetry, 'pool size:', poolSize, 'questions loaded:', state.questions.length);
                     if (state.questions.length > 0 || _waitRetry > 20) {
                         clearInterval(_waitTimer);
                         if (state.questions.length > 0) showQuestion();
@@ -7434,7 +7441,7 @@ GK_GENERATORS.pib = function() {
                     } else if (source === 'wiki_current_affairs') {
                         q = _generateCurrentAffairsFromWiki();
                     }
-                } catch(e) {}
+                } catch(e) { console.log('[QUIZ] generateMixedQuestions error for source', source, ':', e); }
                 if (!q || !q.q || !q.a) continue;
                 q.opts = q.opts || buildOptions(q.a);
                 if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
