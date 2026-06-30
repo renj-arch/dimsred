@@ -5,9 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Arena — NEET Prep — vlymbooq</title>
-    <meta name="description" content="NEET preparation: Physics, Chemistry, Biology — NCERT syllabus, all difficulty levels, all question variants.">
+    <meta name="description" content="NEET preparation: Physics, Chemistry, Biology — real exam problems with solutions.">
     <link rel="canonical" href="https://vlymbooq.qzz.io/arena.html">
-    <script src="js/arena-generator.js?v=20260619" defer></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
         *{margin:0;padding:0;box-sizing:border-box}
@@ -35,78 +34,52 @@
         .subj-pill[data-subj="Chemistry"].active{background:rgba(52,211,153,.15);border-color:var(--emerald);color:var(--emerald)}
         .subj-pill[data-subj="Biology"].active{background:rgba(244,114,182,.15);border-color:var(--pink);color:var(--pink)}
 
-        .chapter-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:16px}
-        @media(max-width:400px){.chapter-grid{grid-template-columns:1fr}}
-        .ch-btn{padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);cursor:pointer;transition:all .2s;font-size:.78em;font-weight:500;text-align:left;color:var(--text-sec);line-height:1.3}
-        .ch-btn:hover{border-color:rgba(255,255,255,.15)}
-        .ch-btn.active{border-color:var(--purple);background:rgba(167,139,250,.08);color:var(--text)}
-
         .arena-view{display:none}
         .arena-view.active{display:block}
 
-        .question-card{padding:32px 24px 24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);margin-bottom:16px;text-align:center}
-        .question-card .q-num{font-size:.72em;color:var(--text-muted);margin-bottom:4px}
-        .question-card .q-progress{height:3px;background:rgba(255,255,255,.06);border-radius:100px;margin-bottom:16px;overflow:hidden}
-        .question-card .q-progress .fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--emerald));border-radius:100px;transition:width .3s}
-        .question-card .q-text{font-size:clamp(1rem,2.2vw,1.25rem);font-weight:700;line-height:1.6;margin-bottom:16px;font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
-        .question-card .q-tags{display:flex;gap:6px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
-        .question-card .q-tags .tag{padding:3px 10px;border-radius:100px;font-size:.65em;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
-        .question-card .q-tags .tag.subject{background:rgba(96,165,250,.15);color:var(--blue)}
-        .question-card .q-tags .tag.diff{background:rgba(239,68,68,.15);color:var(--red)}
-        .question-card .q-tags .tag.chapter{background:rgba(167,139,250,.1);color:var(--purple)}
+        .problem-card{padding:32px 24px 24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);margin-bottom:16px}
+        .problem-card .p-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+        .problem-card .p-num{font-size:.72em;color:var(--text-muted)}
+        .problem-card .p-counter{font-size:.72em;color:var(--text-muted)}
+        .problem-card .p-tags{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+        .problem-card .p-tags .tag{padding:3px 10px;border-radius:100px;font-size:.65em;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+        .problem-card .p-tags .tag.subject{background:rgba(96,165,250,.15);color:var(--blue)}
+        .problem-card .p-tags .tag.qid{background:rgba(167,139,250,.1);color:var(--purple)}
+        .problem-card .p-text{font-size:clamp(1rem,2.2vw,1.25rem);font-weight:500;line-height:1.7;margin-bottom:20px;padding:16px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid var(--border)}
+        .problem-card .p-answer{font-size:.9em;margin-bottom:12px;display:none}
+        .problem-card .p-answer .a-label{color:var(--text-muted);font-size:.78em;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+        .problem-card .p-answer .a-value{font-weight:700;color:var(--emerald)}
+        .problem-card .p-solution{font-size:.82em;color:var(--text-sec);line-height:1.7;padding:16px;border-radius:10px;background:rgba(52,211,153,.05);border:1px solid rgba(52,211,153,.1);display:none}
+        .problem-card .p-solution .sol-label{font-weight:700;color:var(--emerald);margin-bottom:4px;font-size:.85em}
 
-        .timer-circle{width:72px;height:72px;border-radius:50%;border:3px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'JetBrains Mono',monospace;font-size:1.4em;font-weight:700;transition:border-color .3s}
-        .timer-circle.urgent{border-color:var(--red);color:var(--red)}
-        .timer-circle.warning{border-color:var(--amber);color:var(--amber)}
+        .nav-buttons{display:flex;gap:8px;margin-top:12px}
+        .nav-btn{padding:12px 24px;border-radius:100px;border:none;font-weight:700;font-size:.9em;cursor:pointer;transition:all .2s;text-align:center;font-family:'Inter',sans-serif;flex:1}
+        .nav-btn.prev{background:rgba(255,255,255,.06);color:var(--text)}
+        .nav-btn.prev:hover{background:rgba(255,255,255,.1)}
+        .nav-btn.next{background:linear-gradient(135deg,var(--purple),var(--emerald));color:#fff}
+        .nav-btn.next:hover{opacity:.9;transform:translateY(-1px)}
+        .nav-btn:disabled{opacity:.3;cursor:not-allowed;transform:none!important}
 
-        .opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:500px;margin:0 auto}
+        .opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:500px;margin:0 0 16px}
         @media(max-width:400px){.opt-grid{grid-template-columns:1fr}}
-        .opt-btn{padding:14px 16px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;font-size:.9em;font-weight:600;transition:all .15s;text-align:center;font-family:'JetBrains Mono',monospace}
-        .opt-btn:hover{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.04)}
-        .opt-btn.selected{border-color:var(--purple);background:rgba(167,139,250,.1);color:var(--purple)}
-        .opt-btn.correct{border-color:var(--emerald);background:rgba(52,211,153,.1);color:var(--emerald)}
-        .opt-btn.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
-        .opt-btn:disabled{cursor:default;opacity:.7}
+        .opt-item{padding:12px 14px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.02);font-size:.85em;font-weight:500;text-align:left;font-family:'JetBrains Mono',monospace;line-height:1.4}
+        .opt-item .opt-label{font-weight:700;color:var(--text-muted);margin-right:6px}
+        .opt-item.correct{border-color:var(--emerald);background:rgba(52,211,153,.08)}
+        .opt-item.correct .opt-label{color:var(--emerald)}
 
-        .result-flash{padding:16px;border-radius:10px;text-align:center;margin-bottom:12px;font-weight:700;font-size:1em;display:none}
-        .result-flash.show{display:block}
-        .result-flash.correct{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);color:var(--emerald)}
-        .result-flash.wrong{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:var(--red)}
-
-        .action-btn{display:block;width:100%;padding:14px;border-radius:100px;border:none;font-weight:700;font-size:.95em;cursor:pointer;transition:all .2s;text-align:center;margin-top:12px;font-family:'Inter',sans-serif}
-        .action-btn.primary{background:linear-gradient(135deg,var(--purple),var(--emerald));color:#fff}
-        .action-btn.primary:hover{opacity:.9;transform:translateY(-1px)}
-        .action-btn.secondary{background:rgba(255,255,255,.06);color:var(--text)}
-        .action-btn.secondary:hover{background:rgba(255,255,255,.1)}
-        .action-btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
-
-        .solution-box{font-size:.82em;color:var(--text-sec);margin-top:12px;padding:16px;border-radius:10px;background:rgba(52,211,153,.05);border:1px solid rgba(52,211,153,.1);display:none;line-height:1.7;text-align:left}
-        .solution-box.show{display:block}
-        .solution-box .sol-label{font-weight:700;color:var(--emerald);margin-bottom:4px;font-size:.85em}
-        .solution-box .sol-key{font-weight:700;color:var(--text);margin-bottom:8px}
-
-        .results-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;background:rgba(9,9,11,.95);display:none;align-items:center;justify-content:center;padding:24px}
-        .results-overlay.show{display:flex}
-        .results-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;max-width:400px;width:100%;text-align:center}
-        .results-card .big-num{font-size:3em;font-weight:900;margin:8px 0}
-        .results-card .big-num.good{color:var(--emerald)}
-        .results-card .big-num.ok{color:var(--amber)}
-        .results-card .big-num.bad{color:var(--red)}
-        .results-card .label{font-size:.82em;color:var(--text-muted)}
-        .results-card .detail-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:.85em}
-        .results-card .detail-row:last-child{border-bottom:none}
-
-        .hard-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;padding:4px;font-size:.78em;color:var(--text-sec)}
-        .hard-toggle input{display:none}
-        .toggle-slider{width:36px;height:20px;background:rgba(255,255,255,.1);border-radius:100px;position:relative;transition:background .2s;flex-shrink:0}
-        .toggle-slider::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#52525b;transition:all .2s}
-        .hard-toggle input:checked+.toggle-slider{background:rgba(239,68,68,.3)}
-        .hard-toggle input:checked+.toggle-slider::after{background:var(--red);transform:translateX(16px)}
-
-        .session-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;font-size:.82em}
-        .session-bar .sb-score{font-weight:700}
-        .session-bar .sb-score .good{color:var(--emerald)}
-        .session-bar .sb-score .bad{color:var(--red)}
+        .start-view{text-align:center;padding:40px 0}
+        .start-view .icon{font-size:4em;margin-bottom:12px}
+        .start-view h1{font-size:1.8em;font-weight:900;margin-bottom:6px;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .start-view p{color:var(--text-sec);margin-bottom:4px;font-size:.9em}
+        .start-view .sub{color:var(--text-muted);font-size:.78em;margin-bottom:20px}
+        .start-btn{padding:14px 40px;border-radius:100px;border:none;background:linear-gradient(135deg,var(--purple),var(--emerald));color:#fff;font-weight:700;font-size:1em;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+        .start-btn:hover{opacity:.9;transform:translateY(-1px)}
+        .count-grid{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-top:20px}
+        .count-card{text-align:center;padding:16px 24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);min-width:130px}
+        .count-card .c-label{font-size:.72em;color:var(--text-muted)}
+        .count-card .c-num{font-size:1.7em;font-weight:900}
+        .count-card .c-name{font-size:.7em;color:var(--text-sec)}
+        .loading{text-align:center;padding:60px 0;color:var(--text-muted);font-size:.9em}
         .hidden{display:none!important}
     </style>
 </head>
@@ -127,145 +100,55 @@
 
     <div class="container" id="app">
         <div id="subjectStrip" class="subj-strip"></div>
-        <div id="chapterStrip" class="chapter-grid"></div>
-
-        <div id="sessionBar" class="session-bar hidden">
-            <div><span id="qCounter">0/0</span></div>
-            <div class="sb-score">Score: <span id="scoreNum" class="good">0</span> / <span id="totalNum">0</span></div>
-            <label class="hard-toggle" title="Enable maximum difficulty questions">
-                <input type="checkbox" id="hardMode">
-                <span class="toggle-slider"></span>
-                <span>Max Diff</span>
-            </label>
-        </div>
 
         <div id="startView" class="arena-view active">
-            <div style="text-align:center;padding:40px 0">
-                <div style="font-size:4em;margin-bottom:12px">🏟️</div>
-                <h1 style="font-size:1.8em;font-weight:900;margin-bottom:6px;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent">Arena</h1>
-                <p style="color:var(--text-sec);margin-bottom:4px;font-size:.9em">NEET Preparation — NCERT Syllabus</p>
-                <p style="color:var(--text-muted);font-size:.78em;margin-bottom:20px">Select a subject &amp; chapter to begin</p>
-                <div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-top:20px">
-                    <div style="text-align:center;padding:16px 24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);min-width:130px">
-                        <div style="font-size:.72em;color:var(--text-muted)">Questions</div>
-                        <div style="font-size:1.7em;font-weight:900;color:var(--blue)" id="phyCount">0</div>
-                        <div style="font-size:.7em;color:var(--text-sec)">Physics</div>
-                    </div>
-                    <div style="text-align:center;padding:16px 24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);min-width:130px">
-                        <div style="font-size:.72em;color:var(--text-muted)">Questions</div>
-                        <div style="font-size:1.7em;font-weight:900;color:var(--emerald)" id="chemCount">0</div>
-                        <div style="font-size:.7em;color:var(--text-sec)">Chemistry</div>
-                    </div>
-                    <div style="text-align:center;padding:16px 24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);min-width:130px">
-                        <div style="font-size:.72em;color:var(--text-muted)">Questions</div>
-                        <div style="font-size:1.7em;font-weight:900;color:var(--pink)" id="bioCount">0</div>
-                        <div style="font-size:.7em;color:var(--text-sec)">Biology</div>
-                    </div>
+            <div class="start-view">
+                <div class="icon">🏟️</div>
+                <h1>Arena</h1>
+                <p>NEET — Real Exam Problems</p>
+                <p class="sub" id="bankSub">Loading question bank...</p>
+                <div class="count-grid" id="countGrid"></div>
+                <button class="start-btn" id="startBtn" onclick="startBrowse()" style="display:none">Start Solving →</button>
+            </div>
+        </div>
+
+        <div id="browseView" class="arena-view">
+            <div class="problem-card" id="problemCard">
+                <div class="p-head">
+                    <div class="p-num" id="pNum">Problem 1</div>
+                    <div class="p-counter" id="pCounter">1 / 0</div>
+                </div>
+                <div class="p-tags" id="pTags"></div>
+                <div class="p-text" id="pText">Loading...</div>
+                <div class="opt-grid" id="optGrid"></div>
+                <div class="p-answer" id="pAnswer">
+                    <div class="a-label">Answer</div>
+                    <div class="a-value" id="pAnswerValue">—</div>
+                </div>
+                <div class="p-solution" id="pSolution">
+                    <div class="sol-label">Solution</div>
+                    <div id="pSolutionText">—</div>
                 </div>
             </div>
-        </div>
-
-        <div id="practiceView" class="arena-view">
-            <div class="question-card" id="questionCard">
-                <div class="q-num" id="qNum">Question 1</div>
-                <div class="q-progress"><div class="fill" id="progressFill" style="width:10%"></div></div>
-                <div class="q-tags" id="qTags"></div>
-                <div class="timer-circle" id="timerCircle">--</div>
-                <div class="q-text" id="qText">Loading...</div>
-                <div class="opt-grid" id="optGrid"></div>
-                <div class="result-flash" id="resultFlash"></div>
-                <div class="solution-box" id="solutionBox"></div>
-                <button class="action-btn primary" id="nextBtn" onclick="nextQuestion()" style="display:none">Next →</button>
+            <div class="nav-buttons">
+                <button class="nav-btn prev" id="prevBtn" onclick="prevProblem()">← Previous</button>
+                <button class="nav-btn next" id="nextBtn" onclick="nextProblem()">Next →</button>
             </div>
-        </div>
-    </div>
-
-    <div class="results-overlay" id="resultsOverlay">
-        <div class="results-card">
-            <div style="font-size:3em;margin-bottom:8px" id="resultEmoji">🎯</div>
-            <div class="label">Session Complete</div>
-            <div class="big-num" id="resultScore">0/0</div>
-            <div style="font-size:.85em;color:var(--text-sec);margin-bottom:16px" id="resultPct">0%</div>
-            <div class="detail-row"><span>Correct</span><span id="rCorrect" style="color:var(--emerald);font-weight:700">0</span></div>
-            <div class="detail-row"><span>Wrong</span><span id="rWrong" style="color:var(--red);font-weight:700">0</span></div>
-            <div class="detail-row"><span>Skipped</span><span id="rSkipped" style="color:var(--text-muted)">0</span></div>
-            <div class="detail-row"><span>Accuracy</span><span id="rAccuracy" style="font-weight:700">0%</span></div>
-            <div class="detail-row"><span>Avg Time</span><span id="rAvgTime" style="font-weight:700">0s</span></div>
-            <button class="action-btn primary" onclick="restartSession()" style="margin-top:16px">Practice Again</button>
-            <button class="action-btn secondary" onclick="backToMenu()">Change Topic</button>
         </div>
     </div>
 
     <script>
-        var state = {
-            subject: null,
-            chapter: null,
-            questions: [],
-            idx: 0,
-            correct: 0,
-            wrong: 0,
-            skipped: 0,
-            times: [],
-            answered: false,
-            timer: null,
-            timeLeft: 0,
-            totalAsked: 0,
-            hardMode: false,
-            sessionActive: false,
-            questionLimit: 15
-        };
-
+        var state = { subject: null, allQuestions: [], filtered: [], idx: 0 };
+        var LABELS = ['A','B','C','D'];
         var SUBJECTS = ['Physics','Chemistry','Biology'];
         var SUBJ_ICON = { Physics:'⚡', Chemistry:'🧪', Biology:'🧬' };
         var SUBJ_COLOR = { Physics:'var(--blue)', Chemistry:'var(--emerald)', Biology:'var(--pink)' };
 
-        var CHAPTERS = {
-            Physics: [
-                'Physical World & Measurement','Motion in a Straight Line','Motion in a Plane',
-                'Laws of Motion','Work, Energy & Power','System of Particles & Rotational Motion',
-                'Gravitation','Mechanical Properties of Solids','Mechanical Properties of Fluids',
-                'Thermal Properties of Matter','Thermodynamics','Kinetic Theory',
-                'Oscillations','Waves',
-                'Electric Charges & Fields','Electrostatic Potential & Capacitance','Current Electricity',
-                'Moving Charges & Magnetism','Magnetism & Matter','Electromagnetic Induction',
-                'Alternating Current','Electromagnetic Waves','Ray Optics & Optical Instruments',
-                'Wave Optics','Dual Nature of Radiation & Matter','Atoms','Nuclei','Semiconductor Electronics'
-            ],
-            Chemistry: [
-                'Basic Concepts of Chemistry','Structure of Atom','Classification of Elements',
-                'Chemical Bonding & Molecular Structure','States of Matter','Thermodynamics',
-                'Equilibrium','Redox Reactions','Hydrogen','s-Block Elements','p-Block Elements',
-                'Organic Chemistry: Basic Principles','Hydrocarbons','Environmental Chemistry',
-                'Solutions','Electrochemistry','Chemical Kinetics','Surface Chemistry',
-                'd & f Block Elements','Coordination Compounds','Haloalkanes & Haloarenes',
-                'Alcohols, Phenols & Ethers','Aldehydes, Ketones & Carboxylic Acids','Amines','Biomolecules',
-                'Polymers','Chemistry in Everyday Life'
-            ],
-            Biology: [
-                'The Living World','Biological Classification','Plant Kingdom','Animal Kingdom',
-                'Morphology of Flowering Plants','Anatomy of Flowering Plants','Structural Organization in Animals',
-                'Cell: The Unit of Life','Biomolecules','Cell Cycle & Cell Division',
-                'Transport in Plants','Mineral Nutrition','Photosynthesis in Higher Plants',
-                'Respiration in Plants','Plant Growth & Development','Digestion & Absorption',
-                'Breathing & Exchange of Gases','Body Fluids & Circulation','Excretory Products & Their Elimination',
-                'Locomotion & Movement','Neural Control & Coordination','Chemical Coordination & Integration',
-                'Reproduction in Organisms','Sexual Reproduction in Flowering Plants','Human Reproduction',
-                'Reproductive Health','Principles of Inheritance & Variation','Molecular Basis of Inheritance',
-                'Evolution','Human Health & Disease','Strategies for Enhancement in Food Production',
-                'Microbes in Human Welfare','Biotechnology: Principles & Processes','Biotechnology & Its Applications',
-                'Organisms & Populations','Ecosystem','Biodiversity & Conservation','Environmental Issues'
-            ]
-        };
-
-        function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
-        function pick(arr){return arr[rand(0,arr.length-1)]}
-        function shuffle(arr){for(var i=arr.length-1;i>0;i--){var j=rand(0,i);var t=arr[i];arr[i]=arr[j];arr[j]=t}return arr}
+        function shuffle(arr){for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t}return arr}
 
         function init() {
             renderSubjects();
-            renderChapters();
-            updateCounts();
-            document.getElementById('hardMode').addEventListener('change', function(){ state.hardMode = this.checked; });
+            loadBank();
         }
 
         function renderSubjects() {
@@ -286,242 +169,106 @@
             document.querySelectorAll('.subj-pill').forEach(function(p){
                 p.classList.toggle('active', p.getAttribute('data-subj') === subj);
             });
-            renderChapters();
-            document.getElementById('startView').classList.remove('active');
-            document.getElementById('practiceView').classList.remove('active');
+            document.getElementById('browseView').classList.remove('active');
             document.getElementById('startView').classList.add('active');
-            if (state.sessionActive) endSession();
+            updateStartView();
         }
 
-        function renderChapters() {
-            var grid = document.getElementById('chapterStrip');
+        function loadBank() {
+            fetch('question-bank/neet.json')
+                .then(function(r){ return r.json(); })
+                .then(function(data){
+                    state.allQuestions = data.questions || [];
+                    document.getElementById('bankSub').textContent = state.allQuestions.length + ' real exam problems. Select a subject.';
+                    updateStartView();
+                    document.getElementById('startBtn').style.display = 'inline-block';
+                })
+                .catch(function(){
+                    document.getElementById('bankSub').textContent = 'Failed to load question bank.';
+                });
+        }
+
+        function updateStartView() {
+            var grid = document.getElementById('countGrid');
             grid.innerHTML = '';
-            if (!state.subject) return;
-            var chs = CHAPTERS[state.subject] || [];
-            chs.forEach(function(ch, i){
-                var btn = document.createElement('div');
-                btn.className = 'ch-btn' + (state.chapter === ch ? ' active' : '');
-                btn.textContent = (i+1) + '. ' + ch;
-                btn.onclick = function(){ selectChapter(ch); };
-                grid.appendChild(btn);
+            if (!state.allQuestions.length) return;
+            SUBJECTS.forEach(function(s){
+                var count = state.allQuestions.filter(function(q){ return q.section === s; }).length;
+                var card = document.createElement('div');
+                card.className = 'count-card';
+                card.innerHTML = '<div class="c-label">Problems</div><div class="c-num" style="color:' + SUBJ_COLOR[s] + '">' + count + '</div><div class="c-name">' + s + '</div>';
+                grid.appendChild(card);
             });
         }
 
-        function selectChapter(ch) {
-            if (state.sessionActive && state.chapter !== ch) {
-                if (!confirm('Change chapter? Your current session will end.')) return;
-                endSession();
-            }
-            state.chapter = ch;
-            document.querySelectorAll('.ch-btn').forEach(function(b){
-                b.classList.toggle('active', b.textContent.indexOf(ch) >= 0);
-            });
-            startSession();
-        }
-
-        function startSession() {
-            state.sessionActive = true;
-            state.questions = [];
+        function startBrowse() {
+            if (!state.subject || !state.allQuestions.length) return;
+            state.filtered = state.allQuestions.filter(function(q){ return q.section === state.subject; });
+            shuffle(state.filtered);
+            if (state.filtered.length > 50) state.filtered = state.filtered.slice(0, 50);
             state.idx = 0;
-            state.correct = 0;
-            state.wrong = 0;
-            state.skipped = 0;
-            state.times = [];
-            state.totalAsked = 0;
-            state.answered = false;
-            generateQuestions();
             document.getElementById('startView').classList.remove('active');
-            document.getElementById('practiceView').classList.add('active');
-            document.getElementById('sessionBar').classList.remove('hidden');
-            showQuestion();
+            document.getElementById('browseView').classList.add('active');
+            showProblem();
         }
 
-        function endSession() {
-            state.sessionActive = false;
-            if (state.timer) { clearInterval(state.timer); state.timer = null; }
-            document.getElementById('practiceView').classList.remove('active');
-            document.getElementById('sessionBar').classList.add('hidden');
-            document.getElementById('startView').classList.add('active');
-        }
-
-        function generateQuestions() {
-            state.questions = [];
-            var limit = state.questionLimit;
-            for (var i = 0; i < limit; i++) {
-                var q = generateArenaQuestion(state.subject, state.chapter, state.hardMode ? 5 : rand(1,5));
-                if (q) state.questions.push(q);
+        function showProblem() {
+            var qs = state.filtered;
+            if (!qs.length) {
+                document.getElementById('pText').innerHTML = 'No problems available for this subject.';
+                return;
             }
-            if (state.questions.length === 0) {
-                for (var i = 0; i < limit; i++) {
-                    state.questions.push(fallbackQuestion(state.subject));
-                }
-            }
-        }
+            var q = qs[state.idx];
+            document.getElementById('pNum').textContent = 'Problem ' + (state.idx + 1);
+            document.getElementById('pCounter').textContent = (state.idx + 1) + ' / ' + qs.length;
+            document.getElementById('pTags').innerHTML = '<span class="tag subject">' + (q.section || '') + '</span><span class="tag qid">#' + (q.id || '') + '</span>';
+            document.getElementById('pText').innerHTML = q.text || q.question || '';
 
-        function fallbackQuestion(subj) {
-            var fallbacks = {
-                Physics: { q:'A body starts from rest and moves with constant acceleration of 2 m/s² for 5 seconds. Distance covered?', a:'25 m', o:['10 m','20 m','25 m','50 m'], s:'s = ut + ½at² = 0 + ½×2×25 = 25 m', key:'C' },
-                Chemistry: { q:'Number of moles in 18g of H₂O? (Atomic masses: H=1, O=16)', a:'1', o:['0.5','1','1.5','2'], s:'Molar mass H₂O = 18 g/mol. Moles = 18/18 = 1', key:'B' },
-                Biology: { q:'Which organelle is known as the powerhouse of the cell?', a:'Mitochondria', o:['Nucleus','Mitochondria','Ribosome','Golgi body'], s:'Mitochondria produces ATP through cellular respiration.', key:'B' }
-            };
-            var f = fallbacks[subj] || fallbacks.Physics;
-            return { question:f.q, answer:f.a, options:f.o, solution:f.s, key:f.key, subject:subj, chapter:'General', diff:1 };
-        }
-
-        function showQuestion() {
-            if (state.idx >= state.questions.length) { showResults(); return; }
-            state.answered = false;
-            var q = state.questions[state.idx];
-            document.getElementById('qNum').textContent = 'Question ' + (state.totalAsked + 1);
-            document.getElementById('progressFill').style.width = ((state.totalAsked) / state.questions.length * 100) + '%';
-            document.getElementById('qCounter').textContent = (state.totalAsked + 1) + '/' + state.questions.length;
-
-            var tags = document.getElementById('qTags');
-            tags.innerHTML = '<span class="tag subject">' + q.subject + '</span><span class="tag chapter">' + (q.chapter || '') + '</span><span class="tag diff">Diff ' + (q.diff || 1) + '/5</span>';
-
-            document.getElementById('qText').innerHTML = q.question;
-
+            var answer = '';
+            var solution = q.solution || '';
+            var correctIdx = -1;
             var grid = document.getElementById('optGrid');
             grid.innerHTML = '';
-            var labels = ['A','B','C','D'];
-            q.options.forEach(function(o, i){
-                var btn = document.createElement('div');
-                btn.className = 'opt-btn';
-                btn.textContent = labels[i] + '. ' + o;
-                btn.onclick = function(){ selectOption(i); };
-                btn.id = 'opt' + i;
-                grid.appendChild(btn);
-            });
+            if (q.options && q.options.length) {
+                q.options.forEach(function(o, i){
+                    var item = document.createElement('div');
+                    item.className = 'opt-item';
+                    item.id = 'opt' + i;
+                    var label = o.label || LABELS[i];
+                    var text = o.text || o;
+                    item.innerHTML = '<span class="opt-label">' + label + '.</span> ' + text;
+                    grid.appendChild(item);
+                    if (o.correct) { correctIdx = i; answer = label + '. ' + text; }
+                });
+            }
+            if (correctIdx >= 0) document.getElementById('opt' + correctIdx).classList.add('correct');
 
-            document.getElementById('resultFlash').className = 'result-flash';
-            document.getElementById('resultFlash').style.display = 'none';
-            document.getElementById('solutionBox').className = 'solution-box';
-            document.getElementById('solutionBox').style.display = 'none';
-            document.getElementById('nextBtn').style.display = 'none';
-
-            startTimer(q.timeLimit || 30);
-        }
-
-        function selectOption(idx) {
-            if (state.answered) return;
-            state.answered = true;
-            if (state.timer) { clearInterval(state.timer); state.timer = null; }
-            var q = state.questions[state.idx];
-            var correctAns = q.answer;
-            var selectedAns = q.options[idx];
-            var isCorrect = selectedAns === correctAns;
-            var labels = ['A','B','C','D'];
-
-            for (var i = 0; i < q.options.length; i++) {
-                var btn = document.getElementById('opt' + i);
-                btn.disabled = true;
-                if (q.options[i] === correctAns) btn.classList.add('correct');
-                if (i === idx && !isCorrect) btn.classList.add('wrong');
-                if (i === idx && isCorrect) btn.classList.add('selected');
+            document.getElementById('pAnswerValue').textContent = answer || '—';
+            document.getElementById('pAnswer').style.display = answer ? 'block' : 'none';
+            var solEl = document.getElementById('pSolution');
+            if (solution) {
+                solEl.style.display = 'block';
+                document.getElementById('pSolutionText').innerHTML = solution;
+            } else {
+                solEl.style.display = 'none';
             }
 
-            if (isCorrect) { state.correct++; } else { state.wrong++; }
-            state.totalAsked++;
+            document.getElementById('prevBtn').disabled = state.idx === 0;
+            document.getElementById('nextBtn').disabled = state.idx >= qs.length - 1;
+        }
 
-            updateScore();
-
-            var flash = document.getElementById('resultFlash');
-            flash.className = 'result-flash show ' + (isCorrect ? 'correct' : 'wrong');
-            flash.textContent = isCorrect ? '✓ Correct!' : '✗ Wrong — Answer: ' + correctAns;
-            flash.style.display = 'block';
-
-            var sol = document.getElementById('solutionBox');
-            if (q.solution) {
-                sol.className = 'solution-box show';
-                sol.innerHTML = '<div class="sol-label">Solution</div><div class="sol-key">Key: ' + (q.key || labels[q.options.indexOf(correctAns)]) + '. ' + correctAns + '</div><div>' + q.solution + '</div>';
+        function nextProblem() {
+            if (state.idx < state.filtered.length - 1) {
+                state.idx++;
+                showProblem();
             }
-            document.getElementById('nextBtn').style.display = 'block';
         }
 
-        function nextQuestion() {
-            state.idx++;
-            showQuestion();
-        }
-
-        function startTimer(secs) {
-            if (state.timer) clearInterval(state.timer);
-            state.timeLeft = secs;
-            var circle = document.getElementById('timerCircle');
-            circle.className = 'timer-circle';
-            circle.textContent = secs;
-            state.timer = setInterval(function(){
-                state.timeLeft--;
-                circle.textContent = state.timeLeft;
-                if (state.timeLeft <= 5) circle.className = 'timer-circle urgent';
-                else if (state.timeLeft <= 10) circle.className = 'timer-circle warning';
-                if (state.timeLeft <= 0) { clearInterval(state.timer); state.timer = null; autoSkip(); }
-            }, 1000);
-        }
-
-        function autoSkip() {
-            if (state.answered) return;
-            state.answered = true;
-            var q = state.questions[state.idx];
-            var labels = ['A','B','C','D'];
-            for (var i = 0; i < q.options.length; i++) {
-                document.getElementById('opt' + i).disabled = true;
-                if (q.options[i] === q.answer) document.getElementById('opt' + i).classList.add('correct');
+        function prevProblem() {
+            if (state.idx > 0) {
+                state.idx--;
+                showProblem();
             }
-            state.skipped++;
-            state.totalAsked++;
-            updateScore();
-            var flash = document.getElementById('resultFlash');
-            flash.className = 'result-flash show wrong';
-            flash.textContent = '⏰ Time up! Answer: ' + q.answer;
-            flash.style.display = 'block';
-            var sol = document.getElementById('solutionBox');
-            if (q.solution) {
-                sol.className = 'solution-box show';
-                sol.innerHTML = '<div class="sol-label">Solution</div><div class="sol-key">Key: ' + (q.key || labels[q.options.indexOf(q.answer)]) + '. ' + q.answer + '</div><div>' + q.solution + '</div>';
-            }
-            document.getElementById('nextBtn').style.display = 'block';
-        }
-
-        function updateScore() {
-            document.getElementById('scoreNum').textContent = state.correct;
-            document.getElementById('totalNum').textContent = state.totalAsked;
-        }
-
-        function showResults() {
-            if (state.timer) { clearInterval(state.timer); state.timer = null; }
-            var total = state.correct + state.wrong + state.skipped;
-            var pct = total > 0 ? Math.round(state.correct / total * 100) : 0;
-            document.getElementById('resultEmoji').textContent = pct >= 80 ? '🏆' : pct >= 50 ? '🎯' : '💪';
-            document.getElementById('resultScore').textContent = state.correct + '/' + total;
-            document.getElementById('resultScore').className = 'big-num ' + (pct >= 70 ? 'good' : pct >= 40 ? 'ok' : 'bad');
-            document.getElementById('resultPct').textContent = pct + '%';
-            document.getElementById('rCorrect').textContent = state.correct;
-            document.getElementById('rWrong').textContent = state.wrong;
-            document.getElementById('rSkipped').textContent = state.skipped;
-            document.getElementById('rAccuracy').textContent = pct + '%';
-            document.getElementById('rAvgTime').textContent = '30s';
-            document.getElementById('resultsOverlay').classList.add('show');
-        }
-
-        function restartSession() {
-            document.getElementById('resultsOverlay').classList.remove('show');
-            startSession();
-        }
-
-        function backToMenu() {
-            document.getElementById('resultsOverlay').classList.remove('show');
-            endSession();
-        }
-
-        function updateCounts() {
-            try {
-                var p = window._arenaQuestionCounts;
-                if (p) {
-                    document.getElementById('phyCount').textContent = p.Physics || 0;
-                    document.getElementById('chemCount').textContent = p.Chemistry || 0;
-                    document.getElementById('bioCount').textContent = p.Biology || 0;
-                }
-            } catch(e){}
         }
 
         document.addEventListener('DOMContentLoaded', init);
