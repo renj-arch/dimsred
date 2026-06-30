@@ -209,10 +209,11 @@
 
             <!-- Mega GK: the only quiz mode -->
             <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;justify-content:center;flex-direction:column">
-                <button class="action-btn secondary" style="padding:16px;font-size:1.05em;background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.2)" onclick="startCombinedQuiz(15, '🎯 Mega GK')">🎯 Mega GK — Start</button>
+                <button class="action-btn secondary" style="padding:16px;font-size:1.05em;background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.2)" onclick="startCombinedQuiz(15, '🎯 Mega GK')">🎯 Mega GK — Live Wikipedia</button>
+                <button class="action-btn secondary" style="padding:14px;font-size:.95em;background:rgba(99,102,241,.12);color:var(--purple);border:1px solid rgba(99,102,241,.2)" onclick="startStaticGk()">📚 Static GK — All 26 Categories</button>
             </div>
 
-            <p class="gk-intro">Powered by live Wikipedia data — random articles, categories, search, current events, on-this-day history. Every question is procedurally generated on the fly.</p>
+            <p class="gk-intro">Live Wikipedia GK or curated static GK across 26 categories. Auto-advances every 4 seconds. Pause anytime.</p>
 
             <!-- PIB quiz panel -->
             <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;justify-content:center">
@@ -5762,7 +5763,7 @@ GK_GENERATORS.pib = function() {
             }
             _loadingRetry = 0;
             var q = state.questions[state.idx];
-            var isLearning = state.infinite && state.cat === 'mixed';
+            var isLearning = (state.infinite && state.cat === 'mixed') || state.cat === 'static';
             if (isLearning) {
                 state.answered = true; // skip answer interaction
                 document.getElementById('qNum').textContent = (state.idx + 1);
@@ -7362,6 +7363,42 @@ GK_GENERATORS.pib = function() {
                     }
                 }, 400);
             }
+        }
+
+        function startStaticGk() {
+            if (!confirmAbandonQuiz()) return;
+            state.cat = 'static';
+            state.categoryName = 'Static GK';
+            state.idx = 0;
+            state.correct = 0;
+            state.streak = 0;
+            state.answered = true;
+            state.questions = [];
+            state.infinite = false;
+            state.restartFn = function() { startStaticGk(); };
+            document.getElementById('scoreLabel').textContent = 'topics';
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('qArea').classList.add('active');
+            document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('restartBtn').style.display = 'inline-block';
+            document.getElementById('pibHeaderBtn').style.display = 'none';
+            document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
+            document.getElementById('qText').innerHTML = 'Loading Static GK...';
+            document.getElementById('optGrid').innerHTML = '';
+            var allCats = Object.keys(GK_GENERATORS).filter(function(k) { return typeof GK_GENERATORS[k] === 'function' && k !== 'pib' && k !== 'sebi' && k !== 'scjudgments' && k !== 'rbi' && k !== 'isro' && k !== 'mea'; });
+            var added = 0;
+            for (var ci = 0; ci < allCats.length && added < 400; ci++) {
+                try {
+                    var q = GK_GENERATORS[allCats[ci]]();
+                    if (!q || !q.q || !q.a) continue;
+                    if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
+                    q._wikiCat = allCats[ci];
+                    state.questions.push(q);
+                    added++;
+                } catch(e) {}
+            }
+            if (state.questions.length > 0) showQuestion();
+            else document.getElementById('qText').innerHTML = 'No static GK loaded.';
         }
 
         function startCombinedQuiz(count, label) {
