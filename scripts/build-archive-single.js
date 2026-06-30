@@ -432,4 +432,11 @@ html += '<\/body>\n<\/html>';
 fs.writeFileSync(archivePath, html);
 const sizeMb = (Buffer.byteLength(html) / 1024 / 1024).toFixed(1);
 console.log('\nWrote archive.html (' + sizeMb + ' MiB) - single page with lazy-load');
+
+// Write manifest listing all category files (for Cloudflare Function)
+const manifestPath = path.join(outDir, 'manifest.json');
+const manifestFiles = fs.readdirSync(outDir).filter(f => f.endsWith('.json') && f !== 'manifest.json');
+fs.writeFileSync(manifestPath, JSON.stringify(manifestFiles));
+console.log('Wrote manifest.json with ' + manifestFiles.length + ' files');
+
 console.log('Done: ' + catIndex.length + ' category files in data/questions/');

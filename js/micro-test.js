@@ -50,10 +50,10 @@ function loadIndex(){
         var d = JSON.parse(x.responseText);
         exams = d.exams;
         renderExamGrid();
-      } catch(e) { console.error('Parse error:', e); }
+      } catch(e) { }
     }
   };
-  x.onerror = function(){ console.error('Failed to load topic index'); };
+  x.onerror = function(){ };
   x.send();
 }
 
@@ -169,7 +169,7 @@ function loadFullExamData(){
       try {
         var d = JSON.parse(x.responseText);
         buildQuestions(d);
-      } catch(e) { console.error('Parse error:', e); resetStartBtn(); }
+      } catch(e) { resetStartBtn(); }
     } else { resetStartBtn(); }
   };
   x.onerror = function(){ resetStartBtn(); };

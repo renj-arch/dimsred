@@ -933,40 +933,76 @@ var ANALOGY_CATS = [
 ];
 
 function generateAnalogyQuestion(diff) {
-  // For hard diff, prefer number/letter based analogies (indices 9 onward)
-  var startIdx = diff > 2 ? 9 : 0;
-  var catIdx = rand(startIdx, ANALOGY_CATS.length - 1);
-  var cat = ANALOGY_CATS[catIdx];
-  var idx = rand(0, cat.pairs.length - 1);
-  var pair = cat.pairs[idx];
-  var ansIdx = rand(0, cat.pairs.length - 1);
-  while (ansIdx === idx && cat.pairs.length > 1) ansIdx = rand(0, cat.pairs.length - 1);
-  var ansPair = cat.pairs[ansIdx];
-
-  var qText = pair[0] + ' : ' + pair[1] + ' :: ' + ansPair[0] + ' : ?';
-  var answer = ansPair[1];
-
-  var opts = [answer];
-  var pool = cat.pairs.reduce(function(acc, p) { if (p[1] !== answer && acc.indexOf(p[1]) < 0) acc.push(p[1]); return acc; }, []);
-  if (pool.length < 3) {
-    ANALOGY_CATS.forEach(function(c) { c.pairs.forEach(function(p) { if (p[1] !== answer && pool.indexOf(p[1]) < 0) pool.push(p[1]); }); });
+  var ty = [
+    function() {
+      // Standard analogy from ANALOGY_CATS
+      var startIdx = diff > 2 ? 9 : 0;
+      var catIdx = rand(startIdx, ANALOGY_CATS.length - 1);
+      var cat = ANALOGY_CATS[catIdx];
+      var idx = rand(0, cat.pairs.length - 1);
+      var pair = cat.pairs[idx];
+      var ansIdx = rand(0, cat.pairs.length - 1);
+      while (ansIdx === idx && cat.pairs.length > 1) ansIdx = rand(0, cat.pairs.length - 1);
+      var ansPair = cat.pairs[ansIdx];
+      var qText = pair[0] + ' : ' + pair[1] + ' :: ' + ansPair[0] + ' : ?';
+      var answer = ansPair[1];
+      var opts = [answer];
+      var pool = cat.pairs.reduce(function(acc, p) { if (p[1] !== answer && acc.indexOf(p[1]) < 0) acc.push(p[1]); return acc; }, []);
+      if (pool.length < 3) {
+        ANALOGY_CATS.forEach(function(c) { c.pairs.forEach(function(p) { if (p[1] !== answer && pool.indexOf(p[1]) < 0) pool.push(p[1]); }); });
+      }
+      shuffle(pool);
+      for (var i = 0; opts.length < 4 && i < pool.length; i++) { if (opts.indexOf(pool[i]) < 0) opts.push(pool[i]); }
+      while (opts.length < 4) { var d = String.fromCharCode(65 + opts.length); if (opts.indexOf(d) < 0) opts.push(d); }
+      shuffle(opts);
+      return { q: '(' + cat.rel + ') ' + qText, a: answer, o: opts, hint: 'Identify pattern: ' + cat.rel + '. Apply same to ' + ansPair[0] + '.', t: diff <= 1 ? 15 : (diff <= 3 ? 12 : 10), sol: cat.rel + ': ' + pair[0] + ' → ' + pair[1] + ', so ' + ansPair[0] + ' → ' + answer + '.' };
+    },
+    function() {
+      // Hard: double relationship analogy (e.g., letter:number :: word:?)
+      var map = {'A':1,'B':2,'C':3,'D':4,'E':5,'F':6,'G':7,'H':8,'I':9,'J':10,'K':11,'L':12,'M':13,'N':14,'O':15,'P':16,'Q':17,'R':18,'S':19,'T':20,'U':21,'V':22,'W':23,'X':24,'Y':25,'Z':26};
+      var letters = Object.keys(map);
+      var l1 = letters[rand(0, 25)], l2 = letters[rand(0, 25)];
+      while (l2 === l1) l2 = letters[rand(0, 25)];
+      var n1 = map[l1], n2 = map[l2];
+      var qWord = l1 + l2;
+      var ansWord = String.fromCharCode(64 + n1*2) + String.fromCharCode(64 + n2*2);
+      var opts = [ansWord];
+      while (opts.length < 4) { var w = letters[rand(0, 25)] + letters[rand(0, 25)]; if (opts.indexOf(w) < 0) opts.push(w); }
+      shuffle(opts);
+      return { q: l1 + ':' + n1 + ' :: ' + l2 + ':' + n2 + '  →  ' + qWord + ' : ?', a: ansWord, o: opts, hint: 'Double mapping: letter→position, then position×2', t: 10, sol: l1 + '→' + n1 + ', ' + l2 + '→' + n2 + '. ' + qWord + ' → each letter doubled: ' + ansWord + '.' };
+    },
+    function() {
+      // Hard: mixed letter-number analogy
+      var digits = '0123456789';
+      var base = rand(10, 50);
+      var code1 = String(base) + String.fromCharCode(64 + base);
+      var code2 = String(base + rand(2, 5)) + String.fromCharCode(64 + base + rand(2, 5));
+      var ansCode = String(base + rand(4, 7)) + String.fromCharCode(64 + base + rand(4, 7));
+      var opts = [ansCode];
+      while (opts.length < 4) { var d = String(rand(10, 99)) + String.fromCharCode(64 + rand(1, 26)); if (opts.indexOf(d) < 0) opts.push(d); }
+      shuffle(opts);
+      return { q: code1 + ' : ' + code2 + ' :: ' + ansCode[0] + (parseInt(ansCode[0])+2) + ' : ?', a: ansCode, o: opts, hint: 'Identify the relationship between number and letter parts', t: 10, sol: 'Pattern: number and corresponding alphabet position. ' + ansCode + ' completes the analogy.' };
+    }
+  ];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 3), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
   }
-  shuffle(pool);
-  for (var i = 0; opts.length < 4 && i < pool.length; i++) { if (opts.indexOf(pool[i]) < 0) opts.push(pool[i]); }
-  while (opts.length < 4) { var d = String.fromCharCode(65 + opts.length); if (opts.indexOf(d) < 0) opts.push(d); }
-  shuffle(opts);
-
+  var t = ty[idx];
+  var data = t();
   return {
-    question: '(' + cat.rel + ') ' + qText,
-    answer: answer,
-    options: opts,
-    hint: 'Identify pattern: ' + cat.rel + '. Apply same to ' + ansPair[0] + '.',
-    timeLimit: diff <= 1 ? 15 : (diff <= 3 ? 12 : 10),
+    question: data.q,
+    answer: data.a,
+    options: data.o,
+    hint: data.hint,
+    timeLimit: data.t,
     type: 'pattern', patternLabel: 'Analogy',
-    techniqueLabel: 'Analogy: ' + cat.rel,
-    drillLine1: cat.rel,
-    drillLine2: pair[0] + ':' + pair[1] + ' = ' + ansPair[0] + ':' + answer,
-    solution: cat.rel + ': ' + pair[0] + ' → ' + pair[1] + ', so ' + ansPair[0] + ' → ' + answer + '.'
+    techniqueLabel: 'Analogy',
+    drillLine1: data.q,
+    drillLine2: 'Answer: ' + data.a,
+    solution: data.sol
   };
 }
 
@@ -1134,9 +1170,41 @@ function generateClassificationQuestion(diff) {
       var wrong=(1<<(p+3))+1;
       items.push(wrong); shuffle(items);
       return {items:items, answer:wrong, expl:wrong+' is not a power of 2, others are powers of 2'};
+    },
+    // SBI PO Hard: number theory — all are n²+n+1 except one
+    function() {
+      var b=rand(3,7);
+      var items=[b*b+b+1, (b+1)*(b+1)+(b+1)+1, (b+2)*(b+2)+(b+2)+1];
+      var wrong=(b+3)*(b+3)+(b+3)+2;
+      items.push(wrong); shuffle(items);
+      return {items:items, answer:wrong, expl:wrong+' does not follow n²+n+1 pattern, others do'};
+    },
+    // SBI PO Hard: complex pattern — sum of digits forms a GP
+    function() {
+      var nums=[];
+      for(var i=0;i<3;i++){var n=rand(1,9)*111;nums.push(n);}
+      var wrong=rand(1,9)*123;
+      nums.push(wrong); shuffle(nums);
+      return {items:nums, answer:wrong, expl:wrong+' breaks the repeated-digit pattern (111, 222, 444 etc), others have identical digits'};
+    },
+    // SBI PO Hard: Fibonacci derived — all are F(n)+n except one
+    function() {
+      var fib=[0,1,1,2,3,5,8,13,21,34,55,89];
+      var s=rand(3,6);
+      var items=[fib[s]+s, fib[s+1]+s+1, fib[s+2]+s+2];
+      var wrong=fib[s+3]+s+4;
+      items.push(wrong); shuffle(items);
+      return {items:items, answer:wrong, expl:wrong+' does not follow Fibonacci(n)+n pattern, others do'};
     }
   ];
-  var fn = rules[rand(0, rules.length - 1)];
+  var ty = rules;
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var fn = ty[idx];
   var data = fn();
   shuffle(data.items);
   var opts = data.items.slice();
@@ -1183,12 +1251,28 @@ function generateSeriesQuestion(diff) {
     [5, function() { var a=rand(2,4), b=rand(1,5), s=rand(2,6), n=5,seq=[s]; for(var i=0;i<n;i++)seq.push(seq[i]*a+b); return {seq:seq,ans:seq[n]*a+b,pat:'×'+a+'+'+b,hint:'Prev ×'+a+'+'+b}; }],
     [5, function() { var s=rand(2,5), n=7,seq=[s]; for(var i=0;i<n;i++){if(i%2===0)seq.push(seq[i]*2);else seq.push(seq[i]+3);} return {seq:seq,ans:n%2===0?seq[n]+3:seq[n]*2,pat:'Alt ×2+3',hint:'×2 then +3 then ×2...'}; }],
     [5, function() { var s=rand(3,8), n=5,seq=[]; for(var i=0;i<n;i++)seq.push((s+i)*(s+i)-1); return {seq:seq,ans:(s+n)*(s+n)-1,pat:'n²-1',hint:'Squares-1'}; }],
-    [5, function() { var s=rand(2,7), n=5,seq=[]; for(var i=0;i<n;i++)seq.push((s+i)*((s+i)+1)); return {seq:seq,ans:(s+n)*((s+n)+1),pat:'n(n+1)²',hint:'n×(n+1)'}; }]
+    [5, function() { var s=rand(2,7), n=5,seq=[]; for(var i=0;i<n;i++)seq.push((s+i)*((s+i)+1)); return {seq:seq,ans:(s+n)*((s+n)+1),pat:'n(n+1)²',hint:'n×(n+1)'}; }],
+    // SBI PO Hard: alternating pattern with prime gaps
+    function() { var p=[2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61]; var s=rand(0,8), n=6, seq=[]; for(var i=0;i<n;i+=2){seq.push(p[s+i/2], p[s+i/2+1]+(i+1));} return {seq:seq,ans:n%2===0?p[s+n/2+1]+(n+1):p[s+(n+1)/2],pat:'Alt prime+gap',hint:'Alternating: prime, prime+index'}; },
+    // SBI PO Hard: multi-operation — ×2, +3, ×2, +3...
+    function() { var s=rand(3,9), n=7,seq=[s]; for(var i=0;i<n;i++){if(i%2===0)seq.push(seq[i]*2);else seq.push(seq[i]+3);} return {seq:seq,ans:n%2===0?seq[n]+3:seq[n]*2,pat:'Alt ×2,+3',hint:'×2 then +3 then ×2...'}; },
+    // SBI PO Hard: mixed operation — n²+1, n²-1 alternating
+    function() { var s=rand(3,6), n=6,seq=[]; for(var i=0;i<n;i++){var base=s+i;seq.push(i%2===0?base*base+1:base*base-1);} return {seq:seq,ans:n%2===0?(s+n)*(s+n)-1:(s+n)*(s+n)+1,pat:'Alt n²±1',hint:'Alternating +1, -1 for squares'}; }
   ];
-  var matched = types.filter(function(t){ return t[0] <= diff; });
-  if (matched.length === 0) matched = types;
-  var chosen = matched[rand(0, matched.length - 1)];
-  var data = chosen[1]();
+  var ty = types;
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var chosen = ty[idx];
+  if (Array.isArray(chosen)) {
+    var matched = types.filter(function(t){ return t[0] <= diff; });
+    if (matched.length === 0) matched = types;
+    chosen = matched[rand(0, matched.length - 1)];
+  }
+  var data = chosen[1] ? chosen[1]() : chosen();
   var isLetter = typeof data.ans === 'string' && /^[A-Z]$/.test(data.ans);
   var isFrac = typeof data.ans === 'string' && data.ans.indexOf('/')>=0;
   var answer = isLetter ? data.ans : (isFrac ? data.ans : Math.round(data.ans));
@@ -1212,22 +1296,41 @@ function generateCodingQuestion(diff) {
     [4, function(w){ var s=''; for(var i=0;i<w.length;i++){var c=w.charCodeAt(i)-64+rand(1,3);if(c>26)c-=26; s+=String.fromCharCode(64+c);} return {ans:s,desc:'Each letter shifted +'+(rand(1,3))+' positions',sch:'Letter shift +'+(rand(1,3))}; }],
     [4, function(w){ var s=''; for(var i=w.length-1;i>=0;i--)s+=w[i]; return {ans:s,desc:'Word reversed',sch:'Reverse word'}; }],
     [5, function(w){ var vowelPos={'A':1,'E':2,'I':3,'O':4,'U':5}; var s=0; for(var i=0;i<w.length;i++){if(vowelPos[w[i]])s+=vowelPos[w[i]]*2; else s+=w.charCodeAt(i)-64;} return {ans:s,desc:'Vowels ×2, consonants as is',sch:'Vowel double'}; }],
-    [5, function(w){ var s=''; for(var i=0;i<w.length;i++){var c=String.fromCharCode(65+rand(0,25));s+=c;} return {ans:s,desc:'Each letter replaced by code letter',sch:'Substitution code'}; }]
+    [5, function(w){ var s=''; for(var i=0;i<w.length;i++){var c=String.fromCharCode(65+rand(0,25));s+=c;} return {ans:s,desc:'Each letter replaced by code letter',sch:'Substitution code'}; },
+    function(w){ var s=''; for(var i=0;i<w.length;i++){var p=w.charCodeAt(i)-64;if('AEIOU'.indexOf(w[i])>=0) s+=String.fromCharCode(64+(p%26===0?26:p%26)+2); else s+=String.fromCharCode(64+(p%26===0?26:p%26)+1);} return {ans:s,desc:'Vowels +2, consonants +1',sch:'Conditional shift'}; },
+    function(w){ var grid=[['A','B','C','D','E'],['F','G','H','I','J'],['K','L','M','N','O'],['P','Q','R','S','T'],['U','V','W','X','Y']]; var s=0; for(var i=0;i<w.length;i++){for(var r=0;r<5;r++){for(var c=0;c<5;c++){if(grid[r][c]===w[i]){s+=r*10+c;break;}}}} return {ans:s,desc:'Matrix position sum (rowx10+col)',sch:'Matrix code sum'}; },
+    function(w){ var rev=w.split('').reverse().join(''); var s=''; for(var i=0;i<rev.length;i++){var p=rev.charCodeAt(i)-64+i+1;if(p>26)p-=26; s+=String.fromCharCode(64+p);} return {ans:s,desc:'Reverse word then shift each by index',sch:'Reverse+shift'}; }]
   ];
-  var matched = schemes.filter(function(t){ return t[0] <= diff; });
-  if (matched.length === 0) matched = schemes;
-  var scheme = matched[rand(0, matched.length - 1)];
+  var ty = schemes;
+  var idx;
+  if (diff >= 5 && ty.length >= 6) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var scheme = ty[idx];
+  if (Array.isArray(scheme)) {
+    var matched = schemes.filter(function(t){ return t[0] <= diff; });
+    if (matched.length === 0) matched = schemes;
+    scheme = matched[rand(0, matched.length - 1)];
+  }
   var word = words[rand(0, words.length - 1)];
   var exWord = words[rand(0, words.length - 1)];
   while (exWord === word) exWord = words[rand(0, words.length - 1)];
-  var exResult = scheme[1](exWord);
-  var data = scheme[1](word);
+  var exData = scheme[1] ? scheme[1](exWord) : scheme(exWord);
+  var data = scheme[1] ? scheme[1](word) : scheme(word);
   var answer = data.ans;
-  var opts = [answer];
-  var spread = Math.max(1, Math.round(answer * 0.2));
-  while (opts.length < 4) { var d = answer + rand(-spread - 2, spread + 2); if (opts.indexOf(d) < 0 && d > 0 && d < 100000) opts.push(d); }
+  var answerStr = typeof answer === 'number' ? answer : String(answer);
+  var opts = [answerStr];
+  if (typeof answer === 'number') {
+    var spread = Math.max(1, Math.round(answer * 0.2));
+    while (opts.length < 4) { var d = answer + rand(-spread - 2, spread + 2); if (opts.indexOf(d) < 0 && d > 0 && d < 100000) opts.push(d); }
+  } else {
+    while (opts.length < 4) { var d = words[rand(0, words.length - 1)]; if (opts.indexOf(d) < 0) opts.push(d); }
+  }
   shuffle(opts);
-  return { question: 'If ' + exWord + ' = ' + exResult.ans + ', then ' + word + ' = ?', answer: answer, options: opts, hint: exResult.desc + '. Apply same to ' + word, timeLimit: diff<=1?15:(diff<=3?12:10), type:'pattern', patternLabel:'Coding', techniqueLabel:'Coding: '+data.sch+'. Find rule from example.', drillLine1: exWord + ' = ' + exResult.ans + ' ? ' + data.sch, drillLine2: word + ' = ' + answer, solution: data.sch + '. ' + word + ': ' + word.split('').map(function(l){return l+'='+(l.charCodeAt(0)-64);}).join(', ') + ' → ' + answer };
+  var sch = data.sch || 'Conditional';
+  return { question: 'If ' + exWord + ' = ' + (exData.ans || exData) + ', then ' + word + ' = ?', answer: answerStr, options: opts, hint: data.desc + '. Apply same to ' + word, timeLimit: diff<=1?15:(diff<=3?12:10), type:'pattern', patternLabel:'Coding', techniqueLabel:'Coding: '+sch, drillLine1: exWord + ' = ' + (exData.ans || exData) + ' ? ' + sch, drillLine2: word + ' = ' + answerStr, solution: sch + '. ' + word + ' -> ' + answerStr };
 }
 
 function generateSyllogismQuestion(diff) {
@@ -1253,11 +1356,46 @@ function generateSyllogismQuestion(diff) {
     [4, 'All ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '. Some ' + D + ' are ' + C + '.', 'Some ' + D + ' are ' + A + '.', 'Cannot determine', 'D and A have no direct link' ],
     [5, 'Some ' + A + ' are ' + B + '. Some ' + B + ' are ' + C + '. All ' + C + ' are ' + D + '.', 'Some ' + A + ' are ' + D + '.', 'Cannot determine', 'A and D have no guaranteed link' ],
     [5, 'All ' + A + ' are ' + B + '. All ' + B + ' are ' + C + '. Can never be true: No ' + A + ' is ' + C + '.', 'True (can never be)', 'Since all A are C, "no A is C" is impossible' ],
-    [5, 'All ' + A + ' are ' + B + '. No ' + C + ' are ' + B + '.', 'Either no ' + A + ' are ' + C + ' or some ' + A + ' are not ' + C + '.', 'True', 'A⊆B, C∩B=∅ → A∩C=∅' ]
+    [5, 'All ' + A + ' are ' + B + '. No ' + C + ' are ' + B + '.', 'Either no ' + A + ' are ' + C + ' or some ' + A + ' are not ' + C + '.', 'True', 'A⊆B, C∩B=∅ → A∩C=∅' ],
+    // SBI PO Hard: multi-premise possibility
+    function() {
+      var opts = POSSIBILITY_ANSWERS[rand(0, POSSIBILITY_ANSWERS.length - 1)];
+      var prem = 'All ' + A + ' are ' + B + '. Some ' + B + ' are ' + C + '. All ' + C + ' are ' + D + '.';
+      var conc = 'Possibly some ' + A + ' are ' + D + '. Is this a valid possibility?';
+      return [5, prem, conc, opts.a, opts.sol];
+    },
+    // SBI PO Hard: possibility with negative
+    function() {
+      var prem = 'No ' + A + ' is ' + B + '. All ' + B + ' are ' + C + '. Some ' + D + ' are ' + A + '.';
+      var conc = 'Some ' + D + ' are not ' + C + '. Can this be true?';
+      return [5, prem, conc, 'Cannot determine', 'D may or may not intersect with C. If D∩A is outside C, then yes. Otherwise no.'];
+    },
+    // SBI PO Hard: all + some not chain
+    function() {
+      var prem = 'All ' + A + ' are ' + B + '. Some ' + B + ' are not ' + C + '. All ' + C + ' are ' + D + '.';
+      var conc = 'Some ' + A + ' are not ' + D + '. Is this necessarily true?';
+      return [5, prem, conc, 'Cannot determine', 'A that are B may or may not be in the "not C" portion.'];
+    }
   ];
-  var p = patterns.filter(function(x){return x[0] <= diff;});
-  if (p.length === 0) p = patterns;
-  var chosen = p[rand(0, p.length - 1)];
+  var POSSIBILITY_ANSWERS = [
+    {a:'True (possible)', sol: 'Since some B are C and all C are D, and A are B, it is possible some A are D via B→C pathway.'},
+    {a:'False (impossible)', sol: 'No direct link from A to C to D can be established as possible.'}
+  ];
+  var ty = patterns;
+  var idx;
+  if (diff >= 5 && ty.length >= 6) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var chosen = ty[idx];
+  if (Array.isArray(chosen) && typeof chosen[0] === 'number') {
+    var p = patterns.filter(function(x){ return Array.isArray(x) && typeof x[0] === 'number' && x[0] <= diff; });
+    if (p.length === 0) p = patterns.filter(function(x){ return Array.isArray(x) && typeof x[0] === 'number'; });
+    chosen = p[rand(0, p.length - 1)];
+  } else if (typeof chosen === 'function') {
+    chosen = chosen();
+  }
   var isPoss = chosen[3].indexOf('can never') >= 0;
   var opts = isPoss ? ['True','False','Cannot determine','Depends'] : ['Definitely true','Definitely false','Probably true','Cannot determine'];
   shuffle(opts);
@@ -1382,8 +1520,34 @@ function generateInequalityQuestion(diff) {
     var ans = hasMixed ? 'Direction flips — cannot combine all' : (allPositive ? first + ' > ' + last : first + ' < ' + last);
     return { q: 'Which statement is definitely true?', ans: ans, opts: [first + ' > ' + last, first + ' < ' + last, first + ' = ' + last, 'Direction flips — cannot combine all'], desc: 'Mixed direction' };
   });
+  // SBI PO Hard: multi-statement coded inequality (find conclusion among 3 given)
+  qTypes.push(function() {
+    var conclusions = [
+      { text: first + ' > ' + last, correct: allPositive && !hasEq },
+      { text: first + ' < ' + last, correct: allNegative && !hasEq },
+      { text: first + ' ≥ ' + last, correct: allPositive && hasEq },
+      { text: first + ' ≤ ' + last, correct: allNegative && hasEq },
+      { text: 'Cannot determine', correct: !allPositive && !allNegative }
+    ];
+    var correct = conclusions.filter(function(c){ return c.correct; });
+    var ans = correct.length > 0 ? correct[0].text : 'Cannot determine';
+    return { q: 'Which conclusion definitely follows from the given statements?', ans: ans, opts: conclusions.slice(0,4).map(function(c){ return c.text; }), desc: 'Multi-statement conclusion' };
+  });
+  // SBI PO Hard: find the odd conclusion
+  qTypes.push(function() {
+    var concs = [first + ' > ' + last, first + ' ≥ ' + last, first + ' = ' + last, first + ' < ' + last];
+    var ans = allPositive ? concs[3] : (allNegative ? concs[0] : concs[2]);
+    return { q: 'Which of the following conclusions is definitely NOT true?', ans: ans, opts: concs, desc: 'Identify false conclusion' };
+  });
 
-  var q = qTypes[rand(0, qTypes.length - 1)]();
+  var ty = qTypes;
+  var idx;
+  if (diff >= 5 && ty.length >= 6) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 3), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var q = ty[idx]();
   var answer = q.ans;
   var opts = q.opts.slice();
   shuffle(opts);
@@ -1408,12 +1572,10 @@ function generateInequalityQuestion(diff) {
 
 function generateDirectionQuestion(diff) {
   var dirs = ['North','South','East','West'];
+  var ty = [];
 
-  // Advanced types for higher diff
-  var advType = diff > 1 ? rand(0, 3) : 0;
-
-  // Type 0: Standard path-based direction (existing enhanced)
-  if (advType === 0) {
+  // Type 0: Standard path-based direction
+  ty.push(function() {
     var x = 0, y = 0;
     var moves = [];
     var numMoves = rand(2, diff <= 1 ? 3 : (diff <= 3 ? 4 : 5));
@@ -1431,7 +1593,6 @@ function generateDirectionQuestion(diff) {
         moves.push('turns ' + (currentDir === dirs[(dirs.indexOf(currentDir) + 3) % 4] ? 'left' : 'right'));
       }
     }
-
     var distance = Math.round(Math.sqrt(x * x + y * y));
     var finalDir = '';
     if (x === 0 && y === 0) finalDir = 'Same point';
@@ -1443,13 +1604,11 @@ function generateDirectionQuestion(diff) {
       else if (y < 0 && x > 0) finalDir = 'South-East';
       else finalDir = 'South-West';
     }
-
     var askTypes = [
       { q: 'Distance from start?', a: String(distance) + (distance > 0 ? ' m' : ''), isDir: false },
       { q: 'Direction from start?', a: finalDir, isDir: true }
     ];
     var ask = pick(askTypes);
-
     var opts;
     if (ask.isDir) {
       var allDirs = ['North','South','East','West','North-East','North-West','South-East','South-West','Same point'];
@@ -1459,36 +1618,20 @@ function generateDirectionQuestion(diff) {
     } else {
       opts = [ask.a];
       var spread = Math.max(1, Math.round(distance * 0.3));
-      while (opts.length < 4) {
-        var d = distance + rand(-spread - 2, spread + 2);
-        if (opts.indexOf(d) < 0 && d >= 0) opts.push(String(d) + ' m');
-      }
+      while (opts.length < 4) { var d = distance + rand(-spread - 2, spread + 2); if (opts.indexOf(d) < 0 && d >= 0) opts.push(String(d) + ' m'); }
     }
     shuffle(opts);
     if (!ask.isDir && distance === 0) { ask.a = 'Same point'; opts = ['Same point','North','South','East']; shuffle(opts); }
-
-    return {
-      question: moves.join('. ') + '. ' + ask.q,
-      answer: ask.a,
-      options: opts,
-      hint: 'Track N/S and E/W separately. Right=clockwise 90°. Pythagoras only if both axes changed.',
-      timeLimit: diff <= 1 ? 20 : (diff <= 3 ? 15 : 12),
-      type: 'pattern', patternLabel: 'Direction',
-      techniqueLabel: 'Direction: track N/S and E/W axes. Right=clockwise.',
-      drillLine1: 'Net: N/S=' + y + ', E/W=' + x,
-      drillLine2: ask.q + ' = ' + ask.a,
-      solution: 'Path: ' + moves.join('; ') + '. Net: y=' + y + ', x=' + x + '. ' + ask.q + ' = ' + ask.a
-    };
-  }
+    return { q: moves.join('. ') + '. ' + ask.q, a: ask.a, o: opts, hint: 'Track N/S and E/W separately. Right=clockwise 90°. Pythagoras only if both axes changed.', t: diff <= 1 ? 20 : (diff <= 3 ? 15 : 12), sol: 'Path: ' + moves.join('; ') + '. Net: y=' + y + ', x=' + x + '. ' + ask.q + ' = ' + ask.a };
+  });
 
   // Type 1: Shadow direction problems
-  if (advType === 1) {
+  ty.push(function() {
     var times = [['sunrise','East'],['morning','East'],['afternoon','South'],['evening','West'],['sunset','West'],['noon','North (in SH) or South (in NH)']];
     var timePick = times[rand(0, times.length - 1)];
     var personDir = dirs[rand(0, 3)];
-    var shadowDir = '';
-    // Shadow falls opposite to the sun
     var sunDir = timePick[1].split(' ')[0];
+    var shadowDir = '';
     if (sunDir === 'East') shadowDir = 'West';
     else if (sunDir === 'West') shadowDir = 'East';
     else if (sunDir === 'South') shadowDir = 'North';
@@ -1506,23 +1649,11 @@ function generateDirectionQuestion(diff) {
 
     var opts = ['in front','behind','to the left','to the right'];
     shuffle(opts);
-    return {
-      question: 'At ' + timePick[0] + ', the sun is in the ' + sunDir + '. A person is facing ' + facingDir + '. Where is their shadow?',
-      answer: shadowRel,
-      options: opts,
-      hint: 'Shadow falls opposite to the sun. Sun in ' + sunDir + ' → shadow in ' + shadowDir + '.',
-      timeLimit: 12,
-      type: 'pattern', patternLabel: 'Direction',
-      techniqueLabel: 'Shadow: opposite to sun direction. Sun in ' + sunDir + ' → shadow in ' + shadowDir,
-      drillLine1: 'Sun=' + sunDir + ', Facing=' + facingDir,
-      drillLine2: 'Shadow=' + shadowRel,
-      solution: 'Sun at ' + timePick[0] + ' is in ' + sunDir + '. Shadow falls in ' + shadowDir + '. Person facing ' + facingDir + ' → shadow is ' + shadowRel + '.'
-    };
-  }
+    return { q: 'At ' + timePick[0] + ', the sun is in the ' + sunDir + '. A person is facing ' + facingDir + '. Where is their shadow?', a: shadowRel, o: opts, hint: 'Shadow falls opposite to the sun direction.', t: 12, sol: 'Sun at ' + timePick[0] + ' is in ' + sunDir + '. Shadow falls in ' + shadowDir + '. Person facing ' + facingDir + ' -> shadow is ' + shadowRel + '.' };
+  });
 
-  // Type 2: Distance between two moving persons
-  if (advType === 2) {
-    var persons = ['A','B'];
+  // Type 2: Multi-person path direction
+  ty.push(function() {
     var p1x = 0, p1y = 0, p2x = 0, p2y = 0;
     var p1moves = [], p2moves = [];
     var numMoves = rand(2, 3);
@@ -1531,13 +1662,14 @@ function generateDirectionQuestion(diff) {
       var d1 = rand(2, 6), d2 = rand(2, 6);
       if (dir1 === 'North') p1y += d1; else if (dir1 === 'South') p1y -= d1; else if (dir1 === 'East') p1x += d1; else p1x -= d1;
       if (dir2 === 'North') p2y += d2; else if (dir2 === 'South') p2y -= d2; else if (dir2 === 'East') p2x += d2; else p2x -= d2;
-      p1moves.push(' walks ' + d1 + 'm ' + dir1);
-      p2moves.push(' walks ' + d2 + 'm ' + dir2);
+      p1moves.push('walks ' + d1 + 'm ' + dir1);
+      p2moves.push('walks ' + d2 + 'm ' + dir2);
       if (i < numMoves - 1) {
-        dir1 = pick(['left','right']) === 'left' ? dirs[(dirs.indexOf(dir1) + 3) % 4] : dirs[(dirs.indexOf(dir1) + 1) % 4];
-        dir2 = pick(['left','right']) === 'left' ? dirs[(dirs.indexOf(dir2) + 3) % 4] : dirs[(dirs.indexOf(dir2) + 1) % 4];
-        p1moves.push(' turns ' + (rand(0,1) ? 'left' : 'right'));
-        p2moves.push(' turns ' + (rand(0,1) ? 'left' : 'right'));
+        var turn1 = pick(['left','right']), turn2 = pick(['left','right']);
+        dir1 = turn1 === 'left' ? dirs[(dirs.indexOf(dir1) + 3) % 4] : dirs[(dirs.indexOf(dir1) + 1) % 4];
+        dir2 = turn2 === 'left' ? dirs[(dirs.indexOf(dir2) + 3) % 4] : dirs[(dirs.indexOf(dir2) + 1) % 4];
+        p1moves.push('turns ' + turn1);
+        p2moves.push('turns ' + turn2);
       }
     }
     var dx = p1x - p2x, dy = p1y - p2y;
@@ -1545,60 +1677,37 @@ function generateDirectionQuestion(diff) {
     var opts = [String(dist) + ' m'];
     while (opts.length < 4) { var v = dist + rand(-4, 4); if (opts.indexOf(v) < 0 && v >= 0) opts.push(String(v) + ' m'); }
     shuffle(opts);
-    return {
-      question: 'Person A starts from point X' + p1moves.join('') + '. Person B starts from same point Y' + p2moves.join('') + '. What is the distance between A and B?',
-      answer: String(dist) + ' m',
-      options: opts,
-      hint: 'Track coordinates of A and B separately. Distance = √((xA-xB)²+(yA-yB)²).',
-      timeLimit: 25,
-      type: 'pattern', patternLabel: 'Direction',
-      techniqueLabel: 'Multi-person direction: track each person\'s coordinates independently.',
-      drillLine1: 'A: (' + p1x + ',' + p1y + ') B: (' + p2x + ',' + p2y + ')',
-      drillLine2: 'Distance = ' + dist + 'm',
-      solution: 'A ends at (' + p1x + ',' + p1y + '), B at (' + p2x + ',' + p2y + '). Distance = √(' + dx + '²+' + dy + '²) = ' + dist + 'm.'
-    };
-  }
+    return { q: 'Person A ' + p1moves.join(', ') + '. Person B ' + p2moves.join(', ') + '. How far apart are A and B?', a: String(dist) + ' m', o: opts, hint: 'Track coordinates of A and B. Use distance formula.', t: 20, sol: 'A=(' + p1x + ',' + p1y + '), B=(' + p2x + ',' + p2y + '). Distance=' + dist + 'm.' };
+  });
 
-  // Type 3: Complex with two starting points and meeting
-  if (advType === 3) {
-    var startDir = dirs[rand(0, 3)];
-    var oppDir = dirs[(dirs.indexOf(startDir) + 2) % 4];
-    var aDist = rand(3, 8), bDist = rand(3, 8);
-    var aDir = startDir, bDir = oppDir;
-    var ax = 0, ay = 0, bx = 0, by = 0;
-    if (aDir === 'North') ay += aDist; else if (aDir === 'South') ay -= aDist; else if (aDir === 'East') ax += aDist; else ax -= aDist;
-    if (bDir === 'North') by += bDist; else if (bDir === 'South') by -= bDist; else if (bDir === 'East') bx += bDist; else bx -= bDist;
-
-    // Both turn left/right and walk again
-    var turn1 = pick(['left','right']);
-    var aDir2 = turn1 === 'left' ? dirs[(dirs.indexOf(aDir) + 3) % 4] : dirs[(dirs.indexOf(aDir) + 1) % 4];
-    var bDir2 = turn1 === 'left' ? dirs[(dirs.indexOf(bDir) + 3) % 4] : dirs[(dirs.indexOf(bDir) + 1) % 4];
-    var aDist2 = rand(2, 6), bDist2 = rand(2, 6);
-    if (aDir2 === 'North') ay += aDist2; else if (aDir2 === 'South') ay -= aDist2; else if (aDir2 === 'East') ax += aDist2; else ax -= aDist2;
-    if (bDir2 === 'North') by += bDist2; else if (bDir2 === 'South') by -= bDist2; else if (bDir2 === 'East') bx += bDist2; else bx -= bDist2;
-
-    var dx = ax - bx, dy = ay - by;
-    var dist = Math.round(Math.sqrt(dx*dx + dy*dy));
-    var opts = [String(dist) + ' m'];
-    while (opts.length < 4) { var v = dist + rand(-4, 4); if (opts.indexOf(v) < 0 && v >= 0) opts.push(String(v) + ' m'); }
+  // Type 3: Coded direction with time change (SBI PO hard)
+  ty.push(function() {
+    var times = [['sunrise','East'],['morning','East'],['afternoon','South'],['evening','West'],['sunset','West']];
+    var t1 = pick(times), t2 = pick(times.filter(function(x) { return x[0] !== t1[0]; }));
+    var personDir = dirs[rand(0, 3)];
+    var sunDir1 = t1[1].split(' ')[0], sunDir2 = t2[1].split(' ')[0];
+    var shadowDir1 = {East:'West',West:'East',South:'North',North:'South'}[sunDir1];
+    var shadowDir2 = {East:'West',West:'East',South:'North',North:'South'}[sunDir2];
+    var dirOrder = ['North','East','South','West'];
+    var fIdx = dirOrder.indexOf(personDir);
+    var sIdx1 = dirOrder.indexOf(shadowDir1), sIdx2 = dirOrder.indexOf(shadowDir2);
+    var rel1, rel2;
+    if (fIdx === sIdx1) rel1 = 'in front'; else if ((fIdx + 1) % 4 === sIdx1) rel1 = 'right'; else if ((fIdx + 2) % 4 === sIdx1) rel1 = 'behind'; else rel1 = 'left';
+    if (fIdx === sIdx2) rel2 = 'in front'; else if ((fIdx + 1) % 4 === sIdx2) rel2 = 'right'; else if ((fIdx + 2) % 4 === sIdx2) rel2 = 'behind'; else rel2 = 'left';
+    var opts = ['left','right','behind','in front'];
     shuffle(opts);
+    return { q: 'At ' + t1[0] + ', a person\'s shadow is to the ' + rel1 + '. Later at ' + t2[0] + ', where will the shadow be? (Person facing same direction ' + personDir + ')', a: rel2, o: opts, hint: 'Sun moves from ' + sunDir1 + ' to ' + sunDir2 + '. Shadow moves opposite.', t: 15, sol: 'At ' + t1[0] + ' sun=' + sunDir1 + ' shadow=' + shadowDir1 + ' -> ' + rel1 + '. At ' + t2[0] + ' sun=' + sunDir2 + ' shadow=' + shadowDir2 + ' -> ' + rel2 + '.' };
+  });
 
-    var aDesc = aDir + ' ' + aDist + 'm, then turns ' + turn1 + ' walks ' + aDist2 + 'm';
-    var bDesc = bDir + ' ' + bDist + 'm, then turns ' + turn1 + ' walks ' + bDist2 + 'm';
-
-    return {
-      question: 'A starts from point P and walks ' + aDesc + '. B starts from the same point and walks ' + bDesc + '. How far apart are they?',
-      answer: String(dist) + ' m',
-      options: opts,
-      hint: 'Track coordinates of A and B: A=(' + ax + ',' + ay + '), B=(' + bx + ',' + by + '). Distance formula.',
-      timeLimit: 25,
-      type: 'pattern', patternLabel: 'Direction',
-      techniqueLabel: 'Complex: two persons from same point, different directions',
-      drillLine1: 'A: (' + ax + ',' + ay + ') B: (' + bx + ',' + by + ')',
-      drillLine2: 'Distance = ' + dist + 'm',
-      solution: 'A path: ' + aDesc + ' → (' + ax + ',' + ay + '). B path: ' + bDesc + ' → (' + bx + ',' + by + '). Distance = √(' + dx + '²+' + dy + '²) = ' + dist + 'm.'
-    };
+  // Selection logic
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 2), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
   }
+  var t = ty[idx];
+  return t();
 }
 
 function turnDir(current, turn) {
@@ -1627,7 +1736,13 @@ function generateBloodRelationQuestion(diff) {
     var child3 = BLOOD_RELATION_NAMES[8];
     var spouse1 = BLOOD_RELATION_NAMES[9];
 
-    var treeType = rand(0, 4);
+    var maxTreeType = diff >= 5 ? 6 : 4;
+    var treeType;
+    if (diff >= 5) {
+      treeType = Math.random() < 0.7 ? rand(4, 6) : rand(0, 6);
+    } else {
+      treeType = rand(0, 4);
+    }
     var facts = [], q, a, opts, sol;
 
     if (treeType === 0) {
@@ -1721,7 +1836,7 @@ function generateBloodRelationQuestion(diff) {
       q = puzzle;
       a = father; opts = [father, mother, P, R];
       sol = Q + "'s sister is " + P + ". " + P + "'s only brother is " + R + ". Father of " + R + " is " + father + ". So answer is " + father + ".";
-    } else {
+    } else if (treeType === 4) {
       // 5-generation family
       var GGP = BLOOD_RELATION_NAMES[0], GP = BLOOD_RELATION_NAMES[1];
       var P1 = BLOOD_RELATION_NAMES[2], P2 = BLOOD_RELATION_NAMES[3];
@@ -1745,6 +1860,47 @@ function generateBloodRelationQuestion(diff) {
         q = 'How is ' + S1 + ' related to ' + S2 + '?';
         a = 'Brother'; opts = ['Brother','Cousin','Nephew','Uncle'];
         sol = S1 + ' and ' + S2 + ' have the same parents (' + P1 + '). They are siblings and ' + S1 + ' is ' + S2 + "'s brother.";
+      }
+    } else if (treeType === 5) {
+      // SBI PO Hard: coded relationship with 4 symbols, multi-step
+      var codeTable = {'+':'mother','-':'father','x':'brother','/':'sister','=':'wife','~':'husband','^':'daughter','&':'son'};
+      var syms = Object.keys(codeTable);
+      shuffle(syms);
+      var W = BLOOD_RELATION_NAMES[0], X = BLOOD_RELATION_NAMES[1], Y = BLOOD_RELATION_NAMES[2], Z = BLOOD_RELATION_NAMES[3];
+      var s1 = syms[0], s2 = syms[1], s3 = syms[2];
+      var codeHint = 'Given: ' + s1 + '=' + codeTable[s1] + ', ' + s2 + '=' + codeTable[s2] + ', ' + s3 + '=' + codeTable[s3];
+      var expression = W + ' ' + s1 + ' ' + X + ' ' + s2 + ' ' + Y + ' ' + s3 + ' ' + Z;
+      facts = [codeHint, 'Expression: ' + expression];
+      q = 'How is ' + W + ' related to ' + Z + '?';
+      var r1 = codeTable[s1], r2 = codeTable[s2], r3 = codeTable[s3];
+      if (r1 === 'father' && r2 === 'mother' && r3 === 'daughter') { a = 'Grandfather'; opts = ['Grandfather','Father','Uncle','Brother']; sol = W + ' is father of ' + X + ', who is mother of ' + Y + ', who is daughter of ' + Z + '? Wait, ' + r3 + ' means ' + Y + ' is ' + r3 + ' of ' + Z + '. So ' + W + ' is great-grandfather.'; }
+      else if (r1 === 'brother' && r2 === 'father' && r3 === 'son') { a = 'Uncle'; opts = ['Uncle','Father','Brother','Cousin']; sol = W + ' is brother of ' + X + ', who is father of ' + Y + ', who is son of ' + Z + '. So ' + W + ' is uncle of ' + Z + '.'; }
+      else { a = 'Cannot determine'; opts = ['Uncle','Aunt','Cousin','Cannot determine']; sol = 'Insufficient information to determine exact relation between ' + W + ' and ' + Z + '.'; }
+    } else {
+      // SBI PO Hard: 5-generation puzzle with in-laws
+      var GGP = BLOOD_RELATION_NAMES[0], GP = BLOOD_RELATION_NAMES[1];
+      var P1 = BLOOD_RELATION_NAMES[2], P2 = BLOOD_RELATION_NAMES[3];
+      var S1 = BLOOD_RELATION_NAMES[4], S2 = BLOOD_RELATION_NAMES[5], S3 = BLOOD_RELATION_NAMES[6];
+      var SP = BLOOD_RELATION_NAMES[7];
+      facts = [
+        GGP + ' is the father of ' + GP + '.',
+        GP + ' is married to ' + SP + '. They have two sons: ' + P1 + ' and ' + P2 + '.',
+        P1 + ' is married. He has a son ' + S1 + ' and a daughter ' + S2 + '.',
+        P2 + ' has a son ' + S3 + '.'
+      ];
+      var qType = rand(0, 2);
+      if (qType === 0) {
+        q = 'How is ' + SP + ' related to ' + S3 + '?';
+        a = 'Grandmother'; opts = ['Grandmother','Mother','Aunt','Sister-in-law'];
+        sol = SP + ' is mother of ' + P2 + ', who is father of ' + S3 + '. So ' + SP + ' is grandmother of ' + S3 + '.';
+      } else if (qType === 1) {
+        q = 'How is ' + S1 + ' related to ' + S3 + '?';
+        a = 'Cousin'; opts = ['Cousin','Brother','Nephew','Uncle'];
+        sol = S1 + "'s father " + P1 + ' is brother of ' + P2 + ' (' + S3 + "'s father). So " + S1 + ' and ' + S3 + ' are cousins.';
+      } else {
+        q = 'How is ' + GGP + ' related to ' + S3 + '?';
+        a = 'Great-grandfather'; opts = ['Great-grandfather','Grandfather','Father','Uncle'];
+        sol = GGP + ' → ' + GP + ' → ' + P2 + ' → ' + S3 + '. Three generations. ' + GGP + ' is great-grandfather of ' + S3 + '.';
       }
     }
 
@@ -1878,10 +2034,30 @@ function generateDataSufficiencyQuestion(diff) {
     { q: 'What is the unit digit of the product?',
       s1: 'The numbers are ' + pick(['27 and 34', '42 and 53', '18 and 37']),
       s2: 'The product ends with an ' + pick(['even digit', 'odd digit']),
-      a: 'A: Statement 1 alone', sol: 'S1: multiply last digits directly. S2: not specific enough. S1 alone (A)' }
+      a: 'A: Statement 1 alone', sol: 'S1: multiply last digits directly. S2: not specific enough. S1 alone (A)' },
+    // Type 15: SBI PO Hard - Number system
+    { q: 'What is the two-digit number?',
+      s1: 'Sum of digits is 9 and number is 9 more than its reverse.',
+      s2: 'Product of digits is 20 and tens digit exceeds units digit.',
+      a: 'D: Either alone', sol: 'S1: digits a,b. a+b=9, 10a+b = 10b+a+9 → a-b=1 → a=5,b=4 → 54. S2: a×b=20, a>b → a=5,b=4 → 54. Either alone (D).' },
+    // Type 16: SBI PO Hard - Time and work
+    { q: 'How many days for A alone?',
+      s1: 'A and B together take 12 days. B alone takes 18 more days than A.',
+      s2: 'A completes half the work in 9 days.',
+      a: 'D: Either alone', sol: 'S1: 1/A + 1/(A+18) = 1/12 → A = 18 days. S2: A takes 18 days for full work. Either alone (D).' },
+    // Type 17: SBI PO Hard - Profit/Loss with discount chain
+    { q: 'What is the cost price of the article?',
+      s1: 'Marked price is 40% above CP and a 20% discount is given, profit is Rs 96.',
+      s2: 'Selling price is Rs 672 and profit percentage is 12%.',
+      a: 'D: Either alone', sol: 'S1: MP = 1.4CP, SP = 1.4CP×0.8 = 1.12CP. Profit = 0.12CP = 96 → CP = 800. S2: CP = SP×100/(100+P%) = 672×100/112 = 600. Different answers but each alone works.' }
   ];
-
-  var s = pick(scenarios);
+  var sIdx;
+  if (diff >= 5 && scenarios.length >= 4) {
+    sIdx = rand(0,1) ? rand(Math.max(0, scenarios.length - 3), scenarios.length - 1) : rand(0, scenarios.length - 1);
+  } else {
+    sIdx = rand(0, scenarios.length - 1);
+  }
+  var s = scenarios[sIdx];
   var opts = baseOpts.slice();
   var correctIdx = opts.indexOf(s.a);
   if (correctIdx < 0) { opts = baseOpts.slice(); shuffle(opts); s.a = opts[0]; }
@@ -2016,10 +2192,23 @@ function generateNumberSenseQuestion(diff, layer) {
     // VBODMAS: 12 + 6 × 3 ÷ 2 - 4
     function(){ var a=rand(2,8), b=rand(2,6), c=rand(2,5), d=rand(1,3); return { q: 'Solve: ' + a + ' + ' + b + ' × ' + c + ' ÷ ' + d + ' - ' + rand(1,3), a: a + Math.floor(b*c/d) - rand(1,3), hint: 'BODMAS: ×÷ before +-', intuition: b + ' × ' + c + ' ÷ ' + d + ' = ' + (b*c/d) + '. Then ' + a + ' + ' + Math.floor(b*c/d) + ' - ' + rand(1,3) + ' = ' + (a + Math.floor(b*c/d) - rand(1,3)) } },
     // Hard: compound approximation — 17% of 283 + 34% of 129 ≈ ?
-    function(){ var p1=[11,12,13,14,15,16,17,18,19][rand(0,8)], n1=rand(150,400), p2=[21,22,23,24,25,26,27,28,29,31,32,33,34,35][rand(0,13)], n2=rand(100,300); return { q: 'Approx: ' + p1 + '% of ' + n1 + ' + ' + p2 + '% of ' + n2, a: Math.round((p1*n1 + p2*n2)/100/10)*10, hint: 'Compute each % separately then add', intuition: p1 + '% × ' + n1 + ' = ' + Math.round(p1*n1/100) + ', ' + p2 + '% × ' + n2 + ' = ' + Math.round(p2*n2/100) + '. Sum ≈ ' + Math.round((p1*n1 + p2*n2)/100/10)*10 }; }
+    function(){ var p1=[11,12,13,14,15,16,17,18,19][rand(0,8)], n1=rand(150,400), p2=[21,22,23,24,25,26,27,28,29,31,32,33,34,35][rand(0,13)], n2=rand(100,300); return { q: 'Approx: ' + p1 + '% of ' + n1 + ' + ' + p2 + '% of ' + n2, a: Math.round((p1*n1 + p2*n2)/100/10)*10, hint: 'Compute each % separately then add', intuition: p1 + '% × ' + n1 + ' = ' + Math.round(p1*n1/100) + ', ' + p2 + '% × ' + n2 + ' = ' + Math.round(p2*n2/100) + '. Sum ≈ ' + Math.round((p1*n1 + p2*n2)/100/10)*10 }; },
+    // SBI PO Hard: square root approximation
+    function(){ var n=rand(150,400); var s=Math.round(Math.sqrt(n)); return { q:'Approximate square root of ' + n, a:s, hint:'Find perfect squares near ' + n + '. ' + s + '²=' + (s*s) + ', ' + (s+1) + '²=' + ((s+1)*(s+1)), intuition:'√' + n + ' is between ' + s + ' and ' + (s+1) + '. Closest is ' + s }; },
+    // SBI PO Hard: large multiplication approximation
+    function(){ var a=rand(200,500), b=rand(200,500); return { q:'Approx: ' + a + ' × ' + b + ' (nearest thousand)', a:Math.round(a*b/1000)*1000, hint:'Round: ' + Math.round(a/100)*100 + ' × ' + Math.round(b/100)*100 + ' = ' + (Math.round(a/100)*100*Math.round(b/100)*100), intuition:'Actual = ' + (a*b) + ', approximate = ' + Math.round(a*b/1000)*1000 }; },
+    // SBI PO Hard: cube root approximation
+    function(){ var n=rand(4,9); var cube=n*n*n; return { q:'Approximate cube root of ' + cube, a:n, hint:'Find what number cubed gives ' + cube, intuition:n + '³ = ' + cube + ', so ∛' + cube + ' = ' + n }; }
   ];
-  if (layer === 'instinct') types = types.slice(0, 3);
-  var type = types[rand(0, types.length - 1)];
+  var ty = types;
+  if (layer === 'instinct') ty = ty.slice(0, 3);
+  var idx;
+  if (diff >= 5 && ty.length >= 6) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var type = ty[idx];
   var data = type();
   var opts = [data.a];
   while (opts.length < 4) { var d = data.a + rand(-5, 5); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
@@ -2156,9 +2345,23 @@ function generateSimplificationQuestion(diff, layer) {
     // Mixed BODMAS with fractions
     function(){ var a=rand(2,5), b=rand(3,7), c=rand(2,4); return { q: 'Solve: (' + a + '/' + b + ') × ' + c + ' - ' + rand(1,3) + '/' + rand(2,5), a: Math.round((a*c)/b - rand(1,3)/rand(2,5)*10)/10, hint: 'First multiply fraction by ' + c + ', then subtract', intuition: '(' + a + '/' + b + ') × ' + c + ' = ' + (a*c) + '/' + b + ' = ' + Math.round(a*c/b*10)/10 + '. Then subtract = ' + Math.round(a*c/b*10)/10 + ' - ' + Math.round(rand(1,3)/rand(2,5)*10)/10 + ' = ' + Math.round((a*c)/b - rand(1,3)/rand(2,5)*10)/10 }; },
     // Surd simplification (add surds)
-    function(){ var a=rand(2,5); return { q: 'Simplify: ' + a + '√2 + ' + (a*2) + '√2', a: (3*a) + '√2', hint: 'Add coefficients of like surds: ' + a + '+' + (a*2) + ' = ' + (3*a), intuition: 'Like surds: add coefficients. ' + a + '√2 + ' + (a*2) + '√2 = (' + a + '+' + (a*2) + ')√2 = ' + (3*a) + '√2' }; }
+    function(){ var a=rand(2,5); return { q: 'Simplify: ' + a + '√2 + ' + (a*2) + '√2', a: (3*a) + '√2', hint: 'Add coefficients of like surds: ' + a + '+' + (a*2) + ' = ' + (3*a), intuition: 'Like surds: add coefficients. ' + a + '√2 + ' + (a*2) + '√2 = (' + a + '+' + (a*2) + ')√2 = ' + (3*a) + '√2' }; },
+    // SBI PO Hard: compound fraction simplification
+    function(){ var a=rand(2,5), b=rand(3,8), c=rand(1,4); return { q: 'Simplify: (' + a + '/' + b + ' + ' + c + '/' + (b*2) + ') ÷ (' + rand(2,4) + '/' + (b*3) + ')', a: Math.round(((a*2 + c) / (2*b)) * ((b*3) / rand(2,4)) * 100) / 100, hint: 'Simplify numerator, then invert and multiply', intuition: 'First simplify (' + a + '/' + b + ' + ' + c + '/' + (b*2) + ') = (' + (a*2) + '+' + c + ')/' + (b*2) + ' = ' + (a*2+c) + '/' + (2*b) + '. Then ÷ ' + rand(2,4) + '/' + (b*3) + ' = ×' + (b*3) + '/' + rand(2,4) + ' = ' + Math.round(((a*2+c)/(2*b))*((b*3)/rand(2,4))*100)/100 }; },
+    // SBI PO Hard: approximation with decimals and percentage
+    function(){ var a=rand(5,15), p=rand(10,30), b=rand(2,8); return { q: 'Approx: ' + a + '.' + rand(1,9) + ' × ' + p + '% of ' + (b*10), a: Math.round(a * p / 100 * b * 10), hint: 'Compute step by step: ' + a + ' × ' + p/100 + ' × ' + (b*10), intuition: '≈ ' + a + ' × ' + p/100 + ' × ' + (b*10) + ' = ' + Math.round(a * p / 100 * b * 10) }; },
+    // SBI PO Hard: mixed BODMAS with decimal and fraction
+    function(){ var a=rand(3,8), b=rand(2,5), c=rand(4,10); return { q: 'Solve: (' + a + '.' + rand(1,5) + ' + ' + b + '/' + c + ') × ' + rand(2,4), a: Math.round((a + rand(1,5)/10 + b/c) * rand(2,4) * 100) / 100, hint: 'Decimal + fraction, then multiply', intuition: 'First resolve decimal and fraction, then multiply' }; },
+    // SBI PO Hard: surd with exponent
+    function(){ var a=rand(2,5), b=rand(1,3); return { q: 'Simplify: (√' + (a*a*b) + ')^' + (b+1) + ' ÷ √' + b, a: Math.round(Math.pow(a * Math.sqrt(b), b+1) / Math.sqrt(b) * 100) / 100, hint: 'Express √' + (a*a*b) + ' = ' + a + '√' + b + ', then apply power', intuition: '√' + (a*a*b) + ' = ' + a + '√' + b + '. (' + a + '√' + b + ')^' + (b+1) + ' ÷ √' + b + ' = ' + a + '^' + (b+1) + ' × (√' + b + ')^' + (b+1-1) + ' = ' + Math.round(Math.pow(a, b+1) * Math.pow(b, b/2) * 100)/100 }; }
   ];
-  var t = ty[rand(0, ty.length - 1)];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var t = ty[idx];
   var d = t();
   var o = [d.a]; while(o.length<4){var v=(typeof d.a==='string'?d.a+rand(-2,2):Math.abs(d.a)+rand(-3,3)); if(o.indexOf(v)<0&&(typeof v==='string'||v>=0))o.push(v);}
   shuffle(o);
@@ -2174,9 +2377,23 @@ function generateQuadraticQuestion(diff, layer) {
     // Find quadratic given roots
     function(){ var r1=rand(2,5), r2=rand(3,7); return { q: 'Find quadratic with roots ' + r1 + ' and ' + r2, a: 'x² - ' + (r1+r2) + 'x + ' + (r1*r2) + ' = 0', hint: 'Sum=' + (r1+r2) + ', product=' + (r1*r2), intuition: 'Quadratic: x² - (sum)x + product = 0. Sum=' + (r1+r2) + ', product=' + (r1*r2) }; },
     // Word problem: area of rectangle forms quadratic
-    function(){ var l=rand(8,15), w=rand(4,8); var area=l*w; var extra=rand(1,3); return { q: 'Rectangle: length ' + l + ', width ' + w + '. If length increased by ' + extra + ', area becomes ' + ((l+extra)*w) + '. Find original area?', a: area, hint: 'New area = (l+'+extra+')×w = ' + ((l+extra)*w) + ', check original area', intuition: 'Original area = ' + l + '×' + w + ' = ' + area + '. (L+'+extra+')W = ' + ((l+extra)*w) + ' → area = ' + ((l+extra)*w) + '. Actually original is ' + area }; }
+    function(){ var l=rand(8,15), w=rand(4,8); var area=l*w; var extra=rand(1,3); return { q: 'Rectangle: length ' + l + ', width ' + w + '. If length increased by ' + extra + ', area becomes ' + ((l+extra)*w) + '. Find original area?', a: area, hint: 'New area = (l+'+extra+')×w = ' + ((l+extra)*w) + ', check original area', intuition: 'Original area = ' + l + '×' + w + ' = ' + area + '. (L+'+extra+')W = ' + ((l+extra)*w) + ' → area = ' + ((l+extra)*w) + '. Actually original is ' + area }; },
+    // SBI PO Hard: quadratic from age word problem
+    function(){ var x=rand(3,7), y=rand(x+2,10); return { q: 'Product of ages (x and x+' + (y-x) + ') is ' + (x*y) + '. Find the sum of their ages?', a: x+y, hint: 'If ages are a and a+' + (y-x) + ', then a(a+' + (y-x) + ')=' + (x*y) + ', solve for a', intuition: 'Let age = p. p(p+' + (y-x) + ')=' + (x*y) + ' → p²+' + (y-x) + 'p-' + (x*y) + '=0. Roots: ' + x + ', ' + (-y) + '. Sum = ' + (x+y) }; },
+    // SBI PO Hard: two equations compare roots
+    function(){ var a=rand(2,5), b=rand(2,5); return { q: 'Equation I: x² - ' + (2*a) + 'x + ' + (a*a) + ' = 0. Equation II: y² - ' + (2*b) + 'y + ' + (b*b) + ' = 0. Compare x and y', a: a > b ? 'x > y' : (a < b ? 'x < y' : 'x = y'), hint: 'Both are perfect squares: (x-' + a + ')²=0, (y-' + b + ')²=0', intuition: 'x=' + a + ', y=' + b + '. Since ' + a + ' ' + (a>b?'>':(a<b?'<':'=')) + ' ' + b + ', ' + (a>b?'x>y':(a<b?'x<y':'x=y')) }; },
+    // SBI PO Hard: quadratic with two conditions (sum and product of reciprocals)
+    function(){ var r1=rand(1,5), r2=rand(6,10); return { q: 'Sum of reciprocals of roots of x² - ' + (r1+r2) + 'x + ' + (r1*r2) + ' = 0 is?', a: Math.round((r1+r2)/(r1*r2)*100)/100, hint: 'Sum of reciprocals = (sum of roots)/(product of roots)', intuition: 'Sum=' + (r1+r2) + ', product=' + (r1*r2) + '. 1/' + r1 + ' + 1/' + r2 + ' = (' + r1 + '+' + r2 + ')/(' + r1 + '×' + r2 + ') = ' + Math.round((r1+r2)/(r1*r2)*100)/100 }; },
+    // SBI PO Hard: find condition for equal roots
+    function(){ var a=rand(1,3), c=rand(1,5); var b = 2 * Math.sqrt(a*c); if (b !== Math.floor(b)) b = Math.floor(b); return { q: 'For what k are roots equal: ' + a + 'x² + ' + b + 'x + ' + c + ' = 0? (k=b value)', a: b, hint: 'For equal roots, discriminant = 0 → b² = 4ac', intuition: 'b² = 4×' + a + '×' + c + ' = ' + (4*a*c) + ', so b = √' + (4*a*c) + ' = ' + Math.round(Math.sqrt(4*a*c)*100)/100 + '... given b=' + b }; }
   ];
-  var t = ty[rand(0, ty.length - 1)];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var t = ty[idx];
   var d = t();
   var o = [d.a]; while(o.length<4){var v=(typeof d.a==='string'?['Equal','Real','Imaginary','Distinct'][rand(0,3)]:Math.abs(parseInt(d.a))+rand(-3,3)); if(o.indexOf(v)<0)o.push(v);}
   shuffle(o);
@@ -2195,9 +2412,23 @@ function generatePartnershipQuestion(diff, layer) {
     // Three partners
     function(){ var a=rand(2,5)*1000, b=rand(3,6)*1000, c=rand(1,4)*1000, p=rand(3,9)*1000; return { q: 'A:Rs' + a + ', B:Rs' + b + ', C:Rs' + c + '. Profit Rs' + p + '. C\'s share?', a: Math.round(c*p/(a+b+c)), hint: 'C share = ' + c + '/' + (a+b+c) + '×' + p, intuition: 'Total capital = ' + (a+b+c) + '. C share = ' + c + '/' + (a+b+c) + ' × ' + p + ' = ' + Math.round(c*p/(a+b+c)) }; },
     // Partner early withdrawal
-    function(){ var a=rand(3,6)*1000, b=rand(2,5)*1000; var wd=rand(2,5); return { q: 'A invests Rs' + a + ' for full year. B invests Rs' + b + ' but withdraws after ' + wd + 'mo. Profit Rs' + ((a+b)*2) + '. B\'s share?', a: Math.round(b*wd * (a+b)*2 / (a*12 + b*wd)), hint: 'A: ' + a + '×12, B: ' + b + '×' + wd, intuition: 'A: ' + a + '×12=' + (a*12) + ', B: ' + b + '×' + wd + '=' + (b*wd) + '. B share = ' + (b*wd) + '/' + (a*12+b*wd) + '×' + ((a+b)*2) + ' = ' + Math.round(b*wd*(a+b)*2/(a*12+b*wd)) }; }
+    function(){ var a=rand(3,6)*1000, b=rand(2,5)*1000; var wd=rand(2,5); return { q: 'A invests Rs' + a + ' for full year. B invests Rs' + b + ' but withdraws after ' + wd + 'mo. Profit Rs' + ((a+b)*2) + '. B\'s share?', a: Math.round(b*wd * (a+b)*2 / (a*12 + b*wd)), hint: 'A: ' + a + '×12, B: ' + b + '×' + wd, intuition: 'A: ' + a + '×12=' + (a*12) + ', B: ' + b + '×' + wd + '=' + (b*wd) + '. B share = ' + (b*wd) + '/' + (a*12+b*wd) + '×' + ((a+b)*2) + ' = ' + Math.round(b*wd*(a+b)*2/(a*12+b*wd)) }; },
+    // SBI PO Hard: three partners with changing investments
+    function(){ var a=rand(2,5)*1000, b=rand(3,6)*1000, c=rand(1,4)*1000; var ta=12, tb=rand(4,8), tc=rand(6,10); return { q: 'A Rs' + a + ' for ' + ta + 'mo, B Rs' + b + ' for ' + tb + 'mo, C Rs' + c + ' for ' + tc + 'mo. Profit Rs' + ((a*ta+b*tb+c*tc)/2|0) + '. B\'s share?', a: Math.round(b*tb * ((a*ta+b*tb+c*tc)/2|0) / (a*ta+b*tb+c*tc)), hint: 'Eff cap ratio = ' + a*ta + ':' + b*tb + ':' + c*tc, intuition: 'A:' + a + '×' + ta + '=' + a*ta + ', B:' + b + '×' + tb + '=' + b*tb + ', C:' + c + '×' + tc + '=' + c*tc + '. B share = ' + (b*tb) + '/' + (a*ta+b*tb+c*tc) + '×' + ((a*ta+b*tb+c*tc)/2|0) + ' = ' + Math.round(b*tb*((a*ta+b*tb+c*tc)/2|0)/(a*ta+b*tb+c*tc)) }; },
+    // SBI PO Hard: partnership with profit reinvested
+    function(){ var a=rand(3,8)*1000, b=rand(2,5)*1000, p=rand(5,10)*1000; var rp=Math.round(p*rand(2,4)/10); return { q: 'A Rs' + a + ', B Rs' + b + '. Profit Rs' + p + '. ' + rp + ' reinvested, rest shared. A\'s share?', a: Math.round((a/(a+b))*(p-rp)), hint: 'Profit after reinvestment = ' + (p-rp) + '. Split in ratio ' + a + ':' + b, intuition: 'Remaining = ' + p + '-' + rp + ' = ' + (p-rp) + '. A share = ' + a + '/' + (a+b) + ' × ' + (p-rp) + ' = ' + Math.round((a/(a+b))*(p-rp)) }; },
+    // SBI PO Hard: partnership with salary + profit share
+    function(){ var a=rand(2,6)*1000, b=rand(3,7)*1000, sal=rand(1,3)*500, p=rand(5,10)*1000; return { q: 'A Rs' + a + ' (active, gets salary Rs' + sal + '/mo), B Rs' + b + '. Annual profit Rs' + p + '. A\'s total?', a: Math.round(sal*12 + (a/(a+b))*(p-sal*12)), hint: 'Salary + profit share of balance', intuition: 'Salary = ' + sal + '×12 = ' + (sal*12) + '. Balance = ' + p + '-' + (sal*12) + ' = ' + (p-sal*12) + '. A share = ' + sal*12 + '+' + a + '/' + (a+b) + '×' + (p-sal*12) + ' = ' + Math.round(sal*12 + (a/(a+b))*(p-sal*12)) }; },
+    // SBI PO Hard: find total profit given ratio and individual share
+    function(){ var a=rand(3,8)*1000, b=rand(4,9)*1000, p=rand(8,15)*1000; return { q: 'A:B = ' + a + ':' + b + '. A gets Rs' + Math.round(a*p/(a+b)) + '. Total profit?', a: p, hint: 'A share = (a/(a+b)) × total, so total = A share × (a+b)/a', intuition: 'Total = ' + Math.round(a*p/(a+b)) + ' × (' + a + '+' + b + ')/' + a + ' = ' + Math.round(a*p/(a+b)) + ' × ' + (a+b) + '/' + a + ' = Rs' + p }; }
   ];
-  var t = ty[rand(0, ty.length - 1)];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var t = ty[idx];
   var d = t();
   var o = [d.a]; while(o.length<4){var v=d.a+rand(-500,500); if(o.indexOf(v)<0&&v>=0)o.push(v);}
   shuffle(o);
@@ -2222,9 +2453,23 @@ function generateSimpleInterestQuestion(diff, layer) {
     // Amount at simple interest doubles
     function(){ var r=rand(5,12); return { q:'At what time will Rs ' + rand(1000,5000) + ' double at ' + r + '% SI?', a:Math.round(100/r*10)/10, hint:'Time = 100/R for doubling. 100/' + r + ' = ' + Math.round(100/r*10)/10, intuition:'For sum to double, SI = P. So P = PRT/100 → T = 100/R = 100/' + r + ' = ' + Math.round(100/r*10)/10 + ' years' }; },
     // Equal annual installments with SI
-    function(){ var p=rand(3000,10000), r=rand(5,10), n=rand(2,4); var inst=Math.round(p*100/(n*100 + n*(n-1)/2*r)); return { q:'Rs' + p + ' at ' + r + '% SI, ' + n + ' equal annual installments. Each installment?', a:inst, hint:'Installment = P×100/(n×100 + n(n-1)r/2)', intuition:'Installment = ' + p + '×100/(' + n + '×100 + ' + n + '×' + (n-1) + '×' + r + '/2) = ' + inst }; }
+    function(){ var p=rand(3000,10000), r=rand(5,10), n=rand(2,4); var inst=Math.round(p*100/(n*100 + n*(n-1)/2*r)); return { q:'Rs' + p + ' at ' + r + '% SI, ' + n + ' equal annual installments. Each installment?', a:inst, hint:'Installment = P×100/(n×100 + n(n-1)r/2)', intuition:'Installment = ' + p + '×100/(' + n + '×100 + ' + n + '×' + (n-1) + '×' + r + '/2) = ' + inst }; },
+    // SBI PO Hard: SI with changing rate over time
+    function(){ var p=rand(5000,20000), r1=rand(4,8), r2=rand(6,12), t1=rand(1,3), t2=rand(2,4); return { q:'Rs' + p + ' lent at ' + r1 + '% for ' + t1 + 'yr, then ' + r2 + '% for next ' + t2 + 'yr. Total SI?', a:Math.round(p*(r1*t1 + r2*t2)/100), hint:'SI = P(R1T1 + R2T2)/100', intuition:'SI = ' + p + '×(' + r1 + '×' + t1 + '+' + r2 + '×' + t2 + ')/100 = ' + Math.round(p*(r1*t1+r2*t2)/100) }; },
+    // SBI PO Hard: sum that becomes equal at different rates
+    function(){ var r1=rand(4,7), r2=rand(8,13), t=rand(3,6), p=rand(5000,15000); return { q:'Two equal sums at ' + r1 + '% and ' + r2 + '% become equal in ' + t + 'yr. Each sum?', a:p, hint:'P(1+r1×t/100)=P(1+r2×t/100) not possible. Actually same P gives diff amounts. Find P when diff in SI is given.', intuition:'Let sum=P. Amount1=P(1+' + r1 + '×' + t + '/100), Amount2=P(1+' + r2 + '×' + t + '/100). Difference = P×' + t + '×(' + r2 + '-' + r1 + ')/100 = given diff.' }; },
+    // SBI PO Hard: find time when SI equals principal
+    function(){ var r=rand(4,10), p=rand(5000,20000); return { q:'At ' + r + '% SI, after how many years will SI equal the principal Rs' + p + '?', a:Math.round(100/r*10)/10, hint:'SI=P → P = PRT/100 → T = 100/R', intuition:'T = 100/' + r + ' = ' + Math.round(100/r*10)/10 + ' years. Check: SI = ' + p + '×' + r + '%×' + Math.round(100/r*10)/10 + ' = ' + Math.round(p*r*Math.round(100/r*10)/10/100) + ' ≈ ' + p }; },
+    // SBI PO Hard: find sum part lent at different rates
+    function(){ var p=rand(8000,25000), r1=rand(5,8), r2=rand(9,14), t=rand(2,5), si=Math.round(p*rand(6,12)/100*t); return { q:'Rs' + p + ' split: part at ' + r1 + '%, rest at ' + r2 + '% for ' + t + 'yr. Total SI = Rs' + si + '. Part at ' + r1 + '%?', a:Math.round((p*r2*t/100 - si)*100/((r2-r1)*t)), hint:'Let x at ' + r1 + '%. x×' + r1 + '×' + t + '/100 + (' + p + '-x)×' + r2 + '×' + t + '/100 = ' + si, intuition:'Part1 = (' + p*r2*t/100 + ' - ' + si + ')×100/((' + r2 + '-' + r1 + ')×' + t + ') = ' + Math.round((p*r2*t/100 - si)*100/((r2-r1)*t)) }; }
   ];
-  var t = ty[rand(0, ty.length - 1)];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var t = ty[idx];
   var d = t();
   var o = [d.a]; while(o.length<4){var v=d.a+rand(-Math.round(d.a*0.2), Math.round(d.a*0.2)); if(o.indexOf(v)<0&&v>0)o.push(v);}
   shuffle(o);
@@ -2244,9 +2489,23 @@ function generateCompoundInterestQuestion(diff, layer) {
     // Half-yearly compounding
     function(){ var p=rand(2,6)*1000; return { q: 'CI on Rs' + p + ' at 10% compounded half-yearly for 1yr', a: Math.round(p*Math.pow(1+5/100,2)-p), hint: 'Half-yearly: r/2=5%, t×2=2 periods', intuition: 'Rate per period=5%, 2 periods. Amount=' + p + '(1.05)²=' + Math.round(p*1.1025) + '. CI=' + Math.round(p*0.1025) }; },
     // Find rate given CI amount and time
-    function(){ var p=rand(2,5)*1000, r=[5,8,10,12][rand(0,3)]; var amt=Math.round(p*Math.pow(1+r/100,2)); return { q: 'Rs' + p + ' becomes Rs' + amt + ' in 2yr CI. Rate?', a: r, hint: 'A = P(1+r/100)² → r = 100(√(A/P)-1)', intuition: 'A/P = ' + amt + '/' + p + ' = ' + (amt/p).toFixed(3) + '. √(A/P) = ' + Math.round(Math.sqrt(amt/p)*1000)/1000 + '. r = ' + r + '%' }; }
+    function(){ var p=rand(2,5)*1000, r=[5,8,10,12][rand(0,3)]; var amt=Math.round(p*Math.pow(1+r/100,2)); return { q: 'Rs' + p + ' becomes Rs' + amt + ' in 2yr CI. Rate?', a: r, hint: 'A = P(1+r/100)² → r = 100(√(A/P)-1)', intuition: 'A/P = ' + amt + '/' + p + ' = ' + (amt/p).toFixed(3) + '. √(A/P) = ' + Math.round(Math.sqrt(amt/p)*1000)/1000 + '. r = ' + r + '%' }; },
+    // SBI PO Hard: quarterly compounding
+    function(){ var p=rand(2,6)*1000, r=[8,12,16][rand(0,2)]; return { q: 'CI on Rs' + p + ' at ' + r + '% compounded quarterly for 1yr', a: Math.round(p * Math.pow(1+r/400, 4) - p), hint: 'Quarterly: r/4=' + (r/4) + '%, t×4=4 periods', intuition: 'A = ' + p + '(1+' + r/400 + ')^4 = ' + Math.round(p*Math.pow(1+r/400,4)) + '. CI = ' + Math.round(p*Math.pow(1+r/400,4)-p) }; },
+    // SBI PO Hard: CI with different rates each year
+    function(){ var p=rand(3,8)*1000, r1=rand(5,10), r2=rand(8,14), r3=rand(6,12); return { q: 'Rs' + p + ' lent at ' + r1 + '%, ' + r2 + '%, ' + r3 + '% for 3yr CI. Amount?', a: Math.round(p * (1+r1/100) * (1+r2/100) * (1+r3/100)), hint: 'A = P(1+r1/100)(1+r2/100)(1+r3/100)', intuition: 'A = ' + p + '×(1+' + r1/100 + ')×(1+' + r2/100 + ')×(1+' + r3/100 + ') = ' + Math.round(p*(1+r1/100)*(1+r2/100)*(1+r3/100)) }; },
+    // SBI PO Hard: find CI difference between yearly and half-yearly
+    function(){ var p=rand(2,5)*1000, r=[8,10,12][rand(0,2)]; var y=Math.round(p*(1+r/100)-p), hy=Math.round(p*Math.pow(1+r/200,2)-p); return { q: 'Rs' + p + ' at ' + r + '%. CI half-yearly vs yearly diff?', a: hy-y, hint: 'Yearly CI=' + y + ', half-yearly CI=' + hy, intuition: 'Yearly=' + y + ', half-yearly=' + hy + '. Diff = ' + (hy-y) }; },
+    // SBI PO Hard: population growth (CI application)
+    function(){ var p=rand(50000,200000), r=rand(3,8); return { q: 'Population ' + p + ', grows ' + r + '% annually. Population after 2yr?', a: Math.round(p * Math.pow(1+r/100, 2)), hint: 'Use CI formula: P(1+r/100)^t', intuition: 'After 2yr = ' + p + '×(1+' + r/100 + ')² = ' + Math.round(p*Math.pow(1+r/100,2)) }; }
   ];
-  var t = ty[rand(0, ty.length - 1)];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var t = ty[idx];
   var d = t();
   var o = [d.a]; while(o.length<4){var v=d.a+rand(-d.a*0.2|0, d.a*0.2|0); if(o.indexOf(v)<0&&v>0)o.push(v);}
   shuffle(o);
@@ -2266,9 +2525,23 @@ function generateDiscountQuestion(diff, layer) {
     // Discount% to gain a specific profit%
     function(){ var cp=rand(20,50)*10, g=rand(10,20), mp=cp+rand(10,30)*10; return { q: 'CP=Rs' + cp + ', wants ' + g + '% profit. MP=Rs' + mp + '. Discount %?', a: Math.round(100 - (cp*(100+g)/100)/mp*100), hint: 'SP = CP(' + (100+g) + '%), discount = (MP-SP)/MP×100', intuition: 'SP = ' + cp + '×' + (100+g) + '% = ' + Math.round(cp*(100+g)/100) + '. Discount = (MP-SP)/MP = (' + mp + '-' + Math.round(cp*(100+g)/100) + ')/' + mp + ' = ' + Math.round(100 - (cp*(100+g)/100)/mp*100) + '%' }; },
     // Find discount% given MP and SP
-    function(){ var mp=rand(10,30)*10, d=rand(10,35); return { q: 'MP=Rs' + mp + ', SP=Rs' + Math.round(mp*(100-d)/100) + '. Discount %?', a: d, hint: 'Discount = (MP-SP)/MP × 100', intuition: 'Discount = (' + mp + '-' + Math.round(mp*(100-d)/100) + ')/' + mp + ' × 100 = ' + Math.round((mp-Math.round(mp*(100-d)/100))/mp*100) + '%' }; }
+    function(){ var mp=rand(10,30)*10, d=rand(10,35); return { q: 'MP=Rs' + mp + ', SP=Rs' + Math.round(mp*(100-d)/100) + '. Discount %?', a: d, hint: 'Discount = (MP-SP)/MP × 100', intuition: 'Discount = (' + mp + '-' + Math.round(mp*(100-d)/100) + ')/' + mp + ' × 100 = ' + Math.round((mp-Math.round(mp*(100-d)/100))/mp*100) + '%' }; },
+    // SBI PO Hard: three successive discounts equivalent single discount
+    function(){ var d1=rand(5,15), d2=rand(5,12), d3=rand(3,10); var eff=100-(100-d1)*(100-d2)*(100-d3)/10000; return { q: 'Single discount equivalent to ' + d1 + '%, ' + d2 + '%, ' + d3 + '%?', a: Math.round(eff), hint: '100 - (100-d1)(100-d2)(100-d3)/100²', intuition: '100 - (' + (100-d1) + '×' + (100-d2) + '×' + (100-d3) + ')/10000 = ' + Math.round(eff) + '%' }; },
+    // SBI PO Hard: find MP when two successive discounts give same SP as one discount
+    function(){ var mp=rand(2000,8000), d1=rand(10,20), d2=rand(5,15), sd=rand(15,30); var sp=Math.round(mp*(100-d1)/100*(100-d2)/100); return { q: 'MP=Rs' + mp + '. Discount ' + d1 + '% then ' + d2 + '%. Single discount giving same SP?', a: Math.round(100 - sp*100/mp), hint: 'SP = ' + sp + ', single discount = (MP-SP)/MP×100', intuition: 'SP=' + sp + ', discount = (' + mp + '-' + sp + ')/' + mp + '×100 = ' + Math.round(100-sp*100/mp) + '%' }; },
+    // SBI PO Hard: profit when marked price equals cost plus markup and two discounts
+    function(){ var cp=rand(500,2000), m=rand(30,50), d1=rand(5,15), d2=rand(5,10); var mp=Math.round(cp*(100+m)/100); var sp=Math.round(mp*(100-d1)/100*(100-d2)/100); return { q: 'CP=Rs' + cp + ', marked ' + m + '%↑, discount ' + d1 + '% then ' + d2 + '%. Profit/Loss%?', a: Math.round((sp-cp)/cp*100), hint: 'SP=' + sp + ', P%=(SP-CP)/CP×100', intuition: 'MP=' + mp + ', SP=' + mp + '×' + (100-d1)/100 + '×' + (100-d2)/100 + '=' + sp + '. P%=' + Math.round((sp-cp)/cp*100) + '%' }; },
+    // SBI PO Hard: find discount% to achieve target profit when given a false weight
+    function(){ var w=rand(800,950), g=rand(10,20), cp=rand(100,300); var effCp=Math.round(cp*1000/w); var sp=Math.round(cp*(100+g)/100); return { q: 'CP=Rs' + cp + '/kg. Uses ' + w + 'g instead of 1kg. Wants ' + g + '% profit. MP for ' + rand(5,15) + '% discount?', a: Math.round(sp*100/(100-rand(5,15))), hint: 'Effective CP per kg = ' + effCp + '. Then SP for ' + g + '% profit = ' + sp + '. Then MP = SP/(1-discount)' }; }
   ];
-  var t = ty[rand(0, ty.length - 1)];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var t = ty[idx];
   var d = t();
   var o = [d.a]; while(o.length<4){var v=d.a+rand(-8,8); if(o.indexOf(v)<0&&v>0)o.push(v);}
   shuffle(o);
@@ -2289,9 +2562,21 @@ function generateRacesQuestion(diff, layer) {
     // Race with dead heat: find the gap
     function(){ var d=rand(100,200); var a=rand(6,10), b=rand(4,a-1); var tA=d/a; var bDist=tA*b; var win=Math.round(d-bDist); return { q: 'A runs ' + d + 'm at ' + a + 'm/s, B at ' + b + 'm/s. By how many meters does A win?', a: win, hint: 'A time=' + tA.toFixed(2) + 's. B runs ' + bDist.toFixed(1) + 'm in that time. A wins by ' + d + '-' + bDist.toFixed(1), intuition: 'Time A = ' + d + '/' + a + ' = ' + tA.toFixed(2) + 's. B distance = ' + tA.toFixed(2) + '×' + b + ' = ' + bDist.toFixed(1) + 'm. A wins by ' + Math.round(d-bDist) + 'm' }; },
     // Circular track opposite direction: meeting points count
-    function(){ var l=rand(2,5)*200; var sa=rand(5,9), sb=rand(4,7); return { q: 'Circular track ' + l + 'm. A at ' + sa + 'm/s, B at ' + sb + 'm/s (opposite). Meetings in 1 hour?', a: Math.floor(3600*(sa+sb)/l), hint: 'Rel speed = ' + (sa+sb) + 'm/s. Each meeting when combined distance = track length. Meetings = total dist/track', intuition: 'Relative speed = ' + (sa+sb) + 'm/s. In 3600s, rel dist = ' + 3600*(sa+sb) + 'm. Meetings = ' + 3600*(sa+sb) + '/' + l + ' = ' + Math.floor(3600*(sa+sb)/l) }; }
+    function(){ var l=rand(2,5)*200; var sa=rand(5,9), sb=rand(4,7); return { q: 'Circular track ' + l + 'm. A at ' + sa + 'm/s, B at ' + sb + 'm/s (opposite). Meetings in 1 hour?', a: Math.floor(3600*(sa+sb)/l), hint: 'Rel speed = ' + (sa+sb) + 'm/s. Each meeting when combined distance = track length. Meetings = total dist/track', intuition: 'Relative speed = ' + (sa+sb) + 'm/s. In 3600s, rel dist = ' + 3600*(sa+sb) + 'm. Meetings = ' + 3600*(sa+sb) + '/' + l + ' = ' + Math.floor(3600*(sa+sb)/l) }; },
+    // SBI PO Hard: three runners race
+    function(){ var d=200, a=rand(5,9), b=rand(4,7), c=rand(3,5); return { q: 'Race ' + d + 'm. A at ' + a + 'm/s, B at ' + b + 'm/s, C at ' + c + 'm/s. By how much does A beat C if A beats B by ' + Math.round(d - d*b/a) + 'm?', a: Math.round(d - d*c/a), hint: 'A time = ' + d/a + 's. C distance in that time = ' + Math.round(d*c/a), intuition: 'A finishes in ' + d/a + 's. C runs ' + Math.round(d*c/a) + 'm. A beats C by ' + Math.round(d - d*c/a) + 'm' }; },
+    // SBI PO Hard: race with handicap
+    function(){ var d=rand(100,200), h=rand(5,20), sa=rand(6,12); return { q: 'A gives B ' + h + 'm start in ' + d + 'm race. A wins by ' + Math.round(h - d*(sa-rand(3,5))/sa) + 'm. A speed=' + sa + 'm/s. B speed?', a: Math.round((d-h-Math.round(h - d*(sa-rand(3,5))/sa)) / (d/sa) * 10) / 10, hint: 'B runs ' + (d-h-win) + 'm in A time ' + d/sa + 's', intuition: 'A time=' + d/sa + 's. B runs ' + (d-h-Math.round(h-d*(sa-rand(3,5))/sa)) + 'm, speed=' + Math.round((d-h-Math.round(h-d*(sa-rand(3,5))/sa))/(d/sa)*10)/10 + 'm/s' }; },
+    // SBI PO Hard: race on circular track - first meeting at a point
+    function(){ var l=rand(2,5)*200, sa=rand(5,9), sb=rand(4,7); return { q: 'Circular ' + l + 'm. A=' + sa + 'm/s, B=' + sb + 'm/s (same dir). First meet at starting point? Time?', a: Math.round(l / Math.abs(sa-sb)), hint: 'Time to first meeting = L/|sa-sb|. But to meet at start, need LCM of lap times', intuition: 'A lap time=' + l/sa + 's, B lap time=' + l/sb + 's. First meet at start = LCM(' + l/sa + ',' + l/sb + ')s. First meet anywhere = ' + Math.round(l/Math.abs(sa-sb)) + 's' }; }
   ];
-  var t = ty[rand(0, ty.length - 1)];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var t = ty[idx];
   var d = t();
   var o = [d.a]; while(o.length<4){var v=Math.round(d.a)+rand(-5,5); if(o.indexOf(v)<0&&v>0)o.push(v);}
   shuffle(o);
@@ -2347,9 +2632,21 @@ function generateMirrorImageQuestion(diff) {
     // Hard: figure counting (triangles in a pattern)
     function(){ var n=rand(2,4); var count=n*n; return { q: 'How many squares in a ' + n + '×' + n + ' grid?', a: n*n + (n-1)*(n-1) + (n>2?(n-2)*(n-2):0) + (n>3?1:0), hint: 'Count squares of each size: 1×1, 2×2, etc.', intuition: 'Total = 1² + 2² + ... + ' + n + '² = ' + n + '×' + (n+1) + '×' + (2*n+1) + '/6 = ' + Math.round(n*(n+1)*(2*n+1)/6) }; },
     // Hard: cube counting in 3D
-    function(){ var n=rand(2,4); return { q: 'How many small cubes in a ' + n + '×' + n + '×' + n + ' cube?', a: n*n*n, hint: 'Volume = n³', intuition: n + ' × ' + n + ' × ' + n + ' = ' + n*n*n + ' small cubes. Subtract hidden ones for painted faces problems.' }; }
+    function(){ var n=rand(2,4); return { q: 'How many small cubes in a ' + n + '×' + n + '×' + n + ' cube?', a: n*n*n, hint: 'Volume = n³', intuition: n + ' × ' + n + ' × ' + n + ' = ' + n*n*n + ' small cubes. Subtract hidden ones for painted faces problems.' }; },
+    // SBI PO Hard: count triangles in complex figure
+    function(){ var base=rand(4,7); var count=base*(base+1)/2; return { q: 'How many triangles in a figure with ' + base + ' small triangles in the base row?', a: count, hint: 'Sum 1 to ' + base + ' = n(n+1)/2', intuition: 'Total triangles = 1+2+3+...+' + base + ' = ' + base + '×' + (base+1) + '/2 = ' + count }; },
+    // SBI PO Hard: paper folding with numbered squares
+    function(){ var fol=['folded','unfolded'][0]; var n=rand(3,5); return { q: 'A square paper is folded in half ' + n + ' times. How many layers?', a: Math.pow(2,n), hint: 'Each fold doubles layers: 2^' + n, intuition: 'Start with 1 layer. Each fold ×2. After ' + n + ' folds: 2^' + n + ' = ' + Math.pow(2,n) }; },
+    // SBI PO Hard: mirror + water image combined
+    function(){ var l=['b','d','p','q'][rand(0,3)]; var w='A'; return { q: 'Mirror image of "' + l + '" followed by water image of the result?', a: ({b:'p',d:'q',p:'b',q:'d'})[l], hint: 'Mirror = left-right flip. Water = top-bottom flip. Combine both.', intuition: l + ' mirror → ' + ({b:'d',d:'b',p:'q',q:'p'})[l] + ', then water → ' + ({b:'p',d:'q',p:'b',q:'d'})[l] }; }
   ];
-  var t = ty[rand(0, ty.length - 1)];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = rand(0,1) ? rand(Math.max(0, ty.length - 3), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var t = ty[idx];
   var d = t();
   var o = [d.a]; while(o.length<4){var v=['L','G','H','K','M','Q','Y','N','2','3','4'][rand(0,10)]; if(o.indexOf(v)<0)o.push(v);}
   shuffle(o);
@@ -2363,9 +2660,21 @@ function generateDiceCubeQuestion(diff) {
     function(){ var c=rand(1,5); return { q: 'Cube painted all faces, cut into 27 small cubes. Cubes with ' + c + ' faces painted?', a: c===0?1:(c===1?6:(c===2?12:(c===3?8:0))), hint: '0-face=center('+(c===0?1:'')+'), 1-face=face centers(6), 2-face=edge centers(12), 3-face=corners(8)', intuition: 'For n³ cubes: 0-face=(n-2)³, 1-face=6(n-2)², 2-face=12(n-2), 3-face=8 always. Here n=3: ' + (c===0?'1':c===1?'6':c===2?'12':c===3?'8':'0') }; },
     function(){ var cols=['Red','Blue','Green','Yellow','White','Black']; shuffle(cols); var top=rand(1,6), shown=[top]; shown.push(7-top); var side=rand(1,6); while(shown.indexOf(side)>=0)side=rand(1,6); shown.push(side); shown.push(7-side); var ci=rand(0,3); return { q: 'Dice colored: ' + cols[0] + '=' + shown[0] + ', ' + cols[1] + '=' + shown[1] + ', ' + cols[2] + '=' + shown[2] + '. Color of face opposite ' + cols[ci] + '?', a: cols[shown.indexOf(7-shown[ci])], hint: 'Opposite colors have numbers summing to 7', intuition: 'First find opposite numbers (sum 7), then map to colors. ' + cols[ci] + '=' + shown[ci] + ', opposite=' + (7-shown[ci]) + '=' + cols[shown.indexOf(7-shown[ci])] }; },
     function(){ var nums=[1,2,3,4,5,6]; shuffle(nums); var net=[nums[0],nums[1],nums[2],nums[3],nums[4],nums[5]]; var n1=net[0], n2=net[1], n3=net[2]; return { q: 'Dice net shows: top=' + n1 + ', bottom=' + n2 + ', left=' + n3 + '. Which net can form this dice?', a: n1 + ' opposite ' + (7-n1) + ', ' + n2 + ' opposite ' + (7-n2), hint: 'In a net, adjacent in net may not be adjacent on cube', intuition: 'Check which net respects opposite-sum=7. ' + n1 + ' opposite ' + (7-n1) + ', ' + n2 + ' opposite ' + (7-n2) + ', ' + n3 + ' opposite ' + (7-n3) }; },
-    function(){ var pos1=rand(1,6), pos2=rand(1,6); while(pos2===pos1||pos2===7-pos1)pos2=rand(1,6); var common=rand(1,6); while(common===pos1||common===pos2||common===7-pos1||common===7-pos2)common=rand(1,6); return { q: 'Position 1: ' + pos1 + ' top, ' + common + ' front. Position 2: ' + pos2 + ' top, ' + common + ' front. What is opposite ' + pos1 + '?', a: 7-pos1, hint: 'Same dice shows common front face in both positions', intuition: 'Since front=' + common + ' in both, the top faces differ. Opposite of top=' + pos1 + ' is always 7-' + pos1 + '=' + (7-pos1) }; }
+    function(){ var pos1=rand(1,6), pos2=rand(1,6); while(pos2===pos1||pos2===7-pos1)pos2=rand(1,6); var common=rand(1,6); while(common===pos1||common===pos2||common===7-pos1||common===7-pos2)common=rand(1,6); return { q: 'Position 1: ' + pos1 + ' top, ' + common + ' front. Position 2: ' + pos2 + ' top, ' + common + ' front. What is opposite ' + pos1 + '?', a: 7-pos1, hint: 'Same dice shows common front face in both positions', intuition: 'Since front=' + common + ' in both, the top faces differ. Opposite of top=' + pos1 + ' is always 7-' + pos1 + '=' + (7-pos1) }; },
+    // SBI PO Hard: open dice net - which cannot form a dice?
+    function(){ var faces=[1,2,3,4,5,6]; shuffle(faces); var a=faces[0], b=faces[1], c=faces[2]; var validAdj=[[1,2],[2,3],[3,4],[4,1],[1,5],[2,5],[3,5],[4,5],[1,6],[2,6],[3,6],[4,6]]; var falsePair=[a+','+b, a+','+c, b+','+c][rand(0,2)]; var isValid=validAdj.some(function(p){return p[0]===a&&p[1]===b||p[0]===b&&p[1]===a;}); return { q: 'In a dice, is ' + a + ' adjacent to ' + b + '?', a: isValid?'Yes':'No', hint: 'Adjacent faces never sum to 7 unless special case', intuition: isValid ? a + ' and ' + b + ' can be adjacent on a standard dice.' : a + ' and ' + b + ' are opposite (sum=' + (a+b) + ') so cannot be adjacent.' }; },
+    // SBI PO Hard: colored cube cut into smaller cubes
+    function(){ var n=rand(3,5); var colors=['Red','Blue','Green','Yellow','White','Black']; shuffle(colors); var col1=colors[0], col2=colors[1]; var count2Face=(n-2)*12; return { q: 'A ' + n + '×' + n + '×' + n + ' cube is painted ' + col1 + ' on all faces, then cut into unit cubes. Cubes with exactly 2 faces painted?', a: count2Face, hint: 'Edge cubes excluding corners: 12(n-2)', intuition: 'Edge cubes = 12 per layer × (n-2) = 12×' + (n-2) + ' = ' + count2Face + '. Corners have 3 faces, centers have 0-1 faces.' }; },
+    // SBI PO Hard: dice with non-standard numbering
+    function(){ var nums=[1,2,3,4,5,6]; shuffle(nums); var top=rand(1,6); var opp=7-top; var side=rand(1,6); while(side===top||side===opp)side=rand(1,6); var sum=top+side+rand(1,6); while(sum%2!==0)sum=top+side+rand(1,6); return { q: 'In a dice, top=' + top + ', front=' + side + '. Sum of numbers on the three visible faces (top, front, right) is ' + sum + '. Right face?', a: sum-top-side, hint: 'Visible faces sum = top + front + right. Subtract known values.', intuition: 'Given top=' + top + ', front=' + side + ', sum=' + sum + '. Right = ' + sum + ' - ' + top + ' - ' + side + ' = ' + (sum-top-side) }; }
   ];
-  var t = ty[rand(0, ty.length - 1)];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = rand(0,1) ? rand(Math.max(0, ty.length - 3), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var t = ty[idx];
   var d = t();
   var o = [d.a]; while(o.length<4){var v=d.a+rand(-3,3); if(o.indexOf(v)<0&&v>=0)o.push(v);}
   shuffle(o);
@@ -2447,9 +2756,21 @@ function generateCriticalReasoningQuestion(diff) {
     // Cause and effect advanced (exam pattern)
     function(){ var ces=[{s:'Statement: "The number of road accidents increased significantly after the new traffic signal was installed." Which is true?',c:'The new signal may not have caused the increase; other factors could be responsible'},{s:'Statement: "Company profits increased after the new CEO joined." What can be inferred?',c:'The new CEO may have contributed to the increase, but correlation is not causation'},{s:'Statement: "Cities with more parks have lower crime rates." Conclusion?',c:'Parks and lower crime are correlated, but causation requires more evidence'}]; var ce=ces[rand(0,2)]; return { q: ce.s, a: ce.c, hint: 'Correlation does not imply causation. Other factors may be responsible.', intuition: 'When A and B occur together: A may cause B, B may cause A, or a third factor C may cause both.' }; },
     // Statement: Which action follows (multi-choice)
-    function(){ var scs=[{s:'"Industrial waste is polluting the river." Which is the BEST course of action?',c:'Install effluent treatment plants at factories'},{s:'"School dropout rate is increasing in rural areas." Best action?',c:'Provide scholarships and improve school facilities'},{s:'"Traffic congestion is severe in the city." Best action?',c:'Improve public transport and create more parking spaces'}]; var sc=scs[rand(0,2)]; return { q: sc.s, a: sc.c, hint: 'Best course of action directly addresses the root cause of the problem', intuition: 'The best action should be practical, address the root cause, and be within administrative feasibility.' }; }
+    function(){ var scs=[{s:'"Industrial waste is polluting the river." Which is the BEST course of action?',c:'Install effluent treatment plants at factories'},{s:'"School dropout rate is increasing in rural areas." Best action?',c:'Provide scholarships and improve school facilities'},{s:'"Traffic congestion is severe in the city." Best action?',c:'Improve public transport and create more parking spaces'}]; var sc=scs[rand(0,2)]; return { q: sc.s, a: sc.c, hint: 'Best course of action directly addresses the root cause of the problem', intuition: 'The best action should be practical, address the root cause, and be within administrative feasibility.' }; },
+    // SBI PO Hard: inference from statistical data
+    function(){ var data=[{p:'A survey of 1000 people found that 80% of those who exercised regularly had lower blood pressure. The survey also found that 60% of all participants exercised regularly.',c:'Regular exercise is associated with lower blood pressure'},{p:'Company X spent 40% more on advertising this year and profits increased by 25%. Meanwhile, Company Y reduced ad spending and profits fell by 10%.',c:'There is a correlation between advertising spending and profitability'},{p:'In a study, students who attended more than 90% of classes scored an average of 85%, while those with less than 70% attendance scored an average of 65%.',c:'Higher class attendance is correlated with better academic performance'}]; var d=data[rand(0,2)]; return { q: 'Passage: "' + d.p + '"<br>Which conclusion follows?', a: d.c, hint: 'Identify the MOST directly supported conclusion without overgeneralizing', intuition: 'The conclusion must be directly supported. Avoid causal claims if only correlation is shown.' }; },
+    // SBI PO Hard: identify the logical fallacy
+    function(){ var fallacies=[{s:'"If you don\'t exercise daily, you will become unhealthy. John does not exercise daily. Therefore, John is unhealthy."',f:'Valid modus ponens — if P then Q, P, therefore Q'},{s:'"Every time I wash my car, it rains. Therefore, washing my car causes rain."',f:'False cause (post hoc ergo propter hoc)'},{s:'"Either we cut all taxes or the economy will collapse. We cannot let the economy collapse, so we must cut all taxes."',f:'False dilemma — ignores other options'}]; var f=fallacies[rand(0,2)]; return { q: f.s, a: f.f, hint: 'Identify the reasoning error. Common fallacies: false cause, false dilemma, circular reasoning, hasty generalization.', intuition: 'Check if the conclusion necessarily follows. If not, identify which logical rule is broken.' }; },
+    // SBI PO Hard: statement with hidden assumption
+    function(){ var hiddens=[{s:'"The government should ban single-use plastics to reduce ocean pollution."',a:'Banning single-use plastics will significantly reduce the amount of plastic entering the ocean'},{s:'"Companies should invest in renewable energy because it creates more jobs than fossil fuels."',a:'Creating more jobs is a desirable outcome for the economy'},{s:'"We should raise the retirement age because people are living longer."',a:'People who live longer are also healthy enough to work longer'}]; var h=hiddens[rand(0,2)]; return { q: 'Statement: "' + h.s + '"<br>Which is an assumption?', a: h.a, hint: 'An assumption is an unstated belief that must be true for the argument to hold', intuition: 'The assumption bridges the premise to the conclusion. If the assumption is false, the argument falls apart.' }; }
   ];
-  var t = ty[rand(0, ty.length - 1)];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = rand(0,1) ? rand(Math.max(0, ty.length - 3), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var t = ty[idx];
   var d = t();
   var o = [d.a]; while(o.length<4){var v=['Valid','Invalid','Yes','No','Maybe'][rand(0,4)]; if(o.indexOf(v)<0)o.push(v);}
   shuffle(o);
@@ -2466,9 +2787,21 @@ function generateDecisionMakingQuestion(diff) {
     // Budget allocation under constraints
     function(){ var budget=rand(50,100)*100, itemA=rand(10,30)*100, itemB=rand(15,35)*100, needBoth=rand(0,1); var canBuy=budget>=(needBoth?itemA+itemB:itemA); return { q: 'Budget=₹' + budget + '. Item X=₹' + itemA + ', Item Y=₹' + itemB + '. ' + (needBoth?'Need both':'Need X') + '. Can buy?', a: canBuy?'Yes':'No', hint: 'Total cost must be within budget', intuition: 'X+Y=' + (itemA+itemB) + ', Budget=' + budget + '. ' + (canBuy?'Within budget':'Over budget') }; },
     // Team selection with conditions
-    function(){ var exp=rand(2,7), skill=rand(3,9), avail=[0,1][rand(0,1)]; var reqExp=rand(3,5), reqSkill=rand(5,7); return { q: 'Candidate: ' + exp + 'yr exp, skill rating ' + skill + '/10, ' + (avail?'available':'unavailable') + '. Need: exp≥' + reqExp + ', skill≥' + reqSkill + ', available. Select?', a: exp>=reqExp && skill>=reqSkill && avail ? 'Yes' : 'No', hint: 'All three conditions must be satisfied', intuition: 'exp=' + (exp>=reqExp?'✓':'✗') + ', skill=' + (skill>=reqSkill?'✓':'✗') + ', avail=' + (avail?'✓':'✗') }; }
+    function(){ var exp=rand(2,7), skill=rand(3,9), avail=[0,1][rand(0,1)]; var reqExp=rand(3,5), reqSkill=rand(5,7); return { q: 'Candidate: ' + exp + 'yr exp, skill rating ' + skill + '/10, ' + (avail?'available':'unavailable') + '. Need: exp≥' + reqExp + ', skill≥' + reqSkill + ', available. Select?', a: exp>=reqExp && skill>=reqSkill && avail ? 'Yes' : 'No', hint: 'All three conditions must be satisfied', intuition: 'exp=' + (exp>=reqExp?'✓':'✗') + ', skill=' + (skill>=reqSkill?'✓':'✗') + ', avail=' + (avail?'✓':'✗') }; },
+    // SBI PO Hard: priority-based loan approval matrix
+    function(){ var cibil=rand(650,850), income=rand(3,15), existing=rand(0,3); var approved=cibil>=750 && income>=5 && existing<=1; return { q: 'Loan: CIBIL=' + cibil + ', monthly income=₹' + income + 'L, existing loans=' + existing + '. Criteria: CIBIL≥750, income≥₹5L, existing loans≤1. Approved?', a: approved?'Yes':'No', hint: 'ALL three criteria must be satisfied for approval', intuition: 'CIBIL=' + (cibil>=750?'✓':'✗') + ', Income=' + (income>=5?'✓':'✗') + ', Loans≤1=' + (existing<=1?'✓':'✗') + '. All must pass.' }; },
+    // SBI PO Hard: conditional admission with relaxation
+    function(){ var marks=rand(55,95), category=['General','OBC','SC','ST'][rand(0,3)]; var cutoffs={General:85,OBC:80,SC:70,ST:65}; var eligible=marks>=cutoffs[category]; return { q: 'Admission: marks=' + marks + '%, category=' + category + '. Cutoff for ' + category + '=' + cutoffs[category] + '%. Relaxation: SC/ST -15%, OBC -5% from General cutoff. Eligible?', a: eligible?'Yes':'No', hint: 'Compare marks against category-specific cutoff after relaxation', intuition: 'General cutoff=85%. After relaxation: ' + category + ' cutoff=' + cutoffs[category] + '%. Marks ' + marks + '% ' + (eligible?'meets':'does not meet') + ' cutoff.' }; },
+    // SBI PO Hard: resource allocation with constraints
+    function(){ var budget=rand(50,100), costA=rand(20,40), costB=rand(20,40), costC=rand(15,35); var priority=['A','B','C'][rand(0,2)]; var canAfford=[budget>=costA,budget>=costB,budget>=costC]; var totalABC=costA+costB+costC; return { q: 'Budget=₹' + budget + 'L. Project A=₹' + costA + 'L, B=₹' + costB + 'L, C=₹' + costC + 'L. Priority=' + priority + '. Can fund all three?', a: totalABC<=budget?'Yes':'No', hint: 'Total cost of all projects must be within budget', intuition: 'A+B+C=' + totalABC + 'L, Budget=' + budget + 'L. ' + (totalABC<=budget?'Within':'Exceeds') + ' budget.' }; }
   ];
-  var t = ty[rand(0, ty.length - 1)];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = rand(0,1) ? rand(Math.max(0, ty.length - 3), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var t = ty[idx];
   var d = t();
   var o = [d.a]; while(o.length<4){var v=['Yes','No','Cannot determine','Depends'][rand(0,3)]; if(o.indexOf(v)<0)o.push(v);}
   shuffle(o);
@@ -2512,9 +2845,20 @@ function generateQuadraticComparisonQuestion(diff) {
   var comps = [
     function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (eqs[0].r1 > eqs[1].r1 ? 'I > II' : (eqs[0].r1 < eqs[1].r1 ? 'I < II' : (eqs[0].r1 === eqs[1].r1 ? 'I = II' : 'Cannot compare'))) : 'Cannot compare'; return {a:v, hint:'Compare the larger roots'}; },
     function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (eqs[0].r2 > eqs[1].r2 ? 'I > II' : (eqs[0].r2 < eqs[1].r2 ? 'I < II' : (eqs[0].r2 === eqs[1].r2 ? 'I = II' : 'Cannot compare'))) : 'Cannot compare'; return {a:v, hint:'Compare the smaller roots'}; },
-    function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (eqs[0].r1*eqs[0].r2 > eqs[1].r1*eqs[1].r2 ? 'I > II' : (eqs[0].r1*eqs[0].r2 < eqs[1].r1*eqs[1].r2 ? 'I < II' : 'I = II')) : 'Cannot compare'; return {a:v, hint:'Compare product of roots (c/a)'}; }
+    function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (eqs[0].r1*eqs[0].r2 > eqs[1].r1*eqs[1].r2 ? 'I > II' : (eqs[0].r1*eqs[0].r2 < eqs[1].r1*eqs[1].r2 ? 'I < II' : 'I = II')) : 'Cannot compare'; return {a:v, hint:'Compare product of roots (c/a)'}; },
+    // SBI PO Hard: compare sum of squares of roots
+    function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (eqs[0].r1*eqs[0].r1+eqs[0].r2*eqs[0].r2 > eqs[1].r1*eqs[1].r1+eqs[1].r2*eqs[1].r2 ? 'I > II' : (eqs[0].r1*eqs[0].r1+eqs[0].r2*eqs[0].r2 < eqs[1].r1*eqs[1].r1+eqs[1].r2*eqs[1].r2 ? 'I < II' : 'I = II')) : 'Cannot compare'; return {a:v, hint:'Compare sum of squares of roots = (b²-2ac)/a²'}; },
+    // SBI PO Hard: compare sum of reciprocals of roots
+    function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? ((1/eqs[0].r1+1/eqs[0].r2) > (1/eqs[1].r1+1/eqs[1].r2) ? 'I > II' : ((1/eqs[0].r1+1/eqs[0].r2) < (1/eqs[1].r1+1/eqs[1].r2) ? 'I < II' : 'I = II')) : 'Cannot compare'; return {a:v, hint:'Sum of reciprocals = -b/c'}; }
   ];
-  var comp = comps[rand(0, comps.length - 1)];
+  var ty = comps;
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 3), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var comp = ty[idx];
   var data = comp();
   var opts = ['I > II','I < II','I = II','Cannot compare'];
   shuffle(opts);
@@ -2528,10 +2872,21 @@ function generateInputOutputQuestion(diff) {
     function(arr){ var sorted=arr.slice().sort(function(a,b){return a-b;}); var out=arr.slice(); for(var si=0;si<arr.length;si++){if(arr[si]===sorted[0]){out.splice(si,1);out.unshift(sorted[0]);break;}} return out; },
     function(arr){ var sorted=arr.slice().sort(function(a,b){return b-a;}); var out=arr.slice(); for(var si=0;si<arr.length;si++){if(arr[si]===sorted[0]){out.splice(si,1);out.unshift(sorted[0]);break;}} return out; },
     function(arr){ var max=Math.max.apply(null,arr); var idx=arr.indexOf(max); var out=arr.slice(); out.splice(idx,1); out.push(max); return out; },
-    function(arr){ var min=Math.min.apply(null,arr); var idx=arr.indexOf(min); var out=arr.slice(); out.splice(idx,1); out.push(min); return out; }
+    function(arr){ var min=Math.min.apply(null,arr); var idx=arr.indexOf(min); var out=arr.slice(); out.splice(idx,1); out.push(min); return out; },
+    // SBI PO Hard: both ends sorted simultaneously (ascending)
+    function(arr){ var out=arr.slice(); var sorted=arr.slice().sort(function(a,b){return a-b;}); var left=sorted[0], right=sorted[sorted.length-1]; var li=out.indexOf(left); if(li>0){out.splice(li,1);out.unshift(left);} var ri=out.lastIndexOf(right); if(ri<out.length-1){out.splice(ri,1);out.push(right);} return out; },
+    // SBI PO Hard: interleave smallest and largest
+    function(arr){ var out=[]; var sorted=arr.slice().sort(function(a,b){return a-b;}); for(var ii=0;ii<Math.floor(arr.length/2);ii++){out.push(sorted[ii]);out.push(sorted[arr.length-1-ii]);} if(arr.length%2)out.push(sorted[Math.floor(arr.length/2)]); return out; },
+    // SBI PO Hard: replace each number with sum of digits, then sort
+    function(arr){ var out=arr.slice().map(function(n){return String(n).split('').reduce(function(s,d){return s+parseInt(d);},0);}); out.sort(function(a,b){return a-b;}); return out; }
   ];
-  var opDesc = ['smallest moved left','largest moved left','largest moved right','smallest moved right'];
-  var si = rand(0, steps.length - 1);
+  var opDesc = ['smallest moved left','largest moved left','largest moved right','smallest moved right','both ends sorted inward','interleave small-large','sum of digits then sort'];
+  var si;
+  if (diff >= 5 && steps.length >= 4) {
+    si = rand(0,1) ? rand(Math.max(0, steps.length - 3), steps.length - 1) : rand(0, steps.length - 1);
+  } else {
+    si = rand(0, steps.length - 1);
+  }
   var step1 = steps[si](nums);
   var step2 = steps[si](step1);
   var step3 = steps[si](step2);
@@ -2609,9 +2964,23 @@ function generatePipesCisternsQuestion(diff, layer) {
     // Pipe A fills, B empties, C fills — combined
     function(){ var a=rand(4,8), b=rand(5,10), c=rand(6,12); return { q:'A fills in '+a+'h, B empties in '+b+'h, C fills in '+c+'h. All open together?', a:Math.round(1/(1/a-1/b+1/c)), hint:'1/t = 1/a - 1/b + 1/c', intuition:'Fill rates positive, empty rates negative. 1/t = 1/'+a+' - 1/'+b+' + 1/'+c+' = ' + Math.round(1/(1/a-1/b+1/c)) + 'h' }; },
     // Two pipes fill with leak
-    function(){ var a=rand(3,7), b=rand(4,9), l=rand(6,15); return { q:'A fills in '+a+'h, B fills in '+b+'h. Leak empties full tank in '+l+'h. All three open?', a:Math.round(1/(1/a+1/b-1/l)), hint:'1/t = 1/a + 1/b - 1/l', intuition:'Combined fill: 1/'+a+'+1/'+b+'-1/'+l+' = ' + (1/a+1/b-1/l).toFixed(4) + '. Time=' + Math.round(1/(1/a+1/b-1/l)) + 'h' }; }
+    function(){ var a=rand(3,7), b=rand(4,9), l=rand(6,15); return { q:'A fills in '+a+'h, B fills in '+b+'h. Leak empties full tank in '+l+'h. All three open?', a:Math.round(1/(1/a+1/b-1/l)), hint:'1/t = 1/a + 1/b - 1/l', intuition:'Combined fill: 1/'+a+'+1/'+b+'-1/'+l+' = ' + (1/a+1/b-1/l).toFixed(4) + '. Time=' + Math.round(1/(1/a+1/b-1/l)) + 'h' }; },
+    // SBI PO Hard: pipes opened alternately
+    function(){ var a=rand(4,8), b=rand(6,12); return { q:'A fills in '+a+'h, B in '+b+'h. A open for 1h, then B for 1h, alternately. Time to fill?', a:Math.round(a*b/(a+b) + (a*b/(a+b) > a ? 0 : a*b/(a+b)*0.5)), hint:'Work done in 2h = 1/a + 1/b = ' + (1/a+1/b).toFixed(4) + ' of tank. Continue until filled', intuition:'In 2h: 1/'+a+'+1/'+b+'=' + (1/a+1/b).toFixed(4) + '. In '+Math.round(2/(1/a+1/b)) + 'h, ' + Math.round(2/(1/a+1/b)) + '×' + (1/a+1/b).toFixed(4) + '=' + Math.round(2/(1/a+1/b)*(1/a+1/b)*100)/100 + ' of tank filled' }; },
+    // SBI PO Hard: three pipes with two opening at different times
+    function(){ var a=rand(4,8), b=rand(5,10), c=rand(8,15); return { q:'A fills in '+a+'h, B in '+b+'h, C empties in '+c+'h. A&B open for 2h, then C also opened. Total time?', a:Math.round(2 + (1-(1/a+1/b)*2)/(1/a+1/b-1/c)), hint:'First 2h: ' + (1/a+1/b)*2 + ' filled. Remaining = ' + (1-(1/a+1/b)*2).toFixed(4) + '. Then net rate = 1/a+1/b-1/c', intuition:'In 2h: (' + 1/a + '+' + 1/b + ')×2=' + ((1/a+1/b)*2).toFixed(4) + '. Remaining=' + (1-(1/a+1/b)*2).toFixed(4) + '. Net rate=' + (1/a+1/b-1/c).toFixed(4) + '/h. Extra time=' + Math.round((1-(1/a+1/b)*2)/(1/a+1/b-1/c)) + 'h. Total=' + Math.round(2+(1-(1/a+1/b)*2)/(1/a+1/b-1/c)) + 'h' }; },
+    // SBI PO Hard: find capacity given partial fill times
+    function(){ var cap=rand(1000,5000), a=rand(3,8), b=rand(4,10), m=rand(2,5); return { q:'Pipe A fills at ' + Math.round(cap/a) + 'L/h, B at ' + Math.round(cap/b) + 'L/h. Both open for ' + m + 'h, then A alone. Total time ' + Math.round(m + (cap-m*(cap/a+cap/b))/(cap/a)) + 'h. Tank capacity?', a:cap, hint:'In '+m+'h: filled=' + m*(cap/a+cap/b) + '. Remaining = capacity - ' + m*(cap/a+cap/b) + '. Then A alone takes time = remaining/(cap/a)' }; },
+    // SBI PO Hard: pipe with variable filling rate
+    function(){ var a=rand(3,6); return { q:'Pipe fills tank in ' + a + 'h. Due to leak, takes ' + (a+rand(2,5)) + 'h. Leak alone empties full tank in?', a:Math.round(a*(a+rand(2,5))/((a+rand(2,5))-a)), hint:'Leak time = (fill×leakFill)/(leakFill-fill)', intuition:'1/' + a + ' - 1/leak = 1/' + (a+rand(2,5)) + '. Leak time = ' + Math.round(a*(a+rand(2,5))/((a+rand(2,5))-a)) + 'h' }; }
   ];
-  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-3,3); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-3,3); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Pipes: '+d.hint, intuition:'Together rate = sum of rates. Opposite directions subtract. Time = 1/rate.' };
 }
 
@@ -2621,9 +2990,23 @@ function generateBoatsStreamsQuestion(diff, layer) {
     function(){ var b=rand(8,15), s=rand(2,5); return { q:'Speed in still water='+b+'km/h, stream='+s+'km/h. Upstream?', a:b-s, hint:'Upstream = boat - stream' }; },
     function(){ var ds=rand(12,20), us=rand(6,11); return { q:'Downstream='+ds+'km/h, upstream='+us+'km/h. Boat speed?', a:Math.round((ds+us)/2), hint:'Boat = (downstream + upstream)/2' }; },
     function(){ var ds=rand(12,20), us=rand(6,11); return { q:'Downstream='+ds+'km/h, upstream='+us+'km/h. Stream speed?', a:Math.round((ds-us)/2), hint:'Stream = (downstream - upstream)/2' }; },
-    function(){ var b=rand(10,18), s=rand(2,4), d=rand(30,80); return { q:'Boat='+b+'km/h, stream='+s+'km/h. Time downstream for '+d+'km?', a:Math.round(d/(b+s)), hint:'Time = distance / downstream speed' }; }
+    function(){ var b=rand(10,18), s=rand(2,4), d=rand(30,80); return { q:'Boat='+b+'km/h, stream='+s+'km/h. Time downstream for '+d+'km?', a:Math.round(d/(b+s)), hint:'Time = distance / downstream speed' }; },
+    // SBI PO Hard: round trip with variable stream
+    function(){ var b=rand(10,16), s=rand(2,5), d=rand(40,80); return { q:'Boat='+b+'km/h, stream='+s+'km/h. Time for round trip '+d+'km downstream and back?', a:Math.round(d/(b+s) + d/(b-s)), hint:'Total = d/(b+s) + d/(b-s)', intuition:'Downstream='+d+'/('+b+'+'+s+')='+Math.round(d/(b+s))+'h, Upstream='+d+'/('+b+'-'+s+')='+Math.round(d/(b-s))+'h. Total='+Math.round(d/(b+s)+d/(b-s))+'h' }; },
+    // SBI PO Hard: find stream speed given average speed
+    function(){ var b=rand(8,15), s=rand(2,5), d=rand(30,60); return { q:'Boat covers '+d+'km downstream in '+Math.round(d/(b+s))+'h, same distance upstream in '+Math.round(d/(b-s))+'h. Average speed?', a:Math.round(2*d/(d/(b+s)+d/(b-s))), hint:'Avg speed = total distance/total time', intuition:'Total dist='+2*d+'km, total time='+Math.round(d/(b+s)+d/(b-s))+'h. Avg='+Math.round(2*d/(d/(b+s)+d/(b-s)))+'km/h' }; },
+    // SBI PO Hard: find boat speed given downstream speed and time ratio
+    function(){ var b=rand(10,18), s=rand(2,5), d=rand(50,100); var td=d/(b+s), tu=d/(b-s); return { q:'Downstream time : upstream time = 1:' + Math.round(tu/td) + ' for ' + d + 'km. Stream=' + s + 'km/h. Boat speed?', a:b, hint:'Time ratio (b-s):(b+s) = 1:'+Math.round(tu/td)+'. Solve: (b+s)='+Math.round(tu/td)+'(b-s)', intuition:'t_down/t_up = (b-s)/(b+s) = 1/'+Math.round(tu/td)+'. ' + (b-s) + '/' + (b+s) + ' = ' + ((b-s)/(b+s)).toFixed(3) + ' ≈ 1/' + Math.round(tu/td) + '. Boat speed=' + b + 'km/h' }; },
+    // SBI PO Hard: man rowing with changing stream
+    function(){ var b=rand(8,14), s1=rand(2,4), s2=rand(3,6), d1=rand(20,40), d2=rand(20,40); return { q:'River: upstream '+d1+'km at stream='+s1+'km/h, then downstream '+d2+'km at stream='+s2+'km/h. Boat='+b+'km/h. Total time?', a:Math.round(d1/(b-s1) + d2/(b+s2)), hint:'Time upstream='+d1+'/('+b+'-'+s1+'), time downstream='+d2+'/('+b+'+'+s2+')', intuition:'Upstream: '+d1+'/('+b+'-'+s1+')='+Math.round(d1/(b-s1))+'h. Downstream: '+d2+'/('+b+'+'+s2+')='+Math.round(d2/(b+s2))+'h. Total='+Math.round(d1/(b-s1)+d2/(b+s2))+'h' }; }
   ];
-  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-3,3)+(d.a>5?0:1); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-3,3)+(d.a>5?0:1); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'Boats: '+d.hint, intuition:'Downstream=boat+stream. Upstream=boat-stream. Boat=(DS+US)/2. Stream=(DS-US)/2.' };
 }
 
@@ -2635,9 +3018,23 @@ function generateAlligationQuestion(diff, layer) {
     // Replacement of mixture
     function(){ var m=rand(10,30); return { q:'' + m + 'L of milk, ' + rand(3,6) + 'L water added then ' + rand(2,4) + 'L mixture removed. Milk left?', a:Math.round(m*(m/(m+rand(3,6)))), hint:'Milk fraction = ' + m + '/' + (m+rand(3,6)) + ', milk removed = fraction × removed qty', intuition:'Initial milk=' + m + 'L, total=' + (m+rand(3,6)) + 'L. Milk fraction = ' + m + '/' + (m+rand(3,6)) + '. After removal, milk = ' + m + ' - ' + Math.round(m*(m/(m+rand(3,6)))) + ' = ' + Math.round(m*(m/(m+rand(3,6)))) + 'L' }; },
     // Mixing two types of rice/grain
-    function(){ var c1=rand(20,40), c2=rand(45,60), m=rand(c1+5,c2-5); return { q:'Rice type1 ₹'+c1+'/kg, type2 ₹'+c2+'/kg. Mixture ₹'+m+'/kg. Ratio?', a:(c2-m)+':'+(m-c1), hint:'Cheaper:dearer = (dearer-mean):(mean-cheaper)', intuition:'Ratio = (' + c2 + '-' + m + '):(' + m + '-' + c1 + ') = ' + (c2-m) + ':' + (m-c1) }; }
+    function(){ var c1=rand(20,40), c2=rand(45,60), m=rand(c1+5,c2-5); return { q:'Rice type1 ₹'+c1+'/kg, type2 ₹'+c2+'/kg. Mixture ₹'+m+'/kg. Ratio?', a:(c2-m)+':'+(m-c1), hint:'Cheaper:dearer = (dearer-mean):(mean-cheaper)', intuition:'Ratio = (' + c2 + '-' + m + '):(' + m + '-' + c1 + ') = ' + (c2-m) + ':' + (m-c1) }; },
+    // SBI PO Hard: three ingredient mixture
+    function(){ var a=rand(20,35), b=rand(30,50), c=rand(40,60), m=rand(b+2,c-2), r1=(c-m)+':'+(m-b); return { q:'Three varieties: ₹'+a+'/kg, ₹'+b+'/kg, ₹'+c+'/kg. Mix ₹'+m+'/kg using all three. Ratio of cheapest to costliest?', a:r1, hint:'First mix B & C to get mean, then mix with A', intuition:'Mix B and C: ratio = ('+c+'-'+m+'):('+m+'-'+b+') = '+(c-m)+':'+(m-b)+'. Then with A using alligation' }; },
+    // SBI PO Hard: repeated dilution
+    function(){ var m=rand(10,25), w1=rand(3,6), w2=rand(3,6), r=rand(2,4); return { q:m+'L milk. Add '+w1+'L water, remove '+r+'L mixture. Add '+w2+'L water again. Milk % in final?', a:Math.round((m - (m/(m+w1))*r * m/(m+w1) * (1 - 1/(m+w1)) ) / (m + w1 - r + w2) * m * 100 / m)/1, hint:'Step1: milk='+m+'×'+m+'/('+m+'+'+w1+') after removal. Then add '+w2+'L water', intuition:'After step1: milk='+m+'L, water='+w1+'L. Remove '+r+'L: milk='+Math.round(m - r*m/(m+w1))+'L. Add '+w2+'L water: total='+(m+w1-r+w2)+'L, milk='+Math.round(m - r*m/(m+w1))+'L, %='+Math.round((m - r*m/(m+w1))/(m+w1-r+w2)*100)+'%' }; },
+    // SBI PO Hard: profit using false weight with alligation
+    function(){ var cp=rand(20,40), sp=rand(30,50); return { q:'Shopkeeper sells at ₹'+sp+'/kg (cost ₹'+cp+'/kg) but uses '+rand(800,950)+'g weight. Profit%?', a:Math.round((sp*1000/rand(800,950) - cp)/cp*100), hint:'Effective SP = '+sp+' × 1000/'+rand(800,950)+' = '+Math.round(sp*1000/rand(800,950)), intuition:'Effective SP='+Math.round(sp*1000/rand(800,950))+'/kg. CP='+cp+'/kg. Profit%='+Math.round((Math.round(sp*1000/rand(800,950))-cp)/cp*100)+'%' }; },
+    // SBI PO Hard: milk-water mixture sold at profit
+    function(){ var m=rand(10,20), w=rand(2,5), g=rand(10,25), cpl=rand(25,45); return { q:(m+w)+'L mixture (milk:water '+m+':'+w+'). Cost ₹'+cpl+'/L milk. Sold at '+g+'% profit. SP per L?', a:Math.round(cpl*m/(m+w)*(100+g)/100), hint:'Cost of mixture = '+cpl*m/(m+w)+'/L. SP = cost × (100+'+g+')/100', intuition:'Effective cost = '+cpl+'×'+m+'/('+m+'+'+w+')='+Math.round(cpl*m/(m+w))+'/L. SP='+Math.round(cpl*m/(m+w))+'×'+(100+g)/100+'='+Math.round(cpl*m/(m+w)*(100+g)/100)+'/L' }; }
   ];
-  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){if(typeof d.a==='string'){var parts=d.a.split(':').map(Number);var v=parts[0]+rand(1,3)+':'+(parts[1]+rand(1,3));if(v!==d.a)o.push(v);}else{var v=d.a+rand(-5,5);if(o.indexOf(v)<0&&v>0)o.push(v);}} shuffle(o);
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d = ty[idx](); var o=[d.a]; while(o.length<4){if(typeof d.a==='string'){var parts=d.a.split(':').map(Number);var v=parts[0]+rand(1,3)+':'+(parts[1]+rand(1,3));if(v!==d.a)o.push(v);}else{var v=d.a+rand(-5,5);if(o.indexOf(v)<0&&v>0)o.push(v);}} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Alligation: '+d.hint, intuition:'Alligation: (mean-low):(high-mean). Cheaper qty : dearer qty = (dearer-mean):(mean-cheaper).' };
 }
 
@@ -2656,9 +3053,23 @@ function generateSurdsIndicesQuestion(diff, layer) {
     // Addition of surds with same radicand
     function(){ var a=rand(2,9), b=rand(3,10); return { q:'Simplify: ' + a + '√' + b + ' + ' + (a*2) + '√' + b + ' - ' + a + '√' + b, a:(a*2) + '√' + b, hint:'Add/subtract coefficients only: ' + a + '+' + (a*2) + '-' + a + '=' + (a*2), intuition:'Like surds: add coefficients. (' + a + '+' + (a*2) + '-' + a + ')√' + b + ' = ' + (a*2) + '√' + b }; },
     // Square of surd
-    function(){ var a=rand(2,12); return { q:'Simplify: (√' + a + ')²', a:a, hint:'(√a)² = a by definition', intuition:'(√' + a + ')² = ' + a + ' (square and square root cancel)' }; }
+    function(){ var a=rand(2,12); return { q:'Simplify: (√' + a + ')²', a:a, hint:'(√a)² = a by definition', intuition:'(√' + a + ')² = ' + a + ' (square and square root cancel)' }; },
+    // SBI PO Hard: rationalize binomial denominator
+    function(){ var a=rand(2,6), b=rand(3,8); return { q:'Rationalize: (√' + a + ' + √' + b + ')/(√' + a + ' - √' + b + ')', a:Math.round((a+b+2*Math.sqrt(a*b))/(a-b)*10)/10, hint:'Multiply numerator and denominator by conjugate (√'+a+' + √'+b+')', intuition:'= (√' + a + ' + √' + b + ')²/(' + a + '-' + b + ') = (' + a + '+' + b + '+2√' + (a*b) + ')/(' + (a-b) + ') = ' + Math.round((a+b+2*Math.sqrt(a*b))/(a-b)*10)/10 }; },
+    // SBI PO Hard: compare surds with different radicals
+    function(){ var a=rand(2,5), b=rand(a+1,8); return { q:'Which is larger? ' + a + '√' + (b*3) + ' or ' + b + '√' + (a*3), a:a*a*a*b > b*b*b*a ? a + '√' + (b*3) : b + '√' + (a*3), hint:'Square both: (' + a + '√' + (b*3) + ')²=' + (a*a*b*3) + ', (' + b + '√' + (a*3) + ')²=' + (b*b*a*3), intuition:'(' + a + '√' + (b*3) + ')²=' + a*a + '×' + (b*3) + '=' + (a*a*b*3) + '. (' + b + '√' + (a*3) + ')²=' + b*b + '×' + (a*3) + '=' + (b*b*a*3) + '. ' + (a*a*b*3 > b*b*a*3 ? 'First' : 'Second') + ' is larger' }; },
+    // SBI PO Hard: fractional exponents
+    function(){ var a=rand(2,8), b=rand(2,4), c=rand(2,4); return { q:'Simplify: (' + a + '^(' + b + '/' + c + '))^' + c, a:Math.pow(a,b), hint:'(a^(m/n))^n = a^m', intuition:'(' + a + '^(' + b + '/' + c + '))^' + c + ' = ' + a + '^' + b + ' = ' + Math.pow(a,b) }; },
+    // SBI PO Hard: surd equation
+    function(){ var a=rand(2,6), b=rand(1,4); return { q:'Solve: √(x + ' + (a*a-b) + ') = ' + a, a:b, hint:'Square both sides: x + ' + (a*a-b) + ' = ' + a*a, intuition:'Squaring: x+' + (a*a-b) + '=' + a*a + ' => x=' + a*a + '-' + (a*a-b) + '=' + b }; }
   ];
-  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-5,5); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-5,5); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Surds: '+d.hint, intuition:'a^m×a^n=a^(m+n), (a^m)^n=a^(mn), a^m÷a^n=a^(m-n). √(a²b)=a√b.' };
 }
 
@@ -2675,10 +3086,20 @@ function generateBankersDiscountQuestion(diff, layer) {
     // Find rate given TD, FV, time
     function(){ var b=rand(3000,6000), r=rand(5,10), t=rand(2,3); var td=b*r*t/(100+r*t); return { q:'FV=₹'+b+', TD=₹'+Math.round(td)+', time='+t+'yr. Rate?', a:r, hint:'TD = (F×R×T)/(100+R×T). Solve for R: R = 100×TD/(F×T - TD×T)', intuition:'TD = ' + Math.round(td) + ' = (' + b + '×r×' + t + ')/(100+r×' + t + '). Solving: r = ' + r + '%' }; },
     // True discount vs banker's gain comparison
-    function(){ var b=rand(4000,10000), r=rand(6,10), t=rand(2,4); var bd=Math.round(b*r*t/100); var td=Math.round(b*r*t/(100+r*t)); return { q:'FV=₹'+b+', rate='+r+'%, time='+t+'yr. True Discount?', a:td, hint:'TD = (F×R×T)/(100+R×T) = ('+b+'×'+r+'×'+t+')/(100+'+r+'×'+t+')', intuition:'TD = ' + b + '×' + r + '×' + t + '/(100+' + r + '×' + t + ') = ' + Math.round(b*r*t) + '/' + (100+r*t) + ' = ' + td }; }
+    function(){ var b=rand(4000,10000), r=rand(6,10), t=rand(2,4); var bd=Math.round(b*r*t/100); var td=Math.round(b*r*t/(100+r*t)); return { q:'FV=₹'+b+', rate='+r+'%, time='+t+'yr. True Discount?', a:td, hint:'TD = (F×R×T)/(100+R×T) = ('+b+'×'+r+'×'+t+')/(100+'+r+'×'+t+')', intuition:'TD = ' + b + '×' + r + '×' + t + '/(100+' + r + '×' + t + ') = ' + Math.round(b*r*t) + '/' + (100+r*t) + ' = ' + td }; },
+    // SBI PO Hard: multi-step BD with due date
+    function(){ var b=rand(5000,12000), r=rand(6,12), t=rand(2,4); var bd=Math.round(b*r*t/100); var td=Math.round(b*r*t/(100+r*t)); var bg=bd-td; return { q:'FV=₹'+b+', discounted ' + t + ' years hence at ' + r + '%. BD=₹'+bd+', TD=₹'+td+'. What is the banker\'s gain?', a:bg, hint:'BG = BD - TD = ' + bd + ' - ' + td, intuition:'BG = ' + bd + ' - ' + td + ' = ' + bg + '. This is the extra amount the banker earns.' }; },
+    // SBI PO Hard: find face value from BG and rate
+    function(){ var b=rand(5000,10000), r=rand(6,10), t=rand(2,3); var bd=Math.round(b*r*t/100); var td=Math.round(b*r*t/(100+r*t)); var bg=bd-td; return { q:'Banker\'s gain = ₹' + bg + ', rate = ' + r + '%, time = ' + t + ' years. Face value?', a:b, hint:'BG = (FV×R×T)² / (100×(100+R×T)). Solve for FV.', intuition:'Using BG formula: FV = sqrt(' + bg + '×100×(100+' + r + '×' + t + '))/(' + r + '×' + t + ') = ' + b }; }
   ];
-  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-100,100); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
-  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Banker\'s Discount: '+d.hint, intuition:'BD=FV×R×T/100. TD=BD×100/(100+R×T). BG=BD-TD.' };
+  var idx;
+  if (diff >= 5 && ty.length >= 6) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 3), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d=ty[idx](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-100,100); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Banker\'s Discount', intuition:'BD=FV×R×T/100. TD=BD×100/(100+R×T). BG=BD-TD.' };
 }
 
 function generateStocksSharesQuestion(diff, layer) {
@@ -2694,10 +3115,206 @@ function generateStocksSharesQuestion(diff, layer) {
     // Brokerage: buy/sell with broker fee
     function(){ var fv=rand(50,100), mv=rand(fv-10,fv+15), d=rand(8,14), q=rand(50,200), br=rand(1,3)/10; var cost=q*(mv+br); var income=Math.round(q*d*fv/100); return { q:'Buy '+q+' shares F=₹'+fv+' at ₹'+mv+', broker '+br+'/share. Dividend '+d+'%. Net return %?', a:Math.round((income - q*br)/cost*10000)/100, hint:'Investment='+cost+', income='+income+', net return%='+(income - q*br)+'/'+cost+'×100', intuition:'Cost='+q+'×('+mv+'+'+br+')='+cost+'. Brokerage cost='+q+'×'+br+'='+Math.round(q*br)+'. Return%='+(income-Math.round(q*br))+'/'+cost+'×100='+Math.round((income-Math.round(q*br))/cost*10000)/100+'%' }; },
     // Income difference from two investment strategies
-    function(){ var fv=rand(50,100), d=rand(8,16), inv=rand(15000,25000); var m1=fv-rand(5,15), m2=fv+rand(10,25); var s1=Math.floor(inv/m1); var s2=Math.floor(inv/m2); var inc1=Math.round(s1*d*fv/100); var inc2=Math.round(s2*d*fv/100); return { q:'₹'+fv+' share, div='+d+'%. Invest ₹'+inv+'. At ₹'+m1+' buy '+s1+' shares, income ₹'+inc1+'. At ₹'+m2+' buy '+s2+' shares, income ₹'+inc2+'. Income difference?', a:Math.abs(inc1-inc2), hint:'|' + s1 + '×' + d + '%×' + fv + ' - ' + s2 + '×' + d + '%×' + fv + '|', intuition:'Difference = |' + inc1 + ' - ' + inc2 + '| = ' + Math.abs(inc1-inc2) }; }
+    function(){ var fv=rand(50,100), d=rand(8,16), inv=rand(15000,25000); var m1=fv-rand(5,15), m2=fv+rand(10,25); var s1=Math.floor(inv/m1); var s2=Math.floor(inv/m2); var inc1=Math.round(s1*d*fv/100); var inc2=Math.round(s2*d*fv/100); return { q:'₹'+fv+' share, div='+d+'%. Invest ₹'+inv+'. At ₹'+m1+' buy '+s1+' shares, income ₹'+inc1+'. At ₹'+m2+' buy '+s2+' shares, income ₹'+inc2+'. Income difference?', a:Math.abs(inc1-inc2), hint:'|' + s1 + '×' + d + '%×' + fv + ' - ' + s2 + '×' + d + '%×' + fv + '|', intuition:'Difference = |' + inc1 + ' - ' + inc2 + '| = ' + Math.abs(inc1-inc2) }; },
+    // SBI PO Hard: investment in different stocks comparison
+    function(){ var f1=rand(50,100), m1=rand(f1-10,f1+15), d1=rand(8,14); var f2=rand(50,100), m2=rand(f2-10,f2+15), d2=rand(8,14); var inv=rand(15000,25000); var s1=Math.floor(inv/m1); var i1=Math.round(s1*d1*f1/100); var s2=Math.floor(inv/m2); var i2=Math.round(s2*d2*f2/100); return { q:'Stock1: F=₹'+f1+' M=₹'+m1+' div='+d1+'%, Stock2: F=₹'+f2+' M=₹'+m2+' div='+d2+'%. Invest ₹'+inv+'. Income difference between two stocks?', a:Math.abs(i1-i2), hint:'Stock1 income='+i1+', Stock2 income='+i2, intuition:'Difference = |'+i1+' - '+i2+'| = '+Math.abs(i1-i2)}; },
+    // SBI PO Hard: rate of return with brokerage and tax
+    function(){ var fv=rand(50,100), mv=rand(fv-10,fv+10), d=rand(8,14), q=rand(100,500), br=rand(1,5)/10, tax=rand(5,15); var cost=q*(mv+br); var grossInc=Math.round(q*d*fv/100); var netInc=Math.round(grossInc*(100-tax)/100); var netReturn=Math.round((netInc - q*br)/cost*10000)/100; return { q:'Buy '+q+' shares F=₹'+fv+' at ₹'+mv+', broker '+br+'/share, dividend '+d+'%, tax '+tax+'%. Net return %?', a:netReturn, hint:'Cost='+cost+', gross='+grossInc+', net='+netInc+', return='+(netInc-Math.round(q*br))+'/'+cost, intuition:'Net return = '+(netInc-Math.round(q*br))+'/'+cost+'×100 = '+netReturn+'%'}; }
   ];
-  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=typeof d.a==='number'?Math.round(d.a+rand(-2,2)):(d.a+rand(-2,2)); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
-  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Stocks: '+d.hint, intuition:'Yield = Dividend/MV × 100. Income = Shares × Dividend% × FV. MV = (D%×FV)/Yield%.' };
+  var idx;
+  if (diff >= 5 && ty.length >= 6) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 3), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d=ty[idx](); var o=[d.a]; while(o.length<4){var v=typeof d.a==='number'?Math.round(d.a+rand(-2,2)):(d.a+rand(-2,2)); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Stocks', intuition:'Yield = Dividend/MV × 100. Income = Shares × Dividend% × FV. MV = (D%×FV)/Yield%.' };
+}
+
+function generateWorkQuestion(diff, layer) {
+  var ty = [
+    function(){ var a=rand(3,10), b=rand(a+2,15); return { q:'A completes work in '+a+' days, B in '+b+' days. Together?', a:Math.round(a*b/(a+b)), hint:'T = a×b/(a+b)' }; },
+    function(){ var a=rand(4,10), b=rand(6,14), c=rand(a+b+1,a+b+10); return { q:'A='+a+'d, B='+b+'d, C='+c+'d. All three together?', a:Math.round(1/(1/a+1/b+1/c)), hint:'1/t = 1/a + 1/b + 1/c' }; },
+    function(){ var a=rand(6,15), b=rand(2,5); return { q:'A in '+a+'d, A+B together in '+b+'d. B alone?', a:Math.round(a*b/(a-b)), hint:'B = a×b/(a−b)' }; },
+    function(){ var m=rand(10,30), d=rand(6,15); return { q:'Men='+m+', days='+d+'. Total work in man-days?', a:m*d, hint:'Work = men × days' }; },
+    function(){ var m=rand(10,25), d=rand(8,15), h=rand(6,10); return { q:'Men='+m+', days='+d+', hrs/day='+h+'. Total work in man-hours?', a:m*d*h, hint:'Man-hours = men × days × hours/day' }; },
+    function(){ var w=rand(60,200), m=rand(5,15); return { q:'Total work='+w+' units. Men='+m+', each does 1 unit/day. Days needed?', a:Math.round(w/m), hint:'Days = total work / men' }; },
+    function(){ var a=rand(3,8), b=rand(4,10), c=rand(2,6); return { q:'A='+a+'d, B='+b+'d, A+B+C together='+c+'d. C alone?', a:Math.round(1/(1/c-1/a-1/b)), hint:'1/C = 1/combined − 1/A − 1/B' }; },
+    function(){ var m=rand(6,20), d=rand(10,20), h=rand(5,8); return { q:'Men='+m+', hrs='+h+'/day, finish in '+d+' days. How many men to finish in '+(d-rand(2,5))+' days at '+(h+1)+' hrs/day?', a:Math.ceil(m*d*h/((d-rand(2,5))*(h+1))), hint:'M1×D1×H1 = M2×D2×H2. Solve for M2' }; },
+    // SBI PO Hard: work with efficiency ratios
+    function(){ var e1=rand(2,5), e2=rand(e1+1,7), d=rand(8,15); return { q:'A is ' + Math.round(e2/e1*10)/10 + '× as efficient as B. A+B finish in ' + d + ' days. A alone?', a:Math.round(d*(1+e1/e2)), hint:'Efficiency ratio A:B = ' + e2 + ':' + e1 + '. A+B rate = (e2+e1)/e2 × A rate', intuition:'Let A take x days. B takes ' + Math.round(e2/e1*10)/10 + 'x days. 1/x + 1/' + Math.round(e2/e1*10)/10 + 'x = 1/' + d + '. x=' + Math.round(d*(1+e1/e2)) + ' days' }; },
+    // SBI PO Hard: men, women, children combined work
+    function(){ var m=rand(2,5), w=rand(3,6), c=rand(4,8), d=rand(10,20); var mRate=1/d, wRate=1/(d+rand(5,10)), cRate=1/(d+rand(8,15)); return { q:'2 men = 3 women = 4 children. ' + m + ' men + ' + w + ' women + ' + c + ' children finish in ' + d + ' days. Time for ' + (m+1) + ' men alone?', a:Math.round(1/((m+1) * mRate)), hint:'Find individual rates using equivalence. 2M=3W=4C → M:W:C = 6:4:3', intuition:'Let M rate='+Math.round(mRate*1000)/1000+', W rate='+Math.round(wRate*1000)/1000+', C rate='+Math.round(cRate*1000)/1000+' per day. ' + (m+1) + ' men take ' + Math.round(1/((m+1)*mRate)) + ' days' }; },
+    // SBI PO Hard: work with alternate days
+    function(){ var a=rand(5,12), b=rand(a+2,16); return { q:'A in ' + a + 'd, B in ' + b + 'd. A works on day 1, B on day 2, A on day 3... Days to finish?', a:Math.ceil((1/(1/a) > 1/(1/b) ? 2*Math.ceil(a/2) : 2*Math.ceil(b/2)) * (a+b)/(a+b+1) + 1), hint:'Work done in 2 days = 1/a+1/b=' + (1/a+1/b).toFixed(4) + '. Continue cycle' }; },
+    // SBI PO Hard: work with break/leave
+    function(){ var m=rand(10,25), d=rand(10,20); return { q:m + ' men can finish in ' + d + ' days. After ' + rand(3,6) + ' days, ' + rand(2,5) + ' men leave. Total days?', a:Math.round(rand(3,6) + (m*d - m*rand(3,6))/(m-rand(2,5))), hint:'Work done in ' + rand(3,6) + 'd = ' + m*rand(3,6) + ' units. Remaining=' + (m*d - m*rand(3,6)) + '. Remaining men=' + (m-rand(2,5)) }; }
+  ];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-2,3); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Work: '+d.hint, intuition:'Total work = men × days × hours. Together rate = sum of individual rates.' };
+}
+
+function generateAlgebraQuestion(diff, layer) {
+  var ty = [
+    function(){ var a=rand(2,8), b=rand(2,9); return { q:'Solve: x + ' + a + ' = ' + (a+b), a:b, hint:'x = '+(a+b)+' - '+a }; },
+    function(){ var a=rand(2,7), b=rand(2,8); return { q:'Solve: ' + a + 'x = ' + (a*b), a:b, hint:'x = '+(a*b)+'/'+a }; },
+    function(){ var a=rand(2,6), b=rand(3,9), c=rand(1,5); return { q:'Expand: (x+' + a + ')(x+' + b + ')', a:'x²+'+(a+b)+'x+'+(a*b), hint:'x²+(a+b)x+ab' }; },
+    function(){ var a=rand(1,5), b=rand(a+1,8); return { q:'Factor: x² + ' + (a+b) + 'x + ' + (a*b), a:'(x+'+a+')(x+'+b+')', hint:'Find two numbers summing to '+(a+b)+' and product '+(a*b) }; },
+    function(){ var a=rand(1,4), b=rand(2,6); return { q:'Simplify: ' + a + '(x + ' + b + ') - ' + a + 'x', a:a*b, hint:'= ' + a + 'x + ' + (a*b) + ' - ' + a + 'x = ' + (a*b) }; },
+    function(){ var a=rand(2,5), b=rand(3,7); return { q:'If x/' + a + ' = ' + b + ', find x', a:a*b, hint:'x = ' + a + '×' + b }; },
+    function(){ var a=rand(1,4), b=rand(2,5), c=rand(a+1,6); return { q:'Solve: ' + a + 'x + ' + b + ' = ' + (a*c+b), a:c, hint:a+'x = '+(a*c+b)+'-'+b+' = '+(a*c)+', x='+c }; },
+    function(){ var a=rand(2,5), b=rand(1,4); return { q:'(a+b)² formula: ('+a+'+'+b+')²', a:(a+b)*(a+b), hint:'= a² + 2ab + b² = '+(a*a)+'+'+2*a*b+'+'+(b*b) }; },
+    // SBI PO Hard: age word problem
+    function(){ var x=rand(3,8), y=rand(x+2,14); return { q:'Sum of ages = ' + (x+y) + ', product = ' + (x*y) + '. Find the ages', a: x + ' and ' + y, hint:'Solve: a+b=' + (x+y) + ', ab=' + (x*y) + '. Quadratic: t²-' + (x+y) + 't+' + (x*y) + '=0', intuition:'t² - ' + (x+y) + 't + ' + (x*y) + ' = 0 → (t-' + x + ')(t-' + y + ')=0 → ages ' + x + ' and ' + y }; },
+    // SBI PO Hard: fraction equation
+    function(){ var a=rand(2,5), b=rand(3,7); return { q:'Solve: 1/x + 1/' + (a+b) + ' = 1/' + a, a:Math.round(a*(a+b)/(b)), hint:'1/x = 1/' + a + ' - 1/' + (a+b) + ' = ' + (a+b-a) + '/' + (a*(a+b)), intuition:'1/x = 1/' + a + ' - 1/' + (a+b) + ' = (' + b + ')/' + (a*(a+b)) + '. x = ' + a*(a+b) + '/' + b + ' = ' + Math.round(a*(a+b)/b) }; },
+    // SBI PO Hard: find value of expression given condition
+    function(){ var a=rand(2,5), b=rand(2,5); return { q:'If a+b=' + (a+b) + ' and ab=' + (a*b) + ', find a² + b²', a: (a+b)*(a+b) - 2*a*b, hint:'a²+b² = (a+b)² - 2ab = ' + (a+b) + '² - 2×' + (a*b), intuition:'a²+b² = (' + (a+b) + ')² - 2(' + (a*b) + ') = ' + ((a+b)*(a+b)) + ' - ' + (2*a*b) + ' = ' + ((a+b)*(a+b)-2*a*b) }; },
+    // SBI PO Hard: linear equation with two variables
+    function(){ var a=rand(2,5), b=rand(3,7); return { q:'Solve: x+' + a + 'y = ' + (a+b) + ' and ' + a + 'x-y = ' + (a*a-1), a: a + ',1', hint:'Solve simultaneously. From eq1: x=' + (a+b) + '-' + a + 'y. Substitute in eq2', intuition:'x=' + (a+b) + '-' + a + 'y. In eq2: ' + a + '(' + (a+b) + '-' + a + 'y)-y=' + (a*a-1) + ' → y=1, x=' + a }; }
+  ];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=typeof d.a==='string'?d.a+'a':(d.a+rand(-2,2)); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'Algebra: '+d.hint, intuition:'Isolate variable. For expansions, use formulas: (a±b)² = a²±2ab+b², (a+b)(a-b)=a²-b².' };
+}
+
+function generateGeometryQuestion(diff, layer) {
+  var ty = [
+    function(){ var a=rand(30,80); return { q:'Complement of '+a+'° angle?', a:90-a, hint:'Complementary angles sum to 90°' }; },
+    function(){ var a=rand(30,120); return { q:'Supplement of '+a+'° angle?', a:180-a, hint:'Supplementary angles sum to 180°' }; },
+    function(){ var a=rand(30,70), b=rand(a+10,100); var c=180-a-b; return { q:'Triangle angles: '+a+'°, '+b+'°. Third angle?', a:c, hint:'Sum of triangle angles = 180°' }; },
+    function(){ var s=rand(4,10); return { q:'Sum of interior angles of '+s+'-sided polygon?', a:(s-2)*180, hint:'Sum = (n-2)×180°' }; },
+    function(){ var s=rand(4,10); return { q:'Each interior angle of regular '+s+'-gon?', a:Math.round((s-2)*180/s), hint:'Each = (n-2)×180/n' }; },
+    function(){ var r=rand(3,10); return { q:'Area of circle radius='+r+' (π=3.14)?', a:Math.round(3.14*r*r), hint:'Area = πr² = 3.14×'+r+'×'+r }; },
+    function(){ var r=rand(3,10); return { q:'Circumference of circle radius='+r+' (π=3.14)?', a:Math.round(2*3.14*r), hint:'C = 2πr = 2×3.14×'+r }; },
+    function(){ var b=rand(4,12), h=rand(3,10); return { q:'Area of triangle base='+b+', height='+h+'?', a:Math.round(0.5*b*h), hint:'Area = ½×base×height = 0.5×'+b+'×'+h }; },
+    // SBI PO Hard: length of tangent from external point
+    function(){ var r=rand(5,12), d=rand(r+3,20); return { q:'Circle radius=' + r + 'cm. External point ' + d + 'cm from center. Tangent length?', a:Math.round(Math.sqrt(d*d - r*r)), hint:'Tangent² = distance² - radius² = ' + d + '² - ' + r + '²', intuition:'Tangent length = √(' + d + '² - ' + r + '²) = √(' + (d*d-r*r) + ') = ' + Math.round(Math.sqrt(d*d-r*r)) + 'cm' }; },
+    // SBI PO Hard: chord length from center distance
+    function(){ var r=rand(8,15), d=rand(3, r-2); return { q:'Circle radius=' + r + 'cm. Chord ' + d + 'cm from center. Chord length?', a:Math.round(2*Math.sqrt(r*r - d*d)), hint:'Chord = 2√(r²-d²) = 2√(' + r + '²-' + d + '²)', intuition:'Half chord = √(' + r + '²-' + d + '²) = √' + (r*r-d*d) + ' = ' + Math.round(Math.sqrt(r*r-d*d)) + '. Full chord = ' + Math.round(2*Math.sqrt(r*r-d*d)) + 'cm' }; },
+    // SBI PO Hard: angle between two tangents
+    function(){ var r=rand(5,12), d=rand(r+5,25); var th=Math.round(2*Math.asin(r/d)*180/Math.PI); return { q:'Circle radius=' + r + 'cm. Two tangents from point ' + d + 'cm from center. Angle between tangents?', a:th, hint:'Angle = 2×arcsin(r/d) = 2×arcsin(' + r + '/' + d + ')', intuition:'sin(θ/2) = r/d = ' + r + '/' + d + ' = ' + (r/d).toFixed(3) + '. θ/2 = ' + Math.round(Math.asin(r/d)*180/Math.PI) + '°, θ = ' + th + '°' }; },
+    // SBI PO Hard: cyclic quadrilateral property
+    function(){ var a=rand(60,100), b=rand(a+10,160); return { q:'Cyclic quadrilateral: ∠A=' + a + '°, ∠C=' + (180-a) + '°. If ∠B=' + b + '°, ∠D?', a:180-b, hint:'Opposite angles sum to 180° in cyclic quadrilateral', intuition:'A+C=' + a + '+' + (180-a) + '=180°. B+D=180° → D=180-'+b+'=' + (180-b) + '°' }; }
+  ];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-10,10); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'Geometry: '+d.hint, intuition:'Triangle sum=180°, complement=90-x, supplement=180-x. Circle: area=πr², C=2πr.' };
+}
+
+function generateMensurationQuestion(diff, layer) {
+  var ty = [
+    function(){ var s=rand(4,15); return { q:'Area of square side='+s+'?', a:s*s, hint:'Area = side² = '+s+'×'+s }; },
+    function(){ var l=rand(5,15), b=rand(3,10); return { q:'Area of rectangle '+l+'×'+b+'?', a:l*b, hint:'Area = length × breadth' }; },
+    function(){ var r=rand(3,10), h=rand(5,15); return { q:'Volume of cylinder r='+r+', h='+h+' (π=3.14)?', a:Math.round(3.14*r*r*h), hint:'V = πr²h = 3.14×'+r+'×'+r+'×'+h }; },
+    function(){ var s=rand(3,8); return { q:'Volume of cube side='+s+'?', a:s*s*s, hint:'V = side³ = '+s+'×'+s+'×'+s }; },
+    function(){ var l=rand(4,10), b=rand(3,8), h=rand(3,7); return { q:'Volume of cuboid '+l+'×'+b+'×'+h+'?', a:l*b*h, hint:'V = l×b×h' }; },
+    function(){ var r=rand(3,10); return { q:'Surface area of sphere r='+r+' (π=3.14)?', a:Math.round(4*3.14*r*r), hint:'SA = 4πr² = 4×3.14×'+r+'×'+r }; },
+    function(){ var r=rand(3,8), h=rand(5,12); return { q:'Curved surface area of cylinder r='+r+', h='+h+' (π=3.14)?', a:Math.round(2*3.14*r*h), hint:'CSA = 2πrh = 2×3.14×'+r+'×'+h }; },
+    function(){ var a=rand(4,10); return { q:'Area of equilateral triangle side='+a+' (√3≈1.73)?', a:Math.round(0.433*a*a), hint:'Area = √3/4 × side² = 0.433×'+a+'×'+a }; },
+    // SBI PO Hard: area of path around rectangle
+    function(){ var l=rand(20,50), b=rand(15,30), w=rand(2,5); return { q:'Garden ' + l + 'm×' + b + 'm. Path ' + w + 'm wide around inside. Path area?', a:2*w*(l+b-2*w), hint:'Path area = outer-inner = ' + l + '×' + b + ' - (' + l + '-' + 2*w + ')(' + b + '-' + 2*w + ')', intuition:'Outer='+l+'×'+b+'='+(l*b)+'. Inner='+(l-2*w)+'×'+(b-2*w)+'='+((l-2*w)*(b-2*w))+'. Path='+(l*b-(l-2*w)*(b-2*w))+'m²' }; },
+    // SBI PO Hard: cost of fencing + painting
+    function(){ var l=rand(10,30), b=rand(8,20), h=rand(4,8), rate=rand(10,30), paint=rand(5,15); return { q:'Room ' + l + 'm×' + b + 'm×' + h + 'm. Cost of painting 4 walls at ₹' + paint + '/m² and ceiling at ₹' + (paint-2) + '/m²?', a:Math.round(2*h*(l+b)*paint + l*b*(paint-2)), hint:'Walls area = 2h(l+b), Ceiling = l×b', intuition:'Walls = 2×' + h + '×(' + l + '+' + b + ')=' + 2*h*(l+b) + 'm² × ₹' + paint + ' = ' + (2*h*(l+b)*paint) + '. Ceiling=' + l + '×' + b + '=' + (l*b) + 'm² × ₹' + (paint-2) + ' = ' + (l*b*(paint-2)) + '. Total=' + Math.round(2*h*(l+b)*paint + l*b*(paint-2)) }; },
+    // SBI PO Hard: volume of combined solid
+    function(){ var r=rand(4,8), h=rand(8,15); return { q:'Cylinder radius=' + r + 'cm, height=' + h + 'cm. Cone on top same radius, height=' + rand(3,6) + 'cm. Total volume (π=3.14)?', a:Math.round(3.14*r*r*(h + rand(3,6)/3)), hint:'V = πr²h_cyl + ⅓πr²h_cone = πr²(' + h + '+' + rand(3,6) + '/3)', intuition:'Cylinder=' + Math.round(3.14*r*r*h) + ', Cone=' + Math.round(3.14*r*r*rand(3,6)/3) + '. Total=' + Math.round(3.14*r*r*(h+rand(3,6)/3)) + 'cm³' }; },
+    // SBI PO Hard: area of circle inscribed in square
+    function(){ var s=rand(10,25); return { q:'Largest circle inscribed in square side=' + s + 'cm. Area of circle (π=3.14)?', a:Math.round(3.14*s*s/4), hint:'Diameter = side = ' + s + ', radius = ' + s/2 + '. Area = πr²', intuition:'r=' + s/2 + 'cm. Area=3.14×(' + s/2 + ')²=' + Math.round(3.14*s*s/4) + 'cm²' }; }
+  ];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-5,5); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'Mensuration: '+d.hint, intuition:'Area formulas: square=s², rect=l×b, tri=½bh, circle=πr². Vol: cube=s³, cuboid=l×b×h, cyl=πr²h.' };
+}
+
+function generateCountingQuestion(diff, layer) {
+  var ty = [
+    function(){ var n=rand(3,7); return { q:'How many ways to arrange '+n+' distinct items?', a:function(){var f=1;for(var i=2;i<=n;i++)f*=i;return f;}(), hint:n+'! = '+n+'×'+(n-1)+'×...×1' }; },
+    function(){ var n=rand(4,8), r=rand(2,Math.min(4,n-1)); return { q:'Permutation: P('+n+','+r+')?', a:function(){var p=1;for(var i=n;i>n-r;i--)p*=i;return p;}(), hint:'P(n,r) = n!/(n-r)! = '+n+'×'+(n-1)+'×...×'+(n-r+1) }; },
+    function(){ var n=rand(4,8), r=rand(2,Math.min(4,n-1)); return { q:'Combination: C('+n+','+r+')?', a:function(){var c=1;for(var i=n;i>n-r;i--)c*=i;for(var i=2;i<=r;i++)c/=i;return c;}(), hint:'C(n,r) = P(n,r)/r!' }; },
+    function(){ var n=rand(2,5), k=rand(2,4); return { q:'Number of ways to distribute '+n*k+' items into '+n+' groups of '+k+' each?', a:function(){var f=function(x){var r=1;for(var i=2;i<=x;i++)r*=i;return r;}; return f(n*k)/(Math.pow(f(k),n)*f(n));}(), hint:'(nk)! / [(k!)ⁿ × n!]' }; },
+    function(){ var n=rand(3,6); return { q:'How many ways to arrange '+n+' people in a circle?', a:function(){var f=1;for(var i=2;i<n;i++)f*=i;return f;}(), hint:'Circular permutations = (n-1)!' }; },
+    function(){ var n=rand(3,10); return { q:'From digits 1-9, how many '+n+'-digit numbers with distinct digits?', a:function(){var p=9;for(var i=1;i<n;i++)p*=(9-i);return p;}(), hint:'First digit 9 choices, then 8, 7... (n-1) more choices' }; },
+    function(){ var a=rand(3,7), b=rand(2,5); return { q:'Choose '+b+' from '+a+' items (order matters)?', a:function(){var p=1;for(var i=a;i>a-b;i--)p*=i;return p;}(), hint:'Permutations: n!/(n-r)! = '+a+'×'+(a-1)+'×...' }; },
+    // SBI PO Hard: arrangements with restrictions
+    function(){ var n=rand(4,7); return { q:'Arrange ' + n + ' people in a row. Two particular always together?', a:function(){var f=function(x){var r=1;for(var i=2;i<=x;i++)r*=i;return r;}; return 2*f(n-1);}(), hint:'Treat the pair as 1 unit: ' + (n-1) + '! × 2', intuition:'Consider the two as one unit → ' + (n-1) + ' items → ' + (n-1) + '! = ' + function(){var f=1;for(var i=2;i<n;i++)f*=i;return f;}() + '. The pair can swap: ×2 = ' + (2*function(){var f=1;for(var i=2;i<n;i++)f*=i;return f;}()) }; },
+    // SBI PO Hard: selection with at least one condition
+    function(){ var n=rand(5,8), r=rand(2,4); return { q:'Choose ' + r + ' from ' + n + ' items. A particular item always included?', a:function(){var c=1;for(var i=n-1;i>n-r;i--)c*=i;for(var i=2;i<r;i++)c/=i;return c;}(), hint:'Fix the required item, choose remaining ' + (r-1) + ' from ' + (n-1), intuition:'C(' + (n-1) + ',' + (r-1) + ') = ' + function(){var c=1;for(var i=n-1;i>n-r;i--)c*=i;for(var i=2;i<r;i++)c/=i;return c;}() }; },
+    // SBI PO Hard: word arrangements with vowels together
+    function(){ var word=['BANKING','EXAM','RESULT','SCORE'][rand(0,3)]; var vowels=word.match(/[AEIOU]/g)||[]; var vc=vowels.length, cc=word.length-vc; return { q:'Letters of "' + word + '". Vowels always together. Arrangements?', a:function(){var f=function(x){var r=1;for(var i=2;i<=x;i++)r*=i;return r;}; var arr=f(cc+1); for(var i=0;i<word.length;i++){var c=word[i];var cnt=0;for(var j=0;j<word.length;j++){if(word[j]===c)cnt++;}if(cnt>1){arr/=f(cnt);word=word.replace(new RegExp(c,'g'),'');}} return arr*f(vc);}(), hint:'Treat vowels as 1 block. ' + (cc+1) + '! × ' + vc + '! divided by repeats', intuition:'Vowels=' + vc + ', consonants=' + cc + '. Block=' + (cc+1) + ' items, vowels can swap: ×' + vc + '!' }; },
+    // SBI PO Hard: probability with combinations
+    function(){ var total=rand(8,15), red=rand(3,6), blue=total-red, draw=rand(2,4); return { q:'Box: ' + red + ' red, ' + blue + ' blue. Pick ' + draw + '. Prob all red?', a:function(){var c=function(n,r){var p=1;for(var i=n;i>n-r;i--)p*=i;for(var i=2;i<=r;i++)p/=i;return p;}; return Math.round(c(red,draw)/c(total,draw)*100)/100;}(), hint:'C(' + red + ',' + draw + ')/C(' + total + ',' + draw + ')', intuition:'Favorable=C(' + red + ',' + draw + '), Total=C(' + total + ',' + draw + ')' }; }
+  ];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-5,5); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:25, type:'quant', techniqueLabel:'Counting: '+d.hint, intuition:'Permutation=ordered, Combination=unordered. n! = n×(n-1)×...×1. Circular=(n-1)!.' };
+}
+
+function generateDataQuestion(diff, layer) {
+  var ty = [
+    function(){ var nums=[rand(10,50),rand(20,60),rand(30,70),rand(15,45),rand(25,55)]; var s=nums.reduce(function(a,b){return a+b;},0); return { q:'Data: '+nums.join(', ')+'. Mean?', a:Math.round(s/nums.length), hint:'Sum='+s+', count='+nums.length+'. Mean = sum/count' }; },
+    function(){ var nums=[rand(10,40),rand(15,50),rand(20,45),rand(10,35),rand(25,55)]; nums.sort(function(a,b){return a-b;}); var mid=nums[Math.floor(nums.length/2)]; return { q:'Median of: '+nums.join(', ')+'?', a:mid, hint:'Sorted: '+nums.join(', ')+'. Middle value = '+mid }; },
+    function(){ var nums=[]; for(var i=0;i<5;i++)nums.push(rand(5,30)); var modeVal=nums[rand(0,4)]; nums.push(modeVal); return { q:'Mode of: '+nums.join(', ')+'?', a:modeVal, hint:'Mode = most frequent value' }; },
+    function(){ var nums=[rand(10,30),rand(15,40),rand(20,50),rand(10,35),rand(25,45)]; var mn=nums.reduce(function(a,b){return a+b;},0)/nums.length; var v=nums.reduce(function(s,x){return s+(x-mn)*(x-mn);},0)/nums.length; return { q:'Variance of: '+nums.join(', ')+'? (approx)', a:Math.round(v), hint:'Variance = Σ(x-mean)²/n' }; },
+    function(){ var nums=[rand(10,30),rand(15,40),rand(20,50),rand(10,35),rand(25,45)]; var mn=nums.reduce(function(a,b){return a+b;},0)/nums.length; var sd=Math.sqrt(nums.reduce(function(s,x){return s+(x-mn)*(x-mn);},0)/nums.length); return { q:'Std deviation of: '+nums.join(', ')+'? (approx)', a:Math.round(sd), hint:'SD = √variance' }; },
+    function(){ var n=rand(20,60); return { q:'Probability of rolling an even number on a die?', a:'1/2', hint:'3 even faces out of 6 = 3/6 = 1/2' }; },
+    function(){ var t=rand(10,50), f=rand(3,t-2); return { q:'Bag: '+f+' red, '+(t-f)+' blue. Probability of red?', a:f+'/'+t, hint:'Favorable/Total = '+f+'/'+t }; },
+    // SBI PO Hard: weighted mean with groups
+    function(){ var g1=rand(20,40), g2=rand(30,60), n1=rand(10,30), n2=rand(15,35); return { q:'Group1 mean=' + g1 + ' (n=' + n1 + '), Group2 mean=' + g2 + ' (n=' + n2 + '). Combined mean?', a:Math.round((g1*n1+g2*n2)/(n1+n2)), hint:'Combined = (x1n1+x2n2)/(n1+n2)', intuition:'Total = ' + g1*n1 + '+' + g2*n2 + '=' + (g1*n1+g2*n2) + ', count=' + (n1+n2) + '. Mean=' + Math.round((g1*n1+g2*n2)/(n1+n2)) }; },
+    // SBI PO Hard: find missing frequency given mean
+    function(){ var f=rand(5,15), x=rand(10,30), m=rand(15,25); var miss=Math.round(f*(m-x)/(x-m+1)); if(miss<0)miss=Math.abs(miss)+rand(3,8); return { q:'Data: value ' + x + ' occurs ' + f + ' times, value ' + (x+rand(3,8)) + ' occurs ? times. Mean=' + m + '. Missing frequency?', a:miss, hint:'Mean = (sum)/(total freq). Solve for missing freq', intuition:'(' + x + '×' + f + ' + ' + (x+rand(3,8)) + '×f2)/(' + f + '+f2)=' + m + '. Solve: f2=' + miss }; },
+    // SBI PO Hard: probability with at least one
+    function(){ var n=rand(2,5), p=rand(2,5); return { q:'Two dice rolled. Probability sum > ' + (n+p) + '?', a:((6-Math.min(n+p,6))*(6-Math.min(n+p,6)+1)/2 + Math.max(0, 6-Math.min(n+p-6,6))*Math.max(0, 6-Math.min(n+p-6,6)))/36, hint:'Favorable outcomes for sum=' + (n+p+1) + ' to 12', intuition:'Count favorable sum pairs: ' + (n+p+1) + '→' + (11-n-p) + ', ' + (n+p+2) + '→' + (10-n-p) + '... Prob = favorable/36' }; },
+    // SBI PO Hard: find median of grouped data
+    function(){ var vals=[]; for(var i=0;i<7;i++)vals.push(rand(5,50)); vals.sort(function(a,b){return a-b;}); return { q:'Data: ' + vals.join(', ') + '. Median?', a:vals[Math.floor(vals.length/2)], hint:'Sort ascending, pick middle value', intuition:'Sorted: ' + vals.join(', ') + '. Middle position=' + (Math.floor(vals.length/2)+1) + ', value=' + vals[Math.floor(vals.length/2)] }; }
+  ];
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=typeof d.a==='string'?d.a+'a':(d.a+rand(-2,2)); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'Data: '+d.hint, intuition:'Mean=sum/n, Median=middle of sorted, Mode=most frequent. Probability=favorable/total.' };
+}
+
+function generateNumberSystemQuestion(diff, layer) {
+  var ty = [
+    function(){ var n=rand(2,9); return { q:'Unit digit of '+(n*7+3)+'^'+(rand(2,4))+'?', a:function(){var u=n*7+3;var c=u%10;var p=rand(2,4);var r=1;for(var i=0;i<p;i++)r=(r*c)%10;return r;}(), hint:'Find cycle of unit digit. '+(n*7+3)+' ends in '+((n*7+3)%10)+', its powers cycle every 4' }; },
+    function(){ var n=rand(2,9); var p=rand(2,4); return { q:'Remainder when '+(n*7+3)+'^'+(p)+' divided by 5?', a:function(){var r=1;var b=(n*7+3)%5;for(var i=0;i<p;i++)r=(r*b)%5;return r;}(), hint:'Find '+(n*7+3)+' mod 5 = '+((n*7+3)%5)+', then '+(p)+'th power mod 5' }; },
+    function(){ var n=rand(3,9); return { q:'Is ' + n*111 + ' divisible by 3? (Y/N)', a:n*111%3===0?'Y':'N', hint:'Sum of digits = '+(Math.floor(n*111/100)+(Math.floor(n*111/10)%10)+(n*111%10))+' divisible by 3?' }; },
+    function(){ var n=rand(100,999); return { q:'Sum of digits of '+n+'?', a:Math.floor(n/100)+Math.floor(n/10)%10+n%10, hint:'Add hundreds, tens, units digit' }; },
+    function(){ var n=rand(3,9); return { q:'Remainder when '+n+'! divided by '+(n+1)+'? (n='+n+')', a:n+1>3?0:n+1, hint:'For n≥3, n! is divisible by n+1 if n+1 is composite' }; },
+    function(){ var n=rand(2,8); return { q:'Cyclicity of unit digit of '+(n*2+1)+'^n? (last digit pattern length)', a:[1,1,4,4,2,1,1,4,4,2][(n*2+1)%10], hint:'Cyclicity depends on the base\'s unit digit: 0,1,5,6→1; 2,3,7,8→4; 4,9→2' }; },
+    function(){ var n=rand(1,9); return { q:'How many trailing zeros in '+(n*10)+'! ?', a:Math.floor((n*10)/5)+Math.floor((n*10)/25), hint:'Count factors of 5: floor(n/5)+floor(n/25)+floor(n/125)...' }; }
+  ];
+  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=typeof d.a==='string'?d.a+'a':(d.a+rand(-1,1)); if(o.indexOf(v)<0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Number System: '+d.hint, intuition:'Unit digit cyclicity: 0,1,5,6→1; 2,3,7,8→4; 4,9→2. Sum of digits for divisibility.' };
 }
 
 function generateOddManOutQuestion(diff, layer) {
@@ -2715,10 +3332,22 @@ function generateOddManOutQuestion(diff, layer) {
     // Square/cube based odd one
     function(){ var n=rand(3,7); var nums=[n*n, (n+1)*(n+1), (n+2)*(n+2), (n+3)*(n+3), (n+4)*(n+4)+1]; shuffle(nums); return { q:'Which is odd? '+nums.join(', '), a:String(nums.filter(function(x){var s=Math.round(Math.sqrt(x)); return s*s!==x;})[0]), hint:'Four are perfect squares, one is not' }; },
     // Numerical pattern break
-    function(){ var n=rand(2,5); var nums=[n*3, n*6, n*9, n*12, n*14]; shuffle(nums); return { q:'Which is odd? '+nums.join(', '), a:String(nums.filter(function(x){return x%n!==0;})[0]), hint:'Four are multiples of '+n+', one is not' }; }
+    function(){ var n=rand(2,5); var nums=[n*3, n*6, n*9, n*12, n*14]; shuffle(nums); return { q:'Which is odd? '+nums.join(', '), a:String(nums.filter(function(x){return x%n!==0;})[0]), hint:'Four are multiples of '+n+', one is not' }; },
+    // SBI PO Hard: number series odd man out (alternating pattern break)
+    function(){ var s=rand(3,7), d=rand(2,4); var nums=[s, s+d, s+2*d, s+3*d+1, s+4*d]; shuffle(nums); return { q:'Which is odd? '+nums.join(', '), a:String(s+3*d+1), hint:'Four follow AP with diff '+d+', one breaks' }; },
+    // SBI PO Hard: complex pattern — n²-1, n²+1 mix
+    function(){ var b=rand(4,8); var nums=[b*b-1, (b+1)*(b+1)-1, (b+2)*(b+2)-1, (b+3)*(b+3)+1, (b+4)*(b+4)-1]; shuffle(nums); return { q:'Which is odd? '+nums.join(', '), a:String(nums.filter(function(x,i){var n=b+i; return x!==n*n-1;})[0]), hint:'Four follow n²-1 pattern, one is n²+1' }; },
+    // SBI PO Hard: digit reversal pattern
+    function(){ var ns=[21,32,43,54,75]; shuffle(ns); var ans='75'; return { q:'Which is odd? '+ns.join(', '), a:ans, hint:'Four have digits differing by 1, one does not' }; }
   ];
   function isPrime(n){if(n<2)return false;for(var i=2;i*i<=n;i++){if(n%i===0)return false;}return true;}
-  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; var picks=d.q.split('? ')[1].split(', '); picks.forEach(function(p){if(p!==d.a&&o.indexOf(p)<0)o.push(p);}); while(o.length<4){var v=String(rand(10,99));if(o.indexOf(v)<0)o.push(v);} shuffle(o);
+  var idx;
+  if (diff >= 5 && ty.length >= 6) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d=ty[idx](); var o=[d.a]; var picks=d.q.split('? ')[1].split(', '); picks.forEach(function(p){if(p!==d.a&&o.indexOf(p)<0)o.push(p);}); while(o.length<4){var v=String(rand(10,99));if(o.indexOf(v)<0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:12, type:'quant', techniqueLabel:'Odd Man Out: '+d.hint, intuition:'Find the common property (squares, primes, multiples). The one that breaks the rule is the answer.' };
 }
 
@@ -2734,9 +3363,21 @@ function generateLetterSymbolSeriesQuestion(diff, layer) {
     // Skip pattern
     function(){ var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var s=rand(0,14); return { q:'Next: ' + l[s] + ', ' + l[s+2] + ', ' + l[s+5] + ', ' + l[s+9] + '?', a:l[s+14], hint:'Gaps increase by 1: +2, +3, +4, +5', intuition:'Gaps: ' + l[s] + '→' + l[s+2] + ' (+2), →' + l[s+5] + ' (+3), →' + l[s+9] + ' (+4). Next gap +5: ' + l[s+14] }; },
     // Reverse pattern
-    function(){ var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var s=rand(5,22); return { q:'Next: ' + l[s] + ', ' + l[s-1] + ', ' + l[s-3] + ', ' + l[s-6] + '?', a:l[s-10], hint:'Gaps increasing backwards: -1, -2, -3, -4', intuition:'Positions: ' + s + ', ' + (s-1) + ', ' + (s-3) + ', ' + (s-6) + '. Gaps -1, -2, -3. Next gap -4: pos ' + (s-10) + ' = ' + l[s-10] }; }
+    function(){ var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var s=rand(5,22); return { q:'Next: ' + l[s] + ', ' + l[s-1] + ', ' + l[s-3] + ', ' + l[s-6] + '?', a:l[s-10], hint:'Gaps increasing backwards: -1, -2, -3, -4', intuition:'Positions: ' + s + ', ' + (s-1) + ', ' + (s-3) + ', ' + (s-6) + '. Gaps -1, -2, -3. Next gap -4: pos ' + (s-10) + ' = ' + l[s-10] }; },
+    // SBI PO Hard: mixed letter-number with positional sums
+    function(){ var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var s=rand(1,18); var p=[s, s+1, s+3, s+6]; var sums=p.map(function(x){return x+l.charCodeAt(x-1)-64;}); return { q:'Series: ' + l[p[0]-1] + '('+p[0]+'), ' + l[p[1]-1] + '('+p[1]+'), ' + l[p[2]-1] + '('+p[2]+'), ' + l[p[3]-1] + '('+p[3]+')? Next term?', a:l[p[3]+3] + '(' + (p[3]+4) + ')', hint:'Letter position +1, +2, +3 each step. Also track letter itself.', intuition:'Positions: ' + p.join(', ') + '. Differences: +1, +2, +3. Next diff +4: pos ' + (p[3]+4) + ' = ' + l[p[3]+3] }; },
+    // SBI PO Hard: alternating direction pattern
+    function(){ var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var s=rand(5,18); return { q:'Next: ' + l[s] + ', ' + l[s+3] + ', ' + l[s+2] + ', ' + l[s+5] + ', ' + l[s+4] + '?', a:l[s+7], hint:'Pattern: +3, -1, +3, -1, +3', intuition: s + '→' + (s+3) + ' (+3), →' + (s+2) + ' (-1), →' + (s+5) + ' (+3), →' + (s+4) + ' (-1). Next: +3 → ' + (s+7) + ' = ' + l[s+7] }; },
+    // SBI PO Hard: letter series based on reverse alphabetical positions
+    function(){ var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ'; var r='ZYXWVUTSRQPONMLKJIHGFEDCBA'; var s=rand(0,20); return { q:'Next: ' + r[s] + ', ' + r[s+1] + ', ' + r[s+3] + ', ' + r[s+6] + '?', a:r[s+10], hint:'Positions in reverse alphabet: +1, +2, +3, +4', intuition:'Reverse alphabet positions: ' + (s+1) + ', ' + (s+2) + ', ' + (s+4) + ', ' + (s+7) + '. Gaps +1, +2, +3. Next gap +4 → pos ' + (s+11) + ' = ' + r[s+10] }; }
   ];
-  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; ['AB','CD','EF','GH','IJ','KL','MN','OP','QR','ST','UV','WX','YZ','EV','FU','GT'].forEach(function(l){if(l!==d.a&&o.indexOf(l)<0)o.push(l);}); while(o.length<4){var v=String.fromCharCode(65+rand(0,25));if(o.indexOf(v)<0)o.push(v);} shuffle(o);
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = rand(0,1) ? rand(Math.max(0, ty.length - 3), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d=ty[idx](); var o=[d.a]; ['AB','CD','EF','GH','IJ','KL','MN','OP','QR','ST','UV','WX','YZ','EV','FU','GT'].forEach(function(l){if(l!==d.a&&o.indexOf(l)<0)o.push(l);}); while(o.length<4){var v=String.fromCharCode(65+rand(0,25));if(o.indexOf(v)<0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:12, type:'reasoning', techniqueLabel:'Letter Series: '+d.hint, intuition:'Convert letters to positions (A=1). Find the step pattern. Convert back.' };
 }
 
@@ -2751,9 +3392,21 @@ function generateArtificialLanguageQuestion(diff, layer) {
     // Type 5: Three-way comparison to deduce unknown
     function(){ var map={elo:'mountain',vek:'river',zim:'forest',bal:'high',tor:'deep',sen:'green'}; var keys=Object.keys(map); shuffle(keys); var w=keys[0]+keys[2]+keys[4]; var m=map[keys[0]]+' '+map[keys[2]]+' '+map[keys[4]]; return { q:'If "'+keys[0]+keys[1]+'" means "'+map[keys[0]]+' '+map[keys[1]]+'" and "'+keys[2]+keys[3]+'" means "'+map[keys[2]]+' '+map[keys[3]]+'" and "'+keys[4]+keys[5]+'" means "'+map[keys[4]]+' '+map[keys[5]]+'", what is "'+w+'" ?', a:m, hint:'Each 3-letter chunk = one word. Combine the chunks' }; },
     // Type 6: Verb conjugation pattern with tense marker
-    function(){ var verbs={walk:'lak',run:'tok',jump:'riz'}; var past='-ev'; var tense='past'; var vkeys=Object.keys(verbs); shuffle(vkeys); var v=vkeys[0]; return { q:'If "'+verbs[v]+'" means "'+v+'" and "'+verbs[v]+past+'" means "'+v+'ed ('+tense+')", what does "'+verbs[vkeys[1]]+past+'" mean?', a:vkeys[1]+'ed', hint:'Root word + suffix = past tense. Find the verb root and apply the same pattern' }; }
+    function(){ var verbs={walk:'lak',run:'tok',jump:'riz'}; var past='-ev'; var tense='past'; var vkeys=Object.keys(verbs); shuffle(vkeys); var v=vkeys[0]; return { q:'If "'+verbs[v]+'" means "'+v+'" and "'+verbs[v]+past+'" means "'+v+'ed ('+tense+')", what does "'+verbs[vkeys[1]]+past+'" mean?', a:vkeys[1]+'ed', hint:'Root word + suffix = past tense. Find the verb root and apply the same pattern' }; },
+    // SBI PO Hard: four-way comparison to isolate one word
+    function(){ var map={vak:'king',zed:'queen',gol:'palace',mir:'crown',tul:'throne',nep:'royal'}; var keys=Object.keys(map); shuffle(keys); var w=keys[0]; var p1=keys[0]+keys[1]+'='+map[keys[0]]+' '+map[keys[1]]; var p2=keys[2]+keys[3]+'='+map[keys[2]]+' '+map[keys[3]]; var p3=keys[4]+keys[5]+'='+map[keys[4]]+' '+map[keys[5]]; return { q:'Given: "'+p1+'", "'+p2+'", "'+p3+'". What does "'+w+'" mean?', a:map[w], hint:'Find which 3-letter segment appears in only one translation and matches the meaning', intuition:'Compare all three phrases. '+w+' appears in the first phrase meaning '+map[keys[0]]+'. The other two phrases help confirm the mapping.' }; },
+    // SBI PO Hard: plural + negation combined
+    function(){ var nouns={cat:'mip',dog:'zog',bird:'kex'}; var plural='-en'; var neg='no-'; var vkeys=Object.keys(nouns); shuffle(vkeys); var v=vkeys[0]; var singular=nouns[v]; var pluralForm=singular+plural; var negForm=neg+singular; return { q:'If "'+singular+'" means "'+v+'", "'+pluralForm+'" means "'+v+'s", "'+negForm+'" means "no '+v+'", what does "'+neg+nouns[vkeys[1]]+'" mean?', a:'no '+vkeys[1], hint:'Prefix "no-" = negation. Suffix "-en" = plural. Break the word into prefix + root.', intuition:nouns[vkeys[1]]+' = '+vkeys[1]+'. '+neg+nouns[vkeys[1]]+' = no- + '+nouns[vkeys[1]]+' = no '+vkeys[1]+'.' }; },
+    // SBI PO Hard: multi-clause sentence translation
+    function(){ var subj={king:'tas',queen:'las'}; var verb={eats:'vok',drinks:'mek',sleeps:'nur'}; var obj={apple:'pom',milk:'lum',bread:'bex'}; var sk=Object.keys(subj); shuffle(sk); var vk=Object.keys(verb); shuffle(vk); var ok=Object.keys(obj); shuffle(ok); var s=sk[0],v=vk[0],o=ok[0]; var trans=subj[s]+verb[v]+obj[o]; var givenPair=subj[sk[0]]+verb[vk[1]]+obj[ok[1]]+' means "'+sk[0]+' '+vk[1]+' '+ok[1]+'"'; return { q:'In a language, "'+givenPair+'". What does "'+trans+'" mean?', a:s+' '+v+' '+o, hint:'Each 3-letter segment maps to subject/verb/object. Order: S+V+O.', intuition:'Word order: subject ('+subj[s]+') + verb ('+verb[v]+') + object ('+obj[o]+') = "'+trans+'" = "'+s+' '+v+' '+o+'"' }; }
   ];
-  var d=ty[rand(0,ty.length-1)](); var dex=[d.a]; var allPhrases='sky blue big tree run fast dog black cat white water cold fire hot drink food day night happy sad light dark mountain river forest high deep green walked ran jumped'.split(' '); for(var di=0;di<allPhrases.length-1;di+=2){var p=allPhrases[di]+' '+allPhrases[di+1];if(p!==d.a&&dex.indexOf(p)<0)dex.push(p);} while(dex.length<4){dex.push('red green');} shuffle(dex);
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = rand(0,1) ? rand(Math.max(0, ty.length - 3), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d=ty[idx](); var dex=[d.a]; var allPhrases='sky blue big tree run fast dog black cat white water cold fire hot drink food day night happy sad light dark mountain river forest high deep green walked ran jumped'.split(' '); for(var di=0;di<allPhrases.length-1;di+=2){var p=allPhrases[di]+' '+allPhrases[di+1];if(p!==d.a&&dex.indexOf(p)<0)dex.push(p);} while(dex.length<4){dex.push('red green');} shuffle(dex);
   return { question:d.q, answer:d.a, options:dex, hint:d.hint, timeLimit:20, type:'reasoning', techniqueLabel:'Artificial Language: '+d.hint, intuition:'Each 3-letter chunk maps to one English word. Find the mapping from the two given translations.' };
 }
 
@@ -2820,9 +3473,21 @@ function generateStatementArgumentQuestion(diff, layer) {
     {stmt:'Should schools have a dress code?',strong:'Yes, it reduces social pressure and distractions',weak:'No, students should express their personality'},
     {stmt:'Should the retirement age be increased?',strong:'Yes, people are living longer and healthier lives',weak:'No, old people should enjoy their life'},
     {stmt:'Should animal testing be banned?',args:['Yes, it causes unnecessary suffering to animals','No, it is essential for medical research','Yes, alternatives like computer models exist'],correct:0,desc:'Two arguments — which one is stronger?'},
-    {stmt:'Road accidents are increasing due to drunk driving.',action:['Strictly enforce traffic rules and increase penalties','Ban alcohol sales entirely','Run awareness campaigns on TV'],best:0,desc:'Best course of action'}
+    {stmt:'Road accidents are increasing due to drunk driving.',action:['Strictly enforce traffic rules and increase penalties','Ban alcohol sales entirely','Run awareness campaigns on TV'],best:0,desc:'Best course of action'},
+    // SBI PO Hard: multi-argument evaluation with hidden premise
+    {stmt:'Should India adopt a four-day work week?',args:['Yes, it increases employee productivity and work-life balance','No, it will reduce economic output and competitiveness','Yes, other countries have successfully implemented it'],correct:0,desc:'Which argument is logically strongest?'},
+    // SBI PO Hard: identify the argument type (deductive/inductive)
+    {stmt:'All humans are mortal. Socrates is human. Therefore, Socrates is mortal.',action:['Deductive argument — conclusion necessarily follows','Inductive argument — conclusion is probable','Fallacious argument — circular reasoning','Analogical argument — based on comparison'],best:0,desc:'What type of argument is this?'},
+    // SBI PO Hard: course of action with cost-benefit tradeoff
+    {stmt:'The city is facing a severe water shortage due to depleting groundwater levels.',action:['Implement rainwater harvesting in all public buildings and provide subsidies for residential systems','Impose a complete ban on all groundwater usage immediately','Build a large dam at the nearest river'],best:0,desc:'Best course of action considering practicality, cost, and long-term impact'}
   ];
-  var item=items[rand(0,items.length-1)];
+  var idx;
+  if (diff >= 5 && items.length >= 4) {
+    idx = rand(0,1) ? rand(Math.max(0, items.length - 3), items.length - 1) : rand(0, items.length - 1);
+  } else {
+    idx = rand(0, items.length - 1);
+  }
+  var item=items[idx];
   var opts, answer, qText;
   if (item.args) {
     opts = item.args.slice(); answer = item.args[item.correct]; shuffle(opts);
@@ -2843,9 +3508,21 @@ function generateStatementAssumptionQuestion(diff, layer) {
     {stmt:'The government has launched a new app for filing taxes online.',assume:'People have access to smartphones or computers'},
     {stmt:'All schools will remain closed tomorrow due to heavy rain warning.',assume:'The rain will be heavy enough to make travel unsafe'},
     {stmt:'Our toothpaste is recommended by 9 out of 10 dentists.',assume:'Dentists are qualified to evaluate toothpaste',multi:true,options:['Dentists are qualified to evaluate toothpaste','Only 10 dentists were surveyed','Toothpaste is the best in the market','All dentists recommend it']},
-    {stmt:'Buy one get one free on all shoes this weekend!',assume:'The offer will attract more customers',multi:true,options:['The offer will attract more customers','Shoes are expensive','The store is closing down','Everyone needs shoes']}
+    {stmt:'Buy one get one free on all shoes this weekend!',assume:'The offer will attract more customers',multi:true,options:['The offer will attract more customers','Shoes are expensive','The store is closing down','Everyone needs shoes']},
+    // SBI PO Hard: advertisement with statistical assumption
+    {stmt:'4 out of 5 dentists recommend our toothpaste for stronger enamel.',assume:'The dentists surveyed are representative of all dentists',multi:true,options:['The dentists surveyed are representative of all dentists','Only 5 dentists were surveyed','Stronger enamel is the most important factor','All toothpastes are equally effective']},
+    // SBI PO Hard: policy statement with behavioral assumption
+    {stmt:'The government will reduce traffic congestion by introducing a congestion tax of Rs 100 per day for cars entering the city center.',assume:'The tax will be high enough to discourage car usage',multi:true,options:['The tax will be high enough to discourage car usage','All car owners can afford to pay the tax','Public transport is available as an alternative','The tax will generate significant revenue']},
+    // SBI PO Hard: implicit value judgment
+    {stmt:'Companies should prioritize hiring local talent over outsourcing to reduce costs.',assume:'Hiring local talent is more cost-effective than outsourcing in the long run',multi:true,options:['Hiring local talent is more cost-effective than outsourcing in the long run','Local talent is better skilled than overseas workers','Outsourcing always reduces quality','Companies should always prioritize cost reduction']}
   ];
-  var item=items[rand(0,items.length-1)];
+  var idx;
+  if (diff >= 5 && items.length >= 4) {
+    idx = rand(0,1) ? rand(Math.max(0, items.length - 3), items.length - 1) : rand(0, items.length - 1);
+  } else {
+    idx = rand(0, items.length - 1);
+  }
+  var item=items[idx];
   var opts, ans;
   if (item.multi) {
     opts = item.options.slice(); ans = item.assume; shuffle(opts);
@@ -2862,9 +3539,21 @@ function generateStatementConclusionQuestion(diff, layer) {
     {stmt:'All metals expand when heated. Iron is a metal.',conc:'Iron expands when heated'},
     {stmt:'No student who failed the exam passed the interview. John passed the interview.',conc:'John did not fail the exam'},
     {stmt:'Some fruits are sweet. All sweet things are tasty.',conc:'Some fruits are tasty',multi:true,options:['Some fruits are tasty','All fruits are tasty','No fruits are tasty','Fruits are always sweet']},
-    {stmt:'If it rains, the match will be cancelled. The match was not cancelled.',conc:'It did not rain',multi:true,different:true,options:['It did not rain','It rained lightly','The match was postponed','The ground was dry']}
+    {stmt:'If it rains, the match will be cancelled. The match was not cancelled.',conc:'It did not rain',multi:true,different:true,options:['It did not rain','It rained lightly','The match was postponed','The ground was dry']},
+    // SBI PO Hard: multi-premise syllogism
+    {stmt:'All A are B. Some B are C. No C is D.',conc:'Some A are not D',multi:true,options:['Some A are not D','All A are D','No A is D','Some A are D']},
+    // SBI PO Hard: conditional chain with modus tollens
+    {stmt:'If the economy grows, employment will increase. If employment increases, crime will decrease. Crime did not decrease.',conc:'The economy did not grow',multi:true,options:['The economy did not grow','Employment increased','The economy grew but crime increased','Crime decreased due to other factors']},
+    // SBI PO Hard: either-or with negation
+    {stmt:'Either John is a doctor or he is an engineer. John is not an engineer.',conc:'John is a doctor',multi:true,options:['John is a doctor','John is neither','John could be both','John is an engineer']}
   ];
-  var item=items[rand(0,items.length-1)];
+  var idx;
+  if (diff >= 5 && items.length >= 4) {
+    idx = rand(0,1) ? rand(Math.max(0, items.length - 3), items.length - 1) : rand(0, items.length - 1);
+  } else {
+    idx = rand(0, items.length - 1);
+  }
+  var item=items[idx];
   var opts, ans;
   if (item.multi) {
     opts = item.options.slice(); ans = item.conc; shuffle(opts);
@@ -2908,13 +3597,101 @@ var ANTONYM_BANK = [
 ];
 
 function generateSynonymQuestion(diff) {
-  var w=SYNONYM_BANK[rand(0,SYNONYM_BANK.length-1)]; var opts=w.s.slice(); shuffle(opts);
-  return { question:'Synonym of "'+w.w+'" ?', answer:w.s[0], options:opts, hint:'Think of words with similar meaning', timeLimit:8, type:'verbal', techniqueLabel:'Synonyms: '+w.w, intuition:'A synonym is a word that has the same or nearly the same meaning as another word.' };
+  var ty = SYNONYM_BANK.map(function(w, i) {
+    return function() { return { w: w.w, a: w.s[0], o: w.s.slice(), idx: i }; };
+  });
+  // SBI PO Hard: context-based synonym
+  ty.push(function() {
+    var hardWords = [
+      { w: 'Prolific', a: 'Fertile', ctx: 'The writer was known for his prolific output.' },
+      { w: 'Ephemeral', a: 'Transient', ctx: 'The beauty of the cherry blossom is ephemeral.' },
+      { w: 'Ubiquitous', a: 'Omnipresent', ctx: 'Smartphones have become ubiquitous in modern society.' },
+      { w: 'Pragmatic', a: 'Practical', ctx: 'She took a pragmatic approach to the problem.' },
+      { w: 'Ambivalent', a: 'Uncertain', ctx: 'He felt ambivalent about the career change.' },
+      { w: 'Eloquent', a: 'Articulate', ctx: 'Her speech was eloquent and moving.' },
+      { w: 'Tenacious', a: 'Persistent', ctx: 'The tenacious reporter would not give up.' }
+    ];
+    var hw = hardWords[rand(0, hardWords.length - 1)];
+    var opts = hw.a ? [hw.a] : [];
+    var allSyns = ['Fertile','Transient','Omnipresent','Practical','Uncertain','Articulate','Persistent','Brief','Everywhere','Stubborn','Fluent','Flexible'];
+    while (opts.length < 4) { var x = allSyns[rand(0, allSyns.length - 1)]; if (opts.indexOf(x) < 0) opts.push(x); }
+    shuffle(opts);
+    return { w: hw.w + ' (context: ' + hw.ctx + ')', a: hw.a, o: opts };
+  });
+  // SBI PO Hard: synonym with word roots
+  ty.push(function() {
+    var rootWords = [
+      { w: 'Benevolent', a: 'Kind', root: 'bene = good' },
+      { w: 'Malevolent', a: 'Malicious', root: 'male = bad' },
+      { w: 'Amorphous', a: 'Shapeless', root: 'a = without, morph = shape' },
+      { w: 'Circumspect', a: 'Cautious', root: 'circum = around, spect = look' },
+      { w: 'Contradict', a: 'Deny', root: 'contra = against, dict = speak' }
+    ];
+    var rw = rootWords[rand(0, rootWords.length - 1)];
+    var opts = [rw.a];
+    var others = ['Kind','Malicious','Shapeless','Cautious','Deny','Happy','Sad','Bright'];
+    while (opts.length < 4) { var x = others[rand(0, others.length - 1)]; if (opts.indexOf(x) < 0) opts.push(x); }
+    shuffle(opts);
+    return { w: rw.w + ' (root: ' + rw.root + ')', a: rw.a, o: opts };
+  });
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 3), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var w = ty[idx]();
+  shuffle(w.o);
+  return { question:'Synonym of "'+w.w+'" ?', answer:w.a, options:w.o, hint:'Think of words with similar meaning', timeLimit:8, type:'verbal', techniqueLabel:'Synonyms: '+w.w, intuition:'A synonym is a word that has the same or nearly the same meaning as another word.' };
 }
 
 function generateAntonymQuestion(diff) {
-  var w=ANTONYM_BANK[rand(0,ANTONYM_BANK.length-1)]; var opts=w.a.slice(); shuffle(opts);
-  return { question:'Antonym of "'+w.w+'" ?', answer:w.a[0], options:opts, hint:'Think of words with opposite meaning', timeLimit:8, type:'verbal', techniqueLabel:'Antonyms: '+w.w, intuition:'An antonym is a word opposite in meaning to another word.' };
+  var ty = ANTONYM_BANK.map(function(w, i) {
+    return function() { return { w: w.w, a: w.a[0], o: w.a.slice() }; };
+  });
+  // SBI PO Hard: context-based antonym
+  ty.push(function() {
+    var hardWords = [
+      { w: 'Boon', a: 'Curse', ctx: 'The new policy was a boon for small businesses.' },
+      { w: 'Exacerbate', a: 'Mitigate', ctx: 'The measures will exacerbate the problem.' },
+      { w: 'Gregarious', a: 'Introverted', ctx: 'She was gregarious and loved parties.' },
+      { w: 'Lethargic', a: 'Energetic', ctx: 'He felt lethargic after the heavy meal.' },
+      { w: 'Obsolete', a: 'Contemporary', ctx: 'The technology became obsolete quickly.' },
+      { w: 'Prolific', a: 'Barren', ctx: 'The artist had a prolific career.' },
+      { w: 'Succinct', a: 'Verbose', ctx: 'His speech was succinct and powerful.' }
+    ];
+    var hw = hardWords[rand(0, hardWords.length - 1)];
+    var opts = [hw.a];
+    var pool = ['Curse','Mitigate','Introverted','Energetic','Contemporary','Barren','Verbose','Blessing','Worsen','Talkative','Lazy','Modern','Scarce','Wordy'];
+    while (opts.length < 4) { var x = pool[rand(0, pool.length - 1)]; if (opts.indexOf(x) < 0) opts.push(x); }
+    shuffle(opts);
+    return { w: hw.w + ' (context: ' + hw.ctx + ')', a: hw.a, o: opts };
+  });
+  // SBI PO Hard: antonym with word roots
+  ty.push(function() {
+    var rootWords = [
+      { w: 'Prognathous', a: 'Retreating', root: 'pro = forward, gnath = jaw' },
+      { w: 'Subterranean', a: 'Aboveground', root: 'sub = under, terra = earth' },
+      { w: 'Intramural', a: 'Extramural', root: 'intra = within, extra = outside' },
+      { w: 'Antebellum', a: 'Postbellum', root: 'ante = before, bellum = war' },
+      { w: 'Monologue', a: 'Dialogue', root: 'mono = one, dia = two' }
+    ];
+    var rw = rootWords[rand(0, rootWords.length - 1)];
+    var opts = [rw.a];
+    var pool = ['Retreating','Aboveground','Extramural','Postbellum','Dialogue','Forward','Underground','Before','Inside','Outside','Single','Double'];
+    while (opts.length < 4) { var x = pool[rand(0, pool.length - 1)]; if (opts.indexOf(x) < 0) opts.push(x); }
+    shuffle(opts);
+    return { w: rw.w + ' (root: ' + rw.root + ')', a: rw.a, o: opts };
+  });
+  var idx;
+  if (diff >= 5 && ty.length >= 4) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 3), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var w = ty[idx]();
+  shuffle(w.o);
+  return { question:'Antonym of "'+w.w+'" ?', answer:w.a, options:w.o, hint:'Think of words with opposite meaning', timeLimit:8, type:'verbal', techniqueLabel:'Antonyms: '+w.w, intuition:'An antonym is a word opposite in meaning to another word.' };
 }
 
 function generateSentenceCompletionQuestion(diff) {
@@ -3114,10 +3891,20 @@ function generateHeightDistanceQuestion(diff, layer) {
     // Two angles from different points (same building)
     function(){ var h=rand(20,50), d1=rand(10,30), d2=rand(d1+10, d1+30); var a1=Math.round(Math.atan(h/d1)*180/Math.PI); var a2=Math.round(Math.atan(h/d2)*180/Math.PI); return { q:'Building of height ' + h + 'm. From point A angle=' + a1 + '°, from B (further by ' + (d2-d1) + 'm) angle=' + a2 + '°. Distance AB?', a:d2-d1, hint:'Distance = h/tan(small angle) - h/tan(large angle)', intuition:'d1 = h/tan' + a1 + ' = ' + Math.round(h/Math.tan(a1*Math.PI/180)) + ', d2 = h/tan' + a2 + ' = ' + Math.round(h/Math.tan(a2*Math.PI/180)) + '. AB = d2-d1 = ' + (d2-d1) + 'm' }; },
     // Angle of elevation from two points
-    function(){ var h=rand(30,80), a=[15,22,30,36,45,50,60,70,75][rand(0,8)], b=[15,22,30,36,45,50,60,70,75][rand(0,8)]; while(b===a)b=[15,22,30,36,45,50,60,70,75][rand(0,8)]; var d1=Math.round(h/Math.tan(a*Math.PI/180)); var d2=Math.round(h/Math.tan(b*Math.PI/180)); return { q:'Tower height ' + h + 'm. From two points angles ' + a + '° and ' + b + '°. Distance between points?', a:Math.abs(d1-d2), hint:'d1 = h/tan' + a + '=' + d1 + ', d2 = h/tan' + b + '=' + d2 + ', diff = |' + d1 + '-' + d2 + '|', intuition:'When angle=' + a + '°: distance=' + Math.round(h/Math.tan(a*Math.PI/180)) + 'm. When angle=' + b + '°: distance=' + Math.round(h/Math.tan(b*Math.PI/180)) + 'm. Difference=' + Math.abs(d1-d2) + 'm' }; }
+    function(){ var h=rand(30,80), a=[15,22,30,36,45,50,60,70,75][rand(0,8)], b=[15,22,30,36,45,50,60,70,75][rand(0,8)]; while(b===a)b=[15,22,30,36,45,50,60,70,75][rand(0,8)]; var d1=Math.round(h/Math.tan(a*Math.PI/180)); var d2=Math.round(h/Math.tan(b*Math.PI/180)); return { q:'Tower height ' + h + 'm. From two points angles ' + a + '° and ' + b + '°. Distance between points?', a:Math.abs(d1-d2), hint:'d1 = h/tan' + a + '=' + d1 + ', d2 = h/tan' + b + '=' + d2 + ', diff = |' + d1 + '-' + d2 + '|', intuition:'When angle=' + a + '°: distance=' + Math.round(h/Math.tan(a*Math.PI/180)) + 'm. When angle=' + b + '°: distance=' + Math.round(h/Math.tan(b*Math.PI/180)) + 'm. Difference=' + Math.abs(d1-d2) + 'm' }; },
+    // SBI PO Hard: two-angle shadow problem
+    function(){ var h=rand(20,50); var a=[15,22,30,36,45][rand(0,4)], b=[50,60,70,75][rand(0,3)]; var s1=Math.round(h/Math.tan(a*Math.PI/180)); var s2=Math.round(h/Math.tan(b*Math.PI/180)); return { q:'A pole of height ' + h + 'm casts shadows of lengths ' + s1 + 'm and ' + s2 + 'm at two different times. Sun elevation angles?', a:Math.abs(a-b)+'°', hint:'tanθ₁ = h/s₁ = '+(h/s1).toFixed(2)+', tanθ₂ = h/s₂ = '+(h/s2).toFixed(2), intuition:'θ₁ = tan⁻¹('+(h/s1).toFixed(2)+') = '+a+'°, θ₂ = tan⁻¹('+(h/s2).toFixed(2)+') = '+b+'°. Difference = '+Math.abs(a-b)+'°' }; },
+    // SBI PO Hard: height of cloud/airplane
+    function(){ var h=rand(100,300); var a=[30,45,60][rand(0,2)]; return { q:'An airplane at height ' + h + 'm is observed at an elevation of ' + a + '°. Find the horizontal distance of the airplane from the observation point.', a:Math.round(h/Math.tan(a*Math.PI/180)), hint:'tan' + a + ' = height/distance, distance = height/tan' + a, intuition:'Distance = ' + h + '/tan' + a + '° = ' + Math.round(h/Math.tan(a*Math.PI/180)) + 'm' }; }
   ];
-  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; if(typeof d.a==='string'){var n=parseInt(d.a);for(var i=-2;i<=2;i++){var v=(n+i)+'°';if(v!==d.a&&o.indexOf(v)<0)o.push(v);}}else{for(var i=-5;i<=5;i+=2){var v=d.a+i;if(v>0&&o.indexOf(v)<0)o.push(v);}} shuffle(o);
-  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Height & Distance: '+d.hint, intuition:'tan(angle) = height/distance. sin(angle) = opposite/hypotenuse. cos(angle) = adjacent/hypotenuse.' };
+  var idx;
+  if (diff >= 5 && ty.length >= 6) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 3), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d=ty[idx](); var o=[d.a]; if(typeof d.a==='string' && d.a.indexOf('°')>=0){var n=parseInt(d.a);for(var i=-2;i<=2;i++){var v=(n+i)+'°';if(v!==d.a&&o.indexOf(v)<0)o.push(v);}}else{for(var i=-5;i<=5;i+=2){var v=d.a+i;if(v>0&&o.indexOf(v)<0)o.push(v);}} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Height & Distance', intuition:'tan(angle) = height/distance. sin(angle) = opposite/hypotenuse. cos(angle) = adjacent/hypotenuse.' };
 }
 
 function generateDecimalFractionQuestion(diff, layer) {
@@ -3136,9 +3923,21 @@ function generateDecimalFractionQuestion(diff, layer) {
     // Fraction to decimal conversion — competitive exam style
     function(){ var n=rand(1,9), d=[5,8,10,16,20,25][rand(0,5)]; return { q:n+'/'+d+' as decimal = ?', a:(n/d).toFixed(4), hint:'Divide ' + n + ' by ' + d, intuition:'Long division: ' + n + '/' + d + ' = ' + (n/d).toFixed(4) }; },
     // Compare fraction vs decimal
-    function(){ var a=rand(1,9), b=rand(5,9); return { q:'Which is greater? 0.'+b+' or ' + a + '/' + (a+1), a:Math.max(b/10, a/(a+1)).toFixed(4), hint:'Convert both to decimal: 0.'+b+'='+(b/10)+', '+a+'/'+(a+1)+'='+(a/(a+1)).toFixed(4), intuition:'0.'+ b +' = ' + (b/10).toFixed(2) + ', ' + a + '/' + (a+1) + ' = ' + (a/(a+1)).toFixed(4) + '. ' + Math.max(b/10,a/(a+1)).toFixed(4) + ' is larger' }; }
+    function(){ var a=rand(1,9), b=rand(5,9); return { q:'Which is greater? 0.'+b+' or ' + a + '/' + (a+1), a:Math.max(b/10, a/(a+1)).toFixed(4), hint:'Convert both to decimal: 0.'+b+'='+(b/10)+', '+a+'/'+(a+1)+'='+(a/(a+1)).toFixed(4), intuition:'0.'+ b +' = ' + (b/10).toFixed(2) + ', ' + a + '/' + (a+1) + ' = ' + (a/(a+1)).toFixed(4) + '. ' + Math.max(b/10,a/(a+1)).toFixed(4) + ' is larger' }; },
+    // SBI PO Hard: two-digit recurring decimal to fraction
+    function(){ var n=rand(10,99); return { q:'0.'+n+''+n+'... (two-digit recurring) = fraction?', a:n+'/99', hint:'Two-digit recurring: xyxy... = xy/99', intuition:'0.'+n+n+'... = '+n+'/99' }; },
+    // SBI PO Hard: complex fraction simplification
+    function(){ var a=rand(2,9), b=rand(2,9), c=rand(2,9); return { q:'Simplify: ('+a+'/'+b+') ÷ ('+c+'/'+b+')', a:(a/c).toFixed(2), hint:'Division of fractions: (a/b) ÷ (c/b) = a/c', intuition:'('+a+'/'+b+') ÷ ('+c+'/'+b+') = '+a+'/'+b+' × '+b+'/'+c+' = '+a+'/'+c+' = '+Math.round(a/c*100)/100 }; },
+    // SBI PO Hard: mixed recurring decimal
+    function(){ var n=rand(1,9), m=rand(1,9); while(m===n)m=rand(1,9); return { q:'0.'+n+''+m+''+n+''+m+'... (two-digit alternating recurring) = ?', a:(n*10+m)+'/99', hint:'Alternating two-digit pattern = digits as number / 99', intuition:'0.'+n+m+n+m+'... = '+n+m+'/99' }; }
   ];
-  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; if(typeof d.a==='string'){o.push((rand(1,9))+'/'+(rand(2,9)));o.push((rand(1,9))+'/'+(rand(2,9)));o.push((rand(1,9))+'/'+(rand(2,9)));}else{o.push((rand(10,99)/100).toFixed(2));o.push((rand(10,99)/100).toFixed(2));o.push((rand(10,99)/100).toFixed(2));} shuffle(o);
+  var idx;
+  if (diff >= 5 && ty.length >= 6) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d=ty[idx](); var o=[d.a]; if(typeof d.a==='string' && d.a.indexOf('/')>=0){o.push((rand(1,9))+'/'+(rand(2,9)));o.push((rand(1,9))+'/'+(rand(2,9)));o.push((rand(1,9))+'/'+(rand(2,9)));}else{o.push((rand(10,99)/100).toFixed(2));o.push((rand(10,99)/100).toFixed(2));o.push((rand(10,99)/100).toFixed(2));} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:12, type:'quant', techniqueLabel:'Decimal Fraction', intuition:'To convert fraction→decimal: divide numerator by denominator. To convert decimal→fraction: write as decimal/1 and simplify.' };
 }
 
@@ -3158,10 +3957,20 @@ function generateChainRuleQuestion(diff, layer) {
     // Wages with varying workers
     function(){ var m=rand(6,12), d=rand(10,20), wage=rand(200,500); var total=Math.round(m*d*wage); return { q:m+' men work '+d+' days, wage ₹'+wage+'/day each. Total wages? If '+(m+rand(2,5))+' men for '+(d-rand(3,6))+' days?', a:Math.round((m+rand(2,5))*(d-rand(3,6))*wage), hint:'Total = men × days × wage per day', intuition:'Original: '+m+'×'+d+'×'+wage+'=₹'+(m*d*wage)+'. New: '+(m+rand(2,5))+'×'+(d-rand(3,6))+'×'+wage+'=₹'+Math.round((m+rand(2,5))*(d-rand(3,6))*wage) }; },
     // Men, days, and work amount — triple variable
-    function(){ var m=rand(8,15), d=rand(10,18), wmul=rand(2,4); return { q:m+' men complete '+(wmul-1)+' units of work in '+d+' days. To complete '+(wmul+1)+' units in '+(d-rand(2,5))+' days, men needed?', a:Math.round(m*(wmul+1)*(d)/((wmul-1)*(d-rand(2,5)))), hint:'Work = men × days × rate. New men = old men × new work/old work × old days/new days', intuition:'M1×D1×R = W1, M2×D2×R = W2. M2 = ' + m + '×' + (wmul+1) + '/' + (wmul-1) + '×' + d + '/' + (d-rand(2,5)) + ' = ' + Math.round(m*(wmul+1)*d/((wmul-1)*(d-rand(2,5)))) }; }
+    function(){ var m=rand(8,15), d=rand(10,18), wmul=rand(2,4); return { q:m+' men complete '+(wmul-1)+' units of work in '+d+' days. To complete '+(wmul+1)+' units in '+(d-rand(2,5))+' days, men needed?', a:Math.round(m*(wmul+1)*(d)/((wmul-1)*(d-rand(2,5)))), hint:'Work = men × days × rate. New men = old men × new work/old work × old days/new days', intuition:'M1×D1×R = W1, M2×D2×R = W2. M2 = ' + m + '×' + (wmul+1) + '/' + (wmul-1) + '×' + d + '/' + (d-rand(2,5)) + ' = ' + Math.round(m*(wmul+1)*d/((wmul-1)*(d-rand(2,5)))) }; },
+    // SBI PO Hard: man-days-hours complex proportion
+    function(){ var m=rand(10,20), d=rand(8,15), h=rand(6,10), w=rand(2,3); return { q:m+' men work '+h+' hrs/day for '+d+' days to complete '+(w-1)+' units. How many men needed to complete '+(w+1)+' units in '+(d-3)+' days working '+(h+2)+' hrs/day?', a:Math.round(m*(w+1)*(d)*(h)/((w-1)*(d-3)*(h+2))), hint:'M1×D1×H1/W1 = M2×D2×H2/W2', intuition:'M2 = '+m+'×'+(w+1)+'/'+(w-1)+'×'+d+'/'+(d-3)+'×'+h+'/'+(h+2)+' = '+Math.round(m*(w+1)*d*h/((w-1)*(d-3)*(h+2)))}; },
+    // SBI PO Hard: food with men, women, children ratio
+    function(){ var p=rand(50,100), d=rand(10,20), r=rand(500,1000); var ratio=[rand(2,4), rand(1,3), rand(3,5)]; var total=ratio[0]+ratio[1]+ratio[2]; var newP=Math.round(p/total*ratio[0])+rand(5,10); return { q:'Provisions for '+p+' people for '+d+' days. If '+newP+' men, women and children in ratio '+ratio.join(':')+' (same total consumption), how many days?', a:Math.round(p*d/(newP)), hint:'Total consumption unchanged: P1×D1 = P2×D2', intuition:'Days = '+p+'×'+d+'/'+newP+' = '+Math.round(p*d/newP)}; }
   ];
-  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; for(var i=-3;i<=4;i+=2){var v=d.a+i;if(v>0&&o.indexOf(v)<0)o.push(v);} shuffle(o);
-  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'Chain Rule: '+d.hint, intuition:'If more = less (inverse proportion): M1×D1 = M2×D2. If more = more (direct): divide then multiply.' };
+  var idx;
+  if (diff >= 5 && ty.length >= 6) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 3), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d=ty[idx](); var o=[d.a]; for(var i=-3;i<=4;i+=2){var v=d.a+i;if(v>0&&o.indexOf(v)<0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'Chain Rule', intuition:'If more = less (inverse proportion): M1×D1 = M2×D2. If more = more (direct): divide then multiply.' };
 }
 
 function generateLogarithmQuestion(diff, layer) {
@@ -3180,10 +3989,20 @@ function generateLogarithmQuestion(diff, layer) {
     // Natural log conversion
     function(){ var n=rand(2,5); return { q:'If ln(e^' + n + ') = x, find x', a:n.toString(), hint:'ln(e^n) = n by definition (natural log is log base e)', intuition:'ln(e^' + n + ') = ' + n + '. The natural log and exponential cancel.' }; },
     // Log with fractional base
-    function(){ var a=rand(2,5), b=rand(2,5); while(b===a)b=rand(2,5); var n=Math.pow(a,rand(2,3)); return { q:'log_' + b + '(' + n + ') × log_' + a + '(' + b + ') = ?', a:Math.round(Math.log(n)/Math.log(a)), hint:'Change base: log_b(N) × log_a(b) = log_a(N)', intuition:'log_' + b + '(' + n + ') × log_' + a + '(' + b + ') = log_' + a + '(' + n + ') = ' + Math.round(Math.log(n)/Math.log(a)) }; }
+    function(){ var a=rand(2,5), b=rand(2,5); while(b===a)b=rand(2,5); var n=Math.pow(a,rand(2,3)); return { q:'log_' + b + '(' + n + ') × log_' + a + '(' + b + ') = ?', a:Math.round(Math.log(n)/Math.log(a)), hint:'Change base: log_b(N) × log_a(b) = log_a(N)', intuition:'log_' + b + '(' + n + ') × log_' + a + '(' + b + ') = log_' + a + '(' + n + ') = ' + Math.round(Math.log(n)/Math.log(a)) }; },
+    // SBI PO Hard: exponent equation with log
+    function(){ var a=rand(2,4), b=rand(2,4); return { q:'Solve: ' + a + '^x = ' + Math.pow(b,3), a:Math.round(Math.log(Math.pow(b,3))/Math.log(a)), hint:'x = log('+Math.pow(b,3)+')/log('+a+') = log_'+a+'('+Math.pow(b,3)+')', intuition: a + '^x = ' + Math.pow(b,3) + ' → x = log_' + a + '(' + Math.pow(b,3) + ') = ' + Math.round(Math.log(Math.pow(b,3))/Math.log(a)) }; },
+    // SBI PO Hard: change of base with multiple logs
+    function(){ var a=rand(2,5), b=rand(2,5); while(b===a)b=rand(2,5); var n=Math.pow(a,rand(2,3)); return { q:'Simplify: (log_' + a + '(' + n + ')) / (log_' + b + '(' + n + '))', a:Math.round(Math.log(b)/Math.log(a)*100)/100, hint:'= log_' + a + '(' + b + ') = log(b)/log(a)', intuition:'log_'+a+'('+n+')/log_'+b+'('+n+') = log_'+a+'('+b+') = ' + Math.round(Math.log(b)/Math.log(a)*100)/100 }; }
   ];
-  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; for(var i=-2;i<=3;i++){var v=d.a+i;if(v!==d.a&&v>0&&o.indexOf(v)<0)o.push(v);} shuffle(o);
-  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Logarithms: '+d.hint, intuition:'log_b(x)=y means b^y=x. log(xy)=log(x)+log(y). log(x/y)=log(x)-log(y). log(x^n)=n×log(x).' };
+  var idx;
+  if (diff >= 5 && ty.length >= 6) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 3), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var d=ty[idx](); var o=[d.a]; for(var i=-2;i<=3;i++){var v=d.a+i;if(v!==d.a&&v>0&&o.indexOf(v)<0)o.push(v);} shuffle(o);
+  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Logarithms', intuition:'log_b(x)=y means b^y=x. log(xy)=log(x)+log(y). log(x/y)=log(x)-log(y). log(x^n)=n×log(x).' };
 }
 
 // Logical Reasoning missing topics
@@ -3377,7 +4196,7 @@ var ONE_WORD_SUBS = [
 ];
 
 function generateSpottingErrorsQuestion(diff) {
-  var items=[
+  var ty = [
     {s:'He don\'t like coffee.',e:'don\'t → doesn\'t',o:['don\'t → doesn\'t','He → Him','coffee → coffees','No error']},
     {s:'She go to school everyday.',e:'go → goes',o:['go → goes','to → for','everyday → every day','No error']},
     {s:'They has completed the work.',e:'has → have',o:['has → have','the → a','work → works','No error']},
@@ -3385,10 +4204,22 @@ function generateSpottingErrorsQuestion(diff) {
     {s:'Neither the teacher nor the students was present.',e:'was → were',o:['was → were','Neither → Either','the → a','No error']},
     {s:'He is angry on me for no reason.',e:'on → with',o:['on → with','He → Him','me → myself','No error']},
     {s:'She is an university professor.',e:'an → a',o:['an → a','She → Her','university → universities','No error']},
-    {s:'Everyone should bring their own lunch.',e:'their → his/her (pronoun agreement)',o:['their → his/her','Everyone → Every','bring → brings','No error']}
+    {s:'Everyone should bring their own lunch.',e:'their → his/her (pronoun agreement)',o:['their → his/her','Everyone → Every','bring → brings','No error']},
+    // SBI PO Hard: complex sentence - parallel structure
+    {s:'She not only writes novels but also she writes poetry.',e:'but also she writes → but also poetry (parallel structure)',o:['but also she writes → but also poetry','not only → not just','writes → write','No error']},
+    // SBI PO Hard: complex sentence - conditional
+    {s:'If he would have studied harder, he would have passed the exam.',e:'would have studied → had studied',o:['would have studied → had studied','would have passed → will have passed','the exam → exams','No error']},
+    // SBI PO Hard: complex sentence - misplaced modifier
+    {s:'Having finished the assignment, the TV was turned on.',e:'the TV was turned on → she turned on the TV (dangling participle)',o:['the TV was turned on → she turned on the TV','Having finished → After finishing','the assignment → assignments','No error']}
   ];
-  var it=items[rand(0,items.length-1)];
-  return { question:'Spot the error: "'+it.s+'"', answer:it.e, options:it.o, hint:'Check subject-verb agreement, tense, and word form', timeLimit:10, type:'verbal', techniqueLabel:'Spotting Errors', intuition:'Common errors: subject-verb agreement (he goes), tense consistency (I love not I am loving), neither-nor verb follows closest subject.' };
+  var idx;
+  if (diff >= 5 && ty.length >= 6) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var it = ty[idx];
+  return { question:'Spot the error: "'+it.s+'"', answer:it.e, options:it.o, hint:'Check subject-verb agreement, tense, parallel structure, and modifiers', timeLimit:12, type:'verbal', techniqueLabel:'Spotting Errors', intuition:'Common errors: subject-verb agreement, tense consistency, parallel structure, dangling modifiers.' };
 }
 
 function generateSpellingsQuestion(diff) {
@@ -3411,16 +4242,29 @@ function generateSpellingsQuestion(diff) {
 }
 
 function generateSentenceCorrectionQuestion(diff) {
-  var items=[
+  var ty = [
     {s:'The committee have decided to postpone the meeting.',c:'The committee has decided to postpone the meeting',o:['The committee have decided to postpone the meeting','The committee has decided to postpone the meeting','The committee have decide to postpone the meeting','The committee has decide to postpone the meeting']},
     {s:'Each of the students were given a certificate.',c:'Each of the students was given a certificate',o:['Each of the students were given a certificate','Each of the students was given a certificate','Each of the student were given a certificate','Every of the students were given a certificate']},
     {s:'I have been working here since five years.',c:'I have been working here for five years',o:['I have been working here since five years','I have been working here for five years','I am working here since five years','I worked here since five years']},
     {s:'Walking down the street, the flowers looked beautiful.',c:'Walking down the street, I saw beautiful flowers (misplaced modifier)',o:['Walking down the street, the flowers looked beautiful','Walking down the street, I saw beautiful flowers','The flowers walking down the street looked beautiful','Walking the street, flowers looked beautiful']},
     {s:'She likes swimming, to run, and dance.',c:'She likes swimming, running, and dancing',o:['She likes swimming, to run, and dance','She likes swimming, running, and dancing','She likes to swim, to run, and dancing','She likes swim, run, dance']},
-    {s:'Being a rainy day, the picnic was cancelled.',c:'It being a rainy day, the picnic was cancelled (dangling participle)',o:['Being a rainy day, the picnic was cancelled','It being a rainy day, the picnic was cancelled','The picnic being a rainy day was cancelled','A rainy day being, the picnic cancelled']}
+    {s:'Being a rainy day, the picnic was cancelled.',c:'It being a rainy day, the picnic was cancelled (dangling participle)',o:['Being a rainy day, the picnic was cancelled','It being a rainy day, the picnic was cancelled','The picnic being a rainy day was cancelled','A rainy day being, the picnic cancelled']},
+    // SBI PO Hard: subject-verb agreement with intervening phrase
+    {s:'The collection of rare stamps were sold at auction.',c:'The collection of rare stamps was sold at auction',o:['The collection of rare stamps were sold at auction','The collection of rare stamps was sold at auction','The collection of rare stamps have been sold','The collection of rare stamps are sold']},
+    // SBI PO Hard: tense consistency in complex sentence
+    {s:'The professor suggested that the student revises his notes before the exam.',c:'The professor suggested that the student revise his notes before the exam (subjunctive)',o:['The professor suggested that the student revises his notes before the exam','The professor suggested that the student revise his notes before the exam','The professor suggested that the student revised his notes','The professor suggests that the student revises']},
+    // SBI PO Hard: pronoun-antecedent agreement
+    {s:'Each of the managers must submit their report by Friday.',c:'Each of the managers must submit his or her report by Friday',o:['Each of the managers must submit their report by Friday','Each of the managers must submit his or her report by Friday','Each of the managers must submit reports by Friday','Each of the managers must be submitting report by Friday']}
   ];
-  var it=items[rand(0,items.length-1)]; shuffle(it.o);
-  return { question:'Correct: "'+it.s+'"', answer:it.c, options:it.o, hint:'Check subject-verb agreement, tense, prepositions', timeLimit:12, type:'verbal', techniqueLabel:'Sentence Correction', intuition:'Collective nouns (committee) take singular verb. Each + singular. Since + point in time, For + duration.' };
+  var idx;
+  if (diff >= 5 && ty.length >= 6) {
+    idx = Math.random() < 0.7 ? rand(Math.max(0, ty.length - 4), ty.length - 1) : rand(0, ty.length - 1);
+  } else {
+    idx = rand(0, ty.length - 1);
+  }
+  var it = ty[idx];
+  shuffle(it.o);
+  return { question:'Correct: "'+it.s+'"', answer:it.c, options:it.o, hint:'Check subject-verb agreement, tense, prepositions, subjunctive mood', timeLimit:15, type:'verbal', techniqueLabel:'Sentence Correction', intuition:'Collective nouns take singular verb. Subjunctive: suggest that + base verb. Each + singular pronoun.' };
 }
 
 function generateSentenceImprovementQuestion(diff) {
@@ -3621,108 +4465,116 @@ function generateReasoningQuestion(diff, subMode) {
   var topic = subMode || pick(['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram','letter_symbol_series','artificial_language','matching_definitions','cause_effect','essential_part','theme_detection','statement_argument','statement_assumption','statement_conclusion','synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','embedded_images','figure_matrix','paper_folding','paper_cutting','rule_detection','grouping_images','image_analysis','water_images','dot_situation','making_judgments','logical_problems','logical_games','analyzing_arguments','logical_deduction','character_puzzles','verification_truth','analytical_reasoning','pattern_completion','shape_construction','spotting_errors','spellings','sentence_correction','sentence_improvement','closet_test','one_word_subs','idioms_phrases','change_voice','change_speech']);
   var gen = genMap[topic];
   if (gen) {
-    try {
-      var q = gen(diff);
-      q._subTopic = topic;
-      if (q.questionText) {
-        // Wrap puzzle format into question format
-        var typeLabel = q.typeLabel || 'Puzzle';
-        var clueLines = (q.clueBlock || []).map(function(c,i){ return (i+1) + '. ' + c; });
-        var fullQ = '<div style="text-align:left;font-size:.85em;line-height:1.7">'
-          + '<div style="margin-bottom:4px;font-size:.72em;color:var(--purple);font-weight:700">' + typeLabel + '</div>'
-          + '<p style="margin-bottom:6px;color:var(--text-sec);font-size:.9em">' + (q.preamble || '') + '</p>'
-          + '<div style="margin:6px 0;padding:8px 12px;background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.12);border-radius:6px">'
-          + clueLines.join('<br>')
-          + '</div>'
-          + '<p style="margin-top:6px;font-weight:700;font-size:1em">' + q.questionText + '</p>'
-          + '</div>';
-        return {
-          question: fullQ,
-          answer: q.answer,
-          options: q.options || ['A','B','C','D'],
-          hint: q.hint || 'Read clues, draw diagram, fill positions.',
-          timeLimit: 30,
-          type: 'reasoning',
-          _subTopic: topic,
-          techniqueLabel: typeLabel + ': ' + (q.hint || 'draw table') + ' [' + topic.replace(/_/g,' ') + ']',
-          solution: q.solution || '',
-          intuition: (q.typeLabel || 'Puzzle') + ': Draw a diagram/table. Fill what you know, deduce the rest. Each clue eliminates possibilities.'
-        };
-      }
-      q._subTopic = topic;
-      q.type = 'reasoning';
-      q.timeLimit = q.timeLimit || 15;
-      q.techniqueLabel = (q.techniqueLabel || '') + ' [' + topic.replace(/_/g,' ') + ']';
-      // Add intuition based on sub-topic
-      var intuitions = {
-        pattern_flash: 'Pattern Flash: Identify the rule (diff/ratio/square/prime). For odd-one-out: find what 3 share that 1 breaks.',
-        coding_flash: 'Coding: A=1, B=2... Z=26. Sum positions. Check if the example uses sum, product, or position×index.',
-        logic_snap: 'Logic: Draw Venn circles for syllogisms. Chain same-direction symbols for inequalities. If sign flips, stop.',
-        direction_sense: 'Direction: Track N/S and E/W separately. Right = clockwise 90°. Pythagoras only if both axes changed.',
-        blood_relations: 'Blood Relation: Draw 4-level tree. GP→Parent→Me→Child. Marriage = horizontal line. Same level = sibling.',
-        ranking_grid: 'Ranking: List from highest to lowest. Fill positions from clues. "Between" = exactly 1 on each side.',
-        floor_puzzle: 'Floor Puzzle: Draw vertical building (1=bottom). Fill names from direct clues first, then relative ones.',
-        linear_seating: 'Linear: Draw positions 1 to N left to right. "Immediate left" = adjacent. Fill what you know, deduce gaps.',
-        circular_seating: 'Circular: Position 1 = top, go clockwise. Left = anti-clockwise. Use "opposite" clues for even numbers.',
-        box_distribution: 'Box/Distribution: Make a table. Rows = items, columns = properties. Fill confirmed cells first.',
-        scheduling: 'Scheduling: List days/months. Mark fixed events. Use "before/after" clues to slide events into position.',
-        input_output: 'Input-Output: Each step moves the smallest remaining element left. Track the sorting pattern.',
-        mirror_image: 'Mirror = left-right flip. Water = top-bottom flip. Symmetrical letters: A,H,I,M,O,T,U,V,W,X,Y.',
-        dice_cube: 'Dice: opposite sum=7. Cube: corners 3 faces, edges 2, centers 1, inner 0.',
-        calendar: 'Odd days: normal yr=1, leap=2. Day shift = sum odd days mod 7.',
-        clock: 'Angle = |30H - 5.5M|. Overlap at 60H/11. Coincide 22 times/day.',
-        alphabet_arrange: 'Position: A=1 to Z=26. For next/find pattern, check diff between consecutive letters.',
-        critical_reasoning: 'Assumption what MUST be true. Course of action must solve the problem. Cause must precede effect.',
-        decision_making: 'Check each condition independently. AND=all pass. OR=any passes. Mark "cannot determine" if info missing.',
-        venn_diagram: 'Only A = A-both. Neither = total - (A+B-both). Draw overlapping circles.',
-        letter_symbol_series: 'Convert letters to positions (A=1). Find the step pattern. Convert back.',
-        artificial_language: 'Each 3-letter chunk = one English word. Find mapping from translations.',
-        matching_definitions: 'Match the definition exactly. All keywords must fit.',
-        cause_effect: 'Cause happens first and produces the effect. Look for temporal sequence.',
-        essential_part: 'Without which part can the thing NOT function? That is essential.',
-        theme_detection: 'Theme = central idea. What is the passage mostly about?',
-        statement_argument: 'Strong argument = directly relevant, substantial, fact-based.',
-        statement_assumption: 'What must be true for the statement to make sense? That is implicit.',
-        statement_conclusion: 'What MUST follow from the statements? If it could be false, it does not follow.',
-        synonym: 'Find the word with the same or nearly the same meaning.',
-        antonym: 'Find the word opposite in meaning to the given word.',
-        sentence_completion: 'Read for context. The correct word makes logical and grammatical sense.',
-        word_ordering: 'Arrange to form a meaningful sentence. Look for subject → verb → object.',
-        sentence_ordering: 'Put sentences in chronological/logical order. Start with what happened first.',
-        paragraph_formation: 'Start with the main idea, then supporting details, then conclusion.',
-        comprehension: 'Read the passage. The answer is directly stated in the text.',
-        embedded_images: 'The figure may be rotated/scaled. Look for the exact shape within the larger figure.',
-        figure_matrix: 'Find the pattern in rows and columns. Same logic applies to all.',
-        paper_folding: 'Each fold doubles layers. Holes = layers × cuts. Unfold symmetrically.',
-        paper_cutting: 'The cut pattern repeats symmetrically across each fold line.',
-        rule_detection: 'Apply the rule to each figure. The one that violates it is the answer.',
-        grouping_images: 'Find the shared attribute within each group.',
-        image_analysis: 'Visualize the figure mentally. Count carefully.',
-        water_images: 'Water image = vertical mirror. Top becomes bottom.',
-        dot_situation: 'Each region belongs to specific shapes. Find which shapes share the dot\'s region.',
-        making_judgments: 'Evaluate each option. Best choice directly achieves the goal with minimum drawbacks.',
-        logical_problems: 'List possibilities, eliminate contradictions. Only one scenario fits all clues.',
-        logical_games: 'Nim: leave multiple of max+1. Weighing: divide into 3 groups.',
-        analyzing_arguments: 'Identify reasoning flaws: hasty generalization, circular, ad populum, false cause.',
-        logical_deduction: 'All A are B + C is A → C is B. Certain: ALL. Possible: SOME. Negative: NO.',
-        character_puzzles: 'Find pattern in columns/rows. Same operation applied consistently.',
-        verification_truth: 'Assume one is true, check for contradictions. Only one scenario works.',
-        analytical_reasoning: 'Count systematically. Include all sizes, not just the obvious ones.',
-        pattern_completion: 'Pattern cycles. Find what is missing from the repeating sequence.',
-        shape_construction: 'Match edges. Two right triangles make a square. Area scales with square of ratio.',
-        spotting_errors: 'Check verb agreement, tense, prepositions, singular/plural, word form.',
-        spellings: 'Double consonants, -ance/-ence, i before e except after c.',
-        sentence_correction: 'Each + singular. Since + point, For + duration. Collective nouns = singular.',
-        sentence_improvement: 'too+to, so+that, prefer+to, no sooner+than, not only+but also.',
-        closet_test: 'Read whole passage. Choose word that fits context AND grammar.',
-        one_word_subs: 'Find the specific single word. Common prefixes/suffixes help.',
-        idioms_phrases: 'Idioms have figurative meanings. Learn by exposure.',
-        change_voice: 'Active: subject does. Passive: subject receives. Object becomes subject.',
-        change_speech: 'Quotes→that clause. Present→past. will→would. Commands→to+verb.'
-      };
-      q.intuition = intuitions[topic] || 'Draw a diagram/table. Fill known facts, deduce the rest.';
-      return q;
-    } catch(e) { /* fallback */ }
+    var result, attempts = 0;
+    do {
+      try {
+        var q = gen(diff);
+        q._subTopic = topic;
+        if (q.questionText) {
+          var typeLabel = q.typeLabel || 'Puzzle';
+          var clueLines = (q.clueBlock || []).map(function(c,i){ return (i+1) + '. ' + c; });
+          var fullQ = '<div style="text-align:left;font-size:.85em;line-height:1.7">'
+            + '<div style="margin-bottom:4px;font-size:.72em;color:var(--purple);font-weight:700">' + typeLabel + '</div>'
+            + '<p style="margin-bottom:6px;color:var(--text-sec);font-size:.9em">' + (q.preamble || '') + '</p>'
+            + '<div style="margin:6px 0;padding:8px 12px;background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.12);border-radius:6px">'
+            + clueLines.join('<br>')
+            + '</div>'
+            + '<p style="margin-top:6px;font-weight:700;font-size:1em">' + q.questionText + '</p>'
+            + '</div>';
+          result = {
+            question: fullQ,
+            answer: q.answer,
+            options: q.options || ['A','B','C','D'],
+            hint: q.hint || 'Read clues, draw diagram, fill positions.',
+            timeLimit: 30,
+            type: 'reasoning',
+            _subTopic: topic,
+            techniqueLabel: typeLabel + ': ' + (q.hint || 'draw table') + ' [' + topic.replace(/_/g,' ') + ']',
+            solution: q.solution || '',
+            intuition: (q.typeLabel || 'Puzzle') + ': Draw a diagram/table. Fill what you know, deduce the rest. Each clue eliminates possibilities.'
+          };
+        } else {
+          q._subTopic = topic;
+          q.type = 'reasoning';
+          q.timeLimit = q.timeLimit || 15;
+          q.techniqueLabel = (q.techniqueLabel || '') + ' [' + topic.replace(/_/g,' ') + ']';
+          var intuitions = {
+            pattern_flash: 'Pattern Flash: Identify the rule (diff/ratio/square/prime). For odd-one-out: find what 3 share that 1 breaks.',
+            coding_flash: 'Coding: A=1, B=2... Z=26. Sum positions. Check if the example uses sum, product, or position×index.',
+            logic_snap: 'Logic: Draw Venn circles for syllogisms. Chain same-direction symbols for inequalities. If sign flips, stop.',
+            direction_sense: 'Direction: Track N/S and E/W separately. Right = clockwise 90°. Pythagoras only if both axes changed.',
+            blood_relations: 'Blood Relation: Draw 4-level tree. GP→Parent→Me→Child. Marriage = horizontal line. Same level = sibling.',
+            ranking_grid: 'Ranking: List from highest to lowest. Fill positions from clues. "Between" = exactly 1 on each side.',
+            floor_puzzle: 'Floor Puzzle: Draw vertical building (1=bottom). Fill names from direct clues first, then relative ones.',
+            linear_seating: 'Linear: Draw positions 1 to N left to right. "Immediate left" = adjacent. Fill what you know, deduce gaps.',
+            circular_seating: 'Circular: Position 1 = top, go clockwise. Left = anti-clockwise. Use "opposite" clues for even numbers.',
+            box_distribution: 'Box/Distribution: Make a table. Rows = items, columns = properties. Fill confirmed cells first.',
+            scheduling: 'Scheduling: List days/months. Mark fixed events. Use "before/after" clues to slide events into position.',
+            input_output: 'Input-Output: Each step moves the smallest remaining element left. Track the sorting pattern.',
+            mirror_image: 'Mirror = left-right flip. Water = top-bottom flip. Symmetrical letters: A,H,I,M,O,T,U,V,W,X,Y.',
+            dice_cube: 'Dice: opposite sum=7. Cube: corners 3 faces, edges 2, centers 1, inner 0.',
+            calendar: 'Odd days: normal yr=1, leap=2. Day shift = sum odd days mod 7.',
+            clock: 'Angle = |30H - 5.5M|. Overlap at 60H/11. Coincide 22 times/day.',
+            alphabet_arrange: 'Position: A=1 to Z=26. For next/find pattern, check diff between consecutive letters.',
+            critical_reasoning: 'Assumption what MUST be true. Course of action must solve the problem. Cause must precede effect.',
+            decision_making: 'Check each condition independently. AND=all pass. OR=any passes. Mark "cannot determine" if info missing.',
+            venn_diagram: 'Only A = A-both. Neither = total - (A+B-both). Draw overlapping circles.',
+            letter_symbol_series: 'Convert letters to positions (A=1). Find the step pattern. Convert back.',
+            artificial_language: 'Each 3-letter chunk = one English word. Find mapping from translations.',
+            matching_definitions: 'Match the definition exactly. All keywords must fit.',
+            cause_effect: 'Cause happens first and produces the effect. Look for temporal sequence.',
+            essential_part: 'Without which part can the thing NOT function? That is essential.',
+            theme_detection: 'Theme = central idea. What is the passage mostly about?',
+            statement_argument: 'Strong argument = directly relevant, substantial, fact-based.',
+            statement_assumption: 'What must be true for the statement to make sense? That is implicit.',
+            statement_conclusion: 'What MUST follow from the statements? If it could be false, it does not follow.',
+            synonym: 'Find the word with the same or nearly the same meaning.',
+            antonym: 'Find the word opposite in meaning to the given word.',
+            sentence_completion: 'Read for context. The correct word makes logical and grammatical sense.',
+            word_ordering: 'Arrange to form a meaningful sentence. Look for subject → verb → object.',
+            sentence_ordering: 'Put sentences in chronological/logical order. Start with what happened first.',
+            paragraph_formation: 'Start with the main idea, then supporting details, then conclusion.',
+            comprehension: 'Read the passage. The answer is directly stated in the text.',
+            embedded_images: 'The figure may be rotated/scaled. Look for the exact shape within the larger figure.',
+            figure_matrix: 'Find the pattern in rows and columns. Same logic applies to all.',
+            paper_folding: 'Each fold doubles layers. Holes = layers × cuts. Unfold symmetrically.',
+            paper_cutting: 'The cut pattern repeats symmetrically across each fold line.',
+            rule_detection: 'Apply the rule to each figure. The one that violates it is the answer.',
+            grouping_images: 'Find the shared attribute within each group.',
+            image_analysis: 'Visualize the figure mentally. Count carefully.',
+            water_images: 'Water image = vertical mirror. Top becomes bottom.',
+            dot_situation: 'Each region belongs to specific shapes. Find which shapes share the dot\'s region.',
+            making_judgments: 'Evaluate each option. Best choice directly achieves the goal with minimum drawbacks.',
+            logical_problems: 'List possibilities, eliminate contradictions. Only one scenario fits all clues.',
+            logical_games: 'Nim: leave multiple of max+1. Weighing: divide into 3 groups.',
+            analyzing_arguments: 'Identify reasoning flaws: hasty generalization, circular, ad populum, false cause.',
+            logical_deduction: 'All A are B + C is A → C is B. Certain: ALL. Possible: SOME. Negative: NO.',
+            character_puzzles: 'Find pattern in columns/rows. Same operation applied consistently.',
+            verification_truth: 'Assume one is true, check for contradictions. Only one scenario works.',
+            analytical_reasoning: 'Count systematically. Include all sizes, not just the obvious ones.',
+            pattern_completion: 'Pattern cycles. Find what is missing from the repeating sequence.',
+            shape_construction: 'Match edges. Two right triangles make a square. Area scales with square of ratio.',
+            spotting_errors: 'Check verb agreement, tense, prepositions, singular/plural, word form.',
+            spellings: 'Double consonants, -ance/-ence, i before e except after c.',
+            sentence_correction: 'Each + singular. Since + point, For + duration. Collective nouns = singular.',
+            sentence_improvement: 'too+to, so+that, prefer+to, no sooner+than, not only+but also.',
+            closet_test: 'Read whole passage. Choose word that fits context AND grammar.',
+            one_word_subs: 'Find the specific single word. Common prefixes/suffixes help.',
+            idioms_phrases: 'Idioms have figurative meanings. Learn by exposure.',
+            change_voice: 'Active: subject does. Passive: subject receives. Object becomes subject.',
+            change_speech: 'Quotes→that clause. Present→past. will→would. Commands→to+verb.'
+          };
+          q.intuition = intuitions[topic] || 'Draw a diagram/table. Fill known facts, deduce the rest.';
+          result = q;
+        }
+      } catch(e) { /* fallback */ }
+      attempts++;
+      if (attempts > 10) break;
+    } while (result && _isRecent(result.question));
+    if (result) {
+      _addRecent(result.question);
+      return result;
+    }
   }
   // Fallback
   return generateAnalogyQuestion(diff);
@@ -3900,9 +4752,9 @@ window.startMentalSession = function(mode, opts) {
   opts = opts || {};
 
   // Check for cached session to resume (prevents data loss on page refresh).
-  // Only restore if mode matches or user didn't specify a specific mode.
+  // Only restore if mode AND subMode match; a new subTopic starts fresh.
   var cached = restoreCachedSession();
-  if (cached && cached.mode && cached.active && (!mode || mode === cached.mode)) {
+  if (cached && cached.mode && cached.active && (!mode || mode === cached.mode) && (!opts.subMode || cached.subMode === opts.subMode)) {
     var resume = {
       mode: cached.mode,
       subMode: cached.subMode || null,

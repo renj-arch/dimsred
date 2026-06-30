@@ -1409,7 +1409,7 @@ WIKI._batchRandom = function(count) {
       if (titles.length === 0) return [];
       return WIKI._batchSummaries(titles);
     })
-    .catch(function(e) { console.error('[WIKI] _batchRandom failed:', e); return []; });
+    .catch(function() { return []; });
 };
 
 WIKI._batchCategory = function(category, count) {
@@ -1426,7 +1426,7 @@ WIKI._batchCategory = function(category, count) {
       if (titles.length === 0) return [];
       return WIKI._batchSummaries(titles);
     })
-    .catch(function(e) { console.error('[WIKI] _batchCategory failed:', e); return []; });
+    .catch(function() { return []; });
 };
 
 WIKI._discoverSubcategories = function() {
@@ -1460,7 +1460,7 @@ WIKI._discoverSubcategories = function() {
         return results;
       });
     })
-    .catch(function(e) { console.error('[WIKI] _discoverSubcategories failed:', e); return []; });
+    .catch(function() { return []; });
 };
 
 WIKI._batchRecentChanges = function(count) {
@@ -1476,7 +1476,7 @@ WIKI._batchRecentChanges = function(count) {
       if (titles.length === 0) return [];
       return WIKI._batchSummaries(titles);
     })
-    .catch(function(e) { console.error('[WIKI] _batchRecentChanges failed:', e); return []; });
+    .catch(function() { return []; });
 };
 
 WIKI._batchSummaries = function(titles) {
@@ -1497,7 +1497,7 @@ WIKI._batchSummaries = function(titles) {
       }
       return results;
     })
-    .catch(function(e) { console.error('[WIKI] _batchSummaries failed:', e); return []; });
+    .catch(function() { return []; });
 };
 
 WIKI._batchAllPages = function(count) {
@@ -1515,7 +1515,7 @@ WIKI._batchAllPages = function(count) {
       if (titles.length === 0) return [];
       return WIKI._batchSummaries(titles);
     })
-    .catch(function(e) { console.error('[WIKI] _batchAllPages failed:', e); return []; });
+    .catch(function() { return []; });
 };
 
 WIKI._followLinks = function() {
@@ -1548,7 +1548,7 @@ WIKI._followLinks = function() {
       if (linked.length === 0) return [];
       return WIKI._batchSummaries(linked);
     })
-    .catch(function(e) { console.error('[WIKI] _followLinks failed:', e); return []; });
+    .catch(function() { return []; });
 };
 
 WIKI._batchSearch = function(topic, count) {
@@ -1562,7 +1562,7 @@ WIKI._batchSearch = function(topic, count) {
       if (titles.length === 0) return [];
       return WIKI._batchSummaries(titles);
     })
-    .catch(function(e) { console.error('[WIKI] _batchSearch failed:', e); return []; });
+    .catch(function() { return []; });
 };
 
 WIKI.searchQuestion = function() {
@@ -1594,7 +1594,7 @@ WIKI.onThisDay = function(dateStr) {
       }
       return items;
     })
-    .catch(function(e) { console.error('[WIKI] onThisDay failed:', e); return []; });
+    .catch(function() { return []; });
 };
 
 WIKI._loadKnown = function() {
@@ -1702,7 +1702,7 @@ WIKI.prefetch = function() {
       delay += Math.random() * 1000; // jitter
       delay += _fetchBackoff;
       setTimeout(fetchBatch, delay);
-    }).catch(function() { console.error('[WIKI] fetchBatch failed, retrying...'); _fetchBackoff += 1000; setTimeout(fetchBatch, 2000 + Math.random() * 1000 + _fetchBackoff); });
+    }).catch(function() { _fetchBackoff += 1000; setTimeout(fetchBatch, 2000 + Math.random() * 1000 + _fetchBackoff); });
   }
 
   function fetchOnThisDay() {
@@ -2183,7 +2183,7 @@ WIKI.fetchCurrentEvents = function() {
       }
       return items;
     })
-    .catch(function(e) { console.error('[WIKI] fetchCurrentEvents failed:', e); return []; });
+    .catch(function() { return []; });
 };
 
 WIKI._makeEventQuestions = function(eventText) {

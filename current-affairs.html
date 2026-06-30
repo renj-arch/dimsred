@@ -5355,7 +5355,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
         var _quizJsonData = null;
 
         function loadQuizJson() {
-            fetch('data/quiz.json')
+            fetch('/api/quiz-json')
                 .then(function(r) { return r.json(); })
                 .then(function(data) { _quizJsonData = data; })
                 .catch(function() {});
@@ -6394,16 +6394,14 @@ var _staticGen_polity = GK_GENERATORS.polity;
         }
 
         function _fetchHistoricalForRange(startDate, endDate, callback, maxDays) {
-            if (typeof WIKI === 'undefined' || !WIKI.fetchDayEvents) { console.log('[HIST] WIKI.fetchDayEvents not available'); return callback([]); }
+            if (typeof WIKI === 'undefined' || !WIKI.fetchDayEvents) { return callback([]); }
             var start = new Date(startDate);
             var end = endDate ? new Date(endDate) : new Date();
-            console.log('[HIST] Fetching range:', start.toString(), 'to', end.toString());
             var totalDays = Math.floor((end - start) / 86400000) + 1;
             
             // For ranges > 15 days, use monthly API (one call per month, covers ALL events)
             if (totalDays > 15) {
                 if (!WIKI.fetchMonthEvents) {
-                    console.log('[HIST] WIKI.fetchMonthEvents not available, falling back to daily fetch');
                 } else {
                     return _fetchHistoricalByMonth(start, end, callback);
                 }
@@ -6415,29 +6413,24 @@ var _staticGen_polity = GK_GENERATORS.polity;
             for (var d = new Date(start); d <= end; d.setDate(d.getDate() + step)) {
                 dates.push({ y: d.getFullYear(), m: d.getMonth() + 1, day: d.getDate(), date: new Date(d) });
             }
-            console.log('[HIST] Dates to fetch:', dates.length);
             if (dates.length === 0) return callback([]);
             var allDays = [];
             var di = 0;
             function fetchNext() {
                 if (di >= dates.length) {
-                    console.log('[HIST] All fetched, days with data:', allDays.length);
                     return callback(allDays);
                 }
                 var dInfo = dates[di];
                 di++;
                 var pageUrl = 'https://en.wikipedia.org/w/api.php?action=parse&page=Portal:Current_events/' + dInfo.y + '_' + MONTHS[dInfo.m - 1] + '_' + dInfo.day + '&prop=text&format=json&origin=*';
-                console.log('[HIST] Fetching', dInfo.y, MONTHS[dInfo.m - 1], dInfo.day, 'URL:', pageUrl.substring(0,100));
                 WIKI.fetchDayEvents(dInfo.y, dInfo.m, dInfo.day).then(function(items) {
-                    console.log('[HIST] Got', items.length, 'items for', dInfo.y, MONTHS[dInfo.m - 1], dInfo.day);
                     if (items.length > 0) {
                         var label = MONTHS[dInfo.m - 1] + ' ' + dInfo.day + ', ' + dInfo.y;
                         allDays.push({ date: label, items: items });
                         document.getElementById('qText').innerHTML = 'Fetching news for ' + label + '... (' + di + '/' + dates.length + ')';
                     }
                     setTimeout(fetchNext, 250);
-                }).catch(function(e) {
-                    console.log('[HIST] Fetch failed for', dInfo.y, MONTHS[dInfo.m - 1], dInfo.day, e);
+                }).catch(function() {
                     setTimeout(fetchNext, 250);
                 });
             }
@@ -6452,19 +6445,16 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 months.push({ y: cur.getFullYear(), m: cur.getMonth() + 1 });
                 cur.setMonth(cur.getMonth() + 1);
             }
-            console.log('[HIST] Monthly fetch for', months.length, 'months');
             var allMonths = [];
             var mi = 0;
             function fetchMonth() {
                 if (mi >= months.length) {
-                    console.log('[HIST] All months fetched, months with data:', allMonths.length);
                     return callback(allMonths);
                 }
                 var mInfo = months[mi];
                 mi++;
                 document.getElementById('qText').innerHTML = 'Fetching news for ' + MONTHS[mInfo.m - 1] + ' ' + mInfo.y + '... (' + mi + '/' + months.length + ')';
                 WIKI.fetchMonthEvents(mInfo.y, mInfo.m).then(function(items) {
-                    console.log('[HIST] Got', items.length, 'items for', MONTHS[mInfo.m - 1], mInfo.y);
                     if (items.length > 0) {
                         allMonths.push({ date: MONTHS[mInfo.m - 1] + ' ' + mInfo.y, items: items });
                     }
@@ -6532,9 +6522,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 }
             }
             
-            console.log('[QUIZ] Questions from local:', state.questions.length, 'target:', targetCount, 'startDate:', startDate);
             if (state.questions.length < targetCount && startDate) {
-                console.log('[QUIZ] Triggering historical fetch for', startDate, 'to', endDate);
                 _fetchHistoricalForRange(startDate, endDate, function(dayEntries) {
                     var _allEntities = [];
                     var _allNumbers = [];
@@ -6772,7 +6760,6 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 }
                 _wikiWaiting = true;
                 _loadingRetry = 0;
-                console.log('[QUIZ] wiki pool empty, waiting for prefetch...');
                 var _wikiAvailable = typeof WIKI !== 'undefined' && WIKI._pool;
                 var retry = 0;
                 var maxRetries = 8;
@@ -6848,7 +6835,6 @@ var _staticGen_polity = GK_GENERATORS.polity;
 
         function startCombinedQuiz(count, label) {
             if (!confirmAbandonQuiz()) return;
-            console.log('[QUIZ] startCombinedQuiz called, WIKI available:', typeof WIKI !== 'undefined', 'WIKI._pool:', WIKI._pool ? WIKI._pool.length : 'N/A');
             state.cat = 'mixed';
             state.categoryName = label;
             state.idx = 0;
@@ -6881,19 +6867,16 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('qText').innerHTML = 'Loading Knowledge Booster...';
             document.getElementById('optGrid').innerHTML = '';
             generateMixedQuestions(20);
-            console.log('[QUIZ] initial generateMixedQuestions found:', state.questions.length, 'questions, pool:', WIKI._pool ? WIKI._pool.length : 'N/A');
             if (state.questions.length > 0) {
                 showQuestion();
             } else {
-                // Pool not populated yet — wait and retry
-                console.log('[QUIZ] no questions yet, waiting for pool to fill...');
+
                 document.getElementById('qText').innerHTML = 'Loading Knowledge Booster... (pool: 0)';
                 var _waitRetry = 0;
                 var _waitTimer = setInterval(function() {
                     generateMixedQuestions(10);
                     var poolSize = (typeof WIKI !== 'undefined' && WIKI._pool) ? WIKI._pool.length : 0;
                     document.getElementById('qText').innerHTML = 'Loading Knowledge Booster... (pool: ' + poolSize + ')';
-                    console.log('[QUIZ] retry', _waitRetry, 'pool size:', poolSize, 'questions loaded:', state.questions.length);
                     if (state.questions.length > 0 || _waitRetry > 20) {
                         clearInterval(_waitTimer);
                         if (state.questions.length > 0) showQuestion();
@@ -7075,7 +7058,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     } else if (source === 'wiki_current_affairs') {
                         q = _generateCurrentAffairsFromWiki();
                     }
-                } catch(e) { console.log('[QUIZ] generateMixedQuestions error for source', source, ':', e); }
+                } catch(e) { }
                 if (!q || !q.q || !q.a) continue;
                 q.opts = q.opts || buildOptions(q.a);
                 if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
