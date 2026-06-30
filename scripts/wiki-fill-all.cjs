@@ -182,12 +182,8 @@ function paraphrase(text, answer) {
   }
 
   let result = chosen.join('. ').trim();
-  // Basic rewrites
+  // Basic rewrites (NO tense changes — was→is changes meaning for history)
   const swaps = {
-    ' was ': ' is ',
-    ' were ': ' are ',
-    ' has been ': ' is ',
-    ' have been ': ' are ',
     ' established ': ' set up ',
     ' established.': ' set up.',
     ' founded ': ' set up ',
@@ -200,7 +196,7 @@ function paraphrase(text, answer) {
   for (const [from, to] of Object.entries(swaps)) {
     result = result.split(from).join(to);
   }
-  if (result.length > 300) result = result.substring(0, 297) + '...';
+  if (result.length > 500) result = result.substring(0, 497) + '...';
   // Ensure it ends with a period
   if (result.length > 0 && !/[.!?]$/.test(result)) result += '.';
   return result;

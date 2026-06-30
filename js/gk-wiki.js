@@ -409,7 +409,7 @@ WIKI._batchRecentChanges = function(count) {
 };
 
 WIKI._batchSummaries = function(titles) {
-  return fetch('https://en.wikipedia.org/w/api.php?action=query&prop=extracts|description&exintro&explaintext&exlimit=max&titles=' + encodeURIComponent(titles.join('|')) + '&format=json&origin=*')
+  return fetch('https://en.wikipedia.org/w/api.php?action=query&prop=extracts|description&explaintext&exlimit=max&exchars=2000&titles=' + encodeURIComponent(titles.join('|')) + '&format=json&origin=*')
     .then(function(r) { return r.json(); })
     .then(function(res) {
       var pages = res && res.query && res.query.pages;
@@ -783,6 +783,91 @@ WIKI._makeQuestions = function(data) {
     if (blanked !== desc && blanked.length > 20 && blanked.length < 150) {
       blanked = blanked.replace(/\s+/g, ' ').trim();
       pushQ({ q: blanked, a: title, hint: catName, fact: richFact, opts: WIKI._buildOpts(title, entityType) });
+    }
+  }
+
+  // — PRIORITY 7: Varied sentence-based questions (any informative sentence) —
+  // Generates different question styles from sentences the title appears in
+  if (results.length < 2) {
+    var entityPool = (extract.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b/g) || []).filter(function(t) { return t.length > 5 && t !== title; });
+    entityPool = entityPool.concat(WIKI._seenTitles.slice(-15));
+
+    for (var ri = 0; ri < allSentences.length && results.length < 1; ri++) {
+      var rSent = allSentences[ri].trim();
+      if (rSent.length < 40 || rSent.length > 250) continue;
+      if (rSent.toLowerCase().indexOf(titleLower) < 0) continue;
+
+      // Randomly pick a question style
+      var style = Math.floor(Math.random() * 5);
+      var q, a, opts;
+
+      if (style === 0) {
+        // True/False: "X happened. True or False?"
+        var tfStmt = rSent.substring(0, 100).replace(/\.$/, '');
+        if (tfStmt.length < 30) continue;
+        var truthiness = Math.random() < 0.5; // 50% chance the statement is true
+        if (!truthiness) {
+          // Flip a key word to make it false
+          var words = tfStmt.split(' ');
+          if (words.length < 6) continue;
+          var swapWord = words[Math.floor(words.length / 2)];
+          // Simple negation: add "not"
+          tfStmt = tfStmt.replace(swapWord, 'not ' + swapWord);
+          a = 'False';
+        } else {
+          a = 'True';
+        }
+        q = tfStmt + '. True or False?';
+        opts = ['True', 'False', 'Cannot be determined', 'None of the above'];
+
+      } else if (style === 1) {
+        // "What is the main idea of this statement: '...'?"
+        var mainEntities = (rSent.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b/g) || []).filter(function(t) { return t.length > 4; });
+        if (mainEntities.length === 0) continue;
+        a = mainEntities[0];
+        q = 'What/Who is the focus of: "' + rSent.substring(0, 80) + '..."?';
+        opts = [a].concat(entityPool.slice(0, 3));
+
+      } else if (style === 2) {
+        // "Which of the following is true about [title]?"
+        var relEntities = (rSent.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b/g) || []).filter(function(t) { return t.length > 4 && t !== title; });
+        if (relEntities.length === 0) continue;
+        a = relEntities[Math.floor(Math.random() * relEntities.length)];
+        q = 'According to this, which of the following is associated with ' + title + '?';
+        opts = [a].concat(entityPool.slice(0, 3));
+
+      } else if (style === 3) {
+        // "What is the context of: '...'?"
+        var sentences = rSent.match(/[^.!?]+[.!?]/g) || [rSent];
+        var firstClause = (sentences[0] || rSent).trim();
+        // Extract a key term (noun phrase) to blank out
+        var nouns = rSent.match(/\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b/g) || [];
+        nouns = nouns.filter(function(n) { return n.length > 4 && n !== title && n !== firstClause; });
+        if (nouns.length === 0) continue;
+        var blanks = '______';
+        var keyNoun = nouns[Math.floor(Math.random() * nouns.length)];
+        q = firstClause.replace(new RegExp(keyNoun.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), blanks);
+        if (q === firstClause) continue;
+        a = keyNoun;
+        opts = [a].concat(entityPool.slice(0, 3));
+
+      } else {
+        // "What does X refer to in the context of Y?"
+        var ctxEntities = (rSent.match(/\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b/g) || []).filter(function(t) { return t.length > 5; });
+        if (ctxEntities.length < 2) continue;
+        var ctxA = ctxEntities[0];
+        var ctxB = ctxEntities[ctxEntities.length - 1];
+        if (ctxA === ctxB && ctxEntities.length > 1) ctxB = ctxEntities[1];
+        if (ctxA === ctxB) continue;
+        q = 'In the context of "' + title + '", what/ who does ' + ctxA + ' refer to?';
+        a = ctxB;
+        opts = [a].concat(entityPool.slice(0, 3));
+      }
+
+      while (opts.length < 4) opts.push('None');
+      opts.sort(function() { return Math.random() - 0.5; });
+      if (opts.indexOf(a) < 0) continue;
+      pushQ({ q: q, a: a, hint: catName, fact: richFact, opts: opts });
     }
   }
 
