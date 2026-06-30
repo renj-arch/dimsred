@@ -203,13 +203,13 @@
         <div id="welcome">
             <div class="welcome-card" style="margin-bottom:12px">
                 <div class="icon">📖</div>
-                <div class="title">Infinite GK Quiz Engine</div>
+                <div class="title">Mega GK — Learn Anything</div>
                 <div class="desc">Pure GK from the entire Wikipedia corpus — auto-advances every 4 seconds. Pause anytime.</div>
             </div>
 
             <!-- Mega GK: the only quiz mode -->
             <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;justify-content:center;flex-direction:column">
-                <button class="action-btn secondary" style="padding:16px;font-size:1.05em;background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.2)" onclick="startCombinedQuiz(15, '🎯 Mega GK')">🎯 Mega GK — Start Infinite GK Quiz</button>
+                <button class="action-btn secondary" style="padding:16px;font-size:1.05em;background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.2)" onclick="startCombinedQuiz(15, '🎯 Mega GK')">🎯 Mega GK — Start Learning</button>
             </div>
 
             <p class="gk-intro">Powered by live Wikipedia data — random articles, categories, search, current events, on-this-day history. Every question is procedurally generated on the fly.</p>
@@ -250,7 +250,7 @@
 
         <div class="q-area" id="qArea">
             <div class="score-bar" id="scoreBar">
-                <div><span class="num" id="correctNum">0</span> / <span id="totalNum">0</span> correct</div>
+                <div><span class="num" id="correctNum">0</span> / <span id="totalNum">0</span> <span id="scoreLabel">correct</span></div>
                 <div class="streak" id="streakDisplay">🔥 <span id="streakNum">0</span> streak</div>
                 <button id="restartBtn" onclick="if(state.restartFn)state.restartFn()" style="display:none;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:.72em">↻ Restart</button>
                 <button id="pibHeaderBtn" onclick="window.togglePibPanel()" style="display:none;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:.72em">📡 PIB Quiz</button>
@@ -5808,12 +5808,12 @@ GK_GENERATORS.pib = function() {
                 state.correct++;
                 state.streak++;
                 flash.className = 'result-flash show correct';
-                flash.innerHTML = '✅ Correct! <span style="font-size:.75em;color:var(--text-muted)">(Key ' + correctKey + ')</span>';
+                flash.innerHTML = '✅ <span style="font-size:.75em;color:var(--text-muted)">(Key ' + correctKey + ')</span>';
             } else {
                 el.classList.add('wrong');
                 state.streak = 0;
                 flash.className = 'result-flash show wrong';
-                flash.innerHTML = '❌ Answer: ' + correct + ' <span style="font-size:.75em;color:var(--text-muted)">(Key ' + correctKey + ')</span>';
+                flash.innerHTML = '→ ' + correct + ' <span style="font-size:.75em;color:var(--text-muted)">(Key ' + correctKey + ')</span>';
             }
             document.getElementById('correctNum').textContent = state.correct;
             document.getElementById('totalNum').textContent = state.infinite ? (state.idx + 1) : state.questions.length;
@@ -7349,6 +7349,7 @@ GK_GENERATORS.pib = function() {
             state.infinite = true;
             state.restartFn = function() { startCombinedQuiz(count, label); };
             state.staticCats = Object.keys(GK_GENERATORS);
+            document.getElementById('scoreLabel').textContent = 'learned';
             
             // Ensure wiki prefetch is running (reset & retry)
             if (typeof WIKI !== 'undefined') { try { WIKI._prefetching = false; WIKI.prefetch(); } catch(e) {} }
@@ -7359,9 +7360,8 @@ GK_GENERATORS.pib = function() {
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
             document.getElementById('pibHeaderBtn').style.display = 'inline-block';
-            document.getElementById('timedQuizOptions').style.display = 'none';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
-            document.getElementById('qText').innerHTML = 'Loading all GK questions...';
+            document.getElementById('qText').innerHTML = 'Loading GK...';
             document.getElementById('optGrid').innerHTML = '';
             generateMixedQuestions(20);
             console.log('[QUIZ] initial generateMixedQuestions found:', state.questions.length, 'questions, pool:', WIKI._pool ? WIKI._pool.length : 'N/A');
