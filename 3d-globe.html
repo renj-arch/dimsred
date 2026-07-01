@@ -4771,17 +4771,21 @@ function showLectureComplete(){
 }
 
 // ---- Start a lecture chapter ----
+let _lecTick=0;
 function startLectureChapter(chapterIndex){
   const all=buildLectureData();
   const entries=all.filter(e=>e._chapter===chapterIndex);
   if(entries.length===0){log('No entries in chapter '+chapterIndex);return;}
   const chapter=LECTURE_CHAPTERS[chapterIndex];
   
+  // Cancel any lingering speech from previous chapter
+  if(window.speechSynthesis)speechSynthesis.cancel();
+  
   // Close any open detail panel
   dp.classList.remove('show');clearHighlight();hidePortrait();
   
-  // Initialize state
-  _lecState={chapter,entries,index:0,playing:true,stopped:false};
+  // Initialize state with tick counter (stale callbacks check _tick)
+  _lecState={chapter,entries,index:0,playing:true,stopped:false,_tick:++_lecTick};
   document.getElementById('lectureBtn').classList.add('playing');
   
   // Show chapter intro
@@ -4815,17 +4819,20 @@ function playLectureEntry(){
   // Update lecture bar
   updateLectureBar();
   
+  // Capture tick so stale callbacks from old chapters auto-bail
+  const tick=_lecState._tick;
+  
   // Fly to entry's location
   const catColor=entry._type==='battle'?'#fb923c':entry._type==='w_battle'?'#a78bfa':entry._type==='kingdom'?'#34d399':'#60a5fa';
   flyToLatLon(entry.la,entry.ln,R*1.7,()=>{
-    if(!_lecState||_lecState.stopped)return;
+    if(!_lecState||_lecState.stopped||_lecState._tick!==tick)return;
     
     // Get figure and show portrait via speakText
     const fig=getFigure(entry.n,entry.desc,catColor);
     
     // Narrate
     speakText(text,()=>{
-      if(!_lecState||_lecState.stopped)return;
+      if(!_lecState||_lecState.stopped||_lecState._tick!==tick)return;
       document.getElementById('subtitle').classList.remove('show');
       hidePortrait();
       if(window.cleanTLArcs)cleanTLArcs();
@@ -4833,7 +4840,7 @@ function playLectureEntry(){
       if(_lecState.playing){
         _lecState.index++;
         setTimeout(()=>{
-          if(!_lecState||_lecState.stopped)return;
+          if(!_lecState||_lecState.stopped||_lecState._tick!==tick)return;
           playLectureEntry();
         },1800);
       }
@@ -4869,7 +4876,7 @@ function stopLecture(){
 }
 
 function toggleLecturePlay(){
-  if(!_lecState)return;
+  if(!_lecState||document.getElementById('chapterIntro').classList.contains('show')||document.getElementById('chapterOutro').classList.contains('show'))return;
   _lecState.playing=!_lecState.playing;
   updateLectureBar();
   if(_lecState.playing){
@@ -4880,7 +4887,7 @@ function toggleLecturePlay(){
 }
 
 function lecturePrev(){
-  if(!_lecState||_lecState.index<=0)return;
+  if(!_lecState||_lecState.index<=0||document.getElementById('chapterIntro').classList.contains('show')||document.getElementById('chapterOutro').classList.contains('show'))return;
   window.speechSynthesis&&window.speechSynthesis.cancel();
   _lecState.index--;
   _lecState.playing=true;
@@ -4889,7 +4896,7 @@ function lecturePrev(){
 }
 
 function lectureNext(){
-  if(!_lecState)return;
+  if(!_lecState||document.getElementById('chapterIntro').classList.contains('show')||document.getElementById('chapterOutro').classList.contains('show'))return;
   window.speechSynthesis&&window.speechSynthesis.cancel();
   _lecState.index++;
   _lecState.playing=true;
