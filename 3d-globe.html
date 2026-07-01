@@ -2755,6 +2755,8 @@ const ERAS = [
 // ============================================================
 function parseYear(str){
   if(!str)return null;
+  if(typeof str==='number')return str;
+  if(typeof str!=='string')return null;
   const cleaned=str.replace(/,/g,'');
   const m=cleaned.match(/(-?\d+)/);
   if(!m)return null;
