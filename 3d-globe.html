@@ -340,7 +340,11 @@ canvas{display:block}
 </div>
 
 <div id="eraBar">
-  <span id="eraLabel" style="font-size:.65em;font-weight:600;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.05em">All Eras</span>
+  <div style="display:flex;align-items:center;gap:6px">
+    <span id="eraLabel" style="font-size:.65em;font-weight:600;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.05em">All Eras</span>
+    <span id="eraYears" style="font-size:.6em;color:rgba(255,255,255,.15)"></span>
+    <span id="eraToggle" style="cursor:pointer;font-size:.55em;color:rgba(255,255,255,.2);padding:2px 4px" title="Toggle era bar">▼</span>
+  </div>
   <div id="eraChips"></div>
 </div>
 
@@ -496,6 +500,28 @@ const CAT = {
   latitude:{label:'Latitude Lines',color:'#fbbf24',icon:'🌐',region:'WW'},
   current:{label:'Ocean Currents',color:'#60a5fa',icon:'🌊',region:'WW'},
   phenomena:{label:'Climate Phenomena',color:'#ef4444',icon:'🌪️',region:'WW'},
+  wind:{label:'Wind Belts',color:'#fbbf24',icon:'💨',region:'WW'},
+  cloud:{label:'Cloud Cover',color:'#e2e8f0',icon:'☁️',region:'WW'},
+  forest:{label:'Forests & Jungles',color:'#34d399',icon:'🌲',region:'WW'},
+  rainfall:{label:'Rainfall & Precipitation',color:'#38bdf8',icon:'🌧️',region:'WW'},
+  tiger:{label:'Tiger Reserves',color:'#f97316',icon:'🐅',region:'IN'},
+  hill:{label:'Hill Stations',color:'#67e8f9',icon:'🏔️',region:'IN'},
+  bird:{label:'Bird Sanctuaries',color:'#86efac',icon:'🦆',region:'IN'},
+  i_pass:{label:'Mountain Passes',color:'#fbbf24',icon:'🚩',region:'IN'},
+  plateau:{label:'Plateaus',color:'#f472b6',icon:'🏔️',region:'WW'},
+  plain:{label:'Plains',color:'#34d399',icon:'🌾',region:'WW'},
+  valley:{label:'Valleys',color:'#22d3ee',icon:'🏞️',region:'WW'},
+  w_pass:{label:'World Passes',color:'#fbbf24',icon:'🚩',region:'WW'},
+  glacier:{label:'Glaciers',color:'#38bdf8',icon:'🧊',region:'WW'},
+  w_bridge:{label:'Bridges',color:'#94a3b8',icon:'🌉',region:'WW'},
+  lighthouse:{label:'Lighthouses',color:'#facc15',icon:'💡',region:'WW'},
+  wonder:{label:'7 Wonders',color:'#c084fc',icon:'✨',region:'WW'},
+  tower:{label:'Skyscrapers',color:'#94a3b8',icon:'🏗️',region:'WW'},
+  w_dam:{label:'World Dams',color:'#22d3ee',icon:'🏗️',region:'WW'},
+  w_airport:{label:'World Airports',color:'#94a3b8',icon:'✈️',region:'WW'},
+  tunnel:{label:'Tunnels',color:'#a78bfa',icon:'🚇',region:'WW'},
+  trade:{label:'Trade Routes',color:'#f97316',icon:'🚢',region:'WW'},
+  oil:{label:'Oil & Gas Fields',color:'#1e293b',icon:'⛽',region:'WW'},
 };
 
 const D = {};
@@ -2823,6 +2849,222 @@ D.current = [
   {n:'Oyashio Current',temp:'cold',sub:'Pacific · 8 Sv',desc:'Cold Arctic current along Kamchatka/Kurils to Japan. Rich fishing.',pts:[{la:55,ln:155},{la:48,ln:152},{la:42,ln:150},{la:38,ln:145}]},
   {n:'Antarctic Circumpolar Current',temp:'cold',sub:'Southern Ocean · 135 Sv',desc:'World\'s largest current. Flows east around Antarctica. 100x all rivers combined.',pts:[{la:-55,ln:-60},{la:-55,ln:0},{la:-55,ln:60},{la:-55,ln:120},{la:-55,ln:180}]},
 ];
+D.wind = [
+  {n:'NE Trade Winds',temp:'warm',sub:'Atlantic',desc:'Steady easterly winds from 30°N to equator. Powered by Hadley circulation. Columbus used them.',pts:[{la:30,ln:-50},{la:25,ln:-45},{la:20,ln:-40},{la:15,ln:-35},{la:10,ln:-30}]},
+  {n:'SE Trade Winds',temp:'warm',sub:'Atlantic',desc:'Steady easterly winds from 30°S to equator. Southern hemisphere trade winds.',pts:[{la:-30,ln:-40},{la:-25,ln:-35},{la:-20,ln:-30},{la:-15,ln:-25},{la:-10,ln:-20}]},
+  {n:'Pacific Trade Winds',temp:'warm',sub:'Pacific',desc:'Easterly trade winds across equatorial Pacific. Drive El Niño/La Niña cycles.',pts:[{la:15,ln:-140},{la:10,ln:-150},{la:5,ln:-160},{la:0,ln:-170},{la:-5,ln:-180}]},
+  {n:'Westerlies (N. Atlantic)',temp:'cold',sub:'Atlantic',desc:'Prevailing westerlies in mid-latitudes (30°-60°N). Drive weather across North America and Europe.',pts:[{la:40,ln:-70},{la:43,ln:-60},{la:46,ln:-50},{la:48,ln:-40},{la:50,ln:-30},{la:52,ln:-20}]},
+  {n:'Roaring Forties',temp:'cold',sub:'Southern Ocean',desc:'Powerful westerlies between 40°-50°S. Constant, strong — used by clipper ships for Australia/Asia route.',pts:[{la:-42,ln:-60},{la:-43,ln:-40},{la:-44,ln:-20},{la:-45,ln:0},{la:-46,ln:20},{la:-47,ln:40},{la:-48,ln:60},{la:-48,ln:80},{la:-47,ln:100},{la:-46,ln:120}]},
+  {n:'Polar Easterlies',temp:'cold',sub:'Arctic',desc:'Cold winds from polar high-pressure regions (60°-90°N). Drive cold air southward.',pts:[{la:75,ln:-60},{la:72,ln:-50},{la:68,ln:-40},{la:65,ln:-30}]},
+  {n:'Indian Monsoon (Summer)',temp:'warm',sub:'Indian Ocean',desc:'Summer monsoon winds from SW. Cross equator, pick up moisture, bring rain to India June-September.',pts:[{la:-10,ln:60},{la:-5,ln:65},{la:0,ln:70},{la:5,ln:72},{la:10,ln:75},{la:15,ln:75},{la:20,ln:78}]},
+  {n:'Indian Monsoon (Winter)',temp:'cold',sub:'Indian Ocean',desc:'Winter monsoon winds from NE. Dry, continental air from Himalayas. Blow from land to sea October-December.',pts:[{la:25,ln:80},{la:20,ln:82},{la:15,ln:83},{la:10,ln:85},{la:5,ln:87},{la:0,ln:90}]},
+];
+D.cloud = [{}];
+D.forest = [
+  {n:'Amazon Rainforest',la:-3.00,ln:-60.00,sub:'South America · 5.5M km²',desc:'World\'s largest tropical rainforest. 60% in Brazil. 10% of all species on Earth. "Lungs of the Earth" — produces 6% of global oxygen. Deforestation crisis.',fact:'5.5M km² (largest) · 10% of species · Amazon River · 6% of global oxygen'},
+  {n:'Congo Rainforest',la:0.00,ln:22.00,sub:'Central Africa · 2M km²',desc:'Second largest tropical rainforest. 6 countries. Congo Basin. 10,000+ plant species. Gorillas, chimpanzees, okapi. 80M people depend on it. Under threat from logging.',fact:'2M km² (2nd largest) · 10k plant species · Gorillas · Congo Basin'},
+  {n:'Southeast Asian Rainforest',la:2.00,ln:110.00,sub:'Indonesia/Malaysia · 2.5M km²',desc:'One of the oldest rainforests (130M years). Borneo, Sumatra, Papua. Orangutans, tigers, rhinos. Palm oil plantations causing deforestation. Peat swamp forests.',fact:'130M years old · Orangutans · Palm oil threat · Peat swamps'},
+  {n:'Daintree Rainforest',la:-16.20,ln:145.30,sub:'Australia · 1,200 km²',desc:'Oldest rainforest in the world (180M years). North Queensland. UNESCO site. Cassowaries, tree kangaroos. 430 bird species. Adjacent to Great Barrier Reef.',fact:'180M years (oldest) · Queensland · UNESCO · Daintree River'},
+  {n:'Taiga (Boreal Forest)',la:55.00,ln:-100.00,sub:'Canada/Russia · 17M km²',desc:'World\'s largest land biome. Spans Canada, Alaska, Scandinavia, Russia. Coniferous forests. 30% of Earth\'s forest area. Critical carbon sink. Moose, bears, wolves.',fact:'17M km² (largest biome) · Canada to Russia · 30% of forests · Carbon sink'},
+  {n:'Siberian Taiga',la:60.00,ln:100.00,sub:'Russia · 10M km²',desc:'Vast coniferous forest covering most of Siberia. World\'s largest forested region. Extremely cold winters (-50°C). Permafrost. Siberian tiger habitat.',fact:'10M km² · -50°C winters · Permafrost · Siberian tiger'},
+  {n:'Sundarbans Mangroves',la:22.00,ln:89.00,sub:'India/Bangladesh · 10k km²',desc:'World\'s largest mangrove forest. Royal Bengal tiger habitat. Ganges-Brahmaputra delta. UNESCO site. Cyclone protection. 4M people live in surrounding areas.',fact:'10k km² (largest mangroves) · Bengal tigers · UNESCO · Cyclone shield'},
+];
+D.rainfall = [
+  {n:'Mawsynram',la:25.30,ln:91.58,sub:'India · Wettest place on Earth',desc:'Wettest place on Earth with 11,872mm annual rainfall. Meghalaya. Cherrapunji nearby (11,430mm). Monsoon winds trapped by Khasi Hills. Living root bridges.',fact:'11,872mm/year (wettest) · Meghalaya · Khasi Hills · Root bridges'},
+  {n:'Cherrapunji',la:25.28,ln:91.73,sub:'India · 11,430mm/year',desc:'Former wettest place on Earth. Holds record for most rain in a month (9,300mm July 1861). Living root bridges. Double-decker root bridges unique to area.',fact:'11,430mm · 9,300mm in July 1861 · Root bridges · Meghalaya'},
+  {n:'Atacama Desert',la:-24.00,ln:-69.50,sub:'Chile · Driest place on Earth',desc:'Driest non-polar place on Earth. Some areas had zero recorded rainfall. Average 1-3mm/year. No rain for 400 years in some spots. Mars-like landscapes.',fact:'0-3mm/year (driest) · 400 years without rain · NASA testing'},
+  {n:'Mt Waialeale',la:22.07,ln:-159.50,sub:'Hawaii · 11,500mm/year',desc:'One of the wettest places on Earth. Kauai, Hawaii. Constant rain creates spectacular waterfalls. Mt Waialeale means "rippling water". Alakai Swamp nearby.',fact:'11,500mm · Kauai, Hawaii · Constant rain · Waterfalls'},
+  {n:'Amazon Basin',la:-3.00,ln:-60.00,sub:'Brazil · 2,300mm/year',desc:'Receives massive rainfall driving the Amazon rainforest. 2/3 of rainfall is recycled by the forest itself. Deforestation threatens rainfall cycle.',fact:'2,300mm average · Forest recycles 2/3 · Deforestation threat'},
+  {n:'Sahara Desert',la:24.00,ln:12.00,sub:'Africa · <25mm/year',desc:'One of the driest regions on Earth. Some parts go years without rain. Rain shadow effect. 25mm average annual. Hyperarid conditions.',fact:'<25mm/year · Hyperarid · Rain shadow · Some areas 0mm'},
+];
+D.plateau = [
+  {n:'Tibetan Plateau',la:32.00,ln:88.00,sub:'China · 4.5M km² · Avg 4,500m',desc:'World\'s highest and largest plateau. "Roof of the World". Formed by India-Eurasia collision. Source of major Asian rivers (Indus, Brahmaputra, Yangtze, Mekong). 2.5M people. Cold, arid.',fact:'4.5M km² (largest + highest) · 4,500m avg · Source of 10 major rivers · 2.5M people'},
+  {n:'Deccan Plateau',la:17.00,ln:77.00,sub:'India · 1.9M km² · 600m avg',desc:'Large triangular plateau covering most of South India. Bounded by Western and Eastern Ghats. Formed by Deccan Traps volcanic eruptions ~66M years ago. Rich black cotton soil (Regur).',fact:'1.9M km² · Deccan Traps (volcanic) · Black cotton soil · Godavari-Krishna basins'},
+  {n:'Colorado Plateau',la:36.00,ln:-111.00,sub:'USA · 340k km² · 1,800m avg',desc:'High desert plateau in SW USA. Grand Canyon carved by Colorado River. Monument Valley, Zion, Bryce Canyon. Rich in uranium, coal, oil shale. Ancestral Puebloan cliff dwellings.',fact:'340k km² · Grand Canyon · Monument Valley · Puebloan ruins · Four Corners'},
+  {n:'Ethiopian Highlands',la:10.00,ln:39.00,sub:'Ethiopia · 900k km² · 2,500m avg',desc:'"Roof of Africa". Highest part of Africa. Simien Mountains (Ras Dashen 4,550m). Source of Blue Nile. Isolated evolution — unique species like gelada baboon. Great Rift Valley splits it.',fact:'900k km² · Ras Dashen (4,550m) · Blue Nile source · Gelada baboons · Rift Valley'},
+  {n:'Patagonian Plateau',la:-46.00,ln:-70.00,sub:'Argentina · 1M km² · 1,500m avg',desc:'Vast arid plateau in southern Argentina. Cold, windswept steppe. Santa Cruz and Chubut rivers. Rich in fossils. Perito Moreno Glacier. Sheep farming. Tehuelche people.',fact:'1M km² · Arid steppe · Perito Moreno · Fossil-rich · Sheep farming'},
+  {n:'Brazilian Highlands',la:-18.00,ln:-45.00,sub:'Brazil · 5M km² · 1,000m avg',desc:'Vast highland region covering most of eastern Brazil. São Paulo and Rio de Janeiro on its edge. Rich in iron ore, gold, diamonds. Iguaçu Falls. Serra do Mar coastal range.',fact:'5M km² · Iron ore & gold · Iguaçu Falls · Coffee plantations · Atlantic Forest'},
+  {n:'Iranian Plateau',la:33.00,ln:56.00,sub:'Iran · 3.7M km² · 1,200m avg',desc:'Large plateau spanning Iran, Afghanistan, Pakistan. Dasht-e Lut and Dasht-e Kavir deserts. Zagros and Elburz mountains. Persia heartland. Ancient Persian civilization origins.',fact:'3.7M km² · Persian heartland · Dasht-e Lut (hottest surface) · Zagros & Elburz'},
+  {n:'Central Siberian Plateau',la:65.00,ln:100.00,sub:'Russia · 3.5M km² · 600m avg',desc:'Vast plateau between Yenisei and Lena rivers. Extremely cold continental climate (-60°C in winter). Permafrost. Rich in coal, diamonds, and nickel. Tunguska event (1908).',fact:'3.5M km² · -60°C winters · Permafrost · Tunguska · Diamonds & nickel'},
+];
+D.plain = [
+  {n:'Indo-Gangetic Plain',la:27.00,ln:82.00,sub:'India/Pakistan · 700k km²',desc:'Fertile alluvial plain formed by Indus, Ganges, Brahmaputra. World\'s most populous region (1B+ people). Cradle of Indian civilization. Punjab — breadbasket of India.',fact:'700k km² · 1B+ population · Indus/Ganges/Brahmaputra · Green Revolution'},
+  {n:'Great Plains',la:42.00,ln:-100.00,sub:'USA/Canada · 1.3M km²',desc:'Vast grassland between Mississippi and Rocky Mountains. "Breadbasket of America". Dust Bowl of 1930s. Native American territories (Lakota, Cheyenne, Comanche). Tornado Alley.',fact:'1.3M km² · Breadbasket · Dust Bowl · Tornado Alley · Native territories'},
+  {n:'West Siberian Plain',la:60.00,ln:75.00,sub:'Russia · 2.7M km²',desc:'World\'s largest continuous plain. Between Urals and Yenisei. Extremely flat — largest peat bog. Major oil and gas fields (Samotlor). Taiga forest. Swampy, permafrost in north.',fact:'2.7M km² (largest plain) · Peat bogs · Oil & gas · Taiga · Permafrost'},
+  {n:'Pampas',la:-35.00,ln:-61.00,sub:'Argentina · 750k km²',desc:'Fertile South American grasslands. Argentina\'s agricultural heartland (soy, wheat, beef). Gaucho culture. Buenos Aires on its edge. Rich in fossils (Megatherium, Glyptodon).',fact:'750k km² · Beef & soy · Gaucho culture · Buenos Aires · Fossil-rich'},
+  {n:'North China Plain',la:36.00,ln:116.00,sub:'China · 409k km²',desc:'Large alluvial plain formed by Yellow River. Dense population (400M). China\'s agricultural core (wheat, maize, cotton). Beijing and Tianjin located here. Severe air pollution.',fact:'409k km² · 400M people · Yellow River · Agricultural core · Beijing'},
+  {n:'Nullarbor Plain',la:-31.00,ln:128.00,sub:'Australia · 200k km²',desc:'Vast, flat, arid limestone karst plain. No trees (nulla arbor). Trans-Australian Railway crosses it (world\'s longest straight rail 478km). Nuclear test sites (Maralinga).',fact:'200k km² · No trees · Longest straight railway · Maralinga tests · Limestone'},
+  {n:'Canterbury Plains',la:-43.50,ln:171.80,sub:'New Zealand · 45k km²',desc:'Flat, fertile alluvial plains on NZ\'s South Island. Canterbury agricultural heartland. Christchurch main city. Bounded by Southern Alps. Braided rivers (Waimakariri, Rakaia).',fact:'45k km² · Christchurch · Southern Alps backdrop · Sheep & dairy · Braided rivers'},
+  {n:'Lombardy Plain',la:45.50,ln:9.50,sub:'Italy · 47k km²',desc:'Po Valley plain. Italy\'s industrial and agricultural heartland. Milan, Turin, Bologna. Rice paddies. Roman Cisalpine Gaul. High urban population. Po river flooding.',fact:'47k km² · Milan & Turin · Rice · Po River · Industrial core'},
+];
+D.valley = [
+  {n:'Great Rift Valley',la:-1.50,ln:36.00,sub:'East Africa · 6,000km long',desc:'Massive rift from Syria to Mozambique. Formed by divergent tectonic plate movement. Contains many lakes (Turkana, Tanganyika, Malawi). "Cradle of Humankind" — early hominid fossils. Active volcanism (Kilimanjaro, Kenya).',fact:'6,000km · Divergent plate boundary · Cradle of Humankind · Great Lakes · Volcanoes'},
+  {n:'Kathmandu Valley',la:27.70,ln:85.32,sub:'Nepal · 665 km²',desc:'Fertile valley in the Himalayas. Capital region of Nepal. Seven UNESCO World Heritage sites (Durbar Squares, Swayambhunath, Pashupatinath). Newar civilization. Epicenter of 2015 earthquake.',fact:'665 km² · 7 UNESCO sites · Newar culture · 2015 earthquake · Three Durbar Squares'},
+  {n:'Silicon Valley',la:37.39,ln:-122.03,sub:'USA · Santa Clara Valley',desc:'Global center of technology innovation. South of San Francisco. Home to Apple, Google, Meta, Intel, HP. Stanford University. Venture capital hub. Tech boom since 1950s.',fact:'Tech capital · Apple/Google/Meta HQ · Stanford · Venture capital · 1950s+ boom'},
+  {n:'Rhône Valley',la:44.50,ln:4.50,sub:'France · Wine region',desc:'Major wine-producing valley in southern France. Côtes du Rhône AOC. Medieval papal seat in Avignon. Roman aqueduct Pont du Gard. Lavender fields. Mistral wind.',fact:'Wine region · Côtes du Rhône · Avignon (Papal palace) · Pont du Gard · Lavender'},
+  {n:'Central Valley',la:36.50,ln:-120.00,sub:'USA · California · 47k km²',desc:'California\'s agricultural heartland. Produces 25% of US food. Sacramento and San Joaquin valleys. Severe drought issues. Irrigation from Sierra Nevada snowmelt. Rich soil.',fact:'47k km² · 25% of US food · Drought-prone · Sierra Nevada fed · 1/6 of US irrigated land'},
+  {n:'Indus Valley',la:27.00,ln:68.00,sub:'Pakistan · Indus River basin',desc:'Cradle of Indus Valley Civilization (Harappa, Mohenjo-daro). Indus River from Tibet to Arabian Sea. Punjab region. Major irrigation for Pakistan\'s agriculture. 5 rivers confluence.',fact:'Indus Valley Civilization (3300 BCE) · Harappa & Mohenjo-daro · 5 rivers · Punjab'},
+];
+D.w_pass = [
+  {n:'Khyber Pass',la:34.12,ln:71.09,sub:'Pakistan/Afghanistan · 1,070m',desc:'Historic mountain pass connecting Afghanistan to Pakistan. Gateway to the Indian subcontinent. Used by Alexander, Mughals, British. Part of ancient Silk Road. Strategically vital for 2,000 years.',fact:'1,070m · Silk Road · Alexander/Ghaznavi/Mughals/British · Strategic pass · NATO supply route'},
+  {n:'Khunjerab Pass',la:36.85,ln:75.42,sub:'Pakistan/China · 4,693m',desc:'Highest paved border crossing in the world. Karakoram Highway between Pakistan and China. Part of China-Pakistan Economic Corridor (CPEC). Snow-covered 8 months/year. Endangered Marco Polo sheep.',fact:'4,693m (highest paved) · KKH/CPEC · Pakistan-China border · Snow 8 months · Wildlife'},
+  {n:'Brenner Pass',la:47.00,ln:11.50,sub:'Italy/Austria · 1,372m',desc:'Lowest Alpine pass, busiest north-south route across Alps. Brenner motorway and railway. Part of Roman Via Claudia Augusta (AD 46). EU transalpine freight corridor. 2.5M trucks/year.',fact:'1,372m (lowest Alpine) · Roman road · 2.5M trucks/year · Railway tunnel · EU corridor'},
+  {n:'St Gotthard Pass',la:46.55,ln:8.58,sub:'Switzerland · 2,106m',desc:'Key Alpine pass connecting north and south Switzerland. Gotthard Base Tunnel (world\'s longest rail tunnel 57km). William Tell legend. Devils Bridge. Swiss Confederacy origin.',fact:'2,106m · Gotthard Base Tunnel (57km) · Swiss independence · William Tell · Devil\'s Bridge'},
+  {n:'Karakoram Pass',la:35.52,ln:77.82,sub:'India/China · 5,540m',desc:'High-altitude pass connecting Ladakh to Xinjiang. Ancient trade route for silk, jade, spices. Historically part of the Silk Road. Closed since 1967. Permafrost and extreme cold.',fact:'5,540m · Silk Road · Ladakh-Xinjiang · Closed since 1967 · Extreme cold'},
+];
+D.glacier = [
+  {n:'Siachen Glacier',la:35.40,ln:77.10,sub:'India/Pakistan · 76km',desc:'World\'s highest battlefield (5,400m). 76km long in eastern Karakoram. "Third Pole" — largest glacier outside polar regions. Indian Army controls since 1984. Extreme cold (-50°C). Thousands lost to avalanches, not combat.',fact:'76km (longest in Karakoram) · Highest battlefield (5,400m) · -50°C · Operation Meghdoot 1984'},
+  {n:'Gangotri Glacier',la:30.85,ln:79.10,sub:'India · Uttarakhand · 30km',desc:'Source of Ganges River (Bhagirathi). One of the largest Himalayan glaciers (30km). Gaumukh (Cow\'s Mouth) — the snout. Retreating at 20m/year. Hindu pilgrimage. Tapovan meadows.',fact:'30km · Ganges source · Gaumukh · 20m/year retreat · Pilgrimage'},
+  {n:'Vatnajökull',la:64.42,ln:-16.78,sub:'Iceland · 8,100 km²',desc:'Largest glacier in Europe (8% of Iceland). Covers active volcanoes (Bárðarbunga, Grímsvötn). Subglacial eruptions cause jökulhlaups (glacial floods). Ice caves popular with tourists. Vatnajökull National Park (UNESCO).',fact:'8,100 km² (largest in Europe) · Volcano underneath · Jökulhlaups · Ice caves · UNESCO'},
+  {n:'Lambert Glacier',la:-71.00,ln:70.00,sub:'Antarctica · 400km long',desc:'World\'s largest glacier. 400km long, 100km wide. Drains 8% of Antarctic ice sheet. Flows into Amery Ice Shelf. Ice velocity up to 1km/year. Named after Australian geographer.',fact:'400km (world\'s largest) · 100km wide · 8% of Antarctic ice · Amery Ice Shelf'},
+  {n:'Baltoro Glacier',la:35.70,ln:76.30,sub:'Pakistan · 62km',desc:'One of the longest glaciers outside polar regions. Central Karakoram. Gateway to K2 (2nd highest peak) and Concordia. Massive ice intersection. Used by climbers for K2 expeditions.',fact:'62km · K2 gateway · Concordia · Karakoram · Climber route'},
+  {n:'Perito Moreno Glacier',la:-50.48,ln:-73.05,sub:'Argentina · 250 km²',desc:'One of few advancing glaciers worldwide. Los Glaciares National Park (UNESCO). 30km long, 5km wide. Ice dam bursts create dramatic rupture events every 4-5 years. Patagonian ice field.',fact:'250 km² · Advancing (rare!) · Ice dam bursts · UNESCO · Patagonia'},
+  {n:'Aletsch Glacier',la:46.56,ln:8.15,sub:'Switzerland · 86km² · 23km',desc:'Largest Alpine glacier. Swiss Alps Jungfrau-Aletsch UNESCO site. 27 billion tons of ice. Konkordiaplatz ice confluence. Retreating rapidly — could lose 90% by 2100 if warming continues.',fact:'23km (longest Alpine) · UNESCO · Konkordiaplatz · 27B tons · Rapid retreat'},
+];
+D.oil = [
+  {n:'Ghawar Field',la:25.40,ln:49.60,sub:'Saudi Arabia · Largest oil field',desc:'World\'s largest conventional oil field. 280km long, 30km wide. Discovered 1948, production since 1951. 75B barrels recoverable (25% of Saudi oil). Still produces ~4M barrels/day. Ghawar is the elephant of all oil fields.',fact:'Largest (75B barrels) · 4M bbl/day · 280km long · Discovered 1948 · Saudi Arabia'},
+  {n:'Burgan Field',la:28.70,ln:48.20,sub:'Kuwait · Second largest',desc:'World\'s second largest oil field. Greater Burgan — actually 3 fields. Discovered 1938. 40B barrels recoverable. Set on fire by retreating Iraqi forces in 1991 (Gulf War). 700 wells burned.',fact:'40B barrels · 1991 Gulf War fires · 700 wells · 1938 discovery · Kuwait\'s wealth'},
+  {n:'Permian Basin',la:32.00,ln:-102.00,sub:'USA · Texas/New Mexico',desc:'Largest US oil basin. 86B barrels recoverable. Spans 86k sq miles. Multi-basin complex (Midland, Delaware). Shale boom since 2010. Drives US being top oil producer globally.',fact:'86B barrels · Shale boom · 86k sq miles · Top US basin · Midland/Delaware'},
+  {n:'Samotlor Field',la:62.00,ln:77.00,sub:'Russia · Largest in Russia',desc:'Largest Russian oil field. Lake Samotlor, West Siberia. Discovered 1965. Peak production 1980 (3M bbl/day). Now ~500k bbl/day. Water flooding used to maintain pressure. Cold climate extraction.',fact:'Largest Russian field · Lake Samotlor · 3M bbl/day peak · 1965 · Water flooding'},
+  {n:'Cantarell Field',la:19.50,ln:-92.00,sub:'Mexico · Bay of Campeche',desc:'One of world\'s largest oil fields (was 2nd largest). Discovered 1976 by fisherman. Peak 2004 (2.1M bbl/day). Rapid decline to ~50k bbl/day now. Nitrogen injection revived it temporarily. Deepwater offshore.',fact:'2.1M bbl/day peak · Rapid decline · Nitrogen injection · Offshore · Discovered by fisherman'},
+  {n:'Daqing Field',la:46.60,ln:125.00,sub:'China · Largest in China',desc:'Largest Chinese oil field. Discovered 1959. Still produces ~750k bbl/day. Water flooding since 1960s. Heavy paraffin content. Mao era industrialization cornerstone. Heilongjiang province.',fact:'Largest Chinese field · 1959 discovery · 750k bbl/day · Mao era · Water flooding'},
+];
+D.tiger = [
+  {n:'Jim Corbett NP',la:29.53,ln:78.77,sub:'Uttarakhand · 1,318 km²',desc:'India\'s oldest national park (est. 1936 as Hailey NP). First under Project Tiger (1973). Highest tiger density in India. 260 tigers. Ramganga River. Dhikala zone. Elephant safari.',fact:'Oldest NP (1936) · First Project Tiger (1973) · 260 tigers · Highest density'},
+  {n:'Ranthambore NP',la:26.02,ln:76.50,sub:'Rajasthan · 1,334 km²',desc:'Famous for tiger sightings. 10th century Ranthambore Fort (UNESCO). Dry deciduous forest. Padam Talao lake. 70+ tigers. Former Maharaja hunting grounds. Popular for photography.',fact:'70+ tigers · Ranthambore Fort (UNESCO) · Padam Talao · Mughal connections'},
+  {n:'Bandhavgarh NP',la:23.70,ln:80.96,sub:'MP · 1,536 km²',desc:'Highest tiger density in India. Bandhavgarh Fort (2,000yr old). White tiger origin (Mohan captured 1951). 100+ tigers. Vindhyan hills. Ancient caves with Brahmi inscriptions.',fact:'Highest density · White tiger origin (Mohan) · Bandhavgarh Fort · 100+ tigers'},
+  {n:'Kanha NP',la:22.33,ln:80.63,sub:'MP · 1,945 km²',desc:'Largest NP in MP. Inspiration for Kipling\'s The Jungle Book. Barasingha (swamp deer) saved from extinction. 60+ tigers. Banjar River. Sal and bamboo forests. Excellent conservation.',fact:'1,945 km² (largest MP) · Jungle Book inspiration · Barasingha saved · 60+ tigers'},
+  {n:'Sunderbans NP',la:21.95,ln:89.18,sub:'WB · 2,585 km²',desc:'World\'s largest mangrove forest. Royal Bengal tiger habitat (100+ tigers). UNESCO World Heritage. Tiger-human conflict zone. Ganges-Brahmaputra delta. Estuarine crocodiles.',fact:'2,585 km² · Largest mangrove · Bengal tigers (100+) · UNESCO · Tidal delta'},
+  {n:'Kaziranga NP',la:26.58,ln:93.17,sub:'Assam · 1,090 km²',desc:'World\'s largest population of one-horned rhinos (2,400+). UNESCO World Heritage. Elephant grassland. Brahmaputra floodplain. 35+ tigers. Also wild buffalo, swamp deer. Annual floods.',fact:'1,090 km² · 2,400+ rhinos (largest) · UNESCO · One-horned rhino · Flood plains'},
+  {n:'Periyar NP',la:9.53,ln:77.17,sub:'Kerala · 925 km²',desc:'Elephant reserve and tiger reserve. Periyar Lake (artificial). Thekkady. Boat safaris for wildlife viewing. Cardamom Hills. Western Ghats. 40+ tigers. 266 bird species.',fact:'925 km² · Periyar Lake · Boat safaris · Elephants · Western Ghats'},
+  {n:'Sariska NP',la:27.30,ln:76.43,sub:'Rajasthan · 1,213 km²',desc:'Famous for tiger reintroduction (2008). Historically had tigers until poaching wiped them out. 25+ tigers now. Kankwari Fort. Aravalli hills. Dry deciduous. Ancient temples.',fact:'Tiger reintroduction (2008) · Kankwari Fort · Aravalli Range · Dry forest'},
+  {n:'Pench NP',la:21.67,ln:79.30,sub:'MP · 1,179 km²',desc:'Inspired Kipling\'s The Jungle Book (Seoni\'s forests). Pench River. 60+ tigers. Teak and bamboo forests. Rich in prey species (chital, sambar, nilgai). Pakhru Reservoir.',fact:'60+ tigers · Jungle Book inspiration · Pench River · Teak forests · Prey-rich'},
+  {n:'Mudumalai NP',la:11.58,ln:76.55,sub:'TN · 321 km²',desc:'Part of Nilgiri Biosphere Reserve. Elephant corridor. 50+ tigers. Bandipur and Wayanad connectivity. Dry and moist deciduous. Moyar River. Oldest reserve in South India.',fact:'321 km² · Nilgiri Biosphere · Elephant corridor · Bandipur link · Moyar River'},
+  {n:'Bandipur NP',la:11.79,ln:76.49,sub:'Karnataka · 1,125 km²',desc:'Part of Nilgiri Biosphere. Largest tiger population in South India (150+). Mysore Elephant Reserve. Kabini River backwaters. Dry deciduous forest. Part of Project Tiger since 1973.',fact:'1,125 km² · 150+ tigers (largest in S India) · Nilgiri Biosphere · Kabini'},
+  {n:'Nagarhole NP',la:12.06,ln:76.15,sub:'Karnataka · 1,284 km²',desc:'Part of Nilgiri Biosphere. Kabini River. 120+ tigers. Rich forest — moist deciduous, teak, rosewood. Elephant population. Irupu Falls. Bandipur adjacent. Adivasi communities.',fact:'1,284 km² · 120+ tigers · Kabini River · Elephants · Irupu Falls'},
+  {n:'Tadoba NP',la:20.38,ln:79.27,sub:'Maharashtra · 1,727 km²',desc:'Largest NP in Maharashtra. 90+ tigers. Tadoba Lake. Teak and bamboo. 1955 established. Known for tiger sightings. Oldest NP in Maharashtra. Andhari Tiger Reserve.',fact:'1,727 km² · 90+ tigers · Oldest in Maharashtra · Tadoba Lake · Andhari Reserve'},
+  {n:'Dudhwa NP',la:28.46,ln:80.72,sub:'UP · 1,284 km²',desc:'Terai grasslands. 30+ tigers. Swamp deer (barasingha) reintroduction. Rhino reintroduction (from Nepal/Assam). Lush sal forests. Near Nepal border. Kishanpur and Katarniaghat connect.',fact:'1,284 km² · Terai grasslands · Rhino reintroduction · Barasingha · Sal forests'},
+  {n:'Panna NP',la:24.75,ln:80.03,sub:'MP · 1,118 km²',desc:'Successful tiger reintroduction story. Tigers went locally extinct (2009). Reintroduced 2009-2014. Now 50+ tigers. Ken River. Panna Diamond Mines. Dry deciduous. Gharial habitat.',fact:'Tiger extinction (2009) → reintroduction success · 50+ tigers now · Ken River · Diamonds'},
+];
+D.hill = [
+  {n:'Shimla',la:31.10,ln:77.17,sub:'HP · 2,205m · Summer capital of British India',desc:'Queen of Hill Stations. Summer capital of British India (1864-1947). Mall Road, Ridge, Jakhu Temple (Hanuman statue). Kalka-Shimla Railway (UNESCO). Toy train. Scandal Point.',fact:'Summer capital (1864-1947) · Kalka-Shimla Railway (UNESCO) · Mall Road · Toy train'},
+  {n:'Manali',la:32.24,ln:77.19,sub:'HP · 2,050m · Gateway to Ladakh',desc:'Kullu Valley gem. Solang Valley (skiing). Rohtang Pass (39km). Hadimba Temple. Old Manali hippie culture. Beas River. Paragliding hub. Leh highway start point.',fact:'2,050m · Rohtang Pass · Solang Valley skiing · Old Manali · Hadimba Temple'},
+  {n:'Mussoorie',la:30.46,ln:78.05,sub:'Uttarakhand · 2,005m · Queen of Hills',desc:'Queen of Hills (after Shimla). Mall Road, Camel\'s Back Road, Kempty Falls. Landour (writer\'s haven — Ruskin Bond). St. George\'s College. Himalayan views. Lal Tibba viewpoint.',fact:'Queen of Hills · Landour (Ruskin Bond) · Kempty Falls · Mall Road · Lal Tibba'},
+  {n:'Nainital',la:29.38,ln:79.45,sub:'Uttarakhand · 2,084m · Lake District',desc:'Crescent-shaped Naini Lake. Naina Devi Temple. Snow View Point (via ropeway). Tiffin Top. Governor\'s House (Raj Bhavan). High Court of Uttarakhand. Mall Road.',fact:'Naini Lake (crescent) · Naina Devi · Ropeway · Lake District of India · Uttarakhand HC'},
+  {n:'Darjeeling',la:27.06,ln:88.27,sub:'WB · 2,050m · Queen of the Hills',desc:'Tea gardens (Darjeeling tea — Champagne of Teas). Toy train (UNESCO). Tiger Hill (Kanchenjunga sunrise). Batasia Loop. Gorkha culture. Himalayan Mountaineering Institute (Tenzing Norgay).',fact:'Darjeeling tea (GI tag) · Toy train (UNESCO) · Tiger Hill · Tenzing Norgay\'s institute'},
+  {n:'Ooty (Udhagamandalam)',la:11.41,ln:76.70,sub:'TN · 2,240m · Nilgiri Queen',desc:'Queen of Nilgiris. Botanical Gardens. Ooty Lake. Nilgiri Mountain Railway (UNESCO Toy Train). Doddabetta (highest peak 2,637m). Tea plantations. Toda tribal settlements.',fact:'Nilgiri Queen · Nilgiri Mountain Railway (UNESCO) · Doddabetta · Botanical Gardens · Tea'},
+  {n:'Kodaikanal',la:10.24,ln:77.49,sub:'TN · 2,133m · Princess of Hill Stations',desc:'Princess of Hill Stations. Star-shaped Kodaikanal Lake. Coaker\'s Walk. Bryant Park. Pillar Rocks. Bear Shola Falls. Berijam Lake. Kurinji flowers (bloom once in 12 years).',fact:'Princess of Hill Stations · Kodai Lake (star-shaped) · Coaker\'s Walk · Kurinji flowers'},
+  {n:'Munnar',la:10.09,ln:77.06,sub:'Kerala · 1,600m · Tea country',desc:'Vast tea plantations (Tata Tea). Eravikulam NP (Nilgiri Tahr). Mattupetty Dam. Anamudi (highest peak in S India 2,695m). Neelakurinji flowers. Western Ghats UNESCO.',fact:'Tea plantations · Eravikulam NP (Nilgiri Tahr) · Anamudi (S India\'s highest) · Neelakurinji'},
+  {n:'Mount Abu',la:24.59,ln:72.71,sub:'Rajasthan · 1,220m · Only hill station in Rajasthan',desc:'Only hill station in Rajasthan. Dilwara Jain Temples (marble masterpieces). Nakki Lake. Guru Shikhar (highest 1,722m). Sunset Point. Mount Abu Wildlife Sanctuary. Toad Rock.',fact:'Only Rajasthan hill station · Dilwara Jain Temples (marble) · Nakki Lake · Guru Shikhar'},
+  {n:'Gulmarg',la:34.05,ln:74.38,sub:'J&K · 2,650m · Meadow of Flowers',desc:'Meadow of Flowers. Asia\'s highest gondola (cable car) — Gulmarg Gondola. Ski resort. Apharwat Peak (4,390m). 18-hole golf course (highest in world). Betaab Valley nearby.',fact:'Asia\'s highest gondola · Ski resort · Highest golf course · Apharwat · Meadow of Flowers'},
+  {n:'Pahalgam',la:34.03,ln:75.32,sub:'J&K · 2,130m · Valley of Shepherds',desc:'Valley of Shepherds. Base camp for Amarnath Yatra. Betaab Valley. Aru Valley. Lidder River. Baisaran (Mini Switzerland). Chandanwari. Snow bridge. Fishing and trekking hub.',fact:'Amarnath base camp · Betaab Valley · Lidder River · Mini Switzerland · Trekking'},
+  {n:'Sonamarg',la:34.30,ln:75.30,sub:'J&K · 2,800m · Meadow of Gold',desc:'Meadow of Gold. Gateway to Ladakh (Zoji La). Thajiwas Glacier. Sindh River. Alpine flowers. Fish farming. Camping. Alpine lake trekking.',fact:'Meadow of Gold · Zoji La base · Thajiwas Glacier · Ladakh gateway · Sindh River'},
+  {n:'Gangtok',la:27.33,ln:88.61,sub:'Sikkim · 1,650m · Capital of Sikkim',desc:'Capital of Sikkim. Rumtek Monastery (Karma Kagyu). Tsomgo Lake (Changu). Nathu La pass (India-China border). MG Marg (pedestrian only). Banjhakri Falls. Cable car. Clean city award.',fact:'Sikkim capital · Rumtek Monastery · Nathu La · Tsomgo Lake · MG Marg'},
+  {n:'Leh',la:34.15,ln:77.58,sub:'Ladakh · 3,524m · Land of High Passes',desc:'Capital of Ladakh. Leh Palace (9-storey). Shanti Stupa. Magnetic Hill. Khardung La (highest motorable pass). Hemis Monastery (largest monastery in Ladakh). Cold desert. Nubra Valley.',fact:'Ladakh capital · Leh Palace · Highest motorable passes · Hemis festival · Khardung La'},
+  {n:'Coorg (Kodagu)',la:12.33,ln:75.80,sub:'Karnataka · 1,525m · Scotland of India',desc:'Scotland of India. Coffee plantations (70% of India\'s coffee). Abbey Falls. Talakaveri (source of Kaveri). Dubare Elephant Camp. Tibetan settlement (Bylakuppe). Nisargadhama. Trekking.',fact:'Scotland of India · Coffee capital · Abbey Falls · Talakaveri · Dubare elephants'},
+];
+D.bird = [
+  {n:'Keoladeo NP (Bharatpur)',la:27.17,ln:77.52,sub:'Rajasthan · 29 km²',desc:'World Heritage Site. Former duck-hunting reserve of Maharajas. 370+ bird species. Siberian cranes (now rare). Waterfowl sanctuary. Storks, herons, cormorants. Cycle rickshaw tours.',fact:'UNESCO World Heritage · 370+ species · Siberian cranes · Maharaja\'s hunting reserve'},
+  {n:'Chilika Lake',la:19.70,ln:85.30,sub:'Odisha · 1,165 km² · Largest coastal lagoon',desc:'Largest coastal lagoon in India. Ramsar site. 160+ bird species. Irrawaddy dolphins. Nalabana Bird Sanctuary (island). Migratory birds from Siberia. Satapada for dolphin viewing.',fact:'Largest coastal lagoon · 160+ birds · Irrawaddy dolphins · Ramsar · Nalabana Island'},
+  {n:'Ranganathittu Bird Sanctuary',la:12.23,ln:76.75,sub:'Karnataka · 0.67 km²',desc:'Smallest bird sanctuary in India. 6 islets on Kaveri River. Painted storks, spoonbills, ibises. Boat rides. 170+ species. Near Srirangapatna. Crocodile population.',fact:'6 islets on Kaveri · Painted storks · Boat rides · 170+ species · Crocodiles'},
+  {n:'Sultanpur NP',la:28.46,ln:76.88,sub:'Haryana · 1.43 km²',desc:'Located near Gurgaon/Delhi. 250+ bird species. Migratory birds from Eurasia. Flamingos in winter. Raptors. Sultanpur Lake. Educational centre. Cranes, geese, ducks.',fact:'250+ species · Near Delhi · Flamingos · Eurasia migrants · Raptors'},
+  {n:'Kumarakom Bird Sanctuary',la:9.62,ln:76.43,sub:'Kerala · 14 km²',desc:'Vembanad Lake backwaters. Houseboat tourism. Migratory birds from Siberia (August-March). Herons, kingfishers, darters. Mangrove forests. Keralan wetland ecosystem.',fact:'Vembanad Lake · Houseboats · Siberian migrants · Mangroves · Backwaters'},
+  {n:'Thattekad Bird Sanctuary',la:10.08,ln:76.72,sub:'Kerala · 25 km²',desc:'Dr. Salim Ali\'s favorite — "Rarest bird habitat in India". 280+ species. Malabar grey hornbill, Sri Lanka frogmouth. Tropical evergreen forest. Periyar River. Birding capital of Kerala.',fact:'280+ species · Salim Ali\'s favorite · Malabar grey hornbill · Evergreen forest · Birding capital'},
+  {n:'Salim Ali Bird Sanctuary',la:15.50,ln:73.78,sub:'Goa · 2 km²',desc:'Named after Dr. Salim Ali. Mandovi River estuary. Mangrove forest. Kingfishers, herons, eagles. Located on Chorao Island. Accessible by boat from Panaji. Bird ringing research.',fact:'Named after Dr. Salim Ali · Mandovi estuary · Chorao Island · Boat access · Mangroves'},
+  {n:'Bhitarkanika NP',la:20.75,ln:86.87,sub:'Odisha · 672 km²',desc:'Second largest mangrove forest in India (after Sunderbans). 215+ bird species. Saltwater crocodiles (largest population). Olive ridley turtles nesting. Gahirmatha Marine Sanctuary. Ramsar site.',fact:'672 km² · 2nd largest mangroves · Crocodiles · Olive ridleys · Ramsar'},
+];
+D.i_pass = [
+  {n:'Nathu La',la:27.38,ln:88.82,sub:'Sikkim · 4,310m · India-China border',desc:'Reopened in 2006 for border trade (after 1962 war). Connects Sikkim to Tibet (China). Part of historic Silk Road. 14.5km from Gangtok. Permits required for Indian tourists. Used for border trade (barter system).',fact:'4,310m · Silk Road · Reopened 2006 · India-China trade · Gangtok 14.5km'},
+  {n:'Khardung La',la:34.27,ln:77.60,sub:'Ladakh · 5,359m',desc:'One of the highest motorable passes in the world. Connects Leh to Nubra Valley (Siachen). Built by Border Roads Organisation. Khardung means "the pass of lower king". 39km from Leh. Extreme cold.',fact:'5,359m (highest motorable) · Leh-Nubra route · BRO built · Siachen gateway'},
+  {n:'Rohtang Pass',la:32.37,ln:77.25,sub:'HP · 3,978m · Manali-Leh route',desc:'Key pass connecting Kullu Valley to Lahaul-Spiti. Manali-Leh highway. Open June-October only. Snow piles up to 15m in winter. Beas River origin near here. Tourist attraction from Manali.',fact:'3,978m · Manali-Leh route · June-Oct only · 15m snow · Beas origin'},
+  {n:'Chang La',la:34.03,ln:77.93,sub:'Ladakh · 5,360m',desc:'Second highest motorable pass in the world. Connects Leh to Changthang region (Pangong Tso). Famous for marmots. Approx 50km from Leh. Cold desert landscape. Kiang (Tibetan wild ass).',fact:'5,360m (2nd highest motorable) · Changthang · Pangong Tso route · Kiang · Marmots'},
+  {n:'Zoji La',la:34.28,ln:75.47,sub:'J&K · 3,528m · Srinagar-Leh route',desc:'Gateway connecting Kashmir Valley to Ladakh. Srinagar-Leh highway. Considered one of the most dangerous roads in India. Avalanche-prone. Open only June-November. Zanskar range. Dras sector nearby (coldest place in India).',fact:'3,528m · Srinagar-Leh lifeline · Most dangerous road · Avalanches · Dras nearby'},
+  {n:'Fotu La',la:34.12,ln:77.52,sub:'Ladakh · 4,108m · NH 1',desc:'Pass on the Srinagar-Leh highway. 60km from Leh. Desolate, moonscape-like terrain. Buddhist prayer flags. Magnificent views of Indus River valley. Highest point on NH 1 before Leh.',fact:'4,108m · Leh-Srinagar NH 1 · Moonscape · Indus valley views · Prayer flags'},
+  {n:'Bomdi La',la:27.22,ln:92.42,sub:'Arunachal Pradesh · 2,800m',desc:'Pass connecting Tezpur (Assam) to Tawang. Sela Pass further ahead. Bomdila town is a hill station. Buddhist monasteries. Orchid sanctuary. Eastern Himalayan views. Border roads.',fact:'2,800m · Tawang route · Bomdila town · Orchids · Eastern Himalayas'},
+  {n:'Sela Pass',la:27.50,ln:92.12,sub:'Arunachal Pradesh · 4,170m',desc:'Connects Bomdila to Tawang. Entirely above tree line. Sela Lake (frozen in winter). Part of the India-China border region. Jaswant Garh war memorial (1962). 7km from Tawang. Snow-covered most of year.',fact:'4,170m · Sela Lake · Tawang route · 1962 war memorial · Tree line area'},
+  {n:'Dihang Pass',la:28.58,ln:95.68,sub:'Arunachal Pradesh · 4,000m',desc:'Remote pass connecting Arunachal to Myanmar border. Part of historic Stilwell Road (WWII). Dense jungle terrain. Mishmi tribal region. Extremely remote. Biodiversity hotspot — many endemic species.',fact:'4,000m · Stilwell Road (WWII) · India-Myanmar · Mishmi tribe · Biodiversity hotspot'},
+  {n:'Lipulekh Pass',la:30.25,ln:80.95,sub:'Uttarakhand · 5,100m · India-Nepal-China trijunction',desc:'Tri-junction of India, Nepal, China. Part of Kailash-Mansarovar pilgrimage route. Indo-China border crossing. Kalapani border dispute area. High-altitude Himalayan terrain. Ancient trade route to Tibet.',fact:'5,100m · 3-country junction · Kailash-Mansarovar route · Kalapani dispute · Tibet trade'},
+];
+D.w_bridge = [
+  {n:'Howrah Bridge (Rabindra Setu)',la:22.59,ln:88.35,sub:'India · Kolkata · 705m',desc:'Cantilever bridge over Hooghly River. One of the busiest in the world (100k vehicles/day, 1.5M pedestrians). No nuts/bolts — all riveted. Built 1943 by Braithwaite & Co. 3rd longest cantilever span when built.',fact:'705m · No nuts/bolts · 1.5M pedestrians/day · 1943 · Riveted'},
+  {n:'Golden Gate Bridge',la:37.82,ln:-122.48,sub:'USA · San Francisco · 2,737m',desc:'Iconic suspension bridge. International Orange color. Completed 1937. Tallest bridges in the world at time (227m towers). 1.2M vehicles/week. Suicide prevention net (2024). Art Deco style.',fact:'2,737m · International Orange · 1937 · 227m towers · Art Deco'},
+  {n:'Tower Bridge',la:51.51,ln:-0.08,sub:'UK · London · 244m',desc:'Victorian bascule and suspension bridge. 1894 completed. Gothic Revival style. Glass floor walkway (2014). Steam engines originally powered it. River Thames. 1,000+ openings/year for ships.',fact:'244m · 1894 · Bascule bridge · Glass walkway · Gothic Revival'},
+  {n:'Sydney Harbour Bridge',la:-33.85,ln:151.21,sub:'Australia · Sydney · 1,149m',desc:'World\'s largest steel arch bridge (not suspension). "Coathanger" nickname. 1932 opened. Climb to summit (134m). New Year\'s Eve fireworks central. 8 lanes, 2 rails, cycle path. Built during Depression.',fact:'1,149m · Largest steel arch · Climb the bridge · 1932 · Coathanger'},
+  {n:'Millau Viaduct',la:44.08,ln:3.02,sub:'France · Millau · 2,460m',desc:'World\'s tallest bridge (343m pillars — taller than Eiffel Tower). Cable-stayed. Opened 2004. Designed by Norman Foster. Crosses Tarn Valley. 7 concrete pylons. Wind resistance engineering.',fact:'2,460m · Tallest (343m pillars) · 2004 · Norman Foster · 7 pylons'},
+  {n:'Ponte Vecchio',la:43.77,ln:11.25,sub:'Italy · Florence · 84m',desc:'Medieval stone arch bridge over Arno. Shops built on bridge (butchers originally). Only Florentine bridge to survive WWII (allegedly ordered spared by Hitler). Vasari Corridor above. 1345 rebuilt after flood.',fact:'84m · Medieval shops · Survived WWII · Vasari Corridor · 1345'},
+  {n:'Rialto Bridge',la:45.44,ln:12.34,sub:'Italy · Venice · 48m',desc:'Oldest bridge across Grand Canal. 1591 completed (by Antonio da Ponte). Single span stone arch. Shopping arcade with two rows of shops. Covered bridge. Iconic Venetian landmark. Third bridge on the site.',fact:'48m · 1591 · Oldest Grand Canal crossing · Single stone arch · Shops'},
+  {n:'Brooklyn Bridge',la:40.71,ln:-73.99,sub:'USA · NYC · 1,834m',desc:'First steel-wire suspension bridge (1883). Connects Manhattan to Brooklyn. Gothic stone towers. Built by John Roebling. 1,519m main span (longest when built). 150k vehicles/day. Pedestrian walkway above traffic.',fact:'1,834m · 1883 (first steel suspension) · Gothic towers · Roebling · 1,519m span record'},
+  {n:'Akashi Kaikyo Bridge',la:34.62,ln:135.02,sub:'Japan · Kobe-Awaji · 3,911m',desc:'World\'s longest suspension bridge (main span 1,991m). 1998 opened. 282m towers. Survived 1995 Kobe earthquake (built to withstand 8.5). 3-span, 2-hinge stiffening girder. Deep strait currents.',fact:'3,911m (longest suspension) · 1,991m main span · 1995 survived quake · Kobe'},
+  {n:'Bandra-Worli Sea Link',la:19.04,ln:72.81,sub:'India · Mumbai · 5.6km',desc:'Cable-stayed bridge over Mahim Bay. Part of Western Freeway. 8 lanes. Reduces travel time from 45 min to 8 min. Opened 2009-2010. 128 cables. Bay illumination at night. Mumbai landmark.',fact:'5.6km · Cable-stayed · 8 lanes · 2009 · 128 cables · Mumbai landmark'},
+  {n:'Pamban Bridge',la:9.28,ln:79.31,sub:'India · Tamil Nadu · 2.1km',desc:'India\'s first sea bridge. Connects Rameswaram to mainland. Bascule section lifts for ship passage. 1914 opened. Railway bridge with road alongside. Replaced by new Pamban Bridge (2024). Cyclone-prone.',fact:'2.1km · India\'s first sea bridge · 1914 · Bascule lift · Rameswaram'},
+  {n:'Chenab Bridge',la:33.15,ln:74.88,sub:'India · J&K · 1,315m',desc:'World\'s highest railway bridge (359m above Chenab River). Part of Udhampur-Srinagar-Baramulla project. Arch bridge. 42km from Reasi. Steel and concrete. 2023 completion. Engineered for high winds and quakes.',fact:'1,315m · Highest railway bridge (359m) · Chenab River · 2023 · Jammu rail project'},
+];
+D.lighthouse = [
+  {n:'Tower of Hercules',la:43.39,ln:-8.41,sub:'Spain · A Coruña · 55m',desc:'Oldest Roman lighthouse still in use. Built 2nd century AD (Trajan). UNESCO World Heritage. 57m tall. 234 steps. 2,000 years continuous operation. Atlantic coast of Galicia. Mythological — Hercules buried giant\'s head.',fact:'Oldest Roman lighthouse (2nd c. AD) · UNESCO · 234 steps · 2,000 years active'},
+  {n:'Peggy\'s Cove Lighthouse',la:44.49,ln:-63.92,sub:'Canada · Nova Scotia · 15m',desc:'Most photographed lighthouse in North America. Characteristic red and white. 1915 built. Postcard-perfect coastal granite rocks. Still operational. Peggy\'s Cove village. Surge waves dangerous — tourists warned.',fact:'Most photographed in NA · 1915 · Red & white · Nova Scotia · Granite coast'},
+  {n:'Cape Hatteras Lighthouse',la:35.25,ln:-75.53,sub:'USA · North Carolina · 63m',desc:'Tallest brick lighthouse in USA. 200ft (63m). Black and white spiral pattern. 1870 built. Relocated 884m inland in 1999 (erosion threat). 257 steps. Atlantic coast. "Graveyard of the Atlantic" — dangerous shoals.',fact:'Tallest brick in USA · 63m · Spiral pattern · Relocated 1999 · 257 steps'},
+  {n:'Cape Otway Lighthouse',la:-38.86,ln:143.51,sub:'Australia · Victoria · 22m',desc:'Oldest surviving lighthouse in mainland Australia. 1848 built. Great Ocean Road. 90km from Melbourne. Shipwreck coast. Aboriginal history. Lighthouse keeper quarters now museum. Southern Ocean views.',fact:'Oldest in mainland Australia (1848) · Great Ocean Road · Shipwreck coast · Museum'},
+  {n:'Lindau Lighthouse',la:47.54,ln:9.69,sub:'Germany · Lake Constance · 39m',desc:'Only lighthouse in Bavaria. Lake Constance (Bodensee). 1856 built. 33m tall. Austro-German border lake. Lindau harbor entrance. Clock face on lighthouse. Lion statue of Bavaria adjacent. Alpine views.',fact:'Only Bavarian lighthouse · 1856 · Lake Constance · Clock face · Lindau harbor'},
+  {n:'San Blas Lighthouse',la:11.27,ln:75.98,sub:'India · Kerala · 24m',desc:'Located at Punto de Santiago (Kannur). 19th century Portuguese lighthouse. Arabian Sea. St. Angelo Fort nearby. Muzhappilangad Beach. Red and white bands. Active shipping aid. Colonial-era navigation.',fact:'24m · Portuguese era · Kannur · St. Angelo Fort · Arabian Sea'},
+];
+D.wonder = [
+  {n:'Great Wall of China',la:40.43,ln:116.57,sub:'China · 21,196km',desc:'World\'s longest wall. Built over 2,300 years (7th c. BC — 17th c.). Ming dynasty best-preserved sections. Visible from space? No — myth (only from low orbit with aid). 10M visitors/year. UNESCO 1987.',fact:'21,196km · 2,300 years to build · Not visible from space · Ming dynasty · UNESCO'},
+  {n:'Christ the Redeemer',la:-22.95,ln:-43.21,sub:'Brazil · Rio de Janeiro · 38m',desc:'Art Deco statue of Jesus. 30m tall (38m with pedestal). 28m arm span. 635 tonnes. 1931 completed. Corcovado mountain 710m. Mountaintop lightning strike (2014). One of the New7Wonders. City icon.',fact:'38m · Corcovado 710m · Art Deco · 635 tonnes · 1931 · Lightning struck'},
+  {n:'Machu Picchu',la:-13.16,ln:-72.54,sub:'Peru · 2,430m',desc:'Inca citadel built 1450. Abandoned ~1572. Rediscovered 1911 by Hiram Bingham. 200 buildings on mountain ridge. Sacred Valley. No mortar — precision dry-stone. UNESCO 1983. New7Wonders. 1.5M visitors/year (limits imposed).',fact:'2,430m · Inca (1450) · Lost until 1911 · Dry-stone precision · UNESCO · Tourism limits'},
+  {n:'Chichén Itzá',la:20.68,ln:-88.57,sub:'Mexico · Yucatán',desc:'Maya-Toltec city. El Castillo pyramid (Kukulcán). Spring/fall equinox — serpent shadow effect. Cenote Sagrado (sacred sinkhole). 365 steps on pyramid (1 per day). Ball court (largest in Americas). Caracol observatory. UNESCO.',fact:'Mayan city · El Castillo · Equinox serpent · Cenote · Ball court · Observatory'},
+  {n:'Colosseum',la:41.89,ln:12.49,sub:'Italy · Rome · AD 72-80',desc:'Largest amphitheater ever built (50,000-80,000 seats). Flavian dynasty (Vespasian/Titus). Gladiator combats, animal hunts, naval battles (flooded). 80 entrance arches. 4 storeys. Damaged by earthquake 1349. UNESCO. New7Wonders.',fact:'Largest amphitheater · 50-80k seats · AD 80 · Gladiators · 4 storeys'},
+  {n:'Taj Mahal',la:27.18,ln:78.04,sub:'India · Agra · 1632-1653',desc:'White marble mausoleum built by Shah Jahan for Mumtaz Mahal. Ustad Ahmad Lahauri architect. 42 acres. 20,000 workers. 1,000 elephants used. Change color with sunlight. UNESCO 1983. New7Wonders. Yamuna River backdrop.',fact:'White marble tomb · Shah Jahan · Mumtaz · 20,000 workers · UNESCO · Change color'},
+  {n:'Petra',la:30.33,ln:35.44,sub:'Jordan · 2nd c. BC — 1st c. AD',desc:'Rose-red city carved into rock. Nabataean capital. The Treasury (Al-Khazneh) — most famous. Monastery (Ad-Deir). Water conduit system (remarkable engineering). 1.1M visitors/year. UNESCO 1985. Indiana Jones filming location.',fact:'Rose-red rock-cut city · Nabataean · Al-Khazneh · Water system · Indiana Jones'},
+  {n:'Great Pyramid of Giza',la:29.98,ln:31.13,sub:'Egypt · 138m (original 147m)',desc:'Oldest and only surviving ancient 7 Wonder. Built 2580-2560 BC for Pharaoh Khufu (Cheops). 2.3M blocks, avg 2.5 tonnes each. 8 sides (concave indentation made by wind). Aligned to true north. 4,500 years old.',fact:'147m original · Oldest & only surviving ancient wonder · 2.3M blocks · 4,500 years old'},
+];
+D.tower = [
+  {n:'Burj Khalifa',la:25.20,ln:55.27,sub:'UAE · Dubai · 828m (163 floors)',desc:'World\'s tallest building (since 2010). 828m. 163 habitable floors. Designed by Adrian Smith (SOM). Y-shaped plan — inspired by Hymenocallis flower. 57 elevators. Observation deck (At the Top, SKY). Cost $1.5B. Visible 95km.',fact:'828m (tallest) · 163 floors · 2010 · Y-shaped · $1.5B · Dubai'},
+  {n:'Merdeka 118',la:3.14,ln:101.70,sub:'Malaysia · Kuala Lumpur · 678.9m',desc:'Second tallest building in the world (2023). 118 floors. Triangular faceted glass tower. Named for Merdeka (Independence 1957). Towering spire. Mixed-use. Affordable housing component. KL skyline landmark.',fact:'678.9m (2nd tallest) · 118 floors · 2023 · Merdeka (Independence) · KL'},
+  {n:'Shanghai Tower',la:31.24,ln:121.50,sub:'China · Shanghai · 632m (128 floors)',desc:'2nd tallest in China (3rd world). 128 floors. Twisted form (120° rotation) reduces wind loads by 24%. Dual-skin facade. World\'s fastest elevator (20.5 m/s). Observation deck at 546m (highest indoor in world). LEED Platinum.',fact:'632m · Twisted (120° rotation) · Fastest elevator · Highest observation deck · LEED'},
+  {n:'Abraj Al-Bait',la:21.42,ln:39.83,sub:'Saudi Arabia · Mecca · 601m',desc:'Clock tower complex. World\'s tallest clock face (43m diameter). Largest building by floor area. 120 floors. 1.5M pilgrims accommodated. Facing Kaaba. Built by Saudi Binladin Group. Expensive project $15B.',fact:'601m · Largest clock face (43m) · Largest floor area · Mecca · Hajj pilgrims'},
+  {n:'Ping An Finance Center',la:22.54,ln:114.06,sub:'China · Shenzhen · 599m (115 floors)',desc:'115 floors. Carbon fiber spire (lightweight). Diamond-shaped facade for wind resistance. Observation deck at 547m. LEED Platinum. Vibration dampener. Built by KPF architects. Completed 2017.',fact:'599m · Carbon fiber spire · Diamond facade · LEED Platinum · Shenzhen skyline'},
+  {n:'Lotte World Tower',la:37.51,ln:127.10,sub:'South Korea · Seoul · 554.5m (123 floors)',desc:'Tallest building in South Korea. Seoul Sky observation deck (world\'s highest glass-floored at 478m). 123 floors. Curved tapering form. 6 floors of Lotte Department Store. Completed 2017. Olympic Park area.',fact:'554.5m (tallest in SK) · Glass-floored deck (478m) · 123 floors · Seoul Sky'},
+  {n:'One World Trade Center',la:40.71,ln:-74.01,sub:'USA · NYC · 541m (104 floors)',desc:'Tallest building in Western Hemisphere. 1,776ft (1776 — Declaration of Independence year). 104 floors. 400,000 sq m office space. Symbolic identity — replaces Twin Towers. Observation deck One World Observatory. LEED Gold.',fact:'541m (tallest in West) · 1,776ft symbolic · WTC site · Freedom Tower · Observatory'},
+  {n:'Taipei 101',la:25.03,ln:121.56,sub:'Taiwan · Taipei · 508m (101 floors)',desc:'Tallest building in the world 2004-2010. 101 floors (101 = New Year). Tuned mass damper (660-tonne gold pendulum) visible at 89F. Bamboo-shaped segments (8 flared sections — prosperity symbol). Fastest elevators at opening (16.8 m/s).',fact:'508m · Tallest 2004-2010 · 660T damper · Bamboo form · 101 floors (New Year)'},
+  {n:'Petronas Towers',la:3.16,ln:101.71,sub:'Malaysia · KL · 451.9m (88 floors)',desc:'Tallest twin towers in the world. Tallest building 1998-2004. 88 floors each. Skybridge at 41-42F (open to public). Designed by César Pelli. Islamic geometric patterns in facade. 32,000 windows. KLCC park.',fact:'451.9m · Tallest twins · Skybridge · 1998-2004 record · Islamic design · KLCC'},
+  {n:'Chrysler Building',la:40.75,ln:-73.98,sub:'USA · NYC · 319m (77 floors)',desc:'Art Deco masterpiece. Tallest building 1930-1931 (11 months). Stainless steel eagle gargoyles (31F). Triangular arched crown. Built by Walter Chrysler (auto mogul car parts theme). 77 floors. Distinctive NYC skyline element.',fact:'319m · Art Deco · Eagle gargoyles · 1930 record (briefly) · Chrysler Corp'},
+];
+D.w_dam = [
+  {n:'Three Gorges Dam',la:30.82,ln:111.00,sub:'China · Yangtze River · 2,335m long',desc:'World\'s largest power station (22,500 MW). 1.7km long, 181m tall. Reservoir 660km long. 39 trillion cubic meters. Displaced 1.3M people. Built 1994-2012. Cost $40B+ (plus resettlement). Controversial ecosystem impact.',fact:'22,500 MW (largest) · 1.7km · 1.3M displaced · Yangtze · $40B+ · Environmental controversy'},
+  {n:'Itaipu Dam',la:-25.41,ln:-54.59,sub:'Brazil/Paraguay · Paraná River · 14,000 MW',desc:'Second largest hydroelectric in the world. 7.9km long, 196m tall. Built 1974-1984 (binational project). Concrete gravity dam. 20 generating units. Supplies 89% of Paraguay, 15% of Brazil. Engineering wonder.',fact:'14,000 MW · 2nd largest · Paraná · Brazil/Paraguay · 89% of Paraguay\'s power'},
+  {n:'Hoover Dam',la:36.02,ln:-114.74,sub:'USA · Colorado River · 2,080 MW',desc:'Iconic Art Deco dam (1931-1936). 221m tall, 379m long. Created Lake Mead (largest US reservoir). 6.6M tonnes concrete. Built during Great Depression — employed 21,000 workers. 100 deaths during construction. US landmark.',fact:'2,080 MW · Art Deco (1936) · Lake Mead · 6.6M tonnes concrete · Depression-era · 100 deaths'},
+  {n:'Guri Dam',la:7.77,ln:-62.99,sub:'Venezuela · Caroní River · 10,235 MW',desc:'Third largest hydroelectric in the world. 7.4km long. 162m tall. Built 1963-1986. Supplies 65% of Venezuela\'s electricity. Raúl Leoni name. Reservoir extends 4,250 km². Lake Guri formed. Industrial complex nearby.',fact:'10,235 MW (3rd largest) · 65% of Venezuela power · Caroní River · 7.4km long'},
+  {n:'Vajont Dam',la:46.27,ln:12.33,sub:'Italy · Vajont Valley · 261.6m tall',desc:'One of the tallest dams in the world. 261.6m tall (thin arch). Never used — tragedy in 1963. Landslide into reservoir caused 250m megatsunami, overtopped dam, 2,000+ deaths. Dam survived intact but decommissioned. Cautionary engineering tale.',fact:'261.6m (one of tallest) · 1963 megatsunami landslide · 2,000+ dead · Never operational · Arch dam'},
+  {n:'Nurek Dam',la:38.37,ln:69.35,sub:'Tajikistan · Vakhsh River · 3,000 MW',desc:'World\'s tallest dam (300m). Earth-fill embankment. Built 1961-1980. Reservoir Yuzhnoye. Creates irrigation for cotton. 9 hydro turbines. Central Asia\'s power backbone. Seismic risk area — designed for quakes.',fact:'300m (tallest dam) · Earth-fill · Tajikistan · 3,000 MW · Central Asian power'},
+  {n:'Grand Coulee Dam',la:47.96,ln:-118.98,sub:'USA · Columbia River · 6,809 MW',desc:'Largest US hydroelectric (6,809 MW). 168m tall, 1,592m long. Built 1933-1942. Part of Columbia Basin Project — irrigates 2,400 km². Franklin D. Roosevelt. Pump-back system for irrigation. Concrete gravity dam.',fact:'6,809 MW (largest US) · Columbia River · Irrigation · Depression-era · FDR project'},
+];
+D.w_airport = [
+  {n:'Hartsfield-Jackson Atlanta',la:33.64,ln:-84.43,sub:'USA · Atlanta · Busiest in world (passengers)',desc:'World\'s busiest airport (since 1998). 107M passengers (2023). 5 runways. 2 terminals (Domestic/International). Delta Air Lines hub. 150k+ employees. 195 terminals moved per day. Underground train system.',fact:'107M passengers (busiest) · 5 runways · Delta hub · 150k employees · Atlanta'},
+  {n:'Dubai International (DXB)',la:25.25,ln:55.36,sub:'UAE · Dubai · Busiest international',desc:'World\'s busiest for international travel (87M passengers). Terminal 3 — largest building by floor area. A380 dedicated concourse. Dubai Mall connection. 2 runways. City within an airport. Duty free shopping.',fact:'87M international (busiest) · Terminal 3 (largest) · A380 concourse · Dubai shopping'},
+  {n:'London Heathrow (LHR)',la:51.47,ln:-0.45,sub:'UK · London · Busiest in Europe',desc:'Busiest airport in Europe (79M passengers). 4 terminals. 2 runways (limited expansion). British Airways hub. Queen\'s Terminal (T2). Crossrail (Elizabeth line) connects central London. Heathrow Express 15 min.',fact:'79M (busiest in Europe) · BA hub · 2 runway limit · Crossrail · Express 15 min'},
+  {n:'Beijing Capital (PEK)',la:40.08,ln:116.58,sub:'China · Beijing · 3 terminals',desc:'2nd busiest in the world (100M pre-COVID). Terminal 3 — world\'s largest at 1.3M m². Has a pagoda-themed interior. Satellite concourse. Aerotropolis development. 3 runways. Air China hub. Designed by Foster + Partners.',fact:'100M (pre-COVID) · T3 (largest 1.3M m²) · Pagoda design · Foster + Partners'},
+  {n:'Tokyo Haneda (HND)',la:35.55,ln:139.78,sub:'Japan · Tokyo · 87M passengers domestic focus',desc:'One of the busiest in Asia. Only 30 min from central Tokyo. 3 terminals. 4 runways (2 on reclaimed land). Japanese punctuality record. Observation decks. Samurai-themed lounge. International expansion since 2010.',fact:'87M · 30 min from Tokyo · 4 runways · Reclaimed land · Punctuality record'},
+  {n:'Singapore Changi (SIN)',la:1.36,ln:103.99,sub:'Singapore · Jewel Changi',desc:'World\'s most awarded airport. Jewel Changi — indoor waterfall (40m Rain Vortex), forest valley. 4 terminals. Butterfly garden, movie theater, rooftop pool. Skytrain. Orchid garden. 24/7 operation. Star Alliance hub.',fact:'Jewel indoor waterfall · Most awarded · Butterfly garden · Rooftop pool · 24/7'},
+  {n:'Denver International (DEN)',la:39.86,ln:-104.67,sub:'USA · Denver · Largest land area',desc:'Largest airport in North America by land area (337 km²). Teflon roof (snow shedding). 6 runways. Conspiracy theories (murals, underground bunkers). Denver Broncos. Marriott hotel. Light rail to city. Jeppesen Terminal tent roof.',fact:'337 km² (largest in US) · Teflon roof · Conspiracy theories · 6 runways · Tent terminal'},
+];
+D.tunnel = [
+  {n:'Gotthard Base Tunnel',la:46.60,ln:8.59,sub:'Switzerland · 57.1km · Longest rail tunnel',desc:'World\'s longest and deepest rail tunnel (57.1km). 2,300m of rock overburden (maximum). Opened 2016. 17 years construction. Cost $12B. Alps crossing. 260km/h passenger trains. 17-min transit under Alps. NEAT project.',fact:'57.1km (longest rail) · 2,300m rock cover · $12B · 17 years · 2016'},
+  {n:'Channel Tunnel (Chunnel)',la:51.07,ln:1.16,sub:'UK/France · 50.5km',desc:'Undersea rail tunnel connecting England and France. 37.9km under sea (longest undersea). 1994 opened. 3 tunnels (2 rail, 1 service). 30-min crossing. Built by 13,000 workers. 8 deaths during construction. LeShuttle trains.',fact:'50.5km · 37.9km undersea (longest) · 1994 · 13,000 workers · English Channel'},
+  {n:'Seikan Tunnel',la:41.18,ln:140.00,sub:'Japan · 53.9km · Longest undersea',desc:'Longest undersea tunnel in the world (23.3km under seabed). Connects Honshu and Hokkaido. 53.9km total. 1988 opened. 17 years construction. 240km/h Hokkaido Shinkansen. 100m below sea level. Under Tsugaru Strait.',fact:'53.9km · 23.3km undersea (longest) · 1988 · Shinkansen · Tsugaru Strait'},
+  {n:'Laerdal Tunnel',la:61.00,ln:7.00,sub:'Norway · 24.5km · Longest road tunnel',desc:'World\'s longest road tunnel (24.5km). Connects Laerdal and Aurland. 2000 opened. 3 caverns (break areas) with colored lighting to combat driver fatigue. 20 min drive. $1.1B cost. Mountain rock — hard gneiss.',fact:'24.5km (longest road) · Colored lighting caverns · 2000 · Norway mountains · $1.1B'},
+  {n:'Eisenhower Tunnel',la:39.68,ln:-105.92,sub:'USA · Colorado · 2.7km',desc:'Highest vehicle tunnel in North America (11,158ft / 3,401m). Continental Divide. 2.7km. I-70. 1968-73 construction. 55,000 vehicles/day. 4 avalanche cannons. Grade of 7%. Snow season 8 months. 12-ft clearance.',fact:'3,401m (highest in NA) · Continental Divide · I-70 · Avalanche control · 55k/day'},
+  {n:'Pir Panjal Railway Tunnel',la:33.55,ln:74.93,sub:'India · J&K · 11.2km',desc:'India\'s longest railway tunnel. 11.2km under Pir Panjal range. Part of Udhampur-Srinagar-Baramulla line. 2013 opened. 7 years construction. Altitude 1,760m. Escape tunnels. Ventilation shafts. Kashmir rail connectivity lifeline.',fact:'11.2km (longest rail in India) · Kashmir rail line · 1,760m · 2013 · Pir Panjal'},
+  {n:'Atal Tunnel (Rohtang)',la:32.38,ln:77.12,sub:'India · HP · 9.1km',desc:'World\'s longest highway tunnel at 10,000ft+ (altitude). Connects Manali to Lahaul-Spiti year-round. 9.1km. Built at 3,100m. 10 years construction. Saves 46km distance. Horse-shoe shaped. BRO built. Named after Atal Bihari Vajpayee.',fact:'9.1km · Highest highway tunnel (3,100m) · Year-round connectivity · BRO · Vajpayee'},
+  {n:'Zojila Pass Tunnel',la:34.30,ln:75.47,sub:'India · J&K · 14.2km',desc:'India\'s longest road tunnel (under construction). 14.2km. At 3,500m+ altitude. Srinagar-Leh all-weather connectivity. Asia\'s longest bi-directional tunnel. BRO project. Zojila La pass. Expected 2028 completion. Strategic military importance.',fact:'14.2km (longest road in India) · 3,500m · Under construction · Leh connectivity · BRO'},
+];
+D.trade = [
+  {n:'Silk Road',sub:'China to Mediterranean · 7,000km',desc:'Ancient network of trade routes connecting China to Mediterranean. 130 BCE — 1450s CE. Named for lucrative silk. Also carried spices, tea, porcelain, paper, gunpowder. Buddhism spread via these routes. Samarkand, Bukhara, Kashgar key cities. UNESCO World Heritage.',pts:[{la:34.3,ln:108.9},{la:36.1,ln:103.8},{la:39.5,ln:75.9},{la:37.2,ln:67.3},{la:39.7,ln:66.9},{la:39.5,ln:62.9},{la:35.8,ln:51.4},{la:37.9,ln:40.2},{la:36.2,ln:37.2},{la:34.0,ln:36.1},{la:32.4,ln:35.0},{la:31.2,ln:29.9}]},
+  {n:'Spice Route',sub:'India to Europe · 6,000km',desc:'Maritime trade route from Kerala/Malabar Coast to Europe. Cinnamon, black pepper, cardamom, cloves. Roman era (1st c. BC) — Pliny complained about pepper prices. Portuguese (Vasco da Gama 1498) broke Venetian/Arab monopoly. Muziris (Kerala) key port.',pts:[{la:10.0,ln:76.2},{la:8.5,ln:76.9},{la:6.9,ln:79.9},{la:5.0,ln:80.3},{la:2.0,ln:77.7},{la:0.0,ln:73.3},{la:-2.0,ln:71.5},{la:5.0,ln:60.0},{la:12.0,ln:56.0},{la:15.0,ln:51.0},{la:22.0,ln:47.0},{la:27.0,ln:43.0},{la:31.0,ln:36.0},{la:33.0,ln:32.0},{la:31.2,ln:29.9}]},
+  {n:'Incense Route',sub:'Oman to Mediterranean · 2,400km',desc:'Frankincense and myrrh trade from Dhofar (Oman) and Hadhramaut (Yemen) to Mediterranean ports. Active 300 BCE — 300 CE. Nabataean Petra thrived on this trade. Shisr (lost city of Ubar) on route. UNESO World Heritage.',pts:[{la:18.2,ln:54.0},{la:17.0,ln:53.0},{la:15.5,ln:49.0},{la:14.5,ln:47.0},{la:15.4,ln:45.3},{la:19.8,ln:42.6},{la:20.5,ln:41.0},{la:24.5,ln:39.5},{la:26.7,ln:37.9},{la:29.5,ln:35.0},{la:30.3,ln:35.4},{la:31.2,ln:29.9}]},
+  {n:'Trans-Saharan Route',sub:'North to West Africa · 4,000km',desc:'Salt, gold, and slave trade across Sahara Desert. Camel caravans (up to 10,000 camels). 8th-16th centuries. Timbuktu and Gao flourished as gold-salt exchange cities. Routes from Marrakesh/Tripoli to Niger River. Tuareg nomads navigated.',pts:[{la:33.0,ln:-7.6},{la:32.3,ln:-6.4},{la:31.0,ln:-4.4},{la:30.0,ln:-3.0},{la:28.0,ln:-1.0},{la:26.0,ln:-0.5},{la:24.0,ln:-1.5},{la:22.0,ln:-2.5},{la:20.0,ln:-3.0},{la:18.0,ln:-3.5},{la:16.0,ln:-4.0},{la:16.8,ln:-3.0}]},
+  {n:'Amber Road',sub:'Baltic to Mediterranean · 2,000km',desc:'Ancient trade route for amber (fossilized tree resin). Baltic coast to Adriatic. 3,000+ years old. Romans prized amber for jewelry. Aquileia (Italy) was processing center. Route passed through Vistula, Danube rivers. Also carried furs, honey, wax.',pts:[{la:54.7,ln:18.5},{la:52.7,ln:17.0},{la:51.1,ln:16.5},{la:50.3,ln:18.0},{la:49.8,ln:19.0},{la:48.3,ln:17.5},{la:47.5,ln:16.0},{la:46.5,ln:14.5},{la:45.5,ln:13.5},{la:44.5,ln:12.5}]},
+  {n:'Tea Horse Road (Chama)',sub:'China to Tibet · 2,500km',desc:'Ancient caravan route connecting Yunnan (Pu\'er tea) to Tibet (horses). 7th-20th centuries. Tea for horses trade. Crossed Hengduan Mountains, deep gorges (Three Parallel Rivers). Lijiang, Shangri-la, Lhasa key stops. "Southern Silk Road".',pts:[{la:25.0,ln:102.7},{la:26.9,ln:100.2},{la:27.5,ln:99.9},{la:28.5,ln:99.3},{la:29.5,ln:98.5},{la:30.0,ln:97.0},{la:30.5,ln:96.0},{la:31.0,ln:94.0},{la:29.7,ln:91.1}]},
+];
 // ============================================================
 // CONTEMPORARIES DATASET
 // ============================================================
@@ -2955,6 +3197,15 @@ const ERAS = [
   {id:'modern',label:'Modern India',start:1707,end:1947,bg:'#60a5fa20'},
   {id:'post',label:'Post-1947',start:1947,end:2026,bg:'#34d39920'},
 ];
+
+function fmtYear(y){
+  if(y<0)return Math.abs(y)+' BCE';
+  return y+' CE';
+}
+function eraRange(e){
+  if(e.id==='all')return '';
+  return fmtYear(e.start)+' – '+fmtYear(e.end);
+}
 
 // ============================================================
 // HELPERS
@@ -3120,6 +3371,23 @@ const SHAPE_MAP={
   cape:'diamond',
   delta:'box',
   phenomena:'sphere',
+  tiger:'sphere',
+  hill:'cone',
+  bird:'sphere',
+  i_pass:'diamond',
+  plateau:'box',
+  plain:'sphere',
+  valley:'cone',
+  w_pass:'diamond',
+  glacier:'cone',
+  w_bridge:'box',
+  lighthouse:'cone',
+  wonder:'diamond',
+  tower:'box',
+  w_dam:'box',
+  w_airport:'diamond',
+  tunnel:'ring',
+  oil:'sphere',
 };
 function mkPin(col,sz=0.008,cat=''){
   const shape=SHAPE_MAP[cat]||'sphere';
@@ -3161,7 +3429,7 @@ function mkLbl(text,col,scale=0.12){
 }
 
 // Build point markers
-['city','peak','port','airport','dam','nuclear','unesco','battle','temple','institution','wildlife','biosphere','ramsar','national_park','w_city','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','phenomena'].forEach(k=>{
+['city','peak','port','airport','dam','nuclear','unesco','battle','temple','institution','wildlife','biosphere','ramsar','national_park','kingdom','tiger','hill','bird','i_pass','w_city','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','phenomena','plateau','plain','valley','w_pass','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','oil'].forEach(k=>{
   const items=D[k]||[];
   const g=layerGroups[k];
   items.forEach(d=>{
@@ -3177,7 +3445,7 @@ function mkLbl(text,col,scale=0.12){
 });
 
 // Build line features (rivers, railway)
-['river','railway','w_river'].forEach(k=>{
+['river','railway','w_river','trade'].forEach(k=>{
   const items=D[k]||[];
   const g=layerGroups[k];
   items.forEach(d=>{
@@ -3329,11 +3597,109 @@ function mkLbl(text,col,scale=0.12){
   });
 })();
 
+// Build wind belts (line features with warm/cold coloring)
+(function buildWind(){
+  const items=D.wind||[];
+  const g=layerGroups.wind;
+  if(!g||!items.length)return;
+  items.forEach(d=>{
+    if(!d.pts||d.pts.length<2)return;
+    const isWarm=d.temp==='warm';
+    const color=isWarm?'#f97316':'#38bdf8';
+    const radius=R*1.008;
+    const pts=d.pts.map(p=>ll(p.la,p.ln,radius));
+    const bg=new THREE.BufferGeometry().setFromPoints(pts);
+    const ml=new THREE.LineBasicMaterial({color,transparent:true,opacity:0.45});
+    g.add(new THREE.Line(bg,ml));
+    const arrInt=Math.max(1,Math.floor(pts.length/2));
+    for(let a=arrInt;a<pts.length-1;a+=arrInt){
+      const from=pts[a-1],to=pts[a];
+      if(from&&to){
+        const dir=new THREE.Vector3().subVectors(to,from).normalize();
+        const midPt=new THREE.Vector3().addVectors(from,to).multiplyScalar(0.5);
+        const arrow=new THREE.Mesh(new THREE.ConeGeometry(0.006,0.016,4),new THREE.MeshBasicMaterial({color,transparent:true,opacity:0.4}));
+        arrow.position.copy(midPt);
+        const up=new THREE.Vector3(0,1,0);
+        const q=new THREE.Quaternion().setFromUnitVectors(up,dir);
+        arrow.quaternion.copy(q);
+        g.add(arrow);
+      }
+    }
+    const mid=pts[Math.floor(pts.length/2)];
+    if(mid){
+      const lbl=mkLbl(d.n,color,0.12);
+      lbl.position.copy(mid.clone().multiplyScalar(1.15));
+      g.add(lbl);
+    }
+  });
+})();
+
+// Build cloud cover (procedural noise texture on sphere)
+(function buildCloud(){
+  const g=layerGroups.cloud;
+  if(!g)return;
+  const res=128;
+  const size=res*res;
+  const data=new Uint8Array(size*4);
+  for(let i=0;i<size;i++){
+    const x=i%res,y=Math.floor(i/res);
+    const n=Math.sin(x*0.1)*Math.cos(y*0.12)+Math.sin(x*0.05+y*0.07)*0.5+Math.cos(x*0.03-y*0.09)*0.3;
+    const v=Math.max(0,Math.min(1,(n+1.2)/2.4));
+    const a=v>0.3?Math.round((v-0.3)*200):0;
+    data[i*4]=255;data[i*4+1]=255;data[i*4+2]=255;data[i*4+3]=a;
+  }
+  const tex=new THREE.DataTexture(data,res,res,THREE.RGBAFormat,THREE.UnsignedByteType);
+  tex.needsUpdate=true;
+  const geo=new THREE.SphereGeometry(R*1.003,64,64);
+  const mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,depthWrite:false,opacity:1});
+  const mesh=new THREE.Mesh(geo,mat);
+  mesh.name='cloudLayer';
+  g.add(mesh);
+})();
+
+// Build forest pins
+(function buildForest(){
+  const items=D.forest||[];
+  const g=layerGroups.forest;
+  if(!g||!items.length)return;
+  const color='#34d399';
+  items.forEach(d=>{
+    if(!d.la||!d.ln)return;
+    const p=ll(d.la,d.ln,R*1.005);
+    const pin=mkPin(color,0.007,'forest');
+    pin.position.copy(p);
+    pin.userData={n:d.n,sub:d.sub||'',desc:d.desc||'',fact:d.fact||''};
+    g.add(pin);
+    const lbl=mkLbl(d.n,color,0.12);
+    lbl.position.copy(p.clone().multiplyScalar(1.12));
+    g.add(lbl);
+  });
+})();
+
+// Build rainfall pins
+(function buildRainfall(){
+  const items=D.rainfall||[];
+  const g=layerGroups.rainfall;
+  if(!g||!items.length)return;
+  const color='#38bdf8';
+  items.forEach(d=>{
+    if(!d.la||!d.ln)return;
+    const p=ll(d.la,d.ln,R*1.005);
+    const pin=mkPin(color,0.007,'rainfall');
+    pin.position.copy(p);
+    pin.userData={n:d.n,sub:d.sub||'',desc:d.desc||'',fact:d.fact||''};
+    g.add(pin);
+    const lbl=mkLbl(d.n,color,0.12);
+    lbl.position.copy(p.clone().multiplyScalar(1.12));
+    g.add(lbl);
+  });
+})();
+
 // ============================================================
 // LAYER PANEL
 // ============================================================
 const panel = document.getElementById('layersPanel');
-const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','latitude','current','phenomena'];
+const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','tiger','hill','bird','i_pass','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','latitude','current','phenomena','wind','cloud','forest','rainfall','plateau','plain','valley','w_pass','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','trade','oil'];
 
 function buildPanel(){
   panel.innerHTML='';
@@ -3400,14 +3766,23 @@ document.getElementById('layToggle').addEventListener('click',()=>{
 // ============================================================
 (function initEraBar(){
   const chips=document.getElementById('eraChips');
+  const yearsEl=document.getElementById('eraYears');
+  const toggle=document.getElementById('eraToggle');
+  let collapsed=false;
+  toggle.addEventListener('click',()=>{
+    collapsed=!collapsed;
+    chips.style.display=collapsed?'none':'flex';
+    toggle.textContent=collapsed?'▶':'▼';
+  });
   ERAS.forEach(era=>{
     const btn=document.createElement('button');
     btn.className='era-chip'+(era.id==='all'?' active':'');
-    btn.textContent=era.label;
+    btn.innerHTML=era.label+(era.id!=='all'?` <span style="opacity:.4;font-size:.8em">${eraRange(era)}</span>`:'');
     btn.addEventListener('click',()=>{
       document.querySelectorAll('.era-chip').forEach(c=>c.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById('eraLabel').textContent=era.label;
+      yearsEl.textContent=era.id==='all'?'':eraRange(era);
       filterByEra(era.id);
     });
     chips.appendChild(btn);
