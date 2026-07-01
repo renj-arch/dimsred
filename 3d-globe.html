@@ -28,7 +28,22 @@ canvas{display:block}
   background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
   border:1px solid rgba(255,255,255,.06);
   scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.06) transparent;
+  transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .3s ease;
 }
+#layersPanel.collapsed{transform:translateX(-180px);opacity:0;pointer-events:none}
+#layersPanel.collapsed + #layToggle{opacity:1;pointer-events:auto}
+#layToggle{
+  position:fixed;top:60px;left:14px;z-index:19;
+  width:32px;height:32px;border-radius:8px;border:none;
+  background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.06);
+  color:rgba(255,255,255,.5);font-size:14px;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .3s ease;opacity:0;pointer-events:none;
+}
+#layToggle:hover{background:rgba(255,255,255,.08);color:#fff}
+#layToggle.open{left:14px}
+#layToggle.open{left:14px}
 #layersPanel::-webkit-scrollbar{width:3px}
 #layersPanel::-webkit-scrollbar-thumb{background:rgba(255,255,255,.06);border-radius:3px}
 .lay-section{padding:0 10px;margin-bottom:4px}
@@ -299,6 +314,8 @@ canvas{display:block}
 
 @media(max-width:640px){
   #layersPanel{width:160px;left:8px;top:52px;font-size:.9em;padding:6px 0}
+  #layersPanel.collapsed{transform:translateX(-152px)}
+  #layToggle{top:52px;left:8px;width:28px;height:28px;font-size:12px;border-radius:6px}
   #detail{bottom:80px;padding:14px 16px;max-width:96%}
   #topBar{font-size:.7em;padding:4px 12px;top:8px}
   #eraBar{top:50px;padding:4px 10px;font-size:.9em}
@@ -326,6 +343,7 @@ canvas{display:block}
 </div>
 
 <div id="layersPanel"></div>
+<button id="layToggle" title="Toggle layers">☰</button>
 
 <div id="detail">
   <button class="d-close" id="dClose">✕</button>
@@ -2869,8 +2887,39 @@ Object.entries(CAT).forEach(([k,v])=>{
   if(layerVis[k]===false)g.visible=false;
 });
 
-function mkPin(col,sz=0.008){
-  const g=new THREE.SphereGeometry(sz,8,8);
+function mkGeom(shape,sz){
+  switch(shape){
+    case'box':return new THREE.BoxGeometry(sz*1.6,sz*1.6,sz*1.6);
+    case'cone':return new THREE.ConeGeometry(sz*1.2,sz*2.4,3);
+    case'tri':return new THREE.ConeGeometry(sz*1.4,sz*2.2,3);
+    case'diamond':return new THREE.OctahedronGeometry(sz*1.6);
+    case'ring':return new THREE.RingGeometry(sz*0.6,sz*1.6,6);
+    case'pyramid':return new THREE.TetrahedronGeometry(sz*1.8);
+    default:return new THREE.SphereGeometry(sz,8,8);
+  }
+}
+const SHAPE_MAP={
+  city:'box',w_city:'box',
+  peak:'tri',w_peak:'tri',
+  port:'ring',
+  airport:'diamond',
+  dam:'box',
+  nuclear:'sphere',
+  unesco:'cone',w_unesco:'cone',
+  battle:'pyramid',w_battle:'pyramid',
+  temple:'diamond',
+  institution:'box',w_inst:'box',
+  wildlife:'sphere',
+  biosphere:'ring',
+  ramsar:'sphere',
+  national_park:'tri',w_np:'tri',
+  w_landmark:'diamond',
+  w_kingdom:'pyramid',
+  kingdom:'pyramid'
+};
+function mkPin(col,sz=0.008,cat=''){
+  const shape=SHAPE_MAP[cat]||'sphere';
+  const g=mkGeom(shape,sz);
   const m=new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:0.3});
   const sp=new THREE.Mesh(g,m);
   const gl=new THREE.Mesh(new THREE.SphereGeometry(sz*1.5,6,6),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.06}));
@@ -2914,7 +2963,7 @@ function mkLbl(text,col,scale=0.12){
   items.forEach(d=>{
     if(!d.la)return;
     const pos=ll(d.la,d.ln,R*1.008);
-    const pin=mkPin(catColors[k],k==='city'?0.01:0.007);
+    const pin=mkPin(catColors[k],k==='city'?0.01:0.007,k);
     pin.position.copy(pos);g.add(pin);
     const lbl=mkLbl(d.n,catColors[k]);
     lbl.position.copy(pos.clone().multiplyScalar(1.12));
@@ -3045,6 +3094,11 @@ function buildPanel(){
   });
 }
 buildPanel();
+
+// Layer panel toggle for mobile
+document.getElementById('layToggle').addEventListener('click',()=>{
+  document.getElementById('layersPanel').classList.toggle('collapsed');
+});
 
 // ============================================================
 // ERA BAR
