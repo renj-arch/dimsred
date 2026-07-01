@@ -4693,10 +4693,12 @@ function showChapterIntro(chapter,entries){
   document.getElementById('ciTheme').textContent=chapter.theme;
   const btn=document.getElementById('ciStart');
   btn.onclick=()=>{
+    console.debug('[LEC] ciStart clicked — beginLecturePlayback');
     hideChapterIntro();
     beginLecturePlayback(chapter,entries);
   };
   div.classList.add('show');
+  console.debug('[LEC] chapterIntro.show — waiting for ciStart click');
 }
 function hideChapterIntro(){
   document.getElementById('chapterIntro').classList.remove('show');
@@ -4711,18 +4713,21 @@ function showChapterOutro(chapter,nextChapter){
   if(nextChapter){
     btn.textContent='▶ Next: '+nextChapter.title;
     btn.onclick=()=>{
+      console.debug('[LEC] coNext clicked -> ch#'+nextChapter.index+' "'+nextChapter.title+'"');
       hideChapterOutro();
       startLectureChapter(nextChapter.index);
     };
   }else{
     btn.textContent='🎉 Finish Lecture';
     btn.onclick=()=>{
+      console.debug('[LEC] coNext clicked -> Finish Lecture');
       hideChapterOutro();
       stopLecture();
       showLectureComplete();
     };
   }
   div.classList.add('show');
+  console.debug('[LEC] chapterOutro.show — ch#'+chapter.index+' done, next='+(nextChapter?('ch#'+nextChapter.index):'none'));
 }
 function hideChapterOutro(){
   document.getElementById('chapterOutro').classList.remove('show');
@@ -4775,8 +4780,9 @@ let _lecTick=0;
 function startLectureChapter(chapterIndex){
   const all=buildLectureData();
   const entries=all.filter(e=>e._chapter===chapterIndex);
-  if(entries.length===0){log('No entries in chapter '+chapterIndex);return;}
+  if(entries.length===0){console.debug('[LEC] chapter '+chapterIndex+' has 0 entries — abort');return;}
   const chapter=LECTURE_CHAPTERS[chapterIndex];
+  console.debug('[LEC] startLectureChapter #'+chapterIndex+' "'+chapter.title+'" entries='+entries.length);
   
   // Cancel any lingering speech from previous chapter
   if(window.speechSynthesis)speechSynthesis.cancel();
@@ -4795,6 +4801,7 @@ function startLectureChapter(chapterIndex){
 // ---- Begin actual playback after chapter intro ----
 function beginLecturePlayback(chapter,entries){
   if(!_lecState||_lecState.stopped)return;
+  console.debug('[LEC] beginLecturePlayback ch#'+chapter.index+' idx=0 playing=true');
   _lecState.playing=true;
   updateLectureBar();
   playLectureEntry();
@@ -4804,8 +4811,10 @@ function beginLecturePlayback(chapter,entries){
 function playLectureEntry(){
   if(!_lecState||_lecState.stopped)return;
   const {entries,index}=_lecState;
+  console.debug('[LEC] playLectureEntry idx='+index+'/'+entries.length+' playing='+_lecState.playing+' tick='+_lecState._tick);
   if(index>=entries.length){
     // Chapter complete
+    console.debug('[LEC] chapter COMPLETE — show outro');
     _lecState.playing=false;
     const nextIdx=_lecState.chapter.index+1;
     const nextCh=nextIdx<LECTURE_CHAPTERS.length?LECTURE_CHAPTERS[nextIdx]:null;
@@ -4825,24 +4834,36 @@ function playLectureEntry(){
   // Fly to entry's location
   const catColor=entry._type==='battle'?'#fb923c':entry._type==='w_battle'?'#a78bfa':entry._type==='kingdom'?'#34d399':'#60a5fa';
   flyToLatLon(entry.la,entry.ln,R*1.7,()=>{
-    if(!_lecState||_lecState.stopped||_lecState._tick!==tick)return;
+    if(!_lecState||_lecState.stopped||_lecState._tick!==tick){
+      console.debug('[LEC] flyToLatLon callback BAIL (tick mismatch or stopped)');
+      return;
+    }
     
     // Get figure and show portrait via speakText
     const fig=getFigure(entry.n,entry.desc,catColor);
     
     // Narrate
     speakText(text,()=>{
-      if(!_lecState||_lecState.stopped||_lecState._tick!==tick)return;
+      if(!_lecState||_lecState.stopped||_lecState._tick!==tick){
+        console.debug('[LEC] speakText callback BAIL (tick mismatch or stopped)');
+        return;
+      }
       document.getElementById('subtitle').classList.remove('show');
       hidePortrait();
       if(window.cleanTLArcs)cleanTLArcs();
       // Advance to next
       if(_lecState.playing){
+        console.debug('[LEC] advance: idx '+_lecState.index+' -> '+( _lecState.index+1)+' (tick='+tick+')');
         _lecState.index++;
         setTimeout(()=>{
-          if(!_lecState||_lecState.stopped||_lecState._tick!==tick)return;
+          if(!_lecState||_lecState.stopped||_lecState._tick!==tick){
+            console.debug('[LEC] setTimeout BAIL (tick mismatch or stopped)');
+            return;
+          }
           playLectureEntry();
         },1800);
+      } else {
+        console.debug('[LEC] advance SKIP — playing=false');
       }
     },fig,catColor);
   });
@@ -4876,7 +4897,8 @@ function stopLecture(){
 }
 
 function toggleLecturePlay(){
-  if(!_lecState||document.getElementById('chapterIntro').classList.contains('show')||document.getElementById('chapterOutro').classList.contains('show'))return;
+  if(!_lecState||document.getElementById('chapterIntro').classList.contains('show')||document.getElementById('chapterOutro').classList.contains('show')){console.debug('[LEC] toggleLecturePlay blocked — overlay active');return;}
+  console.debug('[LEC] toggleLecturePlay playing='+!_lecState.playing);
   _lecState.playing=!_lecState.playing;
   updateLectureBar();
   if(_lecState.playing){
@@ -4887,7 +4909,8 @@ function toggleLecturePlay(){
 }
 
 function lecturePrev(){
-  if(!_lecState||_lecState.index<=0||document.getElementById('chapterIntro').classList.contains('show')||document.getElementById('chapterOutro').classList.contains('show'))return;
+  if(!_lecState||_lecState.index<=0||document.getElementById('chapterIntro').classList.contains('show')||document.getElementById('chapterOutro').classList.contains('show')){console.debug('[LEC] lecturePrev blocked');return;}
+  console.debug('[LEC] lecturePrev idx '+_lecState.index+' -> '+(_lecState.index-1));
   window.speechSynthesis&&window.speechSynthesis.cancel();
   _lecState.index--;
   _lecState.playing=true;
@@ -4896,7 +4919,8 @@ function lecturePrev(){
 }
 
 function lectureNext(){
-  if(!_lecState||document.getElementById('chapterIntro').classList.contains('show')||document.getElementById('chapterOutro').classList.contains('show'))return;
+  if(!_lecState||document.getElementById('chapterIntro').classList.contains('show')||document.getElementById('chapterOutro').classList.contains('show')){console.debug('[LEC] lectureNext blocked — overlay active');return;}
+  console.debug('[LEC] lectureNext idx '+_lecState.index+' -> '+(_lecState.index+1));
   window.speechSynthesis&&window.speechSynthesis.cancel();
   _lecState.index++;
   _lecState.playing=true;
