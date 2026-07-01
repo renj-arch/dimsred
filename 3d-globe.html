@@ -477,6 +477,16 @@ const CAT = {
   w_landmark:{label:'World Landmarks',color:'#facc15',icon:'🗽',region:'WW'},
   w_inst:{label:'World Institutions',color:'#67e8f9',icon:'🎓',region:'WW'},
   w_kingdom:{label:'World Empires',color:'#f97316',icon:'👑',region:'WW'},
+  strait:{label:'Straits',color:'#22d3ee',icon:'🌊',region:'WW'},
+  desert:{label:'Deserts',color:'#fbbf24',icon:'🏜️',region:'WW'},
+  lake:{label:'Lakes',color:'#38bdf8',icon:'🏞️',region:'WW'},
+  island:{label:'Islands',color:'#34d399',icon:'🏝️',region:'WW'},
+  peninsula:{label:'Peninsulas',color:'#a78bfa',icon:'🗺️',region:'WW'},
+  volcano:{label:'Volcanoes',color:'#ef4444',icon:'🌋',region:'WW'},
+  gulf:{label:'Gulfs & Bays',color:'#60a5fa',icon:'🌊',region:'WW'},
+  canal:{label:'Canals',color:'#94a3b8',icon:'🚢',region:'WW'},
+  range:{label:'Mountain Ranges',color:'#f472b6',icon:'⛰️',region:'WW'},
+  sea:{label:'Oceans & Seas',color:'#38bdf8',icon:'🌏',region:'WW'},
 };
 
 const D = {};
@@ -2636,6 +2646,109 @@ D.w_inst = [
   {n:'ETH Zurich',la:47.38,ln:8.55,sub:'Zurich, Switzerland · 1855',desc:'Swiss Federal Institute of Technology. Einstein taught here. 32 Nobel laureates. Top STEM globally.',fact:'1855 · Einstein professor · 32 Nobel laureates · Rüsterei building'},
   {n:'Peking University',la:39.99,ln:116.31,sub:'Beijing, China · 1898',desc:'Leading university in China. Weiming Lake, traditional architecture. Strong in sciences & humanities.',fact:'1898 · Yuanmingyuan campus · "Harvard of China" · Top in China'},
 ];
+
+D.strait = [
+  {n:'Strait of Gibraltar',la:36.00,ln:-5.40,sub:'Europe/Africa · 14 km wide',desc:'Connects Atlantic to Mediterranean. One of the busiest shipping lanes. Rock of Gibraltar on north side. Pillars of Hercules in ancient times.',fact:'14 km narrowest point · 300 ships/day · 60M passengers/year · Pillars of Hercules'},
+  {n:'Bosporus Strait',la:41.10,ln:29.00,sub:'Turkey · 31 km',desc:'Divides Europe from Asia. Connects Black Sea to Sea of Marmara. Only waterway from Black Sea to Mediterranean. Istanbul spans both banks.',fact:'31 km long · 200 ships/day · Eurasia divide · 3 bridges + rail tunnel'},
+  {n:'Dardanelles Strait',la:40.20,ln:26.40,sub:'Turkey · 61 km',desc:'Connects Sea of Marmara to Aegean. Strategic waterway controlled by Turkey. Site of Gallipoli campaign WWI. Part of Turkish Straits system.',fact:'61 km · Gallipoli 1915 · Hellespont of ancient Greece · Leander & Hero legend'},
+  {n:'Strait of Malacca',la:2.00,ln:102.00,sub:'Malaysia/Indonesia · 930 km',desc:'Busiest shipping strait in the world. Connects Indian Ocean to South China Sea. 40% of global trade passes through. Singapore at southern entrance.',fact:'930 km · 100,000 ships/year · 40% of world trade · Singapore choke point'},
+  {n:'Strait of Hormuz',la:26.50,ln:56.00,sub:'Iran/Oman · 39 km wide',desc:'Strategic oil chokepoint. 20% of global oil passes through. Connects Persian Gulf to Gulf of Oman. Iran threatens to close it regularly.',fact:'20% of world oil · 39 km narrowest · 17M barrels/day · Strait of Hurmuz'},
+  {n:'Strait of Dover',la:51.00,ln:1.50,sub:'England/France · 34 km',desc:'Narrowest point of English Channel. Busiest shipping lane in the world. Channel Tunnel runs underneath. White Cliffs of Dover on UK side.',fact:'34 km · 400 ships/day · Channel Tunnel (50 km) · White Cliffs of Dover'},
+  {n:'Bab-el-Mandeb',la:12.50,ln:43.50,sub:'Yemen/Djibouti · 26 km',desc:'Gate of Tears — strategic strait connecting Red Sea to Gulf of Aden. Key chokepoint for oil and trade. Site of ongoing conflict.',fact:'26 km wide · 4M barrels/day oil · Yemen civil war threat · Entry to Red Sea'},
+  {n:'Taiwan Strait',la:25.00,ln:120.00,sub:'China/Taiwan · 130 km',desc:'Separates Taiwan from mainland China. Flashpoint for potential conflict. China claims Taiwan. Key shipping route for East Asian trade.',fact:'130 km wide · China-Taiwan flashpoint · 50% of container ships pass · Pescadores islands'},
+  {n:'Korea Strait',la:34.50,ln:129.00,sub:'Korea/Japan · 200 km',desc:'Connects Yellow Sea to Sea of Japan. Separates Korea from Japan. Tsushima Island in the middle. Site of 1905 Battle of Tsushima.',fact:'200 km · Tsushima island · Battle of Tsushima 1905 · Busan-Fukuoka ferry'},
+  {n:'Palk Strait',la:10.00,ln:79.80,sub:'India/Sri Lanka · 64 km',desc:'Separates India from Sri Lanka. Adam\'s Bridge (Rama Setu) — chain of limestone shoals. Proposed Sethusamudram shipping canal.',fact:'64 km · Adam\'s Bridge (Rama Setu) · Gulf of Mannar biosphere · Ferry service'},
+  {n:'Sunda Strait',la:-6.00,ln:105.50,sub:'Java/Sumatra · 24 km',desc:'Separates Java from Sumatra. Krakatoa volcano island in the strait. 1883 eruption caused tsunami. Important shipping route.',fact:'24 km · Krakatoa volcano · 1883 mega-eruption · Java-Sumatra divide'},
+  {n:'Torres Strait',la:-10.50,ln:142.50,sub:'Australia/PNG · 150 km',desc:'Separates Australia from Papua New Guinea. Coral reefs and islands. Named after Spanish explorer Torres. Indigenous Torres Strait Islanders.',fact:'150 km · 274 islands · Torres Strait Islander people · Reefs and shallows'},
+  {n:'Strait of Magellan',la:-54.00,ln:-71.00,sub:'Chile · 600 km',desc:'Natural passage between Atlantic and Pacific south of mainland South America. Discovered by Magellan 1520. Safer than Drake Passage.',fact:'600 km · Magellan 1520 · Tierra del Fuego · Patagonia · Cape Horn south'},
+  {n:'Bering Strait',la:65.50,ln:-169.00,sub:'Russia/USA · 85 km',desc:'Separates Asia from North America. Connects Pacific to Arctic. Land bridge during ice ages allowed human migration to Americas. Russia 2.4 km from US islands.',fact:'85 km · Bering land bridge · Diomede Islands (2.4 km apart) · Ice age migration'},
+  {n:'Cook Strait',la:-41.50,ln:174.50,sub:'New Zealand · 22 km',desc:'Separates North and South Islands of New Zealand. Strong currents and winds. Wellington at north end. Inter-island ferry route.',fact:'22 km · Strong winds/currents · Wellington-Picton ferry · Cable Bay'},
+];
+D.desert = [
+  {n:'Sahara Desert',la:24.00,ln:12.00,sub:'North Africa · 9.2M km²',desc:'World\'s largest hot desert. Spans 11 countries. Erg (sand dunes), reg (gravel), hamada (rocky). Highest temperature recorded 57.7°C. Atlas Mountains to north.',fact:'9.2M km² (largest hot) · 11 countries · 57.7°C max · Nile runs through'},
+  {n:'Arabian Desert',la:23.00,ln:48.00,sub:'Arabia · 2.3M km²',desc:'Vast desert covering most of Arabian Peninsula. Rub\' al Khali (Empty Quarter) — largest continuous sand desert. Oil reserves beneath. Bedouin nomads.',fact:'2.3M km² · Rub\' al Khali (empty quarter) · World\'s largest oil · 55°C'},
+  {n:'Gobi Desert',la:43.00,ln:108.00,sub:'China/Mongolia · 1.3M km²',desc:'Cold desert with extreme temperatures (-40°C to 45°C). Dinosaur fossil site (first dinosaur eggs found). Silk Road routes cross it. Expanding desertification.',fact:'1.3M km² · Dinosaur eggs found · -40°C to 45°C · Flaming Cliffs'},
+  {n:'Kalahari Desert',la:-24.00,ln:22.00,sub:'Southern Africa · 900k km²',desc:'Semi-arid sandy savanna. Used by San Bushmen for 20,000+ years. Okavango Delta at northern edge. Rich in wildlife (lions, meerkats).',fact:'900k km² · San Bushmen · Okavango Delta · Meerkats & lions'},
+  {n:'Thar Desert',la:27.00,ln:72.00,sub:'India/Pakistan · 200k km²',desc:'Densely populated desert. 17% of India\'s population. Indira Gandhi Canal irrigation. Known for colorful culture, camels, and desert festivals.',fact:'200k km² · Most populated desert · Indira Gandhi Canal · Jaisalmer fort'},
+  {n:'Atacama Desert',la:-24.00,ln:-69.50,sub:'Chile · 105k km²',desc:'Driest non-polar desert on Earth. Some areas no recorded rain ever. Highest UV radiation. Mars-like landscapes used for NASA rover testing. Clear skies for astronomy.',fact:'Driest on Earth · NASA Mars testing · ALMA observatory · Salt flats & geysers'},
+  {n:'Sonoran Desert',la:32.00,ln:-113.00,sub:'USA/Mexico · 260k km²',desc:'Hottest desert in North America. Saguaro cacti iconic. Unique biodiversity. Arizona, California, Sonora. Bighorn sheep, Gila monster, roadrunner.',fact:'260k km² · Saguaro cacti · Sonora, Arizona · Bighorn sheep'},
+  {n:'Great Victoria Desert',la:-29.00,ln:128.00,sub:'Australia · 348k km²',desc:'Largest desert in Australia. Red sand dunes, salt lakes. Aboriginal protected areas. Spinifex grass. Extremely remote and uninhabited.',fact:'348k km² · Red sand dunes · Aboriginal lands · Remote & untouched'},
+];
+D.lake = [
+  {n:'Caspian Sea',la:42.00,ln:50.00,sub:'Asia/Europe · 371k km²',desc:'World\'s largest inland water body (lake). Saltwater. 5 countries border it. Rich in caviar (sturgeon). 80% of world\'s sturgeon catch. Below sea level.',fact:'371k km² (largest lake) · -28m below sea level · 5 countries · Sturgeon & caviar'},
+  {n:'Lake Superior',la:47.50,ln:-86.50,sub:'USA/Canada · 82k km²',desc:'Largest of Great Lakes. Largest freshwater lake by surface area. 10% of world\'s surface freshwater. Cold and deep (406m max). Lake-effect snow.',fact:'82k km² (largest Great Lake) · 406m deep · 10% world freshwater · Lake effect snow'},
+  {n:'Lake Victoria',la:-1.00,ln:33.00,sub:'Uganda/Kenya/Tanzania · 69k km²',desc:'Africa\'s largest lake. Source of the Nile. Named after Queen Victoria. Discovered by Speke 1858. Over 3,000 islands. Declining fish stocks.',fact:'69k km² (Africa\'s largest) · Nile source · 3,000 islands · Lake Victoria perch'},
+  {n:'Lake Baikal',la:53.50,ln:108.50,sub:'Russia · 31.7k km²',desc:'Deepest lake in the world (1,642m). Holds 20% of world\'s unfrozen freshwater. Oldest lake (25M years). UNESCO site. 1,700+ species (2/3 endemic).',fact:'1,642m (deepest lake) · 20% fresh water · 25M years old · Baikal seal'},
+  {n:'Lake Tanganyika',la:-6.00,ln:29.50,sub:'Tanzania/DRC/Zambia/Burundi · 32.9k km²',desc:'Second deepest lake (1,470m). Longest freshwater lake (673 km). Part of African Great Rift Valley. Ancient (9-12M years). Unique cichlid fish.',fact:'1,470m deep · 673 km (longest) · Rift Valley · 300+ cichlid species'},
+  {n:'Great Bear Lake',la:66.00,ln:-121.00,sub:'Canada · 31k km²',desc:'Largest lake entirely in Canada. 8th largest in world. Pristine, clear water. Arctic Circle. Named for grizzly bears. Radium mining.',fact:'31k km² (largest in Canada) · Arctic Circle · Pristine water · Grizzly bears'},
+  {n:'Lake Titicaca',la:-15.80,ln:-69.40,sub:'Peru/Bolivia · 8.4k km²',desc:'Highest navigable lake in the world (3,812m). Inca and Tiwanaku sacred site. Uros floating reed islands. Sun Island in Inca mythology.',fact:'3,812m (highest navigable) · 8.4k km² · Uros reed islands · Inca birthplace'},
+  {n:'Dead Sea',la:31.50,ln:35.50,sub:'Israel/Jordan · 605 km²',desc:'Lowest point on Earth (-430.5m). Hypersaline — 9.6x saltier than ocean. No life can survive (hence "Dead"). Therapeutic mud. Shrinking 1m/year.',fact:'-430m (lowest land) · 9.6x saltier · Dead Sea scrolls · Shrinking 1m/year'},
+  {n:'Lake Michigan',la:44.00,ln:-87.00,sub:'USA · 58k km²',desc:'Only Great Lake entirely in US. Chicago on southwest shore. Sleeping Bear Dunes. Lake Michigan-Huron connected. Popular for boating.',fact:'58k km² · Only all-US Great Lake · Chicago · Sleeping Bear Dunes'},
+  {n:'Great Salt Lake',la:41.00,ln:-112.50,sub:'USA · 4.4k km²',desc:'Largest saltwater lake in Western Hemisphere. Remnant of ancient Lake Bonneville. Saltier than ocean. Brine shrimp. Great Salt Lake Desert.',fact:'4.4k km² · 3-5x saltier than ocean · Brine shrimp · Salt flats'},
+];
+D.island = [
+  {n:'Greenland',la:72.00,ln:-42.00,sub:'Denmark · 2.17M km²',desc:'World\'s largest island. 80% ice-covered. Ice sheet up to 3km thick. Melting due to climate change. Inuit population. Self-governing Danish territory.',fact:'2.17M km² (largest island) · 80% ice · 3km thick sheet · Melting fast'},
+  {n:'Madagascar',la:-20.00,ln:47.00,sub:'Independent · 587k km²',desc:'4th largest island. Unique biodiversity — 90% species found nowhere else. Lemurs, baobabs, chameleons. Human settlement only 2,000 years ago. French colony until 1960.',fact:'587k km² (4th largest) · 90% endemic species · Lemurs · Baobab trees'},
+  {n:'Java',la:-7.50,ln:110.00,sub:'Indonesia · 139k km²',desc:'Most populous island on Earth (150M+). Home to Jakarta. Volcanic landscape. Borobudur temple. Dutch colonial center. Bustling economy.',fact:'139k km² · 150M+ (most populous) · Jakarta · 45+ volcanoes · Borobudur'},
+  {n:'Borneo',la:1.00,ln:114.00,sub:'Malaysia/Indonesia/Brunei · 748k km²',desc:'3rd largest island. Shared by 3 countries. Ancient rainforest (130M years). Orangutans, pygmy elephants. Deforestation for palm oil is critical.',fact:'748k km² (3rd largest) · 130M year rainforest · Orangutans · Palm oil threat'},
+  {n:'Sumatra',la:0.00,ln:102.00,sub:'Indonesia · 473k km²',desc:'6th largest island. Rich in natural resources (oil, gas, coal). Bukit Barisan mountain range. Lake Toba supervolcano. 2004 tsunami devastated Aceh.',fact:'473k km² · Lake Toba supervolcano · 2004 tsunami epicenter · Rainforest'},
+  {n:'Honshu',la:36.00,ln:138.00,sub:'Japan · 228k km²',desc:'Largest and most populous Japanese island. Tokyo, Osaka, Kyoto, Hiroshima. Mount Fuji. Shinkansen bullet trains. Heart of Japanese culture and economy.',fact:'228k km² · Tokyo, Osaka · Mount Fuji · Shinkansen'},
+  {n:'Great Britain',la:55.00,ln:-3.00,sub:'UK · 229k km²',desc:'Largest European island. Scotland, England, Wales. London the capital. Industrial Revolution birthplace. Roman, Viking, Norman history.',fact:'229k km² · London · Industrial Revolution · Roman/Medieval history'},
+  {n:'Iceland',la:65.00,ln:-18.00,sub:'Independent · 103k km²',desc:'Island of fire and ice. Glaciers and volcanoes. Northern Lights. Geothermal energy. Viking settlement 874 AD. World\'s oldest parliament (Althingi 930 AD).',fact:'103k km² · Fire & ice · Northern Lights · Geothermal · No military'},
+];
+D.peninsula = [
+  {n:'Indian Peninsula',la:17.00,ln:78.00,sub:'India · 2.1M km²',desc:'Heart of the Indian subcontinent. Deccan Plateau. Surrounded by Arabian Sea, Bay of Bengal, Indian Ocean. Dravidian culture. Western/Eastern Ghats.',fact:'2.1M km² · Deccan Plateau · Western/Eastern Ghats · 3 oceans'},
+  {n:'Arabian Peninsula',la:24.00,ln:45.00,sub:'Middle East · 3.2M km²',desc:'Largest peninsula in the world. Saudi Arabia, Yemen, Oman, UAE. Birthplace of Islam. World\'s largest oil reserves. Rub\' al Khali desert.',fact:'3.2M km² (largest) · Birthplace of Islam · 25% of world oil · Rub\' al Khali'},
+  {n:'Iberian Peninsula',la:40.00,ln:-4.00,sub:'Spain/Portugal · 596k km²',desc:'Southwestern Europe. Spain, Portugal, Andorra. Pyrenees border with France. Mediterranean and Atlantic coastlines. Roman, Moorish, Christian history.',fact:'596k km² · Spain & Portugal · Pyrenees · Al-Andalus Moorish history'},
+  {n:'Scandinavian Peninsula',la:63.00,ln:15.00,sub:'Norway/Sweden · 800k km²',desc:'Northern Europe. Norway, Sweden, part of Finland. Scandinavian Mountains. Fjords on west coast. Viking heritage. Aurora borealis.',fact:'800k km² · Norway & Sweden · Fjords · Vikings · Northern Lights'},
+  {n:'Malay Peninsula',la:6.00,ln:102.00,sub:'Malaysia/Myanmar/Thailand · 242k km²',desc:'Southeast Asia. Malaysia, Thailand, Myanmar. Singapore at southern tip. Strait of Malacca on west. Tropical rainforests. Rubber and palm oil.',fact:'242k km² · Malaysia, Thailand · Singapore tip · Strait of Malacca'},
+  {n:'Korean Peninsula',la:38.00,ln:127.00,sub:'Korea · 220k km²',desc:'East Asia. North and South Korea. 38th parallel border. Demilitarized Zone. Rapid development in South. Historical kingdoms (Goguryeo, Joseon).',fact:'220k km² · 2 Koreas · DMZ · Seoul and Pyongyang · Tiger economy'},
+];
+D.volcano = [
+  {n:'Mount Vesuvius',la:40.82,ln:14.43,sub:'Italy · 1,281m',desc:'Only active volcano on European mainland. Destroyed Pompeii in 79 AD. Erupted ~50 times since. Classified as one of most dangerous due to 3M people nearby.',fact:'79 AD Pompeii destruction · 3M people at risk · 1,281m · Last eruption 1944'},
+  {n:'Mount Fuji',la:35.36,ln:138.73,sub:'Japan · 3,776m',desc:'Japan\'s tallest mountain and cultural icon. Active stratovolcano (last erupted 1707). Symbol of Japan. UNESCO World Heritage. Climbing season July-August.',fact:'3,776m · Japan\'s tallest · Symbol of Japan · Last erupted 1707'},
+  {n:'Krakatoa',la:-6.10,ln:105.40,sub:'Indonesia · 813m',desc:'Volcanic island in Sunda Strait. 1883 eruption — loudest sound ever recorded, heard 3,000 km away. Caused 36,000 deaths from tsunami. Colony collapse.',fact:'1883 mega-eruption · 36,000 killed · Tsunami 40m · Loudest sound in history'},
+  {n:'Mount Etna',la:37.75,ln:14.99,sub:'Italy · 3,357m',desc:'Tallest active volcano in Europe. Sicily. Erupting frequently — nearly continuously. UNESCO World Heritage. Ancient Greeks believed it was forge of Hephaestus.',fact:'3,357m · Europe\'s tallest active · Frequent eruptions · Sicily'},
+  {n:'Mount St. Helens',la:46.20,ln:-122.18,sub:'USA · 2,549m',desc:'Catastrophic 1980 eruption — reduced elevation by 400m. Killed 57 people. Lahar, ashfall across 11 states. Part of Pacific Ring of Fire. Cascade Range.',fact:'1980 eruption reduced height 400m · 57 killed · Pacific Ring of Fire'},
+  {n:'Mauna Loa',la:19.48,ln:-155.61,sub:'USA (Hawaii) · 4,169m',desc:'Largest active volcano on Earth by volume. 2022 eruption after 38-year quiet. Shield volcano. 13,678 feet above sea level, 9km total from ocean floor.',fact:'Largest by volume · 2022 eruption · Shield volcano · Hawaii'},
+  {n:'Mount Pinatubo',la:15.14,ln:120.35,sub:'Philippines · 1,486m',desc:'1991 eruption — second largest of 20th century. Influenced global climate (cooled by 0.5°C). Clark Air Base evacuated. Aeta indigenous people affected.',fact:'1991 mega-eruption · 2nd largest 20th century · 0.5°C global cooling'},
+  {n:'Eyjafjallajökull',la:63.63,ln:-19.62,sub:'Iceland · 1,666m',desc:'2010 eruption caused largest airspace shutdown since WWII. Ash cloud grounded 100,000+ flights across Europe. Under ice cap. Famous for difficult pronunciation.',fact:'2010 eruption grounded 100k flights · Under ice cap · Iceland'},
+];
+D.gulf = [
+  {n:'Persian Gulf',la:26.00,ln:52.00,sub:'Middle East · 251k km²',desc:'Strategic water body between Iran and Arabian Peninsula. 30% of world\'s oil reserves. Countries: Iran, Iraq, Kuwait, Saudi Arabia, Bahrain, Qatar, UAE, Oman.',fact:'251k km² · 30% of world oil · Strait of Hormuz exit · Pearl diving history'},
+  {n:'Bay of Bengal',la:15.00,ln:88.00,sub:'South Asia · 2.6M km²',desc:'Largest bay in the world. India, Bangladesh, Myanmar, Sri Lanka. Ganges-Brahmaputra delta. Cyclone-prone. Sundarbans mangroves. Andaman & Nicobar islands.',fact:'2.6M km² (largest bay) · Ganges delta · Cyclones · Sundarbans'},
+  {n:'Gulf of Mexico',la:25.00,ln:-90.00,sub:'North America · 1.6M km²',desc:'USA, Mexico, Cuba. Warm Loop Current feeds Atlantic hurricanes. Offshore oil rigs — 2010 Deepwater Horizon spill. Gulf Stream originates here.',fact:'1.6M km² · Hurricane source · Deepwater Horizon 2010 · Gulf Stream'},
+  {n:'Gulf of Aden',la:12.00,ln:47.00,sub:'Middle East · 200k km²',desc:'Between Yemen and Somalia. Connects Red Sea to Indian Ocean via Bab-el-Mandeb. Piracy hotspot 2000s-2010s. Strategic shipping route.',fact:'200k km² · Piracy hotspot · Bab-el-Mandeb entry · Strategic shipping'},
+  {n:'Arabian Sea',la:18.00,ln:66.00,sub:'South Asia · 3.9M km²',desc:'Part of Indian Ocean. Bounded by India, Pakistan, Iran, Oman, Somalia. Monsoon-driven. Major shipping lanes. Karachi, Mumbai, Salalah ports.',fact:'3.9M km² · Monsoon winds · Mumbai & Karachi ports · Trade route'},
+  {n:'Gulf of Guinea',la:2.00,ln:4.00,sub:'West Africa · 2.3M km²',desc:'Atlantic coast of West Africa. Nigeria, Ghana, Ivory Coast. Oil-rich Niger Delta. Slave Coast historical name. Equator crosses it.',fact:'2.3M km² · Niger Delta oil · Slave Coast heritage · Equator crossing'},
+  {n:'Hudson Bay',la:60.00,ln:-85.00,sub:'Canada · 1.2M km²',desc:'Massive inland sea in northern Canada. Beluga whale habitat. Polar bears on western shore. Named after Henry Hudson 1610. Ice-covered 8 months/year.',fact:'1.2M km² · Beluga whales · Polar bears · Hudson 1610 exploration'},
+  {n:'Bay of Fundy',la:45.00,ln:-66.00,sub:'Canada · 16k km²',desc:'Highest tides in the world (up to 16m). Hopewell Rocks. Reversing Falls. Whale watching. Tidal power potential. UNESCO Global Geopark.',fact:'16m tides (world\'s highest) · Hopewell Rocks · Tidal power · Whales'},
+];
+D.canal = [
+  {n:'Suez Canal',la:30.50,ln:32.50,sub:'Egypt · 193 km',desc:'Links Mediterranean to Red Sea. Opened 1869. Shortens Europe-Asia voyage by 7,000 km. 12% of global trade passes through. Nationalized by Egypt 1956.',fact:'193 km · 12% global trade · 1869 opened · 1956 Suez Crisis · Ever Given 2021'},
+  {n:'Panama Canal',la:9.00,ln:-79.50,sub:'Panama · 82 km',desc:'Links Atlantic to Pacific. Opened 1914. Lock-based system. 5% of world trade. Expanded 2016 for larger ships (Neopanamax). Avoids 13,000 km Cape Horn route.',fact:'82 km · 1914 opened · Lock system · 2016 expansion · 5% of world trade'},
+  {n:'Kiel Canal',la:53.90,ln:9.50,sub:'Germany · 98 km',desc:'Links North Sea to Baltic Sea. Busiest artificial waterway in Europe. 43,000 ships/year. Completed 1895. Avoids 460 km around Jutland.',fact:'98 km · 43k ships/year · 1895 · Germany\'s busiest waterway'},
+  {n:'Erie Canal',la:43.10,ln:-77.00,sub:'USA · 584 km',desc:'Historic canal linking Great Lakes to Hudson River. Opened 1825. Transformed New York into America\'s commercial hub. Now part of NY State Canal System.',fact:'584 km · 1825 opened · Made NYC a port · 36 locks'},
+];
+D.range = [
+  {n:'Himalayas',la:28.00,ln:84.00,sub:'Asia · 2,400 km',desc:'World\'s highest mountain range. 10 peaks over 8,000m including Everest. Formed by India-Eurasia collision 50M years ago. Source of major Asian rivers. Sacred to Hindus/Buddhists.',fact:'2,400 km · 10 peaks >8,000m · Everest (8,848m) · Source of Ganges, Indus, Brahmaputra'},
+  {n:'Andes',la:-20.00,ln:-68.00,sub:'South America · 7,000 km',desc:'World\'s longest continental mountain range. 7 countries. Aconcagua highest (6,961m). Atacama Desert on western rain shadow. Inca civilization thrived here.',fact:'7,000 km (longest) · Aconcagua 6,961m · 7 countries · Inca heartland'},
+  {n:'Alps',la:46.50,ln:8.00,sub:'Europe · 1,200 km',desc:'Major European mountain range. 8 countries. Mont Blanc highest (4,808m). Ski resorts, tourism. Hannibal crossed with elephants (218 BCE). Alpine passes.',fact:'1,200 km · 8 countries · Mont Blanc 4,808m · Winter sports'},
+  {n:'Rocky Mountains',la:40.00,ln:-106.00,sub:'North America · 4,800 km',desc:'Major range in western North America. USA and Canada. Continental Divide. Yellowstone, Glacier, Banff national parks. Elbert Peak highest (4,401m).',fact:'4,800 km · Continental Divide · Yellowstone · Elbert 4,401m'},
+  {n:'Ural Mountains',la:60.00,ln:60.00,sub:'Russia · 2,500 km',desc:'Natural boundary between Europe and Asia. Old mountains (250-300M years). Rich in minerals (iron, copper, gold). Narodnaya highest (1,895m).',fact:'2,500 km · Europe-Asia boundary · Rich in minerals · 1,895m highest'},
+  {n:'Atlas Mountains',la:32.00,ln:-5.00,sub:'North Africa · 2,500 km',desc:'Separates Sahara from Mediterranean. Morocco, Algeria, Tunisia. Toubkal highest (4,167m). Berber culture. Named after Greek Titan Atlas.',fact:'2,500 km · Sahara-Mediterranean divide · Toubkal 4,167m · Berber homeland'},
+  {n:'Great Dividing Range',la:-30.00,ln:150.00,sub:'Australia · 3,500 km',desc:'Australia\'s most substantial mountain range. East coast from Queensland to Victoria. Kosciuszko highest (2,228m). Blue Mountains. Separates coast from Outback.',fact:'3,500 km · Australia\'s east coast · Kosciuszko 2,228m · Blue Mountains'},
+  {n:'Caucasus Mountains',la:42.50,ln:45.00,sub:'Russia/Georgia/Azerbaijan · 1,200 km',desc:'Between Black and Caspian Seas. Europe-Asia boundary. Elbrus highest (5,642m) — tallest in Europe. Diverse languages and cultures.',fact:'1,200 km · Elbrus 5,642m (Europe\'s tallest) · 50+ languages · Ancient cultures'},
+];
+D.sea = [
+  {n:'Pacific Ocean',la:0.00,ln:-150.00,sub:'World · 165M km²',desc:'Largest and deepest ocean. Mariana Trench (11,034m). Covers 1/3 of Earth\'s surface. Pacific Ring of Fire. 25,000 islands (most of any ocean).',fact:'165M km² (largest) · Mariana Trench 11km · 1/3 of Earth · Ring of Fire'},
+  {n:'Atlantic Ocean',la:0.00,ln:-40.00,sub:'World · 85M km²',desc:'Second largest. Divides Old and New Worlds. Mid-Atlantic Ridge (underwater mountain range). Bermuda Triangle. Titanic wreck. Gulf Stream current.',fact:'85M km² · Mid-Atlantic Ridge · Titanic · Bermuda Triangle · Gulf Stream'},
+  {n:'Indian Ocean',la:-10.00,ln:70.00,sub:'World · 70M km²',desc:'Third largest. Warmest ocean. Key trade routes. Monsoon winds. Sri Lanka, Maldives. 2004 tsunami (9.1 earthquake) killed 230,000 across 14 countries.',fact:'70M km² (warmest) · Monsoon trade winds · 2004 tsunami · 1/5 of world water'},
+  {n:'Arctic Ocean',la:85.00,ln:0.00,sub:'World · 15M km²',desc:'Smallest and shallowest ocean. Ice-covered most of year. Melting due to climate change. Northwest Passage opening. Polar bears, seals, walruses.',fact:'15M km² (smallest) · Ice melting fast · Northwest Passage · Polar bears'},
+  {n:'Southern Ocean',la:-65.00,ln:0.00,sub:'World · 21M km²',desc:'Encircles Antarctica. Coldest and stormiest. Antarctic Circumpolar Current. Icebergs, penguins, whales. Krill-rich ecosystem. Discovery of ozone hole.',fact:'21M km² · Antarctic Circumpolar Current · Penguins · Ozone hole'},
+  {n:'Mediterranean Sea',la:37.00,ln:16.00,sub:'Europe/Africa/Asia · 2.5M km²',desc:'Cradle of Western civilization. Roman Empire inland sea. 21 countries. Connected to Atlantic via Gibraltar. Tourism, olive oil, wine culture.',fact:'2.5M km² · Birthplace of 3 continents\' civilizations · 21 countries'},
+  {n:'Caribbean Sea',la:15.00,ln:-75.00,sub:'Central America · 2.75M km²',desc:'Tropical sea with 7,000+ islands. Pirates history. Coral reefs, hurricanes. Tourism, rum, reggae. Panama Canal connects to Pacific.',fact:'2.75M km² · 7,000 islands · Pirates · Hurricanes · Caribbean culture'},
+];
 // ============================================================
 // CONTEMPORARIES DATASET
 // ============================================================
@@ -2916,7 +3029,17 @@ const SHAPE_MAP={
   national_park:'tri',w_np:'tri',
   w_landmark:'diamond',
   w_kingdom:'pyramid',
-  kingdom:'pyramid'
+  kingdom:'pyramid',
+  strait:'ring',
+  desert:'sphere',
+  lake:'sphere',
+  island:'sphere',
+  peninsula:'box',
+  volcano:'tri',
+  gulf:'ring',
+  canal:'box',
+  range:'cone',
+  sea:'sphere'
 };
 function mkPin(col,sz=0.008,cat=''){
   const shape=SHAPE_MAP[cat]||'sphere';
@@ -2958,7 +3081,7 @@ function mkLbl(text,col,scale=0.12){
 }
 
 // Build point markers
-['city','peak','port','airport','dam','nuclear','unesco','battle','temple','institution','wildlife','biosphere','ramsar','national_park','w_city','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst'].forEach(k=>{
+['city','peak','port','airport','dam','nuclear','unesco','battle','temple','institution','wildlife','biosphere','ramsar','national_park','w_city','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea'].forEach(k=>{
   const items=D[k]||[];
   const g=layerGroups[k];
   items.forEach(d=>{
@@ -3042,7 +3165,7 @@ function mkLbl(text,col,scale=0.12){
 // LAYER PANEL
 // ============================================================
 const panel = document.getElementById('layersPanel');
-const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom'];
+const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea'];
 
 function buildPanel(){
   panel.innerHTML='';
