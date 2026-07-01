@@ -4902,6 +4902,7 @@ function toggleLecturePlay(){
   _lecState.playing=!_lecState.playing;
   updateLectureBar();
   if(_lecState.playing){
+    _lecState._tick=++_lecTick;
     playLectureEntry();
   }else{
     window.speechSynthesis&&window.speechSynthesis.cancel();
@@ -4910,20 +4911,22 @@ function toggleLecturePlay(){
 
 function lecturePrev(){
   if(!_lecState||_lecState.index<=0||document.getElementById('chapterIntro').classList.contains('show')||document.getElementById('chapterOutro').classList.contains('show')){console.debug('[LEC] lecturePrev blocked');return;}
-  console.debug('[LEC] lecturePrev idx '+_lecState.index+' -> '+(_lecState.index-1));
+  console.debug('[LEC] lecturePrev idx '+_lecState.index+' -> '+(_lecState.index-1)+' tick '+_lecState._tick+'->'+(_lecTick+1));
   window.speechSynthesis&&window.speechSynthesis.cancel();
   _lecState.index--;
   _lecState.playing=true;
+  _lecState._tick=++_lecTick;
   updateLectureBar();
   playLectureEntry();
 }
 
 function lectureNext(){
   if(!_lecState||document.getElementById('chapterIntro').classList.contains('show')||document.getElementById('chapterOutro').classList.contains('show')){console.debug('[LEC] lectureNext blocked — overlay active');return;}
-  console.debug('[LEC] lectureNext idx '+_lecState.index+' -> '+(_lecState.index+1));
+  console.debug('[LEC] lectureNext idx '+_lecState.index+' -> '+(_lecState.index+1)+' tick '+_lecState._tick+'->'+(_lecTick+1));
   window.speechSynthesis&&window.speechSynthesis.cancel();
   _lecState.index++;
   _lecState.playing=true;
+  _lecState._tick=++_lecTick;
   updateLectureBar();
   playLectureEntry();
 }
