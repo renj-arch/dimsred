@@ -488,6 +488,11 @@ const CAT = {
   canal:{label:'Canals',color:'#94a3b8',icon:'🚢',region:'WW'},
   range:{label:'Mountain Ranges',color:'#f472b6',icon:'⛰️',region:'WW'},
   sea:{label:'Oceans & Seas',color:'#38bdf8',icon:'🌏',region:'WW'},
+  waterfall:{label:'Waterfalls',color:'#22d3ee',icon:'💧',region:'WW'},
+  reef:{label:'Coral Reefs',color:'#f472b6',icon:'🪸',region:'WW'},
+  canyon:{label:'Canyons & Gorges',color:'#f97316',icon:'🏜️',region:'WW'},
+  cape:{label:'Capes & Points',color:'#a78bfa',icon:'📍',region:'WW'},
+  delta:{label:'Deltas',color:'#34d399',icon:'🌾',region:'WW'},
 };
 
 const D = {};
@@ -2750,6 +2755,47 @@ D.sea = [
   {n:'Mediterranean Sea',la:37.00,ln:16.00,sub:'Europe/Africa/Asia · 2.5M km²',desc:'Cradle of Western civilization. Roman Empire inland sea. 21 countries. Connected to Atlantic via Gibraltar. Tourism, olive oil, wine culture.',fact:'2.5M km² · Birthplace of 3 continents\' civilizations · 21 countries'},
   {n:'Caribbean Sea',la:15.00,ln:-75.00,sub:'Central America · 2.75M km²',desc:'Tropical sea with 7,000+ islands. Pirates history. Coral reefs, hurricanes. Tourism, rum, reggae. Panama Canal connects to Pacific.',fact:'2.75M km² · 7,000 islands · Pirates · Hurricanes · Caribbean culture'},
 ];
+D.waterfall = [
+  {n:'Angel Falls',la:5.97,ln:-62.54,sub:'Venezuela · 979m',desc:'World\'s tallest uninterrupted waterfall. Total drop 979m (807m free fall). Located in Canaima National Park. Named after Jimmy Angel, US aviator who crashed nearby 1937. UNESCO site.',fact:'979m (tallest in world) · 807m free fall · Canaima National Park · Jimmy Angel 1937'},
+  {n:'Niagara Falls',la:43.08,ln:-79.07,sub:'USA/Canada · 51m',desc:'Most famous waterfalls in North America. Three falls: Horseshoe, American, Bridal Veil. 2.8M liters/second flowing. Power generation since 1881. Honeymoon capital.',fact:'51m drop · 2.8M L/sec · Horseshoe, American, Bridal Veil · 10M+ visitors/year'},
+  {n:'Victoria Falls',la:-17.92,ln:25.86,sub:'Zambia/Zimbabwe · 108m',desc:'Largest curtain of falling water in the world (1,708m wide). Known as "The Smoke that Thunders" (Mosi-oa-Tunya). David Livingstone named it 1855. UNESCO site.',fact:'108m · 1,708m wide (largest curtain) · Smoke that Thunders · Livingstone 1855'},
+  {n:'Iguazu Falls',la:-25.69,ln:-54.44,sub:'Argentina/Brazil · 82m',desc:'One of the most spectacular waterfall systems in the world. 275 individual falls in a horsehoe shape. Devil\'s Throat (Garganta del Diablo). Wider than Victoria Falls. UNESCO site.',fact:'82m · 275 falls · Devil\'s Throat · Argentina/Brazil border · UNESCO'},
+  {n:'Gullfoss',la:64.33,ln:-20.12,sub:'Iceland · 32m',desc:'Iconic Icelandic waterfall in two tiers (11m + 21m). Golden Circle route. Glacial water from Langjökull. Nearly lost to hydroelectric dam in 1920s — saved by Sigríður Tómasdóttir.',fact:'32m in 2 tiers · Golden Circle · Langjökull glacier · Saved by activist 1920s'},
+  {n:'Yosemite Falls',la:37.76,ln:-119.60,sub:'USA · 739m',desc:'Tallest waterfall in North America. Three tiers: Upper (436m), Middle (206m), Lower (98m). Yosemite National Park. Peak flow in spring snowmelt.',fact:'739m (tallest in N America) · 3 tiers · Yosemite NP · Spring snowmelt peak'},
+  {n:'Plitvice Falls',la:44.88,ln:15.61,sub:'Croatia · varies',desc:'Series of 16 terraced lakes connected by cascading waterfalls. Plitvice Lakes National Park. Travertine barriers created by moss and bacteria. UNESCO site. Color changes with minerals.',fact:'16 terraced lakes · UNESCO · Travertine barriers · Croatia\'s most famous park'},
+  {n:'Kaieteur Falls',la:5.18,ln:-59.49,sub:'Guyana · 226m',desc:'World\'s largest single-drop waterfall by volume (4x Niagara). Potaro River, Amazon rainforest. Remote — only ~25,000 visitors/year. Discovered 1870.',fact:'226m single drop · 4x Niagara volume · Amazon rainforest · Remote'},
+];
+D.reef = [
+  {n:'Great Barrier Reef',la:-18.00,ln:147.00,sub:'Australia · 344k km²',desc:'World\'s largest coral reef system. 2,900+ individual reefs, 900 islands. Visible from space. UNESCO site. Home to 1,500 fish species, 400 coral types. Threatened by bleaching.',fact:'344k km² (largest reef) · 2,900 reefs · UNESCO · Coral bleaching threat'},
+  {n:'Belize Barrier Reef',la:17.00,ln:-88.00,sub:'Belize · 300 km',desc:'Largest barrier reef in Western Hemisphere. Second largest in world after GBR. Great Blue Hole — giant sinkhole, popular diving. UNESCO site. Manatees, sea turtles.',fact:'300 km (2nd largest) · Great Blue Hole · UNESCO · Manatees & turtles'},
+  {n:'New Caledonia Barrier Reef',la:-21.50,ln:165.50,sub:'New Caledonia · 1,500 km',desc:'Second longest continuous barrier reef after GBR. Surrounds New Caledonia. UNESCO site. Unique biodiversity — dugongs, nesting turtles. 1,000+ fish species.',fact:'1,500 km (2nd longest) · New Caledonia · UNESCO · Dugongs & turtles'},
+  {n:'Red Sea Coral Reef',la:25.00,ln:35.00,sub:'Egypt/Eritrea/Saudi Arabia · 1,900 km',desc:'One of the longest coral reef systems. Fringes Red Sea coast. Unique heat-tolerant corals (survive 30°C+). Popular diving (Ras Mohammed, Sharm el-Sheikh). 1,200+ fish species.',fact:'1,900 km · Heat-tolerant corals · Diving paradise · 1,200+ fish species'},
+  {n:'Maldives Coral Reefs',la:3.00,ln:73.00,sub:'Maldives · 26 atolls',desc:'26 coral atolls with 1,000+ islands. Lowest country on Earth (avg 1.5m above sea). Threatened by sea-level rise. Overwater bungalows. 250+ coral species.',fact:'26 atolls · Lowest country · Sea-level threat · Overwater bungalows'},
+];
+D.canyon = [
+  {n:'Grand Canyon',la:36.10,ln:-112.10,sub:'USA · 446 km long · 1.8km deep',desc:'World\'s most famous canyon. Carved by Colorado River over 6M years. Reveals 2B years of geological history. UNESCO site. 5M+ visitors annually. Native American sacred site.',fact:'446 km · 1.8km deep · 6M years carved · Colorado River · UNESCO'},
+  {n:'Fish River Canyon',la:-27.25,ln:17.66,sub:'Namibia · 160 km · 550m deep',desc:'Largest canyon in Africa. Second most visited in Namibia after Etosha. Fish River hiking trail (5 days). Arid, stark landscape. Spectacular at sunrise/sunset.',fact:'160 km · 550m deep · Largest in Africa · 5-day hiking trail'},
+  {n:'Colca Canyon',la:-15.60,ln:-71.85,sub:'Peru · 100 km · 3.3km deep',desc:'One of the deepest canyons in the world (3,270m). Twice as deep as Grand Canyon. Andean condors soar here. Pre-Inca terraces still farmed. Hot springs.',fact:'3.3km deep (one of deepest) · Andean condors · Pre-Inca terraces'},
+  {n:'Antelope Canyon',la:36.86,ln:-111.37,sub:'USA · Navajo land, Arizona',desc:'Stunning slot canyon on Navajo land. Upper (The Crack) and Lower (The Corkscrew) sections. Famous for light beams and smooth, flowing rock shapes. Photographer\'s paradise.',fact:'Slot canyon · Navajo land · Light beams · Upper & Lower sections'},
+  {n:'Blyde River Canyon',la:-24.57,ln:30.80,sub:'South Africa · 26 km · 1km deep',desc:'Largest green canyon in the world. Drakensberg escarpment. Three Rondavels rock formations. Blyde River Dam. Rich in wildlife and lush vegetation.',fact:'26 km · Largest green canyon · Three Rondavels · Drakensberg'},
+  {n:'Yarlung Tsangpo Canyon',la:29.50,ln:95.00,sub:'Tibet/India · 505 km · 5.3km deep',desc:'Deepest canyon in the world (5,300m). River Tsangpo (Brahmaputra) cuts through Himalayas. Longer than Grand Canyon. Remotely located, largely unexplored.',fact:'5.3km deep (deepest in world) · 505 km · Brahmaputra · Himalayas'},
+];
+D.cape = [
+  {n:'Cape of Good Hope',la:-34.36,ln:18.47,sub:'South Africa',desc:'Southern tip of Cape Peninsula. Misnamed as southernmost point — Cape Agulhas is further south. Bartolomeu Dias 1488. Legendary "Cape of Storms". Part of Table Mountain NP.',fact:'Cape Peninsula · Dias 1488 · Cape of Storms · Table Mountain NP'},
+  {n:'Cape Horn',la:-55.98,ln:-67.27,sub:'Chile',desc:'Southernmost point of South America. South of Tierra del Fuego. Treacherous seas — "Sailor\'s Graveyard". Drake Passage north. Rounding the Horn = historic sailing milestone.',fact:'Southernmost S America · Treacherous seas · Sailor\'s graveyard · Drake Passage'},
+  {n:'Cape Comorin (Kanyakumari)',la:8.08,ln:77.55,sub:'India',desc:'Southernmost tip of Indian Peninsula. Confluence of Arabian Sea, Bay of Bengal, Indian Ocean. Famous sunset/sunrise views. Vivekananda Rock Memorial. Thiruvalluvar statue.',fact:'Southern tip of India · 3 oceans meet · Sunset point · Vivekananda Rock'},
+  {n:'Cape Cod',la:42.00,ln:-70.00,sub:'USA · Massachusetts',desc:'Historic peninsula in Massachusetts. Pilgrims landed at Provincetown 1620. Cape Cod National Seashore. Whale watching. Lighthouses, clam chowder, Kennedy Compound.',fact:'Massachusetts · Pilgrims 1620 · National Seashore · Whales & lighthouses'},
+  {n:'North Cape (Nordkapp)',la:71.17,ln:25.78,sub:'Norway',desc:'Northernmost point of Europe accessible by road. 307m cliff face. Midnight Sun (May-July). North Cape Hall visitor center. The true northern tip is Knivskjellodden.',fact:'Northernmost accessible in Europe · Midnight Sun · 307m cliff · Norway'},
+  {n:'Cape Reinga',la:-34.42,ln:172.68,sub:'New Zealand',desc:'Northernmost point of New Zealand accessible by road. Where Pacific meets Tasman Sea — visible collision. Lighthouse. Maori believe spirits depart to homeland here. Pohutukawa tree.',fact:'Northernmost NZ · Pacific meets Tasman · Maori spirits depart · Lighthouse'},
+];
+D.delta = [
+  {n:'Sundarbans Delta',la:22.00,ln:89.00,sub:'India/Bangladesh · 105k km²',desc:'World\'s largest delta. Ganges-Brahmaputra-Meghna river system. Largest mangrove forest on Earth. Royal Bengal tiger, saltwater crocodiles. UNESCO site. Cyclone-prone.',fact:'105k km² (largest delta) · Ganges-Brahmaputra · Bengal tigers · Mangroves'},
+  {n:'Nile Delta',la:30.50,ln:31.00,sub:'Egypt · 24k km²',desc:'Mediterranean outlet of the Nile. 40% of Egypt\'s population lives here. Fertile agricultural land. Ancient Egyptian civilization flourished here. Rosetta Stone found at Rosetta branch.',fact:'24k km² · 40% of Egypt\'s population · Fertile · Rosetta Stone'},
+  {n:'Mekong Delta',la:10.00,ln:106.00,sub:'Vietnam · 40k km²',desc:'Rice bowl of Vietnam. 50% of Vietnam\'s rice production. Floating markets, canals. 18M people live here. 9 distributaries (Nine Dragons). Threatened by sea-level rise.',fact:'40k km² · 50% of Vietnam\'s rice · Floating markets · 18M people'},
+  {n:'Niger Delta',la:5.00,ln:6.00,sub:'Nigeria · 70k km²',desc:'Africa\'s largest delta. Rich in oil reserves — 2M barrels/day. Over 40 ethnic groups, 250 languages. Mangrove forests. Oil spills and environmental damage. Niger Delta conflict.',fact:'70k km² (Africa\'s largest) · 2M barrels/day oil · Mangroves · Environmental issues'},
+  {n:'Mississippi Delta',la:29.00,ln:-89.50,sub:'USA · 80k km²',desc:'River-dominated delta in Louisiana. Birthplace of jazz and blues. Cajun and Creole culture. Hurricane Katrina 2005. Levees and flood control. Land loss due to sinking.',fact:'80k km² · Birthplace of jazz · Hurricanes · Cajun culture · Land loss'},
+  {n:'Okavango Delta',la:-19.00,ln:23.00,sub:'Botswana · 15k km²',desc:'World\'s largest inland delta. Okavango River empties into Kalahari Desert. Seasonal flooding creates unique ecosystem. Elephants, hippos, lions, leopards. UNESCO site. Exclusive safaris.',fact:'15k km² (largest inland delta) · Kalahari Desert · UNESCO · Big 5 safari'},
+];
 // ============================================================
 // CONTEMPORARIES DATASET
 // ============================================================
@@ -3040,7 +3086,12 @@ const SHAPE_MAP={
   gulf:'ring',
   canal:'box',
   range:'cone',
-  sea:'sphere'
+  sea:'sphere',
+  waterfall:'cone',
+  reef:'ring',
+  canyon:'cone',
+  cape:'diamond',
+  delta:'box'
 };
 function mkPin(col,sz=0.008,cat=''){
   const shape=SHAPE_MAP[cat]||'sphere';
@@ -3082,7 +3133,7 @@ function mkLbl(text,col,scale=0.12){
 }
 
 // Build point markers
-['city','peak','port','airport','dam','nuclear','unesco','battle','temple','institution','wildlife','biosphere','ramsar','national_park','w_city','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea'].forEach(k=>{
+['city','peak','port','airport','dam','nuclear','unesco','battle','temple','institution','wildlife','biosphere','ramsar','national_park','w_city','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta'].forEach(k=>{
   const items=D[k]||[];
   const g=layerGroups[k];
   items.forEach(d=>{
@@ -3166,7 +3217,7 @@ function mkLbl(text,col,scale=0.12){
 // LAYER PANEL
 // ============================================================
 const panel = document.getElementById('layersPanel');
-const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea'];
+const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta'];
 
 function buildPanel(){
   panel.innerHTML='';
