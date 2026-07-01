@@ -30,16 +30,16 @@ canvas{display:block}
   scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.06) transparent;
   transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .3s ease;
 }
-#layersPanel.collapsed{transform:translateX(-180px);opacity:0;pointer-events:none}
-#layersPanel.collapsed + #layToggle{opacity:1;pointer-events:auto}
+#layersPanel.collapsed{transform:translateX(-190px);opacity:0;pointer-events:none}
+#layersPanel.collapsed + #layToggle{left:14px}
 #layToggle{
-  position:fixed;top:60px;left:14px;z-index:19;
-  width:32px;height:32px;border-radius:8px;border:none;
+  position:fixed;top:60px;left:210px;z-index:21;
+  width:28px;height:28px;border-radius:0 8px 8px 0;border:none;
   background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
   border:1px solid rgba(255,255,255,.06);
-  color:rgba(255,255,255,.5);font-size:14px;cursor:pointer;font-family:inherit;
+  color:rgba(255,255,255,.5);font-size:12px;cursor:pointer;font-family:inherit;
   display:flex;align-items:center;justify-content:center;
-  transition:all .3s ease;opacity:0;pointer-events:none;
+  transition:all .3s ease;
 }
 #layToggle:hover{background:rgba(255,255,255,.08);color:#fff}
 #layToggle.open{left:14px}
@@ -314,8 +314,9 @@ canvas{display:block}
 
 @media(max-width:640px){
   #layersPanel{width:160px;left:8px;top:52px;font-size:.9em;padding:6px 0}
-  #layersPanel.collapsed{transform:translateX(-152px)}
-  #layToggle{top:52px;left:8px;width:28px;height:28px;font-size:12px;border-radius:6px}
+  #layersPanel.collapsed{transform:translateX(-160px)}
+  #layToggle{top:52px;left:174px;width:24px;height:24px;font-size:10px;border-radius:0 6px 6px 0}
+  #layersPanel.collapsed + #layToggle{left:8px}
   #detail{bottom:80px;padding:14px 16px;max-width:96%}
   #topBar{font-size:.7em;padding:4px 12px;top:8px}
   #eraBar{top:50px;padding:4px 10px;font-size:.9em}
@@ -343,7 +344,7 @@ canvas{display:block}
 </div>
 
 <div id="layersPanel"></div>
-<button id="layToggle" title="Toggle layers">☰</button>
+<button id="layToggle" title="Toggle layers">◀</button>
 
 <div id="detail">
   <button class="d-close" id="dClose">✕</button>
@@ -3096,8 +3097,11 @@ function buildPanel(){
 buildPanel();
 
 // Layer panel toggle for mobile
+const layToggle=document.getElementById('layToggle');
 document.getElementById('layToggle').addEventListener('click',()=>{
-  document.getElementById('layersPanel').classList.toggle('collapsed');
+  const p=document.getElementById('layersPanel');
+  p.classList.toggle('collapsed');
+  layToggle.textContent=p.classList.contains('collapsed')?'▶':'◀';
 });
 
 // ============================================================
