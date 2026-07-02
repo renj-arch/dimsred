@@ -98,7 +98,11 @@
                 <div class="sidebar-nav">
                     <div style="font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Physics</div>
                     <a href="lesson-mechanics.html">Mechanics</a>
-                    <a href="lesson-thermodynamics.html">Thermodynamics</a>
+                    <a href="lesson-derivations.html">Derivations S1</a>
+                    <a href="lesson-derivations-2.html">Derivations S2Derivations S2</a>
+                    
+                    <a href="lesson-derivations-3.html">Derivations S3</a>
+                    <a href="lesson-derivations-4.html">Derivations S4</a><a href="lesson-thermodynamics.html">Thermodynamics</a>
                     <a href="lesson-optics.html">Optics</a>
                     <a href="lesson-electrostatics.html" class="active">Electrostatics & Current</a>
                     <a href="lesson-magnetism.html">Magnetism & EMI</a>
@@ -1183,6 +1187,167 @@
 </table>
 
 <div class="tip-box"><div class="tip-title">Final Revision Checklist: Electrostatics &amp; Current</div><div class="tip-text">&#x2713; Coulomb&rsquo;s law + superposition &#x2713; Electric field formulas (point, ring, disc, sheet, sphere) &#x2713; Gauss law applications &#x2713; Dipole (field, torque, energy) &#x2713; Potential (point, dipole, distributions) &#x2713; Capacitance (parallel plate, dielectric, combinations) &#x2713; Drift velocity and mobility &#x2713; Colour code of resistors &#x2713; Ohm&rsquo;s law and temperature dependence &#x2713; Kirchhoff&rsquo;s laws for circuit analysis &#x2713; Wheatstone bridge and meter bridge &#x2713; Potentiometer applications &#x2713; Galvanometer to ammeter/voltmeter &#x2713; Cells (EMF, internal R, grouping) &#x2713; Joule heating and thermoelectric effects &#x2713; Faraday&rsquo;s laws of electrolysis</div></div>
+<h2 style="margin-top:32px;border-top:2px solid var(--border);padding-top:20px">📋 Formula Sheet</h2>
+
+<details style="margin-bottom:12px">
+<summary style="cursor:pointer;font-weight:600;font-size:1.05em;padding:8px 0;color:var(--emerald)">▶ 1. Electrostatics — Charges &amp; Coulomb's Law</summary>
+<div style="padding:8px 0;font-size:.85em;color:var(--text-sec);line-height:1.8">
+<p>Coulomb's law: F = k·q₁q₂/r² where k = 1/(4πε₀) = 9×10⁹ N·m²/C²</p>
+<p>ε₀ = 8.85×10⁻¹² C²/N·m² (permittivity of free space)</p>
+<p>Dielectric constant: ε<sub>r</sub> = ε/ε₀, force in medium: F<sub>m</sub> = F/ε<sub>r</sub></p>
+<p>Charge quantization: q = ±ne (e = 1.6×10⁻¹⁹ C)</p>
+<p>Charge is conserved and additive</p>
+<p>Principle of superposition: F<sub>net</sub> = ΣFᵢ (vector sum of forces)</p>
+<p>Charge distribution: linear λ = Q/L, surface σ = Q/A, volume ρ = Q/V</p>
+<br>
+<p><strong>NEET Tip:</strong> When charges are distributed on identical spheres and brought in contact, total charge is equally divided. For n identical spheres: Q<sub>each</sub> = (Q₁+Q₂+...+Q<sub>n</sub>)/n</p>
+</div>
+</details>
+
+<details style="margin-bottom:12px">
+<summary style="cursor:pointer;font-weight:600;font-size:1.05em;padding:8px 0;color:var(--emerald)">▶ 2. Electric Field &amp; Potential</summary>
+<div style="padding:8px 0;font-size:.85em;color:var(--text-sec);line-height:1.8">
+<p>E = F/q₀ (electric field = force per unit positive test charge)</p>
+<p>E due to point charge: E = kq/r² (radially outward for +ve, inward for −ve)</p>
+<p>E due to dipole (axial): E = 2kp/r³ (along axis, direction from −q to +q)</p>
+<p>E due to dipole (equatorial): E = −kp/r³ (opposite to dipole moment)</p>
+<p>Torque on dipole: τ = pE sinθ = p × E</p>
+<p>Potential energy of dipole: U = −p·E = −pE cosθ</p>
+<p>Work done to rotate dipole: W = pE(cosθ₁ − cosθ₂)</p>
+<p>Potential due to point charge: V = kq/r</p>
+<p>V due to dipole: V = kp cosθ/r²</p>
+<p>Relation: E = −dV/dr (in 1D), E = −∇V (in 3D)</p>
+<p>For a system of charges: V = Σkqᵢ/rᵢ</p>
+<p>Equipotential surfaces: V constant, E ⟂ to surface</p>
+<br>
+<p><strong>NEET Tip:</strong> Electric field is a vector (use vector addition). Potential is a scalar (simply add magnitudes). Always easier to compute V first, then find E = −dV/dr.</p>
+</div>
+</details>
+
+<details style="margin-bottom:12px">
+<summary style="cursor:pointer;font-weight:600;font-size:1.05em;padding:8px 0;color:var(--emerald)">▶ 3. Gauss's Law &amp; Applications</summary>
+<div style="padding:8px 0;font-size:.85em;color:var(--text-sec);line-height:1.8">
+<p>Gauss's Law: ∮E·dA = Q<sub>enc</sub>/ε₀</p>
+<p>Field due to infinite sheet: E = σ/2ε₀ (near sheet, uniform)</p>
+<p>Field between parallel plates: E = σ/ε₀ (inside, uniform)</p>
+<p>Field due to infinite line charge: E = λ/2πε₀r (radial, ∝ 1/r)</p>
+<p>Field due to spherical shell (r &gt; R): E = kQ/r² (like point charge)</p>
+<p>Field due to spherical shell (r &lt; R): E = 0 (inside)</p>
+<p>Field due to solid sphere (r &gt; R): E = kQ/r²</p>
+<p>Field due to solid sphere (r &lt; R): E = kQr/R³ (∝ r)</p>
+<p><strong>NEET Tip:</strong> Use Gaussian surfaces with symmetry (spherical, cylindrical, planar). The field inside a conductor in electrostatic equilibrium is ALWAYS zero. Charge resides only on the surface.</p>
+</div>
+</details>
+
+<details style="margin-bottom:12px">
+<summary style="cursor:pointer;font-weight:600;font-size:1.05em;padding:8px 0;color:var(--emerald)">▶ 4. Capacitance</summary>
+<div style="padding:8px 0;font-size:.85em;color:var(--text-sec);line-height:1.8">
+<p>Capacitance: C = Q/V (unit: farad F = C/V)</p>
+<p>Parallel plate capacitor: C = ε₀A/d (vacuum), C = ε₀ε<sub>r</sub>A/d (with dielectric)</p>
+<p>Spherical capacitor: C = 4πε₀·ab/(b−a)</p>
+<p>Energy stored: U = ½QV = ½CV² = Q²/2C</p>
+<p>Energy density: u = ½ε₀E² (in vacuum)</p>
+<p>Series: 1/C<sub>eq</sub> = 1/C₁ + 1/C₂ + ... (charge same, voltage divides)</p>
+<p>Parallel: C<sub>eq</sub> = C₁ + C₂ + ... (voltage same, charge divides)</p>
+<p>With dielectric: C = KC₀ (K = ε<sub>r</sub> = dielectric constant)</p>
+<p>Polarization: P = ε₀χE (χ = electric susceptibility)</p>
+<p>Dielectric strength: maximum E field before breakdown</p>
+<p>Force between capacitor plates: F = Q²/2ε₀A</p>
+<br>
+<p><strong>NEET Tip:</strong> When a dielectric slab is inserted in a capacitor with battery connected (V constant): C↑, Q↑, E same, U↑. With battery disconnected (Q constant): C↑, V↓, E↓, U↓.</p>
+</div>
+</details>
+
+<details style="margin-bottom:12px">
+<summary style="cursor:pointer;font-weight:600;font-size:1.05em;padding:8px 0;color:var(--emerald)">▶ 5. Current Electricity</summary>
+<div style="padding:8px 0;font-size:.85em;color:var(--text-sec);line-height:1.8">
+<p>Current: I = dQ/dt = nAev<sub>d</sub></p>
+<p>Drift velocity: v<sub>d</sub> = eEτ/m = e(V/L)τ/m</p>
+<p>Current density: J = I/A = σE (σ = conductivity)</p>
+<p>Ohm's law: V = IR</p>
+<p>Resistance: R = ρL/A (ρ = resistivity, temperature dependent)</p>
+<p>Temperature dependence: R<sub>T</sub> = R₀(1 + αΔT)</p>
+<p>Conductivity: σ = 1/ρ = ne²τ/m</p>
+<p>Mobility: μ = v<sub>d</sub>/E = eτ/m</p>
+<p>Power: P = VI = I²R = V²/R</p>
+<p>Joule heating: H = I²Rt = V²t/R</p>
+<p>EMF: ε = V + Ir (terminal voltage of cell)</p>
+<p>Internal resistance: r = (ε−V)/I = ε/I − R</p>
+<p>Series cells: ε<sub>eq</sub> = ε₁+ε₂+..., r<sub>eq</sub> = r₁+r₂+...</p>
+<p>Parallel cells: ε<sub>eq</sub> = same, 1/r<sub>eq</sub> = 1/r₁+1/r₂+...</p>
+<br>
+<p><strong>Kirchhoff's Laws:</strong></p>
+<p>Junction (KCL): ΣI = 0 (currents entering = currents leaving)</p>
+<p>Loop (KVL): ΣV = 0 (sum of voltage drops = sum of EMFs)</p>
+<br>
+<p><strong>Wheatstone Bridge:</strong> P/Q = R/S (balanced, no current through galvanometer)</p>
+<p><strong>Meter Bridge:</strong> X = R·l/(100−l)</p>
+<p><strong>Potentiometer:</strong> ε₁/ε₂ = l₁/l₂</p>
+<br>
+<p><strong>NEET Tip:</strong> In complex circuits, use KVL for loops and KCL for junctions. For Wheatstone bridge, if P/Q = R/S, middle resistance can be removed as no current flows through it.</p>
+</div>
+</details>
+
+<h2 style="margin-top:32px;border-top:2px solid var(--border);padding-top:20px">📐 Derivations</h2>
+
+<details style="margin-bottom:12px">
+<summary style="cursor:pointer;font-weight:600;font-size:1em;padding:6px 0;color:var(--emerald)">▶ Derivation of Electric Field Due to Infinite Plane Sheet</summary>
+<div style="padding:8px 0;font-size:.85em;color:var(--text-sec);line-height:1.8">
+<p>Consider an infinite plane sheet with uniform charge density σ (C/m²).</p>
+<p>Construct a cylindrical Gaussian surface (pillbox) with area of cross-section A, passing through the sheet.</p>
+<p>Flux through curved surface = 0 (E ∥ surface)</p>
+<p>Flux through each flat end = EA</p>
+<p>Total flux: ∮E·dA = 2EA</p>
+<p>Charge enclosed: Q<sub>enc</sub> = σA</p>
+<p>By Gauss's Law: 2EA = σA/ε₀ → <strong>E = σ/2ε₀</strong></p>
+<p>The field is uniform and perpendicular to the sheet (independent of distance from the sheet).</p>
+</div>
+</details>
+
+<details style="margin-bottom:12px">
+<summary style="cursor:pointer;font-weight:600;font-size:1em;padding:6px 0;color:var(--emerald)">▶ Derivation of Drift Velocity and Ohm's Law</summary>
+<div style="padding:8px 0;font-size:.85em;color:var(--text-sec);line-height:1.8">
+<p>Electrons in a conductor move randomly. When E field is applied, they gain drift velocity.</p>
+<p>Force on electron: F = eE</p>
+<p>Acceleration: a = eE/m</p>
+<p>By Newton's 1st/2nd law with relaxation time τ: v<sub>d</sub> = aτ = eEτ/m</p>
+<p>Current: I = nAev<sub>d</sub> = nAe(eEτ/m) = nAe²Eτ/m</p>
+<p>Since E = V/L (potential gradient): I = nAe²τV/(mL)</p>
+<p>→ V = mL/(nAe²τ)·I → V = RI</p>
+<p>Resistivity: ρ = m/(ne²τ)</p>
+<p>Conductivity: σ = 1/ρ = ne²τ/m</p>
+<p>Thus: <strong>V = IR</strong> (Ohm's law derived from microscopic properties)</p>
+</div>
+</details>
+
+<h2 style="margin-top:32px;border-top:2px solid var(--border);padding-top:20px">⚠️ NEET Exam Tips &amp; Common Mistakes</h2>
+
+<details style="margin-bottom:10px">
+<summary style="cursor:pointer;font-weight:600;font-size:.95em;padding:6px 0;color:#ef4444">▶ Frequently Made Mistakes</summary>
+<div style="padding:8px 0;font-size:.85em;color:var(--text-sec);line-height:1.7">
+<p>❌ <strong>Coulomb's Law sign:</strong> F is a vector. Positive F = repulsion (same charges), negative = attraction (opposite). Use vector form for multiple charges.</p>
+<p>❌ <strong>E vs V:</strong> E is vector (units N/C or V/m), V is scalar (J/C or volts). Don't add E with V in equations.</p>
+<p>❌ <strong>Gauss's Law misuse:</strong> Only useful for symmetric charge distributions (spherical, cylindrical, planar). For nonsymmetric distributions, use integration.</p>
+<p>❌ <strong>Capacitor with dielectric:</strong> Battery connected → V constant, Q changes. Battery disconnected → Q constant, V changes.</p>
+<p>❌ <strong>Kirchhoff sign convention:</strong> Voltage drop = −IR when traversing resistor in current direction. EMF positive when going from − to + terminal.</p>
+<p>❌ <strong>Wheatstone bridge condition:</strong> P/Q = R/S only when balanced. Don't apply when galvanometer shows deflection.</p>
+<p>❌ <strong>Color code of resistors:</strong> Black(0), Brown(1), Red(2), Orange(3), Yellow(4), Green(5), Blue(6), Violet(7), Grey(8), White(9). Mnemonic: BB ROY of Great Britain has Very Good Wife.</p>
+</div>
+</details>
+
+<details style="margin-bottom:10px">
+<summary style="cursor:pointer;font-weight:600;font-size:.95em;padding:6px 0;color:var(--emerald)">▶ Shortcut Formulas for NEET</summary>
+<div style="padding:8px 0;font-size:.85em;color:var(--text-sec);line-height:1.7">
+<p>⚡ Force between parallel plate capacitor plates: F = Q²/2ε₀A = ½Q·E</p>
+<p>⚡ Energy stored in capacitor = ½QV = ½CV². 3 formulas — use the one where you know 2 variables.</p>
+<p>⚡ Sharing of charges: V<sub>common</sub> = (C₁V₁+C₂V₂)/(C₁+C₂)</p>
+<p>⚡ For n identical cells in series: I = nε/(R+nr). If R ≪ nr, I ≈ ε/r (same as one cell)</p>
+<p>⚡ For n identical cells in parallel: I = ε/(R+r/n). If R ≪ r/n, I ≈ nε/r (n times)</p>
+<p>⚡ Maximum power transfer: R = r (external R = internal r). P<sub>max</sub> = ε²/4r</p>
+<p>⚡ Shunt (ammeter): S = I<sub>g</sub>·G/(I−I<sub>g</sub>). Series R (voltmeter): R<sub>s</sub> = V/I<sub>g</sub> − G</p>
+</div>
+</details>
+
 <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
                 <div id="practice-qs"></div>
                 <div style="display:flex;gap:10px;margin-top:10px">
@@ -1212,3 +1377,4 @@
     </div>
 </body>
 </html>
+
