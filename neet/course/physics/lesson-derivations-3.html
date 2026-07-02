@@ -1,0 +1,1330 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Derivations Session 3 — NEET Physics | vlymbooq</title>
+    <meta name="description" content="NEET Physics derivations: Fluids, Thermodynamics, Waves, EMI, Electrostatics, Nuclear, Semiconductors. Beginner-friendly step-by-step.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/neet/course/physics/lesson-derivations-3.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px;color:#34d399}
+        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body h4{font-size:.95em;font-weight:600;margin:12px 0 6px;color:var(--purple,#a78bfa)}
+        .lesson-body p{color:var(--text-sec);font-size:.9em;line-height:1.7;margin-bottom:10px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .formula-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.15);border-radius:var(--radius);padding:12px 16px;margin:10px 0;text-align:center;font-size:.92em;color:var(--text);font-weight:500;font-family:'Courier New',monospace}
+        .deriv-box{background:rgba(167,139,250,.03);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin:12px 0}
+        .deriv-box .step{display:flex;gap:12px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.03)}
+        .deriv-box .step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+        .deriv-box .step-num{width:24px;height:24px;border-radius:50%;background:rgba(167,139,250,.15);color:var(--purple,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:.72em;font-weight:700;flex-shrink:0;margin-top:2px}
+        .deriv-box .step-text{font-size:.88em;color:var(--text-sec);line-height:1.6;flex:1}
+        .deriv-box .step-text .math{color:var(--text);font-weight:500;font-family:'Courier New',monospace;background:rgba(255,255,255,.03);padding:2px 6px;border-radius:4px;font-size:.95em}
+        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
+        .example-box .ex-title{font-weight:600;font-size:.85em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.85em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .tip-box .tip-title{font-weight:600;font-size:.85em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.85em;color:var(--text-sec);line-height:1.5}
+        .neet-box{background:rgba(239,68,68,.03);border:1px solid rgba(239,68,68,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .neet-box .neet-title{font-weight:600;font-size:.85em;color:#f87171;margin-bottom:4px}
+        .neet-box .neet-text{font-size:.85em;color:var(--text-sec);line-height:1.5}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .diagram-box svg{max-width:100%;height:auto}
+        .diagram-box .diagram-caption{font-size:.78em;color:var(--text-muted);margin-top:8px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        
+        /* -- Animations -- */
+        @keyframes pulse {0%,100%{opacity:.4}50%{opacity:1}}
+        @keyframes pulseGlow {0%,100%{opacity:.3;filter:drop-shadow(0 0 2px rgba(52,211,153,0))}50%{opacity:1;filter:drop-shadow(0 0 8px rgba(52,211,153,.7))}}
+        @keyframes bob {0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        @keyframes spin {0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        @keyframes fadeIn {0%{opacity:0}100%{opacity:1}}
+        .anim-pulse{animation:pulse 2s ease-in-out infinite}
+        .anim-glow{animation:pulseGlow 2s ease-in-out infinite}
+        .anim-spin{transform-origin:center;animation:spin 3s linear infinite}
+        .anim-bob{animation:bob 1.5s ease-in-out infinite}
+        .anim-fade{animation:fadeIn 2s ease-out}
+        .speaker-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:100px;font-size:.75em;font-weight:600;border:1px solid rgba(52,211,153,.2);cursor:pointer;background:rgba(52,211,153,.06);color:var(--emerald);transition:all .2s;vertical-align:middle;margin-left:8px}
+        .speaker-btn:hover{background:rgba(52,211,153,.15)}
+        .speaker-btn.speaking{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:#f87171;animation:pulse 1s ease-in-out infinite}
+        .anim-group{transition:opacity .7s ease,transform .7s ease}
+        .anim-hidden{opacity:0!important;pointer-events:none}
+        .anim-highlight{filter:drop-shadow(0 0 10px rgba(52,211,153,.6))}
+        .audio-progress{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:rgba(9,9,11,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:10px 24px;font-size:.82em;animation:fadeIn .3s ease}
+        .progress-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;max-width:1000px;margin-left:auto;margin-right:auto}
+        .progress-label{font-weight:600;color:var(--emerald);text-transform:capitalize}
+        .progress-words{color:var(--text-muted);font-size:.85em}
+        .progress-track{height:4px;background:rgba(255,255,255,.08);border-radius:2px;cursor:pointer;position:relative;max-width:1000px;margin:0 auto}
+        .progress-fill{height:100%;background:linear-gradient(90deg,var(--emerald),#6366f1);border-radius:2px;position:absolute;top:0;left:0;transition:width .1s linear}
+        .progress-thumb{width:14px;height:14px;border-radius:50%;background:var(--emerald);position:absolute;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 12px rgba(52,211,153,.5);transition:left .1s linear}
+        @media print{.nav,.sidebar-nav,.download-btn,.audio-progress{display:none!important}.container{padding:0}.deriv-box{break-inside:avoid}.diagram-box{break-inside:avoid}}
+    </style>
+    <script>
+
+        const LECT={
+ fluids:`Welcome young learner. Today we are going to understand fluid mechanics. Fluid mechanics is about how liquids and gases flow. Water flowing through a pipe. Air moving over an airplane wing. Blood flowing through your arteries. These are all examples of fluid flow. A fluid is anything that can flow. Both liquids and gases are fluids. They do not have a fixed shape. They take the shape of their container. Understanding how fluids behave is important for many applications. From designing pipes to understanding weather patterns. Let us start with the continuity equation. Imagine water flowing through a pipe. The pipe has a wide section and a narrow section. What happens when water enters the narrow section. It speeds up. You have experienced this. When you put your thumb over the end of a garden hose, the water comes out faster. Why does this happen. Because water cannot be compressed. It is incompressible, meaning its density does not change. So the same amount of water must flow through every part of the pipe per second. If the pipe gets narrower, the water must speed up to push the same volume through the smaller opening. This is the continuity equation. The volume flow rate is the same everywhere. Volume flow rate equals area times velocity. So A1 v1 equals A2 v2. A1 is the area at the wide section. V1 is the velocity there. A2 is the area at the narrow section. V2 is the velocity there. Since A2 is smaller than A1, v2 must be larger than v1. That is why water speeds up when the pipe narrows. The continuity equation is a statement of mass conservation. Matter cannot be created or destroyed. So the mass flowing in must equal the mass flowing out. For incompressible fluids, density is constant, so volume is conserved. The product of area and velocity is constant. The units of A v are meters squared times meters per second, which is cubic meters per second. This is the volume flow rate. It is often written as Q. So Q equals A v equals constant. Now let us talk about Bernoulli's equation. This is one of the most famous equations in physics. It describes how pressure changes when a fluid speeds up or slows down. The principle is simple. When a fluid speeds up, its pressure drops. When it slows down, its pressure increases. This is called Bernoulli's principle. It explains how airplanes fly, how atomizers work, and why roofs blow off during storms. Bernoulli's equation is an energy conservation statement for fluids. It says that along a streamline, the sum of pressure energy, kinetic energy per volume, and potential energy per volume is constant. The equation is P plus half rho v squared plus rho g h equals constant. P is the pressure. Rho is the density of the fluid. V is the velocity. G is gravity. H is the height. The term half rho v squared is called the dynamic pressure. It represents the kinetic energy per unit volume. The term rho g h is the gravitational potential energy per unit volume. P is the pressure energy per unit volume. Along a streamline, the sum of these three is constant. Let us understand what this means. If the velocity increases, the dynamic pressure half rho v squared increases. Since the total is constant, the pressure P must decrease. So faster flow means lower pressure. This is Bernoulli's principle. Now let us derive Bernoulli's equation. We use the work energy theorem. Consider a small blob of fluid moving along a streamline. Work is done on the blob by pressure forces. The pressure behind pushes it forward. The pressure ahead pushes it backward. The net work equals the force times distance. The work done by pressure equals P1 minus P2 times the volume. This work equals the change in kinetic energy plus the change in potential energy of the blob. The change in kinetic energy is half rho v2 squared minus v1 squared times volume. The change in potential energy is rho g h2 minus h1 times volume. Dividing by volume and rearranging gives P1 plus half rho v1 squared plus rho g h1 equals P2 plus half rho v2 squared plus rho g h2. This is Bernoulli's equation. It applies along a streamline for an ideal fluid. An ideal fluid is incompressible and has no viscosity, meaning no internal friction. Now let us talk about some important applications. First, Torricelli's law. This describes how fast fluid comes out of a hole in a container. Imagine a large tank filled with water. There is a small hole at the bottom. How fast does the water come out. Using Bernoulli, we set point 1 at the surface of the water and point 2 at the hole. At the surface, the velocity is approximately zero because the tank is large. The pressure at both points is atmospheric pressure. So they cancel. The height difference is h. So Bernoulli gives rho g h equals half rho v squared. Cancel rho. v squared equals 2 g h. So v equals root 2 g h. This is Torricelli's law. The exit speed is the same as the speed of an object falling from height h. This makes sense. The potential energy of the water at the surface converts to kinetic energy at the hole. Second, the Venturimeter. This is a device for measuring flow rate. It has a constriction in a pipe. The pressure difference between the wide and narrow sections is measured. Using Bernoulli and continuity, the flow rate can be calculated. The pressure difference is related to the velocity difference. By measuring the pressure difference with a manometer, we can find the flow rate. Venturimeters are used in pipelines to measure the flow of liquids and gases. Third, the atomizer. An atomizer is used to spray perfume or paint. When you squeeze the bulb, air rushes over the top of a tube. The fast moving air has low pressure. This low pressure sucks the liquid up the tube. The liquid is then broken into tiny droplets by the fast air. This is how spray bottles work. Fourth, aeroplane lift. An airplane wing is shaped so that the air travels faster over the top than under the bottom. The top surface is curved. The bottom surface is flatter. Because the air has to travel a longer distance over the top, it moves faster. Faster air means lower pressure. So the pressure on top is lower than the pressure on the bottom. This pressure difference creates an upward force called lift. This lift must equal the weight of the plane for level flight. Fifth, why roofs blow off during storms. When strong wind blows over a roof, the air moves faster over the top. This creates lower pressure above the roof. The pressure inside the house is higher. The pressure difference pushes the roof upward. That is why roofs can blow off during storms even though the wind is not directly pulling them. Now let us talk about some limitations of Bernoulli. Bernoulli's equation only applies along a single streamline. You cannot apply it between different streamlines. It also only applies to ideal fluids with no viscosity. Real fluids like honey have viscosity. Viscosity is internal friction. It causes energy loss. Bernoulli does not account for this. For viscous fluids, we need the Navier Stokes equations, which are much more complex. For NEET, Bernoulli is usually applied to ideal fluids. Viscous effects are considered separately using Poiseuille's law for flow through pipes. Poiseuille's law says the volume flow rate through a pipe is Q equals pi R to the power 4 delta P over 8 eta L. Here R is the pipe radius, eta is viscosity, L is pipe length, and delta P is the pressure difference. Notice that Q depends on R to the fourth power. Doubling the radius increases the flow rate by 16 times. This is why blood vessels need to be only slightly constricted to significantly reduce blood flow. Viscosity also causes drag on objects moving through fluids. Stokes law gives the drag force on a sphere. F equals 6 pi eta r v, where r is the sphere radius and v is the velocity. This is important for understanding sedimentation and the motion of small particles in fluids. At terminal velocity, the drag force equals the weight minus the buoyant force. So 6 pi eta r v t equals m g minus buoyant force. Solving gives v t equals 2 r squared times rho minus sigma times g over 9 eta, where sigma is the fluid density. This is how we can measure viscosity by observing falling spheres. So to summarize, the continuity equation says A v is constant for incompressible flow. Bernoulli's equation says P plus half rho v squared plus rho g h is constant along a streamline. Bernoulli explains lift, atomizers, Torricelli's law, and the Venturi effect. Viscosity causes energy loss and is described by Poiseuille's law and Stokes law. Understanding fluid mechanics helps us understand how planes fly, how pipes work, and how blood flows.`,
+ thermo:`Welcome young learner. Today we are going to understand thermodynamics. Thermodynamics is the study of heat, work, and energy. It deals with how heat energy is converted to other forms of energy. Every time you start a car engine, you are using thermodynamics. Every time you cook food, you are using thermodynamics. Every time your body converts food into energy, that is also thermodynamics. Thermodynamics has four laws. But for NEET, we focus on the first two laws and their applications. Let us start with some basic concepts. Temperature is a measure of how hot or cold something is. It is measured in Kelvin for thermodynamic calculations. Zero Kelvin is absolute zero, the lowest possible temperature. At absolute zero, all molecular motion stops. Heat is energy that flows from a hotter object to a colder object. It is not the same as temperature. A large object at a low temperature can contain more heat than a small object at a high temperature. Internal energy is the total energy stored inside a system. It includes the kinetic energy of molecules and the potential energy from molecular interactions. For an ideal gas, internal energy depends only on temperature. It is U equals f over 2 n R T, where f is the number of degrees of freedom. A system is the part of the universe we are studying. Everything outside the system is the surroundings. The boundary separates the system from the surroundings. An open system can exchange both matter and energy with the surroundings. A closed system can exchange energy but not matter. An isolated system cannot exchange either. The first law of thermodynamics is about energy conservation. It says that the change in internal energy of a system equals the heat added to the system minus the work done by the system. Delta U equals Q minus W. Here Q is positive when heat is added to the system. W is positive when work is done by the system. This sign convention is used in chemistry and NEET. In physics, sometimes W is defined as work done on the system. Be careful with the sign convention. The first law is simply a statement that energy cannot be created or destroyed. It can only change forms. Heat added to a system can either increase its internal energy or be used to do work. Now let us talk about thermodynamic processes. There are four important types. Isothermal process means constant temperature. For an ideal gas, internal energy depends only on temperature. So in an isothermal process, delta U is zero. The first law gives Q equals W. All heat added is converted to work. The equation for an isothermal process is P V equals constant. Isothermal processes are slow. The system has time to exchange heat with the surroundings to maintain constant temperature. Adiabatic process means no heat exchange. Q is zero. The first law gives delta U equals minus W. Work done by the system comes from its internal energy. So the temperature changes. The equation for an adiabatic process is P V to the power gamma equals constant. Here gamma is the ratio of specific heats, C p over C v. For a monatomic gas, gamma is 5 over 3, about 1 point 6 7. For a diatomic gas, gamma is 7 over 5, about 1 point 4. Adiabatic processes are fast. There is no time for heat to enter or leave. Adiabatic compression heats the gas. This is why a diesel engine does not need spark plugs. The compression heats the air enough to ignite the fuel. Isobaric process means constant pressure. The work done is P times delta V. The heat added is Q equals n C p delta T. The change in internal energy is n C v delta T. Isochoric process means constant volume. No work is done because volume does not change. So W equals zero. The first law gives delta U equals Q. All heat added increases internal energy and temperature. Now let us talk about the Carnot engine. A heat engine is a device that converts heat into work. It takes heat from a hot reservoir, converts some of it to work, and rejects the rest to a cold reservoir. No heat engine can be 100 percent efficient. Some heat must always be rejected. The efficiency of a heat engine is eta equals W over Q h, where W is the work output and Q h is the heat taken from the hot reservoir. Since W equals Q h minus Q c, efficiency also equals 1 minus Q c over Q h. The Carnot engine is an idealized engine that operates on a reversible cycle. It is the most efficient engine possible operating between two temperatures. Its efficiency is eta Carnot equals 1 minus T c over T h, where T c and T h are absolute temperatures of the cold and hot reservoirs. This is the maximum possible efficiency. No real engine can exceed it. The Carnot cycle has four steps. Step one is isothermal expansion at the hot temperature T h. The gas expands, doing work. Heat Q h is absorbed from the hot reservoir. Step two is adiabatic expansion. The gas continues expanding without heat exchange. Its temperature drops to T c. Step three is isothermal compression at T c. Work is done on the gas. Heat Q c is rejected to the cold reservoir. Step four is adiabatic compression. The gas is compressed without heat exchange. Its temperature rises back to T h. The net work done is the area inside the cycle on a P V diagram. The efficiency depends only on the temperatures. Higher T h or lower T c gives higher efficiency. For a Carnot refrigerator, the coefficient of performance is COP equals T c over T h minus T c. A refrigerator transfers heat from a cold space to a hot space using work. The COP tells us how much heat is removed per unit work input. Now let us talk about the second law of thermodynamics. The first law says energy is conserved. But it does not say which processes are possible. For example, heat spontaneously flows from hot to cold, not from cold to hot. The first law does not forbid heat flowing from cold to hot. But it never happens naturally. This is where the second law comes in. The second law has several equivalent statements. The Kelvin Planck statement says it is impossible to construct a heat engine that converts all heat into work without rejecting some heat to a cold reservoir. In other words, 100 percent efficiency is impossible. The Clausius statement says it is impossible for heat to flow from a cold body to a hot body without work being done. This is why refrigerators need electricity. The second law introduces the concept of entropy. Entropy is a measure of disorder or randomness. The second law says the entropy of an isolated system always increases or stays the same. It never decreases. In reversible processes, entropy stays the same. In irreversible processes, entropy increases. All real processes are irreversible, so entropy always increases. The change in entropy is delta S equals Q over T for a reversible process. Heat added increases entropy. Heat removed decreases entropy. For an irreversible process, the entropy change is greater than Q over T. The second law tells us the direction of time. Entropy increases in the forward direction of time. This is why we remember the past but not the future. The universe as a whole is moving toward maximum entropy, a state called heat death. Now let us talk about heat engines and refrigerators in more detail. A heat engine works in a cycle. It takes heat Q h from a hot reservoir, does work W, and rejects heat Q c to a cold reservoir. The efficiency is W over Q h. By the first law, W equals Q h minus Q c. So efficiency is 1 minus Q c over Q h. For a Carnot engine, Q c over Q h equals T c over T h. So efficiency is 1 minus T c over T h. A refrigerator works in reverse. It takes heat Q c from a cold reservoir, uses work W, and rejects heat Q h to a hot reservoir. The coefficient of performance is Q c over W. For a Carnot refrigerator, COP equals T c over T h minus T c. A heat pump is like a refrigerator but used for heating. Its COP is Q h over W, which equals T h over T h minus T c for a Carnot heat pump. Now let us talk about some important thermodynamic quantities. Specific heat is the heat required to raise the temperature of one kilogram of a substance by one Kelvin. For gases, there are two specific heats. C p is the specific heat at constant pressure. C v is the specific heat at constant volume. C p is greater than C v because at constant pressure, the gas expands and does work, so more heat is needed to raise the temperature by the same amount. The ratio gamma equals C p over C v. For a monatomic ideal gas, C v is 3 R over 2 and C p is 5 R over 2. For a diatomic gas, C v is 5 R over 2 and C p is 7 R over 2. Latent heat is the heat required to change the phase of a substance without changing its temperature. For example, the latent heat of fusion is the heat needed to melt ice. The latent heat of vaporization is the heat needed to boil water. These are important for phase change problems. So to summarize, the first law says delta U equals Q minus W. The second law says entropy always increases. The Carnot engine is the most efficient engine. Its efficiency is 1 minus T c over T h. Thermodynamic processes include isothermal, adiabatic, isobaric, and isochoric. Entropy is a measure of disorder. These concepts are fundamental to understanding energy conversion.`,
+ waves:`Welcome young learner. Today we are going to understand waves. Waves are everywhere. Sound is a wave. Light is a wave. When you drop a stone in water, ripples spread out in waves. When you pluck a guitar string, it vibrates and produces sound waves. Even radio waves carry music and speech through the air. Understanding waves is essential for physics. A wave is a disturbance that travels through a medium. The medium itself does not travel. It just oscillates back and forth. Think of a wave on a rope. You hold one end and shake it up and down. The wave travels along the rope. But the rope itself does not travel. Each point on the rope just moves up and down. The disturbance travels. The material does not. There are two main types of waves. Transverse waves and longitudinal waves. In a transverse wave, the particles of the medium move perpendicular to the direction of wave travel. Light waves are transverse. Waves on a string are transverse. In a longitudinal wave, the particles move parallel to the direction of wave travel. Sound waves are longitudinal. The particles compress and rarefy as the wave passes. Let us define some important terms. Wavelength is the distance between two consecutive crests or troughs. It is written as lambda. Frequency is the number of complete waves passing a point per second. It is written as f. The unit is Hertz, which is per second. Time period is the time for one complete wave to pass a point. It is written as T. T equals 1 over f. Wave speed is how fast the wave travels. It is v equals f lambda. This is the fundamental wave equation. It applies to all waves. Amplitude is the maximum displacement of a particle from its equilibrium position. Larger amplitude means more energy. Now let us talk about the wave equation. For a wave traveling along the x direction, the displacement y at position x and time t is given by y equals A sin omega t minus k x plus phi. Here A is the amplitude. Omega is the angular frequency, omega equals 2 pi f. K is the wave number, k equals 2 pi over lambda. Phi is the phase constant. The term omega t minus k x is the phase. Points with the same phase are at the same point in the wave cycle. The wave travels at speed v equals omega over k, which equals f lambda. Now let us talk about superposition. When two waves meet at the same point, their displacements add. This is the principle of superposition. If a crest meets a crest, they add to give a larger crest. This is constructive interference. If a crest meets a trough, they cancel. This is destructive interference. Interference is a key property of waves. It proves that light is a wave. Young's double slit experiment demonstrated interference of light. When light passes through two slits, the waves from the two slits interfere. Bright fringes appear where crests meet crests. Dark fringes appear where crests meet troughs. The fringe width is beta equals lambda D over d, where D is the distance to the screen and d is the slit separation. Now let us talk about standing waves. Standing waves are formed when two identical waves travel in opposite directions and interfere. Imagine a string fixed at both ends. You pluck it. Waves travel to both ends and reflect back. The forward and backward waves interfere. For certain frequencies, they combine to form a standing wave. In a standing wave, some points never move. These are called nodes. The points that move the most are called antinodes. The string vibrates in segments. The simplest standing wave has one segment. This is the fundamental mode. Its wavelength is 2 L, where L is the string length. The frequency is v over 2 L. The next mode has two segments. Its wavelength is L. Its frequency is 2 v over 2 L, which is twice the fundamental. The third mode has three segments. Its wavelength is 2 L over 3. Its frequency is 3 v over 2 L. In general, the frequency of the nth harmonic is n v over 2 L. These are called harmonics. The fundamental is the first harmonic. The second harmonic has twice the frequency. The third harmonic has three times the frequency. For a string fixed at both ends, all harmonics are present. Now let us talk about pipes. Organ pipes produce sound by standing waves in air columns. There are two types. Open pipes are open at both ends. Closed pipes are closed at one end. For an open pipe, both ends are antinodes. The fundamental wavelength is 2 L. The fundamental frequency is v over 2 L. All harmonics are present, just like a string. For a closed pipe, the closed end is a node and the open end is an antinode. The fundamental wavelength is 4 L. The fundamental frequency is v over 4 L. Only odd harmonics are present. The first harmonic, third harmonic, fifth harmonic, and so on. No even harmonics. This is an important difference. For a closed pipe, the frequencies are 2 n minus 1 times v over 4 L. Now let us talk about the Doppler effect. This is the change in frequency when the source of waves and the observer are moving relative to each other. You have experienced this. When an ambulance passes you, the siren sounds higher pitched as it approaches and lower pitched as it moves away. This is the Doppler effect for sound. The formula for the observed frequency is f observed equals f source times v plus or minus v observer over v minus or plus v source. Here v is the speed of sound in air, about 343 meters per second. The sign convention is important. If the observer moves toward the source, use plus in the numerator. If away, use minus. If the source moves toward the observer, use minus in the denominator. If away, use plus. A simple way to remember is that when the distance between source and observer decreases, the observed frequency increases. When the distance increases, the frequency decreases. For light, the Doppler effect is also important. It is used to measure the speed of stars and galaxies. When a star moves away from Earth, its light shifts toward longer wavelengths, the red end of the spectrum. This is called redshift. When a star moves toward Earth, its light shifts toward shorter wavelengths, the blue end. This is blueshift. The Doppler effect for light depends on the relative speed. For speeds much less than the speed of light, the formula is delta lambda over lambda equals v over c. By measuring the redshift, astronomers can determine how fast galaxies are moving away. This is how we know the universe is expanding. Now let us talk about beats. Beats occur when two waves of slightly different frequencies interfere. You hear a periodic variation in loudness. For example, if you tune a guitar, you pluck two strings. If they are not exactly in tune, you hear a wavering sound. The loudness goes up and down. This is beats. The beat frequency is the difference between the two frequencies. If one string vibrates at 440 Hertz and the other at 444 Hertz, you hear beats at 4 Hertz, meaning the loudness varies 4 times per second. As you tune the strings closer, the beat frequency decreases. When the beats stop, the strings are in tune. The beat frequency formula is f beat equals f1 minus f2. This is useful for tuning musical instruments. Now let us talk about resonance. Resonance occurs when a periodic force is applied at the natural frequency of a system. The amplitude becomes very large. When you push a child on a swing, you push at the same frequency as the swing's natural frequency. Each push adds energy, and the swing goes higher and higher. This is resonance. In sound, resonance is why some notes are louder in a room. The room has natural frequencies. When a sound matches one of these frequencies, it resonates and becomes louder. This is why opera singers can break a glass by singing at the right frequency. The sound wave resonates with the glass, causing it to vibrate so strongly that it shatters. In electricity, resonance occurs in LC circuits. At the resonant frequency, the impedance is minimum and the current is maximum. This is used in radio tuning. By changing the capacitance, you change the resonant frequency and select different radio stations. So to summarize, waves are disturbances that carry energy. Transverse waves have perpendicular motion. Longitudinal waves have parallel motion. The wave equation is v equals f lambda. Standing waves form from interference of forward and backward waves. Strings and pipes produce specific frequencies called harmonics. The Doppler effect changes frequency due to relative motion. Beats occur from interference of two close frequencies. Resonance amplifies oscillations at the natural frequency. These concepts are essential for understanding sound, light, and many other phenomena.`,
+ electrostatics:`Welcome young learner. Today we are going to understand electrostatics. Electrostatics is about electric charges that are not moving. It deals with the forces between charges, the electric fields they create, and how charges store energy. Static electricity is something you experience every day. When you rub a balloon on your hair, it sticks to the wall. When you walk on a carpet and touch a door handle, you feel a spark. That is static electricity. It is caused by charges separating. There are two types of electric charge. Positive and negative. Like charges repel each other. Opposite charges attract. This is the fundamental law of electrostatics. The force between two charges is given by Coulomb's law. Coulomb's law says the force between two charges q1 and q2 separated by distance r is F equals k q1 q2 over r squared. K is Coulomb's constant. It equals 9 times 10 to the power 9 Newton meters squared per Coulomb squared. The force is attractive if the charges are opposite and repulsive if they are the same. The force is along the line joining the charges. Coulomb's law is similar to Newton's law of gravitation. Both are inverse square laws. But gravity is always attractive, while electricity can be attractive or repulsive. Also, electricity is much stronger than gravity. The electric force between two protons is about 10 to the power 36 times stronger than the gravitational force between them. Now let us talk about electric field. An electric field is a region where a charge experiences a force. Every charge creates an electric field around it. The electric field at a point is the force per unit charge that would be experienced by a small positive test charge placed there. E equals F over q. The electric field due to a point charge q at distance r is E equals k q over r squared. The direction of the field is radially outward from a positive charge and radially inward toward a negative charge. Electric field lines are used to visualize the field. They start on positive charges and end on negative charges. The density of lines indicates the strength of the field. The direction of the lines at any point is the direction of the electric field. Electric field lines never cross. Now let us talk about electric potential. Electric potential is the potential energy per unit charge. It is measured in Volts. The potential due to a point charge q at distance r is V equals k q over r. Potential is a scalar quantity. It does not have direction. The potential difference between two points is the work done per unit charge to move a charge from one point to the other. V equals W over q. A battery provides a potential difference. A 12 Volt battery provides 12 Joules of energy per Coulomb of charge. The electric field is related to potential by E equals minus d V over d r. The field is the negative gradient of potential. This means the field points in the direction of decreasing potential. Positive charges naturally move from high potential to low potential. Negative charges move from low potential to high potential. Now let us talk about electric dipole. An electric dipole consists of two equal and opposite charges separated by a small distance. The dipole moment p equals q times d, where d is the separation vector from negative to positive. The dipole moment is a vector pointing from negative to positive charge. An electric dipole in a uniform electric field experiences a torque. The torque tries to align the dipole with the field. The torque is tau equals p cross E. The potential energy of a dipole in an electric field is U equals minus p dot E. The energy is minimum when the dipole is aligned with the field and maximum when it is opposite. The electric field due to a dipole at a point on its axis, far away, is E equals 2 k p over r cubed. On the perpendicular bisector, the field is E equals k p over r cubed. The field decreases as 1 over r cubed, faster than the 1 over r squared of a point charge. This is because the dipole has no net charge. The fields from the two charges partially cancel. Now let us talk about Gauss's law. Gauss's law relates the electric flux through a closed surface to the charge enclosed. Electric flux is the product of electric field and area, considering the angle. Gauss's law says the total electric flux through a closed surface equals the charge enclosed divided by epsilon naught. Phi equals Q enclosed over epsilon naught. Epsilon naught is the permittivity of free space. It equals 8 point 8 5 times 10 to the power minus 12. Gauss's law is useful for calculating electric fields for symmetric charge distributions. For a uniformly charged sphere, the field outside is the same as if all charge were at the center. The field inside a uniformly charged spherical shell is zero. This is an important result. For an infinite line of charge, the field is E equals lambda over 2 pi epsilon naught r, where lambda is the charge per unit length. For an infinite plane of charge, the field is E equals sigma over 2 epsilon naught, where sigma is the charge per unit area. The field is constant, independent of distance from the plane. Gauss's law is one of Maxwell's equations. Now let us talk about capacitors. A capacitor is a device that stores electrical energy. It consists of two conductors separated by an insulator called a dielectric. When a voltage is applied, charge accumulates on the plates. One plate becomes positive, the other negative. The capacitance C is the amount of charge stored per unit voltage. C equals Q over V. The unit of capacitance is the Farad. One Farad is one Coulomb per Volt. Practical capacitors are typically in microfarads or picofarads. The capacitance of a parallel plate capacitor is C equals epsilon naught A over d, where A is the area of each plate and d is the separation. If a dielectric material is inserted between the plates, the capacitance increases. The dielectric constant kappa is the factor by which capacitance increases. So C equals kappa epsilon naught A over d. Dielectrics have kappa greater than 1. For example, water has kappa about 80. So a capacitor with water as dielectric has 80 times the capacitance of the same capacitor with air. Capacitors can be connected in series and parallel. In parallel, the equivalent capacitance is the sum of individual capacitances. C eq equals C1 plus C2 plus C3 and so on. The voltage across each is the same. In series, the reciprocal of the equivalent capacitance is the sum of reciprocals. 1 over C eq equals 1 over C1 plus 1 over C2 plus 1 over C3 and so on. The charge on each is the same. The energy stored in a capacitor is U equals half C V squared. It also equals half Q V and half Q squared over C. The energy is stored in the electric field between the plates. The energy density, energy per unit volume, is u equals half epsilon naught E squared. This is a general result. The energy stored in any electric field is given by this formula. Now let us talk about some applications. Capacitors are used in many electronic circuits. They are used to filter out voltage fluctuations. They are used to store energy for flash bulbs in cameras. The flash bulb charges a capacitor slowly and then discharges it quickly through the bulb, producing a bright flash. They are used in timing circuits. The time to charge a capacitor through a resistor determines the timing. The time constant tau equals R C. After one time constant, the capacitor charges to about 63 percent of the full voltage. After five time constants, it is essentially fully charged. For NEET, remember the formulas for capacitance of a parallel plate capacitor, energy stored, series and parallel combinations. Understand how dielectrics affect capacitance. Be able to solve problems involving charging and discharging of capacitors through resistors. The key formulas are Q equals Q naught times 1 minus e to the minus t over R C for charging and Q equals Q naught times e to the minus t over R C for discharging. So to summarize, Coulomb's law gives force between charges. Electric field is force per unit charge. Electric potential is potential energy per unit charge. Gauss's law relates flux to enclosed charge. Capacitors store energy in electric fields. Capacitance depends on geometry and dielectric. Capacitors are used in many electronic applications. Understanding electrostatics is essential for understanding circuits and electronic devices.`,
+ emi:`Welcome young learner. Today we are going to understand electromagnetic induction. This is about how changing magnetic fields can create electricity. This discovery changed the world. Before electromagnetic induction, the only way to get electricity was from batteries. But batteries are expensive and run out. Electromagnetic induction allows us to generate electricity on a large scale. Every power plant in the world uses electromagnetic induction. Every generator, every transformer, every induction motor works on this principle. It was discovered by Michael Faraday in 1831. He showed that a changing magnetic field can induce a current in a wire. This is called electromagnetic induction. Let us understand the basic idea. Imagine you have a coil of wire connected to a sensitive meter called a galvanometer. Now take a bar magnet. If you hold the magnet stationary near the coil, nothing happens. The meter shows no current. But if you move the magnet toward the coil, the meter deflects. Current flows. If you move the magnet away, the meter deflects in the opposite direction. If you move the magnet faster, the deflection is larger. If you use a stronger magnet, the deflection is larger. This is Faraday's discovery. A changing magnetic field induces an electromotive force, or EMF, in a coil. The EMF is like a voltage. It drives current through the coil. The key is that the magnetic field must be changing. A steady magnetic field produces no EMF. Faraday's law of induction states that the induced EMF in a coil equals minus the rate of change of magnetic flux through the coil. EMF equals minus N d phi over d t. N is the number of turns in the coil. Phi is the magnetic flux. Magnetic flux is the product of magnetic field and area, considering the angle. Phi equals B A cos theta, where theta is the angle between the magnetic field and the normal to the area. The unit of flux is the Weber. EMF is measured in Volts. The minus sign in Faraday's law is Lenz's law. Lenz's law says that the induced current flows in a direction that opposes the change causing it. If the magnetic flux through a coil is increasing, the induced current creates a magnetic field that opposes the increase. If the flux is decreasing, the induced current creates a field that opposes the decrease. This opposition is why energy is conserved. If the induced current helped the change, you would get energy for free. That would violate the conservation of energy. Lenz's law ensures energy conservation. Let us understand Lenz's law with an example. Imagine a bar magnet approaching a coil. The north pole of the magnet is approaching the coil. The flux through the coil is increasing. The induced current must create a magnetic field that opposes this increase. That means the induced field should repel the approaching magnet. The induced coil behaves like a magnet with its north pole facing the approaching north pole. Like poles repel. So the induced current opposes the motion of the magnet. You have to do work to push the magnet toward the coil. This work becomes the electrical energy in the coil. If you pull the magnet away, the flux decreases. The induced current creates a field that attracts the magnet, opposing the decrease. Again, you have to do work to pull the magnet away. The work you do is converted to electrical energy. Now let us talk about some applications of Faraday's law. First, the AC generator. An AC generator converts mechanical energy into electrical energy. It consists of a coil rotating in a magnetic field. As the coil rotates, the magnetic flux through it changes sinusoidally. The induced EMF is also sinusoidal. The EMF is given by E equals E naught sin omega t, where E naught is the peak EMF, omega is the angular frequency, and t is time. The peak EMF is N B A omega, where N is the number of turns, B is the magnetic field, A is the area of the coil, and omega is the angular speed. The frequency of the generated AC is omega over 2 pi. In India, the frequency is 50 Hertz. The voltage can be stepped up or down using transformers. This is how power plants generate electricity. Second, the transformer. A transformer is used to change the voltage of AC electricity. It consists of two coils wound on a common iron core. The primary coil is connected to the input voltage. The secondary coil provides the output voltage. When AC flows through the primary, it creates a changing magnetic field in the core. This changing field induces an EMF in the secondary coil. The voltage ratio equals the turns ratio. V s over V p equals N s over N p. If the secondary has more turns, the voltage is stepped up. If it has fewer turns, the voltage is stepped down. The power is conserved, ignoring losses. So V p I p equals V s I s. This means if voltage is stepped up, current is stepped down. Transformers are used to transmit electricity over long distances. High voltage, low current transmission reduces power loss in the wires. The power loss is I squared R. By stepping up the voltage, the current is reduced, and the loss is much smaller. Third, the inductor. An inductor is a coil of wire. It opposes changes in current. When current flows through an inductor, it creates a magnetic field. If the current tries to change, the inductor induces an EMF that opposes the change. This property is called self inductance. The induced EMF is minus L d I over d t, where L is the self inductance in Henrys. The energy stored in an inductor is half L I squared. This energy is stored in the magnetic field. Inductors are used in circuits to filter out high frequency noise and in tuning circuits. Now let us talk about motional EMF. When a conductor moves through a magnetic field, an EMF is induced across it. This is called motional EMF. Imagine a metal rod moving on two parallel rails in a magnetic field. The magnetic field is perpendicular to the plane. As the rod moves, the area of the loop changes. The flux changes. The induced EMF is B L v, where B is the magnetic field, L is the length of the rod, and v is the speed of the rod. The direction of the induced current is given by Lenz's law or Fleming's right hand rule. Fleming's right hand rule says if you point your thumb in the direction of motion, your forefinger in the direction of the magnetic field, your middle finger gives the direction of induced current. This is useful for generators. Now let us talk about eddy currents. Eddy currents are loops of induced current in bulk conductors. When a conductor moves through a magnetic field, or when the field changes, currents are induced inside the conductor. These currents flow in circles, like eddies in water. Eddy currents cause heating. This is used in induction cooktops. A changing magnetic field induces eddy currents in the metal pot, heating it up. Eddy currents also cause braking. In some trains, eddy current brakes are used. A magnetic field is applied to the spinning wheels. Eddy currents are induced, which oppose the motion, slowing the train. Eddy currents also cause energy loss in transformers. The changing magnetic field induces eddy currents in the iron core, heating it up. To reduce this, transformer cores are made of thin laminated sheets. The laminations are insulated from each other, which breaks the eddy current paths and reduces the loss. Now let us talk about mutual inductance. Mutual inductance is the induction of EMF in one coil due to changing current in another coil. It is the principle behind transformers. The mutual inductance M depends on the geometry of the coils and the number of turns. The induced EMF in coil 2 due to changing current in coil 1 is E2 equals minus M d I1 over d t. Similarly, E1 equals minus M d I2 over d t. The mutual inductance is symmetric. It is measured in Henrys. For two coaxial solenoids, the mutual inductance is M equals mu naught N1 N2 A over L, where N1 and N2 are the number of turns, A is the area, and L is the length. The coupling coefficient k equals M over root L1 L2. For perfect coupling, k equals 1. For NEET, remember the formulas for induced EMF, self inductance, mutual inductance, and energy stored in an inductor. Understand Lenz's law and how to apply it. Know how generators and transformers work. Be able to calculate motional EMF. Practice problems involving Faraday's law. So to summarize, Faraday's law says EMF equals minus N d phi over d t. Lenz's law says the induced current opposes the change causing it. Generators convert mechanical energy to electrical energy. Transformers change voltage using mutual inductance. Inductors store energy in magnetic fields. Eddy currents are induced currents in bulk conductors. Electromagnetic induction is the basis of most electrical power generation and many electronic devices.`,
+ nuclear:`Welcome young learner. Today we are going to understand nuclear physics. This is the physics of the atomic nucleus. The nucleus is the tiny core of an atom. It contains protons and neutrons. Protons have positive charge. Neutrons have no charge. They are held together by a powerful force called the strong nuclear force. This force is much stronger than the electric repulsion between protons. Without it, the nucleus would fly apart. Nuclear physics deals with radioactivity, nuclear reactions, and the energy stored in the nucleus. This energy is enormous. It powers the Sun and the stars. It is also used in nuclear power plants and nuclear weapons. Understanding nuclear physics is essential for modern technology and medicine. Let us start with the structure of the nucleus. The nucleus is composed of nucleons. Nucleons is the collective name for protons and neutrons. The number of protons is the atomic number Z. The number of neutrons is N. The total number of nucleons is the mass number A. A equals Z plus N. Atoms of the same element have the same Z but can have different N. These are called isotopes. For example, hydrogen has three isotopes. Protium has one proton and no neutrons. Deuterium has one proton and one neutron. Tritium has one proton and two neutrons. Isotopes have similar chemical properties but different nuclear properties. The size of the nucleus is very small. The radius is about R equals R naught A to the power one third, where R naught is about 1 point 2 times 10 to the power minus 15 meters. That is 1 point 2 femtometers. The nucleus is about 100000 times smaller than the atom. If the atom were the size of a football stadium, the nucleus would be the size of a pea in the center. Most of the atom is empty space. Now let us talk about mass defect and binding energy. The mass of a nucleus is less than the sum of the masses of its individual protons and neutrons. This difference is called the mass defect. Delta m equals Z times m p plus N times m n minus m nucleus. Where did this mass go. It was converted into energy. This energy is the binding energy. The binding energy is the energy required to break the nucleus into its individual nucleons. It is given by Einstein's famous equation E equals m c squared. So binding energy equals delta m times c squared. The binding energy per nucleon is the binding energy divided by the number of nucleons. It is a measure of how tightly the nucleus is bound. The binding energy per nucleon varies with mass number. It starts low for light nuclei, rises to a peak at iron 56, and then slowly decreases for heavier nuclei. Iron 56 has the highest binding energy per nucleon. This means it is the most stable nucleus. For nuclei lighter than iron, energy can be released by fusing them together. This is nuclear fusion. For nuclei heavier than iron, energy can be released by splitting them apart. This is nuclear fission. This is why the binding energy curve is so important. Now let us talk about radioactivity. Radioactivity is the spontaneous emission of radiation from an unstable nucleus. There are three types of radiation. Alpha radiation consists of helium nuclei, two protons and two neutrons. Alpha particles are relatively heavy and positively charged. They can be stopped by a sheet of paper. Beta radiation consists of electrons or positrons. Beta particles are lighter and faster. They can penetrate paper but are stopped by aluminum. Gamma radiation consists of high energy photons. Gamma rays are very penetrating. They require thick lead or concrete to stop them. The decay of a radioactive nucleus follows first order kinetics. The number of undecayed nuclei decreases exponentially with time. N equals N naught e to the minus lambda t. Lambda is the decay constant. It has units of per second. It tells you the probability of decay per unit time. A larger lambda means faster decay. The half life is the time for half the nuclei to decay. It is given by T half equals 0 point 6 9 3 over lambda. The half life is constant for a given isotope. It does not depend on how many nuclei are present. For example, carbon 14 has a half life of 5730 years. Uranium 238 has a half life of 4 point 5 billion years. Some isotopes have half lives of fractions of a second. The mean life is the average lifetime of a nucleus. It equals 1 over lambda. The mean life is longer than the half life. Mean life equals T half over 0 point 6 9 3, which is about 1 point 4 4 times the half life. The activity of a radioactive sample is the number of decays per second. It is A equals lambda N. Activity is measured in Becquerels. One Becquerel is one decay per second. The older unit is the Curie. One Curie is 3 point 7 times 10 to the power 10 Becquerels. Activity also decreases exponentially. A equals A naught e to the minus lambda t. Now let us talk about nuclear reactions. A nuclear reaction is a process where nuclei collide and transform into different nuclei. The sum of mass numbers and atomic numbers must be conserved. Energy can be released or absorbed. The Q value of a reaction is the energy released. If Q is positive, the reaction is exothermic and releases energy. If Q is negative, the reaction is endothermic and requires energy. Nuclear fission is the splitting of a heavy nucleus into two lighter nuclei. It releases a large amount of energy. For example, when uranium 235 absorbs a neutron, it splits into barium 141 and krypton 92, plus three neutrons. The reaction releases about 200 million electron volts of energy. That is enormous compared to chemical reactions. A chemical reaction releases only a few electron volts per atom. The neutrons released in fission can cause more fissions, leading to a chain reaction. If the chain reaction is controlled, we get a nuclear reactor. If it is uncontrolled, we get a nuclear bomb. In a nuclear reactor, control rods absorb neutrons to keep the reaction rate steady. The heat from fission is used to produce steam, which drives turbines to generate electricity. Nuclear fusion is the joining of two light nuclei to form a heavier nucleus. It releases even more energy than fission. The Sun and stars are powered by fusion. In the Sun, hydrogen nuclei fuse to form helium. The reaction is 4 protons fuse into helium 4, plus 2 positrons, 2 neutrinos, and energy. This requires extremely high temperatures and pressures to overcome the electric repulsion between protons. On Earth, fusion is being researched as a source of clean energy. But it is very difficult to achieve controlled fusion. The problem is containing the hot plasma at millions of degrees. No container can withstand that temperature. So magnetic confinement is used. Tokamaks use strong magnetic fields to hold the plasma. ITER is an international fusion experiment being built in France. Now let us talk about radiation detection. Geiger Muller counters detect radiation. They consist of a tube filled with gas. When radiation enters, it ionizes the gas. The ions create a pulse of current that can be counted. Scintillation detectors use materials that flash when struck by radiation. The flashes are detected by photomultiplier tubes. Semiconductor detectors use silicon or germanium. Radiation creates electron hole pairs, which are detected as current. These detectors are used in medicine, research, and security. Radiation is used in medicine for diagnosis and treatment. X rays are used for imaging. Gamma rays are used for cancer treatment. Radioactive tracers are used to study biological processes. For example, iodine 131 is used to study the thyroid gland. Technetium 99m is used for many medical imaging procedures. Radiation is also used for sterilization of medical equipment. Gamma rays kill bacteria and viruses. Food irradiation uses radiation to preserve food by killing microorganisms. So to summarize, the nucleus contains protons and neutrons held by the strong force. Binding energy is the energy needed to break the nucleus. It peaks at iron. Radioactive decay follows exponential decay. Half life is constant. Fission splits heavy nuclei. Fusion joins light nuclei. Both release energy. Radiation has many applications in medicine and industry. Nuclear physics is a fascinating and important field.`,
+ semiconductors:`Welcome young learner. Today we are going to understand semiconductors. Semiconductors are materials that are between conductors and insulators in their ability to conduct electricity. Conductors like copper let electricity flow easily. Insulators like rubber block electricity. Semiconductors can be controlled. They can be made to conduct or not conduct. This makes them incredibly useful. Semiconductors are the heart of modern electronics. Your phone, computer, television, and almost every electronic device uses semiconductors. The most common semiconductor materials are silicon and germanium. Silicon is the most widely used. It is the second most abundant element in the Earth's crust after oxygen. Sand is silicon dioxide. Pure silicon is a poor conductor. But we can add small amounts of impurities to change its properties. This is called doping. Doping is the process of adding impurity atoms to a pure semiconductor to increase its conductivity. There are two types of doped semiconductors. N type and P type. In N type, we add atoms that have more electrons than silicon. For example, phosphorus has five valence electrons. Silicon has four. When phosphorus replaces a silicon atom, four of its electrons form bonds with neighboring silicon atoms. The fifth electron is free to move. So N type has extra free electrons. These electrons are the majority charge carriers. In P type, we add atoms that have fewer electrons than silicon. For example, boron has three valence electrons. When boron replaces a silicon atom, it can only form three bonds. There is a missing bond, which is called a hole. A hole behaves like a positive charge. Electrons from neighboring atoms can jump into the hole, leaving a hole behind. So holes move around. In P type, holes are the majority charge carriers. Now let us understand what happens when we join a P type and an N type semiconductor together. This is called a PN junction. At the junction, something interesting happens. Electrons from the N side diffuse into the P side. Holes from the P side diffuse into the N side. Where they meet, they recombine. The electrons and holes cancel each other. This leaves a region near the junction with no free charge carriers. This is called the depletion region. In the depletion region, there are only fixed ions. On the N side, there are positive donor ions. On the P side, there are negative acceptor ions. These fixed ions create an electric field across the depletion region. This field opposes further diffusion. So an equilibrium is reached. The depletion region acts as a barrier. It prevents more electrons and holes from crossing. Now let us talk about biasing. Biasing means applying an external voltage to the PN junction. There are two types. Forward bias and reverse bias. In forward bias, we connect the positive terminal of a battery to the P side and the negative terminal to the N side. This reduces the barrier. The depletion region becomes narrower. Current can flow easily. The forward current increases exponentially with voltage. The formula is I equals I naught times e to the V over n V T minus 1. Here I naught is the reverse saturation current. V T is the thermal voltage, about 26 millivolts at room temperature. N is the ideality factor, usually about 1 for silicon. For voltages above about 0 point 7 Volts for silicon, the current becomes large. This is the forward voltage drop. In reverse bias, we connect the positive terminal to the N side and the negative terminal to the P side. This increases the barrier. The depletion region becomes wider. Only a tiny current flows. This is called the reverse saturation current. It is caused by minority carriers. If the reverse voltage is too high, the junction breaks down and large current flows. This is called breakdown. Zener diodes are designed to operate in breakdown. They maintain a constant voltage across them regardless of current. They are used for voltage regulation. Now let us talk about diodes. A diode is a PN junction. It allows current to flow in only one direction. In forward bias, it conducts. In reverse bias, it blocks. Diodes are used for rectification. Rectification is converting alternating current, AC, to direct current, DC. AC voltage changes direction periodically. DC voltage is constant. A half wave rectifier uses one diode. It only allows the positive half of the AC cycle to pass. The negative half is blocked. This gives a pulsating DC. A full wave rectifier uses two diodes and a center tapped transformer. It uses both halves of the AC cycle. The output is less pulsating. A bridge rectifier uses four diodes. It is more efficient and does not need a center tapped transformer. It is the most common rectifier circuit. After rectification, the output still has ripples. A capacitor filter is used to smooth the ripples. The capacitor charges up during the peaks and discharges during the valleys. This gives a smoother DC voltage. For better smoothing, more filter stages are used. Now let us talk about special purpose diodes. The Zener diode is designed to operate in reverse breakdown. It maintains a constant voltage. It is used as a voltage regulator. A Zener regulator keeps the output voltage constant even if the input voltage or load current changes. The Zener diode is connected in reverse bias across the load. A series resistor limits the current. As long as the input voltage is above the Zener voltage, the output is regulated. The light emitting diode, LED, emits light when forward biased. The color depends on the semiconductor material. Red, green, blue, yellow, and white LEDs are common. LEDs are energy efficient and long lasting. They are used in displays, indicators, and lighting. The photodiode is sensitive to light. When light falls on it, reverse current increases. Photodiodes are used in light sensors, optical communication, and solar cells. The solar cell converts light directly into electricity. It is a large area photodiode. When sunlight hits it, electron hole pairs are created. The built in electric field separates them, creating a voltage. Solar cells are used to generate clean energy. Now let us talk about transistors. A transistor is a three layer semiconductor device. It has three terminals. There are two types. NPN and PNP. In an NPN transistor, there are two N type layers with a thin P type layer in between. The three terminals are the emitter, base, and collector. The emitter is heavily doped. The base is very thin and lightly doped. The collector is moderately doped. The transistor can act as an amplifier or a switch. In normal operation, the base emitter junction is forward biased. The base collector junction is reverse biased. Electrons from the emitter flow into the base. Most of them go through the thin base into the collector. Only a small fraction recombine in the base. This gives current amplification. A small change in base current causes a large change in collector current. The current gain beta is I c over I b. Typical values of beta are 100 to 200. Transistors are used in amplifiers to increase the strength of weak signals. They are also used as switches in digital circuits. In a digital circuit, the transistor is either fully on or fully off. This represents binary 1 and 0. Millions of transistors are integrated on a single chip to form microprocessors and memory chips. This is called an integrated circuit. Now let us talk about logic gates. Logic gates are the building blocks of digital electronics. They perform basic logical operations. AND gate gives output 1 only when all inputs are 1. OR gate gives output 1 when any input is 1. NOT gate inverts the input. NAND gate is AND followed by NOT. NOR gate is OR followed by NOT. XOR gate gives output 1 when inputs are different. These gates are implemented using transistors. For example, a CMOS NAND gate uses four transistors. Digital circuits use combinations of these gates to perform calculations and control operations. The entire computer processor is made of billions of transistors forming logic gates. For NEET, remember the basics of semiconductors. Intrinsic semiconductors are pure. Extrinsic semiconductors are doped. N type has extra electrons. P type has extra holes. The PN junction forms a depletion region. Forward bias reduces the barrier. Reverse bias increases it. Diodes rectify AC to DC. Zener diodes regulate voltage. LEDs emit light. Transistors amplify and switch. Logic gates perform Boolean operations. These are the fundamental building blocks of modern electronics.`
+ };
+        const ANIM_TIMELINES = {
+            fluids: [
+                { word: 0,    show: ['flu-axes'] },
+                { word: 40,   show: ['flu-axes','flu-continuity'] },
+                { word: 150,  show: ['flu-axes','flu-bernoulli'] },
+                { word: 300,  show: ['flu-axes','flu-applications'] },
+                { word: 500,  show: ['flu-axes','flu-venturi'] },
+                { word: 700,  show: ['flu-axes','flu-venturi'] },
+                { word: 900,  show: ['flu-axes','flu-summary'] }
+            ],
+            thermo: [
+                { word: 0,    show: ['thr-axes'] },
+                { word: 40,   show: ['thr-axes','thr-isothermal'] },
+                { word: 150,  show: ['thr-axes','thr-adiabatic'] },
+                { word: 300,  show: ['thr-axes','thr-carnot'] },
+                { word: 500,  show: ['thr-axes','thr-efficiency'] },
+                { word: 700,  show: ['thr-axes','thr-efficiency'] },
+                { word: 900,  show: ['thr-axes','thr-summary'] }
+            ],
+            waves: [
+                { word: 0,    show: ['wav-axes'] },
+                { word: 40,   show: ['wav-axes','wav-standing-wave'] },
+                { word: 150,  show: ['wav-axes','wav-nodes-antinodes'] },
+                { word: 300,  show: ['wav-axes','wav-doppler'] },
+                { word: 500,  show: ['wav-axes','wav-formulas'] },
+                { word: 700,  show: ['wav-axes','wav-formulas'] },
+                { word: 900,  show: ['wav-axes','wav-summary'] }
+            ],
+            electrostatics: [
+                { word: 0,    show: ['est-axes'] },
+                { word: 40,   show: ['est-axes','est-dipole'] },
+                { word: 150,  show: ['est-axes','est-field-lines'] },
+                { word: 300,  show: ['est-axes','est-capacitor'] },
+                { word: 500,  show: ['est-axes','est-energy'] },
+                { word: 700,  show: ['est-axes','est-energy'] },
+                { word: 900,  show: ['est-axes','est-summary'] }
+            ],
+            emi: [
+                { word: 0,    show: ['emi-axes'] },
+                { word: 40,   show: ['emi-axes','emi-faraday'] },
+                { word: 150,  show: ['emi-axes','emi-lenz'] },
+                { word: 300,  show: ['emi-axes','emi-self-inductance'] },
+                { word: 500,  show: ['emi-axes','emi-ac-generator'] },
+                { word: 700,  show: ['emi-axes','emi-ac-generator'] },
+                { word: 900,  show: ['emi-axes','emi-summary'] }
+            ],
+            nuclear: [
+                { word: 0,    show: ['nuc-axes'] },
+                { word: 40,   show: ['nuc-axes','nuc-de-broglie'] },
+                { word: 150,  show: ['nuc-axes','nuc-radioactivity'] },
+                { word: 300,  show: ['nuc-axes','nuc-binding-energy'] },
+                { word: 500,  show: ['nuc-axes','nuc-fission-fusion'] },
+                { word: 700,  show: ['nuc-axes','nuc-fission-fusion'] },
+                { word: 900,  show: ['nuc-axes','nuc-summary'] }
+            ],
+            semiconductors: [
+                { word: 0,    show: ['sem-axes'] },
+                { word: 40,   show: ['sem-axes','sem-pn-junction'] },
+                { word: 150,  show: ['sem-axes','sem-forward-bias'] },
+                { word: 300,  show: ['sem-axes','sem-reverse-bias'] },
+                { word: 500,  show: ['sem-axes','sem-rectifier'] },
+                { word: 700,  show: ['sem-axes','sem-rectifier'] },
+                { word: 900,  show: ['sem-axes','sem-summary'] }
+            ]
+        };
+        const SVGPREFIX = { fluids:'flu', thermo:'thr', waves:'wav', electrostatics:'est', emi:'emi', nuclear:'nuc', semiconductors:'sem' };
+        const LECT_NAMES = { fluids:'Fluid Mechanics', thermo:'Thermodynamics', waves:'Waves', electrostatics:'Electrostatics', emi:'EMI', nuclear:'Nuclear Physics', semiconductors:'Semiconductors' };
+        let animState = { wordCount: 0, stepIndex: 0, activeKey: null };
+        function applyAnimStep(key) {
+            const steps = ANIM_TIMELINES[key];
+            if (!steps) return;
+            while (animState.stepIndex < steps.length && animState.wordCount >= steps[animState.stepIndex].word) {
+                const s = steps[animState.stepIndex];
+                document.querySelectorAll('#svg-' + key + ' .anim-group').forEach(g => g.classList.add('anim-hidden'));
+                s.show.forEach(id => document.getElementById(id)?.classList.remove('anim-hidden'));
+                animState.stepIndex++;
+            }
+        }
+        function resetAnim(key) {
+            if (!key) return;
+            document.querySelectorAll('#svg-' + key + ' .anim-group').forEach(g => g.classList.add('anim-hidden'));
+            const pfx = SVGPREFIX[key] || key.substring(0,3);
+            document.getElementById(pfx + '-axes')?.classList.remove('anim-hidden');
+            animState.wordCount = 0;
+            animState.stepIndex = 0;
+            animState.activeKey = null;
+        }
+        let synth = window.speechSynthesis;
+        let currentUtter = null;
+        let currentBtn = null;
+        let currentKey = null;
+        let seekTotalWords = 0;
+        function speakText(btn, text) {
+            if (!synth) return;
+            if (currentUtter) {
+                synth.cancel();
+                document.querySelectorAll('.speaker-btn').forEach(b => b.classList.remove('speaking'));
+                if (animState.activeKey) resetAnim(animState.activeKey);
+                currentUtter = null; currentBtn = null; currentKey = null;
+                hideProgress();
+                return;
+            }
+            currentBtn = btn;
+            currentKey = text;
+            _speak(text, 0);
+        }
+        function _speak(key, startWord) {
+            const fullText = LECT[key] || key;
+            const isLectKey = !!LECT[key];
+            const words = fullText.match(/\S+/g) || [];
+            const totalWords = words.length;
+            const remaining = words.slice(startWord).join(' ');
+            if (isLectKey && ANIM_TIMELINES[key]) {
+                resetAnim(key);
+                animState.activeKey = key;
+                animState.wordCount = startWord;
+                animState.stepIndex = 0;
+                applyAnimStep(key);
+            }
+            if (currentBtn) currentBtn.classList.add('speaking');
+            let u = new SpeechSynthesisUtterance(remaining);
+            u.rate = 0.9; u.pitch = 1; u.volume = 1;
+            let relIdx = 0;
+            u.onboundary = function(e) {
+                if (e.name === 'word') {
+                    relIdx++;
+                    const absWord = startWord + relIdx;
+                    if (animState.activeKey && isLectKey) {
+                        animState.wordCount = absWord;
+                        applyAnimStep(animState.activeKey);
+                    }
+                    if (isLectKey) updateTimeProgress(totalWords, e.elapsedTime || 0);
+                }
+            };
+            u.onend = () => {
+                if (currentBtn) currentBtn.classList.remove('speaking');
+                if (animState.activeKey) resetAnim(animState.activeKey);
+                currentUtter = null; currentBtn = null; currentKey = null;
+                hideProgress();
+            };
+            u.onerror = () => {
+                if (currentBtn) currentBtn.classList.remove('speaking');
+                if (animState.activeKey) resetAnim(animState.activeKey);
+                currentUtter = null; currentBtn = null; currentKey = null;
+                hideProgress();
+            };
+            currentUtter = u;
+            seekTotalWords = totalWords;
+            if (isLectKey) showTimeProgress(key, totalWords, startWord);
+            synth.speak(u);
+        }
+        function seekAudio(e) {
+            const track = document.getElementById('progTrack');
+            if (!track || !currentUtter || !currentKey || !LECT[currentKey]) return;
+            const rect = track.getBoundingClientRect();
+            const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+            const targetWord = Math.floor(pct * seekTotalWords);
+            if (targetWord >= seekTotalWords) return;
+            const key = currentKey;
+            const btn = currentBtn;
+            if (currentUtter) { currentUtter.onend = null; currentUtter.onerror = null; currentUtter.onboundary = null; }
+            synth.cancel();
+            currentUtter = null; currentBtn = btn; currentKey = key;
+            hideProgress();
+            _speak(key, targetWord);
+        }
+        function fmtTime(s) {
+            const m = Math.floor(s / 60);
+            const sec = Math.floor(s % 60);
+            return m + ':' + (sec < 10 ? '0' : '') + sec;
+        }
+        function showTimeProgress(key, total, start) {
+            const bar = document.getElementById('audioProgress');
+            if (!bar) return;
+            bar.style.display = 'block';
+            const label = document.getElementById('progLabel');
+            const w = document.getElementById('progWords');
+            if (label) label.textContent = LECT_NAMES[key] || key;
+            const estTotal = total * 0.4;
+            const estStart = start * 0.4;
+            if (w) w.textContent = fmtTime(estStart) + ' / ' + fmtTime(estTotal);
+            const pct = estTotal > 0 ? Math.min(100, estStart/estTotal*100) : 0;
+            const fill = document.getElementById('progFill');
+            const thumb = document.getElementById('progThumb');
+            if (fill) fill.style.width = pct + '%';
+            if (thumb) thumb.style.left = pct + '%';
+        }
+        function updateTimeProgress(total, elapsed) {
+            const estTotal = total * 0.4;
+            const pct = estTotal > 0 ? Math.min(100, elapsed/estTotal*100) : 0;
+            const fill = document.getElementById('progFill');
+            const thumb = document.getElementById('progThumb');
+            const w = document.getElementById('progWords');
+            if (fill) fill.style.width = pct + '%';
+            if (thumb) thumb.style.left = pct + '%';
+            if (w) w.textContent = fmtTime(elapsed) + ' / ' + fmtTime(estTotal);
+        }
+        function hideProgress() {
+            const bar = document.getElementById('audioProgress');
+            if (bar) bar.style.display = 'none';
+        }
+        function stopSpeech() {
+            if (synth) synth.cancel();
+            document.querySelectorAll('.speaker-btn').forEach(b => b.classList.remove('speaking'));
+            if (animState.activeKey) resetAnim(animState.activeKey);
+            currentUtter = null; currentBtn = null; currentKey = null;
+            hideProgress();
+        }
+        document.addEventListener('click', function(e) { if (!e.target.closest('.speaker-btn') && !e.target.closest('.audio-progress')) stopSpeech(); });
+    </script>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="../../../index.html" class="brand"><img src="../../../logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../../index.html">Home</a><a href="../../../dashboard.html">Dashboard</a><a href="../../../dashboard.html">Community</a><a href="../../index.html">NEET</a><a href="index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div style="font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Physics</div>
+                    <a href="lesson-mechanics.html">Mechanics</a>
+                    <a href="lesson-derivations.html">Derivations S1</a>
+                    <a href="lesson-derivations-2.html">Derivations S2</a>
+                    <a href="lesson-derivations-3.html" class="active">Derivations S3</a>
+                    <a href="lesson-derivations-4.html">Derivations S4</a>
+                    <a href="lesson-thermodynamics.html">Thermodynamics</a>
+                    <a href="lesson-optics.html">Optics</a>
+                    <a href="lesson-electrostatics.html">Electrostatics & Current</a>
+                    <a href="lesson-magnetism.html">Magnetism & EMI</a>
+                    <a href="lesson-modern-physics.html">Modern Physics</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Derivation Series &middot; Session 3 &middot; NEET Physics</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Fluids, Waves, EMI, Nuclear & More</h1>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Bernoulli &middot; Carnot &middot; Doppler &middot; Faraday &middot; Capacitors &middot; Nuclear &middot; Semiconductors</div>
+                    <div style="display:flex;gap:8px;margin-top:10px">
+                        <button onclick="window.print()" class="download-btn">📄 Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">🎯 Take Mock Test</a>
+                    </div>
+                </div>
+                <div class="lesson-body">
+
+<!-- ============================================================ -->
+<h2 id="fluids">1. Fluid Mechanics — Continuity & Bernoulli's Equation <button class="speaker-btn" onclick="speakText(this,'fluids')">🔊 Listen</button></h2>
+
+<h3>💡 Why this matters in real life</h3>
+<p>Have you ever wondered how an aeroplane weighing hundreds of tonnes stays in the air? Or why a garden hose sprays faster when you pinch the end? These are both explained by two beautiful ideas: the <strong>continuity equation</strong> (what goes in must come out) and <strong>Bernoulli's equation</strong> (faster flow = lower pressure). The same physics explains how atomizers spray perfume, how carburetors mix fuel with air, and why roofs blow off during storms when wind speeds up across the top.</p>
+
+<h3>🧠 The Big Idea — In Plain Words</h3>
+<p>Imagine water flowing through a pipe that gets narrower. Since water can't be compressed (it's incompressible), whatever volume enters one end must leave the other. If the pipe gets narrower, the water <em>must</em> speed up to push the same volume through a smaller opening. That's the continuity equation: <strong>A₁v₁ = A₂v₂</strong>.</p>
+<p>Now, when the water speeds up, something interesting happens — its pressure drops. This is Bernoulli's principle. Think of it like this: the total "energy" of the fluid (pressure energy + kinetic energy + gravitational energy) stays constant. If kinetic energy goes up (faster flow), pressure energy must go down. This is why fast-moving air above an aeroplane wing creates lower pressure, generating <strong>lift</strong>.</p>
+<p><strong>Key variables:</strong> A = cross-sectional area (m²), v = flow speed (m/s), P = pressure (Pa), ρ = density (kg/m³), h = height (m), g = 9.8 m/s²</p>
+
+<div class="diagram-box">
+    <svg viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg" id="svg-fluids">
+        <rect x="10" y="10" width="400" height="160" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <g id="flu-axes" class="anim-group">
+            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Fluid Mechanics — synchronized with lecture</text>
+            <path d="M 50 70 Q 120 70 200 90 Q 280 110 350 70 L 350 110 Q 280 140 200 120 Q 120 100 50 110 Z" fill="rgba(96,165,250,.05)" stroke="#60a5fa" stroke-width="1.5"/>
+            <line x1="80" y1="58" x2="80" y2="118" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+            <text x="80" y="48" text-anchor="middle" fill="#a1a1aa" font-size="10">A₁</text>
+            <line x1="280" y1="78" x2="280" y2="132" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+            <text x="280" y="146" text-anchor="middle" fill="#a1a1aa" font-size="10">A₂</text>
+            <line x1="30" y1="90" x2="65" y2="90" stroke="#fbbf24" stroke-width="2" marker-end="url(#fluArrow)"/>
+            <text x="30" y="84" fill="#fbbf24" font-size="10">flow</text>
+            <line x1="360" y1="90" x2="390" y2="90" stroke="#fbbf24" stroke-width="2" marker-end="url(#fluArrow)"/>
+            <text x="120" y="130" fill="#f87171" font-size="10">P₁</text>
+            <text x="250" y="95" fill="#f87171" font-size="10">P₂</text>
+            <line x1="50" y1="155" x2="50" y2="70" stroke="rgba(255,255,255,.1)" stroke-width="1" stroke-dasharray="2 2"/>
+            <line x1="350" y1="155" x2="350" y2="70" stroke="rgba(255,255,255,.1)" stroke-width="1" stroke-dasharray="2 2"/>
+            <text x="200" y="165" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">h₁ — h₂ reference</text>
+        </g>
+        <g id="flu-continuity" class="anim-group anim-hidden">
+            <line x1="200" y1="55" x2="200" y2="75" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+            <circle cx="60" cy="90" r="3" fill="#60a5fa" opacity=".7"><animate attributeName="cx" values="60;120;200;300;360" dur="4s" repeatCount="indefinite"/><animate attributeName="cy" values="90;90;105;117;90" dur="4s" repeatCount="indefinite"/></circle>
+            <circle cx="70" cy="85" r="3" fill="#60a5fa" opacity=".5"><animate attributeName="cx" values="70;130;210;310;370" dur="4.5s" repeatCount="indefinite"/><animate attributeName="cy" values="85;85;105;120;90" dur="4.5s" repeatCount="indefinite"/></circle>
+            <circle cx="65" cy="95" r="3" fill="#60a5fa" opacity=".6"><animate attributeName="cx" values="65;125;205;305;365" dur="3.5s" repeatCount="indefinite"/><animate attributeName="cy" values="95;95;108;115;90" dur="3.5s" repeatCount="indefinite"/></circle>
+            <circle cx="75" cy="80" r="2.5" fill="#60a5fa" opacity=".4"><animate attributeName="cx" values="75;135;215;315;375" dur="5s" repeatCount="indefinite"/><animate attributeName="cy" values="80;80;102;118;90" dur="5s" repeatCount="indefinite"/></circle>
+            <text x="130" y="78" fill="#34d399" font-size="11">v₁</text>
+            <text x="230" y="108" fill="#34d399" font-size="11">v₂</text>
+            <text x="210" y="52" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="600">A₁v₁ = A₂v₂</text>
+        </g>
+        <g id="flu-bernoulli" class="anim-group anim-hidden">
+            <text x="210" y="55" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">P + ½ρv² + ρgh = constant</text>
+            <text x="210" y="75" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="10">Bernoulli's Equation (work-energy theorem)</text>
+            <text x="210" y="105" text-anchor="middle" fill="#34d399" font-size="11">P₁ + ½ρv₁² + ρgh₁ = P₂ + ½ρv₂² + ρgh₂</text>
+            <text x="210" y="135" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="10">Along a streamline for ideal fluid</text>
+        </g>
+        <g id="flu-applications" class="anim-group anim-hidden">
+            <text x="210" y="48" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Key Applications</text>
+            <text x="210" y="68" text-anchor="middle" fill="#34d399" font-size="10">Venturimeter: ΔP = ½ρ(v₂² − v₁²)</text>
+            <text x="210" y="86" text-anchor="middle" fill="#34d399" font-size="10">Torricelli: v = √(2gh)</text>
+            <text x="210" y="104" text-anchor="middle" fill="#34d399" font-size="10">Dynamic lift: faster air → lower pressure</text>
+            <text x="210" y="122" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="9">Atomizer, carburetor, aeroplane wing</text>
+        </g>
+        <g id="flu-venturi" class="anim-group anim-hidden">
+            <text x="210" y="50" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Venturimeter</text>
+            <path d="M 60 75 Q 130 75 200 85 Q 270 95 340 75 L 340 105 Q 270 120 200 110 Q 130 100 60 105 Z" fill="rgba(96,165,250,.05)" stroke="#60a5fa" stroke-width="1.2"/>
+            <line x1="100" y1="65" x2="100" y2="115" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+            <text x="100" y="60" text-anchor="middle" fill="#a1a1aa" font-size="9">A₁</text>
+            <line x1="240" y1="78" x2="240" y2="118" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+            <text x="240" y="128" text-anchor="middle" fill="#a1a1aa" font-size="9">A₂</text>
+            <text x="210" y="145" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Q = A₁A₂√(2gh/(A₁²−A₂²))</text>
+        </g>
+        <g id="flu-summary" class="anim-group anim-hidden">
+            <rect x="70" y="50" width="280" height="80" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+            <text x="210" y="68" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Fluid Mechanics Summary</text>
+            <text x="210" y="86" text-anchor="middle" fill="#34d399" font-size="10">Continuity: A₁v₁ = A₂v₂</text>
+            <text x="210" y="102" text-anchor="middle" fill="#34d399" font-size="10">Bernoulli: P + ½ρv² + ρgh = const</text>
+            <text x="210" y="120" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Incompressible, steady, non-viscous flow</text>
+        </g>
+        <defs><marker id="fluArrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#fbbf24"/></marker></defs>
+    </svg>
+    <div class="diagram-caption">Fig 1.1: Fluid flows from a wide section (A₁, v₁, P₁) to a narrow section (A₂, v₂, P₂). Animated particles move faster through the constriction (v₂ > v₁).</div>
+</div>
+
+<h4>🔍 Step-by-Step: Equation of Continuity</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>Imagine a pipe with different cross-sections.</strong> In a small time Δt, the fluid at section 1 moves a distance v₁·Δt. So the volume that crosses section 1 is: volume = area × length = A₁ × (v₁Δt).</div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>Mass entering = mass leaving (fluid can't appear or disappear).</strong> Mass = density × volume. So ρ₁·A₁·v₁·Δt = ρ₂·A₂·v₂·Δt. The Δt cancels: <span class="math">ρ₁A₁v₁ = ρ₂A₂v₂</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text"><strong>For liquids, density is constant (incompressible).</strong> ρ₁ = ρ₂. They cancel: <span class="math">A₁v₁ = A₂v₂</span>. This is the continuity equation. The product Av = Q is the <strong>volume flow rate</strong> (m³/s). When pipe narrows (A↓), velocity must increase (v↑) to keep Q constant.</div>
+    </div>
+</div>
+<div class="formula-box">A₁v₁ = A₂v₂ &nbsp;&nbsp; (Volume flow rate Q = Av = constant)</div>
+
+<h4>🔍 Step-by-Step: Bernoulli's Equation</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>Follow a small blob of fluid as it moves along a streamline.</strong> The work-energy theorem says: total work done on the blob = change in its kinetic energy + change in its potential energy. The only forces doing work are pressure forces (pushing from behind, resisting from ahead) and gravity.</div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>Work done by pressure = force × distance.</strong> At entry, pressure P₁ pushes the blob forward: work in = P₁·A₁·v₁·Δt. At exit, pressure P₂ opposes: work out = P₂·A₂·v₂·Δt. Net work = (P₁A₁v₁ - P₂A₂v₂)Δt. By continuity A₁v₁ = A₂v₂ = Q (flow rate): <span class="math">W = (P₁ - P₂)QΔt</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text"><strong>Change in kinetic energy.</strong> Mass of blob = ρ·Volume = ρ·Q·Δt. KE change = ½m(v₂² - v₁²): <span class="math">ΔKE = ½·ρ·Q·Δt·(v₂² - v₁²)</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">4</span>
+        <div class="step-text"><strong>Change in potential energy.</strong> Blob rises from height h₁ to h₂: <span class="math">ΔPE = m·g·(h₂ - h₁) = ρ·Q·Δt·g·(h₂ - h₁)</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">5</span>
+        <div class="step-text"><strong>Apply W = ΔKE + ΔPE.</strong> <span class="math">(P₁ - P₂)QΔt = ½ρQΔt(v₂² - v₁²) + ρQΔt·g·(h₂ - h₁)</span>. Cancel QΔt (non-zero): <span class="math">P₁ - P₂ = ½ρ(v₂² - v₁²) + ρg(h₂ - h₁)</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">6</span>
+        <div class="step-text"><strong>Rearrange: keep quantities at section 1 on left, section 2 on right.</strong> <span class="math">P₁ + ½ρv₁² + ρgh₁ = P₂ + ½ρv₂² + ρgh₂</span>. Since 1 and 2 are any points on the streamline: <span class="math">P + ½ρv² + ρgh = constant</span></div>
+    </div>
+</div>
+<div class="formula-box">P + ½ρv² + ρgh = constant (along a streamline)</div>
+
+<div class="tip-box">
+    <div class="tip-title">🔍 Common Mistake</div>
+    <div class="tip-text">Bernoulli applies only along a <strong>single streamline</strong> for <strong>ideal fluids</strong> (no viscosity, incompressible, steady flow). You cannot apply it between two different streamlines. Also, if the fluid is viscous (like honey), Bernoulli doesn't work — energy is lost to internal friction.</div>
+</div>
+
+<div class="neet-box">
+    <div class="neet-title">🎯 NEET Pattern — Bernoulli Applications</div>
+    <div class="neet-text">
+        • <strong>Venturimeter:</strong> Measures flow rate using pressure difference in constricted pipe. h = (P₁ - P₂)/(ρg).<br>
+        • <strong>Atomizer:</strong> Fast air flow at constriction creates low pressure, draws liquid up.<br>
+        • <strong>Torricelli's law:</strong> v = √(2gh) — water from a hole at depth h exits at same speed as free fall. Set P₁ = P₂ = atmospheric, v₁ ≈ 0 (large tank).<br>
+        • <strong>Dynamic lift:</strong> Aeroplane wing (curved top → faster air → lower pressure → lift). Swing ball in cricket — ball curves due to pressure difference from spin.
+    </div>
+</div>
+
+<div class="example-box">
+    <div class="ex-title">Example 1: Bernoulli</div>
+    <div class="ex-text">Water flows through a pipe of radius 4 cm with speed 2 m/s at ground level (P = 3×10⁵ Pa). Pipe narrows to 2 cm radius at 5 m height. Find velocity at narrow section. (g = 10 m/s²)<br><br>a) 4 m/s &nbsp; b) 8 m/s &nbsp; c) 2 m/s &nbsp; d) 6 m/s</div>
+    <div class="ex-soln"><strong>Solution:</strong> Continuity first: A₁v₁ = A₂v₂. π(0.04)²×2 = π(0.02)²×v₂. 0.0016×2 = 0.0004×v₂ → v₂ = 8 m/s. Option (b).</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="thermo">2. Thermodynamics — Carnot Engine & Adiabatic Relations <button class="speaker-btn" onclick="speakText(this,'thermo')">🔊 Listen</button></h2>
+
+<h3>💡 Why this matters in real life</h3>
+<p>Every car engine, power plant, and refrigerator operates on thermodynamic cycles. The <strong>Carnot engine</strong> is the gold standard — it tells us the maximum possible efficiency any heat engine can achieve. No real engine can beat it. This sets a fundamental limit: you cannot convert all heat into work; some must always be rejected to a cold reservoir. The <strong>adiabatic relation PV^γ = constant</strong> describes how gases behave when no heat enters or leaves — like in a diesel engine's compression stroke or when you pump up a bicycle tyre quickly (it gets hot!).</p>
+
+<div class="diagram-box">
+    <svg viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg" id="svg-thermo">
+        <rect x="10" y="10" width="400" height="200" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <g id="thr-axes" class="anim-group">
+            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Thermodynamics — synchronized with lecture</text>
+            <line x1="60" y1="170" x2="390" y2="170" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
+            <line x1="60" y1="170" x2="60" y2="30" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
+            <text x="395" y="166" fill="rgba(255,255,255,.5)" font-size="12">V</text>
+            <text x="52" y="26" fill="rgba(255,255,255,.5)" font-size="12">P</text>
+        </g>
+        <g id="thr-isothermal" class="anim-group anim-hidden">
+            <path d="M 100 90 Q 150 60 200 50" fill="none" stroke="#f87171" stroke-width="2.5"/>
+            <text x="105" y="85" fill="#f87171" font-size="10">Isothermal (T₁ hot)</text>
+            <text x="150" y="140" fill="rgba(255,255,255,.3)" font-size="9">Q₁ absorbed, ΔU = 0</text>
+        </g>
+        <g id="thr-adiabatic" class="anim-group anim-hidden">
+            <path d="M 200 50 L 270 70" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
+            <text x="275" y="66" fill="#fbbf24" font-size="10">Adiabatic</text>
+            <text x="230" y="100" fill="rgba(255,255,255,.3)" font-size="9">dQ = 0, W = −ΔU</text>
+            <path d="M 220 150 Q 180 160 150 140" fill="none" stroke="#a78bfa" stroke-width="2.5"/>
+            <text x="145" y="165" fill="#a78bfa" font-size="10">Adiabatic</text>
+        </g>
+        <g id="thr-carnot" class="anim-group anim-hidden">
+            <path d="M 270 70 L 240 150" fill="none" stroke="#60a5fa" stroke-width="2.5"/>
+            <text x="245" y="155" fill="#60a5fa" font-size="10">Isothermal (T₂ cold)</text>
+            <text x="300" y="120" fill="rgba(255,255,255,.3)" font-size="9">Q₂ rejected</text>
+        </g>
+        <g id="thr-efficiency" class="anim-group anim-hidden">
+            <path d="M 100 90 Q 150 60 200 50 L 270 70 L 240 150 Q 180 160 150 140 Z" fill="none" stroke="#34d399" stroke-width="2"/>
+            <circle cx="100" cy="90" r="4" fill="#fafafa"><animate attributeName="cx" values="100;200;270;240;150;100" dur="8s" repeatCount="indefinite"/><animate attributeName="cy" values="90;50;70;150;140;90" dur="8s" repeatCount="indefinite"/></circle>
+            <text x="180" y="190" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Carnot cycle: 2 isothermal + 2 adiabatic</text>
+        </g>
+        <g id="thr-summary" class="anim-group anim-hidden">
+            <rect x="80" y="55" width="260" height="95" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+            <text x="210" y="73" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Thermodynamics Summary</text>
+            <text x="210" y="91" text-anchor="middle" fill="#34d399" font-size="10">Carnot η = 1 − T₂/T₁</text>
+            <text x="210" y="107" text-anchor="middle" fill="#34d399" font-size="10">Adiabatic: PV^γ = constant</text>
+            <text x="210" y="123" text-anchor="middle" fill="#34d399" font-size="10">TV^(γ−1) = constant</text>
+            <text x="210" y="141" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">γ = C_p/C_v (5/3 monatomic, 7/5 diatomic)</text>
+        </g>
+    </svg>
+    <div class="diagram-caption">Fig 2.1: Carnot cycle — two isothermal (red/blue) and two adiabatic (yellow/purple) processes. The moving dot traces the full cycle.</div>
+</div>
+
+<h3>🧠 The Big Idea — In Plain Words</h3>
+<p>A heat engine takes heat Q₁ from a hot source (like burning fuel), does useful work W, and rejects the remaining heat Q₂ to a cold sink (the exhaust). Efficiency = work out / heat in = (Q₁ - Q₂)/Q₁. The Carnot cycle achieves maximum efficiency by using only <strong>reversible</strong> processes — isothermal (temperature constant) and adiabatic (no heat flow). Its efficiency depends <strong>only</strong> on the two temperatures: η = 1 - T₂/T₁. To make an engine more efficient, make the hot source hotter or the cold sink colder.</p>
+<p>For an adiabatic process (no heat exchange), any work done comes from the gas's internal energy. Compress a gas adiabatically → temperature rises (you did work on it). Expand it adiabatically → temperature drops (gas did work on surroundings). The relation PV^γ = constant captures this precisely.</p>
+<p><strong>Key variables:</strong> Q = heat (J), W = work (J), T = temperature (K), P = pressure (Pa), V = volume (m³), γ = C_p/C_v (ratio of specific heats)</p>
+
+<h4>🔍 Step-by-Step: Carnot Engine Efficiency</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>The Carnot cycle has 4 steps, all reversible.</strong> (1) Isothermal expansion at T₁ (hot) — gas absorbs Q₁, does work. (2) Adiabatic expansion — temperature drops to T₂, no heat exchange. (3) Isothermal compression at T₂ (cold) — gas rejects Q₂, work done on it. (4) Adiabatic compression — temperature rises back to T₁, completing the cycle.</div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>Heat absorbed during isothermal expansion at T₁.</strong> For an isothermal process of an ideal gas, ΔU = 0 (temperature constant means internal energy constant). By first law, Q = W = nRT₁·ln(V₂/V₁): <span class="math">Q₁ = nRT₁·ln(V₂/V₁)</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text"><strong>Heat rejected during isothermal compression at T₂.</strong> Similarly: <span class="math">Q₂ = nRT₂·ln(V₃/V₄)</span> (note: Q₂ leaves the system, so it's negative in sign convention, but we take magnitudes here).</div>
+    </div>
+    <div class="step">
+        <span class="step-num">4</span>
+        <div class="step-text"><strong>The adiabatic steps connect the volumes.</strong> From adiabatic relation TV^(γ-1) = constant: T₁V₂^(γ-1) = T₂V₃^(γ-1) and T₁V₁^(γ-1) = T₂V₄^(γ-1). Dividing: V₂/V₁ = V₃/V₄. This means ln(V₂/V₁) = ln(V₃/V₄). So <span class="math">Q₁/Q₂ = T₁/T₂</span> — the heat ratio equals the temperature ratio!</div>
+    </div>
+    <div class="step">
+        <span class="step-num">5</span>
+        <div class="step-text"><strong>Efficiency = Work done / Heat absorbed.</strong> Net work W = Q₁ - Q₂ (area inside PV diagram). η = W/Q₁ = (Q₁ - Q₂)/Q₁ = 1 - Q₂/Q₁ = 1 - T₂/T₁. <span class="math">η = 1 - T₂/T₁</span></div>
+    </div>
+</div>
+<div class="formula-box">η_Carnot = 1 - T₂/T₁ &nbsp;&nbsp; T in Kelvin. Always less than 1. Depends only on temperatures.</div>
+
+<h4>🔍 Step-by-Step: Adiabatic Relation PV^γ = constant</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>Start with the First Law for an adiabatic process.</strong> "Adiabatic" means no heat exchange: dQ = 0. First law: dQ = dU + dW. So 0 = dU + PdV. For an ideal gas, dU = nC_v·dT: <span class="math">nC_v·dT = -P·dV</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>Express P in terms of V and T using ideal gas equation PV = nRT.</strong> Substitute P = nRT/V: <span class="math">nC_v·dT = -(nRT/V)·dV → C_v·dT/T = -R·dV/V</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text"><strong>Use the relation between R, C_p, and C_v.</strong> R = C_p - C_v (Mayer's relation). Also γ = C_p/C_v. So R/C_v = (C_p - C_v)/C_v = γ - 1: <span class="math">dT/T = -(γ - 1)·dV/V</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">4</span>
+        <div class="step-text"><strong>Integrate both sides.</strong> ∫dT/T = -(γ-1)∫dV/V → ln T = -(γ-1)·ln V + constant → <span class="math">TV^(γ-1) = constant</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">5</span>
+        <div class="step-text"><strong>Eliminate T using PV = nRT.</strong> T = PV/(nR). Substitute: (PV/(nR))·V^(γ-1) = constant → PV·V^(γ-1) = constant → <span class="math">PV^γ = constant</span>. Similarly, eliminating V gives <span class="math">T^γ·P^(1-γ) = constant</span>.</div>
+    </div>
+</div>
+<div class="formula-box">PV^γ = constant &nbsp;&nbsp; TV^(γ-1) = constant &nbsp;&nbsp; T^γ·P^(1-γ) = constant</div>
+
+<div class="tip-box">
+    <div class="tip-title">🔍 Common Mistake</div>
+    <div class="tip-text">Students often confuse isothermal (ΔT=0, PV = constant) with adiabatic (ΔQ=0, PV^γ = constant). For an isothermal process, the PV curve is a gentle hyperbola. For an adiabatic process, it's steeper because γ > 1. Also remember: γ is 5/3 for monatomic gases (He, Ar) and 7/5 for diatomic gases (N₂, O₂) at room temperature.</div>
+</div>
+
+<div class="neet-box">
+    <div class="neet-title">🎯 NEET Pattern — Thermodynamics</div>
+    <div class="neet-text">
+        • Carnot efficiency increases with hotter source (T₁↑) or colder sink (T₂↓).<br>
+        • Carnot is a <strong>theoretical maximum</strong> — real engines have lower efficiency due to friction, heat loss, irreversibility.<br>
+        • In adiabatic expansion, temperature drops (gas does work at expense of its internal energy). In adiabatic compression, temperature rises.<br>
+        • NEET common: "An ideal gas expands adiabatically — what happens to temperature and pressure?" → both decrease.
+    </div>
+</div>
+
+<div class="example-box">
+    <div class="ex-title">Example 2: Carnot Engine</div>
+    <div class="ex-text">A Carnot engine operates between 127°C and 27°C. Find its efficiency.<br><br>a) 25% &nbsp; b) 50% &nbsp; c) 75% &nbsp; d) 33%</div>
+    <div class="ex-soln"><strong>Solution:</strong> Always convert to Kelvin! T₁ = 127 + 273 = 400 K, T₂ = 27 + 273 = 300 K. η = 1 - 300/400 = 1/4 = 25%. Option (a).</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="waves">3. Waves — Standing Waves & Doppler Effect <button class="speaker-btn" onclick="speakText(this,'waves')">🔊 Listen</button></h2>
+
+<h3>💡 Why this matters in real life</h3>
+<p>Every musical instrument — from a guitar string to a flute to a drum — produces sound through <strong>standing waves</strong>. When you pluck a guitar string, it vibrates at specific frequencies (harmonics) determined by its length, tension, and thickness. The <strong>Doppler effect</strong> is why an ambulance siren sounds higher-pitched as it rushes toward you and lower-pitched as it moves away. Police use radar guns based on the Doppler effect to measure your car's speed!</p>
+
+<h3>🧠 The Big Idea — In Plain Words</h3>
+<p>When a wave is reflected back and forth between two boundaries, the forward and backward waves <strong>interfere</strong>. At certain frequencies, they add up to create a <strong>standing wave</strong> — a vibration pattern that looks like it's standing still, with points that never move (nodes) and points that move the most (antinodes). The string can only vibrate at specific frequencies called <strong>harmonics</strong> or <strong>overtones</strong>.</p>
+<p>The Doppler effect is simpler than it sounds: when a source of waves moves toward you, each wavecrest is emitted from a closer position, so the waves get bunched up → shorter wavelength → higher frequency (higher pitch). When it moves away, the waves get stretched out → longer wavelength → lower frequency.</p>
+<p><strong>Key variables:</strong> L = length (m), λ = wavelength (m), f = frequency (Hz), v = wave speed (m/s), T = tension (N), μ = mass per unit length (kg/m), v₀ = observer speed, v_s = source speed</p>
+
+<div class="diagram-box">
+    <svg viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" id="svg-waves">
+        <rect x="10" y="10" width="400" height="220" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <g id="wav-axes" class="anim-group">
+            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Waves — synchronized with lecture</text>
+            <rect x="70" y="40" width="10" height="200" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+            <rect x="235" y="40" width="10" height="200" rx="2" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+            <text x="160" y="215" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="9">Fixed ends — nodes at boundaries</text>
+        </g>
+        <g id="wav-standing-wave" class="anim-group anim-hidden">
+            <text x="60" y="55" fill="#60a5fa" font-size="10">n=1 (animated)</text>
+            <path d="M 80 85 Q 160 45 240 85" fill="none" stroke="#34d399" stroke-width="2.5"><animate attributeName="d" values="M 80 85 Q 160 45 240 85;M 80 85 Q 160 125 240 85;M 80 85 Q 160 45 240 85" dur="1.5s" repeatCount="indefinite"/></path>
+            <text x="160" y="105" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">λ/2 = L</text>
+            <text x="60" y="130" fill="#60a5fa" font-size="10">n=2</text>
+            <path d="M 80 160 Q 120 120 160 160 Q 200 200 240 160" fill="none" stroke="#34d399" stroke-width="2"/>
+            <text x="160" y="180" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">λ = L</text>
+            <text x="210" y="198" text-anchor="middle" fill="rgba(255,255,255,.25)" font-size="9">L = n·λ/2</text>
+        </g>
+        <g id="wav-nodes-antinodes" class="anim-group anim-hidden">
+            <circle cx="160" cy="85" r="4" fill="#fbbf24"/>
+            <text x="168" y="88" fill="#fbbf24" font-size="9">Antinode</text>
+            <circle cx="80" cy="85" r="3" fill="#f87171"/>
+            <circle cx="240" cy="85" r="3" fill="#f87171"/>
+            <text x="80" y="75" fill="#f87171" font-size="8">Node</text>
+            <text x="240" y="75" fill="#f87171" font-size="8">Node</text>
+            <text x="210" y="205" text-anchor="middle" fill="rgba(255,255,255,.25)" font-size="9">Nodes at fixed ends, antinode at centre (n=1)</text>
+        </g>
+        <g id="wav-doppler" class="anim-group anim-hidden">
+            <text x="210" y="55" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Doppler Effect</text>
+            <line x1="60" y1="80" x2="180" y2="80" stroke="#f87171" stroke-width="2"/>
+            <line x1="180" y1="80" x2="300" y2="80" stroke="#60a5fa" stroke-width="2"/>
+            <text x="120" y="75" fill="#f87171" font-size="9">Source →</text>
+            <text x="240" y="75" fill="#60a5fa" font-size="9">Observer</text>
+            <text x="210" y="105" text-anchor="middle" fill="#34d399" font-size="10">f' = f·(v ± v₀)/(v ∓ v_s)</text>
+            <text x="210" y="130" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Source towards observer: f' = f·v/(v−v_s)</text>
+            <text x="210" y="150" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Observer towards source: f' = f·(v+v₀)/v</text>
+        </g>
+        <g id="wav-formulas" class="anim-group anim-hidden">
+            <text x="210" y="55" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Wave Formulas</text>
+            <text x="210" y="75" text-anchor="middle" fill="#34d399" font-size="10">v = fλ (wave equation)</text>
+            <text x="210" y="95" text-anchor="middle" fill="#34d399" font-size="10">String: f_n = n/(2L)·√(T/μ)</text>
+            <text x="210" y="115" text-anchor="middle" fill="#34d399" font-size="10">Open pipe: f_n = nv/(2L)</text>
+            <text x="210" y="135" text-anchor="middle" fill="#34d399" font-size="10">Closed pipe: f_n = nv/(4L), n odd</text>
+            <text x="210" y="160" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">v_string = √(T/μ), &nbsp; v_air ≈ 330 m/s</text>
+        </g>
+        <g id="wav-summary" class="anim-group anim-hidden">
+            <rect x="60" y="55" width="300" height="105" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+            <text x="210" y="73" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Waves Summary</text>
+            <text x="210" y="91" text-anchor="middle" fill="#34d399" font-size="10">L = n·λ/2 (standing wave condition)</text>
+            <text x="210" y="107" text-anchor="middle" fill="#34d399" font-size="10">f_n = nv/(2L) (string & open pipe)</text>
+            <text x="210" y="123" text-anchor="middle" fill="#34d399" font-size="10">Doppler: f' = f·(v ± v₀)/(v ∓ v_s)</text>
+            <text x="210" y="145" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Nodes at fixed ends, antinodes at open ends</text>
+        </g>
+    </svg>
+    <div class="diagram-caption">Fig 3.1: The n=1 mode vibrates up and down (animated). Nodes are at the fixed ends, antinode at the centre.</div>
+</div>
+
+<h4>🔍 Step-by-Step: Standing Wave Frequencies in a String</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>The string is fixed at both ends — there must be a node at each end.</strong> This means only those wavelengths that have nodes at both ends can exist. For the fundamental (n=1), the string length L equals exactly half a wavelength: <span class="math">L = λ/2</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>General rule: the string holds exactly n half-wavelengths.</strong> <span class="math">L = n·λ/2</span>, where n = 1, 2, 3... So the wavelength of the nth harmonic is: <span class="math">λ_n = 2L/n</span>. Higher n means shorter wavelength → higher frequency.</div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text"><strong>Wave speed on a string depends on how tight it's pulled and how heavy it is.</strong> Tighter string → faster waves. Heavier string → slower waves. The exact relation: <span class="math">v = √(T/μ)</span>, where T = tension (N) and μ = mass per unit length (kg/m).</div>
+    </div>
+    <div class="step">
+        <span class="step-num">4</span>
+        <div class="step-text"><strong>Frequency = wave speed / wavelength.</strong> Using v and λ_n: <span class="math">f_n = v/λ_n = v/(2L/n) = n·v/(2L)</span>. Substituting v: <span class="math">f_n = (n/2L)·√(T/μ)</span></div>
+    </div>
+</div>
+<div class="formula-box">f_n = n/(2L) × √(T/μ) &nbsp;&nbsp; (n = 1, 2, 3...)</div>
+
+<h4>🔍 Step-by-Step: Standing Waves in Pipes</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>Open pipe (both ends open).</strong> Air molecules can vibrate freely at both ends → antinodes at both ends. Same condition as the string: L = nλ/2. <span class="math">f_n = nv/(2L)</span>, n = 1, 2, 3... All harmonics present (like a flute).</div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>Closed pipe (one end closed).</strong> The closed end is a wall — air cannot vibrate → node at closed end. The open end has free vibration → antinode. Minimum distance between node and antinode is λ/4. So L = nλ/4, where n = 1, 3, 5... (odd only!): <span class="math">f_n = nv/(4L)</span>, n odd.</div>
+    </div>
+</div>
+<div class="formula-box">Open pipe: f_n = nv/(2L) &nbsp;&nbsp; Closed pipe: f_n = nv/(4L), n = 1, 3, 5...</div>
+
+<h4>🔍 Step-by-Step: Doppler Effect</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>When the observer moves toward a stationary source.</strong> The observer is walking into the oncoming waves, so they encounter crests more frequently. Effective speed of sound relative to observer = v + v₀. Wavelength hasn't changed (source isn't moving): <span class="math">f' = (v + v₀)/λ = f·(v + v₀)/v</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>When the source moves toward a stationary observer.</strong> The source chases its own waves. Between emitting one crest and the next, the source moves forward, so the crests are bunched up (wavelength shortened). λ' = (v - v_s)/f: <span class="math">f' = v/λ' = f·v/(v - v_s)</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text"><strong>General formula (both source and observer moving).</strong> <span class="math">f' = f × (v ± v₀) / (v ∓ v_s)</span>. Mnemonic: <strong>"Source in denominator — opposite sign"</strong>. Observer toward source → + in numerator. Source toward observer → - in denominator.</div>
+    </div>
+</div>
+<div class="formula-box">f' = f × (v ± v₀) / (v ∓ v_s)</div>
+
+<div class="tip-box">
+    <div class="tip-title">🔍 Common Mistake</div>
+    <div class="tip-text">Students often forget that for a closed pipe, only ODD harmonics exist (n = 1, 3, 5...). This gives closed pipes a different, "warmer" sound quality compared to open pipes. Also: Doppler effect applies to ALL waves — sound, light, water waves. For light, the relativistic formula is different (no medium needed).</div>
+</div>
+
+<div class="neet-box">
+    <div class="neet-title">🎯 NEET Pattern — Waves</div>
+    <div class="neet-text">
+        • <strong>Fundamental frequency:</strong> n=1 gives the lowest frequency (pitch). For string: f₁ = (1/2L)√(T/μ). For open pipe: f₁ = v/2L. For closed pipe: f₁ = v/4L.<br>
+        • Open pipe harmonics: f₁ : f₂ : f₃ = 1 : 2 : 3. Closed pipe: f₁ : f₃ : f₅ = 1 : 3 : 5.<br>
+        • Doppler: "A train approaches a station with speed v_s, blowing horn at frequency f. What frequency does a stationary person hear?" → f' = f·v/(v - v_s).<br>
+        • If wind is blowing (speed v_w), use effective speed: v_eff = v ± v_w in the formula.
+    </div>
+</div>
+
+<div class="example-box">
+    <div class="ex-title">Example 3: Doppler Effect</div>
+    <div class="ex-text">A police car siren (f = 1 kHz) approaches you at 30 m/s. Speed of sound = 330 m/s. Find the apparent frequency you hear.<br><br>a) 1100 Hz &nbsp; b) 909 Hz &nbsp; c) 1000 Hz &nbsp; d) 1200 Hz</div>
+    <div class="ex-soln"><strong>Solution:</strong> Source moving towards stationary observer: f' = f·v/(v - v_s) = 1000×330/(330-30) = 1000×330/300 = 1100 Hz. Option (a). You hear a higher pitch as it approaches.</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="electrostatics">4. Electrostatics — Electric Dipole & Parallel Plate Capacitor <button class="speaker-btn" onclick="speakText(this,'electrostatics')">🔊 Listen</button></h2>
+
+<h3>💡 Why this matters in real life</h3>
+<p>An electric dipole is like a microscopic "+" and "-" pair separated by a tiny distance. Water molecules are dipoles — that's why they can dissolve salt! Your phone's touchscreen, camera flash, and power supply circuits all use <strong>capacitors</strong> — devices that store electrical energy. A <strong>parallel plate capacitor</strong> is the simplest type: two metal plates separated by a gap. Understanding dipoles helps you grasp how molecules interact with electric fields, and understanding capacitors is essential for electronics.</p>
+
+<h3>🧠 The Big Idea — In Plain Words</h3>
+<p>A dipole has a <strong>dipole moment p = q × 2a</strong> pointing from -q to +q. In an external electric field, the dipole experiences a <strong>torque</strong> that tries to align it with the field — like a compass needle aligning with Earth's magnetic field. The torque is zero when the dipole is aligned (θ = 0) and maximum when perpendicular (θ = 90°).</p>
+<p>A parallel plate capacitor stores charge on two plates. The amount of charge it can store per volt is its <strong>capacitance C = Q/V</strong>. Bigger plates (A↑) and smaller gaps (d↓) give higher capacitance. Placing a dielectric (insulator) between the plates increases capacitance by a factor K (dielectric constant).</p>
+<p><strong>Key variables:</strong> q = charge (C), 2a = separation between charges (m), p = dipole moment (C·m), E = electric field (N/C), τ = torque (N·m), A = plate area (m²), d = plate separation (m), ε₀ = 8.85×10⁻¹² F/m</p>
+
+<div class="diagram-box">
+    <svg viewBox="0 0 420 170" xmlns="http://www.w3.org/2000/svg" id="svg-electrostatics">
+        <rect x="10" y="10" width="400" height="150" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <g id="est-axes" class="anim-group">
+            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Electrostatics — synchronized with lecture</text>
+            <line x1="240" y1="40" x2="240" y2="130" stroke="#fbbf24" stroke-width="3"/>
+            <line x1="350" y1="40" x2="350" y2="130" stroke="#fbbf24" stroke-width="3"/>
+            <text x="245" y="35" fill="#f87171" font-size="10">+σ</text>
+            <text x="355" y="35" fill="#60a5fa" font-size="10">-σ</text>
+            <text x="295" y="88" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="10">d</text>
+            <text x="295" y="140" text-anchor="middle" fill="#34d399" font-size="10">E = σ/ε₀</text>
+        </g>
+        <g id="est-dipole" class="anim-group anim-hidden">
+            <circle cx="80" cy="80" r="10" fill="rgba(248,113,113,.2)" stroke="#f87171" stroke-width="2"/>
+            <text x="80" y="84" text-anchor="middle" fill="#f87171" font-size="13">+q</text>
+            <circle cx="130" cy="80" r="10" fill="rgba(96,165,250,.2)" stroke="#60a5fa" stroke-width="2"/>
+            <text x="130" y="84" text-anchor="middle" fill="#60a5fa" font-size="13">-q</text>
+            <line x1="90" y1="80" x2="120" y2="80" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
+            <text x="105" y="72" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="10">2a</text>
+            <text x="105" y="100" text-anchor="middle" fill="#34d399" font-size="10">p = q·2a</text>
+        </g>
+        <g id="est-field-lines" class="anim-group anim-hidden">
+            <path d="M 80 60 Q 105 30 130 60" fill="none" stroke="rgba(248,113,113,.25)" stroke-width="1.5"/>
+            <path d="M 80 100 Q 105 130 130 100" fill="none" stroke="rgba(96,165,250,.25)" stroke-width="1.5"/>
+            <path d="M 70 50 Q 140 20 140 50" fill="none" stroke="rgba(248,113,113,.15)" stroke-width="1"/>
+            <path d="M 70 110 Q 140 140 140 110" fill="none" stroke="rgba(96,165,250,.15)" stroke-width="1"/>
+            <text x="60" y="40" fill="rgba(255,255,255,.25)" font-size="8">E field lines</text>
+        </g>
+        <g id="est-capacitor" class="anim-group anim-hidden">
+            <line x1="240" y1="40" x2="240" y2="130" stroke="#fbbf24" stroke-width="3"/>
+            <line x1="350" y1="40" x2="350" y2="130" stroke="#fbbf24" stroke-width="3"/>
+            <line x1="250" y1="60" x2="340" y2="60" stroke="rgba(52,211,153,.3)" stroke-width="1.5" stroke-dasharray="6 4"><animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite"/></line>
+            <line x1="250" y1="85" x2="340" y2="85" stroke="rgba(52,211,153,.3)" stroke-width="1.5" stroke-dasharray="6 4"><animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite" begin=".33s"/></line>
+            <line x1="250" y1="110" x2="340" y2="110" stroke="rgba(52,211,153,.3)" stroke-width="1.5" stroke-dasharray="6 4"><animate attributeName="stroke-dashoffset" values="0;-20" dur="1s" repeatCount="indefinite" begin=".67s"/></line>
+            <text x="295" y="150" text-anchor="middle" fill="rgba(255,255,255,.25)" font-size="9">Uniform E = σ/ε₀ between plates</text>
+        </g>
+        <g id="est-energy" class="anim-group anim-hidden">
+            <text x="210" y="50" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Capacitor Energy</text>
+            <text x="210" y="70" text-anchor="middle" fill="#34d399" font-size="11">C = ε₀A/d</text>
+            <text x="210" y="90" text-anchor="middle" fill="#34d399" font-size="11">U = ½CV² = ½QV = ½Q²/C</text>
+            <text x="210" y="115" text-anchor="middle" fill="#34d399" font-size="10">Torque on dipole: τ = pE·sinθ</text>
+            <text x="210" y="135" text-anchor="middle" fill="#34d399" font-size="10">Axial field: E = 2kp/r³</text>
+        </g>
+        <g id="est-summary" class="anim-group anim-hidden">
+            <rect x="70" y="45" width="280" height="80" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+            <text x="210" y="63" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Electrostatics Summary</text>
+            <text x="210" y="81" text-anchor="middle" fill="#34d399" font-size="10">C = ε₀A/d &nbsp;  U = ½CV²</text>
+            <text x="210" y="97" text-anchor="middle" fill="#34d399" font-size="10">E_dipole = 2kp/r³ &nbsp; τ = p×E</text>
+            <text x="210" y="117" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Dielectric: C' = KC, energy stored changes</text>
+        </g>
+    </svg>
+    <div class="diagram-caption">Fig 4.1: Electric dipole (left) with field lines and parallel plate capacitor (right) with animated uniform E-field from +σ to -σ.</div>
+</div>
+
+<h4>🔍 Step-by-Step: Electric Field due to a Dipole on its Axis</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>Set up the geometry.</strong> Two charges +q and -q separated by distance 2a. Dipole moment p = q·2a (direction from -q to +q). We want the field at a point P on the axis at distance r from the dipole's centre.</div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>Field contributions from each charge.</strong> From +q (at distance r-a): E₊ = kq/(r-a)², directed away from +q (rightward). From -q (at distance r+a): E₋ = kq/(r+a)², directed toward -q (also rightward, since -q attracts). Net field: <span class="math">E = E₊ - E₋ = kq[1/(r-a)² - 1/(r+a)²]</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text"><strong>Simplify for far away points (r >> a).</strong> Use binomial approximation: (1±a/r)^(-2) ≈ 1 ∓ 2a/r. After algebra: <span class="math">E ≈ kq·4a/r³ = 2kp/r³</span>. The field falls as 1/r³ — faster than a point charge (1/r²) because the opposite charge partially cancels the field.</div>
+    </div>
+</div>
+<div class="formula-box">E_dipole_axis = 2kp/r³ &nbsp;&nbsp; (for r >> a) &nbsp;&nbsp; E_dipole_equator = -kp/r³</div>
+
+<h4>🔍 Step-by-Step: Torque on a Dipole in a Uniform Field</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>Place a dipole at angle θ to a uniform field E.</strong> Force on +q = +qE (in field direction). Force on -q = -qE (opposite to field). These two forces are equal and opposite but their lines of action are separated — they form a <strong>couple</strong> that produces rotation.</div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>Torque = Force × lever arm.</strong> The perpendicular distance between the two forces = 2a·sinθ. Each force contributes qE × the half-distance: <span class="math">τ = (qE)(a·sinθ) + (qE)(a·sinθ) = q·2a·E·sinθ = pE·sinθ</span></div>
+    </div>
+</div>
+<div class="formula-box">τ = pE·sinθ &nbsp;&nbsp; (Vector: τ = p × E)</div>
+
+<h4>🔍 Step-by-Step: Parallel Plate Capacitor — Capacitance</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>Set up: two parallel plates, area A, separation d, charges +Q and -Q.</strong> We use Gauss's Law. For a single plate, the field is E = σ/(2ε₀), where σ = Q/A is the surface charge density. Between the plates, both fields point in the same direction (from + to -), so they <strong>add</strong>.</div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>Net field between plates = σ/ε₀.</strong> <span class="math">E = σ/ε₀ = Q/(Aε₀)</span>. This field is uniform (constant) everywhere between the plates — it doesn't depend on position. Outside the plates, fields cancel (E = 0).</div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text"><strong>Potential difference V = E × distance.</strong> For uniform field, V = E·d = (Q/(Aε₀))·d: <span class="math">V = Qd/(Aε₀)</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">4</span>
+        <div class="step-text"><strong>Capacitance C = Q/V.</strong> <span class="math">C = Q/V = Q ÷ (Qd/(Aε₀)) = ε₀A/d</span>. If a dielectric (insulator) of constant K fills the gap, C increases by factor K: <span class="math">C = Kε₀A/d</span>. A higher K means the dielectric can store more electric energy.</div>
+    </div>
+</div>
+<div class="formula-box">C = ε₀A/d &nbsp;&nbsp; (with dielectric: C = Kε₀A/d)</div>
+
+<div class="tip-box">
+    <div class="tip-title">🔍 Common Mistake</div>
+    <div class="tip-text">Students think the field outside a capacitor is the same as inside. It's not — outside, the fields from the two plates cancel (E = 0). Inside, they add (E = σ/ε₀). Also remember: if the battery is disconnected and plates are pulled apart, Q stays constant, C decreases, V increases, and stored energy U = ½Q²/C increases.</div>
+</div>
+
+<div class="neet-box">
+    <div class="neet-title">🎯 NEET Pattern — Capacitors</div>
+    <div class="neet-text">
+        • <strong>Energy stored:</strong> U = ½CV² = ½QV = ½Q²/C. NEET loves: "Capacitor charged and disconnected from battery. Plates pulled apart — what happens to V and U?" → V↑, U↑.<br>
+        • <strong>Dielectric insertion:</strong> Battery connected → V constant, Q increases, C increases. Battery disconnected → Q constant, V decreases, C increases.<br>
+        • Series: 1/C_eq = 1/C₁ + 1/C₂ + ... (same charge, voltage divides).<br>
+        • Parallel: C_eq = C₁ + C₂ + ... (same voltage, charge divides).<br>
+        • Dipole in non-uniform field: experiences <strong>net force</strong> (pulled toward stronger field region).
+    </div>
+</div>
+
+<div class="example-box">
+    <div class="ex-title">Example 4: Capacitor</div>
+    <div class="ex-text">A parallel plate capacitor has plate area 0.1 m², separation 1 mm. Find its capacitance. (ε₀ = 8.85×10⁻¹² F/m)<br><br>a) 8.85×10⁻¹⁰ F &nbsp; b) 8.85×10⁻¹² F &nbsp; c) 8.85×10⁻⁸ F &nbsp; d) 8.85×10⁻¹¹ F</div>
+    <div class="ex-soln"><strong>Solution:</strong> C = ε₀A/d = 8.85×10⁻¹² × 0.1 / 0.001 = 8.85×10⁻¹⁰ F = 885 pF. Option (a).</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="emi">5. EMI — Faraday's Law, Self-Inductance & AC Generator <button class="speaker-btn" onclick="speakText(this,'emi')">🔊 Listen</button></h2>
+
+<h3>💡 Why this matters in real life</h3>
+<p>Almost all electricity in the world is generated by <strong>electromagnetic induction</strong> — spinning a coil of wire in a magnetic field. That's how power plants work, whether they use coal, nuclear, hydro, or wind. <strong>Transformers</strong> (which use induction) step voltage up for efficient transmission and down for safe home use. Induction cooktops heat your food without any flame — they induce eddy currents in the metal pan.</p>
+
+<div class="diagram-box">
+    <svg viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg" id="svg-emi">
+        <rect x="10" y="10" width="400" height="180" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <g id="emi-axes" class="anim-group">
+            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">EMI — synchronized with lecture</text>
+            <rect x="170" y="55" width="140" height="90" rx="8" fill="rgba(52,211,153,.04)" stroke="#34d399" stroke-width="1.5"/>
+            <path d="M 190 55 Q 210 30 230 55 Q 250 80 270 55 Q 290 30 310 55" fill="none" stroke="#34d399" stroke-width="2"/>
+            <path d="M 190 145 Q 210 120 230 145 Q 250 170 270 145 Q 290 120 310 145" fill="none" stroke="#34d399" stroke-width="2"/>
+            <text x="240" y="160" text-anchor="middle" fill="#34d399" font-size="10">Coil (N turns)</text>
+            <circle cx="380" cy="100" r="20" fill="rgba(251,191,36,.04)" stroke="#fbbf24" stroke-width="1.5"/>
+            <text x="380" y="95" text-anchor="middle" fill="#fbbf24" font-size="15">G</text>
+            <line x1="310" y1="85" x2="365" y2="85" stroke="rgba(255,255,255,.3)" stroke-width="1"/>
+            <line x1="310" y1="115" x2="365" y2="115" stroke="rgba(255,255,255,.3)" stroke-width="1"/>
+        </g>
+        <g id="emi-faraday" class="anim-group anim-hidden">
+            <rect x="40" y="60" width="60" height="80" rx="4" fill="rgba(248,113,113,.1)" stroke="#f87171" stroke-width="1.5"/>
+            <text x="70" y="105" text-anchor="middle" fill="#f87171" font-size="12">N</text>
+            <text x="106" y="105" fill="#f87171" font-size="10" opacity=".6">S</text>
+            <line x1="100" y1="80" x2="135" y2="80" stroke="#60a5fa" stroke-width="2" marker-end="url(#emiB)"><animate attributeName="x2" values="135;145;135" dur="2s" repeatCount="indefinite"/></line>
+            <line x1="100" y1="100" x2="135" y2="100" stroke="#60a5fa" stroke-width="2" marker-end="url(#emiB)"><animate attributeName="x2" values="135;145;135" dur="2s" repeatCount="indefinite"/></line>
+            <line x1="100" y1="120" x2="135" y2="120" stroke="#60a5fa" stroke-width="2" marker-end="url(#emiB)"><animate attributeName="x2" values="135;145;135" dur="2s" repeatCount="indefinite"/></line>
+            <text x="120" y="145" fill="#60a5fa" font-size="10">B changing</text>
+            <text x="240" y="185" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="8">Faraday: ε = −N·dΦ/dt</text>
+        </g>
+        <g id="emi-lenz" class="anim-group anim-hidden">
+            <text x="210" y="55" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Lenz's Law</text>
+            <line x1="380" y1="100" x2="368" y2="95" stroke="#fbbf24" stroke-width="1.5"><animate attributeName="x2" values="368;372;368" dur="1.5s" repeatCount="indefinite"/><animate attributeName="y2" values="95;98;95" dur="1.5s" repeatCount="indefinite"/></line>
+            <text x="210" y="85" text-anchor="middle" fill="#34d399" font-size="10">Induced current OPPOSES the change</text>
+            <text x="210" y="105" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="10">Increasing B → induced B opposes it</text>
+            <text x="210" y="125" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="10">Decreasing B → induced B supports it</text>
+            <text x="210" y="150" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="9">Energy conservation — cannot get free energy</text>
+        </g>
+        <g id="emi-self-inductance" class="anim-group anim-hidden">
+            <text x="210" y="50" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Self-Inductance</text>
+            <text x="210" y="70" text-anchor="middle" fill="#34d399" font-size="11">L = NΦ/I &nbsp; (definition)</text>
+            <text x="210" y="90" text-anchor="middle" fill="#34d399" font-size="11">L = μ₀N²A/l &nbsp; (solenoid)</text>
+            <text x="210" y="110" text-anchor="middle" fill="#34d399" font-size="10">U = ½LI² (energy stored)</text>
+            <text x="210" y="135" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Inductor opposes changes in current</text>
+        </g>
+        <g id="emi-ac-generator" class="anim-group anim-hidden">
+            <text x="210" y="45" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">AC Generator</text>
+            <path d="M 120 60 Q 150 30 180 60 Q 210 90 240 60 Q 270 30 300 60" fill="none" stroke="#34d399" stroke-width="2"/>
+            <path d="M 120 130 Q 150 100 180 130 Q 210 160 240 130 Q 270 100 300 130" fill="none" stroke="#34d399" stroke-width="2"/>
+            <line x1="170" y1="80" x2="170" y2="115" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+            <line x1="250" y1="80" x2="250" y2="115" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
+            <text x="210" y="70" text-anchor="middle" fill="#34d399" font-size="10">Rotating coil in B</text>
+            <text x="210" y="155" text-anchor="middle" fill="#34d399" font-size="10">ε = NBAω·sin(ωt)</text>
+            <text x="210" y="175" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Peak EMF: ε₀ = NBAω</text>
+        </g>
+        <g id="emi-summary" class="anim-group anim-hidden">
+            <rect x="70" y="50" width="280" height="90" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+            <text x="210" y="68" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">EMI Summary</text>
+            <text x="210" y="86" text-anchor="middle" fill="#34d399" font-size="10">Faraday: ε = −N·dΦ/dt</text>
+            <text x="210" y="102" text-anchor="middle" fill="#34d399" font-size="10">Lenz: induced current opposes change</text>
+            <text x="210" y="118" text-anchor="middle" fill="#34d399" font-size="10">L = μ₀N²A/l &nbsp; ε₀ = NBAω</text>
+            <text x="210" y="136" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Φ = NBA·cosθ &nbsp; ε = −dΦ/dt</text>
+        </g>
+        <defs><marker id="emiB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#60a5fa"/></marker></defs>
+    </svg>
+    <div class="diagram-caption">Fig 5.1: A changing magnetic field (blue) from a moving/rotating magnet induces an EMF in the coil. The galvanometer detects the induced current.</div>
+</div>
+
+<h3>🧠 The Big Idea — In Plain Words</h3>
+<p><strong>Faraday's Law</strong> says: a changing magnetic field creates an electric field, which can push charges through a wire (inducing an EMF or voltage). The induced EMF = - (rate of change of magnetic flux). The <strong>minus sign is Lenz's Law</strong> — the induced current always opposes the change that caused it (this is energy conservation in action).</p>
+<p><strong>Self-inductance L</strong> measures how much a coil opposes changes in current flowing through itself. A coil with high L (like a solenoid) "smooths out" current changes — that's why inductors are used in power supplies to filter ripples.</p>
+<p>An <strong>AC generator</strong> is just a coil rotating in a magnetic field. As it spins, the flux through the coil changes sinusoidally, producing a sinusoidal EMF. This is how mechanical energy (spinning turbine) becomes electrical energy.</p>
+<p><strong>Key variables:</strong> φ = magnetic flux (Wb), B = magnetic field (T), ε = induced EMF (V), L = inductance (H), N = number of turns, ω = angular speed (rad/s)</p>
+
+<h4>🔍 Step-by-Step: Faraday's Law and Lenz's Law</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>Magnetic flux φ through a coil = (number of turns N) × B × A × cosθ.</strong> θ is the angle between the field and the normal to the coil. Flux measures "how much magnetic field passes through the coil." <span class="math">φ = NBA·cosθ</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>Induced EMF = rate of change of flux.</strong> Faraday discovered that whenever flux through a circuit changes, an EMF is induced proportional to how fast it changes: <span class="math">ε = -dφ/dt</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text"><strong>Lenz's Law — the minus sign.</strong> The induced current flows in a direction that <strong>opposes</strong> the change in flux. If flux increases, induced current creates its own flux in the opposite direction. If flux decreases, it creates flux in the same direction to try to keep it constant. This is why you can't get free energy from induction — you must do work to overcome this opposing force.</div>
+    </div>
+</div>
+<div class="formula-box">ε = -dφ/dt &nbsp;&nbsp; (Faraday's Law with Lenz's Law)</div>
+
+<h4>🔍 Step-by-Step: Self-Inductance of a Solenoid</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>Self-inductance defined: L = Nφ/I.</strong> A current I flowing through a coil creates a magnetic field, which produces flux through the coil itself. The ratio of flux linkage (Nφ) to current I is a constant called self-inductance. Higher L means more "opposition" to current changes.</div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>Field inside a solenoid.</strong> For a solenoid of N turns, length l, the magnetic field inside is B = μ₀(N/l)I (from Ampere's law). This field is uniform inside and nearly zero outside — a good approximation for a long solenoid.</div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text"><strong>Flux through one turn = B × cross-sectional area A.</strong> <span class="math">φ₁ = B·A = μ₀(N/l)I·A</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">4</span>
+        <div class="step-text"><strong>Total flux linkage = N × φ₁ = N·μ₀(N/l)I·A = μ₀N²AI/l.</strong> Then L = Nφ/I: <span class="math">L = μ₀N²A/l</span>. Inductance depends on geometry (N², A, l) and the core material. A ferromagnetic core multiplies L enormously (by μᵣ, the relative permeability).</div>
+    </div>
+</div>
+<div class="formula-box">L_solenoid = μ₀N²A/l &nbsp;&nbsp; (Energy stored in inductor: U = ½LI²)</div>
+
+<h4>🔍 Step-by-Step: AC Generator (Alternating EMF)</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>A coil of N turns, area A, rotates with angular velocity ω in uniform B.</strong> At time t, the coil normal makes angle θ = ωt with the field. Flux through the coil: <span class="math">φ = NBA·cos(ωt)</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>Induced EMF = -dφ/dt.</strong> Differentiate: <span class="math">ε = -d/dt[NBA·cos(ωt)] = NBA·ω·sin(ωt)</span><br>When the coil is parallel to the field (θ=90°), flux is zero but rate of change is maximum → peak EMF. When perpendicular (θ=0°), flux is maximum but rate of change is zero → zero EMF.</div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text"><strong>Peak EMF ε₀ = NBAω.</strong> The EMF varies sinusoidally: <span class="math">ε = ε₀·sin(ωt)</span>. This is AC — the current changes direction every half-cycle. Frequency f = ω/(2π). In India, f = 50 Hz, so ω = 2π×50 = 314 rad/s.</div>
+    </div>
+</div>
+<div class="formula-box">ε = NBAω·sin(ωt) &nbsp;&nbsp; ε₀ = NBAω &nbsp;&nbsp; f = ω/(2π)</div>
+
+<div class="tip-box">
+    <div class="tip-title">🔍 Common Mistake</div>
+    <div class="tip-text">Students confuse flux (φ) and induced EMF (ε). Maximum flux does NOT mean maximum EMF — EMF depends on the <strong>rate of change</strong> of flux. When the coil is perpendicular to B (θ=0°), flux is max but EMF is zero. When parallel (θ=90°), flux is zero but EMF is max. EMF is proportional to the slope of the φ-t graph.</div>
+</div>
+
+<div class="neet-box">
+    <div class="neet-title">🎯 NEET Pattern — EMI</div>
+    <div class="neet-text">
+        • <strong>Mutual inductance M</strong> between two coaxial solenoids: M = μ₀N₁N₂A/l. ε₂ = -M·dI₁/dt.<br>
+        • <strong>Eddy currents:</strong> Induced currents in bulk metal. Used in induction cooktops, braking. Minimized by laminating transformer cores.<br>
+        • <strong>Energy stored:</strong> Inductor stores ½LI². Capacitor stores ½CV². Together they form an LC circuit that oscillates at f = 1/(2π√(LC)).<br>
+        • Transformer: V_s/V_p = N_s/N_p. P_in = P_out (ideal). Step-up transformer increases V, decreases I.
+    </div>
+</div>
+
+<div class="example-box">
+    <div class="ex-title">Example 5: AC Generator</div>
+    <div class="ex-text">A 50-turn coil of area 0.1 m² rotates at 60 Hz in a 0.2 T magnetic field. Find the peak EMF generated.<br><br>a) 377 V &nbsp; b) 188 V &nbsp; c) 60 V &nbsp; d) 120 V</div>
+    <div class="ex-soln"><strong>Solution:</strong> ω = 2πf = 2π×60 ≈ 377 rad/s. ε₀ = NBAω = 50×0.2×0.1×377 = 377 V. Option (a).</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="nuclear">6. Modern Physics — de Broglie, Radioactivity & Binding Energy <button class="speaker-btn" onclick="speakText(this,'nuclear')">🔊 Listen</button></h2>
+
+<h3>💡 Why this matters in real life</h3>
+<p>Three revolutionary ideas that shaped modern physics: (1) <strong>de Broglie</strong> proposed that particles like electrons behave like waves — this led to the electron microscope which can "see" individual atoms! (2) <strong>Radioactive decay</strong> powers nuclear reactors, has medical uses (radiotherapy, PET scans), and determines the age of ancient artifacts (carbon dating). (3) <strong>Nuclear binding energy</strong> explains why the Sun shines (nuclear fusion) and why atomic bombs release such enormous energy (nuclear fission).</p>
+
+<div class="diagram-box">
+    <svg viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg" id="svg-nuclear">
+        <rect x="10" y="10" width="400" height="200" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <g id="nuc-axes" class="anim-group">
+            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Nuclear Physics — synchronized with lecture</text>
+            <line x1="50" y1="175" x2="390" y2="175" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
+            <line x1="50" y1="175" x2="50" y2="30" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
+            <text x="395" y="172" fill="rgba(255,255,255,.5)" font-size="11">Mass number A</text>
+            <text x="40" y="28" fill="rgba(255,255,255,.5)" font-size="11" text-anchor="end">BE/A (MeV)</text>
+        </g>
+        <g id="nuc-de-broglie" class="anim-group anim-hidden">
+            <text x="210" y="55" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">de Broglie Wavelength</text>
+            <text x="210" y="78" text-anchor="middle" fill="#34d399" font-size="13">λ = h/p = h/(mv)</text>
+            <text x="210" y="100" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="10">Every moving particle has wave nature</text>
+            <text x="210" y="125" text-anchor="middle" fill="#34d399" font-size="11">Electron: λ = 12.27/√V Å</text>
+            <text x="210" y="150" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="10">V = accelerating potential (volts)</text>
+        </g>
+        <g id="nuc-radioactivity" class="anim-group anim-hidden">
+            <text x="210" y="50" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Radioactive Decay</text>
+            <text x="210" y="72" text-anchor="middle" fill="#34d399" font-size="12">dN/dt = −λN</text>
+            <text x="210" y="94" text-anchor="middle" fill="#34d399" font-size="12">N = N₀·e^{−λt}</text>
+            <path d="M 120 110 Q 200 70 340 90" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+            <circle cx="120" cy="110" r="3" fill="#f87171"/>
+            <text x="114" y="120" fill="#f87171" font-size="9">N₀</text>
+            <text x="210" y="145" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="10">Half-life: T_½ = 0.693/λ</text>
+        </g>
+        <g id="nuc-binding-energy" class="anim-group anim-hidden">
+            <path d="M 60 160 Q 80 140 120 110 Q 160 70 200 60 Q 240 58 280 65 Q 320 78 360 100" fill="none" stroke="#34d399" stroke-width="2.5"/>
+            <circle cx="200" cy="60" r="5" fill="#fbbf24"><animate attributeName="r" values="5;7;5" dur="1.5s" repeatCount="indefinite"/></circle>
+            <text x="200" y="52" text-anchor="middle" fill="#fbbf24" font-size="9">Iron-56 (most stable)</text>
+            <text x="210" y="190" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="9">Binding energy per nucleon vs mass number</text>
+        </g>
+        <g id="nuc-fission-fusion" class="anim-group anim-hidden">
+            <line x1="310" y1="78" x2="350" y2="94" stroke="#f87171" stroke-width="1.5" stroke-dasharray="3 2"/>
+            <text x="330" y="105" fill="#f87171" font-size="9">Fission →</text>
+            <text x="310" y="118" fill="rgba(248,113,113,.6)" font-size="8">heavy split at peak</text>
+            <line x1="80" y1="140" x2="120" y2="110" stroke="#60a5fa" stroke-width="1.5" stroke-dasharray="3 2"/>
+            <text x="70" y="135" fill="#60a5fa" font-size="9">← Fusion</text>
+            <text x="60" y="148" fill="rgba(96,165,250,.6)" font-size="8">light combine towards peak</text>
+            <text x="210" y="175" text-anchor="middle" fill="rgba(255,255,255,.25)" font-size="9">Both release energy (move toward higher BE/A)</text>
+        </g>
+        <g id="nuc-summary" class="anim-group anim-hidden">
+            <rect x="60" y="55" width="300" height="100" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+            <text x="210" y="73" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Nuclear Physics Summary</text>
+            <text x="210" y="91" text-anchor="middle" fill="#34d399" font-size="10">λ = h/p &nbsp; N = N₀e^{−λt}</text>
+            <text x="210" y="107" text-anchor="middle" fill="#34d399" font-size="10">BE = Δm·c² &nbsp; 1 amu = 931.5 MeV/c²</text>
+            <text x="210" y="123" text-anchor="middle" fill="#34d399" font-size="10">E = mc² &nbsp; T_½ = 0.693/λ</text>
+            <text x="210" y="145" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Fusion (light) & Fission (heavy) → energy release</text>
+        </g>
+    </svg>
+    <div class="diagram-caption">Fig 6.1: Binding energy per nucleon peaks at iron-56. Fusion of light elements (left) and fission of heavy elements (right) both release energy because products are closer to the peak.</div>
+</div>
+
+<h3>🧠 The Big Idea — In Plain Words</h3>
+<p>de Broglie turned the wave-particle duality around: if light (a wave) can behave like particles (photons), then particles like electrons should also behave like waves! He proposed that every moving particle has a wavelength λ = h/p = h/(mv). For everyday objects, this wavelength is incredibly tiny (a cricket ball has λ ≈ 10⁻³⁴ m — undetectable). But for electrons, it's comparable to atomic spacing — that's why electron microscopes can resolve atoms.</p>
+<p><strong>Radioactive decay</strong> is random but predictable: each unstable nucleus has a certain probability of decaying per second (λ, the decay constant). The number of undecayed nuclei decreases exponentially: N = N₀e^{-λt}. After one half-life (T_½ = 0.693/λ), half the nuclei have decayed.</p>
+<p><strong>Binding energy</strong> is the energy that holds a nucleus together. The mass of a nucleus is always less than the sum of its individual protons and neutrons. This "missing mass" (mass defect) is converted into energy via E = mc², and it's what keeps the nucleus stable. Iron-56 has the highest binding energy per nucleon — elements lighter than iron can release energy by fusion, heavier ones by fission.</p>
+<p><strong>Key variables:</strong> λ = wavelength (m), h = Planck's constant, p = momentum, N₀ = initial nuclei, λ (decay) = decay constant (s⁻¹), T_½ = half-life (s), Δm = mass defect (kg), BE = binding energy (J or MeV)</p>
+
+<h4>🔍 Step-by-Step: de Broglie Wavelength</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>Einstein showed light has particle-like properties: photon energy E = hf, momentum p = h/λ.</strong> de Broglie's bold idea: if waves can behave like particles, the reverse should also be true. Every material particle has a wave associated with it: <span class="math">λ = h/p = h/(mv)</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>For an electron accelerated through a potential V.</strong> The electron gains kinetic energy eV = ½mv². So v = √(2eV/m). Substituting into λ = h/(mv): <span class="math">λ = h/√(2meV)</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text"><strong>Plug in the numbers.</strong> h = 6.63×10⁻³⁴ J·s, m_e = 9.1×10⁻³¹ kg, e = 1.6×10⁻¹⁹ C. The formula simplifies to: <span class="math">λ = 12.27/√V Å</span> (1 Å = 10⁻¹⁰ m). For V = 100 V, λ ≈ 1.23 Å — comparable to atomic spacing! This is why electron microscopes can "see" atoms.</div>
+    </div>
+</div>
+<div class="formula-box">λ = h/p = h/(mv) &nbsp;&nbsp; Electron: λ = 12.27/√V Å</div>
+
+<h4>🔍 Step-by-Step: Radioactive Decay Law (N = N₀·e^{-λt})</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>Radioactive decay is random, but statistically predictable.</strong> The rate at which nuclei decay (dN/dt) is proportional to how many undecayed nuclei are present (N). More nuclei → more decays per second: <span class="math">dN/dt = -λN</span>, where λ = decay constant (a fixed probability per second for each nucleus).</div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>This is a differential equation — solve by separation of variables.</strong> Rearranging: dN/N = -λ dt. Integrate: ∫(dN/N) = -λ∫dt. ln N = -λt + C.</div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text"><strong>Apply initial condition: at t = 0, N = N₀.</strong> ln N₀ = C. So ln N = -λt + ln N₀. Therefore: <span class="math">ln(N/N₀) = -λt → N = N₀·e^{-λt}</span><br>The number of undecayed nuclei decreases exponentially — it never reaches zero, but gets closer and closer.</div>
+    </div>
+</div>
+<div class="formula-box">N = N₀·e^{-λt} &nbsp;&nbsp; Half-life: T_½ = ln 2/λ = 0.693/λ &nbsp;&nbsp; Mean life: τ = 1/λ</div>
+
+<div class="tip-box">
+    <div class="tip-title">🔍 Common Mistake</div>
+    <div class="tip-text">Students confuse the decay constant λ with the half-life T_½. They're inversely related: larger λ means faster decay → shorter half-life. Also: activity A = λN also decays exponentially (A = A₀e^{-λt}). Don't forget: after n half-lives, N = N₀/2ⁿ (not N₀/2n!).</div>
+</div>
+
+<h4>🔍 Step-by-Step: Nuclear Binding Energy & Mass Defect</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>The mass of a nucleus is LESS than the sum of masses of its individual protons and neutrons.</strong> This "missing mass" is the <strong>mass defect</strong> Δm: <span class="math">Δm = (Z·m_p + N·m_n) - M_nucleus</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>Where does this mass go? Einstein's E = mc².</strong> The missing mass has been converted into energy that <strong>binds the nucleus together</strong> — the binding energy. To separate the nucleus into individual nucleons, you'd need to put this energy back: <span class="math">BE = Δm·c²</span></div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text"><strong>Binding energy per nucleon = BE/A.</strong> Higher BE/nucleon means more stable nucleus. Fe-56 has the highest (~8.8 MeV/nucleon). This is why: (a) <strong>fusion</strong> of light elements (H→He) releases energy (they move toward higher BE/nucleon), and (b) <strong>fission</strong> of heavy elements (U→Ba+Kr) also releases energy. The Sun fuses hydrogen into helium; nuclear power plants fission uranium.</div>
+    </div>
+</div>
+<div class="formula-box">BE = Δm·c² &nbsp;&nbsp; 1 amu = 931.5 MeV/c² (conversion factor)</div>
+
+<div class="neet-box">
+    <div class="neet-title">🎯 NEET Pattern — Nuclear Physics</div>
+    <div class="neet-text">
+        • "After 3 half-lives, what fraction remains?" → 1/8. "After 4 half-lives?" → 1/16.<br>
+        • 1 amu = 1.66×10⁻²⁷ kg = 931.5 MeV/c². NEET provides this value.<br>
+        • <strong>Carbon dating:</strong> C-14 has T_½ = 5730 years. Measure remaining C-14 in ancient organic matter to determine age.<br>
+        • Nuclear fission: U-235 + n → Ba-144 + Kr-89 + 3n + energy (~200 MeV per fission). Chain reaction.<br>
+        • Nuclear fusion: ²H + ³H → ⁴He + n + 17.6 MeV. Requires very high temperature (plasma).
+    </div>
+</div>
+
+<div class="example-box">
+    <div class="ex-title">Example 6: Radioactivity</div>
+    <div class="ex-text">A radioactive sample has a half-life of 10 days. After 30 days, what fraction of the original sample remains?<br><br>a) 1/2 &nbsp; b) 1/4 &nbsp; c) 1/8 &nbsp; d) 1/16</div>
+    <div class="ex-soln"><strong>Solution:</strong> 30 days = 3 half-lives. After each half-life, the amount halves. After 3 half-lives: N = N₀/2³ = N₀/8. Option (c).</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="semiconductors">7. Semiconductor — p-n Junction Diode <button class="speaker-btn" onclick="speakText(this,'semiconductors')">🔊 Listen</button></h2>
+
+<h3>💡 Why this matters in real life</h3>
+<p>The p-n junction is the <strong>single most important invention in modern electronics</strong>. Every computer, smartphone, solar panel, LED bulb, and TV screen uses p-n junctions in some form. A diode (a single p-n junction) acts like a one-way valve for electricity — it lets current flow in one direction but blocks it in the other. This is how AC (alternating current) is converted to DC (direct current) in your phone charger. Solar cells are just large-area p-n junctions that convert light into electricity.</p>
+
+<h3>🧠 The Big Idea — In Plain Words</h3>
+<p>A semiconductor (like silicon) can be "doped" to have extra electrons (n-type) or extra holes — missing electrons (p-type). When you bring a p-type and n-type together, something interesting happens at the junction: electrons from the n-side diffuse into the p-side, and holes from the p-side diffuse into the n-side. They recombine near the junction, leaving behind <strong>immobile ions</strong> (positive on n-side, negative on p-side) that create an <strong>electric field barrier</strong>. This barrier prevents further diffusion → a <strong>depletion region</strong> forms with no free carriers.</p>
+<p>In <strong>forward bias</strong> (p positive, n negative), the applied voltage pushes carriers toward the junction, reducing the barrier → current flows easily. In <strong>reverse bias</strong> (p negative, n positive), the barrier increases → almost no current flows (only tiny leakage). The <strong>Shockley equation</strong> describes this behavior: I = I₀(e^(V/nV_T) - 1).</p>
+<p><strong>Key variables:</strong> I₀ = reverse saturation current (A), V_T = thermal voltage ≈ 26 mV at 300K, n = ideality factor (1 for ideal, ~2 for real Si diode), V = applied voltage (V)</p>
+
+<div class="diagram-box">
+    <svg viewBox="0 0 420 160" xmlns="http://www.w3.org/2000/svg" id="svg-semiconductors">
+        <rect x="10" y="10" width="400" height="140" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <g id="sem-axes" class="anim-group">
+            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Semiconductors — synchronized with lecture</text>
+            <rect x="240" y="50" width="140" height="50" rx="3" fill="rgba(96,165,250,.06)" stroke="#60a5fa" stroke-width="1.5"/>
+            <text x="310" y="78" text-anchor="middle" fill="#60a5fa" font-size="14" font-weight="600">n-type</text>
+            <text x="210" y="150" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="8">Si or Ge — Group IV element</text>
+        </g>
+        <g id="sem-pn-junction" class="anim-group anim-hidden">
+            <rect x="40" y="50" width="140" height="50" rx="3" fill="rgba(248,113,113,.06)" stroke="#f87171" stroke-width="1.5"/>
+            <text x="110" y="78" text-anchor="middle" fill="#f87171" font-size="14" font-weight="600">p-type</text>
+            <line x1="180" y1="50" x2="180" y2="75" stroke="#fbbf24" stroke-width="2"/>
+            <line x1="180" y1="75" x2="240" y2="75" stroke="#fbbf24" stroke-width="2"/>
+            <line x1="240" y1="75" x2="240" y2="100" stroke="#fbbf24" stroke-width="2"/>
+            <text x="210" y="130" text-anchor="middle" fill="#fbbf24" font-size="10">Depletion region (no free carriers)</text>
+            <text x="195" y="62" fill="#f87171" font-size="9">⊖ ⊖</text>
+            <text x="225" y="62" fill="#60a5fa" font-size="9">⊕ ⊕</text>
+        </g>
+        <g id="sem-forward-bias" class="anim-group anim-hidden">
+            <rect x="40" y="50" width="140" height="50" rx="3" fill="rgba(248,113,113,.08)" stroke="#f87171" stroke-width="1.5"/>
+            <text x="110" y="78" text-anchor="middle" fill="#f87171" font-size="14" font-weight="600">p-type</text>
+            <rect x="240" y="50" width="140" height="50" rx="3" fill="rgba(96,165,250,.08)" stroke="#60a5fa" stroke-width="1.5"/>
+            <text x="310" y="78" text-anchor="middle" fill="#60a5fa" font-size="14" font-weight="600">n-type</text>
+            <line x1="180" y1="50" x2="180" y2="75" stroke="#fbbf24" stroke-width="1.5"/>
+            <line x1="180" y1="75" x2="240" y2="75" stroke="#fbbf24" stroke-width="1.5"/>
+            <line x1="240" y1="75" x2="240" y2="100" stroke="#fbbf24" stroke-width="1.5"/>
+            <circle cx="70" cy="70" r="4" fill="#f87171" opacity=".7"><animate attributeName="cx" values="70;140;180" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values=".7;.7;0" dur="3s" repeatCount="indefinite"/></circle>
+            <circle cx="310" cy="70" r="4" fill="#60a5fa" opacity=".7"><animate attributeName="cx" values="310;250;220" dur="3s" repeatCount="indefinite" begin=".5s"/><animate attributeName="opacity" values=".7;.7;0" dur="3s" repeatCount="indefinite" begin=".5s"/></circle>
+            <text x="210" y="130" text-anchor="middle" fill="#fbbf24" font-size="10">Forward bias: current flows</text>
+        </g>
+        <g id="sem-reverse-bias" class="anim-group anim-hidden">
+            <rect x="40" y="50" width="140" height="50" rx="3" fill="rgba(248,113,113,.06)" stroke="#f87171" stroke-width="1.5"/>
+            <text x="110" y="78" text-anchor="middle" fill="#f87171" font-size="14" font-weight="600">p-type</text>
+            <rect x="240" y="50" width="140" height="50" rx="3" fill="rgba(96,165,250,.06)" stroke="#60a5fa" stroke-width="1.5"/>
+            <text x="310" y="78" text-anchor="middle" fill="#60a5fa" font-size="14" font-weight="600">n-type</text>
+            <line x1="170" y1="48" x2="170" y2="105" stroke="#fbbf24" stroke-width="2.5"/>
+            <line x1="250" y1="48" x2="250" y2="105" stroke="#fbbf24" stroke-width="2.5"/>
+            <text x="210" y="130" text-anchor="middle" fill="#f87171" font-size="10">Reverse bias: depletion widens, no current</text>
+        </g>
+        <g id="sem-rectifier" class="anim-group anim-hidden">
+            <text x="210" y="50" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Rectifier</text>
+            <text x="210" y="70" text-anchor="middle" fill="#34d399" font-size="11">Diode = one-way valve for current</text>
+            <text x="210" y="92" text-anchor="middle" fill="#34d399" font-size="10">Half-wave: 1 diode, 40.6% efficiency</text>
+            <text x="210" y="110" text-anchor="middle" fill="#34d399" font-size="10">Full-wave: 4 diodes (bridge), 81.2% eff.</text>
+            <text x="210" y="135" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">I = I₀(e^(V/nV_T) − 1) — Shockley equation</text>
+        </g>
+        <g id="sem-summary" class="anim-group anim-hidden">
+            <rect x="70" y="50" width="280" height="70" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+            <text x="210" y="68" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Semiconductor Summary</text>
+            <text x="210" y="86" text-anchor="middle" fill="#34d399" font-size="10">pn junction → depletion region → barrier</text>
+            <text x="210" y="102" text-anchor="middle" fill="#34d399" font-size="10">Forward: conducts &nbsp; Reverse: blocks</text>
+            <text x="210" y="120" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Si knee ≈ 0.7V &nbsp; Ge knee ≈ 0.3V</text>
+        </g>
+    </svg>
+    <div class="diagram-caption">Fig 7.1: p-n junction showing depletion region with immobile ions. Animated carriers (holes → red, electrons → blue) drift toward the junction under forward bias.</div>
+</div>
+
+<h4>🔍 Step-by-Step: Diode Current Equation (Shockley Equation)</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text"><strong>In forward bias, the applied voltage V reduces the barrier potential.</strong> More majority carriers from each side have enough energy to cross the junction. The current increases <strong>exponentially</strong> with V because the Boltzmann factor e^(V/V_T) determines how many carriers have enough thermal energy to overcome the reduced barrier.</div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text"><strong>The Shockley equation captures this precisely.</strong> <span class="math">I = I₀(e^(V/nV_T) - 1)</span>. I₀ = reverse saturation current (the tiny leakage current in reverse bias). V_T = kT/e ≈ 26 mV at room temperature (300K). n = ideality factor (1 for an ideal junction, ~2 for practical silicon diodes). The "-1" ensures that at V=0, I=0.</div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text"><strong>In reverse bias (V negative), the barrier increases.</strong> For |V| >> V_T, e^(V/nV_T) → 0, so I ≈ -I₀ (tiny constant reverse current, typically μA or nA). If V is large enough in reverse, <strong>breakdown</strong> occurs — for Zener diodes (V < 6V, quantum tunneling), this breakdown is controlled and used for voltage regulation. For regular diodes, breakdown can destroy them.</div>
+    </div>
+</div>
+<div class="formula-box">I = I₀(e^(V/nV_T) - 1) &nbsp;&nbsp; V_T = kT/e ≈ 26 mV at 300K &nbsp;&nbsp; (V_T doubles as temperature increases by ~30°C)</div>
+
+<div class="tip-box">
+    <div class="tip-title">🔍 Common Mistake</div>
+    <div class="tip-text">Students think a diode in forward bias conducts immediately at V=0. It doesn't! For silicon, the <strong>knee voltage</strong> (cut-in voltage) is ~0.7V — below this, current is negligible. For germanium, it's ~0.3V. Also remember: in forward bias, the diode has a small internal resistance (dynamic resistance r = dV/dI).</div>
+</div>
+
+<div class="neet-box">
+    <div class="neet-title">🎯 NEET Pattern — Semiconductors</div>
+    <div class="neet-text">
+        • <strong>Forward bias:</strong> I increases exponentially with V. Knee voltage: Si ≈ 0.7V, Ge ≈ 0.3V.<br>
+        • <strong>Reverse bias:</strong> Very small constant current I₀ (microamps for Si). Independent of V until breakdown.<br>
+        • <strong>Zener diode:</strong> Operates in controlled reverse breakdown. Used as voltage regulator — maintains constant output voltage despite input variations.<br>
+        • <strong>Rectifier:</strong> Half-wave (1 diode, efficiency 40.6%). Full-wave centre-tap (2 diodes, 81.2%). Bridge rectifier (4 diodes, 81.2%).<br>
+        • NEET common: "The knee voltage of a silicon diode is ___" → 0.7V.
+    </div>
+</div>
+
+<div class="example-box">
+    <div class="ex-title">Example 7: Semiconductor</div>
+    <div class="ex-text">A silicon diode has I₀ = 1 μA at 27°C. Find the forward current for V = 0.6 V, assuming n = 1. (V_T = kT/e)<br><br>a) 1.0 A &nbsp; b) 0.1 A &nbsp; c) 0.01 A &nbsp; d) 1 mA</div>
+    <div class="ex-soln"><strong>Solution:</strong> At room temp, V_T = 26 mV = 0.026 V. I = I₀(e^(V/nV_T) - 1) = 10⁻⁶(e^(0.6/0.026) - 1) ≈ 10⁻⁶ × e^23 ≈ 10⁻⁶ × 9.7×10⁹ ≈ 9700 × 10⁻⁶ = 9.7 × 10⁻³ ≈ 0.01 A. Option (c).</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="summary3" style="margin-top:30px">Quick Reference — Formula Sheet</h2>
+
+<table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:.82em;color:var(--text-sec);background:var(--bg-card);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)">
+    <tr style="background:rgba(167,139,250,.12)"><th style="padding:10px 12px;text-align:left;color:var(--text);font-weight:600">Derivation</th><th style="padding:10px 12px;text-align:left;color:var(--text);font-weight:600">Result</th><th style="padding:10px 12px;text-align:left;color:var(--text);font-weight:600">Key Condition</th></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Continuity Equation</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">A₁v₁ = A₂v₂</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Incompressible, steady flow</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Bernoulli's Equation</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">P + ½ρv² + ρgh = constant</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Ideal fluid, along a streamline</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Carnot Efficiency</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">η = 1 - T₂/T₁</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Reversible cycle, T in Kelvin</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Adiabatic Relation</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">PV^γ = constant</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">dQ = 0, γ = C_p/C_v</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Standing Wave — String</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">f_n = n/(2L)√(T/μ)</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Fixed at both ends</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Open Pipe</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">f_n = nv/(2L)</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Both ends open (antinodes)</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Closed Pipe</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">f_n = nv/(4L), n odd</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">One end closed (node), one open</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Doppler Effect</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">f' = f(v ± v₀)/(v ∓ v_s)</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Both along the line joining them</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Dipole Field (axial)</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">E = 2kp/r³</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Far away (r >> a)</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Torque on Dipole</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">τ = pE·sinθ</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Uniform external field E</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Parallel Plate Capacitor</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">C = ε₀A/d</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Uniform field between plates</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Faraday's Law</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">ε = -dφ/dt</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Lenz's Law → negative sign</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Solenoid Self-Inductance</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">L = μ₀N²A/l</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Long solenoid, uniform B inside</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">AC Generator</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">ε = NBAω·sin(ωt)</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Coil rotating in uniform B</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">de Broglie Wavelength</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">λ = h/p</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">For any moving particle</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Radioactive Decay</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">N = N₀·e^{-λt}</td><td style="padding:8px 12px;border-bottom:1px solid var(--border)">Random decay, large sample</td></tr>
+    <tr><td style="padding:8px 12px">Binding Energy</td><td style="padding:8px 12px">BE = Δm·c²</td><td style="padding:8px 12px">Mass defect → energy released</td></tr>
+</table>
+
+                <div class="audio-progress" id="audioProgress" style="display:none">
+                    <div class="progress-info">
+                        <span class="progress-label" id="progLabel">Derivation</span>
+                        <span class="progress-words" id="progWords">0:00 / 0:00</span>
+                    </div>
+                    <div class="progress-track" id="progTrack" onclick="seekAudio(event)">
+                        <div class="progress-fill" id="progFill" style="width:0%"></div>
+                        <div class="progress-thumb" id="progThumb" style="left:0%"></div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
