@@ -508,6 +508,10 @@ const CAT = {
   hill:{label:'Hill Stations',color:'#67e8f9',icon:'🏔️',region:'IN'},
   bird:{label:'Bird Sanctuaries',color:'#86efac',icon:'🦆',region:'IN'},
   i_pass:{label:'Mountain Passes',color:'#fbbf24',icon:'🚩',region:'IN'},
+  highway:{label:'Roads & Highways',color:'#fb923c',icon:'🛣️',region:'IN'},
+  i_range:{label:'Mountain Ranges (India)',color:'#a78bfa',icon:'⛰️',region:'IN'},
+  crop:{label:'Agriculture & Crops',color:'#86efac',icon:'🌾',region:'IN'},
+  mineral:{label:'Minerals & Mining',color:'#94a3b8',icon:'⛏️',region:'IN'},
   plateau:{label:'Plateaus',color:'#f472b6',icon:'🏔️',region:'WW'},
   plain:{label:'Plains',color:'#34d399',icon:'🌾',region:'WW'},
   valley:{label:'Valleys',color:'#22d3ee',icon:'🏞️',region:'WW'},
@@ -522,6 +526,11 @@ const CAT = {
   tunnel:{label:'Tunnels',color:'#a78bfa',icon:'🚇',region:'WW'},
   trade:{label:'Trade Routes',color:'#f97316',icon:'🚢',region:'WW'},
   oil:{label:'Oil & Gas Fields',color:'#1e293b',icon:'⛽',region:'WW'},
+  personality:{label:'Notable People',color:'#e879f9',icon:'👤',region:'WW'},
+  highway:{label:'Highways & Expressways',color:'#fb923c',icon:'🛣️',region:'India'},
+  i_range:{label:'Indian Mountain Ranges',color:'#4ade80',icon:'⛰️',region:'India'},
+  crop:{label:'Agriculture & Crops',color:'#fbbf24',icon:'🌾',region:'India'},
+  mineral:{label:'Minerals & Mining',color:'#f87171',icon:'⛏️',region:'India'},
 };
 
 const D = {};
@@ -708,6 +717,32 @@ D.ramsar = [
   {n:'Upper Ganga River',la:29.50,ln:78.00,sub:'UP · River stretch',desc:'Brijghat to Narora stretch (135 km). Ramsar 2005. Ganga river dolphin (platanista). Narora barrage.',fact:'Unique riverine Ramsar · Dolphins, gharial · Chambal nearby sanctuary'},
   {n:'Vembanad Lake',la:9.50,ln:76.40,sub:'Kerala · Longest in India',desc:'Longest lake in India (96.5 km). Kerala backwaters. Kumarakom bird sanctuary. Nehru Trophy boat race (Punnamada Kayal).',fact:'200 sq km · Ramsar 2002 · Pathiramanal island · Rice bowl of Kerala (Kuttanad)'},
   {n:'Sultanpur NP (Ramsar)',la:28.50,ln:76.90,sub:'Haryana',desc:'Sultanpur National Park. Important bird sanctuary near Gurugram. Ramsar 2021.',fact:'Migratory birds: flamingo, crane, pelican · 250+ bird species · Dried wetland revived'},
+  {n:'Keoladeo NP (Bharatpur)',la:27.18,ln:77.51,sub:'Rajasthan',desc:'UNESCO World Heritage (1985). Major bird sanctuary. Famous for Siberian crane wintering. Est. 1981 as NP.',fact:'364 species of birds · 150+ migratory · Ramsar 1981 · Man-made wetland'},
+  {n:'Point Calimere',la:10.30,ln:79.85,sub:'Tamil Nadu',desc:'Kodikkarai. Coastal wetland in Nagapattinam. Important for migratory birds including flamingos. Ramsar 2002.',fact:'38,500 ha · Flamingo · Dugong · Horseshoe crab'},
+  {n:'East Kolkata Wetlands',la:22.55,ln:88.44,sub:'West Bengal',desc:'World\'s largest wastewater-fed aquaculture system. 12,500 ha. Ramsar 2002. Treats Kolkata\'s sewage naturally.',fact:'Natural sewage treatment · Fish ponds · 12,500 ha · 150+ bird species'},
+  {n:'Kanjli Lake',la:31.42,ln:75.37,sub:'Punjab',desc:'Man-made lake on Kali Bein (rivulet). Built 1870. Sikh history (Guru Nanak). Important bird area.',fact:'Ramsar 2002 · Kali Bein restoration · Guru Nanak\'s pilgrimage'},
+  {n:'Ropar Lake',la:30.97,ln:76.50,sub:'Punjab',desc:'Wetland on Sutlej River created by Ropar barrage. Located in Shivalik foothills. Ramsar 2002.',fact:'200+ birds · Indus dolphin (Platanista) · Ropar Wetland Conservation'},
+  {n:'Chandra Taal',la:32.47,ln:77.62,sub:'Himachal Pradesh',desc:'High-altitude lake (4,300m) in Spiti. "Moon Lake". Ramsar 2005. Tso-chen or Chandra Taal.',fact:'High-altitude (4,300m) · Tso-chen in Tibetan · Spiti Valley · Butterfly habitat'},
+  {n:'Nalsarovar Lake',la:22.77,ln:72.04,sub:'Gujarat',desc:'Largest natural wetland in Gujarat. 120 sq km. Important bird sanctuary. Ramsar 2012.',fact:'Large lake · 200+ species · Flamingo breeding site'},
+  {n:'Thol Lake',la:23.08,ln:72.52,sub:'Gujarat',desc:'Artificial lake near Ahmedabad. Built 1912 by Gaekwad. Bird sanctuary. Ramsar 2021.',fact:'Ramsar 2021 · Flamingo, crane, pelican · Near Ahmedabad'},
+  {n:'Bhindawas Lake',la:28.50,ln:76.55,sub:'Haryana',desc:'Man-made freshwater lake. Bird sanctuary. Ramsar 2021. Largest wetland in Haryana.',fact:'Ramsar 2021 · 260+ birds · Wildlife sanctuary'},
+  {n:'Haiderpur Wetland',la:29.55,ln:77.90,sub:'Uttar Pradesh',desc:'Created by 1984 Madhya Ganga Barrage. 30 km from Bijnor. Ramsar 2021.',fact:'Ramsar 2021 · Ganga floodplains · 300+ birds'},
+  {n:'Kabartal Lake',la:25.55,ln:86.15,sub:'Bihar',desc:'Also known as Kanwar Taal. Asia\'s largest freshwater oxbow lake. Ramsar 2020.',fact:'Largest oxbow in Asia · Ramsar 2020 · 265+ species'},
+  {n:'Lonar Lake',la:19.97,ln:76.51,sub:'Maharashtra',desc:'Unique saline crater lake. Created by meteorite impact (~50k years ago). Brackish alkaline water. Ramsar 2020.',fact:'Only impact crater in basaltic rock · 1.8 km wide · Saline & alkaline'},
+  {n:'Pangong Tso',la:33.72,ln:78.75,sub:'Ladakh',desc:'High-altitude brackish lake (4,350m). 134 km long (60% in China). Famous for 3 Idiots filming. Ramsar 2020.',fact:'High-altitude 4,350m · Endorheic basin · No fish · Seasonal colour change'},
+  {n:'Tso Moriri',la:32.90,ln:78.30,sub:'Ladakh',desc:'High-altitude lake (4,522m). Changthang Wildlife Sanctuary. Ramsar 2002. Endorheic basin.',fact:'4,522m elevation · Changthang · Kiang and marmot habitat'},
+  {n:'Nagi-Nakti Bird Sanctuaries',la:25.20,ln:86.70,sub:'Bihar',desc:'Two man-made reservoirs (Nagi + Nakti) in Jamui. Important bird areas. Ramsar 2023.',fact:'Ramsar 2023 · 200+ bird species · Boat race festival'},
+  {n:'Ranganthittu Bird Sanctuary',la:12.42,ln:76.67,sub:'Karnataka',desc:'Six small islands on Kaveri River near Srirangapatna. Ramsar 2021. Important heronry.',fact:'Ramsar 2021 · 170+ birds · Boat safari'},
+  {n:'Tampara Lake',la:19.30,ln:84.90,sub:'Odisha',desc:'Freshwater lake in Ganjam district of Odisha. Ramsar 2023.',fact:'Ramsar 2023 · Bird diversity · Dredging threat'},
+  {n:'Satkosia Gorge',la:20.50,ln:84.80,sub:'Odisha',desc:'Gorge of Mahanadi River. Tiger reserve. Ramsar 2023.',fact:'Ramsar 2023 · Tiger reserve · Gharial and dolphin'},
+  {n:'Nanda Lake',la:15.28,ln:73.98,sub:'Goa',desc:'Freshwater wetland in South Goa. Ramsar 2023.',fact:'Ramsar 2023 · Bird sanctuary · Waterbird diversity'},
+  {n:'Karavetti Bird Sanctuary',la:10.65,ln:79.22,sub:'Tamil Nadu',desc:'Coastal wetland near Point Calimere. Ramsar 2023.',fact:'Ramsar 2023 · Waterbird site · Flamingo'},
+  {n:'Vellode Lake',la:10.05,ln:77.78,sub:'Tamil Nadu',desc:'Vellode Bird Sanctuary near Erode. Ramsar 2023.',fact:'Ramsar 2023 · Bird sanctuary · Kalingarayan canal'},
+  {n:'Vedanthangal Lake',la:12.54,ln:79.85,sub:'Tamil Nadu',desc:'India\'s oldest waterbird sanctuary (1798?). Ramsar 2023.',fact:'Ramsar 2023 · Oldest bird sanctuary · 40k+ birds'},
+  {n:'Udhayamarthandapuram',la:10.47,ln:79.48,sub:'Tamil Nadu',desc:'Temple tank bird sanctuary in Tiruvarur. Ramsar 2023.',fact:'Ramsar 2023 · Temple tank · Waterbirds'},
+  {n:'Koothankulam Bird Sanctuary',la:8.50,ln:77.76,sub:'Tamil Nadu',desc:'Village wetland in Tirunelveli. Important bird area. Ramsar 2023.',fact:'Ramsar 2023 · Flamingo hotspot'},
+  {n:'Asan Conservation Reserve',la:30.44,ln:77.67,sub:'Uttarakhand',desc:'Man-made wetland at Asan barrage (Yamuna-Giri confluence). Wood duck. Ramsar 2020.',fact:'Ramsar 2020 · White-winged wood duck · 330+ birds'},
+  {n:'Wadhvana Wetland',la:22.10,ln:73.08,sub:'Gujarat',desc:'Vadodara district. Man-made lake on Orsang River. Migratory birds. Ramsar 2021.',fact:'Ramsar 2021 · 230+ species · Migratory: flamingo, crane, pelican'},
 ];
 
 D.port = [
@@ -766,8 +801,16 @@ D.biosphere = [
   {n:'Simlipal Biosphere',la:21.80,ln:86.40,sub:'Odisha',desc:'UNESCO Biosphere Reserve (2009). 5694 sq km. Black tigers (melanistic). Waterfalls.',fact:'Barehipani and Joranda falls · 1076 species · Elephant, tiger, gaur'},
   {n:'Dibru-Saikhowa Biosphere',la:27.60,ln:95.30,sub:'Assam',desc:'Dibru-Saikhowa NP + Biosphere Reserve. Floodplains of Brahmaputra. Feral horses known.',fact:'Brahmaputra & Dibru rivers · White-winged wood duck · Grasslands'},
   {n:'Achanakmar-Amarkantak',la:22.30,ln:82.00,sub:'MP/Chhattisgarh',desc:'Corridor connecting Kanha, Satpura, Bandhavgarh. Achanakmar Tiger Reserve + Amarkantak region.',fact:'Narmada & Mahanadi sources · 3836 sq km · Important wildlife corridor'},
+  {n:'Great Nicobar Biosphere',la:6.90,ln:93.85,sub:'Andaman & Nicobar',desc:'Includes Campbell Bay NP, Galathea NP. Nicobar megapode, crab-eating macaque, saltwater crocodile. Est. 2013.',fact:'UNESCO Biosphere (2013) · 885 sq km · Nicobar pigeon · Tropical rainforest'},
+  {n:'Khangchendzonga Biosphere',la:27.60,ln:88.40,sub:'Sikkim',desc:'Includes Khangchendzonga NP (UNESCO WHS). Third highest peak in world (8,586m). Snow leopard, red panda. Est. 2000.',fact:'UNESCO Biosphere (2018) · Snow leopard · Red panda · High-altitude ecosystem'},
+  {n:'Agasthyamalai Biosphere',la:8.50,ln:77.25,sub:'Kerala/Tamil Nadu',desc:'Southernmost biosphere reserve in Western Ghats. Neyyar, Peppara, Shendurney WLS. Est. 2001.',fact:'UNESCO (2016) · 3500 sq km · Lion-tailed macaque · 2000+ flowering plants'},
+  {n:'Nokrek Biosphere',la:25.40,ln:90.40,sub:'Meghalaya',desc:'Garhills region. Home of the red panda and citrus gene pool (wild orange). Est. 1988.',fact:'UNESCO (2009) · 820 sq km · Wild orange (Citrus indica) · Red panda'},
+  {n:'Kachchh Biosphere',la:23.80,ln:70.50,sub:'Gujarat',desc:'Covers Rann of Kutch (salt desert) and surrounding areas. Wild ass sanctuary. Est. 2008.',fact:'UNESCO (2008) · 12,454 sq km · Wild ass (khur) · Flamingo breeding'},
+  {n:'Cold Desert Biosphere',la:32.50,ln:77.60,sub:'Himachal Pradesh',desc:'High-altitude biosphere in Pin Valley & Chandratal. Kibber Sanctuary. Snow leopard, ibex. Est. 1999.',fact:'UNESCO (2009) · 7770 sq km · Snow leopard · Pin Valley · Highest altitude biosphere'},
+  {n:'Seshachalam Biosphere',la:13.70,ln:79.20,sub:'Andhra Pradesh',desc:'Eastern Ghats biosphere reserve. Known for endemic red sanders. Est. 2010.',fact:'Red sanders (Pterocarpus santalinus) · 4756 sq km · 860+ species'},
+  {n:'Panna Biosphere',la:24.50,ln:80.00,sub:'Madhya Pradesh',desc:'In Vindhyan range. Includes Panna NP, Ken River. Tiger reintroduction success. Est. 2011.',fact:'Ken River · UNESCO (2020) · Tiger reintroduction · Gharial'},
+  {n:'Similipal Biosphere',la:21.83,ln:86.33,sub:'Odisha',desc:'UNESCO Biosphere (2009). 2750 sq km. Tiger reserve. Black tigers (melanistic). Waterfalls.',fact:'Barehipani (399m) & Joranda (181m) falls · Black tigers · 96 mammal species'},
 ];
-
 D.unesco = [
   {n:'Taj Mahal',la:27.18,ln:78.02,sub:'Agra, UP · 1983',desc:'UNESCO World Heritage. Built by Shah Jahan for Mumtaz (1631-53). Masterpiece of Mughal architecture. One of Seven Wonders of the World.',fact:'Marble inlay with semi-precious stones · Symmetry · Ustad Ahmad Lahauri architect'},
   {n:'Ajanta Caves',la:20.55,ln:75.70,sub:'Aurangabad, MH · 1983',desc:'UNESCO WHS. 29 rock-cut Buddhist cave monuments (2nd cent BCE - 600 CE). Paintings and sculptures.',fact:'Chaityas and viharas · Frescoes of Jataka tales · Rediscovered 1819 by British officer'},
@@ -1147,8 +1190,8 @@ D.institution = [
   {n:'IISc Bangalore',la:12.99,ln:77.58,sub:'Bengaluru',desc:'Indian Institute of Science. India\'s top research institute. Est. 1909 by J.N. Tata & Lord Minto. PhD/MSc only.',fact:'NIRF #1 (overall) · 400 acres · CV Raman, Homi Bhabha alumni · JNCASR nearby'},
   {n:'ACU (Aligarh Muslim)',la:27.92,ln:78.08,sub:'Aligarh, UP',desc:'AMU. Central University. Est. 1875 by Sir Syed Ahmad Khan (MAO College). Became university 1920.',fact:'Sir Syed Hall · Maulana Azad Library (4M+ books) · JN Medical College · LAC debate'},
   {n:'Jamia Millia Islamia',la:28.56,ln:77.27,sub:'Delhi',desc:'Central University (est. 1920). Founded at Aligarh, moved to Delhi. Known for mass communication, fine arts.',fact:'AJK Mass Comm Research Centre · 224 acres · Mujeeb Bagh · India\'s cleanest campus'},
+  {n:'Anjuman-e-Islamia',la:18.96,ln:72.83,sub:'Mumbai · Est. 1874',desc:'One of India\'s oldest Muslim educational and social reform organizations. Founded in Mumbai in 1874 by social reformers including Badruddin Tyabji (later President of Indian National Congress). Established schools and colleges across Maharashtra including Anjuman-I-Islam\'s College in Mumbai. Pioneered modern education for the Muslim community. Runs 50+ educational institutions from primary to postgraduate level.',fact:'Founded 1874 · Badruddin Tyabji co-founder · 50+ institutions · Mumbai & Maharashtra · Pioneered Muslim modern education'},
 ];
-
 D.railway = [
   {n:'Howrah-Delvia Main',pts:[{la:22.58,ln:88.33},{la:25.62,ln:85.12},{la:26.50,ln:80.48},{la:28.61,ln:77.23}],sub:'Howrah-Delhi (1534 km)',desc:'Howrah-New Delhi Main Line. 1534 km, oldest route. Grand Chord + main line. Rajdhani Express (fastest connecting 2 metropolises).',fact:'Grand Chord (Sahibganj loop) · Dhanbad coal hub · Mughalsarai (largest yard) · 5 hrs Rajdhani'},
   {n:'Mumbai-Delvia',pts:[{la:19.08,ln:72.88},{la:23.26,ln:77.41},{la:26.85,ln:80.95},{la:28.61,ln:77.23}],sub:'Mumbai-Delhi (1385 km)',desc:'Mumbai-Delhi Line via Itarsi-Jhansi. Central Railway + West Central Railway. Rajdhani (Ahmedabad route), Paschim Express.',fact:'Western Dedicated Freight Corridor · JNPT connectivity · Palghar ~ Surat industrial belt'},
@@ -2700,14 +2743,14 @@ D.strait = [
   {n:'Cook Strait',la:-41.50,ln:174.50,sub:'New Zealand · 22 km',desc:'Separates North and South Islands of New Zealand. Strong currents and winds. Wellington at north end. Inter-island ferry route.',fact:'22 km · Strong winds/currents · Wellington-Picton ferry · Cable Bay'},
 ];
 D.desert = [
-  {n:'Sahara Desert',la:24.00,ln:12.00,sub:'North Africa · 9.2M km²',desc:'World\'s largest hot desert. Spans 11 countries. Erg (sand dunes), reg (gravel), hamada (rocky). Highest temperature recorded 57.7°C. Atlas Mountains to north.',fact:'9.2M km² (largest hot) · 11 countries · 57.7°C max · Nile runs through'},
-  {n:'Arabian Desert',la:23.00,ln:48.00,sub:'Arabia · 2.3M km²',desc:'Vast desert covering most of Arabian Peninsula. Rub\' al Khali (Empty Quarter) — largest continuous sand desert. Oil reserves beneath. Bedouin nomads.',fact:'2.3M km² · Rub\' al Khali (empty quarter) · World\'s largest oil · 55°C'},
-  {n:'Gobi Desert',la:43.00,ln:108.00,sub:'China/Mongolia · 1.3M km²',desc:'Cold desert with extreme temperatures (-40°C to 45°C). Dinosaur fossil site (first dinosaur eggs found). Silk Road routes cross it. Expanding desertification.',fact:'1.3M km² · Dinosaur eggs found · -40°C to 45°C · Flaming Cliffs'},
-  {n:'Kalahari Desert',la:-24.00,ln:22.00,sub:'Southern Africa · 900k km²',desc:'Semi-arid sandy savanna. Used by San Bushmen for 20,000+ years. Okavango Delta at northern edge. Rich in wildlife (lions, meerkats).',fact:'900k km² · San Bushmen · Okavango Delta · Meerkats & lions'},
-  {n:'Thar Desert',la:27.00,ln:72.00,sub:'India/Pakistan · 200k km²',desc:'Densely populated desert. 17% of India\'s population. Indira Gandhi Canal irrigation. Known for colorful culture, camels, and desert festivals.',fact:'200k km² · Most populated desert · Indira Gandhi Canal · Jaisalmer fort'},
-  {n:'Atacama Desert',la:-24.00,ln:-69.50,sub:'Chile · 105k km²',desc:'Driest non-polar desert on Earth. Some areas no recorded rain ever. Highest UV radiation. Mars-like landscapes used for NASA rover testing. Clear skies for astronomy.',fact:'Driest on Earth · NASA Mars testing · ALMA observatory · Salt flats & geysers'},
-  {n:'Sonoran Desert',la:32.00,ln:-113.00,sub:'USA/Mexico · 260k km²',desc:'Hottest desert in North America. Saguaro cacti iconic. Unique biodiversity. Arizona, California, Sonora. Bighorn sheep, Gila monster, roadrunner.',fact:'260k km² · Saguaro cacti · Sonora, Arizona · Bighorn sheep'},
-  {n:'Great Victoria Desert',la:-29.00,ln:128.00,sub:'Australia · 348k km²',desc:'Largest desert in Australia. Red sand dunes, salt lakes. Aboriginal protected areas. Spinifex grass. Extremely remote and uninhabited.',fact:'348k km² · Red sand dunes · Aboriginal lands · Remote & untouched'},
+  {n:'Sahara Desert',la:24.00,ln:12.00,sub:'North Africa · 9.2M km²',desc:'World\'s largest hot desert. Spans 11 countries. Erg (sand dunes), reg (gravel), hamada (rocky). Highest temperature recorded 57.7°C. Atlas Mountains to north.',fact:'9.2M km² (largest hot) · 11 countries · 57.7°C max · Nile runs through',pts:territory([[35,-5],[30,10],[25,20],[20,30],[15,35],[10,40],[5,42],[10,30],[12,15],[15,0],[20,-5],[30,-10],[35,-5]])},
+  {n:'Arabian Desert',la:23.00,ln:48.00,sub:'Arabia · 2.3M km²',desc:'Vast desert covering most of Arabian Peninsula. Rub\' al Khali (Empty Quarter) — largest continuous sand desert. Oil reserves beneath. Bedouin nomads.',fact:'2.3M km² · Rub\' al Khali (empty quarter) · World\'s largest oil · 55°C',pts:territory([[30,35],[32,40],[32,45],[30,50],[28,55],[22,60],[15,55],[12,50],[13,43],[15,35],[20,32],[25,30],[30,35]])},
+  {n:'Gobi Desert',la:43.00,ln:108.00,sub:'China/Mongolia · 1.3M km²',desc:'Cold desert with extreme temperatures (-40°C to 45°C). Dinosaur fossil site (first dinosaur eggs found). Silk Road routes cross it. Expanding desertification.',fact:'1.3M km² · Dinosaur eggs found · -40°C to 45°C · Flaming Cliffs',pts:territory([[46,100],[48,105],[48,110],[46,115],[44,118],[40,120],[36,118],[34,114],[35,110],[38,105],[40,102],[42,100],[46,100]])},
+  {n:'Kalahari Desert',la:-24.00,ln:22.00,sub:'Southern Africa · 900k km²',desc:'Semi-arid sandy savanna. Used by San Bushmen for 20,000+ years. Okavango Delta at northern edge. Rich in wildlife (lions, meerkats).',fact:'900k km² · San Bushmen · Okavango Delta · Meerkats & lions',pts:territory([[-20,18],[-18,22],[-18,26],[-22,28],[-26,26],[-28,22],[-26,18],[-22,16],[-20,18]])},
+  {n:'Thar Desert',la:27.00,ln:72.00,sub:'India/Pakistan · 200k km²',desc:'Densely populated desert. 17% of India\'s population. Indira Gandhi Canal irrigation. Known for colorful culture, camels, and desert festivals.',fact:'200k km² · Most populated desert · Indira Gandhi Canal · Jaisalmer fort',pts:territory([[30,70],[32,73],[30,76],[26,77],[22,76],[20,73],[22,69],[26,68],[30,70]])},
+  {n:'Atacama Desert',la:-24.00,ln:-69.50,sub:'Chile · 105k km²',desc:'Driest non-polar desert on Earth. Some areas no recorded rain ever. Highest UV radiation. Mars-like landscapes used for NASA rover testing. Clear skies for astronomy.',fact:'Driest on Earth · NASA Mars testing · ALMA observatory · Salt flats & geysers',pts:territory([[-18,-70],[-22,-69],[-26,-69],[-28,-70],[-28,-72],[-24,-72],[-20,-71],[-18,-70]])},
+  {n:'Sonoran Desert',la:32.00,ln:-113.00,sub:'USA/Mexico · 260k km²',desc:'Hottest desert in North America. Saguaro cacti iconic. Unique biodiversity. Arizona, California, Sonora. Bighorn sheep, Gila monster, roadrunner.',fact:'260k km² · Saguaro cacti · Sonora, Arizona · Bighorn sheep',pts:territory([[35,-114],[34,-110],[32,-108],[28,-108],[26,-110],[26,-114],[28,-116],[32,-116],[35,-114]])},
+  {n:'Great Victoria Desert',la:-29.00,ln:128.00,sub:'Australia · 348k km²',desc:'Largest desert in Australia. Red sand dunes, salt lakes. Aboriginal protected areas. Spinifex grass. Extremely remote and uninhabited.',fact:'348k km² · Red sand dunes · Aboriginal lands · Remote & untouched',pts:territory([[-26,124],[-26,130],[-28,132],[-32,132],[-34,130],[-34,124],[-32,120],[-28,120],[-26,124]])},
 ];
 D.lake = [
   {n:'Caspian Sea',la:42.00,ln:50.00,sub:'Asia/Europe · 371k km²',desc:'World\'s largest inland water body (lake). Saltwater. 5 countries border it. Rich in caviar (sturgeon). 80% of world\'s sturgeon catch. Below sea level.',fact:'371k km² (largest lake) · -28m below sea level · 5 countries · Sturgeon & caviar'},
@@ -2830,9 +2873,18 @@ D.phenomena = [
   {n:'La Niña',la:-5.00,ln:-130.00,sub:'Equatorial Pacific',desc:'Cooling of Pacific waters, opposite of El Niño. Enhanced monsoon in India. More Atlantic hurricanes. Stronger trade winds. Often follows El Niño. 2020-23 triple-dip La Niña rare.',fact:'Cooling phase · Enhanced Indian monsoon · More hurricanes · Triple-dip 2020-23'},
   {n:'Indian Monsoon',la:15.00,ln:75.00,sub:'Indian Ocean · South Asia',desc:'Seasonal wind reversal bringing 80% of India\'s annual rainfall. June-September. Caused by differential heating of land and sea. Tibetan Plateau enhances it. 1.5B people depend on it for agriculture.',fact:'June-September · 80% of India rain · 1.5B people depend · Tibetan Plateau enhancement'},
   {n:'Intertropical Convergence Zone',la:5.00,ln:0.00,sub:'Equatorial Atlantic',desc:'Belt of low pressure near equator where trade winds meet. Causes heavy rainfall — world\'s rainiest regions. Migrates north-south with seasons. Doldrums — calm winds area feared by sailors.',fact:'Trade winds meet · Heavy rainfall · Migrates with seasons · Doldrums'},
+  {n:'Hadley Cell',la:15.00,ln:-30.00,sub:'Global Circulation',desc:'Thermal circulation between equator and 30°N/S. Warm air rises at equator (ITCZ), moves poleward at upper levels, sinks at 30° forming subtropical highs. Drives Trade Winds. Most important circulation cell.',fact:'0°-30° · Drives Trade Winds · ITCZ rising · Subtropical high sinking · Thermally direct'},
+  {n:'Ferrel Cell',la:45.00,ln:-30.00,sub:'Global Circulation',desc:'Mid-latitude circulation between 30°-60°N/S. Air rises at 60° (subpolar lows), moves equatorward at upper levels, sinks at 30° (subtropical highs). Drives Westerlies. Thermally indirect — driven by eddies.',fact:'30°-60° · Drives Westerlies · Subpolar low rising · Subtropical high sinking · Thermally indirect'},
+  {n:'Polar Cell',la:75.00,ln:-30.00,sub:'Global Circulation',desc:'Thermal circulation between 60°-90°N/S. Cold air sinks at poles, moves equatorward at surface, rises at 60° (subpolar lows). Drives Polar Easterlies. Smallest and weakest of the three cells.',fact:'60°-90° · Drives Polar Easterlies · Polar sinking · Subpolar low rising · Thermally direct'},
+  {n:'Subtropical High (Bermuda High)',la:32.00,ln:-60.00,sub:'N. Atlantic · ~30°N',desc:'Semi-permanent high-pressure system over the North Atlantic. Drives weather patterns across Europe. Influences hurricane tracks. Stronger in summer. Azores High variant.',fact:'Semi-permanent high · Drives European weather · Azores High · Hurricane steering'},
+  {n:'Subtropical High (Pacific High)',la:32.00,ln:-140.00,sub:'N. Pacific · ~30°N',desc:'Semi-permanent high-pressure system over the North Pacific. Drives California\'s Mediterranean climate. Influences typhoon tracks. Stronger in summer.',fact:'Semi-permanent high · California climate · Typhoon steering · North Pacific Gyre'},
+  {n:'Subtropical High (S. Atlantic)',la:-30.00,ln:-20.00,sub:'S. Atlantic · ~30°S',desc:'Semi-permanent high-pressure system over the South Atlantic. Drives SE Trade Winds. Influences South American weather. Part of the South Atlantic Gyre.',fact:'Semi-permanent high · SE Trade Winds · S. Atlantic Gyre · Namib desert influence'},
+  {n:'Subtropical High (S. Pacific)',la:-30.00,ln:-110.00,sub:'S. Pacific · ~30°S',desc:'Semi-permanent high-pressure system over the South Pacific. Drives SE Trade Winds. Influences South American climate. Part of the South Pacific Gyre.',fact:'Semi-permanent high · SE Trade Winds · Atacama desert influence · S. Pacific Gyre'},
+  {n:'Icelandic Low',la:60.00,ln:-30.00,sub:'N. Atlantic · ~60°N',desc:'Semi-permanent low-pressure system near Iceland. Drives North Atlantic storms. Stronger in winter. Part of the North Atlantic Oscillation (NAO).',fact:'Semi-permanent low · North Atlantic storms · NAO · Stronger in winter'},
+  {n:'Aleutian Low',la:52.00,ln:-170.00,sub:'N. Pacific · ~60°N',desc:'Semi-permanent low-pressure system near Aleutian Islands. Drives North Pacific storms. Stronger in winter. Influences weather across North America.',fact:'Semi-permanent low · North Pacific storms · Stronger in winter · Alaska weather'},
+  {n:'Subpolar Low (Antarctic)',la:-60.00,ln:0.00,sub:'Southern Ocean · ~60°S',desc:'Circumpolar low-pressure trough around Antarctica. Drives Southern Ocean storms. Strongest westerlies. Constant low pressure due to temperature contrast.',fact:'Circumpolar trough · Southern Ocean storms · Strongest winds · Antarctic convergence'},
   {n:'Roaring Forties',la:-45.00,ln:60.00,sub:'Southern Ocean',desc:'Powerful westerly winds between 40°-50°S. Strong, constant winds due to no landmass. Used by sailing ships for faster passage from Europe to Australia/Asia. Waves up to 20m.',fact:'40°-50°S · Strongest constant winds · Sailing ship route · 20m waves'},
   {n:'Trade Winds',la:15.00,ln:-50.00,sub:'Atlantic Ocean',desc:'Steady easterly winds between 30°N/S and equator. Powered by Hadley circulation. Historically used by sailing ships for trade routes. Columbus used them to reach Americas.',fact:'Easterly winds · Hadley circulation · Sailing trade routes · Columbus'},
-  {n:'Gulf Stream',la:35.00,ln:-72.00,sub:'Atlantic Ocean',desc:'Warm, powerful Atlantic current. Brings warm water from Gulf of Mexico to Europe. Makes Western Europe 5°C warmer than similar latitudes. 100-150 Sv volume. Could weaken due to climate change.',fact:'Warm Atlantic current · Europe warming · 100-150 Sv volume · AMOC part'},
   {n:'Jet Stream',la:45.00,ln:-100.00,sub:'Northern Hemisphere',desc:'Fast-moving air currents at 9-16km altitude. 200-400 km/h. Separates cold polar air from warm subtropical air. Drives weather systems. Meanders create high/low pressure systems. Climate change disrupting it.',fact:'200-400 km/h at 9-16km · Separates polar/subtropical air · Drives weather · Rossby waves'},
 ];
 D.current = [
@@ -2848,6 +2900,17 @@ D.current = [
   {n:'Canary Current',temp:'cold',sub:'Atlantic · 4 Sv',desc:'Cold current along NW Africa/Canary Islands. Upwelling fisheries.',pts:[{la:42,ln:-12},{la:38,ln:-14},{la:32,ln:-17},{la:25,ln:-20}]},
   {n:'Oyashio Current',temp:'cold',sub:'Pacific · 8 Sv',desc:'Cold Arctic current along Kamchatka/Kurils to Japan. Rich fishing.',pts:[{la:55,ln:155},{la:48,ln:152},{la:42,ln:150},{la:38,ln:145}]},
   {n:'Antarctic Circumpolar Current',temp:'cold',sub:'Southern Ocean · 135 Sv',desc:'World\'s largest current. Flows east around Antarctica. 100x all rivers combined.',pts:[{la:-55,ln:-60},{la:-55,ln:0},{la:-55,ln:60},{la:-55,ln:120},{la:-55,ln:180}]},
+  {n:'Agulhas Current',temp:'warm',sub:'Indian · 70 Sv',desc:'Western boundary current along SE Africa. One of the strongest. Warm water from Indian Ocean. Influences South African climate. Agulhas rings leak into Atlantic.',pts:[{la:-28,ln:32},{la:-30,ln:34},{la:-33,ln:35},{la:-36,ln:36},{la:-38,ln:37}]},
+  {n:'South Equatorial Current',temp:'warm',sub:'Pacific',desc:'Warm current flowing west across equatorial Pacific. Driven by SE Trade Winds. Feeds into E. Australian Current. Part of South Pacific Gyre.',pts:[{la:-5,ln:-150},{la:-5,ln:-130},{la:-5,ln:-110},{la:-5,ln:-90},{la:-8,ln:-70},{la:-10,ln:-50}]},
+  {n:'North Equatorial Current',temp:'warm',sub:'Pacific',desc:'Warm current flowing west across tropical Pacific. Driven by NE Trade Winds. Feeds into Kuroshio Current. Part of North Pacific Gyre.',pts:[{la:15,ln:-140},{la:15,ln:-120},{la:15,ln:-100},{la:15,ln:-80},{la:15,ln:-60},{la:18,ln:-40}]},
+  {n:'North Pacific Current',temp:'warm',sub:'Pacific',desc:'Eastward current across North Pacific. Extension of Kuroshio. Feeds California Current. Part of North Pacific Gyre.',pts:[{la:38,ln:150},{la:38,ln:170},{la:38,ln:-170},{la:38,ln:-150},{la:38,ln:-130}]},
+  {n:'Alaska Current',temp:'warm',sub:'Pacific',desc:'Warm northward current along Alaska coast. Extension of North Pacific Current. Keeps SE Alaska mild. Part of Alaska Gyre.',pts:[{la:42,ln:-130},{la:46,ln:-135},{la:50,ln:-140},{la:54,ln:-145},{la:58,ln:-148}]},
+  {n:'Norwegian Current',temp:'warm',sub:'Atlantic',desc:'Warm current along Norway coast. Extension of North Atlantic Drift. Keeps Norwegian ports ice-free. Influences Scandinavian climate.',pts:[{la:56,ln:2},{la:58,ln:4},{la:61,ln:5},{la:64,ln:7},{la:67,ln:10}]},
+  {n:'West Australian Current',temp:'cold',sub:'Indian',desc:'Cold current flowing north along W. Australia coast. Part of South Indian Ocean Gyre. Brings cool water to Perth. Upwelling supports fisheries.',pts:[{la:-35,ln:115},{la:-30,ln:114},{la:-25,ln:113},{la:-20,ln:112},{la:-15,ln:111}]},
+  {n:'Falkland Current',temp:'cold',sub:'Atlantic',desc:'Cold current flowing north from Antarctica along Argentina coast. Brings icebergs. Meets Brazil Current at the Confluence zone. Rich fishing.',pts:[{la:-52,ln:-60},{la:-48,ln:-58},{la:-44,ln:-56},{la:-40,ln:-54},{la:-36,ln:-52}]},
+  {n:'East Greenland Current',temp:'cold',sub:'Arctic',desc:'Cold current flowing south along Greenland\'s east coast. Brings icebergs from Arctic. Meets Irminger Current. Part of East Greenland Gyre.',pts:[{la:76,ln:-18},{la:72,ln:-20},{la:68,ln:-22},{la:64,ln:-25},{la:60,ln:-30}]},
+  {n:'West Greenland Current',temp:'cold',sub:'Arctic',desc:'Cold current flowing north along Greenland\'s west coast. Mixes with warm Irminger Current. Influences Baffin Bay ice conditions.',pts:[{la:56,ln:-50},{la:60,ln:-48},{la:64,ln:-52},{la:68,ln:-54},{la:72,ln:-56}]},
+  {n:'Equatorial Counter Current',temp:'warm',sub:'Pacific',desc:'Eastward current between N. and S. Equatorial currents. Flows against Trade Winds. Strongest in northern summer. Important for El Niño.',pts:[{la:7,ln:-160},{la:7,ln:-140},{la:7,ln:-120},{la:7,ln:-100},{la:7,ln:-80}]},
 ];
 D.wind = [
   {n:'NE Trade Winds',temp:'warm',sub:'Atlantic',desc:'Steady easterly winds from 30°N to equator. Powered by Hadley circulation. Columbus used them.',pts:[{la:30,ln:-50},{la:25,ln:-45},{la:20,ln:-40},{la:15,ln:-35},{la:10,ln:-30}]},
@@ -2855,7 +2918,10 @@ D.wind = [
   {n:'Pacific Trade Winds',temp:'warm',sub:'Pacific',desc:'Easterly trade winds across equatorial Pacific. Drive El Niño/La Niña cycles.',pts:[{la:15,ln:-140},{la:10,ln:-150},{la:5,ln:-160},{la:0,ln:-170},{la:-5,ln:-180}]},
   {n:'Westerlies (N. Atlantic)',temp:'cold',sub:'Atlantic',desc:'Prevailing westerlies in mid-latitudes (30°-60°N). Drive weather across North America and Europe.',pts:[{la:40,ln:-70},{la:43,ln:-60},{la:46,ln:-50},{la:48,ln:-40},{la:50,ln:-30},{la:52,ln:-20}]},
   {n:'Roaring Forties',temp:'cold',sub:'Southern Ocean',desc:'Powerful westerlies between 40°-50°S. Constant, strong — used by clipper ships for Australia/Asia route.',pts:[{la:-42,ln:-60},{la:-43,ln:-40},{la:-44,ln:-20},{la:-45,ln:0},{la:-46,ln:20},{la:-47,ln:40},{la:-48,ln:60},{la:-48,ln:80},{la:-47,ln:100},{la:-46,ln:120}]},
-  {n:'Polar Easterlies',temp:'cold',sub:'Arctic',desc:'Cold winds from polar high-pressure regions (60°-90°N). Drive cold air southward.',pts:[{la:75,ln:-60},{la:72,ln:-50},{la:68,ln:-40},{la:65,ln:-30}]},
+  {n:'Furious Fifties',temp:'cold',sub:'Southern Ocean',desc:'Westerlies between 50°-60°S. Stronger and more consistent than the Forties. Fewer landmasses to break the wind. Treacherous for sailors.',pts:[{la:-52,ln:-60},{la:-53,ln:-40},{la:-54,ln:-20},{la:-55,ln:0},{la:-56,ln:20},{la:-57,ln:40},{la:-57,ln:60},{la:-56,ln:80},{la:-55,ln:100},{la:-54,ln:120}]},
+  {n:'Screaming Sixties',temp:'cold',sub:'Southern Ocean',desc:'Westerlies between 60°-70°S. Fiercest winds on Earth. Almost no land — uninterrupted fetch around Antarctica. Icebergs common. Extreme danger for ships.',pts:[{la:-62,ln:-60},{la:-63,ln:-40},{la:-64,ln:-20},{la:-65,ln:0},{la:-66,ln:20},{la:-66,ln:40},{la:-65,ln:60},{la:-64,ln:80},{la:-63,ln:100},{la:-62,ln:120}]},
+  {n:'Polar Easterlies (Arctic)',temp:'cold',sub:'Arctic',desc:'Cold winds from polar high-pressure regions (60°-90°N). Drive cold air southward.',pts:[{la:75,ln:-60},{la:72,ln:-50},{la:68,ln:-40},{la:65,ln:-30}]},
+  {n:'Polar Easterlies (Antarctic)',temp:'cold',sub:'Antarctic',desc:'Cold winds from Antarctic high-pressure region (60°-90°S). Drive cold air northward. Katabatic winds. Strongest surface winds on Earth.',pts:[{la:-65,ln:-60},{la:-68,ln:-40},{la:-72,ln:-20},{la:-75,ln:0},{la:-78,ln:20},{la:-75,ln:40},{la:-72,ln:60},{la:-68,ln:80}]},
   {n:'Indian Monsoon (Summer)',temp:'warm',sub:'Indian Ocean',desc:'Summer monsoon winds from SW. Cross equator, pick up moisture, bring rain to India June-September.',pts:[{la:-10,ln:60},{la:-5,ln:65},{la:0,ln:70},{la:5,ln:72},{la:10,ln:75},{la:15,ln:75},{la:20,ln:78}]},
   {n:'Indian Monsoon (Winter)',temp:'cold',sub:'Indian Ocean',desc:'Winter monsoon winds from NE. Dry, continental air from Himalayas. Blow from land to sea October-December.',pts:[{la:25,ln:80},{la:20,ln:82},{la:15,ln:83},{la:10,ln:85},{la:5,ln:87},{la:0,ln:90}]},
 ];
@@ -2906,11 +2972,11 @@ D.valley = [
   {n:'Indus Valley',la:27.00,ln:68.00,sub:'Pakistan · Indus River basin',desc:'Cradle of Indus Valley Civilization (Harappa, Mohenjo-daro). Indus River from Tibet to Arabian Sea. Punjab region. Major irrigation for Pakistan\'s agriculture. 5 rivers confluence.',fact:'Indus Valley Civilization (3300 BCE) · Harappa & Mohenjo-daro · 5 rivers · Punjab'},
 ];
 D.w_pass = [
-  {n:'Khyber Pass',la:34.12,ln:71.09,sub:'Pakistan/Afghanistan · 1,070m',desc:'Historic mountain pass connecting Afghanistan to Pakistan. Gateway to the Indian subcontinent. Used by Alexander, Mughals, British. Part of ancient Silk Road. Strategically vital for 2,000 years.',fact:'1,070m · Silk Road · Alexander/Ghaznavi/Mughals/British · Strategic pass · NATO supply route'},
-  {n:'Khunjerab Pass',la:36.85,ln:75.42,sub:'Pakistan/China · 4,693m',desc:'Highest paved border crossing in the world. Karakoram Highway between Pakistan and China. Part of China-Pakistan Economic Corridor (CPEC). Snow-covered 8 months/year. Endangered Marco Polo sheep.',fact:'4,693m (highest paved) · KKH/CPEC · Pakistan-China border · Snow 8 months · Wildlife'},
-  {n:'Brenner Pass',la:47.00,ln:11.50,sub:'Italy/Austria · 1,372m',desc:'Lowest Alpine pass, busiest north-south route across Alps. Brenner motorway and railway. Part of Roman Via Claudia Augusta (AD 46). EU transalpine freight corridor. 2.5M trucks/year.',fact:'1,372m (lowest Alpine) · Roman road · 2.5M trucks/year · Railway tunnel · EU corridor'},
-  {n:'St Gotthard Pass',la:46.55,ln:8.58,sub:'Switzerland · 2,106m',desc:'Key Alpine pass connecting north and south Switzerland. Gotthard Base Tunnel (world\'s longest rail tunnel 57km). William Tell legend. Devils Bridge. Swiss Confederacy origin.',fact:'2,106m · Gotthard Base Tunnel (57km) · Swiss independence · William Tell · Devil\'s Bridge'},
-  {n:'Karakoram Pass',la:35.52,ln:77.82,sub:'India/China · 5,540m',desc:'High-altitude pass connecting Ladakh to Xinjiang. Ancient trade route for silk, jade, spices. Historically part of the Silk Road. Closed since 1967. Permafrost and extreme cold.',fact:'5,540m · Silk Road · Ladakh-Xinjiang · Closed since 1967 · Extreme cold'},
+  {n:'Khyber Pass',la:34.12,ln:71.09,sub:'Pakistan/Afghanistan · 1,070m',desc:'Historic mountain pass connecting Afghanistan to Pakistan. Gateway to the Indian subcontinent. Used by Alexander, Mughals, British. Part of ancient Silk Road. Strategically vital for 2,000 years.',fact:'1,070m · Silk Road · Alexander/Ghaznavi/Mughals/British · Strategic pass · NATO supply route',pts:[{la:34.00,ln:71.30},{la:34.05,ln:71.20},{la:34.12,ln:71.09},{la:34.20,ln:70.95},{la:34.30,ln:70.80}]},
+  {n:'Khunjerab Pass',la:36.85,ln:75.42,sub:'Pakistan/China · 4,693m',desc:'Highest paved border crossing in the world. Karakoram Highway between Pakistan and China. Part of China-Pakistan Economic Corridor (CPEC). Snow-covered 8 months/year. Endangered Marco Polo sheep.',fact:'4,693m (highest paved) · KKH/CPEC · Pakistan-China border · Snow 8 months · Wildlife',pts:[{la:36.60,ln:75.10},{la:36.70,ln:75.25},{la:36.85,ln:75.42},{la:37.00,ln:75.55},{la:37.20,ln:75.70}]},
+  {n:'Brenner Pass',la:47.00,ln:11.50,sub:'Italy/Austria · 1,372m',desc:'Lowest Alpine pass, busiest north-south route across Alps. Brenner motorway and railway. Part of Roman Via Claudia Augusta (AD 46). EU transalpine freight corridor. 2.5M trucks/year.',fact:'1,372m (lowest Alpine) · Roman road · 2.5M trucks/year · Railway tunnel · EU corridor',pts:[{la:46.70,ln:11.40},{la:46.85,ln:11.45},{la:47.00,ln:11.50},{la:47.15,ln:11.55},{la:47.30,ln:11.55}]},
+  {n:'St Gotthard Pass',la:46.55,ln:8.58,sub:'Switzerland · 2,106m',desc:'Key Alpine pass connecting north and south Switzerland. Gotthard Base Tunnel (world\'s longest rail tunnel 57km). William Tell legend. Devils Bridge. Swiss Confederacy origin.',fact:'2,106m · Gotthard Base Tunnel (57km) · Swiss independence · William Tell · Devil\'s Bridge',pts:[{la:46.40,ln:8.55},{la:46.48,ln:8.57},{la:46.55,ln:8.58},{la:46.62,ln:8.58},{la:46.70,ln:8.55}]},
+  {n:'Karakoram Pass',la:35.52,ln:77.82,sub:'India/China · 5,540m',desc:'High-altitude pass connecting Ladakh to Xinjiang. Ancient trade route for silk, jade, spices. Historically part of the Silk Road. Closed since 1967. Permafrost and extreme cold.',fact:'5,540m · Silk Road · Ladakh-Xinjiang · Closed since 1967 · Extreme cold',pts:[{la:34.80,ln:77.60},{la:35.10,ln:77.70},{la:35.52,ln:77.82},{la:35.80,ln:77.90},{la:36.00,ln:78.00}]},
 ];
 D.glacier = [
   {n:'Siachen Glacier',la:35.40,ln:77.10,sub:'India/Pakistan · 76km',desc:'World\'s highest battlefield (5,400m). 76km long in eastern Karakoram. "Third Pole" — largest glacier outside polar regions. Indian Army controls since 1984. Extreme cold (-50°C). Thousands lost to avalanches, not combat.',fact:'76km (longest in Karakoram) · Highest battlefield (5,400m) · -50°C · Operation Meghdoot 1984'},
@@ -2974,16 +3040,16 @@ D.bird = [
   {n:'Bhitarkanika NP',la:20.75,ln:86.87,sub:'Odisha · 672 km²',desc:'Second largest mangrove forest in India (after Sunderbans). 215+ bird species. Saltwater crocodiles (largest population). Olive ridley turtles nesting. Gahirmatha Marine Sanctuary. Ramsar site.',fact:'672 km² · 2nd largest mangroves · Crocodiles · Olive ridleys · Ramsar'},
 ];
 D.i_pass = [
-  {n:'Nathu La',la:27.38,ln:88.82,sub:'Sikkim · 4,310m · India-China border',desc:'Reopened in 2006 for border trade (after 1962 war). Connects Sikkim to Tibet (China). Part of historic Silk Road. 14.5km from Gangtok. Permits required for Indian tourists. Used for border trade (barter system).',fact:'4,310m · Silk Road · Reopened 2006 · India-China trade · Gangtok 14.5km'},
-  {n:'Khardung La',la:34.27,ln:77.60,sub:'Ladakh · 5,359m',desc:'One of the highest motorable passes in the world. Connects Leh to Nubra Valley (Siachen). Built by Border Roads Organisation. Khardung means "the pass of lower king". 39km from Leh. Extreme cold.',fact:'5,359m (highest motorable) · Leh-Nubra route · BRO built · Siachen gateway'},
-  {n:'Rohtang Pass',la:32.37,ln:77.25,sub:'HP · 3,978m · Manali-Leh route',desc:'Key pass connecting Kullu Valley to Lahaul-Spiti. Manali-Leh highway. Open June-October only. Snow piles up to 15m in winter. Beas River origin near here. Tourist attraction from Manali.',fact:'3,978m · Manali-Leh route · June-Oct only · 15m snow · Beas origin'},
-  {n:'Chang La',la:34.03,ln:77.93,sub:'Ladakh · 5,360m',desc:'Second highest motorable pass in the world. Connects Leh to Changthang region (Pangong Tso). Famous for marmots. Approx 50km from Leh. Cold desert landscape. Kiang (Tibetan wild ass).',fact:'5,360m (2nd highest motorable) · Changthang · Pangong Tso route · Kiang · Marmots'},
-  {n:'Zoji La',la:34.28,ln:75.47,sub:'J&K · 3,528m · Srinagar-Leh route',desc:'Gateway connecting Kashmir Valley to Ladakh. Srinagar-Leh highway. Considered one of the most dangerous roads in India. Avalanche-prone. Open only June-November. Zanskar range. Dras sector nearby (coldest place in India).',fact:'3,528m · Srinagar-Leh lifeline · Most dangerous road · Avalanches · Dras nearby'},
-  {n:'Fotu La',la:34.12,ln:77.52,sub:'Ladakh · 4,108m · NH 1',desc:'Pass on the Srinagar-Leh highway. 60km from Leh. Desolate, moonscape-like terrain. Buddhist prayer flags. Magnificent views of Indus River valley. Highest point on NH 1 before Leh.',fact:'4,108m · Leh-Srinagar NH 1 · Moonscape · Indus valley views · Prayer flags'},
-  {n:'Bomdi La',la:27.22,ln:92.42,sub:'Arunachal Pradesh · 2,800m',desc:'Pass connecting Tezpur (Assam) to Tawang. Sela Pass further ahead. Bomdila town is a hill station. Buddhist monasteries. Orchid sanctuary. Eastern Himalayan views. Border roads.',fact:'2,800m · Tawang route · Bomdila town · Orchids · Eastern Himalayas'},
-  {n:'Sela Pass',la:27.50,ln:92.12,sub:'Arunachal Pradesh · 4,170m',desc:'Connects Bomdila to Tawang. Entirely above tree line. Sela Lake (frozen in winter). Part of the India-China border region. Jaswant Garh war memorial (1962). 7km from Tawang. Snow-covered most of year.',fact:'4,170m · Sela Lake · Tawang route · 1962 war memorial · Tree line area'},
-  {n:'Dihang Pass',la:28.58,ln:95.68,sub:'Arunachal Pradesh · 4,000m',desc:'Remote pass connecting Arunachal to Myanmar border. Part of historic Stilwell Road (WWII). Dense jungle terrain. Mishmi tribal region. Extremely remote. Biodiversity hotspot — many endemic species.',fact:'4,000m · Stilwell Road (WWII) · India-Myanmar · Mishmi tribe · Biodiversity hotspot'},
-  {n:'Lipulekh Pass',la:30.25,ln:80.95,sub:'Uttarakhand · 5,100m · India-Nepal-China trijunction',desc:'Tri-junction of India, Nepal, China. Part of Kailash-Mansarovar pilgrimage route. Indo-China border crossing. Kalapani border dispute area. High-altitude Himalayan terrain. Ancient trade route to Tibet.',fact:'5,100m · 3-country junction · Kailash-Mansarovar route · Kalapani dispute · Tibet trade'},
+  {n:'Nathu La',la:27.38,ln:88.82,sub:'Sikkim · 4,310m · India-China border',desc:'Reopened in 2006 for border trade (after 1962 war). Connects Sikkim to Tibet (China). Part of historic Silk Road. 14.5km from Gangtok. Permits required for Indian tourists. Used for border trade (barter system).',fact:'4,310m · Silk Road · Reopened 2006 · India-China trade · Gangtok 14.5km',pts:[{la:27.20,ln:88.70},{la:27.30,ln:88.78},{la:27.38,ln:88.82},{la:27.45,ln:88.85},{la:27.55,ln:88.90}]},
+  {n:'Khardung La',la:34.27,ln:77.60,sub:'Ladakh · 5,359m',desc:'One of the highest motorable passes in the world. Connects Leh to Nubra Valley (Siachen). Built by Border Roads Organisation. Khardung means "the pass of lower king". 39km from Leh. Extreme cold.',fact:'5,359m (highest motorable) · Leh-Nubra route · BRO built · Siachen gateway',pts:[{la:34.10,ln:77.50},{la:34.18,ln:77.55},{la:34.27,ln:77.60},{la:34.35,ln:77.63},{la:34.45,ln:77.68}]},
+  {n:'Rohtang Pass',la:32.37,ln:77.25,sub:'HP · 3,978m · Manali-Leh route',desc:'Key pass connecting Kullu Valley to Lahaul-Spiti. Manali-Leh highway. Open June-October only. Snow piles up to 15m in winter. Beas River origin near here. Tourist attraction from Manali.',fact:'3,978m · Manali-Leh route · June-Oct only · 15m snow · Beas origin',pts:[{la:32.20,ln:77.15},{la:32.28,ln:77.20},{la:32.37,ln:77.25},{la:32.45,ln:77.30},{la:32.55,ln:77.38}]},
+  {n:'Chang La',la:34.03,ln:77.93,sub:'Ladakh · 5,360m',desc:'Second highest motorable pass in the world. Connects Leh to Changthang region (Pangong Tso). Famous for marmots. Approx 50km from Leh. Cold desert landscape. Kiang (Tibetan wild ass).',fact:'5,360m (2nd highest motorable) · Changthang · Pangong Tso route · Kiang · Marmots',pts:[{la:33.90,ln:77.85},{la:33.97,ln:77.90},{la:34.03,ln:77.93},{la:34.10,ln:77.97},{la:34.18,ln:78.05}]},
+  {n:'Zoji La',la:34.28,ln:75.47,sub:'J&K · 3,528m · Srinagar-Leh route',desc:'Gateway connecting Kashmir Valley to Ladakh. Srinagar-Leh highway. Considered one of the most dangerous roads in India. Avalanche-prone. Open only June-November. Zanskar range. Dras sector nearby (coldest place in India).',fact:'3,528m · Srinagar-Leh lifeline · Most dangerous road · Avalanches · Dras nearby',pts:[{la:34.10,ln:75.38},{la:34.18,ln:75.42},{la:34.28,ln:75.47},{la:34.35,ln:75.52},{la:34.42,ln:75.58}]},
+  {n:'Fotu La',la:34.12,ln:77.52,sub:'Ladakh · 4,108m · NH 1',desc:'Pass on the Srinagar-Leh highway. 60km from Leh. Desolate, moonscape-like terrain. Buddhist prayer flags. Magnificent views of Indus River valley. Highest point on NH 1 before Leh.',fact:'4,108m · Leh-Srinagar NH 1 · Moonscape · Indus valley views · Prayer flags',pts:[{la:34.02,ln:77.45},{la:34.08,ln:77.48},{la:34.12,ln:77.52},{la:34.18,ln:77.55},{la:34.25,ln:77.60}]},
+  {n:'Bomdi La',la:27.22,ln:92.42,sub:'Arunachal Pradesh · 2,800m',desc:'Pass connecting Tezpur (Assam) to Tawang. Sela Pass further ahead. Bomdila town is a hill station. Buddhist monasteries. Orchid sanctuary. Eastern Himalayan views. Border roads.',fact:'2,800m · Tawang route · Bomdila town · Orchids · Eastern Himalayas',pts:[{la:27.10,ln:92.35},{la:27.16,ln:92.38},{la:27.22,ln:92.42},{la:27.28,ln:92.45},{la:27.35,ln:92.50}]},
+  {n:'Sela Pass',la:27.50,ln:92.12,sub:'Arunachal Pradesh · 4,170m',desc:'Connects Bomdila to Tawang. Entirely above tree line. Sela Lake (frozen in winter). Part of the India-China border region. Jaswant Garh war memorial (1962). 7km from Tawang. Snow-covered most of year.',fact:'4,170m · Sela Lake · Tawang route · 1962 war memorial · Tree line area',pts:[{la:27.38,ln:92.05},{la:27.44,ln:92.08},{la:27.50,ln:92.12},{la:27.56,ln:92.15},{la:27.62,ln:92.20}]},
+  {n:'Dihang Pass',la:28.58,ln:95.68,sub:'Arunachal Pradesh · 4,000m',desc:'Remote pass connecting Arunachal to Myanmar border. Part of historic Stilwell Road (WWII). Dense jungle terrain. Mishmi tribal region. Extremely remote. Biodiversity hotspot — many endemic species.',fact:'4,000m · Stilwell Road (WWII) · India-Myanmar · Mishmi tribe · Biodiversity hotspot',pts:[{la:28.40,ln:95.55},{la:28.48,ln:95.60},{la:28.58,ln:95.68},{la:28.65,ln:95.75},{la:28.75,ln:95.85}]},
+  {n:'Lipulekh Pass',la:30.25,ln:80.95,sub:'Uttarakhand · 5,100m · India-Nepal-China trijunction',desc:'Tri-junction of India, Nepal, China. Part of Kailash-Mansarovar pilgrimage route. Indo-China border crossing. Kalapani border dispute area. High-altitude Himalayan terrain. Ancient trade route to Tibet.',fact:'5,100m · 3-country junction · Kailash-Mansarovar route · Kalapani dispute · Tibet trade',pts:[{la:30.12,ln:80.88},{la:30.18,ln:80.92},{la:30.25,ln:80.95},{la:30.32,ln:80.98},{la:30.40,ln:81.02}]},
 ];
 D.w_bridge = [
   {n:'Howrah Bridge (Rabindra Setu)',la:22.59,ln:88.35,sub:'India · Kolkata · 705m',desc:'Cantilever bridge over Hooghly River. One of the busiest in the world (100k vehicles/day, 1.5M pedestrians). No nuts/bolts — all riveted. Built 1943 by Braithwaite & Co. 3rd longest cantilever span when built.',fact:'705m · No nuts/bolts · 1.5M pedestrians/day · 1943 · Riveted'},
@@ -3008,7 +3074,7 @@ D.lighthouse = [
   {n:'San Blas Lighthouse',la:11.27,ln:75.98,sub:'India · Kerala · 24m',desc:'Located at Punto de Santiago (Kannur). 19th century Portuguese lighthouse. Arabian Sea. St. Angelo Fort nearby. Muzhappilangad Beach. Red and white bands. Active shipping aid. Colonial-era navigation.',fact:'24m · Portuguese era · Kannur · St. Angelo Fort · Arabian Sea'},
 ];
 D.wonder = [
-  {n:'Great Wall of China',la:40.43,ln:116.57,sub:'China · 21,196km',desc:'World\'s longest wall. Built over 2,300 years (7th c. BC — 17th c.). Ming dynasty best-preserved sections. Visible from space? No — myth (only from low orbit with aid). 10M visitors/year. UNESCO 1987.',fact:'21,196km · 2,300 years to build · Not visible from space · Ming dynasty · UNESCO'},
+  {n:'Great Wall of China',la:40.43,ln:116.57,sub:'China · 21,196km',desc:'World\'s longest wall. Built over 2,300 years (7th c. BC — 17th c.). Ming dynasty best-preserved sections. Visible from space? No — myth (only from low orbit with aid). 10M visitors/year. UNESCO 1987.',fact:'21,196km · 2,300 years to build · Not visible from space · Ming dynasty · UNESCO',pts:[{la:39.7,ln:119.5},{la:40.0,ln:118.0},{la:40.3,ln:116.5},{la:40.5,ln:115.0},{la:40.7,ln:113.5},{la:40.9,ln:112.0},{la:41.0,ln:110.5},{la:40.8,ln:109.0},{la:40.5,ln:107.5},{la:40.2,ln:106.0},{la:39.5,ln:104.5},{la:38.8,ln:103.0},{la:38.2,ln:101.5},{la:37.5,ln:100.0},{la:36.8,ln:98.5}]},
   {n:'Christ the Redeemer',la:-22.95,ln:-43.21,sub:'Brazil · Rio de Janeiro · 38m',desc:'Art Deco statue of Jesus. 30m tall (38m with pedestal). 28m arm span. 635 tonnes. 1931 completed. Corcovado mountain 710m. Mountaintop lightning strike (2014). One of the New7Wonders. City icon.',fact:'38m · Corcovado 710m · Art Deco · 635 tonnes · 1931 · Lightning struck'},
   {n:'Machu Picchu',la:-13.16,ln:-72.54,sub:'Peru · 2,430m',desc:'Inca citadel built 1450. Abandoned ~1572. Rediscovered 1911 by Hiram Bingham. 200 buildings on mountain ridge. Sacred Valley. No mortar — precision dry-stone. UNESCO 1983. New7Wonders. 1.5M visitors/year (limits imposed).',fact:'2,430m · Inca (1450) · Lost until 1911 · Dry-stone precision · UNESCO · Tourism limits'},
   {n:'Chichén Itzá',la:20.68,ln:-88.57,sub:'Mexico · Yucatán',desc:'Maya-Toltec city. El Castillo pyramid (Kukulcán). Spring/fall equinox — serpent shadow effect. Cenote Sagrado (sacred sinkhole). 365 steps on pyramid (1 per day). Ball court (largest in Americas). Caracol observatory. UNESCO.',fact:'Mayan city · El Castillo · Equinox serpent · Cenote · Ball court · Observatory'},
@@ -3064,6 +3130,71 @@ D.trade = [
   {n:'Trans-Saharan Route',sub:'North to West Africa · 4,000km',desc:'Salt, gold, and slave trade across Sahara Desert. Camel caravans (up to 10,000 camels). 8th-16th centuries. Timbuktu and Gao flourished as gold-salt exchange cities. Routes from Marrakesh/Tripoli to Niger River. Tuareg nomads navigated.',pts:[{la:33.0,ln:-7.6},{la:32.3,ln:-6.4},{la:31.0,ln:-4.4},{la:30.0,ln:-3.0},{la:28.0,ln:-1.0},{la:26.0,ln:-0.5},{la:24.0,ln:-1.5},{la:22.0,ln:-2.5},{la:20.0,ln:-3.0},{la:18.0,ln:-3.5},{la:16.0,ln:-4.0},{la:16.8,ln:-3.0}]},
   {n:'Amber Road',sub:'Baltic to Mediterranean · 2,000km',desc:'Ancient trade route for amber (fossilized tree resin). Baltic coast to Adriatic. 3,000+ years old. Romans prized amber for jewelry. Aquileia (Italy) was processing center. Route passed through Vistula, Danube rivers. Also carried furs, honey, wax.',pts:[{la:54.7,ln:18.5},{la:52.7,ln:17.0},{la:51.1,ln:16.5},{la:50.3,ln:18.0},{la:49.8,ln:19.0},{la:48.3,ln:17.5},{la:47.5,ln:16.0},{la:46.5,ln:14.5},{la:45.5,ln:13.5},{la:44.5,ln:12.5}]},
   {n:'Tea Horse Road (Chama)',sub:'China to Tibet · 2,500km',desc:'Ancient caravan route connecting Yunnan (Pu\'er tea) to Tibet (horses). 7th-20th centuries. Tea for horses trade. Crossed Hengduan Mountains, deep gorges (Three Parallel Rivers). Lijiang, Shangri-la, Lhasa key stops. "Southern Silk Road".',pts:[{la:25.0,ln:102.7},{la:26.9,ln:100.2},{la:27.5,ln:99.9},{la:28.5,ln:99.3},{la:29.5,ln:98.5},{la:30.0,ln:97.0},{la:30.5,ln:96.0},{la:31.0,ln:94.0},{la:29.7,ln:91.1}]},
+];
+D.personality = [
+  {n:'Mrinalini Devi',la:22.57,ln:88.36,sub:'1874-1902 · Kolkata, India',desc:'Wife of Swami Vivekananda (then Narendranath Datta). Born as Mrinalini Chattopadhyay in Kolkata. Married in 1884 at age 14 to Narendranath Datta (who later became Swami Vivekananda). A devoted wife and spiritual companion, she supported Vivekananda\'s spiritual pursuits despite their limited time together — Vivekananda became a monk shortly after marriage. She remained in the background, living a simple life in Kolkata with her mother. Died in 1902 at age 28, just months before Vivekananda\'s own passing. Very few letters between them survive — one notable letter from Vivekananda to her discusses his spiritual mission. Her life exemplifies the quiet sacrifice behind a great spiritual movement.',fact:'1874-1902 · Married Vivekananda at 14 (1884) · Died at 28 · Only a few letters survive · Symbol of quiet devotion · Kolkata'},
+  {n:'Narendra Modi',la:23.79,ln:72.64,sub:'1950–present · Vadnagar, Gujarat · 14th PM of India',desc:'14th and current Prime Minister of India (2014–present). Born in Vadnagar, Gujarat to a family of tea sellers. Joined RSS as a child volunteer. Rose through BJP ranks. Chief Minister of Gujarat (2001–2014) for 4 consecutive terms — Gujarat saw rapid industrial growth under his leadership. Became PM in 2014 with the first single-party majority in 30 years; re-elected in 2019 with even larger mandate. Key initiatives: Swachh Bharat Mission (cleanliness), Digital India (e-governance/UPI), Make in India (manufacturing), GST (tax reform), abrogation of Article 370 (J&K special status), Ayushman Bharat (health insurance for 500M+ poor), UPI (world\'s largest real-time payment system). Also known for foreign policy outreach (Act East, Neighbourhood First) and projecting India as Vishwaguru (world teacher). Controversies: 2002 Gujarat riots, demonetisation (2016), handling of COVID-19 lockdown. Consistently high approval ratings. Longest-serving non-Congress PM (surpassed Vajpayee in 2024). Author of several books including "Exam Warriors" and poems.',fact:'1950– · 14th PM (2014–) · 3-term Gujarat CM · Swachh Bharat · Digital India · Make in India · GST · UPI · Ayushman Bharat · Article 370 · Longest non-Congress PM'},
+  {n:'King George V',la:51.51,ln:-0.14,sub:'1865-1936 · London, UK · King-Emperor of India',desc:'King of the United Kingdom (1910-1936) and Emperor of India. Born at Marlborough House, London. Grandson of Queen Victoria. Served in the Royal Navy before becoming king. His reign was transformative: World War I (1914-1918), Irish independence (1922), Statute of Westminster (1931 — established Commonwealth). Visited India in 1911 as the only British monarch-Emperor to visit India — held the grand Delhi Durbar (Coronation Durbar) where he announced the transfer of capital from Calcutta to Delhi and the reunification of Bengal. Also witnessed the rise of the Indian freedom movement (Jallianwala Bagh 1919, Non-Cooperation 1920). Changed the royal house name from Saxe-Coburg and Gotha to Windsor in 1917 due to anti-German sentiment. His reign saw the establishment of the BBC (1922), universal suffrage (1928), and the Great Depression. Known as a constitutional monarch who adapted the crown to the modern era.',fact:'1865-1936 · King & Emperor (1910-1936) · 1911 Delhi Durbar · Capital shift to Delhi · Bengal reunification · House of Windsor (1917) · WWI · Irish independence · Commonwealth'},
+  {n:'George Bernard Shaw',la:53.35,ln:-6.26,sub:'1856-1950 · Dublin, Ireland · Playwright & Critic',desc:'Irish playwright, critic, polemicist, and political activist. Born in Dublin. Moved to London in 1876 where he became a leading figure in the Fabian Society (socialist reform). Revolutionized English drama with plays that combined comedy with social criticism. Major works: "Pygmalion" (1912 — later adapted as My Fair Lady, won him an Oscar 1938 making him the only person to win both Nobel Prize and Oscar), "Saint Joan" (1923), "Man and Superman" (1903), "Major Barbara" (1905), "Mrs. Warren\'s Profession" (1893), "Arms and the Man" (1894). Co-founder of the London School of Economics (1895) with Sidney and Beatrice Webb. Awarded Nobel Prize in Literature (1925) — described his work as "idealism, humanity, and subtle humour." A vegetarian, teetotaler, and ardent socialist. Known for his witty, provocative prefaces to his plays. Also wrote music criticism under the pseudonym "Corno di Bassetto." Died at 94 after falling from a ladder while pruning a tree. His ashes were mixed with those of his wife and scattered in their garden, contrary to his wish to have them scattered in the crematorium garden.',fact:'1856-1950 · Pygmalion (My Fair Lady) · Saint Joan · Man and Superman · Nobel 1925 · Oscar 1938 (only person with both) · Co-founded LSE · Fabian socialist · Vegetarian · Dublin-born'},
+];
+D.highway = [
+  {n:'NH 44 (Srinagar-Kanyakumari)',sub:'India\'s longest NH · 3,745 km',desc:'Longest national highway in India. Connects Srinagar to Kanyakumari passing through J&K, Punjab, Haryana, Delhi, UP, MP, Maharashtra, Telangana, AP, TN. Old NH 1A, 1, 2, 3, 7 merged. Key corridor of India.',fact:'3,745 km (longest) · North-South Corridor part · 4-lane (partly 6) · Connects 11 states',pts:[{la:34.08,ln:74.79},{la:32.74,ln:74.87},{la:31.60,ln:75.00},{la:30.35,ln:75.87},{la:28.70,ln:77.10},{la:27.50,ln:77.70},{la:26.50,ln:78.50},{la:25.50,ln:79.50},{la:24.50,ln:80.00},{la:23.20,ln:79.90},{la:21.20,ln:79.10},{la:20.00,ln:78.80},{la:18.50,ln:78.10},{la:17.40,ln:78.50},{la:16.50,ln:80.50},{la:14.50,ln:79.50},{la:13.10,ln:79.50},{la:12.60,ln:79.40},{la:11.70,ln:79.50},{la:10.80,ln:79.80},{la:9.90,ln:79.50},{la:8.50,ln:78.10},{la:8.10,ln:77.50}]},
+  {n:'NH 48 (Delhi-Chennai)',sub:'Delhi-Chennai · 2,807 km',desc:'Connects Delhi to Chennai via Jaipur, Udaipur, Ahmedabad, Vadodara, Mumbai, Pune, Bangalore. Golden Quadrilateral segment. Major arterial highway.',fact:'Golden Quadrilateral part · 4-6 lane · Connects 7 states',pts:[{la:28.60,ln:77.20},{la:27.00,ln:76.00},{la:26.90,ln:75.80},{la:24.60,ln:73.70},{la:22.30,ln:73.20},{la:21.20,ln:72.90},{la:19.10,ln:72.90},{la:18.50,ln:73.80},{la:12.95,ln:77.60},{la:13.10,ln:79.50},{la:13.08,ln:80.27}]},
+  {n:'NH 19 (Delhi-Kolkata)',sub:'Delhi-Kolkata · 1,435 km',desc:'Connects Delhi to Kolkata via Mathura, Agra, Kanpur, Vardhman. Part of historic Grand Trunk Road. Golden Quadrilateral segment. Old NH 2.',fact:'Grand Trunk Road · Golden Quadrilateral · 4-6 lane · 1,435 km',pts:[{la:28.60,ln:77.20},{la:27.50,ln:77.70},{la:27.20,ln:78.00},{la:26.50,ln:80.30},{la:25.50,ln:81.50},{la:25.30,ln:83.00},{la:24.80,ln:84.50},{la:23.70,ln:85.50},{la:23.30,ln:87.30},{la:22.60,ln:88.40}]},
+  {n:'NH 27 (Porbandar-Silchar)',sub:'Porbandar-Silchar · 3,507 km',desc:'East-West Corridor + extension. Connects Gujarat to Assam. Passes through Rajasthan, MP, UP, Bihar, WB, Assam. Major route for NE connectivity.',fact:'EW Corridor · 3,507 km · Connects 8 states · NH 31 extension',pts:[{la:21.60,ln:69.60},{la:22.30,ln:70.80},{la:23.30,ln:72.60},{la:24.60,ln:73.70},{la:25.10,ln:75.80},{la:26.50,ln:80.30},{la:25.80,ln:83.50},{la:25.30,ln:85.50},{la:24.80,ln:87.00},{la:23.50,ln:88.50},{la:24.00,ln:89.50},{la:24.80,ln:92.80}]},
+  {n:'Golden Quadrilateral',sub:'Delhi-Mumbai-Chennai-Kolkata · 5,846 km',desc:'India\'s largest highway project. 4/6-lane highways connecting 4 metro cities: Delhi, Mumbai, Chennai, Kolkata. Completed 2012 (started 2001). Part of National Highways Development Project (NHDP).',fact:'5,846 km total · NHDP Phase 1 · Completed 2012 · 4 metro cities · 13 states',pts:[{la:28.60,ln:77.20},{la:27.00,ln:76.00},{la:24.60,ln:73.70},{la:22.30,ln:73.20},{la:19.10,ln:72.90},{la:18.50,ln:73.80},{la:12.95,ln:77.60},{la:13.08,ln:80.27},{la:16.50,ln:80.50},{la:19.10,ln:84.80},{la:21.50,ln:86.60},{la:22.60,ln:88.40},{la:25.30,ln:83.00},{la:26.50,ln:80.30},{la:27.20,ln:78.00},{la:28.60,ln:77.20}]},
+  {n:'Delhi-Mumbai Expressway',sub:'Delhi-Mumbai · 1,350 km',desc:'India\'s longest expressway (under construction/partially open). 8-12 lane access-controlled. Reduces Delhi-Mumbai travel from 24 to 12 hours. Saves 30% distance vs NH 48.',fact:'1,350 km (longest expressway) · 8-12 lane · 12 hrs travel · 30% shorter',pts:[{la:28.60,ln:77.20},{la:28.10,ln:77.00},{la:27.60,ln:76.60},{la:27.10,ln:76.40},{la:26.50,ln:75.80},{la:25.90,ln:75.30},{la:25.50,ln:74.80},{la:24.80,ln:74.00},{la:23.80,ln:73.50},{la:23.50,ln:73.00},{la:22.80,ln:72.50},{la:22.00,ln:72.00},{la:21.20,ln:71.50},{la:20.50,ln:71.00},{la:19.80,ln:70.50},{la:19.00,ln:70.00}]},
+  {n:'Yamuna Expressway',sub:'Delhi-Agra · 165 km',desc:'6-lane access-controlled expressway. Connects Noida (Delhi NCR) to Agra via Mathura. Built by Jaypee Group. Travel time 3 hrs → 90 min.',fact:'165 km · 6-lane · 12 min to Jewar Airport · First built by private sector',pts:[{la:28.50,ln:77.50},{la:28.20,ln:77.60},{la:27.80,ln:77.70},{la:27.50,ln:78.00}]},
+  {n:'Mumbai-Pune Expressway',sub:'Mumbai-Pune · 94.5 km',desc:'India\'s first 6-lane access-controlled expressway (opened 2002). 25 tunnels, 17 flyovers. Cuts travel from 4 to 2 hrs. BOT basis.',fact:'First expressway in India · 94.5 km · 25 tunnels · 6-lane · Tolled',pts:[{la:19.10,ln:72.90},{la:18.90,ln:73.20},{la:18.70,ln:73.40},{la:18.55,ln:73.60},{la:18.50,ln:73.80}]},
+  {n:'Eastern Peripheral Expressway',sub:'NCR outer ring · 135 km',desc:'Ring road around Delhi on eastern side. 6-lane access-controlled. Decongests Delhi. Connects NH 44 (Ghaziabad) to NH 48 (Faridabad).',fact:'135 km · 6-lane · Green expressway · Decongests Delhi · CCTV monitored',pts:[{la:28.70,ln:77.40},{la:28.60,ln:77.50},{la:28.40,ln:77.40},{la:28.20,ln:77.35},{la:28.00,ln:77.30},{la:27.80,ln:77.25},{la:27.60,ln:77.20},{la:27.40,ln:77.20},{la:27.30,ln:77.20}]},
+  {n:'Mumbai-Nagpur Expressway (Samruddhi)',sub:'Mumbai-Nagpur · 701 km',desc:'Maharashtra\'s longest expressway. 6-lane (expandable to 8). Reduces Mumbai-Nagpur travel from 16 to 8 hrs. Connects 24 districts.',fact:'701 km · 6-lane · 8 hrs travel · 24 districts · MSRDC project',pts:[{la:19.10,ln:72.90},{la:19.50,ln:73.00},{la:19.80,ln:73.50},{la:20.00,ln:74.00},{la:20.30,ln:74.50},{la:20.50,ln:75.00},{la:20.80,ln:75.50},{la:21.00,ln:76.00},{la:21.10,ln:76.50},{la:21.20,ln:77.00},{la:21.15,ln:77.50},{la:21.10,ln:78.00},{la:21.15,ln:78.50},{la:21.15,ln:79.00},{la:21.15,ln:79.50},{la:21.10,ln:80.00},{la:21.10,ln:80.50},{la:21.15,ln:81.00}]},
+  {n:'Purvanchal Expressway',sub:'Lucknow-Ghazipur · 340 km',desc:'UP\'s longest expressway. 6-lane (expandable to 8). Inaugurated 2021. Connects Lucknow to Ghazipur near Bihar border. Airstrip for emergency landings.',fact:'340 km · 6-lane · Airstrip on expressway · Lucknow-Ghazipur · UP longest',pts:[{la:26.80,ln:80.90},{la:26.50,ln:81.00},{la:26.20,ln:81.50},{la:26.00,ln:82.00},{la:25.80,ln:82.50},{la:25.60,ln:83.00},{la:25.40,ln:83.50},{la:25.30,ln:83.60}]},
+  {n:'Agra-Lucknow Expressway',sub:'Agra-Lucknow · 302 km',desc:'6-lane access-controlled expressway. Connects Agra to Lucknow. Part of UP Expressway network.',fact:'302 km · 6-lane · Agra-Lucknow in 3.5 hrs',pts:[{la:27.20,ln:78.00},{la:27.00,ln:78.50},{la:26.80,ln:79.00},{la:26.60,ln:79.50},{la:26.80,ln:80.90}]},
+  {n:'Delhi-Saharanpur-Dehradun Expressway',sub:'Delhi-Dehradun · 210 km',desc:'Under construction. Reduces Delhi-Dehradun travel from 6 to 2.5 hrs. 6-lane with greenfield alignment.',fact:'210 km · 6-lane · 2.5 hrs travel · Wildlife corridor features',pts:[{la:28.60,ln:77.20},{la:28.80,ln:77.30},{la:29.00,ln:77.50},{la:29.50,ln:77.60},{la:30.00,ln:77.80},{la:30.30,ln:78.00}]},
+];
+D.i_range = [
+  {n:'Himalayas (Great Himalaya Range)',sub:'Northern India · 2,400 km',desc:'World\'s highest mountain range. Spans 5 Indian states (J&K, HP, UK, Sikkim, Arunachal). Contains 9 of 10 highest peaks on Earth (Everest 8,848m, K2 8,611m, Kanchenjunga 8,586m). Formed by India-Eurasia plate collision (~50 mya). 3 parallel ranges: Himadri (Greater), Himachal (Lesser), Siwalik (Outer). Major glaciers: Gangotri, Siachen, Zemu. Perennial rivers: Indus, Ganga, Brahmaputra. Acts as climate barrier.',fact:'2,400 km · 3 parallel ranges · 9/10 highest peaks · Youngest fold mountains · India-Eurasia collision · Permafrost & glaciers · Climate barrier for India',pts:[{la:36.50,ln:73.00},{la:36.00,ln:75.00},{la:35.50,ln:77.00},{la:35.00,ln:79.00},{la:34.00,ln:80.00},{la:33.00,ln:81.00},{la:32.00,ln:82.00},{la:31.00,ln:83.00},{la:30.00,ln:84.00},{la:29.50,ln:85.00},{la:28.50,ln:86.00},{la:28.00,ln:87.00},{la:27.50,ln:88.00},{la:27.00,ln:89.00},{la:27.00,ln:90.00},{la:27.50,ln:91.00},{la:28.00,ln:92.00},{la:29.00,ln:94.00},{la:28.50,ln:96.00},{la:28.00,ln:97.00}]},
+  {n:'Western Ghats (Sahyadri)',sub:'Western India · 1,600 km',desc:'Mountain range parallel to India\'s west coast. UNESCO World Heritage (2012). One of 8 hottest biodiversity hotspots. Older than Himalayas. Runs from Gujarat to Kanyakumari spread across 6 states. Average elevation 1,000-2,500m. Highest peak: Anamudi (2,695m in Kerala). Important for rainfall (orographic) — receives 2,500-6,000mm/year. Major passes: Bhor (NH 48), Palakkad, Thal, Amboli. Rich in endemic flora & fauna: lion-tailed macaque, Nilgiri tahr, Malabar hornbill.',fact:'1,600 km · UNESCO WHS (2012) · 6 states · Anamudi (2,695m) · Biodiversity hotspot · Orographic rainfall · 39 UNESCO World Heritage sites',pts:[{la:21.50,ln:73.00},{la:20.50,ln:73.50},{la:19.50,ln:73.30},{la:18.50,ln:73.50},{la:17.50,ln:73.80},{la:16.50,ln:74.00},{la:15.50,ln:74.30},{la:14.50,ln:74.80},{la:13.50,ln:75.50},{la:12.50,ln:76.00},{la:11.50,ln:76.50},{la:10.50,ln:77.00},{la:9.50,ln:77.30},{la:8.50,ln:77.50}]},
+  {n:'Eastern Ghats',sub:'Eastern India · 1,750 km',desc:'Discontinuous mountain range along India\'s east coast. Runs from Odisha through AP, Telangana to TN. Lower elevation than Western Ghats (600-1,200m). Highest peak: Arma Konda (1,680m in AP). Broken by four major rivers: Godavari, Mahanadi, Krishna, Kaveri. Rich in bauxite, iron ore. Jeypore tract — rich biodiversity. Important tribal population.',fact:'1,750 km · 4 states · Discontinuous (broken by rivers) · Arma Konda (1,680m) · Minerals (bauxite, iron ore) · Tribal belt',pts:[{la:20.50,ln:86.00},{la:19.50,ln:83.50},{la:18.50,ln:83.00},{la:17.50,ln:82.50},{la:16.50,ln:82.50},{la:15.50,ln:80.00},{la:14.50,ln:79.50},{la:13.50,ln:79.50},{la:12.50,ln:79.00},{la:11.50,ln:78.50},{la:10.50,ln:78.50}]},
+  {n:'Vindhya Range',sub:'Central India · 1,200 km',desc:'Ancient east-west mountain range separating North and South India. Runs across MP, UP, Bihar. Acts as traditional boundary between Aryavarta (north) and Deccan (south). Source of Narmada, Son rivers. Average elevation 300-600m. Important for sandstone, limestone. Kalinjar Fort, Rewa region.',fact:'1,200 km · E-W range · North-South India divide · Narmada & Son source · 300-600m · Sandstone',pts:[{la:24.00,ln:80.00},{la:23.50,ln:81.00},{la:23.00,ln:82.00},{la:22.50,ln:83.00},{la:22.00,ln:84.00}]},
+  {n:'Satpura Range',sub:'Central India · 900 km',desc:'East-west range parallel to Vindhya south of Narmada River. Runs across MP, Maharashtra, Chhattisgarh. Higher than Vindhyas (600-1,350m). Highest peak: Dhupgarh (1,350m). Seven mountain spurs (Satpura = 7 folds). Includes Pachmarhi, Satpura NP. Tapti and Narmada rivers originate here.',fact:'900 km · E-W range · South of Narmada · Dhupgarh (1,350m) · 7 folds · Satpura NP · Tapti source',pts:[{la:22.50,ln:77.50},{la:22.30,ln:78.00},{la:22.00,ln:79.00},{la:21.80,ln:80.00},{la:21.50,ln:81.00},{la:21.00,ln:82.00}]},
+  {n:'Aravalli Range',sub:'NW India · 800 km',desc:'Oldest fold mountain range in India (Precambrian). Runs from Gujarat through Rajasthan to Delhi. Highest peak: Guru Shikhar (1,722m on Mount Abu). Heavily eroded — oldest surviving mountain range on Earth (over 2 billion years). Rich in minerals: copper, zinc, lead, marble. Contains Delhi Ridge — green lung for Delhi.',fact:'800 km · Oldest fold mts (2B+ years) · Guru Shikhar (1,722m) · Mineral-rich · Delhi Ridge · Highly eroded',pts:[{la:24.60,ln:72.70},{la:25.00,ln:73.00},{la:25.50,ln:73.50},{la:26.00,ln:74.00},{la:26.50,ln:74.50},{la:27.00,ln:75.00},{la:27.50,ln:75.50},{la:28.00,ln:76.20},{la:28.50,ln:77.00},{la:28.60,ln:77.20}]},
+  {n:'Nilgiri Hills',sub:'South India · 2,400m avg',desc:'Mountain range forming tri-junction of TN, Kerala, Karnataka. Part of Western Ghats. Known for tea plantations, Ooty, Coonoor, Kotagiri. Highest: Doddabetta (2,637m). Nilgiri Biosphere Reserve. Nilgiri Mountain Railway (UNESCO). Rich Shola forests.',fact:'Doddabetta (2,637m) · Ooty · Tea · Nilgiri Biosphere · NM Railway (UNESCO) · Shola forests',pts:[{la:11.50,ln:76.50},{la:11.40,ln:76.70},{la:11.30,ln:76.80}]},
+  {n:'Cardamom Hills',sub:'South India · 1,600m avg',desc:'Southernmost part of Western Ghats in Kerala and Tamil Nadu. Known for spice cultivation (cardamom, pepper, coffee). Periyar NP, Anamudi peak. Idukki Dam. Rich rainforest ecosystem.',fact:'Cardamom/pepper/coffee · Periyar NP · Anamudi · Idukki Dam · Rainforest',pts:[{la:9.50,ln:77.30},{la:9.80,ln:77.20},{la:10.10,ln:77.10}]},
+  {n:'Anaimalai Hills',sub:'South India · 2,695m',desc:'Mountain range in Western Ghats (Kerala-TN border). Anamudi (2,695m) — highest peak in South India at Eravikulam NP. Indira Gandhi WLS. Elephants, tigers, Nilgiri tahr.',fact:'Anamudi (2,695m) · Highest in South India · Eravikulam NP · Indira Gandhi WLS',pts:[{la:10.00,ln:77.00},{la:10.30,ln:77.20},{la:10.60,ln:77.00}]},
+  {n:'Pir Panjal Range',sub:'Himachal/J&K · 5,000m avg',desc:'Major sub-range of the Himalayas (Lesser/Lower Himalayas). Runs from J&K through HP. Highest peak: Indrasan (6,221m). Pir Panjal Pass (3,480m) connects J&K to Ladakh. Famous for Kashmir valley on its north. Ski resort Gulmarg. Important passes: Banihal, Rohtang La, Pir Panjal.',fact:'Lower Himalayas · 6,221m (Indrasan) · Pir Panjal Pass (3,480m) · Gulmarg ski · Banihal & Rohtang passes',pts:[{la:34.00,ln:74.00},{la:33.50,ln:75.00},{la:33.00,ln:76.00},{la:32.50,ln:77.00},{la:32.00,ln:78.00}]},
+  {n:'Zaskar Range',sub:'J&K/Ladakh · 6,000m avg',desc:'Sub-range of the Himalayas in Ladakh and Zaskar region. Famous for challenging mountaineering (Nun 7,135m, Kun 7,077m). Several glaciers. Zaskar River deep gorges. Stok Kangri popular trekking peak. Contains highest motorable road (Khardung La 5,359m).',fact:'Nun (7,135m) & Kun (7,077m) · Khardung La (highest road) · Stok Kangri · Zaskar River gorges',pts:[{la:34.50,ln:76.00},{la:34.00,ln:77.00},{la:33.50,ln:78.00},{la:33.00,ln:79.00}]},
+  {n:'Karakoram Range',sub:'J&K/Ladakh · 8,000m avg',desc:'Second highest range in the world — part of Greater Himalayas. Stretches 500 km across Pakistan, China, India. Contains K2 (8,611m — 2nd highest on Earth) and 60+ peaks over 7,000m. Siachen Glacier (76 km — longest in Karakoram). Karakoram Pass (4,775m). Karakoram Highway to China.',fact:'K2 (8,611m) · 60+ peaks over 7,000m · Siachen Glacier (76 km) · Karakoram Pass · Spectacular peaks',pts:[{la:36.00,ln:74.00},{la:35.50,ln:75.00},{la:35.00,ln:76.00},{la:34.50,ln:77.00}]},
+  {n:'Purvanchal Range',sub:'NE India · 1,200 km',desc:'Eastern extension of the Himalayas in Northeast India. Comprises Patkai Hills, Naga Hills, Manipur Hills, Mizo Hills, Tripura Hills. Lower elevation (500-3,000m). Dense tropical rainforests, high rainfall. Rich in biodiversity, tribal culture. Border with Myanmar along Patkai.',fact:'NE extension · Patkai, Naga, Mizo, Tripura hills · 500-3,000m · Dense rain forests · Myanmar border',pts:[{la:27.00,ln:96.00},{la:26.50,ln:95.00},{la:26.00,ln:94.50},{la:25.50,ln:94.00},{la:24.50,ln:93.50},{la:23.50,ln:93.00},{la:22.50,ln:92.50},{la:21.50,ln:92.50}]},
+];
+D.crop = [
+  {n:'Rice (Major producer)',la:22.50,ln:88.00,sub:'West Bengal · Largest producer',desc:'India\'s most important food crop. West Bengal is the largest producer followed by UP, Punjab, Odisha, AP, Bihar. Grown in Kharif season (sown June-July, harvested Sept-Oct). Requires high temp (25°C+), high rainfall (150-300cm). Alluvial soil preferred. Varieties: Aman, Aus, Boro (in WB). India is 2nd largest producer globally after China.',fact:'WB largest producer · Kharif crop · 25°C+, 150-300cm rain · Alluvial soil · 2nd globally'},
+  {n:'Wheat (Major producer)',la:29.50,ln:78.50,sub:'Uttar Pradesh · Largest producer',desc:'India\'s second most important food crop. UP is the largest producer followed by Punjab, Haryana, MP, Rajasthan, Bihar. Grown in Rabi season (sown Oct-Dec, harvested March-April). Requires moderate temp (15-25°C), moderate rainfall (50-100cm). Best in well-drained loamy soil. India is 2nd largest producer globally after China. Green Revolution transformed wheat production.',fact:'UP largest producer · Rabi crop · 15-25°C · 50-100cm rain · Loamy soil · Green Revolution'},
+  {n:'Sugarcane (Major producer)',la:26.50,ln:80.50,sub:'Uttar Pradesh · Largest producer',desc:'India\'s main cash crop for sugar production. UP is the largest producer (45%) followed by Maharashtra, Karnataka, Tamil Nadu, Bihar. Grown year-long (10-12 months). Requires hot (25-35°C) & humid, 100-200cm rainfall. Well-drained soil. India is 2nd largest producer globally after Brazil. Sugar, jaggery, ethanol from sugarcane.',fact:'UP largest (45%) · Year-long crop · 25-35°C · 100-200cm rain · 2nd globally after Brazil · Ethanol'},
+  {n:'Tea (Major producer)',la:26.70,ln:88.30,sub:'Assam · Largest producer',desc:'India is 2nd largest tea producer globally after China. Assam produces 52% of India\'s tea — CTC tea (strong, used in chai). Darjeeling tea (West Bengal) — "Champagne of teas" — GI tag. Nilgiri tea (TN) — aromatic. Requires tropical climate (20-30°C), 150-300cm rainfall, well-drained acidic soil. Tea gardens on slopes for drainage.',fact:'Assam (52% of India) · Assam CTC, Darjeeling (Champagne of teas), Nilgiri · 20-30°C · 150-300cm rain · Acidic soil'},
+  {n:'Coffee (Major producer)',la:13.30,ln:75.80,sub:'Karnataka · Largest producer (70%)',desc:'India produces 70% Arabica coffee (grown in shade) in Karnataka (Chikmagalur, Kodagu — 70%), Kerala (20%), Tamil Nadu (10%). Requires warm climate (15-28°C), 150-250cm rainfall, well-drained forest loam. Grown under shade trees (mixed plantation). India contributes only 4% of global coffee but Robusta from India is world-renowned.',fact:'Karnataka (70%) · Arabica (70%) · Shade-grown · 15-28°C · 150-250cm rain · Kodagu & Chikmagalur'},
+  {n:'Cotton (Major producer)',la:22.50,ln:72.50,sub:'Gujarat · Largest producer',desc:'India is 2nd largest cotton producer globally after China. Gujarat is the largest producer (30%) followed by Maharashtra, Telangana, MP, Karnataka, Punjab. Kharif crop (sown May-June), requires 20-35°C, 50-100cm rainfall. Black soil (regur) ideal in Deccan plateau. Three types: long staple (hybrid), medium staple (Indian), short staple (desi). Bt cotton (genetically modified) dominates since 2002.',fact:'Gujarat (30%) · 2nd globally after China · Black soil (regur) · Bt cotton dominant · Kharif crop'},
+  {n:'Jute (Major producer)',la:22.50,ln:88.50,sub:'West Bengal · Largest producer',desc:'India is the largest jute producer globally (70% of world production). West Bengal produces 70% of India\'s jute (mainly Murshidabad, Nadia, 24 Parganas). Grows in hot (25-35°C) humid climate, 150-250cm rainfall, alluvial soil. "Golden Fibre" — used for sacks, carpets, eco-friendly products. Jute mills along Hooghly River (West Bengal). Jute packaging mandatory (JPMA).',fact:'Largest globally (70%) · WB (70%) · Golden Fibre · Alluvial soil · Hooghly mills · Eco-friendly'},
+  {n:'Rubber (Major producer)',la:9.50,ln:76.50,sub:'Kerala · Largest producer (75%)',desc:'India is 4th largest natural rubber producer (Thailand, Indonesia, Vietnam ahead). Kerala produces 75% (Kottayam, Kollam, Kozhikode districts). Requires equatorial climate (24-35°C), 200-300cm rainfall, laterite soil. Grown in tropical wet region. Used for tyres, industrial rubber, gloves. Increasing domestic demand.',fact:'Kerala (75%) · 4th globally · Equatorial climate · Laterite soil · Tyre industry'},
+  {n:'Spices (Major producer)',la:10.00,ln:76.50,sub:'Kerala · Spice capital',desc:'India is the world\'s largest spice producer, consumer and exporter. Kerala is "Spice Garden of India" — black pepper (50% of India), cardamom (80%), ginger, cinnamon. Other major states: Rajasthan (coriander, cumin, fenugreek), AP (chillies — 50% of India), Gujarat (cumin), Karnataka (chillies). Black pepper — "King of Spices" — Kerala\'s Idukki district largest. India exports to 120+ countries.',fact:'Largest global producer · Kerala: pepper & cardamom · AP: chillies (50%) · Rajasthan: cumin & coriander · 120+ export countries'},
+  {n:'Tobacco (Major producer)',la:16.50,ln:80.50,sub:'Andhra Pradesh · Largest producer (45%)',desc:'India is 2nd largest tobacco producer globally after China. AP (45%) is the largest producer, followed by Gujarat (20%), Karnataka (15%), UP (10%). Virginia tobacco main variety (for cigarettes). Oriental tobacco in Karnataka/UP. Bidi tobacco — Gujarat (Nipani). Regulated by Tobacco Board (Guntur). Strong anti-tobacco laws & health warnings.',fact:'AP (45%) · 2nd globally after China · Virginia & bidi tobacco · Tobacco Board (Guntur) · Cigarettes'},
+  {n:'Oilseeds (Groundnut/Coconut)',la:10.00,ln:77.50,sub:'Tamil Nadu · Groundnut/Coconut',desc:'India is 4th largest oilseed producer. Groundnut: Gujarat (40% — Saurashtra region), AP, TN, Karnataka. Kharif crop, rainfed. Coconut: Kerala (largest coconut producer — 40%), Tamil Nadu (30%), Karnataka. TN has most coconut trees. "Kallakurichi coconut" GI tag. India produces 35% of world\'s coconuts. Used in cooking, cosmetics, coir industry.',fact:'Gujarat: groundnut (40%) · Kerala: coconut (40%) · 4th globally oilseeds · Rainfed · Coir industry'},
+];
+D.mineral = [
+  {n:'Coal (Jharia Coalfield)',la:23.75,ln:86.40,sub:'Jharkhand · Largest coal reserves',desc:'Largest and most important coalfield in India. Located in Jharia district of Dhanbad division. Produces the best coking coal in India (used in steel-making). Part of Gondwana coal belt. Own coal fires since 1916 (underground fires). Also Dhanbad — "Coal Capital of India". India is 2nd largest coal producer globally after China.',fact:'Largest coalfield · Best coking coal · Jharia fires since 1916 · Gondwana belt · 2nd globally'},
+  {n:'Coal (Raniganj Coalfield)',la:23.60,ln:87.10,sub:'West Bengal · Oldest coalfield',desc:'India\'s oldest coalfield — first commercial coal mining (1774) in India. Spread across West Bardhaman, Bankura, Birbhum districts. Produces high-grade non-coking coal. Part of Damodar Valley (Dalma range). ECL (Eastern Coalfields Ltd) operates. Gondwana belt.',fact:'Oldest coalfield (1774) · ECL · Non-coking coal · Damodar Valley · West Bengal'},
+  {n:'Iron Ore (Bailadila)',la:18.60,ln:81.20,sub:'Chhattisgarh · Rich haematite ore',desc:'Bailadila hills in Dantewada district. World\'s finest iron ore (66%+ Fe content — haematite). Owned by NMDC (National Mineral Development Corp). Open-cast mines developed with Japanese collaboration (exported to Japan). 14 deposits. 3,100 million tonnes reserves.',fact:'Best haematite (66%+ Fe) · NMDC · Japanese collaboration · Bastar region · 3,100 MT reserves'},
+  {n:'Iron Ore (Kudremukh)',la:13.20,ln:75.30,sub:'Karnataka · Magnetite deposits',desc:'Kudremukh (horse-face) hills in Western Ghats. One of world\'s largest magnetite iron ore deposits. Low-grade (30-35% Fe) but huge quantity. Owned by KIOCL (Kudremukh Iron Ore Company). Operations shut due to Supreme Court environmental order (2012) — mining in protected forests. Slurry pipeline to Mangalore port (68 km).',fact:'7th largest globally · Magnetite (30-35% Fe) · Shut for environment · Slurry pipeline · KIOCL'},
+  {n:'Bauxite (Odisha)',la:19.50,ln:84.50,sub:'Odisha · Largest reserves (50%)',desc:'India has 5th largest bauxite reserves globally. Odisha (Kalahandi, Koraput, Rayagada) has 50% of India\'s reserves. Bauxite is primary ore for aluminium. Nalco (National Aluminium Co) operates Panchpatmali mines in Koraput. Also Gujarat (Kutch), Jharkhand (Lohardaga). Average grade 45-50% Al2O3. Open-cast mining.',fact:'Odisha (50%) · 5th globally · Aluminium ore · Nalco · Panchpatmali (Koraput) · Open-cast'},
+  {n:'Manganese (Odisha/Karnataka)',la:21.50,ln:85.00,sub:'Odisha/Karnataka/Maharashtra',desc:'India has 6th largest manganese reserves globally. Odisha (Kalahandi, Sundargarh) leads, followed by Karnataka (Bellary), Maharashtra (Nagpur), MP, AP, Jharkhand. Essential for steel-making (as alloy). Used in batteries, fertilizer, ceramics. Manganese Ore India Ltd (MOIL) is major PSU. Gondwana belt deposits.',fact:'6th globally · Odisha leads · Steel alloy · MOIL · Battery & fertilizer use'},
+  {n:'Copper (Khetri)',la:28.00,ln:75.80,sub:'Rajasthan · Khetri Nagar',desc:'Rajasthan has 40% of India\'s copper reserves. Khetri Nagar (Jhunjhunu) is the largest copper mining complex. Also Malanjkhand (MP — largest copper deposit: 1.5 MT), Singhbhum (Jharkhand). Hindustan Copper Ltd (HCL) operates Khetri. Used in electrical conductivity, alloys, brass.',fact:'Rajasthan (40%) · Khetri HCL · Malanjkhand largest deposit · Electrical, alloys'},
+  {n:'Gold (Kolar Gold Fields)',la:12.94,ln:78.27,sub:'Karnataka · Kolar',desc:'Historically India\'s most important gold mine. Closed in 2001 after 120 years of mining (depth 3,200m — one of world\'s deepest). Once produced 3 tons/year (80% of India\'s gold). Hutti Gold Mine (Raichur, Karnataka) — only active gold mine in India (since 1947). Also Ramagiri (AP), Kolar (KGF — now closed). India largely imports gold.',fact:'Deepest gold mine (3.2km) · Closed 2001 · Hutti (only active) · 120 years · India imports most gold'},
+  {n:'Mica (Jharkhand/Bihar)',la:24.50,ln:85.50,sub:'Jharkhand · Largest producer',desc:'India is the world\'s largest mica producer and exporter (60% of global). Jharkhand (Koderma, Hazaribagh district — "Mica Belt") leads followed by Bihar, Rajasthan, AP. Used in electrical insulation, cosmetics (glitter), paints, electronics. Mica mining largely unorganized, child labour issues. Koderma district is "Mica Capital".',fact:'60% globally · Jharkhand (Mica Belt) · Koderma (Mica Capital) · Electrical & cosmetics · Child labour issues'},
+  {n:'Petroleum (Mumbai High)',la:19.50,ln:72.00,sub:'Offshore Mumbai · ONGC',desc:'Largest offshore oil field in India. Located 160 km west of Mumbai in Arabian Sea. Discovered 1974 by ONGC (Oil & Natural Gas Corp) on RV Anweshak. Produces 65% of India\'s domestic oil. Peak production 1985 (~400k bbl/day). Now declining (~200k bbl/day). Other fields: Bassein, Heera, Neelam. India imports 85% of its oil needs.',fact:'Largest offshore · ONGC · 65% of India\'s oil · Discovered 1974 · 160 km off Mumbai · 85% import'},
+  {n:'Petroleum (Digboi)',la:27.38,ln:95.63,sub:'Assam · Oldest oil refinery',desc:'India\'s oldest oil field (1889) and refinery (1901 — one of world\'s oldest still operating). Located in Tinsukia district, Assam. Discovered by British engineers digging for elephants\' foot prints! Assam-Arakan basin. Produces waxy crude (high paraffin). Oil India Ltd (OIL) HQ in Duliajan. Part of NE oil belt (Assam, AP, Nagaland).',fact:'Oldest (1889) · Assam (Arakan basin) · Elephants\' footprints discovery · OIL · Waxy crude'},
+  {n:'Thorium (Monazite sands)',la:9.80,ln:76.50,sub:'Kerala · Chavara, Manavalakurichi',desc:'India has the WORLD\'S LARGEST thorium reserves (30% of global). Kerala\'s monazite sands (Chavara, Neendakara, Manavalakurichi) are richest. Also Odisha (Chatrapur), TN, WB, AP. Monazite sand contains thorium phosphate. Used in nuclear fuel (Thorium cycle) — India\'s 3-stage nuclear power program. Atomic Minerals Directorate controls. Has strategic importance for India\'s energy independence.',fact:'Largest global reserves (30%) · Kerala monazite sands · 3-stage nuclear program · Strategic importance · AMD controlled'},
+  {n:'Limestone (MP/Chhattisgarh)',la:24.00,ln:81.00,sub:'MP · Largest producer',desc:'Limestone is the most abundant mineral in India. MP leads with 25% followed by Rajasthan (15%), AP (10%), Chhattisgarh (10%), Gujarat. Essential for cement industry (calcium carbonate). Used in steel (flux), fertilizers, paper, chemicals. Cement plants co-located near limestone mines (Satna, Chhattisgarh, Gulbarga). India is 2nd largest cement producer globally.',fact:'Most abundant · MP (25%) · Cement industry · 2nd globally cement · Flux in steelmaking'},
+  {n:'Uranium (Jaduguda)',la:22.65,ln:86.36,sub:'Jharkhand · Jaduguda mines',desc:'India\'s first uranium mine (1967) in East Singhbhum. Operated by Uranium Corporation of India (UCIL). Supplies fuel to India\'s nuclear reactors. Also mines at Bhatin, Narwapahar, Turamdih (all in Singhbhum). Tummalapalle (AP) — largest uranium discovery in India (2014). Atomic Minerals Directorate for exploration. India has limited uranium reserves — imports from Kazakhstan, Canada.',fact:'First uranium mine (1967) · UCIL · Singhbhum belt · Tummalapalle (AP) largest · Limited domestic reserves'},
 ];
 // ============================================================
 // CONTEMPORARIES DATASET
@@ -3257,6 +3388,10 @@ function getEraEvents(year,buffer=100){
 // ============================================================
 // THREE.JS SETUP
 // ============================================================
+log(`DATA: ${Object.keys(D).length} categories loaded`);
+let totalItems=0;Object.values(D).forEach(a=>{if(a)totalItems+=a.length});
+log(`DATA: ${totalItems} total markers/features`);
+
 const scene = new THREE.Scene();
 const cam = new THREE.PerspectiveCamera(40,innerWidth/innerHeight,0.1,1000);
 cam.position.set(0.15,0.4,1.9);
@@ -3267,6 +3402,7 @@ ren.toneMapping=THREE.ACESFilmicToneMapping;ren.toneMappingExposure=1.2;
 document.body.prepend(ren.domElement);
 
 const ctrl = new OrbitControls(cam,ren.domElement);
+log('RENDERER: Three.js scene + camera + controls ready');
 ctrl.enableDamping=true;ctrl.dampingFactor=0.06;
 ctrl.minDistance=1.2;ctrl.maxDistance=5.5;
 ctrl.autoRotate=false;ctrl.enablePan=false;
@@ -3307,10 +3443,17 @@ function ll(lat,lng,r=R){const p=(90-lat)*Math.PI/180,t=(lng+180)*Math.PI/180;re
 // INIT LAYER VIS STATE
 // ============================================================
 const layerVis=JSON.parse(localStorage.getItem('upsc_layer_vis')||'{}');
+const labelVis=JSON.parse(localStorage.getItem('upsc_label_vis')||'{}');
 function toggleLayer(k,on){
   layerVis[k]=on;
   localStorage.setItem('upsc_layer_vis',JSON.stringify(layerVis));
   if(layerGroups[k])layerGroups[k].visible=on;
+}
+function toggleLabel(k,on){
+  labelVis[k]=on;
+  localStorage.setItem('upsc_label_vis',JSON.stringify(labelVis));
+  // Force label update
+  updateLabels();
 }
 
 // ============================================================
@@ -3332,7 +3475,7 @@ function mkGeom(shape,sz){
     case'cone':return new THREE.ConeGeometry(sz*1.2,sz*2.4,3);
     case'tri':return new THREE.ConeGeometry(sz*1.4,sz*2.2,3);
     case'diamond':return new THREE.OctahedronGeometry(sz*1.6);
-    case'ring':return new THREE.RingGeometry(sz*0.6,sz*1.6,6);
+    case'ring':return new THREE.RingGeometry(sz*0.6,sz*1.6,8);
     case'pyramid':return new THREE.TetrahedronGeometry(sz*1.8);
     default:return new THREE.SphereGeometry(sz,8,8);
   }
@@ -3388,6 +3531,9 @@ const SHAPE_MAP={
   w_airport:'diamond',
   tunnel:'ring',
   oil:'sphere',
+  personality:'diamond',
+  crop:'cone',
+  mineral:'sphere',
 };
 function mkPin(col,sz=0.008,cat=''){
   const shape=SHAPE_MAP[cat]||'sphere';
@@ -3400,8 +3546,21 @@ function mkPin(col,sz=0.008,cat=''){
 }
 
 let _selHighlight=null;
+let _selTube=null;
+let _selArrows=null;
 function clearHighlight(){
   if(_selHighlight){EG.remove(_selHighlight);_selHighlight=null;}
+  if(_selTube){
+    _selTube.material.color.set(_selTube.userData._origColor||'#ffffff');
+    _selTube.material.opacity=_selTube.userData._origOpacity||0.5;
+    _selTube.scale.set(1,1,1);
+    _selTube=null;
+    if(_selArrows)_selArrows.forEach(a=>{
+      a.material.color.set(a.userData._origColor||'#ffffff');
+      a.material.opacity=a.userData._origOpacity||0.4;
+    });
+    _selArrows=null;
+  }
 }
 function setHighlight(lat,lng,color='#ff4444'){
   clearHighlight();
@@ -3429,13 +3588,13 @@ function mkLbl(text,col,scale=0.12){
 }
 
 // Build point markers
-['city','peak','port','airport','dam','nuclear','unesco','battle','temple','institution','wildlife','biosphere','ramsar','national_park','kingdom','tiger','hill','bird','i_pass','w_city','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','phenomena','plateau','plain','valley','w_pass','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','oil'].forEach(k=>{
+['city','peak','port','airport','dam','nuclear','unesco','battle','temple','institution','wildlife','biosphere','ramsar','national_park','kingdom','tiger','hill','bird','w_city','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','phenomena','plateau','plain','valley','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','oil','personality','crop','mineral'].forEach(k=>{
   const items=D[k]||[];
   const g=layerGroups[k];
   items.forEach(d=>{
     if(!d.la)return;
     const pos=ll(d.la,d.ln,R*1.008);
-    const pin=mkPin(catColors[k],k==='city'?0.01:0.007,k);
+    const pin=mkPin(catColors[k],k==='city'?0.01:k==='strait'?0.025:0.007,k);
     pin.position.copy(pos);g.add(pin);
     const lbl=mkLbl(d.n,catColors[k]);
     lbl.position.copy(pos.clone().multiplyScalar(1.12));
@@ -3444,16 +3603,27 @@ function mkLbl(text,col,scale=0.12){
   });
 });
 
-// Build line features (rivers, railway)
-['river','railway','w_river','trade'].forEach(k=>{
+// Build line features (rivers, railway, trade, passes) — thick tubes
+['river','railway','w_river','trade','i_pass','w_pass','highway','i_range'].forEach(k=>{
   const items=D[k]||[];
   const g=layerGroups[k];
+  const tubeRad=k==='railway'?0.01:k==='i_pass'||k==='w_pass'?0.012:0.014;
+  const arrowRad=k==='railway'?0.008:k==='i_pass'||k==='w_pass'?0.007:0.01;
+  const arrowLen=k==='railway'?0.018:k==='i_pass'||k==='w_pass'?0.016:0.022;
   items.forEach(d=>{
     if(!d.pts||d.pts.length<2)return;
     const pts=d.pts.map(p=>ll(p.la,p.ln,R*1.004));
-    const bg=new THREE.BufferGeometry().setFromPoints(pts);
-    const ml=new THREE.LineBasicMaterial({color:catColors[k],transparent:true,opacity:0.5});
-    g.add(new THREE.Line(bg,ml));
+    try{
+      const curve=new THREE.CatmullRomCurve3(pts);
+      const tubeGeo=new THREE.TubeGeometry(curve,Math.max(pts.length*4,24),tubeRad,5,false);
+      const tubeMat=new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:0.55});
+      const tube=new THREE.Mesh(tubeGeo,tubeMat);
+      tube.userData._origColor=catColors[k];
+      tube.userData._origOpacity=0.55;
+      d._tube=tube;
+      g.add(tube);
+    }catch(e){/* skip */}
+    d._arrows=[];
     // Flow direction arrows
     const arrInt=Math.max(1,Math.floor(pts.length/3));
     for(let a=arrInt;a<pts.length-1;a+=arrInt){
@@ -3461,11 +3631,14 @@ function mkLbl(text,col,scale=0.12){
       if(from&&to){
         const dir=new THREE.Vector3().subVectors(to,from).normalize();
         const midPt=new THREE.Vector3().addVectors(from,to).multiplyScalar(0.5);
-        const arrow=new THREE.Mesh(new THREE.ConeGeometry(0.006,0.015,4),new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:0.35}));
+        const arrow=new THREE.Mesh(new THREE.ConeGeometry(arrowRad,arrowLen,4),new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:0.4}));
         arrow.position.copy(midPt);
         const up=new THREE.Vector3(0,1,0);
         const q=new THREE.Quaternion().setFromUnitVectors(up,dir);
         arrow.quaternion.copy(q);
+        arrow.userData._origColor=catColors[k];
+        arrow.userData._origOpacity=0.4;
+        d._arrows.push(arrow);
         g.add(arrow);
       }
     }
@@ -3487,8 +3660,10 @@ function mkLbl(text,col,scale=0.12){
     }
   });
 });
+log('LINES: Rivers, railways & trade routes built');
 
 // Build territory polygons (kingdoms)
+
 ['kingdom','w_kingdom'].forEach(k=>{
   const items=D[k]||[];
   const g=layerGroups[k];
@@ -3508,6 +3683,7 @@ function mkLbl(text,col,scale=0.12){
     allMarkers.push({el:pin,lbl,data:d,cat:k,pos:cp,_eraHidden:false,_mesh:mesh});
   });
 });
+log('POLYGONS: Kingdom territories built');
 
 // Build latitude/longitude lines
 (function buildLatLines(){
@@ -3557,8 +3733,9 @@ function mkLbl(text,col,scale=0.12){
   lonHalfCircle(0,'#ffffff');
   lonHalfCircle(180,'#ffffff');
 })();
+log('LATLON: Grid lines ready');
 
-// Build ocean currents (line features with warm/cold coloring)
+// Build ocean currents (thick tubes with warm/cold coloring)
 (function buildCurrents(){
   const items=D.current||[];
   const g=layerGroups.current;
@@ -3569,35 +3746,117 @@ function mkLbl(text,col,scale=0.12){
     const color=isWarm?'#ef4444':'#38bdf8';
     const radius=R*1.005;
     const pts=d.pts.map(p=>ll(p.la,p.ln,radius));
-    const bg=new THREE.BufferGeometry().setFromPoints(pts);
-    const ml=new THREE.LineBasicMaterial({color,transparent:true,opacity:0.6});
-    g.add(new THREE.Line(bg,ml));
-    // Flow arrows
+    // Use TubeGeometry for thick lines
+    try{
+      const curve=new THREE.CatmullRomCurve3(pts);
+      const tubeGeo=new THREE.TubeGeometry(curve,Math.max(pts.length*4,32),0.022,7,false);
+      const tubeMat=new THREE.MeshBasicMaterial({color,transparent:true,opacity:0.6});
+      const tube=new THREE.Mesh(tubeGeo,tubeMat);
+      tube.userData._origColor=color;
+      tube.userData._origOpacity=0.6;
+      d._tube=tube;
+      g.add(tube);
+    }catch(e){/* skip */}
+    d._arrows=[];
+    // Flow arrows (scaled to match tube thickness)
     const arrInt=Math.max(1,Math.floor(pts.length/2));
     for(let a=arrInt;a<pts.length-1;a+=arrInt){
       const from=pts[a-1],to=pts[a];
       if(from&&to){
         const dir=new THREE.Vector3().subVectors(to,from).normalize();
         const midPt=new THREE.Vector3().addVectors(from,to).multiplyScalar(0.5);
-        const arrow=new THREE.Mesh(new THREE.ConeGeometry(0.008,0.02,4),new THREE.MeshBasicMaterial({color,transparent:true,opacity:0.5}));
+        const arrow=new THREE.Mesh(new THREE.ConeGeometry(0.014,0.035,4),new THREE.MeshBasicMaterial({color,transparent:true,opacity:0.55}));
         arrow.position.copy(midPt);
         const up=new THREE.Vector3(0,1,0);
         const q=new THREE.Quaternion().setFromUnitVectors(up,dir);
         arrow.quaternion.copy(q);
+        arrow.userData._origColor=color;
+        arrow.userData._origOpacity=0.55;
+        d._arrows.push(arrow);
         g.add(arrow);
       }
     }
-    // Label at mid
+    // Label at mid, with pin + allMarkers registration for proper LOD/culling
     const mid=pts[Math.floor(pts.length/2)];
+    let lbl=null, lblPos=null;
     if(mid){
-      const lbl=mkLbl(d.n,color,0.14);
+      lbl=mkLbl(d.n,color,0.14);
       lbl.position.copy(mid.clone().multiplyScalar(1.12));
       g.add(lbl);
+      lblPos=mid;
+    }
+    const end=pts[pts.length-1];
+    if(end){
+      const pin=mkPin(color,0.005);
+      pin.position.copy(end);g.add(pin);
+      allMarkers.push({el:pin,lbl,data:d,cat:'current',pos:lblPos||end});
     }
   });
 })();
+log('CURRENTS: Ocean current tubes placed');
 
-// Build wind belts (line features with warm/cold coloring)
+// Build El Niño / La Niña region overlay (equatorial Pacific warming/cooling band)
+(function buildENSO(){
+  const g=layerGroups.phenomena;
+  if(!g)return;
+  const r=R*1.006;
+  // Region: 150°E to 80°W, 5°S to 5°N
+  const lats=[-5,-3,0,3,5], lngs=[];
+  for(let l=150;l>=-80;l-=8)lngs.push(l);
+  const pos=[];
+  for(let i=0;i<lats.length;i++)
+    for(let j=0;j<lngs.length;j++){
+      const p=ll(lats[i],lngs[j],r);
+      pos.push(p.x,p.y,p.z);
+    }
+  const idx=[];
+  for(let i=0;i<lats.length-1;i++)
+    for(let j=0;j<lngs.length-1;j++){
+      const a=i*lngs.length+j,b=a+1,c=(i+1)*lngs.length+j,d=c+1;
+      idx.push(a,b,c,b,d,c);
+    }
+  const geo=new THREE.BufferGeometry();
+  geo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+  geo.setIndex(idx);
+  geo.computeVertexNormals();
+  function ensoMat(col,op){
+    return new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:op,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending});
+  }
+  const elNino=new THREE.Mesh(geo,ensoMat('#ef4444',0.12));
+  g.add(elNino);
+  // La Niña region (slightly west, cooler blue)
+  const lats2=[-5,-3,0,3,5], lngs2=[];
+  for(let l=120;l>=-70;l-=8)lngs2.push(l);
+  const pos2=[];
+  for(let i=0;i<lats2.length;i++)
+    for(let j=0;j<lngs2.length;j++){
+      const p=ll(lats2[i],lngs2[j],r);
+      pos2.push(p.x,p.y,p.z);
+    }
+  const idx2=[];
+  for(let i=0;i<lats2.length-1;i++)
+    for(let j=0;j<lngs2.length-1;j++){
+      const a=i*lngs2.length+j,b=a+1,c=(i+1)*lngs2.length+j,d=c+1;
+      idx2.push(a,b,c,b,d,c);
+    }
+  const geo2=new THREE.BufferGeometry();
+  geo2.setAttribute('position',new THREE.Float32BufferAttribute(pos2,3));
+  geo2.setIndex(idx2);
+  geo2.computeVertexNormals();
+  const laNina=new THREE.Mesh(geo2,ensoMat('#38bdf8',0.08));
+  g.add(laNina);
+  // Subtle outline for El Niño region
+  const olPts=[], st=48;
+  const addEdge=(la1,ln1,la2,ln2)=>{for(let i=0;i<=st;i++)olPts.push(ll(la1+(la2-la1)*i/st,ln1+(ln2-ln1)*i/st,r))};
+  addEdge(5,150,5,-80); addEdge(5,-80,-5,-80);
+  addEdge(-5,-80,-5,150); addEdge(-5,150,5,150);
+  const olGeo=new THREE.BufferGeometry().setFromPoints(olPts);
+  const olMat=new THREE.LineBasicMaterial({color:'#ef4444',transparent:true,opacity:0.25});
+  g.add(new THREE.Line(olGeo,olMat));
+})();
+log('ENSO: El Niño/La Niña regions drawn');
+
+// Build wind belts (thick tubes with warm/cold coloring)
 (function buildWind(){
   const items=D.wind||[];
   const g=layerGroups.wind;
@@ -3608,31 +3867,51 @@ function mkLbl(text,col,scale=0.12){
     const color=isWarm?'#f97316':'#38bdf8';
     const radius=R*1.008;
     const pts=d.pts.map(p=>ll(p.la,p.ln,radius));
-    const bg=new THREE.BufferGeometry().setFromPoints(pts);
-    const ml=new THREE.LineBasicMaterial({color,transparent:true,opacity:0.45});
-    g.add(new THREE.Line(bg,ml));
+    try{
+      const curve=new THREE.CatmullRomCurve3(pts);
+      const tubeGeo=new THREE.TubeGeometry(curve,Math.max(pts.length*4,28),0.018,6,false);
+      const tubeMat=new THREE.MeshBasicMaterial({color,transparent:true,opacity:0.45});
+      const tube=new THREE.Mesh(tubeGeo,tubeMat);
+      tube.userData._origColor=color;
+      tube.userData._origOpacity=0.45;
+      d._tube=tube;
+      g.add(tube);
+    }catch(e){/* skip */}
+    d._arrows=[];
     const arrInt=Math.max(1,Math.floor(pts.length/2));
     for(let a=arrInt;a<pts.length-1;a+=arrInt){
       const from=pts[a-1],to=pts[a];
       if(from&&to){
         const dir=new THREE.Vector3().subVectors(to,from).normalize();
         const midPt=new THREE.Vector3().addVectors(from,to).multiplyScalar(0.5);
-        const arrow=new THREE.Mesh(new THREE.ConeGeometry(0.006,0.016,4),new THREE.MeshBasicMaterial({color,transparent:true,opacity:0.4}));
+        const arrow=new THREE.Mesh(new THREE.ConeGeometry(0.012,0.03,4),new THREE.MeshBasicMaterial({color,transparent:true,opacity:0.45}));
         arrow.position.copy(midPt);
         const up=new THREE.Vector3(0,1,0);
         const q=new THREE.Quaternion().setFromUnitVectors(up,dir);
         arrow.quaternion.copy(q);
+        arrow.userData._origColor=color;
+        arrow.userData._origOpacity=0.45;
+        d._arrows.push(arrow);
         g.add(arrow);
       }
     }
     const mid=pts[Math.floor(pts.length/2)];
+    let lbl=null, lblPos=null;
     if(mid){
-      const lbl=mkLbl(d.n,color,0.12);
+      lbl=mkLbl(d.n,color,0.12);
       lbl.position.copy(mid.clone().multiplyScalar(1.15));
       g.add(lbl);
+      lblPos=mid;
+    }
+    const end=pts[pts.length-1];
+    if(end){
+      const pin=mkPin(color,0.005);
+      pin.position.copy(end);g.add(pin);
+      allMarkers.push({el:pin,lbl,data:d,cat:'wind',pos:lblPos||end});
     }
   });
 })();
+log('WIND: Wind belt tubes placed');
 
 // Build cloud cover (procedural noise texture on sphere)
 (function buildCloud(){
@@ -3656,6 +3935,7 @@ function mkLbl(text,col,scale=0.12){
   mesh.name='cloudLayer';
   g.add(mesh);
 })();
+log('CLOUD: Procedural cloud layer generated');
 
 // Build forest pins
 (function buildForest(){
@@ -3675,6 +3955,7 @@ function mkLbl(text,col,scale=0.12){
     g.add(lbl);
   });
 })();
+log('FOREST: Forest pins placed');
 
 // Build rainfall pins
 (function buildRainfall(){
@@ -3694,13 +3975,55 @@ function mkLbl(text,col,scale=0.12){
     g.add(lbl);
   });
 })();
+log('RAINFALL: Rainfall pins placed');
 
 // ============================================================
 // LAYER PANEL
 // ============================================================
 const panel = document.getElementById('layersPanel');
-const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','tiger','hill','bird','i_pass','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','latitude','current','phenomena','wind','cloud','forest','rainfall','plateau','plain','valley','w_pass','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','trade','oil'];
+const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','tiger','hill','bird','i_pass','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','latitude','current','phenomena','wind','cloud','forest','rainfall','plateau','plain','valley','w_pass','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','trade','oil','personality','highway','i_range','crop','mineral'];
 
+// Auto-play state
+let _ap=null; // {k, idx, items, timeout}
+function stopAutoPlay(){
+  if(_ap){clearTimeout(_ap.timeout);_ap=null;rotating=false;
+    document.querySelectorAll('.ap-btn').forEach(b=>{b.textContent='▶';b.style.color='rgba(255,255,255,.35)'});
+    document.getElementById('subtitle').classList.remove('show');
+    if(window.speechSynthesis)speechSynthesis.cancel();
+  }
+}
+function startAutoPlay(k,items){
+  stopAutoPlay();
+  // Ensure layer is visible
+  if(layerVis[k]===false){toggleLayer(k,true);
+    const vb=document.querySelector(`[data-ap="${k}"]`)?.closest('.lay-section')?.querySelector('.vis-btn');
+    if(vb){vb.style.color='rgba(255,255,255,.5)';vb.textContent='◉';}
+  }
+  rotating=true;
+  let idx=0;
+  const btn=document.querySelector(`[data-ap="${k}"]`);
+  function next(){
+    if(!_ap){rotating=false;return;}
+    if(idx>=items.length)idx=0; // loop
+    const item=items[idx];
+    const hasPos = item.la||item.ln||(item.pts&&item.pts.length);
+    if(hasPos){
+      flyTo(item,CAT[k],k);
+      speakText(item.n+'. '+(item.sub||''));
+      if(btn)btn.textContent=(idx+1)+'/'+items.length;
+      idx++;
+      if(idx>=items.length)idx=0;
+      _ap.timeout=setTimeout(next,4200);
+    }else{
+      idx++;
+      if(idx>=items.length)idx=0;
+      _ap.timeout=setTimeout(next,800); // skip faster
+    }
+  }
+  _ap={k,idx:0,items,timeout:null};
+  if(btn){btn.textContent='⏹';btn.style.color='#a78bfa';}
+  next();
+}
 function buildPanel(){
   panel.innerHTML='';
   const collapseAll = localStorage.getItem('upsc_atlas_collapse')==='true';
@@ -3713,15 +4036,17 @@ function buildPanel(){
       prevRegion=cat.region;
     }
     const startVis=layerVis[k]!==false;
+    const startLbl=labelVis[k]===true;
     const sec=document.createElement('div');sec.className='lay-section';
     const head=document.createElement('div');head.className='lay-head';
-    head.innerHTML=`<span>${cat.icon||'●'}</span> ${cat.label} <span class="cnt">${items.length}</span> <span class="vis-btn" style="font-size:.65em;color:${startVis?'rgba(255,255,255,.5)':'rgba(255,255,255,.15)'}">${startVis?'◉':'○'}</span> <span class="arr ${collapseAll?'':'open'}">▶</span>`;
+    head.innerHTML=`<span>${cat.icon||'●'}</span> ${cat.label} <span class="cnt">${items.length}</span> <span class="ap-btn" style="font-size:.55em;cursor:pointer;color:rgba(255,255,255,.35);margin-right:3px" title="Auto-play: visit all sites">▶</span> <span class="lbl-btn" style="font-size:.6em;cursor:pointer;color:${startLbl?'#a78bfa':'rgba(255,255,255,.2)'};margin-right:4px" title="Toggle labels">${startLbl?'Aa':'<span style="opacity:0.4">Aa</span>'}</span> <span class="vis-btn" style="font-size:.65em;color:${startVis?'rgba(255,255,255,.5)':'rgba(255,255,255,.15)'}">${startVis?'◉':'○'}</span> <span class="arr ${collapseAll?'':'open'}">▶</span>`;
     const cont=document.createElement('div');cont.className=`lay-items ${collapseAll?'':'open'}`;
     cat.subItems = items;
     items.forEach(item=>{
       const it=document.createElement('div');it.className='lay-it';
       it.innerHTML=`<span class="dot" style="background:${cat.color}"></span><span class="lbl">${item.n}</span>`;
       it.addEventListener('click',()=>{
+        if(_ap)stopAutoPlay();
         if(k==='kingdom'||k==='w_kingdom'){
           const wasSame=allMarkers.some(m=>(m.cat===k||m.cat===k)&&m._mesh&&m._kingdomSelected===item);
           allMarkers.forEach(m=>{
@@ -3742,8 +4067,25 @@ function buildPanel(){
       e.target.style.color=on?'rgba(255,255,255,.5)':'rgba(255,255,255,.15)';
       e.target.textContent=on?'◉':'○';
     });
+    const lblBtn=head.querySelector('.lbl-btn');
+    if(lblBtn)lblBtn.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      const on=labelVis[k]!==true;
+      toggleLabel(k,on);
+      lblBtn.innerHTML=on?'Aa':'<span style="opacity:0.4">Aa</span>';
+      lblBtn.style.color=on?'#a78bfa':'rgba(255,255,255,.2)';
+      updateLabels();
+    });
+    const apBtn=head.querySelector('.ap-btn');
+    if(apBtn){apBtn.dataset.ap=k;
+      apBtn.addEventListener('click',(e)=>{
+        e.stopPropagation();
+        if(_ap&&_ap.k===k){stopAutoPlay();return;}
+        startAutoPlay(k,items);
+      });
+    }
     head.addEventListener('click',(e)=>{
-      if(e.target.classList.contains('vis-btn'))return;
+      if(e.target.classList.contains('vis-btn')||e.target.classList.contains('lbl-btn')||e.target.closest('.lbl-btn')||e.target.classList.contains('ap-btn'))return;
       cont.classList.toggle('open');
       head.querySelector('.arr').classList.toggle('open');
       localStorage.setItem('upsc_atlas_collapse',!cont.classList.contains('open'));
@@ -3752,6 +4094,7 @@ function buildPanel(){
   });
 }
 buildPanel();
+log('PANEL: Layer panel with ' + CAT_ORDER.filter(k=>CAT[k]&&D[k]&&D[k].length).length + ' categories built');
 
 // Layer panel toggle for mobile
 const layToggle=document.getElementById('layToggle');
@@ -3838,10 +4181,28 @@ function showDetail(d,cat,k){
   document.getElementById('dSub').textContent=d.sub||'';
   document.getElementById('dDesc').textContent=d.desc||'';
   const fact=document.getElementById('dFact');
-  fact.textContent=d.fact?'📌 '+d.fact:'';
+  if(d.fact&&d.fact.includes('wikipedia.org')){
+    const m=d.fact.match(/(https:\/\/[^\s]+)/);
+    fact.innerHTML='📌 '+d.fact.replace(/(https:\/\/[^\s]+)/,'<a href="$1" target="_blank" rel="noopener" style="color:'+cat.color+'">Open in Wikipedia →</a>');
+  }else{
+    fact.textContent=d.fact?'📌 '+d.fact:'';
+  }
+  // Highlight tube + arrows for line/path features
+  if(d._tube){
+    clearHighlight();
+    d._tube.material.color.set('#fbbf24');
+    d._tube.material.opacity=0.9;
+    d._tube.scale.set(1.3,1.3,1.3);
+    _selTube=d._tube;
+    _selArrows=d._arrows||[];
+    _selArrows.forEach(a=>{
+      a.material.color.set('#fbbf24');
+      a.material.opacity=0.9;
+    });
+  }
   const hlLat=d.la||(d.pts?d.pts[Math.floor(d.pts.length/2)].la:0);
   const hlLn=d.ln||(d.pts?d.pts[Math.floor(d.pts.length/2)].ln:0);
-  if(hlLat||hlLn)setHighlight(hlLat,hlLn,cat.color||'#ff4444');
+  if((hlLat||hlLn)&&!d._tube)setHighlight(hlLat,hlLn,cat.color||'#ff4444');
   // Show figure portrait
   if(k==='battle'||k==='w_battle')showPortrait(getFigure(d.n,d.desc,cat.color),cat.color);
   // Timeline play button
@@ -3898,43 +4259,77 @@ ren.domElement.addEventListener('click',(e)=>{
   const hits=ray.intersectObjects(meshes.map(m=>m.mesh));
   if(hits.length){
     const hit=meshes.find(m=>m.mesh===hits[0].object);
-    if(hit){stopTimeline();hidePortrait();const m=hit.el;showDetail(m.data,CAT[m.cat],m.cat);return;}
+    if(hit){if(_ap)stopAutoPlay();stopTimeline();hidePortrait();const m=hit.el;showDetail(m.data,CAT[m.cat],m.cat);return;}
   }
+  if(_ap)stopAutoPlay();
   dp.classList.remove('show');
   clearHighlight();
   hidePortrait();
 });
 
 // ============================================================
-// SEARCH
+// SEARCH — local data + Wikipedia API fallback
 // ============================================================
 const searchInp=document.getElementById('searchInp');
-let searchTimeout;
+let searchTimeout, _lastQ='';
+const WIKI_API='https://en.wikipedia.org/api/rest_v1/page/summary/';
 searchInp.addEventListener('input',()=>{
   clearTimeout(searchTimeout);
+  const q=searchInp.value.trim();
+  _lastQ=q;
   searchTimeout=setTimeout(()=>{
-    const q=searchInp.value.trim().toLowerCase();
+    if(q!==_lastQ)return; // stale — user kept typing
     if(!q)return;
+    const lq=q.toLowerCase();
+    // Local data search
     for(const k of CAT_ORDER){
       const items=D[k];if(!items)continue;
       for(const d of items){
-        if(d.n&&d.n.toLowerCase().includes(q)){
-          flyTo(d,CAT[k],k);
+        if(d.n&&d.n.toLowerCase().includes(lq)){
+          if(_ap)stopAutoPlay();
           searchInp.value='';
+          flyTo(d,CAT[k],k);
           return;
         }
       }
     }
-  },300);
+    // Wikipedia API fallback (only for queries 3+ chars, catches network errors silently)
+    if(q.length<3)return;
+    fetch(WIKI_API+encodeURIComponent(q))
+      .then(r=>r.ok?r.json():null)
+      .then(data=>{
+        if(!data||data.type==='disambiguation'||!data.extract)return;
+        if(q!==_lastQ)return; // stale
+        if(_ap)stopAutoPlay();
+        searchInp.value='';
+        const title=data.title||q;
+        const coords=data.coordinates?{la:data.coordinates[0].lat,ln:data.coordinates[0].lon}:null;
+        const desc=data.description||'Wikipedia article';
+        const extract=data.extract.replace(/<[^>]*>/g,'').split('\n')[0].substring(0,400);
+        const wikiUrl=data.content_urls?.desktop?.page||'https://en.wikipedia.org/wiki/'+encodeURIComponent(title);
+        const fakeData={
+          n:title,sub:desc,desc:extract+(data.extract.length>400?'…':''),
+          fact:'🔍 Wikipedia · '+(data.content_urls?.desktop?.page?'Open in browser: ':'')+wikiUrl,
+          la:coords?.la,ln:coords?.ln
+        };
+        if(coords){
+          flyTo(fakeData,CAT.personality||{color:'#e879f9',icon:'🔍',label:'Wikipedia'},'wikipedia');
+        }else{
+          showDetail(fakeData,CAT.personality||{color:'#e879f9',icon:'🔍',label:'Wikipedia'},'wikipedia');
+        }
+      })
+      .catch(()=>{});
+  },600);
 });
 
 // ============================================================
 // CONTROLS
 // ============================================================
 let rotating=false,allLayersVisible=true;
-document.getElementById('btnRotate').addEventListener('click',()=>{rotating=!rotating;document.getElementById('btnRotate').textContent=rotating?'⏸':'▶'});
-document.getElementById('btnReset').addEventListener('click',()=>{cam.position.set(0.15,0.4,1.9);ctrl.target.set(0,0,0);EG.rotation.y=Math.PI;ctrl.update();dp.classList.remove('show');clearHighlight();hidePortrait();});
+document.getElementById('btnRotate').addEventListener('click',()=>{if(_ap)stopAutoPlay();rotating=!rotating;document.getElementById('btnRotate').textContent=rotating?'⏸':'▶'});
+document.getElementById('btnReset').addEventListener('click',()=>{if(_ap)stopAutoPlay();cam.position.set(0.15,0.4,1.9);ctrl.target.set(0,0,0);EG.rotation.y=Math.PI;ctrl.update();dp.classList.remove('show');clearHighlight();hidePortrait();if(window.speechSynthesis)speechSynthesis.cancel();});
 document.getElementById('btnLayers').addEventListener('click',()=>{
+  if(_ap)stopAutoPlay();
   allLayersVisible=!allLayersVisible;
   document.getElementById('btnLayers').textContent=allLayersVisible?'◉':'○';
   CAT_ORDER.forEach(k=>{
@@ -3950,22 +4345,30 @@ document.getElementById('btnLayers').addEventListener('click',()=>{
 // Keyboard shortcut: H to toggle all layers
 document.addEventListener('keydown',e=>{
   if(e.key==='h'||e.key==='H')document.getElementById('btnLayers').click();
-  if(e.key==='Escape'){dp.classList.remove('show');clearHighlight();stopTimeline();hidePortrait();document.getElementById('subtitle').classList.remove('show')}
+  if(e.key==='Escape'){if(_ap)stopAutoPlay();dp.classList.remove('show');clearHighlight();stopTimeline();hidePortrait();document.getElementById('subtitle').classList.remove('show');if(window.speechSynthesis)speechSynthesis.cancel();}
 });
 
 // Resize
 window.addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();ren.setSize(innerWidth,innerHeight)});
 
-// Label LOD — hide/show labels based on zoom distance, hemisphere, view center & overlap
+// Label LOD — hide/show labels based on zoom, with per-category force toggle
 const _scratch=new THREE.Vector3(),_list=[];
 function updateLabels(){
   const d=cam.position.length();
+  const forced=Object.keys(labelVis).filter(k=>labelVis[k]===true);
+  // Always show labels for force-enabled categories
+  allMarkers.forEach(m=>{
+    if(m.lbl&&m.cat&&forced.includes(m.cat)){
+      m.lbl.visible=!(m._eraHidden||m._hide);
+    }
+  });
   if(d<1.7){
     const camDir=cam.position.clone().normalize().applyQuaternion(EG.quaternion.clone().invert());
     const w=window.innerWidth, h=window.innerHeight, cx=w/2, cy=h/2, maxDist=w*0.12, minGap=w*0.035;
     _list.length=0;
     allMarkers.forEach(m=>{
       if(!m.lbl||m._eraHidden||m._hide)return;
+      if(m.cat&&forced.includes(m.cat))return; // already shown above
       if(m.pos.dot(camDir)<=0){m.lbl.visible=false;return;}
       _scratch.copy(m.pos).applyQuaternion(EG.quaternion).project(cam);
       const sx=(_scratch.x*0.5+0.5)*w, sy=(-_scratch.y*0.5+0.5)*h;
@@ -3981,7 +4384,11 @@ function updateLabels(){
       m.lbl.visible=true;
     });
   }else{
-    allMarkers.forEach(m=>{if(m.lbl)m.lbl.visible=false});
+    allMarkers.forEach(m=>{
+      if(!m.lbl)return;
+      if(m.cat&&forced.includes(m.cat))return; // keep visible even when zoomed out
+      m.lbl.visible=false;
+    });
   }
 }
 // ============================================================
@@ -4446,6 +4853,7 @@ function anim(){
   }
   ren.render(scene,cam);
 }
+log('RENDER: Starting animation loop');
 anim();
 
 // ---- Camera flyTo helper (just move, no detail panel) ----
@@ -4930,7 +5338,7 @@ document.getElementById('lecturePanel').addEventListener('click',(e)=>{
 setTimeout(speechWarmup,500);
 document.addEventListener('click',()=>{if(!window._speechWarmed){window._speechWarmed=true;speechWarmup()}},{once:true});
 
-log('UPSC Atlas loaded successfully');
+log('DONE: All systems ready — ' + Object.keys(layerGroups).length + ' layer groups');
 }catch(e){log('FATAL: '+(e.stack||e.message||e))}
 </script>
 </body>
