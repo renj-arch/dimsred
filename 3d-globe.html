@@ -331,7 +331,7 @@ canvas{display:block}
 </head>
 <body>
 
-<div id="debug" style="position:fixed;top:0;left:0;z-index:9999;color:#0f0;background:#000c;font:12px monospace;padding:4px;max-height:200px;overflow:auto;pointer-events:none;display:none"></div>
+
 
 <div id="topBar">
   <span class="brand">UPSC Atlas</span>
@@ -439,12 +439,6 @@ canvas{display:block}
 
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.170.0/build/three.module.js"}}</script>
 <script type="module">
-// Debug helper
-const dbg=document.getElementById('debug');
-function log(msg){dbg.style.display='block';dbg.innerHTML+=msg+'<br>'}
-window.addEventListener('error',e=>{log('ERR: '+e.message)});
-window.addEventListener('unhandledrejection',e=>{log('PROMISE: '+e.reason)});
-
 import * as THREE from 'three';
 import { OrbitControls } from 'https://unpkg.com/three@0.170.0/examples/jsm/controls/OrbitControls.js';
 
@@ -3388,9 +3382,8 @@ function getEraEvents(year,buffer=100){
 // ============================================================
 // THREE.JS SETUP
 // ============================================================
-log(`DATA: ${Object.keys(D).length} categories loaded`);
 let totalItems=0;Object.values(D).forEach(a=>{if(a)totalItems+=a.length});
-log(`DATA: ${totalItems} total markers/features`);
+
 
 const scene = new THREE.Scene();
 const cam = new THREE.PerspectiveCamera(40,innerWidth/innerHeight,0.1,1000);
@@ -3402,7 +3395,7 @@ ren.toneMapping=THREE.ACESFilmicToneMapping;ren.toneMappingExposure=1.2;
 document.body.prepend(ren.domElement);
 
 const ctrl = new OrbitControls(cam,ren.domElement);
-log('RENDERER: Three.js scene + camera + controls ready');
+
 ctrl.enableDamping=true;ctrl.dampingFactor=0.06;
 ctrl.minDistance=1.2;ctrl.maxDistance=5.5;
 ctrl.autoRotate=false;ctrl.enablePan=false;
@@ -3660,7 +3653,7 @@ function mkLbl(text,col,scale=0.12){
     }
   });
 });
-log('LINES: Rivers, railways & trade routes built');
+
 
 // Build territory polygons (kingdoms)
 
@@ -3683,7 +3676,7 @@ log('LINES: Rivers, railways & trade routes built');
     allMarkers.push({el:pin,lbl,data:d,cat:k,pos:cp,_eraHidden:false,_mesh:mesh});
   });
 });
-log('POLYGONS: Kingdom territories built');
+
 
 // Build latitude/longitude lines
 (function buildLatLines(){
@@ -3733,7 +3726,7 @@ log('POLYGONS: Kingdom territories built');
   lonHalfCircle(0,'#ffffff');
   lonHalfCircle(180,'#ffffff');
 })();
-log('LATLON: Grid lines ready');
+
 
 // Build ocean currents (thick tubes with warm/cold coloring)
 (function buildCurrents(){
@@ -3793,7 +3786,7 @@ log('LATLON: Grid lines ready');
     }
   });
 })();
-log('CURRENTS: Ocean current tubes placed');
+
 
 // Build El Niño / La Niña region overlay (equatorial Pacific warming/cooling band)
 (function buildENSO(){
@@ -3854,7 +3847,7 @@ log('CURRENTS: Ocean current tubes placed');
   const olMat=new THREE.LineBasicMaterial({color:'#ef4444',transparent:true,opacity:0.25});
   g.add(new THREE.Line(olGeo,olMat));
 })();
-log('ENSO: El Niño/La Niña regions drawn');
+
 
 // Build wind belts (thick tubes with warm/cold coloring)
 (function buildWind(){
@@ -3911,7 +3904,7 @@ log('ENSO: El Niño/La Niña regions drawn');
     }
   });
 })();
-log('WIND: Wind belt tubes placed');
+
 
 // Build cloud cover (procedural noise texture on sphere)
 (function buildCloud(){
@@ -3935,7 +3928,7 @@ log('WIND: Wind belt tubes placed');
   mesh.name='cloudLayer';
   g.add(mesh);
 })();
-log('CLOUD: Procedural cloud layer generated');
+
 
 // Build forest pins
 (function buildForest(){
@@ -3955,7 +3948,7 @@ log('CLOUD: Procedural cloud layer generated');
     g.add(lbl);
   });
 })();
-log('FOREST: Forest pins placed');
+
 
 // Build rainfall pins
 (function buildRainfall(){
@@ -3975,7 +3968,7 @@ log('FOREST: Forest pins placed');
     g.add(lbl);
   });
 })();
-log('RAINFALL: Rainfall pins placed');
+
 
 // ============================================================
 // LAYER PANEL
@@ -4094,7 +4087,7 @@ function buildPanel(){
   });
 }
 buildPanel();
-log('PANEL: Layer panel with ' + CAT_ORDER.filter(k=>CAT[k]&&D[k]&&D[k].length).length + ' categories built');
+
 
 // Layer panel toggle for mobile
 const layToggle=document.getElementById('layToggle');
@@ -4853,7 +4846,7 @@ function anim(){
   }
   ren.render(scene,cam);
 }
-log('RENDER: Starting animation loop');
+
 anim();
 
 // ---- Camera flyTo helper (just move, no detail panel) ----
@@ -5183,7 +5176,7 @@ let _lecTick=0;
 function startLectureChapter(chapterIndex){
   const all=buildLectureData();
   const entries=all.filter(e=>e._chapter===chapterIndex);
-  if(entries.length===0){log('No entries in chapter '+chapterIndex);return;}
+  if(entries.length===0){return;}
   const chapter=LECTURE_CHAPTERS[chapterIndex];
   
   // Cancel any lingering speech from previous chapter
@@ -5338,8 +5331,7 @@ document.getElementById('lecturePanel').addEventListener('click',(e)=>{
 setTimeout(speechWarmup,500);
 document.addEventListener('click',()=>{if(!window._speechWarmed){window._speechWarmed=true;speechWarmup()}},{once:true});
 
-log('DONE: All systems ready — ' + Object.keys(layerGroups).length + ' layer groups');
-}catch(e){log('FATAL: '+(e.stack||e.message||e))}
+}catch(e){}
 </script>
 </body>
 </html>
