@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel='stylesheet' href='../../../css/style.css'>
-    
+    <link rel="stylesheet" href="../../../css/style.css">
     <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Probability &amp; Statistics — JEE Mathematics Lesson | vlymbooq</title>
-    <meta name="description" content="Free JEE Mathematics Probability &amp; Statistics lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Probability & Statistics — The Fortune Teller | vlymbooq</title>
+    <meta name="description" content="Learn Probability & Statistics through stories, animated visuals, and real-life analogies. Zero formula memorization required — build intuition first.">
     <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/png" href="/logo.png">
@@ -14,9 +13,9 @@
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
-        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-        a{color:var(--purple,#a78bfa);text-decoration:none}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
         .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
         .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
         .brand{display:flex;align-items:center;gap:8px}
@@ -27,124 +26,1876 @@
         .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
         .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
         .container{max-width:1000px;margin:0 auto;padding:24px}
-        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
-        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
-        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
-        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
-        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
-        .module-card:hover{border-color:rgba(255,255,255,.12)}
-        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
-        .module-card .m-desc{font-size:.85em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
-        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
-        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.78em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
-        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
-        .lesson-body{padding:20px 0}
-        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
-        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
-        .lesson-body p{color:var(--text-sec);font-size:.9em;line-height:1.7;margin-bottom:10px}
-        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
-        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
-        .example-box .ex-title{font-weight:600;font-size:.85em;color:var(--pureple,#a78bfa);margin-bottom:4px}
-        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.6}
-        .example-box .ex-soln{font-size:.85em;color:var(--emerald);margin-top:6px;font-weight:500}
-        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
-        .tip-box .tip-title{font-weight:600;font-size:.85em;color:var(--emerald);margin-bottom:4px}
-        .tip-box .tip-text{font-size:.85em;color:var(--text-sec);line-height:1.5}
-        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
-        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
-        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
-        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s}
-        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
-        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
-        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
-        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
-        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.82em;color:var(--text-sec)}
-        .q-card .q-soln.show{display:block}
-        .q-card .q-soln strong{color:var(--emerald)}
-        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
-        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
-        .sidebar-nav{position:sticky;top:72px}
-        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
-        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
-        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
-        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
-        .btn-primary:hover{background:rgba(167,139,250,.25)}
-        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
-        .btn-success:hover{background:rgba(52,211,153,.25)}
         .flex-row{display:flex;gap:24px}
         .flex-row .main{flex:1;min-width:0}
         .flex-row .side{width:220px;flex-shrink:0}
         @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
-        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
-        .diagram-box svg{max-width:100%;height:auto}
-        .diagram-box .diagram-caption{font-size:.78em;color:var(--text-muted);margin-top:8px}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
         .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
         .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
-        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}}
+
+        /* ========== STORY CARDS ========== */
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        /* ========== INSIGHT BOX ========== */
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        /* ========== ANIMATED DIAGRAM ========== */
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+        .diagram-box .diagram-title{font-size:.85em;font-weight:700;color:var(--text);margin-bottom:8px}
+        .diagram-box .diagram-controls{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+        .diagram-box .ctrl-btn{padding:6px 16px;border-radius:100px;font-size:.78em;font-weight:600;border:1px solid var(--border);background:var(--bg-card);color:var(--text-sec);cursor:pointer;transition:all .2s}
+        .diagram-box .ctrl-btn:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15)}
+        .diagram-box .ctrl-btn.active{background:rgba(167,139,250,.12);border-color:var(--purple);color:var(--purple)}
+        .diagram-box .slider-wrap{display:flex;align-items:center;gap:12px;margin-top:12px;justify-content:center}
+        .diagram-box .slider-wrap input[type=range]{width:200px;max-width:60%;-webkit-appearance:none;background:var(--border);height:4px;border-radius:4px;outline:none}
+        .diagram-box .slider-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple);cursor:pointer}
+        .diagram-box .slider-wrap .slider-val{font-size:.82em;color:var(--purple);font-weight:700;min-width:30px}
+
+        /* ========== STEP REVEAL ========== */
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        /* ========== PRACTICE CARDS ========== */
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+        .q-badge{display:inline-block;padding:2px 8px;border-radius:100px;font-size:.7em;font-weight:600;margin-bottom:6px}
+        .q-badge.easy{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .q-badge.medium{background:rgba(245,158,11,.1);color:var(--amber)}
+        .q-badge.hard{background:rgba(239,68,68,.1);color:var(--red)}
+
+        /* ========== KEYFRAME ANIMATIONS ========== */
+        @keyframes breathe{0%,100%{opacity:.4}50%{opacity:.8}}
+        @keyframes pulse-glow{0%,100%{filter:drop-shadow(0 0 4px rgba(167,139,250,.3))}50%{filter:drop-shadow(0 0 12px rgba(167,139,250,.6))}}
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes bounce-dot{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        @keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+        .slide-up{animation:slide-up .6s ease forwards}
+        .stagger-1{animation-delay:.1s}
+        .stagger-2{animation-delay:.2s}
+        .stagger-3{animation-delay:.3s}
+
+        /* ========== PROGRESS TRACKER ========== */
+        .progress-tracker{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+        .progress-tracker .p-step{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;font-size:.75em;border:1px solid var(--border);color:var(--text-muted);transition:all .3s}
+        .progress-tracker .p-step.done{border-color:var(--emerald);color:var(--emerald);background:rgba(52,211,153,.06)}
+        .progress-tracker .p-step.active{border-color:var(--purple);color:var(--purple);background:rgba(167,139,250,.08)}
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part2{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part3{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        /* Interactive graph hover effect */
+        .graph-hover-area{cursor:crosshair}
+        .graph-point{transition:all .3s}
+        .graph-point:hover{r:6;fill:var(--amber)}
+
+        /* Math display */
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+
+        /* Interactive playground */
+        .playground{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin:16px 0}
+        .playground .pg-title{font-size:.9em;font-weight:700;margin-bottom:4px}
+        .playground .pg-desc{font-size:.78em;color:var(--text-muted);margin-bottom:12px}
     </style>
 </head>
 <body>
-    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="../index.html">JEE</a><a href="index.html" class="active">Course</a></div></div></nav>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="../../index.html">JEE</a><a href="../index.html" class="active">Course</a></div></div></nav>
     <div class="container">
         <div class="flex-row">
             <div class="side">
                 <div class="sidebar-nav">
-                    <div style="font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Mathematics</div>
+                    <div class="s-title">Mathematics</div>
                     <a href="lesson-algebra.html">Algebra</a>
                     <a href="lesson-calculus.html">Calculus</a>
                     <a href="lesson-coordinate-geometry.html">Coordinate Geometry</a>
-                    <a href="lesson-vector-3d.html">Vector & 3D Geometry</a>
-                    <a href="lesson-probability-statistics.html" class="active">Probability & Statistics</a>
+                    <a href="lesson-vector-3d.html">Vector & 3D</a>
+                    <a href="lesson-probability-statistics.html" class="active">Probability & Stats</a>
                     <a href="lesson-trigonometry.html">Trigonometry</a>
                 </div>
             </div>
             <div class="main">
                 <div style="margin-bottom:16px">
-                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 3 &middot; JEE Mathematics</div>
-                    <h1 style="font-size:1.5em;font-weight:900">Probability &amp; Statistics</h1>
-                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Probability, random variables, distributions, mean, median, variance, correlation.</div>
-                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
-                        <span style="font-size:.75em;color:var(--text-muted)">Probability · Random Variables · Distributions · Statistics</span>
-                    </div>
-                    <div style="display:flex;gap:8px;margin-top:10px">
-                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
-                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 1 &middot; JEE Mathematics</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Probability & Statistics</h1>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">No formulas. No memorization. Just stories, animations, and "AHA!" moments.</div>
+                    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+                        <button onclick="window.print()" class="download-btn">📄 Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">🎯 Take Mock Test</a>
                     </div>
                 </div>
+
+                <div class="progress-tracker">
+                    <span class="p-step active" id="p1"><span>🌤️</span> Weather</span>
+                    <span class="p-step" id="p2"><span>📊</span> Summarizers</span>
+                    <span class="p-step" id="p3"><span>📏</span> Spread</span>
+                    <span class="p-step" id="p4"><span>🪙</span> Probability</span>
+                    <span class="p-step" id="p5"><span>🔬</span> Conditional</span>
+                    <span class="p-step" id="p6"><span>🔄</span> Bayes</span>
+                    <span class="p-step" id="p7"><span>📈</span> Distributions</span>
+                    <span class="p-step" id="p8"><span>📉</span> Correlation</span>
+                    <span class="p-step" id="p9"><span>🎯</span> Practice</span>
+                </div>
+
                 <div class="lesson-body">
-                    <h3>Learning Objectives</h3>
-                    <ul>
-                        <li>Understand the fundamental concepts of Probability &amp; Statistics</li>
-                        <li>Apply key formulas and techniques to solve problems</li>
-                        <li>Practice with exam-level questions to build speed and accuracy</li>
-                    </ul>
-                    <h3>Key Concepts</h3>
-<h3>What is Probability & Statistics?</h3><p>Probability and Statistics form a core part of engineering mathematics. This topic covers probability theory, random variables, probability distributions, sampling, estimation, hypothesis testing, and regression analysis. GATE weightage is approximately 5-8%.</p><h3>Key Concepts</h3><p><strong>1. Probability Basics:</strong> P(E) = favourable/total equally likely outcomes. Additive rule: P(A∪B) = P(A)+P(B)-P(A∩B). Conditional: P(A|B) = P(A∩B)/P(B). Independence: P(A∩B) = P(A)P(B). Bayes theorem for inverse probability.</p><p><strong>2. Random Variables:</strong> Discrete — probability mass function (PMF). Continuous — probability density function (PDF). Cumulative distribution function (CDF): F(x) = P(X ≤ x). Expectation: E[X] = ∑x·P(x) or ∫x·f(x)dx. Variance: Var(X) = E[X²] - (E[X])².</p><p><strong>3. Standard Distributions:</strong> Binomial: X~B(n,p), P(X=r)=ⁿCᵣ pʳqⁿ⁻ʳ, E[X]=np, Var(X)=npq. Poisson: X~P(λ), P(X=r)=e⁻λ λʳ/r!, E[X]=λ, Var(X)=λ. Normal: X~N(μ,σ²), bell-shaped, symmetry about μ, standard normal Z = (X-μ)/σ ~ N(0,1). Uniform: X~U(a,b), f(x)=1/(b-a) for a≤x≤b.</p><p><strong>4. Sampling & Estimation:</strong> Central Limit Theorem: sample mean ~ N(μ, σ²/n) for large n. Confidence intervals: CI = X̄ ± Z(α/2)×σ/√n. Point estimate vs. interval estimate.</p><p><strong>5. Correlation & Regression:</strong> Correlation coefficient r measures linear relationship (-1 ≤ r ≤ 1). Regression line: y = a + bx, where b = Cov(X,Y)/Var(X), a = ӯ - bx̄.</p><h3>Solved Examples</h3><div class="example-box"><div class="ex-title">Example 1 (Expectation & Variance)</div><div class="ex-text">A random variable X has PMF: P(X=0)=0.2, P(X=1)=0.5, P(X=2)=0.3. Find E[X] and Var(X).<br><br>a) E=1.1, Var=0.49 b) E=1.2, Var=0.56 c) E=1.1, Var=0.69 d) E=1.0, Var=0.5</div><div class="ex-soln"><strong>Solution:</strong> a) E=1.1, Var=0.49. E[X] = 0×0.2+1×0.5+2×0.3 = 0+0.5+0.6 = 1.1. E[X²] = 0²×0.2+1²×0.5+2²×0.3 = 0+0.5+1.2 = 1.7. Var = 1.7 - (1.1)² = 1.7 - 1.21 = 0.49.</div></div><div class="example-box"><div class="ex-title">Example 2 (Normal Distribution)</div><div class="ex-text">If X~N(50, 16), find P(46 < X < 54). Given P(Z < 1) = 0.8413.<br><br>a) 0.6826 b) 0.9544 c) 0.4972 d) 0.8413</div><div class="ex-soln"><strong>Solution:</strong> a) 0.6826. μ=50, σ=4. Z₁ = (46-50)/4 = -1, Z₂ = (54-50)/4 = 1. P(-1<Z<1) = P(Z<1) - P(Z<-1) = 0.8413 - 0.1587 = 0.6826. Alternatively, the empirical rule states ~68% of data lies within 1σ of mean.</div></div><div class="example-box"><div class="ex-title">Example 3 (Binomial Distribution)</div><div class="ex-text">In a manufacturing process, 5% of items are defective. What is the probability that in a sample of 10 items, at most one is defective?<br><br>a) 0.9138 b) 0.5987 c) 0.9139 d) 0.9885</div><div class="ex-soln"><strong>Solution:</strong> a) 0.9138. n=10, p=0.05, q=0.95. P(X≤1) = P(0) + P(1). P(0) = ¹⁰C₀(0.05)⁰(0.95)¹⁰ = 0.95¹⁰ = 0.5987. P(1) = ¹⁰C₁(0.05)¹(0.95)⁹ = 10×0.05×0.95⁹ = 0.5×0.6302 = 0.3151. Total = 0.5987+0.3151 = 0.9138.</div></div><h3>Shortcut Techniques</h3><ul><li>For binomial probability, use recurrence: P(r+1) = P(r)×(n-r)/(r+1)×p/q to avoid recomputing from scratch.</li><li>Normal distribution problems use symmetry: P(-k<Z<k) = 2P(Z<k)-1.</li><li>Variance shortcut: Var(X) = E[X²]-(E[X])² — this is almost always easier than the definition.</li><li>For Poisson distribution with large n and small p (n>50, p<0.1), approximate binomial as Poisson with λ=np.</li><li>Central Limit Theorem: for any population, sample mean distribution approaches normal as n increases (n≥30 sufficient).</li></ul><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">In GATE, probability and statistics questions are scoring if you memorise the standard distributions and their properties. Focus on understanding the central limit theorem and confidence intervals — these are frequently tested. Always identify whether the random variable is discrete or continuous before choosing the approach.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div>                </div>
-                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
-                <div id="practice-qs"></div>
-                <div style="display:flex;gap:10px;margin-top:10px">
-                    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
-                    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
-                </div>
-                <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
-                    <a href="lesson-vector-3d.html" class="btn btn-primary">&#x2190; Vector &amp; 3D Geometry</a>
-                    <a href="lesson-trigonometry.html" class="btn btn-success">Trigonometry &#x2192;</a>
+                    <!-- ============================================================ -->
+                    <!-- PART 1: STORY — THE WEATHER FORECASTER -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">🌤️ Part 1: The Story That Started It All</span>
+                    <h2>Story Time: "There's a 70% Chance of Rain"</h2>
+
+                    <p>Your phone says: <strong>"70% chance of rain tomorrow."</strong></p>
+
+                    <p>What does that <em>actually</em> mean? Does it mean it will rain in 70% of the city? Does it mean the forecaster is 70% sure? Does it mean it will rain for 70% of the day?</p>
+
+                    <p><strong>Here's what it really means:</strong> If the exact same weather conditions occurred 100 times, it would rain on about 70 of those days. That's it. <strong>Probability = "how likely something is to happen."</strong></p>
+
+                    <div class="story-card">
+                        <div class="story-label">🌧️ The Weather Forecaster (Real Life, Every Day)</div>
+                        <div class="story-title">What "70%" Actually Means</div>
+                        <div class="story-text">
+                            <strong>Common misunderstanding:</strong> "70% chance means it will definitely rain." No! It means if you had 100 identical weather days, about 70 would see rain.<br><br>
+                            <strong>Think of it like a loaded dice:</strong> 7 out of 10 faces say "rain," 3 say "no rain." Roll it once — you might get "no rain." But roll it 1000 times, and roughly 700 will come up "rain."
+                        </div>
+                        <div class="story-moral">💡 <strong>Probability</strong> is not about certainty — it's about <strong>long-run relative frequency</strong>. What happens in the long run?</div>
+                    </div>
+
+                    <!-- Animated Weather Simulation -->
+                    <div class="diagram-box">
+                        <div class="diagram-title">🌧️ Watch 100 Simulated "Tomorrows" — How Many Rain?</div>
+                        <svg viewBox="0 0 700 260" width="700" height="260">
+                            <defs>
+                                <linearGradient id="rainGrad" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stop-color="#3b82f6"/>
+                                    <stop offset="100%" stop-color="#6366f1"/>
+                                </linearGradient>
+                                <linearGradient id="sunGrad" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stop-color="#f59e0b"/>
+                                    <stop offset="100%" stop-color="#eab308"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- Grid of 100 small squares (10x10) -->
+                            <g id="weatherGrid">
+                            </g>
+                            <!-- Stats display -->
+                            <rect x="230" y="170" width="240" height="50" rx="10" fill="rgba(0,0,0,.3)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="350" y="195" fill="var(--text-sec)" font-size="14" text-anchor="middle" font-weight="600">
+                                Rain: <tspan fill="var(--cyan)" font-weight="800" id="rainCount">0</tspan>
+                                &nbsp;|&nbsp; No Rain: <tspan fill="var(--amber)" font-weight="800" id="noRainCount">0</tspan>
+                                &nbsp;|&nbsp; %: <tspan fill="var(--emerald)" font-weight="800" id="rainPercent">0%</tspan>
+                            </text>
+                            <!-- Animated raindrop -->
+                            <text x="570" y="65" font-size="28" opacity=".8" id="weatherIcon">🌧️</text>
+                            <text x="570" y="90" fill="var(--text-muted)" font-size="11" text-anchor="middle" id="weatherLabel">Loading...</text>
+                            <!-- Legend -->
+                            <rect x="30" y="225" width="12" height="12" rx="2" fill="var(--cyan)" opacity=".7"/>
+                            <text x="48" y="236" fill="var(--text-muted)" font-size="11">Rain (70% chance)</text>
+                            <rect x="170" y="225" width="12" height="12" rx="2" fill="var(--amber)" opacity=".7"/>
+                            <text x="188" y="236" fill="var(--text-muted)" font-size="11">No Rain</text>
+                        </svg>
+                        <div class="diagram-caption">Each square is one "tomorrow." Blue = rain, yellow = no rain. With 70% probability, roughly 70 out of 100 squares turn blue. The more simulations, the closer to 70%.</div>
+                        <div class="diagram-controls">
+                            <button class="ctrl-btn active" onclick="simulateWeather(70)">▶ Simulate!</button>
+                            <button class="ctrl-btn" onclick="simulateWeather(30)">🌤️ Try 30%</button>
+                            <button class="ctrl-btn" onclick="simulateWeather(90)">🌧️ Try 90%</button>
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 First Big Idea</div>
+                        <div class="insight-text"><strong>Probability</strong> = the fraction of times an event would happen if you repeated the situation many, many times.</div>
+                        <div class="insight-sub">It's a long-run prediction, not a single-event guarantee.</div>
+                    </div>
+
+                    <p><strong>Real-life example:</strong> "There's a 1% chance of an accident on this flight." That means if you took the SAME flight (same weather, same plane, same pilot) 1000 times, about 10 would have an accident. Each individual flight, you just roll the dice.</p>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 2: MEAN, MEDIAN, MODE — THE THREE SUMMARIZERS -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">📊 Part 2: The Three Summarizers</span>
+                    <h2>Three Ways to Describe "Typical"</h2>
+
+                    <p>You have a bunch of numbers. Someone asks: <strong>"What's the typical value?"</strong></p>
+
+                    <p>There's no single answer! It depends on what you mean by "typical." Here are the three best answers:</p>
+
+                    <h3>Mean = Average = "Fair Share"</h3>
+                    <p>Imagine everyone in a group has some amount of money. The <strong>mean</strong> is what each person would have if you pooled all the money and redistributed it equally.</p>
+
+                    <h3>Median = "The Middle Person"</h3>
+                    <p>Line everyone up in order. The <strong>median</strong> is the person standing right in the middle. Half are above, half are below.</p>
+
+                    <h3>Mode = "The Most Popular"</h3>
+                    <p>The value that shows up <strong>the most</strong> times. The most frequent, the most common.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">👥 The Three Summarizers in Action</div>
+                        <svg viewBox="0 0 700 420" width="700" height="420">
+                            <!-- Background -->
+                            <rect width="700" height="420" rx="8" fill="var(--bg-elevated)"/>
+                            <!-- Row of people with heights: 140, 150, 160, 170, 180 -->
+                            <!-- Person 1 -->
+                            <g>
+                                <circle cx="60" cy="170" r="12" fill="var(--purple)" opacity=".8"/>
+                                <rect x="52" y="182" width="16" height="50" rx="4" fill="var(--purple)" opacity=".6"/>
+                                <rect x="48" y="232" width="24" height="10" rx="2" fill="var(--purple)" opacity=".4"/>
+                                <text x="60" y="258" fill="var(--text-muted)" font-size="9" text-anchor="middle">140</text>
+                            </g>
+                            <!-- Person 2 -->
+                            <g>
+                                <circle cx="140" cy="150" r="12" fill="var(--purple)" opacity=".8"/>
+                                <rect x="132" y="162" width="16" height="56" rx="4" fill="var(--purple)" opacity=".6"/>
+                                <rect x="128" y="218" width="24" height="10" rx="2" fill="var(--purple)" opacity=".4"/>
+                                <text x="140" y="244" fill="var(--text-muted)" font-size="9" text-anchor="middle">150</text>
+                            </g>
+                            <!-- Person 3 -->
+                            <g>
+                                <circle cx="220" cy="130" r="12" fill="var(--purple)" opacity=".8"/>
+                                <rect x="212" y="142" width="16" height="62" rx="4" fill="var(--purple)" opacity=".6"/>
+                                <rect x="208" y="204" width="24" height="10" rx="2" fill="var(--purple)" opacity=".4"/>
+                                <text x="220" y="230" fill="var(--text-muted)" font-size="9" text-anchor="middle">160</text>
+                            </g>
+                            <!-- Person 4 -->
+                            <g>
+                                <circle cx="300" cy="110" r="12" fill="var(--purple)" opacity=".8"/>
+                                <rect x="292" y="122" width="16" height="68" rx="4" fill="var(--purple)" opacity=".6"/>
+                                <rect x="288" y="190" width="24" height="10" rx="2" fill="var(--purple)" opacity=".4"/>
+                                <text x="300" y="216" fill="var(--text-muted)" font-size="9" text-anchor="middle">170</text>
+                            </g>
+                            <!-- Person 5 -->
+                            <g>
+                                <circle cx="380" cy="90" r="12" fill="var(--purple)" opacity=".8"/>
+                                <rect x="372" y="102" width="16" height="74" rx="4" fill="var(--purple)" opacity=".6"/>
+                                <rect x="368" y="176" width="24" height="10" rx="2" fill="var(--purple)" opacity=".4"/>
+                                <text x="380" y="202" fill="var(--text-muted)" font-size="9" text-anchor="middle">180</text>
+                            </g>
+
+                            <!-- Mean redistribution bar (animated) -->
+                            <g>
+                                <rect x="44" y="300" width="350" height="16" rx="8" fill="var(--emerald)" opacity=".15"/>
+                                <text x="44" y="335" fill="var(--emerald)" font-size="11" font-weight="700">Mean (Fair Share) = 160</text>
+                                <text x="44" y="352" fill="var(--text-muted)" font-size="9">Pool all height & divide equally → everyone gets 160</text>
+                                <!-- Animated horizontal bar showing redistribution -->
+                                <rect x="44" y="300" width="0" height="16" rx="8" fill="var(--emerald)" opacity=".4">
+                                    <animate attributeName="width" values="0;350;350" dur="5s" repeatCount="indefinite"/>
+                                </rect>
+                            </g>
+
+                            <!-- Median highlight -->
+                            <g>
+                                <!-- Rect around middle person -->
+                                <rect x="196" y="62" width="48" height="144" rx="6" fill="none" stroke="var(--amber)" stroke-width="2" stroke-dasharray="4,2">
+                                    <animate attributeName="opacity" values="0;0;1;1;0" dur="5s" repeatCount="indefinite"/>
+                                </rect>
+                                <text x="220" y="55" fill="var(--amber)" font-size="11" font-weight="700" text-anchor="middle">
+                                    Median (middle) = 160
+                                    <animate attributeName="opacity" values="0;0;1;1;0" dur="5s" repeatCount="indefinite"/>
+                                </text>
+                            </g>
+
+                            <!-- Mode as a bar chart on the right -->
+                            <g transform="translate(440, 30)">
+                                <text x="80" y="20" fill="var(--cyan)" font-size="11" font-weight="700" text-anchor="middle">Mode = Most Frequent</text>
+                                <!-- Bar chart of frequencies -->
+                                <rect x="10" y="120" width="25" height="20" rx="3" fill="var(--cyan)" opacity=".5"/>
+                                <rect x="45" y="100" width="25" height="40" rx="3" fill="var(--cyan)" opacity=".5"/>
+                                <rect x="80" y="60" width="25" height="80" rx="3" fill="var(--cyan)" opacity=".8">
+                                    <animate attributeName="height" values="80;100;80" dur="2s" repeatCount="indefinite"/>
+                                </rect>
+                                <rect x="115" y="110" width="25" height="30" rx="3" fill="var(--cyan)" opacity=".5"/>
+                                <rect x="150" y="120" width="25" height="20" rx="3" fill="var(--cyan)" opacity=".5"/>
+                                <!-- Labels -->
+                                <text x="22" y="152" fill="var(--text-muted)" font-size="8" text-anchor="middle">130</text>
+                                <text x="57" y="152" fill="var(--text-muted)" font-size="8" text-anchor="middle">145</text>
+                                <text x="92" y="152" fill="var(--text-muted)" font-size="8" text-anchor="middle">160</text>
+                                <text x="127" y="152" fill="var(--text-muted)" font-size="8" text-anchor="middle">175</text>
+                                <text x="162" y="152" fill="var(--text-muted)" font-size="8" text-anchor="middle">190</text>
+                                <text x="92" y="48" fill="var(--cyan)" font-size="10" font-weight="700" text-anchor="middle">160 (most common!)</text>
+                            </g>
+                        </svg>
+                        <div class="diagram-caption">Left: people of different heights. Mean (green bar) shows the "fair share." Median (amber outline) picks the middle person. Mode (cyan bar chart) finds the most frequent value.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🎪 Real-Life Analogy — The Bill Gates Problem</div>
+                        <div class="story-title">When to Use Mean vs Median</div>
+                        <div class="story-text">
+                            Imagine 9 people and Bill Gates walk into a bar. The 9 people earn $30k each. Bill Gates earns $1 billion.<br><br>
+                            <strong>Mean salary:</strong> About $100 million — but NONE of the 9 people earn that! The mean is pulled up by Bill Gates.<br><br>
+                            <strong>Median salary:</strong> $30k — because the middle person (the 5th person in line) still earns $30k. The median ignores the extreme outlier.<br><br>
+                            <strong>When to use which:</strong> Use <strong>Mean</strong> for symmetric data without outliers. Use <strong>Median</strong> when there are extreme values (like salaries, house prices). Use <strong>Mode</strong> for categorical data (most popular ice cream flavor).
+                        </div>
+                        <div class="story-moral">🧠 Mean is sensitive to outliers. Median is robust. Bill Gates makes the mean lie, but the median tells the truth.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 3: SPREAD — HOW SPREAD OUT? -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">📏 Part 3: How Spread Out?</span>
+                    <h2>Variance & Standard Deviation — Tight Cluster or Wide Scatter?</h2>
+
+                    <p>Two datasets can have the EXACT same mean, but look completely different:</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🎯 Same Mean, Different Spread</div>
+                        <svg viewBox="0 0 700 380" width="700" height="380">
+                            <!-- Dataset A: Tightly clustered {5,5,5,5,5} -->
+                            <g transform="translate(20, 20)">
+                                <text x="150" y="20" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">Dataset A: {5,5,5,5,5}</text>
+                                <text x="150" y="38" fill="var(--text-sec)" font-size="11" text-anchor="middle">"Everyone is the same"</text>
+                                <!-- Axis -->
+                                <line x1="30" y1="120" x2="300" y2="120" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                                <text x="30" y="145" fill="var(--text-muted)" font-size="10" text-anchor="middle">0</text>
+                                <text x="165" y="145" fill="var(--text-muted)" font-size="10" text-anchor="middle">5 (mean)</text>
+                                <text x="290" y="145" fill="var(--text-muted)" font-size="10" text-anchor="middle">10</text>
+                                <!-- All 5 points at 5 -->
+                                <circle cx="165" cy="95" r="8" fill="var(--emerald)" opacity=".8"/>
+                                <circle cx="155" cy="85" r="8" fill="var(--emerald)" opacity=".8"/>
+                                <circle cx="175" cy="85" r="8" fill="var(--emerald)" opacity=".8"/>
+                                <circle cx="160" cy="75" r="8" fill="var(--emerald)" opacity=".8"/>
+                                <circle cx="170" cy="75" r="8" fill="var(--emerald)" opacity=".8"/>
+                                <!-- Tight cluster brackets -->
+                                <path d="M140,60 Q165,50 190,60" fill="none" stroke="var(--emerald)" stroke-width="1.5" stroke-dasharray="3,2"/>
+                                <text x="165" y="48" fill="var(--emerald)" font-size="10" font-weight="600" text-anchor="middle">⚫ Low spread</text>
+                                <!-- Mean marker -->
+                                <line x1="165" y1="120" x2="165" y2="60" stroke="var(--emerald)" stroke-width="1" stroke-dasharray="4,2" opacity=".5"/>
+                                <!-- Variance calc -->
+                                <text x="30" y="170" fill="var(--text-sec)" font-size="10">Each point = mean → distance = 0</text>
+                                <text x="30" y="185" fill="var(--text-sec)" font-size="10">Variance = (0²+0²+0²+0²+0²)/5 = <tspan fill="var(--emerald)" font-weight="700">0</tspan></text>
+                            </g>
+
+                            <!-- Dataset B: Spread out {1,3,5,7,9} -->
+                            <g transform="translate(370, 20)">
+                                <text x="150" y="20" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">Dataset B: {1,3,5,7,9}</text>
+                                <text x="150" y="38" fill="var(--text-sec)" font-size="11" text-anchor="middle">"Spread out everywhere"</text>
+                                <!-- Axis -->
+                                <line x1="30" y1="120" x2="300" y2="120" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                                <text x="30" y="145" fill="var(--text-muted)" font-size="10" text-anchor="middle">0</text>
+                                <text x="165" y="145" fill="var(--text-muted)" font-size="10" text-anchor="middle">5 (mean)</text>
+                                <text x="290" y="145" fill="var(--text-muted)" font-size="10" text-anchor="middle">10</text>
+                                <!-- Points spread out -->
+                                <circle cx="62" cy="85" r="8" fill="var(--amber)" opacity=".8">
+                                    <animate attributeName="cy" values="85;80;85" dur="2s" repeatCount="indefinite"/>
+                                </circle>
+                                <circle cx="113" cy="80" r="8" fill="var(--amber)" opacity=".8">
+                                    <animate attributeName="cy" values="80;75;80" dur="2.5s" repeatCount="indefinite"/>
+                                </circle>
+                                <circle cx="165" cy="75" r="8" fill="var(--amber)" opacity=".8">
+                                    <animate attributeName="cy" values="75;70;75" dur="3s" repeatCount="indefinite"/>
+                                </circle>
+                                <circle cx="218" cy="80" r="8" fill="var(--amber)" opacity=".8">
+                                    <animate attributeName="cy" values="80;75;80" dur="2.5s" repeatCount="indefinite"/>
+                                </circle>
+                                <circle cx="270" cy="85" r="8" fill="var(--amber)" opacity=".8">
+                                    <animate attributeName="cy" values="85;80;85" dur="2s" repeatCount="indefinite"/>
+                                </circle>
+                                <!-- Wide spread brackets -->
+                                <path d="M55,55 Q165,40 275,55" fill="none" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="3,2"/>
+                                <text x="165" y="38" fill="var(--amber)" font-size="10" font-weight="600" text-anchor="middle">🟡 High spread</text>
+                                <!-- Mean marker -->
+                                <line x1="165" y1="120" x2="165" y2="55" stroke="var(--amber)" stroke-width="1" stroke-dasharray="4,2" opacity=".5"/>
+                                <!-- Variance distances -->
+                                <g opacity=".4">
+                                    <line x1="62" y1="85" x2="165" y2="75" stroke="var(--cyan)" stroke-width="1" stroke-dasharray="2,2"/>
+                                    <text x="105" y="100" fill="var(--cyan)" font-size="8">4</text>
+                                    <line x1="270" y1="85" x2="165" y2="75" stroke="var(--cyan)" stroke-width="1" stroke-dasharray="2,2"/>
+                                    <text x="230" y="100" fill="var(--cyan)" font-size="8">4</text>
+                                </g>
+                                <!-- Variance calc -->
+                                <text x="30" y="170" fill="var(--text-sec)" font-size="10">Distances from mean: -4, -2, 0, 2, 4</text>
+                                <text x="30" y="185" fill="var(--text-sec)" font-size="10">Variance = (16+4+0+4+16)/5 = <tspan fill="var(--amber)" font-weight="700">8</tspan></text>
+                            </g>
+
+                            <!-- Common insight -->
+                            <rect x="50" y="330" width="600" height="36" rx="10" fill="rgba(167,139,250,.06)" stroke="rgba(167,139,250,.1)" stroke-width="1"/>
+                            <text x="350" y="353" fill="var(--purple)" font-size="13" font-weight="700" text-anchor="middle">💡 Both datasets have MEAN = 5, but completely different SPREAD. Variance captures the spread!</text>
+                        </svg>
+                        <div class="diagram-caption">Dataset A: everyone is exactly at the mean → variance = 0. Dataset B: points are far from the mean → variance = 8. Same center, totally different story.</div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="this.querySelector('.step-content').classList.toggle('open');this.querySelector('.arrow').classList.toggle('open')">
+                            <span class="step-number">📐</span>
+                            <span style="flex:1;font-weight:600;font-size:.9em">The Formulas (Just for Reference)</span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            <p><strong>Variance</strong> = average of squared distances from the mean:</p>
+                            <div class="math-block">σ² = Σ(xᵢ - μ)² / N</div>
+                            <p>Why square? Because distances can be negative, and we want all distances to be positive. Squaring does that — but the units get squared too.</p>
+                            <p><strong>Standard Deviation</strong> = √variance — brings it back to the original units:</p>
+                            <div class="math-block">σ = √(Σ(xᵢ - μ)² / N)</div>
+                            <p style="color:var(--emerald);font-weight:600">Think of standard deviation as the "typical distance from the mean."</p>
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Understanding Spread</div>
+                        <div class="insight-text"><strong>Variance</strong> = average of squared deviations. <strong>Standard deviation</strong> = √variance = the "typical" distance from average.</div>
+                        <div class="insight-sub">Standard deviation is in the same units as your data. That's why we usually prefer it.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 4: PROBABILITY BASICS — THE COIN TOSS -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">🪙 Part 4: Probability Basics — The Coin Toss</span>
+                    <h2>The Foundation: P(event) = Favorable / Total</h2>
+
+                    <p>Every probability question starts with the same idea: <strong>How many ways can our event happen, divided by how many total things can happen?</strong></p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🪙 Watch the Coin Flip — Probability Approaches 50%</div>
+                        <svg viewBox="0 0 700 380" width="700" height="380">
+                            <!-- Coin -->
+                            <g transform="translate(150, 60)">
+                                <circle cx="0" cy="0" r="50" fill="var(--amber)" opacity=".9" stroke="rgba(255,255,255,.2)" stroke-width="2"/>
+                                <text x="0" y="8" font-size="36" font-weight="800" fill="var(--bg)" text-anchor="middle" dominant-baseline="middle" id="coinFaceH">H</text>
+                                <text x="0" y="8" font-size="36" font-weight="800" fill="var(--bg)" text-anchor="middle" dominant-baseline="middle" id="coinFaceT" opacity="0">T</text>
+                                <!-- Coin spin animation -->
+                                <animateTransform attributeName="transform" type="rotate" values="0,150,60;360,150,60" dur="3s" repeatCount="indefinite" id="coinSpin"/>
+                            </g>
+
+                            <!-- Flip button -->
+                            <rect x="120" y="140" width="70" height="28" rx="14" fill="rgba(167,139,250,.15)" stroke="var(--purple)" stroke-width="1"/>
+                            <text x="155" y="159" fill="var(--purple)" font-size="12" font-weight="700" text-anchor="middle" style="cursor:pointer" onclick="manualFlip()">▶ Flip</text>
+
+                            <!-- Counter display -->
+                            <rect x="280" y="30" width="380" height="100" rx="12" fill="rgba(0,0,0,.2)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="300" y="55" fill="var(--text-sec)" font-size="12">
+                                Heads: <tspan fill="var(--amber)" font-weight="800" id="headsCount">0</tspan>
+                                &nbsp;|&nbsp; Tails: <tspan fill="var(--cyan)" font-weight="800" id="tailsCount">0</tspan>
+                                &nbsp;|&nbsp; Total: <tspan fill="var(--text)" font-weight="800" id="totalFlips">0</tspan>
+                            </text>
+                            <!-- Probability bar -->
+                            <rect x="300" y="70" width="340" height="14" rx="7" fill="rgba(255,255,255,.05)"/>
+                            <rect x="300" y="70" width="170" height="14" rx="7" fill="var(--amber)" opacity=".6" id="probBar" style="transition:width .3s"/>
+                            <text x="300" y="100" fill="var(--text-sec)" font-size="11">
+                                P(Heads) = <tspan fill="var(--amber)" font-weight="800" id="probDisplay">0.00</tspan>
+                            </text>
+                            <!-- Law of large numbers note -->
+                            <text x="470" y="115" fill="var(--text-muted)" font-size="10" text-anchor="middle" opacity=".7">More flips → closer to 50%</text>
+
+                            <!-- Animated sparkline for running probability -->
+                            <g transform="translate(50, 210)">
+                                <text x="280" y="10" fill="var(--text)" font-size="12" font-weight="700" text-anchor="middle">Running Probability of Heads</text>
+                                <!-- Axes -->
+                                <line x1="30" y1="140" x2="530" y2="140" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                                <line x1="30" y1="20" x2="30" y2="140" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                                <!-- 50% target line -->
+                                <line x1="30" y1="80" x2="530" y2="80" stroke="var(--emerald)" stroke-width="1" stroke-dasharray="4,3" opacity=".5"/>
+                                <text x="20" y="84" fill="var(--emerald)" font-size="9" text-anchor="end">50%</text>
+                                <!-- Animated probability line -->
+                                <polyline fill="none" stroke="var(--amber)" stroke-width="2" id="sparkLine" points=""/>
+                            </g>
+                        </svg>
+                        <div class="diagram-caption">The more you flip, the more the proportion of heads settles toward 50%. That's the <strong>Law of Large Numbers</strong> in action.</div>
+                        <div class="diagram-controls">
+                            <button class="ctrl-btn" onclick="autoFlips(10)">10 Flips</button>
+                            <button class="ctrl-btn active" onclick="autoFlips(100)">100 Flips</button>
+                            <button class="ctrl-btn" onclick="autoFlips(1000)">1000 Flips</button>
+                            <button class="ctrl-btn" onclick="resetCoin()">Reset</button>
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Law of Large Numbers</div>
+                        <div class="insight-text">The more trials you run, the closer the observed probability gets to the theoretical probability.</div>
+                        <div class="insight-sub">The coin doesn't "remember" — but the AVERAGE of many flips converges to 50%.</div>
+                    </div>
+
+                    <!-- Addition Rule & Venn -->
+                    <h3>The Addition Rule: "A or B"</h3>
+                    <p>What if you want the probability of <strong>either</strong> event A <strong>or</strong> event B happening? You can't just add them — because they might overlap!</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🔵 Venn Diagram — The Double-Counted Overlap</div>
+                        <svg viewBox="0 0 600 320" width="600" height="320">
+                            <!-- Venn diagram -->
+                            <!-- Circle A -->
+                            <circle cx="230" cy="160" r="90" fill="rgba(167,139,250,.15)" stroke="var(--purple)" stroke-width="2.5"/>
+                            <text x="180" y="160" fill="var(--purple)" font-size="16" font-weight="700" text-anchor="middle">A</text>
+                            <text x="180" y="180" fill="var(--text-sec)" font-size="11" text-anchor="middle">P(A) = 0.4</text>
+                            <!-- Circle B -->
+                            <circle cx="370" cy="160" r="90" fill="rgba(52,211,153,.15)" stroke="var(--emerald)" stroke-width="2.5"/>
+                            <text x="420" y="160" fill="var(--emerald)" font-size="16" font-weight="700" text-anchor="middle">B</text>
+                            <text x="420" y="180" fill="var(--text-sec)" font-size="11" text-anchor="middle">P(B) = 0.3</text>
+                            <!-- Overlap -->
+                            <text x="300" y="160" fill="var(--amber)" font-size="13" font-weight="700" text-anchor="middle">A∩B</text>
+                            <text x="300" y="178" fill="var(--text-sec)" font-size="11" text-anchor="middle">P(A∩B) = 0.1</text>
+                            <!-- Animated highlight of overlap -->
+                            <circle cx="300" cy="160" r="30" fill="none" stroke="var(--amber)" stroke-width="3">
+                                <animate attributeName="opacity" values="0;0;1;1;1;1;0;0" dur="5s" repeatCount="indefinite"/>
+                                <animate attributeName="r" values="30;30;30;40;40;30;30;30" dur="5s" repeatCount="indefinite"/>
+                            </circle>
+
+                            <!-- Formula -->
+                            <rect x="80" y="280" width="440" height="30" rx="8" fill="rgba(245,158,11,.06)" stroke="rgba(245,158,11,.1)" stroke-width="1"/>
+                            <text x="300" y="300" fill="var(--amber)" font-size="13" font-weight="700" text-anchor="middle">P(A∪B) = P(A) + P(B) − P(A∩B)</text>
+
+                            <!-- Cards showing the math -->
+                            <rect x="50" y="38" width="30" height="20" rx="4" fill="var(--purple)" opacity=".5"/>
+                            <text x="65" y="52" fill="var(--text)" font-size="10" text-anchor="middle">A</text>
+                            <text x="30" y="45" fill="var(--text-muted)" font-size="20" opacity=".3">+</text>
+                            <rect x="90" y="38" width="30" height="20" rx="4" fill="var(--emerald)" opacity=".5"/>
+                            <text x="105" y="52" fill="var(--text)" font-size="10" text-anchor="middle">B</text>
+                            <text x="135" y="45" fill="var(--text-muted)" font-size="20" opacity=".3">=</text>
+                            <!-- Overlap counted twice animation -->
+                            <rect x="150" y="38" width="50" height="20" rx="4" fill="rgba(167,139,250,.3)"/>
+                            <text x="175" y="52" fill="var(--text)" font-size="10" text-anchor="middle">A+B</text>
+                            <text x="215" y="45" fill="var(--red)" font-size="16" opacity=".6">✕</text>
+                            <text x="225" y="52" fill="var(--red)" font-size="9" opacity=".8">Overlap double-counted!</text>
+                        </svg>
+                        <div class="diagram-caption">When adding P(A) and P(B), the overlap (A∩B) gets counted twice. Subtract it once to correct. The overlap region pulses in amber.</div>
+                    </div>
+
+                    <h3>Independent Events: "The Coin Doesn't Remember"</h3>
+                    <p>If you flip a coin and get heads 5 times in a row, what's the chance of heads on the 6th flip? If you think "surely tails is due!" — you're falling for the <strong>gambler's fallacy</strong>.</p>
+
+                    <p>The coin has no memory! <strong>P(A and B) = P(A) × P(B)</strong> for independent events.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">🎲 The Gambler's Fallacy</div>
+                        <div class="story-title">"It's Due for Tails!"</div>
+                        <div class="story-text">
+                            A gambler watches a roulette wheel land on red 8 times in a row. He bets everything on black, thinking "black is due!" <br><br>
+                            But the wheel doesn't remember. Each spin is independent. The chance of black is still 18/38 ≈ 47.4%, regardless of what happened before.<br><br>
+                            <strong>Independent events:</strong> The outcome of one event has ZERO effect on the next. Coin flips, dice rolls, roulette spins.
+                        </div>
+                        <div class="story-moral">🧠 Probability has no memory. The universe doesn't "keep score" to balance things out.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 5: BAYES THEOREM — THE REVERSE DETECTIVE -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">🔍 Part 5: Bayes Theorem — The Reverse Detective</span>
+                    <h2>Flipping the Question Around</h2>
+
+                    <p>You hear your phone buzz. <strong>What's the chance it's a message from your friend vs spam?</strong></p>
+
+                    <p>You know: spam messages buzz 95% of the time. Friend messages buzz 80% of the time. And 60% of all messages are spam.</p>
+
+                    <p>But you want the <strong>reverse</strong>: given that it buzzed, what's P(friend | buzz)?</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🌳 Bayes Theorem — The Tree of Reversal</div>
+                        <svg viewBox="0 0 700 380" width="700" height="380">
+                            <!-- Tree diagram -->
+                            <!-- Root: Message -->
+                            <circle cx="350" cy="30" r="22" fill="rgba(167,139,250,.2)" stroke="var(--purple)" stroke-width="2"/>
+                            <text x="350" y="35" fill="var(--purple)" font-size="11" font-weight="700" text-anchor="middle">Message</text>
+
+                            <!-- First branches: Spam vs Friend -->
+                            <!-- Spam branch (60%) -->
+                            <line x1="340" y1="52" x2="220" y2="110" stroke="var(--red)" stroke-width="2.5" opacity=".6"/>
+                            <circle cx="220" cy="125" r="20" fill="rgba(239,68,68,.15)" stroke="var(--red)" stroke-width="2"/>
+                            <text x="220" y="130" fill="var(--red)" font-size="11" font-weight="700" text-anchor="middle">Spam</text>
+                            <text x="290" y="90" fill="var(--red)" font-size="12" font-weight="700">P(Spam) = 0.6</text>
+
+                            <!-- Friend branch (40%) -->
+                            <line x1="360" y1="52" x2="480" y2="110" stroke="var(--emerald)" stroke-width="2.5" opacity=".6"/>
+                            <circle cx="480" cy="125" r="20" fill="rgba(52,211,153,.15)" stroke="var(--emerald)" stroke-width="2"/>
+                            <text x="480" y="130" fill="var(--emerald)" font-size="11" font-weight="700" text-anchor="middle">Friend</text>
+                            <text x="550" y="90" fill="var(--emerald)" font-size="12" font-weight="700">P(Friend) = 0.4</text>
+
+                            <!-- Second level: Buzz vs No Buzz for Spam -->
+                            <line x1="210" y1="145" x2="140" y2="200" stroke="var(--cyan)" stroke-width="2" opacity=".5"/>
+                            <rect x="110" y="205" width="80" height="30" rx="6" fill="rgba(34,211,238,.1)" stroke="var(--cyan)" stroke-width="1.5"/>
+                            <text x="150" y="224" fill="var(--cyan)" font-size="10" font-weight="700" text-anchor="middle">Buzz (95%)</text>
+                            <text x="240" y="190" fill="var(--text-sec)" font-size="10">P(Buzz|Spam) = 0.95</text>
+
+                            <line x1="230" y1="145" x2="240" y2="200" stroke="var(--text-muted)" stroke-width="1.5" opacity=".3" stroke-dasharray="3,2"/>
+                            <rect x="210" y="205" width="80" height="30" rx="6" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <text x="250" y="224" fill="var(--text-muted)" font-size="10" font-weight="700" text-anchor="middle">No Buzz (5%)</text>
+
+                            <!-- Second level: Buzz vs No Buzz for Friend -->
+                            <line x1="470" y1="145" x2="420" y2="200" stroke="var(--cyan)" stroke-width="2" opacity=".5"/>
+                            <rect x="390" y="205" width="80" height="30" rx="6" fill="rgba(34,211,238,.1)" stroke="var(--cyan)" stroke-width="1.5"/>
+                            <text x="430" y="224" fill="var(--cyan)" font-size="10" font-weight="700" text-anchor="middle">Buzz (80%)</text>
+                            <text x="510" y="190" fill="var(--text-sec)" font-size="10">P(Buzz|Friend) = 0.80</text>
+
+                            <line x1="490" y1="145" x2="520" y2="200" stroke="var(--text-muted)" stroke-width="1.5" opacity=".3" stroke-dasharray="3,2"/>
+                            <rect x="490" y="205" width="80" height="30" rx="6" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <text x="530" y="224" fill="var(--text-muted)" font-size="10" font-weight="700" text-anchor="middle">No Buzz (20%)</text>
+
+                            <!-- Bayes reversal box -->
+                            <rect x="100" y="270" width="500" height="90" rx="12" fill="rgba(167,139,250,.06)" stroke="rgba(167,139,250,.15)" stroke-width="1"/>
+                            <text x="350" y="295" fill="var(--purple)" font-size="14" font-weight="800" text-anchor="middle">🔁 Bayes Reversal: P(Friend | Buzz)</text>
+                            <text x="350" y="318" fill="var(--text-sec)" font-size="11" text-anchor="middle">
+                                = <tspan fill="var(--emerald)" font-weight="700">P(Buzz|Friend) × P(Friend)</tspan> / <tspan fill="var(--cyan)" font-weight="700">P(Buzz)</tspan>
+                            </text>
+                            <text x="350" y="340" fill="var(--amber)" font-size="11" text-anchor="middle" font-weight="600">
+                                = (0.80 × 0.40) / (0.95 × 0.60 + 0.80 × 0.40) = 0.32 / 0.89 ≈ 0.36 (36%)
+                            </text>
+                        </svg>
+                        <div class="diagram-caption">The tree shows the forward direction: first whether it's spam/friend, then whether it buzzes. Bayes reverses the tree: given a buzz, what's the chance it's from a friend? Surprisingly, only 36%!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🏥 Real-World Bayes — Medical Testing</div>
+                        <div class="story-title">"99% Accurate" Doesn't Mean What You Think</div>
+                        <div class="story-text">
+                            A disease affects <strong>1 in 10,000</strong> people. The test is <strong>99% accurate</strong> (1% false positive rate). You test positive. What's the chance you actually HAVE the disease?<br><br>
+                            Most people say "99%!" But using Bayes:<br><br>
+                            <strong>P(disease | positive)</strong> = (0.99 × 0.0001) / (0.99 × 0.0001 + 0.01 × 0.9999) ≈ <strong>0.98%</strong><br><br>
+                            That's right — less than 1%! Because the disease is so rare, even a tiny false positive rate creates many more false positives than true positives.
+                        </div>
+                        <div class="story-moral">⚠️ Never trust "99% accurate" without knowing the base rate. Bayes is your shield against misleading statistics!</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Bayes Theorem</div>
+                        <div class="insight-text">P(A|B) = P(B|A) × P(A) / P(B)</div>
+                        <div class="insight-sub">We reverse the condition: "Given the effect, what's the chance of the cause?"</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 6: BINOMIAL DISTRIBUTION — THE MULTIPLE CHOICE TEST -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🎲 Part 6: Binomial Distribution — The Multiple Choice Test</span>
+                    <h2>What Happens When You Guess on Everything?</h2>
+
+                    <p>Imagine a test with <strong>10 multiple-choice questions</strong>, each with <strong>4 options</strong>. You didn't study. You guess on every question.</p>
+
+                    <p>How many do you expect to get right? And what's the chance you get exactly 5 right? Or 10 right?</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📊 Binomial Distribution — 10 Coin Flips, How Many Heads?</div>
+                        <svg viewBox="0 0 700 420" width="700" height="420">
+                            <!-- Axes -->
+                            <line x1="60" y1="380" x2="660" y2="380" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <line x1="60" y1="380" x2="60" y2="40" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <!-- Bars for k=0 to 10 (binomial n=10, p=0.5) -->
+                            <g id="binomialBars">
+                            </g>
+                            <!-- Labels -->
+                            <text x="350" y="405" fill="var(--text-sec)" font-size="12" text-anchor="middle">Number of Heads (k) →</text>
+                            <text x="25" y="210" fill="var(--text-sec)" font-size="12" text-anchor="middle" transform="rotate(-90,25,210)">Probability →</text>
+                            <!-- Mean marker -->
+                            <line x1="350" y1="380" x2="350" y2="40" stroke="var(--emerald)" stroke-width="1.5" stroke-dasharray="5,3" opacity=".5"/>
+                            <text x="350" y="50" fill="var(--emerald)" font-size="12" font-weight="700" text-anchor="middle">Mean = np = 10×0.5 = 5 heads</text>
+                            <!-- Expected value -->
+                            <rect x="200" y="390" width="300" height="24" rx="8" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.1)" stroke-width="1"/>
+                            <text x="350" y="406" fill="var(--emerald)" font-size="12" font-weight="700" text-anchor="middle">Expected Value (Mean) = np = 10 × 0.5 = 5 heads</text>
+                        </svg>
+                        <div class="diagram-caption">The bars show the probability of getting exactly k heads in 10 flips. Notice the bell-like shape centered at 5 (the mean). Most outcomes are near 5; getting 0 or 10 is extremely rare.</div>
+                        <div class="diagram-controls">
+                            <button class="ctrl-btn active" onclick="updateBinomialChart(10, 0.5)">n=10, p=0.5</button>
+                            <button class="ctrl-btn" onclick="updateBinomialChart(20, 0.5)">n=20, p=0.5</button>
+                            <button class="ctrl-btn" onclick="updateBinomialChart(10, 0.25)">n=10, p=0.25 (guessing!)</button>
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="this.querySelector('.step-content').classList.toggle('open');this.querySelector('.arrow').classList.toggle('open')">
+                            <span class="step-number">🎯</span>
+                            <span style="flex:1;font-weight:600;font-size:.9em">The Binomial Formula (Just One Look)</span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            <p><strong>Binomial Distribution</strong> = n independent trials, each with the same probability p of success.</p>
+                            <div class="math-block">P(X = k) = C(n,k) · pᵏ · (1-p)ⁿ⁻ᵏ</div>
+                            <p><strong>Mean = np</strong> — that's the expected number of successes.</p>
+                            <p><strong>Variance = np(1-p)</strong> — spread depends on both n and p.</p>
+                            <p style="color:var(--emerald);font-weight:600">For p=0.5, the distribution is symmetric (bell-shaped). For p close to 0 or 1, it's skewed.</p>
+                        </div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">📝 The Multiple Choice Test</div>
+                        <div class="story-title">If You Guess on All 10 Questions (4 options each)</div>
+                        <div class="story-text">
+                            Each question: p = 1/4 = 0.25 chance of being correct.<br><br>
+                            <strong>Expected correct:</strong> np = 10 × 0.25 = 2.5 questions.<br><br>
+                            <strong>P(getting 0 correct):</strong> (0.75)¹⁰ ≈ 5.6% — unlikely but possible.<br><br>
+                            <strong>P(getting all 10 correct):</strong> (0.25)¹⁰ ≈ 0.000095% — basically impossible!<br><br>
+                            This is why guessing is a terrible strategy. You're expected to get only 2.5 out of 10.
+                        </div>
+                        <div class="story-moral">🃏 The binomial distribution tells you: "If I repeat this trial n times, what range of outcomes should I expect?"</div>
+                    </div>
+
+                    <!-- ============================================================ -->
+                    <!-- CONDITIONAL PROBABILITY DEEP DIVE -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">🔬 Part 4B: Conditional Probability — The "Given" That Changes Everything</span>
+                    <h2>What Happens to Probability When You Have Extra Information?</h2>
+
+                    <p>"Given that it's cloudy, what's the chance of rain?" — This is <strong>conditional probability</strong>: how does knowing one thing change the probability of another?</p>
+
+                    <h3>The Formal Definition</h3>
+                    <div class="math-block">P(A | B) = P(A ∩ B) / P(B), &nbsp; P(B) ≠ 0</div>
+                    <p><strong>Read out loud:</strong> "Probability of A given B equals P(A and B together) divided by P(B)."</p>
+                    <p>Think of it this way: we've entered a new universe where B has already happened. The only outcomes that matter are those in B. Among those, which also have A?</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🎯 P(A|B): Zoom Into B, See How Much of It Is A</div>
+                        <svg viewBox="0 0 640 330" width="640" height="330">
+                            <circle cx="250" cy="150" r="90" fill="rgba(167,139,250,.12)" stroke="var(--purple)" stroke-width="2.5" id="condCircleA"/>
+                            <text x="195" y="145" fill="var(--purple)" font-size="16" font-weight="700" text-anchor="middle">A</text>
+                            <text x="195" y="165" fill="var(--text-sec)" font-size="11" text-anchor="middle">P(A)=0.3</text>
+                            <circle cx="380" cy="150" r="100" fill="rgba(52,211,153,.12)" stroke="var(--emerald)" stroke-width="2.5" id="condCircleB"/>
+                            <text x="440" y="145" fill="var(--emerald)" font-size="16" font-weight="700" text-anchor="middle">B</text>
+                            <text x="440" y="165" fill="var(--text-sec)" font-size="11" text-anchor="middle">P(B)=0.4</text>
+                            <path d="M 278 78 A 90 90 0 0 1 352 78 A 100 100 0 0 1 352 222 A 90 90 0 0 1 278 222 A 100 100 0 0 1 278 78" fill="rgba(245,158,11,.2)" stroke="var(--amber)" stroke-width="2" id="condIntersect"/>
+                            <text x="315" y="150" fill="var(--amber)" font-size="12" font-weight="700" text-anchor="middle">A∩B</text>
+                            <text x="315" y="168" fill="var(--text-sec)" font-size="11" text-anchor="middle" id="condProbText">P(A∩B)=0.12</text>
+                            <rect x="100" y="265" width="440" height="55" rx="10" fill="rgba(167,139,250,.06)" stroke="rgba(167,139,250,.1)" stroke-width="1"/>
+                            <text x="320" y="288" fill="var(--text)" font-size="14" font-weight="800" text-anchor="middle">
+                                P(A|B) = <tspan fill="var(--emerald)">P(A∩B)</tspan> / <tspan fill="var(--amber)">P(B)</tspan>
+                                = <tspan fill="var(--emerald)">0.12</tspan> / <tspan fill="var(--amber)">0.40</tspan>
+                                = <tspan fill="var(--purple)" font-weight="900" id="condResult">0.30</tspan>
+                            </text>
+                            <text x="320" y="310" fill="var(--text-muted)" font-size="11" text-anchor="middle">30% of the B-universe is also in A</text>
+                            <rect x="20" y="40" width="90" height="24" rx="12" fill="rgba(52,211,153,.12)" stroke="var(--emerald)" stroke-width="1" style="cursor:pointer" onclick="highlightCond('B')"/>
+                            <text x="65" y="56" fill="var(--emerald)" font-size="10" font-weight="700" text-anchor="middle">🔦 Focus on B</text>
+                            <rect x="20" y="72" width="90" height="24" rx="12" fill="rgba(245,158,11,.12)" stroke="var(--amber)" stroke-width="1" style="cursor:pointer" onclick="highlightCond('I')"/>
+                            <text x="65" y="88" fill="var(--amber)" font-size="10" font-weight="700" text-anchor="middle">✂️ A∩B inside B</text>
+                        </svg>
+                        <div class="diagram-caption">Click "Focus on B" to see only the B universe. Then "A∩B inside B" shows what fraction of B is also A. P(A|B) = 0.12/0.40 = 0.30.</div>
+                        <div class="diagram-controls">
+                            <button class="ctrl-btn" onclick="highlightCond('B')">🔦 Focus on B</button>
+                            <button class="ctrl-btn active" onclick="highlightCond('I')">✂️ A∩B as fraction of B</button>
+                        </div>
+                    </div>
+
+                    <h3>The Multiplication Theorem</h3>
+                    <div class="math-block">P(A ∩ B) = P(A) · P(B|A) = P(B) · P(A|B)</div>
+                    <p>This flows directly from the definition. It's useful when you know the conditional probability and need the joint probability.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">🧮 Multiplication Theorem in Action</div>
+                        <div class="story-title">Drawing Without Replacement</div>
+                        <div class="story-text">
+                            You have a deck of 52 cards. What's the probability of drawing two Aces in a row?<br><br>
+                            <strong>P(1st is Ace)</strong> = 4/52 = 1/13<br>
+                            <strong>P(2nd is Ace | 1st was Ace)</strong> = 3/51 (one Ace removed)<br>
+                            <strong>P(both Aces)</strong> = (4/52) × (3/51) = 12/2652 ≈ 0.45%<br><br>
+                            Notice: the events are <strong>dependent</strong> — removing a card changes the deck!
+                        </div>
+                        <div class="story-moral">🎯 When events are dependent, use P(A∩B) = P(A) × P(B|A). Only multiply directly when independent!</div>
+                    </div>
+
+                    <h3>Independent Events — When P(A|B) = P(A)</h3>
+                    <p>If knowing B doesn't change P(A), then A and B are <strong>independent</strong>:</p>
+                    <div class="math-block">P(A|B) = P(A) &nbsp; ⇔ &nbsp; P(A ∩ B) = P(A) · P(B)</div>
+                    <p>This is the formal test. Coin flips are independent. Rain and umbrella-use are <strong>not</strong> — you check the forecast before deciding.</p>
+
+                    <h3>Pairwise vs Mutual Independence — JEE Trap</h3>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">⚠️ Pairwise ≠ Mutual Independence</div>
+                        <svg viewBox="0 0 700 220" width="700" height="220">
+                            <circle cx="260" cy="120" r="80" fill="rgba(167,139,250,.1)" stroke="var(--purple)" stroke-width="2"/>
+                            <text x="260" y="120" fill="var(--purple)" font-size="14" font-weight="700" text-anchor="middle">A</text>
+                            <circle cx="350" cy="120" r="80" fill="rgba(52,211,153,.1)" stroke="var(--emerald)" stroke-width="2"/>
+                            <text x="350" y="120" fill="var(--emerald)" font-size="14" font-weight="700" text-anchor="middle">B</text>
+                            <circle cx="305" cy="65" r="80" fill="rgba(245,158,11,.1)" stroke="var(--amber)" stroke-width="2"/>
+                            <text x="305" y="65" fill="var(--amber)" font-size="14" font-weight="700" text-anchor="middle">C</text>
+                            <text x="490" y="40" fill="var(--text)" font-size="13" font-weight="700">Pairwise Independent ✓</text>
+                            <text x="490" y="60" fill="var(--text-sec)" font-size="11">P(A∩B)=P(A)P(B)</text>
+                            <text x="490" y="78" fill="var(--text-sec)" font-size="11">P(B∩C)=P(B)P(C)</text>
+                            <text x="490" y="96" fill="var(--text-sec)" font-size="11">P(A∩C)=P(A)P(C)</text>
+                            <text x="490" y="128" fill="var(--red)" font-size="13" font-weight="700">NOT Mutual!</text>
+                            <text x="490" y="148" fill="var(--text-sec)" font-size="11">P(A∩B∩C) ≠ P(A)P(B)P(C)</text>
+                            <text x="490" y="175" fill="var(--amber)" font-size="11">Triple overlap ≠ product!</text>
+                        </svg>
+                        <div class="diagram-caption">Three events can be pairwise independent yet fail mutual independence. The triple intersection doesn't factor.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- TOTAL PROBABILITY & BAYES DEEP -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">🔄 Part 5B: Total Probability & Bayes Theorem — The Full Picture</span>
+                    <h2>From Partitions to Reversals</h2>
+
+                    <h3>The Theorem of Total Probability</h3>
+                    <p>If events A₁, A₂, ..., Aₙ form a <strong>partition</strong> of the sample space (they're disjoint and cover everything), then for any event B:</p>
+                    <div class="math-block">P(B) = Σ P(Aᵢ) · P(B | Aᵢ)</div>
+                    <p>This is just the Law of Total Probability: B's total probability is the weighted average of its probability across each partition piece.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📊 Partition of Sample Space — B Intersects Each Part</div>
+                        <svg viewBox="0 0 700 300" width="700" height="300">
+                            <rect x="20" y="20" width="660" height="200" rx="6" fill="rgba(255,255,255,.02)" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                            <text x="350" y="12" fill="var(--text-muted)" font-size="11" text-anchor="middle">Sample Space Ω</text>
+                            <rect x="30" y="30" width="200" height="180" rx="4" fill="rgba(167,139,250,.12)" stroke="var(--purple)" stroke-width="1.5" id="partA1"/>
+                            <text x="130" y="120" fill="var(--purple)" font-size="14" font-weight="700" text-anchor="middle" id="partLabel1">A₁</text>
+                            <text x="130" y="140" fill="var(--text-sec)" font-size="11" text-anchor="middle" id="partProb1">P=0.3</text>
+                            <rect x="240" y="30" width="220" height="180" rx="4" fill="rgba(52,211,153,.12)" stroke="var(--emerald)" stroke-width="1.5" id="partA2"/>
+                            <text x="350" y="120" fill="var(--emerald)" font-size="14" font-weight="700" text-anchor="middle" id="partLabel2">A₂</text>
+                            <text x="350" y="140" fill="var(--text-sec)" font-size="11" text-anchor="middle" id="partProb2">P=0.5</text>
+                            <rect x="470" y="30" width="200" height="180" rx="4" fill="rgba(245,158,11,.12)" stroke="var(--amber)" stroke-width="1.5" id="partA3"/>
+                            <text x="570" y="120" fill="var(--amber)" font-size="14" font-weight="700" text-anchor="middle" id="partLabel3">A₃</text>
+                            <text x="570" y="140" fill="var(--text-sec)" font-size="11" text-anchor="middle" id="partProb3">P=0.2</text>
+                            <ellipse cx="350" cy="110" rx="250" ry="60" fill="rgba(34,211,238,.08)" stroke="var(--cyan)" stroke-width="2" stroke-dasharray="4,2" id="eventBShape"/>
+                            <text x="350" y="108" fill="var(--cyan)" font-size="13" font-weight="700" text-anchor="middle">B</text>
+                            <rect x="20" y="235" width="660" height="55" rx="8" fill="rgba(34,211,238,.04)" stroke="rgba(34,211,238,.1)" stroke-width="1"/>
+                            <text x="350" y="258" fill="var(--text)" font-size="13" font-weight="800" text-anchor="middle">
+                                P(B) = Σ P(Aᵢ)·P(B|Aᵢ) = 
+                                <tspan fill="var(--purple)">0.3·0.6</tspan> + 
+                                <tspan fill="var(--emerald)">0.5·0.4</tspan> + 
+                                <tspan fill="var(--amber)">0.2·0.7</tspan> = 
+                                <tspan fill="var(--cyan)" font-weight="900">0.52</tspan>
+                            </text>
+                            <text x="350" y="278" fill="var(--text-muted)" font-size="10" text-anchor="middle">Click a partition to highlight. See how B's total probability is the weighted sum.</text>
+                        </svg>
+                        <div class="diagram-caption">Event B cuts across the partition A₁, A₂, A₃. The total probability of B is the sum of P(Aᵢ)P(B|Aᵢ) across all parts.</div>
+                        <div class="diagram-controls">
+                            <button class="ctrl-btn" onclick="highlightPartition(1)">🔦 A₁</button>
+                            <button class="ctrl-btn active" onclick="highlightPartition(2)">🔦 A₂</button>
+                            <button class="ctrl-btn" onclick="highlightPartition(3)">🔦 A₃</button>
+                            <button class="ctrl-btn" onclick="highlightPartition(0)">Show All</button>
+                        </div>
+                    </div>
+
+                    <h3>Bayes Theorem — The Full Form</h3>
+                    <p>Bayes reverses the conditional. Given that we observed B, what's the chance it came from partition piece Aᵢ?</p>
+                    <div class="math-block">P(Aᵢ | B) = P(Aᵢ) · P(B | Aᵢ) / P(B) = P(Aᵢ) · P(B | Aᵢ) / Σ P(Aⱼ) · P(B | Aⱼ)</div>
+                    <p>The denominator is just the total probability of B. This is the <strong>full Bayes formula</strong> — it normalizes the numerator so probabilities sum to 1.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">🏥 Worked Example 1 — Medical Testing</div>
+                        <div class="story-title">The Classic Bayes Problem</div>
+                        <div class="story-text">
+                            <strong>Problem:</strong> A disease affects 0.1% of the population. A test detects it with 99% sensitivity (true positive) but has a 2% false positive rate. You test positive. What's P(disease | positive)?<br><br>
+                            <strong>Solution using Bayes:</strong><br>
+                            P(D) = 0.001, P(¬D) = 0.999<br>
+                            P(+|D) = 0.99, P(+|¬D) = 0.02<br><br>
+                            P(D|+) = (0.001 × 0.99) / (0.001 × 0.99 + 0.999 × 0.02)<br>
+                            = 0.00099 / 0.02097 ≈ <strong>0.047 (4.7%)</strong><br><br>
+                            Even with a "99% accurate" test, a positive result means only 4.7% chance of having the disease! The base rate (0.1%) makes all the difference.
+                        </div>
+                        <div class="story-moral">⚠️ <strong>Base rate neglect</strong> is one of the most dangerous statistical fallacies. Always, always consider how rare the condition is!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">📧 Worked Example 2 — Spam Detection</div>
+                        <div class="story-title">Bayes at Work in Your Inbox</div>
+                        <div class="story-text">
+                            <strong>Problem:</strong> 60% of emails are spam. The word "FREE" appears in 80% of spam and 10% of non-spam (ham). If an email contains "FREE," what's P(spam | FREE)?<br><br>
+                            <strong>Solution:</strong><br>
+                            P(S)=0.6, P(H)=0.4, P(F|S)=0.8, P(F|H)=0.1<br><br>
+                            P(S|F) = (0.6 × 0.8) / (0.6 × 0.8 + 0.4 × 0.1)<br>
+                            = 0.48 / 0.52 ≈ <strong>0.923 (92.3%)</strong><br><br>
+                            Your spam filter uses dozens of such words with Bayes to classify millions of emails daily!
+                        </div>
+                        <div class="story-moral">📬 Bayes powers the spam filter that keeps your inbox clean. Every email is scored by how "spam-like" its words are.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">⛏️ Worked Example 3 — Gold Mining</div>
+                        <div class="story-title">Bayes in Resource Exploration</div>
+                        <div class="story-text">
+                            <strong>Problem:</strong> Geological surveys show that 5% of explored regions contain gold. A new sensing tool detects gold 90% of the time when present, but also gives false positives 15% of the time when no gold exists. The tool shows positive. What's P(gold | positive)?<br><br>
+                            <strong>Solution:</strong><br>
+                            P(G)=0.05, P(¬G)=0.95, P(+|G)=0.9, P(+|¬G)=0.15<br><br>
+                            P(G|+) = (0.05 × 0.9) / (0.05 × 0.9 + 0.95 × 0.15)<br>
+                            = 0.045 / 0.1875 ≈ <strong>0.24 (24%)</strong><br><br>
+                            Even with a "90% accurate" tool, only 1 in 4 positive readings leads to gold. Mining companies drill multiple sites and use Bayes to prioritize.
+                        </div>
+                        <div class="story-moral">💰 Bayes is used daily in oil勘探, mineral exploration, and every field where you need to update beliefs with new evidence.</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Bayes Theorem Pattern</div>
+                        <div class="insight-text">"Given effect, find cause" → that's Bayes. P(cause|effect) = P(effect|cause) × P(cause) / P(effect)</div>
+                        <div class="insight-sub">Numerator = likelihood × prior. Denominator = total probability of the evidence.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- RANDOM VARIABLES & PROBABILITY DISTRIBUTIONS -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">📈 Part 6B: Random Variables — From Outcomes to Numbers</span>
+                    <h2>Turning Random Events into Math-Friendly Numbers</h2>
+
+                    <p>A <strong>random variable</strong> assigns a number to each outcome of a random experiment. It's a bridge between random events and mathematics.</p>
+
+                    <h3>Discrete vs Continuous</h3>
+                    <p><strong>Discrete:</strong> Countable values (number of heads, dice roll). <strong>Continuous:</strong> Any value in a range (height, temperature, time).</p>
+
+                    <h3>Probability Mass Function (PMF)</h3>
+                    <p>The PMF gives the probability that a discrete random variable equals a specific value:</p>
+                    <div class="math-block">P(X = xᵢ) = pᵢ, &nbsp; where Σ pᵢ = 1</div>
+
+                    <h3>Cumulative Distribution Function (CDF)</h3>
+                    <p>The CDF gives the probability that X is ≤ some value:</p>
+                    <div class="math-block">F(x) = P(X ≤ x)</div>
+                    <p>The CDF starts at 0 and climbs to 1 as x increases. For discrete variables, it's a step function.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📊 PMF (Bars) + CDF (Steps) — Two Views of the Same Distribution</div>
+                        <svg viewBox="0 0 700 360" width="700" height="360">
+                            <rect x="20" y="10" width="320" height="340" rx="8" fill="rgba(255,255,255,.02)" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+                            <text x="180" y="35" fill="var(--purple)" font-size="13" font-weight="700" text-anchor="middle">PMF: P(X = x)</text>
+                            <line x1="40" y1="320" x2="320" y2="320" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <line x1="40" y1="40" x2="40" y2="320" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <g id="pmfBars"></g>
+                            <rect x="360" y="10" width="320" height="340" rx="8" fill="rgba(255,255,255,.02)" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+                            <text x="520" y="35" fill="var(--emerald)" font-size="13" font-weight="700" text-anchor="middle">CDF: F(x) = P(X ≤ x)</text>
+                            <line x1="380" y1="320" x2="660" y2="320" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <line x1="380" y1="40" x2="380" y2="320" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <text x="375" y="335" fill="var(--text-muted)" font-size="9" text-anchor="middle">0</text>
+                            <text x="500" y="335" fill="var(--text-muted)" font-size="9" text-anchor="middle">2</text>
+                            <text x="620" y="335" fill="var(--text-muted)" font-size="9" text-anchor="middle">5</text>
+                            <text x="375" y="35" fill="var(--text-muted)" font-size="9" text-anchor="middle">0</text>
+                            <text x="380" y="140" fill="var(--text-muted)" font-size="9" text-anchor="middle">0.5</text>
+                            <text x="380" y="50" fill="var(--text-muted)" font-size="9" text-anchor="middle">1</text>
+                            <polyline fill="none" stroke="var(--emerald)" stroke-width="2.5" id="cdfLine" points=""/>
+                            <circle cx="40" cy="320" r="3" fill="var(--text-muted)"/>
+                            <text x="40" y="335" fill="var(--text-muted)" font-size="9" text-anchor="middle">0</text>
+                            <text x="120" y="335" fill="var(--text-muted)" font-size="9" text-anchor="middle">1</text>
+                            <text x="200" y="335" fill="var(--text-muted)" font-size="9" text-anchor="middle">2</text>
+                            <text x="280" y="335" fill="var(--text-muted)" font-size="9" text-anchor="middle">3</text>
+                        </svg>
+                        <div class="diagram-caption">Left: PMF shows the probability of each value. Right: CDF accumulates those probabilities, stepping up at each value until it reaches 1.</div>
+                        <div class="diagram-controls">
+                            <button class="ctrl-btn active" onclick="updatePMF_CDF('binom')">Binomial</button>
+                            <button class="ctrl-btn" onclick="updatePMF_CDF('poisson')">Poisson</button>
+                            <button class="ctrl-btn" onclick="updatePMF_CDF('uniform')">Uniform</button>
+                        </div>
+                    </div>
+
+                    <h3>Mean (Expected Value) and Variance</h3>
+                    <div class="math-block">E(X) = Σ xᵢ · pᵢ</div>
+                    <p>The expected value is a probability-weighted average — the "center of mass" of the distribution.</p>
+                    <div class="math-block">Var(X) = E(X²) − [E(X)]²</div>
+                    <p>Variance measures spread. <strong>Standard deviation</strong> = √Var(X) — back in the original units.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">🎲 Expected Value Intuition</div>
+                        <div class="story-title">"What Should I Expect on Average?"</div>
+                        <div class="story-text">
+                            You play a game: roll a die, win $10 for each dot. What's your expected winnings?<br><br>
+                            E(X) = 1·(1/6) + 2·(1/6) + 3·(1/6) + 4·(1/6) + 5·(1/6) + 6·(1/6)<br>
+                            = 21/6 = <strong>$3.50</strong><br><br>
+                            You'll never actually win $3.50 on a single roll. But over many rolls, your average will be $3.50 per roll. That's the expected value.
+                        </div>
+                        <div class="story-moral">💡 Expected value is the long-run average, not a prediction for any single trial.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- STANDARD DISTRIBUTIONS DEEP -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🎲 Part 6C: Standard Distributions — The Building Blocks</span>
+                    <h2>Binomial, Poisson, and Normal — The Big Three</h2>
+
+                    <h3>Binomial Distribution — Deeper Dive</h3>
+                    <p>The Binomial model: <strong>n</strong> independent trials, each with success probability <strong>p</strong>.</p>
+                    <div class="math-block">P(X = r) = ⁿCᵣ · pʳ · qⁿ⁻ʳ, &nbsp; q = 1−p</div>
+                    <div class="math-block">Mean = np, &nbsp; Variance = npq</div>
+                    <p>As p approaches 0.5, the distribution becomes symmetric. As p gets close to 0 or 1, it becomes skewed.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🎚️ Binomial Distribution — Change n and p with Sliders</div>
+                        <svg viewBox="0 0 700 380" width="700" height="380">
+                            <line x1="60" y1="340" x2="660" y2="340" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <line x1="60" y1="340" x2="60" y2="40" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <g id="binomBarsDeep"></g>
+                            <rect x="200" y="350" width="300" height="24" rx="8" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.1)" stroke-width="1"/>
+                            <text x="350" y="366" fill="var(--emerald)" font-size="12" font-weight="700" text-anchor="middle" id="binomStatsDeep">Mean = np = 5 &nbsp;|&nbsp; Var = npq = 2.5</text>
+                        </svg>
+                        <div class="diagram-caption">Drag sliders to see how n and p change the binomial shape. Symmetric at p=0.5, skewed otherwise.</div>
+                        <div class="diagram-controls">
+                            <div class="slider-wrap">
+                                <span style="font-size:.78em;color:var(--text-muted)">n:</span>
+                                <input type="range" min="1" max="30" value="10" id="binomNSlider" oninput="updateBinomDeep()">
+                                <span class="slider-val" id="binomNVal">10</span>
+                            </div>
+                            <div class="slider-wrap">
+                                <span style="font-size:.78em;color:var(--text-muted)">p:</span>
+                                <input type="range" min="0.05" max="0.95" step="0.05" value="0.5" id="binomPSlider" oninput="updateBinomDeep()">
+                                <span class="slider-val" id="binomPVal">0.50</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Poisson Distribution — The Rare Event Model</h3>
+                    <p>The Poisson distribution models the number of events in a fixed interval of time or space, when events happen independently at a constant average rate λ.</p>
+                    <div class="math-block">P(X = r) = e⁻λ · λʳ / r!</div>
+                    <div class="math-block">Mean = λ, &nbsp; Variance = λ</div>
+                    <p><strong>Story:</strong> "The number of emails you get per hour." If you average 5 emails/hour, λ = 5. Most hours you'll get 3-7 emails. Occasionally 10+.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📧 Poisson Distribution — Change the Average Rate λ</div>
+                        <svg viewBox="0 0 700 350" width="700" height="350">
+                            <line x1="60" y1="310" x2="660" y2="310" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <line x1="60" y1="310" x2="60" y2="40" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <g id="poissonBars"></g>
+                            <rect x="200" y="320" width="300" height="24" rx="8" fill="rgba(34,211,238,.06)" stroke="rgba(34,211,238,.1)" stroke-width="1"/>
+                            <text x="350" y="336" fill="var(--cyan)" font-size="12" font-weight="700" text-anchor="middle" id="poissonStats">Mean = Var = λ = 5</text>
+                        </svg>
+                        <div class="diagram-caption">Poisson is right-skewed for small λ, becomes more symmetric as λ grows. Mean always equals variance.</div>
+                        <div class="diagram-controls">
+                            <div class="slider-wrap">
+                                <span style="font-size:.78em;color:var(--text-muted)">λ (rate):</span>
+                                <input type="range" min="0.5" max="15" step="0.5" value="5" id="poissonLSlider" oninput="updatePoisson()">
+                                <span class="slider-val" id="poissonLVal">5.0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">📞 Real-Life Poisson Examples</div>
+                        <div class="story-title">"How Many Calls per Minute?"</div>
+                        <div class="story-text">
+                            A call center gets 3 calls per minute on average. What's the chance of exactly 5 calls in a minute?<br><br>
+                            P(X=5) = e⁻³ · 3⁵ / 5! = 0.0498 × 243 / 120 ≈ <strong>0.101 (10.1%)</strong><br><br>
+                            Other Poisson examples:<br>
+                            • Number of typos per page in a book<br>
+                            • Number of cars passing a point per minute<br>
+                            • Number of mutations in a DNA strand<br><br>
+                            Key condition: events are <strong>independent</strong> and occur at a <strong>constant average rate</strong>.
+                        </div>
+                        <div class="story-moral">📊 Poisson is the go-to model for counting rare, independent events over time or space.</div>
+                    </div>
+
+                    <h3>Normal Distribution — The Bell Curve (Brief Intro)</h3>
+                    <p>The Normal distribution is the most important distribution in statistics. It's symmetric, bell-shaped, and appears everywhere in nature.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🔔 Normal Distribution — The 68-95-99.7 Rule</div>
+                        <svg viewBox="0 0 700 350" width="700" height="350">
+                            <line x1="50" y1="310" x2="650" y2="310" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <path d="M 50 300 Q 100 300 150 280 Q 200 250 260 200 Q 300 160 350 140 Q 400 160 440 200 Q 500 250 550 280 Q 600 300 650 300" fill="none" stroke="var(--purple)" stroke-width="3" id="normalCurve"/>
+                            <path d="M 50 300 Q 100 300 150 280 Q 200 250 260 200 Q 300 160 350 140 Q 400 160 440 200 Q 500 250 550 280 Q 600 300 650 300 L 650 310 L 50 310 Z" fill="rgba(167,139,250,.08)" id="normalFill"/>
+                            <line x1="350" y1="140" x2="350" y2="310" stroke="var(--emerald)" stroke-width="1.5" stroke-dasharray="4,2"/>
+                            <text x="350" y="325" fill="var(--emerald)" font-size="11" font-weight="700" text-anchor="middle">Mean = Median = Mode</text>
+                            <!-- SD regions -->
+                            <rect x="280" y="195" width="140" height="115" rx="4" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.2)" stroke-width="1"/>
+                            <text x="350" y="215" fill="var(--emerald)" font-size="10" font-weight="700" text-anchor="middle">68%</text>
+                            <text x="350" y="230" fill="var(--text-muted)" font-size="9" text-anchor="middle">within 1σ</text>
+                            <rect x="210" y="235" width="280" height="75" rx="4" fill="rgba(245,158,11,.04)" stroke="rgba(245,158,11,.15)" stroke-width="1"/>
+                            <text x="350" y="252" fill="var(--amber)" font-size="10" font-weight="700" text-anchor="middle">95%</text>
+                            <text x="350" y="267" fill="var(--text-muted)" font-size="9" text-anchor="middle">within 2σ</text>
+                            <rect x="140" y="270" width="420" height="40" rx="4" fill="rgba(239,68,68,.04)" stroke="rgba(239,68,68,.12)" stroke-width="1"/>
+                            <text x="350" y="286" fill="var(--red)" font-size="10" font-weight="700" text-anchor="middle">99.7%</text>
+                            <text x="350" y="300" fill="var(--text-muted)" font-size="9" text-anchor="middle">within 3σ</text>
+                        </svg>
+                        <div class="diagram-caption">The 68-95-99.7 rule: 68% of data falls within 1 SD of mean, 95% within 2 SD, and 99.7% within 3 SD. This works for all Normal distributions.</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Central Limit Theorem (Preview)</div>
+                        <div class="insight-text">The sum of many independent random variables tends toward a Normal distribution, regardless of their original distribution.</div>
+                        <div class="insight-sub">This is why the Normal distribution appears everywhere — from heights to IQ scores to measurement errors.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- CORRELATION & REGRESSION -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">📉 Part 6D: Correlation & Regression — How Variables Move Together</span>
+                    <h2>Do Tall Parents Have Tall Children? The Power of Correlation</h2>
+
+                    <h3>Covariance — The Starting Point</h3>
+                    <div class="math-block">Cov(X, Y) = E[(X − μₓ)(Y − μᵧ)]</div>
+                    <p>Covariance measures how two variables <strong>move together</strong>. Positive = both go up together. Negative = one goes up, the other goes down. But it's hard to interpret because units are messy.</p>
+
+                    <h3>Correlation Coefficient — The Clean Version</h3>
+                    <div class="math-block">r = Cov(X, Y) / (σₓ · σᵧ), &nbsp; −1 ≤ r ≤ 1</div>
+                    <p>Correlation is unitless and always between -1 and 1. This makes it easy to interpret.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🎯 Correlation Coefficient — See How r Changes the Scatter</div>
+                        <svg viewBox="0 0 700 240" width="700" height="240">
+                            <!-- r = 1 -->
+                            <g transform="translate(10,5)">
+                                <rect x="0" y="0" width="120" height="120" rx="4" fill="rgba(255,255,255,.02)" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                                <text x="60" y="14" fill="var(--emerald)" font-size="10" font-weight="700" text-anchor="middle">r = 1.0</text>
+                                <g id="scatter1"></g>
+                            </g>
+                            <!-- r = 0.5 -->
+                            <g transform="translate(145,5)">
+                                <rect x="0" y="0" width="120" height="120" rx="4" fill="rgba(255,255,255,.02)" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                                <text x="60" y="14" fill="var(--amber)" font-size="10" font-weight="700" text-anchor="middle">r = 0.5</text>
+                                <g id="scatter2"></g>
+                            </g>
+                            <!-- r = 0 -->
+                            <g transform="translate(280,5)">
+                                <rect x="0" y="0" width="120" height="120" rx="4" fill="rgba(255,255,255,.02)" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                                <text x="60" y="14" fill="var(--text-muted)" font-size="10" font-weight="700" text-anchor="middle">r = 0</text>
+                                <g id="scatter3"></g>
+                            </g>
+                            <!-- r = -0.5 -->
+                            <g transform="translate(415,5)">
+                                <rect x="0" y="0" width="120" height="120" rx="4" fill="rgba(255,255,255,.02)" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                                <text x="60" y="14" fill="var(--amber)" font-size="10" font-weight="700" text-anchor="middle">r = -0.5</text>
+                                <g id="scatter4"></g>
+                            </g>
+                            <!-- r = -1 -->
+                            <g transform="translate(550,5)">
+                                <rect x="0" y="0" width="120" height="120" rx="4" fill="rgba(255,255,255,.02)" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                                <text x="60" y="14" fill="var(--red)" font-size="10" font-weight="700" text-anchor="middle">r = -1.0</text>
+                                <g id="scatter5"></g>
+                            </g>
+                            <text x="350" y="145" fill="var(--text-sec)" font-size="11" text-anchor="middle">Perfect positive → no correlation → perfect negative. Click buttons to animate different patterns.</text>
+                        </svg>
+                        <div class="diagram-caption">From perfect positive correlation (r=1, all points on a line) to perfect negative (r=-1, all points on a descending line). r=0 means no linear relationship.</div>
+                        <div class="diagram-controls">
+                            <button class="ctrl-btn active" onclick="renderCorrelation(1)">r = 1</button>
+                            <button class="ctrl-btn" onclick="renderCorrelation(0.5)">r = 0.5</button>
+                            <button class="ctrl-btn" onclick="renderCorrelation(0)">r = 0</button>
+                            <button class="ctrl-btn" onclick="renderCorrelation(-0.5)">r = -0.5</button>
+                            <button class="ctrl-btn" onclick="renderCorrelation(-1)">r = -1</button>
+                            <button class="ctrl-btn" onclick="renderCorrelation('all')">🎲 Show All</button>
+                        </div>
+                    </div>
+
+                    <h3>Regression Line — Predicting y from x</h3>
+                    <p>The regression line is the best-fit line through the scatter plot:</p>
+                    <div class="math-block">y = a + bx, &nbsp; where b = Cov(X, Y) / Var(X)</div>
+                    <p><strong>b</strong> is the slope: "For each unit increase in x, y changes by b units." <strong>a</strong> is the intercept: "The predicted y when x = 0."</p>
+
+                    <div class="story-card">
+                        <div class="story-label">📏 Regression to the Mean</div>
+                        <div class="story-title">"Why Extremes Tend to Even Out"</div>
+                        <div class="story-text">
+                            <strong>Francis Galton's discovery:</strong> Tall fathers tend to have sons who are tall — but not AS tall. Short fathers tend to have sons who are short — but not AS short.<br><br>
+                            This is <strong>regression to the mean</strong>: if a variable is extreme on one measurement, it tends to be closer to average on the next.<br><br>
+                            <strong>Why this matters:</strong> After a great performance, don't expect a repeat — expect something closer to the average. This explains why "Sports Illustrated cover jinx" feels real: athletes on the cover are at their peak, so they're likely to do worse next time (just from natural variation).
+                        </div>
+                        <div class="story-moral">📉 Regression to the mean is NOT a force — it's a statistical inevitability. Extremes are rare by definition, so future values tend to be less extreme.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PROBLEM-SOLVING STRATEGIES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">🧠 Part 7: Problem-Solving Strategies — The JEE Toolkit</span>
+                    <h2>Smart Ways to Attack Probability Problems</h2>
+
+                    <div class="story-card">
+                        <div class="story-label">🎯 Strategy 1 — The Complement Trick</div>
+                        <div class="story-title">"When 'at least one' is hard, use 1 − P(none)"</div>
+                        <div class="story-text">
+                            <strong>Problem:</strong> What's the probability of getting at least one head in 5 coin flips?<br><br>
+                            Direct approach: P(1 head) + P(2 heads) + P(3 heads) + P(4 heads) + P(5 heads) — <strong>5 calculations!</strong><br><br>
+                            <strong>Complement trick:</strong> P(at least one) = 1 − P(no heads) = 1 − (0.5)⁵ = 1 − 1/32 = <strong>31/32 ≈ 96.9%</strong><br><br>
+                            Much easier! Use this whenever "at least one" appears.
+                        </div>
+                        <div class="story-moral">💡 P(at least one) = 1 − P(none). This is the single most useful trick in probability.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🎯 Strategy 2 — The "Or" Problem</div>
+                        <div class="story-title">"Don't forget to subtract the overlap!"</div>
+                        <div class="story-text">
+                            <strong>Problem:</strong> P(A) = 0.4, P(B) = 0.3, P(A∩B) = 0.1. Find P(A∪B).<br><br>
+                            <strong>Always use:</strong> P(A∪B) = P(A) + P(B) − P(A∩B)<br><br>
+                            = 0.4 + 0.3 − 0.1 = <strong>0.6</strong><br><br>
+                            <strong>Warning:</strong> If they say "mutually exclusive" then P(A∩B) = 0. But if not stated, you MUST check for overlap!
+                        </div>
+                        <div class="story-moral">📐 Addition rule with subtraction of overlap. Always draw the Venn!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🎯 Strategy 3 — Spotting Bayes Problems</div>
+                        <div class="story-title">"Given an effect, find the cause"</div>
+                        <div class="story-text">
+                            <strong>Key phrase to watch for:</strong> "Given that [effect happened], what's the probability of [cause]?"<br><br>
+                            Example: "A test is 99% accurate. You test positive. What's the chance you have the disease?"<br><br>
+                            This is Bayes! You have P(positive|disease) = 0.99, but you need P(disease|positive).<br><br>
+                            <strong>Bayes formula:</strong> P(cause|effect) = P(effect|cause) × P(cause) / P(effect)
+                        </div>
+                        <div class="story-moral">🔄 Whenever you see "given that... what's the chance of...", think Bayes!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🎯 Strategy 4 — Check Independence First</div>
+                        <div class="story-title">"Never multiply without checking independence!"</div>
+                        <div class="story-text">
+                            <strong>Common mistake:</strong> P(A and B) = P(A) × P(B) is ONLY true if A and B are independent.<br><br>
+                            <strong>Test independence:</strong> Check if P(A∩B) = P(A)P(B). If given conditional probabilities, check if P(A|B) = P(A).<br><br>
+                            <strong>Without replacement?</strong> Not independent! Use P(A) × P(B|A) instead.<br><br>
+                            <strong>With replacement?</strong> Independent! You can multiply directly.
+                        </div>
+                        <div class="story-moral">🔍 Independent? Multiply. Dependent? Use conditional. Never guess!</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 The Four-Step JEE Problem Solver</div>
+                        <div class="insight-text">1. Identify: Is this conditional/Bayes/complement/independent?<br>2. Translate: Write P(what you need) in terms of what you have<br>3. Formula: Pick the right formula (Bayes, addition, multiplication)<br>4. Compute: Substitute numbers and solve</div>
+                        <div class="insight-sub">Most JEE mistakes happen at step 1. Identify the problem TYPE before calculating!</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- COMMON MISTAKES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">⚠️ Part 7B: Common Mistakes — What NOT to Do</span>
+                    <h2>The 4 Mistakes That Cost JEE Marks</h2>
+
+                    <div class="story-card" style="border-left-color:var(--red)">
+                        <div class="story-label">❌ Mistake 1</div>
+                        <div class="story-title">P(A∩B) = P(A) × P(B) — Only If Independent!</div>
+                        <div class="story-text">
+                            This is the #1 mistake! Students multiply probabilities without checking independence.<br><br>
+                            <strong>Wrong:</strong> "P(rain today and tomorrow) = 0.3 × 0.3 = 0.09"<br>
+                            <strong>Right:</strong> Weather on consecutive days is NOT independent! You need conditional probabilities.<br><br>
+                            <strong>Remember:</strong> P(A∩B) = P(A) × P(B) only when A and B are independent. Otherwise use P(A) × P(B|A).
+                        </div>
+                    </div>
+
+                    <div class="story-card" style="border-left-color:var(--red)">
+                        <div class="story-label">❌ Mistake 2</div>
+                        <div class="story-title">Confusing P(A|B) with P(B|A)</div>
+                        <div class="story-text">
+                            These are often VERY different!<br><br>
+                            <strong>P(symptom | disease)</strong> = "If you have the disease, what's the chance of the symptom?" (Usually high)<br>
+                            <strong>P(disease | symptom)</strong> = "If you have the symptom, what's the chance of the disease?" (Can be very low!)<br><br>
+                            Medical tests illustrate this dramatically. A test can be 99% sensitive P(+|D) = 0.99, but P(D|+) might be only 5% if the disease is rare.
+                        </div>
+                    </div>
+
+                    <div class="story-card" style="border-left-color:var(--red)">
+                        <div class="story-label">❌ Mistake 3</div>
+                        <div class="story-title">Variance Adds, NOT Standard Deviation</div>
+                        <div class="story-text">
+                            For independent variables:<br><br>
+                            <strong>Correct:</strong> Var(X + Y) = Var(X) + Var(Y)<br>
+                            <strong>Wrong:</strong> σ(X + Y) = σ(X) + σ(Y)<br><br>
+                            Standard deviations don't add! You must convert to variance, add, then take the square root.<br><br>
+                            Example: If σ(X) = 3 and σ(Y) = 4 (independent), then:<br>
+                            σ(X+Y) = √(3² + 4²) = √(9 + 16) = √25 = <strong>5</strong> (NOT 7!)
+                        </div>
+                    </div>
+
+                    <div class="story-card" style="border-left-color:var(--red)">
+                        <div class="story-label">❌ Mistake 4</div>
+                        <div class="story-title">Gambler's Fallacy — "It's Due!"</div>
+                        <div class="story-text">
+                            "The coin has landed heads 5 times in a row. Tails is DUE!"<br><br>
+                            <strong>NO!</strong> The coin has no memory. Each flip is independent. The chance of tails is still 50%, regardless of past results.<br><br>
+                            <strong>The truth:</strong> The Law of Large Numbers works over MANY trials, not by "balancing out" in the short term. The coin doesn't know what happened before.<br><br>
+                            This fallacy costs gamblers millions every year at casinos.
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PRACTICE SECTION -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🎯 Part 7C: Test Your Understanding (No Formulas!)</span>
+                    <h2>Practice Zone: Think, Don't Compute</h2>
+                    <p>These questions test if you truly <strong>understand</strong> the ideas. No calculation needed — just reasoning!</p>
+
+                    <div id="practice-qs"></div>
+
+                    <div style="display:flex;gap:10px;margin-top:10px">
+                        <button onclick="resetPractice()" class="btn btn-primary">🔄 Reset</button>
+                        <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                        <a href="lesson-vector-3d.html" class="btn btn-primary">← Vector & 3D Geometry</a>
+                        <a href="lesson-trigonometry.html" class="btn btn-success">Trigonometry →</a>
+                    </div>
                 </div>
             </div>
         </div>
-        <script>
-        var practiceQs = [{"id":40016,"text":"If P(A) = 0.6, P(B) = 0.4, and P(A∩B) = 0.2, find P(A∪B).","options":[{"l":"a","t":"0.8","c":true},{"l":"b","t":"1.0","c":false},{"l":"c","t":"0.6","c":false},{"l":"d","t":"0.7","c":false}],"sol":"P(A∪B) = P(A)+P(B)-P(A∩B) = 0.6+0.4-0.2 = 0.8."},{"id":40017,"text":"A fair die is rolled twice. What is the probability of getting a sum of 7?","options":[{"l":"a","t":"1/6","c":true},{"l":"b","t":"1/9","c":false},{"l":"c","t":"1/12","c":false},{"l":"d","t":"5/36","c":false}],"sol":"Total outcomes = 36. Favourable pairs: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) = 6. Probability = 6/36 = 1/6."},{"id":40018,"text":"The mean of a binomial distribution is 16 and variance is 12. Find n and p.","options":[{"l":"a","t":"n=64, p=0.25","c":true},{"l":"b","t":"n=32, p=0.5","c":false},{"l":"c","t":"n=48, p=0.33","c":false},{"l":"d","t":"n=80, p=0.2","c":false}],"sol":"Mean = np = 16. Variance = npq = 12. So q = 12/16 = 0.75, p = 0.25. n = 16/0.25 = 64."},{"id":40019,"text":"If X~N(0,1), find P(-1.96 < Z < 1.96). Given Φ(1.96) = 0.975.","options":[{"l":"a","t":"0.95","c":true},{"l":"b","t":"0.90","c":false},{"l":"c","t":"0.975","c":false},{"l":"d","t":"0.99","c":false}],"sol":"P(-1.96<Z<1.96) = Φ(1.96) - Φ(-1.96) = 0.975 - 0.025 = 0.95. This is the 95% confidence interval range."},{"id":40020,"text":"The covariance between X and Y is 6. Var(X)=9, Var(Y)=16. Find the correlation coefficient r.","options":[{"l":"a","t":"0.5","c":true},{"l":"b","t":"0.4","c":false},{"l":"c","t":"0.6","c":false},{"l":"d","t":"0.75","c":false}],"sol":"r = Cov(X,Y)/(σₓσᵧ) = 6/√(9×16) = 6/(3×4) = 6/12 = 0.5."},{"id":80736,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":80737,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":80738,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":80739,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":80740,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":80741,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":80742,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":80743,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":80744,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":80745,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":80746,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":80747,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":80748,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":80749,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":80750,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."},{"id":82881,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":82882,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":82883,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":82884,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":82885,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":82886,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":82887,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":82888,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":82889,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":82890,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":82891,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":82892,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":82893,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":82894,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":82895,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."},{"id":82896,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":82897,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":82898,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":82899,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":82900,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":82901,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":82902,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":82903,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":82904,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":82905,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":82906,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":82907,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":82908,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":82909,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":82910,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."}];
-        var answered={},correctCount=0,lessonSlug="probability-statistics";
-        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
-        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
-        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
-        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.85em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
-        function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
-        function markComplete(){try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("jee-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
-        renderPractice();
-        try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
-        </script>
     </div>
+
+    <script>
+    // ========== WEATHER SIMULATION ==========
+    function simulateWeather(prob) {
+        var grid = document.getElementById('weatherGrid');
+        var total = 100;
+        var rain = 0;
+        var html = '';
+        for (var i = 0; i < total; i++) {
+            var row = Math.floor(i / 10);
+            var col = i % 10;
+            var isRain = Math.random() * 100 < prob;
+            if (isRain) rain++;
+            var color = isRain ? '#3b82f6' : '#f59e0b';
+            var opacity = isRain ? '0.7' : '0.7';
+            html += '<rect x="' + (30 + col * 34) + '" y="' + (10 + row * 15) + '" width="30" height="12" rx="3" fill="' + color + '" opacity="' + opacity + '"/>';
+        }
+        grid.innerHTML = html;
+        document.getElementById('rainCount').textContent = rain;
+        document.getElementById('noRainCount').textContent = total - rain;
+        document.getElementById('rainPercent').textContent = Math.round(rain) + '%';
+        document.getElementById('weatherIcon').textContent = prob >= 70 ? '🌧️' : (prob >= 40 ? '⛅' : '☀️');
+        document.getElementById('weatherLabel').textContent = prob + '% chance forecast';
+    }
+
+    // ========== COIN FLIP SIMULATION ==========
+    var flipData = { heads: 0, tails: 0, history: [] };
+
+    function manualFlip() {
+        var result = Math.random() < 0.5 ? 'H' : 'T';
+        if (result === 'H') flipData.heads++; else flipData.tails++;
+        flipData.history.push(result === 'H' ? 1 : 0);
+        updateCoinDisplay();
+    }
+
+    function autoFlips(n) {
+        for (var i = 0; i < n; i++) {
+            var result = Math.random() < 0.5 ? 'H' : 'T';
+            if (result === 'H') flipData.heads++; else flipData.tails++;
+            flipData.history.push(result === 'H' ? 1 : 0);
+        }
+        updateCoinDisplay();
+    }
+
+    function resetCoin() {
+        flipData = { heads: 0, tails: 0, history: [] };
+        updateCoinDisplay();
+    }
+
+    function updateCoinDisplay() {
+        var total = flipData.heads + flipData.tails;
+        document.getElementById('headsCount').textContent = flipData.heads;
+        document.getElementById('tailsCount').textContent = flipData.tails;
+        document.getElementById('totalFlips').textContent = total;
+        var prob = total > 0 ? flipData.heads / total : 0;
+        document.getElementById('probDisplay').textContent = prob.toFixed(4);
+        document.getElementById('probBar').setAttribute('width', Math.min(340, prob * 340));
+
+        // Update sparkline
+        var points = '';
+        var maxHistory = 100;
+        var hist = flipData.history.slice(-maxHistory);
+        var step = 500 / Math.max(hist.length, 1);
+        for (var i = 0; i < hist.length; i++) {
+            var runningSum = 0;
+            for (var j = 0; j <= i; j++) runningSum += hist[j];
+            var runningProb = (i + 1) > 0 ? runningSum / (i + 1) : 0;
+            var x = 30 + i * step;
+            var y = 140 - runningProb * 120;
+            points += (i === 0 ? '' : ' ') + x.toFixed(1) + ',' + y.toFixed(1);
+        }
+        document.getElementById('sparkLine').setAttribute('points', points);
+    }
+
+    // ========== BINOMIAL CHART ==========
+    function updateBinomialChart(n, p) {
+        var container = document.getElementById('binomialBars');
+        var html = '';
+        var maxProb = 0;
+        var probs = [];
+        for (var k = 0; k <= n; k++) {
+            var prob = binomialProb(n, k, p);
+            probs.push(prob);
+            if (prob > maxProb) maxProb = prob;
+        }
+        var barWidth = Math.min(30, 500 / (n + 1));
+        var startX = 60 + (500 - (n + 1) * barWidth) / 2;
+        for (var k = 0; k <= n; k++) {
+            var barH = (probs[k] / maxProb) * 280;
+            var x = startX + k * barWidth;
+            var y = 380 - barH;
+            var r = Math.round(probs[k] * 1000) / 10;
+            var color = k === Math.round(n * p) ? 'var(--emerald)' : 'var(--purple)';
+            html += '<rect x="' + x + '" y="' + y + '" width="' + (barWidth - 2) + '" height="' + barH + '" rx="2" fill="' + color + '" opacity=".7"><animate attributeName="height" values="0;' + barH + '" dur="0.5s" fill="freeze"/><animate attributeName="y" values="380;' + y + '" dur="0.5s" fill="freeze"/></rect>';
+            if (n <= 15) {
+                html += '<text x="' + (x + barWidth/2) + '" y="' + (y - 5) + '" fill="var(--text-sec)" font-size="9" text-anchor="middle">' + r + '%</text>';
+            }
+            html += '<text x="' + (x + barWidth/2) + '" y="395" fill="var(--text-muted)" font-size="9" text-anchor="middle">' + k + '</text>';
+        }
+        container.innerHTML = html;
+    }
+
+    function binomialProb(n, k, p) {
+        if (k < 0 || k > n) return 0;
+        return combination(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
+    }
+
+    function combination(n, k) {
+        if (k > n) return 0;
+        var r = 1;
+        for (var i = 1; i <= k; i++) {
+            r = r * (n - i + 1) / i;
+        }
+        return r;
+    }
+
+    // ========== PRACTICE QUESTIONS ==========
+    var practiceQs = [
+        {
+            id: 5001,
+            text: "🧒 If you flip a fair coin 100 times, about how many heads do you expect?",
+            opts: [
+                {l: "A", t: "Exactly 50 — no exceptions", c: false},
+                {l: "B", t: "Close to 50, likely between 40-60", c: true},
+                {l: "C", t: "About 100 — coins almost always land heads", c: false},
+                {l: "D", t: "Exactly 100 — probability guarantees it", c: false}
+            ],
+            sol: "If the coin is fair, P(heads)=0.5. In 100 flips, expected value = 100×0.5 = <strong>50</strong>. But actual results vary — you might get 47 or 53. The Law of Large Numbers says it gets closer to 50% with more flips, but exact numbers fluctuate."
+        },
+        {
+            id: 5002,
+            text: "📈 Five people in a room have salaries: 20k, 25k, 30k, 35k, and 1000k (CEO). Which is more representative: mean or median?",
+            opts: [
+                {l: "A", t: "Mean — it uses all the data", c: false},
+                {l: "B", t: "Median — the CEO's salary is an outlier that pulls the mean", c: true},
+                {l: "C", t: "Both are equally representative", c: false},
+                {l: "D", t: "Neither — salaries can't be summarized", c: false}
+            ],
+            sol: "Mean = (20+25+30+35+1000)/5 = <strong>222k</strong> — but NO ONE earns that! Median = <strong>30k</strong> — the middle person's salary. The CEO's extreme salary <strong>pulls the mean</strong> upward, while the median ignores outliers."
+        },
+        {
+            id: 5003,
+            text: "🧮 Two datasets have the same mean. Dataset A: {5,5,5,5,5}. Dataset B: {1,3,5,7,9}. Which has higher variance?",
+            opts: [
+                {l: "A", t: "Dataset A — all values are the same", c: false},
+                {l: "B", t: "Dataset B — values are spread far from the mean", c: true},
+                {l: "C", t: "They have the same variance", c: false},
+                {l: "D", t: "Neither has variance", c: false}
+            ],
+            sol: "Dataset A: every value = 5 = mean, so distances from mean are 0 → variance = <strong>0</strong>. Dataset B: distances are -4, -2, 0, 2, 4 → squared distances 16,4,0,4,16 → variance = <strong>8</strong>. B has higher variance because values are spread out."
+        },
+        {
+            id: 5004,
+            text: "🎯 You roll a fair six-sided die. What is P(even number)?",
+            opts: [
+                {l: "A", t: "1/6", c: false},
+                {l: "B", t: "1/3", c: false},
+                {l: "C", t: "1/2", c: true},
+                {l: "D", t: "2/3", c: false}
+            ],
+            sol: "Favorable outcomes: {2, 4, 6} → 3 numbers. Total outcomes: {1, 2, 3, 4, 5, 6} → 6 numbers. P(even) = 3/6 = <strong>1/2</strong>."
+        },
+        {
+            id: 5005,
+            text: "🕳️ If it rains 30% of days, and you have a 50% chance of carrying an umbrella, what assumptions do you need to compute P(rain AND umbrella)?",
+            opts: [
+                {l: "A", t: "That rain and umbrella are independent events", c: true},
+                {l: "B", t: "That rain and umbrella are mutually exclusive", c: false},
+                {l: "C", t: "That you always carry an umbrella when it rains", c: false},
+                {l: "D", t: "That it never rains when you have an umbrella", c: false}
+            ],
+            sol: "To multiply probabilities (P(A and B) = P(A) × P(B)), we need <strong>independence</strong> — one event doesn't affect the other. If you check the weather before deciding to bring an umbrella, they're NOT independent!"
+        },
+        {
+            id: 5006,
+            text: "🔄 Bayes theorem lets us compute P(A|B) from P(B|A). In medical testing, why might a positive test NOT mean you're sick?",
+            opts: [
+                {l: "A", t: "Because tests are always wrong", c: false},
+                {l: "B", t: "Because the disease might be rare — even a small false positive rate creates many false positives", c: true},
+                {l: "C", t: "Because doctors don't know Bayes theorem", c: false},
+                {l: "D", t: "Because positive tests mean nothing", c: false}
+            ],
+            sol: "When a disease is rare (say 1 in 10,000), even a <strong>1% false positive rate</strong> generates many more false positives than true positives. Bayes shows: P(disease|positive) can be very low despite the test being '99% accurate.' <strong>Base rate matters!</strong>"
+        },
+        {
+            id: 5007,
+            text: "🪄 Mean of Binomial = np. What does 'n' and 'p' stand for?",
+            opts: [
+                {l: "A", t: "n = number of trials, p = probability of success", c: true},
+                {l: "B", t: "n = number of successes, p = number of failures", c: false},
+                {l: "C", t: "n = population size, p = sample size", c: false},
+                {l: "D", t: "n = any number, p = any probability", c: false}
+            ],
+            sol: "In the Binomial distribution: <strong>n</strong> = number of independent trials, <strong>p</strong> = probability of success on each trial. The expected number of successes = np. For 10 coin flips, n=10, p=0.5, mean = 5."
+        },
+        {
+            id: 5008,
+            text: "🏔️ If P(A)=0.4, P(B)=0.5, and they're mutually exclusive, what is P(A∪B)?",
+            opts: [
+                {l: "A", t: "0.2", c: false},
+                {l: "B", t: "0.9", c: true},
+                {l: "C", t: "0.1", c: false},
+                {l: "D", t: "0.0", c: false}
+            ],
+            sol: "Mutually exclusive = they cannot happen together, so P(A∩B) = 0. P(A∪B) = P(A) + P(B) − P(A∩B) = 0.4 + 0.5 − 0 = <strong>0.9</strong>. No overlap to subtract!"
+        },
+        {
+            id: 5009,
+            text: "🏥 A disease affects 0.1% of people. A test is 99% sensitive and 98% specific (2% false positive). You test positive. What's P(disease | positive) approximately?",
+            opts: [
+                {l: "A", t: "99% — the test is very accurate", c: false},
+                {l: "B", t: "About 50% — the false positive rate balances", c: false},
+                {l: "C", t: "About 4.7% — base rate makes positives mostly false", c: true},
+                {l: "D", t: "0.1% — the base rate doesn't change", c: false}
+            ],
+            sol: "Using Bayes: P(D|+) = (0.001 × 0.99) / (0.001 × 0.99 + 0.999 × 0.02) = 0.00099 / 0.02097 ≈ <strong>0.047 (4.7%)</strong>. Even with 99% accuracy, the extreme rarity of the disease means most positives are false!"
+        },
+        {
+            id: 5010,
+            text: "📧 A spam filter catches 95% of spam but flags 5% of ham as spam. If 60% of emails are spam, what % of flagged emails are actually spam?",
+            opts: [
+                {l: "A", t: "About 95%", c: false},
+                {l: "B", t: "About 97%", c: true},
+                {l: "C", t: "About 60%", c: false},
+                {l: "D", t: "About 80%", c: false}
+            ],
+            sol: "P(S|F) = (0.6 × 0.95) / (0.6 × 0.95 + 0.4 × 0.05) = 0.57 / 0.59 ≈ <strong>0.966 (96.6%)</strong>. The filter is very reliable because spam is common and the filter is good at catching it."
+        },
+        {
+            id: 5011,
+            text: "⛏️ A mining test detects gold with 90% accuracy but has a 15% false positive rate. Only 5% of sites contain gold. A site tests positive. What's P(gold | positive)?",
+            opts: [
+                {l: "A", t: "90% — the test is accurate", c: false},
+                {l: "B", t: "About 5%", c: false},
+                {l: "C", t: "About 24%", c: true},
+                {l: "D", t: "About 50%", c: false}
+            ],
+            sol: "P(G|+) = (0.05 × 0.9) / (0.05 × 0.9 + 0.95 × 0.15) = 0.045 / 0.1875 ≈ <strong>0.24 (24%)</strong>. Only 1 in 4 positive tests actually leads to gold! Mining companies drill multiple sites."
+        },
+        {
+            id: 5012,
+            text: "📊 You're counting the number of customer arrivals per minute at a store. Which distribution is most appropriate?",
+            opts: [
+                {l: "A", t: "Binomial — customers either arrive or don't", c: false},
+                {l: "B", t: "Poisson — rare, independent events at constant rate", c: true},
+                {l: "C", t: "Normal — everything is normal", c: false},
+                {l: "D", t: "Uniform — all counts equally likely", c: false}
+            ],
+            sol: "The <strong>Poisson distribution</strong> models the number of events in a fixed time interval when events occur independently at a constant average rate. Customer arrivals typically fit this pattern. Binomial would be for a fixed number of trials, not a time interval."
+        },
+        {
+            id: 5013,
+            text: "🧠 You flip a coin 10 times. What's the probability of getting at least one head? (Hint: use the complement trick!)",
+            opts: [
+                {l: "A", t: "1/2¹⁰ ≈ 0.1%", c: false},
+                {l: "B", t: "1 − 1/2¹⁰ ≈ 99.9%", c: true},
+                {l: "C", t: "50% — same as any single flip", c: false},
+                {l: "D", t: "10 × 1/2 = 500%", c: false}
+            ],
+            sol: "Use the complement: P(at least one head) = 1 − P(no heads) = 1 − (1/2)¹⁰ = 1 − 1/1024 = <strong>1023/1024 ≈ 99.9%</strong>. Almost certain! This is why the complement trick is so powerful."
+        },
+        {
+            id: 5014,
+            text: "📉 A card is drawn from a standard deck. Given that it's a face card (J, Q, K), what's the probability it's a King?",
+            opts: [
+                {l: "A", t: "1/13 — there's one King in each suit", c: false},
+                {l: "B", t: "4/52 = 1/13", c: false},
+                {l: "C", t: "1/3 — 4 Kings out of 12 face cards", c: true},
+                {l: "D", t: "1/4 — one suit", c: false}
+            ],
+            sol: "This is conditional probability! P(King | Face) = P(King ∩ Face) / P(Face). There are 4 Kings (all are face cards) and 12 face cards total. So P = 4/12 = <strong>1/3</strong>. Knowing it's a face card narrows the universe from 52 to 12 cards."
+        },
+        {
+            id: 5015,
+            text: "⚠️ A call center gets an average of 4 calls per minute. The probability of exactly 2 calls in a minute follows which pattern?",
+            opts: [
+                {l: "A", t: "Exponential decay — more calls = less likely", c: false},
+                {l: "B", t: "Poisson — rare events at constant rate", c: true},
+                {l: "C", t: "Binomial — each second is a trial", c: false},
+                {l: "D", t: "Normal — bell-shaped around 4", c: false}
+            ],
+            sol: "This is a classic <strong>Poisson</strong> scenario: counting events in a fixed time interval, with events at constant average rate. P(X=2) = e⁻⁴·4²/2! = 0.0183 × 16/2 = 0.146 (14.6%)."
+        },
+        {
+            id: 5016,
+            text: "🎲 Two datasets have a correlation coefficient of r = -0.8. What does this mean?",
+            opts: [
+                {l: "A", t: "Strong positive relationship — both increase together", c: false},
+                {l: "B", t: "Weak negative relationship", c: false},
+                {l: "C", t: "Strong negative relationship — as one increases, the other tends to decrease", c: true},
+                {l: "D", t: "No relationship at all", c: false}
+            ],
+            sol: "r = -0.8 indicates a <strong>strong negative correlation</strong>. As one variable increases, the other tends to decrease. The closer |r| is to 1, the stronger the linear relationship. Negative sign tells the direction; magnitude tells the strength."
+        }
+    ];
+
+    // ========== RENDER & INTERACT ==========
+    var answered = {}, correctCount = 0, lessonSlug = "probability-statistics";
+
+    function renderPractice() {
+        var c = document.getElementById('practice-qs'), h = '';
+        for (var i = 0; i < practiceQs.length; i++) {
+            var q = practiceQs[i], o = '';
+            var badges = ['🧒 Easy','📈 Medium','🧮 Medium','🎯 Easy','🕳️ Medium','🔄 Hard','🪄 Easy','🏔️ Easy','🏥 Medium','📧 Medium','⛏️ Hard','📊 Medium','🧠 Easy','📉 Medium','⚠️ Easy','🎲 Medium'];
+            for (var j = 0; j < q.opts.length; j++) {
+                o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+            }
+            h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+        }
+        c.innerHTML = h;
+        updateScore();
+    }
+
+    function getCorrectLabel(q) {
+        for (var i = 0; i < q.opts.length; i++) {
+            if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+        }
+        return '';
+    }
+
+    function selectOpt(qId, idx) {
+        if (answered[qId]) return;
+        answered[qId] = true;
+        var q = practiceQs.filter(function(x){return x.id === qId})[0];
+        var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+        var isCorrect = q.opts[idx].c;
+        for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+        if (isCorrect) {
+            opts[idx].classList.add('correct');
+            document.getElementById('result-'+qId).textContent = '✅ Correct! +4';
+            document.getElementById('result-'+qId).className = 'q-result correct';
+            correctCount++;
+        } else {
+            opts[idx].classList.add('wrong');
+            document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+            document.getElementById('result-'+qId).className = 'q-result wrong';
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) opts[i].classList.add('correct');
+            }
+        }
+        document.getElementById('soln-'+qId).classList.add('show');
+        updateScore();
+    }
+
+    function updateScore() {
+        var t = Object.keys(answered).length;
+        var el = document.getElementById('score-display');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'score-display';
+            el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+            document.getElementById('practice-qs').before(el);
+        }
+        el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+    }
+
+    function resetPractice() {
+        if (!confirm('Reset all answers?')) return;
+        answered = {}; correctCount = 0;
+        document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+        document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+        document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+        var el = document.getElementById('score-display');
+        if (el) el.textContent = '';
+        renderPractice();
+    }
+
+    function markComplete() {
+        try {
+            var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+            if (done.indexOf(lessonSlug) === -1) {
+                done.push(lessonSlug);
+                localStorage.setItem('jee-course-done', JSON.stringify(done));
+            }
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        } catch(e) {}
+    }
+
+    // ========== CONDITIONAL PROBABILITY VENN ==========
+    function highlightCond(type) {
+        var cA = document.getElementById('condCircleA');
+        var cB = document.getElementById('condCircleB');
+        var cI = document.getElementById('condIntersect');
+        [cA, cB].forEach(function(el) {
+            el.setAttribute('stroke-width', '2.5');
+            el.setAttribute('stroke', el === cA ? 'var(--purple)' : 'var(--emerald)');
+        });
+        cI.setAttribute('stroke-width', '2');
+        cI.setAttribute('stroke', 'var(--amber)');
+        cI.setAttribute('opacity', '1');
+        if (type === 'B') {
+            cB.setAttribute('stroke-width', '5');
+            cB.setAttribute('stroke', '#f59e0b');
+            cI.setAttribute('opacity', '0.3');
+        } else if (type === 'I') {
+            cB.setAttribute('stroke-width', '5');
+            cB.setAttribute('stroke', '#f59e0b');
+            cI.setAttribute('stroke-width', '4');
+            cI.setAttribute('stroke', '#f59e0b');
+            cI.setAttribute('opacity', '1');
+        }
+    }
+
+    // ========== TOTAL PROBABILITY PARTITION ==========
+    function highlightPartition(idx) {
+        var parts = [
+            document.getElementById('partA1'),
+            document.getElementById('partA2'),
+            document.getElementById('partA3')
+        ];
+        var strokes = ['var(--purple)', 'var(--emerald)', 'var(--amber)'];
+        for (var i = 0; i < 3; i++) {
+            parts[i].setAttribute('stroke-width', '1.5');
+            parts[i].setAttribute('stroke', strokes[i]);
+        }
+        if (idx === 0) return;
+        parts[idx - 1].setAttribute('stroke-width', '4');
+        parts[idx - 1].setAttribute('stroke', '#f59e0b');
+    }
+
+    // ========== PMF / CDF CHART ==========
+    function updatePMF_CDF(type) {
+        var probs = [], maxK = 10, label = '';
+        if (type === 'binom') {
+            for (var k = 0; k <= 10; k++) probs.push(binomialProb(10, k, 0.5));
+            maxK = 10; label = 'Binomial(10, 0.5)';
+        } else if (type === 'poisson') {
+            maxK = 12;
+            for (var k = 0; k <= maxK; k++) probs.push(Math.exp(-5) * Math.pow(5, k) / factorial(k));
+            label = 'Poisson(λ=5)';
+        } else {
+            for (var k = 0; k <= 5; k++) probs.push(1/6);
+            maxK = 5; label = 'Uniform(1-6)';
+        }
+        var maxP = Math.max.apply(null, probs);
+        // PMF bars
+        var h1 = '', bw = Math.min(28, 260 / (maxK + 1)), sx = 50;
+        for (var k = 0; k <= maxK; k++) {
+            var bh = (probs[k] / maxP) * 250, x = sx + k * (bw + 2), y = 310 - bh;
+            var r = Math.round(probs[k] * 1000) / 10;
+            h1 += '<rect x="' + x + '" y="' + y + '" width="' + bw + '" height="' + bh + '" rx="2" fill="var(--purple)" opacity=".7"><animate attributeName="height" values="0;' + bh + '" dur="0.3s" fill="freeze"/><animate attributeName="y" values="310;' + y + '" dur="0.3s" fill="freeze"/></rect>';
+            if (maxK <= 10) h1 += '<text x="' + (x + bw/2) + '" y="' + (y - 4) + '" fill="var(--text-sec)" font-size="8" text-anchor="middle">' + r + '%</text>';
+            h1 += '<text x="' + (x + bw/2) + '" y="322" fill="var(--text-muted)" font-size="8" text-anchor="middle">' + k + '</text>';
+        }
+        document.getElementById('pmfBars').innerHTML = h1;
+        // CDF step
+        var cum = 0, pts = ['380,310'];
+        var stepX = 270 / (maxK + 1);
+        for (var k = 0; k <= maxK; k++) {
+            cum += probs[k];
+            var x = 385 + (k + 0.5) * stepX;
+            var prevY = 310 - (cum - probs[k]) / maxP * 250;
+            var currY = 310 - cum / maxP * 250;
+            pts.push(x + ',' + Math.round(prevY));
+            pts.push(x + ',' + Math.round(currY));
+        }
+        document.getElementById('cdfLine').setAttribute('points', pts.join(' '));
+    }
+
+    // ========== BINOMIAL DEEP SLIDERS ==========
+    function updateBinomDeep() {
+        var n = parseInt(document.getElementById('binomNSlider').value);
+        var p = parseFloat(document.getElementById('binomPSlider').value);
+        document.getElementById('binomNVal').textContent = n;
+        document.getElementById('binomPVal').textContent = p.toFixed(2);
+        var c = document.getElementById('binomBarsDeep'), h = '', mp = 0, ps = [];
+        for (var k = 0; k <= n; k++) { var pr = binomialProb(n, k, p); ps.push(pr); if (pr > mp) mp = pr; }
+        var bw = Math.min(28, 560 / (n + 1)), sx = 60 + (560 - (n + 1) * bw) / 2;
+        for (var k = 0; k <= n; k++) {
+            var bh = (ps[k] / mp) * 260, x = sx + k * bw, y = 340 - bh;
+            var col = k === Math.round(n * p) ? 'var(--emerald)' : 'var(--purple)';
+            h += '<rect x="' + x + '" y="' + y + '" width="' + (bw - 2) + '" height="' + bh + '" rx="2" fill="' + col + '" opacity=".7"><animate attributeName="height" values="0;' + bh + '" dur="0.3s" fill="freeze"/><animate attributeName="y" values="340;' + y + '" dur="0.3s" fill="freeze"/></rect>';
+            if (n <= 20) h += '<text x="' + (x + (bw-2)/2) + '" y="352" fill="var(--text-muted)" font-size="8" text-anchor="middle">' + k + '</text>';
+        }
+        c.innerHTML = h;
+        document.getElementById('binomStatsDeep').textContent = 'Mean = np = ' + (n * p).toFixed(1) + '  |  Var = npq = ' + (n * p * (1 - p)).toFixed(2);
+    }
+
+    // ========== POISSON SLIDER ==========
+    function factorial(n) { if (n <= 1) return 1; var r = 1; for (var i = 2; i <= n; i++) r *= i; return r; }
+
+    function updatePoisson() {
+        var lam = parseFloat(document.getElementById('poissonLSlider').value);
+        document.getElementById('poissonLVal').textContent = lam.toFixed(1);
+        var mk = Math.min(30, Math.ceil(lam + 4 * Math.sqrt(lam)) + 2);
+        var c = document.getElementById('poissonBars'), h = '', ps = [], mp = 0;
+        for (var k = 0; k <= mk; k++) { var pr = Math.exp(-lam) * Math.pow(lam, k) / factorial(k); ps.push(pr); if (pr > mp) mp = pr; }
+        var bw = Math.min(28, 560 / (mk + 1)), sx = 60 + (560 - (mk + 1) * bw) / 2;
+        for (var k = 0; k <= mk; k++) {
+            var bh = (ps[k] / mp) * 240, x = sx + k * bw, y = 310 - bh;
+            var col = k === Math.round(lam) ? 'var(--cyan)' : 'var(--purple)';
+            h += '<rect x="' + x + '" y="' + y + '" width="' + (bw - 2) + '" height="' + bh + '" rx="2" fill="' + col + '" opacity=".7"><animate attributeName="height" values="0;' + bh + '" dur="0.3s" fill="freeze"/><animate attributeName="y" values="310;' + y + '" dur="0.3s" fill="freeze"/></rect>';
+        }
+        c.innerHTML = h;
+        document.getElementById('poissonStats').textContent = 'Mean = Var = λ = ' + lam.toFixed(1);
+    }
+
+    // ========== CORRELATION SCATTER ==========
+    function renderCorrelation(type) {
+        var rVals = [1, 0.5, 0, -0.5, -1];
+        for (var i = 0; i < 5; i++) {
+            renderScatter(i + 1, rVals[i]);
+        }
+    }
+
+    function renderScatter(idx, r) {
+        var c = document.getElementById('scatter' + idx), pts = [], n = 25;
+        for (var i = 0; i < n; i++) {
+            var x = (Math.random() - 0.5) * 80;
+            var y = r * x + (1 - Math.abs(r)) * (Math.random() - 0.5) * 80;
+            var px = 60 + x, py = 60 - y;
+            px = Math.max(8, Math.min(112, px));
+            py = Math.max(8, Math.min(112, py));
+            pts.push('<circle cx="' + px.toFixed(1) + '" cy="' + py.toFixed(1) + '" r="2.5" fill="var(--purple)" opacity=".7"/>');
+        }
+        c.innerHTML = pts.join('');
+    }
+
+    // ========== INIT ==========
+    renderPractice();
+    try {
+        var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+        if (done.indexOf(lessonSlug) !== -1) {
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        }
+    } catch(e) {}
+
+    // Initialize charts
+    updateBinomialChart(10, 0.5);
+    simulateWeather(70);
+    updateBinomDeep();
+    updatePoisson();
+    updatePMF_CDF('binom');
+    renderCorrelation('all');
+    </script>
 </body>
 </html>

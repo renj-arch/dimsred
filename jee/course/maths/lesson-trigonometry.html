@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel='stylesheet' href='../../../css/style.css'>
-    
+    <link rel="stylesheet" href="../../../css/style.css">
     <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Trigonometry — JEE Mathematics Lesson | vlymbooq</title>
-    <meta name="description" content="Free JEE Mathematics Trigonometry lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Trigonometry — The Shadow Measurer | vlymbooq</title>
+    <meta name="description" content="Learn Trigonometry through stories, animated visuals, and real-life analogies. Zero formula memorization required — build intuition first.">
     <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/png" href="/logo.png">
@@ -14,9 +13,9 @@
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
-        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-        a{color:var(--purple,#a78bfa);text-decoration:none}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
         .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
         .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
         .brand{display:flex;align-items:center;gap:8px}
@@ -27,124 +26,1518 @@
         .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
         .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
         .container{max-width:1000px;margin:0 auto;padding:24px}
-        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
-        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
-        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
-        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
-        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
-        .module-card:hover{border-color:rgba(255,255,255,.12)}
-        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
-        .module-card .m-desc{font-size:.85em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
-        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
-        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.78em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
-        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
-        .lesson-body{padding:20px 0}
-        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
-        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
-        .lesson-body p{color:var(--text-sec);font-size:.9em;line-height:1.7;margin-bottom:10px}
-        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
-        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
-        .example-box .ex-title{font-weight:600;font-size:.85em;color:var(--pureple,#a78bfa);margin-bottom:4px}
-        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.6}
-        .example-box .ex-soln{font-size:.85em;color:var(--emerald);margin-top:6px;font-weight:500}
-        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
-        .tip-box .tip-title{font-weight:600;font-size:.85em;color:var(--emerald);margin-bottom:4px}
-        .tip-box .tip-text{font-size:.85em;color:var(--text-sec);line-height:1.5}
-        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
-        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
-        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
-        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s}
-        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
-        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
-        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
-        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
-        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.82em;color:var(--text-sec)}
-        .q-card .q-soln.show{display:block}
-        .q-card .q-soln strong{color:var(--emerald)}
-        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
-        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
-        .sidebar-nav{position:sticky;top:72px}
-        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
-        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
-        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
-        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
-        .btn-primary:hover{background:rgba(167,139,250,.25)}
-        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
-        .btn-success:hover{background:rgba(52,211,153,.25)}
         .flex-row{display:flex;gap:24px}
         .flex-row .main{flex:1;min-width:0}
         .flex-row .side{width:220px;flex-shrink:0}
         @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
-        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
-        .diagram-box svg{max-width:100%;height:auto}
-        .diagram-box .diagram-caption{font-size:.78em;color:var(--text-muted);margin-top:8px}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
         .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
         .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
-        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}}
+
+        /* ========== STORY CARDS ========== */
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        /* ========== INSIGHT BOX ========== */
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        /* ========== ANIMATED DIAGRAM ========== */
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+        .diagram-box .diagram-title{font-size:.85em;font-weight:700;color:var(--text);margin-bottom:8px}
+        .diagram-box .diagram-controls{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+        .diagram-box .ctrl-btn{padding:6px 16px;border-radius:100px;font-size:.78em;font-weight:600;border:1px solid var(--border);background:var(--bg-card);color:var(--text-sec);cursor:pointer;transition:all .2s}
+        .diagram-box .ctrl-btn:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15)}
+        .diagram-box .ctrl-btn.active{background:rgba(167,139,250,.12);border-color:var(--purple);color:var(--purple)}
+        .diagram-box .slider-wrap{display:flex;align-items:center;gap:12px;margin-top:12px;justify-content:center}
+        .diagram-box .slider-wrap input[type=range]{width:200px;max-width:60%;-webkit-appearance:none;background:var(--border);height:4px;border-radius:4px;outline:none}
+        .diagram-box .slider-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple);cursor:pointer}
+        .diagram-box .slider-wrap .slider-val{font-size:.82em;color:var(--purple);font-weight:700;min-width:30px}
+
+        /* ========== STEP REVEAL ========== */
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        /* ========== PRACTICE CARDS ========== */
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+        .q-badge{display:inline-block;padding:2px 8px;border-radius:100px;font-size:.7em;font-weight:600;margin-bottom:6px}
+        .q-badge.easy{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .q-badge.medium{background:rgba(245,158,11,.1);color:var(--amber)}
+        .q-badge.hard{background:rgba(239,68,68,.1);color:var(--red)}
+
+        /* ========== KEYFRAME ANIMATIONS ========== */
+        @keyframes breathe{0%,100%{opacity:.4}50%{opacity:.8}}
+        @keyframes pulse-glow{0%,100%{filter:drop-shadow(0 0 4px rgba(167,139,250,.3))}50%{filter:drop-shadow(0 0 12px rgba(167,139,250,.6))}}
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes bounce-dot{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        @keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+        .slide-up{animation:slide-up .6s ease forwards}
+        .stagger-1{animation-delay:.1s}
+        .stagger-2{animation-delay:.2s}
+        .stagger-3{animation-delay:.3s}
+
+        /* ========== PROGRESS TRACKER ========== */
+        .progress-tracker{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+        .progress-tracker .p-step{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;font-size:.75em;border:1px solid var(--border);color:var(--text-muted);transition:all .3s}
+        .progress-tracker .p-step.done{border-color:var(--emerald);color:var(--emerald);background:rgba(52,211,153,.06)}
+        .progress-tracker .p-step.active{border-color:var(--purple);color:var(--purple);background:rgba(167,139,250,.08)}
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part2{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part3{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .graph-hover-area{cursor:crosshair}
+        .graph-point{transition:all .3s}
+        .graph-point:hover{r:6;fill:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+
+        .playground{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin:16px 0}
+        .playground .pg-title{font-size:.9em;font-weight:700;margin-bottom:4px}
+        .playground .pg-desc{font-size:.78em;color:var(--text-muted);margin-bottom:12px}
+
+        /* Highlight glow for unit circle point */
+        .unit-point{filter:drop-shadow(0 0 8px rgba(245,158,11,.8))}
+        .label-highlight{font-weight:800}
+
+        .ratio-display{display:flex;gap:16px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+        .ratio-display .r-item{padding:8px 14px;border-radius:8px;background:var(--bg-card);border:1px solid var(--border);text-align:center;min-width:100px}
+        .ratio-display .r-item .r-val{font-size:1.1em;font-weight:800;color:var(--purple);margin-top:2px}
+        .ratio-display .r-item .r-label{font-size:.7em;color:var(--text-muted);text-transform:uppercase}
     </style>
 </head>
 <body>
-    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="../index.html">JEE</a><a href="index.html" class="active">Course</a></div></div></nav>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="../../index.html">JEE</a><a href="../index.html" class="active">Course</a></div></div></nav>
     <div class="container">
         <div class="flex-row">
             <div class="side">
                 <div class="sidebar-nav">
-                    <div style="font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Mathematics</div>
+                    <div class="s-title">Mathematics</div>
                     <a href="lesson-algebra.html">Algebra</a>
                     <a href="lesson-calculus.html">Calculus</a>
                     <a href="lesson-coordinate-geometry.html">Coordinate Geometry</a>
-                    <a href="lesson-vector-3d.html">Vector & 3D Geometry</a>
-                    <a href="lesson-probability-statistics.html">Probability & Statistics</a>
+                    <a href="lesson-vector-3d.html">Vector & 3D</a>
+                    <a href="lesson-probability-statistics.html">Probability & Stats</a>
                     <a href="lesson-trigonometry.html" class="active">Trigonometry</a>
                 </div>
             </div>
             <div class="main">
                 <div style="margin-bottom:16px">
-                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 3 &middot; JEE Mathematics</div>
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 1 &middot; JEE Mathematics</div>
                     <h1 style="font-size:1.5em;font-weight:900">Trigonometry</h1>
-                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Trigonometric functions, identities, inverse trig, trigonometric equations, height &amp; distance.</div>
-                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
-                        <span style="font-size:.75em;color:var(--text-muted)">Trig Functions · Identities · Inverse Trig · Equations</span>
-                    </div>
-                    <div style="display:flex;gap:8px;margin-top:10px">
-                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
-                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">No formulas. No memorization. Just shadows, circles, and "AHA!" moments.</div>
+                    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+                        <button onclick="window.print()" class="download-btn">📄 Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">🎯 Take Mock Test</a>
                     </div>
                 </div>
+
+                <div class="progress-tracker">
+                    <span class="p-step active" id="p1"><span>🎭</span> Shadow</span>
+                    <span class="p-step" id="p2"><span>🔺</span> SOH CAH TOA</span>
+                    <span class="p-step" id="p3"><span>🕐</span> Unit Circle</span>
+                    <span class="p-step" id="p4"><span>🧮</span> Identities</span>
+                    <span class="p-step" id="p5"><span>🔄</span> Inverse</span>
+                    <span class="p-step" id="p6"><span>☕</span> ASTC</span>
+                    <span class="p-step" id="p7"><span>📈</span> Graphs</span>
+                    <span class="p-step" id="p8"><span>♾️</span> Gen. Sol.</span>
+                    <span class="p-step" id="p9"><span>📐</span> Triangles</span>
+                    <span class="p-step" id="p10"><span>🌊</span> Sum→Prod</span>
+                    <span class="p-step" id="p11"><span>💡</span> Strategies</span>
+                    <span class="p-step" id="p12"><span>🎯</span> Practice</span>
+                </div>
+
                 <div class="lesson-body">
-                    <h3>Learning Objectives</h3>
-                    <ul>
-                        <li>Understand the fundamental concepts of Trigonometry</li>
-                        <li>Apply key formulas and techniques to solve problems</li>
-                        <li>Practice with exam-level questions to build speed and accuracy</li>
-                    </ul>
-                    <h3>Key Concepts</h3>
-<h3>What is Trigonometry?</h3><p>Trigonometry deals with relationships between angles and sides of triangles. In JEE, it covers trigonometric functions, identities, inverse trigonometry, trigonometric equations, and height & distance problems. Weightage is approximately 6-8% in JEE Main.</p><h3>Key Concepts</h3><p><strong>1. Trigonometric Functions:</strong> sinθ, cosθ, tanθ, cotθ, secθ, cosecθ defined using unit circle. Signs in quadrants: All (I) sin+cos+, Sin (II) sin+others-, Tan (III) tan+cot+, Cos (IV) cos+sec+. Standard angles: 0°,30°,45°,60°,90° values must be memorised.</p><p><strong>2. Identities:</strong> sin²θ+cos²θ=1, 1+tan²θ=sec²θ, 1+cot²θ=cosec²θ. Compound angles: sin(A±B)=sinAcosB±cosAsinB, cos(A±B)=cosAcosB∓sinAsinB, tan(A±B)=(tanA±tanB)/(1∓tanAtanB). Double angle: sin2A=2sinAcosA, cos2A=cos²A-sin²A=2cos²A-1=1-2sin²A, tan2A=2tanA/(1-tan²A).</p><p><strong>3. Transformation Formulas:</strong> 2sinAcosB=sin(A+B)+sin(A-B). 2cosAsinB=sin(A+B)-sin(A-B). 2cosAcosB=cos(A+B)+cos(A-B). 2sinAsinB=cos(A-B)-cos(A+B). Sum→product: sinC+sinD=2sin(C+D)/2 cos(C-D)/2. sinC-sinD=2cos(C+D)/2 sin(C-D)/2.</p><p><strong>4. Inverse Trigonometry:</strong> sin⁻¹x + cos⁻¹x = π/2, tan⁻¹x + cot⁻¹x = π/2, sec⁻¹x + cosec⁻¹x = π/2. Properties: tan⁻¹x + tan⁻¹y = tan⁻¹[(x+y)/(1-xy)] for xy<1. sin⁻¹(-x) = -sin⁻¹x, cos⁻¹(-x) = π - cos⁻¹x.</p><p><strong>5. Trigonometric Equations:</strong> General solutions: sinθ=sinα → θ=nπ+(-1)ⁿα. cosθ=cosα → θ=2nπ±α. tanθ=tanα → θ=nπ+α. Always find principal solutions first (0 to 2π).</p><h3>Solved Examples</h3><div class="example-box"><div class="ex-title">Example 1 (Identity — Product to Sum)</div><div class="ex-text">Find the value of cos 20° cos 40° cos 80°.<br><br>a) 1/4 b) 1/8 c) 1/2 d) 1/16</div><div class="ex-soln"><strong>Solution:</strong> b) 1/8. Multiply numerator and denominator by 2 sin 20°: (2 sin 20° cos 20°) cos 40° cos 80°/(2 sin 20°) = (sin 40° cos 40° cos 80°)/(2 sin 20°) = (sin 80° cos 80°)/(4 sin 20°) = sin 160°/(8 sin 20°) = sin(180°-20°)/(8 sin 20°) = sin 20°/(8 sin 20°) = 1/8.</div></div><div class="example-box"><div class="ex-title">Example 2 (Inverse Trigonometry)</div><div class="ex-text">Find the value of tan⁻¹(1/2) + tan⁻¹(1/3).<br><br>a) 30° b) 45° c) 60° d) 90°</div><div class="ex-soln"><strong>Solution:</strong> b) 45°. tan⁻¹(1/2) + tan⁻¹(1/3) = tan⁻¹[(1/2+1/3)/(1-1/2·1/3)] = tan⁻¹[(5/6)/(5/6)] = tan⁻¹(1) = 45°.</div></div><div class="example-box"><div class="ex-title">Example 3 (Trigonometric Equation)</div><div class="ex-text">Solve: 2sin²θ + sinθ - 1 = 0 for θ in [0, 2π).<br><br>a) π/6, 5π/6, 3π/2 b) π/6, 3π/2 c) π/6, 5π/6, π/2 d) π/3, 2π/3, 3π/2</div><div class="ex-soln"><strong>Solution:</strong> a) π/6, 5π/6, 3π/2. Let t = sinθ. 2t² + t - 1 = 0 → (2t-1)(t+1) = 0 → t = 1/2 or t = -1. sinθ = 1/2 → θ = π/6, 5π/6. sinθ = -1 → θ = 3π/2. So solutions: π/6, 5π/6, 3π/2.</div></div><h3>Shortcut Techniques</h3><ul><li>For product-to-sum problems, multiply by appropriate sine/cosine terms to create a telescoping chain — as in the cos20°cos40°cos80° example.</li><li>Use the 'R formula': a sinθ + b cosθ = R sin(θ+φ) where R = √(a²+b²), φ = tan⁻¹(b/a) — this helps find maximum/minimum values.</li><li>Memorise sin18° = (√5-1)/4 and cos36° = (√5+1)/4 — these are frequently tested in JEE.</li><li>For inverse trig problems, always check the domain and range of the inverse function before applying formulas.</li><li>In trigonometric equations, check for extraneous roots by substituting back into the original equation.</li></ul><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Trigonometry is the backbone of many JEE calculus problems (integration of trig functions, limits with trig expressions). Master the identities thoroughly — being able to quickly transform expressions using product-to-sum or sum-to-product formulas saves significant time in exams.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div>                </div>
-                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
-                <div id="practice-qs"></div>
-                <div style="display:flex;gap:10px;margin-top:10px">
-                    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
-                    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
-                </div>
-                <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
-                    <a href="lesson-probability-statistics.html" class="btn btn-primary">&#x2190; Probability &amp; Statistics</a>
-                    <a href="../index.html" class="btn btn-success">&#x2190; Course Home</a>
+                    <!-- ============================================================ -->
+                    <!-- PART 1: THE SHADOW MEASURER — ERATOSTHENES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">🎭 Part 1: The Story That Measured the Earth</span>
+                    <h2>Story Time: How a Stick Cast a Shadow and Measured the World</h2>
+
+                    <p>Around <strong>240 BC</strong>, a Greek scholar named Eratosthenes did something that sounds impossible: he measured the <strong>entire circumference of the Earth</strong> using nothing but a stick, a shadow, and his brain.</p>
+
+                    <p>He heard a rumor: in the city of Syene (modern-day Aswan, Egypt), at noon on the summer solstice, the sun shone straight down a well — no shadow at all. The sun was <strong>directly overhead</strong>.</p>
+
+                    <p>But in Alexandria, 800 km north, at the exact same moment, a stick (called a <strong>gnomon</strong>) cast a shadow. The angle of that shadow was about <strong>7.2°</strong>.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">🌍 Ancient Breakthrough (Eratosthenes, 240 BC)</div>
+                        <div class="story-title">The Stick That Weighed the World</div>
+                        <div class="story-text">
+                            <strong>Eratosthenes reasoned:</strong> If the Earth were flat, the sun's rays would be parallel — both cities would have the same shadow (or none). But Alexandria has a 7.2° shadow while Syene has none. That 7.2° is the Earth's <strong>curvature</strong> between the two cities.<br><br>
+                            <strong>The calculation:</strong> 7.2° is 1/50th of a full circle (360° ÷ 7.2° = 50). So the distance between the cities (800 km) is 1/50th of Earth's circumference. 800 km × 50 = <strong>40,000 km</strong> — remarkably close to the actual value of 40,075 km!
+                        </div>
+                        <div class="story-moral">💡 <strong>Triangles + Angles = Measure Anything.</strong> Height of a pyramid, distance to a ship, size of the Earth — all come down to the same idea: <strong>trigonometry</strong>.</div>
+                    </div>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">☀️ Watch the Shadow Change with the Sun's Angle</div>
+                        <svg viewBox="0 0 600 300" width="600" height="300">
+                            <defs>
+                                <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" stop-color="#fbbf24" stop-opacity="1"/>
+                                    <stop offset="80%" stop-color="#f59e0b" stop-opacity=".6"/>
+                                    <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+                                </radialGradient>
+                                <linearGradient id="groundGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#292524"/>
+                                    <stop offset="100%" stop-color="#1c1917"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- Sky -->
+                            <rect width="600" height="300" fill="var(--bg-elevated)" rx="12"/>
+                            <!-- Ground -->
+                            <rect x="0" y="230" width="600" height="70" fill="url(#groundGrad)"/>
+                            <line x1="0" y1="230" x2="600" y2="230" stroke="var(--border)" stroke-width="1"/>
+                            <!-- Sun -->
+                            <circle cx="500" cy="40" r="30" fill="url(#sunGrad)" opacity=".9"/>
+                            <text x="500" y="90" fill="var(--amber)" font-size="12" font-weight="700" text-anchor="middle">☀️ Sun</text>
+                            <!-- Sun rays -->
+                            <line x1="480" y1="55" x2="220" y2="200" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="6,3" opacity=".5" id="ray1">
+                                <animate attributeName="x2" values="220;260;300;340;380;420;460;500;530" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="y2" values="200;185;170;155;140;125;110;95;80" dur="8s" repeatCount="indefinite"/>
+                            </line>
+                            <line x1="490" y1="50" x2="225" y2="200" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="6,3" opacity=".3" id="ray2">
+                                <animate attributeName="x2" values="225;265;305;345;385;425;465;505;535" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="y2" values="200;185;170;155;140;125;110;95;80" dur="8s" repeatCount="indefinite"/>
+                            </line>
+                            <!-- Gnomon (stick) -->
+                            <rect x="218" y="80" width="6" height="150" rx="2" fill="var(--text)"/>
+                            <text x="210" y="70" fill="var(--text)" font-size="11" font-weight="700" text-anchor="middle">Gnomon</text>
+                            <!-- Shadow (changes length) -->
+                            <line x1="224" y1="230" x2="320" y2="230" stroke="var(--purple)" stroke-width="5" stroke-linecap="round" opacity=".7" id="shadowLine">
+                                <animate attributeName="x2" values="320;280;245;224;224;224;245;280;320" dur="8s" repeatCount="indefinite"/>
+                            </line>
+                            <!-- Shadow label -->
+                            <text x="270" y="220" fill="var(--purple)" font-size="10" font-weight="600" text-anchor="middle" id="shadowLabel">Shadow length</text>
+                            <!-- Angle arc -->
+                            <path d="M224,200 A30,30 0 0,0 244,230" fill="none" stroke="var(--amber)" stroke-width="2" id="angleArc">
+                                <animate attributeName="d" values="M224,200 A30,30 0 0,0 244,230;M224,200 A30,30 0 0,0 250,225;M224,200 A30,30 0 0,0 224,200;M224,200 A30,30 0 0,0 224,200;M224,200 A30,30 0 0,0 224,200;M224,200 A30,30 0 0,0 224,200;M224,200 A30,30 0 0,0 224,200;M224,200 A30,30 0 0,0 224,200;M224,200 A30,30 0 0,0 244,200" dur="8s" repeatCount="indefinite"/>
+                            </path>
+                            <text x="238" y="208" fill="var(--amber)" font-size="13" font-weight="800" id="angleLabel">θ = 7.2°</text>
+                            <!-- Angle value display -->
+                            <rect x="380" y="110" width="120" height="80" rx="8" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="440" y="135" fill="var(--text-sec)" font-size="11" text-anchor="middle">Angle θ</text>
+                            <text x="440" y="165" fill="var(--amber)" font-size="22" font-weight="900" text-anchor="middle" id="angleDisplay">7.2°</text>
+                            <text x="440" y="180" fill="var(--emerald)" font-size="10" font-weight="600" text-anchor="middle">Shadow changes!</text>
+                        </svg>
+                        <div class="diagram-caption">As the sun's position changes (simulated above), the shadow length changes. At noon, the shadow is shortest. Eratosthenes measured this angle — just <strong>7.2°</strong> — and used it to calculate Earth's circumference with remarkable accuracy.</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 First Big Idea</div>
+                        <div class="insight-text"><strong>Trigonometry</strong> is the study of how angles and side lengths in triangles are connected.</div>
+                        <div class="insight-sub">Measure an angle, calculate a distance. That's ALL it is. Everything else is details.</div>
+                    </div>
+
+                    <p>From one angle (7.2°) and one distance (800 km), Eratosthenes measured the whole planet. That's the power of trigonometry — it's the <strong>origin of all measurement</strong>.</p>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 2: SOH CAH TOA — THE TRIANGLE DETECTIVE -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">🔺 Part 2: SOH CAH TOA — The Triangle Detective</span>
+                    <h2>Meet Your Three Best Friends: Sine, Cosine, Tangent</h2>
+
+                    <p>Every right triangle has three sides, and every angle θ has three special ratios. They're not magic — they're just <strong>names for fractions</strong>.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">🔍 Memory Trick</div>
+                        <div class="story-title">SOH CAH TOA — The Detective's Code</div>
+                        <div class="story-text">
+                            Imagine a detective investigating a right triangle. He needs three clues:<br><br>
+                            <strong>SOH:</strong> <strong>S</strong>ine = <strong>O</strong>pposite ÷ <strong>H</strong>ypotenuse<br>
+                            <strong>CAH:</strong> <strong>C</strong>osine = <strong>A</strong>djacent ÷ <strong>H</strong>ypotenuse<br>
+                            <strong>TOA:</strong> <strong>T</strong>angent = <strong>O</strong>pposite ÷ <strong>A</strong>djacent
+                        </div>
+                        <div class="story-moral">🧠 Don't memorize these as letters. See them as: "the ratio of two sides that this angle connects."</div>
+                    </div>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">👆 Drag the Angle θ to See All 3 Ratios Change in Real-Time</div>
+                        <svg viewBox="0 0 550 320" width="550" height="320" id="sohcahtoaSVG">
+                            <!-- Grid background -->
+                            <rect width="550" height="320" fill="var(--bg-elevated)" rx="12"/>
+                            <!-- Right triangle -->
+                            <polygon points="70,280 70,80 320,280" fill="rgba(167,139,250,.06)" stroke="var(--purple)" stroke-width="2.5" id="trianglePoly"/>
+                            <!-- Right angle mark -->
+                            <polyline points="70,260 90,260 90,280" fill="none" stroke="var(--text-muted)" stroke-width="1.5"/>
+                            <!-- Angle arc -->
+                            <path d="M70,260 A20,20 0 0,0 90,280" fill="none" stroke="var(--amber)" stroke-width="2" id="thetaArc"/>
+                            <text x="78" y="262" fill="var(--amber)" font-size="15" font-weight="800" id="thetaLabel">θ</text>
+                            <!-- Side labels -->
+                            <text x="75" y="175" fill="var(--cyan)" font-size="13" font-weight="700" transform="rotate(-90,75,175)" id="oppLabel">Opposite</text>
+                            <text x="190" y="295" fill="var(--emerald)" font-size="13" font-weight="700" id="adjLabel">Adjacent</text>
+                            <!-- Hypotenuse label (along the slanted edge) -->
+                            <text x="180" y="165" fill="var(--text)" font-size="14" font-weight="700" id="hypLabel" transform="rotate(-36,180,165)">Hypotenuse</text>
+                            <!-- Side length values -->
+                            <text x="55" y="170" fill="var(--cyan)" font-size="11" font-weight="700" id="oppVal">opp = 0.50</text>
+                            <text x="160" y="310" fill="var(--emerald)" font-size="11" font-weight="700" id="adjVal">adj = 0.87</text>
+                            <text x="230" y="165" fill="var(--text-sec)" font-size="11" font-weight="700" id="hypVal">hyp = 1.00</text>
+                        </svg>
+                        <div class="slider-wrap">
+                            <span style="font-size:.78em;color:var(--text-muted)">0°</span>
+                            <input type="range" min="5" max="85" value="30" id="angleSlider" oninput="updateTriangle(this.value)">
+                            <span style="font-size:.78em;color:var(--text-muted)">90°</span>
+                            <span class="slider-val" id="sliderAngleVal">θ = 30°</span>
+                        </div>
+                        <div class="ratio-display">
+                            <div class="r-item"><div class="r-label">sin θ (SOH)</div><div class="r-val" id="sinDisplay" style="color:var(--cyan)">0.500</div></div>
+                            <div class="r-item"><div class="r-label">cos θ (CAH)</div><div class="r-val" id="cosDisplay" style="color:var(--emerald)">0.866</div></div>
+                            <div class="r-item"><div class="r-label">tan θ (TOA)</div><div class="r-val" id="tanDisplay" style="color:var(--amber)">0.577</div></div>
+                        </div>
+                        <div class="diagram-caption">As θ grows from 0° to 90°, <strong>sin θ</strong> increases from 0 to 1, <strong>cos θ</strong> decreases from 1 to 0, and <strong>tan θ</strong> grows from 0 to infinity. Watch the pattern!</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Second Big Idea</div>
+                        <div class="insight-text"><strong>Sine, Cosine, Tangent</strong> are just fractions — ratios of two sides of a right triangle.</div>
+                        <div class="insight-sub">The angle determines the ratio. The ratio determines the angle. That's the whole game.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 3: THE UNIT CIRCLE — THE CLOCK -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">🕐 Part 3: The Unit Circle — The Clock That Tells Coordinates</span>
+                    <h2>Why the Circle is the Key to All Trig</h2>
+
+                    <p>A right triangle can only have angles between 0° and 90°. But what about 120°? 200°? 360°?</p>
+
+                    <p>Enter the <strong>Unit Circle</strong>: a circle of radius 1, centered at the origin. For any angle θ, the point where the ray hits the circle has coordinates <strong>(cos θ, sin θ)</strong>.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🔄 Watch the Point Trace the Circle — See Sin & Cos as Coordinates</div>
+                        <svg viewBox="0 0 700 380" width="700" height="380">
+                            <defs>
+                                <pattern id="gridCirc" width="30" height="30" patternUnits="userSpaceOnUse">
+                                    <path d="M30 0 L0 0 0 30" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+                                </pattern>
+                            </defs>
+                            <rect width="700" height="380" fill="url(#gridCirc)"/>
+                            <!-- Axes -->
+                            <line x1="30" y1="190" x2="370" y2="190" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <line x1="200" y1="360" x2="200" y2="20" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <text x="365" y="205" fill="rgba(255,255,255,.3)" font-size="11">x</text>
+                            <text x="190" y="25" fill="rgba(255,255,255,.3)" font-size="11">y</text>
+                            <!-- Unit circle -->
+                            <circle cx="200" cy="190" r="140" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <!-- Radius line -->
+                            <line x1="200" y1="190" x2="340" y2="50" stroke="var(--purple)" stroke-width="2" id="radiusLine">
+                            </line>
+                            <!-- Moving point on circle -->
+                            <circle cx="340" cy="50" r="8" fill="var(--amber)" class="unit-point" id="unitPoint">
+                            </circle>
+                            <!-- Drop lines to axes -->
+                            <line x1="340" y1="190" x2="340" y2="50" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="3,3" id="sinDrop"/>
+                            <line x1="200" y1="50" x2="340" y2="50" stroke="var(--emerald)" stroke-width="1.5" stroke-dasharray="3,3" id="cosDrop"/>
+                            <!-- Axis labels -->
+                            <text x="340" y="205" fill="var(--emerald)" font-size="12" font-weight="700" text-anchor="middle" id="cosLabel">cos = 0.50</text>
+                            <text x="190" y="55" fill="var(--cyan)" font-size="12" font-weight="700" text-anchor="end" id="sinLabel">sin = 0.87</text>
+                            <!-- Angle arc -->
+                            <path d="M200,190 L240,190 A40,40 0 0,1 226,162" fill="none" stroke="var(--amber)" stroke-width="2" id="unitArc"/>
+                            <text x="218" y="175" fill="var(--amber)" font-size="13" font-weight="800" id="unitAngleLabel">30°</text>
+                            <!-- Coordinates display -->
+                            <rect x="400" y="40" width="280" height="120" rx="8" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="540" y="65" fill="var(--text-sec)" font-size="11" text-anchor="middle">Angle θ = <tspan fill="var(--amber)" font-weight="800" id="coordAngle">30°</tspan></text>
+                            <text x="540" y="90" fill="var(--text)" font-size="14" font-weight="700" text-anchor="middle">
+                                Point = (<tspan fill="var(--emerald)" id="coordCos">0.866</tspan>, <tspan fill="var(--cyan)" id="coordSin">0.500</tspan>)
+                            </text>
+                            <text x="540" y="120" fill="var(--text-sec)" font-size="12" text-anchor="middle">
+                                cos = x-coordinate = <tspan fill="var(--emerald)" font-weight="700" id="coordCosVal">0.866</tspan>
+                            </text>
+                            <text x="540" y="145" fill="var(--text-sec)" font-size="12" text-anchor="middle">
+                                sin = y-coordinate = <tspan fill="var(--cyan)" font-weight="700" id="coordSinVal">0.500</tspan>
+                            </text>
+                            <!-- Memory trick box -->
+                            <rect x="400" y="170" width="280" height="40" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.08)" stroke-width="1"/>
+                            <text x="540" y="195" fill="var(--emerald)" font-size="11" font-weight="600" text-anchor="middle">💡 "Cosine is the x (co- means together, like coordinates), Sine is the y"</text>
+                            <!-- Sine wave tracing area -->
+                            <rect x="60" y="310" width="620" height="60" rx="6" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="370" y="325" fill="var(--text-muted)" font-size="10" text-anchor="middle">📈 Sine wave (unwrapping the circle)</text>
+                            <!-- Sine wave path (animated drawing) -->
+                            <path d="M80,350 Q120,340 160,330 Q200,310 240,290 Q280,270 320,280 Q360,290 400,310 Q440,330 480,340 Q520,350 560,350 Q600,350 640,350" fill="none" stroke="var(--cyan)" stroke-width="2" opacity=".6" id="sineWave"/>
+                            <!-- Moving dot on sine wave -->
+                            <circle r="5" fill="var(--cyan)" id="sineDot">
+                            </circle>
+                            <!-- Angle markers on sine wave -->
+                            <text x="80" y="362" fill="var(--text-muted)" font-size="8" text-anchor="middle">0°</text>
+                            <text x="220" y="362" fill="var(--text-muted)" font-size="8" text-anchor="middle">90°</text>
+                            <text x="370" y="362" fill="var(--text-muted)" font-size="8" text-anchor="middle">180°</text>
+                            <text x="520" y="362" fill="var(--text-muted)" font-size="8" text-anchor="middle">270°</text>
+                            <text x="660" y="362" fill="var(--text-muted)" font-size="8" text-anchor="middle">360°</text>
+                        </svg>
+                        <div class="diagram-controls">
+                            <button class="ctrl-btn active" id="playUnitBtn" onclick="toggleUnitAnim()">⏸ Pause</button>
+                            <button class="ctrl-btn" onclick="setUnitAngle(0)">⬅ 0°</button>
+                            <button class="ctrl-btn" onclick="setUnitAngle(90)">⬆ 90°</button>
+                            <button class="ctrl-btn" onclick="setUnitAngle(180)">⬅ 180°</button>
+                            <button class="ctrl-btn" onclick="setUnitAngle(270)">⬇ 270°</button>
+                            <button class="ctrl-btn" onclick="setUnitAngle(360)">🔄 360°</button>
+                        </div>
+                        <div class="diagram-caption">The point on the unit circle at angle θ has coordinates (cos θ, sin θ). As θ goes from 0° to 360°, cos and sin smoothly cycle — this is why they're called <strong>circular functions</strong>. The sine wave below is just the y-coordinate as the angle increases!</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Third Big Idea</div>
+                        <div class="insight-text"><strong>sin θ = y-coordinate, cos θ = x-coordinate</strong> on the unit circle.</div>
+                        <div class="insight-sub">Cosine comes first because "co-" means "together" — like coordinates. Cosine = x, Sine = y. Always.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 4: PYTHAGOREAN IDENTITIES + COMPOUND ANGLES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🧮 Part 4: Always True — The Three Identities</span>
+                    <h2>Pythagoras on the Circle</h2>
+
+                    <p>On the unit circle, the radius is 1. The point (cos θ, sin θ) is always on the circle. So by Pythagoras:</p>
+
+                    <div class="math-block">(cos θ)² + (sin θ)² = 1² &nbsp;→&nbsp; sin²θ + cos²θ = 1</div>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📐 Pythagoras on the Circle — The Most Beautiful Equation in Trig</div>
+                        <svg viewBox="0 0 550 350" width="550" height="350">
+                            <rect width="550" height="350" fill="var(--bg-elevated)" rx="12"/>
+                            <!-- Grid -->
+                            <line x1="50" y1="175" x2="500" y2="175" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                            <line x1="275" y1="350" x2="275" y2="25" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                            <!-- Circle -->
+                            <circle cx="275" cy="175" r="130" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <!-- Right triangle inscribed -->
+                            <polygon points="275,175 380,175 380,75" fill="rgba(167,139,250,.08)" stroke="var(--purple)" stroke-width="2"/>
+                            <!-- Right angle mark -->
+                            <polyline points="360,175 360,155 380,155" fill="none" stroke="var(--text-muted)" stroke-width="1.5"/>
+                            <!-- Radius labels -->
+                            <text x="310" y="170" fill="var(--text)" font-size="13" font-weight="700">1</text>
+                            <!-- Cos label (adjacent) -->
+                            <text x="320" y="195" fill="var(--emerald)" font-size="13" font-weight="700">cos θ</text>
+                            <!-- Sin label (opposite) -->
+                            <text x="385" y="120" fill="var(--cyan)" font-size="13" font-weight="700" transform="rotate(-90,385,120)">sin θ</text>
+                            <!-- Theta label -->
+                            <text x="290" y="165" fill="var(--amber)" font-size="15" font-weight="800">θ</text>
+                            <!-- Formula display -->
+                            <rect x="100" y="280" width="360" height="60" rx="8" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.12)" stroke-width="1"/>
+                            <text x="280" y="305" fill="var(--emerald)" font-size="16" font-weight="900" text-anchor="middle">
+                                (cos θ)² + (sin θ)² = 1²
+                            </text>
+                            <text x="280" y="325" fill="var(--text-sec)" font-size="11" text-anchor="middle">
+                                ↔ sin²θ + cos²θ = 1 &nbsp;(Pythagoras on the circle!)
+                            </text>
+                            <!-- Animated checkmark -->
+                            <text x="370" y="320" fill="var(--emerald)" font-size="20" opacity=".6">
+                                <animate attributeName="opacity" values="0;0;1;1;0" dur="4s" repeatCount="indefinite"/>
+                                ✓
+                            </text>
+                        </svg>
+                        <div class="diagram-caption">In the unit circle, the horizontal leg is cos θ (x-coordinate), the vertical leg is sin θ (y-coordinate), and the hypotenuse is 1 (the radius). Pythagoras says cos²θ + sin²θ = 1. <strong>It's just the Pythagorean theorem!</strong></div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="this.querySelector('.step-content').classList.toggle('open');this.querySelector('.arrow').classList.toggle('open')">
+                            <span class="step-number">🧮</span>
+                            <span style="flex:1;font-weight:600;font-size:.9em">The Three Identities Are Actually ONE Identity</span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            <p><strong>Starting point:</strong> sin²θ + cos²θ = 1</p>
+                            <p><strong>Divide by cos²θ:</strong></p>
+                            <div class="math-block">sin²θ/cos²θ + cos²θ/cos²θ = 1/cos²θ &nbsp;→&nbsp; tan²θ + 1 = sec²θ</div>
+                            <p><strong>Divide by sin²θ:</strong></p>
+                            <div class="math-block">sin²θ/sin²θ + cos²θ/sin²θ = 1/sin²θ &nbsp;→&nbsp; 1 + cot²θ = csc²θ</div>
+                            <p style="color:var(--emerald);font-weight:600;margin-top:8px">That's it! Three identities from ONE — just divided differently. No need to memorize all three!</p>
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <h3>The Angle Addition Machine — What's sin(75°)?</h3>
+
+                    <p>You know sin(30°) = 0.5 and sin(45°) ≈ 0.707. But what about <strong>sin(75°)</strong>? (75° = 30° + 45°). Can we figure it out from what we already know?</p>
+
+                    <p>Yes! And the formula is surprisingly beautiful:</p>
+
+                    <div class="math-block">sin(A+B) = sinA·cosB + cosA·sinB</div>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📐 The Geometric Proof — Two Triangles Stacked</div>
+                        <svg viewBox="0 0 550 380" width="550" height="380">
+                            <rect width="550" height="380" fill="var(--bg-elevated)" rx="12"/>
+                            <!-- Bottom triangle (angle A) -->
+                            <polygon points="60,340 340,340 340,120" fill="rgba(96,165,250,.06)" stroke="var(--cyan)" stroke-width="2"/>
+                            <!-- Top triangle (angle B) stacked on top -->
+                            <polygon points="340,340 340,120 220,40" fill="rgba(167,139,250,.06)" stroke="var(--purple)" stroke-width="2"/>
+                            <!-- Right angle mark on bottom -->
+                            <polyline points="320,340 320,320 340,320" fill="none" stroke="var(--text-muted)" stroke-width="1.5"/>
+                            <!-- Right angle mark on top -->
+                            <polyline points="340,140 320,140 320,120" fill="none" stroke="var(--text-muted)" stroke-width="1.5"/>
+                            <!-- Angle A arc -->
+                            <path d="M60,320 A20,20 0 0,0 80,340" fill="none" stroke="var(--cyan)" stroke-width="2"/>
+                            <text x="72" y="320" fill="var(--cyan)" font-size="14" font-weight="800">A</text>
+                            <!-- Angle B arc -->
+                            <path d="M340,280 A20,20 0 0,1 320,260" fill="none" stroke="var(--purple)" stroke-width="2"/>
+                            <text x="330" y="270" fill="var(--purple)" font-size="14" font-weight="800">B</text>
+                            <!-- Outer angle A+B arc -->
+                            <path d="M60,320 A40,40 0 0,0 260,86" fill="none" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="3,2"/>
+                            <text x="150" y="160" fill="var(--amber)" font-size="16" font-weight="900">A+B</text>
+                            <!-- Side labels -->
+                            <text x="200" y="350" fill="var(--cyan)" font-size="12" font-weight="700">cos A</text>
+                            <text x="350" y="230" fill="var(--text-sec)" font-size="11" font-weight="700" transform="rotate(90,350,230)">1</text>
+                            <text x="280" y="75" fill="var(--purple)" font-size="11" font-weight="700">sin(A+B)?</text>
+                            <!-- Rectangle split visualization -->
+                            <rect x="340" y="120" width="80" height="60" fill="rgba(52,211,153,.04)" stroke="var(--emerald)" stroke-width="1" stroke-dasharray="3,3" opacity=".5"/>
+                            <rect x="220" y="40" width="120" height="80" fill="rgba(245,158,11,.04)" stroke="var(--amber)" stroke-width="1" stroke-dasharray="3,3" opacity=".5"/>
+                            <!-- Formula at bottom -->
+                            <rect x="60" y="340" width="450" height="34" rx="6" fill="rgba(167,139,250,.04)" stroke="rgba(167,139,250,.08)" stroke-width="1"/>
+                            <text x="285" y="362" fill="var(--purple)" font-size="13" font-weight="700" text-anchor="middle">
+                                sin(A+B) = sinA·cosB + cosA·sinB
+                            </text>
+                        </svg>
+                        <div class="diagram-caption">Two right triangles stacked: one with angle A, one with angle B on top. The total height is sin(A+B). That height splits into two rectangles: the bottom part = (cos A)(sin B), the top part = (sin A)(cos B). Added together, they give sin(A+B)!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Memory Trick</div>
+                        <div class="story-title">Sine keeps the sign, Cosine changes it</div>
+                        <div class="story-text">
+                            <strong>sin(A + B):</strong> "Sine = sign-same" → plus stays plus in the middle.<br>
+                            <strong>sin(A + B) = sinA cosB + cosA sinB</strong><br><br>
+                            <strong>cos(A + B):</strong> "Cosine = co-sign-changes" → plus becomes minus in the middle.<br>
+                            <strong>cos(A + B) = cosA cosB − sinA sinB</strong><br><br>
+                            For sin(A−B) and cos(A−B), just flip the sign: sin(A−B) = sinA cosB − cosA sinB, cos(A−B) = cosA cosB + sinA sinB.
+                        </div>
+                        <div class="story-moral">🧠 Don't memorize 4 formulas. Just remember: <strong>Sine keeps the sign, Cosine changes it.</strong></div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 5: INVERSE TRIG + PRACTICE -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">🔄 Part 5: Inverse Trig — The Undo Button</span>
+                    <h2>Ctrl+Z for Trigonometry!</h2>
+
+                    <p>You know sin(30°) = ½. That's the forward journey: <strong>angle → ratio</strong>.</p>
+                    <p>But what if you want to go backward? "Which angle gives me the ratio ½?" That's <strong>inverse trig</strong>: <strong>ratio → angle</strong>.</p>
+
+                    <div class="math-block">sin(30°) = ½ &nbsp;&nbsp;⟹&nbsp;&nbsp; sin⁻¹(½) = 30°</div>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🔁 Forward (sin) and Backward (sin⁻¹)</div>
+                        <svg viewBox="0 0 600 200" width="600" height="200">
+                            <rect width="600" height="200" fill="var(--bg-elevated)" rx="12"/>
+                            <!-- Forward arrow: angle → sin → ratio -->
+                            <rect x="30" y="30" width="140" height="60" rx="10" fill="rgba(96,165,250,.1)" stroke="var(--cyan)" stroke-width="2"/>
+                            <text x="100" y="65" fill="var(--cyan)" font-size="16" font-weight="800" text-anchor="middle">Angle θ</text>
+                            <text x="100" y="80" fill="var(--text-sec)" font-size="10" text-anchor="middle">30°</text>
+                            <!-- Arrow right -->
+                            <text x="185" y="65" fill="var(--emerald)" font-size="20" font-weight="700">⟶</text>
+                            <!-- sin function box -->
+                            <rect x="220" y="25" width="80" height="70" rx="10" fill="rgba(52,211,153,.08)" stroke="var(--emerald)" stroke-width="2"/>
+                            <text x="260" y="55" fill="var(--emerald)" font-size="18" font-weight="900" text-anchor="middle">sin</text>
+                            <text x="260" y="75" fill="var(--text-sec)" font-size="9" text-anchor="middle">(forward)</text>
+                            <!-- Arrow right -->
+                            <text x="315" y="65" fill="var(--cyan)" font-size="20" font-weight="700">⟶</text>
+                            <!-- Ratio box -->
+                            <rect x="350" y="30" width="140" height="60" rx="10" fill="rgba(245,158,11,.1)" stroke="var(--amber)" stroke-width="2"/>
+                            <text x="420" y="65" fill="var(--amber)" font-size="16" font-weight="800" text-anchor="middle">Ratio</text>
+                            <text x="420" y="80" fill="var(--text-sec)" font-size="10" text-anchor="middle">0.5</text>
+                            <!-- Backward arrow: ratio → sin⁻¹ → angle -->
+                            <rect x="350" y="120" width="140" height="60" rx="10" fill="rgba(245,158,11,.1)" stroke="var(--amber)" stroke-width="2"/>
+                            <text x="420" y="155" fill="var(--amber)" font-size="16" font-weight="800" text-anchor="middle">Ratio</text>
+                            <text x="420" y="170" fill="var(--text-sec)" font-size="10" text-anchor="middle">0.5</text>
+                            <!-- Arrow left -->
+                            <text x="315" y="155" fill="var(--purple)" font-size="20" font-weight="700">⟵</text>
+                            <!-- sin⁻¹ box -->
+                            <rect x="220" y="115" width="80" height="70" rx="10" fill="rgba(167,139,250,.08)" stroke="var(--purple)" stroke-width="2"/>
+                            <text x="260" y="143" fill="var(--purple)" font-size="16" font-weight="900" text-anchor="middle">sin⁻¹</text>
+                            <text x="260" y="165" fill="var(--text-sec)" font-size="9" text-anchor="middle">(undo)</text>
+                            <!-- Arrow left -->
+                            <text x="185" y="155" fill="var(--cyan)" font-size="20" font-weight="700">⟵</text>
+                            <!-- Angle box -->
+                            <rect x="30" y="120" width="140" height="60" rx="10" fill="rgba(96,165,250,.1)" stroke="var(--cyan)" stroke-width="2"/>
+                            <text x="100" y="155" fill="var(--cyan)" font-size="16" font-weight="800" text-anchor="middle">Angle θ</text>
+                            <text x="100" y="170" fill="var(--text-sec)" font-size="10" text-anchor="middle">30°</text>
+                            <!-- "Like Ctrl+Z" label -->
+                            <rect x="510" y="60" width="80" height="80" rx="40" fill="rgba(167,139,250,.06)" stroke="rgba(167,139,250,.12)" stroke-width="1"/>
+                            <text x="550" y="95" fill="var(--purple)" font-size="12" font-weight="700" text-anchor="middle">Ctrl</text>
+                            <text x="550" y="115" fill="var(--purple)" font-size="12" font-weight="700" text-anchor="middle">+ Z</text>
+                            <text x="550" y="132" fill="var(--text-sec)" font-size="9" text-anchor="middle">for trig!</text>
+                        </svg>
+                        <div class="diagram-caption">sin takes an angle and gives a ratio. sin⁻¹ (also written as arcsin) takes a ratio and gives back the angle. Like pressing <strong>Ctrl+Z</strong> — it undoes the sin operation!</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Fourth Big Idea</div>
+                        <div class="insight-text"><strong>Inverse trig</strong> is just asking: "What angle produced this ratio?"</div>
+                        <div class="insight-sub">sin⁻¹(½) = 30° means "the angle whose sine is ½ is 30°." That's it.</div>
+                    </div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 6: ASTC RULE -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">🔄 Part 6: Which Trig Functions are Positive? — The ASTC Rule</span>
+                    <h2>All Students Take Coffee — The Sign of the Four Quadrants</h2>
+
+                    <p>On the unit circle, the sign of sin, cos, and tan changes depending on which quadrant the angle is in. There's a <strong>simple memory trick</strong> to keep track:</p>
+
+                    <div class="story-card">
+                        <div class="story-label">☕ Memory Trick</div>
+                        <div class="story-title">All Students Take Coffee</div>
+                        <div class="story-text">
+                            <strong>Q1 — All</strong> functions are positive.<br>
+                            <strong>Q2 — Students:</strong> <strong>S</strong>ine is positive (cos, tan negative).<br>
+                            <strong>Q3 — Take:</strong> <strong>T</strong>angent is positive (sin, cos negative).<br>
+                            <strong>Q4 — Coffee:</strong> <strong>C</strong>osine is positive (sin, tan negative).<br><br>
+                            <strong>Why?</strong> On the unit circle, cos = x-coordinate, sin = y-coordinate. In Q2, x is negative (cos negative) but y is positive (sin positive). Tan = sin/cos, so when sin and cos have opposite signs, tan is negative!
+                        </div>
+                        <div class="story-moral">🧠 ASTC = "All Students Take Coffee" — the FIRST LETTER of each quadrant tells you which function is positive.</div>
+                    </div>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🎯 Click a Quadrant to See Which Functions Are Positive</div>
+                        <svg viewBox="0 0 500 480" width="500" height="480">
+                            <rect width="500" height="480" fill="var(--bg-elevated)" rx="12"/>
+                            <line x1="250" y1="30" x2="250" y2="450" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <line x1="30" y1="240" x2="470" y2="240" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <circle cx="250" cy="240" r="170" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2"/>
+                            <path d="M250,240 L250,70 A170,170 0 0,1 420,240 Z" fill="rgba(167,139,250,.08)" stroke="var(--purple)" stroke-width="2" stroke-dasharray="4,4" id="astcQ1" style="cursor:pointer" onclick="highlightQuadrant(1)"/>
+                            <path d="M250,240 L420,240 A170,170 0 0,1 250,410 Z" fill="rgba(52,211,153,.08)" stroke="var(--emerald)" stroke-width="2" stroke-dasharray="4,4" id="astcQ4" style="cursor:pointer" onclick="highlightQuadrant(4)"/>
+                            <path d="M250,240 L250,410 A170,170 0 0,1 80,240 Z" fill="rgba(245,158,11,.08)" stroke="var(--amber)" stroke-width="2" stroke-dasharray="4,4" id="astcQ3" style="cursor:pointer" onclick="highlightQuadrant(3)"/>
+                            <path d="M250,240 L80,240 A170,170 0 0,1 250,70 Z" fill="rgba(96,165,250,.08)" stroke="var(--cyan)" stroke-width="2" stroke-dasharray="4,4" id="astcQ2" style="cursor:pointer" onclick="highlightQuadrant(2)"/>
+                            <text x="250" y="25" fill="var(--text-muted)" font-size="13" font-weight="700" text-anchor="middle">90° (π/2)</text>
+                            <text x="250" y="465" fill="var(--text-muted)" font-size="13" font-weight="700" text-anchor="middle">270° (3π/2)</text>
+                            <text x="20" y="245" fill="var(--text-muted)" font-size="13" font-weight="700">180° (π)</text>
+                            <text x="475" y="245" fill="var(--text-muted)" font-size="13" font-weight="700">0° / 360° (2π)</text>
+                            <text x="350" y="140" fill="var(--purple)" font-size="20" font-weight="900" text-anchor="middle">Q1</text>
+                            <text x="150" y="140" fill="var(--cyan)" font-size="20" font-weight="900" text-anchor="middle">Q2</text>
+                            <text x="350" y="360" fill="var(--amber)" font-size="20" font-weight="900" text-anchor="middle">Q4</text>
+                            <text x="150" y="360" fill="var(--emerald)" font-size="20" font-weight="900" text-anchor="middle">Q3</text>
+                            <text x="350" y="170" fill="var(--purple)" font-size="13" font-weight="600" text-anchor="middle" opacity="0" id="q1Funcs">All: sin, cos, tan +</text>
+                            <text x="130" y="170" fill="var(--cyan)" font-size="13" font-weight="600" text-anchor="middle" opacity="0" id="q2Funcs">Only sin +</text>
+                            <text x="130" y="340" fill="var(--emerald)" font-size="13" font-weight="600" text-anchor="middle" opacity="0" id="q3Funcs">Only tan +</text>
+                            <text x="380" y="330" fill="var(--amber)" font-size="13" font-weight="600" text-anchor="middle" opacity="0" id="q4Funcs">Only cos +</text>
+                            <rect x="60" y="420" width="380" height="45" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.08)" stroke-width="1"/>
+                            <text x="250" y="440" fill="var(--emerald)" font-size="13" font-weight="700" text-anchor="middle" id="astcMessage">Click a quadrant to see which functions are positive!</text>
+                        </svg>
+                        <div class="diagram-controls">
+                            <button class="ctrl-btn" onclick="highlightQuadrant(1)">Q1: All +</button>
+                            <button class="ctrl-btn" onclick="highlightQuadrant(2)">Q2: sin +</button>
+                            <button class="ctrl-btn" onclick="highlightQuadrant(3)">Q3: tan +</button>
+                            <button class="ctrl-btn" onclick="highlightQuadrant(4)">Q4: cos +</button>
+                            <button class="ctrl-btn" onclick="highlightQuadrant(0)">Clear</button>
+                        </div>
+                        <div class="diagram-caption"><strong>All Students Take Coffee:</strong> Q1 → All positive. Q2 → Sine positive. Q3 → Tangent positive. Q4 → Cosine positive. The sign matters when solving equations!</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 7: TRIG GRAPHS -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">📈 Part 7: Trigonometric Graphs — The Waves of Life</span>
+                    <h2>Sine, Cosine, Tangent — The Rhythm of the Universe</h2>
+
+                    <p>Trig functions don't just live on triangles — they create <strong>beautiful repeating waves</strong> that describe everything from sound to tides to heartbeats.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📊 The Three Fundamental Waves</div>
+                        <svg viewBox="0 0 700 380" width="700" height="380">
+                            <rect width="700" height="380" fill="var(--bg-elevated)" rx="12"/>
+                            <line x1="40" y1="190" x2="680" y2="190" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
+                            <line x1="40" y1="20" x2="40" y2="360" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
+                            <text x="40" y="18" fill="rgba(255,255,255,.3)" font-size="10" text-anchor="middle">y</text>
+                            <text x="680" y="205" fill="rgba(255,255,255,.3)" font-size="10" text-anchor="end">x</text>
+                            <path d="M40,190 Q70,40 100,190 Q130,340 160,190 Q190,40 220,190 Q250,340 280,190 Q310,40 340,190 Q370,340 400,190 Q430,40 460,190 Q490,340 520,190 Q550,40 580,190 Q610,340 640,190 Q670,40 700,190" fill="none" stroke="var(--cyan)" stroke-width="3" opacity=".85"/>
+                            <text x="55" y="55" fill="var(--cyan)" font-size="13" font-weight="700">sin x</text>
+                            <path d="M40,60 Q70,190 100,60 Q130,190 160,60 Q190,190 220,60 Q250,190 280,60 Q310,190 340,60 Q370,190 400,60 Q430,190 460,60 Q490,190 520,60 Q550,190 580,60 Q610,190 640,60 Q670,190 700,60" fill="none" stroke="var(--emerald)" stroke-width="2.5" opacity=".7" stroke-dasharray="8,4"/>
+                            <text x="55" y="40" fill="var(--emerald)" font-size="13" font-weight="700">cos x</text>
+                            <path d="M40,190 Q65,175 80,155 Q90,135 95,100 Q100,60 103,20" fill="none" stroke="var(--amber)" stroke-width="2.5" opacity=".7"/>
+                            <path d="M103,360 L106,320 Q111,280 116,245 Q126,210 136,200 Q150,187 170,190" fill="none" stroke="var(--amber)" stroke-width="2.5" opacity=".7"/>
+                            <path d="M200,190 Q225,175 240,155 Q250,135 255,100 Q260,60 263,20" fill="none" stroke="var(--amber)" stroke-width="2.5" opacity=".7"/>
+                            <path d="M263,360 L266,320 Q271,280 276,245 Q286,210 296,200 Q310,187 330,190" fill="none" stroke="var(--amber)" stroke-width="2.5" opacity=".7"/>
+                            <text x="55" y="95" fill="var(--amber)" font-size="13" font-weight="700">tan x</text>
+                            <line x1="103" y1="20" x2="103" y2="360" stroke="var(--red)" stroke-width="1.2" stroke-dasharray="5,5" opacity=".5"/>
+                            <line x1="263" y1="20" x2="263" y2="360" stroke="var(--red)" stroke-width="1.2" stroke-dasharray="5,5" opacity=".5"/>
+                            <text x="103" y="375" fill="var(--red)" font-size="10" text-anchor="middle">π/2</text>
+                            <text x="263" y="375" fill="var(--red)" font-size="10" text-anchor="middle">3π/2</text>
+                            <line x1="55" y1="190" x2="55" y2="50" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="3,3"/>
+                            <text x="55" y="115" fill="var(--text-sec)" font-size="10" text-anchor="end" transform="rotate(-90,55,115)">Amplitude = 1</text>
+                            <line x1="40" y1="360" x2="220" y2="360" stroke="var(--text-muted)" stroke-width="1.5"/>
+                            <text x="130" y="355" fill="var(--text-sec)" font-size="10" text-anchor="middle">Period = 2π</text>
+                        </svg>
+                        <div class="diagram-caption"><strong>Sine</strong> (solid) starts at 0, rises to 1 at π/2, back to 0 at π. <strong>Cosine</strong> (dashed) is sine shifted left by π/2. <strong>Tangent</strong> (gold) has vertical asymptotes at π/2, 3π/2... where cos = 0 (division by zero!). Period of sin/cos = 2π, period of tan = π.</div>
+                    </div>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🔄 Frequency Changes — sin x vs sin 2x vs sin(x/2)</div>
+                        <svg viewBox="0 0 700 280" width="700" height="280">
+                            <rect width="700" height="280" fill="var(--bg-elevated)" rx="12"/>
+                            <line x1="40" y1="50" x2="680" y2="50" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                            <line x1="40" y1="140" x2="680" y2="140" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                            <line x1="40" y1="230" x2="680" y2="230" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                            <path d="M40,50 Q70,10 100,50 Q130,90 160,50 Q190,10 220,50 Q250,90 280,50 Q310,10 340,50 Q370,90 400,50 Q430,10 460,50 Q490,90 520,50 Q550,10 580,50 Q610,90 640,50 Q670,10 700,50" fill="none" stroke="var(--cyan)" stroke-width="2.5"/>
+                            <text x="45" y="35" fill="var(--cyan)" font-size="12" font-weight="700">sin x (Period = 2π)</text>
+                            <path d="M40,140 Q55,110 70,140 Q85,170 100,140 Q115,110 130,140 Q145,170 160,140 Q175,110 190,140 Q205,170 220,140 Q235,110 250,140 Q265,170 280,140 Q295,110 310,140 Q325,170 340,140 Q355,110 370,140 Q385,170 400,140 Q415,110 430,140 Q445,170 460,140 Q475,110 490,140 Q505,170 520,140 Q535,110 550,140 Q565,170 580,140 Q595,110 610,140 Q625,170 640,140 Q655,110 670,140 Q685,170 700,140" fill="none" stroke="var(--purple)" stroke-width="2.5"/>
+                            <text x="45" y="125" fill="var(--purple)" font-size="12" font-weight="700">sin 2x (Period = π)</text>
+                            <path d="M40,230 Q100,205 160,230 Q220,255 280,230 Q340,205 400,230 Q460,255 520,230 Q580,205 640,230 Q700,255 700,230" fill="none" stroke="var(--amber)" stroke-width="2.5"/>
+                            <text x="45" y="215" fill="var(--amber)" font-size="12" font-weight="700">sin(x/2) (Period = 4π)</text>
+                            <line x1="40" y1="260" x2="220" y2="260" stroke="var(--cyan)" stroke-width="1.5"/>
+                            <text x="130" y="255" fill="var(--cyan)" font-size="10" text-anchor="middle">2π</text>
+                            <line x1="40" y1="270" x2="130" y2="270" stroke="var(--purple)" stroke-width="1.5"/>
+                            <text x="85" y="265" fill="var(--purple)" font-size="10" text-anchor="middle">π</text>
+                        </svg>
+                        <div class="diagram-caption"><strong>Period = 2π/|a|</strong> for sin(ax). When a=1, one cycle per 2π. When a=2, the wave squeezes — 2 cycles per 2π, so period = π. When a=½, the wave stretches — half a cycle per 2π, so period = 4π. The 'a' controls the <strong>frequency</strong>!</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Key Graph Facts</div>
+                        <div class="insight-text">Amplitude = |A| for A·sin(x). Period = 2π/|B| for sin(Bx). Phase shift = C/B for sin(Bx − C).</div>
+                        <div class="insight-sub">The general form: y = A·sin(Bx − C) + D — A controls height, B controls width, C shifts left/right, D shifts up/down.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 8: GENERAL SOLUTIONS -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">♾️ Part 8: General Solutions — The Infinite Answers</span>
+                    <h2>When One Answer is Not Enough</h2>
+
+                    <p>If sinθ = ½, you might say θ = 30°. But what about 150°? Or 390°? Or -210°? All of these have sine = ½! <strong>Trig equations have INFINITE solutions</strong> because the unit circle wraps around forever.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">♾️ Infinite Answers</div>
+                        <div class="story-title">"If sinθ = 0, θ could be 0, π, 2π, -π... INFINITE answers!"</div>
+                        <div class="story-text">
+                            Unlike algebraic equations (like x+2=5, one answer), trig equations usually have <strong>infinitely many</strong> solutions because trig functions repeat every 2π (or π for tan).<br><br>
+                            <strong>Example:</strong> sinθ = 0 → θ = 0, π, 2π, 3π, -π, -2π, ... → <strong>θ = nπ</strong> for any integer n!<br><br>
+                            <strong>The trick:</strong> Find ONE solution (the principal value), then add the period repeatedly. The general solution formula captures ALL answers in one line.
+                        </div>
+                        <div class="story-moral">💡 When solving trig equations, NEVER cancel or divide by a trig function — you might lose solutions! Factor instead.</div>
+                    </div>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🔄 All Solutions of sinθ = ½ — Animated on the Unit Circle</div>
+                        <svg viewBox="0 0 520 400" width="520" height="400">
+                            <rect width="520" height="400" fill="var(--bg-elevated)" rx="12"/>
+                            <line x1="260" y1="30" x2="260" y2="340" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <line x1="40" y1="185" x2="480" y2="185" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <circle cx="260" cy="185" r="130" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2"/>
+                            <circle cx="370" cy="120" r="7" fill="var(--amber)" class="unit-point" id="genSol1">
+                                <animate attributeName="r" values="7;12;7" dur="3s" begin="0s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="150" cy="120" r="7" fill="var(--cyan)" id="genSol2">
+                                <animate attributeName="r" values="7;12;7" dur="3s" begin="0.75s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="370" cy="250" r="7" fill="var(--emerald)" id="genSol3">
+                                <animate attributeName="r" values="7;12;7" dur="3s" begin="1.5s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="150" cy="250" r="7" fill="var(--purple)" id="genSol4">
+                                <animate attributeName="r" values="7;12;7" dur="3s" begin="2.25s" repeatCount="indefinite"/>
+                            </circle>
+                            <text x="370" y="108" fill="var(--amber)" font-size="12" font-weight="700" text-anchor="middle">30° (π/6)</text>
+                            <text x="150" y="108" fill="var(--cyan)" font-size="12" font-weight="700" text-anchor="middle">150° (5π/6)</text>
+                            <text x="370" y="270" fill="var(--emerald)" font-size="12" font-weight="700" text-anchor="middle">390° = 30°+360°</text>
+                            <text x="150" y="270" fill="var(--purple)" font-size="12" font-weight="700" text-anchor="middle">510° = 150°+360°</text>
+                            <line x1="260" y1="185" x2="370" y2="120" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="4,3" opacity=".6"/>
+                            <line x1="260" y1="185" x2="150" y2="120" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="4,3" opacity=".6"/>
+                            <rect x="60" y="310" width="400" height="75" rx="8" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.12)" stroke-width="1"/>
+                            <text x="260" y="335" fill="var(--emerald)" font-size="15" font-weight="800" text-anchor="middle">sinθ = sinα → θ = nπ + (-1)ⁿα</text>
+                            <text x="260" y="355" fill="var(--text-sec)" font-size="11" text-anchor="middle">For sinθ = ½ = sin(π/6): n=0 → π/6, n=1 → 5π/6, n=2 → 13π/6, n=3 → 17π/6...</text>
+                            <text x="260" y="372" fill="var(--text-sec)" font-size="10" text-anchor="middle">The (-1)ⁿ alternates: even n → +α, odd n → (π−α). That's why solutions come in pairs!</text>
+                        </svg>
+                        <div class="diagram-caption">The general solution formula captures ALL infinitely many answers. For sin, the (-1)ⁿ term handles the "mirror" property of sine about the y-axis. <strong>Never lose solutions!</strong></div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="this.querySelector('.step-content').classList.toggle('open');this.querySelector('.arrow').classList.toggle('open')">
+                            <span class="step-number">📝</span>
+                            <span style="flex:1;font-weight:600;font-size:.9em">The Three General Solution Formulas</span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            <p><strong>For sin:</strong> sinθ = sinα → θ = nπ + (-1)ⁿα</p>
+                            <p><strong>For cos:</strong> cosθ = cosα → θ = 2nπ ± α</p>
+                            <p><strong>For tan:</strong> tanθ = tanα → θ = nπ + α</p>
+                            <p style="margin-top:8px;color:var(--emerald);font-weight:600">Where n is any integer (n ∈ ℤ). The ± for cosine gives two branches — one adding α, one subtracting α.</p>
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 9: SOLUTION OF TRIANGLES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">📐 Part 9: Solution of Triangles — Beyond Right Angles</span>
+                    <h2>Any Triangle, Any Angle — The Power of Sine and Cosine Rules</h2>
+
+                    <p>SOH CAH TOA only works for right triangles. But what about <strong>any</strong> triangle? The Sine Rule and Cosine Rule are the supercharged versions — they work for <strong>every</strong> triangle.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📐 The General Triangle — Labeled with Sides and Angles</div>
+                        <svg viewBox="0 0 600 380" width="600" height="380">
+                            <rect width="600" height="380" fill="var(--bg-elevated)" rx="12"/>
+                            <polygon points="300,330 80,60 520,60" fill="rgba(167,139,250,.06)" stroke="var(--purple)" stroke-width="2.5"/>
+                            <text x="300" y="355" fill="var(--text)" font-size="18" font-weight="800" text-anchor="middle">A</text>
+                            <text x="60" y="55" fill="var(--text)" font-size="18" font-weight="800" text-anchor="end">B</text>
+                            <text x="540" y="55" fill="var(--text)" font-size="18" font-weight="800" text-anchor="start">C</text>
+                            <text x="185" y="195" fill="var(--cyan)" font-size="16" font-weight="700" text-anchor="middle" transform="rotate(-58,185,195)">a = BC</text>
+                            <text x="415" y="195" fill="var(--emerald)" font-size="16" font-weight="700" text-anchor="middle" transform="rotate(58,415,195)">b = AC</text>
+                            <text x="300" y="60" fill="var(--amber)" font-size="16" font-weight="700" text-anchor="middle">c = AB</text>
+                            <path d="M300,290 A40,40 0 0,0 248,258" fill="none" stroke="var(--amber)" stroke-width="2.5"/>
+                            <text x="268" y="278" fill="var(--amber)" font-size="16" font-weight="800">A</text>
+                            <path d="M88,85 A25,25 0 0,1 115,80" fill="none" stroke="var(--cyan)" stroke-width="2.5"/>
+                            <text x="100" y="75" fill="var(--cyan)" font-size="16" font-weight="800">B</text>
+                            <path d="M500,85 A25,25 0 0,0 478,100" fill="none" stroke="var(--emerald)" stroke-width="2.5"/>
+                            <text x="492" y="75" fill="var(--emerald)" font-size="16" font-weight="800">C</text>
+                            <rect x="30" y="320" width="260" height="52" rx="6" fill="rgba(96,165,250,.06)" stroke="rgba(96,165,250,.12)" stroke-width="1"/>
+                            <text x="160" y="340" fill="var(--cyan)" font-size="12" font-weight="700" text-anchor="middle">Sine Rule:</text>
+                            <text x="160" y="358" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">a/sin A = b/sin B = c/sin C = 2R</text>
+                            <rect x="310" y="320" width="260" height="52" rx="6" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.12)" stroke-width="1"/>
+                            <text x="440" y="340" fill="var(--emerald)" font-size="12" font-weight="700" text-anchor="middle">Cosine Rule:</text>
+                            <text x="440" y="358" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">a² = b² + c² − 2bc cos A</text>
+                        </svg>
+                        <div class="diagram-controls">
+                            <button class="ctrl-btn" onclick="showTriangleCase('sss')">🔺 SSS → Cosine Rule</button>
+                            <button class="ctrl-btn" onclick="showTriangleCase('sas')">📐 SAS → Cosine Rule</button>
+                            <button class="ctrl-btn" onclick="showTriangleCase('asa')">📏 ASA → Sine Rule</button>
+                        </div>
+                        <div class="diagram-caption" id="triangleCaption"><strong>Sine Rule:</strong> works when you know two angles + one side (ASA/AAS) or two sides + non-included angle (SSA). <strong>Cosine Rule:</strong> works when you know three sides (SSS) or two sides + included angle (SAS). Click a case above!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">📝 Worked Example</div>
+                        <div class="story-title">Find the area of a triangle with two sides 7cm and 9cm, and included angle 40°</div>
+                        <div class="story-text">
+                            <strong>Given:</strong> a = 7, b = 9, and included angle C = 40° (this is an SAS case!).<br><br>
+                            <strong>Area formula:</strong> Δ = ½·a·b·sin(C)<br><br>
+                            <strong>Step 1:</strong> Δ = ½ × 7 × 9 × sin(40°)<br>
+                            <strong>Step 2:</strong> sin(40°) ≈ 0.6428<br>
+                            <strong>Step 3:</strong> Δ = ½ × 63 × 0.6428 = ½ × 40.4964<br>
+                            <strong>Answer:</strong> Δ ≈ <strong>20.25 cm²</strong><br><br>
+                            <strong>Check with Heron's formula:</strong> First find side c using cosine rule: c² = 7²+9²−2·7·9·cos40° = 49+81−126·0.7660 = 130−96.52 = 33.48 → c ≈ 5.79. Then s = (7+9+5.79)/2 = 10.895. Heron: Δ = √(10.895·3.895·1.895·5.105) ≈ √(410.2) = 20.25 cm² ✓
+                        </div>
+                        <div class="story-moral">🧠 For area, you only need <strong>two sides and the included angle</strong> — Δ = ½ab sin C. Quick, clean, no need to find the third side!</div>
+                    </div>
+
+                    <div class="math-block">Δ = ½ab sin C = ½bc sin A = ½ac sin B &nbsp;&nbsp;=&nbsp;&nbsp; √(s(s-a)(s-b)(s-c)) &nbsp;(Heron's formula)</div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 10: SUM-TO-PRODUCT & PRODUCT-TO-SUM -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">🌊 Part 10: Sum-to-Product & Product-to-Sum — Waves Colliding</span>
+                    <h2>Adding Waves Creates Multiplication — The Most Beautiful Transformation</h2>
+
+                    <p>What happens when you add two sine waves? The result looks like a <strong>modulated wave</strong> — and it can be rewritten as a <strong>product</strong> of two simpler waves!</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🌊 Two Sine Waves Adding Together — The "Beat" Pattern</div>
+                        <svg viewBox="0 0 700 320" width="700" height="320">
+                            <rect width="700" height="320" fill="var(--bg-elevated)" rx="12"/>
+                            <line x1="20" y1="100" x2="690" y2="100" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                            <line x1="20" y1="200" x2="690" y2="200" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                            <line x1="20" y1="60" x2="20" y2="280" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                            <path d="M30,100 Q65,55 100,100 Q135,145 170,100 Q205,55 240,100 Q275,145 310,100 Q345,55 380,100 Q415,145 450,100 Q485,55 520,100 Q555,145 590,100 Q625,55 660,100 Q695,145 700,130" fill="none" stroke="var(--cyan)" stroke-width="2" opacity=".5"/>
+                            <text x="25" y="92" fill="var(--cyan)" font-size="10" font-weight="600">sin A</text>
+                            <path d="M30,200 Q55,170 80,200 Q105,230 130,200 Q155,170 180,200 Q205,230 230,200 Q255,170 280,200 Q305,230 330,200 Q355,170 380,200 Q405,230 430,200 Q455,170 480,200 Q505,230 530,200 Q555,170 580,200 Q605,230 630,200 Q655,170 680,200 Q695,230 700,210" fill="none" stroke="var(--amber)" stroke-width="2" opacity=".5"/>
+                            <text x="25" y="192" fill="var(--amber)" font-size="10" font-weight="600">sin B</text>
+                            <path d="M30,150 Q55,128 80,142 Q105,162 130,150 Q155,135 180,145 Q205,160 230,150 Q255,140 280,148 Q305,158 330,150 Q355,142 380,150 Q405,160 430,150 Q455,140 480,148 Q505,158 530,150 Q555,142 580,150 Q605,160 630,150 Q655,140 680,148 Q695,155 700,150" fill="none" stroke="var(--purple)" stroke-width="3" opacity=".9"/>
+                            <text x="25" y="142" fill="var(--purple)" font-size="10" font-weight="700">sin A + sin B</text>
+                            <rect x="80" y="260" width="540" height="50" rx="6" fill="rgba(167,139,250,.06)" stroke="rgba(167,139,250,.12)" stroke-width="1"/>
+                            <text x="350" y="280" fill="var(--purple)" font-size="14" font-weight="800" text-anchor="middle">sin C + sin D = 2 sin((C+D)/2) cos((C-D)/2)</text>
+                            <text x="350" y="298" fill="var(--text-sec)" font-size="11" text-anchor="middle">The sum of two sine waves creates a "beat" — the envelope (slow wave) times the carrier (fast wave)!</text>
+                        </svg>
+                        <div class="diagram-caption">The purple wave is sin A + sin B. It looks like a fast oscillation (the "carrier") inside a slow envelope (the "modulator"). The sum-to-product formula rewrites this sum as <strong>2 sin(average) cos(half-difference)</strong> — turning addition into multiplication!</div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="this.querySelector('.step-content').classList.toggle('open');this.querySelector('.arrow').classList.toggle('open')">
+                            <span class="step-number">🧮</span>
+                            <span style="flex:1;font-weight:600;font-size:.9em">All Four Sum-to-Product Formulas</span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="math-block">sin C + sin D = 2 sin((C+D)/2) cos((C-D)/2)</div>
+                            <div class="math-block">sin C − sin D = 2 cos((C+D)/2) sin((C-D)/2)</div>
+                            <div class="math-block">cos C + cos D = 2 cos((C+D)/2) cos((C-D)/2)</div>
+                            <div class="math-block">cos C − cos D = −2 sin((C+D)/2) sin((C-D)/2)</div>
+                            <p style="margin-top:8px;color:var(--emerald);font-weight:600">The pattern: sum of sines → 2·sin(avg)·cos(half-diff). Sum of cosines → 2·cos(avg)·cos(half-diff). The "co" functions pair together!</p>
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="this.querySelector('.step-content').classList.toggle('open');this.querySelector('.arrow').classList.toggle('open')">
+                            <span class="step-number">🔄</span>
+                            <span style="flex:1;font-weight:600;font-size:.9em">Product-to-Sum (Reverse Direction)</span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            <div class="math-block">2 sin A cos B = sin(A+B) + sin(A-B)</div>
+                            <div class="math-block">2 cos A sin B = sin(A+B) − sin(A-B)</div>
+                            <div class="math-block">2 cos A cos B = cos(A+B) + cos(A-B)</div>
+                            <div class="math-block">2 sin A sin B = cos(A-B) − cos(A+B)</div>
+                            <p style="margin-top:8px;color:var(--amber);font-weight:600">These are just the sum-to-product formulas read backwards! Helpful for integrating products of trig functions.</p>
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 11: PROBLEM-SOLVING STRATEGIES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">💡 Part 11: Problem-Solving Strategies — Think Like a Trig Master</span>
+                    <h2>Three Golden Rules for Solving Any Trig Problem</h2>
+
+                    <p>Most trig problems feel hard because you're staring at a pile of formulas. Here are <strong>three universal strategies</strong> that work for almost everything:</p>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy #1</div>
+                        <div class="story-title">Convert Everything to sin and cos First</div>
+                        <div class="story-text">
+                            Whenever you see tan, cot, sec, or csc, <strong>rewrite them as sin/cos</strong>:<br><br>
+                            tan x = sin x / cos x &nbsp;|&nbsp; cot x = cos x / sin x<br>
+                            sec x = 1 / cos x &nbsp;|&nbsp; csc x = 1 / sin x<br><br>
+                            Most identities become obvious once everything is in terms of sines and cosines. It's like translating a foreign language into your native tongue!
+                        </div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy #2</div>
+                        <div class="story-title">Use the t = tan(θ/2) Substitution</div>
+                        <div class="story-text">
+                            For integrals or tricky equations, the <strong>Weierstrass substitution</strong> converts trig into algebra:<br><br>
+                            t = tan(θ/2) &nbsp;⟹&nbsp; sin θ = 2t/(1+t²), cos θ = (1−t²)/(1+t²), tan θ = 2t/(1−t²)<br><br>
+                            This turns ANY trig expression into a rational function of t — which you can solve with plain algebra!
+                        </div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy #3</div>
+                        <div class="story-title">Check the Range Before Applying Inverse Trig</div>
+                        <div class="story-text">
+                            <strong>sin⁻¹(x)</strong> returns values in [−π/2, π/2] (Quadrants I and IV)<br>
+                            <strong>cos⁻¹(x)</strong> returns values in [0, π] (Quadrants I and II)<br>
+                            <strong>tan⁻¹(x)</strong> returns values in (−π/2, π/2) (Quadrants I and IV)<br><br>
+                            <strong>Example:</strong> sin⁻¹(0.5) = 30°, but sin⁻¹(−0.5) = <strong>−30°</strong> (not 330°!). Always ask: "Is my answer in the correct range?"
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 12: COMMON MISTAKES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">⚠️ Part 12: Common Mistakes — Learn from Others' Errors</span>
+                    <h2>Three Traps That Trip Everyone Up</h2>
+
+                    <div class="story-card" style="border-color:rgba(239,68,68,.2)">
+                        <div class="story-label" style="color:var(--red)">🚫 Mistake #1</div>
+                        <div class="story-title">Forgetting Inverse Trig Range Restrictions</div>
+                        <div class="story-text">
+                            <strong>The error:</strong> sin⁻¹(½) = 30° <em>or</em> 150°?<br>
+                            <strong>Wrong!</strong> sin⁻¹(½) = <strong>30° ONLY</strong> (not 150°).<br><br>
+                            The inverse sine function is defined to return a <strong>single value</strong> in [−90°, 90°]. If you want ALL solutions, use the general solution formula instead: θ = nπ + (−1)ⁿ·30°.
+                        </div>
+                    </div>
+
+                    <div class="story-card" style="border-color:rgba(239,68,68,.2)">
+                        <div class="story-label" style="color:var(--red)">🚫 Mistake #2</div>
+                        <div class="story-title">Confusing sin⁻¹x with (sin x)⁻¹ (Cosecant!)</div>
+                        <div class="story-text">
+                            This is the <strong>#1 notation trap</strong> in trigonometry!<br><br>
+                            <strong>sin⁻¹x</strong> = "inverse sine" or "arcsin" = the angle whose sine is x.<br>
+                            <strong>(sin x)⁻¹</strong> = 1/sin x = <strong>cosecant (csc x)</strong>.<br><br>
+                            <strong>Mnemonic:</strong> The "−1" exponent in sin⁻¹ means "inverse function" (undo), NOT "reciprocal." The reciprocal of sin has its own name: csc!
+                        </div>
+                    </div>
+
+                    <div class="story-card" style="border-color:rgba(239,68,68,.2)">
+                        <div class="story-label" style="color:var(--red)">🚫 Mistake #3</div>
+                        <div class="story-title">Dropping Solutions — Dividing by sinθ Loses sinθ=0 Cases</div>
+                        <div class="story-text">
+                            <strong>Wrong approach:</strong> 2 sinθ cosθ = sinθ → divide by sinθ → 2 cosθ = 1 → cosθ = ½ → θ = 60°, 300°<br><br>
+                            <strong>What went wrong?</strong> You divided by sinθ, which is zero when θ = 0°, 180°, 360°... <strong>You lost those solutions!</strong><br><br>
+                            <strong>Correct approach:</strong> 2 sinθ cosθ − sinθ = 0 → sinθ(2 cosθ − 1) = 0 → <strong>Either</strong> sinθ = 0 → θ = 0°, 180°, 360°, ... <strong>Or</strong> cosθ = ½ → θ = 60°, 300°<br><br>
+                            <strong>Golden rule:</strong> Never divide by a trig function. <strong>Factor instead!</strong>
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">⚠️ The #1 Rule</div>
+                        <div class="insight-text"><strong>FACTOR, DON'T DIVIDE.</strong> If you ever reach for ÷sin or ÷cos, stop — factor it out instead.</div>
+                        <div class="insight-sub">Every solution matters. Don't let them slip away!</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PRACTICE SECTION -->
+                    <!-- ============================================================ -->
+
+                    <span class="section-label part3">🎯 Part 13: Test Your Understanding (No Formulas!)</span>
+                    <h2>Practice Zone: Think, Don't Compute</h2>
+                    <p>These questions test if you truly <strong>understand</strong> the ideas. No calculation needed — just reasoning!</p>
+
+                    <div id="practice-qs"></div>
+
+                    <div style="display:flex;gap:10px;margin-top:10px">
+                        <button onclick="resetPractice()" class="btn btn-primary">🔄 Reset</button>
+                        <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                        <a href="lesson-probability-statistics.html" class="btn btn-primary">← Probability & Statistics</a>
+                        <span></span>
+                    </div>
                 </div>
             </div>
         </div>
-        <script>
-        var practiceQs = [{"id":40021,"text":"If sinθ = 3/5 and θ is acute, find cosθ.","options":[{"l":"a","t":"4/5","c":true},{"l":"b","t":"-4/5","c":false},{"l":"c","t":"3/4","c":false},{"l":"d","t":"5/4","c":false}],"sol":"sin²θ+cos²θ=1 → cos²θ = 1-9/25 = 16/25 → cosθ = ±4/5. Since θ is acute (0<θ<90°), cosθ is positive, so cosθ = 4/5."},{"id":40022,"text":"Find the value of sin 75°.","options":[{"l":"a","t":"(√3+1)/(2√2)","c":true},{"l":"b","t":"(√3-1)/(2√2)","c":false},{"l":"c","t":"(√6+√2)/4","c":false},{"l":"d","t":"Both a and c","c":false}],"sol":"sin75° = sin(45°+30°) = sin45°cos30°+cos45°sin30° = (1/√2)(√3/2)+(1/√2)(1/2) = (√3+1)/(2√2) = (√6+√2)/4. Both a and c are equivalent. Option a is the simplified form."},{"id":40023,"text":"The general solution of sinθ = 1/2 is:","options":[{"l":"a","t":"θ = nπ + (-1)ⁿπ/6","c":true},{"l":"b","t":"θ = nπ + π/6","c":false},{"l":"c","t":"θ = 2nπ ± π/3","c":false},{"l":"d","t":"θ = nπ + (-1)ⁿπ/3","c":false}],"sol":"sinθ = 1/2 → θ = π/6 (principal value). General solution: θ = nπ + (-1)ⁿ·π/6."},{"id":40024,"text":"If tanθ = 1, then secθ + cosecθ = ?","options":[{"l":"a","t":"√2","c":false},{"l":"b","t":"2√2","c":true},{"l":"c","t":"3√2","c":false},{"l":"d","t":"2","c":false}],"sol":"tanθ = 1 → θ = 45°. sec45° = √2, cosec45° = √2. Sum = 2√2."},{"id":40025,"text":"The maximum value of 3 sinθ + 4 cosθ is:","options":[{"l":"a","t":"5","c":true},{"l":"b","t":"7","c":false},{"l":"c","t":"25","c":false},{"l":"d","t":"3","c":false}],"sol":"Max of a sinθ + b cosθ = √(a²+b²) = √(9+16) = √25 = 5."},{"id":80751,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":80752,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":80753,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":80754,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":80755,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":80756,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":80757,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":80758,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":80759,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":80760,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":80761,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":80762,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":80763,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":80764,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":80765,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."},{"id":82911,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":82912,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":82913,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":82914,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":82915,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":82916,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":82917,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":82918,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":82919,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":82920,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":82921,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":82922,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":82923,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":82924,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":82925,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."},{"id":82926,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":82927,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":82928,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":82929,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":82930,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":82931,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":82932,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":82933,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":82934,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":82935,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":82936,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":82937,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":82938,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":82939,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":82940,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."}];
-        var answered={},correctCount=0,lessonSlug="trigonometry";
-        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
-        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
-        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
-        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.85em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
-        function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
-        function markComplete(){try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("jee-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
-        renderPractice();
-        try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
-        </script>
     </div>
+
+    <script>
+    // ========== SOH CAH TOA INTERACTIVE ==========
+    function updateTriangle(angleDeg) {
+        var angle = parseFloat(angleDeg);
+        var rad = angle * Math.PI / 180;
+        var hyp = 200;
+        var opp = hyp * Math.sin(rad);
+        var adj = hyp * Math.cos(rad);
+
+        // Triangle coordinates
+        var x0 = 70, y0 = 280;
+        var x1 = x0 + adj;
+        var y1 = y0;
+        var x2 = x0 + adj;
+        var y2 = y0 - opp;
+
+        document.getElementById('trianglePoly').setAttribute('points', x0+','+y0+' '+x1+','+y1+' '+x2+','+y2);
+
+        // Angle arc
+        var arcR = 25;
+        var arcEndX = x0 + arcR * Math.cos(rad);
+        var arcEndY = y0 - arcR * Math.sin(rad);
+        var largeFlag = rad > Math.PI/2 ? 1 : 0;
+        document.getElementById('thetaArc').setAttribute('d',
+            'M'+(x0+arcR)+','+y0+' A'+arcR+','+arcR+' 0 0,0 '+arcEndX.toFixed(1)+','+arcEndY.toFixed(1));
+        document.getElementById('thetaLabel').setAttribute('x', (x0 + 12).toString());
+        document.getElementById('thetaLabel').setAttribute('y', (y0 - 8).toString());
+
+        // Side labels position
+        document.getElementById('oppLabel').setAttribute('x', (x2 + 10).toString());
+        document.getElementById('oppLabel').setAttribute('y', ((y2 + y1) / 2).toString());
+        document.getElementById('adjLabel').setAttribute('x', ((x0 + x1) / 2).toString());
+        document.getElementById('adjLabel').setAttribute('y', (y0 + 18).toString());
+
+        // Side length values
+        var oppNorm = (opp / hyp).toFixed(3);
+        var adjNorm = (adj / hyp).toFixed(3);
+        document.getElementById('oppVal').setAttribute('x', (x2 + 10).toString());
+        document.getElementById('oppVal').setAttribute('y', ((y2 + y1) / 2 - 12).toString());
+        document.getElementById('oppVal').textContent = 'opp = ' + oppNorm;
+        document.getElementById('adjVal').textContent = 'adj = ' + adjNorm;
+        document.getElementById('hypVal').textContent = 'hyp = 1.000';
+
+        // Hypotenuse label position
+        var hypMidX = (x0 + x2) / 2;
+        var hypMidY = (y0 + y2) / 2;
+        var hypAngle = -Math.atan2(opp, adj) * 180 / Math.PI;
+        document.getElementById('hypLabel').setAttribute('x', (hypMidX - 50).toString());
+        document.getElementById('hypLabel').setAttribute('y', (hypMidY + 5).toString());
+        document.getElementById('hypLabel').setAttribute('transform', 'rotate('+hypAngle+','+(hypMidX-50)+','+(hypMidY+5)+')');
+
+        // Update slider value
+        document.getElementById('sliderAngleVal').textContent = 'θ = ' + angle + '°';
+
+        // Update ratio display
+        var sinV = Math.sin(rad);
+        var cosV = Math.cos(rad);
+        var tanV = sinV / cosV;
+
+        document.getElementById('sinDisplay').textContent = sinV.toFixed(3);
+        document.getElementById('cosDisplay').textContent = cosV.toFixed(3);
+        document.getElementById('tanDisplay').textContent = (Math.abs(tanV) > 100 ? '∞' : tanV.toFixed(3));
+
+        // Progress tracker update
+        updateProgress(2);
+    }
+
+    // ========== UNIT CIRCLE ANIMATION ==========
+    var unitAngle = 30;
+    var unitAnimRunning = true;
+    var unitAnimId = null;
+
+    function updateUnitCircle(angleDeg) {
+        var rad = angleDeg * Math.PI / 180;
+        var cx = 200, cy = 190, r = 140;
+        var px = cx + r * Math.cos(rad);
+        var py = cy - r * Math.sin(rad);
+
+        document.getElementById('unitPoint').setAttribute('cx', px);
+        document.getElementById('unitPoint').setAttribute('cy', py);
+
+        document.getElementById('radiusLine').setAttribute('x2', px);
+        document.getElementById('radiusLine').setAttribute('y2', py);
+
+        // Drop lines
+        document.getElementById('sinDrop').setAttribute('x1', px);
+        document.getElementById('sinDrop').setAttribute('y1', cy);
+        document.getElementById('sinDrop').setAttribute('x2', px);
+        document.getElementById('sinDrop').setAttribute('y2', py);
+
+        document.getElementById('cosDrop').setAttribute('x1', cx);
+        document.getElementById('cosDrop').setAttribute('y1', py);
+        document.getElementById('cosDrop').setAttribute('x2', px);
+        document.getElementById('cosDrop').setAttribute('y2', py);
+
+        // Labels
+        var cosV = Math.cos(rad);
+        var sinV = Math.sin(rad);
+        document.getElementById('cosLabel').textContent = 'cos = ' + cosV.toFixed(3);
+        document.getElementById('cosLabel').setAttribute('x', px.toString());
+        document.getElementById('cosLabel').setAttribute('y', (cy + 18).toString());
+
+        document.getElementById('sinLabel').textContent = 'sin = ' + sinV.toFixed(3);
+        document.getElementById('sinLabel').setAttribute('x', (cx - 10).toString());
+        document.getElementById('sinLabel').setAttribute('y', (py + 4).toString());
+
+        // Angle arc
+        var aR = 35;
+        var aex = cx + aR * Math.cos(rad);
+        var aey = cy - aR * Math.sin(rad);
+        document.getElementById('unitArc').setAttribute('d',
+            'M'+(cx+aR)+','+cy+' A'+aR+','+aR+' 0 0,0 '+aex.toFixed(1)+','+aey.toFixed(1));
+        document.getElementById('unitAngleLabel').textContent = angleDeg + '°';
+        document.getElementById('unitAngleLabel').setAttribute('x', (cx + 22).toString());
+        document.getElementById('unitAngleLabel').setAttribute('y', (cy - 15).toString());
+
+        // Coordinate display
+        document.getElementById('coordAngle').textContent = angleDeg + '°';
+        document.getElementById('coordCos').textContent = cosV.toFixed(3);
+        document.getElementById('coordSin').textContent = sinV.toFixed(3);
+        document.getElementById('coordCosVal').textContent = cosV.toFixed(3);
+        document.getElementById('coordSinVal').textContent = sinV.toFixed(3);
+
+        // Sine wave dot
+        var waveW = 620;
+        var sineX = 80 + (angleDeg / 360) * (waveW - 80);
+        var sineY = 350 - 30 * sinV;
+        document.getElementById('sineDot').setAttribute('cx', sineX);
+        document.getElementById('sineDot').setAttribute('cy', sineY);
+
+        // Update progress
+        updateProgress(3);
+    }
+
+    function unitAnimStep() {
+        if (!unitAnimRunning) return;
+        unitAngle += 1;
+        if (unitAngle > 360) unitAngle = 0;
+        updateUnitCircle(unitAngle);
+        unitAnimId = requestAnimationFrame(unitAnimStep);
+    }
+
+    function toggleUnitAnim() {
+        unitAnimRunning = !unitAnimRunning;
+        document.getElementById('playUnitBtn').textContent = unitAnimRunning ? '⏸ Pause' : '▶ Play';
+        if (unitAnimRunning) {
+            unitAnimId = requestAnimationFrame(unitAnimStep);
+        } else if (unitAnimId) {
+            cancelAnimationFrame(unitAnimId);
+        }
+    }
+
+    function setUnitAngle(angle) {
+        unitAngle = angle;
+        updateUnitCircle(angle);
+    }
+
+    // Start unit circle animation
+    setTimeout(function() {
+        updateUnitCircle(30);
+        unitAnimId = requestAnimationFrame(unitAnimStep);
+    }, 100);
+
+    // ========== PROGRESS TRACKER ==========
+    var progressState = {1: true};
+
+    function updateProgress(step) {
+        for (var i = 1; i <= step; i++) {
+            progressState[i] = true;
+            var el = document.getElementById('p' + i);
+            if (el) {
+                el.classList.remove('active');
+                el.classList.add('done');
+            }
+        }
+        if (step < 12) {
+            var nextEl = document.getElementById('p' + (step + 1));
+            if (nextEl) {
+                nextEl.classList.add('active');
+            }
+        }
+    }
+
+    // ========== PRACTICE QUESTIONS ==========
+    var practiceQs = [
+        {
+            id: 5001,
+            text: "🧒 If you increase the angle of a right triangle from 10° to 80°, what happens to sin θ?",
+            opts: [
+                {l: "A", t: "It stays the same because sin is always a ratio", c: false},
+                {l: "B", t: "It increases from near 0 to near 1", c: true},
+                {l: "C", t: "It decreases from 1 to 0", c: false},
+                {l: "D", t: "It first increases then decreases", c: false}
+            ],
+            sol: "Sin θ = opposite/hypotenuse. As θ grows, the opposite side gets longer while the hypotenuse stays fixed, so the ratio <strong>increases</strong>. At 10°, sin ≈ 0.17; at 80°, sin ≈ 0.98."
+        },
+        {
+            id: 5002,
+            text: "📈 In the unit circle, the x-coordinate of a point at angle θ gives you...",
+            opts: [
+                {l: "A", t: "sin θ", c: false},
+                {l: "B", t: "cos θ", c: true},
+                {l: "C", t: "tan θ", c: false},
+                {l: "D", t: "The radius", c: false}
+            ],
+            sol: "On the unit circle, the x-coordinate is <strong>cos θ</strong> and the y-coordinate is <strong>sin θ</strong>. Remember: 'Cosine is the x (co- means together, like coordinates).'"
+        },
+        {
+            id: 5003,
+            text: "🧮 Why does sin²θ + cos²θ always equal 1?",
+            opts: [
+                {l: "A", t: "Because mathematicians decided it should", c: false},
+                {l: "B", t: "Because on the unit circle, (cos θ)² + (sin θ)² = 1² — it's just the Pythagorean theorem", c: true},
+                {l: "C", t: "Because sin and cos always add up to 1", c: false},
+                {l: "D", t: "Only when θ is between 0° and 90°", c: false}
+            ],
+            sol: "On the unit circle, cos θ and sin θ are the legs of a right triangle with hypotenuse 1. Pythagoras says: leg² + leg² = hyp², so <strong>sin²θ + cos²θ = 1</strong>. It's always true because it's geometry, not magic!"
+        },
+        {
+            id: 5004,
+            text: "🎯 cos(120°) = ? (Hint: 120° = 180° - 60°, use the unit circle)",
+            opts: [
+                {l: "A", t: "0.5", c: false},
+                {l: "B", t: "-0.5", c: true},
+                {l: "C", t: "-0.866", c: false},
+                {l: "D", t: "0.866", c: false}
+            ],
+            sol: "120° is in the 2nd quadrant. The reference angle is 60° (cos 60° = 0.5). In quadrant II, cosine is <strong>negative</strong>, so cos(120°) = <strong>-0.5</strong>. The unit circle tells you sign!"
+        },
+        {
+            id: 5005,
+            text: "🕳️ The period of sin 3x is 2π/3. What does 'period' mean in simple words?",
+            opts: [
+                {l: "A", t: "How fast the graph goes up", c: false},
+                {l: "B", t: "The length of one complete cycle before it repeats", c: true},
+                {l: "C", t: "The height of the wave", c: false},
+                {l: "D", t: "The time it takes to reach the maximum", c: false}
+            ],
+            sol: "<strong>Period</strong> = the length of one complete cycle. For sin x, it's 2π (360°). For sin 3x, the waves are squished 3× closer together, so the period is <strong>2π/3</strong>. It's like the 'wavelength.'"
+        },
+        {
+            id: 5006,
+            text: "🔄 If sin⁻¹ returns angles between -90° and 90°, why does cos⁻¹ return between 0° and 180°?",
+            opts: [
+                {l: "A", t: "Because cos is positive in the 1st and 4th quadrants", c: false},
+                {l: "B", t: "So that the inverse is a proper function (one input → one output)", c: true},
+                {l: "C", t: "Because cos is defined only between 0° and 180°", c: false},
+                {l: "D", t: "It's a random choice", c: false}
+            ],
+            sol: "For a function to have an inverse, it must be <strong>one-to-one</strong> (each y comes from exactly one x). Sin is one-to-one between -90° and 90°, but cos is one-to-one between 0° and 180°. Different ranges because each function needs a unique 'undo' region!"
+        },
+        {
+            id: 5007,
+            text: "🪄 sin(A+B) = sinA cosB + cosA sinB. What happens if B=0?",
+            opts: [
+                {l: "A", t: "It becomes sinA (because cos0=1, sin0=0)", c: true},
+                {l: "B", t: "It becomes 0", c: false},
+                {l: "C", t: "It becomes sinA + sinA = 2sinA", c: false},
+                {l: "D", t: "The formula breaks down", c: false}
+            ],
+            sol: "Plug in B=0: sin(A+0) = sinA·cos0 + cosA·sin0 = sinA·1 + cosA·0 = <strong>sinA</strong>. The formula reduces back to sin(A), just as it should! This is a good sanity check — all formulas should work for obvious cases."
+        },
+        {
+            id: 5008,
+            text: "🏔️ A ladder makes a 60° angle with the ground. The wall is 5m high. How long is the ladder?",
+            opts: [
+                {l: "A", t: "5 sin(60°) meters", c: false},
+                {l: "B", t: "5 / sin(60°) meters", c: true},
+                {l: "C", t: "5 cos(60°) meters", c: false},
+                {l: "D", t: "5 / cos(60°) meters", c: false}
+            ],
+            sol: "The wall (5m) is opposite the 60° angle. The ladder is the hypotenuse. sin(60°) = opposite/hypotenuse = 5/ladder. So ladder = <strong>5 / sin(60°)</strong>. Always identify which sides you know and which trig ratio connects them!"
+        },
+        {
+            id: 5009,
+            text: "🏢 A person standing 50m from a building sees the top at 30° elevation. How tall is the building?",
+            opts: [
+                {l: "A", t: "50×tan(30°) meters", c: true},
+                {l: "B", t: "50×sin(30°) meters", c: false},
+                {l: "C", t: "50/tan(30°) meters", c: false},
+                {l: "D", t: "50×cos(30°) meters", c: false}
+            ],
+            sol: "We know the adjacent side (50m) and need the opposite side. tan(30°) = opposite/adjacent = height/50. So <strong>height = 50×tan(30°) ≈ 28.87m</strong>. Remember: tan = opposite/adjacent!"
+        },
+        {
+            id: 5010,
+            text: "📊 What is the period of y = sin(4x)?",
+            opts: [
+                {l: "A", t: "2π", c: false},
+                {l: "B", t: "π/2", c: true},
+                {l: "C", t: "π/4", c: false},
+                {l: "D", t: "8π", c: false}
+            ],
+            sol: "For y = sin(Bx), period = <strong>2π/|B|</strong>. Here B=4, so period = 2π/4 = <strong>π/2</strong>. The wave completes 4 full cycles in 2π!"
+        },
+        {
+            id: 5011,
+            text: "☕ According to the ASTC rule, in which quadrant is only tan positive?",
+            opts: [
+                {l: "A", t: "Quadrant 1 (0° to 90°)", c: false},
+                {l: "B", t: "Quadrant 2 (90° to 180°)", c: false},
+                {l: "C", t: "Quadrant 3 (180° to 270°)", c: true},
+                {l: "D", t: "Quadrant 4 (270° to 360°)", c: false}
+            ],
+            sol: "<strong>All Students Take Coffee:</strong> Q1=All, Q2=Sine, Q3=Tangent, Q4=Cosine. So in <strong>Q3 (180°-270°)</strong>, only tan is positive. Sin and cos are both negative there."
+        },
+        {
+            id: 5012,
+            text: "🧮 Solve: sin²x − sin x = 0 for 0° ≤ x < 360°",
+            opts: [
+                {l: "A", t: "0°, 90°, 180°", c: true},
+                {l: "B", t: "0°, 180°", c: false},
+                {l: "C", t: "90°, 270°", c: false},
+                {l: "D", t: "0°, 90°, 180°, 270°", c: false}
+            ],
+            sol: "Factor: sin x (sin x − 1) = 0. Either sin x = 0 → x = 0°, 180° OR sin x = 1 → x = 90°. Wait — sin x = 1 gives x = 90°, but check: (sin 90°)² − sin 90° = 1 − 1 = 0 ✓. So answer is <strong>0°, 90°, 180°</strong>! (Option A). Always <strong>factor, don't divide!</strong>"
+        },
+        {
+            id: 5013,
+            text: "📐 In any triangle ABC, which is the correct form of the Cosine Rule?",
+            opts: [
+                {l: "A", t: "a² = b² + c² − 2bc cos A", c: true},
+                {l: "B", t: "a² = b² + c² + 2bc cos A", c: false},
+                {l: "C", t: "a = b + c − 2bc cos A", c: false},
+                {l: "D", t: "a² = b² + c² − 2bc sin A", c: false}
+            ],
+            sol: "The <strong>Cosine Rule</strong> is a² = b² + c² − 2bc·cos(A). It's like Pythagoras with a correction term. When A = 90°, cos A = 0, and it reduces to a² = b² + c² (Pythagoras)!"
+        },
+        {
+            id: 5014,
+            text: "🌊 Which sum-to-product formula is correct?",
+            opts: [
+                {l: "A", t: "sin C + sin D = 2 sin((C+D)/2) sin((C-D)/2)", c: false},
+                {l: "B", t: "sin C + sin D = 2 sin((C+D)/2) cos((C-D)/2)", c: true},
+                {l: "C", t: "sin C + sin D = 2 cos((C+D)/2) sin((C-D)/2)", c: false},
+                {l: "D", t: "sin C + sin D = sin(C+D)", c: false}
+            ],
+            sol: "The correct formula is <strong>sin C + sin D = 2 sin((C+D)/2) cos((C-D)/2)</strong>. The average (C+D)/2 goes into sine, the half-difference (C−D)/2 goes into cosine. Sum of sines → sin·cos!"
+        },
+        {
+            id: 5015,
+            text: "♾️ The general solution for cosθ = cosα is:",
+            opts: [
+                {l: "A", t: "θ = nπ + (-1)ⁿα", c: false},
+                {l: "B", t: "θ = 2nπ ± α", c: true},
+                {l: "C", t: "θ = nπ + α", c: false},
+                {l: "D", t: "θ = nπ ± α", c: false}
+            ],
+            sol: "For <strong>cosθ = cosα</strong>, the general solution is <strong>θ = 2nπ ± α</strong> (n ∈ ℤ). The ± gives two branches: adding α and subtracting α, because cosine is symmetric about the x-axis. For sin it's θ = nπ + (-1)ⁿα, for tan it's θ = nπ + α."
+        },
+        {
+            id: 5016,
+            text: "⚠️ What's wrong with this step: 2 sinθ cosθ = sinθ → 2 cosθ = 1?",
+            opts: [
+                {l: "A", t: "Nothing, it's correct algebra", c: false},
+                {l: "B", t: "Dividing by sinθ loses sinθ=0 solutions", c: true},
+                {l: "C", t: "2 cosθ should equal 0", c: false},
+                {l: "D", t: "sinθ should be factored, not subtracted", c: false}
+            ],
+            sol: "You divided by sinθ, which is zero when θ = 0°, 180°, etc. <strong>Those solutions are lost forever!</strong> Instead: 2 sinθ cosθ − sinθ = 0 → sinθ(2 cosθ − 1) = 0 → sinθ = 0 OR cosθ = ½. <strong>Factor, don't divide!</strong>"
+        }
+    ];
+
+    // ========== RENDER & INTERACT ==========
+    var answered = {}, correctCount = 0, lessonSlug = "trigonometry";
+
+    function renderPractice() {
+        var c = document.getElementById('practice-qs'), h = '';
+        for (var i = 0; i < practiceQs.length; i++) {
+            var q = practiceQs[i], o = '';
+            for (var j = 0; j < q.opts.length; j++) {
+                o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+            }
+            h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+        }
+        c.innerHTML = h;
+        updateScore();
+    }
+
+    function getCorrectLabel(q) {
+        for (var i = 0; i < q.opts.length; i++) {
+            if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+        }
+        return '';
+    }
+
+    function selectOpt(qId, idx) {
+        if (answered[qId]) return;
+        answered[qId] = true;
+        var q = practiceQs.filter(function(x){return x.id === qId})[0];
+        var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+        var isCorrect = q.opts[idx].c;
+        for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+        if (isCorrect) {
+            opts[idx].classList.add('correct');
+            document.getElementById('result-'+qId).textContent = '✅ Correct! +4';
+            document.getElementById('result-'+qId).className = 'q-result correct';
+            correctCount++;
+        } else {
+            opts[idx].classList.add('wrong');
+            document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+            document.getElementById('result-'+qId).className = 'q-result wrong';
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) opts[i].classList.add('correct');
+            }
+        }
+        document.getElementById('soln-'+qId).classList.add('show');
+        updateScore();
+    }
+
+    function updateScore() {
+        var t = Object.keys(answered).length;
+        var el = document.getElementById('score-display');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'score-display';
+            el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+            document.getElementById('practice-qs').before(el);
+        }
+        el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+    }
+
+    function resetPractice() {
+        if (!confirm('Reset all answers?')) return;
+        answered = {}; correctCount = 0;
+        document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+        document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+        document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+        var el = document.getElementById('score-display');
+        if (el) el.textContent = '';
+        renderPractice();
+    }
+
+    function markComplete() {
+        try {
+            var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+            if (done.indexOf(lessonSlug) === -1) {
+                done.push(lessonSlug);
+                localStorage.setItem('jee-course-done', JSON.stringify(done));
+            }
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        } catch(e) {}
+    }
+
+    // ========== ASTC QUADRANT HIGHLIGHT ==========
+    function highlightQuadrant(q) {
+        var quadrants = [1,2,3,4];
+        quadrants.forEach(function(n) {
+            var el = document.getElementById('astcQ'+n);
+            if (el) el.style.opacity = '0.3';
+            var fl = document.getElementById('q'+n+'Funcs');
+            if (fl) fl.style.opacity = '0';
+        });
+        if (q === 0) {
+            document.getElementById('astcMessage').textContent = 'Click a quadrant to see which functions are positive!';
+            return;
+        }
+        var el = document.getElementById('astcQ'+q);
+        if (el) el.style.opacity = '0.6';
+        var fl = document.getElementById('q'+q+'Funcs');
+        if (fl) fl.style.opacity = '1';
+        var msgs = {
+            1: '✅ Q1 (0° to 90°): ALL functions (sin, cos, tan) are positive!',
+            2: '✅ Q2 (90° to 180°): Only sin is positive. Cos and tan are negative.',
+            3: '✅ Q3 (180° to 270°): Only tan is positive. Sin and cos are negative.',
+            4: '✅ Q4 (270° to 360°): Only cos is positive. Sin and tan are negative.'
+        };
+        document.getElementById('astcMessage').innerHTML = msgs[q] || 'Click a quadrant!';
+    }
+
+    // ========== TRIANGLE CASE HELPER ==========
+    function showTriangleCase(c) {
+        var caption = document.getElementById('triangleCaption');
+        var tips = {
+            sss: '🔺 <strong>SSS (three sides):</strong> Use the <strong>Cosine Rule</strong> to find any angle. a² = b² + c² − 2bc cos A → solve for cos A.',
+            sas: '📐 <strong>SAS (two sides + included angle):</strong> Use the <strong>Cosine Rule</strong> to find the third side, then Sine Rule for the other angles.',
+            asa: '📏 <strong>ASA (two angles + side):</strong> Use the <strong>Sine Rule</strong>. First find the third angle (sum = 180°), then a/sin A = b/sin B = c/sin C.'
+        };
+        caption.innerHTML = tips[c] || caption.innerHTML;
+    }
+
+    // Init
+    updateTriangle(30);
+    renderPractice();
+    try {
+        var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+        if (done.indexOf(lessonSlug) !== -1) {
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        }
+    } catch(e) {}
+    </script>
 </body>
 </html>

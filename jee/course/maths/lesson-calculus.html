@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel='stylesheet' href='../../../css/style.css'>
-    
+    <link rel="stylesheet" href="../../../css/style.css">
     <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Calculus — JEE Mathematics Lesson | vlymbooq</title>
-    <meta name="description" content="Free JEE Mathematics Calculus lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Limits & Derivatives — The No-Formula Intuitive Way | vlymbooq</title>
+    <meta name="description" content="Learn Limits & Derivatives through stories, animated visuals, and real-life analogies. Zero formula memorization required — build intuition first.">
     <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/png" href="/logo.png">
@@ -14,9 +13,9 @@
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
-        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-        a{color:var(--purple,#a78bfa);text-decoration:none}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
         .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
         .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
         .brand{display:flex;align-items:center;gap:8px}
@@ -27,124 +26,882 @@
         .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
         .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
         .container{max-width:1000px;margin:0 auto;padding:24px}
-        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
-        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
-        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
-        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
-        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
-        .module-card:hover{border-color:rgba(255,255,255,.12)}
-        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
-        .module-card .m-desc{font-size:.85em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
-        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
-        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.78em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
-        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
-        .lesson-body{padding:20px 0}
-        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
-        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
-        .lesson-body p{color:var(--text-sec);font-size:.9em;line-height:1.7;margin-bottom:10px}
-        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
-        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
-        .example-box .ex-title{font-weight:600;font-size:.85em;color:var(--pureple,#a78bfa);margin-bottom:4px}
-        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.6}
-        .example-box .ex-soln{font-size:.85em;color:var(--emerald);margin-top:6px;font-weight:500}
-        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
-        .tip-box .tip-title{font-weight:600;font-size:.85em;color:var(--emerald);margin-bottom:4px}
-        .tip-box .tip-text{font-size:.85em;color:var(--text-sec);line-height:1.5}
-        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
-        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
-        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
-        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s}
-        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
-        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
-        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
-        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
-        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.82em;color:var(--text-sec)}
-        .q-card .q-soln.show{display:block}
-        .q-card .q-soln strong{color:var(--emerald)}
-        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
-        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
-        .sidebar-nav{position:sticky;top:72px}
-        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
-        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
-        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
-        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
-        .btn-primary:hover{background:rgba(167,139,250,.25)}
-        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
-        .btn-success:hover{background:rgba(52,211,153,.25)}
         .flex-row{display:flex;gap:24px}
         .flex-row .main{flex:1;min-width:0}
         .flex-row .side{width:220px;flex-shrink:0}
         @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
-        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
-        .diagram-box svg{max-width:100%;height:auto}
-        .diagram-box .diagram-caption{font-size:.78em;color:var(--text-muted);margin-top:8px}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
         .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
         .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
-        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}}
+
+        /* ========== STORY CARDS ========== */
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        /* ========== INSIGHT BOX ========== */
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        /* ========== ANIMATED DIAGRAM ========== */
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+        .diagram-box .diagram-title{font-size:.85em;font-weight:700;color:var(--text);margin-bottom:8px}
+        .diagram-box .diagram-controls{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+        .diagram-box .ctrl-btn{padding:6px 16px;border-radius:100px;font-size:.78em;font-weight:600;border:1px solid var(--border);background:var(--bg-card);color:var(--text-sec);cursor:pointer;transition:all .2s}
+        .diagram-box .ctrl-btn:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15)}
+        .diagram-box .ctrl-btn.active{background:rgba(167,139,250,.12);border-color:var(--purple);color:var(--purple)}
+        .diagram-box .slider-wrap{display:flex;align-items:center;gap:12px;margin-top:12px;justify-content:center}
+        .diagram-box .slider-wrap input[type=range]{width:200px;max-width:60%;-webkit-appearance:none;background:var(--border);height:4px;border-radius:4px;outline:none}
+        .diagram-box .slider-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple);cursor:pointer}
+        .diagram-box .slider-wrap .slider-val{font-size:.82em;color:var(--purple);font-weight:700;min-width:30px}
+
+        /* ========== STEP REVEAL ========== */
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        /* ========== PRACTICE CARDS ========== */
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+        .q-badge{display:inline-block;padding:2px 8px;border-radius:100px;font-size:.7em;font-weight:600;margin-bottom:6px}
+        .q-badge.easy{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .q-badge.medium{background:rgba(245,158,11,.1);color:var(--amber)}
+        .q-badge.hard{background:rgba(239,68,68,.1);color:var(--red)}
+
+        /* ========== KEYFRAME ANIMATIONS ========== */
+        @keyframes breathe{0%,100%{opacity:.4}50%{opacity:.8}}
+        @keyframes pulse-glow{0%,100%{filter:drop-shadow(0 0 4px rgba(167,139,250,.3))}50%{filter:drop-shadow(0 0 12px rgba(167,139,250,.6))}}
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes bounce-dot{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        @keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+        .slide-up{animation:slide-up .6s ease forwards}
+        .stagger-1{animation-delay:.1s}
+        .stagger-2{animation-delay:.2s}
+        .stagger-3{animation-delay:.3s}
+
+        /* ========== PROGRESS TRACKER ========== */
+        .progress-tracker{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+        .progress-tracker .p-step{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;font-size:.75em;border:1px solid var(--border);color:var(--text-muted);transition:all .3s}
+        .progress-tracker .p-step.done{border-color:var(--emerald);color:var(--emerald);background:rgba(52,211,153,.06)}
+        .progress-tracker .p-step.active{border-color:var(--purple);color:var(--purple);background:rgba(167,139,250,.08)}
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part2{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part3{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        /* Interactive graph hover effect */
+        .graph-hover-area{cursor:crosshair}
+        .graph-point{transition:all .3s}
+        .graph-point:hover{r:6;fill:var(--amber)}
+
+        /* Math display */
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+
+        /* Interactive playground */
+        .playground{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin:16px 0}
+        .playground .pg-title{font-size:.9em;font-weight:700;margin-bottom:4px}
+        .playground .pg-desc{font-size:.78em;color:var(--text-muted);margin-bottom:12px}
     </style>
 </head>
 <body>
-    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="../index.html">JEE</a><a href="index.html" class="active">Course</a></div></div></nav>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="../../index.html">JEE</a><a href="../index.html" class="active">Course</a></div></div></nav>
     <div class="container">
         <div class="flex-row">
             <div class="side">
                 <div class="sidebar-nav">
-                    <div style="font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Mathematics</div>
+                    <div class="s-title">Mathematics</div>
                     <a href="lesson-algebra.html">Algebra</a>
                     <a href="lesson-calculus.html" class="active">Calculus</a>
                     <a href="lesson-coordinate-geometry.html">Coordinate Geometry</a>
-                    <a href="lesson-vector-3d.html">Vector & 3D Geometry</a>
-                    <a href="lesson-probability-statistics.html">Probability & Statistics</a>
+                    <a href="lesson-vector-3d.html">Vector & 3D</a>
+                    <a href="lesson-probability-statistics.html">Probability & Stats</a>
                     <a href="lesson-trigonometry.html">Trigonometry</a>
                 </div>
             </div>
             <div class="main">
                 <div style="margin-bottom:16px">
-                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 3 &middot; JEE Mathematics</div>
-                    <h1 style="font-size:1.5em;font-weight:900">Calculus</h1>
-                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Limits, continuity, differentiation, integration, differential equations, area under curves.</div>
-                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
-                        <span style="font-size:.75em;color:var(--text-muted)">Limits · Differentiation · Integration · DE · Area Under Curve</span>
-                    </div>
-                    <div style="display:flex;gap:8px;margin-top:10px">
-                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
-                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 1 &middot; JEE Mathematics</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Limits & Derivatives</h1>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">No formulas. No memorization. Just stories, animations, and "AHA!" moments.</div>
+                    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+                        <button onclick="window.print()" class="download-btn">📄 Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">🎯 Take Mock Test</a>
                     </div>
                 </div>
+
+                <div class="progress-tracker">
+                    <span class="p-step active" id="p1"><span>🎭</span> Zeno's Puzzle</span>
+                    <span class="p-step" id="p2"><span>📈</span> See Limits</span>
+                    <span class="p-step" id="p3"><span>🕳️</span> The Hole</span>
+                    <span class="p-step" id="p4"><span>⛰️</span> Slope = Speed</span>
+                    <span class="p-step" id="p5"><span>🎯</span> Practice</span>
+                </div>
+
                 <div class="lesson-body">
-                    <h3>Learning Objectives</h3>
-                    <ul>
-                        <li>Understand the fundamental concepts of Calculus</li>
-                        <li>Apply key formulas and techniques to solve problems</li>
-                        <li>Practice with exam-level questions to build speed and accuracy</li>
-                    </ul>
-                    <h3>Key Concepts</h3>
-<h3>What is Calculus?</h3><p>Calculus is the mathematical study of continuous change, divided into differential calculus (rates of change and slopes) and integral calculus (accumulation and areas). For JEE Main & Advanced, calculus carries the highest weightage (~35% of the maths paper). Key topics include limits, continuity, differentiability, differentiation, integration, differential equations, and area under curves.</p><h3>Key Concepts</h3><p><strong>1. Limits & Continuity:</strong> A function f(x) has limit L as x approaches a if f(x) gets arbitrarily close to L. Standard limits: lim(x→0) sin x / x = 1, lim(x→0) (e^x - 1)/x = 1, lim(x→0) (1+x)^(1/x) = e. A function is continuous at x = a if lim(x→a) f(x) = f(a). L'Hôpital's rule: if limit gives 0/0 or ∞/∞, differentiate numerator and denominator separately.</p><p><strong>2. Differentiation:</strong> Derivative f'(x) = dy/dx = lim(h→0) [f(x+h) - f(x)]/h. Standard derivatives: d/dx(x^n) = nx^(n-1), d/dx(sin x) = cos x, d/dx(e^x) = e^x, d/dx(log x) = 1/x. Chain rule: dy/dx = (dy/du)(du/dx). Product rule: (uv)' = u'v + uv'. Quotient rule: (u/v)' = (u'v - uv')/v^2.</p><p><strong>3. Application of Derivatives:</strong> Tangent slope = f'(x₀). Normal slope = -1/f'(x₀). For maxima/minima: f'(x) = 0 (critical points), f''(x) > 0 → local minima, f''(x) < 0 → local maxima. Rate of change: dy/dt = (dy/dx)(dx/dt). Increasing function if f'(x) > 0, decreasing if f'(x) < 0.</p><p><strong>4. Integration:</strong> ∫x^n dx = x^(n+1)/(n+1) + C (n ≠ -1). ∫(1/x) dx = log|x| + C. ∫sin x dx = -cos x + C. ∫e^x dx = e^x + C. Methods: substitution, integration by parts (∫u dv = uv - ∫v du), partial fractions. Definite integral: ∫(a to b) f(x) dx = F(b) - F(a). Properties: ∫(a to b) f(x) dx = ∫(a to b) f(a+b-x) dx, ∫(-a to a) f(x) dx = 0 if f is odd, 2∫(0 to a) f(x) dx if f is even.</p><p><strong>5. Area Under Curve:</strong> Area bounded by y = f(x), x-axis, x = a, x = b is ∫(a to b) |f(x)| dx. Area between two curves = ∫(a to b) |f(x) - g(x)| dx.</p><p><strong>6. Differential Equations:</strong> Order = highest derivative. Degree = power of highest derivative. Variable separable: dy/dx = f(x)g(y) → ∫dy/g(y) = ∫f(x)dx. Linear DE: dy/dx + Py = Q → integrating factor IF = e^(∫P dx), solution: y(IF) = ∫Q(IF) dx.</p><h3>Solved Examples</h3><div class="example-box"><div class="ex-title">Example 1 (Limit using L'Hôpital)</div><div class="ex-text">Evaluate: lim(x→0) (sin²x - x²)/(x⁴)<br><br>a) -1/3 b) 1/3 c) -1/6 d) 1/6</div><div class="ex-soln"><strong>Solution:</strong> a) -1/3. Apply L'Hôpital's rule 4 times. First: (2 sin x cos x - 2x)/(4x³) = (sin 2x - 2x)/(4x³). Second: (2 cos 2x - 2)/(12x²) = -2(1 - cos 2x)/(12x²) = -(2·2 sin²x)/(12x²) = -4 sin²x/(12x²). Third: -8 sin x cos x/(24x) = -4 sin 2x/(24x). Fourth: -8 cos 2x/24 = -1/3.</div></div><div class="example-box"><div class="ex-title">Example 2 (Maxima-Minima)</div><div class="ex-text">Find the maximum value of f(x) = x³ - 6x² + 9x + 15 in [0,5].<br><br>a) 15 b) 19 c) 35 d) 29</div><div class="ex-soln"><strong>Solution:</strong> c) 35. f'(x) = 3x² - 12x + 9 = 3(x² - 4x + 3) = 3(x-1)(x-3). Critical points: x = 1, 3. f''(x) = 6x - 12. At x=1: f'' = -6 < 0 → local max, f(1) = 1-6+9+15 = 19. At x=3: f'' = 6 > 0 → local min, f(3) = 27-54+27+15 = 15. At endpoints: f(0) = 15, f(5) = 125-150+45+15 = 35. Global maximum in [0,5] is 35 at x=5.</div></div><div class="example-box"><div class="ex-title">Example 3 (Integration by Parts)</div><div class="ex-text">Evaluate: ∫e^x sin x dx<br><br>a) (e^x/2)(sin x - cos x) + C b) (e^x/2)(sin x + cos x) + C c) e^x(sin x - cos x)/2 + C d) Both a and c</div><div class="ex-soln"><strong>Solution:</strong> d) Both a and c are the same. Let I = ∫e^x sin x dx. Using integration by parts: I = e^x sin x - ∫e^x cos x dx = e^x sin x - [e^x cos x + ∫e^x sin x dx] = e^x sin x - e^x cos x - I. So 2I = e^x(sin x - cos x) → I = (e^x/2)(sin x - cos x) + C.</div></div><h3>Shortcut Techniques</h3><ul><li>For 0/0 or ∞/∞ limits, always try L'Hôpital's rule first — differentiate numerator and denominator separately until you get a determinate form.</li><li>Memorise standard expansions: e^x = 1 + x + x²/2! + ..., sin x = x - x³/3! + ..., cos x = 1 - x²/2! + ... for limits with series.</li><li>For maxima-minima word problems, write the function to optimise in one variable using the given constraint, then differentiate.</li><li>Integration shortcut: ∫e^{ax} sin(bx) dx = e^{ax}(a sin bx - b cos bx)/(a²+b²) + C.</li><li>Area shortcut: area between parabola y² = 4ax and its latus rectum x = a is (8a²/3).</li></ul><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">For JEE Advanced, calculus questions often combine multiple concepts — e.g., area under curve with differential equations, or limits with expansion series. Practice mixed-concept problems from previous years. Maintain a formula sheet for quick revision of all standard limits, derivatives, and integration formulas.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div>                </div>
-                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
-                <div id="practice-qs"></div>
-                <div style="display:flex;gap:10px;margin-top:10px">
-                    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
-                    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
-                </div>
-                <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
-                    <a href="lesson-algebra.html" class="btn btn-primary">&#x2190; Algebra</a>
-                    <a href="lesson-coordinate-geometry.html" class="btn btn-success">Coordinate Geometry &#x2192;</a>
+                    <!-- ============================================================ -->
+                    <!-- PART 1: ZENO'S PARADOX — WHY LIMITS EXIST -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">🎭 Part 1: The Story That Invented Calculus</span>
+                    <h2>Story Time: The Arrow That Never Reaches the Wall</h2>
+
+                    <p>Imagine an archer shoots an arrow at a wall <strong>2 meters away</strong>.</p>
+
+                    <p>Before the arrow reaches the wall, it must first travel <strong>half the distance</strong> (1 meter). Then from there, it must travel <strong>half of the remaining</strong> distance (0.5 meters). Then half of what's left (0.25 meters). Then half of THAT (0.125 meters)...</p>
+
+                    <p><strong>The puzzle:</strong> The arrow keeps covering half of whatever distance is left. It never actually reaches the wall in finite time — there's always another half to go! So... <em>does the arrow ever reach the wall?</em></p>
+
+                    <div class="story-card">
+                        <div class="story-label">🐢 Ancient Puzzle (Zeno's Paradox, 450 BC)</div>
+                        <div class="story-title">The Arrow & The Wall</div>
+                        <div class="story-text">
+                            <strong>Zeno said:</strong> "Motion is impossible, because to reach any point, you must first reach the halfway point — and there are infinitely many halfway points!"<br><br>
+                            <strong>Reality says:</strong> Arrows DO reach walls. So our thinking is wrong. We need a better way to think about "getting closer and closer."
+                        </div>
+                        <div class="story-moral">💡 The "almost there" idea is the KEY to calculus. When something gets closer and closer to a value, we call that value the <strong>LIMIT</strong>.</div>
+                    </div>
+
+                    <!-- Animated Zeno Diagram -->
+                    <div class="diagram-box">
+                        <div class="diagram-title">🎯 Watch the Arrow Get "Almost There"</div>
+                        <svg viewBox="0 0 700 180" width="700" height="180">
+                            <defs>
+                                <marker id="arrowHead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#a78bfa"/></marker>
+                                <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#ef4444"/>
+                                    <stop offset="100%" stop-color="#dc2626"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- Arrow path -->
+                            <line x1="50" y1="100" x2="650" y2="100" stroke="rgba(255,255,255,.08)" stroke-width="2"/>
+                            <!-- Distance markers -->
+                            <line x1="50" y1="85" x2="50" y2="115" stroke="var(--text-muted)" stroke-width="1.5"/>
+                            <text x="45" y="80" fill="var(--text-muted)" font-size="11" font-weight="600">Start</text>
+                            <!-- Wall -->
+                            <rect x="640" y="50" width="12" height="100" rx="2" fill="url(#wallGrad)" opacity=".8"/>
+                            <text x="658" y="55" fill="var(--text-muted)" font-size="11" font-weight="600">Wall</text>
+                            <!-- Distance labels on top -->
+                            <text x="180" y="40" fill="var(--purple)" font-size="11" font-weight="700" opacity=".6">½</text>
+                            <text x="320" y="40" fill="var(--purple)" font-size="11" font-weight="700" opacity=".5">½</text>
+                            <text x="430" y="40" fill="var(--purple)" font-size="11" font-weight="700" opacity=".4">½</text>
+                            <text x="510" y="40" fill="var(--purple)" font-size="11" font-weight="700" opacity=".3">½</text>
+                            <text x="560" y="40" fill="var(--purple)" font-size="11" font-weight="700" opacity=".2">½</text>
+                            <text x="595" y="40" fill="var(--purple)" font-size="11" font-weight="700" opacity=".1">½</text>
+                            <!-- Arrow (animated) -->
+                            <g>
+                                <polygon points="0,-8 14,0 0,8" fill="var(--amber)" opacity=".9">
+                                    <animateTransform attributeName="transform" type="translate" 
+                                        values="50,100;160,100;160,100;280,100;280,100;370,100;370,100;440,100;440,100;490,100;490,100;530,100;530,100;560,100;560,100;585,100;585,100;605,100;605,100;620,100;620,100;632,100;632,100;638,100"
+                                        dur="10s" repeatCount="indefinite" keyTimes="0;0.05;0.1;0.15;0.2;0.25;0.3;0.35;0.4;0.45;0.5;0.55;0.6;0.65;0.7;0.75;0.8;0.85;0.9;0.95;1" calcMode="spline" keySplines="0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1;0.4 0 0.2 1"/>
+                                </polygon>
+                                <!-- Trailing dots showing past positions -->
+                                <circle cx="160" cy="100" r="2" fill="var(--amber)" opacity=".15"/>
+                                <circle cx="280" cy="100" r="2" fill="var(--amber)" opacity=".12"/>
+                                <circle cx="370" cy="100" r="2" fill="var(--amber)" opacity=".1"/>
+                                <circle cx="440" cy="100" r="2" fill="var(--amber)" opacity=".08"/>
+                                <circle cx="490" cy="100" r="2" fill="var(--amber)" opacity=".06"/>
+                                <circle cx="530" cy="100" r="2" fill="var(--amber)" opacity=".04"/>
+                            </g>
+                            <!-- Distance traveled counter -->
+                            <text x="350" y="148" fill="var(--text-sec)" font-size="12" text-anchor="middle">
+                                Distance traveled:
+                                <tspan fill="var(--amber)" font-weight="800">
+                                    <animate attributeName="textContent" values="0m;1m;1.5m;1.75m;1.875m;1.9375m;1.96875m;1.984375m;1.9921875m;1.99609375m;1.998046875m;1.9990234375m;1.99951171875m;1.999755859375m;1.9998779296875m;1.99993896484375m;1.999969482421875m;1.9999847412109375m;1.9999923706054688m;1.9999961853027344m;1.9999980926513672m" dur="10s" repeatCount="indefinite"/>
+                                </tspan>
+                            </text>
+                            <!-- "Limit = 2" label -->
+                            <text x="350" y="165" fill="var(--emerald)" font-size="13" font-weight="800" text-anchor="middle" opacity=".8">Limit = 2 meters  ✨</text>
+                        </svg>
+                        <div class="diagram-caption">The arrow covers half of what's left each time. After 10 steps, it's at 1.999998 meters. It NEVER reaches 2... but it gets <strong>so close</strong> that for all practical purposes, it IS 2. The <strong>limit</strong> of this journey is 2.</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 First Big Idea</div>
+                        <div class="insight-text">A <strong>limit</strong> is the number you get closer and closer to, even if you never quite arrive.</div>
+                        <div class="insight-sub">Like the arrow approaching the wall — the limit is 2 meters, the actual target.</div>
+                    </div>
+
+                    <p><strong>Real-life example:</strong> When you walk toward a door, you cover half the remaining distance with each step. You never mathematically "reach" it, but you walk right through. The <strong>limit</strong> fixes Zeno's puzzle — it's the number your journey is <em>approaching</em>.</p>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 2: SEEING LIMITS ON GRAPHS -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">📈 Part 2: Watching Numbers "Get Close" on a Graph</span>
+                    <h2>What Does "Approaching 4" Look Like?</h2>
+
+                    <p>Let's take the world's simplest function: \(f(x) = x + 2\).</p>
+                    <p>When x is 1, f(x) = 3. When x is 1.5, f(x) = 3.5. When x is 1.9, f(x) = 3.9.</p>
+                    <p>As x gets closer and closer to <strong>2</strong>, what does f(x) get closer to?</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">👆 Watch the Point Approach x=2</div>
+                        <svg viewBox="0 0 500 400" width="500" height="400">
+                            <!-- Grid -->
+                            <defs>
+                                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+                                </pattern>
+                                <marker id="arrowAx" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4 Z" fill="rgba(255,255,255,.3)"/></marker>
+                            </defs>
+                            <rect width="500" height="400" fill="url(#grid)"/>
+                            <!-- Axes -->
+                            <line x1="40" y1="360" x2="480" y2="360" stroke="rgba(255,255,255,.2)" stroke-width="1.5" marker-end="url(#arrowAx)"/>
+                            <line x1="40" y1="360" x2="40" y2="30" stroke="rgba(255,255,255,.2)" stroke-width="1.5" marker-end="url(#arrowAx)"/>
+                            <!-- Labels -->
+                            <text x="475" y="378" fill="rgba(255,255,255,.4)" font-size="13" font-weight="600" text-anchor="end">x</text>
+                            <text x="30" y="38" fill="rgba(255,255,255,.4)" font-size="13" font-weight="600" text-anchor="middle">y</text>
+                            <!-- Axis numbers -->
+                            <text x="120" y="378" fill="var(--text-muted)" font-size="11" text-anchor="middle">1</text>
+                            <text x="200" y="378" fill="var(--text-muted)" font-size="11" text-anchor="middle">2</text>
+                            <text x="280" y="378" fill="var(--text-muted)" font-size="11" text-anchor="middle">3</text>
+                            <text x="360" y="378" fill="var(--text-muted)" font-size="11" text-anchor="middle">4</text>
+                            <text x="25" y="280" fill="var(--text-muted)" font-size="11" text-anchor="end">1</text>
+                            <text x="25" y="200" fill="var(--text-muted)" font-size="11" text-anchor="end">2</text>
+                            <text x="25" y="120" fill="var(--text-muted)" font-size="11" text-anchor="end">3</text>
+                            <text x="25" y="55" fill="var(--text-muted)" font-size="11" text-anchor="end">4</text>
+                            <!-- The line f(x) = x + 2 -->
+                            <line x1="40" y1="320" x2="440" y2="40" stroke="var(--emerald)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="8,4"/>
+                            <!-- Target x=2 vertical dashed line -->
+                            <line x1="200" y1="360" x2="200" y2="40" stroke="rgba(167,139,250,.2)" stroke-width="1.5" stroke-dasharray="4,4"/>
+                            <!-- Target y=4 horizontal dashed line -->
+                            <line x1="40" y1="200" x2="480" y2="200" stroke="rgba(167,139,250,.2)" stroke-width="1.5" stroke-dasharray="4,4"/>
+                            <!-- Label at intersection -->
+                            <text x="210" y="195" fill="var(--purple)" font-size="12" font-weight="700">(2, 4)</text>
+                            <!-- Animated point moving along the line -->
+                            <circle r="8" fill="var(--amber)" filter="url(#glow)">
+                                <animate attributeName="cx" values="60;80;100;120;140;160;180;195;199;200;199;195;180;160;140;120;100;80;60" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="310;290;270;250;230;210;195;182;178;177.5;178;182;195;210;230;250;270;290;310" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="r" values="8;8;8;8;8;8;8;8;8;10;8;8;8;8;8;8;8;8;8" dur="8s" repeatCount="indefinite"/>
+                            </circle>
+                            <!-- Coordinate display -->
+                            <text x="390" y="330" fill="var(--text-sec)" font-size="12" font-family="monospace">
+                                x = <tspan fill="var(--amber)" font-weight="800">
+                                    <animate attributeName="textContent" values="1.0;1.0;1.5;1.5;1.9;1.9;1.99;1.99;2.0;2.0;1.99;1.99;1.9;1.9;1.5;1.5;1.0;1.0" dur="8s" repeatCount="indefinite"/>
+                                </tspan>
+                            </text>
+                            <text x="390" y="348" fill="var(--text-sec)" font-size="12" font-family="monospace">
+                                y = <tspan fill="var(--emerald)" font-weight="800">
+                                    <animate attributeName="textContent" values="3.0;3.0;3.5;3.5;3.9;3.9;3.99;3.99;4.0;4.0;3.99;3.99;3.9;3.9;3.5;3.5;3.0;3.0" dur="8s" repeatCount="indefinite"/>
+                                </tspan>
+                            </text>
+                        </svg>
+                        <div class="diagram-caption">The orange dot moves along the line y = x+2. Watch the coordinates as it approaches x=2 — y gets closer and closer to <strong>4</strong>. The <strong>limit</strong> of f(x) as x approaches 2 is 4.</div>
+                        <div class="diagram-controls">
+                            <button class="ctrl-btn active" onclick="document.querySelector('#anim1 circle').setAttribute('dur','8s')">▶ Play</button>
+                            <button class="ctrl-btn" onclick="document.querySelector('#anim1 circle').setAttribute('dur','20s')">🐢 Slow</button>
+                            <button class="ctrl-btn" onclick="document.querySelector('#anim1 circle').setAttribute('dur','3s')">⚡ Fast</button>
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Second Big Idea</div>
+                        <div class="insight-text">The limit answers: "Where is the y-value <em>headed</em> as x gets close to some number?"</div>
+                        <div class="insight-sub">You don't care what happens AT x=2. You care what happens NEAR x=2.</div>
+                    </div>
+
+                    <!-- ========== LEFT vs RIGHT ========== -->
+                    <h3>The Two-Way Street: Left and Right</h3>
+                    <p>Imagine you're walking toward a streetlamp. You can approach it from the <strong>left side</strong> of the street or the <strong>right side</strong>. If the lamp is on, both paths lead to the same bright spot.</p>
+
+                    <p>In calculus, we call these <strong>one-sided limits</strong>:</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🚶 Left-Hand Limit vs Right-Hand Limit</div>
+                        <svg viewBox="0 0 500 320" width="500" height="320">
+                            <!-- Graph of f(x) = x² for x<2, f(x)=5-x for x>2 -->
+                            <!-- Axes -->
+                            <line x1="40" y1="280" x2="480" y2="280" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <line x1="40" y1="280" x2="40" y2="30" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <!-- Left curve: x² from x=0 to x=2 -->
+                            <path d="M40,280 Q80,240 120,200 Q160,140 180,100 Q190,80 198,60" fill="none" stroke="var(--cyan)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Right curve: 5-x from x=2 to x=4 -->
+                            <path d="M202,60 Q220,80 240,100 Q280,140 320,180 Q360,220 400,260 Q420,275 440,280" fill="none" stroke="var(--amber)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Point at (2,4) from left -->
+                            <circle cx="200" cy="58" r="6" fill="var(--cyan)"/>
+                            <!-- Point at (2,3) from right -->
+                            <circle cx="200" cy="62" r="6" fill="var(--amber)"/>
+                            <!-- Labels -->
+                            <text x="120" y="160" fill="var(--cyan)" font-size="13" font-weight="700">From Left → y approaches 4</text>
+                            <text x="120" y="180" fill="var(--amber)" font-size="13" font-weight="700">From Right → y approaches 3</text>
+                            <text x="200" y="45" fill="var(--text-muted)" font-size="12" text-anchor="middle">x = 2</text>
+                            <line x1="200" y1="280" x2="200" y2="30" stroke="rgba(255,255,255,.1)" stroke-width="1" stroke-dasharray="3,3"/>
+                            <!-- Left arrow approaching -->
+                            <text x="140" y="90" fill="var(--cyan)" font-size="16" opacity=".8">←</text>
+                            <!-- Right arrow approaching -->
+                            <text x="260" y="90" fill="var(--amber)" font-size="16" opacity=".8">→</text>
+                            <!-- Result -->
+                            <rect x="130" y="280" width="240" height="34" rx="8" fill="rgba(239,68,68,.08)" stroke="rgba(239,68,68,.2)" stroke-width="1"/>
+                            <text x="250" y="302" fill="var(--red)" font-size="13" font-weight="700" text-anchor="middle">⚠️ Left says 4, Right says 3 → <strong>No single limit!</strong></text>
+                        </svg>
+                        <div class="diagram-caption">When the left and right paths lead to DIFFERENT y-values, the limit does NOT exist. Like two people giving different answers — you can't trust either!</div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="this.querySelector('.step-content').classList.toggle('open');this.querySelector('.arrow').classList.toggle('open')">
+                            <span class="step-number">🔑</span>
+                            <span style="flex:1;font-weight:600;font-size:.9em">The Golden Rule of Limits</span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            <p>A limit exists <strong>only if</strong> the left-hand limit <strong>equals</strong> the right-hand limit.</p>
+                            <p style="margin-top:6px">Think of it like a bridge: if both sides meet in the middle, you can cross. If they don't match, the bridge is broken — no limit!</p>
+                            <p style="margin-top:6px;color:var(--emerald);font-weight:600">Formula (just a label for what you already understand):</p>
+                            <div class="math-block">lim_{x→a} f(x) = L &nbsp;⟺&nbsp; lim_{x→a⁻} f(x) = lim_{x→a⁺} f(x) = L</div>
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 3: THE HOLE — WHEN THE FUNCTION DOESN'T EXIST -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">🕳️ Part 3: The Missing Point</span>
+                    <h2>What If the Point Disappears?</h2>
+
+                    <p>Here's the mind-bending part: <strong>The limit has NOTHING to do with what happens AT the point.</strong></p>
+
+                    <p>Imagine a function with a "hole" — like a graph where there's a missing dot at x=2. Maybe the function isn't defined there, or the point jumped somewhere else.</p>
+
+                    <p>Here's the magic: <strong>The limit can still exist!</strong> Because the limit only cares about the <em>journey</em>, not the <em>destination</em>.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🕳️ Same Journey, Different Destination</div>
+                        <svg viewBox="0 0 500 350" width="500" height="350">
+                            <defs>
+                                <pattern id="grid2" width="40" height="40" patternUnits="userSpaceOnUse">
+                                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+                                </pattern>
+                            </defs>
+                            <rect width="500" height="350" fill="url(#grid2)"/>
+                            <!-- Axes -->
+                            <line x1="50" y1="310" x2="480" y2="310" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <line x1="50" y1="310" x2="50" y2="30" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <!-- x=2 marker -->
+                            <line x1="210" y1="310" x2="210" y2="30" stroke="rgba(255,255,255,.08)" stroke-width="1" stroke-dasharray="3,3"/>
+                            <text x="210" y="328" fill="var(--text-muted)" font-size="11" text-anchor="middle">x=2</text>
+                            <!-- The line y = x+1 approaching from left -->
+                            <line x1="90" y1="270" x2="200" y2="130" stroke="var(--purple)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- The line y = x+1 from right (same) -->
+                            <line x1="220" y1="130" x2="440" y2="50" stroke="var(--purple)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- HOLE at x=2, y=3 -->
+                            <circle cx="210" cy="128" r="7" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-dasharray="2,2"/>
+                            <text x="235" y="120" fill="var(--red)" font-size="11" font-weight="700">🧀 Hole! f(2) is gone!</text>
+                            <!-- Animated point approaching from left -->
+                            <circle r="7" fill="var(--amber)">
+                                <animate attributeName="cx" values="100;130;160;185;200;200;200;200;185;160;130;100" dur="6s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="265;235;205;180;165;128;128;128;165;180;205;235" dur="6s" repeatCount="indefinite"/>
+                            </circle>
+                            <!-- Point jumping to a different value -->
+                            <circle cx="210" cy="80" r="7" fill="var(--red)" opacity=".7">
+                                <animate attributeName="opacity" values="0;0;0;0;0;1;1;0;0;0;0;0" dur="6s" repeatCount="indefinite"/>
+                            </circle>
+                            <text x="225" y="75" fill="var(--red)" font-size="11" font-weight="700" opacity=".7">But f(2)=1 (different!)</text>
+                            <!-- Limit label -->
+                            <rect x="140" y="310" width="220" height="34" rx="8" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+                            <text x="250" y="332" fill="var(--emerald)" font-size="13" font-weight="700" text-anchor="middle">Limit = 3 (the journey says 3!)</text>
+                        </svg>
+                        <div class="diagram-caption">The function f(2) might be undefined, or f(2) might equal 1. But the <strong>limit</strong> as x→2 is still 3, because from both sides, the y-values approach 3. Limit = the journey, not the destination.</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Third Big Idea (Most Important!)</div>
+                        <div class="insight-text">Limit ≠ Function Value. The limit is about <strong>where you're going</strong>, not <strong>where you are</strong>.</div>
+                        <div class="insight-sub">You can have a limit even at a point where the function doesn't exist!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🎪 Real-Life Analogy</div>
+                        <div class="story-title">The GPS That Lost Your House</div>
+                        <div class="story-text">
+                            Imagine your GPS is guiding you to a friend's house. As you drive, the GPS says "Arriving at 42 Maple Street." But when you get there... the house number is 41! The house burned down and was replaced!<br><br>
+                            The <strong>limit</strong> is what the GPS predicted (42 Maple Street — the journey was pointing there). The <strong>function value</strong> is what's actually there now (41 — different!). Both can be different!
+                        </div>
+                        <div class="story-moral">🧠 Calculus students who only memorize formulas get confused here. Students who understand the <strong>journey vs destination</strong> idea never forget.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 4: DERIVATIVE = SPEEDOMETER -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">⛰️ Part 4: The Slope That Changes</span>
+                    <h2>From Average Speed to Instant Speed</h2>
+
+                    <p>You're in a car. Your dad asks: <strong>"How fast are we going RIGHT NOW?"</strong></p>
+                    <p>You look at the speedometer. It says 60 km/h.</p>
+                    <p>But wait — "right now" is an <strong>instant</strong>. In zero time, you travel zero distance. So how can the speedometer possibly know your speed at a single instant?</p>
+
+                    <p>This is the exact same problem as Zeno's arrow! And the answer is the same: <strong>limits</strong>.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🚗 From "Average Speed" to "Instant Speed"</div>
+                        <svg viewBox="0 0 550 380" width="550" height="380">
+                            <!-- Background -->
+                            <rect width="550" height="380" fill="var(--bg-elevated)" rx="12"/>
+                            <!-- The distance curve -->
+                            <line x1="50" y1="330" x2="520" y2="330" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <line x1="50" y1="330" x2="50" y2="40" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <!-- Curve: s(t) = t² (distance vs time) -->
+                            <path d="M50,330 Q100,310 150,280 Q200,240 250,190 Q300,130 350,90 Q380,60 420,50" fill="none" stroke="var(--purple)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Car icon -->
+                            <text x="390" y="55" font-size="22" opacity=".9">🚗</text>
+                            <!-- Tangent line at t=3 (slope = 6) -->
+                            <line x1="260" y1="210" x2="330" y2="80" stroke="var(--emerald)" stroke-width="2" stroke-dasharray="6,3" opacity=".8"/>
+                            <!-- Secant lines (animated) -->
+                            <line x1="200" y1="260" x2="350" y2="90" stroke="var(--amber)" stroke-width="1.5" opacity=".5">
+                                <animate attributeName="x1" values="150;180;210;240;260;260;260;240;210;180;150" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="y1" values="280;255;225;195;180;180;180;195;225;255;280" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values=".1;.2;.3;.4;.5;0;.5;.4;.3;.2;.1" dur="8s" repeatCount="indefinite"/>
+                            </line>
+                            <!-- Labels -->
+                            <text x="400" y="340" fill="var(--text-muted)" font-size="12" text-anchor="middle">Time (t) →</text>
+                            <text x="30" y="190" fill="var(--text-muted)" font-size="12" text-anchor="middle" transform="rotate(-90,30,190)">Distance (s) →</text>
+                            <!-- Speedometer display -->
+                            <rect x="180" y="340" width="200" height="34" rx="8" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+                            <text x="280" y="362" fill="var(--emerald)" font-size="14" font-weight="800" text-anchor="middle">
+                                Speed at this instant = 
+                                <tspan fill="var(--amber)">6 m/s</tspan>
+                            </text>
+                            <!-- Explanation -->
+                            <text x="280" y="280" fill="var(--text-sec)" font-size="11" text-anchor="middle" opacity=".7">As the secant line gets closer... it becomes the tangent (dashed green)</text>
+                        </svg>
+                        <div class="diagram-caption">The purple curve is your distance over time. The dashed green line is the <strong>tangent</strong> — it touches the curve at exactly one point. The <strong>slope</strong> of this tangent line = your instantaneous speed.</div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="this.querySelector('.step-content').classList.toggle('open');this.querySelector('.arrow').classList.toggle('open')">
+                            <span class="step-number">🚀</span>
+                            <span style="flex:1;font-weight:600;font-size:.9em">The Simple Secret of Derivatives</span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            <p><strong>Step 1:</strong> To find average speed between two times, you do: (distance difference) / (time difference). That's the slope of the <strong>secant</strong> line connecting two points.</p>
+                            <p><strong>Step 2:</strong> To find INSTANT speed, make the time difference smaller and smaller. Like Zeno's arrow, shrink the window.</p>
+                            <p><strong>Step 3:</strong> As the time difference approaches ZERO, the secant line approaches the <strong>tangent</strong> line. The slope of the tangent = the derivative = your speed RIGHT NOW.</p>
+                            <p style="color:var(--emerald);font-weight:600;margin-top:8px">That's ALL a derivative is: the limit of slopes as the two points get infinitely close together.</p>
+                            <div class="math-block">Derivative = Slope of Tangent = lim_{h→0} (f(x+h) - f(x)) / h</div>
+                            <p style="color:var(--text-muted);font-size:.82em;margin-top:4px">Don't memorize this formula. Understand it: "As the gap h shrinks to zero, the secant becomes the tangent."</p>
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 The Fourth Big Idea</div>
+                        <div class="insight-text">A <strong>derivative</strong> is just answering: "If I zoom in REALLY close, what's the slope at this exact point?"</div>
+                        <div class="insight-sub">Speedometer, hill steepness, stock market change — ALL are derivatives. One idea, infinite uses.</div>
+                    </div>
+
+                    <!-- ========== INTERACTIVE PLAYGROUND ========== -->
+                    <div class="playground">
+                        <div class="pg-title">🎮 Interactive: See the Secant Become the Tangent</div>
+                        <div class="pg-desc">Drag the slider to move the second point closer to the first. Watch the secant line (orange) become the tangent (green)!</div>
+                        <div style="text-align:center">
+                            <svg viewBox="0 0 500 350" width="100%" style="max-width:500px">
+                                <defs>
+                                    <pattern id="grid3" width="30" height="30" patternUnits="userSpaceOnUse">
+                                        <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+                                    </pattern>
+                                </defs>
+                                <rect width="500" height="320" fill="url(#grid3)"/>
+                                <line x1="40" y1="290" x2="480" y2="290" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
+                                <line x1="40" y1="290" x2="40" y2="30" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
+                                <!-- f(x) = x²/10 curve (scaled) -->
+                                <path d="M40,240 Q80,220 120,190 Q160,150 200,100 Q240,68 280,58 Q320,68 360,100 Q400,150 440,210" fill="none" stroke="var(--purple)" stroke-width="2.5" stroke-linecap="round"/>
+                                <!-- Point at x=3 (fixed) -->
+                                <circle cx="250" cy="65" r="6" fill="var(--cyan)"/>
+                                <text x="250" y="55" fill="var(--cyan)" font-size="11" font-weight="700" text-anchor="middle">P (fixed)</text>
+                                <!-- Secant point (moving) -->
+                                <circle cx="180" cy="135" r="6" fill="var(--amber)" id="secantPoint"/>
+                                <text x="180" y="155" fill="var(--amber)" font-size="10" font-weight="600" text-anchor="middle" id="secantLabel">Q (far)</text>
+                                <!-- Secant line (orange) -->
+                                <line x1="180" y1="135" x2="250" y2="65" stroke="var(--amber)" stroke-width="2" stroke-dasharray="5,3" id="secantLine"/>
+                                <!-- Tangent line (green) when close -->
+                                <line x1="180" y1="175" x2="320" y2="10" stroke="var(--emerald)" stroke-width="2" opacity="0" id="tangentLine"/>
+                                <!-- Labels -->
+                                <text x="250" y="305" fill="var(--text-muted)" font-size="11" text-anchor="middle">x →</text>
+                                <text x="20" y="170" fill="var(--text-muted)" font-size="11" text-anchor="middle" transform="rotate(-90,20,170)">y →</text>
+                                <!-- Slope display -->
+                                <rect x="300" y="300" width="180" height="20" rx="6" fill="rgba(255,255,255,.03)"/>
+                                <text x="390" y="314" fill="var(--text-sec)" font-size="11" text-anchor="middle" id="slopeDisplay">Secant slope: 7.0</text>
+                            </svg>
+                            <div class="slider-wrap">
+                                <span style="font-size:.78em;color:var(--text-muted)">Far apart</span>
+                                <input type="range" min="80" max="240" value="180" id="secantSlider" oninput="updateSecant(this.value)">
+                                <span style="font-size:.78em;color:var(--text-muted)">Very close</span>
+                                <span class="slider-val" id="sliderVal">x=2.0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 5: STANDARD LIMITS (VISUAL FIRST) -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">📐 Part 5: The Three Magic Limits (Without Memorizing)</span>
+                    <h2>Watch the Pattern, Don't Memorize the Formula</h2>
+
+                    <p>There are three limits that show up everywhere. Instead of memorizing them, let's <strong>see</strong> them.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🎭 The Three Famous Limits (Watch the Pattern!)</div>
+                        <svg viewBox="0 0 700 300" width="700" height="300">
+                            <!-- Limit 1: sin x / x -->
+                            <rect x="20" y="20" width="200" height="260" rx="10" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="120" y="50" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">① sin x / x</text>
+                            <!-- Graph -->
+                            <line x1="40" y1="200" x2="200" y2="200" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <line x1="120" y1="200" x2="120" y2="70" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <!-- sin x / x curve approaching 1 -->
+                            <path d="M45,200 Q60,195 80,185 Q100,175 115,150 Q118,140 120,120 Q122,100 125,90" fill="none" stroke="var(--emerald)" stroke-width="2.5" stroke-linecap="round"/>
+                            <!-- Animated point -->
+                            <circle r="6" fill="var(--amber)">
+                                <animate attributeName="cx" values="200;180;160;140;128;125;123;122;121;121;120" dur="4s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="200;185;165;145;130;120;110;105;103;102;100" dur="4s" repeatCount="indefinite"/>
+                            </circle>
+                            <text x="120" y="230" fill="var(--text-sec)" font-size="10" text-anchor="middle">→ 1 as x → 0</text>
+                            <text x="120" y="245" fill="var(--emerald)" font-size="11" font-weight="700" text-anchor="middle">Limit = 1</text>
+
+                            <!-- Limit 2: (e^x - 1) / x -->
+                            <rect x="250" y="20" width="200" height="260" rx="10" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="350" y="50" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">② (eˣ - 1) / x</text>
+                            <line x1="270" y1="200" x2="430" y2="200" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <line x1="350" y1="200" x2="350" y2="70" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <path d="M275,200 Q290,195 310,185 Q330,170 345,140 Q348,130 350,115 Q352,100 355,90" fill="none" stroke="var(--cyan)" stroke-width="2.5" stroke-linecap="round"/>
+                            <circle r="6" fill="var(--amber)">
+                                <animate attributeName="cx" values="430;410;390;370;358;355;353;352;351;351;350" dur="4s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="200;185;165;145;130;120;110;105;103;102;100" dur="4s" repeatCount="indefinite"/>
+                            </circle>
+                            <text x="350" y="230" fill="var(--text-sec)" font-size="10" text-anchor="middle">→ 1 as x → 0</text>
+                            <text x="350" y="245" fill="var(--cyan)" font-size="11" font-weight="700" text-anchor="middle">Limit = 1</text>
+
+                            <!-- Limit 3: (1+x)^(1/x) -->
+                            <rect x="480" y="20" width="200" height="260" rx="10" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="580" y="50" fill="var(--text)" font-size="13" font-weight="700" text-anchor="middle">③ (1+x)^(1/x)</text>
+                            <line x1="500" y1="200" x2="660" y2="200" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <line x1="580" y1="200" x2="580" y2="70" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                            <path d="M505,200 Q520,195 540,185 Q560,170 575,145 Q578,130 580,115 Q582,100 585,92" fill="none" stroke="var(--amber)" stroke-width="2.5" stroke-linecap="round"/>
+                            <circle r="6" fill="var(--cyan)">
+                                <animate attributeName="cx" values="660;640;620;600;588;585;583;582;581;581;580" dur="4s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="200;185;165;145;130;120;110;105;103;102;100" dur="4s" repeatCount="indefinite"/>
+                            </circle>
+                            <text x="580" y="230" fill="var(--text-sec)" font-size="10" text-anchor="middle">→ e ≈ 2.718 as x → 0</text>
+                            <text x="580" y="245" fill="var(--amber)" font-size="11" font-weight="700" text-anchor="middle">Limit = e</text>
+
+                            <!-- Common insight -->
+                            <rect x="80" y="265" width="540" height="28" rx="8" fill="rgba(167,139,250,.06)" stroke="rgba(167,139,250,.1)" stroke-width="1"/>
+                            <text x="350" y="284" fill="var(--purple)" font-size="12" font-weight="600" text-anchor="middle">💡 All three → 0/0 form, but each approaches a DIFFERENT number!</text>
+                        </svg>
+                        <div class="diagram-caption">Watch all three graphs as x→0. They all start at 0/0 (undefined!), but each settles at a different y-value. The limit tells us which value each one approaches.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🍕 The Pizza Slice Analogy</div>
+                        <div class="story-title">Why sin x / x → 1</div>
+                        <div class="story-text">
+                            Imagine a pizza slice with a very small angle. The arc length (sin of the angle) and the straight-line length (the angle itself in radians) are <strong>almost the same</strong>. As the angle gets tiny, they're identical!<br><br>
+                            That's why sin x / x → 1 as x → 0. They become the same length. No formula needed — just picture a very thin pizza slice!
+                        </div>
+                        <div class="story-moral">🧠 Every limit has a <strong>visual story</strong>. Find the story, and you'll never need to memorize.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PRACTICE SECTION -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🎯 Part 6: Test Your Understanding (No Formulas!)</span>
+                    <h2>Practice Zone: Think, Don't Compute</h2>
+                    <p>These questions test if you truly <strong>understand</strong> the ideas. No calculation needed — just reasoning!</p>
+
+                    <div id="practice-qs"></div>
+
+                    <div style="display:flex;gap:10px;margin-top:10px">
+                        <button onclick="resetPractice()" class="btn btn-primary">🔄 Reset</button>
+                        <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                        <a href="lesson-algebra.html" class="btn btn-primary">← Algebra</a>
+                        <a href="lesson-coordinate-geometry.html" class="btn btn-success">Coordinate Geometry →</a>
+                    </div>
                 </div>
             </div>
         </div>
-        <script>
-        var practiceQs = [{"id":40001,"text":"Evaluate: lim(x→0) (e^x - 1 - x)/x²","options":[{"l":"a","t":"0","c":false},{"l":"b","t":"1/2","c":true},{"l":"c","t":"1","c":false},{"l":"d","t":"Does not exist","c":false}],"sol":"Using L'Hôpital's rule: first (e^x - 1)/(2x), second e^x/2 → 1/2. Alternatively, use series expansion: e^x = 1 + x + x²/2! + ... so (e^x-1-x)/x² = 1/2! + x/3! + ... → 1/2 as x→0."},{"id":40002,"text":"If f(x) = |x-2|, at x = 2 the function is:","options":[{"l":"a","t":"Continuous and differentiable","c":false},{"l":"b","t":"Continuous but not differentiable","c":true},{"l":"c","t":"Not continuous but differentiable","c":false},{"l":"d","t":"Neither continuous nor differentiable","c":false}],"sol":"|x-2| has a sharp corner at x=2. Left-hand limit = right-hand limit = 0 = f(2), so it is continuous. But LHD = -1 and RHD = +1, so it is not differentiable at x=2."},{"id":40003,"text":"Find the integral: ∫x·e^x dx","options":[{"l":"a","t":"e^x(x-1) + C","c":false},{"l":"b","t":"e^x(x+1) + C","c":false},{"l":"c","t":"x·e^x - e^x + C","c":true},{"l":"d","t":"x·e^x + e^x + C","c":false}],"sol":"Using integration by parts: ∫x·e^x dx = x·e^x - ∫e^x·1 dx = x·e^x - e^x + C = e^x(x-1) + C. Option c matches as x·e^x - e^x + C."},{"id":40004,"text":"The area bounded by y = x² and y = x is:","options":[{"l":"a","t":"1/6","c":false},{"l":"b","t":"1/3","c":false},{"l":"c","t":"1/2","c":false},{"l":"d","t":"1/12","c":true}],"sol":"Intersection: x² = x → x(x-1) = 0 → x=0,1. Area = ∫(0 to 1) (x - x²)dx = [x²/2 - x³/3](0 to 1) = 1/2 - 1/3 = 1/6. Wait, upper curve is y=x, lower is y=x². Area = ∫(x - x²)dx = 1/2 - 1/3 = 1/6. But option d says 1/12. Let me recheck: ∫₀¹(x-x²)dx = [x²/2 - x³/3]₀¹ = 1/2-1/3 = 1/6. Hmm, option a is 1/6. So answer is a) 1/6."},{"id":40005,"text":"The order and degree of the differential equation (d²y/dx²)³ + (dy/dx)² + y = 0 are:","options":[{"l":"a","t":"Order 2, degree 3","c":true},{"l":"b","t":"Order 3, degree 2","c":false},{"l":"c","t":"Order 2, degree 2","c":false},{"l":"d","t":"Order 3, degree 1","c":false}],"sol":"The highest derivative is d²y/dx² (order 2). Its power is 3 (degree 3). So order = 2, degree = 3."},{"id":80691,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":80692,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":80693,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":80694,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":80695,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":80696,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":80697,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":80698,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":80699,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":80700,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":80701,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":80702,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":80703,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":80704,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":80705,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."},{"id":82791,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":82792,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":82793,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":82794,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":82795,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":82796,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":82797,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":82798,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":82799,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":82800,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":82801,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":82802,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":82803,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":82804,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":82805,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."},{"id":82806,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":82807,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":82808,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":82809,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":82810,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":82811,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":82812,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":82813,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":82814,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":82815,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":82816,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":82817,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":82818,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":82819,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":82820,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."}];
-        var answered={},correctCount=0,lessonSlug="calculus";
-        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
-        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
-        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
-        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.85em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
-        function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
-        function markComplete(){try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("jee-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
-        renderPractice();
-        try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
-        </script>
     </div>
+
+    <script>
+    // ========== INTERACTIVE SLIDER ==========
+    function updateSecant(val) {
+        var x = parseInt(val);
+        var y = 0.01 * (x - 80) * (x - 80) + 60; // quadratic
+        document.getElementById('secantPoint').setAttribute('cx', x);
+        document.getElementById('secantPoint').setAttribute('cy', y);
+        document.getElementById('secantLine').setAttribute('x1', x);
+        document.getElementById('secantLine').setAttribute('y1', y);
+
+        // Distance between points
+        var dist = Math.abs(x - 250);
+        var slope = (65 - y) / (250 - x);
+
+        document.getElementById('sliderVal').textContent = 'Δx=' + dist.toFixed(0);
+
+        // Tangent appears when close enough
+        var tangentOpacity = Math.max(0, 1 - dist / 100);
+        var tangentEl = document.getElementById('tangentLine');
+        if (dist < 80) {
+            tangentEl.setAttribute('opacity', tangentOpacity);
+            // Calculate tangent slope at x=250 (using derivative of x^2/10 = x/5 at x=250... but our curve is scaled)
+            var actualSlope = 2 * 250 / 100; // f(x)=x^2/100 => f'(x)=2x/100 = x/50
+            // Adjust for our coordinate system
+            var tangentSlope = 0.35;
+            tangentEl.setAttribute('x1', x);
+            tangentEl.setAttribute('y1', y + 30);
+            tangentEl.setAttribute('x2', 320);
+            tangentEl.setAttribute('y2', 10);
+
+            document.getElementById('slopeDisplay').textContent = 'Secant slope: ' + slope.toFixed(2) + (dist < 20 ? ' ≈ Tangent!' : ' → approaching tangent');
+        } else {
+            tangentEl.setAttribute('opacity', 0);
+            document.getElementById('slopeDisplay').textContent = 'Secant slope: ' + slope.toFixed(2) + ' (far from tangent)';
+        }
+
+        // Update Q label
+        if (dist < 20) {
+            document.getElementById('secantLabel').textContent = 'Q (very close!)';
+        } else if (dist < 50) {
+            document.getElementById('secantLabel').textContent = 'Q (closer)';
+        } else {
+            document.getElementById('secantLabel').textContent = 'Q (far)';
+        }
+    }
+
+    // ========== PRACTICE QUESTIONS ==========
+    var practiceQs = [
+        {
+            id: 4001,
+            text: "🧒 Zeno's arrow gets halfway to the wall, then half of what's left, then half again... What number does the total distance approach?",
+            opts: [
+                {l: "A", t: "It never approaches any number — there are infinite steps", c: false},
+                {l: "B", t: "The full distance to the wall (the limit is the target)", c: true},
+                {l: "C", t: "Half the distance to the wall", c: false},
+                {l: "D", t: "Infinity — the steps go on forever", c: false}
+            ],
+            sol: "The arrow approaches the full distance (the wall). Even though there are infinite steps, the STEPS get so small that the SUM approaches the wall. The <strong>limit</strong> is the wall's distance — the target."
+        },
+        {
+            id: 4002,
+            text: "📈 Look at the graph of y = x+2. As x gets closer to 2 from EITHER side, what does y approach?",
+            opts: [
+                {l: "A", t: "0", c: false},
+                {l: "B", t: "2", c: false},
+                {l: "C", t: "4", c: true},
+                {l: "D", t: "It depends on which side you approach from", c: false}
+            ],
+            sol: "When x=1.9, y=3.9. When x=2.1, y=4.1. Both sides approach y=4. The left and right agree, so the limit is <strong>4</strong>."
+        },
+        {
+            id: 4003,
+            text: "🕳️ A function has a hole at x=3. The function isn't defined there. From the left, y approaches 7. From the right, y also approaches 7. What is the limit as x→3?",
+            opts: [
+                {l: "A", t: "7 — both sides agree on the journey", c: true},
+                {l: "B", t: "Does not exist — the function has a hole", c: false},
+                {l: "C", t: "0 — undefined means limit is 0", c: false},
+                {l: "D", t: "There's not enough information", c: false}
+            ],
+            sol: "<strong>7!</strong> The limit is about the JOURNEY, not the destination. Both sides approach 7, so the limit is 7, even though f(3) doesn't exist."
+        },
+        {
+            id: 4004,
+            text: "🚗 A car's distance over time is shown on a graph. At exactly t=5 seconds, you draw a line that just touches the curve at one point. The slope of this line is 20 m/s. What does 20 m/s represent?",
+            opts: [
+                {l: "A", t: "The car's average speed over the whole trip", c: false},
+                {l: "B", t: "The car's speed at EXACTLY t=5 seconds (instantaneous speed)", c: true},
+                {l: "C", t: "The total distance traveled at t=5", c: false},
+                {l: "D", t: "The acceleration of the car", c: false}
+            ],
+            sol: "The line that just touches at one point is the <strong>tangent</strong>. Its slope = the derivative = the instantaneous speed at that exact moment. This is what your car's speedometer shows!"
+        },
+        {
+            id: 4005,
+            text: "🎢 A hill's shape is given by a curve. At the very top of the hill, the tangent line is flat (horizontal). What is the slope (derivative) at the top?",
+            opts: [
+                {l: "A", t: "1", c: false},
+                {l: "B", t: "Infinity", c: false},
+                {l: "C", t: "0 — a flat line has zero slope", c: true},
+                {l: "D", t: "It depends on how steep the hill is", c: false}
+            ],
+            sol: "A horizontal line has slope = 0. At the top of a hill (or bottom of a valley), the tangent is horizontal, so the derivative is <strong>0</strong>. This is how you find maximums and minimums!"
+        },
+        {
+            id: 4006,
+            text: "🧮 A function has f(2) = 5, but as x approaches 2 from both sides, y approaches 3. Which is true?",
+            opts: [
+                {l: "A", t: "Limit = 5 (because f(2) = 5)", c: false},
+                {l: "B", t: "Limit = 3 (the journey), function value = 5 (the destination)", c: true},
+                {l: "C", t: "No limit exists because they're different", c: false},
+                {l: "D", t: "The function must be wrong", c: false}
+            ],
+            sol: "The <strong>limit is 3</strong> (both sides approach 3), even though <strong>f(2) = 5</strong>. The limit cares about the journey, not the destination. They CAN be different!"
+        },
+        {
+            id: 4007,
+            text: "🍕 As a pizza slice angle gets very tiny, the arc length and the straight-line length become almost equal. This explains why:",
+            opts: [
+                {l: "A", t: "sin x / x → 1 as x → 0", c: true},
+                {l: "B", t: "cos x → 0 as x → 0", c: false},
+                {l: "C", t: "tan x → ∞ as x → 0", c: false},
+                {l: "D", t: "All limits equal 1", c: false}
+            ],
+            sol: "When the angle is tiny, the arc (sin) and the straight line (the angle in radians) are nearly identical. So their ratio → 1. This is the <strong>visual reason</strong> behind the famous limit!"
+        },
+        {
+            id: 4008,
+            text: "✨ If the left-hand limit of a function at x=a is 4, but the right-hand limit is -2, what is the limit as x→a?",
+            opts: [
+                {l: "A", t: "1 (the average of 4 and -2)", c: false},
+                {l: "B", t: "4 (left is usually more important)", c: false},
+                {l: "C", t: "Does not exist — the two sides disagree", c: true},
+                {l: "D", t: "Depends on the function value at a", c: false}
+            ],
+            sol: "If left and right disagree, the limit <strong>does not exist</strong>. Like two witnesses giving different accounts — you can't trust either!"
+        }
+    ];
+
+    // ========== RENDER & INTERACT ==========
+    var answered = {}, correctCount = 0, lessonSlug = "calculus";
+
+    function renderPractice() {
+        var c = document.getElementById('practice-qs'), h = '';
+        for (var i = 0; i < practiceQs.length; i++) {
+            var q = practiceQs[i], o = '';
+            var badges = ['🧒 Easy','📈 Medium','🕳️ Medium','🚗 Easy','🎢 Easy','🧮 Medium','🍕 Easy','✨ Easy'];
+            for (var j = 0; j < q.opts.length; j++) {
+                o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+            }
+            h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+        }
+        c.innerHTML = h;
+        updateScore();
+    }
+
+    function getCorrectLabel(q) {
+        for (var i = 0; i < q.opts.length; i++) {
+            if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+        }
+        return '';
+    }
+
+    function selectOpt(qId, idx) {
+        if (answered[qId]) return;
+        answered[qId] = true;
+        var q = practiceQs.filter(function(x){return x.id === qId})[0];
+        var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+        var isCorrect = q.opts[idx].c;
+        for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+        if (isCorrect) {
+            opts[idx].classList.add('correct');
+            document.getElementById('result-'+qId).textContent = '✅ Correct! +4';
+            document.getElementById('result-'+qId).className = 'q-result correct';
+            correctCount++;
+        } else {
+            opts[idx].classList.add('wrong');
+            document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+            document.getElementById('result-'+qId).className = 'q-result wrong';
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) opts[i].classList.add('correct');
+            }
+        }
+        document.getElementById('soln-'+qId).classList.add('show');
+        updateScore();
+    }
+
+    function updateScore() {
+        var t = Object.keys(answered).length;
+        var el = document.getElementById('score-display');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'score-display';
+            el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+            document.getElementById('practice-qs').before(el);
+        }
+        el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+    }
+
+    function resetPractice() {
+        if (!confirm('Reset all answers?')) return;
+        answered = {}; correctCount = 0;
+        document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+        document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+        document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+        var el = document.getElementById('score-display');
+        if (el) el.textContent = '';
+        renderPractice();
+    }
+
+    function markComplete() {
+        try {
+            var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+            if (done.indexOf(lessonSlug) === -1) {
+                done.push(lessonSlug);
+                localStorage.setItem('jee-course-done', JSON.stringify(done));
+            }
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        } catch(e) {}
+    }
+
+    renderPractice();
+    try {
+        var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+        if (done.indexOf(lessonSlug) !== -1) {
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        }
+    } catch(e) {}
+    </script>
 </body>
 </html>

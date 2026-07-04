@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel='stylesheet' href='../../../css/style.css'>
-    
+    <link rel="stylesheet" href="../../../css/style.css">
     <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Coordinate Geometry — JEE Mathematics Lesson | vlymbooq</title>
-    <meta name="description" content="Free JEE Mathematics Coordinate Geometry lesson with theory, solved examples, shortcut tricks, and practice MCQs.">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Coordinate Geometry — The Treasure Map | vlymbooq</title>
+    <meta name="description" content="Learn Coordinate Geometry through stories, animated visuals, and real-life analogies. Zero formula memorization required — build intuition first.">
     <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/png" href="/logo.png">
@@ -14,9 +13,9 @@
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
-        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-        a{color:var(--purple,#a78bfa);text-decoration:none}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
         .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
         .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
         .brand{display:flex;align-items:center;gap:8px}
@@ -27,124 +26,1674 @@
         .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
         .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
         .container{max-width:1000px;margin:0 auto;padding:24px}
-        .course-header{padding:24px 0;border-bottom:1px solid var(--border);margin-bottom:24px}
-        .course-header .badge{display:inline-flex;padding:4px 12px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple,#a78bfa);font-size:.75em;font-weight:600;margin-bottom:8px}
-        .course-header h1{font-size:1.8em;font-weight:900;margin-bottom:8px;line-height:1.2}
-        .course-header .sub{color:var(--text-sec);font-size:.9em;line-height:1.6}
-        .module-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;transition:border-color .2s}
-        .module-card:hover{border-color:rgba(255,255,255,.12)}
-        .module-card .m-title{font-size:1.1em;font-weight:700;margin-bottom:4px}
-        .module-card .m-desc{font-size:.85em;color:var(--text-sec);margin-bottom:10px;line-height:1.5}
-        .module-card .m-topics{display:flex;gap:6px;flex-wrap:wrap}
-        .module-card .m-topics a{padding:4px 12px;border-radius:100px;font-size:.78em;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text-sec);transition:all .2s}
-        .module-card .m-topics a:hover{background:rgba(167,139,250,.1);border-color:var(--purple,#a78bfa);color:var(--purple,#a78bfa)}
-        .lesson-body{padding:20px 0}
-        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px}
-        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
-        .lesson-body p{color:var(--text-sec);font-size:.9em;line-height:1.7;margin-bottom:10px}
-        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
-        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
-        .example-box .ex-title{font-weight:600;font-size:.85em;color:var(--pureple,#a78bfa);margin-bottom:4px}
-        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.6}
-        .example-box .ex-soln{font-size:.85em;color:var(--emerald);margin-top:6px;font-weight:500}
-        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
-        .tip-box .tip-title{font-weight:600;font-size:.85em;color:var(--emerald);margin-bottom:4px}
-        .tip-box .tip-text{font-size:.85em;color:var(--text-sec);line-height:1.5}
-        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
-        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
-        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
-        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s}
-        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
-        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
-        .q-card .q-opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.1);color:#ef4444}
-        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
-        .q-card .q-soln{display:none;margin-top:8px;padding:8px;background:rgba(167,139,250,.06);border-radius:6px;font-size:.82em;color:var(--text-sec)}
-        .q-card .q-soln.show{display:block}
-        .q-card .q-soln strong{color:var(--emerald)}
-        .progress-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin:12px 0}
-        .progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--purple,#a78bfa),var(--emerald));border-radius:4px;transition:width .4s}
-        .sidebar-nav{position:sticky;top:72px}
-        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
-        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
-        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
-        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple,#a78bfa)}
-        .btn-primary:hover{background:rgba(167,139,250,.25)}
-        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
-        .btn-success:hover{background:rgba(52,211,153,.25)}
         .flex-row{display:flex;gap:24px}
         .flex-row .main{flex:1;min-width:0}
         .flex-row .side{width:220px;flex-shrink:0}
         @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
-        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
-        .diagram-box svg{max-width:100%;height:auto}
-        .diagram-box .diagram-caption{font-size:.78em;color:var(--text-muted);margin-top:8px}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
         .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
         .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
-        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}}
+
+        /* ========== STORY CARDS ========== */
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        /* ========== INSIGHT BOX ========== */
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        /* ========== ANIMATED DIAGRAM ========== */
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+        .diagram-box .diagram-title{font-size:.85em;font-weight:700;color:var(--text);margin-bottom:8px}
+        .diagram-box .diagram-controls{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+        .diagram-box .ctrl-btn{padding:6px 16px;border-radius:100px;font-size:.78em;font-weight:600;border:1px solid var(--border);background:var(--bg-card);color:var(--text-sec);cursor:pointer;transition:all .2s}
+        .diagram-box .ctrl-btn:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15)}
+        .diagram-box .ctrl-btn.active{background:rgba(167,139,250,.12);border-color:var(--purple);color:var(--purple)}
+        .diagram-box .slider-wrap{display:flex;align-items:center;gap:12px;margin-top:12px;justify-content:center}
+        .diagram-box .slider-wrap input[type=range]{width:200px;max-width:60%;-webkit-appearance:none;background:var(--border);height:4px;border-radius:4px;outline:none}
+        .diagram-box .slider-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple);cursor:pointer}
+        .diagram-box .slider-wrap .slider-val{font-size:.82em;color:var(--purple);font-weight:700;min-width:30px}
+
+        /* ========== STEP REVEAL ========== */
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        /* ========== PRACTICE CARDS ========== */
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+        .q-badge{display:inline-block;padding:2px 8px;border-radius:100px;font-size:.7em;font-weight:600;margin-bottom:6px}
+        .q-badge.easy{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .q-badge.medium{background:rgba(245,158,11,.1);color:var(--amber)}
+        .q-badge.hard{background:rgba(239,68,68,.1);color:var(--red)}
+
+        /* ========== KEYFRAME ANIMATIONS ========== */
+        @keyframes breathe{0%,100%{opacity:.4}50%{opacity:.8}}
+        @keyframes pulse-glow{0%,100%{filter:drop-shadow(0 0 4px rgba(167,139,250,.3))}50%{filter:drop-shadow(0 0 12px rgba(167,139,250,.6))}}
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes bounce-dot{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        @keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+        .slide-up{animation:slide-up .6s ease forwards}
+        .stagger-1{animation-delay:.1s}
+        .stagger-2{animation-delay:.2s}
+        .stagger-3{animation-delay:.3s}
+
+        /* ========== PROGRESS TRACKER ========== */
+        .progress-tracker{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+        .progress-tracker .p-step{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;font-size:.75em;border:1px solid var(--border);color:var(--text-muted);transition:all .3s}
+        .progress-tracker .p-step.done{border-color:var(--emerald);color:var(--emerald);background:rgba(52,211,153,.06)}
+        .progress-tracker .p-step.active{border-color:var(--purple);color:var(--purple);background:rgba(167,139,250,.08)}
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part2{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part3{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        /* Interactive graph hover effect */
+        .graph-hover-area{cursor:crosshair}
+        .graph-point{transition:all .3s}
+        .graph-point:hover{r:6;fill:var(--amber)}
+
+        /* Math display */
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+
+        /* Interactive playground */
+        .playground{background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin:16px 0}
+        .playground .pg-title{font-size:.9em;font-weight:700;margin-bottom:4px}
+        .playground .pg-desc{font-size:.78em;color:var(--text-muted);margin-bottom:12px}
+
+        /* Clickable grid */
+        .click-grid{cursor:crosshair}
     </style>
 </head>
 <body>
-    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="../index.html">JEE</a><a href="index.html" class="active">Course</a></div></div></nav>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="../../index.html">JEE</a><a href="../index.html" class="active">Course</a></div></div></nav>
     <div class="container">
         <div class="flex-row">
             <div class="side">
                 <div class="sidebar-nav">
-                    <div style="font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Mathematics</div>
+                    <div class="s-title">Mathematics</div>
                     <a href="lesson-algebra.html">Algebra</a>
                     <a href="lesson-calculus.html">Calculus</a>
                     <a href="lesson-coordinate-geometry.html" class="active">Coordinate Geometry</a>
-                    <a href="lesson-vector-3d.html">Vector & 3D Geometry</a>
-                    <a href="lesson-probability-statistics.html">Probability & Statistics</a>
+                    <a href="lesson-vector-3d.html">Vector & 3D</a>
+                    <a href="lesson-probability-statistics.html">Probability & Stats</a>
                     <a href="lesson-trigonometry.html">Trigonometry</a>
                 </div>
             </div>
             <div class="main">
                 <div style="margin-bottom:16px">
                     <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 3 &middot; JEE Mathematics</div>
-                    <h1 style="font-size:1.5em;font-weight:900">Coordinate Geometry</h1>
-                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Straight lines, circles, parabolas, ellipses, hyperbolas, 3D geometry.</div>
-                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
-                        <span style="font-size:.75em;color:var(--text-muted)">Lines · Circles · Conic Sections · 3D Geometry</span>
-                    </div>
-                    <div style="display:flex;gap:8px;margin-top:10px">
-                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
-                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
+                    <h1 style="font-size:1.5em;font-weight:900">Coordinate Geometry — The Treasure Map</h1>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">No formulas. No memorization. Just stories, animations, and "AHA!" moments.</div>
+                    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+                        <button onclick="window.print()" class="download-btn">📄 Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">🎯 Take Mock Test</a>
                     </div>
                 </div>
+
+                <div class="progress-tracker">
+                    <span class="p-step active" id="p1"><span>🏴‍☠️</span> Pirate Treasure</span>
+                    <span class="p-step" id="p2"><span>🗺️</span> Address System</span>
+                    <span class="p-step" id="p3"><span>📏</span> Shortest Path</span>
+                    <span class="p-step" id="p4"><span>⭕</span> Perfect Round</span>
+                    <span class="p-step" id="p5"><span>🍦</span> Conics</span>
+                </div>
+
                 <div class="lesson-body">
-                    <h3>Learning Objectives</h3>
+                    <!-- ============================================================ -->
+                    <!-- PART 1: THE PIRATE TREASURE — WHY COORDINATES EXIST -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">🏴‍☠️ Part 1: The Story That Gave Us Coordinates</span>
+                    <h2>Story Time: The Pirate Treasure</h2>
+
+                    <p>Imagine you're a pirate. You've found an old map with a <strong>grid</strong> drawn on it. The map says:</p>
+
+                    <p style="text-align:center;font-size:1.1em;font-weight:700;color:var(--amber);padding:8px">"Walk <strong>3 steps East</strong>, then <strong>2 steps North</strong> — X marks the spot!"</p>
+
+                    <p>If the big tree is at (0,0), then 3 steps East and 2 steps North puts you at the point <strong>(3,2)</strong>. You've just used <strong>coordinates</strong>!</p>
+
+                    <div class="story-card">
+                        <div class="story-label">🏴‍☠️ The Pirate Map (The First Coordinate System)</div>
+                        <div class="story-title">X Marks the Spot</div>
+                        <div class="story-text">
+                            <strong>Every point has an address:</strong> (East-West steps, North-South steps).<br><br>
+                            The first number is how far <strong>right</strong> (positive) or <strong>left</strong> (negative).<br>
+                            The second number is how far <strong>up</strong> (positive) or <strong>down</strong> (negative).<br><br>
+                            <strong>Example:</strong> (-4, 3) means "4 steps West, 3 steps North."
+                        </div>
+                        <div class="story-moral">💡 Coordinates are just <strong>addresses</strong> on a grid. Every point has one unique address (x, y).</div>
+                    </div>
+
+                    <!-- Animated Pirate Map -->
+                    <div class="diagram-box">
+                        <div class="diagram-title">🏴‍☠️ The Pirate Map — Watch the Steps!</div>
+                        <svg viewBox="0 0 600 480" width="600" height="480">
+                            <defs>
+                                <pattern id="pirateGrid" width="60" height="60" patternUnits="userSpaceOnUse">
+                                    <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+                                </pattern>
+                                <marker id="arrowN" markerWidth="6" markerHeight="4" refX="3" refY="0" orient="auto"><path d="M0,4 L3,0 L6,4 Z" fill="rgba(255,255,255,.3)"/></marker>
+                                <marker id="arrowE" markerWidth="6" markerHeight="4" refX="0" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4 Z" fill="rgba(255,255,255,.3)"/></marker>
+                            </defs>
+                            <rect width="600" height="480" fill="var(--bg-elevated)" rx="12"/>
+                            <rect x="40" y="40" width="520" height="400" fill="url(#pirateGrid)" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                            <!-- Axes labels -->
+                            <text x="300" y="450" fill="var(--text-muted)" font-size="13" font-weight="600" text-anchor="middle">East → &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ← West</text>
+                            <text x="20" y="240" fill="var(--text-muted)" font-size="13" font-weight="600" text-anchor="middle" transform="rotate(-90,20,240)">North ↑ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ↓ South</text>
+                            <!-- Origin marker -->
+                            <circle cx="100" cy="380" r="4" fill="var(--cyan)"/>
+                            <text x="85" y="370" fill="var(--cyan)" font-size="11" font-weight="600">Tree (0,0)</text>
+                            <!-- Animated path: 3 East, 2 North -->
+                            <g>
+                                <!-- Step 1: 3 East -->
+                                <polygon points="0,-5 10,0 0,5" fill="var(--amber)" opacity=".9">
+                                    <animateTransform attributeName="transform" type="translate"
+                                        values="100,380;280,380;280,380;280,380;280,260;280,260;280,260"
+                                        dur="8s" repeatCount="indefinite"
+                                        keyTimes="0;0.25;0.3;0.45;0.7;0.75;1"/>
+                                </polygon>
+                                <!-- Trail dots -->
+                                <circle cx="160" cy="380" r="3" fill="var(--amber)" opacity=".2">
+                                    <animate attributeName="opacity" values="0;0.2;0.2;0.2;0.2;0.2;0" dur="8s" repeatCount="indefinite"/>
+                                </circle>
+                                <circle cx="220" cy="380" r="3" fill="var(--amber)" opacity=".3">
+                                    <animate attributeName="opacity" values="0;0.3;0.3;0.3;0.3;0.3;0" dur="8s" repeatCount="indefinite"/>
+                                </circle>
+                                <circle cx="280" cy="380" r="4" fill="var(--amber)" opacity=".5">
+                                    <animate attributeName="opacity" values="0;0.5;0.5;0.5;0.5;0.5;0" dur="8s" repeatCount="indefinite"/>
+                                </circle>
+                                <circle cx="280" cy="320" r="3" fill="var(--amber)" opacity=".3">
+                                    <animate attributeName="opacity" values="0;0;0;0;0.3;0.3;0" dur="8s" repeatCount="indefinite"/>
+                                </circle>
+                            </g>
+                            <!-- X marks the spot -->
+                            <g>
+                                <text x="280" y="255" font-size="32" font-weight="900" fill="var(--red)" text-anchor="middle" opacity="0">
+                                    ✗
+                                    <animate attributeName="opacity" values="0;0;0;0;0;1;0" dur="8s" repeatCount="indefinite"/>
+                                </text>
+                            </g>
+                            <!-- Coordinate display -->
+                            <rect x="340" y="360" width="200" height="70" rx="10" fill="rgba(255,255,255,.03)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="440" y="385" fill="var(--text-sec)" font-size="13" font-family="monospace" text-anchor="middle">
+                                Position:
+                                <tspan fill="var(--amber)" font-weight="800">
+                                    <animate attributeName="textContent" values="(0, 0);(0, 0);(1, 0);(1, 0);(2, 0);(2, 0);(3, 0);(3, 0);(3, 0);(3, 1);(3, 1);(3, 2);(3, 2)" dur="8s" repeatCount="indefinite"/>
+                                </tspan>
+                            </text>
+                            <text x="440" y="410" fill="var(--emerald)" font-size="14" font-weight="800" text-anchor="middle" opacity=".8">
+                                <animate attributeName="opacity" values="0;0;0;0;0;1;0" dur="8s" repeatCount="indefinite"/>
+                                🏆 Treasure at (3, 2)!
+                            </text>
+                            <!-- Steps labels -->
+                            <text x="190" y="370" fill="var(--purple)" font-size="11" font-weight="600" text-anchor="middle">→ 3 East</text>
+                            <text x="270" y="310" fill="var(--purple)" font-size="11" font-weight="600" text-anchor="end">↑ 2 North</text>
+                        </svg>
+                        <div class="diagram-caption">The little ship moves 3 steps East, then 2 steps North. Every point on the map has an address (x, y)! The treasure is at <strong>(3, 2)</strong>.</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 First Big Idea</div>
+                        <div class="insight-text">Coordinates are just <strong>addresses</strong> on a grid: (how far right/left, how far up/down).</div>
+                        <div class="insight-sub">Like a city grid: 3rd Street × 2nd Avenue = (3, 2).</div>
+                    </div>
+
+                    <p><strong>The legend:</strong> The mathematician <strong>René Descartes</strong> supposedly came up with this idea while lying in bed watching a <strong>fly crawl across his ceiling</strong>. He realized he could describe the fly's position by its distance from the walls! And coordinate geometry was born.</p>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 2: THE CARTESIAN GRID — THE ADDRESS SYSTEM -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">🗺️ Part 2: The Cartesian Grid — "The Address System"</span>
+                    <h2>Every Point Has an Address (x, y)</h2>
+
+                    <p>The grid is called the <strong>Cartesian plane</strong> (after Descartes). It has two number lines that cross at <strong>right angles</strong>:</p>
                     <ul>
-                        <li>Understand the fundamental concepts of Coordinate Geometry</li>
-                        <li>Apply key formulas and techniques to solve problems</li>
-                        <li>Practice with exam-level questions to build speed and accuracy</li>
+                        <li><strong>x-axis</strong> — the horizontal line (East-West street)</li>
+                        <li><strong>y-axis</strong> — the vertical line (North-South street)</li>
+                        <li><strong>Origin (0,0)</strong> — where they cross</li>
                     </ul>
-                    <h3>Key Concepts</h3>
-<h3>What is Coordinate Geometry?</h3><p>Coordinate geometry (or analytic geometry) uses algebraic equations to describe geometric shapes. For JEE, this topic covers straight lines, circles, and conic sections (parabola, ellipse, hyperbola). It carries approximately 12-15% weightage in JEE Main and Advanced.</p><h3>Key Concepts</h3><p><strong>1. Straight Lines:</strong> Slope m = tanθ = (y₂-y₁)/(x₂-x₁). Forms: y = mx + c (slope-intercept), y - y₁ = m(x - x₁) (point-slope), (y-y₁)/(y₂-y₁) = (x-x₁)/(x₂-x₁) (two-point), x/a + y/b = 1 (intercept). Angle between two lines: tanθ = |(m₁-m₂)/(1+m₁m₂)|. Condition for perpendicular: m₁m₂ = -1. Condition for parallel: m₁ = m₂. Distance from point (x₁,y₁) to line ax+by+c=0: d = |ax₁+by₁+c|/√(a²+b²).</p><p><strong>2. Circles:</strong> Standard form: (x-h)² + (y-k)² = r². General form: x² + y² + 2gx + 2fy + c = 0, centre (-g,-f), radius r = √(g²+f²-c). Tangent at (x₁,y₁): xx₁ + yy₁ + g(x+x₁) + f(y+y₁) + c = 0. Condition for tangency: distance from centre to line = radius.</p><p><strong>3. Parabola:</strong> Standard y² = 4ax. Focus: (a,0), directrix: x = -a, vertex: (0,0), latus rectum: x = a (length = 4a). Parametric: (at², 2at). Tangent at t: yt = x + at². Condition: y = mx + a/m touches parabola y² = 4ax.</p><p><strong>4. Ellipse:</strong> x²/a² + y²/b² = 1 (a > b). Foci: (±ae,0), eccentricity e = √(1-b²/a²). Directrices: x = ±a/e. Latus rectum: x = ±ae (length = 2b²/a). Parametric: (a cosθ, b sinθ).</p><p><strong>5. Hyperbola:</strong> x²/a² - y²/b² = 1. Foci: (±ae,0), eccentricity e = √(1+b²/a²). Directrices: x = ±a/e. Asymptotes: y = ±(b/a)x. Rectangular hyperbola: xy = c².</p><h3>Solved Examples</h3><div class="example-box"><div class="ex-title">Example 1 (Straight Line — Foot of Perpendicular)</div><div class="ex-text">Find the foot of the perpendicular from point P(3,2) to the line 2x + 3y - 4 = 0.<br><br>a) (5/13, 22/13) b) (25/13, 14/13) c) (2/13, 20/13) d) (1/13, 18/13)</div><div class="ex-soln"><strong>Solution:</strong> b) (25/13, 14/13). Foot of perpendicular: (x - x₁)/a = (y - y₁)/b = -(ax₁+by₁+c)/(a²+b²). Here a=2, b=3, c=-4. x₁=3, y₁=2. Value = -(2·3+3·2-4)/(4+9) = -(6+6-4)/13 = -8/13. So x = 3 + (-8/13)·2 = 3 - 16/13 = 25/13. y = 2 + (-8/13)·3 = 2 - 24/13 = 14/13.</div></div><div class="example-box"><div class="ex-title">Example 2 (Circle — Tangent Condition)</div><div class="ex-text">Find the values of p for which the line y = px + 1 is a tangent to the circle x² + y² - 2x + 4y = 0.<br><br>a) 2, -1/2 b) 1, -2 c) 3, -1 d) 0, 1</div><div class="ex-soln"><strong>Solution:</strong> a) 2, -1/2. Circle centre: (1,-2), radius r = √(1+4) = √5. Distance from centre to line: line: px - y + 1 = 0. d = |p(1) - (-2) + 1|/√(p²+1) = |p+3|/√(p²+1) = √5. Squaring: (p+3)² = 5(p²+1) → p² + 6p + 9 = 5p² + 5 → 4p² - 6p - 4 = 0 → 2p² - 3p - 2 = 0 → (2p+1)(p-2) = 0 → p = 2 or p = -1/2.</div></div><div class="example-box"><div class="ex-title">Example 3 (Parabola — Chord Length)</div><div class="ex-text">Find the length of the chord of the parabola y² = 8x intercepted by the line y = 2x - 4.<br><br>a) 2√5 b) 3√5 c) 4√5 d) 5√5</div><div class="ex-soln"><strong>Solution:</strong> b) 3√5. y² = 8x, line y = 2x - 4. Substitute: (2x-4)² = 8x → 4x² - 16x + 16 = 8x → 4x² - 24x + 16 = 0 → x² - 6x + 4 = 0. Roots: x₁, x₂. x₁+x₂ = 6, x₁x₂ = 4. Corresponding y₁=2x₁-4, y₂=2x₂-4. Chord length = √[(x₁-x₂)² + (y₁-y₂)²] = √[(x₁-x₂)² + 4(x₁-x₂)²] = √5|x₁-x₂|. |x₁-x₂| = √[(x₁+x₂)²-4x₁x₂] = √(36-16) = √20 = 2√5. Length = √5 × 2√5 = 10. Wait — recalculating: |x₁-x₂| = √(36-16) = √20 = 2√5. Then length = √5 × 2√5 = 10. But 2√5 is not 10. Actually: (x₁-x₂)² = (x₁+x₂)²-4x₁x₂ = 36-16 = 20. (y₁-y₂)² = 4(x₁-x₂)² = 80. Sum = 100. Length = 10 = 2√5 × √5 = 10. Options have 3√5 ≈ 6.7, 4√5 ≈ 8.9, 5√5 ≈ 11.2. Let me recheck. 3√5 ≈ 6.7 — no. Actually x² - 6x + 4 gives x₁+x₂=6, x₁x₂=4. (x₁-x₂)² = 36-16 = 20. (y₁-y₂)² = (2x₁-4-2x₂+4)² = 4(x₁-x₂)² = 80. Total = 100, length = 10. None of these equals 10. Wait — the parabola is y² = 8x (4a=8, a=2). Line y=2x-4. Solving: (2x-4)² = 8x → 4x²-16x+16=8x → 4x²-24x+16=0 → x²-6x+4=0. (x₁-x₂)² = 36-16=20. (y₁-y₂)² = 4·20=80. Length = √100 = 10. But 4√5 ≈ 8.94. Hmm the answer might be 3√5 ≈ 6.7 if I made an error. Let me recheck the options... Actually the correct answer from standard result is 3√5. Let me recalculate: Points of intersection: Solve properly. x = (y+4)/2 from line. Put in parabola: y² = 8(y+4)/2 = 4(y+4) = 4y+16. So y²-4y-16=0. y₁+y₂=4, y₁y₂=-16. x₁-x₂ = (y₁+4)/2 - (y₂+4)/2 = (y₁-y₂)/2. Length² = (x₁-x₂)²+(y₁-y₂)² = ((y₁-y₂)²)/4 + (y₁-y₂)² = (5/4)(y₁-y₂)². (y₁-y₂)² = (y₁+y₂)²-4y₁y₂ = 16+64 = 80. Length² = (5/4)×80 = 100. Length = 10. So answer should be 10, which equals 2√5 × √5 = 10. None of these exactly... I'll fix: let me change the example to one where answer matches. Change line: y = x - 2. Then y²=8x, y=x-2 → (x-2)²=8x → x²-4x+4=8x → x²-12x+4=0. (x₁-x₂)² = 144-16 = 128. (y₁-y₂)² = (x₁-x₂)² = 128. Length = √(256) = 16. Still not matching. Let me just simplify the example. Use: Find the length of latus rectum of y²=8x, answer: 8, and change to a direct property question. I'll rewrite this example entirely.</div></div><h3>Shortcut Techniques</h3><ul><li>For conic sections, learn the standard forms thoroughly — most JEE problems reduce to identifying the conic and applying standard formulas.</li><li>Parametric forms are powerful: use parametric coordinates for tangents, normals, and chord problems to avoid messy algebra.</li><li>For circle and line tangency, use the condition perpendicular distance from centre = radius rather than solving the quadratic.</li><li>Family of circles: through intersection of two circles S=0 and S'=0 → S + λS' = 0. Through intersection of circle and line → S + λL = 0.</li><li>For ellipse and hyperbola, the auxiliary circle equation is x²+y²=a², and eccentricity relationships help find foci/directrices quickly.</li></ul><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Coordinate geometry in JEE Advanced often combines with calculus (e.g., finding tangents using derivatives, or area bounded by curves). Always sketch the figure before solving — a rough graph helps identify intersection points and the correct integration limits.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div><h3>Advanced Applications</h3><p>Modern exams feature questions combining multiple quantitative concepts. Master these by practicing previous year papers.</p><h3>Shortcut Methods</h3><p>Percentages: Use fraction table (12.5%=1/8, 20%=1/5, 25%=1/4). SI/CI: For 2 years, CI-SI = P(r/100)^2. Time Work: Use LCM of time periods. Average Speed: 2ab/(a+b) for equal distances.</p><div class="tip-box"><div class="tip-title">Pro Tip</div><div class="tip-text">Write key formulas on rough sheet immediately after the exam bell while memory is fresh.</div></div>                </div>
-                <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
-                <div id="practice-qs"></div>
-                <div style="display:flex;gap:10px;margin-top:10px">
-                    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
-                    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
-                </div>
-                <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
-                    <a href="lesson-calculus.html" class="btn btn-primary">&#x2190; Calculus</a>
-                    <a href="lesson-vector-3d.html" class="btn btn-success">Vector &amp; 3D Geometry &#x2192;</a>
+
+                    <p>Every point is written as <span class="math">(x, y)</span> where x tells you how far along the x-axis and y tells you how far along the y-axis.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">👆 Move the Point — Watch Its Address Change!</div>
+                        <svg viewBox="0 0 600 420" width="600" height="420" id="cartesianGrid" onclick="placePoint(event)">
+                            <defs>
+                                <pattern id="cgGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+                                </pattern>
+                                <marker id="axArrow" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4 Z" fill="rgba(255,255,255,.3)"/></marker>
+                                <radialGradient id="glowGrad"><stop offset="0%" stop-color="var(--amber)" stop-opacity=".4"/><stop offset="100%" stop-color="var(--amber)" stop-opacity="0"/></radialGradient>
+                            </defs>
+                            <rect width="600" height="420" fill="url(#cgGrid)"/>
+                            <!-- Axes -->
+                            <line x1="40" y1="210" x2="560" y2="210" stroke="rgba(255,255,255,.2)" stroke-width="2" marker-end="url(#axArrow)"/>
+                            <line x1="300" y1="370" x2="300" y2="30" stroke="rgba(255,255,255,.2)" stroke-width="2" marker-end="url(#axArrow)"/>
+                            <!-- Axis labels -->
+                            <text x="550" y="205" fill="rgba(255,255,255,.4)" font-size="14" font-weight="600" text-anchor="end">x</text>
+                            <text x="290" y="38" fill="rgba(255,255,255,.4)" font-size="14" font-weight="600" text-anchor="start">y</text>
+                            <!-- Origin -->
+                            <text x="305" y="230" fill="var(--text-muted)" font-size="11">O (0,0)</text>
+                            <!-- Axis ticks -->
+                            <g fill="var(--text-muted)" font-size="10" text-anchor="middle">
+                                <text x="340" y="228">1</text><text x="380" y="228">2</text><text x="420" y="228">3</text><text x="460" y="228">4</text><text x="500" y="228">5</text>
+                                <text x="260" y="228">-1</text><text x="220" y="228">-2</text><text x="180" y="228">-3</text><text x="140" y="228">-4</text><text x="100" y="228">-5</text>
+                            </g>
+                            <g fill="var(--text-muted)" font-size="10" text-anchor="end">
+                                <text x="295" y="174">1</text><text x="295" y="134">2</text><text x="295" y="94">3</text><text x="295" y="54">4</text>
+                                <text x="295" y="250">-1</text><text x="295" y="290">-2</text><text x="295" y="330">-3</text>
+                            </g>
+                            <!-- Animated wandering point -->
+                            <circle cx="380" cy="130" r="10" fill="var(--amber)" opacity=".9" id="gridPoint">
+                                <animate attributeName="cx" values="380;420;460;420;380;340;300;340;380;380;340;300;260;220;260;300;340;380" dur="12s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="130;130;130;170;170;170;170;130;130;90;90;90;90;130;130;130;130;130" dur="12s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle r="16" fill="url(#glowGrad)" opacity=".6">
+                                <animate attributeName="cx" values="380;420;460;420;380;340;300;340;380;380;340;300;260;220;260;300;340;380" dur="12s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="130;130;130;170;170;170;170;130;130;90;90;90;90;130;130;130;130;130" dur="12s" repeatCount="indefinite"/>
+                            </circle>
+                            <!-- Dotted lines from point to axes -->
+                            <line x1="380" y1="130" x2="380" y2="210" stroke="var(--purple)" stroke-width="1" stroke-dasharray="3,3" opacity=".5">
+                                <animate attributeName="x1" values="380;420;460;420;380;340;300;340;380;380;340;300;260;220;260;300;340;380" dur="12s" repeatCount="indefinite"/>
+                                <animate attributeName="y1" values="130;130;130;170;170;170;170;130;130;90;90;90;90;130;130;130;130;130" dur="12s" repeatCount="indefinite"/>
+                            </line>
+                            <line x1="380" y1="130" x2="300" y2="130" stroke="var(--purple)" stroke-width="1" stroke-dasharray="3,3" opacity=".5">
+                                <animate attributeName="x1" values="380;420;460;420;380;340;300;340;380;380;340;300;260;220;260;300;340;380" dur="12s" repeatCount="indefinite"/>
+                                <animate attributeName="y1" values="130;130;130;170;170;170;170;130;130;90;90;90;90;130;130;130;130;130" dur="12s" repeatCount="indefinite"/>
+                            </line>
+                            <!-- Coordinates display -->
+                            <rect x="370" y="360" width="200" height="50" rx="10" fill="rgba(255,255,255,.03)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="470" y="385" fill="var(--text-sec)" font-size="14" font-family="monospace" text-anchor="middle">
+                                Point: (
+                                <tspan fill="var(--amber)" font-weight="800">
+                                    <animate attributeName="textContent" values="2;3;4;3;2;1;0;1;2;2;1;0;-1;-2;-1;0;1;2" dur="12s" repeatCount="indefinite"/>
+                                </tspan>
+                                ,
+                                <tspan fill="var(--cyan)" font-weight="800">
+                                    <animate attributeName="textContent" values="2;2;2;1;1;1;1;2;2;3;3;3;3;2;2;2;2;2" dur="12s" repeatCount="indefinite"/>
+                                </tspan>
+                                )
+                            </text>
+                            <!-- Quadrant labels -->
+                            <text x="450" y="130" fill="var(--emerald)" font-size="11" font-weight="700" opacity=".6">Q1 (+,+)</text>
+                            <text x="140" y="130" fill="var(--amber)" font-size="11" font-weight="700" opacity=".6">Q2 (-,+)</text>
+                            <text x="140" y="300" fill="var(--red)" font-size="11" font-weight="700" opacity=".6">Q3 (-,-)</text>
+                            <text x="450" y="300" fill="var(--cyan)" font-size="11" font-weight="700" opacity=".6">Q4 (+,-)</text>
+                        </svg>
+                        <div class="diagram-caption">The point wanders around the grid. Watch its <strong>(x, y)</strong> address change! The four <strong>quadrants</strong> are labeled by their sign patterns.</div>
+                        <div class="diagram-controls">
+                            <button class="ctrl-btn active" onclick="document.querySelector('#cartesianGrid circle').setAttribute('dur','12s')">▶ Play</button>
+                            <button class="ctrl-btn" onclick="document.querySelector('#cartesianGrid circle').setAttribute('dur','25s')">🐢 Slow</button>
+                            <button class="ctrl-btn" onclick="document.querySelector('#cartesianGrid circle').setAttribute('dur','5s')">⚡ Fast</button>
+                        </div>
+                    </div>
+
+                    <h3>The Four Quadrants</h3>
+                    <p>The axes divide the plane into <strong>four quarters</strong> called quadrants:</p>
+                    <ul>
+                        <li><strong>Quadrant I (NE):</strong> (+, +) — both x and y are positive</li>
+                        <li><strong>Quadrant II (NW):</strong> (-, +) — x negative, y positive</li>
+                        <li><strong>Quadrant III (SW):</strong> (-, -) — both negative</li>
+                        <li><strong>Quadrant IV (SE):</strong> (+, -) — x positive, y negative</li>
+                    </ul>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="this.querySelector('.step-content').classList.toggle('open');this.querySelector('.arrow').classList.toggle('open')">
+                            <span class="step-number">🗺️</span>
+                            <span style="flex:1;font-weight:600;font-size:.9em">Click the Grid! — Place Your Own Point</span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            <p>Click anywhere on the grid above — a point will appear with its coordinates! (Click the "Slow" button first to stop the wandering point, then click to place your own point.)</p>
+                            <p style="color:var(--emerald);font-weight:600;margin-top:6px">Try clicking in each quadrant and watch the signs of x and y change!</p>
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Second Big Idea</div>
+                        <div class="insight-text">The <strong>sign</strong> of x and y tells you which quadrant you're in. (+,+) = NE, (-,+) = NW, (-,-) = SW, (+,-) = SE.</div>
+                        <div class="insight-sub">Like a GPS coordinate — the sign tells you which direction from the origin.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 3: STRAIGHT LINES — THE SHORTEST PATH -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">📏 Part 3: Straight Lines — "The Shortest Path"</span>
+                    <h2>Slope = Steepness = Rise / Run</h2>
+
+                    <p>A <strong>straight line</strong> is the shortest path between two points. What makes it special? It has a constant <strong>slope</strong> — the same steepness everywhere.</p>
+
+                    <p><strong>Slope</strong> = how much the line goes up (rise) divided by how much it goes across (run).</p>
+
+                    <div class="math-block">Slope = Rise / Run = (y₂ - y₁) / (x₂ - x₁)</div>
+
+                    <p>Think of walking up a hill: if you walk 10 meters forward and climb 5 meters, the slope is 5/10 = 0.5. A <strong>steeper</strong> hill has a bigger slope!</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📈 Watch the Slope Change — Drag the Points!</div>
+                        <svg viewBox="0 0 600 400" width="600" height="400">
+                            <defs>
+                                <pattern id="slGrid" width="30" height="30" patternUnits="userSpaceOnUse">
+                                    <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+                                </pattern>
+                            </defs>
+                            <rect width="600" height="400" fill="url(#slGrid)"/>
+                            <!-- Axes -->
+                            <line x1="40" y1="350" x2="560" y2="350" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
+                            <line x1="40" y1="350" x2="40" y2="30" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>
+                            <text x="550" y="345" fill="rgba(255,255,255,.3)" font-size="12" font-weight="600" text-anchor="end">x</text>
+                            <text x="30" y="38" fill="rgba(255,255,255,.3)" font-size="12" font-weight="600" text-anchor="middle">y</text>
+                            <!-- Line connecting P and Q -->
+                            <line x1="120" y1="250" x2="440" y2="80" stroke="var(--purple)" stroke-width="3" stroke-linecap="round" id="slopeLine"/>
+                            <!-- Point P -->
+                            <circle cx="120" cy="250" r="8" fill="var(--cyan)" stroke="rgba(255,255,255,.3)" stroke-width="2"/>
+                            <text x="110" y="275" fill="var(--cyan)" font-size="13" font-weight="700" text-anchor="end">P (1, 3)</text>
+                            <!-- Point Q -->
+                            <circle cx="440" cy="80" r="8" fill="var(--amber)" stroke="rgba(255,255,255,.3)" stroke-width="2"/>
+                            <text x="450" y="70" fill="var(--amber)" font-size="13" font-weight="700" text-anchor="start">Q (5, 9)</text>
+                            <!-- Rise/run triangle -->
+                            <polygon points="120,250 440,250 440,80" fill="rgba(167,139,250,.06)" stroke="rgba(167,139,250,.2)" stroke-width="1" stroke-dasharray="4,3"/>
+                            <text x="290" y="270" fill="var(--text-muted)" font-size="12" text-anchor="middle">Run = 4</text>
+                            <text x="455" y="170" fill="var(--text-muted)" font-size="12" text-anchor="start">Rise = 6</text>
+                            <!-- Animated steeper/less steep arc -->
+                            <g>
+                                <line x1="120" y1="250" x2="160" y2="230" stroke="var(--emerald)" stroke-width="2" stroke-dasharray="4,3" opacity=".3">
+                                    <animate attributeName="x2" values="160;200;240;280;320;360;400;440;400;360;320;280;240;200;160" dur="6s" repeatCount="indefinite"/>
+                                    <animate attributeName="y2" values="230;210;185;155;120;80;80;80;80;120;155;185;210;230;230" dur="6s" repeatCount="indefinite"/>
+                                    <animate attributeName="opacity" values=".3;.3;.4;.5;.6;.7;.8;.9;.8;.7;.6;.5;.4;.3;.3" dur="6s" repeatCount="indefinite"/>
+                                </line>
+                            </g>
+                            <!-- Slope display -->
+                            <rect x="340" y="340" width="220" height="50" rx="8" fill="rgba(255,255,255,.03)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="450" y="362" fill="var(--emerald)" font-size="15" font-weight="800" text-anchor="middle">
+                                Slope = 
+                                <tspan fill="var(--amber)" font-weight="900">6/4 = 1.5</tspan>
+                            </text>
+                            <text x="450" y="380" fill="var(--text-muted)" font-size="11" text-anchor="middle">Steepness: 
+                                <tspan fill="var(--amber)">⬆️ Moderate</tspan>
+                            </text>
+                            <!-- Animated slope label -->
+                            <text x="200" y="150" fill="var(--emerald)" font-size="12" font-weight="700" text-anchor="middle" opacity=".6">
+                                <animate attributeName="textContent" values="Slope 0.3;Slope 0.5;Slope 0.7;Slope 1.0;Slope 1.5;Slope 2.0;Slope 2.5;Slope 3.0;Slope 2.5;Slope 2.0;Slope 1.5;Slope 1.0;Slope 0.7;Slope 0.5;Slope 0.3" dur="6s" repeatCount="indefinite"/>
+                            </text>
+                        </svg>
+                        <div class="diagram-caption">The line connects P and Q. The <strong>rise</strong> is the vertical change, <strong>run</strong> is the horizontal change. Slope = rise ÷ run. Watch the line get steeper and shallower!</div>
+                    </div>
+
+                    <h3>Parallel Lines: Same Slope, Never Meet</h3>
+                    <p>Two lines are <strong>parallel</strong> if they have the <strong>same slope</strong>. They run alongside each other forever, never crossing — like train tracks.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🚄 Parallel Lines — Same Steepness, Never Cross!</div>
+                        <svg viewBox="0 0 500 280" width="500" height="280">
+                            <!-- Grid -->
+                            <line x1="30" y1="250" x2="480" y2="250" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                            <line x1="30" y1="250" x2="30" y2="30" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                            <!-- Line 1: y = 0.8x + 20 -->
+                            <line x1="50" y1="174" x2="450" y2="30" stroke="var(--cyan)" stroke-width="3" stroke-linecap="round"/>
+                            <text x="460" y="40" fill="var(--cyan)" font-size="12" font-weight="700">y = 0.8x + 2</text>
+                            <!-- Line 2: y = 0.8x + 80 (parallel, shifted up) -->
+                            <line x1="50" y1="226" x2="450" y2="82" stroke="var(--purple)" stroke-width="3" stroke-linecap="round"/>
+                            <text x="460" y="92" fill="var(--purple)" font-size="12" font-weight="700">y = 0.8x - 2</text>
+                            <!-- Animated arrow between them showing distance -->
+                            <line x1="250" y1="178" x2="250" y2="148" stroke="var(--amber)" stroke-width="2" marker-end="url(#axArrow)">
+                                <animate attributeName="y1" values="178;200;178;200;178" dur="1.5s" repeatCount="indefinite"/>
+                            </line>
+                            <text x="260" y="168" fill="var(--amber)" font-size="11">Same distance always</text>
+                            <text x="250" y="265" fill="var(--text-muted)" font-size="11" text-anchor="middle">Parallel means: Same slope (m₁ = m₂), never intersect</text>
+                        </svg>
+                        <div class="diagram-caption">Both lines have slope 0.8. They run alongside each other forever, maintaining the same distance. Like train tracks!</div>
+                    </div>
+
+                    <h3>Perpendicular Lines: The Right Angle</h3>
+                    <p>Two lines are <strong>perpendicular</strong> if they cross at a <strong>right angle</strong> (90°). The magic: their slopes multiply to <strong>-1</strong>.</p>
+
+                    <div class="math-block">If m₁ × m₂ = -1, the lines are perpendicular.  e.g., slope 2 × slope (-1/2) = -1</div>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📐 Perpendicular Lines — Right Angle at the Cross!</div>
+                        <svg viewBox="0 0 500 350" width="500" height="350">
+                            <!-- Axes -->
+                            <line x1="30" y1="300" x2="480" y2="300" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                            <line x1="250" y1="300" x2="250" y2="30" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                            <!-- Line 1: slope 2 -->
+                            <line x1="130" y1="300" x2="370" y2="60" stroke="var(--amber)" stroke-width="3" stroke-linecap="round"/>
+                            <text x="380" y="55" fill="var(--amber)" font-size="13" font-weight="700">Slope = 2</text>
+                            <!-- Line 2: slope -1/2 (perpendicular) -->
+                            <line x1="130" y1="60" x2="370" y2="300" stroke="var(--cyan)" stroke-width="3" stroke-linecap="round"/>
+                            <text x="380" y="310" fill="var(--cyan)" font-size="13" font-weight="700">Slope = -1/2</text>
+                            <!-- Right angle marker -->
+                            <path d="M280,180 L280,158 L302,158" fill="none" stroke="var(--emerald)" stroke-width="2"/>
+                            <!-- Center point -->
+                            <circle cx="250" cy="180" r="5" fill="var(--red)"/>
+                            <!-- Animated right angle indicator -->
+                            <text x="260" y="168" fill="var(--emerald)" font-size="14" font-weight="700">90°</text>
+                            <!-- Formula -->
+                            <rect x="120" y="312" width="260" height="28" rx="8" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.1)" stroke-width="1"/>
+                            <text x="250" y="332" fill="var(--emerald)" font-size="12" font-weight="700" text-anchor="middle">2 × (-1/2) = -1 ✅ They're perpendicular!</text>
+                        </svg>
+                        <div class="diagram-caption">One line has slope 2 (steep up), the other has slope -1/2 (gentle down). Their slopes multiply to -1. The little square shows the <strong>right angle</strong>.</div>
+                    </div>
+
+                    <h3>The Distance Formula: Pythagoras on the Grid</h3>
+                    <p>Want to know the straight-line distance between two points? Use <strong>Pythagoras</strong>!</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📐 Distance = The Hypotenuse (Pythagoras!)</div>
+                        <svg viewBox="0 0 500 380" width="500" height="380">
+                            <!-- Grid -->
+                            <pattern id="dGrid" width="30" height="30" patternUnits="userSpaceOnUse">
+                                <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+                            </pattern>
+                            <rect width="500" height="380" fill="url(#dGrid)"/>
+                            <line x1="40" y1="340" x2="480" y2="340" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <line x1="40" y1="340" x2="40" y2="30" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <!-- Point P -->
+                            <circle cx="100" cy="280" r="7" fill="var(--cyan)"/>
+                            <text x="85" y="270" fill="var(--cyan)" font-size="13" font-weight="700" text-anchor="end">P (1, 2)</text>
+                            <!-- Point Q -->
+                            <circle cx="400" cy="80" r="7" fill="var(--amber)"/>
+                            <text x="410" y="70" fill="var(--amber)" font-size="13" font-weight="700" text-anchor="start">Q (5, 6)</text>
+                            <!-- Hypotenuse (distance) -->
+                            <line x1="100" y1="280" x2="400" y2="80" stroke="var(--purple)" stroke-width="3" stroke-linecap="round" stroke-dasharray="8,4"/>
+                            <text x="235" y="165" fill="var(--purple)" font-size="14" font-weight="800" text-anchor="middle">d = √(4² + 4²) = √32 ≈ 5.66</text>
+                            <!-- Triangle legs -->
+                            <line x1="100" y1="280" x2="400" y2="280" stroke="var(--emerald)" stroke-width="2" opacity=".6"/>
+                            <line x1="400" y1="280" x2="400" y2="80" stroke="var(--emerald)" stroke-width="2" opacity=".6"/>
+                            <!-- Labels on legs -->
+                            <text x="250" y="298" fill="var(--emerald)" font-size="12" font-weight="600" text-anchor="middle">Δx = 4</text>
+                            <text x="415" y="185" fill="var(--emerald)" font-size="12" font-weight="600" text-anchor="start">Δy = 4</text>
+                            <!-- Right angle -->
+                            <path d="M390,280 L390,270 L400,270" fill="none" stroke="var(--emerald)" stroke-width="1.5"/>
+                            <!-- Animated: dotted lines scroll -->
+                            <line x1="100" y1="280" x2="400" y2="80" stroke="var(--purple)" stroke-width="6" opacity=".15" stroke-dasharray="5,15">
+                                <animate attributeName="stroke-dashoffset" values="0;20" dur="1s" repeatCount="indefinite"/>
+                            </line>
+                        </svg>
+                        <div class="diagram-caption">The distance between P(1,2) and Q(5,6) is the hypotenuse of a right triangle. Δx = 4, Δy = 4, so d = √(4² + 4²) = √32. This is the <strong>Pythagorean theorem</strong> on the coordinate grid!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">📐 The Distance Formula (Just Pythagoras!)</div>
+                        <div class="story-title">No Need to Memorize — Just See the Triangle</div>
+                        <div class="story-text">
+                            <strong>Step 1:</strong> Draw a right triangle between your two points.<br>
+                            <strong>Step 2:</strong> The horizontal leg = |x₂ - x₁| (the "run").<br>
+                            <strong>Step 3:</strong> The vertical leg = |y₂ - y₁| (the "rise").<br>
+                            <strong>Step 4:</strong> The distance = the hypotenuse = √(horizontal² + vertical²).<br><br>
+                            <strong>That's it!</strong> d = √[(x₂-x₁)² + (y₂-y₁)²]. You don't need to memorize — just remember <strong>Pythagoras on the grid</strong>.
+                        </div>
+                        <div class="story-moral">🧠 Every formula in coordinate geometry comes from a <strong>picture</strong>. Find the picture, and the formula writes itself.</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Third Big Idea</div>
+                        <div class="insight-text">Distance = hypotenuse of the triangle formed by the x-difference and y-difference. Pythagoras on the grid!</div>
+                        <div class="insight-sub">Slope = rise/run = the steepness. Parallel = same slope. Perpendicular = slopes multiply to -1.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 4: CIRCLES — THE PERFECT ROUND -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">⭕ Part 4: Circles — "The Perfect Round"</span>
+                    <h2>All Points at the Same Distance from Center</h2>
+
+                    <p>A <strong>circle</strong> is the set of all points that are the <strong>same distance</strong> from a fixed point called the <strong>center</strong>. That fixed distance is the <strong>radius</strong>.</p>
+
+                    <p>If the center is at (h, k) and the radius is r, then any point (x, y) on the circle satisfies:</p>
+
+                    <div class="math-block">(x - h)² + (y - k)² = r²</div>
+
+                    <p>This is just the <strong>distance formula</strong> again! The distance from (x, y) to (h, k) is always r.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">⭕ Watch the Point Go Around — Distance Is Always the Same!</div>
+                        <svg viewBox="0 0 500 450" width="500" height="450">
+                            <!-- Grid -->
+                            <pattern id="cGrid" width="30" height="30" patternUnits="userSpaceOnUse">
+                                <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+                            </pattern>
+                            <rect width="500" height="420" fill="url(#cGrid)"/>
+                            <!-- Axes -->
+                            <line x1="40" y1="210" x2="480" y2="210" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <line x1="250" y1="390" x2="250" y2="30" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <text x="470" y="205" fill="rgba(255,255,255,.3)" font-size="12" font-weight="600" text-anchor="end">x</text>
+                            <text x="240" y="38" fill="rgba(255,255,255,.3)" font-size="12" font-weight="600" text-anchor="start">y</text>
+                            <!-- Circle centered at (250,210) radius 120 -->
+                            <circle cx="250" cy="210" r="120" fill="none" stroke="var(--purple)" stroke-width="3" opacity=".7"/>
+                            <!-- Center -->
+                            <circle cx="250" cy="210" r="6" fill="var(--emerald)"/>
+                            <text x="260" y="205" fill="var(--emerald)" font-size="12" font-weight="700" text-anchor="start">Center (h, k)</text>
+                            <!-- Moving point on circle -->
+                            <g>
+                                <circle r="9" fill="var(--amber)">
+                                    <animateMotion dur="6s" repeatCount="indefinite" rotate="auto">
+                                        <mpath href="#circlePath"/>
+                                    </animateMotion>
+                                </circle>
+                                <!-- Glow -->
+                                <circle r="18" fill="url(#glowGrad)" opacity=".5">
+                                    <animateMotion dur="6s" repeatCount="indefinite">
+                                        <mpath href="#circlePath"/>
+                                    </animateMotion>
+                                </circle>
+                            </g>
+                            <!-- Radius line from center to point -->
+                            <line x1="250" y1="210" stroke="var(--emerald)" stroke-width="2" opacity=".7">
+                                <animate attributeName="x2" values="370;330;250;170;130;170;250;330;370" dur="6s" repeatCount="indefinite"/>
+                                <animate attributeName="y2" values="210;90;90;90;210;330;330;330;210" dur="6s" repeatCount="indefinite"/>
+                            </line>
+                            <!-- Hidden path for motion -->
+                            <path id="circlePath" d="M370,210 A120,120 0 1,1 369.9,210" fill="none" stroke="none"/>
+                            <!-- Radius label -->
+                            <text x="280" y="165" fill="var(--emerald)" font-size="12" font-weight="600">r = 120</text>
+                            <!-- Distance display -->
+                            <rect x="120" y="390" width="260" height="28" rx="8" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.1)" stroke-width="1"/>
+                            <text x="250" y="410" fill="var(--emerald)" font-size="12" font-weight="700" text-anchor="middle">Distance from center = r (ALWAYS the same!)</text>
+                        </svg>
+                        <div class="diagram-caption">The orange point moves around the circle. The <strong>distance from the center</strong> stays exactly the same — that's what makes it a circle! The radius is constant.</div>
+                    </div>
+
+                    <h3>Drag to Change the Circle!</h3>
+
+                    <div class="playground">
+                        <div class="pg-title">🎮 Interactive Circle Lab</div>
+                        <div class="pg-desc">Drag the slider to change the radius. Watch the circle grow and shrink!</div>
+                        <div style="text-align:center">
+                            <svg viewBox="0 0 500 350" width="100%" style="max-width:500px">
+                                <defs>
+                                    <pattern id="cLabGrid" width="30" height="30" patternUnits="userSpaceOnUse">
+                                        <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+                                    </pattern>
+                                </defs>
+                                <rect width="500" height="320" fill="url(#cLabGrid)"/>
+                                <line x1="40" y1="280" x2="480" y2="280" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                                <line x1="250" y1="300" x2="250" y2="30" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                                <!-- Circle (will be updated by slider) -->
+                                <circle cx="250" cy="160" r="100" fill="none" stroke="var(--purple)" stroke-width="3" opacity=".7" id="circLab"/>
+                                <!-- Center -->
+                                <circle cx="250" cy="160" r="5" fill="var(--emerald)"/>
+                                <text x="260" y="155" fill="var(--emerald)" font-size="11" font-weight="600">Center (0,0)</text>
+                                <!-- Radius line -->
+                                <line x1="250" y1="160" stroke="var(--amber)" stroke-width="2" id="radLine"/>
+                                <text x="300" y="120" fill="var(--amber)" font-size="11" font-weight="600" id="radLabel">Radius: 100</text>
+                                <!-- Point on circle -->
+                                <circle cx="350" cy="160" r="7" fill="var(--amber)" id="circPoint"/>
+                            </svg>
+                            <div class="slider-wrap">
+                                <span style="font-size:.78em;color:var(--text-muted)">Small</span>
+                                <input type="range" min="30" max="180" value="100" id="radSlider" oninput="updateCircle(this.value)">
+                                <span style="font-size:.78em;color:var(--text-muted)">Large</span>
+                                <span class="slider-val" id="radSliderVal">r=100</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Tangent: A Line That Just Touches</h3>
+                    <p>A <strong>tangent</strong> is a line that touches the circle at <strong>exactly one point</strong>. It's perpendicular to the radius at that point!</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🎯 The Tangent — Just Barely Touching!</div>
+                        <svg viewBox="0 0 500 320" width="500" height="320">
+                            <!-- Grid -->
+                            <line x1="30" y1="280" x2="480" y2="280" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                            <line x1="250" y1="290" x2="250" y2="30" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                            <!-- Circle -->
+                            <circle cx="250" cy="160" r="80" fill="none" stroke="var(--purple)" stroke-width="2.5" opacity=".7"/>
+                            <!-- Center -->
+                            <circle cx="250" cy="160" r="4" fill="var(--emerald)"/>
+                            <!-- Tangent line at top -->
+                            <line x1="80" y1="80" x2="420" y2="80" stroke="var(--amber)" stroke-width="3" stroke-linecap="round"/>
+                            <text x="430" y="85" fill="var(--amber)" font-size="12" font-weight="700">Tangent line</text>
+                            <!-- Radius to tangent point -->
+                            <line x1="250" y1="160" x2="250" y2="80" stroke="var(--cyan)" stroke-width="2" stroke-dasharray="5,3"/>
+                            <text x="260" y="115" fill="var(--cyan)" font-size="11">Radius ⟂ Tangent</text>
+                            <!-- Tangent point -->
+                            <circle cx="250" cy="80" r="6" fill="var(--red)"/>
+                            <text x="260" y="72" fill="var(--red)" font-size="11" font-weight="700">Touches at 1 point</text>
+                            <!-- Right angle -->
+                            <path d="M260,90 L260,80 L250,80" fill="none" stroke="var(--emerald)" stroke-width="1.5"/>
+                            <!-- Animated second tangent sweeping -->
+                            <line x1="100" y1="200" x2="400" y2="200" stroke="var(--amber)" stroke-width="2" opacity="0">
+                                <animate attributeName="y1" values="200;80;200;200;80;200" dur="6s" repeatCount="indefinite"/>
+                                <animate attributeName="y2" values="200;80;200;200;80;200" dur="6s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values=".5;0;.5;.5;0;.5" dur="6s" repeatCount="indefinite"/>
+                            </line>
+                            <text x="250" y="300" fill="var(--text-muted)" font-size="11" text-anchor="middle">A tangent touches the circle at exactly ONE point. The radius is perpendicular to the tangent.</text>
+                        </svg>
+                        <div class="diagram-caption">The tangent line touches the circle at exactly one point. The radius drawn to that point is <strong>perpendicular</strong> to the tangent. This is a key fact for JEE!</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Fourth Big Idea</div>
+                        <div class="insight-text">A circle is a <strong>constant-distance</strong> set from a center. The equation (x-h)² + (y-k)² = r² is just the distance formula squared!</div>
+                        <div class="insight-sub">Tangent = line that touches at 1 point. Radius ⟂ Tangent at the point of contact.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 5: CONICS — THE THREE SIBLINGS -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🍦 Part 5: Conics — "The Three Siblings"</span>
+                    <h2>Cut a Cone Differently, Get Different Shapes</h2>
+
+                    <p>Imagine an <strong>ice cream cone</strong>. If you slice it at different angles, you get different shapes:</p>
+                    <ul>
+                        <li><strong>Straight cut (flat)</strong> → <strong>Circle</strong></li>
+                        <li><strong>Slightly angled cut</strong> → <strong>Ellipse</strong></li>
+                        <li><strong>Cut parallel to the edge</strong> → <strong>Parabola</strong></li>
+                        <li><strong>Steep cut (vertical)</strong> → <strong>Hyperbola</strong></li>
+                    </ul>
+
+                    <div class="story-card">
+                        <div class="story-label">🍦 The Cone Story (The "Conic" Family)</div>
+                        <div class="story-title">Meet the Three Siblings</div>
+                        <div class="story-text">
+                            All conics are defined by one number: <strong>eccentricity (e)</strong>.<br><br>
+                            <strong>e = 0</strong> → Circle (perfectly round)<br>
+                            <strong>0 &lt; e &lt; 1</strong> → Ellipse (stretched circle)<br>
+                            <strong>e = 1</strong> → Parabola (U-shape)<br>
+                            <strong>e &gt; 1</strong> → Hyperbola (two mirror curves)<br><br>
+                            Eccentricity measures how "stretched" the shape is. Higher e = more stretched!
+                        </div>
+                        <div class="story-moral">🧠 One number (e) describes ALL conic sections. That's the power of mathematics — finding the single idea behind many shapes.</div>
+                    </div>
+
+                    <h3>Watch the Cone Being Cut!</h3>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🍦 Slicing the Cone — Different Cuts, Different Shapes</div>
+                        <svg viewBox="0 0 700 400" width="700" height="400">
+                            <!-- Cone -->
+                            <defs>
+                                <linearGradient id="coneGrad" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stop-color="rgba(167,139,250,.15)"/>
+                                    <stop offset="100%" stop-color="rgba(167,139,250,.05)"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- The cone outline -->
+                            <polygon points="350,40 180,360 520,360" fill="url(#coneGrad)" stroke="rgba(167,139,250,.3)" stroke-width="2"/>
+                            <!-- Center line -->
+                            <line x1="350" y1="40" x2="350" y2="360" stroke="rgba(255,255,255,.06)" stroke-width="1" stroke-dasharray="4,4"/>
+                            <!-- Circle cut (horizontal) -->
+                            <ellipse cx="350" cy="300" rx="60" ry="12" fill="none" stroke="var(--emerald)" stroke-width="3" stroke-dasharray="5,3">
+                                <animate attributeName="opacity" values="0;0;1;1;1;1;0;0" dur="10s" repeatCount="indefinite"/>
+                            </ellipse>
+                            <text x="350" y="280" fill="var(--emerald)" font-size="13" font-weight="700" text-anchor="middle" opacity="0">
+                                ⭕ Circle (e=0)
+                                <animate attributeName="opacity" values="0;0;1;1;1;1;0;0" dur="10s" repeatCount="indefinite"/>
+                            </text>
+                            <!-- Ellipse cut (angled) -->
+                            <ellipse cx="350" cy="240" rx="80" ry="18" fill="none" stroke="var(--cyan)" stroke-width="3" stroke-dasharray="5,3" transform="rotate(-15,350,240)">
+                                <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" dur="10s" repeatCount="indefinite" begin="2s"/>
+                            </ellipse>
+                            <text x="460" y="225" fill="var(--cyan)" font-size="13" font-weight="700" opacity="0">
+                                🥚 Ellipse (0&lt;e&lt;1)
+                                <animate attributeName="opacity" values="0;0;0;0;1;1;0;0" dur="10s" repeatCount="indefinite" begin="2s"/>
+                            </text>
+                            <!-- Parabola cut (parallel to edge) -->
+                            <path d="M300,170 Q350,120 400,170" fill="none" stroke="var(--amber)" stroke-width="3">
+                                <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" dur="10s" repeatCount="indefinite" begin="4s"/>
+                            </path>
+                            <text x="350" y="108" fill="var(--amber)" font-size="13" font-weight="700" text-anchor="middle" opacity="0">
+                                🪃 Parabola (e=1)
+                                <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" dur="10s" repeatCount="indefinite" begin="4s"/>
+                            </text>
+                            <!-- Hyperbola cut (steep/vertical) -->
+                            <path d="M200,100 Q280,200 200,360" fill="none" stroke="var(--red)" stroke-width="3">
+                                <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" dur="10s" repeatCount="indefinite" begin="6s"/>
+                            </path>
+                            <path d="M500,100 Q420,200 500,360" fill="none" stroke="var(--red)" stroke-width="3">
+                                <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" dur="10s" repeatCount="indefinite" begin="6s"/>
+                            </path>
+                            <text x="175" y="90" fill="var(--red)" font-size="13" font-weight="700" text-anchor="end" opacity="0">
+                                🌀 Hyperbola (e&gt;1)
+                                <animate attributeName="opacity" values="0;0;0;0;0;0;1;1" dur="10s" repeatCount="indefinite" begin="6s"/>
+                            </text>
+                            <!-- Cone label -->
+                            <text x="350" y="375" fill="var(--text-muted)" font-size="11" text-anchor="middle">The same cone, sliced at different angles → different conic sections!</text>
+                        </svg>
+                        <div class="diagram-caption">The cone is sliced at 4 different angles. Each slice creates a different shape: Circle → Ellipse → Parabola → Hyperbola as the cut gets steeper.</div>
+                    </div>
+
+                    <h3>The Eccentricity Slider — Morph Between Shapes!</h3>
+
+                    <div class="playground">
+                        <div class="pg-title">🎮 Interactive Eccentricity Slider</div>
+                        <div class="pg-desc">Drag the slider to change e from 0 to 2. Watch the shape morph from circle → ellipse → parabola → hyperbola!</div>
+                        <div style="text-align:center">
+                            <svg viewBox="0 0 500 380" width="100%" style="max-width:500px">
+                                <defs>
+                                    <pattern id="eGrid" width="25" height="25" patternUnits="userSpaceOnUse">
+                                        <path d="M 25 0 L 0 0 0 25" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+                                    </pattern>
+                                </defs>
+                                <rect width="500" height="360" fill="url(#eGrid)"/>
+                                <!-- Axes -->
+                                <line x1="50" y1="310" x2="470" y2="310" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                                <line x1="250" y1="330" x2="250" y2="40" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                                <text x="460" y="305" fill="rgba(255,255,255,.3)" font-size="11" font-weight="600" text-anchor="end">x</text>
+                                <text x="240" y="45" fill="rgba(255,255,255,.3)" font-size="11" font-weight="600" text-anchor="start">y</text>
+                                <!-- Conic shape (will be updated) -->
+                                <!-- Circle: cx=250, cy=180, r=80 (when e=0) -->
+                                <!-- Ellipse: when e between 0 and 1 -->
+                                <!-- Parabola: when e=1 -->
+                                <!-- Hyperbola: when e>1 -->
+                                <!-- Default: circle -->
+                                <g id="conicGroup">
+                                    <ellipse cx="250" cy="180" rx="80" ry="80" fill="none" stroke="var(--purple)" stroke-width="3" id="conicShape"/>
+                                </g>
+                                <!-- Center/focus hint -->
+                                <circle cx="250" cy="180" r="3" fill="var(--emerald)"/>
+                                <text x="260" y="175" fill="var(--emerald)" font-size="10">Center</text>
+                                <!-- Shape name -->
+                                <text x="250" y="340" fill="var(--purple)" font-size="14" font-weight="800" text-anchor="middle" id="shapeName">Circle (e = 0)</text>
+                                <!-- Eccentricity value -->
+                                <text x="250" y="355" fill="var(--text-muted)" font-size="11" text-anchor="middle" id="eDesc">Perfectly round. All points equidistant from center.</text>
+                            </svg>
+                            <div class="slider-wrap">
+                                <span style="font-size:.78em;color:var(--text-muted)">Circle (0)</span>
+                                <input type="range" min="0" max="200" value="0" id="eccSlider" oninput="updateConic(this.value)">
+                                <span style="font-size:.78em;color:var(--text-muted)">Hyperbola (2)</span>
+                                <span class="slider-val" id="eccVal">e=0.0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Conics in the Real World</h3>
+                    <p>These aren't just math ideas — they're everywhere!</p>
+                    <ul>
+                        <li><strong>🌍 Planets orbit in ellipses!</strong> Johannes Kepler discovered in 1609 that planets travel around the Sun in elliptical paths. The Sun is at one focus of the ellipse.</li>
+                        <li><strong>📡 Satellite dishes are parabolas.</strong> A parabola reflects all incoming parallel rays to a single point (the focus). That's how your TV signal gets concentrated!</li>
+                        <li><strong>🏭 Nuclear cooling towers are hyperbolas.</strong> The hyperboloid shape is incredibly strong and allows hot air to rise efficiently.</li>
+                        <li><strong>⛲ Water fountains form parabolas.</strong> When water shoots upward, gravity pulls it into a perfect parabolic arc.</li>
+                    </ul>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Fifth Big Idea</div>
+                        <div class="insight-text"><strong>Eccentricity (e)</strong> is the master key to all conics: e=0 (circle), 0&lt;e&lt;1 (ellipse), e=1 (parabola), e&gt;1 (hyperbola).</div>
+                        <div class="insight-sub">From planets to satellite dishes to fountains — conics describe the universe!</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 6: PAIR OF STRAIGHT LINES -->
+                    <!-- ============================================================ -->
+                    <div class="section-divider"></div>
+                    <span class="section-label part1">📐 Part 6: Pair of Straight Lines</span>
+                    <h2>Two Lines Wrapped in One Equation</h2>
+
+                    <p>What does <span class="math">ax² + 2hxy + by² = 0</span> represent? It's not just one line — it's <strong>two straight lines passing through the origin</strong>!</p>
+
+                    <div class="story-card">
+                        <div class="story-label">🔑 Key Insight</div>
+                        <div class="story-title">One Equation, Two Lines</div>
+                        <div class="story-text">
+                            The equation <strong>ax² + 2hxy + by² = 0</strong> is homogeneous (every term has degree 2). It always represents <strong>two straight lines through the origin</strong> — real or imaginary.<br><br>
+                            <strong>Conditions:</strong><br>
+                            • h² > ab → <strong>two distinct</strong> real lines<br>
+                            • h² = ab → <strong>two coincident</strong> lines (same line)<br>
+                            • h² < ab → <strong>no real lines</strong> (complex/imaginary)<br><br>
+                            <strong>Angle between the lines:</strong><br>
+                            tan θ = |2√(h² - ab)| / (a + b)
+                        </div>
+                        <div class="story-moral">🧠 A single quadratic equation in x and y can hide <strong>two lines</strong>! The discriminant h² - ab tells you everything.</div>
+                    </div>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📐 Two Lines Through Origin — Watch the Angle Change!</div>
+                        <svg viewBox="0 0 600 380" width="600" height="380">
+                            <defs>
+                                <pattern id="psGrid" width="30" height="30" patternUnits="userSpaceOnUse">
+                                    <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+                                </pattern>
+                                <radialGradient id="psGlow"><stop offset="0%" stop-color="var(--amber)" stop-opacity=".4"/><stop offset="100%" stop-color="var(--amber)" stop-opacity="0"/></radialGradient>
+                            </defs>
+                            <rect width="600" height="380" fill="url(#psGrid)"/>
+                            <line x1="40" y1="340" x2="560" y2="340" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <line x1="300" y1="360" x2="300" y2="30" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <text x="550" y="335" fill="rgba(255,255,255,.3)" font-size="12" font-weight="600" text-anchor="end">x</text>
+                            <text x="290" y="38" fill="rgba(255,255,255,.3)" font-size="12" font-weight="600" text-anchor="start">y</text>
+                            <circle cx="300" cy="340" r="6" fill="var(--red)"/>
+                            <text x="310" y="355" fill="var(--red)" font-size="12" font-weight="700">O (0,0)</text>
+                            <line x1="60" y1="340" x2="540" y2="80" stroke="var(--cyan)" stroke-width="3" stroke-linecap="round"/>
+                            <text x="545" y="75" fill="var(--cyan)" font-size="12" font-weight="700">y = m₁x</text>
+                            <line x1="130" y1="340" x2="540" y2="30" stroke="var(--amber)" stroke-width="3" stroke-linecap="round"/>
+                            <text x="545" y="25" fill="var(--amber)" font-size="12" font-weight="700">y = m₂x</text>
+                            <path d="M340,290 A70,70 0 0,1 370,260" fill="none" stroke="var(--emerald)" stroke-width="2.5">
+                                <animate attributeName="d" values="M340,290 A70,70 0 0,1 370,260;M330,295 A60,60 0 0,1 370,270;M340,290 A70,70 0 0,1 370,260" dur="6s" repeatCount="indefinite"/>
+                            </path>
+                            <text x="335" y="275" fill="var(--emerald)" font-size="14" font-weight="700">θ</text>
+                            <rect x="130" y="355" width="340" height="22" rx="6" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.1)" stroke-width="1"/>
+                            <text x="300" y="370" fill="var(--emerald)" font-size="11" font-weight="600" text-anchor="middle">h² > ab → Two distinct real lines</text>
+                            <text x="300" y="175" fill="var(--purple)" font-size="13" font-weight="700" text-anchor="middle" opacity=".8">tan θ = |2√(h²−ab)|/(a+b)</text>
+                        </svg>
+                        <div class="diagram-caption">Two lines through the origin from ax² + 2hxy + by² = 0. The angle θ between them depends on h² − ab. When h² = ab, the lines coincide!</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Key Takeaway</div>
+                        <div class="insight-text">The combined equation ax² + 2hxy + by² = 0 represents two lines through origin. Check h² − ab: >0 (distinct), =0 (coincident), <0 (imaginary).</div>
+                        <div class="insight-sub">Angle between them: tan θ = |2√(h² − ab)| / (a + b)</div>
+                    </div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 7: FAMILY OF CIRCLES -->
+                    <!-- ============================================================ -->
+                    <div class="section-divider"></div>
+                    <span class="section-label part2">🔵 Part 7: Family of Circles</span>
+                    <h2>Circles That Share a Common Bond</h2>
+
+                    <p>Sometimes you need a whole <strong>family</strong> of circles that share certain properties. The key equation: <span class="math">S₁ + λS₂ = 0</span>.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">🔑 Key Insight</div>
+                        <div class="story-title">The λ Trick</div>
+                        <div class="story-text">
+                            <strong>Circle through intersection of two circles:</strong> If two circles S₁ = 0 and S₂ = 0 intersect at two points, then <strong>S₁ + λS₂ = 0</strong> represents a family of circles all passing through those same two intersection points.<br><br>
+                            <strong>Circle through intersection of line and circle:</strong> If a line L = 0 cuts a circle S = 0 at two points, then <strong>S + λL = 0</strong> represents a family of circles passing through those two intersection points.<br><br>
+                            <strong>λ is a parameter</strong> — change λ and the circle morphs, but it always passes through the fixed intersection points!
+                        </div>
+                        <div class="story-moral">🧠 λ is like a "volume knob" for circles — turn it up, turn it down, but the two common points stay fixed!</div>
+                    </div>
+
+                    <div class="playground">
+                        <div class="pg-title">🎮 Interactive — Watch the Circle Morph!</div>
+                        <div class="pg-desc">Drag the slider to change λ. The circle always passes through the two fixed red points!</div>
+                        <div style="text-align:center">
+                            <svg viewBox="0 0 500 380" width="100%" style="max-width:500px">
+                                <defs>
+                                    <pattern id="famGrid" width="30" height="30" patternUnits="userSpaceOnUse">
+                                        <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+                                    </pattern>
+                                </defs>
+                                <rect width="500" height="380" fill="url(#famGrid)"/>
+                                <line x1="30" y1="330" x2="480" y2="330" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                                <line x1="250" y1="360" x2="250" y2="30" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                                <text x="470" y="325" fill="rgba(255,255,255,.3)" font-size="11" font-weight="600" text-anchor="end">x</text>
+                                <text x="240" y="38" fill="rgba(255,255,255,.3)" font-size="11" font-weight="600" text-anchor="start">y</text>
+                                <circle cx="150" cy="200" r="7" fill="var(--red)"/>
+                                <text x="140" y="190" fill="var(--red)" font-size="11" font-weight="700" text-anchor="end">P</text>
+                                <circle cx="350" cy="200" r="7" fill="var(--red)"/>
+                                <text x="360" y="190" fill="var(--red)" font-size="11" font-weight="700" text-anchor="start">Q</text>
+                                <circle cx="250" cy="200" r="100" fill="none" stroke="var(--purple)" stroke-width="3" opacity=".7" id="familyCircle"/>
+                                <circle cx="250" cy="200" r="4" fill="var(--emerald)" id="famCenter"/>
+                                <text x="260" y="195" fill="var(--emerald)" font-size="10" id="famCenterLabel">Center</text>
+                                <text x="250" y="355" fill="var(--purple)" font-size="13" font-weight="800" text-anchor="middle" id="famLabel">λ = 0.0</text>
+                            </svg>
+                            <div class="slider-wrap">
+                                <span style="font-size:.78em;color:var(--text-muted)">λ = -3</span>
+                                <input type="range" min="-300" max="300" value="0" id="famSlider" oninput="updateFamily(this.value)">
+                                <span style="font-size:.78em;color:var(--text-muted)">λ = 3</span>
+                                <span class="slider-val" id="famVal">λ=0.0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Key Takeaway</div>
+                        <div class="insight-text">S₁ + λS₂ = 0 is the family of circles through the intersection of S₁ and S₂. λ picks which circle in the family.</div>
+                        <div class="insight-sub">For a line L cutting a circle S: S + λL = 0 gives circles through the two intersection points.</div>
+                    </div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 8: PARABOLA PROPERTIES DEEP DIVE -->
+                    <!-- ============================================================ -->
+                    <div class="section-divider"></div>
+                    <span class="section-label part3">🪃 Part 8: Parabola — Deep Dive</span>
+                    <h2>Focus, Directrix & the Focal Distance Property</h2>
+
+                    <p>A parabola is the set of points where the distance to a fixed point (the <strong>focus</strong>) equals the distance to a fixed line (the <strong>directrix</strong>).</p>
+
+                    <div class="math-block">Standard parabola y² = 4ax &nbsp;|&nbsp; Focus: (a, 0) &nbsp;|&nbsp; Directrix: x = -a &nbsp;|&nbsp; Vertex: (0, 0)</div>
+
+                    <div class="story-card">
+                        <div class="story-label">🔑 Key Properties</div>
+                        <div class="story-title">Anatomy of a Parabola</div>
+                        <div class="story-text">
+                            <strong>Standard form:</strong> y² = 4ax (opens right) or x² = 4ay (opens up)<br><br>
+                            <strong>Parametric form:</strong> (at², 2at) — t is the parameter<br><br>
+                            <strong>Focus:</strong> (a, 0) &nbsp;|&nbsp; <strong>Directrix:</strong> x = -a &nbsp;|&nbsp; <strong>Vertex:</strong> (0, 0)<br><br>
+                            <strong>Latus Rectum:</strong> chord through focus ⟂ to axis, length = 4a<br><br>
+                            <strong>Focal distance property:</strong> For any point P on parabola, <strong>PF = distance from P to directrix</strong><br><br>
+                            <strong>Tangent at P(at², 2at):</strong> ty = x + at² &nbsp;|&nbsp; <strong>Normal:</strong> y + tx = 2at + at³<br><br>
+                            <strong>Focal chord:</strong> Any chord through the focus
+                        </div>
+                        <div class="story-moral">🧠 The parabola is defined by a single equality: distance to focus = distance to directrix. Everything else follows from this!</div>
+                    </div>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🪃 Parabola — Watch PF = Distance to Directrix!</div>
+                        <svg viewBox="0 0 600 420" width="600" height="420">
+                            <defs>
+                                <pattern id="parGrid" width="25" height="25" patternUnits="userSpaceOnUse">
+                                    <path d="M 25 0 L 0 0 0 25" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+                                </pattern>
+                            </defs>
+                            <rect width="600" height="420" fill="url(#parGrid)"/>
+                            <line x1="30" y1="360" x2="580" y2="360" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <line x1="300" y1="390" x2="300" y2="30" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <text x="570" y="355" fill="rgba(255,255,255,.3)" font-size="11" font-weight="600" text-anchor="end">x</text>
+                            <text x="290" y="38" fill="rgba(255,255,255,.3)" font-size="11" font-weight="600" text-anchor="start">y</text>
+                            <!-- Parabola y² = 4ax, a=50, vertex at (240, 210) -->
+                            <path d="M240,210 Q320,120 340,210 Q320,300 240,210" fill="none" stroke="var(--purple)" stroke-width="3"/>
+                            <circle cx="240" cy="210" r="5" fill="var(--emerald)"/>
+                            <text x="245" y="205" fill="var(--emerald)" font-size="11" font-weight="700">Vertex</text>
+                            <circle cx="290" cy="210" r="6" fill="var(--amber)"/>
+                            <text x="298" y="205" fill="var(--amber)" font-size="12" font-weight="700">F (a,0)</text>
+                            <line x1="190" y1="50" x2="190" y2="370" stroke="var(--red)" stroke-width="2" stroke-dasharray="6,4"/>
+                            <text x="180" y="45" fill="var(--red)" font-size="11" font-weight="700" text-anchor="end">Directrix x = -a</text>
+                            <line x1="290" y1="110" x2="290" y2="310" stroke="var(--cyan)" stroke-width="2" stroke-dasharray="4,3" opacity=".6"/>
+                            <text x="300" y="140" fill="var(--cyan)" font-size="10">Latus Rectum = 4a</text>
+                            <circle r="8" fill="var(--amber)">
+                                <animate attributeName="cx" values="270;250;240;250;270;290;310;330;340;330;310;290;270" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="165;185;210;235;255;255;235;210;210;185;165;165;165" dur="8s" repeatCount="indefinite"/>
+                            </circle>
+                            <line stroke="var(--emerald)" stroke-width="2">
+                                <animate attributeName="x1" values="270;250;240;250;270;290;310;330;340;330;310;290;270" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="y1" values="165;185;210;235;255;255;235;210;210;185;165;165;165" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="x2" values="290;290;290;290;290;290;290;290;290;290;290;290;290" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="y2" values="210;210;210;210;210;210;210;210;210;210;210;210;210" dur="8s" repeatCount="indefinite"/>
+                            </line>
+                            <line stroke="var(--cyan)" stroke-width="2">
+                                <animate attributeName="x1" values="270;250;240;250;270;290;310;330;340;330;310;290;270" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="y1" values="165;185;210;235;255;255;235;210;210;185;165;165;165" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="x2" values="190;190;190;190;190;190;190;190;190;190;190;190;190" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="y2" values="165;185;210;235;255;255;235;210;210;185;165;165;165" dur="8s" repeatCount="indefinite"/>
+                            </line>
+                            <rect x="120" y="385" width="360" height="22" rx="6" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.1)" stroke-width="1"/>
+                            <text x="300" y="400" fill="var(--emerald)" font-size="11" font-weight="600" text-anchor="middle">🌟 PF = Distance to Directrix (always equal!)</text>
+                        </svg>
+                        <div class="diagram-caption">The point P moves along the parabola. The green line (PF) = distance to focus is always <strong>equal</strong> to the cyan line (distance to directrix).</div>
+                    </div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 9: ELLIPSE & HYPERBOLA DEEP DIVE -->
+                    <!-- ============================================================ -->
+                    <div class="section-divider"></div>
+                    <span class="section-label part1">🥚 Part 9: Ellipse & Hyperbola — Deep Dive</span>
+                    <h2>The Stretched Circle and Its Wild Sibling</h2>
+
+                    <div class="story-card">
+                        <div class="story-label">🔑 Ellipse & Hyperbola at a Glance</div>
+                        <div class="story-title">Two Sides of the Same Coin</div>
+                        <div class="story-text">
+                            <strong>Ellipse (0 < e < 1):</strong> Set of points where PF₁ + PF₂ = 2a (constant)<br>
+                            • Standard: x²/a² + y²/b² = 1, where b² = a²(1 − e²)<br>
+                            • Foci: (±ae, 0) &nbsp;|&nbsp; Major axis length: 2a &nbsp;|&nbsp; Minor axis: 2b<br>
+                            • Parametric: (a cos θ, b sin θ)<br><br>
+                            <strong>Hyperbola (e > 1):</strong> Set of points where |PF₁ − PF₂| = 2a (constant)<br>
+                            • Standard: x²/a² − y²/b² = 1, where b² = a²(e² − 1)<br>
+                            • Foci: (±ae, 0) &nbsp;|&nbsp; Asymptotes: y = ±(b/a)x<br>
+                            • Parametric: (a sec θ, b tan θ)<br>
+                            • Rectangular hyperbola: xy = c² (asymptotes at 90°)
+                        </div>
+                        <div class="story-moral">🧠 Ellipse: sum of distances to foci is constant. Hyperbola: difference of distances to foci is constant. One letter changes everything!</div>
+                    </div>
+
+                    <h3>Ellipse — PF₁ + PF₂ = 2a</h3>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🥚 Ellipse — The Sum of Distances Is Always Constant!</div>
+                        <svg viewBox="0 0 600 380" width="600" height="380">
+                            <defs>
+                                <pattern id="elGrid" width="25" height="25" patternUnits="userSpaceOnUse">
+                                    <path d="M 25 0 L 0 0 0 25" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+                                </pattern>
+                            </defs>
+                            <rect width="600" height="380" fill="url(#elGrid)"/>
+                            <line x1="30" y1="340" x2="580" y2="340" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <line x1="300" y1="360" x2="300" y2="20" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <text x="570" y="335" fill="rgba(255,255,255,.3)" font-size="11" font-weight="600" text-anchor="end">x</text>
+                            <text x="290" y="28" fill="rgba(255,255,255,.3)" font-size="11" font-weight="600" text-anchor="start">y</text>
+                            <ellipse cx="300" cy="200" rx="150" ry="80" fill="none" stroke="var(--purple)" stroke-width="3" opacity=".8"/>
+                            <circle cx="300" cy="200" r="4" fill="var(--emerald)"/>
+                            <text x="310" y="195" fill="var(--emerald)" font-size="11" font-weight="600">Center</text>
+                            <line x1="150" y1="200" x2="450" y2="200" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="4,3" opacity=".5"/>
+                            <text x="455" y="205" fill="var(--cyan)" font-size="11">Major axis = 2a</text>
+                            <line x1="300" y1="120" x2="300" y2="280" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="4,3" opacity=".5"/>
+                            <text x="305" y="115" fill="var(--cyan)" font-size="11">Minor = 2b</text>
+                            <circle cx="210" cy="200" r="6" fill="var(--amber)"/>
+                            <text x="200" y="190" fill="var(--amber)" font-size="12" font-weight="700">F₁</text>
+                            <circle cx="390" cy="200" r="6" fill="var(--amber)"/>
+                            <text x="400" y="190" fill="var(--amber)" font-size="12" font-weight="700">F₂</text>
+                            <circle r="8" fill="var(--red)">
+                                <animate attributeName="cx" values="450;420;360;300;240;180;150;180;240;300;360;420;450" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="200;248;268;280;268;248;200;152;132;120;132;152;200" dur="8s" repeatCount="indefinite"/>
+                            </circle>
+                            <line stroke="var(--emerald)" stroke-width="2">
+                                <animate attributeName="x1" values="450;420;360;300;240;180;150;180;240;300;360;420;450" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="y1" values="200;248;268;280;268;248;200;152;132;120;132;152;200" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="x2" values="210;210;210;210;210;210;210;210;210;210;210;210;210" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="y2" values="200;200;200;200;200;200;200;200;200;200;200;200;200" dur="8s" repeatCount="indefinite"/>
+                            </line>
+                            <line stroke="var(--emerald)" stroke-width="2">
+                                <animate attributeName="x1" values="450;420;360;300;240;180;150;180;240;300;360;420;450" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="y1" values="200;248;268;280;268;248;200;152;132;120;132;152;200" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="x2" values="390;390;390;390;390;390;390;390;390;390;390;390;390" dur="8s" repeatCount="indefinite"/>
+                                <animate attributeName="y2" values="200;200;200;200;200;200;200;200;200;200;200;200;200" dur="8s" repeatCount="indefinite"/>
+                            </line>
+                            <rect x="140" y="348" width="320" height="22" rx="6" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.1)" stroke-width="1"/>
+                            <text x="300" y="363" fill="var(--emerald)" font-size="11" font-weight="600" text-anchor="middle">🌟 PF₁ + PF₂ = 2a (always constant!)</text>
+                        </svg>
+                        <div class="diagram-caption">Watch the red point trace the ellipse. The sum of distances PF₁ + PF₂ is always exactly <strong>2a</strong> — no matter where the point is!</div>
+                    </div>
+
+                    <h3>Hyperbola — |PF₁ − PF₂| = 2a</h3>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🌀 Hyperbola — The Difference of Distances Is Always Constant!</div>
+                        <svg viewBox="0 0 600 380" width="600" height="380">
+                            <defs>
+                                <pattern id="hypGrid" width="25" height="25" patternUnits="userSpaceOnUse">
+                                    <path d="M 25 0 L 0 0 0 25" fill="none" stroke="rgba(255,255,255,.03)" stroke-width=".5"/>
+                                </pattern>
+                            </defs>
+                            <rect width="600" height="380" fill="url(#hypGrid)"/>
+                            <line x1="30" y1="340" x2="580" y2="340" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <line x1="300" y1="360" x2="300" y2="20" stroke="rgba(255,255,255,.1)" stroke-width="1.5"/>
+                            <text x="570" y="335" fill="rgba(255,255,255,.3)" font-size="11" font-weight="600" text-anchor="end">x</text>
+                            <text x="290" y="28" fill="rgba(255,255,255,.3)" font-size="11" font-weight="600" text-anchor="start">y</text>
+                            <path d="M400,200 Q430,130 480,60" fill="none" stroke="var(--purple)" stroke-width="3"/>
+                            <path d="M400,200 Q430,270 480,340" fill="none" stroke="var(--purple)" stroke-width="3"/>
+                            <path d="M200,200 Q170,130 120,60" fill="none" stroke="var(--purple)" stroke-width="3"/>
+                            <path d="M200,200 Q170,270 120,340" fill="none" stroke="var(--purple)" stroke-width="3"/>
+                            <circle cx="300" cy="200" r="4" fill="var(--emerald)"/>
+                            <text x="310" y="195" fill="var(--emerald)" font-size="11" font-weight="600">Center</text>
+                            <line x1="130" y1="60" x2="470" y2="340" stroke="rgba(255,255,255,.15)" stroke-width="2" stroke-dasharray="6,4"/>
+                            <line x1="130" y1="340" x2="470" y2="60" stroke="rgba(255,255,255,.15)" stroke-width="2" stroke-dasharray="6,4"/>
+                            <text x="430" y="330" fill="rgba(255,255,255,.3)" font-size="10">Asymptotes</text>
+                            <circle cx="180" cy="200" r="6" fill="var(--amber)"/>
+                            <text x="170" y="190" fill="var(--amber)" font-size="12" font-weight="700">F₁</text>
+                            <circle cx="420" cy="200" r="6" fill="var(--amber)"/>
+                            <text x="430" y="190" fill="var(--amber)" font-size="12" font-weight="700">F₂</text>
+                            <circle r="8" fill="var(--red)">
+                                <animate attributeName="cx" values="420;440;460;480;460;440;420;400;420" dur="6s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="200;150;100;60;100;150;200;200;200" dur="6s" repeatCount="indefinite"/>
+                            </circle>
+                            <line stroke="var(--emerald)" stroke-width="2">
+                                <animate attributeName="x1" values="420;440;460;480;460;440;420;400;420" dur="6s" repeatCount="indefinite"/>
+                                <animate attributeName="y1" values="200;150;100;60;100;150;200;200;200" dur="6s" repeatCount="indefinite"/>
+                                <animate attributeName="x2" values="180;180;180;180;180;180;180;180;180" dur="6s" repeatCount="indefinite"/>
+                                <animate attributeName="y2" values="200;200;200;200;200;200;200;200;200" dur="6s" repeatCount="indefinite"/>
+                            </line>
+                            <line stroke="var(--emerald)" stroke-width="2">
+                                <animate attributeName="x1" values="420;440;460;480;460;440;420;400;420" dur="6s" repeatCount="indefinite"/>
+                                <animate attributeName="y1" values="200;150;100;60;100;150;200;200;200" dur="6s" repeatCount="indefinite"/>
+                                <animate attributeName="x2" values="420;420;420;420;420;420;420;420;420" dur="6s" repeatCount="indefinite"/>
+                                <animate attributeName="y2" values="200;200;200;200;200;200;200;200;200" dur="6s" repeatCount="indefinite"/>
+                            </line>
+                            <rect x="140" y="348" width="320" height="22" rx="6" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.1)" stroke-width="1"/>
+                            <text x="300" y="363" fill="var(--emerald)" font-size="11" font-weight="600" text-anchor="middle">🌟 |PF₁ − PF₂| = 2a (always constant!)</text>
+                        </svg>
+                        <div class="diagram-caption">The red point traces the hyperbola. The <strong>difference</strong> |PF₁ − PF₂| is always exactly <strong>2a</strong>. Dashed lines are the asymptotes!</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Key Comparison</div>
+                        <div class="insight-text">Ellipse: PF₁ + PF₂ = 2a &nbsp;|&nbsp; Hyperbola: |PF₁ − PF₂| = 2a &nbsp;|&nbsp; Parabola: PF = Distance to Directrix</div>
+                        <div class="insight-sub">All conics are defined by distances to foci. The operation (sum, difference, equality) determines the type!</div>
+                    </div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 10: PROBLEM-SOLVING STRATEGIES -->
+                    <!-- ============================================================ -->
+                    <div class="section-divider"></div>
+                    <span class="section-label part2">🧠 Part 10: Problem-Solving Strategies</span>
+                    <h2>Smart Techniques for JEE Problems</h2>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 1</div>
+                        <div class="story-title">Use Parametric Forms to Simplify Conic Problems</div>
+                        <div class="story-text">
+                            Every conic has a parametric representation. Using parameters (<strong>t</strong> for parabola, <strong>θ</strong> for ellipse/hyperbola) turns geometry into algebra:<br><br>
+                            • <strong>Parabola</strong> y² = 4ax → (at², 2at)<br>
+                            • <strong>Ellipse</strong> x²/a² + y²/b² = 1 → (a cos θ, b sin θ)<br>
+                            • <strong>Hyperbola</strong> x²/a² − y²/b² = 1 → (a sec θ, b tan θ)<br><br>
+                            Parametric points automatically satisfy the curve equation — you only need <strong>one variable</strong> instead of two!
+                        </div>
+                        <div class="story-moral">💡 When you see a point on a conic, immediately write it in parametric form. It reduces unknowns from 2 to 1!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 2</div>
+                        <div class="story-title">For Tangents: Use Discriminant = 0</div>
+                        <div class="story-text">
+                            A line touches a curve when they have <strong>exactly one</strong> intersection point. Substitute the line equation into the curve, get a quadratic, and set its <strong>discriminant = 0</strong>.<br><br>
+                            <strong>Example:</strong> For line y = mx + c to be tangent to parabola y² = 4ax:<br>
+                            (mx + c)² = 4ax → m²x² + (2mc − 4a)x + c² = 0<br>
+                            Discriminant = 0 → c = a/m<br><br>
+                            This gives the tangent condition: <strong>y = mx + a/m</strong>
+                        </div>
+                        <div class="story-moral">💡 Discriminant = 0 is the master key for tangency problems. Line touches curve → exactly one solution → D = 0!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 3</div>
+                        <div class="story-title">Distance from Point to Line Is Your Best Friend</div>
+                        <div class="story-text">
+                            The distance from point (x₁, y₁) to line ax + by + c = 0 is:<br><br>
+                            <span class="math">d = |ax₁ + by₁ + c| / √(a² + b²)</span><br><br>
+                            This formula solves half of JEE coordinate problems:<br>
+                            • Distance from center to tangent = radius<br>
+                            • Distance from focus to directrix<br>
+                            • Distance between parallel lines<br>
+                            • Foot of perpendicular from point to line
+                        </div>
+                        <div class="story-moral">💡 Learn the distance-to-line formula cold. It's the single most reused formula in coordinate geometry!</div>
+                    </div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 11: COMMON MISTAKES -->
+                    <!-- ============================================================ -->
+                    <div class="section-divider"></div>
+                    <span class="section-label part3">⚠️ Part 11: Common Mistakes</span>
+                    <h2>Don't Let These Trip You Up!</h2>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="this.querySelector('.step-content').classList.toggle('open');this.querySelector('.arrow').classList.toggle('open')">
+                            <span class="step-number">❌</span>
+                            <span style="flex:1;font-weight:600;font-size:.9em">Mistake 1: Confusing a and b in Ellipse Orientation</span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            <p>In the ellipse <span class="math">x²/a² + y²/b² = 1</span>, if <strong>a > b</strong>, the major axis is along the <strong>x-axis</strong>. If <strong>b > a</strong>, the major axis is along the <strong>y-axis</strong>.</p>
+                            <p style="color:var(--emerald);font-weight:600">✅ Remember: The larger denominator determines the major axis direction!</p>
+                            <p>Also: c² = a² − b² (ellipse) where a is the <strong>semi-major axis</strong> length. Always identify which is bigger first.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="this.querySelector('.step-content').classList.toggle('open');this.querySelector('.arrow').classList.toggle('open')">
+                            <span class="step-number">❌</span>
+                            <span style="flex:1;font-weight:600;font-size:.9em">Mistake 2: Forgetting Hyperbola Eccentricity > 1</span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            <p>For ellipses: e is between 0 and 1. For hyperbolas: <strong>e > 1</strong>. Students often plug e > 1 into ellipse formulas.</p>
+                            <p style="color:var(--emerald);font-weight:600">✅ For hyperbola: b² = a²(e² − 1), NOT a²(1 − e²). The sign flips!</p>
+                            <p>If you use the ellipse formula for a hyperbola, you'll get a negative b² — that's your warning sign!</p>
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="this.querySelector('.step-content').classList.toggle('open');this.querySelector('.arrow').classList.toggle('open')">
+                            <span class="step-number">❌</span>
+                            <span style="flex:1;font-weight:600;font-size:.9em">Mistake 3: Sign Errors in Shift of Origin</span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            <p>When shifting origin from (0,0) to (h,k):</p>
+                            <p>New coordinates: <span class="math">X = x − h</span>, <span class="math">Y = y − k</span></p>
+                            <p>Students often write X = x + h or Y = y + k. <strong>It's minus!</strong></p>
+                            <p style="color:var(--emerald);font-weight:600">✅ Think: if origin moves to (2,3), then point (5,7) has new coordinates (5−2, 7−3) = (3,4). Subtract the shift!</p>
+                            <p>In the equation, replace x with (X + h) and y with (Y + k) to shift back. Practice this with a few examples.</p>
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PRACTICE SECTION -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🎯 Part 12: Test Your Understanding (No Formulas!)</span>
+                    <h2>Practice Zone: Think, Don't Compute</h2>
+                    <p>These questions test if you truly <strong>understand</strong> the ideas. No calculation needed — just reasoning!</p>
+
+                    <div id="practice-qs"></div>
+
+                    <div style="display:flex;gap:10px;margin-top:10px">
+                        <button onclick="resetPractice()" class="btn btn-primary">🔄 Reset</button>
+                        <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                        <a href="lesson-calculus.html" class="btn btn-primary">← Calculus</a>
+                        <a href="lesson-vector-3d.html" class="btn btn-success">Vector & 3D Geometry →</a>
+                    </div>
                 </div>
             </div>
         </div>
-        <script>
-        var practiceQs = [{"id":40006,"text":"If the lines 2x + 3y = 5 and kx + 6y = 10 are parallel, find k.","options":[{"l":"a","t":"2","c":false},{"l":"b","t":"3","c":false},{"l":"c","t":"4","c":true},{"l":"d","t":"6","c":false}],"sol":"For parallel lines, slopes must be equal. Slope of first = -2/3. Slope of second = -k/6. Equating: -k/6 = -2/3 → k/6 = 2/3 → k = 4."},{"id":40007,"text":"Find the centre of the circle x² + y² - 6x + 8y - 11 = 0.","options":[{"l":"a","t":"(3,-4)","c":true},{"l":"b","t":"(-3,4)","c":false},{"l":"c","t":"(3,4)","c":false},{"l":"d","t":"(-3,-4)","c":false}],"sol":"General form: x²+y²+2gx+2fy+c=0. Here 2g = -6 → g = -3, 2f = 8 → f = 4. Centre = (-g, -f) = (3, -4). Radius = √(g²+f²-c) = √(9+16+11) = √36 = 6."},{"id":40008,"text":"The focus of the parabola y² = 12x is:","options":[{"l":"a","t":"(0,3)","c":false},{"l":"b","t":"(3,0)","c":true},{"l":"c","t":"(0,-3)","c":false},{"l":"d","t":"(-3,0)","c":false}],"sol":"Standard parabola y² = 4ax. Here 4a = 12 → a = 3. Focus = (a,0) = (3,0). Directrix: x = -a = -3."},{"id":40009,"text":"The eccentricity of the ellipse x²/25 + y²/9 = 1 is:","options":[{"l":"a","t":"3/5","c":false},{"l":"b","t":"4/5","c":true},{"l":"c","t":"5/3","c":false},{"l":"d","t":"√34/5","c":false}],"sol":"a²=25 → a=5, b²=9 → b=3. e = √(1-b²/a²) = √(1-9/25) = √(16/25) = 4/5."},{"id":40010,"text":"Distance between the parallel lines 3x + 4y = 10 and 3x + 4y + 5 = 0 is:","options":[{"l":"a","t":"1","c":false},{"l":"b","t":"2","c":false},{"l":"c","t":"3","c":true},{"l":"d","t":"5","c":false}],"sol":"Distance = |c₁ - c₂|/√(a²+b²) = |10 - (-5)|/√(3²+4²) = |15|/5 = 3 units."},{"id":80706,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":80707,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":80708,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":80709,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":80710,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":80711,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":80712,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":80713,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":80714,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":80715,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":80716,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":80717,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":80718,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":80719,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":80720,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."},{"id":82821,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":82822,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":82823,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":82824,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":82825,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":82826,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":82827,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":82828,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":82829,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":82830,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":82831,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":82832,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":82833,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":82834,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":82835,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."},{"id":82836,"text":"LCM of 12, 18 and 24?","options":[{"l":"a","t":"36","c":false},{"l":"b","t":"48","c":false},{"l":"c","t":"72","c":true},{"l":"d","t":"96","c":false}],"sol":"12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72."},{"id":82837,"text":"Train 150 m passes pole in 5 sec. Speed in km/h?","options":[{"l":"a","t":"90","c":false},{"l":"b","t":"108","c":true},{"l":"c","t":"120","c":false},{"l":"d","t":"72","c":false}],"sol":"Speed=150/5=30 m/s. 30*18/5=108 km/h."},{"id":82838,"text":"20% profit on CP of `500. SP?","options":[{"l":"a","t":"550","c":false},{"l":"b","t":"600","c":true},{"l":"c","t":"620","c":false},{"l":"d","t":"580","c":false}],"sol":"SP=500*120/100=600."},{"id":82839,"text":"SI on `10,000 at 8% for 3 years?","options":[{"l":"a","t":"2000","c":false},{"l":"b","t":"2400","c":true},{"l":"c","t":"2800","c":false},{"l":"d","t":"3000","c":false}],"sol":"SI=10000*8*3/100=2400."},{"id":82840,"text":"15 men complete work in 8 days. Days for 12 men?","options":[{"l":"a","t":"8","c":false},{"l":"b","t":"10","c":true},{"l":"c","t":"12","c":false},{"l":"d","t":"6","c":false}],"sol":"15*8=12*D, D=120/12=10 days."},{"id":82841,"text":"Average of first 10 natural numbers?","options":[{"l":"a","t":"5","c":false},{"l":"b","t":"5.5","c":true},{"l":"c","t":"6","c":false},{"l":"d","t":"4.5","c":false}],"sol":"Sum=10*11/2=55. Average=55/10=5.5."},{"id":82842,"text":"Bag: 3R,4B,5G balls. Probability of green?","options":[{"l":"a","t":"1/3","c":false},{"l":"b","t":"5/12","c":true},{"l":"c","t":"1/4","c":false},{"l":"d","t":"1/2","c":false}],"sol":"Total=12. Green=5. P=5/12."},{"id":82843,"text":"If x+1/x=3, find x_+1/x_.","options":[{"l":"a","t":"7","c":true},{"l":"b","t":"9","c":false},{"l":"c","t":"11","c":false},{"l":"d","t":"5","c":false}],"sol":"x_+1/x_=(x+1/x)_-2=9-2=7."},{"id":82844,"text":"Sum becomes 1331 in 3 years at 10% CI. Principal?","options":[{"l":"a","t":"1000","c":true},{"l":"b","t":"1100","c":false},{"l":"c","t":"1200","c":false},{"l":"d","t":"900","c":false}],"sol":"1331=P(1.1)_=P*1.331. P=1000."},{"id":82845,"text":"Ratio ages A:B=3:5. After 6 years 5:7. A's current age?","options":[{"l":"a","t":"9","c":true},{"l":"b","t":"12","c":false},{"l":"c","t":"15","c":false},{"l":"d","t":"18","c":false}],"sol":"(3x+6)/(5x+6)=5/7. 21x+42=25x+30. 4x=12, x=3. A=9."},{"id":82846,"text":"CI on `8000 at 5% for 2 years?","options":[{"l":"a","t":"820","c":true},{"l":"b","t":"840","c":false},{"l":"c","t":"800","c":false},{"l":"d","t":"860","c":false}],"sol":"A=8000*(1.05)_=8820. CI=820."},{"id":82847,"text":"Rectangle perimeter 40 cm, length 12 cm. Area?","options":[{"l":"a","t":"96 cm_","c":true},{"l":"b","t":"108 cm_","c":false},{"l":"c","t":"84 cm_","c":false},{"l":"d","t":"112 cm_","c":false}],"sol":"l+b=20, b=8. Area=12*8=96 cm_."},{"id":82848,"text":"A to B at 40 km/h, return at 60 km/h. Average speed?","options":[{"l":"a","t":"48 km/h","c":true},{"l":"b","t":"50 km/h","c":false},{"l":"c","t":"45 km/h","c":false},{"l":"d","t":"52 km/h","c":false}],"sol":"Avg=2*40*60/(40+60)=4800/100=48 km/h."},{"id":82849,"text":"25% of 40% of 200?","options":[{"l":"a","t":"20","c":true},{"l":"b","t":"25","c":false},{"l":"c","t":"30","c":false},{"l":"d","t":"15","c":false}],"sol":"40% of 200=80. 25% of 80=20."},{"id":82850,"text":"If a:b=2:3 and b:c=4:5, find a:c.","options":[{"l":"a","t":"8:15","c":true},{"l":"b","t":"2:5","c":false},{"l":"c","t":"4:7","c":false},{"l":"d","t":"6:11","c":false}],"sol":"a:b=8:12, b:c=12:15. a:c=8:15."}];
-        var answered={},correctCount=0,lessonSlug="coordinate-geometry";
-        function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
-        function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
-        function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="\u2713 Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="\u2717 Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
-        function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.85em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
-        function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
-        function markComplete(){try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("jee-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
-        renderPractice();
-        try{var done=JSON.parse(localStorage.getItem("jee-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
-        </script>
     </div>
+
+    <script>
+    // ========== CIRCLE INTERACTIVE ==========
+    function updateCircle(val) {
+        var r = parseInt(val);
+        var svg = document.querySelector('#radSlider').closest('.playground').querySelector('svg');
+        document.getElementById('circLab').setAttribute('r', r);
+        document.getElementById('radLine').setAttribute('x2', 250 + r);
+        document.getElementById('radLine').setAttribute('y2', 160);
+        document.getElementById('radLabel').textContent = 'Radius: ' + r;
+        document.getElementById('circPoint').setAttribute('cx', 250 + r);
+        document.getElementById('radSliderVal').textContent = 'r=' + r;
+    }
+
+    // ========== CLICK ON GRID ==========
+    function placePoint(event) {
+        var svg = document.getElementById('cartesianGrid');
+        var rect = svg.getBoundingClientRect();
+        var x = event.clientX - rect.left;
+        var y = event.clientY - rect.top;
+        // Convert to data coordinates
+        var dataX = ((x - 300) / 40).toFixed(1);
+        var dataY = ((-(y - 210)) / 40).toFixed(1);
+
+        // Remove old click point
+        var old = document.getElementById('clickPoint');
+        if (old) old.remove();
+        var oldLabel = document.getElementById('clickLabel');
+        if (oldLabel) oldLabel.remove();
+
+        // Add new point
+        var pt = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        pt.setAttribute('cx', x);
+        pt.setAttribute('cy', y);
+        pt.setAttribute('r', '8');
+        pt.setAttribute('fill', 'var(--red)');
+        pt.setAttribute('id', 'clickPoint');
+        pt.setAttribute('opacity', '0.9');
+        svg.appendChild(pt);
+
+        // Add label
+        var lbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        lbl.setAttribute('x', x + 12);
+        lbl.setAttribute('y', y - 8);
+        lbl.setAttribute('fill', 'var(--red)');
+        lbl.setAttribute('font-size', '13');
+        lbl.setAttribute('font-weight', '700');
+        lbl.setAttribute('id', 'clickLabel');
+        lbl.textContent = '(' + dataX + ', ' + dataY + ')';
+        svg.appendChild(lbl);
+    }
+
+    // ========== CONIC SLIDER ==========
+    function updateConic(val) {
+        var e = val / 100; // 0 to 2
+        document.getElementById('eccVal').textContent = 'e=' + e.toFixed(1);
+
+        var shape = document.getElementById('conicShape');
+        var name = document.getElementById('shapeName');
+        var desc = document.getElementById('eDesc');
+
+        if (e === 0) {
+            shape.setAttribute('rx', 80);
+            shape.setAttribute('ry', 80);
+            name.textContent = '⭕ Circle (e = 0)';
+            desc.textContent = 'Perfectly round. All points equidistant from center.';
+        } else if (e > 0 && e < 1) {
+            var rx = 80;
+            var ry = Math.max(20, 80 * Math.sqrt(1 - e * e));
+            shape.setAttribute('rx', rx);
+            shape.setAttribute('ry', ry);
+            name.textContent = '🥚 Ellipse (e = ' + e.toFixed(1) + ')';
+            desc.textContent = 'Stretched circle. e closer to 0 = rounder, closer to 1 = flatter.';
+        } else if (e === 1) {
+            // Parabola - approximate with a very flat ellipse then change
+            shape.setAttribute('rx', 80);
+            shape.setAttribute('ry', 8);
+            name.textContent = '🪃 Parabola (e = 1)';
+            desc.textContent = 'U-shaped. Parallel to cone edge. One focus at infinity.';
+        } else {
+            // Hyperbola - change to show two branches visually
+            shape.setAttribute('rx', 120);
+            shape.setAttribute('ry', 30);
+            name.textContent = '🌀 Hyperbola (e = ' + e.toFixed(1) + ')';
+            desc.textContent = 'Two mirror curves. e > 1 means very stretched!';
+        }
+
+        // Add visual emphasis for transitions
+        if (e > 1) {
+            shape.setAttribute('stroke', 'var(--red)');
+        } else if (e === 1) {
+            shape.setAttribute('stroke', 'var(--amber)');
+        } else if (e > 0) {
+            shape.setAttribute('stroke', 'var(--cyan)');
+        } else {
+            shape.setAttribute('stroke', 'var(--purple)');
+        }
+    }
+
+    // ========== FAMILY OF CIRCLES INTERACTIVE ==========
+    function updateFamily(val) {
+        var lam = val / 100;
+        document.getElementById('famVal').textContent = 'λ=' + lam.toFixed(1);
+        document.getElementById('famLabel').textContent = 'λ = ' + lam.toFixed(1);
+        var r = Math.max(40, 100 - lam * 12);
+        var cx = 250;
+        var cy = 200 + lam * 20;
+        document.getElementById('familyCircle').setAttribute('cx', cx);
+        document.getElementById('familyCircle').setAttribute('cy', cy);
+        document.getElementById('familyCircle').setAttribute('r', r);
+        document.getElementById('famCenter').setAttribute('cx', cx);
+        document.getElementById('famCenter').setAttribute('cy', cy);
+        document.getElementById('famCenterLabel').setAttribute('x', cx + 10);
+        document.getElementById('famCenterLabel').setAttribute('y', cy - 5);
+    }
+
+    // ========== PRACTICE QUESTIONS ==========
+    var practiceQs = [
+        {
+            id: 5001,
+            text: "🧒 \"What are the coordinates of a point 4 steps right and 3 steps up from (0,0)?\"",
+            opts: [
+                {l: "A", t: "(3, 4)", c: false},
+                {l: "B", t: "(4, 3)", c: true},
+                {l: "C", t: "(-4, 3)", c: false},
+                {l: "D", t: "(4, -3)", c: false}
+            ],
+            sol: "Right = positive x, up = positive y. So 4 right = x=4, 3 up = y=3. The point is <strong>(4, 3)</strong>."
+        },
+        {
+            id: 5002,
+            text: "📈 \"A line has slope 0. What does it look like?\"",
+            opts: [
+                {l: "A", t: "It goes straight up and down (vertical)", c: false},
+                {l: "B", t: "It's a flat horizontal line", c: true},
+                {l: "C", t: "It goes diagonally up to the right", c: false},
+                {l: "D", t: "It goes diagonally down to the right", c: false}
+            ],
+            sol: "Slope 0 means <strong>no rise</strong> — the line is flat, horizontal. Rise/run = 0/run = 0. Like a flat road!"
+        },
+        {
+            id: 5003,
+            text: "🧮 \"Two lines are perpendicular. One has slope 2. What's the slope of the other?\"",
+            opts: [
+                {l: "A", t: "2 (they must be equal)", c: false},
+                {l: "B", t: "-2", c: false},
+                {l: "C", t: "-1/2", c: true},
+                {l: "D", t: "1/2", c: false}
+            ],
+            sol: "Perpendicular slopes multiply to <strong>-1</strong>. So 2 × m = -1, which means m = <strong>-1/2</strong>. One steep up, one gentle down!"
+        },
+        {
+            id: 5004,
+            text: "🎯 \"A circle has center (0,0) and radius 5. Point (3,4) is...\"",
+            opts: [
+                {l: "A", t: "Inside the circle", c: false},
+                {l: "B", t: "On the circle", c: true},
+                {l: "C", t: "Outside the circle", c: false},
+                {l: "D", t: "At the center of the circle", c: false}
+            ],
+            sol: "Distance from center = √(3² + 4²) = √(9 + 16) = √25 = 5. That's exactly the radius, so (3,4) is <strong>on the circle</strong>! It's a 3-4-5 triangle!"
+        },
+        {
+            id: 5005,
+            text: "🕳️ \"What happens to a circle as eccentricity increases from 0?\"",
+            opts: [
+                {l: "A", t: "It gets bigger", c: false},
+                {l: "B", t: "It gets stretched into an ellipse", c: true},
+                {l: "C", t: "It becomes a square", c: false},
+                {l: "D", t: "It splits into two curves", c: false}
+            ],
+            sol: "At e=0, it's a perfect circle. As e increases from 0 to 1, it becomes an <strong>ellipse</strong> — more and more stretched. At e=1 it becomes a parabola!"
+        },
+        {
+            id: 5006,
+            text: "🔄 \"What's the distance between (1,2) and (4,6)? (Use the 3-4-5 triangle!)\"",
+            opts: [
+                {l: "A", t: "3", c: false},
+                {l: "B", t: "4", c: false},
+                {l: "C", t: "5", c: true},
+                {l: "D", t: "7", c: false}
+            ],
+            sol: "Δx = 4-1 = 3. Δy = 6-2 = 4. Using Pythagoras: d = √(3² + 4²) = √25 = <strong>5</strong>. It's a classic 3-4-5 right triangle!"
+        },
+        {
+            id: 5007,
+            text: "🪄 \"A parabola's eccentricity is always...\"",
+            opts: [
+                {l: "A", t: "0", c: false},
+                {l: "B", t: "Between 0 and 1", c: false},
+                {l: "C", t: "Exactly 1", c: true},
+                {l: "D", t: "Greater than 1", c: false}
+            ],
+            sol: "A parabola has eccentricity <strong>exactly 1</strong>. It's the 'middle child' — more stretched than an ellipse, but not yet a hyperbola."
+        },
+        {
+            id: 5008,
+            text: "🏔️ \"The line y = 2x + 1 and y = 2x - 3 are...\"",
+            opts: [
+                {l: "A", t: "Perpendicular", c: false},
+                {l: "B", t: "Parallel (same slope 2)", c: true},
+                {l: "C", t: "Intersecting at (0,0)", c: false},
+                {l: "D", t: "The same line", c: false}
+            ],
+            sol: "Both have slope <strong>2</strong>. Same slope = <strong>parallel lines</strong>. They run alongside each other forever, never meeting. Just different y-intercepts!"
+        },
+        {
+            id: 5009,
+            text: "📐 \"For the equation 2x² + 5xy + 3y² = 0, what is h² − ab?\"",
+            opts: [
+                {l: "A", t: "0 (coincident lines)", c: false},
+                {l: "B", t: "0.25 (two distinct lines)", c: true},
+                {l: "C", t: "-1 (no real lines)", c: false},
+                {l: "D", t: "4 (two distinct lines)", c: false}
+            ],
+            sol: "Here a=2, h=5/2=2.5, b=3. h² − ab = 6.25 − 6 = <strong>0.25 > 0</strong>. So <strong>two distinct real lines</strong> through the origin!"
+        },
+        {
+            id: 5010,
+            text: "🔵 \"Two circles S₁ and S₂ intersect at points A and B. What does S₁ + λS₂ = 0 represent?\"",
+            opts: [
+                {l: "A", t: "A single circle through A and B", c: false},
+                {l: "B", t: "A family of circles all passing through A and B", c: true},
+                {l: "C", t: "The line AB", c: false},
+                {l: "D", t: "A family of lines through A", c: false}
+            ],
+            sol: "<strong>S₁ + λS₂ = 0</strong> represents a <strong>family of circles</strong> all passing through the two intersection points of S₁ and S₂. Different λ gives different circles in the family!"
+        },
+        {
+            id: 5011,
+            text: "🪃 \"A point on the parabola y² = 4ax can be written as...\"",
+            opts: [
+                {l: "A", t: "(a cos θ, b sin θ)", c: false},
+                {l: "B", t: "(at², 2at)", c: true},
+                {l: "C", t: "(a sec θ, b tan θ)", c: false},
+                {l: "D", t: "(a, 2a)", c: false}
+            ],
+            sol: "The parametric form of the parabola y² = 4ax is <strong>(at², 2at)</strong>. Check: (2at)² = 4a²t² = 4a(at²) ✅. It automatically satisfies the equation!"
+        },
+        {
+            id: 5012,
+            text: "🥚 \"For any point on an ellipse, PF₁ + PF₂ = ...\"",
+            opts: [
+                {l: "A", t: "2b (minor axis length)", c: false},
+                {l: "B", t: "2a (major axis length)", c: true},
+                {l: "C", t: "c (distance to center)", c: false},
+                {l: "D", t: "ae (eccentric distance)", c: false}
+            ],
+            sol: "For an ellipse, the sum of distances from any point on the ellipse to the two foci is always <strong>2a</strong>, where a is the <strong>semi-major axis</strong>. It's the defining property!"
+        },
+        {
+            id: 5013,
+            text: "🌀 \"What is the defining property of a hyperbola?\"",
+            opts: [
+                {l: "A", t: "PF₁ + PF₂ = constant", c: false},
+                {l: "B", t: "PF = distance to directrix", c: false},
+                {l: "C", t: "|PF₁ − PF₂| = constant (2a)", c: true},
+                {l: "D", t: "PF₁ × PF₂ = constant", c: false}
+            ],
+            sol: "A hyperbola is defined by <strong>|PF₁ − PF₂| = 2a</strong>. The <strong>difference</strong> (not sum) of distances to the two foci is always constant!"
+        },
+        {
+            id: 5014,
+            text: "🎯 \"A line touches a curve at exactly one point. The condition is...\"",
+            opts: [
+                {l: "A", t: "The line is vertical", c: false},
+                {l: "B", t: "The discriminant of the combined equation is 0", c: true},
+                {l: "C", t: "The line passes through the origin", c: false},
+                {l: "D", t: "The slope of the line is 0", c: false}
+            ],
+            sol: "For tangency, substitute the line into the curve, get a quadratic, and set <strong>discriminant = 0</strong>. This gives exactly one intersection point = the point of tangency!"
+        },
+        {
+            id: 5015,
+            text: "📡 \"A chord through the focus of a parabola is called...\"",
+            opts: [
+                {l: "A", t: "Latus rectum", c: false},
+                {l: "B", t: "Focal chord", c: true},
+                {l: "C", t: "Diameter", c: false},
+                {l: "D", t: "Directrix", c: false}
+            ],
+            sol: "Any chord passing through the focus is called a <strong>focal chord</strong>. The <strong>latus rectum</strong> is a special focal chord perpendicular to the axis."
+        },
+        {
+            id: 5016,
+            text: "🔄 \"When shifting origin to (h, k), the new coordinates are...\"",
+            opts: [
+                {l: "A", t: "X = x + h, Y = y + k", c: false},
+                {l: "B", t: "X = x − h, Y = y − k", c: true},
+                {l: "C", t: "X = h − x, Y = k − y", c: false},
+                {l: "D", t: "X = xh, Y = yk", c: false}
+            ],
+            sol: "New coordinates = <strong>X = x − h, Y = y − k</strong>. If origin shifts to (2,3), point (5,7) → (3,4). Always <strong>subtract</strong> the shift!"
+        }
+    ];
+
+    // ========== RENDER & INTERACT ==========
+    var answered = {}, correctCount = 0, lessonSlug = "coordinate-geometry";
+
+    function renderPractice() {
+        var c = document.getElementById('practice-qs'), h = '';
+        for (var i = 0; i < practiceQs.length; i++) {
+            var q = practiceQs[i], o = '';
+            var badges = ['🧒 Easy','📈 Medium','🧮 Medium','🎯 Easy','🕳️ Medium','🔄 Easy','🪄 Easy','🏔️ Medium','📐 Medium','🔵 Easy','🪃 Easy','🥚 Easy','🌀 Medium','🎯 Medium','📡 Easy','🔄 Medium'];
+            for (var j = 0; j < q.opts.length; j++) {
+                o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+            }
+            h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+        }
+        c.innerHTML = h;
+        updateScore();
+    }
+
+    function getCorrectLabel(q) {
+        for (var i = 0; i < q.opts.length; i++) {
+            if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+        }
+        return '';
+    }
+
+    function selectOpt(qId, idx) {
+        if (answered[qId]) return;
+        answered[qId] = true;
+        var q = practiceQs.filter(function(x){return x.id === qId})[0];
+        var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+        var isCorrect = q.opts[idx].c;
+        for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+        if (isCorrect) {
+            opts[idx].classList.add('correct');
+            document.getElementById('result-'+qId).textContent = '✅ Correct! +4';
+            document.getElementById('result-'+qId).className = 'q-result correct';
+            correctCount++;
+        } else {
+            opts[idx].classList.add('wrong');
+            document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+            document.getElementById('result-'+qId).className = 'q-result wrong';
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) opts[i].classList.add('correct');
+            }
+        }
+        document.getElementById('soln-'+qId).classList.add('show');
+        updateScore();
+    }
+
+    function updateScore() {
+        var t = Object.keys(answered).length;
+        var el = document.getElementById('score-display');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'score-display';
+            el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+            document.getElementById('practice-qs').before(el);
+        }
+        el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+    }
+
+    function resetPractice() {
+        if (!confirm('Reset all answers?')) return;
+        answered = {}; correctCount = 0;
+        document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+        document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+        document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+        var el = document.getElementById('score-display');
+        if (el) el.textContent = '';
+        renderPractice();
+    }
+
+    function markComplete() {
+        try {
+            var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+            if (done.indexOf(lessonSlug) === -1) {
+                done.push(lessonSlug);
+                localStorage.setItem('jee-course-done', JSON.stringify(done));
+            }
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        } catch(e) {}
+    }
+
+    renderPractice();
+    try {
+        var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+        if (done.indexOf(lessonSlug) !== -1) {
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        }
+    } catch(e) {}
+    </script>
 </body>
 </html>
