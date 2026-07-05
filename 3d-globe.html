@@ -4171,7 +4171,7 @@ function clearHighlight(){
     _selArrows=null;
   }
 }
-function setHighlight(lat,lng,color='#ff4444'){
+function setHighlight(lat,lng,color='#fb923c'){
   clearHighlight();
   const pos=ll(lat,lng,1.008);
   const g=new THREE.Group();
@@ -4852,7 +4852,7 @@ function showDetail(d,cat,k){
   }
   const hlLat=d.la||(d.pts?d.pts[Math.floor(d.pts.length/2)].la:0);
   const hlLn=d.ln||(d.pts?d.pts[Math.floor(d.pts.length/2)].ln:0);
-  if((hlLat||hlLn)&&!d._tube)setHighlight(hlLat,hlLn,cat.color||'#ff4444');
+  if((hlLat||hlLn)&&!d._tube)setHighlight(hlLat,hlLn);
   // Show figure portrait
   if(k==='battle'||k==='w_battle')showPortrait(getFigure(d.n,d.desc,cat.color),cat.color);
   // Timeline play button
@@ -5394,7 +5394,7 @@ function flyToStep(idx){
     if(!_tlActive())return;
     if(t<1)requestAnimationFrame(tick);
     else{
-      setHighlight(step.la,step.ln,s.cat.color||'#fb923c');
+      setHighlight(step.la,step.ln);
       const fig=getFigure(step.label,step.desc,s.cat.color);
       speakText(step.desc,()=>{
         if(!_tlActive())return;
@@ -5485,7 +5485,7 @@ document.getElementById('tlReplayBtn').addEventListener('click',()=>{
   target.applyQuaternion(EG.quaternion);
   cam.position.copy(target);
   ctrl.update();
-  setHighlight(step.la,step.ln,s.cat.color||'#fb923c');
+  setHighlight(step.la,step.ln);
   s.beacons.push(createPulseBeacon(step.la,step.ln,s.cat.color||'#fb923c'));
   s.stepLabels.push(createStepLabel(idx,step.la,step.ln,s.cat.color||'#fb923c'));
   const fig=getFigure(step.label,step.desc,s.cat.color);
