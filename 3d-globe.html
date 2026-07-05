@@ -70,14 +70,14 @@ canvas{display:block}
 
 /* Detail panel */
 #detail{
-  position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:18;
-  padding:16px 22px;border-radius:16px;max-width:480px;width:92%;
+  position:fixed;bottom:auto;top:72px;right:16px;left:auto;z-index:18;
+  padding:14px 18px;border-radius:16px;max-width:380px;width:340px;
   background:rgba(0,0,0,.75);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);
   border:1px solid rgba(255,255,255,.06);
   opacity:0;pointer-events:none;transition:all .4s cubic-bezier(.22,1,.36,1);
-  transform:translateX(-50%) translateY(10px);max-height:50vh;overflow-y:auto;
+  transform:translateY(-6px);max-height:60vh;overflow-y:auto;
 }
-#detail.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+#detail.show{opacity:1;pointer-events:auto;transform:translateY(0)}
 #detail .d-badge{display:inline-block;padding:2px 10px;border-radius:100px;font-size:.6em;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
 #detail .d-title{font-size:1em;font-weight:700;color:#fff;margin-bottom:1px}
 #detail .d-sub{font-size:.72em;color:rgba(255,255,255,.4);margin-bottom:6px}
@@ -317,7 +317,7 @@ canvas{display:block}
   #layersPanel.collapsed{transform:translateX(-160px)}
   #layToggle{top:52px;left:174px;width:24px;height:24px;font-size:10px;border-radius:0 6px 6px 0}
   #layersPanel.collapsed + #layToggle{left:8px}
-  #detail{bottom:80px;padding:14px 16px;max-width:96%}
+  #detail{bottom:80px;right:8px;left:auto;padding:14px 16px;max-width:96%;width:auto}
   #topBar{font-size:.7em;padding:4px 12px;top:8px}
   #eraBar{top:50px;padding:4px 10px;font-size:.9em}
   #bottomBar{padding:6px 10px;gap:4px}
@@ -4000,12 +4000,14 @@ let totalItems=0;Object.values(D).forEach(a=>{if(a)totalItems+=a.length});
 
 
 const scene = new THREE.Scene();
-const cam = new THREE.PerspectiveCamera(40,innerWidth/innerHeight,0.1,1000);
+function getPanelRM(){return innerWidth<700?0:380;}
+const cam = new THREE.PerspectiveCamera(40,(innerWidth-getPanelRM())/innerHeight,0.1,1000);
 cam.position.set(0.15,0.4,1.9);
 const ren = new THREE.WebGLRenderer({antialias:true});
-ren.setSize(innerWidth,innerHeight);
+ren.setSize(innerWidth-getPanelRM(),innerHeight);
 ren.setPixelRatio(Math.min(devicePixelRatio,2));
 ren.toneMapping=THREE.ACESFilmicToneMapping;ren.toneMappingExposure=1.2;
+ren.domElement.style.position='fixed';ren.domElement.style.top='0';ren.domElement.style.left='0';
 document.body.prepend(ren.domElement);
 
 const ctrl = new OrbitControls(cam,ren.domElement);
@@ -4621,7 +4623,7 @@ function stopAutoPlay(){
     if(window.speechSynthesis)speechSynthesis.cancel();
   }
 }
-function startAutoPlay(k,items){
+function startAutoPlay(k,items,resumeIdx){
   stopAutoPlay();
   // Ensure layer is visible
   if(layerVis[k]===false){toggleLayer(k,true);
@@ -4629,7 +4631,7 @@ function startAutoPlay(k,items){
     if(vb){vb.style.color='rgba(255,255,255,.5)';vb.textContent='◉';}
   }
   rotating=true;
-  let idx=0;
+  let idx=resumeIdx||0;
   const btn=document.querySelector(`[data-ap="${k}"]`);
   function next(){
     if(!_ap){rotating=false;return;}
@@ -4642,14 +4644,16 @@ function startAutoPlay(k,items){
       if(btn)btn.textContent=(idx+1)+'/'+items.length;
       idx++;
       if(idx>=items.length)idx=0;
+      _ap.idx=idx; // persist position for resume
       _ap.timeout=setTimeout(next,4200);
     }else{
       idx++;
       if(idx>=items.length)idx=0;
+      _ap.idx=idx; // persist position for resume
       _ap.timeout=setTimeout(next,800); // skip faster
     }
   }
-  _ap={k,idx:0,items,timeout:null};
+  _ap={k,idx,items,timeout:null};
   if(btn){btn.textContent='⏹';btn.style.color='#a78bfa';}
   next();
 }
@@ -4709,7 +4713,19 @@ function buildPanel(){
     if(apBtn){apBtn.dataset.ap=k;
       apBtn.addEventListener('click',(e)=>{
         e.stopPropagation();
-        if(_ap&&_ap.k===k){stopAutoPlay();return;}
+        if(_ap&&_ap.k===k){
+          if(_ap.timeout){
+            // Playing → pause
+            clearTimeout(_ap.timeout);_ap.timeout=null;rotating=false;
+            e.target.textContent='▶';e.target.style.color='rgba(255,255,255,.35)';
+            document.getElementById('subtitle').classList.remove('show');
+            if(window.speechSynthesis)speechSynthesis.cancel();
+          }else{
+            // Paused → resume from where we left off
+            startAutoPlay(k,items,_ap.idx);
+          }
+          return;
+        }
         startAutoPlay(k,items);
       });
     }
@@ -4787,6 +4803,11 @@ function flyTo(item,cat,k){
   const pos=ll(d.la||(d.pts?d.pts[Math.floor(d.pts.length/2)].la:0),d.ln||(d.pts?d.pts[Math.floor(d.pts.length/2)].ln:0),R*2.2);
   pos.applyQuaternion(EG.quaternion);
   const start=cam.position.clone(),st=Date.now(),dur=1200;
+  // Clear previous info & highlight during flight so they don't overlap
+  clearHighlight();
+  dp.classList.remove('show');
+  document.getElementById('dDesc').textContent='';
+  document.getElementById('dFact').textContent='';
   function anim(){
     const t=Math.min((Date.now()-st)/dur,1);
     const e=1-Math.pow(1-t,3);
@@ -4986,7 +5007,7 @@ document.addEventListener('keydown',e=>{
 });
 
 // Resize
-window.addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();ren.setSize(innerWidth,innerHeight)});
+window.addEventListener('resize',()=>{const w=innerWidth-getPanelRM();cam.aspect=w/innerHeight;cam.updateProjectionMatrix();ren.setSize(w,innerHeight)});
 
 // Label LOD — hide/show labels based on zoom, with per-category force toggle
 const _scratch=new THREE.Vector3(),_list=[];
