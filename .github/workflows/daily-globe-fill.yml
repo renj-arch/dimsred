@@ -1,0 +1,62 @@
+name: Daily Globe Fill
+
+on:
+  schedule:
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Fill categories — Part 1 (w_peak, w_np, w_unesco, w_inst, w_landmark, w_bridge, w_airport, w_dam, w_pass, strait, desert, lake)
+        run: node scripts/fill-globe-part1.js
+
+      - name: Fill categories — Part 2 (island, peninsula, volcano, gulf, canal, range, sea, waterfall, reef, canyon, cape, delta)
+        run: node scripts/fill-globe-part2.js
+
+      - name: Fill categories — Part 3 (plateau, plain, valley, glacier, tunnel, trade, oil, phenomena, current)
+        run: node scripts/fill-globe-part3.js
+
+      - name: Fill categories — Part 4 (wind, cloud, forest, rainfall, latitude, lighthouse, wonder, tower, personality, railway, i_range)
+        run: node scripts/fill-globe-part4.js
+
+      - name: Escape apostrophes in data strings
+        run: node scripts/fix-apostrophes.js
+
+      - name: Validate syntax
+        run: |
+          node -e "
+            const fs = require('fs');
+            let h = fs.readFileSync('3d-globe.html', 'utf8');
+            const ms = h.indexOf('<script type=\"module\">');
+            const me = h.indexOf('</script>', ms);
+            const js = h.substring(ms + 23, me);
+            fs.writeFileSync('/tmp/globe-check.mjs', js);
+          "
+          node --check /tmp/globe-check.mjs
+
+      - name: Commit and push
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Daily globe fill $(date +'%Y-%m-%d')"
+            git pull --rebase
+            git push
+          else
+            echo "No new entries to commit"
+          fi
