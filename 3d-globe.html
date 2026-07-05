@@ -4194,13 +4194,35 @@ function mkLbl(text,col,scale=0.12){
   return s;
 }
 
-// Build point markers
+// Build point markers with overlap spreading
+const _placedPos = [];
+function _spreadPos(la, ln) {
+  const pos = ll(la, ln, R * 1.008);
+  const threshold = 0.025;
+  for (const p of _placedPos) {
+    const d = pos.distanceTo(p);
+    if (d < threshold) {
+      const angle = Math.random() * Math.PI * 2;
+      const spread = (threshold - d) * 0.6 + 0.003;
+      const latR = la * Math.PI / 180;
+      const lngR = ln * Math.PI / 180;
+      const east = new THREE.Vector3(-Math.sin(lngR), 0, Math.cos(lngR));
+      const north = new THREE.Vector3(-Math.sin(latR) * Math.cos(lngR), Math.cos(latR), -Math.sin(latR) * Math.sin(lngR));
+      east.multiplyScalar(Math.cos(angle) * spread);
+      north.multiplyScalar(Math.sin(angle) * spread);
+      pos.add(east).add(north);
+      break;
+    }
+  }
+  _placedPos.push(pos.clone());
+  return pos;
+}
 ['city','peak','port','airport','dam','nuclear','unesco','battle','temple','institution','wildlife','biosphere','ramsar','national_park','kingdom','tiger','hill','bird','w_city','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','phenomena','plateau','plain','valley','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','oil','personality','crop','mineral'].forEach(k=>{
   const items=D[k]||[];
   const g=layerGroups[k];
   items.forEach(d=>{
     if(!d.la)return;
-    const pos=ll(d.la,d.ln,R*1.008);
+    const pos=_spreadPos(d.la,d.ln);
     const pin=mkPin(catColors[k],k==='city'?0.01:k==='strait'?0.025:0.007,k);
     pin.position.copy(pos);g.add(pin);
     const lbl=mkLbl(d.n,catColors[k]);
