@@ -4,7 +4,7 @@
     <link rel='stylesheet' href='../../../css/style.css'>
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Derivations Session 2 — NEET Physics | vlymbooq</title>
+    <title>Derivations Session 2 � NEET Physics | vlymbooq</title>
     <meta name="description" content="NEET Physics derivations: Mirror Formula, Lens Maker's, Drift Velocity, Biot-Savart, Bohr's Model, Photoelectric Effect. Beginner-friendly step-by-step.">
     <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
     <link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
@@ -79,6 +79,18 @@
         .anim-group{transition:opacity .7s ease,transform .7s ease}
         .anim-hidden{opacity:0!important;pointer-events:none}
         .anim-highlight{filter:drop-shadow(0 0 10px rgba(52,211,153,.6))}
+        /* -- Frame-based lecture sync -- */
+        .frame-container{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:0;margin:16px 0;overflow:hidden}
+        .frame-progress{display:flex;align-items:center;gap:12px;padding:8px 16px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border)}
+        .frame-count{font-size:.72em;color:var(--text-muted);white-space:nowrap;font-weight:500;min-width:80px}
+        .frame-bar{flex:1;height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+        .frame-bar-fill{height:100%;background:linear-gradient(90deg,var(--emerald),#6366f1);border-radius:2px;transition:width .15s ease}
+        .frame-topic{font-size:.72em;color:var(--text-muted);white-space:nowrap}
+        .frame-body{padding:0;position:relative}
+        .frame-body svg{display:block;max-width:100%;height:auto}
+        .frame-body .g-reveal{opacity:0;transform:translateY(12px) scale(.96);transition:opacity .4s ease,transform .4s ease;pointer-events:none}
+        .frame-body .g-reveal.show{opacity:1;transform:translateY(0) scale(1);animation:revealPop .6s ease-out}
+        @keyframes revealPop{0%{filter:drop-shadow(0 0 0 transparent)}30%{filter:drop-shadow(0 0 14px rgba(52,211,153,.6))}70%{filter:drop-shadow(0 0 6px rgba(52,211,153,.2))}100%{filter:drop-shadow(0 0 0 transparent)}}
         .audio-progress{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:rgba(9,9,11,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:10px 24px;font-size:.82em;animation:fadeIn .3s ease}
         .progress-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;max-width:1000px;margin-left:auto;margin-right:auto}
         .progress-label{font-weight:600;color:var(--emerald);text-transform:capitalize}
@@ -86,7 +98,7 @@
         .progress-track{height:4px;background:rgba(255,255,255,.08);border-radius:2px;cursor:pointer;position:relative;max-width:1000px;margin:0 auto}
         .progress-fill{height:100%;background:linear-gradient(90deg,var(--emerald),#6366f1);border-radius:2px;position:absolute;top:0;left:0;transition:width .1s linear}
         .progress-thumb{width:14px;height:14px;border-radius:50%;background:var(--emerald);position:absolute;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 12px rgba(52,211,153,.5);transition:left .1s linear}
-        @media print{.nav,.sidebar-nav,.download-btn,.audio-progress{display:none!important}.container{padding:0}.deriv-box{break-inside:avoid}.diagram-box{break-inside:avoid}}
+        @media print{.nav,.sidebar-nav,.download-btn,.audio-progress{display:none!important}.container{padding:0}.deriv-box{break-inside:avoid}.frame-container{break-inside:avoid}}
     </style>
     <script>
 
@@ -103,91 +115,68 @@
 
  photoelectric:`Welcome young learner. Today we are going to understand the photoelectric effect. This is one of the most important discoveries in physics. It showed that light can behave like a particle. Before this, everyone thought light was a wave. But the photoelectric effect proved that light also behaves like a stream of particles called photons. This wave particle duality is a fundamental concept of quantum mechanics. Let us understand what the photoelectric effect is. Imagine you have a metal surface. You shine light on it. If the light has the right color, electrons come flying out of the metal. These electrons are called photoelectrons. This is the photoelectric effect. It is used in many devices. Solar panels use the photoelectric effect to convert light into electricity. Light sensors and photodiodes also work on this principle. Even the sensors in digital cameras use a related effect. Now let us set up the experiment. We have a metal plate inside a vacuum tube. We shine light on the plate. Electrons are ejected. We collect these electrons with another plate called the collector. We can measure the current. This is called photocurrent. We can also apply a voltage between the plates. If we make the collector negative relative to the emitter, we repel the electrons. This is called a stopping potential. At a certain voltage, no electrons reach the collector. The current becomes zero. This voltage is called the stopping potential V naught. The stopping potential tells us the maximum kinetic energy of the ejected electrons. The maximum kinetic energy is e times V naught, where e is the electron charge. Now let us see what classical physics predicted. Classical wave theory said that light is a wave. The energy of a wave depends on its intensity. Brighter light should give more energy to the electrons. So electrons should be ejected with more kinetic energy when the light is brighter. Also, any color of light should eventually eject electrons if it is bright e...`
  };
-        /* -- Animation timelines synchronized with lecture speech -- */
-        const ANIM_TIMELINES = {
-            mirror: [
-                { word: 0,    show: ['mir-axes'] },
-                { word: 40,   show: ['mir-axes','mir-object'] },
-                { word: 120,  show: ['mir-axes','mir-ray1'] },
-                { word: 250,  show: ['mir-axes','mir-ray2'] },
-                { word: 400,  show: ['mir-axes','mir-image'] },
-                { word: 600,  show: ['mir-axes','mir-formulas'] },
-                { word: 800,  show: ['mir-axes','mir-summary'] }
-            ],
-            lens: [
-                { word: 0,    show: ['lns-axes'] },
-                { word: 40,   show: ['lns-axes','lns-foci'] },
-                { word: 150,  show: ['lns-axes','lns-rays'] },
-                { word: 300,  show: ['lns-axes','lns-radii'] },
-                { word: 500,  show: ['lns-axes','lns-formula'] },
-                { word: 700,  show: ['lns-axes','lns-summary'] }
-            ],
-            drift: [
-                { word: 0,    show: ['drf-axes'] },
-                { word: 50,   show: ['drf-axes','drf-atoms'] },
-                { word: 150,  show: ['drf-axes','drf-electrons'] },
-                { word: 300,  show: ['drf-axes','drf-drift'] },
-                { word: 500,  show: ['drf-axes','drf-formula'] },
-                { word: 700,  show: ['drf-axes','drf-summary'] }
-            ],
-            biotsavart: [
-                { word: 0,    show: ['bsv-axes'] },
-                { word: 40,   show: ['bsv-axes','bsv-current'] },
-                { word: 120,  show: ['bsv-axes','bsv-field'] },
-                { word: 280,  show: ['bsv-axes','bsv-righthand'] },
-                { word: 450,  show: ['bsv-axes','bsv-formula'] },
-                { word: 650,  show: ['bsv-axes','bsv-summary'] }
-            ],
-            bohr: [
-                { word: 0,    show: ['boh-axes'] },
-                { word: 40,   show: ['boh-axes','boh-orbits'] },
-                { word: 150,  show: ['boh-axes','boh-electrons'] },
-                { word: 300,  show: ['boh-axes','boh-energy'] },
-                { word: 500,  show: ['boh-axes','boh-formulas'] },
-                { word: 700,  show: ['boh-axes','boh-summary'] }
-            ],
-            photoelectric: [
-                { word: 0,    show: ['pe-axes'] },
-                { word: 40,   show: ['pe-axes','pe-photons'] },
-                { word: 150,  show: ['pe-axes','pe-electrons'] },
-                { word: 300,  show: ['pe-axes','pe-graph'] },
-                { word: 500,  show: ['pe-axes','pe-formula'] },
-                { word: 700,  show: ['pe-axes','pe-summary'] }
-            ]
-        };
-        const SVGPREFIX = { mirror:'mir', lens:'lns', drift:'drf', biotsavart:'bsv', bohr:'boh', photoelectric:'pe' };
-        const LECT_NAMES = { mirror:'Mirror Formula', lens:"Lens Maker's Formula", drift:'Drift Velocity', biotsavart:"Biot-Savart Law", bohr:"Bohr's Model", photoelectric:'Photoelectric Effect' };
-        let animState = { wordCount: 0, stepIndex: 0, activeKey: null };
-        function applyAnimStep(key) {
-            const steps = ANIM_TIMELINES[key];
-            if (!steps) return;
-            while (animState.stepIndex < steps.length && animState.wordCount >= steps[animState.stepIndex].word) {
-                const s = steps[animState.stepIndex];
-                document.querySelectorAll('#svg-' + key + ' .anim-group').forEach(g => g.classList.add('anim-hidden'));
-                s.show.forEach(id => document.getElementById(id)?.classList.remove('anim-hidden'));
-                animState.stepIndex++;
+        /* ── Frame-based lecture sync ── */
+        var REVEALS = {
+            mirror: {
+                15:['mir-axes'], 50:['mir-object'], 130:['mir-ray1'], 200:['mir-ray2'], 280:['mir-image'], 350:['mir-formulas'], 500:['mir-summary']
+            },
+            lens: {
+                15:['lns-axes'], 50:['lns-foci'], 160:['lns-rays'], 250:['lns-radii'], 400:['lns-formula'], 600:['lns-summary']
+            },
+            drift: {
+                15:['drf-axes'], 60:['drf-atoms'], 160:['drf-electrons'], 280:['drf-drift'], 420:['drf-formula'], 620:['drf-summary']
+            },
+            biotsavart: {
+                15:['bsv-axes'], 50:['bsv-current'], 130:['bsv-field'], 250:['bsv-righthand'], 380:['bsv-formula'], 550:['bsv-summary']
+            },
+            bohr: {
+                15:['boh-axes'], 50:['boh-orbits'], 160:['boh-electrons'], 280:['boh-energy'], 420:['boh-formulas'], 600:['boh-summary']
+            },
+            photoelectric: {
+                15:['pe-axes'], 50:['pe-photons'], 160:['pe-electrons'], 280:['pe-graph'], 420:['pe-formula'], 600:['pe-summary']
             }
+        };
+        var LECT_NAMES = { mirror:'Mirror Formula', lens:"Lens Maker's Formula", drift:'Drift Velocity', biotsavart:"Biot-Savart Law", bohr:"Bohr's Model", photoelectric:'Photoelectric Effect' };
+        var synth = window.speechSynthesis;
+        var currentUtter = null, currentBtn = null, currentKey = null, seekTotalWords = 0;
+        var frameState = { wordCount: 0, activeKey: null };
+        function showGroups(key) {
+            var reveals = REVEALS[key];
+            if (!reveals) return;
+            var svg = document.getElementById('svg-' + key);
+            if (!svg) return;
+            var offsets = Object.keys(reveals).map(Number).sort(function(a,b){return a-b;});
+            var shown = 0;
+            offsets.forEach(function(o) {
+                if (frameState.wordCount >= o) {
+                    reveals[o].forEach(function(gid) {
+                        var g = svg.getElementById(gid);
+                        if (g && !g.classList.contains('show')) { g.classList.add('show'); }
+                    });
+                    shown++;
+                }
+            });
+            var countEl = document.getElementById('fcount-' + key);
+            var barEl = document.getElementById('fbar-' + key);
+            if (countEl) countEl.textContent = shown + ' / ' + offsets.length;
+            if (barEl) barEl.style.width = (shown / offsets.length * 100) + '%';
         }
-        function resetAnim(key) {
-            if (!key) return;
-            document.querySelectorAll('#svg-' + key + ' .anim-group').forEach(g => g.classList.add('anim-hidden'));
-            const pfx = SVGPREFIX[key] || key.substring(0,3);
-            document.getElementById(pfx + '-axes')?.classList.remove('anim-hidden');
-            animState.wordCount = 0;
-            animState.stepIndex = 0;
-            animState.activeKey = null;
+        function resetGroups(key) {
+            var svg = document.getElementById('svg-' + key);
+            if (svg) { var gs = svg.querySelectorAll('.g-reveal'); gs.forEach(function(g){g.classList.remove('show');}); }
+            var countEl = document.getElementById('fcount-' + key);
+            var barEl = document.getElementById('fbar-' + key);
+            if (countEl) countEl.textContent = '0 / ' + (REVEALS[key] ? Object.keys(REVEALS[key]).length : 0);
+            if (barEl) barEl.style.width = '0%';
+            frameState.wordCount = 0;
+            frameState.activeKey = null;
         }
-        let synth = window.speechSynthesis;
-        let currentUtter = null;
-        let currentBtn = null;
-        let currentKey = null;
-        let seekTotalWords = 0;
         function speakText(btn, text) {
             if (!synth) return;
             if (currentUtter) {
                 synth.cancel();
-                document.querySelectorAll('.speaker-btn').forEach(b => b.classList.remove('speaking'));
-                if (animState.activeKey) resetAnim(animState.activeKey);
+                document.querySelectorAll('.speaker-btn').forEach(function(b){b.classList.remove('speaking');});
+                if (frameState.activeKey) resetGroups(frameState.activeKey);
                 currentUtter = null; currentBtn = null; currentKey = null;
                 hideProgress();
                 return;
@@ -197,42 +186,41 @@
             _speak(text, 0);
         }
         function _speak(key, startWord) {
-            const fullText = LECT[key] || key;
-            const isLectKey = !!LECT[key];
-            const words = fullText.match(/\S+/g) || [];
-            const totalWords = words.length;
-            const remaining = words.slice(startWord).join(' ');
-            if (isLectKey && ANIM_TIMELINES[key]) {
-                resetAnim(key);
-                animState.activeKey = key;
-                animState.wordCount = startWord;
-                animState.stepIndex = 0;
-                applyAnimStep(key);
+            var fullText = LECT[key] || key;
+            var isLectKey = !!LECT[key];
+            var words = fullText.match(/\S+/g) || [];
+            var totalWords = words.length;
+            var remaining = words.slice(startWord).join(' ');
+            if (isLectKey) {
+                resetGroups(key);
+                frameState.activeKey = key;
+                frameState.wordCount = startWord;
+                showGroups(key);
             }
             if (currentBtn) currentBtn.classList.add('speaking');
-            let u = new SpeechSynthesisUtterance(remaining);
+            var u = new SpeechSynthesisUtterance(remaining);
             u.rate = 0.9; u.pitch = 1; u.volume = 1;
-            let relIdx = 0;
+            var relIdx = 0;
             u.onboundary = function(e) {
                 if (e.name === 'word') {
                     relIdx++;
-                    const absWord = startWord + relIdx;
-                    if (animState.activeKey && isLectKey) {
-                        animState.wordCount = absWord;
-                        applyAnimStep(animState.activeKey);
+                    var absWord = startWord + relIdx;
+                    if (frameState.activeKey && isLectKey) {
+                        frameState.wordCount = absWord;
+                        showGroups(frameState.activeKey);
                     }
-                    if (isLectKey) updateTimeProgress(totalWords, e.elapsedTime || 0);
+                    if (isLectKey) updateTimeProgress(totalWords, absWord);
                 }
             };
-            u.onend = () => {
+            u.onend = function() {
                 if (currentBtn) currentBtn.classList.remove('speaking');
-                if (animState.activeKey) resetAnim(animState.activeKey);
+                if (frameState.activeKey) resetGroups(frameState.activeKey);
                 currentUtter = null; currentBtn = null; currentKey = null;
                 hideProgress();
             };
-            u.onerror = () => {
+            u.onerror = function() {
                 if (currentBtn) currentBtn.classList.remove('speaking');
-                if (animState.activeKey) resetAnim(animState.activeKey);
+                if (frameState.activeKey) resetGroups(frameState.activeKey);
                 currentUtter = null; currentBtn = null; currentKey = null;
                 hideProgress();
             };
@@ -242,59 +230,53 @@
             synth.speak(u);
         }
         function seekAudio(e) {
-            const track = document.getElementById('progTrack');
+            var track = document.getElementById('progTrack');
             if (!track || !currentUtter || !currentKey || !LECT[currentKey]) return;
-            const rect = track.getBoundingClientRect();
-            const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-            const targetWord = Math.floor(pct * seekTotalWords);
+            var rect = track.getBoundingClientRect();
+            var pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+            var targetWord = Math.floor(pct * seekTotalWords);
             if (targetWord >= seekTotalWords) return;
-            const key = currentKey;
-            const btn = currentBtn;
+            var key = currentKey;
+            var btn = currentBtn;
             if (currentUtter) { currentUtter.onend = null; currentUtter.onerror = null; currentUtter.onboundary = null; }
             synth.cancel();
             currentUtter = null; currentBtn = btn; currentKey = key;
             hideProgress();
             _speak(key, targetWord);
         }
-        function fmtTime(s) {
-            const m = Math.floor(s / 60);
-            const sec = Math.floor(s % 60);
-            return m + ':' + (sec < 10 ? '0' : '') + sec;
-        }
+        function fmtTime(s) { var m = Math.floor(s / 60); var sec = Math.floor(s % 60); return m + ':' + (sec < 10 ? '0' : '') + sec; }
         function showTimeProgress(key, total, start) {
-            const bar = document.getElementById('audioProgress');
+            var bar = document.getElementById('audioProgress');
             if (!bar) return;
             bar.style.display = 'block';
-            const label = document.getElementById('progLabel');
-            const w = document.getElementById('progWords');
+            var label = document.getElementById('progLabel');
+            var w = document.getElementById('progWords');
             if (label) label.textContent = LECT_NAMES[key] || key;
-            const estTotal = total * 0.4;
-            const estStart = start * 0.4;
+            var estTotal = total * 0.4;
+            var estStart = start * 0.4;
             if (w) w.textContent = fmtTime(estStart) + ' / ' + fmtTime(estTotal);
-            const pct = estTotal > 0 ? Math.min(100, estStart/estTotal*100) : 0;
-            const fill = document.getElementById('progFill');
-            const thumb = document.getElementById('progThumb');
+            var pct = estTotal > 0 ? Math.min(100, estStart/estTotal*100) : 0;
+            var fill = document.getElementById('progFill');
+            var thumb = document.getElementById('progThumb');
             if (fill) fill.style.width = pct + '%';
             if (thumb) thumb.style.left = pct + '%';
         }
-        function updateTimeProgress(total, elapsed) {
-            const estTotal = total * 0.4;
-            const pct = estTotal > 0 ? Math.min(100, elapsed/estTotal*100) : 0;
-            const fill = document.getElementById('progFill');
-            const thumb = document.getElementById('progThumb');
-            const w = document.getElementById('progWords');
+        function updateTimeProgress(total, wordPos) {
+            var estTotal = total * 0.4;
+            var curTime = wordPos * 0.4;
+            var pct = estTotal > 0 ? Math.min(100, curTime/estTotal*100) : 0;
+            var fill = document.getElementById('progFill');
+            var thumb = document.getElementById('progThumb');
+            var w = document.getElementById('progWords');
             if (fill) fill.style.width = pct + '%';
             if (thumb) thumb.style.left = pct + '%';
-            if (w) w.textContent = fmtTime(elapsed) + ' / ' + fmtTime(estTotal);
+            if (w) w.textContent = fmtTime(curTime) + ' / ' + fmtTime(estTotal);
         }
-        function hideProgress() {
-            const bar = document.getElementById('audioProgress');
-            if (bar) bar.style.display = 'none';
-        }
+        function hideProgress() { var bar = document.getElementById('audioProgress'); if (bar) bar.style.display = 'none'; }
         function stopSpeech() {
             if (synth) synth.cancel();
-            document.querySelectorAll('.speaker-btn').forEach(b => b.classList.remove('speaking'));
-            if (animState.activeKey) resetAnim(animState.activeKey);
+            document.querySelectorAll('.speaker-btn').forEach(function(b){b.classList.remove('speaking');});
+            if (frameState.activeKey) resetGroups(frameState.activeKey);
             currentUtter = null; currentBtn = null; currentKey = null;
             hideProgress();
         }
@@ -338,15 +320,20 @@
 <h3>💡 Why this matters in real life</h3>
 <p>Have you ever looked into a makeup mirror (concave) that makes your face appear larger? Or used a car's side-view mirror (convex) that shows a wider view? Both are <strong>spherical mirrors</strong>. The <strong>mirror formula</strong> (1/f = 1/u + 1/v) tells us exactly where the image will form and how big it will be. This is essential for designing telescopes, microscopes, rear-view mirrors, and even satellite dishes.</p>
 
-<h3>🧠 The Big Idea — In Plain Words</h3>
+<h3>🧠 The Big Idea � In Plain Words</h3>
 <p>Think of a concave mirror as a "bowl-shaped" reflective surface. Parallel rays coming from far away converge at the <strong>focus (F)</strong>. The centre of curvature (C) is at twice the focal length. The mirror formula connects three numbers: <strong>u</strong> (object distance from mirror), <strong>v</strong> (image distance from mirror), and <strong>f</strong> (focal length). If you know any two, you can find the third. The <strong>magnification</strong> m = -v/u tells you how big the image is compared to the object and whether it's upright or inverted.</p>
 <p><strong>Key variables:</strong> u = object distance (m), v = image distance (m), f = focal length (m), R = radius of curvature (m), h₀ = object height, hᵢ = image height</p>
 
-<div class="diagram-box">
-    <svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" id="svg-mirror">
-        <rect x="10" y="10" width="400" height="240" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
-        <g id="mir-axes" class="anim-group">
-            <text x="210" y="28" text-anchor="middle" fill="#a1a1aa" font-size="11">Mirror Formula — synchronized with lecture</text>
+<div class="frame-container">
+    <div class="frame-progress">
+        <span class="frame-count" id="fcount-mirror">0 / 7</span>
+        <div class="frame-bar"><div class="frame-bar-fill" id="fbar-mirror" style="width:0%"></div></div>
+        <span class="frame-topic">Mirror Formula</span>
+    </div>
+    <svg viewBox="0 0 420 370" xmlns="http://www.w3.org/2000/svg" id="svg-mirror">
+        <rect x="10" y="10" width="400" height="350" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <g id="mir-axes" class="g-reveal">
+            <text x="210" y="28" text-anchor="middle" fill="#a1a1aa" font-size="11">Mirror Formula � synchronized with lecture</text>
             <line x1="30" y1="140" x2="390" y2="140" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
             <path d="M 340 55 Q 380 140 340 225" fill="none" stroke="#34d399" stroke-width="2.5"/>
             <text x="360" y="45" fill="#34d399" font-size="10">Mirror</text>
@@ -357,50 +344,47 @@
             <circle cx="160" cy="140" r="2" fill="#60a5fa"/>
             <text x="150" y="130" fill="#60a5fa" font-size="10">C</text>
         </g>
-        <g id="mir-object" class="anim-group anim-hidden">
+        <g id="mir-object" class="g-reveal">
             <line x1="80" y1="140" x2="80" y2="55" stroke="#fbbf24" stroke-width="2.5"/>
             <text x="68" y="50" fill="#fbbf24" font-size="11">Object</text>
             <text x="68" y="235" fill="rgba(255,255,255,.3)" font-size="9">Object distance u (negative)</text>
         </g>
-        <g id="mir-ray1" class="anim-group anim-hidden">
+        <g id="mir-ray1" class="g-reveal">
             <line x1="80" y1="55" x2="340" y2="55" stroke="#f87171" stroke-width="1.5" stroke-dasharray="6 4" opacity=".8"/>
             <line x1="340" y1="55" x2="240" y2="140" stroke="#f87171" stroke-width="1.5" stroke-dasharray="6 4" opacity=".8"/>
             <text x="175" y="50" fill="#f87171" font-size="9">Ray 1: parallel → through F</text>
         </g>
-        <g id="mir-ray2" class="anim-group anim-hidden">
+        <g id="mir-ray2" class="g-reveal">
             <line x1="80" y1="55" x2="160" y2="140" stroke="#60a5fa" stroke-width="1.5" stroke-dasharray="6 4" opacity=".8"/>
             <line x1="160" y1="140" x2="340" y2="75" stroke="#60a5fa" stroke-width="1.5" stroke-dasharray="6 4" opacity=".8"/>
             <text x="110" y="170" fill="#60a5fa" font-size="9">Ray 2: through C → reflects back</text>
         </g>
-        <g id="mir-image" class="anim-group anim-hidden">
+        <g id="mir-image" class="g-reveal">
             <line x1="110" y1="140" x2="110" y2="95" stroke="#60a5fa" stroke-width="2.5"/>
             <text x="110" y="88" fill="#60a5fa" font-size="11">Image</text>
             <text x="110" y="230" fill="rgba(255,255,255,.3)" font-size="9">Image distance v (negative if real)</text>
         </g>
-        <g id="mir-formulas" class="anim-group anim-hidden">
+        <g id="mir-formulas" class="g-reveal">
             <text x="210" y="60" text-anchor="middle" fill="#fbbf24" font-size="15" font-weight="700">1/f = 1/v + 1/u</text>
             <text x="210" y="85" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="10">Sign convention: u negative, v positive if real</text>
             <text x="210" y="115" text-anchor="middle" fill="#34d399" font-size="13">Magnification m = −v/u</text>
             <text x="210" y="140" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="10">m &gt; 1 → enlarged, m &lt; 1 → diminished</text>
             <text x="210" y="175" text-anchor="middle" fill="#60a5fa" font-size="12">f = R/2 (for spherical mirrors)</text>
         </g>
-        <g id="mir-summary" class="anim-group anim-hidden">
-            <rect x="80" y="55" width="260" height="100" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
-            <text x="210" y="73" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Mirror Summary</text>
-            <text x="210" y="91" text-anchor="middle" fill="#34d399" font-size="10">1/f = 1/v + 1/u</text>
-            <text x="210" y="107" text-anchor="middle" fill="#34d399" font-size="10">m = −v/u = hᵢ/hₒ</text>
-            <text x="210" y="123" text-anchor="middle" fill="#34d399" font-size="10">f = R/2</text>
-            <text x="210" y="143" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Concave: f negative | Convex: f positive</text>
+        <g id="mir-summary" class="g-reveal">
+            <rect x="60" y="280" width="300" height="72" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+            <text x="210" y="297" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Mirror Summary</text>
+            <text x="210" y="313" text-anchor="middle" fill="#34d399" font-size="10">1/f = 1/v + 1/u &nbsp;&nbsp; m = −v/u = hᵢ/hₒ &nbsp;&nbsp; f = R/2</text>
+            <text x="210" y="337" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Concave: f negative | Convex: f positive</text>
         </g>
     </svg>
-    <div class="diagram-caption">Fig 1.1: Mirror ray diagram — synchronized. Animation advances through object, ray 1, ray 2, image, formulas, and summary.</div>
 </div>
 
 <h4>🔍 Step-by-Step: The Mirror Formula (1/u + 1/v = 1/f)</h4>
 <div class="deriv-box">
     <div class="step">
         <span class="step-num">1</span>
-        <div class="step-text"><strong>Start with geometry — draw two rays from the object.</strong> Ray 1: from object tip, parallel to principal axis → reflects through F. Ray 2: from object tip, through F → reflects parallel to axis. Where the two reflected rays meet is the image location. Using similar triangles from this ray diagram, we can derive the formula.</div>
+        <div class="step-text"><strong>Start with geometry � draw two rays from the object.</strong> Ray 1: from object tip, parallel to principal axis → reflects through F. Ray 2: from object tip, through F → reflects parallel to axis. Where the two reflected rays meet is the image location. Using similar triangles from this ray diagram, we can derive the formula.</div>
     </div>
     <div class="step">
         <span class="step-num">2</span>
@@ -408,7 +392,7 @@
     </div>
     <div class="step">
         <span class="step-num">3</span>
-        <div class="step-text"><strong>The result — simplest form.</strong> <span class="math">1/u + 1/v = 1/f</span>. This is the mirror formula. Use it with the <strong>Cartesian sign convention</strong> (see table below). For concave mirrors, f is negative; for convex, f is positive.</div>
+        <div class="step-text"><strong>The result � simplest form.</strong> <span class="math">1/u + 1/v = 1/f</span>. This is the mirror formula. Use it with the <strong>Cartesian sign convention</strong> (see table below). For concave mirrors, f is negative; for convex, f is positive.</div>
     </div>
     <div class="step">
         <span class="step-num">4</span>
@@ -418,17 +402,17 @@
 <div class="formula-box">1/u + 1/v = 1/f &nbsp;&nbsp; m = -v/u = hᵢ/h₀ &nbsp;&nbsp; f = R/2</div>
 
 <div class="tip-box">
-    <div class="tip-title">🔍 Sign Convention (Cartesian — used in NEET)</div>
-    <div class="tip-text">• All distances from pole P. Towards incident light = +. Opposite = -.<br>• Heights above axis = +, below = -.<br>• f negative for concave, positive for convex mirrors.</div>
+    <div class="tip-title">🔍 Sign Convention (Cartesian � used in NEET)</div>
+    <div class="tip-text">� All distances from pole P. Towards incident light = +. Opposite = -.<br>� Heights above axis = +, below = -.<br>� f negative for concave, positive for convex mirrors.</div>
 </div>
 
 <div class="neet-box">
-    <div class="neet-title">🎯 NEET Pattern — Mirrors</div>
+    <div class="neet-title">🎯 NEET Pattern � Mirrors</div>
     <div class="neet-text">
-        • Concave mirror: f negative. Real image → v negative. Virtual image → v positive.<br>
-        • Convex mirror: always forms virtual, erect, diminished image. f positive, u always negative, v positive.<br>
-        • Common question: "An object placed 15 cm from a concave mirror of f = 10 cm. Find image position." → Apply 1/v = 1/f - 1/u with signs.<br>
-        • m = -v/u. For convex mirror, m is positive and < 1 (diminished, erect).
+        � Concave mirror: f negative. Real image → v negative. Virtual image → v positive.<br>
+        � Convex mirror: always forms virtual, erect, diminished image. f positive, u always negative, v positive.<br>
+        � Common question: "An object placed 15 cm from a concave mirror of f = 10 cm. Find image position." → Apply 1/v = 1/f - 1/u with signs.<br>
+        � m = -v/u. For convex mirror, m is positive and < 1 (diminished, erect).
     </div>
 </div>
 
@@ -444,23 +428,28 @@
 <h3>💡 Why this matters in real life</h3>
 <p>Every pair of glasses, contact lens, camera lens, microscope objective, and telescope eyepiece is designed using the <strong>Lens Maker's formula</strong>. This formula tells lens manufacturers exactly what curvature to grind into a lens to achieve a desired focal length. It links the focal length to the lens's shape (radii of curvature) and the material's refractive index.</p>
 
-<div class="diagram-box">
-    <svg viewBox="0 0 420 235" xmlns="http://www.w3.org/2000/svg" id="svg-lens">
-        <rect x="10" y="10" width="400" height="215" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
-        <g id="lns-axes" class="anim-group">
-            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Lens Maker's Formula — synchronized with lecture</text>
+<div class="frame-container">
+    <div class="frame-progress">
+        <span class="frame-count" id="fcount-lens">0 / 6</span>
+        <div class="frame-bar"><div class="frame-bar-fill" id="fbar-lens" style="width:0%"></div></div>
+        <span class="frame-topic">Lens Maker's Formula</span>
+    </div>
+    <svg viewBox="0 0 420 370" xmlns="http://www.w3.org/2000/svg" id="svg-lens">
+        <rect x="10" y="10" width="400" height="350" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <g id="lns-axes" class="g-reveal">
+            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Lens Maker's Formula � synchronized with lecture</text>
             <line x1="20" y1="105" x2="400" y2="105" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
             <ellipse cx="210" cy="105" rx="6" ry="80" fill="rgba(52,211,153,.12)" stroke="#34d399" stroke-width="2"/>
             <text x="218" y="30" fill="#34d399" font-size="10">Lens (n)</text>
         </g>
-        <g id="lns-foci" class="anim-group anim-hidden">
+        <g id="lns-foci" class="g-reveal">
             <circle cx="310" cy="105" r="3" fill="#f87171"/>
             <text x="316" y="99" fill="#f87171" font-size="10">F</text>
             <circle cx="110" cy="105" r="2" fill="rgba(248,113,113,.4)"/>
             <text x="100" y="99" fill="rgba(248,113,113,.4)" font-size="10">F'</text>
             <text x="210" y="195" text-anchor="middle" fill="rgba(255,255,255,.25)" font-size="9">Focal length f (distance from lens to F)</text>
         </g>
-        <g id="lns-rays" class="anim-group anim-hidden">
+        <g id="lns-rays" class="g-reveal">
             <g><line x1="40" y1="45" x2="210" y2="45" stroke="#fbbf24" stroke-width="1.5" opacity=".6"/><line x1="210" y1="45" x2="310" y2="105" stroke="#fbbf24" stroke-width="1.5" opacity=".6"/></g>
             <g><line x1="40" y1="70" x2="210" y2="70" stroke="#fbbf24" stroke-width="1.5" opacity=".6"/><line x1="210" y1="70" x2="310" y2="105" stroke="#fbbf24" stroke-width="1.5" opacity=".6"/></g>
             <g><line x1="40" y1="105" x2="210" y2="105" stroke="#fbbf24" stroke-width="1.5" opacity=".6"/><line x1="210" y1="105" x2="310" y2="105" stroke="#fbbf24" stroke-width="1.5" opacity=".6"/></g>
@@ -468,32 +457,29 @@
             <g><line x1="40" y1="165" x2="210" y2="165" stroke="#fbbf24" stroke-width="1.5" opacity=".6"/><line x1="210" y1="165" x2="310" y2="105" stroke="#fbbf24" stroke-width="1.5" opacity=".6"/></g>
             <text x="150" y="185" text-anchor="middle" fill="#fbbf24" font-size="9">Parallel rays converge at focus</text>
         </g>
-        <g id="lns-radii" class="anim-group anim-hidden">
+        <g id="lns-radii" class="g-reveal">
             <path d="M 160 30 Q 210 25 260 30" fill="none" stroke="#60a5fa" stroke-width="1.5"/>
             <text x="210" y="22" text-anchor="middle" fill="#60a5fa" font-size="10">R₁ (radius of first surface)</text>
             <path d="M 160 185 Q 210 190 260 185" fill="none" stroke="#60a5fa" stroke-width="1.5"/>
             <text x="210" y="205" text-anchor="middle" fill="#60a5fa" font-size="10">R₂ (radius of second surface)</text>
             <text x="210" y="220" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="8">Sign convention: R₁ positive, R₂ negative for convex</text>
         </g>
-        <g id="lns-formula" class="anim-group anim-hidden">
+        <g id="lns-formula" class="g-reveal">
             <text x="210" y="65" text-anchor="middle" fill="#fbbf24" font-size="14" font-weight="700">1/f = (n − 1)(1/R₁ − 1/R₂)</text>
             <text x="210" y="90" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="10">Lens Maker's Formula</text>
             <text x="210" y="120" text-anchor="middle" fill="#34d399" font-size="12">P = 1/f (Power in diopters)</text>
             <text x="210" y="145" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="10">f in meters, P = 1/f</text>
         </g>
-        <g id="lns-summary" class="anim-group anim-hidden">
-            <rect x="80" y="60" width="260" height="100" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
-            <text x="210" y="78" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Lens Summary</text>
-            <text x="210" y="96" text-anchor="middle" fill="#34d399" font-size="10">1/f = (n−1)(1/R₁ − 1/R₂)</text>
-            <text x="210" y="112" text-anchor="middle" fill="#34d399" font-size="10">1/f = 1/v − 1/u (Lens formula)</text>
-            <text x="210" y="128" text-anchor="middle" fill="#34d399" font-size="10">m = v/u = hᵢ/hₒ</text>
-            <text x="210" y="148" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Convex: f positive | Concave: f negative</text>
+        <g id="lns-summary" class="g-reveal">
+            <rect x="60" y="280" width="300" height="72" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+            <text x="210" y="297" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Lens Summary</text>
+            <text x="210" y="313" text-anchor="middle" fill="#34d399" font-size="10">1/f = (n−1)(1/R₁ − 1/R₂) &nbsp;&nbsp; 1/f = 1/v − 1/u &nbsp;&nbsp; m = v/u</text>
+            <text x="210" y="337" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Convex: f positive | Concave: f negative</text>
         </g>
     </svg>
-    <div class="diagram-caption">Fig 2.1: Lens Maker's — synchronized. Animation advances through foci, rays, radii, formula, and summary.</div>
 </div>
 
-<h3>🧠 The Big Idea — In Plain Words</h3>
+<h3>🧠 The Big Idea � In Plain Words</h3>
 <p>A lens works by bending (refracting) light at its two curved surfaces. The <strong>Lens Maker's formula</strong> says: 1/f = (μ - 1)(1/R₁ - 1/R₂). Here μ is the refractive index of the lens material relative to the surrounding medium. R₁ and R₂ are the radii of curvature of the two surfaces. A lens with more curved surfaces (smaller R) and higher refractive index will be stronger (shorter focal length). A plano-convex lens (one flat side, R₂ = ∞) is a special case. The formula combines the refraction at both surfaces into one equation.</p>
 <p><strong>Key variables:</strong> μ = refractive index of lens material, R₁, R₂ = radii of curvature (m), f = focal length (m)</p>
 
@@ -528,13 +514,13 @@
 </div>
 
 <div class="neet-box">
-    <div class="neet-title">🎯 NEET Pattern — Lenses</div>
+    <div class="neet-title">🎯 NEET Pattern � Lenses</div>
     <div class="neet-text">
-        • <strong>Lens formula:</strong> 1/v - 1/u = 1/f (same as mirror but with a minus sign difference!).<br>
-        • <strong>Power:</strong> P = 1/f (in metres). Convex lens: P positive. Concave lens: P negative.<br>
-        • Combination of lenses: P_eq = P₁ + P₂. 1/f_eq = 1/f₁ + 1/f₂.<br>
-        • If a lens is immersed in water (μ > 1 for lens, μ_water > 1), the effective refractive index μ_rel = μ_lens/μ_water decreases → focal length increases.<br>
-        • Lens maker's formula with μ_rel: 1/f = (μ_rel - 1)(1/R₁ - 1/R₂).
+        � <strong>Lens formula:</strong> 1/v - 1/u = 1/f (same as mirror but with a minus sign difference!).<br>
+        � <strong>Power:</strong> P = 1/f (in metres). Convex lens: P positive. Concave lens: P negative.<br>
+        � Combination of lenses: P_eq = P₁ + P₂. 1/f_eq = 1/f₁ + 1/f₂.<br>
+        � If a lens is immersed in water (μ > 1 for lens, μ_water > 1), the effective refractive index μ_rel = μ_lens/μ_water decreases → focal length increases.<br>
+        � Lens maker's formula with μ_rel: 1/f = (μ_rel - 1)(1/R₁ - 1/R₂).
     </div>
 </div>
 
@@ -548,26 +534,31 @@
 <h2 id="drift">3. Drift Velocity & Ohm's Law (Microscopic Derivation) <button class="speaker-btn" onclick="speakText(this,'drift')">🔊 Listen</button></h2>
 
 <h3>💡 Why this matters in real life</h3>
-<p>When you flip a switch, the light turns on almost instantly — but the individual electrons barely move! This is the key insight of <strong>drift velocity</strong>. Understanding how current flows at the atomic level helps us design better wires, understand why wires heat up (I²R loss), and explains why some materials conduct electricity better than others.</p>
+<p>When you flip a switch, the light turns on almost instantly � but the individual electrons barely move! This is the key insight of <strong>drift velocity</strong>. Understanding how current flows at the atomic level helps us design better wires, understand why wires heat up (I�R loss), and explains why some materials conduct electricity better than others.</p>
 
-<div class="diagram-box">
-    <svg viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg" id="svg-drift">
-        <rect x="10" y="10" width="400" height="200" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
-        <g id="drf-axes" class="anim-group">
-            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Drift Velocity — synchronized with lecture</text>
+<div class="frame-container">
+    <div class="frame-progress">
+        <span class="frame-count" id="fcount-drift">0 / 6</span>
+        <div class="frame-bar"><div class="frame-bar-fill" id="fbar-drift" style="width:0%"></div></div>
+        <span class="frame-topic">Drift Velocity</span>
+    </div>
+    <svg viewBox="0 0 420 370" xmlns="http://www.w3.org/2000/svg" id="svg-drift">
+        <rect x="10" y="10" width="400" height="350" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <g id="drf-axes" class="g-reveal">
+            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Drift Velocity � synchronized with lecture</text>
             <rect x="20" y="50" width="380" height="80" rx="6" fill="rgba(52,211,153,.03)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
             <text x="210" y="190" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="9">Conductor with applied electric field E →</text>
         </g>
-        <g id="drf-atoms" class="anim-group anim-hidden">
+        <g id="drf-atoms" class="g-reveal">
             <circle cx="60" cy="65" r="8" fill="rgba(255,255,255,.06)"/><circle cx="60" cy="115" r="8" fill="rgba(255,255,255,.06)"/>
             <circle cx="120" cy="65" r="8" fill="rgba(255,255,255,.06)"/><circle cx="120" cy="115" r="8" fill="rgba(255,255,255,.06)"/>
             <circle cx="180" cy="65" r="8" fill="rgba(255,255,255,.06)"/><circle cx="180" cy="115" r="8" fill="rgba(255,255,255,.06)"/>
             <circle cx="240" cy="65" r="8" fill="rgba(255,255,255,.06)"/><circle cx="240" cy="115" r="8" fill="rgba(255,255,255,.06)"/>
             <circle cx="300" cy="65" r="8" fill="rgba(255,255,255,.06)"/><circle cx="300" cy="115" r="8" fill="rgba(255,255,255,.06)"/>
             <circle cx="360" cy="65" r="8" fill="rgba(255,255,255,.06)"/><circle cx="360" cy="115" r="8" fill="rgba(255,255,255,.06)"/>
-            <text x="210" y="148" text-anchor="middle" fill="rgba(255,255,255,.25)" font-size="9">Atoms in a lattice — positive ions at fixed positions</text>
+            <text x="210" y="148" text-anchor="middle" fill="rgba(255,255,255,.25)" font-size="9">Atoms in a lattice � positive ions at fixed positions</text>
         </g>
-        <g id="drf-electrons" class="anim-group anim-hidden">
+        <g id="drf-electrons" class="g-reveal">
             <circle cx="52" cy="90" r="4" fill="#60a5fa"><animate attributeName="cx" values="52;92;52" dur="4s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;.3;1" dur=".3s" repeatCount="indefinite"/></circle>
             <circle cx="112" cy="90" r="4" fill="#60a5fa"><animate attributeName="cx" values="112;152;112" dur="4s" repeatCount="indefinite"/><animate attributeName="cy" values="90;80;90" dur=".4s" repeatCount="indefinite"/></circle>
             <circle cx="172" cy="90" r="4" fill="#60a5fa"><animate attributeName="cx" values="172;212;172" dur="4s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;.3;1" dur=".25s" repeatCount="indefinite"/></circle>
@@ -576,49 +567,46 @@
             <circle cx="352" cy="90" r="4" fill="#60a5fa"><animate attributeName="cx" values="352;392;352" dur="4s" repeatCount="indefinite"/><animate attributeName="cy" values="90;85;90" dur=".3s" repeatCount="indefinite"/></circle>
             <text x="210" y="155" text-anchor="middle" fill="rgba(255,255,255,.25)" font-size="9">Free electrons moving randomly at ~10⁶ m/s</text>
         </g>
-        <g id="drf-drift" class="anim-group anim-hidden">
+        <g id="drf-drift" class="g-reveal">
             <line x1="30" y1="175" x2="120" y2="175" stroke="#60a5fa" stroke-width="2.5" marker-end="url(#drfArrow)"/>
             <text x="130" y="170" fill="#60a5fa" font-size="10">Net drift → v_d ~ 10⁻⁴ m/s (slow!)</text>
             <text x="210" y="200" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="8">Electric field causes a tiny net drift in opposite direction</text>
         </g>
-        <g id="drf-formula" class="anim-group anim-hidden">
+        <g id="drf-formula" class="g-reveal">
             <text x="210" y="65" text-anchor="middle" fill="#fbbf24" font-size="14" font-weight="700">v_d = −(eEτ)/m</text>
             <text x="210" y="85" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="10">τ = relaxation time between collisions</text>
-            <text x="210" y="115" text-anchor="middle" fill="#34d399" font-size="12">I = n·A·e·v_d</text>
+            <text x="210" y="115" text-anchor="middle" fill="#34d399" font-size="12">I = n�A�e�v_d</text>
             <text x="210" y="135" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="10">n = number density of electrons</text>
-            <text x="210" y="160" text-anchor="middle" fill="#34d399" font-size="12">J = σE &nbsp; σ = ne²τ/m</text>
+            <text x="210" y="160" text-anchor="middle" fill="#34d399" font-size="12">J = σE &nbsp; σ = ne�τ/m</text>
         </g>
-        <g id="drf-summary" class="anim-group anim-hidden">
-            <rect x="80" y="60" width="260" height="100" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
-            <text x="210" y="78" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Drift Summary</text>
-            <text x="210" y="96" text-anchor="middle" fill="#34d399" font-size="10">v_d = −eEτ/m</text>
-            <text x="210" y="112" text-anchor="middle" fill="#34d399" font-size="10">I = nAe v_d</text>
-            <text x="210" y="128" text-anchor="middle" fill="#34d399" font-size="10">J = σE, &nbsp; σ = ne²τ/m</text>
-            <text x="210" y="148" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Ohm's law: V = IR (from microscopic picture)</text>
+        <g id="drf-summary" class="g-reveal">
+            <rect x="60" y="280" width="300" height="72" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+            <text x="210" y="297" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Drift Summary</text>
+            <text x="210" y="313" text-anchor="middle" fill="#34d399" font-size="10">v_d = −eEτ/m &nbsp;&nbsp; I = nAe v_d &nbsp;&nbsp; J = σE</text>
+            <text x="210" y="337" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Ohm's law: V = IR (from microscopic picture)</text>
         </g>
         <defs><marker id="drfArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#60a5fa"/></marker></defs>
     </svg>
-    <div class="diagram-caption">Fig 3.1: Drift velocity — synchronized. Animation advances through atoms, free electrons, net drift, formulas, and summary.</div>
 </div>
 
-<h3>🧠 The Big Idea — In Plain Words</h3>
+<h3>🧠 The Big Idea � In Plain Words</h3>
 <p>Electrons in a metal move randomly in all directions at huge speeds (~10⁶ m/s) due to thermal energy. When you apply a voltage, it creates an electric field that <em>drifts</em> the electrons slowly (about 1 mm/s!) in one direction. This <strong>drift velocity v_d</strong> is very small. But because there are so many electrons, the total current is substantial. The formula I = nAev_d connects the current to the number of electrons (n), wire area (A), and drift velocity (v_d).</p>
 <p>Ohm's law (V = IR) is a macroscopic law. The microscopic version shows that <strong>resistivity ρ</strong> depends on the electron density, charge, and how often they collide with atoms (relaxation time τ). This explains why conductors have low resistivity and insulators high resistivity.</p>
-<p><strong>Key variables:</strong> n = free electron density (m⁻³), A = cross-section (m²), e = 1.6×10⁻¹⁹ C, v_d = drift velocity (m/s), τ = relaxation time (s), σ = conductivity (Ω⁻¹m⁻¹), ρ = resistivity (Ω·m)</p>
+<p><strong>Key variables:</strong> n = free electron density (m⁻�), A = cross-section (m�), e = 1.6�10⁻�⁹ C, v_d = drift velocity (m/s), τ = relaxation time (s), σ = conductivity (Ω⁻�m⁻�), ρ = resistivity (Ω�m)</p>
 
 <h4>🔍 Step-by-Step: Current in terms of Drift Velocity</h4>
 <div class="deriv-box">
     <div class="step">
         <span class="step-num">1</span>
-        <div class="step-text"><strong>Picture a wire with cross-section A.</strong> When an electric field E is applied, electrons drift with velocity v_d along the wire. In time Δt, an electron moves a distance v_d·Δt. So the volume of wire from which electrons exit in Δt = A × v_d·Δt.</div>
+        <div class="step-text"><strong>Picture a wire with cross-section A.</strong> When an electric field E is applied, electrons drift with velocity v_d along the wire. In time Δt, an electron moves a distance v_d�Δt. So the volume of wire from which electrons exit in Δt = A � v_d�Δt.</div>
     </div>
     <div class="step">
         <span class="step-num">2</span>
-        <div class="step-text"><strong>Number of electrons in this volume = n × Volume = n·A·v_d·Δt.</strong> Each electron carries charge e. Total charge flowing in Δt: <span class="math">Q = n·A·v_d·Δt·e</span></div>
+        <div class="step-text"><strong>Number of electrons in this volume = n � Volume = n�A�v_d�Δt.</strong> Each electron carries charge e. Total charge flowing in Δt: <span class="math">Q = n�A�v_d�Δt�e</span></div>
     </div>
     <div class="step">
         <span class="step-num">3</span>
-        <div class="step-text"><strong>Current I = Q/Δt = n·A·v_d·e.</strong> <span class="math">I = nAev_d</span>. This tells us: for a given current, if the wire is thicker (A↑) or has more free electrons (n↑), the drift velocity is smaller.</div>
+        <div class="step-text"><strong>Current I = Q/Δt = n�A�v_d�e.</strong> <span class="math">I = nAev_d</span>. This tells us: for a given current, if the wire is thicker (A↑) or has more free electrons (n↑), the drift velocity is smaller.</div>
     </div>
 </div>
 <div class="formula-box">I = nAev_d &nbsp;&nbsp; Drift velocity: v_d = I/(nAe)</div>
@@ -631,42 +619,42 @@
     </div>
     <div class="step">
         <span class="step-num">2</span>
-        <div class="step-text"><strong>Drift velocity = acceleration × average time between collisions.</strong> The electron accelerates from 0 after each collision. Average velocity during one free run = ½·a·τ. But more precisely: <span class="math">v_d = (eE/m)·τ</span> (the factor of ½ is absorbed into a more detailed calculation).</div>
+        <div class="step-text"><strong>Drift velocity = acceleration � average time between collisions.</strong> The electron accelerates from 0 after each collision. Average velocity during one free run = ��a�τ. But more precisely: <span class="math">v_d = (eE/m)�τ</span> (the factor of � is absorbed into a more detailed calculation).</div>
     </div>
     <div class="step">
         <span class="step-num">3</span>
-        <div class="step-text"><strong>Substitute v_d into I = nAev_d.</strong> <span class="math">I = nAe·(eEτ/m) = (nAe²τ/m)·E</span></div>
+        <div class="step-text"><strong>Substitute v_d into I = nAev_d.</strong> <span class="math">I = nAe�(eEτ/m) = (nAe�τ/m)�E</span></div>
     </div>
     <div class="step">
         <span class="step-num">4</span>
-        <div class="step-text"><strong>Express E in terms of V and L: E = V/L (potential difference divided by length).</strong> <span class="math">I = (nAe²τ/m)·(V/L) → V = I·(mL)/(nAe²τ)</span></div>
+        <div class="step-text"><strong>Express E in terms of V and L: E = V/L (potential difference divided by length).</strong> <span class="math">I = (nAe�τ/m)�(V/L) → V = I�(mL)/(nAe�τ)</span></div>
     </div>
     <div class="step">
         <span class="step-num">5</span>
-        <div class="step-text"><strong>Compare with V = IR to identify resistance R.</strong> <span class="math">R = mL/(nAe²τ) = ρ·L/A</span>, where <span class="math">ρ = m/(ne²τ)</span> is the <strong>resistivity</strong>. This microscopic model shows that resistivity depends on the electron density n and the relaxation time τ (which decreases with temperature → ρ increases with temperature in conductors).</div>
+        <div class="step-text"><strong>Compare with V = IR to identify resistance R.</strong> <span class="math">R = mL/(nAe�τ) = ρ�L/A</span>, where <span class="math">ρ = m/(ne�τ)</span> is the <strong>resistivity</strong>. This microscopic model shows that resistivity depends on the electron density n and the relaxation time τ (which decreases with temperature → ρ increases with temperature in conductors).</div>
     </div>
 </div>
-<div class="formula-box">R = ρL/A &nbsp;&nbsp; ρ = m/(ne²τ) &nbsp;&nbsp; σ = 1/ρ = ne²τ/m</div>
+<div class="formula-box">R = ρL/A &nbsp;&nbsp; ρ = m/(ne�τ) &nbsp;&nbsp; σ = 1/ρ = ne�τ/m</div>
 
 <div class="tip-box">
     <div class="tip-title">🔍 Common Mistake</div>
-    <div class="tip-text">Students think drift velocity is the speed of electrons. It's not! Electrons move randomly at ~10⁶ m/s, but their net drift is only ~10⁻⁴ m/s. Also: Ohm's law (V = IR) is not a universal law — it only holds for <strong>ohmic conductors</strong> at constant temperature. Semiconductors, electrolytes, and gases do NOT follow Ohm's law.</div>
+    <div class="tip-text">Students think drift velocity is the speed of electrons. It's not! Electrons move randomly at ~10⁶ m/s, but their net drift is only ~10⁻⁴ m/s. Also: Ohm's law (V = IR) is not a universal law � it only holds for <strong>ohmic conductors</strong> at constant temperature. Semiconductors, electrolytes, and gases do NOT follow Ohm's law.</div>
 </div>
 
 <div class="neet-box">
-    <div class="neet-title">🎯 NEET Pattern — Drift Velocity</div>
+    <div class="neet-title">🎯 NEET Pattern � Drift Velocity</div>
     <div class="neet-text">
-        • "A wire of length L, area A has n free electrons per m³. Find drift velocity for current I." → v_d = I/(nAe).<br>
-        • As temperature increases, τ decreases (more collisions) → ρ increases → R increases for conductors.<br>
-        • For insulators: n is very small (few free electrons) → ρ is huge.<br>
-        • NEET common: "Two wires of same material, one twice as thick. Same current → drift velocity in thinner wire is ___" → 4 times larger (since v_d ∝ 1/A ∝ 1/r²).
+        � "A wire of length L, area A has n free electrons per m�. Find drift velocity for current I." → v_d = I/(nAe).<br>
+        � As temperature increases, τ decreases (more collisions) → ρ increases → R increases for conductors.<br>
+        � For insulators: n is very small (few free electrons) → ρ is huge.<br>
+        � NEET common: "Two wires of same material, one twice as thick. Same current → drift velocity in thinner wire is ___" → 4 times larger (since v_d ∝ 1/A ∝ 1/r�).
     </div>
 </div>
 
 <div class="example-box">
     <div class="ex-title">Example 3: Drift Velocity</div>
-    <div class="ex-text">A copper wire of cross-section 1 mm² carries a current of 1 A. If the free electron density in copper is 8.5×10²⁸ m⁻³, find the drift velocity. (e = 1.6×10⁻¹⁹ C)<br><br>a) 0.074 mm/s &nbsp; b) 0.74 mm/s &nbsp; c) 7.4 mm/s &nbsp; d) 74 mm/s</div>
-    <div class="ex-soln"><strong>Solution:</strong> v_d = I/(nAe) = 1/(8.5×10²⁸ × 10⁻⁶ × 1.6×10⁻¹⁹) = 1/(8.5×1.6×10³) = 1/(13600) = 7.35×10⁻⁵ m/s ≈ 0.074 mm/s. Option (a).</div>
+    <div class="ex-text">A copper wire of cross-section 1 mm� carries a current of 1 A. If the free electron density in copper is 8.5�10�⁸ m⁻�, find the drift velocity. (e = 1.6�10⁻�⁹ C)<br><br>a) 0.074 mm/s &nbsp; b) 0.74 mm/s &nbsp; c) 7.4 mm/s &nbsp; d) 74 mm/s</div>
+    <div class="ex-soln"><strong>Solution:</strong> v_d = I/(nAe) = 1/(8.5�10�⁸ � 10⁻⁶ � 1.6�10⁻�⁹) = 1/(8.5�1.6�10�) = 1/(13600) = 7.35�10⁻⁵ m/s ≈ 0.074 mm/s. Option (a).</div>
 </div>
 
 <!-- ============================================================ -->
@@ -675,19 +663,24 @@
 <h3>💡 Why this matters in real life</h3>
 <p>The <strong>Biot-Savart law</strong> tells us how electric currents create magnetic fields. This is the physics behind electromagnets (used in scrap yards to lift cars), MRI machines (which use strong magnetic fields to image your body), electric motors, and even the Earth's magnetic field (generated by currents in the molten core).</p>
 
-<div class="diagram-box">
-    <svg viewBox="0 0 420 245" xmlns="http://www.w3.org/2000/svg" id="svg-biotsavart">
-        <rect x="10" y="10" width="400" height="225" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
-        <g id="bsv-axes" class="anim-group">
-            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Biot-Savart Law — synchronized with lecture</text>
+<div class="frame-container">
+    <div class="frame-progress">
+        <span class="frame-count" id="fcount-biotsavart">0 / 6</span>
+        <div class="frame-bar"><div class="frame-bar-fill" id="fbar-biotsavart" style="width:0%"></div></div>
+        <span class="frame-topic">Biot-Savart Law</span>
+    </div>
+    <svg viewBox="0 0 420 370" xmlns="http://www.w3.org/2000/svg" id="svg-biotsavart">
+        <rect x="10" y="10" width="400" height="350" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <g id="bsv-axes" class="g-reveal">
+            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Biot-Savart Law � synchronized with lecture</text>
             <line x1="210" y1="35" x2="210" y2="220" stroke="#fbbf24" stroke-width="3"/>
         </g>
-        <g id="bsv-current" class="anim-group anim-hidden">
+        <g id="bsv-current" class="g-reveal">
             <polygon points="215,45 220,60 210,60" fill="#fbbf24"/>
             <text x="222" y="55" fill="#fbbf24" font-size="11">I (current)</text>
             <text x="210" y="230" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="8">Current-carrying wire</text>
         </g>
-        <g id="bsv-field" class="anim-group anim-hidden">
+        <g id="bsv-field" class="g-reveal">
             <circle cx="210" cy="125" r="30" fill="none" stroke="#60a5fa" stroke-width="2" stroke-dasharray="8 6" opacity=".7"><animate attributeName="stroke-dashoffset" from="0" to="100" dur="3s" repeatCount="indefinite"/></circle>
             <circle cx="210" cy="125" r="50" fill="none" stroke="#60a5fa" stroke-width="1.8" stroke-dasharray="8 6" opacity=".5"><animate attributeName="stroke-dashoffset" from="0" to="-100" dur="4s" repeatCount="indefinite"/></circle>
             <circle cx="210" cy="125" r="70" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-dasharray="8 6" opacity=".35"><animate attributeName="stroke-dashoffset" from="0" to="100" dur="5s" repeatCount="indefinite"/></circle>
@@ -695,53 +688,50 @@
             <text x="120" y="130" fill="#60a5fa" font-size="9">B ∝ I/r</text>
             <text x="210" y="210" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="8">Concentric circular field lines around wire</text>
         </g>
-        <g id="bsv-righthand" class="anim-group anim-hidden">
+        <g id="bsv-righthand" class="g-reveal">
             <path d="M 50 160 Q 70 145 85 160" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/>
             <text x="55" y="150" fill="rgba(255,255,255,.4)" font-size="8">thumb = I</text>
             <text x="90" y="168" fill="rgba(255,255,255,.4)" font-size="8">curl = B</text>
             <text x="210" y="195" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Right-hand rule: thumb along I, fingers curl along B</text>
         </g>
-        <g id="bsv-formula" class="anim-group anim-hidden">
-            <text x="210" y="60" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="700">dB = (μ₀/4π)·(I·dℓ×r̂)/r²</text>
-            <text x="210" y="85" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="10">μ₀ = 4π × 10⁻⁷ T·m/A</text>
+        <g id="bsv-formula" class="g-reveal">
+            <text x="210" y="60" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="700">dB = (μ₀/4π)�(I�dℓ�r̂)/r�</text>
+            <text x="210" y="85" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="10">μ₀ = 4π � 10⁻⁷ T�m/A</text>
             <text x="210" y="115" text-anchor="middle" fill="#34d399" font-size="13">B_wire = μ₀I/(2πr)</text>
             <text x="210" y="135" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="10">Long straight wire</text>
             <text x="210" y="165" text-anchor="middle" fill="#34d399" font-size="12">B_solenoid = μ₀nI</text>
             <text x="210" y="185" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="10">n = turns per unit length</text>
         </g>
-        <g id="bsv-summary" class="anim-group anim-hidden">
-            <rect x="80" y="65" width="260" height="100" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
-            <text x="210" y="83" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">BSL Summary</text>
-            <text x="210" y="101" text-anchor="middle" fill="#34d399" font-size="10">dB = (μ₀/4π)·(I·dℓ×r̂)/r²</text>
-            <text x="210" y="117" text-anchor="middle" fill="#34d399" font-size="10">B_wire = μ₀I/(2πr)</text>
-            <text x="210" y="133" text-anchor="middle" fill="#34d399" font-size="10">B_solenoid = μ₀nI</text>
-            <text x="210" y="153" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Right-hand rule gives B direction</text>
+        <g id="bsv-summary" class="g-reveal">
+            <rect x="60" y="280" width="300" height="72" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+            <text x="210" y="297" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Biot-Savart Summary</text>
+            <text x="210" y="313" text-anchor="middle" fill="#34d399" font-size="10">dB = μ₀/4π � Idl�r̂ / r� &nbsp;&nbsp; B(loop) = μ₀I/2R &nbsp;&nbsp; B(wire) = μ₀I/2πR</text>
+            <text x="210" y="337" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Direction: Right-hand thumb rule</text>
         </g>
     </svg>
-    <div class="diagram-caption">Fig 4.1: Biot-Savart — synchronized. Animation advances through current, field lines, right-hand rule, formula, and summary.</div>
 </div>
 
-<h3>🧠 The Big Idea — In Plain Words</h3>
-<p>A moving charge (current) creates a magnetic field around it. The Biot-Savart law gives the magnetic field dB produced by a tiny segment of current-carrying wire. The field dB is: (1) proportional to the current I and the length of the segment dl, (2) inversely proportional to the square of the distance r², and (3) depends on the sine of the angle between dl and the direction to the point. The <strong>right-hand thumb rule</strong> gives the direction: point your thumb along current, fingers curl in direction of B.</p>
-<p><strong>Key variables:</strong> I = current (A), dl = tiny length element (m), r = distance from element (m), θ = angle between dl and r, μ₀ = 4π×10⁻⁷ T·m/A (permeability of free space)</p>
+<h3>🧠 The Big Idea � In Plain Words</h3>
+<p>A moving charge (current) creates a magnetic field around it. The Biot-Savart law gives the magnetic field dB produced by a tiny segment of current-carrying wire. The field dB is: (1) proportional to the current I and the length of the segment dl, (2) inversely proportional to the square of the distance r�, and (3) depends on the sine of the angle between dl and the direction to the point. The <strong>right-hand thumb rule</strong> gives the direction: point your thumb along current, fingers curl in direction of B.</p>
+<p><strong>Key variables:</strong> I = current (A), dl = tiny length element (m), r = distance from element (m), θ = angle between dl and r, μ₀ = 4π�10⁻⁷ T�m/A (permeability of free space)</p>
 
 <h4>🔍 Step-by-Step: Biot-Savart Law</h4>
 <div class="deriv-box">
     <div class="step">
         <span class="step-num">1</span>
-        <div class="step-text"><strong>The law in its general form.</strong> A current element Idl (current I flowing through length dl) produces a magnetic field dB at a point at distance r: <span class="math">dB = (μ₀/4π)·(Idl × r̂)/r² = (μ₀/4π)·(I·dl·sinθ)/r²</span></div>
+        <div class="step-text"><strong>The law in its general form.</strong> A current element Idl (current I flowing through length dl) produces a magnetic field dB at a point at distance r: <span class="math">dB = (μ₀/4π)�(Idl � r̂)/r� = (μ₀/4π)�(I�dl�sinθ)/r�</span></div>
     </div>
     <div class="step">
         <span class="step-num">2</span>
-        <div class="step-text"><strong>Application 1: Magnetic field at centre of a circular current loop.</strong> For a circular loop of radius R, every dl is perpendicular to r (θ = 90°, sinθ = 1), and r = R constant. dB from each element points in the same direction (out of plane, by right-hand rule): <span class="math">B = ∫dB = (μ₀/4π)·(I/R²)∫dl = (μ₀/4π)·(I/R²)·(2πR) = μ₀I/(2R)</span></div>
+        <div class="step-text"><strong>Application 1: Magnetic field at centre of a circular current loop.</strong> For a circular loop of radius R, every dl is perpendicular to r (θ = 90�, sinθ = 1), and r = R constant. dB from each element points in the same direction (out of plane, by right-hand rule): <span class="math">B = ∫dB = (μ₀/4π)�(I/R�)∫dl = (μ₀/4π)�(I/R�)�(2πR) = μ₀I/(2R)</span></div>
     </div>
     <div class="step">
         <span class="step-num">3</span>
-        <div class="step-text"><strong>Application 2: Field due to a long straight wire.</strong> For a straight wire of length L, at a perpendicular distance a from the wire, we integrate along the wire. Each element dl at distance r = a/sinθ from P: <span class="math">B = (μ₀I)/(4πa)[sinφ₁ + sinφ₂]</span>. For an infinitely long wire (φ₁ = φ₂ = 90°): <span class="math">B = μ₀I/(2πa)</span></div>
+        <div class="step-text"><strong>Application 2: Field due to a long straight wire.</strong> For a straight wire of length L, at a perpendicular distance a from the wire, we integrate along the wire. Each element dl at distance r = a/sinθ from P: <span class="math">B = (μ₀I)/(4πa)[sinφ₁ + sinφ₂]</span>. For an infinitely long wire (φ₁ = φ₂ = 90�): <span class="math">B = μ₀I/(2πa)</span></div>
     </div>
     <div class="step">
         <span class="step-num">4</span>
-        <div class="step-text"><strong>Application 3: Field on the axis of a circular loop.</strong> At distance x from centre on the axis, only the axial component adds up (perpendicular components cancel by symmetry): <span class="math">B = (μ₀IR²)/(2(R² + x²)^(3/2))</span>. At centre (x = 0): B = μ₀I/(2R). Far away (x >> R): B ≈ μ₀IR²/(2x³) — like a magnetic dipole.</div>
+        <div class="step-text"><strong>Application 3: Field on the axis of a circular loop.</strong> At distance x from centre on the axis, only the axial component adds up (perpendicular components cancel by symmetry): <span class="math">B = (μ₀IR�)/(2(R� + x�)^(3/2))</span>. At centre (x = 0): B = μ₀I/(2R). Far away (x >> R): B ≈ μ₀IR�/(2x�) � like a magnetic dipole.</div>
     </div>
     <div class="step">
         <span class="step-num">5</span>
@@ -756,53 +746,58 @@
 </div>
 
 <div class="neet-box">
-    <div class="neet-title">🎯 NEET Pattern — Biot-Savart</div>
+    <div class="neet-title">🎯 NEET Pattern � Biot-Savart</div>
     <div class="neet-text">
-        • Straight wire: B ∝ I/a. Double the current → double B. Double the distance → half B.<br>
-        • Circular loop: B at centre ∝ I/R. Half the radius → double B.<br>
-        • Solenoid: B = μ₀nI = μ₀NI/L. Independent of cross-sectional area!<br>
-        • <strong>Ampere's circuital law</strong> (alternative way): ∮B·dl = μ₀I_enclosed. Useful for symmetric situations (infinite wire, solenoid, toroid).<br>
-        • NEET 2023: "Two parallel wires carrying currents in same direction ___" → attract each other.
+        � Straight wire: B ∝ I/a. Double the current → double B. Double the distance → half B.<br>
+        � Circular loop: B at centre ∝ I/R. Half the radius → double B.<br>
+        � Solenoid: B = μ₀nI = μ₀NI/L. Independent of cross-sectional area!<br>
+        � <strong>Ampere's circuital law</strong> (alternative way): ∮B�dl = μ₀I_enclosed. Useful for symmetric situations (infinite wire, solenoid, toroid).<br>
+        � NEET 2023: "Two parallel wires carrying currents in same direction ___" → attract each other.
     </div>
 </div>
 
 <div class="example-box">
     <div class="ex-title">Example 4: Biot-Savart Law</div>
-    <div class="ex-text">A long straight wire carries 5 A current. Find the magnetic field at a distance of 2 cm from the wire. (μ₀ = 4π×10⁻⁷)<br><br>a) 5×10⁻⁵ T &nbsp; b) 2.5×10⁻⁵ T &nbsp; c) 1.25×10⁻⁵ T &nbsp; d) 10⁻⁴ T</div>
-    <div class="ex-soln"><strong>Solution:</strong> B = μ₀I/(2πa) = (4π×10⁻⁷×5)/(2π×0.02) = (20π×10⁻⁷)/(0.04π) = 500×10⁻⁷ = 5×10⁻⁵ T. Option (a).</div>
+    <div class="ex-text">A long straight wire carries 5 A current. Find the magnetic field at a distance of 2 cm from the wire. (μ₀ = 4π�10⁻⁷)<br><br>a) 5�10⁻⁵ T &nbsp; b) 2.5�10⁻⁵ T &nbsp; c) 1.25�10⁻⁵ T &nbsp; d) 10⁻⁴ T</div>
+    <div class="ex-soln"><strong>Solution:</strong> B = μ₀I/(2πa) = (4π�10⁻⁷�5)/(2π�0.02) = (20π�10⁻⁷)/(0.04π) = 500�10⁻⁷ = 5�10⁻⁵ T. Option (a).</div>
 </div>
 
 <!-- ============================================================ -->
 <h2 id="bohr">5. Bohr's Model of Hydrogen Atom <button class="speaker-btn" onclick="speakText(this,'bohr')">🔊 Listen</button></h2>
 
 <h3>💡 Why this matters in real life</h3>
-<p>Bohr's model was the first successful explanation of why atoms emit light at specific colours (like the red glow of a neon sign or the yellow of sodium street lamps). It introduced the revolutionary idea that electrons can only exist in certain allowed orbits — <strong>quantisation of angular momentum</strong>. This was the first step toward quantum mechanics, which underlies all of modern electronics, lasers, and even how we understand the chemical properties of elements.</p>
+<p>Bohr's model was the first successful explanation of why atoms emit light at specific colours (like the red glow of a neon sign or the yellow of sodium street lamps). It introduced the revolutionary idea that electrons can only exist in certain allowed orbits � <strong>quantisation of angular momentum</strong>. This was the first step toward quantum mechanics, which underlies all of modern electronics, lasers, and even how we understand the chemical properties of elements.</p>
 
-<div class="diagram-box">
-    <svg viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" id="svg-bohr">
-        <rect x="10" y="10" width="400" height="220" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
-        <g id="boh-axes" class="anim-group">
-            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Bohr's Model — synchronized with lecture</text>
+<div class="frame-container">
+    <div class="frame-progress">
+        <span class="frame-count" id="fcount-bohr">0 / 6</span>
+        <div class="frame-bar"><div class="frame-bar-fill" id="fbar-bohr" style="width:0%"></div></div>
+        <span class="frame-topic">Bohr's Model</span>
+    </div>
+    <svg viewBox="0 0 420 370" xmlns="http://www.w3.org/2000/svg" id="svg-bohr">
+        <rect x="10" y="10" width="400" height="350" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <g id="boh-axes" class="g-reveal">
+            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Bohr's Model � synchronized with lecture</text>
             <circle cx="200" cy="115" r="10" fill="#f87171" opacity=".85"/>
             <text x="200" y="119" text-anchor="middle" fill="#fafafa" font-size="8" font-weight="600">+e</text>
             <text x="200" y="215" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="9">Nucleus (protons + neutrons)</text>
         </g>
-        <g id="boh-orbits" class="anim-group anim-hidden">
+        <g id="boh-orbits" class="g-reveal">
             <circle cx="200" cy="115" r="35" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
             <circle cx="200" cy="115" r="65" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="1"/>
             <circle cx="200" cy="115" r="95" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
             <text x="240" y="78" fill="rgba(255,255,255,.25)" font-size="9">n=1 (K)</text>
             <text x="270" y="48" fill="rgba(255,255,255,.25)" font-size="9">n=2 (L)</text>
             <text x="300" y="18" fill="rgba(255,255,255,.25)" font-size="9">n=3 (M)</text>
-            <text x="200" y="203" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="8">Quantised orbits — only discrete radii allowed</text>
+            <text x="200" y="203" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="8">Quantised orbits � only discrete radii allowed</text>
         </g>
-        <g id="boh-electrons" class="anim-group anim-hidden">
+        <g id="boh-electrons" class="g-reveal">
             <g><animateTransform attributeName="transform" type="rotate" from="0 200 115" to="360 200 115" dur="1.5s" repeatCount="indefinite"/><circle cx="235" cy="115" r="6" fill="#34d399" opacity=".9"/></g>
             <g><animateTransform attributeName="transform" type="rotate" from="0 200 115" to="-360 200 115" dur="2.5s" repeatCount="indefinite"/><circle cx="265" cy="115" r="6" fill="#60a5fa" opacity=".7"/></g>
             <g><animateTransform attributeName="transform" type="rotate" from="0 200 115" to="360 200 115" dur="4s" repeatCount="indefinite"/><circle cx="295" cy="115" r="6" fill="#fbbf24" opacity=".5"/></g>
             <text x="200" y="225" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="8">Inner orbit: faster (n=1), Outer orbit: slower (n=3)</text>
         </g>
-        <g id="boh-energy" class="anim-group anim-hidden">
+        <g id="boh-energy" class="g-reveal">
             <text x="210" y="55" text-anchor="middle" fill="#fbbf24" font-size="12">Energy Levels</text>
             <rect x="130" y="62" width="160" height="14" rx="3" fill="rgba(251,191,36,.08)"/>
             <text x="210" y="73" text-anchor="middle" fill="#fbbf24" font-size="10">E₃ = −1.51 eV &nbsp;(n=3)</text>
@@ -813,82 +808,79 @@
             <line x1="275" y1="69" x2="275" y2="94" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#bohPhoton)"/>
             <text x="285" y="85" fill="#fbbf24" font-size="8">hf = E₃−E₂</text>
         </g>
-        <g id="boh-formulas" class="anim-group anim-hidden">
-            <text x="210" y="60" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="700">r_n = n²·a₀</text>
-            <text x="210" y="75" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="9">a₀ = 0.529 Å (Bohr radius)</text>
-            <text x="210" y="100" text-anchor="middle" fill="#34d399" font-size="13">E_n = −13.6/n² eV</text>
+        <g id="boh-formulas" class="g-reveal">
+            <text x="210" y="60" text-anchor="middle" fill="#fbbf24" font-size="13" font-weight="700">r_n = n��a₀</text>
+            <text x="210" y="75" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="9">a₀ = 0.529 � (Bohr radius)</text>
+            <text x="210" y="100" text-anchor="middle" fill="#34d399" font-size="13">E_n = −13.6/n� eV</text>
             <text x="210" y="115" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="9">Ground state: −13.6 eV</text>
-            <text x="210" y="145" text-anchor="middle" fill="#60a5fa" font-size="12">1/λ = R(1/n² − 1/m²)</text>
-            <text x="210" y="160" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="9">R = 1.097×10⁷ m⁻¹ (Rydberg constant)</text>
+            <text x="210" y="145" text-anchor="middle" fill="#60a5fa" font-size="12">1/λ = R(1/n� − 1/m�)</text>
+            <text x="210" y="160" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="9">R = 1.097�10⁷ m⁻� (Rydberg constant)</text>
         </g>
-        <g id="boh-summary" class="anim-group anim-hidden">
-            <rect x="70" y="65" width="280" height="100" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
-            <text x="210" y="83" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Bohr Model Summary</text>
-            <text x="210" y="101" text-anchor="middle" fill="#34d399" font-size="10">L = n·h/2π (quantised angular momentum)</text>
-            <text x="210" y="117" text-anchor="middle" fill="#34d399" font-size="10">r_n = n²·a₀, &nbsp; E_n = −13.6/n² eV</text>
-            <text x="210" y="133" text-anchor="middle" fill="#34d399" font-size="10">hf = E_m − E_n (emission/absorption)</text>
-            <text x="210" y="153" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Only works for single-electron atoms</text>
+        <g id="boh-summary" class="g-reveal">
+            <rect x="60" y="280" width="300" height="72" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+            <text x="210" y="297" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Bohr's Model Summary</text>
+            <text x="210" y="313" text-anchor="middle" fill="#34d399" font-size="10">L = nħ &nbsp;&nbsp; rₙ = r₁n� &nbsp;&nbsp; Eₙ = −13.6/n� eV</text>
+            <text x="210" y="337" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">ΔE = hf (transition between orbits)</text>
         </g>
         <defs><marker id="bohPhoton" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3" markerHeight="3" orient="auto"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#fbbf24"/></marker></defs>
     </svg>
-    <div class="diagram-caption">Fig 5.1: Bohr model — synchronized. Animation advances through orbits, electrons, energy levels, formulas, and summary.</div>
 </div>
 
-<h3>🧠 The Big Idea — In Plain Words</h3>
-<p>Bohr proposed three postulates: (1) Electrons orbit the nucleus in <strong>stationary orbits</strong> without radiating energy — something classical physics couldn't explain. (2) The angular momentum of an electron is <strong>quantised</strong>: mvr = nh/(2π), where n = 1, 2, 3... (the principal quantum number). (3) Electrons can "jump" between orbits by absorbing or emitting a photon of energy equal to the difference in orbit energies: ΔE = hf.</p>
-<p>From these postulates, we can derive the radius, velocity, and energy of the nth orbit. The radius increases as n², the velocity decreases as 1/n, and the energy is -13.6/n² eV (negative means the electron is bound).</p>
+<h3>🧠 The Big Idea � In Plain Words</h3>
+<p>Bohr proposed three postulates: (1) Electrons orbit the nucleus in <strong>stationary orbits</strong> without radiating energy � something classical physics couldn't explain. (2) The angular momentum of an electron is <strong>quantised</strong>: mvr = nh/(2π), where n = 1, 2, 3... (the principal quantum number). (3) Electrons can "jump" between orbits by absorbing or emitting a photon of energy equal to the difference in orbit energies: ΔE = hf.</p>
+<p>From these postulates, we can derive the radius, velocity, and energy of the nth orbit. The radius increases as n�, the velocity decreases as 1/n, and the energy is -13.6/n� eV (negative means the electron is bound).</p>
 <p><strong>Key variables:</strong> n = principal quantum number, r_n = radius of nth orbit, v_n = speed, E_n = total energy, h = Planck's constant</p>
 
 <h4>🔍 Step-by-Step: Radius of nth Bohr Orbit</h4>
 <div class="deriv-box">
     <div class="step">
         <span class="step-num">1</span>
-        <div class="step-text"><strong>Coulomb force provides the centripetal force.</strong> The electrostatic attraction between the nucleus (+Ze) and electron (-e) keeps the electron in circular motion. For hydrogen, Z = 1: <span class="math">ke²/r² = mv²/r → ke²/r = mv²</span></div>
+        <div class="step-text"><strong>Coulomb force provides the centripetal force.</strong> The electrostatic attraction between the nucleus (+Ze) and electron (-e) keeps the electron in circular motion. For hydrogen, Z = 1: <span class="math">ke�/r� = mv�/r → ke�/r = mv�</span></div>
     </div>
     <div class="step">
         <span class="step-num">2</span>
-        <div class="step-text"><strong>Bohr's quantisation condition: angular momentum = n·h/(2π).</strong> <span class="math">mvr = n·h/(2π) → v = n·h/(2πmr)</span></div>
+        <div class="step-text"><strong>Bohr's quantisation condition: angular momentum = n�h/(2π).</strong> <span class="math">mvr = n�h/(2π) → v = n�h/(2πmr)</span></div>
     </div>
     <div class="step">
         <span class="step-num">3</span>
-        <div class="step-text"><strong>Substitute v into the centripetal equation.</strong> From step 1: mv² = ke²/r. Substitute v² = n²h²/(4π²m²r²): <span class="math">m·[n²h²/(4π²m²r²)] = ke²/r → n²h²/(4π²mr²) = ke²/r → r = n²h²/(4π²mke²)</span></div>
+        <div class="step-text"><strong>Substitute v into the centripetal equation.</strong> From step 1: mv� = ke�/r. Substitute v� = n�h�/(4π�m�r�): <span class="math">m�[n�h�/(4π�m�r�)] = ke�/r → n�h�/(4π�mr�) = ke�/r → r = n�h�/(4π�mke�)</span></div>
     </div>
     <div class="step">
         <span class="step-num">4</span>
-        <div class="step-text"><strong>Plug in the constants.</strong> h = 6.63×10⁻³⁴, m = 9.1×10⁻³¹, k = 9×10⁹, e = 1.6×10⁻¹⁹: <span class="math">r_n = n² × 0.529 Å = n²a₀</span>, where a₀ = 0.529 Å is the <strong>Bohr radius</strong> (radius of the smallest orbit, n=1). The radius grows as n² — higher orbits are much larger.</div>
+        <div class="step-text"><strong>Plug in the constants.</strong> h = 6.63�10⁻�⁴, m = 9.1�10⁻��, k = 9�10⁹, e = 1.6�10⁻�⁹: <span class="math">r_n = n� � 0.529 � = n�a₀</span>, where a₀ = 0.529 � is the <strong>Bohr radius</strong> (radius of the smallest orbit, n=1). The radius grows as n� � higher orbits are much larger.</div>
     </div>
 </div>
-<div class="formula-box">r_n = n²a₀ &nbsp;&nbsp; a₀ = 0.529 Å = 5.29×10⁻¹¹ m &nbsp;&nbsp; (Bohr radius)</div>
+<div class="formula-box">r_n = n�a₀ &nbsp;&nbsp; a₀ = 0.529 � = 5.29�10⁻�� m &nbsp;&nbsp; (Bohr radius)</div>
 
 <h4>🔍 Step-by-Step: Velocity and Energy of nth Orbit</h4>
 <div class="deriv-box">
     <div class="step">
         <span class="step-num">1</span>
-        <div class="step-text"><strong>Velocity from quantisation: v = nh/(2πmr).</strong> Using r = n²a₀: <span class="math">v_n = h/(2πma₀)·(1/n) = v₁/n</span>. The velocity decreases as 1/n. v₁ ≈ 2.2×10⁶ m/s (about 1/137 of speed of light — the fine structure constant α = v₁/c = 1/137).</div>
+        <div class="step-text"><strong>Velocity from quantisation: v = nh/(2πmr).</strong> Using r = n�a₀: <span class="math">v_n = h/(2πma₀)�(1/n) = v₁/n</span>. The velocity decreases as 1/n. v₁ ≈ 2.2�10⁶ m/s (about 1/137 of speed of light � the fine structure constant α = v₁/c = 1/137).</div>
     </div>
     <div class="step">
         <span class="step-num">2</span>
-        <div class="step-text"><strong>Total energy = Kinetic energy + Potential energy.</strong> KE = ½mv². From the force equation, mv² = ke²/r, so KE = ke²/(2r). PE = -ke²/r (attractive potential, negative). Total: <span class="math">E = KE + PE = ke²/(2r) - ke²/r = -ke²/(2r)</span></div>
+        <div class="step-text"><strong>Total energy = Kinetic energy + Potential energy.</strong> KE = �mv�. From the force equation, mv� = ke�/r, so KE = ke�/(2r). PE = -ke�/r (attractive potential, negative). Total: <span class="math">E = KE + PE = ke�/(2r) - ke�/r = -ke�/(2r)</span></div>
     </div>
     <div class="step">
         <span class="step-num">3</span>
-        <div class="step-text"><strong>Substitute r = n²a₀:</strong> <span class="math">E_n = -ke²/(2n²a₀) = -13.6/n² eV</span>. For n=1 (ground state): -13.6 eV — this is the <strong>ionisation energy</strong> of hydrogen. For n=2: -3.4 eV. For n=3: -1.51 eV. As n → ∞, E → 0 (electron is free).</div>
+        <div class="step-text"><strong>Substitute r = n�a₀:</strong> <span class="math">E_n = -ke�/(2n�a₀) = -13.6/n� eV</span>. For n=1 (ground state): -13.6 eV � this is the <strong>ionisation energy</strong> of hydrogen. For n=2: -3.4 eV. For n=3: -1.51 eV. As n → ∞, E → 0 (electron is free).</div>
     </div>
 </div>
-<div class="formula-box">E_n = -13.6/n² eV &nbsp;&nbsp; v_n = v₁/n &nbsp;&nbsp; r_n = n²a₀</div>
+<div class="formula-box">E_n = -13.6/n� eV &nbsp;&nbsp; v_n = v₁/n &nbsp;&nbsp; r_n = n�a₀</div>
 
 <div class="tip-box">
     <div class="tip-title">🔍 Common Mistake</div>
-    <div class="tip-text">Students often forget that the total energy of an electron in orbit is <strong>negative</strong>. A negative energy means the electron is bound to the nucleus — you need to give it +13.6 eV to free it. Also: the Bohr model only works for <strong>single-electron atoms</strong> (H, He⁺, Li²⁺). For multi-electron atoms, the full Schrödinger equation is needed.</div>
+    <div class="tip-text">Students often forget that the total energy of an electron in orbit is <strong>negative</strong>. A negative energy means the electron is bound to the nucleus � you need to give it +13.6 eV to free it. Also: the Bohr model only works for <strong>single-electron atoms</strong> (H, He⁺, Li�⁺). For multi-electron atoms, the full Schr�dinger equation is needed.</div>
 </div>
 
 <div class="neet-box">
-    <div class="neet-title">🎯 NEET Pattern — Bohr's Model</div>
+    <div class="neet-title">🎯 NEET Pattern � Bohr's Model</div>
     <div class="neet-text">
-        • Energy of photon emitted when electron jumps from n₂ to n₁: ΔE = 13.6(1/n₁² - 1/n₂²) eV.<br>
-        • Wavelength of emitted photon: hc/λ = ΔE. For Lyman series (n₁ = 1): UV. Balmer (n₁ = 2): visible. Paschen (n₁ = 3): infrared.<br>
-        • Spectral lines in a transition from n₂ to n₁: number of lines = n₂(n₂-1)/2.<br>
-        • For hydrogen-like atoms (Z > 1): E_n = -13.6 Z²/n² eV, r_n = n²a₀/Z.
+        � Energy of photon emitted when electron jumps from n₂ to n₁: ΔE = 13.6(1/n₁� - 1/n₂�) eV.<br>
+        � Wavelength of emitted photon: hc/λ = ΔE. For Lyman series (n₁ = 1): UV. Balmer (n₁ = 2): visible. Paschen (n₁ = 3): infrared.<br>
+        � Spectral lines in a transition from n₂ to n₁: number of lines = n₂(n₂-1)/2.<br>
+        � For hydrogen-like atoms (Z > 1): E_n = -13.6 Z�/n� eV, r_n = n�a₀/Z.
     </div>
 </div>
 
@@ -899,21 +891,26 @@
 </div>
 
 <!-- ============================================================ -->
-<h2 id="photoelectric">6. Photoelectric Effect — Einstein's Equation <button class="speaker-btn" onclick="speakText(this,'photoelectric')">🔊 Listen</button></h2>
+<h2 id="photoelectric">6. Photoelectric Effect � Einstein's Equation <button class="speaker-btn" onclick="speakText(this,'photoelectric')">🔊 Listen</button></h2>
 
 <h3>💡 Why this matters in real life</h3>
-<p>The <strong>photoelectric effect</strong> is how solar panels generate electricity! When light hits a metal surface, it can knock out electrons. More importantly, this experiment <strong>proved that light behaves as particles (photons)</strong> — not just waves — and won Einstein the Nobel Prize. It's the foundation of quantum mechanics and is used in light sensors, automatic doors, digital cameras, and solar cells.</p>
+<p>The <strong>photoelectric effect</strong> is how solar panels generate electricity! When light hits a metal surface, it can knock out electrons. More importantly, this experiment <strong>proved that light behaves as particles (photons)</strong> � not just waves � and won Einstein the Nobel Prize. It's the foundation of quantum mechanics and is used in light sensors, automatic doors, digital cameras, and solar cells.</p>
 
-<div class="diagram-box">
-    <svg viewBox="0 0 420 250" xmlns="http://www.w3.org/2000/svg" id="svg-photoelectric">
-        <rect x="10" y="10" width="400" height="230" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
-        <g id="pe-axes" class="anim-group">
-            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Photoelectric Effect — synchronized with lecture</text>
+<div class="frame-container">
+    <div class="frame-progress">
+        <span class="frame-count" id="fcount-photoelectric">0 / 6</span>
+        <div class="frame-bar"><div class="frame-bar-fill" id="fbar-photoelectric" style="width:0%"></div></div>
+        <span class="frame-topic">Photoelectric Effect</span>
+    </div>
+    <svg viewBox="0 0 420 370" xmlns="http://www.w3.org/2000/svg" id="svg-photoelectric">
+        <rect x="10" y="10" width="400" height="350" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <g id="pe-axes" class="g-reveal">
+            <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Photoelectric Effect � synchronized with lecture</text>
             <rect x="140" y="60" width="130" height="80" rx="4" fill="rgba(251,191,36,.06)" stroke="#fbbf24" stroke-width="2"/>
             <text x="205" y="105" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="600">Metal</text>
             <text x="205" y="120" text-anchor="middle" fill="rgba(251,191,36,.4)" font-size="8">work function φ</text>
         </g>
-        <g id="pe-photons" class="anim-group anim-hidden">
+        <g id="pe-photons" class="g-reveal">
             <line x1="40" y1="40" x2="100" y2="40" stroke="#f87171" stroke-width="2.5" opacity=".9"/>
             <text x="70" y="35" fill="#f87171" font-size="11">photon hf</text>
             <line x1="40" y1="55" x2="100" y2="55" stroke="#f87171" stroke-width="2" opacity=".6"/>
@@ -921,7 +918,7 @@
             <text x="70" y="170" fill="#f87171" font-size="10" opacity=".7">Incident light (frequency f)</text>
             <text x="210" y="210" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="8">Energy of each photon = hf (depends only on frequency, not intensity!)</text>
         </g>
-        <g id="pe-electrons" class="anim-group anim-hidden">
+        <g id="pe-electrons" class="g-reveal">
             <circle cx="160" cy="60" r="5" fill="#60a5fa">
                 <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" keyTimes="0;0.3;0.7"/>
                 <animate attributeName="cy" values="60;20;20" dur="2s" repeatCount="indefinite" keyTimes="0;0.4;0.7"/>
@@ -939,7 +936,7 @@
             <text x="70" y="175" fill="#60a5fa" font-size="10">Photo-electrons ejected!</text>
             <text x="210" y="215" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="8">If hf > φ: electron escapes. If hf < φ: nothing happens.</text>
         </g>
-        <g id="pe-graph" class="anim-group anim-hidden">
+        <g id="pe-graph" class="g-reveal">
             <line x1="60" y1="160" x2="60" y2="40" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
             <line x1="60" y1="160" x2="360" y2="160" stroke="rgba(255,255,255,.2)" stroke-width="1"/>
             <path d="M 100 160 L 150 160 L 250 100 L 350 60" fill="none" stroke="#60a5fa" stroke-width="2"/>
@@ -947,7 +944,7 @@
             <text x="365" y="168" fill="#f87171" font-size="8">V</text>
             <text x="210" y="185" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">I-V characteristic: current saturates at higher voltage</text>
         </g>
-        <g id="pe-formula" class="anim-group anim-hidden">
+        <g id="pe-formula" class="g-reveal">
             <text x="210" y="60" text-anchor="middle" fill="#fbbf24" font-size="14" font-weight="700">hf = φ + KE_max</text>
             <text x="210" y="80" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="10">Einstein's photoelectric equation</text>
             <text x="210" y="110" text-anchor="middle" fill="#34d399" font-size="12">KE_max = hf − φ = eV₀</text>
@@ -955,21 +952,18 @@
             <text x="210" y="155" text-anchor="middle" fill="#34d399" font-size="11">Threshold frequency: f₀ = φ/h</text>
             <text x="210" y="175" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="9">No photocurrent below threshold frequency</text>
         </g>
-        <g id="pe-summary" class="anim-group anim-hidden">
-            <rect x="70" y="60" width="280" height="110" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
-            <text x="210" y="78" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">P.E. Summary</text>
-            <text x="210" y="96" text-anchor="middle" fill="#34d399" font-size="10">hf = φ + KE_max</text>
-            <text x="210" y="112" text-anchor="middle" fill="#34d399" font-size="10">KE_max = eV₀</text>
-            <text x="210" y="128" text-anchor="middle" fill="#34d399" font-size="10">f₀ = φ/h</text>
-            <text x="210" y="148" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Proves particle nature of light (photon)</text>
+        <g id="pe-summary" class="g-reveal">
+            <rect x="60" y="280" width="300" height="72" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.15)" stroke-width="1"/>
+            <text x="210" y="297" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">Photoelectric Effect Summary</text>
+            <text x="210" y="313" text-anchor="middle" fill="#34d399" font-size="10">K_max = hf − φ &nbsp;&nbsp; hf₀ = φ &nbsp;&nbsp; V₀ = hf/e − φ/e</text>
+            <text x="210" y="337" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">Direct evidence for particle nature of light</text>
         </g>
     </svg>
-    <div class="diagram-caption">Fig 6.1: Photoelectric effect — synchronized. Animation advances through photons, ejected electrons, I-V graph, formula, and summary.</div>
 </div>
 
-<h3>🧠 The Big Idea — In Plain Words</h3>
+<h3>🧠 The Big Idea � In Plain Words</h3>
 <p>Classical physics predicted that shining brighter light (higher intensity) should knock out electrons with more energy. But experiments showed something strange: brighter light knocked out <strong>more</strong> electrons, not more <strong>energetic</strong> ones. And if the light's frequency was below a certain threshold, no electrons came out at all, no matter how bright the light!</p>
-<p>Einstein explained this by proposing that light comes in <strong>packets (photons)</strong> each with energy E = hf. One photon gives ALL its energy to ONE electron. The electron uses some energy to escape the metal (work function φ) and the rest becomes kinetic energy: hf = φ + ½mv². If hf < φ, no electron can escape (no matter how many photons). This instantly explained the threshold frequency and why intensity only affects the number of electrons, not their energy.</p>
+<p>Einstein explained this by proposing that light comes in <strong>packets (photons)</strong> each with energy E = hf. One photon gives ALL its energy to ONE electron. The electron uses some energy to escape the metal (work function φ) and the rest becomes kinetic energy: hf = φ + �mv�. If hf < φ, no electron can escape (no matter how many photons). This instantly explained the threshold frequency and why intensity only affects the number of electrons, not their energy.</p>
 <p><strong>Key variables:</strong> h = Planck's constant, f = frequency (Hz), λ = wavelength (m), φ = work function (eV or J), K_max = maximum KE of photoelectron (eV or J), V₀ = stopping potential (V)</p>
 
 <h4>🔍 Step-by-Step: Einstein's Photoelectric Equation</h4>
@@ -984,7 +978,7 @@
     </div>
     <div class="step">
         <span class="step-num">3</span>
-        <div class="step-text"><strong>Einstein's photoelectric equation (energy conservation).</strong> The photon's energy goes into two things: (a) freeing the electron from the metal (φ), and (b) giving it kinetic energy: <span class="math">hf = φ + K_max</span>, where <span class="math">K_max = ½mv_max²</span></div>
+        <div class="step-text"><strong>Einstein's photoelectric equation (energy conservation).</strong> The photon's energy goes into two things: (a) freeing the electron from the metal (φ), and (b) giving it kinetic energy: <span class="math">hf = φ + K_max</span>, where <span class="math">K_max = �mv_max�</span></div>
     </div>
     <div class="step">
         <span class="step-num">4</span>
@@ -995,25 +989,25 @@
 
 <div class="tip-box">
     <div class="tip-title">🔍 Common Mistake</div>
-    <div class="tip-text">Students confuse intensity and frequency. <strong>Intensity</strong> = number of photons per second (affects number of photoelectrons, i.e., current). <strong>Frequency</strong> = energy per photon (affects K_max of electrons). Also: photoelectric emission is <strong>instantaneous</strong> — the electron absorbs the photon's energy immediately (no time delay as wave theory predicted!).</div>
+    <div class="tip-text">Students confuse intensity and frequency. <strong>Intensity</strong> = number of photons per second (affects number of photoelectrons, i.e., current). <strong>Frequency</strong> = energy per photon (affects K_max of electrons). Also: photoelectric emission is <strong>instantaneous</strong> � the electron absorbs the photon's energy immediately (no time delay as wave theory predicted!).</div>
 </div>
 
 <div class="neet-box">
-    <div class="neet-title">🎯 NEET Pattern — Photoelectric Effect</div>
+    <div class="neet-title">🎯 NEET Pattern � Photoelectric Effect</div>
     <div class="neet-text">
-        • Threshold frequency f₀ = φ/h. Below f₀: no emission regardless of intensity.<br>
-        • Above threshold: K_max = h(f - f₀). Increasing intensity → more electrons (higher photocurrent), same K_max.<br>
-        • Stopping potential V₀ = (h/e)(f - f₀). Independent of intensity.<br>
-        • NEET classic: "Light of wavelength λ falls on a metal with work function φ. Find stopping potential." → V₀ = (hc/λ - φ)/e.<br>
-        • Factors affecting photocurrent: intensity of light (↑ intensity → ↑ current), potential difference (saturates at high V).<br>
-        • Davis and Goucher experiment showed that wave theory cannot explain photoemission.
+        � Threshold frequency f₀ = φ/h. Below f₀: no emission regardless of intensity.<br>
+        � Above threshold: K_max = h(f - f₀). Increasing intensity → more electrons (higher photocurrent), same K_max.<br>
+        � Stopping potential V₀ = (h/e)(f - f₀). Independent of intensity.<br>
+        � NEET classic: "Light of wavelength λ falls on a metal with work function φ. Find stopping potential." → V₀ = (hc/λ - φ)/e.<br>
+        � Factors affecting photocurrent: intensity of light (↑ intensity → ↑ current), potential difference (saturates at high V).<br>
+        � Davis and Goucher experiment showed that wave theory cannot explain photoemission.
     </div>
 </div>
 
 <div class="example-box">
     <div class="ex-title">Example 6: Photoelectric Effect</div>
-    <div class="ex-text">Light of wavelength 200 nm falls on a metal surface with work function 4.0 eV. Find the stopping potential. (h = 6.63×10⁻³⁴, c = 3×10⁸, e = 1.6×10⁻¹⁹)<br><br>a) 2.2 V &nbsp; b) 4.0 V &nbsp; c) 1.2 V &nbsp; d) 6.2 V</div>
-    <div class="ex-soln"><strong>Solution:</strong> hc/λ = (6.63×10⁻³⁴×3×10⁸)/(200×10⁻⁹) = 9.945×10⁻¹⁹ J = 9.945×10⁻¹⁹/1.6×10⁻¹⁹ = 6.22 eV. K_max = 6.22 - 4.0 = 2.22 eV. V₀ = K_max/e = 2.22 V. Option (a).</div>
+    <div class="ex-text">Light of wavelength 200 nm falls on a metal surface with work function 4.0 eV. Find the stopping potential. (h = 6.63�10⁻�⁴, c = 3�10⁸, e = 1.6�10⁻�⁹)<br><br>a) 2.2 V &nbsp; b) 4.0 V &nbsp; c) 1.2 V &nbsp; d) 6.2 V</div>
+    <div class="ex-soln"><strong>Solution:</strong> hc/λ = (6.63�10⁻�⁴�3�10⁸)/(200�10⁻⁹) = 9.945�10⁻�⁹ J = 9.945�10⁻�⁹/1.6�10⁻�⁹ = 6.22 eV. K_max = 6.22 - 4.0 = 2.22 eV. V₀ = K_max/e = 2.22 V. Option (a).</div>
 </div>
 
                 <div class="audio-progress" id="audioProgress" style="display:none">

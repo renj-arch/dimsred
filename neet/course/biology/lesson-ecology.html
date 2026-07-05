@@ -528,66 +528,25 @@
                         </div>
                     </div>
 
-                    <h3>Practice MCQs for NEET</h3>
-
-                    <div class="q-card">
-                        <div class="q-text">Q1. The pyramid of energy in an ecosystem is always:</div>
-                        <div class="q-opts">
-                            <div class="q-opt" onclick="checkAnswer(this,'b')">a) Inverted</div>
-                            <div class="q-opt" onclick="checkAnswer(this,'b')">b) Upright</div>
-                            <div class="q-opt" onclick="checkAnswer(this,'b')">c) Sometimes upright, sometimes inverted</div>
-                            <div class="q-opt" onclick="checkAnswer(this,'b')">d) Spindle-shaped</div>
-                        </div>
-                        <div class="q-soln"><strong>Solution:</strong> The pyramid of energy is ALWAYS upright because energy decreases at each successive trophic level due to the Second Law of Thermodynamics (heat loss). It can never be inverted. Hence option (b) is correct.</div>
-                    </div>
-
-                    <div class="q-card">
-                        <div class="q-text">Q2. Which of the following is a free-living nitrogen-fixing bacterium?</div>
-                        <div class="q-opts">
-                            <div class="q-opt" onclick="checkAnswer(this,'c')">a) Rhizobium</div>
-                            <div class="q-opt" onclick="checkAnswer(this,'c')">b) Nitrobacter</div>
-                            <div class="q-opt" onclick="checkAnswer(this,'c')">c) Azotobacter</div>
-                            <div class="q-opt" onclick="checkAnswer(this,'c')">d) Nitrosomonas</div>
-                        </div>
-                        <div class="q-soln"><strong>Solution:</strong> Azotobacter is a free-living aerobic nitrogen-fixing bacterium found in soil. Rhizobium is a symbiotic N<sub>2</sub>-fixer (in legume root nodules). Nitrosomonas converts NH<sub>3</sub> to NO<sub>2</sub><sup>&minus;</sup> (nitrification). Nitrobacter converts NO<sub>2</sub><sup>&minus;</sup> to NO<sub>3</sub><sup>&minus;</sup>. Hence option (c) is correct.</div>
-                    </div>
-
-                    <div class="q-card">
-                        <div class="q-text">Q3. Which of the following is a greenhouse gas that also causes ozone depletion?</div>
-                        <div class="q-opts">
-                            <div class="q-opt" onclick="checkAnswer(this,'d')">a) CO<sub>2</sub></div>
-                            <div class="q-opt" onclick="checkAnswer(this,'d')">b) CH<sub>4</sub></div>
-                            <div class="q-opt" onclick="checkAnswer(this,'d')">c) N<sub>2</sub>O</div>
-                            <div class="q-opt" onclick="checkAnswer(this,'d')">d) CFCs</div>
-                        </div>
-                        <div class="q-soln"><strong>Solution:</strong> Chlorofluorocarbons (CFCs) are both greenhouse gases (trap infrared radiation in the troposphere) AND cause ozone depletion (release chlorine in the stratosphere that catalytically destroys O<sub>3</sub>). CO<sub>2</sub> and CH<sub>4</sub> are greenhouse gases but do not deplete ozone. Hence option (d) is correct.</div>
-                    </div>
-
-                    <div class="q-card">
-                        <div class="q-text">Q4. According to the competitive exclusion principle, two species cannot coexist indefinitely if they:</div>
-                        <div class="q-opts">
-                            <div class="q-opt" onclick="checkAnswer(this,'a')">a) Occupy the same niche</div>
-                            <div class="q-opt" onclick="checkAnswer(this,'a')">b) Have different predators</div>
-                            <div class="q-opt" onclick="checkAnswer(this,'a')">c) Occupy different habitats</div>
-                            <div class="q-opt" onclick="checkAnswer(this,'a')">d) Are both predators</div>
-                        </div>
-                        <div class="q-soln"><strong>Solution:</strong> Gause&rsquo;s competitive exclusion principle states that two species competing for exactly the same limited resource (occupying the same niche) cannot coexist indefinitely &mdash; one will outcompete the other. Coexistence is possible through resource partitioning. Hence option (a) is correct.</div>
-                    </div>
-
-                    <div class="q-card">
-                        <div class="q-text">Q5. Which zone of a biosphere reserve allows the highest level of human activity?</div>
-                        <div class="q-opts">
-                            <div class="q-opt" onclick="checkAnswer(this,'c')">a) Core zone</div>
-                            <div class="q-opt" onclick="checkAnswer(this,'c')">b) Buffer zone</div>
-                            <div class="q-opt" onclick="checkAnswer(this,'c')">c) Transition zone</div>
-                            <div class="q-opt" onclick="checkAnswer(this,'c')">d) All zones have equal restrictions</div>
-                        </div>
-                        <div class="q-soln"><strong>Solution:</strong> Biosphere Reserves have three zones: Core (strictly protected, no human activity), Buffer (limited research and education), and Transition (sustainable human activities including traditional resource use, agroforestry, and settlements). Hence option (c) is correct.</div>
-                    </div>
-
-                    <p>This comprehensive lesson covers the entire NEET Ecology &amp; Environment syllabus in depth. Make sure to revise the key topics listed above, solve past NEET questions on these topics, and practice with the mock tests available on the platform. Good luck with your NEET preparation!</p>
-
-                    <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                    
+<h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
+<div id="practice-qs"></div>
+<div style="display:flex;gap:10px;margin-top:10px">
+    <button onclick="resetPractice()" class="btn btn-primary">Reset</button>
+    <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+</div>
+<script>
+var practiceQs = [{"id":34001,"text":"The pyramid of energy in an ecosystem is always:","options":[{"l":"a","t":"Inverted","c":false},{"l":"b","t":"Upright","c":true},{"l":"c","t":"Sometimes upright, sometimes inverted","c":false},{"l":"d","t":"Spindle-shaped","c":false}],"sol":"The pyramid of energy is always upright because energy decreases at each trophic level (10% law)."},{"id":34002,"text":"Azotobacter is a:","options":[{"l":"a","t":"Symbiotic N2-fixer","c":false},{"l":"b","t":"Free-living N2-fixing bacterium","c":true},{"l":"c","t":"Nitrifying bacterium","c":false},{"l":"d","t":"Denitrifying bacterium","c":false}],"sol":"Azotobacter is a free-living aerobic nitrogen-fixing bacterium. Rhizobium is symbiotic; Nitrosomonas and Nitrobacter are nitrifiers."},{"id":34003,"text":"Which gas is both a greenhouse gas and causes ozone depletion?","options":[{"l":"a","t":"CO2","c":false},{"l":"b","t":"CH4","c":false},{"l":"c","t":"N2O","c":false},{"l":"d","t":"CFCs","c":true}],"sol":"CFCs are greenhouse gases AND deplete stratospheric ozone by releasing chlorine that catalytically destroys O3."},{"id":34004,"text":"Competitive exclusion principle states that two species cannot coexist if they:","options":[{"l":"a","t":"Occupy the same niche","c":true},{"l":"b","t":"Have different predators","c":false},{"l":"c","t":"Occupy different habitats","c":false},{"l":"d","t":"Are both predators","c":false}],"sol":"Gause's principle: two species competing for the same limited resource cannot coexist indefinitely."},{"id":34005,"text":"The transition zone of a biosphere reserve allows:","options":[{"l":"a","t":"No human activity","c":false},{"l":"b","t":"Only research","c":false},{"l":"c","t":"Sustainable human activities","c":true},{"l":"d","t":"Industrial development","c":false}],"sol":"Transition zone: sustainable activities (agroforestry, settlements). Core: strictly protected. Buffer: research and education."},{"id":34006,"text":"Biodegradable pollutants are:","options":[{"l":"a","t":"DDT","c":false},{"l":"b","t":"Plastic","c":false},{"l":"c","t":"Sewage","c":true},{"l":"d","t":"Mercury","c":false}],"sol":"Sewage is biodegradable (decomposed by microorganisms). DDT, plastic, and mercury are non-biodegradable."},{"id":34007,"text":"The 10% law of energy transfer was given by:","options":[{"l":"a","t":"Odum","c":false},{"l":"b","t":"Lindeman","c":true},{"l":"c","t":"Tansley","c":false},{"l":"d","t":"Elton","c":false}],"sol":"Lindeman (1942) proposed the 10% law: only ~10% of energy is transferred from one trophic level to the next."},{"id":34008,"text":"National parks come under which type of conservation?","options":[{"l":"a","t":"Ex situ","c":false},{"l":"b","t":"In situ","c":true},{"l":"c","t":"Both","c":false},{"l":"d","t":"Artificial","c":false}],"sol":"National parks, wildlife sanctuaries, and biosphere reserves are in situ conservation (protecting species in their natural habitat)."},{"id":34009,"text":"The zone of a lake with rooted vegetation is called:","options":[{"l":"a","t":"Littoral zone","c":true},{"l":"b","t":"Limnetic zone","c":false},{"l":"c","t":"Profundal zone","c":false},{"l":"d","t":"Benthic zone","c":false}],"sol":"Littoral zone: shallow, rooted vegetation. Limnetic: open water, phytoplankton. Profundal: deep, no light. Benthic: bottom."},{"id":34010,"text":"The species diversity of a community is measured by:","options":[{"l":"a","t":"Simpson's index","c":false},{"l":"b","t":"Shannon-Weiner index","c":true},{"l":"c","t":"Species richness only","c":false},{"l":"d","t":"Evenness only","c":false}],"sol":"Shannon-Weiner index (H) considers both species richness and evenness. Higher H = greater diversity."}];
+var answered={},correctCount=0,lessonSlug="ecology";
+function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
+function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
+function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll("#q-"+qId+" .q-opt");var cr=q.options[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add("disabled");if(cr){opts[idx].classList.add("correct");document.getElementById("result-"+qId).textContent="✓ Correct";correctCount++}else{opts[idx].classList.add("wrong");document.getElementById("result-"+qId).textContent="✗ Wrong";for(var i=0;i<q.options.length;i++){if(q.options[i].c)opts[i].classList.add("correct")}}document.getElementById("soln-"+qId).classList.add("show");updateProgress()}
+function updateProgress(){var t=Object.keys(answered).length;var s=document.getElementById("score-display");if(!s){s=document.createElement("div");s.id="score-display";s.style.cssText="font-size:.85em;color:var(--text-sec);margin-bottom:10px";document.getElementById("practice-qs").before(s)}s.textContent="Attempted: "+t+"/"+(practiceQs.length||0)+" | Correct: "+correctCount+" | Accuracy: "+(t>0?Math.round(correctCount/t*100):0)+"%"}
+function resetPractice(){if(!confirm("Reset all answers?"))return;answered={};correctCount=0;document.querySelectorAll("#practice-qs .q-opt").forEach(function(e){e.className="q-opt"});document.querySelectorAll("#practice-qs .q-soln").forEach(function(e){e.classList.remove("show")});document.querySelectorAll("#practice-qs .q-result").forEach(function(e){e.textContent="";e.className="q-result"});var s=document.getElementById("score-display");if(s)s.textContent="";renderPractice()}
+function markComplete(){try{var done=JSON.parse(localStorage.getItem("neet-course-done")||"[]");if(done.indexOf(lessonSlug)===-1){done.push(lessonSlug);localStorage.setItem("neet-course-done",JSON.stringify(done));document.getElementById("complete-btn").textContent="✓ Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){alert("Progress saved locally")}}
+renderPractice();
+try{var done=JSON.parse(localStorage.getItem("neet-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="✓ Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
+</script><div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
                         <a href="lesson-human-physiology.html" class="btn btn-primary">&#x2190; Human Physiology</a>
                         <a href="lesson-biotech.html" class="btn btn-success">Biotechnology &#x2192;</a>
                     </div>
