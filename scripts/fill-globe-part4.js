@@ -1,7 +1,8 @@
 const fs = require('fs');
-const path = 'C:\\Users\\Renjith\\Desktop\\icode (2)\\study\\3d-globe.html';
+const path = require('path');
+const filePath = path.resolve(__dirname, '..', '3d-globe.html');
 
-let html = fs.readFileSync(path, 'utf8');
+let html = fs.readFileSync(filePath, 'utf8');
 
 const inserts = {
   wind: [
@@ -311,5 +312,5 @@ for (const [cat, entries] of Object.entries(inserts)) {
   }
 }
 
-fs.writeFileSync(path, html, 'utf8');
+fs.writeFileSync(filePath, html, 'utf8');
 console.log('Done writing file');
