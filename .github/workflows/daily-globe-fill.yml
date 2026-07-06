@@ -33,6 +33,12 @@ jobs:
       - name: Fill categories — Part 11
         run: node scripts/fill-globe-part11.js
 
+      - name: Fetch contemporaries
+        run: node scripts/fetch-contemporaries.js
+
+      - name: Insert contemporaries
+        run: node scripts/insert-contemporaries.js
+
       - name: Escape apostrophes in data strings
         run: node scripts/fix-apostrophes.js
 
