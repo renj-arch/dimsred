@@ -179,6 +179,7 @@ const GLOBE_CAT_MAP = {
   museum:'museum', religious:'religious', shipwreck:'shipwreck',
   spaceport:'spaceport', statue:'statue', wind_farm:'wind_farm',
   zoo:'zoo', amusement_park:'amusement_park',
+  range:'range', sea:'sea', valley:'valley',
 };
 let globeNames = new Map(); // catId -> Set of normalized names
 
@@ -1256,6 +1257,39 @@ const CFG = [
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
     sub(b,s,a,i){ return b.countryLabel?.value||'Amusement park'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'range',
+    label: 'World Mountain Ranges',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q46831. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'sea',
+    label: 'Seas',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q165. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Sea'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'valley',
+    label: 'Valleys',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q39816. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Valley'; },
     prefix(b,s,a){ return s||''; }
   },
 ];
