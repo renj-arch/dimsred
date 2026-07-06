@@ -51,6 +51,12 @@ jobs:
       - name: Fill categories — Part 10 (freedom sites, forts, pilgrimages, palaces, medieval capitals, colonial settlements, revolts, lakes, glaciers, waterfalls, islands, caves, ocean trenches, tectonic plates, WWI/II, impact craters, refineries, fertilizer, cement, stadiums, observatories, zoos)
         run: node scripts/fill-globe-part10.js
 
+      - name: Fetch Wikipedia categories
+        run: node scripts/wikipedia-fetch.js
+
+      - name: Fetch Wikidata SPARQL
+        run: node scripts/wikidata-multi-fetch.js
+
       - name: Fill categories — Part 11 (all 27 wiki-sourced categories)
         run: node scripts/fill-globe-part11.js
 
