@@ -5,8 +5,10 @@ const questionsDir = path.join(__dirname, '..', 'data', 'questions');
 const quizPath = path.join(__dirname, '..', 'data', 'quiz.json');
 
 if (!fs.existsSync(questionsDir)) {
-  console.error('data/questions/ directory not found — cannot rebuild quiz.json');
-  process.exit(1);
+  fs.mkdirSync(questionsDir, { recursive: true });
+  fs.writeFileSync(quizPath, JSON.stringify({ questions: [] }));
+  console.log('Created data/questions/ directory; wrote empty quiz.json');
+  process.exit(0);
 }
 
 const files = fs.readdirSync(questionsDir).filter(f => f.endsWith('.json'));
