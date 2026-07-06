@@ -18,7 +18,7 @@ async function httpGet(url, retries = 3) {
           });
         });
         req.on('error', reject);
-        req.setTimeout(60000, () => { req.destroy(); reject(new Error('timeout')); });
+        req.setTimeout(180000, () => { req.destroy(); reject(new Error('timeout')); });
       });
       return result;
     } catch (e) {

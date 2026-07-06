@@ -15,7 +15,7 @@ function httpGet(url) {
       });
     });
     req.on('error', reject);
-    req.setTimeout(60000, () => { req.destroy(); reject(new Error('timeout')); });
+    req.setTimeout(180000, () => { req.destroy(); reject(new Error('timeout')); });
   });
 }
 
