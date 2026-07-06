@@ -5,19 +5,32 @@ const GLOBE_PATH = path.resolve(__dirname, '..', '3d-globe.html');
 
 const CAT_MAP = {
   'wiki-airport.json': 'airport',
+  'wiki-battle.json': 'battle',
   'wiki-biosphere.json': 'biosphere',
+  'wiki-bird.json': 'bird',
   'wiki-city.json': 'city',
+  'wiki-crop.json': 'crop',
   'wiki-dams.json': 'dam',
+  'wiki-highway.json': 'highway',
   'wiki-hill.json': 'hill',
+  'wiki-institution.json': 'institution',
   'wiki-i_pass.json': 'i_pass',
+  'wiki-kingdom.json': 'kingdom',
+  'wiki-mineral.json': 'mineral',
   'wiki-national_park.json': 'national_park',
+  'wiki-nuclear.json': 'nuclear',
   'wiki-peak.json': 'peak',
   'wiki-port.json': 'port',
   'wiki-ramsar.json': 'ramsar',
   'wiki-rivers.json': 'river',
+  'wiki-temple.json': 'temple',
   'wiki-tiger.json': 'tiger',
   'wiki-unesco.json': 'unesco',
   'wiki-wildlife.json': 'wildlife',
+  'wiki-w_battle.json': 'w_battle',
+  'wiki-w_city.json': 'w_city',
+  'wiki-w_kingdom.json': 'w_kingdom',
+  'wiki-w_river.json': 'w_river',
 };
 
 let html = fs.readFileSync(GLOBE_PATH, 'utf8');
