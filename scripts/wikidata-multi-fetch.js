@@ -257,7 +257,7 @@ const CFG = [
         OPTIONAL { ?item wdt:P2044 ?elevation. }
         OPTIONAL { ?item wdt:P131 ?state. }
         SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
-      } ORDER BY DESC(?elevation)`,
+      } ORDER BY DESC(?elevation) LIMIT 50`,
     sub(b,s,a,i){
       const p=[s];
       const el=b.elevation?.value?parseFloat(b.elevation.value).toFixed(0)+' m':'';
