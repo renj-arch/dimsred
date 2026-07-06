@@ -27,7 +27,10 @@ jobs:
       - name: Fetch Wikidata SPARQL
         run: node scripts/wikidata-multi-fetch.js
 
-      - name: Fill categories — Part 11 (all 27 wiki-sourced categories)
+      - name: Generate static data
+        run: node scripts/create-static-data.js
+
+      - name: Fill categories — Part 11
         run: node scripts/fill-globe-part11.js
 
       - name: Escape apostrophes in data strings
