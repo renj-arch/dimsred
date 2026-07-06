@@ -304,9 +304,11 @@ for (const [cat, entries] of Object.entries(inserts)) {
     const e = entries[j];
     const la = typeof e.la === 'number' ? e.la : parseFloat(e.la);
     const ln = typeof e.ln === 'number' ? e.ln : parseFloat(e.ln);
-    insertStr += `  {n:'${e.n}',la:${la},ln:${ln},sub:'${e.sub}',desc:'${e.desc}',fact:'${e.fact}'},`;
+    insertStr += `  {n:'${e.n}',la:${la},ln:${ln},sub:'${e.sub}',desc:'${e.desc}',fact:'${e.fact}'},\n`;
   }
   if (insertStr) {
+    const before = html.slice(0, insertIdx).replace(/[\s,]+$/, '');
+    if (before.endsWith('}')) insertStr = ',\n' + insertStr;
     html = html.slice(0, insertIdx) + '\n' + insertStr + html.slice(insertIdx);
   }
   console.log(`${cat}: ${existingCount} → ${existingCount + (entries.length - existingCount)} (added ${entries.length - existingCount})`);

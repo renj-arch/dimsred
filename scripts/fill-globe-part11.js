@@ -95,11 +95,13 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
   let added = 0;
   for (const e of toInsert) {
     if (existingNames.has(normalize(e.n))) continue;
-    insertStr += `  {n:'${e.n.replace(/'/g, "\\'")}',la:${e.la},ln:${e.ln},sub:'${e.sub.replace(/'/g, "\\'")}',desc:'${e.desc.replace(/'/g, "\\'")}',fact:'${e.fact.replace(/'/g, "\\'")}'},`;
+    insertStr += `  {n:'${e.n.replace(/'/g, "\\'")}',la:${e.la},ln:${e.ln},sub:'${e.sub.replace(/'/g, "\\'")}',desc:'${e.desc.replace(/'/g, "\\'")}',fact:'${e.fact.replace(/'/g, "\\'")}'},\n`;
     added++;
   }
 
   if (insertStr) {
+    const before = html.slice(0, insertIdx).replace(/[\s,]+$/, '');
+    if (before.endsWith('}')) insertStr = ',\n' + insertStr;
     html = html.slice(0, insertIdx) + '\n' + insertStr + html.slice(insertIdx);
   }
 
