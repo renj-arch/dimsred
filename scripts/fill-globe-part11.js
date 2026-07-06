@@ -149,6 +149,20 @@ const CAT_MAP = {
   'wiki-cyclone_region.json': 'cyclone_region',
   'wiki-tornado_region.json': 'tornado_region',
   'wiki-time_zone.json': 'time_zone',
+  'wiki-basin.json': 'basin',
+  'wiki-crater.json': 'crater',
+  'wiki-ecoregion.json': 'ecoregion',
+  'wiki-estuary.json': 'estuary',
+  'wiki-lagoon.json': 'lagoon',
+  'wiki-mesa.json': 'mesa',
+  'wiki-museum.json': 'museum',
+  'wiki-religious.json': 'religious',
+  'wiki-shipwreck.json': 'shipwreck',
+  'wiki-spaceport.json': 'spaceport',
+  'wiki-statue.json': 'statue',
+  'wiki-wind_farm.json': 'wind_farm',
+  'wiki-zoo.json': 'zoo',
+  'wiki-amusement_park.json': 'amusement_park',
 };
 
 let html = fs.readFileSync(GLOBE_PATH, 'utf8');

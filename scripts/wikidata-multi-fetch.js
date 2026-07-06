@@ -174,6 +174,11 @@ const GLOBE_CAT_MAP = {
   biome:'biome', climate_zone:'climate_zone',
   cyclone_region:'cyclone_region', tornado_region:'tornado_region',
   time_zone:'time_zone',
+  basin:'basin', crater:'crater', ecoregion:'ecoregion',
+  estuary:'estuary', lagoon:'lagoon', mesa:'mesa',
+  museum:'museum', religious:'religious', shipwreck:'shipwreck',
+  spaceport:'spaceport', statue:'statue', wind_farm:'wind_farm',
+  zoo:'zoo', amusement_park:'amusement_park',
 };
 let globeNames = new Map(); // catId -> Set of normalized names
 
@@ -1092,6 +1097,165 @@ const CFG = [
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 40`,
     sub(b,s,a,i){ return b.countryLabel?.value||'Ice cap'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'basin',
+    label: 'Structural Basins',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q1421346. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'crater',
+    label: 'Volcanic Craters & Calderas',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      { ?item wdt:P31 wd:Q186690. } UNION { ?item wdt:P31 wd:Q193283. }
+      ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Crater'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'ecoregion',
+    label: 'Ecoregions',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q295605. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Ecoregion'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'estuary',
+    label: 'Estuaries',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q134737. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 40`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Estuary'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'lagoon',
+    label: 'Lagoons',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q187223. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Lagoon'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'mesa',
+    label: 'Mesas & Buttes',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q285598. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 40`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Mesa'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'museum',
+    label: 'Major Museums',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel ?visitors WHERE {
+      ?item wdt:P31 wd:Q33506. ?item wdt:P625 ?coord.
+      ?item wdt:P1082 ?visitors. FILTER(?visitors > 100000)
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY DESC(?visitors) LIMIT 80`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Museum'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'religious',
+    label: 'Religious Sites',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q1370598. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 80`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Religious site'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'shipwreck',
+    label: 'Shipwrecks',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q852190. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Shipwreck'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'spaceport',
+    label: 'Spaceports & Launch Sites',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      { ?item wdt:P31 wd:Q118958. } UNION { ?item wdt:P31 wd:Q749571. } UNION { ?item wdt:P31 wd:Q189107. }
+      ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 40`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Spaceport'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'statue',
+    label: 'Statues & Monuments',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel ?height WHERE {
+      ?item wdt:P31 wd:Q179700. ?item wdt:P625 ?coord.
+      ?item wdt:P2048 ?height. FILTER(?height > 10)
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY DESC(?height) LIMIT 80`,
+    sub(b,s,a,i){ const p=[]; if(b.countryLabel?.value)p.push(b.countryLabel.value); if(b.height?.value)p.push(parseFloat(b.height.value).toFixed(0)+' m'); return p.filter(Boolean).join(' · '); },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'wind_farm',
+    label: 'Wind Farms',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      { ?item wdt:P31 wd:Q194356. } UNION { ?item wdt:P31 wd:Q194357. }
+      ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Wind farm'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'zoo',
+    label: 'World Zoos',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q43501. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Zoo'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'amusement_park',
+    label: 'Amusement Parks',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q194348. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Amusement park'; },
     prefix(b,s,a){ return s||''; }
   },
 ];
