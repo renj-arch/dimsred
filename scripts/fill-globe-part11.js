@@ -163,6 +163,19 @@ const CAT_MAP = {
   'wiki-wind_farm.json': 'wind_farm',
   'wiki-zoo.json': 'zoo',
   'wiki-amusement_park.json': 'amusement_park',
+  'wiki-folk_dance.json': 'folk_dance',
+  'wiki-longitude.json': 'longitude',
+  'wiki-festival.json': 'festival',
+  'wiki-language.json': 'language',
+  'wiki-cuisine.json': 'cuisine',
+  'wiki-classical_dance.json': 'classical_dance',
+  'wiki-monument.json': 'monument',
+  'wiki-mosque.json': 'mosque',
+  'wiki-church.json': 'church',
+  'wiki-archaeological_site.json': 'archaeological_site',
+  'wiki-monastery.json': 'monastery',
+  'wiki-escarpment.json': 'escarpment',
+  'wiki-geopark.json': 'geopark',
 };
 
 let html = fs.readFileSync(GLOBE_PATH, 'utf8');

@@ -180,6 +180,12 @@ const GLOBE_CAT_MAP = {
   spaceport:'spaceport', statue:'statue', wind_farm:'wind_farm',
   zoo:'zoo', amusement_park:'amusement_park',
   range:'range', sea:'sea', valley:'valley',
+  escarpment:'escarpment', geopark:'geopark',
+  folk_dance:'folk_dance', longitude:'longitude',
+  festival:'festival', language:'language', cuisine:'cuisine',
+  classical_dance:'classical_dance', monument:'monument',
+  mosque:'mosque', church:'church',
+  archaeological_site:'archaeological_site', monastery:'monastery',
 };
 let globeNames = new Map(); // catId -> Set of normalized names
 
@@ -579,7 +585,8 @@ const CFG = [
     id: 'strait',
     label: 'Straits',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q37915. ?item wdt:P625 ?coord.
+      VALUES ?type { wd:Q37901 wd:Q37915 }
+      ?item wdt:P31 ?type. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -1290,6 +1297,28 @@ const CFG = [
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
     sub(b,s,a,i){ return b.countryLabel?.value||'Valley'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'escarpment',
+    label: 'Escarpments',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q118975. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 40`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Escarpment'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'geopark',
+    label: 'Global Geoparks',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q776477. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Geopark'; },
     prefix(b,s,a){ return s||''; }
   },
 ];

@@ -167,7 +167,7 @@ function loadDedupSet() {
   } catch {}
   try {
     const html = fs.readFileSync(GLOBE_PATH, 'utf8');
-    const globCats = ['tiger','wildlife','biosphere','ramsar','peak','desert','waterfall','glacier','volcano','railway','hill','tower','forest','port','airport','island','lake','river','dam','national_park','unesco','city','i_fort','i_palace','i_lake','i_glacier','i_waterfall','i_island','i_cave','i_bridge','i_tunnel','i_stadium','i_observatory','i_zoo','rl_zone','pipeline','refinery','fertilizer','cement','power_plant','steel_plant','tribe','i_freedom','i_medieval','i_colonial','i_movement','i_pilgrimage','personality','irrigation','drainage','physiographic','soil','monsoon','vegetation','seismic_zone','biogeographic_zone','industrial','wind','cloud','rainfall','latitude','trade','phenomena','dfc','i_corridor','border_road','ocean','fjord','atoll','oasis','salt_flat','mangrove','ice_shelf','ocean_ridge','seamount','capital','ice_cap','biome','climate_zone','cyclone_region','tornado_region','time_zone','basin','crater','ecoregion','estuary','lagoon','mesa','museum','religious','shipwreck','spaceport','statue','wind_farm','zoo','amusement_park','range','sea','valley'];
+    const globCats = ['tiger','wildlife','biosphere','ramsar','peak','desert','waterfall','glacier','volcano','railway','hill','tower','forest','port','airport','island','lake','river','dam','national_park','unesco','city','i_fort','i_palace','i_lake','i_glacier','i_waterfall','i_island','i_cave','i_bridge','i_tunnel','i_stadium','i_observatory','i_zoo','rl_zone','pipeline','refinery','fertilizer','cement','power_plant','steel_plant','tribe','i_freedom','i_medieval','i_colonial','i_movement','i_pilgrimage','personality','irrigation','drainage','physiographic','soil','monsoon','vegetation','seismic_zone','biogeographic_zone','industrial','wind','cloud','rainfall','latitude','trade','phenomena','dfc','i_corridor','border_road','ocean','fjord','atoll','oasis','salt_flat','mangrove','ice_shelf','ocean_ridge','seamount','capital','ice_cap','biome','climate_zone','cyclone_region','tornado_region','time_zone','basin','crater','ecoregion','estuary','lagoon','mesa','museum','religious','shipwreck','spaceport','statue','wind_farm','zoo','amusement_park','range','sea','valley','folk_dance','longitude','festival','language','cuisine','classical_dance','monument','mosque','church','archaeological_site','monastery','escarpment','geopark'];
     for (const gc of globCats) {
       const rx = new RegExp(`D\\.${gc}\\s*=\\s*\\[([\\s\\S]*?)\\];`, 'i');
       const m = rx.exec(html);
@@ -267,6 +267,17 @@ const CFG = [
   { id:'dfc', label:'Dedicated Freight Corridors', wikiCat:'Category:Dedicated_freight_corridors_in_India', subFn:(s,a)=>s },
   { id:'i_corridor', label:'Industrial Corridors', wikiCat:'Category:Industrial_corridors_in_India', subFn:(s,a)=>s },
   { id:'border_road', label:'Border Roads', wikiCat:'Category:Border_Roads_Organisation', subFn:(s,a)=>s },
+  { id:'folk_dance', label:'Folk Dances', wikiCat:'Category:Folk_dances_of_India', subFn:(s,a)=>s+' · Folk Dance' },
+  { id:'longitude', label:'Lines of Longitude', wikiCat:'Category:Lines_of_longitude', subFn:(s,a)=>s },
+  { id:'festival', label:'Festivals', wikiCat:'Category:Festivals_in_India', subFn:(s,a)=>s+' · Festival' },
+  { id:'language', label:'Languages', wikiCat:'Category:Languages_of_India', subFn:(s,a)=>s },
+  { id:'cuisine', label:'Regional Cuisines', wikiCat:'Category:Indian_cuisine_by_state', subFn:(s,a)=>s+' · Cuisine' },
+  { id:'classical_dance', label:'Classical Dances', wikiCat:'Category:Indian_classical_dance', subFn:(s,a)=>s+' · Classical Dance' },
+  { id:'monument', label:'Monuments & Memorials', wikiCat:'Category:Monuments_and_memorials_in_India', subFn:(s,a)=>s },
+  { id:'mosque', label:'Mosques', wikiCat:'Category:Mosques_in_India', subFn:(s,a)=>s },
+  { id:'church', label:'Churches', wikiCat:'Category:Churches_in_India', subFn:(s,a)=>s },
+  { id:'archaeological_site', label:'Archaeological Sites', wikiCat:'Category:Archaeological_sites_in_India', subFn:(s,a)=>s },
+  { id:'monastery', label:'Monasteries', wikiCat:'Category:Monasteries_in_India', subFn:(s,a)=>s },
 ];
 
 // ====== PROCESS CATEGORY ======
