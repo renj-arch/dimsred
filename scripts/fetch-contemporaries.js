@@ -26,15 +26,26 @@ function sparql(query) {
 const TYPE_MAP = {
   Q11631: 'ruler', Q477: 'ruler', Q31758: 'ruler', Q588767: 'ruler', Q14977072: 'ruler',
   Q171298: 'ruler', Q11424: 'ruler', Q164744: 'ruler', Q232908: 'ruler', Q105040: 'ruler',
+  Q10871364: 'freedom_fighter', Q22686: 'freedom_fighter',
+  Q611644: 'religious', Q133813: 'religious', Q20643955: 'religious',
+  Q201788: 'religious', Q1778155: 'religious',
+  Q844069: 'reformer',
+  Q34763: 'explorer', Q11905581: 'explorer',
   Q7432: 'scholar', Q169470: 'scholar', Q36180: 'scholar', Q188094: 'scholar',
   Q12737077: 'scholar', Q482980: 'scholar', Q177054: 'scholar', Q170790: 'scholar',
   Q2374149: 'scholar', Q1622272: 'scholar', Q49757: 'scholar', Q1097498: 'scholar',
-  Q5: 'religious', Q611644: 'religious', Q133813: 'religious', Q20643955: 'religious',
-  Q201788: 'religious', Q1778155: 'religious',
-  Q10871364: 'freedom_fighter', Q22686: 'freedom_fighter',
-  Q844069: 'reformer',
-  Q34763: 'explorer', Q11905581: 'explorer',
 };
+
+function classifyByDesc(desc) {
+  if (!desc) return null;
+  const d = desc.toLowerCase();
+  if (/\b(king|emperor|ruler|monarch|maharaja|maharani|sultan[ae]?|shah|queen|prince|princess|pharaoh|caliph|nawab|rani|chieftain|rajah|begum)\b/.test(d)) return 'ruler';
+  if (/\b(freedom fighter|independence activist|revolutionary|rebel|liberation|martyrs?)\b/.test(d)) return 'freedom_fighter';
+  if (/\b(saint|guru|monk|nun|archbishop|patriarch|religious leader|missionary|swami|bhagwan|holy|clergy|buddhist monk|sufi|theologian|yog[iin])\b/.test(d)) return 'religious';
+  if (/\b(reformer|social reformer|activist)\b/.test(d)) return 'reformer';
+  if (/\b(explorer|navigator|discoverer|exploration)\b/.test(d)) return 'explorer';
+  return null;
+}
 
 const ERA_BOUNDS = [
   { min: -10000, max: 1206, era: 'Ancient' },
@@ -51,10 +62,13 @@ function classifyEra(year) {
   return 'Global';
 }
 
-function classifyType(occupations) {
-  if (!occupations || !occupations.length) return 'scholar';
-  for (const o of occupations) {
-    if (TYPE_MAP[o]) return TYPE_MAP[o];
+function classifyType(occupations, desc) {
+  const fromDesc = classifyByDesc(desc);
+  if (fromDesc) return fromDesc;
+  if (occupations && occupations.length) {
+    for (const o of occupations) {
+      if (TYPE_MAP[o]) return TYPE_MAP[o];
+    }
   }
   return 'scholar';
 }
@@ -62,14 +76,21 @@ function classifyType(occupations) {
 async function main() {
   console.log('=== Fetch Contemporaries ===\n');
 
-  const query = `SELECT ?item ?itemLabel ?birth ?death ?desc (GROUP_CONCAT(DISTINCT ?occupation; SEPARATOR="|") AS ?occIds) (GROUP_CONCAT(DISTINCT ?occLabel; SEPARATOR="|") AS ?occLabels) WHERE {
-    ?item wdt:P31 wd:Q5. ?item wdt:P27 wd:Q668. ?item wdt:P569 ?birth. ?item wdt:P570 ?death.
-    OPTIONAL { ?item wdt:P106 ?occupation. }
-    OPTIONAL { ?item wdt:P106 ?occ. ?occ rdfs:label ?occLabel. FILTER(LANG(?occLabel)="en") }
+  const INDIA_POLITIES = `wd:Q668 wd:Q39977 wd:Q131416 wd:Q1068147 wd:Q36217 wd:Q134923
+    wd:Q189229 wd:Q14621 wd:Q1773283 wd:Q188433 wd:Q132001 wd:Q3816318
+    wd:Q1193889 wd:Q26955 wd:Q62697 wd:Q59744 wd:Q1062709 wd:Q754770
+    wd:Q208594 wd:Q1143007 wd:Q385073 wd:Q1142577 wd:Q321224 wd:Q736532
+    wd:Q200651 wd:Q94588`.replace(/\s+/g,' ');
+
+  const query = `SELECT ?item ?itemLabel ?birth ?death (SAMPLE(?desc) AS ?desc) (GROUP_CONCAT(DISTINCT ?occ; SEPARATOR="|") AS ?occIds) WHERE {
+    ?item wdt:P31 wd:Q5. ?item wdt:P27 ?citizenship. ?item wdt:P569 ?birth. ?item wdt:P570 ?death.
+    VALUES ?citizenship { ${INDIA_POLITIES} }
+    OPTIONAL { ?item wdt:P106 ?occ. }
     OPTIONAL { ?item schema:description ?desc. FILTER(LANG(?desc)="en") }
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
   }
-  GROUP BY ?item ?itemLabel ?birth ?death ?desc
-  ORDER BY ?birth LIMIT 400`;
+  GROUP BY ?item ?itemLabel ?birth ?death
+  ORDER BY ?birth LIMIT 600`;
 
   let result;
   try { result = await sparql(query); }
@@ -80,18 +101,17 @@ async function main() {
     const label = b.itemLabel?.value || '';
     if (!label || /^Q\d+$/.test(label)) continue;
 
-    const birth = b.birth?.value ? parseInt(b.birth.value.substring(0, 4)) * (b.birth.value.includes('-') && b.birth.value.startsWith('-') ? -1 : 1) : null;
-    const death = b.death?.value ? parseInt(b.death.value.substring(0, 4)) * (b.death.value.includes('-') && b.death.value.startsWith('-') ? -1 : 1) : null;
+    const birth = b.birth?.value ? parseInt((b.birth.value.match(/^(-?\d+)/)||[])[1]) : null;
+    const death = b.death?.value ? parseInt((b.death.value.match(/^(-?\d+)/)||[])[1]) : null;
     if (!birth || !death || isNaN(birth) || isNaN(death)) continue;
     if (birth > 2005 || death > 2025) continue;
 
-    const occIds = b.occIds?.value ? b.occIds.value.split('|') : [];
-    const type = classifyType(occIds);
+    const occIds = b.occIds?.value ? b.occIds.value.split('|').map(u => u.replace(/^.*\//,'')) : [];
+    const rawDesc = b.desc?.value || '';
+    const type = classifyType(occIds, rawDesc);
     const era = classifyEra(birth);
-    const desc = b.desc?.value ? b.desc.value.charAt(0).toUpperCase() + b.desc.value.slice(1) : '';
-    const occLabels = b.occLabels?.value || '';
-
-    const title = [desc, occLabels].filter(Boolean).join(' · ').slice(0, 120) || type;
+    const desc = rawDesc ? rawDesc.charAt(0).toUpperCase() + rawDesc.slice(1) : '';
+    const title = desc.slice(0, 120) || type;
 
     entries[label] = { b: birth, d: death, title, type, era };
   }
