@@ -9442,8 +9442,9 @@ function buildLectureData(){
     {data:D.w_kingdom,type:'w_kingdom'}
   ];
   for(const {data,type} of arrays){
+    if(!data)continue;
     for(const e of data){
-      if(!e.la||!e.ln)continue;
+      if(!e||!e.la||!e.ln)continue;
       let year=parseYear(e.year);
       // Fallback: use first step's year (most precise)
       if(year===null&&e.steps&&e.steps[0]&&e.steps[0].year){
