@@ -167,7 +167,7 @@ function loadDedupSet() {
   } catch {}
   try {
     const html = fs.readFileSync(GLOBE_PATH, 'utf8');
-    const globCats = ['tiger','wildlife','biosphere','ramsar','peak','desert','waterfall','glacier','volcano','railway','hill','tower','forest','port','airport','island','lake','river','dam','national_park','unesco','city'];
+    const globCats = ['tiger','wildlife','biosphere','ramsar','peak','desert','waterfall','glacier','volcano','railway','hill','tower','forest','port','airport','island','lake','river','dam','national_park','unesco','city','i_fort','i_palace','i_lake','i_glacier','i_waterfall','i_island','i_cave','i_bridge','i_tunnel','i_stadium','i_observatory','i_zoo','rl_zone','pipeline','refinery','fertilizer','cement','power_plant','steel_plant','tribe','i_freedom','i_medieval','i_colonial','i_movement','i_pilgrimage'];
     for (const gc of globCats) {
       const rx = new RegExp(`D\\.${gc}\\s*=\\s*\\[([\\s\\S]*?)\\];`, 'i');
       const m = rx.exec(html);
@@ -211,6 +211,31 @@ const CFG = [
   { id:'mineral', label:'Minerals', wikiCat:'Category:Minerals_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   { id:'nuclear', label:'Nuclear Power Stations', wikiCat:'Category:Nuclear_power_stations_in_India', subFn:(s,a)=>[s,'Nuclear Station'].filter(Boolean).join(' · ') },
   { id:'temple', label:'Temples', wikiCat:'Category:Hindu_temples_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_fort', label:'Forts', wikiCat:'Category:Forts_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_palace', label:'Palaces', wikiCat:'Category:Palaces_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_lake', label:'Lakes', wikiCat:'Category:Lakes_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_glacier', label:'Glaciers', wikiCat:'Category:Glaciers_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_waterfall', label:'Waterfalls', wikiCat:'Category:Waterfalls_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_island', label:'Islands', wikiCat:'Category:Islands_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_cave', label:'Caves', wikiCat:'Category:Caves_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_bridge', label:'Bridges', wikiCat:'Category:Bridges_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_tunnel', label:'Tunnels', wikiCat:'Category:Tunnels_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_stadium', label:'Stadiums', wikiCat:'Category:Stadiums_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_observatory', label:'Observatories', wikiCat:'Category:Observatories_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_zoo', label:'Zoos', wikiCat:'Category:Zoos_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'rl_zone', label:'Railway Zones', wikiCat:'Category:Indian_Railway_zones', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'pipeline', label:'Pipelines', wikiCat:'Category:Pipelines_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'refinery', label:'Refineries', wikiCat:'Category:Oil_refineries_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'fertilizer', label:'Fertilizer Plants', wikiCat:'Category:Fertilizer_plants_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'cement', label:'Cement Plants', wikiCat:'Category:Cement_plants_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'power_plant', label:'Power Stations', wikiCat:'Category:Power_stations_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'steel_plant', label:'Steel Plants', wikiCat:'Category:Steel_plants_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'tribe', label:'Tribes', wikiCat:'Category:Tribes_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_freedom', label:'Freedom Movement Sites', wikiCat:'Category:Indian_independence_movement', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_medieval', label:'Medieval Sites', wikiCat:'Category:Medieval_sites_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_colonial', label:'Colonial Sites', wikiCat:'Category:Colonial_architecture_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_movement', label:'Social Movements', wikiCat:'Category:Social_movements_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_pilgrimage', label:'Pilgrimage Sites', wikiCat:'Category:Pilgrimage_sites_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
 ];
 
 // ====== PROCESS CATEGORY ======

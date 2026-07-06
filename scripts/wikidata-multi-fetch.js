@@ -150,6 +150,23 @@ const GLOBE_CAT_MAP = {
   glacier:'glacier', volcano:'volcano', forest:'forest',
   plateau:'plateau', valley:'valley', range:'range', sea:'sea',
   w_city:'w_city', w_river:'w_river', w_kingdom:'w_kingdom', w_battle:'w_battle',
+  w_peak:'w_peak', w_np:'w_np', w_inst:'w_inst', w_landmark:'w_landmark',
+  w_bridge:'w_bridge', w_airport:'w_airport', w_dam:'w_dam', w_pass:'w_pass',
+  strait:'strait', peninsula:'peninsula', gulf:'gulf',
+  canal:'canal', reef:'reef', canyon:'canyon', cape:'cape',
+  delta:'delta', plain:'plain', tunnel:'tunnel',
+  oil:'oil', current:'current',
+  lighthouse:'lighthouse', wonder:'wonder',
+  w_bay:'w_bay', w_cave:'w_cave', w_gorge:'w_gorge',
+  w_archipelago:'w_archipelago', w_geyser:'w_geyser',
+  w_isthmus:'w_isthmus', w_spring:'w_spring', w_coast:'w_coast',
+  w_empire:'w_empire', w_civilization:'w_civilization',
+  w_revolution:'w_revolution', w_treaty:'w_treaty',
+  w_disaster:'w_disaster', w_war:'w_war',
+  metro:'metro', waterway:'waterway',
+  w_trench:'w_trench', w_plate:'w_plate',
+  w_ww2:'w_ww2', w_ww1:'w_ww1', w_meteorite:'w_meteorite',
+  i_range:'i_range',
 };
 let globeNames = new Map(); // catId -> Set of normalized names
 
@@ -432,6 +449,509 @@ const CFG = [
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 200`,
     sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_peak',
+    label: 'World Mountains',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel ?elevation WHERE {
+      ?item wdt:P31 wd:Q8502. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P2044 ?elevation. }
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY DESC(?elevation) LIMIT 100`,
+    sub(b,s,a,i){ const p=[]; if(b.countryLabel?.value)p.push(b.countryLabel.value); const el=b.elevation?.value?parseFloat(b.elevation.value).toFixed(0)+' m':''; if(el)p.push(el); return p.filter(Boolean).join(' · '); },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_np',
+    label: 'World National Parks',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel ?area ?inception WHERE {
+      ?item wdt:P31 wd:Q46169. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P2046 ?area. }
+      OPTIONAL { ?item wdt:P571 ?inception. }
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 100`,
+    sub(b,s,a,i){ const p=[]; if(b.countryLabel?.value)p.push(b.countryLabel.value); if(a)p.push(a); if(i)p.push('est. '+i); return p.filter(Boolean).join(' · '); },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_inst',
+    label: 'World Institutions',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      { ?item wdt:P31 wd:Q3914. } UNION { ?item wdt:P31 wd:Q4671277. }
+      ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      ?item wdt:P1082 ?pop. FILTER(?pop > 5000)
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 100`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_landmark',
+    label: 'World Landmarks',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      { ?item wdt:P31 wd:Q570116. } UNION { ?item wdt:P31 wd:Q358. }
+      ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 100`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_bridge',
+    label: 'World Bridges',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel ?length WHERE {
+      ?item wdt:P31 wd:Q12280. ?item wdt:P625 ?coord.
+      ?item wdt:P2043 ?length. FILTER(?length > 100)
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY DESC(?length) LIMIT 100`,
+    sub(b,s,a,i){ const p=[]; if(b.countryLabel?.value)p.push(b.countryLabel.value); if(b.length?.value)p.push(parseFloat(b.length.value).toFixed(0)+' m'); return p.filter(Boolean).join(' · '); },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_airport',
+    label: 'World Airports',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel ?iata WHERE {
+      ?item wdt:P31 wd:Q1248784. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      OPTIONAL { ?item wdt:P238 ?iata. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 100`,
+    sub(b,s,a,i){ const p=[]; if(b.countryLabel?.value)p.push(b.countryLabel.value); if(b.iata?.value)p.push(b.iata.value); return p.filter(Boolean).join(' · '); },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_dam',
+    label: 'World Dams',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel ?height WHERE {
+      ?item wdt:P31 wd:Q12323. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P2048 ?height. }
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY DESC(?height) LIMIT 100`,
+    sub(b,s,a,i){ const p=[]; if(b.countryLabel?.value)p.push(b.countryLabel.value); if(b.height?.value)p.push(parseFloat(b.height.value).toFixed(0)+' m'); return p.filter(Boolean).join(' · '); },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_pass',
+    label: 'Mountain Passes',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel ?elevation WHERE {
+      ?item wdt:P31 wd:Q133056. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P2044 ?elevation. }
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 100`,
+    sub(b,s,a,i){ const p=[]; if(b.countryLabel?.value)p.push(b.countryLabel.value); if(b.elevation?.value)p.push(parseFloat(b.elevation.value).toFixed(0)+' m'); return p.filter(Boolean).join(' · '); },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'strait',
+    label: 'Straits',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q37915. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'peninsula',
+    label: 'Peninsulas',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q43795. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'gulf',
+    label: 'Gulfs',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      { ?item wdt:P31 wd:Q166. } UNION { ?item wdt:P31 wd:Q165. }
+      ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'canal',
+    label: 'Canals',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel ?length WHERE {
+      ?item wdt:P31 wd:Q12284. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P2043 ?length. }
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY DESC(?length) LIMIT 60`,
+    sub(b,s,a,i){ const p=[]; if(b.countryLabel?.value)p.push(b.countryLabel.value); if(b.length?.value)p.push(parseFloat(b.length.value).toFixed(0)+' km'); return p.filter(Boolean).join(' · '); },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'reef',
+    label: 'Reefs',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q24641. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'canyon',
+    label: 'Canyons',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q150784. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'cape',
+    label: 'Capes',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q185113. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'delta',
+    label: 'River Deltas',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q181158. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'plain',
+    label: 'Plains',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q12315. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'tunnel',
+    label: 'Tunnels',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel ?length WHERE {
+      ?item wdt:P31 wd:Q44377. ?item wdt:P625 ?coord. ?item wdt:P2043 ?length.
+      FILTER(?length > 500)
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY DESC(?length) LIMIT 60`,
+    sub(b,s,a,i){ const p=[]; if(b.countryLabel?.value)p.push(b.countryLabel.value); if(b.length?.value)p.push(parseFloat(b.length.value).toFixed(0)+' m'); return p.filter(Boolean).join(' · '); },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'oil',
+    label: 'Oil Fields',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q1154915. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'current',
+    label: 'Ocean Currents',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q129221. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'lighthouse',
+    label: 'Lighthouses',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q39715. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'wonder',
+    label: 'World Wonders',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      { ?item wdt:P31 wd:Q570116. } UNION { ?item wdt:P31 wd:Q41176. }
+      ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_bay',
+    label: 'Bays',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q39594. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_cave',
+    label: 'Caves',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel ?length WHERE {
+      ?item wdt:P31 wd:Q35509. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P2043 ?length. }
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ const p=[]; if(b.countryLabel?.value)p.push(b.countryLabel.value); if(b.length?.value)p.push(parseFloat(b.length.value).toFixed(0)+' m'); return p.filter(Boolean).join(' · '); },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_gorge',
+    label: 'Gorges',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q1251493. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_archipelago',
+    label: 'Archipelagos',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q33837. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_geyser',
+    label: 'Geysers',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q83514. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 40`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_isthmus',
+    label: 'Isthmuses',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q93267. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 40`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_spring',
+    label: 'Springs',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q79428. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 40`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_coast',
+    label: 'Coasts',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      { ?item wdt:P31 wd:Q93352. } UNION { ?item wdt:P31 wd:Q1200565. }
+      ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_empire',
+    label: 'Empires',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?continentLabel WHERE {
+      { ?item wdt:P31 wd:Q179191. } UNION { ?item wdt:P31 wd:Q48349. } UNION { ?item wdt:P31 wd:Q1093599. }
+      ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P30 ?continent. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 100`,
+    sub(b,s,a,i){ return b.continentLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_civilization',
+    label: 'Civilizations',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?continentLabel WHERE {
+      ?item wdt:P31 wd:Q8432. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P30 ?continent. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.continentLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_revolution',
+    label: 'Revolutions',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q12475716. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_treaty',
+    label: 'Treaties',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q131569. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_disaster',
+    label: 'Disasters',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q38908. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_war',
+    label: 'Wars',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q198. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 100`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'metro',
+    label: 'Metro Systems',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q152144. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'waterway',
+    label: 'Waterways',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      { ?item wdt:P31 wd:Q12284. } UNION { ?item wdt:P31 wd:Q184582. }
+      ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_trench',
+    label: 'Oceanic Trenches',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q118620. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 30`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_plate',
+    label: 'Tectonic Plates',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord WHERE {
+      ?item wdt:P31 wd:Q373174. ?item wdt:P625 ?coord.
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 30`,
+    sub(b,s,a,i){ return ''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_ww2',
+    label: 'WWII Sites',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      { ?item wdt:P31 wd:Q201994. } UNION { ?item wdt:P31 wd:Q11943845. }
+      ?item wdt:P361 wd:Q362. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_ww1',
+    label: 'WWI Sites',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      { ?item wdt:P31 wd:Q201994. } UNION { ?item wdt:P31 wd:Q11943845. }
+      ?item wdt:P361 wd:Q361. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_meteorite',
+    label: 'Meteorite Craters',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q55818. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 40`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'i_range',
+    label: 'Indian Mountain Ranges',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      ?item wdt:P31 wd:Q46831. ?item wdt:P17 wd:Q668. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.stateLabel?.value||''; },
     prefix(b,s,a){ return s||''; }
   },
 ];
