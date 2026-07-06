@@ -167,7 +167,7 @@ function loadDedupSet() {
   } catch {}
   try {
     const html = fs.readFileSync(GLOBE_PATH, 'utf8');
-    const globCats = ['tiger','wildlife','biosphere','ramsar','peak','desert','waterfall','glacier','volcano','railway','hill','tower','forest','port','airport','island','lake','river','dam','national_park','unesco','city','i_fort','i_palace','i_lake','i_glacier','i_waterfall','i_island','i_cave','i_bridge','i_tunnel','i_stadium','i_observatory','i_zoo','rl_zone','pipeline','refinery','fertilizer','cement','power_plant','steel_plant','tribe','i_freedom','i_medieval','i_colonial','i_movement','i_pilgrimage'];
+    const globCats = ['tiger','wildlife','biosphere','ramsar','peak','desert','waterfall','glacier','volcano','railway','hill','tower','forest','port','airport','island','lake','river','dam','national_park','unesco','city','i_fort','i_palace','i_lake','i_glacier','i_waterfall','i_island','i_cave','i_bridge','i_tunnel','i_stadium','i_observatory','i_zoo','rl_zone','pipeline','refinery','fertilizer','cement','power_plant','steel_plant','tribe','i_freedom','i_medieval','i_colonial','i_movement','i_pilgrimage','personality','irrigation','drainage','physiographic','soil','monsoon','vegetation','seismic_zone','biogeographic_zone','industrial','wind','cloud','rainfall','latitude','trade','phenomena','dfc','i_corridor','border_road'];
     for (const gc of globCats) {
       const rx = new RegExp(`D\\.${gc}\\s*=\\s*\\[([\\s\\S]*?)\\];`, 'i');
       const m = rx.exec(html);
@@ -236,6 +236,26 @@ const CFG = [
   { id:'i_colonial', label:'Colonial Sites', wikiCat:'Category:Colonial_architecture_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   { id:'i_movement', label:'Social Movements', wikiCat:'Category:Social_movements_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   { id:'i_pilgrimage', label:'Pilgrimage Sites', wikiCat:'Category:Pilgrimage_sites_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  // Remaining categories to wire into fetch+part11 pipeline
+  { id:'personality', label:'Historical Figures', wikiCat:'Category:Indian_independence_activists', subFn:(s,a)=>s },
+  { id:'irrigation', label:'Irrigation Projects', wikiCat:'Category:Irrigation_in_India', subFn:(s,a)=>s },
+  { id:'drainage', label:'Drainage Basins', wikiCat:'Category:Drainage_basins_of_India', subFn:(s,a)=>s },
+  { id:'physiographic', label:'Physiographic Divisions', wikiCat:'Category:Landforms_of_India', subFn:(s,a)=>s },
+  { id:'soil', label:'Soil Types', wikiCat:'Category:Soils_of_India', subFn:(s,a)=>s },
+  { id:'monsoon', label:'Monsoon', wikiCat:'Category:Monsoon', subFn:(s,a)=>s },
+  { id:'vegetation', label:'Vegetation Types', wikiCat:'Category:Vegetation_of_India', subFn:(s,a)=>s },
+  { id:'seismic_zone', label:'Seismic Zones', wikiCat:'Category:Seismic_zones_of_India', subFn:(s,a)=>s },
+  { id:'biogeographic_zone', label:'Biogeographic Zones', wikiCat:'Category:Biogeographic_regions_of_India', subFn:(s,a)=>s },
+  { id:'industrial', label:'Industrial Regions', wikiCat:'Category:Industrial_regions_in_India', subFn:(s,a)=>s },
+  { id:'wind', label:'Wind Patterns', wikiCat:'Category:Wind_types', subFn:(s,a)=>s },
+  { id:'cloud', label:'Cloud Types', wikiCat:'Category:Cloud_types', subFn:(s,a)=>s },
+  { id:'rainfall', label:'Rainfall Records', wikiCat:'Category:Weather_records', subFn:(s,a)=>s },
+  { id:'latitude', label:'Latitude Lines', wikiCat:'Category:Lines_of_latitude', subFn:(s,a)=>s },
+  { id:'trade', label:'Trade Routes', wikiCat:'Category:Trade_routes', subFn:(s,a)=>s },
+  { id:'phenomena', label:'Natural Phenomena', wikiCat:'Category:Natural_phenomena', subFn:(s,a)=>s },
+  { id:'dfc', label:'Dedicated Freight Corridors', wikiCat:'Category:Dedicated_freight_corridors_in_India', subFn:(s,a)=>s },
+  { id:'i_corridor', label:'Industrial Corridors', wikiCat:'Category:Industrial_corridors_in_India', subFn:(s,a)=>s },
+  { id:'border_road', label:'Border Roads', wikiCat:'Category:Border_Roads_Organisation', subFn:(s,a)=>s },
 ];
 
 // ====== PROCESS CATEGORY ======

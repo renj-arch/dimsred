@@ -143,7 +143,7 @@ try {
 // ====== LOAD 3D GLOBE ENTRIES FOR DEDUP ======
 const GLOBE_PATH = path.resolve(__dirname, '..', '3d-globe.html');
 const GLOBE_CAT_MAP = {
-  national_park:'national_park', unesco:'unesco',
+  national_park:'national_park', unesco:'unesco', w_unesco:'w_unesco',
   dams:'dam', rivers:'river', lakes:'lake',
   city:'city', port:'port', airport:'airport',
   desert:'desert', island:'island', waterfall:'waterfall',
@@ -220,6 +220,19 @@ const CFG = [
     query: `
       SELECT DISTINCT ?item ?itemLabel ?coord ?stateLabel ?year WHERE {
         ?item wdt:P1435 wd:Q9259. ?item wdt:P17 wd:Q668. ?item wdt:P625 ?coord.
+        OPTIONAL { ?item wdt:P131 ?state. }
+        OPTIONAL { ?item wdt:P580 ?year. }
+        SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+      } ORDER BY ?itemLabel LIMIT 80`,
+    sub(b,s,a,i){ return [s,i?'UNESCO '+i:'UNESCO WHS'].filter(Boolean).join(' · '); },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'w_unesco',
+    label: 'World UNESCO Sites',
+    query: `
+      SELECT DISTINCT ?item ?itemLabel ?coord ?stateLabel ?year WHERE {
+        ?item wdt:P1435 wd:Q9259. ?item wdt:P625 ?coord.
         OPTIONAL { ?item wdt:P131 ?state. }
         OPTIONAL { ?item wdt:P580 ?year. }
         SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
