@@ -143,18 +143,16 @@ for (const [cat, entries] of Object.entries(inserts)) {
   const arrayContent = chunk.slice(0, endIdx);
   const existingCount = (arrayContent.match(/\{n:'/g) || []).length;
   const insertIdx = afterBracket + endIdx;
-  if (existingCount < 50) {
-    let insertStr = '';
-    for (let j = existingCount; j < 50 && j - existingCount < entries.length; j++) {
-      insertStr += '\n' + entries[j - existingCount];
-    }
-    if (insertStr) {
-      html = html.slice(0, insertIdx) + insertStr + '\n' + html.slice(insertIdx);
-    }
-    console.log(`${cat}: ${existingCount} → ${Math.min(50, existingCount + entries.length)} (added ${Math.min(50, existingCount + entries.length) - existingCount})`);
-  } else {
-    console.log(`${cat}: already ${existingCount} (≥50, skipped)`);
+  if (existingCount >= entries.length) { console.log(`${cat}: ${existingCount} entries (all done)`); continue; }
+
+  let insertStr = '';
+  for (let j = existingCount; j < entries.length; j++) {
+    insertStr += '\n' + entries[j];
   }
+  if (insertStr) {
+    html = html.slice(0, insertIdx) + insertStr + '\n' + html.slice(insertIdx);
+  }
+  console.log(`${cat}: ${existingCount} → ${existingCount + (entries.length - existingCount)} (added ${entries.length - existingCount})`);
 }
 fs.writeFileSync(filePath, html, 'utf8');
 console.log('Part 6 done');

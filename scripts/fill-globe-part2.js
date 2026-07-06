@@ -5,7 +5,6 @@ const filePath = path.join(__dirname, '..', '3d-globe.html');
 let html = fs.readFileSync(filePath, 'utf8');
 
 const categories = ['island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta'];
-const need = { island:24, peninsula:26, volcano:26, gulf:26, canal:26, range:25, sea:26, waterfall:26, reef:26, canyon:26, cape:26, delta:26 };
 
 const E = {};
 
@@ -374,11 +373,13 @@ for (const cat of categories) {
   let match;
   while ((match = entryRegex.exec(content)) !== null) count++;
 
-  console.log(`${cat}: existing ${count}, need ${need[cat]} more (target 50)`);
+  if (count >= E[cat].length) { console.log(`${cat}: ${count} entries (all done)`); continue; }
+
+  console.log(`${cat}: existing ${count}, adding ${E[cat].length - count} more`);
 
   // Build new entries text
   let newText = '';
-  for (let i = 0; i < need[cat]; i++) {
+  for (let i = count; i < E[cat].length; i++) {
     newText += fmt(cat, E[cat][i]) + '\n';
   }
 

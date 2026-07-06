@@ -296,20 +296,20 @@ for (const [cat, entries] of Object.entries(inserts)) {
   const existingCount = (arrayContent.match(/\{n:'/g) || []).length;
   const currentTotal = afterOpenBracket + endIdx;
 
-  if (existingCount < 50) {
-    const insertIdx = currentTotal;
-    let insertStr = '';
-    for (let j = existingCount; j < 50 && j - existingCount < entries.length; j++) {
-      const e = entries[j - existingCount];
-      const la = typeof e.la === 'number' ? e.la : parseFloat(e.la);
-      const ln = typeof e.ln === 'number' ? e.ln : parseFloat(e.ln);
-      insertStr += `  {n:'${e.n}',la:${la},ln:${ln},sub:'${e.sub}',desc:'${e.desc}',fact:'${e.fact}'},`;
-    }
-    if (insertStr) {
-      html = html.slice(0, insertIdx) + '\n' + insertStr + html.slice(insertIdx);
-    }
-    console.log(`${cat}: ${existingCount} → ${existingCount + entries.length} (added ${entries.length})`);
+  if (existingCount >= entries.length) { console.log(`${cat}: ${existingCount} entries (all done)`); continue; }
+
+  const insertIdx = currentTotal;
+  let insertStr = '';
+  for (let j = existingCount; j < entries.length; j++) {
+    const e = entries[j];
+    const la = typeof e.la === 'number' ? e.la : parseFloat(e.la);
+    const ln = typeof e.ln === 'number' ? e.ln : parseFloat(e.ln);
+    insertStr += `  {n:'${e.n}',la:${la},ln:${ln},sub:'${e.sub}',desc:'${e.desc}',fact:'${e.fact}'},`;
   }
+  if (insertStr) {
+    html = html.slice(0, insertIdx) + '\n' + insertStr + html.slice(insertIdx);
+  }
+  console.log(`${cat}: ${existingCount} → ${existingCount + (entries.length - existingCount)} (added ${entries.length - existingCount})`);
 }
 
 fs.writeFileSync(filePath, html, 'utf8');

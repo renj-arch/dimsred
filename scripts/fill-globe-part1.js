@@ -376,14 +376,13 @@ categories.forEach(function(cat) {
   var arrayContent = html.substring(startIdx, endIdx);
   var existingCount = (arrayContent.match(/\{n:'/g) || []).length;
 
-  if (existingCount >= need) { console.log(key + ': ' + existingCount + ' entries (no action)'); return; }
+  if (existingCount >= entries.length) { console.log(key + ': ' + existingCount + ' entries (all done)'); return; }
 
-  var toAdd = need - existingCount;
-  var newEntries = entries.slice(0, toAdd);
+  var newEntries = entries.slice(existingCount);
   var insertion = '\n      ' + newEntries.join('\n      ');
   html = html.substring(0, endIdx) + insertion + html.substring(endIdx);
 
-  console.log(key + ': + ' + toAdd + ' (' + existingCount + ' -> ' + (existingCount + toAdd) + ')');
+  console.log(key + ': + ' + newEntries.length + ' (' + existingCount + ' -> ' + (existingCount + newEntries.length) + ')');
 });
 
 console.log('\n--- Verification ---');

@@ -277,15 +277,13 @@ for (const [catName, newEntries] of Object.entries(categories)) {
   const arrayContent = match[2];
   const existingLines = arrayContent.split('\n');
   const existingCount = existingLines.filter(line => line.trim().startsWith('{n:')).length;
-  const target = 50;
-  const needed = target - existingCount;
 
-  if (needed <= 0) {
-    console.log(`${catName}: already ${existingCount} entries, none needed`);
+  if (existingCount >= newEntries.length) {
+    console.log(`${catName}: ${existingCount} entries (all done)`);
     continue;
   }
 
-  const toAdd = newEntries.slice(0, needed);
+  const toAdd = newEntries.slice(existingCount);
   const newBlock = '\n' + toAdd.join('\n') + '\n';
 
   const insertPos = match.index + match[1].length + arrayContent.length;
