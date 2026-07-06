@@ -155,7 +155,8 @@ function normName(n) {
 
 // ====== LOAD EXISTING DATA FOR DEDUP ======
 const DATA_DIR = path.resolve(__dirname, '..', 'data');
-const GLOBE_PATH = path.resolve(__dirname, '..', '3d-globe.html');
+fs.mkdirSync(DATA_DIR, { recursive: true });
+
 const MANUAL_PATH = path.resolve(DATA_DIR, 'globe-manual.json');
 
 function loadDedupSet() {

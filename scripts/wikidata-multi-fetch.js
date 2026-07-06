@@ -514,6 +514,7 @@ async function processCat(cat) {
 
 async function main(){
   console.log('=== Wikidata Multi-Category Fetch ===\n');
+  fs.mkdirSync(path.resolve(__dirname,'..','data'),{recursive:true});
   for(const cat of CFG){
     const entries=await processCat(cat);
     const fp=path.resolve(__dirname,'..','data',`wiki-${cat.id}.json`);
