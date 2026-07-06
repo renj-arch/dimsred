@@ -8520,6 +8520,7 @@ document.getElementById('layToggle').addEventListener('click',()=>{
 // ============================================================
 // ERA FILTERING
 // ============================================================
+const TEMPORAL_CATS=new Set(['battle','w_battle','kingdom','w_kingdom','personality','phenomena','w_landmark']);
 let currentEra='all';
 function filterByEra(eraId){
   currentEra=eraId;
@@ -8527,8 +8528,10 @@ function filterByEra(eraId){
   allMarkers.forEach(m=>{
     if(m._mesh){m._mesh.visible=true;m._hide=false;m._kingdomSelected=null;}
     if(!era||eraId==='all'){m._eraHidden=false;if(m.el)m.el.visible=true;if(m._mesh)m._mesh.visible=true;return;}
-    const y=parseYear(m.data.sub||'');
-    m._eraHidden=!y||y<era.start||y>era.end;
+    // Only filter categories that have temporal meaning; others stay visible
+    if(!TEMPORAL_CATS.has(m.cat)){m._eraHidden=false;if(m.el)m.el.visible=true;if(m._mesh)m._mesh.visible=true;return;}
+    const y=m.data.year||parseYear(m.data.sub||'');
+    m._eraHidden=y?(y<era.start||y>era.end):false;
     if(m.el)m.el.visible=!m._eraHidden;
     if(m.lbl)m.lbl.visible=!m._eraHidden;
     if(m._mesh)m._mesh.visible=!m._eraHidden;
