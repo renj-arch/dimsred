@@ -184,6 +184,17 @@ function loadDedupSet() {
       for (const e of entries) if (e.n) set.add(normName(e.n));
     }
   } catch {}
+  // Blocklist: alternate names for the same site (removed duplicates or non-Ramsar entries)
+  const blocklist = [
+    'Sambhar Salt Lake','Bhitarkanika Mangroves','Harike Wetland','Maharana Pratap Sagar',
+    'Hokersar','Nandur Madhmeshwar Bird Sanctuary','Asan Barrage','East Calcutta Wetlands',
+    'Sultanpur NP (Ramsar)','Point Calimere Wildlife and Bird Sanctuary','Kanjli Wetland',
+    'Ropar Lake','Thol Lake Bird Sanctuary','Bhindawas Lake','Karavetti Bird Sanctuary',
+    'Kabartal Lake','Koothankulam Bird Sanctuary',
+    'Ranganthittu Bird Sanctuary','Vellode Lake','Vedanthangal Lake','Udhayamarthandapuram',
+    'Nagi-Nakti Bird Sanctuaries','Kerala backwaters','Kodiyampalayam',
+  ];
+  for (const name of blocklist) set.add(normName(name));
   return set;
 }
 
