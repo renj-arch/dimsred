@@ -167,6 +167,13 @@ const GLOBE_CAT_MAP = {
   w_trench:'w_trench', w_plate:'w_plate',
   w_ww2:'w_ww2', w_ww1:'w_ww1', w_meteorite:'w_meteorite',
   i_range:'i_range',
+  ocean:'ocean', fjord:'fjord', atoll:'atoll', oasis:'oasis',
+  salt_flat:'salt_flat', mangrove:'mangrove', ice_shelf:'ice_shelf',
+  ocean_ridge:'ocean_ridge', seamount:'seamount',
+  capital:'capital',   ice_cap:'ice_cap',
+  biome:'biome', climate_zone:'climate_zone',
+  cyclone_region:'cyclone_region', tornado_region:'tornado_region',
+  time_zone:'time_zone',
 };
 let globeNames = new Map(); // catId -> Set of normalized names
 
@@ -965,6 +972,126 @@ const CFG = [
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
     sub(b,s,a,i){ return b.stateLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'ocean',
+    label: 'Oceans',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord WHERE {
+      ?item wdt:P31 wd:Q9439. ?item wdt:P625 ?coord.
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 10`,
+    sub(b,s,a,i){ return 'Ocean'; },
+    prefix(b,s,a){ return ''; }
+  },
+  {
+    id: 'fjord',
+    label: 'Fjords',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q46871. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'atoll',
+    label: 'Atolls',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q188779. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Atoll'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'oasis',
+    label: 'Oases',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q168414. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||''; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'salt_flat',
+    label: 'Salt Flats',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q867218. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 40`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Salt flat'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'mangrove',
+    label: 'Mangrove Forests',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q19794. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Mangrove'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'ice_shelf',
+    label: 'Ice Shelves',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q1474633. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Ice shelf'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'ocean_ridge',
+    label: 'Ocean Ridges',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord WHERE {
+      ?item wdt:P31 wd:Q190197. ?item wdt:P625 ?coord.
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 40`,
+    sub(b,s,a,i){ return 'Oceanic ridge'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'seamount',
+    label: 'Seamounts',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q219739. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 60`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Seamount'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'capital',
+    label: 'World Capitals',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      ?item wdt:P31 wd:Q5119. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P1376 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?countryLabel LIMIT 80`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Capital'; },
+    prefix(b,s,a){ return s||''; }
+  },
+  {
+    id: 'ice_cap',
+    label: 'Ice Caps & Sheets',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      VALUES ?type { wd:Q209814 wd:Q185441 }
+      ?item wdt:P31 ?type. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 40`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Ice cap'; },
     prefix(b,s,a){ return s||''; }
   },
 ];

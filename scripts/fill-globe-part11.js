@@ -133,6 +133,22 @@ const CAT_MAP = {
   'wiki-dfc.json': 'dfc',
   'wiki-i_corridor.json': 'i_corridor',
   'wiki-border_road.json': 'border_road',
+  'wiki-ocean.json': 'ocean',
+  'wiki-fjord.json': 'fjord',
+  'wiki-atoll.json': 'atoll',
+  'wiki-oasis.json': 'oasis',
+  'wiki-salt_flat.json': 'salt_flat',
+  'wiki-mangrove.json': 'mangrove',
+  'wiki-ice_shelf.json': 'ice_shelf',
+  'wiki-ocean_ridge.json': 'ocean_ridge',
+  'wiki-seamount.json': 'seamount',
+  'wiki-capital.json': 'capital',
+  'wiki-ice_cap.json': 'ice_cap',
+  'wiki-biome.json': 'biome',
+  'wiki-climate_zone.json': 'climate_zone',
+  'wiki-cyclone_region.json': 'cyclone_region',
+  'wiki-tornado_region.json': 'tornado_region',
+  'wiki-time_zone.json': 'time_zone',
 };
 
 let html = fs.readFileSync(GLOBE_PATH, 'utf8');
