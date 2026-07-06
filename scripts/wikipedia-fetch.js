@@ -33,9 +33,9 @@ async function httpGet(url, retries = 3) {
   }
 }
 
-async function wikiCategoryMembers(category) {
+async function wikiCategoryMembers(category, maxPages = 1500) {
   let all = [], cmcontinue = '';
-  while (true) {
+  while (all.length < maxPages) {
     let url = `https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=${encodeURIComponent(category)}&cmlimit=500&format=json&cmtype=page`;
     if (cmcontinue) url += `&cmcontinue=${encodeURIComponent(cmcontinue)}`;
     const d = await httpGet(url);
@@ -267,7 +267,6 @@ const CFG = [
   { id:'dfc', label:'Dedicated Freight Corridors', wikiCat:'Category:Dedicated_freight_corridors_in_India', subFn:(s,a)=>s },
   { id:'i_corridor', label:'Industrial Corridors', wikiCat:'Category:Industrial_corridors_in_India', subFn:(s,a)=>s },
   { id:'border_road', label:'Border Roads', wikiCat:'Category:Border_Roads_Organisation', subFn:(s,a)=>s },
-  { id:'folk_dance', label:'Folk Dances', wikiCat:'Category:Folk_dances_of_India', subFn:(s,a)=>s+' · Folk Dance' },
   { id:'longitude', label:'Lines of Longitude', wikiCat:'Category:Lines_of_longitude', subFn:(s,a)=>s },
   { id:'festival', label:'Festivals', wikiCat:'Category:Festivals_in_India', subFn:(s,a)=>s+' · Festival' },
   { id:'language', label:'Languages', wikiCat:'Category:Languages_of_India', subFn:(s,a)=>s },

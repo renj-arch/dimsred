@@ -203,7 +203,8 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
     if (!e.la || !e.ln || !e.n) continue;
     toInsert.push({
       n: e.n, la: e.la, ln: e.ln,
-      sub: e.sub || '', desc: e.desc || '', fact: e.fact || ''
+      sub: e.sub || '', desc: e.desc || '', fact: e.fact || '',
+      tag: e.tag || ''
     });
   }
 
@@ -240,7 +241,8 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
   let added = 0;
   for (const e of toInsert) {
     if (existingNames.has(normalize(e.n))) continue;
-    insertStr += `  {n:'${e.n.replace(/'/g, "\\'")}',la:${e.la},ln:${e.ln},sub:'${e.sub.replace(/'/g, "\\'")}',desc:'${e.desc.replace(/'/g, "\\'")}',fact:'${e.fact.replace(/'/g, "\\'")}'},\n`;
+    const t = e.tag ? e.tag.replace(/'/g, "\\'") : '';
+    insertStr += `  {n:'${e.n.replace(/'/g, "\\'")}',la:${e.la},ln:${e.ln},sub:'${e.sub.replace(/'/g, "\\'")}',desc:'${e.desc.replace(/'/g, "\\'")}',fact:'${e.fact.replace(/'/g, "\\'")}',tag:'${t}'},\n`;
     added++;
   }
 
