@@ -1,34 +1,125 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Optimization Theory — Coming Soon | vlymbooq</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="icon" type="image/png" href="/logo.png">
-    <style>
-        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:Inter,-apple-system,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
-        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
-        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-        .brand{display:flex;align-items:center;gap:8px;text-decoration:none}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .container{max-width:700px;margin:80px auto;padding:24px;text-align:center}
-        .badge{display:inline-block;padding:4px 14px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.75em;font-weight:700;margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase}
-        h1{font-size:1.8em;font-weight:900;margin-bottom:12px;line-height:1.3}
-        p{color:#a1a1aa;font-size:.95em;line-height:1.7;margin-bottom:28px;max-width:500px;margin-left:auto;margin-right:auto}
-        .btn{display:inline-block;padding:10px 24px;border-radius:100px;font-weight:600;font-size:.85em;background:rgba(167,139,250,.15);color:#a78bfa;text-decoration:none;transition:all .2s}
-        .btn:hover{background:rgba(167,139,250,.25)}
-    </style>
-</head>
-<body>
-    <nav class="nav"><div class="nav-inner"><a href="index.html" class="brand"><svg width="28" height="28" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg><span class="brand-text">vlymbooq</span></a><a href="math.html" style="color:#a78bfa;font-size:.82em;font-weight:500;text-decoration:none">Math Map</a></div></nav>
-    <div class="container">
-        <div class="badge">🔬 Scientist</div>
-        <h1>Optimization Theory</h1>
-        <p>This deep dive into pure mathematics is being prepared. Check the Math Concept Map for all available lessons.</p>
-        <a href="math.html" class="btn">← Back to Math Concept Map</a>
-    </div>
-</body>
-</html>
+<link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Optimization Theory — Linear, Convex, Nonlinear & Stochastic | vlymbooq</title>
+<meta name="description" content="Deep dive into Optimization Theory — linear programming, convex optimization, duality, KKT conditions, gradient methods, integer programming, and stochastic optimization.">
+<meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="canonical" href="https://vlymbooq.qzz.io/lesson-optimization.html">
+<style>@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");*{margin:0;padding:0;box-sizing:border-box}:root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}a{color:var(--purple);text-decoration:none}
+.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{display:flex;align-items:center;gap:8px}.brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}.brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}.nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}.nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}.container{max-width:1000px;margin:0 auto;padding:24px}.flex-row{display:flex;gap:24px}.flex-row .main{flex:1;min-width:0}.flex-row .side{width:220px;flex-shrink:0}@media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}.sidebar-nav{position:sticky;top:72px}.sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px;white-space:nowrap}.sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}.sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}.sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}.lesson-body{padding:20px 0}.lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}.lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}.lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}.lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}.btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}.btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}.btn-primary:hover{background:rgba(167,139,250,.25)}.btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}.btn-success:hover{background:rgba(52,211,153,.25)}@media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+.story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}.story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}.story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}.story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}.story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}.story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+.quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}.quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}.quote-box .attribution{font-size:.78em;color:var(--text-muted);margin-top:6px}
+.q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}.q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}.q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}@media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}.q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}.q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}.q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}.q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}.q-card .q-opt.disabled{pointer-events:none;opacity:.7}.q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}.q-card .q-soln.show{display:block}.q-card .q-soln strong{color:var(--emerald)}.q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}.q-card .q-result.correct{color:var(--emerald)}.q-card .q-result.wrong{color:var(--red)}
+.section-divider{height:1px;background:var(--border);margin:32px 0}.section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}.section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}.section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}.section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}.section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+</style></head>
+<body><nav class="nav"><div class="nav-inner"><a href="index.html" class="brand"><svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="index.html">Home</a><a href="math.html">Math Map</a><a href="index.html#exams">Exams</a></div></div></nav>
+<div class="container"><div class="flex-row"><div class="side"><div class="sidebar-nav"><div class="s-title">Math Lessons</div>
+<a href="math.html">← Math Concept Map</a>
+<a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+<a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+<a href="lesson-number-theory.html">Number Theory <span class="s-tag">🔬</span></a>
+<a href="lesson-linear-algebra.html">Linear Algebra <span class="s-tag">🔬</span></a>
+<a href="lesson-complex-analysis.html">Complex Analysis <span class="s-tag">🔬</span></a>
+<a href="lesson-abstract-algebra.html">Abstract Algebra <span class="s-tag">🔬</span></a>
+<a href="lesson-graph-theory.html">Graph Theory <span class="s-tag">🔬</span></a>
+<a href="lesson-real-analysis.html">Real Analysis <span class="s-tag">🔬</span></a>
+<a href="lesson-topology.html">Topology <span class="s-tag">🔬</span></a>
+<a href="lesson-diff-geometry.html">Diff Geometry <span class="s-tag">🔬</span></a>
+<a href="lesson-game-theory.html">Game Theory <span class="s-tag">🔬</span></a>
+<a href="lesson-info-theory.html">Info Theory <span class="s-tag">🔬</span></a>
+<a href="lesson-measure-theory.html">Measure Theory <span class="s-tag">🔬</span></a>
+<a href="lesson-category-theory.html">Category Theory <span class="s-tag">🔬</span></a>
+<a href="lesson-set-theory.html">Set Theory &amp; Logic <span class="s-tag">🔬</span></a>
+<a href="lesson-functional-analysis.html">Functional Analysis <span class="s-tag">🔬</span></a>
+<a href="lesson-algebraic-topology.html">Algebraic Topology <span class="s-tag">🔬</span></a>
+<a href="lesson-diff-eq.html">Diff Equations <span class="s-tag">🔬</span></a>
+<a href="lesson-numerical-analysis.html">Numerical Analysis <span class="s-tag">🔬</span></a>
+<a href="lesson-math-physics.html">Math Physics <span class="s-tag">🔬</span></a>
+<a href="lesson-optimization.html" class="active" style="color:var(--text);font-weight:600">Optimization <span class="s-tag">🔬</span></a>
+<a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
+<a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
+<a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
+<a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
+<a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
+<a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+<a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+<a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+</div></div>
+<div class="main"><div class="lesson-body">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px"><span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.7em;font-weight:700">🔬 Scientist</span><span style="font-size:.78em;color:var(--text-muted)">Pure & applied mathematics</span></div>
+<h2>Optimization Theory — The Science of Best Choices</h2>
+<p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Optimization is the mathematics of making the best possible choice under constraints. It spans linear programming (simplex method), convex optimization (gradient descent, Newton), nonlinear programming (KKT conditions), integer programming (branch-and-bound), and stochastic optimization (simulated annealing, evolutionary algorithms). The subject is the foundation of operations research, machine learning, engineering design, and economics.</p>
+<div class="quote-box"><div class="quote">"Optimization theory is the mathematical art of making the best of things."</div><div class="attribution">— George Dantzig</div></div>
+
+<div class="section-label part1">Part 1</div>
+<h2>📐 Linear Programming — The Simplex Method and Duality</h2>
+<div class="story-card">
+<div class="story-label">Optimal Allocation</div>
+<div class="story-title">Linear Programming — Maximizing Under Linear Constraints</div>
+<div class="story-text">A linear program (LP) minimizes cᵀx subject to Ax = b, x ≥ 0. The feasible region is a convex polytope. The <strong>simplex method</strong> (Dantzig, 1947) walks along edges of the polytope from vertex to vertex, decreasing the objective at each step — exponential worst-case but polynomial in practice. <strong>Strong duality</strong>: if the primal (min cᵀx) has an optimal solution x*, then the dual (max bᵀy) has an optimal y* with cᵀx* = bᵀy*. Complementary slackness gives optimality conditions. <strong>Interior point methods</strong> (Karmarkar, 1984) traverse the interior of the feasible region using barrier functions — polynomial time O(n³L). <strong>Integer linear programming</strong> (ILP) adds integrality constraints — much harder (NP-complete). The <strong>branch-and-bound</strong> algorithm solves ILPs by recursively partitioning the feasible region and bounding the objective.</div>
+<div class="story-moral">Linear programming duality is the deepest idea — every maximization problem has a matching minimization problem with the same optimal value.</div>
+</div>
+
+<div class="section-label part2">Part 2</div>
+<h2>🔄 Convex Optimization — Gradient Descent and Newton's Method</h2>
+<div class="story-card">
+<div class="story-label">Descent Direction</div>
+<div class="story-title">Convex Optimization — When Local Minima Are Global</div>
+<div class="story-text">A set is <strong>convex</strong> if the line between any two points lies in it. A function f is convex if f(θx+(1−θ)y) ≤ θf(x)+(1−θ)f(y) — a convex function on a convex set has every local minimum be global. <strong>Gradient descent</strong> x_{k+1} = x_k − α∇f(x_k) converges to optimum for convex f with Lipschitz gradient — O(1/k) rate. <strong>Stochastic gradient descent</strong> (SGD) uses noisy gradient estimates ∇f_i(x_k) instead of full gradient — the workhorse of machine learning. <strong>Newton's method</strong> x_{k+1} = x_k − [∇²f(x_k)]^{-1}∇f(x_k) converges quadratically near optimum but costs O(n³) per step. <strong>BFGS</strong> and <strong>Limited-memory BFGS</strong> (L-BFGS) approximate the Hessian with gradient differences — quasi-Newton methods balance cost and convergence speed. <strong>Nesterov accelerated gradient</strong> achieves O(1/k²) convergence for smooth convex functions — optimal first-order method.</div>
+<div class="story-moral">Convex optimization is the golden land — every local minimum is global, and gradient methods find it reliably.</div>
+</div>
+
+<div class="section-label part3">Part 3</div>
+<h2>⚡ KKT Conditions and Constrained Nonlinear Optimization</h2>
+<div class="story-card">
+<div class="story-label">Optimization Under Constraints</div>
+<div class="story-title">KKT Conditions — The First-Order Necessary Conditions for Optimality</div>
+<div class="story-text">For minimize f(x) subject to g_i(x) ≤ 0, h_j(x) = 0, the <strong>Karush-Kuhn-Tucker (KKT) conditions</strong> are: (1) Stationarity: ∇f + Σ μ_i∇g_i + Σ λ_j∇h_j = 0, (2) Primal feasibility: g_i(x) ≤ 0, h_j(x) = 0, (3) Dual feasibility: μ_i ≥ 0, (4) Complementary slackness: μ_i g_i(x) = 0. For convex problems, KKT is both necessary and sufficient. The <strong>Lagrangian</strong> L(x,μ,λ) = f(x) + Σ μ_i g_i(x) + Σ λ_j h_j(x). The <strong>penalty method</strong> adds a penalty term for constraint violations. The <strong>augmented Lagrangian</strong> (method of multipliers) adds a quadratic penalty to improve convergence. <strong>Sequential quadratic programming</strong> (SQP) solves constrained nonlinear problems by approximating them as QP subproblems at each iteration.</div>
+<div class="story-moral">The KKT conditions are the ultimate check for whether you've found the best possible point under constraints.</div>
+</div>
+
+<div class="section-label part4">Part 4</div>
+<h2>🎲 Stochastic Optimization and Metaheuristics</h2>
+<div class="story-card">
+<div class="story-label">Randomness as a Tool</div>
+<div class="story-title">When Deterministic Methods Fail — Stochastic and Global Optimization</div>
+<div class="story-text">Non-convex optimization has multiple local minima — deterministic gradient methods get trapped. <strong>Simulated annealing</strong> accepts worse solutions with decreasing probability (controlled by temperature) to escape local minima — inspired by metallurgy. <strong>Genetic algorithms</strong> evolve a population of solutions through selection, crossover, and mutation — they explore the search space broadly. <strong>Particle swarm optimization</strong> (PSO) models a swarm of particles moving toward personal and global best positions. <strong>Bayesian optimization</strong> builds a probabilistic surrogate model (Gaussian process) of the objective function and uses an acquisition function (expected improvement, upper confidence bound) to choose the next evaluation point — ideal for expensive black-box functions. <strong>Evolutionary strategies</strong> (CMA-ES) adapt the covariance matrix of the search distribution for efficient exploration. For convex nondifferentiable problems, <strong>subgradient methods</strong> replace gradients with subgradients — they converge slowly but reliably.</div>
+<div class="story-moral">When the landscape is rugged, randomness helps — simulated annealing, genetic algorithms, and Bayesian optimization explore in different ways.</div>
+</div>
+
+<div class="section-divider"></div>
+<h2 style="margin-top:0">🎯 Practice — Optimization Theory Intuition</h2>
+<p style="color:var(--text-sec);margin-bottom:16px">Test your understanding of optimization methods and theory.</p>
+<div id="practice-qs"></div>
+<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button><a href="math.html" class="btn btn-success">← Back to Math Map</a></div>
+</div></div></div></div>
+
+<script>
+var practiceQs=[
+{id:26001,text:"📐 Strong duality in linear programming says:",opts:[{l:"A",t:"Primal and dual optimal values are equal",c:true},{l:"B",t:"The primal is always feasible",c:false},{l:"C",t:"The simplex method always terminates",c:false},{l:"D",t:"The dual has no solution",c:false}],sol:"<strong>Strong duality</strong>: if the primal LP has an optimal solution x*, then the dual LP has an optimal y* with cᵀx* = bᵀy*. Their optimal values are equal."},
+{id:26002,text:"📐 The simplex method traverses:",opts:[{l:"A",t:"The interior of the polytope",c:false},{l:"B",t:"Edges of the polytope from vertex to vertex",c:true},{l:"C",t:"The dual space only",c:false},{l:"D",t:"Random directions",c:false}],sol:"The <strong>simplex method</strong> walks along edges of the feasible polytope from one vertex to an adjacent vertex, decreasing the objective at each pivot step."},
+{id:26003,text:"🔄 For a convex function, every local minimum is:",opts:[{l:"A",t:"A global minimum",c:true},{l:"B",t:"A saddle point",c:false},{l:"C",t:"Unique",c:false},{l:"D",t:"The only stationary point",c:false}],sol:"For convex functions, <strong>every local minimum is a global minimum</strong>. This is why convex optimization is 'easy' — no getting stuck in local minima."},
+{id:26004,text:"🔄 Gradient descent on smooth convex f converges at rate:",opts:[{l:"A",t:"O(1/k)",c:true},{l:"B",t:"O(1/k²)",c:false},{l:"C",t:"O(e^{-k})",c:false},{l:"D",t:"O(log k)",c:false}],sol:"Gradient descent with Lipschitz gradient converges as <strong>O(1/k)</strong>. Nesterov acceleration improves to O(1/k²) — the optimal first-order rate."},
+{id:26005,text:"⚡ Complementary slackness in KKT conditions states:",opts:[{l:"A",t:"μ_i = 0 or g_i(x) = 0",c:true},{l:"B",t:"f(x) = 0",c:false},{l:"C",t:"∇f = 0",c:false},{l:"D",t:"All constraints must be active",c:false}],sol:"<strong>Complementary slackness</strong>: for each inequality g_i(x) ≤ 0, either μ_i = 0 (constraint inactive) or g_i(x) = 0 (constraint active) — never both nonzero."},
+{id:26006,text:"⚡ For convex problems, KKT conditions are:",opts:[{l:"A",t:"Necessary and sufficient for optimality",c:true},{l:"B",t:"Only necessary",c:false},{l:"C",t:"Only sufficient",c:false},{l:"D",t:"Irrelevant",c:false}],sol:"For convex optimization problems (convex f, convex g_i, affine h_j), KKT conditions are <strong>both necessary and sufficient</strong> for optimality (under constraint qualification)."},
+{id:26007,text:"🎲 Simulated annealing is inspired by:",opts:[{l:"A",t:"Evolution",c:false},{l:"B",t:"Metallurgy (annealing of metals)",c:true},{l:"C",t:"Swarm behavior",c:false},{l:"D",t:"Quantum mechanics",c:false}],sol:"<strong>Simulated annealing</strong> is inspired by the physical annealing process where metals are heated and cooled to eliminate defects — higher temperature allows more exploration."},
+{id:26008,text:"🎲 Bayesian optimization is best for:",opts:[{l:"A",t:"Large-scale linear programs",c:false},{l:"B",t:"Expensive black-box functions",c:true},{l:"C",t:"Convex optimization",c:false},{l:"D",t:"Integer linear programs",c:false}],sol:"Bayesian optimization uses Gaussian process surrogates for <strong>expensive black-box functions</strong> where function evaluations are costly (hyperparameter tuning, experimental design)."},
+{id:26009,text:"📐 Interior point methods are ___ while simplex is ___ :",opts:[{l:"A",t:"Polynomial, exponential worst-case",c:true},{l:"B",t:"Exponential, polynomial",c:false},{l:"C",t:"Both exponential",c:false},{l:"D",t:"Both polynomial",c:false}],sol:"Interior point methods have <strong>polynomial time</strong> O(n³L) worst-case. The simplex method has <strong>exponential worst-case</strong> but polynomial average-case behavior."},
+{id:26010,text:"🔄 Newton's method converges ___ near the optimum:",opts:[{l:"A",t:"Linearly",c:false},{l:"B",t:"Quadratically",c:true},{l:"C",t:"Sublinearly",c:false},{l:"D",t:"Exponentially",c:false}],sol:"Newton's method achieves <strong>quadratic</strong> convergence (doubling correct digits each step) near the optimum, but costs O(n³) per iteration for the Hessian inverse."},
+{id:26011,text:"⚡ Sequential quadratic programming (SQP) handles:",opts:[{l:"A",t:"Unconstrained problems",c:false},{l:"B",t:"Constrained nonlinear optimization",c:true},{l:"C",t:"Integer programming",c:false},{l:"D",t:"Stochastic optimization",c:false}],sol:"<strong>SQP</strong> solves constrained nonlinear optimization by approximating the problem as a quadratic program (QP) at each iteration, using QP to find the step direction."},
+{id:26012,text:"🎲 CMA-ES adapts:",opts:[{l:"A",t:"The step size only",c:false},{l:"B",t:"The covariance matrix of the search distribution",c:true},{l:"C",t:"The temperature schedule",c:false},{l:"D",t:"The population size randomly",c:false}],sol:"<strong>CMA-ES</strong> (Covariance Matrix Adaptation Evolution Strategy) adapts the full covariance matrix of the multivariate normal search distribution for efficient exploration."}
+];
+var answered={},correctCount=0;
+function renderPractice(){var c=document.getElementById('practice-qs'),h='';for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o='';for(var j=0;j<q.opts.length;j++){o+='<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';}h+='<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';}c.innerHTML=h;updateScore();}
+function getCorrectLabel(q){for(var i=0;i<q.opts.length;i++){if(q.opts[i].c)return q.opts[i].l+'. '+q.opts[i].t;}return '';}
+function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll('#q-'+qId+' .q-opt');var isCorrect=q.opts[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add('disabled');if(isCorrect){opts[idx].classList.add('correct');document.getElementById('result-'+qId).textContent='✅ Correct!';document.getElementById('result-'+qId).className='q-result correct';correctCount++;}else{opts[idx].classList.add('wrong');document.getElementById('result-'+qId).textContent='❌ Not quite. Read the solution!';document.getElementById('result-'+qId).className='q-result wrong';for(var i=0;i<q.opts.length;i++){if(q.opts[i].c)opts[i].classList.add('correct');}}document.getElementById('soln-'+qId).classList.add('show');updateScore();}
+function updateScore(){var t=Object.keys(answered).length;var el=document.getElementById('score-display');if(!el){el=document.createElement('div');el.id='score-display';el.style.cssText='font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';document.getElementById('practice-qs').before(el);}el.innerHTML='<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';}
+function resetPractice(){if(!confirm('Reset all answers?'))return;answered={};correctCount=0;document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className='q-opt'});document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent='';e.className='q-result'});var el=document.getElementById('score-display');if(el)el.textContent='';renderPractice();}
+renderPractice();
+</script></body></html>
