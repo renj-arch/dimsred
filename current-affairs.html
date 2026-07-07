@@ -7062,7 +7062,9 @@ var _staticGen_polity = GK_GENERATORS.polity;
         }
 
         function generateMixedQuestions(count) {
-            var sources = ['wiki_pool', 'wiki_current_affairs'];
+            var sources = (state.timeFilter && state.timeFilter !== 'all')
+                ? ['wiki_current_affairs', 'wiki_current_affairs', 'wiki_pool']
+                : ['wiki_pool', 'wiki_current_affairs'];
             var added = 0;
             var maxTries = count * 15;
             // Historical questions (BC to CE) added continuously by background _fetchRandomHistoricalOnThisDay
@@ -7151,21 +7153,103 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 }
                 if (entities.length === 0) continue;
                 var entity = entities[0];
-                // Format as a proper current affairs question
-                var qText = cleanText;
-                if (qText.length > 150) qText = qText.substring(0, 147) + '...';
-                var monthLabel = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][mInfo.m - 1];
+                // Generate a proper current affairs question from the event text
+                var qResult = _makeCAAQuestion(cleanText, entity, mInfo);
+                if (!qResult) continue;
                 return {
-                    q: qText + ' (Which ' + (entity.indexOf(' ') > 0 ? 'entity' : 'term') + ' is related?)',
-                    a: entity,
-                    hint: 'Current affairs ' + monthLabel + ' ' + mInfo.y,
-                    fact: cleanText + ' (' + monthLabel + ' ' + mInfo.y + ')',
+                    q: qResult.q,
+                    a: qResult.a,
+                    hint: 'Current affairs ' + qResult.monthLabel + ' ' + mInfo.y,
+                    fact: cleanText + ' (' + qResult.monthLabel + ' ' + mInfo.y + ')',
                     _source: 'wiki_current_affairs',
                     pubDate: mInfo.y + '-' + String(mInfo.m).padStart(2,'0') + '-01T00:00:00.000Z',
-                    opts: buildOptions(entity)
+                    opts: buildOptions(qResult.a)
                 };
             }
             return null;
+        }
+
+        function _makeCAAQuestion(text, entity, mInfo) {
+            var monthLabel = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][mInfo.m - 1];
+            var t = text.replace(/\s+/g, ' ').trim();
+            var lower = t.toLowerCase();
+            var eLower = (entity || '').toLowerCase();
+
+            // Pattern 1: "X cabinet/government/ministry approves/clears/launches Y" → Which state X?
+            var m = t.match(/^(The\s+)?([A-Z][a-z]+)\s+(cabinet|government|ministry|department|authority|board|commission|panel)\s+(approved|cleared|clears|launched|launches|unveiled|unveils|announced|announces|notified|sanctioned|sanctions|passed|passes)\s+(?:the\s+|an\s+|a\s+)?(.+)/i);
+            if (m && m[5].length > 10) {
+                var verb = m[4].replace(/s$/, '').replace(/ed$/, '');
+                var obj = m[5].length > 80 ? m[5].substring(0, 77) + '...' : m[5];
+                return { q: 'Which state ' + verb + ' ' + obj + '?', a: m[2], monthLabel: monthLabel };
+            }
+
+            // Pattern 2: "X partnered with Y for Z" or "X and Y to build Z"
+            m = t.match(/with\s+(.+?)(?:\s+to\s+|\s+for\s+|\s+on\s+|\s+,\s+)/i);
+            if (m) {
+                var p2 = m[1].trim();
+                if (p2.length < 40 && entity && entity.toLowerCase() !== p2.toLowerCase()) {
+                    var rest = t.substring(t.toLowerCase().indexOf(m[0].toLowerCase()) + m[0].length).replace(/^(?:the\s+)?/, '');
+                    rest = rest.length > 60 ? rest.substring(0, 57) + '...' : rest;
+                    return { q: 'Which entity partnered ' + (rest ? 'for ' + rest : 'on this project') + '?', a: p2, monthLabel: monthLabel };
+                }
+            }
+
+            // Pattern 3: "between X and Y" → ask about Y
+            m = lower.match(/between\s+([a-z][a-z\s.]+?)\s+and\s+([a-z][a-z\s.]+?)(?:\s+for\s+|\s+to\s+|\s+[,;]|$)/i);
+            if (m) {
+                var p1 = m[1].trim(), p2 = m[2].trim();
+                if (p1.length < 30 && p2.length < 30 && p1.length > 2 && p2.length > 2) {
+                    var purpose = t.substring(t.toLowerCase().lastIndexOf(p2) + p2.length).replace(/^(?:\s+for\s+|\s+to\s+|\s+[,;]+\s+)/i, '');
+                    purpose = purpose.length > 60 ? purpose.substring(0, 57) + '...' : purpose;
+                    return { q: (p1.charAt(0).toUpperCase() + p1.slice(1)) + ' partnered with which ' + (p2.indexOf(' ') > 0 ? 'entity' : 'country/state') + (purpose ? ' for ' + purpose : '') + '?', a: p2, monthLabel: monthLabel };
+                }
+            }
+
+            // Pattern 4: "X ranked Y in Z" → ask "What is the rank of X in Z?"
+            m = t.match(/([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:has been |was |is\s+)?(?:ranked|placed|stood|became|secured)\s+(?:the\s+)?(\w+\w?)(?:\s+rank|\s+position|\s+spot|\s+place)?\s+(?:in|among|with|across|nationally|globally)(\s+.+?)(?:[,.]|$)/i);
+            if (m) {
+                var rankTxt = m[2].toLowerCase().replace(/^the\s+/, '');
+                return { q: 'What is the rank of ' + m[1] + ' in' + m[3].replace(/^[\s,]+/, '') + '?', a: rankTxt, monthLabel: monthLabel };
+            }
+
+            // Pattern 5: "X amended Y to Z" → "Which rules/act was amended for Z?"
+            m = lower.match(/(?:amended|amends|amending)\s+(.+?)(?:\s+to\s+|\s+for\s+|\s+in\s+)/i);
+            if (m) {
+                var amendedWhat = m[1].trim();
+                var purposeBit = t.substring(t.toLowerCase().indexOf(m[0].toLowerCase()) + m[0].length).replace(/^(?:\s+the\s+)?/, '');
+                purposeBit = purposeBit.length > 60 ? purposeBit.substring(0, 57) + '...' : purposeBit;
+                return { q: 'Which regulation was amended ' + (purposeBit ? 'for ' + purposeBit : 'recently') + '?', a: amendedWhat, monthLabel: monthLabel };
+            }
+
+            // Pattern 6: "X launched/unveiled/inaugurated Y" → "What did X launch?"
+            m = t.match(/^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:has\s+)?(launched|unveiled|inaugurated|introduced|released|opened|started|began)\s+(?:the\s+|an?\s+)?(.+)/i);
+            if (m && m[3].length > 10) {
+                var subj = m[1], verb = m[2], obj = m[3].length > 70 ? m[3].substring(0, 67) + '...' : m[3];
+                return { q: 'What did ' + subj + ' ' + verb + ' recently?', a: obj.split(/[,;]/)[0], monthLabel: monthLabel };
+            }
+
+            // Pattern 7: "X approved Y for Z purpose" → "What was approved for Z?"
+            m = t.match(/approved\s+(?:the\s+|an?\s+)?(.+?)(?:\s+for\s+|\s+to\s+|\s+[,]|$)/i);
+            if (m && m[1].length > 10 && m[1].length < 80) {
+                return { q: 'What was approved: ' + m[1] + '?', a: entity, monthLabel: monthLabel };
+            }
+
+            // Fallback: classify entity type and generate contextual question
+            var prefix = '';
+            if (/mission|scheme|programme|policy|project|yojana$|initiative|drive|abhiyaan|mission$/i.test(eLower)) prefix = 'Which scheme/initiative';
+            else if (/rules?$|act$|bill$|regulation|amendment|policy|framework|treaty|accord|pact|convention/i.test(eLower)) prefix = 'Which regulation';
+            else if (/board|authority|commission|committee|corporation|ltd$|inc$|group|forum|council|association|federation|organisation|agency|bureau/i.test(eLower)) prefix = 'Which organization';
+            else if (/summit|conference|meeting|forum|congress|assembly|session|dialogue/i.test(eLower)) prefix = 'Which event';
+            else if (/award|prize|honour|fellowship|medal|scholarship|recognition|rank/i.test(eLower)) prefix = 'Which award/recognition';
+            else if (/agreement|deal|contract|partnership|alliance|moU|tie.up|joint.venture/i.test(eLower)) prefix = 'Which agreement';
+            else if (/satellite|mission|probe|rover|orbiter|telescope|observatory|launch.vehicle|rocket/i.test(eLower)) prefix = 'Which space mission';
+            else if (/defence|missile|warship|submarine|fighter|aircraft|drone|radar|rifle|tank|ammunition|navy|army|air force/i.test(eLower)) prefix = 'Which defence system';
+            else if (/hospital|institute|college|university|academy|centre|center|lab|laboratory|research|institution|school|facility|campus/i.test(eLower)) prefix = 'Which institution';
+            else if (/minister|cmo|pm|president|governor|secretary|commissioner|ambassador|envoy|chairperson|director|chief/i.test(eLower)) prefix = 'Which official';
+            else prefix = 'What';
+
+            var shortText = t.length > 120 ? t.substring(0, 117) + '...' : t;
+            return { q: prefix + ' is associated with: ' + shortText + '?', a: entity, monthLabel: monthLabel };
         }
 
         function _classifyPibItem(title, source) {
