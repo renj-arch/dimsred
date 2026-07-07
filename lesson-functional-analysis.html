@@ -1,34 +1,292 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Functional Analysis — Coming Soon | vlymbooq</title>
+    <title>Functional Analysis — Banach Spaces, Hilbert Spaces & Operators | vlymbooq</title>
+    <meta name="description" content="Deep dive into Functional Analysis — Banach spaces, Hilbert spaces, bounded operators, dual spaces, Hahn-Banach, uniform boundedness, open mapping theorem, spectral theorem, and applications to quantum mechanics.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-functional-analysis.html">
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:Inter,-apple-system,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
-        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
-        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-        .brand{display:flex;align-items:center;gap:8px;text-decoration:none}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .container{max-width:700px;margin:80px auto;padding:24px;text-align:center}
-        .badge{display:inline-block;padding:4px 14px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.75em;font-weight:700;margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase}
-        h1{font-size:1.8em;font-weight:900;margin-bottom:12px;line-height:1.3}
-        p{color:#a1a1aa;font-size:.95em;line-height:1.7;margin-bottom:28px;max-width:500px;margin-left:auto;margin-right:auto}
-        .btn{display:inline-block;padding:10px 24px;border-radius:100px;font-weight:600;font-size:.85em;background:rgba(167,139,250,.15);color:#a78bfa;text-decoration:none;transition:all .2s}
-        .btn:hover{background:rgba(167,139,250,.25)}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}
+        .section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.72em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.7em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--purple);font-weight:700}
+
+        .quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}
+        .quote-box .attribution{font-size:.78em;color:var(--text-muted);margin-top:6px}
     </style>
 </head>
 <body>
-    <nav class="nav"><div class="nav-inner"><a href="index.html" class="brand"><svg width="28" height="28" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg><span class="brand-text">vlymbooq</span></a><a href="math.html" style="color:#a78bfa;font-size:.82em;font-weight:500;text-decoration:none">Math Map</a></div></nav>
-    <div class="container">
-        <div class="badge">🔬 Scientist</div>
-        <h1>Functional Analysis</h1>
-        <p>This deep dive into pure mathematics is being prepared. Check the Math Concept Map for all available lessons.</p>
-        <a href="math.html" class="btn">← Back to Math Concept Map</a>
-    </div>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links"><a href="index.html">Home</a><a href="math.html">Math Map</a><a href="index.html#exams">Exams</a></div>
+        </div>
+    </nav>
+    <div class="container"><div class="flex-row"><div class="side"><div class="sidebar-nav"><div class="s-title">Math Lessons</div>
+<a href="math.html">← Math Concept Map</a>
+<a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+<a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+<a href="lesson-number-theory.html">Number Theory <span class="s-tag">🔬</span></a>
+<a href="lesson-linear-algebra.html">Linear Algebra <span class="s-tag">🔬</span></a>
+<a href="lesson-complex-analysis.html">Complex Analysis <span class="s-tag">🔬</span></a>
+<a href="lesson-abstract-algebra.html">Abstract Algebra <span class="s-tag">🔬</span></a>
+<a href="lesson-graph-theory.html">Graph Theory <span class="s-tag">🔬</span></a>
+<a href="lesson-real-analysis.html">Real Analysis <span class="s-tag">🔬</span></a>
+<a href="lesson-topology.html">Topology <span class="s-tag">🔬</span></a>
+<a href="lesson-diff-geometry.html">Diff Geometry <span class="s-tag">🔬</span></a>
+<a href="lesson-game-theory.html">Game Theory <span class="s-tag">🔬</span></a>
+<a href="lesson-info-theory.html">Info Theory <span class="s-tag">🔬</span></a>
+<a href="lesson-measure-theory.html">Measure Theory <span class="s-tag">🔬</span></a>
+<a href="lesson-category-theory.html">Category Theory <span class="s-tag">🔬</span></a>
+<a href="lesson-set-theory.html">Set Theory &amp; Logic <span class="s-tag">🔬</span></a>
+<a href="lesson-functional-analysis.html" class="active" style="color:var(--text);font-weight:600">Functional Analysis <span class="s-tag">🔬</span></a>
+<a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
+<a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
+<a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
+<a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
+<a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
+<a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+<a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+<a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+</div></div>
+<div class="main"><div class="lesson-body">
+
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px"><span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.7em;font-weight:700">🔬 Scientist</span><span style="font-size:.78em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span></div>
+
+<h2>Functional Analysis — The Study of Function Spaces</h2>
+<p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Functional analysis studies vector spaces whose elements are functions — and the linear operators that act on them. It emerged from the need to solve differential and integral equations, and it provides the mathematical framework for quantum mechanics, signal processing, and partial differential equations. At its heart are three schools: Banach spaces (complete normed spaces), Hilbert spaces (complete inner product spaces), and the spectral theory of operators.</p>
+
+<div class="quote-box"><div class="quote">"Functional analysis is the study of vector spaces endowed with a notion of limit."</div><div class="attribution">— Stefan Banach</div></div>
+
+<!-- PART 1: BANACH SPACES -->
+<div class="section-label part1">Part 1</div>
+<h2>📏 Banach Spaces — Complete Normed Vector Spaces</h2>
+
+<div class="story-card">
+<div class="story-label">The Polish School</div>
+<div class="story-title">Banach and the Lwów School of Mathematics — Where Analysis Became Abstract</div>
+<div class="story-text">In the 1920s and 30s, the Lwów School of Mathematics in Poland — led by Stefan Banach, Hugo Steinhaus, and Stanisław Mazur — created functional analysis. Their key insight: many problems about functions (convergence of Fourier series, solvability of integral equations) are really problems about the <strong>spaces</strong> where those functions live. A <strong>norm</strong> ‖·‖ on a vector space X gives each vector a "size" — the length of the function. A <strong>Banach space</strong> is a normed vector space that is <strong>complete</strong>: every Cauchy sequence converges. Lᵖ spaces (from measure theory) are Banach spaces. C([0,1]) (continuous functions on [0,1] with the sup norm) is a Banach space. The space of all bounded sequences ℓ^∞ is a Banach space. Completeness is crucial because it lets us solve equations by constructing approximate solutions and taking limits — the foundation of modern analysis.</div>
+<div class="story-moral">A Banach space is a place where limits work properly — every Cauchy sequence finds its home.</div>
+</div>
+
+<h3>Examples of Banach Spaces</h3>
+<div class="formula-grid">
+<div class="formula-card"><div class="f-label">ℓᵖ (sequences)</div><div class="f-math">‖x‖ₚ = (Σ|xₙ|ᵖ)^{1/p}</div></div>
+<div class="formula-card"><div class="f-label">Lᵖ (functions)</div><div class="f-math">‖f‖ₚ = (∫|f|ᵖ)^{1/p}</div></div>
+<div class="formula-card"><div class="f-label">C(K) (continuous)</div><div class="f-math">‖f‖_∞ = sup|f(x)|</div></div>
+<div class="formula-card"><div class="f-label">ℓ^∞ (bounded)</div><div class="f-math">‖x‖_∞ = sup|xₙ|</div></div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- PART 2: HILBERT SPACES -->
+<div class="section-label part2">Part 2</div>
+<h2>📐 Hilbert Spaces — Geometry in Infinite Dimensions</h2>
+
+<div class="story-card">
+<div class="story-label">The Most Beautiful Space</div>
+<div class="story-title">Hilbert Spaces — Where Pythagoras Meets Fourier</div>
+<div class="story-text">A <strong>Hilbert space</strong> is a Banach space whose norm comes from an <strong>inner product</strong> ⟨·,·⟩. This gives it geometry: lengths, angles, orthogonality, and projections. The canonical example is ℓ² (square-summable sequences) with ⟨x,y⟩ = Σ xₙ·yₙ̄. The continuous analog is L² (square-integrable functions) with ⟨f,g⟩ = ∫ f·ḡ. In a Hilbert space, the <strong>Parallelogram law</strong> holds: ‖x+y‖² + ‖x−y‖² = 2(‖x‖² + ‖y‖²). The <strong>orthogonal projection theorem</strong> says that for any closed subspace M and any x, there's a unique closest point in M — the projection of x onto M. An <strong>orthonormal basis</strong> is a set {eₙ} such that ⟨eₙ, eₘ⟩ = δ_{nm} and every vector can be written as x = Σ ⟨x, eₙ⟩ eₙ. In L²([0,2π]), the Fourier basis {e^{int} / √(2π)} is an orthonormal basis, and the Fourier series is just expansion in this basis. Parseval's identity: ‖x‖² = Σ |⟨x, eₙ⟩|² — the energy of a signal equals the sum of squares of its Fourier coefficients.</div>
+<div class="story-moral">Hilbert spaces are the natural habitat of Fourier analysis, quantum mechanics, and signal processing — geometry without dimension limits.</div>
+</div>
+
+<h3>Orthonormal Bases and Fourier Series</h3>
+<p>In L²([0,2π]), the functions eₙ(t) = e^{int}/√(2π) for n ∈ ℤ form an orthonormal basis. The Fourier series of f is f(t) = Σ ĉₙ e^{int} where ĉₙ = (1/√(2π))∫ f(t)e^{-int} dt. The <strong>Riesz-Fischer theorem</strong> says L² is complete — every sequence of coefficients with Σ |cₙ|² &lt; ∞ corresponds to an L² function. The completeness of L² is what makes Fourier analysis rigorous: we can approximate any square-integrable function by its Fourier partial sums (converging in L² norm, though not necessarily pointwise). The <strong>Gram-Schmidt process</strong> produces orthonormal bases from any linearly independent set — the Legendre polynomials, Hermite polynomials, and Chebyshev polynomials are all orthonormal bases for different L² spaces with weights.</p>
+
+<div class="insight-box"><div class="insight-label">Parseval's Identity</div><div class="insight-text">‖f‖² = Σ |⟨f, eₙ⟩|²</div><div class="insight-sub">The energy of a signal equals the sum of the squares of its Fourier coefficients — a perfect energy conservation law.</div></div>
+
+<div class="step-reveal">
+<div class="step-header" onclick="toggleStep(this)"><div class="step-number">✨</div><span style="font-size:.88em;font-weight:600">The Orthogonal Projection Theorem</span><span class="arrow">▶</span></div>
+<div class="step-content">
+Let M be a closed subspace of a Hilbert space H. For any x ∈ H, there's a unique m ∈ M such that x − m ⟂ M (orthogonal to every vector in M). This m is the <strong>best approximation</strong> to x in M — the unique minimizer of ‖x − y‖ for y ∈ M.<br><br>
+<strong>Example:</strong> In L²([0,1]), let M be the space of linear functions (a + bt). The orthogonal projection of a function f onto M gives the best linear approximation in the L² sense — which is exactly the linear regression line!<br><br>
+This theorem unifies least-squares approximation, linear regression, and signal processing — all instances of projecting onto a subspace.
+</div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- PART 3: OPERATORS -->
+<div class="section-label part3">Part 3</div>
+<h2>⚡ Linear Operators and the Three Pillars</h2>
+
+<div class="story-card">
+<div class="story-label">The Three Theorems</div>
+<div class="story-title">Hahn-Banach, Uniform Boundedness, and Open Mapping — The Foundation of Operator Theory</div>
+<div class="story-text">A <strong>bounded linear operator</strong> T: X → Y between normed spaces satisfies ‖Tx‖ ≤ C‖x‖ for some constant C. The operator norm ‖T‖ is the smallest such C. Functional analysis rests on three cornerstone theorems about operators. <strong>Hahn-Banach:</strong> bounded linear functionals (operators to ℝ or ℂ) can be extended from any subspace to the whole space without increasing their norm. This guarantees that the dual space X* (all bounded linear functionals on X) is rich enough to study X. <strong>Uniform boundedness principle (Banach-Steinhaus):</strong> if a family of bounded operators is pointwise bounded, it's uniformly bounded in norm. <strong>Open mapping theorem:</strong> a bounded linear operator from one Banach space onto another is an open map (it sends open sets to open sets). A corollary is the <strong>closed graph theorem</strong>: if a linear operator between Banach spaces has a closed graph, it's bounded. These three theorems are the bedrock of all applications — they guarantee that solutions to linear problems are well-behaved.</div>
+<div class="story-moral">The three pillars of functional analysis tell us: linear operators between Banach spaces are as well-behaved as we could possibly hope.</div>
+</div>
+
+<h3>Dual Spaces and Weak Topologies</h3>
+<p>The <strong>dual space</strong> X* of a Banach space X is the space of all bounded linear functionals f: X → ℝ (or ℂ). For Lᵖ with 1 &lt; p &lt; ∞, the dual is L^q where 1/p + 1/q = 1 (Hölder conjugates). The dual of ℓ¹ is ℓ^∞, but the dual of ℓ^∞ is much larger — a subtlety that matters in measure theory. The <strong>weak topology</strong> on X is the coarsest topology making all functionals in X* continuous. In infinite dimensions, the weak topology is strictly weaker than the norm topology — the unit ball is compact in the weak topology (Banach-Alaoglu theorem), which is the key to many existence proofs. The <strong>Goldstine theorem</strong> says the unit ball of X is weak* dense in the unit ball of X**.</p>
+
+<div class="formula-grid">
+<div class="formula-card"><div class="f-label">Dual of Lᵖ</div><div class="f-math">(Lᵖ)* ≅ L^q, 1/p+1/q = 1</div></div>
+<div class="formula-card"><div class="f-label">Hahn-Banach</div><div class="f-math">Extend functionals without increasing norm</div></div>
+<div class="formula-card"><div class="f-label">Banach-Steinhaus</div><div class="f-math">Pointwise bounded ⇒ uniformly bounded</div></div>
+<div class="formula-card"><div class="f-label">Open Mapping</div><div class="f-math">Surjective bounded operator is open</div></div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- PART 4: SPECTRAL THEORY -->
+<div class="section-label part4">Part 4</div>
+<h2>🌌 Spectral Theorem and Quantum Mechanics</h2>
+
+<div class="story-card">
+<div class="story-label">The Music of Operators</div>
+<div class="story-title">The Spectral Theorem — Diagonalizing the Infinite</div>
+<div class="story-text">For finite-dimensional matrices, the spectral theorem says self-adjoint matrices can be diagonalized by an orthonormal basis of eigenvectors. The infinite-dimensional version is one of the deepest results in mathematics. A <strong>compact self-adjoint operator</strong> T on a Hilbert space has a discrete spectrum: eigenvalues λₙ → 0 and eigenvectors forming an orthonormal basis. The <strong>Fredholm alternative</strong> says such operators satisfy the same properties as finite matrices — Fredholm integral equations are solvable exactly when their finite-dimensional analogs are. For <strong>bounded self-adjoint operators</strong>, the <strong>spectral theorem</strong> gives a projection-valued measure E(λ) such that T = ∫ λ dE(λ) — the operator is a "continuous sum" of its eigenvalues. In quantum mechanics, observable quantities are self-adjoint operators on the Hilbert space L²(ℝ³). The spectral theorem says any observable can be diagonalized — its spectrum (possible measurement outcomes) is the set of its eigenvalues (discrete) or continuous spectrum. The position operator x̂ acts by multiplication: (x̂ψ)(x) = x·ψ(x). The momentum operator p̂ = −iℏ·d/dx. The uncertainty principle [x̂, p̂] = iℏ is a commutation relation — and the fact that they don't commute means they can't be simultaneously diagonalized, which is the mathematical content of the uncertainty principle.</div>
+<div class="story-moral">The spectral theorem says that every self-adjoint operator is, in a suitable basis, just multiplication by its spectrum. Quantum mechanics is the spectral theorem in action.</div>
+</div>
+
+<h3>Compact Operators and Fredholm Theory</h3>
+<p>An operator K: H → H is <strong>compact</strong> if it sends bounded sets to precompact sets (the image has compact closure). Compact operators are "almost finite-dimensional" — they can be approximated by finite-rank operators. The <strong>Fredholm alternative</strong> for compact operators: either the equation (I − K)x = y has a unique solution for every y, or the homogeneous equation (I − K)x = 0 has nontrivial solutions. This mirrors the finite-dimensional case. <strong>Hilbert-Schmidt operators</strong> satisfy Σ ‖Keₙ‖² &lt; ∞ for any orthonormal basis — they're the "L²" operators. <strong>Trace class operators</strong> satisfy Σ ⟨|T|eₙ, eₙ⟩ &lt; ∞ — they generalize finite-rank operators and appear in quantum statistical mechanics as density matrices.</p>
+
+<div class="insight-box"><div class="insight-label">Spectral Theorem for Compact Self-Adjoint Operators</div><div class="insight-text">T = Σ λₙ Pₙ where λₙ → 0 and Pₙ are orthogonal projections onto eigenspaces</div><div class="insight-sub">This is the infinite-dimensional analog of diagonalizing a symmetric matrix — the eigenvalues accumulate only at zero.</div></div>
+
+<div class="quote-box"><div class="quote">"The spectral theorem is the deepest and most beautiful result in functional analysis. It tells us that every self-adjoint operator can be understood as a multiplication operator — the fundamental structure of quantum observables."</div><div class="attribution">— John von Neumann</div></div>
+
+<div class="section-divider"></div>
+
+<!-- PRACTICE -->
+<h2 style="margin-top:0">🎯 Practice — Check Your Functional Analysis Intuition</h2>
+<p style="color:var(--text-sec);margin-bottom:16px">These puzzles build operator theory intuition.</p>
+<div id="practice-qs"></div>
+<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+<button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+<a href="math.html" class="btn btn-success">← Back to Math Map</a>
+</div></div></div></div></div>
+
+<script>
+var practiceQs = [
+{id:21001,text:"📏 A Banach space is a complete:",opts:[{l:"A",t:"Metric space",c:false},{l:"B",t:"Normed vector space",c:true},{l:"C",t:"Inner product space",c:false},{l:"D",t:"Topological space",c:false}],sol:"A <strong>Banach space</strong> is a <strong>complete normed vector space</strong>. Every Cauchy sequence converges to a limit in the space."},
+{id:21002,text:"📏 Which of these is NOT a Banach space?",opts:[{l:"A",t:"L²[0,1]",c:false},{l:"B",t:"C([0,1]) with sup norm",c:false},{l:"C",t:"ℓ²",c:false},{l:"D",t:"The space of polynomials with L² norm",c:true}],sol:"The space of polynomials with L² norm is <strong>not complete</strong> — the limit of a Cauchy sequence of polynomials may be a non-polynomial continuous function. Completeness is what makes a Banach space."},
+{id:21003,text:"📐 In a Hilbert space, the norm comes from:",opts:[{l:"A",t:"A metric",c:false},{l:"B",t:"An inner product",c:true},{l:"C",t:"A linear functional",c:false},{l:"D",t:"A seminorm",c:false}],sol:"In a Hilbert space, the norm is defined by ‖x‖² = <strong>⟨x,x⟩</strong>, coming from an inner product. This gives the space the geometry of angles and orthogonality."},
+{id:21004,text:"📐 Parseval's identity relates the norm to:",opts:[{l:"A",t:"The spectrum",c:false},{l:"B",t:"The Fourier coefficients",c:true},{l:"C",t:"The operator norm",c:false},{l:"D",t:"The trace",c:false}],sol:"<strong>Parseval's identity</strong>: ‖f‖² = Σ |⟨f,eₙ⟩|². The norm equals the sum of squares of the inner products with an orthonormal basis — energy = sum of squared coefficients."},
+{id:21005,text:"⚡ The Hahn-Banach theorem is about:",opts:[{l:"A",t:"Compact operators",c:false},{l:"B",t:"Extending linear functionals",c:true},{l:"C",t:"Open maps",c:false},{l:"D",t:"Spectra",c:false}],sol:"<strong>Hahn-Banach</strong> says a bounded linear functional defined on a subspace can be extended to the whole space without increasing its norm. This guarantees the dual space is rich."},
+{id:21006,text:"⚡ The uniform boundedness principle says:",opts:[{l:"A",t:"All operators are bounded",c:false},{l:"B",t:"Pointwise bounded ⇒ uniformly bounded in norm",c:true},{l:"C",t:"The unit ball is compact",c:false},{l:"D",t:"Operators have spectra",c:false}],sol:"The <strong>Banach-Steinhaus theorem</strong>: if sup_α ‖T_α x‖ &lt; ∞ for each x, then sup_α ‖T_α‖ &lt; ∞. Pointwise boundedness implies uniform boundedness."},
+{id:21007,text:"⚡ The open mapping theorem says a surjective bounded operator between Banach spaces is:",opts:[{l:"A",t:"Compact",c:false},{l:"B",t:"An open map",c:true},{l:"C",t:"Injective",c:false},{l:"D",t:"Unbounded",c:false}],sol:"The <strong>open mapping theorem</strong> says a surjective bounded linear operator between Banach spaces sends open sets to open sets. It's an isometry up to a constant."},
+{id:21008,text:"🌌 The spectral theorem applies to which type of operator?",opts:[{l:"A",t:"Any bounded operator",c:false},{l:"B",t:"Self-adjoint operators",c:true},{l:"C",t:"Compact operators only",c:false},{l:"D",t:"Invertible operators",c:false}],sol:"The <strong>spectral theorem</strong> for Hilbert spaces applies to <strong>self-adjoint operators</strong> (and more generally, normal operators). It gives a projection-valued measure diagonalizing the operator."},
+{id:21009,text:"🌌 The Fredholm alternative says for compact K:",opts:[{l:"A",t:"I−K is always invertible",c:false},{l:"B",t:"Either (I−K)x=y has unique solution, or (I−K)x=0 has nontrivial solutions",c:true},{l:"C",t:"K must be self-adjoint",c:false},{l:"D",t:"K has no eigenvalues",c:false}],sol:"The <strong>Fredholm alternative</strong>: for compact K, either (I−K) is bijective (unique solution for every y) or it has a nontrivial kernel (the homogeneous equation has solutions)."// removed extra comma
+},
+{id:21010,text:"🌌 In quantum mechanics, observables correspond to:",opts:[{l:"A",t:"Compact operators",c:false},{l:"B",t:"Self-adjoint operators on a Hilbert space",c:true},{l:"C",t:"Banach spaces",c:false},{l:"D",t:"Linear functionals",c:false}],sol:"Quantum observables (position, momentum, energy, spin) correspond to <strong>self-adjoint operators</strong> on the Hilbert space of wavefunctions. The spectral theorem gives the possible measurement outcomes."},
+{id:21011,text:"📐 The ℓ² space consists of:",opts:[{l:"A",t:"Bounded sequences",c:false},{l:"B",t:"Square-summable sequences",c:true},{l:"C",t:"Absolutely summable sequences",c:false},{l:"D",t:"Sequences converging to 0",c:false}],sol:"ℓ² is the space of <strong>square-summable sequences</strong>: Σ |xₙ|² &lt; ∞. It's a Hilbert space with inner product ⟨x,y⟩ = Σ xₙ·yₙ̄."},
+{id:21012,text:"📏 The dual space of Lᵖ (1&lt;p&lt;∞) is:",opts:[{l:"A",t:"Lᵖ itself",c:false},{l:"B",t:"L^q where 1/p+1/q=1",c:true},{l:"C",t:"ℓ^∞",c:false},{l:"D",t:"The space of bounded operators",c:false}],sol:"For 1 &lt; p &lt; ∞, the dual of Lᵖ is <strong>L^q</strong> where 1/p + 1/q = 1 (Hölder conjugate). This is a key result of the Riesz representation theorem."}
+];
+var answered={},correctCount=0;
+function renderPractice(){var c=document.getElementById('practice-qs'),h='';for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o='';for(var j=0;j<q.opts.length;j++){o+='<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';}
+h+='<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';}
+c.innerHTML=h;updateScore();}
+function getCorrectLabel(q){for(var i=0;i<q.opts.length;i++){if(q.opts[i].c)return q.opts[i].l+'. '+q.opts[i].t;}return '';}
+function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll('#q-'+qId+' .q-opt');var isCorrect=q.opts[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add('disabled');if(isCorrect){opts[idx].classList.add('correct');document.getElementById('result-'+qId).textContent='✅ Correct!';document.getElementById('result-'+qId).className='q-result correct';correctCount++;}else{opts[idx].classList.add('wrong');document.getElementById('result-'+qId).textContent='❌ Not quite. Read the solution!';document.getElementById('result-'+qId).className='q-result wrong';for(var i=0;i<q.opts.length;i++){if(q.opts[i].c)opts[i].classList.add('correct');}}
+document.getElementById('soln-'+qId).classList.add('show');updateScore();}
+function updateScore(){var t=Object.keys(answered).length;var el=document.getElementById('score-display');if(!el){el=document.createElement('div');el.id='score-display';el.style.cssText='font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';document.getElementById('practice-qs').before(el);}
+el.innerHTML='<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';}
+function resetPractice(){if(!confirm('Reset all answers?'))return;answered={};correctCount=0;document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className='q-opt'});document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent='';e.className='q-result'});var el=document.getElementById('score-display');if(el)el.textContent='';renderPractice();}
+function toggleStep(header){var content=header.nextElementSibling;var arrow=header.querySelector('.arrow');if(content.classList.contains('open')){content.classList.remove('open');arrow.classList.remove('open');}else{content.classList.add('open');arrow.classList.add('open');}}
+renderPractice();
+</script>
 </body>
 </html>
