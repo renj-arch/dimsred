@@ -1,34 +1,583 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Topology — Coming Soon | vlymbooq</title>
+    <title>Topology — Shapes, Spaces & Continuity | vlymbooq</title>
+    <meta name="description" content="Deep dive into Topology — open sets, compactness, connectedness, homeomorphisms, manifolds, the Poincaré conjecture, and the study of continuous deformation.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-topology.html">
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:Inter,-apple-system,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
-        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
-        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-        .brand{display:flex;align-items:center;gap:8px;text-decoration:none}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .container{max-width:700px;margin:80px auto;padding:24px;text-align:center}
-        .badge{display:inline-block;padding:4px 14px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.75em;font-weight:700;margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase}
-        h1{font-size:1.8em;font-weight:900;margin-bottom:12px;line-height:1.3}
-        p{color:#a1a1aa;font-size:.95em;line-height:1.7;margin-bottom:28px;max-width:500px;margin-left:auto;margin-right:auto}
-        .btn{display:inline-block;padding:10px 24px;border-radius:100px;font-weight:600;font-size:.85em;background:rgba(167,139,250,.15);color:#a78bfa;text-decoration:none;transition:all .2s}
-        .btn:hover{background:rgba(167,139,250,.25)}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}
+        .section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.72em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.7em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--purple);font-weight:700}
+
+        .quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}
+        .quote-box .attribution{font-size:.78em;color:var(--text-muted);margin-top:6px}
     </style>
 </head>
 <body>
-    <nav class="nav"><div class="nav-inner"><a href="index.html" class="brand"><svg width="28" height="28" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg><span class="brand-text">vlymbooq</span></a><a href="math.html" style="color:#a78bfa;font-size:.82em;font-weight:500;text-decoration:none">Math Map</a></div></nav>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="math.html">Math Map</a>
+                <a href="index.html#exams">Exams</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
-        <div class="badge">🔬 Scientist</div>
-        <h1>Topology</h1>
-        <p>This deep dive into pure mathematics is being prepared. Check the Math Concept Map for all available lessons.</p>
-        <a href="math.html" class="btn">← Back to Math Concept Map</a>
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Math Lessons</div>
+                    <a href="math.html">← Math Concept Map</a>
+                    <a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+                    <a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+                    <a href="lesson-number-theory.html">Number Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-linear-algebra.html">Linear Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-complex-analysis.html">Complex Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-abstract-algebra.html">Abstract Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-graph-theory.html">Graph Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-real-analysis.html">Real Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-topology.html" class="active" style="color:var(--text);font-weight:600">Topology <span class="s-tag">🔬</span></a>
+                    <a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+                </div>
+            </div>
+            <div class="main">
+                <div class="lesson-body">
+
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                    <span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.7em;font-weight:700">🔬 Scientist</span>
+                    <span style="font-size:.78em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span>
+                </div>
+
+                <h2>Topology — The Mathematics of Continuity</h2>
+                <p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Topology studies properties that remain unchanged under continuous deformations — stretching, bending, twisting, but not tearing or gluing. It asks what it means for two shapes to be "the same" without measuring distances. To a topologist, a coffee cup and a donut are the same shape (both have one hole). Topology provides the language for continuity across all of mathematics — from analysis to geometry to data science — and its deepest question, the Poincaré conjecture, was only solved in 2003.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"Topology is the study of those properties of geometric figures that persist even when the figures are subjected to deformations so drastic that all their metric and projective properties are lost."</div>
+                    <div class="attribution">— James W. Alexander</div>
+                </div>
+
+                <!-- ========== PART 1: FOUNDATIONS ========== -->
+                <div class="section-label part1">Part 1</div>
+                <h2>🧭 Open Sets, Topologies, and the Shape of Space</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Rubber Sheet Geometry</div>
+                    <div class="story-title">When Distance Doesn't Matter</div>
+                    <div class="story-text">Imagine a world made of rubber — you can stretch it, bend it, twist it, but you can't cut it or glue parts together. In this world, a circle and a square are the same shape. The triangle and the pentagon are the same. But a figure-8 is different from a circle — because to turn a circle into a figure-8, you'd have to glue two points together. Topology formalizes this intuition. Instead of distances, it studies <strong>open sets</strong>: collections of points that define "nearness" without measuring. A <strong>topological space</strong> is just a set X together with a collection of subsets (called open sets) that satisfy three simple rules: the empty set and X are open; any union of open sets is open; any finite intersection of open sets is open. That's it — three rules, and suddenly you have a language for continuity, convergence, and the shape of space.</div>
+                    <div class="story-moral">Topology strips away measurement and keeps only the essential structure of "what's near what."</div>
+                </div>
+
+                <h3>Metric Spaces — The First Topology</h3>
+                <p>The most intuitive way to get a topology is from a <strong>metric</strong> — a distance function d(x,y) satisfying positivity, symmetry, and the triangle inequality. The open balls B(x,r) = { y : d(x,y) &lt; r } generate the metric topology. Euclidean space ℝⁿ with the usual distance is the canonical example, but metrics also appear on function spaces, graphs, and even the space of DNA sequences (edit distance). Every metric space is a topological space, but not every topological space comes from a metric — those that do are called <strong>metrizable</strong>.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Topological Space</div><div class="f-math">(X, τ) with τ ⊆ 𝒫(X)</div></div>
+                    <div class="formula-card"><div class="f-label">Metric Space</div><div class="f-math">d(x,y) ≥ 0, symmetric, Δ</div></div>
+                    <div class="formula-card"><div class="f-label">Open Ball</div><div class="f-math">B(x,r) = { y : d(x,y) &lt; r }</div></div>
+                    <div class="formula-card"><div class="f-label">Discrete Topology</div><div class="f-math">Every subset is open</div></div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">The Standard Topology on ℝ</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        On the real line, the standard topology has open sets that are unions of open intervals (a,b). This comes from the metric d(x,y) = |x − y|.<br><br>
+                        <strong>Key observation:</strong> In this topology, (0,1) is open, but [0,1] is not (because the endpoints don't have any open ball fully inside the set). The set (0,1) ∪ (2,3) is open — it's a union of open intervals. The set (0,1] is neither open nor closed — it's a half-open interval.<br><br>
+                        A set can be open, closed, both (clopen), or neither. In the discrete topology, every set is clopen. In a connected space like ℝ, the only clopen sets are the empty set and the whole space.
+                    </div>
+                </div>
+
+                <h3>Bases and Subbases</h3>
+                <p>A <strong>basis</strong> for a topology is a collection of open sets such that every open set is a union of basis elements. The open intervals (a,b) form a basis for the standard topology on ℝ. The open balls form a basis for any metric topology. A <strong>subbasis</strong> is an even smaller generating set — finite intersections of subbasis elements give a basis. This machinery lets us define topologies efficiently without listing every open set.</p>
+
+                <div class="example-box">
+                    <div class="ex-label">Product Topology</div>
+                    <div class="ex-text">Given two topological spaces X and Y, the product topology on X×Y has a basis of sets U×V where U is open in X and V is open in Y. For ℝ² = ℝ×ℝ, the basis is open rectangles (a,b)×(c,d). These generate the same topology as open balls, so the product topology matches the usual Euclidean topology.</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 2: CONNECTEDNESS & COMPACTNESS ========== -->
+                <div class="section-label part2">Part 2</div>
+                <h2>🌉 Connectedness and Compactness — The Two Pillars</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Pivotal Properties</div>
+                    <div class="story-title">What Makes a Space "One Piece" and "Finite"?</div>
+                    <div class="story-text">Two properties dominate topology more than any others. <strong>Connectedness</strong> captures the intuitive idea that a space is "all one piece" — it cannot be split into two disjoint nonempty open subsets. The interval [0,1] is connected; the set [0,1]∪[2,3] is not. A space that is connected but not "path-connected" is a weird intermediate — the topologist's sine curve { (x, sin(1/x)) : x > 0 } ∪ { (0,y) : |y| ≤ 1 } is connected (because points on the curve accumulate along the vertical segment), but no path connects a point on the curve to a point on the segment. <strong>Compactness</strong> captures a different intuition: "finite" in a topological sense. A space is compact if every open cover has a finite subcover. In ℝⁿ, the Heine-Borel theorem says this is exactly closed and bounded sets. Compactness turns out to be the topological version of finiteness — and it's the key to almost every deep theorem in analysis.</div>
+                    <div class="story-moral">Connectedness is about wholeness; compactness is about manageability. Together they define the spaces we can truly understand.</div>
+                </div>
+
+                <h3>Connected vs Path-Connected</h3>
+                <p>A space is <strong>connected</strong> if it's not the disjoint union of two nonempty open subsets. It's <strong>path-connected</strong> if any two points can be joined by a continuous path. Path-connected implies connected, but not vice versa (as the topologist's sine curve shows). Path components are equivalence classes under "there exists a path between them." For most nice spaces (manifolds, CW complexes), the two notions coincide.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Intermediate Value Theorem (Topological Version)</div>
+                    <div class="insight-text">The continuous image of a connected space is connected</div>
+                    <div class="insight-sub">This is why any continuous function f: [0,1] → ℝ that takes values f(0) = a and f(1) = b must take every value between a and b.</div>
+                </div>
+
+                <h3>Compactness — The Heine-Borel Theorem</h3>
+                <p>In ℝⁿ, a set is compact iff it's closed and bounded. But in general topology, compactness is more subtle. The <strong>Heine-Borel theorem</strong> fails in infinite-dimensional spaces — the closed unit ball in an infinite-dimensional Hilbert space is not compact (it's not "finite enough"). A continuous function on a compact set achieves its maximum and minimum (extreme value theorem). The <strong>Bolzano-Weierstrass property</strong> (every sequence has a convergent subsequence) is equivalent to compactness in metric spaces, but not in general topological spaces, where <strong>sequential compactness</strong> and <strong>compactness</strong> diverge.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Connected</div><div class="f-math">No nontrivial clopen sets</div></div>
+                    <div class="formula-card"><div class="f-label">Path-connected</div><div class="f-math">∀x,y ∃ path p with p(0)=x, p(1)=y</div></div>
+                    <div class="formula-card"><div class="f-label">Compact</div><div class="f-math">Every open cover has finite subcover</div></div>
+                    <div class="formula-card"><div class="f-label">Heine-Borel</div><div class="f-math">In ℝⁿ: compact ⇔ closed &amp; bounded</div></div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Compactness in Function Spaces — Arzelà–Ascoli</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        In analysis, we often need to extract convergent subsequences of functions. The <strong>Arzelà–Ascoli theorem</strong> says a set of continuous functions on a compact set is compact (in the uniform topology) iff they're uniformly bounded and equicontinuous.<br><br>
+                        <strong>Example:</strong> The set { fₙ(x) = sin(nx) } on [0,2π] is uniformly bounded but not equicontinuous — the functions oscillate too rapidly. No subsequence converges uniformly. But { fₙ(x) = xⁿ } on [0,1] is also not equicontinuous at x=1, and indeed the limit function is discontinuous.<br><br>
+                        This theorem is the foundation of the existence of solutions to differential equations (Picard–Lindelöf) and the calculus of variations.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 3: CONTINUITY & HOMEOMORPHISMS ========== -->
+                <div class="section-label part3">Part 3</div>
+                <h2>🔄 Continuous Functions and When Spaces Are "the Same"</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Topologist's Notion of Sameness</div>
+                    <div class="story-title">Homeomorphisms — The Rubber-Sheet Equivalence</div>
+                    <div class="story-text">In topology, a <strong>homeomorphism</strong> is a continuous bijection with a continuous inverse. Two spaces that are homeomorphic are topologically indistinguishable — they have exactly the same topological properties. The classic joke: a topologist can't tell the difference between a coffee cup and a donut. Both have exactly one hole, so they're homeomorphic. A circle is homeomorphic to a square, an ellipse, or any simple closed curve. But a circle is NOT homeomorphic to a figure-8 (which has a point where removing it disconnects the space into 3 components, whereas removing any point from a circle gives 2 components — this is a <strong>topological invariant</strong>). The fundamental problem of topology: given two spaces, are they homeomorphic? This question drives the entire field.</div>
+                    <div class="story-moral">To a topologist, shape is about connectivity, not geometry. Two shapes are the same if one can be deformed into the other without tearing or gluing.</div>
+                </div>
+
+                <h3>Topological Invariants</h3>
+                <p>A <strong>topological invariant</strong> is a property preserved under homeomorphisms. Connectedness, compactness, and the number of holes (genus) are invariants. The Euler characteristic V − E + F is an invariant for surfaces. If two spaces differ on an invariant, they cannot be homeomorphic. The search for invariants is the central activity of topology — from the fundamental group to homology to characteristic classes. The <strong>invariance of dimension</strong> theorem states that ℝᵐ and ℝⁿ are not homeomorphic for m ≠ n — a result that seems obvious but was notoriously difficult to prove.</p>
+
+                <div class="example-box">
+                    <div class="ex-label">The Circle vs the Figure-8</div>
+                    <div class="ex-text">Consider the circle S¹ and the figure-8 space (two circles joined at a point). Remove a single point from S¹: the remainder is connected (it's an open interval). Remove the crossing point from the figure-8: the remainder has 3 connected components (two open intervals and the crossing point removal). Since removing a point changes connectivity differently, they cannot be homeomorphic. This is a <strong>point-set topological invariant</strong>.</div>
+                </div>
+
+                <h3>Embeddings and Quotients</h3>
+                <p>An <strong>embedding</strong> is a homeomorphism onto its image — it places one space inside another. The circle embeds in ℝ² (naturally) and in ℝ³ (as a knot, which is a whole subfield). The Möbius strip embeds in ℝ³ but not in ℝ². A <strong>quotient space</strong> identifies points of a space to create a new one — gluing the ends of [0,1] gives a circle; gluing the top and bottom edges of a square gives a cylinder; gluing both pairs of opposite edges gives a torus. Quotients are how we build all surfaces from simple pieces.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Classification of 2-Manifolds</div>
+                    <div class="insight-text">Every connected compact 2-manifold is homeomorphic to a sphere with g handles (genus g) or, for non-orientable surfaces, a sphere with g cross-caps</div>
+                    <div class="insight-sub">The genus g (number of holes) is the only invariant needed to classify orientable surfaces.</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 4: DEEP RESULTS ========== -->
+                <div class="section-label part4">Part 4</div>
+                <h2>🌌 Deep Topology — Manifolds, the Poincaré Conjecture, and Beyond</h2>
+
+                <div class="story-card">
+                    <div class="story-label">A Century of Shape</div>
+                    <div class="story-title">The Poincaré Conjecture — Solved After 100 Years</div>
+                    <div class="story-text">In 1904, Henri Poincaré asked: if a closed 3-dimensional space has the property that every loop can be continuously shrunk to a point (it's <strong>simply connected</strong>), is it necessarily homeomorphic to the 3-sphere (the 3D analog of a sphere's surface)? This seems obvious in 2 dimensions — a simply connected closed surface is always a sphere — but in 3 dimensions, the problem stumped mathematicians for a century. Grigori Perelman proved it in 2003 using <strong>Ricci flow</strong>, a technique that smooths out curvature over time. He was awarded the $1M Clay Millennium Prize but declined it. The Poincaré conjecture was the first of the seven Millennium Problems to be solved. Its higher-dimensional analogs (n ≥ 5) were solved by Smale (1961) and Freedman (1982), leaving only dimension 3 as the hardest case.</div>
+                    <div class="story-moral">Sometimes the most intuitive-sounding statements in mathematics are the hardest to prove — and the simplest dimensions are the most complex.</div>
+                </div>
+
+                <h3>Manifolds — Local Is Not Global</h3>
+                <p>An n-dimensional <strong>manifold</strong> is a topological space that locally looks like ℝⁿ: every point has a neighborhood homeomorphic to an open ball in ℝⁿ. The surface of the Earth is a 2-manifold (it locally looks flat — that's why maps work). The universe may be a 3-manifold. The <strong>sphere Sⁿ</strong> is the set of points at distance 1 from the origin in ℝⁿ⁺¹. The <strong>torus Tⁿ</strong> is the product of n circles. Manifolds are the primary objects of study in geometry and topology, and they appear everywhere from general relativity (spacetime is a 4-manifold) to robotics (the configuration space of a robot arm is a manifold).</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">n-Manifold</div><div class="f-math">Locally ℝⁿ, Hausdorff, second-countable</div></div>
+                    <div class="formula-card"><div class="f-label">Sphere Sⁿ</div><div class="f-math">{ x∈ℝⁿ⁺¹ : ‖x‖ = 1 }</div></div>
+                    <div class="formula-card"><div class="f-label">Torus Tⁿ</div><div class="f-math">S¹ × S¹ × ... × S¹</div></div>
+                    <div class="formula-card"><div class="f-label">Genus g Surface</div><div class="f-math">Sphere with g handles</div></div>
+                </div>
+
+                <h3>The Fundamental Group — Detecting Holes Algebraically</h3>
+                <p>The <strong>fundamental group</strong> π₁(X) is a group whose elements are loops in X (starting and ending at a base point), considered up to continuous deformation (homotopy). The group operation is concatenation of loops. For the circle S¹, π₁(S¹) ≅ ℤ — each loop wraps around some integer number of times. For the sphere S², π₁(S²) = 0 (every loop shrinks to a point). For the torus, π₁(T²) ≅ ℤ×ℤ (loops can wind around either hole independently). The fundamental group is the first <strong>homotopy group</strong>, and it's one of the most powerful invariants. The Poincaré conjecture asks whether a simply connected (π₁ = 0) closed 3-manifold must be S³ — a question entirely about the fundamental group.</p>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Computing π₁ of a Graph</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        A graph is a 1-dimensional CW complex. Its fundamental group is a <strong>free group</strong> — one generator for each independent cycle.<br><br>
+                        <strong>Example:</strong> A tree is contractible (π₁ = 0). A graph with one cycle (like a circle) has π₁ ≅ ℤ. The figure-8 graph (two cycles sharing a point) has π₁ ≅ F₂ — the free group on two generators. The generators are loops around each lobe, and words like ab⁻¹a²b represent paths that wind around both lobes in sequence.<br><br>
+                        Unlike the torus's ℤ×ℤ (which is abelian), free groups are non-abelian — winding around one lobe then the other is different from the reverse order. This non-commutativity captures the essential complexity of the space.
+                    </div>
+                </div>
+
+                <h3>Homology and the Euler Characteristic</h3>
+                <p>While homotopy groups capture the full structure of loops and higher-dimensional spheres, <strong>homology groups</strong> are easier to compute and give Abelian invariants. The nth homology group Hₙ(X) counts n-dimensional holes: H₀ counts connected components, H₁ counts 1-dimensional holes (loops), H₂ counts 2-dimensional holes (voids), and so on. The <strong>Euler characteristic</strong> χ(X) = Σ (−1)ⁿ rank(Hₙ) generalizes the formula V − E + F for polyhedra. For a surface of genus g, χ = 2 − 2g. This single number encodes the topology of the entire surface.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Gauss–Bonnet Theorem</div>
+                    <div class="insight-text">For a compact 2-manifold, ∫_M K dA = 2π χ(M)</div>
+                    <div class="insight-sub">The total curvature of a surface is determined entirely by its topology — the Euler characteristic. Geometry and topology meet in this beautiful equation.</div>
+                </div>
+
+                <h3>Applied Topology — TDA and Beyond</h3>
+                <p>In the 21st century, topology has become a practical tool. <strong>Topological Data Analysis (TDA)</strong> uses persistent homology to study the shape of data — clustering, connectivity, and holes in point clouds at multiple scales. The <strong>mapper algorithm</strong> creates graph summaries of high-dimensional data. Topology also appears in robotics (configuration spaces), sensor networks (coverage holes), neuroscience (neural activity patterns), and materials science (the topology of atomic structures). The same invariants that classify surfaces now classify patterns in data.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"Topology is the study of qualitative properties of geometric objects. It's the branch of mathematics where a coffee cup is a donut, and a sheet of paper with a twist is a Möbius strip."</div>
+                    <div class="attribution">— Popular mathematics saying</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PRACTICE ========== -->
+                <h2 style="margin-top:0">🎯 Practice — Check Your Topology Intuition</h2>
+                <p style="color:var(--text-sec);margin-bottom:16px">These puzzles build topological intuition — no heavy math needed.</p>
+
+                <div id="practice-qs"></div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+                    <a href="math.html" class="btn btn-success">← Back to Math Map</a>
+                </div>
+
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        var practiceQs = [
+            {
+                id: 14001,
+                text: "🧭 How many rules define a topological space?",
+                opts: [
+                    {l: "A", t: "Two", c: false},
+                    {l: "B", t: "Three", c: true},
+                    {l: "C", t: "Five", c: false},
+                    {l: "D", t: "Ten", c: false}
+                ],
+                sol: "A topological space is defined by <strong>three</strong> axioms: (1) ∅ and X are open, (2) arbitrary unions of open sets are open, (3) finite intersections of open sets are open."
+            },
+            {
+                id: 14002,
+                text: "🔄 What is the term for a continuous bijection with a continuous inverse?",
+                opts: [
+                    {l: "A", t: "Isomorphism", c: false},
+                    {l: "B", t: "Homeomorphism", c: true},
+                    {l: "C", t: "Diffeomorphism", c: false},
+                    {l: "D", t: "Homotopy", c: false}
+                ],
+                sol: "A <strong>homeomorphism</strong> is a continuous bijection with a continuous inverse. It's the notion of equivalence in topology — two spaces that are homeomorphic are topologically the same."
+            },
+            {
+                id: 14003,
+                text: "🌉 Which of the following sets is connected in the standard topology on ℝ?",
+                opts: [
+                    {l: "A", t: "[0,1] ∪ [2,3]", c: false},
+                    {l: "B", t: "(0,1) ∪ (2,3)", c: false},
+                    {l: "C", t: "[0,1) ∪ (1,2]", c: true},
+                    {l: "D", t: "ℚ ∩ [0,1]", c: false}
+                ],
+                sol: "[0,1) ∪ (1,2] is <strong>connected</strong> — the gap at 1 is just a single point, and removing one point from ℝ doesn't disconnect it. A set in ℝ is connected iff it's an interval (in the extended sense)."
+            },
+            {
+                id: 14004,
+                text: "🌌 By the Heine-Borel theorem, which sets are compact in ℝⁿ?",
+                opts: [
+                    {l: "A", t: "Open and bounded", c: false},
+                    {l: "B", t: "Closed and bounded", c: true},
+                    {l: "C", t: "Closed and unbounded", c: false},
+                    {l: "D", t: "Any countable set", c: false}
+                ],
+                sol: "In ℝⁿ, compact = <strong>closed and bounded</strong>. The open interval (0,1) is bounded but not closed — it's not compact (the open cover by (1/n, 1) has no finite subcover)."
+            },
+            {
+                id: 14005,
+                text: "🧭 The interval (0,1) with the standard topology is:",
+                opts: [
+                    {l: "A", t: "Compact but not connected", c: false},
+                    {l: "B", t: "Connected but not compact", c: true},
+                    {l: "C", t: "Both compact and connected", c: false},
+                    {l: "D", t: "Neither", c: false}
+                ],
+                sol: "(0,1) is <strong>connected</strong> (it's an interval) but <strong>not compact</strong> — it's bounded but not closed. The open cover { (1/n, 1) : n ∈ ℕ } covers (0,1) but has no finite subcover."
+            },
+            {
+                id: 14006,
+                text: "🔄 Which two shapes are homeomorphic?",
+                opts: [
+                    {l: "A", t: "A circle and a line segment", c: false},
+                    {l: "B", t: "A coffee cup and a donut", c: true},
+                    {l: "C", t: "A sphere and a torus", c: false},
+                    {l: "D", t: "A circle and a figure-8", c: false}
+                ],
+                sol: "A coffee cup and a donut (torus) are <strong>homeomorphic</strong> — both have exactly one hole. A circle and a line segment have different compactness/connectedness after point removal."
+            },
+            {
+                id: 14007,
+                text: "🌉 What is π₁(S¹) — the fundamental group of a circle?",
+                opts: [
+                    {l: "A", t: "0 (trivial group)", c: false},
+                    {l: "B", t: "ℤ (integers)", c: true},
+                    {l: "C", t: "ℤ × ℤ", c: false},
+                    {l: "D", t: "The free group on 2 generators", c: false}
+                ],
+                sol: "π₁(S¹) ≅ <strong>ℤ</strong>. Each loop around the circle winds some integer number of times (positive = counterclockwise, negative = clockwise). This is the fundamental computation in algebraic topology."
+            },
+            {
+                id: 14008,
+                text: "🌌 What is the Euler characteristic of a torus (surface of genus 1)?",
+                opts: [
+                    {l: "A", t: "2", c: false},
+                    {l: "B", t: "0", c: true},
+                    {l: "C", t: "−2", c: false},
+                    {l: "D", t: "1", c: false}
+                ],
+                sol: "For a surface of genus g, χ = 2 − 2g. For a torus (g=1): χ = <strong>0</strong>. This matches the Euler formula V − E + F = 0 for the standard torus polyhedron."
+            },
+            {
+                id: 14009,
+                text: "🌌 The Poincaré conjecture (proved by Perelman) states:",
+                opts: [
+                    {l: "A", t: "Every continuous function is differentiable", c: false},
+                    {l: "B", t: "Every simply connected closed 3-manifold is homeomorphic to S³", c: true},
+                    {l: "C", t: "The Euler characteristic of any surface is 2", c: false},
+                    {l: "D", t: "Every metric space is compact", c: false}
+                ],
+                sol: "The Poincaré conjecture says a <strong>simply connected closed 3-manifold is homeomorphic to the 3-sphere</strong>. Perelman proved it in 2003 using Ricci flow."
+            },
+            {
+                id: 14010,
+                text: "🌉 A space is compact if:",
+                opts: [
+                    {l: "A", t: "Every sequence converges", c: false},
+                    {l: "B", t: "Every open cover has a finite subcover", c: true},
+                    {l: "C", t: "It has a finite number of points", c: false},
+                    {l: "D", t: "It is closed", c: false}
+                ],
+                sol: "A space is <strong>compact</strong> if every open cover has a finite subcover. Finite sets are always compact, but infinite sets can be too (e.g., [0,1] is compact)."
+            },
+            {
+                id: 14011,
+                text: "🧭 A metric d(x,y) must satisfy the triangle inequality. What does it state?",
+                opts: [
+                    {l: "A", t: "d(x,z) ≤ d(x,y) + d(y,z)", c: true},
+                    {l: "B", t: "d(x,y) = d(y,x)", c: false},
+                    {l: "C", t: "d(x,y) = 0 iff x = y", c: false},
+                    {l: "D", t: "All of the above are part of it", c: false}
+                ],
+                sol: "All three are axioms of a metric! But the question asks about the <strong>triangle inequality</strong> specifically: <strong>d(x,z) ≤ d(x,y) + d(y,z)</strong>. The symmetry and positivity are separate axioms."
+            },
+            {
+                id: 14012,
+                text: "🌌 Which of the following is a 2-manifold?",
+                opts: [
+                    {l: "A", t: "A circle", c: false},
+                    {l: "B", t: "The surface of a sphere", c: true},
+                    {l: "C", t: "A figure-8", c: false},
+                    {l: "D", t: "A solid cube", c: false}
+                ],
+                sol: "The <strong>surface of a sphere</strong> is a 2-manifold — every point has a neighborhood homeomorphic to ℝ². A circle is a 1-manifold. A figure-8 has a point (the crossing) where it doesn't look like ℝⁿ."
+            }
+        ];
+
+        var answered = {}, correctCount = 0;
+
+        function renderPractice() {
+            var c = document.getElementById('practice-qs'), h = '';
+            for (var i = 0; i < practiceQs.length; i++) {
+                var q = practiceQs[i], o = '';
+                for (var j = 0; j < q.opts.length; j++) {
+                    o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                }
+                h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+            }
+            c.innerHTML = h;
+            updateScore();
+        }
+
+        function getCorrectLabel(q) {
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+            }
+            return '';
+        }
+
+        function selectOpt(qId, idx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            var q = practiceQs.filter(function(x){return x.id === qId})[0];
+            var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+            var isCorrect = q.opts[idx].c;
+            for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-'+qId).textContent = '✅ Correct!';
+                document.getElementById('result-'+qId).className = 'q-result correct';
+                correctCount++;
+            } else {
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+                document.getElementById('result-'+qId).className = 'q-result wrong';
+                for (var i = 0; i < q.opts.length; i++) {
+                    if (q.opts[i].c) opts[i].classList.add('correct');
+                }
+            }
+            document.getElementById('soln-'+qId).classList.add('show');
+            updateScore();
+        }
+
+        function updateScore() {
+            var t = Object.keys(answered).length;
+            var el = document.getElementById('score-display');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'score-display';
+                el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+                document.getElementById('practice-qs').before(el);
+            }
+            el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+        }
+
+        function resetPractice() {
+            if (!confirm('Reset all answers?')) return;
+            answered = {}; correctCount = 0;
+            document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+            document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+            document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+            var el = document.getElementById('score-display');
+            if (el) el.textContent = '';
+            renderPractice();
+        }
+
+        function toggleStep(header) {
+            var content = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        renderPractice();
+    </script>
 </body>
 </html>

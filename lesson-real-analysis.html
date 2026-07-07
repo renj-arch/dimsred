@@ -1,34 +1,198 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Real Analysis — Coming Soon | vlymbooq</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="icon" type="image/png" href="/logo.png">
-    <style>
-        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:Inter,-apple-system,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
-        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
-        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-        .brand{display:flex;align-items:center;gap:8px;text-decoration:none}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .container{max-width:700px;margin:80px auto;padding:24px;text-align:center}
-        .badge{display:inline-block;padding:4px 14px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.75em;font-weight:700;margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase}
-        h1{font-size:1.8em;font-weight:900;margin-bottom:12px;line-height:1.3}
-        p{color:#a1a1aa;font-size:.95em;line-height:1.7;margin-bottom:28px;max-width:500px;margin-left:auto;margin-right:auto}
-        .btn{display:inline-block;padding:10px 24px;border-radius:100px;font-weight:600;font-size:.85em;background:rgba(167,139,250,.15);color:#a78bfa;text-decoration:none;transition:all .2s}
-        .btn:hover{background:rgba(167,139,250,.25)}
-    </style>
-</head>
+<head><link rel="stylesheet" href="css/style.css"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Real Analysis — The Foundations of Calculus | vlymbooq</title><meta name="description" content="Deep dive into Real Analysis — completeness, sequences, continuity, differentiation, Riemann integration, and the rigorous foundations of calculus."><meta property="og:image" content="https://vlymbooq.qzz.io/logo.png"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" type="image/png" href="/logo.png"><link rel="canonical" href="https://vlymbooq.qzz.io/lesson-real-analysis.html"><style>
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+a{color:var(--purple);text-decoration:none}
+.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:8px}
+.brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+.brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+.nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.container{max-width:1000px;margin:0 auto;padding:24px}
+.flex-row{display:flex;gap:24px}
+.flex-row .main{flex:1;min-width:0}
+.flex-row .side{width:220px;flex-shrink:0}
+@media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+.sidebar-nav{position:sticky;top:72px}
+.sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+.sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+.sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+.sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}
+.lesson-body{padding:20px 0}
+.lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+.lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+.lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+.lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+.lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+.btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+.btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+.btn-primary:hover{background:rgba(167,139,250,.25)}
+.btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+.btn-success:hover{background:rgba(52,211,153,.25)}
+@media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+.story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+.story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+.story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+.story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+.story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+.insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+.insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+.insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+.diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+.diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+.diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+.step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+.step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+.step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+.step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+.step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+.step-reveal .step-content.open{display:block}
+.q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+.q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+@media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+.q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+.q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+.q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+.q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+.q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+.q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+.q-card .q-soln.show{display:block}
+.q-card .q-soln strong{color:var(--emerald)}
+.q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+.q-card .q-result.correct{color:var(--emerald)}
+.q-card .q-result.wrong{color:var(--red)}
+@keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fade-in .5s ease forwards}
+.section-divider{height:1px;background:var(--border);margin:32px 0}
+.section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+.section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}
+.section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}
+.section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}
+.section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+.math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+.math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+.example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+.example-box .ex-label{font-size:.72em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+.formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+@media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+.formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+.formula-card .f-label{font-size:.7em;color:var(--text-muted);margin-bottom:2px}
+.formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--purple);font-weight:700}
+.quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+.quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}
+.quote-box .attribution{font-size:.78em;color:var(--text-muted);margin-top:6px}
+</style></head>
 <body>
-    <nav class="nav"><div class="nav-inner"><a href="index.html" class="brand"><svg width="28" height="28" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg><span class="brand-text">vlymbooq</span></a><a href="math.html" style="color:#a78bfa;font-size:.82em;font-weight:500;text-decoration:none">Math Map</a></div></nav>
-    <div class="container">
-        <div class="badge">🔬 Scientist</div>
-        <h1>Real Analysis</h1>
-        <p>This deep dive into pure mathematics is being prepared. Check the Math Concept Map for all available lessons.</p>
-        <a href="math.html" class="btn">← Back to Math Concept Map</a>
-    </div>
+<nav class="nav"><div class="nav-inner"><a href="index.html" class="brand"><svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="index.html">Home</a><a href="math.html">Math Map</a><a href="index.html#exams">Exams</a></div></div></nav>
+<div class="container"><div class="flex-row"><div class="side"><div class="sidebar-nav"><div class="s-title">Math Lessons</div>
+<a href="math.html">← Math Concept Map</a>
+<a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+<a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+<a href="lesson-number-theory.html">Number Theory <span class="s-tag">🔬</span></a>
+<a href="lesson-linear-algebra.html">Linear Algebra <span class="s-tag">🔬</span></a>
+<a href="lesson-complex-analysis.html">Complex Analysis <span class="s-tag">🔬</span></a>
+<a href="lesson-abstract-algebra.html">Abstract Algebra <span class="s-tag">🔬</span></a>
+<a href="lesson-graph-theory.html">Graph Theory <span class="s-tag">🔬</span></a>
+<a href="lesson-real-analysis.html" class="active" style="color:var(--text);font-weight:600">Real Analysis <span class="s-tag">🔬</span></a>
+<a href="lesson-topology.html">Topology <span class="s-tag">🔬</span></a>
+<a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
+<a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
+<a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
+<a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
+<a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
+<a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+<a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+<a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+</div></div>
+<div class="main"><div class="lesson-body">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px"><span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.7em;font-weight:700">🔬 Scientist</span><span style="font-size:.78em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span></div>
+<h2>Real Analysis — The Foundations of Calculus</h2>
+<p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Real analysis is calculus made rigorous. For centuries, mathematicians used derivatives and integrals without a precise understanding of what they were. Limits were "approaching" but never arriving. Infinitesimals were "infinitely small" but nobody could define them. In the 19th century, Cauchy, Weierstrass, Dedekind, and Riemann rebuilt calculus from the ground up — replacing vague intuition with epsilon-delta precision. The result is real analysis: the study of the real number system, sequences, continuity, differentiation, and integration, all built on the solid foundation of the completeness axiom.</p>
+<div class="quote-box"><div class="quote">"God created the integers, all else is the work of man."</div><div class="attribution">— Leopold Kronecker</div></div>
+
+<div class="section-label part1">Part 1</div>
+<h2>📏 The Real Numbers — Filling the Gaps</h2>
+<div class="story-card"><div class="story-label">The Problem with √2</div><div class="story-title">Why the Rationals Have Holes and How We Filled Them</div><div class="story-text">The ancient Greeks discovered that √2 is irrational — it can't be written as a fraction. But geometrically, √2 is the length of the diagonal of a unit square. It must exist. This gap between the rational numbers (which have holes) and the geometric continuum was a scandal for 2000 years. In 1872, Dedekind solved it with his <strong>cut</strong>: he defined a real number as a partition of the rationals into two sets L and R where every element of L is less than every element of R, and L has no largest element. The cut for √2 puts all rationals with x² &lt; 2 into L and all with x² &gt; 2 into R. This construction fills every gap in the rationals, creating the continuum of real numbers — the <strong>completeness</strong> of ℝ.</div><div class="story-moral">Real numbers are not given by nature — they are constructed to make the number line continuous.</div></div>
+<h3>The Completeness Axiom</h3>
+<p>Every non-empty set of real numbers that is bounded above has a <strong>least upper bound</strong> (supremum). This is the completeness axiom, and it's the single property that distinguishes ℝ from ℚ. In ℚ, the set {x : x² &lt; 2} has no supremum (√2 is missing). In ℝ, it does. From completeness, everything else follows: the intermediate value theorem, the extreme value theorem, the convergence of Cauchy sequences, the existence of limits.</p>
+<div class="insight-box"><div class="insight-label">Completeness Axiom</div><div class="insight-text">Every non-empty set bounded above has a supremum</div><div class="insight-sub">This one property guarantees the continuum has no gaps.</div></div>
+<h3>Archimedean Property</h3>
+<p>For any real number x, there exists a natural number n such that n > x. This seemingly obvious statement — that there are no infinite real numbers — is a consequence of completeness. It implies the rationals are <strong>dense</strong> in ℝ: between any two real numbers, there is a rational.</p>
+
+<div class="section-divider"></div>
+<div class="section-label part2">Part 2</div>
+<h2>🔢 Sequences — Approaching Infinity</h2>
+<div class="story-card"><div class="story-label">The Algebra of Limits</div><div class="story-title">What Does It Mean for a Sequence to Converge?</div><div class="story-text">A sequence (aₙ) converges to L if for every ε > 0, there exists N such that for all n ≥ N, |aₙ − L| &lt; ε. This epsilon-definition, perfected by Weierstrass, removes all vagueness from "approaches." The sequence 1, 1/2, 1/3, 1/4, ... converges to 0 because for any ε, choose N > 1/ε and all subsequent terms are within ε. A <strong>Cauchy sequence</strong> is one where terms get arbitrarily close to each other: for every ε > 0, there exists N such that for all m,n ≥ N, |aₘ − aₙ| &lt; ε. In ℝ, every Cauchy sequence converges — this is equivalent to completeness and is the standard way to define completeness in metric spaces.</div><div class="story-moral">A sequence converges not when it "reaches" its limit, but when it can get arbitrarily close and stay there.</div></div>
+<h3>Key Theorems</h3>
+<div class="formula-grid"><div class="formula-card"><div class="f-label">Monotone Convergence</div><div class="f-math">Bounded monotone sequences converge</div></div><div class="formula-card"><div class="f-label">Bolzano-Weierstrass</div><div class="f-math">Every bounded sequence has a convergent subsequence</div></div><div class="formula-card"><div class="f-label">Squeeze Theorem</div><div class="f-math">If aₙ ≤ bₙ ≤ cₙ and aₙ,cₙ → L then bₙ → L</div></div><div class="formula-card"><div class="f-label">Cauchy Criterion</div><div class="f-math">A sequence converges iff it is Cauchy</div></div></div>
+<div class="step-reveal"><div class="step-header" onclick="toggleStep(this)"><div class="step-number">✨</div><span style="font-size:.88em;font-weight:600">Proof That √2 Exists (Using Completeness)</span><span class="arrow">▶</span></div><div class="step-content">Let S = {x ∈ ℝ : x² &lt; 2}. S is non-empty (1 ∈ S) and bounded above (2 is an upper bound). By completeness, S has a supremum s. We show s² = 2.<br><br>If s² &lt; 2, then for small h &gt; 0, (s+h)² = s² + 2sh + h² &lt; 2 for sufficiently small h, so s+h ∈ S — contradiction since s is an upper bound.<br><br>If s² &gt; 2, then for small h &gt; 0, (s−h)² &gt; 2, so s−h is a smaller upper bound — contradiction.<br><br>Therefore s² = 2, and s = √2. This proof works only because of completeness — in ℚ, no such s exists.</div></div>
+<h3>Series — Adding Infinitely Many Numbers</h3>
+<p>A series Σ aₙ converges if the sequence of partial sums converges. The geometric series Σ rⁿ converges to 1/(1−r) when |r| &lt; 1. The harmonic series Σ 1/n diverges (slowly — like ln n). The alternating harmonic series Σ (−1)ⁿ⁺¹/n converges to ln 2. A series converges <strong>absolutely</strong> if Σ |aₙ| converges; otherwise it converges <strong>conditionally</strong>. The Riemann rearrangement theorem says conditionally convergent series can be rearranged to sum to any value — absolute convergence is the only kind that's well-behaved.</p>
+
+<div class="section-divider"></div>
+<div class="section-label part3">Part 3</div>
+<h2>🎯 Continuity — Functions Without Gaps</h2>
+<div class="story-card"><div class="story-label">The Epsilon-Delta Definition</div><div class="story-title">Cauchy and Weierstrass Tame the Infinite</div><div class="story-text">A function f is <strong>continuous</strong> at a if for every ε > 0, there exists δ > 0 such that |x − a| &lt; δ implies |f(x) − f(a)| &lt; ε. This is the famous epsilon-delta definition. Intuitively: if you want the output to stay within a tiny window ε, you can find a tiny input window δ that guarantees it. Continuous functions on closed intervals have the <strong>Intermediate Value Property</strong> (they take every value between f(a) and f(b)) and the <strong>Extreme Value Property</strong> (they attain their maximum and minimum). Both rely on completeness — they fail on ℚ.</div><div class="story-moral">Continuity means small changes in input produce small changes in output — and the size of "small" can be chosen uniformly.</div></div>
+<h3>Uniform Continuity</h3>
+<p>A function is <strong>uniformly continuous</strong> on a set if δ can be chosen independently of the point — the same δ works everywhere. Continuous functions on closed bounded intervals are automatically uniformly continuous (Heine-Cantor theorem). On unbounded intervals, this fails: f(x) = x² is continuous on ℝ but not uniformly continuous — the δ required to keep changes small shrinks as x grows.</p>
+<h3>Differentiability — The Best Linear Approximation</h3>
+<p>A function is <strong>differentiable</strong> at a if the limit f'(a) = lim_{h→0} (f(a+h) − f(a))/h exists. Geometrically, f'(a) is the slope of the tangent line — the best linear approximation to f near a. Differentiability implies continuity, but not vice versa (f(x) = |x| is continuous but not differentiable at 0). The <strong>Mean Value Theorem</strong> says there's a point where the instantaneous slope equals the average slope: f'(c) = (f(b)−f(a))/(b−a).</p>
+<div class="insight-box"><div class="insight-label">Mean Value Theorem</div><div class="insight-text">f'(c) = (f(b) − f(a)) / (b − a) for some c ∈ (a,b)</div><div class="insight-sub">If f(a) = f(b), then f'(c) = 0 (Rolle's theorem).</div></div>
+<h3>Taylor's Theorem — Power Series Approximations</h3>
+<p>If f is n+1 times differentiable, then f(x) can be approximated by its Taylor polynomial with an error term: f(x) = Σ_{k=0}^{n} f^{(k)}(a)(x−a)ᵏ/k! + Rₙ(x). The remainder Rₙ(x) can be expressed in various forms (Lagrange, Cauchy, integral). For analytic functions, the Taylor series converges to f within its radius of convergence.</p>
+
+<div class="section-divider"></div>
+<div class="section-label part4">Part 4</div>
+<h2>📊 Integration — Measuring Area Under Curves</h2>
+<div class="story-card"><div class="story-label">Riemann's Definition</div><div class="story-title">How to Make Area Rigorous</div><div class="story-text">The Riemann integral partitions the domain into subintervals, forms rectangles whose heights are the function values at sample points, and takes the limit as the partition becomes finer. A function is <strong>Riemann integrable</strong> if this limit exists and is independent of the sample points chosen. Continuous functions are Riemann integrable, as are monotone functions and functions with countably many discontinuities. The <strong>Fundamental Theorem of Calculus</strong> connects integration and differentiation: the derivative of the integral is the original function, and the integral of the derivative is the change in the original function.</div><div class="story-moral">Integration is not just area — it's the inverse of differentiation, and its existence depends on continuity (which depends on completeness).</div></div>
+<div class="formula-grid"><div class="formula-card"><div class="f-label">FTC Part 1</div><div class="f-math">d/dx ∫ₐˣ f(t) dt = f(x)</div></div><div class="formula-card"><div class="f-label">FTC Part 2</div><div class="f-math">∫ₐᵇ f'(x) dx = f(b) − f(a)</div></div><div class="formula-card"><div class="f-label">Integration by Parts</div><div class="f-math">∫ u dv = uv − ∫ v du</div></div><div class="formula-card"><div class="f-label">Improper Integral</div><div class="f-math">∫ₐ^∞ f(x) dx = lim_{t→∞} ∫ₐᵗ f(x) dx</div></div></div>
+<h3>Sequences of Functions — When Can We Swap Limits?</h3>
+<p>When does lim_{n→∞} lim_{x→a} fₙ(x) = lim_{x→a} lim_{n→∞} fₙ(x)? Not always! <strong>Pointwise convergence</strong> — each x individually — is too weak to allow swapping. <strong>Uniform convergence</strong> — where the rate of convergence is independent of x — preserves continuity, differentiability, and integrability, allowing limits to be swapped. The Weierstrass M-test gives a sufficient condition for uniform convergence of series.</p>
+<h3>Beyond Riemann — The Lebesgue Integral</h3>
+<p>The Riemann integral has limitations: it doesn't handle functions with dense discontinuities well, and it doesn't play nicely with limits. The <strong>Lebesgue integral</strong> partitions the range instead of the domain, leading to a more powerful theory that integrates more functions and allows better limit theorems (dominated convergence, monotone convergence). This is the foundation of measure theory and modern analysis, essential for probability theory and partial differential equations.</p>
+<div class="quote-box"><div class="quote">"Analysis is the art of taking limits, and real analysis is the science of when you're allowed to."</div><div class="attribution">— Anonymous analyst</div></div>
+
+<div class="section-divider"></div>
+<h2 style="margin-top:0">🎯 Practice — Check Your Analysis Intuition</h2>
+<p style="color:var(--text-sec);margin-bottom:16px">These puzzles build real analysis intuition — think epsilon!</p>
+<div id="practice-qs"></div>
+<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button><a href="math.html" class="btn btn-success">← Back to Math Map</a></div>
+</div></div></div></div>
+
+<script>
+var practiceQs = [
+{id:14001,text:"📏 The completeness of ℝ is equivalent to:",opts:[{l:"A",t:"Every Cauchy sequence converges",c:true},{l:"B",t:"Every sequence is bounded",c:false},{l:"C",t:"Every function is continuous",c:false},{l:"D",t:"Every set has a maximum",c:false}],sol:"Completeness is <strong>equivalent to the Cauchy criterion</strong> — every Cauchy sequence of real numbers converges. This is the standard way to define completeness in metric spaces."},
+{id:14002,text:"📏 Does the set {x ∈ ℚ : x² < 3} have a supremum in ℚ?",opts:[{l:"A",t:"Yes, it's √3",c:false},{l:"B",t:"No, √3 is not rational",c:true},{l:"C",t:"Yes, it's 3",c:false},{l:"D",t:"No, the set is unbounded",c:false}],sol:"The set is bounded above by 2, but its supremum would be √3, which is <strong>not rational</strong>. This shows ℚ is not complete — ℝ fills this gap."},
+{id:14003,text:"🔢 What is the limit of the sequence aₙ = (n+1)/n?",opts:[{l:"A",t:"0",c:false},{l:"B",t:"1",c:true},{l:"C",t:"∞",c:false},{l:"D",t:"2",c:false}],sol:"aₙ = (n+1)/n = 1 + 1/n → 1 + 0 = <strong>1</strong>. For any ε > 0, choose N > 1/ε, then for n ≥ N, |aₙ−1| = 1/n < ε."},
+{id:14004,text:"🔢 Which of the following series converges?",opts:[{l:"A",t:"Σ 1/n",c:false},{l:"B",t:"Σ 1/n²",c:true},{l:"C",t:"Σ 1/√n",c:false},{l:"D",t:"Σ 2",c:false}],sol:"Σ 1/n² converges (p-series with p=2 > 1). Σ 1/n (harmonic) and Σ 1/√n (p=1/2) diverge. Σ 2 diverges trivially."},
+{id:14005,text:"🎯 A function f is continuous at a if:",opts:[{l:"A",t:"f(a) exists",c:false},{l:"B",t:"lim_{x→a} f(x) = f(a)",c:true},{l:"C",t:"f'(a) exists",c:false},{l:"D",t:"f is bounded near a",c:false}],sol:"Continuity means <strong>lim_{x→a} f(x) = f(a)</strong>. The epsilon-delta definition makes this precise. Differentiability implies continuity, but not vice versa."},
+{id:14006,text:"🎯 By the Intermediate Value Theorem, f(x) = x³ − 2 has a root in:",opts:[{l:"A",t:"(0,1)",c:false},{l:"B",t:"(1,2)",c:true},{l:"C",t:"(2,3)",c:false},{l:"D",t:"(−1,0)",c:false}],sol:"f(1) = 1 − 2 = −1 < 0, f(2) = 8 − 2 = 6 > 0. Since f is continuous on [1,2], by IVT there exists c ∈ (1,2) with f(c) = 0. So the root is in <strong>(1,2)</strong>, which is ∛2 ≈ 1.26."},
+{id:14007,text:"🎯 Rolle's theorem guarantees f'(c) = 0 when:",opts:[{l:"A",t:"f is continuous on [a,b]",c:false},{l:"B",t:"f(a) = f(b) and f is differentiable on (a,b)",c:true},{l:"C",t:"f'(a) = f'(b)",c:false},{l:"D",t:"f is constant",c:false}],sol:"Rolle's theorem: if f is continuous on [a,b], differentiable on (a,b), and <strong>f(a) = f(b)</strong>, then f'(c) = 0 for some c ∈ (a,b)."},
+{id:14008,text:"📊 The Fundamental Theorem of Calculus says:",opts:[{l:"A",t:"∫ f = f(b) − f(a)",c:false},{l:"B",t:"d/dx ∫ₐˣ f = f(x)",c:true},{l:"C",t:"∫ fg = ∫ f ∫ g",c:false},{l:"D",t:"∫ f'/f = ln|f|",c:false}],sol:"FTC Part 1: <strong>d/dx ∫ₐˣ f(t) dt = f(x)</strong>. Differentiation undoes integration. Part 2: ∫ₐᵇ f'(x) dx = f(b) − f(a). Integration undoes differentiation."},
+{id:14009,text:"🔢 A conditionally convergent series:",opts:[{l:"A",t:"Converges absolutely",c:false},{l:"B",t:"Converges but not absolutely",c:true},{l:"C",t:"Diverges",c:false},{l:"D",t:"Has all positive terms",c:false}],sol:"<strong>Conditional convergence</strong> means Σ aₙ converges but Σ |aₙ| diverges. Example: Σ (−1)ⁿ⁺¹/n converges to ln 2, but Σ 1/n diverges."},
+{id:14010,text:"🎯 f(x) = |x| is at x = 0:",opts:[{l:"A",t:"Continuous and differentiable",c:false},{l:"B",t:"Continuous but not differentiable",c:true},{l:"C",t:"Differentiable but not continuous",c:false},{l:"D",t:"Neither continuous nor differentiable",c:false}],sol:"f(x)=|x| is <strong>continuous but not differentiable</strong> at 0. The left derivative is −1, right derivative is 1 — they don't match, so the derivative doesn't exist."},
+{id:14011,text:"📊 Which type of convergence preserves continuity?",opts:[{l:"A",t:"Pointwise convergence",c:false},{l:"B",t:"Uniform convergence",c:true},{l:"C",t:"Conditional convergence",c:false},{l:"D",t:"Absolute convergence",c:false}],sol:"<strong>Uniform convergence</strong> preserves continuity: if fₙ → f uniformly and each fₙ is continuous, then f is continuous. Pointwise convergence is not strong enough."},
+{id:14012,text:"📏 The Bolzano-Weierstrass theorem states:",opts:[{l:"A",t:"Every sequence converges",c:false},{l:"B",t:"Every bounded sequence has a convergent subsequence",c:true},{l:"C",t:"Every Cauchy sequence converges",c:false},{l:"D",t:"Every function has a maximum",c:false}],sol:"The <strong>Bolzano-Weierstrass theorem</strong>: every bounded sequence in ℝ has a convergent subsequence. This is a key consequence of completeness."}
+];
+var answered = {}, correctCount = 0;
+function renderPractice(){var c=document.getElementById('practice-qs'),h='';for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o='';for(var j=0;j<q.opts.length;j++){o+='<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';}h+='<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';}c.innerHTML=h;updateScore();}
+function getCorrectLabel(q){for(var i=0;i<q.opts.length;i++){if(q.opts[i].c)return q.opts[i].l+'. '+q.opts[i].t;}return '';}
+function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll('#q-'+qId+' .q-opt');var isCorrect=q.opts[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add('disabled');if(isCorrect){opts[idx].classList.add('correct');document.getElementById('result-'+qId).textContent='✅ Correct!';document.getElementById('result-'+qId).className='q-result correct';correctCount++;}else{opts[idx].classList.add('wrong');document.getElementById('result-'+qId).textContent='❌ Not quite. Read the solution!';document.getElementById('result-'+qId).className='q-result wrong';for(var i=0;i<q.opts.length;i++){if(q.opts[i].c)opts[i].classList.add('correct');}}document.getElementById('soln-'+qId).classList.add('show');updateScore();}
+function updateScore(){var t=Object.keys(answered).length;var el=document.getElementById('score-display');if(!el){el=document.createElement('div');el.id='score-display';el.style.cssText='font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';document.getElementById('practice-qs').before(el);}el.innerHTML='<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';}
+function resetPractice(){if(!confirm('Reset all answers?'))return;answered={};correctCount=0;document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className='q-opt'});document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent='';e.className='q-result'});var el=document.getElementById('score-display');if(el)el.textContent='';renderPractice();}
+function toggleStep(header){var content=header.nextElementSibling;var arrow=header.querySelector('.arrow');if(content.classList.contains('open')){content.classList.remove('open');arrow.classList.remove('open');}else{content.classList.add('open');arrow.classList.add('open');}}
+renderPractice();
+</script>
 </body>
 </html>
