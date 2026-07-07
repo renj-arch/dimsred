@@ -163,6 +163,14 @@
             opacity:0;transition:all .3s;
         }
         .branch-card:hover .arrow-link{opacity:1;transform:translateX(3px)}
+        .card-tag{
+            display:inline-block;padding:2px 8px;border-radius:4px;
+            font-size:.62em;font-weight:700;letter-spacing:.3px;
+            margin-bottom:8px;
+        }
+        .tag-foundation{background:rgba(99,102,241,.15);color:#818cf8}
+        .tag-core{background:rgba(52,211,153,.15);color:#6ee7b7}
+        .tag-jee{background:rgba(167,139,250,.15);color:#c4b5fd}
 
         /* SVG connectors */
         .connector-svg{
@@ -298,6 +306,13 @@
                     </div>
                 </div>
 
+                <!-- Legend -->
+                <div style="display:flex;justify-content:center;gap:16px;margin-bottom:24px;flex-wrap:wrap;font-size:.72em">
+                    <span style="display:flex;align-items:center;gap:5px;color:var(--text-muted)"><span style="padding:2px 8px;border-radius:4px;background:rgba(99,102,241,.15);color:#818cf8;font-weight:700;font-size:.9em">📚 Foundation</span> Every exam needs this</span>
+                    <span style="display:flex;align-items:center;gap:5px;color:var(--text-muted)"><span style="padding:2px 8px;border-radius:4px;background:rgba(52,211,153,.15);color:#6ee7b7;font-weight:700;font-size:.9em">📖 Core</span> JEE + several exams</span>
+                    <span style="display:flex;align-items:center;gap:5px;color:var(--text-muted)"><span style="padding:2px 8px;border-radius:4px;background:rgba(167,139,250,.15);color:#c4b5fd;font-weight:700;font-size:.9em">🎯 JEE</span> JEE Advanced focus</span>
+                </div>
+
                 <!-- Branch grid -->
                 <div class="branch-grid" id="branchGrid"></div>
 
@@ -322,52 +337,52 @@
             {
                 id:'arithmetic', title:'Arithmetic', icon:'🔢', color:'#6366f1',
                 subs:['Number Systems','Fractions &amp; Decimals','Ratios &amp; Percentages','Exponents &amp; Roots'],
-                href:'lesson-arithmetic.html'
+                href:'lesson-arithmetic.html', tag:'foundation'
             },
             {
                 id:'algebra', title:'Algebra', icon:'✖️', color:'#a78bfa',
                 subs:['Polynomials','Sequences &amp; Series','Matrices','Complex Numbers','Permutations'],
-                href:'jee/course/maths/lesson-algebra.html'
+                href:'jee/course/maths/lesson-algebra.html', tag:'core'
             },
             {
                 id:'trigonometry', title:'Trigonometry', icon:'📐', color:'#f59e0b',
                 subs:['Ratios &amp; Identities','Equations','Inverse Trig'],
-                href:'jee/course/maths/lesson-trigonometry.html'
+                href:'jee/course/maths/lesson-trigonometry.html', tag:'core'
             },
             {
                 id:'coordinate', title:'Coordinate Geometry', icon:'📈', color:'#3b82f6',
                 subs:['Straight Lines','Circles','Conic Sections'],
-                href:'jee/course/maths/lesson-coordinate-geometry.html'
+                href:'jee/course/maths/lesson-coordinate-geometry.html', tag:'jee'
             },
             {
                 id:'calculus', title:'Calculus', icon:'∫', color:'#34d399',
                 subs:['Limits','Derivatives','Integration','Diff Equations'],
-                href:'jee/course/maths/lesson-calculus.html'
+                href:'jee/course/maths/lesson-calculus.html', tag:'core'
             },
             {
                 id:'geometry', title:'Geometry', icon:'🔷', color:'#f97316',
                 subs:['Lines &amp; Angles','Triangles','Circles','Polygons','3D Geometry'],
-                href:'lesson-geometry.html'
+                href:'lesson-geometry.html', tag:'foundation'
             },
             {
                 id:'vectors', title:'Vectors &amp; 3D', icon:'➡️', color:'#ec4899',
                 subs:['Vector Algebra','Dot &amp; Cross','3D Lines &amp; Planes'],
-                href:'jee/course/maths/lesson-vector-3d.html'
+                href:'jee/course/maths/lesson-vector-3d.html', tag:'jee'
             },
             {
                 id:'probability', title:'Probability &amp; Stats', icon:'🎲', color:'#06b6d4',
                 subs:['Probability','Random Variables','Statistics'],
-                href:'jee/course/maths/lesson-probability-statistics.html'
+                href:'jee/course/maths/lesson-probability-statistics.html', tag:'core'
             },
             {
                 id:'sets', title:'Sets, Relations &amp; Functions', icon:'⊂', color:'#8b5cf6',
                 subs:['Sets','Relations','Functions'],
-                href:'jee/course/maths/lesson-sets-relations-functions.html'
+                href:'jee/course/maths/lesson-sets-relations-functions.html', tag:'jee'
             },
             {
                 id:'reasoning', title:'Mathematical Reasoning', icon:'💡', color:'#14b8a6',
                 subs:['Logic &amp; Statements','Truth Tables','Valid Arguments'],
-                href:'jee/course/maths/lesson-mathematical-reasoning.html'
+                href:'jee/course/maths/lesson-mathematical-reasoning.html', tag:'jee'
             }
         ];
 
@@ -383,6 +398,7 @@
 
             card.innerHTML = `
                 <span class="arrow-link">→</span>
+                <div class="card-tag tag-${t.tag}">${t.tag === 'foundation' ? '📚 Foundation' : t.tag === 'core' ? '📖 Core' : '🎯 JEE'}</div>
                 <div class="icon-wrap" style="background:rgba(${hexToRgb(t.color)},.12);color:${t.color}">${t.icon}</div>
                 <div class="b-title">${t.title}</div>
                 <div class="b-subs">${t.subs.map(s => `<span>${s}</span>`).join('')}</div>
