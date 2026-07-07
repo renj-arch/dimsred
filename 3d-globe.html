@@ -79,18 +79,12 @@ canvas{display:block}
 }
 #detail.show{opacity:1;pointer-events:none;transform:translateY(0)}
 #detail.show .d-close,#detail.show #dTimeline,#detail.show .era-event-item,#detail.show a{pointer-events:auto}
-#detail .d-head{display:flex;align-items:center;gap:6px;margin-bottom:6px}
-#detail .d-badge{display:inline-block;padding:2px 10px;border-radius:100px;font-size:.6em;font-weight:600;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0}
-#detail .d-collapse{background:none;border:none;color:rgba(255,255,255,.3);font-size:12px;cursor:pointer;font-family:inherit;padding:2px 4px;display:none;transition:transform .3s}
-#detail .d-collapse:hover{color:#fff}
-#detail.collapsed .d-collapse{transform:rotate(-90deg)}
-#detail .d-body{transition:max-height .3s ease;overflow:hidden}
-#detail.collapsed .d-body{max-height:0 !important}
+#detail .d-badge{display:inline-block;padding:2px 10px;border-radius:100px;font-size:.6em;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
 #detail .d-title{font-size:1em;font-weight:700;color:#fff;margin-bottom:1px}
 #detail .d-sub{font-size:.72em;color:rgba(255,255,255,.4);margin-bottom:6px}
 #detail .d-desc{font-size:.78em;color:rgba(255,255,255,.75);line-height:1.6;margin-bottom:4px}
 #detail .d-fact{font-size:.72em;color:rgba(255,255,255,.5);line-height:1.5;padding:6px 10px;border-radius:6px;background:rgba(255,255,255,.04);margin-top:4px}
-#detail .d-close{background:none;border:none;color:rgba(255,255,255,.3);font-size:16px;cursor:pointer;font-family:inherit;padding:4px;margin-left:auto}
+#detail .d-close{position:absolute;top:10px;right:12px;background:none;border:none;color:rgba(255,255,255,.3);font-size:16px;cursor:pointer;font-family:inherit;padding:4px}
 #detail .d-close:hover{color:#fff}
 
 /* Bottom controls */
@@ -312,8 +306,6 @@ canvas{display:block}
 @media(max-width:768px){
   #detail{left:auto;right:8px;top:64px;bottom:auto;transform:translateY(-10px);max-width:300px;width:calc(100% - 16px);max-height:40vh}
   #detail.show{transform:translateY(0)}
-  #detail .d-collapse{display:inline-flex}
-  #detail.collapsed{max-height:34px;overflow:hidden;width:auto;padding:4px 10px;border-radius:100px;top:8px}
 }
 
 @media(max-width:640px){
@@ -363,13 +355,9 @@ canvas{display:block}
 <button id="layToggle" title="Toggle layers">◀</button>
 
 <div id="detail">
-  <div class="d-head">
-    <button class="d-collapse" id="dCollapse">▾</button>
-    <div class="d-badge" id="dBadge">Feature</div>
-    <button class="d-close" id="dClose">✕</button>
-  </div>
-  <div class="d-body">
-    <div class="d-title" id="dTitle"></div>
+  <button class="d-close" id="dClose">✕</button>
+  <div class="d-badge" id="dBadge">Feature</div>
+  <div class="d-title" id="dTitle"></div>
   <div class="d-sub" id="dSub"></div>
   <div class="d-desc" id="dDesc"></div>
   <div class="d-fact" id="dFact"></div>
@@ -382,7 +370,7 @@ canvas{display:block}
     <div id="dEventsList" style="max-height:120px;overflow-y:auto"></div>
   </div>
   <button id="dTimeline">▶ Play Timeline</button>
-</div></div>
+</div>
 
 <div id="portrait">
   <div class="p-frame">
@@ -4319,11 +4307,9 @@ function showDetail(d,cat,k){
     const curEra=ERAS.slice().reverse().find(e=>year>=e.start&&year<=e.end);
     if(curEra&&curEra.id!=='all')document.getElementById('eraLabel').textContent=curEra.label;
   }
-  dp.classList.remove('collapsed');
   dp.classList.add('show');
 }
-document.getElementById('dClose').addEventListener('click',()=>{dp.classList.remove('show','collapsed');clearHighlight();stopTimeline();hidePortrait();document.getElementById('subtitle').classList.remove('show')});
-document.getElementById('dCollapse').addEventListener('click',()=>dp.classList.toggle('collapsed'));
+document.getElementById('dClose').addEventListener('click',()=>{dp.classList.remove('show');clearHighlight();stopTimeline();hidePortrait();document.getElementById('subtitle').classList.remove('show')});
 
 // Click on 3D markers
 const ray=new THREE.Raycaster(),ptr=new THREE.Vector2();
