@@ -1,34 +1,535 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Category Theory — Coming Soon | vlymbooq</title>
+    <title>Category Theory — The Mathematics of Mathematics | vlymbooq</title>
+    <meta name="description" content="Deep dive into Category Theory — categories, functors, natural transformations, Yoneda lemma, limits, adjunctions, monads, and the universal language of mathematics.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-category-theory.html">
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:Inter,-apple-system,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
-        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
-        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-        .brand{display:flex;align-items:center;gap:8px;text-decoration:none}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .container{max-width:700px;margin:80px auto;padding:24px;text-align:center}
-        .badge{display:inline-block;padding:4px 14px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.75em;font-weight:700;margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase}
-        h1{font-size:1.8em;font-weight:900;margin-bottom:12px;line-height:1.3}
-        p{color:#a1a1aa;font-size:.95em;line-height:1.7;margin-bottom:28px;max-width:500px;margin-left:auto;margin-right:auto}
-        .btn{display:inline-block;padding:10px 24px;border-radius:100px;font-weight:600;font-size:.85em;background:rgba(167,139,250,.15);color:#a78bfa;text-decoration:none;transition:all .2s}
-        .btn:hover{background:rgba(167,139,250,.25)}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}
+        .section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.72em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.7em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--purple);font-weight:700}
+
+        .quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}
+        .quote-box .attribution{font-size:.78em;color:var(--text-muted);margin-top:6px}
     </style>
 </head>
 <body>
-    <nav class="nav"><div class="nav-inner"><a href="index.html" class="brand"><svg width="28" height="28" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg><span class="brand-text">vlymbooq</span></a><a href="math.html" style="color:#a78bfa;font-size:.82em;font-weight:500;text-decoration:none">Math Map</a></div></nav>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="math.html">Math Map</a>
+                <a href="index.html#exams">Exams</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
-        <div class="badge">🔬 Scientist</div>
-        <h1>Category Theory</h1>
-        <p>This deep dive into pure mathematics is being prepared. Check the Math Concept Map for all available lessons.</p>
-        <a href="math.html" class="btn">← Back to Math Concept Map</a>
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Math Lessons</div>
+                    <a href="math.html">← Math Concept Map</a>
+                    <a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+                    <a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+                    <a href="lesson-number-theory.html">Number Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-linear-algebra.html">Linear Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-complex-analysis.html">Complex Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-abstract-algebra.html">Abstract Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-graph-theory.html">Graph Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-real-analysis.html">Real Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-topology.html">Topology <span class="s-tag">🔬</span></a>
+                    <a href="lesson-diff-geometry.html">Diff Geometry <span class="s-tag">🔬</span></a>
+                    <a href="lesson-game-theory.html">Game Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-info-theory.html">Info Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-measure-theory.html">Measure Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-category-theory.html" class="active" style="color:var(--text);font-weight:600">Category Theory <span class="s-tag">🔬</span></a>
+                    <a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+                </div>
+            </div>
+            <div class="main">
+                <div class="lesson-body">
+
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                    <span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.7em;font-weight:700">🔬 Scientist</span>
+                    <span style="font-size:.78em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span>
+                </div>
+
+                <h2>Category Theory — The Mathematics of Mathematics</h2>
+                <p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Category theory studies mathematical structure itself — the patterns that appear across every branch of mathematics. Where algebra studies groups and topology studies spaces, category theory studies the <strong>relationships</strong> between them. It provides a universal language: functors, natural transformations, adjunctions, and the Yoneda lemma. Once you see category-theoretic patterns, they appear everywhere — in logic, programming languages, physics, and even biology. Category theory doesn't just describe mathematics; it reveals the architecture of mathematical thought.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"Category theory is the mathematics of mathematics. It provides a language that lets us see the deep structural analogies between different areas of math."</div>
+                    <div class="attribution">— Saunders Mac Lane</div>
+                </div>
+
+                <!-- ========== PART 1: CATEGORIES & FUNCTORS ========== -->
+                <div class="section-label part1">Part 1</div>
+                <h2>🔗 Categories, Objects, and Morphisms</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Arrow's the Thing</div>
+                    <div class="story-title">Eilenberg & Mac Lane — The 1945 Insight That Changed Mathematics</div>
+                    <div class="story-text">In 1945, Samuel Eilenberg and Saunders Mac Lane were working on a problem in algebraic topology. They realized that to understand the relationship between homology and homotopy, they needed a new language — one focused not on what mathematical objects <em>are</em>, but on the <strong>arrows</strong> between them. A <strong>category</strong> consists of objects, morphisms (arrows) between objects, and a composition operation that is associative and has identities. The category <strong>Set</strong> has sets as objects and functions as morphisms. <strong>Grp</strong> has groups and group homomorphisms. <strong>Top</strong> has topological spaces and continuous maps. <strong>Vectₖ</strong> has vector spaces over k and linear maps. The crucial insight: mathematical objects are defined by how they relate to other objects, not by their internal structure. A group is defined by what a homomorphism from it can do — not by its elements.</div>
+                    <div class="story-moral">In category theory, an object is what it does — it's defined by its relationships, not its internal structure.</div>
+                </div>
+
+                <h3>Definition of a Category</h3>
+                <p>A category C consists of a collection of objects Ob(C), a set of morphisms Hom_C(A,B) for each pair of objects, composition ∘: Hom(B,C) × Hom(A,B) → Hom(A,C) that is associative, and identity morphisms id_A: A → A such that id∘f = f = f∘id. A morphism f: A → B is an <strong>isomorphism</strong> if it has a two-sided inverse. An <strong>initial object</strong> has exactly one morphism to every object (like the empty set in Set). A <strong>terminal object</strong> has exactly one morphism from every object (like a singleton set). Initial and terminal objects, when they exist, are unique up to unique isomorphism — a theme that pervades category theory.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Category</div><div class="f-math">Objects + morphisms + composition</div></div>
+                    <div class="formula-card"><div class="f-label">Functor</div><div class="f-math">F: C → D, preserves structure</div></div>
+                    <div class="formula-card"><div class="f-label">Composition</div><div class="f-math">(h∘g)∘f = h∘(g∘f)</div></div>
+                    <div class="formula-card"><div class="f-label">Identity</div><div class="f-math">f∘id = f = id∘f</div></div>
+                </div>
+
+                <h3>Functors — Maps Between Categories</h3>
+                <p>A <strong>functor</strong> F: C → D sends objects to objects and morphisms to morphisms, preserving composition and identities. The <strong>forgetful functor</strong> U: Grp → Set sends a group to its underlying set, "forgetting" the group structure. The <strong>free group functor</strong> F: Set → Grp sends a set to the free group generated by it. These form an adjunction. The <strong>power set functor</strong> P: Set → Set sends a set to its power set and a function f: X → Y to the direct image function P(f)(A) = {f(a) : a ∈ A}. The <strong>dual vector space functor</strong> (−)*: Vect_k → Vect_k sends a vector space to its linear dual. Functors are everywhere — once you learn to see them, you can't unsee them.</p>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">The Hom Functor — The Most Important Functor</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        For a fixed object A in category C, the <strong>hom functor</strong> Hom(A, −): C → Set sends an object X to the set of morphisms Hom(A,X), and a morphism f: X → Y to the function Hom(A,f): Hom(A,X) → Hom(A,Y) given by g ↦ f∘g.<br><br>
+                        The <strong>Yoneda lemma</strong> says: for any functor F: C → Set, the set of natural transformations from Hom(A,−) to F is in bijection with F(A). In particular, Hom(A,−) ≅ Hom(B,−) iff A ≅ B.<br><br>
+                        This means: an object is completely determined by its <strong>relationships</strong> to all other objects. If two objects have the same "pattern of relationships," they're essentially the same. This is the deepest insight in category theory.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 2: NATURAL TRANSFORMATIONS ========== -->
+                <div class="section-label part2">Part 2</div>
+                <h2>🔄 Natural Transformations and the Yoneda Lemma</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Goal of Category Theory</div>
+                    <div class="story-title">Natural Transformations — Why the Determinant Is "Natural"</div>
+                    <div class="story-text">Given two functors F, G: C → D, a <strong>natural transformation</strong> α: F → G is a family of morphisms α_X: F(X) → G(X) for each X in C, such that for every morphism f: X → Y in C, the diagram commutes: G(f)∘α_X = α_Y∘F(f). This "naturality condition" captures the idea that the transformation is independent of the specific object. The classic example: the determinant is a natural transformation from the general linear group functor GLₙ to the multiplicative group functor (−)*. For any ring homomorphism f: R → S, det(f(A)) = f(det(A)). The naturality of the determinant is why we can talk about "the determinant" without specifying the ring. Eilenberg and Mac Lane invented category theory precisely to make this notion of "natural" precise.</div>
+                    <div class="story-moral">A natural transformation is a family of maps that all work the same way — the "naturality" is that it doesn't depend on which object you're looking at.</div>
+                </div>
+
+                <h3>Natural Isomorphisms and Equivalence</h3>
+                <p>A natural transformation α is a <strong>natural isomorphism</strong> if each component α_X is an isomorphism. Two categories C and D are <strong>equivalent</strong> if there exist functors F: C → D, G: D → C and natural isomorphisms GF ≅ id_C and FG ≅ id_D. Equivalence is the right notion of "sameness" for categories — it's weaker than isomorphism (which requires strict equality) but captures all categorical properties. The classic example: the category of finite-dimensional vector spaces is equivalent to its opposite via the dual functor — but it's not isomorphic to it.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Yoneda Lemma</div>
+                    <div class="insight-text">Nat(Hom(A,−), F) ≅ F(A) for any functor F: C → Set</div>
+                    <div class="insight-sub">"An object is determined by its relationships." This is the most important theorem in category theory.</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 3: LIMITS ========== -->
+                <div class="section-label part3">Part 3</div>
+                <h2>📐 Limits, Colimits, and Universal Properties</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Universal View</div>
+                    <div class="story-title">Limits and Colimits — How to Define Things by Their Properties</div>
+                    <div class="story-text">A <strong>limit</strong> of a diagram is the universal cone — the object that has a unique morphism from any other cone. The <strong>product</strong> A×B is the limit of the diagram with two objects and no morphisms: it has projections π₁: A×B → A, π₂: A×B → B, and for any X with maps to A and B, there's a unique map X → A×B. The <strong>equalizer</strong> of f,g: A → B is the limit of the diagram A ⇒ B — the largest subobject where f and g agree. The <strong>pullback</strong> is the limit of A → C ← B. Dually, <strong>colimits</strong> include coproducts (disjoint unions), coequalizers, and pushouts. The key insight: objects defined by universal properties (like products, equalizers, pullbacks) are unique up to unique isomorphism. This is why categorical definitions are so powerful — they specify exactly what an object does, not how it's built.</div>
+                    <div class="story-moral">Universal properties define objects by their relationships, not their construction. This is the categorical way: tell me what it does, not what it is.</div>
+                </div>
+
+                <h3>Examples of Universal Constructions</h3>
+                <p>In Set, the product is the Cartesian product A×B. In Grp, the product is the direct product of groups (with componentwise operations). In Top, the product has the product topology. The coproduct in Set is the disjoint union; in Grp, it's the free product; in Top, the disjoint union with the coproduct topology. The <strong>equalizer</strong> of f,g: A → B in Set is {a ∈ A : f(a) = g(a)}. The <strong>coequalizer</strong> is the quotient of B by the smallest equivalence relation identifying f(a) and g(a). The <strong>pullback</strong> of f: A → C and g: B → C is {(a,b) : f(a) = g(b)} — it's the solution set of an equation, which is why pullbacks are central to algebraic geometry.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Product</div><div class="f-math">Limit of two objects</div></div>
+                    <div class="formula-card"><div class="f-label">Coproduct</div><div class="f-math">Colimit of two objects</div></div>
+                    <div class="formula-card"><div class="f-label">Equalizer</div><div class="f-math">Limit: A ⇒ B → Eq</div></div>
+                    <div class="formula-card"><div class="f-label">Pullback</div><div class="f-math">Limit of A → C ← B</div></div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Why Products and Coproducts Are Not the Same</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        In Set, the product A×B and coproduct A⊔B are very different: product = ordered pairs, coproduct = disjoint union.<br><br>
+                        In the category of vector spaces Vect_k, the product and coproduct of finitely many spaces <strong>coincide</strong> — both are the direct sum V⊕W. This reflects the fact that finite products and coproducts coincide in additive categories (biproducts).<br><br>
+                        In Grp, the product is the direct product G×H (componentwise multiplication), and the coproduct is the free product G∗H (words with letters from G and H). They are very different — the free product of ℤ₂ and ℤ₂ is the infinite dihedral group, while ℤ₂×ℤ₂ is the Klein four-group.<br><br>
+                        The difference between products and coproducts captures deep structural differences between categories.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 4: ADJOINTS & MONADS ========== -->
+                <div class="section-label part4">Part 4</div>
+                <h2>🌌 Adjoint Functors and Monads — The Grand Unification</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Most Important Concept</div>
+                    <div class="story-title">Adjunctions — The Mathematics of "Best Approximation"</div>
+                    <div class="story-text">An <strong>adjunction</strong> F ⊣ G consists of functors F: C → D, G: D → C such that Hom_D(F(X), Y) ≅ Hom_C(X, G(Y)) naturally in X and Y. This says: F is the "free" or "best" way to get from C to D, and G is the "forgetful" way back. The free group functor is left adjoint to the forgetful functor from Grp to Set. The free vector space functor is left adjoint to the forgetful functor to Set. The product functor (−)×A is left adjoint to the exponential functor (−)^A in cartesian closed categories. Adjunctions are everywhere because they capture the idea of <strong>universal solutions to optimization problems</strong> — the free functor gives the most efficient way to add structure, and its right adjoint forgets structure. Saunders Mac Lane said "Adjoint functors arise everywhere" — and he was right.</div>
+                    <div class="story-moral">Adjoint functors are the mathematical formalization of "free" and "forgetful" — they're everywhere in mathematics because they capture the essence of structure and its absence.</div>
+                </div>
+
+                <h3>Monads — Algebraic Theories</h3>
+                <p>A <strong>monad</strong> on a category C consists of an endofunctor T: C → C with natural transformations η: id → T (unit) and μ: T² → T (multiplication) satisfying the same laws as a monoid (associativity and unit). Every adjunction F ⊣ G gives a monad T = GF on C with unit η and multiplication GεF (where ε is the counit). Monads capture <strong>algebraic theories</strong> categorically: the monad for groups on Set sends a set X to the underlying set of the free group on X, and the multiplication sends a word of words to a flattened word. In functional programming, monads (like Maybe, List, IO) are used to structure effects — and they satisfy exactly the same categorical axioms. The <strong>Eilenberg-Moore category</strong> of algebras for a monad reconstructs the category of algebraic structures (groups, rings, etc.) from the monad. This is how category theory captures universal algebra.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">The Triangle Identities</div>
+                    <div class="insight-text">For an adjunction F ⊣ G with unit η and counit ε: Gε∘ηG = id_G and εF∘Fη = id_F</div>
+                    <div class="insight-sub">These identities capture the "zig-zag" of going back and forth between categories — you always return where you started.</div>
+                </div>
+
+                <h3>Category Theory in Practice</h3>
+                <p>Category theory is not just abstract nonsense. In <strong>functional programming</strong>, Haskell's typeclass system is deeply categorical: Functor, Applicative (lax monoidal functor), Monad, and Comonad come directly from category theory. In <strong>quantum mechanics</strong>, the category of Hilbert spaces with tensor product forms a symmetric monoidal category, and quantum protocols are described by string diagrams. In <strong>machine learning</strong>, backpropagation can be understood as a functor between categories of smooth functions and parameterized functions. In <strong>logic</strong>, the Curry-Howard correspondence links types (category of types and programs) to proofs (category of propositions and derivations). The <strong>Grothendieck construction</strong> in algebraic geometry uses category theory to build geometric objects from algebraic data. Modern mathematics is unthinkable without category theory — it's the lingua franca of the 21st century.</p>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">The Free-Forgetful Adjunction</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Let F: Set → Grp be the free group functor (F(X) = the group of reduced words from X), and U: Grp → Set the forgetful functor (U(G) = underlying set).<br><br>
+                        The adjunction F ⊣ U means: Hom_Grp(F(X), G) ≅ Hom_Set(X, U(G)). A group homomorphism from the free group on X to G is uniquely determined by where it sends each generator (each element of X).<br><br>
+                        The unit η_X: X → U(F(X)) sends each generator to the corresponding one-letter word. The counit ε_G: F(U(G)) → G sends a word of group elements to their product in G (this is the "evaluation" map).<br><br>
+                        This adjunction captures the essence of "free" vs "forgetful" — and it generalizes to free vector spaces, free modules, free rings, and many other constructions.
+                    </div>
+                </div>
+
+                <div class="quote-box">
+                    <div class="quote">"Category theory is the soul of mathematics. It teaches us to see the forest instead of the trees, the patterns instead of the formulas."</div>
+                    <div class="attribution">— Inspired by Eugenia Cheng</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PRACTICE ========== -->
+                <h2 style="margin-top:0">🎯 Practice — Check Your Category Theory Intuition</h2>
+                <p style="color:var(--text-sec);margin-bottom:16px">These puzzles build categorical thinking.</p>
+
+                <div id="practice-qs"></div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+                    <a href="math.html" class="btn btn-success">← Back to Math Map</a>
+                </div>
+
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        var practiceQs = [
+            {
+                id: 19001,
+                text: "🔗 A category consists of objects and:",
+                opts: [
+                    {l: "A", t: "Functions", c: false},
+                    {l: "B", t: "Morphisms (arrows)", c: true},
+                    {l: "C", t: "Elements", c: false},
+                    {l: "D", t: "Operations", c: false}
+                ],
+                sol: "A category consists of <strong>objects</strong> and <strong>morphisms</strong> (arrows between objects) with associative composition and identities."
+            },
+            {
+                id: 19002,
+                text: "🔗 A functor F: C → D must preserve:",
+                opts: [
+                    {l: "A", t: "Only objects", c: false},
+                    {l: "B", t: "Composition and identities", c: true},
+                    {l: "C", t: "Only morphisms", c: false},
+                    {l: "D", t: "Limits and colimits", c: false}
+                ],
+                sol: "A functor must preserve <strong>composition</strong> (F(g∘f) = F(g)∘F(f)) and <strong>identities</strong> (F(id_A) = id_{F(A)})."
+            },
+            {
+                id: 19003,
+                text: "🔗 What is an initial object in a category?",
+                opts: [
+                    {l: "A", t: "An object with no morphisms", c: false},
+                    {l: "B", t: "An object with exactly one morphism to every object", c: true},
+                    {l: "C", t: "An object with one morphism from every object", c: false},
+                    {l: "D", t: "The identity object", c: false}
+                ],
+                sol: "An <strong>initial object</strong> 0 has exactly one morphism from 0 to every object. In Set, it's the empty set. In Grp, it's the trivial group."
+            },
+            {
+                id: 19004,
+                text: "🔄 A natural transformation α: F → G is natural if:",
+                opts: [
+                    {l: "A", t: "α is an isomorphism", c: false},
+                    {l: "B", t: "G(f)∘α_X = α_Y∘F(f) for all f", c: true},
+                    {l: "C", t: "F = G", c: false},
+                    {l: "D", t: "α is the identity", c: false}
+                ],
+                sol: "Naturality means the diagram commutes: <strong>G(f)∘α_X = α_Y∘F(f)</strong>. This says the transformation doesn't depend on the specific object."
+            },
+            {
+                id: 19005,
+                text: "🔄 The Yoneda lemma relates natural transformations to:",
+                opts: [
+                    {l: "A", t: "Limits", c: false},
+                    {l: "B", t: "Elements of F(A)", c: true},
+                    {l: "C", t: "Adjunctions", c: false},
+                    {l: "D", t: "Monads", c: false}
+                ],
+                sol: "The Yoneda lemma says Nat(Hom(A,−), F) ≅ <strong>F(A)</strong>. Natural transformations from the hom functor to F correspond to elements of F(A)."
+            },
+            {
+                id: 19006,
+                text: "📐 The product A×B in a category is a type of:",
+                opts: [
+                    {l: "A", t: "Limit", c: true},
+                    {l: "B", t: "Colimit", c: false},
+                    {l: "C", t: "Functor", c: false},
+                    {l: "D", t: "Natural transformation", c: false}
+                ],
+                sol: "The product is a <strong>limit</strong> of a diagram with two objects and no morphisms. It has projection maps to each factor."
+            },
+            {
+                id: 19007,
+                text: "📐 The coproduct in the category of sets is:",
+                opts: [
+                    {l: "A", t: "Cartesian product", c: false},
+                    {l: "B", t: "Disjoint union", c: true},
+                    {l: "C", t: "Power set", c: false},
+                    {l: "D", t: "Function set", c: false}
+                ],
+                sol: "The coproduct in Set is the <strong>disjoint union</strong> (also called sum). It's the colimit of two objects — the universal cocone with inclusion maps."
+            },
+            {
+                id: 19008,
+                text: "🌌 An adjunction F ⊣ G means there's a natural bijection between:",
+                opts: [
+                    {l: "A", t: "Hom(F(X), Y) and Hom(X, G(Y))", c: true},
+                    {l: "B", t: "Hom(X, Y) and Hom(F(X), G(Y))", c: false},
+                    {l: "C", t: "Hom(G(X), Y) and Hom(X, F(Y))", c: false},
+                    {l: "D", t: "Hom(X, F(Y)) and Hom(G(X), F(Y))", c: false}
+                ],
+                sol: "An adjunction F ⊣ G gives a natural bijection <strong>Hom_D(F(X), Y) ≅ Hom_C(X, G(Y))</strong>. F is left adjoint, G is right adjoint."
+            },
+            {
+                id: 19009,
+                text: "🌌 Every adjunction gives rise to a:",
+                opts: [
+                    {l: "A", t: "Limit", c: false},
+                    {l: "B", t: "Monad", c: true},
+                    {l: "C", t: "Pullback", c: false},
+                    {l: "D", t: "Equalizer", c: false}
+                ],
+                sol: "Every adjunction F ⊣ G gives a <strong>monad</strong> T = GF on C, with unit η and multiplication GεF."
+            },
+            {
+                id: 19010,
+                text: "🌌 Which programming concept comes directly from category theory?",
+                opts: [
+                    {l: "A", t: "Recursion", c: false},
+                    {l: "B", t: "Monads", c: true},
+                    {l: "C", t: "Variables", c: false},
+                    {l: "D", t: "Loops", c: false}
+                ],
+                sol: "<strong>Monads</strong> in functional programming (Maybe, List, IO) come directly from category theory. They structure side effects using the same categorical axioms."
+            },
+            {
+                id: 19011,
+                text: "📐 An equalizer of f,g: A → B is:",
+                opts: [
+                    {l: "A", t: "The set where f and g agree", c: true},
+                    {l: "B", t: "The set where f and g differ", c: false},
+                    {l: "C", t: "The image of f", c: false},
+                    {l: "D", t: "The kernel of f", c: false}
+                ],
+                sol: "An <strong>equalizer</strong> is the limit of A ⇒ B — it's the largest subobject where f and g agree. In Set, Eq(f,g) = {a : f(a) = g(a)}."
+            },
+            {
+                id: 19012,
+                text: "🔗 In the category of sets, what is the terminal object?",
+                opts: [
+                    {l: "A", t: "The empty set", c: false},
+                    {l: "B", t: "A singleton set {*}", c: true},
+                    {l: "C", t: "The set of natural numbers", c: false},
+                    {l: "D", t: "The power set of everything", c: false}
+                ],
+                sol: "The <strong>terminal object</strong> in Set is any <strong>singleton set {*}</strong>. There's exactly one function from any set to {*} — the constant function."
+            }
+        ];
+
+        var answered = {}, correctCount = 0;
+
+        function renderPractice() { /* same as other lessons */ var c = document.getElementById('practice-qs'), h = '';
+            for (var i = 0; i < practiceQs.length; i++) {
+                var q = practiceQs[i], o = '';
+                for (var j = 0; j < q.opts.length; j++) {
+                    o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                }
+                h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+            }
+            c.innerHTML = h; updateScore();
+        }
+        function getCorrectLabel(q) { for (var i = 0; i < q.opts.length; i++) { if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t; } return ''; }
+        function selectOpt(qId, idx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            var q = practiceQs.filter(function(x){return x.id === qId})[0];
+            var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+            var isCorrect = q.opts[idx].c;
+            for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-'+qId).textContent = '✅ Correct!';
+                document.getElementById('result-'+qId).className = 'q-result correct';
+                correctCount++;
+            } else {
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+                document.getElementById('result-'+qId).className = 'q-result wrong';
+                for (var i = 0; i < q.opts.length; i++) { if (q.opts[i].c) opts[i].classList.add('correct'); }
+            }
+            document.getElementById('soln-'+qId).classList.add('show');
+            updateScore();
+        }
+        function updateScore() {
+            var t = Object.keys(answered).length;
+            var el = document.getElementById('score-display');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'score-display';
+                el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+                document.getElementById('practice-qs').before(el);
+            }
+            el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+        }
+        function resetPractice() {
+            if (!confirm('Reset all answers?')) return;
+            answered = {}; correctCount = 0;
+            document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+            document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+            document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+            var el = document.getElementById('score-display');
+            if (el) el.textContent = '';
+            renderPractice();
+        }
+        function toggleStep(header) {
+            var content = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (content.classList.contains('open')) { content.classList.remove('open'); arrow.classList.remove('open'); }
+            else { content.classList.add('open'); arrow.classList.add('open'); }
+        }
+        renderPractice();
+    </script>
 </body>
 </html>
