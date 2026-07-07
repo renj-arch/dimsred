@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Differential Equations — The Equations That Know the Future | vlymbooq</title>
+    <meta name="description" content="Learn Differential Equations through stories and intuition — order, degree, variable separable, homogeneous, linear DE, and applications.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/jee/course/maths/lesson-differential-equations.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}}
+
+        .story-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin:16px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .story-card .story-title{font-size:1.05em;font-weight:700;color:var(--text);margin-bottom:8px}
+        .story-card .story-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .story-card .story-moral{font-size:.82em;color:var(--emerald);font-weight:600;margin-top:10px;padding:8px 12px;background:rgba(52,211,153,.04);border-radius:8px;border-left:3px solid var(--emerald)}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+        .diagram-box .diagram-title{font-size:.85em;font-weight:700;color:var(--text);margin-bottom:8px}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .progress-tracker{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+        .progress-tracker .p-step{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;font-size:.75em;border:1px solid var(--border);color:var(--text-muted);transition:all .3s}
+        .progress-tracker .p-step.done{border-color:var(--emerald);color:var(--emerald);background:rgba(52,211,153,.06)}
+        .progress-tracker .p-step.active{border-color:var(--purple);color:var(--purple);background:rgba(167,139,250,.08)}
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part2{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part3{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="../../index.html">JEE</a><a href="../index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Mathematics</div>
+                    <a href="lesson-algebra.html">Algebra</a>
+                    <a href="lesson-calculus.html">Calculus</a>
+                    <a href="lesson-coordinate-geometry.html">Coordinate Geometry</a>
+                    <a href="lesson-vector-3d.html">Vector & 3D</a>
+                    <a href="lesson-probability-statistics.html">Probability & Stats</a>
+                    <a href="lesson-trigonometry.html">Trigonometry</a>
+                    <a href="lesson-sets-relations-functions.html">Sets, Relations & Functions</a>
+                    <a href="lesson-inverse-trigonometry.html">Inverse Trigonometry</a>
+                    <a href="lesson-application-derivatives.html">Application of Derivatives</a>
+                    <a href="lesson-integration.html">Integration</a>
+                    <a href="lesson-differential-equations.html" class="active">Differential Equations</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 6 &middot; JEE Mathematics</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Differential Equations — The Equations That Know the Future</h1>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">dy/dx tells you the rate. The DE tells you the whole story. Population growth, cooling coffee, falling objects — it's all DEs.</div>
+                    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+                        <button onclick="window.print()" class="download-btn">📄 Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">🎯 Take Mock Test</a>
+                    </div>
+                </div>
+
+                <div class="progress-tracker">
+                    <span class="p-step active" id="p1"><span>📝</span> What is a DE?</span>
+                    <span class="p-step" id="p2"><span>🔄</span> Variable Sep.</span>
+                    <span class="p-step" id="p3"><span>🏠</span> Homogeneous</span>
+                    <span class="p-step" id="p4"><span>📏</span> Linear DE</span>
+                    <span class="p-step" id="p5"><span>🎯</span> Practice</span>
+                </div>
+
+                <div class="lesson-body">
+                    <!-- ============================================================ -->
+                    <!-- PART 1: WHAT IS A DIFFERENTIAL EQUATION? -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">📝 Part 1: What Is a Differential Equation? — The Equation That Knows the Future</span>
+                    <h2>A Differential Equation Describes HOW Something Changes</h2>
+
+                    <p>A differential equation is an equation that involves a function and its derivatives. It describes a <strong>relationship between a quantity and its rate of change</strong>.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">📝 The Core Idea</div>
+                        <div class="story-title">DE = "I Know How Fast It's Changing — Tell Me What It Is"</div>
+                        <div class="story-text">
+                            <strong>Regular equation:</strong> x² + 3 = 7 → solve for x. One answer.<br>
+                            <strong>Differential equation:</strong> dy/dx = 2x → solve for y(x). A whole family of curves!<br><br>
+                            <strong>Why "knows the future"?</strong> If you know the rate of change of a population (dP/dt = kP), and you know the current population, you can predict the population at ANY future time! That's the power of DEs — they model how things evolve.<br><br>
+                            <strong>Examples of DEs in nature:</strong><br>
+                            • Radioactive decay: dN/dt = −λN (rate of decay ∝ amount left)<br>
+                            • Newton's cooling: dT/dt = −k(T − T₀) (cooling rate ∝ temperature difference)<br>
+                            • Population growth: dP/dt = rP (growth rate ∝ current population)
+                        </div>
+                        <div class="story-moral">💡 dy/dx = rate of change. A DE = an equation relating y and dy/dx. Solving it = finding y(x).</div>
+                    </div>
+
+                    <h3>Order and Degree — The DE's ID Card</h3>
+                    <p><strong>Order</strong> = the highest derivative in the equation. <strong>Degree</strong> = the power of that highest derivative (after removing radicals and fractions).</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📊 Order & Degree — Classifying DEs</div>
+                        <svg viewBox="0 0 570 240" width="570" height="240">
+                            <rect x="10" y="10" width="270" height="55" rx="8" fill="rgba(167,139,250,.06)" stroke="var(--purple)" stroke-width="1.5"/>
+                            <text x="25" y="32" fill="var(--purple)" font-size="13" font-weight="700">dy/dx + y = 5</text>
+                            <text x="145" y="32" fill="var(--text-sec)" font-size="12">Order = 1, Degree = 1</text>
+                            <text x="145" y="50" fill="var(--text-muted)" font-size="11">First-order, first-degree (linear)</text>
+
+                            <rect x="300" y="10" width="260" height="55" rx="8" fill="rgba(52,211,153,.06)" stroke="var(--emerald)" stroke-width="1.5"/>
+                            <text x="315" y="32" fill="var(--emerald)" font-size="13" font-weight="700">d²y/dx² + 3dy/dx = 0</text>
+                            <text x="430" y="50" fill="var(--text-muted)" font-size="11">Order = 2, Degree = 1</text>
+
+                            <rect x="10" y="80" width="270" height="55" rx="8" fill="rgba(245,158,11,.06)" stroke="var(--amber)" stroke-width="1.5"/>
+                            <text x="25" y="102" fill="var(--amber)" font-size="12" font-weight="700">(d²y/dx²)² + dy/dx = cos(x)</text>
+                            <text x="145" y="120" fill="var(--text-muted)" font-size="11">Order = 2, Degree = 2</text>
+
+                            <rect x="300" y="80" width="260" height="55" rx="8" fill="rgba(239,68,68,.06)" stroke="var(--red)" stroke-width="1.5"/>
+                            <text x="315" y="100" fill="var(--red)" font-size="12" font-weight="700">d³y/dx³ + xy = 0</text>
+                            <text x="430" y="118" fill="var(--text-muted)" font-size="11">Order = 3, Degree = 1</text>
+
+                            <rect x="40" y="155" width="490" height="75" rx="10" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="285" y="178" fill="var(--amber)" font-size="14" font-weight="800" text-anchor="middle">🧠 Quick Classification</text>
+                            <text x="285" y="200" fill="var(--text-sec)" font-size="12" text-anchor="middle"><tspan fill="var(--purple)" font-weight="700">Order</tspan> = highest derivative &nbsp;|&nbsp; <tspan fill="var(--emerald)" font-weight="700">Degree</tspan> = power of highest derivative (after clearing radicals)</text>
+                            <text x="285" y="220" fill="var(--text-muted)" font-size="11" text-anchor="middle">If the DE involves sin(dy/dx) or √(dy/dx), the degree is not defined!</text>
+                        </svg>
+                        <div class="diagram-caption"><strong>Order</strong> = how many times you differentiate (the number of dashes). <strong>Degree</strong> = the exponent on the highest derivative. If the DE has sin(dy/dx), e^(dy/dx), or √(dy/dx), its degree is not defined (non-polynomial in derivatives).</div>
+                    </div>
+
+                    <h3>General Solution vs Particular Solution</h3>
+                    <div class="story-card">
+                        <div class="story-label">📝 Solutions</div>
+                        <div class="story-title">General Solution = Family of Curves. Particular Solution = One Specific Curve.</div>
+                        <div class="story-text">
+                            <strong>General solution:</strong> Contains arbitrary constants (one constant for each order). dy/dx = 2x → y = x² + C. The constant C represents a whole family of parabolas.<br><br>
+                            <strong>Particular solution:</strong> The constant(s) are determined by initial conditions (extra info like y(0) = 3). So C = 3, giving y = x² + 3.<br><br>
+                            <strong>Order determines constants:</strong> A first-order DE needs 1 initial condition. A second-order DE needs 2.
+                        </div>
+                        <div class="story-moral">💡 Order = number of constants in the general solution = number of initial conditions needed for a particular solution.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 2: VARIABLE SEPARABLE -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">🔄 Part 2: Variable Separable — Separate, Integrate, Done</span>
+                    <h2>The Simpliest DE: dy/dx = f(x)·g(y) — Just Separate and Integrate</h2>
+
+                    <p>If you can rearrange the DE so that all x's are on one side and all y's on the other, you're done. Just separate and integrate both sides.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">🔄 Variable Separable</div>
+                        <div class="story-title">Form: dy/dx = f(x)·g(y) → ∫ 1/g(y) dy = ∫ f(x) dx</div>
+                        <div class="story-text">
+                            <strong>Steps:</strong><br>
+                            1. Rearrange to get all y terms with dy and all x terms with dx.<br>
+                            2. Integrate both sides.<br>
+                            3. Solve for y if possible.<br><br>
+                            <strong>Example:</strong> dy/dx = 2xy.<br>
+                            Separate: dy/y = 2x dx.<br>
+                            Integrate: ∫ dy/y = ∫ 2x dx → ln|y| = x² + C.<br>
+                            Solve: |y| = e^(x²+C) = e^C·e^(x²). Let A = ±e^C.<br>
+                            <div class="math-block">y = A·e^(x²)</div>
+                            Check: dy/dx = A·2x·e^(x²) = 2xy ✅
+                        </div>
+                        <div class="story-moral">💡 "Separate and integrate" — if you can split x's and y's, the DE is solved. This is the most common JEE Main DE type!</div>
+                    </div>
+
+                    <h3>Worked Example: Variable Separable</h3>
+                    <p>Solve dy/dx = 1 + y² given y(0) = 1. Find y(π/4).</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Separate and integrate</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            dy/dx = 1 + y²<br>
+                            dy/(1 + y²) = dx<br>
+                            ∫ dy/(1 + y²) = ∫ dx<br>
+                            tan⁻¹(y) = x + C
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>Use the initial condition and evaluate</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            y(0) = 1: tan⁻¹(1) = 0 + C → π/4 = C.<br>
+                            So tan⁻¹(y) = x + π/4.<br>
+                            y = tan(x + π/4).<br><br>
+                            At x = π/4: y = tan(π/4 + π/4) = tan(π/2) = <strong>undefined</strong> (infinite).<br><br>
+                            This means the solution blows up at x = π/4 — the function has a vertical asymptote there.
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 3: HOMOGENEOUS DIFFERENTIAL EQUATIONS -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🏠 Part 3: Homogeneous DE — When dy/dx = f(y/x)</span>
+                    <h2>If Every Term Has the Same Total Degree, Substitute y = vx</h2>
+
+                    <p>A DE is <strong>homogeneous</strong> if dy/dx can be written as a function of y/x. The substitution y = vx (where v is a function of x) turns it into a variable-separable equation.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">🏠 Homogeneous DE</div>
+                        <div class="story-title">Form: dy/dx = F(y/x). Substitute y = vx, then dy/dx = v + x·dv/dx</div>
+                        <div class="story-text">
+                            <strong>The substitution trick:</strong> Let y = vx (where v = y/x). Then:<br>
+                            dy/dx = v + x·dv/dx (product rule).<br><br>
+                            The DE becomes: v + x·dv/dx = F(v).<br>
+                            Rearranged: x·dv/dx = F(v) − v.<br>
+                            Separated: dv/(F(v) − v) = dx/x.<br>
+                            Now it's variable-separable! Integrate, then substitute back v = y/x.<br><br>
+                            <strong>How to check if a DE is homogeneous:</strong> Replace x with tx and y with ty. If all terms get the same power of t, it's homogeneous. Example: (x² + y²)dx + xy·dy = 0. Each term has degree 2.
+                        </div>
+                        <div class="story-moral">💡 Homogeneous DE → substitute y = vx. The substitution converts it into a separable equation. v + x·dv/dx = F(v) is the key equation!</div>
+                    </div>
+
+                    <h3>Worked Example: Homogeneous DE</h3>
+                    <p>Solve (x² − y²)dx + xy·dy = 0.</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Rewrite in the form dy/dx = F(y/x)</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            (x² − y²)dx + xy·dy = 0<br>
+                            xy·dy = (y² − x²)dx<br>
+                            dy/dx = (y² − x²)/(xy) = y/x − x/y.<br><br>
+                            This is dy/dx = y/x − x/y = F(y/x) where F(v) = v − 1/v. ✅ Homogeneous.
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>Substitute y = vx</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            y = vx, dy/dx = v + x·dv/dx.<br>
+                            v + x·dv/dx = v − 1/v<br>
+                            x·dv/dx = −1/v<br>
+                            v·dv = −dx/x<br>
+                            ∫ v dv = −∫ dx/x<br>
+                            v²/2 = −ln|x| + C<br>
+                            v² = −2ln|x| + 2C = −ln(x²) + C₁
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">3</span>
+                            <span><strong>Substitute back v = y/x</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            (y/x)² = C₁ − ln(x²)<br>
+                            <div class="math-block">y² = x²(C₁ − ln(x²))</div>
+                            This is the general solution — a family of curves. The constant C₁ is determined by an initial condition.
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 4: LINEAR FIRST-ORDER DE -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">📏 Part 4: Linear First-Order DE — The Integrating Factor</span>
+                    <h2>Form: dy/dx + P(x)·y = Q(x). The Answer Is Always y·IF = ∫Q·IF dx</h2>
+
+                    <p>A linear first-order DE has the form dy/dx + P(x)·y = Q(x). The <strong>integrating factor (IF)</strong> method is the standard solution technique.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">📏 Linear DE</div>
+                        <div class="story-title">dy/dx + P·y = Q → Multiply by IF = e^(∫P dx), then the LHS becomes d/dx(y·IF)</div>
+                        <div class="story-text">
+                            <strong>The magic:</strong> Multiply both sides by the integrating factor IF = e^(∫P dx). The left side becomes the derivative of (y·IF).<br><br>
+                            <strong>Solution formula:</strong><br>
+                            <div class="math-block">y·IF = ∫ Q·IF dx + C</div>
+                            <strong>Steps:</strong><br>
+                            1. Write the DE as dy/dx + Py = Q (P and Q are functions of x only).<br>
+                            2. Compute IF = e^(∫P dx).<br>
+                            3. Multiply both sides by IF: IF·dy/dx + IF·P·y = IF·Q.<br>
+                            4. Notice the LHS = d/dx(y·IF).<br>
+                            5. Integrate: y·IF = ∫ Q·IF dx + C.<br>
+                            6. Solve for y.<br><br>
+                            <strong>Example:</strong> dy/dx + 3y = eˣ. P = 3, Q = eˣ.<br>
+                            IF = e^(∫3 dx) = e^(3x).<br>
+                            y·e^(3x) = ∫ eˣ·e^(3x) dx = ∫ e^(4x) dx = e^(4x)/4 + C.<br>
+                            y = e^(4x)/(4e^(3x)) + C/e^(3x) = eˣ/4 + C·e^(−3x).
+                        </div>
+                        <div class="story-moral">💡 IF = e^(∫P dx) transforms the LHS into a perfect derivative. Then it's just integrate-and-multiply. This is the single most important method for first-order DEs.</div>
+                    </div>
+
+                    <h3>Worked Example: Linear DE — Newton's Cooling</h3>
+                    <p>A cup of coffee at 90°C is placed in a room at 20°C. After 5 minutes, it's 60°C. Newton's law: dT/dt = −k(T − 20). Find when it reaches 40°C.</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Set up and solve the DE</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            dT/dt = −k(T − 20). Let's rewrite: dT/dt + kT = 20k.<br>
+                            This is linear with P = k, Q = 20k.<br>
+                            IF = e^(∫k dt) = e^(kt).<br>
+                            T·e^(kt) = ∫ 20k·e^(kt) dt = 20e^(kt) + C.<br>
+                            T = 20 + C·e^(−kt).<br><br>
+                            At t = 0, T = 90: 90 = 20 + C → C = 70.<br>
+                            So T(t) = 20 + 70·e^(−kt).
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>Find k and solve for the target time</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            At t = 5, T = 60: 60 = 20 + 70·e^(−5k)<br>
+                            40 = 70·e^(−5k)<br>
+                            e^(−5k) = 4/7 → −5k = ln(4/7) → k = −ln(4/7)/5 ≈ 0.1119.<br><br>
+                            Find t when T = 40: 40 = 20 + 70·e^(−kt)<br>
+                            20 = 70·e^(−kt) → e^(−kt) = 2/7<br>
+                            −kt = ln(2/7) → t = −ln(2/7)/k ≈ 11.2 minutes.<br><br>
+                            <div class="math-block">The coffee reaches 40°C after about 11.2 minutes.</div>
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 DE Solution Flowchart</div>
+                        <div class="insight-text">Step 1: Can you separate? → Variable separable. Step 2: Is it dy/dx = F(y/x)? → Homogeneous (y = vx). Step 3: Is it dy/dx + Py = Q? → Linear (IF method).</div>
+                        <div class="insight-sub">If none of these, it may be Bernoulli (dy/dx + Py = Q·yⁿ) — transform into linear by letting v = y^(1−n).</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- COMMON MISTAKES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">⚠️ Common Mistakes (Don't Fall For These!)</span>
+                    <h2>These Traps Trip Up Even Top Students</h2>
+
+                    <div class="story-card">
+                        <div class="story-label">⚠️ Mistake 1</div>
+                        <div class="story-title">Forgetting the + C When Integrating</div>
+                        <div class="story-text">
+                            <strong>Wrong:</strong> ∫ dy/y = ∫ 2x dx → ln|y| = x² → y = e^(x²) ❌<br>
+                            <strong>Right:</strong> ∫ dy/y = ∫ 2x dx → ln|y| = x² <strong>+ C</strong> → y = ±e^C·e^(x²) = A·e^(x²) ✅<br><br>
+                            The constant of integration is ABSOLUTELY CRITICAL in DEs. Without it, you lose the entire family of solutions. The general solution MUST have constants equal to the order of the DE.
+                        </div>
+                        <div class="story-moral">⚠️ Never omit + C when integrating a DE. The constant represents which specific curve you're talking about!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">⚠️ Mistake 2</div>
+                        <div class="story-title">Confusing Degree and Order</div>
+                        <div class="story-text">
+                            <strong>Wrong:</strong> (d²y/dx²)³ + dy/dx = 0 → Order 3, Degree 2 ❌<br>
+                            <strong>Right:</strong> The highest derivative is d²y/dx² (order 2). The power of the highest derivative is 3. So <strong>Order = 2, Degree = 3</strong> ✅.<br><br>
+                            Order always = the <strong>number of dashes</strong> on y (or the highest derivative). Degree = the exponent on that highest derivative (after removing radicals and fractions).
+                        </div>
+                        <div class="story-moral">⚠️ Order = highest derivative (count the dashes). Degree = exponent on that derivative (after cleaning radicals). Don't swap them!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">⚠️ Mistake 3</div>
+                        <div class="story-title">Forgetting the Absolute Value in ln|y|</div>
+                        <div class="story-text">
+                            <strong>Wrong:</strong> ∫ dy/y = ∫ dx → ln(y) = x + C → y = e^(x+C) ❌<br>
+                            <strong>Right:</strong> ∫ dy/y = ∫ dx → ln<strong>|y|</strong> = x + C → |y| = e^(x+C) → y = ±e^C·e^x = A·e^x ✅<br><br>
+                            The absolute value matters because y could be negative. The constant A = ±e^C absorbs both the sign and the magnitude.
+                        </div>
+                        <div class="story-moral">⚠️ ∫ dy/y = ln|y| + C, not ln(y) + C. The absolute value handles negative solutions correctly.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PROBLEM-SOLVING TOOLKIT -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">🧠 Differential Equations Toolkit</span>
+                    <h2>5 Strategies That Crack Almost Any Problem</h2>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 1</div>
+                        <div class="story-title">"Identify the Type First" — The DE Classification Flowchart</div>
+                        <div class="story-text">
+                            Before doing ANY algebra, look at the DE and ask:<br><br>
+                            1. <strong>Can I separate?</strong> → dy/dx = f(x)g(y)? → Separate and integrate.<br>
+                            2. <strong>Is it dy/dx = F(y/x)?</strong> → Homogeneous. Substitute y = vx.<br>
+                            3. <strong>Is it dy/dx + P(x)·y = Q(x)?</strong> → Linear. Find IF = e^(∫P dx).<br>
+                            4. <strong>Is it dy/dx + P·y = Q·yⁿ?</strong> → Bernoulli. Let v = y^(1−n) to make it linear.<br>
+                            5. <strong>None of the above?</strong> → Try an exact DE or look for a substitution.<br><br>
+                            <strong>Pro tip:</strong> Most JEE DE problems are designed to be one of these types. Identify the type first, then apply the standard method.
+                        </div>
+                        <div class="story-moral">💡 90% of JEE DE problems are one of: separable, homogeneous, or linear. Identify the type, apply the method, get the answer.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 2</div>
+                        <div class="story-title">"Check the Form Before Rearranging"</div>
+                        <div class="story-text">
+                            Don't blindly rearrange terms. First check if the DE is already in a standard form:<br><br>
+                            • <strong>dx/dy form:</strong> Sometimes the equation is easier if you treat x as a function of y. dx/dy + P(y)·x = Q(y) → linear in x!<br>
+                            • <strong>Symmetric form:</strong> M(x,y)dx + N(x,y)dy = 0. Check if it's homogeneous by looking at the degrees of M and N.<br><br>
+                            <strong>Example:</strong> (x² + y²)dx + xy·dy = 0. This is in symmetric form. The degree of each term is 2 → homogeneous.
+                        </div>
+                        <div class="story-moral">💡 Sometimes treating x as the dependent variable (dx/dy instead of dy/dx) makes a non-linear DE become linear. Always check both orientations!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 3</div>
+                        <div class="story-title">"Verify Your Solution by Substituting Back"</div>
+                        <div class="story-text">
+                            The fastest way to check your answer: <strong>plug the solution back into the original DE</strong> and verify it works.<br><br>
+                            If you got y = A·e^(x²) from dy/dx = 2xy:<br>
+                            dy/dx = 2x·A·e^(x²) = 2xy. ✅ Works!<br><br>
+                            This catches differentiation errors, sign errors, and integration constant mistakes. Always do this check in exams if you have time.
+                        </div>
+                        <div class="story-moral">💡 Substituting back is the ultimate proof. If your solution satisfies the original DE, it's correct. Period.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 4</div>
+                        <div class="story-title">"Don't Fear Initial Conditions — They Just Find the Constant"</div>
+                        <div class="story-text">
+                            Many students find DEs hard because they don't know what to do with y(0) = 5 or y'(0) = 2.<br><br>
+                            <strong>It's simple:</strong> First find the general solution (with constant C). Then plug in the initial condition to find C.<br><br>
+                            <strong>Example:</strong> dy/dx = 2xy, y(0) = 5.<br>
+                            General: y = A·e^(x²).<br>
+                            Plug x = 0, y = 5: 5 = A·e⁰ = A. So y = 5·e^(x²).<br><br>
+                            That's it! The initial condition just pinpoints which curve from the family you want.
+                        </div>
+                        <div class="story-moral">💡 Initial conditions come LAST. Solve the DE generally first, then use the initial conditions to find the constants.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- ADVANCED WORKED EXAMPLES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🔥 Advanced Worked Examples (JEE Level)</span>
+                    <h2>Multi-Step Problems That Combine Multiple Concepts</h2>
+
+                    <h3>Example 1: Bernoulli's Equation</h3>
+                    <p>Solve dy/dx + y/x = y².</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Recognize it as Bernoulli: dy/dx + P·y = Q·yⁿ</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            dy/dx + (1/x)·y = 1·y².<br>
+                            Here P = 1/x, Q = 1, n = 2.<br><br>
+                            Bernoulli's substitution: v = y^(1−n) = y^(1−2) = y^(−1) = 1/y.<br>
+                            Then dv/dx = −y^(−2)·dy/dx = −v²·dy/dx.
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>Transform to linear DE in v</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            Divide the original DE by y²: y^(−2)·dy/dx + (1/x)·y^(−1) = 1.<br>
+                            Note: dv/dx = −y^(−2)·dy/dx, so y^(−2)·dy/dx = −dv/dx.<br>
+                            And y^(−1) = v.<br><br>
+                            So: −dv/dx + (1/x)·v = 1 → dv/dx − (1/x)·v = −1.<br>
+                            This is linear in v: dv/dx + P'·v = Q' where P' = −1/x, Q' = −1.<br>
+                            IF = e^(∫−1/x dx) = e^(−ln|x|) = 1/x.<br>
+                            v·(1/x) = ∫ −1·(1/x) dx = −ln|x| + C.<br>
+                            v = x(−ln|x| + C) = −x·ln|x| + Cx.
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">3</span>
+                            <span><strong>Substitute back v = 1/y</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            Since v = 1/y, the general solution is:<br>
+                            <div class="math-block">1/y = Cx − x·ln|x| &nbsp;→&nbsp; y = 1/(Cx − x·ln|x|)</div>
+                            This is the general solution. For JEE, the answer is often left in this form. If y(1) = 1 was given, then C = 1, and y = 1/(x − x·ln|x|).
+                        </div>
+                    </div>
+
+                    <h3>Example 2: Orthogonal Trajectories</h3>
+                    <p>Find the orthogonal trajectories of the family of parabolas y = ax².</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Find the DE of the given family</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            y = ax². Differentiate: dy/dx = 2ax. But a = y/x², so:<br>
+                            dy/dx = 2(y/x²)·x = 2y/x.<br>
+                            The slope of the tangent at any point on y = ax² is dy/dx = 2y/x.
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>Orthogonal trajectories have slope = negative reciprocal</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            For orthogonal trajectories, the slope at any point is the negative reciprocal: dy/dx = −x/(2y).<br><br>
+                            This is variable separable: 2y·dy = −x·dx<br>
+                            ∫ 2y dy = −∫ x dx<br>
+                            y² = −x²/2 + C<br>
+                            <div class="math-block">x² + 2y² = 2C &nbsp;→&nbsp; x²/2 + y²/1 = C₁</div>
+                            The orthogonal trajectories are <strong>ellipses</strong> with semi-axes in ratio √2 : 1. Every parabola y = ax² is intersected orthogonally by these ellipses!
+                        </div>
+                    </div>
+
+                    <h3>Example 3: Growth/Decay Application</h3>
+                    <p>The rate at which a substance decays is proportional to the amount present. If half of a 100g sample decays in 10 years, how much remains after 25 years?</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Set up and solve the DE</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            dN/dt = −kN (negative because amount decreases).<br>
+                            Separate: dN/N = −k dt.<br>
+                            Integrate: ln|N| = −kt + C → N = N₀·e^(−kt).<br><br>
+                            At t = 0, N = 100: N₀ = 100.<br>
+                            So N(t) = 100·e^(−kt).
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>Find k from the half-life and compute</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            Half-life means N = 50 when t = 10:<br>
+                            50 = 100·e^(−10k) → e^(−10k) = ½ → −10k = ln(½) = −ln(2) → k = ln(2)/10 ≈ 0.0693.<br><br>
+                            At t = 25: N = 100·e^(−25·ln(2)/10) = 100·e^(−2.5·ln(2)) = 100·(e^(ln(2)))⁻²·⁵<br>
+                            = 100·(2⁻²·⁵) = 100/2^(2.5) = 100/(2²·√2) = 100/(4√2) = 25/√2 ≈ <strong>17.68 grams</strong>.<br><br>
+                            <div class="math-block">After 25 years: ≈ 17.68 g remaining</div>
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Growth & Decay Formula</div>
+                        <div class="insight-text">dN/dt = ±kN → N(t) = N₀·e^(±kt). &nbsp;|&nbsp; Half-life: t₁/₂ = ln(2)/k</div>
+                        <div class="insight-sub">(+) for growth (population, interest), (−) for decay (radioactive, cooling). The magnitude of k determines how fast things change.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PRACTICE SECTION -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🎯 Practice Zone: Test Your Understanding</span>
+                    <h2>Practice Zone: Think, Don't Compute</h2>
+                    <p>These questions test if you truly <strong>understand</strong> differential equations.</p>
+
+                    <div id="practice-qs"></div>
+
+                    <div style="display:flex;gap:10px;margin-top:10px">
+                        <button onclick="resetPractice()" class="btn btn-primary">🔄 Reset</button>
+                        <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                        <a href="lesson-integration.html" class="btn btn-primary">← Integration</a>
+                        <a href="lesson-calculus.html" class="btn btn-success">Calculus →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function toggleStep(el) {
+        var content = el.nextElementSibling;
+        var arrow = el.querySelector('.arrow');
+        if (content.classList.contains('open')) {
+            content.classList.remove('open');
+            arrow.classList.remove('open');
+        } else {
+            content.classList.add('open');
+            arrow.classList.add('open');
+        }
+    }
+
+    var practiceQs = [
+        {
+            id: 8001,
+            text: "📝 What is the order and degree of d²y/dx² + (dy/dx)³ + y = 0?",
+            opts: [
+                {l: "A", t: "Order 2, Degree 2", c: false},
+                {l: "B", t: "Order 2, Degree 1", c: true},
+                {l: "C", t: "Order 3, Degree 1", c: false},
+                {l: "D", t: "Order 1, Degree 3", c: false}
+            ],
+            sol: "The highest derivative is d²y/dx² → <strong>Order = 2</strong>. That derivative has exponent 1 (no square on it — (dy/dx)³ is a lower derivative). <strong>Degree = 1</strong>. Order is about which derivative, degree is about the exponent on it."
+        },
+        {
+            id: 8002,
+            text: "🔄 Solve dy/dx = 2x/y. What is the general solution?",
+            opts: [
+                {l: "A", t: "y² = x² + C", c: false},
+                {l: "B", t: "y² = x² + C", c: true},
+                {l: "C", t: "y² = 2x² + C", c: false},
+                {l: "D", t: "y = x² + C", c: false}
+            ],
+            sol: "Separate: y·dy = 2x·dx. Integrate: ∫ y dy = ∫ 2x dx → y²/2 = x² + C₁. Multiply by 2: y² = 2x² + 2C₁ = <strong>2x² + C</strong>. Check: differentiate: 2y·dy/dx = 4x → dy/dx = 2x/y ✅."
+        },
+        {
+            id: 8003,
+            text: "📏 The IF for dy/dx + 2xy = x is:",
+            opts: [
+                {l: "A", t: "e^(x²)", c: true},
+                {l: "B", t: "e^(2x)", c: false},
+                {l: "C", t: "e^(x)", c: false},
+                {l: "D", t: "e^(2x²)", c: false}
+            ],
+            sol: "IF = e^(∫P dx). Here P = 2x. ∫2x dx = x². So IF = <strong>e^(x²)</strong>. The IF turns the LHS into d/dx(y·e^(x²)). Then: y·e^(x²) = ∫ x·e^(x²) dx = e^(x²)/2 + C → y = 1/2 + C·e^(−x²)."
+        },
+        {
+            id: 8004,
+            text: "🏠 The DE (x² + y²)dx − xy·dy = 0 is:",
+            opts: [
+                {l: "A", t: "Variable separable", c: false},
+                {l: "B", t: "Homogeneous", c: true},
+                {l: "C", t: "Linear", c: false},
+                {l: "D", t: "Exact", c: false}
+            ],
+            sol: "Rewrite: dy/dx = (x² + y²)/(xy) = x/y + y/x = (1/v) + v where v = y/x. Since it's a function of y/x only, it's <strong>homogeneous</strong>. Substitute y = vx and solve. The degree of each term is 2 → a clear homogeneous signal."
+        },
+        {
+            id: 8005,
+            text: "🔄 Solve dy/dx = e^(x−y). The general solution is:",
+            opts: [
+                {l: "A", t: "e^y = eˣ + C", c: false},
+                {l: "B", t: "e^y = eˣ + C", c: true},
+                {l: "C", t: "y = x + C", c: false},
+                {l: "D", t: "e^(−y) = eˣ + C", c: false}
+            ],
+            sol: "dy/dx = e^(x−y) = eˣ·e^(−y). Separate: e^y dy = eˣ dx. Integrate: ∫ e^y dy = ∫ eˣ dx → e^y = eˣ + C. Note: the constant C absorbs the e^C₁ from both sides. This is variable separable because the RHS = (eˣ)(e^(−y)) = f(x)·g(y)."
+        },
+        {
+            id: 8006,
+            text: "📝 The degree of √(dy/dx) + x = 0 is:",
+            opts: [
+                {l: "A", t: "1", c: false},
+                {l: "B", t: "2", c: true},
+                {l: "C", t: "1/2", c: false},
+                {l: "D", t: "Not defined", c: false}
+            ],
+            sol: "√(dy/dx) + x = 0 → √(dy/dx) = −x. Square both sides: dy/dx = x². Now the highest derivative (dy/dx) has exponent 1. So the degree is <strong>1</strong>. Wait — let me reconsider. The original equation has √(dy/dx). We need to express it as a polynomial in derivatives. After squaring, we get dy/dx = x². The highest derivative is dy/dx with power 1. So Degree = <strong>1</strong>. But wait — the original equation has √(dy/dx) which is derivative of power 1/2. After rationalizing (squaring), we get (dy/dx)³ = x⁶ — no. Actually: √(dy/dx) = −x → dy/dx = x². So the highest derivative power is 1 → Degree = 1."
+        },
+        {
+            id: 8007,
+            text: "📏 Solve dy/dx + y = 1. Which is correct?",
+            opts: [
+                {l: "A", t: "y = 1 + C·e^(−x)", c: false},
+                {l: "B", t: "y = 1 + C·e^(−x)", c: true},
+                {l: "C", t: "y = C·e^(−x)", c: false},
+                {l: "D", t: "y = 1 + C·eˣ", c: false}
+            ],
+            sol: "Linear: P = 1, Q = 1. IF = e^(∫1 dx) = eˣ. y·eˣ = ∫ 1·eˣ dx = eˣ + C. y = 1 + C·e^(−x). Check: dy/dx = −C·e^(−x), so dy/dx + y = −C·e^(−x) + 1 + C·e^(−x) = 1 ✅. The steady-state solution is y = 1 (as x → ∞)."
+        },
+        {
+            id: 8008,
+            text: "🔄 Which DE is variable separable?",
+            opts: [
+                {l: "A", t: "dy/dx = x + y", c: false},
+                {l: "B", t: "dy/dx = xy", c: true},
+                {l: "C", t: "dy/dx = x² + y²", c: false},
+                {l: "D", t: "dy/dx = sin(x+y)", c: false}
+            ],
+            sol: "dy/dx = xy = x·y. This is f(x)·g(y) where f(x) = x and g(y) = y. Separate: dy/y = x dx. Integrate: ln|y| = x²/2 + C → y = A·e^(x²/2). The other options are sums or sin(x+y), which can't be separated into product f(x)·g(y)."
+        },
+        {
+            id: 8009,
+            text: "🏠 The substitution for solving a homogeneous DE is:",
+            opts: [
+                {l: "A", t: "y = ux", c: true},
+                {l: "B", t: "u = x + y", c: false},
+                {l: "C", t: "v = x² + y²", c: false},
+                {l: "D", t: "t = ln(x)", c: false}
+            ],
+            sol: "For a homogeneous DE (dy/dx = F(y/x)), substitute <strong>y = vx</strong> (or y = ux). Then dy/dx = v + x·dv/dx. This converts the DE into a separable equation in v and x. After solving, substitute back v = y/x."
+        },
+        {
+            id: 8010,
+            text: "⏱️ A population grows as dP/dt = kP. If P doubles in 5 years, find k.",
+            opts: [
+                {l: "A", t: "k = ln(2)/5", c: true},
+                {l: "B", t: "k = 2/5", c: false},
+                {l: "C", t: "k = 5·ln(2)", c: false},
+                {l: "D", t: "k = ln(5)/2", c: false}
+            ],
+            sol: "Solution: P(t) = P₀·e^(kt). Doubling: P(5) = 2P₀ → P₀·e^(5k) = 2P₀ → e^(5k) = 2 → 5k = ln(2) → k = <strong>ln(2)/5</strong>. Doubling time = ln(2)/k, so k = ln(2)/T₂. For T₂ = 5, k = ln(2)/5 ≈ 0.1386 per year."
+        },
+        {
+            id: 8011,
+            text: "📝 The order of d³y/dx³ + (d²y/dx²)² + y = 0 is:",
+            opts: [
+                {l: "A", t: "2", c: false},
+                {l: "B", t: "3", c: true},
+                {l: "C", t: "1", c: false},
+                {l: "D", t: "4", c: false}
+            ],
+            sol: "The highest derivative present is d³y/dx³ (third derivative). The order is <strong>3</strong>. The (d²y/dx²)² is a lower derivative raised to a power — it doesn't affect the order. Order = highest derivative, degree = exponent on that highest derivative."
+        },
+        {
+            id: 8012,
+            text: "📏 For dy/dx + y·tan(x) = sin(x), the IF is:",
+            opts: [
+                {l: "A", t: "cos(x)", c: false},
+                {l: "B", t: "sec(x)", c: true},
+                {l: "C", t: "tan(x)", c: false},
+                {l: "D", t: "sin(x)", c: false}
+            ],
+            sol: "P = tan(x). IF = e^(∫tan(x) dx) = e^(−ln|cos(x)|) = 1/|cos(x)|. But in the interval (−π/2, π/2), cos(x) > 0, so IF = <strong>1/cos(x) = sec(x)</strong>. Check: d/dx(y·sec(x)) = sec(x)·dy/dx + y·sec(x)·tan(x) = sec(x)(dy/dx + y·tan(x)) = sec(x)·sin(x) = tan(x). So y·sec(x) = ∫ tan(x) dx = −ln|cos(x)| + C → y = cos(x)(C − ln|cos(x)|)."
+        }
+    ];
+
+    var answered = {}, correctCount = 0, lessonSlug = "differential-equations";
+
+    function renderPractice() {
+        var c = document.getElementById('practice-qs'), h = '';
+        for (var i = 0; i < practiceQs.length; i++) {
+            var q = practiceQs[i], o = '';
+            for (var j = 0; j < q.opts.length; j++) {
+                o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+            }
+            h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+        }
+        c.innerHTML = h;
+        updateScore();
+    }
+
+    function getCorrectLabel(q) {
+        for (var i = 0; i < q.opts.length; i++) {
+            if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+        }
+        return '';
+    }
+
+    function selectOpt(qId, idx) {
+        if (answered[qId]) return;
+        answered[qId] = true;
+        var q = practiceQs.filter(function(x){return x.id === qId})[0];
+        var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+        var isCorrect = q.opts[idx].c;
+        for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+        if (isCorrect) {
+            opts[idx].classList.add('correct');
+            document.getElementById('result-'+qId).textContent = '✅ Correct! +4';
+            document.getElementById('result-'+qId).className = 'q-result correct';
+            correctCount++;
+        } else {
+            opts[idx].classList.add('wrong');
+            document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+            document.getElementById('result-'+qId).className = 'q-result wrong';
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) opts[i].classList.add('correct');
+            }
+        }
+        document.getElementById('soln-'+qId).classList.add('show');
+        updateScore();
+    }
+
+    function updateScore() {
+        var t = Object.keys(answered).length;
+        var el = document.getElementById('score-display');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'score-display';
+            el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+            document.getElementById('practice-qs').before(el);
+        }
+        el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+    }
+
+    function resetPractice() {
+        if (!confirm('Reset all answers?')) return;
+        answered = {}; correctCount = 0;
+        document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+        document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+        document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+        var el = document.getElementById('score-display');
+        if (el) el.textContent = '';
+        renderPractice();
+    }
+
+    function markComplete() {
+        try {
+            var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+            if (done.indexOf(lessonSlug) === -1) {
+                done.push(lessonSlug);
+                localStorage.setItem('jee-course-done', JSON.stringify(done));
+            }
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        } catch(e) {}
+    }
+
+    renderPractice();
+    try {
+        var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+        if (done.indexOf(lessonSlug) !== -1) {
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        }
+    } catch(e) {}
+    </script>
+</body>
+</html>
