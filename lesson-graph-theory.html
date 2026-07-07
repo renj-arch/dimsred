@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Graph Theory — Networks, Coloring &amp; Connections | vlymbooq</title>
+    <meta name="description" content="Deep dive into Graph Theory — Eulerian paths, trees, coloring, network flows, Ramsey theory, and the math behind social networks and P vs NP.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-graph-theory.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}
+        .section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.72em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.7em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--purple);font-weight:700}
+
+        .quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}
+        .quote-box .attribution{font-size:.78em;color:var(--text-muted);margin-top:6px}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="math.html">Math Map</a>
+                <a href="index.html#exams">Exams</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Math Lessons</div>
+                    <a href="math.html">← Math Concept Map</a>
+                    <a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+                    <a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+                    <a href="lesson-number-theory.html">Number Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-linear-algebra.html">Linear Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-complex-analysis.html">Complex Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-abstract-algebra.html">Abstract Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-graph-theory.html" class="active" style="color:var(--text);font-weight:600">Graph Theory <span class="s-tag">🔬</span></a>
+                    <a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+                </div>
+            </div>
+            <div class="main">
+                <div class="lesson-body">
+
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                    <span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.7em;font-weight:700">🔬 Scientist</span>
+                    <span style="font-size:.78em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span>
+                </div>
+
+                <h2>Graph Theory — The Mathematics of Connections</h2>
+                <p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Graph theory studies networks — collections of points (vertices) connected by lines (edges). It began with a simple question about bridges in Königsberg and grew into one of the most applied branches of mathematics. Social networks, the internet, transportation, epidemiology, circuit design, and even the structure of molecules are all graphs. And at its frontier lies the most famous unsolved problem in computer science: P vs NP.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"Graph theory is the science of relationships. Everything is connected to everything else — graph theory makes that precise."</div>
+                    <div class="attribution">— Anonymous</div>
+                </div>
+
+                <!-- ========== PART 1: FOUNDATIONS ========== -->
+                <div class="section-label part1">Part 1</div>
+                <h2>🔗 Graphs — Vertices, Edges, and the Bridges of Königsberg</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Birth of Graph Theory</div>
+                    <div class="story-title">How Seven Bridges Launched a Mathematical Revolution</div>
+                    <div class="story-text">In the 18th century, the city of Königsberg had seven bridges crossing the Pregel River. The question: could you take a walk that crossed each bridge exactly once and return to your starting point? In 1736, Euler proved it was impossible — and in doing so, invented graph theory. He realized the problem wasn't about geography; it was about <strong>connections</strong>. The landmasses became vertices, the bridges became edges, and the answer depended only on the <strong>degrees</strong> of the vertices. A graph has an Eulerian circuit (a tour using every edge exactly once) iff every vertex has even degree. All seven Königsberg bridges had odd degree — impossible.</div>
+                    <div class="story-moral">Sometimes the deepest insights come from ignoring what something <em>is</em> and focusing only on how it's connected.</div>
+                </div>
+
+                <h3>Basic Vocabulary</h3>
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Degree</div><div class="f-math">deg(v) = # edges incident to v</div></div>
+                    <div class="formula-card"><div class="f-label">Handshaking Lemma</div><div class="f-math">Σ deg(v) = 2|E|</div></div>
+                    <div class="formula-card"><div class="f-label">Complete Graph Kₙ</div><div class="f-math">Every pair connected</div></div>
+                    <div class="formula-card"><div class="f-label">Bipartite Graph</div><div class="f-math">Two sets, edges only between</div></div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">The Handshaking Lemma</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        The sum of all vertex degrees equals twice the number of edges. Why? Each edge contributes 1 to the degree of each of its two endpoints, so it contributes 2 to the total sum.<br><br>
+                        <strong>Consequence:</strong> Every graph has an <strong>even</strong> number of vertices of odd degree. This is why Euler's seven bridges had an odd number of odd-degree vertices — making a Eulerian circuit impossible.
+                    </div>
+                </div>
+
+                <h3>Paths, Cycles, and Connectedness</h3>
+                <p>A <strong>path</strong> is a sequence of edges where no vertex repeats. A <strong>cycle</strong> is a closed path. A graph is <strong>connected</strong> if there's a path between every pair of vertices. A <strong>tree</strong> is a connected graph with no cycles — it has exactly n−1 edges for n vertices. Trees are the minimal connected structures and appear everywhere: file systems, decision trees, family trees, spanning trees of networks.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Properties of Trees</div>
+                    <div class="insight-text">A tree on n vertices has exactly n−1 edges</div>
+                    <div class="insight-sub">Add one more edge → creates a cycle. Remove one edge → disconnects the graph.</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 2: COLORING & PLANARITY ========== -->
+                <div class="section-label part2">Part 2</div>
+                <h2>🎨 Graph Coloring — How Many Colors Do You Need?</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Four Color Theorem</div>
+                    <div class="story-title">A 124-Year Obsession That Changed Mathematics</div>
+                    <div class="story-text">In 1852, Francis Guthrie noticed that four colors sufficed to color any map of England so that adjacent counties had different colors. The question: is four always enough? The <strong>Four Color Theorem</strong> says yes — any planar graph (one that can be drawn without crossing edges) is 4-colorable. It was the first major theorem proven by computer (Appel and Haken, 1976), sparking controversy about what constitutes a proof. A graph's <strong>chromatic number</strong> χ(G) is the fewest colors needed. For Kₙ, χ = n. For bipartite graphs, χ = 2. For planar graphs, χ ≤ 4.</div>
+                    <div class="story-moral">Sometimes a simple question takes over a century and a computer to answer.</div>
+                </div>
+
+                <h3>Greedy Coloring Algorithm</h3>
+                <p>Order the vertices. Give each vertex the smallest color not used by its already-colored neighbors. In the worst case, this uses at most Δ+1 colors (where Δ is the maximum degree). Brooks' theorem gives a tighter bound: for connected graphs that aren't complete or odd cycles, χ(G) ≤ Δ.</p>
+
+                <h3>Planar Graphs — Drawing Without Crossings</h3>
+                <p>A graph is <strong>planar</strong> if it can be drawn in the plane with no edges crossing. Euler's formula for connected planar graphs:</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Euler's Formula for Planar Graphs</div>
+                    <div class="insight-text">V − E + F = 2</div>
+                    <div class="insight-sub">Vertices minus edges plus faces equals 2 (for connected planar graphs).</div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-label">Consequences of Euler's Formula</div>
+                    <div class="ex-text">For a planar graph with V ≥ 3: E ≤ 3V − 6. This is why K₅ (complete graph on 5 vertices) is non-planar — it has 10 edges, but 3×5−6 = 9, so it violates the bound. K₃,₃ (utility graph) also violates a face-length bound and is non-planar. <strong>Kuratowski's theorem</strong> says a graph is planar iff it contains no subdivision of K₅ or K₃,₃.</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 3: MATCHINGS & FLOWS ========== -->
+                <div class="section-label part3">Part 3</div>
+                <h2>⚡ Matchings and Flows — Connecting Pairs and Moving Stuff</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Matchmaking Mathematics</div>
+                    <div class="story-title">Hall's Marriage Theorem and the Perfect Match</div>
+                    <div class="story-text">Suppose you have n jobs and n applicants, and each applicant is qualified for some subset of jobs. Can you assign each applicant a unique job they're qualified for? This is a <strong>matching</strong> problem on a bipartite graph. <strong>Hall's marriage theorem</strong> answers: a perfect matching exists iff for every subset of applicants, the set of jobs they collectively qualify for is at least as large. This simple condition appears in assignment problems, scheduling, and even online dating algorithms.</div>
+                    <div class="story-moral">A graph doesn't need to be dense — it just needs enough connections for everyone to find a partner.</div>
+                </div>
+
+                <h3>Maximum Matching</h3>
+                <p>A <strong>matching</strong> is a set of edges with no shared vertices. A <strong>maximum matching</strong> contains as many edges as possible. The <strong>augmenting path algorithm</strong> finds one: start with any matching, find a path that alternates between unmatched and matched edges, flip the edges along the path to increase the matching size. Repeat until no augmenting path exists — then the matching is maximum.</p>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">König's Theorem — Matchings and Covers</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        In bipartite graphs, the size of a maximum matching equals the size of a minimum vertex cover (a set of vertices that touches every edge). This is <strong>König's theorem</strong>, and it's a special case of the <strong>max-flow min-cut theorem</strong>.<br><br>
+                        <strong>Example:</strong> In a graph with 4 jobs and 4 applicants, if the maximum matching has size 3, then there are 3 vertices that together touch every possible edge. Those 3 vertices form a bottleneck — explaining why 4 matches are impossible.
+                    </div>
+                </div>
+
+                <h3>Network Flows — The Max-Flow Min-Cut Theorem</h3>
+                <p>A <strong>flow network</strong> is a directed graph with a source (s), a sink (t), and capacities on edges. A flow sends as much "stuff" from s to t as possible without exceeding capacities. The <strong>max-flow min-cut theorem</strong> says the maximum flow equals the minimum capacity of a cut (a set of edges whose removal disconnects s from t). This is one of the most applied results in mathematics — it governs traffic flow, internet routing, airline scheduling, and the movement of goods in supply chains.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Max-Flow Min-Cut Theorem</div>
+                    <div class="insight-text">Maximum flow = Minimum cut capacity</div>
+                    <div class="insight-sub">The bottleneck determines the throughput. The Ford-Fulkerson algorithm finds the max flow by repeatedly finding augmenting paths.</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 4: DEEP RESULTS & APPLICATIONS ========== -->
+                <div class="section-label part4">Part 4</div>
+                <h2>🌍 Deep Graph Theory — Ramsey, Random Graphs, and P vs NP</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Order from Chaos</div>
+                    <div class="story-title">Ramsey Theory: Complete Disorder Is Impossible</div>
+                    <div class="story-text">In any group of 6 people, there must be either 3 mutual friends or 3 mutual strangers. This is R(3,3) = 6 — the smallest number where a monochromatic triangle is unavoidable. <strong>Ramsey theory</strong> says that in any large enough structure, patterns inevitably emerge. R(4,4) = 18, but R(5,5) is unknown — only that it's between 43 and 48. The <strong>Ramsey numbers</strong> grow extremely fast, and computing them is one of the hardest problems in combinatorics. The philosopher Wittgenstein famously tried to disprove R(3,3) = 6 by drawing a counterexample — and failed.</div>
+                    <div class="story-moral">Complete randomness is impossible. Enough structure always contains order.</div>
+                </div>
+
+                <h3>Extremal Graph Theory — Turán's Theorem</h3>
+                <p>What's the maximum number of edges in a graph on n vertices that contains no triangle? <strong>Turán's theorem</strong> answers: the extremal graph is a complete bipartite graph with parts as equal as possible — ⌊n²/4⌋ edges. More generally, if a graph has no Kᵣ as a subgraph, the extremal number is given by the Turán graph T(n, r−1).</p>
+
+                <div class="example-box">
+                    <div class="ex-label">Mantel's Theorem (r=3)</div>
+                    <div class="ex-text">A triangle-free graph on n vertices has at most ⌊n²/4⌋ edges. Example: n = 6. Max edges without a triangle = 9 (a complete bipartite K₃,₃). If you add one more edge, a triangle appears. This is the simplest case of Turán's theorem.</div>
+                </div>
+
+                <h3>Random Graphs — The Erdős–Rényi Model</h3>
+                <p>In the G(n,p) model, each of the n(n−1)/2 possible edges appears independently with probability p. This seems random, but it produces remarkably predictable behavior. At p = 1/n, the graph undergoes a <strong>phase transition</strong>: below this threshold, components are tiny (O(log n)); above it, a giant component emerges containing a constant fraction of vertices. This models how epidemics spread, how social networks form, and how the internet connected — suddenly, not gradually.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Erdős–Rényi Phase Transition</div>
+                    <div class="insight-text">At p = 1/n, a giant component suddenly appears</div>
+                    <div class="insight-sub">Below: isolated trees. Above: a single component containing most vertices. This critical point is remarkably sharp.</div>
+                </div>
+
+                <h3>Graph Algorithms — P vs NP</h3>
+                <p>Many graph problems have efficient (polynomial-time) algorithms: finding shortest paths (Dijkstra), minimum spanning trees (Kruskal), maximum matchings, network flows. These are in <strong>P</strong>. But others seem to require checking all possibilities: finding a Hamiltonian cycle (a tour visiting each vertex once), the traveling salesman problem, graph coloring with 3 colors, finding a clique of a given size. These are in <strong>NP</strong> — solutions can be checked quickly, but finding them seems hard. The P vs NP question asks whether these are truly distinct: can every problem whose solution is easy to verify also be solved quickly? A $1M Clay Millennium problem, and arguably the most important open question in computer science.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"Graph theory is the ultimate applied mathematics — it doesn't matter whether you're studying molecules or social networks, it's all graphs underneath."</div>
+                    <div class="attribution">— Paul Erdős</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PRACTICE ========== -->
+                <h2 style="margin-top:0">🎯 Practice — Check Your Graph Intuition</h2>
+                <p style="color:var(--text-sec);margin-bottom:16px">These puzzles build graph theory intuition — no code needed.</p>
+
+                <div id="practice-qs"></div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+                    <a href="math.html" class="btn btn-success">← Back to Math Map</a>
+                </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var practiceQs = [
+            {
+                id: 13001,
+                text: "🔗 How many edges does a tree with 20 vertices have?",
+                opts: [
+                    {l: "A", t: "20", c: false},
+                    {l: "B", t: "19", c: true},
+                    {l: "C", t: "21", c: false},
+                    {l: "D", t: "10", c: false}
+                ],
+                sol: "A tree on n vertices always has <strong>n−1</strong> edges. So a tree with 20 vertices has 19 edges. This is a fundamental property of trees."
+            },
+            {
+                id: 13002,
+                text: "🔗 In a graph with 10 vertices and 15 edges, what is the sum of all vertex degrees?",
+                opts: [
+                    {l: "A", t: "15", c: false},
+                    {l: "B", t: "20", c: false},
+                    {l: "C", t: "30", c: true},
+                    {l: "D", t: "10", c: false}
+                ],
+                sol: "By the handshaking lemma: Σ deg(v) = <strong>2|E|</strong> = 2 × 15 = 30. The sum of degrees is always twice the number of edges."
+            },
+            {
+                id: 13003,
+                text: "🎨 What is the chromatic number of K₄ (complete graph on 4 vertices)?",
+                opts: [
+                    {l: "A", t: "2", c: false},
+                    {l: "B", t: "3", c: false},
+                    {l: "C", t: "4", c: true},
+                    {l: "D", t: "5", c: false}
+                ],
+                sol: "In K₄, every vertex is connected to every other vertex. Each vertex needs its own color — so χ(K₄) = <strong>4</strong>. In general, χ(Kₙ) = n."
+            },
+            {
+                id: 13004,
+                text: "🎨 A planar graph has 8 vertices and 12 edges. How many faces does it have?",
+                opts: [
+                    {l: "A", t: "4", c: false},
+                    {l: "B", t: "6", c: true},
+                    {l: "C", t: "8", c: false},
+                    {l: "D", t: "2", c: false}
+                ],
+                sol: "Euler's formula: V − E + F = 2. So 8 − 12 + F = 2 → F = <strong>6</strong> faces."
+            },
+            {
+                id: 13005,
+                text: "🔗 Which of these graphs is NOT planar?",
+                opts: [
+                    {l: "A", t: "K₄", c: false},
+                    {l: "B", t: "K₅", c: true},
+                    {l: "C", t: "A tree", c: false},
+                    {l: "D", t: "A cycle C₆", c: false}
+                ],
+                sol: "<strong>K₅</strong> is not planar. It has 10 edges, but E ≤ 3V − 6 = 3×5−6 = 9, violating Euler's formula bound. K₄ is planar (it's a tetrahedron)."
+            },
+            {
+                id: 13006,
+                text: "⚡ In any group of 6 people, what must exist by Ramsey theory?",
+                opts: [
+                    {l: "A", t: "3 mutual friends or 3 mutual strangers", c: true},
+                    {l: "B", t: "4 mutual friends", c: false},
+                    {l: "C", t: "A person who knows everyone", c: false},
+                    {l: "D", t: "A cycle of acquaintances", c: false}
+                ],
+                sol: "R(3,3) = 6 means any 2-coloring of K₆ contains a monochromatic triangle. By Ramsey theory, in any group of 6 there are <strong>3 mutual friends or 3 mutual strangers</strong>."
+            },
+            {
+                id: 13007,
+                text: "⚡ Hall's marriage theorem gives a condition for:",
+                opts: [
+                    {l: "A", t: "A Hamiltonian cycle", c: false},
+                    {l: "B", t: "A perfect matching", c: true},
+                    {l: "C", t: "A planar embedding", c: false},
+                    {l: "D", t: "A 3-coloring", c: false}
+                ],
+                sol: "Hall's marriage theorem gives a necessary and sufficient condition for a <strong>perfect matching</strong> in a bipartite graph: every subset of one part must have at least as many neighbors in the other part."
+            },
+            {
+                id: 13008,
+                text: "⚡ The max-flow min-cut theorem states that maximum flow equals:",
+                opts: [
+                    {l: "A", t: "The number of vertices", c: false},
+                    {l: "B", t: "Minimum cut capacity", c: true},
+                    {l: "C", t: "Average edge capacity", c: false},
+                    {l: "D", t: "The length of the longest path", c: false}
+                ],
+                sol: "The <strong>max-flow min-cut theorem</strong> says the maximum flow from s to t equals the minimum capacity of an s-t cut. The bottleneck determines throughput."
+            },
+            {
+                id: 13009,
+                text: "🌍 At what edge probability p does a giant component emerge in G(n,p)?",
+                opts: [
+                    {l: "A", t: "p = 1/n", c: true},
+                    {l: "B", t: "p = 1", c: false},
+                    {l: "C", t: "p = 1/2", c: false},
+                    {l: "D", t: "p = log n / n", c: false}
+                ],
+                sol: "The phase transition occurs at <strong>p = 1/n</strong>. Below this threshold, all components are O(log n). Above it, a giant component containing Θ(n) vertices emerges."
+            },
+            {
+                id: 13010,
+                text: "🎨 Which graph has chromatic number 2?",
+                opts: [
+                    {l: "A", t: "K₅", c: false},
+                    {l: "B", t: "Any bipartite graph", c: true},
+                    {l: "C", t: "Any cycle", c: false},
+                    {l: "D", t: "K₃,₃", c: false}
+                ],
+                sol: "<strong>Bipartite graphs</strong> are 2-colorable — color one part red, the other blue. Odd cycles like C₃ or C₅ need 3 colors. K₃,₃ is bipartite, so χ = 2."
+            },
+            {
+                id: 13011,
+                text: "🌍 Which problem is in NP but not known to be in P?",
+                opts: [
+                    {l: "A", t: "Finding a shortest path", c: false},
+                    {l: "B", t: "Finding a minimum spanning tree", c: false},
+                    {l: "C", t: "Finding a Hamiltonian cycle", c: true},
+                    {l: "D", t: "Checking if a graph is bipartite", c: false}
+                ],
+                sol: "Finding a <strong>Hamiltonian cycle</strong> is NP-complete. Shortest path, MST, and bipartiteness checking all have polynomial-time algorithms and are in P."
+            },
+            {
+                id: 13012,
+                text: "🔗 A connected graph with no cycles is called a:",
+                opts: [
+                    {l: "A", t: "Complete graph", c: false},
+                    {l: "B", t: "Tree", c: true},
+                    {l: "C", t: "Bipartite graph", c: false},
+                    {l: "D", t: "Planar graph", c: false}
+                ],
+                sol: "A connected graph with no cycles is a <strong>tree</strong>. Trees are the minimal connected graphs — they have exactly n−1 edges."
+            }
+        ];
+
+        var answered = {}, correctCount = 0;
+
+        function renderPractice() {
+            var c = document.getElementById('practice-qs'), h = '';
+            for (var i = 0; i < practiceQs.length; i++) {
+                var q = practiceQs[i], o = '';
+                for (var j = 0; j < q.opts.length; j++) {
+                    o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                }
+                h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+            }
+            c.innerHTML = h;
+            updateScore();
+        }
+
+        function getCorrectLabel(q) {
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+            }
+            return '';
+        }
+
+        function selectOpt(qId, idx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            var q = practiceQs.filter(function(x){return x.id === qId})[0];
+            var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+            var isCorrect = q.opts[idx].c;
+            for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-'+qId).textContent = '✅ Correct!';
+                document.getElementById('result-'+qId).className = 'q-result correct';
+                correctCount++;
+            } else {
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+                document.getElementById('result-'+qId).className = 'q-result wrong';
+                for (var i = 0; i < q.opts.length; i++) {
+                    if (q.opts[i].c) opts[i].classList.add('correct');
+                }
+            }
+            document.getElementById('soln-'+qId).classList.add('show');
+            updateScore();
+        }
+
+        function updateScore() {
+            var t = Object.keys(answered).length;
+            var el = document.getElementById('score-display');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'score-display';
+                el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+                document.getElementById('practice-qs').before(el);
+            }
+            el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+        }
+
+        function resetPractice() {
+            if (!confirm('Reset all answers?')) return;
+            answered = {}; correctCount = 0;
+            document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+            document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+            document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+            var el = document.getElementById('score-display');
+            if (el) el.textContent = '';
+            renderPractice();
+        }
+
+        function toggleStep(header) {
+            var content = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        renderPractice();
+    </script>
+</body>
+</html>
