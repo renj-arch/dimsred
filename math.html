@@ -172,6 +172,7 @@
         .tag-core{background:rgba(52,211,153,.15);color:#6ee7b7}
         .tag-jee{background:rgba(167,139,250,.15);color:#c4b5fd}
         .tag-scientist{background:rgba(244,114,182,.15);color:#f9a8d4}
+        .tag-applied{background:rgba(20,184,166,.15);color:#5eead4}
         .tag-label{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.62em;font-weight:700;letter-spacing:.3px;margin-top:8px}
 
         /* SVG connectors */
@@ -314,6 +315,7 @@
                     <span style="display:flex;align-items:center;gap:5px;color:var(--text-muted)"><span style="padding:2px 8px;border-radius:4px;background:rgba(52,211,153,.15);color:#6ee7b7;font-weight:700;font-size:.9em">📖 Core</span> JEE + several exams</span>
                     <span style="display:flex;align-items:center;gap:5px;color:var(--text-muted)"><span style="padding:2px 8px;border-radius:4px;background:rgba(167,139,250,.15);color:#c4b5fd;font-weight:700;font-size:.9em">🎯 JEE</span> JEE Advanced focus</span>
                     <span style="display:flex;align-items:center;gap:5px;color:var(--text-muted)"><span style="padding:2px 8px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-weight:700;font-size:.9em">🔬 Scientist</span> Pure math, no exam</span>
+                    <span style="display:flex;align-items:center;gap:5px;color:var(--text-muted)"><span style="padding:2px 8px;border-radius:4px;background:rgba(20,184,166,.15);color:#5eead4;font-weight:700;font-size:.9em">🔧 Applied</span> Real-world use</span>
                 </div>
 
                 <!-- Branch grid -->
@@ -622,6 +624,47 @@
                 id:'model-theory-algebra', title:'Model Theory in Algebra', icon:'📜', color:'#22d3ee',
                 subs:['O-Minimality','Quantifier Elimination','Stability Theory','Algebraic Structures'],
                 href:'#', tag:'scientist'
+            },
+            // Applied — real-world math
+            {
+                id:'cryptography', title:'Cryptography', icon:'🔐', color:'#14b8a6',
+                subs:['RSA','Elliptic Curve Crypto','Quantum Crypto','Zero-Knowledge Proofs'],
+                href:'#', tag:'applied'
+            },
+            {
+                id:'quantum-computing', title:'Quantum Computing', icon:'⚛️', color:'#2dd4bf',
+                subs:['Qubits','Quantum Gates','Shor\'s Algorithm','Error Correction'],
+                href:'#', tag:'applied'
+            },
+            {
+                id:'data-science', title:'Data Science &amp; ML', icon:'🤖', color:'#5eead4',
+                subs:['Regression','Neural Nets','Bayesian Inference','Classification'],
+                href:'#', tag:'applied'
+            },
+            {
+                id:'ops-research', title:'Operations Research', icon:'📋', color:'#14b8a6',
+                subs:['Supply Chain','Scheduling','Queuing Theory','Decision Analysis'],
+                href:'#', tag:'applied'
+            },
+            {
+                id:'math-finance', title:'Mathematical Finance', icon:'💰', color:'#2dd4bf',
+                subs:['Black-Scholes','Portfolio Theory','Risk Models','Derivatives'],
+                href:'#', tag:'applied'
+            },
+            {
+                id:'actuarial-science', title:'Actuarial Science', icon:'📈', color:'#5eead4',
+                subs:['Insurance Models','Life Tables','Ruin Theory','Risk Assessment'],
+                href:'#', tag:'applied'
+            },
+            {
+                id:'computational-math', title:'Computational Math', icon:'💻', color:'#14b8a6',
+                subs:['Algorithms','Simulation','Monte Carlo','HPC'],
+                href:'#', tag:'applied'
+            },
+            {
+                id:'math-epidemiology', title:'Math Epidemiology', icon:'🦠', color:'#2dd4bf',
+                subs:['SIR Models','Herd Immunity','Outbreak Prediction','Vaccination Strategy'],
+                href:'#', tag:'applied'
             }
         ];
 
@@ -641,7 +684,7 @@
                 <div class="icon-wrap" style="background:rgba(${hexToRgb(t.color)},.12);color:${t.color}">${t.icon}</div>
                 <div class="b-title">${t.title}</div>
                 <div class="b-subs">${t.subs.map(s => `<span>${s}</span>`).join('')}</div>
-                <div class="card-tag tag-${t.tag}">${t.tag === 'foundation' ? '📚 Foundation' : t.tag === 'core' ? '📖 Core' : t.tag === 'jee' ? '🎯 JEE' : '🔬 Scientist'}</div>
+                <div class="card-tag tag-${t.tag}">${t.tag === 'foundation' ? '📚 Foundation' : t.tag === 'core' ? '📖 Core' : t.tag === 'jee' ? '🎯 JEE' : t.tag === 'scientist' ? '🔬 Scientist' : '🔧 Applied'}</div>
             `;
 
             card.addEventListener('click', () => {
@@ -650,6 +693,7 @@
                 const tag = card.dataset.tag;
                 if (href === '#') {
                     if (tag === 'scientist') alert('🔬 Coming soon — a deep dive into pure mathematics!');
+                    else if (tag === 'applied') alert('🔧 Coming soon — the real-world applications of mathematics!');
                     return;
                 }
                 if (ext) { window.open(href, '_blank', 'noopener'); return; }
