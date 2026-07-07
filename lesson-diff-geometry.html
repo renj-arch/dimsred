@@ -1,34 +1,580 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Differential Geometry — Coming Soon | vlymbooq</title>
+    <title>Differential Geometry — Curves, Surfaces & the Shape of Space | vlymbooq</title>
+    <meta name="description" content="Deep dive into Differential Geometry — curves, curvature, surfaces, Gauss-Bonnet, Riemannian manifolds, general relativity, and Ricci flow.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-diff-geometry.html">
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:Inter,-apple-system,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
-        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
-        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-        .brand{display:flex;align-items:center;gap:8px;text-decoration:none}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .container{max-width:700px;margin:80px auto;padding:24px;text-align:center}
-        .badge{display:inline-block;padding:4px 14px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.75em;font-weight:700;margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase}
-        h1{font-size:1.8em;font-weight:900;margin-bottom:12px;line-height:1.3}
-        p{color:#a1a1aa;font-size:.95em;line-height:1.7;margin-bottom:28px;max-width:500px;margin-left:auto;margin-right:auto}
-        .btn{display:inline-block;padding:10px 24px;border-radius:100px;font-weight:600;font-size:.85em;background:rgba(167,139,250,.15);color:#a78bfa;text-decoration:none;transition:all .2s}
-        .btn:hover{background:rgba(167,139,250,.25)}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}
+        .section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.72em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.7em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--purple);font-weight:700}
+
+        .quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}
+        .quote-box .attribution{font-size:.78em;color:var(--text-muted);margin-top:6px}
     </style>
 </head>
 <body>
-    <nav class="nav"><div class="nav-inner"><a href="index.html" class="brand"><svg width="28" height="28" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg><span class="brand-text">vlymbooq</span></a><a href="math.html" style="color:#a78bfa;font-size:.82em;font-weight:500;text-decoration:none">Math Map</a></div></nav>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="math.html">Math Map</a>
+                <a href="index.html#exams">Exams</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
-        <div class="badge">🔬 Scientist</div>
-        <h1>Differential Geometry</h1>
-        <p>This deep dive into pure mathematics is being prepared. Check the Math Concept Map for all available lessons.</p>
-        <a href="math.html" class="btn">← Back to Math Concept Map</a>
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Math Lessons</div>
+                    <a href="math.html">← Math Concept Map</a>
+                    <a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+                    <a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+                    <a href="lesson-number-theory.html">Number Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-linear-algebra.html">Linear Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-complex-analysis.html">Complex Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-abstract-algebra.html">Abstract Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-graph-theory.html">Graph Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-real-analysis.html">Real Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-topology.html">Topology <span class="s-tag">🔬</span></a>
+                    <a href="lesson-diff-geometry.html" class="active" style="color:var(--text);font-weight:600">Diff Geometry <span class="s-tag">🔬</span></a>
+                    <a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+                </div>
+            </div>
+            <div class="main">
+                <div class="lesson-body">
+
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                    <span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.7em;font-weight:700">🔬 Scientist</span>
+                    <span style="font-size:.78em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span>
+                </div>
+
+                <h2>Differential Geometry — The Calculus of Curved Space</h2>
+                <p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Differential geometry applies calculus to study curves, surfaces, and higher-dimensional spaces. It asks: what does it mean for a space to be curved? How do you measure distances on a sphere? The answers led to Einstein's general relativity, the classification of surfaces, and the proof of the Poincaré conjecture. It's where geometry meets analysis, producing some of the most beautiful and useful mathematics ever discovered.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"Differential geometry is the study of those properties of surfaces that are invariant under bending and twisting — it's the calculus of shapes."</div>
+                    <div class="attribution">— Carl Friedrich Gauss</div>
+                </div>
+
+                <!-- ========== PART 1: CURVES ========== -->
+                <div class="section-label part1">Part 1</div>
+                <h2>🌀 Curves — The Geometry of Motion</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Frenet-Serret Apparatus</div>
+                    <div class="story-title">How a Curve Knows How to Turn and Twist</div>
+                    <div class="story-text">A curve in space is a continuous path γ(t) = (x(t), y(t), z(t)). At each point, it has a tangent vector γ′(t) pointing in the direction of motion. But a curve can do more than go straight — it can <strong>bend</strong> (curvature κ) and <strong>twist</strong> (torsion τ). The Frenet-Serret formulas describe how three orthogonal vectors — tangent T, normal N, and binormal B — change as you move along the curve: T′ = κN, N′ = −κT + τB, B′ = −τN. Curvature measures how sharply the curve turns; torsion measures how it lifts out of the plane. A straight line has κ = 0, a circle has constant κ = 1/r, and a helix has both constant κ and constant τ — it's a curve that simultaneously turns and rises.</div>
+                    <div class="story-moral">Every curve has a fingerprint — curvature and torsion uniquely determine its shape up to rigid motion.</div>
+                </div>
+
+                <h3>Arc Length and Reparametrization</h3>
+                <p>The <strong>arc length</strong> of a curve from t=a to t=b is ∫ ‖γ′(t)‖ dt. A curve parametrized by arc length (‖γ′(s)‖ = 1) is called <strong>unit-speed</strong>. In this parametrization, the Frenet formulas simplify because the tangent is already a unit vector. Curvature is just ‖γ″(s)‖ — the magnitude of acceleration when moving at unit speed. The <strong>osculating circle</strong> at a point has radius 1/κ and best approximates the curve near that point.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Curvature</div><div class="f-math">κ = ‖dT/ds‖</div></div>
+                    <div class="formula-card"><div class="f-label">Torsion</div><div class="f-math">τ = −(dB/ds)·N</div></div>
+                    <div class="formula-card"><div class="f-label">Arc Length</div><div class="f-math">s = ∫ ‖γ′(t)‖ dt</div></div>
+                    <div class="formula-card"><div class="f-label">Frenet Frame</div><div class="f-math">{T, N, B} orthonormal</div></div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Computing Curvature of a Helix</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Consider the helix γ(t) = (a cos t, a sin t, bt). The tangent is γ′(t) = (−a sin t, a cos t, b), with speed √(a² + b²).<br><br>
+                        The curvature comes out to κ = a / (a² + b²). When b = 0 (a circle), κ = 1/a — tighter helix = more curvature.<br><br>
+                        Torsion τ = b / (a² + b²). When b = 0 (circle), τ = 0 — the curve stays in a plane. The helix is the simplest curve with both bending and twisting.
+                    </div>
+                </div>
+
+                <h3>Plane Curves — The Turning Tangent</h3>
+                <p>For plane curves, torsion is zero, and curvature can be signed: positive when turning left, negative when turning right. The <strong>total curvature</strong> of a closed plane curve is always 2π times the <strong>turning number</strong> (how many times the tangent winds around). For a simple closed curve (no self-intersections), the turning number is ±1 — this is the <strong>Hopf Umlaufsatz</strong>, and it's a precursor to the Gauss-Bonnet theorem.</p>
+
+                <div class="example-box">
+                    <div class="ex-label">Total Curvature of a Convex Curve</div>
+                    <div class="ex-text">For any convex closed plane curve, the total signed curvature is exactly 2π. This means the tangent vector rotates exactly once as you go around. For a figure-8 curve, the turning number is 0 — the tangent rotates once clockwise and once counterclockwise, canceling out.</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 2: SURFACES ========== -->
+                <div class="section-label part2">Part 2</div>
+                <h2>🔮 Surfaces — The First Fundamental Form</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Measuring on a Curved World</div>
+                    <div class="story-title">The First Fundamental Form — How to Do Geometry Without Leaving the Surface</div>
+                    <div class="story-text">A surface is a 2D shape sitting in 3D space — like the surface of a sphere, a donut, or a saddle. The <strong>first fundamental form</strong> tells you how to measure distances, angles, and areas on the surface using only information available to a 2D creature living on it. If you parametrize a surface as X(u,v), then the metric coefficients are E = X_u·X_u, F = X_u·X_v, G = X_v·X_v. The length of a curve on the surface is ∫ √(E u′² + 2F u′v′ + G v′²) dt. This is the intrinsic geometry — it doesn't care how the surface sits in space, only how distances work on the surface itself. Gauss called this the <strong>inner geometry</strong> of the surface.</div>
+                    <div class="story-moral">A 2D creature on a surface can measure lengths and angles without ever looking into the third dimension.</div>
+                </div>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">First Fundamental Form</div><div class="f-math">I = E du² + 2F du dv + G dv²</div></div>
+                    <div class="formula-card"><div class="f-label">Area Element</div><div class="f-math">dA = √(EG − F²) du dv</div></div>
+                    <div class="formula-card"><div class="f-label">Sphere Metric</div><div class="f-math">R²(dθ² + sin²θ dφ²)</div></div>
+                    <div class="formula-card"><div class="f-label">Unit Normal</div><div class="f-math">n = (X_u × X_v) / ‖X_u × X_v‖</div></div>
+                </div>
+
+                <h3>Gaussian Curvature — The Theorema Egregium</h3>
+                <p>The <strong>second fundamental form</strong> measures how the surface bends in space — how the unit normal changes as you move. But Gauss made a stunning discovery: the <strong>Gaussian curvature</strong> K (product of the principal curvatures) can be computed from the first fundamental form alone! This is the <strong>Theorema Egregium</strong> (Remarkable Theorem). It means a 2D creature can detect curvature by measuring distances and angles on the surface — without looking into the third dimension. A sphere has K = 1/R² (positive curvature — triangles have more than 180°). A saddle has K &lt; 0 (negative curvature — triangles have less than 180°). A cylinder has K = 0 (intrinsically flat — it's just a rolled-up plane).</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Theorema Egregium</div>
+                    <div class="insight-text">Gaussian curvature is intrinsic — it depends only on the first fundamental form</div>
+                    <div class="insight-sub">This is why you can't flatten a sphere onto a plane without distortion (map projections always stretch something).</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Why a Sphere Can't Be Flattened</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        A sphere has constant positive Gaussian curvature K = 1/R². A plane has K = 0 everywhere. Since Gaussian curvature is intrinsic (Theorema Egregium), any map from the sphere to the plane would have to preserve K — but it can't, because K differs everywhere.<br><br>
+                        <strong>Real-world consequence:</strong> Every world map distorts something. Mercator preserves angles but blows up areas near the poles. Lambert preserves areas but distorts shapes. You literally cannot have a map that preserves both distances and angles — curvature is an obstacle.<br><br>
+                        This is the deep reason we need different map projections — the geometry of the Earth forces us to choose what to preserve.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 3: GEODESICS & MANIFOLDS ========== -->
+                <div class="section-label part3">Part 3</div>
+                <h2>📐 Geodesics and Curved Spaces</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Shortest Path</div>
+                    <div class="story-title">Geodesics — Straight Lines on Curved Surfaces</div>
+                    <div class="story-text">On a curved surface, what's the shortest path between two points? A <strong>geodesic</strong> is the curve that locally minimizes distance — it's the closest thing to a straight line on a curved surface. On a sphere, geodesics are great circles (the equator, lines of longitude). On a cylinder, geodesics are helices. The key property: the acceleration vector of a geodesic is always perpendicular to the surface — there's no sideways acceleration. Geodesics satisfy the <strong>geodesic equation</strong>, a second-order differential equation involving the Christoffel symbols Γᵏᵢⱼ, which encode how the coordinate basis changes from point to point. <strong>Parallel transport</strong> moves a vector along a curve keeping it "as parallel as possible." On a curved surface, parallel transport around a closed loop rotates the vector — the amount of rotation is exactly the Gaussian curvature enclosed by the loop.</div>
+                    <div class="story-moral">On a curved surface, going "straight" means following a geodesic — and your direction might change even when you think you're going straight.</div>
+                </div>
+
+                <h3>Riemannian Manifolds</h3>
+                <p>A <strong>Riemannian manifold</strong> is a smooth manifold with a <strong>metric tensor</strong> g that defines an inner product on the tangent space at each point. This lets you measure lengths, angles, volumes, and curvature in any dimension. Riemannian geometry generalizes the surface theory of Gauss to n dimensions. The <strong>Riemann curvature tensor</strong> Rᵢⱼₖₗ describes curvature completely — it tells you how parallel transport around an infinitesimal loop changes a vector. In 2D, it reduces to Gaussian curvature. In 4D, it describes the curvature of spacetime in general relativity.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Metric Tensor</div><div class="f-math">g = Σ gᵢⱼ dxⁱ dxʲ</div></div>
+                    <div class="formula-card"><div class="f-label">Christoffel Symbols</div><div class="f-math">Γᵏᵢⱼ = ½gᵏˡ(∂ᵢgⱼₗ + ∂ⱼgᵢₗ − ∂ₗgᵢⱼ)</div></div>
+                    <div class="formula-card"><div class="f-label">Geodesic Equation</div><div class="f-math">d²xᵏ/dt² + Γᵏᵢⱼ dxⁱ/dt dxʲ/dt = 0</div></div>
+                    <div class="formula-card"><div class="f-label">Ricci Curvature</div><div class="f-math">Rᵢⱼ = Σ Rᵏᵢₖⱼ</div></div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-label">Geodesics on a Sphere</div>
+                    <div class="ex-text">On a sphere of radius R, the metric in spherical coordinates is g = R²(dθ² + sin²θ dφ²). The geodesic equation gives great circles: curves that are intersections of the sphere with planes through the center. Airlines use great circle routes because they're the shortest path — that's why flights from New York to Tokyo go over Alaska.</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 4: DEEP RESULTS ========== -->
+                <div class="section-label part4">Part 4</div>
+                <h2>🌌 Curvature, Relativity, and the Shape of the Universe</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Gauss-Bonnet and the Cosmos</div>
+                    <div class="story-title">The Deepest Theorem in Differential Geometry</div>
+                    <div class="story-text">The <strong>Gauss-Bonnet theorem</strong> is one of the most beautiful results in all of mathematics. It says: for a compact 2-dimensional surface M, the total Gaussian curvature equals 2π times the Euler characteristic: ∫_M K dA = 2π χ(M). This connects local geometry (curvature at each point) to global topology (the Euler characteristic, which counts handles). A sphere (χ=2) must have positive total curvature — which it does, K = 1/R² everywhere. A torus (χ=0) must have zero total curvature — and indeed, while a torus has both positively curved (outer) and negatively curved (inner) regions, they cancel exactly. For a surface of genus g (g holes), ∫ K dA = 4π(1 − g). This is the first example of a <strong>local-to-global theorem</strong> — geometry at every point adds up to determine the overall shape of the universe.</div>
+                    <div class="story-moral">The total curvature of a surface is determined entirely by how many holes it has — geometry and topology are bound together.</div>
+                </div>
+
+                <h3>General Relativity — Geometry Is Gravity</h3>
+                <p>Einstein's <strong>general theory of relativity</strong> is built on Riemannian geometry — but with a twist. Spacetime is a 4-dimensional Lorentzian manifold (the metric has a time-like direction). The <strong>Einstein field equations</strong> relate the curvature of spacetime to its matter and energy content:</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Einstein Field Equations</div>
+                    <div class="insight-text">Rᵤᵥ − ½gᵤᵥR + Λgᵤᵥ = 8πGTᵤᵥ</div>
+                    <div class="insight-sub">Curvature on the left, matter and energy on the right — mass tells spacetime how to curve, curvature tells matter how to move.</div>
+                </div>
+
+                <p>The <strong>Ricci curvature</strong> Rᵤᵥ (a trace of the Riemann tensor) determines how volumes change along geodesics. Positive Ricci curvature means geodesics converge (gravity is attractive). The <strong>Weyl curvature</strong> (the traceless part) describes tidal forces and gravitational waves. The metric of a black hole (Schwarzschild solution) has a <strong>singularity</strong> at the center where curvature becomes infinite — a point where the manifold breaks down. The <strong>expansion of the universe</strong> is encoded in the Friedmann-Lemaître-Robertson-Walker metric, which has constant curvature depending on the density of matter.</p>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Ricci Flow — Perelman's Proof of the Poincaré Conjecture</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        <strong>Ricci flow</strong> is a process that smooths out curvature over time, described by ∂g/∂t = −2 Ric(g). It's like the heat equation for the metric — regions of high curvature spread out and average.<br><br>
+                        Perelman's idea: start with any simply connected 3-manifold and run Ricci flow. The manifold either becomes round (curvature constant everywhere) or develops singularities. Perelman showed that all singularities can be surgically removed, and the flow eventually produces a round 3-sphere.<br><br>
+                        This proved the Poincaré conjecture (every simply connected closed 3-manifold is homeomorphic to S³) and earned him a Fields Medal and $1M Clay Prize, both of which he declined.
+                    </div>
+                </div>
+
+                <h3>Modern Differential Geometry — Beyond Einstein</h3>
+                <p>Differential geometry continues to evolve. <strong>Calabi-Yau manifolds</strong> are compact Ricci-flat manifolds that appear in string theory as the hidden dimensions of space. <strong>Geometric analysis</strong> uses PDEs to study curvature and minimal surfaces. <strong>Optimal transport</strong> (the Wasserstein metric) puts a Riemannian structure on the space of probability distributions. <strong>Information geometry</strong> applies Riemannian geometry to statistical manifolds — the Fisher information metric measures distance between probability distributions. Even <strong>machine learning</strong> uses differential geometry: manifold learning assumes high-dimensional data lies on a low-dimensional curved surface, and geometric deep learning builds neural networks that respect the geometry of the data.</p>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">The Shape of the Universe</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Is the universe finite or infinite? The answer depends on its curvature. If the universe has positive spatial curvature (like a 3-sphere), it's finite but unbounded — like the Earth's surface, you can travel forever without reaching an edge. If curvature is negative, the universe is infinite and saddle-shaped. If flat (zero curvature), it's infinite Euclidean space.<br><br>
+                        Measurements from the Planck satellite show the universe is very close to flat (Ω ≈ 1 within 0.4%). But this raises another question: is the universe simply connected? Could space be a 3-torus (finite but flat)? Current data can't rule it out — we might live in a space where traveling far enough returns you to your starting point.
+                    </div>
+                </div>
+
+                <div class="quote-box">
+                    <div class="quote">"The miracle of differential geometry is that the universe speaks its language — from the fall of an apple to the shape of the cosmos."</div>
+                    <div class="attribution">— Inspired by Albert Einstein</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PRACTICE ========== -->
+                <h2 style="margin-top:0">🎯 Practice — Check Your Geometry Intuition</h2>
+                <p style="color:var(--text-sec);margin-bottom:16px">These puzzles build differential geometry intuition — no heavy calculus needed.</p>
+
+                <div id="practice-qs"></div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+                    <a href="math.html" class="btn btn-success">← Back to Math Map</a>
+                </div>
+
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        var practiceQs = [
+            {
+                id: 15001,
+                text: "🌀 What does the Frenet-Serret frame consist of?",
+                opts: [
+                    {l: "A", t: "Tangent, Normal, Binormal", c: true},
+                    {l: "B", t: "Position, Velocity, Acceleration", c: false},
+                    {l: "C", t: "X, Y, Z axes", c: false},
+                    {l: "D", t: "Curvature, Torsion, Arc length", c: false}
+                ],
+                sol: "The Frenet-Serret frame is an orthonormal frame consisting of <strong>Tangent T</strong>, <strong>Normal N</strong>, and <strong>Binormal B</strong> vectors that move along the curve."
+            },
+            {
+                id: 15002,
+                text: "🌀 What is the curvature κ of a straight line?",
+                opts: [
+                    {l: "A", t: "1", c: false},
+                    {l: "B", t: "0", c: true},
+                    {l: "C", t: "∞", c: false},
+                    {l: "D", t: "Depends on the line", c: false}
+                ],
+                sol: "A straight line has <strong>κ = 0</strong> — it doesn't bend at all. The tangent vector is constant, so its rate of change (curvature) is zero."
+            },
+            {
+                id: 15003,
+                text: "🔮 Gauss's Theorema Egregium states that Gaussian curvature is:",
+                opts: [
+                    {l: "A", t: "Always positive", c: false},
+                    {l: "B", t: "Intrinsic — depends only on the first fundamental form", c: true},
+                    {l: "C", t: "Extrinsic — depends on how the surface sits in space", c: false},
+                    {l: "D", t: "Always negative on a sphere", c: false}
+                ],
+                sol: "Gauss's <strong>Theorema Egregium</strong> says Gaussian curvature is <strong>intrinsic</strong> — it can be computed from the first fundamental form alone, without reference to the embedding space. This is remarkable because curvature seems to depend on how a surface bends in space, but it's actually an intrinsic property."
+            },
+            {
+                id: 15004,
+                text: "📐 What is a geodesic on a sphere?",
+                opts: [
+                    {l: "A", t: "A line of latitude", c: false},
+                    {l: "B", t: "A great circle", c: true},
+                    {l: "C", t: "Any circle on the sphere", c: false},
+                    {l: "D", t: "A spiral", c: false}
+                ],
+                sol: "A geodesic on a sphere is a <strong>great circle</strong> (like the equator or lines of longitude). Lines of latitude (except the equator) are not geodesics — they're not the shortest path between points."
+            },
+            {
+                id: 15005,
+                text: "🔮 What is the Gaussian curvature of a cylinder?",
+                opts: [
+                    {l: "A", t: "Positive", c: false},
+                    {l: "B", t: "Negative", c: false},
+                    {l: "C", t: "Zero", c: true},
+                    {l: "D", t: "Variable", c: false}
+                ],
+                sol: "A cylinder has <strong>Gaussian curvature K = 0</strong> everywhere. It's intrinsically flat — it can be made by rolling a flat sheet of paper without stretching. The product of principal curvatures is 0 because one principal curvature (along the axis) is 0."
+            },
+            {
+                id: 15006,
+                text: "🌀 The total curvature of a simple closed plane curve is always:",
+                opts: [
+                    {l: "A", t: "0", c: false},
+                    {l: "B", t: "2π", c: true},
+                    {l: "C", t: "π", c: false},
+                    {l: "D", t: "4π", c: false}
+                ],
+                sol: "The total signed curvature of a simple closed plane curve is <strong>2π</strong> (the tangent rotates exactly once). This is the Hopf Umlaufsatz, a precursor to Gauss-Bonnet."
+            },
+            {
+                id: 15007,
+                text: "🌌 The Gauss-Bonnet theorem relates total curvature to:",
+                opts: [
+                    {l: "A", t: "Surface area", c: false},
+                    {l: "B", t: "Euler characteristic", c: true},
+                    {l: "C", t: "Volume", c: false},
+                    {l: "D", t: "Geodesic length", c: false}
+                ],
+                sol: "The Gauss-Bonnet theorem says ∫_M K dA = <strong>2π χ(M)</strong>. Total Gaussian curvature = 2π times the Euler characteristic. For a sphere (χ=2), total curvature = 4π."
+            },
+            {
+                id: 15008,
+                text: "🌌 What curvature does a torus (donut shape) have at its outer region?",
+                opts: [
+                    {l: "A", t: "Positive", c: true},
+                    {l: "B", t: "Negative", c: false},
+                    {l: "C", t: "Zero", c: false},
+                    {l: "D", t: "Infinite", c: false}
+                ],
+                sol: "The outer region of a torus has <strong>positive</strong> Gaussian curvature (it's convex like a sphere), while the inner region has negative curvature (saddle-like). They cancel out so the total curvature is 0, matching χ=0."
+            },
+            {
+                id: 15009,
+                text: "📐 The geodesic equation involves which symbols?",
+                opts: [
+                    {l: "A", t: "Christoffel symbols Γᵏᵢⱼ", c: true},
+                    {l: "B", t: "Einstein symbols Gᵤᵥ", c: false},
+                    {l: "C", t: "Riemann symbols Rᵢⱼₖₗ", c: false},
+                    {l: "D", t: "Kronecker delta δᵢⱼ", c: false}
+                ],
+                sol: "The geodesic equation uses <strong>Christoffel symbols Γᵏᵢⱼ</strong> which encode how the coordinate basis changes from point to point. They're built from derivatives of the metric tensor."
+            },
+            {
+                id: 15010,
+                text: "🌌 Perelman proved the Poincaré conjecture using:",
+                opts: [
+                    {l: "A", t: "Einstein field equations", c: false},
+                    {l: "B", t: "Ricci flow", c: true},
+                    {l: "C", t: "Gauss-Bonnet theorem", c: false},
+                    {l: "D", t: "Frenet-Serret formulas", c: false}
+                ],
+                sol: "Perelman proved the Poincaré conjecture using <strong>Ricci flow</strong>, which smooths out curvature over time. He showed a simply connected 3-manifold evolves into a round 3-sphere under this flow."
+            },
+            {
+                id: 15011,
+                text: "📐 What does parallel transport around a closed loop on a surface reveal?",
+                opts: [
+                    {l: "A", t: "The surface area", c: false},
+                    {l: "B", t: "The Gaussian curvature enclosed", c: true},
+                    {l: "C", t: "The principal curvatures", c: false},
+                    {l: "D", t: "The metric tensor", c: false}
+                ],
+                sol: "Parallel transporting a vector around a closed loop rotates it by an amount equal to the <strong>integral of Gaussian curvature</strong> enclosed by the loop. This is the geometric meaning of curvature — holonomy."
+            },
+            {
+                id: 15012,
+                text: "🌀 A helix has both constant curvature and constant torsion. This means:",
+                opts: [
+                    {l: "A", t: "It's actually a circle", c: false},
+                    {l: "B", t: "It's a straight line", c: false},
+                    {l: "C", t: "It's uniquely determined up to rigid motion", c: true},
+                    {l: "D", t: "It's impossible", c: false}
+                ],
+                sol: "By the fundamental theorem of curves, a curve with both constant curvature κ and constant torsion τ is <strong>uniquely determined up to rigid motion</strong> — it's a helix, and the ratio τ/κ determines the pitch."
+            }
+        ];
+
+        var answered = {}, correctCount = 0;
+
+        function renderPractice() {
+            var c = document.getElementById('practice-qs'), h = '';
+            for (var i = 0; i < practiceQs.length; i++) {
+                var q = practiceQs[i], o = '';
+                for (var j = 0; j < q.opts.length; j++) {
+                    o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                }
+                h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+            }
+            c.innerHTML = h;
+            updateScore();
+        }
+
+        function getCorrectLabel(q) {
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+            }
+            return '';
+        }
+
+        function selectOpt(qId, idx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            var q = practiceQs.filter(function(x){return x.id === qId})[0];
+            var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+            var isCorrect = q.opts[idx].c;
+            for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-'+qId).textContent = '✅ Correct!';
+                document.getElementById('result-'+qId).className = 'q-result correct';
+                correctCount++;
+            } else {
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+                document.getElementById('result-'+qId).className = 'q-result wrong';
+                for (var i = 0; i < q.opts.length; i++) {
+                    if (q.opts[i].c) opts[i].classList.add('correct');
+                }
+            }
+            document.getElementById('soln-'+qId).classList.add('show');
+            updateScore();
+        }
+
+        function updateScore() {
+            var t = Object.keys(answered).length;
+            var el = document.getElementById('score-display');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'score-display';
+                el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+                document.getElementById('practice-qs').before(el);
+            }
+            el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+        }
+
+        function resetPractice() {
+            if (!confirm('Reset all answers?')) return;
+            answered = {}; correctCount = 0;
+            document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+            document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+            document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+            var el = document.getElementById('score-display');
+            if (el) el.textContent = '';
+            renderPractice();
+        }
+
+        function toggleStep(header) {
+            var content = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        renderPractice();
+    </script>
 </body>
 </html>
