@@ -68,16 +68,16 @@ canvas{display:block}
 .lay-it .lbl{flex:1}
 .lay-head .cnt{font-size:.62em;color:rgba(255,255,255,.2);margin-left:auto;padding-right:6px}
 
-/* Detail panel */
+/* Detail panel — desktop: right side away from map center */
 #detail{
-  position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:18;
-  padding:16px 22px;border-radius:16px;max-width:480px;width:92%;
+  position:fixed;bottom:80px;right:16px;left:auto;top:auto;z-index:18;
+  padding:16px 22px;border-radius:16px;max-width:340px;width:340px;
   background:rgba(0,0,0,.75);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);
   border:1px solid rgba(255,255,255,.06);
   opacity:0;pointer-events:none;transition:all .4s cubic-bezier(.22,1,.36,1);
-  transform:translateX(-50%) translateY(10px);max-height:50vh;overflow-y:auto;
+  transform:translateY(10px);max-height:60vh;overflow-y:auto;
 }
-#detail.show{opacity:1;pointer-events:none;transform:translateX(-50%) translateY(0)}
+#detail.show{opacity:1;pointer-events:none;transform:translateY(0)}
 #detail.show .d-close,#detail.show #dTimeline,#detail.show .era-event-item,#detail.show a{pointer-events:auto}
 #detail .d-badge{display:inline-block;padding:2px 10px;border-radius:100px;font-size:.6em;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
 #detail .d-title{font-size:1em;font-weight:700;color:#fff;margin-bottom:1px}
@@ -306,6 +306,11 @@ canvas{display:block}
 #lectureBar .lb-play:hover{background:rgba(251,146,60,.25)}
 
 /* Lecture bar mobile */
+@media(max-width:768px){
+  #detail{left:50%;right:auto;bottom:80px;transform:translateX(-50%) translateY(10px);max-width:440px;width:92%;max-height:45vh}
+  #detail.show{transform:translateX(-50%) translateY(0)}
+}
+
 @media(max-width:640px){
   #lectureBar{padding:4px 10px;gap:4px}
   #lectureBar .lb-title{max-width:100px;font-size:.65em}
@@ -318,7 +323,7 @@ canvas{display:block}
   #layersPanel.collapsed{transform:translateX(-160px)}
   #layToggle{top:52px;left:174px;width:24px;height:24px;font-size:10px;border-radius:0 6px 6px 0}
   #layersPanel.collapsed + #layToggle{left:8px}
-  #detail{bottom:80px;padding:14px 16px;max-width:96%}
+  #detail{padding:14px 16px}
   #topBar{font-size:.7em;padding:4px 12px;top:8px}
   #eraBar{top:50px;padding:4px 10px;font-size:.9em}
   #bottomBar{padding:6px 10px;gap:4px}
