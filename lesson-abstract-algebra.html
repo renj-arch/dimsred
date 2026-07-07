@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Abstract Algebra — The Algebra of Symmetry | vlymbooq</title>
+    <meta name="description" content="Deep dive into Abstract Algebra — groups, rings, fields, Galois theory, and the symmetries underlying all of mathematics.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-abstract-algebra.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}
+        .section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.72em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.7em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--purple);font-weight:700}
+
+        .quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}
+        .quote-box .attribution{font-size:.78em;color:var(--text-muted);margin-top:6px}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="math.html">Math Map</a>
+                <a href="index.html#exams">Exams</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Math Lessons</div>
+                    <a href="math.html">← Math Concept Map</a>
+                    <a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+                    <a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+                    <a href="lesson-number-theory.html">Number Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-linear-algebra.html">Linear Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-complex-analysis.html">Complex Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-abstract-algebra.html" class="active" style="color:var(--text);font-weight:600">Abstract Algebra <span class="s-tag">🔬</span></a>
+                    <a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+                </div>
+            </div>
+            <div class="main">
+                <div class="lesson-body">
+
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                    <span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.7em;font-weight:700">🔬 Scientist</span>
+                    <span style="font-size:.78em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span>
+                </div>
+
+                <h2>Abstract Algebra — The Algebra of Symmetry</h2>
+                <p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Abstract algebra studies algebraic structures — sets with operations that obey certain rules. A <strong>group</strong> captures symmetry. A <strong>ring</strong> captures addition and multiplication together. A <strong>field</strong> captures the arithmetic of numbers. And <strong>Galois theory</strong> uses all three to answer one of the oldest questions in mathematics: which equations can be solved by radicals? The answer — discovered by a 20-year-old Frenchman the night before he died in a duel — is one of the most beautiful and tragic stories in all of science.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"Algebra is the intellectual instrument which has been created for rendering clear the quantitative aspects of the world."</div>
+                    <div class="attribution">— Alfred North Whitehead</div>
+                </div>
+
+                <!-- ========== PART 1: GROUPS ========== -->
+                <div class="section-label part1">Part 1</div>
+                <h2>🔷 Groups — The Mathematics of Symmetry</h2>
+
+                <div class="story-card">
+                    <div class="story-label">What Is a Group?</div>
+                    <div class="story-title">Four Rules That Capture Every Kind of Symmetry</div>
+                    <div class="story-text">A <strong>group</strong> is a set G with an operation • satisfying four axioms: <strong>closure</strong> (a•b is in G), <strong>associativity</strong> ((a•b)•c = a•(b•c)), <strong>identity</strong> (an element e such that e•a = a•e = a), and <strong>inverses</strong> (for every a, there exists a⁻¹ such that a•a⁻¹ = e). That's it — four rules. Yet from these four rules flows an entire theory that describes the symmetries of snowflakes, the structure of crystals, the possible elementary particles, and the rotations of a Rubik's cube. A group is a universe of symmetry, defined by its multiplication table.</div>
+                    <div class="story-moral">A group is a set with a single operation that satisfies four simple axioms — yet it captures the essence of symmetry everywhere.</div>
+                </div>
+
+                <h3>Examples of Groups</h3>
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Integers under +</div><div class="f-math">(ℤ, +): identity 0, inverse −a</div></div>
+                    <div class="formula-card"><div class="f-label">Non-zero reals under ×</div><div class="f-math">(ℝ\{0}, ×): identity 1, inverse 1/a</div></div>
+                    <div class="formula-card"><div class="f-label">Clock arithmetic</div><div class="f-math">ℤₙ: integers mod n under +</div></div>
+                    <div class="formula-card"><div class="f-label">Permutations</div><div class="f-math">Sₙ: all bijections of {1,...,n}</div></div>
+                </div>
+
+                <h3>Cyclic Groups — The Simplest Kind</h3>
+                <p>A group is <strong>cyclic</strong> if it's generated by a single element: every element is gⁿ for some n. The integers ℤ are infinite cyclic (generated by 1). The clock group ℤₙ is finite cyclic (generated by 1 mod n). Cyclic groups are the building blocks of all finite abelian groups — the <strong>Fundamental Theorem of Finite Abelian Groups</strong> says every such group is a product of cyclic groups.</p>
+
+                <h3>Permutation Groups — Symmetry in Action</h3>
+                <p>The symmetric group Sₙ consists of all permutations of n objects. It has n! elements. Cayley's theorem says every finite group is isomorphic to a subgroup of some Sₙ — meaning every group can be understood as permutations of something. The <strong>alternating group</strong> Aₙ (even permutations) is the key to the unsolvability of the quintic.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Cayley's Theorem</div>
+                    <div class="insight-text">Every finite group is isomorphic to a subgroup of Sₙ</div>
+                    <div class="insight-sub">Every group can be represented as permutations of its own elements.</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Lagrange's Theorem — The Size of Subgroups</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        If H is a subgroup of a finite group G, then |H| divides |G|. This simple counting argument is one of the most powerful in group theory.<br><br>
+                        <strong>Example:</strong> A group of order 6 can have subgroups of order 1, 2, 3, or 6 — never 4 or 5. This is why a pentagon's rotational symmetry group (order 5) can't be a subgroup of a hexagon's (order 6) — 5 doesn't divide 6.<br><br>
+                        The converse is false: not every divisor has a subgroup. The smallest counterexample is A₄ (order 12), which has no subgroup of order 6.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 2: RINGS & FIELDS ========== -->
+                <div class="section-label part2">Part 2</div>
+                <h2>⭕ Rings & Fields — Two Operations Are Better Than One</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Adding Multiplication</div>
+                    <div class="story-title">Rings: Where Addition and Multiplication Live Together</div>
+                    <div class="story-text">A <strong>ring</strong> is a set with two operations: addition (forming an abelian group) and multiplication (associative, distributive over addition). The integers ℤ are a ring. Polynomials ℤ[x] form a ring. Matrices form a ring. A <strong>field</strong> is a ring where multiplication also forms an abelian group (except 0) — meaning every non-zero element has a multiplicative inverse. ℚ, ℝ, ℂ are fields. ℤ is not a field (2 has no multiplicative inverse in ℤ). The distinction between rings and fields is the distinction between integer arithmetic and fraction arithmetic — polynomials vs. rational functions.</div>
+                    <div class="story-moral">Rings are like ℤ; fields are like ℚ. The difference is whether you can divide.</div>
+                </div>
+
+                <h3>Ideals — The Substructures of Rings</h3>
+                <p>An <strong>ideal</strong> I in a ring R is a subset closed under addition and under multiplication by any element of R. Think of it as a "module of zero" — if you multiply an element of I by anything in R, you stay in I. Ideals are to rings what normal subgroups are to groups: they allow you to form <strong>quotient rings</strong> R/I.</p>
+
+                <div class="example-box">
+                    <div class="ex-label">Example: ℤ/nℤ</div>
+                    <div class="ex-text">The set nℤ = {..., −2n, −n, 0, n, 2n, ...} is an ideal of ℤ. The quotient ℤ/nℤ is the ring of integers mod n. If n is prime, this is actually a <strong>field</strong> — the finite field 𝔽ₚ. This is why modular arithmetic works especially well modulo a prime: every non-zero residue has a multiplicative inverse.</div>
+                </div>
+
+                <h3>Polynomial Rings</h3>
+                <p>The ring R[x] of polynomials with coefficients in R is one of the most important constructions in algebra. Over a field, polynomial division works, and every ideal of F[x] is principal (generated by a single polynomial). The <strong>irreducible polynomials</strong> are like prime numbers — they generate the prime ideals. The study of polynomial roots leads directly to field theory and Galois theory.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Integer Ring</div><div class="f-math">ℤ (not a field)</div></div>
+                    <div class="formula-card"><div class="f-label">Rationals</div><div class="f-math">ℚ (field)</div></div>
+                    <div class="formula-card"><div class="f-label">Polynomials</div><div class="f-math">F[x] (ring)</div></div>
+                    <div class="formula-card"><div class="f-label">Finite Field</div><div class="f-math">𝔽ₚ = ℤ/pℤ</div></div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 3: GALOIS THEORY ========== -->
+                <div class="section-label part3">Part 3</div>
+                <h2>🌿 Galois Theory — The Tragedy of the Quintic</h2>
+
+                <div class="story-card">
+                    <div class="story-label">A Genius Lost at 20</div>
+                    <div class="story-title">Évariste Galois and the Unsolvable Equation</div>
+                    <div class="story-text">For 2000 years, mathematicians sought a formula for the roots of a quintic (5th-degree) polynomial — akin to the quadratic formula for ax² + bx + c = 0. In the 1820s, Niels Henrik Abel proved it was impossible. But Évariste Galois went further: he developed an entire theory to determine exactly which polynomials are solvable by radicals. The night before his fatal duel at age 20, he wrote down his theory in a letter — "I have no time" — founding modern algebra. The key insight: the symmetries of a polynomial's roots form a group, and the polynomial is solvable by radicals iff this group is <strong>solvable</strong>.</div>
+                    <div class="story-moral">The solvability of an equation is not about the coefficients — it's about the symmetry group of its roots.</div>
+                </div>
+
+                <h3>Field Extensions — Adjoining Roots</h3>
+                <p>To solve x² − 2 = 0, we need √2. The rationals ℚ don't contain √2, so we create a <strong>field extension</strong> ℚ(√2) = {a + b√2 : a,b ∈ ℚ}. The <strong>degree</strong> of the extension — the dimension as a vector space over ℚ — is 2. The degree tells you how many new numbers you need to adjoin.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Degree of an Extension</div>
+                    <div class="insight-text">[ℚ(√d) : ℚ] = 2</div>
+                    <div class="insight-sub">The extension degree is the dimension as a vector space over the base field.</div>
+                </div>
+
+                <h3>Galois Groups — The Symmetries of Roots</h3>
+                <p>The <strong>Galois group</strong> Gal(L/K) is the group of field automorphisms of L that fix K. Each automorphism permutes the roots of a polynomial. For x² − 2 = 0, the Galois group has two elements: one that sends √2 to itself (identity) and one that sends √2 to −√2. This group is ℤ₂ — cyclic of order 2.</p>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">The Fundamental Theorem of Galois Theory</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        There is a one-to-one correspondence between:<br>
+                        — Intermediate fields K ⊆ M ⊆ L<br>
+                        — Subgroups of the Galois group Gal(L/K)<br><br>
+                        Larger subfields correspond to smaller subgroups, and vice versa. This correspondence turns problems about fields (hard) into problems about groups (easier).<br><br>
+                        A polynomial is <strong>solvable by radicals</strong> iff its Galois group is a <strong>solvable group</strong> — a group that can be broken down into a chain of abelian subgroups. The symmetric group S₅ is not solvable. Therefore, the general quintic is not solvable by radicals.<br><br>
+                        This is why there's a quadratic formula, a cubic formula, a quartic formula — but no general quintic formula.
+                    </div>
+                </div>
+
+                <h3>The Unsolvable Quintic</h3>
+                <p>The Galois group of the general quintic is S₅ (all permutations of 5 roots). S₅ is not solvable — its only normal subgroups are {e}, A₅ (alternating), and S₅ itself, and A₅ is simple (no normal subgroups at all). Therefore no radical formula exists. Specific quintics like x⁵ − x − 1 = 0 have Galois group S₅ and cannot be solved by radicals — their roots exist but cannot be expressed using +, −, ×, ÷, and √.</p>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 4: APPLICATIONS & DEEP RESULTS ========== -->
+                <div class="section-label part4">Part 4</div>
+                <h2>🌍 Abstract Algebra in the Real World</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Algebra Everywhere</div>
+                    <div class="story-title">From Rubik's Cube to Particle Physics</div>
+                    <div class="story-text">Abstract algebra seemed like the purest of pure mathematics — studying groups and fields for their own sake. Yet it turned out to be the language of modern physics. The Standard Model of particle physics is built on Lie groups (SU(3) × SU(2) × U(1)). Crystallography uses space groups. Cryptography uses finite fields and elliptic curve groups. Coding theory uses polynomial rings over finite fields. The Rubik's Cube is a group of 43 quintillion elements. And the classification of finite simple groups — one of the greatest mathematical achievements of the 20th century — lists all the "atoms" of finite symmetry.</div>
+                    <div class="story-moral">Group theory is the grammar of symmetry, and nature speaks in symmetry.</div>
+                </div>
+
+                <h3>The Rubik's Cube Group</h3>
+                <p>The Rubik's Cube has 43,252,003,274,489,856,000 possible states. The set of all moves forms a group. The structure of this group — its generators (the six face turns), its relations (the sequences that return to solved), and its subgroups (like the "square subgroup" of moves that only use half-turns) — is a beautiful application of group theory. God's number (the maximum number of moves needed to solve any state) was proven to be 20 using group-theoretic reasoning and computer search.</p>
+
+                <h3>Elliptic Curve Cryptography</h3>
+                <p>Elliptic curves over finite fields form groups. The security of ECC relies on the difficulty of the <strong>elliptic curve discrete logarithm problem</strong>: given points P and nP on the curve, find n. This is believed to be much harder than factoring — so ECC achieves the same security as RSA with much smaller keys. Bitcoin, HTTPS, and modern messaging all use elliptic curve groups.</p>
+
+                <div class="example-box">
+                    <div class="ex-label">Elliptic Curve Group Law</div>
+                    <div class="ex-text">Points on y² = x³ + ax + b form a group. The "addition" of two points is defined geometrically: draw the line through P and Q; its third intersection with the curve is −(P+Q); reflect across the x-axis to get P+Q. This turns the curve into an abelian group — the foundation of ECC.</div>
+                </div>
+
+                <h3>Burnside's Lemma — Counting with Symmetry</h3>
+                <p>How many distinct necklaces can you make with 6 beads, each bead either black or white, if rotations are considered the same? Burnside's lemma uses group actions to count: number of orbits = (1/|G|) Σ |Fix(g)|. For this problem: G = the 6 rotations. Fix(identity) = 2⁶ = 64. A 90° rotation only fixes monochromatic necklaces: 2. Summing over all rotations: (64 + 2 + 4 + 2 + 4 + 2)/6 = 78/6 = 13 distinct necklaces.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Burnside's Lemma</div>
+                    <div class="insight-text"># Orbits = (1/|G|) Σ_{g∈G} |Fix(g)|</div>
+                    <div class="insight-sub">The number of distinct objects under a group action equals the average number of objects fixed by each group element.</div>
+                </div>
+
+                <h3>The Classification of Finite Simple Groups</h3>
+                <p>Finite simple groups are the "prime numbers" of group theory — they have no non-trivial normal subgroups. The <strong>classification theorem</strong>, completed in 2004 (after tens of thousands of pages across hundreds of papers), lists all finite simple groups. They fall into families: cyclic groups of prime order, alternating groups Aₙ (n ≥ 5), groups of Lie type (like PSLₙ(𝔽ₐ)), and 26 <strong>sporadic groups</strong> — the largest of which is the <strong>Monster group</strong>, with about 8×10⁵³ elements. The Monster has deep connections to number theory through monstrous moonshine.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"The mathematician does not study pure mathematics because it is useful; he studies it because he delights in it, and he delights in it because it is beautiful."</div>
+                    <div class="attribution">— Henri Poincaré</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PRACTICE ========== -->
+                <h2 style="margin-top:0">🎯 Practice — Check Your Algebraic Intuition</h2>
+                <p style="color:var(--text-sec);margin-bottom:16px">These puzzles build intuition about groups, rings, and fields.</p>
+
+                <div id="practice-qs"></div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+                    <a href="math.html" class="btn btn-success">← Back to Math Map</a>
+                </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var practiceQs = [
+            {
+                id: 12001,
+                text: "🔷 Is ℤ (integers) a group under multiplication?",
+                opts: [
+                    {l: "A", t: "Yes, it satisfies all axioms", c: false},
+                    {l: "B", t: "No, most elements lack inverses", c: true},
+                    {l: "C", t: "No, multiplication isn't associative", c: false},
+                    {l: "D", t: "Yes, all integers have inverses", c: false}
+                ],
+                sol: "ℤ under multiplication is <strong>not</strong> a group. While it has closure, associativity, and identity (1), most elements lack multiplicative inverses. For example, 2×? = 1 has no integer solution. ℤ under <em>addition</em> is a group."
+            },
+            {
+                id: 12002,
+                text: "🔷 What is the order of the group S₃ (permutations of 3 items)?",
+                opts: [
+                    {l: "A", t: "3", c: false},
+                    {l: "B", t: "6", c: true},
+                    {l: "C", t: "9", c: false},
+                    {l: "D", t: "27", c: false}
+                ],
+                sol: "S₃ has 3! = <strong>6</strong> elements. They are: identity (1), three 2-cycles (12), (13), (23), and two 3-cycles (123) and (132). S₃ is the smallest non-abelian group."
+            },
+            {
+                id: 12003,
+                text: "🔷 The integers mod 5, ℤ₅, form a field because:",
+                opts: [
+                    {l: "A", t: "5 is prime, so every non-zero element has an inverse", c: true},
+                    {l: "B", t: "5 is divisible by 1 and 5", c: false},
+                    {l: "C", t: "ℤ₅ is a ring under multiplication only", c: false},
+                    {l: "D", t: "5 is odd", c: false}
+                ],
+                sol: "ℤ₅ is a field because <strong>5 is prime</strong>. Every non-zero element mod 5 is coprime to 5, so it has a multiplicative inverse. For example, 2×3 = 6 ≡ 1 mod 5, so 2⁻¹ = 3 in ℤ₅."
+            },
+            {
+                id: 12004,
+                text: "🔷 Is every subgroup of an abelian group also abelian?",
+                opts: [
+                    {l: "A", t: "Yes, sub-groups inherit commutativity", c: true},
+                    {l: "B", t: "No, subgroups can be non-abelian", c: false},
+                    {l: "C", t: "Only cyclic subgroups are abelian", c: false},
+                    {l: "D", t: "Only if the group is finite", c: false}
+                ],
+                sol: "Yes, any subgroup of an abelian group is <strong>abelian</strong>, because the group operation is the same and commutativity is inherited by any subset closed under the operation."
+            },
+            {
+                id: 12005,
+                text: "⭕ Which of the following is NOT a field?",
+                opts: [
+                    {l: "A", t: "ℚ (rational numbers)", c: false},
+                    {l: "B", t: "ℝ (real numbers)", c: false},
+                    {l: "C", t: "ℤ (integers)", c: true},
+                    {l: "D", t: "ℂ (complex numbers)", c: false}
+                ],
+                sol: "ℤ (integers) is <strong>not</strong> a field because 2 has no multiplicative inverse in ℤ. ℚ, ℝ, and ℂ are all fields. ℤ is a ring but not a field."
+            },
+            {
+                id: 12006,
+                text: "🌿 The Galois group of x² − 2 over ℚ is:",
+                opts: [
+                    {l: "A", t: "S₂ (order 2)", c: false},
+                    {l: "B", t: "ℤ₂ (cyclic of order 2)", c: true},
+                    {l: "C", t: "S₃ (order 6)", c: false},
+                    {l: "D", t: "The trivial group", c: false}
+                ],
+                sol: "The Galois group of x² − 2 is <strong>ℤ₂</strong> — it has two automorphisms: one sending √2 to √2 (identity) and one sending √2 to −√2. Since ℤ₂ is abelian (hence solvable), the polynomial is solvable by radicals."
+            },
+            {
+                id: 12007,
+                text: "🌿 Why is the general quintic not solvable by radicals?",
+                opts: [
+                    {l: "A", t: "5 is too large a number", c: false},
+                    {l: "B", t: "Its Galois group is S₅, which is not solvable", c: true},
+                    {l: "C", t: "There are too many roots to keep track of", c: false},
+                    {l: "D", t: "It was proven impossible by Abel only", c: false}
+                ],
+                sol: "The general quintic has Galois group <strong>S₅</strong>, which is not a solvable group because A₅ is simple (non-abelian). Therefore no general formula using radicals exists."
+            },
+            {
+                id: 12008,
+                text: "🌍 How many distinct 4-bead necklaces with 2 colors (black/white), counting rotations as same?",
+                opts: [
+                    {l: "A", t: "4", c: false},
+                    {l: "B", t: "6", c: true},
+                    {l: "C", t: "8", c: false},
+                    {l: "D", t: "16", c: false}
+                ],
+                sol: "Using Burnside's lemma with G = C₄: identity fixes 2⁴=16. 90° and 270° fix only monochromatic: 2 each. 180° fixes anything with opposite beads equal: 2²=4. Total: (16+2+4+2)/4 = 24/4 = <strong>6</strong> distinct necklaces."
+            },
+            {
+                id: 12009,
+                text: "🔷 Which group has order 4 and is NOT cyclic?",
+                opts: [
+                    {l: "A", t: "ℤ₄", c: false},
+                    {l: "B", t: "The Klein four-group V₄", c: true},
+                    {l: "C", t: "S₂", c: false},
+                    {l: "D", t: "The trivial group", c: false}
+                ],
+                sol: "The <strong>Klein four-group V₄</strong> has order 4 but every non-identity element has order 2 (a² = e for all a). ℤ₄ is cyclic (generated by 1). V₄ = ℤ₂ × ℤ₂."
+            },
+            {
+                id: 12010,
+                text: "⭕ In the ring ℤ₁₂ (integers mod 12), what is 7 × 8?",
+                opts: [
+                    {l: "A", t: "56", c: false},
+                    {l: "B", t: "8", c: true},
+                    {l: "C", t: "4", c: false},
+                    {l: "D", t: "7", c: false}
+                ],
+                sol: "7 × 8 = 56. 56 mod 12 = 56 − 4×12 = 56 − 48 = <strong>8</strong>. In ℤ₁₂, 7×8 ≡ 8."
+            },
+            {
+                id: 12011,
+                text: "🌍 The Monster group is related to number theory through:",
+                opts: [
+                    {l: "A", t: "Monstrous Moonshine", c: true},
+                    {l: "B", t: "The monster prime", c: false},
+                    {l: "C", t: "Fermat's Last Theorem", c: false},
+                    {l: "D", t: "Goldbach's conjecture", c: false}
+                ],
+                sol: "The Monster group is connected to number theory through <strong>Monstrous Moonshine</strong> — a surprising relationship between the Monster's representations and the Fourier coefficients of the j-function, a modular form."
+            },
+            {
+                id: 12012,
+                text: "🔷 A group where every element is its own inverse (a² = e) must be:",
+                opts: [
+                    {l: "A", t: "Cyclic", c: false},
+                    {l: "B", t: "Abelian", c: true},
+                    {l: "C", t: "Infinite", c: false},
+                    {l: "D", t: "Simple", c: false}
+                ],
+                sol: "If a² = e for all a, the group is <strong>abelian</strong>. Proof: (ab)² = e ⇒ abab = e ⇒ ab = b⁻¹a⁻¹ = ba (since a = a⁻¹, b = b⁻¹). The Klein four-group V₄ is such a group."
+            }
+        ];
+
+        var answered = {}, correctCount = 0;
+
+        function renderPractice() {
+            var c = document.getElementById('practice-qs'), h = '';
+            for (var i = 0; i < practiceQs.length; i++) {
+                var q = practiceQs[i], o = '';
+                for (var j = 0; j < q.opts.length; j++) {
+                    o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                }
+                h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+            }
+            c.innerHTML = h;
+            updateScore();
+        }
+
+        function getCorrectLabel(q) {
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+            }
+            return '';
+        }
+
+        function selectOpt(qId, idx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            var q = practiceQs.filter(function(x){return x.id === qId})[0];
+            var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+            var isCorrect = q.opts[idx].c;
+            for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-'+qId).textContent = '✅ Correct!';
+                document.getElementById('result-'+qId).className = 'q-result correct';
+                correctCount++;
+            } else {
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+                document.getElementById('result-'+qId).className = 'q-result wrong';
+                for (var i = 0; i < q.opts.length; i++) {
+                    if (q.opts[i].c) opts[i].classList.add('correct');
+                }
+            }
+            document.getElementById('soln-'+qId).classList.add('show');
+            updateScore();
+        }
+
+        function updateScore() {
+            var t = Object.keys(answered).length;
+            var el = document.getElementById('score-display');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'score-display';
+                el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+                document.getElementById('practice-qs').before(el);
+            }
+            el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+        }
+
+        function resetPractice() {
+            if (!confirm('Reset all answers?')) return;
+            answered = {}; correctCount = 0;
+            document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+            document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+            document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+            var el = document.getElementById('score-display');
+            if (el) el.textContent = '';
+            renderPractice();
+        }
+
+        function toggleStep(header) {
+            var content = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        renderPractice();
+    </script>
+</body>
+</html>
