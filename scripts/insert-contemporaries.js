@@ -46,7 +46,8 @@ for (const [name, data] of sorted) {
 
 if (insertStr) {
   const before = html.slice(0, insertIdx).replace(/[\s,]+$/, '');
-  html = before + '\n' + insertStr + html.slice(insertIdx);
+  const needsComma = before.trimEnd().length > 0 && !before.trimEnd().endsWith('{');
+  html = before + (needsComma ? ',' : '') + '\n' + insertStr + html.slice(insertIdx);
   fs.writeFileSync(GLOBE_PATH, html, 'utf8');
   console.log(`Inserted ${inserted} contemporaries (${existingNames.size} existing)`);
 } else {
