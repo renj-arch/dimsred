@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Complex Analysis — The Magic of Imaginary Numbers | vlymbooq</title>
+    <meta name="description" content="Deep dive into Complex Analysis — the complex plane, Euler's formula, Cauchy's theorem, residues, contour integration, and the Riemann Hypothesis.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-complex-analysis.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}
+        .section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.72em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.7em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--purple);font-weight:700}
+
+        .quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}
+        .quote-box .attribution{font-size:.78em;color:var(--text-muted);margin-top:6px}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="math.html">Math Map</a>
+                <a href="index.html#exams">Exams</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Math Lessons</div>
+                    <a href="math.html">← Math Concept Map</a>
+                    <a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+                    <a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+                    <a href="lesson-number-theory.html">Number Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-linear-algebra.html">Linear Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-complex-analysis.html" class="active" style="color:var(--text);font-weight:600">Complex Analysis <span class="s-tag">🔬</span></a>
+                    <a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+                </div>
+            </div>
+            <div class="main">
+                <div class="lesson-body">
+
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                    <span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.7em;font-weight:700">🔬 Scientist</span>
+                    <span style="font-size:.78em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span>
+                </div>
+
+                <h2>Complex Analysis — The Magic of Imaginary Numbers</h2>
+                <p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Complex analysis is often called the most beautiful subject in mathematics. By taking the "imaginary" number i = √(−1) seriously, we unlock a world where differentiation and integration become almost magically simple, where infinite series converge in surprising ways, and where a single formula — Euler's identity — connects the five most important constants in mathematics. It is the hidden language behind quantum mechanics, fluid dynamics, and the deepest unsolved problem in math: the Riemann Hypothesis.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"The shortest path between two truths in the real domain passes through the complex domain."</div>
+                    <div class="attribution">— Jacques Hadamard</div>
+                </div>
+
+                <!-- ========== PART 1: THE COMPLEX PLANE ========== -->
+                <div class="section-label part1">Part 1</div>
+                <h2>🌀 The Complex Plane — A New Dimension of Numbers</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Invention of i</div>
+                    <div class="story-title">Why Mathematicians Needed a Number That Doesn't Exist</div>
+                    <div class="story-text">For centuries, equations like x² + 1 = 0 had no solution — no real number squared gives −1. So mathematicians did something audacious: they invented a new number i such that i² = −1. A complex number z = x + iy has a real part x and an imaginary part y. The <strong>complex plane</strong> (Argand diagram) plots these as coordinates: the x-axis is real, the y-axis is imaginary. Just like that, every quadratic equation has two solutions. What started as a convenient fiction became the foundation of modern physics and mathematics.</div>
+                    <div class="story-moral">"Imaginary" is a terrible name — complex numbers are no less real than real numbers. They just live in a plane instead of on a line.</div>
+                </div>
+
+                <h3>Polar Form — The Magic of e</h3>
+                <p>A complex number z = x + iy can also be written in <strong>polar form</strong> using its distance from the origin r = |z| and its angle θ (the argument): z = r(cos θ + i sin θ). But the real shock comes from Euler's formula:</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Euler's Formula</div>
+                    <div class="insight-text">e^{iθ} = cos θ + i sin θ</div>
+                    <div class="insight-sub">The most beautiful formula in mathematics: e^{iπ} + 1 = 0 (Euler's identity).</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Why e^{iθ} = cos θ + i sin θ Makes Sense</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Write e^{iθ} as its Taylor series:<br><br>
+                        e^{iθ} = 1 + iθ + (iθ)²/2! + (iθ)³/3! + (iθ)⁴/4! + ...<br>
+                        = 1 + iθ − θ²/2! − iθ³/3! + θ⁴/4! + iθ⁵/5! − ...<br><br>
+                        Group real and imaginary terms:<br>
+                        Real: 1 − θ²/2! + θ⁴/4! − θ⁶/6! + ... = cos θ<br>
+                        Imag: θ − θ³/3! + θ⁵/5! − θ⁷/7! + ... = sin θ<br><br>
+                        So e^{iθ} = cos θ + i sin θ. When θ = π: e^{iπ} = cos π + i sin π = −1 + 0 = −1.<br>
+                        Thus e^{iπ} + 1 = 0 — one equation linking e, π, i, 1, and 0.
+                    </div>
+                </div>
+
+                <h3>Multiplication Is Rotation</h3>
+                <p>In polar form, multiplication becomes stunningly simple: multiply the radii, add the angles. (r₁e^{iθ₁})(r₂e^{iθ₂}) = r₁r₂ e^{i(θ₁+θ₂)}. Geometrically, multiplying by e^{iθ} rotates by angle θ. Multiplying by i = e^{iπ/2} rotates by 90°. This is the deep truth: complex numbers encode rotation algebraically.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Addition</div><div class="f-math">(x+iy)+(u+iv) = (x+u)+i(y+v)</div></div>
+                    <div class="formula-card"><div class="f-label">Multiplication</div><div class="f-math">(x+iy)(u+iv) = (xu−yv)+i(xv+yu)</div></div>
+                    <div class="formula-card"><div class="f-label">Polar Form</div><div class="f-math">z = re^{iθ}</div></div>
+                    <div class="formula-card"><div class="f-label">Complex Conjugate</div><div class="f-math">z̄ = x − iy = re^{−iθ}</div></div>
+                </div>
+
+                <h3>Roots of Unity</h3>
+                <p>The equation zⁿ = 1 has n solutions — the n-th roots of unity. They lie equally spaced on the unit circle at angles 2πk/n. For n = 4: 1, i, −1, −i. These form a <strong>cyclic group</strong> — the foundation of discrete Fourier transforms, signal processing, and modern number theory.</p>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 2: COMPLEX FUNCTIONS & CAUCHY ========== -->
+                <div class="section-label part2">Part 2</div>
+                <h2>🎯 Analytic Functions — Differentiability in the Complex World</h2>
+
+                <div class="story-card">
+                    <div class="story-label">A Stricter Kind of Smooth</div>
+                    <div class="story-title">Complex Differentiability Is Real Differentiability on Steroids</div>
+                    <div class="story-text">A complex function f(z) is <strong>analytic</strong> (or holomorphic) if it's complex-differentiable at every point. The definition looks like the real one: f'(z) = lim_{h→0} (f(z+h) − f(z))/h. But here h is a <strong>complex</strong> number — it can approach zero from any direction in the plane. This seemingly small change makes complex differentiability incredibly restrictive. If a function is complex-differentiable once, it's automatically infinitely differentiable and can be expanded as a power series. Real functions are not this well-behaved — a real function can be differentiable but not twice differentiable, or smooth but not analytic.</div>
+                    <div class="story-moral">Complex differentiability is real differentiability in every direction at once — and that extra constraint makes everything beautiful.</div>
+                </div>
+
+                <h3>Cauchy-Riemann Equations</h3>
+                <p>Write f(z) = u(x,y) + iv(x,y). For f to be analytic, the partial derivatives must satisfy:</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Cauchy-Riemann Equations</div>
+                    <div class="insight-text">∂u/∂x = ∂v/∂y, &nbsp; ∂u/∂y = −∂v/∂x</div>
+                    <div class="insight-sub">These ensure that the derivative is the same from every direction.</div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-label">Check: Is f(z) = z² = (x² − y²) + i(2xy) analytic?</div>
+                    <div class="ex-text">u = x² − y², v = 2xy.<br>
+                    ∂u/∂x = 2x, ∂v/∂y = 2x ✓<br>
+                    ∂u/∂y = −2y, −∂v/∂x = −2y ✓<br>
+                    Yes! f'(z) = 2z everywhere. Every polynomial is analytic.</div>
+                </div>
+
+                <h3>Cauchy's Integral Theorem</h3>
+                <p>The most remarkable result in complex analysis: if f is analytic inside and on a closed curve C, then the integral around C is zero.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Cauchy's Integral Theorem</div>
+                    <div class="insight-text">∮_C f(z) dz = 0</div>
+                    <div class="insight-sub">The contour integral of an analytic function around any closed loop is zero.</div>
+                </div>
+
+                <p>This is deeply connected to the idea that analytic functions have <strong>antiderivatives</strong>. Think of a gravitational field: the work done going around a closed path is zero if the field is conservative. Analytic functions are "conservative" in this sense.</p>
+
+                <h3>Cauchy's Integral Formula — The Crown Jewel</h3>
+                <p>If f is analytic inside and on a closed curve C, then the value of f at any point a inside C is determined entirely by its values on the boundary:</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Cauchy's Integral Formula</div>
+                    <div class="insight-text">f(a) = (1/2πi) ∮_C f(z)/(z−a) dz</div>
+                    <div class="insight-sub">The value inside is the average of the values on the boundary — a kind of magic averaging property.</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Why This Is So Powerful</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Cauchy's formula means that the entire function inside a region is determined by its values on the boundary. More incredibly, differentiating under the integral gives:<br><br>
+                        f<sup>(n)</sup>(a) = (n!/2πi) ∮_C f(z)/(z−a)^{n+1} dz<br><br>
+                        This proves that analytic functions are <strong>infinitely differentiable</strong> and that all derivatives can be computed from boundary values. In the real world, differentiability once doesn't even guarantee twice. In the complex world, once = infinitely many times.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 3: POWER SERIES & RESIDUES ========== -->
+                <div class="section-label part3">Part 3</div>
+                <h2>🔍 Singularities and Residues — Taming Infinity</h2>
+
+                <div class="story-card">
+                    <div class="story-label">When Functions Explode</div>
+                    <div class="story-title">Singularities: The Holes Where Everything Goes Wrong</div>
+                    <div class="story-text">Not every complex function is analytic everywhere. The function f(z) = 1/z is analytic everywhere except at z = 0, where it has a <strong>singularity</strong>. The type of singularity tells you how badly the function behaves there. A <strong>pole</strong> is like a 1/x² blow-up — the function goes to infinity but in a controlled way. An <strong>essential singularity</strong> is wilder — near e^{1/z} at z = 0, the function oscillates so violently it approaches every possible value. Near essential singularities, functions behave so chaotically that Picard's theorem says they take every complex value (with at most one exception) in any neighborhood.</div>
+                    <div class="story-moral">Singularities are not just problems — they're where the interesting information lives.</div>
+                </div>
+
+                <h3>Power Series — Taylor and Laurent</h3>
+                <p>Analytic functions have power series expansions. Around a point where the function is analytic, it has a <strong>Taylor series</strong>. Around a singularity, it has a <strong>Laurent series</strong> that includes negative powers:</p>
+
+                <div class="math-block">f(z) = Σ_{n=−∞}^{∞} aₙ (z−a)ⁿ</div>
+
+                <p>The coefficient a₋₁ — the one multiplying 1/(z−a) — is called the <strong>residue</strong>. It captures the "strength" of the singularity, and it's the key to evaluating integrals.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Simple Pole (order 1)</div><div class="f-math">Res(f, a) = lim(z−a)f(z)</div></div>
+                    <div class="formula-card"><div class="f-label">Pole of order n</div><div class="f-math">Res = 1/(n−1)! lim d^{n−1}/dz^{n−1} (z−a)ⁿf(z)</div></div>
+                    <div class="formula-card"><div class="f-label">Residue at ∞</div><div class="f-math">Res(f, ∞) = −Res(f(1/z)/z², 0)</div></div>
+                    <div class="formula-card"><div class="f-label">Sum of all residues</div><div class="f-math">Σ Res(f) + Res(f,∞) = 0</div></div>
+                </div>
+
+                <h3>The Residue Theorem — The Grand Unification</h3>
+                <p>The Residue Theorem is the most powerful tool in complex analysis. It says that the contour integral of a function around a closed curve is 2πi times the sum of residues inside:</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">The Residue Theorem</div>
+                    <div class="insight-text">∮_C f(z) dz = 2πi × Σ Res(f, aₖ)</div>
+                    <div class="insight-sub">The integral around a closed curve depends only on the singularities inside — not on the exact shape of the curve.</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Computing a Real Integral Using Residues</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        The real integral ∫₋∞^∞ 1/(1+x²) dx = π. Let's prove it using residues.<br><br>
+                        Consider ∮ 1/(1+z²) dz around a semicircle of radius R in the upper half-plane.<br>
+                        Factor: 1/(1+z²) = 1/((z−i)(z+i)). Only z = i (in the upper half-plane) is inside.<br>
+                        Residue at z = i: lim (z−i) × 1/((z−i)(z+i)) = 1/(2i).<br>
+                        By the residue theorem: ∮ = 2πi × 1/(2i) = π.<br>
+                        As R → ∞, the semicircle arc contributes 0, so the real line integral = π.<br><br>
+                        This technique works for a vast class of real integrals that would be nearly impossible otherwise.
+                    </div>
+                </div>
+
+                <h3>Contour Integration — Strategic Paths</h3>
+                <p>By choosing clever contours (keyhole, rectangular, wedge, dogbone), you can evaluate seemingly impossible real integrals. The strategy: extend the real integral to a complex contour, apply the residue theorem, and extract the real answer. This is how many integrals in physics and engineering are computed.</p>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 4: APPLICATIONS & DEEP RESULTS ========== -->
+                <div class="section-label part4">Part 4</div>
+                <h2>🌍 Complex Analysis in the Real World</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Unreasonable Power</div>
+                    <div class="story-title">Why Imaginary Numbers Describe Real Physics</div>
+                    <div class="story-text">Complex analysis seems like pure abstraction — studying functions of an "imaginary" variable. Yet it describes the real world with uncanny accuracy. Quantum mechanics uses complex wavefunctions (Schrödinger's equation has i built in). Fluid dynamics uses complex potentials to describe ideal flow. Electrical engineering uses complex impedance. Signal processing uses the Fourier transform, which is fundamentally complex. Conformal mapping — the study of angle-preserving transformations — solves problems in electrostatics, heat flow, and aerodynamics. The "imaginary" turned out to be more real than we thought.</div>
+                    <div class="story-moral">Complex analysis is the language nature uses to describe waves, fields, and quantum reality.</div>
+                </div>
+
+                <h3>Conformal Mapping — Angle-Preserving Magic</h3>
+                <p>Analytic functions are <strong>conformal</strong>: they preserve angles between curves (except at critical points where f'(z) = 0). This means you can transform a complicated shape into a simple one while keeping the physics intact. The <strong>Joukowski transformation</strong> maps circles to airfoil shapes — used to design airplane wings. The <strong>Möbius transformation</strong> maps lines and circles to lines and circles — the basis of hyperbolic geometry and special relativity.</p>
+
+                <div class="example-box">
+                    <div class="ex-label">Möbius Transformation: f(z) = (az + b)/(cz + d)</div>
+                    <div class="ex-text">These are the most important conformal maps. They map circles/lines to circles/lines, preserve angles, and form a group under composition. The condition ad − bc ≠ 0 ensures the map is invertible. In relativity, the Lorentz transformations are essentially Möbius transformations on the Riemann sphere.</div>
+                </div>
+
+                <h3>The Riemann Sphere — Adding a Point at Infinity</h3>
+                <p>The <strong>Riemann sphere</strong> adds a single point "∞" to the complex plane, turning it into a sphere via stereographic projection. On this sphere, every rational function becomes a smooth map from the sphere to itself. The point at infinity is where 1/z is analytic (since 1/z → 0 as z → ∞). This compactification makes complex analysis even more elegant — there are no "missing" points.</p>
+
+                <h3>The Riemann Hypothesis — The $1M Connection</h3>
+                <p>The <strong>Riemann zeta function</strong> ζ(s) is defined for complex s with Re(s) > 1 by the series Σ 1/nˢ. Riemann showed that ζ(s) can be <strong>analytically continued</strong> to all complex numbers (except s = 1, where it has a simple pole). The zeta function is deeply connected to prime numbers through the Euler product: ζ(s) = Π (1 − p⁻ˢ)⁻¹.</p>
+
+                <p>Riemann conjectured that all non-trivial zeros of ζ(s) lie on the critical line Re(s) = 1/2. This is the <strong>Riemann Hypothesis</strong> — the most important unsolved problem in mathematics. Its proof would reveal the deepest structure of prime numbers. Complex analysis is the only language in which this problem even makes sense.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">The Riemann Zeta Function</div>
+                    <div class="insight-text">ζ(s) = Σ_{n=1}^{∞} 1/nˢ (for Re(s) > 1)</div>
+                    <div class="insight-sub">Analytically continued to the whole complex plane. Zeros at negative even integers are "trivial." The non-trivial zeros are conjectured to all have Re(s) = 1/2.</div>
+                </div>
+
+                <h3>Quantum Mechanics</h3>
+                <p>In quantum mechanics, the state of a particle is a complex-valued wavefunction ψ(x,t). The Schrödinger equation iℏ ∂ψ/∂t = Ĥψ has i built directly into its foundation. Probability amplitudes are complex numbers — the actual probability is |ψ|² = ψψ̄. The Fourier transform between position and momentum space is a complex integral. Without complex analysis, quantum mechanics would be impossible to formulate.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"The imaginary number is a fine and wonderful recourse of the divine spirit, almost an amphibian between being and non-being."</div>
+                    <div class="attribution">— Gottfried Wilhelm Leibniz</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PRACTICE ========== -->
+                <h2 style="margin-top:0">🎯 Practice — Check Your Complex Intuition</h2>
+                <p style="color:var(--text-sec);margin-bottom:16px">These puzzles build intuition about complex numbers and their properties.</p>
+
+                <div id="practice-qs"></div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+                    <a href="math.html" class="btn btn-success">← Back to Math Map</a>
+                </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var practiceQs = [
+            {
+                id: 11001,
+                text: "🌀 What is (2 + 3i) + (4 − i)?",
+                opts: [
+                    {l: "A", t: "6 + 2i", c: true},
+                    {l: "B", t: "8 − 3i", c: false},
+                    {l: "C", t: "6 + 4i", c: false},
+                    {l: "D", t: "2 + 4i", c: false}
+                ],
+                sol: "(2+3i)+(4−i) = (2+4) + (3−1)i = <strong>6 + 2i</strong>. Add real parts and imaginary parts separately."
+            },
+            {
+                id: 11002,
+                text: "🌀 What is (1 + i)(2 − 3i)?",
+                opts: [
+                    {l: "A", t: "5 − i", c: true},
+                    {l: "B", t: "−1 − i", c: false},
+                    {l: "C", t: "2 − 3i", c: false},
+                    {l: "D", t: "5 + i", c: false}
+                ],
+                sol: "(1+i)(2−3i) = 1×2 + 1×(−3i) + i×2 + i×(−3i) = 2 − 3i + 2i − 3i² = 2 − i + 3 = <strong>5 − i</strong>. (Since i² = −1)"
+            },
+            {
+                id: 11003,
+                text: "🌀 What is the complex conjugate of 3 − 4i?",
+                opts: [
+                    {l: "A", t: "−3 + 4i", c: false},
+                    {l: "B", t: "3 + 4i", c: true},
+                    {l: "C", t: "−3 − 4i", c: false},
+                    {l: "D", t: "4 − 3i", c: false}
+                ],
+                sol: "The complex conjugate flips the sign of the imaginary part: 3 − 4i → <strong>3 + 4i</strong>. The product zz̄ = |z|² = 9 + 16 = 25."
+            },
+            {
+                id: 11004,
+                text: "🌀 What is (1 + i)⁴?",
+                opts: [
+                    {l: "A", t: "4", c: false},
+                    {l: "B", t: "−4", c: true},
+                    {l: "C", t: "4i", c: false},
+                    {l: "D", t: "−4i", c: false}
+                ],
+                sol: "Polar form: 1+i = √2 e^{iπ/4}. (1+i)⁴ = (√2)⁴ e^{iπ} = 4 × (−1) = <strong>−4</strong>. Much easier in polar form!"
+            },
+            {
+                id: 11005,
+                text: "🌀 How many solutions does z⁵ = 1 have?",
+                opts: [
+                    {l: "A", t: "1", c: false},
+                    {l: "B", t: "2", c: false},
+                    {l: "C", t: "5", c: true},
+                    {l: "D", t: "Infinite", c: false}
+                ],
+                sol: "The equation z⁵ = 1 has <strong>5</strong> solutions — the 5th roots of unity. They are equally spaced on the unit circle at angles 2πk/5 for k = 0,1,2,3,4."
+            },
+            {
+                id: 11006,
+                text: "🎯 If f(z) = u + iv is analytic, which equations must hold?",
+                opts: [
+                    {l: "A", t: "uₓ = vᵧ, uᵧ = vₓ", c: false},
+                    {l: "B", t: "uₓ = vᵧ, uᵧ = −vₓ", c: true},
+                    {l: "C", t: "uₓ = −vᵧ, uᵧ = vₓ", c: false},
+                    {l: "D", t: "uₓ = uᵧ, vₓ = vᵧ", c: false}
+                ],
+                sol: "The <strong>Cauchy-Riemann equations</strong>: ∂u/∂x = ∂v/∂y and ∂u/∂y = −∂v/∂x. These guarantee the derivative is the same from every direction."
+            },
+            {
+                id: 11007,
+                text: "🎯 What is the value of ∮_C 1/z dz where C is the unit circle?",
+                opts: [
+                    {l: "A", t: "0", c: false},
+                    {l: "B", t: "πi", c: false},
+                    {l: "C", t: "2πi", c: true},
+                    {l: "D", t: "2π", c: false}
+                ],
+                sol: "1/z has a simple pole at z = 0 with residue 1. By the residue theorem: ∮ = 2πi × 1 = <strong>2πi</strong>. This is the fundamental contour integral."
+            },
+            {
+                id: 11008,
+                text: "🔍 What type of singularity does f(z) = e^{1/z} have at z = 0?",
+                opts: [
+                    {l: "A", t: "Removable", c: false},
+                    {l: "B", t: "Pole", c: false},
+                    {l: "C", t: "Essential", c: true},
+                    {l: "D", t: "Branch point", c: false}
+                ],
+                sol: "e^{1/z} has an <strong>essential singularity</strong> at z = 0. Its Laurent series has infinitely many negative powers. By Picard's theorem, it takes every complex value (except 0) in any neighborhood of 0."
+            },
+            {
+                id: 11009,
+                text: "🔍 What is the residue of f(z) = 1/(z²−1) at z = 1?",
+                opts: [
+                    {l: "A", t: "1", c: false},
+                    {l: "B", t: "1/2", c: true},
+                    {l: "C", t: "−1/2", c: false},
+                    {l: "D", t: "0", c: false}
+                ],
+                sol: "Factor: 1/(z²−1) = 1/((z−1)(z+1)). At z = 1 (simple pole): Res = lim (z−1)×1/((z−1)(z+1)) = 1/(1+1) = <strong>1/2</strong>."
+            },
+            {
+                id: 11010,
+                text: "🌀 What is e^{iπ/2} equal to?",
+                opts: [
+                    {l: "A", t: "−1", c: false},
+                    {l: "B", t: "i", c: true},
+                    {l: "C", t: "−i", c: false},
+                    {l: "D", t: "1", c: false}
+                ],
+                sol: "By Euler's formula: e^{iπ/2} = cos(π/2) + i sin(π/2) = 0 + i×1 = <strong>i</strong>. This is why multiplying by i rotates by 90°."
+            },
+            {
+                id: 11011,
+                text: "🌀 |3 + 4i| = ?",
+                opts: [
+                    {l: "A", t: "3", c: false},
+                    {l: "B", t: "4", c: false},
+                    {l: "C", t: "5", c: true},
+                    {l: "D", t: "7", c: false}
+                ],
+                sol: "|3 + 4i| = √(3² + 4²) = √(9 + 16) = √25 = <strong>5</strong>. The modulus is the distance from the origin in the complex plane."
+            },
+            {
+                id: 11012,
+                text: "🌍 Which function is central to the Riemann Hypothesis?",
+                opts: [
+                    {l: "A", t: "The Gamma function", c: false},
+                    {l: "B", t: "The Riemann zeta function ζ(s)", c: true},
+                    {l: "C", t: "The exponential function", c: false},
+                    {l: "D", t: "The sine function", c: false}
+                ],
+                sol: "The <strong>Riemann zeta function</strong> ζ(s) is central. The Riemann Hypothesis states that all non-trivial zeros of ζ(s) have real part 1/2. Its proof would unlock the deepest secrets of prime numbers."
+            }
+        ];
+
+        var answered = {}, correctCount = 0;
+
+        function renderPractice() {
+            var c = document.getElementById('practice-qs'), h = '';
+            for (var i = 0; i < practiceQs.length; i++) {
+                var q = practiceQs[i], o = '';
+                for (var j = 0; j < q.opts.length; j++) {
+                    o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                }
+                h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+            }
+            c.innerHTML = h;
+            updateScore();
+        }
+
+        function getCorrectLabel(q) {
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+            }
+            return '';
+        }
+
+        function selectOpt(qId, idx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            var q = practiceQs.filter(function(x){return x.id === qId})[0];
+            var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+            var isCorrect = q.opts[idx].c;
+            for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-'+qId).textContent = '✅ Correct!';
+                document.getElementById('result-'+qId).className = 'q-result correct';
+                correctCount++;
+            } else {
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+                document.getElementById('result-'+qId).className = 'q-result wrong';
+                for (var i = 0; i < q.opts.length; i++) {
+                    if (q.opts[i].c) opts[i].classList.add('correct');
+                }
+            }
+            document.getElementById('soln-'+qId).classList.add('show');
+            updateScore();
+        }
+
+        function updateScore() {
+            var t = Object.keys(answered).length;
+            var el = document.getElementById('score-display');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'score-display';
+                el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+                document.getElementById('practice-qs').before(el);
+            }
+            el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+        }
+
+        function resetPractice() {
+            if (!confirm('Reset all answers?')) return;
+            answered = {}; correctCount = 0;
+            document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+            document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+            document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+            var el = document.getElementById('score-display');
+            if (el) el.textContent = '';
+            renderPractice();
+        }
+
+        function toggleStep(header) {
+            var content = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        renderPractice();
+    </script>
+</body>
+</html>
