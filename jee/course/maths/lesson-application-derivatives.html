@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Application of Derivatives — The Calculus Swiss Army Knife | vlymbooq</title>
+    <meta name="description" content="Learn Application of Derivatives through stories, animated graphs, and real-life analogies. Tangents, maxima, minima, rate of change — built on intuition.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/jee/course/maths/lesson-application-derivatives.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}}
+
+        .story-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin:16px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .story-card .story-title{font-size:1.05em;font-weight:700;color:var(--text);margin-bottom:8px}
+        .story-card .story-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .story-card .story-moral{font-size:.82em;color:var(--emerald);font-weight:600;margin-top:10px;padding:8px 12px;background:rgba(52,211,153,.04);border-radius:8px;border-left:3px solid var(--emerald)}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+        .diagram-box .diagram-title{font-size:.85em;font-weight:700;color:var(--text);margin-bottom:8px}
+        .diagram-box .diagram-controls{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+        .diagram-box .ctrl-btn{padding:6px 16px;border-radius:100px;font-size:.78em;font-weight:600;border:1px solid var(--border);background:var(--bg-card);color:var(--text-sec);cursor:pointer;transition:all .2s}
+        .diagram-box .ctrl-btn:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15)}
+        .diagram-box .ctrl-btn.active{background:rgba(167,139,250,.12);border-color:var(--purple);color:var(--purple)}
+        .diagram-box .slider-wrap{display:flex;align-items:center;gap:12px;margin-top:12px;justify-content:center}
+        .diagram-box .slider-wrap input[type=range]{width:200px;max-width:60%;-webkit-appearance:none;background:var(--border);height:4px;border-radius:4px;outline:none}
+        .diagram-box .slider-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple);cursor:pointer}
+        .diagram-box .slider-wrap .slider-val{font-size:.82em;color:var(--purple);font-weight:700;min-width:30px}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+        .q-badge{display:inline-block;padding:2px 8px;border-radius:100px;font-size:.7em;font-weight:600;margin-bottom:6px}
+        .q-badge.easy{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .q-badge.medium{background:rgba(245,158,11,.1);color:var(--amber)}
+        .q-badge.hard{background:rgba(239,68,68,.1);color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes paint-brush{from{stroke-dashoffset:400}to{stroke-dashoffset:0}}
+        .fade-in{animation:fade-in .5s ease forwards}
+        .slide-up{animation:slide-up .6s ease forwards}
+
+        .progress-tracker{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+        .progress-tracker .p-step{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;font-size:.75em;border:1px solid var(--border);color:var(--text-muted);transition:all .3s}
+        .progress-tracker .p-step.done{border-color:var(--emerald);color:var(--emerald);background:rgba(52,211,153,.06)}
+        .progress-tracker .p-step.active{border-color:var(--purple);color:var(--purple);background:rgba(167,139,250,.08)}
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part2{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part3{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+
+        .graph-hover-area{cursor:crosshair}
+        .graph-point{transition:all .3s}
+        .graph-point:hover{r:6;fill:var(--amber)}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="../../index.html">JEE</a><a href="../index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Mathematics</div>
+                    <a href="lesson-algebra.html">Algebra</a>
+                    <a href="lesson-calculus.html">Calculus</a>
+                    <a href="lesson-coordinate-geometry.html">Coordinate Geometry</a>
+                    <a href="lesson-vector-3d.html">Vector & 3D</a>
+                    <a href="lesson-probability-statistics.html">Probability & Stats</a>
+                    <a href="lesson-trigonometry.html">Trigonometry</a>
+                    <a href="lesson-sets-relations-functions.html">Sets, Relations & Functions</a>
+                    <a href="lesson-inverse-trigonometry.html">Inverse Trigonometry</a>
+                    <a href="lesson-application-derivatives.html" class="active">Application of Derivatives</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 4 &middot; JEE Mathematics</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Application of Derivatives — The Calculus Swiss Army Knife</h1>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Tangents, maxima, minima, rate of change — the derivative isn't just slope, it's a superpower.</div>
+                    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+                        <button onclick="window.print()" class="download-btn">📄 Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">🎯 Take Mock Test</a>
+                    </div>
+                </div>
+
+                <div class="progress-tracker">
+                    <span class="p-step active" id="p1"><span>📐</span> Tangents</span>
+                    <span class="p-step" id="p2"><span>📈</span> Monotonicity</span>
+                    <span class="p-step" id="p3"><span>🏔️</span> Maxima & Minima</span>
+                    <span class="p-step" id="p4"><span>⏱️</span> Rate of Change</span>
+                    <span class="p-step" id="p5"><span>🎯</span> Practice</span>
+                </div>
+
+                <div class="lesson-body">
+                    <!-- ============================================================ -->
+                    <!-- PART 1: TANGENTS & NORMALS -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">📐 Part 1: Tangents & Normals — The Derivative as Slope</span>
+                    <h2>The Derivative Is the Slope of the Tangent Line. Period.</h2>
+
+                    <p>You learned in the Calculus lesson that f'(a) gives the instantaneous rate of change at x = a. Geometrically, that's the <strong>slope of the tangent line</strong> to the curve y = f(x) at the point (a, f(a)).</p>
+
+                    <div class="story-card">
+                        <div class="story-label">📐 The Core Idea</div>
+                        <div class="story-title">Tangent = The line that "just touches" the curve. Normal = The line perpendicular to the tangent.</div>
+                        <div class="story-text">
+                            Imagine driving a car around a curve. At any instant, your direction of travel is the <strong>tangent</strong> at that point. The <strong>normal</strong> is the line perpendicular to your direction — like the direction a skid mark would point if you hit the brakes.<br><br>
+                            <strong>Equation of tangent</strong> at (x₀, y₀): y − y₀ = f'(x₀)(x − x₀)<br>
+                            <strong>Equation of normal</strong> at (x₀, y₀): y − y₀ = −1/f'(x₀)(x − x₀) (if f'(x₀) ≠ 0)<br><br>
+                            If f'(x₀) = 0, the tangent is horizontal (y = y₀), and the normal is vertical (x = x₀).
+                        </div>
+                        <div class="story-moral">💡 Tangent = derivative as slope. Normal = negative reciprocal slope. Two lines, one derivative.</div>
+                    </div>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📐 Tangent & Normal — Visualized</div>
+                        <svg viewBox="0 0 500 350" width="500" height="350">
+                            <line x1="40" y1="300" x2="480" y2="300" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <line x1="250" y1="300" x2="250" y2="30" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <text x="480" y="315" fill="var(--text-muted)" font-size="12" text-anchor="end">x →</text>
+                            <text x="240" y="38" fill="var(--text-muted)" font-size="12" text-anchor="middle">↑ y</text>
+                            <!-- Parabola y = x²/4 -->
+                            <path d="M80,270 Q100,230 130,190 Q160,150 200,120 Q240,100 280,90 Q320,80 360,80 Q400,80 440,90" fill="none" stroke="var(--purple)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Tangent at x = 200 -->
+                            <line x1="120" y1="175" x2="320" y2="115" stroke="var(--amber)" stroke-width="2.5" stroke-dasharray="6,3"/>
+                            <text x="310" y="110" fill="var(--amber)" font-size="12" font-weight="700">Tangent</text>
+                            <!-- Normal at x = 200 -->
+                            <line x1="160" y1="220" x2="280" y2="60" stroke="var(--emerald)" stroke-width="2" stroke-dasharray="4,4"/>
+                            <text x="285" y="65" fill="var(--emerald)" font-size="12" font-weight="700">Normal</text>
+                            <!-- Point of tangency -->
+                            <circle cx="200" cy="120" r="6" fill="var(--red)"/>
+                            <text x="190" y="110" fill="var(--red)" font-size="12" font-weight="700">(x₀, y₀)</text>
+                            <!-- Rectangle highlighting right triangle -->
+                            <rect x="200" y="120" width="80" height="80" rx="2" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.1)" stroke-width="1" stroke-dasharray="3,3"/>
+                            <text x="280" y="180" fill="var(--text-muted)" font-size="10">⊥</text>
+                            <rect x="90" y="330" width="320" height="20" rx="4" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.1)" stroke-width="1"/>
+                            <text x="250" y="344" fill="var(--emerald)" font-size="11" font-weight="700" text-anchor="middle">Tangent slope = f'(x₀). Normal slope = −1/f'(x₀). They are perpendicular (product = −1).</text>
+                        </svg>
+                        <div class="diagram-caption">The tangent (amber, dashed) touches the curve at exactly one point. The normal (green, dotted) is perpendicular to the tangent. Together they form a crosshair at the point of interest.</div>
+                    </div>
+
+                    <h3>Worked Example: Tangent & Normal</h3>
+                    <p>Find the equations of the tangent and normal to y = x² at the point (2, 4).</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Find the derivative</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            f(x) = x²<br>
+                            f'(x) = 2x<br>
+                            At x = 2: f'(2) = 2(2) = <strong>4</strong>.<br><br>
+                            The slope of the tangent at (2, 4) is 4.
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>Equation of tangent</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            Point-slope form: y − y₀ = m(x − x₀)<br>
+                            y − 4 = 4(x − 2)<br>
+                            y − 4 = 4x − 8<br>
+                            <div class="math-block">y = 4x − 4 (Tangent)</div>
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">3</span>
+                            <span><strong>Equation of normal</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            Slope of normal = −1/m = −1/4.<br>
+                            y − 4 = (−1/4)(x − 2)<br>
+                            y − 4 = −x/4 + 1/2<br>
+                            <div class="math-block">y = −x/4 + 9/2 (Normal)</div>
+                        </div>
+                    </div>
+
+                    <h3>Angle Between Two Curves</h3>
+                    <p>The angle between two curves at their intersection point is the angle between their tangents at that point.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">📐 Angle Between Curves</div>
+                        <div class="story-title">tan(θ) = |(m₁ − m₂)/(1 + m₁m₂)|</div>
+                        <div class="story-text">
+                            To find the angle between curves y₁ = f(x) and y₂ = g(x) at their intersection:<br><br>
+                            1. Find the intersection point(s) by solving f(x) = g(x).<br>
+                            2. Find m₁ = f'(x₀) and m₂ = g'(x₀) at the intersection.<br>
+                            3. Use the formula: <strong>tan(θ) = |(m₁ − m₂)/(1 + m₁m₂)|</strong>.<br><br>
+                            If m₁m₂ = −1, the curves intersect <strong>orthogonally</strong> (at 90°).<br>
+                            If m₁ = m₂, the curves touch each other (angle = 0°).
+                        </div>
+                        <div class="story-moral">💡 The angle between curves = the angle between their tangents. Same formula as angle between two lines!</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Tangent & Normal Checklist</div>
+                        <div class="insight-text">1. Find f'(x) → 2. Plug in x₀ for slope → 3. Use point-slope line equation</div>
+                        <div class="insight-sub">Normal slope = negative reciprocal. Horizontal tangent → vertical normal (and vice versa).</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 2: INCREASING & DECREASING FUNCTIONS -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">📈 Part 2: Increasing & Decreasing — The Derivative Tells You Where the Function Goes</span>
+                    <h2>If f'(x) &gt; 0, the Function Is Rising. If f'(x) &lt; 0, It's Falling.</h2>
+
+                    <p>The derivative is like a <strong>thermometer for direction</strong>. Positive derivative = function going up. Negative derivative = function going down. Zero derivative = flat (possibly a peak or valley).</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📈 Increasing vs Decreasing — Read the Slope</div>
+                        <svg viewBox="0 0 500 320" width="500" height="320">
+                            <line x1="40" y1="280" x2="480" y2="280" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <line x1="250" y1="280" x2="250" y2="30" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <text x="480" y="295" fill="var(--text-muted)" font-size="12" text-anchor="end">x →</text>
+                            <text x="240" y="38" fill="var(--text-muted)" font-size="12" text-anchor="middle">↑ y = f(x)</text>
+                            <!-- Cubic curve -->
+                            <path d="M60,260 Q100,260 140,240 Q180,200 220,140 Q240,100 260,80 Q280,60 320,80 Q360,120 400,200 Q440,260 460,270" fill="none" stroke="var(--purple)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Increasing region label -->
+                            <rect x="60" y="30" width="120" height="24" rx="12" fill="rgba(52,211,153,.12)" stroke="var(--emerald)" stroke-width="1"/>
+                            <text x="120" y="47" fill="var(--emerald)" font-size="12" font-weight="700" text-anchor="middle">↑ Increasing</text>
+                            <!-- Decreasing region label -->
+                            <rect x="180" y="30" width="90" height="24" rx="12" fill="rgba(239,68,68,.12)" stroke="var(--red)" stroke-width="1"/>
+                            <text x="225" y="47" fill="var(--red)" font-size="12" font-weight="700" text-anchor="middle">↓ Decreasing</text>
+                            <!-- Increasing region 2 -->
+                            <rect x="270" y="30" width="120" height="24" rx="12" fill="rgba(52,211,153,.12)" stroke="var(--emerald)" stroke-width="1"/>
+                            <text x="330" y="47" fill="var(--emerald)" font-size="12" font-weight="700" text-anchor="middle">↑ Increasing</text>
+                            <!-- Tangent lines showing slope -->
+                            <line x1="100" y1="250" x2="130" y2="235" stroke="var(--emerald)" stroke-width="2"/>
+                            <line x1="220" y1="145" x2="245" y2="165" stroke="var(--red)" stroke-width="2"/>
+                            <line x1="360" y1="125" x2="390" y2="110" stroke="var(--emerald)" stroke-width="2"/>
+                            <text x="300" y="310" fill="var(--text-muted)" font-size="11" text-anchor="middle">Where f'(x) > 0 → function rises. Where f'(x) < 0 → function falls.</text>
+                        </svg>
+                        <div class="diagram-caption"><strong>Increasing:</strong> The curve rises as x increases (tangent slopes upward). <strong>Decreasing:</strong> The curve falls as x increases (tangent slopes downward). The <strong>critical points</strong> where f'(x) = 0 are where the function changes direction (local max/min).</div>
+                    </div>
+
+                    <h3>How to Find Intervals of Increase/Decrease</h3>
+
+                    <div class="story-card">
+                        <div class="story-label">📈 The Method</div>
+                        <div class="story-title">4 Steps to Find Where a Function Is Increasing or Decreasing</div>
+                        <div class="story-text">
+                            1. Find f'(x).<br>
+                            2. Set f'(x) = 0 and solve for critical points (where f' = 0 or f' is undefined).<br>
+                            3. Plot these critical points on a number line to divide the domain into intervals.<br>
+                            4. Test ONE point in each interval: if f'(test) &gt; 0, the function is <strong>increasing</strong> there. If f'(test) &lt; 0, it's <strong>decreasing</strong>.<br><br>
+                            <strong>Example:</strong> f(x) = x³ − 3x. f'(x) = 3x² − 3 = 3(x − 1)(x + 1).<br>
+                            Critical points: x = −1, x = 1.<br>
+                            Test x = −2: f'(−2) = 3(4 − 1) = 9 &gt; 0 → increasing on (−∞, −1).<br>
+                            Test x = 0: f'(0) = −3 &lt; 0 → decreasing on (−1, 1).<br>
+                            Test x = 2: f'(2) = 3(4 − 1) = 9 &gt; 0 → increasing on (1, ∞).
+                        </div>
+                        <div class="story-moral">💡 The sign of f'(x) tells you the direction. Positive = climbing. Negative = descending. Zero = possibly flat (critical point).</div>
+                    </div>
+
+                    <h3>Worked Example: Monotonicity</h3>
+                    <p>Find the intervals where f(x) = 2x³ − 9x² + 12x − 5 is increasing or decreasing.</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Find the derivative and factor</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            f'(x) = 6x² − 18x + 12 = 6(x² − 3x + 2) = 6(x − 1)(x − 2).<br><br>
+                            Critical points: x = 1 and x = 2 (where f'(x) = 0).<br>
+                            Domain is ℝ, so the number line is: (−∞, 1), (1, 2), (2, ∞).
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>Test each interval</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            <strong>Interval (−∞, 1):</strong> Test x = 0. f'(0) = 6(−1)(−2) = 12 &gt; 0 → <strong>Increasing</strong>.<br>
+                            <strong>Interval (1, 2):</strong> Test x = 1.5. f'(1.5) = 6(0.5)(−0.5) = −1.5 &lt; 0 → <strong>Decreasing</strong>.<br>
+                            <strong>Interval (2, ∞):</strong> Test x = 3. f'(3) = 6(2)(1) = 12 &gt; 0 → <strong>Increasing</strong>.<br><br>
+                            <strong>Result:</strong> f is increasing on (−∞, 1) ∪ (2, ∞), and decreasing on (1, 2).<br>
+                            At x = 1: f goes from ↑ to ↓ → <strong>local maximum</strong>.<br>
+                            At x = 2: f goes from ↓ to ↑ → <strong>local minimum</strong>.
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Direction Change = Extreme Point</div>
+                        <div class="insight-text">↑ to ↓ at critical point → local maximum. ↓ to ↑ at critical point → local minimum.</div>
+                        <div class="insight-sub">This is the <strong>First Derivative Test</strong> — the simplest way to classify critical points.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 3: MAXIMA & MINIMA -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">🏔️ Part 3: Maxima & Minima — Finding the Peaks and Valleys</span>
+                    <h2>The Derivative Finds Where Things Peak and Where They Bottom Out</h2>
+
+                    <p>In real life, we're always optimizing: maximizing profit, minimizing cost, finding the shortest path. The derivative is our optimization superpower.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🏔️ Local vs Absolute Extrema — Peaks and Valleys</div>
+                        <svg viewBox="0 0 500 300" width="500" height="300">
+                            <line x1="40" y1="260" x2="480" y2="260" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <line x1="250" y1="260" x2="250" y2="30" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <!-- Wavy curve with multiple peaks/valleys -->
+                            <path d="M40,200 Q80,200 110,180 Q140,150 170,140 Q200,120 230,160 Q250,190 270,150 Q300,80 330,100 Q360,130 380,120 Q420,100 460,160" fill="none" stroke="var(--purple)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Local maximum -->
+                            <circle cx="170" cy="140" r="6" fill="var(--emerald)"/>
+                            <text x="170" y="130" fill="var(--emerald)" font-size="11" font-weight="700" text-anchor="middle">Local Max</text>
+                            <!-- Local minimum -->
+                            <circle cx="230" cy="160" r="6" fill="var(--red)"/>
+                            <text x="230" y="175" fill="var(--red)" font-size="11" font-weight="700" text-anchor="middle">Local Min</text>
+                            <!-- Absolute maximum -->
+                            <circle cx="300" cy="80" r="8" fill="var(--amber)" stroke="var(--amber)" stroke-width="2"/>
+                            <text x="300" y="65" fill="var(--amber)" font-size="12" font-weight="800" text-anchor="middle">Global Max 🏆</text>
+                            <!-- Local max 2 -->
+                            <circle cx="420" cy="100" r="6" fill="var(--emerald)"/>
+                            <text x="420" y="90" fill="var(--emerald)" font-size="11" font-weight="700" text-anchor="middle">Local Max</text>
+                            <rect x="80" y="275" width="340" height="22" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.1)" stroke-width="1"/>
+                            <text x="250" y="291" fill="var(--emerald)" font-size="11" font-weight="700" text-anchor="middle">f'(x) = 0 at all peaks and valleys (horizontal tangent). f''(x) tells peak from valley.</text>
+                        </svg>
+                        <div class="diagram-caption"><strong>Local maximum:</strong> Higher than all nearby points. <strong>Local minimum:</strong> Lower than all nearby points. <strong>Absolute (global) maximum:</strong> The highest point overall. Every peak has a horizontal tangent (f' = 0).</div>
+                    </div>
+
+                    <h3>First Derivative Test vs Second Derivative Test</h3>
+
+                    <div class="story-card">
+                        <div class="story-label">🏔️ Two Tests for Classifying Critical Points</div>
+                        <div class="story-title">First Derivative Test (check sign change) vs Second Derivative Test (check concavity)</div>
+                        <div class="story-text">
+                            <strong>First Derivative Test:</strong><br>
+                            • f' changes from + to − at c → <strong>local maximum</strong> (peak)<br>
+                            • f' changes from − to + at c → <strong>local minimum</strong> (valley)<br>
+                            • f' does NOT change sign → <strong>point of inflection</strong> (neither)<br><br>
+                            <strong>Second Derivative Test (faster when f'' exists):</strong><br>
+                            • If f'(c) = 0 and f''(c) &lt; 0 → <strong>local maximum</strong> (curve is ∩-shaped)<br>
+                            • If f'(c) = 0 and f''(c) &gt; 0 → <strong>local minimum</strong> (curve is ∪-shaped)<br>
+                            • If f''(c) = 0 → test is <strong>inconclusive</strong> (use first derivative test)
+                        </div>
+                        <div class="story-moral">💡 f'' < 0 → concave down → maximum. f'' > 0 → concave up → minimum. f'' = 0 → need more investigation.</div>
+                    </div>
+
+                    <h3>Worked Example: Maxima & Minima</h3>
+                    <p>Find all local maxima and minima of f(x) = x³ − 3x + 1, and determine their nature.</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Find critical points</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            f'(x) = 3x² − 3 = 3(x² − 1) = 3(x − 1)(x + 1).<br>
+                            Set f'(x) = 0: x = −1 or x = <strong>1</strong>.<br>
+                            Critical points: x = −1 and x = 1.
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>Apply the second derivative test</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            f''(x) = 6x.<br><br>
+                            At x = −1: f''(−1) = −6 &lt; 0 → <strong>Local maximum</strong>. f(−1) = −1 + 3 + 1 = 3. So local max at (−1, 3).<br><br>
+                            At x = 1: f''(1) = 6 &gt; 0 → <strong>Local minimum</strong>. f(1) = 1 − 3 + 1 = −1. So local min at (1, −1).<br><br>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+                                <div style="background:rgba(239,68,68,.06);border-radius:8px;padding:8px;text-align:center;border:1px solid rgba(239,68,68,.1)">
+                                    <div style="color:var(--red);font-weight:700;font-size:.9em">(−1, 3) 🏔️</div>
+                                    <div style="color:var(--text-muted);font-size:.78em">Local Max (f'' < 0)</div>
+                                </div>
+                                <div style="background:rgba(52,211,153,.06);border-radius:8px;padding:8px;text-align:center;border:1px solid rgba(52,211,153,.1)">
+                                    <div style="color:var(--emerald);font-weight:700;font-size:.9em">(1, −1) 🪷</div>
+                                    <div style="color:var(--text-muted);font-size:.78em">Local Min (f'' > 0)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Worked Example: Maxima on a Closed Interval</h3>
+                    <p>Find the absolute maximum and minimum of f(x) = x³ − 3x + 1 on [−2, 3].</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Check critical points AND endpoints</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            Critical points from above: x = −1, x = 1 (both in [−2, 3]).<br>
+                            Endpoints: x = −2, x = 3.<br><br>
+                            Evaluate f at all four:<br>
+                            f(−2) = −8 + 6 + 1 = <strong>−1</strong><br>
+                            f(−1) = −1 + 3 + 1 = <strong>3</strong><br>
+                            f(1) = 1 − 3 + 1 = <strong>−1</strong><br>
+                            f(3) = 27 − 9 + 1 = <strong>19</strong><br><br>
+                            <strong>Absolute maximum:</strong> f(3) = 19 (at the right endpoint!)<br>
+                            <strong>Absolute minimum:</strong> f(−2) = −1 and f(1) = −1 (tied at two points).
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Closed Interval Method</div>
+                        <div class="insight-text">To find absolute extrema on [a, b]: evaluate f at ALL critical points in (a, b) AND at both endpoints. The largest value wins.</div>
+                        <div class="insight-sub">Don't forget the endpoints! The absolute max/min can be at an endpoint, not necessarily at a critical point.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 4: RATE OF CHANGE & RELATED RATES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">⏱️ Part 4: Rate of Change — Derivatives in the Real World</span>
+                    <h2>The Derivative Measures HOW FAST Something Changes</h2>
+
+                    <p>In the real world, quantities change with time. The derivative dy/dt tells you the <strong>rate</strong> at which y changes. This is the most practical application of derivatives — from physics to economics.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">⏱️ Rate of Change</div>
+                        <div class="story-title">dy/dt = The Speedometer of Any Quantity</div>
+                        <div class="story-text">
+                            If y = f(t) describes a quantity at time t, then <strong>dy/dt</strong> is its rate of change.<br><br>
+                            <strong>Examples:</strong><br>
+                            • Position s(t) → velocity = ds/dt → acceleration = d²s/dt²<br>
+                            • Area A(r) = πr² → dA/dt = 2πr·dr/dt (chain rule!)<br>
+                            • Profit P(q) → marginal profit = dP/dq<br><br>
+                            <strong>Related rates:</strong> When two quantities are linked by an equation, you can find how fast one changes by knowing how fast the other changes. Differentiate both sides with respect to time (t) using the chain rule.
+                        </div>
+                        <div class="story-moral">💡 dy/dt = "how fast y changes per unit time." For related rates: differentiate the relationship, plug in known values, solve for the unknown rate.</div>
+                    </div>
+
+                    <h3>Worked Example: Related Rates — Expanding Balloon</h3>
+                    <p>Air is being pumped into a spherical balloon at 5 cm³/s. Find the rate at which the radius is increasing when the radius is 10 cm. (Volume of sphere: V = 4πr³/3)</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Set up the relationship</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            Given: dV/dt = 5 cm³/s (rate of volume increase).<br>
+                            Need: dr/dt when r = 10 cm.<br><br>
+                            Relationship: V = 4πr³/3.<br>
+                            Differentiate both sides with respect to t: dV/dt = 4πr²·dr/dt.
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>Plug in known values</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            dV/dt = 4πr²·dr/dt<br>
+                            5 = 4π(10)²·dr/dt<br>
+                            5 = 400π·dr/dt<br>
+                            dr/dt = 5/(400π) = 1/(80π) cm/s.<br><br>
+                            <div class="math-block">dr/dt ≈ 0.00398 cm/s (about 0.004 cm per second)</div>
+                            The radius increases very slowly because a sphere with r = 10 has a large surface area (400π cm²), so new air spreads thin.
+                        </div>
+                    </div>
+
+                    <h3>Worked Example: Motion Along a Line</h3>
+                    <p>A particle moves along a line such that s(t) = t³ − 6t² + 9t + 1 (s in meters, t in seconds). Find velocity and acceleration at t = 2.</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Velocity = ds/dt, Acceleration = dv/dt</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            v(t) = ds/dt = 3t² − 12t + 9<br>
+                            a(t) = dv/dt = 6t − 12<br><br>
+                            At t = 2:<br>
+                            v(2) = 3(4) − 24 + 9 = 12 − 24 + 9 = <strong>−3 m/s</strong> (moving backward/left)<br>
+                            a(2) = 12 − 12 = <strong>0 m/s²</strong> (momentarily not accelerating)<br><br>
+                            The negative velocity at t = 2 means the particle is moving in the negative direction. Zero acceleration means the velocity is at a turning point (minimum velocity).
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Related Rates Strategy</div>
+                        <div class="insight-text">1. Write the relationship. 2. Differentiate with respect to t. 3. Substitute known values. 4. Solve for unknown rate.</div>
+                        <div class="insight-sub">The chain rule is your friend: dr/dt, dV/dt, dA/dt — everything changes with time, so every variable gets a dt derivative.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- COMMON MISTAKES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">⚠️ Common Mistakes (Don't Fall For These!)</span>
+                    <h2>These Traps Trip Up Even Top Students</h2>
+
+                    <div class="story-card">
+                        <div class="story-label">⚠️ Mistake 1</div>
+                        <div class="story-title">Forgetting That f'(c) = 0 Is NECESSARY But Not SUFFICIENT for Extrema</div>
+                        <div class="story-text">
+                            <strong>Wrong:</strong> f'(c) = 0 means c is a local max or min ❌<br>
+                            <strong>Right:</strong> f'(c) = 0 only means c is a <strong>critical point</strong>. It could be a max, a min, or a <strong>point of inflection</strong>.<br><br>
+                            <strong>Example:</strong> f(x) = x³. f'(0) = 0, but (0, 0) is a point of inflection (the function is increasing through x = 0). The first derivative doesn't change sign!<br><br>
+                            Always check the sign change (first derivative test) or concavity (second derivative test) to classify critical points.
+                        </div>
+                        <div class="story-moral">⚠️ f'(c) = 0 is a clue, not a verdict. Always verify whether it's a max, min, or inflection point.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">⚠️ Mistake 2</div>
+                        <div class="story-title">Forgetting to Check Endpoints for Absolute Extrema</div>
+                        <div class="story-text">
+                            <strong>Wrong:</strong> Finding f'(x) = 0 gives the absolute max and min on [a, b] ❌<br>
+                            <strong>Right:</strong> The absolute max/min can occur at <strong>endpoints</strong> of the interval, not just at critical points!<br><br>
+                            <strong>Example:</strong> f(x) = x² on [−2, 3]. f'(x) = 2x = 0 → x = 0. f(0) = 0. But f(3) = 9 is the absolute maximum. The critical point gave the minimum, not the maximum!<br><br>
+                            Always evaluate the function at endpoints when finding absolute extrema on a closed interval.
+                        </div>
+                        <div class="story-moral">⚠️ On a closed interval, absolute extrema live at EITHER critical points OR endpoints. Check both!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">⚠️ Mistake 3</div>
+                        <div class="story-title">Confusing Increasing/Decreasing with Positive/Negative Function Values</div>
+                        <div class="story-text">
+                            <strong>Wrong:</strong> f(x) &gt; 0 means f is increasing ❌<br>
+                            <strong>Right:</strong> f(x) &gt; 0 means the function's VALUE is positive. f'(x) &gt; 0 means the function is <strong>increasing</strong>.<br><br>
+                            A function can be positive and decreasing (like f(x) = e⁻ˣ for x &gt; 0).<br>
+                            A function can be negative and increasing (like f(x) = ln(x) for 0 &lt; x &lt; 1).<br><br>
+                            f'(x) is about DIRECTION, not VALUE. Don't mix them up!
+                        </div>
+                        <div class="story-moral">⚠️ f'(x) > 0 → function going UP (increasing). f(x) > 0 → function is ABOVE the x-axis. These are completely different things!</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PROBLEM-SOLVING TOOLKIT -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">🧠 Application of Derivatives Toolkit</span>
+                    <h2>4 Strategies That Crack Almost Any Problem</h2>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 1</div>
+                        <div class="story-title">"Tangent = Derivative at the Point"</div>
+                        <div class="story-text">
+                            Every tangent problem boils down to: find f'(x₀), then use point-slope form. No matter how complex the function looks, the tangent is always:<br><br>
+                            <div class="math-block">y − f(a) = f'(a)(x − a)</div>
+                            For the normal, just flip the slope to its negative reciprocal. If the slope is 0 (horizontal tangent), the normal is vertical (x = a). If the slope is infinite (vertical tangent), the normal is horizontal (y = f(a)).
+                        </div>
+                        <div class="story-moral">💡 One formula for all tangents: y − y₀ = m(x − x₀) where m = f'(x₀). Don't overthink it!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 2</div>
+                        <div class="story-title">"Sign Chart for Monotonicity"</div>
+                        <div class="story-text">
+                            To find intervals of increase/decrease:<br><br>
+                            1. Find f'(x) and factor it.<br>
+                            2. Find all x where f'(x) = 0 or f'(x) DNE.<br>
+                            3. Draw a number line with these points marked.<br>
+                            4. Pick a test point in each interval and evaluate f' there.<br>
+                            5. Mark each interval as + (increasing) or − (decreasing).<br><br>
+                            <strong>Pro tip:</strong> Use the factored form of f'(x) to quickly determine signs. A factor like (x − a) changes sign at a. A squared factor like (x − a)² never changes sign.
+                        </div>
+                        <div class="story-moral">💡 The sign chart is your best friend for monotonicity. One test value per interval is enough — f' can only change sign at critical points!</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 3</div>
+                        <div class="story-title">"Second Derivative Test for Quick Classification"</div>
+                        <div class="story-text">
+                            When you already have f''(x) and finding it isn't too messy, use the second derivative test:<br><br>
+                            • f'(c) = 0 AND f''(c) &lt; 0 → local maximum (concave down ∩)<br>
+                            • f'(c) = 0 AND f''(c) &gt; 0 → local minimum (concave up ∪)<br>
+                            • f''(c) = 0 → test fails. Use the first derivative test instead.<br><br>
+                            <strong>When to use which:</strong> The second derivative test is faster but can fail (when f'' = 0). The first derivative test always works but requires more work (checking sign on both sides).
+                        </div>
+                        <div class="story-moral">💡 f'' < 0 = ∩ = max. f'' > 0 = ∪ = min. If f'' = 0, fall back to the first derivative test.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 4</div>
+                        <div class="story-title">"Chain Rule for Related Rates"</div>
+                        <div class="story-text">
+                            Related rates problems always follow the same pattern:<br><br>
+                            1. Write an equation linking the quantities.<br>
+                            2. Differentiate BOTH sides with respect to t (time). Every variable gets a dt derivative via chain rule.<br>
+                            3. Plug in the known values (be careful with signs — "increasing" means positive rate, "decreasing" means negative).<br>
+                            4. Solve for the unknown rate.<br><br>
+                            <strong>Example:</strong> A ladder sliding down a wall. x² + y² = L². Differentiate: 2x·dx/dt + 2y·dy/dt = 0. So dy/dt = −(x/y)·dx/dt.
+                        </div>
+                        <div class="story-moral">💡 Differentiate the relationship, then substitute. The chain rule automatically handles the rates — just let d/dt flow through every variable.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- ADVANCED WORKED EXAMPLES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🔥 Advanced Worked Examples (JEE Level)</span>
+                    <h2>Multi-Step Problems That Combine Multiple Concepts</h2>
+
+                    <h3>Example 1: Tangent + Monotonicity + Optimization</h3>
+                    <p>A curve y = ax² + bx + c passes through (1, 3) and has a tangent with slope 5 at x = 2. The function has a local minimum at x = 1. Find a, b, c.</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Set up equations from the conditions</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            y = ax² + bx + c<br>
+                            y' = 2ax + b<br><br>
+                            <strong>Condition 1:</strong> Passes through (1, 3): a(1)² + b(1) + c = 3 → a + b + c = 3<br>
+                            <strong>Condition 2:</strong> Tangent slope = 5 at x = 2: y'(2) = 4a + b = 5<br>
+                            <strong>Condition 3:</strong> Local minimum at x = 1: y'(1) = 2a + b = 0
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>Solve the system</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            From condition 3: b = −2a.<br>
+                            Substitute into condition 2: 4a + (−2a) = 5 → 2a = 5 → a = <strong>5/2</strong> = 2.5<br>
+                            b = −2(5/2) = <strong>−5</strong>.<br>
+                            From condition 1: 5/2 − 5 + c = 3 → c = 3 + 5 − 5/2 = 8 − 2.5 = <strong>11/2</strong> = 5.5<br><br>
+                            <div class="math-block">y = 2.5x² − 5x + 5.5</div>
+                            Verify: y'(1) = 5 − 5 = 0 ✅. y''(1) = 5 > 0 → local minimum ✅.
+                        </div>
+                    </div>
+
+                    <h3>Example 2: Optimization — Maximizing Area</h3>
+                    <p>A farmer has 100 meters of fencing. He wants to enclose a rectangular field against an existing wall (no fence needed on the wall side). Find the dimensions that maximize the area.</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Set up the equations</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            Let the side parallel to the wall be L, and the other two sides (perpendicular to the wall) be W each.<br><br>
+                            <strong>Fencing used:</strong> L + 2W = 100 → L = 100 − 2W.<br>
+                            <strong>Area:</strong> A = L × W = (100 − 2W)W = 100W − 2W².<br><br>
+                            Domain: W &gt; 0 and L = 100 − 2W &gt; 0 → W ∈ (0, 50).
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>Maximize using derivatives</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            A(W) = 100W − 2W²<br>
+                            A'(W) = 100 − 4W<br>
+                            Set A'(W) = 0: 100 − 4W = 0 → W = <strong>25</strong>.<br><br>
+                            A''(W) = −4 &lt; 0 → local maximum (and the only critical point in the domain, so global max).<br><br>
+                            L = 100 − 2(25) = 50.<br><br>
+                            <div class="math-block">Dimensions: 50m × 25m. Max area = 1250 m².</div>
+                        </div>
+                    </div>
+
+                    <h3>Example 3: Rate of Change — Radius of a Cylinder</h3>
+                    <p>The radius of a cylinder is increasing at 0.5 cm/s while its height is constant at 10 cm. Find the rate of change of volume when r = 4 cm. (V = πr²h)</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Differentiate the volume formula</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            V = πr²h = πr²(10) = 10πr²<br><br>
+                            dV/dt = 10π·2r·dr/dt = 20πr·dr/dt<br><br>
+                            Given: dr/dt = 0.5 cm/s, r = 4 cm.<br><br>
+                            dV/dt = 20π(4)(0.5) = 20π(2) = <strong>40π cm³/s</strong>.<br><br>
+                            At r = 4 cm, the volume is increasing at about 125.7 cm³ per second.
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PRACTICE SECTION -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🎯 Practice Zone: Test Your Understanding</span>
+                    <h2>Practice Zone: Think, Don't Compute</h2>
+                    <p>These questions test if you truly <strong>understand</strong> how derivatives apply to real problems.</p>
+
+                    <div id="practice-qs"></div>
+
+                    <div style="display:flex;gap:10px;margin-top:10px">
+                        <button onclick="resetPractice()" class="btn btn-primary">🔄 Reset</button>
+                        <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                        <a href="lesson-inverse-trigonometry.html" class="btn btn-primary">← Inverse Trig</a>
+                        <a href="lesson-calculus.html" class="btn btn-success">Calculus →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function toggleStep(el) {
+        var content = el.nextElementSibling;
+        var arrow = el.querySelector('.arrow');
+        if (content.classList.contains('open')) {
+            content.classList.remove('open');
+            arrow.classList.remove('open');
+        } else {
+            content.classList.add('open');
+            arrow.classList.add('open');
+        }
+    }
+
+    var practiceQs = [
+        {
+            id: 6001,
+            text: "📐 What is the slope of the tangent to y = x² + 1 at x = 3?",
+            opts: [
+                {l: "A", t: "3", c: false},
+                {l: "B", t: "6", c: true},
+                {l: "C", t: "9", c: false},
+                {l: "D", t: "10", c: false}
+            ],
+            sol: "The derivative gives the slope of the tangent. f(x) = x² + 1 → f'(x) = 2x. At x = 3: f'(3) = 2(3) = <strong>6</strong>. The tangent line at (3, 10) has slope 6."
+        },
+        {
+            id: 6002,
+            text: "📐 The slope of the normal to a curve at (2, 5) is 3. What is the slope of the tangent?",
+            opts: [
+                {l: "A", t: "3", c: false},
+                {l: "B", t: "−3", c: false},
+                {l: "C", t: "1/3", c: false},
+                {l: "D", t: "−1/3", c: true}
+            ],
+            sol: "The normal is perpendicular to the tangent. If m_n = 3, then m_t × m_n = −1, so m_t = −1/3. The tangent and normal slopes are negative reciprocals of each other (product = −1)."
+        },
+        {
+            id: 6003,
+            text: "📈 For which x is f(x) = x² − 4x + 5 increasing?",
+            opts: [
+                {l: "A", t: "x > 2", c: true},
+                {l: "B", t: "x < 2", c: false},
+                {l: "C", t: "x > 0", c: false},
+                {l: "D", t: "All x", c: false}
+            ],
+            sol: "f'(x) = 2x − 4 = 2(x − 2). Set f'(x) = 0: x = 2. For x > 2: f'(x) > 0 → increasing. For x < 2: f'(x) < 0 → decreasing. So f is increasing on (2, ∞). The vertex of the parabola at x = 2 is a minimum."
+        },
+        {
+            id: 6004,
+            text: "🏔️ If f'(c) = 0 and f''(c) < 0, what type of point is x = c?",
+            opts: [
+                {l: "A", t: "Local minimum", c: false},
+                {l: "B", t: "Local maximum", c: true},
+                {l: "C", t: "Point of inflection", c: false},
+                {l: "D", t: "Not a critical point", c: false}
+            ],
+            sol: "f'(c) = 0 means c is a critical point. f''(c) < 0 means the curve is concave down (∩-shaped) at c. A critical point with concave down is a <strong>local maximum</strong> — the function reaches a peak and then descends."
+        },
+        {
+            id: 6005,
+            text: "🏔️ Function f(x) = 3x⁴ − 4x³. At x = 1, what happens?",
+            opts: [
+                {l: "A", t: "Local maximum", c: false},
+                {l: "B", t: "Local minimum", c: true},
+                {l: "C", t: "Point of inflection", c: false},
+                {l: "D", t: "Not a critical point", c: false}
+            ],
+            sol: "f'(x) = 12x³ − 12x² = 12x²(x − 1). f'(x) = 0 at x = 0 and x = 1. f''(x) = 36x² − 24x. At x = 1: f''(1) = 36 − 24 = 12 > 0 → <strong>Local minimum</strong>. f(1) = 3 − 4 = −1. The function has a local min at (1, −1). At x = 0, f''(0) = 0, so the test is inconclusive — check with the first derivative test."
+        },
+        {
+            id: 6006,
+            text: "📈 The function f(x) = x³ − 6x² + 9x − 4 is decreasing in which interval?",
+            opts: [
+                {l: "A", t: "(−∞, 1)", c: false},
+                {l: "B", t: "(1, 3)", c: true},
+                {l: "C", t: "(3, ∞)", c: false},
+                {l: "D", t: "(−∞, 3)", c: false}
+            ],
+            sol: "f'(x) = 3x² − 12x + 9 = 3(x² − 4x + 3) = 3(x − 1)(x − 3). Critical points: x = 1, 3. Test: x = 0 → f'(0) = 9 > 0 (increasing). x = 2 → f'(2) = 3(1)(−1) = −3 < 0 (decreasing). x = 4 → f'(4) = 3(3)(1) = 9 > 0 (increasing). So decreasing on <strong>(1, 3)</strong>."
+        },
+        {
+            id: 6007,
+            text: "⏱️ A spherical balloon's radius is 5 cm. Air is pumped in at 100 cm³/s. Find dr/dt. (V = 4πr³/3)",
+            opts: [
+                {l: "A", t: "1/π cm/s", c: true},
+                {l: "B", t: "1/(5π) cm/s", c: false},
+                {l: "C", t: "5/π cm/s", c: false},
+                {l: "D", t: "π cm/s", c: false}
+            ],
+            sol: "V = 4πr³/3. Differentiate: dV/dt = 4πr²·dr/dt. Given: dV/dt = 100, r = 5. So 100 = 4π(25)·dr/dt → 100 = 100π·dr/dt → dr/dt = <strong>1/π cm/s</strong>. The radius increases at about 0.318 cm/s."
+        },
+        {
+            id: 6008,
+            text: "🏔️ What is the absolute maximum of f(x) = x³ − 3x on [0, 2]?",
+            opts: [
+                {l: "A", t: "0", c: false},
+                {l: "B", t: "2", c: true},
+                {l: "C", t: "−2", c: false},
+                {l: "D", t: "−3", c: false}
+            ],
+            sol: "f'(x) = 3x² − 3 = 3(x² − 1). Critical points in (0, 2): x = 1 (since x = −1 is outside). Evaluate: f(0) = 0, f(1) = −2, f(2) = 8 − 6 = <strong>2</strong>. The absolute max is f(2) = 2. Notice: the max is at the ENDPOINT, not at the critical point!"
+        },
+        {
+            id: 6009,
+            text: "⏱️ A particle moves along s(t) = t² − 6t + 5. When is its velocity zero?",
+            opts: [
+                {l: "A", t: "t = 0", c: false},
+                {l: "B", t: "t = 3", c: true},
+                {l: "C", t: "t = 5", c: false},
+                {l: "D", t: "t = 6", c: false}
+            ],
+            sol: "v(t) = ds/dt = 2t − 6. Set v(t) = 0: 2t − 6 = 0 → t = <strong>3</strong>. At t = 3, the particle momentarily stops (velocity = 0) before changing direction. s(3) = 9 − 18 + 5 = −4, so it's 4 units left of origin."
+        },
+        {
+            id: 6010,
+            text: "📐 Find the equation of the tangent to y = √x at x = 4.",
+            opts: [
+                {l: "A", t: "y = x/4 + 1", c: true},
+                {l: "B", t: "y = 2x − 6", c: false},
+                {l: "C", t: "y = x/2", c: false},
+                {l: "D", t: "y = 4x − 14", c: false}
+            ],
+            sol: "f(x) = √x = x¹/². f'(x) = 1/(2√x). At x = 4: f(4) = 2, f'(4) = 1/(2·2) = 1/4. Tangent: y − 2 = (1/4)(x − 4) → y = x/4 − 1 + 2 → <strong>y = x/4 + 1</strong>. Check: at x = 4, y = 4/4 + 1 = 2 ✅."
+        },
+        {
+            id: 6011,
+            text: "🏔️ The function f(x) = x³ + ax² + bx + c has critical points at x = 1 and x = 3. Find a and b.",
+            opts: [
+                {l: "A", t: "a = −6, b = 9", c: false},
+                {l: "B", t: "a = −3, b = 9", c: false},
+                {l: "C", t: "a = −6, b = 3", c: false},
+                {l: "D", t: "a = −6, b = 9", c: true}
+            ],
+            sol: "f'(x) = 3x² + 2ax + b. Critical points at x = 1 and x = 3: f'(1) = 3 + 2a + b = 0, f'(3) = 27 + 6a + b = 0. Subtract: (27 + 6a + b) − (3 + 2a + b) = 0 → 24 + 4a = 0 → a = <strong>−6</strong>. Then 3 + 2(−6) + b = 0 → 3 − 12 + b = 0 → b = <strong>9</strong>. So f'(x) = 3x² − 12x + 9 = 3(x − 1)(x − 3) ✅."
+        },
+        {
+            id: 6012,
+            text: "⏱️ A stone dropped from rest falls s(t) = 4.9t² meters in t seconds. Find its velocity at t = 2.",
+            opts: [
+                {l: "A", t: "4.9 m/s", c: false},
+                {l: "B", t: "9.8 m/s", c: false},
+                {l: "C", t: "19.6 m/s", c: true},
+                {l: "D", t: "39.2 m/s", c: false}
+            ],
+            sol: "v(t) = ds/dt = 9.8t (derivative of 4.9t²). At t = 2: v(2) = 9.8 × 2 = <strong>19.6 m/s</strong>. The stone accelerates at 9.8 m/s² (gravity), so velocity increases linearly with time. At t = 2, it's falling at about 70 km/h!"
+        }
+    ];
+
+    var answered = {}, correctCount = 0, lessonSlug = "application-derivatives";
+
+    function renderPractice() {
+        var c = document.getElementById('practice-qs'), h = '';
+        for (var i = 0; i < practiceQs.length; i++) {
+            var q = practiceQs[i], o = '';
+            for (var j = 0; j < q.opts.length; j++) {
+                o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+            }
+            h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+        }
+        c.innerHTML = h;
+        updateScore();
+    }
+
+    function getCorrectLabel(q) {
+        for (var i = 0; i < q.opts.length; i++) {
+            if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+        }
+        return '';
+    }
+
+    function selectOpt(qId, idx) {
+        if (answered[qId]) return;
+        answered[qId] = true;
+        var q = practiceQs.filter(function(x){return x.id === qId})[0];
+        var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+        var isCorrect = q.opts[idx].c;
+        for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+        if (isCorrect) {
+            opts[idx].classList.add('correct');
+            document.getElementById('result-'+qId).textContent = '✅ Correct! +4';
+            document.getElementById('result-'+qId).className = 'q-result correct';
+            correctCount++;
+        } else {
+            opts[idx].classList.add('wrong');
+            document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+            document.getElementById('result-'+qId).className = 'q-result wrong';
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) opts[i].classList.add('correct');
+            }
+        }
+        document.getElementById('soln-'+qId).classList.add('show');
+        updateScore();
+    }
+
+    function updateScore() {
+        var t = Object.keys(answered).length;
+        var el = document.getElementById('score-display');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'score-display';
+            el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+            document.getElementById('practice-qs').before(el);
+        }
+        el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+    }
+
+    function resetPractice() {
+        if (!confirm('Reset all answers?')) return;
+        answered = {}; correctCount = 0;
+        document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+        document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+        document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+        var el = document.getElementById('score-display');
+        if (el) el.textContent = '';
+        renderPractice();
+    }
+
+    function markComplete() {
+        try {
+            var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+            if (done.indexOf(lessonSlug) === -1) {
+                done.push(lessonSlug);
+                localStorage.setItem('jee-course-done', JSON.stringify(done));
+            }
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        } catch(e) {}
+    }
+
+    renderPractice();
+    try {
+        var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+        if (done.indexOf(lessonSlug) !== -1) {
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        }
+    } catch(e) {}
+    </script>
+</body>
+</html>
