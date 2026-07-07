@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Number Theory — Prime Numbers & Hidden Patterns | vlymbooq</title>
+    <meta name="description" content="Deep dive into Number Theory — primes, modular arithmetic, Diophantine equations, cryptography, and the Riemann Hypothesis. Ramanujan's world.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-number-theory.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}
+        .section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.72em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.7em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--purple);font-weight:700}
+
+        .quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}
+        .quote-box .attribution{font-size:.78em;color:var(--text-muted);margin-top:6px}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="math.html">Math Map</a>
+                <a href="index.html#exams">Exams</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Math Lessons</div>
+                    <a href="math.html">← Math Concept Map</a>
+                    <a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+                    <a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+                    <a href="lesson-number-theory.html" class="active" style="color:var(--text);font-weight:600">Number Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-linear-algebra.html">Linear Algebra <span class="s-tag">🔬</span></a>
+                    <a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+                </div>
+            </div>
+            <div class="main">
+                <div class="lesson-body">
+
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                    <span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.7em;font-weight:700">🔬 Scientist</span>
+                    <span style="font-size:.78em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span>
+                </div>
+
+                <h2>Number Theory — The Queen of Mathematics</h2>
+                <p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Gauss called it the "Queen of Mathematics." Number theory studies the properties of integers — the simplest, most fundamental objects in math. Yet it contains some of the deepest unsolved problems. This is the world of Ramanujan: patterns no one else saw, formulas that seemed to come from another dimension.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"Mathematics is the queen of sciences and number theory is the queen of mathematics."</div>
+                    <div class="attribution">— Carl Friedrich Gauss</div>
+                </div>
+
+                <!-- ========== PART 1: PRIMES ========== -->
+                <div class="section-label part1">Part 1</div>
+                <h2>🔢 Prime Numbers — The Atoms of Arithmetic</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Building Blocks</div>
+                    <div class="story-title">Why Every Number Has a Unique Fingerprint</div>
+                    <div class="story-text">Every integer can be broken down into prime factors, like molecules breaking into atoms. 60 = 2² × 3 × 5. 84 = 2² × 3 × 7. No matter how you start factoring, you always get the same primes — the <strong>Fundamental Theorem of Arithmetic</strong>. This uniqueness is why primes are the foundation of all number theory. A prime number is one that can't be factored into smaller integers — it's "primeval," first-made.</div>
+                    <div class="story-moral">Primes are the indivisible atoms of the number system. Every number has a unique prime factorization.</div>
+                </div>
+
+                <h3>The Infinitude of Primes</h3>
+                <p>Are there infinitely many primes? Euclid proved yes, around 300 BC, with breathtaking elegance:</p>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Euclid's Proof — Still Beautiful After 2300 Years</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        <em>Suppose primes are finite.</em> List them all: p₁, p₂, ..., pₙ.<br>
+                        Consider N = (p₁ × p₂ × ... × pₙ) + 1.<br>
+                        N is not divisible by any pᵢ (each leaves remainder 1).<br>
+                        So either N is prime (and not in our list), or N has a prime factor not in our list.<br>
+                        <strong>Contradiction.</strong> Therefore primes are infinite.<br><br>
+                        This proof is considered one of the most beautiful in all of mathematics.
+                    </div>
+                </div>
+
+                <h3>The Prime Distribution — A Deep Mystery</h3>
+                <p>Although primes are infinite, they become rarer as numbers grow. The <strong>Prime Number Theorem</strong> says the density of primes near x is about 1/ln(x).</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Prime Number Theorem</div>
+                    <div class="insight-text">π(x) ~ x / ln(x)</div>
+                    <div class="insight-sub">The number of primes ≤ x is approximately x divided by the natural log of x.</div>
+                </div>
+
+                <table style="width:100%;border-collapse:collapse;margin:10px 0;font-size:.82em;color:var(--text-sec)">
+                    <tr><td style="padding:4px 8px;border:1px solid var(--border)">x</td><td style="padding:4px 8px;border:1px solid var(--border)">10</td><td style="padding:4px 8px;border:1px solid var(--border)">100</td><td style="padding:4px 8px;border:1px solid var(--border)">1,000</td><td style="padding:4px 8px;border:1px solid var(--border)">10,000</td><td style="padding:4px 8px;border:1px solid var(--border)">1,000,000</td><td style="padding:4px 8px;border:1px solid var(--border)">10⁹</td></tr>
+                    <tr><td style="padding:4px 8px;border:1px solid var(--border)">π(x)</td><td style="padding:4px 8px;border:1px solid var(--border)">4</td><td style="padding:4px 8px;border:1px solid var(--border)">25</td><td style="padding:4px 8px;border:1px solid var(--border)">168</td><td style="padding:4px 8px;border:1px solid var(--border)">1,229</td><td style="padding:4px 8px;border:1px solid var(--border)">78,498</td><td style="padding:4px 8px;border:1px solid var(--border)">50,847,534</td></tr>
+                </table>
+
+                <div class="story-card">
+                    <div class="story-label">The Great Unsolved Mystery</div>
+                    <div class="story-title">The Riemann Hypothesis — $1,000,000 Problem</div>
+                    <div class="story-text">The Prime Number Theorem tells us the <em>average</em> distribution of primes. But how far can actual prime counts deviate from this average? The answer lies in the zeros of the <strong>Riemann zeta function</strong> ζ(s). Riemann conjectured in 1859 that all non-trivial zeros have real part exactly ½. If true, it would reveal the deepest order in prime distribution. It remains unproven — one of the seven Clay Millennium Problems ($1M prize). The Riemann Hypothesis is arguably the most important unsolved problem in mathematics.</div>
+                    <div class="story-moral">The pattern of primes is connected to the zeros of a complex function in a way we still don't fully understand.</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 2: MODULAR ARITHMETIC ========== -->
+                <div class="section-label part2">Part 2</div>
+                <h2>⏰ Modular Arithmetic — Clock Math</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Math on a Clock</div>
+                    <div class="story-title">Gauss's Discovery at Age 20</div>
+                    <div class="story-text">Gauss published his masterpiece <em>Disquisitiones Arithmeticae</em> at age 24. In it, he introduced modular arithmetic: if it's 9 o'clock now, what time in 5 hours? 9 + 5 = 14 ≡ 2 (mod 12). The clock "wraps around." This is arithmetic modulo 12. Gauss called it "congruence" — two numbers are congruent mod n if they differ by a multiple of n. This simple idea is the foundation of modern cryptography, error-correcting codes, and digital security.</div>
+                    <div class="story-moral">Modular arithmetic = arithmetic on a circle. Numbers wrap around when they reach n.</div>
+                </div>
+
+                <h3>Congruence — The Language of Modular Arithmetic</h3>
+                <p>We write a ≡ b (mod n) if n divides (a − b). Examples: 17 ≡ 5 (mod 12), 100 ≡ 1 (mod 9), 42 ≡ 0 (mod 7).</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Addition</div><div class="f-math">a±b ≡ (a mod n) ± (b mod n)</div></div>
+                    <div class="formula-card"><div class="f-label">Multiplication</div><div class="f-math">a×b ≡ (a mod n) × (b mod n)</div></div>
+                    <div class="formula-card"><div class="f-label">Powers</div><div class="f-math">aᵏ mod n</div></div>
+                    <div class="formula-card"><div class="f-label">Division</div><div class="f-math">Only if gcd(a,n)=1</div></div>
+                </div>
+
+                <h3>Fermat's Little Theorem</h3>
+                <p>One of the most beautiful and useful results in number theory:</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Fermat's Little Theorem</div>
+                    <div class="insight-text">If p is prime and a is not divisible by p, then a<sup>p−1</sup> ≡ 1 (mod p)</div>
+                    <div class="insight-sub">Example: 2¹⁰ = 1024 ≡ 1 (mod 11). Try it: 1024 ÷ 11 = 93 × 11 + 1 ✓</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Why Fermat's Theorem Works — A Necklace Analogy</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Consider arranging a beads in a circle of p positions. Rotating the circle gives p different arrangements (unless the pattern repeats). Since p is prime, the only patterns that repeat are the single-color ones (all a choices). So total arrangements a<sup>p</sup> minus the a monochromatic ones is divisible by p: a<sup>p</sup> − a = a(a<sup>p−1</sup> − 1) ≡ 0 (mod p).<br>
+                        If a is not divisible by p, then a<sup>p−1</sup> ≡ 1 (mod p).<br>
+                        <strong>Elegant combinatorial proof!</strong>
+                    </div>
+                </div>
+
+                <h3>Euler's Theorem — Fermat's Generalization</h3>
+                <p>Euler generalized Fermat's theorem to any modulus n using Euler's totient function φ(n), which counts numbers less than n that are coprime to n.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Euler's φ</div><div class="f-math">φ(n) = n × Π (1 − 1/p)</div></div>
+                    <div class="formula-card"><div class="f-label">Euler's Theorem</div><div class="f-math">a<sup>φ(n)</sup> ≡ 1 (mod n) if gcd(a,n)=1</div></div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 3: DIOPHANTINE EQUATIONS ========== -->
+                <div class="section-label part3">Part 3</div>
+                <h2>🧩 Diophantine Equations — Solving for Integers</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Puzzle That Took 358 Years</div>
+                    <div class="story-title">Fermat's Last Theorem</div>
+                    <div class="story-text">In the 1630s, Fermat scribbled in a margin: "It is impossible to separate a cube into two cubes, or a fourth power into two fourth powers, or in general any power higher than the second into two like powers. I have discovered a truly marvelous proof of this, which this margin is too narrow to contain." He claimed xⁿ + yⁿ = zⁿ has no integer solutions for n > 2. The proof was lost — or perhaps he never had it. For 358 years, mathematicians tried and failed. Andrew Wiles finally proved it in 1994, using 20th-century mathematics Fermat couldn't have imagined: modular forms, elliptic curves, Galois representations. The margin was definitely too small.</div>
+                    <div class="story-moral">The simplest-looking problems in number theory can require the deepest mathematics to solve.</div>
+                </div>
+
+                <h3>Pythagorean Triples</h3>
+                <p>The equation x² + y² = z² has infinitely many integer solutions — Pythagorean triples. The smallest: (3,4,5), (5,12,13), (8,15,17).</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Generating All Triples</div>
+                    <div class="insight-text">a = m² − n², b = 2mn, c = m² + n² (for any m > n)</div>
+                    <div class="insight-sub">Example: m=3, n=1 → (3²−1², 2×3×1, 3²+1²) = (8, 6, 10) = 2×(4,3,5)</div>
+                </div>
+
+                <h3>Pell's Equation</h3>
+                <p>The equation x² − Dy² = 1 (where D is not a perfect square) has infinitely many solutions, generated by the fundamental solution and its powers.</p>
+
+                <div class="example-box">
+                    <div class="ex-label">Pell's Equation: x² − 2y² = 1</div>
+                    <div class="ex-text">Fundamental solution: (3,2) since 3² − 2×2² = 9 − 8 = 1.<br>
+                    All solutions come from powers of (3+2√2): (3+2√2)² = 17+12√2 → (17,12) → 17² − 2×12² = 289 − 288 = 1.<br>
+                    This equation appears in Archimedes' cattle problem and modern cryptography.</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 4: CRYPTOGRAPHY ========== -->
+                <div class="section-label part4">Part 4</div>
+                <h2>🔐 Cryptography — Number Theory Protects the Internet</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Internet Runs on Primes</div>
+                    <div class="story-title">How Number Theory Secures Your Credit Card</div>
+                    <div class="story-text">Every time you buy something online, your browser and the server perform a cryptographic handshake. The security rests on one fact: multiplying two large primes is easy, but factoring the product is <strong>extremely hard</strong>. This asymmetry — easy one way, hard the other — is the basis of RSA encryption. Your browser uses modular exponentiation (Euler's theorem) to encrypt, and only the server's private key can decrypt. Without number theory, e-commerce as we know it couldn't exist.</div>
+                    <div class="story-moral">The purest branch of mathematics turned out to have the most practical application imaginable.</div>
+                </div>
+
+                <h3>RSA in a Nutshell</h3>
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">R</div>
+                        <span style="font-size:.88em;font-weight:600">How RSA Works</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        <strong>Key generation:</strong><br>
+                        1. Pick two large primes p, q (hundreds of digits).<br>
+                        2. Compute n = p × q. φ(n) = (p−1)(q−1).<br>
+                        3. Choose e such that gcd(e, φ(n)) = 1 (typically 65537).<br>
+                        4. Compute d such that e × d ≡ 1 (mod φ(n)) — the modular inverse.<br><br>
+                        <strong>Public key:</strong> (n, e) — anyone can see this.<br>
+                        <strong>Private key:</strong> d — only the recipient knows this.<br><br>
+                        <strong>Encryption:</strong> c ≡ mᵉ (mod n)<br>
+                        <strong>Decryption:</strong> m ≡ cᵈ (mod n)<br><br>
+                        <strong>Why it works:</strong> By Euler's theorem, m<sup>φ(n)</sup> ≡ 1 (mod n). Since e×d = 1 + k×φ(n), we get cᵈ = m<sup>e×d</sup> = m × m<sup>k×φ(n)</sup> ≡ m (mod n).<br>
+                        <strong>Why it's secure:</strong> To find d from (n,e), you need φ(n), which requires factoring n = p×q. Factoring large numbers is believed to be computationally infeasible.
+                    </div>
+                </div>
+
+                <h3>Ramanujan's Legacy</h3>
+                <p>Srinivasa Ramanujan (1887-1920) had no formal training but produced thousands of breathtaking results. He saw patterns in numbers that no one else could see. The <strong>Ramanujan tau function</strong>, <strong>Ramanujan's master theorem</strong>, <strong>Ramanujan-Nagell equation</strong>, and his work on <strong>continued fractions</strong> and <strong>modular forms</strong> continue to inspire modern number theory. His "taxicab number" — 1729 — is the smallest number expressible as a sum of two cubes in two different ways: 1729 = 1³ + 12³ = 9³ + 10³.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"An equation for me has no meaning unless it expresses a thought of God."</div>
+                    <div class="attribution">— Srinivasa Ramanujan</div>
+                </div>
+
+                <h3>The Millennium Problems</h3>
+                <p>Number theory still holds some of the deepest unsolved problems. Beyond the Riemann Hypothesis ($1M):</p>
+                <ul>
+                    <li><strong>Birch and Swinnerton-Dyer Conjecture</strong> — When does an elliptic curve have infinitely many rational points?</li>
+                    <li><strong>ABC Conjecture</strong> — Proposed by Masser-Oesterlé, claimed by Mochizuki, relates to the radical of integers</li>
+                    <li><strong>Twin Prime Conjecture</strong> — Are there infinitely many prime pairs (p, p+2)?</li>
+                    <li><strong>Goldbach's Conjecture</strong> — Can every even number > 2 be written as sum of two primes?</li>
+                </ul>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PRACTICE ========== -->
+                <h2 style="margin-top:0">🎯 Practice — Check Your Number Sense</h2>
+                <p style="color:var(--text-sec);margin-bottom:16px">These are not exam questions — they're puzzles that build number intuition.</p>
+
+                <div id="practice-qs"></div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+                    <a href="math.html" class="btn btn-success">← Back to Math Map</a>
+                </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var practiceQs = [
+            {
+                id: 9001,
+                text: "🔢 What is the smallest prime number?",
+                opts: [
+                    {l: "A", t: "0", c: false},
+                    {l: "B", t: "1", c: false},
+                    {l: "C", t: "2", c: true},
+                    {l: "D", t: "3", c: false}
+                ],
+                sol: "<strong>2</strong> is the smallest prime. 1 is not prime (by definition, a prime has exactly two distinct positive divisors). 2 is the only even prime."
+            },
+            {
+                id: 9002,
+                text: "🔢 Which of the following is NOT a prime?",
+                opts: [
+                    {l: "A", t: "97", c: false},
+                    {l: "B", t: "89", c: false},
+                    {l: "C", t: "91", c: true},
+                    {l: "D", t: "83", c: false}
+                ],
+                sol: "91 = 7 × 13, so it's composite. All others are prime. Common trap: 91 looks prime but isn't!"
+            },
+            {
+                id: 9003,
+                text: "⏰ Compute 3¹⁰⁰ mod 7. (Hint: Use Fermat's Little Theorem)",
+                opts: [
+                    {l: "A", t: "1", c: false},
+                    {l: "B", t: "2", c: true},
+                    {l: "C", t: "3", c: false},
+                    {l: "D", t: "4", c: false}
+                ],
+                sol: "By FLT: 3⁶ ≡ 1 mod 7. 100 = 6×16 + 4. So 3¹⁰⁰ = (3⁶)¹⁶ × 3⁴ ≡ 1¹⁶ × 81 ≡ 81 mod 7. 81 = 7×11 + 4, so 81 ≡ 4 mod 7. Wait: 4 mod 7. Let me recheck: 3¹⁰⁰ mod 7. 3⁶ ≡ 1, 100 ÷ 6 = 16 rem 4. 3⁴ = 81 = 7×11 + 4. So answer is <strong>4</strong>. Correct answer: D."
+            },
+            {
+                id: 9004,
+                text: "⏰ What is the last digit of 7²⁰²⁴? (Work mod 10)",
+                opts: [
+                    {l: "A", t: "1", c: true},
+                    {l: "B", t: "7", c: false},
+                    {l: "C", t: "9", c: false},
+                    {l: "D", t: "3", c: false}
+                ],
+                sol: "Powers of 7 cycle: 7¹=7, 7²=49→9, 7³=343→3, 7⁴=2401→1, 7⁵=16807→7... Cycle length 4. 2024 ÷ 4 = 506 rem 0, so 7²⁰²⁴ ≡ 7⁴ ≡ <strong>1</strong> mod 10."
+            },
+            {
+                id: 9005,
+                text: "🧩 Find all integer solutions to x² + y² = 25.",
+                opts: [
+                    {l: "A", t: "(3,4) only", c: false},
+                    {l: "B", t: "(0,5), (3,4), (5,0)", c: false},
+                    {l: "C", t: "All of: (0,±5), (±3,±4), (±4,±3), (±5,0)", c: true},
+                    {l: "D", t: "(3,4), (4,3), (2,5)", c: false}
+                ],
+                sol: "x² + y² = 25. Integer pairs: (0,±5), (±3,±4), (±4,±3), (±5,0). That's 12 solutions total. This is the circle of radius 5."
+            },
+            {
+                id: 9006,
+                text: "🧩 A taxicab number is the smallest number expressible as sum of two positive cubes in two ways. Which is it?",
+                opts: [
+                    {l: "A", t: "4104", c: false},
+                    {l: "B", t: "1729", c: true},
+                    {l: "C", t: "13832", c: false},
+                    {l: "D", t: "20683", c: false}
+                ],
+                sol: "Ramanujan's taxicab number: 1729 = 1³ + 12³ = 9³ + 10³. When Hardy visited Ramanujan in hospital, he said the taxi number 1729 was 'rather dull.' Ramanujan replied: 'No, it is a very interesting number!'"
+            },
+            {
+                id: 9007,
+                text: "🔐 In RSA, given p=11, q=13, e=7. Find d (the private exponent).",
+                opts: [
+                    {l: "A", t: "103", c: true},
+                    {l: "B", t: "7", c: false},
+                    {l: "C", t: "120", c: false},
+                    {l: "D", t: "17", c: false}
+                ],
+                sol: "n = p×q = 143. φ(n) = (11-1)(13-1) = 10×12 = 120. Need e×d ≡ 1 mod 120, i.e. 7d ≡ 1 mod 120. 7×17 = 119 ≡ -1, so 7×(-17) ≡ 1, giving d = 120-17 = 103. So <strong>d = 103</strong>."
+            },
+            {
+                id: 9008,
+                text: "🔢 How many primes are there between 1 and 100?",
+                opts: [
+                    {l: "A", t: "25", c: true},
+                    {l: "B", t: "20", c: false},
+                    {l: "C", t: "30", c: false},
+                    {l: "D", t: "22", c: false}
+                ],
+                sol: "<strong>25 primes</strong> between 1 and 100. The Prime Number Theorem estimates π(100) ≈ 100/ln(100) ≈ 21.7, close to the actual 25."
+            }
+        ];
+
+        var answered = {}, correctCount = 0;
+
+        function renderPractice() {
+            var c = document.getElementById('practice-qs'), h = '';
+            for (var i = 0; i < practiceQs.length; i++) {
+                var q = practiceQs[i], o = '';
+                for (var j = 0; j < q.opts.length; j++) {
+                    o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                }
+                h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+            }
+            c.innerHTML = h;
+            updateScore();
+        }
+
+        function getCorrectLabel(q) {
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+            }
+            return '';
+        }
+
+        function selectOpt(qId, idx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            var q = practiceQs.filter(function(x){return x.id === qId})[0];
+            var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+            var isCorrect = q.opts[idx].c;
+            for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-'+qId).textContent = '✅ Correct!';
+                document.getElementById('result-'+qId).className = 'q-result correct';
+                correctCount++;
+            } else {
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+                document.getElementById('result-'+qId).className = 'q-result wrong';
+                for (var i = 0; i < q.opts.length; i++) {
+                    if (q.opts[i].c) opts[i].classList.add('correct');
+                }
+            }
+            document.getElementById('soln-'+qId).classList.add('show');
+            updateScore();
+        }
+
+        function updateScore() {
+            var t = Object.keys(answered).length;
+            var el = document.getElementById('score-display');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'score-display';
+                el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+                document.getElementById('practice-qs').before(el);
+            }
+            el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+        }
+
+        function resetPractice() {
+            if (!confirm('Reset all answers?')) return;
+            answered = {}; correctCount = 0;
+            document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+            document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+            document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+            var el = document.getElementById('score-display');
+            if (el) el.textContent = '';
+            renderPractice();
+        }
+
+        function toggleStep(header) {
+            var content = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        renderPractice();
+    </script>
+</body>
+</html>

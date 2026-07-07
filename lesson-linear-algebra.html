@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Linear Algebra — The Language of Dimensions | vlymbooq</title>
+    <meta name="description" content="Deep dive into Linear Algebra — vectors, matrices, eigenvalues, SVD, and the math behind PCA, PageRank, and quantum mechanics.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-linear-algebra.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}
+        .section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.72em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.7em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--purple);font-weight:700}
+
+        .quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}
+        .quote-box .attribution{font-size:.78em;color:var(--text-muted);margin-top:6px}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="math.html">Math Map</a>
+                <a href="index.html#exams">Exams</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Math Lessons</div>
+                    <a href="math.html">← Math Concept Map</a>
+                    <a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+                    <a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+                    <a href="lesson-number-theory.html">Number Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-linear-algebra.html" class="active" style="color:var(--text);font-weight:600">Linear Algebra <span class="s-tag">🔬</span></a>
+                    <a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+                </div>
+            </div>
+            <div class="main">
+                <div class="lesson-body">
+
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                    <span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.7em;font-weight:700">🔬 Scientist</span>
+                    <span style="font-size:.78em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span>
+                </div>
+
+                <h2>Linear Algebra — The Language of Dimensions</h2>
+                <p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Linear algebra is the mathematics of the 21st century. From Google's PageRank to Netflix recommendations, from quantum mechanics to facial recognition — it's all linear algebra underneath. It's the study of vectors, matrices, and the transformations between them. And at its heart lies a simple question: <strong>what happens to space when you stretch, rotate, or project it?</strong></p>
+
+                <div class="quote-box">
+                    <div class="quote">"Linear algebra is the one subject that every scientist, engineer, and data scientist needs to know. It is the language of modern computation."</div>
+                    <div class="attribution">— Gilbert Strang, MIT</div>
+                </div>
+
+                <!-- ========== PART 1: VECTORS & SPACES ========== -->
+                <div class="section-label part1">Part 1</div>
+                <h2>➡️ Vectors — Arrows in Space</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Geometry of Numbers</div>
+                    <div class="story-title">Why (3, 4) Is an Arrow, Not Just a Point</div>
+                    <div class="story-text">A vector is an arrow with a direction and a length. The vector (3, 4) means "go 3 units right and 4 units up." Vectors can be added: (3, 4) + (1, 2) = (4, 6). And scaled: 2 × (3, 4) = (6, 8). This is the foundation — vectors combine like forces, like velocities, like everything in the physical world. A vector space is simply the collection of all vectors you can reach by adding and scaling a given set of "building block" vectors.</div>
+                    <div class="story-moral">Vectors are the atoms of linear algebra. Everything else is built from them.</div>
+                </div>
+
+                <h3>The Dot Product — Measuring Alignment</h3>
+                <p>The dot product v · w = v₁w₁ + v₂w₂ + ... + vₙwₙ tells you how much two vectors point in the same direction. If v · w = 0, they're perpendicular (orthogonal). If v · w = |v||w|, they're perfectly aligned.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Dot Product = Projection</div>
+                    <div class="insight-text">v · w = |v| |w| cos θ</div>
+                    <div class="insight-sub">The dot product is the product of lengths times the cosine of the angle between them.</div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-label">Example: Vectors in 3D</div>
+                    <div class="ex-text">v = (3, 4, 0), w = (0, 0, 5).<br>v · w = 3×0 + 4×0 + 0×5 = 0. They're perpendicular!<br>|v| = √(3²+4²) = 5, |w| = 5. So cos θ = 0, θ = 90°.</div>
+                </div>
+
+                <h3>Span, Basis, and Dimension</h3>
+                <p>The <strong>span</strong> of a set of vectors is all vectors you can reach by linear combinations (adding and scaling). A <strong>basis</strong> is a minimal set that spans the space — no redundancies. The number of vectors in a basis is the <strong>dimension</strong>.</p>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Intuition: Why 3D Needs 3 Basis Vectors</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        In 3D space, you need three independent directions: forward/back, left/right, up/down. No combination of just "forward" and "right" can give you "up." That's what <strong>linear independence</strong> means — each basis vector adds a new direction that can't be reached using the others. The standard basis in 3D: î = (1,0,0), ĵ = (0,1,0), k̂ = (0,0,1). Every vector in 3D can be written uniquely as a combination of these three.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 2: MATRICES & TRANSFORMATIONS ========== -->
+                <div class="section-label part2">Part 2</div>
+                <h2>🧮 Matrices — The Algebra of Transformations</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Machines That Move Space</div>
+                    <div class="story-title">A Matrix Is a Function That Eats Vectors</div>
+                    <div class="story-text">A matrix is a rectangular array of numbers, but don't be fooled by its simplicity. Think of it as a machine: you feed in a vector, and it spits out another vector. The matrix rotates space, or stretches it, or squishes it onto a line. The product Av = b means "apply transformation A to vector v, get vector b." Matrix multiplication (AB) means "apply B first, then A" — composition of transformations. This is the deep idea: matrices are <strong>linear functions</strong>.</div>
+                    <div class="story-moral">A matrix is not just a table of numbers — it's a description of how to transform space.</div>
+                </div>
+
+                <h3>Matrix Multiplication as Composition</h3>
+                <p>If A rotates 90° and B stretches horizontally, then AB first stretches then rotates (right to left). The order matters — AB ≠ BA in general.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">2×2 Rotation by θ</div><div class="f-math">[cosθ, -sinθ; sinθ, cosθ]</div></div>
+                    <div class="formula-card"><div class="f-label">Identity</div><div class="f-math">I = [1 0; 0 1]</div></div>
+                    <div class="formula-card"><div class="f-label">Horizontal Stretch by k</div><div class="f-math">[k 0; 0 1]</div></div>
+                    <div class="formula-card"><div class="f-label">Shear</div><div class="f-math">[1 k; 0 1]</div></div>
+                </div>
+
+                <h3>The Inverse — Undoing a Transformation</h3>
+                <p>If A doubles the x-direction, A⁻¹ halves it. If A rotates by 30°, A⁻¹ rotates by -30°. The product A × A⁻¹ = I, the identity (which does nothing). A matrix has an inverse only if it doesn't collapse space — a 2D-to-2D transformation that squishes everything onto a line loses information and is not invertible.</p>
+
+                <h3>The Determinant — How Much Does Space Stretch?</h3>
+                <p>The determinant det(A) tells you the factor by which A changes area (in 2D) or volume (in 3D). If det(A) = 2, areas double. If det(A) = 0, space is collapsed (not invertible). If det(A) is negative, orientation is flipped (like a mirror).</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Determinant of 2×2</div>
+                    <div class="insight-text">det(a b; c d) = ad − bc</div>
+                    <div class="insight-sub">The signed area of the parallelogram formed by the columns.</div>
+                </div>
+
+                <h3>Systems of Equations — The Original Problem</h3>
+                <p>Linear algebra was born to solve systems like: 2x + 3y = 7, 4x − y = 1. In matrix form: A x = b, where A = [2 3; 4 -1], x = (x, y), b = (7, 1). The solution is x = A⁻¹b, found via Gaussian elimination — systematically eliminating variables.</p>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Gaussian Elimination — The Workhorse Algorithm</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Solve: 2x + 3y = 7, 4x − y = 1.<br><br>
+                        <strong>Step 1:</strong> Write the augmented matrix:<br>
+                        [2 3 | 7; 4 -1 | 1]<br><br>
+                        <strong>Step 2:</strong> Eliminate x from row 2: R₂ ← R₂ − 2R₁ (because 2×2 = 4).<br>
+                        [2 3 | 7; 0 -7 | -13]<br><br>
+                        <strong>Step 3:</strong> Back-substitute: -7y = -13 → y = 13/7.<br>
+                        2x + 3(13/7) = 7 → 2x = 7 − 39/7 = 10/7 → x = 5/7.<br><br>
+                        <strong>Solution:</strong> (x, y) = (5/7, 13/7).<br>
+                        This algorithm scales to thousands of equations — it's how computers solve linear systems.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 3: EIGENVALUES & THE DEEP STRUCTURE ========== -->
+                <div class="section-label part3">Part 3</div>
+                <h2>🔮 Eigenvalues — The Hidden Directions</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Directions That Don't Bend</div>
+                    <div class="story-title">Eigenvectors: The Special Vectors That Only Stretch</div>
+                    <div class="story-text">When a matrix A acts on a vector v, the result is usually a completely different direction. But for some special vectors — <strong>eigenvectors</strong> — the result is just a scaled version of the same vector: Av = λv. The scalar λ is the <strong>eigenvalue</strong>. These are the "natural directions" of the transformation. In a rotating planet, the axis of rotation is an eigenvector (it doesn't change direction). In a vibrating bridge, the normal modes are eigenvectors. In Google's PageRank, the ranking vector is the dominant eigenvector of the web's link matrix.</div>
+                    <div class="story-moral">Eigenvectors are the directions that a transformation treats most simply — they reveal the hidden structure of a matrix.</div>
+                </div>
+
+                <h3>Finding Eigenvalues</h3>
+                <p>From Av = λv, we get (A − λI)v = 0. For non-zero v to exist, the matrix (A − λI) must be singular — its determinant must be zero. This gives the <strong>characteristic polynomial</strong>.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Characteristic Equation</div>
+                    <div class="insight-text">det(A − λI) = 0</div>
+                    <div class="insight-sub">The roots λ are the eigenvalues. For an n×n matrix, this is an nth-degree polynomial.</div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-label">Example: Find Eigenvalues of A = [2 1; 1 2]</div>
+                    <div class="ex-text">det(A − λI) = det(2-λ, 1; 1, 2-λ) = (2-λ)² − 1 = λ² − 4λ + 3 = 0.<br>λ = 1 or λ = 3.<br><br>
+                    For λ = 3: (A − 3I)v = 0 → [-1 1; 1 -1]v = 0 → v = (1, 1).<br>
+                    For λ = 1: (A − I)v = 0 → [1 1; 1 1]v = 0 → v = (1, -1).<br><br>
+                    Check: A(1,1) = (3,3) = 3×(1,1) ✓. A(1,-1) = (1,-1) = 1×(1,-1) ✓.</div>
+                </div>
+
+                <h3>Diagonalization — The Ultimate Simplification</h3>
+                <p>If a matrix has enough eigenvectors, you can write A = PDP⁻¹, where D is a diagonal matrix of eigenvalues and P contains the eigenvectors. This is like changing to a coordinate system where the transformation is just scaling along each axis — the simplest possible description.</p>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Why Diagonalization Matters</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Computing A¹⁰⁰ directly is expensive. But if A = PDP⁻¹, then:<br>
+                        A¹⁰⁰ = (PDP⁻¹)¹⁰⁰ = PD¹⁰⁰P⁻¹<br>
+                        D¹⁰⁰ just raises each diagonal eigenvalue to the 100th power — trivial!<br><br>
+                        This powers entire fields: Markov chains, population dynamics, quantum mechanics, and differential equations all rely on this trick.
+                    </div>
+                </div>
+
+                <h3>The Spectral Theorem — Symmetric Matrices Are Special</h3>
+                <p>For symmetric matrices (A = Aᵀ), eigenvalues are always real, and eigenvectors are orthogonal. This is why covariance matrices, correlation matrices, and distance matrices — all symmetric — have such nice properties. The <strong>Spectral Theorem</strong> says every symmetric matrix can be written as A = QΛQᵀ where Q is an orthogonal matrix (its columns are orthonormal eigenvectors).</p>
+
+                <h3>Singular Value Decomposition — The Master Factorization</h3>
+                <p>The SVD factorizes any matrix (not just square) into A = UΣVᵀ. U contains left singular vectors, V contains right singular vectors, and Σ contains singular values (like eigenvalues but for non-square matrices). The SVD is the <strong>crown jewel</strong> of linear algebra — it works for every matrix, reveals its rank, and gives the best low-rank approximation.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">SVD: Any Matrix, Any Shape</div>
+                    <div class="insight-text">A = U Σ Vᵀ</div>
+                    <div class="insight-sub">U and V are orthogonal, Σ is diagonal. The singular values σ₁ ≥ σ₂ ≥ ... ≥ σᵣ > 0 reveal the "importance" of each dimension.</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 4: APPLICATIONS ========== -->
+                <div class="section-label part4">Part 4</div>
+                <h2>🌍 Linear Algebra in the Real World</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Unreasonable Effectiveness</div>
+                    <div class="story-title">Why the 19th Century's Nicest Math Powers 21st-Century Tech</div>
+                    <div class="story-text">Linear algebra was developed largely in the 1800s — before computers, before data, before the internet. Yet it turned out to be the perfect language for the digital age. Why? Because digital data is naturally vector-shaped. A grayscale image is a matrix of pixel values. A database of users is a matrix of features. A website's links form a matrix. And the operations we want — find patterns, reduce noise, rank importance — are all linear algebra.</div>
+                    <div class="story-moral">Linear algebra is not just math — it's the operating system of modern computation.</div>
+                </div>
+
+                <h3>PCA — Dimensionality Reduction</h3>
+                <p>Suppose you have 1000-dimensional data (1000 features per sample). Much of it is noise. <strong>Principal Component Analysis (PCA)</strong> finds the directions of highest variance — the eigenvectors of the covariance matrix — and projects the data onto the top few. This is the SVD in action: the principal components are the right singular vectors, and the singular values tell you how much variance each component captures.</p>
+
+                <div class="example-box">
+                    <div class="ex-label">PCA in Practice</div>
+                    <div class="ex-text">A face recognition dataset has 10,000 pixels per image. PCA reduces each image to just 50-100 "eigenface" coefficients — compressing by 99% while retaining 95% of the information. This is how early facial recognition worked.</div>
+                </div>
+
+                <h3>Google PageRank — The $100B Eigenvector</h3>
+                <p>PageRank models the web as a matrix: entry Aᵢⱼ = 1 if page j links to page i, weighted by the out-degree of j. The ranking vector r is the dominant eigenvector: r is the solution to r = Ar, or equivalently r is the eigenvector with eigenvalue 1. This is also the <strong>stationary distribution</strong> of a random surfer — someone clicking random links eventually spends proportion rⱼ of their time on page j. That proportion is the PageRank. This single linear algebra idea built Google.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"PageRank can be computed by finding the principal eigenvector of the link matrix."</div>
+                    <div class="attribution">— Brin & Page, 1998</div>
+                </div>
+
+                <h3>Least Squares — Fitting Lines and Curves</h3>
+                <p>When you have more equations than unknowns (overdetermined system), there's usually no exact solution. The <strong>least squares</strong> method finds the x that minimizes ||Ax − b||². The solution is x = (AᵀA)⁻¹Aᵀb — the <strong>normal equations</strong>. This is the math behind every regression line, every curve fit, every machine learning model that minimizes squared error.</p>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">The Geometry of Least Squares</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Geometrically, Ax = b has a solution only if b is in the column space of A. If not, the best we can do is project b onto the column space. The projection is A x̂ where x̂ = (AᵀA)⁻¹Aᵀb, and the residual b − A x̂ is orthogonal to the column space.<br><br>
+                        This is why it's called "least squares" — we're minimizing the squared length of the error vector, which is the sum of squared residuals. Linear regression, polynomial fitting, and even neural network training all use this principle.
+                    </div>
+                </div>
+
+                <h3>Image Compression via SVD</h3>
+                <p>A 1000×1000 grayscale image is a matrix of 1 million numbers. The SVD gives A = σ₁u₁v₁ᵀ + σ₂u₂v₂ᵀ + ... + σᵣuᵣvᵣᵀ. The early terms (large σ) capture the broad structure; later terms capture fine detail. By keeping only the top k singular values, you get the best rank-k approximation to the image. A 1000×1000 image compressed to k=50 uses only 50×(1000+1000+1) ≈ 100,000 numbers — a 10× compression with barely visible quality loss.</p>
+
+                <h3>Quantum Mechanics — The Ultimate Linear Theory</h3>
+                <p>In quantum mechanics, the state of a particle is a vector in an infinite-dimensional Hilbert space. Observables (position, momentum, energy) are linear operators (matrices). The possible measurement values are eigenvalues. The state evolution is given by Schrödinger's equation, which is a linear differential equation. Everything in quantum mechanics is linear algebra — it's the language of reality at its most fundamental level.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Quantum Mechanics = Linear Algebra</div>
+                    <div class="insight-text">H |ψ⟩ = E |ψ⟩</div>
+                    <div class="insight-sub">Schrödinger's equation is an eigenvalue problem. The Hamiltonian H has eigenvalues E — the possible energy levels. The eigenvectors |ψ⟩ are the stationary states.</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PRACTICE ========== -->
+                <h2 style="margin-top:0">🎯 Practice — Check Your Linear Intuition</h2>
+                <p style="color:var(--text-sec);margin-bottom:16px">These puzzles build your linear algebra intuition — no calculator needed.</p>
+
+                <div id="practice-qs"></div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+                    <a href="math.html" class="btn btn-success">← Back to Math Map</a>
+                </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var practiceQs = [
+            {
+                id: 10001,
+                text: "➡️ What is the dot product of v = (1, 2, 3) and w = (4, 5, 6)?",
+                opts: [
+                    {l: "A", t: "32", c: true},
+                    {l: "B", t: "24", c: false},
+                    {l: "C", t: "30", c: false},
+                    {l: "D", t: "36", c: false}
+                ],
+                sol: "v·w = 1×4 + 2×5 + 3×6 = 4 + 10 + 18 = <strong>32</strong>."
+            },
+            {
+                id: 10002,
+                text: "➡️ What is the length of the vector v = (3, 4)?",
+                opts: [
+                    {l: "A", t: "7", c: false},
+                    {l: "B", t: "5", c: true},
+                    {l: "C", t: "25", c: false},
+                    {l: "D", t: "12", c: false}
+                ],
+                sol: "|v| = √(3² + 4²) = √(9 + 16) = √25 = <strong>5</strong>. This is a 3-4-5 triangle!"
+            },
+            {
+                id: 10003,
+                text: "🧮 What is the determinant of [[3, 4], [1, 2]]?",
+                opts: [
+                    {l: "A", t: "10", c: false},
+                    {l: "B", t: "6", c: false},
+                    {l: "C", t: "2", c: true},
+                    {l: "D", t: "0", c: false}
+                ],
+                sol: "det = (3×2) − (4×1) = 6 − 4 = <strong>2</strong>. The transformation doubles area."
+            },
+            {
+                id: 10004,
+                text: "🧮 If A = [[1, 2], [3, 4]] and v = (1, 0), what is Av?",
+                opts: [
+                    {l: "A", t: "(1, 2)", c: false},
+                    {l: "B", t: "(1, 3)", c: true},
+                    {l: "C", t: "(3, 4)", c: false},
+                    {l: "D", t: "(2, 4)", c: false}
+                ],
+                sol: "Av = [[1×1 + 2×0], [3×1 + 4×0]] = (1, 3). This is just the first column of A!"
+            },
+            {
+                id: 10005,
+                text: "🎯 Are the vectors (1, 0, 0), (0, 1, 0), (1, 1, 0) linearly independent?",
+                opts: [
+                    {l: "A", t: "Yes, they span 3D", c: false},
+                    {l: "B", t: "No, (1,1,0) = (1,0,0)+(0,1,0)", c: true},
+                    {l: "C", t: "No, they're too short", c: false},
+                    {l: "D", t: "Yes, all three are distinct", c: false}
+                ],
+                sol: "<strong>No.</strong> (1,1,0) = (1,0,0) + (0,1,0), so the third vector is a linear combination of the first two. The set is dependent. All three lie in the xy-plane."
+            },
+            {
+                id: 10006,
+                text: "🔮 What are the eigenvalues of [[2, 0], [0, 3]]?",
+                opts: [
+                    {l: "A", t: "2 and 3", c: true},
+                    {l: "B", t: "1 and 6", c: false},
+                    {l: "C", t: "0 and 5", c: false},
+                    {l: "D", t: "−2 and −3", c: false}
+                ],
+                sol: "This is a diagonal matrix. The eigenvalues are simply the diagonal entries: <strong>2 and 3</strong>. The eigenvectors are the standard basis vectors (1,0) and (0,1)."
+            },
+            {
+                id: 10007,
+                text: "🔮 If A has eigenvalue λ = 4 with eigenvector v, what is A⁵v?",
+                opts: [
+                    {l: "A", t: "4v", c: false},
+                    {l: "B", t: "20v", c: false},
+                    {l: "C", t: "1024v", c: true},
+                    {l: "D", t: "625v", c: false}
+                ],
+                sol: "If Av = 4v, then A⁵v = 4⁵v = <strong>1024v</strong>. Repeated application scales by λ each time. This is why diagonalization is so powerful."
+            },
+            {
+                id: 10008,
+                text: "🌍 In Google PageRank, the ranking vector is the eigenvector with eigenvalue:",
+                opts: [
+                    {l: "A", t: "0", c: false},
+                    {l: "B", t: "−1", c: false},
+                    {l: "C", t: "1", c: true},
+                    {l: "D", t: "The largest singular value", c: false}
+                ],
+                sol: "The PageRank vector satisfies r = Ar, so it's the eigenvector with eigenvalue <strong>1</strong>. It's the stationary distribution of the random surfer model."
+            },
+            {
+                id: 10009,
+                text: "🧮 What is the dimension of the space spanned by (1,2), (2,4), (3,6)?",
+                opts: [
+                    {l: "A", t: "3", c: false},
+                    {l: "B", t: "2", c: false},
+                    {l: "C", t: "1", c: true},
+                    {l: "D", t: "0", c: false}
+                ],
+                sol: "(2,4) = 2×(1,2) and (3,6) = 3×(1,2). All three vectors are on the same line through the origin. The span is just that line — <strong>dimension 1</strong>."
+            },
+            {
+                id: 10010,
+                text: "➡️ If v·w = 0, what can we say about v and w?",
+                opts: [
+                    {l: "A", t: "They are parallel", c: false},
+                    {l: "B", t: "They are orthogonal (perpendicular)", c: true},
+                    {l: "C", t: "One must be the zero vector", c: false},
+                    {l: "D", t: "They are equal", c: false}
+                ],
+                sol: "If v·w = 0, the vectors are <strong>orthogonal</strong> (perpendicular). They form a right angle. This does NOT require either to be zero — e.g., (1,0) and (0,1)."
+            },
+            {
+                id: 10011,
+                text: "🧮 What is the sum of the eigenvalues of [[1, 2], [3, 4]]?",
+                opts: [
+                    {l: "A", t: "5", c: true},
+                    {l: "B", t: "4", c: false},
+                    {l: "C", t: "7", c: false},
+                    {l: "D", t: "10", c: false}
+                ],
+                sol: "The sum of eigenvalues equals the <strong>trace</strong> (sum of diagonal entries). Trace = 1 + 4 = <strong>5</strong>. The product equals the determinant = 1×4 − 2×3 = −2."
+            },
+            {
+                id: 10012,
+                text: "🌍 Which factorization works for ANY matrix (including non-square)?",
+                opts: [
+                    {l: "A", t: "Eigenvalue decomposition", c: false},
+                    {l: "B", t: "LU decomposition", c: false},
+                    {l: "C", t: "Singular Value Decomposition (SVD)", c: true},
+                    {l: "D", t: "Cholesky decomposition", c: false}
+                ],
+                sol: "<strong>SVD</strong> (A = UΣVᵀ) works for every matrix — any shape, any rank, real or complex. Eigenvalue decomposition only works for square diagonalizable matrices. LU and Cholesky are for square matrices in specific contexts."
+            }
+        ];
+
+        var answered = {}, correctCount = 0;
+
+        function renderPractice() {
+            var c = document.getElementById('practice-qs'), h = '';
+            for (var i = 0; i < practiceQs.length; i++) {
+                var q = practiceQs[i], o = '';
+                for (var j = 0; j < q.opts.length; j++) {
+                    o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                }
+                h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+            }
+            c.innerHTML = h;
+            updateScore();
+        }
+
+        function getCorrectLabel(q) {
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+            }
+            return '';
+        }
+
+        function selectOpt(qId, idx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            var q = practiceQs.filter(function(x){return x.id === qId})[0];
+            var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+            var isCorrect = q.opts[idx].c;
+            for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-'+qId).textContent = '✅ Correct!';
+                document.getElementById('result-'+qId).className = 'q-result correct';
+                correctCount++;
+            } else {
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+                document.getElementById('result-'+qId).className = 'q-result wrong';
+                for (var i = 0; i < q.opts.length; i++) {
+                    if (q.opts[i].c) opts[i].classList.add('correct');
+                }
+            }
+            document.getElementById('soln-'+qId).classList.add('show');
+            updateScore();
+        }
+
+        function updateScore() {
+            var t = Object.keys(answered).length;
+            var el = document.getElementById('score-display');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'score-display';
+                el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+                document.getElementById('practice-qs').before(el);
+            }
+            el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+        }
+
+        function resetPractice() {
+            if (!confirm('Reset all answers?')) return;
+            answered = {}; correctCount = 0;
+            document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+            document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+            document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+            var el = document.getElementById('score-display');
+            if (el) el.textContent = '';
+            renderPractice();
+        }
+
+        function toggleStep(header) {
+            var content = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        renderPractice();
+    </script>
+</body>
+</html>
