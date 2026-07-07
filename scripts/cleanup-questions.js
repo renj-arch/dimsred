@@ -21,9 +21,9 @@ function isBad(q) {
   // No space at all → fragment
   if (!/\s/.test(text)) return true;
 
-  // Comma density too high (table row)
+  // Comma density too high (table row) — relaxed from 15 to 8
   const commas = (text.match(/,/g) || []).length;
-  if (commas > 0 && text.length / commas < 15) return true;
+  if (commas > 0 && text.length / commas < 8) return true;
 
   // Contains known table fragments (Nobel list patterns)
   if (/, (Physics|Chemistry|Peace|Literature|Medicine|Economics)(,|$)/.test(text)) return true;
@@ -66,10 +66,7 @@ function isBad(q) {
   // Citation entry: "Surname, Firstname (date)" or "Name (date)" pattern
   if (/^[A-Z][a-z]+,\s*[A-Z][a-z]+.*\(\d{4}\)/.test(text)) return true;
   if (/^[A-Z][a-z]+\s+\([12]\d{3}\)/.test(text)) return true;
-  if (/\(\d{4}\)\s*$/.test(text) && text.length < 60) return true;
-
-  // Question starts with a citation-style author name + comma
-  if (/^[A-Z][a-z]+,\s+[A-Z][a-z]/.test(text) && !/\b(?:was|were|is|are|has|have|had|said|born|died|known|became|served|joined|established|founded|created|introduced|developed|published|released|announced|launched|appointed|elected|awarded|received|won|played|worked|studied|taught|led|built|designed|invented|discovered|proposed|suggested|argued|stated|noted|observed|reported|described|explained|introduced|formed|made|given|taken|held|shown|found|seen|heard|known|considered|regarded|believed|thought|felt|wanted|needed|used)\b/i.test(text)) return true;
+  if (/\(\d{4}\)\s*$/.test(text) && text.length < 20) return true;
 
   // Blank replaces first word of sentence (always bad - "_____ in 1961")
   const firstWord = text.split(/\s+/)[0];
