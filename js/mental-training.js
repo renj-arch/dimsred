@@ -104,7 +104,8 @@ var defaultState = {
     quicksolve: { attempts:0, correct:0 }, instinct: { attempts:0, correct:0 },
     fivesec: { attempts:0, correct:0 }, examrush: { attempts:0, correct:0 },
     weakspot: { attempts:0, correct:0 },
-    quant: { attempts:0, correct:0 }, reasoning: { attempts:0, correct:0 }
+    quant: { attempts:0, correct:0 }, reasoning: { attempts:0, correct:0 },
+    verbal: { attempts:0, correct:0 }
   },
   subTopicStats: {
     // Quant sub-topics
@@ -2605,7 +2606,17 @@ function generateDataInterpretationQuestion(diff, layer) {
     [4, function(){ var s1=rand(200,500), s2=rand(150,400), s3=rand(100,300); var growth1to2=Math.round((s2-s1)/s1*100), growth2to3=Math.round((s3-s2)/s2*100); return { tbl:tableHtml(['Year','Sales (₹L)'],[['2020',s1],['2021',s2],['2022',s3]]), q:'Which yr had higher % growth?', a:growth1to2>=growth2to3?'2020-21':'2021-22', hint:'Compute both growth rates', technical:hint}; }],
     [4, function(){ var a=rand(25,45), b=rand(15,35), c=100-a-b; var tot=rand(800,2000); return { tbl:tableHtml(['Sector','%'],[['Agri',a+'%'],['Ind',b+'%'],['Serv',c+'%']])+'<div style="font-size:.82em">Total GDP: ₹'+tot+'cr</div>', q:'Diff b/w Agri & Serv GDP?', a:Math.round(tot*(Math.abs(a-c))/100), hint:'|Agri-Serv|%×total'}; }],
     [5, function(){ var companies=4; var profits=[]; for(var k=0;k<companies;k++)profits.push(rand(200,600)); var sum=profits.reduce(function(a,b){return a+b;},0); var c=rand(0,companies-1); return { tbl:tableHtml(['Co','Profit (₹L)'],profits.map(function(p,i){return['Co'+(i+1),p];})), q:'Co'+(c+1)+' profit share % of total?', a:Math.round(profits[c]*100/sum), hint:'Co'+(c+1)+'/total×100'}; }],
-    [5, function(){ var labels=['Jan','Feb','Mar','Apr','May','Jun']; var revs=labels.map(function(){return rand(100,500);}); var costs=labels.map(function(){return rand(50,300);}); var totals=revs.map(function(r,i){return r-costs[i];}); var maxP=Math.max.apply(null,totals), minP=Math.min.apply(null,totals); var maxI=totals.indexOf(maxP), minI=totals.indexOf(minP); return { tbl:tableHtml(['Month','Rev','Cost'],[['Jan',revs[0],costs[0]],['Feb',revs[1],costs[1]],['Mar',revs[2],costs[2]],['Apr',revs[3],costs[3]],['May',revs[4],costs[4]],['Jun',revs[5],costs[5]]]), q:'Max profit month & min profit month?', a:labels[maxP]+' & '+labels[minP], hint:'Profit=Rev-Cost for each month', technical:hint}; }]
+    [5, function(){ var labels=['Jan','Feb','Mar','Apr','May','Jun']; var revs=labels.map(function(){return rand(100,500);}); var costs=labels.map(function(){return rand(50,300);}); var totals=revs.map(function(r,i){return r-costs[i];}); var maxP=Math.max.apply(null,totals), minP=Math.min.apply(null,totals); var maxI=totals.indexOf(maxP), minI=totals.indexOf(minP); return { tbl:tableHtml(['Month','Rev','Cost'],[['Jan',revs[0],costs[0]],['Feb',revs[1],costs[1]],['Mar',revs[2],costs[2]],['Apr',revs[3],costs[3]],['May',revs[4],costs[4]],['Jun',revs[5],costs[5]]]), q:'Max profit month & min profit month?', a:labels[maxP]+' & '+labels[minP], hint:'Profit=Rev-Cost for each month', technical:hint}; }],
+    // New: Multi-column comparison table
+    [3, function(){ var c=[rand(300,700), rand(400,800), rand(500,900), rand(350,750)]; var r=[rand(250,600), rand(300,700), rand(400,800), rand(300,650)]; return { tbl:tableHtml(['Co','Revenue','Expense','Profit'],[['A',c[0],r[0],c[0]-r[0]],['B',c[1],r[1],c[1]-r[1]],['C',c[2],r[2],c[2]-r[2]],['D',c[3],r[3],c[3]-r[3]]]), q:'Which company has highest profit %?', a:function(){var ps=c.map(function(v,i){return Math.round((v-r[i])*100/v);});var mx=Math.max.apply(null,ps);return 'Co'+(ps.indexOf(mx)+1);}(), hint:'Profit% = (Rev-Exp)/Rev×100'}; }],
+    // New: Multi-year multi-category table
+    [4, function(){ var ap=[rand(200,400), rand(250,450), rand(300,500)]; var bp=[rand(150,300), rand(200,350), rand(250,400)]; var y=[2020,2021,2022]; return { tbl:tableHtml(['Year','Product A','Product B','Total'],[[y[0],ap[0],bp[0],ap[0]+bp[0]],[y[1],ap[1],bp[1],ap[1]+bp[1]],[y[2],ap[2],bp[2],ap[2]+bp[2]]]), q:'% growth in total sales 2020→2022?', a:Math.round((ap[2]+bp[2]-(ap[0]+bp[0]))*100/(ap[0]+bp[0])), hint:'(T2022-T2020)/T2020×100'}; }],
+    // New: True/False statement based on table
+    [4, function(){ var co=[rand(40,90), rand(30,80), rand(20,70), rand(10,60), rand(5,50)]; var stmts=[co[0]>co[1]?'A > B':'B > A', 'Total > '+Math.round(co.reduce(function(a,b){return a+b;},0)-rand(10,50)), co[2]+' < 50', 'Avg < 60', co[4]+' < '+co[0]]; var which=rand(0,stmts.length-1); return { tbl:tableHtml(['City','Score'],[['A',co[0]],['B',co[1]],['C',co[2]],['D',co[3]],['E',co[4]]]), q:'Which statement is TRUE?', a:stmts[which], hint:'Check each statement against the table', technical:hint}; }],
+    // New: Bar chart visual using CSS
+    [3, function(){ var vals=[rand(30,90), rand(20,80), rand(40,95), rand(10,70)]; var max=Math.max.apply(null,vals); var bars=vals.map(function(v){var pct=Math.round(v/max*100);return '<div style="margin:2px 0;font-size:.72em;display:flex;align-items:center;gap:4px"><span style="width:30px;text-align:right">'+v+'</span><div style="height:16px;width:'+pct+'%;background:linear-gradient(90deg,var(--purple),var(--emerald));border-radius:0 4px 4px 0;min-width:4px"></div></div>';}).join(''); var labels=['Q1','Q2','Q3','Q4']; return { tbl:'<div style="margin:8px 0;padding:8px 0"><div style="font-size:.75em;color:var(--text-sec);margin-bottom:4px">Sales (₹L) by Quarter</div>'+bars+'</div>', q:'Total annual sales?', a:vals.reduce(function(a,b){return a+b;},0), hint:'Sum all quarters'}; }],
+    // New: Two-table comparison
+    [5, function(){ var mNames=['TechCo','MedCorp','FinServ','EduInc']; var revs=[rand(500,1500), rand(400,1200), rand(300,1000), rand(200,800)]; var emps=[rand(100,500), rand(80,400), rand(60,300), rand(40,200)]; var c=rand(0,3); return { tbl:tableHtml(['Company','Rev (₹L)','Employees'],[mNames.map(function(n,i){return[n,revs[i],emps[i]];})[0],mNames.map(function(n,i){return[n,revs[i],emps[i]];})[1],mNames.map(function(n,i){return[n,revs[i],emps[i]];})[2],mNames.map(function(n,i){return[n,revs[i],emps[i]];})[3]]), q:'Revenue per employee of '+mNames[c]+'? (₹L)', a:Math.round(revs[c]*100/emps[c])/100, hint:'Rev÷Employees'}; }]
   ];
   var matched = types.filter(function(t){ return t[0] <= diff; });
   if (matched.length === 0) matched = types;
@@ -3700,7 +3711,32 @@ function generateSentenceCompletionQuestion(diff) {
     {q:'She is so _______ that she can solve any problem in minutes.',a:'intelligent',o:['lazy','intelligent','careless','nervous']},
     {q:'The scientist made a _______ discovery that changed the world.',a:'groundbreaking',o:['minor','groundbreaking','ordinary','useless']},
     {q:'He was _______ for his role in the conspiracy.',a:'convicted',o:['praised','convicted','promoted','awarded']},
-    {q:'The _______ of medical technology has saved countless lives.',a:'advancement',o:['decline','advancement','absence','failure']}
+    {q:'The _______ of medical technology has saved countless lives.',a:'advancement',o:['decline','advancement','absence','failure']},
+    {q:'The manager asked the employees to _______ the new policy immediately.',a:'implement',o:['ignore','implement','delay','reject']},
+    {q:'Her _______ attitude made her very popular among colleagues.',a:'affable',o:['rude','affable','arrogant','indifferent']},
+    {q:'The lawyer presented _______ evidence that proved his client\'s innocence.',a:'conclusive',o:['weak','conclusive','irrelevant','ambiguous']},
+    {q:'The government plans to _______ a new healthcare scheme next month.',a:'launch',o:['cancel','launch','delay','suspend']},
+    {q:'The professor\'s lecture was so _______ that most students fell asleep.',a:'tedious',o:['fascinating','tedious','inspiring','engaging']},
+    {q:'The company\'s profits have _______ steadily over the past five years.',a:'grown',o:['declined','grown','stagnated','plummeted']},
+    {q:'She displayed remarkable _______ by completing the marathon despite her injury.',a:'perseverance',o:['laziness','perseverance','carelessness','timidity']},
+    {q:'The new policy aims to _______ the gap between rich and poor.',a:'bridge',o:['widen','bridge','ignore','measure']},
+    {q:'The detective _______ the mystery after months of investigation.',a:'unraveled',o:['created','unraveled','ignored','hid']},
+    {q:'His speech was _______ with anecdotes and humor.',a:'interspersed',o:['devoid','interspersed','filled','lacking']},
+    {q:'The team worked _______ to meet the project deadline.',a:'diligently',o:['carelessly','diligently','reluctantly','haphazardly']},
+    {q:'The _______ of the ancient temple attracted tourists from around the world.',a:'grandeur',o:['decline','grandeur','destruction','remoteness']},
+    {q:'The CEO was known for his _______ leadership style that inspired innovation.',a:'visionary',o:['autocratic','visionary','passive','erratic']},
+    {q:'The evidence presented in court was entirely _______.',a:'circumstantial',o:['circumstantial','irrefutable','direct','overwhelming']},
+    {q:'The company faced severe financial _______ due to the economic downturn.',a:'hardship',o:['growth','hardship','prosperity','expansion']},
+    {q:'The new software is designed to _______ productivity in the workplace.',a:'enhance',o:['reduce','enhance','complicate','hinder']},
+    {q:'She was _______ for her contribution to the field of medicine.',a:'acclaimed',o:['criticized','acclaimed','overlooked','forgotten']},
+    {q:'The _______ of the river caused widespread flooding in the region.',a:'overflow',o:['drought','overflow','freeze','evaporation']},
+    {q:'The politician\'s speech was full of empty _______ but no real solutions.',a:'rhetoric',o:['facts','rhetoric','data','logic']},
+    {q:'The project was _______ due to lack of funding.',a:'abandoned',o:['accelerated','abandoned','expanded','completed']},
+    {q:'She has a _______ for learning new languages quickly.',a:'knack',o:['hatred','knack','fear','disinterest']},
+    {q:'The doctor advised him to _______ his salt intake for better health.',a:'reduce',o:['increase','reduce','maintain','ignore']},
+    {q:'The meeting was _______ to discuss the quarterly results.',a:'convened',o:['adjourned','convened','cancelled','postponed']},
+    {q:'His _______ remarks offended everyone in the room.',a:'tactless',o:['diplomatic','tactless','thoughtful','considerate']},
+    {q:'The organization works to _______ awareness about environmental issues.',a:'raise',o:['lower','raise','hide','reduce']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:'Fill the blank: "'+it.q+'"', answer:it.a, options:it.o, hint:'Which word makes the sentence meaningful?', timeLimit:10, type:'verbal', techniqueLabel:'Sentence Completion', intuition:'Read the sentence for context clues. The correct word must make logical and grammatical sense.' };
@@ -3712,11 +3748,28 @@ function generateWordOrderingQuestion(diff) {
     {w:['education','is','the','key','to','success'],s:'education is the key to success'},
     {w:['practice','makes','a','man','perfect'],s:'practice makes a man perfect'},
     {w:['honesty','is','the','best','policy'],s:'honesty is the best policy'},
-    {w:['united','we','stand','divided','we','fall'],s:'united we stand divided we fall'}
+    {w:['united','we','stand','divided','we','fall'],s:'united we stand divided we fall'},
+    {w:['knowledge','is','power'],s:'knowledge is power'},
+    {w:['all','that','glitters','is','not','gold'],s:'all that glitters is not gold'},
+    {w:['actions','speak','louder','than','words'],s:'actions speak louder than words'},
+    {w:['every','cloud','has','a','silver','lining'],s:'every cloud has a silver lining'},
+    {w:['where','there','is','a','will','there','is','a','way'],s:'where there is a will there is a way'},
+    {w:['necessity','is','the','mother','of','invention'],s:'necessity is the mother of invention'},
+    {w:['slow','and','steady','wins','the','race'],s:'slow and steady wins the race'},
+    {w:['a','stitch','in','time','saves','nine'],s:'a stitch in time saves nine'},
+    {w:['charity','begins','at','home'],s:'charity begins at home'},
+    {w:['prevention','is','better','than','cure'],s:'prevention is better than cure'},
+    {w:['the','early','bird','catches','the','worm'],s:'the early bird catches the worm'},
+    {w:['better','late','than','never'],s:'better late than never'},
+    {w:['easy','come','easy','go'],s:'easy come easy go'},
+    {w:['look','before','you','leap'],s:'look before you leap'},
+    {w:['old','is','gold'],s:'old is gold'},
+    {w:['time','and','tide','wait','for','none'],s:'time and tide wait for none'},
+    {w:['when','in','rome','do','as','the','romans','do'],s:'when in rome do as the romans do'},
+    {w:['a','penny','for','your','thoughts'],s:'a penny for your thoughts'},
+    {w:['barking','dogs','seldom','bite'],s:'barking dogs seldom bite'},
+    {w:['cut','your','coat','according','to','your','cloth'],s:'cut your coat according to your cloth'}
   ];
-  var it=items[rand(0,items.length-1)]; var jumbled=it.w.slice(); shuffle(jumbled);
-  return { question:'Arrange: "'+jumbled.join(' ')+'"', answer:it.s, options:[it.s, jumbled.slice().reverse().join(' '), [jumbled[0],jumbled[jumbled.length-1],jumbled[2],jumbled[1],jumbled[3]].join(' '), [jumbled[jumbled.length-1],jumbled[0],jumbled[2],jumbled[1],jumbled[3]].join(' ')], hint:'Find the logical sequence', timeLimit:15, type:'verbal', techniqueLabel:'Word Ordering', intuition:'Try to form a meaningful sentence. Look for the subject first, then verb, then object.' };
-}
 
 function generateSentenceOrderingQuestion(diff) {
   var items=[
@@ -4273,11 +4326,23 @@ function generateSentenceImprovementQuestion(diff) {
     {s:'No sooner had he arrived than the meeting started.',i:'No sooner had he arrived than the meeting started (correct)',o:['No sooner had he arrived than the meeting started','No sooner he arrived than the meeting started','No sooner had he arrived when the meeting started','No sooner did he arrive than the meeting had started']},
     {s:'I prefer coffee than tea.',i:'I prefer coffee to tea',o:['I prefer coffee than tea','I prefer coffee to tea','I prefer coffee over tea','I prefer coffee from tea']},
     {s:'Walking through the park, the flowers looked beautiful.',i:'Walking through the park, she saw that the flowers looked beautiful',o:['Walking through the park, the flowers looked beautiful','Walking through the park, she saw that the flowers looked beautiful','Walking through the park, beautiful flowers were seen','The park walking, flowers looked beautiful']},
-    {s:'She likes swimming, to run, and dancing.',i:'She likes swimming, running, and dancing',o:['She likes swimming, to run, and dancing','She likes swimming, running, and dancing','She likes to swim, to run, to dance','She likes to swim, running, and dance']}
+    {s:'She likes swimming, to run, and dancing.',i:'She likes swimming, running, and dancing',o:['She likes swimming, to run, and dancing','She likes swimming, running, and dancing','She likes to swim, to run, to dance','She likes to swim, running, and dance']},
+    {s:'I and my friend went to the park.',i:'My friend and I went to the park',o:['I and my friend went to the park','My friend and I went to the park','I and my friend went to the park together','Me and my friend went to the park']},
+    {s:'If I was you, I would accept the offer.',i:'If I were you, I would accept the offer',o:['If I was you, I would accept the offer','If I were you, I would accept the offer','If I am you, I would accept the offer','If I had been you, I would accept the offer']},
+    {s:'He asked that what is your name.',i:'He asked, "What is your name?"',o:['He asked that what is your name','He asked, "What is your name?"','He asked what my name is','He asked that what was my name']},
+    {s:'She not only lost her wallet but also her phone.',i:'She lost not only her wallet but also her phone',o:['She not only lost her wallet but also her phone','She lost not only her wallet but also her phone','She not only lost her wallet but also lost her phone','She lost her wallet and also her phone']},
+    {s:'The reason he was late is because of the traffic.',i:'The reason he was late is that there was traffic',o:['The reason he was late is because of the traffic','The reason he was late is that there was traffic','The reason he was late is due to traffic','Because of traffic, he was late']},
+    {s:'One of the boys have broken the window.',i:'One of the boys has broken the window',o:['One of the boys have broken the window','One of the boys has broken the window','One of the boy has broken the window','One boy among them have broken the window']},
+    {s:'He is suffering from fever since Monday.',i:'He has been suffering from fever since Monday',o:['He is suffering from fever since Monday','He has been suffering from fever since Monday','He was suffering from fever since Monday','He suffered from fever since Monday']},
+    {s:'Neither the manager nor the employees was present.',i:'Neither the manager nor the employees were present',o:['Neither the manager nor the employees was present','Neither the manager nor the employees were present','Neither the manager nor the employees is present','The manager and employees was not present']},
+    {s:'This is the same dress which she wore yesterday.',i:'This is the same dress that she wore yesterday',o:['This is the same dress which she wore yesterday','This is the same dress that she wore yesterday','This is same dress that she wore yesterday','This is the dress which she wore yesterday']},
+    {s:'He did nothing but to complain.',i:'He did nothing but complain',o:['He did nothing but to complain','He did nothing but complain','He did nothing except to complain','He did nothing except complaining']},
+    {s:'I have seen him yesterday.',i:'I saw him yesterday',o:['I have seen him yesterday','I saw him yesterday','I had seen him yesterday','I did see him yesterday']},
+    {s:'Work hard so that you may pass.',i:'Work hard so that you may pass (correct)',o:['Work hard so that you may pass','Work hard so that you can pass','Work hard so that you might pass','Work hard so that you could pass']},
+    {s:'Scarcely had he left when the storm began.',i:'Scarcely had he left when the storm began (correct)',o:['Scarcely had he left when the storm began','Scarcely had he left than the storm began','Scarcely he left when the storm began','Scarcely did he leave when the storm began']},
+    {s:'He is more taller than his brother.',i:'He is taller than his brother',o:['He is more taller than his brother','He is taller than his brother','He is more tall than his brother','He is much taller than his brother']},
+    {s:'Neither did he call nor did he come.',i:'Neither did he call nor did he come (correct)',o:['Neither did he call nor did he come','He neither called nor came','Neither he called nor came','He called nor came']}
   ];
-  var it=items[rand(0,items.length-1)]; shuffle(it.o);
-  return { question:'Improve: "'+it.s+'"', answer:it.i, options:it.o, hint:'Replace the incorrect word/phrase with the correct one', timeLimit:12, type:'verbal', techniqueLabel:'Sentence Improvement', intuition:'too...to (infinitive), so...that (clause). Prefer A to B. No sooner...than. Scarcely...when.' };
-}
 
 function generateClosetTestQuestion(diff) {
   var items=[
@@ -4316,10 +4381,33 @@ function generateChangeVoiceQuestion(diff) {
     {a:'They will build a bridge.',p:'A bridge will be built by them',o:['A bridge will be built by them','A bridge will build by them','A bridge would be built','A bridge is built by them']},
     {a:'She has finished the work.',p:'The work has been finished by her',o:['The work has been finished by her','The work has finished by her','She has been finished the work','The work had been finished by her']},
     {a:'You must obey the rules.',p:'The rules must be obeyed by you',o:['The rules must be obeyed by you','The rules must obey by you','You must be obeyed the rules','The rules are obeyed by you']},
-    {a:'Please open the door.',p:'You are requested to open the door',o:['You are requested to open the door','The door is opened please','Let the door be opened','Please the door be opened']}
+    {a:'Please open the door.',p:'You are requested to open the door',o:['You are requested to open the door','The door is opened please','Let the door be opened','Please the door be opened']},
+    {a:'The chef is cooking dinner.',p:'Dinner is being cooked by the chef',o:['Dinner is being cooked by the chef','Dinner was being cooked by the chef','The chef is cooked dinner','Dinner is cooked by the chef']},
+    {a:'The students had completed the assignment.',p:'The assignment had been completed by the students',o:['The assignment had been completed by the students','The assignment has been completed by the students','The assignment was completed by the students','The students had been completed the assignment']},
+    {p:'The letter was being written by her.',a:'She was writing the letter',o:['She was writing the letter','She wrote the letter','She had written the letter','She is writing the letter']},
+    {a:'They will have finished the project by Friday.',p:'The project will have been finished by Friday',o:['The project will have been finished by Friday','The project will be finished by Friday','The project would have been finished by Friday','The project is finished by Friday']},
+    {p:'English is spoken all over the world.',a:'People speak English all over the world',o:['People speak English all over the world','People spoke English all over the world','People are speaking English all over the world','People have spoken English all over the world']},
+    {a:'Who broke the window?',p:'By whom was the window broken?',o:['By whom was the window broken?','Who was the window broken by?','The window was broken by whom?','By who was the window broken?']},
+    {p:'The child was given a toy by the aunt.',a:'The aunt gave the child a toy',o:['The aunt gave the child a toy','The aunt gives the child a toy','The aunt has given the child a toy','The child was gave a toy by the aunt']},
+    {a:'We can solve this problem easily.',p:'This problem can be solved easily',o:['This problem can be solved easily','This problem could be solved easily','This problem can solve easily','This problem is solved easily by us']},
+    {p:'The building was destroyed by the earthquake.',a:'The earthquake destroyed the building',o:['The earthquake destroyed the building','The earthquake destroys the building','The earthquake has destroyed the building','The building destroyed the earthquake']},
+    {a:'The committee is considering the proposal.',p:'The proposal is being considered by the committee',o:['The proposal is being considered by the committee','The proposal was being considered by the committee','The proposal is considered by the committee','The committee is being considered the proposal']},
+    {a:'They had invited us to the party.',p:'We had been invited to the party by them',o:['We had been invited to the party by them','We were invited to the party by them','We have been invited to the party by them','They had been invited us to the party']},
+    {p:'The match was won by our team.',a:'Our team won the match',o:['Our team won the match','Our team wins the match','Our team had won the match','Our team has won the match']},
+    {a:'Do not touch the exhibits.',p:'You are advised not to touch the exhibits',o:['You are advised not to touch the exhibits','The exhibits are not touched','Let the exhibits not be touched','Do not be touched the exhibits']},
+    {a:'The scientist discovered a new planet.',p:'A new planet was discovered by the scientist',o:['A new planet was discovered by the scientist','A new planet is discovered by the scientist','A new planet has been discovered','The scientist was discovered a new planet']},
+    {a:'Someone stole my car yesterday.',p:'My car was stolen yesterday',o:['My car was stolen yesterday','My car is stolen yesterday','My car has been stolen yesterday','My car had been stolen yesterday']},
+    {p:'The report will be submitted by the manager.',a:'The manager will submit the report',o:['The manager will submit the report','The manager submits the report','The manager would submit the report','The report will submit by the manager']},
+    {a:'The teacher is explaining the lesson.',p:'The lesson is being explained by the teacher',o:['The lesson is being explained by the teacher','The lesson was being explained by the teacher','The lesson is explained by the teacher','The teacher is being explained the lesson']},
+    {a:'Why did you make this mistake?',p:'Why was this mistake made by you?',o:['Why was this mistake made by you?','Why this mistake was made by you?','By whom was this mistake made?','Why did this mistake made by you?']}
   ];
   var it=items[rand(0,items.length-1)];
-  return { question:'Change voice: "'+it.a||it.p+'"', answer:it.p||it.a, options:it.o, hint:'Active→Passive: object becomes subject, verb becomes be+past participle, subject becomes by+agent', timeLimit:15, type:'verbal', techniqueLabel:'Change of Voice', intuition:'Active: subject does action. Passive: subject receives action. Verb changes: do→is done, did→was done, will do→will be done.' };
+  var fromActive = rand(0,1) ? true : false;
+  var show = fromActive && it.a ? it.a : (it.p || it.a);
+  var answer = fromActive ? (it.p || it.a) : (it.a || it.p);
+  var label = fromActive ? 'Active→Passive' : 'Passive→Active';
+  var opts = it.o.slice(); shuffle(opts);
+  return { question:'Change voice ('+label+'): "'+show+'"', answer:answer, options:opts, hint:'Active→Passive: object becomes subject, verb becomes be+past participle, subject becomes by+agent', timeLimit:15, type:'verbal', techniqueLabel:'Change of Voice', intuition:'Active: subject does action. Passive: subject receives action. Verb changes: do→is done, did→was done, will do→will be done.' };
 }
 
 function generateChangeSpeechQuestion(diff) {
@@ -4329,7 +4417,26 @@ function generateChangeSpeechQuestion(diff) {
     {d:'"Please help me," she said.',i:'She requested me to help her',o:['She requested me to help her','She said please help me','She ordered me to help her','She said to help me']},
     {d:'He asked, "Are you coming?"',i:'He asked if I was coming',o:['He asked if I was coming','He asked that I am coming','He asked are you coming','He asked that you are coming']},
     {d:'She said, "What a beautiful day!"',i:'She exclaimed that it was a beautiful day',o:['She exclaimed that it was a beautiful day','She said what a beautiful day','She asked what a beautiful day','She exclaimed what a day']},
-    {d:'The teacher said, "The Earth revolves around the Sun."',i:'The teacher said that the Earth revolves around the Sun',o:['The teacher said that the Earth revolves around the Sun','The teacher said that the Earth revolved around the Sun','The teacher said that the Earth is revolving around the Sun','The teacher said the Earth revolved around the Sun']}
+    {d:'The teacher said, "The Earth revolves around the Sun."',i:'The teacher said that the Earth revolves around the Sun',o:['The teacher said that the Earth revolves around the Sun','The teacher said that the Earth revolved around the Sun','The teacher said that the Earth is revolving around the Sun','The teacher said the Earth revolved around the Sun']},
+    {d:'"Don\'t touch the wire," the electrician warned.',i:'The electrician warned me not to touch the wire',o:['The electrician warned me not to touch the wire','The electrician said don\'t touch the wire','The electrician warned that do not touch the wire','The electrician said not to touch the wire']},
+    {d:'She said, "I have finished my homework."',i:'She said that she had finished her homework',o:['She said that she had finished her homework','She said that she has finished her homework','She said that I have finished my homework','She said that she finished her homework']},
+    {d:'He said, "I was reading a book."',i:'He said that he had been reading a book',o:['He said that he had been reading a book','He said that he was reading a book','He said that I was reading a book','He said that he read a book']},
+    {d:'"Leave the room immediately!" the officer shouted.',i:'The officer ordered me to leave the room immediately',o:['The officer ordered me to leave the room immediately','The officer shouted leave the room','The officer said to leave the room','The officer ordered that leave the room']},
+    {d:'My mother said, "I cooked dinner for you."',i:'My mother said that she had cooked dinner for me',o:['My mother said that she had cooked dinner for me','My mother said that she cooked dinner for me','My mother said that I cooked dinner for you','My mother said she has cooked dinner for me']},
+    {d:'The stranger asked, "Where does the road lead?"',i:'The stranger asked where the road led',o:['The stranger asked where the road led','The stranger asked where does the road lead','The stranger asked that where the road leads','The stranger asked where the road leads']},
+    {d:'"May I come in?" the student asked.',i:'The student asked if he might come in',o:['The student asked if he might come in','The student asked may I come in','The student asked to come in','The student asked if he may come in']},
+    {d:'He said, "Alas! I have lost my wallet."',i:'He exclaimed with sorrow that he had lost his wallet',o:['He exclaimed with sorrow that he had lost his wallet','He said alas I have lost my wallet','He exclaimed that he lost his wallet','He said with sorrow that he lost his wallet']},
+    {d:'The coach said, "Practice until you perfect it."',i:'The coach advised us to practice until we perfected it',o:['The coach advised us to practice until we perfected it','The coach said practice until you perfect it','The coach advised that practice until perfection','The coach said to practice until perfect']},
+    {d:'"Shut up!" the teacher shouted at the noisy class.',i:'The teacher ordered the noisy class to shut up',o:['The teacher ordered the noisy class to shut up','The teacher shouted shut up at the class','The teacher said shut up','The teacher ordered that the class shut up']},
+    {d:'He said, "I have been waiting for an hour."',i:'He said that he had been waiting for an hour',o:['He said that he had been waiting for an hour','He said that he has been waiting for an hour','He said that I have been waiting for an hour','He said that he waited for an hour']},
+    {d:'The little girl said, "How beautiful the stars are!"',i:'The little girl exclaimed with wonder that the stars were very beautiful',o:['The little girl exclaimed with wonder that the stars were very beautiful','The little girl said how beautiful the stars are','The little girl exclaimed the stars are beautiful','The little girl asked how beautiful the stars are']},
+    {d:'"Could you help me with this?" she asked.',i:'She requested me to help her with that',o:['She requested me to help her with that','She asked could you help me with this','She said could you help me','She requested if I could help']},
+    {d:'The man said, "I regret my actions."',i:'The man said that he regretted his actions',o:['The man said that he regretted his actions','The man said that he regrets his actions','The man said I regret my actions','The man said that he had regretted his actions']},
+    {d:'"Let\'s go for a walk," he proposed.',i:'He proposed that they should go for a walk',o:['He proposed that they should go for a walk','He said let us go for a walk','He proposed to go for a walk','He said they should go for a walk']},
+    {d:'She said, "I will meet you tomorrow."',i:'She said that she would meet me the next day',o:['She said that she would meet me the next day','She said that she will meet me tomorrow','She said that she would meet me tomorrow','She said I will meet you tomorrow']},
+    {d:'"Please don\'t make noise," the librarian said.',i:'The librarian requested us not to make noise',o:['The librarian requested us not to make noise','The librarian said please don\'t make noise','The librarian ordered not to make noise','The librarian said not to make noise']},
+    {d:'He said, "I can swim across the river."',i:'He said that he could swim across the river',o:['He said that he could swim across the river','He said that he can swim across the river','He said that I can swim across the river','He said he swam across the river']},
+    {d:'"Bravo! You played well," the captain said.',i:'The captain applauded him saying that he played well',o:['The captain applauded him saying that he played well','The captain said bravo you played well','The captain exclaimed that he played well','The captain praised him you played well']}
   ];
   var it=items[rand(0,items.length-1)]; shuffle(it.o);
   return { question:'Change to indirect speech:<br>"'+it.d+'"', answer:it.i, options:it.o, hint:'Remove quotes, change pronouns, adjust tense (present→past, will→would, tomorrow→next day)', timeLimit:15, type:'verbal', techniqueLabel:'Change of Speech', intuition:'Reporting verb + that clause. Present→past. will→would. today→that day. tomorrow→next day. Commands become to+verb. Questions become if/whether.' };
@@ -4424,14 +4531,6 @@ function generateReasoningQuestion(diff, subMode) {
     statement_argument: generateStatementArgumentQuestion,
     statement_assumption: generateStatementAssumptionQuestion,
     statement_conclusion: generateStatementConclusionQuestion,
-    // Verbal
-    synonym: generateSynonymQuestion,
-    antonym: generateAntonymQuestion,
-    sentence_completion: generateSentenceCompletionQuestion,
-    word_ordering: generateWordOrderingQuestion,
-    sentence_ordering: generateSentenceOrderingQuestion,
-    paragraph_formation: generateParagraphFormationQuestion,
-    comprehension: generateComprehensionQuestion,
     // Non-verbal
     embedded_images: generateEmbeddedImagesQuestion,
     figure_matrix: generateFigureMatrixQuestion,
@@ -4452,17 +4551,8 @@ function generateReasoningQuestion(diff, subMode) {
     analytical_reasoning: generateAnalyticalReasoningQuestion,
     pattern_completion: generatePatternCompletionQuestion,
     shape_construction: generateShapeConstructionQuestion,
-    spotting_errors: generateSpottingErrorsQuestion,
-    spellings: generateSpellingsQuestion,
-    sentence_correction: generateSentenceCorrectionQuestion,
-    sentence_improvement: generateSentenceImprovementQuestion,
-    closet_test: generateClosetTestQuestion,
-    one_word_subs: generateOneWordSubstitutesQuestion,
-    idioms_phrases: generateIdiomsPhrasesQuestion,
-    change_voice: generateChangeVoiceQuestion,
-    change_speech: generateChangeSpeechQuestion
   };
-  var topic = subMode || pick(['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram','letter_symbol_series','artificial_language','matching_definitions','cause_effect','essential_part','theme_detection','statement_argument','statement_assumption','statement_conclusion','synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','embedded_images','figure_matrix','paper_folding','paper_cutting','rule_detection','grouping_images','image_analysis','water_images','dot_situation','making_judgments','logical_problems','logical_games','analyzing_arguments','logical_deduction','character_puzzles','verification_truth','analytical_reasoning','pattern_completion','shape_construction','spotting_errors','spellings','sentence_correction','sentence_improvement','closet_test','one_word_subs','idioms_phrases','change_voice','change_speech']);
+  var topic = subMode || pick(['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram','letter_symbol_series','artificial_language','matching_definitions','cause_effect','essential_part','theme_detection','statement_argument','statement_assumption','statement_conclusion','embedded_images','figure_matrix','paper_folding','paper_cutting','rule_detection','grouping_images','image_analysis','water_images','dot_situation','making_judgments','logical_problems','logical_games','analyzing_arguments','logical_deduction','character_puzzles','verification_truth','analytical_reasoning','pattern_completion','shape_construction']);
   var gen = genMap[topic];
   if (gen) {
     var result, attempts = 0;
@@ -4528,13 +4618,6 @@ function generateReasoningQuestion(diff, subMode) {
             statement_argument: 'Strong argument = directly relevant, substantial, fact-based.',
             statement_assumption: 'What must be true for the statement to make sense? That is implicit.',
             statement_conclusion: 'What MUST follow from the statements? If it could be false, it does not follow.',
-            synonym: 'Find the word with the same or nearly the same meaning.',
-            antonym: 'Find the word opposite in meaning to the given word.',
-            sentence_completion: 'Read for context. The correct word makes logical and grammatical sense.',
-            word_ordering: 'Arrange to form a meaningful sentence. Look for subject → verb → object.',
-            sentence_ordering: 'Put sentences in chronological/logical order. Start with what happened first.',
-            paragraph_formation: 'Start with the main idea, then supporting details, then conclusion.',
-            comprehension: 'Read the passage. The answer is directly stated in the text.',
             embedded_images: 'The figure may be rotated/scaled. Look for the exact shape within the larger figure.',
             figure_matrix: 'Find the pattern in rows and columns. Same logic applies to all.',
             paper_folding: 'Each fold doubles layers. Holes = layers × cuts. Unfold symmetrically.',
@@ -4551,18 +4634,6 @@ function generateReasoningQuestion(diff, subMode) {
             logical_deduction: 'All A are B + C is A → C is B. Certain: ALL. Possible: SOME. Negative: NO.',
             character_puzzles: 'Find pattern in columns/rows. Same operation applied consistently.',
             verification_truth: 'Assume one is true, check for contradictions. Only one scenario works.',
-            analytical_reasoning: 'Count systematically. Include all sizes, not just the obvious ones.',
-            pattern_completion: 'Pattern cycles. Find what is missing from the repeating sequence.',
-            shape_construction: 'Match edges. Two right triangles make a square. Area scales with square of ratio.',
-            spotting_errors: 'Check verb agreement, tense, prepositions, singular/plural, word form.',
-            spellings: 'Double consonants, -ance/-ence, i before e except after c.',
-            sentence_correction: 'Each + singular. Since + point, For + duration. Collective nouns = singular.',
-            sentence_improvement: 'too+to, so+that, prefer+to, no sooner+than, not only+but also.',
-            closet_test: 'Read whole passage. Choose word that fits context AND grammar.',
-            one_word_subs: 'Find the specific single word. Common prefixes/suffixes help.',
-            idioms_phrases: 'Idioms have figurative meanings. Learn by exposure.',
-            change_voice: 'Active: subject does. Passive: subject receives. Object becomes subject.',
-            change_speech: 'Quotes→that clause. Present→past. will→would. Commands→to+verb.'
           };
           q.intuition = intuitions[topic] || 'Draw a diagram/table. Fill known facts, deduce the rest.';
           result = q;
@@ -4578,6 +4649,67 @@ function generateReasoningQuestion(diff, subMode) {
   }
   // Fallback
   return generateAnalogyQuestion(diff);
+}
+
+function generateVerbalQuestion(diff, subMode) {
+  var genMap = {
+    synonym: generateSynonymQuestion,
+    antonym: generateAntonymQuestion,
+    sentence_completion: generateSentenceCompletionQuestion,
+    word_ordering: generateWordOrderingQuestion,
+    sentence_ordering: generateSentenceOrderingQuestion,
+    paragraph_formation: generateParagraphFormationQuestion,
+    comprehension: generateComprehensionQuestion,
+    spotting_errors: generateSpottingErrorsQuestion,
+    spellings: generateSpellingsQuestion,
+    sentence_correction: generateSentenceCorrectionQuestion,
+    sentence_improvement: generateSentenceImprovementQuestion,
+    closet_test: generateClosetTestQuestion,
+    one_word_subs: generateOneWordSubstitutesQuestion,
+    idioms_phrases: generateIdiomsPhrasesQuestion,
+    change_voice: generateChangeVoiceQuestion,
+    change_speech: generateChangeSpeechQuestion
+  };
+  var topic = subMode || pick(['synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','spotting_errors','spellings','sentence_correction','sentence_improvement','closet_test','one_word_subs','idioms_phrases','change_voice','change_speech']);
+  var gen = genMap[topic];
+  if (gen) {
+    var q, attempts = 0;
+    do {
+      try {
+        q = gen(diff);
+        q._subTopic = topic;
+        q.type = 'verbal';
+        q.timeLimit = q.timeLimit || 15;
+        q.techniqueLabel = (q.techniqueLabel || '') + ' [' + topic.replace(/_/g,' ') + ']';
+        var intuitions = {
+          synonym: 'Find the word with the same or nearly the same meaning.',
+          antonym: 'Find the word opposite in meaning to the given word.',
+          sentence_completion: 'Read for context. The correct word makes logical and grammatical sense.',
+          word_ordering: 'Arrange to form a meaningful sentence. Look for subject → verb → object.',
+          sentence_ordering: 'Put sentences in chronological/logical order. Start with what happened first.',
+          paragraph_formation: 'Start with the main idea, then supporting details, then conclusion.',
+          comprehension: 'Read the passage. The answer is directly stated in the text.',
+          spotting_errors: 'Check verb agreement, tense, prepositions, singular/plural, word form.',
+          spellings: 'Double consonants, -ance/-ence, i before e except after c.',
+          sentence_correction: 'Each + singular. Since + point, For + duration. Collective nouns = singular.',
+          sentence_improvement: 'too+to, so+that, prefer+to, no sooner+than, not only+but also.',
+          closet_test: 'Read whole passage. Choose word that fits context AND grammar.',
+          one_word_subs: 'Find the specific single word. Common prefixes/suffixes help.',
+          idioms_phrases: 'Idioms have figurative meanings. Learn by exposure.',
+          change_voice: 'Active: subject does. Passive: subject receives. Object becomes subject.',
+          change_speech: 'Quotes→that clause. Present→past. will→would. Commands→to+verb.'
+        };
+        q.intuition = intuitions[topic] || '';
+      } catch(e) {}
+      attempts++;
+      if (attempts > 10) break;
+    } while (q && _isRecent(q.question));
+    if (q) {
+      _addRecent(q.question);
+      return q;
+    }
+  }
+  return generateSynonymQuestion(diff);
 }
 
 // ====== REFLEX MODE GENERATORS ======
@@ -4745,6 +4877,7 @@ GENERATORS.examrush = generateExamRushQuestion;
 GENERATORS.weakspot = generateWeakSpotQuestion;
 GENERATORS.quant = generateQuantQuestion;
 GENERATORS.reasoning = generateReasoningQuestion;
+GENERATORS.verbal = generateVerbalQuestion;
 
 // ====== MAIN TRAINING FUNCTIONS ======
 window.startMentalSession = function(mode, opts) {
@@ -4871,7 +5004,7 @@ window.getMentalQuestion = function(session) {
     };
   }
 
-  if (session.mode === 'quant' || session.mode === 'reasoning') {
+  if (session.mode === 'quant' || session.mode === 'reasoning' || session.mode === 'verbal') {
     var q = GENERATORS[session.mode](diff, session.subMode);
     q.displayType = 'normal';
     q.index = session.questionIndex;
@@ -4928,7 +5061,7 @@ window.submitMentalAnswer = function(session, question, selectedAnswer, timeRema
     state.subTopicStats[subTopic].attempts++;
     if (correct) state.subTopicStats[subTopic].correct++;
     // Also update parent category stat
-    var parentCat = mode === 'quant' ? 'quant' : (mode === 'reasoning' ? 'reasoning' : null);
+    var parentCat = mode === 'quant' ? 'quant' : (mode === 'reasoning' ? 'reasoning' : (mode === 'verbal' ? 'verbal' : null));
     if (parentCat && state.stats[parentCat]) {
       state.stats[parentCat].attempts++;
       if (correct) state.stats[parentCat].correct++;
@@ -5203,7 +5336,7 @@ function generatePuzzle(diff, desiredType) {
         options: opts, timeLimit: 45 + diff * 8,
         hint: 'Draw a vertical building. Floor 1 at bottom. Mark names from clues.',
         typeLabel: 'Floor Puzzle',
-        solution: 'Floor map: ' + names.map(function(nn){return nn+'='+seatOf[nn];}).join(', ') + '. Answer=' + ans + '.'
+        solution: 'Floor map: ' + names.map(function(nn){return nn+'='+liveOn[nn];}).join(', ') + '. Answer=' + ans + '.'
       };
     } else if (puzType === 'linear') {
       //EXAM-STYLE LINEAR ROW — left to right positions 1..n
@@ -5450,45 +5583,51 @@ function generatePuzzle(diff, desiredType) {
       };
     } else if (puzType === 'blood') {
       // BLOOD RELATION PUZZLE — family tree from generated relations
-      var REL = ['father','mother','brother','sister','uncle','aunt','grandfather','grandmother','cousin','nephew','niece'];
-      var REL_REV = {father:'son',mother:'daughter',brother:'sister',sister:'brother',uncle:'nephew',aunt:'niece','grandfather':'grandson','grandmother':'granddaughter','cousin':'cousin','nephew':'uncle','niece':'aunt'};
-      // Build a 3-generation family tree
-      var family = {};
+      var REL = ['father','mother','brother','sister','uncle','aunt','grandfather','grandmother','cousin','nephew','niece','son','daughter','grandson','granddaughter'];
+      // Build a family tree
       var famNames = PUZ_NAMES.slice(0, 6 + rand(0, Math.min(2, diff)));
       shuffle(famNames);
-      // Pick roles: gen0 = grandparents, gen1 = parents, gen2 = children
-      var gen0 = famNames.slice(0, 2); // grandfather, grandmother
-      var gen1 = famNames.slice(2, 5); // father, mother, uncle/aunt
+      var gen0 = famNames.slice(0, 2); // grandparents
+      var gen1 = famNames.slice(2, 5); // parents
       var gen2 = famNames.slice(5); // children
-      // Assign genders
-      var male = [gen0[0], gen1[0], gen2[0], gen2[2]];
-      var female = [gen0[1], gen1[1], gen1[2], gen2[1], gen2[3]].filter(Boolean);
       var clues = [];
-      // Chain: "X is the father of Y"
       if (gen0[0] && gen1[0]) clues.push(gen0[0] + ' is the father of ' + gen1[0] + '.');
       if (gen0[1] && gen1[0]) clues.push(gen0[1] + ' is the mother of ' + gen1[0] + '.');
       if (gen1[0] && gen2[0]) clues.push(gen1[0] + ' is the father of ' + gen2[0] + '.');
       if (gen1[1] && gen2[0]) clues.push(gen1[1] + ' is the mother of ' + gen2[0] + '.');
       if (gen1[0] && gen1[1]) clues.push(gen1[0] + ' is the husband of ' + gen1[1] + '.');
       if (gen1[2] && gen2[1]) clues.push(gen1[2] + ' is the mother of ' + gen2[1] + '.');
-      // Pick question: relationship between two members
+      if (gen2[0] && gen2[1]) clues.push(gen2[0] + ' is the brother of ' + gen2[1] + '.');
+      // Build possible pairs for questioning
       var pairs = [];
       if (gen2[0] && gen0[0]) pairs.push({a:gen2[0], b:gen0[0], rel:'grandson'});
       if (gen2[0] && gen1[2]) pairs.push({a:gen2[0], b:gen1[2], rel:'nephew'});
-      if (gen2[0] && gen2[1]) pairs.push({a:gen2[0], b:gen2[1], rel:'cousin'});
+      if (gen2[0] && gen2[1]) pairs.push({a:gen2[0], b:gen2[1], rel:'brother'});
       if (gen1[0] && gen1[2]) pairs.push({a:gen1[0], b:gen1[2], rel:'brother'});
-      if (gen1[1] && gen1[2]) pairs.push({a:gen1[1], b:gen0[1], rel:'daughter'});
-      if (gen2[0] && gen2[2]) pairs.push({a:gen2[0], b:gen2[2], rel:'brother'});
+      if (gen1[1] && gen1[2]) pairs.push({a:gen1[1], b:gen1[2], rel:'sister'});
+      if (gen1[0] && gen0[1]) pairs.push({a:gen1[0], b:gen0[1], rel:'son'});
+      if (gen0[0] && gen2[0]) pairs.push({a:gen0[0], b:gen2[0], rel:'grandfather'});
+      if (gen1[2] && gen1[0]) pairs.push({a:gen1[2], b:gen1[0], rel:'sister'});
+      if (gen1[1] && gen0[0]) pairs.push({a:gen1[1], b:gen0[0], rel:'daughter-in-law'});
+      if (gen0[1] && gen2[0]) pairs.push({a:gen0[1], b:gen2[0], rel:'grandmother'});
       if (pairs.length === 0) pairs.push({a:famNames[0], b:famNames[1], rel:'cousin'});
+      // Multiple question types
+      var bloodQType = rand(0, 2);
       var chosen = pairs[rand(0, pairs.length - 1)];
-      var target = chosen.a;
-      var target2 = chosen.b;
-      var ans = chosen.rel;
-      var qText = 'How is ' + target + ' related to ' + target2 + '?';
+      var target = chosen.a, target2 = chosen.b, ans = chosen.rel, qText;
+      if (bloodQType === 0) {
+        qText = 'How is ' + target + ' related to ' + target2 + '?';
+      } else if (bloodQType === 1) {
+        qText = target + '\'s mother\'s father is whom?';
+        if (gen0[0]) { ans = gen0[0]; } else { qText = 'How is ' + target + ' related to ' + target2 + '?'; }
+      } else {
+        qText = 'Who is the ' + ans + ' of ' + target2 + '?';
+        ans = target;
+      }
       opts = [ans];
-      var otherRels = REL.filter(function(r){ return r !== ans; });
+      var otherRels = REL.filter(function(r){ return r !== ans && r !== chosen.rel; });
       shuffle(otherRels);
-      while (opts.length < 4) { if (otherRels.length) { var ro = otherRels.pop(); opts.push(ro); } else { opts.push(REL[rand(0, REL.length - 1)]); } }
+      while (opts.length < 4) { if (otherRels.length) { var ro = otherRels.pop(); opts.push(ro); } else { opts.push(PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]); } }
       shuffle(opts);
       return {
         type: 'puzzle', clueBlock: clues,
@@ -5497,7 +5636,7 @@ function generatePuzzle(diff, desiredType) {
         options: opts, timeLimit: 45 + diff * 8,
         hint: 'Draw a family tree. Parents above children. Label each person.',
         typeLabel: 'Blood Relations',
-        solution: target + ' is the ' + ans + ' of ' + target2 + '.'
+        solution: ans + ' is the ' + chosen.rel + ' of ' + target2 + '.'
       };
     } else if (puzType === 'scheduling') {
       // SCHEDULING PUZZLE — events on different days of the week
@@ -5521,13 +5660,33 @@ function generatePuzzle(diff, desiredType) {
       var wDay = dayOf[sNames[wIdx]];
       if (wDay === 'Saturday' || wDay === 'Sunday') clues.push(sNames[wIdx] + ' is on a weekend.');
       else clues.push(sNames[wIdx] + ' is on a weekday.');
-      opts = [sAns];
+      // Multiple question types
+      var schedQType = rand(0, 2);
+      var schedQ, schedAns;
+      if (schedQType === 0) {
+        schedQ = 'On which day is ' + sTarget + ' scheduled?';
+        schedAns = sAns;
+      } else if (schedQType === 1) {
+        var adjacentIdx = (sDays.indexOf(sAns) + 1) % nDays;
+        var adjacentDay = sDays[adjacentIdx];
+        var whoOnAdj = null;
+        for (var sn in dayOf) { if (dayOf[sn] === adjacentDay) { whoOnAdj = sn; break; } }
+        if (whoOnAdj) { schedQ = 'What is scheduled on ' + adjacentDay + '?'; schedAns = whoOnAdj; }
+        else { schedQ = 'On which day is ' + sTarget + ' scheduled?'; schedAns = sAns; }
+      } else {
+        var countAfter = 0;
+        var tIdx = sDays.indexOf(sAns);
+        for (var ci = tIdx + 1; ci < nDays; ci++) countAfter++;
+        schedQ = 'How many events are scheduled after ' + sTarget + '?';
+        schedAns = String(countAfter);
+      }
+      opts = [schedAns];
       while (opts.length < 4) { var rd = DAYS[rand(0, DAYS.length - 1)]; if (opts.indexOf(rd) < 0) opts.push(rd); }
       shuffle(opts);
       return {
         type: 'puzzle', clueBlock: clues,
         preamble: sNames.length + ' events (' + sNames.join(', ') + ') are scheduled on different days Monday to ' + sDays[nDays-1] + '.',
-        questionText: 'On which day is ' + sTarget + ' scheduled?', answer: sAns,
+        questionText: schedQ, answer: schedAns,
         options: opts, timeLimit: 45 + diff * 8,
         hint: 'List days Monday to ' + sDays[nDays-1] + '. Fill events from clues.',
         typeLabel: 'Scheduling',
