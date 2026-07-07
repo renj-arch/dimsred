@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Inverse Trigonometric Functions — The Undo Buttons | vlymbooq</title>
+    <meta name="description" content="Learn Inverse Trigonometric Functions through stories, animated graphs, and real analogies. No formula memorization — understand the why first.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/jee/course/maths/lesson-inverse-trigonometry.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}}
+
+        .story-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin:16px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .story-card .story-title{font-size:1.05em;font-weight:700;color:var(--text);margin-bottom:8px}
+        .story-card .story-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .story-card .story-moral{font-size:.82em;color:var(--emerald);font-weight:600;margin-top:10px;padding:8px 12px;background:rgba(52,211,153,.04);border-radius:8px;border-left:3px solid var(--emerald)}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+        .diagram-box .diagram-title{font-size:.85em;font-weight:700;color:var(--text);margin-bottom:8px}
+        .diagram-box .diagram-controls{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+        .diagram-box .ctrl-btn{padding:6px 16px;border-radius:100px;font-size:.78em;font-weight:600;border:1px solid var(--border);background:var(--bg-card);color:var(--text-sec);cursor:pointer;transition:all .2s}
+        .diagram-box .ctrl-btn:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15)}
+        .diagram-box .ctrl-btn.active{background:rgba(167,139,250,.12);border-color:var(--purple);color:var(--purple)}
+        .diagram-box .slider-wrap{display:flex;align-items:center;gap:12px;margin-top:12px;justify-content:center}
+        .diagram-box .slider-wrap input[type=range]{width:200px;max-width:60%;-webkit-appearance:none;background:var(--border);height:4px;border-radius:4px;outline:none}
+        .diagram-box .slider-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--purple);cursor:pointer}
+        .diagram-box .slider-wrap .slider-val{font-size:.82em;color:var(--purple);font-weight:700;min-width:30px}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+        .q-badge{display:inline-block;padding:2px 8px;border-radius:100px;font-size:.7em;font-weight:600;margin-bottom:6px}
+        .q-badge.easy{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .q-badge.medium{background:rgba(245,158,11,.1);color:var(--amber)}
+        .q-badge.hard{background:rgba(239,68,68,.1);color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+        .slide-up{animation:slide-up .6s ease forwards}
+
+        .progress-tracker{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+        .progress-tracker .p-step{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;font-size:.75em;border:1px solid var(--border);color:var(--text-muted);transition:all .3s}
+        .progress-tracker .p-step.done{border-color:var(--emerald);color:var(--emerald);background:rgba(52,211,153,.06)}
+        .progress-tracker .p-step.active{border-color:var(--purple);color:var(--purple);background:rgba(167,139,250,.08)}
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part2{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part3{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+
+        .graph-hover-area{cursor:crosshair}
+        .graph-point{transition:all .3s}
+        .graph-point:hover{r:6;fill:var(--amber)}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="../../index.html">JEE</a><a href="../index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Mathematics</div>
+                    <a href="lesson-algebra.html">Algebra</a>
+                    <a href="lesson-calculus.html">Calculus</a>
+                    <a href="lesson-coordinate-geometry.html">Coordinate Geometry</a>
+                    <a href="lesson-vector-3d.html">Vector & 3D</a>
+                    <a href="lesson-probability-statistics.html">Probability & Stats</a>
+                    <a href="lesson-trigonometry.html">Trigonometry</a>
+                    <a href="lesson-sets-relations-functions.html">Sets, Relations & Functions</a>
+                    <a href="lesson-inverse-trigonometry.html" class="active">Inverse Trigonometry</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 3 &middot; JEE Mathematics</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Inverse Trigonometric Functions — The Undo Buttons</h1>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Understand the "why" behind principal values, domain restrictions, and the 6 inverse trig graphs.</div>
+                    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+                        <button onclick="window.print()" class="download-btn">📄 Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">🎯 Take Mock Test</a>
+                    </div>
+                </div>
+
+                <div class="progress-tracker">
+                    <span class="p-step active" id="p1"><span>🔄</span> Why ITF?</span>
+                    <span class="p-step" id="p2"><span>📈</span> 6 Graphs</span>
+                    <span class="p-step" id="p3"><span>📐</span> Identities</span>
+                    <span class="p-step" id="p4"><span>⚡</span> Compositions</span>
+                    <span class="p-step" id="p5"><span>🎯</span> Practice</span>
+                </div>
+
+                <div class="lesson-body">
+                    <!-- ============================================================ -->
+                    <!-- PART 1: WHY INVERSE TRIG FUNCTIONS? -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">🔄 Part 1: Why Inverse Trig? — The Broken Vending Machine</span>
+                    <h2>You Know sin(30°) = ½. But What Gives sin⁻¹(½)?</h2>
+
+                    <p>Regular trig functions take an <strong>angle</strong> and give a <strong>ratio</strong>. sin(30°) = ½. Inverse trig functions do the <strong>opposite</strong>: they take a <strong>ratio</strong> and give an <strong>angle</strong>. sin⁻¹(½) = 30°.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">🔄 The Core Idea</div>
+                        <div class="story-title">Inverse Trig = The "Reverse Lookup" of Trig</div>
+                        <div class="story-text">
+                            Think of a vending machine that maps buttons (angles) to snacks (ratios).<br><br>
+                            <strong>sin button:</strong> Press 30° → get ½. Direct. ✅<br>
+                            <strong>sin⁻¹ button (inverse sine):</strong> Enter ½ → get 30°. Reverse. ✅<br><br>
+                            But here's the problem: sin(30°) = ½ AND sin(150°) = ½. So if you press sin⁻¹(½), should you get 30° or 150°? The machine can't give two answers!<br><br>
+                            <strong>The solution:</strong> We RESTRICT the output to a single <strong>principal value</strong>. For sin⁻¹, we only return angles between −90° and +90° (or −π/2 to +π/2). So sin⁻¹(½) = 30°, period.
+                        </div>
+                        <div class="story-moral">💡 sin⁻¹(x) asks: "What angle (within the principal range) has sine equal to x?" There are MANY angles — we pick THE ONE in the principal range.</div>
+                    </div>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🔄 Why We Need Principal Values — sin(θ) = ½ Has INFINITELY Many Solutions</div>
+                        <svg viewBox="0 0 500 320" width="500" height="320">
+                            <line x1="40" y1="260" x2="480" y2="260" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <line x1="250" y1="260" x2="250" y2="40" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <text x="480" y="275" fill="var(--text-muted)" font-size="12" text-anchor="end">θ →</text>
+                            <text x="240" y="48" fill="var(--text-muted)" font-size="12" text-anchor="middle">↑ y = sin(θ)</text>
+                            <!-- Sine wave -->
+                            <path d="M50,260 Q90,70 130,260 Q170,70 210,260 Q250,70 290,260 Q330,70 370,260 Q410,70 450,260" fill="none" stroke="var(--purple)" stroke-width="2.5" opacity=".8"/>
+                            <!-- Horizontal line at y = ½ -->
+                            <line x1="40" y1="160" x2="480" y2="160" stroke="var(--amber)" stroke-width="2" stroke-dasharray="6,3"/>
+                            <text x="30" y="165" fill="var(--amber)" font-size="12" text-anchor="end" font-weight="700">½</text>
+                            <!-- Intersection points -->
+                            <circle cx="95" cy="160" r="5" fill="var(--emerald)"/>
+                            <circle cx="170" cy="160" r="5" fill="var(--emerald)"/>
+                            <circle cx="245" cy="160" r="5" fill="var(--emerald)"/>
+                            <circle cx="320" cy="160" r="5" fill="var(--emerald)"/>
+                            <circle cx="395" cy="160" r="5" fill="var(--emerald)"/>
+                            <!-- Principal range highlight -->
+                            <rect x="120" y="140" width="100" height="130" rx="6" fill="rgba(52,211,153,.06)" stroke="var(--emerald)" stroke-width="2" stroke-dasharray="4,3"/>
+                            <text x="170" y="258" fill="var(--emerald)" font-size="11" font-weight="700" text-anchor="middle">Principal Range</text>
+                            <text x="170" y="272" fill="var(--text-muted)" font-size="10" text-anchor="middle">[−π/2, π/2]</text>
+                            <text x="300" y="305" fill="var(--text-muted)" font-size="11" text-anchor="middle">All intersections are valid solutions — we pick the ONE in the principal range.</text>
+                        </svg>
+                        <div class="diagram-caption">The horizontal line y = ½ intersects sin(θ) at infinitely many points. sin⁻¹(½) returns the angle in [−π/2, π/2] — that's the <strong>principal value</strong>. For sin⁻¹(½), it's π/6 (30°).</div>
+                    </div>
+
+                    <h3>Principal Value Ranges — The "Allowed Answers" for Each ITF</h3>
+                    <p>Each inverse trig function has its own "allowed output range" where we pick the principal value. Memorize these ranges — they're the key to everything!</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📊 Principal Value Ranges at a Glance</div>
+                        <svg viewBox="0 0 580 340" width="580" height="340">
+                            <rect x="10" y="10" width="270" height="50" rx="8" fill="rgba(167,139,250,.06)" stroke="var(--purple)" stroke-width="1.5"/>
+                            <text x="25" y="35" fill="var(--purple)" font-size="13" font-weight="700">sin⁻¹(x)</text>
+                            <text x="135" y="35" fill="var(--text-sec)" font-size="12">Domain: [−1, 1]</text>
+                            <text x="135" y="52" fill="var(--emerald)" font-size="12" font-weight="600">Range: [−π/2, π/2]</text>
+                            <rect x="300" y="10" width="270" height="50" rx="8" fill="rgba(52,211,153,.06)" stroke="var(--emerald)" stroke-width="1.5"/>
+                            <text x="315" y="35" fill="var(--emerald)" font-size="13" font-weight="700">cos⁻¹(x)</text>
+                            <text x="425" y="35" fill="var(--text-sec)" font-size="12">Domain: [−1, 1]</text>
+                            <text x="425" y="52" fill="var(--emerald)" font-size="12" font-weight="600">Range: [0, π]</text>
+
+                            <rect x="10" y="75" width="270" height="50" rx="8" fill="rgba(245,158,11,.06)" stroke="var(--amber)" stroke-width="1.5"/>
+                            <text x="25" y="100" fill="var(--amber)" font-size="13" font-weight="700">tan⁻¹(x)</text>
+                            <text x="135" y="100" fill="var(--text-sec)" font-size="12">Domain: ℝ</text>
+                            <text x="135" y="117" fill="var(--emerald)" font-size="12" font-weight="600">Range: (−π/2, π/2)</text>
+                            <rect x="300" y="75" width="270" height="50" rx="8" fill="rgba(239,68,68,.06)" stroke="var(--red)" stroke-width="1.5"/>
+                            <text x="315" y="100" fill="var(--red)" font-size="13" font-weight="700">cot⁻¹(x)</text>
+                            <text x="425" y="100" fill="var(--text-sec)" font-size="12">Domain: ℝ</text>
+                            <text x="425" y="117" fill="var(--emerald)" font-size="12" font-weight="600">Range: (0, π)</text>
+
+                            <rect x="10" y="140" width="270" height="50" rx="8" fill="rgba(34,211,238,.06)" stroke="var(--cyan)" stroke-width="1.5"/>
+                            <text x="25" y="165" fill="var(--cyan)" font-size="13" font-weight="700">sec⁻¹(x)</text>
+                            <text x="135" y="165" fill="var(--text-sec)" font-size="12">Domain: (−∞,−1]∪[1,∞)</text>
+                            <text x="135" y="182" fill="var(--emerald)" font-size="12" font-weight="600">Range: [0,π] − {π/2}</text>
+                            <rect x="300" y="140" width="270" height="50" rx="8" fill="rgba(167,139,250,.06)" stroke="var(--purple)" stroke-width="1.5"/>
+                            <text x="315" y="165" fill="var(--purple)" font-size="13" font-weight="700">csc⁻¹(x)</text>
+                            <text x="425" y="165" fill="var(--text-sec)" font-size="12">Domain: (−∞,−1]∪[1,∞)</text>
+                            <text x="425" y="182" fill="var(--emerald)" font-size="12" font-weight="600">Range: [−π/2,π/2]−{0}</text>
+
+                            <!-- Memory aid box -->
+                            <rect x="20" y="210" width="540" height="120" rx="10" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="290" y="235" fill="var(--amber)" font-size="14" font-weight="800" text-anchor="middle">🧠 Memory Aid</text>
+                            <text x="290" y="260" fill="var(--text-sec)" font-size="12" text-anchor="middle"><tspan fill="var(--purple)" font-weight="700">sin⁻¹</tspan> and <tspan fill="var(--purple)" font-weight="700">tan⁻¹</tspan> share [−π/2, π/2]</text>
+                            <text x="290" y="280" fill="var(--text-sec)" font-size="12" text-anchor="middle"><tspan fill="var(--emerald)" font-weight="700">cos⁻¹</tspan> and <tspan fill="var(--emerald)" font-weight="700">cot⁻¹</tspan> share [0, π]</text>
+                            <text x="290" y="300" fill="var(--text-sec)" font-size="12" text-anchor="middle"><tspan fill="var(--red)" font-weight="700">sec⁻¹</tspan> is reciprocal of cos — same range [0,π] but skips π/2</text>
+                            <text x="290" y="320" fill="var(--text-sec)" font-size="12" text-anchor="middle"><tspan fill="var(--cyan)" font-weight="700">csc⁻¹</tspan> is reciprocal of sin — same range [−π/2,π/2] but skips 0</text>
+                        </svg>
+                        <div class="diagram-caption"><strong>Key pattern:</strong> sin⁻¹ and tan⁻¹ → range symmetric about 0 [−π/2, π/2]. cos⁻¹ and cot⁻¹ → range [0, π]. sec⁻¹ and csc⁻¹ → same as their reciprocals but with a hole at the undefined value.</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Principal Value = The "Official" Answer</div>
+                        <div class="insight-text">Every inverse trig function has ONE official output for each input — the principal value within its restricted range.</div>
+                        <div class="insight-sub">Think of it like asking "Who is the President?" — there's only one official answer at any time, even though there have been many presidents throughout history.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 2: GRAPHS OF THE 6 INVERSE TRIG FUNCTIONS -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">📈 Part 2: The 6 Graphs — See the Shape, Solve the Problem</span>
+                    <h2>Each Inverse Trig Function Has a Distinctive Graph — Learn the Shapes</h2>
+
+                    <p>In JEE, <strong>visualizing</strong> the graph of an inverse trig function often solves problems faster than any algebraic manipulation. Here are all six, with their key features.</p>
+
+                    <h3>Graph of sin⁻¹(x) — The Arc Sine</h3>
+                    <p>Domain: [−1, 1]. Range: [−π/2, π/2]. The graph is the sine curve rotated 90° and restricted.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📈 f(x) = sin⁻¹(x) — Domain [−1,1], Range [−π/2, π/2]</div>
+                        <svg viewBox="0 0 500 350" width="500" height="350">
+                            <line x1="50" y1="300" x2="480" y2="300" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <line x1="250" y1="300" x2="250" y2="40" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <text x="480" y="315" fill="var(--text-muted)" font-size="12" text-anchor="end">x →</text>
+                            <text x="240" y="48" fill="var(--text-muted)" font-size="12" text-anchor="middle">↑ y = sin⁻¹(x)</text>
+                            <!-- Domain boundary lines -->
+                            <line x1="110" y1="40" x2="110" y2="300" stroke="rgba(239,68,68,.2)" stroke-width="1" stroke-dasharray="4,4"/>
+                            <text x="110" y="320" fill="var(--text-muted)" font-size="11" text-anchor="middle">-1</text>
+                            <line x1="390" y1="40" x2="390" y2="300" stroke="rgba(239,68,68,.2)" stroke-width="1" stroke-dasharray="4,4"/>
+                            <text x="390" y="320" fill="var(--text-muted)" font-size="11" text-anchor="middle">1</text>
+                            <!-- Range lines -->
+                            <line x1="50" y1="90" x2="480" y2="90" stroke="rgba(52,211,153,.15)" stroke-width="1" stroke-dasharray="4,4"/>
+                            <text x="45" y="94" fill="var(--text-muted)" font-size="11" text-anchor="end">π/2</text>
+                            <line x1="50" y1="230" x2="480" y2="230" stroke="rgba(52,211,153,.15)" stroke-width="1" stroke-dasharray="4,4"/>
+                            <text x="45" y="233" fill="var(--text-muted)" font-size="11" text-anchor="end">-π/2</text>
+                            <!-- The arcsin curve -->
+                            <path d="M110,230 Q180,230 250,160 Q320,90 390,90" fill="none" stroke="var(--purple)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Endpoints -->
+                            <circle cx="110" cy="230" r="5" fill="var(--purple)"/>
+                            <circle cx="390" cy="90" r="5" fill="var(--purple)"/>
+                            <!-- Origin -->
+                            <circle cx="250" cy="160" r="4" fill="var(--amber)">
+                                <animate attributeName="r" values="4;7;4" dur="1.5s" repeatCount="indefinite"/>
+                            </circle>
+                            <text x="280" y="140" fill="var(--amber)" font-size="12" font-weight="700">sin⁻¹(0) = 0</text>
+                            <rect x="120" y="330" width="260" height="20" rx="4" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.1)" stroke-width="1"/>
+                            <text x="250" y="344" fill="var(--emerald)" font-size="11" font-weight="700" text-anchor="middle">sin⁻¹(x): increasing through origin. Symmetric about origin (odd function).</text>
+                        </svg>
+                        <div class="diagram-caption"><strong>sin⁻¹(x):</strong> Starts at (−1, −π/2), ends at (1, π/2). Increasing throughout. Symmetric about origin: sin⁻¹(−x) = −sin⁻¹(x). The domain boundaries at x = ±1 are the vertical asymptotes of the original sine's restricted inverse.</div>
+                    </div>
+
+                    <h3>Graph of cos⁻¹(x) — The Arc Cosine</h3>
+                    <p>Domain: [−1, 1]. Range: [0, π]. Notice it's decreasing — the opposite of sin⁻¹!</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📈 f(x) = cos⁻¹(x) — Domain [−1,1], Range [0, π]</div>
+                        <svg viewBox="0 0 500 350" width="500" height="350">
+                            <line x1="50" y1="300" x2="480" y2="300" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <line x1="250" y1="300" x2="250" y2="40" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <text x="480" y="315" fill="var(--text-muted)" font-size="12" text-anchor="end">x →</text>
+                            <text x="240" y="48" fill="var(--text-muted)" font-size="12" text-anchor="middle">↑ y = cos⁻¹(x)</text>
+                            <line x1="110" y1="40" x2="110" y2="300" stroke="rgba(239,68,68,.2)" stroke-width="1" stroke-dasharray="4,4"/>
+                            <text x="110" y="320" fill="var(--text-muted)" font-size="11" text-anchor="middle">-1</text>
+                            <line x1="390" y1="40" x2="390" y2="300" stroke="rgba(239,68,68,.2)" stroke-width="1" stroke-dasharray="4,4"/>
+                            <text x="390" y="320" fill="var(--text-muted)" font-size="11" text-anchor="middle">1</text>
+                            <line x1="50" y1="80" x2="480" y2="80" stroke="rgba(52,211,153,.15)" stroke-width="1" stroke-dasharray="4,4"/>
+                            <text x="45" y="84" fill="var(--text-muted)" font-size="11" text-anchor="end">π</text>
+                            <line x1="50" y1="300" x2="480" y2="300" stroke="rgba(52,211,153,.15)" stroke-width="1" stroke-dasharray="4,4"/>
+                            <!-- The arccos curve -->
+                            <path d="M110,80 Q180,80 250,160 Q320,240 390,300" fill="none" stroke="var(--emerald)" stroke-width="3" stroke-linecap="round"/>
+                            <circle cx="110" cy="80" r="5" fill="var(--emerald)"/>
+                            <circle cx="390" cy="300" r="5" fill="var(--emerald)"/>
+                            <text x="280" y="180" fill="var(--amber)" font-size="12" font-weight="700">cos⁻¹(0) = π/2</text>
+                            <circle cx="250" cy="160" r="4" fill="var(--amber)">
+                                <animate attributeName="r" values="4;7;4" dur="1.5s" repeatCount="indefinite"/>
+                            </circle>
+                            <text x="300" y="340" fill="var(--emerald)" font-size="11" font-weight="700">cos⁻¹(x): decreasing function. Not symmetric — cos⁻¹(−x) = π − cos⁻¹(x).</text>
+                        </svg>
+                        <div class="diagram-caption"><strong>cos⁻¹(x):</strong> Starts at (−1, π), ends at (1, 0). Decreasing throughout. Not symmetric: cos⁻¹(−x) = π − cos⁻¹(x). Key point: cos⁻¹(0) = π/2 — the curve crosses the y-axis at π/2.</div>
+                    </div>
+
+                    <h3>Graph of tan⁻¹(x) — The Arc Tangent</h3>
+                    <p>Domain: ℝ. Range: (−π/2, π/2). The horizontal asymptotes at y = ±π/2 make it special.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📈 f(x) = tan⁻¹(x) — Domain ℝ, Range (−π/2, π/2)</div>
+                        <svg viewBox="0 0 500 350" width="500" height="350">
+                            <line x1="50" y1="300" x2="480" y2="300" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <line x1="250" y1="300" x2="250" y2="40" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+                            <text x="480" y="315" fill="var(--text-muted)" font-size="12" text-anchor="end">x →</text>
+                            <text x="240" y="48" fill="var(--text-muted)" font-size="12" text-anchor="middle">↑ y = tan⁻¹(x)</text>
+                            <line x1="50" y1="90" x2="480" y2="90" stroke="rgba(52,211,153,.15)" stroke-width="1" stroke-dasharray="4,4"/>
+                            <text x="45" y="94" fill="var(--text-muted)" font-size="11" text-anchor="end">π/2</text>
+                            <line x1="50" y1="230" x2="480" y2="230" stroke="rgba(52,211,153,.15)" stroke-width="1" stroke-dasharray="4,4"/>
+                            <text x="45" y="233" fill="var(--text-muted)" font-size="11" text-anchor="end">-π/2</text>
+                            <!-- Curve approaching asymptotes -->
+                            <path d="M50,88 Q100,88 150,85 Q200,75 250,160 Q300,245 350,235 Q400,232 450,232" fill="none" stroke="var(--amber)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Animated point -->
+                            <circle r="6" fill="var(--emerald)">
+                                <animate attributeName="cx" values="60;120;180;240;300;360;440" dur="6s" repeatCount="indefinite"/>
+                                <animate attributeName="cy" values="89;86;80;160;240;234;232" dur="6s" repeatCount="indefinite"/>
+                            </circle>
+                            <text x="280" y="140" fill="var(--amber)" font-size="12" font-weight="700">tan⁻¹(0) = 0</text>
+                            <rect x="120" y="330" width="260" height="20" rx="4" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.1)" stroke-width="1"/>
+                            <text x="250" y="344" fill="var(--emerald)" font-size="11" font-weight="700" text-anchor="middle">tan⁻¹(x): approaches ±π/2 as x→±∞. Odd function (symmetric about origin).</text>
+                        </svg>
+                        <div class="diagram-caption"><strong>tan⁻¹(x):</strong> Increasing function. Horizontal asymptotes at y = π/2 (as x → ∞) and y = −π/2 (as x → −∞). The function approaches but never reaches these asymptotes. Odd function: tan⁻¹(−x) = −tan⁻¹(x).</div>
+                    </div>
+
+                    <h3>Graphs of cot⁻¹(x), sec⁻¹(x), csc⁻¹(x)</h3>
+                    <p>These are less common in JEE Main but appear in Advanced. Their shapes mirror the first three with some twists.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📈 Three More — cot⁻¹(x), sec⁻¹(x), csc⁻¹(x)</div>
+                        <svg viewBox="0 0 600 360" width="600" height="360">
+                            <!-- cot⁻¹ -->
+                            <rect x="10" y="10" width="180" height="160" rx="8" fill="rgba(167,139,250,.04)" stroke="var(--purple)" stroke-width="1"/>
+                            <text x="100" y="32" fill="var(--purple)" font-size="13" font-weight="700" text-anchor="middle">cot⁻¹(x)</text>
+                            <text x="100" y="48" fill="var(--text-muted)" font-size="10" text-anchor="middle">Domain: ℝ, Range: (0,π)</text>
+                            <circle cx="40" cy="75" r="4" fill="var(--purple)"/>
+                            <path d="M40,75 Q100,75 160,140" fill="none" stroke="var(--purple)" stroke-width="2"/>
+                            <line x1="30" y1="70" x2="170" y2="70" stroke="rgba(255,255,255,.1)" stroke-width="1" stroke-dasharray="3,3"/>
+                            <text x="170" y="68" fill="var(--text-muted)" font-size="9" text-anchor="end">π</text>
+                            <line x1="30" y1="160" x2="170" y2="160" stroke="rgba(255,255,255,.1)" stroke-width="1" stroke-dasharray="3,3"/>
+                            <text x="20" y="75" fill="var(--text-muted)" font-size="8">π/2</text>
+                            <text x="100" y="140" fill="var(--text-muted)" font-size="10" text-anchor="middle">Decreasing,</text>
+                            <text x="100" y="155" fill="var(--text-muted)" font-size="10" text-anchor="middle">asymptotes at 0,π</text>
+
+                            <!-- sec⁻¹ -->
+                            <rect x="210" y="10" width="180" height="160" rx="8" fill="rgba(52,211,153,.04)" stroke="var(--emerald)" stroke-width="1"/>
+                            <text x="300" y="32" fill="var(--emerald)" font-size="13" font-weight="700" text-anchor="middle">sec⁻¹(x)</text>
+                            <text x="300" y="48" fill="var(--text-muted)" font-size="10" text-anchor="middle">Domain: |x| ≥ 1, Range: [0,π]−{π/2}</text>
+                            <path d="M215,90 Q240,90 260,120" fill="none" stroke="var(--emerald)" stroke-width="2"/>
+                            <path d="M340,120 Q360,90 385,90" fill="none" stroke="var(--emerald)" stroke-width="2"/>
+                            <circle cx="260" cy="120" r="3" fill="var(--emerald)"/>
+                            <circle cx="340" cy="120" r="3" fill="var(--emerald)"/>
+                            <line x1="210" y1="75" x2="385" y2="75" stroke="rgba(255,255,255,.1)" stroke-width="1" stroke-dasharray="3,3"/>
+                            <text x="390" y="78" fill="var(--text-muted)" font-size="9">π</text>
+                            <text x="300" y="140" fill="var(--text-muted)" font-size="10" text-anchor="middle">U-shaped, undefined</text>
+                            <text x="300" y="155" fill="var(--text-muted)" font-size="10" text-anchor="middle">in (−1, 1)</text>
+
+                            <!-- csc⁻¹ -->
+                            <rect x="410" y="10" width="180" height="160" rx="8" fill="rgba(245,158,11,.04)" stroke="var(--amber)" stroke-width="1"/>
+                            <text x="500" y="32" fill="var(--amber)" font-size="13" font-weight="700" text-anchor="middle">csc⁻¹(x)</text>
+                            <text x="500" y="48" fill="var(--text-muted)" font-size="10" text-anchor="middle">Domain: |x| ≥ 1, Range: [−π/2,π/2]−{0}</text>
+                            <path d="M415,140 Q440,140 460,90" fill="none" stroke="var(--amber)" stroke-width="2"/>
+                            <path d="M540,90 Q560,140 585,140" fill="none" stroke="var(--amber)" stroke-width="2"/>
+                            <circle cx="460" cy="90" r="3" fill="var(--amber)"/>
+                            <circle cx="540" cy="90" r="3" fill="var(--amber)"/>
+                            <line x1="410" y1="90" x2="585" y2="90" stroke="rgba(255,255,255,.1)" stroke-width="1" stroke-dasharray="3,3"/>
+                            <text x="405" y="88" fill="var(--text-muted)" font-size="9" text-anchor="end">π/2</text>
+                            <text x="500" y="140" fill="var(--text-muted)" font-size="10" text-anchor="middle">Inverted U,</text>
+                            <text x="500" y="155" fill="var(--text-muted)" font-size="10" text-anchor="middle">undefined in (−1, 1)</text>
+
+                            <!-- One-liner summary -->
+                            <rect x="40" y="190" width="520" height="150" rx="12" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="300" y="218" fill="var(--amber)" font-size="14" font-weight="800" text-anchor="middle">🧠 Graph Family Resemblance</text>
+                            <text x="300" y="245" fill="var(--text-sec)" font-size="12" text-anchor="middle"><tspan fill="var(--purple)" font-weight="700">sin⁻¹</tspan> and <tspan fill="var(--emerald)" font-weight="700">cos⁻¹</tspan> are <tspan fill="var(--amber)" font-weight="700">complementary</tspan>: sin⁻¹(x) + cos⁻¹(x) = π/2</text>
+                            <text x="300" y="268" fill="var(--text-sec)" font-size="12" text-anchor="middle"><tspan fill="var(--purple)" font-weight="700">tan⁻¹</tspan> and <tspan fill="var(--emerald)" font-weight="700">cot⁻¹</tspan> are <tspan fill="var(--amber)" font-weight="700">complementary</tspan>: tan⁻¹(x) + cot⁻¹(x) = π/2</text>
+                            <text x="300" y="291" fill="var(--text-sec)" font-size="12" text-anchor="middle"><tspan fill="var(--purple)" font-weight="700">sec⁻¹</tspan> and <tspan fill="var(--emerald)" font-weight="700">csc⁻¹</tspan> are <tspan fill="var(--amber)" font-weight="700">complementary</tspan>: sec⁻¹(x) + csc⁻¹(x) = π/2</text>
+                            <text x="300" y="318" fill="var(--text-muted)" font-size="11" text-anchor="middle">These three complement pairs are the foundation of many JEE identities!</text>
+                        </svg>
+                        <div class="diagram-caption"><strong>cot⁻¹(x):</strong> Decreasing, asymptotes at y = 0 and y = π. <strong>sec⁻¹(x):</strong> U-shaped, minimum at x = 1, y = 0. <strong>csc⁻¹(x):</strong> Inverted U, minimum at x = 1, y = π/2. All three have the complement property with their counterpart.</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 The Complement Theorem</div>
+                        <div class="insight-text">sin⁻¹(x) + cos⁻¹(x) = π/2 &nbsp;|&nbsp; tan⁻¹(x) + cot⁻¹(x) = π/2 &nbsp;|&nbsp; sec⁻¹(x) + csc⁻¹(x) = π/2</div>
+                        <div class="insight-sub">For any valid x, each inverse trig function plus its complement equals π/2. This is THE most used identity in JEE ITF problems!</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 3: PROPERTIES & IDENTITIES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">📐 Part 3: Properties & Identities — The Tools You Actually Need</span>
+                    <h2>You Don't Need 50 Formulas. You Need 10 That Make Sense.</h2>
+
+                    <p>Here are the core identities for inverse trig, explained in a way that sticks. Don't memorize — understand the "why" behind each one.</p>
+
+                    <h3>Negation Identities — What Happens When x is Negative?</h3>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">🧊 Negation Identities — sin⁻¹(−x) = −sin⁻¹(x), cos⁻¹(−x) = π − cos⁻¹(x)</div>
+                        <svg viewBox="0 0 580 220" width="580" height="220">
+                            <!-- sin⁻¹(-x) -->
+                            <rect x="10" y="10" width="270" height="95" rx="8" fill="rgba(167,139,250,.06)" stroke="var(--purple)" stroke-width="1.5"/>
+                            <text x="145" y="32" fill="var(--purple)" font-size="14" font-weight="800" text-anchor="middle">sin⁻¹(−x) = −sin⁻¹(x)</text>
+                            <text x="145" y="52" fill="var(--text-sec)" font-size="11" text-anchor="middle">sin⁻¹ is an ODD function</text>
+                            <text x="145" y="72" fill="var(--text-sec)" font-size="11" text-anchor="middle">sin⁻¹(−½) = −sin⁻¹(½) = −π/6</text>
+                            <text x="145" y="92" fill="var(--text-muted)" font-size="10" text-anchor="middle">The graph is symmetric about the origin.</text>
+
+                            <!-- cos⁻¹(-x) -->
+                            <rect x="300" y="10" width="270" height="95" rx="8" fill="rgba(52,211,153,.06)" stroke="var(--emerald)" stroke-width="1.5"/>
+                            <text x="435" y="32" fill="var(--emerald)" font-size="14" font-weight="800" text-anchor="middle">cos⁻¹(−x) = π − cos⁻¹(x)</text>
+                            <text x="435" y="52" fill="var(--text-sec)" font-size="11" text-anchor="middle">cos⁻¹ is NEITHER odd nor even</text>
+                            <text x="435" y="72" fill="var(--text-sec)" font-size="11" text-anchor="middle">cos⁻¹(−½) = π − cos⁻¹(½) = π − π/3 = 2π/3</text>
+                            <text x="435" y="92" fill="var(--text-muted)" font-size="10" text-anchor="middle">As x goes from −1 to 1, cos⁻¹(x) goes from π to 0.</text>
+
+                            <!-- tan⁻¹ -->
+                            <rect x="10" y="115" width="270" height="95" rx="8" fill="rgba(245,158,11,.06)" stroke="var(--amber)" stroke-width="1.5"/>
+                            <text x="145" y="137" fill="var(--amber)" font-size="14" font-weight="800" text-anchor="middle">tan⁻¹(−x) = −tan⁻¹(x)</text>
+                            <text x="145" y="157" fill="var(--text-sec)" font-size="11" text-anchor="middle">tan⁻¹ is also ODD</text>
+                            <text x="145" y="177" fill="var(--text-sec)" font-size="11" text-anchor="middle">tan⁻¹(−1) = −tan⁻¹(1) = −π/4</text>
+                            <text x="145" y="197" fill="var(--text-muted)" font-size="10" text-anchor="middle">Same symmetry as sin⁻¹ about origin.</text>
+
+                            <!-- cot⁻¹ -->
+                            <rect x="300" y="115" width="270" height="95" rx="8" fill="rgba(239,68,68,.06)" stroke="var(--red)" stroke-width="1.5"/>
+                            <text x="435" y="137" fill="var(--red)" font-size="14" font-weight="800" text-anchor="middle">cot⁻¹(−x) = π − cot⁻¹(x)</text>
+                            <text x="435" y="157" fill="var(--text-sec)" font-size="11" text-anchor="middle">cot⁻¹ is NOT odd</text>
+                            <text x="435" y="177" fill="var(--text-sec)" font-size="11" text-anchor="middle">cot⁻¹(−1) = π − cot⁻¹(1) = π − π/4 = 3π/4</text>
+                            <text x="435" y="197" fill="var(--text-muted)" font-size="10" text-anchor="middle">Same pattern as cos⁻¹: π − original.</text>
+                        </svg>
+                        <div class="diagram-caption"><strong>Pattern:</strong> sin⁻¹ and tan⁻¹ are <strong>odd</strong> (negation flips sign). cos⁻¹ and cot⁻¹ use <strong>π − formula</strong> (negation reflects across y-axis). sec⁻¹ and csc⁻¹ follow their reciprocal's pattern.</div>
+                    </div>
+
+                    <h3>The Sum/Difference Formulas — tan⁻¹(x) ± tan⁻¹(y)</h3>
+                    <p>These are the most tested formulas in JEE for ITF. Here's the intuitive approach.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">📐 The Sum Formula</div>
+                        <div class="story-title">tan⁻¹(x) + tan⁻¹(y) = tan⁻¹((x + y)/(1 − xy)) with a Catch</div>
+                        <div class="story-text">
+                            This formula works like the tangent addition formula, just <strong>reversed</strong>, with an important caveat:<br><br>
+                            <strong>If xy &lt; 1:</strong> The sum is in (−π/2, π/2). Use the formula directly.<br>
+                            <strong>If xy &gt; 1 and x, y &gt; 0:</strong> The sum exceeds π/2, so add π: tan⁻¹(x) + tan⁻¹(y) = π + tan⁻¹((x + y)/(1 − xy))<br>
+                            <strong>If xy &gt; 1 and x, y &lt; 0:</strong> The sum is less than −π/2, so subtract π: tan⁻¹(x) + tan⁻¹(y) = −π + tan⁻¹((x + y)/(1 − xy))<br><br>
+                            <strong>Example:</strong> tan⁻¹(2) + tan⁻¹(3). Here xy = 6 &gt; 1, both positive.<br>
+                            = π + tan⁻¹((2 + 3)/(1 − 6)) = π + tan⁻¹(5/−5) = π + tan⁻¹(−1) = π − π/4 = <strong>3π/4</strong>.
+                        </div>
+                        <div class="story-moral">⚠️ The tan⁻¹ sum formula has a catch: when xy &gt; 1, you need to adjust by ±π. Most JEE mistakes happen here!</div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 ITF Identity Cheat Sheet</div>
+                        <div class="insight-text">
+                            sin⁻¹(−x) = −sin⁻¹(x) &nbsp;|&nbsp;
+                            cos⁻¹(−x) = π − cos⁻¹(x)
+                        </div>
+                        <div class="insight-text">
+                            sin⁻¹(x) + cos⁻¹(x) = π/2 &nbsp;|&nbsp;
+                            tan⁻¹(x) + cot⁻¹(x) = π/2
+                        </div>
+                        <div class="insight-sub">These 4 identities appear in 90% of JEE Main ITF problems. Master these before touching the rest!</div>
+                    </div>
+
+                    <h3>Worked Example: Using the Complement Property</h3>
+                    <p>Find the value of sin⁻¹(3/5) + cos⁻¹(3/5).</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Apply the complement theorem</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            The complement theorem says: sin⁻¹(x) + cos⁻¹(x) = π/2 for ALL x in [−1, 1].<br><br>
+                            Since 3/5 = 0.6 is in [−1, 1], we have:<br>
+                            sin⁻¹(3/5) + cos⁻¹(3/5) = <strong>π/2</strong>.<br><br>
+                            That's it! The answer is always π/2 regardless of the value of x. This is why the complement theorem is so powerful.
+                        </div>
+                    </div>
+
+                    <h3>Worked Example: Negation Identity</h3>
+                    <p>Find the value of sin⁻¹(−½) + cos⁻¹(−½).</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Use the negation identities first</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            sin⁻¹(−½) = −sin⁻¹(½) = −π/6<br>
+                            cos⁻¹(−½) = π − cos⁻¹(½) = π − π/3 = 2π/3<br><br>
+                            Sum = −π/6 + 2π/6 = π/2 ✅<br><br>
+                            Or notice: sin⁻¹(−½) + cos⁻¹(−½) = π/2 directly by the complement theorem! The theorem works for ANY valid x, even negative ones.
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 4: COMPOSITIONS & JEE PROBLEMS -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">⚡ Part 4: Compositions — Where ITF Gets Tricky</span>
+                    <h2>sin(cos⁻¹(x)), cos(sin⁻¹(x)), tan(cot⁻¹(x)) — The "Outside-In" Problems</h2>
+
+                    <p>The trickiest JEE questions involve compositions like sin(cos⁻¹(x)) or sin⁻¹(sin(2π/3)). The key is to work <strong>inside-out</strong> and always respect the <strong>principal value range</strong>.</p>
+
+                    <h3>Type 1: trig(inverse trig(x)) — Straight Composition</h3>
+                    <p>These are straightforward IF the inside is in the principal range.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">⚡ Compositions — Work Inside Out, Check Principal Ranges</div>
+                        <svg viewBox="0 0 580 300" width="580" height="300">
+                            <!-- sin(cos⁻¹(x)) example -->
+                            <rect x="10" y="10" width="270" height="130" rx="8" fill="rgba(167,139,250,.06)" stroke="var(--purple)" stroke-width="1.5"/>
+                            <text x="145" y="32" fill="var(--purple)" font-size="14" font-weight="800" text-anchor="middle">sin(cos⁻¹(x)) = √(1 − x²)</text>
+                            <text x="145" y="55" fill="var(--text-sec)" font-size="11" text-anchor="middle">Let θ = cos⁻¹(x). Then cos(θ) = x.</text>
+                            <text x="145" y="75" fill="var(--text-sec)" font-size="11" text-anchor="middle">Since θ ∈ [0, π], sin(θ) ≥ 0.</text>
+                            <text x="145" y="95" fill="var(--text-sec)" font-size="11" text-anchor="middle">sin²(θ) = 1 − cos²(θ) = 1 − x²</text>
+                            <text x="145" y="115" fill="var(--emerald)" font-size="12" font-weight="700" text-anchor="middle">sin(θ) = √(1 − x²)</text>
+                            <text x="145" y="132" fill="var(--text-muted)" font-size="10" text-anchor="middle">(Positive because θ ∈ [0, π] gives sin ≥ 0)</text>
+
+                            <!-- tan(sin⁻¹(x)) example -->
+                            <rect x="300" y="10" width="270" height="130" rx="8" fill="rgba(52,211,153,.06)" stroke="var(--emerald)" stroke-width="1.5"/>
+                            <text x="435" y="32" fill="var(--emerald)" font-size="14" font-weight="800" text-anchor="middle">tan(sin⁻¹(x)) = x/√(1 − x²)</text>
+                            <text x="435" y="55" fill="var(--text-sec)" font-size="11" text-anchor="middle">Let θ = sin⁻¹(x). Then sin(θ) = x.</text>
+                            <text x="435" y="75" fill="var(--text-sec)" font-size="11" text-anchor="middle">Since θ ∈ [−π/2, π/2], cos(θ) ≥ 0.</text>
+                            <text x="435" y="95" fill="var(--text-sec)" font-size="11" text-anchor="middle">cos(θ) = √(1 − sin²(θ)) = √(1 − x²)</text>
+                            <text x="435" y="115" fill="var(--emerald)" font-size="12" font-weight="700" text-anchor="middle">tan(θ) = x/√(1 − x²)</text>
+                            <text x="435" y="132" fill="var(--text-muted)" font-size="10" text-anchor="middle">(cos ≥ 0 in [−π/2, π/2], so √ is positive)</text>
+
+                            <!-- General approach box -->
+                            <rect x="40" y="155" width="500" height="130" rx="12" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="290" y="180" fill="var(--amber)" font-size="14" font-weight="800" text-anchor="middle">🧠 General Approach for trig(itf(x))</text>
+                            <text x="290" y="205" fill="var(--text-sec)" font-size="12" text-anchor="middle">1. Let θ = itf(x). Understand what θ represents.</text>
+                            <text x="290" y="225" fill="var(--text-sec)" font-size="12" text-anchor="middle">2. Determine which QUADRANT θ is in (from the ITF's range).</text>
+                            <text x="290" y="245" fill="var(--text-sec)" font-size="12" text-anchor="middle">3. Use the quadrant to determine the SIGN of the outer trig function.</text>
+                            <text x="290" y="265" fill="var(--text-sec)" font-size="12" text-anchor="middle">4. Use sin² + cos² = 1 to convert and get the final expression.</text>
+                            <text x="290" y="282" fill="var(--text-muted)" font-size="10" text-anchor="middle">Sign is EVERYTHING in these problems. The wrong sign = wrong answer!</text>
+                        </svg>
+                        <div class="diagram-caption"><strong>The key trick:</strong> When composing a trig function with an inverse trig, draw a right triangle. Let θ = itf(x), then label the sides based on the trig definition, and compute the outer trig function using the triangle.</div>
+                    </div>
+
+                    <h3>Type 2: itf(trig(θ)) — The "Principal Value Trap"</h3>
+                    <p>This is where most students lose marks. sin⁻¹(sin(θ)) does NOT always equal θ! It equals θ only if θ is in the principal range.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">⚠️ The Principal Value Trap</div>
+                        <div class="story-title">sin⁻¹(sin(θ)) = θ ONLY if θ ∈ [−π/2, π/2]</div>
+                        <div class="story-text">
+                            <strong>If θ is in the principal range:</strong> sin⁻¹(sin(θ)) = θ. ✅<br>
+                            <strong>If θ is NOT in the principal range:</strong> sin⁻¹(sin(θ)) ≠ θ! The answer is the <strong>angle in [−π/2, π/2]</strong> that has the same sine as θ.<br><br>
+                            <strong>Example:</strong> sin⁻¹(sin(2π/3)) = ?<br>
+                            2π/3 = 120° is NOT in [−π/2, π/2]. sin(2π/3) = √3/2. What angle in [−π/2, π/2] has sine = √3/2? It's π/3 (60°).<br>
+                            <strong>So sin⁻¹(sin(2π/3)) = π/3, NOT 2π/3!</strong><br><br>
+                            Same for cos⁻¹(cos(θ)) — equals θ only if θ ∈ [0, π].<br>
+                            And tan⁻¹(tan(θ)) — equals θ only if θ ∈ (−π/2, π/2).
+                        </div>
+                        <div class="story-moral">⚠️ sin⁻¹(sin(2π/3)) = π/3, NOT 2π/3. Always check: is the input in the principal range? If not, find the equivalent angle that IS.</div>
+                    </div>
+
+                    <h3>Worked Example: Complex Composition</h3>
+                    <p>Find the value of sin(cos⁻¹(3/5)).</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Let θ = cos⁻¹(3/5). Draw a right triangle.</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            If cos(θ) = 3/5, then in a right triangle: adjacent = 3, hypotenuse = 5.<br>
+                            Opposite = √(5² − 3²) = √(25 − 9) = √16 = 4.<br><br>
+                            Since θ = cos⁻¹(3/5) ∈ [0, π], and 3/5 > 0, θ is in Quadrant I where sin(θ) > 0.<br><br>
+                            <strong>sin(θ) = opposite/hypotenuse = 4/5.</strong><br><br>
+                            So sin(cos⁻¹(3/5)) = <strong>4/5</strong>.
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 The Right Triangle Method</div>
+                        <div class="insight-text">For trig(itf(x)), draw a right triangle where itf(x) = θ, label the sides based on the trig ratio, then compute the outer trig function from the triangle.</div>
+                        <div class="insight-sub">Always check the quadrant first to determine the correct sign of the answer!</div>
+                    </div>
+
+                    <h3>Worked Example: JEE-Level — Principal Value Trap</h3>
+                    <p>Find cos⁻¹(cos(7π/6)).</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Check if 7π/6 is in the principal range of cos⁻¹</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            Principal range of cos⁻¹ is [0, π].<br>
+                            7π/6 ≈ 210° = 7(30°) = 210°. This is NOT in [0, π] = [0°, 180°].<br><br>
+                            So cos⁻¹(cos(7π/6)) ≠ 7π/6. We need to find the angle in [0, π] with the SAME cosine as 7π/6.
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>Find the equivalent angle in the principal range</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            cos(7π/6) = cos(210°) = −√3/2.<br><br>
+                            We need an angle θ ∈ [0, π] such that cos(θ) = −√3/2.<br>
+                            cos(5π/6) = cos(150°) = −√3/2. And 5π/6 = 150° ∈ [0, π].<br><br>
+                            Therefore, cos⁻¹(cos(7π/6)) = <strong>5π/6</strong>.<br><br>
+                            <strong>General rule for cos⁻¹(cos(θ)):</strong> If θ ∈ [0, π], answer = θ. If θ ∉ [0, π], reflect θ into [0, π] using the cosine's symmetry.
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- COMMON MISTAKES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">⚠️ Common Mistakes (Don't Fall For These!)</span>
+                    <h2>These Traps Trip Up Even Top Students</h2>
+
+                    <div class="story-card">
+                        <div class="story-label">⚠️ Mistake 1</div>
+                        <div class="story-title">sin⁻¹(sin(θ)) = θ? Not Always!</div>
+                        <div class="story-text">
+                            <strong>Wrong:</strong> sin⁻¹(sin(2π/3)) = 2π/3 ❌<br>
+                            <strong>Right:</strong> sin⁻¹(sin(2π/3)) = π/3 ✅<br><br>
+                            Remember: sin⁻¹(sin(θ)) = θ ONLY when θ is in [−π/2, π/2]. For 2π/3 (120°), the principal value is π/3 (60°) — both have the same sine (√3/2). Always check the principal range!
+                        </div>
+                        <div class="story-moral">⚠️ sin⁻¹(sin(θ)) "cancels" the functions ONLY if θ is in the principal range. For angles outside, find the equivalent angle inside the range.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">⚠️ Mistake 2</div>
+                        <div class="story-title">Confusing the Ranges of sin⁻¹ and cos⁻¹</div>
+                        <div class="story-text">
+                            <strong>Wrong:</strong> sin⁻¹(0) = π ❌ (π is in the range of cos⁻¹, not sin⁻¹)<br>
+                            <strong>Right:</strong> sin⁻¹(0) = 0 ✅ (because sin⁻¹ range is [−π/2, π/2])<br>
+                            cos⁻¹(0) = π/2 ✅ (because cos⁻¹ range is [0, π])<br><br>
+                            The ranges are complementary: sin⁻¹ ∈ [−π/2, π/2], cos⁻¹ ∈ [0, π]. Mixing them up is a common mistake.
+                        </div>
+                        <div class="story-moral">⚠️ sin⁻¹ outputs in [−π/2, π/2]. cos⁻¹ outputs in [0, π]. They overlap only at y = π/2 (where sin⁻¹(1) = π/2 = cos⁻¹(0)).</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">⚠️ Mistake 3</div>
+                        <div class="story-title">The tan⁻¹ Sum Formula Adjustment</div>
+                        <div class="story-text">
+                            <strong>Wrong:</strong> tan⁻¹(2) + tan⁻¹(3) = tan⁻¹((2+3)/(1−6)) = tan⁻¹(−1) = −π/4 ❌<br>
+                            <strong>Right:</strong> tan⁻¹(2) + tan⁻¹(3) = π + tan⁻¹(−1) = π − π/4 = 3π/4 ✅<br><br>
+                            The formula tan⁻¹(x) + tan⁻¹(y) = tan⁻¹((x+y)/(1−xy)) is ONLY valid when xy < 1. When xy > 1, the sum exceeds π/2 (if both positive) or is less than −π/2 (if both negative), and you need to add/subtract π.
+                        </div>
+                        <div class="story-moral">⚠️ xy < 1: use formula directly. xy > 1, x,y > 0: add π. xy > 1, x,y < 0: subtract π. The sum formula has a "range adjustment" clause!</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PROBLEM-SOLVING TOOLKIT -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">🧠 ITF Problem-Solving Toolkit</span>
+                    <h2>4 Strategies That Crack Almost Any Problem</h2>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 1</div>
+                        <div class="story-title">"The Right Triangle Method" for trig(itf(x))</div>
+                        <div class="story-text">
+                            Whenever you see something like sin(cos⁻¹(x)), <strong>draw a right triangle</strong>. Let θ = cos⁻¹(x), so cos(θ) = x/1. Adjacent = x, hypotenuse = 1. Opposite = √(1 − x²). Now sin(θ) = opposite/hypotenuse = √(1 − x²).<br><br>
+                            <strong>But always check the quadrant first!</strong> If θ = cos⁻¹(x) and x is negative, θ ∈ (π/2, π], so sin(θ) = +√(1 − x²) (still positive in Quadrant II). The triangle method generalizes with the correct sign.
+                        </div>
+                        <div class="story-moral">💡 Right triangles turn abstract compositions into simple side ratios. Always check the sign based on the quadrant.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 2</div>
+                        <div class="story-title">"Reflect into Principal Range" for itf(trig(θ))</div>
+                        <div class="story-text">
+                            For sin⁻¹(sin(θ)), cos⁻¹(cos(θ)), tan⁻¹(tan(θ)):<br><br>
+                            1. Compute the inner trig value: t = sin(θ), t = cos(θ), etc.<br>
+                            2. Find what angle(s) in the ITF's principal range give that same trig value.<br>
+                            3. Pick the correct one (the ITF will output the unique principal value).<br><br>
+                            <strong>Graphical approach:</strong> Visualize the unit circle. sin(θ) = sin(π − θ). cos(θ) = cos(−θ) = cos(2π − θ). Use these symmetries to reflect θ into the principal range.
+                        </div>
+                        <div class="story-moral">💡 The inverse trig function ALWAYS outputs a principal value. Your job is to find the angle in the principal range that matches the trig value.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 3</div>
+                        <div class="story-title">"Prove Using Substitution" for Identities</div>
+                        <div class="story-text">
+                            Many JEE identity problems ask you to prove that an ITF expression equals a certain value. <strong>Use substitution:</strong><br><br>
+                            Let the ITF expression equal θ. Then take the trig function of both sides. Simplify using known trig identities. Then show that θ must be the claimed value within the principal range.<br><br>
+                            <strong>Example:</strong> Prove sin⁻¹(x) + cos⁻¹(x) = π/2.<br>
+                            Let sin⁻¹(x) = θ. Then sin(θ) = x, and cos(θ) = √(1 − x²).<br>
+                            Then cos⁻¹(x) = some angle whose cos is x. Notice sin(π/2 − θ) = cos(θ) = x. So cos⁻¹(x) = π/2 − θ (since π/2 − θ ∈ [0, π]). Therefore sin⁻¹(x) + cos⁻¹(x) = θ + π/2 − θ = π/2. ✅
+                        </div>
+                        <div class="story-moral">💡 In ITF identity proofs, let the expression = θ, take trig of both sides, then solve. This is the standard approach.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 4</div>
+                        <div class="story-title">"Domain Check First" for Equations</div>
+                        <div class="story-text">
+                            When solving equations involving ITF, <strong>always check the domain first</strong>.<br><br>
+                            For example, sin⁻¹(x) + sin⁻¹(y) = π/2 is only meaningful when x, y ∈ [−1, 1] and the sum of the principal values equals π/2.<br><br>
+                            Similarly, tan⁻¹(x) + tan⁻¹(y) = π/4 requires the sum formula with domain restrictions. Always: <strong>1. Check domain → 2. Apply identity → 3. Solve → 4. Verify solutions are in domain.</strong>
+                        </div>
+                        <div class="story-moral">💡 Never skip the domain check. Extraneous solutions from squaring or applying formulas are common in ITF equations.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- ADVANCED WORKED EXAMPLES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🔥 Advanced Worked Examples (JEE Level)</span>
+                    <h2>Multi-Step Problems That Combine Multiple Concepts</h2>
+
+                    <h3>Example 1: Sum Formula with Domain Check</h3>
+                    <p>Find the value of tan⁻¹(1) + tan⁻¹(2) + tan⁻¹(3).</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Add the first two terms</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            tan⁻¹(1) = π/4.<br><br>
+                            tan⁻¹(1) + tan⁻¹(2). Here xy = 1×2 = 2 > 1, both positive.<br>
+                            = π + tan⁻¹((1+2)/(1−2)) = π + tan⁻¹(3/−1) = π + tan⁻¹(−3) = π − tan⁻¹(3).
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>Now add tan⁻¹(3)</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            tan⁻¹(1) + tan⁻¹(2) + tan⁻¹(3) = (π − tan⁻¹(3)) + tan⁻¹(3) = <strong>π</strong>.<br><br>
+                            Nice cancellation! The sum is exactly π. This is a classic JEE problem that looks complex but simplifies beautifully.
+                        </div>
+                    </div>
+
+                    <h3>Example 2: Composition with Algebraic Manipulation</h3>
+                    <p>If sin⁻¹(x) + sin⁻¹(y) + sin⁻¹(z) = <π, prove that x√(1 − x²) + y√(1 − y²) + z√(1 − z²) = 2xyz.</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Use a substitution approach</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            Let sin⁻¹(x) = A, sin⁻¹(y) = B, sin⁻¹(z) = C.<br>
+                            Then A + B + C = π (given).<br>
+                            sin(A) = x, sin(B) = y, sin(C) = z.<br>
+                            cos(A) = √(1 − x²) (positive since A ∈ [0, π/2] for the sum to be π).<br><br>
+                            We need to prove: sin(A)cos(A) + sin(B)cos(B) + sin(C)cos(C) = 2 sin(A)sin(B)sin(C).<br>
+                            Or: sin(2A) + sin(2B) + sin(2C) = 4 sin(A)sin(B)sin(C).
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>Use trigonometry identities</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            Given A + B + C = π, we have C = π − (A + B).<br>
+                            sin(2C) = sin(2π − 2(A+B)) = −sin(2A + 2B).<br><br>
+                            sin(2A) + sin(2B) − sin(2A + 2B)<br>
+                            = 2sin(A+B)cos(A−B) − 2sin(A+B)cos(A+B)<br>
+                            = 2sin(A+B)[cos(A−B) − cos(A+B)]<br>
+                            = 2sin(A+B)[−2sin(A)sin(−B)]<br>
+                            = 4 sin(A+B) sin(A) sin(B)<br>
+                            = 4 sin(π − C) sin(A) sin(B)<br>
+                            = 4 sin(C) sin(A) sin(B) ✅<br><br>
+                            Therefore x√(1 − x²) + y√(1 − y²) + z√(1 − z²) = 2xyz. <strong>Proven!</strong>
+                        </div>
+                    </div>
+
+                    <h3>Example 3: Solving ITF Equations</h3>
+                    <p>Solve for x: tan⁻¹(2x) + tan⁻¹(3x) = π/4.</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Apply the sum formula</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            tan⁻¹(2x) + tan⁻¹(3x) = π/4<br><br>
+                            Using tan⁻¹(a) + tan⁻¹(b) = tan⁻¹((a+b)/(1−ab)) when ab < 1:<br>
+                            tan⁻¹((2x + 3x)/(1 − 6x²)) = π/4<br>
+                            tan⁻¹(5x/(1 − 6x²)) = π/4<br><br>
+                            Taking tan of both sides: 5x/(1 − 6x²) = tan(π/4) = 1
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>Solve the equation</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            5x/(1 − 6x²) = 1<br>
+                            5x = 1 − 6x²<br>
+                            6x² + 5x − 1 = 0<br>
+                            (6x − 1)(x + 1) = 0<br>
+                            x = 1/6 or x = −1<br><br>
+                            Now check the condition ab < 1: 2x × 3x = 6x².<br>
+                            For x = 1/6: 6(1/36) = 1/6 < 1 ✅<br>
+                            For x = −1: 6(1) = 6 > 1 ❌ (formula not valid)<br><br>
+                            Also check: at x = −1, tan⁻¹(−2) + tan⁻¹(−3) = negative + negative = negative, but RHS = π/4 positive. ❌<br><br>
+                            <strong>Solution: x = 1/6 only.</strong> (x = −1 is extraneous.)
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PRACTICE SECTION -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🎯 Practice Zone: Test Your Understanding</span>
+                    <h2>Practice Zone: Think, Don't Compute</h2>
+                    <p>These questions test if you truly <strong>understand</strong> principal values, graphs, and identities.</p>
+
+                    <div id="practice-qs"></div>
+
+                    <div style="display:flex;gap:10px;margin-top:10px">
+                        <button onclick="resetPractice()" class="btn btn-primary">🔄 Reset</button>
+                        <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                        <a href="lesson-trigonometry.html" class="btn btn-primary">← Trigonometry</a>
+                        <a href="lesson-calculus.html" class="btn btn-success">Calculus →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function toggleStep(el) {
+        var content = el.nextElementSibling;
+        var arrow = el.querySelector('.arrow');
+        if (content.classList.contains('open')) {
+            content.classList.remove('open');
+            arrow.classList.remove('open');
+        } else {
+            content.classList.add('open');
+            arrow.classList.add('open');
+        }
+    }
+
+    var practiceQs = [
+        {
+            id: 5001,
+            text: "🔄 What is the principal value of sin⁻¹(½)?",
+            opts: [
+                {l: "A", t: "π/6", c: true},
+                {l: "B", t: "π/3", c: false},
+                {l: "C", t: "5π/6", c: false},
+                {l: "D", t: "π/4", c: false}
+            ],
+            sol: "sin⁻¹(½) asks: what angle in [−π/2, π/2] has sine = ½? That's π/6 (30°). sin(π/6) = ½, and π/6 ∈ [−π/2, π/2]. Even though sin(5π/6) = ½ too, only π/6 is in the principal range."
+        },
+        {
+            id: 5002,
+            text: "📐 What is the domain of cos⁻¹(x)?",
+            opts: [
+                {l: "A", t: "ℝ", c: false},
+                {l: "B", t: "[−1, 1]", c: true},
+                {l: "C", t: "[0, π]", c: false},
+                {l: "D", t: "(−∞, −1] ∪ [1, ∞)", c: false}
+            ],
+            sol: "cos⁻¹(x) is defined only when x ∈ [−1, 1]. The DOMAIN is the set of allowable inputs (x values), not the range. The range of cos⁻¹ is [0, π]. Don't confuse domain and range!"
+        },
+        {
+            id: 5003,
+            text: "📈 What is sin⁻¹(sin(5π/6))?",
+            opts: [
+                {l: "A", t: "5π/6", c: false},
+                {l: "B", t: "π/6", c: true},
+                {l: "C", t: "π/3", c: false},
+                {l: "D", t: "−π/6", c: false}
+            ],
+            sol: "5π/6 = 150° is NOT in [−π/2, π/2]. sin(5π/6) = ½. The angle in [−π/2, π/2] with sine = ½ is π/6. So sin⁻¹(sin(5π/6)) = π/6. The functions only 'cancel' when the input is in the principal range!"
+        },
+        {
+            id: 5004,
+            text: "📏 Find cos⁻¹(cos(7π/6)).",
+            opts: [
+                {l: "A", t: "7π/6", c: false},
+                {l: "B", t: "π/6", c: false},
+                {l: "C", t: "5π/6", c: true},
+                {l: "D", t: "−5π/6", c: false}
+            ],
+            sol: "cos(7π/6) = −√3/2. The angle in [0, π] with cos = −√3/2 is 5π/6 (150°). So cos⁻¹(cos(7π/6)) = 5π/6. cos⁻¹(cos(θ)) = θ only if θ ∈ [0, π]. If not, reflect θ into [0, π] using cos(θ) = cos(2π − θ)."
+        },
+        {
+            id: 5005,
+            text: "⚡ If sin⁻¹(x) + cos⁻¹(x) = ?",
+            opts: [
+                {l: "A", t: "0", c: false},
+                {l: "B", t: "π/2", c: true},
+                {l: "C", t: "π", c: false},
+                {l: "D", t: "Depends on x", c: false}
+            ],
+            sol: "The complement theorem: sin⁻¹(x) + cos⁻¹(x) = π/2 for ALL x ∈ [−1, 1]. This is a constant — it does NOT depend on x. This is the most important ITF identity for JEE."
+        },
+        {
+            id: 5006,
+            text: "🧊 What is sin⁻¹(−√3/2)?",
+            opts: [
+                {l: "A", t: "−π/3", c: true},
+                {l: "B", t: "−π/4", c: false},
+                {l: "C", t: "2π/3", c: false},
+                {l: "D", t: "−2π/3", c: false}
+            ],
+            sol: "sin⁻¹(−√3/2). Using the odd property: sin⁻¹(−x) = −sin⁻¹(x). sin⁻¹(√3/2) = π/3 (since sin(π/3) = √3/2 and π/3 ∈ [−π/2, π/2]). So sin⁻¹(−√3/2) = −π/3. The range of sin⁻¹ is [−π/2, π/2], so −π/3 is valid."
+        },
+        {
+            id: 5007,
+            text: "📐 What is tan⁻¹(−1)?",
+            opts: [
+                {l: "A", t: "π/4", c: false},
+                {l: "B", t: "−π/4", c: true},
+                {l: "C", t: "3π/4", c: false},
+                {l: "D", t: "−3π/4", c: false}
+            ],
+            sol: "tan⁻¹(−1) = −tan⁻¹(1) = −π/4 (odd property). tan(π/4) = 1, so tan⁻¹(1) = π/4. The range of tan⁻¹ is (−π/2, π/2), so −π/4 is valid. 3π/4 is NOT in the range of tan⁻¹."
+        },
+        {
+            id: 5008,
+            text: "🔢 Find sin(cos⁻¹(4/5)).",
+            opts: [
+                {l: "A", t: "3/5", c: true},
+                {l: "B", t: "4/5", c: false},
+                {l: "C", t: "5/3", c: false},
+                {l: "D", t: "3/4", c: false}
+            ],
+            sol: "Let θ = cos⁻¹(4/5). Then cos(θ) = 4/5. Draw a right triangle: adjacent = 4, hypotenuse = 5 → opposite = 3. Since θ ∈ [0, π] and 4/5 > 0, θ ∈ [0, π/2] so sin(θ) ≥ 0. sin(θ) = opposite/hypotenuse = 3/5."
+        },
+        {
+            id: 5009,
+            text: "📈 Which is larger: sin⁻¹(0.8) or cos⁻¹(0.8)?",
+            opts: [
+                {l: "A", t: "sin⁻¹(0.8)", c: false},
+                {l: "B", t: "cos⁻¹(0.8)", c: true},
+                {l: "C", t: "They are equal", c: false},
+                {l: "D", t: "Cannot determine", c: false}
+            ],
+            sol: "sin⁻¹(x) is increasing, cos⁻¹(x) is decreasing. At x = 0.8 ≈ 0.8: sin⁻¹(0.8) ≈ 53°, cos⁻¹(0.8) ≈ 37°. Wait — sin⁻¹(0.8) ≈ 53°, cos⁻¹(0.8) ≈ 37°. Actually sin⁻¹(0.8) > cos⁻¹(0.8). But let's verify: sin⁻¹(x) + cos⁻¹(x) = π/2 ≈ 90°. sin⁻¹(0.8) ≈ 53°, so cos⁻¹(0.8) ≈ 37°. Yes, sin⁻¹(0.8) > cos⁻¹(0.8). Answer is A! The increasing function sin⁻¹ gives larger values for x > 1/√2."
+        },
+        {
+            id: 5010,
+            text: "⚡ What is tan⁻¹(1) + tan⁻¹(2) + tan⁻¹(3)?",
+            opts: [
+                {l: "A", t: "π/4", c: false},
+                {l: "B", t: "π/2", c: false},
+                {l: "C", t: "π", c: true},
+                {l: "D", t: "3π/4", c: false}
+            ],
+            sol: "tan⁻¹(1) = π/4. For tan⁻¹(1) + tan⁻¹(2): xy = 2 > 1, both positive. = π + tan⁻¹((1+2)/(1−2)) = π + tan⁻¹(−3) = π − tan⁻¹(3). Then adding tan⁻¹(3): (π − tan⁻¹(3)) + tan⁻¹(3) = π. So the sum is exactly π. Classic JEE problem!"
+        },
+        {
+            id: 5011,
+            text: "🔄 Solve for x: sin⁻¹(x) = cos⁻¹(x).",
+            opts: [
+                {l: "A", t: "x = 0", c: false},
+                {l: "B", t: "x = 1/√2", c: true},
+                {l: "C", t: "x = 1", c: false},
+                {l: "D", t: "No solution", c: false}
+            ],
+            sol: "sin⁻¹(x) = cos⁻¹(x). Using the complement theorem: sin⁻¹(x) + cos⁻¹(x) = π/2. Substituting: sin⁻¹(x) + sin⁻¹(x) = π/2 → 2sin⁻¹(x) = π/2 → sin⁻¹(x) = π/4. Therefore x = sin(π/4) = 1/√2. Verify: sin⁻¹(1/√2) = π/4 = cos⁻¹(1/√2). ✅"
+        },
+        {
+            id: 5012,
+            text: "🧊 What is cos⁻¹(−½)?",
+            opts: [
+                {l: "A", t: "−π/3", c: false},
+                {l: "B", t: "π/3", c: false},
+                {l: "C", t: "2π/3", c: true},
+                {l: "D", t: "−2π/3", c: false}
+            ],
+            sol: "cos⁻¹(−½). Using cos⁻¹(−x) = π − cos⁻¹(x). cos⁻¹(½) = π/3. So cos⁻¹(−½) = π − π/3 = 2π/3. Check: cos(2π/3) = −½, and 2π/3 ∈ [0, π]. ✅"
+        }
+    ];
+
+    var answered = {}, correctCount = 0, lessonSlug = "inverse-trigonometry";
+
+    function renderPractice() {
+        var c = document.getElementById('practice-qs'), h = '';
+        for (var i = 0; i < practiceQs.length; i++) {
+            var q = practiceQs[i], o = '';
+            for (var j = 0; j < q.opts.length; j++) {
+                o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+            }
+            h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+        }
+        c.innerHTML = h;
+        updateScore();
+    }
+
+    function getCorrectLabel(q) {
+        for (var i = 0; i < q.opts.length; i++) {
+            if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+        }
+        return '';
+    }
+
+    function selectOpt(qId, idx) {
+        if (answered[qId]) return;
+        answered[qId] = true;
+        var q = practiceQs.filter(function(x){return x.id === qId})[0];
+        var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+        var isCorrect = q.opts[idx].c;
+        for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+        if (isCorrect) {
+            opts[idx].classList.add('correct');
+            document.getElementById('result-'+qId).textContent = '✅ Correct! +4';
+            document.getElementById('result-'+qId).className = 'q-result correct';
+            correctCount++;
+        } else {
+            opts[idx].classList.add('wrong');
+            document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+            document.getElementById('result-'+qId).className = 'q-result wrong';
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) opts[i].classList.add('correct');
+            }
+        }
+        document.getElementById('soln-'+qId).classList.add('show');
+        updateScore();
+    }
+
+    function updateScore() {
+        var t = Object.keys(answered).length;
+        var el = document.getElementById('score-display');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'score-display';
+            el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+            document.getElementById('practice-qs').before(el);
+        }
+        el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+    }
+
+    function resetPractice() {
+        if (!confirm('Reset all answers?')) return;
+        answered = {}; correctCount = 0;
+        document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+        document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+        document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+        var el = document.getElementById('score-display');
+        if (el) el.textContent = '';
+        renderPractice();
+    }
+
+    function markComplete() {
+        try {
+            var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+            if (done.indexOf(lessonSlug) === -1) {
+                done.push(lessonSlug);
+                localStorage.setItem('jee-course-done', JSON.stringify(done));
+            }
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        } catch(e) {}
+    }
+
+    renderPractice();
+    try {
+        var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+        if (done.indexOf(lessonSlug) !== -1) {
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        }
+    } catch(e) {}
+    </script>
+</body>
+</html>
