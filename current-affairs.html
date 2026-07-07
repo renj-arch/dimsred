@@ -7106,10 +7106,48 @@ var _staticGen_polity = GK_GENERATORS.polity;
             }, 400);
         }
 
+        function _pickExamCurrentAffair() {
+            if (!_quizJsonData || !_quizJsonData.questions) return null;
+            var pool = _quizJsonData.questions;
+            // Apply time filter if active
+            if (state.timeFilter && state.timeFilter !== 'all') {
+                var now = new Date();
+                var curY = now.getFullYear();
+                pool = pool.filter(function(qa) {
+                    if (!qa.pubDate) return false;
+                    var y = parseInt(qa.pubDate.slice(0,4), 10);
+                    if (isNaN(y)) return false;
+                    if (state.timeFilter === 'year') return y === curY;
+                    if (state.timeFilter === 'lastyear') return y === curY - 1;
+                    if (state.timeFilter === 'recent') return y >= curY - 1;
+                    return true;
+                });
+            }
+            // Apply region filter if active
+            if (state.regionFilter && state.regionFilter !== 'all') {
+                pool = pool.filter(function(qa) {
+                    var text = ((qa.question||'') + ' ' + (qa.answer||'') + ' ' + (qa.category||'')).toLowerCase();
+                    var isInd = /\bindia\b|\bindian\b|\bdelhi\b|\bmumbai\b|\bgovernor\b|\bminister\b|\bpm\b|\brbi\b|\bsebi\b|\bgst\b|\bupi\b/i.test(text);
+                    return state.regionFilter === 'india' ? isInd : !isInd;
+                });
+            }
+            if (pool.length === 0) return null;
+            var qa = pool[Math.floor(Math.random() * pool.length)];
+            var q = {
+                q: qa.question,
+                a: qa.answer,
+                hint: qa.category || 'Current Affairs',
+                fact: (qa.question||'') + ' — ' + (qa.answer||'') + ' [' + (qa.source||'') + ', ' + (qa.pubDate||'').slice(0,10) + ']',
+                _pubDate: qa.pubDate,
+                _source: 'exam_current_affairs'
+            };
+            q.opts = qa.options && qa.options.length >= 2 ? qa.options.slice() : buildOptions(q.a);
+            if (!isValidAnswer(q.a) || isTrash(q)) return null;
+            return q;
+        }
+
         function generateMixedQuestions(count) {
-            var sources = (state.timeFilter && state.timeFilter !== 'all')
-                ? ['wiki_current_affairs', 'wiki_current_affairs', 'wiki_pool']
-                : ['wiki_pool', 'wiki_current_affairs'];
+            var sources = ['exam_current_affairs', 'exam_current_affairs', 'wiki_current_affairs', 'wiki_pool'];
             var added = 0;
             var maxTries = count * 15;
             // Historical questions (BC to CE) added continuously by background _fetchRandomHistoricalOnThisDay
@@ -7117,7 +7155,9 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 var source = sources[Math.floor(Math.random() * sources.length)];
                 var q = null;
                 try {
-                    if (source === 'wiki_pool' && typeof WIKI !== 'undefined' && WIKI.poolQuestion) {
+                    if (source === 'exam_current_affairs') {
+                        q = _pickExamCurrentAffair();
+                    } else if (source === 'wiki_pool' && typeof WIKI !== 'undefined' && WIKI.poolQuestion) {
                         q = WIKI.poolQuestion();
                     } else if (source === 'wiki_current_affairs') {
                         q = _generateCurrentAffairsFromWiki();
