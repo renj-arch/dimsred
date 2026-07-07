@@ -2320,14 +2320,14 @@ function generateMotionQuestion(diff, layer) {
     [5, function(){ var d=rand(5,9), r=rand(1,d-1); return { q:'Remainder when '+(rand(100,999))+' is divided by '+d+'?', a:(rand(100,999))%d, hint:'Just check divisibility'}; }],
     [5, function(){ var n=rand(100,999), m=rand(2,9); return { q:'Largest '+m+'-digit number divisible by '+n+'?', a:(function(x,y){var p=Math.pow(10,m)-1; return p-p%x;})(n,m), hint:'Largest '+m+'-digit=10^'+m+'-1. Subtract remainder'}; }]
   ];
-  var matched = ty.filter(function(t){ return t[0] <= diff; });
-  if (matched.length === 0) matched = ty;
-  var t = matched[rand(0, matched.length - 1)];
-  var d = t[1]();
-  var o = [d.a]; var spread = Math.max(1, typeof d.a==='number'?Math.abs(d.a*0.15):5);
-  while(o.length<4){var v=typeof d.a==='number'?Math.round(d.a+rand(-spread,spread)):['Y','N'][rand(0,1)]; if(o.indexOf(v)<0&&(typeof v==='string'||v>=0))o.push(v);}
-  shuffle(o);
-  return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:layer==='instinct'?12:18, type:'quant', techniqueLabel:'NumSys: '+d.hint, intuition:'Unit digit cyclicity. HCF×LCM=Product. Factors=Π(ei+1). Digital sum.' };
+  var matched = types.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = types;
+  var chosen = matched[rand(0, matched.length - 1)];
+  var data = chosen[1]();
+  var opts = [data.a]; var spread = Math.max(1, typeof data.a==='number'?Math.abs(data.a*0.15):5);
+  while(opts.length<4){var v=typeof data.a==='number'?Math.round(data.a+rand(-spread,spread)):['Y','N'][rand(0,1)]; if(opts.indexOf(v)<0&&(typeof v==='string'||v>=0))opts.push(v);}
+  shuffle(opts);
+  return { question:data.q, answer:data.a, options:opts, hint:data.hint, timeLimit:layer==='instinct'?12:18, type:'quant', techniqueLabel:'Motion: '+data.hint, intuition:'Speed=Dist/Time. Rel speed (opp)=v1+v2, (same)=|v1-v2|. km/h→m/s: ×5/18. Boat: down=u+v, up=u-v.' };
 }
 
 function generateSimplificationQuestion(diff, layer) {
