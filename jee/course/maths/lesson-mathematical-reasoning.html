@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Mathematical Reasoning — Statements, Truth & Logic | vlymbooq</title>
+    <meta name="description" content="Learn Mathematical Reasoning for JEE Main — statements, truth tables, connectives, tautologies, valid arguments. No formulas, just clear logic.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/jee/course/maths/lesson-mathematical-reasoning.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}}
+
+        .story-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin:16px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .story-card .story-title{font-size:1.05em;font-weight:700;color:var(--text);margin-bottom:8px}
+        .story-card .story-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .story-card .story-moral{font-size:.82em;color:var(--emerald);font-weight:600;margin-top:10px;padding:8px 12px;background:rgba(52,211,153,.04);border-radius:8px;border-left:3px solid var(--emerald)}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+        .diagram-box .diagram-title{font-size:.85em;font-weight:700;color:var(--text);margin-bottom:8px}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .progress-tracker{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+        .progress-tracker .p-step{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;font-size:.75em;border:1px solid var(--border);color:var(--text-muted);transition:all .3s}
+        .progress-tracker .p-step.done{border-color:var(--emerald);color:var(--emerald);background:rgba(52,211,153,.06)}
+        .progress-tracker .p-step.active{border-color:var(--purple);color:var(--purple);background:rgba(167,139,250,.08)}
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part2{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part3{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700}
+        .truth-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.85em}
+        .truth-table th,.truth-table td{padding:8px 12px;border:1px solid var(--border);text-align:center}
+        .truth-table th{background:rgba(167,139,250,.1);color:var(--purple);font-weight:700}
+        .truth-table td{color:var(--text-sec)}
+        .truth-table .true{color:var(--emerald);font-weight:700}
+        .truth-table .false{color:var(--red);font-weight:700}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="../../index.html">JEE</a><a href="../index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Mathematics</div>
+                    <a href="../../../lesson-arithmetic.html">Arithmetic</a>
+                    <a href="lesson-algebra.html">Algebra</a>
+                    <a href="lesson-calculus.html">Calculus</a>
+                    <a href="lesson-coordinate-geometry.html">Coordinate Geometry</a>
+                    <a href="lesson-vector-3d.html">Vector & 3D</a>
+                    <a href="lesson-probability-statistics.html">Probability & Stats</a>
+                    <a href="lesson-trigonometry.html">Trigonometry</a>
+                    <a href="lesson-sets-relations-functions.html">Sets, Relations & Functions</a>
+                    <a href="lesson-inverse-trigonometry.html">Inverse Trigonometry</a>
+                    <a href="lesson-application-derivatives.html">Application of Derivatives</a>
+                    <a href="lesson-integration.html">Integration</a>
+                    <a href="lesson-differential-equations.html">Differential Equations</a>
+                    <a href="lesson-mathematical-reasoning.html" class="active">Mathematical Reasoning</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 7 &middot; JEE Mathematics</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Mathematical Reasoning — The Grammar of Logic</h1>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Statements, truth tables, connectives, tautologies — the only JEE Main topic that's 100% logic, 0% calculation.</div>
+                    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+                        <button onclick="window.print()" class="download-btn">📄 Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">🎯 Take Mock Test</a>
+                    </div>
+                </div>
+
+                <div class="progress-tracker">
+                    <span class="p-step active" id="p1"><span>📝</span> Statements</span>
+                    <span class="p-step" id="p2"><span>🔗</span> Connectives</span>
+                    <span class="p-step" id="p3"><span>✅</span> Tautologies</span>
+                    <span class="p-step" id="p4"><span>🧠</span> Arguments</span>
+                    <span class="p-step" id="p5"><span>🎯</span> Practice</span>
+                </div>
+
+                <div class="lesson-body">
+                    <!-- ============================================================ -->
+                    <!-- PART 1: STATEMENTS -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">📝 Part 1: Statements — The Building Blocks of Logic</span>
+                    <h2>A Statement Is a Sentence That Is Either True or False (But Not Both)</h2>
+
+                    <p>Mathematical reasoning starts with <strong>statements</strong> — declarative sentences that have a definite truth value (T or F).</p>
+
+                    <div class="story-card">
+                        <div class="story-label">📝 What Is a Statement?</div>
+                        <div class="story-title">"2 + 2 = 4" ✅ True. "2 + 2 = 5" ✅ False. "Hello!" ❌ Not a statement.</div>
+                        <div class="story-text">
+                            <strong>Statement:</strong> A sentence that is either true or false, but not both.<br><br>
+                            <strong>Examples of statements:</strong><br>
+                            • "New Delhi is the capital of India." → True (T)<br>
+                            • "5 is greater than 7." → False (F)<br>
+                            • "Every even number is divisible by 2." → True (T)<br><br>
+                            <strong>Not statements:</strong><br>
+                            • "Hello!" (exclamation — no truth value)<br>
+                            • "Is it raining?" (question — no truth value)<br>
+                            • "x + 2 = 5" (open sentence — depends on x, not a statement unless quantified)<br>
+                            • "This statement is false." (paradox — can't be consistently assigned T or F)
+                        </div>
+                        <div class="story-moral">💡 Statements = declarative sentences with a truth value. Questions, exclamations, commands, and paradoxes are NOT statements.</div>
+                    </div>
+
+                    <h3>Compound Statements — Connecting Simple Statements</h3>
+                    <p>Simple statements like "It is raining" can be combined with <strong>logical connectives</strong> to form compound statements like "It is raining AND it is cold."</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📊 Simple vs Compound Statements</div>
+                        <svg viewBox="0 0 560 180" width="560" height="180">
+                            <rect x="10" y="10" width="260" height="70" rx="8" fill="rgba(167,139,250,.06)" stroke="var(--purple)" stroke-width="1.5"/>
+                            <text x="140" y="32" fill="var(--purple)" font-size="14" font-weight="800" text-anchor="middle">Simple Statement</text>
+                            <text x="140" y="54" fill="var(--text-sec)" font-size="12" text-anchor="middle">"The sun rises in the east."</text>
+                            <text x="140" y="72" fill="var(--emerald)" font-size="11" font-weight="600" text-anchor="middle">One idea. True or False.</text>
+
+                            <rect x="290" y="10" width="260" height="70" rx="8" fill="rgba(52,211,153,.06)" stroke="var(--emerald)" stroke-width="1.5"/>
+                            <text x="420" y="32" fill="var(--emerald)" font-size="14" font-weight="800" text-anchor="middle">Compound Statement</text>
+                            <text x="420" y="54" fill="var(--text-sec)" font-size="12" text-anchor="middle">"The sun rises AND Mars is red."</text>
+                            <text x="420" y="72" fill="var(--amber)" font-size="11" font-weight="600" text-anchor="middle">Two+ simple statements joined by connectives.</text>
+
+                            <rect x="80" y="100" width="400" height="65" rx="10" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="280" y="122" fill="var(--amber)" font-size="13" font-weight="800" text-anchor="middle">🔗 Connectives That Join Statements</text>
+                            <text x="280" y="145" fill="var(--text-sec)" font-size="12" text-anchor="middle"><tspan fill="var(--purple)" font-weight="700">and (∧)</tspan> &nbsp;|&nbsp; <tspan fill="var(--emerald)" font-weight="700">or (∨)</tspan> &nbsp;|&nbsp; <tspan fill="var(--red)" font-weight="700">not (¬)</tspan> &nbsp;|&nbsp; <tspan fill="var(--amber)" font-weight="700">if...then (→)</tspan> &nbsp;|&nbsp; <tspan fill="var(--cyan)" font-weight="700">if and only if (↔)</tspan></text>
+                            <text x="280" y="162" fill="var(--text-muted)" font-size="10" text-anchor="middle">These 5 connectives are the alphabet of mathematical logic.</text>
+                        </svg>
+                        <div class="diagram-caption"><strong>Simple statement:</strong> One atomic claim. <strong>Compound statement:</strong> Multiple simple statements linked by logical connectives. The truth value of a compound depends on the truth values of its parts and the connective.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 2: LOGICAL CONNECTIVES & TRUTH TABLES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">🔗 Part 2: Logical Connectives — AND, OR, NOT, IF-THEN, IFF</span>
+                    <h2>Five Connectives. Five Truth Tables. That's All There Is.</h2>
+
+                    <p>Each logical connective has a precise meaning defined by its <strong>truth table</strong> — a table that shows the truth value of the compound for every combination of input truth values.</p>
+
+                    <h3>Negation (¬) — The NOT Operator</h3>
+                    <p>¬p simply flips the truth value. If p is true, ¬p is false. If p is false, ¬p is true.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📊 Truth Tables — All 5 Connectives</div>
+                        <svg viewBox="0 0 580 440" width="580" height="440">
+                            <!-- NOT -->
+                            <rect x="10" y="10" width="170" height="180" rx="8" fill="rgba(239,68,68,.04)" stroke="var(--red)" stroke-width="1.5"/>
+                            <text x="95" y="32" fill="var(--red)" font-size="14" font-weight="800" text-anchor="middle">¬p (NOT)</text>
+                            <line x1="30" y1="42" x2="160" y2="42" stroke="var(--border)" stroke-width="1"/>
+                            <text x="65" y="62" fill="var(--text-sec)" font-size="12" font-weight="700">p</text>
+                            <text x="140" y="62" fill="var(--text-sec)" font-size="12" font-weight="700">¬p</text>
+                            <line x1="30" y1="70" x2="160" y2="70" stroke="var(--border)" stroke-width="1"/>
+                            <text x="65" y="92" fill="var(--emerald)" font-size="13" font-weight="700">T</text>
+                            <text x="140" y="92" fill="var(--red)" font-size="13" font-weight="700">F</text>
+                            <line x1="30" y1="100" x2="160" y2="100" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+                            <text x="65" y="122" fill="var(--red)" font-size="13" font-weight="700">F</text>
+                            <text x="140" y="122" fill="var(--emerald)" font-size="13" font-weight="700">T</text>
+                            <text x="95" y="155" fill="var(--text-muted)" font-size="11" text-anchor="middle">Flips truth value</text>
+                            <text x="95" y="175" fill="var(--text-muted)" font-size="11" text-anchor="middle">¬T = F, ¬F = T</text>
+
+                            <!-- AND -->
+                            <rect x="200" y="10" width="180" height="180" rx="8" fill="rgba(167,139,250,.04)" stroke="var(--purple)" stroke-width="1.5"/>
+                            <text x="290" y="32" fill="var(--purple)" font-size="14" font-weight="800" text-anchor="middle">p ∧ q (AND)</text>
+                            <line x1="215" y1="42" x2="370" y2="42" stroke="var(--border)" stroke-width="1"/>
+                            <text x="245" y="62" fill="var(--text-sec)" font-size="12" font-weight="700">p</text>
+                            <text x="290" y="62" fill="var(--text-sec)" font-size="12" font-weight="700">q</text>
+                            <text x="350" y="62" fill="var(--text-sec)" font-size="12" font-weight="700">p∧q</text>
+                            <line x1="215" y1="70" x2="370" y2="70" stroke="var(--border)" stroke-width="1"/>
+                            <text x="245" y="92" fill="var(--emerald)">T</text><text x="290" y="92" fill="var(--emerald)">T</text><text x="350" y="92" fill="var(--emerald)">T</text>
+                            <line x1="215" y1="100" x2="370" y2="100" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+                            <text x="245" y="122" fill="var(--emerald)">T</text><text x="290" y="122" fill="var(--red)">F</text><text x="350" y="122" fill="var(--red)">F</text>
+                            <line x1="215" y1="130" x2="370" y2="130" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+                            <text x="245" y="152" fill="var(--red)">F</text><text x="290" y="152" fill="var(--emerald)">T</text><text x="350" y="152" fill="var(--red)">F</text>
+                            <line x1="215" y1="160" x2="370" y2="160" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+                            <text x="245" y="182" fill="var(--red)">F</text><text x="290" y="182" fill="var(--red)">F</text><text x="350" y="182" fill="var(--red)">F</text>
+
+                            <!-- OR -->
+                            <rect x="400" y="10" width="170" height="180" rx="8" fill="rgba(52,211,153,.04)" stroke="var(--emerald)" stroke-width="1.5"/>
+                            <text x="485" y="32" fill="var(--emerald)" font-size="14" font-weight="800" text-anchor="middle">p ∨ q (OR)</text>
+                            <line x1="415" y1="42" x2="560" y2="42" stroke="var(--border)" stroke-width="1"/>
+                            <text x="445" y="62" fill="var(--text-sec)" font-size="12" font-weight="700">p</text>
+                            <text x="490" y="62" fill="var(--text-sec)" font-size="12" font-weight="700">q</text>
+                            <text x="540" y="62" fill="var(--text-sec)" font-size="12" font-weight="700">p∨q</text>
+                            <line x1="415" y1="70" x2="560" y2="70" stroke="var(--border)" stroke-width="1"/>
+                            <text x="445" y="92" fill="var(--emerald)">T</text><text x="490" y="92" fill="var(--emerald)">T</text><text x="540" y="92" fill="var(--emerald)">T</text>
+                            <line x1="415" y1="100" x2="560" y2="100" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+                            <text x="445" y="122" fill="var(--emerald)">T</text><text x="490" y="122" fill="var(--red)">F</text><text x="540" y="122" fill="var(--emerald)">T</text>
+                            <line x1="415" y1="130" x2="560" y2="130" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+                            <text x="445" y="152" fill="var(--red)">F</text><text x="490" y="152" fill="var(--emerald)">T</text><text x="540" y="152" fill="var(--emerald)">T</text>
+                            <line x1="415" y1="160" x2="560" y2="160" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+                            <text x="445" y="182" fill="var(--red)">F</text><text x="490" y="182" fill="var(--red)">F</text><text x="540" y="182" fill="var(--red)">F</text>
+
+                            <!-- IF-THEN -->
+                            <rect x="10" y="210" width="270" height="180" rx="8" fill="rgba(245,158,11,.04)" stroke="var(--amber)" stroke-width="1.5"/>
+                            <text x="145" y="232" fill="var(--amber)" font-size="14" font-weight="800" text-anchor="middle">p → q (IF p THEN q)</text>
+                            <line x1="25" y1="242" x2="270" y2="242" stroke="var(--border)" stroke-width="1"/>
+                            <text x="80" y="262" fill="var(--text-sec)" font-size="12" font-weight="700">p</text>
+                            <text x="140" y="262" fill="var(--text-sec)" font-size="12" font-weight="700">q</text>
+                            <text x="220" y="262" fill="var(--text-sec)" font-size="12" font-weight="700">p→q</text>
+                            <line x1="25" y1="270" x2="270" y2="270" stroke="var(--border)" stroke-width="1"/>
+                            <text x="80" y="292" fill="var(--emerald)">T</text><text x="140" y="292" fill="var(--emerald)">T</text><text x="220" y="292" fill="var(--emerald)">T</text>
+                            <line x1="25" y1="300" x2="270" y2="300" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+                            <text x="80" y="322" fill="var(--emerald)">T</text><text x="140" y="322" fill="var(--red)">F</text><text x="220" y="322" fill="var(--red)">F</text>
+                            <line x1="25" y1="330" x2="270" y2="330" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+                            <text x="80" y="352" fill="var(--red)">F</text><text x="140" y="352" fill="var(--emerald)">T</text><text x="220" y="352" fill="var(--emerald)">T</text>
+                            <line x1="25" y1="360" x2="270" y2="360" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+                            <text x="80" y="382" fill="var(--red)">F</text><text x="140" y="382" fill="var(--red)">F</text><text x="220" y="382" fill="var(--emerald)">T</text>
+                            <text x="145" y="200" fill="var(--text-muted)" font-size="10" text-anchor="middle">(already shown above)</text>
+
+                            <!-- IFF -->
+                            <rect x="300" y="210" width="270" height="180" rx="8" fill="rgba(34,211,238,.04)" stroke="var(--cyan)" stroke-width="1.5"/>
+                            <text x="435" y="232" fill="var(--cyan)" font-size="14" font-weight="800" text-anchor="middle">p ↔ q (p IFF q)</text>
+                            <line x1="315" y1="242" x2="560" y2="242" stroke="var(--border)" stroke-width="1"/>
+                            <text x="370" y="262" fill="var(--text-sec)" font-size="12" font-weight="700">p</text>
+                            <text x="430" y="262" fill="var(--text-sec)" font-size="12" font-weight="700">q</text>
+                            <text x="510" y="262" fill="var(--text-sec)" font-size="12" font-weight="700">p↔q</text>
+                            <line x1="315" y1="270" x2="560" y2="270" stroke="var(--border)" stroke-width="1"/>
+                            <text x="370" y="292" fill="var(--emerald)">T</text><text x="430" y="292" fill="var(--emerald)">T</text><text x="510" y="292" fill="var(--emerald)">T</text>
+                            <line x1="315" y1="300" x2="560" y2="300" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+                            <text x="370" y="322" fill="var(--emerald)">T</text><text x="430" y="322" fill="var(--red)">F</text><text x="510" y="322" fill="var(--red)">F</text>
+                            <line x1="315" y1="330" x2="560" y2="330" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+                            <text x="370" y="352" fill="var(--red)">F</text><text x="430" y="352" fill="var(--emerald)">T</text><text x="510" y="352" fill="var(--red)">F</text>
+                            <line x1="315" y1="360" x2="560" y2="360" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+                            <text x="370" y="382" fill="var(--red)">F</text><text x="430" y="382" fill="var(--red)">F</text><text x="510" y="382" fill="var(--emerald)">T</text>
+
+                            <!-- Memory aid -->
+                            <rect x="20" y="400" width="540" height="36" rx="8" fill="var(--bg-card)" stroke="var(--border)" stroke-width="1"/>
+                            <text x="290" y="424" fill="var(--amber)" font-size="12" font-weight="700" text-anchor="middle">🧠 &nbsp;∧ = both T &nbsp;|&nbsp; ∨ = at least one T &nbsp;|&nbsp; → = only false when T→F &nbsp;|&nbsp; ↔ = same truth value</text>
+                        </svg>
+                        <div class="diagram-caption"><strong>The five truth tables:</strong> ¬p flips. p∧q is T only when both are T. p∨q is T when at least one is T. p→q (implication) is F only when T implies F. p↔q is T when both have the same truth value.</div>
+                    </div>
+
+                    <h3>The Tricky One: Implication (p → q)</h3>
+                    <p>The implication "if p then q" is the most misunderstood connective. It's false ONLY when p is true and q is false. In all other cases — even when p is false — the implication is considered TRUE.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">→ The Implication</div>
+                        <div class="story-title">"If it rains, the ground gets wet." p → q is TRUE even when it doesn't rain!</div>
+                        <div class="story-text">
+                            <strong>Why is p → q true when p is false?</strong> Because the implication only promises: IF p happens, THEN q happens. If p doesn't happen, the promise isn't broken!<br><br>
+                            <strong>Example:</strong> "If you score 100%, you get an A+."<br>
+                            • You score 100% AND get A+ → Promise kept. (T → T = T) ✅<br>
+                            • You score 100% BUT don't get A+ → Promise broken. (T → F = F) ❌<br>
+                            • You DON'T score 100% AND get or don't get A+ → Promise wasn't tested. (F → T/F = T) ✅<br><br>
+                            <strong>Key insight:</strong> An implication is a promise. It's only broken when the condition is met but the result doesn't happen.
+                        </div>
+                        <div class="story-moral">💡 p → q is false ONLY when p is true and q is false. "False implies anything" is vacuously true.</div>
+                    </div>
+
+                    <h3>Contrapositive, Converse, Inverse</h3>
+                    <p>For any implication p → q, we can form three related statements. The <strong>contrapositive</strong> is logically equivalent to the original.</p>
+
+                    <div class="diagram-box">
+                        <div class="diagram-title">📊 Implication and Its Relatives</div>
+                        <svg viewBox="0 0 560 180" width="560" height="180">
+                            <rect x="10" y="10" width="260" height="55" rx="8" fill="rgba(167,139,250,.06)" stroke="var(--purple)" stroke-width="1.5"/>
+                            <text x="140" y="32" fill="var(--purple)" font-size="14" font-weight="800" text-anchor="middle">Original: p → q</text>
+                            <text x="140" y="52" fill="var(--text-sec)" font-size="11" text-anchor="middle">"If it rains, the ground gets wet."</text>
+
+                            <rect x="290" y="10" width="260" height="55" rx="8" fill="rgba(52,211,153,.06)" stroke="var(--emerald)" stroke-width="1.5"/>
+                            <text x="420" y="32" fill="var(--emerald)" font-size="14" font-weight="800" text-anchor="middle">Converse: q → p</text>
+                            <text x="420" y="52" fill="var(--text-sec)" font-size="11" text-anchor="middle">"If the ground is wet, it rained." ❌</text>
+
+                            <rect x="10" y="80" width="260" height="55" rx="8" fill="rgba(245,158,11,.06)" stroke="var(--amber)" stroke-width="1.5"/>
+                            <text x="140" y="102" fill="var(--amber)" font-size="14" font-weight="800" text-anchor="middle">Inverse: ¬p → ¬q</text>
+                            <text x="140" y="122" fill="var(--text-sec)" font-size="11" text-anchor="middle">"If it doesn't rain, ground stays dry." ❌</text>
+
+                            <rect x="290" y="80" width="260" height="55" rx="8" fill="rgba(239,68,68,.06)" stroke="var(--red)" stroke-width="1.5"/>
+                            <text x="420" y="102" fill="var(--red)" font-size="14" font-weight="800" text-anchor="middle">Contrapositive: ¬q → ¬p</text>
+                            <text x="420" y="122" fill="var(--text-sec)" font-size="11" text-anchor="middle">"If ground is dry, it didn't rain." ✅</text>
+
+                            <rect x="60" y="150" width="440" height="28" rx="6" fill="rgba(52,211,153,.04)" stroke="rgba(52,211,153,.1)" stroke-width="1"/>
+                            <text x="280" y="169" fill="var(--emerald)" font-size="12" font-weight="700" text-anchor="middle">p → q ≡ ¬q → ¬p (Law of Contrapositive) &nbsp;|&nbsp; Converse and Inverse are NOT equivalent to original</text>
+                        </svg>
+                        <div class="diagram-caption"><strong>Original ⇔ Contrapositive</strong> (logically equivalent). <strong>Converse</strong> and <strong>Inverse</strong> are not equivalent to the original, but they are equivalent to each other. The contrapositive is the most powerful tool for proving implications.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 3: TAUTOLOGY, CONTRADICTION, CONTINGENCY -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">✅ Part 3: Tautology, Contradiction & Contingency</span>
+                    <h2>Tautology = Always True. Contradiction = Always False. Contingency = Sometimes True.</h2>
+
+                    <p>These classifications come from the truth table of a compound statement.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">✅ Tautology</div>
+                        <div class="story-title">A Statement That Is TRUE in Every Possible Case — Like "p OR ¬p"</div>
+                        <div class="story-text">
+                            <strong>Tautology:</strong> The last column of the truth table is ALL TRUE.<br>
+                            <strong>Contradiction:</strong> The last column of the truth table is ALL FALSE.<br>
+                            <strong>Contingency:</strong> The truth table has BOTH true and false entries.<br><br>
+                            <strong>Classic tautologies:</strong><br>
+                            • p ∨ ¬p (Law of Excluded Middle — "Either it is raining or it is not raining")<br>
+                            • ¬(p ∧ ¬p) (Law of Non-Contradiction — "It can't be both raining and not raining")<br>
+                            • (p ∧ q) → p (Simplification — "If p AND q are true, then p is true")<br><br>
+                            <strong>Method to check:</strong> Construct the truth table. If ALL entries in the final column are T → tautology. ALL F → contradiction. Mixed → contingency.
+                        </div>
+                        <div class="story-moral">💡 Tautology = always T (like p ∨ ¬p). Contradiction = always F (like p ∧ ¬p). Contingency = sometimes T, sometimes F.</div>
+                    </div>
+
+                    <h3>Worked Example: Checking a Tautology</h3>
+                    <p>Show that (p → q) ∨ (q → p) is a tautology.</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Construct the truth table</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            <table class="truth-table">
+                                <tr><th>p</th><th>q</th><th>p→q</th><th>q→p</th><th>(p→q) ∨ (q→p)</th></tr>
+                                <tr><td>T</td><td>T</td><td class="true">T</td><td class="true">T</td><td class="true">T</td></tr>
+                                <tr><td>T</td><td>F</td><td class="false">F</td><td class="true">T</td><td class="true">T</td></tr>
+                                <tr><td>F</td><td>T</td><td class="true">T</td><td class="false">F</td><td class="true">T</td></tr>
+                                <tr><td>F</td><td>F</td><td class="true">T</td><td class="true">T</td><td class="true">T</td></tr>
+                            </table>
+                            The last column is ALL T. Therefore, (p → q) ∨ (q → p) is a <strong>tautology</strong>. Intuitively: no matter what p and q are, at least one direction of the implication is always true!
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PART 4: VALID ARGUMENTS & REASONING -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">🧠 Part 4: Valid Arguments — Syllogisms and Proof Patterns</span>
+                    <h2>An Argument Is Valid If the Conclusion Follows from the Premises</h2>
+
+                    <p>In mathematical reasoning, an <strong>argument</strong> consists of <strong>premises</strong> (given statements) and a <strong>conclusion</strong>. The argument is valid if whenever ALL premises are true, the conclusion must also be true.</p>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Valid Arguments</div>
+                        <div class="story-title">Modus Ponens, Modus Tollens, and the Syllogism</div>
+                        <div class="story-text">
+                            <strong>Modus Ponens (Mode of Affirming):</strong><br>
+                            Premise 1: p → q<br>
+                            Premise 2: p<br>
+                            Conclusion: ∴ q<br>
+                            "If it rains, the ground gets wet. It rains. Therefore, the ground gets wet." ✅<br><br>
+                            <strong>Modus Tollens (Mode of Denying):</strong><br>
+                            Premise 1: p → q<br>
+                            Premise 2: ¬q<br>
+                            Conclusion: ∴ ¬p<br>
+                            "If it rains, the ground gets wet. The ground is NOT wet. Therefore, it did NOT rain." ✅<br><br>
+                            <strong>Hypothetical Syllogism:</strong><br>
+                            Premise 1: p → q<br>
+                            Premise 2: q → r<br>
+                            Conclusion: ∴ p → r<br>
+                            "Chain of implications: if p then q, if q then r, so if p then r." ✅<br><br>
+                            <strong>Fallacies (invalid arguments to watch for):</strong><br>
+                            • Fallacy of the converse: p → q and q does NOT imply p ❌<br>
+                            • Fallacy of the inverse: p → q and ¬p does NOT imply ¬q ❌
+                        </div>
+                        <div class="story-moral">💡 Valid argument = when premises are true, conclusion MUST be true. Invalid = fallacy. Modus ponens and tollens are the two workhorses of logical proof.</div>
+                    </div>
+
+                    <h3>Worked Example: Checking Argument Validity</h3>
+                    <p>Check if the following argument is valid: "If I study, I pass. I pass. Therefore, I studied."</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Translate to symbols and check</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            Let p = "I study", q = "I pass."<br>
+                            Premise 1: p → q<br>
+                            Premise 2: q<br>
+                            Conclusion: ∴ p<br><br>
+                            This is the <strong>fallacy of the converse</strong>! From p → q and q, we CANNOT conclude p.<br><br>
+                            <strong>Why?</strong> What if I passed because the test was easy? I could pass without studying. The premises don't rule out other ways to pass. So the argument is <strong>INVALID</strong>.<br><br>
+                            <strong>Truth table check:</strong> Is there a case where premises are T but conclusion is F?<br>
+                            p = F, q = T: p→q = T (F→T = T), q = T, but p = F. Yes! This row shows the argument is invalid.
+                        </div>
+                    </div>
+
+                    <div class="insight-box">
+                        <div class="insight-label">🌟 Argument Validity Cheat Sheet</div>
+                        <div class="insight-text">Valid: Modus Ponens (p→q, p ⊢ q) &nbsp;|&nbsp; Modus Tollens (p→q, ¬q ⊢ ¬p) &nbsp;|&nbsp; Syllogism (p→q, q→r ⊢ p→r)</div>
+                        <div class="insight-sub">Invalid: Converse fallacy (p→q, q ⊢ p) ❌ &nbsp;|&nbsp; Inverse fallacy (p→q, ¬p ⊢ ¬q) ❌</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- COMMON MISTAKES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part1">⚠️ Common Mistakes (Don't Fall For These!)</span>
+                    <h2>These Traps Trip Up Even Top Students</h2>
+
+                    <div class="story-card">
+                        <div class="story-label">⚠️ Mistake 1</div>
+                        <div class="story-title">Confusing OR (∨) in Logic with "Either...Or" in English</div>
+                        <div class="story-text">
+                            <strong>Wrong:</strong> p ∨ q means "p or q but not both" ❌<br>
+                            <strong>Right:</strong> In logic, p ∨ q is <strong>inclusive OR</strong> — at least one is true (could be both).<br><br>
+                            The "exclusive or" (either p or q but not both) is a different connective called XOR (⊻).<br><br>
+                            <strong>Example:</strong> "I will have tea OR coffee" in everyday English usually means one OR the other but not both. But in logic, p ∨ q includes the possibility of both! If you want exactly one, use XOR.
+                        </div>
+                        <div class="story-moral">⚠️ ∨ = inclusive OR (at least one). English "or" is often exclusive. In JEE, ∨ is ALWAYS inclusive unless specified as "either...or...but not both."</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">⚠️ Mistake 2</div>
+                        <div class="story-title">Thinking "If p then q" Means the Same as "p Causes q"</div>
+                        <div class="story-text">
+                            <strong>Wrong:</strong> p → q means p causes q ❌<br>
+                            <strong>Right:</strong> p → q is about truth values, not causation. "If 2+2=4, then Paris is the capital of France" is TRUE (both true). "If 2+2=5, then I'm the Pope" is TRUE (false → anything is true).<br><br>
+                            The implication only says: "It is NOT the case that p is true and q is false simultaneously." It has nothing to do with causality, time, or relevance!
+                        </div>
+                        <div class="story-moral">⚠️ p → q is a truth-functional connective, not a causal statement. It's only about combinations of truth values, not about whether p actually "causes" q.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">⚠️ Mistake 3</div>
+                        <div class="story-title">Confusing the Converse with the Contrapositive</div>
+                        <div class="story-text">
+                            <strong>Wrong:</strong> p → q ≡ q → p ❌<br>
+                            <strong>Right:</strong> p → q ≡ ¬q → ¬p (contrapositive). The converse q → p is NOT equivalent!<br><br>
+                            <strong>Example:</strong> "If it's a dog, it's an animal" (p → q) is true.<br>
+                            • Contrapositive: "If it's NOT an animal, it's NOT a dog." (¬q → ¬p) ✅ Also true.<br>
+                            • Converse: "If it's an animal, it's a dog." (q → p) ❌ False! (Could be a cat.)<br><br>
+                            Learning to distinguish the contrapositive (equivalent) from the converse (not equivalent) is crucial for JEE.
+                        </div>
+                        <div class="story-moral">⚠️ Contrapositive = ¬q → ¬p (equivalent to original). Converse = q → p (NOT equivalent). Don't swap them!</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PROBLEM-SOLVING TOOLKIT -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part2">🧠 Mathematical Reasoning Toolkit</span>
+                    <h2>4 Strategies That Crack Almost Any Problem</h2>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 1</div>
+                        <div class="story-title">"Build the Truth Table" — The Universal Method</div>
+                        <div class="story-text">
+                            When in doubt, <strong>build a truth table</strong>. For n statements, you need 2ⁿ rows. For JEE, n is almost always 2 (4 rows) or sometimes 3 (8 rows).<br><br>
+                            <strong>Steps:</strong><br>
+                            1. List all combinations of T/F for the atomic statements.<br>
+                            2. Compute intermediate columns for sub-statements.<br>
+                            3. Compute the final column.<br>
+                            4. Analyze: all T = tautology, all F = contradiction, mixed = contingency.<br><br>
+                            <strong>Pro tip:</strong> For tautology checking, you can also use the <strong>method of contradiction</strong> — assume the statement is false and check if that leads to a contradiction.
+                        </div>
+                        <div class="story-moral">💡 Truth tables are the universal tool. For 2 statements (4 rows), you can always build the truth table within a minute.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 2</div>
+                        <div class="story-title">"Use Known Equivalences" Instead of Full Truth Tables</div>
+                        <div class="story-text">
+                            For speed, memorize these logical equivalences:<br><br>
+                            • <strong>De Morgan's Laws:</strong> ¬(p ∧ q) ≡ ¬p ∨ ¬q and ¬(p ∨ q) ≡ ¬p ∧ ¬q<br>
+                            • <strong>Implication:</strong> p → q ≡ ¬p ∨ q (very useful for simplifying!)<br>
+                            • <strong>Contrapositive:</strong> p → q ≡ ¬q → ¬p<br>
+                            • <strong>Double negation:</strong> ¬(¬p) ≡ p<br>
+                            • <strong>Distributive:</strong> p ∨ (q ∧ r) ≡ (p ∨ q) ∧ (p ∨ r)<br><br>
+                            These let you transform compound statements into simpler equivalent forms without building truth tables.
+                        </div>
+                        <div class="story-moral">💡 p → q ≡ ¬p ∨ q is the single most useful equivalence. It rewrites implication as OR, which is often easier to work with.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 3</div>
+                        <div class="story-title">"For Valid Arguments, Look for the Counterexample"</div>
+                        <div class="story-text">
+                            To check if an argument is valid, try to find a <strong>counterexample</strong> — a situation where all premises are true but the conclusion is false.<br><br>
+                            If you can find one, the argument is invalid. If no such situation exists, it's valid.<br><br>
+                            <strong>Example:</strong> "If it's a square (p), it has 4 sides (q). This shape has 4 sides. Therefore it's a square."<br>
+                            Counterexample: A rectangle has 4 sides but isn't necessarily a square. Premises T, conclusion F → invalid.
+                        </div>
+                        <div class="story-moral">💡 Invalid argument = there exists at least one case where premises are T but conclusion is F. Find that case, and you've disproven the argument.</div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-label">🧠 Strategy 4</div>
+                        <div class="story-title">"Quantified Statements — Watch the Order"</div>
+                        <div class="story-text">
+                            For JEE Main, you may encounter statements with <strong>quantifiers</strong>:<br><br>
+                            • ∀ (for all): "∀x &gt; 0, x² &gt; 0" → true<br>
+                            • ∃ (there exists): "∃x &gt; 0, x² = 2" → true (x = √2)<br><br>
+                            <strong>Negation of quantifiers:</strong><br>
+                            • ¬(∀x P(x)) ≡ ∃x ¬P(x) — "Not all birds fly" ≡ "There exists a bird that doesn't fly"<br>
+                            • ¬(∃x P(x)) ≡ ∀x ¬P(x) — "There is no unicorn" ≡ "Everything is not a unicorn"<br><br>
+                            <strong>Key trick:</strong> To negate a quantified statement: flip ∀ ↔ ∃ and negate the predicate.
+                        </div>
+                        <div class="story-moral">💡 ¬(∀x P(x)) = ∃x ¬P(x). ¬(∃x P(x)) = ∀x ¬P(x). Flip the quantifier and negate the predicate.</div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- ADVANCED WORKED EXAMPLES -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🔥 Advanced Worked Examples (JEE Level)</span>
+                    <h2>Multi-Step Problems That Combine Multiple Concepts</h2>
+
+                    <h3>Example 1: Tautology Check Using Equivalence</h3>
+                    <p>Show that (p → q) ∧ (p → ¬q) → ¬p is a tautology.</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Rewrite implications using p → q ≡ ¬p ∨ q</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            (p → q) ∧ (p → ¬q) → ¬p<br>
+                            ≡ [(¬p ∨ q) ∧ (¬p ∨ ¬q)] → ¬p<br><br>
+                            Inside brackets: (¬p ∨ q) ∧ (¬p ∨ ¬q) = ¬p ∨ (q ∧ ¬q) [distributive]<br>
+                            = ¬p ∨ F [q ∧ ¬q is contradiction = F]<br>
+                            = ¬p [¬p ∨ F ≡ ¬p]
+                        </div>
+                    </div>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">2</span>
+                            <span><strong>The statement reduces to ¬p → ¬p</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            The whole statement simplifies to: ¬p → ¬p.<br>
+                            An implication where both sides are the same is always T (p → p is a tautology).<br>
+                            Therefore, the original statement is a <strong>tautology</strong>. ✅<br><br>
+                            <strong>Intuitive meaning:</strong> If p implies both q AND not-q, then p must be false (proof by contradiction).
+                        </div>
+                    </div>
+
+                    <h3>Example 2: Checking Argument Validity</h3>
+                    <p>Check the validity: "If I go to the gym (G), I feel healthy (H). If I eat well (E), I feel healthy. I don't feel healthy. Therefore, I didn't go to the gym AND I didn't eat well."</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Translate to symbols</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            Premises:<br>
+                            1. G → H<br>
+                            2. E → H<br>
+                            3. ¬H<br>
+                            Conclusion: ¬G ∧ ¬E.<br><br>
+                            From ¬H and G → H: By modus tollens, ¬G is valid.<br>
+                            From ¬H and E → H: By modus tollens, ¬E is valid.<br>
+                            Since both ¬G and ¬E are true, their conjunction ¬G ∧ ¬E is also true.<br><br>
+                            <strong>The argument is VALID.</strong> ✅<br><br>
+                            But wait — in JEE, you need to be careful. The question might ask if the <strong>conclusion follows from the premises</strong>. Since both modus tollens steps are valid, the conclusion does follow. So the argument is valid.
+                        </div>
+                    </div>
+
+                    <h3>Example 3: Negating Quantified Statements</h3>
+                    <p>Write the negation of: "∀x ∈ ℝ, (x² &gt; 0) ∨ (x² = 0)".</p>
+
+                    <div class="step-reveal">
+                        <div class="step-header" onclick="toggleStep(this)">
+                            <span class="step-number">1</span>
+                            <span><strong>Apply the negation rule</strong></span>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="step-content">
+                            ¬(∀x ∈ ℝ, (x² &gt; 0) ∨ (x² = 0))<br>
+                            ≡ ∃x ∈ ℝ, ¬[(x² &gt; 0) ∨ (x² = 0)]<br>
+                            ≡ ∃x ∈ ℝ, ¬(x² &gt; 0) ∧ ¬(x² = 0) [De Morgan's]<br>
+                            ≡ ∃x ∈ ℝ, (x² ≤ 0) ∧ (x² ≠ 0)<br>
+                            ≡ ∃x ∈ ℝ, (x² &lt; 0)<br><br>
+                            But wait — x² is never negative for real x! So the negation is: "There exists a real x such that x² &lt; 0." This is FALSE. So the original statement is TRUE (which makes sense: every real number squared is either positive or zero).
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <!-- ============================================================ -->
+                    <!-- PRACTICE SECTION -->
+                    <!-- ============================================================ -->
+                    <span class="section-label part3">🎯 Practice Zone: Test Your Understanding</span>
+                    <h2>Practice Zone: Think Logically</h2>
+                    <p>These questions test if you truly <strong>understand</strong> mathematical reasoning.</p>
+
+                    <div id="practice-qs"></div>
+
+                    <div style="display:flex;gap:10px;margin-top:10px">
+                        <button onclick="resetPractice()" class="btn btn-primary">🔄 Reset</button>
+                        <button onclick="markComplete()" class="btn btn-success" id="complete-btn">Mark Lesson Complete</button>
+                    </div>
+
+                    <div style="display:flex;justify-content:space-between;margin-top:30px;padding-top:16px;border-top:1px solid var(--border)">
+                        <a href="lesson-differential-equations.html" class="btn btn-primary">← DE</a>
+                        <a href="lesson-algebra.html" class="btn btn-success">Algebra →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function toggleStep(el) {
+        var content = el.nextElementSibling;
+        var arrow = el.querySelector('.arrow');
+        if (content.classList.contains('open')) {
+            content.classList.remove('open');
+            arrow.classList.remove('open');
+        } else {
+            content.classList.add('open');
+            arrow.classList.add('open');
+        }
+    }
+
+    var practiceQs = [
+        {
+            id: 9001,
+            text: "📝 Which of these is a mathematical statement?",
+            opts: [
+                {l: "A", t: "\"Hello, world!\"", c: false},
+                {l: "B", t: "\"x + 3 = 7\"", c: false},
+                {l: "C", t: "\"2 + 2 = 5\"", c: true},
+                {l: "D", t: "\"Is it raining?\"", c: false}
+            ],
+            sol: "<strong>\"2 + 2 = 5\"</strong> is a statement because it's a declarative sentence with a definite truth value (it's false). \"Hello, world!\" is an exclamation. \"x + 3 = 7\" is an open sentence (depends on x). \"Is it raining?\" is a question. Only declarative sentences with truth value are statements."
+        },
+        {
+            id: 9002,
+            text: "🔗 If p = T and q = F, what is ¬(p ∧ q)?",
+            opts: [
+                {l: "A", t: "True", c: true},
+                {l: "B", t: "False", c: false},
+                {l: "C", t: "Cannot determine", c: false},
+                {l: "D", t: "Same as p", c: false}
+            ],
+            sol: "p ∧ q = T ∧ F = F. Then ¬(p ∧ q) = ¬F = <strong>True</strong>. Alternatively, by De Morgan's: ¬(p ∧ q) = ¬p ∨ ¬q = F ∨ T = T. Either way, the answer is True."
+        },
+        {
+            id: 9003,
+            text: "→ What is the truth value of p → q when p = F and q = T?",
+            opts: [
+                {l: "A", t: "True", c: true},
+                {l: "B", t: "False", c: false},
+                {l: "C", t: "Undefined", c: false},
+                {l: "D", t: "Depends on q", c: false}
+            ],
+            sol: "p → q is F → T = <strong>True</strong>. An implication is false ONLY when the antecedent is true and the consequent is false. In all other cases (including false antecedent), the implication is true. \"False implies anything\" is vacuously true."
+        },
+        {
+            id: 9004,
+            text: "✅ Which is a tautology?",
+            opts: [
+                {l: "A", t: "p ∧ ¬p", c: false},
+                {l: "B", t: "p ∨ ¬p", c: true},
+                {l: "C", t: "p → ¬p", c: false},
+                {l: "D", t: "p ∧ q", c: false}
+            ],
+            sol: "<strong>p ∨ ¬p</strong> (Law of Excluded Middle) is a tautology — it's always true. Either p is true or not-p is true — there's no third option. p ∧ ¬p is a contradiction (always false). p → ¬p and p ∧ q are contingencies (sometimes true, sometimes false)."
+        },
+        {
+            id: 9005,
+            text: "🧠 Given p → q and ¬q, what can you conclude?",
+            opts: [
+                {l: "A", t: "p", c: false},
+                {l: "B", t: "¬p", c: true},
+                {l: "C", t: "q", c: false},
+                {l: "D", t: "¬q", c: false}
+            ],
+            sol: "This is <strong>Modus Tollens</strong>. From p → q and ¬q, we conclude ¬p. \"If it rained, the ground is wet. The ground is NOT wet. Therefore, it did NOT rain.\" This is a valid argument form — always truth-preserving."
+        },
+        {
+            id: 9006,
+            text: "🔗 The contrapositive of \"If it's a bird, it can fly\" is:",
+            opts: [
+                {l: "A", t: "If it can fly, it's a bird", c: false},
+                {l: "B", t: "If it can't fly, it's not a bird", c: true},
+                {l: "C", t: "If it's not a bird, it can't fly", c: false},
+                {l: "D", t: "It's a bird and it can't fly", c: false}
+            ],
+            sol: "p = \"it's a bird\", q = \"it can fly\". Original: p → q. Contrapositive: ¬q → ¬p = <strong>\"If it can't fly, it's not a bird\"</strong>. The contrapositive is logically equivalent to the original. (The original is actually false — penguins are birds that can't fly — so the contrapositive is also false, which is correct!)"
+        },
+        {
+            id: 9007,
+            text: "✅ (p → q) ∧ p → q is a:",
+            opts: [
+                {l: "A", t: "Tautology", c: true},
+                {l: "B", t: "Contradiction", c: false},
+                {l: "C", t: "Contingency", c: false},
+                {l: "D", t: "Not a statement", c: false}
+            ],
+            sol: "This is <strong>Modus Ponens</strong> expressed as a conditional. (p → q) ∧ p → q. If p implies q, and p is true, then q must be true. This is always true — it's a <strong>tautology</strong>. The truth table: when p=T, q=T → (T∧T)→T = T. When p=T, q=F → (F∧T)→F = T→F = ... wait: (T→F)∧T → F = F∧T→F = F→F = T. All cases give T."
+        },
+        {
+            id: 9008,
+            text: "📝 Which is TRUE about p → q?",
+            opts: [
+                {l: "A", t: "It's equivalent to q → p", c: false},
+                {l: "B", t: "It's equivalent to ¬q → ¬p", c: true},
+                {l: "C", t: "It's equivalent to ¬p → ¬q", c: false},
+                {l: "D", t: "It's equivalent to p ∧ ¬q", c: false}
+            ],
+            sol: "p → q is equivalent to its <strong>contrapositive: ¬q → ¬p</strong>. The converse (q → p) and inverse (¬p → ¬q) are NOT equivalent. Another useful equivalence: p → q ≡ ¬p ∨ q. And p → q ≡ ¬(p ∧ ¬q) — it's only false when p is true AND q is false."
+        },
+        {
+            id: 9009,
+            text: "🔗 p ∨ (q ∧ r) is equivalent to:",
+            opts: [
+                {l: "A", t: "(p ∨ q) ∧ (p ∨ r)", c: true},
+                {l: "B", t: "p ∧ (q ∨ r)", c: false},
+                {l: "C", t: "(p ∧ q) ∨ (p ∧ r)", c: false},
+                {l: "D", t: "p ∨ q ∨ r", c: false}
+            ],
+            sol: "This is the <strong>distributive law</strong>: p ∨ (q ∧ r) ≡ <strong>(p ∨ q) ∧ (p ∨ r)</strong>. OR distributes over AND, just like multiplication distributes over addition. The dual is: p ∧ (q ∨ r) ≡ (p ∧ q) ∨ (p ∧ r). These are important logical equivalences."
+        },
+        {
+            id: 9010,
+            text: "⚠️ The fallacy \"p → q, q, therefore p\" is called:",
+            opts: [
+                {l: "A", t: "Modus ponens", c: false},
+                {l: "B", t: "Modus tollens", c: false},
+                {l: "C", t: "Fallacy of the converse", c: true},
+                {l: "D", t: "Hypothetical syllogism", c: false}
+            ],
+            sol: "This is the <strong>fallacy of the converse</strong>. From p → q and q, you CANNOT conclude p. Example: \"If it's a square, it has 4 sides. This shape has 4 sides. Therefore it's a square.\" (It could be a rectangle!) p → q and q → p are different. Always check: could there be other ways for q to be true without p?"
+        },
+        {
+            id: 9011,
+            text: "📝 The negation of ∀x, P(x) is:",
+            opts: [
+                {l: "A", t: "∀x, ¬P(x)", c: false},
+                {l: "B", t: "∃x, ¬P(x)", c: true},
+                {l: "C", t: "¬∀x, P(x)", c: false},
+                {l: "D", t: "∃x, P(x)", c: false}
+            ],
+            sol: "The negation of \"for all x, P(x)\" is <strong>\"there exists x such that not P(x)\"</strong>. ¬(∀x P(x)) ≡ ∃x ¬P(x). To disprove a universal statement, you just need one counterexample. For instance, to disprove \"all birds can fly,\" you just need to find one bird (like a penguin) that cannot."
+        },
+        {
+            id: 9012,
+            text: "✅ (p → q) ∨ (q → p) is a:",
+            opts: [
+                {l: "A", t: "Tautology", c: true},
+                {l: "B", t: "Contradiction", c: false},
+                {l: "C", t: "Contingency", c: false},
+                {l: "D", t: "Invalid statement", c: false}
+            ],
+            sol: "This is a famous <strong>tautology</strong>. Build the truth table: p=T,q=T: (T→T)∨(T→T)=T∨T=T. p=T,q=F: (T→F)∨(F→T)=F∨T=T. p=F,q=T: (F→T)∨(T→F)=T∨F=T. p=F,q=F: (F→F)∨(F→F)=T∨T=T. All T! Intuitively: no matter what p and q are, at least one direction of the implication holds."
+        }
+    ];
+
+    var answered = {}, correctCount = 0, lessonSlug = "mathematical-reasoning";
+
+    function renderPractice() {
+        var c = document.getElementById('practice-qs'), h = '';
+        for (var i = 0; i < practiceQs.length; i++) {
+            var q = practiceQs[i], o = '';
+            for (var j = 0; j < q.opts.length; j++) {
+                o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+            }
+            h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+        }
+        c.innerHTML = h;
+        updateScore();
+    }
+
+    function getCorrectLabel(q) {
+        for (var i = 0; i < q.opts.length; i++) {
+            if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+        }
+        return '';
+    }
+
+    function selectOpt(qId, idx) {
+        if (answered[qId]) return;
+        answered[qId] = true;
+        var q = practiceQs.filter(function(x){return x.id === qId})[0];
+        var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+        var isCorrect = q.opts[idx].c;
+        for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+        if (isCorrect) {
+            opts[idx].classList.add('correct');
+            document.getElementById('result-'+qId).textContent = '✅ Correct! +4';
+            document.getElementById('result-'+qId).className = 'q-result correct';
+            correctCount++;
+        } else {
+            opts[idx].classList.add('wrong');
+            document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+            document.getElementById('result-'+qId).className = 'q-result wrong';
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) opts[i].classList.add('correct');
+            }
+        }
+        document.getElementById('soln-'+qId).classList.add('show');
+        updateScore();
+    }
+
+    function updateScore() {
+        var t = Object.keys(answered).length;
+        var el = document.getElementById('score-display');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'score-display';
+            el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+            document.getElementById('practice-qs').before(el);
+        }
+        el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+    }
+
+    function resetPractice() {
+        if (!confirm('Reset all answers?')) return;
+        answered = {}; correctCount = 0;
+        document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+        document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+        document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+        var el = document.getElementById('score-display');
+        if (el) el.textContent = '';
+        renderPractice();
+    }
+
+    function markComplete() {
+        try {
+            var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+            if (done.indexOf(lessonSlug) === -1) {
+                done.push(lessonSlug);
+                localStorage.setItem('jee-course-done', JSON.stringify(done));
+            }
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        } catch(e) {}
+    }
+
+    renderPractice();
+    try {
+        var done = JSON.parse(localStorage.getItem('jee-course-done')||'[]');
+        if (done.indexOf(lessonSlug) !== -1) {
+            document.getElementById('complete-btn').textContent = '✅ Completed!';
+            document.getElementById('complete-btn').style.opacity = '0.6';
+        }
+    } catch(e) {}
+    </script>
+</body>
+</html>

@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Arithmetic — The Foundation of All Math | vlymbooq</title>
+    <meta name="description" content="Master Arithmetic for competitive exams. Number Systems, Fractions, Ratios, Percentages, Averages, Profit & Loss, Interest, Time & Work, Speed & Distance.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-arithmetic.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+        .q-badge{display:inline-block;padding:2px 8px;border-radius:100px;font-size:.7em;font-weight:600;margin-bottom:6px}
+        .q-badge.easy{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .q-badge.medium{background:rgba(245,158,11,.1);color:var(--amber)}
+        .q-badge.hard{background:rgba(239,68,68,.1);color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+        .slide-up{animation:slide-up .6s ease forwards}
+
+        .progress-tracker{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+        .progress-tracker .p-step{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;font-size:.75em;border:1px solid var(--border);color:var(--text-muted);transition:all .3s}
+        .progress-tracker .p-step.done{border-color:var(--emerald);color:var(--emerald);background:rgba(52,211,153,.06)}
+        .progress-tracker .p-step.active{border-color:var(--purple);color:var(--purple);background:rgba(167,139,250,.08)}
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part2{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part3{background:rgba(245,158,11,.1);color:var(--amber)}
+        .section-label.part4{background:rgba(34,211,238,.1);color:var(--cyan)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.72em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.7em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--purple);font-weight:700}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="math.html">Math Map</a>
+                <a href="index.html#exams">Exams</a>
+                <a href="micro-test.html">Drill</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Math Lessons</div>
+                    <a href="math.html">← Math Concept Map</a>
+                    <a href="lesson-arithmetic.html" class="active" style="color:var(--text);font-weight:600">Arithmetic</a>
+                    <a href="jee/course/maths/lesson-algebra.html">Algebra</a>
+                    <a href="jee/course/maths/lesson-calculus.html">Calculus</a>
+                    <a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geometry</a>
+                    <a href="jee/course/maths/lesson-trigonometry.html">Trigonometry</a>
+                    <a href="jee/course/maths/lesson-inverse-trigonometry.html">Inverse Trigonometry</a>
+                    <a href="jee/course/maths/lesson-application-derivatives.html">App of Derivatives</a>
+                    <a href="jee/course/maths/lesson-integration.html">Integration</a>
+                    <a href="jee/course/maths/lesson-differential-equations.html">Diff Equations</a>
+                    <a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D</a>
+                    <a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats</a>
+                    <a href="jee/course/maths/lesson-sets-relations-functions.html">Sets, Relations &amp; Functions</a>
+                    <a href="jee/course/maths/lesson-mathematical-reasoning.html">Mathematical Reasoning</a>
+                </div>
+            </div>
+            <div class="main">
+                <div class="lesson-body">
+
+                <div class="progress-tracker">
+                    <div class="p-step active" id="p-step-0">🔢 Number Systems</div>
+                    <div class="p-step" id="p-step-1">➗ Fractions &amp; Indices</div>
+                    <div class="p-step" id="p-step-2">📊 Ratios &amp; Averages</div>
+                    <div class="p-step" id="p-step-3">💰 Applied Arithmetic</div>
+                </div>
+
+                <h2>Arithmetic — The Foundation of All Math</h2>
+                <p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Arithmetic is the oldest and most practical branch of mathematics. Every competitive exam — SSC, Banking, Railways, Defence, CTET, CLAT, UPSC CSAT — tests your arithmetic fluency. This lesson builds deep intuition, not just formulas.</p>
+
+                <!-- ========== PART 1: NUMBER SYSTEMS ========== -->
+                <div class="section-label part1">Part 1</div>
+                <h2>🔢 Number Systems &amp; Divisibility</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Human Need to Count</div>
+                    <div class="story-title">Why Numbers Were Invented</div>
+                    <div class="story-text">Thousands of years ago, a shepherd needed to know if all his sheep were back. He'd put a pebble in a pouch for each sheep that left the pen. At sunset, he matched pebbles to returning sheep. That matching is the origin of counting — <strong>one-to-one correspondence</strong>. From that simple need, humanity built the entire number system: Natural numbers (the pebbles), then Integers (adding debt), Rational numbers (sharing food), and Real numbers (measuring everything).</div>
+                    <div class="story-moral">Every number type was invented to solve a practical human problem.</div>
+                </div>
+
+                <h3>The Number Zoo</h3>
+                <p>Here is how numbers are classified. Each box contains the previous:</p>
+
+                <div class="diagram-box">
+                    <svg viewBox="0 0 600 340" style="max-width:560px">
+                        <rect x="10" y="10" width="580" height="320" rx="12" fill="none" stroke="rgba(167,139,250,.2)" stroke-width="2" stroke-dasharray="6,4"/>
+                        <text x="40" y="36" font-size="11" fill="var(--text-muted)">Real Numbers ℝ</text>
+                        <rect x="50" y="46" width="500" height="270" rx="10" fill="rgba(167,139,250,.06)" stroke="rgba(167,139,250,.25)" stroke-width="1.5"/>
+                        <text x="70" y="72" font-size="11" fill="var(--text-muted)">Rational ℚ</text>
+                        <rect x="90" y="82" width="420" height="225" rx="10" fill="rgba(52,211,153,.06)" stroke="rgba(52,211,153,.25)" stroke-width="1.5"/>
+                        <text x="110" y="108" font-size="11" fill="var(--text-muted)">Integers ℤ</text>
+                        <rect x="140" y="118" width="330" height="180" rx="10" fill="rgba(245,158,11,.06)" stroke="rgba(245,158,11,.25)" stroke-width="1.5"/>
+                        <text x="160" y="144" font-size="11" fill="var(--text-muted)">Whole Numbers ℕ₀</text>
+                        <rect x="200" y="154" width="235" height="135" rx="10" fill="rgba(34,211,238,.06)" stroke="rgba(34,211,238,.25)" stroke-width="1.5"/>
+                        <text x="220" y="180" font-size="11" fill="var(--text-muted)">Natural Numbers ℕ</text>
+                        <text x="220" y="202" font-size="11" fill="var(--text-sec)">Counting: 1, 2, 3, ...</text>
+                        <text x="220" y="226" font-size="10" fill="var(--text-muted)">+ 0 → Whole</text>
+                        <text x="220" y="246" font-size="10" fill="var(--text-muted)">+ negatives → Integers</text>
+                        <text x="220" y="266" font-size="10" fill="var(--text-muted)">+ fractions → Rational</text>
+
+                        <text x="300" y="320" font-size="10" fill="var(--text-muted)" font-style="italic">Irrational: π, √2, e — non-repeating, non-terminating decimals</text>
+                        <line x1="50" y1="130" x2="50" y2="320" stroke="rgba(239,68,68,.2)" stroke-width="1" stroke-dasharray="3,3"/>
+                        <text x="14" y="264" font-size="9" fill="var(--text-muted)" transform="rotate(-90,14,264)">Irrationals</text>
+                    </svg>
+                    <div class="diagram-caption">The hierarchy of number systems. Each layer adds new numbers that solve new problems.</div>
+                </div>
+
+                <h3>Divisibility Rules — Shortcuts That Save Minutes</h3>
+                <p>Quick checks to see if one number divides another without actually dividing:</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">By 2</div><div class="f-math">Last digit even (0,2,4,6,8)</div></div>
+                    <div class="formula-card"><div class="f-label">By 3</div><div class="f-math">Sum of digits ÷ 3</div></div>
+                    <div class="formula-card"><div class="f-label">By 4</div><div class="f-math">Last 2 digits ÷ 4</div></div>
+                    <div class="formula-card"><div class="f-label">By 5</div><div class="f-math">Last digit 0 or 5</div></div>
+                    <div class="formula-card"><div class="f-label">By 6</div><div class="f-math">Divisible by 2 AND 3</div></div>
+                    <div class="formula-card"><div class="f-label">By 8</div><div class="f-math">Last 3 digits ÷ 8</div></div>
+                    <div class="formula-card"><div class="f-label">By 9</div><div class="f-math">Sum of digits ÷ 9</div></div>
+                    <div class="formula-card"><div class="f-label">By 11</div><div class="f-math">(Sum odd − sum even) ÷ 11</div></div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-label">Example</div>
+                    <div class="ex-text">Is 7,284 divisible by 11? Sum of odd-position digits: 7 + 8 = 15. Sum of even-position digits: 2 + 4 = 6. Difference: 15 − 6 = 9. Since 9 is not a multiple of 11, <strong>7,284 is not divisible by 11</strong>.</div>
+                </div>
+
+                <h3>LCM &amp; HCF — The Building Blocks</h3>
+                <p>Every number can be broken into prime factors. <strong>HCF</strong> (GCD) is the biggest common factor. <strong>LCM</strong> is the smallest common multiple.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Key Insight</div>
+                    <div class="insight-text">For any two numbers: LCM × HCF = Product of numbers</div>
+                    <div class="insight-sub">Always true. Use it to find one when you know the other.</div>
+                </div>
+
+                <div class="story-card">
+                    <div class="story-label">Real-World LCM</div>
+                    <div class="story-title">The Traffic Light Problem</div>
+                    <div class="story-text">Two traffic lights blink together. One blinks every 24 seconds, the other every 36 seconds. When will they blink together again? This is an LCM problem: find LCM(24, 36). Prime factors: 24 = 2³ × 3, 36 = 2² × 3². Take highest powers: 2³ × 3² = 8 × 9 = <strong>72 seconds</strong>.</div>
+                    <div class="story-moral">LCM = "least common multiple" — the next time two cycles align.</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">1</div>
+                        <span style="font-size:.88em;font-weight:600">Find HCF of 144 and 198</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        <strong>Method 1 (Prime factorization):</strong><br>
+                        144 = 2⁴ × 3²<br>
+                        198 = 2 × 3² × 11<br>
+                        Common factors: 2 × 3² = 2 × 9 = <strong>18</strong><br><br>
+                        <strong>Method 2 (Division/Euclid's algorithm):</strong><br>
+                        198 ÷ 144 = 1 remainder 54<br>
+                        144 ÷ 54 = 2 remainder 36<br>
+                        54 ÷ 36 = 1 remainder 18<br>
+                        36 ÷ 18 = 2 remainder 0<br>
+                        HCF = <strong>18</strong>
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 2: FRACTIONS, DECIMALS, SURDS & INDICES ========== -->
+                <div class="section-label part2">Part 2</div>
+                <h2>➗ Fractions, Decimals, Surds &amp; Indices</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Breaking Things into Parts</div>
+                    <div class="story-title">The Pizza That Taught Fractions</div>
+                    <div class="story-text">A pizza cut into 8 slices. You eat 3. You've eaten ³⁄₈ of the pizza. That's a fraction — the numerator (3) counts the parts you have, and the denominator (8) tells how many equal parts make the whole. Fractions are just <strong>division that hasn't been performed yet</strong>.</div>
+                    <div class="story-moral">A fraction is a quotient written vertically. ³⁄₈ = 3 ÷ 8.</div>
+                </div>
+
+                <h3>Types of Fractions</h3>
+                <ul>
+                    <li><strong>Proper</strong>: numerator &lt; denominator (e.g., ²⁄₅) — value &lt; 1</li>
+                    <li><strong>Improper</strong>: numerator ≥ denominator (e.g., ⁷⁄₃) — value ≥ 1</li>
+                    <li><strong>Mixed</strong>: whole + proper fraction (e.g., 2⅓ = ⁷⁄₃)</li>
+                    <li><strong>Decimal</strong>: fraction in base-10 (e.g., ³⁄₈ = 0.375)</li>
+                </ul>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Addition</div><div class="f-math">ᵃ⁄ᵦ + ᶜ⁄ₔ = (ad + bc) / bd</div></div>
+                    <div class="formula-card"><div class="f-label">Multiplication</div><div class="f-math">ᵃ⁄ᵦ × ᶜ⁄ₔ = ac / bd</div></div>
+                    <div class="formula-card"><div class="f-label">Division</div><div class="f-math">ᵃ⁄ᵦ ÷ ᶜ⁄ₔ = a/b × d/c</div></div>
+                    <div class="formula-card"><div class="f-label">Comparison</div><div class="f-math">ᵃ⁄ᵦ > ᶜ⁄ₔ iff ad > bc</div></div>
+                </div>
+
+                <h3>Decimal Conversions</h3>
+                <p>Every fraction can be written as a decimal — either <strong>terminating</strong> (denominator's prime factors are only 2 and 5) or <strong>repeating</strong>.</p>
+
+                <div class="example-box">
+                    <div class="ex-label">Repeating Decimal Trick</div>
+                    <div class="ex-text">To convert 0.̅142857 to a fraction: Let x = 0.142857142857... Multiply by 1,000,000 (6 digits repeat): 1,000,000x = 142,857.142857... Subtract x: 999,999x = 142,857. So x = 142,857/999,999 = 1/7. That's why 1/7 = 0.̅142857.</div>
+                </div>
+
+                <h3>Surds — Irrational Square Roots</h3>
+                <p>Surds are roots that can't be simplified to integers (√2, √3, √5). The key skill is <strong>rationalization</strong> — removing the root from the denominator.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Rationalization Formula</div>
+                    <div class="insight-text">1 / (√a + √b) = (√a − √b) / (a − b)</div>
+                    <div class="insight-sub">Multiply numerator and denominator by the conjugate.</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">2</div>
+                        <span style="font-size:.88em;font-weight:600">Simplify: 1/(√5 + √2)</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Multiply top and bottom by the conjugate (√5 − √2):<br>
+                        = (√5 − √2) / ((√5)² − (√2)²)<br>
+                        = (√5 − √2) / (5 − 2)<br>
+                        = <strong>(√5 − √2) / 3</strong>
+                    </div>
+                </div>
+
+                <h3>Laws of Indices (Exponents)</h3>
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Product</div><div class="f-math">aᵐ × aⁿ = aᵐ⁺ⁿ</div></div>
+                    <div class="formula-card"><div class="f-label">Quotient</div><div class="f-math">aᵐ ÷ aⁿ = aᵐ⁻ⁿ</div></div>
+                    <div class="formula-card"><div class="f-label">Power of Power</div><div class="f-math">(aᵐ)ⁿ = aᵐⁿ</div></div>
+                    <div class="formula-card"><div class="f-label">Zero Exponent</div><div class="f-math">a⁰ = 1 (a ≠ 0)</div></div>
+                    <div class="formula-card"><div class="f-label">Negative</div><div class="f-math">a⁻ⁿ = 1/aⁿ</div></div>
+                    <div class="formula-card"><div class="f-label">Fractional</div><div class="f-math">aᵐ/ⁿ = ⁿ√(aᵐ)</div></div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 3: RATIOS, PERCENTAGES & AVERAGES ========== -->
+                <div class="section-label part3">Part 3</div>
+                <h2>📊 Ratios, Percentages &amp; Averages</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Comparing Quantities</div>
+                    <div class="story-title">The Lemonade Stand</div>
+                    <div class="story-text">You make lemonade with 2 cups of water and 1 cup of lemon juice. The ratio of water to juice is 2:1. If you scale to 10 cups of water, you need 5 cups of juice to keep the same taste. That's <strong>proportion</strong> — ratios stay constant when you multiply both parts by the same number. In exams, ratios tell you how to share, mix, and compare.</div>
+                    <div class="story-moral">A ratio compares two quantities. A proportion says two ratios are equal.</div>
+                </div>
+
+                <h3>Ratio &amp; Proportion</h3>
+                <p>If a:b = c:d, then ad = bc (cross-multiplication). Key applications:</p>
+                <ul>
+                    <li><strong>Sharing</strong>: Divide a total in a given ratio</li>
+                    <li><strong>Mixtures</strong>: Find ratio of ingredients, or combine two mixtures</li>
+                    <li><strong>Direct proportion</strong>: y = kx (more work → more pay)</li>
+                    <li><strong>Inverse proportion</strong>: y = k/x (more people → less time)</li>
+                </ul>
+
+                <div class="example-box">
+                    <div class="ex-label">Mixture Problem</div>
+                    <div class="ex-text">Two vessels contain milk and water in ratios 3:1 and 5:3. Mix them in equal quantity. What's the new ratio?<br>
+                    First vessel: milk = ¾, water = ¼. Second: milk = ⅝, water = ⅜.<br>
+                    Total milk = ¾ + ⅝ = 6/8 + 5/8 = 11/8. Total water = ¼ + ⅜ = 2/8 + 3/8 = 5/8.<br>
+                    Ratio milk:water = <strong>11:5</strong>.</div>
+                </div>
+
+                <h3>Percentage — "Per Hundred"</h3>
+                <p>Percentages are ratios with denominator 100. They are the most tested topic in every exam.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Percentage Change</div><div class="f-math">(New − Old) / Old × 100</div></div>
+                    <div class="formula-card"><div class="f-label">Successive %</div><div class="f-math">a + b + ab/100</div></div>
+                    <div class="formula-card"><div class="f-label">% to Fraction</div><div class="f-math">a% = a/100</div></div>
+                    <div class="formula-card"><div class="f-label">% of a Number</div><div class="f-math">a% of b = (a × b) / 100</div></div>
+                </div>
+
+                <div class="insight-box">
+                    <div class="insight-label">Fraction ↔ Percentage Shortcuts</div>
+                    <div class="insight-text">¹⁄₂ = 50%, ¹⁄₃ = 33⅓%, ¹⁄₄ = 25%, ¹⁄₅ = 20%,<br>¹⁄₆ = 16⅔%, ¹⁄₇ ≈ 14.28%, ¹⁄₈ = 12.5%, ¹⁄₉ ≈ 11.11%, ¹⁄₁₀ = 10%</div>
+                    <div class="insight-sub">Memorize these — they save 5-10 seconds per question.</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">3</div>
+                        <span style="font-size:.88em;font-weight:600">Salary increased by 20%, then decreased by 20%. What's net change?</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Use successive formula: a + b + ab/100 = 20 + (−20) + (20 × −20)/100<br>
+                        = 0 + (−400)/100 = <strong>−4%</strong> (net 4% decrease)<br><br>
+                        Intuition: 20% increase multiplies by 1.2, then 20% decrease multiplies by 0.8.<br>
+                        Net: 1.2 × 0.8 = 0.96 = <strong>4% decrease</strong>. Always a net loss when you increase then decrease by the same percentage.
+                    </div>
+                </div>
+
+                <h3>Averages &amp; Mixtures</h3>
+                <p>Average = Sum ÷ Count. But exams rarely test the simple average — they test <strong>weighted averages</strong> and <strong>mixtures (alligation)</strong>.</p>
+
+                <div class="story-card">
+                    <div class="story-label">The Alligation Shortcut</div>
+                    <div class="story-title">Mixing Tea at Different Prices</div>
+                    <div class="story-text">You mix ₹200/kg tea with ₹300/kg tea. You want ₹240/kg mixture. How much of each?<br>
+                    The <strong>alligation</strong> method: Draw a cross. Difference from mean: 300−240 = 60, 240−200 = 40. Ratio = 60:40 = 3:2. So mix 3 parts of ₹200 tea with 2 parts of ₹300 tea.<br>
+                    This works for any mixture: prices, percentages, concentrations, speeds.</div>
+                    <div class="story-moral">Alligation = weighted average in reverse. Given the average, find the ratio.</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 4: APPLIED ARITHMETIC ========== -->
+                <div class="section-label part4">Part 4</div>
+                <h2>💰 Applied Arithmetic — Profit, Interest, Time &amp; Work</h2>
+
+                <h3>Profit &amp; Loss</h3>
+                <p>The language of business. Every transaction has Cost Price (CP) and Selling Price (SP).</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Profit</div><div class="f-math">SP − CP</div></div>
+                    <div class="formula-card"><div class="f-label">Loss</div><div class="f-math">CP − SP</div></div>
+                    <div class="formula-card"><div class="f-label">Profit %</div><div class="f-math">(Profit / CP) × 100</div></div>
+                    <div class="formula-card"><div class="f-label">Discount</div><div class="f-math">MP − SP</div></div>
+                </div>
+
+                <div class="insight-box">
+                    <div class="insight-label">Key Insight</div>
+                    <div class="insight-text">Profit percentage is ALWAYS on CP (unless stated otherwise). Discount percentage is ALWAYS on Marked Price (MP).</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">4</div>
+                        <span style="font-size:.88em;font-weight:600">A shopkeeper marks goods 30% above cost and gives 10% discount. Find profit %.</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Let CP = ₹100. MP = 100 + 30% of 100 = ₹130.<br>
+                        Discount = 10% of MP = 10% of 130 = ₹13.<br>
+                        SP = MP − Discount = 130 − 13 = ₹117.<br>
+                        Profit = SP − CP = 117 − 100 = ₹17.<br>
+                        Profit % = (17/100) × 100 = <strong>17%</strong>.<br><br>
+                        Quick formula: Profit % = (Markup% − Discount% − (Markup% × Discount%)/100)<br>
+                        = 30 − 10 − (30 × 10)/100 = 30 − 10 − 3 = 17%.
+                    </div>
+                </div>
+
+                <h3>Simple &amp; Compound Interest</h3>
+                <p>Money grows over time. Simple Interest (SI) grows linearly. Compound Interest (CI) grows exponentially.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Simple Interest</div><div class="f-math">SI = P × R × T / 100</div></div>
+                    <div class="formula-card"><div class="f-label">Amount (SI)</div><div class="f-math">A = P + SI</div></div>
+                    <div class="formula-card"><div class="f-label">Compound Interest</div><div class="f-math">A = P(1 + R/100)ᵀ</div></div>
+                    <div class="formula-card"><div class="f-label">CI = A − P</div><div class="f-math"></div></div>
+                </div>
+
+                <div class="story-card">
+                    <div class="story-label">The Power of Compounding</div>
+                    <div class="story-title">₹1 That Became ₹16</div>
+                    <div class="story-text">You invest ₹1 at 100% annual interest. After 1 year: ₹2. After 2: ₹4. After 3: ₹8. After 4: ₹16. That's doubling every year — exponential growth. In SI, ₹1 at 100% would be ₹1 + ₹1×4 = ₹5 after 4 years. CI gives ₹16 — more than 3× higher! This is why Einstein called compounding "the eighth wonder of the world."</div>
+                    <div class="story-moral">CI grows faster because you earn interest on interest. Time magnifies the difference massively.</div>
+                </div>
+
+                <div class="insight-box">
+                    <div class="insight-label">CI vs SI Difference (2 years)</div>
+                    <div class="insight-text">CI − SI = P × (R/100)²</div>
+                    <div class="insight-sub">For 3 years: CI − SI = P × (R/100)² × (3 + R/100)</div>
+                </div>
+
+                <h3>Time &amp; Work</h3>
+                <p>The fundamental relationship: Work = Rate × Time. The trick is to invert: a person who takes T days to finish does ¹⁄ᵀ of the work per day.</p>
+
+                <div class="example-box">
+                    <div class="ex-label">Classic Problem</div>
+                    <div class="ex-text">A can finish a job in 12 days, B in 18 days. How many days together?<br>
+                    A's daily work = ¹⁄₁₂, B's daily work = ¹⁄₁₈.<br>
+                    Combined = ¹⁄₁₂ + ¹⁄₁₈ = (3+2)/36 = ⁵⁄₃₆.<br>
+                    Time = 1 ÷ (⁵⁄₃₆) = ³⁶⁄₅ = <strong>7.2 days</strong>.</div>
+                </div>
+
+                <h3>Speed, Distance &amp; Time</h3>
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Speed</div><div class="f-math">Speed = Distance / Time</div></div>
+                    <div class="formula-card"><div class="f-label">Average Speed</div><div class="f-math">Total Dist / Total Time</div></div>
+                    <div class="formula-card"><div class="f-label">Rel Speed (same direction)</div><div class="f-math">v₁ − v₂</div></div>
+                    <div class="formula-card"><div class="f-label">Rel Speed (opposite)</div><div class="f-math">v₁ + v₂</div></div>
+                </div>
+
+                <div class="insight-box">
+                    <div class="insight-label">Average Speed Trap</div>
+                    <div class="insight-text">If you travel at v₁ for half the DISTANCE and v₂ for the other half, average speed = 2v₁v₂ / (v₁ + v₂).<br>Not (v₁ + v₂)/2!</div>
+                    <div class="insight-sub">Similarly, if you travel at v₁ for half the TIME, then average = (v₁ + v₂)/2.</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">5</div>
+                        <span style="font-size:.88em;font-weight:600">A train 300m long passes a pole in 15s and a platform in 45s. Find platform length.</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Speed of train = 300m / 15s = 20 m/s.<br>
+                        To pass the platform, train must cover its own length + platform length.<br>
+                        Distance = Speed × Time = 20 × 45 = 900m.<br>
+                        Platform length = 900 − 300 = <strong>600m</strong>.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PRACTICE ========== -->
+                <h2 style="margin-top:0">🎯 Practice — 12 Questions</h2>
+                <p style="color:var(--text-sec);margin-bottom:16px">Test your understanding. Click an option to see if you're right.</p>
+
+                <div id="practice-qs"></div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+                    <a href="math.html" class="btn btn-success">← Back to Math Map</a>
+                    <a href="jee/course/maths/lesson-algebra.html" class="btn btn-primary">Algebra →</a>
+                </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var practiceQs = [
+            // Part 1: Number Systems
+            {
+                id: 1001,
+                text: "🔢 What is the HCF of 144 and 198?",
+                opts: [
+                    {l: "A", t: "12", c: false},
+                    {l: "B", t: "18", c: true},
+                    {l: "C", t: "24", c: false},
+                    {l: "D", t: "36", c: false}
+                ],
+                sol: "144 = 2⁴ × 3², 198 = 2 × 3² × 11. Common: 2 × 3² = <strong>18</strong>. Using Euclid's algorithm: 198 ÷ 144 = 1 rem 54, 144 ÷ 54 = 2 rem 36, 54 ÷ 36 = 1 rem 18, 36 ÷ 18 = 2 rem 0. HCF = <strong>18</strong>."
+            },
+            {
+                id: 1002,
+                text: "🔢 If LCM of two numbers is 360 and HCF is 12, and one number is 60, what is the other?",
+                opts: [
+                    {l: "A", t: "36", c: false},
+                    {l: "B", t: "60", c: false},
+                    {l: "C", t: "72", c: true},
+                    {l: "D", t: "120", c: false}
+                ],
+                sol: "Product = LCM × HCF = 360 × 12 = 4320. Other number = 4320 ÷ 60 = <strong>72</strong>. Always verify: 60 × 72 = 4320 ✓, LCM(60,72) = 360 ✓."
+            },
+            {
+                id: 1003,
+                text: "🔢 Which of the following numbers is divisible by 11?",
+                opts: [
+                    {l: "A", t: "12,345", c: false},
+                    {l: "B", t: "13,579", c: false},
+                    {l: "C", t: "14,685", c: false},
+                    {l: "D", t: "12,584", c: true}
+                ],
+                sol: "For 12,584: odd positions sum = 1+2+8 = 11, even positions sum = 2+5+4 = 11. Difference = 0, which is divisible by 11. So <strong>12,584</strong> is divisible by 11."
+            },
+            // Part 2: Fractions, Decimals, Surds, Indices
+            {
+                id: 2001,
+                text: "➗ What is ⁴⁄₇ + ²⁄₅?",
+                opts: [
+                    {l: "A", t: "³⁴⁄₃₅", c: true},
+                    {l: "B", t: "⁶⁄₁₂", c: false},
+                    {l: "C", t: "²⁰⁄₁₂", c: false},
+                    {l: "D", t: "¹⁰⁄₃₅", c: false}
+                ],
+                sol: "LCM of 7 and 5 = 35. ⁴⁄₇ = ²⁰⁄₃₅, ²⁄₅ = ¹⁴⁄₃₅. Sum = (20+14)/35 = <strong>³⁴⁄₃₅</strong>."
+            },
+            {
+                id: 2002,
+                text: "➗ Rationalize: 1 / (√7 − √3). What is the result?",
+                opts: [
+                    {l: "A", t: "(√7 + √3)/4", c: true},
+                    {l: "B", t: "(√7 − √3)/4", c: false},
+                    {l: "C", t: "(√7 + √3)/10", c: false},
+                    {l: "D", t: "√7 + √3", c: false}
+                ],
+                sol: "Multiply numerator and denominator by (√7 + √3):<br>= (√7 + √3) / (7 − 3)<br>= <strong>(√7 + √3)/4</strong>"
+            },
+            {
+                id: 2003,
+                text: "➗ Simplify: (2³)² ÷ 2⁴",
+                opts: [
+                    {l: "A", t: "2", c: false},
+                    {l: "B", t: "4", c: true},
+                    {l: "C", t: "8", c: false},
+                    {l: "D", t: "16", c: false}
+                ],
+                sol: "(2³)² = 2⁶. 2⁶ ÷ 2⁴ = 2⁶⁻⁴ = 2² = <strong>4</strong>."
+            },
+            // Part 3: Ratios, Percentages, Averages
+            {
+                id: 3001,
+                text: "📊 If a : b = 3 : 4 and b : c = 6 : 5, find a : c.",
+                opts: [
+                    {l: "A", t: "3 : 5", c: false},
+                    {l: "B", t: "9 : 10", c: true},
+                    {l: "C", t: "5 : 3", c: false},
+                    {l: "D", t: "18 : 20", c: false}
+                ],
+                sol: "Make b common. a:b = 3:4 = 9:12. b:c = 6:5 = 12:10. So a:b:c = 9:12:10. a:c = <strong>9:10</strong>."
+            },
+            {
+                id: 3002,
+                text: "📊 A number increased by 25% then decreased by 25%. Net change?",
+                opts: [
+                    {l: "A", t: "0%", c: false},
+                    {l: "B", t: "6.25% decrease", c: true},
+                    {l: "C", t: "6.25% increase", c: false},
+                    {l: "D", t: "1.25% decrease", c: false}
+                ],
+                sol: "Successive formula: a + b + ab/100 = 25 + (−25) + (25 × −25)/100 = 0 − 6.25 = <strong>6.25% decrease</strong>. Or: 1.25 × 0.75 = 0.9375 = 6.25% less."
+            },
+            {
+                id: 3003,
+                text: "📊 Average of 10 numbers is 45. If each number is increased by 8, what's the new average?",
+                opts: [
+                    {l: "A", t: "45", c: false},
+                    {l: "B", t: "53", c: true},
+                    {l: "C", t: "50", c: false},
+                    {l: "D", t: "48", c: false}
+                ],
+                sol: "If every value increases by 8, the sum increases by 10×8 = 80. New sum = 450 + 80 = 530. New average = 530/10 = <strong>53</strong>. Rule: adding constant to all values adds the same constant to the average."
+            },
+            // Part 4: Applied Arithmetic
+            {
+                id: 4001,
+                text: "💰 A shopkeeper sells an item for ₹540 at a 10% profit. What was the cost price?",
+                opts: [
+                    {l: "A", t: "₹486", c: false},
+                    {l: "B", t: "₹490.90", c: false},
+                    {l: "C", t: "₹490.91", c: true},
+                    {l: "D", t: "₹500", c: false}
+                ],
+                sol: "SP = CP + 10% of CP = 1.1 × CP = 540. CP = 540/1.1 = <strong>₹490.91</strong>."
+            },
+            {
+                id: 4002,
+                text: "💰 What is the compound interest on ₹10,000 at 10% p.a. for 2 years?",
+                opts: [
+                    {l: "A", t: "₹2,000", c: false},
+                    {l: "B", t: "₹2,100", c: true},
+                    {l: "C", t: "₹2,010", c: false},
+                    {l: "D", t: "₹1,210", c: false}
+                ],
+                sol: "A = 10000(1 + 0.1)² = 10000 × 1.21 = ₹12,100. CI = 12100 − 10000 = <strong>₹2,100</strong>. SI would be ₹2,000. CI is ₹100 more."
+            },
+            {
+                id: 4003,
+                text: "💰 A can do a job in 15 days, B in 10 days. How many days together?",
+                opts: [
+                    {l: "A", t: "6", c: true},
+                    {l: "B", t: "5", c: false},
+                    {l: "C", t: "7.5", c: false},
+                    {l: "D", t: "8", c: false}
+                ],
+                sol: "A's 1 day work = ¹⁄₁₅, B's = ¹⁄₁₀. Combined = ¹⁄₁₅ + ¹⁄₁₀ = (2+3)/30 = ⁵⁄₃₀ = ¹⁄₆. Time = 1 ÷ ¹⁄₆ = <strong>6 days</strong>."
+            },
+            {
+                id: 4004,
+                text: "💰 A train 240m long passes a platform 360m long in 30s. Find speed in km/h.",
+                opts: [
+                    {l: "A", t: "54 km/h", c: false},
+                    {l: "B", t: "72 km/h", c: true},
+                    {l: "C", t: "60 km/h", c: false},
+                    {l: "D", t: "48 km/h", c: false}
+                ],
+                sol: "Total distance = train + platform = 240 + 360 = 600m. Speed = 600/30 = 20 m/s. Convert: 20 × (18/5) = <strong>72 km/h</strong>."
+            }
+        ];
+
+        var answered = {}, correctCount = 0;
+
+        function renderPractice() {
+            var c = document.getElementById('practice-qs'), h = '';
+            for (var i = 0; i < practiceQs.length; i++) {
+                var q = practiceQs[i], o = '';
+                for (var j = 0; j < q.opts.length; j++) {
+                    o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                }
+                h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+            }
+            c.innerHTML = h;
+            updateScore();
+        }
+
+        function getCorrectLabel(q) {
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+            }
+            return '';
+        }
+
+        function selectOpt(qId, idx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            var q = practiceQs.filter(function(x){return x.id === qId})[0];
+            var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+            var isCorrect = q.opts[idx].c;
+            for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-'+qId).textContent = '✅ Correct! +4';
+                document.getElementById('result-'+qId).className = 'q-result correct';
+                correctCount++;
+            } else {
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+                document.getElementById('result-'+qId).className = 'q-result wrong';
+                for (var i = 0; i < q.opts.length; i++) {
+                    if (q.opts[i].c) opts[i].classList.add('correct');
+                }
+            }
+            document.getElementById('soln-'+qId).classList.add('show');
+            updateScore();
+        }
+
+        function updateScore() {
+            var t = Object.keys(answered).length;
+            var el = document.getElementById('score-display');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'score-display';
+                el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+                document.getElementById('practice-qs').before(el);
+            }
+            el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+        }
+
+        function resetPractice() {
+            if (!confirm('Reset all answers?')) return;
+            answered = {}; correctCount = 0;
+            document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+            document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+            document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+            var el = document.getElementById('score-display');
+            if (el) el.textContent = '';
+            renderPractice();
+        }
+
+        function toggleStep(header) {
+            var content = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        renderPractice();
+    </script>
+</body>
+</html>
