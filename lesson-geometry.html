@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Geometry — Shapes, Spaces &amp; Theorems | vlymbooq</title>
+    <meta name="description" content="Master Geometry for competitive exams. Lines & Angles, Triangles, Circles, Polygons, Mensuration, and 3D with story-driven intuition.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-geometry.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+        .q-badge{display:inline-block;padding:2px 8px;border-radius:100px;font-size:.7em;font-weight:600;margin-bottom:6px}
+        .q-badge.easy{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .q-badge.medium{background:rgba(245,158,11,.1);color:var(--amber)}
+        .q-badge.hard{background:rgba(239,68,68,.1);color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+        .slide-up{animation:slide-up .6s ease forwards}
+
+        .progress-tracker{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+        .progress-tracker .p-step{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;font-size:.75em;border:1px solid var(--border);color:var(--text-muted);transition:all .3s}
+        .progress-tracker .p-step.done{border-color:var(--emerald);color:var(--emerald);background:rgba(52,211,153,.06)}
+        .progress-tracker .p-step.active{border-color:var(--purple);color:var(--purple);background:rgba(167,139,250,.08)}
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part2{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part3{background:rgba(245,158,11,.1);color:var(--amber)}
+        .section-label.part4{background:rgba(34,211,238,.1);color:var(--cyan)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.72em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.7em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--purple);font-weight:700}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="math.html">Math Map</a>
+                <a href="index.html#exams">Exams</a>
+                <a href="micro-test.html">Drill</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Math Lessons</div>
+                    <a href="math.html">← Math Concept Map</a>
+                    <a href="lesson-arithmetic.html">Arithmetic</a>
+                    <a href="lesson-geometry.html" class="active" style="color:var(--text);font-weight:600">Geometry</a>
+                    <a href="jee/course/maths/lesson-algebra.html">Algebra</a>
+                    <a href="jee/course/maths/lesson-calculus.html">Calculus</a>
+                    <a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geometry</a>
+                    <a href="jee/course/maths/lesson-trigonometry.html">Trigonometry</a>
+                    <a href="jee/course/maths/lesson-inverse-trigonometry.html">Inverse Trigonometry</a>
+                    <a href="jee/course/maths/lesson-application-derivatives.html">App of Derivatives</a>
+                    <a href="jee/course/maths/lesson-integration.html">Integration</a>
+                    <a href="jee/course/maths/lesson-differential-equations.html">Diff Equations</a>
+                    <a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D</a>
+                    <a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats</a>
+                    <a href="jee/course/maths/lesson-sets-relations-functions.html">Sets, Relations &amp; Functions</a>
+                    <a href="jee/course/maths/lesson-mathematical-reasoning.html">Mathematical Reasoning</a>
+                </div>
+            </div>
+            <div class="main">
+                <div class="lesson-body">
+
+                <div class="progress-tracker">
+                    <div class="p-step active" id="p-step-0">📐 Lines &amp; Angles</div>
+                    <div class="p-step" id="p-step-1">🔺 Triangles</div>
+                    <div class="p-step" id="p-step-2">⭕ Circles</div>
+                    <div class="p-step" id="p-step-3">📏 Mensuration &amp; 3D</div>
+                </div>
+
+                <h2>Geometry — Shapes, Spaces &amp; Theorems</h2>
+                <p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Geometry is the study of shapes and their properties. From the pyramids of Egypt to modern architecture, geometry describes the physical world. Every competitive exam tests geometry — SSC CGL has 8-10 questions, Banking 5-6, CDS/NDA 10-12, and CTET 8-10.</p>
+
+                <!-- ========== PART 1: LINES & ANGLES ========== -->
+                <div class="section-label part1">Part 1</div>
+                <h2>📐 Lines &amp; Angles</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Where It All Begins</div>
+                    <div class="story-title">The Egyptian Rope-Stretchers</div>
+                    <div class="story-text">Every year the Nile flooded, washing away farmland boundaries. The Egyptians needed to re-mark fields. They used stretched ropes — straight lines — to measure and divide land. They discovered that a rope with knots at 3, 4, and 5 units made a perfect right angle. That was geometry's birth: <strong>measuring the earth</strong> (geo = earth, metry = measure).</div>
+                    <div class="story-moral">Geometry started as a practical tool: dividing land, building structures, measuring distances.</div>
+                </div>
+
+                <h3>Angle Basics</h3>
+                <p>An angle is formed when two rays meet at a point. Measured in degrees (°), a full circle is 360°.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Acute</div><div class="f-math">0° &lt; θ &lt; 90°</div></div>
+                    <div class="formula-card"><div class="f-label">Right</div><div class="f-math">θ = 90°</div></div>
+                    <div class="formula-card"><div class="f-label">Obtuse</div><div class="f-math">90° &lt; θ &lt; 180°</div></div>
+                    <div class="formula-card"><div class="f-label">Straight</div><div class="f-math">θ = 180°</div></div>
+                    <div class="formula-card"><div class="f-label">Reflex</div><div class="f-math">180° &lt; θ &lt; 360°</div></div>
+                    <div class="formula-card"><div class="f-label">Complementary</div><div class="f-math">Sum = 90°</div></div>
+                    <div class="formula-card"><div class="f-label">Supplementary</div><div class="f-math">Sum = 180°</div></div>
+                    <div class="formula-card"><div class="f-label">Vertically Opposite</div><div class="f-math">Equal</div></div>
+                </div>
+
+                <h3>Parallel Lines &amp; Transversals</h3>
+                <p>When a transversal cuts two parallel lines, specific angle pairs are equal:</p>
+                <ul>
+                    <li><strong>Corresponding angles</strong> (F-pattern): equal</li>
+                    <li><strong>Alternate interior angles</strong> (Z-pattern): equal</li>
+                    <li><strong>Co-interior angles</strong> (C-pattern): supplementary (sum = 180°)</li>
+                </ul>
+
+                <div class="diagram-box">
+                    <svg viewBox="0 0 480 220" style="max-width:460px">
+                        <line x1="40" y1="40" x2="440" y2="40" stroke="var(--purple)" stroke-width="2"/>
+                        <line x1="40" y1="160" x2="440" y2="160" stroke="var(--purple)" stroke-width="2"/>
+                        <line x1="80" y1="10" x2="400" y2="200" stroke="var(--amber)" stroke-width="1.5"/>
+                        <text x="200" y="32" font-size="11" fill="var(--text-muted)">L₁</text>
+                        <text x="200" y="152" font-size="11" fill="var(--text-muted)">L₂</text>
+                        <text x="220" y="134" font-size="10" fill="var(--amber)">Transversal</text>
+                        <circle cx="150" cy="40" r="20" fill="none" stroke="var(--emerald)" stroke-width="1" stroke-dasharray="3,2"/>
+                        <circle cx="310" cy="160" r="20" fill="none" stroke="var(--emerald)" stroke-width="1" stroke-dasharray="3,2"/>
+                        <text x="140" y="20" font-size="9" fill="var(--emerald)">Corresponding</text>
+                        <text x="300" y="140" font-size="9" fill="var(--emerald)">Corresponding</text>
+                    </svg>
+                    <div class="diagram-caption">Corresponding angles are equal when a transversal cuts parallel lines.</div>
+                </div>
+
+                <div class="insight-box">
+                    <div class="insight-label">Angle Sum Property</div>
+                    <div class="insight-text">Sum of angles in a triangle = 180°<br>Sum of angles in a quadrilateral = 360°<br>Sum of exterior angles (any polygon) = 360°</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">1</div>
+                        <span style="font-size:.88em;font-weight:600">Two complementary angles differ by 20°. Find the larger angle.</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Let angles be x and y with x + y = 90° and x − y = 20°.<br>
+                        Adding: 2x = 110°, so x = 55°. Then y = 90° − 55° = 35°.<br>
+                        Larger angle = <strong>55°</strong>.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 2: TRIANGLES ========== -->
+                <div class="section-label part2">Part 2</div>
+                <h2>🔺 Triangles — The Strongest Shape</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Nature's Favorite Shape</div>
+                    <div class="story-title">Why Bridges Use Triangles</div>
+                    <div class="story-text">A square frame wobbles. Add a diagonal — two triangles — and it's rigid. Triangles are the only polygon that cannot change shape without changing side lengths. That's why bridges, cranes, and roof trusses use triangles. A triangle is <strong>the simplest rigid structure</strong> in engineering.</div>
+                    <div class="story-moral">Triangles are uniquely rigid. That's why they're everywhere in construction.</div>
+                </div>
+
+                <h3>Types of Triangles (by sides)</h3>
+                <ul>
+                    <li><strong>Equilateral</strong>: all sides equal, all angles = 60°</li>
+                    <li><strong>Isosceles</strong>: two sides equal, base angles equal</li>
+                    <li><strong>Scalene</strong>: all sides different</li>
+                </ul>
+
+                <h3>Types (by angles)</h3>
+                <ul>
+                    <li><strong>Acute</strong>: all angles &lt; 90°</li>
+                    <li><strong>Right</strong>: one angle = 90° (hypotenuse opposite right angle)</li>
+                    <li><strong>Obtuse</strong>: one angle &gt; 90°</li>
+                </ul>
+
+                <h3>Congruence (Same Size &amp; Shape)</h3>
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">SSS</div><div class="f-math">Three sides equal</div></div>
+                    <div class="formula-card"><div class="f-label">SAS</div><div class="f-math">Two sides + included ∠</div></div>
+                    <div class="formula-card"><div class="f-label">ASA</div><div class="f-math">Two angles + included side</div></div>
+                    <div class="formula-card"><div class="f-label">AAS</div><div class="f-math">Two angles + non-included side</div></div>
+                    <div class="formula-card"><div class="f-label">RHS</div><div class="f-math">Right + Hypotenuse + Side</div></div>
+                </div>
+
+                <h3>Similarity (Same Shape, Any Size)</h3>
+                <p>Two triangles are similar if corresponding angles are equal and sides are in proportion.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Similarity Shortcuts</div>
+                    <div class="insight-text">AA (two angles equal) ⇒ triangles are similar</div>
+                    <div class="insight-sub">No need to check sides! If angles match, similarity follows automatically.</div>
+                </div>
+
+                <h3>Pythagoras Theorem</h3>
+                <p>In a right triangle: <span class="math">a² + b² = c²</span>, where c is the hypotenuse (longest side).</p>
+
+                <div class="diagram-box">
+                    <svg viewBox="0 0 400 180" style="max-width:380px">
+                        <polygon points="50,150 200,150 50,30" fill="rgba(167,139,250,.08)" stroke="var(--purple)" stroke-width="2"/>
+                        <text x="115" y="170" font-size="11" fill="var(--text-sec)" text-anchor="middle">a (base)</text>
+                        <text x="36" y="100" font-size="11" fill="var(--text-sec)" text-anchor="end">b (height)</text>
+                        <text x="100" y="70" font-size="11" fill="var(--emerald)" text-anchor="middle">c (hypotenuse)</text>
+                        <rect x="45" y="148" width="8" height="8" fill="var(--amber)" opacity=".6"/>
+                        <line x1="20" y1="150" x2="230" y2="150" stroke="rgba(255,255,255,.08)" stroke-width="1" stroke-dasharray="4,3"/>
+                        <rect x="182" y="30" width="8" height="8" fill="var(--amber)" opacity=".6"/>
+                        <text x="250" y="80" font-size="11" fill="var(--emerald)">Square of longest side</text>
+                        <text x="250" y="100" font-size="11" fill="var(--emerald)">= sum of squares</text>
+                        <text x="250" y="120" font-size="11" fill="var(--emerald)">of the other two sides</text>
+                    </svg>
+                    <div class="diagram-caption">Pythagoras: a² + b² = c². Works only for right triangles.</div>
+                </div>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Pythagorean Triplet</div><div class="f-math">(3,4,5), (5,12,13), (7,24,25), (8,15,17)</div></div>
+                    <div class="formula-card"><div class="f-label">Common Ratios</div><div class="f-math">30-60-90: 1:√3:2<br>45-45-90: 1:1:√2</div></div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">2</div>
+                        <span style="font-size:.88em;font-weight:600">Find the height of an equilateral triangle of side 12 cm.</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        In an equilateral triangle, the altitude splits it into two 30-60-90 right triangles.<br>
+                        Half the base = 6 cm. Using the 30-60-90 ratio 1:√3:2:<br>
+                        Short leg (half-base) = 6, long leg (height) = 6√3.<br>
+                        Height = <strong>6√3 cm</strong>.<br><br>
+                        General formula: Height of equilateral triangle = (√3/2) × side.
+                    </div>
+                </div>
+
+                <h3>Key Centers of a Triangle</h3>
+                <ul>
+                    <li><strong>Centroid</strong> (G): intersection of medians — divides each median in ratio 2:1</li>
+                    <li><strong>Incenter</strong> (I): intersection of angle bisectors — center of incircle</li>
+                    <li><strong>Circumcenter</strong> (O): intersection of perpendicular bisectors — center of circumcircle</li>
+                    <li><strong>Orthocenter</strong> (H): intersection of altitudes</li>
+                </ul>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 3: CIRCLES ========== -->
+                <div class="section-label part3">Part 3</div>
+                <h2>⭕ Circles — The Perfect Shape</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Wheels &amp; Cycles</div>
+                    <div class="story-title">Why Circles Are Everywhere</div>
+                    <div class="story-text">A circle is the set of all points at a fixed distance (radius) from a center. The wheel — humanity's greatest invention — works because every point on a circle's rim is the same distance from the axle. That gives smooth rotation. The Babylonians divided the circle into 360° because it's divisible by 1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, 18, 20, 24, 30, 36, 45, 60, 72, 90, 120, and 180 — the most divisible number possible.</div>
+                    <div class="story-moral">The circle's symmetry and the divisibility of 360 make it the natural unit for angles.</div>
+                </div>
+
+                <h3>Circle Theorems — The Exam Shortcuts</h3>
+
+                <div class="diagram-box">
+                    <svg viewBox="0 0 420 210" style="max-width:400px">
+                        <circle cx="120" cy="105" r="80" fill="none" stroke="var(--purple)" stroke-width="1.5"/>
+                        <text x="120" y="105" font-size="10" fill="var(--text-muted)" text-anchor="middle">O</text>
+                        <line x1="120" y1="105" x2="190" y2="75" stroke="var(--amber)" stroke-width="1.5"/>
+                        <line x1="120" y1="105" x2="55" y2="60" stroke="var(--amber)" stroke-width="1.5"/>
+                        <text x="198" y="73" font-size="10" fill="var(--amber)">r</text>
+                        <text x="48" y="56" font-size="10" fill="var(--amber)">r</text>
+                        <text x="120" y="205" font-size="10" fill="var(--text-muted)" text-anchor="middle">All radii are equal</text>
+
+                        <circle cx="320" cy="105" r="80" fill="none" stroke="var(--emerald)" stroke-width="1.5"/>
+                        <rect x="308" y="55" width="24" height="24" fill="rgba(52,211,153,.15)" rx="4"/>
+                        <text x="308" y="95" font-size="9" fill="var(--emerald)">Angle in a</text>
+                        <text x="308" y="108" font-size="9" fill="var(--emerald)">semicircle</text>
+                        <text x="310" y="130" font-size="9" fill="var(--emerald)">= 90°</text>
+                        <line x1="280" y1="105" x2="360" y2="105" stroke="rgba(52,211,153,.3)" stroke-width="1" stroke-dasharray="4,3"/>
+                        <line x1="280" y1="105" x2="320" y2="160" stroke="rgba(52,211,153,.3)" stroke-width="1" stroke-dasharray="4,3"/>
+                        <line x1="320" y1="160" x2="360" y2="105" stroke="rgba(52,211,153,.3)" stroke-width="1" stroke-dasharray="4,3"/>
+                    </svg>
+                    <div class="diagram-caption">Left: All radii equal. Right: Angle in a semicircle is always 90°.</div>
+                </div>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Tangent-Radius</div><div class="f-math">Tangent ⟂ radius at point of contact</div></div>
+                    <div class="formula-card"><div class="f-label">Two Tangents</div><div class="f-math">From external point, tangents are equal</div></div>
+                    <div class="formula-card"><div class="f-label">Angle in Semicircle</div><div class="f-math">Angle in semicircle = 90°</div></div>
+                    <div class="formula-card"><div class="f-label">Equal Chords</div><div class="f-math">Equal chords subtend equal angles at center</div></div>
+                    <div class="formula-card"><div class="f-label">Cyclic Quadrilateral</div><div class="f-math">Opposite angles sum to 180°</div></div>
+                    <div class="formula-card"><div class="f-label">Alternate Segment</div><div class="f-math">Angle between tangent and chord = angle in alternate segment</div></div>
+                </div>
+
+                <div class="insight-box">
+                    <div class="insight-label">Tangent Length Formula</div>
+                    <div class="insight-text">Length of tangent from external point P to circle center O: PT² = OP² − r²</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">3</div>
+                        <span style="font-size:.88em;font-weight:600">Two circles of radii 8 cm and 6 cm touch externally. Find distance between their centers.</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        When circles touch externally, distance between centers = sum of radii.<br>
+                        Distance = 8 + 6 = <strong>14 cm</strong>.<br><br>
+                        For internal tangency: distance = difference of radii = |8 − 6| = <strong>2 cm</strong>.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 4: MENSURATION & 3D ========== -->
+                <div class="section-label part4">Part 4</div>
+                <h2>📏 Mensuration &amp; 3D Geometry</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Measuring Everything</div>
+                    <div class="story-title">The King's Dilemma</div>
+                    <div class="story-text">A king ordered a gold crown. He gave the goldsmith pure gold. The crown came back the right weight, but was it pure gold? Archimedes realized: submerge the crown in water. The volume of water displaced equals the crown's volume. Compare density = mass/volume with pure gold's density. He ran naked through the streets shouting "Eureka!" — Greek for "I found it!" That was the birth of <strong>mensuration</strong>: measuring volume by displacement.</div>
+                    <div class="story-moral">Density = mass/volume. Volume of irregular objects = water displaced.</div>
+                </div>
+
+                <h3>Perimeter &amp; Area (2D Shapes)</h3>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Square</div><div class="f-math">A = a², P = 4a</div></div>
+                    <div class="formula-card"><div class="f-label">Rectangle</div><div class="f-math">A = l × b, P = 2(l+b)</div></div>
+                    <div class="formula-card"><div class="f-label">Triangle</div><div class="f-math">A = ½ × b × h</div></div>
+                    <div class="formula-card"><div class="f-label">Circle</div><div class="f-math">A = πr², C = 2πr</div></div>
+                    <div class="formula-card"><div class="f-label">Trapezium</div><div class="f-math">A = ½(a+b) × h</div></div>
+                    <div class="formula-card"><div class="f-label">Parallelogram</div><div class="f-math">A = b × h</div></div>
+                    <div class="formula-card"><div class="f-label">Rhombus</div><div class="f-math">A = ½ × d₁ × d₂</div></div>
+                    <div class="formula-card"><div class="f-label">Sector</div><div class="f-math">A = (θ/360) × πr²</div></div>
+                </div>
+
+                <div class="insight-box">
+                    <div class="insight-label">Heron's Formula</div>
+                    <div class="insight-text">Area of triangle with sides a, b, c: A = √[s(s−a)(s−b)(s−c)] where s = (a+b+c)/2</div>
+                    <div class="insight-sub">Useful when you know three sides but not the height.</div>
+                </div>
+
+                <h3>Surface Area &amp; Volume (3D Shapes)</h3>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Cube</div><div class="f-math">V = a³, SA = 6a²</div></div>
+                    <div class="formula-card"><div class="f-label">Cuboid</div><div class="f-math">V = l × b × h, SA = 2(lb+bh+hl)</div></div>
+                    <div class="formula-card"><div class="f-label">Cylinder</div><div class="f-math">V = πr²h, CSA = 2πrh</div></div>
+                    <div class="formula-card"><div class="f-label">Cone</div><div class="f-math">V = ⅓πr²h, CSA = πrl</div></div>
+                    <div class="formula-card"><div class="f-label">Sphere</div><div class="f-math">V = ⁴⁄₃πr³, SA = 4πr²</div></div>
+                    <div class="formula-card"><div class="f-label">Hemisphere</div><div class="f-math">V = ⅔πr³, CSA = 2πr²</div></div>
+                </div>
+
+                <p style="font-size:.82em;color:var(--text-muted);margin:8px 0"><em>Note: CSA = Curved Surface Area. For a cone, l = slant height = √(r² + h²).</em></p>
+
+                <div class="example-box">
+                    <div class="ex-label">Volume Combination Problem</div>
+                    <div class="ex-text">A sphere of radius 6 cm is melted and recast into a cylinder of height 8 cm. Find the cylinder's radius.<br>
+                    Volume stays same in melting and recasting.<br>
+                    Sphere volume = ⁴⁄₃π(6)³ = 288π cm³.<br>
+                    Cylinder volume = πr² × 8 = 8πr².<br>
+                    Equate: 8πr² = 288π → r² = 36 → <strong>r = 6 cm</strong>.</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">4</div>
+                        <span style="font-size:.88em;font-weight:600">Find the area of a triangle with sides 13 cm, 14 cm, 15 cm.</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Semi-perimeter s = (13 + 14 + 15)/2 = 42/2 = 21.<br>
+                        Heron's formula: A = √[21(21−13)(21−14)(21−15)]<br>
+                        = √[21 × 8 × 7 × 6]<br>
+                        = √(21 × 336) = √7056 = <strong>84 cm²</strong>.<br><br>
+                        This is a well-known triple — area is always 84 for a 13-14-15 triangle.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PRACTICE ========== -->
+                <h2 style="margin-top:0">🎯 Practice — 12 Questions</h2>
+                <p style="color:var(--text-sec);margin-bottom:16px">Test your understanding. Click an option to see if you're right.</p>
+
+                <div id="practice-qs"></div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+                    <a href="math.html" class="btn btn-success">← Back to Math Map</a>
+                    <a href="lesson-arithmetic.html" class="btn btn-primary">← Arithmetic</a>
+                    <a href="jee/course/maths/lesson-algebra.html" class="btn btn-primary">Algebra →</a>
+                </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var practiceQs = [
+            // Part 1: Lines & Angles
+            {
+                id: 5001,
+                text: "📐 Two supplementary angles are in ratio 4:5. Find the larger angle.",
+                opts: [
+                    {l: "A", t: "80°", c: false},
+                    {l: "B", t: "100°", c: true},
+                    {l: "C", t: "90°", c: false},
+                    {l: "D", t: "120°", c: false}
+                ],
+                sol: "Supplementary means sum = 180°. 4x + 5x = 9x = 180°, so x = 20°. Larger angle = 5 × 20 = <strong>100°</strong>."
+            },
+            {
+                id: 5002,
+                text: "📐 One angle of a triangle is 65° and the other two are equal. Find the equal angles.",
+                opts: [
+                    {l: "A", t: "57.5°", c: true},
+                    {l: "B", t: "65°", c: false},
+                    {l: "C", t: "50°", c: false},
+                    {l: "D", t: "60°", c: false}
+                ],
+                sol: "Sum of angles = 180°. 65 + 2x = 180 → 2x = 115 → x = <strong>57.5°</strong>."
+            },
+            {
+                id: 5003,
+                text: "📐 In a right triangle, the acute angles are in ratio 1:2. Find the smaller acute angle.",
+                opts: [
+                    {l: "A", t: "30°", c: true},
+                    {l: "B", t: "45°", c: false},
+                    {l: "C", t: "60°", c: false},
+                    {l: "D", t: "36°", c: false}
+                ],
+                sol: "Right triangle: one angle = 90°, so the other two sum to 90°. x + 2x = 3x = 90°, x = <strong>30°</strong>."
+            },
+            // Part 2: Triangles
+            {
+                id: 6001,
+                text: "🔺 What is the height of an equilateral triangle of side 10 cm?",
+                opts: [
+                    {l: "A", t: "5√3 cm", c: true},
+                    {l: "B", t: "10√3 cm", c: false},
+                    {l: "C", t: "5 cm", c: false},
+                    {l: "D", t: "8.66 cm", c: false}
+                ],
+                sol: "Height = (√3/2) × side = (√3/2) × 10 = <strong>5√3 cm</strong> (≈ 8.66 cm)."
+            },
+            {
+                id: 6002,
+                text: "🔺 In triangle ABC, AB = 6 cm, BC = 8 cm, ∠B = 90°. Find AC.",
+                opts: [
+                    {l: "A", t: "10 cm", c: true},
+                    {l: "B", t: "14 cm", c: false},
+                    {l: "C", t: "7 cm", c: false},
+                    {l: "D", t: "12 cm", c: false}
+                ],
+                sol: "By Pythagoras: AC² = AB² + BC² = 36 + 64 = 100. AC = <strong>10 cm</strong>. This is a 6-8-10 triple (classic 3-4-5 scaled by 2)."
+            },
+            {
+                id: 6003,
+                text: "🔺 Triangles with sides 5,6,7 and 10,12,14 are:",
+                opts: [
+                    {l: "A", t: "Congruent", c: false},
+                    {l: "B", t: "Similar with ratio 1:2", c: true},
+                    {l: "C", t: "Neither similar nor congruent", c: false},
+                    {l: "D", t: "Both similar and congruent", c: false}
+                ],
+                sol: "All sides of the second triangle are exactly twice the first (5→10, 6→12, 7→14). So they are <strong>similar with ratio 1:2</strong> (SSS similarity)."
+            },
+            // Part 3: Circles
+            {
+                id: 7001,
+                text: "⭕ A circle has radius 7 cm. A chord is 4 cm from the center. Find chord length.",
+                opts: [
+                    {l: "A", t: "2√33 cm", c: true},
+                    {l: "B", t: "2√45 cm", c: false},
+                    {l: "C", t: "√33 cm", c: false},
+                    {l: "D", t: "4√33 cm", c: false}
+                ],
+                sol: "Draw perpendicular from center to chord. Half-chord = √(r² − d²) = √(49 − 16) = √33. Full chord = <strong>2√33 cm</strong>."
+            },
+            {
+                id: 7002,
+                text: "⭕ Two circles of radii 5 cm and 3 cm touch internally. Distance between centers:",
+                opts: [
+                    {l: "A", t: "8 cm", c: false},
+                    {l: "B", t: "2 cm", c: true},
+                    {l: "C", t: "4 cm", c: false},
+                    {l: "D", t: "15 cm", c: false}
+                ],
+                sol: "For internal tangency: distance = difference of radii = 5 − 3 = <strong>2 cm</strong>."
+            },
+            {
+                id: 7003,
+                text: "⭕ Angle in a semicircle is always:",
+                opts: [
+                    {l: "A", t: "60°", c: false},
+                    {l: "B", t: "45°", c: false},
+                    {l: "C", t: "90°", c: true},
+                    {l: "D", t: "180°", c: false}
+                ],
+                sol: "The angle subtended by a diameter on the circle is always <strong>90°</strong> (right angle)."
+            },
+            // Part 4: Mensuration
+            {
+                id: 8001,
+                text: "📏 Find the area of a circle with circumference 44 cm. (Use π = ²²⁄₇)",
+                opts: [
+                    {l: "A", t: "154 cm²", c: true},
+                    {l: "B", t: "144 cm²", c: false},
+                    {l: "C", t: "121 cm²", c: false},
+                    {l: "D", t: "176 cm²", c: false}
+                ],
+                sol: "C = 2πr = 44 → r = 44/(2π) = 44 × 7/44 = 7 cm. A = πr² = (22/7) × 49 = <strong>154 cm²</strong>."
+            },
+            {
+                id: 8002,
+                text: "📏 Volume of a sphere is 288π cm³. Find its radius.",
+                opts: [
+                    {l: "A", t: "6 cm", c: true},
+                    {l: "B", t: "8 cm", c: false},
+                    {l: "C", t: "4 cm", c: false},
+                    {l: "D", t: "9 cm", c: false}
+                ],
+                sol: "V = ⁴⁄₃πr³ = 288π → r³ = 288 × 3/4 = 216 → r = <strong>6 cm</strong>."
+            },
+            {
+                id: 8003,
+                text: "📏 A cylinder's height is 14 cm and base radius is 7 cm. Find its curved surface area.",
+                opts: [
+                    {l: "A", t: "308 cm²", c: false},
+                    {l: "B", t: "616 cm²", c: true},
+                    {l: "C", t: "154 cm²", c: false},
+                    {l: "D", t: "462 cm²", c: false}
+                ],
+                sol: "CSA = 2πrh = 2 × (22/7) × 7 × 14 = 2 × 22 × 14 = <strong>616 cm²</strong>."
+            },
+            {
+                id: 8004,
+                text: "📏 A cube has surface area 150 cm². Find its volume.",
+                opts: [
+                    {l: "A", t: "125 cm³", c: true},
+                    {l: "B", t: "150 cm³", c: false},
+                    {l: "C", t: "100 cm³", c: false},
+                    {l: "D", t: "75 cm³", c: false}
+                ],
+                sol: "SA = 6a² = 150 → a² = 25 → a = 5 cm. Volume = a³ = <strong>125 cm³</strong>."
+            }
+        ];
+
+        var answered = {}, correctCount = 0;
+
+        function renderPractice() {
+            var c = document.getElementById('practice-qs'), h = '';
+            for (var i = 0; i < practiceQs.length; i++) {
+                var q = practiceQs[i], o = '';
+                for (var j = 0; j < q.opts.length; j++) {
+                    o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                }
+                h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+            }
+            c.innerHTML = h;
+            updateScore();
+        }
+
+        function getCorrectLabel(q) {
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+            }
+            return '';
+        }
+
+        function selectOpt(qId, idx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            var q = practiceQs.filter(function(x){return x.id === qId})[0];
+            var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+            var isCorrect = q.opts[idx].c;
+            for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-'+qId).textContent = '✅ Correct! +4';
+                document.getElementById('result-'+qId).className = 'q-result correct';
+                correctCount++;
+            } else {
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+                document.getElementById('result-'+qId).className = 'q-result wrong';
+                for (var i = 0; i < q.opts.length; i++) {
+                    if (q.opts[i].c) opts[i].classList.add('correct');
+                }
+            }
+            document.getElementById('soln-'+qId).classList.add('show');
+            updateScore();
+        }
+
+        function updateScore() {
+            var t = Object.keys(answered).length;
+            var el = document.getElementById('score-display');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'score-display';
+                el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+                document.getElementById('practice-qs').before(el);
+            }
+            el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+        }
+
+        function resetPractice() {
+            if (!confirm('Reset all answers?')) return;
+            answered = {}; correctCount = 0;
+            document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+            document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+            document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+            var el = document.getElementById('score-display');
+            if (el) el.textContent = '';
+            renderPractice();
+        }
+
+        function toggleStep(header) {
+            var content = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        renderPractice();
+    </script>
+</body>
+</html>
