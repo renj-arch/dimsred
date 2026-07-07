@@ -1,34 +1,519 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Set Theory &amp;amp; Logic — Coming Soon | vlymbooq</title>
+    <title>Set Theory & Logic — Infinity, Truth & Foundations | vlymbooq</title>
+    <meta name="description" content="Deep dive into Set Theory and Logic — ZFC axioms, cardinal and ordinal numbers, axiom of choice, independence proofs, Gödel's incompleteness theorems, and the limits of mathematics.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-set-theory.html">
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:Inter,-apple-system,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
-        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
-        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-        .brand{display:flex;align-items:center;gap:8px;text-decoration:none}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .container{max-width:700px;margin:80px auto;padding:24px;text-align:center}
-        .badge{display:inline-block;padding:4px 14px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.75em;font-weight:700;margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase}
-        h1{font-size:1.8em;font-weight:900;margin-bottom:12px;line-height:1.3}
-        p{color:#a1a1aa;font-size:.95em;line-height:1.7;margin-bottom:28px;max-width:500px;margin-left:auto;margin-right:auto}
-        .btn{display:inline-block;padding:10px 24px;border-radius:100px;font-weight:600;font-size:.85em;background:rgba(167,139,250,.15);color:#a78bfa;text-decoration:none;transition:all .2s}
-        .btn:hover{background:rgba(167,139,250,.25)}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}
+        .section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.72em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.7em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--purple);font-weight:700}
+
+        .quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}
+        .quote-box .attribution{font-size:.78em;color:var(--text-muted);margin-top:6px}
     </style>
 </head>
 <body>
-    <nav class="nav"><div class="nav-inner"><a href="index.html" class="brand"><svg width="28" height="28" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg><span class="brand-text">vlymbooq</span></a><a href="math.html" style="color:#a78bfa;font-size:.82em;font-weight:500;text-decoration:none">Math Map</a></div></nav>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="math.html">Math Map</a>
+                <a href="index.html#exams">Exams</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
-        <div class="badge">🔬 Scientist</div>
-        <h1>Set Theory &amp;amp; Logic</h1>
-        <p>This deep dive into pure mathematics is being prepared. Check the Math Concept Map for all available lessons.</p>
-        <a href="math.html" class="btn">← Back to Math Concept Map</a>
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Math Lessons</div>
+                    <a href="math.html">← Math Concept Map</a>
+                    <a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+                    <a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+                    <a href="lesson-number-theory.html">Number Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-linear-algebra.html">Linear Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-complex-analysis.html">Complex Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-abstract-algebra.html">Abstract Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-graph-theory.html">Graph Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-real-analysis.html">Real Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-topology.html">Topology <span class="s-tag">🔬</span></a>
+                    <a href="lesson-diff-geometry.html">Diff Geometry <span class="s-tag">🔬</span></a>
+                    <a href="lesson-game-theory.html">Game Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-info-theory.html">Info Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-measure-theory.html">Measure Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-category-theory.html">Category Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-set-theory.html" class="active" style="color:var(--text);font-weight:600">Set Theory &amp; Logic <span class="s-tag">🔬</span></a>
+                    <a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+                </div>
+            </div>
+            <div class="main">
+                <div class="lesson-body">
+
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                    <span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.7em;font-weight:700">🔬 Scientist</span>
+                    <span style="font-size:.78em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span>
+                </div>
+
+                <h2>Set Theory & Logic — The Foundations of Mathematics</h2>
+                <p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Set theory is the language in which all of mathematics can be expressed. Every mathematical object — number, function, space, group — can be defined as a set. Logic provides the rules for reasoning about these sets. Together, they answer the deepest questions: What can mathematics prove? What is the nature of infinity? Are there true statements that can never be proved? The answers are as beautiful as they are unsettling.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"Mathematics is the only science where we can prove things — but Gödel showed that even in mathematics, there are things we can never prove."</div>
+                    <div class="attribution">— inspired by Gödel's incompleteness theorems</div>
+                </div>
+
+                <!-- ========== PART 1: ZFC ========== -->
+                <div class="section-label part1">Part 1</div>
+                <h2>🧱 ZFC Axioms — The Rules of the Game</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Building Mathematics from Nothing</div>
+                    <div class="story-title">The Axiom of Extensionality — Two Sets Are Equal If They Have the Same Elements</div>
+                    <div class="story-text">Set theory begins with a single primitive notion: a set is a collection of objects. The <strong>Zermelo-Fraenkel axioms with Choice</strong> (ZFC) provide the foundational rules. There are 8-10 axioms (depending on how you count): Extensionality (sets are determined by their elements), Pairing (given a,b, {a,b} exists), Union (∪ of a set of sets exists), Power Set (all subsets exist), Infinity (an infinite set exists), Separation (subsets of a set defined by a property exist), Replacement (the image of a set under a function exists), Foundation (no infinite descending chains), and Choice (a product of nonempty sets is nonempty). From these, all of mathematics can be derived: natural numbers as von Neumann ordinals (0=∅, 1={∅}, 2={∅,{∅}}), functions as sets of ordered pairs, real numbers as Dedekind cuts, and so on. Every theorem ever proved can be translated into ZFC — at least in principle.</div>
+                    <div class="story-moral">ZFC is the common language of mathematics. Everything you've ever proved can be expressed in set theory — but at a cost: the foundation is never provably consistent.</div>
+                </div>
+
+                <h3>The Axiom of Choice</h3>
+                <p>The <strong>Axiom of Choice</strong> (AC) states: for any set of nonempty sets, there's a function choosing one element from each. It seems obvious for finite collections, but for infinite collections it has startling consequences: the Banach-Tarski paradox, the existence of a well-ordering of ℝ, the existence of non-measurable sets, and the fact that every vector space has a basis. Most mathematicians accept AC because it's so useful — without it, we lose foundational results in analysis, algebra, and topology. But the debate continues: is AC "obviously true" or does it create too many paradoxes?</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Extensionality</div><div class="f-math">∀x,x∈A↔x∈B ⇒ A=B</div></div>
+                    <div class="formula-card"><div class="f-label">Separation</div><div class="f-math">{x∈A : P(x)} exists</div></div>
+                    <div class="formula-card"><div class="f-label">Choice</div><div class="f-math">∏ᵢ Aᵢ ≠ ∅ for nonempty Aᵢ</div></div>
+                    <div class="formula-card"><div class="f-label">Foundation</div><div class="f-math">No infinite descending ∈ chains</div></div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 2: INFINITY ========== -->
+                <div class="section-label part2">Part 2</div>
+                <h2>∞ Cardinals and Ordinals — Sizes of Infinity</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Cantor's Paradise</div>
+                    <div class="story-title">Some Infinities Are Bigger Than Others</div>
+                    <div class="story-text">Cantor showed that infinity comes in many sizes. Two sets have the same <strong>cardinality</strong> if there's a bijection between them. ℕ (natural numbers) has cardinality ℵ₀ (aleph-null). ℝ (real numbers) has cardinality 2^{ℵ₀} — strictly larger than ℵ₀, as shown by Cantor's diagonal argument. The <strong>continuum hypothesis</strong> (CH) asks: is there a set whose size is strictly between ℵ₀ and 2^{ℵ₀}? Gödel proved CH is consistent with ZFC (1940); Cohen proved its negation is consistent (1963). CH is <strong>independent</strong> of ZFC — it can be neither proved nor disproved. <strong>Ordinal numbers</strong> extend the natural numbers into the transfinite: ω (the first infinite ordinal), ω+1, ω·2, ω², ω^ω, ε₀, and far beyond. Ordinals capture the idea of "position" in an infinite sequence; cardinals capture "size." The aleph hierarchy: ℵ₀, ℵ₁, ℵ₂, ... enumerates all infinite cardinalities. The <strong>continuum hypothesis</strong> says 2^{ℵ₀} = ℵ₁.</div>
+                    <div class="story-moral">Cantor showed us that infinity is not one thing — it's a ladder of ever-larger infinities, stretching beyond imagination.</div>
+                </div>
+
+                <h3>Cantor's Diagonal Argument</h3>
+                <p>Suppose ℝ were countable. List all real numbers r₁, r₂, r₃, ... between 0 and 1. Construct a new number whose nth decimal digit is different from the nth digit of rₙ. This number differs from every rₙ — contradiction. Therefore ℝ is uncountable. This simple argument is the most important in set theory, and it generalizes: the power set of any set is strictly larger than the original set (Cantor's theorem). There is no largest infinity — the sequence of cardinalities ℵ₀, 2^{ℵ₀}, 2^{2^{ℵ₀}}, ... never ends.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Cantor's Theorem</div>
+                    <div class="insight-text">|P(X)| > |X| for any set X</div>
+                    <div class="insight-sub">There is no set of all sets, no largest infinity, and no way to escape the endless ascent of larger and larger cardinalities.</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">The Continuum Hypothesis — The First Hilbert Problem</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        In 1900, Hilbert listed 23 unsolved problems. The first was: prove the continuum hypothesis — that there's no set whose size is between ℕ and ℝ.<br><br>
+                        Gödel (1940) showed CH can't be disproved from ZFC (it's consistent). He built the <strong>constructible universe L</strong>, a model of ZFC where CH holds.<br><br>
+                        Cohen (1963) showed CH can't be proved from ZFC. He invented <strong>forcing</strong> — a technique to build models where CH fails.<br><br>
+                        Together, this proves CH is <strong>independent</strong> of ZFC. The question of whether CH is "true" is a question about what we mean by truth in mathematics — a philosophical question, not a mathematical one.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 3: FORCING & INDEPENDENCE ========== -->
+                <div class="section-label part3">Part 3</div>
+                <h2>🔨 Independence — What Cannot Be Proved</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Building New Realities</div>
+                    <div class="story-title">Forcing — Paul Cohen's Method for Creating Mathematical Universes</div>
+                    <div class="story-text">Paul Cohen invented <strong>forcing</strong> in 1963 to prove the independence of CH. The idea: start with a countable model M of ZFC (guaranteed by the Löwenheim-Skolem theorem). Add a "generic" set G that doesn't exist in M. The new model M[G] contains G and is still a model of ZFC. By choosing G carefully, we can control which statements are true in M[G]. Cohen added ℵ₂ many new reals to make CH fail. Forcing has since been used to prove independence of dozens of statements: the axiom of choice itself (from ZF), Souslin's hypothesis, the Whitehead problem, and many more. Today, set theorists study the <strong>forcing multiverse</strong> — the collection of all possible set-theoretic universes connected by forcing extensions. The question "what is true?" becomes "what is true in which universe?"</div>
+                    <div class="story-moral">Set theory reveals that many mathematical questions have no single answer — they're true in some universes and false in others. Mathematics studies not one reality, but a multiverse of possibilities.</div>
+                </div>
+
+                <h3>Large Cardinal Axioms</h3>
+                <p>Just as the axioms of ZFC assert the existence of one infinity (ℕ), <strong>large cardinal axioms</strong> assert the existence of much larger infinities: inaccessible cardinals, Mahlo cardinals, measurable cardinals, Woodin cardinals, and supercompact cardinals. These cannot be proved from ZFC (if ZFC is consistent), but they're not arbitrary — they form a natural hierarchy, and they have consequences for ordinary mathematics (like projective determinacy). The study of large cardinals reveals the structure of the set-theoretic universe and suggests that the search for "stronger and stronger axioms of infinity" is the natural path of mathematical foundations.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Inaccessible</div><div class="f-math">κ: regular strong limit</div></div>
+                    <div class="formula-card"><div class="f-label">Measurable</div><div class="f-math">∃ κ-complete ultrafilter</div></div>
+                    <div class="formula-card"><div class="f-label">Woodin</div><div class="f-math">∃ elementary j: V→M</div></div>
+                    <div class="formula-card"><div class="f-label">Supercompact</div><div class="f-math">λ-supercompact for all λ</div></div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 4: GÖDEL ========== -->
+                <div class="section-label part4">Part 4</div>
+                <h2>🧠 Gödel's Theorems — The Limits of Proof</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The End of Certainty</div>
+                    <div class="story-title">Gödel's Incompleteness Theorems — Mathematics Can't Prove Its Own Consistency</div>
+                    <div class="story-text">In 1931, Kurt Gödel published a paper that shook mathematics to its core. His <strong>first incompleteness theorem</strong>: any consistent formal system strong enough to do arithmetic contains a statement that can neither be proved nor disproved within the system. His <strong>second incompleteness theorem</strong>: such a system cannot prove its own consistency. Gödel constructed a statement G that says "G is not provable." If G were provable, it would be false — contradiction. If G were not provable, it would be true — but unprovable. This is no trick — arithmetic really is incomplete. This means that ZFC (if consistent) cannot prove its own consistency. The search for a complete, consistent foundation for all mathematics is impossible. Mathematics will always have unsolved questions — not because we're not smart enough, but because the nature of proof has fundamental limits.</div>
+                    <div class="story-moral">Gödel showed that mathematics is incomplete — there will always be true statements we can never prove. This is not a failure of mathematics; it's the deepest truth about its nature.</div>
+                </div>
+
+                <h3>Gödel Numbering — Coding Statements as Numbers</h3>
+                <p>Gödel's brilliance was encoding mathematical statements as numbers. Assign numbers to symbols (0, 1, +, ×, =, ∀, etc.). A formula is a sequence of symbols, its Gödel number is 2^{code1} × 3^{code2} × 5^{code3} × ... (prime exponent coding). A proof is a sequence of formulas, also encoded as a single number. Now the statement "formula with number p is provable" becomes an arithmetical statement about p. The self-referential sentence G says "the formula with Gödel number g is not provable," where g is the Gödel number of G itself. This self-reference is the heart of the proof — and it's completely legitimate within arithmetic.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Gödel's First Incompleteness Theorem</div>
+                    <div class="insight-text">Any consistent formal system containing arithmetic is incomplete — there are true statements it cannot prove</div>
+                    <div class="insight-sub">This does not mean some truths are unknowable — it means they're unprovable in any given system. We can always move to a stronger system, but that system will have its own unprovable truths.</div>
+                </div>
+
+                <h3>Truth vs Provability</h3>
+                <p>Gödel's theorems establish that <strong>truth</strong> and <strong>provability</strong> are different concepts. In a given formal system, provable statements are a subset of true statements — but the converse fails. The <strong>Löb theorem</strong> says that if "if P is provable then P" is provable, then P is provable — a technical result about provability logic. The <strong>Halting problem</strong> (Turing, 1936) is the computability-theoretic version of incompleteness: there is no algorithm that determines whether a given program halts. Gödel's and Turing's results together define the limits of computation and proof — boundaries that no amount of cleverness can cross.</p>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">The Liar Paradox vs Gödel's Sentence</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        The classic Liar Paradox: "This sentence is false." If it's true, it's false. If it's false, it's true. This is a paradox because it involves self-reference and truth — but truth is not a formal concept within the language.<br><br>
+                        Gödel's insight: replace "true" with "provable." The sentence "This sentence is not provable" is not paradoxical — it's either true (and unprovable) or false (provable, which would be a contradiction if the system is consistent).<br><br>
+                        By using provability instead of truth, Gödel sidestepped the paradox and created a genuine mathematical theorem. The self-reference is legitimate because it's coded arithmetically — not a semantic trick but a syntactic construction within the formal system.
+                    </div>
+                </div>
+
+                <div class="quote-box">
+                    <div class="quote">"The first incompleteness theorem says that mathematics is inexhaustible. No matter how many axioms you add, there will always be true statements that elude proof."</div>
+                    <div class="attribution">— Gregory Chaitin</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PRACTICE ========== -->
+                <h2 style="margin-top:0">🎯 Practice — Check Your Set Theory Intuition</h2>
+                <p style="color:var(--text-sec);margin-bottom:16px">These puzzles build set theory and logic intuition.</p>
+
+                <div id="practice-qs"></div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+                    <a href="math.html" class="btn btn-success">← Back to Math Map</a>
+                </div>
+
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        var practiceQs = [
+            {
+                id: 20001,
+                text: "🧱 The Axiom of Extensionality says:",
+                opts: [
+                    {l: "A", t: "Sets can be extended", c: false},
+                    {l: "B", t: "Sets with the same elements are equal", c: true},
+                    {l: "C", t: "Every set has an extension", c: false},
+                    {l: "D", t: "Sets are extensible objects", c: false}
+                ],
+                sol: "<strong>Extensionality</strong> says two sets are equal iff they have exactly the same elements. This is the defining property of sets — they are determined by their members."
+            },
+            {
+                id: 20002,
+                text: "∞ Cantor's diagonal argument shows that:",
+                opts: [
+                    {l: "A", t: "ℕ is countable", c: false},
+                    {l: "B", t: "ℝ is uncountable", c: true},
+                    {l: "C", t: "ℚ is uncountable", c: false},
+                    {l: "D", t: "All infinities are equal", c: false}
+                ],
+                sol: "Cantor's diagonal argument shows ℝ is <strong>uncountable</strong> — there's no bijection between ℕ and ℝ. This was a revolutionary result."
+            },
+            {
+                id: 20003,
+                text: "∞ The cardinality of ℝ is:",
+                opts: [
+                    {l: "A", t: "ℵ₀", c: false},
+                    {l: "B", t: "ℵ₁", c: false},
+                    {l: "C", t: "2^{ℵ₀}", c: true},
+                    {l: "D", t: "ℵ₂", c: false}
+                ],
+                sol: "ℝ has cardinality <strong>2^{ℵ₀}</strong> (that's the cardinality of the power set of ℕ). Whether 2^{ℵ₀} = ℵ₁ is the continuum hypothesis."
+            },
+            {
+                id: 20004,
+                text: "🧠 Gödel's first incompleteness theorem says:",
+                opts: [
+                    {l: "A", t: "All true statements are provable", c: false},
+                    {l: "B", t: "Any consistent system containing arithmetic has unprovable true statements", c: true},
+                    {l: "C", t: "Mathematics is complete", c: false},
+                    {l: "D", t: "Only false statements are unprovable", c: false}
+                ],
+                sol: "Gödel's first theorem: any consistent formal system that can do arithmetic contains a statement G that is <strong>true but not provable</strong>. Mathematics is inherently incomplete."
+            },
+            {
+                id: 19005,
+                text: "🧠 Gödel's second incompleteness theorem says:",
+                opts: [
+                    {l: "A", t: "Everything is provable", c: false},
+                    {l: "B", t: "A system cannot prove its own consistency", c: true},
+                    {l: "C", t: "Consistency is always provable", c: false},
+                    {l: "D", t: "Only inconsistent systems are interesting", c: false}
+                ],
+                sol: "The second theorem: if a consistent system can prove its own consistency, it's inconsistent. So <strong>ZFC cannot prove Con(ZFC)</strong> — unless ZFC is inconsistent."
+            },
+            {
+                id: 20006,
+                text: "🔨 The continuum hypothesis is:",
+                opts: [
+                    {l: "A", t: "Proved true", c: false},
+                    {l: "B", t: "Proved false", c: false},
+                    {l: "C", t: "Independent of ZFC", c: true},
+                    {l: "D", t: "Meaningless", c: false}
+                ],
+                sol: "The continuum hypothesis is <strong>independent</strong> of ZFC — neither provable nor disprovable. Gödel and Cohen proved this via the constructible universe and forcing."
+            },
+            {
+                id: 20007,
+                text: "🔨 Cohen invented which technique for independence proofs?",
+                opts: [
+                    {l: "A", t: "Diagonalization", c: false},
+                    {l: "B", t: "Forcing", c: true},
+                    {l: "C", t: "Induction", c: false},
+                    {l: "D", t: "Recursion", c: false}
+                ],
+                sol: "Paul Cohen invented <strong>forcing</strong> to prove the independence of CH. It builds new models of ZFC by adding generic sets."
+            },
+            {
+                id: 20008,
+                text: "∞ Von Neumann ordinals represent each number as:",
+                opts: [
+                    {l: "A", t: "A set of all smaller numbers", c: true},
+                    {l: "B", t: "A set of one element", c: false},
+                    {l: "C", t: "A function", c: false},
+                    {l: "D", t: "An ordered pair", c: false}
+                ],
+                sol: "In von Neumann ordinals, each number is the set of all smaller numbers: 0=∅, 1={0}, 2={0,1}, 3={0,1,2}, etc. This gives a canonical representation."
+            },
+            {
+                id: 20009,
+                text: "🧱 Which ZFC axiom asserts the existence of an infinite set?",
+                opts: [
+                    {l: "A", t: "Power Set", c: false},
+                    {l: "B", t: "Infinity", c: true},
+                    {l: "C", t: "Replacement", c: false},
+                    {l: "D", t: "Separation", c: false}
+                ],
+                sol: "The <strong>Axiom of Infinity</strong> asserts there exists a set containing ∅ and closed under successor x → x∪{x} — an infinite set exists."
+            },
+            {
+                id: 20010,
+                text: "∞ Cantor's theorem says: |P(X)| > |X|. This implies:",
+                opts: [
+                    {l: "A", t: "There is a largest infinity", c: false},
+                    {l: "B", t: "There is no largest infinity", c: true},
+                    {l: "C", t: "All infinite sets have the same size", c: false},
+                    {l: "D", t: "P(ℕ) is countable", c: false}
+                ],
+                sol: "Since |P(X)| > |X| for every X, applying it to P(X) gives an even larger set, and so on forever. There is <strong>no largest infinity</strong>."
+            },
+            {
+                id: 20011,
+                text: "🧠 What is Gödel numbering used for?",
+                opts: [
+                    {l: "A", t: "Counting large numbers", c: false},
+                    {l: "B", t: "Encoding formulas as numbers for self-reference", c: true},
+                    {l: "C", t: "Ordering infinite sets", c: false},
+                    {l: "D", t: "Proving CH", c: false}
+                ],
+                sol: "<strong>Gödel numbering</strong> encodes formulas and proofs as numbers using prime powers. This lets arithmetic talk about provability and creates self-referential statements."
+            },
+            {
+                id: 20012,
+                text: "🧠 The Liar Paradox and Gödel's sentence differ because Gödel uses:",
+                opts: [
+                    {l: "A", t: "Truth instead of provability", c: false},
+                    {l: "B", t: "Provability instead of truth", c: true},
+                    {l: "C", t: "Consistency instead of provability", c: false},
+                    {l: "D", t: "Set theory instead of arithmetic", c: false}
+                ],
+                sol: "The Liar says \"this sentence is false\" (truth). Gödel says \"this sentence is not provable\" (provability). Provability is formalizable within arithmetic; truth is not."
+            }
+        ];
+
+        var answered = {}, correctCount = 0;
+        function renderPractice() {
+            var c = document.getElementById('practice-qs'), h = '';
+            for (var i = 0; i < practiceQs.length; i++) {
+                var q = practiceQs[i], o = '';
+                for (var j = 0; j < q.opts.length; j++) {
+                    o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                }
+                h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+            }
+            c.innerHTML = h; updateScore();
+        }
+        function getCorrectLabel(q) { for (var i = 0; i < q.opts.length; i++) { if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t; } return ''; }
+        function selectOpt(qId, idx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            var q = practiceQs.filter(function(x){return x.id === qId})[0];
+            var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+            var isCorrect = q.opts[idx].c;
+            for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-'+qId).textContent = '✅ Correct!';
+                document.getElementById('result-'+qId).className = 'q-result correct';
+                correctCount++;
+            } else {
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+                document.getElementById('result-'+qId).className = 'q-result wrong';
+                for (var i = 0; i < q.opts.length; i++) { if (q.opts[i].c) opts[i].classList.add('correct'); }
+            }
+            document.getElementById('soln-'+qId).classList.add('show');
+            updateScore();
+        }
+        function updateScore() {
+            var t = Object.keys(answered).length;
+            var el = document.getElementById('score-display');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'score-display';
+                el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+                document.getElementById('practice-qs').before(el);
+            }
+            el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+        }
+        function resetPractice() {
+            if (!confirm('Reset all answers?')) return;
+            answered = {}; correctCount = 0;
+            document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+            document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+            document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+            var el = document.getElementById('score-display');
+            if (el) el.textContent = '';
+            renderPractice();
+        }
+        function toggleStep(header) {
+            var content = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (content.classList.contains('open')) { content.classList.remove('open'); arrow.classList.remove('open'); }
+            else { content.classList.add('open'); arrow.classList.add('open'); }
+        }
+        renderPractice();
+    </script>
 </body>
 </html>
