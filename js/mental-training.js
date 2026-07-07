@@ -3770,6 +3770,9 @@ function generateWordOrderingQuestion(diff) {
     {w:['barking','dogs','seldom','bite'],s:'barking dogs seldom bite'},
     {w:['cut','your','coat','according','to','your','cloth'],s:'cut your coat according to your cloth'}
   ];
+  var it=items[rand(0,items.length-1)]; var jumbled=it.w.slice(); shuffle(jumbled);
+  return { question:'Arrange: "'+jumbled.join(' ')+'"', answer:it.s, options:[it.s, jumbled.slice().reverse().join(' '), [jumbled[0],jumbled[jumbled.length-1],jumbled[2],jumbled[1],jumbled[3]].join(' '), [jumbled[jumbled.length-1],jumbled[0],jumbled[2],jumbled[1],jumbled[3]].join(' ')], hint:'Find the logical sequence', timeLimit:15, type:'verbal', techniqueLabel:'Word Ordering', intuition:'Try to form a meaningful sentence. Look for the subject first, then verb, then object.' };
+}
 
 function generateSentenceOrderingQuestion(diff) {
   var items=[
@@ -4343,6 +4346,9 @@ function generateSentenceImprovementQuestion(diff) {
     {s:'He is more taller than his brother.',i:'He is taller than his brother',o:['He is more taller than his brother','He is taller than his brother','He is more tall than his brother','He is much taller than his brother']},
     {s:'Neither did he call nor did he come.',i:'Neither did he call nor did he come (correct)',o:['Neither did he call nor did he come','He neither called nor came','Neither he called nor came','He called nor came']}
   ];
+  var it=items[rand(0,items.length-1)]; shuffle(it.o);
+  return { question:'Improve: "'+it.s+'"', answer:it.i, options:it.o, hint:'Replace the incorrect word/phrase with the correct one', timeLimit:12, type:'verbal', techniqueLabel:'Sentence Improvement', intuition:'too...to (infinitive), so...that (clause). Prefer A to B. No sooner...than. Scarcely...when.' };
+}
 
 function generateClosetTestQuestion(diff) {
   var items=[
