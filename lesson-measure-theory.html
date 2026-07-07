@@ -1,34 +1,558 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Measure Theory — Coming Soon | vlymbooq</title>
+    <title>Measure Theory — The Foundations of Integration | vlymbooq</title>
+    <meta name="description" content="Deep dive into Measure Theory — sigma-algebras, Lebesgue measure, integration, convergence theorems, Lp spaces, and the rigorous foundations of probability.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-measure-theory.html">
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:Inter,-apple-system,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
-        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
-        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-        .brand{display:flex;align-items:center;gap:8px;text-decoration:none}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .container{max-width:700px;margin:80px auto;padding:24px;text-align:center}
-        .badge{display:inline-block;padding:4px 14px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.75em;font-weight:700;margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase}
-        h1{font-size:1.8em;font-weight:900;margin-bottom:12px;line-height:1.3}
-        p{color:#a1a1aa;font-size:.95em;line-height:1.7;margin-bottom:28px;max-width:500px;margin-left:auto;margin-right:auto}
-        .btn{display:inline-block;padding:10px 24px;border-radius:100px;font-weight:600;font-size:.85em;background:rgba(167,139,250,.15);color:#a78bfa;text-decoration:none;transition:all .2s}
-        .btn:hover{background:rgba(167,139,250,.25)}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}
+        .section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.72em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.7em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--purple);font-weight:700}
+
+        .quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}
+        .quote-box .attribution{font-size:.78em;color:var(--text-muted);margin-top:6px}
     </style>
 </head>
 <body>
-    <nav class="nav"><div class="nav-inner"><a href="index.html" class="brand"><svg width="28" height="28" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg><span class="brand-text">vlymbooq</span></a><a href="math.html" style="color:#a78bfa;font-size:.82em;font-weight:500;text-decoration:none">Math Map</a></div></nav>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="math.html">Math Map</a>
+                <a href="index.html#exams">Exams</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
-        <div class="badge">🔬 Scientist</div>
-        <h1>Measure Theory</h1>
-        <p>This deep dive into pure mathematics is being prepared. Check the Math Concept Map for all available lessons.</p>
-        <a href="math.html" class="btn">← Back to Math Concept Map</a>
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Math Lessons</div>
+                    <a href="math.html">← Math Concept Map</a>
+                    <a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+                    <a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+                    <a href="lesson-number-theory.html">Number Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-linear-algebra.html">Linear Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-complex-analysis.html">Complex Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-abstract-algebra.html">Abstract Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-graph-theory.html">Graph Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-real-analysis.html">Real Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-topology.html">Topology <span class="s-tag">🔬</span></a>
+                    <a href="lesson-diff-geometry.html">Diff Geometry <span class="s-tag">🔬</span></a>
+                    <a href="lesson-game-theory.html">Game Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-info-theory.html">Info Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-measure-theory.html" class="active" style="color:var(--text);font-weight:600">Measure Theory <span class="s-tag">🔬</span></a>
+                    <a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+                </div>
+            </div>
+            <div class="main">
+                <div class="lesson-body">
+
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                    <span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.7em;font-weight:700">🔬 Scientist</span>
+                    <span style="font-size:.78em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span>
+                </div>
+
+                <h2>Measure Theory — The Mathematics of Size</h2>
+                <p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Measure theory answers the question: how do we measure the "size" of a set? It starts simply — length of an interval, area of a rectangle — but quickly leads to deep questions about infinity, the structure of the real line, and the foundations of integration. Without measure theory, there is no rigorous probability theory, no Lebesgue integral, no modern analysis. It's the invisible scaffolding beneath the mathematics of uncertainty and change.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"Measure theory is the soul of modern analysis. It tells us what we can integrate, what we can average, and what we can know."</div>
+                    <div class="attribution">— Henri Lebesgue</div>
+                </div>
+
+                <!-- ========== PART 1: MEASURE ========== -->
+                <div class="section-label part1">Part 1</div>
+                <h2>📏 Sigma-Algebras and Measures — The Foundation</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Problem with Length</div>
+                    <div class="story-title">Can Every Set Have a Length? The Banach-Tarski Paradox</div>
+                    <div class="story-text">In 1902, Lebesgue asked: can we assign a "length" to every subset of the real line that satisfies basic properties — length of an interval is its length, length is translation-invariant, and length is countably additive (the length of a disjoint union equals the sum of lengths)? The answer is no. There exist <strong>non-measurable sets</strong> — sets so pathological that no consistent notion of length can include them. The <strong>Vitali set</strong> is the classic example: pick one element from each coset of ℚ in ℝ. It has the bizarre property that countably many disjoint translations of it cover [0,1], so it can't have any consistent length. Even more dramatically, the <strong>Banach-Tarski paradox</strong> (1924) shows you can decompose a sphere into finitely many pieces, rotate them, and reassemble them into two identical copies of the original sphere — but the pieces are non-measurable. This is why we need <strong>σ-algebras</strong>: families of "well-behaved" sets that we can measure.</div>
+                    <div class="story-moral">Not every set can be measured. Measure theory tells us which sets are well-behaved enough to have a size — and which are too pathological.</div>
+                </div>
+
+                <h3>Sigma-Algebras</h3>
+                <p>A <strong>σ-algebra</strong> (or σ-field) F on a set X is a collection of subsets containing X, closed under complements and countable unions. The pair (X, F) is a <strong>measurable space</strong>. The <strong>Borel σ-algebra</strong> on ℝ is the smallest σ-algebra containing all open intervals — it's generated by (a,b), (−∞,a], or any family that generates the open sets. Borel sets include intervals, open sets, closed sets, Gδ sets, Fσ sets, and more — but still not all subsets. The <strong>Lebesgue σ-algebra</strong> extends the Borel σ-algebra to include all sets that differ from a Borel set by a set of measure zero (the completion).</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">σ-Algebra Axioms</div><div class="f-math">∅∈F, closed under complements, countable unions</div></div>
+                    <div class="formula-card"><div class="f-label">Measure</div><div class="f-math">μ(∅)=0, countable additivity</div></div>
+                    <div class="formula-card"><div class="f-label">Borel σ-Algebra</div><div class="f-math">Smallest σ-algebra with all open sets</div></div>
+                    <div class="formula-card"><div class="f-label">Probability Measure</div><div class="f-math">μ(Ω) = 1</div></div>
+                </div>
+
+                <h3>Constructing the Lebesgue Measure</h3>
+                <p>The <strong>Lebesgue measure</strong> λ on ℝ is built in stages. Start with the <strong>outer measure</strong> λ*(A) = inf{ Σ |Iₙ| : A ⊆ ∪ Iₙ } where Iₙ are intervals. A set A is <strong>Lebesgue measurable</strong> if it splits every set appropriately (Carathéodory's criterion): λ*(E) = λ*(E∩A) + λ*(E\A) for all E ⊆ ℝ. This gives a σ-algebra containing the Borel sets, and λ is countably additive on it. The Lebesgue measure of an interval is its length, it's translation-invariant, and it satisfies all the intuitive properties of "length" — but only on measurable sets.</p>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">The Cantor Set — Measure Zero, Yet Uncountable</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        The Cantor set is constructed by repeatedly removing the middle third of intervals. Start with [0,1]. Remove (1/3, 2/3). Then remove the middle third of each remaining piece, and so on.<br><br>
+                        The total length removed = 1/3 + 2/9 + 4/27 + ... = 1. So the Cantor set has <strong>Lebesgue measure 0</strong>. Yet it's <strong>uncountable</strong> — it has as many points as the entire interval [0,1]!<br><br>
+                        The Cantor set is a perfect, nowhere-dense set of measure zero. It shows that "size" in the sense of measure is very different from "size" in the sense of cardinality. It also appears in dynamics, fractal geometry, and as the attractor of iterated function systems.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 2: INTEGRATION ========== -->
+                <div class="section-label part2">Part 2</div>
+                <h2>∫ The Lebesgue Integral — Integrating Without Continuity</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Riemann Problem</div>
+                    <div class="story-title">Why Riemann's Integral Isn't Enough — and What Lebesgue Did About It</div>
+                    <div class="story-text">The Riemann integral approximates area by slicing vertically — partitioning the x-axis and summing rectangles. This works for continuous functions and many discontinuous ones, but it fails for functions with "too many" discontinuities. The indicator function of the rationals (1 on ℚ, 0 elsewhere) is nowhere continuous, and its Riemann integral doesn't exist. Lebesgue's insight: slice <strong>horizontally</strong> instead. Instead of partitioning the domain, partition the <strong>range</strong> and measure the set where the function takes values in each range interval. For the indicator of ℚ, the set where it's 1 is ℚ, which has measure 0 — so the integral is 0. The <strong>Lebesgue integral</strong> exists for a much wider class of functions — all measurable functions — and satisfies powerful convergence theorems that the Riemann integral lacks.</div>
+                    <div class="story-moral">The Riemann integral asks "what's the value at each x?" The Lebesgue integral asks "how large is the set where the function takes each value?" The second question turns out to be far more powerful.</div>
+                </div>
+
+                <h3>Measurable Functions and Simple Functions</h3>
+                <p>A function f: X → ℝ is <strong>measurable</strong> if the preimage of every Borel set is measurable. This is equivalent to {x : f(x) &gt; c} being measurable for all c ∈ ℝ. Almost every function you can reasonably define is measurable — continuous functions, step functions, limits of measurable functions. A <strong>simple function</strong> is a finite linear combination of indicator functions of measurable sets. The integral of a simple function is Σ aᵢ·μ(Aᵢ). For a non-negative measurable function f, the integral is the supremum of integrals of simple functions ≤ f. For general f, split into positive and negative parts.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">The Three Convergence Theorems</div>
+                    <div class="insight-text">Monotone Convergence: fₙ ↗ f ⇒ ∫ fₙ → ∫ f</div>
+                    <div class="insight-sub">Dominated Convergence: |fₙ| ≤ g, fₙ → f a.e. ⇒ ∫ fₙ → ∫ f</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">The Dominated Convergence Theorem in Action</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Let fₙ(x) = n·xⁿ for x ∈ [0,1]. Pointwise, fₙ(x) → 0 for x ∈ [0,1), and fₙ(1) = n → ∞. So the pointwise limit is 0 almost everywhere (except at x=1, a set of measure 0).<br><br>
+                        Can we swap limit and integral? ∫₀¹ n·xⁿ dx = n/(n+1) → 1. The pointwise limit is 0, so ∫ fₙ → 1 ≠ 0 = ∫ 0!<br><br>
+                        The dominated convergence theorem doesn't apply because there's no integrable dominating function g with |fₙ| ≤ g for all n. Indeed, supₙ fₙ(1) = ∞. This shows why the conditions matter — when they're satisfied, swapping limit and integral is justified; when they're not, all bets are off.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 3: LP SPACES ========== -->
+                <div class="section-label part3">Part 3</div>
+                <h2>📊 Lᵖ Spaces — Function Spaces with Norms</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Space of Functions</div>
+                    <div class="story-title">Lᵖ Spaces — Measuring the Size of a Function</div>
+                    <div class="story-text">Once we have the Lebesgue integral, we can define norms on function spaces. For p ≥ 1, the <strong>Lᵖ norm</strong> is ‖f‖ₚ = (∫ |f|ᵖ dμ)^{1/p}. The space Lᵖ consists of all measurable functions with finite Lᵖ norm, identifying functions that agree almost everywhere. L² is a Hilbert space (inner product ⟨f,g⟩ = ∫ f ḡ dμ) and is the natural setting for Fourier series and quantum mechanics. L¹ is the space of integrable functions. L^∞ consists of essentially bounded functions. The <strong>Hölder inequality</strong> says ∫ |fg| ≤ ‖f‖ₚ·‖g‖₉ for 1/p + 1/q = 1, generalizing Cauchy-Schwarz (p=q=2). <strong>Riesz-Fischer theorem</strong>: Lᵖ spaces are complete (every Cauchy sequence converges) — they're <strong>Banach spaces</strong>. This completeness is what makes modern analysis work: we can solve equations by finding approximate solutions and taking limits.</div>
+                    <div class="story-moral">Lᵖ spaces give us a way to measure functions like we measure vectors — with norms, convergence, and completeness.</div>
+                </div>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Lᵖ Norm</div><div class="f-math">‖f‖ₚ = (∫ |f|ᵖ)^{1/p}</div></div>
+                    <div class="formula-card"><div class="f-label">Hölder</div><div class="f-math">∫ |fg| ≤ ‖f‖ₚ·‖g‖₉</div></div>
+                    <div class="formula-card"><div class="f-label">Minkowski</div><div class="f-math">‖f+g‖ₚ ≤ ‖f‖ₚ + ‖g‖ₚ</div></div>
+                    <div class="formula-card"><div class="f-label">Riesz-Fischer</div><div class="f-math">Lᵖ is complete (Banach)</div></div>
+                </div>
+
+                <h3>Modes of Convergence</h3>
+                <p>In measure theory, there are several distinct notions of convergence for functions. <strong>Pointwise a.e.</strong> convergence: fₙ(x) → f(x) for almost every x. <strong>Convergence in measure</strong>: for every ε > 0, μ({|fₙ − f| &gt; ε}) → 0. <strong>Convergence in Lᵖ</strong>: ‖fₙ − f‖ₚ → 0. These are related: Lᵖ convergence implies convergence in measure; convergence in measure implies a subsequence converges pointwise a.e.; but in general, none of these implications reverse. The <strong>Egoroff theorem</strong> says that on a finite measure space, pointwise a.e. convergence implies <strong>uniform</strong> convergence on sets of arbitrarily large measure — almost uniform convergence.</p>
+
+                <div class="example-box">
+                    <div class="ex-label">Convergence that Isn't What It Seems</div>
+                    <div class="ex-text">Consider fₙ = n·χ_{[0,1/n]}. Pointwise, fₙ(x) → 0 for all x > 0, but fₙ(0) = n → ∞. Pointwise a.e., fₙ → 0. In measure: for any ε > 0, μ({|fₙ| > ε}) = 1/n → 0. But ∫ fₙ = n·(1/n) = 1, so ‖fₙ‖₁ = 1 — they do NOT converge in L¹ to 0. This function "escapes to infinity" in the L¹ norm even though it converges to 0 pointwise.</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 4: DEEP RESULTS ========== -->
+                <div class="section-label part4">Part 4</div>
+                <h2>🌌 Radon-Nikodym, Fubini, and the Foundations of Probability</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Changing Measures</div>
+                    <div class="story-title">The Radon-Nikodym Theorem — When Is One Measure "Denser" Than Another?</div>
+                    <div class="story-text">Given two measures μ and ν on the same measurable space, when can we write ν(A) = ∫_A f dμ for some measurable function f? The <strong>Radon-Nikodym theorem</strong> says: if ν is absolutely continuous with respect to μ (ν(A) = 0 whenever μ(A) = 0), then there exists a <strong>Radon-Nikodym derivative</strong> f = dν/dμ such that ν(A) = ∫_A f dμ. This is the measure-theoretic version of the chain rule. In probability, this gives conditional expectation: E[X|G] is the Radon-Nikodym derivative of a measure with respect to another. The <strong>Lebesgue decomposition theorem</strong> says any measure can be uniquely decomposed into an absolutely continuous part, a singular continuous part, and a discrete part — the mathematical structure behind the distinction between continuous and discrete probability distributions.</div>
+                    <div class="story-moral">The Radon-Nikodym theorem tells us when one measure can be described as a "density" with respect to another — it's why probability density functions exist.</div>
+                </div>
+
+                <h3>Product Measures and Fubini's Theorem</h3>
+                <p>Given two measure spaces (X, F, μ) and (Y, G, ν), the <strong>product measure</strong> μ×ν on X×Y is defined by (μ×ν)(A×B) = μ(A)·ν(B) on rectangles, then extended to the product σ-algebra. <strong>Fubini's theorem</strong> says that if f is integrable with respect to the product measure, then the iterated integrals exist and are equal: ∫_{X×Y} f d(μ×ν) = ∫_X (∫_Y f(x,y) dν(y)) dμ(x) = ∫_Y (∫_X f(x,y) dμ(x)) dν(y). This is the justification for "changing the order of integration" in multivariable calculus — but it requires integrability, which is not automatic. The <strong>Tonelli theorem</strong> gives a useful sufficient condition: if f ≥ 0, the iterated integrals are always equal (even if infinite).</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Fubini's Theorem</div>
+                    <div class="insight-text">For integrable f, the order of integration doesn't matter: ∬ f = ∫∫ f dx dy = ∫∫ f dy dx</div>
+                    <div class="insight-sub">But this is NOT always true for non-integrable functions! Fubini's theorem requires absolute integrability with respect to the product measure.</div>
+                </div>
+
+                <h3>Probability Theory as Measure Theory</h3>
+                <p>Modern probability theory is entirely built on measure theory. A <strong>probability space</strong> (Ω, F, P) is just a measure space with P(Ω) = 1. A <strong>random variable</strong> is a measurable function X: Ω → ℝ. Its <strong>expected value</strong> is E[X] = ∫_Ω X dP. The <strong>law</strong> of X is the pushforward measure P_X(A) = P(X ∈ A). <strong>Conditional expectation</strong> E[X|G] for a sub-σ-algebra G ⊆ F is defined via the Radon-Nikodym theorem. The <strong>Kolmogorov extension theorem</strong> constructs infinite-dimensional probability spaces (like the space of all Brownian motion paths). The <strong>strong law of large numbers</strong> and <strong>central limit theorem</strong> are theorems about convergence of integrals with respect to product measures. Measure theory provides the mathematical rigor that makes probability a branch of mathematics rather than a collection of heuristics.</p>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">The Vitali Set — A Non-Measurable Set</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Define an equivalence relation on [0,1]: x ~ y if x − y ∈ ℚ. This partitions [0,1] into uncountably many equivalence classes, each a coset of ℚ. Using the axiom of choice, pick one element from each equivalence class to form the <strong>Vitali set V</strong>.<br><br>
+                        Key properties: for any rational q ∈ [0,1], the translates V_q = V + q (mod 1) are disjoint and their union over all q ∈ ℚ∩[0,1] is exactly [0,1].<br><br>
+                        If V were Lebesgue measurable with measure m, then each V_q would also have measure m (translation invariance). Countable additivity would give: 1 = λ([0,1]) = Σ_m λ(V_q) = Σ_m m. If m = 0, the sum is 0. If m > 0, the sum is infinite. Both contradiction. So V is <strong>not measurable</strong>.<br><br>
+                        The existence of non-measurable sets requires the axiom of choice. Without it, it's consistent that every set of reals is Lebesgue measurable (Solovay, 1970).
+                    </div>
+                </div>
+
+                <div class="quote-box">
+                    <div class="quote">"Probability theory is measure theory with a soul — the soul being the interpretation of measure as degree of belief, and measurable functions as random variables."</div>
+                    <div class="attribution">— Mark Kac</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PRACTICE ========== -->
+                <h2 style="margin-top:0">🎯 Practice — Check Your Measure Theory Intuition</h2>
+                <p style="color:var(--text-sec);margin-bottom:16px">These puzzles build measure theory intuition.</p>
+
+                <div id="practice-qs"></div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+                    <a href="math.html" class="btn btn-success">← Back to Math Map</a>
+                </div>
+
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        var practiceQs = [
+            {
+                id: 18001,
+                text: "📏 A σ-algebra must be closed under:",
+                opts: [
+                    {l: "A", t: "Finite unions", c: false},
+                    {l: "B", t: "Countable unions and complements", c: true},
+                    {l: "C", t: "Arbitrary unions", c: false},
+                    {l: "D", t: "Only complements", c: false}
+                ],
+                sol: "A σ-algebra is closed under <strong>countable unions</strong> and <strong>complements</strong> (and therefore also countable intersections by De Morgan's laws)."
+            },
+            {
+                id: 18002,
+                text: "📏 The Borel σ-algebra on ℝ is generated by:",
+                opts: [
+                    {l: "A", t: "All subsets of ℝ", c: false},
+                    {l: "B", t: "All open intervals", c: true},
+                    {l: "C", t: "All countable sets", c: false},
+                    {l: "D", t: "All closed sets only", c: false}
+                ],
+                sol: "The Borel σ-algebra is the smallest σ-algebra containing all <strong>open intervals (a,b)</strong>. Equivalently, it's generated by open sets, closed sets, or half-lines (−∞, a]."
+            },
+            {
+                id: 18003,
+                text: "📏 The Lebesgue measure of the Cantor set is:",
+                opts: [
+                    {l: "A", t: "1", c: false},
+                    {l: "B", t: "0", c: true},
+                    {l: "C", t: "1/2", c: false},
+                    {l: "D", t: "Non-measurable", c: false}
+                ],
+                sol: "The Cantor set has Lebesgue measure <strong>0</strong>. The total length of removed intervals equals 1, so what remains has length 0 — yet it's uncountable."
+            },
+            {
+                id: 18004,
+                text: "∫ The Lebesgue integral of the indicator function of ℚ on [0,1] is:",
+                opts: [
+                    {l: "A", t: "1", c: false},
+                    {l: "B", t: "0", c: true},
+                    {l: "C", t: "∞", c: false},
+                    {l: "D", t: "Undefined", c: false}
+                ],
+                sol: "The indicator of ℚ is 1 on the rationals and 0 elsewhere. Since ℚ is <strong>countable</strong>, its Lebesgue measure is 0. The integral is 1·0 + 0·1 = <strong>0</strong>."
+            },
+            {
+                id: 18005,
+                text: "∫ The monotone convergence theorem requires that fₙ is:",
+                opts: [
+                    {l: "A", t: "Decreasing and bounded", c: false},
+                    {l: "B", t: "Non-negative and increasing", c: true},
+                    {l: "C", t: "Positive and decreasing", c: false},
+                    {l: "D", t: "Complex-valued", c: false}
+                ],
+                sol: "The <strong>monotone convergence theorem</strong> requires fₙ to be <strong>non-negative and increasing</strong> (pointwise a.e.) to f. Then ∫ fₙ → ∫ f, even if the limit is infinite."
+            },
+            {
+                id: 18006,
+                text: "∫ The dominated convergence theorem requires a dominating function g that is:",
+                opts: [
+                    {l: "A", t: "Non-negative", c: false},
+                    {l: "B", t: "Integrable", c: true},
+                    {l: "C", t: "Bounded", c: false},
+                    {l: "D", t: "Constant", c: false}
+                ],
+                sol: "The dominating function g must be <strong>integrable</strong> (∫ |g| &lt; ∞). This is the crucial condition — without an integrable bound, swapping limit and integral may fail."
+            },
+            {
+                id: 18007,
+                text: "📊 The L² norm comes from which inner product?",
+                opts: [
+                    {l: "A", t: "∫ |f| dμ", c: false},
+                    {l: "B", t: "∫ f·g dμ", c: true},
+                    {l: "C", t: "sup |f|", c: false},
+                    {l: "D", t: "√∫ f² dμ alone", c: false}
+                ],
+                sol: "The L² inner product is ⟨f,g⟩ = <strong>∫ f·g dμ</strong> (or ∫ f·ḡ for complex). The norm is ‖f‖₂ = √⟨f,f⟩. L² is a Hilbert space."
+            },
+            {
+                id: 18008,
+                text: "📊 The Riesz-Fischer theorem states that Lᵖ spaces are:",
+                opts: [
+                    {l: "A", t: "Finite-dimensional", c: false},
+                    {l: "B", t: "Complete (Banach spaces)", c: true},
+                    {l: "C", t: "Compact", c: false},
+                    {l: "D", t: "Separable for all p", c: false}
+                ],
+                sol: "The <strong>Riesz-Fischer theorem</strong> proves Lᵖ spaces are <strong>complete</strong> — every Cauchy sequence converges to a limit in Lᵖ. This makes them Banach spaces."
+            },
+            {
+                id: 18009,
+                text: "🌌 The Radon-Nikodym theorem says: if ν ≪ μ, then:",
+                opts: [
+                    {l: "A", t: "ν = μ", c: false},
+                    {l: "B", t: "ν(A) = ∫_A f dμ for some f", c: true},
+                    {l: "C", t: "μ(A) = ∫_A f dν for some f", c: false},
+                    {l: "D", t: "ν and μ are unrelated", c: false}
+                ],
+                sol: "If ν is <strong>absolutely continuous</strong> with respect to μ (ν ≪ μ), then ν(A) = ∫_A <strong>f dμ</strong> where f = dν/dμ is the Radon-Nikodym derivative."
+            },
+            {
+                id: 18010,
+                text: "🌌 Fubini's theorem allows us to:",
+                opts: [
+                    {l: "A", t: "Swap the order of integration", c: true},
+                    {l: "B", t: "Differentiate under the integral", c: false},
+                    {l: "C", t: "Integrate by parts", c: false},
+                    {l: "D", t: "Change variables in integration", c: false}
+                ],
+                sol: "<strong>Fubini's theorem</strong> says we can <strong>swap the order of integration</strong> for integrable functions: ∫∫ f(x,y) dy dx = ∫∫ f(x,y) dx dy."
+            },
+            {
+                id: 18011,
+                text: "📏 A set with Lebesgue measure zero is called:",
+                opts: [
+                    {l: "A", t: "Empty", c: false},
+                    {l: "B", t: "A null set", c: true},
+                    {l: "C", t: "A Cantor set", c: false},
+                    {l: "D", t: "Non-measurable", c: false}
+                ],
+                sol: "A set of measure zero is called a <strong>null set</strong>. Properties that hold except on a null set are said to hold <strong>almost everywhere</strong> (a.e.)."
+            },
+            {
+                id: 18012,
+                text: "📊 Hölder's inequality generalizes which familiar inequality?",
+                opts: [
+                    {l: "A", t: "Triangle inequality", c: false},
+                    {l: "B", t: "Cauchy-Schwarz", c: true},
+                    {l: "C", t: "Jensen's inequality", c: false},
+                    {l: "D", t: "Chebyshev's inequality", c: false}
+                ],
+                sol: "Hölder's inequality ∫ |fg| ≤ ‖f‖ₚ·‖g‖₉ generalizes <strong>Cauchy-Schwarz</strong> (which is the special case p=q=2). For p=1, q=∞, it gives ∫ |fg| ≤ ‖f‖₁·‖g‖_∞."
+            }
+        ];
+
+        var answered = {}, correctCount = 0;
+
+        function renderPractice() {
+            var c = document.getElementById('practice-qs'), h = '';
+            for (var i = 0; i < practiceQs.length; i++) {
+                var q = practiceQs[i], o = '';
+                for (var j = 0; j < q.opts.length; j++) {
+                    o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                }
+                h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+            }
+            c.innerHTML = h;
+            updateScore();
+        }
+
+        function getCorrectLabel(q) {
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+            }
+            return '';
+        }
+
+        function selectOpt(qId, idx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            var q = practiceQs.filter(function(x){return x.id === qId})[0];
+            var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+            var isCorrect = q.opts[idx].c;
+            for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-'+qId).textContent = '✅ Correct!';
+                document.getElementById('result-'+qId).className = 'q-result correct';
+                correctCount++;
+            } else {
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+                document.getElementById('result-'+qId).className = 'q-result wrong';
+                for (var i = 0; i < q.opts.length; i++) {
+                    if (q.opts[i].c) opts[i].classList.add('correct');
+                }
+            }
+            document.getElementById('soln-'+qId).classList.add('show');
+            updateScore();
+        }
+
+        function updateScore() {
+            var t = Object.keys(answered).length;
+            var el = document.getElementById('score-display');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'score-display';
+                el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+                document.getElementById('practice-qs').before(el);
+            }
+            el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+        }
+
+        function resetPractice() {
+            if (!confirm('Reset all answers?')) return;
+            answered = {}; correctCount = 0;
+            document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+            document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+            document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+            var el = document.getElementById('score-display');
+            if (el) el.textContent = '';
+            renderPractice();
+        }
+
+        function toggleStep(header) {
+            var content = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        renderPractice();
+    </script>
 </body>
 </html>
