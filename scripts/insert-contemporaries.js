@@ -13,14 +13,14 @@ const entries = Object.entries(fetched).filter(([, v]) => v.b !== undefined && v
 
 // Existing dedup
 const existingNames = new Set();
-const nameRx = /^\s+'([^']+)':\s*\{/gm;
+const nameRx = /^\s+'([^']+)':\s*\{|^\s+"([^"]+)":\s*\{/gm;
 const start = html.indexOf('const CONTEMPORARIES = {');
 const end = html.indexOf('};', start);
 const existingBlock = html.substring(start, end);
 let m;
-while ((m = nameRx.exec(existingBlock)) !== null) existingNames.add(m[1]);
+while ((m = nameRx.exec(existingBlock)) !== null) existingNames.add(m[1] || m[2]);
 
-const insertIdx = html.lastIndexOf('}', end) + 1;
+const insertIdx = html.lastIndexOf('}', end);
 const pad = '  ';
 
 let inserted = 0;
