@@ -4078,11 +4078,14 @@ function startAutoPlay(k,items){
     const hasPos = item.la||item.ln||(item.pts&&item.pts.length);
     if(hasPos){
       flyTo(item,CAT[k],k);
-      speakText(item.n+'. '+(item.sub||''));
       if(btn)btn.textContent=(idx+1)+'/'+items.length;
-      idx++;
-      if(idx>=items.length)idx=0;
-      _ap.timeout=setTimeout(next,4200);
+      const cur=idx;
+      speakText(item.n+'. '+(item.sub||''),()=>{
+        if(!_ap)return;
+        idx=cur+1;
+        if(idx>=items.length)idx=0;
+        _ap.timeout=setTimeout(next,2000);
+      });
     }else{
       idx++;
       if(idx>=items.length)idx=0;
