@@ -304,8 +304,14 @@ canvas{display:block}
 
 /* Lecture bar mobile */
 @media(max-width:768px){
-  #detail{left:auto;right:8px;top:64px;bottom:auto;transform:translateY(-10px);max-width:300px;width:calc(100% - 16px);max-height:40vh}
-  #detail.show{transform:translateY(0)}
+  #detail{left:50%;right:auto;top:auto;bottom:24px;transform:translateX(-50%);padding:8px 16px;border-radius:100px;width:auto;max-width:85%;max-height:none;overflow:hidden;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap}
+  #detail .d-close,#detail .d-sub,#detail .d-desc,#detail .d-fact,#detail .d-era,#detail .d-events,#detail #dTimeline{display:none}
+  #detail .d-expand{display:inline;font-size:10px;color:rgba(255,255,255,.4)}
+  #detail.show{opacity:1;pointer-events:auto;transform:translateX(-50%)}
+  #detail.expanded{bottom:0;left:0;right:0;width:100%;max-width:100%;border-radius:16px 16px 0 0;padding:16px 22px;max-height:60vh;overflow-y:auto;cursor:default;display:block;white-space:normal}
+  #detail.expanded .d-close{display:block}
+  #detail.expanded .d-sub,#detail.expanded .d-desc,#detail.expanded .d-fact,#detail.expanded .d-era,#detail.expanded .d-events,#detail.expanded #dTimeline{display:block}
+  #detail.expanded .d-expand{display:none}
 }
 
 @media(max-width:640px){
@@ -358,6 +364,7 @@ canvas{display:block}
   <button class="d-close" id="dClose">✕</button>
   <div class="d-badge" id="dBadge">Feature</div>
   <div class="d-title" id="dTitle"></div>
+  <span class="d-expand">▴</span>
   <div class="d-sub" id="dSub"></div>
   <div class="d-desc" id="dDesc"></div>
   <div class="d-fact" id="dFact"></div>
@@ -4307,9 +4314,14 @@ function showDetail(d,cat,k){
     const curEra=ERAS.slice().reverse().find(e=>year>=e.start&&year<=e.end);
     if(curEra&&curEra.id!=='all')document.getElementById('eraLabel').textContent=curEra.label;
   }
+  dp.classList.remove('expanded');
   dp.classList.add('show');
 }
-document.getElementById('dClose').addEventListener('click',()=>{dp.classList.remove('show');clearHighlight();stopTimeline();hidePortrait();document.getElementById('subtitle').classList.remove('show')});
+document.getElementById('dClose').addEventListener('click',()=>{dp.classList.remove('show','expanded');clearHighlight();stopTimeline();hidePortrait();document.getElementById('subtitle').classList.remove('show')});
+dp.addEventListener('click',(e)=>{
+  if(e.target.closest('#dClose')||e.target.closest('.era-event-item')||e.target.closest('#dTimeline')||e.target.closest('a'))return;
+  if(innerWidth<=768)dp.classList.toggle('expanded');
+});
 
 // Click on 3D markers
 const ray=new THREE.Raycaster(),ptr=new THREE.Vector2();
@@ -4328,7 +4340,7 @@ ren.domElement.addEventListener('click',(e)=>{
     if(hit){if(_ap)stopAutoPlay();stopTimeline();hidePortrait();const m=hit.el;showDetail(m.data,CAT[m.cat],m.cat);return;}
   }
   if(_ap)stopAutoPlay();
-  dp.classList.remove('show');
+  dp.classList.remove('show','expanded');
   clearHighlight();
   hidePortrait();
 });
