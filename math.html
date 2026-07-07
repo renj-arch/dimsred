@@ -166,11 +166,13 @@
         .card-tag{
             display:inline-block;padding:2px 8px;border-radius:4px;
             font-size:.62em;font-weight:700;letter-spacing:.3px;
-            margin-bottom:8px;
+            margin-top:8px;
         }
         .tag-foundation{background:rgba(99,102,241,.15);color:#818cf8}
         .tag-core{background:rgba(52,211,153,.15);color:#6ee7b7}
         .tag-jee{background:rgba(167,139,250,.15);color:#c4b5fd}
+        .tag-scientist{background:rgba(244,114,182,.15);color:#f9a8d4}
+        .tag-label{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.62em;font-weight:700;letter-spacing:.3px;margin-top:8px}
 
         /* SVG connectors */
         .connector-svg{
@@ -311,6 +313,7 @@
                     <span style="display:flex;align-items:center;gap:5px;color:var(--text-muted)"><span style="padding:2px 8px;border-radius:4px;background:rgba(99,102,241,.15);color:#818cf8;font-weight:700;font-size:.9em">📚 Foundation</span> Every exam needs this</span>
                     <span style="display:flex;align-items:center;gap:5px;color:var(--text-muted)"><span style="padding:2px 8px;border-radius:4px;background:rgba(52,211,153,.15);color:#6ee7b7;font-weight:700;font-size:.9em">📖 Core</span> JEE + several exams</span>
                     <span style="display:flex;align-items:center;gap:5px;color:var(--text-muted)"><span style="padding:2px 8px;border-radius:4px;background:rgba(167,139,250,.15);color:#c4b5fd;font-weight:700;font-size:.9em">🎯 JEE</span> JEE Advanced focus</span>
+                    <span style="display:flex;align-items:center;gap:5px;color:var(--text-muted)"><span style="padding:2px 8px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-weight:700;font-size:.9em">🔬 Scientist</span> Pure math, no exam</span>
                 </div>
 
                 <!-- Branch grid -->
@@ -383,6 +386,32 @@
                 id:'reasoning', title:'Mathematical Reasoning', icon:'💡', color:'#14b8a6',
                 subs:['Logic &amp; Statements','Truth Tables','Valid Arguments'],
                 href:'jee/course/maths/lesson-mathematical-reasoning.html', tag:'jee'
+            },
+            // Scientist path — pure math, no exam
+            {
+                id:'number-theory', title:'Number Theory', icon:'🔢', color:'#ec4899',
+                subs:['Primes','Modular Arithmetic','Fermat &amp; Euler','Cryptography'],
+                href:'#', tag:'scientist'
+            },
+            {
+                id:'linear-algebra', title:'Linear Algebra', icon:'📊', color:'#f472b6',
+                subs:['Vector Spaces','Transformations','Eigenvalues','SVD'],
+                href:'#', tag:'scientist'
+            },
+            {
+                id:'abstract-algebra', title:'Abstract Algebra', icon:'🌀', color:'#d946ef',
+                subs:['Groups','Rings &amp; Fields','Symmetries','Galois Theory'],
+                href:'#', tag:'scientist'
+            },
+            {
+                id:'real-analysis', title:'Real Analysis', icon:'ε', color:'#e879f9',
+                subs:['Epsilon-Delta','Continuity','Sequences','Series Convergence'],
+                href:'#', tag:'scientist'
+            },
+            {
+                id:'topology', title:'Topology', icon:'🌐', color:'#c084fc',
+                subs:['Open Sets','Connectedness','Knots','Manifolds'],
+                href:'#', tag:'scientist'
             }
         ];
 
@@ -395,19 +424,24 @@
             card.dataset.color = t.color;
             card.dataset.href = t.href;
             card.dataset.external = t.external || false;
+            card.dataset.tag = t.tag;
 
             card.innerHTML = `
                 <span class="arrow-link">→</span>
-                <div class="card-tag tag-${t.tag}">${t.tag === 'foundation' ? '📚 Foundation' : t.tag === 'core' ? '📖 Core' : '🎯 JEE'}</div>
                 <div class="icon-wrap" style="background:rgba(${hexToRgb(t.color)},.12);color:${t.color}">${t.icon}</div>
                 <div class="b-title">${t.title}</div>
                 <div class="b-subs">${t.subs.map(s => `<span>${s}</span>`).join('')}</div>
+                <div class="card-tag tag-${t.tag}">${t.tag === 'foundation' ? '📚 Foundation' : t.tag === 'core' ? '📖 Core' : t.tag === 'jee' ? '🎯 JEE' : '🔬 Scientist'}</div>
             `;
 
             card.addEventListener('click', () => {
                 const href = card.dataset.href;
                 const ext = card.dataset.external === 'true';
-                if (href === '#') return;
+                const tag = card.dataset.tag;
+                if (href === '#') {
+                    if (tag === 'scientist') alert('🔬 Coming soon — a deep dive into pure mathematics!');
+                    return;
+                }
                 if (ext) { window.open(href, '_blank', 'noopener'); return; }
                 window.location.href = href;
             });
