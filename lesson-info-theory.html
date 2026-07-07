@@ -1,34 +1,569 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Information Theory — Coming Soon | vlymbooq</title>
+    <title>Information Theory — Entropy, Compression & Communication | vlymbooq</title>
+    <meta name="description" content="Deep dive into Information Theory — entropy, data compression, channel capacity, Shannon's theorems, and the mathematics of communication.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-info-theory.html">
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:Inter,-apple-system,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
-        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
-        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-        .brand{display:flex;align-items:center;gap:8px;text-decoration:none}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .container{max-width:700px;margin:80px auto;padding:24px;text-align:center}
-        .badge{display:inline-block;padding:4px 14px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.75em;font-weight:700;margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase}
-        h1{font-size:1.8em;font-weight:900;margin-bottom:12px;line-height:1.3}
-        p{color:#a1a1aa;font-size:.95em;line-height:1.7;margin-bottom:28px;max-width:500px;margin-left:auto;margin-right:auto}
-        .btn{display:inline-block;padding:10px 24px;border-radius:100px;font-weight:600;font-size:.85em;background:rgba(167,139,250,.15);color:#a78bfa;text-decoration:none;transition:all .2s}
-        .btn:hover{background:rgba(167,139,250,.25)}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}
+        .section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.72em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.7em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--purple);font-weight:700}
+
+        .quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}
+        .quote-box .attribution{font-size:.78em;color:var(--text-muted);margin-top:6px}
     </style>
 </head>
 <body>
-    <nav class="nav"><div class="nav-inner"><a href="index.html" class="brand"><svg width="28" height="28" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg><span class="brand-text">vlymbooq</span></a><a href="math.html" style="color:#a78bfa;font-size:.82em;font-weight:500;text-decoration:none">Math Map</a></div></nav>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="math.html">Math Map</a>
+                <a href="index.html#exams">Exams</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
-        <div class="badge">🔬 Scientist</div>
-        <h1>Information Theory</h1>
-        <p>This deep dive into pure mathematics is being prepared. Check the Math Concept Map for all available lessons.</p>
-        <a href="math.html" class="btn">← Back to Math Concept Map</a>
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Math Lessons</div>
+                    <a href="math.html">← Math Concept Map</a>
+                    <a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+                    <a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+                    <a href="lesson-number-theory.html">Number Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-linear-algebra.html">Linear Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-complex-analysis.html">Complex Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-abstract-algebra.html">Abstract Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-graph-theory.html">Graph Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-real-analysis.html">Real Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-topology.html">Topology <span class="s-tag">🔬</span></a>
+                    <a href="lesson-diff-geometry.html">Diff Geometry <span class="s-tag">🔬</span></a>
+                    <a href="lesson-game-theory.html">Game Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-info-theory.html" class="active" style="color:var(--text);font-weight:600">Info Theory <span class="s-tag">🔬</span></a>
+                    <a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+                </div>
+            </div>
+            <div class="main">
+                <div class="lesson-body">
+
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                    <span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.7em;font-weight:700">🔬 Scientist</span>
+                    <span style="font-size:.78em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span>
+                </div>
+
+                <h2>Information Theory — The Mathematics of Communication</h2>
+                <p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Information theory answers two fundamental questions: what is information, and how much can we communicate reliably? Claude Shannon, in his 1948 paper "A Mathematical Theory of Communication," invented the entire field — defining entropy, channel capacity, and the limits of data compression and error correction. His work made the digital age possible: every time you zip a file, stream a video, or send a text, Shannon's mathematics is at work.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"Information is the resolution of uncertainty."</div>
+                    <div class="attribution">— Claude Shannon</div>
+                </div>
+
+                <!-- ========== PART 1: ENTROPY ========== -->
+                <div class="section-label part1">Part 1</div>
+                <h2>📊 Entropy — Measuring Uncertainty</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Birth of Information</div>
+                    <div class="story-title">Shannon's Great Question: What Is Information?</div>
+                    <div class="story-text">Before Shannon, nobody knew how to measure information. Shannon realized that information isn't about meaning — it's about <strong>uncertainty</strong>. A message you can predict (like "the sun will rise tomorrow") carries little information. A message that surprises you (like "it's snowing in the Sahara") carries lots. The <strong>self-information</strong> of an event with probability p is h(p) = −log₂(p) bits. A fair coin flip (p=1/2) gives 1 bit. A sure thing (p=1) gives 0 bits. The <strong>entropy</strong> H(X) of a random variable is the average self-information: H(X) = −Σ p(x) log₂ p(x). For a fair coin, H = 1 bit. For a biased coin (p=0.9), H = −0.9·log₂(0.9) − 0.1·log₂(0.1) ≈ 0.47 bits — less uncertainty, less information. Entropy is the fundamental limit on lossless compression: you cannot compress data to fewer bits than its entropy.</div>
+                    <div class="story-moral">Information is not about meaning — it's about surprise. The more unpredictable something is, the more information it carries.</div>
+                </div>
+
+                <h3>Properties of Entropy</h3>
+                <p>Entropy is always non-negative, maximized by the uniform distribution, and additive for independent events. For a distribution over n outcomes with probabilities p₁, p₂, ..., pₙ: H ≤ log₂(n), with equality iff all pᵢ = 1/n. <strong>Joint entropy</strong> H(X,Y) extends the definition to pairs. <strong>Conditional entropy</strong> H(Y|X) = H(X,Y) − H(X) measures the remaining uncertainty about Y after knowing X.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Entropy</div><div class="f-math">H(X) = −Σ p(x) log₂ p(x)</div></div>
+                    <div class="formula-card"><div class="f-label">Joint Entropy</div><div class="f-math">H(X,Y) = −ΣΣ p(x,y) log₂ p(x,y)</div></div>
+                    <div class="formula-card"><div class="f-label">Conditional Entropy</div><div class="f-math">H(Y|X) = H(X,Y) − H(X)</div></div>
+                    <div class="formula-card"><div class="f-label">Chain Rule</div><div class="f-math">H(X,Y) = H(X) + H(Y|X)</div></div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Entropy of a Biased Coin</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        A coin comes up Heads with probability p. The entropy is H = −p·log₂(p) − (1-p)·log₂(1-p).<br><br>
+                        • p = 0.5: H = 1 bit (maximum uncertainty)<br>
+                        • p = 0.9: H ≈ 0.47 bits<br>
+                        • p = 0.99: H ≈ 0.08 bits<br>
+                        • p = 0 or 1: H = 0 bits (no uncertainty)<br><br>
+                        This function is called the <strong>binary entropy function</strong> H₂(p). It's symmetric around p=0.5 and concave — it peaks at maximum uncertainty and drops to zero at certainty.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 2: COMPRESSION ========== -->
+                <div class="section-label part2">Part 2</div>
+                <h2>🗜️ Data Compression — The Source Coding Theorem</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Ultimate Limit</div>
+                    <div class="story-title">Shannon's Source Coding Theorem — You Can't Beat Entropy</div>
+                    <div class="story-text">Shannon's <strong>source coding theorem</strong> (or noiseless coding theorem) establishes the fundamental limit of lossless data compression. For a source emitting symbols with entropy H, the average number of bits needed per symbol is at least H. Conversely, there exists a code that gets arbitrarily close to H. This means entropy is the ultimate compression ratio — no algorithm, no matter how clever, can compress data to fewer bits than its entropy without losing information. <strong>Huffman coding</strong> achieves entropy-optimal compression for known probability distributions (it assigns shorter codes to more frequent symbols). <strong>Lempel-Ziv</strong> (used in zip, gzip, PNG) achieves it for unknown distributions by building the dictionary adaptively. Every time you zip a file, you're getting closer to Shannon's limit — but you can never beat it.</div>
+                    <div class="story-moral">Entropy is the hard limit of compression. You can't beat Shannon — but you can get arbitrarily close.</div>
+                </div>
+
+                <h3>Prefix Codes and Kraft's Inequality</h3>
+                <p>A <strong>prefix code</strong> (or instantaneous code) is a code where no codeword is a prefix of another. This lets you decode without lookahead. <strong>Kraft's inequality</strong> gives a necessary and sufficient condition for the existence of a prefix code with codeword lengths ℓ₁, ..., ℓₙ: Σ 2^{−ℓᵢ} ≤ 1 (for binary codes). Huffman's algorithm constructs the optimal prefix code for a given distribution — it repeatedly merges the two least probable symbols and assigns them the longest codewords. The average codeword length L satisfies H ≤ L &lt; H + 1.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Shannon's Source Coding Theorem</div>
+                    <div class="insight-text">The minimum possible average codeword length for lossless compression is H(X)</div>
+                    <div class="insight-sub">You can approach H arbitrarily closely by coding blocks of symbols together (the "per-symbol" entropy).</div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-label">Huffman Code for a 4-Symbol Source</div>
+                    <div class="ex-text">Symbols A, B, C, D with probabilities 0.5, 0.25, 0.125, 0.125. Huffman assigns: A=0, B=10, C=110, D=111. Average length = 0.5×1 + 0.25×2 + 0.125×3 + 0.125×3 = 1.75 bits. Entropy H = 0.5·1 + 0.25·2 + 0.125·3 + 0.125·3 = 1.75 bits — optimal!</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 3: CHANNEL CAPACITY ========== -->
+                <div class="section-label part3">Part 3</div>
+                <h2>📡 Channel Capacity and Reliable Communication</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Noisy Channel</div>
+                    <div class="story-title">Shannon's Second Theorem — How Much Can We Send Through a Noisy Channel?</div>
+                    <div class="story-text">Real communication channels are noisy — bits get flipped, signals fade, interference creeps in. The obvious solution is to add redundancy (error-correcting codes), but that reduces the effective data rate. Shannon's <strong>noisy channel coding theorem</strong> proves that for any channel with noise, there's a <strong>channel capacity C</strong> — the maximum rate at which information can be transmitted with arbitrarily low error probability. Below C, you can achieve near-perfect communication with the right code. Above C, reliable communication is impossible. The capacity of the additive white Gaussian noise channel is C = ½·log₂(1 + S/N) bits per channel use — the <strong>Shannon-Hartley theorem</strong>. This formula governs everything from WiFi to 5G to deep space communication. Modern <strong>turbo codes</strong> and <strong>LDPC codes</strong> get within a fraction of a dB of the Shannon limit.</div>
+                    <div class="story-moral">Noise is inevitable, but Shannon tells us exactly how much we can communicate through it. The Shannon limit is the boundary between possible and impossible.</div>
+                </div>
+
+                <h3>Mutual Information</h3>
+                <p>The <strong>mutual information</strong> I(X; Y) = H(X) − H(X|Y) = H(Y) − H(Y|X) measures how much knowing one variable reduces uncertainty about another. It's symmetric, non-negative, and equals 0 iff X and Y are independent. Channel capacity is defined as the maximum mutual information over all input distributions: C = max_{p(x)} I(X; Y). This is the fundamental limit — the tightest upper bound on how fast we can send data through a noisy channel.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Mutual Information</div><div class="f-math">I(X;Y) = H(X) − H(X|Y)</div></div>
+                    <div class="formula-card"><div class="f-label">Channel Capacity</div><div class="f-math">C = max I(X;Y)</div></div>
+                    <div class="formula-card"><div class="f-label">AWGN Capacity</div><div class="f-math">C = ½·log₂(1 + S/N)</div></div>
+                    <div class="formula-card"><div class="f-label">Binary Symmetric</div><div class="f-math">C = 1 − H₂(p)</div></div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Binary Symmetric Channel</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        The simplest noisy channel: input bits are flipped with probability p (crossover probability). The channel capacity is C = 1 − H₂(p) bits per channel use.<br><br>
+                        • p = 0: C = 1 bit (perfect channel — send raw bits)<br>
+                        • p = 0.5: C = 0 bits (channel is useless — output is independent of input)<br>
+                        • p = 0.1: C = 1 − (−0.1·log₂(0.1) − 0.9·log₂(0.9)) ≈ 1 − 0.47 = 0.53 bits<br><br>
+                        With a (7,4) Hamming code (which corrects 1 error per 7 bits), we can send 4 bits of information per 7 channel uses = 0.57 bits/use — below capacity at p=0.1. At p=0.01, capacity ≈ 0.92 bits/use, and the Hamming code still only gives 0.57 — we need more efficient codes like turbo or LDPC to approach the limit.
+                    </div>
+                </div>
+
+                <h3>Error-Correcting Codes</h3>
+                <p><strong>Hamming codes</strong> (1950) were the first practical error-correcting codes. A (7,4) Hamming code encodes 4 data bits into 7 bits, correcting any single-bit error. <strong>Reed-Solomon codes</strong> correct burst errors and are used in CDs, QR codes, and space probes. <strong>Turbo codes</strong> (1993) and <strong>LPDC codes</strong> (rediscovered in the 1990s) approach the Shannon limit within fractions of a decibel — they're used in 4G/5G, satellite communication, and deep space networks. The search for capacity-approaching codes drove half a century of coding theory, and the field continues to evolve with <strong>polar codes</strong> (Arikan, 2009), the first provably capacity-achieving codes with low complexity.</p>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 4: DEEP RESULTS ========== -->
+                <div class="section-label part4">Part 4</div>
+                <h2>🌌 Beyond Shannon — Entropy in Physics, ML, and Quantum Information</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Entropy Is Everywhere</div>
+                    <div class="story-title">From Thermodynamics to Machine Learning — The Universal Language of Uncertainty</div>
+                    <div class="story-text">Shannon's entropy is mathematically identical to Boltzmann's entropy in thermodynamics: S = k_B · ln(W) where W is the number of microstates. Shannon's H is just Boltzmann's S but with base-2 logs and a different constant. This is no coincidence — both measure the same thing: the number of possible states of a system, and thus our uncertainty about which one it's in. In <strong>machine learning</strong>, cross-entropy is the most common loss function for classification — it measures the difference between the predicted and actual probability distributions. <strong>KL divergence</strong> D_KL(P||Q) = Σ p(x) log(p(x)/q(x)) measures how much information is lost when using Q to approximate P. It's the foundation of variational inference, Bayesian deep learning, and generative models (VAEs use KL divergence to regularize latent spaces). In <strong>quantum information theory</strong>, the von Neumann entropy S(ρ) = −Tr(ρ log ρ) generalizes Shannon entropy to quantum states, and the <strong>Holevo bound</strong> limits how much classical information can be extracted from a quantum system.</div>
+                    <div class="story-moral">Entropy is the bridge between physics, information, and learning — a single idea that connects the second law of thermodynamics to the training of neural networks.</div>
+                </div>
+
+                <h3>KL Divergence and the Information Bottleneck</h3>
+                <p>The <strong>Kullback-Leibler divergence</strong> (or relative entropy) is the foundation of information geometry. It's not a metric (it's asymmetric), but it satisfies D_KL ≥ 0 with equality iff P = Q. The <strong>information bottleneck method</strong> finds a compressed representation Z of X that preserves information about Y — it maximizes I(Z; Y) − β·I(Z; X). This has become a framework for understanding deep learning: neural networks naturally learn to compress inputs while preserving task-relevant information.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Data Processing Inequality</div>
+                    <div class="insight-text">I(X; Y) ≥ I(X; f(Y)) for any function f</div>
+                    <div class="insight-sub">Processing can only destroy or preserve information — it can never create it. This simple inequality is the foundation of all data analysis.</div>
+                </div>
+
+                <h3>Rate-Distortion Theory — Lossy Compression</h3>
+                <p>Not all compression needs to be lossless. <strong>Rate-distortion theory</strong> answers: given a distortion measure (like mean squared error), what's the minimum bitrate needed to reconstruct a source within a given distortion D? The <strong>rate-distortion function</strong> R(D) characterizes this trade-off. For a Gaussian source with variance σ² and MSE distortion, R(D) = ½·log₂(σ²/D) for D ≤ σ². This is the theory behind JPEG, MP3, and video compression — you trade bits for perceptual quality, and Shannon tells you the optimal trade-off.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">KL Divergence</div><div class="f-math">D_KL(P‖Q) = Σ p·log(p/q)</div></div>
+                    <div class="formula-card"><div class="f-label">Cross-Entropy</div><div class="f-math">H(P,Q) = H(P) + D_KL(P‖Q)</div></div>
+                    <div class="formula-card"><div class="f-label">Rate-Distortion</div><div class="f-math">R(D) = min I(X;X̂)</div></div>
+                    <div class="formula-card"><div class="f-label">Von Neumann Entropy</div><div class="f-math">S(ρ) = −Tr(ρ log ρ)</div></div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">The Two Envelopes Paradox — An Information Puzzle</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Two envelopes contain money, one twice as much as the other. You pick one, open it, and find $100. Should you switch?<br><br>
+                        Naive reasoning: the other envelope has $50 or $200 with equal probability, expected value = $125, so switch! But this reasoning would apply regardless of what you found, so you'd switch even before opening — a contradiction.<br><br>
+                        The resolution: you need a <strong>prior distribution</strong> over the amounts. If all amounts are equally likely, the expected value is infinite (improper prior), and the calculation breaks down. Information theory tells us that without a proper prior, you can't assign meaningful probabilities — the "equally likely" assumption smuggles in an infinite expected value.<br><br>
+                        This shows how careful we must be with probabilistic reasoning — a key lesson for both information theory and decision theory.
+                    </div>
+                </div>
+
+                <div class="quote-box">
+                    <div class="quote">"The fundamental problem of communication is that of reproducing at one point either exactly or approximately a message selected at another point. Frequently the messages have meaning; that is, they refer to or are correlated according to some system with certain physical or conceptual entities. These semantic aspects of communication are irrelevant to the engineering problem."</div>
+                    <div class="attribution">— Claude Shannon, 1948 — the opening of the paper that created information theory</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PRACTICE ========== -->
+                <h2 style="margin-top:0">🎯 Practice — Check Your Information Theory Intuition</h2>
+                <p style="color:var(--text-sec);margin-bottom:16px">These puzzles build information theory intuition — no heavy math needed.</p>
+
+                <div id="practice-qs"></div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+                    <a href="math.html" class="btn btn-success">← Back to Math Map</a>
+                </div>
+
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        var practiceQs = [
+            {
+                id: 17001,
+                text: "📊 What is the entropy of a fair coin flip in bits?",
+                opts: [
+                    {l: "A", t: "0 bits", c: false},
+                    {l: "B", t: "0.5 bits", c: false},
+                    {l: "C", t: "1 bit", c: true},
+                    {l: "D", t: "2 bits", c: false}
+                ],
+                sol: "A fair coin has H = −(0.5)·log₂(0.5) − (0.5)·log₂(0.5) = <strong>1 bit</strong>. The outcome has exactly 1 bit of uncertainty."
+            },
+            {
+                id: 17002,
+                text: "📊 Which distribution maximizes entropy for a given set of outcomes?",
+                opts: [
+                    {l: "A", t: "The uniform distribution", c: true},
+                    {l: "B", t: "The normal distribution", c: false},
+                    {l: "C", t: "The distribution with one outcome certain", c: false},
+                    {l: "D", t: "The Poisson distribution", c: false}
+                ],
+                sol: "<strong>Uniform distribution</strong> maximizes entropy for a finite set of outcomes. H ≤ log₂(n) with equality iff all outcomes are equally likely."
+            },
+            {
+                id: 17003,
+                text: "🗜️ Shannon's source coding theorem says the minimum average bits per symbol for lossless compression is:",
+                opts: [
+                    {l: "A", t: "0", c: false},
+                    {l: "B", t: "H(X) — the entropy", c: true},
+                    {l: "C", t: "1 bit", c: false},
+                    {l: "D", t: "log₂(n) for n symbols", c: false}
+                ],
+                sol: "The <strong>source coding theorem</strong> says the minimum average codeword length for lossless compression is the <strong>entropy H(X)</strong>. You can approach H arbitrarily closely but never beat it."
+            },
+            {
+                id: 17004,
+                text: "🗜️ In Huffman coding, which symbols get the longest codewords?",
+                opts: [
+                    {l: "A", t: "The most probable symbols", c: false},
+                    {l: "B", t: "The least probable symbols", c: true},
+                    {l: "C", t: "The first symbol in the alphabet", c: false},
+                    {l: "D", t: "All symbols have equal length", c: false}
+                ],
+                sol: "Huffman coding assigns the <strong>longest codewords to the least probable symbols</strong> — it merges the two least probable symbols first, giving them the deepest tree level."
+            },
+            {
+                id: 17005,
+                text: "📡 What is mutual information I(X; Y) when X and Y are independent?",
+                opts: [
+                    {l: "A", t: "0", c: true},
+                    {l: "B", t: "1", c: false},
+                    {l: "C", t: "H(X)", c: false},
+                    {l: "D", t: "Infinite", c: false}
+                ],
+                sol: "If X and Y are independent, knowing X tells you nothing about Y, so <strong>I(X; Y) = 0</strong>. The mutual information is zero when there's no dependence."
+            },
+            {
+                id: 17006,
+                text: "📡 The capacity of a binary symmetric channel with crossover probability p = 0 is:",
+                opts: [
+                    {l: "A", t: "0", c: false},
+                    {l: "B", t: "0.5", c: false},
+                    {l: "C", t: "1 bit/channel use", c: true},
+                    {l: "D", t: "Infinite", c: false}
+                ],
+                sol: "With p = 0 (no noise), the channel is perfect. Each channel use transmits exactly <strong>1 bit</strong> of information reliably. C = 1 − H₂(0) = 1 − 0 = 1."
+            },
+            {
+                id: 17007,
+                text: "📡 The Shannon-Hartley theorem gives capacity for:",
+                opts: [
+                    {l: "A", t: "Binary channels", c: false},
+                    {l: "B", t: "AWGN (additive white Gaussian noise) channels", c: true},
+                    {l: "C", t: "Lossless compression", c: false},
+                    {l: "D", t: "Quantum channels", c: false}
+                ],
+                sol: "The <strong>Shannon-Hartley theorem</strong> gives the capacity C = ½·log₂(1 + S/N) for an <strong>AWGN channel</strong>. It governs all communication over noisy analog channels."
+            },
+            {
+                id: 17008,
+                text: "🌌 The KL divergence D_KL(P‖Q) measures:",
+                opts: [
+                    {l: "A", t: "The distance between P and Q (symmetric)", c: false},
+                    {l: "B", t: "The information lost when using Q to approximate P", c: true},
+                    {l: "C", t: "The entropy of P", c: false},
+                    {l: "D", t: "The channel capacity", c: false}
+                ],
+                sol: "<strong>KL divergence</strong> measures the information lost when Q is used to approximate P. It's not symmetric (D_KL(P‖Q) ≠ D_KL(Q‖P)) and is the foundation of variational inference."
+            },
+            {
+                id: 17009,
+                text: "🌌 The data processing inequality states that processing data can only:",
+                opts: [
+                    {l: "A", t: "Increase information", c: false},
+                    {l: "B", t: "Preserve or destroy information", c: true},
+                    {l: "C", t: "Create new information", c: false},
+                    {l: "D", t: "Reverse information flow", c: false}
+                ],
+                sol: "The <strong>data processing inequality</strong> says I(X; Y) ≥ I(X; f(Y)). Processing can only <strong>preserve or destroy</strong> information — it can never create new information."
+            },
+            {
+                id: 17010,
+                text: "🗜️ What is Kraft's inequality for the existence of a prefix code?",
+                opts: [
+                    {l: "A", t: "Σ 2^{−ℓᵢ} ≤ 1", c: true},
+                    {l: "B", t: "Σ ℓᵢ ≤ n", c: false},
+                    {l: "C", t: "Σ pᵢ = 1", c: false},
+                    {l: "D", t: "max ℓᵢ ≤ n", c: false}
+                ],
+                sol: "<strong>Kraft's inequality</strong> Σ 2^{−ℓᵢ} ≤ 1 is necessary and sufficient for the existence of a binary prefix code with codeword lengths ℓ₁, ℓ₂, ..., ℓₙ."
+            },
+            {
+                id: 17011,
+                text: "🌌 The von Neumann entropy generalizes Shannon entropy to:",
+                opts: [
+                    {l: "A", t: "Continuous distributions", c: false},
+                    {l: "B", t: "Quantum states", c: true},
+                    {l: "C", t: "Deterministic systems", c: false},
+                    {l: "D", t: "Graphs", c: false}
+                ],
+                sol: "<strong>Von Neumann entropy</strong> S(ρ) = −Tr(ρ log ρ) generalizes Shannon entropy to <strong>quantum systems</strong>. For classical probability distributions, it reduces to Shannon entropy."
+            },
+            {
+                id: 17012,
+                text: "📊 The binary entropy function H₂(p) reaches its maximum at:",
+                opts: [
+                    {l: "A", t: "p = 0", c: false},
+                    {l: "B", t: "p = 0.5", c: true},
+                    {l: "C", t: "p = 1", c: false},
+                    {l: "D", t: "p = 0.25", c: false}
+                ],
+                sol: "The binary entropy function H₂(p) = −p·log₂(p) − (1−p)·log₂(1−p) is maximized at <strong>p = 0.5</strong> where H₂(0.5) = 1 bit. It drops to 0 at p = 0 or p = 1."
+            }
+        ];
+
+        var answered = {}, correctCount = 0;
+
+        function renderPractice() {
+            var c = document.getElementById('practice-qs'), h = '';
+            for (var i = 0; i < practiceQs.length; i++) {
+                var q = practiceQs[i], o = '';
+                for (var j = 0; j < q.opts.length; j++) {
+                    o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                }
+                h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+            }
+            c.innerHTML = h;
+            updateScore();
+        }
+
+        function getCorrectLabel(q) {
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+            }
+            return '';
+        }
+
+        function selectOpt(qId, idx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            var q = practiceQs.filter(function(x){return x.id === qId})[0];
+            var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+            var isCorrect = q.opts[idx].c;
+            for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-'+qId).textContent = '✅ Correct!';
+                document.getElementById('result-'+qId).className = 'q-result correct';
+                correctCount++;
+            } else {
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+                document.getElementById('result-'+qId).className = 'q-result wrong';
+                for (var i = 0; i < q.opts.length; i++) {
+                    if (q.opts[i].c) opts[i].classList.add('correct');
+                }
+            }
+            document.getElementById('soln-'+qId).classList.add('show');
+            updateScore();
+        }
+
+        function updateScore() {
+            var t = Object.keys(answered).length;
+            var el = document.getElementById('score-display');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'score-display';
+                el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+                document.getElementById('practice-qs').before(el);
+            }
+            el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+        }
+
+        function resetPractice() {
+            if (!confirm('Reset all answers?')) return;
+            answered = {}; correctCount = 0;
+            document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+            document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+            document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+            var el = document.getElementById('score-display');
+            if (el) el.textContent = '';
+            renderPractice();
+        }
+
+        function toggleStep(header) {
+            var content = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        renderPractice();
+    </script>
 </body>
 </html>
