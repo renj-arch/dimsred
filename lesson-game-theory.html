@@ -1,34 +1,567 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Game Theory — Coming Soon | vlymbooq</title>
+    <title>Game Theory — Strategy, Competition & Cooperation | vlymbooq</title>
+    <meta name="description" content="Deep dive into Game Theory — Nash equilibrium, zero-sum games, prisoner's dilemma, repeated games, evolutionary dynamics, and mechanism design.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/lesson-game-theory.html">
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:Inter,-apple-system,sans-serif;background:#09090b;color:#fafafa;min-height:100vh}
-        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
-        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-        .brand{display:flex;align-items:center;gap:8px;text-decoration:none}
-        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .container{max-width:700px;margin:80px auto;padding:24px;text-align:center}
-        .badge{display:inline-block;padding:4px 14px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.75em;font-weight:700;margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase}
-        h1{font-size:1.8em;font-weight:900;margin-bottom:12px;line-height:1.3}
-        p{color:#a1a1aa;font-size:.95em;line-height:1.7;margin-bottom:28px;max-width:500px;margin-left:auto;margin-right:auto}
-        .btn{display:inline-block;padding:10px 24px;border-radius:100px;font-weight:600;font-size:.85em;background:rgba(167,139,250,.15);color:#a78bfa;text-decoration:none;transition:all .2s}
-        .btn:hover{background:rgba(167,139,250,.25)}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--pink:#ec4899;--radius:12px;--radius-lg:16px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        a{color:var(--purple);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav .s-title{font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px;letter-spacing:.5px}
+        .sidebar-nav .s-tag{font-size:.58em;margin-left:4px;opacity:.6}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.5em;font-weight:900;margin:32px 0 12px;line-height:1.3}
+        .lesson-body h3{font-size:1.15em;font-weight:700;margin:20px 0 10px;color:var(--emerald)}
+        .lesson-body h4{font-size:1em;font-weight:600;margin:16px 0 8px;color:var(--purple)}
+        .lesson-body p{color:var(--text-sec);font-size:.92em;line-height:1.7;margin-bottom:12px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:var(--purple)}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        @media print{.nav,.sidebar-nav{display:none!important}.container{padding:0}}
+
+        .story-card{background:linear-gradient(135deg,rgba(96,165,250,.06),rgba(167,139,250,.04));border:1px solid rgba(167,139,250,.12);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative;overflow:hidden}
+        .story-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--purple),var(--emerald));border-radius:0 2px 2px 0}
+        .story-card .story-label{font-size:.72em;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+        .story-card .story-title{font-size:1.1em;font-weight:800;margin-bottom:8px}
+        .story-card .story-text{color:var(--text-sec);font-size:.9em;line-height:1.7}
+        .story-card .story-moral{background:rgba(52,211,153,.08);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.85em;color:var(--emerald);font-weight:600}
+
+        .insight-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:16px;margin:16px 0;text-align:center}
+        .insight-box .insight-label{font-size:.72em;font-weight:700;color:var(--emerald);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .insight-box .insight-text{font-size:1.05em;font-weight:600;line-height:1.5}
+        .insight-box .insight-sub{font-size:.82em;color:var(--text-muted);margin-top:4px}
+
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;margin:16px 0;text-align:center;overflow:hidden}
+        .diagram-box svg{max-width:100%;height:auto;display:block;margin:0 auto}
+        .diagram-box .diagram-caption{font-size:.8em;color:var(--text-muted);margin-top:10px;line-height:1.5}
+
+        .step-reveal{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .step-reveal .step-header{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+        .step-reveal .step-number{width:28px;height:28px;border-radius:50%;background:rgba(167,139,250,.12);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.78em;font-weight:700;flex-shrink:0}
+        .step-reveal .step-header .arrow{font-size:.7em;color:var(--text-muted);transition:transform .3s}
+        .step-reveal .step-header .arrow.open{transform:rotate(90deg)}
+        .step-reveal .step-content{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);color:var(--text-sec);font-size:.88em;line-height:1.7}
+        .step-reveal .step-content.open{display:block}
+
+        .q-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+        .q-card .q-text{font-size:.9em;margin-bottom:10px;line-height:1.6;font-weight:500}
+        .q-card .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:500px){.q-card .q-opts{grid-template-columns:1fr}}
+        .q-card .q-opt{padding:8px 12px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .15s;text-align:left}
+        .q-card .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .q-card .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .q-card .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
+        .q-card .q-opt.disabled{pointer-events:none;opacity:.7}
+        .q-card .q-soln{display:none;margin-top:8px;padding:10px;background:rgba(167,139,250,.06);border-radius:8px;font-size:.82em;color:var(--text-sec);line-height:1.6}
+        .q-card .q-soln.show{display:block}
+        .q-card .q-soln strong{color:var(--emerald)}
+        .q-card .q-result{font-size:.8em;font-weight:600;margin-top:8px}
+        .q-card .q-result.correct{color:var(--emerald)}
+        .q-card .q-result.wrong{color:var(--red)}
+
+        @keyframes fade-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .fade-in{animation:fade-in .5s ease forwards}
+
+        .section-divider{height:1px;background:var(--border);margin:32px 0}
+        .section-label{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:.72em;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
+        .section-label.part1{background:rgba(236,72,153,.1);color:var(--pink)}
+        .section-label.part2{background:rgba(167,139,250,.1);color:var(--purple)}
+        .section-label.part3{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .section-label.part4{background:rgba(245,158,11,.1);color:var(--amber)}
+
+        .math{font-family:'JetBrains Mono',monospace;color:var(--purple);font-weight:700;font-size:.95em}
+        .math-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:10px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9em;color:var(--purple);font-weight:700;line-height:1.6}
+        .example-box{background:rgba(245,158,11,.04);border:1px solid rgba(245,158,11,.1);border-radius:var(--radius);padding:16px;margin:14px 0}
+        .example-box .ex-label{font-size:.72em;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+        @media(max-width:500px){.formula-grid{grid-template-columns:1fr}}
+        .formula-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+        .formula-card .f-label{font-size:.7em;color:var(--text-muted);margin-bottom:2px}
+        .formula-card .f-math{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--purple);font-weight:700}
+
+        .quote-box{background:rgba(236,72,153,.04);border:1px solid rgba(236,72,153,.1);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .quote-box .quote{font-size:.95em;font-style:italic;color:var(--text);line-height:1.6}
+        .quote-box .attribution{font-size:.78em;color:var(--text-muted);margin-top:6px}
     </style>
 </head>
 <body>
-    <nav class="nav"><div class="nav-inner"><a href="index.html" class="brand"><svg width="28" height="28" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg><span class="brand-text">vlymbooq</span></a><a href="math.html" style="color:#a78bfa;font-size:.82em;font-weight:500;text-decoration:none">Math Map</a></div></nav>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <svg class="brand-icon" viewBox="0 0 80 80" fill="none"><rect x="8" y="8" width="64" height="64" rx="16" stroke="url(#g)" stroke-width="4"/><path d="M28 52V28l12 14 12-14v24" stroke="url(#g)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="g" x1="8" y1="8" x2="72" y2="72"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs></svg>
+                <span class="brand-text">vlymbooq</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="math.html">Math Map</a>
+                <a href="index.html#exams">Exams</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
-        <div class="badge">🔬 Scientist</div>
-        <h1>Game Theory</h1>
-        <p>This deep dive into pure mathematics is being prepared. Check the Math Concept Map for all available lessons.</p>
-        <a href="math.html" class="btn">← Back to Math Concept Map</a>
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="s-title">Math Lessons</div>
+                    <a href="math.html">← Math Concept Map</a>
+                    <a href="lesson-arithmetic.html">Arithmetic <span class="s-tag">📚</span></a>
+                    <a href="lesson-geometry.html">Geometry <span class="s-tag">📚</span></a>
+                    <a href="lesson-number-theory.html">Number Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-linear-algebra.html">Linear Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-complex-analysis.html">Complex Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-abstract-algebra.html">Abstract Algebra <span class="s-tag">🔬</span></a>
+                    <a href="lesson-graph-theory.html">Graph Theory <span class="s-tag">🔬</span></a>
+                    <a href="lesson-real-analysis.html">Real Analysis <span class="s-tag">🔬</span></a>
+                    <a href="lesson-topology.html">Topology <span class="s-tag">🔬</span></a>
+                    <a href="lesson-diff-geometry.html">Diff Geometry <span class="s-tag">🔬</span></a>
+                    <a href="lesson-game-theory.html" class="active" style="color:var(--text);font-weight:600">Game Theory <span class="s-tag">🔬</span></a>
+                    <a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
+                    <a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+                    <a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+                </div>
+            </div>
+            <div class="main">
+                <div class="lesson-body">
+
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                    <span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.7em;font-weight:700">🔬 Scientist</span>
+                    <span style="font-size:.78em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span>
+                </div>
+
+                <h2>Game Theory — The Mathematics of Strategy</h2>
+                <p style="font-size:.95em;color:var(--text-sec);margin-bottom:16px">Game theory studies strategic decision-making — how rational agents interact when each person's outcome depends on everyone's choices. It began with a poker problem in 1928 (von Neumann's minimax theorem) and grew into a universal language for economics, biology, political science, and artificial intelligence. At its heart is one revolutionary idea: that we can model conflict and cooperation mathematically, and find the stable outcomes that rational players will settle on.</p>
+
+                <div class="quote-box">
+                    <div class="quote">"Game theory is the study of mathematical models of strategic interaction among rational decision-makers."</div>
+                    <div class="attribution">— John von Neumann & Oskar Morgenstern, Theory of Games and Economic Behavior (1944)</div>
+                </div>
+
+                <!-- ========== PART 1: FOUNDATIONS ========== -->
+                <div class="section-label part1">Part 1</div>
+                <h2>🎲 Normal Form Games and Nash Equilibrium</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Prisoner's Dilemma</div>
+                    <div class="story-title">The Game That Changed Social Science</div>
+                    <div class="story-text">Two criminals are arrested and interrogated separately. Each can either <strong>cooperate</strong> (stay silent) or <strong>defect</strong> (betray the other). If both cooperate, they each get 1 year. If one defects and the other cooperates, the defector goes free and the cooperator gets 5 years. If both defect, they each get 3 years. What should a rational player do? Defecting gives a strictly better outcome regardless of what the other does — it's a <strong>dominant strategy</strong>. So both defect and get 3 years, even though mutual cooperation (1 year each) would make both better off. This is the tragedy of the prisoner's dilemma: individual rationality leads to collective disaster. It explains arms races, price wars, the tragedy of the commons, and why cooperation is so fragile — and so remarkable when it emerges.</div>
+                    <div class="story-moral">What's rational for each person individually can be terrible for everyone collectively.</div>
+                </div>
+
+                <h3>Payoff Matrices and Strategy Sets</h3>
+                <p>A game in <strong>normal form</strong> has three components: players, strategies, and payoffs. For two players, we write a <strong>payoff matrix</strong> where rows are Player 1's strategies, columns are Player 2's, and each cell contains the payoff pair (u₁, u₂). A strategy s* is a <strong>dominant strategy</strong> if it gives a strictly higher payoff than any other strategy no matter what the opponent does. A <strong>Nash equilibrium</strong> is a strategy profile where no player can improve by unilaterally changing their strategy — each player's strategy is a <strong>best response</strong> to the others'. In the prisoner's dilemma, (Defect, Defect) is the unique Nash equilibrium.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Best Response</div><div class="f-math">BRᵢ(s₋ᵢ) = argmax uᵢ(sᵢ, s₋ᵢ)</div></div>
+                    <div class="formula-card"><div class="f-label">Nash Equilibrium</div><div class="f-math">sᵢ ∈ BRᵢ(s₋ᵢ) for all i</div></div>
+                    <div class="formula-card"><div class="f-label">Dominant Strategy</div><div class="f-math">sᵢ dominates if uᵢ(sᵢ, t) > uᵢ(rᵢ, t) ∀t</div></div>
+                    <div class="formula-card"><div class="f-label">Pareto Optimal</div><div class="f-math">No player can improve without harming another</div></div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Solving a 2×2 Coordination Game</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Consider two drivers approaching each other. Each can drive on the Left or Right. If both choose the same side, they avoid collision (payoff 1 each). If they choose different sides, they crash (payoff 0 each).<br><br>
+                        The payoff matrix:
+                        <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; L &nbsp;&nbsp; R<br>
+                        L: (1,1) (0,0)<br>
+                        R: (0,0) (1,1)<br><br>
+                        There are <strong>two pure Nash equilibria</strong>: (L,L) and (R,R). There's also a <strong>mixed equilibrium</strong> where each player randomizes 50-50 — but that gives expected payoff 0.5, worse than the pure equilibria. This is why societies converge on one convention (drive on the left in the UK, on the right in the US) — coordination problems have multiple solutions, and history decides which one we pick.
+                    </div>
+                </div>
+
+                <h3>Elimination of Dominated Strategies</h3>
+                <p>Not every game has a dominant strategy. But we can often simplify games by <strong>iterated elimination of strictly dominated strategies</strong> (IESDS). A strategy is strictly dominated if there's another strategy that always does better. Removing dominated strategies may reveal new dominated ones. This process converges to a set of rationalizable strategies — those that survive common knowledge of rationality. In some games, this uniquely identifies the outcome; in others (like coordination games), it doesn't narrow things down much.</p>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 2: MIXED STRATEGIES ========== -->
+                <div class="section-label part2">Part 2</div>
+                <h2>🎰 Mixed Strategies and the Minimax Theorem</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Randomize to Win</div>
+                    <div class="story-title">Why Poker Players Bluff — and Why It's Mathematical</div>
+                    <div class="story-text">Not every game has a pure-strategy Nash equilibrium. Consider <strong>Rock-Paper-Scissors</strong>: whatever you pick, your opponent can counter it. The only stable strategy is to <strong>randomize</strong> uniformly — play each option with probability 1/3. This is a <strong>mixed strategy</strong>. Von Neumann's <strong>minimax theorem</strong> (1928) showed that in any two-player zero-sum game (one player's gain equals the other's loss), there exists a value V such that Player 1 can guarantee at least V and Player 2 can guarantee at most V. The optimal strategies are mixed, and the value V is unique. This is the birth of game theory — von Neumann proved it before he even knew what to call the field. Today, the minimax theorem underlies adversarial training in AI (GANs), security games, and poker-solving algorithms.</div>
+                    <div class="story-moral">When every pure strategy can be beaten, randomization is the rational choice.</div>
+                </div>
+
+                <h3>Mixed Strategy Nash Equilibrium</h3>
+                <p>A <strong>mixed strategy</strong> is a probability distribution over pure strategies. A mixed strategy Nash equilibrium exists when each player's mixed strategy makes the other players indifferent among their pure strategies (so they're willing to randomize too). <strong>Nash's existence theorem</strong> (1950) proved that every finite game has at least one Nash equilibrium (possibly in mixed strategies). This result — proved in Nash's 27-page PhD thesis — earned him the Nobel Prize and became the foundation of modern game theory. To find a mixed equilibrium, solve for probabilities where each player's expected payoff is equal across all pure strategies they play with positive probability.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">Nash's Existence Theorem</div>
+                    <div class="insight-text">Every finite game has at least one Nash equilibrium</div>
+                    <div class="insight-sub">A brilliant application of Kakutani's fixed-point theorem to economics. Nash's proof took just two pages and changed the world.</div>
+                </div>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Computing Mixed Equilibrium in Matching Pennies</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        Two players each show a coin. Player 1 wins if both match (both Heads or both Tails). Player 2 wins if they differ.<br><br>
+                        Payoff matrix (P1 payoff shown, P2 gets the opposite in this zero-sum game):
+                        <br> &nbsp;&nbsp;&nbsp;&nbsp; H &nbsp;&nbsp;&nbsp; T<br>
+                        H: &nbsp; +1 &nbsp; −1<br>
+                        T: &nbsp; −1 &nbsp; +1<br><br>
+                        No pure Nash equilibrium exists. For mixed: let p = P1's probability of Heads, q = P2's probability of Heads.<br>
+                        P1's expected payoff given q: if H → q(1) + (1−q)(−1) = 2q−1. If T → q(−1) + (1−q)(1) = 1−2q.<br>
+                        For P1 to be indifferent: 2q−1 = 1−2q → q = 1/2. Similarly, p = 1/2.<br><br>
+                        The mixed equilibrium: both play Heads with probability 1/2. Expected value of the game = 0.
+                    </div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 3: EXTENSIVE FORM ========== -->
+                <div class="section-label part3">Part 3</div>
+                <h2>🌳 Sequential Games and Backward Induction</h2>
+
+                <div class="story-card">
+                    <div class="story-label">The Power of Commitment</div>
+                    <div class="story-title">Backward Induction — Solving Games by Thinking Backward</div>
+                    <div class="story-text">In <strong>extensive form games</strong>, players move in sequence, and later players know what earlier players did. These are represented as <strong>game trees</strong>. The solution concept is <strong>subgame perfect equilibrium</strong> — found by <strong>backward induction</strong>: start at the terminal nodes, determine the optimal choice at each decision node, and work backward. Consider a game where you can either take $1 now or let me take $0.50 and give you $2 tomorrow. If I'm rational, I'll take the $0.50 and you get $2 — but if you don't trust me, you take the $1. The <strong>ultimatum game</strong> shows this beautifully: one player proposes a split of $10, the other accepts or rejects (both get nothing if rejected). Standard theory says the proposer offers $0.01 and the responder accepts (something > nothing). But in real life, people reject unfair offers — because humans care about fairness, not just money.</div>
+                    <div class="story-moral">Backward induction assumes perfect rationality and perfect trust. Real humans are more complex — and more interesting.</div>
+                </div>
+
+                <h3>Subgame Perfect Equilibrium</h3>
+                <p>A <strong>subgame perfect equilibrium</strong> (SPE) is a strategy profile that induces a Nash equilibrium in every subgame of the original game. It eliminates non-credible threats — promises to punish that wouldn't actually be carried out. Backward induction finds SPE in finite perfect-information games. The <strong>centipede game</strong> illustrates a paradox: backward induction says the first player should defect immediately, but if both players are even slightly altruistic, they can cooperate for many rounds and both come out ahead.</p>
+
+                <h3>Repeated Games and the Folk Theorem</h3>
+                <p>When the same game is played repeatedly, cooperation can emerge even in the prisoner's dilemma. The <strong>Folk theorem</strong> says that in infinitely repeated games, any feasible payoff vector that's better for each player than their minimax value can be sustained as a Nash equilibrium — provided players are patient enough. <strong>Tit-for-tat</strong> (cooperate on the first move, then copy the opponent's previous move) is remarkably effective: it's nice, retaliatory, forgiving, and clear. In Axelrod's tournaments, tit-for-tat won against far more complex strategies.</p>
+
+                <div class="insight-box">
+                    <div class="insight-label">The Folk Theorem</div>
+                    <div class="insight-text">Any feasible, individually rational payoff can be sustained in an infinitely repeated game with sufficiently patient players</div>
+                    <div class="insight-sub">The "folk" part comes from it being common knowledge among game theorists before anyone formally proved it. It shows that repetition enables cooperation.</div>
+                </div>
+
+                <div class="example-box">
+                    <div class="ex-label">Tit-for-Tat in the Prisoner's Dilemma</div>
+                    <div class="ex-text">In a repeated prisoner's dilemma with tit-for-tat, both players start by cooperating. If one defects, the other defects next round — punishment is immediate but reversible. This creates a stable cooperative equilibrium as long as players care enough about future payoffs (formalized by the discount factor δ > 1/2 for typical payoffs).</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PART 4: DEEP RESULTS ========== -->
+                <div class="section-label part4">Part 4</div>
+                <h2>🌍 Evolution, Auctions, and Mechanism Design</h2>
+
+                <div class="story-card">
+                    <div class="story-label">Darwin's Game</div>
+                    <div class="story-title">Evolutionary Game Theory — Survival of the Fittest Strategy</div>
+                    <div class="story-text">John Maynard Smith realized that game theory applies not just to rational humans but to <strong>evolving populations</strong>. An <strong>evolutionarily stable strategy (ESS)</strong> is a strategy such that if the whole population uses it, no mutant strategy can invade. The classic example: in a population of aggressive Hawks and peaceful Doves, the ESS is a mix where the payoff for playing Hawk equals the payoff for playing Dove. This explains why animals don't always fight to the death — ritualized displays (Dove behavior) persist because they're evolutionarily stable. The Hawk-Dove game models territorial disputes, mate competition, and even corporate pricing strategies. Evolutionary game theory replaces rationality with selection — strategies that do well proliferate; those that do poorly die out.</div>
+                    <div class="story-moral">Rationality isn't required for strategic behavior — evolution finds the equilibrium through trial and error over generations.</div>
+                </div>
+
+                <h3>Auction Theory — The Winner's Curse</h3>
+                <p>Auctions are games with rules designed by the seller. In a <strong>first-price sealed-bid auction</strong>, the highest bidder pays their bid. In a <strong>second-price auction</strong> (Vickrey), the highest bidder pays the second-highest bid — which makes truthful bidding a dominant strategy (you should bid exactly what the item is worth to you). The <strong>revenue equivalence theorem</strong> says that under certain conditions, all standard auction formats yield the same expected revenue. The <strong>winner's curse</strong> occurs in common-value auctions (like oil drilling rights): the winner tends to be the one who overestimated the value, so winning the auction is bad news. Sophisticated bidders shade their bids downward to avoid this — but that's a strategic choice, and getting it wrong can bankrupt you.</p>
+
+                <div class="formula-grid">
+                    <div class="formula-card"><div class="f-label">Vickrey Auction</div><div class="f-math">Truthful bidding is dominant</div></div>
+                    <div class="formula-card"><div class="f-label">Revenue Equivalence</div><div class="f-math">All standard auctions give same expected revenue</div></div>
+                    <div class="formula-card"><div class="f-label">ESS Condition</div><div class="f-math">u(x,x) ≥ u(y,x) for all y</div></div>
+                    <div class="formula-card"><div class="f-label">Minimax Value</div><div class="f-math">V = max_{p} min_{q} u(p,q)</div></div>
+                </div>
+
+                <h3>Mechanism Design — Reverse Game Theory</h3>
+                <p>In <strong>mechanism design</strong>, you design the rules of the game to achieve a desired outcome, assuming players will act strategically. The <strong>revelation principle</strong> says any outcome achievable by some mechanism can also be achieved by a <strong>direct revelation mechanism</strong> where players truthfully report their private information. The <strong>Vickrey-Clarke-Groves (VCG) mechanism</strong> generalizes the Vickrey auction to any social choice problem — it makes truthful reporting a dominant strategy and achieves efficient outcomes. VCG mechanisms are used in spectrum auctions, keyword advertising auctions (Google AdWords), and even kidney exchange programs. The challenge: VCG can run deficits, and designing budget-balanced mechanisms that are also strategy-proof is the subject of active research.</p>
+
+                <div class="step-reveal">
+                    <div class="step-header" onclick="toggleStep(this)">
+                        <div class="step-number">✨</div>
+                        <span style="font-size:.88em;font-weight:600">Nash's Nobel — A Life of Genius and Struggle</span>
+                        <span class="arrow">▶</span>
+                    </div>
+                    <div class="step-content">
+                        John Nash proved the existence of equilibrium in 1950 when he was just 21 years old. His proof used Kakutani's fixed-point theorem — a deep result from topology — to show that in any finite game, there's a set of strategies where no player wants to deviate.<br><br>
+                        Nash later developed a severe mental illness (paranoid schizophrenia) and spent decades in and out of hospitals. He recovered remarkably in the 1990s and won the Nobel Prize in Economics in 1994. His life was portrayed in the film "A Beautiful Mind" (2001).<br><br>
+                        Tragically, Nash and his wife died in a car crash in 2015, returning from Norway where he'd just received the Abel Prize — mathematics' highest honor.
+                    </div>
+                </div>
+
+                <div class="quote-box">
+                    <div class="quote">"The best way to predict the future is to design it — mechanism design gives us the tools to build games that align individual incentives with social good."</div>
+                    <div class="attribution">— Inspired by Roger Myerson and Eric Maskin</div>
+                </div>
+
+                <div class="section-divider"></div>
+
+                <!-- ========== PRACTICE ========== -->
+                <h2 style="margin-top:0">🎯 Practice — Check Your Game Theory Intuition</h2>
+                <p style="color:var(--text-sec);margin-bottom:16px">These puzzles build game theory intuition — think strategically.</p>
+
+                <div id="practice-qs"></div>
+
+                <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
+                    <a href="math.html" class="btn btn-success">← Back to Math Map</a>
+                </div>
+
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        var practiceQs = [
+            {
+                id: 16001,
+                text: "🎲 In the prisoner's dilemma, what is the Nash equilibrium?",
+                opts: [
+                    {l: "A", t: "Both cooperate", c: false},
+                    {l: "B", t: "Both defect", c: true},
+                    {l: "C", t: "One cooperates, one defects", c: false},
+                    {l: "D", t: "Randomized strategy", c: false}
+                ],
+                sol: "Both players have a dominant strategy to <strong>defect</strong>. So (Defect, Defect) is the unique Nash equilibrium — even though both would prefer (Cooperate, Cooperate)."
+            },
+            {
+                id: 16002,
+                text: "🎲 A dominant strategy means:",
+                opts: [
+                    {l: "A", t: "It always gives the highest payoff regardless of what others do", c: true},
+                    {l: "B", t: "It's the most common strategy", c: false},
+                    {l: "C", t: "It's the strategy chosen in equilibrium", c: false},
+                    {l: "D", t: "It involves randomizing", c: false}
+                ],
+                sol: "A <strong>dominant strategy</strong> gives a strictly higher payoff than any alternative <strong>no matter what the other players do</strong>. It's the strongest solution concept in game theory."
+            },
+            {
+                id: 16003,
+                text: "🎰 Who proved that every finite game has at least one Nash equilibrium?",
+                opts: [
+                    {l: "A", t: "John von Neumann", c: false},
+                    {l: "B", t: "John Nash", c: true},
+                    {l: "C", t: "John Maynard Smith", c: false},
+                    {l: "D", t: "Oskar Morgenstern", c: false}
+                ],
+                sol: "<strong>John Nash</strong> proved the existence theorem in 1950 (published 1951). It earned him the Nobel Prize in Economics in 1994."
+            },
+            {
+                id: 16004,
+                text: "🎰 Rock-Paper-Scissors has a unique Nash equilibrium. What is it?",
+                opts: [
+                    {l: "A", t: "Always play Rock", c: false},
+                    {l: "B", t: "Play each move with probability 1/3", c: true},
+                    {l: "C", t: "Always play Scissors", c: false},
+                    {l: "D", t: "Never play Paper", c: false}
+                ],
+                sol: "The unique Nash equilibrium is to play each option with probability <strong>1/3</strong>. Any deviation from equal probability can be exploited by an opponent."
+            },
+            {
+                id: 16005,
+                text: "🎰 The minimax theorem applies to which type of game?",
+                opts: [
+                    {l: "A", t: "Cooperative games", c: false},
+                    {l: "B", t: "Zero-sum games", c: true},
+                    {l: "C", t: "Coordination games", c: false},
+                    {l: "D", t: "Evolutionary games", c: false}
+                ],
+                sol: "The <strong>minimax theorem</strong> applies to <strong>two-player zero-sum games</strong> (one player's gain equals the other's loss). It guarantees a unique game value and optimal mixed strategies."
+            },
+            {
+                id: 16006,
+                text: "🌳 Backward induction is used to solve:",
+                opts: [
+                    {l: "A", t: "Normal form games", c: false},
+                    {l: "B", t: "Sequential (extensive form) games", c: true},
+                    {l: "C", t: "Zero-sum games only", c: false},
+                    {l: "D", t: "Cooperative games", c: false}
+                ],
+                sol: "<strong>Backward induction</strong> solves sequential games by reasoning backward from the final moves. It finds subgame perfect equilibria."
+            },
+            {
+                id: 16007,
+                text: "🌳 The Folk theorem says that in repeated games:",
+                opts: [
+                    {l: "A", t: "Only Nash equilibria exist", c: false},
+                    {l: "B", t: "Any feasible individually rational payoff can be sustained given enough patience", c: true},
+                    {l: "C", t: "Cooperation is impossible", c: false},
+                    {l: "D", t: "Only the one-shot equilibrium is possible", c: false}
+                ],
+                sol: "The <strong>Folk theorem</strong> says any feasible individually rational payoff can be sustained as an equilibrium in infinitely repeated games with sufficiently patient players. This shows how <strong>cooperation emerges</strong> through repetition."
+            },
+            {
+                id: 16008,
+                text: "🌍 What does ESS stand for in evolutionary game theory?",
+                opts: [
+                    {l: "A", t: "Equilibrium Strategy Set", c: false},
+                    {l: "B", t: "Evolutionarily Stable Strategy", c: true},
+                    {l: "C", t: "Expected Strategic Solution", c: false},
+                    {l: "D", t: "Efficient Strategy Space", c: false}
+                ],
+                sol: "<strong>Evolutionarily Stable Strategy</strong> — a strategy that, if adopted by a population, cannot be invaded by any mutant strategy. It's the game theory analog of evolutionary fitness."
+            },
+            {
+                id: 16009,
+                text: "🌍 In which type of auction is truthful bidding a dominant strategy?",
+                opts: [
+                    {l: "A", t: "First-price sealed bid", c: false},
+                    {l: "B", t: "Second-price (Vickrey) auction", c: true},
+                    {l: "C", t: "English auction", c: false},
+                    {l: "D", t: "Dutch auction", c: false}
+                ],
+                sol: "In a <strong>Vickrey (second-price) auction</strong>, the optimal strategy is to bid your true valuation. You pay the second-highest price, so you never regret bidding what the item is worth to you."
+            },
+            {
+                id: 16010,
+                text: "🎲 A Pareto optimal outcome means:",
+                opts: [
+                    {l: "A", t: "No player can be made better off without making another worse off", c: true},
+                    {l: "B", t: "All players get equal payoffs", c: false},
+                    {l: "C", t: "The sum of payoffs is maximized", c: false},
+                    {l: "D", t: "It's the same as Nash equilibrium", c: false}
+                ],
+                sol: "<strong>Pareto optimal</strong> means no player can improve their payoff without reducing someone else's. The prisoner's dilemma is famous because the Nash equilibrium (both defect) is <strong>not</strong> Pareto optimal — both cooperating is better for everyone."
+            },
+            {
+                id: 16011,
+                text: "🌳 Which strategy won Axelrod's repeated prisoner's dilemma tournament?",
+                opts: [
+                    {l: "A", t: "Always defect", c: false},
+                    {l: "B", t: "Tit-for-tat", c: true},
+                    {l: "C", t: "Random", c: false},
+                    {l: "D", t: "Always cooperate", c: false}
+                ],
+                sol: "<strong>Tit-for-tat</strong> won: cooperate on the first move, then copy whatever the opponent did last time. It's nice, retaliatory, forgiving, and clear — the four properties of successful reciprocal strategies."
+            },
+            {
+                id: 16012,
+                text: "🎲 The 'winner's curse' occurs in:",
+                opts: [
+                    {l: "A", t: "Coordination games", c: false},
+                    {l: "B", t: "Common-value auctions", c: true},
+                    {l: "C", t: "Repeated games", c: false},
+                    {l: "D", t: "Evolutionary games", c: false}
+                ],
+                sol: "The <strong>winner's curse</strong> occurs in common-value auctions (where the item's value is the same for all bidders but unknown). The winner tends to be the one who <strong>overestimated the value</strong> — so winning is actually bad news."
+            }
+        ];
+
+        var answered = {}, correctCount = 0;
+
+        function renderPractice() {
+            var c = document.getElementById('practice-qs'), h = '';
+            for (var i = 0; i < practiceQs.length; i++) {
+                var q = practiceQs[i], o = '';
+                for (var j = 0; j < q.opts.length; j++) {
+                    o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                }
+                h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
+            }
+            c.innerHTML = h;
+            updateScore();
+        }
+
+        function getCorrectLabel(q) {
+            for (var i = 0; i < q.opts.length; i++) {
+                if (q.opts[i].c) return q.opts[i].l+'. '+q.opts[i].t;
+            }
+            return '';
+        }
+
+        function selectOpt(qId, idx) {
+            if (answered[qId]) return;
+            answered[qId] = true;
+            var q = practiceQs.filter(function(x){return x.id === qId})[0];
+            var opts = document.querySelectorAll('#q-'+qId+' .q-opt');
+            var isCorrect = q.opts[idx].c;
+            for (var i = 0; i < opts.length; i++) opts[i].classList.add('disabled');
+            if (isCorrect) {
+                opts[idx].classList.add('correct');
+                document.getElementById('result-'+qId).textContent = '✅ Correct!';
+                document.getElementById('result-'+qId).className = 'q-result correct';
+                correctCount++;
+            } else {
+                opts[idx].classList.add('wrong');
+                document.getElementById('result-'+qId).textContent = '❌ Not quite. Read the solution!';
+                document.getElementById('result-'+qId).className = 'q-result wrong';
+                for (var i = 0; i < q.opts.length; i++) {
+                    if (q.opts[i].c) opts[i].classList.add('correct');
+                }
+            }
+            document.getElementById('soln-'+qId).classList.add('show');
+            updateScore();
+        }
+
+        function updateScore() {
+            var t = Object.keys(answered).length;
+            var el = document.getElementById('score-display');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'score-display';
+                el.style.cssText = 'font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';
+                document.getElementById('practice-qs').before(el);
+            }
+            el.innerHTML = '<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';
+        }
+
+        function resetPractice() {
+            if (!confirm('Reset all answers?')) return;
+            answered = {}; correctCount = 0;
+            document.querySelectorAll('#practice-qs .q-opt').forEach(function(e){e.className = 'q-opt'});
+            document.querySelectorAll('#practice-qs .q-soln').forEach(function(e){e.classList.remove('show')});
+            document.querySelectorAll('#practice-qs .q-result').forEach(function(e){e.textContent = ''; e.className = 'q-result'});
+            var el = document.getElementById('score-display');
+            if (el) el.textContent = '';
+            renderPractice();
+        }
+
+        function toggleStep(header) {
+            var content = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                content.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        renderPractice();
+    </script>
 </body>
 </html>
