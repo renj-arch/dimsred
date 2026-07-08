@@ -5678,7 +5678,7 @@
       "<div id='st-timer-wrap' style='display:flex;align-items:center;gap:4px;padding:4px 10px;background:rgba(255,255,255,.04);border-radius:8px'><span style='font-size:.7em'>⏱</span><span id='st-timer' style='font-size:1em;font-weight:700;font-variant-numeric:tabular-nums;color:#fafafa;min-width:36px;text-align:center'></span></div>" +
       "<span id='st-score' style='color:#fbbf24;font-size:.82em;font-weight:600;padding:4px 10px;background:rgba(251,191,36,.08);border-radius:8px'></span>" +
       "<button id='st-exit-btn' style='padding:6px 10px;border-radius:8px;background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.15);font-size:.72em;cursor:pointer;font-weight:600;transition:all .2s' onmouseenter='this.style.background=\"rgba(239,68,68,.25)\"' onmouseleave='this.style.background=\"rgba(239,68,68,.12)\"'>✕</button></div></div>" +
-      "<div id='st-question-area' style='animation:fadeIn .35s ease'></div>";
+      "<div id='st-question-area' style='animation:fadeIn .35s ease;position:relative'></div>";
     document.getElementById("st-exit-btn").addEventListener("click", function () {
       if (confirm("End current session?")) {
         clearTimer();
@@ -5709,12 +5709,22 @@
         btn.style.background = "rgba(52,211,153,.15)";
         btn.style.color = "#34d399";
         btn.style.borderColor = "rgba(52,211,153,.2)";
-        if (area) area.innerHTML = "<div style='text-align:center;padding:60px 20px;color:#a1a1aa'><div style='font-size:3em;margin-bottom:12px'>⏸</div><div style='font-size:1.1em;font-weight:600;margin-bottom:6px'>Session Paused</div><div style='font-size:.82em;color:#52525b'>Press Resume to continue</div></div>";
+        var po = document.getElementById("st-pause-badge");
+        if (!po && area) {
+          area.style.position = "relative";
+          po = document.createElement("div");
+          po.id = "st-pause-badge";
+          po.style.cssText = "position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);padding:5px 12px;border-radius:100px;font-size:.72em;color:#a1a1aa;z-index:10;backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.06)";
+          po.textContent = "⏸ Paused";
+          area.appendChild(po);
+        }
       } else {
         btn.textContent = "⏸ Pause";
         btn.style.background = "rgba(255,255,255,.06)";
         btn.style.color = "#a1a1aa";
         btn.style.borderColor = "rgba(255,255,255,.08)";
+        var po = document.getElementById("st-pause-badge");
+        if (po) po.remove();
         showQuestion();
       }
     });
