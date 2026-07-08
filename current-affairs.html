@@ -6877,6 +6877,21 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('qText').innerHTML = 'Loading Static GK...';
             document.getElementById('optGrid').innerHTML = '';
 
+            var archiveToggle = document.getElementById('archiveToggle');
+            if (archiveToggle && archiveToggle.checked) {
+                document.getElementById('qText').innerHTML = 'Loading Static GK + Archive...';
+                _loadArchiveIntoState(function() {
+                    _generateStaticQuestions();
+                    if (state.questions.length > 0) showQuestion();
+                    else document.getElementById('qText').innerHTML = 'No questions loaded.';
+                });
+            } else {
+                _generateStaticQuestions();
+                if (state.questions.length > 0) showQuestion();
+                else document.getElementById('qText').innerHTML = 'No static GK loaded.';
+            }
+        }
+        function _generateStaticQuestions() {
             var allCats = Object.keys(GK_GENERATORS).filter(function(k) { return typeof GK_GENERATORS[k] === 'function' && k !== 'sebi' && k !== 'scjudgments' && k !== 'rbi' && k !== 'isro' && k !== 'mea'; });
             var added = 0;
             for (var ci = 0; ci < allCats.length && added < 400; ci++) {
@@ -6889,24 +6904,18 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     added++;
                 } catch(e) {}
             }
-
-            var archiveToggle = document.getElementById('archiveToggle');
-            if (archiveToggle && archiveToggle.checked) {
-                document.getElementById('qText').innerHTML = 'Loading Static GK + Archive...';
-                loadArchiveQuestions(function(archiveQs) {
-                    if (archiveQs && archiveQs.length) {
-                        for (var i = 0; i < archiveQs.length && state.questions.length < 500; i++) {
-                            archiveQs[i]._archive = true;
-                            state.questions.push(archiveQs[i]);
-                        }
+        }
+        function _loadArchiveIntoState(cb) {
+            if (_archiveCache) { for (var i = 0; i < _archiveCache.length && state.questions.length < 500; i++) { var aq = _archiveCache[i]; aq._archive = true; state.questions.push(aq); } cb(); return; }
+            loadArchiveQuestions(function(archiveQs) {
+                if (archiveQs && archiveQs.length) {
+                    for (var i = 0; i < archiveQs.length && state.questions.length < 500; i++) {
+                        archiveQs[i]._archive = true;
+                        state.questions.push(archiveQs[i]);
                     }
-                    if (state.questions.length > 0) showQuestion();
-                    else document.getElementById('qText').innerHTML = 'No questions loaded.';
-                });
-            } else {
-                if (state.questions.length > 0) showQuestion();
-                else document.getElementById('qText').innerHTML = 'No static GK loaded.';
-            }
+                }
+                cb();
+            });
         }
 
         var _archiveCache = null;
