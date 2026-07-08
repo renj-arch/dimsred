@@ -217,7 +217,7 @@
             <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;justify-content:center;flex-direction:column">
                 <button class="action-btn secondary" style="padding:16px;font-size:1.05em;background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.2)" onclick="startCombinedQuiz(15, '🎯 Mega GK')">🎯 Mega GK — Live Wikipedia</button>
                 <button class="action-btn secondary" style="padding:14px;font-size:.95em;background:rgba(99,102,241,.12);color:var(--purple);border:1px solid rgba(99,102,241,.2)" onclick="startStaticGk()">📚 Static GK — All 26 Categories</button>
-                <label style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none;margin-top:4px"><input type="checkbox" id="archiveToggle" style="accent-color:var(--purple);width:14px;height:14px"> 📚 Include Archive (all 43 categories + questions from JSON)</label>
+                <label style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none;margin-top:4px"><input type="checkbox" id="archiveToggle" style="accent-color:var(--purple);width:14px;height:14px"> 📚 Include Archive <span id="archiveStatus" style="color:var(--emerald);font-size:.72em">loaded</span></label>
             </div>
 
             <p class="gk-intro">Live Wikipedia GK or curated static GK across 26 categories. Auto-advances every 4 seconds. Pause anytime.</p>
@@ -5392,6 +5392,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 .then(function(data) { GK_LEARN = data; _initStudyData(); })
                 .catch(function() { _initStudyData(); });
             loadQuizJson();
+            preloadArchive();
         }
 
         function startCategory(id, name) {
@@ -6906,19 +6907,45 @@ var _staticGen_polity = GK_GENERATORS.polity;
             }
         }
         function _loadArchiveIntoState(cb) {
-            if (_archiveCache) { for (var i = 0; i < _archiveCache.length && state.questions.length < 500; i++) { var aq = _archiveCache[i]; aq._archive = true; state.questions.push(aq); } cb(); return; }
-            loadArchiveQuestions(function(archiveQs) {
-                if (archiveQs && archiveQs.length) {
-                    for (var i = 0; i < archiveQs.length && state.questions.length < 500; i++) {
-                        archiveQs[i]._archive = true;
-                        state.questions.push(archiveQs[i]);
-                    }
+            if (_archiveCache) {
+                for (var i = 0; i < _archiveCache.length && state.questions.length < 500; i++) {
+                    var aq = _archiveCache[i];
+                    aq._archive = true;
+                    state.questions.push(aq);
                 }
                 cb();
-            });
+            } else {
+                loadArchiveQuestions(function(archiveQs) {
+                    if (archiveQs && archiveQs.length) {
+                        for (var i = 0; i < archiveQs.length && state.questions.length < 500; i++) {
+                            archiveQs[i]._archive = true;
+                            state.questions.push(archiveQs[i]);
+                        }
+                    }
+                    cb();
+                });
+            }
         }
 
         var _archiveCache = null;
+        var _archiveLoading = false;
+        function preloadArchive() {
+            if (_archiveCache || _archiveLoading) return;
+            _archiveLoading = true;
+            setArchiveStatus('loading');
+            loadArchiveQuestions(function(qs) {
+                _archiveCache = qs;
+                _archiveLoading = false;
+                setArchiveStatus('loaded');
+            });
+        }
+        function setArchiveStatus(s) {
+            var el = document.getElementById('archiveStatus');
+            if (!el) return;
+            if (s === 'loading') el.innerHTML = '<span style="color:var(--amber)">loading...</span>';
+            else if (s === 'loaded') el.innerHTML = '<span style="color:var(--emerald)">loaded</span>';
+            else el.innerHTML = '<span style="color:var(--text-muted)">ready</span>';
+        }
         function loadArchiveQuestions(cb) {
             if (_archiveCache) { cb(_archiveCache); return; }
             var files = [];
