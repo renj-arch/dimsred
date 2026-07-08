@@ -279,13 +279,16 @@ function searchInCategory(ci, query, results) {
     }
   }
 }
+var MAX_RESULTS = 500;
 function showSearchResults(query, results) {
   var panel = document.getElementById('view-content');
   if (results.length === 0) {
     panel.innerHTML = '<div class="search-no-results">No questions matching "<strong>' + escHtml(query) + '</strong>"</div>';
     return;
   }
-  var h = '<div class="search-results-info">Found <strong>' + results.length + '</strong> result' + (results.length>1?'s':'') + ' for "' + escHtml(query) + '"</div>';
+  var total = results.length;
+  if (results.length > MAX_RESULTS) results = results.slice(0, MAX_RESULTS);
+  var h = '<div class="search-results-info">Found <strong>' + total + '</strong> result' + (total>1?'s':'') + ' for "' + escHtml(query) + '"' + (total > MAX_RESULTS ? ' (showing first ' + MAX_RESULTS + ')' : '') + '</div>';
   h += '<div class="question-list">';
   results.forEach(function(r) {
     var q = r.question;
