@@ -1592,6 +1592,7 @@
     if (!session || !currentQuestion) return;
     clearTimer();
     var q = currentQuestion;
+    console.log("submitAnswer called, selected:", selected, "currentQ exists:", !!q);
     var correct = false;
     var ansStr = typeof q.a === "number" ? q.a + "" : q.a;
 
@@ -1614,6 +1615,7 @@
   }
 
   function nextQuestion() {
+    console.log("nextQuestion called, index:", session.questionIndex, "total:", session.questions.length);
     hideResult();
     session.questionIndex++;
     showQuestion();
@@ -1720,11 +1722,15 @@
       html += "<div id='st-solution-box' style='display:none;margin-top:16px;padding:16px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15);border-radius:10px;color:#34d399;font-size:.9em'>" + q.solution + "</div>";
     }
 
+    console.log("RENDER Q", session.questionIndex, "opts count:", opts ? opts.length : 0, "answered:", area.classList.contains("answered"));
     area.classList.remove("answered");
     area.innerHTML = html;
 
-    area.querySelectorAll(".st-opt").forEach(function (btn) {
+    var btns = area.querySelectorAll(".st-opt");
+    console.log("BTNS found:", btns.length);
+    btns.forEach(function (btn) {
       btn.addEventListener("click", function () {
+        console.log("CLICK", btn.getAttribute("data-value"), "answered?", area.classList.contains("answered"));
         if (area.classList.contains("answered")) return;
         area.classList.add("answered");
         submitAnswer(btn.getAttribute("data-value"));
@@ -1756,7 +1762,9 @@
       (session.questionIndex >= session.questions.length - 1 ? "📊 View Results" : "Next Question →") + "</button>";
 
     overlay.style.display = "flex";
+    console.log("showResult: overlay shown, attaching next-btn listener");
     document.getElementById("st-next-btn").addEventListener("click", function () {
+      console.log("NEXT BUTTON CLICKED, index:", session.questionIndex);
       if (session.questionIndex >= session.questions.length - 1) {
         overlay.style.display = "none";
         endTraining();
