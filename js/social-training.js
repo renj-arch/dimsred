@@ -489,7 +489,7 @@
       "<div style='display:flex;align-items:center;gap:10px'>" +
       "<span id='st-timer' style=\"font-family:'JetBrains Mono',monospace;font-size:1.1em;font-weight:700;font-variant-numeric:tabular-nums;color:#ede4d7\"></span>" +
       "<span id='st-score' style='color:#c9a04a;font-size:.82em'></span>" +
-      "<button id='st-exit-btn' style='padding:2px 8px;border-radius:6px;background:rgba(168,28,28,.08);color:#8a3a3a;border:1px solid rgba(168,28,28,.1);font-size:.65em;cursor:pointer'>✕</button></div></div>" +
+      "<button id='st-exit-btn' style='padding:4px 12px;border-radius:6px;background:rgba(168,28,28,.08);color:#8a3a3a;border:1px solid rgba(168,28,28,.1);font-size:.72em;cursor:pointer;font-weight:500'>← Back</button></div></div>" +
       "<div id='st-question-area' class='st-card' style='padding:0;background:transparent;border:none'></div>" +
       "<div id='st-result-overlay' style='display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);z-index:1000;align-items:center;justify-content:center'>" +
       "<div style='padding:32px;max-width:500px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.4)'></div></div>";
