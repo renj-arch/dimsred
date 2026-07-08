@@ -596,11 +596,11 @@
       "<div style=\"font-family:'Cormorant Garamond',serif;font-size:2.2em;font-weight:700;background:linear-gradient(135deg,#ede4d7,#c9a04a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2px\">Social Sciences</div>" +
       "<div style='color:#6d5f53;font-size:.82em;letter-spacing:1px;text-transform:uppercase'>History · Polity · Geography · Economy · GK</div>" +
       "<div style='margin:14px auto 0;max-width:400px;padding:10px 16px;background:rgba(201,160,74,.06);border:1px solid rgba(201,160,74,.08);border-radius:100px'>" +
-      "<span style='color:#c9a04a;font-size:.82em'>🏅 " + rank.name + '</span>' +
-      "<span style='color:#6d5f53;margin:0 8px'>·</span>' +
-      "<span style='color:#c9a04a;font-size:.82em'>⭐ ' + state.totalPoints + '</span>' +
-      "<span style='color:#6d5f53;margin:0 8px'>·</span>' +
-      "<span style='color:#d47a3a;font-size:.82em'>🔥 ' + state.streaks.current + 'd</span>" +
+       "<span style='color:#c9a04a;font-size:.82em'>🏅 " + rank.name + '</span>' +
+      "<span style='color:#6d5f53;margin:0 8px'>·</span>" +
+      "<span style='color:#c9a04a;font-size:.82em'>⭐ " + state.totalPoints + '</span>' +
+      "<span style='color:#6d5f53;margin:0 8px'>·</span>" +
+      "<span style='color:#d47a3a;font-size:.82em'>🔥 " + state.streaks.current + "d</span>" +
       "<span style='color:#6d5f53;margin:0 8px'>·</span>" +
       "<span style='color:#6d5f53;font-size:.78em'>📝 " + state.sessions.length + ' sessions</span>' +
       '</div></div>' +
@@ -625,9 +625,6 @@
     if (!_loadedCache[SUBJECT_ORDER[0]]) {
       loadAllQuestions(SUBJECT_ORDER[0], function () {});
     }
-    return html;
-  }
-
     return html;
   }
 
