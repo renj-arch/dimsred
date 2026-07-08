@@ -306,7 +306,7 @@
     if (questions.length === 0) {
       var container = document.getElementById('social-training-container');
       if (container) {
-        container.innerHTML = '<div style="text-align:center;padding:40px;color:#a1a1aa">No questions loaded. Please select a subject first.</div><div style="text-align:center;margin-top:12px"><button onclick="window.backToSocialMenu()" style="padding:12px 24px;border-radius:8px;background:#a78bfa;color:#fff;border:none;font-size:.95em;font-weight:600;cursor:pointer">← Back to Menu</button></div>';
+        container.innerHTML = '<div style="text-align:center;padding:40px;color:#6d5f53">No questions loaded. Please select a subject first.</div><div style="text-align:center;margin-top:12px"><button onclick="window.backToSocialMenu()" style="padding:12px 24px;border-radius:10px;background:linear-gradient(135deg,#c9a04a,#d47a3a);color:#fff;border:none;font-size:.95em;font-weight:600;cursor:pointer">← Back to Menu</button></div>';
       }
       return;
     }
@@ -377,7 +377,7 @@
     if (session.questionIndex >= session.totalQuestions) {
       var container = document.getElementById('social-training-container');
       if (container) {
-        container.innerHTML = '<div style="text-align:center;padding:40px;color:#a1a1aa">Loading more questions...</div>';
+        container.innerHTML = '<div style="text-align:center;padding:40px;color:#6d5f53">Loading more questions...</div>';
       }
       loadAllQuestions(session.subject, function (allQ) {
         var pool = allQ.filter(function (q) { return !_isRecent(q.q); });
@@ -436,23 +436,25 @@
     var overallRank = getRank(state.totalPoints);
 
     var html =
-      "<div style='text-align:center;padding:20px 0'>" +
-      "<div style='font-size:2.5em;margin-bottom:8px'>🏆</div>" +
-      "<h2 style='margin:0 0 4px;color:#fafafa;font-size:1.4em'>Session Complete!</h2>" +
-      "<div style='color:#a1a1aa;font-size:.9em'>" + subjName + ' &middot; ' + session.mode + '</div>' +
+      "<div style='text-align:center;padding:24px 0 16px'>" +
+      "<div style='font-size:2.8em;margin-bottom:4px'>🏆</div>" +
+      "<h2 style=\"font-family:'Cormorant Garamond',serif;margin:0 0 2px;color:#ede4d7;font-size:1.6em;font-weight:700\">Session Complete</h2>" +
+      "<div style='color:#6d5f53;font-size:.85em;letter-spacing:.5px'>" + subjName + ' &middot; ' + session.mode + '</div>' +
+      "</div>" +
+      "<div style='display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:20px 0'>" +
+      "<div style='text-align:center;padding:18px 12px;background:rgba(201,160,74,.04);border:1px solid rgba(201,160,74,.06);border-radius:12px'><div style='font-size:1.6em;font-weight:700;color:#3da88a'>" + session.correctCount + "<span style='color:#6d5f53;font-size:.5em;font-weight:400'>/" + session.totalQuestions + "</span></div><div style='color:#6d5f53;font-size:.72em;text-transform:uppercase;letter-spacing:1px;margin-top:2px'>Correct</div></div>" +
+      "<div style='text-align:center;padding:18px 12px;background:rgba(201,160,74,.04);border:1px solid rgba(201,160,74,.06);border-radius:12px'><div style='font-size:1.6em;font-weight:700;color:" + (pct >= 60 ? '#3da88a' : '#c94a4a') + "'>" + pct + "<span style='color:#6d5f53;font-size:.5em;font-weight:400'>%</span></div><div style='color:#6d5f53;font-size:.72em;text-transform:uppercase;letter-spacing:1px;margin-top:2px'>Accuracy</div></div>" +
+      "<div style='text-align:center;padding:18px 12px;background:rgba(201,160,74,.04);border:1px solid rgba(201,160,74,.06);border-radius:12px'><div style='font-size:1.6em;font-weight:700;color:#c9a04a'>+" + session.pointsEarned + "</div><div style='color:#6d5f53;font-size:.72em;text-transform:uppercase;letter-spacing:1px;margin-top:2px'>Points</div></div>" +
       '</div>' +
-      "<div style='display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:20px 0'>" +
-      "<div style='text-align:center;padding:16px;background:#27272a;border-radius:10px'><div style='font-size:1.5em;font-weight:700;color:#34d399'>" + session.correctCount + '/' + session.totalQuestions + "</div><div style='color:#a1a1aa;font-size:.8em'>Correct</div></div>" +
-      "<div style='text-align:center;padding:16px;background:#27272a;border-radius:10px'><div style='font-size:1.5em;font-weight:700;color:" + (pct >= 60 ? '#34d399' : '#ef4444') + "'>" + pct + "%</div><div style='color:#a1a1aa;font-size:.8em'>Accuracy</div></div>" +
-      "<div style='text-align:center;padding:16px;background:#27272a;border-radius:10px'><div style='font-size:1.5em;font-weight:700;color:#fbbf24'>+" + session.pointsEarned + "</div><div style='color:#a1a1aa;font-size:.8em'>Points</div></div>" +
-      '</div>' +
-      "<div style='text-align:center;margin:12px 0;padding:12px;background:rgba(139,92,246,.1);border-radius:10px'>" +
-      "<span style='font-size:.9em;color:#a78bfa'>Rank: " + overallRank.name + ' (Total: ' + state.totalPoints + " pts)</span>" +
-      '</div>' +
-      "<div style='margin-top:8px;padding:12px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.15);border-radius:10px;font-size:.85em;color:#fbbf24'>🔥 Streak: " + state.streaks.current + ' days (Best: ' + state.streaks.best + ")</div>" +
+      "<div style='text-align:center;margin:16px 0;padding:10px;background:rgba(201,160,74,.04);border:1px solid rgba(201,160,74,.06);border-radius:100px'>" +
+      "<span style='font-size:.82em;color:#c9a04a;font-weight:600'>" + overallRank.name + '</span>' +
+      "<span style='color:#6d5f53;margin:0 8px'>·</span>" +
+      "<span style='font-size:.78em;color:#6d5f53'>" + state.totalPoints + ' total pts</span>' +
+      "</div>" +
+      "<div style='margin-top:8px;padding:10px 14px;background:rgba(212,122,58,.04);border:1px solid rgba(212,122,58,.06);border-radius:10px;font-size:.82em;color:#d47a3a;text-align:center'>🔥 " + state.streaks.current + ' day streak <span style="color:#6d5f53">(best: ' + state.streaks.best + ")</span></div>" +
       "<div style='display:flex;gap:10px;margin-top:20px'>" +
-      "<button id='st-retry-btn' style='flex:1;padding:14px;border-radius:10px;background:#a78bfa;color:#fff;border:none;font-size:.95em;font-weight:600;cursor:pointer'>🔄 Retry</button>" +
-      "<button id='st-close-btn' style='flex:1;padding:14px;border-radius:10px;background:#52525b;color:#fff;border:none;font-size:.95em;font-weight:600;cursor:pointer'>📋 Menu</button>" +
+      "<button id='st-retry-btn' style='flex:1;padding:14px;border-radius:10px;border:none;font-size:.95em;font-weight:600;cursor:pointer;color:#fff'>🔄 Retry</button>" +
+      "<button id='st-close-btn' style='flex:1;padding:14px;border-radius:10px;font-size:.95em;font-weight:600;cursor:pointer'>📋 Menu</button>" +
       '</div>';
 
     container.innerHTML = html;
@@ -475,21 +477,21 @@
     if (!container) {
       container = document.createElement('div');
       container.id = 'social-training-container';
-      container.style.cssText = 'max-width:800px;margin:20px auto;padding:24px;background:rgba(24,24,27,.95);border-radius:16px;border:1px solid rgba(255,255,255,.08)';
+      container.style.cssText = 'max-width:800px;margin:20px auto;padding:24px;background:rgba(26,21,18,.9);border-radius:16px;border:1px solid rgba(200,170,140,.06)';
       var main = document.querySelector('.paper-page, main, .content') || document.body;
       main.appendChild(container);
     }
     container.innerHTML =
       "<div id='st-header' style='display:flex;justify-content:space-between;align-items:center;margin-bottom:20px'>" +
-      "<div><span id='st-mode-badge' style='background:rgba(139,92,246,.2);color:#a78bfa;padding:4px 12px;border-radius:6px;font-size:.85em;font-weight:600'></span>" +
-      "<span id='st-progress' style='margin-left:12px;color:#a1a1aa;font-size:.85em'></span></div>" +
-      "<div style='display:flex;align-items:center;gap:12px'>" +
-      "<span id='st-timer' style='font-size:1.2em;font-weight:700;font-variant-numeric:tabular-nums;color:#fafafa'></span>" +
-      "<span id='st-score' style='color:#fbbf24;font-size:.9em'></span>" +
-      "<button id='st-exit-btn' style='padding:4px 10px;border-radius:6px;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.2);font-size:.75em;cursor:pointer'>✕ Exit</button></div></div>" +
-      "<div id='st-question-area'></div>" +
-      "<div id='st-result-overlay' style='display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center'>" +
-      "<div style='background:#18181b;border-radius:16px;padding:32px;max-width:500px;width:90%;border:1px solid rgba(255,255,255,.08)'></div></div>";
+      "<div style='display:flex;align-items:center;gap:10px'><span id='st-mode-badge' style='padding:4px 10px;border-radius:6px;font-size:.72em;font-weight:600;color:#6d5f53;background:rgba(201,160,74,.06);border:1px solid rgba(201,160,74,.08)'></span>" +
+      "<span id='st-progress' style='color:#6d5f53;font-size:.8em'></span></div>" +
+      "<div style='display:flex;align-items:center;gap:10px'>" +
+      "<span id='st-timer' style=\"font-family:'JetBrains Mono',monospace;font-size:1.1em;font-weight:700;font-variant-numeric:tabular-nums;color:#ede4d7\"></span>" +
+      "<span id='st-score' style='color:#c9a04a;font-size:.82em'></span>" +
+      "<button id='st-exit-btn' style='padding:2px 8px;border-radius:6px;background:rgba(168,28,28,.08);color:#8a3a3a;border:1px solid rgba(168,28,28,.1);font-size:.65em;cursor:pointer'>✕</button></div></div>" +
+      "<div id='st-question-area' class='st-card' style='padding:0;background:transparent;border:none'></div>" +
+      "<div id='st-result-overlay' style='display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);z-index:1000;align-items:center;justify-content:center'>" +
+      "<div style='padding:32px;max-width:500px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.4)'></div></div>";
     document.getElementById('st-result-overlay').style.display = 'none';
     document.getElementById('st-exit-btn').addEventListener('click', function () {
       if (confirm('End current session?')) {
@@ -508,25 +510,24 @@
 
     var subj = SOCIAL_SUBJECTS[session.subject];
     var subjectLabel = subj ? subj.icon + ' ' + subj.name : 'Social Sciences';
-    var modeLabel = session.mode.charAt(0).toUpperCase() + session.mode.slice(1);
-    document.getElementById('st-mode-badge').textContent = modeLabel + ' | ' + subjectLabel;
+    document.getElementById('st-mode-badge').textContent = subjectLabel;
     document.getElementById('st-progress').textContent = (session.questionIndex + 1) + ' / ' + session.totalQuestions;
     document.getElementById('st-score').textContent = '⭐ ' + session.pointsEarned + ' pts';
 
     var html = "<div style='margin-bottom:16px'>";
-    if (q.hint) html += "<div style='font-size:.8em;color:#a78bfa;margin-bottom:8px'>💡 " + q.hint + '</div>';
-    html += "<div style='font-size:1.05em;line-height:1.7;color:#fafafa;font-weight:500'>" + q.q + '</div></div>';
+    if (q.hint) html += "<div style='font-size:.8em;color:#b8a89a;margin-bottom:8px'>💡 " + q.hint + '</div>';
+    html += "<div style='font-size:1.05em;line-height:1.7;color:#ede4d7;font-weight:500'>" + q.q + '</div></div>';
 
     var opts = q.options || [];
     html += "<div id='st-options' style='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px'>";
     for (var i = 0; i < opts.length && i < 4; i++) {
-      html += "<button class='st-opt' data-value='" + opts[i].replace(/'/g, "&apos;") + "' style='padding:14px 16px;border-radius:10px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;font-size:.95em;cursor:pointer;text-align:left;transition:all .15s'>" +
+      html += "<button class='st-opt' data-value='" + opts[i].replace(/'/g, "&apos;") + "' style='padding:14px 16px;border-radius:10px;background:rgba(40,34,30,.5);border:1px solid rgba(200,170,140,.06);color:#ede4d7;font-size:.95em;cursor:pointer;text-align:left;transition:all .2s'>" +
         String.fromCharCode(65 + i) + '. ' + opts[i] + '</button>';
     }
     html += '</div>';
 
     if (q.solution) {
-      html += "<div id='st-solution-box' style='display:none;margin-top:16px;padding:16px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15);border-radius:10px;color:#34d399;font-size:.9em'>" + q.solution + '</div>';
+      html += "<div id='st-solution-box' style='display:none;margin-top:16px;padding:14px;background:rgba(42,125,100,.04);border:1px solid rgba(42,125,100,.1);border-radius:10px;color:#3da88a;font-size:.85em;line-height:1.6'>📖 " + q.solution + '</div>';
     }
 
     area.classList.remove('answered');
@@ -539,8 +540,8 @@
         area.classList.add('answered');
         submitAnswer(btn.getAttribute('data-value'));
       });
-      btn.addEventListener('mouseenter', function () { this.style.borderColor = 'rgba(139,92,246,.4)'; this.style.background = '#2a2a2e'; });
-      btn.addEventListener('mouseleave', function () { if (!this.classList.contains('selected')) { this.style.borderColor = 'rgba(255,255,255,.06)'; this.style.background = '#27272a'; } });
+      btn.addEventListener('mouseenter', function () { this.style.borderColor = 'rgba(201,160,74,.25)'; this.style.background = 'rgba(50,44,38,.6)'; });
+      btn.addEventListener('mouseleave', function () { if (!this.classList.contains('selected')) { this.style.borderColor = 'rgba(200,170,140,.06)'; this.style.background = 'rgba(40,34,30,.5)'; } });
     });
   }
 
@@ -552,17 +553,17 @@
     var ansStr = typeof q.a === 'number' ? q.a + '' : q.a;
     content.innerHTML =
       "<div style='text-align:center;margin-bottom:20px'>" +
-      "<div style='font-size:3em;margin-bottom:8px'>" + (correct ? '✅' : '❌') + '</div>' +
-      "<div style='font-size:1.2em;font-weight:700;color:" + (correct ? '#34d399' : '#ef4444') + "'>" + (correct ? 'Correct!' : 'Wrong!') + '</div>' +
-      "<div style='color:#a1a1aa;margin-top:8px'>" +
+      "<div style='font-size:3em;margin-bottom:6px'>" + (correct ? '✅' : '❌') + '</div>' +
+      "<div style='font-size:1.15em;font-weight:700;color:" + (correct ? '#3da88a' : '#c94a4a') + "'>" + (correct ? 'Correct!' : 'Wrong!') + '</div>' +
+      "<div style='color:#6d5f53;margin-top:6px;font-size:.9em'>" +
       (correct ? '+' + (session.hardMode ? 20 : 10) + ' points' : 'Answer: ' + ansStr) +
       '</div></div>';
 
     if (q.solution) {
-      content.innerHTML += "<div style='padding:14px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15);border-radius:10px;color:#34d399;font-size:.85em;margin-bottom:16px'>📖 " + q.solution + '</div>';
+      content.innerHTML += "<div style='padding:14px;background:rgba(42,125,100,.04);border:1px solid rgba(42,125,100,.1);border-radius:10px;color:#3da88a;font-size:.82em;line-height:1.6;margin-bottom:16px;text-align:left'>📖 " + q.solution + '</div>';
     }
 
-    content.innerHTML += "<button id='st-next-btn' style='width:100%;padding:14px;border-radius:10px;background:#a78bfa;color:#fff;border:none;font-size:1em;font-weight:600;cursor:pointer'>Next Question →</button>";
+    content.innerHTML += "<button id='st-next-btn' style='width:100%;padding:14px;border-radius:10px;border:none;font-size:1em;font-weight:700;cursor:pointer;letter-spacing:.3px'>Next →</button>";
 
     overlay.style.display = 'flex';
     document.getElementById('st-next-btn').addEventListener('click', function () {
@@ -591,51 +592,41 @@
     var state = loadState();
     var rank = getRank(state.totalPoints);
     var html =
-      "<div style='text-align:center;padding:20px 0'>" +
-      "<div style='font-size:2em;margin-bottom:8px'>🌍 Social Sciences Arena</div>" +
-      "<div style='color:#a1a1aa;font-size:.9em'>History • Polity • Geography • Economy • GK & more</div>" +
-      "<div style='margin-top:12px;padding:12px;background:rgba(139,92,246,.1);border-radius:10px'>" +
-      "<span style='color:#a78bfa'>🏅 " + rank.name + '</span> · ' +
-      "<span style='color:#fbbf24'>⭐ " + state.totalPoints + ' points</span> · ' +
-      "<span style='color:#34d399'>🔥 " + state.streaks.current + ' day streak</span>' +
+      "<div style='text-align:center;padding:24px 0 16px;position:relative'>" +
+      "<div style=\"font-family:'Cormorant Garamond',serif;font-size:2.2em;font-weight:700;background:linear-gradient(135deg,#ede4d7,#c9a04a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2px\">Social Sciences</div>" +
+      "<div style='color:#6d5f53;font-size:.82em;letter-spacing:1px;text-transform:uppercase'>History · Polity · Geography · Economy · GK</div>" +
+      "<div style='margin:14px auto 0;max-width:400px;padding:10px 16px;background:rgba(201,160,74,.06);border:1px solid rgba(201,160,74,.08);border-radius:100px'>" +
+      "<span style='color:#c9a04a;font-size:.82em'>🏅 " + rank.name + '</span>' +
+      "<span style='color:#6d5f53;margin:0 8px'>·</span>' +
+      "<span style='color:#c9a04a;font-size:.82em'>⭐ ' + state.totalPoints + '</span>' +
+      "<span style='color:#6d5f53;margin:0 8px'>·</span>' +
+      "<span style='color:#d47a3a;font-size:.82em'>🔥 ' + state.streaks.current + 'd</span>" +
+      "<span style='color:#6d5f53;margin:0 8px'>·</span>" +
+      "<span style='color:#6d5f53;font-size:.78em'>📝 " + state.sessions.length + ' sessions</span>' +
       '</div></div>' +
-      "<div style='margin:8px 0 12px;padding:12px;background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.1);border-radius:10px;font-size:.8em;color:#a1a1aa;text-align:center'>📚 Select a subject below, then choose a quiz mode. Questions load from the archive and reshuffle infinitely.</div>" +
-      "<div style='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0'>" +
-      "<button class='st-mode-btn' data-mode='quicksolve' style='padding:16px;border-radius:12px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer;text-align:left'>" +
-      "<div style='font-weight:600'>⚡ Quick Solve</div><div style='font-size:.8em;color:#a1a1aa;margin-top:4px'>5-8 seconds per question</div></button>" +
-      "<button class='st-mode-btn' data-mode='instinct' style='padding:16px;border-radius:12px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer;text-align:left'>" +
-      "<div style='font-weight:600'>🧠 Instinct</div><div style='font-size:.8em;color:#a1a1aa;margin-top:4px'>5-15 seconds, build speed</div></button>" +
-      "<button class='st-mode-btn' data-mode='fivesec' style='padding:16px;border-radius:12px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer;text-align:left'>" +
-      "<div style='font-weight:600'>⏱ Five Sec</div><div style='font-size:.8em;color:#a1a1aa;margin-top:4px'>Exactly 5 seconds per question</div></button>" +
-      "<button class='st-mode-btn' data-mode='examrush' style='padding:16px;border-radius:12px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer;text-align:left'>" +
-      "<div style='font-weight:600'>📝 Exam Rush</div><div style='font-size:.8em;color:#a1a1aa;margin-top:4px'>Timed set of questions</div></button>" +
-      "<button class='st-mode-btn' data-mode='weakspot' style='padding:16px;border-radius:12px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer;text-align:left'>" +
-      "<div style='font-weight:600'>🎯 Weak Spot</div><div style='font-size:.8em;color:#a1a1aa;margin-top:4px'>Focus on past mistakes</div></button>" +
-      '<button id="st-custom-btn" style="padding:16px;border-radius:12px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer;text-align:left">' +
-      "<div style='font-weight:600'>🎨 Custom</div><div style='font-size:.8em;color:#a1a1aa;margin-top:4px'>Pick subject &amp; difficulty</div></button>" +
-      '</div>' +
-      "<div style='display:flex;gap:12px;margin:12px 0;padding:12px;background:#27272a;border-radius:10px;align-items:center'>" +
-      "<label style='font-size:.9em;color:#a1a1aa'>🔥 Hard Mode</label>" +
-      "<input type='checkbox' id='st-hard-toggle' " + (activeHardMode ? 'checked' : '') + " style='width:18px;height:18px;accent-color:#ef4444'>" +
-      "<span style='font-size:.8em;color:#52525b'>45% less time, 2x points</span>" +
-      '</div>' +
-      "<div style='margin:12px 0 8px'><div style='font-size:.85em;font-weight:600;color:#a1a1aa;margin-bottom:8px'>📖 Select Subject</div>" +
-      "<div id='st-subject-grid' style='display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px'>";
-
+      "<div style='margin:4px 0 16px;padding:10px 16px;background:rgba(42,125,100,.04);border:1px solid rgba(42,125,100,.06);border-radius:10px;font-size:.78em;color:#3da88a;text-align:center'>🔄 Click any subject to start. Questions reshuffle infinitely. Mistakes get retried automatically.</div>" +
+      "<div id='st-subject-grid' style='display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0'>";
     SUBJECT_ORDER.forEach(function (key) {
       var s = SOCIAL_SUBJECTS[key];
-      html += "<button class='st-subject-btn' data-subject='" + key + "' style='padding:12px;border-radius:8px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer;font-size:.85em'>" + s.icon + ' ' + s.name + '</button>';
+      html += "<button class='st-subject-btn' data-subject='" + key + "' style='padding:16px 12px;border-radius:12px;background:rgba(40,34,30,.5);border:1px solid rgba(200,170,140,.06);color:#ede4d7;cursor:pointer;font-size:.9em;text-align:center;transition:all .2s'>" +
+        "<div style='font-size:1.6em;margin-bottom:4px'>" + s.icon + "</div>" +
+        "<div style='font-weight:600'>" + s.name + "</div>" +
+        "<div style='font-size:.7em;color:#6d5f53;margin-top:4px'>" + s.files.length + " question banks</div></button>";
     });
-
-    html += '</div></div>' +
-      "<div style='text-align:center;margin-top:12px'>" +
-      "<span style='font-size:.8em;color:#52525b'>Sessions completed: " + state.sessions.length + ' · Mistakes to review: ' + loadMistakes().length + '</span>' +
+    html += '</div>';
+    if (loadMistakes().length > 0) {
+      html +=
+        "<div style='margin:16px 0;padding:14px 16px;background:rgba(212,122,58,.04);border:1px solid rgba(212,122,58,.06);border-radius:12px;text-align:center'>" +
+        "<button id='st-review-mistakes' style='background:none;border:none;color:#d47a3a;font-size:.85em;font-weight:600;cursor:pointer'>🎯 Review " + loadMistakes().length + " mistakes</button></div>";
+    }
+    html += "<div style='text-align:center;margin-top:8px'>" +
+      "<span style='font-size:.75em;color:#6d5f53'>Streak: " + state.streaks.current + 'd · Best: ' + state.streaks.best + 'd</span>' +
       '</div>';
-
-    // Preload the first subject's questions
     if (!_loadedCache[SUBJECT_ORDER[0]]) {
       loadAllQuestions(SUBJECT_ORDER[0], function () {});
     }
+    return html;
+  }
 
     return html;
   }
@@ -687,112 +678,39 @@
 
   // ==================== EVENT BINDING ====================
 
-  function bindEvents() {
-    var pendingSubject = null;
-    var pendingMode = null;
-
-    document.addEventListener('click', function (e) {
-      var modeBtn = e.target.closest('.st-mode-btn');
-      if (modeBtn) {
-        var mode = modeBtn.getAttribute('data-mode');
-        if (mode === 'weakspot') {
-          startTraining(mode, { count: 10 });
-          return;
-        }
-        var selectedSubj = document.querySelector('.st-subject-btn.selected');
-        if (selectedSubj) {
-          var subjKey = selectedSubj.getAttribute('data-subject');
-          if (_loadedCache[subjKey]) {
-            startTraining(mode, { count: mode === 'examrush' ? 15 : 10, subject: subjKey });
-          } else {
-            var container = document.getElementById('social-training-container');
-            if (container) container.innerHTML = '<div class="loading" style="text-align:center;padding:40px;color:#a1a1aa">Loading questions...</div>';
-            pendingMode = mode;
-            loadAllQuestions(subjKey, function () {
-              if (pendingMode) {
-                startTraining(pendingMode, { count: pendingMode === 'examrush' ? 15 : 10, subject: subjKey });
-                pendingMode = null;
-              }
-            });
-          }
-        } else {
-          var firstSubj = document.querySelector('.st-subject-btn');
-          if (firstSubj) firstSubj.click();
-        }
-        return;
-      }
-
-      var subBtn = e.target.closest('.st-subject-btn');
-      if (subBtn) {
-        document.querySelectorAll('.st-subject-btn').forEach(function (b) { b.classList.remove('selected'); b.style.borderColor = 'rgba(255,255,255,.06)'; b.style.background = '#27272a'; });
-        subBtn.classList.add('selected');
-        subBtn.style.borderColor = 'rgba(139,92,246,.5)';
-        subBtn.style.background = 'rgba(139,92,246,.12)';
-
-        var subjKey = subBtn.getAttribute('data-subject');
-        if (!_loadedCache[subjKey]) {
-          loadAllQuestions(subjKey, function () {});
-        }
-        return;
-      }
-
-      if (e.target.id === 'st-custom-btn') {
-        showCustomDialog();
-      }
-    });
-
-    document.addEventListener('change', function (e) {
-      if (e.target.id === 'st-hard-toggle') {
-        activeHardMode = e.target.checked;
-      }
-    });
+  function startSession(subjKey) {
+    if (_loadedCache[subjKey]) {
+      startTraining('instinct', { count: 10, subject: subjKey });
+    } else {
+      var container = document.getElementById('social-training-container');
+      if (container) container.innerHTML = '<div class="loading" style="text-align:center;padding:40px;color:#6d5f53">Loading questions...</div>';
+      loadAllQuestions(subjKey, function () {
+        startTraining('instinct', { count: 10, subject: subjKey });
+      });
+    }
   }
 
-  function showCustomDialog() {
-    var overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:center;justify-content:center';
-    var html =
-      "<div style='background:#18181b;border-radius:16px;padding:28px;max-width:400px;width:90%;border:1px solid rgba(255,255,255,.08)'>" +
-      "<h3 style='margin:0 0 16px;color:#fafafa;font-size:1.1em'>🎨 Custom Session</h3>" +
-      "<label style='color:#a1a1aa;font-size:.85em;display:block;margin-bottom:6px'>Subject</label>" +
-      "<select id='st-custom-subject' style='width:100%;padding:10px;border-radius:8px;background:#27272a;color:#fafafa;border:1px solid rgba(255,255,255,.1);margin-bottom:12px;font-size:.9em'>";
+  function bindEvents() {
+    document.addEventListener('click', function (e) {
+      var subBtn = e.target.closest('.st-subject-btn');
+      if (subBtn) {
+        var subjKey = subBtn.getAttribute('data-subject');
+        document.querySelectorAll('.st-subject-btn').forEach(function (b) {
+          b.style.borderColor = 'rgba(200,170,140,.06)';
+          b.style.background = 'rgba(40,34,30,.5)';
+          b.style.transform = '';
+        });
+        subBtn.style.borderColor = 'rgba(201,160,74,.4)';
+        subBtn.style.background = 'rgba(201,160,74,.08)';
+        subBtn.style.transform = 'scale(0.97)';
+        startSession(subjKey);
+        return;
+      }
 
-    SUBJECT_ORDER.forEach(function (key) {
-      var s = SOCIAL_SUBJECTS[key];
-      html += "<option value='" + key + "'>" + s.icon + ' ' + s.name + '</option>';
-    });
-
-    html += "</select>" +
-      "<label style='color:#a1a1aa;font-size:.85em;display:block;margin-bottom:6px'>Mode</label>" +
-      "<select id='st-custom-mode' style='width:100%;padding:10px;border-radius:8px;background:#27272a;color:#fafafa;border:1px solid rgba(255,255,255,.1);margin-bottom:12px;font-size:.9em'>" +
-      "<option value='instinct'>🧠 Instinct</option><option value='fivesec'>⏱ Five Sec</option><option value='examrush'>📝 Exam Rush</option><option value='quicksolve'>⚡ Quick Solve</option>" +
-      "</select>" +
-      "<label style='color:#a1a1aa;font-size:.85em;display:block;margin-bottom:6px'>Questions</label>" +
-      "<select id='st-custom-count' style='width:100%;padding:10px;border-radius:8px;background:#27272a;color:#fafafa;border:1px solid rgba(255,255,255,.1);margin-bottom:20px;font-size:.9em'>" +
-      "<option value='5'>5</option><option value='10' selected>10</option><option value='15'>15</option><option value='20'>20</option><option value='30'>30</option>" +
-      "</select>" +
-      "<div style='display:flex;gap:10px'>" +
-      "<button id='st-custom-start' style='flex:1;padding:12px;border-radius:8px;background:#a78bfa;color:#fff;border:none;font-size:.95em;font-weight:600;cursor:pointer'>Start</button>" +
-      "<button id='st-custom-cancel' style='flex:1;padding:12px;border-radius:8px;background:#52525b;color:#fff;border:none;font-size:.95em;cursor:pointer'>Cancel</button>" +
-      '</div></div>';
-
-    overlay.innerHTML = html;
-    document.body.appendChild(overlay);
-
-    overlay.querySelector('#st-custom-start').addEventListener('click', function () {
-      var subject = overlay.querySelector('#st-custom-subject').value;
-      var mode = overlay.querySelector('#st-custom-mode').value;
-      var count = parseInt(overlay.querySelector('#st-custom-count').value);
-      overlay.remove();
-      if (_loadedCache[subject]) {
-        startTraining(mode, { count: count, subject: subject });
-      } else {
-        var container = document.getElementById('social-training-container');
-        if (container) container.innerHTML = '<div class="loading" style="text-align:center;padding:40px;color:#a1a1aa">Loading questions...</div>';
-        loadAllQuestions(subject, function () { startTraining(mode, { count: count, subject: subject }); });
+      if (e.target.id === 'st-review-mistakes') {
+        startTraining('weakspot', { count: 10 });
       }
     });
-    overlay.querySelector('#st-custom-cancel').addEventListener('click', function () { overlay.remove(); });
   }
 
   // ==================== INITIALIZATION ====================
