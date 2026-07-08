@@ -5669,11 +5669,25 @@ function matchFigure(text){
 // ============================================================
 let _tlState=null; // {steps,item,cat,idx,active,lines}
 
+function isMobile(){return /Mobi|Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent)}
+function readingTime(text){const w=text.split(/\s+/).length;return Math.max(1500,Math.min(8000,w*280))}
+
 function speakText(text,cb,fig,catColor,gen){
   if(fig)showPortrait(fig,catColor);
   const sub=document.getElementById('subtitle');
   if(text){sub.textContent=text;sub.classList.add('show')}
-  if(!window.speechSynthesis||!text){if(cb)setTimeout(cb,800);return}
+  if(!text){if(cb)setTimeout(cb,800);return}
+  if(isMobile()){
+    const ms=readingTime(text);
+    const lecTick=_lecState&&_lecState._tick, tlGen=_tlState&&_tlState._gen;
+    setTimeout(()=>{
+      if((_lecState&&_lecState._tick!==lecTick)||(_tlState&&_tlState._gen!==tlGen))return;
+      hidePortrait();sub.classList.remove('show');
+      if(cb)setTimeout(cb,200);
+    },ms);
+    return;
+  }
+  if(!window.speechSynthesis){if(cb)setTimeout(cb,800);return}
   speechSynthesis.cancel();
   // Strip commas from numbers so TTS reads "12000" as "twelve thousand" not "twelve zero zero zero"
   const speechText=text.replace(/(\d),(\d)/g,'$1$2');
@@ -5893,7 +5907,7 @@ function cleanTLArcs(){
 
 function stopTimeline(){
   if(!_tlState)return;
-  speechSynthesis.cancel();
+  if(window.speechSynthesis)speechSynthesis.cancel();
   if(_tlState._advanceTimer){clearTimeout(_tlState._advanceTimer);_tlState._advanceTimer=null;}
   _tlState.active=false;
   cleanTLArcs();
@@ -5905,7 +5919,7 @@ function stopTimeline(){
 }
 
 function speechWarmup(){
-  if(!window.speechSynthesis)return;
+  if(!window.speechSynthesis||isMobile())return;
   speechSynthesis.cancel();
   const w=new SpeechSynthesisUtterance(' ');
   w.volume=0.01;w.rate=1;w.lang='en-US';
