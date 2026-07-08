@@ -1667,12 +1667,23 @@
       "<div id='st-header' style='display:flex;justify-content:space-between;align-items:center;margin-bottom:20px'>" +
       "<div><span id='st-mode-badge' style='background:rgba(139,92,246,.2);color:#a78bfa;padding:4px 12px;border-radius:6px;font-size:.85em;font-weight:600'></span>" +
       "<span id='st-progress' style='margin-left:12px;color:#a1a1aa;font-size:.85em'></span></div>" +
-      "<div><span id='st-timer' style='font-size:1.2em;font-weight:700;font-variant-numeric:tabular-nums;color:#fafafa'></span>" +
-      "<span id='st-score' style='margin-left:16px;color:#fbbf24;font-size:.9em'></span></div></div>" +
+      "<div style='display:flex;align-items:center;gap:12px'>" +
+      "<span id='st-timer' style='font-size:1.2em;font-weight:700;font-variant-numeric:tabular-nums;color:#fafafa'></span>" +
+      "<span id='st-score' style='color:#fbbf24;font-size:.9em'></span>" +
+      "<button id='st-exit-btn' style='padding:4px 10px;border-radius:6px;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.2);font-size:.75em;cursor:pointer'>✕ Exit</button></div></div>" +
       "<div id='st-question-area'></div>" +
       "<div id='st-result-overlay' style='display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:1000;display:none;align-items:center;justify-content:center'>" +
       "<div style='background:#18181b;border-radius:16px;padding:32px;max-width:500px;width:90%;border:1px solid rgba(255,255,255,.08)'></div></div>";
     document.getElementById("st-result-overlay").style.display = "none";
+    document.getElementById("st-exit-btn").addEventListener("click", function () {
+      if (confirm("End current session?")) {
+        clearTimer();
+        session = null;
+        currentQuestion = null;
+        clearSessionCache();
+        backToMenu();
+      }
+    });
   }
 
   function renderQuestion(q) {
@@ -1754,7 +1765,7 @@
       (correct ? "+" + (session.hardMode ? 20 : 10) + " points" : "Answer: " + ansStr) +
       "</div></div>";
 
-    if (!correct && q.solution) {
+    if (q.solution) {
       content.innerHTML += "<div style='padding:14px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15);border-radius:10px;color:#34d399;font-size:.85em;margin-bottom:16px'>📖 " + q.solution + "</div>";
     }
 
