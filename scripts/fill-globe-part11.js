@@ -201,11 +201,13 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
   for (const e of entries) {
     if (e._quality === 'low') continue;
     if (!e.la || !e.ln || !e.n) continue;
-    toInsert.push({
+    const entry = {
       n: e.n, la: e.la, ln: e.ln,
       sub: e.sub || '', desc: e.desc || '', fact: e.fact || '',
       tag: e.tag || ''
-    });
+    };
+    if (e.pts && Array.isArray(e.pts) && e.pts.length) entry.pts = e.pts;
+    toInsert.push(entry);
   }
 
   if (!toInsert.length) {
@@ -242,7 +244,11 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
   for (const e of toInsert) {
     if (existingNames.has(normalize(e.n))) continue;
     const t = e.tag ? e.tag.replace(/'/g, "\\'") : '';
-    insertStr += `  {n:'${e.n.replace(/'/g, "\\'")}',la:${e.la},ln:${e.ln},sub:'${e.sub.replace(/'/g, "\\'")}',desc:'${e.desc.replace(/'/g, "\\'")}',fact:'${e.fact.replace(/'/g, "\\'")}',tag:'${t}'},\n`;
+    let ptsStr = '';
+    if (e.pts && Array.isArray(e.pts) && e.pts.length) {
+      ptsStr = ',pts:[' + e.pts.map(p => `{la:${p.la},ln:${p.ln}}`).join(',') + ']';
+    }
+    insertStr += `  {n:'${e.n.replace(/'/g, "\\'")}',la:${e.la},ln:${e.ln},sub:'${e.sub.replace(/'/g, "\\'")}',desc:'${e.desc.replace(/'/g, "\\'")}',fact:'${e.fact.replace(/'/g, "\\'")}'${ptsStr},tag:'${t}'},\n`;
     added++;
   }
 

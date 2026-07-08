@@ -30,6 +30,12 @@ jobs:
       - name: Generate static data
         run: node scripts/create-static-data.js
 
+      - name: Rebuild river pts lookup
+        run: node scripts/extract-river-lookup.js
+
+      - name: Enrich river entries with flow paths
+        run: node scripts/enrich-river-pts.js
+
       - name: Fill categories — Part 11
         run: node scripts/fill-globe-part11.js
 
