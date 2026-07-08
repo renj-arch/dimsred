@@ -5641,19 +5641,29 @@
       main.appendChild(container);
     }
     container.innerHTML =
-      "<div id='st-header' style='display:flex;justify-content:space-between;align-items:center;margin-bottom:20px'>" +
-      "<div><span id='st-mode-badge' style='background:rgba(139,92,246,.2);color:#a78bfa;padding:4px 12px;border-radius:6px;font-size:.85em;font-weight:600'></span>" +
-      "<span id='st-progress' style='margin-left:12px;color:#a1a1aa;font-size:.85em'></span></div>" +
-      "<div style='display:flex;align-items:center;gap:12px'>" +
-      "<span id='st-timer' style='font-size:1.2em;font-weight:700;font-variant-numeric:tabular-nums;color:#fafafa'></span>" +
-      "<span id='st-score' style='color:#fbbf24;font-size:.9em'></span>" +
-      "<button id='st-exit-btn' style='padding:4px 10px;border-radius:6px;background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.2);font-size:.75em;cursor:pointer'>✕ Exit</button></div></div>" +
-      "<div id='st-question-area'></div>" +
-      "<div id='st-result-overlay' style='display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:1000;display:none;align-items:center;justify-content:center'>" +
-      "<div style='background:#18181b;border-radius:16px;padding:32px;max-width:500px;width:90%;border:1px solid rgba(255,255,255,.08)'></div></div>";
+      "<div id='st-header' style='display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding:12px 16px;background:linear-gradient(135deg,rgba(167,139,250,.08),rgba(52,211,153,.04));border:1px solid rgba(255,255,255,.06);border-radius:14px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)'>" +
+      "<div style='display:flex;align-items:center;gap:10px'><button id='st-back-btn' style='padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.06);color:#a1a1aa;border:1px solid rgba(255,255,255,.08);font-size:.78em;cursor:pointer;transition:all .2s' onmouseenter='this.style.background=\"rgba(255,255,255,.1)\"' onmouseleave='this.style.background=\"rgba(255,255,255,.06)\"'>← Back</button>" +
+      "<span id='st-mode-badge' style='background:linear-gradient(135deg,rgba(167,139,250,.25),rgba(52,211,153,.1));color:#a78bfa;padding:5px 14px;border-radius:100px;font-size:.8em;font-weight:700'></span>" +
+      "<span id='st-progress' style='margin-left:4px;color:#a1a1aa;font-size:.82em;font-weight:500'></span></div>" +
+      "<div style='display:flex;align-items:center;gap:8px'>" +
+      "<div id='st-timer-wrap' style='display:flex;align-items:center;gap:4px;padding:4px 10px;background:rgba(255,255,255,.04);border-radius:8px'><span style='font-size:.7em'>⏱</span><span id='st-timer' style='font-size:1em;font-weight:700;font-variant-numeric:tabular-nums;color:#fafafa;min-width:36px;text-align:center'></span></div>" +
+      "<span id='st-score' style='color:#fbbf24;font-size:.82em;font-weight:600;padding:4px 10px;background:rgba(251,191,36,.08);border-radius:8px'></span>" +
+      "<button id='st-exit-btn' style='padding:6px 12px;border-radius:8px;background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.15);font-size:.75em;cursor:pointer;font-weight:600;transition:all .2s' onmouseenter='this.style.background=\"rgba(239,68,68,.25)\"' onmouseleave='this.style.background=\"rgba(239,68,68,.12)\"'>✕</button></div></div>" +
+      "<div id='st-question-area' style='animation:fadeIn .35s ease'></div>" +
+      "<div id='st-result-overlay' style='display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);z-index:1000;display:none;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);animation:fadeIn .25s ease'>" +
+      "<div style='background:linear-gradient(135deg,#1c1c21,#18181b);border-radius:20px;padding:32px;max-width:500px;width:90%;border:1px solid rgba(255,255,255,.08);box-shadow:0 20px 60px rgba(0,0,0,.5)'></div></div>";
     document.getElementById("st-result-overlay").style.display = "none";
     document.getElementById("st-exit-btn").addEventListener("click", function () {
       if (confirm("End current session?")) {
+        clearTimer();
+        session = null;
+        currentQuestion = null;
+        clearSessionCache();
+        backToMenu();
+      }
+    });
+    document.getElementById("st-back-btn").addEventListener("click", function () {
+      if (confirm("Exit to menu? Progress will be saved.")) {
         clearTimer();
         session = null;
         currentQuestion = null;
@@ -5675,9 +5685,9 @@
     document.getElementById("st-progress").textContent = (session.questionIndex + 1) + " / " + session.totalQuestions;
     document.getElementById("st-score").textContent = "⭐ " + session.pointsEarned + " pts";
 
-    var html = "<div style='margin-bottom:16px'>";
-    if (q.hint) html += "<div style='font-size:.8em;color:#a78bfa;margin-bottom:8px'>💡 " + q.hint + "</div>";
-    html += "<div style='font-size:1.15em;line-height:1.6;color:#fafafa;font-weight:500'>" + q.q + "</div></div>";
+    var html = "<div style='background:linear-gradient(135deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:24px 24px 20px;margin-bottom:16px'>";
+    if (q.hint) html += "<div style='font-size:.8em;color:#a78bfa;margin-bottom:10px;padding:8px 12px;background:rgba(167,139,250,.08);border-radius:8px;border-left:3px solid #a78bfa'>💡 " + q.hint + "</div>";
+    html += "<div style='font-size:clamp(1rem,2.2vw,1.2rem);line-height:1.7;color:#fafafa;font-weight:500;font-family:\"Georgia\",\"Times New Roman\",serif;letter-spacing:.01em'>" + q.q + "</div></div>";
 
     var opts = q.options;
     if (!opts || opts.length < 2) {
@@ -5701,13 +5711,16 @@
     if (!opts) opts = [ans || "1", "2", "3", "4"];
     html += "<div id='st-options' style='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px'>";
     for (var i = 0; i < opts.length && i < 4; i++) {
-      html += "<button class='st-opt' data-value='" + opts[i].replace(/'/g, "&apos;") + "' style='padding:14px 16px;border-radius:10px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;font-size:.95em;cursor:pointer;text-align:left;transition:all .15s'>" +
-        String.fromCharCode(65 + i) + ". " + opts[i] + "</button>";
+      html += "<button class='st-opt' data-value='" + opts[i].replace(/'/g, "&apos;") + "' style='padding:16px 18px;border-radius:12px;background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.07);color:#fafafa;font-size:.9em;cursor:pointer;text-align:left;transition:all .2s;font-weight:500;position:relative;overflow:hidden' " +
+        "onmouseenter='this.style.borderColor=\"rgba(167,139,250,.5)\";this.style.background=\"linear-gradient(135deg,rgba(167,139,250,.12),rgba(52,211,153,.06))\";this.style.transform=\"translateY(-2px)\";this.style.boxShadow=\"0 4px 20px rgba(167,139,250,.15)\"' " +
+        "onmouseleave='if(!this.classList.contains(\"selected\")){this.style.borderColor=\"rgba(255,255,255,.07)\";this.style.background=\"linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.01))\";this.style.transform=\"\";this.style.boxShadow=\"\"}'>" +
+        "<span style='display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:rgba(167,139,250,.15);color:#a78bfa;font-size:.75em;font-weight:700;margin-right:10px;flex-shrink:0'>" + String.fromCharCode(65 + i) + "</span>" +
+        "<span>" + opts[i] + "</span></button>";
     }
     html += "</div>";
 
     if (q.solution) {
-      html += "<div id='st-solution-box' style='display:none;margin-top:16px;padding:16px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15);border-radius:10px;color:#34d399;font-size:.9em'>" + q.solution + "</div>";
+      html += "<div id='st-solution-box' style='display:none;margin-top:16px;padding:16px 18px;background:linear-gradient(135deg,rgba(52,211,153,.08),rgba(167,139,250,.04));border:1px solid rgba(52,211,153,.15);border-radius:12px;color:#34d399;font-size:.85em;line-height:1.6'>📖 " + q.solution + "</div>";
     }
 
     console.log("RENDER Q", session.questionIndex, "opts count:", opts ? opts.length : 0, "answered:", area.classList.contains("answered"));
@@ -5721,10 +5734,18 @@
         console.log("CLICK", btn.getAttribute("data-value"), "answered?", area.classList.contains("answered"));
         if (area.classList.contains("answered")) return;
         area.classList.add("answered");
-        submitAnswer(btn.getAttribute("data-value"));
+        var val = btn.getAttribute("data-value");
+        var ansStr = typeof currentQuestion.a === "number" ? currentQuestion.a + "" : currentQuestion.a;
+        var isCorrect = val === ansStr || parseFloat(val) === parseFloat(currentQuestion.a);
+        btn.classList.add(isCorrect ? "correct" : "wrong");
+        if (!isCorrect) {
+          area.querySelectorAll(".st-opt").forEach(function(ob) {
+            var ov = ob.getAttribute("data-value");
+            if (ov === ansStr || parseFloat(ov) === parseFloat(currentQuestion.a)) ob.classList.add("correct");
+          });
+        }
+        submitAnswer(val);
       });
-      btn.addEventListener("mouseenter", function () { this.style.borderColor = "rgba(139,92,246,.4)"; this.style.background = "#2a2a2e"; });
-      btn.addEventListener("mouseleave", function () { if (!this.classList.contains("selected")) { this.style.borderColor = "rgba(255,255,255,.06)"; this.style.background = "#27272a"; } });
     });
   }
 
@@ -5736,18 +5757,19 @@
     var ansStr = typeof q.a === "number" ? q.a + "" : q.a;
     content.innerHTML =
       "<div style='text-align:center;margin-bottom:20px'>" +
-      "<div style='font-size:3em;margin-bottom:8px'>" + (correct ? "✅" : "❌") + "</div>" +
-      "<div style='font-size:1.2em;font-weight:700;color:" + (correct ? "#34d399" : "#ef4444") + "'>" + (correct ? "Correct!" : "Wrong!") + "</div>" +
-      "<div style='color:#a1a1aa;margin-top:8px'>" +
-      (correct ? "+" + (session.hardMode ? 20 : 10) + " points" : "Answer: " + ansStr) +
+      "<div style='font-size:3.5em;margin-bottom:4px;animation:bounceIn .4s ease'>" + (correct ? "✅" : "❌") + "</div>" +
+      "<div style='font-size:1.3em;font-weight:800;color:" + (correct ? "#34d399" : "#ef4444") + ";margin-bottom:4px'>" + (correct ? "Correct!" : "Wrong!") + "</div>" +
+      "<div style='color:#a1a1aa;font-size:.85em;padding:8px 12px;background:rgba(255,255,255,.03);border-radius:8px;display:inline-block'>" +
+      (correct ? "⭐ +" + (session.hardMode ? 20 : 10) + " points" : "Answer: <span style='color:#fafafa;font-weight:600'>" + ansStr + "</span>") +
       "</div></div>";
 
     if (q.solution) {
-      content.innerHTML += "<div style='padding:14px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15);border-radius:10px;color:#34d399;font-size:.85em;margin-bottom:16px'>📖 " + q.solution + "</div>";
+      content.innerHTML += "<div style='padding:14px 16px;background:linear-gradient(135deg,rgba(52,211,153,.08),rgba(167,139,250,.04));border:1px solid rgba(52,211,153,.12);border-radius:12px;color:#34d399;font-size:.82em;line-height:1.6;margin-bottom:16px'>📖 " + q.solution + "</div>";
     }
 
-    content.innerHTML += "<button id='st-next-btn' style='width:100%;padding:14px;border-radius:10px;background:#a78bfa;color:#fff;border:none;font-size:1em;font-weight:600;cursor:pointer'>" +
-      (session.questionIndex >= session.questions.length - 1 ? "📊 View Results" : "Next Question →") + "</button>";
+    var isLast = session.questionIndex >= session.questions.length - 1;
+    content.innerHTML += "<button id='st-next-btn' style='width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;font-size:1em;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:.02em' onmouseenter='this.style.opacity=\".9\";this.style.transform=\"translateY(-1px)\"' onmouseleave='this.style.opacity=\"\";this.style.transform=\"\"'>" +
+      (isLast ? "📊 View Results" : "Next Question →") + "</button>";
 
     overlay.style.display = "flex";
     console.log("showResult: overlay shown, attaching next-btn listener");
@@ -5778,24 +5800,36 @@
     var state = loadState();
     var overallRank = getRank(state.totalPoints);
 
+    var grade = pct >= 90 ? 'S' : pct >= 75 ? 'A' : pct >= 60 ? 'B' : pct >= 40 ? 'C' : 'D';
+    var gradeColor = grade === 'S' ? '#a78bfa' : grade === 'A' ? '#34d399' : grade === 'B' ? '#fbbf24' : grade === 'C' ? '#f59e0b' : '#ef4444';
+    var gradeIcon = grade === 'S' ? '🏆' : grade === 'A' ? '🌟' : grade === 'B' ? '👍' : grade === 'C' ? '💪' : '📚';
+    var streakStr = state.streaks.current > 0 ? "🔥 " + state.streaks.current + " day" + (state.streaks.current !== 1 ? "s" : "") : "Start a streak!";
+
     var html =
       "<div style='text-align:center;padding:20px 0'>" +
-      "<div style='font-size:2.5em;margin-bottom:8px'>🏆</div>" +
-      "<h2 style='margin:0 0 4px;color:#fafafa;font-size:1.4em'>Session Complete!</h2>" +
-      "<div style='color:#a1a1aa;font-size:.9em'>" + session.mode + " | " + session.layer + "</div>" +
+      "<div style='font-size:3em;margin-bottom:4px;animation:bounceIn .5s ease'>" + gradeIcon + "</div>" +
+      "<h2 style='margin:0 0 2px;color:#fafafa;font-size:1.5em;font-weight:800;background:linear-gradient(135deg," + gradeColor + "," + (grade === 'S' ? '#34d399' : gradeColor) + ");-webkit-background-clip:text;-webkit-text-fill-color:transparent'>Session Complete!</h2>" +
+      "<div style='color:#a1a1aa;font-size:.82em'>" + session.mode + " · " + session.layer + (session.hardMode ? " · 🔥 Hard" : "") + "</div>" +
+      "<div style='margin-top:8px;display:flex;justify-content:center;gap:6px'>" +
+      "<span style='padding:2px 10px;border-radius:100px;background:" + gradeColor + "20;border:1px solid " + gradeColor + "30;color:" + gradeColor + ";font-size:.75em;font-weight:700'>" + grade + " Grade</span>" +
+      "</div></div>" +
+      "<div style='display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0'>" +
+      "<div style='text-align:center;padding:18px 10px;background:linear-gradient(135deg,rgba(52,211,153,.08),rgba(52,211,153,.02));border:1px solid rgba(52,211,153,.1);border-radius:12px'><div style='font-size:1.6em;font-weight:800;color:#34d399'>" + session.correctCount + "<span style='font-size:.6em;color:#a1a1aa'>/" + session.totalQuestions + "</span></div><div style='color:#a1a1aa;font-size:.72em;margin-top:2px'>Correct</div></div>" +
+      "<div style='text-align:center;padding:18px 10px;background:linear-gradient(135deg,rgba(167,139,250,.08),rgba(167,139,250,.02));border:1px solid rgba(167,139,250,.1);border-radius:12px'><div style='font-size:1.6em;font-weight:800;color:" + gradeColor + "'>" + pct + "<span style='font-size:.6em;color:#a1a1aa'>%</span></div><div style='color:#a1a1aa;font-size:.72em;margin-top:2px'>Accuracy</div></div>" +
+      "<div style='text-align:center;padding:18px 10px;background:linear-gradient(135deg,rgba(251,191,36,.08),rgba(251,191,36,.02));border:1px solid rgba(251,191,36,.1);border-radius:12px'><div style='font-size:1.6em;font-weight:800;color:#fbbf24'>+" + session.pointsEarned + "</div><div style='color:#a1a1aa;font-size:.72em;margin-top:2px'>Points</div></div>" +
       "</div>" +
-      "<div style='display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:20px 0'>" +
-      "<div style='text-align:center;padding:16px;background:#27272a;border-radius:10px'><div style='font-size:1.5em;font-weight:700;color:#34d399'>" + session.correctCount + "/" + session.totalQuestions + "</div><div style='color:#a1a1aa;font-size:.8em'>Correct</div></div>" +
-      "<div style='text-align:center;padding:16px;background:#27272a;border-radius:10px'><div style='font-size:1.5em;font-weight:700;color:" + (pct >= 60 ? "#34d399" : "#ef4444") + "'>" + pct + "%</div><div style='color:#a1a1aa;font-size:.8em'>Accuracy</div></div>" +
-      "<div style='text-align:center;padding:16px;background:#27272a;border-radius:10px'><div style='font-size:1.5em;font-weight:700;color:#fbbf24'>+" + session.pointsEarned + "</div><div style='color:#a1a1aa;font-size:.8em'>Points</div></div>" +
+      "<div style='text-align:center;margin:12px 0;padding:12px;background:linear-gradient(135deg,rgba(167,139,250,.08),rgba(52,211,153,.04));border:1px solid rgba(167,139,250,.1);border-radius:12px'>" +
+      "<span style='font-size:.85em;color:#a78bfa'>🏅 " + overallRank.name + "</span>" +
+      "<span style='color:#52525b;margin:0 8px'>·</span>" +
+      "<span style='font-size:.85em;color:#fbbf24'>⭐ " + state.totalPoints + " total</span>" +
       "</div>" +
-      "<div style='text-align:center;margin:12px 0;padding:12px;background:rgba(139,92,246,.1);border-radius:10px'>" +
-      "<span style='font-size:.9em;color:#a78bfa'>Rank: " + overallRank.name + " (Total: " + state.totalPoints + " pts)</span>" +
+      "<div style='margin-top:8px;padding:10px 14px;background:linear-gradient(135deg,rgba(251,191,36,.06),rgba(239,68,68,.04));border:1px solid rgba(251,191,36,.1);border-radius:10px;font-size:.82em;color:#fbbf24;display:flex;align-items:center;gap:8px'>" +
+      "<span style='font-size:1.2em'>🔥</span><span>" + streakStr + "</span>" +
+      (state.streaks.best > 1 ? "<span style='color:#52525b;margin-left:auto;font-size:.85em'>Best: " + state.streaks.best + "</span>" : "") +
       "</div>" +
-      "<div style='margin-top:8px;padding:12px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.15);border-radius:10px;font-size:.85em;color:#fbbf24'>🔥 Streak: " + state.streaks.current + " days (Best: " + state.streaks.best + ")</div>" +
       "<div style='display:flex;gap:10px;margin-top:20px'>" +
-      "<button id='st-retry-btn' class='st-btn' style='flex:1;padding:14px;border-radius:10px;background:#a78bfa;color:#fff;border:none;font-size:.95em;font-weight:600;cursor:pointer'>🔄 Retry</button>" +
-      "<button id='st-close-btn' class='st-btn' style='flex:1;padding:14px;border-radius:10px;background:#52525b;color:#fff;border:none;font-size:.95em;font-weight:600;cursor:pointer'>📋 Menu</button>" +
+      "<button id='st-retry-btn' style='flex:1;padding:14px;border-radius:12px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;font-size:.9em;font-weight:700;cursor:pointer;transition:all .2s' onmouseenter='this.style.opacity=\".9\";this.style.transform=\"translateY(-2px)\"' onmouseleave='this.style.opacity=\"\";this.style.transform=\"\"'>🔄 Retry</button>" +
+      "<button id='st-close-btn' style='flex:1;padding:14px;border-radius:12px;background:rgba(255,255,255,.06);color:#fafafa;border:1px solid rgba(255,255,255,.08);font-size:.9em;font-weight:600;cursor:pointer;transition:all .2s' onmouseenter='this.style.background=\"rgba(255,255,255,.1)\"' onmouseleave='this.style.background=\"rgba(255,255,255,.06)\"'>📋 Menu</button>" +
       "</div>";
 
     container.innerHTML = html;
@@ -5825,42 +5859,68 @@
   function renderMenu() {
     var state = loadState();
     var rank = getRank(state.totalPoints);
+    var pct = state.sessions.length > 0 ? Math.round(state.sessions.reduce(function(a,s){return a+s.correct;},0) / Math.max(1, state.sessions.reduce(function(a,s){return a+s.total;},0)) * 100) : 0;
+    var mistakeCount = loadMistakes().length;
+
+    var quickStart = [
+      { subject:'physics', icon:'🔭', name:'Physics', desc:'Mechanics · EM · Optics · Modern · Thermo', color:'#a78bfa', topics:16 },
+      { subject:'chemistry', icon:'🧪', name:'Chemistry', desc:'Physical · Organic · Inorganic · Everyday', color:'#34d399', topics:25 },
+      { subject:'biology', icon:'🧬', name:'Biology', desc:'Zoology · Botany · Human · Ecology · Immune', color:'#f59e0b', topics:16 },
+      { subject:'math', icon:'📐', name:'Math', desc:'Algebra · Calculus · Geometry · Trig · Stats', color:'#ef4444', topics:15 }
+    ];
+    var quickHtml = '';
+    for (var qi = 0; qi < quickStart.length; qi++) {
+      var qs = quickStart[qi];
+      quickHtml += "<button class='st-subject-btn' data-subject='" + qs.subject + "' style='padding:20px 16px;border-radius:16px;background:linear-gradient(135deg," + qs.color + "10,rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer;text-align:left;transition:all .25s' " +
+        "onmouseenter='this.style.borderColor=\"" + qs.color + "50\";this.style.transform=\"translateY(-4px)\";this.style.boxShadow=\"0 12px 40px " + qs.color + "15\"' " +
+        "onmouseleave='this.style.borderColor=\"rgba(255,255,255,.06)\";this.style.transform=\"\";this.style.boxShadow=\"\"'>" +
+        "<div style='display:flex;align-items:center;gap:14px'>" +
+        "<div style='width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg," + qs.color + "20," + qs.color + "08);display:flex;align-items:center;justify-content:center;font-size:1.6em;flex-shrink:0'>" + qs.icon + "</div>" +
+        "<div style='flex:1;min-width:0'><div style='font-weight:800;font-size:1.05em;color:" + qs.color + "'>" + qs.name + "</div><div style='font-size:.75em;color:#a1a1aa;margin-top:3px'>" + qs.desc + "</div></div>" +
+        "<div style='font-size:.7em;color:#52525b;text-align:right;flex-shrink:0'>" + qs.topics + " topics<div style='color:#a78bfa;font-weight:600;font-size:1.1em'>→</div></div>" +
+        "</div></button>";
+    }
+
+    var tools = [
+      { mode:'examrush', icon:'📝', name:'Full Test', desc:'Mixed subjects · 15 Qs · Timed', color:'#ef4444', accent:'rgba(239,68,68,.1)' },
+      { mode:'weakspot', icon:'🎯', name:'Mistake Review', desc:'Practice your wrong answers', color:'#ec4899', accent:'rgba(236,72,153,.1)', badge: mistakeCount > 0 ? mistakeCount : '' },
+      { mode:'quicksolve', icon:'⚡', name:'Quick Drill', desc:'Mixed questions · Fast pace', color:'#a78bfa', accent:'rgba(167,139,250,.12)' },
+      { mode:'custom', icon:'🎨', name:'Topic Practice', desc:'Pick exact topic & count', color:'#8b5cf6', accent:'rgba(139,92,246,.12)' }
+    ];
+    var toolHtml = '';
+    for (var ti = 0; ti < tools.length; ti++) {
+      var t = tools[ti];
+      var cls = t.mode === 'custom' ? "id='st-custom-btn'" : "class='st-mode-btn' data-mode='" + t.mode + "'";
+      toolHtml += "<button " + cls + " style='flex:1;padding:14px 12px;border-radius:12px;background:linear-gradient(135deg," + t.accent + ",rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer;text-align:center;transition:all .25s;position:relative' " +
+        "onmouseenter='this.style.borderColor=\"" + t.color + "40\";this.style.transform=\"translateY(-2px)\";this.style.boxShadow=\"0 6px 24px " + t.accent + "\"' " +
+        "onmouseleave='this.style.borderColor=\"rgba(255,255,255,.06)\";this.style.transform=\"\";this.style.boxShadow=\"\"'>" +
+        (t.badge ? "<div style='position:absolute;top:-6px;right:-4px;background:" + t.color + ";color:#fff;font-size:.65em;font-weight:700;padding:2px 7px;border-radius:100px;min-width:18px;box-shadow:0 2px 8px " + t.accent + "'>" + t.badge + "</div>" : "") +
+        "<div style='font-size:1.4em;margin-bottom:4px'>" + t.icon + "</div>" +
+        "<div style='font-weight:700;font-size:.78em'>" + t.name + "</div>" +
+        "<div style='font-size:.62em;color:#a1a1aa;margin-top:2px'>" + t.desc + "</div></button>";
+    }
+
     var html =
-      "<div style='text-align:center;padding:20px 0'>" +
-      "<div style='font-size:2em;margin-bottom:8px'>🔬 Science Training Arena</div>" +
-      "<div style='color:#a1a1aa;font-size:.9em'>Physics • Chemistry • Biology • Math</div>" +
-      "<div style='margin-top:12px;padding:12px;background:rgba(139,92,246,.1);border-radius:10px'>" +
-      "<span style='color:#a78bfa'>🏅 " + rank.name + "</span> · " +
-      "<span style='color:#fbbf24'>⭐ " + state.totalPoints + " points</span> · " +
-      "<span style='color:#34d399'>🔥 " + state.streaks.current + " day streak</span>" +
+      "<div style='text-align:center;padding:24px 0 12px;position:relative'>" +
+      "<div style='position:absolute;top:0;left:50%;transform:translateX(-50%);width:240px;height:240px;background:radial-gradient(circle,rgba(167,139,250,.06),transparent 70%);pointer-events:none'></div>" +
+      "<div style='font-size:2em;margin-bottom:4px'>🔬</div>" +
+      "<h1 style='margin:0 0 2px;color:#fafafa;font-size:1.4em;font-weight:800;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent'>JEE · NEET Lab</h1>" +
+      "<div style='color:#a1a1aa;font-size:.78em'>Physics · Chemistry · Biology · Math</div>" +
+      "<div style='margin-top:12px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap'>" +
+      "<span style='padding:5px 12px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.12);border-radius:100px;color:#a78bfa;font-size:.72em;font-weight:600'>🏅 " + rank.name + "</span>" +
+      "<span style='padding:5px 12px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.1);border-radius:100px;color:#fbbf24;font-size:.72em;font-weight:600'>⭐ " + state.totalPoints + " pts</span>" +
+      "<span style='padding:5px 12px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.1);border-radius:100px;color:#34d399;font-size:.72em;font-weight:600'>🔥 " + state.streaks.current + "d</span>" +
       "</div></div>" +
-      "<div style='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0'>" +
-      "<button class='st-mode-btn' data-mode='quicksolve' style='padding:16px;border-radius:12px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer;text-align:left'>" +
-      "<div style='font-weight:600'>⚡ Quick Solve</div><div style='font-size:.8em;color:#a1a1aa;margin-top:4px'>5-8 seconds per question</div></button>" +
-      "<button class='st-mode-btn' data-mode='instinct' style='padding:16px;border-radius:12px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer;text-align:left'>" +
-      "<div style='font-weight:600'>🧠 Instinct</div><div style='font-size:.8em;color:#a1a1aa;margin-top:4px'>5-15 seconds, build speed</div></button>" +
-      "<button class='st-mode-btn' data-mode='fivesec' style='padding:16px;border-radius:12px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer;text-align:left'>" +
-      "<div style='font-weight:600'>⏱ Five Sec</div><div style='font-size:.8em;color:#a1a1aa;margin-top:4px'>Exactly 5 seconds per question</div></button>" +
-      "<button class='st-mode-btn' data-mode='examrush' style='padding:16px;border-radius:12px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer;text-align:left'>" +
-      "<div style='font-weight:600'>📝 Exam Rush</div><div style='font-size:.8em;color:#a1a1aa;margin-top:4px'>Timed set of questions</div></button>" +
-      "<button class='st-mode-btn' data-mode='weakspot' style='padding:16px;border-radius:12px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer;text-align:left'>" +
-      "<div style='font-weight:600'>🎯 Weak Spot</div><div style='font-size:.8em;color:#a1a1aa;margin-top:4px'>Focus on past mistakes</div></button>" +
-      "<button id='st-custom-btn' style='padding:16px;border-radius:12px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer;text-align:left'>" +
-      "<div style='font-weight:600'>🎨 Custom</div><div style='font-size:.8em;color:#a1a1aa;margin-top:4px'>Pick topic & difficulty</div></button>" +
-      "</div>" +
-      "<div style='display:flex;gap:12px;margin:12px 0;padding:12px;background:#27272a;border-radius:10px;align-items:center'>" +
-      "<label style='font-size:.9em;color:#a1a1aa'>🔥 Hard Mode</label>" +
-      "<input type='checkbox' id='st-hard-toggle' " + (activeHardMode ? "checked" : "") + " style='width:18px;height:18px;accent-color:#ef4444'>" +
-      "<span style='font-size:.8em;color:#52525b'>45% less time, 2x points</span>" +
-      "</div>" +
-      "<div style='display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin:12px 0'>" +
-      "<button class='st-subject-btn' data-subject='physics' style='padding:12px;border-radius:8px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer'>🔭 Physics</button>" +
-      "<button class='st-subject-btn' data-subject='chemistry' style='padding:12px;border-radius:8px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer'>🧪 Chemistry</button>" +
-      "<button class='st-subject-btn' data-subject='biology' style='padding:12px;border-radius:8px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer'>🧬 Biology</button>" +
-      "<button class='st-subject-btn' data-subject='math' style='padding:12px;border-radius:8px;background:#27272a;border:1px solid rgba(255,255,255,.06);color:#fafafa;cursor:pointer'>📐 Math</button>" +
-      "</div>" +
-      "<div style='text-align:center;margin-top:12px'>" +
-      "<span style='font-size:.8em;color:#52525b'>Sessions completed: " + state.sessions.length + " · Mistakes to review: " + loadMistakes().length + "</span>" +
+      "<div style='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0'>" + quickHtml + "</div>" +
+      "<div style='display:flex;gap:8px;margin:14px 0'>" + toolHtml + "</div>" +
+      "<div style='display:flex;gap:10px;margin:12px 0;padding:12px 14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:12px;align-items:center;flex-wrap:wrap'>" +
+      "<div style='display:flex;align-items:center;gap:6px;flex:1'>" +
+      "<div style='width:30px;height:18px;background:rgba(239,68,68,.2);border-radius:100px;position:relative;cursor:pointer' id='st-hard-toggle-track' onclick='var c=document.getElementById(\"st-hard-toggle\");c.checked=!c.checked;this.style.background=c.checked?\"rgba(239,68,68,.4)\":\"rgba(239,68,68,.2)\";activeHardMode=c.checked'>" +
+      "<div style='width:14px;height:14px;border-radius:50%;background:" + (activeHardMode ? "#ef4444" : "#52525b") + ";position:absolute;top:2px;left:" + (activeHardMode ? "14px" : "2px") + ";transition:all .25s'></div></div>" +
+      "<input type='checkbox' id='st-hard-toggle' " + (activeHardMode ? "checked" : "") + " style='display:none'>" +
+      "<label style='font-size:.78em;color:#a1a1aa;cursor:pointer;font-weight:500' onclick='document.getElementById(\"st-hard-toggle\").click()'>🔥 Hard</label>" +
+      "</div><span style='font-size:.68em;color:#52525b'>" + state.sessions.length + " sessions</span>" +
+      "<span style='font-size:.68em;color:#52525b'>" + pct + "% accuracy</span>" +
       "</div>";
 
     return html;
@@ -5944,29 +6004,30 @@
 
   function showCustomDialog() {
     var overlay = document.createElement("div");
-    overlay.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:center;justify-content:center";
+    overlay.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);z-index:1000;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)";
     var subjects = ["physics","chemistry","biology","math"];
     var subjectNames = ["Physics","Chemistry","Biology","Math"];
     var html =
-      "<div style='background:#18181b;border-radius:16px;padding:28px;max-width:400px;width:90%;border:1px solid rgba(255,255,255,.08)'>" +
-      "<h3 style='margin:0 0 16px;color:#fafafa;font-size:1.1em'>🎨 Custom Session</h3>" +
-      "<label style='color:#a1a1aa;font-size:.85em;display:block;margin-bottom:6px'>Subject</label>" +
-      "<select id='st-custom-subject' style='width:100%;padding:10px;border-radius:8px;background:#27272a;color:#fafafa;border:1px solid rgba(255,255,255,.1);margin-bottom:12px;font-size:.9em'>";
+      "<div style='background:linear-gradient(135deg,#1c1c21,#18181b);border-radius:20px;padding:28px;max-width:400px;width:90%;border:1px solid rgba(255,255,255,.08);box-shadow:0 20px 60px rgba(0,0,0,.5)'>" +
+      "<div style='text-align:center;margin-bottom:16px'><span style='font-size:2em'>🎨</span>" +
+      "<h3 style='margin:4px 0 0;color:#fafafa;font-size:1.15em;font-weight:800'>Custom Session</h3></div>" +
+      "<label style='color:#a1a1aa;font-size:.82em;display:block;margin-bottom:6px;font-weight:600'>Subject</label>" +
+      "<select id='st-custom-subject' style='width:100%;padding:11px 12px;border-radius:10px;background:#27272a;color:#fafafa;border:1px solid rgba(255,255,255,.08);margin-bottom:12px;font-size:.88em;outline:none'>";
     for (var i = 0; i < subjects.length; i++) {
       html += "<option value='" + subjects[i] + "'>" + subjectNames[i] + "</option>";
     }
     html += "</select>" +
-      "<label style='color:#a1a1aa;font-size:.85em;display:block;margin-bottom:6px'>Mode</label>" +
-      "<select id='st-custom-mode' style='width:100%;padding:10px;border-radius:8px;background:#27272a;color:#fafafa;border:1px solid rgba(255,255,255,.1);margin-bottom:12px;font-size:.9em'>" +
-      "<option value='instinct'>🧠 Instinct</option><option value='fivesec'>⏱ Five Sec</option><option value='examrush'>📝 Exam Rush</option>" +
+      "<label style='color:#a1a1aa;font-size:.82em;display:block;margin-bottom:6px;font-weight:600'>Intensity</label>" +
+      "<select id='st-custom-mode' style='width:100%;padding:11px 12px;border-radius:10px;background:#27272a;color:#fafafa;border:1px solid rgba(255,255,255,.08);margin-bottom:12px;font-size:.88em;outline:none'>" +
+      "<option value='instinct'>📖 Standard Practice</option><option value='fivesec'>⚡ Speed Focus</option><option value='examrush'>📝 Full Test Mode</option>" +
       "</select>" +
-      "<label style='color:#a1a1aa;font-size:.85em;display:block;margin-bottom:6px'>Questions</label>" +
-      "<select id='st-custom-count' style='width:100%;padding:10px;border-radius:8px;background:#27272a;color:#fafafa;border:1px solid rgba(255,255,255,.1);margin-bottom:20px;font-size:.9em'>" +
-      "<option value='5'>5</option><option value='10' selected>10</option><option value='15'>15</option><option value='20'>20</option>" +
+      "<label style='color:#a1a1aa;font-size:.82em;display:block;margin-bottom:6px;font-weight:600'>Questions</label>" +
+      "<select id='st-custom-count' style='width:100%;padding:11px 12px;border-radius:10px;background:#27272a;color:#fafafa;border:1px solid rgba(255,255,255,.08);margin-bottom:20px;font-size:.88em;outline:none'>" +
+      "<option value='5'>5</option><option value='10' selected>10</option><option value='15'>15</option><option value='20'>20</option><option value='30'>30</option>" +
       "</select>" +
-      "<div style='display:flex;gap:10px'>" +
-      "<button id='st-custom-start' style='flex:1;padding:12px;border-radius:8px;background:#a78bfa;color:#fff;border:none;font-size:.95em;font-weight:600;cursor:pointer'>Start</button>" +
-      "<button id='st-custom-cancel' style='flex:1;padding:12px;border-radius:8px;background:#52525b;color:#fff;border:none;font-size:.95em;cursor:pointer'>Cancel</button>" +
+      "<div style='display:flex;gap:10px;margin-top:4px'>" +
+      "<button id='st-custom-start' style='flex:1;padding:13px;border-radius:10px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;font-size:.9em;font-weight:700;cursor:pointer;transition:all .2s' onmouseenter='this.style.opacity=\".9\"' onmouseleave='this.style.opacity=\"\"'>🚀 Start</button>" +
+      "<button id='st-custom-cancel' style='flex:1;padding:13px;border-radius:10px;background:rgba(255,255,255,.06);color:#fafafa;border:1px solid rgba(255,255,255,.08);font-size:.9em;font-weight:600;cursor:pointer;transition:all .2s' onmouseenter='this.style.background=\"rgba(255,255,255,.1)\"' onmouseleave='this.style.background=\"rgba(255,255,255,.06)\"'>Cancel</button>" +
       "</div></div>";
 
     overlay.innerHTML = html;
@@ -5999,7 +6060,17 @@
 
   // ==================== INITIALIZATION ====================
 
+  function injectStyles() {
+    var styleId = 'st-animations';
+    if (document.getElementById(styleId)) return;
+    var style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = '@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@keyframes bounceIn{0%{transform:scale(0)}50%{transform:scale(1.15)}70%{transform:scale(.95)}100%{transform:scale(1)}}.st-opt.selected{border-color:#a78bfa!important;background:linear-gradient(135deg,rgba(167,139,250,.15),rgba(52,211,153,.06))!important;transform:translateY(-2px)!important;box-shadow:0 4px 20px rgba(167,139,250,.2)!important}.st-opt.correct{border-color:#34d399!important;background:linear-gradient(135deg,rgba(52,211,153,.15),rgba(52,211,153,.05))!important;color:#34d399!important}.st-opt.wrong{border-color:#ef4444!important;background:linear-gradient(135deg,rgba(239,68,68,.15),rgba(239,68,68,.05))!important;color:#ef4444!important}';
+    document.head.appendChild(style);
+  }
+
   function initScienceTraining() {
+    injectStyles();
     // Check for cached session
     var cached = restoreCachedSession();
     if (cached) {
