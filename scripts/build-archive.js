@@ -62,6 +62,14 @@ const TRASH_RULES = [
   /economy of (?:Albania|Algeria|Angola|Argentina|Australia|Bolivia|Brazil|Cambodia|Cameroon|Canada|Chile|China|Colombia|Croatia|Cuba|Czech|Denmark|Egypt|Estonia|Ethiopia|Finland|France|Germany|Ghana|Greece|Hungary|Iceland|Indonesia|Iran|Iraq|Ireland|Israel|Italy|Japan|Jordan|Kazakhstan|Kenya|Laos|Latvia|Lebanon|Lithuania|Malaysia|Mexico|Morocco|Myanmar|Nepal|Netherlands|New Zealand|Nigeria|Norway|Pakistan|Peru|Philippines|Poland|Portugal|Romania|Russia|Saudi|Serbia|Singapore|South Africa|South Korea|Spain|Sri Lanka|Sudan|Sweden|Switzerland|Syria|Taiwan|Tanzania|Thailand|Tunisia|Turkey|Uganda|Ukraine|United Kingdom|United States|Uzbekistan|Venezuela|Vietnam|Zimbabwe)/i,
   /geography of (?:Albania|Algeria|Angola|Argentina|Australia|Bolivia|Brazil|Cambodia|Cameroon|Canada|Chile|China|Colombia|Croatia|Cuba|Czech|Denmark|Egypt|Estonia|Ethiopia|Finland|France|Germany|Ghana|Greece|Hungary|Iceland|Indonesia|Iran|Iraq|Ireland|Israel|Italy|Japan|Jordan|Kazakhstan|Kenya|Laos|Latvia|Lebanon|Lithuania|Malaysia|Mexico|Morocco|Myanmar|Nepal|Netherlands|New Zealand|Nigeria|Norway|Pakistan|Peru|Philippines|Poland|Portugal|Romania|Russia|Saudi|Serbia|Singapore|South Africa|South Korea|Spain|Sri Lanka|Sudan|Sweden|Switzerland|Syria|Taiwan|Tanzania|Thailand|Tunisia|Turkey|Uganda|Ukraine|United Kingdom|United States|Uzbekistan|Venezuela|Vietnam|Zimbabwe)/i,
   /film (?:career|actress|actor|director|producer|industry|award|festival)|movie|reality (?:tv|show|television|series)/i,
+  /\b(killed|killing|killings)\b/i,
+  /\b(injured|injuries)\b/i,
+  /\b(casualt(y|ies))\b/i,
+  /\b blast(s|ed)?\b/i,
+  /\b shootings?\b/i,
+  /\b murder(s|ed|ing)?\b/i,
+  /\b massacre(s)?\b/i,
+  /\b genocide\b/i,
 ];
 
 function isTrash(q) {
@@ -77,7 +85,7 @@ function isTrash(q) {
     if (new RegExp('^' + aEsc + '[:,]').test(q.fact)) return true;
   }
   if (q.source === 'SEBI' && /Appeal/i.test(q.question)) return true;
-  if (q.source === 'Wikipedia' && /In a global|Members of Mexico|Major Oak|Six people|bus crashes|bus overturns|Marco Rubio|Australian Government/i.test(q.question)) return true;
+  if (q.source === 'Wikipedia' && /In a global|Members of Mexico|Major Oak|Six people|bus crashes|bus overturns|Marco Rubio|Australian Government|\bkilled\b|\binjured\b|\bcasualt|\bblast|\bshootings?\b|\bmurder\b|\bmassacre\b|\bgenocide\b/i.test(q.question)) return true;
   if (q.source === 'Wiki') {
     if (q.question.length < 25) return true;
     if (q.answer.length < 3) return true;
