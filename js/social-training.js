@@ -185,9 +185,7 @@
               var ss = data[sk].subSubjects;
               for (var ssk in ss) {
                 ss[ssk].forEach(function (q) {
-                  var questionText = q.question || '';
-                  var blankIdx = questionText.lastIndexOf('___');
-                  var actualQ = blankIdx > 0 ? questionText.substring(0, blankIdx) : questionText;
+                  var actualQ = (q.question || '').replace(/[_\s]+$/g, '').trim();
                   allQuestions.push({
                     q: actualQ,
                     a: q.answer || '',
@@ -215,22 +213,25 @@
     });
   }
 
-  function pickOptions(q) {
+  function pickOptions(q, subjectPool) {
     if (q.options && q.options.length >= 4) return q.options;
     var ans = (q.a || '').toString();
-    var pool = [ans];
-    var distractors = ['None of the above', 'Both A and B', 'Can\'t be determined', 'Insufficient data', 'Only A', 'Only B', 'All of the above', 'None'];
-    for (var i = 0; i < distractors.length && pool.length < 4; i++) {
-      if (distractors[i] !== ans) pool.push(distractors[i]);
+    if (!ans) return ['Option A', 'Option B', 'Option C', 'Option D'];
+    var candidates = [ans];
+    if (subjectPool) {
+      var shuffled = shuffle(subjectPool.slice());
+      for (var i = 0; i < shuffled.length && candidates.length < 4; i++) {
+        var otherAns = (shuffled[i].a || '').toString();
+        if (otherAns && otherAns !== ans && candidates.indexOf(otherAns) < 0) candidates.push(otherAns);
+      }
     }
-    var extra = ['Option A', 'Option B', 'Option C', 'Option D'];
-    for (var i = 0; i < extra.length && pool.length < 4; i++) {
-      if (extra[i] !== ans) pool.push(extra[i]);
+    while (candidates.length < 4) {
+      var fallbacks = ['None of the above', 'All of the above', 'Only 1', 'Only 2'];
+      for (var i = 0; i < fallbacks.length && candidates.length < 4; i++) {
+        if (candidates.indexOf(fallbacks[i]) < 0) candidates.push(fallbacks[i]);
+      }
     }
-    pool = pool.filter(function (v, i, a) { return a.indexOf(v) === i; });
-    shuffle(pool);
-    if (pool.indexOf(ans) < 0) pool[rand(0, pool.length - 1)] = ans;
-    return pool.slice(0, 4);
+    return shuffle(candidates);
   }
 
   // ==================== QUIZ ENGINE ====================
@@ -387,7 +388,7 @@
           var idx = rand(0, pool.length - 1);
           var q = pool.splice(idx, 1)[0];
           q.timeLimit = getTimeLimit(session.mode);
-          q.options = pickOptions(q);
+        q.options = pickOptions(q, _loadedCache[subjectKey] || []);
           more.push(q);
           _addRecent(q.q);
         }
