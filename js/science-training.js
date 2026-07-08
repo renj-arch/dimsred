@@ -451,7 +451,7 @@
     function () { var m=rand(2,6); var k=rand(100,400); var b=rand(2,8); return {q:'Damped SHM: m='+m+' kg, k='+k+' N/m, damping coeff b='+b+' Ns/m. Condition for critical damping?',a:'b = 2*sqrt(km) = '+(2*Math.sqrt(k*m)).toFixed(1),hint:'Critical damping: b_c = 2*sqrt(km)'}; }
   ];
   GENERATORS.physics.waves = [
-    function () { var f=rand(50,500); var lam=(rand(5,50))/10; return {q:'f='+f+' Hz, lambda='+lam+' m. Wave speed?',a:(f*lam)+' m/s',hint:'v = f*lambda'}; },
+    function () { var f=rand(50,500); var lam=(rand(5,50))/10; var v=f*lam; return {q:'f='+f+' Hz, lambda='+lam+' m. Wave speed?',a:v+' m/s',hint:'v = f·λ',solution:'v = '+f+' × '+lam+' = '+v+' m/s'}; },
     function () { var v=rand(300,360); var f=rand(200,800); return {q:'v='+v+' m/s, f='+f+' Hz. Wavelength?',a:(v/f).toFixed(3)+' m',hint:'lambda = v/f'}; },
     function () { var T=rand(50,200); var mu=pick([0.01,0.02,0.05,0.1]); return {q:'String T='+T+' N, mu='+mu+' kg/m. Wave speed?',a:Math.sqrt(T/mu).toFixed(1)+' m/s',hint:'v = sqrt(T/mu)'}; },
     function () { var L=(rand(5,20))/10; var T=rand(50,200); var mu=pick([0.01,0.02,0.05]); return {q:'String L='+L+' m, T='+T+' N, mu='+mu+' kg/m. Fundamental?',a:(Math.sqrt(T/mu)/(2*L)).toFixed(1)+' Hz',hint:'f = v/2L, v=sqrt(T/mu)'}; },
@@ -470,7 +470,7 @@
     function () { var I1=rand(1,10); var r=rand(2,5); return {q:'I1='+I1+' at r=1 m. I at r='+r+' m?',a:(I1/(r*r)).toFixed(2)+' units',hint:'I prop to 1/r^2'}; },
     function () { var A1=rand(2,5); var A2=rand(2,5); return {q:'Two waves A1='+A1+', A2='+A2+' in phase. Resultant amplitude?',a:(A1+A2)+' units',hint:'A = A1+A2 for constructive'}; },
     function () { var A1=rand(3,6); var A2=rand(3,6); return {q:'Two waves A1='+A1+', A2='+A2+' out of phase. Resultant amplitude?',a:Math.abs(A1-A2)+' units',hint:'A = |A1-A2| for destructive'}; },
-    function () { var f=rand(100,500); var lam=(rand(5,20))/10; return {q:'Wave f='+f+' Hz, lambda='+lam+' m. Speed?',a:(f*lam)+' m/s',hint:'v = f*lambda'}; },
+    function () { var f=rand(100,500); var lam=(rand(5,20))/10; var v=f*lam; return {q:'Wave f='+f+' Hz, lambda='+lam+' m. Speed?',a:v+' m/s',hint:'v = f·λ',solution:'v = '+f+' × '+lam+' = '+v+' m/s'}; },
     function () { var v=rand(300,360); var L=(rand(5,20))/10; return {q:'String L='+L+' m, v='+v+' m/s. 2nd harmonic?',a:(v/L).toFixed(1)+' Hz',hint:'2nd harmonic = v/L'}; },
     function () { var f0=rand(200,500); var vo=rand(5,15); var vs=rand(5,15); return {q:'Source toward observer, both at '+vs+' and '+vo+' m/s. f='+f0+' Hz. Apparent f?',a:(f0*(340+vo)/(340-vs)).toFixed(1)+' Hz',hint:'f = f0(v+vo)/(v-vs)'}; },
     function () { var L=(rand(5,20))/10; var v=rand(300,360); return {q:'Closed pipe L='+L+' m. 1st overtone? (v='+v+' m/s)',a:(3*v/(4*L)).toFixed(1)+' Hz',hint:'1st overtone = 3rd harmonic for closed pipe'}; },
