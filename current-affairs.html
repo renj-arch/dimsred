@@ -217,6 +217,7 @@
             <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;justify-content:center;flex-direction:column">
                 <button class="action-btn secondary" style="padding:16px;font-size:1.05em;background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.2)" onclick="startCombinedQuiz(15, '🎯 Mega GK')">🎯 Mega GK — Live Wikipedia</button>
                 <button class="action-btn secondary" style="padding:14px;font-size:.95em;background:rgba(99,102,241,.12);color:var(--purple);border:1px solid rgba(99,102,241,.2)" onclick="startStaticGk()">📚 Static GK — All 26 Categories</button>
+                <label style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none;margin-top:4px"><input type="checkbox" id="archiveToggle" style="accent-color:var(--purple);width:14px;height:14px"> 📚 Include Archive (all 43 categories + questions from JSON)</label>
             </div>
 
             <p class="gk-intro">Live Wikipedia GK or curated static GK across 26 categories. Auto-advances every 4 seconds. Pause anytime.</p>
@@ -6872,10 +6873,10 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
-
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
             document.getElementById('qText').innerHTML = 'Loading Static GK...';
             document.getElementById('optGrid').innerHTML = '';
+
             var allCats = Object.keys(GK_GENERATORS).filter(function(k) { return typeof GK_GENERATORS[k] === 'function' && k !== 'sebi' && k !== 'scjudgments' && k !== 'rbi' && k !== 'isro' && k !== 'mea'; });
             var added = 0;
             for (var ci = 0; ci < allCats.length && added < 400; ci++) {
@@ -6888,9 +6889,67 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     added++;
                 } catch(e) {}
             }
-            if (state.questions.length > 0) showQuestion();
-            else document.getElementById('qText').innerHTML = 'No static GK loaded.';
+
+            var archiveToggle = document.getElementById('archiveToggle');
+            if (archiveToggle && archiveToggle.checked) {
+                document.getElementById('qText').innerHTML = 'Loading Static GK + Archive...';
+                loadArchiveQuestions(function(archiveQs) {
+                    if (archiveQs && archiveQs.length) {
+                        for (var i = 0; i < archiveQs.length && state.questions.length < 500; i++) {
+                            archiveQs[i]._archive = true;
+                            state.questions.push(archiveQs[i]);
+                        }
+                    }
+                    if (state.questions.length > 0) showQuestion();
+                    else document.getElementById('qText').innerHTML = 'No questions loaded.';
+                });
+            } else {
+                if (state.questions.length > 0) showQuestion();
+                else document.getElementById('qText').innerHTML = 'No static GK loaded.';
+            }
         }
+
+        var _archiveCache = null;
+        function loadArchiveQuestions(cb) {
+            if (_archiveCache) { cb(_archiveCache); return; }
+            var files = [];
+            var CAT_ARCHIVE = [
+                {file:'data/questions/agriculture-food.json'},{file:'data/questions/ancient-india.json'},{file:'data/questions/announcements.json'},{file:'data/questions/art-culture.json'},{file:'data/questions/awards-honours.json'},{file:'data/questions/awards.json'},{file:'data/questions/books-authors.json'},{file:'data/questions/business-economy.json'},{file:'data/questions/computer-it.json'},{file:'data/questions/constitution.json'},{file:'data/questions/defence-security.json'},{file:'data/questions/defence.json'},{file:'data/questions/disaster-management.json'},{file:'data/questions/environment-ecology.json'},{file:'data/questions/ethics-integrity.json'},{file:'data/questions/ethics.json'},{file:'data/questions/general-science.json'},{file:'data/questions/general.json'},{file:'data/questions/geography.json'},{file:'data/questions/govt-schemes.json'},{file:'data/questions/health-medicine.json'},{file:'data/questions/important-days.json'},{file:'data/questions/indian-economy.json'},{file:'data/questions/indian-geography.json'},{file:'data/questions/indian-history.json'},{file:'data/questions/indian-national-symbols.json'},{file:'data/questions/indian-society.json'},{file:'data/questions/indian-states.json'},{file:'data/questions/international-relations.json'},{file:'data/questions/isro-space.json'},{file:'data/questions/medieval-modern-india.json'},{file:'data/questions/personalities.json'},{file:'data/questions/polity-governance.json'},{file:'data/questions/polity.json'},{file:'data/questions/rbi-banking.json'},{file:'data/questions/rbi-press-releases.json'},{file:'data/questions/science-technology.json'},{file:'data/questions/society.json'},{file:'data/questions/sports.json'},{file:'data/questions/state-gk.json'},{file:'data/questions/tech-science.json'},{file:'data/questions/world-geography.json'},{file:'data/questions/world-history-2.json'},{file:'data/questions/world-history.json'}
+            ];
+            var loaded = 0;
+            var allQ = [];
+            var pending = CAT_ARCHIVE.length;
+            CAT_ARCHIVE.forEach(function(entry) {
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        try {
+                            var data = JSON.parse(xhr.responseText);
+                            for (var sk in data) {
+                                var ss = data[sk].subSubjects;
+                                for (var ssk in ss) {
+                                    ss[ssk].forEach(function(q) {
+                                        if (q && q.question && q.answer) {
+                                            allQ.push({q:q.question, a:q.answer, options:q.options||[], solution:q.fact||'', hint:q.hint||'', subject:sk, subTopic:ssk});
+                                        }
+                                    });
+                                }
+                            }
+                        } catch(e) {}
+                    }
+                    loaded++;
+                    if (loaded === pending) {
+                        shuffleArray(allQ);
+                        _archiveCache = allQ.slice(0, 300);
+                        cb(_archiveCache);
+                    }
+                };
+                xhr.onerror = function() { loaded++; if (loaded === pending) { _archiveCache = allQ.slice(0, 300); cb(_archiveCache); } };
+                xhr.open('GET', entry.file, true);
+                xhr.send();
+            });
+        }
+        function shuffleArray(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
         function startCombinedQuiz(count, label) {
             if (!confirmAbandonQuiz()) return;
