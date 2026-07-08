@@ -5678,10 +5678,7 @@
       "<div id='st-timer-wrap' style='display:flex;align-items:center;gap:4px;padding:4px 10px;background:rgba(255,255,255,.04);border-radius:8px'><span style='font-size:.7em'>⏱</span><span id='st-timer' style='font-size:1em;font-weight:700;font-variant-numeric:tabular-nums;color:#fafafa;min-width:36px;text-align:center'></span></div>" +
       "<span id='st-score' style='color:#fbbf24;font-size:.82em;font-weight:600;padding:4px 10px;background:rgba(251,191,36,.08);border-radius:8px'></span>" +
       "<button id='st-exit-btn' style='padding:6px 10px;border-radius:8px;background:rgba(239,68,68,.12);color:#ef4444;border:1px solid rgba(239,68,68,.15);font-size:.72em;cursor:pointer;font-weight:600;transition:all .2s' onmouseenter='this.style.background=\"rgba(239,68,68,.25)\"' onmouseleave='this.style.background=\"rgba(239,68,68,.12)\"'>✕</button></div></div>" +
-      "<div id='st-question-area' style='animation:fadeIn .35s ease'></div>" +
-      "<div id='st-result-overlay' style='display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);z-index:1000;display:none;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);animation:fadeIn .25s ease'>" +
-      "<div style='background:linear-gradient(135deg,#1c1c21,#18181b);border-radius:20px;padding:32px;max-width:500px;width:90%;border:1px solid rgba(255,255,255,.08);box-shadow:0 20px 60px rgba(0,0,0,.5)'></div></div>";
-    document.getElementById("st-result-overlay").style.display = "none";
+      "<div id='st-question-area' style='animation:fadeIn .35s ease'></div>";
     document.getElementById("st-exit-btn").addEventListener("click", function () {
       if (confirm("End current session?")) {
         clearTimer();
@@ -5849,9 +5846,8 @@
   }
 
   function showResult(correct, q) {
-    var overlay = document.getElementById("st-result-overlay");
-    if (!overlay) return;
-    var content = overlay.querySelector("div");
+    var area = document.getElementById("st-question-area");
+    if (!area) return;
 
     var ansStr = typeof q.a === "number" ? q.a + "" : q.a;
     var isLast = session.questionIndex >= session.questions.length - 1;
@@ -5859,58 +5855,50 @@
     var answeredCount = session.answers.filter(function(a){return a!==undefined && a!==null;}).length;
     var isAllAnswered = answeredCount >= session.questions.length;
 
-    content.innerHTML =
-      "<div style='text-align:center;margin-bottom:16px'>" +
-      "<div style='font-size:3em;margin-bottom:2px'>" + (correct ? "✅" : "❌") + "</div>" +
-      "<div style='font-size:1.1em;font-weight:800;color:" + (correct ? "#34d399" : "#ef4444") + ";margin-bottom:2px'>" + (correct ? "Correct!" : "Wrong!") + "</div>" +
-      "<div style='color:#a1a1aa;font-size:.8em;padding:6px 12px;background:rgba(255,255,255,.03);border-radius:6px;display:inline-block'>" +
-      (correct ? "⭐ +" + (session.hardMode ? 20 : 10) + " points" : "Answer: <span style='color:#fafafa;font-weight:600'>" + ansStr + "</span>") +
-      "</div></div>" +
-      "<div style='text-align:center;font-size:.72em;color:#52525b;margin-bottom:10px'>Q " + (session.questionIndex + 1) + " of " + session.totalQuestions + " · " + answeredCount + " answered</div>";
+    var resultHtml = "<div id='st-result-inline' style='margin-top:14px;animation:fadeIn .3s ease'>";
 
     if (q.solution) {
-      content.innerHTML += "<div style='padding:12px 14px;background:linear-gradient(135deg,rgba(52,211,153,.08),rgba(167,139,250,.04));border:1px solid rgba(52,211,153,.12);border-radius:10px;color:#34d399;font-size:.78em;line-height:1.5;margin-bottom:12px'>📖 " + q.solution + "</div>";
+      resultHtml += "<div style='padding:12px 14px;background:linear-gradient(135deg,rgba(52,211,153,.06),rgba(167,139,250,.03));border:1px solid rgba(52,211,153,.1);border-radius:10px;color:#a1a1aa;font-size:.78em;line-height:1.6;margin-bottom:10px'><span style='color:#34d399;font-weight:600'>📖 Solution:</span> " + q.solution + "</div>";
     }
 
     if (isAllAnswered && isLast) {
-      content.innerHTML += "<button id='st-review-btn' style='width:100%;padding:12px;border-radius:10px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;font-size:.9em;font-weight:700;cursor:pointer;margin-bottom:8px;transition:all .2s' onmouseenter='this.style.opacity=\".9\"' onmouseleave='this.style.opacity=\"\"'>📋 Review All Answers</button>" +
-        "<button id='st-finish-btn' style='width:100%;padding:12px;border-radius:10px;background:rgba(255,255,255,.06);color:#fafafa;border:1px solid rgba(255,255,255,.08);font-size:.85em;font-weight:600;cursor:pointer;transition:all .2s' onmouseenter='this.style.background=\"rgba(255,255,255,.1)\"' onmouseleave='this.style.background=\"rgba(255,255,255,.06)\"'>📊 View Results</button>";
+      resultHtml += "<div style='display:flex;gap:8px'>" +
+        "<button id='st-review-btn' style='flex:1;padding:11px;border-radius:10px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;font-size:.82em;font-weight:700;cursor:pointer;transition:all .2s' onmouseenter='this.style.opacity=\".9\"' onmouseleave='this.style.opacity=\"\"'>📋 Review All</button>" +
+        "<button id='st-finish-btn' style='flex:1;padding:11px;border-radius:10px;background:rgba(255,255,255,.06);color:#fafafa;border:1px solid rgba(255,255,255,.08);font-size:.82em;font-weight:600;cursor:pointer;transition:all .2s' onmouseenter='this.style.background=\"rgba(255,255,255,.1)\"' onmouseleave='this.style.background=\"rgba(255,255,255,.06)\"'>📊 Results</button>" +
+        "</div>";
     } else {
-      var navHtml = "<div style='display:flex;gap:8px;margin-bottom:8px'>";
-      if (!isFirst) navHtml += "<button id='st-prev-btn' style='flex:1;padding:11px;border-radius:10px;background:rgba(255,255,255,.06);color:#fafafa;border:1px solid rgba(255,255,255,.08);font-size:.82em;font-weight:600;cursor:pointer;transition:all .2s' onmouseenter='this.style.background=\"rgba(255,255,255,.1)\"' onmouseleave='this.style.background=\"rgba(255,255,255,.06)\"'>← Previous</button>";
-      navHtml += "<button id='st-next-btn' style='flex:1;padding:11px;border-radius:10px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;font-size:.82em;font-weight:700;cursor:pointer;transition:all .2s' onmouseenter='this.style.opacity=\".9\"' onmouseleave='this.style.opacity=\"\"'>" + (isLast ? "📋 Review All" : "Next →") + "</button>";
-      if (isFirst && isLast) navHtml += ""; // single question
-      navHtml += "</div>";
-      content.innerHTML += navHtml;
+      resultHtml += "<div style='display:flex;gap:8px'>";
+      if (!isFirst) resultHtml += "<button id='st-prev-btn' style='flex:1;padding:11px;border-radius:10px;background:rgba(255,255,255,.06);color:#fafafa;border:1px solid rgba(255,255,255,.08);font-size:.78em;font-weight:600;cursor:pointer;transition:all .2s' onmouseenter='this.style.background=\"rgba(255,255,255,.1)\"' onmouseleave='this.style.background=\"rgba(255,255,255,.06)\"'>← Previous</button>";
+      resultHtml += "<button id='st-next-btn' style='flex:1;padding:11px;border-radius:10px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;font-size:.78em;font-weight:700;cursor:pointer;transition:all .2s' onmouseenter='this.style.opacity=\".9\"' onmouseleave='this.style.opacity=\"\"'>" + (isLast ? "📋 Review All" : "Next →") + "</button>";
+      resultHtml += "</div>";
     }
 
-    overlay.style.display = "flex";
+    resultHtml += "</div>";
 
-    if (document.getElementById("st-next-btn")) document.getElementById("st-next-btn").addEventListener("click", function () {
-      overlay.style.display = "none";
+    var prev = document.getElementById("st-result-inline");
+    if (prev) prev.remove();
+    area.insertAdjacentHTML("beforeend", resultHtml);
+
+    var nextBtn = document.getElementById("st-next-btn");
+    var prevBtn = document.getElementById("st-prev-btn");
+    var reviewBtn = document.getElementById("st-review-btn");
+    var finishBtn = document.getElementById("st-finish-btn");
+
+    if (nextBtn) nextBtn.addEventListener("click", function () {
       if (session.questionIndex >= session.questions.length - 1) {
         showReviewMode();
       } else {
         nextQuestion();
       }
     });
-    if (document.getElementById("st-prev-btn")) document.getElementById("st-prev-btn").addEventListener("click", function () {
-      overlay.style.display = "none";
-      prevQuestion();
-    });
-    if (document.getElementById("st-review-btn")) document.getElementById("st-review-btn").addEventListener("click", function () {
-      overlay.style.display = "none";
-      showReviewMode();
-    });
-    if (document.getElementById("st-finish-btn")) document.getElementById("st-finish-btn").addEventListener("click", function () {
-      overlay.style.display = "none";
-      endTraining();
-    });
+    if (prevBtn) prevBtn.addEventListener("click", function () { prevQuestion(); });
+    if (reviewBtn) reviewBtn.addEventListener("click", function () { showReviewMode(); });
+    if (finishBtn) finishBtn.addEventListener("click", function () { endTraining(); });
   }
 
   function hideResult() {
-    var overlay = document.getElementById("st-result-overlay");
-    if (overlay) overlay.style.display = "none";
+    var el = document.getElementById("st-result-inline");
+    if (el) el.remove();
   }
 
   function showSessionResults() {
