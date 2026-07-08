@@ -48,6 +48,9 @@ jobs:
       - name: Escape apostrophes in data strings
         run: node scripts/fix-apostrophes.js
 
+      - name: Deduplicate globe entries
+        run: node scripts/dedup-globe.js
+
       - name: Validate syntax
         run: |
           node -e "
