@@ -36,11 +36,11 @@ function isBad(q) {
   const words = text.split(/\s+/);
   if (words.length < 3) return true;
 
-  // Answer is just a year (4-digit number) — not useful practice
-  if (/^(1[0-9]{3}|20[0-9]{2})$/.test(answer)) return true;
+  // Answer is just a year AND the year is already mentioned in question text (tautological)
+  if (/^(1[0-9]{3}|20[0-9]{2})$/.test(answer) && text.includes(answer)) return true;
 
-  // Answer is just a single digit or ordinal
-  if (/^\d+(st|nd|rd|th)?$/i.test(answer)) return true;
+  // Answer is just a single digit/ordinal AND already mentioned in question text (tautological)
+  if (/^\d+(st|nd|rd|th)?$/i.test(answer) && text.includes(answer)) return true;
 
   // Question looks like "Name, Name (_____)" (list entry fragment)
   if (/^[A-Z][a-z]+[,\s]+[A-Z][a-z]+.*\(_____\)/.test(text)) return true;
@@ -49,8 +49,8 @@ function isBad(q) {
   // Question is just a parenthesized blank "(_____)"
   if (/^\(_____\)/.test(text)) return true;
 
-  // Answer is too short and generic (1-2 chars)
-  if (answer.length < 2) return true;
+  // Answer is empty
+  if (answer.length < 1) return true;
 
   // Question contains no lowercase letters → all caps or all structured fragment
   if (!/[a-z]/.test(text)) return true;
