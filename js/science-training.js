@@ -4912,7 +4912,7 @@
     function () { var a=rand(1,4); return {q:'Directrix of parabola y² = '+(4*a)+'x?',a:'x = -'+a,hint:'Directrix: x = -a for y² = 4ax'}; },
     function () { var a=rand(1,5); return {q:'Center of hyperbola x²/'+(a*a)+' - y²/'+(a*a)+' = 1?',a:'(0,0)',hint:'Center at origin for standard form'}; },
     function () { var m=rand(1,4); return {q:'Condition for parallel lines y='+m+'x+1 and y='+m+'x+2?',a:'Slopes equal, different intercepts',hint:'Parallel if m1=m2 and c1!=c2'}; },
-    function () { var a=rand(1,5); return {q:'Parabola y² = '+(4*a)+'x. Length of latus rectum?',a:(4*a)+'',hint:'Length = 4a'}; },
+    function () { var a=rand(1,5); return {q:'Parabola y² = '+(4*a)+'x. Length of latus rectum?',a:(4*a)+'',hint:'Length = 4a',solution:'Standard parabola y² = 4ax → length of latus rectum = 4a. Here 4a = '+(4*a)+', so length = '+(4*a)+' units'}; },
     function () { var r=rand(2,6); return {q:'Circle x² + y² = '+(r*r)+'. Radius?',a:r+'',hint:'x²+y² = r² => radius = r'}; },
     function () { var a=rand(1,5); var b=rand(1,5); return {q:'Distance of point ('+a+','+b+') from origin?',a:Math.sqrt(a*a+b*b).toFixed(2),hint:'Distance = sqrt(x²+y²)'}; },
     function () { var a=rand(1,4); var b=rand(1,4); return {q:'Line 2x + 3y = 6. x-intercept?',a:'3 (put y=0)',hint:'Set y=0 => 2x=6 => x=3'}; },
