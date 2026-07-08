@@ -1720,6 +1720,7 @@
       html += "<div id='st-solution-box' style='display:none;margin-top:16px;padding:16px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15);border-radius:10px;color:#34d399;font-size:.9em'>" + q.solution + "</div>";
     }
 
+    area.classList.remove("answered");
     area.innerHTML = html;
 
     area.querySelectorAll(".st-opt").forEach(function (btn) {
