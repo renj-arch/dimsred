@@ -4418,7 +4418,7 @@
     function () { var a=rand(1,5); return {q:'Lim x->0 (1 - cos('+a+'x))/x²?',a:(a*a/2)+'',hint:'lim (1-cos(ax))/x² = a²/2'}; },
     function () { var a=rand(1,5); return {q:'Lim x->0 (e^('+a+'x) - 1)/x?',a:a+'',hint:'lim (e^(ax)-1)/x = a'}; },
     function () { var a=rand(1,5); return {q:'Lim x->0 (tan('+a+'x))/x?',a:a+'',hint:'lim tan(ax)/x = a'}; },
-    function () { var a=rand(1,5); return {q:'Lim x->0 (sin²('+a+'x))/x²?',a:(a*a)+'',hint:'lim (sin²(ax))/x² = a²'}; },
+    function () { var a=rand(1,5); var ans=a*a; return {q:'Lim x->0 (sin²('+a+'x))/x²?',a:ans+'',hint:'lim (sin²(ax))/x² = a²',solution:'lim x→0 sin²('+a+'x)/x² = [lim x→0 sin('+a+'x)/x]² = [lim x→0 '+a+'·sin('+a+'x)/('+a+'x)]² = ['+a+'·1]² = '+ans+''}; },
     function () { var a=rand(1,5); return {q:'Lim x->0 (sin('+a+'x))/(sin('+(a+1)+'x))?',a:(a/(a+1))+'',hint:'lim sin(ax)/sin(bx) = a/b'}; },
     function () { var a=rand(1,4); return {q:'Lim x->0 (ln(1+'+a+'x))/x?',a:a+'',hint:'lim ln(1+ax)/x = a'}; },
     function () { var a=rand(1,5); return {q:'Lim x->0 (cos('+a+'x) - 1)/x?',a:'0',hint:'lim (cos(ax)-1)/x = 0'}; },
