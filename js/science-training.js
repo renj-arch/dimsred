@@ -661,7 +661,7 @@
     function () { return {q:'Bond order of O2?',a:'2 (double bond)',hint:'O2: sigma + pi + 2 unpaired e-'}; },
     function () { var n=rand(1,5); var l=pick([0,1,2,3]); return {q:'Magnetic quantum number for l='+l+'? Range?',a:(-l)+' to '+l,hint:'ml = -l to +l'}; },
     function () { var mol=pick(["BeCl2","BF3","CH4","SF6"]); return {q:'Is '+mol+' non-polar?',a:'Yes (symmetrical)',hint:'Symmetrical molecules are non-polar'}; },
-    function () { return {q:'Fajan\\''s rule: more covalent character when?',a:'Small cation, large anion, high charge',hint:'Polarization of anion by cation'}; },
+    function () { return {q:'Fajan\'s rule: more covalent character when?',a:'Small cation, large anion, high charge',hint:'Polarization of anion by cation'}; },
     function () { var A=pick([{n:"H2",o:1},{n:"O2",o:2},{n:"N2",o:3}]); return {q:'Bond order of '+A.n+'?',a:A.o,hint:'BO = (bonding-antibonding)/2'}; },
     function () { return {q:'Sigma bond vs pi bond: which is stronger?',a:'Sigma bond',hint:'Sigma bonds have greater overlap'}; },
     function () { var el=pick(["H2O","CO2","SO2"]); return {q:'Polar molecule: '+el+'?',a:el==="CO2"?"No":"Yes",hint:'CO2 is linear non-polar, H2O bent polar, SO2 bent polar'}; },
@@ -681,7 +681,7 @@
     function () { var c=pick([{f:"[CoCl2(NH3)4]+",i:2},{f:"[PtCl2(NH3)2]",i:2},{f:"[Co(en)3]3+",i:2}]); return {q:'Number of isomers possible for '+c.f+'?',a:c.i,hint:'Geometric and optical isomerism'}; },
     function () { return {q:'Crystal field splitting: octahedral vs tetrahedral?',a:'Octahedral: larger splitting (delta_o > delta_t)',hint:'delta_t = 4/9 delta_o'}; },
     function () { var c=pick([{f:"[NiCl4]2-",p:"Paramagnetic"},{f:"[Ni(CN)4]2-",p:"Diamagnetic"}]); return {q:'Magnetic nature of '+c.f+'?',a:c.p,hint:'Unpaired e- cause paramagnetism'}; },
-    function () { return {q:'Werner\\''s coordination theory proposed?',a:'Primary and secondary valencies',hint:'Primary = oxidation state, secondary = CN'}; },
+    function () { return {q:'Werner\'s coordination theory proposed?',a:'Primary and secondary valencies',hint:'Primary = oxidation state, secondary = CN'}; },
     function () { return {q:'Effective atomic number (EAN) rule?',a:'Metal + electrons from ligands = next noble gas config',hint:'EAN = Z(metal) - ox + 2*CN'}; },
     function () { return {q:'Ligand field theory vs CFT difference?',a:'LFT includes covalent character (M-L bonding)',hint:'CFT treats ligands as point charges'}; },
     function () { return {q:'Which ligand causes maximum splitting (spectrochemical series)?',a:'CO > CN- > en > NH3 > H2O > F- > Cl- > Br- > I-',hint:'Strong field: CN-, CO; Weak: I-, Br-'}; }
@@ -692,7 +692,7 @@
     function () { return {q:'Alkali metals: color of flame for Na?',a:'Golden yellow',hint:'Na gives yellow flame'}; },
     function () { return {q:'Alkaline earth metal: Be shows anomalous behavior due to?',a:'Small size, high ionization energy, no d-orbitals',hint:'Diagonal relationship with Al'}; },
     function () { var el=pick(["Li","Na","K"]); return {q:el+'OH: strong/weak base?',a:'Strong',hint:'All alkali metal hydroxides are strong bases'}; },
-    function () { return {q:'Most abundant element in Earth\\''s crust is?',a:'Oxygen (46.6%) by mass',hint:'Followed by Si (27.7%)'}; },
+    function () { return {q:'Most abundant element in Earth\'s crust is?',a:'Oxygen (46.6%) by mass',hint:'Followed by Si (27.7%)'}; },
     function () { return {q:'Alkali metal with least density?',a:'Lithium (0.53 g/cm3)',hint:'Li is the lightest metal'}; },
     function () { return {q:'Be and Al show diagonal relationship. Similarity?',a:'Both form covalent compounds, oxides amphoteric',hint:'BeO and Al2O3 are amphoteric'}; },
     function () { var el=pick(["Na","K"]); return {q:el+' in liquid ammonia: color?',a:'Blue (due to solvated electrons)',hint:'Metal-ammonia solutions are blue'}; },
@@ -700,7 +700,7 @@
     function () { return {q:'Solubility of hydroxides of group 2 down group?',a:'Increases',hint:'Be(OH)2 insoluble, Ba(OH)2 soluble'}; },
     function () { return {q:'Lithium shows similarities with Mg. Name two?',a:'Carbonates decompose, nitrides formed, no bicarbonates',hint:'Lithium is anomalous'}; },
     function () { var el=pick(["Be","Mg","Ca","Sr","Ba"]); return {q:'Color of flame for '+el+'?',a:['White','Brilliant white','Brick red','Crimson red','Apple green'][["Be","Mg","Ca","Sr","Ba"].indexOf(el)],hint:'Flame colors: Ca=brick red, Sr=crimson, Ba=green'}; },
-    function () { return {q:'Sodium fusion test for N,S,X?',a:'Lassaigne\\''s test for detection of elements',hint:'Na + organic compound -> NaCN, Na2S, NaX'}; },
+    function () { return {q:'Sodium fusion test for N,S,X?',a:'Lassaigne\'s test for detection of elements',hint:'Na + organic compound -> NaCN, Na2S, NaX'}; },
     function () { return {q:'Anhydrous MgCl2 used in?',a:'Electrolysis to extract Mg',hint:'Mg is extracted from sea water'}; },
     function () { return {q:'CaOCl2 is?',a:'Bleaching powder',hint:'Ca(OCl)Cl - mixed salt'}; }
   ];
@@ -726,7 +726,7 @@
   GENERATORS.chemistry.d_f_block = [
     function () { var el=pick(["Ti","V","Cr","Mn","Fe","Co","Ni","Cu","Zn"]); return {q:'Electronic config of '+el+' (Z='+[22,23,24,25,26,27,28,29,30][["Ti","V","Cr","Mn","Fe","Co","Ni","Cu","Zn"].indexOf(el)]+')?',a:'[Ar]3d^?4s^2',hint:'Exceptions: Cr (3d5 4s1), Cu (3d10 4s1)'}; },
     function () { var el=pick(["Cr2O7^2-","MnO4-","Fe3+","Cu2+"]); return {q:'Color of '+el+' in solution?',a:['Orange','Purple','Yellow/brown','Blue'][["Cr2O7^2-","MnO4-","Fe3+","Cu2+"].indexOf(el)],hint:'Colors due to d-d transitions'}; },
-    function () { return {q:'Lanthanoid contraction: cause?',a:'Poor shielding of 4f electrons',hint:'Increase in Z, f-electrons don\\''t shield well'}; },
+    function () { return {q:'Lanthanoid contraction: cause?',a:'Poor shielding of 4f electrons',hint:'Increase in Z, f-electrons don\'t shield well'}; },
     function () { return {q:'Which block has variable oxidation states?',a:'d-block (transition metals)',hint:'Unfilled d-orbitals allow multiple OS'}; },
     function () { return {q:'K2Cr2O7: color and oxidation state of Cr?',a:'Orange, Cr = +6',hint:'Dichromate ion is orange'}; },
     function () { return {q:'KMnO4: color and OS of Mn?',a:'Purple, Mn = +7',hint:'Permanganate is purple, strong oxidizing agent'}; },
@@ -762,16 +762,16 @@
     function () { var n=rand(1,6); return {q:'General formula of alkanes?',a:'CnH'+(2*n+2),hint:'Saturated hydrocarbons, single bonds'}; },
     function () { var n=rand(2,6); return {q:'General formula of alkenes?',a:'CnH'+(2*n),hint:'One double bond'}; },
     function () { var n=rand(2,6); return {q:'General formula of alkynes?',a:'CnH'+(2*n-2),hint:'One triple bond'}; },
-    function () { return {q:'Which hydrocarbon gives Baeyer\\''s test?',a:'Unsaturated (alkenes/alkynes) - purple KMnO4 turns brown',hint:'Test for unsaturation'}; },
+    function () { return {q:'Which hydrocarbon gives Baeyer\'s test?',a:'Unsaturated (alkenes/alkynes) - purple KMnO4 turns brown',hint:'Test for unsaturation'}; },
     function () { return {q:'Wurtz reaction: 2CH3Br + 2Na -> ?',a:'CH3CH3 + 2NaBr',hint:'Coupling of alkyl halides with Na'}; },
     function () { return {q:'Ozonolysis of alkene gives?',a:'Carbonyl compounds (aldehydes/ketones)',hint:'O3 cleaves C=C bond'}; },
     function () { return {q:'Hydrogenation of alkenes: catalyst?',a:'Ni, Pt, or Pd',hint:'Raney Ni for Sabatier-Sendrens reaction'}; },
-    function () { return {q:'Kolbe\''s electrolysis: product?',a:'Alkane (from carboxylate salt electrolysis)',hint:'2RCOO- -> R-R + 2CO2 + 2e-'}; },
+    function () { return {q:'Kolbe\'s electrolysis: product?',a:'Alkane (from carboxylate salt electrolysis)',hint:'2RCOO- -> R-R + 2CO2 + 2e-'}; },
     function () { return {q:'Which has highest boiling point: n-butane, isobutane?',a:'n-butane (straight chain, more surface area)',hint:'Boiling point increases with chain length'}; },
     function () { return {q:'Free radical chlorination of methane: step 1?',a:'Initiation: Cl2 -> 2Cl (hv)',hint:'Chain reaction: initiation, propagation, termination'}; },
     function () { return {q:'Markovnikov addition: HBr on propene?',a:'2-bromopropane (H adds to CH2, Br to CH)',hint:'H goes to C with more H atoms'}; },
     function () { return {q:'Electrophilic substitution in benzene: example?',a:'Nitration, halogenation, sulfonation, Friedel-Crafts',hint:'Benzene undergoes substitution, not addition'}; },
-    function () { return {q:'Aromaticity: Huckel\\''s rule?',a:'4n+2 pi electrons in planar cyclic conjugated system',hint:'n=0,1,2... gives aromatic stability'}; },
+    function () { return {q:'Aromaticity: Huckel\'s rule?',a:'4n+2 pi electrons in planar cyclic conjugated system',hint:'n=0,1,2... gives aromatic stability'}; },
     function () { return {q:'Alkane preparation from Grignard reagent?',a:'RMgX + H2O -> RH + Mg(OH)X',hint:'Hydrolysis of Grignard gives alkane'}; },
     function () { return {q:'Cracking of hydrocarbons?',a:'Breaking larger alkanes into smaller ones (heat/catalyst)',hint:'Used in petroleum refining'}; }
   ];
@@ -803,7 +803,7 @@
     function () { return {q:'Iodoform test: positive for?',a:'CH3CO- or CH3CHOH- compounds',hint:'Yellow precipitate of CHI3'}; },
     function () { return {q:'Phenol: acidic due to?',a:'Resonance stabilization of phenoxide ion',hint:'Phenol is more acidic than alcohols'}; },
     function () { return {q:'Reimer-Tiemann reaction: phenol + CHCl3 + NaOH?',a:'Salicylaldehyde (o-hydroxybenzaldehyde)',hint:'Formylation of phenol at ortho position'}; },
-    function () { return {q:'Kolbe\''s reaction: phenol + CO2 + NaOH?',a:'Salicylic acid (o-hydroxybenzoic acid)',hint:'CO2 attacks at ortho position'}; },
+    function () { return {q:'Kolbe\'s reaction: phenol + CO2 + NaOH?',a:'Salicylic acid (o-hydroxybenzoic acid)',hint:'CO2 attacks at ortho position'}; },
     function () { return {q:'Ethanol: dehydration with H2SO4 at 170C?',a:'Ethene (elimination)',hint:'At 140C forms diethyl ether'}; },
     function () { return {q:'Victor Meyer test: distinguishes?',a:'1o, 2o, 3o alcohols',hint:'Different colors based on oxidation products'}; },
     function () { return {q:'Phenol + FeCl3 gives?',a:'Violet color (complex formation)',hint:'Characteristic test for phenol'}; },
@@ -822,12 +822,12 @@
     function () { return {q:'Crossed Cannizzaro: HCHO + ArCHO?',a:'ArCH2OH + HCOO- (HCHO is oxidized)',hint:'More reactive aldehyde is oxidized'}; },
     function () { return {q:'Clemmensen reduction: C=O -> CH2?',a:'Zn-Hg/HCl',hint:'Reduction under acidic conditions'}; },
     function () { return {q:'Oxidation of CH3CHO with K2Cr2O7?',a:'CH3COOH (acetic acid)',hint:'Aldehydes oxidize to carboxylic acids'}; },
-    function () { return {q:'Benzaldehyde: does it give Fehling test?',a:'No (aromatic aldehydes don\\''t)',hint:'Only aliphatic aldehydes give Fehling test'}; },
+    function () { return {q:'Benzaldehyde: does it give Fehling test?',a:'No (aromatic aldehydes don\'t)',hint:'Only aliphatic aldehydes give Fehling test'}; },
     function () { return {q:'Haloform reaction: CH3COCH3 + NaOI?',a:'CHI3 (iodoform) + CH3COONa',hint:'Methyl ketones give iodoform'}; },
     function () { return {q:'Perkin reaction: benzaldehyde + acetic anhydride?',a:'Cinnamic acid',hint:'Formation of alpha-beta unsaturated acid'}; },
     function () { return {q:'Keto-enol tautomerism: which form more stable?',a:'Keto form (for simple carbonyls)',hint:'Enol form stabilized by conjugation/H-bond'}; },
     function () { return {q:'Acetal formation: aldehyde + 2ROH?',a:'RCH(OR)2 + H2O',hint:'Protection of aldehyde group'}; },
-    function () { return {q:'Schiff\\''s base: aldehyde + primary amine?',a:'RCH=N-R (imine)',hint:'Condensation with -NH2 gives imine'}; }
+    function () { return {q:'Schiff\'s base: aldehyde + primary amine?',a:'RCH=N-R (imine)',hint:'Condensation with -NH2 gives imine'}; }
   ];
 
   GENERATORS.chemistry.organic_acids = [
@@ -949,8 +949,8 @@
     function () { return makeBioQ("Base pairing: A pairs with?","Thymine (T) [A-T]",["G","C","T","U"],"Two hydrogen bonds","Adenine-Thymine: 2 H-bonds"); },
     function () { return makeBioQ("RNA has which base instead of thymine?","Uracil (U)",["A","G","C","U"],"Uracil pairs with Adenine in RNA","T is replaced by U in RNA"); },
     function () { return makeBioQ("Central dogma of molecular biology:?","DNA -> RNA -> Protein",["RNA->DNA","DNA->RNA->Protein","Protein->DNA","RNA->Protein"],"Flow of genetic information","Reverse transcription in retroviruses violates this"); },
-    function () { return makeBioQ("Okazaki fragments: on which strand?","Lagging strand",["Leading","Lagging","Template","Coding"],"Discontinuous synthesis","DNA polymerase works 5" to 3" only"); },
-    function () { return makeBioQ("DNA polymerase adds nucleotides to which end?","3"-OH end",["5" end","3"-OH","Both","Either"],"Synthesis direction 5"->3"","New strand elongates at 3" end"); },
+    function () { return makeBioQ("Okazaki fragments: on which strand?","Lagging strand",["Leading","Lagging","Template","Coding"],"Discontinuous synthesis","DNA polymerase works 5' to 3' only"); },
+    function () { return makeBioQ("DNA polymerase adds nucleotides to which end?","3'-OH end",["5' end","3'-OH","Both","Either"],"Synthesis direction 5'->3'","New strand elongates at 3' end"); },
     function () { return makeBioQ("Transcription: enzyme?","RNA polymerase",["DNA polymerase","RNA polymerase","Helicase","Ligase"],"RNA synthesizing enzyme","Binds to promoter region"); },
     function () { return makeBioQ("Translation: mRNA codons read by?","tRNA (anticodon)",["rRNA","tRNA","mRNA","snRNA"],"tRNA carries amino acids","Anticodon on tRNA pairs with mRNA codon"); },
     function () { return makeBioQ("Ribosome: site of?","Protein synthesis (translation)",["Transcription","Translation","Replication","Splicing"],"Ribosomes read mRNA","70S in prokaryotes, 80S in eukaryotes"); },
@@ -962,7 +962,7 @@
   ];
 
   GENERATORS.biology.evolution = [
-    function () { return makeBioQ("Darwin\\''s book on evolution?","On the Origin of Species (1859)",["Descent of Man","Origin of Species","Voyage of Beagle","Principles of Geology"],"Natural selection theory","Darwin proposed natural selection as mechanism"); },
+    function () { return makeBioQ("Darwin\'s book on evolution?","On the Origin of Species (1859)",["Descent of Man","Origin of Species","Voyage of Beagle","Principles of Geology"],"Natural selection theory","Darwin proposed natural selection as mechanism"); },
     function () { return makeBioQ("Natural selection: survival of?","Fittest (best adapted to environment)",["Strongest","Fittest","Largest","Fastest"],"Differential reproductive success","Organisms with advantageous traits survive more"); },
     function () { return makeBioQ("Homologous organs: example?","Human arm, whale flipper, bat wing",["Wing of bat and bird","Wings of bird and butterfly","Leg of horse and crab","Arm of human and leg of horse"],"Same structure, different function","Indicate common ancestry"); },
     function () { return makeBioQ("Analogous organs: example?","Wing of insect and wing of bird",["Arm and leg","Bird wing and insect wing","Whale flipper and human arm","Leaf and stem"],"Different origin, similar function","Convergent evolution"); },
@@ -1089,14 +1089,14 @@
   GENERATORS.biology.human_endocrine = [
     function () { return makeBioQ("Master endocrine gland?","Pituitary (hypophysis)",["Thyroid","Pituitary","Adrenal","Pancreas"],"Controls other endocrine glands","Anterior pituitary: 6 hormones, Posterior: 2"); },
     function () { return makeBioQ("Growth hormone (GH) deficiency causes?","Dwarfism (normal proportions)",["Gigantism","Dwarfism","Acromegaly","Cretinism"],"GH from anterior pituitary","Excess causes gigantism in children, acromegaly in adults"); },
-    function () { return makeBioQ("Thyroid hormone (T3, T4) deficiency in children?","Cretinism (stunted growth, mental retardation)",["Goiter","Myxedema","Cretinism","Hashi",]],"Hypothyroidism in children","Iodine deficiency causes goiter and cretinism"); },
+    function () { return makeBioQ("Thyroid hormone (T3, T4) deficiency in children?","Cretinism (stunted growth, mental retardation)",["Goiter","Myxedema","Cretinism","Hashimoto"],"Hypothyroidism in children","Iodine deficiency causes goiter and cretinism"); },
     function () { return makeBioQ("Parathyroid hormone (PTH): effect on blood Ca?","Increases Ca2+ (bone resorption, kidney reabsorption)",["Increases Ca","Decreases Ca","Has no effect","Decreases P"],"Regulates Ca2+ homeostasis","Opposite of calcitonin from thyroid"); },
     function () { return makeBioQ("Insulin: produced by?","Beta cells of pancreatic islets",["Alpha cells","Beta cells","Delta cells","PP cells"],"Lowers blood glucose","Promotes glucose uptake by cells, glycogenesis"); },
     function () { return makeBioQ("Glucagon: effect on blood glucose?","Increases glucose (glycogenolysis)",["Increases","Decreases","No effect","Regulates"],"From alpha cells of pancreas","Opposite action to insulin"); },
     function () { return makeBioQ("Adrenaline (epinephrine): effect?","Increases HR, BP, dilates airways (fight/flight)",["Decreases HR","Increases HR","Decreases BP","Constricts airways"],"From adrenal medulla","Also increases blood glucose for energy"); },
     function () { return makeBioQ("Cortisol: steroid hormone from?","Adrenal cortex (stress hormone)",["Adrenal cortex","Adrenal medulla","Thyroid","Pancreas"],"Increases blood sugar, suppresses immune","High levels: Cushing syndrome"); },
     function () { return makeBioQ("Testosterone: produced in?","Leydig cells of testes",["Sertoli cells","Leydig cells","Seminiferous","Prostate"],"Male sex hormone (androgen)","Responsible for male secondary sex characteristics"); },
-    function () { return makeBioQ("Estrogen: produced by?","Ovarian follicles (theca/granulosa cells)",["Ovaries","Adrenal","Placenta","All":]],"Female sex hormone","Responsible for female secondary sex characteristics"); },
+    function () { return makeBioQ("Estrogen: produced by?","Ovarian follicles (theca/granulosa cells)",["Ovaries","Adrenal","Placenta","All"],"Female sex hormone","Responsible for female secondary sex characteristics"); },
     function () { return makeBioQ("Melatonin: produced by?","Pineal gland (regulates sleep-wake cycle)",["Pineal","Pituitary","Hypothalamus","Thyroid"],"Regulates circadian rhythm","High at night, low during day"); },
     function () { return makeBioQ("Oxytocin: role in?","Uterine contractions during childbirth, milk ejection",["Labor","Growth","Thyroid","Stress"],"Posterior pituitary hormone","Positive feedback mechanism in childbirth"); },
     function () { return makeBioQ("ACTH: target?","Adrenal cortex (stimulates cortisol release)",["Thyroid","Adrenal cortex","Gonads","Mammary"],"Adrenocorticotropic hormone","Pituitary responds to CRH from hypothalamus"); },
@@ -1254,16 +1254,16 @@
     function () { var a=rand(1,5); var b=rand(1,5); var c=rand(1,5); var d=rand(1,5); return {q:'Trace of [[ '+a+','+b+' ]['+c+','+d+']]?',a:(a+d)+'',hint:'Trace = sum of diagonal elements'}; },
     function () { var a=rand(1,5); var b=rand(1,5); var c=rand(1,5); return {q:'Order of matrix A = ['+a+'x'+b+'] and B = ['+b+'x'+c+']. AB order?',a:(''+a+'x'+c),hint:'mxn * nxp = mxp'}; },
     function () { var a=rand(1,4); var b=rand(1,4); var c=rand(1,4); var d=rand(1,4); return {q:'Transpose of [[ '+a+','+b+' ]['+c+','+d+']]?',a:'[[ '+a+','+c+' ]['+b+','+d+']]',hint:'Swap rows and columns'}; },
-    function () { var a=rand(1,5); var b=rand(1,5); var c=rand(1,5); var d=rand(1,5); return {q:'For A = [[ '+a+','+b+' ]['+c+','+d+']], A + A\\'?',a:'[[ '+(2*a)+','+(b+c)+' ]['+(b+c)+','+(2*d)+']]',hint:'A = A_ij, A\\' = A_ji. Sum elementwise'}; },
+    function () { var a=rand(1,5); var b=rand(1,5); var c=rand(1,5); var d=rand(1,5); return {q:'For A = [[ '+a+','+b+' ]['+c+','+d+']], A + A\'?',a:'[[ '+(2*a)+','+(b+c)+' ]['+(b+c)+','+(2*d)+']]',hint:'A = A_ij, A\' = A_ji. Sum elementwise'}; },
     function () { var a=rand(1,5); var b=rand(1,5); return {q:'If A = ['+a+'x'+b+'] and B = ['+b+'x'+a+'], AB exists?',a:'Yes (AB: '+a+'x'+a+')',hint:'Multiplication possible if cols A = rows B'}; },
     function () { var n=rand(2,4); return {q:'Identity matrix I_'+n+' has how many 1s?',a:n+'',hint:'Diagonal elements = 1, rest = 0'}; },
     function () { var a=rand(1,4); var b=rand(1,4); var c=rand(1,4); var d=rand(1,4); var k=rand(2,5); return {q:'kA for k='+k+', A=[[ '+a+','+b+' ]['+c+','+d+']]?',a:'[[ '+(k*a)+','+(k*b)+' ]['+(k*c)+','+(k*d)+']]',hint:'Multiply each element by k'}; },
-    function () { var a=rand(2,5); return {q:'Sc [[ 1,'+a+' ]['+a+',1 ]] ?',a:'Symmetric (A = A\\')',hint:'Symmetric if a_ij = a_ji'}; },
+    function () { var a=rand(2,5); return {q:'Sc [[ 1,'+a+' ]['+a+',1 ]] ?',a:'Symmetric (A = A\')',hint:'Symmetric if a_ij = a_ji'}; },
     function () { var a=rand(1,4); var b=rand(1,4); var c=rand(1,4); var d=rand(1,4); return {q:'A = [[ '+a+','+b+' ]['+c+','+d+']]. Find A^2?',a:'Compute: [[ '+(a*a+b*c)+','+(a*b+b*d)+' ]['+(c*a+d*c)+','+(c*b+d*d)+']]',hint:'Matrix multiplication: row*col'}; },
     function () { return {q:'Which matrix has det = ad - bc?',a:'2x2 matrix [[a,b],[c,d]]',hint:'Determinant formula for 2x2'}; },
     function () { var a=rand(1,5); var b=rand(1,5); var c=rand(1,5); var d=rand(1,5); return {q:'For A=[[ '+a+','+b+' ]['+c+','+d+']], |A|?',a:(a*d-b*c)+'',hint:'|A| = ad - bc'}; },
-    function () { var a=rand(2,5); var b=rand(2,5); return {q:'If A is '+a+'x'+b+', A\\' is?',a:(''+b+'x'+a),hint:'Transpose: rows become columns'}; },
-    function () { var a=rand(1,4); var b=rand(1,4); return {q:'A=['+a+'x'+b+'] and B=['+b+'x'+a+']. (AB)\\' = ?',a:'B\\'A\\'',hint:'(AB)\\' = B\\' A\\''}; }
+    function () { var a=rand(2,5); var b=rand(2,5); return {q:'If A is '+a+'x'+b+', A\' is?',a:(''+b+'x'+a),hint:'Transpose: rows become columns'}; },
+    function () { var a=rand(1,4); var b=rand(1,4); return {q:'A=['+a+'x'+b+'] and B=['+b+'x'+a+']. (AB)\' = ?',a:'B\'A\'',hint:'(AB)\' = B\' A\''}; }
   ];
 
   GENERATORS.math.calculus_limits = [
@@ -1298,24 +1298,24 @@
     function () { var n=rand(1,4); return {q:'d/dx (x^'+n+' + 1/x^'+n+')?',a:''+n+'x^'+(n-1)+' - '+n+'/x^'+(n+1),hint:'1/x^n = x^(-n), d/dx = -n*x^(-n-1)'}; },
     function () { var a=rand(1,4); var b=rand(1,4); return {q:'d/dx (sin x + cos x)?',a:'cos x - sin x',hint:'d(sin)/dx=cos, d(cos)/dx=-sin'}; },
     function () { var n=rand(1,4); return {q:'d/dx e^(x^'+n+')?',a:''+n+'x^'+(n-1)+'e^(x^'+n+')',hint:'Chain rule: e^u * du/dx'}; },
-    function () { var a=rand(1,4); var b=rand(1,4); return {q:'d/dx ('+a+'x * sin x)?',a:''+a+'sin x + '+a+'x cos x',hint:'Product rule: (uv)\\' = u\\'v + uv\\''}; },
+    function () { var a=rand(1,4); var b=rand(1,4); return {q:'d/dx ('+a+'x * sin x)?',a:''+a+'sin x + '+a+'x cos x',hint:'Product rule: (uv)\' = u\'v + uv\''}; },
     function () { var a=rand(1,4); return {q:'d/dx tan^-1('+a+'x)?',a:''+a+'/(1+'+(a*a)+'x^2)',hint:'d/dx arctan(ax) = a/(1+a^2 x^2)'}; }
   ];
   GENERATORS.math.calculus_application = [
-    function () { var a=rand(1,4); var b=rand(1,4); return {q:'f(x)='+a+'x^2 + '+b+'x + 1. f\\'(x) at x=1?',a:(2*a+b)+'',hint:'f\\'(x)=2ax+b, plug x=1'}; },
+    function () { var a=rand(1,4); var b=rand(1,4); return {q:'f(x)='+a+'x^2 + '+b+'x + 1. f\'(x) at x=1?',a:(2*a+b)+'',hint:'f\'(x)=2ax+b, plug x=1'}; },
     function () { var a=rand(1,4); var b=rand(1,4); return {q:'Slope of tangent to y='+a+'x^2+'+b+'x at x=2?',a:(4*a+b)+'',hint:'dy/dx = 2ax+b, evaluate at x=2'}; },
-    function () { var a=rand(2,5); return {q:'Maxima or minima: f(x)=x^2 - '+a+'x + 1?',a:'Minimum (a>0, parabola opens up)',hint:'Second derivative test: f\\'\\'=2>0'}; },
+    function () { var a=rand(2,5); return {q:'Maxima or minima: f(x)=x^2 - '+a+'x + 1?',a:'Minimum (a>0, parabola opens up)',hint:'Second derivative test: f\'\'=2>0'}; },
     function () { var a=rand(2,5); var b=rand(2,5); return {q:'Rate of change: area of circle when r='+a+', dr/dt='+b+'?',a:(2*Math.PI*a*b).toFixed(2)+' units^2/s',hint:'dA/dt = 2*pi*r*dr/dt'}; },
-    function () { var a=rand(2,5); var b=rand(2,5); return {q:'Increasing/decreasing: f(x)=x^3-'+a+'x at x='+b+'?',a:(3*b*b-a)>0?'Increasing':'Decreasing',hint:'f\\'(x)=3x^2 - a, check sign at x'}; },
+    function () { var a=rand(2,5); var b=rand(2,5); return {q:'Increasing/decreasing: f(x)=x^3-'+a+'x at x='+b+'?',a:(3*b*b-a)>0?'Increasing':'Decreasing',hint:'f\'(x)=3x^2 - a, check sign at x'}; },
     function () { var a=rand(2,5); var b=rand(1,4); return {q:'Equation of tangent to y=x^2 at ('+a+','+(a*a)+')?',a:'y = '+(2*a)+'x - '+(a*a),hint:'y - y1 = m(x-x1), m=2x at x1'}; },
-    function () { var a=rand(2,6); return {q:'f(x)=x^3 - '+a+'x^2. Maxima at?',a:'x=0 and x='+(2*a/3).toFixed(1),hint:'f\\'(x)=3x^2-2ax=0 => x=0, x=2a/3'}; },
+    function () { var a=rand(2,6); return {q:'f(x)=x^3 - '+a+'x^2. Maxima at?',a:'x=0 and x='+(2*a/3).toFixed(1),hint:'f\'(x)=3x^2-2ax=0 => x=0, x=2a/3'}; },
     function () { var r=rand(2,6); return {q:'Volume of sphere: rate of change when r='+r+', dr/dt=2?',a:(4*Math.PI*r*r*2).toFixed(1)+' units^3/s',hint:'dV/dt = 4*pi*r^2*dr/dt'}; },
     function () { var a=rand(2,5); return {q:'Approx value of sqrt('+(a*a+1)+') using differentiation?',a:(a+1/(2*a)).toFixed(3)+' (approx)',hint:'sqrt(a^2+h) ~ a + h/(2a)'}; },
-    function () { var a=rand(2,5); return {q:'f(x)=x^3 - '+a+'x. Is f(x) increasing for x>'+a+'?',a:(3*a*a-a)>0?'Yes':'Check',hint:'f\\'(x)=3x^2 - a, for x>sqrt(a/3), f\\'>0'}; },
-    function () { var a=rand(1,4); var b=rand(1,4); var c=rand(1,3); return {q:'f(x)='+a+'x^3 - '+b+'x. f\\'\\'(1)?',a:(6*a)+'',hint:'f\\'\\'(x)=6ax, evaluate at x=1'}; },
-    function () { var a=rand(2,5); var b=rand(2,5); return {q:'Increasing: f(x)=sin x on [0,'+a+']?',a:Math.PI/2>a?'Varies':'Increasing on [0,pi/2]',hint:'f\\'(x)=cos x, positive on [0, pi/2)'}; },
-    function () { var a=rand(2,5); return {q:'f(x)=x^3-'+a+'x^2. f is concave up for?',a:'x > '+(a/3).toFixed(1),hint:'f\\'\\'(x)=6x-2a > 0 => x > a/3'}; },
-    function () { var a=rand(2,5); return {q:'Find min of f(x)=x^2 + '+a+'/x for x>0?',a:'At x = '+(a/2).toFixed(2)+'^(1/3) (approx)',hint:'Set f\\'(x)=2x - a/x^2 = 0 => x^3=a/2'}; },
+    function () { var a=rand(2,5); return {q:'f(x)=x^3 - '+a+'x. Is f(x) increasing for x>'+a+'?',a:(3*a*a-a)>0?'Yes':'Check',hint:'f\'(x)=3x^2 - a, for x>sqrt(a/3), f\'>0'}; },
+    function () { var a=rand(1,4); var b=rand(1,4); var c=rand(1,3); return {q:'f(x)='+a+'x^3 - '+b+'x. f\'\'(1)?',a:(6*a)+'',hint:'f\'\'(x)=6ax, evaluate at x=1'}; },
+    function () { var a=rand(2,5); var b=rand(2,5); return {q:'Increasing: f(x)=sin x on [0,'+a+']?',a:Math.PI/2>a?'Varies':'Increasing on [0,pi/2]',hint:'f\'(x)=cos x, positive on [0, pi/2)'}; },
+    function () { var a=rand(2,5); return {q:'f(x)=x^3-'+a+'x^2. f is concave up for?',a:'x > '+(a/3).toFixed(1),hint:'f\'\'(x)=6x-2a > 0 => x > a/3'}; },
+    function () { var a=rand(2,5); return {q:'Find min of f(x)=x^2 + '+a+'/x for x>0?',a:'At x = '+(a/2).toFixed(2)+'^(1/3) (approx)',hint:'Set f\'(x)=2x - a/x^2 = 0 => x^3=a/2'}; },
     function () { var a=rand(2,5); return {q:'f(x)=x^2 - '+a+'x + 1. Minimum value?',a:((4*1-a*a)/(4)).toFixed(2),hint:'Min value = -D/4a = -(a^2-4)/4'}; }
   ];
 
@@ -1352,7 +1352,7 @@
     function () { var n=rand(1,4); return {q:'dy/dx = '+n+'y, y(0)=2. y at x=1?',a:(2*Math.exp(n)).toFixed(2),hint:'y = 2e^(nx), plug x=1'}; },
     function () { var a=rand(1,4); return {q:'Diff eq: (x^'+a+' + y)dx + x dy = 0. Exact?',a:'Check: dM/dy = 1, dN/dx = 1 => Exact',hint:'Exact if dM/dy = dN/dx'}; },
     function () { var n=rand(1,3); var m=rand(1,3); return {q:'Homogeneous: dy/dx = (x^'+n+' + y^'+m+')/(x^'+n+'). Put y=vx?',a:'Yes, homogeneous degree 0',hint:'Put y=vx, then dy/dx = v + x dv/dx'}; },
-    function () { var n=rand(1,4); return {q:'Newton\\''s law of cooling: dT/dt = -k(T-Ts). Solution?',a:'T = Ts + (T0-Ts)e^(-kt)',hint:'Temperature approaches surrounding temp exponentially'}; }
+    function () { var n=rand(1,4); return {q:'Newton\'s law of cooling: dT/dt = -k(T-Ts). Solution?',a:'T = Ts + (T0-Ts)e^(-kt)',hint:'Temperature approaches surrounding temp exponentially'}; }
   ];
 
   GENERATORS.math.coordinate_geometry = [
