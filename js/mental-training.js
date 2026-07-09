@@ -4875,12 +4875,30 @@ function generateWeakSpotQuestion(diff) {
   return generateExamRushQuestion(diff);
 }
 
+function generateGrandSlamQuestion(diff) {
+  var category = pick(['quant', 'reasoning', 'verbal']);
+  var q;
+  switch (category) {
+    case 'quant': q = generateQuantQuestion(diff); break;
+    case 'reasoning': q = generateReasoningQuestion(diff); break;
+    case 'verbal': q = generateVerbalQuestion(diff); break;
+  }
+  if (q) {
+    q.type = 'grandslam';
+    q._parentCategory = category;
+    q.techniqueLabel = 'Grand Slam [' + category + '] ' + (q.techniqueLabel || '');
+    q.timeLimit = q.timeLimit || 15;
+  }
+  return q;
+}
+
 // Register new generators
 GENERATORS.quicksolve = generateQuickSolveQuestion;
 GENERATORS.instinct = generateInstinctQuestion;
 GENERATORS.fivesec = generateFiveSecQuestion;
 GENERATORS.examrush = generateExamRushQuestion;
 GENERATORS.weakspot = generateWeakSpotQuestion;
+GENERATORS.grandslam = generateGrandSlamQuestion;
 GENERATORS.quant = generateQuantQuestion;
 GENERATORS.reasoning = generateReasoningQuestion;
 GENERATORS.verbal = generateVerbalQuestion;
@@ -4917,7 +4935,7 @@ window.startMentalSession = function(mode, opts) {
 
   if (!mode || !GENERATORS[mode]) mode = 'mixed';
   var subMode = opts.subMode || null;
-  var totalQ = (mode === 'puzzle') ? 5 : 10;
+  var totalQ = (mode === 'puzzle') ? 5 : (mode === 'grandslam') ? 999 : 10;
 
   // Inject mistake bank questions (skip for puzzle/weakspot mode and when a specific sub-topic is chosen)
   var mistakeQueue = [];
@@ -5067,7 +5085,7 @@ window.submitMentalAnswer = function(session, question, selectedAnswer, timeRema
     state.subTopicStats[subTopic].attempts++;
     if (correct) state.subTopicStats[subTopic].correct++;
     // Also update parent category stat
-    var parentCat = mode === 'quant' ? 'quant' : (mode === 'reasoning' ? 'reasoning' : (mode === 'verbal' ? 'verbal' : null));
+    var parentCat = mode === 'grandslam' ? (question._parentCategory || null) : (mode === 'quant' ? 'quant' : (mode === 'reasoning' ? 'reasoning' : (mode === 'verbal' ? 'verbal' : null)));
     if (parentCat && state.stats[parentCat]) {
       state.stats[parentCat].attempts++;
       if (correct) state.stats[parentCat].correct++;
