@@ -144,6 +144,8 @@ canvas{display:block}
 .era-event-item:hover{background:rgba(255,255,255,.04);color:rgba(255,255,255,.8)}
 .era-event-item .e-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .era-event-item .e-year{color:rgba(255,255,255,.25);flex-shrink:0;min-width:32px}
+.d-era,.d-events{display:none}
+.d-era.show,.d-events.show{display:block}
 
 /* Subtitle overlay */
 #subtitle{
@@ -310,7 +312,7 @@ canvas{display:block}
   #detail.show{opacity:1;pointer-events:auto;transform:translateX(-50%)}
   #detail.expanded{bottom:0;left:0;right:0;width:100%;max-width:100%;border-radius:16px 16px 0 0;padding:16px 22px;max-height:45vh;height:auto;overflow-y:auto;-webkit-overflow-scrolling:touch;cursor:default;display:block;white-space:normal;transform:none}
   #detail.expanded .d-close{display:block}
-  #detail.expanded .d-sub,#detail.expanded .d-desc,#detail.expanded .d-fact,#detail.expanded .d-era,#detail.expanded .d-events,#detail.expanded #dTimeline{display:block}
+  #detail.expanded .d-sub,#detail.expanded .d-desc,#detail.expanded .d-fact,#detail.expanded .d-era.show,#detail.expanded .d-events.show,#detail.expanded #dTimeline{display:block}
   #detail.expanded .d-expand{display:none}
 }
 
@@ -368,6 +370,14 @@ canvas{display:block}
   <div class="d-sub" id="dSub"></div>
   <div class="d-desc" id="dDesc"></div>
   <div class="d-fact" id="dFact"></div>
+  <div class="d-era" id="dEra" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.06)">
+    <div style="font-size:.7em;font-weight:600;color:rgba(255,255,255,.4);margin-bottom:4px">⏳ CONTEMPORARIES</div>
+    <div id="dEraList" style="display:flex;flex-wrap:wrap;gap:4px"></div>
+  </div>
+  <div class="d-events" id="dEvents" style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.06)">
+    <div style="font-size:.7em;font-weight:600;color:rgba(255,255,255,.4);margin-bottom:4px">📌 ERA EVENTS</div>
+    <div id="dEventsList" style="max-height:120px;overflow-y:auto"></div>
+  </div>
 
   <button id="dTimeline">▶ Play Timeline</button>
 </div>
@@ -5392,16 +5402,46 @@ function showDetail(d,cat,k){
     tlBtn.onclick=()=>playTimeline(d.steps,d,cat,k);
     tlBtn.style.display='inline-flex';
   }else tlBtn.style.display='none';
-  // Set era chip
+  // Contemporaries & era events
   const year=parseYear(d.sub||'');
-  const curEra=ERAS.slice().reverse().find(e=>year>=e.start&&year<=e.end);
-  if(curEra&&curEra.id!=='all')document.getElementById('eraLabel').textContent=curEra.label;
+  const eraEl=document.getElementById('dEra'),eraList=document.getElementById('dEraList');
+  const evtEl=document.getElementById('dEvents'),evtList=document.getElementById('dEventsList');
+  eraEl.classList.remove('show');evtEl.classList.remove('show');
+  if(year){
+    const contemps=getContemporaries(year,30);
+    if(contemps.length){
+      eraList.innerHTML=contemps.slice(0,10).map(c=>
+        `<span class="contemp-chip" title="${c.title}">${c.name}</span>`
+      ).join('');
+      eraEl.classList.add('show');
+    }
+    const events=getEraEvents(year,50);
+    if(events.length){
+      evtList.innerHTML=events.slice(0,10).map(e=>
+        `<div class="era-event-item" data-cat="${e.cat}" data-idx="${D[e.cat]?.indexOf(e.item)}">
+          <span class="e-dot" style="background:${e.color}"></span>
+          <span class="e-year">${e.year}${e.year<0?' BCE':' CE'}</span>
+          <span>${e.label}</span>
+        </div>`
+      ).join('');
+      evtList.querySelectorAll('.era-event-item').forEach(el=>{
+        el.addEventListener('click',()=>{
+          const ci=D[el.dataset.cat];
+          if(ci&&ci[el.dataset.idx])flyTo(ci[el.dataset.idx],CAT[el.dataset.cat],el.dataset.cat);
+        });
+      });
+      evtEl.classList.add('show');
+    }
+    // Set era chip
+    const curEra=ERAS.slice().reverse().find(e=>year>=e.start&&year<=e.end);
+    if(curEra&&curEra.id!=='all')document.getElementById('eraLabel').textContent=curEra.label;
+  }
   dp.classList.remove('expanded');
   dp.classList.add('show');
 }
 document.getElementById('dClose').addEventListener('click',()=>{dp.classList.remove('show','expanded');clearHighlight();stopTimeline();hidePortrait();document.getElementById('subtitle').classList.remove('show')});
 dp.addEventListener('click',(e)=>{
-  if(e.target.closest('#dClose')||e.target.closest('#dTimeline')||e.target.closest('a'))return;
+  if(e.target.closest('#dClose')||e.target.closest('.era-event-item')||e.target.closest('#dTimeline')||e.target.closest('a'))return;
   if(innerWidth<=768)dp.classList.toggle('expanded');
 });
 
