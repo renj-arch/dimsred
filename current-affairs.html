@@ -235,9 +235,7 @@
                 <div class="q-progress"><div class="fill" id="qProgress" style="width:0%"></div></div>
                 <div class="q-cat-tag" id="catTag"></div>
                 <div class="q-text" id="qText">Loading...</div>
-                <div class="q-hint" id="qHint" onclick="toggleHint()">💡 Hint
-                    <div class="hint-text" id="hintText"></div>
-                </div>
+                <div class="q-hint" id="qHint" onclick="toggleHint()" style="display:none">💡 Hint
                 <div class="q-opt-grid" id="optGrid"></div>
                 <div style="font-size:.65em;color:var(--text-muted);margin-top:8px;text-align:center"><span class="kb-hint"><kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">→</kbd> advance · <kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">⏸</kbd> pause</span> <span class="swipe-hint" style="display:none">swipe → next</span></div>
             </div>
@@ -5576,10 +5574,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 document.getElementById('qText').style.fontSize = '.95em';
                 document.getElementById('qText').style.lineHeight = '1.6';
                 document.getElementById('optGrid').innerHTML = '';
-                document.getElementById('hintText').textContent = '';
-                document.getElementById('resultFlash').className = 'result-flash';
-                document.getElementById('resultFlash').style.display = 'none';
-                document.getElementById('nextBtn').classList.add('hidden');
+                document.getElementById('qHint').style.display = 'none';
                 document.getElementById('intuitionDisplay').style.display = 'none';
                 document.getElementById('correctNum').textContent = state.idx + 1;
                 document.getElementById('totalNum').textContent = state.questions.length;
@@ -5597,8 +5592,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 document.getElementById('qText').innerHTML = q.q.replace(/\n/g, '<br>') + yearStr;
                 document.getElementById('qText').style.fontSize = '';
                 document.getElementById('qText').style.lineHeight = '';
-                document.getElementById('hintText').textContent = q.hint || 'Think carefully about the options';
-                document.getElementById('hintText').classList.remove('show');
+                document.getElementById('qHint').style.display = 'none';
                 document.getElementById('resultFlash').className = 'result-flash';
                 document.getElementById('resultFlash').style.display = 'none';
                 document.getElementById('nextBtn').classList.add('hidden');
