@@ -3,7 +3,7 @@
   var MISTAKE_KEY = 'science_mistakes';
   var SESSION_CACHE_KEY = 'science_session_cache';
   var activeLayer = 'instinct';
-  
+  function esc(s){return (s||'').replace(/[&<>]/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[m];});}
   var session = null;
   var timerId = null;
   var currentQuestion = null;
@@ -6700,7 +6700,6 @@
       document.getElementById("st-score").textContent = "⭐ " + session.pointsEarned + " pts";
     }
 
-    function esc(s){return (s||'').replace(/[&<>]/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[m];});}
     var html = "<div style='background:linear-gradient(135deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:24px 24px 20px;margin-bottom:16px'>";
     if (q.hint) html += "<div style='font-size:.8em;color:#a78bfa;margin-bottom:10px;padding:8px 12px;background:rgba(167,139,250,.08);border-radius:8px;border-left:3px solid #a78bfa'>💡 " + esc(q.hint) + "</div>";
     html += "<div style='font-size:clamp(1rem,2.2vw,1.2rem);line-height:1.7;color:#fafafa;font-weight:500;font-family:\"Georgia\",\"Times New Roman\",serif;letter-spacing:.01em'>" + esc(q.q) + "</div></div>";
