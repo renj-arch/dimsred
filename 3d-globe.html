@@ -5396,33 +5396,12 @@ function showDetail(d,cat,k){
   const year=parseYear(d.sub||'');
   const curEra=ERAS.slice().reverse().find(e=>year>=e.start&&year<=e.end);
   if(curEra&&curEra.id!=='all')document.getElementById('eraLabel').textContent=curEra.label;
-    const events=getEraEvents(year,50);
-    if(events.length){
-      evtList.innerHTML=events.slice(0,10).map(e=>
-        `<div class="era-event-item" data-cat="${e.cat}" data-idx="${D[e.cat]?.indexOf(e.item)}">
-          <span class="e-dot" style="background:${e.color}"></span>
-          <span class="e-year">${e.year}${e.year<0?' BCE':' CE'}</span>
-          <span>${e.label}</span>
-        </div>`
-      ).join('');
-      evtList.querySelectorAll('.era-event-item').forEach(el=>{
-        el.addEventListener('click',()=>{
-          const ci=D[el.dataset.cat];
-          if(ci&&ci[el.dataset.idx])flyTo(ci[el.dataset.idx],CAT[el.dataset.cat],el.dataset.cat);
-        });
-      });
-      evtEl.style.display='block';
-    }
-    // Set era chip
-    const curEra=ERAS.slice().reverse().find(e=>year>=e.start&&year<=e.end);
-    if(curEra&&curEra.id!=='all')document.getElementById('eraLabel').textContent=curEra.label;
-  }
   dp.classList.remove('expanded');
   dp.classList.add('show');
 }
 document.getElementById('dClose').addEventListener('click',()=>{dp.classList.remove('show','expanded');clearHighlight();stopTimeline();hidePortrait();document.getElementById('subtitle').classList.remove('show')});
 dp.addEventListener('click',(e)=>{
-  if(e.target.closest('#dClose')||e.target.closest('.era-event-item')||e.target.closest('#dTimeline')||e.target.closest('a'))return;
+  if(e.target.closest('#dClose')||e.target.closest('#dTimeline')||e.target.closest('a'))return;
   if(innerWidth<=768)dp.classList.toggle('expanded');
 });
 
