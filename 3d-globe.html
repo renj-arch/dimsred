@@ -5405,16 +5405,16 @@ function showDetail(d,cat,k){
   const evtEl=document.getElementById('dEvents'),evtList=document.getElementById('dEventsList');
   eraEl.style.display='none';evtEl.style.display='none';
   if(year){
-    const contemps=getContemporaries(year);
+    const contemps=getContemporaries(year,30);
     if(contemps.length){
-      eraList.innerHTML=contemps.map(c=>
+      eraList.innerHTML=contemps.slice(0,10).map(c=>
         `<span class="contemp-chip" title="${c.title}">${c.name}</span>`
       ).join('');
       eraEl.style.display='block';
     }
-    const events=getEraEvents(year);
+    const events=getEraEvents(year,50);
     if(events.length){
-      evtList.innerHTML=events.slice(0,20).map(e=>
+      evtList.innerHTML=events.slice(0,10).map(e=>
         `<div class="era-event-item" data-cat="${e.cat}" data-idx="${D[e.cat]?.indexOf(e.item)}">
           <span class="e-dot" style="background:${e.color}"></span>
           <span class="e-year">${e.year}${e.year<0?' BCE':' CE'}</span>
