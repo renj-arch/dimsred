@@ -368,14 +368,7 @@ canvas{display:block}
   <div class="d-sub" id="dSub"></div>
   <div class="d-desc" id="dDesc"></div>
   <div class="d-fact" id="dFact"></div>
-  <div class="d-era" id="dEra" style="display:none;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.06)">
-    <div style="font-size:.7em;font-weight:600;color:rgba(255,255,255,.4);margin-bottom:4px">⏳ CONTEMPORARIES</div>
-    <div id="dEraList" style="display:flex;flex-wrap:wrap;gap:4px"></div>
-  </div>
-  <div class="d-events" id="dEvents" style="display:none;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.06)">
-    <div style="font-size:.7em;font-weight:600;color:rgba(255,255,255,.4);margin-bottom:4px">📌 ERA EVENTS</div>
-    <div id="dEventsList" style="max-height:120px;overflow-y:auto"></div>
-  </div>
+
   <button id="dTimeline">▶ Play Timeline</button>
 </div>
 
@@ -5399,19 +5392,10 @@ function showDetail(d,cat,k){
     tlBtn.onclick=()=>playTimeline(d.steps,d,cat,k);
     tlBtn.style.display='inline-flex';
   }else tlBtn.style.display='none';
-  // Contemporaries & era events
+  // Set era chip
   const year=parseYear(d.sub||'');
-  const eraEl=document.getElementById('dEra'),eraList=document.getElementById('dEraList');
-  const evtEl=document.getElementById('dEvents'),evtList=document.getElementById('dEventsList');
-  eraEl.style.display='none';evtEl.style.display='none';
-  if(year){
-    const contemps=getContemporaries(year,30);
-    if(contemps.length){
-      eraList.innerHTML=contemps.slice(0,10).map(c=>
-        `<span class="contemp-chip" title="${c.title}">${c.name}</span>`
-      ).join('');
-      eraEl.style.display='block';
-    }
+  const curEra=ERAS.slice().reverse().find(e=>year>=e.start&&year<=e.end);
+  if(curEra&&curEra.id!=='all')document.getElementById('eraLabel').textContent=curEra.label;
     const events=getEraEvents(year,50);
     if(events.length){
       evtList.innerHTML=events.slice(0,10).map(e=>
