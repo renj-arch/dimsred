@@ -199,7 +199,7 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
 
   const toInsert = [];
   for (const e of entries) {
-    if (e._quality === 'low') continue;
+    if (e._quality === 'poor') continue;
     if (!e.la || !e.ln || !e.n) continue;
     const entry = {
       n: e.n, la: e.la, ln: e.ln,

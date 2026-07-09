@@ -179,7 +179,6 @@ const GLOBE_CAT_MAP = {
   museum:'museum', religious:'religious', shipwreck:'shipwreck',
   spaceport:'spaceport', statue:'statue', wind_farm:'wind_farm',
   zoo:'zoo', amusement_park:'amusement_park',
-  range:'range', sea:'sea', valley:'valley',
   escarpment:'escarpment', geopark:'geopark',
   folk_dance:'folk_dance', longitude:'longitude',
   festival:'festival', language:'language', cuisine:'cuisine',
@@ -687,8 +686,8 @@ const CFG = [
     id: 'tunnel',
     label: 'Tunnels',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel ?length WHERE {
-      ?item wdt:P31 wd:Q44377. ?item wdt:P625 ?coord. ?item wdt:P2043 ?length.
-      FILTER(?length > 500)
+      ?item wdt:P31 wd:Q44377. ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P2043 ?length. }
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY DESC(?length) LIMIT 60`,
@@ -1388,7 +1387,7 @@ async function processCat(cat) {
     entry._quality=assessQuality(entry);
 
     // Filter
-    if(entry._quality==='poor'||entry.desc.length<15||entry.fact.length<15||entry.sub.length<3||entry.la===0)continue;
+    if(entry._quality==='poor'||entry.sub.length<3||entry.la===0||!entry.n)continue;
     out.push(entry);
     if(n%3===0)await new Promise(r=>setTimeout(r,300));
   }

@@ -534,6 +534,10 @@ const CAT = {
   trade:{label:'Trade Routes',color:'#f97316',icon:'🚢',region:'WW'},
   oil:{label:'Oil & Gas Fields',color:'#1e293b',icon:'⛽',region:'WW'},
   personality:{label:'Notable People',color:'#e879f9',icon:'👤',region:'WW'},
+  statue:{label:'Statues & Monuments',color:'#a78bfa',icon:'🗽',region:'WW'},
+  capital:{label:'World Capitals',color:'#60a5fa',icon:'🏛️',region:'WW'},
+  w_coast:{label:'Coasts & Shorelines',color:'#38bdf8',icon:'🏖️',region:'WW'},
+  w_civilization:{label:'Ancient Civilizations',color:'#facc15',icon:'🏛️',region:'WW'},
 };
 
 const D = {};
@@ -3913,6 +3917,14 @@ D.mineral = [
   {n:'Limestone (MP/Chhattisgarh)',la:24.00,ln:81.00,sub:'MP · Largest producer',desc:'Limestone is the most abundant mineral in India. MP leads with 25% followed by Rajasthan (15%), AP (10%), Chhattisgarh (10%), Gujarat. Essential for cement industry (calcium carbonate). Used in steel (flux), fertilizers, paper, chemicals. Cement plants co-located near limestone mines (Satna, Chhattisgarh, Gulbarga). India is 2nd largest cement producer globally.',fact:'Most abundant · MP (25%) · Cement industry · 2nd globally cement · Flux in steelmaking'},
   {n:'Uranium (Jaduguda)',la:22.65,ln:86.36,sub:'Jharkhand · Jaduguda mines',desc:'India\'s first uranium mine (1967) in East Singhbhum. Operated by Uranium Corporation of India (UCIL). Supplies fuel to India\'s nuclear reactors. Also mines at Bhatin, Narwapahar, Turamdih (all in Singhbhum). Tummalapalle (AP) — largest uranium discovery in India (2014). Atomic Minerals Directorate for exploration. India has limited uranium reserves — imports from Kazakhstan, Canada.',fact:'First uranium mine (1967) · UCIL · Singhbhum belt · Tummalapalle (AP) largest · Limited domestic reserves'},
 ];
+D.statue = [
+];
+D.capital = [
+];
+D.w_coast = [
+];
+D.w_civilization = [
+];
 // ============================================================
 // CONTEMPORARIES DATASET
 // ============================================================
@@ -5162,7 +5174,7 @@ function mkLbl(text,col,scale=0.12){
 // LAYER PANEL
 // ============================================================
 const panel = document.getElementById('layersPanel');
-const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','tiger','hill','bird','i_pass','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','latitude','current','phenomena','wind','cloud','forest','rainfall','plateau','plain','valley','w_pass','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','trade','oil','personality','highway','i_range','crop','mineral'];
+const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','tiger','hill','bird','i_pass','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','latitude','current','phenomena','wind','cloud','forest','rainfall','plateau','plain','valley','w_pass','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','trade','oil','personality','highway','i_range','crop','mineral','statue','capital','w_coast','w_civilization'];
 
 // Auto-play state
 let _ap=null; // {k, idx, items, timeout}
