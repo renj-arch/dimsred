@@ -338,6 +338,55 @@ canvas{display:block}
   #portrait{right:8px;bottom:100px}
   #portrait .p-frame{width:56px;height:56px}
 }
+/* Time machine scrubber */
+#timelineBar{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:14;
+  display:flex;align-items:center;gap:10px;
+  background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.06);border-radius:100px;
+  padding:6px 14px 6px 18px;max-width:92%;width:480px;
+  opacity:0;pointer-events:none;transition:opacity .4s ease;
+}
+#timelineBar.show{opacity:1;pointer-events:auto}
+#tlYear{display:flex;align-items:baseline;gap:1px;flex-shrink:0}
+#tlYearVal{font-size:1.05em;font-weight:700;color:#fff;min-width:44px;text-align:right;font-variant-numeric:tabular-nums}
+#tlYearSuffix{font-size:.55em;color:rgba(255,255,255,.3);font-weight:600}
+#tlTrackWrap{flex:1;position:relative;height:24px;display:flex;align-items:center}
+#tlTrack{position:absolute;left:0;right:0;height:6px;border-radius:3px;pointer-events:none;top:50%;transform:translateY(-50%)}
+#tlSlider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:transparent;outline:none;cursor:pointer;position:relative;z-index:1;margin:0}
+#tlSlider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid rgba(0,0,0,.3);cursor:pointer;box-shadow:0 0 8px rgba(0,0,0,.3);transition:transform .15s}
+#tlSlider::-webkit-slider-thumb:hover{transform:scale(1.15)}
+#tlSlider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid rgba(0,0,0,.3);cursor:pointer}
+#tlStats{font-size:.58em;color:rgba(255,255,255,.25);font-weight:600;flex-shrink:0;min-width:40px;text-align:center}
+#tlToggle{font-size:1.1em;cursor:pointer;opacity:.5;transition:opacity .2s;flex-shrink:0;line-height:1}
+#tlToggle:hover{opacity:1}
+/* Contemporaries panel */
+#contempPanel{
+  position:fixed;right:14px;bottom:70px;z-index:14;
+  width:220px;max-height:280px;border-radius:12px;
+  background:rgba(0,0,0,.65);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.06);
+  padding:10px 12px;overflow-y:auto;
+  opacity:0;pointer-events:none;transition:opacity .4s ease;transform:translateY(8px);
+}
+#contempPanel.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+#contempPanel .cp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,.06)}
+#contempPanel .cp-head span:first-child{font-size:.6em;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:.08em;text-transform:uppercase}
+#contempPanel .cp-year{font-size:.55em;color:rgba(255,255,255,.2);font-weight:600}
+#cpBody{display:flex;flex-direction:column;gap:3px}
+#cpBody .cp-item{font-size:.68em;color:rgba(255,255,255,.65);padding:3px 6px;border-radius:6px;background:rgba(255,255,255,.04);display:flex;align-items:center;gap:5px}
+#cpBody .cp-item .cp-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+#cpBody .cp-item .cp-title{font-size:.75em;color:rgba(255,255,255,.3);margin-left:auto;flex-shrink:0}
+#cpBody .cp-empty{font-size:.65em;color:rgba(255,255,255,.15);text-align:center;padding:12px 0}
+@media(max-width:768px){
+  #timelineBar{
+    bottom:10px;padding:4px 10px 4px 14px;width:auto;max-width:96%;gap:6px;border-radius:50px
+  }
+  #tlYearVal{font-size:.9em;min-width:36px}
+  #tlStats{font-size:.5em;min-width:30px}
+  #contempPanel{right:8px;bottom:60px;width:170px;max-height:200px;padding:8px 10px}
+  #contempPanel .cp-item{font-size:.62em}
+}
 </style>
 </head>
 <body>
@@ -361,6 +410,29 @@ canvas{display:block}
 
 <div id="layersPanel"></div>
 <button id="layToggle" title="Toggle layers">◀</button>
+
+<!-- Time machine scrubber -->
+<div id="timelineBar">
+  <div id="tlYear">
+    <span id="tlYearVal">2026</span>
+    <span id="tlYearSuffix">CE</span>
+  </div>
+  <div id="tlTrackWrap">
+    <canvas id="tlTrack"></canvas>
+    <input type="range" id="tlSlider" min="-5000" max="2026" value="2026" step="1">
+  </div>
+  <div id="tlStats"><span id="tlCount">0</span> items</div>
+  <span id="tlToggle" title="Toggle timeline">⌛</span>
+</div>
+
+<!-- Contemporaries panel -->
+<div id="contempPanel">
+  <div class="cp-head">
+    <span>👤 Who Was Alive</span>
+    <span class="cp-year" id="cpYear">2026 CE</span>
+  </div>
+  <div id="cpBody"></div>
+</div>
 
 <div id="detail">
   <button class="d-close" id="dClose">✕</button>
@@ -4466,13 +4538,40 @@ const CONTEMPORARIES = {
 // ERA & TIMELINE DEFINITIONS
 // ============================================================
 const ERAS = [
-  {id:'all',label:'All Eras',start:-5000,end:2030},
-  {id:'ancient',label:'Ancient India',start:-3300,end:1206,bg:'#c084fc20'},
-  {id:'medieval',label:'Medieval India',start:1206,end:1526,bg:'#fb923c20'},
-  {id:'mughal',label:'Mughal Era',start:1526,end:1707,bg:'#f472b620'},
-  {id:'modern',label:'Modern India',start:1707,end:1947,bg:'#60a5fa20'},
-  {id:'post',label:'Post-1947',start:1947,end:2026,bg:'#34d39920'},
+  {id:'all',label:'All Eras',start:-5000,end:2030,color:'#fff'},
+  {id:'ancient',label:'Ancient India',start:-3300,end:1206,bg:'#c084fc20',color:'#c084fc',icon:'🏛️'},
+  {id:'medieval',label:'Medieval India',start:1206,end:1526,bg:'#fb923c20',color:'#fb923c',icon:'⚔️'},
+  {id:'mughal',label:'Mughal Era',start:1526,end:1707,bg:'#f472b620',color:'#f472b6',icon:'👑'},
+  {id:'modern',label:'Modern India',start:1707,end:1947,bg:'#60a5fa20',color:'#60a5fa',icon:'🏗️'},
+  {id:'post',label:'Post-1947',start:1947,end:2026,bg:'#34d39920',color:'#34d399',icon:'🚀'},
 ];
+const ERA_INFO = {
+  ancient:{
+    desc:'From the Indus Valley Civilization to the Delhi Sultanate — India saw the rise of great empires (Maurya, Gupta), the birth of Buddhism and Jainism, the Golden Age of science and arts, and the invasion of Mahmud of Ghazni.',
+    figures:[{n:'Ashoka',t:'Maurya Emperor'},{n:'Chandragupta',t:'Maurya Founder'},{n:'Aryabhata',t:'Mathematician'},{n:'Kalidasa',t:'Sanskrit Poet'},{n:'Samudragupta',t:'Gupta Emperor'},{n:'Chanakya',t:'Political Strategist'}],
+    events:[{y:'2600 BCE',e:'Indus Valley Civilization'},{y:'321 BCE',e:'Maurya Empire founded'},{y:'261 BCE',e:'Kalinga War — Ashoka embraces Buddhism'},{y:'320 CE',e:'Gupta Empire — Golden Age'},{y:'500 CE',e:'Aryabhata calculates pi'},{y:'712 CE',e:'Arab invasion of Sindh'},{y:'1000 CE',e:'Mahmud of Ghazni raids India'},{y:'1206 CE',e:'Delhi Sultanate begins'}]
+  },
+  medieval:{
+    desc:'The Delhi Sultanate era — five dynasties ruled from Delhi: Slave, Khilji, Tughlaq, Sayyid, and Lodi. Alauddin Khilji expanded south, Muhammad bin Tughlaq made disastrous experiments, and Timur\'s invasion weakened Delhi.',
+    figures:[{n:'Alauddin Khilji',t:'Sultan · Market control'},{n:'Muhammad bin Tughlaq',t:'Sultan · Ambitious schemes'},{n:'Ibn Battuta',t:'Moroccan traveller'},{n:'Razia Sultana',t:'First female Sultan'},{n:'Timur',t:'Invader (1398)'},{n:'Kabir',t:'Saint-poet'}],
+    events:[{y:'1206 CE',e:'Delhi Sultanate under Qutb-ud-din Aibak'},{y:'1296 CE',e:'Alauddin Khilji\'s expansion'},{y:'1325 CE',e:'Ibn Battuta visits India'},{y:'1336 CE',e:'Vijayanagara Empire'},{y:'1398 CE',e:'Timur invades Delhi'},{y:'1498 CE',e:'Vasco da Gama reaches India'}]
+  },
+  mughal:{
+    desc:'The Mughal Empire — from Babur\'s victory at Panipat to Aurangzeb\'s death. Akbar\'s religious tolerance, Shah Jahan\'s architectural zenith (Taj Mahal), and the rise of Maratha power under Shivaji.',
+    figures:[{n:'Akbar',t:'Greatest Mughal'},{n:'Shah Jahan',t:'Taj Mahal builder'},{n:'Aurangzeb',t:'Last great Mughal'},{n:'Shivaji',t:'Maratha founder'},{n:'Guru Gobind Singh',t:'10th Sikh Guru'},{n:'Nur Jahan',t:'Empress & power broker'}],
+    events:[{y:'1526 CE',e:'Babur wins First Panipat'},{y:'1556 CE',e:'Akbar crowned at 13'},{y:'1576 CE',e:'Battle of Haldighati'},{y:'1632 CE',e:'Taj Mahal construction'},{y:'1674 CE',e:'Shivaji coronated'},{y:'1707 CE',e:'Aurangzeb dies — empire declines'}]
+  },
+  modern:{
+    desc:'The British Raj and India\'s freedom struggle. From the Battle of Plassey to Independence. The Revolt of 1857, the founding of INC, Gandhi\'s non-violent movement, and the partition of India.',
+    figures:[{n:'Mahatma Gandhi',t:'Father of the Nation'},{n:'Jawaharlal Nehru',t:'First PM'},{n:'Subhas Bose',t:'INA leader'},{n:'Bhagat Singh',t:'Revolutionary'},{n:'BR Ambedkar',t:'Constitution architect'},{n:'Rani Lakshmibai',t:'1857 warrior'}],
+    events:[{y:'1757 CE',e:'Battle of Plassey'},{y:'1857 CE',e:'First War of Independence'},{y:'1885 CE',e:'INC founded'},{y:'1919 CE',e:'Jallianwala Bagh'},{y:'1930 CE',e:'Dandi March'},{y:'1942 CE',e:'Quit India Movement'},{y:'1947 CE',e:'Independence & Partition'}]
+  },
+  post:{
+    desc:'Independent India — the world\'s largest democracy. From Nehru\'s socialist policies to economic liberalization in 1991, the Green Revolution, space program, IT boom, and India\'s rise as a global power.',
+    figures:[{n:'Nehru',t:'First PM'},{n:'Sardar Patel',t:'Unification of India'},{n:'Indira Gandhi',t:'First woman PM'},{n:'APJ Abdul Kalam',t:'Missile Man'},{n:'PV Narasimha Rao',t:'1991 reforms'},{n:'Narendra Modi',t:'Current PM'}],
+    events:[{y:'1947 CE',e:'Independence & Partition'},{y:'1950 CE',e:'Republic — Constitution adopted'},{y:'1962 CE',e:'Sino-Indian War'},{y:'1971 CE',e:'Bangladesh Liberation'},{y:'1991 CE',e:'Economic liberalization'},{y:'2014 CE',e:'Modi government begins'}]
+  }
+};
 
 function fmtYear(y){
   if(y<0)return Math.abs(y)+' BCE';
@@ -5327,6 +5426,111 @@ document.getElementById('layToggle').addEventListener('click',()=>{
     chips.appendChild(btn);
   });
 })();
+
+// ============================================================
+// TIME MACHINE
+// ============================================================
+let _tmActive=false,_tmYear=2026;
+function initTimeline(){
+  const wrap=document.getElementById('timelineBar');
+  const slider=document.getElementById('tlSlider');
+  const yearVal=document.getElementById('tlYearVal');
+  const suffix=document.getElementById('tlYearSuffix');
+  const countEl=document.getElementById('tlCount');
+  const canvas=document.getElementById('tlTrack');
+  const ctx=canvas.getContext('2d');
+  const cp=document.getElementById('contempPanel');
+  const cpBody=document.getElementById('cpBody');
+  const cpYear=document.getElementById('cpYear');
+  // Draw era zones on canvas
+  function drawTrack(){
+    const W=wrap.querySelector('#tlTrackWrap').offsetWidth-4||320;
+    canvas.width=W;canvas.height=8;
+    const total=7026,offset=5000;
+    const eras=ERAS.filter(e=>e.id!=='all');
+    eras.forEach((e,i)=>{
+      const x=((e.start+offset)/total)*W;
+      const x2=((e.end+offset)/total)*W;
+      ctx.fillStyle=e.color+'40';
+      ctx.fillRect(x,1,x2-x,6);
+      // Era separator line
+      if(i>0){
+        ctx.strokeStyle='rgba(255,255,255,.08)';ctx.lineWidth=1;
+        ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,8);ctx.stroke();
+      }
+    });
+    // Current year marker
+    const curX=((_tmYear+offset)/total)*W;
+    ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=1;ctx.setLineDash([2,3]);
+    ctx.beginPath();ctx.moveTo(curX,0);ctx.lineTo(curX,8);ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  function updateContemporaries(year){
+    cpBody.innerHTML='';
+    const alive=[];
+    for(const [name,data] of Object.entries(CONTEMPORARIES)){
+      const b=data.b,d=data.d;
+      if(b!==undefined&&d!==undefined&&year>=b&&year<=d){
+        alive.push({name,...data});
+      }
+    }
+    if(!alive.length){cpBody.innerHTML='<div class="cp-empty">No notable figures alive</div>';return;}
+    alive.sort((a,b)=>a.b-b.b).slice(0,30).forEach(p=>{
+      const el=document.createElement('div');el.className='cp-item';
+      const typeColor={'scholar':'#60a5fa','ruler':'#f472b6','religious':'#fbbf24','explorer':'#34d399','thinker':'#a78bfa'}[p.type]||'rgba(255,255,255,.3)';
+      el.innerHTML=`<span class="cp-dot" style="background:${typeColor}"></span>${p.name}<span class="cp-title">${p.title||''}</span>`;
+      cpBody.appendChild(el);
+    });
+  }
+  slider.addEventListener('input',()=>{
+    _tmYear=parseInt(slider.value);
+    const abs=_tmYear<0?Math.abs(_tmYear)+' BCE':_tmYear+' CE';
+    yearVal.textContent=Math.abs(_tmYear);
+    suffix.textContent=_tmYear<0?'BCE':'CE';
+    cpYear.textContent=abs;
+    // Filter markers
+    let count=0;
+    allMarkers.forEach(m=>{
+      if(m._mesh){m._mesh.visible=true;m._edge&&(m._edge.visible=true);m._hide=false;m._kingdomSelected=null;}
+      const y=parseYear(m.data.sub||'');
+      const match=!y||Math.abs(y-_tmYear)<=50;
+      m._eraHidden=!match;
+      if(m.el)m.el.visible=match;
+      if(m.lbl)m.lbl.visible=match;
+      if(m._mesh)m._mesh.visible=match;
+      if(m._edge)m._edge.visible=match;
+      if(match)count++;
+    });
+    countEl.textContent=count;
+    // Redraw track marker
+    const total=7026,offset=5000,W=canvas.width;
+    const curX=((_tmYear+offset)/total)*W;
+    ctx.clearRect(0,0,W,8);
+    const eras=ERAS.filter(e=>e.id!=='all');
+    eras.forEach((e,i)=>{
+      const x=((e.start+offset)/total)*W;
+      const x2=((e.end+offset)/total)*W;
+      ctx.fillStyle=e.color+'40';
+      ctx.fillRect(x,1,x2-x,6);
+      if(i>0){ctx.strokeStyle='rgba(255,255,255,.08)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,8);ctx.stroke();}
+    });
+    ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=1;ctx.setLineDash([2,3]);
+    ctx.beginPath();ctx.moveTo(curX,0);ctx.lineTo(curX,8);ctx.stroke();
+    ctx.setLineDash([]);
+    updateContemporaries(_tmYear);
+  });
+  // Toggle timeline
+  document.getElementById('tlToggle').addEventListener('click',()=>{
+    _tmActive=!_tmActive;
+    wrap.classList.toggle('show');
+    cp.classList.toggle('show');
+    if(_tmActive){drawTrack();slider.dispatchEvent(new Event('input'));}
+    else{filterByEra(currentEra);cp.classList.remove('show');}
+  });
+  // Handle resize
+  window.addEventListener('resize',()=>{if(_tmActive)drawTrack();});
+}
+setTimeout(initTimeline,500);
 
 // ============================================================
 // ERA FILTERING
