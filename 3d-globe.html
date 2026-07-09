@@ -6306,6 +6306,7 @@ function buildLectureData(){
     {data:D.w_kingdom,type:'w_kingdom'}
   ];
   for(const {data,type} of arrays){
+    if(!data)continue;
     for(const e of data){
       if(!e.la||!e.ln)continue;
       let year=parseYear(e.year);
