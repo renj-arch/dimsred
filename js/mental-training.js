@@ -2200,7 +2200,14 @@ function generateNumberSenseQuestion(diff, layer) {
     // SBI PO Hard: large multiplication approximation
     function(){ var a=rand(200,500), b=rand(200,500); return { q:'Approx: ' + a + ' × ' + b + ' (nearest thousand)', a:Math.round(a*b/1000)*1000, hint:'Round: ' + Math.round(a/100)*100 + ' × ' + Math.round(b/100)*100 + ' = ' + (Math.round(a/100)*100*Math.round(b/100)*100), intuition:'Actual = ' + (a*b) + ', approximate = ' + Math.round(a*b/1000)*1000 }; },
     // SBI PO Hard: cube root approximation
-    function(){ var n=rand(4,9); var cube=n*n*n; return { q:'Approximate cube root of ' + cube, a:n, hint:'Find what number cubed gives ' + cube, intuition:n + '³ = ' + cube + ', so ∛' + cube + ' = ' + n }; }
+    function(){ var n=rand(4,9); var cube=n*n*n; return { q:'Approximate cube root of ' + cube, a:n, hint:'Find what number cubed gives ' + cube, intuition:n + '³ = ' + cube + ', so ∛' + cube + ' = ' + n }; },
+    // SBI PO Hard: new variants
+    function(){ var p=rand(12,85), n=rand(50,500); return { q:'Find '+p+'% of '+n, a:Math.round(p*n/100), hint:'= '+p+'/100×'+n }; },
+    function(){ var t=rand(1,9), n=t*10+5; return { q:n+'²', a:n*n, hint:'('+t+'5)² = '+t+'×'+(t+1)+'|25' }; },
+    function(){ var a=[2,3,4,5,6,7,8,9][rand(0,7)], p=rand(2,7); var c=[[],[],[2,4,8,6],[3,9,7,1],[4,6],[5],[6],[7,9,3,1],[8,4,2,6],[9,1]]; return { q:'Unit digit of '+a+'^'+p, a:c[a][(p-1)%c[a].length], hint:'Cyclicity of '+a+' is '+c[a].length }; },
+    function(){ var n=rand(10,50); return { q:'Sum of first '+n+' naturals', a:n*(n+1)/2, hint:'n(n+1)/2 = '+n+'×'+(n+1)+'/2' }; },
+    function(){ var n=rand(4,7), x=rand(50,99); var s=0; for(var i=0;i<n-1;i++)s+=rand(10,40); return { q:'Avg of '+n+' nos = '+((s+x)/n).toFixed(1)+'. Sum given='+s+'. Missing?', a:x, hint:'Total='+(s+x)+', missing='+(s+x)+'-'+s }; },
+    function(){ var n=rand(4,12); var d=n*n/100; return { q:'√'+d, a:n/10, hint:'√'+d+' = √('+n+'²/100) = '+n+'/10' }; }
   ];
   var ty = types;
   if (layer === 'instinct') ty = ty.slice(0, 3);
@@ -2387,7 +2394,23 @@ function generateQuadraticQuestion(diff, layer) {
     // SBI PO Hard: quadratic with two conditions (sum and product of reciprocals)
     function(){ var r1=rand(1,5), r2=rand(6,10); return { q: 'Sum of reciprocals of roots of x² - ' + (r1+r2) + 'x + ' + (r1*r2) + ' = 0 is?', a: Math.round((r1+r2)/(r1*r2)*100)/100, hint: 'Sum of reciprocals = (sum of roots)/(product of roots)', intuition: 'Sum=' + (r1+r2) + ', product=' + (r1*r2) + '. 1/' + r1 + ' + 1/' + r2 + ' = (' + r1 + '+' + r2 + ')/(' + r1 + '×' + r2 + ') = ' + Math.round((r1+r2)/(r1*r2)*100)/100 }; },
     // SBI PO Hard: find condition for equal roots
-    function(){ var a=rand(1,3), c=rand(1,5); var b = 2 * Math.sqrt(a*c); if (b !== Math.floor(b)) b = Math.floor(b); return { q: 'For what k are roots equal: ' + a + 'x² + ' + b + 'x + ' + c + ' = 0? (k=b value)', a: b, hint: 'For equal roots, discriminant = 0 → b² = 4ac', intuition: 'b² = 4×' + a + '×' + c + ' = ' + (4*a*c) + ', so b = √' + (4*a*c) + ' = ' + Math.round(Math.sqrt(4*a*c)*100)/100 + '... given b=' + b }; }
+    function(){ var a=rand(1,3), c=rand(1,5); var b = 2 * Math.sqrt(a*c); if (b !== Math.floor(b)) b = Math.floor(b); return { q: 'For what k are roots equal: ' + a + 'x² + ' + b + 'x + ' + c + ' = 0? (k=b value)', a: b, hint: 'For equal roots, discriminant = 0 → b² = 4ac', intuition: 'b² = 4×' + a + '×' + c + ' = ' + (4*a*c) + ', so b = √' + (4*a*c) + ' = ' + Math.round(Math.sqrt(4*a*c)*100)/100 + '... given b=' + b }; },
+    // SBI PO Hard: Form quadratic from given roots
+    function(){ var a=rand(1,4), b=rand(2,6); return { q:'Form quadratic: roots '+a+' and '+b, a:'x\u00b2-'+(a+b)+'x+'+(a*b), hint:'x\u00b2-(sum)x+product=0' }; },
+    // SBI PO Hard: Sum of reciprocals of roots
+    function(){ var a=rand(1,4), b=rand(2,5); return { q:'Roots of x\u00b2-'+(a+b)+'x+'+(a*b)+'=0. 1/\u03b1+1/\u03b2?', a:Math.round((a+b)/(a*b)*100)/100, hint:'(sum)/(product) = '+(a+b)+'/'+(a*b) }; },
+    // SBI PO Hard: Nature from discriminant
+    function(){ var a=rand(1,3), b=rand(5,9), c=rand(2,4); var d=b*b-4*a*c; return { q:'Nature of roots: '+a+'x\u00b2+'+b+'x+'+c+'=0', a:d>0?'Real & distinct':(d===0?'Real & equal':'Imaginary'), hint:'D='+b+'\u00b2-4\u00d7'+a+'\u00d7'+c+'='+d }; },
+    // SBI PO Hard: Solve (larger root) by formula
+    function(){ var a=rand(1,3), b=rand(3,8), c=rand(1,4); var d=b*b-4*a*c; if(d<0){c=1;d=b*b-4*a*c;} var r=Math.round((-b+Math.sqrt(d))/(2*a)*10)/10; return { q:'Solve: '+a+'x\u00b2+'+b+'x+'+c+'=0 (larger)', a:r, hint:'x=[-b\u00b1\u221a(b\u00b2-4ac)]/2a' }; },
+    // SBI PO Hard: Find k for equal roots
+    function(){ var a=rand(1,3), b=rand(4,8); return { q:'Find k: '+a+'x\u00b2+'+b+'x+k=0 has equal roots', a:Math.round(b*b/(4*a)), hint:'D=0: '+b+'\u00b2-4\u00d7'+a+'\u00d7k=0' }; },
+    // SBI PO Hard: Quadratic from sum & product
+    function(){ var a=rand(1,4), b=rand(2,5); return { q:'Sum='+(a+b)+', product='+(a*b)+'. Find quadratic', a:'x\u00b2-'+(a+b)+'x+'+(a*b), hint:'x\u00b2-Sx+P=0' }; },
+    // SBI PO Hard: Solve by rearrangement
+    function(){ var a=rand(2,5), b=rand(1,4); var val=a*a+b*b-a*b; return { q:'Solve: '+a+'x\u00b2+'+b+'x='+val, a:Math.round((-b+Math.sqrt(b*b+4*a*val))/(2*a)*10)/10, hint:'Rearrange to standard form' }; },
+    // SBI PO Hard: \u03b1\u00b2+\u03b2\u00b2 from sum & product
+    function(){ var a=rand(1,3), b=rand(2,6); return { q:'If \u03b1,\u03b2 roots of x\u00b2-'+(a+b)+'x+'+(a*b)+'=0, find \u03b1\u00b2+\u03b2\u00b2', a:(a+b)*(a+b)-2*a*b, hint:'\u03b1\u00b2+\u03b2\u00b2=(\u03b1+\u03b2)\u00b2-2\u03b1\u03b2' }; }
   ];
   var idx;
   if (diff >= 5 && ty.length >= 4) {
@@ -3001,7 +3024,16 @@ function generatePipesCisternsQuestion(diff, layer) {
     // SBI PO Hard: find capacity given partial fill times
     function(){ var cap=rand(1000,5000), a=rand(3,8), b=rand(4,10), m=rand(2,5); return { q:'Pipe A fills at ' + Math.round(cap/a) + 'L/h, B at ' + Math.round(cap/b) + 'L/h. Both open for ' + m + 'h, then A alone. Total time ' + Math.round(m + (cap-m*(cap/a+cap/b))/(cap/a)) + 'h. Tank capacity?', a:cap, hint:'In '+m+'h: filled=' + m*(cap/a+cap/b) + '. Remaining = capacity - ' + m*(cap/a+cap/b) + '. Then A alone takes time = remaining/(cap/a)' }; },
     // SBI PO Hard: pipe with variable filling rate
-    function(){ var a=rand(3,6); return { q:'Pipe fills tank in ' + a + 'h. Due to leak, takes ' + (a+rand(2,5)) + 'h. Leak alone empties full tank in?', a:Math.round(a*(a+rand(2,5))/((a+rand(2,5))-a)), hint:'Leak time = (fill×leakFill)/(leakFill-fill)', intuition:'1/' + a + ' - 1/leak = 1/' + (a+rand(2,5)) + '. Leak time = ' + Math.round(a*(a+rand(2,5))/((a+rand(2,5))-a)) + 'h' }; }
+    function(){ var a=rand(3,6); return { q:'Pipe fills tank in ' + a + 'h. Due to leak, takes ' + (a+rand(2,5)) + 'h. Leak alone empties full tank in?', a:Math.round(a*(a+rand(2,5))/((a+rand(2,5))-a)), hint:'Leak time = (fill×leakFill)/(leakFill-fill)', intuition:'1/' + a + ' - 1/leak = 1/' + (a+rand(2,5)) + '. Leak time = ' + Math.round(a*(a+rand(2,5))/((a+rand(2,5))-a)) + 'h' }; },
+    // SBI PO Hard: new variants
+    function(){ var a=rand(3,8), b=rand(a+2,12); return { q:'Pipe A fills in '+a+'h, B empties in '+b+'h. Both open?', a:Math.round(a*b/(b-a)), hint:'Net = 1/a-1/b. Time = a*b/(b-a)' }; },
+    function(){ var a=rand(4,8), b=rand(5,10), c=rand(12,20); return { q:'Fills: A='+a+'h, B='+b+'h. Empty: C='+c+'h. All open?', a:Math.round(1/(1/a+1/b-1/c)), hint:'1/t = 1/a+1/b-1/c' }; },
+    function(){ var a=rand(4,10), b=rand(a+3,18); return { q:'Pipe fills in '+a+'h. Leak takes '+b+'h. Leak empties full tank?', a:Math.round(a*b/(b-a)), hint:'Leak rate = 1/'+a+'-1/'+b+' = '+(1/a-1/b).toFixed(4) }; },
+    function(){ var a=rand(4,8), b=rand(6,12); return { q:'A fills in '+a+'h, B in '+b+'h. A open 1h, then B alone. Total?', a:Math.ceil(1+(1-1/a)*b), hint:'A fills 1/'+a+'. Remaining '+(1-1/a).toFixed(2)+' at 1/'+b+' per h' }; },
+    function(){ var a=rand(4,10), b=rand(6,14), h=rand(2,4); return { q:'A fills in '+a+'h, B empties in '+b+'h. Both open '+h+'h. How full?', a:Math.round((1/a-1/b)*h*100)/100, hint:'Net fill rate = 1/'+a+'-1/'+b+', \u00d7'+h }; },
+    function(){ var a=rand(2,5), b=rand(a+1,7), c=rand(b+2,10); var r=Math.round(1/(1/a+1/b+1/c)); return { q:'A='+a+'h, B='+b+'h, C='+c+'h (fill). Time for 2 tanks?', a:r*2, hint:'1 tank = '+r+'h. 2 tanks = '+r+'\u00d72' }; },
+    function(){ var a=rand(5,12), b=rand(a+2,15); var d=rand(2,4); var rem=1-d/a; var net=1/a-1/b; return { q:'Pipe A in '+a+'h. '+d+'h later, B (empties '+b+'h) opened. Total fill time?', a:Math.ceil(d+rem/net), hint:'Done='+d+'/'+a+'. Remaining '+rem.toFixed(2)+' at net rate '+(net).toFixed(4) }; },
+    function(){ var a=rand(3,7), b=rand(5,11); return { q:'Cistern has '+a+' inlets (each fills '+b+'h). Outlet empties in '+(a*b)+'h. Fill time?', a:Math.round(1/(a/b-1/(a*b))), hint:'Inlet rate='+a+'/'+b+', outlet=1/'+(a*b) }; }
   ];
   var idx;
   if (diff >= 5 && ty.length >= 4) {
@@ -3201,7 +3233,14 @@ function generateWorkQuestion(diff, layer) {
     // SBI PO Hard: work with alternate days
     function(){ var a=rand(5,12), b=rand(a+2,16); return { q:'A in ' + a + 'd, B in ' + b + 'd. A works on day 1, B on day 2, A on day 3... Days to finish?', a:Math.ceil((1/(1/a) > 1/(1/b) ? 2*Math.ceil(a/2) : 2*Math.ceil(b/2)) * (a+b)/(a+b+1) + 1), hint:'Work done in 2 days = 1/a+1/b=' + (1/a+1/b).toFixed(4) + '. Continue cycle' }; },
     // SBI PO Hard: work with break/leave
-    function(){ var m=rand(10,25), d=rand(10,20); return { q:m + ' men can finish in ' + d + ' days. After ' + rand(3,6) + ' days, ' + rand(2,5) + ' men leave. Total days?', a:Math.round(rand(3,6) + (m*d - m*rand(3,6))/(m-rand(2,5))), hint:'Work done in ' + rand(3,6) + 'd = ' + m*rand(3,6) + ' units. Remaining=' + (m*d - m*rand(3,6)) + '. Remaining men=' + (m-rand(2,5)) }; }
+    function(){ var m=rand(10,25), d=rand(10,20); return { q:m + ' men can finish in ' + d + ' days. After ' + rand(3,6) + ' days, ' + rand(2,5) + ' men leave. Total days?', a:Math.round(rand(3,6) + (m*d - m*rand(3,6))/(m-rand(2,5))), hint:'Work done in ' + rand(3,6) + 'd = ' + m*rand(3,6) + ' units. Remaining=' + (m*d - m*rand(3,6)) + '. Remaining men=' + (m-rand(2,5)) }; },
+    // SBI PO Hard: new variants
+    function(){ var a=rand(4,10), b=rand(6,15); return { q:'Pipe A fills in '+a+'h, B in '+b+'h. Both together?', a:Math.round(a*b/(a+b)), hint:'=a×b/(a+b)' }; },
+    function(){ var a=rand(4,10), b=rand(a+2,14), w=rand(3000,15000); return { q:'A='+a+'d, B='+b+'d. Wage ₹'+w+'. A share?', a:Math.round(w*b/(a+b)), hint:'Eff A:B='+b+':'+a+'. A=₹'+b+'×'+w+'/'+(a+b) }; },
+    function(){ var a=rand(7,15); return { q:'A twice as fast as B. Together '+a+'d. B alone?', a:Math.round(3*a), hint:'1/x+1/(2x)=1/'+a+', x=3'+a+'/2, B=2x' }; },
+    function(){ var a=rand(5,12), b=rand(a+3,18); return { q:'A='+a+'d, B='+b+'d. A works 2d, then B joins. Total?', a:Math.ceil(2+(1-2/a)/(1/a+1/b)), hint:'A does 2/'+a+', rem='+(1-2/a).toFixed(2)+', rate='+(1/a+1/b).toFixed(4) }; },
+    function(){ var a=rand(6,12), p=rand(20,80); return { q:'A='+a+'d. B is '+p+'% more efficient. B alone?', a:Math.round(a*100/(100+p)), hint:'B time = '+a+'×100/'+(100+p) }; },
+    function(){ var m=rand(3,7), w=rand(m+2,10), d=rand(8,18); return { q:m+' men = '+w+' women. '+m+' men in '+d+'d. '+w+' women alone?', a:d, hint:'Men=women efficiency, same time' }; }
   ];
   var idx;
   if (diff >= 5 && ty.length >= 4) {
@@ -3230,7 +3269,15 @@ function generateAlgebraQuestion(diff, layer) {
     // SBI PO Hard: find value of expression given condition
     function(){ var a=rand(2,5), b=rand(2,5); return { q:'If a+b=' + (a+b) + ' and ab=' + (a*b) + ', find a² + b²', a: (a+b)*(a+b) - 2*a*b, hint:'a²+b² = (a+b)² - 2ab = ' + (a+b) + '² - 2×' + (a*b), intuition:'a²+b² = (' + (a+b) + ')² - 2(' + (a*b) + ') = ' + ((a+b)*(a+b)) + ' - ' + (2*a*b) + ' = ' + ((a+b)*(a+b)-2*a*b) }; },
     // SBI PO Hard: linear equation with two variables
-    function(){ var a=rand(2,5), b=rand(3,7); return { q:'Solve: x+' + a + 'y = ' + (a+b) + ' and ' + a + 'x-y = ' + (a*a-1), a: a + ',1', hint:'Solve simultaneously. From eq1: x=' + (a+b) + '-' + a + 'y. Substitute in eq2', intuition:'x=' + (a+b) + '-' + a + 'y. In eq2: ' + a + '(' + (a+b) + '-' + a + 'y)-y=' + (a*a-1) + ' → y=1, x=' + a }; }
+    function(){ var a=rand(2,5), b=rand(3,7); return { q:'Solve: x+' + a + 'y = ' + (a+b) + ' and ' + a + 'x-y = ' + (a*a-1), a: a + ',1', hint:'Solve simultaneously. From eq1: x=' + (a+b) + '-' + a + 'y. Substitute in eq2', intuition:'x=' + (a+b) + '-' + a + 'y. In eq2: ' + a + '(' + (a+b) + '-' + a + 'y)-y=' + (a*a-1) + ' → y=1, x=' + a }; },
+    // SBI PO Hard: new variants
+    function(){ var a=rand(2,5), b=rand(3,7); return { q:'If x+1/x='+a+', find x²+1/x²', a:a*a-2, hint:'x²+1/x²=(x+1/x)²-2' }; },
+    function(){ var a=rand(1,4), b=rand(2,6); return { q:'Expand (x-'+a+')(x-'+b+')', a:'x²-'+(a+b)+'x+'+(a*b), hint:'=x²-(a+b)x+ab' }; },
+    function(){ var a=rand(1,4), b=rand(1,5); if(a===b)b++; return { q:'Simplify ('+a+'x²+'+b+'x)/'+a+'x', a:'x+'+b+'/'+a, hint:'Factor x: x('+a+'x+'+b+')/'+a+'x = ('+a+'x+'+b+')/'+a }; },
+    function(){ var a=rand(2,5), b=rand(2,6); return { q:'Solve: '+a+'/(x+'+b+') = '+(a-1)+'/x', a:Math.round(a*(a-1)*b/(a-(a-1))), hint:'Cross-multiply: '+a+'x = '+(a-1)+'(x+'+b+')' }; },
+    function(){ var a=rand(2,5); return { q:'If 2^{x} = '+Math.pow(2,a)+', find x', a:a, hint:'2^'+a+' = '+Math.pow(2,a)+', so x='+a }; },
+    function(){ var a=rand(2,5), b=rand(3,7); return { q:'If x²+1/x²='+(a*a-2)+', find x+1/x', a:a, hint:'x²+1/x²=(x+1/x)²-2' }; },
+    function(){ var a=rand(1,4), b=rand(2,5); return { q:'If a='+a+', b='+b+', find (a+b)²-(a-b)²', a:4*a*b, hint:'(a+b)²-(a-b)²=4ab' }; }
   ];
   var idx;
   if (diff >= 5 && ty.length >= 4) {
@@ -4014,7 +4061,16 @@ function generateHeightDistanceQuestion(diff, layer) {
     // SBI PO Hard: two-angle shadow problem
     function(){ var h=rand(20,50); var a=[15,22,30,36,45][rand(0,4)], b=[50,60,70,75][rand(0,3)]; var s1=Math.round(h/Math.tan(a*Math.PI/180)); var s2=Math.round(h/Math.tan(b*Math.PI/180)); return { q:'A pole of height ' + h + 'm casts shadows of lengths ' + s1 + 'm and ' + s2 + 'm at two different times. Sun elevation angles?', a:Math.abs(a-b)+'°', hint:'tanθ₁ = h/s₁ = '+(h/s1).toFixed(2)+', tanθ₂ = h/s₂ = '+(h/s2).toFixed(2), intuition:'θ₁ = tan⁻¹('+(h/s1).toFixed(2)+') = '+a+'°, θ₂ = tan⁻¹('+(h/s2).toFixed(2)+') = '+b+'°. Difference = '+Math.abs(a-b)+'°' }; },
     // SBI PO Hard: height of cloud/airplane
-    function(){ var h=rand(100,300); var a=[30,45,60][rand(0,2)]; return { q:'An airplane at height ' + h + 'm is observed at an elevation of ' + a + '°. Find the horizontal distance of the airplane from the observation point.', a:Math.round(h/Math.tan(a*Math.PI/180)), hint:'tan' + a + ' = height/distance, distance = height/tan' + a, intuition:'Distance = ' + h + '/tan' + a + '° = ' + Math.round(h/Math.tan(a*Math.PI/180)) + 'm' }; }
+    function(){ var h=rand(100,300); var a=[30,45,60][rand(0,2)]; return { q:'An airplane at height ' + h + 'm is observed at an elevation of ' + a + '°. Find the horizontal distance of the airplane from the observation point.', a:Math.round(h/Math.tan(a*Math.PI/180)), hint:'tan' + a + ' = height/distance, distance = height/tan' + a, intuition:'Distance = ' + h + '/tan' + a + '° = ' + Math.round(h/Math.tan(a*Math.PI/180)) + 'm' }; },
+    // SBI PO Hard: new variants
+    function(){ var a=rand(30,60), d=rand(50,200); return { q:'Angle of elevation='+a+'\u00b0, distance='+d+'m. Height?', a:Math.round(d*Math.tan(a*Math.PI/180)), hint:'Height = d \u00d7 tan('+a+'\u00b0) = '+Math.round(d*Math.tan(a*Math.PI/180))+'m' }; },
+    function(){ var h=rand(30,100), a=rand(30,60); return { q:'Tower height='+h+'m, angle='+a+'\u00b0. Shadow length?', a:Math.round(h/Math.tan(a*Math.PI/180)), hint:'Shadow = h/tan(angle)' }; },
+    function(){ var a=rand(20,50), b=rand(a+10,70), d=rand(20,80); var h=Math.round(d/(1/Math.tan(a*Math.PI/180)-1/Math.tan(b*Math.PI/180))); return { q:'From point A, angle='+a+'\u00b0, from B ('+d+'m closer), angle='+b+'\u00b0. Height?', a:h, hint:'h = d/(cot A - cot B)' }; },
+    function(){ var h=rand(30,80), a=rand(30,60); return { q:'Height='+h+'m, angle of elevation of top from point='+a+'\u00b0. Distance from foot?', a:Math.round(h/Math.tan(a*Math.PI/180)), hint:'Distance = h \u00d7 cot(angle)' }; },
+    function(){ var h=rand(20,60), d=rand(20,50); return { q:'Building height='+h+'m. Shadow='+d+'m shorter when sun angle changes from '+rand(30,45)+'\u00b0 to '+rand(50,70)+'\u00b0. Original shadow?', a:Math.round(h/Math.tan(rand(30,45)*Math.PI/180)), hint:'Shadow = h/tan(original angle)' }; },
+    function(){ var a=rand(30,60), b=rand(a+10,75), d=rand(50,150); var h=Math.round(d*Math.tan(a*Math.PI/180)*Math.tan(b*Math.PI/180)/(Math.tan(b*Math.PI/180)-Math.tan(a*Math.PI/180))); return { q:'From two points '+d+'m apart, angles='+a+'\u00b0 and '+b+'\u00b0. Height?', a:h, hint:'h = d tanA tanB/(tanB-tanA)' }; },
+    function(){ var a=rand(20,50), d=rand(100,300); return { q:'Angle of depression='+a+'\u00b0. Horizontal distance='+d+'m. Height?', a:Math.round(d*Math.tan(a*Math.PI/180)), hint:'Height = distance \u00d7 tan(angle of depression)' }; },
+    function(){ var h=rand(40,80), a=rand(25,50), b=rand(30,55); return { q:'Two towers: heights '+h+'m and '+(h+rand(10,30))+'m. Angle of elevation of top of taller from bottom of shorter='+a+'\u00b0. Their distance?', a:Math.round((h+rand(10,30))/Math.tan(a*Math.PI/180)), hint:'Distance = height/tan(angle)' }; }
   ];
   var idx;
   if (diff >= 5 && ty.length >= 6) {
