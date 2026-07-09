@@ -650,6 +650,7 @@ var GENERATORS = {
   fivesec: generateFiveSecQuestion,
   examrush: generateExamRushQuestion,
   weakspot: generateWeakSpotQuestion,
+  grandslam: generateGrandSlamQuestion,
   // category dispatchers
   quant: generateQuantQuestion,
   reasoning: generateReasoningQuestion
@@ -4093,10 +4094,14 @@ function generateNumberSeriesQuestion(diff, layer) {
   var answer = data.wrong ? data.ans : data.ans;
   var opts = [answer];
   if (data.wrong) {
-    for(var i=-2;i<=3;i++){var v=answer+i;if(v!==answer&&v>0&&opts.indexOf(v)<0)opts.push(v);}
+    for(var i=-2;i<=3;i++){var v=answer+i;if(v!==answer&&v>0&&opts.indexOf(v)<0&&v!==undefined&&!isNaN(v))opts.push(v);}
   } else {
     var spread = Math.max(2, Math.round(answer*0.15));
-    for(var i=-spread;i<=spread;i+=Math.max(1,Math.round(spread/3))){var v=answer+i;if(v!==answer&&v>0&&opts.indexOf(v)<0)opts.push(v);}
+    for(var i=-spread;i<=spread;i+=Math.max(1,Math.round(spread/3))){var v=answer+i;if(v!==answer&&v>0&&opts.indexOf(v)<0&&v!==undefined&&!isNaN(v))opts.push(v);}
+  }
+  opts = opts.filter(function(v){ return v != null && !isNaN(v); });
+  if (opts.length < 4) {
+    while(opts.length < 4) { var d = answer + rand(2, 8); if(opts.indexOf(d) < 0) opts.push(d); }
   }
   shuffle(opts);
   return {
@@ -4989,9 +4994,9 @@ window.startMentalSession = function(mode, opts) {
   var subMode = opts.subMode || null;
   var totalQ = (mode === 'puzzle') ? 5 : (mode === 'grandslam') ? 999 : 10;
 
-  // Inject mistake bank questions (skip for puzzle/weakspot mode and when a specific sub-topic is chosen)
+  // Inject mistake bank questions (skip for puzzle/weakspot/grandslam mode and when a specific sub-topic is chosen)
   var mistakeQueue = [];
-  if (mode !== 'puzzle' && mode !== 'weakspot' && !subMode) {
+  if (mode !== 'puzzle' && mode !== 'weakspot' && mode !== 'grandslam' && !subMode) {
     mistakeQueue = getMistakesForRetry(2);
   }
 
