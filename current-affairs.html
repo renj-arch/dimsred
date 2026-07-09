@@ -5571,7 +5571,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 document.getElementById('catTag').textContent = q._wikiCat ? q._wikiCat.replace(/_/g, ' ') : state.categoryName;
                 var displayText = '<div style="font-size:1.2em;font-weight:700;margin-bottom:8px">' + q.q.replace(/\n/g, '<br>') + '</div>';
                 if (q.a) displayText += '<div style="font-size:1.05em;color:var(--emerald);margin-bottom:10px;padding:8px 12px;border-radius:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15)">→ ' + q.a + '</div>';
-                if (q.fact) displayText += '<div style="font-size:.85em;color:var(--text-sec);line-height:1.7">' + q.fact.replace(/\n/g, '<br>') + '</div>';
+                if (q.fact || q.solution) displayText += '<div style="font-size:.85em;color:var(--text-sec);line-height:1.7">' + (q.fact||q.solution).replace(/\n/g, '<br>') + '</div>';
                 document.getElementById('qText').innerHTML = displayText;
                 document.getElementById('qText').style.fontSize = '.95em';
                 document.getElementById('qText').style.lineHeight = '1.6';
@@ -5651,7 +5651,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('streakNum').textContent = state.streak;
 
             // Show quick fact with bonus OnThisDay / CurrentEvents context
-            var factText = q.fact || q.q;
+            var factText = q.fact || q.solution || q.explanation || q.q;
             if (typeof WIKI !== 'undefined') {
                 var bonus = '';
                 if (WIKI._onThisDayCache && WIKI._onThisDayCache.length > 0) {
@@ -6966,7 +6966,8 @@ var _staticGen_polity = GK_GENERATORS.polity;
                                 for (var ssk in ss) {
                                     ss[ssk].forEach(function(q) {
                                         if (q && q.question && q.answer) {
-                                            allQ.push({q:q.question, a:q.answer, options:q.options||[], solution:q.fact||'', hint:q.hint||'', subject:sk, subTopic:ssk});
+                                            var fact = q.fact || q.solution || q.explanation || '';
+                                            allQ.push({q:q.question, a:q.answer, options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:sk, subTopic:ssk});
                                         }
                                     });
                                 }
