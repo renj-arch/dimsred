@@ -6452,11 +6452,7 @@
   }
 
   function getTimeLimit(mode) {
-    if (mode === "quicksolve") return rand(5, 8);
     if (mode === "instinct") return rand(5, 15);
-    if (mode === "fivesec") return 5;
-    if (mode === "examrush") return 30;
-    if (mode === "weakspot") return 15;
     if (mode === "unlimited") return 20;
     return 20;
   }
