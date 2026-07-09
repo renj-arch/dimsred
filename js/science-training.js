@@ -3,7 +3,7 @@
   var MISTAKE_KEY = 'science_mistakes';
   var SESSION_CACHE_KEY = 'science_session_cache';
   var activeLayer = 'instinct';
-  var activeHardMode = false;
+  
   var session = null;
   var timerId = null;
   var currentQuestion = null;
@@ -53,7 +53,7 @@
 
   function cacheSession(sess) {
     if (!sess) return;
-    try { sessionStorage.setItem(SESSION_CACHE_KEY, JSON.stringify({ active:true, mode:sess.mode, subMode:sess.subMode, layer:sess.layer, hardMode:sess.hardMode, questionIndex:sess.questionIndex, totalQuestions:sess.totalQuestions, topic:sess.topic, subTopic:sess.subTopic, questions:sess.questions, correctCount:sess.correctCount, wrongCount:sess.wrongCount, pointsEarned:sess.pointsEarned, startTime:sess.startTime })); }
+    try { sessionStorage.setItem(SESSION_CACHE_KEY, JSON.stringify({ active:true, mode:sess.mode, unlimited:sess.unlimited, subMode:sess.subMode, layer:sess.layer, questionIndex:sess.questionIndex, totalQuestions:sess.totalQuestions, topic:sess.topic, subTopic:sess.subTopic, questions:sess.questions, correctCount:sess.correctCount, wrongCount:sess.wrongCount, pointsEarned:sess.pointsEarned, startTime:sess.startTime })); }
     catch(e) {}
   }
   function restoreCachedSession() {
@@ -6457,6 +6457,7 @@
     if (mode === "fivesec") return 5;
     if (mode === "examrush") return 30;
     if (mode === "weakspot") return 15;
+    if (mode === "unlimited") return 20;
     return 20;
   }
 
@@ -6479,8 +6480,8 @@
 
     session = {
       mode: mode,
+      unlimited: mode === "unlimited",
       layer: activeLayer,
-      hardMode: activeHardMode,
       questions: questions,
       questionIndex: 0,
       totalQuestions: questions.length,
@@ -6504,8 +6505,15 @@
   function showQuestion() {
     if (!session || session.questionIndex >= session.questions.length) {
       if (session && session._reviewMode) { session._reviewMode = false; endTraining(); return; }
-      endTraining();
-      return;
+      if (session && session.unlimited) {
+        var more = generateSessionQuestions("unlimited", 10, null, null);
+        session.questions = session.questions.concat(more);
+        session.totalQuestions = session.questions.length;
+        cacheSession(session);
+      } else {
+        endTraining();
+        return;
+      }
     }
     var q = session.questions[session.questionIndex];
     currentQuestion = q;
@@ -6529,7 +6537,7 @@
       correct = true;
       session.correctCount++;
       var points = 10;
-      if (session.hardMode) points *= 2;
+      
       if (session.mode === "fivesec") points += 5;
       if (session.mode === "quicksolve") points += 3;
       session.pointsEarned += points;
@@ -6576,13 +6584,15 @@
     if (!session) return;
     var state = loadState();
     state.totalPoints += session.pointsEarned;
+    var actualTotal = session.unlimited ? session.answers.filter(function(a){return a!==undefined && a!==null;}).length : session.totalQuestions;
+    if (session.unlimited) session.totalQuestions = actualTotal;
     state.sessions.push({
       mode: session.mode,
       layer: session.layer,
       date: new Date().toISOString(),
       correct: session.correctCount,
       wrong: session.wrongCount,
-      total: session.totalQuestions,
+      total: actualTotal,
       points: session.pointsEarned,
       subject: session.subject,
       subTopic: session.subTopic
@@ -6590,7 +6600,7 @@
     if (state.sessions.length > 200) state.sessions = state.sessions.slice(-200);
 
     var modeStats = state.stats[session.mode] || { attempts: 0, correct: 0 };
-    modeStats.attempts += session.totalQuestions;
+    modeStats.attempts += actualTotal;
     modeStats.correct += session.correctCount;
     state.stats[session.mode] = modeStats;
 
@@ -6682,15 +6692,15 @@
 
     var modeLabel = session.mode.charAt(0).toUpperCase() + session.mode.slice(1);
     var layerLabel = session.layer === "instinct" ? "⚡ Instinct" : "📝 Exam";
-    if (session.hardMode) layerLabel += " 🔥 Hard";
+    
     var badgeEl = document.getElementById("st-mode-badge");
     if (session._reviewMode) {
       if (badgeEl) badgeEl.textContent = "📋 Review";
       document.getElementById("st-progress").textContent = (session.questionIndex + 1) + " / " + session.totalQuestions;
       document.getElementById("st-score").textContent = "⭐ " + session.pointsEarned + " pts";
     } else {
-      if (badgeEl) badgeEl.textContent = modeLabel + " | " + (q.subject || "Science") + (q.subTopic ? " - " + q.subTopic.replace(/_/g, " ") : "");
-      document.getElementById("st-progress").textContent = (session.questionIndex + 1) + " / " + session.totalQuestions;
+      if (badgeEl) badgeEl.textContent = (session.unlimited ? "♾️ " : "") + modeLabel + " | " + (q.subject || "Science") + (q.subTopic ? " - " + q.subTopic.replace(/_/g, " ") : "");
+      document.getElementById("st-progress").textContent = (session.questionIndex + 1) + (session.unlimited ? " / ∞" : " / " + session.totalQuestions);
       document.getElementById("st-score").textContent = "⭐ " + session.pointsEarned + " pts";
     }
 
@@ -6806,6 +6816,7 @@
     if (!area) return;
 
     var ansStr = typeof q.a === "number" ? q.a + "" : q.a;
+    var isUnlimited = session.unlimited;
     var isLast = session.questionIndex >= session.questions.length - 1;
     var isFirst = session.questionIndex <= 0;
     var answeredCount = session.answers.filter(function(a){return a!==undefined && a!==null;}).length;
@@ -6817,7 +6828,7 @@
       resultHtml += "<div style='padding:12px 14px;background:linear-gradient(135deg,rgba(52,211,153,.06),rgba(167,139,250,.03));border:1px solid rgba(52,211,153,.1);border-radius:10px;color:#a1a1aa;font-size:.78em;line-height:1.6;margin-bottom:10px'><span style='color:#34d399;font-weight:600'>📖 Solution:</span> " + esc(q.solution) + "</div>";
     }
 
-    if (isAllAnswered && isLast) {
+    if (isAllAnswered && isLast && !isUnlimited) {
       resultHtml += "<div style='display:flex;gap:8px'>" +
         "<button id='st-review-btn' style='flex:1;padding:11px;border-radius:10px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;font-size:.82em;font-weight:700;cursor:pointer;transition:all .2s' onmouseenter='this.style.opacity=\".9\"' onmouseleave='this.style.opacity=\"\"'>📋 Review All</button>" +
         "<button id='st-finish-btn' style='flex:1;padding:11px;border-radius:10px;background:rgba(255,255,255,.06);color:#fafafa;border:1px solid rgba(255,255,255,.08);font-size:.82em;font-weight:600;cursor:pointer;transition:all .2s' onmouseenter='this.style.background=\"rgba(255,255,255,.1)\"' onmouseleave='this.style.background=\"rgba(255,255,255,.06)\"'>📊 Results</button>" +
@@ -6825,7 +6836,7 @@
     } else {
       resultHtml += "<div style='display:flex;gap:8px'>";
       if (!isFirst) resultHtml += "<button id='st-prev-btn' style='flex:1;padding:11px;border-radius:10px;background:rgba(255,255,255,.06);color:#fafafa;border:1px solid rgba(255,255,255,.08);font-size:.78em;font-weight:600;cursor:pointer;transition:all .2s' onmouseenter='this.style.background=\"rgba(255,255,255,.1)\"' onmouseleave='this.style.background=\"rgba(255,255,255,.06)\"'>← Previous</button>";
-      resultHtml += "<button id='st-next-btn' style='flex:1;padding:11px;border-radius:10px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;font-size:.78em;font-weight:700;cursor:pointer;transition:all .2s' onmouseenter='this.style.opacity=\".9\"' onmouseleave='this.style.opacity=\"\"'>" + (isLast ? "📋 Review All" : "Next →") + "</button>";
+      resultHtml += "<button id='st-next-btn' style='flex:1;padding:11px;border-radius:10px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;font-size:.78em;font-weight:700;cursor:pointer;transition:all .2s' onmouseenter='this.style.opacity=\".9\"' onmouseleave='this.style.opacity=\"\"'>" + (isLast && !isUnlimited ? "📋 Review All" : "Next →") + "</button>";
       resultHtml += "</div>";
     }
 
@@ -6841,10 +6852,10 @@
     var finishBtn = document.getElementById("st-finish-btn");
 
     if (nextBtn) nextBtn.addEventListener("click", function () {
-      if (session.questionIndex >= session.questions.length - 1) {
-        showReviewMode();
-      } else {
+      if (session.unlimited || session.questionIndex < session.questions.length - 1) {
         nextQuestion();
+      } else {
+        showReviewMode();
       }
     });
     if (prevBtn) prevBtn.addEventListener("click", function () { prevQuestion(); });
@@ -6876,7 +6887,7 @@
       "<div style='text-align:center;padding:20px 0'>" +
       "<div style='font-size:3em;margin-bottom:4px;animation:bounceIn .5s ease'>" + gradeIcon + "</div>" +
       "<h2 style='margin:0 0 2px;color:#fafafa;font-size:1.5em;font-weight:800;background:linear-gradient(135deg," + gradeColor + "," + (grade === 'S' ? '#34d399' : gradeColor) + ");-webkit-background-clip:text;-webkit-text-fill-color:transparent'>Session Complete!</h2>" +
-      "<div style='color:#a1a1aa;font-size:.82em'>" + session.mode + " · " + session.layer + (session.hardMode ? " · 🔥 Hard" : "") + "</div>" +
+      "<div style='color:#a1a1aa;font-size:.82em'>" + session.mode + " · " + session.layer + "</div>" +
       "<div style='margin-top:8px;display:flex;justify-content:center;gap:6px'>" +
       "<span style='padding:2px 10px;border-radius:100px;background:" + gradeColor + "20;border:1px solid " + gradeColor + "30;color:" + gradeColor + ";font-size:.75em;font-weight:700'>" + grade + " Grade</span>" +
       "</div></div>" +
@@ -6949,10 +6960,7 @@
     }
 
     var tools = [
-      { mode:'examrush', icon:'📝', name:'Full Test', desc:'Mixed subjects · 15 Qs · Timed', color:'#ef4444', accent:'rgba(239,68,68,.1)' },
-      { mode:'weakspot', icon:'🎯', name:'Mistake Review', desc:'Practice your wrong answers', color:'#ec4899', accent:'rgba(236,72,153,.1)', badge: mistakeCount > 0 ? mistakeCount : '' },
-      { mode:'quicksolve', icon:'⚡', name:'Quick Drill', desc:'Mixed questions · Fast pace', color:'#a78bfa', accent:'rgba(167,139,250,.12)' },
-      { mode:'custom', icon:'🎨', name:'Topic Practice', desc:'Pick exact topic & count', color:'#8b5cf6', accent:'rgba(139,92,246,.12)' }
+      { mode:'unlimited', icon:'♾️', name:'Unlimited', desc:'Endless questions · All subjects', color:'#34d399', accent:'rgba(52,211,153,.1)' }
     ];
     var toolHtml = '';
     for (var ti = 0; ti < tools.length; ti++) {
@@ -6981,12 +6989,7 @@
       "<div style='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0'>" + quickHtml + "</div>" +
       "<div style='display:flex;gap:8px;margin:14px 0'>" + toolHtml + "</div>" +
       "<div style='display:flex;gap:10px;margin:12px 0;padding:12px 14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:12px;align-items:center;flex-wrap:wrap'>" +
-      "<div style='display:flex;align-items:center;gap:6px;flex:1'>" +
-      "<div style='width:30px;height:18px;background:rgba(239,68,68,.2);border-radius:100px;position:relative;cursor:pointer' id='st-hard-toggle-track' onclick='var c=document.getElementById(\"st-hard-toggle\");c.checked=!c.checked;this.style.background=c.checked?\"rgba(239,68,68,.4)\":\"rgba(239,68,68,.2)\";activeHardMode=c.checked'>" +
-      "<div style='width:14px;height:14px;border-radius:50%;background:" + (activeHardMode ? "#ef4444" : "#52525b") + ";position:absolute;top:2px;left:" + (activeHardMode ? "14px" : "2px") + ";transition:all .25s'></div></div>" +
-      "<input type='checkbox' id='st-hard-toggle' " + (activeHardMode ? "checked" : "") + " style='display:none'>" +
-      "<label style='font-size:.78em;color:#a1a1aa;cursor:pointer;font-weight:500' onclick='document.getElementById(\"st-hard-toggle\").click()'>🔥 Hard</label>" +
-      "</div><span style='font-size:.68em;color:#52525b'>" + state.sessions.length + " sessions</span>" +
+      "<span style='font-size:.68em;color:#52525b'>" + state.sessions.length + " sessions</span>" +
       "<span style='font-size:.68em;color:#52525b'>" + pct + "% accuracy</span>" +
       "</div>";
 
@@ -7000,9 +7003,7 @@
     var timerEl = document.getElementById("st-timer");
     if (!timerEl) return;
 
-    if (session && session.hardMode) {
-      seconds = Math.max(3, Math.round(seconds * 0.55));
-    }
+    
 
     var remaining = seconds;
     timerEl.textContent = formatTime(remaining);
@@ -7045,8 +7046,7 @@
       var modeBtn = e.target.closest(".st-mode-btn");
       if (modeBtn) {
         var mode = modeBtn.getAttribute("data-mode");
-        document.getElementById("st-hard-toggle");
-        startTraining(mode, { count: mode === "examrush" ? 15 : 10 });
+        startTraining(mode, { count: 10 });
         return;
       }
 
@@ -7059,12 +7059,6 @@
 
       if (e.target.id === "st-custom-btn") {
         showCustomDialog();
-      }
-    });
-
-    document.addEventListener("change", function (e) {
-      if (e.target.id === "st-hard-toggle") {
-        activeHardMode = e.target.checked;
       }
     });
   }
@@ -7137,12 +7131,7 @@
     }
   };
 
-  window.toggleScienceHardMode = function () {
-    activeHardMode = !activeHardMode;
-    var toggle = document.getElementById("st-hard-toggle");
-    if (toggle) toggle.checked = activeHardMode;
-    return activeHardMode;
-  };
+  
 
   // ==================== INITIALIZATION ====================
 
