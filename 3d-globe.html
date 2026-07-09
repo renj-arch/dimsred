@@ -5774,7 +5774,8 @@ function speakText(text,cb,fig,catColor,gen){
   const sub=document.getElementById('subtitle');
   if(text){sub.textContent=text;sub.classList.add('show')}
   if(!text){if(cb)setTimeout(cb,800);return}
-  if(isMobile()){
+  if(!window.speechSynthesis){
+    // Fallback: timer-based display when no TTS available
     const ms=readingTime(text);
     const lecTick=_lecState&&_lecState._tick, tlGen=_tlState&&_tlState._gen;
     setTimeout(()=>{
@@ -5784,7 +5785,6 @@ function speakText(text,cb,fig,catColor,gen){
     },ms);
     return;
   }
-  if(!window.speechSynthesis){if(cb)setTimeout(cb,800);return}
   speechSynthesis.cancel();
   // Strip commas from numbers so TTS reads "12000" as "twelve thousand" not "twelve zero zero zero"
   const speechText=text.replace(/(\d),(\d)/g,'$1$2');
@@ -6016,7 +6016,7 @@ function stopTimeline(){
 }
 
 function speechWarmup(){
-  if(!window.speechSynthesis||isMobile())return;
+  if(!window.speechSynthesis)return;
   speechSynthesis.cancel();
   const w=new SpeechSynthesisUtterance(' ');
   w.volume=0.01;w.rate=1;w.lang='en-US';
