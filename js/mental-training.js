@@ -4540,10 +4540,11 @@ function generateQuantQuestion(diff, subMode) {
     logarithm: generateLogarithmQuestion,
     quadratic_comparison: generateQuadraticComparisonQuestion,
     number_series: generateNumberSeriesQuestion,
+    quantity_comparison: generateQuantityComparisonQuestion,
     meta: generateMetaQuestion
   };
   // If no subMode, pick random quant topic
-  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','quadratic_comparison','partnership','simple_interest','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out','height_distance','decimal_fraction','chain_rule','logarithm','number_series','meta','meta','meta']);
+  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','quadratic_comparison','partnership','simple_interest','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out','height_distance','decimal_fraction','chain_rule','logarithm','number_series','quantity_comparison','meta','meta','meta']);
   var gen = genMap[topic];
   if (gen) {
     var q, attempts = 0;
@@ -4713,6 +4714,152 @@ function generateReasoningQuestion(diff, subMode) {
   return generateAnalogyQuestion(diff);
 }
 
+function generateSentenceConnectorsQuestion(diff) {
+  var items = [
+    { p1:'He was tired', p2:'he continued working', a:'Although', opts:['Although','Because','Therefore','Unless'], hint:'Opposing ideas need a contrast connector' },
+    { p1:'She studied hard', p2:'she passed the exam', a:'so', opts:['so','but','although','unless'], hint:'Result needs a cause-effect connector' },
+    { p1:'You must start early', p2:'you will miss the train', a:'otherwise', opts:['otherwise','because','so','and'], hint:'Warning needs a conditional connector' },
+    { p1:'The weather was bad', p2:'they cancelled the flight', a:'therefore', opts:['therefore','although','however','unless'], hint:'Consequence needs a result connector' },
+    { p1:'He is rich', p2:'he is not happy', a:'yet', opts:['yet','so','because','and'], hint:'Contrast between wealth and happiness' },
+    { p1:'She is intelligent', p2:'she is hardworking', a:'and', opts:['and','but','or','yet'], hint:'Similar qualities need an additive connector' },
+    { p1:'We can go by train', p2:'we can drive', a:'or', opts:['or','and','but','so'], hint:'Options need an alternative connector' },
+    { p1:'He run fast', p2:'he missed the bus', a:'but', opts:['but','so','and','because'], hint:'Unexpected result needs a contrast connector' },
+    { p1:'She will not come', p2:'you invite her', a:'unless', opts:['unless','if','because','although'], hint:'Conditional negative needs "unless"' },
+    { p1:'The project was complex', p2:'the team completed it on time', a:'nevertheless', opts:['nevertheless','therefore','because','moreover'], hint:'Despite difficulty, they finished' },
+    { p1:'He invested wisely', p2:'his wealth grew', a:'consequently', opts:['consequently','however','although','meanwhile'], hint:'Result of wise investment' },
+    { p1:'The company expanded', p2:'profits increased', a:'as a result', opts:['as a result','on the contrary','in contrast','for example'], hint:'Expansion led to higher profits' },
+    { p1:'She speaks French', p2:'she learned it in school', a:'for', opts:['for','yet','so','and'], hint:'Reason for her French ability' },
+    { p1:'The food was expensive', p2:'it was delicious', a:'but', opts:['but','so','and','or'], hint:'Price vs quality contrast' },
+    { p1:'Take an umbrella', p2:'it might rain', a:'in case', opts:['in case','although','therefore','unless'], hint:'Precaution for possible rain' },
+    { p1:'He is not eligible for the loan', p2:'his credit score is low', a:'because', opts:['because','however','therefore','nevertheless'], hint:'Reason for ineligibility' },
+    { p1:'The experiment failed', p2:'they learned valuable lessons', a:'yet', opts:['yet','so','because','or'], hint:'Failure with positive outcome contrast' },
+    { p1:'The path was steep', p2:'the view was worth it', a:'but', opts:['but','so','because','and'], hint:'Difficulty vs reward contrast' },
+    { p1:'Technology advances rapidly', p2:'we must keep learning', a:'therefore', opts:['therefore','however','although','unless'], hint:'Advancement implies action' },
+    { p1:'The plane was delayed', p2:'passengers missed their connections', a:'as a result', opts:['as a result','nevertheless','on the contrary','in addition'], hint:'Delay caused missed connections' }
+  ];
+  var item = items[rand(0, items.length - 1)];
+  var qText = item.p1 + ', _____ ' + item.p2 + '.';
+  var opts = item.opts.slice(); shuffle(opts);
+  return {
+    question: qText,
+    answer: item.a,
+    options: opts,
+    hint: item.hint,
+    timeLimit: 10,
+    type: 'verbal',
+    techniqueLabel: 'Connector: ' + item.a + ' (' + item.hint + ')',
+    intuition: 'Connectors show relationships: contrast (but, although, yet), cause-effect (so, therefore, because), condition (if, unless), addition (and, moreover), alternative (or).'
+  };
+}
+
+function generateDoubleFillersQuestion(diff) {
+  var items = [
+    { s:'The _____ of the new policy led to _____ among employees.', a:'implementation, confusion', opts:['implementation, confusion','rejection, harmony','delay, enthusiasm','approval, resistance'], hint:'New rules usually cause uncertainty' },
+    { s:'The _____ manager was known for his _____ attitude.', a:'strict, no-nonsense', opts:['strict, no-nonsense','lazy, ambitious','lenient, aggressive','friendly, rude'], hint:'Someone strict does not tolerate nonsense' },
+    { s:'She gave a _____ explanation that _____ everyone.', a:'clear, satisfied', opts:['clear, satisfied','vague, confused','brief, angered','long, bored'], hint:'Good explanation meets expectations' },
+    { s:'The _____ of the ancient city was a _____ discovery.', a:'excavation, remarkable', opts:['excavation, remarkable','destruction, minor','construction, ordinary','location, disappointing'], hint:'Finding ancient things is extraordinary' },
+    { s:'His _____ speech _____ the audience deeply.', a:'emotional, moved', opts:['emotional, moved','boring, excited','short, confused','angry, pleased'], hint:'Emotion affects listeners' },
+    { s:'The _____ weather caused _____ damage to crops.', a:'severe, extensive', opts:['severe, extensive','mild, minimal','pleasant, serious','sudden, little'], hint:'Bad weather leads to widespread harm' },
+    { s:'The _____ of new technology _____ productivity.', a:'adoption, boosted', opts:['adoption, boosted','rejection, improved','delay, increased','lack, enhanced'], hint:'Using tech improves output' },
+    { s:'The company _____ a new strategy to _____ market share.', a:'implemented, increase', opts:['implemented, increase','rejected, lose','delayed, maintain','ignored, capture'], hint:'Strategy is meant to grow business' },
+    { s:'Her _____ nature made her _____ among friends.', a:'generous, popular', opts:['generous, popular','selfish, loved','rude, admired','lazy, respected'], hint:'Generosity attracts people' },
+    { s:'The _____ of funds _____ the project progress.', a:'shortage, hindered', opts:['shortage, hindered','surplus, stopped','availability, delayed','allocation, helped'], hint:'Lack of money slows things down' },
+    { s:'The _____ evidence _____ the defendant\'s guilt.', a:'conclusive, proved', opts:['conclusive, proved','weak, confirmed','circumstantial, denied','insufficient, established'], hint:'Strong evidence confirms guilt' },
+    { s:'He _____ the offer _____ the terms were unfavorable.', a:'rejected, because', opts:['rejected, because','accepted, although','considered, unless','declined, therefore'], hint:'Unfavorable terms lead to refusal' },
+    { s:'The _____ of the lake was _____ during winter.', a:'surface, frozen', opts:['surface, frozen','depth, warm','water, evaporated','shore, dry'], hint:'Winter makes water surface solid' },
+    { s:'Her _____ performance in the interview _____ her selection.', a:'impressive, ensured', opts:['impressive, ensured','poor, guaranteed','average, prevented','mediocre, secured'], hint:'Good performance leads to selection' },
+    { s:'The _____ of gas _____ the car to stop.', a:'lack, caused', opts:['lack, caused','excess, helped','presence, forced','supply, enabled'], hint:'No fuel means vehicle cannot run' }
+  ];
+  var item = items[rand(0, items.length - 1)];
+  var opts = item.opts.slice(); shuffle(opts);
+  return {
+    question: item.s,
+    answer: item.a,
+    options: opts,
+    hint: item.hint,
+    timeLimit: 15,
+    type: 'verbal',
+    techniqueLabel: 'Double Fillers: ' + item.a,
+    intuition: 'Read the full sentence first. Both blanks must fit logically and grammatically. Eliminate pairs where even one word does not fit.'
+  };
+}
+
+function generateParagraphCompletionQuestion(diff) {
+  var items = [
+    { p:'The internet has revolutionized the way we access information. With just a few clicks, we can find answers to almost any question. However, this easy access has also led to the spread of misinformation. People often share news without verifying its authenticity. ',
+      a:'Therefore, it is crucial to develop critical thinking skills to evaluate online information.', opts:['Therefore, it is crucial to develop critical thinking skills to evaluate online information.','The internet should be banned to prevent misinformation.','People should stop using social media altogether.','Information on the internet is always reliable.'], hint:'The paragraph warns about misinformation, so the conclusion should address solutions.' },
+    { p:'Climate change is one of the most pressing challenges of our time. Rising temperatures are causing glaciers to melt and sea levels to rise. Extreme weather events are becoming more frequent. Governments worldwide are discussing measures to reduce carbon emissions. ',
+      a:'Individual actions, combined with policy changes, can make a significant difference in combating climate change.', opts:['Individual actions, combined with policy changes, can make a significant difference in combating climate change.','Climate change is a natural phenomenon that cannot be stopped.','Only governments can solve climate change.','There is nothing we can do about climate change.'], hint:'After discussing the problem and government action, the conclusion should mention collective effort.' },
+    { p:'Regular exercise is essential for maintaining good health. It strengthens the heart, improves blood circulation, and boosts the immune system. Physical activity also releases endorphins, which improve mood and reduce stress. ',
+      a:'Incorporating at least 30 minutes of exercise into your daily routine can significantly enhance your quality of life.', opts:['Incorporating at least 30 minutes of exercise into your daily routine can significantly enhance your quality of life.','Exercise is only for young people.','Only intense workouts are beneficial.','You should exercise only on weekends.'], hint:'The paragraph lists benefits; the conclusion should recommend a practical action.' },
+    { p:'Education is the foundation of a progressive society. It empowers individuals with knowledge and skills needed to contribute meaningfully. However, access to quality education remains unequal across different regions and economic groups. ',
+      a:'Bridging this educational gap is essential for creating a more equitable and prosperous world.', opts:['Bridging this educational gap is essential for creating a more equitable and prosperous world.','Education is not necessary for success.','Only wealthy people deserve quality education.','Standardized tests should be eliminated.'], hint:'After noting inequality, the conclusion should advocate for solutions.' },
+    { p:'Artificial intelligence is transforming industries at an unprecedented pace. From healthcare diagnosis to autonomous vehicles, AI is making tasks more efficient. However, concerns about job displacement and ethical implications are growing. ',
+      a:'It is important to establish regulations that ensure AI development benefits humanity while minimizing risks.', opts:['It is important to establish regulations that ensure AI benefits humanity while minimizing risks.','AI will eventually replace all human workers.','AI development should be stopped immediately.','AI has no ethical implications.'], hint:'The paragraph mentions both benefits and concerns; conclusion should balance both.' },
+    { p:'Teamwork is crucial in any organization. When individuals collaborate effectively, they can achieve more than they could alone. Diverse perspectives lead to innovative solutions, and shared responsibilities reduce individual stress. ',
+      a:'Fostering a culture of collaboration should be a priority for every successful organization.', opts:['Fostering a culture of collaboration should be a priority for every successful organization.','Working alone is always more efficient.','Teams are unnecessary in modern workplaces.','Individual effort does not matter.'], hint:'After listing benefits of teamwork, conclude by recommending it.' },
+    { p:'Time management is a skill that greatly impacts productivity. Prioritizing tasks and avoiding procrastination can help individuals accomplish more in less time. Successful people often plan their days meticulously. ',
+      a:'Learning to manage time effectively is one of the most valuable skills for personal and professional growth.', opts:['Learning to manage time effectively is one of the most valuable skills for personal and professional growth.','Time management is an inborn talent that cannot be learned.','Only professionals need time management.','Planning is a waste of time.'], hint:'The paragraph praises time management; conclude by reinforcing its value.' },
+    { p:'Forests play a vital role in maintaining ecological balance. They absorb carbon dioxide, produce oxygen, and provide habitat for countless species. Deforestation, however, is threatening this balance at an alarming rate. ',
+      a:'Protecting and restoring forests is essential for the survival of our planet and future generations.', opts:['Protecting and restoring forests is essential for the survival of our planet and future generations.','Deforestation has no impact on the environment.','Forests are not important for human survival.','Only animals need forests.'], hint:'After highlighting forests\' importance and deforestation, the conclusion should call for action.' },
+    { p:'Reading books has numerous benefits beyond entertainment. It improves vocabulary, enhances empathy, and reduces stress. Reading also stimulates the brain and can help prevent cognitive decline in old age. ',
+      a:'Making reading a daily habit is one of the best investments you can make in your mental well-being.', opts:['Making reading a daily habit is one of the best investments you can make in your mental well-being.','Reading is a waste of time.','Only fiction books are worth reading.','Watching movies has the same benefits as reading.'], hint:'The paragraph lists benefits; conclude by encouraging reading.' }
+  ];
+  var item = items[rand(0, items.length - 1)];
+  var opts = item.opts.slice(); shuffle(opts);
+  return {
+    question: item.p + '<br><br>_____',
+    answer: item.a,
+    options: opts,
+    hint: item.hint,
+    timeLimit: 25,
+    type: 'verbal',
+    techniqueLabel: 'Paragraph Completion: ' + item.a.substring(0, 50),
+    intuition: 'The concluding sentence should logically follow from the passage. It should summarize, draw a conclusion, or suggest action based on the information presented.'
+  };
+}
+
+function generateQuantityComparisonQuestion(diff, layer) {
+  var ty = [
+    [1, function(){ return { q1:'A bag has 5 red, 3 blue balls. P(red)', v1:'5/8', q2:'P(blue)', v2:'3/8', ans:'Quantity I > Quantity II' }; }],
+    [1, function(){ return { q1:'Speed 60km/h for 2h → distance', v1:'120 km', q2:'Speed 40km/h for 4h → distance', v2:'160 km', ans:'Quantity I < Quantity II' }; }],
+    [1, function(){ return { q1:'Cost of 5 pens at Rs10 each', v1:'Rs 50', q2:'Cost of 4 pens at Rs12 each', v2:'Rs 48', ans:'Quantity I > Quantity II' }; }],
+    [1, function(){ return { q1:'Average of 4, 6, 8, 10', v1:'7', q2:'Average of 5, 7, 9, 11', v2:'8', ans:'Quantity I < Quantity II' }; }],
+    [2, function(){ var a=rand(20,40), b=rand(30,50); return { q1:'(a+b)² - (a-b)² where a='+a+', b='+b, v1:4*a*b, q2:'4ab = 4×'+a+'×'+b, v2:4*a*b, ans:'Quantity I = Quantity II' }; }],
+    [2, function(){ var p=rand(1000,5000), r=rand(5,15), t=rand(2,4); var si=Math.round(p*r*t/100), ci=Math.round(p*Math.pow(1+r/100,t)-p); return { q1:'SI on Rs'+p+' at '+r+'% for '+t+'yr', v1:si, q2:'CI on Rs'+p+' at '+r+'% for '+t+'yr', v2:ci, ans:si>ci?'Quantity I > Quantity II':(si<ci?'Quantity I < Quantity II':'Quantity I = Quantity II') }; }],
+    [2, function(){ var m1=rand(10,20), m2=rand(5,15), d1=rand(5,10), d2=rand(d1+1,12); return { q1:m1+' men complete in '+d1+' days. Work in man-days', v1:m1*d1, q2:m2+' men complete in '+d2+' days. Work in man-days', v2:m2*d2, ans:m1*d1>m2*d2?'Quantity I > Quantity II':(m1*d1<m2*d2?'Quantity I < Quantity II':'Quantity I = Quantity II') }; }],
+    [3, function(){ var c=rand(400,1000), s1=c+rand(50,150), s2=c+rand(160,250); return { q1:'Profit% if CP='+c+', SP='+s1, v1:Math.round((s1-c)/c*100)+'%', q2:'Profit% if CP='+c+', SP='+s2, v2:Math.round((s2-c)/c*100)+'%', ans:Math.round((s1-c)/c*100)>Math.round((s2-c)/c*100)?'Quantity I > Quantity II':'Quantity I < Quantity II' }; }],
+    [3, function(){ var a=rand(5,10), b=rand(3,7); var x=rand(2,5), y=rand(3,6); return { q1:'Ratio a:b = '+a+':'+b+'. Sum='+(a+b)+'x'+x+'. A share?', v1:a*x, q2:'Ratio a:b = '+a+':'+b+'. Sum='+(a+b)+'x'+y+'. B share?', v2:b*y, ans:a*x>b*y?'Quantity I > Quantity II':(a*x<b*y?'Quantity I < Quantity II':'Cannot be determined') }; }],
+    [3, function(){ var s=rand(40,80), t1=rand(2,4), t2=rand(1,3); return { q1:'Speed '+s+'km/h for '+t1+'h. Distance', v1:s*t1+' km', q2:'Speed '+(s+rand(5,15))+'km/h for '+t2+'h. Distance', v2:(s+rand(5,15))*t2+' km', ans:s*t1>(s+rand(5,15))*t2?'Quantity I > Quantity II':(s*t1<(s+rand(5,15))*t2?'Quantity I < Quantity II':'Cannot be determined') }; }],
+    [4, function(){ var p=rand(500,2000), r1=rand(5,10), r2=rand(11,15), t=rand(2,3); return { q1:'CI on Rs'+p+' at '+r1+'% for '+t+'yr', v1:Math.round(p*Math.pow(1+r1/100,t)-p), q2:'SI on Rs'+p+' at '+r2+'% for '+t+'yr', v2:Math.round(p*r2*t/100), ans:Math.round(p*Math.pow(1+r1/100,t)-p) > Math.round(p*r2*t/100) ? 'Quantity I > Quantity II' : 'Quantity I < Quantity II' }; }],
+    [4, function(){ var a=rand(200,500), b=rand(100,400); return { q1:'(a+b)² where a='+a+', b='+b, v1:(a+b)*(a+b), q2:'a²+b²+2ab where a='+a+', b='+b, v2:a*a+b*b+2*a*b, ans:'Quantity I = Quantity II' }; }],
+    [4, function(){ var m=rand(4,8), w=rand(3,6); return { q1:'Men='+m+', earn Rs'+(m*rand(200,500))+' total. Each earns?', v1:rand(200,500), q2:'Women='+w+', earn Rs'+(w*rand(150,400))+' total. Each earns?', v2:rand(150,400), ans:'Cannot be determined' }; }],
+    [5, function(){ var p=rand(800,3000), r=rand(8,15), t=rand(1,3); return { q1:'CI on Rs'+p+' at '+r+'% for '+t+'yr (annual)', v1:Math.round(p*Math.pow(1+r/100,t)-p), q2:'CI on Rs'+p+' at '+r+'% for '+t+'yr (half-yearly)', v2:Math.round(p*Math.pow(1+r/200,2*t)-p), ans:Math.round(p*Math.pow(1+r/100,t)-p) > Math.round(p*Math.pow(1+r/200,2*t)-p) ? 'Quantity I > Quantity II' : 'Quantity I < Quantity II' }; }],
+    [5, function(){ var a=rand(300,700), b=rand(a+100,a+300); return { q1:'Discount% if MP='+b+', SP='+(a+rand(10,50)), v1:Math.round((b-(a+rand(10,50)))/b*100)+'%', q2:'Discount% if MP='+b+', SP='+(a+rand(60,100)), v2:Math.round((b-(a+rand(60,100)))/b*100)+'%', ans:'Cannot be determined' }; }],
+    [5, function(){ var n=rand(2,5); return { q1:'Number of triangles formed by '+n+' points on a circle', v1:n*(n-1)*(n-2)/6, q2:'Number of chords formed by '+n+' points on a circle', v2:n*(n-1)/2, ans:n*(n-1)*(n-2)/6 > n*(n-1)/2 ? 'Quantity I > Quantity II' : 'Quantity I < Quantity II' }; }],
+    [5, function(){ var d=rand(60,90); return { q1:'tan('+d+'°)', v1:Math.round(Math.tan(d*Math.PI/180)*100)/100, q2:'cot('+d+'°)', v2:Math.round(1/Math.tan(d*Math.PI/180)*100)/100, ans:Math.round(Math.tan(d*Math.PI/180)*100)/100 > Math.round(1/Math.tan(d*Math.PI/180)*100)/100 ? 'Quantity I > Quantity II' : 'Quantity I < Quantity II' }; }]
+  ];
+  var matched = ty.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = ty;
+  var chosen = matched[rand(0, matched.length - 1)];
+  var data = chosen[1]();
+  var qText = 'Quantity I: ' + data.q1 + ' = ' + data.v1 + '<br>Quantity II: ' + data.q2 + ' = ' + data.v2 + '<br><br>Which is correct?';
+  var opts = ['Quantity I > Quantity II', 'Quantity I < Quantity II', 'Quantity I = Quantity II', 'Cannot be determined'];
+  var correctIdx = opts.indexOf(data.ans);
+  if (correctIdx < 0) correctIdx = 3;
+  shuffle(opts);
+  return {
+    question: qText,
+    answer: data.ans,
+    options: opts,
+    hint: 'Compute both quantities separately, then compare. ' + data.ans,
+    timeLimit: diff <= 2 ? 25 : (diff <= 4 ? 20 : 15),
+    type: 'quant',
+    techniqueLabel: 'Quantity Comparison: ' + data.ans,
+    intuition: 'Compute Quantity I and Quantity II separately. Check: I > II, I < II, I = II, or cannot determine (if insufficient data). For CI vs SI: CI > SI for same rate and time > 1yr.'
+  };
+}
+
 function generateVerbalQuestion(diff, subMode) {
   var genMap = {
     synonym: generateSynonymQuestion,
@@ -4730,9 +4877,12 @@ function generateVerbalQuestion(diff, subMode) {
     one_word_subs: generateOneWordSubstitutesQuestion,
     idioms_phrases: generateIdiomsPhrasesQuestion,
     change_voice: generateChangeVoiceQuestion,
-    change_speech: generateChangeSpeechQuestion
+    change_speech: generateChangeSpeechQuestion,
+    sentence_connectors: generateSentenceConnectorsQuestion,
+    double_fillers: generateDoubleFillersQuestion,
+    paragraph_completion: generateParagraphCompletionQuestion
   };
-  var topic = subMode || pick(['synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','spotting_errors','spellings','sentence_correction','sentence_improvement','closet_test','one_word_subs','idioms_phrases','change_voice','change_speech']);
+  var topic = subMode || pick(['synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','spotting_errors','spellings','sentence_correction','sentence_improvement','closet_test','one_word_subs','idioms_phrases','change_voice','change_speech','sentence_connectors','double_fillers','paragraph_completion']);
   var gen = genMap[topic];
   if (gen) {
     var q, attempts = 0;
@@ -4759,7 +4909,10 @@ function generateVerbalQuestion(diff, subMode) {
           one_word_subs: 'Find the specific single word. Common prefixes/suffixes help.',
           idioms_phrases: 'Idioms have figurative meanings. Learn by exposure.',
           change_voice: 'Active: subject does. Passive: subject receives. Object becomes subject.',
-          change_speech: 'Quotes→that clause. Present→past. will→would. Commands→to+verb.'
+          change_speech: 'Quotes→that clause. Present→past. will→would. Commands→to+verb.',
+          sentence_connectors: 'Connectors show relationships: contrast, cause-effect, condition, addition, alternative between two parts of a sentence.',
+          double_fillers: 'Read the full sentence. Both blanks must fit logically AND grammatically. Eliminate by checking one blank at a time.',
+          paragraph_completion: 'The last sentence should logically conclude the passage — summarize, recommend action, or draw inference.'
         };
         q.intuition = intuitions[topic] || '';
       } catch(e) {}
