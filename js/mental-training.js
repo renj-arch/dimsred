@@ -436,7 +436,7 @@ var QM = {
     })(ctx[find].tpl, vals, name) : autoTpl;
     var hint = knowns.map(function(k) { return k + '=' + QM._fmt(vals[k], k, name); }).join(', ') + ' → ' + find + '=' + QM._fmt(ans, find, name);
     var opts = [ans]; var r = def.optRange || 5;
-    while (opts.length < 4) { var d = Math.round((ans + rand(-r, r)) * 100) / 100; if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+    for (var _g=0; _g<50 && opts.length<4; _g++) { var d = Math.round((ans + rand(-r, r)) * 100) / 100; if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
     shuffle(opts);
     return { q: qText, a: ans, options: opts, hint: hint, timeLimit: 15, type: 'quant', techniqueLabel: name + ': ' + hint.substring(0, 35), intuition: hint, _meta: true, _formula: name, _find: find, _vals: vals, _result: result };
   },
@@ -495,7 +495,7 @@ var QM = {
       var compositeQ = 'Step 1: ' + qA.q + ' (ans: ' + ansA + ') Then: ' + qB.q;
       // Build options from qB's answer
       var opts = [qB.a]; var r = defB.optRange || 5;
-      while (opts.length < 4) { var d2 = Math.round((qB.a + rand(-r, r)) * 100) / 100; if (opts.indexOf(d2) < 0 && d2 > 0) opts.push(d2); }
+      for (var _g=0; _g<50 && opts.length<4; _g++) { var d2 = Math.round((qB.a + rand(-r, r)) * 100) / 100; if (opts.indexOf(d2) < 0 && d2 > 0) opts.push(d2); }
       shuffle(opts);
       return { q: compositeQ, a: qB.a, options: opts, hint: qB.hint, timeLimit: 25, type: 'quant', techniqueLabel: 'Chain: ' + chainLabel, intuition: qA.intuition + ' | ' + qB.intuition, _meta: true, _chain: true };
     }
@@ -668,7 +668,7 @@ function generateMathQuestion(diff) {
   var type = types[rand(0, types.length - 1)];
   var data = type();
   var opts = [data.a];
-  while (opts.length < 4) { var d = rand(-5, 5) + data.a; if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  for (var _g=0; _g<50 && opts.length<4; _g++) { var d = rand(-5, 5) + data.a; if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
   shuffle(opts);
   return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: diff <= 1 ? 10 : (diff <= 3 ? 8 : 6), type: 'math', techniqueLabel: 'Mental math: break, compute, combine. Square→(a+b)², Percent→10% first then scale' };
 }
@@ -955,7 +955,7 @@ function generateAnalogyQuestion(diff) {
       }
       shuffle(pool);
       for (var i = 0; opts.length < 4 && i < pool.length; i++) { if (opts.indexOf(pool[i]) < 0) opts.push(pool[i]); }
-      while (opts.length < 4) { var d = String.fromCharCode(65 + opts.length); if (opts.indexOf(d) < 0) opts.push(d); }
+      for (var _g=0; _g<50 && opts.length<4; _g++) { var d = String.fromCharCode(65 + opts.length); if (opts.indexOf(d) < 0) opts.push(d); }
       shuffle(opts);
       return { q: '(' + cat.rel + ') ' + qText, a: answer, o: opts, hint: 'Identify pattern: ' + cat.rel + '. Apply same to ' + ansPair[0] + '.', t: diff <= 1 ? 15 : (diff <= 3 ? 12 : 10), sol: cat.rel + ': ' + pair[0] + ' → ' + pair[1] + ', so ' + ansPair[0] + ' → ' + answer + '.' };
     },
@@ -969,7 +969,7 @@ function generateAnalogyQuestion(diff) {
       var qWord = l1 + l2;
       var ansWord = String.fromCharCode(64 + n1*2) + String.fromCharCode(64 + n2*2);
       var opts = [ansWord];
-      while (opts.length < 4) { var w = letters[rand(0, 25)] + letters[rand(0, 25)]; if (opts.indexOf(w) < 0) opts.push(w); }
+      for (var _g=0; _g<50 && opts.length<4; _g++) { var w = letters[rand(0, 25)] + letters[rand(0, 25)]; if (opts.indexOf(w) < 0) opts.push(w); }
       shuffle(opts);
       return { q: l1 + ':' + n1 + ' :: ' + l2 + ':' + n2 + '  →  ' + qWord + ' : ?', a: ansWord, o: opts, hint: 'Double mapping: letter→position, then position×2', t: 10, sol: l1 + '→' + n1 + ', ' + l2 + '→' + n2 + '. ' + qWord + ' → each letter doubled: ' + ansWord + '.' };
     },
@@ -981,7 +981,7 @@ function generateAnalogyQuestion(diff) {
       var code2 = String(base + rand(2, 5)) + String.fromCharCode(64 + base + rand(2, 5));
       var ansCode = String(base + rand(4, 7)) + String.fromCharCode(64 + base + rand(4, 7));
       var opts = [ansCode];
-      while (opts.length < 4) { var d = String(rand(10, 99)) + String.fromCharCode(64 + rand(1, 26)); if (opts.indexOf(d) < 0) opts.push(d); }
+      for (var _g=0; _g<50 && opts.length<4; _g++) { var d = String(rand(10, 99)) + String.fromCharCode(64 + rand(1, 26)); if (opts.indexOf(d) < 0) opts.push(d); }
       shuffle(opts);
       return { q: code1 + ' : ' + code2 + ' :: ' + ansCode[0] + (parseInt(ansCode[0])+2) + ' : ?', a: ansCode, o: opts, hint: 'Identify the relationship between number and letter parts', t: 10, sol: 'Pattern: number and corresponding alphabet position. ' + ansCode + ' completes the analogy.' };
     }
@@ -1279,9 +1279,9 @@ function generateSeriesQuestion(diff) {
   var isFrac = typeof data.ans === 'string' && data.ans.indexOf('/')>=0;
   var answer = isLetter ? data.ans : (isFrac ? data.ans : Math.round(data.ans));
   var opts = [answer];
-  if (isLetter) { var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''); while(opts.length<4){var x=l[rand(0,25)];if(opts.indexOf(x)<0)opts.push(x);} }
-  else if (isFrac) { var den=parseInt(data.ans.split('/')[1]); while(opts.length<4){var d='1/'+(den+rand(-3,3));if(opts.indexOf(d)<0&&d.indexOf('-')<0)opts.push(d);} }
-  else { var sp=Math.max(1,Math.round(answer*0.15)); while(opts.length<4){var d=answer+rand(-sp*3,sp*3);if(opts.indexOf(d)<0&&d>0)opts.push(d);} }
+  if (isLetter) { var l='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''); for (var _g=0; _g<50 && opts.length<4; _g++) {var x=l[rand(0,25)];if(opts.indexOf(x)<0)opts.push(x);} }
+  else if (isFrac) { var den=parseInt(data.ans.split('/')[1]); for (var _g=0; _g<50 && opts.length<4; _g++) {var d='1/'+(den+rand(-3,3));if(opts.indexOf(d)<0&&d.indexOf('-')<0)opts.push(d);} }
+  else { var sp=Math.max(1,Math.round(answer*0.15)); for (var _g=0; _g<50 && opts.length<4; _g++) {var d=answer+rand(-sp*3,sp*3);if(opts.indexOf(d)<0&&d>0)opts.push(d);} }
   shuffle(opts);
   return { question: data.seq.join(', ')+', ?', answer: answer, options: opts, hint: data.hint+'. '+data.pat, timeLimit: diff<=1?15:(diff<=3?12:10), type:'pattern', patternLabel:'Series', techniqueLabel:'Series: '+data.pat+'. '+data.hint, drillLine1:'Pattern: '+data.pat, drillLine2:data.seq.join(' ? ')+' ? '+answer, solution:'Series: '+data.pat+'. Next = '+answer };
 }
@@ -1326,9 +1326,9 @@ function generateCodingQuestion(diff) {
   var opts = [answerStr];
   if (typeof answer === 'number') {
     var spread = Math.max(1, Math.round(answer * 0.2));
-    while (opts.length < 4) { var d = answer + rand(-spread - 2, spread + 2); if (opts.indexOf(d) < 0 && d > 0 && d < 100000) opts.push(d); }
+    for (var _g=0; _g<50 && opts.length<4; _g++) { var d = answer + rand(-spread - 2, spread + 2); if (opts.indexOf(d) < 0 && d > 0 && d < 100000) opts.push(d); }
   } else {
-    while (opts.length < 4) { var d = words[rand(0, words.length - 1)]; if (opts.indexOf(d) < 0) opts.push(d); }
+    for (var _g=0; _g<50 && opts.length<4; _g++) { var d = words[rand(0, words.length - 1)]; if (opts.indexOf(d) < 0) opts.push(d); }
   }
   shuffle(opts);
   var sch = data.sch || 'Conditional';
@@ -1620,7 +1620,7 @@ function generateDirectionQuestion(diff) {
     } else {
       opts = [ask.a];
       var spread = Math.max(1, Math.round(distance * 0.3));
-      while (opts.length < 4) { var d = distance + rand(-spread - 2, spread + 2); if (opts.indexOf(d) < 0 && d >= 0) opts.push(String(d) + ' m'); }
+      for (var _g=0; _g<50 && opts.length<4; _g++) { var d = distance + rand(-spread - 2, spread + 2); if (opts.indexOf(d) < 0 && d >= 0) opts.push(String(d) + ' m'); }
     }
     shuffle(opts);
     if (!ask.isDir && distance === 0) { ask.a = 'Same point'; opts = ['Same point','North','South','East']; shuffle(opts); }
@@ -1677,7 +1677,7 @@ function generateDirectionQuestion(diff) {
     var dx = p1x - p2x, dy = p1y - p2y;
     var dist = Math.round(Math.sqrt(dx*dx + dy*dy));
     var opts = [String(dist) + ' m'];
-    while (opts.length < 4) { var v = dist + rand(-4, 4); if (opts.indexOf(v) < 0 && v >= 0) opts.push(String(v) + ' m'); }
+    for (var _g=0; _g<50 && opts.length<4; _g++) { var v = dist + rand(-4, 4); if (opts.indexOf(v) < 0 && v >= 0) opts.push(String(v) + ' m'); }
     shuffle(opts);
     return { q: 'Person A ' + p1moves.join(', ') + '. Person B ' + p2moves.join(', ') + '. How far apart are A and B?', a: String(dist) + ' m', o: opts, hint: 'Track coordinates of A and B. Use distance formula.', t: 20, sol: 'A=(' + p1x + ',' + p1y + '), B=(' + p2x + ',' + p2y + '). Distance=' + dist + 'm.' };
   });
@@ -2220,7 +2220,7 @@ function generateNumberSenseQuestion(diff, layer) {
   var type = ty[idx];
   var data = type();
   var opts = [data.a];
-  while (opts.length < 4) { var d = data.a + rand(-5, 5); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  for (var _g=0; _g<50 && opts.length<4; _g++) { var d = data.a + rand(-5, 5); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
   shuffle(opts);
   return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer === 'instinct' ? 10 : (diff <= 1 ? 15 : 12), type: 'quant', techniqueLabel: 'Number Sense: ' + data.q, intuition: data.intuition || 'Find the right operation first' };
 }
@@ -2256,7 +2256,7 @@ function generatePercentageQuestion(diff, layer) {
   var data = chosen[1]();
   var opts = [data.a];
   var spread = Math.max(2, Math.abs(data.a * 0.1));
-  while (opts.length < 4) { var d = Math.round(data.a + rand(-spread, spread)); if (opts.indexOf(d) < 0 && d >= 0) opts.push(d); }
+  for (var _g=0; _g<50 && opts.length<4; _g++) { var d = Math.round(data.a + rand(-spread, spread)); if (opts.indexOf(d) < 0 && d >= 0) opts.push(d); }
   shuffle(opts);
   return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer==='instinct'?12:18, type:'quant', techniqueLabel:'%: '+data.hint, intuition: data.intuition||'Key: successive x+y+xy/100. CP=SP×100/(100+p). Weighted avg for mixed groups.' };
 }
@@ -2293,10 +2293,10 @@ function generateArithmeticQuestion(diff, layer) {
   if (typeof data.a === 'string' && data.a.indexOf(':') > 0) {
     var parts = data.a.split(':');
     var num = parseInt(parts[0]), den = parseInt(parts[1]);
-    while (opts.length < 4) { var d = (num+rand(-1,1)) + ':' + (den+rand(-1,1)); if (opts.indexOf(d) < 0 && d !== '0:0') opts.push(d); }
+    for (var _g=0; _g<50 && opts.length<4; _g++) { var d = (num+rand(-1,1)) + ':' + (den+rand(-1,1)); if (opts.indexOf(d) < 0 && d !== '0:0') opts.push(d); }
   } else {
     var spread = Math.max(2, Math.abs(data.a * 0.15));
-    while (opts.length < 4) { var d = (typeof data.a === 'number' ? Math.round(data.a + rand(-spread, spread)) : data.a + rand(-spread, spread)); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+    for (var _g=0; _g<50 && opts.length<4; _g++) { var d = (typeof data.a === 'number' ? Math.round(data.a + rand(-spread, spread)) : data.a + rand(-spread, spread)); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
   }
   shuffle(opts);
   return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer==='instinct'?12:18, type:'quant', techniqueLabel: data.hint, intuition: data.intuition||'Ages: equation from conditions. Alligation: (mean-low):(high-mean). Installment: P×r(1+r)^n/((1+r)^n-1).' };
@@ -2333,7 +2333,7 @@ function generateMotionQuestion(diff, layer) {
   var chosen = matched[rand(0, matched.length - 1)];
   var data = chosen[1]();
   var opts = [data.a]; var spread = Math.max(1, typeof data.a==='number'?Math.abs(data.a*0.15):5);
-  while(opts.length<4){var v=typeof data.a==='number'?Math.round(data.a+rand(-spread,spread)):['Y','N'][rand(0,1)]; if(opts.indexOf(v)<0&&(typeof v==='string'||v>=0))opts.push(v);}
+  for (var _g=0; _g<50 && opts.length<4; _g++) {var v=typeof data.a==='number'?Math.round(data.a+rand(-spread,spread)):['Y','N'][rand(0,1)]; if(opts.indexOf(v)<0&&(typeof v==='string'||v>=0))opts.push(v);}
   shuffle(opts);
   return { question:data.q, answer:data.a, options:opts, hint:data.hint, timeLimit:layer==='instinct'?12:18, type:'quant', techniqueLabel:'Motion: '+data.hint, intuition:'Speed=Dist/Time. Rel speed (opp)=v1+v2, (same)=|v1-v2|. km/h→m/s: ×5/18. Boat: down=u+v, up=u-v.' };
 }
@@ -2649,7 +2649,7 @@ function generateDataInterpretationQuestion(diff, layer) {
   var q = (data.tbl || '') + '<div style="margin-top:8px;font-weight:600">' + data.q + '</div>';
   var opts = [data.a];
   var spread = typeof data.a==='number' ? Math.max(2, Math.abs(data.a*0.12)) : 3;
-  while (opts.length < 4) {
+  for (var _g=0; _g<50 && opts.length<4; _g++) {
     var v = typeof data.a==='number' ? Math.round(data.a + rand(-spread, spread)) : data.a;
     if (opts.indexOf(v) < 0 && (typeof v!=='number'||v>=0)) opts.push(v);
   }
@@ -2970,7 +2970,7 @@ function generateInputOutputQuestion(diff) {
     hint = 'Track when the sequence becomes fully sorted.';
   }
   var opts = [a];
-  while (opts.length < 4) { var r = a + rand(-5, 5); if (opts.indexOf(r) < 0 && r > 0) opts.push(r); }
+  for (var _g=0; _g<50 && opts.length<4; _g++) { var r = a + rand(-5, 5); if (opts.indexOf(r) < 0 && r > 0) opts.push(r); }
   shuffle(opts);
   return { question: q, answer: a, options: opts, hint: hint, timeLimit: 30, type:'reasoning', techniqueLabel:'Input-Output: '+opDesc[si], intuition:'Each step reverses or applies a consistent operation. Track one element to find the pattern.' };
 }
@@ -3735,7 +3735,7 @@ function generateSynonymQuestion(diff) {
     var hw = hardWords[rand(0, hardWords.length - 1)];
     var opts = hw.a ? [hw.a] : [];
     var allSyns = ['Fertile','Transient','Omnipresent','Practical','Uncertain','Articulate','Persistent','Brief','Everywhere','Stubborn','Fluent','Flexible'];
-    while (opts.length < 4) { var x = allSyns[rand(0, allSyns.length - 1)]; if (opts.indexOf(x) < 0) opts.push(x); }
+    for (var _g=0; _g<50 && opts.length<4; _g++) { var x = allSyns[rand(0, allSyns.length - 1)]; if (opts.indexOf(x) < 0) opts.push(x); }
     shuffle(opts);
     return { w: hw.w + ' (context: ' + hw.ctx + ')', a: hw.a, o: opts };
   });
@@ -3751,7 +3751,7 @@ function generateSynonymQuestion(diff) {
     var rw = rootWords[rand(0, rootWords.length - 1)];
     var opts = [rw.a];
     var others = ['Kind','Malicious','Shapeless','Cautious','Deny','Happy','Sad','Bright'];
-    while (opts.length < 4) { var x = others[rand(0, others.length - 1)]; if (opts.indexOf(x) < 0) opts.push(x); }
+    for (var _g=0; _g<50 && opts.length<4; _g++) { var x = others[rand(0, others.length - 1)]; if (opts.indexOf(x) < 0) opts.push(x); }
     shuffle(opts);
     return { w: rw.w + ' (root: ' + rw.root + ')', a: rw.a, o: opts };
   });
@@ -3784,7 +3784,7 @@ function generateAntonymQuestion(diff) {
     var hw = hardWords[rand(0, hardWords.length - 1)];
     var opts = [hw.a];
     var pool = ['Curse','Mitigate','Introverted','Energetic','Contemporary','Barren','Verbose','Blessing','Worsen','Talkative','Lazy','Modern','Scarce','Wordy'];
-    while (opts.length < 4) { var x = pool[rand(0, pool.length - 1)]; if (opts.indexOf(x) < 0) opts.push(x); }
+    for (var _g=0; _g<50 && opts.length<4; _g++) { var x = pool[rand(0, pool.length - 1)]; if (opts.indexOf(x) < 0) opts.push(x); }
     shuffle(opts);
     return { w: hw.w + ' (context: ' + hw.ctx + ')', a: hw.a, o: opts };
   });
@@ -3800,7 +3800,7 @@ function generateAntonymQuestion(diff) {
     var rw = rootWords[rand(0, rootWords.length - 1)];
     var opts = [rw.a];
     var pool = ['Retreating','Aboveground','Extramural','Postbellum','Dialogue','Forward','Underground','Before','Inside','Outside','Single','Double'];
-    while (opts.length < 4) { var x = pool[rand(0, pool.length - 1)]; if (opts.indexOf(x) < 0) opts.push(x); }
+    for (var _g=0; _g<50 && opts.length<4; _g++) { var x = pool[rand(0, pool.length - 1)]; if (opts.indexOf(x) < 0) opts.push(x); }
     shuffle(opts);
     return { w: rw.w + ' (root: ' + rw.root + ')', a: rw.a, o: opts };
   });
@@ -4219,7 +4219,7 @@ function generateNumberSeriesQuestion(diff, layer) {
   }
   opts = opts.filter(function(v){ return v != null && !isNaN(v); });
   if (opts.length < 4) {
-    while(opts.length < 4) { var d = answer + rand(2, 8); if(opts.indexOf(d) < 0) opts.push(d); }
+    for (var _g=0; _g<50 && opts.length<4; _g++) { var d = answer + rand(2, 8); if(opts.indexOf(d) < 0) opts.push(d); }
   }
   shuffle(opts);
   return {
@@ -5134,7 +5134,7 @@ function generateFiveSecQuestion(diff) {
   ];
   var item = rapid[rand(0, rapid.length - 1)];
   var opts = [item.a];
-  while (opts.length < 4) { var d = item.a + rand(-3, 3); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  for (var _g=0; _g<50 && opts.length<4; _g++) { var d = item.a + rand(-3, 3); if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
   shuffle(opts);
   return {
     question: item.q,
@@ -5211,12 +5211,18 @@ function generateGrandSlamQuestion(diff) {
     case 'reasoning': q = generateReasoningQuestion(examDiff); break;
     case 'verbal': q = generateVerbalQuestion(examDiff); break;
   }
-  if (q) {
-    q.type = 'grandslam';
-    q._parentCategory = category;
-    q.techniqueLabel = 'Grand Slam [' + category + '] ' + (q.techniqueLabel || '');
-    q.timeLimit = q.timeLimit || 15;
+  if (!q) {
+    q = generateNumberSenseQuestion(examDiff, 'exam');
+    category = 'quant';
   }
+  q.type = 'grandslam';
+  q._parentCategory = category;
+  q.techniqueLabel = 'Grand Slam [' + category + '] ' + (q.techniqueLabel || '');
+  q.timeLimit = q.timeLimit || 15;
+  if (!q.options || q.options.length < 2) {
+    q.options = [q.answer, q.answer + 1, q.answer + 2, q.answer + 3];
+  }
+  q.options = q.options.filter(function(v){ return v != null && v !== undefined && !(typeof v === 'number' && isNaN(v)); });
   return q;
 }
 
@@ -5574,7 +5580,7 @@ function fallbackPuzzle(diff) {
   var target = names[rand(0, names.length - 1)];
   var ans = assign[target];
   var opts = [ans];
-  while (opts.length < 4) { var d = rand(1, 10); if (opts.indexOf(d) < 0) opts.push(d); }
+  for (var _g=0; _g<50 && opts.length<4; _g++) { var d = rand(1, 10); if (opts.indexOf(d) < 0) opts.push(d); }
   shuffle(opts);
   return {
     type: 'puzzle',
@@ -5672,13 +5678,13 @@ function generatePuzzle(diff, desiredType) {
       if (qType === 2) {
         opts = [];
         for (d = 0; d <= n - 2; d++) opts.push(d);
-        while (opts.length < 4) { d = rand(1, n); if (opts.indexOf(d) < 0) opts.push(d); }
+        for (var _g=0; _g<50 && opts.length<4; _g++) { d = rand(1, n); if (opts.indexOf(d) < 0) opts.push(d); }
       } else if (typeof ans === 'string') {
         opts = [ans];
-        while (opts.length < 4) { var rn = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rn) < 0) opts.push(rn); }
+        for (var _g=0; _g<50 && opts.length<4; _g++) { var rn = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rn) < 0) opts.push(rn); }
       } else {
         opts = [ans];
-        while (opts.length < 4) { d = rand(1, n + 2); if (opts.indexOf(d) < 0) opts.push(d); }
+        for (var _g=0; _g<50 && opts.length<4; _g++) { d = rand(1, n + 2); if (opts.indexOf(d) < 0) opts.push(d); }
       }
       shuffle(opts);
       return {
@@ -5754,10 +5760,10 @@ function generatePuzzle(diff, desiredType) {
 
       if (typeof ans === 'string') {
         opts = [ans];
-        while (opts.length < 4) { var rname = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rname) < 0) opts.push(rname); }
+        for (var _g=0; _g<50 && opts.length<4; _g++) { var rname = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rname) < 0) opts.push(rname); }
       } else {
         opts = [ans];
-        while (opts.length < 4) { d = rand(1, n + 1); if (opts.indexOf(d) < 0) opts.push(d); }
+        for (var _g=0; _g<50 && opts.length<4; _g++) { d = rand(1, n + 1); if (opts.indexOf(d) < 0) opts.push(d); }
       }
       shuffle(opts);
       return {
@@ -5842,10 +5848,10 @@ function generatePuzzle(diff, desiredType) {
       var ansIsName = typeof ans === 'string';
       if (!ansIsName) {
         opts = [ans];
-        while (opts.length < 4) { d = rand(1, n + 1); if (opts.indexOf(d) < 0) opts.push(d); }
+        for (var _g=0; _g<50 && opts.length<4; _g++) { d = rand(1, n + 1); if (opts.indexOf(d) < 0) opts.push(d); }
       } else {
         opts = [ans];
-        while (opts.length < 4) { var rn = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rn) < 0) opts.push(rn); }
+        for (var _g=0; _g<50 && opts.length<4; _g++) { var rn = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rn) < 0) opts.push(rn); }
       }
       shuffle(opts);
       var posWords = ['','1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th'];
@@ -5917,10 +5923,10 @@ function generatePuzzle(diff, desiredType) {
       var ansIsName = typeof ans === 'string';
       if (!ansIsName) {
         opts = [ans];
-        while (opts.length < 4) { var d2 = rand(1, n + 1); if (opts.indexOf(d2) < 0) opts.push(d2); }
+        for (var _g=0; _g<50 && opts.length<4; _g++) { var d2 = rand(1, n + 1); if (opts.indexOf(d2) < 0) opts.push(d2); }
       } else {
         opts = [ans];
-        while (opts.length < 4) { var rn = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rn) < 0) opts.push(rn); }
+        for (var _g=0; _g<50 && opts.length<4; _g++) { var rn = PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]; if (opts.indexOf(rn) < 0) opts.push(rn); }
       }
       shuffle(opts);
       var rankWords = ['','first','second','third','fourth','fifth','sixth','seventh','eighth','ninth','tenth'];
@@ -5979,7 +5985,7 @@ function generatePuzzle(diff, desiredType) {
       opts = [ans];
       var otherRels = REL.filter(function(r){ return r !== ans && r !== chosen.rel; });
       shuffle(otherRels);
-      while (opts.length < 4) { if (otherRels.length) { var ro = otherRels.pop(); opts.push(ro); } else { opts.push(PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]); } }
+      for (var _g=0; _g<50 && opts.length<4; _g++) { if (otherRels.length) { var ro = otherRels.pop(); opts.push(ro); } else { opts.push(PUZ_NAMES[rand(0, PUZ_NAMES.length - 1)]); } }
       shuffle(opts);
       return {
         type: 'puzzle', clueBlock: clues,
@@ -6033,7 +6039,7 @@ function generatePuzzle(diff, desiredType) {
         schedAns = String(countAfter);
       }
       opts = [schedAns];
-      while (opts.length < 4) { var rd = DAYS[rand(0, DAYS.length - 1)]; if (opts.indexOf(rd) < 0) opts.push(rd); }
+      for (var _g=0; _g<50 && opts.length<4; _g++) { var rd = DAYS[rand(0, DAYS.length - 1)]; if (opts.indexOf(rd) < 0) opts.push(rd); }
       shuffle(opts);
       return {
         type: 'puzzle', clueBlock: clues,
@@ -6170,7 +6176,7 @@ function generatePuzzle(diff, desiredType) {
       for (var ii = 0; ii < conclusions.length; ii++) {
         if (opts.indexOf(conclusions[ii]) < 0) opts.push(conclusions[ii]);
       }
-      while (opts.length < 4) { var fake = vars[rand(0,vars.length-1)] + ' ' + symbols[rand(0,2)] + ' ' + vars[rand(0,vars.length-1)]; if (opts.indexOf(fake) < 0) opts.push(fake); }
+      for (var _g=0; _g<50 && opts.length<4; _g++) { var fake = vars[rand(0,vars.length-1)] + ' ' + symbols[rand(0,2)] + ' ' + vars[rand(0,vars.length-1)]; if (opts.indexOf(fake) < 0) opts.push(fake); }
       shuffle(opts);
       return {
         type: 'puzzle', clueBlock: statements,
@@ -6226,10 +6232,10 @@ function generatePuzzle(diff, desiredType) {
       }
       var opts = [ans];
       if (qType === 2) {
-        while (opts.length < 4) { var rv = String(rand(1, nRank)); if (opts.indexOf(rv) < 0) opts.push(rv); }
+        for (var _g=0; _g<50 && opts.length<4; _g++) { var rv = String(rand(1, nRank)); if (opts.indexOf(rv) < 0) opts.push(rv); }
       } else {
         for (var ri = 0; ri < nRank; ri++) { if (opts.indexOf(sortedNames[ri]) < 0) opts.push(sortedNames[ri]); }
-        while (opts.length < 4) { var fake = rankNames[rand(0, nRank-1)]; if (opts.indexOf(fake) < 0) opts.push(fake); }
+        for (var _g=0; _g<50 && opts.length<4; _g++) { var fake = rankNames[rand(0, nRank-1)]; if (opts.indexOf(fake) < 0) opts.push(fake); }
       }
       shuffle(opts);
       return {
@@ -6358,7 +6364,7 @@ function generatePuzzle(diff, desiredType) {
         var wrongDirs = DIRS.filter(function(d){ return d !== finalDir; });
         shuffle(wrongDirs);
         opts = [finalDir];
-        while (opts.length < 4) { opts.push(wrongDirs.pop() || DIRS[rand(0, 3)]); }
+        for (var _g=0; _g<50 && opts.length<4; _g++) { opts.push(wrongDirs.pop() || DIRS[rand(0, 3)]); }
         shuffle(opts);
         return {
           type: 'puzzle', clueBlock: clues,
@@ -6373,7 +6379,7 @@ function generatePuzzle(diff, desiredType) {
         // "How far is he from the starting point?"
         var minDist = Math.max(1, finalDist - 4), maxDist = finalDist + 4;
         opts = [String(finalDist)];
-        while (opts.length < 4) { var d2 = rand(minDist, maxDist); if (opts.indexOf(String(d2)) < 0) opts.push(String(d2)); }
+        for (var _g=0; _g<50 && opts.length<4; _g++) { var d2 = rand(minDist, maxDist); if (opts.indexOf(String(d2)) < 0) opts.push(String(d2)); }
         shuffle(opts);
         return {
           type: 'puzzle', clueBlock: clues,

@@ -706,7 +706,8 @@
 
         var og = document.getElementById('optGrid');
         og.innerHTML = '';
-        q.options.forEach(function(o, i){
+        (q.options || []).forEach(function(o, i){
+            if (o == null || o === undefined) return;
             var b = document.createElement('div');
             b.className = 'opt-btn';
             b.textContent = o;
