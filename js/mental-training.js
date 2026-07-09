@@ -4061,6 +4061,56 @@ function generateLogarithmQuestion(diff, layer) {
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Logarithms', intuition:'log_b(x)=y means b^y=x. log(xy)=log(x)+log(y). log(x/y)=log(x)-log(y). log(x^n)=n×log(x).' };
 }
 
+function generateNumberSeriesQuestion(diff, layer) {
+  var ty = [
+    [1, function(){ var s=rand(2,8), d=rand(4,10), n=5, seq=[]; for(var i=0;i<n;i++)seq.push(s+i*d); return {seq:seq, ans:s+n*d, typ:'next', pat:'AP +'+d, hint:'Constant difference. Add '+d+' each step.'}; }],
+    [1, function(){ var s=rand(3,9), r=rand(2,4), n=5, seq=[]; for(var i=0;i<n;i++)seq.push(s*Math.pow(r,i)); return {seq:seq, ans:s*Math.pow(r,n), typ:'next', pat:'GP ×'+r, hint:'Geometric progression. Multiply by '+r+' each time.'}; }],
+    [1, function(){ var s=rand(3,8), n=5, seq=[]; for(var i=0;i<n;i++)seq.push((s+i)*(s+i)); return {seq:seq, ans:(s+n)*(s+n), typ:'next', pat:'Squares', hint:'Numbers are squares of consecutive integers.'}; }],
+    [2, function(){ var s=rand(4,10), n=5, seq=[]; for(var i=0;i<n;i++)seq.push((s+i)*(s+i)-1); return {seq:seq, ans:(s+n)*(s+n)-1, typ:'next', pat:'n²-1', hint:'Subtract 1 from each square number.'}; }],
+    [2, function(){ var s=rand(2,7), d=rand(2,5), n=6, seq=[s]; for(var i=0;i<n;i++)seq.push(seq[i]+d+i*2); return {seq:seq, ans:seq[n]+d+n*2, typ:'next', pat:'Inc diff', hint:'Differences increase by 2 each step.'}; }],
+    [2, function(){ var primes=[2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97]; var s=rand(0,10), n=5; var seq=[]; for(var i=0;i<n;i++)seq.push(primes[s+i]); return {seq:seq, ans:primes[s+n], typ:'next', pat:'Primes', hint:'Prime number series.'}; }],
+    [3, function(){ var s=rand(2,5), n=6, seq=[s,s+rand(1,3)]; for(var i=2;i<n;i++)seq.push(seq[i-1]+seq[i-2]); return {seq:seq, ans:seq[n-1]+seq[n-2], typ:'next', pat:'Fibonacci', hint:'Each term is sum of previous two terms.'}; }],
+    [3, function(){ var s=rand(2,5), n=5, seq=[]; for(var i=0;i<n;i++)seq.push(Math.pow(s+i,3)); return {seq:seq, ans:Math.pow(s+n,3), typ:'next', pat:'Cubes', hint:'Numbers are cubes of consecutive integers.'}; }],
+    [3, function(){ var s=rand(5,12), n=6, seq=[s]; for(var i=0;i<n;i++)seq.push(seq[i]+(i%2===0?rand(3,6):rand(7,12))); return {seq:seq, ans:seq[n]+(n%2===0?rand(3,6):rand(7,12)), typ:'next', pat:'Alt diff', hint:'Two alternating differences in the series.'}; }],
+    [4, function(){ var s=rand(2,6), c=rand(1,5), n=5, seq=[]; for(var i=0;i<n;i++)seq.push((s+i)*(s+i)+c); return {seq:seq, ans:(s+n)*(s+n)+c, typ:'next', pat:'n²+'+c, hint:'Add '+c+' to each square number.'}; }],
+    [4, function(){ var a=rand(2,4), b=rand(3,7), s=rand(3,8), n=5, seq=[s]; for(var i=0;i<n;i++)seq.push(seq[i]*a+b); return {seq:seq, ans:seq[n]*a+b, typ:'next', pat:'×'+a+'+'+b, hint:'Multiply by '+a+', then add '+b+'.'}; }],
+    [4, function(){ var s=rand(10,30), d=rand(2,4), n=6, seq=[s]; for(var i=0;i<n;i++)seq.push(i%2===0?seq[i]-d:seq[i]+d*2); return {seq:seq, ans:seq[n], typ:'next', pat:'Alt ±', hint:'Alternating subtract and add pattern.'}; }],
+    // SBI PO style: Wrong number series
+    [5, function(){ var s=rand(4,8), d=rand(3,6), n=5, seq=[]; for(var i=0;i<n;i++)seq.push(s+i*d); var wrongIdx=rand(2,3); seq[wrongIdx]+=rand(1,3); return {seq:seq, ans:seq[wrongIdx], wrong:true, correct:s+wrongIdx*d, pat:'Wrong AP', hint:'Find the number that breaks the constant difference pattern of '+d+'.'}; }],
+    [5, function(){ var s=rand(2,4), r=rand(2,3), n=5, seq=[]; for(var i=0;i<n;i++)seq.push(s*Math.pow(r,i)); var wrongIdx=rand(2,3); seq[wrongIdx]=Math.round(seq[wrongIdx]*rand(11,14)/10); return {seq:seq, ans:seq[wrongIdx], wrong:true, correct:s*Math.pow(r,wrongIdx), pat:'Wrong GP', hint:'Find the term that does not follow the geometric progression with ratio '+r+'.'}; }],
+    [5, function(){ var s=rand(2,5), n=6, seq=[s,s+rand(1,2)]; for(var i=2;i<n;i++)seq.push(seq[i-1]+seq[i-2]); var wrongIdx=rand(2,4); seq[wrongIdx]+=rand(2,4); return {seq:seq, ans:seq[wrongIdx], wrong:true, correct:(seq[wrongIdx-1]+seq[wrongIdx-2]), pat:'Wrong Fibonacci', hint:'Each term should be sum of previous two. Find the term that violates this.'}; }],
+    [5, function(){ var s=rand(10,25), d=rand(5,10), n=5, seq=[s]; for(var i=0;i<n;i++)seq.push(seq[i]+d+i*3); var wrongIdx=rand(2,3); seq[wrongIdx]-=rand(2,5); var correctVal=s; for(var i=0;i<=wrongIdx;i++)correctVal+=d+i*3; return {seq:seq, ans:seq[wrongIdx], wrong:true, correct:correctVal, pat:'Wrong inc diff', hint:'Differences should increase by 3 each step.'}; }],
+    // SBI PO style: Mixed pattern
+    [5, function(){ var s=rand(3,7), n=7, seq=[]; for(var i=0;i<n;i+=2){seq.push((s+i/2)*(s+i/2), (s+i/2)*(s+i/2)+1);} return {seq:seq.slice(0,n), ans:n%2===0?(s+n/2-1)*(s+n/2-1)+1:(s+n/2)*(s+n/2), typ:'next', pat:'n², n²+1', hint:'Alternating pattern: square, square+1, square, square+1...'}; }],
+    [5, function(){ var s=rand(1,4), n=5, seq=[]; for(var i=0;i<n;i++)seq.push(Math.pow(2,s+i+1)-1); return {seq:seq, ans:Math.pow(2,s+n+1)-1, typ:'next', pat:'2ⁿ-1', hint:'Subtract 1 from powers of 2.'}; }]
+  ];
+  var matched = ty.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = ty;
+  var chosen = matched[rand(0, matched.length - 1)];
+  var data = chosen[1]();
+  var seqStr = data.seq.join(', ');
+  var qText = data.wrong ? 'Find the wrong number: ' + seqStr : 'Find the next term: ' + seqStr + ', ?';
+  var answer = data.wrong ? data.ans : data.ans;
+  var opts = [answer];
+  if (data.wrong) {
+    for(var i=-2;i<=3;i++){var v=answer+i;if(v!==answer&&v>0&&opts.indexOf(v)<0)opts.push(v);}
+  } else {
+    var spread = Math.max(2, Math.round(answer*0.15));
+    for(var i=-spread;i<=spread;i+=Math.max(1,Math.round(spread/3))){var v=answer+i;if(v!==answer&&v>0&&opts.indexOf(v)<0)opts.push(v);}
+  }
+  shuffle(opts);
+  return {
+    question: qText,
+    answer: answer,
+    options: opts,
+    hint: data.hint + ' Pattern: ' + data.pat,
+    timeLimit: diff <= 2 ? 20 : (diff <= 4 ? 15 : 12),
+    type: 'quant',
+    techniqueLabel: 'Number Series: ' + data.pat + (data.wrong ? ' [Wrong: ' + data.ans + ', Correct: ' + data.correct + ']' : ''),
+    intuition: 'Number Series: Check differences, ratios, squares/cubes, prime gaps, or mixed operations. ' + data.hint
+  };
+}
+
 // Logical Reasoning missing topics
 function generateMakingJudgmentsQuestion(diff) {
   var items=[
@@ -4484,10 +4534,11 @@ function generateQuantQuestion(diff, subMode) {
     chain_rule: generateChainRuleQuestion,
     logarithm: generateLogarithmQuestion,
     quadratic_comparison: generateQuadraticComparisonQuestion,
+    number_series: generateNumberSeriesQuestion,
     meta: generateMetaQuestion
   };
   // If no subMode, pick random quant topic
-  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','quadratic_comparison','partnership','simple_interest','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out','height_distance','decimal_fraction','chain_rule','logarithm','meta','meta','meta']);
+  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','quadratic_comparison','partnership','simple_interest','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out','height_distance','decimal_fraction','chain_rule','logarithm','number_series','meta','meta','meta']);
   var gen = genMap[topic];
   if (gen) {
     var q, attempts = 0;
@@ -4876,12 +4927,13 @@ function generateWeakSpotQuestion(diff) {
 }
 
 function generateGrandSlamQuestion(diff) {
+  var examDiff = Math.max(4, diff);
   var category = pick(['quant', 'reasoning', 'verbal']);
   var q;
   switch (category) {
-    case 'quant': q = generateQuantQuestion(diff); break;
-    case 'reasoning': q = generateReasoningQuestion(diff); break;
-    case 'verbal': q = generateVerbalQuestion(diff); break;
+    case 'quant': q = generateQuantQuestion(examDiff); break;
+    case 'reasoning': q = generateReasoningQuestion(examDiff); break;
+    case 'verbal': q = generateVerbalQuestion(examDiff); break;
   }
   if (q) {
     q.type = 'grandslam';
