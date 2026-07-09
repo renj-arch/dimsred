@@ -2855,13 +2855,30 @@ function generateQuadraticComparisonQuestion(diff) {
     eqs.push({eq: a+'x²'+(b>=0?'+':'')+b+'x'+(c>=0?'+':'')+c+'=0', r1:r1, r2:r2, a:a, b:b, c:c});
   }
   var comps = [
+    // 1: Compare larger roots
     function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (eqs[0].r1 > eqs[1].r1 ? 'I > II' : (eqs[0].r1 < eqs[1].r1 ? 'I < II' : (eqs[0].r1 === eqs[1].r1 ? 'I = II' : 'Cannot compare'))) : 'Cannot compare'; return {a:v, hint:'Compare the larger roots'}; },
+    // 2: Compare smaller roots
     function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (eqs[0].r2 > eqs[1].r2 ? 'I > II' : (eqs[0].r2 < eqs[1].r2 ? 'I < II' : (eqs[0].r2 === eqs[1].r2 ? 'I = II' : 'Cannot compare'))) : 'Cannot compare'; return {a:v, hint:'Compare the smaller roots'}; },
+    // 3: Compare product of roots (c/a)
     function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (eqs[0].r1*eqs[0].r2 > eqs[1].r1*eqs[1].r2 ? 'I > II' : (eqs[0].r1*eqs[0].r2 < eqs[1].r1*eqs[1].r2 ? 'I < II' : 'I = II')) : 'Cannot compare'; return {a:v, hint:'Compare product of roots (c/a)'}; },
-    // SBI PO Hard: compare sum of squares of roots
-    function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (eqs[0].r1*eqs[0].r1+eqs[0].r2*eqs[0].r2 > eqs[1].r1*eqs[1].r1+eqs[1].r2*eqs[1].r2 ? 'I > II' : (eqs[0].r1*eqs[0].r1+eqs[0].r2*eqs[0].r2 < eqs[1].r1*eqs[1].r1+eqs[1].r2*eqs[1].r2 ? 'I < II' : 'I = II')) : 'Cannot compare'; return {a:v, hint:'Compare sum of squares of roots = (b²-2ac)/a²'}; },
-    // SBI PO Hard: compare sum of reciprocals of roots
-    function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? ((1/eqs[0].r1+1/eqs[0].r2) > (1/eqs[1].r1+1/eqs[1].r2) ? 'I > II' : ((1/eqs[0].r1+1/eqs[0].r2) < (1/eqs[1].r1+1/eqs[1].r2) ? 'I < II' : 'I = II')) : 'Cannot compare'; return {a:v, hint:'Sum of reciprocals = -b/c'}; }
+    // 4: Compare sum of squares of roots
+    function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (eqs[0].r1*eqs[0].r1+eqs[0].r2*eqs[0].r2 > eqs[1].r1*eqs[1].r1+eqs[1].r2*eqs[1].r2 ? 'I > II' : (eqs[0].r1*eqs[0].r1+eqs[0].r2*eqs[0].r2 < eqs[1].r1*eqs[1].r1+eqs[1].r2*eqs[1].r2 ? 'I < II' : 'I = II')) : 'Cannot compare'; return {a:v, hint:'Compare sum of squares = (b²-2ac)/a²'}; },
+    // 5: Compare sum of reciprocals of roots
+    function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? ((1/eqs[0].r1+1/eqs[0].r2) > (1/eqs[1].r1+1/eqs[1].r2) ? 'I > II' : ((1/eqs[0].r1+1/eqs[0].r2) < (1/eqs[1].r1+1/eqs[1].r2) ? 'I < II' : 'I = II')) : 'Cannot compare'; return {a:v, hint:'Sum of reciprocals = -b/c'}; },
+    // 6: Compare sum of roots (direct from coefficients)
+    function(){ var s1 = -eqs[0].b/eqs[0].a, s2 = -eqs[1].b/eqs[1].a; var v = s1 > s2 ? 'I > II' : (s1 < s2 ? 'I < II' : 'I = II'); return {a:v, hint:'Sum of roots = -b/a. I: -('+eqs[0].b+')/'+eqs[0].a+'='+s1+', II: -('+eqs[1].b+')/'+eqs[1].a+'='+s2}; },
+    // 7: Compare absolute values of larger roots
+    function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (Math.abs(eqs[0].r1) > Math.abs(eqs[1].r1) ? 'I > II' : (Math.abs(eqs[0].r1) < Math.abs(eqs[1].r1) ? 'I < II' : 'I = II')) : 'Cannot compare'; return {a:v, hint:'Compare |larger root| of each equation'}; },
+    // 8: Compare x²+y² from both equations (substitute both roots)
+    function(){ var v = eqs[0].r1 !== null && eqs[0].r2 !== null && eqs[1].r1 !== null && eqs[1].r2 !== null ? (eqs[0].r1*eqs[0].r1+eqs[0].r2*eqs[0].r2 > eqs[1].r1*eqs[1].r1+eqs[1].r2*eqs[1].r2 ? 'I > II' : (eqs[0].r1*eqs[0].r1+eqs[0].r2*eqs[0].r2 < eqs[1].r1*eqs[1].r1+eqs[1].r2*eqs[1].r2 ? 'I < II' : 'I = II')) : 'Cannot compare'; return {a:v, hint:'Compare sum of squares of BOTH roots'}; },
+    // 9: Compare (x - y)² difference of roots squared
+    function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (Math.pow(eqs[0].r1 - eqs[0].r2,2) > Math.pow(eqs[1].r1 - eqs[1].r2,2) ? 'I > II' : (Math.pow(eqs[0].r1 - eqs[0].r2,2) < Math.pow(eqs[1].r1 - eqs[1].r2,2) ? 'I < II' : 'I = II')) : 'Cannot compare'; return {a:v, hint:'Compare (difference of roots)² = (b²-4ac)/a² = discriminant/a²'}; },
+    // 10: Compare x*y + x + y (cross product)
+    function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (eqs[0].r1*eqs[0].r2+eqs[0].r1+eqs[0].r2 > eqs[1].r1*eqs[1].r2+eqs[1].r1+eqs[1].r2 ? 'I > II' : (eqs[0].r1*eqs[0].r2+eqs[0].r1+eqs[0].r2 < eqs[1].r1*eqs[1].r2+eqs[1].r1+eqs[1].r2 ? 'I < II' : 'I = II')) : 'Cannot compare'; return {a:v, hint:'Compare xy + x + y = product + sum'}; },
+    // 11: SBI PO Hard — compare 1/x + 1/y with 1 (sum of reciprocals vs 1)
+    function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (Math.abs(1/eqs[0].r1+1/eqs[0].r2 - 1) < Math.abs(1/eqs[1].r1+1/eqs[1].r2 - 1) ? 'I > II' : (Math.abs(1/eqs[0].r1+1/eqs[0].r2 - 1) > Math.abs(1/eqs[1].r1+1/eqs[1].r2 - 1) ? 'I < II' : 'I = II')) : 'Cannot compare'; return {a:v, hint:'Compare how close sum of reciprocals is to 1'}; },
+    // 12: SBI PO Hard — compare sqrt(x² + y²) magnitude
+    function(){ var v = eqs[0].r1 !== null && eqs[1].r1 !== null ? (Math.sqrt(eqs[0].r1*eqs[0].r1+eqs[0].r2*eqs[0].r2) > Math.sqrt(eqs[1].r1*eqs[1].r1+eqs[1].r2*eqs[1].r2) ? 'I > II' : (Math.sqrt(eqs[0].r1*eqs[0].r1+eqs[0].r2*eqs[0].r2) < Math.sqrt(eqs[1].r1*eqs[1].r1+eqs[1].r2*eqs[1].r2) ? 'I < II' : 'I = II')) : 'Cannot compare'; return {a:v, hint:'Compare √(x²+y²) for the two equations'}; }
   ];
   var ty = comps;
   var idx;
@@ -2998,19 +3015,32 @@ function generatePipesCisternsQuestion(diff, layer) {
 
 function generateBoatsStreamsQuestion(diff, layer) {
   var ty = [
+    // 1: Basic downstream speed
     function(){ var b=rand(8,15), s=rand(2,5); return { q:'Speed in still water='+b+'km/h, stream='+s+'km/h. Downstream?', a:b+s, hint:'Downstream = boat + stream' }; },
+    // 2: Basic upstream speed
     function(){ var b=rand(8,15), s=rand(2,5); return { q:'Speed in still water='+b+'km/h, stream='+s+'km/h. Upstream?', a:b-s, hint:'Upstream = boat - stream' }; },
+    // 3: Find boat speed from DS and US
     function(){ var ds=rand(12,20), us=rand(6,11); return { q:'Downstream='+ds+'km/h, upstream='+us+'km/h. Boat speed?', a:Math.round((ds+us)/2), hint:'Boat = (downstream + upstream)/2' }; },
+    // 4: Find stream speed from DS and US
     function(){ var ds=rand(12,20), us=rand(6,11); return { q:'Downstream='+ds+'km/h, upstream='+us+'km/h. Stream speed?', a:Math.round((ds-us)/2), hint:'Stream = (downstream - upstream)/2' }; },
+    // 5: Time downstream
     function(){ var b=rand(10,18), s=rand(2,4), d=rand(30,80); return { q:'Boat='+b+'km/h, stream='+s+'km/h. Time downstream for '+d+'km?', a:Math.round(d/(b+s)), hint:'Time = distance / downstream speed' }; },
-    // SBI PO Hard: round trip with variable stream
+    // 6: Round trip
     function(){ var b=rand(10,16), s=rand(2,5), d=rand(40,80); return { q:'Boat='+b+'km/h, stream='+s+'km/h. Time for round trip '+d+'km downstream and back?', a:Math.round(d/(b+s) + d/(b-s)), hint:'Total = d/(b+s) + d/(b-s)', intuition:'Downstream='+d+'/('+b+'+'+s+')='+Math.round(d/(b+s))+'h, Upstream='+d+'/('+b+'-'+s+')='+Math.round(d/(b-s))+'h. Total='+Math.round(d/(b+s)+d/(b-s))+'h' }; },
-    // SBI PO Hard: find stream speed given average speed
+    // 7: Average speed of round trip
     function(){ var b=rand(8,15), s=rand(2,5), d=rand(30,60); return { q:'Boat covers '+d+'km downstream in '+Math.round(d/(b+s))+'h, same distance upstream in '+Math.round(d/(b-s))+'h. Average speed?', a:Math.round(2*d/(d/(b+s)+d/(b-s))), hint:'Avg speed = total distance/total time', intuition:'Total dist='+2*d+'km, total time='+Math.round(d/(b+s)+d/(b-s))+'h. Avg='+Math.round(2*d/(d/(b+s)+d/(b-s)))+'km/h' }; },
-    // SBI PO Hard: find boat speed given downstream speed and time ratio
-    function(){ var b=rand(10,18), s=rand(2,5), d=rand(50,100); var td=d/(b+s), tu=d/(b-s); return { q:'Downstream time : upstream time = 1:' + Math.round(tu/td) + ' for ' + d + 'km. Stream=' + s + 'km/h. Boat speed?', a:b, hint:'Time ratio (b-s):(b+s) = 1:'+Math.round(tu/td)+'. Solve: (b+s)='+Math.round(tu/td)+'(b-s)', intuition:'t_down/t_up = (b-s)/(b+s) = 1/'+Math.round(tu/td)+'. ' + (b-s) + '/' + (b+s) + ' = ' + ((b-s)/(b+s)).toFixed(3) + ' ≈ 1/' + Math.round(tu/td) + '. Boat speed=' + b + 'km/h' }; },
-    // SBI PO Hard: man rowing with changing stream
-    function(){ var b=rand(8,14), s1=rand(2,4), s2=rand(3,6), d1=rand(20,40), d2=rand(20,40); return { q:'River: upstream '+d1+'km at stream='+s1+'km/h, then downstream '+d2+'km at stream='+s2+'km/h. Boat='+b+'km/h. Total time?', a:Math.round(d1/(b-s1) + d2/(b+s2)), hint:'Time upstream='+d1+'/('+b+'-'+s1+'), time downstream='+d2+'/('+b+'+'+s2+')', intuition:'Upstream: '+d1+'/('+b+'-'+s1+')='+Math.round(d1/(b-s1))+'h. Downstream: '+d2+'/('+b+'+'+s2+')='+Math.round(d2/(b+s2))+'h. Total='+Math.round(d1/(b-s1)+d2/(b+s2))+'h' }; }
+    // 8: Find boat speed from time ratio
+    function(){ var b=rand(10,18), s=rand(2,5), d=rand(50,100); var td=d/(b+s), tu=d/(b-s); return { q:'Downstream time : upstream time = 1:' + Math.round(tu/td) + ' for ' + d + 'km. Stream=' + s + 'km/h. Boat speed?', a:b, hint:'Time ratio (b-s):(b+s) = 1:'+Math.round(tu/td)+'. (b+s)='+Math.round(tu/td)+'(b-s)', intuition:'t_down/t_up='+(b-s)+'/'+(b+s)+'='+((b-s)/(b+s)).toFixed(3)+'. Boat='+b+'km/h' }; },
+    // 9: Total time with changing stream
+    function(){ var b=rand(8,14), s1=rand(2,4), s2=rand(3,6), d1=rand(20,40), d2=rand(20,40); return { q:'Upstream '+d1+'km at stream='+s1+', downstream '+d2+'km at stream='+s2+'. Boat='+b+'. Total time?', a:Math.round(d1/(b-s1) + d2/(b+s2)), hint:'Time='+d1+'/('+b+'-'+s1+')+'+d2+'/('+b+'+'+s2+')', intuition:'='+Math.round(d1/(b-s1))+'h + '+Math.round(d2/(b+s2))+'h = '+Math.round(d1/(b-s1)+d2/(b+s2))+'h' }; },
+    // 10: Find stream speed from distance and time difference (IndiaBix style)
+    function(){ var b=rand(10,16), s=rand(2,5), d=rand(30,60); var td=d/(b+s), tu=d/(b-s); return { q:'A boat takes '+(Math.round(tu-td))+'h more to go '+d+'km upstream than downstream. Boat='+b+'km/h. Stream speed?', a:s, hint:'d/(b-s)-d/(b+s)='+(tu-td)+'. Solve for s: s='+s+'km/h', intuition:'Time diff = d[1/(b-s)-1/(b+s)] = d[2s/(b²-s²)] = '+(tu-td)+'. Solve: s='+s }; },
+    // 11: Find distance given round trip time
+    function(){ var b=rand(10,16), s=rand(2,4), t=rand(3,6); var d=Math.round(t*(b*b-s*s)/(2*b)); return { q:'Boat='+b+'km/h, stream='+s+'km/h. Round trip takes '+t+'h. Distance one way?', a:d, hint:'d = t×(b²-s²)/(2b) = '+t+'×('+(b*b)+'-'+(s*s)+')/'+(2*b), intuition:'Round trip time = d/(b+s)+d/(b-s)=2db/(b²-s²). d='+d+'km' }; },
+    // 12: SBI PO Hard — speed given time saved by going downstream
+    function(){ var b=rand(8,15), s=rand(2,5), d=rand(40,80); var td=d/(b+s), tu=d/(b-s); return { q:'Time saved going downstream vs upstream for '+d+'km is '+(Math.round(tu-td))+'h. Boat='+b+'km/h. Stream speed?', a:s, hint:'Time saved = d/(b-s)-d/(b+s)=2ds/(b²-s²)='+(tu-td)+'. Solve: s='+s }; },
+    // 13: SBI PO Hard — man rowing to a place and back (IndiaBix style)
+    function(){ var b=rand(6,12), s=rand(2,4); var d=rand(8,20); return { q:'Man rows at '+b+'km/h in still water. Stream='+s+'km/h. He rows to a place '+d+'km away and back. Total time?', a:Math.round(d/(b+s)+d/(b-s)), hint:'Total = d/(b+s)+d/(b-s)', intuition:'DS: '+d+'/'+(b+s)+'='+Math.round(d/(b+s))+'h. US: '+d+'/'+(b-s)+'='+Math.round(d/(b-s))+'h. Total='+Math.round(d/(b+s)+d/(b-s))+'h' }; }
   ];
   var idx;
   if (diff >= 5 && ty.length >= 4) {
@@ -3024,21 +3054,32 @@ function generateBoatsStreamsQuestion(diff, layer) {
 
 function generateAlligationQuestion(diff, layer) {
   var ty = [
+    // 1: Basic ratio from percentages
     function(){ var p1=rand(5,15), p2=rand(20,40), m=rand(p1+3,p2-3); return { q:'Mix '+(p1*10)+'% and '+(p2*10)+'% to get '+(m*10)+'%? Ratio?', a:(p2-m)+':'+(m-p1), hint:'(mean-low):(high-mean)' }; },
+    // 2: Average price from quantities
     function(){ var c1=rand(20,50), c2=c1+rand(15,40), r1=rand(1,4), r2=rand(1,4); var m=Math.round((c1*r1+c2*r2)/(r1+r2)); return { q:'₹'+c1+'/kg (qty '+r1+'kg) + ₹'+c2+'/kg (qty '+r2+'kg). Avg price?', a:m, hint:'Avg = (C1×Q1+C2×Q2)/(Q1+Q2)' }; },
+    // 3: Quantity of a component given ratio
     function(){ var w=rand(5,15), c=rand(2,5); return { q:'Water: Milk = '+w+':'+c+' in '+(w+c)*2+'L mixture. Milk quantity?', a:Math.round((w+c)*2*c/(w+c)), hint:'Milk = total × part/total_parts' }; },
-    // Replacement of mixture
-    function(){ var m=rand(10,30); return { q:'' + m + 'L of milk, ' + rand(3,6) + 'L water added then ' + rand(2,4) + 'L mixture removed. Milk left?', a:Math.round(m*(m/(m+rand(3,6)))), hint:'Milk fraction = ' + m + '/' + (m+rand(3,6)) + ', milk removed = fraction × removed qty', intuition:'Initial milk=' + m + 'L, total=' + (m+rand(3,6)) + 'L. Milk fraction = ' + m + '/' + (m+rand(3,6)) + '. After removal, milk = ' + m + ' - ' + Math.round(m*(m/(m+rand(3,6)))) + ' = ' + Math.round(m*(m/(m+rand(3,6)))) + 'L' }; },
-    // Mixing two types of rice/grain
-    function(){ var c1=rand(20,40), c2=rand(45,60), m=rand(c1+5,c2-5); return { q:'Rice type1 ₹'+c1+'/kg, type2 ₹'+c2+'/kg. Mixture ₹'+m+'/kg. Ratio?', a:(c2-m)+':'+(m-c1), hint:'Cheaper:dearer = (dearer-mean):(mean-cheaper)', intuition:'Ratio = (' + c2 + '-' + m + '):(' + m + '-' + c1 + ') = ' + (c2-m) + ':' + (m-c1) }; },
-    // SBI PO Hard: three ingredient mixture
-    function(){ var a=rand(20,35), b=rand(30,50), c=rand(40,60), m=rand(b+2,c-2), r1=(c-m)+':'+(m-b); return { q:'Three varieties: ₹'+a+'/kg, ₹'+b+'/kg, ₹'+c+'/kg. Mix ₹'+m+'/kg using all three. Ratio of cheapest to costliest?', a:r1, hint:'First mix B & C to get mean, then mix with A', intuition:'Mix B and C: ratio = ('+c+'-'+m+'):('+m+'-'+b+') = '+(c-m)+':'+(m-b)+'. Then with A using alligation' }; },
-    // SBI PO Hard: repeated dilution
-    function(){ var m=rand(10,25), w1=rand(3,6), w2=rand(3,6), r=rand(2,4); return { q:m+'L milk. Add '+w1+'L water, remove '+r+'L mixture. Add '+w2+'L water again. Milk % in final?', a:Math.round((m - (m/(m+w1))*r * m/(m+w1) * (1 - 1/(m+w1)) ) / (m + w1 - r + w2) * m * 100 / m)/1, hint:'Step1: milk='+m+'×'+m+'/('+m+'+'+w1+') after removal. Then add '+w2+'L water', intuition:'After step1: milk='+m+'L, water='+w1+'L. Remove '+r+'L: milk='+Math.round(m - r*m/(m+w1))+'L. Add '+w2+'L water: total='+(m+w1-r+w2)+'L, milk='+Math.round(m - r*m/(m+w1))+'L, %='+Math.round((m - r*m/(m+w1))/(m+w1-r+w2)*100)+'%' }; },
-    // SBI PO Hard: profit using false weight with alligation
-    function(){ var cp=rand(20,40), sp=rand(30,50); return { q:'Shopkeeper sells at ₹'+sp+'/kg (cost ₹'+cp+'/kg) but uses '+rand(800,950)+'g weight. Profit%?', a:Math.round((sp*1000/rand(800,950) - cp)/cp*100), hint:'Effective SP = '+sp+' × 1000/'+rand(800,950)+' = '+Math.round(sp*1000/rand(800,950)), intuition:'Effective SP='+Math.round(sp*1000/rand(800,950))+'/kg. CP='+cp+'/kg. Profit%='+Math.round((Math.round(sp*1000/rand(800,950))-cp)/cp*100)+'%' }; },
-    // SBI PO Hard: milk-water mixture sold at profit
-    function(){ var m=rand(10,20), w=rand(2,5), g=rand(10,25), cpl=rand(25,45); return { q:(m+w)+'L mixture (milk:water '+m+':'+w+'). Cost ₹'+cpl+'/L milk. Sold at '+g+'% profit. SP per L?', a:Math.round(cpl*m/(m+w)*(100+g)/100), hint:'Cost of mixture = '+cpl*m/(m+w)+'/L. SP = cost × (100+'+g+')/100', intuition:'Effective cost = '+cpl+'×'+m+'/('+m+'+'+w+')='+Math.round(cpl*m/(m+w))+'/L. SP='+Math.round(cpl*m/(m+w))+'×'+(100+g)/100+'='+Math.round(cpl*m/(m+w)*(100+g)/100)+'/L' }; }
+    // 4: Replacement of mixture (one step)
+    function(){ var m=rand(10,30); var w=rand(3,6); var r=rand(2,4); return { q:m+'L milk, '+w+'L water added then '+r+'L mixture removed. Milk left?', a:Math.round(m*(m/(m+w))), hint:'Milk fraction = ' + m + '/' + (m+w) + ', milk removed = fraction × ' + r, intuition:'Initial milk='+m+'L, total='+(m+w)+'L. After removal, milk='+Math.round(m-r*m/(m+w))+'L' }; },
+    // 5: Ratio from mixing rice/grain
+    function(){ var c1=rand(20,40), c2=rand(45,60), m=rand(c1+5,c2-5); return { q:'Rice type1 ₹'+c1+'/kg, type2 ₹'+c2+'/kg. Mixture ₹'+m+'/kg. Ratio?', a:(c2-m)+':'+(m-c1), hint:'Cheaper:dearer = (dearer-mean):(mean-cheaper)'}; },
+    // 6: Three ingredient mixture
+    function(){ var a=rand(20,35), b=rand(30,50), c=rand(40,60), m=rand(b+2,c-2); return { q:'Three varieties: ₹'+a+'/kg, ₹'+b+'/kg, ₹'+c+'/kg. Mix ₹'+m+'/kg. Ratio cheapest:costliest?', a:(c-m)+':'+(m-b), hint:'Mix B&C first: ('+c+'-'+m+'):('+m+'-'+b+')' }; },
+    // 7: Repeated dilution (two steps)
+    function(){ var m=rand(10,25), w1=rand(3,6), w2=rand(3,6), r=rand(2,4); return { q:m+'L milk. Add '+w1+'L water, remove '+r+'L mixture. Add '+w2+'L water again. Milk %?', a:Math.round((m - r*m/(m+w1))/(m+w1-r+w2)*100), hint:'After step1: milk='+Math.round(m-r*m/(m+w1))+'L. Then add '+w2+'L water', intuition:'Milk after removal='+Math.round(m-r*m/(m+w1))+'L. Total='+(m+w1-r+w2)+'L. %='+Math.round((m - r*m/(m+w1))/(m+w1-r+w2)*100)+'%' }; },
+    // 8: False weight profit
+    function(){ var cp=rand(20,40), sp=rand(30,50), fw=rand(800,950); return { q:'Shopkeeper sells at ₹'+sp+'/kg (cost ₹'+cp+'/kg) uses '+fw+'g weight. Profit%?', a:Math.round((sp*1000/fw-cp)/cp*100), hint:'Effective SP = '+sp+'×1000/'+fw+' = '+Math.round(sp*1000/fw)}; },
+    // 9: Mixture sold at profit
+    function(){ var m=rand(10,20), w=rand(2,5), g=rand(10,25), cpl=rand(25,45); return { q:(m+w)+'L mixture (milk:water '+m+':'+w+'). Milk cost ₹'+cpl+'/L. Sold at '+g+'% profit. SP per L?', a:Math.round(cpl*m/(m+w)*(100+g)/100), hint:'Cost = '+cpl+'×'+m+'/('+m+'+'+w+')='+Math.round(cpl*m/(m+w))+'/L. SP = cost × '+(100+g)/100 }; },
+    // 10: Find amount of liquid left after n operations (IndiaBix style)
+    function(){ var m=rand(15,30); var r=rand(3,6); return { q:'A vessel contains '+m+'L of milk. '+r+'L drawn and replaced with water. Repeated once. Milk left?', a:Math.round(m*Math.pow((m-r)/m,2)), hint:'After n ops: initial × ((initial - drawn)/initial)^n', intuition:'After 1st: '+m+'×('+(m-r)+'/'+m+')='+Math.round(m*(m-r)/m)+'L. After 2nd: '+Math.round(m*(m-r)/m)+'×('+(m-r)+'/'+m+')='+Math.round(m*Math.pow((m-r)/m,2))+'L' }; },
+    // 11: Find original quantity before replacement (IndiaBix style)
+    function(){ var m=rand(15,30), r=rand(3,6), final=Math.round(m*(m-r)/m); return { q:'After drawing '+r+'L from milk and replacing with water, mixture has '+(final)+'L milk. Original quantity?', a:m, hint:'Let x = original. x × (x-'+r+')/x = '+final+'. x = '+m }; },
+    // 12: SBI PO Hard — mix water with milk at profit (IndiaBix style)
+    function(){ var g=rand(10,20); return { q:'A milkman mixes water with milk and sells at cost price, gaining '+(g)+'%. Water : Milk ratio?', a:g+':100', hint:'Gain% = water/milk × 100. Water:milk = '+g+':100' }; },
+    // 13: SBI PO Hard — alligation with two mixtures example
+    function(){ var a=rand(50,70), b=rand(30,49); return { q:'Two vessels contain milk & water in ratio '+(a)+':'+(b)+' and '+(b)+':'+(a)+'. Mix them in what ratio to get 1:1?', a:'1:1', hint:'Fraction milk in vessel1='+a+'/'+(a+b)+', vessel2='+b+'/'+(a+b)+'. Alligation gives equal parts 1:1' }; }
   ];
   var idx;
   if (diff >= 5 && ty.length >= 4) {
@@ -3317,13 +3358,34 @@ function generateDataQuestion(diff, layer) {
 
 function generateNumberSystemQuestion(diff, layer) {
   var ty = [
+    // 1: Unit digit of power
     function(){ var n=rand(2,9); return { q:'Unit digit of '+(n*7+3)+'^'+(rand(2,4))+'?', a:function(){var u=n*7+3;var c=u%10;var p=rand(2,4);var r=1;for(var i=0;i<p;i++)r=(r*c)%10;return r;}(), hint:'Find cycle of unit digit. '+(n*7+3)+' ends in '+((n*7+3)%10)+', its powers cycle every 4' }; },
+    // 2: Remainder by modulus
     function(){ var n=rand(2,9); var p=rand(2,4); return { q:'Remainder when '+(n*7+3)+'^'+(p)+' divided by 5?', a:function(){var r=1;var b=(n*7+3)%5;for(var i=0;i<p;i++)r=(r*b)%5;return r;}(), hint:'Find '+(n*7+3)+' mod 5 = '+((n*7+3)%5)+', then '+(p)+'th power mod 5' }; },
+    // 3: Divisibility check
     function(){ var n=rand(3,9); return { q:'Is ' + n*111 + ' divisible by 3? (Y/N)', a:n*111%3===0?'Y':'N', hint:'Sum of digits = '+(Math.floor(n*111/100)+(Math.floor(n*111/10)%10)+(n*111%10))+' divisible by 3?' }; },
+    // 4: Sum of digits
     function(){ var n=rand(100,999); return { q:'Sum of digits of '+n+'?', a:Math.floor(n/100)+Math.floor(n/10)%10+n%10, hint:'Add hundreds, tens, units digit' }; },
+    // 5: Factorial remainder (Wilson)
     function(){ var n=rand(3,9); return { q:'Remainder when '+n+'! divided by '+(n+1)+'? (n='+n+')', a:n+1>3?0:n+1, hint:'For n≥3, n! is divisible by n+1 if n+1 is composite' }; },
-    function(){ var n=rand(2,8); return { q:'Cyclicity of unit digit of '+(n*2+1)+'^n? (last digit pattern length)', a:[1,1,4,4,2,1,1,4,4,2][(n*2+1)%10], hint:'Cyclicity depends on the base\'s unit digit: 0,1,5,6→1; 2,3,7,8→4; 4,9→2' }; },
-    function(){ var n=rand(1,9); return { q:'How many trailing zeros in '+(n*10)+'! ?', a:Math.floor((n*10)/5)+Math.floor((n*10)/25), hint:'Count factors of 5: floor(n/5)+floor(n/25)+floor(n/125)...' }; }
+    // 6: Cyclicity length
+    function(){ var n=rand(2,8); return { q:'Cyclicity of unit digit of '+(n*2+1)+'^n? (last digit pattern length)', a:[1,1,4,4,2,1,1,4,4,2][(n*2+1)%10], hint:'Cyclicity: 0,1,5,6→1; 2,3,7,8→4; 4,9→2' }; },
+    // 7: Trailing zeros in factorial
+    function(){ var n=rand(1,9); return { q:'How many trailing zeros in '+(n*10)+'! ?', a:Math.floor((n*10)/5)+Math.floor((n*10)/25), hint:'Count factors of 5: floor(n/5)+floor(n/25)+floor(n/125)...' }; },
+    // 8: Find number from fraction of fraction (IndiaBix style)
+    function(){ var n=rand(40,160); return { q:'If 1/'+(rand(3,5))+' of 1/'+(rand(3,5))+' of a number is '+Math.round(n/(rand(3,5)*rand(3,5)))+', find the number?', a:n, hint:'Let x be number. '+(rand(3,5))+'x/'+(rand(3,5)*rand(3,5))+' = '+Math.round(n/(rand(3,5)*rand(3,5)))+'. Solve for x.' }; },
+    // 9: Two-digit digit reversal (IndiaBix style)
+    function(){ var d1=rand(2,8), d2=rand(d1+1,9); var n=d1*10+d2, r=d2*10+d1; return { q:'Sum of a two-digit number and its reverse is '+(n+r)+'. The digits differ by '+(d2-d1)+'. Find the number?', a:n, hint:'10a+b+10b+a=11(a+b)='+(n+r)+'. a+b='+((n+r)/11)+'. Also a-b='+(d2-d1)+'. Solve.' }; },
+    // 10: Number of factors
+    function(){ var primes=[2,3,5,7]; var p=primes[rand(0,3)]; var e=rand(2,5); return { q:'How many factors does '+(Math.pow(p,e))+' have? (prime factors: '+p+'^'+e+')', a:e+1, hint:'Number of factors = exponent+1 = '+e+'+1. For p^e, factors = e+1.' }; },
+    // 11: Divisibility rule check (7 or 11)
+    function(){ var d=rand(1000,9999); return { q:'Is '+d+' divisible by 11? (Y/N)', a:(d%11===0)?'Y':'N', hint:'Alternate sum: '+(String(d).split('').reduce(function(s,c,i){return i%2?s+parseInt(c):s-parseInt(c);},0) % 11 === 0 ? 'divisible' : 'not divisible')+' by 11' }; },
+    // 12: SBI PO Hard — find number from remainders (Chinese remainder)
+    function(){ var m=rand(3,6), n=rand(4,7); var x=m*n+rand(1,Math.min(m,n)-1); return { q:'Find the smallest number which when divided by '+m+' and '+n+' leaves remainder '+(x%m)+' and '+(x%n)+' respectively?', a:x, hint:'Number = LCM('+m+','+n+')k + common remainder. Smallest when k=1 => '+x }; },
+    // 13: SBI PO Hard — sum of first n natural numbers
+    function(){ var n=rand(10,30); return { q:'Sum of first '+n+' natural numbers?', a:Math.round(n*(n+1)/2), hint:'Sum = n(n+1)/2 = '+n+'×'+(n+1)+'/2' }; },
+    // 14: SBI PO Hard — find number when digits reversed
+    function(){ var d1=rand(1,4), d2=rand(6,9); var n=d1*10+d2, r=d2*10+d1; return { q:'A two-digit number is '+(r-n)+' less than its reverse. Sum of digits is '+(d1+d2)+'. Find the number?', a:n, hint:'Let 10a+b=number. 10b+a-10a-b=9(b-a)='+(r-n)+'. b-a='+((r-n)/9)+', a+b='+(d1+d2)+'. Solve.' }; }
   ];
   var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=typeof d.a==='string'?d.a+'a':(d.a+rand(-1,1)); if(o.indexOf(v)<0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Number System: '+d.hint, intuition:'Unit digit cyclicity: 0,1,5,6→1; 2,3,7,8→4; 4,9→2. Sum of digits for divisibility.' };
