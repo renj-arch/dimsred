@@ -571,7 +571,7 @@
     function () { var f=-rand(10,30); var u=-rand(20,60); var v=1/(1/f-1/u); return {q:'Concave mirror f='+Math.abs(f)+' cm, u='+Math.abs(u)+' cm. Image distance?',a:Math.round(v)+' cm (real)',hint:'1/f = 1/v+1/u',solution:'Formula: 1/f = 1/v+1/u → ' + ('' + 'Math.round' + '(' + v + ')') + ' = ' + (Math.round(v)+' cm (real)')}; },
     function () { var f=rand(10,30); var u=-rand(5,15); var v=1/(1/f-1/u); return {q:'Convex mirror f='+f+' cm, u='+Math.abs(u)+' cm. v?',a:(v>0?Math.round(v*10)/10+' cm (virtual)':Math.round(Math.abs(v))+' cm (virtual)'),hint:'1/f = 1/v+1/u',solution:'1/f = 1/v+1/u → ' + ((v>0?Math.round(v*10)/10+' cm (virtual)':Math.round(Math.abs(v))+' cm (virtual)'))}; },
     function () { var f=rand(20,50); var u=-rand(30,80); var v=1/(1/f-1/u); return {q:'Convex lens f='+f+' cm, u='+Math.abs(u)+' cm. Magnification?',a:(-v/u).toFixed(2),hint:'1/f = 1/v-1/u, m = v/u',solution:'Formula: 1/f = 1/v-1/u, m = v/u → ' + ('' + '-' + v + '/' + u) + ' = ' + ((-v/u).toFixed(2))}; },
-    function () { var mu=pick([1.5,1.6,1.7]); var A=pick([30,45,60,75]); return {q:'Prism mu='+mu+', A='+A+'°. Min deviation?',a:(A*(mu-1)).toFixed(1)+'°',hint:'delta_m = A(mu-1)',solution:'Formula: delta_m = A(mu-1) → ' + ('' + A + '*' + '(' + mu + '-' + '1' + ')') + ' = ' + ((A*(mu-1)).toFixed(1)+'°')}; },
+    function () { var mu=pick([1.5,1.6,1.7]); var A=pick([30,45,60,75]); var delta=(2*Math.asin(mu*Math.sin(A/2*Math.PI/180))*180/Math.PI-A); return {q:'Prism mu='+mu+', A='+A+'°. Min deviation?',a:delta.toFixed(1)+'°',hint:'mu = sin((A+delta_m)/2)/sin(A/2)',solution:'Formula: mu = sin((A+delta_m)/2)/sin(A/2) → ' + ('' + delta.toFixed(1)) + '°'}; },
     function () { var R1=rand(10,30); var R2=-rand(10,30); var mu=pick([1.5,1.6]); return {q:'Lens R1='+R1+' cm, R2='+Math.abs(R2)+' cm, mu='+mu+'. Focal length?',a:(1/((mu-1)*(1/R1-1/R2))).toFixed(1)+' cm',hint:'1/f = (mu-1)(1/R1-1/R2)',solution:'Formula: 1/f = (mu-1)(1/R1-1/R2) → ' + ('' + '1' + '/' + '(' + '(' + mu + '-' + '1' + ')' + '*' + '(' + '1' + '/' + R1 + '-' + '1' + '/' + R2 + ')' + ')') + ' = ' + ((1/((mu-1)*(1/R1-1/R2))).toFixed(1)+' cm')}; },
     function () { var f=rand(10,30); var u=-rand(20,50); return {q:'Lens f='+f+' cm, u='+Math.abs(u)+' cm. v?',a:(1/(1/f-1/u)).toFixed(1)+' cm',hint:'1/f = 1/v - 1/u',solution:'Formula: 1/f = 1/v - 1/u → ' + ('' + '1' + '/' + '(' + '1' + '/' + f + '-' + '1' + '/' + u + ')') + ' = ' + ((1/(1/f-1/u)).toFixed(1)+' cm')}; },
     function () { var th_c=rand(25,50); return {q:'Critical angle '+th_c+'°. Refractive index?',a:(1/Math.sin(th_c*Math.PI/180)).toFixed(2),hint:'mu = 1/sin C',solution:'Formula: mu = 1/sin C → ' + ('' + '1' + '/' + 'Math.sin' + '(' + th_c + '*' + 'Math.PI' + '/' + '180' + ')') + ' = ' + ((1/Math.sin(th_c*Math.PI/180)).toFixed(2))}; },
@@ -596,7 +596,7 @@
     function () { var i=rand(20,60); var n=pick([1.5,1.6,1.7]); return {q:'i='+i+'° in air, n='+n+'. Refraction angle in medium?',a:(Math.asin(Math.sin(i*Math.PI/180)/n)*180/Math.PI).toFixed(2)+'°',hint:'sin r = sin i / n',solution:'Formula: sin r = sin i / n → ' + ('' + 'Math.asin' + '(' + 'Math.sin' + '(' + i + '*' + 'Math.PI' + '/' + '180' + ')' + '/' + n + ')' + '*' + '180' + '/' + 'Math.PI') + ' = ' + ((Math.asin(Math.sin(i*Math.PI/180)/n)*180/Math.PI).toFixed(2)+'°')}; },
     function () { var R=-rand(15,30); var mu=pick([1.5,1.6]); var f=R/(2*(mu-1)); return {q:'Plano-convex lens R='+Math.abs(R)+' cm, mu='+mu+'. f?',a:f.toFixed(1)+' cm',hint:'1/f = (mu-1)/R for planoconvex',solution:'Formula: 1/f = (mu-1)/R for planoconvex → ' + ('' + f) + ' = ' + (f.toFixed(1)+' cm')}; },
     function () { var u=-rand(30,60); var f=rand(15,30); var v=1/(1/f-1/u); return {q:'Object at '+Math.abs(u)+' cm from lens f='+f+' cm. Image distance?',a:v.toFixed(1)+' cm',hint:'1/f = 1/v - 1/u',solution:'Formula: 1/f = 1/v - 1/u → ' + ('' + v) + ' = ' + (v.toFixed(1)+' cm')}; },
-    function () { var mu=pick([1.33,1.5]); var A=pick([30,45,60]); var delta=A*(mu-1); return {q:'Prism A='+A+'°, mu='+mu+'. Min deviation?',a:delta.toFixed(1)+'°',hint:'delta_m = A(mu-1) for small A',solution:'Formula: delta_m = A(mu-1) for small A → ' + ('' + delta) + ' = ' + (delta.toFixed(1)+'°')}; },
+    function () { var mu=pick([1.33,1.5]); var A=pick([30,45,60]); var delta=(2*Math.asin(mu*Math.sin(A/2*Math.PI/180))*180/Math.PI-A); return {q:'Prism A='+A+'°, mu='+mu+'. Min deviation?',a:delta.toFixed(1)+'°',hint:'mu = sin((A+delta_m)/2)/sin(A/2)',solution:'Formula: mu = sin((A+delta_m)/2)/sin(A/2) → ' + ('' + delta.toFixed(1)) + '°'}; },
     function () { var f=rand(10,25); var d=rand(2,8); var F=f*f/d; return {q:'Two lenses f='+f+' cm separated by '+d+' cm. Effective f?',a:(f*f/(2*f-d)).toFixed(1)+' cm',hint:'1/F = 1/f1+1/f2-d/(f1*f2)',solution:'Formula: 1/F = 1/f1+1/f2-d/(f1*f2) → ' + ('' + f + '*' + f + '/' + '(' + '2' + '*' + f + '-' + d + ')') + ' = ' + ((f*f/(2*f-d)).toFixed(1)+' cm')}; },
     function () { var h=rand(3,8); var u=-rand(15,35); var f=rand(10,25); var m=f/(f+u); return {q:'h='+h+' cm, u='+Math.abs(u)+' cm, f='+f+' cm. Image size?',a:(Math.abs(m)*h).toFixed(1)+' cm',hint:'m = f/(f+u)',solution:'Formula: m = f/(f+u) → ' + ('' + 'Math.abs' + '(' + m + ')' + '*' + h) + ' = ' + ((Math.abs(m)*h).toFixed(1)+' cm')}; },
     function () { var R1=rand(10,20); var R2=rand(15,30); var mu=1.5; var f=1/((mu-1)*(1/R1-1/(-R2))); return {q:'Bi-concave lens R1='+R1+', R2='+R2+' cm, mu=1.5. f?',a:Math.abs(f).toFixed(1)+' cm (diverging)',hint:'1/f = (mu-1)(1/R1-1/R2), both negative',solution:'Formula: 1/f = (mu-1)(1/R1-1/R2), both negative → ' + ('' + 'Math.abs' + '(' + f + ')') + ' = ' + (Math.abs(f).toFixed(1)+' cm (diverging)')}; },
@@ -5749,9 +5749,10 @@
       document.getElementById("st-score").textContent = "⭐ " + session.pointsEarned + " pts";
     }
 
+    function esc(s){return (s||'').replace(/[&<>]/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[m];});}
     var html = "<div style='background:linear-gradient(135deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:24px 24px 20px;margin-bottom:16px'>";
-    if (q.hint) html += "<div style='font-size:.8em;color:#a78bfa;margin-bottom:10px;padding:8px 12px;background:rgba(167,139,250,.08);border-radius:8px;border-left:3px solid #a78bfa'>💡 " + q.hint + "</div>";
-    html += "<div style='font-size:clamp(1rem,2.2vw,1.2rem);line-height:1.7;color:#fafafa;font-weight:500;font-family:\"Georgia\",\"Times New Roman\",serif;letter-spacing:.01em'>" + q.q + "</div></div>";
+    if (q.hint) html += "<div style='font-size:.8em;color:#a78bfa;margin-bottom:10px;padding:8px 12px;background:rgba(167,139,250,.08);border-radius:8px;border-left:3px solid #a78bfa'>💡 " + esc(q.hint) + "</div>";
+    html += "<div style='font-size:clamp(1rem,2.2vw,1.2rem);line-height:1.7;color:#fafafa;font-weight:500;font-family:\"Georgia\",\"Times New Roman\",serif;letter-spacing:.01em'>" + esc(q.q) + "</div></div>";
 
     var opts = q.options;
     if (!opts || opts.length < 2) {
@@ -5805,7 +5806,7 @@
     html += "</div>";
 
     if (q.solution && readOnly) {
-      html += "<div style='margin-top:16px;padding:12px 14px;background:linear-gradient(135deg,rgba(52,211,153,.08),rgba(167,139,250,.04));border:1px solid rgba(52,211,153,.12);border-radius:10px;color:#34d399;font-size:.78em;line-height:1.5'>📖 " + q.solution + "</div>";
+      html += "<div style='margin-top:16px;padding:12px 14px;background:linear-gradient(135deg,rgba(52,211,153,.08),rgba(167,139,250,.04));border:1px solid rgba(52,211,153,.12);border-radius:10px;color:#34d399;font-size:.78em;line-height:1.5'>📖 " + esc(q.solution) + "</div>";
     }
 
     if (readOnly) {
@@ -5868,7 +5869,7 @@
     var resultHtml = "<div id='st-result-inline' style='margin-top:14px;animation:fadeIn .3s ease'>";
 
     if (q.solution) {
-      resultHtml += "<div style='padding:12px 14px;background:linear-gradient(135deg,rgba(52,211,153,.06),rgba(167,139,250,.03));border:1px solid rgba(52,211,153,.1);border-radius:10px;color:#a1a1aa;font-size:.78em;line-height:1.6;margin-bottom:10px'><span style='color:#34d399;font-weight:600'>📖 Solution:</span> " + q.solution + "</div>";
+      resultHtml += "<div style='padding:12px 14px;background:linear-gradient(135deg,rgba(52,211,153,.06),rgba(167,139,250,.03));border:1px solid rgba(52,211,153,.1);border-radius:10px;color:#a1a1aa;font-size:.78em;line-height:1.6;margin-bottom:10px'><span style='color:#34d399;font-weight:600'>📖 Solution:</span> " + esc(q.solution) + "</div>";
     }
 
     if (isAllAnswered && isLast) {
