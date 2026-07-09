@@ -5821,9 +5821,9 @@
     function () { var a=rand(1,5); return {q:'∫_0^{2π} sin^'+a+'x dx for odd '+a+'?',a:'0 (odd power over full period)',hint:'∫_0^{2π} sin^n x dx = 0 for odd n',solution:'∫_0^{2π} sin^n x dx = 0 for odd n → ' + ('0 (odd power over full period)')}; },
     function () { var a=rand(1,5); return {q:'∫_0^{π} sin^'+a+'x dx?',a:'2∫_0^{π/2} sin^'+a+'x dx',hint:'Use symmetry: ∫_0^π sin^n x dx = 2∫_0^{π/2} sin^n x dx',solution:'Use symmetry: ∫_0^π sin^n x dx = 2∫_0^{π/2} sin^n x dx → ' + ('2∫_0^{π/2} sin^'+a+'x dx')}; },
     function () { var a=rand(2,5); return {q:'Area under y=x^'+a+' from x=0 to x=1?',a:''+(1/(a+1)),hint:'Area = ∫_0^1 x^',solution:'Area = ∫_0^1 x^ → ' + (''+(1/(a+1)))+a+' dx = [x^'+(a+1)+'/'+(a+1)+']_0^1'}; },
-    function () { var a=rand(1,5); var b=rand(1,5); return {q:'Area between y=x² and y=x?',a:'∫_0^1 (x-x²) dx = [x²/2-x³/3]_0^1 = 1/6',hint:'Find intersection points (0,1), then integrate difference',solution:'Find intersection points (0,1), then integrate difference → ' + ('∫_0^1 (x-x²) dx = [x²/2-x³/3]_0^1 = 1/6')}; },
-    function () { var a=rand(1,4); return {q:'Area between y='+a+'x and y=x²?',a:'Intersection at x=0, x='+a+'. Area = ∫_0^'+a+' ('+a+'x-x²) dx = '+((a*a*a)/6),hint:'Upper - lower function over intersection interval',solution:'Upper - lower function over intersection interval → ' + ('Intersection at x=0, x='+a+'. Area = ∫_0^'+a+' ('+a+'x-x²) dx = '+((a*a*a)/6))}; },
-    function () { var a=rand(1,5); return {q:'Area of circle x²+y²='+a*a+' using integration?',a:'4∫_0^'+a+' sqrt('+a*a+'-x²) dx = π'+a*a+'',hint:'Use formula for area of semicircle',solution:'Use formula for area of semicircle → ' + ('4∫_0^'+a+' sqrt('+a*a+'-x²) dx = π'+a*a+'')}; },
+    function () { var a=rand(1,5); var b=rand(1,5); return {q:'Area between y=x² and y=x?',a:'∫_0^1 (x-x²) dx = [x²/2-x³/3]_0^1 = 1/6',hint:'Find intersection points (0,1), then integrate difference',solution:'Find intersection points (0,1), then integrate difference → ∫_0^1 (x-x²) dx = [x²/2-x³/3]_0^1 = 1/6'}; },
+    function () { var a=rand(1,4); return {q:'Area between y='+a+'x and y=x²?',a:'Intersection at x=0, x='+a+'. Area = ∫_0^'+a+' ('+a+'x-x²) dx = '+((a*a*a)/6),hint:'Upper - lower function over intersection interval',solution:'Upper - lower function over intersection interval → Intersection at x=0, x='+a+'. Area = ∫_0^'+a+' ('+a+'x-x²) dx = '+((a*a*a)/6)}; },
+    function () { var a=rand(1,5); return {q:'Area of circle x²+y²='+a*a+' using integration?',a:'4∫_0^'+a+' sqrt('+a*a+'-x²) dx = π'+a*a+'',hint:'Use formula for area of semicircle',solution:'Use formula for area of semicircle → 4∫_0^'+a+' sqrt('+a*a+'-x²) dx = π'+a*a+''}; },
     function () { var a=rand(1,5); return {q:'Reduction formula: I_n = ∫ sin^'+a+'x dx?',a:'I_'+a+' = -sin^'+(a-1)+'x cos x/'+a+' + ('+(a-1)+'/'+a+')I_'+(a-2),hint:'Integration by parts with sin^n x = sin^(n-1)x * sin x',solution:'Integration by parts with sin^n x = sin^(n-1)x * sin x → ' + ('I_'+a+' = -sin^'+(a-1)+'x cos x/'+a+' + ('+(a-1)+'/'+a+')I_'+(a-2))}; },
     function () { var a=rand(1,5); return {q:'Reduction: ∫ cos^'+a+'x dx formula?',a:'∫ cos^'+a+'x dx = (cos^'+(a-1)+'x sin x)/'+a+' + ('+(a-1)+'/'+a+')∫ cos^'+(a-2)+'x dx',hint:'Similar to sin reduction',solution:'Similar to sin reduction → ' + ('∫ cos^'+a+'x dx = (cos^'+(a-1)+'x sin x)/'+a+' + ('+(a-1)+'/'+a+')∫ cos^'+(a-2)+'x dx')}; },
     function () { var a=rand(1,5); return {q:'Improper: ∫_1^∞ dx/x^'+a+' converges if?',a:a+'>1 (diverges if '+a+'≤1)',hint:'∫_1^∞ 1/x^p dx converges for p>1',solution:'∫_1^∞ 1/x^p dx converges for p>1 → ' + (a+'>1 (diverges if '+a+'≤1)')}; },
@@ -6754,7 +6754,7 @@
     function(){return{q:'Area of circle x²+y²=a² using integration?',a:'4∫₀ᵃ √(a²-x²) dx = 4·[x√(a²-x²)/2 + a²/2·sin⁻¹(x/a)]₀ᵃ = πa²',hint:'√(a²-x²) integrates to standard formula',solution:'Area = πa²'}},
     function(){return{q:'Area of ellipse x²/a²+y²/b²=1?',a:'πab',hint:'Area = 4∫₀ᵃ b/a·√(a²-x²) dx',solution:'Area of ellipse = πab'}},
     function(){return{q:'Area bounded by y=|x| and y=2?',a:'2 triangles: Area = 2·½·2·2 = 4 sq units',hint:'|x| is V-shaped. y=2 is horizontal line',solution:'Area = 4 sq units'}},
-    function(){return{q:'Area between y=sin x and y=cos x from 0 to π/4?',a:'∫₀^{π/4} (cos x - sin x) dx = [sin x + cos x]₀^{π/4} = (√2-1)+... = √2-1',hint:'cos x ≥ sin x on [0,π/4]',solution:'Area = √2-1 sq units'}},
+    function(){return{q:'Area between y=sin x and y=cos x from 0 to π/4?',a:'∫₀^{π/4} (cos x - sin x) dx = [sin x + cos x]₀^{π/4} = (√2-1)+... = √2-1',hint:'cos x ≥ sin x on [0,π/4]',solution:'Area = √2-1 sq units',graph:{fn:["Math.sin(x)","Math.cos(x)"],labels:["y = sin x","y = cos x"],xRange:[0,1.2],yRange:[0,1.1],colors:["#f59e0b","#34d399"],fill:[{fn1Idx:1,fn2Idx:0,from:0,to:0.7854,color:"rgba(52,211,153,.12)"}]}}},
     function(){var a=rand(1,4);return{q:'Area under y='+a+'e^x from 0 to 1?',a:''+(a*(Math.E-1)),hint:'∫ke^x dx = ke^x',solution:'Area = '+a+'·(e¹-e⁰) = '+(a*(Math.E-1))}},
     function(){return{q:'Area between parabola y²=4x and line y=2x-4?',a:'Intersection: y²=4x and y=2x-4. From line: x=(y+4)/2. Substitute: y²=4((y+4)/2)=2(y+4). y²-2y-8=0 ⇒ y=-2,4. Area = ∫₋₂⁴ [(y+4)/2 - y²/4] dy = [y²/4+2y-y³/12]₋₂⁴ = 9 sq units',hint:'Integrate w.r.t y (convenient for sideways parabola)',solution:'Area = 9 sq units'}},
     function(){return{q:'Area of region {(x,y): x²≤y≤|x|}?',a:'Intersection: x²=|x| ⇒ x(x-1)(x+1)=0. Area = 2∫₀¹ (x-x²) dx = 2·1/6 = 1/3',hint:'Symmetric about y-axis, double the right half',solution:'Area = 1/3 sq units'}},
@@ -7219,6 +7219,176 @@
     });
   }
 
+  function autoGraph(q) {
+    var text = q.q + " " + q.a + " " + (q.solution || "") + " " + (q.hint || "");
+    var textLower = text.toLowerCase();
+    if (textLower.indexOf("area") === -1 && textLower.indexOf("bounded") === -1 && textLower.indexOf("between") === -1) return null;
+
+    var fnList = [], patternsList = [], labelsList = [], xr = [0, 2], yr = [0, 2];
+    var fillInfo = null;
+
+    function tryDetect(patterns) {
+      for (var pi = 0; pi < patterns.length; pi++) {
+        var m = text.match(patterns[pi]);
+        if (m) return m;
+      }
+      return null;
+    }
+
+    var mYeq = text.match(/y\s*=\s*([\w\^\(\)\+\-\*\/\.\d]+)/gi);
+    if (mYeq && mYeq.length >= 2) {
+      var fns = [];
+      for (var j = 0; j < Math.min(mYeq.length, 4); j++) {
+        var expr = mYeq[j].replace(/y\s*=\s*/i, "").trim();
+        var jsExpr = expr.replace(/\^/g, "**");
+        if (jsExpr.indexOf("x") === -1) continue;
+        if (/[a-zA-Z]/.test(jsExpr.replace(/[x\s\d\*\+\-\/\(\)\^\.]/g, ""))) continue;
+        fns.push(jsExpr);
+        labelsList.push(mYeq[j]);
+      }
+      if (fns.length >= 2) {
+        for (var j = 0; j < fns.length; j++) patternsList.push(fns[j]);
+        // guess range from numbers in text
+        var nums = text.match(/\d+/g);
+        if (nums) {
+          var maxV = 2;
+          for (var ni = 0; ni < nums.length; ni++) { var nv = parseFloat(nums[ni]); if (nv > maxV && nv < 50) maxV = nv; }
+          xr = [0, Math.max(maxV + 0.5, 2)];
+          yr = [0, Math.max(maxV * maxV + 0.5, 2)];
+        }
+        fillInfo = {fn1Idx:0, fn2Idx:Math.min(fns.length-1, 1), from:xr[0], to:xr[1], color:"rgba(167,139,250,.12)"};
+      }
+    }
+
+    if (patternsList.length < 2) return null;
+
+    var colors = [];
+    for (var j = 0; j < patternsList.length; j++) colors.push(["#a78bfa","#f59e0b","#34d399","#ef4444"][j % 4]);
+
+    return {
+      fn: patternsList,
+      labels: labelsList,
+      xRange: xr,
+      yRange: yr,
+      colors: colors,
+      fill: fillInfo ? [fillInfo] : undefined
+    };
+  }
+
+  function renderGraph(canvas, spec) {
+    if (!canvas || !spec) return;
+    var ctx = canvas.getContext("2d");
+    var W = canvas.width, H = canvas.height;
+    var xMin = spec.xRange[0], xMax = spec.xRange[1];
+    var yMin = spec.yRange[0], yMax = spec.yRange[1];
+    var pad = 6;
+    var plotW = W - 2 * pad, plotH = H - 2 * pad;
+    function toX(px) { return xMin + (px - pad) / plotW * (xMax - xMin); }
+    function toY(py) { return yMax - (py - pad) / plotH * (yMax - yMin); }
+    function toPx(x) { return pad + (x - xMin) / (xMax - xMin) * plotW; }
+    function toPy(y) { return pad + (yMax - y) / (yMax - yMin) * plotH; }
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "rgba(0,0,0,.35)";
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(0, 0, W, H, 8) : ctx.rect(0, 0, W, H);
+    ctx.fill();
+
+    function drawGrid() {
+      ctx.strokeStyle = "rgba(255,255,255,.06)";
+      ctx.lineWidth = 0.5;
+      ctx.setLineDash([3, 3]);
+      for (var x = Math.ceil(xMin); x <= Math.floor(xMax); x++) {
+        var px = toPx(x);
+        ctx.beginPath(); ctx.moveTo(px, pad); ctx.lineTo(px, H - pad); ctx.stroke();
+      }
+      for (var y = Math.ceil(yMin); y <= Math.floor(yMax); y++) {
+        var py = toPy(y);
+        ctx.beginPath(); ctx.moveTo(pad, py); ctx.lineTo(W - pad, py); ctx.stroke();
+      }
+      ctx.setLineDash([]);
+    }
+    drawGrid();
+
+    ctx.strokeStyle = "rgba(255,255,255,.25)";
+    ctx.lineWidth = 1;
+    if (xMin < 0 && xMax > 0) { var px = toPx(0); ctx.beginPath(); ctx.moveTo(px, pad); ctx.lineTo(px, H - pad); ctx.stroke(); }
+    if (yMin < 0 && yMax > 0) { var py = toPy(0); ctx.beginPath(); ctx.moveTo(pad, py); ctx.lineTo(W - pad, py); ctx.stroke(); }
+
+    ctx.font = "9px system-ui,sans-serif";
+    ctx.fillStyle = "rgba(255,255,255,.3)";
+    ctx.textAlign = "center";
+    for (var x = Math.ceil(xMin); x <= Math.floor(xMax); x++) {
+      if (x === 0) continue;
+      var px = toPx(x);
+      ctx.fillText(x + "", px, H - 1);
+    }
+    ctx.textAlign = "right";
+    for (var y = Math.ceil(yMin); y <= Math.floor(yMax); y++) {
+      if (y === 0) continue;
+      var py = toPy(y);
+      ctx.fillText(y + "", pad - 2, py + 3);
+    }
+
+    function fillFn(fnExpr, fn2Expr, xFrom, xTo, color) {
+      var fn1 = new Function("x", "return " + fnExpr + ";");
+      var fn2 = new Function("x", "return " + (typeof fn2Expr === "number" ? fn2Expr : fn2Expr) + ";");
+      ctx.fillStyle = color || "rgba(167,139,250,.15)";
+      ctx.beginPath();
+      var steps = Math.max(2, Math.round((xTo - xFrom) / (xMax - xMin) * plotW));
+      for (var i = 0; i <= steps; i++) {
+        var x = xFrom + (xTo - xFrom) * i / steps;
+        var y1, y2;
+        try { y1 = fn1(x); } catch(e) { y1 = 0; }
+        try { y2 = typeof fn2 === "function" ? fn2(x) : fn2Expr; } catch(e) { y2 = 0; }
+        if (i === 0) { ctx.moveTo(toPx(x), toPy(y1)); ctx.lineTo(toPx(x), toPy(y2)); }
+        else { ctx.lineTo(toPx(x), toPy(y2)); }
+      }
+      for (var i = steps; i >= 0; i--) {
+        var x = xFrom + (xTo - xFrom) * i / steps;
+        var y1;
+        try { y1 = fn1(x); } catch(e) { y1 = 0; }
+        ctx.lineTo(toPx(x), toPy(y1));
+      }
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    if (spec.fill) {
+      spec.fill.forEach(function(f) {
+        fillFn(spec.fn[f.fn1Idx], spec.fn[f.fn2Idx], f.from, f.to, f.color);
+      });
+    }
+
+    spec.fn.forEach(function(fnExpr, idx) {
+      ctx.strokeStyle = spec.colors ? spec.colors[idx % spec.colors.length] : "#a78bfa";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      var fn = new Function("x", "return " + fnExpr + ";");
+      var started = false;
+      var steps = Math.max(2, Math.round(plotW * 1.5));
+      for (var i = 0; i <= steps; i++) {
+        var x = xMin + (xMax - xMin) * i / steps;
+        var y;
+        try { y = fn(x); } catch(e) { started = false; continue; }
+        if (y < yMin || y > yMax) { started = false; continue; }
+        var px = toPx(x), py = toPy(y);
+        if (!started) { ctx.moveTo(px, py); started = true; }
+        else { ctx.lineTo(px, py); }
+      }
+      ctx.stroke();
+    });
+
+    if (spec.labels) {
+      ctx.font = "10px system-ui,sans-serif";
+      ctx.textAlign = "left";
+      spec.labels.forEach(function(label, idx) {
+        ctx.fillStyle = spec.colors ? spec.colors[idx % spec.colors.length] : "#a78bfa";
+        ctx.fillText(label, pad + 4, pad + 12 + idx * 14);
+      });
+    }
+  }
+
   function renderQuestion(q, readOnly) {
     var header = document.getElementById("st-header");
     var area = document.getElementById("st-question-area");
@@ -7241,6 +7411,12 @@
     var html = "<div style='background:linear-gradient(135deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:24px 24px 20px;margin-bottom:16px'>";
     if (q.hint) html += "<div style='font-size:.8em;color:#a78bfa;margin-bottom:10px;padding:8px 12px;background:rgba(167,139,250,.08);border-radius:8px;border-left:3px solid #a78bfa'>💡 " + esc(q.hint) + "</div>";
     html += "<div style='font-size:clamp(1rem,2.2vw,1.2rem);line-height:1.7;color:#fafafa;font-weight:500;font-family:\"Georgia\",\"Times New Roman\",serif;letter-spacing:.01em'>" + esc(q.q) + "</div></div>";
+
+    var _graph = q.graph || autoGraph(q);
+    if (_graph) {
+      var gw = _graph.width || 280, gh = _graph.height || 200;
+      html += "<div style='text-align:center;margin:8px 0 4px'><canvas id='st-graph-canvas' width='" + gw + "' height='" + gh + "' style='width:" + gw + "px;height:" + gh + "px;max-width:100%;border-radius:8px'></canvas></div>";
+    }
 
     var opts = q.options;
     if (!opts || opts.length < 2) {
@@ -7313,6 +7489,14 @@
 
     area.classList.remove("answered");
     area.innerHTML = html;
+
+    var _graph2 = q.graph || autoGraph(q);
+    if (_graph2) {
+      var canvas = document.getElementById("st-graph-canvas");
+      if (canvas) {
+        requestAnimationFrame(function () { renderGraph(canvas, _graph2); });
+      }
+    }
 
     var readOnly = !!(session.answers && session.answers[session.questionIndex]);
     if (readOnly) {
