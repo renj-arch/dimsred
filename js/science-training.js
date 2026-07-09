@@ -6227,7 +6227,7 @@
   function generateSessionQuestions(mode, count, subject, subTopic) {
     var questions = [];
     var attempts = 0;
-    while (questions.length < count && attempts < 200) {
+    while (questions.length < count && attempts < 300) {
       attempts++;
       var s = subject || pick(["physics","chemistry","biology","math"]);
       var st = subTopic || getRandomTopic(s);
@@ -6235,8 +6235,12 @@
       if (q) {
         q.timeLimit = getTimeLimit(mode);
         questions.push(q);
+      } else if (subTopic) {
+        // If we exhausted unique questions in this topic, clear recent cache and retry
+        _recentQ = [];
       }
     }
+    _recentQ = [];
     return questions;
   }
 
@@ -6892,16 +6896,29 @@
     overlay.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);z-index:1000;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)";
     var subjects = ["physics","chemistry","biology","math"];
     var subjectNames = ["Physics","Chemistry","Biology","Math"];
+    function buildTopicOptions(subject) {
+      var topics = SCI_TOPICS[subject] || [];
+      var h = "<option value=''>All Topics</option>";
+      for (var i = 0; i < topics.length; i++) {
+        var label = topics[i].replace(/_/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});
+        h += "<option value='" + topics[i] + "'>" + label + "</option>";
+      }
+      return h;
+    }
     var html =
       "<div style='background:linear-gradient(135deg,#1c1c21,#18181b);border-radius:20px;padding:28px;max-width:400px;width:90%;border:1px solid rgba(255,255,255,.08);box-shadow:0 20px 60px rgba(0,0,0,.5)'>" +
       "<div style='text-align:center;margin-bottom:16px'><span style='font-size:2em'>🎨</span>" +
-      "<h3 style='margin:4px 0 0;color:#fafafa;font-size:1.15em;font-weight:800'>Custom Session</h3></div>" +
+      "<h3 style='margin:4px 0 0;color:#fafafa;font-size:1.15em;font-weight:800'>Topic Practice</h3></div>" +
       "<label style='color:#a1a1aa;font-size:.82em;display:block;margin-bottom:6px;font-weight:600'>Subject</label>" +
       "<select id='st-custom-subject' style='width:100%;padding:11px 12px;border-radius:10px;background:#27272a;color:#fafafa;border:1px solid rgba(255,255,255,.08);margin-bottom:12px;font-size:.88em;outline:none'>";
     for (var i = 0; i < subjects.length; i++) {
       html += "<option value='" + subjects[i] + "'>" + subjectNames[i] + "</option>";
     }
     html += "</select>" +
+      "<label style='color:#a1a1aa;font-size:.82em;display:block;margin-bottom:6px;font-weight:600'>Topic</label>" +
+      "<select id='st-custom-topic' style='width:100%;padding:11px 12px;border-radius:10px;background:#27272a;color:#fafafa;border:1px solid rgba(255,255,255,.08);margin-bottom:12px;font-size:.88em;outline:none'>" +
+      buildTopicOptions("physics") +
+      "</select>" +
       "<label style='color:#a1a1aa;font-size:.82em;display:block;margin-bottom:6px;font-weight:600'>Intensity</label>" +
       "<select id='st-custom-mode' style='width:100%;padding:11px 12px;border-radius:10px;background:#27272a;color:#fafafa;border:1px solid rgba(255,255,255,.08);margin-bottom:12px;font-size:.88em;outline:none'>" +
       "<option value='instinct'>📖 Standard Practice</option><option value='fivesec'>⚡ Speed Focus</option><option value='examrush'>📝 Full Test Mode</option>" +
@@ -6918,12 +6935,18 @@
     overlay.innerHTML = html;
     document.body.appendChild(overlay);
 
+    overlay.querySelector("#st-custom-subject").addEventListener("change", function () {
+      var subj = overlay.querySelector("#st-custom-subject").value;
+      overlay.querySelector("#st-custom-topic").innerHTML = buildTopicOptions(subj);
+    });
+
     overlay.querySelector("#st-custom-start").addEventListener("click", function () {
       var subject = overlay.querySelector("#st-custom-subject").value;
+      var topic = overlay.querySelector("#st-custom-topic").value;
       var mode = overlay.querySelector("#st-custom-mode").value;
       var count = parseInt(overlay.querySelector("#st-custom-count").value);
       overlay.remove();
-      startTraining(mode, { count: count, subject: subject });
+      startTraining(mode, { count: count, subject: topic ? subject : null, subTopic: topic || null });
     });
     overlay.querySelector("#st-custom-cancel").addEventListener("click", function () { overlay.remove(); });
   }
