@@ -231,18 +231,49 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
   }
 
   const existingContent = chunk.slice(0, endIdx);
-  const existingNames = new Set();
-  const nameRx = /\{n:'([^']+)'/g;
-  let match;
-  while ((match = nameRx.exec(existingContent)) !== null) {
-    existingNames.add(normalize(match[1]));
+  const existingLines = existingContent.split('\n').map(l => l.trim()).filter(l => l.startsWith('{n:'));
+  const existingMap = new Map(); // name -> { fullText, desc, fact }
+  const nameRx = /\{n:'([^']+)'/;
+  let replaced = 0;
+  for (const line of existingLines) {
+    const m = nameRx.exec(line);
+    if (!m) continue;
+    const descM = line.match(/desc:'([^']*)'/);
+    const factM = line.match(/fact:'([^']*)'/);
+    existingMap.set(normalize(m[1]), {
+      fullText: line,
+      desc: descM ? descM[1] : '',
+      fact: factM ? factM[1] : ''
+    });
+  }
+
+  // Check if an entry has meaningful content (not placeholder like district name repeated)
+  function hasGoodContent(e) {
+    return e.desc && e.desc.length >= 40
+      && e.desc !== e.sub
+      && e.desc !== (e.sub ? e.sub.split('·')[0].trim() : '');
   }
 
   const insertIdx = afterOpen + endIdx;
   let insertStr = '';
   let added = 0;
   for (const e of toInsert) {
-    if (existingNames.has(normalize(e.n))) continue;
+    const key = normalize(e.n);
+    const existing = existingMap.get(key);
+    if (existing) {
+      // Replace if new entry has better content than the placeholder
+      if (hasGoodContent(e) && !hasGoodContent({ desc: existing.desc, fact: existing.fact, sub: e.sub })) {
+        const oldLine = existing.fullText;
+        const newLine = `  {n:'${e.n.replace(/'/g, "\\'")}',la:${e.la},ln:${e.ln},sub:'${e.sub.replace(/'/g, "\\'")}',desc:'${e.desc.replace(/'/g, "\\'")}',fact:'${e.fact.replace(/'/g, "\\'")}',tag:''}`;
+        const lineIdx = html.indexOf(oldLine, startIdx);
+        if (lineIdx !== -1) {
+          html = html.slice(0, lineIdx) + newLine + html.slice(lineIdx + oldLine.length);
+          existingMap.set(key, { fullText: newLine, desc: e.desc, fact: e.fact });
+          replaced++;
+        }
+      }
+      continue;
+    }
     const t = e.tag ? e.tag.replace(/'/g, "\\'") : '';
     let ptsStr = '';
     if (e.pts && Array.isArray(e.pts) && e.pts.length) {
@@ -258,8 +289,8 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
     html = html.slice(0, insertIdx) + '\n' + insertStr + html.slice(insertIdx);
   }
 
-  const existingCount = existingNames.size;
-  console.log(`${globeCat}: ${existingCount} → ${existingCount + added} (added ${added} from ${wikiFile})`);
+  const existingCount = existingMap.size;
+  console.log(`${globeCat}: ${existingCount} existing, +${added} new, ${replaced} replaced (from ${wikiFile})`);
 }
 
 fs.writeFileSync(GLOBE_PATH, html, 'utf8');
