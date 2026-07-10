@@ -9,7 +9,7 @@
                 this.classList.add('correct');
             } else {
                 this.classList.add('wrong');
-                parent.querySelector('.q-option[data-correct]').classList.add('correct');
+                parent.querySelector('.q-option[data-correct="true"]').classList.add('correct');
             }
             parent.classList.add('answered');
         });
@@ -22,7 +22,7 @@
                 box.classList.toggle('show');
                 var parent = this.closest('.question');
                 if(!parent.classList.contains('answered')){
-                    parent.querySelector('.q-option[data-correct]').classList.add('correct');
+                    parent.querySelector('.q-option[data-correct="true"]').classList.add('correct');
                     parent.querySelectorAll('.q-option').forEach(function(o){ o.style.pointerEvents='none' });
                     parent.classList.add('answered');
                 }

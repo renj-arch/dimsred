@@ -140,7 +140,7 @@ function attachH(){
       if(ok){this.classList.add('correct')}
       else{
         this.classList.add('wrong');
-        var cr = p.querySelector('.q-option[data-correct]');
+        var cr = p.querySelector('.q-option[data-correct="true"]');
         if(cr) cr.classList.add('correct');
       }
       p.classList.add('answered');
@@ -154,7 +154,7 @@ function attachH(){
         box.classList.toggle('show');
         var p = this.closest('.question');
         if(!p.classList.contains('answered')){
-          var cr = p.querySelector('.q-option[data-correct]');
+          var cr = p.querySelector('.q-option[data-correct="true"]');
           if(cr) cr.classList.add('correct');
           p.querySelectorAll('.q-option').forEach(function(x){x.classList.add('disabled')});
           p.classList.add('answered');
