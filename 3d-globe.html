@@ -6001,37 +6001,36 @@ function showDetail(d,cat,k){
       a.material.color.set('#ff6b6b');
       a.material.opacity=0.9;
     });
-    // Highlight flow dots for rivers — make entire path glow
-    if(k==='river'||k==='w_river'){
-      _selFlowDots=[d];
-      // Speed up and highlight existing flow dots
-      if(d._flowDots)d._flowDots.forEach(fd=>{
-        fd.mesh.material.color.set('#ff6b6b');
-        fd.mesh.material.opacity=1;
-        fd.mesh.scale.set(2.5,2.5,2.5);
-        fd.speed=0.005+Math.random()*0.003;
-      });
-      // Add extra highlight dots along the full curve
-      if(d._curve&&d._flowDots){
-        const g=layerGroups[k];
-        if(!d._extraFlowDots)d._extraFlowDots=[];
-        const hiMat=new THREE.MeshBasicMaterial({color:'#ff6b6b',transparent:true,opacity:0.9});
-        for(let i=0;i<12;i++){
-          const dot=new THREE.Mesh(new THREE.SphereGeometry(0.008,8,8),hiMat);
-          const t=i/12;
-          const p=d._curve.getPoint(t);
-          dot.position.copy(p);
-          if(g)g.add(dot);
-          const spd=0.003+Math.random()*0.004;
-          d._extraFlowDots.push({mesh:dot,t,curve:d._curve,speed:spd,_isHighlight:true,_data:d});
-          d._flowDots.push(d._extraFlowDots[d._extraFlowDots.length-1]);
-        }
-      }
-    }
     // Add floating midpoint marker for tube features
     const midIdx=Math.floor((d.pts||[]).length/2);
     const midP=d.pts?d.pts[midIdx]:null;
     if(midP)setHighlight(midP.la,midP.ln,'#ff6b6b');
+  }
+  // Highlight flow dots for rivers — make entire path glow
+  if(d._flowDots&&d._flowDots.length){
+    _selFlowDots=[d];
+    d._flowDots.forEach(fd=>{
+      fd.mesh.material.color.set('#ff6b6b');
+      fd.mesh.material.opacity=1;
+      fd.mesh.scale.set(2.5,2.5,2.5);
+      fd.speed=0.005+Math.random()*0.003;
+    });
+    // Add extra highlight dots along the full curve
+    if(d._curve){
+      const g=layerGroups[k==='w_river'?'w_river':'river'];
+      if(!d._extraFlowDots)d._extraFlowDots=[];
+      const hiMat=new THREE.MeshBasicMaterial({color:'#ff6b6b',transparent:true,opacity:0.9});
+      for(let i=0;i<12;i++){
+        const dot=new THREE.Mesh(new THREE.SphereGeometry(0.009,8,8),hiMat);
+        const t=i/12;
+        const p=d._curve.getPoint(t);
+        dot.position.copy(p);
+        if(g)g.add(dot);
+        const spd=0.003+Math.random()*0.004;
+        d._extraFlowDots.push({mesh:dot,t,curve:d._curve,speed:spd,_isHighlight:true});
+        d._flowDots.push(d._extraFlowDots[d._extraFlowDots.length-1]);
+      }
+    }
   }
   const hlLat=d.la||(d.pts?d.pts[Math.floor(d.pts.length/2)].la:0);
   const hlLn=d.ln||(d.pts?d.pts[Math.floor(d.pts.length/2)].ln:0);
