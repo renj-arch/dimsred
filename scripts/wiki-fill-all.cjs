@@ -8,7 +8,12 @@ function fetchJSON(url) {
     https.get(url + '&origin=*', { headers: { 'User-Agent': 'WikiFill/1.0' } }, (res) => {
       let data = '';
       res.on('data', c => data += c);
-      res.on('end', () => { try { resolve(JSON.parse(data)); } catch (e) { reject(e); } });
+      res.on('end', () => {
+        if (res.statusCode !== 200) {
+          return reject(new Error('HTTP ' + res.statusCode + ': ' + data.substring(0, 120)));
+        }
+        try { resolve(JSON.parse(data)); } catch (e) { reject(new Error('not valid JSON: ' + data.substring(0, 120))); }
+      });
     }).on('error', reject);
   });
 }
@@ -22,7 +27,7 @@ async function fetchAllTopics(topics, concurrency) {
     while (queue.length > 0) {
       const topic = queue.shift();
       process.stdout.write('  Fetching: ' + topic);
-      const a = await fetchArticleExtract(topic);
+      const a = await fetchArticleExtract(topic, 5);
       if (a && a.extract.length > 200) {
         results.push(a);
         process.stdout.write(' \u2713\n');
@@ -31,7 +36,11 @@ async function fetchAllTopics(topics, concurrency) {
       }
     }
   }
-  const workers = Array.from({ length: Math.min(concurrency, topics.length) }, () => worker());
+  const workers = [];
+  for (let i = 0; i < Math.min(concurrency, topics.length); i++) {
+    await delay(600);
+    workers.push(worker());
+  }
   await Promise.all(workers);
   return results;
 }
@@ -1206,10 +1215,10 @@ async function main() {
 
   let totalAdded = 0;
 
-  const ARTICLES_PER_SEC = 4; // Wikipedia allows ~200 req/s; 4 is safe
+  const CONCURRENCY = 2; // Wikipedia rate-limits; 2 concurrent is safe
   for (const cat of CATEGORIES) {
     console.log('\n=== ' + cat.name + ' ===');
-    const articles = await fetchAllTopics(cat.topics, ARTICLES_PER_SEC);
+    const articles = await fetchAllTopics(cat.topics, CONCURRENCY);
 
     let added = 0;
     for (const article of articles) {
