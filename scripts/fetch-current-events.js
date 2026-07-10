@@ -87,11 +87,11 @@ function scoreEvent(ev) {
 
 function parseDaySections(html) {
   var sections = [];
-  var headingRe = /<h3>[\s\S]*?<span[^>]*id="([^"]+)"[^>]*>([^<]*)<\/span>[\s\S]*?<\/h3>([\s\S]*?)(?=<h[12]|$)/g;
+  var dayBlockRe = /<div[^>]*role="region"[^>]*aria-label="([^"]+)"[^>]*>([\s\S]*?)<\/div>\s*<\/div>\s*<\/div>/g;
   var m;
-  while ((m = headingRe.exec(html)) !== null) {
-    var dayLabel = m[2].trim();
-    var dayContent = m[3];
+  while ((m = dayBlockRe.exec(html)) !== null) {
+    var dayLabel = m[1].trim();
+    var dayContent = m[2];
     var events = [];
     var liRe = /<li>(.*?)<\/li>/g;
     var lm;
@@ -108,12 +108,37 @@ function parseDaySections(html) {
       sections.push({ label: dayLabel, events: events });
     }
   }
+  if (sections.length === 0) {
+    var altRe = /<div class="current-events[^"]*">[\s\S]*?<div[^>]*>([\s\S]*?)<\/div>\s*<\/div>\s*<\/div>/g;
+    while ((m = altRe.exec(html)) !== null) {
+      var content = m[1];
+      var labelMatch = content.match(/<b>\s*([A-Z][a-z]+ \d+)/);
+      var dayLabel = labelMatch ? labelMatch[1] : '';
+      if (!dayLabel) continue;
+      var events = [];
+      var liRe = /<li>(.*?)<\/li>/g;
+      var lm;
+      while ((lm = liRe.exec(content)) !== null) {
+        var txt = stripHtml(lm[1]);
+        if (txt.length > 40 && txt.length < 400) {
+          var entity = extractEntity(lm[1]);
+          if (entity) {
+            events.push({ text: txt, entity: entity });
+          }
+        }
+      }
+      if (events.length > 0) {
+        sections.push({ label: dayLabel, events: events });
+      }
+    }
+  }
   return sections;
 }
 
 function parseDateFromLabel(label) {
-  var parts = label.split(' ');
-  var day = parseInt(parts[0], 10);
+  var parts = label.replace(/,.*$/, '').trim().split(' ');
+  var day = parseInt(parts[parts.length - 1], 10);
+  if (isNaN(day)) day = parseInt(parts[0], 10);
   return day;
 }
 
@@ -300,7 +325,11 @@ async function main() {
       var seq = parseInt(parts[parts.length - 1], 10);
       if (seq > maxSeq) maxSeq = seq;
     });
-    seqCounters[mk] = maxSeq;
+    var parts = mk.split(' ');
+    var mi = MONTHS.indexOf(parts[0]) + 1;
+    var y = parseInt(parts[1], 10);
+    var key = y + '-' + pad(mi);
+    seqCounters[key] = maxSeq;
   });
 
   var allNewQuestions = [];
