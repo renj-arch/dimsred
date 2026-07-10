@@ -438,7 +438,7 @@ var QM = {
     var opts = [ans]; var r = def.optRange || 5;
     for (var _g=0; _g<50 && opts.length<4; _g++) { var d = Math.round((ans + rand(-r, r)) * 100) / 100; if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
     shuffle(opts);
-    return { q: qText, a: ans, options: opts, hint: hint, timeLimit: 15, type: 'quant', techniqueLabel: name + ': ' + hint.substring(0, 35), intuition: hint, _meta: true, _formula: name, _find: find, _vals: vals, _result: result };
+    return { question: qText, answer: ans, options: opts, hint: hint, timeLimit: 15, type: 'quant', techniqueLabel: name + ': ' + hint.substring(0, 35), intuition: hint, _meta: true, _formula: name, _find: find, _vals: vals, _result: result };
   },
   any: function() {
     var names = Object.keys(this._f);
@@ -467,7 +467,7 @@ var QM = {
       var findA = solA[rand(0, solA.length - 1)];
       var qA = this.gen(nA, findA);
       if (!qA) continue;
-      var ansA = qA.a; var typeA = this._typeOf(findA);
+      var ansA = qA.answer; var typeA = this._typeOf(findA);
       var compatB = defB.vars.filter(function(v) {
         return defB.formula[v] && QM._typeOf(v) === typeA;
       });
@@ -492,12 +492,12 @@ var QM = {
       // Combine into a composite question
       var chainLabel = nA + '→' + nB;
       var step1Hint = qA.hint.split(' → ').pop() || String(ansA);
-      var compositeQ = 'Step 1: ' + qA.q + ' (ans: ' + ansA + ') Then: ' + qB.q;
+      var compositeQ = 'Step 1: ' + qA.question + ' (ans: ' + ansA + ') Then: ' + qB.question;
       // Build options from qB's answer
-      var opts = [qB.a]; var r = defB.optRange || 5;
-      for (var _g=0; _g<50 && opts.length<4; _g++) { var d2 = Math.round((qB.a + rand(-r, r)) * 100) / 100; if (opts.indexOf(d2) < 0 && d2 > 0) opts.push(d2); }
+      var opts = [qB.answer]; var r = defB.optRange || 5;
+      for (var _g=0; _g<50 && opts.length<4; _g++) { var d2 = Math.round((qB.answer + rand(-r, r)) * 100) / 100; if (opts.indexOf(d2) < 0 && d2 > 0) opts.push(d2); }
       shuffle(opts);
-      return { q: compositeQ, a: qB.a, options: opts, hint: qB.hint, timeLimit: 25, type: 'quant', techniqueLabel: 'Chain: ' + chainLabel, intuition: qA.intuition + ' | ' + qB.intuition, _meta: true, _chain: true };
+      return { question: compositeQ, answer: qB.answer, options: opts, hint: qB.hint, timeLimit: 25, type: 'quant', techniqueLabel: 'Chain: ' + chainLabel, intuition: qA.intuition + ' | ' + qB.intuition, _meta: true, _chain: true };
     }
     return null;
   }
@@ -3890,7 +3890,7 @@ function generateSentenceOrderingQuestion(diff) {
     {s:['They decided to open a café.','The friends noticed a lack of good coffee shops.','The café became popular within months.','They saved money and found a location.']},
     {s:['Eventually, dark clouds covered the sky completely.','The rain stopped and a rainbow appeared.','Heavy rain started pouring down suddenly.','First, the wind began to blow strongly.']},
     {s:['After kneading, the dough was left to rise for an hour.','First, all the ingredients were measured and mixed together.','The bread was baked until golden brown.','The dough was shaped into a loaf and placed in a pan.']},
-    {s:['He prepared thoroughly for the interview.','After several rounds, he received the job offer.','He submitted his application online.','The company called him for an interview.']},
+    {s:['He submitted his application online.','The company called him for an interview.','He prepared thoroughly for the interview.','After several rounds, he received the job offer.']},
     {s:['Seeds were planted in small pots with soil.','Fresh vegetables were harvested within weeks.','The seedlings were watered daily and placed in sunlight.','The soil was prepared by adding compost and fertilizer.']},
     {s:['They boarded the train early in the morning.','The family planned a weekend trip to the mountains.','The train arrived at the scenic station by noon.','They spent the afternoon hiking and enjoying the view.']}
   ];
