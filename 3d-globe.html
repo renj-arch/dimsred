@@ -5420,7 +5420,7 @@ function mkLbl(text,col,scale=0.12){
       const dotMat=new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:0.8});
       d._flowDots=[];
       for(let i=0;i<4;i++){
-        const dot=new THREE.Mesh(new THREE.SphereGeometry(tubeRad*2.5,8,8),dotMat);
+        const dot=new THREE.Mesh(new THREE.SphereGeometry(tubeRad*2,8,8),dotMat);
         const t=i/4;
         const p=curve.getPoint(t);
         dot.position.copy(p);
@@ -6012,7 +6012,7 @@ function showDetail(d,cat,k){
     d._flowDots.forEach(fd=>{
       fd.mesh.material.color.set('#ff6b6b');
       fd.mesh.material.opacity=1;
-      fd.mesh.scale.set(2.5,2.5,2.5);
+      fd.mesh.scale.set(1.5,1.5,1.5);
       fd.speed=0.005+Math.random()*0.003;
     });
     // Add extra highlight dots along the full curve
@@ -6021,7 +6021,7 @@ function showDetail(d,cat,k){
       if(!d._extraFlowDots)d._extraFlowDots=[];
       const hiMat=new THREE.MeshBasicMaterial({color:'#ff6b6b',transparent:true,opacity:0.9});
       for(let i=0;i<12;i++){
-        const dot=new THREE.Mesh(new THREE.SphereGeometry(0.009,8,8),hiMat);
+        const dot=new THREE.Mesh(new THREE.SphereGeometry(0.006,8,8),hiMat);
         const t=i/12;
         const p=d._curve.getPoint(t);
         dot.position.copy(p);
