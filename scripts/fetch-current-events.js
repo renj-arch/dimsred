@@ -7,9 +7,11 @@ const ARCHIVE = 'archive.html';
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAYS_BACK = 5;
 
+const AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
+
 function fetchJSON(url) {
   return new Promise((resolve, reject) => {
-    https.get(url + '&origin=*', { headers: { 'User-Agent': 'CurrentEventsFill/1.0' } }, (res) => {
+    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'CurrentEventsFill/1.0' } }, (res) => {
       let data = '';
       res.on('data', c => data += c);
       res.on('end', () => {
@@ -274,7 +276,7 @@ async function main() {
     if (result) {
       monthlySections[mk] = result.sections;
     }
-    if (i < monthKeys.length - 1) await delay(1500);
+    if (i < monthKeys.length - 1) await delay(500);
   }
 
   var newCount = 0;

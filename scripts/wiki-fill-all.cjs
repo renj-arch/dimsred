@@ -1202,6 +1202,17 @@ const CATEGORIES = [
   ]},
 ];
 
+// Daily rotation groups — each day processes ~4 categories to keep runtime <1h
+const DAY_GROUPS = [
+  [0,1,2,3],       // Sun: Ancient India, Medieval & Modern India, World History, Indian Geography
+  [4,5,6,7],       // Mon: World Geography, Polity & Governance, Indian Economy, General Science
+  [8,9,10,11],     // Tue: Science & Technology, Art & Culture, Defence & Security, Environment & Ecology
+  [12,13,14,15],   // Wed: International Relations, Indian Society, Ethics & Integrity, ISRO & Space
+  [16,17,18,19],   // Thu: Sports, Books & Authors, Awards & Honours, Govt Schemes
+  [20,21,22,23],   // Fri: Indian States, Important Days, Personalities, Disaster Management
+  [24,25,26,27,28],// Sat: Business & Economy, RBI & Banking, Indian National Symbols, Agriculture & Food, Health & Medicine
+];
+
 async function main() {
   const quiz = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8'));
   const existingQ = new Set(quiz.questions.map(q => norm(q.question)));
@@ -1218,8 +1229,25 @@ async function main() {
 
   let totalAdded = 0;
 
+  // Determine which categories to process today
+  const processAll = process.env.WIKI_FILL_ALL === '1';
+  let activeCategories;
+  if (processAll) {
+    activeCategories = CATEGORIES;
+    console.log('Processing ALL categories (WIKI_FILL_ALL=1)');
+  } else {
+    const dayIdx = new Date().getDay();
+    const group = DAY_GROUPS[dayIdx];
+    activeCategories = group.map(i => CATEGORIES[i]);
+    const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    console.log('Day: ' + dayNames[dayIdx] + ' — processing ' + activeCategories.length + ' of ' + CATEGORIES.length + ' categories');
+    CATEGORIES.forEach((c, i) => {
+      if (!group.includes(i)) console.log('  (skipping: ' + c.name + ')');
+    });
+  }
+
   const CONCURRENCY = 2; // Wikipedia rate-limits; 2 concurrent is safe
-  for (const cat of CATEGORIES) {
+  for (const cat of activeCategories) {
     console.log('\n=== ' + cat.name + ' ===');
     const articles = await fetchAllTopics(cat.topics, CONCURRENCY);
 
