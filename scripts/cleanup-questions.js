@@ -77,6 +77,9 @@ function isBad(q) {
     if (nextWord && /^[a-z]/.test(nextWord)) return true;
   }
 
+  // Generic "What is X?" / "Who is X?" definition lookups lacking quiz context
+  if (/^(What|Who)\s+is\s+(?!(the|a|an)\s)/i.test(text)) return true;
+
   return false;
 }
 

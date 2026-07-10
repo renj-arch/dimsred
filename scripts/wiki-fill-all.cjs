@@ -15,6 +15,27 @@ function fetchJSON(url) {
 
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+async function fetchAllTopics(topics, concurrency) {
+  const results = [];
+  const queue = [...topics];
+  async function worker() {
+    while (queue.length > 0) {
+      const topic = queue.shift();
+      process.stdout.write('  Fetching: ' + topic);
+      const a = await fetchArticleExtract(topic);
+      if (a && a.extract.length > 200) {
+        results.push(a);
+        process.stdout.write(' \u2713\n');
+      } else {
+        process.stdout.write(' (skip)\n');
+      }
+    }
+  }
+  const workers = Array.from({ length: Math.min(concurrency, topics.length) }, () => worker());
+  await Promise.all(workers);
+  return results;
+}
+
 async function fetchArticleExtract(title, retries) {
   retries = retries || 3;
   for (let attempt = 0; attempt < retries; attempt++) {
@@ -1185,15 +1206,10 @@ async function main() {
 
   let totalAdded = 0;
 
+  const ARTICLES_PER_SEC = 4; // Wikipedia allows ~200 req/s; 4 is safe
   for (const cat of CATEGORIES) {
     console.log('\n=== ' + cat.name + ' ===');
-    const articles = [];
-    for (const topic of cat.topics) {
-      console.log('  Fetching: ' + topic);
-      const a = await fetchArticleExtract(topic);
-      if (a && a.extract.length > 200) articles.push(a);
-      await delay(3000);
-    }
+    const articles = await fetchAllTopics(cat.topics, ARTICLES_PER_SEC);
 
     let added = 0;
     for (const article of articles) {
@@ -1222,24 +1238,21 @@ async function main() {
         })) added++;
       }
 
-      for (let si = 0; si < sentences.length; si++) {
+      const MAX_PER_ARTICLE = 20;
+      let articleQ = 0;
+      for (let si = 0; si < sentences.length && articleQ < MAX_PER_ARTICLE; si++) {
         const sent = sentences[si];
         if (sent.length > 260) continue;
-        let made = false;
 
         // ▸ Year-based (any year, no trigger word filter)
         const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
         if (years && sent.length < 240) {
           const context = sent.replace(years[0], '_____').trim().substring(0, 200);
-          // Skip if context is a fragment like "Name (_____)" or "Name, Name (_____)"
           if (/^[^a-z]*[A-Z][a-z]+[,\s].*\(_____\)\s*$/.test(context)) continue;
           if (/^\(?_____\)?\s*$/.test(context)) continue;
-          // Skip citation boilerplate: "Archived from the original on _____"
           if (/^Archived from/i.test(context)) continue;
-          // Skip citation entries: "Name (date)" or "Surname, Name (date)" with blank
           if (/^[A-Z][a-z]+,\s*[A-Z][a-z]+.*\(\d{4}.*\)/.test(sent)) continue;
           if (/^[A-Z][a-z]+\s+\([12]\d{3}\)/.test(sent)) continue;
-          // Skip if year is inside a citation parenthetical like "(29 October _____)"
           if (/\([^)]*_____[^)]*\)/.test(context)) continue;
           if (context.length > 25 && pushQ({
             id: cat.name.substring(0,3).toLowerCase() + added + 'y',
@@ -1247,11 +1260,11 @@ async function main() {
             pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
             question: context, answer: years[0], hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), years[0]),
-          })) { added++; made = true; }
+          })) { added++; articleQ++; }
         }
 
         // ▸ Number-based (%, lakh, crore, million, billion, km, kg)
-        if (!made) {
+        if (articleQ < MAX_PER_ARTICLE) {
           const numMatch = sent.match(/\b(\d+(?:[.,]\d+)?\s*(%|lakh|crore|million|billion|trillion|sq\s*\.?\s*km|km²|km\b|kg|tonnes?|hectares?|megawatts?|kilometres?))/i);
           if (numMatch && sent.length < 240) {
             const context = sent.replace(numMatch[1], '_____').trim().substring(0, 200);
@@ -1261,15 +1274,14 @@ async function main() {
               pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
             question: context, answer: numMatch[1].trim(), hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), numMatch[1].trim()),
-            })) { added++; made = true; }
+            })) { added++; articleQ++; }
           }
         }
 
         // ▸ Superlative-based (first, largest, highest, oldest, etc.)
-        if (!made) {
+        if (articleQ < MAX_PER_ARTICLE) {
           const supMatch = sent.match(/\b(first|second|largest|highest|oldest|deepest|longest|biggest|tallest|smallest|largest|earliest|latest|closest|farthest|most powerful|most populous|most important)\b/i);
           if (supMatch && sent.length < 240) {
-            // Try to find a nearby number or entity to blank
             const numberNearby = sent.match(/\b(\d+(?:[.,]\d+)?)\s*(?=%|million|billion|lakh|crore|km|kg)?/);
             if (numberNearby) {
               const context = sent.replace(numberNearby[1], '_____').trim().substring(0, 200);
@@ -1279,17 +1291,16 @@ async function main() {
                 pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
             question: context, answer: numberNearby[1].trim(), hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), numberNearby[1].trim()),
-              })) { added++; made = true; }
+              })) { added++; articleQ++; }
             }
           }
         }
 
-        // ▸ Blank-out key term (every 2nd sentence to limit volume)
-        if (!made && si % 2 === 0) {
+        // ▸ Blank-out key term (every sentence)
+        if (articleQ < MAX_PER_ARTICLE) {
           if (new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(sent)) continue;
           const bestTerm = findBestTerm(sent, title);
           if (!bestTerm) continue;
-          // Skip if bestTerm is the first word (too obvious — "_____ in 1961")
           if (new RegExp('^' + bestTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(sent.trim())) continue;
           const context = sent.replace(bestTerm, '_____').trim().substring(0, 200);
           if (context.length > 25 && context.length < 200 && pushQ({
@@ -1298,7 +1309,7 @@ async function main() {
             pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
             question: context, answer: bestTerm, hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), bestTerm),
-          })) added++;
+          })) { added++; articleQ++; }
         }
       }
     }
