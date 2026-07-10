@@ -151,7 +151,15 @@ function makeQuestion(event, seq) {
   var pubDate = event.year + '-' + pad(event.month) + '-' + pad(day) + 'T12:00:00.000Z';
 
   var qText = event.text;
+  var answer = event.entity;
   if (qText.length > 250) qText = qText.substring(0, 247) + '...';
+
+  var blankText = qText;
+  var answerLower = answer.toLowerCase();
+  var idx = blankText.toLowerCase().indexOf(answerLower);
+  if (idx !== -1) {
+    blankText = blankText.substring(0, idx) + '_____' + blankText.substring(idx + answer.length);
+  }
 
   return {
     id: id,
@@ -163,8 +171,8 @@ function makeQuestion(event, seq) {
     subject: 'Current Affairs',
     subSubject: monthLabel,
     emoji: '',
-    question: qText,
-    answer: event.entity,
+    question: blankText,
+    answer: answer,
     hint: '',
     fact: event.text.substring(0, 500)
   };
@@ -174,7 +182,7 @@ function eventKey(ev) {
   return (ev.question || ev.text || '').substring(0, 80) + '|' + (ev.answer || ev.entity || '');
 }
 
-function updateArchiveHtml(entryStr) {
+function updateArchiveHtml(entryStr, total) {
   var path = ARCHIVE;
   if (!fs.existsSync(path)) {
     console.error('  WARN: ' + path + ' not found, skipping CAT_INDEX update');
@@ -187,8 +195,13 @@ function updateArchiveHtml(entryStr) {
     return;
   }
   html = html.replace(pattern, entryStr);
+
+  html = html.replace(/(Current Affairs[^<]*?sidebar-count">)\d+(<\/span>)/g, '$1' + total + '$2');
+
+  html = html.replace(/(Current Affairs[^<]*?subj-card-count">)\d+/g, '$1' + total);
+
   fs.writeFileSync(path, html, 'utf8');
-  console.error('  Updated CAT_INDEX in ' + path);
+  console.error('  Updated CAT_INDEX and sidebar counts in ' + path);
 }
 
 async function fetchMonthEvents(year, month) {
@@ -401,7 +414,7 @@ async function main() {
 
   var total = totalQuestions;
   var entryStr = '"name":"Current Affairs","total":' + total + ',"icon":"📰","file":"data/questions/current-events.json","subjects":[{"name":"Current Affairs","total":' + total + ',"subSubjects":[' + subSubjectEntries.join(',') + ']}]}';
-  updateArchiveHtml(entryStr);
+  updateArchiveHtml(entryStr, total);
   console.error('Total: ' + total + ' events');
 }
 
