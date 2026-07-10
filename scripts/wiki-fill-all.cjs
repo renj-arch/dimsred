@@ -46,9 +46,10 @@ async function fetchAllTopics(topics, concurrency) {
 }
 
 async function fetchArticleExtract(title, retries) {
-  retries = retries || 3;
+  retries = retries || 5;
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
+      await delay(2500);
       const url = `${WIKI_API}?action=query&prop=extracts|description&explaintext&exlimit=1&titles=${encodeURIComponent(title)}&format=json`;
       const data = await fetchJSON(url);
       const pages = data.query ? data.query.pages : {};
@@ -62,9 +63,11 @@ async function fetchArticleExtract(title, retries) {
       }
       return null;
     } catch (err) {
-      if (attempt < retries - 1 && (err.message.includes('not valid JSON') || err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED')) {
-        console.log('  (' + (err.code || 'rate limited') + ', waiting 15s...)');
-        await delay(15000);
+      const isRetryable = err.message.includes('429') || err.message.includes('not valid JSON') || err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED';
+      if (attempt < retries - 1 && isRetryable) {
+        const wait = Math.min(30000 * Math.pow(2, attempt), 120000);
+        console.log('  (HTTP 429, waiting ' + (wait / 1000) + 's...)');
+        await delay(wait);
         continue;
       }
       throw err;
