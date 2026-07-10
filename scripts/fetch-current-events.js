@@ -147,7 +147,8 @@ function pad(n) { return n < 10 ? '0' + n : '' + n; }
 function makeQuestion(event, seq) {
   var id = 'ce_' + event.year + '_' + pad(event.month) + '_' + pad(seq);
   var monthLabel = MONTHS[event.month - 1] + ' ' + event.year;
-  var pubDate = event.year + '-' + pad(event.month) + '-15T12:00:00.000Z';
+  var day = event.day || 15;
+  var pubDate = event.year + '-' + pad(event.month) + '-' + pad(day) + 'T12:00:00.000Z';
 
   var qText = event.text;
   if (qText.length > 250) qText = qText.substring(0, 247) + '...';
@@ -369,7 +370,7 @@ async function main() {
       });
       if (!alreadyExists) {
         seqCounters[mk] = (seqCounters[mk] || 0) + 1;
-        var q = makeQuestion({ year: y, month: m, text: ev.text, entity: ev.entity }, seqCounters[mk]);
+        var q = makeQuestion({ year: y, month: m, day: day, text: ev.text, entity: ev.entity }, seqCounters[mk]);
         allNewQuestions.push(q);
       }
     });
