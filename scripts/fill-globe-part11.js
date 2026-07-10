@@ -3,6 +3,10 @@ const path = require('path');
 const DATA_DIR = path.resolve(__dirname, '..', 'data');
 const GLOBE_PATH = path.resolve(__dirname, '..', '3d-globe.html');
 
+function esc(s) {
+  return (s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t');
+}
+
 const CAT_MAP = {
   'wiki-airport.json': 'airport',
   'wiki-battle.json': 'battle',
@@ -264,7 +268,7 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
       // Replace if new entry has better content than the placeholder
       if (hasGoodContent(e) && !hasGoodContent({ desc: existing.desc, fact: existing.fact, sub: e.sub })) {
         const oldLine = existing.fullText;
-        const newLine = `  {n:'${e.n.replace(/'/g, "\\'")}',la:${e.la},ln:${e.ln},sub:'${e.sub.replace(/'/g, "\\'")}',desc:'${e.desc.replace(/'/g, "\\'")}',fact:'${e.fact.replace(/'/g, "\\'")}',tag:''}`;
+        const newLine = `  {n:'${esc(e.n)}',la:${e.la},ln:${e.ln},sub:'${esc(e.sub)}',desc:'${esc(e.desc)}',fact:'${esc(e.fact)}',tag:''}`;
         const lineIdx = html.indexOf(oldLine, startIdx);
         if (lineIdx !== -1) {
           html = html.slice(0, lineIdx) + newLine + html.slice(lineIdx + oldLine.length);
@@ -274,12 +278,12 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
       }
       continue;
     }
-    const t = e.tag ? e.tag.replace(/'/g, "\\'") : '';
+    const t = esc(e.tag);
     let ptsStr = '';
     if (e.pts && Array.isArray(e.pts) && e.pts.length) {
       ptsStr = ',pts:[' + e.pts.map(p => `{la:${p.la},ln:${p.ln}}`).join(',') + ']';
     }
-    insertStr += `  {n:'${e.n.replace(/'/g, "\\'")}',la:${e.la},ln:${e.ln},sub:'${e.sub.replace(/'/g, "\\'")}',desc:'${e.desc.replace(/'/g, "\\'")}',fact:'${e.fact.replace(/'/g, "\\'")}'${ptsStr},tag:'${t}'},\n`;
+    insertStr += `  {n:'${esc(e.n)}',la:${e.la},ln:${e.ln},sub:'${esc(e.sub)}',desc:'${esc(e.desc)}',fact:'${esc(e.fact)}'${ptsStr},tag:'${t}'},\n`;
     added++;
   }
 

@@ -4,7 +4,7 @@ const path = require('path');
 const filePath = path.resolve(__dirname, '..', '3d-globe.html');
 let content = fs.readFileSync(filePath, 'utf-8');
 
-function esc(s) { return s.replace(/'/g, "\\'"); }
+function esc(s) { return (s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t'); }
 
 function makeEntry(n, la, ln, sub, desc, fact) {
   return `  {n:'${esc(n)}',la:${la},ln:${ln},sub:'${esc(sub)}',desc:'${esc(desc)}',fact:'${esc(fact)}'},`;
