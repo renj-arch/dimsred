@@ -155,16 +155,18 @@ function makeQuestion(event, seq) {
   if (qText.length > 250) qText = qText.substring(0, 247) + '...';
 
   var blankText = qText;
-  var answerLower = answer.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  var wordRe = new RegExp('\\b' + answerLower + '\\b', 'i');
+  var finalAnswer = answer;
+  var answerEscaped = answer.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  var wordRe = new RegExp('\\b' + answerEscaped + '\\b', 'i');
   var m = wordRe.exec(blankText);
   if (m) {
     blankText = blankText.substring(0, m.index) + '_____' + blankText.substring(m.index + m[0].length);
   } else {
-    var stemRe = new RegExp('\\b' + answerLower + '\\w*\\b', 'i');
+    var stemRe = new RegExp('\\b' + answerEscaped + '\\w*\\b', 'i');
     var m2 = stemRe.exec(blankText);
     if (m2) {
       blankText = blankText.substring(0, m2.index) + '_____' + blankText.substring(m2.index + m2[0].length);
+      finalAnswer = m2[0];
     }
   }
 
@@ -179,7 +181,7 @@ function makeQuestion(event, seq) {
     subSubject: monthLabel,
     emoji: '',
     question: blankText,
-    answer: answer,
+    answer: finalAnswer,
     hint: '',
     fact: event.text.substring(0, 500)
   };
