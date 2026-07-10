@@ -5285,13 +5285,25 @@ function clearHighlight(){
     });
     _selArrows=null;
   }
-  if(_selFlowDots){
-    _selFlowDots.forEach(fd=>{
-      fd.mesh.material.color.set(fd._origColor||'#38bdf8');
-      fd.mesh.material.opacity=0.8;
-      fd.mesh.scale.set(1,1,1);
-      fd.speed=fd._origSpeed||0.003;
-    });
+  if(_selFlowDots&&_selFlowDots.length){
+    const d=_selFlowDots[0];
+    if(d){
+      // Remove highlight-only flow dots from scene + array
+      if(d._extraFlowDots){
+        d._extraFlowDots.forEach(fd=>{if(fd.mesh.parent)fd.mesh.parent.remove(fd.mesh);fd.mesh.geometry.dispose();fd.mesh.material.dispose()});
+        d._extraFlowDots=null;
+      }
+      // Restore original flow dots
+      if(d._flowDots){
+        d._flowDots=d._flowDots.filter(fd=>!fd._isHighlight);
+        d._flowDots.forEach(fd=>{
+          fd.mesh.material.color.set(fd._origColor||'#38bdf8');
+          fd.mesh.material.opacity=0.8;
+          fd.mesh.scale.set(1,1,1);
+          fd.speed=fd._origSpeed||0.003;
+        });
+      }
+    }
     _selFlowDots=null;
   }
 }
@@ -5404,15 +5416,16 @@ function mkLbl(text,col,scale=0.12){
     // Flow animation dots for rivers
     if((k==='river'||k==='w_river')&&d.pts&&d.pts.length>=3){
       const curve=new THREE.CatmullRomCurve3(pts);
+      d._curve=curve;
       const dotMat=new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:0.8});
       d._flowDots=[];
-      for(let i=0;i<2;i++){
-        const dot=new THREE.Mesh(new THREE.SphereGeometry(tubeRad*2,6,6),dotMat);
-        const t=i/2;
+      for(let i=0;i<4;i++){
+        const dot=new THREE.Mesh(new THREE.SphereGeometry(tubeRad*2.5,8,8),dotMat);
+        const t=i/4;
         const p=curve.getPoint(t);
         dot.position.copy(p);
         g.add(dot);
-        const spd=0.002+Math.random()*0.002;
+        const spd=0.0015+Math.random()*0.0015;
         d._flowDots.push({mesh:dot,t,curve,speed:spd,_origSpeed:spd,_origColor:catColors[k]});
       }
     }
@@ -5988,15 +6001,32 @@ function showDetail(d,cat,k){
       a.material.color.set('#ff6b6b');
       a.material.opacity=0.9;
     });
-    // Highlight flow dots for rivers
-    if(d._flowDots){
-      _selFlowDots=d._flowDots;
-      _selFlowDots.forEach(fd=>{
+    // Highlight flow dots for rivers — make entire path glow
+    if(k==='river'||k==='w_river'){
+      _selFlowDots=[d];
+      // Speed up and highlight existing flow dots
+      if(d._flowDots)d._flowDots.forEach(fd=>{
         fd.mesh.material.color.set('#ff6b6b');
         fd.mesh.material.opacity=1;
         fd.mesh.scale.set(2.5,2.5,2.5);
-        fd.speed=0.008;
+        fd.speed=0.005+Math.random()*0.003;
       });
+      // Add extra highlight dots along the full curve
+      if(d._curve&&d._flowDots){
+        const g=layerGroups[k];
+        if(!d._extraFlowDots)d._extraFlowDots=[];
+        const hiMat=new THREE.MeshBasicMaterial({color:'#ff6b6b',transparent:true,opacity:0.9});
+        for(let i=0;i<12;i++){
+          const dot=new THREE.Mesh(new THREE.SphereGeometry(0.008,8,8),hiMat);
+          const t=i/12;
+          const p=d._curve.getPoint(t);
+          dot.position.copy(p);
+          if(g)g.add(dot);
+          const spd=0.003+Math.random()*0.004;
+          d._extraFlowDots.push({mesh:dot,t,curve:d._curve,speed:spd,_isHighlight:true,_data:d});
+          d._flowDots.push(d._extraFlowDots[d._extraFlowDots.length-1]);
+        }
+      }
     }
     // Add floating midpoint marker for tube features
     const midIdx=Math.floor((d.pts||[]).length/2);
