@@ -351,18 +351,18 @@ const LGS_QS = [
     0, "വഖഫ് ഭേദഗതി നിയമം 2025 ഏപ്രിൽ 5-ന് നിലവിൽ വന്നു.", "The Waqf Amendment Act came into effect on April 5, 2025."
   ],
   [50,1,
-    "2024 ഒളിമ്പിക്സ് നടന്ന സ്ഥലം ഏതാണ്?",
-    "Where were the 2024 Olympics held?",
-    ["പാരീസ്","ടോക്കിയോ","ലോസ് ഏഞ്ചലസ്","ലണ്ടൻ"],
-    ["Paris","Tokyo","Los Angeles","London"],
-    0, "2024 ഒളിമ്പിക്സ് പാരീസിലാണ് നടന്നത്.", "The 2024 Olympics were held in Paris."
+    "2026-ൽ NEET UG പരീക്ഷ റദ്ദാക്കാൻ കാരണമായത് എന്ത്?",
+    "Why was the NEET UG 2026 exam cancelled?",
+    ["ചോർന്ന ചോദ്യപേപ്പർ","സാങ്കേതിക തകരാർ","സുരക്ഷാ ഭീഷണി","കുറഞ്ഞ ഹാജർ"],
+    ["Leaked question paper","Technical glitch","Security threat","Low attendance"],
+    0, "ചോദ്യപേപ്പർ ചോർന്നതിനെത്തുടർന്ന് 2026 മെയിലെ NEET UG പരീക്ഷ NTA റദ്ദാക്കി.", "NTA cancelled the May 2026 NEET UG exam due to leaked question paper."
   ],
   [51,1,
-    "2024-ലെ നോബൽ ശാന്തി സമ്മാനം നേടിയത് ആര്?",
-    "Who won the 2024 Nobel Peace Prize?",
-    ["നിഹോൺ ഹിദാൻക്യോ","അലക്സി നവല്നി","ഗ്രെറ്റ തൻബെർഗ്","ഡോക്ടേഴ്സ് വിത്തൗട്ട് ബോർഡേഴ്സ്"],
-    ["Nihon Hidankyo","Alexei Navalny","Greta Thunberg","Doctors Without Borders"],
-    0, "നിഹോൺ ഹിദാൻക്യോ 2024-ൽ നോബൽ ശാന്തി സമ്മാനം നേടി.", "Nihon Hidankyo won the 2024 Nobel Peace Prize."
+    "2026 ജൂണിൽ DRDO വിജയകരമായി പരീക്ഷിച്ച ദീർഘദൂര ക്രൂയിസ് മിസൈൽ ഏത്?",
+    "Which long-range cruise missile did DRDO test in June 2026?",
+    ["LRLACM","അഗ്നി-5","ബ്രഹ്മോസ്","പൃഥ്വി"],
+    ["LRLACM","Agni-5","BrahMos","Prithvi"],
+    0, "DRDO 2026 ജൂണിൽ LRLACM വിജയകരമായി പരീക്ഷിച്ചു.", "DRDO successfully tested the LRLACM in June 2026."
   ],
   [52,1,
     "ബംഗാൾ ഉൾക്കട്ടിലെ ഇന്ത്യൻ കേന്ദ്രഭരണ പ്രദേശം ഏതാണ്?",
@@ -372,11 +372,11 @@ const LGS_QS = [
     0, "ആൻഡമാൻ നിക്കോബാർ ദ്വീപുകൾ ബംഗാൾ ഉൾക്കട്ടിലാണ്.", "Andaman & Nicobar Islands are in the Bay of Bengal."
   ],
   [53,1,
-    "2028 ഒളിമ്പിക്സ് നടക്കുന്ന നഗരം ഏതാണ്?",
-    "Which city will host the 2028 Olympics?",
-    ["ലോസ് ഏഞ്ചലസ്","പാരീസ്","ബ്രിസ്ബെയ്ൻ","മുംബൈ"],
-    ["Los Angeles","Paris","Brisbane","Mumbai"],
-    0, "2028 ഒളിമ്പിക്സ് ലോസ് ഏഞ്ചലസിൽ നടക്കും.", "The 2028 Olympics will be held in Los Angeles."
+    "2026 ജൂലൈ 1-ന് MGNREGA-യ്ക്ക് പകരമായി നിലവിൽ വന്ന പുതിയ നിയമം ഏത്?",
+    "Which law replaced MGNREGA on July 1, 2026?",
+    ["VB G RAM G","ജോബ് ഗ്യാരണ്ടി നിയമം","കിസാൻ സമ്മാൻ നിയമം","ഗ്രാമ വികാസ് നിയമം"],
+    ["VB G RAM G","Job Guarantee Act","Kisan Samman Act","Gram Vikas Act"],
+    0, "VB G RAM G നിയമം 2026 ജൂലൈ 1-ന് MGNREGA-യ്ക്ക് പകരമായി.", "VB G RAM G replaced MGNREGA on July 1, 2026."
   ],
   [54,1,
     "കേരളത്തിന്റെ നിലവിലെ ഗവർണർ ആരാണ്?",
@@ -757,7 +757,7 @@ const LGS_QS = [
   [144,1,"2026-ൽ ഇന്ത്യയിലെ നക്സൽ പ്രസ്ഥാനം അവസാനിച്ചതായി പ്രഖ്യാപിച്ചത് ആര്?","Who declared the end of the Naxal insurgency in India in 2026?",["അമിത് ഷാ","നരേന്ദ്ര മോദി","രാജ്നാഥ് സിംഗ്","നിർമ്മല സീതാരാമൻ"],["Amit Shah","Narendra Modi","Rajnath Singh","Nirmala Sitharaman"],0,"കേന്ദ്ര ആഭ്യന്തരമന്ത്രി അമിത് ഷാ 2026-ൽ നക്സൽ പ്രസ്ഥാനം അവസാനിച്ചതായി പ്രഖ്യാപിച്ചു.","Home Minister Amit Shah declared the end of Naxal insurgency in 2026."],
   [145,1,"2025-ലെ പ്രയാഗ് മഹാകുംഭമേളയിൽ തിക്കിലും ചവിട്ടിലും പെട്ട് മരിച്ചവരുടെ എണ്ണം എത്ര?","How many died in the 2025 Prayag Kumbh Mela crowd crush?",["30","50","20","10"],["30","50","20","10"],0,"2025 ജനുവരിയിൽ കുംഭമേളയിൽ 30 പേർ മരിച്ചു.","30 people died in the 2025 Kumbh Mela crowd crush."],
   [146,1,"2025-ലെ പത്മ പുരസ്കാരങ്ങളിൽ ഏറ്റവും ഉയർന്ന ബഹുമതി ഏതാണ്?","Which is the highest award in the 2025 Padma awards?",["പത്മവിഭൂഷൺ","പത്മഭൂഷൺ","പത്മശ്രീ","സരസ്വതി സമ്മാൻ"],["Padma Vibhushan","Padma Bhushan","Padma Shri","Saraswati Samman"],0,"പത്മവിഭൂഷൺ ഏറ്റവും ഉയർന്ന പത്മ പുരസ്കാരമാണ്.","Padma Vibhushan is the highest Padma award."],
-  [147,1,"2025-ൽ ഏത് രാജ്യത്താണ് COP30 കാലാവസ്ഥ ഉച്ചകോടി നടന്നത്?","Which country hosted COP30 climate summit in 2025?",["ബ്രസീൽ","ഇന്ത്യ","ഈജിപ്ത്","യുഎഇ"],["Brazil","India","Egypt","UAE"],0,"COP30 2025-ൽ ബ്രസീലിൽ നടന്നു.","COP30 was held in Brazil in 2025."],
+  [147,1,"2026 ജൂണിൽ ഇന്ത്യയിൽ താൽക്കാലികമായി നിരോധിച്ച സന്ദേശ അപ്ലിക്കേഷൻ ഏത്?","Which messaging app was temporarily blocked in India in June 2026?",["ടെലഗ്രാം","വാട്ട്സ്ആപ്പ്","സിഗ്നൽ","ഫേസ്ബുക്ക്"],["Telegram","WhatsApp","Signal","Facebook"],0,"2026 ജൂൺ 16-ന് ടെലഗ്രാം ഇന്ത്യയിൽ തടയപ്പെട്ടു.","Telegram was blocked in India on June 16, 2026."],
   [148,1,"2025-ൽ ഏത് സംസ്ഥാനത്താണ് കേന്ദ്രഭരണം ഏർപ്പെടുത്തിയത്?","In which state was President's rule imposed in 2025?",["മണിപ്പൂർ","കേരളം","തമിഴ്നാട്","പഞ്ചാബ്"],["Manipur","Kerala","Tamil Nadu","Punjab"],0,"മണിപ്പൂരിൽ 2025 ഫെബ്രുവരിയിൽ കേന്ദ്രഭരണം ഏർപ്പെടുത്തി.","President's rule was imposed in Manipur in Feb 2025."],
   [149,1,"2025 നവംബറിൽ ഇന്ത്യയുടെ ചീഫ് ജസ്റ്റിസായി ചുമതലയേറ്റത് ആര്?","Who became CJI in November 2025?",["സൂര്യ കാന്ത്","ഡി.വൈ. ചന്ദ്രചൂഡ്","സഞ്ജയ് കിഷൻ കൗൾ","എൻ.വി. രമണ"],["Surya Kant","D.Y. Chandrachud","Sanjay Kishan Kaul","N.V. Ramana"],0,"സൂര്യ കാന്ത് 2025 നവംബറിൽ ചീഫ് ജസ്റ്റിസായി.","Surya Kant became CJI in November 2025."],
   [150,1,"2026-ൽ ഇന്ത്യയുടെ ചീഫ് ഓഫ് ഡിഫൻസ് സ്റ്റാഫ് ആയി നിയമിതനായത് ആര്?","Who was appointed CDS of India in 2026?",["എൻ.എസ്. രാജ സുബ്രഹ്മണി","അനിൽ ചൗഹാൻ","ബിപിൻ റാവത്ത്","മനോജ് മുകുന്ദ് നരവാനെ"],["N.S. Raja Subramani","Anil Chauhan","Bipin Rawat","Manoj Mukund Naravane"],0,"എൻ.എസ്. രാജ സുബ്രഹ്മണി 2026 മെയിൽ സിഡിഎസായി.","N.S. Raja Subramani became CDS in May 2026."],
@@ -765,11 +765,11 @@ const LGS_QS = [
   [152,1,"2026-ൽ ഇന്ത്യയിൽ നിപ വൈറസ് റിപ്പോർട്ട് ചെയ്ത സംസ്ഥാനം ഏത്?","Which state reported a Nipah virus outbreak in 2026?",["പശ്ചിമ ബംഗാൾ","കേരളം","കർണാടക","തമിഴ്നാട്"],["West Bengal","Kerala","Karnataka","Tamil Nadu"],0,"2026 ജനുവരിയിൽ പശ്ചിമ ബംഗാളിൽ നിപ വൈറസ് റിപ്പോർട്ട് ചെയ്തു.","Nipah virus was reported in West Bengal in Jan 2026."],
   [153,1,"2026-ൽ തമിഴ്നാട് മുഖ്യമന്ത്രിയായി തിരഞ്ഞെടുക്കപ്പെട്ടത് ആര്?","Who was elected Tamil Nadu CM in 2026?",["വിജയ്","എം.കെ. സ്റ്റാലിൻ","എഡപ്പാടി കെ. പളനിസ്വാമി","ഒ. പനീർശെൽവം"],["Vijay","M.K. Stalin","Edappadi K. Palaniswami","O. Panneerselvam"],0,"നടൻ വിജയ് 2026-ൽ തമിഴ്നാട് മുഖ്യമന്ത്രിയായി.","Actor Vijay became Tamil Nadu CM in 2026."],
   [154,1,"യുറാനിയം 2025-ൽ ഏത് രാജ്യത്താണ് ഏറ്റവും കൂടുതൽ ഉത്പാദിപ്പിക്കുന്നത്?","Which country produces the most uranium in 2025?",["കസാഖ്സ്ഥാൻ","കാനഡ","ഓസ്ട്രേലിയ","റഷ്യ"],["Kazakhstan","Canada","Australia","Russia"],0,"കസാഖ്സ്ഥാൻ ഏറ്റവും കൂടുതൽ യുറാനിയം ഉത്പാദിപ്പിക്കുന്നു.","Kazakhstan produces the most uranium."],
-  [155,1,"2025-ൽ ഏത് രാജ്യമാണ് ലോകത്തിലെ ഏറ്റവും വലിയ സമ്പദ്വ്യവസ്ഥയായി മാറിയത്?","Which country became the world's largest economy in 2025?",["അമേരിക്ക","ചൈന","ഇന്ത്യ","ജപ്പാൻ"],["USA","China","India","Japan"],0,"അമേരിക്ക ഏറ്റവും വലിയ സമ്പദ്വ്യവസ്ഥയായി തുടരുന്നു.","USA remains the largest economy."],
+  [155,1,"2026 ജൂലൈയിൽ ഇന്ത്യ ആതിഥേയത്വം വഹിച്ച അന്താരാഷ്ട്ര ഉച്ചകോടി ഏത്?","Which summit did India host in July 2026?",["ബ്രിക്സ്","ജി20","ആസിയാൻ","SAARC"],["BRICS","G20","ASEAN","SAARC"],0,"ഇന്ത്യ 2026 ജൂലൈയിൽ BRICS ഉച്ചകോടിക്ക് ആതിഥേയത്വം വഹിച്ചു.","India hosted the BRICS summit in July 2026."],
   [156,1,"2026-ൽ കേരള മുഖ്യമന്ത്രിയായി അധികാരമേറ്റത് ആര്?","Who assumed office as Kerala CM in 2026?",["വി.ഡി. സതീശൻ","പിണറായി വിജയൻ","കെ. കരുണാകരൻ","എ.കെ. ആന്റണി"],["V.D. Satheesan","Pinarayi Vijayan","K. Karunakaran","A.K. Antony"],0,"വി.ഡി. സതീശൻ 2026-ൽ കേരള മുഖ്യമന്ത്രിയായി.","V.D. Satheesan became Kerala CM in 2026."],
   [157,1,"2025-ലെ ഓസ്കാർ പുരസ്കാരത്തിൽ മികച്ച ചിത്രമായി തിരഞ്ഞെടുത്തത് ഏത്?","Which film won Best Picture at the 2025 Oscars?",["അനോറ","ദി ബ്രൂട്ടലിസ്റ്റ്","കൺക്ലേവ്","എമിലിയ പെരെസ്"],["Anora","The Brutalist","Conclave","Emilia Perez"],0,"അനോറ 2025-ലെ മികച്ച ചിത്രമായി.","Anora won Best Picture at the 2025 Oscars."],
   [158,1,"2026-ൽ പശ്ചിമ ബംഗാൾ മുഖ്യമന്ത്രിയായത് ആര്?","Who became West Bengal CM in 2026?",["സുവേന്ദു അധികാരി","മമത ബാനർജി","അഭിഷേക് ബാനർജി","ദിലീപ് ഘോഷ്"],["Suvendu Adhikari","Mamata Banerjee","Abhishek Banerjee","Dilip Ghosh"],0,"സുവേന്ദു അധികാരി 2026-ൽ പശ്ചിമ ബംഗാൾ മുഖ്യമന്ത്രിയായി.","Suvendu Adhikari became West Bengal CM in 2026."],
-  [159,1,"2025-ൽ ഗൂഗിളിന്റെ പുതിയ AI മോഡലിന്റെ പേരെന്ത്?","What is the name of Google's new AI model in 2025?",["ജെമിനി","ബാർഡ്","ജിപിടി-5","ഡീപ്മൈൻഡ്"],["Gemini","Bard","GPT-5","DeepMind"],0,"ഗൂഗിളിന്റെ ജെമിനി 2025-ലെ പുതിയ AI മോഡലാണ്.","Google's Gemini is the new AI model in 2025."],
+  [159,1,"2026 ജൂൺ 30-ന് ഇന്ത്യയുടെ കരസേനാ മേധാവിയായി ചുമതലയേറ്റത് ആര്?","Who took charge as Indian Army Chief on June 30, 2026?",["ജനറൽ ധീരജ് സേത്ത്","ജനറൽ മനോജ് പാണ്ഡെ","ജനറൽ എം.എം. നരവാനെ","ജനറൽ വി.കെ. സിംഗ്"],["General Dhiraj Seth","General Manoj Pande","General M.M. Naravane","General V.K. Singh"],0,"ജനറൽ ധീരജ് സേത്ത് 2026 ജൂൺ 30-ന് കരസേനാ മേധാവിയായി.","General Dhiraj Seth became Army Chief on June 30, 2026."],
   [160,1,"2025-ൽ ഇന്ത്യൻ സംസ്ഥാനങ്ങളിലെ ഏറ്റവും വലിയ സ്വർണ്ണ ശേഖരം ഏത് സംസ്ഥാനത്താണ്?","Which state has the largest gold reserve in India 2025?",["കർണാടക","രാജസ്ഥാൻ","ആന്ധ്രാപ്രദേശ്","മഹാരാഷ്ട്ര"],["Karnataka","Rajasthan","Andhra Pradesh","Maharashtra"],0,"കർണാടകയിലെ കോലാർ സ്വർണ്ണ ഖനി ഏറ്റവും വലുതാണ്.","Kolar gold mine in Karnataka is the largest."],
   // ---- SET 2: Science (10 questions) ----
   [161,2,"മനുഷ്യ ശരീരത്തിലെ ഏറ്റവും വലിയ ഗ്രന്ഥി ഏതാണ്?","Which is the largest gland in the human body?",["കരൾ","തൈറോയ്ഡ്","പാൻക്രിയാസ്","അഡ്രിനൽ"],["Liver","Thyroid","Pancreas","Adrenal"],0,"കരൾ (ലിവർ) ഏറ്റവും വലിയ ഗ്രന്ഥിയാണ്.","The liver is the largest gland."],
