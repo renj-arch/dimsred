@@ -155,10 +155,17 @@ function makeQuestion(event, seq) {
   if (qText.length > 250) qText = qText.substring(0, 247) + '...';
 
   var blankText = qText;
-  var answerLower = answer.toLowerCase();
-  var idx = blankText.toLowerCase().indexOf(answerLower);
-  if (idx !== -1) {
-    blankText = blankText.substring(0, idx) + '_____' + blankText.substring(idx + answer.length);
+  var answerLower = answer.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  var wordRe = new RegExp('\\b' + answerLower + '\\b', 'i');
+  var m = wordRe.exec(blankText);
+  if (m) {
+    blankText = blankText.substring(0, m.index) + '_____' + blankText.substring(m.index + m[0].length);
+  } else {
+    var stemRe = new RegExp('\\b' + answerLower + '\\w*\\b', 'i');
+    var m2 = stemRe.exec(blankText);
+    if (m2) {
+      blankText = blankText.substring(0, m2.index) + '_____' + blankText.substring(m2.index + m2[0].length);
+    }
   }
 
   return {
