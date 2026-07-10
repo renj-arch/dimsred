@@ -6,9 +6,7 @@ async function httpGet(url, retries = 3) {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const result = await new Promise((resolve, reject) => {
-        const opts = new URL(url);
-        opts.headers = { 'User-Agent': 'studypro-wiki/1.0 (gk-bot)' };
-        const req = https.get(opts, res => {
+        const req = https.get(url, { headers: { 'User-Agent': 'studypro-wiki/1.0 (gk-bot)' } }, res => {
           let d = '';
           res.on('data', c => d += c);
           res.on('end', () => {
@@ -279,6 +277,22 @@ const CFG = [
   { id:'monastery', label:'Monasteries', wikiCat:'Category:Monasteries_in_India', subFn:(s,a)=>s },
 ];
 
+async function fetchSummariesConcurrently(titles, concurrency = 5) {
+  const results = {};
+  const queue = [...titles];
+  async function worker() {
+    while (queue.length > 0) {
+      const title = queue.shift();
+      try { results[title] = await wikiSummary(title); } catch { results[title] = null; }
+      await new Promise(r => setTimeout(r, 200));
+    }
+  }
+  const workers = [];
+  for (let i = 0; i < concurrency && i < titles.length; i++) workers.push(worker());
+  await Promise.all(workers);
+  return results;
+}
+
 // ====== PROCESS CATEGORY ======
 async function processCat(cat, dedupSet) {
   console.log(`\n▓ ${cat.label} (${cat.wikiCat})`);
@@ -291,7 +305,6 @@ async function processCat(cat, dedupSet) {
   console.log(`  QIDs found: ${valid.length}`);
   if (!valid.length) return [];
 
-  // Batch SPARQL for coords & state
   let sparqlResult;
   try {
     const qidList = valid.map(([, q]) => `wd:${q}`).join(' ');
@@ -317,30 +330,35 @@ async function processCat(cat, dedupSet) {
   }
   console.log(`  With coords: ${coordMap.size}`);
 
-  const out = [];
-  let n = 0, skipped = 0;
+  // Phase 1: collect candidates (coord + dedup)
+  const candidates = [];
+  let skipped = 0;
   for (const [title, qid] of valid) {
-    if (n >= 60) break;
+    if (candidates.length >= 60) break;
     const coord = coordMap.get(qid);
     if (!coord) continue;
     if (dedupSet.has(normName(title))) { skipped++; continue; }
-    dedupSet.add(normName(title)); // prevent future dedup within same run
+    dedupSet.add(normName(title));
+    candidates.push({ title, coord });
+  }
 
-    const state = coord.states?.join(', ') || '';
+  // Phase 2: batch-fetch summaries with concurrency
+  console.log(`  Fetching ${candidates.length} summaries...`);
+  const summaries = await fetchSummariesConcurrently(candidates.map(c => c.title), 5);
+
+  // Phase 3: build and filter entries
+  const out = [];
+  let n = 0;
+  for (const cand of candidates) {
+    const state = cand.coord.states?.join(', ') || '';
     const sub = cat.subFn(state, '');
-
-    let wd;
-    try {
-      wd = await wikiSummary(title);
-      await new Promise(r => setTimeout(r, 600));
-    } catch {}
+    const wd = summaries[cand.title];
     const txt = wd?.extract || '';
     const desc = buildDesc(txt);
     const fact = buildFacts(txt, desc) || desc || state;
     const factText = fact || desc || state;
-
     const entry = {
-      n: title, la: coord.la, ln: coord.ln, sub,
+      n: cand.title, la: cand.coord.la, ln: cand.coord.ln, sub,
       desc: desc || factText.slice(0, 200),
       fact: factText,
       img: wd?.thumbnail || '',
@@ -348,11 +366,10 @@ async function processCat(cat, dedupSet) {
       _quality: 'good'
     };
     entry._quality = assessQuality(entry);
-    if (entry._quality === 'poor' || entry.desc.length < 15 || entry.fact.length < 15 || entry.sub.length < 3 || entry.la === 0) continue;
+    if (entry._quality === 'poor' || entry.desc.length < 5 || entry.fact.length < 5 || entry.sub.length < 3 || entry.la === 0) continue;
     out.push(entry);
     n++;
-    await new Promise(r => setTimeout(r, 100));
-    if (n % 3 === 0) { console.log(`  ...${n} entries`); }
+    if (n % 10 === 0) { console.log(`  ...${n} entries`); }
   }
   console.log(`  ${out.length} clean (${skipped} dedup skip)`);
   return out;
@@ -392,7 +409,7 @@ async function main() {
     const fp = path.join(DATA_DIR, `wiki-${cat.id}.json`);
     fs.writeFileSync(fp, JSON.stringify(entries, null, 2), 'utf8');
     console.log(`  → data/wiki-${cat.id}.json`);
-    if (i < runCats.length - 1) await new Promise(r => setTimeout(r, 5000));
+    if (i < runCats.length - 1) await new Promise(r => setTimeout(r, 1000));
   }
   console.log('\n=== Done ===');
 }

@@ -4,9 +4,7 @@ const https = require('https');
 
 function httpGet(url) {
   return new Promise((resolve, reject) => {
-    const opts = new URL(url);
-    opts.headers = { 'User-Agent': 'studypro-wiki/1.0 (gk-bot)' };
-    const req = https.get(opts, res => {
+    const req = https.get(url, { headers: { 'User-Agent': 'studypro-wiki/1.0 (gk-bot)' } }, res => {
       let d = '';
       res.on('data', c => d += c);
       res.on('end', () => {
@@ -1324,13 +1322,28 @@ const CFG = [
 
 // ====== PROCESS CATEGORY ======
 
+async function fetchSummariesConcurrently(titles, concurrency = 5) {
+  const results = {};
+  const queue = [...titles];
+  async function worker() {
+    while (queue.length > 0) {
+      const title = queue.shift();
+      try { results[title] = await wikiSummary(title); } catch { results[title] = null; }
+      await new Promise(r => setTimeout(r, 200));
+    }
+  }
+  const workers = [];
+  for (let i = 0; i < concurrency && i < titles.length; i++) workers.push(worker());
+  await Promise.all(workers);
+  return results;
+}
+
 async function processCat(cat) {
   console.log(`\n▓ ${cat.label}`);
   let result;
   try { result = await sparql(cat.query); }
   catch(e){ console.log(`  ✗ Query failed: ${e.message}`); return []; }
 
-  // Dedup by item ID
   const seen = new Map();
   for(const b of result.results.bindings){
     const id=b.item?.value||'';
@@ -1341,8 +1354,8 @@ async function processCat(cat) {
     } else { seen.set(id,{item:b}); }
   }
 
-  const out=[];
-  let n=0;
+  // Phase 1: collect candidates
+  const candidates = [];
   let skippedManual=0;
   let skippedGlobe=0;
   const globeCatNames = globeNames.get(cat.id);
@@ -1351,33 +1364,41 @@ async function processCat(cat) {
     if(!label||/^Q\d+$/.test(label)||isBadName(label))continue;
     if(manualNames.has(normName(label))){ skippedManual++; continue; }
     if(globeCatNames&&globeCatNames.has(normName(label))){ skippedGlobe++; continue; }
-    if(n++>120)break;
-
+    if(candidates.length>=120)break;
     const m=b.coord?.value?.match(/Point\(([-\d.]+)\s+([-\d.]+)\)/);
-    const la=m?parseFloat(parseFloat(m[2]).toFixed(6)):0;
-    const ln=m?parseFloat(parseFloat(m[1]).toFixed(6)):0;
+    if(!m)continue;
+    candidates.push({
+      label, b,
+      la:parseFloat(parseFloat(m[2]).toFixed(6)),
+      ln:parseFloat(parseFloat(m[1]).toFixed(6)),
+      state:b.stateLabel?.value||'',
+      area:b.area?.value?parseFloat(b.area.value).toFixed(1)+' km²':'',
+      incept:b.inception?.value?b.inception.value.slice(0,4):'',
+    });
+  }
 
-    const state=b.stateLabel?.value||'';
-    const area=b.area?.value?parseFloat(b.area.value).toFixed(1)+' km²':'';
-    const incept=b.inception?.value?b.inception.value.slice(0,4):'';
-    const sub=cat.sub(b,state,area,incept);
-    const prefix=cat.prefix(b,state,area);
+  // Phase 2: batch-fetch summaries with concurrency
+  console.log(`  Fetching ${candidates.length} summaries...`);
+  const summaryResults = await fetchSummariesConcurrently(candidates.map(c => c.label), 5);
 
-    // Wikipedia fetch (with retry on suffix)
-    let wd=null;
-    try{
-      wd=await wikiSummary(label);
-      if(!wd&&cat.id==='dams')wd=await wikiSummary(label)+(/dam$/i.test(label)?'':' Dam');
-      if(!wd&&cat.id==='rivers')wd=await wikiSummary(label)+(/river$/i.test(label)?'':' River');
-    }catch{}
+  // Phase 3: build and filter entries
+  const out=[];
+  let n=0;
+  for(const cand of candidates){
+    const label=cand.label;
+    const sub=cat.sub(cand.b, cand.state, cand.area, cand.incept);
+    const prefix=cat.prefix(cand.b, cand.state, cand.area);
+
+    let wd=summaryResults[label];
+    if(!wd&&cat.id==='dams')wd=await wikiSummary(label)+(/dam$/i.test(label)?'':' Dam');
+    if(!wd&&cat.id==='rivers')wd=await wikiSummary(label)+(/river$/i.test(label)?'':' River');
 
     const txt=wd?.extract||'';
     const desc=buildDesc(txt);
     const fact=buildFacts(txt,desc)||desc||prefix;
-
     const factText=fact||desc||prefix;
     const entry={
-      n:label,la,ln,sub,
+      n:label, la:cand.la, ln:cand.ln, sub,
       desc:desc||factText.slice(0,200),
       fact:factText,
       img:wd?.thumbnail||'',
@@ -1385,11 +1406,10 @@ async function processCat(cat) {
       _quality:'good'
     };
     entry._quality=assessQuality(entry);
-
-    // Filter
     if(entry._quality==='poor'||entry.sub.length<3||entry.la===0||!entry.n)continue;
     out.push(entry);
-    if(n%3===0)await new Promise(r=>setTimeout(r,300));
+    n++;
+    if(n%10===0)await new Promise(r=>setTimeout(r,100));
   }
 
   console.log(`  ${out.length} clean entries (from ${seen.size} raw, ${skippedManual} manual, ${skippedGlobe} globe skip)`);
