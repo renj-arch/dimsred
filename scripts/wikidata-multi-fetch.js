@@ -198,7 +198,7 @@ try {
     const nameRx = /n\s*:\s*'((?:[^'\\]|\\.)*)'/g;
     const names = new Set();
     let nm;
-    while ((nm = nameRx.exec(block)) !== null) names.add(normName(nm[1]));
+    while ((nm = nameRx.exec(block)) !== null) names.add(normName(nm[1].replace(/\\(.)/g, '$1')));
     if (names.size) globeNames.set(fetchCat, names);
     console.log(`Globe dedup: ${names.size} entries in "${globeCat}" → fetch "${fetchCat}"`);
   }

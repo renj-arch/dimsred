@@ -26,9 +26,10 @@ for (const [fullMatch, cat] of catMatches) {
 
   const content = chunk.slice(0, endIdx);
   // extract entries: {n:'...',la:...,ln:...,...},
-  const entries = [...content.matchAll(/\{n:'([^']+)',la:([^,]+),ln:([^,]+)[^}]*\}/g)].map(m => ({
+  const entryRx = /\{n:'((?:[^'\\]|\\.)*)',la:([^,]+),ln:([^,]+)[^}]*\}/g;
+  const entries = [...content.matchAll(entryRx)].map(m => ({
     full: m[0],
-    name: m[1],
+    name: m[1].replace(/\\(.)/g, '$1'),
     la: parseFloat(m[2]),
     ln: parseFloat(m[3])
   }));
