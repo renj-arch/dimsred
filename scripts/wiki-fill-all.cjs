@@ -1231,18 +1231,23 @@ async function main() {
 
   // Determine which categories to process today
   const processAll = process.env.WIKI_FILL_ALL === '1';
+  const GROUPS_PER_DAY = parseInt(process.env.WIKI_FILL_GROUPS || '2', 10);
   let activeCategories;
   if (processAll) {
     activeCategories = CATEGORIES;
     console.log('Processing ALL categories (WIKI_FILL_ALL=1)');
   } else {
     const dayIdx = new Date().getDay();
-    const group = DAY_GROUPS[dayIdx];
-    activeCategories = group.map(i => CATEGORIES[i]);
     const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    console.log('Day: ' + dayNames[dayIdx] + ' — processing ' + activeCategories.length + ' of ' + CATEGORIES.length + ' categories');
+    const groupIdxs = [];
+    for (let i = 0; i < GROUPS_PER_DAY; i++) {
+      groupIdxs.push((dayIdx * GROUPS_PER_DAY + i) % DAY_GROUPS.length);
+    }
+    const activeIdxs = new Set(groupIdxs.flatMap(gi => DAY_GROUPS[gi]));
+    activeCategories = [...activeIdxs].map(i => CATEGORIES[i]);
+    console.log('Day: ' + dayNames[dayIdx] + ' — processing ' + activeCategories.length + ' of ' + CATEGORIES.length + ' categories (groups: ' + groupIdxs.join(',') + ')');
     CATEGORIES.forEach((c, i) => {
-      if (!group.includes(i)) console.log('  (skipping: ' + c.name + ')');
+      if (!activeIdxs.has(i)) console.log('  (skipping: ' + c.name + ')');
     });
   }
 
