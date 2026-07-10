@@ -5271,6 +5271,7 @@ function mkPin(col,sz=0.008,cat=''){
 let _selHighlight=null;
 let _selTube=null;
 let _selArrows=null;
+let _selFlowDots=null;
 function clearHighlight(){
   if(_selHighlight){EG.remove(_selHighlight);_selHighlight=null;}
   if(_selTube){
@@ -5283,6 +5284,15 @@ function clearHighlight(){
       a.material.opacity=a.userData._origOpacity||0.4;
     });
     _selArrows=null;
+  }
+  if(_selFlowDots){
+    _selFlowDots.forEach(fd=>{
+      fd.mesh.material.color.set(fd._origColor||'#38bdf8');
+      fd.mesh.material.opacity=0.8;
+      fd.mesh.scale.set(1,1,1);
+      fd.speed=fd._origSpeed||0.003;
+    });
+    _selFlowDots=null;
   }
 }
 function setHighlight(lat,lng,color='#ff4444'){
@@ -5402,7 +5412,8 @@ function mkLbl(text,col,scale=0.12){
         const p=curve.getPoint(t);
         dot.position.copy(p);
         g.add(dot);
-        d._flowDots.push({mesh:dot,t,curve,speed:0.002+Math.random()*0.002});
+        const spd=0.002+Math.random()*0.002;
+        d._flowDots.push({mesh:dot,t,curve,speed:spd,_origSpeed:spd,_origColor:catColors[k]});
       }
     }
   });
@@ -5977,6 +5988,16 @@ function showDetail(d,cat,k){
       a.material.color.set('#ff6b6b');
       a.material.opacity=0.9;
     });
+    // Highlight flow dots for rivers
+    if(d._flowDots){
+      _selFlowDots=d._flowDots;
+      _selFlowDots.forEach(fd=>{
+        fd.mesh.material.color.set('#ff6b6b');
+        fd.mesh.material.opacity=1;
+        fd.mesh.scale.set(2.5,2.5,2.5);
+        fd.speed=0.008;
+      });
+    }
     // Add floating midpoint marker for tube features
     const midIdx=Math.floor((d.pts||[]).length/2);
     const midP=d.pts?d.pts[midIdx]:null;
