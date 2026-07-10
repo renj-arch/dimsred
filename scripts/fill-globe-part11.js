@@ -268,7 +268,7 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
       // Replace if new entry has better content than the placeholder
       if (hasGoodContent(e) && !hasGoodContent({ desc: existing.desc, fact: existing.fact, sub: e.sub })) {
         const oldLine = existing.fullText;
-        const newLine = `  {n:'${esc(e.n)}',la:${e.la},ln:${e.ln},sub:'${esc(e.sub)}',desc:'${esc(e.desc)}',fact:'${esc(e.fact)}',tag:''}`;
+        const newLine = `  {n:'${esc(e.n)}',la:${e.la},ln:${e.ln},sub:'${esc(e.sub)}',desc:'${esc(e.desc)}',fact:'${esc(e.fact)}',tag:''},`;
         const lineIdx = html.indexOf(oldLine, startIdx);
         if (lineIdx !== -1) {
           html = html.slice(0, lineIdx) + newLine + html.slice(lineIdx + oldLine.length);
