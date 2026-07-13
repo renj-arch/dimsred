@@ -5273,13 +5273,7 @@ function clearHighlight(){
   }
 }
 function setHighlight(lat,lng,color='#ff4444'){
-  clearHighlight();
-  const pos=ll(lat,lng,1.008);
-  const g=mkPin(color,0.018,'pin');
-  g.position.copy(pos);
-  g.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),pos.clone().normalize());
-  EG.add(g);
-  _selHighlight=g;
+  // marker removed by user request
 }
 
 function mkLbl(text,col,scale=0.12){
