@@ -1,10 +1,17 @@
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
+const os = require('os');
 
 const filePath = path.resolve(__dirname, '..', '3d-globe.html');
+
 let h = fs.readFileSync(filePath, 'utf8');
 const ms = h.indexOf('<script type="module">');
 const me = h.indexOf('</script>', ms);
+if (ms === -1 || me === -1) {
+  console.error('Could not find module script in 3d-globe.html');
+  process.exit(1);
+}
 const outerPrefix = h.substring(0, ms + 23);
 let js = h.substring(ms + 23, me);
 const outerSuffix = h.substring(me);
@@ -61,5 +68,19 @@ for (let i = 0; i < js.length; i++) {
 }
 
 h = outerPrefix + result + outerSuffix;
+
+const tmpFile = path.join(os.tmpdir(), 'globe-check.mjs');
+fs.writeFileSync(tmpFile, result, 'utf8');
+try {
+  execSync(`node --check "${tmpFile}"`, { stdio: 'pipe', timeout: 10000 });
+} catch (e) {
+  const stderr = e.stderr ? e.stderr.toString() : e.message;
+  console.error('Syntax error detected after apostrophe fixing');
+  console.error(stderr);
+  try { fs.unlinkSync(tmpFile); } catch {}
+  process.exit(1);
+}
+try { fs.unlinkSync(tmpFile); } catch {}
+
 fs.writeFileSync(filePath, h);
 console.log(`Fixed ${fixed} apostrophes`);

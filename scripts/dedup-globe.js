@@ -61,7 +61,7 @@ for (const [fullMatch, cat] of catMatches) {
       const re = new RegExp('  ' + esc + '[,\\s]*\\r?\\n', 'g');
       h = h.replace(re, '');
       totalRemoved++;
-      console.log(cat + ': removed ' + entry.match(/n:'([^']+)'/)[1]);
+      console.log(cat + ': removed ' + entry.match(/n:'((?:[^'\\]|\\.)*)'/)[1]);
     }
   }
 }

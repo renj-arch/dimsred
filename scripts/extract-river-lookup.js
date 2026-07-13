@@ -11,7 +11,7 @@ function extractEntries(html, arrayName) {
   if (!m) return [];
   const block = m[1];
   const entries = [];
-  const objRx = /\{n:'([^']+)'([\s\S]*?)\},?(?=\s*\{n:|\s*\];)/g;
+  const objRx = /\{n:'((?:[^'\\]|\\.)*)'([\s\S]*?)\},?(?=\s*\{n:|\s*\];)/g;
   let match;
   while ((match = objRx.exec(block)) !== null) {
     const name = match[1];

@@ -237,13 +237,13 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
   const existingContent = chunk.slice(0, endIdx);
   const existingLines = existingContent.split('\n').map(l => l.trim()).filter(l => l.startsWith('{n:'));
   const existingMap = new Map(); // name -> { fullText, desc, fact }
-  const nameRx = /\{n:'([^']+)'/;
+  const nameRx = /\{n:'((?:[^'\\]|\\.)*)'/;
   let replaced = 0;
   for (const line of existingLines) {
     const m = nameRx.exec(line);
     if (!m) continue;
-    const descM = line.match(/desc:'([^']*)'/);
-    const factM = line.match(/fact:'([^']*)'/);
+    const descM = line.match(/desc:'((?:[^'\\]|\\.)*)'/);
+    const factM = line.match(/fact:'((?:[^'\\]|\\.)*)'/);
     existingMap.set(normalize(m[1]), {
       fullText: line,
       desc: descM ? descM[1] : '',
