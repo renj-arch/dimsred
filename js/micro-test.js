@@ -41,20 +41,25 @@ var homeBtn = document.getElementById('homeBtn');
 
 function qsa(s) { return document.querySelectorAll(s); }
 
+function loadScript(src, cb){
+  var s = document.createElement('script');
+  s.src = src + '?' + Date.now();
+  s.onload = cb;
+  s.onerror = function(){ if (cb) cb(new Error('Failed to load ' + src)); };
+  document.head.appendChild(s);
+}
+
 function loadIndex(){
-  var x = new XMLHttpRequest();
-  x.open('GET', 'data/topic-index.json?' + Date.now(), true);
-  x.onload = function(){
-    if (x.status === 200) {
-      try {
-        var d = JSON.parse(x.responseText);
-        exams = d.exams;
-        renderExamGrid();
-      } catch(e) { }
-    }
-  };
-  x.onerror = function(){ };
-  x.send();
+  if (location.protocol === 'file:') {
+    loadScript('data/topic-index.js', function(err){
+      if (!err && window.__topicIndex) { exams = window.__topicIndex.exams; renderExamGrid(); }
+    });
+    return;
+  }
+  fetch('data/topic-index.json?' + Date.now())
+    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(d){ exams = d.exams; renderExamGrid(); })
+    .catch(function(){});
 }
 
 function renderExamGrid(){
@@ -162,18 +167,18 @@ startBtn.onclick = function(){
 };
 
 function loadFullExamData(){
-  var x = new XMLHttpRequest();
-  x.open('GET', 'data/topics/' + selectedExam + '.json?' + Date.now(), true);
-  x.onload = function(){
-    if (x.status === 200) {
-      try {
-        var d = JSON.parse(x.responseText);
-        buildQuestions(d);
-      } catch(e) { resetStartBtn(); }
-    } else { resetStartBtn(); }
-  };
-  x.onerror = function(){ resetStartBtn(); };
-  x.send();
+  if (location.protocol === 'file:') {
+    loadScript('data/topics/' + selectedExam + '.js', function(err){
+      if (err) { resetStartBtn(); return; }
+      if (window.__examData) { buildQuestions(window.__examData); }
+      else { resetStartBtn(); }
+    });
+    return;
+  }
+  fetch('data/topics/' + selectedExam + '.json?' + Date.now())
+    .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(d){ buildQuestions(d); })
+    .catch(function(){ resetStartBtn(); });
 }
 
 function resetStartBtn(){

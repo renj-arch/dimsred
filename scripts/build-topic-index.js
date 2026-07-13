@@ -53,6 +53,8 @@ for (var f of files) {
   // Write per-exam file
   var examData = { exam: key, name: EXAM_NAMES[key], total: raw.questions.length, sections: sectionList };
   fs.writeFileSync(path.join(topicDir, key + '.json'), JSON.stringify(examData));
+  // JS version for file:// (script tag loading)
+  fs.writeFileSync(path.join(topicDir, key + '.js'), 'window.__examData=' + JSON.stringify(examData) + ';');
 
   // Add lightweight entry to master index
   masterIndex[key] = {
@@ -63,11 +65,10 @@ for (var f of files) {
   totalQuestions += raw.questions.length;
 }
 
-fs.writeFileSync(indexFile, JSON.stringify({
-  updatedAt: new Date().toISOString(),
-  totalQuestions: totalQuestions,
-  exams: masterIndex
-}, null, 2));
+var indexData = { updatedAt: new Date().toISOString(), totalQuestions: totalQuestions, exams: masterIndex };
+fs.writeFileSync(indexFile, JSON.stringify(indexData, null, 2));
+// JS version for file:// (script tag loading)
+fs.writeFileSync(path.join(dataDir, 'topic-index.js'), 'window.__topicIndex=' + JSON.stringify(indexData) + ';');
 
 console.log('Topic index built: ' + Object.keys(masterIndex).length + ' exams, ' + totalQuestions + ' questions');
 console.log('Per-exam files in data/topics/');
