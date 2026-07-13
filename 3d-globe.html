@@ -6557,7 +6557,7 @@ function flyToStep(idx){
   s.beacons.push(createPulseBeacon(step.la,step.ln,s.cat.color||'#fb923c'));
 
   // Fly camera to step location with cinematic arc
-  const targetPos=ll(step.la,step.ln,R*1.7);
+  const targetPos=ll(step.la+0.06,step.ln+0.08,R*1.7);
   targetPos.applyQuaternion(EG.quaternion);
   const startPos=cam.position.clone();
   const midPoint=new THREE.Vector3().addVectors(startPos,targetPos).multiplyScalar(0.5);
@@ -6670,7 +6670,7 @@ document.getElementById('tlReplayBtn').addEventListener('click',()=>{
   s.active=true;
   // Reset camera to step location and replay
   const step=s.steps[idx];
-  const target=ll(step.la,step.ln,R*1.7);
+  const target=ll(step.la+0.06,step.ln+0.08,R*1.7);
   target.applyQuaternion(EG.quaternion);
   cam.position.copy(target);
   ctrl.update();
