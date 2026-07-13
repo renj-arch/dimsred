@@ -5310,7 +5310,8 @@ function mkLbl(text,col,scale=0.12){
     allMarkers.push({el:pin,lbl,data:d,cat:k,pos});
     // Pulse ring for important categories
     if(['capital','unesco','w_unesco','wonder','biosphere','national_park','w_np','tiger','ramsar'].includes(k)){
-      const ring=new THREE.Mesh(new THREE.RingGeometry(0.008,0.024,24),new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:0.5,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending}));
+      const isNP=k==='national_park'||k==='w_np';
+      const ring=new THREE.Mesh(new THREE.RingGeometry(isNP?0.004:0.008,isNP?0.012:0.024,24),new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:0.5,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending}));
       ring.position.copy(pos);
       const r2=ring.clone();r2.material=ring.material.clone();r2.material.opacity=0.2;
       r2.scale.set(1.8,1.8,1);
