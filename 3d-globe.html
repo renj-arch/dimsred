@@ -725,8 +725,8 @@ D.river = [
   {n:'Palar',la:12.85,ln:79.1,sub:'348 km � Karnataka to Bay of Bengal',desc:'Important river of northern Tamil Nadu. Originates from Nandidurg (Karnataka) in the Chikkaballapur district. Flows through Vellore, Tiruvannamalai, and Kanchipuram districts. Known for Palar River basin agriculture and the Palar anicuts for irrigation.',fact:'Originates from Nandidurg � Flows through Vellore � Palar anicuts � Seasonal river prone to flooding',pts:[{la:12.85,ln:79.1},{la:12.92,ln:79.25},{la:13,ln:79.4},{la:13.1,ln:79.55},{la:13.2,ln:79.7},{la:13.3,ln:79.85}],tag:''},
 
 ,
-  {n:'Barak River',la:24.367348,ln:91.215521,sub:'Mizoram · 900 km',desc:'The Barak River is a trans-boundary river in India and Bangladesh. It flows 900 kilometres through the states of Manipur, Mizoram and Assam in India. It flows into Bangladesh where it bifurcates into the Surma River and the Kushiyara River which converge again to become the Meghna River before forming the Ganges Delta.',fact:'Of its total length, 524 km is in India, 31 km in Bangladesh · The upper part of its navigable part is in India — 121 km between Lakhipur and Bhanga, declared as National Waterway 16, since the year 2016 · It drains a basin of 52,000 km² , of which 41,723 km² lies in India, 1.38% of the country · It flows 900 kilometres through the states of Manipur, Mizoram and Assam in India',tag:''},
-  {n:'Surma River',la:24.184342,ln:90.994552,sub:'900 km',desc:'The Surma is a major transboundary river in Bangladesh and Assam, part of the Surma-Meghna River System. It starts when the Barak River from northeast India divides at the Bangladesh border into the Surma and the Kushiyara rivers at the junction of Cachar and Karimganj districts. It ends in Kishoreganj District, above Bhairab Bāzār, where the two rivers rejoin to form the Meghna River, which ultimately flows into the Bay of Bengal in Bhola District.',fact:'It ends in Kishoreganj District, above Bhairab Bāzār, where the two rivers rejoin to form the Meghna River, which ultimately flows into the Bay of Bengal in Bhola District · It starts when the Barak River from northeast India divides at the Bangladesh border into the Surma and the Kushiyara rivers at the junction of Cachar and Karimganj districts',tag:''},
+  {n:'Barak River',la:24.367348,ln:91.215521,sub:'Mizoram · 900 km',desc:'The Barak River is a trans-boundary river in India and Bangladesh. It flows 900 kilometres through the states of Manipur, Mizoram and Assam in India. It flows into Bangladesh where it bifurcates into the Surma River and the Kushiyara River which converge again to become the Meghna River before forming the Ganges Delta.',fact:'Of its total length, 524 km is in India, 31 km in Bangladesh · The upper part of its navigable part is in India — 121 km between Lakhipur and Bhanga, declared as National Waterway 16, since the year 2016 · It drains a basin of 52,000 km² , of which 41,723 km² lies in India, 1.38% of the country · It flows 900 kilometres through the states of Manipur, Mizoram and Assam in India',tag:'',pts:[{la:25.20,ln:94.30},{la:24.90,ln:93.80},{la:24.60,ln:93.20},{la:24.80,ln:92.80},{la:24.90,ln:92.50},{la:24.60,ln:92.00},{la:24.50,ln:91.20}]},
+  {n:'Surma River',la:24.184342,ln:90.994552,sub:'900 km',desc:'The Surma is a major transboundary river in Bangladesh and Assam, part of the Surma-Meghna River System. It starts when the Barak River from northeast India divides at the Bangladesh border into the Surma and the Kushiyara rivers at the junction of Cachar and Karimganj districts. It ends in Kishoreganj District, above Bhairab Bāzār, where the two rivers rejoin to form the Meghna River, which ultimately flows into the Bay of Bengal in Bhola District.',fact:'It ends in Kishoreganj District, above Bhairab Bāzār, where the two rivers rejoin to form the Meghna River, which ultimately flows into the Bay of Bengal in Bhola District · It starts when the Barak River from northeast India divides at the Bangladesh border into the Surma and the Kushiyara rivers at the junction of Cachar and Karimganj districts',tag:'',pts:[{la:24.50,ln:91.20},{la:24.80,ln:91.50},{la:24.90,ln:91.80},{la:24.80,ln:91.60},{la:24.50,ln:91.30},{la:24.20,ln:90.90}]},
 ];
 D.peak = [
   {n:'K2',la:35.88,ln:76.51,sub:'8611 m · Karakoram · World\'s 2nd',desc:'Second highest on Earth. Known as Mount Godwin-Austen. In Karakoram range, Ladakh (POK). First ascent 1954 by Italian team.',fact:'Deadliest peak after Annapurna · "Savage Mountain" · Abruzzi Spur route'},
@@ -5362,18 +5362,20 @@ function mkLbl(text,col,scale=0.12){
       allMarkers.push({el:pin,lbl,data:d,cat:k,pos:lblPos||end});
     }
     // Flow animation dots for rivers
-    if((k==='river'||k==='w_river')&&d.pts&&d.pts.length>=3){
+    if((k==='river'||k==='w_river'||k==='railway')&&d.pts&&d.pts.length>=3){
       const curve=new THREE.CatmullRomCurve3(pts);
       d._curve=curve;
       const dotMat=new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:0.8});
       d._flowDots=[];
-      for(let i=0;i<4;i++){
-        const dot=new THREE.Mesh(new THREE.SphereGeometry(tubeRad*2,8,8),dotMat);
-        const t=i/4;
+      const dotCount=k==='railway'?6:4;
+      const dotRad=k==='railway'?tubeRad*1.2:tubeRad*0.7;
+      for(let i=0;i<dotCount;i++){
+        const dot=new THREE.Mesh(new THREE.SphereGeometry(dotRad,8,8),dotMat);
+        const t=i/dotCount;
         const p=curve.getPoint(t);
         dot.position.copy(p);
         g.add(dot);
-        const spd=0.0015+Math.random()*0.0015;
+        const spd=k==='railway'?0.003+Math.random()*0.003:0.0015+Math.random()*0.0015;
         d._flowDots.push({mesh:dot,t,curve,speed:spd,_origSpeed:spd,_origColor:catColors[k]});
       }
     }
