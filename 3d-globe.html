@@ -5275,11 +5275,9 @@ function clearHighlight(){
 function setHighlight(lat,lng,color='#ff4444'){
   clearHighlight();
   const pos=ll(lat,lng,1.008);
-  const g=new THREE.Group();
-  const core=new THREE.Mesh(new THREE.SphereGeometry(0.02,12,12),new THREE.MeshBasicMaterial({color,transparent:true,opacity:0.95}));
-  const glow=new THREE.Mesh(new THREE.SphereGeometry(0.04,12,12),new THREE.MeshBasicMaterial({color,transparent:true,opacity:0.12}));
-  g.add(core);g.add(glow);
+  const g=mkPin(color,0.018,'pin');
   g.position.copy(pos);
+  g.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),pos.clone().normalize());
   EG.add(g);
   _selHighlight=g;
 }
