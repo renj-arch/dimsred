@@ -5746,26 +5746,25 @@ function startAutoPlay(k,items){
     if(vb){vb.style.color='rgba(255,255,255,.5)';vb.textContent='◉';}
   }
   rotating=true;
-  let idx=0;
   const btn=document.querySelector(`[data-ap="${k}"]`);
   function next(){
     if(!_ap){rotating=false;return;}
-    if(idx>=items.length)idx=0; // loop
-    const item=items[idx];
+    if(_ap.idx>=items.length)_ap.idx=0;
+    const item=items[_ap.idx];
     const hasPos = item.la||item.ln||(item.pts&&item.pts.length);
     if(hasPos){
       flyTo(item,CAT[k],k);
-      if(btn)btn.textContent=(idx+1)+'/'+items.length;
-      const cur=idx;
+      if(btn)btn.textContent=(_ap.idx+1)+'/'+items.length;
+      const cur=_ap.idx;
       speakText(item.n+'. '+(item.sub||''),()=>{
         if(!_ap)return;
-        idx=cur+1;
-        if(idx>=items.length)idx=0;
+        _ap.idx=cur+1;
+        if(_ap.idx>=items.length)_ap.idx=0;
         _ap.timeout=setTimeout(next,2000);
       });
     }else{
-      idx++;
-      if(idx>=items.length)idx=0;
+      _ap.idx++;
+      if(_ap.idx>=items.length)_ap.idx=0;
       _ap.timeout=setTimeout(next,800); // skip faster
     }
   }
