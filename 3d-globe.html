@@ -5945,7 +5945,7 @@ function flyTo(item,cat,k){
   const midIdx=Math.floor((d.pts||[]).length/2);
   const useLa=d.pts&&d.pts[midIdx]?d.pts[midIdx].la:d.la||0;
   const useLn=d.pts&&d.pts[midIdx]?d.pts[midIdx].ln:d.ln||0;
-  const pos=ll(useLa,useLn,R*2.2);
+  const pos=ll(useLa+0.06,useLn+0.08,R*2.2);
   pos.applyQuaternion(EG.quaternion);
   const start=cam.position.clone(),st=Date.now(),dur=1200;
   function anim(){
@@ -6760,7 +6760,7 @@ anim();
 
 // ---- Camera flyTo helper (just move, no detail panel) ----
 function flyToLatLon(la,ln,radius,callback){
-  const pos=ll(la,ln,radius||R*1.7);
+  const pos=ll(la+0.06,ln+0.08,radius||R*1.7);
   pos.applyQuaternion(EG.quaternion);
   const start=cam.position.clone(),st=Date.now(),dur=1400;
   function tick(){
