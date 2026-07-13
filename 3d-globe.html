@@ -5151,12 +5151,12 @@ function mkGeom(shape,sz){
     case'pin':{
       const s=sz;
       const pts=[
-        new THREE.Vector2(0.001,s*2.8),
-        new THREE.Vector2(s*1.0,s*2.8),
-        new THREE.Vector2(s*1.0,s*2.2),
-        new THREE.Vector2(s*0.12,s*2.0),
-        new THREE.Vector2(s*0.1,s*-1.5),
-        new THREE.Vector2(0.001,s*-2.0),
+        new THREE.Vector2(0.001,0),
+        new THREE.Vector2(s*0.08,s*0.5),
+        new THREE.Vector2(s*0.12,s*4.0),
+        new THREE.Vector2(s*1.0,s*4.5),
+        new THREE.Vector2(s*1.0,s*5.2),
+        new THREE.Vector2(0.001,s*5.2),
       ];
       return new THREE.LatheGeometry(pts,14);
     }
