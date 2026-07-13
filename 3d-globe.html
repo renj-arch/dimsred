@@ -5148,7 +5148,19 @@ function mkGeom(shape,sz){
     case'diamond':return new THREE.OctahedronGeometry(sz*1.6);
     case'ring':return new THREE.RingGeometry(sz*0.6,sz*1.6,8);
     case'pyramid':return new THREE.TetrahedronGeometry(sz*1.8);
-    case'pin':return new THREE.ConeGeometry(sz*1.2,sz*2.8,6);
+    case'pin':{
+      const pts=[
+        new THREE.Vector2(0.001,sz*2.0),
+        new THREE.Vector2(sz*0.6,sz*1.6),
+        new THREE.Vector2(sz*0.9,sz*1.0),
+        new THREE.Vector2(sz*1.0,sz*0.4),
+        new THREE.Vector2(sz*0.8,sz*-0.2),
+        new THREE.Vector2(sz*0.5,sz*-0.8),
+        new THREE.Vector2(sz*0.2,sz*-1.4),
+        new THREE.Vector2(0.001,sz*-2.0),
+      ];
+      return new THREE.LatheGeometry(pts,14);
+    }
     default:return new THREE.SphereGeometry(sz,8,8);
   }
 }
@@ -5363,7 +5375,9 @@ function mkLbl(text,col,scale=0.12){
     const end=pts[pts.length-1];
     if(end&&k!=='range'){
       const pin=mkPin(catColors[k],0.005,k);
-      pin.position.copy(end);g.add(pin);
+      pin.position.copy(end);
+      pin.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),end.clone().normalize());
+      g.add(pin);
       allMarkers.push({el:pin,lbl,data:d,cat:k,pos:lblPos||end});
     }
     // Flow animation dots for rivers
