@@ -5769,7 +5769,8 @@ function startAutoPlay(k,items){
       _ap.timeout=setTimeout(next,800); // skip faster
     }
   }
-  _ap={k,idx:0,items,timeout:null};
+  _ap={k,idx:0,items,timeout:null,paused:false,next:null};
+  _ap.next=next;
   if(btn){btn.textContent='⏹';btn.style.color='#a78bfa';}
   next();
 }
@@ -5795,6 +5796,13 @@ function buildPanel(){
       const it=document.createElement('div');it.className='lay-it';
       it.innerHTML=`<span class="dot" style="background:${cat.color}"></span><span class="lbl">${item.n}</span>`;
       it.addEventListener('click',()=>{
+        if(_ap&&_ap.k===k&&_ap.next){
+          if(_ap.timeout)clearTimeout(_ap.timeout);
+          if(window.speechSynthesis)speechSynthesis.cancel();
+          const idx=items.indexOf(item);
+          if(idx!==-1){_ap.idx=idx;_ap.paused=false;_ap.next();}
+          return;
+        }
         if(_ap)stopAutoPlay();
         if(k==='kingdom'||k==='w_kingdom'){
           const wasSame=allMarkers.some(m=>(m.cat===k||m.cat===k)&&m._mesh&&m._kingdomSelected===item);
@@ -5829,7 +5837,19 @@ function buildPanel(){
     if(apBtn){apBtn.dataset.ap=k;
       apBtn.addEventListener('click',(e)=>{
         e.stopPropagation();
-        if(_ap&&_ap.k===k){stopAutoPlay();return;}
+        if(_ap&&_ap.k===k){
+          if(_ap.paused){
+            _ap.paused=false;apBtn.textContent='⏸';apBtn.style.color='#a78bfa';
+            if(_ap.next)_ap.next();
+          }else{
+            _ap.paused=true;
+            if(_ap.timeout)clearTimeout(_ap.timeout);
+            if(window.speechSynthesis)speechSynthesis.cancel();
+            apBtn.textContent='▶';apBtn.style.color='#fbbf24';
+            document.getElementById('subtitle').classList.remove('show');
+          }
+          return;
+        }
         startAutoPlay(k,items);
       });
     }
