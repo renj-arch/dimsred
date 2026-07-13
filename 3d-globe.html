@@ -5148,6 +5148,7 @@ function mkGeom(shape,sz){
     case'diamond':return new THREE.OctahedronGeometry(sz*1.6);
     case'ring':return new THREE.RingGeometry(sz*0.6,sz*1.6,8);
     case'pyramid':return new THREE.TetrahedronGeometry(sz*1.8);
+    case'pin':return new THREE.ConeGeometry(sz*1.2,sz*2.8,6);
     default:return new THREE.SphereGeometry(sz,8,8);
   }
 }
@@ -5169,6 +5170,7 @@ const SHAPE_MAP={
   w_landmark:'diamond',
   w_kingdom:'pyramid',
   kingdom:'pyramid',
+  river:'pin',w_river:'pin',
   strait:'ring',
   desert:'sphere',
   lake:'sphere',
@@ -5211,8 +5213,11 @@ function mkPin(col,sz=0.008,cat=''){
   const g=mkGeom(shape,sz);
   const m=new THREE.MeshStandardMaterial({color:col,emissive:col,emissiveIntensity:0.3});
   const sp=new THREE.Mesh(g,m);
-  const gl=new THREE.Mesh(new THREE.SphereGeometry(sz*1.5,6,6),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.06}));
-  const gr=new THREE.Group();gr.add(sp);gr.add(gl);
+  const gr=new THREE.Group();gr.add(sp);
+  if(shape!=='pin'){
+    const gl=new THREE.Mesh(new THREE.SphereGeometry(sz*1.5,6,6),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:0.06}));
+    gr.add(gl);
+  }
   return gr;
 }
 
@@ -5357,7 +5362,7 @@ function mkLbl(text,col,scale=0.12){
     // End pin (skip for range)
     const end=pts[pts.length-1];
     if(end&&k!=='range'){
-      const pin=mkPin(catColors[k],0.005);
+      const pin=mkPin(catColors[k],0.005,k);
       pin.position.copy(end);g.add(pin);
       allMarkers.push({el:pin,lbl,data:d,cat:k,pos:lblPos||end});
     }
@@ -5731,6 +5736,7 @@ const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway',
 
 // Auto-play state
 let _ap=null; // {k, idx, items, timeout}
+let _apTick=0;
 function stopAutoPlay(){
   if(_ap){clearTimeout(_ap.timeout);_ap=null;rotating=false;
     document.querySelectorAll('.ap-btn').forEach(b=>{b.textContent='▶';b.style.color='rgba(255,255,255,.35)'});
@@ -5755,9 +5761,9 @@ function startAutoPlay(k,items){
     if(hasPos){
       flyTo(item,CAT[k],k);
       if(btn)btn.textContent=(_ap.idx+1)+'/'+items.length;
-      const cur=_ap.idx;
+      const cur=_ap.idx,tick=_ap.tick;
       speakText(item.n+'. '+(item.sub||''),()=>{
-        if(!_ap)return;
+        if(!_ap||_ap.tick!==tick)return;
         _ap.idx=cur+1;
         if(_ap.idx>=items.length)_ap.idx=0;
         _ap.timeout=setTimeout(next,2000);
@@ -5768,7 +5774,7 @@ function startAutoPlay(k,items){
       _ap.timeout=setTimeout(next,800); // skip faster
     }
   }
-  _ap={k,idx:0,items,timeout:null,paused:false,next:null};
+  _ap={k,idx:0,items,timeout:null,paused:false,next:null,tick:++_apTick};
   _ap.next=next;
   if(btn){btn.textContent='⏹';btn.style.color='#a78bfa';}
   next();
@@ -5799,7 +5805,7 @@ function buildPanel(){
           if(_ap.timeout)clearTimeout(_ap.timeout);
           if(window.speechSynthesis)speechSynthesis.cancel();
           const idx=items.indexOf(item);
-          if(idx!==-1){_ap.idx=idx;_ap.paused=false;_ap.next();}
+          if(idx!==-1){_ap.idx=idx;_ap.paused=false;_ap.tick=++_apTick;_ap.next();}
           return;
         }
         if(_ap)stopAutoPlay();
@@ -5841,7 +5847,7 @@ function buildPanel(){
             _ap.paused=false;apBtn.textContent='⏸';apBtn.style.color='#a78bfa';
             if(_ap.next)_ap.next();
           }else{
-            _ap.paused=true;
+            _ap.paused=true;_ap.tick=++_apTick;
             if(_ap.timeout)clearTimeout(_ap.timeout);
             if(window.speechSynthesis)speechSynthesis.cancel();
             apBtn.textContent='▶';apBtn.style.color='#fbbf24';
