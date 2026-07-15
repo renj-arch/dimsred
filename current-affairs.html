@@ -7003,6 +7003,32 @@ var _staticGen_polity = GK_GENERATORS.polity;
             else if (s === 'loaded') el.innerHTML = '<span style="color:var(--emerald)">loaded</span>';
             else el.innerHTML = '<span style="color:var(--text-muted)">ready</span>';
         }
+        function _titleCase(str) {
+            var knownUpper = ['PM-KISAN','Ayushman Bharat','PM Jan Dhan','PM Mudra','PM Fasal Bima','PM Ujjwala','PM SVANidhi','PM Gati Shakti','PM Awas Yojana','PM-JANMAN','NIPU-2026','BioE3','Startup India','Stand-Up India','Make in India','Skill India','Digital India','Jal Jeevan Mission','Swachh Bharat','PM Modi','DRDO','ISRO','ICAR','NDDB','MCD','DGR','IICA','PNB','NIPER','UPPPC','NITI Aayog','UPSC','CAG','RBI','SEBI','NABARD','SIDBI','EXIM Bank','FCI','CACP','NTCA','CPCB','ASI','WHO','IMF','ADB','AIIB','NDB','UNESCO','UNICEF','UNDP','UNEP','ILO','FAO','IAEA','INTERPOL','SCO','QUAD','ASEAN','SAARC','BRICS','G20','IBSA','FIPIC','IORA','BIMSTEC','ISA','CDRI','IPEF','RCEP','INSTC','NSG','MTCR','FATF','UNCAC','UNSC','UNGA','UNFCCC','COP','OPEC','IRDAI','PFRDA','NHAI','NHPC','NPCC','CPWD','NTRO','NIC','NKN','NMEO','NMHS','NMSA','NMSH','NMEEE','NRSC','NSC','NSDC','NSSO','NTPC','ONGC','PFC','PGCIL','REC','RVNL','SJVN','THDC','NBCC','HSCC','HUDCO','HEPC','SSC','CGL','NEET','JEE','GATE','NDA','CDS','AIF','REIT','InvIT','KYC','PAN','FPO','FII','FPI','ETF','IPO','AQR','NPA','PCR','RoA','RoE','NIM','MCLR','CPI','WPI','MPC','RRB','NBFC','HFC','CBDC','UPI','IMPS','NEFT','RTGS','GST','RERA','IGST','SGST','CGST','UTGST','e-NAM','PLI','FAME','MGNREGA','POSHAN','SVAMITVA','CVC','CBI','CIC','NHRC','NCW','NCBC','LWE','PVTG','POCSO','SHG','NRLM','CAA','NRC','RTI','FRBM','BPL','AIIMS','IIT','NIT','IIM','IIIT','ISI','CISF','BSF','ITBP','SSB','CRPF','NSG','RAW','IB','NIA','ED','CVC','CIC','NHRC','NCW','NCBC','OBC','SC','ST','SRO','SAT','DRT','NCLT','NCLAT','CCI','RERA','IBC'];
+            var knownLower = ['of','the','and','for','with','in','on','at','to','by','an','a','its','their','from'];
+            if (knownUpper.indexOf(str) >= 0) return str;
+            var isAllUpper = str.length >= 2 && str === str.toUpperCase() && /[A-Z]/.test(str);
+            if (isAllUpper && str.length <= 6) return str;
+            return str.split(/\s+/).map(function(word, idx) {
+                if (knownLower.indexOf(word.toLowerCase()) >= 0 && idx > 0) return word.toLowerCase();
+                var wu = word.toUpperCase();
+                if (knownUpper.indexOf(wu) >= 0) return wu;
+                if (word.indexOf('-') >= 0) {
+                    return word.split('-').map(function(part, pi) { return pi === 0 ? part.charAt(0).toUpperCase() + part.slice(1).toLowerCase() : part.charAt(0).toUpperCase() + part.slice(1).toLowerCase(); }).join('-');
+                }
+                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+            }).join(' ');
+        }
+
+        function _verbPast(verb) {
+            var map = { 'inaugurates':'inaugurated','launches':'launched','unveils':'unveiled','addresses':'addressed','releases':'released','opens':'opened','flags off':'flagged off','dedicates to the nation':'dedicated to the nation','organises':'organised','invites':'invited','issues':'issued','notifies':'notified','constitutes':'constituted','publishes':'published','announces':'announced','explores':'explored','conducts':'conducted','signs':'signed','strengthens':'strengthened','deepens':'deepened','reviews':'reviewed','holds':'held','launches for':'launched','agrees':'agreed','discusses':'discussed','cooperates':'cooperated','participates in':'participated in','chairs':'chaired','presides over':'presided over','visits':'visited','enters into':'entered into','congratulates':'congratulated','flags off':'flagged off','begins':'began','orders':'ordered','attends':'attended','interacts with':'interacted with','chaired':'chaired','visited':'visited','reviewed':'reviewed','began':'began','ordered':'ordered','attended':'attended','addressed':'addressed','released':'released','launched':'launched','inaugurated':'inaugurated','unveiled':'unveiled','opened':'opened','flagged off':'flagged off','dedicated':'dedicated' };
+            var vl = verb.toLowerCase().replace(/s$/, '');
+            if (vl.match(/e$/)) return map[verb.toLowerCase()] || map[vl] || vl + 'd';
+            return map[verb.toLowerCase()] || map[vl] || vl + 'ed';
+        }
+
+        var _pibStopWords = ['PRESS RELEASE','THE HINDU','TIMES OF INDIA','INDIAN EXPRESS','DAILY NEWS','TODAY','NEWS','ALERT','BREAKING','UPDATES','PIB','MINISTRY OF INFORMATION','GOVERNMENT OF INDIA','WHO\'S WHO','WHAT\'S WHAT','HAPPENING','UPCOMING','NAMASTE','QUALITY HEALTHCARE','AIM SUMVAAD','COMBINED GEO','LOKAYAN','NIESBUD','PERIODIC LABOUR FORCE','CONSUMER PRICE INDEX','MUST REACH THE LAST','BHASHINI DIVISION','FORGE STRATEGIC'];
+
         function _pibMakeQuestion(title, source) {
             var t = title.replace(/\s+/g, ' ').trim();
             var tLower = t.toLowerCase();
@@ -7018,8 +7044,8 @@ var _staticGen_polity = GK_GENERATORS.polity;
             // Pattern 1: "President/PM/VP/Minister X inaugurates/launches/unveils Y" → Who?
             var m = t.match(/^(President\s+of\s+India|Vice-President|Prime Minister|President|PM|Union Minister|Home Minister|Finance Minister|Defence Minister|Education Minister|Health Minister|Dr\.\s+[\w\s]+|Shri\s+[\w\s]+)\s+(inaugurates?|launches?|unveils?|addresses?|participates?\s+in|releases?|opens?|flags\s+off|dedicates?\s+to\s+the\s+nation)\s+(.+)/i);
             if (m) {
-                var person = m[1].replace(/\s+Smt\.?\s*/i, ' ').replace(/\s+Shri\s*/i, ' ').trim();
-                var action = m[2].replace(/s$/, '').replace(/^inaugurat/, 'inaugurat');
+                var person = _titleCase(m[1].replace(/\s+Smt\.?\s*/i, ' ').replace(/\s+Shri\s*/i, ' ').trim());
+                var action = _verbPast(m[2]);
                 var obj = m[3].replace(/\s+IN\s+/i, ' in ').replace(/['\u2018\u2019]/g, '').replace(/['\u201C\u201D]/g, '').trim();
                 if (obj.length > 60) obj = obj.substring(0, 57) + '...';
                 return { q: 'Who ' + action + ' ' + obj + '?', a: person, hint: 'PIB: ' + subject };
@@ -7037,8 +7063,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             m = t.match(/^(Ministry\s+of\s+[\w\s&]+)\s+(signs?|issues?|invites?|launches?|organises?|releases?|notifies?|constitutes?|approves?|frames?|publishes?|announces?)/i);
             if (m) {
                 var ministry = m[1].trim();
-                var action2 = m[2].replace(/s$/, '');
-                // Find the target of the action
+                var action2 = _verbPast(m[2]);
                 var rest = t.substring(m.index + m[0].length).trim();
                 var target = rest.split(/with|for|to\s+|on\s+/)[0].trim();
                 if (target.length < 5 || target.length > 50) target = '';
@@ -7058,17 +7083,19 @@ var _staticGen_polity = GK_GENERATORS.polity;
             // Pattern 5: "India and X explore/conduct/cooperate on Y" → Which country?
             m = t.match(/^India\s+and\s+(.+?)\s+(explore|conduct|sign|strengthen|deepen|review|hold|launch|agree|discuss|cooperate)/i);
             if (m) {
-                var partner2 = m[1].trim();
-                return { q: 'With which country did India ' + m[2].replace(/s$/, '') + ' this partnership?', a: partner2, hint: 'PIB: International Relations' };
+                var partner2 = _titleCase(m[1].trim());
+                return { q: 'With which country did India ' + _verbPast(m[2]) + ' this partnership?', a: partner2, hint: 'PIB: International Relations' };
             }
 
-            // Pattern 6: "Dr./Shri/Smt X does Y" → Who is the person?
-            m = t.match(/^(Dr\.\s+[\w\s]+|Shri\s+[\w\s]+|Smt\.\s+[\w\s]+)\s+(launches?|inaugurates?|unveils?|addresses?|participates?\s+in|releases?|opens?|flags?\s+off|dedicates?|chairs?|presides?\s+over|visits?)\s+(.+)/i);
+            // Pattern 6: "Union Minister / Dr. / Shri / Smt X does Y" → Who is the person?
+            m = t.match(/^(Union\s+(?:Minister|Home Minister|Minister of|Minister for|Minister of State)\s+[\w&,.]+(?:\s+[\w&,.]+){0,6}|Dr\.\s+[\w&,.]+(?:\s+[\w&,.]+){0,6}|Shri\s+[\w&,.]+(?:\s+[\w&,.]+){0,6}|Smt\.\s+[\w&,.]+(?:\s+[\w&,.]+){0,6}|President\s+of\s+India|Prime Minister|Chief Minister|Raksha Mantri|Railway Minister|Home Minister|Finance Minister|Defence Minister|Education Minister|Health Minister|Vice President)\s+(launches?|inaugurates?|unveils?|addresses?|participates?\s+in|releases?|opens?|flags?\s+off|dedicates?|chairs?|presides?\s+over|visits?|reviews?|begins?|orders?|attends?|congratulates?|interacts?\s+with|unveils?|chaired|visited|reviewed|began|addressed|released|launched|inaugurated)\s+(.+)/i);
             if (m) {
-                var who = m[1].trim();
-                var action3 = m[2].replace(/s$/, '');
-                var what = m[3].substring(0, 60).replace(/\([^)]*\)/g, '').trim();
-                return { q: 'Who ' + action3 + ' ' + what + '?', a: who, hint: 'PIB: ' + subject };
+                var who6 = m[1].trim();
+                var action6 = _verbPast(m[2]);
+                var what6 = m[3].substring(0, 60).replace(/\([^)]*\)/g, '').trim();
+                if (who6.length > 3) {
+                    return { q: 'Who ' + action6 + ' ' + what6 + '?', a: _titleCase(who6), hint: 'PIB: ' + subject };
+                }
             }
 
             // Pattern 7: "X AND Y sign/agree/partner" → extract partner
@@ -7076,19 +7103,45 @@ var _staticGen_polity = GK_GENERATORS.polity;
             if (m) {
                 var partner3 = m[2].trim();
                 if (partner3.length < 50 && partner3.length > 2) {
-                    return { q: 'With which entity did ' + m[1].trim() + ' partner?', a: partner3, hint: 'PIB: ' + subject };
+                    var skipPartner = false;
+                    for (var si = 0; si < _pibStopWords.length; si++) { if (partner3.toUpperCase().indexOf(_pibStopWords[si].toUpperCase()) >= 0) { skipPartner = true; break; } }
+                    if (!skipPartner) {
+                        return { q: 'With which entity did ' + m[1].trim() + ' partner?', a: partner3, hint: 'PIB: ' + subject };
+                    }
                 }
             }
 
-            // Pattern 8: Fallback — extract first known entity (case-insensitive)
+            // Pattern 8: "X to (inaugurate/launch/unveil) Y" (future tense)
+            m = t.match(/^(President\s+of\s+India|Vice-President|Union Home Minister|Home Minister|Union Minister|Prime Minister|President|PM|Dr\.\s+[\w\s]+|Shri\s+[\w\s]+)\s+(?:and\s+[\w\s]+\s+)?to\s+(inaugurate|launch|unveil|visit|release|address|flag off|dedicate|chair|preside over)\s+(.+)/i);
+            if (m) {
+                var person8 = _titleCase(m[1].trim());
+                var verb8 = m[2].replace(/s$/, '') + 'd';
+                var obj8 = m[3].replace(/[(][^)]*[)]/g, '').slice(0, 60).trim();
+                return { q: 'Who will ' + m[2] + ' ' + obj8 + '?', a: person8, hint: 'PIB: ' + subject };
+            }
+
+            // Pattern 8b: "X congratulates Y for Z" → Who?
+            m = t.match(/^(President\s+of\s+India|Vice-President|Union Home Minister|Home Minister|Union Minister|Prime Minister|President|PM|Dr\.\s+[\w\s]+|Shri\s+[\w\s]+)\s+congratulates\s+(.+)/i);
+            if (m) {
+                var person8b = _titleCase(m[1].trim());
+                return { q: 'Who offered congratulations in this PIB release?', a: person8b, hint: 'PIB: ' + subject };
+            }
+
+            // Pattern 9: Fallback — extract first known entity with context-appropriate question
             for (var ei = 0; ei < allItems.length; ei++) {
                 var eiLower = allItems[ei].toLowerCase();
                 if (tLower.indexOf(eiLower) >= 0) {
-                    return { q: 'Which entity is mentioned in this PIB release?', a: allItems[ei], hint: 'PIB: ' + subject };
+                    var found = allItems[ei];
+                    var qText = 'Which entity is mentioned in this PIB release?';
+                    for (var si9 = 0; si9 < knownSchemes.length; si9++) { if (found === knownSchemes[si9]) { qText = 'Which scheme is mentioned in this PIB release?'; break; } }
+                    if (qText === 'Which entity is mentioned in this PIB release?') { for (var mi9 = 0; mi9 < knownMins.length; mi9++) { if (found === knownMins[mi9]) { qText = 'Which ministry is mentioned in this PIB release?'; break; } } }
+                    if (qText === 'Which entity is mentioned in this PIB release?') { for (var oi9 = 0; oi9 < knownOrgs.length; oi9++) { if (found === knownOrgs[oi9]) { qText = 'Which organization is mentioned in this PIB release?'; break; } } }
+                    if (qText === 'Which entity is mentioned in this PIB release?') { for (var pi9 = 0; pi9 < knownPersons.length; pi9++) { if (found === knownPersons[pi9]) { qText = 'Who is mentioned in this PIB release?'; break; } } }
+                    return { q: qText, a: found, hint: 'PIB: ' + subject };
                 }
             }
 
-            // Pattern 9: Extract first all-caps acronym
+            // Pattern 10: Extract first all-caps acronym from known list
             var acro = t.match(/\b([A-Z]{2,}(?:\s+[A-Z]{2,})*)\b/g);
             if (acro) {
                 for (var ai = 0; ai < acro.length; ai++) {
@@ -7101,24 +7154,27 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 }
             }
 
-            // Pattern 10: Extract anything in ALL CAPS (likely an acronym or scheme name)
+            // Pattern 11: Extract short all-caps acronym/scheme name (max 3 words, non-generic)
             var allCapsWords = t.match(/\b([A-Z][A-Z0-9]{2,}(?:\s+[A-Z][A-Z0-9]{2,})*)\b/g);
             if (allCapsWords) {
                 for (var wi = 0; wi < allCapsWords.length; wi++) {
                     var w = allCapsWords[wi];
                     if (w.length >= 3 && w !== 'PIB' && w !== 'RBI' && w !== 'SEBI' && w !== 'SC' && w !== 'MEA' && w !== 'THE' && w !== 'AND' && w !== 'FOR' && w !== 'WITH' && w !== 'IN' && w !== 'OF' && w !== 'TO' && w !== 'AT' && w !== 'BY' && w !== 'ON') {
-                        // Capitalize properly
                         var words = w.split(/\s+/);
-                        var cap = words.map(function(word){ return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(); }).join(' ');
-                        if (cap.length > 2 && cap.length < 50) {
+                        if (words.length > 3) continue;
+                        var skip = false;
+                        for (var swi = 0; swi < _pibStopWords.length; swi++) { if (w.indexOf(_pibStopWords[swi]) >= 0) { skip = true; break; } }
+                        if (skip) continue;
+                        var cap = _titleCase(w);
+                        if (cap.length > 2 && cap.length < 50 && /[A-Za-z]/.test(cap)) {
                             return { q: 'Which organization/scheme is highlighted in this PIB release?', a: cap, hint: 'PIB: ' + subject };
                         }
                     }
                 }
             }
 
-            // Ultimate fallback: use subject as answer, present title as fact
-            return { q: 'Which area does this PIB release relate to?', a: subject, hint: 'PIB: ' + subject };
+            // Ultimate fallback: use subject as answer
+            return { q: 'Which sector does this PIB release pertain to?', a: subject, hint: 'PIB: ' + subject };
         }
 
         function loadPibQuestions(cb) {
@@ -7157,11 +7213,13 @@ var _staticGen_polity = GK_GENERATORS.polity;
                                 var oj = Math.floor(Math.random() * (oi + 1));
                                 var tmp = opts[oi]; opts[oi] = opts[oj]; opts[oj] = tmp;
                             }
+                            var factText = item.description || title;
+                            if (factText.length > 300) factText = factText.slice(0, 297) + '...';
                             qs.push({
                                 q: qInfo.q,
                                 a: qInfo.a,
                                 hint: qInfo.hint,
-                                fact: title + ' [' + item.source + ', ' + (item.pubDate || '').slice(0,10) + ']',
+                                fact: factText + ' [' + item.source + ', ' + (item.pubDate || '').slice(0,10) + ']',
                                 opts: opts,
                                 _source: 'pib_feed',
                                 pubDate: item.pubDate,
