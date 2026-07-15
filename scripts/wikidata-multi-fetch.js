@@ -389,7 +389,7 @@ const CFG = [
     id: 'glacier',
     label: 'Glaciers',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?stateLabel WHERE {
-      ?item wdt:P31 wd:Q35657. ?item wdt:P17 wd:Q668. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q35666. ?item wdt:P17 wd:Q668. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 40`,
@@ -461,8 +461,7 @@ const CFG = [
     id: 'w_kingdom',
     label: 'Historical Kingdoms & Empires',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?continentLabel WHERE {
-      { ?item wdt:P31 wd:Q48349. } UNION { ?item wdt:P31 wd:Q179191. } UNION { ?item wdt:P31 wd:Q1093599. }
-      ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q48349. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P30 ?continent. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 100`,
@@ -594,7 +593,7 @@ const CFG = [
     id: 'peninsula',
     label: 'Peninsulas',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q43795. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q34763. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -605,7 +604,7 @@ const CFG = [
     id: 'gulf',
     label: 'Gulfs',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      { ?item wdt:P31 wd:Q166. } UNION { ?item wdt:P31 wd:Q165. }
+      { ?item wdt:P31 wd:Q1322134. } UNION { ?item wdt:P31 wd:Q165. }
       ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
@@ -629,7 +628,7 @@ const CFG = [
     id: 'reef',
     label: 'Reefs',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q24641. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q184358. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -662,7 +661,7 @@ const CFG = [
     id: 'delta',
     label: 'River Deltas',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q181158. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q43197. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -673,7 +672,7 @@ const CFG = [
     id: 'plain',
     label: 'Plains',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q12315. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q160091. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -696,7 +695,7 @@ const CFG = [
     id: 'oil',
     label: 'Oil Fields',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q1154915. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q211748. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -707,7 +706,7 @@ const CFG = [
     id: 'current',
     label: 'Ocean Currents',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q129221. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q129558. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -764,7 +763,7 @@ const CFG = [
     id: 'w_gorge',
     label: 'Gorges',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q1251493. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q150784. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -786,7 +785,7 @@ const CFG = [
     id: 'w_geyser',
     label: 'Geysers',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q83514. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q83471. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 40`,
@@ -808,7 +807,7 @@ const CFG = [
     id: 'w_spring',
     label: 'Springs',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q79428. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q124714. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 40`,
@@ -819,8 +818,7 @@ const CFG = [
     id: 'w_coast',
     label: 'Coasts',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      { ?item wdt:P31 wd:Q93352. } UNION { ?item wdt:P31 wd:Q1200565. }
-      ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q93352. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -831,8 +829,7 @@ const CFG = [
     id: 'w_empire',
     label: 'Empires',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?continentLabel WHERE {
-      { ?item wdt:P31 wd:Q179191. } UNION { ?item wdt:P31 wd:Q48349. } UNION { ?item wdt:P31 wd:Q1093599. }
-      ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q48349. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P30 ?continent. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 100`,
@@ -854,7 +851,7 @@ const CFG = [
     id: 'w_revolution',
     label: 'Revolutions',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q12475716. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q115523701. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -876,7 +873,7 @@ const CFG = [
     id: 'w_disaster',
     label: 'Disasters',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q38908. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q3839081. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -898,7 +895,7 @@ const CFG = [
     id: 'metro',
     label: 'Metro Systems',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q152144. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q5503. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -909,8 +906,7 @@ const CFG = [
     id: 'waterway',
     label: 'Waterways',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      { ?item wdt:P31 wd:Q12284. } UNION { ?item wdt:P31 wd:Q184582. }
-      ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q1267889. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -921,7 +917,7 @@ const CFG = [
     id: 'w_trench',
     label: 'Oceanic Trenches',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q118620. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q119253. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 30`,
@@ -932,7 +928,7 @@ const CFG = [
     id: 'w_plate',
     label: 'Tectonic Plates',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord WHERE {
-      ?item wdt:P31 wd:Q373174. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q215680. ?item wdt:P625 ?coord.
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 30`,
     sub(b,s,a,i){ return ''; },
@@ -942,7 +938,6 @@ const CFG = [
     id: 'w_ww2',
     label: 'WWII Sites',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      { ?item wdt:P31 wd:Q201994. } UNION { ?item wdt:P31 wd:Q11943845. }
       ?item wdt:P361 wd:Q362. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
@@ -954,7 +949,6 @@ const CFG = [
     id: 'w_ww1',
     label: 'WWI Sites',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      { ?item wdt:P31 wd:Q201994. } UNION { ?item wdt:P31 wd:Q11943845. }
       ?item wdt:P361 wd:Q361. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
@@ -988,7 +982,7 @@ const CFG = [
     id: 'ocean',
     label: 'Oceans',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord WHERE {
-      ?item wdt:P31 wd:Q9439. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q9430. ?item wdt:P625 ?coord.
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 10`,
     sub(b,s,a,i){ return 'Ocean'; },
@@ -998,7 +992,7 @@ const CFG = [
     id: 'fjord',
     label: 'Fjords',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q46871. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q45776. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -1009,7 +1003,7 @@ const CFG = [
     id: 'atoll',
     label: 'Atolls',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q188779. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q42523. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -1020,7 +1014,7 @@ const CFG = [
     id: 'oasis',
     label: 'Oases',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q168414. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q43742. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -1031,7 +1025,7 @@ const CFG = [
     id: 'salt_flat',
     label: 'Salt Flats',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q867218. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q935277. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 40`,
@@ -1042,7 +1036,7 @@ const CFG = [
     id: 'mangrove',
     label: 'Mangrove Forests',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q19794. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q19756. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -1053,7 +1047,7 @@ const CFG = [
     id: 'ice_shelf',
     label: 'Ice Shelves',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q1474633. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q46966. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -1064,7 +1058,7 @@ const CFG = [
     id: 'ocean_ridge',
     label: 'Ocean Ridges',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord WHERE {
-      ?item wdt:P31 wd:Q190197. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q104698. ?item wdt:P625 ?coord.
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 40`,
     sub(b,s,a,i){ return 'Oceanic ridge'; },
@@ -1074,7 +1068,7 @@ const CFG = [
     id: 'seamount',
     label: 'Seamounts',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q219739. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q503269. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -1096,7 +1090,7 @@ const CFG = [
     id: 'ice_cap',
     label: 'Ice Caps & Sheets',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      VALUES ?type { wd:Q209814 wd:Q185441 }
+      VALUES ?type { wd:Q878077 wd:Q12599 }
       ?item wdt:P31 ?type. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
@@ -1108,7 +1102,7 @@ const CFG = [
     id: 'basin',
     label: 'Structural Basins',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q1421346. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q749565. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -1119,7 +1113,7 @@ const CFG = [
     id: 'crater',
     label: 'Volcanic Craters & Calderas',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      { ?item wdt:P31 wd:Q186690. } UNION { ?item wdt:P31 wd:Q193283. }
+      { ?item wdt:P31 wd:Q109391. } UNION { ?item wdt:P31 wd:Q159954. }
       ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
@@ -1131,7 +1125,7 @@ const CFG = [
     id: 'ecoregion',
     label: 'Ecoregions',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q295605. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q295469. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -1142,7 +1136,7 @@ const CFG = [
     id: 'estuary',
     label: 'Estuaries',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q134737. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q47053. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 40`,
@@ -1164,7 +1158,7 @@ const CFG = [
     id: 'mesa',
     label: 'Mesas & Buttes',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q285598. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q623319. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 40`,
@@ -1209,7 +1203,7 @@ const CFG = [
     id: 'spaceport',
     label: 'Spaceports & Launch Sites',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      { ?item wdt:P31 wd:Q118958. } UNION { ?item wdt:P31 wd:Q749571. } UNION { ?item wdt:P31 wd:Q189107. }
+      { ?item wdt:P31 wd:Q194188. } UNION { ?item wdt:P31 wd:Q1353183. }
       ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
@@ -1233,8 +1227,7 @@ const CFG = [
     id: 'wind_farm',
     label: 'Wind Farms',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      { ?item wdt:P31 wd:Q194356. } UNION { ?item wdt:P31 wd:Q194357. }
-      ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q194356. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -1256,7 +1249,7 @@ const CFG = [
     id: 'amusement_park',
     label: 'Amusement Parks',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q194348. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q194195. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
@@ -1300,7 +1293,7 @@ const CFG = [
     id: 'escarpment',
     label: 'Escarpments',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q118975. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q1174791. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 40`,
@@ -1311,7 +1304,7 @@ const CFG = [
     id: 'geopark',
     label: 'Global Geoparks',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
-      ?item wdt:P31 wd:Q776477. ?item wdt:P625 ?coord.
+      ?item wdt:P31 wd:Q1324355. ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY ?itemLabel LIMIT 60`,
