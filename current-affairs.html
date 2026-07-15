@@ -6905,6 +6905,16 @@ var _staticGen_polity = GK_GENERATORS.polity;
         }
         
 
+        function _isExamRelevant(q) {
+            var text = ((q.q||q.question||'') + ' ' + (q.a||q.answer||'') + ' ' + (q.fact||q.solution||'')).toLowerCase();
+            var nonExamWords = ['killed','killing','kills','kill','died','dies','death','deaths','dead','murder','murdered','shooting','shot','gunshot','explosion','blast','bomb','bombing','casualty','casualties','suicide','suicide bomber','massacre','assassination','assassinated','kidnapped','kidnapping','mass shooting','terrorist attack','terror attack','lynching','riots','riot','clash','clashes','firing','open fire','gunfire','stabbing','stabbed','beheaded','executed','execution','ambush','insurgency','militant','militants','militant attack','naxal attack','IED','shelling','bloodshed','war crime','war crimes','genocide','crimes against humanity'];
+            for (var wi = 0; wi < nonExamWords.length; wi++) {
+                var w = nonExamWords[wi];
+                if (w.indexOf(' ') > 0) { if (text.indexOf(w) !== -1) return false; }
+                else { var re = new RegExp('\\b' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i'); if (re.test(text)) return false; }
+            }
+            return true;
+        }
         function loadArchiveQuestions(cb) {
             if (_archiveCache) { cb(_archiveCache); return; }
             var CAT_ARCHIVE = [
@@ -6925,6 +6935,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                                     ss[ssk].forEach(function(q) {
                                         if (q && q.question && q.answer) {
                                             var fact = q.fact || q.solution || q.explanation || '';
+                                            if (!_isExamRelevant({q:q.question, a:q.answer, fact:fact})) return;
                                             allQ.push({q:q.question, a:q.answer, options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:sk, subTopic:ssk});
                                         }
                                     });
