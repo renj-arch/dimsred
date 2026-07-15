@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head>,{file:"data/questions/pib-archive.json"}
     <link rel='stylesheet' href='css/style.css'>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>GK Current Affairs — vlymbooq</title>
@@ -6903,48 +6904,6 @@ var _staticGen_polity = GK_GENERATORS.polity;
             }
         }
         
-
-        function loadArchiveQuestions(cb) {
-            if (_archiveCache) { cb(_archiveCache); return; }
-            var files = [];
-            var CAT_ARCHIVE = [
-                {file:'data/questions/agriculture-food.json'},{file:'data/questions/ancient-india.json'},{file:'data/questions/announcements.json'},{file:'data/questions/art-culture.json'},{file:'data/questions/awards-honours.json'},{file:'data/questions/awards.json'},{file:'data/questions/books-authors.json'},{file:'data/questions/business-economy.json'},{file:'data/questions/computer-it.json'},{file:'data/questions/constitution.json'},{file:'data/questions/defence-security.json'},{file:'data/questions/defence.json'},{file:'data/questions/disaster-management.json'},{file:'data/questions/environment-ecology.json'},{file:'data/questions/ethics-integrity.json'},{file:'data/questions/ethics.json'},{file:'data/questions/general-science.json'},{file:'data/questions/general.json'},{file:'data/questions/geography.json'},{file:'data/questions/govt-schemes.json'},{file:'data/questions/health-medicine.json'},{file:'data/questions/important-days.json'},{file:'data/questions/indian-economy.json'},{file:'data/questions/indian-geography.json'},{file:'data/questions/indian-history.json'},{file:'data/questions/indian-national-symbols.json'},{file:'data/questions/indian-society.json'},{file:'data/questions/indian-states.json'},{file:'data/questions/international-relations.json'},{file:'data/questions/isro-space.json'},{file:'data/questions/medieval-modern-india.json'},{file:'data/questions/personalities.json'},{file:'data/questions/polity-governance.json'},{file:'data/questions/polity.json'},{file:'data/questions/rbi-banking.json'},{file:'data/questions/rbi-press-releases.json'},{file:'data/questions/science-technology.json'},{file:'data/questions/society.json'},{file:'data/questions/sports.json'},{file:'data/questions/state-gk.json'},{file:'data/questions/tech-science.json'},{file:'data/questions/world-geography.json'},{file:'data/questions/world-history-2.json'},{file:'data/questions/world-history.json'},{file:'data/questions/current-events.json'},{file:'data/questions/pib-archive.json'}
-            ];
-            var loaded = 0;
-            var allQ = [];
-            var pending = CAT_ARCHIVE.length;
-            CAT_ARCHIVE.forEach(function(entry) {
-                var xhr = new XMLHttpRequest();
-                xhr.onload = function() {
-                    if (xhr.status === 200) {
-                        try {
-                            var data = JSON.parse(xhr.responseText);
-                            for (var sk in data) {
-                                var ss = data[sk].subSubjects;
-                                for (var ssk in ss) {
-                                    ss[ssk].forEach(function(q) {
-                                        if (q && q.question && q.answer) {
-                                            var fact = q.fact || q.solution || q.explanation || '';
-                                            allQ.push({q:q.question, a:q.answer, options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:sk, subTopic:ssk});
-                                        }
-                                    });
-                                }
-                            }
-                        } catch(e) {}
-                    }
-                    loaded++;
-                    if (loaded === pending) {
-                        shuffleArray(allQ);
-                        _archiveCache = allQ.slice(0, 300);
-                        cb(_archiveCache);
-                    }
-                };
-                xhr.onerror = function() { loaded++; if (loaded === pending) { _archiveCache = allQ.slice(0, 300); cb(_archiveCache); } };
-                xhr.open('GET', entry.file, true);
-                xhr.send();
-            });
-        }
-        function shuffleArray(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
         function _loadArchiveIntoState(cb) {
             if (_archiveCache) {
