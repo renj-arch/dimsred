@@ -67,10 +67,12 @@ function scoreEvent(ev) {
   if (/launch(?:ed|es)?\s+(?:satellite|mission|rocket|spacecraft)|isro|nasa|space\s+(?:station|mission)|discover(?:y|ed)|clinical\s+trial|vaccine|gene|dna|quantum|ai\s+|artificial\s+intelligence/i.test(text)) score += 3;
   if (/exercise|drill|missile|warship|submarine|fighter\s+jet|defence|defense|military\s+(?:exercise|drill|aid)|nuclear\s+(?:weapon|test|program|facility)/i.test(text)) score += 2;
   if (/climate|emissions|carbon|renewable|conservation|endangered|species|habitat|deforestation|paris\s+agreement|cop\d+/i.test(text)) score += 2;
-  if (/nobel|prize|award(?:ed)?|died|death|passed\s+away|obituary|cremation|funeral/i.test(text)) score += 3;
+  if (/nobel|prize|award(?:ed)?|passed\s+away|obituary|cremation|funeral/i.test(text)) score += 3;
   if (/supreme\s+court|verdict|judgment|ruling|amendment|bill|legislation|law|enact|enacted|cleared|approved|court\s+rules|court\s+sentence|war\s+crime|war\s+crimes|genocide|crimes\s+against\s+humanity/i.test(text)) score += 2;
   if (/outbreak|pandemic|epidemic|ebola|marburg|virus|disease|clinical|trial/i.test(text)) score += 2;
-  if (/(\d{2,})\s+(?:people|persons|killed?|dead|die|death)/i.test(text) && parseInt(RegExp.$1) >= 10) score += 2;
+
+  // Violent/death content: strongly penalize
+  if (/\b(killed|killing|kills|dead|die|died|death|deaths|murder|murdered|shooting|shot|gunshot|explosion|blast|bomb|bombing|casualty|casualties|suicide|massacre|assassination|assassinated|kidnapped|kidnapping|lynching|riots?|clash(?:es)?|firing|gunfire|stabbing|stabbed|beheaded|executed|execution|ambush|insurgency|IED)\b/i.test(text)) score -= 15;
 
   if (/\b(bus|car|truck|van|train|plane|vehicle|lorry|ambulance)\s+(crash|collision|accident|overturn|plunge|ram|hit|struck|collided|plows?|ploughs?)\b/i.test(text)) score -= 8;
   if (/\b(collides?|collided?|collision)\s+with\s+(a\s+)?(bus|car|truck|van|train|tractor)\b/i.test(text)) score -= 8;
