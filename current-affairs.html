@@ -7071,19 +7071,29 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 return { q: 'Who ' + action3 + ' ' + what + '?', a: who, hint: 'PIB: ' + subject };
             }
 
-            // Pattern 7: Fallback — extract first known entity (scheme/ministry/org/person)
-            for (var ei = 0; ei < allItems.length; ei++) {
-                if (t.indexOf(allItems[ei]) >= 0) {
-                    return { q: 'Which entity is associated with this PIB release: ' + t.substring(0, 90) + '...?', a: allItems[ei], hint: 'PIB: ' + subject };
+            // Pattern 7: "X AND Y sign/agree/partner" → extract partner
+            m = t.match(/(.+?)\s+AND\s+(.+?)\s+(sign|agree|partner|strengthen|deepen|explore|review|hold|launch|discuss|cooperate)/i);
+            if (m) {
+                var partner3 = m[2].trim();
+                if (partner3.length < 50 && partner3.length > 2) {
+                    return { q: 'With which entity did ' + m[1].trim() + ' partner?', a: partner3, hint: 'PIB: ' + subject };
                 }
             }
 
-            // Pattern 8: Extract first all-caps entity (acronyms like ICAR, NDDB, MCD, etc.)
+            // Pattern 8: Fallback — extract first known entity (case-insensitive)
+            for (var ei = 0; ei < allItems.length; ei++) {
+                var eiLower = allItems[ei].toLowerCase();
+                if (tLower.indexOf(eiLower) >= 0) {
+                    return { q: 'Which entity is mentioned in this PIB release?', a: allItems[ei], hint: 'PIB: ' + subject };
+                }
+            }
+
+            // Pattern 9: Extract first all-caps acronym
             var acro = t.match(/\b([A-Z]{2,}(?:\s+[A-Z]{2,})*)\b/g);
             if (acro) {
                 for (var ai = 0; ai < acro.length; ai++) {
                     if (acro[ai].length >= 3 && acro[ai] !== 'PIB' && acro[ai] !== 'RBI' && acro[ai] !== 'SEBI' && acro[ai] !== 'SC' && acro[ai] !== 'MEA') {
-                        var known = ['ICAR','NDDB','MCD','DGR','IICA','PNB','NIPER','UPPPC','MPMS','NIPU','BRCP','BRI','ISA','CDRI','IBSA','FIPIC','IORA','BIMSTEC','ASEAN','SAARC','SCO','QUAD','BRICS','G20','IPEF','RCEP','INSTC','NSG','MTCR','FATF','UNCAC','UNSC','UNGA','UNEP','UNFCCC','COP','ISA','CDRI','AI','IT','MSME','CSR','AI','RBI','SEBI','IRDAI','PFRDA','NABARD','SIDBI','EXIM','NHAI','NHPC','NPCC','CPWD','NTRO','NIC','NKN','NMEO','NMHS','NMSA','NMSH','NMEEE','NPCC','NRSC','NSC','NSDC','NSSO','NTPC','ONGC','PFC','PGCIL','REC','RVNL','SJVN','THDC','NBCC','HSCC','HUDCO','HEPC','SSC','UPSC','CGL','NEET','JEE','GATE','NDA','CDS'];
+                        var known = ['ICAR','NDDB','MCD','DGR','IICA','PNB','NIPER','UPPPC','MPMS','NIPU','BRCP','BRI','ISA','CDRI','IBSA','FIPIC','IORA','BIMSTEC','ASEAN','SAARC','SCO','QUAD','BRICS','G20','IPEF','RCEP','INSTC','NSG','MTCR','FATF','UNCAC','UNSC','UNGA','UNEP','UNFCCC','COP','ISA','CDRI','AI','IT','MSME','CSR','RBI','SEBI','IRDAI','PFRDA','NABARD','SIDBI','EXIM','NHAI','NHPC','NPCC','CPWD','NTRO','NIC','NKN','NMEO','NMHS','NMSA','NMSH','NMEEE','NRSC','NSC','NSDC','NSSO','NTPC','ONGC','PFC','PGCIL','REC','RVNL','SJVN','THDC','NBCC','HSCC','HUDCO','HEPC','SSC','UPSC','CGL','NEET','JEE','GATE','NDA','CDS'];
                         if (known.indexOf(acro[ai]) >= 0) {
                             return { q: 'Which organization is highlighted in this PIB release?', a: acro[ai], hint: 'PIB: ' + subject };
                         }
@@ -7091,8 +7101,24 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 }
             }
 
-            // Ultimate fallback: use subject as answer
-            return { q: t.substring(0, 120), a: subject, hint: 'PIB: ' + subject };
+            // Pattern 10: Extract anything in ALL CAPS (likely an acronym or scheme name)
+            var allCapsWords = t.match(/\b([A-Z][A-Z0-9]{2,}(?:\s+[A-Z][A-Z0-9]{2,})*)\b/g);
+            if (allCapsWords) {
+                for (var wi = 0; wi < allCapsWords.length; wi++) {
+                    var w = allCapsWords[wi];
+                    if (w.length >= 3 && w !== 'PIB' && w !== 'RBI' && w !== 'SEBI' && w !== 'SC' && w !== 'MEA' && w !== 'THE' && w !== 'AND' && w !== 'FOR' && w !== 'WITH' && w !== 'IN' && w !== 'OF' && w !== 'TO' && w !== 'AT' && w !== 'BY' && w !== 'ON') {
+                        // Capitalize properly
+                        var words = w.split(/\s+/);
+                        var cap = words.map(function(word){ return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(); }).join(' ');
+                        if (cap.length > 2 && cap.length < 50) {
+                            return { q: 'Which organization/scheme is highlighted in this PIB release?', a: cap, hint: 'PIB: ' + subject };
+                        }
+                    }
+                }
+            }
+
+            // Ultimate fallback: use subject as answer, present title as fact
+            return { q: 'Which area does this PIB release relate to?', a: subject, hint: 'PIB: ' + subject };
         }
 
         function loadPibQuestions(cb) {
@@ -7144,10 +7170,11 @@ var _staticGen_polity = GK_GENERATORS.polity;
                         }
                     } catch(e) { console.error('PIB parse error:', e); }
                 }
+                console.log('[PIB] Generated ' + qs.length + ' questions from feed');
                 _pibCache = qs;
                 cb(qs);
             };
-            xhr.onerror = function() { _pibCache = []; cb([]); };
+            xhr.onerror = function() { console.error('[PIB] XHR failed'); _pibCache = []; cb([]); };
             xhr.open('GET', 'data/pib-feed.json', true);
             xhr.send();
         }
