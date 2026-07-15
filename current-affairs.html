@@ -217,7 +217,10 @@
             <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;justify-content:center;flex-direction:column">
                 <button class="action-btn secondary" style="padding:16px;font-size:1.05em;background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.2)" onclick="startCombinedQuiz(15, '🎯 Mega GK')">🎯 Mega GK — Live Wikipedia</button>
                 <button class="action-btn secondary" style="padding:14px;font-size:.95em;background:rgba(99,102,241,.12);color:var(--purple);border:1px solid rgba(99,102,241,.2)" onclick="startStaticGk()">📚 Static GK — All 26 Categories</button>
-                <label style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none;margin-top:4px"><input type="checkbox" id="archiveToggle" style="accent-color:var(--purple);width:14px;height:14px"> 📚 Include Archive <span id="archiveStatus" style="color:var(--emerald);font-size:.72em">loaded</span></label>
+                <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:4px;flex-wrap:wrap">
+                    <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="archiveToggle" style="accent-color:var(--purple);width:14px;height:14px"> 📚 Include Archive <span id="archiveStatus" style="color:var(--emerald);font-size:.72em">loaded</span></label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="pibToggle" style="accent-color:var(--purple);width:14px;height:14px"> 📰 PIB Feed <span id="pibStatus" style="color:var(--emerald);font-size:.72em">loaded</span></label>
+                </div>
             </div>
 
             <p class="gk-intro">Live Wikipedia GK or curated static GK across 26 categories. Auto-advances every 4 seconds. Pause anytime.</p>
@@ -5391,6 +5394,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 .catch(function() { _initStudyData(); });
             loadQuizJson();
             preloadArchive();
+            preloadPib();
         }
 
         function startCategory(id, name) {
@@ -6873,9 +6877,28 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('optGrid').innerHTML = '';
 
             var archiveToggle = document.getElementById('archiveToggle');
-            if (archiveToggle && archiveToggle.checked) {
+            var pibToggle = document.getElementById('pibToggle');
+            var hasArchive = archiveToggle && archiveToggle.checked;
+            var hasPib = pibToggle && pibToggle.checked;
+            if (hasArchive && hasPib) {
+                document.getElementById('qText').innerHTML = 'Loading Static GK + Archive + PIB...';
+                _loadArchiveIntoState(function() {
+                    _loadPibIntoState(function() {
+                        _generateStaticQuestions();
+                        if (state.questions.length > 0) showQuestion();
+                        else document.getElementById('qText').innerHTML = 'No questions loaded.';
+                    });
+                });
+            } else if (hasArchive) {
                 document.getElementById('qText').innerHTML = 'Loading Static GK + Archive...';
                 _loadArchiveIntoState(function() {
+                    _generateStaticQuestions();
+                    if (state.questions.length > 0) showQuestion();
+                    else document.getElementById('qText').innerHTML = 'No questions loaded.';
+                });
+            } else if (hasPib) {
+                document.getElementById('qText').innerHTML = 'Loading Static GK + PIB...';
+                _loadPibIntoState(function() {
                     _generateStaticQuestions();
                     if (state.questions.length > 0) showQuestion();
                     else document.getElementById('qText').innerHTML = 'No questions loaded.';
@@ -6900,6 +6923,27 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 } catch(e) {}
             }
         }
+        function _loadPibIntoState(cb) {
+            if (_pibCache) {
+                for (var i = 0; i < _pibCache.length && state.questions.length < 500; i++) {
+                    var pq = _pibCache[i];
+                    pq._pibItem = true;
+                    state.questions.push(pq);
+                }
+                cb();
+            } else {
+                loadPibQuestions(function(pibQs) {
+                    if (pibQs && pibQs.length) {
+                        for (var i = 0; i < pibQs.length && state.questions.length < 500; i++) {
+                            pibQs[i]._pibItem = true;
+                            state.questions.push(pibQs[i]);
+                        }
+                    }
+                    cb();
+                });
+            }
+        }
+
         function _loadArchiveIntoState(cb) {
             if (_archiveCache) {
                 for (var i = 0; i < _archiveCache.length && state.questions.length < 500; i++) {
@@ -6940,6 +6984,174 @@ var _staticGen_polity = GK_GENERATORS.polity;
             else if (s === 'loaded') el.innerHTML = '<span style="color:var(--emerald)">loaded</span>';
             else el.innerHTML = '<span style="color:var(--text-muted)">ready</span>';
         }
+        var _pibCache = null;
+        var _pibLoading = false;
+        function preloadPib() {
+            if (_pibCache || _pibLoading) return;
+            _pibLoading = true;
+            setPibStatus('loading');
+            loadPibQuestions(function(qs) {
+                _pibCache = qs;
+                _pibLoading = false;
+                setPibStatus('loaded');
+            });
+        }
+        function setPibStatus(s) {
+            var el = document.getElementById('pibStatus');
+            if (!el) return;
+            if (s === 'loading') el.innerHTML = '<span style="color:var(--amber)">loading...</span>';
+            else if (s === 'loaded') el.innerHTML = '<span style="color:var(--emerald)">loaded</span>';
+            else el.innerHTML = '<span style="color:var(--text-muted)">ready</span>';
+        }
+        function _pibMakeQuestion(title, source) {
+            var t = title.replace(/\s+/g, ' ').trim();
+            var tLower = t.toLowerCase();
+            var knownSchemes = ['PM-KISAN','Ayushman Bharat','PM Jan Dhan','Swachh Bharat','Make in India','Skill India','Digital India','Jal Jeevan Mission','PM Mudra','PM Fasal Bima','PM Ujjwala','MGNREGA','POSHAN Abhiyaan','PM Gati Shakti','FAME','PLI','PM SVANidhi','AMRUT','Smart Cities','SAGARMALA','Bharatmala','UDAN','Khelo India','Semicon 2.0','MPMS','NIPU-2026','BRCP','PM-JANMAN','PM Awas Yojana','Startup India','Stand-Up India','Hydrogen Mission','National Quantum Mission','BioE3 Policy','Mission Mausam'];
+            var knownMins = ['Ministry of Defence','Defence Ministry','Ministry of Home Affairs','Home Ministry','Ministry of Finance','Finance Ministry','Ministry of External Affairs','External Affairs Ministry','Ministry of Health','Health Ministry','Ministry of Education','Education Ministry','Ministry of Agriculture','Agriculture Ministry','Ministry of Ayush','Ministry of Heavy Industries','Ministry of Rural Development','Ministry of Railways','Ministry of Road Transport','Ministry of Power','Ministry of Commerce','Ministry of MSME','Ministry of Law & Justice','Ministry of Tribal Affairs','Ministry of Social Justice','Ministry of Culture','Ministry of Jal Shakti','Ministry of Labour & Employment','Ministry of Science & Technology','Ministry of Electronics & IT','Ministry of Ports & Shipping'];
+            var knownOrgs = ['DRDO','ISRO','ICAR','NDDB','MCD','DGR','IICA','PNB','NIPER','UPPPC','DG Resettlement','NITI Aayog','Election Commission','UPSC','CAG','RBI','SEBI','NABARD','SIDBI','EXIM Bank','FCI','CACP','NTCA','CPCB','NAMAMI GANGE','ASI','Sangeet Natak Akademi','Sahitya Akademi','Lalit Kala Akademi','National School of Drama','WHO','World Bank','IMF','ADB','AIIB','NDB','UNESCO','UNICEF','UNDP','UNEP','ILO','FAO','IAEA','INTERPOL'];
+            var knownPersons = ['PM Modi','Prime Minister Narendra Modi','President Droupadi Murmu','President of India','Vice President','Amit Shah','Rajnath Singh','Nirmala Sitharaman','S Jaishankar','Shivraj Singh Chouhan','Dr. Jitendra Singh','Dr. Mansukh Mandaviya','Piyush Goyal','Nitin Gadkari','Dharmendra Pradhan','Kiren Rijiju','Anurag Thakur','Smriti Irani','Gajendra Singh Shekhawat','Ashwini Vaishnaw','Jyotiraditya Scindia','Bhagwat Kishanrao Karad','Shaktikanta Das','Sanjay Malhotra'];
+            var allItems = knownSchemes.concat(knownMins).concat(knownOrgs).concat(knownPersons);
+
+            var classified = _classifyPibItem(t, source);
+            var subject = classified.subject;
+
+            // Pattern 1: "President/PM/VP/Minister X inaugurates/launches/unveils Y" → Who?
+            var m = t.match(/^(President\s+of\s+India|Vice-President|Prime Minister|President|PM|Union Minister|Home Minister|Finance Minister|Defence Minister|Education Minister|Health Minister|Dr\.\s+[\w\s]+|Shri\s+[\w\s]+)\s+(inaugurates?|launches?|unveils?|addresses?|participates?\s+in|releases?|opens?|flags\s+off|dedicates?\s+to\s+the\s+nation)\s+(.+)/i);
+            if (m) {
+                var person = m[1].replace(/\s+Smt\.?\s*/i, ' ').replace(/\s+Shri\s*/i, ' ').trim();
+                var action = m[2].replace(/s$/, '').replace(/^inaugurat/, 'inaugurat');
+                var obj = m[3].replace(/\s+IN\s+/i, ' in ').replace(/['\u2018\u2019]/g, '').replace(/['\u201C\u201D]/g, '').trim();
+                if (obj.length > 60) obj = obj.substring(0, 57) + '...';
+                return { q: 'Who ' + action + ' ' + obj + '?', a: person, hint: 'PIB: ' + subject };
+            }
+
+            // Pattern 2: "Cabinet approves X" → What scheme/project?
+            m = t.match(/^Cabinet\s+approves?\s+(.+)/i);
+            if (m) {
+                var scheme = m[1].replace(/for\s+Atmanirbhar\s+Bharat.*/i, '').replace(/increasing\s+the\s+existing.*/i, '').replace(/between\s+.*/i, '').trim();
+                if (scheme.length > 60) scheme = scheme.substring(0, 57) + '...';
+                return { q: 'Which scheme/project was approved by the Union Cabinet?', a: scheme, hint: 'PIB: Cabinet Approval - ' + subject };
+            }
+
+            // Pattern 3: "Ministry of X signs MoU / does Y" → Which ministry?
+            m = t.match(/^(Ministry\s+of\s+[\w\s&]+)\s+(signs?|issues?|invites?|launches?|organises?|releases?|notifies?|constitutes?|approves?|frames?|publishes?|announces?)/i);
+            if (m) {
+                var ministry = m[1].trim();
+                var action2 = m[2].replace(/s$/, '');
+                // Find the target of the action
+                var rest = t.substring(m.index + m[0].length).trim();
+                var target = rest.split(/with|for|to\s+|on\s+/)[0].trim();
+                if (target.length < 5 || target.length > 50) target = '';
+                return { q: 'Which ministry ' + action2 + (target ? ' regarding ' + target : ' this?'), a: ministry, hint: 'PIB: ' + subject };
+            }
+
+            // Pattern 4: "X signs MoU with Y" → Which entity?
+            m = t.match(/(.+?)\s+(signs?|enters?\s+into)\s+(?:an\s+)?MoU\s+with\s+(.+)/i);
+            if (m) {
+                var entity1 = m[1].replace(/^The\s+/i, '').trim();
+                var partner = m[3].split(/to\s+|for\s+|on\s+/)[0].replace(/\([^)]*\)/g, '').trim();
+                if (partner.length > 3 && partner.length < 60) {
+                    return { q: 'Which organization signed an MoU with ' + partner + '?', a: entity1, hint: 'PIB: ' + subject };
+                }
+            }
+
+            // Pattern 5: "India and X explore/conduct/cooperate on Y" → Which country?
+            m = t.match(/^India\s+and\s+(.+?)\s+(explore|conduct|sign|strengthen|deepen|review|hold|launch|agree|discuss|cooperate)/i);
+            if (m) {
+                var partner2 = m[1].trim();
+                return { q: 'With which country did India ' + m[2].replace(/s$/, '') + ' this partnership?', a: partner2, hint: 'PIB: International Relations' };
+            }
+
+            // Pattern 6: "Dr./Shri/Smt X does Y" → Who is the person?
+            m = t.match(/^(Dr\.\s+[\w\s]+|Shri\s+[\w\s]+|Smt\.\s+[\w\s]+)\s+(launches?|inaugurates?|unveils?|addresses?|participates?\s+in|releases?|opens?|flags?\s+off|dedicates?|chairs?|presides?\s+over|visits?)\s+(.+)/i);
+            if (m) {
+                var who = m[1].trim();
+                var action3 = m[2].replace(/s$/, '');
+                var what = m[3].substring(0, 60).replace(/\([^)]*\)/g, '').trim();
+                return { q: 'Who ' + action3 + ' ' + what + '?', a: who, hint: 'PIB: ' + subject };
+            }
+
+            // Pattern 7: Fallback — extract first known entity (scheme/ministry/org/person)
+            for (var ei = 0; ei < allItems.length; ei++) {
+                if (t.indexOf(allItems[ei]) >= 0) {
+                    return { q: 'Which entity is associated with this PIB release: ' + t.substring(0, 90) + '...?', a: allItems[ei], hint: 'PIB: ' + subject };
+                }
+            }
+
+            // Pattern 8: Extract first all-caps entity (acronyms like ICAR, NDDB, MCD, etc.)
+            var acro = t.match(/\b([A-Z]{2,}(?:\s+[A-Z]{2,})*)\b/g);
+            if (acro) {
+                for (var ai = 0; ai < acro.length; ai++) {
+                    if (acro[ai].length >= 3 && acro[ai] !== 'PIB' && acro[ai] !== 'RBI' && acro[ai] !== 'SEBI' && acro[ai] !== 'SC' && acro[ai] !== 'MEA') {
+                        var known = ['ICAR','NDDB','MCD','DGR','IICA','PNB','NIPER','UPPPC','MPMS','NIPU','BRCP','BRI','ISA','CDRI','IBSA','FIPIC','IORA','BIMSTEC','ASEAN','SAARC','SCO','QUAD','BRICS','G20','IPEF','RCEP','INSTC','NSG','MTCR','FATF','UNCAC','UNSC','UNGA','UNEP','UNFCCC','COP','ISA','CDRI','AI','IT','MSME','CSR','AI','RBI','SEBI','IRDAI','PFRDA','NABARD','SIDBI','EXIM','NHAI','NHPC','NPCC','CPWD','NTRO','NIC','NKN','NMEO','NMHS','NMSA','NMSH','NMEEE','NPCC','NRSC','NSC','NSDC','NSSO','NTPC','ONGC','PFC','PGCIL','REC','RVNL','SJVN','THDC','NBCC','HSCC','HUDCO','HEPC','SSC','UPSC','CGL','NEET','JEE','GATE','NDA','CDS'];
+                        if (known.indexOf(acro[ai]) >= 0) {
+                            return { q: 'Which organization is highlighted in this PIB release?', a: acro[ai], hint: 'PIB: ' + subject };
+                        }
+                    }
+                }
+            }
+
+            // Ultimate fallback: use subject as answer
+            return { q: t.substring(0, 120), a: subject, hint: 'PIB: ' + subject };
+        }
+
+        function loadPibQuestions(cb) {
+            if (_pibCache) { cb(_pibCache); return; }
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                var qs = [];
+                if (xhr.status === 200) {
+                    try {
+                        var data = JSON.parse(xhr.responseText);
+                        var items = data.items || [];
+                        var seen = {};
+                        for (var i = 0; i < items.length && qs.length < 80; i++) {
+                            var item = items[i];
+                            if (!item || !item.title) continue;
+                            var title = item.title.replace(/<(?:.|\n)*?>/gm, '').trim();
+                            if (!title || title.length < 10) continue;
+                            var qInfo = _pibMakeQuestion(title, item.source);
+                            if (!qInfo || qInfo.q.length < 10) continue;
+                            var key = qInfo.q.substring(0, 40) + qInfo.a.substring(0, 20);
+                            if (seen[key]) continue;
+                            seen[key] = true;
+                            var pool = GK_DISTRACTORS.pib || [];
+                            var subj = qInfo.hint.replace('PIB: ', '');
+                            var opts = [qInfo.a];
+                            var shuffled = pool.slice();
+                            for (var si = shuffled.length - 1; si > 0; si--) {
+                                var sj = Math.floor(Math.random() * (si + 1));
+                                var tmp = shuffled[si]; shuffled[si] = shuffled[sj]; shuffled[sj] = tmp;
+                            }
+                            for (var oi = 0; oi < shuffled.length && opts.length < 4; oi++) {
+                                if (opts.indexOf(shuffled[oi]) < 0) opts.push(shuffled[oi]);
+                            }
+                            while (opts.length < 4) opts.push('General');
+                            for (var oi = opts.length - 1; oi > 0; oi--) {
+                                var oj = Math.floor(Math.random() * (oi + 1));
+                                var tmp = opts[oi]; opts[oi] = opts[oj]; opts[oj] = tmp;
+                            }
+                            qs.push({
+                                q: qInfo.q,
+                                a: qInfo.a,
+                                hint: qInfo.hint,
+                                fact: title + ' [' + item.source + ', ' + (item.pubDate || '').slice(0,10) + ']',
+                                opts: opts,
+                                _source: 'pib_feed',
+                                pubDate: item.pubDate,
+                                _pibItem: true
+                            });
+                        }
+                    } catch(e) { console.error('PIB parse error:', e); }
+                }
+                _pibCache = qs;
+                cb(qs);
+            };
+            xhr.onerror = function() { _pibCache = []; cb([]); };
+            xhr.open('GET', '/data/pib-feed.json', true);
+            xhr.send();
+        }
+
         function loadArchiveQuestions(cb) {
             if (_archiveCache) { cb(_archiveCache); return; }
             var files = [];
@@ -7237,8 +7449,14 @@ var _staticGen_polity = GK_GENERATORS.polity;
             return q;
         }
 
+        function _pickPibQuestion() {
+            var pool = _pibCache || [];
+            if (pool.length === 0) return null;
+            return pool[Math.floor(Math.random() * pool.length)];
+        }
+
         function generateMixedQuestions(count) {
-            var sources = ['exam_current_affairs', 'exam_current_affairs', 'wiki_current_affairs', 'wiki_pool'];
+            var sources = ['exam_current_affairs', 'exam_current_affairs', 'wiki_current_affairs', 'wiki_pool', 'pib_feed'];
             var added = 0;
             var maxTries = count * 15;
             // Historical questions (BC to CE) added continuously by background _fetchRandomHistoricalOnThisDay
@@ -7252,6 +7470,8 @@ var _staticGen_polity = GK_GENERATORS.polity;
                         q = WIKI.poolQuestion();
                     } else if (source === 'wiki_current_affairs') {
                         q = _generateCurrentAffairsFromWiki();
+                    } else if (source === 'pib_feed') {
+                        q = _pickPibQuestion();
                     }
                 } catch(e) { console.log('[QUIZ] generateMixedQuestions error for source', source, ':', e); }
                 if (!q || !q.q || !q.a) continue;
