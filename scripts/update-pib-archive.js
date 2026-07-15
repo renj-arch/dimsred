@@ -50,23 +50,28 @@ function extractNumber(text) {
   return m ? { num: m[1], unit: (m[2] || '').toLowerCase() } : null;
 }
 
+var VERB_SET = 'has|announced|launched|approved|sanctioned|notified|prohibited|reviews|chairs|organises|partners|holds|releases|facilitates|issues|signs|takes|introduces|inaugurates|rolls|marks|invites|extends|addresses|says|stated|met|visited|flags|orders|defines|begins|visits|unveils|concludes|explores|strengthens|forge|accelerates|promotes|resolve|inaugurated|reviewed|commissioned|sanctioned|disbursed|graced|flagged|exchanged|discussed|highlighted|expressed|paid|offered|shared|participated|led|observed|released|congratulates|launches|aims';
+
 function extractNamedEntity(text) {
-  var stop = text.search(/\s+(?:has|announced|launched|approved|sanctioned|notified|prohibited|reviews|chairs|organises|partners|holds|releases|facilitates|issues|signs|takes|introduces|inaugurates|rolls|marks|invites|extends|addresses|says|stated|met|visited|flags)\s/);
+  var stop = text.search(new RegExp('\\s+(?:' + VERB_SET + ')\\s'));
   if (stop > 0) {
     var prefix = text.substring(0, stop);
     var m = prefix.match(/(?:Union\s+)?(Ministry of [\w\s&]+)/i);
     if (m) return { value: m[1].trim(), type: 'ministry' };
   }
-  var personStop = text.search(/\s+(?:said|addressed|launched|inaugurated|announced|reviewed|visited|chairs|addresses|holds|reviews|commissions|sanctions|disburses|graces|flags|met|exchanges|discusses|highlights|condoles|expresses|pays|offers|shares|participates|leads|observes)\s/);
+  var personStop = text.search(new RegExp('\\s+(?:' + VERB_SET + ')\\s'));
   if (personStop > 0) {
     var personPrefix = text.substring(0, personStop);
-    m = personPrefix.match(/(Raksha Mantri|Home Minister|Finance Minister|Defence Minister|Health Minister|Education Minister|Commerce Secretary|Cabinet Secretary|Prime Minister|President|Vice President|Attorney General|CJI|Chief Justice)\s+(?:Shri|Smt|Dr|Shri\.)?\s*([A-Z][\w\s.]+)/i);
+    m = personPrefix.match(/(Raksha Mantri|Home Minister|Finance Minister|Defence Minister|Health Minister|Education Minister|Commerce Secretary|Cabinet Secretary|Prime Minister|President|Vice President|Vice-President|Attorney General|CJI|Chief Justice|Union Minister|Lok Sabha Speaker|Railway Minister)\s+(?:Shri|Smt|Dr|Shri\.|Smt\.|Dr\.)?\s*([A-Z][\w\s.]+)/i);
+    if (!m) m = personPrefix.match(/(President of India|Prime Minister|Vice President|Vice-President of India|Lok Sabha Speaker|Raksha Mantri|Home Minister)\s*$/i);
+    if (m) return { value: m[1].trim(), type: 'person' };
+    m = personPrefix.match(/^([A-Z][\w\s.]+?)\s+(?:Shri|Smt|Dr|Shri\.)\s*([A-Z][\w\s.]+)/i);
     if (m) return { value: (m[1] + ' ' + m[2]).trim(), type: 'person' };
   }
   var awardMatch = text.match(/(?:present(?:s|ed)?|confer(?:s|red)?|award(?:s|ed)?|honour(?:s|ed)?|receives?|gets?|selected\s+for|chosen\s+for)\s+(?:the\s+)?(?:Bharat\s+Ratna|Padma\s+(?:Vibhushan|Bhushan|Shri))\s+(?:upon|to|on)\s+(?:Shri|Smt|Dr|Prof)\.?\s*([A-Z][\w\s.]+?)(?:\s+(?:for|in|by|,|$)|$)/i);
   if (!awardMatch) awardMatch = text.match(/(?:Bharat\s+Ratna|Padma\s+(?:Vibhushan|Bhushan|Shri))\s+(?:award(?:ed|ee)?|recipient|conferred)\s+(?:upon|to|on|is\s+)(?:Shri|Smt|Dr|Prof)\.?\s*([A-Z][\w\s.]+?)(?:\s+(?:for|in|by|,|$)|$)/i);
   if (awardMatch) return { value: awardMatch[1].trim(), type: 'person' };
-  m = text.match(/((?:Pradhan Mantri|PM|National|Bharat|Ayushman|Jan|Digital|Smart|Skill|Swachh)\s+[\w\s]{2,40}?(?:Yojana|Scheme|Mission|Abhiyan|Programme|Policy|Vision|Niryat|Rozgar|Kisan|Awas|Bank|Suraksha|Shakti|Seva|Sathi))/i);
+  m = text.match(/((?:Pradhan Mantri|PM|National|Bharat|Ayushman|Jan|Digital|Smart|Skill|Swachh|Viksit)\s+[\w\s]{2,40}?(?:Yojana|Scheme|Mission|Abhiyan|Programme|Policy|Vision|Niryat|Rozgar|Kisan|Awas|Bank|Suraksha|Shakti|Seva|Sathi|Connect|Expo))/i);
   if (m) return { value: m[1].trim(), type: 'scheme' };
   return null;
 }
@@ -229,12 +234,48 @@ function categorizeItem(title, desc) {
   return 'Announcements';
 }
 
+function extractAcronym(text) {
+  var m = text.match(/\(([A-Z]{2,8})\)/);
+  if (m) return { value: m[1], type: 'acronym' };
+  return null;
+}
+
+function findEntityInTitle(title, entityValue) {
+  var idx = title.toLowerCase().indexOf(entityValue.toLowerCase());
+  if (idx >= 0) return title.substring(idx, idx + entityValue.length);
+  return null;
+}
+
+function makeBlankQuestion(title, entity, entityDisplay, cat, item, idx, distractors, fact) {
+  var actual = findEntityInTitle(title, entity);
+  if (!actual) return null;
+  var blankQ = title.replace(actual, '_____');
+  if (blankQ === title || blankQ.length < 25) return null;
+  var q = {
+    id: 'pib-' + idx,
+    type: 'fill_blank',
+    category: 'PIB',
+    region: item.region || '',
+    source: 'PIB',
+    pubDate: item.pubDate,
+    subject: SUBJECT,
+    subSubject: cat,
+    emoji: EMOJI,
+    _feedId: item.id,
+    question: blankQ.length > 200 ? blankQ.substring(0, 197) + '...' : blankQ,
+    answer: entityDisplay || entity,
+    options: shuffle([entityDisplay || entity].concat(distractors.slice(0, 3)).concat(['None'])),
+    hint: 'PIB: ' + cat,
+    fact: fact
+  };
+  return q;
+}
+
 function generateQuestion(item, idx) {
   var t = item.title || '';
   var d = item.description || '';
   var cat = item.category || categorizeItem(t, d);
   var fact = handWriteSummary(t, item.source, cat);
-  var subj = determineSubject(t, cat, item.source);
 
   var q = {
     id: 'pib-' + idx,
@@ -249,6 +290,7 @@ function generateQuestion(item, idx) {
     _feedId: item.id
   };
 
+  // 1. Try number fill-in-blank
   var ne = extractNumber(t);
   if (ne && ne.num && ne.num.length > 1) {
     var displayNum = ne.num + (ne.unit ? ' ' + ne.unit : '');
@@ -276,63 +318,85 @@ function generateQuestion(item, idx) {
     }
   }
 
+  // 2. Try named entity fill-in-blank — entity MUST literally appear in title
   var named = extractNamedEntity(t);
-  if (named) {
+  if (named && findEntityInTitle(t, named.value)) {
     var answer = named.value;
-    var pool = (named.type === 'ministry' ? ['Ministry of Finance', 'Ministry of Defence', 'Ministry of Home Affairs', 'Ministry of Health', 'Ministry of Education', 'Ministry of Agriculture', 'Ministry of External Affairs', 'Ministry of Commerce', 'Ministry of Power', 'Ministry of Environment'] :
-                named.type === 'scheme' ? ['Pradhan Mantri Awas Yojana', 'Ayushman Bharat', 'PM-KISAN', 'Jal Jeevan Mission', 'Digital India', 'Make in India', 'Skill India', 'Swachh Bharat Mission'] :
-                ['Prime Minister', 'President', 'Home Minister', 'Finance Minister', 'Defence Minister', 'Raksha Mantri', 'Vice President', 'Cabinet Secretary']);
-    var dist = shuffle(pool.filter(function(v) { return v !== answer; }));
-    var questionText = (named.type === 'ministry' ? 'Which ministry/organisation is associated with this news?\n"' : 'Who is associated with this news?\n"') + t.substring(0, 120) + '"';
-    q.question = questionText;
-    q.answer = answer;
-    q.options = shuffle([answer].concat(dist.slice(0, 3)).concat(['None']));
-    q.type = named.type === 'ministry' ? 'who' : 'who';
-    q.hint = 'PIB: ' + cat;
-    q.fact = fact;
-    return q;
+    var perPool = ['Prime Minister', 'President of India', 'Home Minister', 'Finance Minister', 'Defence Minister', 'Raksha Mantri', 'Vice President', 'Cabinet Secretary', 'Dr. Jitendra Singh'];
+    var schPool = ['Pradhan Mantri Awas Yojana', 'Ayushman Bharat', 'PM-KISAN', 'Jal Jeevan Mission', 'Digital India', 'Make in India', 'Skill India', 'Swachh Bharat Mission'];
+    var minPool = ['Ministry of Finance', 'Ministry of Defence', 'Ministry of Home Affairs', 'Ministry of Health', 'Ministry of Education', 'Ministry of Agriculture', 'Ministry of External Affairs', 'Ministry of Power', 'Ministry of Environment', 'Ministry of Jal Shakti'];
+    var pool = named.type === 'ministry' ? minPool : named.type === 'scheme' ? schPool : perPool;
+    var dist = shuffle(pool.filter(function(v) { return v.toLowerCase() !== answer.toLowerCase(); }));
+    q = makeBlankQuestion(t, answer, answer, cat, item, idx, dist, fact);
+    if (q) {
+      q.type = 'fill_blank';
+      q.hint = 'PIB: ' + cat;
+      return q;
+    }
   }
 
-  // Fallback: true/false from the title
-  var text = t.substring(0, 120).replace(/\.$/, '');
+  // 3. Try acronym fill-in-blank (e.g. (PLFS), (MPMS))
+  var acro = extractAcronym(t);
+  if (acro && findEntityInTitle(t, acro.value)) {
+    var dist = shuffle(['RBI', 'SEBI', 'ISRO', 'DRDO', 'CSIR', 'BHEL', 'ONGC', 'NDDB', 'TRAI', 'CCI']);
+    q = makeBlankQuestion(t, acro.value, acro.value, cat, item, idx, dist, fact);
+    if (q) {
+      q.type = 'fill_blank';
+      q.hint = 'PIB: ' + cat + ' - Acronym';
+      return q;
+    }
+  }
+
+  // 4. Try "Who" or "Which country" etc: look for person/title + action pattern
+  var titleMatch = t.replace(/['\u2018\u2019\u201C\u201D]/g, '').trim();
+  var actionMatch = titleMatch.match(/^((?:(?:Union\s+)?(?:Minister|Home Minister|Finance Minister|Defence Minister|Health Minister|Education Minister|Commerce Secretary|Cabinet Secretary|President|Vice President|Vice-President|PM|Prime Minister|Raksha Mantri|Lok Sabha Speaker|Railway Minister|Chief Labour Commissioner|Union Minister of State)(?:\s+(?:of|for)\s+[\w\s&]+?)?(?:\s+(?:Shri|Smt|Dr|Shri\.|Smt\.|Dr\.)\s*[A-Z][\w\s.]+)?)|(?:President of India|Prime Minister Narendra Modi|Vice President|Lok Sabha Speaker|Raksha Mantri|Home Minister))(?:\s*[,:]?\s*)?\s+(inaugurates|addresses|launches|reviews|flags|unveils|releases|chairs|announces|approves|sanctions|congratulates|visits|orders|defines|begins|concludes|explores|strengthens|forge|accelerates|promotes|inaugurated|addressed|launched|reviewed|flagged|unveiled|released|chaired|announced|approved|sanctioned|congratulated|visited|ordered|defined|began|concluded|explored)\s/i);
+  if (actionMatch) {
+    var who = actionMatch[1].trim();
+    if (who.length > 5 && who.length < 100) {
+      var blankQ = titleMatch.replace(who, '_____');
+      if (blankQ !== titleMatch && blankQ.length > 25) {
+        var whoPool = ['Prime Minister Narendra Modi', 'President Droupadi Murmu', 'Home Minister Amit Shah', 'Finance Minister Nirmala Sitharaman', 'Defence Minister Rajnath Singh', 'Vice President Jagdeep Dhankhar', 'Raksha Mantri Rajnath Singh', 'Union Minister', 'Lok Sabha Speaker', 'President of India'];
+        var dist = shuffle(whoPool.filter(function(v) { return v.toLowerCase() !== who.toLowerCase(); }));
+        q.question = (blankQ.length > 120 ? blankQ.substring(0, 117) + '...' : blankQ);
+        q.answer = who;
+        q.options = shuffle([who].concat(dist.slice(0, 3)).concat(['None']));
+        q.type = 'fill_blank';
+        q.hint = 'PIB: ' + cat;
+        q.fact = fact;
+        return q;
+      }
+    }
+  }
+
+  // 5. True/false fallback — only if title is informative enough
+  var text = t.substring(0, 150).replace(/\.$/, '');
   if (text.length < 30) return null;
 
-  // Try false: swap number, entity, or negate
   var swapped = null;
   var ne2 = extractNumber(t);
   if (ne2 && ne2.num && ne2.num.length > 1) {
     var wrongNum = (parseInt(ne2.num.replace(/,/g, '')) + Math.floor(Math.random() * 5) + 1).toString();
     swapped = t.replace(new RegExp(ne2.num.replace(',', '\\,'), ''), wrongNum);
+  } else if (/approved|launched|sanctioned/i.test(t)) {
+    swapped = t.replace(/approved|launched|sanctioned/i, 'delayed');
+  } else if (/inaugurated|commissioned|opened/i.test(t)) {
+    swapped = t.replace(/inaugurated|commissioned|opened/i, 'postponed');
   } else {
-    var named2 = extractNamedEntity(t);
-    if (named2 && named2.value.length > 5) {
-      var swaps = named2.type === 'ministry' ? ['Ministry of Home Affairs', 'Ministry of Finance', 'Ministry of Defence', 'Ministry of Education'] :
-                  named2.type === 'scheme' ? ['Pradhan Mantri Awas Yojana', 'Digital India', 'Make in India', 'Skill India'] :
-                  ['Prime Minister', 'President of India', 'Home Minister', 'Finance Minister'];
-      var wrong = null;
-      for (var si = 0; si < swaps.length; si++) {
-        if (swaps[si].toLowerCase() !== named2.value.toLowerCase()) { wrong = swaps[si]; break; }
-      }
-      if (wrong) swapped = t.replace(named2.value, wrong);
-    } else if (/approved|launched|sanctioned/i.test(t)) {
-      swapped = t.replace(/approved|launched|sanctioned/i, 'delayed');
-    } else if (/inaugurated|commissioned|opened/i.test(t)) {
-      swapped = t.replace(/inaugurated|commissioned|opened/i, 'postponed');
+    // Try with auxiliary verb first
+    var auxSwap = t.replace(new RegExp('\\b(will|has|is|was|are|were)\\s+(announced|approved|launched|sanctioned|released|inaugurated|notified|introduced|partners|facilitates|reviews|commissions|disburses|chairs|holds|organises|signs|flags|marks|invites|addresses|inaugurates|releases|holds|addresses|launches|defines|orders|begins|visits|unveils|concludes|explores|strengthens|forge|accelerates|promotes|resolve|congratulates|aims)\\b', 'i'), '$1 NOT $2');
+    if (auxSwap !== t) {
+      swapped = auxSwap;
     } else {
-      swapped = t.replace(/\b(will|has|is|was)\s+(announced|approved|launched|sanctioned|released|inaugurated|notified|introduced|partners|facilitates|reviews|commissions|disburses|chairs|holds|organises|signs|flags|marks|invites|addresses)/i, '$1 NOT $2');
+      // No auxiliary: try bare verb negation
+      swapped = t.replace(new RegExp('\\b(announced|approved|launched|sanctioned|released|inaugurated|notified|introduced|partners|facilitates|reviews|commissions|disburses|chairs|holds|organises|signs|flags|marks|invites|addresses|inaugurates|releases|holds|addresses|launches|defines|orders|begins|visits|unveils|concludes|explores|strengthens|forge|accelerates|promotes|resolve|congratulates|aims|declares|defined|began|concluded|explored|ordered|visited|released|chairs)\\b', 'i'), 'NOT $1');
     }
   }
   if (!swapped || swapped === t) return null;
 
-  var useTrue = Math.random() > 0.5;
-  if (useTrue) {
-    q.question = 'True or False: ' + text + '.';
-    q.answer = 'True';
-    q.type = 'true_false';
-  } else {
-    q.question = 'True or False: ' + swapped.substring(0, 120).replace(/\.$/, '') + '.';
-    q.answer = 'False';
-    q.type = 'true_false';
+  q.question = 'True or False: ' + text + '.';
+  q.answer = Math.random() > 0.5 ? 'True' : 'False';
+  if (q.answer === 'False') {
+    q.question = 'True or False: ' + swapped.substring(0, 150).replace(/\.$/, '') + '.';
   }
   q.options = ['True', 'False'];
   q.type = 'true_false';
@@ -354,8 +418,13 @@ function main() {
   Object.keys(subs).forEach(function(cat) {
     var before = (subs[cat] || []).length;
     subs[cat] = (subs[cat] || []).filter(function(q) {
-      if (/^Which sector does this PIB release pertain to/i.test(q.question)) { cleanupCount++; return false; }
-      if (/^What is the key highlight of this PIB release/i.test(q.question)) { cleanupCount++; return false; }
+      if (/^Which (sector|ministry|organisation|organization|scheme|project)\b/i.test(q.question)) { cleanupCount++; return false; }
+      if (/^Who is mentioned/i.test(q.question)) { cleanupCount++; return false; }
+      if (/^Which (organization|scheme|organisation)\/scheme is highlighted/i.test(q.question)) { cleanupCount++; return false; }
+      if (/^Who is associated with this news/i.test(q.question)) { cleanupCount++; return false; }
+      if (/^What is the key highlight/i.test(q.question)) { cleanupCount++; return false; }
+      if (/^Which ministry (organised|organized|launched|mentioned|signed)\b/i.test(q.question)) { cleanupCount++; return false; }
+      if (/^With which (entity|country|organization)\b.*partner/i.test(q.question) && q.question.length < 40) { cleanupCount++; return false; }
       return true;
     });
   });
