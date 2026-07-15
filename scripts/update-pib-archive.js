@@ -293,10 +293,49 @@ function generateQuestion(item, idx) {
     return q;
   }
 
-  q.question = 'What is the key highlight of this PIB release?';
-  q.answer = cat === 'Announcements' ? t.substring(0, 100) : cat;
-  q.options = shuffle([q.answer, 'Policy Change', 'Budget Allocation', 'International Agreement', 'None']);
-  q.type = 'mcq';
+  // Fallback: true/false from the title
+  var text = t.substring(0, 120).replace(/\.$/, '');
+  if (text.length < 30) return null;
+
+  // Try false: swap number, entity, or negate
+  var swapped = null;
+  var ne2 = extractNumber(t);
+  if (ne2 && ne2.num && ne2.num.length > 1) {
+    var wrongNum = (parseInt(ne2.num.replace(/,/g, '')) + Math.floor(Math.random() * 5) + 1).toString();
+    swapped = t.replace(new RegExp(ne2.num.replace(',', '\\,'), ''), wrongNum);
+  } else {
+    var named2 = extractNamedEntity(t);
+    if (named2 && named2.value.length > 5) {
+      var swaps = named2.type === 'ministry' ? ['Ministry of Home Affairs', 'Ministry of Finance', 'Ministry of Defence', 'Ministry of Education'] :
+                  named2.type === 'scheme' ? ['Pradhan Mantri Awas Yojana', 'Digital India', 'Make in India', 'Skill India'] :
+                  ['Prime Minister', 'President of India', 'Home Minister', 'Finance Minister'];
+      var wrong = null;
+      for (var si = 0; si < swaps.length; si++) {
+        if (swaps[si].toLowerCase() !== named2.value.toLowerCase()) { wrong = swaps[si]; break; }
+      }
+      if (wrong) swapped = t.replace(named2.value, wrong);
+    } else if (/approved|launched|sanctioned/i.test(t)) {
+      swapped = t.replace(/approved|launched|sanctioned/i, 'delayed');
+    } else if (/inaugurated|commissioned|opened/i.test(t)) {
+      swapped = t.replace(/inaugurated|commissioned|opened/i, 'postponed');
+    } else {
+      swapped = t.replace(/\b(will|has|is|was)\s+(announced|approved|launched|sanctioned|released|inaugurated|notified|introduced|partners|facilitates|reviews|commissions|disburses|chairs|holds|organises|signs|flags|marks|invites|addresses)/i, '$1 NOT $2');
+    }
+  }
+  if (!swapped || swapped === t) return null;
+
+  var useTrue = Math.random() > 0.5;
+  if (useTrue) {
+    q.question = 'True or False: ' + text + '.';
+    q.answer = 'True';
+    q.type = 'true_false';
+  } else {
+    q.question = 'True or False: ' + swapped.substring(0, 120).replace(/\.$/, '') + '.';
+    q.answer = 'False';
+    q.type = 'true_false';
+  }
+  q.options = ['True', 'False'];
+  q.type = 'true_false';
   q.hint = 'PIB: ' + cat;
   q.fact = fact;
   return q;
@@ -309,7 +348,21 @@ function main() {
   var archive = JSON.parse(fs.readFileSync(ARCHIVE, 'utf-8'));
   var feed = JSON.parse(fs.readFileSync(FEED, 'utf-8'));
 
+  // Cleanup existing poor questions: generic "Which sector" and "key highlight" questions
   var subs = archive[PIB_KEY] && archive[PIB_KEY].subSubjects || {};
+  var cleanupCount = 0;
+  Object.keys(subs).forEach(function(cat) {
+    var before = (subs[cat] || []).length;
+    subs[cat] = (subs[cat] || []).filter(function(q) {
+      if (/^Which sector does this PIB release pertain to/i.test(q.question)) { cleanupCount++; return false; }
+      if (/^What is the key highlight of this PIB release/i.test(q.question)) { cleanupCount++; return false; }
+      return true;
+    });
+  });
+  if (cleanupCount > 0) {
+    console.log('Removed ' + cleanupCount + ' poor questions');
+    archive[PIB_KEY].subSubjects = subs;
+  }
   var allQuestions = [];
   var existingFeedIds = new Set();
 
@@ -384,7 +437,8 @@ function main() {
     newItems.forEach(function(item) {
       maxId++;
       var q = generateQuestion(item, maxId);
-      generated.push(q);
+      if (q) generated.push(q);
+      else maxId--;
     });
 
     console.log('Generated ' + generated.length + ' new questions');
