@@ -33,6 +33,9 @@ jobs:
       - name: Fetch current events and update archive.html
         run: node scripts/fetch-current-events.js
 
+      - name: Update PIB archive from feed (no duplicates)
+        run: node scripts/update-pib-archive.js
+
       - name: Rebuild single archive + per-category data
         run: node scripts/build-archive-single.js
 

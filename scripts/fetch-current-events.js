@@ -72,7 +72,7 @@ function scoreEvent(ev) {
   if (/outbreak|pandemic|epidemic|ebola|marburg|virus|disease|clinical|trial/i.test(text)) score += 2;
 
   // Violent/death content: strongly penalize
-  if (/\b(killed|killing|kills|dead|die|died|death|deaths|murder|murdered|shooting|shot|gunshot|explosion|blast|bomb|bombing|casualty|casualties|suicide|massacre|assassination|assassinated|kidnapped|kidnapping|lynching|riots?|clash(?:es)?|firing|gunfire|stabbing|stabbed|beheaded|executed|execution|ambush|insurgency|IED)\b/i.test(text)) score -= 15;
+  if (/\b(killed|killing|kills|kill|dead|die|died|dies|death|deaths|murder|murdered|shooting|shot|gunshot|explosion|blast|bomb|bombing|casualty|casualties|suicide|massacre|assassination|assassinated|kidnapped|kidnapping|lynching|riots?|clash(?:es)?|firing|gunfire|stabbing|stabbed|beheaded|executed|execution|ambush|insurgency|militant|militants|IED|shelling|bloodshed|genocide)\b/i.test(text)) score -= 15;
 
   if (/\b(bus|car|truck|van|train|plane|vehicle|lorry|ambulance)\s+(crash|collision|accident|overturn|plunge|ram|hit|struck|collided|plows?|ploughs?)\b/i.test(text)) score -= 8;
   if (/\b(collides?|collided?|collision)\s+with\s+(a\s+)?(bus|car|truck|van|train|tractor)\b/i.test(text)) score -= 8;
