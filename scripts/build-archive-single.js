@@ -64,7 +64,8 @@ sortedCats.forEach(c => {
     });
   });
 
-  const baseName = c.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const FILE_OVERRIDE = { 'PIB': 'pib-archive' };
+  const baseName = FILE_OVERRIDE[c] || c.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   const filePaths = [];
   const MAX_BYTES = 24 * 1024 * 1024;
 
