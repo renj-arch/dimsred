@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -171,7 +171,7 @@ function renderQuestions(ci, si, ssi) {
   panel.innerHTML = '<div class="loading">Loading questions...</div>';
   loadCategory(ci, function() {
     var data = _cache[ci];
-    var qs = data[subj.name].subSubjects[ss.name];
+    var qs = data[subj.name] && data[subj.name].subSubjects && data[subj.name].subSubjects[ss.name];
     if (!qs) { panel.innerHTML = '<div class="loading">No questions found.</div>'; return; }
     var h = '<h2 class="page-title">' + CAT_INDEX[ci].icon + ' ' + escHtml(ss.name) + '</h2>';
     h += '<p class="page-sub">' + escHtml(subj.name) + ' — ' + escHtml(CAT_INDEX[ci].name) + '</p>';
@@ -191,15 +191,9 @@ function loadCategory(ci, cb) {
   files.forEach(function(url, fi) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
-      if (xhr.status !== 200) {
-        document.getElementById('view-content').innerHTML = '<div class="loading">Failed to load questions (HTTP ' + xhr.status + ').</div>';
-        return;
-      }
+      if (xhr.status !== 200) { _cache[ci] = {}; cb(); return; }
       var data;
-      try { data = JSON.parse(xhr.responseText); } catch(e) {
-        document.getElementById('view-content').innerHTML = '<div class="loading">Failed to parse questions.</div>';
-        return;
-      }
+      try { data = JSON.parse(xhr.responseText); } catch(e) { _cache[ci] = {}; cb(); return; }
       for (var sk in data) {
         if (!merged[sk]) merged[sk] = { subSubjects: {} };
         var ss = data[sk].subSubjects;
@@ -210,7 +204,7 @@ function loadCategory(ci, cb) {
       loaded++;
       if (loaded === files.length) { _cache[ci] = merged; cb(); }
     };
-    xhr.onerror = function() { document.getElementById('view-content').innerHTML = '<div class="loading">Failed to load questions (network error).</div>'; };
+    xhr.onerror = function() { _cache[ci] = {}; cb(); };
     xhr.open('GET', url, true);
     xhr.send();
   });
