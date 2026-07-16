@@ -21,6 +21,8 @@ const CAT_MAP = {
   'wiki-highway.json': 'highway',
   'wiki-hill.json': 'hill',
   'wiki-institution.json': 'institution',
+  'wiki-i_fort.json': 'i_fort',
+  'wiki-i_palace.json': 'i_palace',
   'wiki-i_pass.json': 'i_pass',
   'wiki-island.json': 'island',
   'wiki-kingdom.json': 'kingdom',
@@ -142,6 +144,7 @@ const CAT_MAP = {
   'wiki-atoll.json': 'atoll',
   'wiki-oasis.json': 'oasis',
   'wiki-salt_flat.json': 'salt_flat',
+  'wiki-mountains.json': 'mountains',
   'wiki-mangrove.json': 'mangrove',
   'wiki-ice_shelf.json': 'ice_shelf',
   'wiki-ocean_ridge.json': 'ocean_ridge',
@@ -176,10 +179,34 @@ const CAT_MAP = {
   'wiki-monument.json': 'monument',
   'wiki-mosque.json': 'mosque',
   'wiki-church.json': 'church',
+  'wiki-castle.json': 'castle',
+  'wiki-cathedral.json': 'cathedral',
+  'wiki-embassy.json': 'embassy',
+  'wiki-harbor.json': 'harbor',
+  'wiki-market.json': 'market',
+  'wiki-park.json': 'park',
+  'wiki-reservoir.json': 'reservoir',
+  'wiki-shrine.json': 'shrine',
+  'wiki-theatre.json': 'theatre',
+  'wiki-tomb.json': 'tomb',
   'wiki-archaeological_site.json': 'archaeological_site',
   'wiki-monastery.json': 'monastery',
   'wiki-escarpment.json': 'escarpment',
   'wiki-geopark.json': 'geopark',
+  'wiki-w_castle.json': 'w_castle',
+  'wiki-w_cathedral.json': 'w_cathedral',
+  'wiki-w_embassy.json': 'w_embassy',
+  'wiki-w_harbor.json': 'w_harbor',
+  'wiki-w_market.json': 'w_market',
+  'wiki-w_park.json': 'w_park',
+  'wiki-w_reservoir.json': 'w_reservoir',
+  'wiki-w_shrine.json': 'w_shrine',
+  'wiki-w_theatre.json': 'w_theatre',
+  'wiki-w_tomb.json': 'w_tomb',
+  'wiki-w_hospital.json': 'w_hospital',
+  'wiki-w_school.json': 'w_school',
+  'wiki-w_university.json': 'w_university',
+  'wiki-w_stadium.json': 'w_stadium',
 };
 
 let html = fs.readFileSync(GLOBE_PATH, 'utf8');
@@ -201,10 +228,24 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
     continue;
   }
 
+  function fixDesc(e) {
+    if (!e.desc || e.desc.length < 20 || e.desc === e.sub) {
+      const parts = [];
+      if (e.sub) {
+        const subParts = e.sub.split('·').map(s => s.trim()).filter(Boolean);
+        if (subParts.length) parts.push('located in ' + subParts.join(', '));
+        if (subParts.length && e.sub.includes('m')) parts.push('with ' + e.sub);
+      }
+      e.desc = parts.length ? e.n + ' is ' + parts.join(', ') + '.' : e.n + ' is a notable ' + globeCat.replace(/_/g, ' ') + '.';
+    }
+    if (!e.fact || e.fact.length < 10) e.fact = e.desc;
+  }
+
   const toInsert = [];
   for (const e of entries) {
     if (e._quality === 'poor') continue;
     if (!e.la || !e.ln || !e.n) continue;
+    fixDesc(e);
     const entry = {
       n: e.n, la: e.la, ln: e.ln,
       sub: e.sub || '', desc: e.desc || '', fact: e.fact || '',
@@ -297,5 +338,36 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
   console.log(`${globeCat}: ${existingCount} existing, +${added} new, ${replaced} replaced (from ${wikiFile})`);
 }
 
-fs.writeFileSync(GLOBE_PATH, html, 'utf8');
+// Fix any remaining poor descs across all D.xxx arrays in the globe
+function fixGlobalDescs(html) {
+  const entryRx = /\{n:'((?:[^'\\]|\\.)*)',la:[\d.-]+,ln:[\d.-]+,sub:'((?:[^'\\]|\\.)*)',desc:'((?:[^'\\]|\\.)*)',fact:'((?:[^'\\]|\\.)*)'/g;
+  let m;
+  const fixes = [];
+  while ((m = entryRx.exec(html)) !== null) {
+    const name = m[1], sub = m[2], desc = m[3], fact = m[4];
+    if (desc.length >= 20 && fact.length >= 10) continue;
+    let newDesc = desc, newFact = fact;
+    if (desc.length < 20) {
+      const parts = [];
+      if (sub) {
+        const subParts = sub.split('·').map(s => s.trim()).filter(Boolean);
+        if (subParts.length) parts.push('located in ' + subParts.join(', '));
+      }
+      newDesc = parts.length ? name + ' is ' + parts.join(', ') + '.' : name + ' is a notable landmark.';
+    }
+    if (fact.length < 10) newFact = newDesc;
+    fixes.push({ idx: m.index, old: m[0], name, sub, desc, fact, newDesc, newFact });
+  }
+  for (let i = fixes.length - 1; i >= 0; i--) {
+    const f = fixes[i];
+    const oldStr = `desc:'${f.desc}',fact:'${f.fact}'`;
+    const newStr = `desc:'${esc(f.newDesc)}',fact:'${esc(f.newFact)}'`;
+    html = html.slice(0, f.idx) + f.old.replace(oldStr, newStr) + html.slice(f.idx + f.old.length);
+  }
+  return { html, fixed: fixes.length };
+}
+
+const { html: fixedHtml, fixed } = fixGlobalDescs(html);
+console.log(`Fixed ${fixed} entries with poor desc/fact across all categories`);
+fs.writeFileSync(GLOBE_PATH, fixedHtml, 'utf8');
 console.log('\nPart 11 done');
