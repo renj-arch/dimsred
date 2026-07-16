@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 
 var DATA = path.resolve(__dirname, '..', 'data');
-var ARCHIVE = path.join(DATA, 'questions', 'pib-archive.json');
+var ARCHIVE = path.join(DATA, 'questions', 'pib-releases.json');
 var FEED = path.join(DATA, 'pib-feed.json');
 
 var PIB_KEY = 'PIB Releases';
@@ -254,7 +254,7 @@ function makeBlankQuestion(title, entity, entityDisplay, cat, item, idx, distrac
   var q = {
     id: 'pib-' + idx,
     type: 'fill_blank',
-    category: 'PIB',
+    category: 'PIB Releases',
     region: item.region || '',
     source: 'PIB',
     pubDate: item.pubDate,
@@ -280,7 +280,7 @@ function generateQuestion(item, idx) {
   var q = {
     id: 'pib-' + idx,
     type: 'mcq',
-    category: 'PIB',
+    category: 'PIB Releases',
     region: '',
     source: 'PIB',
     pubDate: item.pubDate,

@@ -23,7 +23,8 @@ const CAT_ICONS = {
   'Business & Economy':'💼','RBI & Banking':'🏦','RBI Press Releases':'🏦',
   'Indian National Symbols':'🇮🇳','Agriculture & Food':'🌾',
   'Health & Medicine':'🏥','Computer & IT':'💻','Constitution':'📜',
-  'General':'📌','Announcements':'📢'
+  'General':'📌','Announcements':'📢',
+  'PIB Releases':'📰'
 };
 
 // Group questions by category → subject → subSubject
