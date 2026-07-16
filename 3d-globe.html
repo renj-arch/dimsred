@@ -538,6 +538,7 @@ const CAT = {
   capital:{label:'World Capitals',color:'#60a5fa',icon:'🏛️',region:'WW'},
   w_coast:{label:'Coasts & Shorelines',color:'#38bdf8',icon:'🏖️',region:'WW'},
   w_civilization:{label:'Ancient Civilizations',color:'#facc15',icon:'🏛️',region:'WW'},
+  museum:{label:'Major Museums',color:'#e879f9',icon:'🏛️',region:'WW'},
 };
 
 const D = {};
@@ -8017,7 +8018,7 @@ function mkLbl(text,col,scale=0.12){
 }
 
 // Build point markers
-['city','peak','port','airport','dam','nuclear','unesco','battle','temple','institution','wildlife','biosphere','ramsar','national_park','kingdom','tiger','hill','bird','w_city','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','phenomena','plateau','plain','valley','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','oil','personality','crop','mineral'].forEach(k=>{
+['city','peak','port','airport','dam','nuclear','unesco','battle','temple','institution','wildlife','biosphere','ramsar','national_park','kingdom','tiger','hill','bird','w_city','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','phenomena','plateau','plain','valley','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','oil','personality','crop','mineral','museum'].forEach(k=>{
   const items=D[k]||[];
   const g=layerGroups[k];
   items.forEach(d=>{
@@ -8466,7 +8467,7 @@ function mkLbl(text,col,scale=0.12){
 // LAYER PANEL
 // ============================================================
 const panel = document.getElementById('layersPanel');
-const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','tiger','hill','bird','i_pass','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','latitude','current','phenomena','wind','cloud','forest','rainfall','plateau','plain','valley','w_pass','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','trade','oil','personality','highway','i_range','crop','mineral','statue','capital','w_coast','w_civilization'];
+const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','tiger','hill','bird','i_pass','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','latitude','current','phenomena','wind','cloud','forest','rainfall','plateau','plain','valley','w_pass','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','trade','oil','personality','highway','i_range','crop','mineral','statue','capital','w_coast','w_civilization','museum'];
 
 // Auto-play state
 let _ap=null; // {k, idx, items, timeout}
