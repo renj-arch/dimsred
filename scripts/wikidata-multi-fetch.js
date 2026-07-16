@@ -1179,10 +1179,10 @@ const CFG = [
     label: 'Major Museums',
     query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel ?visitors WHERE {
       ?item wdt:P31 wd:Q33506. ?item wdt:P625 ?coord.
-      ?item wdt:P1082 ?visitors. FILTER(?visitors > 100000)
+      OPTIONAL { ?item wdt:P1082 ?visitors. }
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
-    } ORDER BY DESC(?visitors) LIMIT 80`,
+    } ORDER BY DESC(?visitors) LIMIT 40`,
     sub(b,s,a,i){ return b.countryLabel?.value||'Museum'; },
     prefix(b,s,a){ return s||''; }
   },
