@@ -207,6 +207,9 @@ const CAT_MAP = {
   'wiki-w_school.json': 'w_school',
   'wiki-w_university.json': 'w_university',
   'wiki-w_stadium.json': 'w_stadium',
+  'wiki-ruler.json': 'ruler',
+  'wiki-freedom.json': 'freedom',
+  'wiki-traveller.json': 'traveller',
 };
 
 let html = fs.readFileSync(GLOBE_PATH, 'utf8');
