@@ -406,7 +406,11 @@ function generateQuestion(item, idx) {
 }
 
 function main() {
-  if (!fs.existsSync(ARCHIVE)) { console.error('Archive not found: ' + ARCHIVE); process.exit(1); }
+  if (!fs.existsSync(ARCHIVE)) {
+    console.log('Archive not found, creating: ' + ARCHIVE);
+    fs.mkdirSync(path.dirname(ARCHIVE), {recursive:true});
+    fs.writeFileSync(ARCHIVE, JSON.stringify({"PIB Releases":{"subSubjects":{}}}), 'utf-8');
+  }
   if (!fs.existsSync(FEED)) { console.error('Feed not found: ' + FEED); process.exit(1); }
 
   var archive = JSON.parse(fs.readFileSync(ARCHIVE, 'utf-8'));
