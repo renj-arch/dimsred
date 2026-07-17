@@ -222,38 +222,6 @@ function escHtml(s) {
   if(!s) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-function expandQuery(q) {
-  var seen = {}; var out = [];
-  function add(t) { if (!seen[t] && t && t.length > 1) { seen[t] = true; out.push(t); } }
-  add(q);
-  if (q.endsWith('ing')) {
-    var s = q.slice(0, -3);
-    add(s); add(s + 's'); add(s + 'ed');
-    add(s + 'e'); add(s + 'es'); add(s + 'ed'); // take -> taking
-  } else if (q.endsWith('ied')) {
-    var s = q.slice(0, -3);
-    if (s.length) { add(s + 'y'); add(s + 'ies'); add(s + 'ying'); } // tried -> try
-    add(q.slice(0, -1));                          // died -> die
-    add(q.slice(0, -1) + 's');                    // died -> dies
-    add(q.slice(0, -1) + 'ing');                  // died -> dying
-  } else if (q.endsWith('ed') && q.length > 3) {
-    var s = q.slice(0, -2);
-    add(s); add(s + 's'); add(s + 'ing');
-    add(s + 'e'); add(s + 'es');
-  } else if (q.endsWith('s') && !q.endsWith('ss') && q.length > 2) {
-    var s = q.slice(0, -1);
-    if (s.endsWith('e')) { add(s.slice(0, -1) + 'ing'); add(s.slice(0, -1) + 'ed'); }
-    add(s); add(s + 'ed'); add(s + 'ing');
-  } else {
-    // Base form: add common variants
-    add(q + 's');
-    if (q.endsWith('ie')) { add(q.slice(0, -2) + 'ying'); add(q.slice(0, -2) + 'ied'); } // die -> dying/died
-    else if (q.endsWith('e')) { add(q + 'd'); add(q.slice(0, -1) + 'ing'); }
-    else if (q.endsWith('y')) { add(q.slice(0, -1) + 'ied'); add(q.slice(0, -1) + 'ying'); }
-    else { add(q + 'ed'); add(q + 'ing'); }
-  }
-  return out;
-}
 var _searchTimer = null;
 function onSearchInput(val) {
   clearTimeout(_searchTimer);
@@ -292,29 +260,13 @@ function doSearch(query) {
 function searchInCategory(ci, query, results) {
   var data = _cache[ci];
   var c = CAT_INDEX[ci];
-  var words = query.split(/\s+/).filter(function(w){return w});
-  var wordGroups = words.map(function(w){ return expandQuery(w); });
-  var seen = {};
   for (var sk in data) {
     var subj = data[sk];
     if (!subj.subSubjects) continue;
     for (var ssk in subj.subSubjects) {
       subj.subSubjects[ssk].forEach(function(q) {
-        var key = q.question;
-        if (seen[key]) return;
-        var haystack = (key||'') + ' ' + (q.answer||'') + ' ' + (q.fact||'');
-        haystack = haystack.toLowerCase();
-        var match = true;
-        for (var g = 0; g < wordGroups.length && match; g++) {
-          var group = wordGroups[g];
-          var found = false;
-          for (var t = 0; t < group.length; t++) {
-            if (haystack.indexOf(group[t]) !== -1) { found = true; break; }
-          }
-          if (!found) match = false;
-        }
-        if (match) {
-          seen[key] = true;
+        var haystack = (q.question||'') + ' ' + (q.answer||'') + ' ' + (q.fact||'');
+        if (haystack.toLowerCase().indexOf(query) !== -1) {
           results.push({category:c.name,icon:c.icon,subject:sk,subSubject:ssk,question:q});
         }
       });
