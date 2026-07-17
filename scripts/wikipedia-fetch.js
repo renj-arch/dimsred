@@ -246,7 +246,18 @@ const CFG = [
   { id:'i_movement', label:'Social Movements', wikiCat:'Category:Social_movements_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   { id:'i_pilgrimage', label:'Pilgrimage Sites', wikiCat:'Category:Pilgrimage_sites_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   // Remaining categories to wire into fetch+part11 pipeline
-  { id:'personality', label:'Historical Figures', wikiCat:'Category:Indian_independence_activists', subFn:(s,a)=>s },
+  { id:'personality', label:'Historical Figures', wikiCat:'Category:Indian_historical_figures',
+    subFn:(s,a)=>s,
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P19 ?coord. }
+      UNION
+      { ?item wdt:P20 ?coord. }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }` },
   { id:'irrigation', label:'Irrigation Projects', wikiCat:'Category:Irrigation_in_India', subFn:(s,a)=>s },
   { id:'drainage', label:'Drainage Basins', wikiCat:'Category:Drainage_basins_of_India', subFn:(s,a)=>s },
   { id:'physiographic', label:'Physiographic Divisions', wikiCat:'Category:Landforms_of_India', subFn:(s,a)=>s },
