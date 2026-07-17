@@ -8582,27 +8582,14 @@ function mkLbl(text,col,scale=0.12){
         g.add(arrow);
       }
     }
-    // Labels at source (start) and mouth (end)
-    const start=pts[0];
-    const end=pts[pts.length-1];
-    let lbl=null;
-    if(start&&k!=='range'){
-      lbl=mkLbl(d.n,catColors[k],0.14);
-      lbl.position.copy(start.clone().multiplyScalar(1.10));
-      g.add(lbl);
-    }
-    if(end&&k!=='range'){
-      lbl=mkLbl(d.n,catColors[k],0.14);
-      lbl.position.copy(end.clone().multiplyScalar(1.10));
-      g.add(lbl);
-    }
     // End pin at mouth
+    const end=pts[pts.length-1];
     if(end&&k!=='range'){
       const pin=mkPin(catColors[k],0.005,k);
       pin.position.copy(end);
       pin.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),end.clone().normalize());
       g.add(pin);
-      allMarkers.push({el:pin,lbl,data:d,cat:k,pos:end});
+      allMarkers.push({el:pin,lbl:null,data:d,cat:k,pos:end});
     }
     // Flow animation dots for rivers
     if((k==='river'||k==='w_river'||k==='railway')&&d.pts&&d.pts.length>=3){
