@@ -221,6 +221,9 @@ const CAT_MAP = {
   'wiki-writer.json': 'writer',
   'wiki-reformer.json': 'reformer',
   'wiki-country.json': 'country',
+  'wiki-philosopher.json': 'philosopher',
+  'wiki-artist.json': 'artist',
+  'wiki-architect.json': 'architect',
 };
 
 let html = fs.readFileSync(GLOBE_PATH, 'utf8');

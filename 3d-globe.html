@@ -632,6 +632,12 @@ const CAT = {
   writer:{label:'Writers & Poets',color:'#facc15',icon:'✍️',region:'IN'},
   reformer:{label:'Reformers & Thinkers',color:'#c084fc',icon:'🧠',region:'IN'},
   country:{label:'Countries & Currencies',color:'#60a5fa',icon:'🌍',region:'WW'},
+  philosopher:{label:'Philosophers',color:'#a78bfa',icon:'🧠',region:'WW'},
+  artist:{label:'Artists',color:'#f472b6',icon:'🎨',region:'WW'},
+  architect:{label:'Architects',color:'#f97316',icon:'🏛️',region:'WW'},
+  w_philosopher:{label:'World Philosophers',color:'#a78bfa',icon:'🧠',region:'WW'},
+  w_artist:{label:'World Artists',color:'#f472b6',icon:'🎨',region:'WW'},
+  w_architect:{label:'World Architects',color:'#f97316',icon:'🏛️',region:'WW'},
 };
 
 const D = {};
@@ -7333,6 +7339,12 @@ D.country = [
   {n:'Guinea',la:10,ln:-11,sub:' · Guinean franc · Conakry',desc:'Guinea, officially the Republic of Guinea, is a coastal country located in West Africa. It borders the Atlantic Ocean to the west, Guinea-Bissau to the northwest, Senegal to the north, Mali to the northeast, Ivory Coast to the southeast, and Sierra Leone and Liberia to the south. It is sometimes referred to as Guinea-Conakry, after its capital Conakry, to distinguish it from other territories in the eponymous region, such as Guinea-Bissau and Equatorial Guinea.',fact:'At the census held on 1 July 2025, Guinea had a population of over 17.5 million and an area of 245,857 square kilometres · It borders the Atlantic Ocean to the west, Guinea-Bissau to the northwest, Senegal to the north, Mali to the northeast, Ivory Coast to the southeast, and Sierra Leone and Liberia to the south · It is sometimes referred to as Guinea-Conakry, after its capital Conakry, to distinguish it from other territories in the eponymous region, such as Guinea-Bissau and Equatorial Guinea',tag:''},
   {n:'Guinea-Bissau',la:12,ln:-15,sub:' · West African CFA franc · Bissau',desc:'Guinea-Bissau, officially the Republic of Guinea-Bissau, is a country in West Africa that covers 36,125 square kilometres with an estimated population of 2,080,000. It borders Senegal to its north and Guinea to its southeast.',fact:'It borders Senegal to its north and Guinea to its southeast · Guinea-Bissau, officially the Republic of Guinea-Bissau, is a country in West Africa that covers 36,125 square kilometres with an estimated population of 2,080,000',tag:''},
 ];
+D.philosopher = [];
+D.artist = [];
+D.architect = [];
+D.w_philosopher = [];
+D.w_artist = [];
+D.w_architect = [];
 // ============================================================
 // CONTEMPORARIES DATASET
 // ============================================================
@@ -8644,7 +8656,7 @@ function mkLbl(text,col,scale=0.12){
 // LAYER PANEL
 // ============================================================
 const panel = document.getElementById('layersPanel');
-const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','dynasty','organization','tiger','hill','bird','i_pass','tribal','i_book','ruler','freedom','traveller','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','w_organization','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','latitude','current','phenomena','wind','cloud','forest','rainfall','plateau','plain','valley','w_pass','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','trade','oil','personality','highway','i_range','crop','mineral','statue','capital','w_coast','w_civilization','museum','w_cathedral','w_park','w_reservoir','w_castle','w_shrine','w_university','w_school','statue','ice_shelf','shrine','w_embassy','w_geyser','atoll','w_stadium','folk_dance','waterway','w_theatre','w_war','crater','geopark','w_ww1','mountains','ice_cap','seamount','w_tomb','w_hospital','capital','w_ww2','ecoregion','mesa','ocean_ridge','w_harbor','w_treaty','salt_flat','time_zone','cloud','spaceport','oasis','reservoir','park','w_trench','metro','mangrove','estuary','market','w_coast','climate_zone','i_fort','biome','tornado_region','monument','tomb','w_empire','cyclone_region','rainfall','theatre','i_palace','castle','cathedral','embassy','current','w_civilization','wind','invention','movement','corridor','writer','reformer','country'];
+const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','dynasty','organization','tiger','hill','bird','i_pass','tribal','i_book','ruler','freedom','traveller','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','w_organization','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','latitude','current','phenomena','wind','cloud','forest','rainfall','plateau','plain','valley','w_pass','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','trade','oil','personality','highway','i_range','crop','mineral','statue','capital','w_coast','w_civilization','museum','w_cathedral','w_park','w_reservoir','w_castle','w_shrine','w_university','w_school','statue','ice_shelf','shrine','w_embassy','w_geyser','atoll','w_stadium','folk_dance','waterway','w_theatre','w_war','crater','geopark','w_ww1','mountains','ice_cap','seamount','w_tomb','w_hospital','capital','w_ww2','ecoregion','mesa','ocean_ridge','w_harbor','w_treaty','salt_flat','time_zone','cloud','spaceport','oasis','reservoir','park','w_trench','metro','mangrove','estuary','market','w_coast','climate_zone','i_fort','biome','tornado_region','monument','tomb','w_empire','cyclone_region','rainfall','theatre','i_palace','castle','cathedral','embassy','current','w_civilization','wind','invention','movement','corridor','writer','reformer','country','philosopher','artist','architect','w_philosopher','w_artist','w_architect'];
 
 // Auto-play state
 let _ap=null; // {k, idx, items, timeout}
