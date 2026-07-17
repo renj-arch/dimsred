@@ -158,7 +158,7 @@ const GLOBE_CAT_MAP = {
   w_bay:'w_bay', w_cave:'w_cave', w_gorge:'w_gorge',
   w_archipelago:'w_archipelago', w_geyser:'w_geyser',
   w_isthmus:'w_isthmus', w_spring:'w_spring', w_coast:'w_coast',
-  w_empire:'w_empire', w_civilization:'w_civilization',
+  w_empire:'w_empire', w_civilization:'w_civilization', w_organization:'w_organization',
   w_revolution:'w_revolution', w_treaty:'w_treaty',
   w_disaster:'w_disaster', w_war:'w_war',
   metro:'metro', waterway:'waterway',
@@ -294,15 +294,17 @@ const CFG = [
     id: 'rivers',
     label: 'Major Rivers',
     query: `
-      SELECT DISTINCT ?item ?itemLabel ?coord ?stateLabel ?length WHERE {
+      SELECT DISTINCT ?item ?itemLabel ?coord ?stateLabel ?length ?src ?mouth WHERE {
         ?item wdt:P31 wd:Q4022. ?item wdt:P17 wd:Q668.
         ?item wdt:P625 ?coord. ?item wdt:P2043 ?length.
+        OPTIONAL { ?item wdt:P974 ?src. }
+        OPTIONAL { ?item wdt:P403 ?mouth. }
         OPTIONAL { ?item wdt:P131 ?state. }
         FILTER(?length > 200)
         SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
       } ORDER BY DESC(?length) LIMIT 80`,
-    sub(b,s,a,i){ return [s,b.length?.value?parseFloat(b.length.value).toFixed(0)+' km':''].filter(Boolean).join(' · '); },
-    prefix(b,s,a){ return b.length?.value?parseFloat(b.length.value).toFixed(0)+' km':''; }
+    sub(b,s,a,i){ const m=parseFloat(b.length?.value); const d=m>=1000?(m/1000).toFixed(m>=100000?0:1)+' km':m.toFixed(0)+' m'; return [s,b.length?.value?d:''].filter(Boolean).join(' · '); },
+    prefix(b,s,a){ const m=parseFloat(b.length?.value); return m?m>=1000?(m/1000).toFixed(m>=100000?0:1)+' km':m.toFixed(0)+' m':''; }
   },
   {
     id: 'mountains',
@@ -458,13 +460,15 @@ const CFG = [
   {
     id: 'w_river',
     label: 'World Rivers',
-    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel ?length WHERE {
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel ?length ?src ?mouth WHERE {
       ?item wdt:P31 wd:Q4022. ?item wdt:P625 ?coord. ?item wdt:P2043 ?length.
       FILTER(?length > 500)
+      OPTIONAL { ?item wdt:P974 ?src. }
+      OPTIONAL { ?item wdt:P403 ?mouth. }
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY DESC(?length) LIMIT 100`,
-    sub(b,s,a,i){ const p=[]; if(b.countryLabel?.value)p.push(b.countryLabel.value); if(b.length?.value)p.push(parseFloat(b.length.value).toFixed(0)+' km'); return p.filter(Boolean).join(' · '); },
+    sub(b,s,a,i){ const p=[]; if(b.countryLabel?.value)p.push(b.countryLabel.value); if(b.length?.value){ const m=parseFloat(b.length.value); p.push(m>=1000?(m/1000).toFixed(m>=100000?0:1)+' km':m.toFixed(0)+' m'); } return p.filter(Boolean).join(' · '); },
     prefix(b,s,a){ return s||''; }
   },
   {
@@ -631,7 +635,7 @@ const CFG = [
       OPTIONAL { ?item wdt:P17 ?country. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     } ORDER BY DESC(?length) LIMIT 60`,
-    sub(b,s,a,i){ const p=[]; if(b.countryLabel?.value)p.push(b.countryLabel.value); if(b.length?.value)p.push(parseFloat(b.length.value).toFixed(0)+' km'); return p.filter(Boolean).join(' · '); },
+    sub(b,s,a,i){ const p=[]; if(b.countryLabel?.value)p.push(b.countryLabel.value); if(b.length?.value){ const m=parseFloat(b.length.value); p.push(m>=1000?(m/1000).toFixed(m>=100000?0:1)+' km':m.toFixed(0)+' m'); } return p.filter(Boolean).join(' · '); },
     prefix(b,s,a){ return s||''; }
   },
   {
@@ -1488,6 +1492,18 @@ const CFG = [
     sub(b,s,a,i){ return b.countryLabel?.value||'Stadium'; },
     prefix(b,s,a){ return s||''; }
   },
+  {
+    id: 'w_organization',
+    label: 'World Organizations & Parties',
+    query: `SELECT DISTINCT ?item ?itemLabel ?coord ?countryLabel WHERE {
+      { ?item wdt:P31 wd:Q7278. } UNION { ?item wdt:P31 wd:Q484652. } UNION { ?item wdt:P31 wd:Q79913. }
+      ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P17 ?country. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    } ORDER BY ?itemLabel LIMIT 100`,
+    sub(b,s,a,i){ return b.countryLabel?.value||'Organization'; },
+    prefix(b,s,a){ return s||''; }
+  },
 ];
 
 // ====== PROCESS CATEGORY ======
@@ -1544,7 +1560,31 @@ async function processCat(cat) {
       state:b.stateLabel?.value||'',
       area:b.area?.value?parseFloat(b.area.value).toFixed(1)+' km²':'',
       incept:b.inception?.value?b.inception.value.slice(0,4):'',
+      srcQ:b.src?.value||'', mouthQ:b.mouth?.value||'',
     });
+  }
+
+  // Batch-fetch src/mouth coords if this category has river entries
+  let srcMouthCoords = {};
+  const riverCats = new Set(['rivers','w_river','canal']);
+  if(riverCats.has(cat.id)){
+    const qids = new Set();
+    for(const c of candidates){
+      if(c.srcQ)qids.add(c.srcQ);
+      if(c.mouthQ)qids.add(c.mouthQ);
+    }
+    if(qids.size){
+      const qlist = [...qids].map(q=>`<${q}>`).join(' ');
+      try {
+        const cr = await sparql(`SELECT ?item ?coord WHERE { VALUES ?item { ${qlist} } ?item wdt:P625 ?coord. }`);
+        for(const r of cr.results.bindings){
+          const id=r.item?.value||'';
+          const cm=r.coord?.value?.match(/Point\(([-\d.]+)\s+([-\d.]+)\)/);
+          if(id&&cm)srcMouthCoords[id]={la:parseFloat(parseFloat(cm[2]).toFixed(6)),ln:parseFloat(parseFloat(cm[1]).toFixed(6))};
+        }
+        console.log(`  Fetched ${Object.keys(srcMouthCoords).length} src/mouth coords`);
+      } catch(e){ console.log(`  ⚠ src/mouth coord query failed: ${e.message}`); }
+    }
   }
 
   // Phase 2: batch-fetch summaries with concurrency
@@ -1592,6 +1632,21 @@ async function processCat(cat) {
       _cat:cat.id,
       _quality:'good'
     };
+    if(cand.srcQ||cand.mouthQ){
+      const src = cand.srcQ ? srcMouthCoords[cand.srcQ] : null;
+      const mouth = cand.mouthQ ? srcMouthCoords[cand.mouthQ] : null;
+      if(src)entry.src={la:src.la,ln:src.ln};
+      if(mouth)entry.mouth={la:mouth.la,ln:mouth.ln};
+      if(src&&mouth){
+        const steps=10;
+        const pts=[];
+        for(let i=0;i<=steps;i++){
+          const t=i/steps;
+          pts.push({la:src.la+(mouth.la-src.la)*t, ln:src.ln+(mouth.ln-src.ln)*t});
+        }
+        entry.pts=pts;
+      }
+    }
     entry._quality=assessQuality(entry);
     if(entry._quality==='poor'||entry.sub.length<3||entry.la===0||!entry.n)continue;
     out.push(entry);
