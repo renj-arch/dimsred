@@ -638,6 +638,52 @@ const CAT = {
   w_philosopher:{label:'World Philosophers',color:'#a78bfa',icon:'🧠',region:'WW'},
   w_artist:{label:'World Artists',color:'#f472b6',icon:'🎨',region:'WW'},
   w_architect:{label:'World Architects',color:'#f97316',icon:'🏛️',region:'WW'},
+  ocean:{label:'Oceans & Seas',color:'#38bdf8',icon:'🌏',region:'WW'},
+  w_bay:{label:'Bays',color:'#60a5fa',icon:'🌊',region:'WW'},
+  w_cave:{label:'Caves',color:'#94a3b8',icon:'🕳️',region:'WW'},
+  w_gorge:{label:'Gorges',color:'#f97316',icon:'🏜️',region:'WW'},
+  w_archipelago:{label:'Archipelagos',color:'#34d399',icon:'🏝️',region:'WW'},
+  w_isthmus:{label:'Isthmuses',color:'#a78bfa',icon:'🗺️',region:'WW'},
+  w_spring:{label:'Springs',color:'#38bdf8',icon:'💧',region:'WW'},
+  w_revolution:{label:'Revolutions',color:'#ef4444',icon:'✊',region:'WW'},
+  w_disaster:{label:'Disasters',color:'#fb923c',icon:'🌋',region:'WW'},
+  w_plate:{label:'Tectonic Plates',color:'#6366f1',icon:'🌍',region:'WW'},
+  w_meteorite:{label:'Meteorites',color:'#94a3b8',icon:'☄️',region:'WW'},
+  i_corridor:{label:'Industrial Corridors',color:'#f97316',icon:'🏭',region:'IN'},
+  border_road:{label:'Border Roads',color:'#fb923c',icon:'🛣️',region:'IN'},
+  rl_zone:{label:'Railway Zones',color:'#e879f9',icon:'🚂',region:'IN'},
+  pipeline:{label:'Pipelines',color:'#1e293b',icon:'⛽',region:'IN'},
+  dfc:{label:'Freight Corridors',color:'#f97316',icon:'🚆',region:'IN'},
+  i_bridge:{label:'Bridges (India)',color:'#94a3b8',icon:'🌉',region:'IN'},
+  biogeographic_zone:{label:'Biogeographic Zones',color:'#34d399',icon:'🌍',region:'IN'},
+  cement:{label:'Cement Plants',color:'#94a3b8',icon:'🏭',region:'IN'},
+  drainage:{label:'Drainage Systems',color:'#38bdf8',icon:'🌊',region:'IN'},
+  fertilizer:{label:'Fertilizer Plants',color:'#a3e635',icon:'🏭',region:'IN'},
+  i_cave:{label:'Caves (India)',color:'#94a3b8',icon:'🕳️',region:'IN'},
+  i_colonial:{label:'Colonial Sites',color:'#fb923c',icon:'🏛️',region:'IN'},
+  i_freedom:{label:'Freedom Fighters',color:'#ef4444',icon:'✊',region:'IN'},
+  i_glacier:{label:'Glaciers (India)',color:'#38bdf8',icon:'🧊',region:'IN'},
+  i_island:{label:'Islands (India)',color:'#34d399',icon:'🏝️',region:'IN'},
+  i_lake:{label:'Lakes (India)',color:'#38bdf8',icon:'🏞️',region:'IN'},
+  i_medieval:{label:'Medieval Sites',color:'#fb923c',icon:'🏰',region:'IN'},
+  i_movement:{label:'Movements',color:'#86efac',icon:'✊',region:'IN'},
+  i_observatory:{label:'Observatories',color:'#a78bfa',icon:'🔭',region:'IN'},
+  i_pilgrimage:{label:'Pilgrimage Sites',color:'#facc15',icon:'🕉️',region:'IN'},
+  i_stadium:{label:'Stadiums (India)',color:'#94a3b8',icon:'🏟️',region:'IN'},
+  i_tunnel:{label:'Tunnels (India)',color:'#a78bfa',icon:'🚇',region:'IN'},
+  i_waterfall:{label:'Waterfalls (India)',color:'#22d3ee',icon:'💧',region:'IN'},
+  i_zoo:{label:'Zoos (India)',color:'#34d399',icon:'🦁',region:'IN'},
+  industrial:{label:'Industrial Areas',color:'#94a3b8',icon:'🏭',region:'IN'},
+  irrigation:{label:'Irrigation Projects',color:'#38bdf8',icon:'💧',region:'IN'},
+  monsoon:{label:'Monsoon Regions',color:'#38bdf8',icon:'🌧️',region:'IN'},
+  physiographic:{label:'Physiographic Divisions',color:'#f472b6',icon:'🏔️',region:'IN'},
+  power_plant:{label:'Power Plants',color:'#ef4444',icon:'⚡',region:'IN'},
+  refinery:{label:'Refineries',color:'#1e293b',icon:'🏭',region:'IN'},
+  seismic_zone:{label:'Seismic Zones',color:'#ef4444',icon:'🌋',region:'IN'},
+  soil:{label:'Soil Types',color:'#a3e635',icon:'🌱',region:'IN'},
+  steel_plant:{label:'Steel Plants',color:'#94a3b8',icon:'🏗️',region:'IN'},
+  tribe:{label:'Tribal Regions',color:'#e879f9',icon:'🪶',region:'IN'},
+  vegetation:{label:'Vegetation Types',color:'#34d399',icon:'🌲',region:'IN'},
 };
 
 const D = {};
@@ -10738,7 +10784,7 @@ function mkLbl(text,col,scale=0.12){
 // LAYER PANEL
 // ============================================================
 const panel = document.getElementById('layersPanel');
-const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','dynasty','organization','tiger','hill','bird','i_pass','tribal','i_book','ruler','freedom','traveller','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','w_organization','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','latitude','current','phenomena','wind','cloud','forest','rainfall','plateau','plain','valley','w_pass','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','trade','oil','personality','highway','i_range','crop','mineral','statue','capital','w_coast','w_civilization','museum','w_cathedral','w_park','w_reservoir','w_castle','w_shrine','w_university','w_school','statue','ice_shelf','shrine','w_embassy','w_geyser','atoll','w_stadium','folk_dance','waterway','w_theatre','w_war','crater','geopark','w_ww1','mountains','ice_cap','seamount','w_tomb','w_hospital','capital','w_ww2','ecoregion','mesa','ocean_ridge','w_harbor','w_treaty','salt_flat','time_zone','cloud','spaceport','oasis','reservoir','park','w_trench','metro','mangrove','estuary','market','w_coast','climate_zone','i_fort','biome','tornado_region','monument','tomb','w_empire','cyclone_region','rainfall','theatre','i_palace','castle','cathedral','embassy','current','w_civilization','wind','invention','movement','corridor','writer','reformer','country','philosopher','artist','architect','w_philosopher','w_artist','w_architect'];
+const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','dynasty','organization','tiger','hill','bird','i_pass','tribal','i_book','ruler','freedom','traveller','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','w_organization','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','latitude','current','phenomena','wind','cloud','forest','rainfall','plateau','plain','valley','w_pass','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','trade','oil','personality','highway','i_range','crop','mineral','statue','capital','w_coast','w_civilization','museum','w_cathedral','w_park','w_reservoir','w_castle','w_shrine','w_university','w_school','statue','ice_shelf','shrine','w_embassy','w_geyser','atoll','w_stadium','folk_dance','waterway','w_theatre','w_war','crater','geopark','w_ww1','mountains','ice_cap','seamount','w_tomb','w_hospital','capital','w_ww2','ecoregion','mesa','ocean_ridge','w_harbor','w_treaty','salt_flat','time_zone','cloud','spaceport','oasis','reservoir','park','w_trench','metro','mangrove','estuary','market','w_coast','climate_zone','i_fort','biome','tornado_region','monument','tomb','w_empire','cyclone_region','rainfall','theatre','i_palace','castle','cathedral','embassy','current','w_civilization','wind','invention','movement','corridor','writer','reformer','country','philosopher','artist','architect','w_philosopher','w_artist','w_architect','ocean','w_bay','w_cave','w_gorge','w_archipelago','w_isthmus','w_spring','w_revolution','w_disaster','w_plate','w_meteorite','i_corridor','border_road','rl_zone','pipeline','dfc','i_bridge','biogeographic_zone','cement','drainage','fertilizer','i_cave','i_colonial','i_freedom','i_glacier','i_island','i_lake','i_medieval','i_movement','i_observatory','i_pilgrimage','i_stadium','i_tunnel','i_waterfall','i_zoo','industrial','irrigation','monsoon','physiographic','power_plant','refinery','seismic_zone','soil','steel_plant','tribe','vegetation'];
 
 // Auto-play state
 let _ap=null; // {k, idx, items, timeout}
