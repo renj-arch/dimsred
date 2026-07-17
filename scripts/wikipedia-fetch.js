@@ -165,7 +165,7 @@ function loadDedupSet() {
   } catch {}
   try {
     const html = fs.readFileSync(GLOBE_PATH, 'utf8');
-    const globCats = ['tiger','wildlife','biosphere','ramsar','peak','desert','waterfall','glacier','volcano','railway','hill','tower','forest','port','airport','island','lake','river','dam','national_park','unesco','city','i_fort','i_palace','i_lake','i_glacier','i_waterfall','i_island','i_cave','i_bridge','i_tunnel','i_stadium','i_observatory','i_zoo','rl_zone','pipeline','refinery','fertilizer','cement','power_plant','steel_plant','tribe','i_freedom','i_medieval','i_colonial','i_movement','i_pilgrimage','personality','irrigation','drainage','physiographic','soil','monsoon','vegetation','seismic_zone','biogeographic_zone','industrial','wind','cloud','rainfall','latitude','trade','phenomena','dfc','i_corridor','border_road','ocean','fjord','atoll','oasis','salt_flat','mangrove','ice_shelf','ocean_ridge','seamount','capital','ice_cap','biome','climate_zone','cyclone_region','tornado_region','time_zone','basin','crater','ecoregion','estuary','lagoon','mesa','museum','religious','shipwreck','spaceport','statue','wind_farm','zoo','amusement_park','range','sea','valley','folk_dance','longitude','festival','language','cuisine','classical_dance','monument','mosque','church','archaeological_site','monastery','escarpment','geopark','ruler','freedom','traveller','tribal','i_book'];
+    const globCats = ['tiger','wildlife','biosphere','ramsar','peak','desert','waterfall','glacier','volcano','railway','hill','tower','forest','port','airport','island','lake','river','dam','national_park','unesco','city','i_fort','i_palace','i_lake','i_glacier','i_waterfall','i_island','i_cave','i_bridge','i_tunnel','i_stadium','i_observatory','i_zoo','rl_zone','pipeline','refinery','fertilizer','cement','power_plant','steel_plant','tribe','i_freedom','i_medieval','i_colonial','i_movement','i_pilgrimage','personality','irrigation','drainage','physiographic','soil','monsoon','vegetation','seismic_zone','biogeographic_zone','industrial','wind','cloud','rainfall','latitude','trade','phenomena','dfc','i_corridor','border_road','ocean','fjord','atoll','oasis','salt_flat','mangrove','ice_shelf','ocean_ridge','seamount','capital','ice_cap','biome','climate_zone','cyclone_region','tornado_region','time_zone','basin','crater','ecoregion','estuary','lagoon','mesa','museum','religious','shipwreck','spaceport','statue','wind_farm','zoo','amusement_park','range','sea','valley','folk_dance','longitude','festival','language','cuisine','classical_dance','monument','mosque','church','archaeological_site','monastery','escarpment','geopark','ruler','freedom','traveller','tribal','i_book','invention','movement','corridor','writer','reformer','country'];
     for (const gc of globCats) {
       const rx = new RegExp(`D\\.${gc}\\s*=\\s*\\[([\\s\\S]*?)\\];`, 'i');
       const m = rx.exec(html);
@@ -288,6 +288,62 @@ const CFG = [
   { id:'ruler', label:'Rulers & Emperors', wikiCat:'Category:Indian_monarchs', subFn:(s,a)=>[s,'Indian monarch'].filter(Boolean).join(' · ') },
   { id:'freedom', label:'Freedom Fighters', wikiCat:'Category:Indian_revolutionaries', subFn:(s,a)=>[s,'Indian revolutionary'].filter(Boolean).join(' · ') },
   { id:'traveller', label:'Travellers & Explorers', wikiCat:'Category:Indian_explorers', subFn:(s,a)=>[s,'Indian explorer'].filter(Boolean).join(' · ') },
+  { id:'invention', label:'Inventions & Discoveries', wikiCat:'Category:Indian_inventions', subFn:(s,a)=>s },
+  { id:'movement', label:'Movements & Protests', wikiCat:'Category:Environmental_protests_in_India', subFn:(s,a)=>s },
+  { id:'i_book', label:'Ancient Books & Texts', wikiCat:'Category:Ancient_Indian_literature',
+    subFn:(s,a)=>s,
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P50 ?author. { ?author wdt:P19 ?coord. } UNION { ?author wdt:P20 ?coord. } }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }`
+  },
+  { id:'tribal', label:'Tribal Regions', wikiCat:'Category:Adivasi', subFn:(s,a)=>s },
+  { id:'corridor', label:'Wildlife Corridors', wikiCat:'Category:Elephant_reserves_of_India', subFn:(s,a)=>s },
+  { id:'reformer', label:'Reformers & Thinkers', wikiCat:'Category:Indian_social_reformers',
+    subFn:(s,a)=>s,
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P19 ?coord. }
+      UNION
+      { ?item wdt:P20 ?coord. }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }`
+  },
+  { id:'country', label:'Countries & Currencies', wikiCat:'Category:Member_states_of_the_United_Nations',
+    subFn:(s,a,m)=>{
+      let sub = s;
+      if (m?.currencyLabel?.[0]) sub += ' · ' + m.currencyLabel[0];
+      if (m?.capitalLabel?.[0]) sub += ' · ' + m.capitalLabel[0];
+      return sub;
+    },
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel ?capitalLabel ?currencyLabel WHERE {
+      VALUES ?item { QIDS }
+      ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P36 ?capital. }
+      OPTIONAL { ?item wdt:P38 ?currency. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }`
+  },
+  { id:'writer', label:'Writers & Poets', wikiCat:'Category:Indian_poets',
+    subFn:(s,a)=>s,
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P19 ?coord. }
+      UNION
+      { ?item wdt:P20 ?coord. }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }`
+  },
 ];
 
 async function fetchSummariesConcurrently(titles, concurrency = 5) {
@@ -321,12 +377,17 @@ async function processCat(cat, dedupSet) {
   let sparqlResult;
   try {
     const qidList = valid.map(([, q]) => `wd:${q}`).join(' ');
-    const q = `SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+    let q;
+    if (cat.coordSparql) {
+      q = cat.coordSparql.replace('QIDS', qidList);
+    } else {
+      q = `SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
       VALUES ?item { ${qidList} }
       ?item wdt:P625 ?coord.
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`;
+    }
     sparqlResult = await sparql(q);
   } catch (e) { console.log(`  ✗ SPARQL failed: ${e.message}`); return []; }
 
@@ -335,10 +396,16 @@ async function processCat(cat, dedupSet) {
     const qid = b.item.value.split('/').pop();
     const m = b.coord?.value?.match(/Point\(([-\d.]+)\s+([-\d.]+)\)/);
     if (!m) continue;
-    const e = coordMap.get(qid) || { la: 0, ln: 0, states: [] };
+    const e = coordMap.get(qid) || { la: 0, ln: 0, states: [], meta: {} };
     e.la = parseFloat(parseFloat(m[2]).toFixed(6));
     e.ln = parseFloat(parseFloat(m[1]).toFixed(6));
     if (b.stateLabel?.value && !e.states.includes(b.stateLabel.value)) e.states.push(b.stateLabel.value);
+    for (const v of Object.keys(b)) {
+      if (!['item','coord','state','stateLabel','itemLabel'].includes(v) && b[v]?.value) {
+        const val = b[v].value;
+        if (!e.meta[v] || !e.meta[v].includes(val)) { if (!e.meta[v]) e.meta[v] = []; e.meta[v].push(val); }
+      }
+    }
     coordMap.set(qid, e);
   }
   console.log(`  With coords: ${coordMap.size}`);
@@ -364,7 +431,8 @@ async function processCat(cat, dedupSet) {
   let n = 0;
   for (const cand of candidates) {
     const state = cand.coord.states?.join(', ') || '';
-    const sub = cat.subFn(state, '');
+    const meta = cand.coord.meta || {};
+    const sub = cat.subFn(state, '', meta);
     const wd = summaries[cand.title];
     const txt = wd?.extract || '';
     const desc = buildDesc(txt);

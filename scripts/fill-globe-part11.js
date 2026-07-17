@@ -210,6 +210,14 @@ const CAT_MAP = {
   'wiki-ruler.json': 'ruler',
   'wiki-freedom.json': 'freedom',
   'wiki-traveller.json': 'traveller',
+  'wiki-invention.json': 'invention',
+  'wiki-movement.json': 'movement',
+  'wiki-i_book.json': 'i_book',
+  'wiki-tribal.json': 'tribal',
+  'wiki-corridor.json': 'corridor',
+  'wiki-writer.json': 'writer',
+  'wiki-reformer.json': 'reformer',
+  'wiki-country.json': 'country',
 };
 
 let html = fs.readFileSync(GLOBE_PATH, 'utf8');
