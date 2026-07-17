@@ -9409,6 +9409,7 @@ document.getElementById('btnLayers').addEventListener('click',()=>{
 });
 // Keyboard shortcut: H to toggle all layers
 document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;
   if(e.key==='h'||e.key==='H')document.getElementById('btnLayers').click();
   if(e.key==='Escape'){if(_ap)stopAutoPlay();dp.classList.remove('show');clearHighlight();stopTimeline();hidePortrait();document.getElementById('subtitle').classList.remove('show');if(window.speechSynthesis)speechSynthesis.cancel();}
 });
