@@ -15,13 +15,24 @@ function normalizeName(n) {
 const catMatches = [...h.matchAll(/D\.(\w+)\s*=\s*\[/g)];
 let totalRemoved = 0;
 
-for (const [fullMatch, cat] of catMatches) {
-  const startIdx = fullMatch.index + fullMatch.length;
-  const chunk = h.slice(startIdx, startIdx + 200000);
-  let depth = 1, endIdx = 0;
+for (const match of catMatches) {
+  const cat = match[1];
+  const startIdx = match.index + match[0].length;
+  const chunk = h.slice(startIdx);
+  let depth = 1, endIdx = 0, inStr = false;
   for (let i = 0; i < chunk.length; i++) {
-    if (chunk[i] === '[') depth++;
-    else if (chunk[i] === ']') { depth--; if (depth === 0) { endIdx = i; break; } }
+    const c = chunk[i];
+    if (inStr) {
+      if (c === '\\') { i++; continue; }
+      if (c === '\'') inStr = false;
+    } else if (c === '\'') {
+      inStr = true;
+    } else if (c === '[') {
+      depth++;
+    } else if (c === ']') {
+      depth--;
+      if (depth === 0) { endIdx = i; break; }
+    }
   }
 
   const content = chunk.slice(0, endIdx);
