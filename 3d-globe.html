@@ -12283,6 +12283,7 @@ searchInp.addEventListener('input',()=>{
       const items=D[k];if(!items)continue;
       const cat=CAT[k];
       for(const d of items){
+        if(!d)continue;
         const n=(d.n||'').toLowerCase();
         const s=(d.sub||'').toLowerCase();
         const de=(d.desc||'').toLowerCase();
