@@ -6,7 +6,20 @@ const outDir = path.join(__dirname, '..', 'data', 'questions');
 const archivePath = path.join(__dirname, '..', 'archive.html');
 
 const quiz = JSON.parse(fs.readFileSync(quizPath, 'utf8'));
-const allQuestions = quiz.questions;
+const rawQuestions = quiz.questions;
+
+// ── Dedup by (question + answer) key ──
+const seen = new Set();
+const allQuestions = [];
+rawQuestions.forEach(q => {
+  const key = ((q.question || '') + '||' + (q.answer || '')).toLowerCase().replace(/\s+/g, ' ').trim();
+  if (!seen.has(key)) {
+    seen.add(key);
+    allQuestions.push(q);
+  }
+});
+const deduped = allQuestions.length;
+console.log('quiz.json: ' + deduped + ' / ' + rawQuestions.length + ' unique (removed ' + (rawQuestions.length - deduped) + ' duplicates)');
 
 const CAT_ICONS = {
   'Ancient India':'🏛️','Medieval & Modern India':'👑','Indian History':'🏛️',
