@@ -31,18 +31,34 @@ async function httpGet(url, retries = 3) {
   }
 }
 
-async function wikiCategoryMembers(category, maxPages = 1500) {
-  let all = [], cmcontinue = '';
-  while (all.length < maxPages) {
-    let url = `https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=${encodeURIComponent(category)}&cmlimit=500&format=json&cmtype=page`;
+async function wikiCategoryDeepMembers(category, maxPages = 5000, visited = new Set(), depth = 0) {
+  if (visited.has(category) || depth > 2) return [];
+  visited.add(category);
+
+  let pages = [], subcats = [], cmcontinue = '';
+  while (pages.length < maxPages) {
+    let url = `https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=${encodeURIComponent(category)}&cmlimit=500&format=json&cmtype=page|subcat`;
     if (cmcontinue) url += `&cmcontinue=${encodeURIComponent(cmcontinue)}`;
     const d = await httpGet(url);
-    all = all.concat(d.query.categorymembers.map(m => m.title));
+    for (const m of d.query.categorymembers) {
+      if (m.type === 'subcat' && depth < 2) subcats.push(m.title);
+      else if (m.type === 'page') pages.push(m.title);
+    }
     cmcontinue = d.continue?.cmcontinue;
     if (!cmcontinue) break;
     await new Promise(r => setTimeout(r, 200));
   }
-  return all.filter(t => !t.startsWith('List of ') && !t.includes('/'));
+
+  let result = pages.filter(t => !t.startsWith('List of ') && !t.includes('/'));
+
+  for (const sc of subcats) {
+    if (result.length >= maxPages) break;
+    const subPages = await wikiCategoryDeepMembers(sc, maxPages - result.length, visited, depth + 1);
+    result = result.concat(subPages);
+    await new Promise(r => setTimeout(r, 250));
+  }
+
+  return result;
 }
 
 async function titlesToQids(titles) {
@@ -165,7 +181,7 @@ function loadDedupSet() {
   } catch {}
   try {
     const html = fs.readFileSync(GLOBE_PATH, 'utf8');
-    const globCats = ['tiger','wildlife','biosphere','ramsar','peak','desert','waterfall','glacier','volcano','railway','hill','tower','forest','port','airport','island','lake','river','dam','national_park','unesco','city','i_fort','i_palace','i_lake','i_glacier','i_waterfall','i_island','i_cave','i_bridge','i_tunnel','i_stadium','i_observatory','i_zoo','rl_zone','pipeline','refinery','fertilizer','cement','power_plant','steel_plant','tribe','i_freedom','i_medieval','i_colonial','i_movement','i_pilgrimage','personality','dynasty','organization','irrigation','drainage','physiographic','soil','monsoon','vegetation','seismic_zone','biogeographic_zone','industrial','wind','cloud','rainfall','latitude','trade','phenomena','dfc','i_corridor','border_road','ocean','fjord','atoll','oasis','salt_flat','mangrove','ice_shelf','ocean_ridge','seamount','capital','ice_cap','biome','climate_zone','cyclone_region','tornado_region','time_zone','basin','crater','ecoregion','estuary','lagoon','mesa','museum','religious','shipwreck','spaceport','statue','wind_farm','zoo','amusement_park','range','sea','valley','folk_dance','longitude','festival','language','cuisine','classical_dance','monument','mosque','church','archaeological_site','monastery','escarpment','geopark','ruler','freedom','traveller','tribal','i_book','invention','movement','corridor','writer','reformer','country','philosopher','artist','architect'];
+    const globCats = ['tiger','wildlife','biosphere','ramsar','peak','desert','waterfall','glacier','volcano','railway','hill','tower','forest','port','airport','island','lake','river','dam','national_park','unesco','city','i_fort','i_palace','i_lake','i_glacier','i_waterfall','i_island','i_cave','i_bridge','i_tunnel','i_stadium','i_observatory','i_zoo','rl_zone','pipeline','refinery','fertilizer','cement','power_plant','steel_plant','tribe','i_freedom','i_medieval','i_colonial','i_movement','i_pilgrimage','personality','dynasty','organization','irrigation','drainage','physiographic','soil','monsoon','vegetation','seismic_zone','biogeographic_zone','industrial','wind','cloud','rainfall','latitude','trade','phenomena','dfc','i_corridor','border_road','ocean','fjord','atoll','oasis','salt_flat','mangrove','ice_shelf','ocean_ridge','seamount','capital','ice_cap','biome','climate_zone','cyclone_region','tornado_region','time_zone','basin','crater','ecoregion','estuary','lagoon','mesa','museum','religious','shipwreck','spaceport','statue','wind_farm','zoo','amusement_park','range','sea','valley','folk_dance','longitude','festival','language','cuisine','classical_dance','monument','mosque','church','archaeological_site','monastery','escarpment','geopark','ruler','freedom','traveller','tribal','i_book','invention','movement','corridor','writer','reformer','country','philosopher','artist','architect','w_politician'];
     for (const gc of globCats) {
       const rx = new RegExp(`D\\.${gc}\\s*=\\s*\\[([\\s\\S]*?)\\];`, 'i');
       const m = rx.exec(html);
@@ -547,6 +563,19 @@ const CFG = [
   { id:'escarpment', label:'Escarpments', wikiCat:'Category:Escarpments', subFn:(s,a)=>s },
   { id:'w_reservoir', label:'World Reservoirs', wikiCat:'Category:Reservoirs', subFn:(s,a)=>s },
   // Static-fallback categories (use Wikipedia fetch as supplement to static data)
+  { id:'w_politician', label:'World Political Leaders', wikiCat:'Category:Political_leaders',
+    subFn:(s,a)=>s,
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P19 ?coord. }
+      UNION
+      { ?item wdt:P20 ?coord. }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }`
+  },
   { id:'w_ideology', label:'Political Ideologies', wikiCat:'Category:Political_ideologies',
     subFn:(s,a)=>s,
     coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
@@ -601,8 +630,8 @@ async function fetchSummariesConcurrently(titles, concurrency = 5) {
 // ====== PROCESS CATEGORY ======
 async function processCat(cat, dedupSet) {
   console.log(`\n▓ ${cat.label} (${cat.wikiCat})`);
-  const titles = await wikiCategoryMembers(cat.wikiCat);
-  console.log(`  Wikipedia: ${titles.length} pages in category`);
+  const titles = await wikiCategoryDeepMembers(cat.wikiCat);
+  console.log(`  Wikipedia: ${titles.length} pages (deep scan, up to 2 subcat levels)`);
   if (!titles.length) return [];
 
   const titleQid = await titlesToQids(titles);
@@ -650,7 +679,7 @@ async function processCat(cat, dedupSet) {
   const candidates = [];
   let skipped = 0;
   for (const [title, qid] of valid) {
-    if (candidates.length >= 60) break;
+    if (candidates.length >= 200) break;
     const coord = coordMap.get(qid);
     if (!coord) continue;
     if (dedupSet.has(normName(title))) { skipped++; continue; }

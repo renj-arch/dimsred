@@ -233,6 +233,7 @@ const CAT_MAP = {
   'wiki-w_nuclear_power.json': 'w_nuclear_power',
   'wiki-scientist.json': 'scientist',
   'wiki-sports.json': 'sports',
+  'wiki-w_politician.json': 'w_politician',
   'wiki-w_ideology.json': 'w_ideology',
   'wiki-w_language.json': 'w_language',
   'wiki-coastline.json': 'coastline',
