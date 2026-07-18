@@ -11735,9 +11735,11 @@ function mkLbl(text,col,scale=0.12){
 
 // ====== COUNTRY REGION SHADING (TopoJSON) ======
 function topoDecodeArcs(topo) {
+  const [sx, sy] = topo.transform.scale;
+  const [tx, ty] = topo.transform.translate;
   return topo.arcs.map(arc => {
     let x = 0, y = 0;
-    return arc.map(([dx, dy]) => { x += dx; y += dy; return [x, y]; });
+    return arc.map(([dx, dy]) => { x += dx; y += dy; return [x * sx + tx, y * sy + ty]; });
   });
 }
 function topoGetRing(arcIds, decoded) {
