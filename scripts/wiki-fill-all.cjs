@@ -20,6 +20,24 @@ function fetchJSON(url) {
 
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+async function fetchCategoryMembers(wikiCat, maxPages = 200) {
+  let pages = [], cmcontinue = '';
+  while (pages.length < maxPages) {
+    let url = `${WIKI_API}?action=query&list=categorymembers&cmtitle=${encodeURIComponent('Category:' + wikiCat)}&cmlimit=500&format=json&cmtype=page`;
+    if (cmcontinue) url += '&cmcontinue=' + encodeURIComponent(cmcontinue);
+    try {
+      const d = await fetchJSON(url);
+      for (const m of d.query.categorymembers) {
+        if (m.ns === 0) pages.push(m.title);
+      }
+      cmcontinue = d.continue?.cmcontinue;
+      if (!cmcontinue) break;
+      await delay(500);
+    } catch { break; }
+  }
+  return pages.filter(t => !t.startsWith('List of ') && !t.includes('/'));
+}
+
 async function fetchAllTopics(topics, concurrency) {
   const results = [];
   const queue = [...topics];
@@ -246,7 +264,7 @@ function makeDescriptionQuestion(desc, title) {
 
 const CATEGORIES = [
   // ───────── Ancient India ─────────
-  { name:'Ancient India', topics:[
+  { name:'Ancient India', wikiCat:'History_of_India_by_period', topics:[
     'Indus Valley Civilisation','Vedic period','Maurya Empire','Ashoka',
     'Gupta Empire','Chola Empire','Vijayanagara Empire','Sangam period',
     'Kushan Empire','Satavahana dynasty','Pala Empire','Chera dynasty',
@@ -260,7 +278,7 @@ const CATEGORIES = [
     'Meera','Tulsidas','Surdas','Mirabai','Nagarjuna','Moulinak (Moulinak)'
   ]},
   // ───────── Medieval & Modern India ─────────
-  { name:'Medieval & Modern India', topics:[
+  { name:'Medieval & Modern India', wikiCat:'Medieval_India', topics:[
     'Delhi Sultanate','Mughal Empire','Maratha Empire','Sikh Empire',
     'Vijayanagara Empire','Bahmani Sultanate','Bengal Sultanate','Ahom kingdom',
     'Rajput','Khalji dynasty','Tughlaq dynasty','Sayyid dynasty','Lodi dynasty',
@@ -280,7 +298,7 @@ const CATEGORIES = [
     'Goods and Services Tax (India)'
   ]},
   // ───────── World History ─────────
-  { name:'World History', topics:[
+  { name:'World History', wikiCat:'World_history', topics:[
     'World history','Ancient Egypt','Ancient Greece','Ancient Rome',
     'French Revolution','Russian Revolution','Industrial Revolution',
     'World War I','World War II','Cold War','Great Depression',
@@ -312,7 +330,7 @@ const CATEGORIES = [
     'Captain James Cook','Ibn Battuta','Xuanzang'
   ]},
   // ───────── Indian Geography ─────────
-  { name:'Indian Geography', topics:[
+  { name:'Indian Geography', wikiCat:'Geography_of_India', topics:[
     'Geography of India','Climate of India','Rivers of India',
     'Soils of India','Minerals of India','Natural vegetation of India',
     'Agriculture in India','Population of India','Urbanization in India',
@@ -340,7 +358,7 @@ const CATEGORIES = [
     'List of wildlife sanctuaries of India','List of Indian states by forest cover'
   ]},
   // ───────── World Geography ─────────
-  { name:'World Geography', topics:[
+  { name:'World Geography', wikiCat:'Physical_geography', topics:[
     'Continent','Climate','Ocean','Atmosphere','Biosphere','Ecosystem','Biome',
     'Plate tectonics','Volcano','Earthquake','Water cycle','Desert','Rainforest',
     'Tundra','Grassland','Taiga','Savanna','Mediterranean climate',
@@ -376,7 +394,7 @@ const CATEGORIES = [
     'New Development Bank','Asian Infrastructure Investment Bank'
   ]},
   // ───────── Indian Polity & Governance ─────────
-  { name:'Polity & Governance', topics:[
+  { name:'Polity & Governance', wikiCat:'Government_of_India', topics:[
     'Constitution of India','Fundamental rights in India',
     'Directive principles of India','Fundamental duties in India',
     'Politics of India','Election Commission of India','Parliament of India',
@@ -414,7 +432,7 @@ const CATEGORIES = [
     'Public Interest Litigation in India','Writ jurisdiction in India'
   ]},
   // ───────── Indian Economy ─────────
-  { name:'Indian Economy', topics:[
+  { name:'Indian Economy', wikiCat:'Economy_of_India', topics:[
     'Economy of India','Economic liberalisation in India','Agriculture in India',
     'Five-year plans of India','NITI Aayog','Reserve Bank of India','Banking in India',
     'Poverty in India','Unemployment in India','Foreign trade of India',
@@ -443,7 +461,7 @@ const CATEGORIES = [
     'International trade of India','World Trade Organization and India'
   ]},
   // ───────── General Science ─────────
-  { name:'General Science', topics:[
+  { name:'General Science', wikiCat:'Science', topics:[
     'Physics','Chemistry','Biology','Human body','Genetics','Cell biology',
     'Evolution','Ecology','Nutrition','Disease','Atomic physics','Nuclear physics',
     'Optics','Electricity','Magnetism','Thermodynamics','Periodic table',
@@ -483,7 +501,7 @@ const CATEGORIES = [
     'Laser','Fibre optics','Satellite','Radar','Sonar','GPS'
   ]},
   // ───────── Science & Technology ─────────
-  { name:'Science & Technology', topics:[
+  { name:'Science & Technology', wikiCat:'Science_and_technology_in_India', topics:[
     'Science and technology in India','Biotechnology','Nanotechnology',
     'Renewable energy in India','Nuclear power in India','Robotics',
     'Artificial intelligence','Information technology in India',
@@ -504,7 +522,7 @@ const CATEGORIES = [
     'BrahMos Aerospace','Hindustan Aeronautics Limited'
   ]},
   // ───────── Art, Culture & Heritage ─────────
-  { name:'Art & Culture', topics:[
+  { name:'Art & Culture', wikiCat:'Culture_of_India', topics:[
     'Culture of India','Indian classical music','Indian folk music',
     'Indian dance','Indian painting','Indian sculpture',
     'Indian architecture','Indian theatre','Indian cinema',
@@ -539,7 +557,7 @@ const CATEGORIES = [
     'Salman Rushdie','Vikram Seth','Arundhati Roy','R. K. Narayan'
   ]},
   // ───────── Defence & Internal Security ─────────
-  { name:'Defence & Security', topics:[
+  { name:'Defence & Security', wikiCat:'Military_of_India', topics:[
     'Indian Armed Forces','Indian Army','Indian Navy','Indian Air Force',
     'Indian Coast Guard','Nuclear weapons of India','Defence industry of India',
     'Internal security of India','Terrorism in India',
@@ -569,7 +587,7 @@ const CATEGORIES = [
     'Indian Ordnance Factories','Military history of India'
   ]},
   // ───────── Environment, Ecology & Climate ─────────
-  { name:'Environment & Ecology', topics:[
+  { name:'Environment & Ecology', wikiCat:'Environment_of_India', topics:[
     'Environment of India','Wildlife of India','Climate change in India',
     'Biodiversity of India','Deforestation in India','Pollution in India',
     'Waste management in India','National parks of India',
@@ -615,7 +633,7 @@ const CATEGORIES = [
     'Central Pollution Control Board','State Pollution Control Board'
   ]},
   // ───────── International Relations ─────────
-  { name:'International Relations', topics:[
+  { name:'International Relations', wikiCat:'Foreign_relations_of_India', topics:[
     'Foreign relations of India','United Nations','SAARC','BRICS','G20',
     'Shanghai Cooperation Organisation','ASEAN','World Trade Organization',
     'International Monetary Fund','World Bank','Non-Aligned Movement',
@@ -669,7 +687,7 @@ const CATEGORIES = [
     'Teesta River water dispute','Kishanganga Hydroelectric Project'
   ]},
   // ───────── Indian Society & Social Issues ─────────
-  { name:'Indian Society', topics:[
+  { name:'Indian Society', wikiCat:'Society_of_India', topics:[
     'Indian society','Caste system in India','Education in India',
     'Demographics of India','Health in India','Women in India',
     'Child labour in India','Human rights in India','Hunger in India',
@@ -707,7 +725,7 @@ const CATEGORIES = [
     'Microfinance in India','Women\'s empowerment in India'
   ]},
   // ───────── Ethics & Integrity ─────────
-  { name:'Ethics & Integrity', topics:[
+  { name:'Ethics & Integrity', wikiCat:'Ethics', topics:[
     'Ethics','Moral philosophy','Applied ethics','Business ethics',
     'Medical ethics','Environmental ethics','Corporate governance',
     'Code of conduct','Conflict of interest','Whistleblower',
@@ -742,7 +760,7 @@ const CATEGORIES = [
     'Common good','General will','Social contract'
   ]},
   // ───────── ISRO, Space & Nuclear ─────────
-  { name:'ISRO & Space', topics:[
+  { name:'ISRO & Space', wikiCat:'Indian_Space_Research_Organisation', topics:[
     'ISRO','Chandrayaan programme','Mangalyaan','Gaganyaan',
     'Satellite navigation','Space research','Indian Space Research Organisation',
     'List of Indian satellites','Launch vehicles of India',
@@ -774,7 +792,7 @@ const CATEGORIES = [
     'Mission Shakti'
   ]},
   // ───────── Sports ─────────
-  { name:'Sports', topics:[
+  { name:'Sports', wikiCat:'Sports_in_India', topics:[
     'Sports in India','Cricket in India','Hockey in India','Football in India',
     'Olympic Games','Asian Games','Commonwealth Games','Chess','Badminton',
     'Tennis','Kabbadi','Wrestling in India','Boxing in India',
@@ -807,7 +825,7 @@ const CATEGORIES = [
     'Taekwondo in India','Cycling in India','Gymnastics in India'
   ]},
   // ───────── Books, Authors & Literature ─────────
-  { name:'Books & Authors', topics:[
+  { name:'Books & Authors', wikiCat:'Indian_literature', topics:[
     'Indian literature','Hindi literature','Indian English literature',
     'Sanskrit literature','Tamil literature','Bengali literature',
     'Urdu literature','Marathi literature','Gujarati literature',
@@ -837,7 +855,7 @@ const CATEGORIES = [
     'List of Indian autobiographies','List of Indian biographies'
   ]},
   // ───────── Awards & Honours ─────────
-  { name:'Awards & Honours', topics:[
+  { name:'Awards & Honours', wikiCat:'Awards_in_India', topics:[
     'National awards of India','Bharat Ratna','Padma awards',
     'Sahitya Akademi Award','Jnanpith Award','Dadasaheb Phalke Award',
     'Arjuna Award','Dronacharya Award','Major Dhyan Chand Khel Ratna',
@@ -864,7 +882,7 @@ const CATEGORIES = [
     'List of civil awards and decorations of India'
   ]},
   // ───────── Government Schemes ─────────
-  { name:'Govt Schemes', topics:[
+  { name:'Govt Schemes', wikiCat:'Government_schemes_in_India', topics:[
     'Government of India','MGNREGA','Ayushman Bharat','Swachh Bharat Mission',
     'Digital India','Make in India','Startup India','Skill India',
     'Pradhan Mantri Jan Dhan Yojana','Pradhan Mantri Awas Yojana',
@@ -894,7 +912,7 @@ const CATEGORIES = [
     'Electoral Bond','NOTA','National Voters Day'
   ]},
   // ───────── Indian States ─────────
-  { name:'Indian States', topics:[
+  { name:'Indian States', wikiCat:'States_and_union_territories_of_India', topics:[
     'States and union territories of India','Maharashtra','Tamil Nadu',
     'Uttar Pradesh','Karnataka','Kerala','Gujarat','Rajasthan','West Bengal',
     'Bihar','Madhya Pradesh','Punjab, India','Haryana','Andhra Pradesh',
@@ -913,7 +931,7 @@ const CATEGORIES = [
     'List of Indian state cuisines','List of Indian state languages'
   ]},
   // ───────── Important Days ─────────
-  { name:'Important Days', topics:[
+  { name:'Important Days', wikiCat:'United_Nations_observances', topics:[
     'United Nations observances','International days','National days of India',
     'List of International Years','Public holidays in India','Indian calendar',
     'List of commemorative days','List of awareness days',
@@ -944,7 +962,7 @@ const CATEGORIES = [
     'National Integration Day (India)','National Brahmin Day (India)'
   ]},
   // ───────── Personalities ─────────
-  { name:'Personalities', topics:[
+  { name:'Personalities', wikiCat:'Indian_people', topics:[
     'List of Indian leaders','Indian independence activists','Indian scientists',
     'List of Indian philosophers','List of Indian writers','List of Indian poets',
     'List of Indian artists','List of Indian musicians','List of Indian film actors',
@@ -983,7 +1001,7 @@ const CATEGORIES = [
     'Kalpana Chawla','Sunita Williams','Rajiv Malhotra'
   ]},
   // ───────── Disaster Management ─────────
-  { name:'Disaster Management', topics:[
+  { name:'Disaster Management', wikiCat:'Disaster_management_in_India', topics:[
     'Disaster management in India','National Disaster Management Authority',
     'Floods in India','Cyclones in India','Earthquakes in India',
     'Drought in India','Tsunami','Landslide','Heat wave',
@@ -1015,7 +1033,7 @@ const CATEGORIES = [
     'Armed forces and disaster management in India'
   ]},
   // ───────── Business & Economy ─────────
-  { name:'Business & Economy', topics:[
+  { name:'Business & Economy', wikiCat:'Business_in_India', topics:[
     'Business in India','Startup India','Make in India','E-commerce in India',
     'Retail in India','Microfinance in India','Small and medium enterprises',
     'Stock exchanges in India','Bombay Stock Exchange',
@@ -1058,7 +1076,7 @@ const CATEGORIES = [
     'Brand India','Made in India','India brand equity foundation'
   ]},
   // ───────── RBI & Banking ─────────
-  { name:'RBI & Banking', topics:[
+  { name:'RBI & Banking', wikiCat:'Banking_in_India', topics:[
     'Reserve Bank of India','Monetary policy of India','Banking in India',
     'National Bank for Agriculture and Rural Development',
     'Securities and Exchange Board of India','Insurance in India',
@@ -1106,7 +1124,7 @@ const CATEGORIES = [
     'SEBI Act','Depositories Act','Securities Contract Regulation Act'
   ]},
   // ───────── Indian National Symbols ─────────
-  { name:'Indian National Symbols', topics:[
+  { name:'Indian National Symbols', wikiCat:'National_symbols_of_India', topics:[
     'Flag of India','Emblem of India','National anthem of India',
     'National song of India','National calendar of India',
     'National fruit of India','National river of India',
@@ -1125,7 +1143,7 @@ const CATEGORIES = [
     'National population register'
   ]},
   // ───────── Agriculture & Food ─────────
-  { name:'Agriculture & Food', topics:[
+  { name:'Agriculture & Food', wikiCat:'Agriculture_in_India', topics:[
     'Agriculture in India','Green Revolution in India','White Revolution (India)',
     'Land reforms in India','Irrigation in India','Soil conservation in India',
     'List of crops in India','List of agricultural universities in India',
@@ -1168,7 +1186,7 @@ const CATEGORIES = [
     'Food Safety and Standards Authority of India'
   ]},
   // ───────── Health & Medicine ─────────
-  { name:'Health & Medicine', topics:[
+  { name:'Health & Medicine', wikiCat:'Health_in_India', topics:[
     'Health in India','Healthcare in India','Public health in India',
     'National Health Mission','Ayushman Bharat','Janani Suraksha Yojana',
     'Ministry of Health and Family Welfare',
@@ -1200,9 +1218,86 @@ const CATEGORIES = [
     'National Pharmaceutical Pricing Authority',
     'Drugs Controller General of India'
   ]},
+  // ───────── Constitution ─────────
+  { name:'Constitution', wikiCat:'Constitution_of_India', topics:[
+    'Constitution of India','Preamble to the Constitution of India',
+    'Fundamental rights in India','Directive principles in India',
+    'Fundamental duties in India','Amendment of the Constitution of India',
+    'List of amendments of the Constitution of India',
+    'Union List','State List','Concurrent List',
+    'Federalism in India','Basic structure doctrine',
+    'Judicial review in India','Writ jurisdiction in India',
+    'Public Interest Litigation in India','Election Commission of India',
+    'President of India','Prime Minister of India','Parliament of India',
+    'Supreme Court of India','High courts of India','Governor (India)',
+    'Panchayati Raj','Municipal governance in India',
+    'Finance Commission of India','NITI Aayog',
+    'Comptroller and Auditor General of India',
+    'Attorney General of India','Solicitor General of India',
+    'Chief Election Commissioner of India',
+    'Union Public Service Commission','State Public Service Commission',
+    'Official language of India','Languages with official status in India'
+  ]},
+  // ───────── Computer & IT ─────────
+  { name:'Computer & IT', wikiCat:'Information_technology_in_India', topics:[
+    'Computer','Computer science','Programming language','Operating system',
+    'Database','Computer network','Internet','World Wide Web',
+    'Cybersecurity','Cryptography','Artificial intelligence',
+    'Machine learning','Deep learning','Data science','Cloud computing',
+    'Software engineering','Information technology in India',
+    'Software industry in India','IT services in India',
+    'Business process outsourcing in India',
+    'Telecommunications in India','Internet in India',
+    'Digital India','E-governance in India','Aadhaar',
+    'Unified Payments Interface','BHIM','India Stack',
+    'Open Network for Digital Commerce','National Supercomputing Mission',
+    'Param (supercomputer)','List of Indian IT companies',
+    'Tata Consultancy Services','Infosys','Wipro','HCL Technologies',
+    'Tech Mahindra','LTI Mindtree','Cognizant'
+  ]},
+  // ───────── Railways & Transport ─────────
+  { name:'Railways & Transport', wikiCat:'Rail_transport_in_India', topics:[
+    'Indian Railways','Rail transport in India','History of Indian Railways',
+    'List of railway stations in India','Indian Railway zones',
+    'Indian Railway divisions','List of Indian Railways trains',
+    'Vande Bharat Express','Rajdhani Express','Shatabdi Express',
+    'Duronto Express','Gatimaan Express','Tejas Express',
+    'Kolkata Metro','Delhi Metro','Chennai Metro','Mumbai Metro',
+    'Namma Metro','Hyderabad Metro','Kochi Metro','Lucknow Metro',
+    'Road transport in India','National Highways of India',
+    'Golden Quadrilateral','North–South–East–West Corridor',
+    'Bharatmala Pariyojana','Sagarmala programme','Ports in India',
+    'Civil aviation in India','Airports in India','Air India',
+    'IndiGo','SpiceJet','Vistara','Go First','Akasa Air',
+    'Water transport in India','Inland waterways in India',
+    'National Waterway 1','National Waterway 2',
+    'National Waterway 3','Shipping industry in India',
+    'Kolkata Port Trust','Mumbai Port Trust','Chennai Port',
+    'Jawaharlal Nehru Port','Paradip Port','Visakhapatnam Port'
+  ]},
+  // ───────── Energy & Power ─────────
+  { name:'Energy & Power', wikiCat:'Energy_in_India', topics:[
+    'Energy in India','Energy policy of India','Ministry of Power (India)',
+    'Power sector in India','Electricity sector in India',
+    'National Grid (India)','Coal in India','Coal mining in India',
+    'Petroleum in India','Oil and gas industry in India',
+    'Indian Oil Corporation','ONGC','Reliance Industries',
+    'Natural gas in India','City Gas Distribution in India',
+    'Renewable energy in India','Solar power in India',
+    'Wind power in India','Hydroelectric power in India',
+    'Nuclear power in India','Biomass in India',
+    'Nuclear power plants in India','Thermal power stations in India',
+    'Hydroelectric projects in India','Solar parks in India',
+    'Wind farms in India','National Solar Mission',
+    'International Solar Alliance','Power Grid Corporation of India',
+    'Coal India','NTPC Limited','NHPC Limited',
+    'National Hydroelectric Power Corporation',
+    'Nuclear Power Corporation of India',
+    'Bharat Heavy Electricals Limited'
+  ]},
 ];
 
-// Daily rotation groups — each day processes ~4 categories to keep runtime <1h
+// Daily rotation groups
 const DAY_GROUPS = [
   [0,1,2,3],       // Sun: Ancient India, Medieval & Modern India, World History, Indian Geography
   [4,5,6,7],       // Mon: World Geography, Polity & Governance, Indian Economy, General Science
@@ -1210,7 +1305,7 @@ const DAY_GROUPS = [
   [12,13,14,15],   // Wed: International Relations, Indian Society, Ethics & Integrity, ISRO & Space
   [16,17,18,19],   // Thu: Sports, Books & Authors, Awards & Honours, Govt Schemes
   [20,21,22,23],   // Fri: Indian States, Important Days, Personalities, Disaster Management
-  [24,25,26,27,28],// Sat: Business & Economy, RBI & Banking, Indian National Symbols, Agriculture & Food, Health & Medicine
+  [24,25,26,27,28,29,30,31,32], // Sat: Business & Economy, RBI & Banking, Indian National Symbols, Agriculture & Food, Health & Medicine, Constitution, Computer & IT, Railways & Transport, Energy & Power
 ];
 
 async function main() {
@@ -1254,7 +1349,17 @@ async function main() {
   const CONCURRENCY = 2; // Wikipedia rate-limits; 2 concurrent is safe
   for (const cat of activeCategories) {
     console.log('\n=== ' + cat.name + ' ===');
-    const articles = await fetchAllTopics(cat.topics, CONCURRENCY);
+    let allTopics = [...cat.topics];
+    if (cat.wikiCat) {
+      const wikiTopics = await fetchCategoryMembers(cat.wikiCat, 150);
+      const existing = new Set(allTopics.map(t => t.toLowerCase()));
+      const newTopics = wikiTopics.filter(t => !existing.has(t.toLowerCase()));
+      if (newTopics.length) {
+        console.log('  Auto-discovered ' + newTopics.length + ' topics from Category:' + cat.wikiCat);
+        allTopics = allTopics.concat(newTopics.slice(0, 100));
+      }
+    }
+    const articles = await fetchAllTopics(allTopics, CONCURRENCY);
 
     let added = 0;
     for (const article of articles) {

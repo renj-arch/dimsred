@@ -29,6 +29,8 @@ jobs:
 
       - name: Generate questions from Wikipedia
         run: node scripts/wiki-fill-all.cjs
+        env:
+          WIKI_FILL_GROUPS: 3
 
       - name: Remove garbled questions (table rows, fragments)
         run: node scripts/cleanup-questions.js
