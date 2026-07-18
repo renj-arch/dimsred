@@ -11754,7 +11754,7 @@ function topoGetRing(arcIds, decoded) {
 }
 (async function loadCountryShading() {
   try {
-    if (location.protocol === 'file:') { console.warn('Country shading: serve via HTTP (file:// blocks fetch)'); return; }
+    if (location.protocol === 'file:') { console.warn('Country shading: run "npx serve" in project root then open http://localhost:3000/3d-globe.html'); return; }
     const k = 'w_country_region';
     if (!layerGroups[k]) return;
     const res = await fetch('https://unpkg.com/world-atlas@2/countries-110m.json');
@@ -11791,20 +11791,16 @@ function topoGetRing(arcIds, decoded) {
     if (!g || !items.length) return;
     items.forEach(d => {
       if (!d.pts || d.pts.length < 3) return;
-      const pts3 = d.pts.map(p => ll(p.la, p.ln, R * 1.004));
-      const cx = pts3.reduce((a,b) => a.add(b), new THREE.Vector3()).divideScalar(pts3.length);
-      const pos = [];
-      [...Array(pts3.length)].forEach((_, i) => {
-        pos.push(cx.x, cx.y, cx.z, pts3[i].x, pts3[i].y, pts3[i].z,
-          pts3[(i+1)%pts3.length].x, pts3[(i+1)%pts3.length].y, pts3[(i+1)%pts3.length].z);
-      });
-      const geo = new THREE.BufferGeometry();
-      geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-      const mat = new THREE.MeshBasicMaterial({ color: catColors[k], transparent: true, opacity: 0.1, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending });
-      const mesh = new THREE.Mesh(geo, mat); g.add(mesh);
+      const pts3 = d.pts.map(p => ll(p.la, p.ln, R * 1.006));
+      // Outline — main visible boundary
       const edgeGeo = new THREE.BufferGeometry().setFromPoints(pts3);
-      const edgeMat = new THREE.LineBasicMaterial({ color: catColors[k], transparent: true, opacity: 0.3 });
+      const edgeMat = new THREE.LineBasicMaterial({ color: catColors[k], transparent: true, opacity: 0.5 });
       const edge = new THREE.LineLoop(edgeGeo, edgeMat); g.add(edge);
+      // Secondary glow outline (slightly larger radius)
+      const glow3 = pts3.map(p => p.clone().multiplyScalar(1.001));
+      const glowGeo = new THREE.BufferGeometry().setFromPoints(glow3);
+      const glowMat = new THREE.LineBasicMaterial({ color: catColors[k], transparent: true, opacity: 0.12 });
+      const glow = new THREE.LineLoop(glowGeo, glowMat); g.add(glow);
     });
     toggleLayer(k, true);
   } catch (e) { console.warn('Country shading unavailable:', e.message); }
