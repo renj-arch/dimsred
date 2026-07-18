@@ -722,7 +722,7 @@ const CAT = {
 };
 
 const D = {};
-D.w_country_region = []; // placeholder — populated asynchronously from TopoJSON
+D.w_country_region = []; // placeholder — populated from embedded TopoJSON (countries-data.js)
 
 D.city = [
   {n:'New Delhi',la:28.61,ln:77.23,sub:'National Capital Territory',desc:'Capital of India on the Yamuna River. Seat of Parliament, Supreme Court, and Rashtrapati Bhavan. Designed by Edwin Lutyens and Herbert Baker.',fact:'Built on 7 cities · Mughal capital Shahjahanabad · India Gate memorial · Lotus Temple · Qutub Minar (UNESCO)'},
@@ -11752,20 +11752,12 @@ function topoGetRing(arcIds, decoded) {
   });
   return pts;
 }
-(async function loadCountryShading() {
+(function loadCountryShading() {
   try {
     const k = 'w_country_region';
     if (!layerGroups[k]) return;
-    let topo;
-    try {
-      const res = await fetch('countries-110m.json');
-      if (res.ok) topo = await res.json();
-    } catch (_) {}
-    if (!topo) {
-      const res = await fetch('https://unpkg.com/world-atlas@2/countries-110m.json');
-      if (!res.ok) return;
-      topo = await res.json();
-    }
+    const topo = window._countryTopo;
+    if (!topo) { console.warn('Country shading: countries-data.js not loaded'); return; }
     const obj = topo?.objects?.countries;
     if (!obj || obj.type !== 'GeometryCollection') return;
     const arcs = topoDecodeArcs(topo);
@@ -13694,6 +13686,7 @@ document.addEventListener('click',()=>{if(!window._speechWarmed){window._speechW
 
 }catch(e){console.error('Globe fatal:',e)}
 </script>
+<script src="countries-data.js"></script>
 </body>
 </html>
 
