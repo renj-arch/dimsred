@@ -722,6 +722,7 @@ const CAT = {
 };
 
 const D = {};
+D.w_country_region = []; // placeholder — populated asynchronously from TopoJSON
 
 D.city = [
   {n:'New Delhi',la:28.61,ln:77.23,sub:'National Capital Territory',desc:'Capital of India on the Yamuna River. Seat of Parliament, Supreme Court, and Rashtrapati Bhavan. Designed by Edwin Lutyens and Herbert Baker.',fact:'Built on 7 cities · Mughal capital Shahjahanabad · India Gate memorial · Lotus Temple · Qutub Minar (UNESCO)'},
@@ -11823,6 +11824,7 @@ function topoGetRing(arcIds, decoded) {
       });
     });
     toggleLayer(k, true);
+    buildPanel(); // create/update UI section with actual 195 countries
   } catch (e) { console.warn('Country shading unavailable:', e.message); }
 })();
 
