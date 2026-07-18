@@ -12506,8 +12506,8 @@ ren.domElement.addEventListener('click',(e)=>{
   // Geographic country hit test (point-in-polygon)
   const terData = D.w_country_region;
   if (terData && terData.length) {
-    const dir = ray.direction.clone().normalize();
-    const oc = ray.origin.clone();
+    const dir = ray.ray.direction.clone().normalize();
+    const oc = ray.ray.origin.clone();
     const a = dir.dot(dir), b = 2 * oc.dot(dir), c = oc.dot(oc) - R * R;
     const disc = b * b - 4 * a * c;
     if (disc >= 0) {
@@ -12518,12 +12518,6 @@ ren.domElement.addEventListener('click',(e)=>{
         EG.worldToLocal(local);
         const la = 90 - Math.acos(Math.max(-1, Math.min(1, local.y / R))) * 180 / Math.PI;
         const ln = (Math.atan2(local.z, -local.x) * 180 / Math.PI - 180 + 540) % 360 - 180;
-        // DEBUG: flash pink on all countries to confirm mesh coloring works
-        if (!terData._debugInit) {
-          terData._debugInit = true;
-          console.log('Country click debug: click any country');
-        }
-        let hitName = null;
         for (const d of terData) {
           if (!d.rings) continue;
           let found = false;
@@ -12535,33 +12529,18 @@ ren.domElement.addEventListener('click',(e)=>{
             }
             if (inside) { found = true; break; }
           }
-          if (found) { hitName = d.n; break; }
-        }
-        // Always flash ALL countries pink for 500ms on any globe click (debug)
-        terData.forEach(d => {
-          if (d._fillMeshes) d._fillMeshes.forEach(m => {
-            if (!m.userData._dbg) { m.userData._dbg = m.material.color.getHex(); }
-            m.material.color.setHex(0xff69b4);
-          });
-        });
-        setTimeout(() => {
-          terData.forEach(d => {
-            if (d._fillMeshes) d._fillMeshes.forEach(m => {
-              if (m.userData._dbg) m.material.color.setHex(m.userData._dbg);
-            });
-          });
-        }, 500);
-        if (hitName) {
-          if(_ap)stopAutoPlay();stopTimeline();hidePortrait();
-          if (window._selCountry) { window._selCountry._fillMeshes.forEach(m => m.material.color.setHex(window._selCountry._origColor)); }
-          const d = terData.find(x => x.n === hitName);
-          if (d && d._fillMeshes) {
+          if (found) {
+            if(_ap)stopAutoPlay();stopTimeline();hidePortrait();
+            if (window._selCountry && window._selCountry !== d) {
+              window._selCountry._fillMeshes.forEach(m => m.material.color.setHex(window._selCountry._origColor));
+            }
+            d._origColor = d._origColor || catColors['country'];
             d._fillMeshes.forEach(m => m.material.color.setHex(0xff69b4));
             window._selCountry = d;
+            const match = D.country?.find(c => c.n === d.n);
+            showDetail(match || d, CAT['country'], 'country');
+            return;
           }
-          const match = D.country?.find(c => c.n === hitName);
-          showDetail(match || d, CAT['country'], 'country');
-          return;
         }
       }
     }
