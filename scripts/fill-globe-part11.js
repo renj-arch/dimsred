@@ -17,6 +17,7 @@ const CAT_MAP = {
   'wiki-dams.json': 'dam',
   'wiki-desert.json': 'desert',
   'wiki-dynasty.json': 'dynasty',
+  'wiki-w_dynasty.json': 'w_dynasty',
   'wiki-organization.json': 'organization',
   'wiki-forest.json': 'forest',
   'wiki-glacier.json': 'glacier',
