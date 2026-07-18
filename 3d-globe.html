@@ -11795,7 +11795,6 @@ function topoGetRing(arcIds, decoded) {
     });
     const g = layerGroups[renderKey];
     if (!g || !items.length) return;
-    window._territoryMeshes = window._territoryMeshes || [];
     const baseColor = catColors[renderKey];
     items.forEach(d => {
       if (!d.pts || d.pts.length < 3) return;
@@ -11811,9 +11810,7 @@ function topoGetRing(arcIds, decoded) {
         const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
           color: baseColor, transparent: true, opacity: 0.2, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending
         }));
-        mesh.userData = { cat: renderKey, data: d };
         d._fillMeshes.push(mesh);
-        window._territoryMeshes.push(mesh);
         g.add(mesh);
         const ptsOut = ring.map(p => ll(p.la, p.ln, R * 1.006));
         g.add(new THREE.LineLoop(
@@ -12506,26 +12503,45 @@ ren.domElement.addEventListener('click',(e)=>{
       }
       showDetail(m.data,CAT[m.cat],m.cat);return;}
   }
-  // Check territory mesh hits (countries)
-  const terMeshes = window._territoryMeshes || [];
-  if (terMeshes.length) {
-    const terHits = ray.intersectObjects(terMeshes);
-    if (terHits.length) {
-      const hit = terHits[0].object;
-      const data = hit.userData.data;
-      if (data) {
-        if(_ap)stopAutoPlay();stopTimeline();hidePortrait();
-        // Restore previous selection
-        if (window._selCountry && window._selCountry !== data) {
-          window._selCountry._fillMeshes.forEach(m => m.material.color.setHex(window._selCountry._origColor));
+  // Geographic country hit test (point-in-polygon)
+  const terData = D.w_country_region;
+  if (terData && terData.length) {
+    const dir = ray.direction.clone().normalize();
+    const oc = ray.origin.clone();
+    const a = dir.dot(dir), b = 2 * oc.dot(dir), c = oc.dot(oc) - R * R;
+    const disc = b * b - 4 * a * c;
+    if (disc >= 0) {
+      const t = (-b - Math.sqrt(disc)) / (2 * a);
+      if (t > 0) {
+        const hp = oc.clone().add(dir.clone().multiplyScalar(t));
+        const local = new THREE.Vector3().copy(hp);
+        EG.worldToLocal(local);
+        const la = 90 - Math.acos(Math.max(-1, Math.min(1, local.y / R))) * 180 / Math.PI;
+        const ln = (Math.atan2(local.z, -local.x) * 180 / Math.PI - 180 + 540) % 360 - 180;
+        for (const d of terData) {
+          if (!d.rings) continue;
+          let found = false;
+          for (const ring of d.rings) {
+            let inside = false;
+            for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+              const la_i = ring[i].la, ln_i = ring[i].ln, la_j = ring[j].la, ln_j = ring[j].ln;
+              if ((la_i > la) !== (la_j > la) && ln < ((ln_j - ln_i) * (la - la_i) / (la_j - la_i)) + ln_i) inside = !inside;
+            }
+            if (inside) { found = true; break; }
+          }
+          if (found) {
+            if(_ap)stopAutoPlay();stopTimeline();hidePortrait();
+            if (window._selCountry && window._selCountry !== d) {
+              window._selCountry._fillMeshes.forEach(m => m.material.color.setHex(window._selCountry._origColor));
+            }
+            d._origColor = d._origColor || catColors['country'];
+            d._fillMeshes.forEach(m => m.material.color.setHex(0xff69b4));
+            window._selCountry = d;
+            const match = D.country?.find(c => c.n === d.n);
+            showDetail(match || d, CAT['country'], 'country');
+            return;
+          }
         }
-        // Highlight this country
-        data._origColor = data._origColor || catColors['country'];
-        data._fillMeshes.forEach(m => m.material.color.setHex(0xff69b4));
-        window._selCountry = data;
-        const match = D.country?.find(c => c.n === data.n);
-        showDetail(match || data, CAT['country'], 'country');
-        return;
       }
     }
   }
