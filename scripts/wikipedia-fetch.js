@@ -213,6 +213,7 @@ const CFG = [
   { id:'tower', label:'Towers', wikiCat:'Category:Towers_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   { id:'highway', label:'National Highways', wikiCat:'Category:National_highways_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   { id:'battle', label:'Battles', wikiCat:'Category:Battles_involving_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'w_battle', label:'World Battles', wikiCat:'Category:Battles', subFn:(s,a)=>s },
   { id:'bird', label:'Bird Sanctuaries', wikiCat:'Category:Bird_sanctuaries_of_India', subFn:(s,a)=>[s,'Bird Sanctuary'].filter(Boolean).join(' · ') },
   { id:'crop', label:'Crops', wikiCat:'Category:Crops_originating_from_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   { id:'institution', label:'Institutions', wikiCat:'Category:Universities_and_colleges_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
