@@ -11524,6 +11524,10 @@ let _selTube=null;
 let _selArrows=null;
 let _selFlowDots=null;
 function clearHighlight(){
+  if(window._selCountry){
+    window._selCountry._fillMeshes.forEach(m => m.material.color.setHex(window._selCountry._origColor));
+    window._selCountry = null;
+  }
   if(_selHighlight){EG.remove(_selHighlight);_selHighlight=null;}
   if(_selTube){
     _selTube.material.color.set(_selTube.userData._origColor||'#ffffff');
@@ -11791,8 +11795,11 @@ function topoGetRing(arcIds, decoded) {
     });
     const g = layerGroups[renderKey];
     if (!g || !items.length) return;
+    window._territoryMeshes = window._territoryMeshes || [];
+    const baseColor = catColors[renderKey];
     items.forEach(d => {
       if (!d.pts || d.pts.length < 3) return;
+      d._fillMeshes = [];
       (d.rings || [d.pts]).forEach(ring => {
         if (ring.length < 3) return;
         const pts3 = ring.map(p => ll(p.la, p.ln, R * 1.004));
@@ -11801,17 +11808,21 @@ function topoGetRing(arcIds, decoded) {
         [...Array(pts3.length)].forEach((_,i) => { pos.push(cx.x,cx.y,cx.z,pts3[i].x,pts3[i].y,pts3[i].z,pts3[(i+1)%pts3.length].x,pts3[(i+1)%pts3.length].y,pts3[(i+1)%pts3.length].z); });
         const geo = new THREE.BufferGeometry();
         geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-        g.add(new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
-          color: catColors[renderKey], transparent: true, opacity: 0.2, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending
-        })));
+        const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
+          color: baseColor, transparent: true, opacity: 0.2, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending
+        }));
+        mesh.userData = { cat: renderKey, data: d };
+        d._fillMeshes.push(mesh);
+        window._territoryMeshes.push(mesh);
+        g.add(mesh);
         const ptsOut = ring.map(p => ll(p.la, p.ln, R * 1.006));
         g.add(new THREE.LineLoop(
           new THREE.BufferGeometry().setFromPoints(ptsOut),
-          new THREE.LineBasicMaterial({ color: catColors[renderKey], transparent: true, opacity: 0.5 })
+          new THREE.LineBasicMaterial({ color: baseColor, transparent: true, opacity: 0.5 })
         ));
         g.add(new THREE.LineLoop(
           new THREE.BufferGeometry().setFromPoints(ptsOut.map(p => p.clone().multiplyScalar(1.001))),
-          new THREE.LineBasicMaterial({ color: catColors[renderKey], transparent: true, opacity: 0.12 })
+          new THREE.LineBasicMaterial({ color: baseColor, transparent: true, opacity: 0.12 })
         ));
       });
     });
@@ -12476,7 +12487,32 @@ ren.domElement.addEventListener('click',(e)=>{
   const hits=ray.intersectObjects(meshes.map(m=>m.mesh));
   if(hits.length){
     const hit=meshes.find(m=>m.mesh===hits[0].object);
-    if(hit){if(_ap)stopAutoPlay();stopTimeline();hidePortrait();const m=hit.el;showDetail(m.data,CAT[m.cat],m.cat);return;}
+    if(hit){if(_ap)stopAutoPlay();stopTimeline();hidePortrait();
+      if(window._selCountry){window._selCountry._fillMeshes.forEach(m => m.material.color.setHex(window._selCountry._origColor));window._selCountry=null;}
+      const m=hit.el;showDetail(m.data,CAT[m.cat],m.cat);return;}
+  }
+  // Check territory mesh hits (countries)
+  const terMeshes = window._territoryMeshes || [];
+  if (terMeshes.length) {
+    const terHits = ray.intersectObjects(terMeshes);
+    if (terHits.length) {
+      const hit = terHits[0].object;
+      const data = hit.userData.data;
+      if (data) {
+        if(_ap)stopAutoPlay();stopTimeline();hidePortrait();
+        // Restore previous selection
+        if (window._selCountry && window._selCountry !== data) {
+          window._selCountry._fillMeshes.forEach(m => m.material.color.setHex(window._selCountry._origColor));
+        }
+        // Highlight this country
+        data._origColor = data._origColor || catColors['country'];
+        data._fillMeshes.forEach(m => m.material.color.setHex(0xff69b4));
+        window._selCountry = data;
+        const match = D.country?.find(c => c.n === data.n);
+        showDetail(match || data, CAT['country'], 'country');
+        return;
+      }
+    }
   }
   if(_ap)stopAutoPlay();
   dp.classList.remove('show','expanded');
