@@ -11747,9 +11747,10 @@ function topoDecodeArcs(topo) {
 function topoGetRing(arcIds, decoded) {
   const pts = [];
   arcIds.forEach(id => {
-    let arc = decoded[Math.abs(id) - 1];
-    if (id < 0) arc = [...arc].reverse();
-    arc.forEach(([ln, la]) => pts.push({la, ln}));
+    const arc = decoded[Math.abs(id) - 1];
+    if (!arc) return;
+    const points = id < 0 ? [...arc].reverse() : arc;
+    points.forEach(([ln, la]) => pts.push({la, ln}));
   });
   return pts;
 }
