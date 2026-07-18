@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
-async function httpGet(url, retries = 3) {
+async function httpGet(url, retries = 5) {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const result = await new Promise((resolve, reject) => {
@@ -21,7 +21,7 @@ async function httpGet(url, retries = 3) {
       return result;
     } catch (e) {
       if (e.status === 429 && attempt < retries) {
-        const wait = (attempt + 2) * 10000;
+        const wait = Math.min((attempt + 1) * 5000, 60000);
         console.log(`  ⏳ rate limited, waiting ${wait/1000}s...`);
         await new Promise(r => setTimeout(r, wait));
         continue;
@@ -46,7 +46,7 @@ async function wikiCategoryDeepMembers(category, maxPages = 5000, visited = new 
     }
     cmcontinue = d.continue?.cmcontinue;
     if (!cmcontinue) break;
-    await new Promise(r => setTimeout(r, 200));
+    await new Promise(r => setTimeout(r, 500));
   }
 
   let result = pages.filter(t => !t.startsWith('List of ') && !t.includes('/'));
@@ -55,7 +55,7 @@ async function wikiCategoryDeepMembers(category, maxPages = 5000, visited = new 
     if (result.length >= maxPages) break;
     const subPages = await wikiCategoryDeepMembers(sc, maxPages - result.length, visited, depth + 1);
     result = result.concat(subPages);
-    await new Promise(r => setTimeout(r, 250));
+    await new Promise(r => setTimeout(r, 500));
   }
 
   return result;
@@ -69,12 +69,12 @@ async function titlesToQids(titles) {
     const d = await httpGet(url);
     for (const [, page] of Object.entries(d.query.pages))
       if (page.pageprops?.wikibase_item) map[page.title] = page.pageprops.wikibase_item;
-    await new Promise(r => setTimeout(r, 200));
+    await new Promise(r => setTimeout(r, 500));
   }
   return map;
 }
 
-async function httpPost(url, data, retries = 3) {
+async function httpPost(url, data, retries = 5) {
   const postData = typeof data === 'string' ? data : new URLSearchParams(data).toString();
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
@@ -101,7 +101,7 @@ async function httpPost(url, data, retries = 3) {
       return result;
     } catch (e) {
       if (e.status === 429 && attempt < retries) {
-        const wait = (attempt + 2) * 10000;
+        const wait = Math.min((attempt + 1) * 5000, 60000);
         console.log(`  ⏳ SPARQL rate limited, waiting ${wait/1000}s...`);
         await new Promise(r => setTimeout(r, wait));
         continue;
@@ -673,14 +673,14 @@ const CFG = [
   },
 ];
 
-async function fetchSummariesConcurrently(titles, concurrency = 5) {
+async function fetchSummariesConcurrently(titles, concurrency = 2) {
   const results = {};
   const queue = [...titles];
   async function worker() {
     while (queue.length > 0) {
       const title = queue.shift();
       try { results[title] = await wikiSummary(title); } catch { results[title] = null; }
-      await new Promise(r => setTimeout(r, 200));
+      await new Promise(r => setTimeout(r, 500));
     }
   }
   const workers = [];
@@ -741,7 +741,7 @@ async function processCat(cat, dedupSet) {
   const candidates = [];
   let skipped = 0;
   for (const [title, qid] of valid) {
-    if (candidates.length >= 200) break;
+    if (candidates.length >= 100) break;
     const coord = coordMap.get(qid);
     if (!coord) continue;
     if (dedupSet.has(normName(title))) { skipped++; continue; }
@@ -817,7 +817,7 @@ async function main() {
     const fp = path.join(DATA_DIR, `wiki-${cat.id}.json`);
     fs.writeFileSync(fp, JSON.stringify(entries, null, 2), 'utf8');
     console.log(`  → data/wiki-${cat.id}.json`);
-    if (i < runCats.length - 1) await new Promise(r => setTimeout(r, 1000));
+    if (i < runCats.length - 1) await new Promise(r => setTimeout(r, 3000));
   }
   console.log('\n=== Done ===');
 }
