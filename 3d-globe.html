@@ -11817,7 +11817,7 @@ function topoGetRing(arcIds, decoded) {
     });
     toggleLayer(k, true);
     buildPanel(); // create/update UI section with actual 195 countries
-  } catch (e) { console.warn('Country shading unavailable:', e.message); }
+  } catch (e) { console.warn('Country shading unavailable:', e.message, e.stack); }
 })();
 
 // Build latitude/longitude lines
