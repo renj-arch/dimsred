@@ -23,6 +23,8 @@ jobs:
 
       - name: Fetch Wikipedia categories
         run: node scripts/wikipedia-fetch.js
+        env:
+          GLOBE_FILL_GROUPS: 3
 
       - name: Fetch Wikidata SPARQL
         run: node scripts/wikidata-multi-fetch.js

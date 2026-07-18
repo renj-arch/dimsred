@@ -46,7 +46,7 @@ async function wikiCategoryDeepMembers(category, maxPages = 5000, visited = new 
     }
     cmcontinue = d.continue?.cmcontinue;
     if (!cmcontinue) break;
-    await new Promise(r => setTimeout(r, 500));
+    await new Promise(r => setTimeout(r, 1500));
   }
 
   let result = pages.filter(t => !t.startsWith('List of ') && !t.includes('/'));
@@ -55,7 +55,7 @@ async function wikiCategoryDeepMembers(category, maxPages = 5000, visited = new 
     if (result.length >= maxPages) break;
     const subPages = await wikiCategoryDeepMembers(sc, maxPages - result.length, visited, depth + 1);
     result = result.concat(subPages);
-    await new Promise(r => setTimeout(r, 500));
+    await new Promise(r => setTimeout(r, 1500));
   }
 
   return result;
@@ -69,7 +69,7 @@ async function titlesToQids(titles) {
     const d = await httpGet(url);
     for (const [, page] of Object.entries(d.query.pages))
       if (page.pageprops?.wikibase_item) map[page.title] = page.pageprops.wikibase_item;
-    await new Promise(r => setTimeout(r, 500));
+    await new Promise(r => setTimeout(r, 1000));
   }
   return map;
 }
@@ -680,7 +680,7 @@ async function fetchSummariesConcurrently(titles, concurrency = 2) {
     while (queue.length > 0) {
       const title = queue.shift();
       try { results[title] = await wikiSummary(title); } catch { results[title] = null; }
-      await new Promise(r => setTimeout(r, 500));
+      await new Promise(r => setTimeout(r, 1000));
     }
   }
   const workers = [];
@@ -751,7 +751,7 @@ async function processCat(cat, dedupSet) {
 
   // Phase 2: batch-fetch summaries with concurrency
   console.log(`  Fetching ${candidates.length} summaries...`);
-  const summaries = await fetchSummariesConcurrently(candidates.map(c => c.title), 5);
+    const summaries = await fetchSummariesConcurrently(candidates.map(c => c.title), 2);
 
   // Phase 3: build and filter entries
   const out = [];
@@ -794,13 +794,13 @@ async function main() {
   const runCats = [];
   for (const cat of CFG) {
     const fp = path.join(DATA_DIR, `wiki-${cat.id}.json`);
-    try {
-      const existing = JSON.parse(fs.readFileSync(fp, 'utf8'));
-      if (existing.length > 0) {
+    if (fs.existsSync(fp)) {
+      try {
+        const existing = JSON.parse(fs.readFileSync(fp, 'utf8'));
         skipCats.push({ ...cat, existing: existing.length });
-        continue;
-      }
-    } catch {}
+      } catch {}
+      continue;
+    }
     runCats.push(cat);
   }
 
@@ -810,14 +810,40 @@ async function main() {
     console.log();
   }
 
-  for (let i = 0; i < runCats.length; i++) {
-    const cat = runCats[i];
-    console.log(`[${i+1}/${runCats.length}]`);
+  // Group processing — spread remaining categories across days
+  const processAll = process.env.GLOBE_FILL_ALL === '1';
+  const GROUPS_PER_RUN = parseInt(process.env.GLOBE_FILL_GROUPS || '1', 10);
+  const GROUP_COUNT = 10;
+  const DAY_GROUPS = Array.from({ length: GROUP_COUNT }, () => []);
+  CFG.forEach((_, i) => DAY_GROUPS[i % GROUP_COUNT].push(i));
+
+  let activeRunCats;
+  if (processAll) {
+    activeRunCats = runCats;
+    console.log(`Processing ALL ${runCats.length} remaining categories (GLOBE_FILL_ALL=1)\n`);
+  } else {
+    const dayIdx = new Date().getDay();
+    const activeIdxs = new Set();
+    for (let g = 0; g < GROUPS_PER_RUN; g++) {
+      const gi = (dayIdx * GROUPS_PER_RUN + g) % GROUP_COUNT;
+      for (const idx of DAY_GROUPS[gi]) activeIdxs.add(idx);
+    }
+    activeRunCats = runCats.filter(cat => activeIdxs.has(CFG.indexOf(cat)));
+    console.log(`Day ${dayIdx} — processing ${activeRunCats.length} of ${runCats.length} remaining (${GROUPS_PER_RUN} group(s), ${GROUP_COUNT} total groups)`);
+    for (const cat of runCats) {
+      if (!activeIdxs.has(CFG.indexOf(cat))) console.log(`  (skipping: ${cat.id})`);
+    }
+    console.log();
+  }
+
+  for (let i = 0; i < activeRunCats.length; i++) {
+    const cat = activeRunCats[i];
+    console.log(`[${i+1}/${activeRunCats.length}]`);
     const entries = await processCat(cat, dedupSet);
     const fp = path.join(DATA_DIR, `wiki-${cat.id}.json`);
     fs.writeFileSync(fp, JSON.stringify(entries, null, 2), 'utf8');
     console.log(`  → data/wiki-${cat.id}.json`);
-    if (i < runCats.length - 1) await new Promise(r => setTimeout(r, 3000));
+    if (i < activeRunCats.length - 1) await new Promise(r => setTimeout(r, 5000));
   }
   console.log('\n=== Done ===');
 }
