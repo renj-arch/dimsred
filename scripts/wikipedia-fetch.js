@@ -546,6 +546,40 @@ const CFG = [
   { id:'folk_dance', label:'Folk Dances', wikiCat:'Category:Folk_dances', subFn:(s,a)=>s },
   { id:'escarpment', label:'Escarpments', wikiCat:'Category:Escarpments', subFn:(s,a)=>s },
   { id:'w_reservoir', label:'World Reservoirs', wikiCat:'Category:Reservoirs', subFn:(s,a)=>s },
+  // Static-fallback categories (use Wikipedia fetch as supplement to static data)
+  { id:'w_ideology', label:'Political Ideologies', wikiCat:'Category:Political_ideologies',
+    subFn:(s,a)=>s,
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P17/wdt:P625 ?coord. }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }`
+  },
+  { id:'w_language', label:'Language Families', wikiCat:'Category:Language_families',
+    subFn:(s,a)=>s,
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P17/wdt:P625 ?coord. }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }`
+  },
+  { id:'coastline', label:'Coastlines', wikiCat:'Category:Coasts_of_India',
+    subFn:(s,a)=>s,
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P17/wdt:P625 ?coord. }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }`
+  },
 ];
 
 async function fetchSummariesConcurrently(titles, concurrency = 5) {
