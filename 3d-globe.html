@@ -11754,7 +11754,6 @@ function topoGetRing(arcIds, decoded) {
 }
 (async function loadCountryShading() {
   try {
-    if (location.protocol === 'file:') { console.warn('Country shading: run "npx serve" in project root then open http://localhost:3000/3d-globe.html'); return; }
     const k = 'w_country_region';
     if (!layerGroups[k]) return;
     const res = await fetch('https://unpkg.com/world-atlas@2/countries-110m.json');
@@ -11794,31 +11793,24 @@ function topoGetRing(arcIds, decoded) {
       if (!d.pts || d.pts.length < 3) return;
       (d.rings || [d.pts]).forEach(ring => {
         if (ring.length < 3) return;
-        // Fill via earcut triangulation (Shape + ShapeGeometry handles concave polygons)
-        const shape = new THREE.Shape();
-        shape.moveTo(ring[0].ln, ring[0].la);
-        for (let i = 1; i < ring.length; i++) shape.lineTo(ring[i].ln, ring[i].la);
-        shape.closePath();
-        const sGeo = new THREE.ShapeGeometry(shape);
-        const pos = sGeo.attributes.position;
-        for (let i = 0; i < pos.count; i++) {
-          const v = ll(pos.getY(i), pos.getX(i), R * 1.004);
-          pos.setXYZ(i, v.x, v.y, v.z);
-        }
-        pos.needsUpdate = true;
-        sGeo.computeVertexNormals();
-        g.add(new THREE.Mesh(sGeo, new THREE.MeshBasicMaterial({
-          color: catColors[k], transparent: true, opacity: 0.2, side: THREE.DoubleSide, depthWrite: false
+        const pts3 = ring.map(p => ll(p.la, p.ln, R * 1.004));
+        const cx = pts3.reduce((a,b) => a.add(b), new THREE.Vector3()).divideScalar(pts3.length);
+        const pos = [];
+        [...Array(pts3.length)].forEach((_,i) => { pos.push(cx.x,cx.y,cx.z,pts3[i].x,pts3[i].y,pts3[i].z,pts3[(i+1)%pts3.length].x,pts3[(i+1)%pts3.length].y,pts3[(i+1)%pts3.length].z); });
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+        g.add(new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
+          color: catColors[k], transparent: true, opacity: 0.2, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending
         })));
-        // Outline — main visible boundary (per ring, no spurious inter-island lines)
-        const pts3 = ring.map(p => ll(p.la, p.ln, R * 1.006));
+        // Outline — main visible boundary
+        const ptsOut = ring.map(p => ll(p.la, p.ln, R * 1.006));
         g.add(new THREE.LineLoop(
-          new THREE.BufferGeometry().setFromPoints(pts3),
+          new THREE.BufferGeometry().setFromPoints(ptsOut),
           new THREE.LineBasicMaterial({ color: catColors[k], transparent: true, opacity: 0.5 })
         ));
         // Secondary glow outline
         g.add(new THREE.LineLoop(
-          new THREE.BufferGeometry().setFromPoints(pts3.map(p => p.clone().multiplyScalar(1.001))),
+          new THREE.BufferGeometry().setFromPoints(ptsOut.map(p => p.clone().multiplyScalar(1.001))),
           new THREE.LineBasicMaterial({ color: catColors[k], transparent: true, opacity: 0.12 })
         ));
       });
