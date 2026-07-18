@@ -11796,30 +11796,31 @@ function topoGetRing(arcIds, decoded) {
     const g = layerGroups[renderKey];
     if (!g || !items.length) return;
     const baseColor = catColors[renderKey];
+    const FILL_R = R * 1.015;
     items.forEach(d => {
       if (!d.pts || d.pts.length < 3) return;
       d._fillMeshes = [];
       (d.rings || [d.pts]).forEach(ring => {
         if (ring.length < 3) return;
-        const pts3 = ring.map(p => ll(p.la, p.ln, R * 1.004));
-        const cx = pts3.reduce((a,b) => a.add(b), new THREE.Vector3()).divideScalar(pts3.length);
+        const pts3 = ring.map(p => ll(p.la, p.ln, FILL_R));
+        const cx = pts3.reduce((a,b) => a.add(b), new THREE.Vector3()).divideScalar(pts3.length).setLength(FILL_R);
         const pos = [];
         [...Array(pts3.length)].forEach((_,i) => { pos.push(cx.x,cx.y,cx.z,pts3[i].x,pts3[i].y,pts3[i].z,pts3[(i+1)%pts3.length].x,pts3[(i+1)%pts3.length].y,pts3[(i+1)%pts3.length].z); });
         const geo = new THREE.BufferGeometry();
         geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
         const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
-          color: baseColor, transparent: true, opacity: 0.2, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending
+          color: baseColor, transparent: true, opacity: 0.25, side: THREE.DoubleSide, depthWrite: true, depthTest: true
         }));
         d._fillMeshes.push(mesh);
         g.add(mesh);
-        const ptsOut = ring.map(p => ll(p.la, p.ln, R * 1.006));
+        const ptsOut = ring.map(p => ll(p.la, p.ln, FILL_R * 1.003));
         g.add(new THREE.LineLoop(
           new THREE.BufferGeometry().setFromPoints(ptsOut),
-          new THREE.LineBasicMaterial({ color: baseColor, transparent: true, opacity: 0.5 })
+          new THREE.LineBasicMaterial({ color: baseColor, transparent: true, opacity: 0.6 })
         ));
         g.add(new THREE.LineLoop(
           new THREE.BufferGeometry().setFromPoints(ptsOut.map(p => p.clone().multiplyScalar(1.001))),
-          new THREE.LineBasicMaterial({ color: baseColor, transparent: true, opacity: 0.12 })
+          new THREE.LineBasicMaterial({ color: baseColor, transparent: true, opacity: 0.15 })
         ));
       });
     });
