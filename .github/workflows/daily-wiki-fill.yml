@@ -42,9 +42,6 @@ jobs:
       - name: Update PIB archive from feed (no duplicates)
         run: node scripts/update-pib-archive.js
 
-      - name: Rebuild quiz.json to include new PIB feed questions
-        run: node scripts/rebuild-quiz-json.js
-
       - name: Rebuild single archive + per-category data
         run: node scripts/build-archive-single.js
 

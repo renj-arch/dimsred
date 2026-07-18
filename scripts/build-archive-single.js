@@ -5,8 +5,21 @@ const quizPath = path.join(__dirname, '..', 'data', 'quiz.json');
 const outDir = path.join(__dirname, '..', 'data', 'questions');
 const archivePath = path.join(__dirname, '..', 'archive.html');
 
+const pibPath = path.join(__dirname, '..', 'data', 'questions', 'pib-archive.json');
+let pibQuestions = [];
+try {
+  const pibData = JSON.parse(fs.readFileSync(pibPath, 'utf8'));
+  for (const [, subjData] of Object.entries(pibData)) {
+    if (subjData.subSubjects) {
+      for (const [, qs] of Object.entries(subjData.subSubjects)) {
+        pibQuestions = pibQuestions.concat(qs);
+      }
+    }
+  }
+} catch {}
+
 const quiz = JSON.parse(fs.readFileSync(quizPath, 'utf8'));
-const rawQuestions = quiz.questions;
+const rawQuestions = quiz.questions.concat(pibQuestions);
 
 // ── Dedup by (question + answer) key ──
 const seen = new Set();
