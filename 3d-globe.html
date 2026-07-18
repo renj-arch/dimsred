@@ -11799,26 +11799,29 @@ function topoGetRing(arcIds, decoded) {
     items.forEach(d => {
       if (!d.pts || d.pts.length < 3) return;
       d._fillMeshes = [];
-      // Use all points as a single polygon fill (same as kingdom approach)
-      const pts3 = d.pts.map(p => ll(p.la, p.ln, R * 1.006));
-      const cx = pts3.reduce((a,b) => a.add(b), new THREE.Vector3()).divideScalar(pts3.length);
-      const pos = [];
-      [...Array(pts3.length)].forEach((_,i) => { pos.push(cx.x,cx.y,cx.z, pts3[i].x,pts3[i].y,pts3[i].z, pts3[(i+1)%pts3.length].x,pts3[(i+1)%pts3.length].y,pts3[(i+1)%pts3.length].z); });
-      const geo = new THREE.BufferGeometry();
-      geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-      const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
-        color: baseColor, transparent: true, opacity: 0.18, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending
-      }));
-      d._fillMeshes.push(mesh);
-      g.add(mesh);
-      // Outline (same radius as fill)
-      const edgeGeo = new THREE.BufferGeometry().setFromPoints(pts3);
-      g.add(new THREE.LineLoop(edgeGeo, new THREE.LineBasicMaterial({ color: baseColor, transparent: true, opacity: 0.5 })));
-      // Secondary glow
-      g.add(new THREE.LineLoop(
-        new THREE.BufferGeometry().setFromPoints(pts3.map(p => p.clone().multiplyScalar(1.002))),
-        new THREE.LineBasicMaterial({ color: baseColor, transparent: true, opacity: 0.12 })
-      ));
+      // Proper triangulation using ShapeUtils (handles concave polygons)
+      (d.rings || [d.pts]).forEach(ring => {
+        if (ring.length < 3) return;
+        const pts3 = ring.map(p => ll(p.la, p.ln, R * 1.006));
+        const idx = THREE.ShapeUtils.triangulateShape(ring.map(p => ({x: p.ln, y: p.la})), []);
+        const pos = [];
+        idx.forEach(i => { pos.push(pts3[i].x, pts3[i].y, pts3[i].z); });
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+        const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
+          color: baseColor, transparent: true, opacity: 0.18, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+        }));
+        d._fillMeshes.push(mesh);
+        g.add(mesh);
+        // Outline
+        const edgeGeo = new THREE.BufferGeometry().setFromPoints(pts3);
+        g.add(new THREE.LineLoop(edgeGeo, new THREE.LineBasicMaterial({ color: baseColor, transparent: true, opacity: 0.5 })));
+        // Secondary glow
+        g.add(new THREE.LineLoop(
+          new THREE.BufferGeometry().setFromPoints(pts3.map(p => p.clone().multiplyScalar(1.002))),
+          new THREE.LineBasicMaterial({ color: baseColor, transparent: true, opacity: 0.12 })
+        ));
+      });
     });
     toggleLayer(renderKey, true);
   } catch (e) { console.warn('Country shading unavailable:', e.message, e.stack); }
