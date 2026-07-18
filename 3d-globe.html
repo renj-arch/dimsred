@@ -12218,6 +12218,11 @@ function buildPanel(){
             }
           });
         }
+        if(k==='country'&&D.w_country_region){
+          if(window._selCountry){window._selCountry._fillMeshes.forEach(m=>m.material.color.setHex(window._selCountry._origColor));window._selCountry=null;}
+          const td=D.w_country_region.find(c=>c.n===item.n);
+          if(td&&td._fillMeshes){td._origColor=td._origColor||catColors['country'];td._fillMeshes.forEach(x=>x.material.color.setHex(0xff69b4));window._selCountry=td;}
+        }
         flyTo(item,cat,k);
       });
       cont.appendChild(it);
@@ -12489,7 +12494,17 @@ ren.domElement.addEventListener('click',(e)=>{
     const hit=meshes.find(m=>m.mesh===hits[0].object);
     if(hit){if(_ap)stopAutoPlay();stopTimeline();hidePortrait();
       if(window._selCountry){window._selCountry._fillMeshes.forEach(m => m.material.color.setHex(window._selCountry._origColor));window._selCountry=null;}
-      const m=hit.el;showDetail(m.data,CAT[m.cat],m.cat);return;}
+      const m=hit.el;
+      // If clicking a country pin, also highlight its territory
+      if (m.cat === 'country' && D.w_country_region) {
+        const td = D.w_country_region.find(c => c.n === m.data.n);
+        if (td && td._fillMeshes) {
+          td._origColor = td._origColor || catColors['country'];
+          td._fillMeshes.forEach(x => x.material.color.setHex(0xff69b4));
+          window._selCountry = td;
+        }
+      }
+      showDetail(m.data,CAT[m.cat],m.cat);return;}
   }
   // Check territory mesh hits (countries)
   const terMeshes = window._territoryMeshes || [];
