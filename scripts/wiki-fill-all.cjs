@@ -1393,28 +1393,32 @@ async function main() {
       for (let si = 0; si < sentences.length && articleQ < MAX_PER_ARTICLE; si++) {
         const sent = sentences[si];
         if (sent.length > 260) continue;
+        const sentKey = title + '::' + si;
+        let sentUsed = false;
 
         // ▸ Year-based (any year, no trigger word filter)
-        const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
-        if (years && sent.length < 240) {
-          const context = sent.replace(years[0], '_____').trim().substring(0, 200);
-          if (/^[^a-z]*[A-Z][a-z]+[,\s].*\(_____\)\s*$/.test(context)) continue;
-          if (/^\(?_____\)?\s*$/.test(context)) continue;
-          if (/^Archived from/i.test(context)) continue;
-          if (/^[A-Z][a-z]+,\s*[A-Z][a-z]+.*\(\d{4}.*\)/.test(sent)) continue;
-          if (/^[A-Z][a-z]+\s+\([12]\d{3}\)/.test(sent)) continue;
-          if (/\([^)]*_____[^)]*\)/.test(context)) continue;
-          if (context.length > 25 && pushQ({
-            id: cat.name.substring(0,3).toLowerCase() + added + 'y',
-            type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-            pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
-            question: context, answer: years[0], hint: '',
-            fact: paraphrase(getContext(allSentences, sent, 3), years[0]),
-          })) { added++; articleQ++; }
+        if (!sentUsed) {
+          const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
+          if (years && sent.length < 240) {
+            const context = sent.replace(years[0], '_____').trim().substring(0, 200);
+            if (/^[^a-z]*[A-Z][a-z]+[,\s].*\(_____\)\s*$/.test(context)) continue;
+            if (/^\(?_____\)?\s*$/.test(context)) continue;
+            if (/^Archived from/i.test(context)) continue;
+            if (/^[A-Z][a-z]+,\s*[A-Z][a-z]+.*\(\d{4}.*\)/.test(sent)) continue;
+            if (/^[A-Z][a-z]+\s+\([12]\d{3}\)/.test(sent)) continue;
+            if (/\([^)]*_____[^)]*\)/.test(context)) continue;
+            if (context.length > 25 && pushQ({
+              id: cat.name.substring(0,3).toLowerCase() + added + 'y',
+              type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+              pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+              question: context, answer: years[0], hint: '',
+              fact: paraphrase(getContext(allSentences, sent, 3), years[0]),
+            })) { added++; articleQ++; sentUsed = true; }
+          }
         }
 
         // ▸ Number-based (%, lakh, crore, million, billion, km, kg)
-        if (articleQ < MAX_PER_ARTICLE) {
+        if (articleQ < MAX_PER_ARTICLE && !sentUsed) {
           const numMatch = sent.match(/\b(\d+(?:[.,]\d+)?\s*(%|lakh|crore|million|billion|trillion|sq\s*\.?\s*km|km²|km\b|kg|tonnes?|hectares?|megawatts?|kilometres?))/i);
           if (numMatch && sent.length < 240) {
             const context = sent.replace(numMatch[1], '_____').trim().substring(0, 200);
@@ -1424,12 +1428,12 @@ async function main() {
               pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
             question: context, answer: numMatch[1].trim(), hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), numMatch[1].trim()),
-            })) { added++; articleQ++; }
+            })) { added++; articleQ++; sentUsed = true; }
           }
         }
 
         // ▸ Superlative-based (first, largest, highest, oldest, etc.)
-        if (articleQ < MAX_PER_ARTICLE) {
+        if (articleQ < MAX_PER_ARTICLE && !sentUsed) {
           const supMatch = sent.match(/\b(first|second|largest|highest|oldest|deepest|longest|biggest|tallest|smallest|largest|earliest|latest|closest|farthest|most powerful|most populous|most important)\b/i);
           if (supMatch && sent.length < 240) {
             const numberNearby = sent.match(/\b(\d+(?:[.,]\d+)?)\s*(?=%|million|billion|lakh|crore|km|kg)?/);
@@ -1441,13 +1445,13 @@ async function main() {
                 pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
             question: context, answer: numberNearby[1].trim(), hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), numberNearby[1].trim()),
-              })) { added++; articleQ++; }
+              })) { added++; articleQ++; sentUsed = true; }
             }
           }
         }
 
         // ▸ Blank-out key term (every sentence)
-        if (articleQ < MAX_PER_ARTICLE) {
+        if (articleQ < MAX_PER_ARTICLE && !sentUsed) {
           if (new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(sent)) continue;
           const bestTerm = findBestTerm(sent, title);
           if (!bestTerm) continue;
@@ -1459,7 +1463,7 @@ async function main() {
             pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
             question: context, answer: bestTerm, hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), bestTerm),
-          })) { added++; articleQ++; }
+          })) { added++; articleQ++; sentUsed = true; }
         }
       }
     }
