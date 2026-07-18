@@ -468,7 +468,6 @@ canvas{display:block}
 </div>
 
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.170.0/build/three.module.js"}}</script>
-<script src="countries-data.js"></script>
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'https://unpkg.com/three@0.170.0/examples/jsm/controls/OrbitControls.js';
@@ -723,7 +722,6 @@ const CAT = {
 };
 
 const D = {};
-D.w_country_region = []; // placeholder — populated from embedded TopoJSON (countries-data.js)
 
 D.city = [
   {n:'New Delhi',la:28.61,ln:77.23,sub:'National Capital Territory',desc:'Capital of India on the Yamuna River. Seat of Parliament, Supreme Court, and Rashtrapati Bhavan. Designed by Edwin Lutyens and Herbert Baker.',fact:'Built on 7 cities · Mughal capital Shahjahanabad · India Gate memorial · Lotus Temple · Qutub Minar (UNESCO)'},
@@ -11524,10 +11522,6 @@ let _selTube=null;
 let _selArrows=null;
 let _selFlowDots=null;
 function clearHighlight(){
-  if(window._selCountry){
-    window._selCountry._fillMeshes.forEach(m => m.material.color.setHex(window._selCountry._origColor));
-    window._selCountry = null;
-  }
   if(_selHighlight){EG.remove(_selHighlight);_selHighlight=null;}
   if(_selTube){
     _selTube.material.color.set(_selTube.userData._origColor||'#ffffff');
@@ -11738,94 +11732,6 @@ function mkLbl(text,col,scale=0.12){
     const edge=new THREE.LineLoop(edgeGeo,edgeMat);g.add(edge);
   });
 });
-
-// ====== COUNTRY REGION SHADING (TopoJSON) ======
-const panel = document.getElementById('layersPanel');
-function topoDecodeArcs(topo) {
-  const [sx, sy] = topo.transform.scale;
-  const [tx, ty] = topo.transform.translate;
-  return topo.arcs.map(arc => {
-    let x = 0, y = 0;
-    return arc.map(([dx, dy]) => { x += dx; y += dy; return [x * sx + tx, y * sy + ty]; });
-  });
-}
-function topoGetRing(arcIds, decoded) {
-  const pts = [];
-  arcIds.forEach(id => {
-    const arc = decoded[Math.abs(id) - 1];
-    if (!arc) return;
-    const points = id < 0 ? [...arc].reverse() : arc;
-    points.forEach(([ln, la]) => pts.push({la, ln}));
-  });
-  return pts;
-}
-(function loadCountryShading() {
-  try {
-    const dataKey = 'w_country_region', renderKey = 'country';
-    if (!layerGroups[renderKey]) return;
-    const topo = window._countryTopo;
-    if (!topo) { console.warn('Country shading: countries-data.js not loaded'); return; }
-    const obj = topo?.objects?.countries;
-    if (!obj || obj.type !== 'GeometryCollection') return;
-    const arcs = topoDecodeArcs(topo);
-    const items = D[dataKey] = [];
-    obj.geometries.forEach(geom => {
-      const name = geom?.properties?.name;
-      if (!name || items.length >= 195) return;
-      if (geom.type === 'Polygon' && geom.arcs?.[0]) {
-        const ring = topoGetRing(geom.arcs[0], arcs);
-        if (ring.length >= 3) {
-          const cy = ring.reduce((s,p) => s + p.la, 0) / ring.length;
-          const cx = ring.reduce((s,p) => s + p.ln, 0) / ring.length;
-          items.push({ n: name, la: cy, ln: cx, rings: [ring], pts: ring, sub: '', desc: '', fact: '', _auto: true });
-        }
-      } else if (geom.type === 'MultiPolygon' && geom.arcs?.length) {
-        let allPts = [], allRings = [], laSum = 0, lnSum = 0, n = 0;
-        geom.arcs.forEach(p => {
-          if (!p?.[0]) return;
-          const ring = topoGetRing(p[0], arcs);
-          ring.forEach(pt => { laSum += pt.la; lnSum += pt.ln; n++; });
-          allPts = allPts.concat(ring);
-          allRings.push(ring);
-        });
-        if (allPts.length >= 3 && n > 0) {
-          items.push({ n: name, la: laSum/n, ln: lnSum/n, rings: allRings, pts: allPts, sub: '', desc: '', fact: '', _auto: true });
-        }
-      }
-    });
-    const g = layerGroups[renderKey];
-    if (!g || !items.length) return;
-    const baseColor = catColors[renderKey];
-    items.forEach(d => {
-      if (!d.pts || d.pts.length < 3) return;
-      d._fillMeshes = [];
-      // Proper triangulation using ShapeUtils (handles concave polygons)
-      (d.rings || [d.pts]).forEach(ring => {
-        if (ring.length < 3) return;
-        const pts3 = ring.map(p => ll(p.la, p.ln, R * 1.006));
-        const idx = THREE.ShapeUtils.triangulateShape(ring.map(p => ({x: p.ln, y: p.la})), []);
-        const pos = [];
-        idx.forEach(i => { pos.push(pts3[i].x, pts3[i].y, pts3[i].z); });
-        const geo = new THREE.BufferGeometry();
-        geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-        const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
-          color: baseColor, transparent: true, opacity: 0.18, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending
-        }));
-        d._fillMeshes.push(mesh);
-        g.add(mesh);
-        // Outline
-        const edgeGeo = new THREE.BufferGeometry().setFromPoints(pts3);
-        g.add(new THREE.LineLoop(edgeGeo, new THREE.LineBasicMaterial({ color: baseColor, transparent: true, opacity: 0.5 })));
-        // Secondary glow
-        g.add(new THREE.LineLoop(
-          new THREE.BufferGeometry().setFromPoints(pts3.map(p => p.clone().multiplyScalar(1.002))),
-          new THREE.LineBasicMaterial({ color: baseColor, transparent: true, opacity: 0.12 })
-        ));
-      });
-    });
-    toggleLayer(renderKey, true);
-  } catch (e) { console.warn('Country shading unavailable:', e.message, e.stack); }
-})();
 
 // Build latitude/longitude lines
 (function buildLatLines(){
@@ -12122,6 +12028,7 @@ function topoGetRing(arcIds, decoded) {
 // ============================================================
 // LAYER PANEL
 // ============================================================
+const panel=document.getElementById('layersPanel');
 const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','dynasty','organization','tiger','hill','bird','i_pass','tribal','i_book','ruler','freedom','traveller','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','w_dynasty','w_organization','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','latitude','current','phenomena','wind','cloud','forest','rainfall','plateau','plain','valley','w_pass','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','trade','oil','personality','highway','i_range','crop','mineral','statue','capital','w_coast','w_civilization','museum','w_cathedral','w_park','w_reservoir','w_castle','w_shrine','w_university','w_school','statue','ice_shelf','shrine','w_embassy','w_geyser','atoll','w_stadium','folk_dance','waterway','w_theatre','w_war','crater','geopark','w_ww1','mountains','ice_cap','seamount','w_tomb','w_hospital','capital','w_ww2','ecoregion','mesa','ocean_ridge','w_harbor','w_treaty','salt_flat','time_zone','cloud','spaceport','oasis','reservoir','park','w_trench','metro','mangrove','estuary','market','w_coast','climate_zone','i_fort','biome','tornado_region','monument','tomb','w_empire','cyclone_region','rainfall','theatre','i_palace','castle','cathedral','embassy','current','w_civilization','wind','w_alliance','judiciary','w_trade_bloc','w_language','w_religion','space_mission','border','coastline','w_nuclear_power','scientist','sports','w_ideology','invention','movement','corridor','writer','reformer','country','philosopher','artist','architect','w_philosopher','w_artist','w_architect','w_politician','ocean','w_bay','w_cave','w_gorge','w_archipelago','w_isthmus','w_spring','w_revolution','w_disaster','w_plate','w_meteorite','i_corridor','border_road','rl_zone','pipeline','dfc','i_bridge','biogeographic_zone','cement','drainage','fertilizer','i_cave','i_colonial','i_freedom','i_glacier','i_island','i_lake','i_medieval','i_movement','i_observatory','i_pilgrimage','i_stadium','i_tunnel','i_waterfall','i_zoo','industrial','irrigation','monsoon','physiographic','power_plant','refinery','seismic_zone','soil','steel_plant','tribe','vegetation','harbor','mosque','church','archaeological_site','monastery','escarpment','w_market','amusement_park','basin','classical_dance','cuisine','festival','fjord','lagoon','language','longitude','religious','shipwreck','wind_farm','zoo'];
 
 // Auto-play state
@@ -12214,11 +12121,6 @@ function buildPanel(){
               else{const same=m.data===item;m._mesh.visible=same;m._hide=!same;m._kingdomSelected=same?item:null;if(m.el)m.el.visible=same;if(m._edge)m._edge.visible=same;}
             }
           });
-        }
-        if(k==='country'&&D.w_country_region){
-          if(window._selCountry){window._selCountry._fillMeshes.forEach(m=>m.material.color.setHex(window._selCountry._origColor));window._selCountry=null;}
-          const td=D.w_country_region.find(c=>c.n===item.n);
-          if(td&&td._fillMeshes){td._origColor=td._origColor||catColors['country'];td._fillMeshes.forEach(x=>x.material.color.setHex(0xff69b4));window._selCountry=td;}
         }
         flyTo(item,cat,k);
       });
@@ -12490,60 +12392,7 @@ ren.domElement.addEventListener('click',(e)=>{
   if(hits.length){
     const hit=meshes.find(m=>m.mesh===hits[0].object);
     if(hit){if(_ap)stopAutoPlay();stopTimeline();hidePortrait();
-      if(window._selCountry){window._selCountry._fillMeshes.forEach(m => m.material.color.setHex(window._selCountry._origColor));window._selCountry=null;}
-      const m=hit.el;
-      // If clicking a country pin, also highlight its territory
-      if (m.cat === 'country' && D.w_country_region) {
-        const td = D.w_country_region.find(c => c.n === m.data.n);
-        if (td && td._fillMeshes) {
-          td._origColor = td._origColor || catColors['country'];
-          td._fillMeshes.forEach(x => x.material.color.setHex(0xff69b4));
-          window._selCountry = td;
-        }
-      }
-      showDetail(m.data,CAT[m.cat],m.cat);return;}
-  }
-  // Geographic country hit test (point-in-polygon)
-  const terData = D.w_country_region;
-  if (terData && terData.length) {
-    const dir = ray.ray.direction.clone().normalize();
-    const oc = ray.ray.origin.clone();
-    const a = dir.dot(dir), b = 2 * oc.dot(dir), c = oc.dot(oc) - R * R;
-    const disc = b * b - 4 * a * c;
-    if (disc >= 0) {
-      const t = (-b - Math.sqrt(disc)) / (2 * a);
-      if (t > 0) {
-        const hp = oc.clone().add(dir.clone().multiplyScalar(t));
-        const local = new THREE.Vector3().copy(hp);
-        EG.worldToLocal(local);
-        const la = 90 - Math.acos(Math.max(-1, Math.min(1, local.y / R))) * 180 / Math.PI;
-        const ln = (Math.atan2(local.z, -local.x) * 180 / Math.PI - 180 + 540) % 360 - 180;
-        for (const d of terData) {
-          if (!d.rings) continue;
-          let found = false;
-          for (const ring of d.rings) {
-            let inside = false;
-            for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-              const la_i = ring[i].la, ln_i = ring[i].ln, la_j = ring[j].la, ln_j = ring[j].ln;
-              if ((la_i > la) !== (la_j > la) && ln < ((ln_j - ln_i) * (la - la_i) / (la_j - la_i)) + ln_i) inside = !inside;
-            }
-            if (inside) { found = true; break; }
-          }
-          if (found) {
-            if(_ap)stopAutoPlay();stopTimeline();hidePortrait();
-            if (window._selCountry && window._selCountry !== d) {
-              window._selCountry._fillMeshes.forEach(m => m.material.color.setHex(window._selCountry._origColor));
-            }
-            d._origColor = d._origColor || catColors['country'];
-            d._fillMeshes.forEach(m => m.material.color.setHex(0xff69b4));
-            window._selCountry = d;
-            const match = D.country?.find(c => c.n === d.n);
-            showDetail(match || d, CAT['country'], 'country');
-            return;
-          }
-        }
-      }
-    }
+      showDetail(hit.el.data,CAT[hit.el.cat],hit.el.cat);return;}
   }
   if(_ap)stopAutoPlay();
   dp.classList.remove('show','expanded');
