@@ -11,6 +11,18 @@ var parser = new Parser({
   }
 });
 
+async function timedFetch(url, opts, timeoutMs) {
+  timeoutMs = timeoutMs || 30000;
+  var controller = new AbortController();
+  var timer = setTimeout(function() { controller.abort(); }, timeoutMs);
+  try {
+    var resp = await fetch(url, Object.assign({}, opts, { signal: controller.signal }));
+    return resp;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 var PIB_RSS_URL = 'https://www.pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3';
 var PIB_ENGLISH_URL = 'https://www.pib.gov.in/AllRelease.aspx?MenuId=4&lang=1&reg=3';
 var RBI_RSS_URL = 'https://www.rbi.org.in/pressreleases_rss.xml';
@@ -270,9 +282,9 @@ async function fetchRss() {
 
 async function fetchEnglish() {
   try {
-    var resp = await fetch(PIB_ENGLISH_URL, {
+    var resp = await timedFetch(PIB_ENGLISH_URL, {
       headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': 'text/html, */*', 'Accept-Language': 'en-US,en;q=0.9' }
-    });
+    }, 60000);
     if (!resp.ok) { console.error('English page HTTP ' + resp.status); return []; }
     var html = await resp.text();
     return parseEnglishHtml(html);
@@ -329,9 +341,9 @@ async function fetchSEBI() {
 
 async function fetchISRO() {
   try {
-    var resp = await fetch('https://www.isro.gov.in/ISRO_EN/Press.html', {
+    var resp = await timedFetch('https://www.isro.gov.in/ISRO_EN/Press.html', {
       headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': 'text/html, */*', 'Accept-Language': 'en-US,en;q=0.9' }
-    });
+    }, 30000);
     if (!resp.ok) { console.error('ISRO page HTTP ' + resp.status); return []; }
     var html = await resp.text();
     var items = [];
@@ -374,9 +386,9 @@ async function fetchISRO() {
 
 async function fetchMEA() {
   try {
-    var resp = await fetch('https://www.mea.gov.in/FrontEnd/FetchPublicationListingData?publicationId=51&SortBy=new&page=1&PageSize=20&PLngId=1', {
+    var resp = await timedFetch('https://www.mea.gov.in/FrontEnd/FetchPublicationListingData?publicationId=51&SortBy=new&page=1&PageSize=20&PLngId=1', {
       headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': 'text/html, */*', 'Accept-Language': 'en-US,en;q=0.9' }
-    });
+    }, 30000);
     if (!resp.ok) { console.error('MEA AJAX HTTP ' + resp.status); return []; }
     var html = await resp.text();
     var items = [];
@@ -452,9 +464,9 @@ async function concurrentMap(items, fn, limit) {
 
 async function fetchWikiCurrentEvents() {
   try {
-    var resp = await fetch(WIKI_CURRENT_EVENTS_URL, {
+    var resp = await timedFetch(WIKI_CURRENT_EVENTS_URL, {
       headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': 'application/json, */*', 'Accept-Language': 'en-US,en;q=0.9' }
-    });
+    }, 30000);
     if (!resp.ok) { console.error('Wiki current events HTTP ' + resp.status); return []; }
     var data = await resp.json();
     var html = data && data.parse && data.parse.text && data.parse.text['*'];

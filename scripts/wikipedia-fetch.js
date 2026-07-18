@@ -41,8 +41,8 @@ async function wikiCategoryDeepMembers(category, maxPages = 5000, visited = new 
     if (cmcontinue) url += `&cmcontinue=${encodeURIComponent(cmcontinue)}`;
     const d = await httpGet(url);
     for (const m of d.query.categorymembers) {
-      if (m.type === 'subcat' && depth < 2) subcats.push(m.title);
-      else if (m.type === 'page') pages.push(m.title);
+      if (m.ns === 14 && depth < 2) subcats.push(m.title);
+      else if (m.ns === 0) pages.push(m.title);
     }
     cmcontinue = d.continue?.cmcontinue;
     if (!cmcontinue) break;
@@ -74,8 +74,45 @@ async function titlesToQids(titles) {
   return map;
 }
 
+async function httpPost(url, data, retries = 3) {
+  const postData = typeof data === 'string' ? data : new URLSearchParams(data).toString();
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const result = await new Promise((resolve, reject) => {
+        const parsed = new URL(url);
+        const opts = {
+          hostname: parsed.hostname, path: parsed.pathname, method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Content-Length': Buffer.byteLength(postData), 'User-Agent': 'studypro-wiki/1.0 (gk-bot)' }
+        };
+        const req = https.request(opts, res => {
+          let d = '';
+          res.on('data', c => d += c);
+          res.on('end', () => {
+            if (res.statusCode === 429) return reject(Object.assign(new Error(d.slice(0, 200)), { status: 429 }));
+            if (res.statusCode >= 400) return reject(new Error(d.slice(0, 200)));
+            resolve(JSON.parse(d));
+          });
+        });
+        req.on('error', reject);
+        req.setTimeout(180000, () => { req.destroy(); reject(new Error('timeout')); });
+        req.write(postData);
+        req.end();
+      });
+      return result;
+    } catch (e) {
+      if (e.status === 429 && attempt < retries) {
+        const wait = (attempt + 2) * 10000;
+        console.log(`  ⏳ SPARQL rate limited, waiting ${wait/1000}s...`);
+        await new Promise(r => setTimeout(r, wait));
+        continue;
+      }
+      throw e;
+    }
+  }
+}
+
 function sparql(query) {
-  return httpGet('https://query.wikidata.org/sparql?format=json&query=' + encodeURIComponent(query));
+  return httpPost('https://query.wikidata.org/sparql', `format=json&query=${encodeURIComponent(query)}`);
 }
 
 async function wikiSummary(title) {
