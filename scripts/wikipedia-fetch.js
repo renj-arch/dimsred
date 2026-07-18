@@ -396,6 +396,39 @@ const CFG = [
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
   },
+  { id:'w_alliance', label:'World Alliances', wikiCat:'Category:Military_alliances', subFn:(s,a)=>s },
+  { id:'judiciary', label:'High Courts', wikiCat:'Category:High_courts_of_India', subFn:(s,a)=>[s,'High Court'].filter(Boolean).join(' · ') },
+  { id:'w_trade_bloc', label:'Trade Blocs', wikiCat:'Category:Trade_blocs', subFn:(s,a)=>s },
+  { id:'w_religion', label:'World Religions', wikiCat:'Category:Major_religious_groups', subFn:(s,a)=>s },
+  { id:'space_mission', label:'Space Missions', wikiCat:'Category:Space_missions', subFn:(s,a)=>s },
+  { id:'border', label:'Border Disputes', wikiCat:'Category:Border_disputes_involving_India', subFn:(s,a)=>s },
+  { id:'w_nuclear_power', label:'Nuclear Powers', wikiCat:'Category:Nuclear_weapons_programmes', subFn:(s,a)=>s },
+  { id:'scientist', label:'Scientists', wikiCat:'Category:Indian_scientists',
+    subFn:(s,a)=>s,
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P19 ?coord. }
+      UNION
+      { ?item wdt:P20 ?coord. }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }`
+  },
+  { id:'sports', label:'Sports Figures', wikiCat:'Category:Indian_sportspeople',
+    subFn:(s,a)=>s,
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P19 ?coord. }
+      UNION
+      { ?item wdt:P20 ?coord. }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }`
+  },
 ];
 
 async function fetchSummariesConcurrently(titles, concurrency = 5) {

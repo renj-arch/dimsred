@@ -224,6 +224,18 @@ const CAT_MAP = {
   'wiki-philosopher.json': 'philosopher',
   'wiki-artist.json': 'artist',
   'wiki-architect.json': 'architect',
+  'wiki-w_alliance.json': 'w_alliance',
+  'wiki-judiciary.json': 'judiciary',
+  'wiki-w_trade_bloc.json': 'w_trade_bloc',
+  'wiki-w_religion.json': 'w_religion',
+  'wiki-space_mission.json': 'space_mission',
+  'wiki-border.json': 'border',
+  'wiki-w_nuclear_power.json': 'w_nuclear_power',
+  'wiki-scientist.json': 'scientist',
+  'wiki-sports.json': 'sports',
+  'wiki-w_ideology.json': 'w_ideology',
+  'wiki-w_language.json': 'w_language',
+  'wiki-coastline.json': 'coastline',
 };
 
 let html = fs.readFileSync(GLOBE_PATH, 'utf8');
