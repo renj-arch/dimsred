@@ -11756,9 +11756,16 @@ function topoGetRing(arcIds, decoded) {
   try {
     const k = 'w_country_region';
     if (!layerGroups[k]) return;
-    const res = await fetch('https://unpkg.com/world-atlas@2/countries-110m.json');
-    if (!res.ok) return;
-    const topo = await res.json();
+    let topo;
+    try {
+      const res = await fetch('countries-110m.json');
+      if (res.ok) topo = await res.json();
+    } catch (_) {}
+    if (!topo) {
+      const res = await fetch('https://unpkg.com/world-atlas@2/countries-110m.json');
+      if (!res.ok) return;
+      topo = await res.json();
+    }
     const obj = topo?.objects?.countries;
     if (!obj || obj.type !== 'GeometryCollection') return;
     const arcs = topoDecodeArcs(topo);
