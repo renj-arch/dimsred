@@ -17,8 +17,32 @@ function httpGet(url) {
   });
 }
 
+function httpPost(url, body) {
+  return new Promise((resolve, reject) => {
+    const u = new URL(url);
+    const opts = {
+      hostname: u.hostname, port: 443, path: u.pathname + u.search,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'studypro-wiki/1.0 (gk-bot)' }
+    };
+    const req = https.request(opts, res => {
+      let d = '';
+      res.on('data', c => d += c);
+      res.on('end', () => {
+        if (res.statusCode >= 400) return reject(new Error(d.slice(0, 200)));
+        resolve(JSON.parse(d));
+      });
+    });
+    req.on('error', reject);
+    req.setTimeout(180000, () => { req.destroy(); reject(new Error('timeout')); });
+    req.write(body);
+    req.end();
+  });
+}
+
 function sparql(query) {
-  return httpGet('https://query.wikidata.org/sparql?format=json&query=' + encodeURIComponent(query));
+  const url = 'https://query.wikidata.org/sparql?format=json';
+  return httpPost(url, 'query=' + encodeURIComponent(query));
 }
 
 async function wikiSummary(title) {
