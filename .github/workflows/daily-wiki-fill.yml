@@ -35,6 +35,9 @@ jobs:
       - name: Remove garbled questions (table rows, fragments)
         run: node scripts/cleanup-questions.js
 
+      - name: Remove sentence-flood duplicates (same sentence, different blank)
+        run: node scripts/dedup-sentence-flood.js
+
       - name: Fetch current events and update archive.html
         run: node scripts/fetch-current-events.js
 
