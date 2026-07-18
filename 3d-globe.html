@@ -11818,6 +11818,30 @@ function topoGetRing(arcIds, decoded) {
       });
     });
     toggleLayer(k, true);
+    // Add country section to panel
+    if (panel && items.length) {
+      const sec = document.createElement('div'); sec.className = 'lay-section';
+      const head = document.createElement('div'); head.className = 'lay-head';
+      head.innerHTML = `<span>🗺️</span> Country Regions <span class="cnt">${items.length}</span> <span class="ap-btn" style="font-size:.55em;cursor:pointer;color:rgba(255,255,255,.35);margin-right:3px" title="Auto-play">▶</span> <span class="vis-btn" style="font-size:.65em;color:rgba(255,255,255,.5)">◉</span> <span class="arr open">▶</span>`;
+      const cont = document.createElement('div'); cont.className = 'lay-items open';
+      items.forEach(item => {
+        const it = document.createElement('div'); it.className = 'lay-it';
+        it.innerHTML = `<span class="dot" style="background:${catColors[k]}"></span><span class="lbl">${item.n}</span>`;
+        it.addEventListener('click', () => {
+          if(_ap)stopAutoPlay();
+          flyTo(item, CAT[k], k);
+        });
+        cont.appendChild(it);
+      });
+      head.querySelector('.vis-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const on = layerVis[k] === false;
+        toggleLayer(k, on);
+        e.target.style.color = on ? 'rgba(255,255,255,.5)' : 'rgba(255,255,255,.15)';
+        e.target.textContent = on ? '◉' : '○';
+      });
+      sec.appendChild(head); sec.appendChild(cont); panel.appendChild(sec);
+    }
   } catch (e) { console.warn('Country shading unavailable:', e.message, e.stack); }
 })();
 
