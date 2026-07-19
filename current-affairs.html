@@ -203,7 +203,6 @@
         <!-- Mode Toggle (always visible) -->
         <div style="display:flex;gap:4px;margin:0 auto 12px;padding:4px;border-radius:100px;background:rgba(255,255,255,.04);max-width:240px">
             <button id="modeQuizBtn" class="mode-btn active" onclick="setMode('quiz')" style="flex:1;padding:7px 14px;border-radius:100px;border:none;font-weight:600;font-size:.78em;cursor:pointer;transition:all .2s;background:var(--purple);color:#fff">📝 Quiz</button>
-            <button id="modeStudyBtn" class="mode-btn" onclick="setMode('study')" style="flex:1;padding:7px 14px;border-radius:100px;border:none;font-weight:600;font-size:.78em;cursor:pointer;transition:all .2s;background:transparent;color:var(--text-sec)">📖 Study</button>
         </div>
 
         <div id="welcome">
@@ -5390,12 +5389,13 @@ var _staticGen_polity = GK_GENERATORS.polity;
 
         function init() {
             if (!restoreQuizSession()) {
-                initCatGrid('study');
-                initCatGrid('quiz');
+                initCatGrid();
             } else {
-                initCatGrid('study');
-                initCatGrid('quiz');
+                initCatGrid();
             }
+            loadQuizJson();
+            preloadArchive();
+        }
             // Load knowledge base from external JSON (reduces page size by ~230KB)
             fetch('data/knowledge-base.json')
                 .then(function(r) { return r.json(); })
@@ -5871,15 +5871,6 @@ var _staticGen_polity = GK_GENERATORS.polity;
             if (state.answered || state.idx > 0) {
                 if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
             }
-            if (currentMode === 'study') {
-                document.getElementById('studyGrid').style.display = 'block';
-                document.getElementById('studyArea').style.display = 'none';
-                document.getElementById('qArea').classList.remove('active');
-                document.getElementById('scoreBar').classList.remove('show');
-                state.questions = [];
-                state.idx = 0;
-                return;
-            }
             document.getElementById('welcome').style.display = 'block';
             document.getElementById('qArea').classList.remove('active');
             document.getElementById('scoreBar').classList.remove('show');
@@ -5892,65 +5883,35 @@ var _staticGen_polity = GK_GENERATORS.polity;
         }
 
         var currentMode = 'quiz';
-        var currentStudyCat = null;
-        var currentStudyName = null;
 
         function setMode(mode) {
             if (mode !== currentMode && !confirmAbandonQuiz()) return;
             currentMode = mode;
-            document.getElementById('modeQuizBtn').style.background = mode === 'quiz' ? 'var(--purple)' : 'transparent';
-            document.getElementById('modeQuizBtn').style.color = mode === 'quiz' ? '#fff' : 'var(--text-sec)';
-            document.getElementById('modeStudyBtn').style.background = mode === 'study' ? 'var(--purple)' : 'transparent';
-            document.getElementById('modeStudyBtn').style.color = mode === 'study' ? '#fff' : 'var(--text-sec)';
-            if (mode === 'study') {
-                document.getElementById('welcome').style.display = 'none';
-                document.getElementById('qArea').classList.remove('active');
-                document.getElementById('studyGrid').style.display = 'block';
-                document.getElementById('studyArea').style.display = 'none';
-                closeSearch();
-            } else {
-                document.getElementById('welcome').style.display = 'block';
-                document.getElementById('studyGrid').style.display = 'none';
-                document.getElementById('studyArea').style.display = 'none';
-                closeSearch();
-            }
         }
 
-        function initCatGrid(mode) {
-            var grid = document.getElementById(mode === 'study' ? 'studyGrid' : 'catGrid');
+        function initCatGrid() {
+            var grid = document.getElementById('catGrid');
             if (!grid) return;
-            var catContainer = mode === 'study' ? grid.querySelector('.cat-grid') || grid : grid;
-            catContainer.innerHTML = '';
+            grid.innerHTML = '';
             CATEGORIES.forEach(function(c) {
                 var btn = document.createElement('div');
                 btn.className = 'cat-btn';
                 btn.innerHTML = '<div class="cat-icon">' + c.icon + '</div>'
                     + '<div class="cat-name">' + c.name + '</div>'
                     + '<div class="cat-desc">' + c.desc + '</div>';
-                btn.onclick = function() {
-                    if (mode === 'study') {
-                        setMode('study');
-                        showStudy(c.id, c.name, c.icon);
-                    } else {
-                        startCategory(c.id, c.name);
-                    }
+                btn.onclick = function() { startCategory(c.id, c.name); };
+                grid.appendChild(btn);
+                var combBtn = document.createElement('div');
+                combBtn.style.cssText = 'font-size:.6em;color:var(--text-muted);text-align:center;padding:2px 0 4px;cursor:pointer;transition:color .15s';
+                combBtn.textContent = '+ current affairs';
+                combBtn.onmouseover = function() { this.style.color = 'var(--emerald)'; };
+                combBtn.onmouseout = function() { this.style.color = 'var(--text-muted)'; };
+                combBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    startCategoryQuiz(c.id, c.name);
                 };
-                catContainer.appendChild(btn);
-                // Add a combined quiz link below the category button (on hover context)
-                if (mode !== 'study') {
-                    var combBtn = document.createElement('div');
-                    combBtn.style.cssText = 'font-size:.6em;color:var(--text-muted);text-align:center;padding:2px 0 4px;cursor:pointer;transition:color .15s';
-                    combBtn.textContent = '+ current affairs';
-                    combBtn.onmouseover = function() { this.style.color = 'var(--emerald)'; };
-                    combBtn.onmouseout = function() { this.style.color = 'var(--text-muted)'; };
-                    combBtn.onclick = function(e) {
-                        e.stopPropagation();
-                        startCategoryQuiz(c.id, c.name);
-                    };
-                    catContainer.appendChild(combBtn);
-                }
+                grid.appendChild(combBtn);
             });
-            if (mode === 'study') grid.style.display = 'grid';
         }
 
         // ===== STUDY MODE ENGINE =====
@@ -6945,7 +6906,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                                         if (q && q.question && q.answer) {
                                             var fact = q.fact || q.solution || q.explanation || '';
                                             if (!_isExamRelevant({q:q.question, a:q.answer, fact:fact})) return;
-                                            allQ.push({q:q.question, a:q.answer, options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:sk, subTopic:ssk});
+                                            allQ.push({q:q.question, a:q.answer, options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:sk, subTopic:ssk, pubDate:q.pubDate||''});
                                         }
                                     });
                                 }
