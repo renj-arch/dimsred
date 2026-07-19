@@ -210,6 +210,7 @@
                 <div class="icon">📖</div>
                 <div class="title">Knowledge Booster</div>
                 <div class="desc">Browse PIB & Current Affairs by date — auto-advances every 4 seconds. Pause anytime.</div>
+                <div id="archiveStats" style="font-size:.75em;color:var(--text-muted);margin-top:8px">📌 PIB <span id="pibCount">—</span> & 📌 Current Affairs <span id="caCount">—</span></div>
             </div>
 
             <!-- Mega GK replaced with PIB/CA time-range feed -->
@@ -7072,6 +7073,15 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 _archiveCache = qs;
                 _archiveLoading = false;
                 setArchiveStatus('loaded');
+                var pib = 0, ca = 0;
+                for (var si = 0; si < qs.length; si++) {
+                    if (qs[si].subject === 'PIB Releases') pib++;
+                    else if (qs[si].subject === 'Current Affairs') ca++;
+                }
+                var pibEl = document.getElementById('pibCount');
+                var caEl = document.getElementById('caCount');
+                if (pibEl) pibEl.textContent = pib;
+                if (caEl) caEl.textContent = ca;
             });
         }
         function setArchiveStatus(s) {
