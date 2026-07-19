@@ -100,11 +100,6 @@
         .period-chip:hover{border-color:var(--cyan);color:var(--cyan)}
         .period-chip.active{background:rgba(34,211,238,.15);border-color:var(--cyan);color:var(--cyan);font-weight:600}
 
-        .time-filter{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:100px;font-size:.82em;font-weight:600;cursor:pointer;transition:all .2s;background:rgba(99,102,241,.12);color:var(--purple);border:1px solid rgba(99,102,241,.2);white-space:nowrap;user-select:none}
-        .time-filter:hover{background:rgba(99,102,241,.2)}
-        .time-filter.active{background:var(--purple);color:#fff;border-color:var(--purple)}
-        .feed-area{min-height:120px}
-        
         /* === Study Mode Enhancements === */
         .study-bc{font-size:.75em;color:var(--text-muted);margin-bottom:8px;padding:0 4px}
         .study-bc span{color:var(--purple)}
@@ -213,25 +208,22 @@
 
         <div id="welcome">
             <div class="welcome-card" style="margin-bottom:12px">
-                <div class="icon">📰</div>
-                <div class="title">Current Affairs Feed</div>
-                <div class="desc">Browse PIB & Current Affairs questions filtered by date.</div>
+                <div class="icon">📖</div>
+                <div class="title">Knowledge Booster</div>
+                <div class="desc">Pure GK from Wikipedia — auto-advances every 4 seconds. Pause anytime.</div>
             </div>
 
-            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;justify-content:center">
-                <button class="time-filter" onclick="renderTimedFeed(0)" data-days="0">Today</button>
-                <button class="time-filter" onclick="renderTimedFeed(7)" data-days="7">7 Days</button>
-                <button class="time-filter active" onclick="renderTimedFeed(30)" data-days="30">1 Month</button>
-                <button class="time-filter" onclick="renderTimedFeed(90)" data-days="90">3 Months</button>
-                <button class="time-filter" onclick="renderTimedFeed(180)" data-days="180">6 Months</button>
-                <button class="time-filter" onclick="renderTimedFeed(-1)" data-days="-1">All Time</button>
+            <!-- Mega GK: the only quiz mode -->
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;justify-content:center;flex-direction:column">
+                <button class="action-btn secondary" style="padding:16px;font-size:1.05em;background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.2)" onclick="startCombinedQuiz(15, '🎯 Mega GK')">🎯 Mega GK — Live Wikipedia</button>
+                <button class="action-btn secondary" style="padding:14px;font-size:.95em;background:rgba(99,102,241,.12);color:var(--purple);border:1px solid rgba(99,102,241,.2)" onclick="startStaticGk()">📚 Static GK — All 26 Categories</button>
+                <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:4px;flex-wrap:wrap">
+                    <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="archiveToggle" style="accent-color:var(--purple);width:14px;height:14px"> 📚 Include Archive <span id="archiveStatus" style="color:var(--emerald);font-size:.72em">loaded</span></label>
+                    
+                </div>
             </div>
 
-            <div id="feedArea" class="feed-area">
-                <div class="gk-intro" style="padding:20px 0">Select a time range above to browse questions.</div>
-            </div>
-
-            <button class="action-btn secondary" style="padding:14px;font-size:.95em;margin-top:14px;background:rgba(99,102,241,.12);color:var(--purple);border:1px solid rgba(99,102,241,.2)" onclick="startStaticGk()">📚 Static GK — All 26 Categories</button>
+            <p class="gk-intro">Live Wikipedia GK or curated static GK across 26 categories. Auto-advances every 4 seconds. Pause anytime.</p>
 
         </div>
 
@@ -5401,9 +5393,34 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 .then(function(data) { GK_LEARN = data; _initStudyData(); })
                 .catch(function() { _initStudyData(); });
             loadQuizJson();
-            preloadArchive();
-            renderTimedFeed(30);
-        }
+            preloadArchive();        }
+
+        function startCategory(id, name) {
+            if (!confirmAbandonQuiz()) return;
+            try { localStorage.removeItem(SESSION_KEY); } catch(e) {}
+            if (state._poolTimerId) { clearInterval(state._poolTimerId); state._poolTimerId = null; }
+            state.cat = id;
+            state.categoryName = name;
+            state.idx = 0;
+            state.correct = 0;
+            state.streak = 0;
+            state.answered = false;
+            state.questions = [];
+            state.restartFn = function() { startCategory(id, name); };
+            var gen2 = GK_GEN2 && GK_GEN2[id];
+            var gen1 = GK_GENERATORS[id];
+            if (typeof WIKI !== 'undefined') { try { if (!WIKI._prefetching) WIKI.prefetch(); } catch(e) {} try { var _wikiSearchMap = { sebi:'Securities and Exchange Board of India SEBI', scjudgments:'Supreme Court judgments India landmark cases', isro:'Indian Space Research Organisation ISRO', mea:'Ministry of External Affairs India MEA', rbi:'Reserve Bank of India RBI', defence:'Indian Armed Forces', environment:'Environment climate change India', sports:'Sports India', economics:'Indian economy', polity:'Constitution of India', sciTech:'Science technology India', health:'Healthcare India', education:'Education India', agriculture:'Agriculture India', energy:'Energy India', geography:'Geography of India', history:'History of India' }; if (_wikiSearchMap[id] && typeof WIKI !== 'undefined' && WIKI._batchSearch) WIKI._batchSearch(_wikiSearchMap[id], 15).then(function(qs) { if (qs && qs.length) { for (var si = 0; si < qs.length; si++) { if (WIKI._pool.length < 300) WIKI._pool.push(qs[si]); } } }); } catch(e) {} }
+            for (var i = 0; i < 8; i++) {
+                var q = null;
+                if (typeof WIKI !== 'undefined') { try { var _wikiCatMap = { sebi:'economics', scjudgments:'polity', isro:'space', mea:'ir', rbi:'economics', defence:'defence', environment:'environment', sports:'sports', economics:'economics', polity:'polity', sciTech:'science', health:'health', education:'education', agriculture:'agriculture', energy:'energy', geography:'geography', history:'history' }; var _targetCat = _wikiCatMap[id]; if (_targetCat && WIKI._pool && WIKI._pool.length > 0) { for (var pi = 0; pi < WIKI._pool.length; pi++) { if (WIKI._pool[pi]._wikiCat === _targetCat) { q = WIKI._pool.splice(pi, 1)[0]; break; } } } if (!q) { q = WIKI.poolQuestion(); } if (q) { q = JSON.parse(JSON.stringify(q)); } } catch(e) {} }
+                if (!q && gen2 && Math.random() < 0.3) { try { q = gen2(); } catch(e) {} }
+                if (!q && gen1) { try { q = gen1(); } catch(e) {} }
+                if (q) {
+                    q.opts = q.opts || buildOptions(q.a);
+                    if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
+                    if (!isValidAnswer(q.a) || isTrash(q)) continue;
+                    state.questions.push(q);
+                }
             }
             if (state.questions.length === 0) {
                 if (typeof WIKI === 'undefined' || !WIKI._pool) { alert('No questions available for this category right now. The data feed may still be loading.'); return; }
@@ -6919,7 +6936,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                                         if (q && q.question && q.answer) {
                                             var fact = q.fact || q.solution || q.explanation || '';
                                             if (!_isExamRelevant({q:q.question, a:q.answer, fact:fact})) return;
-                                            allQ.push({q:q.question, a:q.answer, options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:sk, subTopic:ssk, pubDate:q.pubDate||''});
+                                            allQ.push({q:q.question, a:q.answer, options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:sk, subTopic:ssk});
                                         }
                                     });
                                 }
@@ -6929,7 +6946,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     loaded++;
                     if (loaded === pending) {
                         shuffleArray(allQ);
-                        _archiveCache = allQ.slice(0, 5000);
+                        _archiveCache = allQ.slice(0, 300);
                         cb(_archiveCache);
                     }
                 };
@@ -6939,39 +6956,6 @@ var _staticGen_polity = GK_GENERATORS.polity;
             });
         }
         function shuffleArray(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
-
-        function renderTimedFeed(days) {
-            var feedEl = document.getElementById('feedArea');
-            feedEl.innerHTML = '<div class="gk-intro" style="padding:20px 0">⏳ Loading archive...</div>';
-            document.querySelectorAll('.time-filter').forEach(function(b){b.classList.toggle('active',(b.getAttribute('data-days')||'')==days+'')});
-            loadArchiveQuestions(function(questions) {
-                var cutoff = days < 0 ? null : new Date(Date.now() - days * 86400000);
-                var filtered = questions.filter(function(q) {
-                    if (!q.pubDate) return false;
-                    if (!cutoff) return true;
-                    return new Date(q.pubDate).getTime() >= cutoff.getTime();
-                });
-                filtered.sort(function(a,b){return new Date(b.pubDate)-new Date(a.pubDate)});
-                if (filtered.length === 0) {
-                    feedEl.innerHTML = '<div class="gk-intro" style="padding:20px 0">😕 No questions found for this time range.</div>';
-                    return;
-                }
-                var html = '<div style="margin-bottom:10px;font-size:.78em;color:var(--text-muted);text-align:center">Showing ' + filtered.length + ' question' + (filtered.length!==1?'s':'') + '</div>';
-                filtered.forEach(function(q,i){
-                    var ds = q.pubDate ? new Date(q.pubDate).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '';
-                    html += '<div class="q-card" style="text-align:left;padding:18px 20px;cursor:default">';
-                    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">';
-                    html += '<span style="font-size:.68em;color:var(--text-muted)">#'+(i+1)+'</span>';
-                    if (ds) html += '<span style="font-size:.68em;padding:2px 8px;border-radius:6px;background:rgba(34,211,238,.08);color:var(--cyan)">'+ds+'</span>';
-                    if (q.subject) html += '<span style="font-size:.68em;padding:2px 8px;border-radius:6px;background:rgba(167,139,250,.08);color:var(--purple)">'+(q.subTopic||q.subject)+'</span>';
-                    html += '</div><div class="q-text" style="font-size:.925em;text-align:left;margin-bottom:10px">'+q.q+'</div>';
-                    html += '<div class="q-hint" onclick="var p=this.nextElementSibling;p.classList.toggle(\'show\');this.querySelector(\'.hint-text\').classList.toggle(\'show\')" style="text-align:left;margin-bottom:0"><span style="font-size:.75em;color:var(--purple);font-weight:600">👁 Show Answer</span><div class="hint-text" style="margin-top:8px;font-size:.88em;color:var(--emerald);line-height:1.6">'+q.a+'</div></div>';
-                    if (q.fact) html += '<div style="margin-top:8px;font-size:.75em;color:var(--text-sec);line-height:1.5;border-top:1px solid var(--border);padding-top:8px">💡 '+q.fact+'</div>';
-                    html += '</div>';
-                });
-                feedEl.innerHTML = html;
-            });
-        }
 
         function _loadArchiveIntoState(cb) {
             if (_archiveCache) {
