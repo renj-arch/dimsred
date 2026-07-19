@@ -215,7 +215,7 @@
 
             <!-- Mega GK: the only quiz mode -->
             <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;justify-content:center;flex-direction:column">
-                <button class="action-btn secondary" style="padding:16px;font-size:1.05em;background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.2)" onclick="startCombinedQuiz(15, '🎯 Mega GK')">🎯 Mega GK — Live Wikipedia</button>
+                <button class="action-btn secondary" style="padding:16px;font-size:1.05em;background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.2)" onclick="startMegaGkFeed()">🎯 Mega GK — Live Wikipedia</button>
                 <button class="action-btn secondary" style="padding:14px;font-size:.95em;background:rgba(99,102,241,.12);color:var(--purple);border:1px solid rgba(99,102,241,.2)" onclick="startStaticGk()">📚 Static GK — All 26 Categories</button>
                 <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:4px;flex-wrap:wrap">
                     <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="archiveToggle" style="accent-color:var(--purple);width:14px;height:14px"> 📚 Include Archive <span id="archiveStatus" style="color:var(--emerald);font-size:.72em">loaded</span></label>
@@ -6956,6 +6956,103 @@ var _staticGen_polity = GK_GENERATORS.polity;
             });
         }
         function shuffleArray(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
+        function startMegaGkFeed() {
+            if (state.answered || state.idx > 0) {
+                if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
+            }
+            state.questions = [];
+            state.idx = 0;
+            state.answered = true;
+            state.autoPaused = false;
+            state.infinite = true;
+            state.restartFn = startMegaGkFeed;
+
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('qArea').classList.add('active');
+            document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('regionFilterRow').style.display = 'none';
+            document.getElementById('timeFilterRow').style.display = 'none';
+            document.getElementById('customDateRange').style.display = 'none';
+            document.getElementById('correctNum').textContent = '0';
+            document.getElementById('totalNum').textContent = '0';
+            document.getElementById('scoreLabel').textContent = 'Mega GK';
+            document.getElementById('streakDisplay').style.display = 'none';
+            document.getElementById('pauseBtn').classList.remove('hidden');
+            document.getElementById('pauseBtn').textContent = '⏸';
+            document.getElementById('nextBtn').classList.add('hidden');
+            document.getElementById('restartBtn').style.display = 'none';
+
+            var count = 0;
+            var maxQ = 50;
+            if (typeof WIKI !== 'undefined' && WIKI._pool) {
+                while (WIKI._pool.length > 0 && count < maxQ) {
+                    var q = WIKI.poolQuestion();
+                    if (q) {
+                        if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
+                        state.questions.push(q);
+                        count++;
+                    }
+                }
+            }
+            if (typeof WIKI !== 'undefined') { try { WIKI.prefetch(); } catch(e) {} }
+
+            _showFeedItem();
+        }
+
+        function _showFeedItem() {
+            _stopFeedTimer();
+            if (state.idx >= state.questions.length) {
+                try {
+                    var added = 0;
+                    while (typeof WIKI !== 'undefined' && WIKI._pool && WIKI._pool.length > 0 && added < 20) {
+                        var q = WIKI.poolQuestion();
+                        if (q) {
+                            if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
+                            state.questions.push(q);
+                            added++;
+                        }
+                    }
+                } catch(e) {}
+                if (state.idx >= state.questions.length) {
+                    document.getElementById('qText').innerHTML = 'No more questions. <button onclick="startMegaGkFeed()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Restart</button>';
+                    document.getElementById('optGrid').innerHTML = '';
+                    document.getElementById('pauseBtn').classList.add('hidden');
+                    return;
+                }
+            }
+            var q = state.questions[state.idx];
+            document.getElementById('correctNum').textContent = state.idx + 1;
+            document.getElementById('totalNum').textContent = state.questions.length;
+            document.getElementById('qNum').textContent = '';
+            document.getElementById('qProgress').style.width = '0%';
+            document.getElementById('catTag').textContent = q.hint || '';
+            document.getElementById('qText').innerHTML = q.q;
+            document.getElementById('qHint').style.display = 'none';
+            document.getElementById('resultFlash').className = 'result-flash';
+            document.getElementById('intuitionDisplay').style.display = 'none';
+
+            var html = '<div style="padding:8px 0"><span style="font-size:.85em;color:var(--text-muted)">Answer:</span> <span style="font-size:1em;font-weight:700;color:var(--emerald)">' + q.a + '</span></div>';
+            if (q.fact) {
+                html += '<div style="padding:8px 0 4px;border-top:1px solid var(--border);margin-top:4px"><span style="font-size:.75em;color:var(--text-muted)">Explanation:</span> <div style="font-size:.85em;color:var(--text-sec);line-height:1.6;margin-top:4px">' + q.fact + '</div></div>';
+            }
+            document.getElementById('optGrid').innerHTML = html;
+            document.getElementById('optGrid').style.display = 'block';
+            document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
+
+            state._feedTimer = setTimeout(function tick() {
+                if (state.autoPaused) {
+                    state._feedTimer = setTimeout(tick, 4000);
+                } else {
+                    state.idx++;
+                    _showFeedItem();
+                }
+            }, 4000);
+        }
+
+        function _stopFeedTimer() {
+            if (state._feedTimer) { clearTimeout(state._feedTimer); state._feedTimer = null; }
+        }
 
         function _loadArchiveIntoState(cb) {
             if (_archiveCache) {
