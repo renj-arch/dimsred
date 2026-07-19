@@ -23,6 +23,33 @@ async function timedFetch(url, opts, timeoutMs) {
   }
 }
 
+async function fetchText(url, opts, timeoutMs) {
+  timeoutMs = timeoutMs || 30000;
+  var controller = new AbortController();
+  var timer = setTimeout(function() { controller.abort(); }, timeoutMs);
+  try {
+    var resp = await fetch(url, Object.assign({}, opts, { signal: controller.signal }));
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    var text = await resp.text();
+    return text;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function withTimeout(promise, ms, label) {
+  return Promise.race([
+    promise,
+    new Promise(function(_, reject) {
+      setTimeout(function() { reject(new Error((label || 'operation') + ' timed out after ' + ms + 'ms')); }, ms);
+    })
+  ]);
+}
+
+function timeLog(label) {
+  console.log('[' + new Date().toISOString().slice(11,19) + '] ' + label);
+}
+
 var PIB_RSS_URL = 'https://www.pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3';
 var PIB_ENGLISH_URL = 'https://www.pib.gov.in/AllRelease.aspx?MenuId=4&lang=1&reg=3';
 var RBI_RSS_URL = 'https://www.rbi.org.in/pressreleases_rss.xml';
@@ -282,11 +309,9 @@ async function fetchRss() {
 
 async function fetchEnglish() {
   try {
-    var resp = await timedFetch(PIB_ENGLISH_URL, {
+    var html = await fetchText(PIB_ENGLISH_URL, {
       headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': 'text/html, */*', 'Accept-Language': 'en-US,en;q=0.9' }
     }, 60000);
-    if (!resp.ok) { console.error('English page HTTP ' + resp.status); return []; }
-    var html = await resp.text();
     return parseEnglishHtml(html);
   } catch (e) {
     console.error('English page fetch failed: ' + e.message);
@@ -341,11 +366,9 @@ async function fetchSEBI() {
 
 async function fetchISRO() {
   try {
-    var resp = await timedFetch('https://www.isro.gov.in/ISRO_EN/Press.html', {
+    var html = await fetchText('https://www.isro.gov.in/ISRO_EN/Press.html', {
       headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': 'text/html, */*', 'Accept-Language': 'en-US,en;q=0.9' }
-    }, 30000);
-    if (!resp.ok) { console.error('ISRO page HTTP ' + resp.status); return []; }
-    var html = await resp.text();
+    }, 20000);
     var items = [];
     var yearPanels = html.match(/<div class="tab-pane[^"]*"[^>]*id="(tab\d+|tab1)"[^>]*>[\s\S]*?<table[\s\S]*?<\/table>/g);
     if (!yearPanels) return [];
@@ -386,11 +409,9 @@ async function fetchISRO() {
 
 async function fetchMEA() {
   try {
-    var resp = await timedFetch('https://www.mea.gov.in/FrontEnd/FetchPublicationListingData?publicationId=51&SortBy=new&page=1&PageSize=20&PLngId=1', {
+    var html = await fetchText('https://www.mea.gov.in/FrontEnd/FetchPublicationListingData?publicationId=51&SortBy=new&page=1&PageSize=20&PLngId=1', {
       headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': 'text/html, */*', 'Accept-Language': 'en-US,en;q=0.9' }
-    }, 30000);
-    if (!resp.ok) { console.error('MEA AJAX HTTP ' + resp.status); return []; }
-    var html = await resp.text();
+    }, 15000);
     var items = [];
     var regex = /<div class="pressRelesastBox">[\s\S]*?<span class="date">([^<]*)<\/span>[\s\S]*?<h3 class="pressTitle">[\s\S]*?<a href="([^"]*)"[^>]*>([\s\S]*?)<\/a>[\s\S]*?<\/h3>/g;
     var match;
@@ -464,11 +485,10 @@ async function concurrentMap(items, fn, limit) {
 
 async function fetchWikiCurrentEvents() {
   try {
-    var resp = await timedFetch(WIKI_CURRENT_EVENTS_URL, {
+    var json = await fetchText(WIKI_CURRENT_EVENTS_URL, {
       headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': 'application/json, */*', 'Accept-Language': 'en-US,en;q=0.9' }
-    }, 30000);
-    if (!resp.ok) { console.error('Wiki current events HTTP ' + resp.status); return []; }
-    var data = await resp.json();
+    }, 20000);
+    var data = JSON.parse(json);
     var html = data && data.parse && data.parse.text && data.parse.text['*'];
     if (!html) { console.error('No wiki content'); return []; }
 
@@ -519,37 +539,28 @@ async function fetchWikiCurrentEvents() {
 }
 
 async function fetchAll() {
-  console.log('Fetching PIB English HTML page...');
-  var englishItems = await fetchEnglish();
-  console.log('PIB English items: ' + englishItems.length);
+  // Run all fetches in parallel using withTimeout
+  timeLog('Starting parallel fetches');
+  var results = await withTimeout(Promise.all([
+    fetchEnglish().then(function(r) { timeLog('PIB English: ' + r.length + ' items'); return r; }),
+    fetchRss().then(function(r) { timeLog('PIB RSS: ' + r.length + ' items'); return r; }),
+    fetchRBI().then(function(r) { timeLog('RBI: ' + r.length + ' items'); return r; }),
+    fetchSEBI().then(function(r) { timeLog('SEBI: ' + r.length + ' items'); return r; }),
+    fetchSCJudgments().then(function(r) { timeLog('SC: ' + r.length + ' items'); return r; }),
+    fetchISRO().then(function(r) { timeLog('ISRO: ' + r.length + ' items'); return r; }),
+    fetchMEA().then(function(r) { timeLog('MEA: ' + r.length + ' items'); return r; }),
+    fetchWikiCurrentEvents().then(function(r) { timeLog('Wiki: ' + r.length + ' items'); return r; })
+  ]), 120000, 'overall fetch');
+  timeLog('All fetches completed');
 
-  console.log('Fetching PIB RSS feed...');
-  var rssItems = await fetchRss();
-  console.log('PIB RSS items: ' + rssItems.length);
-
-  console.log('Fetching RBI Press Releases RSS...');
-  var rbiItems = await fetchRBI();
-  console.log('RBI items: ' + rbiItems.length);
-
-  console.log('Fetching SEBI RSS feed...');
-  var sebiItems = await fetchSEBI();
-  console.log('SEBI items: ' + sebiItems.length);
-
-  console.log('Fetching SC Judgments RSS...');
-  var scItems = await fetchSCJudgments();
-  console.log('SC items: ' + scItems.length);
-
-  console.log('Fetching ISRO press releases...');
-  var isroItems = await fetchISRO();
-  console.log('ISRO items: ' + isroItems.length);
-
-  console.log('Fetching MEA press releases...');
-  var meaItems = await fetchMEA();
-  console.log('MEA items: ' + meaItems.length);
-
-  console.log('Fetching Wikipedia current events...');
-  var worldNewsItems = await fetchWikiCurrentEvents();
-  console.log('World news items: ' + worldNewsItems.length);
+  var englishItems = results[0];
+  var rssItems = results[1];
+  var rbiItems = results[2];
+  var sebiItems = results[3];
+  var scItems = results[4];
+  var isroItems = results[5];
+  var meaItems = results[6];
+  var worldNewsItems = results[7];
 
   // Merge all items
   var seen = new Set();

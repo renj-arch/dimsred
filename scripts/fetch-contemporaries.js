@@ -116,9 +116,14 @@ async function main() {
   GROUP BY ?item ?itemLabel ?birth ?death
   ORDER BY ?birth LIMIT 600`;
 
-  let result;
-  try { result = await sparql(query); }
-  catch (e) { console.error('SPARQL failed:', e.message); process.exit(1); }
+  // Retry SPARQL up to 3 times with backoff
+  let result, lastErr;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try { result = await sparql(query); break; }
+    catch (e) { lastErr = e; console.error(`SPARQL failed (attempt ${attempt}/3):`, e.message); }
+    if (attempt < 3) await new Promise(r => setTimeout(r, attempt * 10000));
+  }
+  if (!result) { console.error('SPARQL failed after 3 attempts, skipping contemporaries fetch'); return; }
 
   const entries = {};
   for (const b of result.results.bindings) {
