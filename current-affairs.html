@@ -5396,13 +5396,6 @@ var _staticGen_polity = GK_GENERATORS.polity;
             loadQuizJson();
             preloadArchive();
         }
-            // Load knowledge base from external JSON (reduces page size by ~230KB)
-            fetch('data/knowledge-base.json')
-                .then(function(r) { return r.json(); })
-                .then(function(data) { GK_LEARN = data; _initStudyData(); })
-                .catch(function() { _initStudyData(); });
-            loadQuizJson();
-            preloadArchive();        }
 
         function startCategory(id, name) {
             if (!confirmAbandonQuiz()) return;
