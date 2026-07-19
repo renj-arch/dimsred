@@ -6964,6 +6964,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('optGrid').innerHTML = '';
             loadArchiveQuestions(function(questions) {
                 var filtered = questions.filter(function(q) {
+                    if (q.subject !== 'PIB Releases' && q.subject !== 'Current Affairs') return false;
                     if (!q.pubDate) return false;
                     var d = new Date(q.pubDate);
                     if (cutoff && d < cutoff.from) return false;
@@ -7075,6 +7076,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 setArchiveStatus('loaded');
                 var pib = 0, ca = 0;
                 for (var si = 0; si < qs.length; si++) {
+                    if (!qs[si].pubDate) continue;
                     if (qs[si].subject === 'PIB Releases') pib++;
                     else if (qs[si].subject === 'Current Affairs') ca++;
                 }
