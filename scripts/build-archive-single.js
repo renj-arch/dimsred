@@ -78,15 +78,15 @@ allQuestions.forEach(q => {
   tree[c][s][ss].push(q);
 });
 
-// Merge Indian Current Affairs into Current Affairs
+// Merge Indian Current Affairs into Current Affairs subject (not as separate subject)
 if (tree['Indian Current Affairs']) {
   if (!tree['Current Affairs']) tree['Current Affairs'] = {};
+  if (!tree['Current Affairs']['Current Affairs']) tree['Current Affairs']['Current Affairs'] = {};
   var icaSubjects = tree['Indian Current Affairs'];
   Object.keys(icaSubjects).forEach(function(s) {
-    if (!tree['Current Affairs'][s]) tree['Current Affairs'][s] = {};
     Object.keys(icaSubjects[s]).forEach(function(ss) {
-      if (!tree['Current Affairs'][s][ss]) tree['Current Affairs'][s][ss] = [];
-      tree['Current Affairs'][s][ss] = tree['Current Affairs'][s][ss].concat(icaSubjects[s][ss]);
+      if (!tree['Current Affairs']['Current Affairs'][ss]) tree['Current Affairs']['Current Affairs'][ss] = [];
+      tree['Current Affairs']['Current Affairs'][ss] = tree['Current Affairs']['Current Affairs'][ss].concat(icaSubjects[s][ss]);
     });
   });
   delete tree['Indian Current Affairs'];
