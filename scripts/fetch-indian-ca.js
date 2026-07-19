@@ -195,18 +195,34 @@ function updateArchiveHtml(entryStr, total) {
   }
   var html = fs.readFileSync(ARCHIVE, 'utf8');
 
-  var pattern = /"name":"Indian Current Affairs"[^}]+?subSubjects":\[[^\]]*\]\}\]\}/;
+  var pattern = /\{"name":"Indian Current Affairs"[^}]+?subSubjects":\[[^\]]*\]\}\]\}/;
   if (pattern.test(html)) {
     html = html.replace(pattern, entryStr);
   } else {
-    var insertPoint = html.indexOf('];');
-    if (insertPoint >= 0) {
-      var comma = insertPoint > 0 && html[insertPoint - 1] !== '[' ? ',' : '';
-      html = html.substring(0, insertPoint) + comma + entryStr + html.substring(insertPoint);
-    } else {
-      console.error('  WARN: Could not find CAT_INDEX insert point in ' + ARCHIVE);
+    // Find the true end of CAT_INDEX array by bracket matching
+    var catStart = html.indexOf('var CAT_INDEX = [');
+    if (catStart < 0) {
+      console.error('  WARN: Could not find CAT_INDEX in ' + ARCHIVE);
       return;
     }
+    var i = catStart + 16;
+    var d = 1;
+    var inStr = false;
+    var esc = false;
+    while (d > 0 && i < html.length) {
+      i++;
+      var c = html[i];
+      if (esc) { esc = false; continue; }
+      if (c === '\\') { esc = true; continue; }
+      if (c === '"') inStr = !inStr;
+      if (!inStr) {
+        if (c === '[') d++;
+        else if (c === ']') d--;
+      }
+    }
+    // i is at the closing ]
+    var comma = html[i - 1] !== '[' ? ',' : '';
+    html = html.substring(0, i) + comma + entryStr + html.substring(i);
   }
 
   html = html.replace(/(Indian Current Affairs[^<]*?sidebar-count">)\d+(<\/span>)/g, '$1' + total + '$2');
@@ -425,7 +441,7 @@ async function main() {
   });
 
   var total = totalQuestions;
-  var entryStr = '"name":"Indian Current Affairs","total":' + total + ',"icon":"\uD83C\uDDFF\uD83C\uDDE6","file":"data/questions/indian-current-affairs.json","subjects":[{"name":"Indian Current Affairs","total":' + total + ',"subSubjects":[' + subSubjectEntries.join(',') + ']}]}';
+  var entryStr = '{"name":"Indian Current Affairs","total":' + total + ',"icon":"\uD83C\uDDEE\uD83C\uDDF3","file":"data/questions/indian-current-affairs.json","subjects":[{"name":"Indian Current Affairs","total":' + total + ',"subSubjects":[' + subSubjectEntries.join(',') + ']}]}';
   updateArchiveHtml(entryStr, total);
   console.error('Total: ' + total + ' Indian current affairs events');
 }
