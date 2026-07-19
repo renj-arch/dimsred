@@ -6908,12 +6908,11 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     }
                     loaded++;
                     if (loaded === pending) {
-                        shuffleArray(allQ);
-                        _archiveCache = allQ.slice(0, 300);
-                        cb(_archiveCache);
+                        _archiveCache = allQ;
+                        cb(allQ);
                     }
                 };
-                xhr.onerror = function() { loaded++; if (loaded === pending) { _archiveCache = allQ.slice(0, 300); cb(_archiveCache); } };
+                xhr.onerror = function() { loaded++; if (loaded === pending) { _archiveCache = allQ; cb(allQ); } };
                 xhr.open('GET', entry.file, true);
                 xhr.send();
             });
