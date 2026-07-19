@@ -5377,7 +5377,8 @@ var _staticGen_polity = GK_GENERATORS.polity;
             if (_quizJsonData && _quizJsonData.questions) {
                 _quizJsonData.questions.forEach(function(qa) {
                     if (qa.pubDate && new Date(qa.pubDate) >= cutoffDate) {
-                        var q = { q: qa.question, a: qa.answer, hint: qa.category || '', fact: qa.question + ' — ' + (qa.answer || '') + ' [' + qa.source + ', ' + qa.pubDate.slice(0,10) + ']', _pubDate: qa.pubDate };
+                        var fact = qa.fact || qa.solution || qa.explanation || (qa.question + ' — ' + (qa.answer || '') + ' [' + qa.source + ', ' + qa.pubDate.slice(0,10) + ']');
+                        var q = { q: qa.question, a: qa.answer, hint: qa.category || '', fact: fact, _pubDate: qa.pubDate };
                         q.opts = qa.options && qa.options.length >= 2 ? qa.options.slice() : null;
                         if (!q.opts) q.opts = buildOptions(q.a);
                         if (isValidAnswer(q.a) && !isTrash(q)) results.push(q);
@@ -5636,7 +5637,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 state.correct++;
                 state.streak++;
                 flash.className = 'result-flash show correct';
-                flash.innerHTML = '✅ <span style="font-size:.75em;color:var(--text-muted)">(Key ' + correctKey + ')</span>';
+                flash.innerHTML = '✅ ' + correct + ' <span style="font-size:.75em;color:var(--text-muted)">(Key ' + correctKey + ')</span>';
             } else {
                 el.classList.add('wrong');
                 state.streak = 0;
