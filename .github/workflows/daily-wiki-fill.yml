@@ -50,6 +50,12 @@ jobs:
       - name: Fetch Indian current affairs from Wikipedia
         run: node scripts/fetch-indian-ca.js
 
+      - name: Fetch RBI monetary data (repo rate, GDP)
+        run: node scripts/fetch-rbi-data.js
+
+      - name: Fetch state-level news (CM, Governor, budgets)
+        run: node scripts/fetch-state-news.js
+
       - name: Rebuild single archive + per-category data
         run: node scripts/build-archive-single.js
 
