@@ -16,12 +16,15 @@ const outerPrefix = h.substring(0, ms + 23);
 let js = h.substring(ms + 23, me);
 const outerSuffix = h.substring(me);
 
+const unicodeSpace = /[\u00A0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000]/;
+
 let result = '';
 let inSQ = false, inDQ = false, inBacktick = false;
-let fixed = 0;
+let fixed = 0, line = 1, col = 0;
 
 for (let i = 0; i < js.length; i++) {
   const ch = js[i];
+  if (ch === '\n') { line++; col = 0; } else { col++; }
 
   if (inBacktick) {
     if (ch === '\\' && i + 1 < js.length) { result += ch + js[++i]; continue; }
@@ -37,12 +40,14 @@ for (let i = 0; i < js.length; i++) {
       let nextNonSpace = '';
       for (let j = i + 1; j < Math.min(i + 20, js.length); j++) {
         const nc = js[j];
-        if (nc !== ' ' && nc !== '\n' && nc !== '\r' && nc !== '\t') {
+        if (nc !== ' ' && nc !== '\n' && nc !== '\r' && nc !== '\t' && !unicodeSpace.test(nc)) {
           nextNonSpace = nc;
           break;
         }
       }
-      if (/[a-zA-Z0-9_"']/.test(nextNonSpace)) {
+      const prev = i > 0 ? js[i - 1] : '';
+      const isApostrophe = /[a-zA-Z]/.test(prev) && /[a-zA-Z0-9_]/.test(nextNonSpace);
+      if (isApostrophe) {
         result += "\\'";
         fixed++;
       } else {

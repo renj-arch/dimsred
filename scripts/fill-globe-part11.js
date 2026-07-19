@@ -3,8 +3,16 @@ const path = require('path');
 const DATA_DIR = path.resolve(__dirname, '..', 'data');
 const GLOBE_PATH = path.resolve(__dirname, '..', '3d-globe.html');
 
+function clean(s) {
+  return (s || '')
+    .replace(/\[\[([^\]|]*)(?:\|[^\]]*)?\]\]/g, '$1')
+    .replace(/\]\]/g, '')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+}
+
 function esc(s) {
-  return (s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t');
+  return clean(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t');
 }
 
 const CAT_MAP = {
@@ -372,7 +380,7 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
 
 // Fix any remaining poor descs across all D.xxx arrays in the globe
 function fixGlobalDescs(html) {
-  const entryRx = /\{n:'((?:[^'\\]|\\.)*)',la:[\d.-]+,ln:[\d.-]+,sub:'((?:[^'\\]|\\.)*)',desc:'((?:[^'\\]|\\.)*)',fact:'((?:[^'\\]|\\.)*)'/g;
+  const entryRx = /\{n:'((?:[^'\\]|\\.)*)',la:[\d.-]+,ln:[\d.-]+,sub:'((?:[^'\\]|\\.)*)',desc:'((?:[^'\\]|\\.)*)',fact:'((?:[^'\\]|\\.)*)'(?:,pts:\[[^\]]+\])?(?:,tag:'(?:[^'\\]|\\.)*')?\}/g;
   let m;
   const fixes = [];
   while ((m = entryRx.exec(html)) !== null) {
