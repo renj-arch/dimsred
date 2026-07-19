@@ -14,18 +14,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Node.js
+      - name: Use Node.js 18
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-
-      - name: Restore quiz.json from per-category files
-        run: node scripts/rebuild-quiz-json.js
+          node-version: 18
 
       - name: Install dependencies
         run: npm install
+
+      - name: Sync with origin (clean slate)
+        run: |
+          git fetch origin
+          git reset --hard origin/main
+          git clean -fd
 
       - name: Generate questions from Wikipedia
         run: node scripts/wiki-fill-all.cjs
@@ -62,6 +65,9 @@ jobs:
       - name: Fetch parliament bills and acts
         run: node scripts/fetch-parliament-bills.js
 
+      - name: Fetch UN/WHO yearly themes (Yoga Day, Environment Day, etc.)
+        run: node scripts/fetch-themes.js
+
       - name: Rebuild single archive + per-category data
         run: node scripts/build-archive-single.js
 
@@ -70,14 +76,11 @@ jobs:
 
       - name: Commit and push
         run: |
-          git stash --include-untracked
-          git pull --rebase
-          git stash pop || true
-          git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Daily wiki fill $(date +'%Y-%m-%d')"
+            git pull --rebase
             git push
           else
             echo "No new questions to commit"
