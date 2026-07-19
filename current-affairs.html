@@ -213,17 +213,23 @@
                 <div class="desc">Pure GK from Wikipedia — auto-advances every 4 seconds. Pause anytime.</div>
             </div>
 
-            <!-- Mega GK: the only quiz mode -->
-            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;justify-content:center;flex-direction:column">
-                <button class="action-btn secondary" style="padding:16px;font-size:1.05em;background:rgba(52,211,153,.12);color:var(--emerald);border:1px solid rgba(52,211,153,.2)" onclick="startMegaGkFeed()">🎯 Mega GK — Live Wikipedia</button>
-                <button class="action-btn secondary" style="padding:14px;font-size:.95em;background:rgba(99,102,241,.12);color:var(--purple);border:1px solid rgba(99,102,241,.2)" onclick="startStaticGk()">📚 Static GK — All 26 Categories</button>
-                <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:4px;flex-wrap:wrap">
-                    <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="archiveToggle" style="accent-color:var(--purple);width:14px;height:14px"> 📚 Include Archive <span id="archiveStatus" style="color:var(--emerald);font-size:.72em">loaded</span></label>
-                    
-                </div>
+            <!-- Mega GK replaced with PIB/CA time-range feed -->
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;justify-content:center">
+                <button class="action-btn secondary" style="padding:12px 16px;font-size:.85em;background:rgba(99,102,241,.12);color:var(--purple);border:1px solid rgba(99,102,241,.2);flex:1;min-width:80px" onclick="startArchiveFeed(0)">Today</button>
+                <button class="action-btn secondary" style="padding:12px 16px;font-size:.85em;background:rgba(99,102,241,.12);color:var(--purple);border:1px solid rgba(99,102,241,.2);flex:1;min-width:80px" onclick="startArchiveFeed(30)">1 Month</button>
+                <button class="action-btn secondary" style="padding:12px 16px;font-size:.85em;background:rgba(99,102,241,.12);color:var(--purple);border:1px solid rgba(99,102,241,.2);flex:1;min-width:80px" onclick="startArchiveFeed(180)">6 Months</button>
+                <button class="action-btn secondary" style="padding:12px 16px;font-size:.85em;background:rgba(99,102,241,.12);color:var(--purple);border:1px solid rgba(99,102,241,.2);flex:1;min-width:80px" onclick="document.getElementById('customDateRow').style.display='flex'">Custom</button>
+            </div>
+            <div id="customDateRow" style="display:none;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:14px">
+                <input type="date" id="archiveFrom" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.78em;width:130px">
+                <span style="font-size:.7em;color:var(--text-muted)">→</span>
+                <input type="date" id="archiveTo" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.78em;width:130px">
+                <button onclick="startArchiveFeed(-2)" style="padding:4px 12px;border-radius:6px;border:1px solid var(--purple);background:rgba(99,102,241,.12);color:var(--purple);cursor:pointer;font-size:.75em;font-weight:600">Go</button>
             </div>
 
-            <p class="gk-intro">Live Wikipedia GK or curated static GK across 26 categories. Auto-advances every 4 seconds. Pause anytime.</p>
+            <button class="action-btn secondary" style="padding:14px;font-size:.95em;background:rgba(99,102,241,.12);color:var(--purple);border:1px solid rgba(99,102,241,.2);margin-bottom:14px" onclick="startStaticGk()">📚 Static GK — All 26 Categories</button>
+
+            <p class="gk-intro">Browse PIB & Current Affairs by date range, or try Static GK across 26 categories. Auto-advances every 4 seconds. Pause anytime.</p>
 
         </div>
 
@@ -6957,7 +6963,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
         }
         function shuffleArray(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
-        function startMegaGkFeed() {
+        function startArchiveFeed(days) {
             if (state.answered || state.idx > 0) {
                 if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
             }
@@ -6965,8 +6971,9 @@ var _staticGen_polity = GK_GENERATORS.polity;
             state.idx = 0;
             state.answered = true;
             state.autoPaused = false;
-            state.infinite = true;
-            state.restartFn = startMegaGkFeed;
+            state.infinite = false;
+            state._feedSource = 'archive';
+            state.restartFn = function(){startArchiveFeed(days)};
 
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
@@ -6976,33 +6983,53 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('customDateRange').style.display = 'none';
             document.getElementById('correctNum').textContent = '0';
             document.getElementById('totalNum').textContent = '0';
-            document.getElementById('scoreLabel').textContent = 'Mega GK';
+            document.getElementById('scoreLabel').textContent = days === -2 ? 'Custom' : (days === 0 ? 'Today' : (days === 30 ? '1 Month' : (days === 180 ? '6 Months' : 'Archive')));
             document.getElementById('streakDisplay').style.display = 'none';
             document.getElementById('pauseBtn').classList.remove('hidden');
             document.getElementById('pauseBtn').textContent = '⏸';
             document.getElementById('nextBtn').classList.add('hidden');
             document.getElementById('restartBtn').style.display = 'none';
 
-            var count = 0;
-            var maxQ = 50;
-            if (typeof WIKI !== 'undefined' && WIKI._pool) {
-                while (WIKI._pool.length > 0 && count < maxQ) {
-                    var q = WIKI.poolQuestion();
-                    if (q) {
-                        if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
-                        state.questions.push(q);
-                        count++;
-                    }
-                }
+            var cutoff = null;
+            if (days === -2) {
+                var fromEl = document.getElementById('archiveFrom');
+                var toEl = document.getElementById('archiveTo');
+                if (fromEl.value && toEl.value) cutoff = {from: new Date(fromEl.value), to: new Date(toEl.value + 'T23:59:59')};
+            } else if (days >= 0) {
+                cutoff = {from: new Date(Date.now() - days * 86400000), to: null};
             }
-            if (typeof WIKI !== 'undefined') { try { WIKI.prefetch(); } catch(e) {} }
 
-            _showFeedItem();
+            document.getElementById('qText').innerHTML = '⏳ Loading archive...';
+            document.getElementById('optGrid').innerHTML = '';
+            loadArchiveQuestions(function(questions) {
+                var filtered = questions.filter(function(q) {
+                    if (!q.pubDate) return false;
+                    var d = new Date(q.pubDate);
+                    if (cutoff && d < cutoff.from) return false;
+                    if (cutoff && cutoff.to && d > cutoff.to) return false;
+                    return true;
+                });
+                filtered.sort(function(a,b){return new Date(b.pubDate)-new Date(a.pubDate)});
+                if (filtered.length === 0) {
+                    document.getElementById('qText').innerHTML = '😕 No PIB/CA questions for this period.';
+                    document.getElementById('optGrid').innerHTML = '<button class="action-btn secondary" onclick="backToMenu()">← Back</button>';
+                    document.getElementById('pauseBtn').classList.add('hidden');
+                    return;
+                }
+                state.questions = filtered;
+                _showFeedItem();
+            });
         }
 
         function _showFeedItem() {
             _stopFeedTimer();
             if (state.idx >= state.questions.length) {
+                if (state._feedSource === 'archive') {
+                    document.getElementById('qText').innerHTML = '✅ All done! No more questions.';
+                    document.getElementById('optGrid').innerHTML = '<button class="action-btn secondary" onclick="backToMenu()">← Back to Menu</button>';
+                    document.getElementById('pauseBtn').classList.add('hidden');
+                    return;
+                }
                 try {
                     var added = 0;
                     while (typeof WIKI !== 'undefined' && WIKI._pool && WIKI._pool.length > 0 && added < 20) {
@@ -7015,7 +7042,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     }
                 } catch(e) {}
                 if (state.idx >= state.questions.length) {
-                    document.getElementById('qText').innerHTML = 'No more questions. <button onclick="startMegaGkFeed()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Restart</button>';
+                    document.getElementById('qText').innerHTML = 'No more questions. <button onclick="backToMenu()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer">Back</button>';
                     document.getElementById('optGrid').innerHTML = '';
                     document.getElementById('pauseBtn').classList.add('hidden');
                     return;
@@ -7026,7 +7053,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('totalNum').textContent = state.questions.length;
             document.getElementById('qNum').textContent = '';
             document.getElementById('qProgress').style.width = '0%';
-            document.getElementById('catTag').textContent = q.hint || '';
+            document.getElementById('catTag').textContent = q.hint || (q.subject ? q.subject : '');
             document.getElementById('qText').innerHTML = q.q;
             document.getElementById('qHint').style.display = 'none';
             document.getElementById('resultFlash').className = 'result-flash';
