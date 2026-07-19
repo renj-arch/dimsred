@@ -12298,6 +12298,101 @@ function mkLbl(text,col,scale=0.12){
       barGroup.position.copy(pos);
       g.add(barGroup);
     }
+    // Mountain peak cones — larger, taller
+    if(k==='peak'||k==='w_peak'||k==='mountains'||k==='volcano'){
+      const peakGroup=new THREE.Group();
+      const coneGeo=new THREE.ConeGeometry(0.014,0.035,5);
+      const coneMat=new THREE.MeshStandardMaterial({color:catColors[k],emissive:catColors[k],emissiveIntensity:0.2});
+      const cone=new THREE.Mesh(coneGeo,coneMat);
+      cone.position.y=0.018;
+      peakGroup.add(cone);
+      const glow=new THREE.Mesh(new THREE.SphereGeometry(0.018,8,8),new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:0.12,blending:THREE.AdditiveBlending}));
+      peakGroup.add(glow);
+      peakGroup.position.copy(pos);
+      g.add(peakGroup);
+    }
+    // Port — mast pole
+    if(k==='port'){
+      const mast=new THREE.Mesh(new THREE.CylinderGeometry(0.0008,0.0008,0.025,4),new THREE.MeshBasicMaterial({color:'#f97316',transparent:true,opacity:0.7}));
+      mast.position.set(0,0.013,0);pin.add(mast);
+      const flag=new THREE.Mesh(new THREE.BoxGeometry(0.006,0.004,0.0005),new THREE.MeshBasicMaterial({color:'#f97316',transparent:true,opacity:0.8}));
+      flag.position.set(0.004,0.021,0);pin.add(flag);
+    }
+    // Airport — runway cross
+    if(k==='airport'||k==='w_airport'){
+      const rw1=new THREE.Mesh(new THREE.BoxGeometry(0.014,0.0005,0.002),new THREE.MeshBasicMaterial({color:'#94a3b8',transparent:true,opacity:0.6}));
+      rw1.position.set(0,0.001,0);pin.add(rw1);
+      const rw2=new THREE.Mesh(new THREE.BoxGeometry(0.002,0.0005,0.014),new THREE.MeshBasicMaterial({color:'#94a3b8',transparent:true,opacity:0.6}));
+      rw2.position.set(0,0.001,0);pin.add(rw2);
+    }
+    // Dam — wall barrier
+    if(k==='dam'||k==='w_dam'){
+      const wall=new THREE.Mesh(new THREE.BoxGeometry(0.018,0.008,0.003),new THREE.MeshStandardMaterial({color:'#22d3ee',emissive:'#22d3ee',emissiveIntensity:0.2,transparent:true,opacity:0.7}));
+      wall.position.set(0,0.004,0);pin.add(wall);
+      const waterGlow=new THREE.Mesh(new THREE.SphereGeometry(0.004,6,6),new THREE.MeshBasicMaterial({color:'#38bdf8',transparent:true,opacity:0.3,blending:THREE.AdditiveBlending}));
+      waterGlow.position.set(0.01,0.002,0);pin.add(waterGlow);
+    }
+    // Nuclear — radiation rings
+    if(k==='nuclear'||k==='w_nuclear_power'){
+      for(let ri=0;ri<3;ri++){
+        const rGeo=new THREE.RingGeometry(0.003+ri*0.003,0.006+ri*0.003,16);
+        const rMat=new THREE.MeshBasicMaterial({color:'#ef4444',transparent:true,opacity:0.4-ri*0.1,side:THREE.DoubleSide,depthWrite:false});
+        const rM=new THREE.Mesh(rGeo,rMat);
+        rM.position.copy(pos);
+        const s=1+ri*0.3;
+        rM.scale.set(s,s,1);
+        rM.lookAt(0,0,0);
+        g.add(rM);
+        if(!d._nucRings)d._nucRings=[];d._nucRings.push(rM);
+      }
+      d._pulsePhase=Math.random()*Math.PI*2;
+    }
+    // Temple/Shrine/Cathedral — spire + golden glow
+    if(k==='temple'||k==='shrine'||k==='w_shrine'||k==='cathedral'||k==='w_cathedral'||k==='mosque'||k==='church'){
+      const spire=new THREE.Mesh(new THREE.ConeGeometry(0.002,0.012,4),new THREE.MeshBasicMaterial({color:'#facc15',transparent:true,opacity:0.8}));
+      spire.position.set(0,0.008,0);pin.add(spire);
+      const halo=new THREE.Mesh(new THREE.RingGeometry(0.006,0.012,16),new THREE.MeshBasicMaterial({color:'#facc15',transparent:true,opacity:0.2,side:THREE.DoubleSide,blending:THREE.AdditiveBlending}));
+      halo.position.set(0,0.014,0);pin.add(halo);
+    }
+    // Bridge — arched wireframe arc
+    if(k==='w_bridge'||k==='i_bridge'||k==='bridge'){
+      const arcPts=[];const n=12;
+      for(let i=0;i<=n;i++){
+        const t=i/n;
+        const a=t*Math.PI;
+        arcPts.push(new THREE.Vector3(Math.sin(a)*0.012,Math.cos(a)*0.006-0.006,0));
+      }
+      const arcGeo=new THREE.BufferGeometry().setFromPoints(arcPts);
+      const arcMat=new THREE.LineBasicMaterial({color:'#94a3b8',transparent:true,opacity:0.5});
+      const arc=new THREE.Line(arcGeo,arcMat);pin.add(arc);
+    }
+    // Lighthouse — spotlight beam
+    if(k==='lighthouse'){
+      const tower=new THREE.Mesh(new THREE.CylinderGeometry(0.001,0.003,0.015,6),new THREE.MeshBasicMaterial({color:'#facc15',transparent:true,opacity:0.8}));
+      tower.position.set(0,0.008,0);pin.add(tower);
+      const beam=new THREE.Mesh(new THREE.ConeGeometry(0.006,0.015,6),new THREE.MeshBasicMaterial({color:'#facc15',transparent:true,opacity:0.12,blending:THREE.AdditiveBlending}));
+      beam.position.set(0,0.016,0);beam.rotation.x=0.3;beam.rotation.z=0.5;pin.add(beam);
+      d._lhBeam=beam;
+    }
+    // Waterfall — cascading blue particles
+    if(k==='waterfall'||k==='i_waterfall'){
+      const fallCnt=12;
+      d._fallDots=[];
+      for(let fi=0;fi<fallCnt;fi++){
+        const fGeo=new THREE.SphereGeometry(0.001+Math.random()*0.001,4,4);
+        const fMat=new THREE.MeshBasicMaterial({color:'#22d3ee',transparent:true,opacity:0.3+Math.random()*0.3});
+        const fM=new THREE.Mesh(fGeo,fMat);
+        fM.position.set((Math.random()-0.5)*0.005,Math.random()*0.02-0.02,(Math.random()-0.5)*0.005);
+        pin.add(fM);
+        d._fallDots.push({mesh:fM,phase:Math.random()*Math.PI*2,speed:1+Math.random(),offset:Math.random()*0.02});
+      }
+    }
+    // Tunnel — entry/exit rings
+    if(k==='tunnel'||k==='i_tunnel'){
+      const e1=new THREE.Mesh(new THREE.RingGeometry(0.003,0.008,12),new THREE.MeshBasicMaterial({color:'#a78bfa',transparent:true,opacity:0.5,side:THREE.DoubleSide}));
+      e1.position.set(-0.008,0,0);e1.lookAt(0,0,0);pin.add(e1);
+      const e2=e1.clone();e2.position.set(0.008,0,0);e2.lookAt(0,0,0);pin.add(e2);
+    }
     const lbl=mkLbl(d.n,catColors[k]);
     lbl.position.copy(pos.clone().multiplyScalar(1.12));
     g.add(lbl);
@@ -12329,20 +12424,7 @@ function mkLbl(text,col,scale=0.12){
       const pos=ll(d.la,d.ln,R*1.008);
       const pin=mkPin(catColors[k],k==='river'||k==='w_river'?0.008:0.012,k);
       pin.position.copy(pos);g.add(pin);
-    // Mountain peak cones — larger, taller
-    if(k==='peak'||k==='w_peak'||k==='mountains'||k==='volcano'){
-      const peakGroup=new THREE.Group();
-      const coneGeo=new THREE.ConeGeometry(0.014,0.035,5);
-      const coneMat=new THREE.MeshStandardMaterial({color:catColors[k],emissive:catColors[k],emissiveIntensity:0.2});
-      const cone=new THREE.Mesh(coneGeo,coneMat);
-      cone.position.y=0.018;
-      peakGroup.add(cone);
-      const glow=new THREE.Mesh(new THREE.SphereGeometry(0.018,8,8),new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:0.12,blending:THREE.AdditiveBlending}));
-      peakGroup.add(glow);
-      peakGroup.position.copy(pos);
-      g.add(peakGroup);
-    }
-    const lbl=mkLbl(d.n,catColors[k]);
+      const lbl=mkLbl(d.n,catColors[k]);
       lbl.position.copy(pos.clone().multiplyScalar(1.12));
       g.add(lbl);
       allMarkers.push({el:pin,lbl,data:d,cat:k,pos});
@@ -12371,6 +12453,28 @@ function mkLbl(text,col,scale=0.12){
           g.add(subTube);
         }
         d._tube=d._tubes[0]; // first segment for quick reference
+      }else if(k==='railway'){
+        // Parallel rail tracks
+        d._tubes=[];
+        const railRad=tubeRad*0.25;
+        const gap=0.005;
+        const curve=new THREE.CatmullRomCurve3(pts);
+        for(let side=-1;side<=1;side+=2){
+          const offPts=pts.map((p,i)=>{
+            const t=curve.getTangent(i/Math.max(pts.length-1,1));
+            const up=new THREE.Vector3(0,1,0);
+            const right=new THREE.Vector3().crossVectors(t,up).normalize();
+            if(right.length()<0.01){const alt=new THREE.Vector3(1,0,0);right.crossVectors(t,alt).normalize()}
+            return p.clone().add(right.clone().multiplyScalar(side*gap));
+          });
+          const pc=new THREE.CatmullRomCurve3(offPts);
+          const tg=new THREE.TubeGeometry(pc,Math.max(pts.length*4,24),railRad,4,false);
+          const tm=new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:0.7});
+          const tr=new THREE.Mesh(tg,tm);
+          tr.userData._origColor=catColors[k];tr.userData._origOpacity=0.7;
+          d._tubes.push(tr);g.add(tr);
+        }
+        d._tube=d._tubes[0];
       }else{
         const curve=new THREE.CatmullRomCurve3(pts);
         const tubeGeo=new THREE.TubeGeometry(curve,Math.max(pts.length*4,24),tubeRad,5,false);
@@ -12411,7 +12515,7 @@ function mkLbl(text,col,scale=0.12){
       allMarkers.push({el:pin,lbl:null,data:d,cat:k,pos:end});
     }
     // Flow animation dots for rivers
-    if((k==='river'||k==='w_river'||k==='railway')&&d.pts&&d.pts.length>=3){
+    if((k==='river'||k==='w_river'||k==='railway'||k==='trade')&&d.pts&&d.pts.length>=3){
       const curve=new THREE.CatmullRomCurve3(pts);
       d._curve=curve;
       const dotMat=new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:0.8});
@@ -12459,7 +12563,7 @@ function mkLbl(text,col,scale=0.12){
 });
 
 // Build polygon territory overlays (areas — pin+label from point markers)
-['desert','peninsula','national_park','w_np','biosphere','ramsar','wildlife','tiger','lake','island','forest','glacier','sea','valley','plateau','plain','delta','canyon','gulf','reef','volcano','ocean'].forEach(k=>{
+['desert','peninsula','national_park','w_np','biosphere','ramsar','wildlife','tiger','lake','island','forest','glacier','ice_shelf','sea','valley','plateau','plain','delta','canyon','gulf','reef','volcano','ocean'].forEach(k=>{
   const items=D[k]||[];
   const g=layerGroups[k];
   if(!g||!items.length)return;
@@ -12491,6 +12595,29 @@ function mkLbl(text,col,scale=0.12){
         const tree=new THREE.Mesh(tGeo,tMat);
         tree.position.copy(tp);
         g.add(tree);
+      }
+    }
+    // Glacier/ice_shelf icy shimmer
+    if(k==='glacier'||k==='ice_shelf'){
+      mat.opacity=0.08;
+      mat.color.set('#e0f2fe');
+      edgeMat.color.set('#bae6fd');
+      edgeMat.opacity=0.6;
+    }
+    // Coral reef dots
+    if(k==='reef'){
+      const dotCnt=10+Math.floor(Math.random()*8);
+      for(let ri=0;ri<dotCnt;ri++){
+        const rPt=d.pts[Math.floor(Math.random()*d.pts.length)];
+        if(!rPt)continue;
+        const rp=ll(rPt.la,rPt.ln,R*1.006);
+        const roff=new THREE.Vector3((Math.random()-0.5)*0.02,0,(Math.random()-0.5)*0.02);
+        rp.add(roff);
+        const rGeo=new THREE.SphereGeometry(0.0015+Math.random()*0.002,5,5);
+        const rMat=new THREE.MeshBasicMaterial({color:Math.random()>0.5?'#f472b6':'#fb923c',transparent:true,opacity:0.25+Math.random()*0.3});
+        const rM=new THREE.Mesh(rGeo,rMat);
+        rM.position.copy(rp);
+        g.add(rM);
       }
     }
   });
@@ -14055,7 +14182,7 @@ document.getElementById('tlPlayBtn').addEventListener('click',()=>{
 window._animatedItems=[];
 for(const k of Object.keys(D)){
   const items=D[k];
-  if(items)for(const d of items)if(d&&(d._pulseRings||d._flowDots))window._animatedItems.push(d);
+  if(items)for(const d of items)if(d&&(d._pulseRings||d._flowDots||d._nucRings||d._fallDots||d._lhBeam))window._animatedItems.push(d);
 }
 
 // Animate
@@ -14088,6 +14215,26 @@ function anim(){
           const p=fd.curve.getPoint(fd.t);
           fd.mesh.position.copy(p);
         }
+      }
+      // Nuclear rings — rotate
+      if(d._nucRings){
+        d._nucRings.forEach((r,i)=>{
+          r.rotation.z=at*0.5+i*1.2;
+          const s=1+Math.sin(at*0.8+i)*0.15;
+          r.scale.set(s,s,1);
+        });
+      }
+      // Waterfall falling dots
+      if(d._fallDots){
+        d._fallDots.forEach(fd=>{
+          const y=((at*fd.speed+fd.phase)%2)-1;
+          fd.mesh.position.y=y*0.015;
+          fd.mesh.material.opacity=0.2+Math.sin(y*4)*0.2;
+        });
+      }
+      // Lighthouse beam rotation
+      if(d._lhBeam){
+        d._lhBeam.rotation.y=at*0.6;
       }
     }
   }
