@@ -2,7 +2,19 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
+// Global rate limiter — enforces minimum gap between all API calls
+let lastRequestTime = 0;
+async function rateLimit(minGapMs = 1500) {
+  const now = Date.now();
+  const elapsed = now - lastRequestTime;
+  if (elapsed < minGapMs) {
+    await new Promise(r => setTimeout(r, minGapMs - elapsed));
+  }
+  lastRequestTime = Date.now();
+}
+
 async function httpGet(url, retries = 5) {
+  await rateLimit(1200);
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const result = await new Promise((resolve, reject) => {
@@ -31,8 +43,8 @@ async function httpGet(url, retries = 5) {
   }
 }
 
-async function wikiCategoryDeepMembers(category, maxPages = 5000, visited = new Set(), depth = 0) {
-  if (visited.has(category) || depth > 2) return [];
+async function wikiCategoryDeepMembers(category, maxPages = 5000, visited = new Set(), depth = 0, maxDepth = 2) {
+  if (visited.has(category) || depth > maxDepth) return [];
   visited.add(category);
 
   let pages = [], subcats = [], cmcontinue = '';
@@ -41,21 +53,19 @@ async function wikiCategoryDeepMembers(category, maxPages = 5000, visited = new 
     if (cmcontinue) url += `&cmcontinue=${encodeURIComponent(cmcontinue)}`;
     const d = await httpGet(url);
     for (const m of d.query.categorymembers) {
-      if (m.ns === 14 && depth < 2) subcats.push(m.title);
+      if (m.ns === 14 && depth < maxDepth) subcats.push(m.title);
       else if (m.ns === 0) pages.push(m.title);
     }
     cmcontinue = d.continue?.cmcontinue;
     if (!cmcontinue) break;
-    await new Promise(r => setTimeout(r, 1500));
   }
 
   let result = pages.filter(t => !t.startsWith('List of ') && !t.includes('/'));
 
   for (const sc of subcats) {
     if (result.length >= maxPages) break;
-    const subPages = await wikiCategoryDeepMembers(sc, maxPages - result.length, visited, depth + 1);
+    const subPages = await wikiCategoryDeepMembers(sc, maxPages - result.length, visited, depth + 1, maxDepth);
     result = result.concat(subPages);
-    await new Promise(r => setTimeout(r, 1500));
   }
 
   return result;
@@ -76,6 +86,7 @@ async function titlesToQids(titles) {
 
 async function httpPost(url, data, retries = 5) {
   const postData = typeof data === 'string' ? data : new URLSearchParams(data).toString();
+  await rateLimit(1200);
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const result = await new Promise((resolve, reject) => {
@@ -343,22 +354,22 @@ const CFG = [
   { id:'drainage', label:'Drainage Basins', wikiCat:'Category:Drainage_basins_of_India', subFn:(s,a)=>s },
   { id:'physiographic', label:'Physiographic Divisions', wikiCat:'Category:Landforms_of_India', subFn:(s,a)=>s },
   { id:'soil', label:'Soil Types', wikiCat:'Category:Soils_of_India', subFn:(s,a)=>s },
-  { id:'monsoon', label:'Monsoon', wikiCat:'Category:Monsoon', subFn:(s,a)=>s },
+  { id:'monsoon', label:'Monsoon', wikiCat:'Category:Monsoon', subFn:(s,a)=>s, maxDepth:0 },
   { id:'vegetation', label:'Vegetation Types', wikiCat:'Category:Vegetation_of_India', subFn:(s,a)=>s },
   { id:'seismic_zone', label:'Seismic Zones', wikiCat:'Category:Seismic_zones_of_India', subFn:(s,a)=>s },
   { id:'biogeographic_zone', label:'Biogeographic Zones', wikiCat:'Category:Biogeographic_regions_of_India', subFn:(s,a)=>s },
   { id:'industrial', label:'Industrial Regions', wikiCat:'Category:Industrial_regions_in_India', subFn:(s,a)=>s },
-  { id:'wind', label:'Wind Patterns', wikiCat:'Category:Wind', subFn:(s,a)=>s },
-  { id:'cloud', label:'Cloud Types', wikiCat:'Category:Cloud_types', subFn:(s,a)=>s },
-  { id:'rainfall', label:'Rainfall Records', wikiCat:'Category:Weather_records', subFn:(s,a)=>s },
-  { id:'latitude', label:'Latitude Lines', wikiCat:'Category:Lines_of_latitude', subFn:(s,a)=>s },
-  { id:'trade', label:'Trade Routes', wikiCat:'Category:Trade_routes', subFn:(s,a)=>s },
-  { id:'phenomena', label:'Natural Phenomena', wikiCat:'Category:Natural_phenomena', subFn:(s,a)=>s },
+  { id:'wind', label:'Wind Patterns', wikiCat:'Category:Wind', subFn:(s,a)=>s, maxDepth:0 },
+  { id:'cloud', label:'Cloud Types', wikiCat:'Category:Cloud_types', subFn:(s,a)=>s, maxDepth:0 },
+  { id:'rainfall', label:'Rainfall Records', wikiCat:'Category:Weather_records', subFn:(s,a)=>s, maxDepth:0 },
+  { id:'latitude', label:'Latitude Lines', wikiCat:'Category:Lines_of_latitude', subFn:(s,a)=>s, maxDepth:0 },
+  { id:'trade', label:'Trade Routes', wikiCat:'Category:Trade_routes', subFn:(s,a)=>s, maxDepth:0 },
+  { id:'phenomena', label:'Natural Phenomena', wikiCat:'Category:Natural_phenomena', subFn:(s,a)=>s, maxDepth:0 },
   { id:'dfc', label:'Dedicated Freight Corridors', wikiCat:'Category:Dedicated_freight_corridors_in_India', subFn:(s,a)=>s },
   { id:'i_corridor', label:'Industrial Corridors', wikiCat:'Category:Industrial_corridors_in_India', subFn:(s,a)=>s },
   { id:'border_road', label:'Border Roads', wikiCat:'Category:Border_Roads_Organisation', subFn:(s,a)=>s },
-  { id:'longitude', label:'Lines of Longitude', wikiCat:'Category:Lines_of_longitude', subFn:(s,a)=>s },
-  { id:'festival', label:'Festivals', wikiCat:'Category:Festivals_in_India', subFn:(s,a)=>s+' · Festival' },
+  { id:'longitude', label:'Lines of Longitude', wikiCat:'Category:Lines_of_longitude', subFn:(s,a)=>s, maxDepth:0 },
+  { id:'festival', label:'Festivals', wikiCat:'Category:Festivals_in_India', subFn:(s,a)=>s+' · Festival', maxDepth:0 },
   { id:'language', label:'Languages', wikiCat:'Category:Languages_of_India', subFn:(s,a)=>s },
   { id:'cuisine', label:'Regional Cuisines', wikiCat:'Category:Indian_cuisine_by_state', subFn:(s,a)=>s+' · Cuisine' },
   { id:'classical_dance', label:'Classical Dances', wikiCat:'Category:Indian_classical_dances', subFn:(s,a)=>s+' · Classical Dance' },
@@ -692,8 +703,8 @@ async function fetchSummariesConcurrently(titles, concurrency = 2) {
 // ====== PROCESS CATEGORY ======
 async function processCat(cat, dedupSet) {
   console.log(`\n▓ ${cat.label} (${cat.wikiCat})`);
-  const titles = await wikiCategoryDeepMembers(cat.wikiCat);
-  console.log(`  Wikipedia: ${titles.length} pages (deep scan, up to 2 subcat levels)`);
+  const titles = await wikiCategoryDeepMembers(cat.wikiCat, 5000, new Set(), 0, cat.maxDepth ?? 2);
+  console.log(`  Wikipedia: ${titles.length} pages (deep scan, up to ${cat.maxDepth ?? 2} subcat levels)`);
   if (!titles.length) return [];
 
   const titleQid = await titlesToQids(titles);

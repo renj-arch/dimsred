@@ -260,13 +260,14 @@ function doSearch(query) {
 function searchInCategory(ci, query, results) {
   var data = _cache[ci];
   var c = CAT_INDEX[ci];
+  var terms = query.split(/\s+/).filter(Boolean);
   for (var sk in data) {
     var subj = data[sk];
     if (!subj.subSubjects) continue;
     for (var ssk in subj.subSubjects) {
       subj.subSubjects[ssk].forEach(function(q) {
-        var haystack = (q.question||'') + ' ' + (q.answer||'') + ' ' + (q.fact||'');
-        if (haystack.toLowerCase().indexOf(query) !== -1) {
+        var haystack = ((q.question||'') + ' ' + (q.answer||'') + ' ' + (q.fact||'')).toLowerCase();
+        if (terms.every(function(t){ return haystack.indexOf(t) !== -1; })) {
           results.push({category:c.name,icon:c.icon,subject:sk,subSubject:ssk,question:q});
         }
       });
