@@ -6953,7 +6953,10 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 var toEl = document.getElementById('archiveTo');
                 if (fromEl.value && toEl.value) cutoff = {from: new Date(fromEl.value), to: new Date(toEl.value + 'T23:59:59')};
             } else if (days >= 0) {
-                cutoff = {from: new Date(Date.now() - days * 86400000), to: null};
+                var d = new Date();
+                d.setHours(0,0,0,0);
+                if (days > 0) d.setDate(d.getDate() - days);
+                cutoff = {from: d, to: null};
             }
 
             document.getElementById('qText').innerHTML = '⏳ Loading archive...';
