@@ -210,6 +210,7 @@ canvas{display:block}
   transform:translateY(10px);display:flex;flex-direction:column;align-items:center;gap:4px;
 }
 #portrait.show{opacity:1;pointer-events:none;transform:translateY(0)}
+#portrait.show img{pointer-events:auto;cursor:pointer}
 #portrait .p-frame{
   width:72px;height:72px;border-radius:50%;overflow:hidden;
   border:2px solid rgba(255,255,255,.12);
@@ -400,10 +401,13 @@ canvas{display:block}
 
 <div id="portrait">
   <div class="p-frame">
-    <img id="pImg" alt="" style="display:none">
+    <img id="pImg" alt="" style="display:none;cursor:pointer">
     <div class="p-fallback" style="display:flex">👤</div>
   </div>
   <div class="p-name" id="pName"></div>
+</div>
+<div id="pZoom" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);align-items:center;justify-content:center;cursor:pointer">
+  <img id="pZoomImg" style="max-width:90vw;max-height:90vh;border-radius:16px;box-shadow:0 8px 48px rgba(0,0,0,.6)">
 </div>
 
 <div id="tlBar">
@@ -12439,8 +12443,14 @@ function mkLbl(text,col,scale=0.12){
       pts.push(new THREE.Vector3(x,y,z));
     }
     const bg=new THREE.BufferGeometry().setFromPoints(pts);
-    const mat=new THREE.LineBasicMaterial({color,transparent:true,opacity:dash?0.2:0.25});
+    let mat;
+    if(dash){
+      mat=new THREE.LineDashedMaterial({color,transparent:true,opacity:0.35,dashSize:0.05,gapSize:0.04});
+    }else{
+      mat=new THREE.LineBasicMaterial({color,transparent:true,opacity:0.25});
+    }
     const line=new THREE.Line(bg,mat);
+    if(dash)line.computeLineDistances();
     g.add(line);
   }
   const majorLines=[
@@ -12452,7 +12462,113 @@ function mkLbl(text,col,scale=0.12){
   ];
   majorLines.forEach(l=>latCircle(l.lat,l.color));
   lonHalfCircle(0,'#ffffff');
-  lonHalfCircle(180,'#ffffff');
+  const lonG=layerGroups.longitude;
+  if(lonG){
+    const lonCol=CAT.longitude?CAT.longitude.color:'#fbbf24';
+    for(let lon=-165;lon<=180;lon+=30){
+      if(lon===0)continue;
+      const pts=[];
+      const lambda=lon*Math.PI/180;
+      for(let i=0;i<=48;i++){
+        const phi=-Math.PI/2+(i/48)*Math.PI;
+        pts.push(new THREE.Vector3(R2*Math.cos(phi)*Math.cos(lambda),R2*Math.sin(phi),R2*Math.cos(phi)*Math.sin(lambda)));
+      }
+      const bg=new THREE.BufferGeometry().setFromPoints(pts);
+      const mat=new THREE.LineDashedMaterial({color:lonCol,transparent:true,opacity:0.3,dashSize:0.04,gapSize:0.04});
+      const line=new THREE.Line(bg,mat);
+      line.computeLineDistances();
+      lonG.add(line);
+      const label=lon===180?"180° · Date Line":(lon>0?lon+"°E":(-lon)+"°W");
+      const lbl=mkLbl(label,lonCol,0.1);
+      lbl.position.copy(ll(0,lon,R2*1.065));
+      lonG.add(lbl);
+    }
+  }
+  const autoLatCol='#ffffff';
+  for(let lat=-60;lat<=60;lat+=30){
+    if(lat===0)continue;
+    const pts=[];
+    const phi=lat*Math.PI/180;
+    const steps=64;
+    for(let i=0;i<=steps;i++){
+      const theta=(i/steps)*2*Math.PI;
+      pts.push(new THREE.Vector3(R2*Math.cos(phi)*Math.cos(theta),R2*Math.sin(phi),R2*Math.cos(phi)*Math.sin(theta)));
+    }
+    const bg=new THREE.BufferGeometry().setFromPoints(pts);
+    const mat=new THREE.LineDashedMaterial({color:autoLatCol,transparent:true,opacity:0.25,dashSize:0.03,gapSize:0.03});
+    const line=new THREE.Line(bg,mat);
+    line.computeLineDistances();
+    g.add(line);
+    const label=(lat>0?lat+"°N":(-lat)+"°S");
+    const lbl=mkLbl(label,autoLatCol,0.1);
+    lbl.position.copy(ll(lat,0,R2*1.065));
+    g.add(lbl);
+  }
+  const borderBounds=[
+    {lat:49,north:'Canada',south:'USA',lon:-105},
+    {lat:45,north:'France',south:'Italy',lon:7},
+    {lat:45,north:'Canada',south:'USA',lon:-73},
+    {lat:43,north:'France',south:'Spain',lon:1},
+    {lat:42,north:'China',south:'Nepal',lon:84},
+    {lat:41,north:'Turkey',south:'Iran',lon:44},
+    {lat:40,north:'Turkey',south:'Azerbaijan',lon:44},
+    {lat:38,north:'North Korea',south:'South Korea',lon:127},
+    {lat:33,north:'Iraq',south:'Syria',lon:41},
+    {lat:32,north:'Iran',south:'Iraq',lon:46},
+    {lat:31,north:'Iran',south:'Iraq',lon:48},
+    {lat:30,north:'Egypt',south:'Sudan',lon:31},
+    {lat:28,north:'Iran',south:'Pakistan',lon:62},
+    {lat:27,north:'India',south:'Bangladesh',lon:89},
+    {lat:26,north:'India',south:'Myanmar',lon:93},
+    {lat:25,north:'India',south:'Pakistan',lon:70},
+    {lat:24,north:'Pakistan',south:'India',lon:68},
+    {lat:22,north:'Libya',south:'Sudan',lon:25},
+    {lat:22,north:'Namibia',south:'Botswana',lon:20},
+    {lat:20,north:'Libya',south:'Sudan',lon:25},
+    {lat:20,north:'Mauritania',south:'Mali',lon:-6},
+    {lat:17,north:'North Vietnam',south:'South Vietnam',lon:107},
+    {lat:15,north:'Senegal',south:'Mauritania',lon:-13},
+    {lat:10,north:'Ivory Coast',south:'Ghana',lon:-3},
+    {lat:10,north:'Thailand',south:'Cambodia',lon:103},
+    {lat:5,north:'Venezuela',south:'Colombia',lon:-68},
+    {lat:-5,north:'Brazil',south:'Peru',lon:-73},
+    {lat:-10,north:'Angola',south:'Zambia',lon:22},
+    {lat:-10,north:'Tanzania',south:'Mozambique',lon:38},
+    {lat:-15,north:'Angola',south:'Namibia',lon:14},
+    {lat:-20,north:'Namibia',south:'Botswana',lon:20},
+    {lat:-20,north:'Botswana',south:'Zimbabwe',lon:28},
+    {lat:-22,north:'Botswana',south:'Zimbabwe',lon:27},
+    {lat:-22,north:'Brazil',south:'Paraguay',lon:-56},
+    {lat:-24,north:'Chile',south:'Argentina',lon:-67},
+    {lat:-25,north:'South Africa',south:'Namibia',lon:18},
+    {lat:-25,north:'Botswana',south:'South Africa',lon:25},
+    {lat:-26,north:'South Africa',south:'Botswana',lon:24},
+    {lat:-28,north:'South Africa',south:'Lesotho',lon:27},
+    {lat:-30,north:'South Africa',south:'Lesotho',lon:27},
+    {lat:-35,north:'Argentina',south:'Chile',lon:-70}
+  ];
+  const bCol='#fbbf24';
+  borderBounds.forEach(b=>{
+    const pts=[];
+    const phi=b.lat*Math.PI/180;
+    for(let i=0;i<=64;i++){
+      const theta=(i/64)*2*Math.PI;
+      pts.push(new THREE.Vector3(R2*Math.cos(phi)*Math.cos(theta),R2*Math.sin(phi),R2*Math.cos(phi)*Math.sin(theta)));
+    }
+    const bg=new THREE.BufferGeometry().setFromPoints(pts);
+    const mat=new THREE.LineDashedMaterial({color:bCol,transparent:true,opacity:0.5,dashSize:0.05,gapSize:0.03});
+    const line=new THREE.Line(bg,mat);
+    line.computeLineDistances();
+    g.add(line);
+    const northPos=ll(b.lat+2,b.lon,R2*1.06);
+    const southPos=ll(b.lat-2,b.lon,R2*1.06);
+    const northLbl=mkLbl(b.north,bCol,0.14);
+    northLbl.position.copy(northPos);
+    g.add(northLbl);
+    const southLbl=mkLbl(b.south,bCol,0.14);
+    southLbl.position.copy(southPos);
+    g.add(southLbl);
+  });
 })();
 
 
@@ -12999,8 +13115,7 @@ function showDetail(d,cat,k){
   const hlLat=d.la||(d.pts?d.pts[Math.floor(d.pts.length/2)].la:0);
   const hlLn=d.ln||(d.pts?d.pts[Math.floor(d.pts.length/2)].ln:0);
   if((hlLat||hlLn)&&!d._tube)setHighlight(hlLat,hlLn,cat.color||'#ff4444');
-  // Show figure portrait
-  if(k==='battle'||k==='w_battle')showPortrait(getFigure(d.n,d.desc,cat.color),cat.color);
+  showPortrait(getFigure(d.n,d.desc,cat.color),cat.color);
   // Timeline play button
   const tlBtn=document.getElementById('dTimeline');
   if(d.steps&&d.steps.length){
@@ -13374,6 +13489,15 @@ async function fetchWikiThumb(wikiTitle){
     return url;
   }catch(e){return null}
 }
+
+const pZoom=document.getElementById('pZoom');
+const pZoomImg=document.getElementById('pZoomImg');
+pImg.addEventListener('click',()=>{
+  if(!pImg.src||pImg.style.display==='none')return;
+  pZoomImg.src=pImg.src;
+  pZoom.style.display='flex';
+});
+pZoom.addEventListener('click',()=>pZoom.style.display='none');
 
 function showPortrait(fig,catColor){
   if(!fig){hidePortrait();return}
