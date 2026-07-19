@@ -18,8 +18,21 @@ try {
   }
 } catch {}
 
+const icaPath = path.join(__dirname, '..', 'data', 'questions', 'indian-current-affairs.json');
+let icaQuestions = [];
+try {
+  const icaData = JSON.parse(fs.readFileSync(icaPath, 'utf8'));
+  for (const [, subjData] of Object.entries(icaData)) {
+    if (subjData.subSubjects) {
+      for (const [, qs] of Object.entries(subjData.subSubjects)) {
+        icaQuestions = icaQuestions.concat(qs);
+      }
+    }
+  }
+} catch {}
+
 const quiz = JSON.parse(fs.readFileSync(quizPath, 'utf8'));
-const rawQuestions = quiz.questions.concat(pibQuestions);
+const rawQuestions = quiz.questions.concat(pibQuestions).concat(icaQuestions);
 
 // ── Dedup by (question + answer) key ──
 const seen = new Set();
@@ -65,6 +78,19 @@ allQuestions.forEach(q => {
   tree[c][s][ss].push(q);
 });
 
+// Merge Indian Current Affairs into Current Affairs
+if (tree['Indian Current Affairs']) {
+  if (!tree['Current Affairs']) tree['Current Affairs'] = {};
+  var icaSubjects = tree['Indian Current Affairs'];
+  Object.keys(icaSubjects).forEach(function(s) {
+    if (!tree['Current Affairs'][s]) tree['Current Affairs'][s] = {};
+    Object.keys(icaSubjects[s]).forEach(function(ss) {
+      if (!tree['Current Affairs'][s][ss]) tree['Current Affairs'][s][ss] = [];
+      tree['Current Affairs'][s][ss] = tree['Current Affairs'][s][ss].concat(icaSubjects[s][ss]);
+    });
+  });
+  delete tree['Indian Current Affairs'];
+}
 // Merge Current Events into Current Affairs
 if (tree['Current Events']) {
   if (!tree['Current Affairs']) tree['Current Affairs'] = {};
