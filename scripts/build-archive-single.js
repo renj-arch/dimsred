@@ -65,6 +65,33 @@ allQuestions.forEach(q => {
   tree[c][s][ss].push(q);
 });
 
+// Merge Indian Current Affairs into Current Affairs
+if (tree['Indian Current Affairs']) {
+  if (!tree['Current Affairs']) tree['Current Affairs'] = {};
+  var icaSubjects = tree['Indian Current Affairs'];
+  Object.keys(icaSubjects).forEach(function(s) {
+    if (!tree['Current Affairs'][s]) tree['Current Affairs'][s] = {};
+    Object.keys(icaSubjects[s]).forEach(function(ss) {
+      if (!tree['Current Affairs'][s][ss]) tree['Current Affairs'][s][ss] = [];
+      tree['Current Affairs'][s][ss] = tree['Current Affairs'][s][ss].concat(icaSubjects[s][ss]);
+    });
+  });
+  delete tree['Indian Current Affairs'];
+}
+// Merge Current Events into Current Affairs
+if (tree['Current Events']) {
+  if (!tree['Current Affairs']) tree['Current Affairs'] = {};
+  var ceSubjects = tree['Current Events'];
+  Object.keys(ceSubjects).forEach(function(s) {
+    if (!tree['Current Affairs'][s]) tree['Current Affairs'][s] = {};
+    Object.keys(ceSubjects[s]).forEach(function(ss) {
+      if (!tree['Current Affairs'][s][ss]) tree['Current Affairs'][s][ss] = [];
+      tree['Current Affairs'][s][ss] = tree['Current Affairs'][s][ss].concat(ceSubjects[s][ss]);
+    });
+  });
+  delete tree['Current Events'];
+}
+
 const sortedCats = Object.keys(tree).sort();
 
 // ── Write per-category JSON files ──
@@ -349,11 +376,27 @@ html += '      for (var sk in data) {\n';
 html += '        if (!merged[sk]) merged[sk] = { subSubjects: {} };\n';
 html += '        var ss = data[sk].subSubjects;\n';
 html += '        for (var ssk in ss) {\n';
-html += '          merged[sk].subSubjects[ssk] = ss[ssk];\n';
+html += '          if (ssk === \'__proto__\' || ssk === \'constructor\') continue;\n';
+html += '          if (!merged[sk].subSubjects[ssk]) merged[sk].subSubjects[ssk] = [];\n';
+html += '          merged[sk].subSubjects[ssk] = merged[sk].subSubjects[ssk].concat(ss[ssk]);\n';
 html += '        }\n';
 html += '      }\n';
 html += '      loaded++;\n';
-html += '      if (loaded === files.length) { _cache[ci] = merged; cb(); }\n';
+html += '      if (loaded === files.length) {\n';
+html += '        var allKeys = Object.keys(merged);\n';
+html += '        if (allKeys.length > 1) {\n';
+html += '          var firstKey = allKeys[0];\n';
+html += '          for (var ki = 1; ki < allKeys.length; ki++) {\n';
+html += '            var otherSS = merged[allKeys[ki]].subSubjects;\n';
+html += '            for (var ssk2 in otherSS) {\n';
+html += '              if (ssk2 === \'__proto__\' || ssk2 === \'constructor\') continue;\n';
+html += '              if (!merged[firstKey].subSubjects[ssk2]) merged[firstKey].subSubjects[ssk2] = [];\n';
+html += '              merged[firstKey].subSubjects[ssk2] = merged[firstKey].subSubjects[ssk2].concat(otherSS[ssk2]);\n';
+html += '            }\n';
+html += '          }\n';
+html += '        }\n';
+html += '        _cache[ci] = merged; cb();\n';
+html += '      }\n';
 html += '    };\n';
 html += '    xhr.onerror = function() { _cache[ci] = {}; cb(); };\n';
 html += '    xhr.open(\'GET\', url, true);\n';
