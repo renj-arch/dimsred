@@ -13520,8 +13520,10 @@ function setAvatar(img,fig,color){
 
 async function fetchWikiThumb(wikiTitle){
   if(_thumbCache[wikiTitle])return _thumbCache[wikiTitle];
+  _thumbCache[wikiTitle]=null;
   try{
     const r=await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(wikiTitle)}`);
+    if(!r.ok){_thumbCache[wikiTitle]=null;return null}
     const d=await r.json();
     const url=d.thumbnail?.source||null;
     _thumbCache[wikiTitle]=url;
