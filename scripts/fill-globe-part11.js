@@ -68,6 +68,7 @@ const CAT_MAP = {
   'wiki-gulf.json': 'gulf',
   'wiki-canal.json': 'canal',
   'wiki-reef.json': 'reef',
+  'wiki-ridge.json': 'ridge',
   'wiki-canyon.json': 'canyon',
   'wiki-cape.json': 'cape',
   'wiki-delta.json': 'delta',
