@@ -3,8 +3,8 @@ var fs = require('fs');
 var path = require('path');
 
 var API = 'https://en.wikipedia.org/w/api.php';
-var OUTPUT = path.resolve(__dirname, '..', 'data/questions/indian-current-affairs.json');
-var ARCHIVE = path.resolve(__dirname, '..', 'archive.html');
+var OUTPUT = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
+
 var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 var DAYS_BACK = 3;
 
@@ -170,11 +170,11 @@ function makeQuestion(event, seq) {
   return {
     id: id,
     type: 'fill_blank',
-    category: 'Indian Current Affairs',
+    category: 'Current Affairs',
     region: '',
     source: 'Wikipedia Indian Current Events',
     pubDate: pubDate,
-    subject: 'Indian Current Affairs',
+    subject: 'Current Affairs',
     subSubject: monthLabel,
     emoji: '\uD83C\uDDFF\uD83C\uDDE6',
     question: blankText,
@@ -186,50 +186,6 @@ function makeQuestion(event, seq) {
 
 function eventKey(ev) {
   return (ev.question || ev.text || '').substring(0, 80) + '|' + (ev.answer || ev.entity || '');
-}
-
-function updateArchiveHtml(entryStr, total) {
-  if (!fs.existsSync(ARCHIVE)) {
-    console.error('  WARN: ' + ARCHIVE + ' not found, skipping CAT_INDEX update');
-    return;
-  }
-  var html = fs.readFileSync(ARCHIVE, 'utf8');
-
-  var pattern = /\{"name":"Indian Current Affairs"[^}]+?subSubjects":\[[^\]]*\]\}\]\}/;
-  if (pattern.test(html)) {
-    html = html.replace(pattern, entryStr);
-  } else {
-    // Find the true end of CAT_INDEX array by bracket matching
-    var catStart = html.indexOf('var CAT_INDEX = [');
-    if (catStart < 0) {
-      console.error('  WARN: Could not find CAT_INDEX in ' + ARCHIVE);
-      return;
-    }
-    var i = catStart + 16;
-    var d = 1;
-    var inStr = false;
-    var esc = false;
-    while (d > 0 && i < html.length) {
-      i++;
-      var c = html[i];
-      if (esc) { esc = false; continue; }
-      if (c === '\\') { esc = true; continue; }
-      if (c === '"') inStr = !inStr;
-      if (!inStr) {
-        if (c === '[') d++;
-        else if (c === ']') d--;
-      }
-    }
-    // i is at the closing ]
-    var comma = html[i - 1] !== '[' ? ',' : '';
-    html = html.substring(0, i) + comma + entryStr + html.substring(i);
-  }
-
-  html = html.replace(/(Indian Current Affairs[^<]*?sidebar-count">)\d+(<\/span>)/g, '$1' + total + '$2');
-  html = html.replace(/(Indian Current Affairs[^<]*?subj-card-count">)\d+/g, '$1' + total);
-
-  fs.writeFileSync(ARCHIVE, html, 'utf8');
-  console.error('  Updated CAT_INDEX and sidebar counts in ' + ARCHIVE);
 }
 
 async function fetchMonthEvents(year, month) {
@@ -261,11 +217,12 @@ async function main() {
   var cm = now.getMonth() + 1;
   var cd = now.getDate();
 
-  var existing = { 'Indian Current Affairs': { subSubjects: {} } };
+  var existing = { 'Current Affairs': { subSubjects: {} } };
   if (fs.existsSync(OUTPUT)) {
     try {
       existing = JSON.parse(fs.readFileSync(OUTPUT, 'utf8'));
-      console.error('Read existing file with ' + Object.keys(existing['Indian Current Affairs'].subSubjects).length + ' months');
+      if (!existing['Current Affairs']) existing['Current Affairs'] = { subSubjects: {} };
+      console.error('Read existing file with ' + Object.keys(existing['Current Affairs'].subSubjects).length + ' active subSubjects');
     } catch (e) {
       console.error('Error reading existing file, starting fresh: ' + e.message);
     }
@@ -322,12 +279,12 @@ async function main() {
 
     if (kept.length === 0) continue;
 
-    if (!existing['Indian Current Affairs'].subSubjects[monthKey]) {
-      existing['Indian Current Affairs'].subSubjects[monthKey] = [];
+    if (!existing['Current Affairs'].subSubjects[monthKey]) {
+      existing['Current Affairs'].subSubjects[monthKey] = [];
     }
 
     var existingKeys = {};
-    existing['Indian Current Affairs'].subSubjects[monthKey].forEach(function(q) {
+    existing['Current Affairs'].subSubjects[monthKey].forEach(function(q) {
       existingKeys[eventKey(q)] = true;
     });
 
@@ -351,7 +308,9 @@ async function main() {
     console.error('No new events to add. Updating CAT_INDEX with current totals anyway.');
   }
 
-  var monthKeys_sorted = Object.keys(existing['Indian Current Affairs'].subSubjects).sort(function(a, b) {
+  // Filter only month-name subSubjects (e.g. "July 2026"), ignore topic-based ones from other scripts
+  var isMonthKey = function(k) { var p = k.split(' '); return p.length >= 2 && MONTHS.indexOf(p[0]) !== -1; };
+  var monthKeys_sorted = Object.keys(existing['Current Affairs'].subSubjects).filter(isMonthKey).sort(function(a, b) {
     var pa = a.split(' '), pb = b.split(' ');
     var ma = MONTHS.indexOf(pa[0]), mb = MONTHS.indexOf(pb[0]);
     var ya = parseInt(pa[1], 10), yb = parseInt(pb[1], 10);
@@ -360,7 +319,7 @@ async function main() {
 
   var seqCounters = {};
   monthKeys_sorted.forEach(function(mk) {
-    var items = existing['Indian Current Affairs'].subSubjects[mk];
+    var items = existing['Current Affairs'].subSubjects[mk];
     var maxSeq = 0;
     items.forEach(function(q) {
       var parts = q.id.split('_');
@@ -395,18 +354,18 @@ async function main() {
     events.sort(function(a, b) { return b.score - a.score; });
     var kept = events.filter(function(ev) { return ev.score >= 1; });
 
-    if (!existing['Indian Current Affairs'].subSubjects[monthKey]) {
-      existing['Indian Current Affairs'].subSubjects[monthKey] = [];
+    if (!existing['Current Affairs'].subSubjects[monthKey]) {
+      existing['Current Affairs'].subSubjects[monthKey] = [];
     }
 
     var existingIds = {};
-    existing['Indian Current Affairs'].subSubjects[monthKey].forEach(function(q) {
+    existing['Current Affairs'].subSubjects[monthKey].forEach(function(q) {
       existingIds[q.id] = true;
     });
 
     kept.forEach(function(ev) {
       var key = eventKey(ev);
-      var alreadyExists = existing['Indian Current Affairs'].subSubjects[monthKey].some(function(q) {
+      var alreadyExists = existing['Current Affairs'].subSubjects[monthKey].some(function(q) {
         return eventKey(q) === key;
       });
       if (!alreadyExists) {
@@ -419,31 +378,26 @@ async function main() {
 
   allNewQuestions.forEach(function(q) {
     var mk = q.subSubject;
-    existing['Indian Current Affairs'].subSubjects[mk].push(q);
+    existing['Current Affairs'].subSubjects[mk].push(q);
   });
 
   var totalQuestions = 0;
   monthKeys_sorted.forEach(function(mk) {
-    existing['Indian Current Affairs'].subSubjects[mk].sort(function(a, b) {
+    existing['Current Affairs'].subSubjects[mk].sort(function(a, b) {
       return a.id.localeCompare(b.id);
     });
-    totalQuestions += existing['Indian Current Affairs'].subSubjects[mk].length;
+    totalQuestions += existing['Current Affairs'].subSubjects[mk].length;
   });
 
   fs.writeFileSync(OUTPUT, JSON.stringify(existing, null, 2), 'utf8');
   console.error('Wrote ' + OUTPUT + ' (' + totalQuestions + ' total questions)');
 
-  var subSubjectEntries = [];
   monthKeys_sorted.forEach(function(mk) {
-    var count = existing['Indian Current Affairs'].subSubjects[mk].length;
+    var count = existing['Current Affairs'].subSubjects[mk].length;
     console.error('  ' + mk + ': ' + count + ' questions');
-    subSubjectEntries.push('{"name":"' + mk.replace(/"/g, '\\"') + '","count":' + count + '}');
   });
 
-  var total = totalQuestions;
-  var entryStr = '{"name":"Indian Current Affairs","total":' + total + ',"icon":"\uD83C\uDDEE\uD83C\uDDF3","file":"data/questions/indian-current-affairs.json","subjects":[{"name":"Indian Current Affairs","total":' + total + ',"subSubjects":[' + subSubjectEntries.join(',') + ']}]}';
-  updateArchiveHtml(entryStr, total);
-  console.error('Total: ' + total + ' Indian current affairs events');
+  console.error('Total: ' + totalQuestions + ' Indian current affairs events');
 }
 
 main().catch(function(err) {
