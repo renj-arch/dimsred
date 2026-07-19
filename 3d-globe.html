@@ -211,6 +211,13 @@ canvas{display:block}
 }
 #portrait.show{opacity:1;pointer-events:none;transform:translateY(0)}
 #portrait.show img{pointer-events:auto;cursor:pointer}
+#contempTooltip{position:fixed;z-index:50;pointer-events:none;opacity:0;transition:opacity .15s;display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;background:rgba(10,10,20,.92);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);box-shadow:0 4px 24px rgba(0,0,0,.5);max-width:300px}
+#contempTooltip.show{opacity:1}
+#contempTooltip img{width:40px;height:40px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1px solid rgba(255,255,255,.1)}
+#contempTooltip .ct-info{display:flex;flex-direction:column;gap:2px;min-width:0}
+#contempTooltip .ct-name{font-size:.72em;color:rgba(255,255,255,.85);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#contempTooltip .ct-title{font-size:.6em;color:rgba(255,255,255,.45);line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+#contempTooltip .ct-fallback{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.25);flex-shrink:0}
 #portrait .p-frame{
   width:72px;height:72px;border-radius:50%;overflow:hidden;
   border:2px solid rgba(255,255,255,.12);
@@ -406,6 +413,7 @@ canvas{display:block}
   </div>
   <div class="p-name" id="pName"></div>
 </div>
+<div id="contempTooltip"><div class="ct-fallback">👤</div><img id="ctImg" style="display:none"><div class="ct-info"><div class="ct-name"></div><div class="ct-title"></div></div></div>
 <div id="pZoom" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);align-items:center;justify-content:center;cursor:pointer">
   <img id="pZoomImg" style="max-width:90vw;max-height:90vh;border-radius:16px;box-shadow:0 8px 48px rgba(0,0,0,.6)">
 </div>
@@ -13131,7 +13139,7 @@ function showDetail(d,cat,k){
     const contemps=getContemporaries(year,30);
     if(contemps.length){
       eraList.innerHTML=contemps.slice(0,10).map(c=>
-        `<span class="contemp-chip" title="${c.title}">${c.name}</span>`
+        `<span class="contemp-chip" data-title="${c.title.replace(/"/g,'&quot;')}">${c.name}</span>`
       ).join('');
       eraEl.classList.add('show');
     }
@@ -13164,6 +13172,34 @@ dp.addEventListener('click',(e)=>{
   if(e.target.closest('#dClose')||e.target.closest('.era-event-item')||e.target.closest('#dTimeline')||e.target.closest('a'))return;
   if(innerWidth<=768)dp.classList.toggle('expanded');
 });
+const ctEl=document.getElementById('contempTooltip'),ctImg=document.getElementById('ctImg'),ctName=ctEl.querySelector('.ct-name'),ctTitle=ctEl.querySelector('.ct-title');
+let _ctTimer=null;
+document.getElementById('eraList').addEventListener('mouseover',(e)=>{
+  const chip=e.target.closest('.contemp-chip');
+  if(!chip)return;
+  clearTimeout(_ctTimer);
+  const name=chip.textContent,title=chip.dataset.title||'';
+  ctName.textContent=name;ctTitle.textContent=title;
+  ctImg.style.display='none';ctImg.src='';
+  ctEl.querySelector('.ct-fallback').style.display='flex';
+  const rect=chip.getBoundingClientRect();
+  ctEl.style.left=rect.left+'px';ctEl.style.top=(rect.bottom+6)+'px';
+  ctEl.classList.add('show');
+  const fig=getFigure(name,'',null);
+  if(fig&&fig.wiki){
+    fetchWikiThumb(fig.wiki).then(url=>{
+      if(!url||ctName.textContent!==name)return;
+      const img=new Image();
+      img.onload=()=>{if(ctName.textContent===name){ctImg.src=url;ctImg.style.display='block';ctEl.querySelector('.ct-fallback').style.display='none'}};
+      img.src=url;
+    });
+  }
+});
+document.getElementById('eraList').addEventListener('mouseout',(e)=>{
+  if(e.target.closest('.contemp-chip')){_ctTimer=setTimeout(()=>ctEl.classList.remove('show'),200);}
+});
+ctEl.addEventListener('mouseenter',()=>clearTimeout(_ctTimer));
+ctEl.addEventListener('mouseleave',()=>ctEl.classList.remove('show'));
 
 // Click on 3D markers
 const ray=new THREE.Raycaster(),ptr=new THREE.Vector2();
