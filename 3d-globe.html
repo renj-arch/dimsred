@@ -603,6 +603,7 @@ const CAT = {
   ecoregion:{label:'Ecoregions',color:'#34d399',icon:'🌍',region:'WW'},
   mesa:{label:'Mesas',color:'#f97316',icon:'🏜️',region:'WW'},
   ocean_ridge:{label:'Ocean Ridges',color:'#22d3ee',icon:'🌊',region:'WW'},
+  ridge:{label:'Ridges & Escarpments',color:'#d4a373',icon:'🏔️',region:'IN'},
   w_harbor:{label:'World Harbors',color:'#f59e0b',icon:'⚓',region:'WW'},
   w_treaty:{label:'Treaties',color:'#c084fc',icon:'📜',region:'WW'},
   salt_flat:{label:'Salt Flats',color:'#e2e8f0',icon:'🧂',region:'WW'},
@@ -12103,6 +12104,7 @@ function mkGeom(shape,sz){
     case'diamond':return new THREE.OctahedronGeometry(sz*1.6);
     case'ring':return new THREE.RingGeometry(sz*0.6,sz*1.6,8);
     case'pyramid':return new THREE.TetrahedronGeometry(sz*1.8);
+    case'ridgeWall':return new THREE.BoxGeometry(sz*3,sz*0.5,sz*0.8);
     case'pin':{
       const s=sz;
       const pts=[
@@ -12188,6 +12190,8 @@ const SHAPE_MAP={
   writer:'diamond',
   reformer:'diamond',
   country:'sphere',
+  ridge:'diamond',
+  ocean_ridge:'ridgeWall',
 };
 function mkPin(col,sz=0.008,cat=''){
   const shape=SHAPE_MAP[cat]||'sphere';
@@ -12209,9 +12213,13 @@ let _selFlowDots=null;
 function clearHighlight(){
   if(_selHighlight){EG.remove(_selHighlight);_selHighlight=null;}
   if(_selTube){
-    _selTube.material.color.set(_selTube.userData._origColor||'#ffffff');
-    _selTube.material.opacity=_selTube.userData._origOpacity||0.5;
-    _selTube.scale.set(1,1,1);
+    // Restore all tube segments (single or tapered)
+    const tubes=_selTube._tubes||[_selTube];
+    tubes.forEach(t=>{
+      t.material.color.set(t.userData._origColor||'#ffffff');
+      t.material.opacity=t.userData._origOpacity||0.5;
+      t.scale.set(1,1,1);
+    });
     _selTube=null;
     if(_selArrows)_selArrows.forEach(a=>{
       a.material.color.set(a.userData._origColor||'#ffffff');
@@ -12265,7 +12273,7 @@ function mkLbl(text,col,scale=0.12){
 }
 
 // Build point markers
-['city','peak','port','airport','dam','nuclear','unesco','battle','temple','institution','wildlife','biosphere','ramsar','national_park','kingdom','tiger','hill','bird','w_city','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','phenomena','plateau','plain','valley','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','oil','personality','crop','mineral','museum','w_cathedral','w_park','w_reservoir','w_castle','w_shrine','w_university','w_school','statue','ice_shelf','shrine','w_embassy','w_geyser','atoll','w_stadium','folk_dance','waterway','w_theatre','w_war','crater','geopark','w_ww1','mountains','ice_cap','seamount','w_tomb','w_hospital','capital','w_ww2','ecoregion','mesa','ocean_ridge','w_harbor','w_treaty','salt_flat','time_zone','cloud','spaceport','oasis','reservoir','park','w_trench','metro','mangrove','estuary','market','w_coast','climate_zone','i_fort','biome','tornado_region','monument','tomb','w_empire','cyclone_region','rainfall','theatre','i_palace','castle','cathedral','embassy','current','w_civilization','wind','w_alliance','judiciary','w_trade_bloc','w_language','w_religion','space_mission','border','coastline','w_nuclear_power','scientist','sports','w_ideology'].forEach(k=>{
+['city','peak','port','airport','dam','nuclear','unesco','battle','temple','institution','wildlife','biosphere','ramsar','national_park','kingdom','tiger','hill','bird','w_city','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','phenomena','plateau','plain','valley','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','oil','personality','crop','mineral','museum','w_cathedral','w_park','w_reservoir','w_castle','w_shrine','w_university','w_school','statue','ice_shelf','shrine','w_embassy','w_geyser','atoll','w_stadium','folk_dance','waterway','w_theatre','w_war','crater','geopark','w_ww1','mountains','ice_cap','seamount','w_tomb','w_hospital','capital','w_ww2','ecoregion','mesa','ocean_ridge','ridge','w_harbor','w_treaty','salt_flat','time_zone','cloud','spaceport','oasis','reservoir','park','w_trench','metro','mangrove','estuary','market','w_coast','climate_zone','i_fort','biome','tornado_region','monument','tomb','w_empire','cyclone_region','rainfall','theatre','i_palace','castle','cathedral','embassy','current','w_civilization','wind','w_alliance','judiciary','w_trade_bloc','w_language','w_religion','space_mission','border','coastline','w_nuclear_power','scientist','sports','w_ideology'].forEach(k=>{
   const items=D[k]||[];
   const g=layerGroups[k];
   items.forEach(d=>{
@@ -12273,6 +12281,23 @@ function mkLbl(text,col,scale=0.12){
     const pos=ll(d.la,d.ln,R*1.008);
     const pin=mkPin(catColors[k],k==='city'?0.01:k==='strait'?0.025:0.007,k);
     pin.position.copy(pos);g.add(pin);
+    // City building bars
+    if(k==='city'||k==='w_city'){
+      const barCount=3+Math.floor(Math.random()*3);
+      const barGroup=new THREE.Group();
+      for(let i=0;i<barCount;i++){
+        const bw=0.003+Math.random()*0.004;
+        const bh=0.008+Math.random()*0.025;
+        const bd=0.003+Math.random()*0.004;
+        const barGeo=new THREE.BoxGeometry(bw,bh,bd);
+        const barMat=new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:0.5+Math.random()*0.3});
+        const bar=new THREE.Mesh(barGeo,barMat);
+        bar.position.set((Math.random()-0.5)*0.012,bh/2+0.001,(Math.random()-0.5)*0.012);
+        barGroup.add(bar);
+      }
+      barGroup.position.copy(pos);
+      g.add(barGroup);
+    }
     const lbl=mkLbl(d.n,catColors[k]);
     lbl.position.copy(pos.clone().multiplyScalar(1.12));
     g.add(lbl);
@@ -12304,7 +12329,20 @@ function mkLbl(text,col,scale=0.12){
       const pos=ll(d.la,d.ln,R*1.008);
       const pin=mkPin(catColors[k],k==='river'||k==='w_river'?0.008:0.012,k);
       pin.position.copy(pos);g.add(pin);
-      const lbl=mkLbl(d.n,catColors[k]);
+    // Mountain peak cones — larger, taller
+    if(k==='peak'||k==='w_peak'||k==='mountains'||k==='volcano'){
+      const peakGroup=new THREE.Group();
+      const coneGeo=new THREE.ConeGeometry(0.014,0.035,5);
+      const coneMat=new THREE.MeshStandardMaterial({color:catColors[k],emissive:catColors[k],emissiveIntensity:0.2});
+      const cone=new THREE.Mesh(coneGeo,coneMat);
+      cone.position.y=0.018;
+      peakGroup.add(cone);
+      const glow=new THREE.Mesh(new THREE.SphereGeometry(0.018,8,8),new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:0.12,blending:THREE.AdditiveBlending}));
+      peakGroup.add(glow);
+      peakGroup.position.copy(pos);
+      g.add(peakGroup);
+    }
+    const lbl=mkLbl(d.n,catColors[k]);
       lbl.position.copy(pos.clone().multiplyScalar(1.12));
       g.add(lbl);
       allMarkers.push({el:pin,lbl,data:d,cat:k,pos});
@@ -12312,14 +12350,37 @@ function mkLbl(text,col,scale=0.12){
     }
     const pts=d.pts.map(p=>ll(p.la,p.ln,R*1.004));
     try{
-      const curve=new THREE.CatmullRomCurve3(pts);
-      const tubeGeo=new THREE.TubeGeometry(curve,Math.max(pts.length*4,24),tubeRad,5,false);
-      const tubeMat=new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:k==='river'||k==='w_river'?0.25:0.55});
-      const tube=new THREE.Mesh(tubeGeo,tubeMat);
-      tube.userData._origColor=catColors[k];
-      tube.userData._origOpacity=0.55;
-      d._tube=tube;
-      g.add(tube);
+      if((k==='river'||k==='w_river')&&pts.length>=4){
+        // Tapered tube: narrower at source, wider at mouth
+        const segs=4;
+        const segLen=Math.floor((pts.length-1)/segs);
+        d._tubes=[];
+        for(let s=0;s<segs;s++){
+          const si=s*segLen;
+          const ei=s===segs-1?pts.length-1:si+segLen;
+          const subPts=pts.slice(si,ei+1);
+          if(subPts.length<2)continue;
+          const subCurve=new THREE.CatmullRomCurve3(subPts);
+          const rad=tubeRad*(0.35+(s+1)/segs*0.85);
+          const subGeo=new THREE.TubeGeometry(subCurve,Math.max(subPts.length*4,12),rad,5,false);
+          const subMat=new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:0.25});
+          const subTube=new THREE.Mesh(subGeo,subMat);
+          subTube.userData._origColor=catColors[k];
+          subTube.userData._origOpacity=0.25;
+          d._tubes.push(subTube);
+          g.add(subTube);
+        }
+        d._tube=d._tubes[0]; // first segment for quick reference
+      }else{
+        const curve=new THREE.CatmullRomCurve3(pts);
+        const tubeGeo=new THREE.TubeGeometry(curve,Math.max(pts.length*4,24),tubeRad,5,false);
+        const tubeMat=new THREE.MeshBasicMaterial({color:catColors[k],transparent:true,opacity:k==='river'||k==='w_river'?0.25:0.55});
+        const tube=new THREE.Mesh(tubeGeo,tubeMat);
+        tube.userData._origColor=catColors[k];
+        tube.userData._origOpacity=0.55;
+        d._tube=tube;
+        g.add(tube);
+      }
     }catch(e){/* skip */}
     d._arrows=[];
     // Flow direction arrows
@@ -12415,6 +12476,23 @@ function mkLbl(text,col,scale=0.12){
     const edgeGeo=new THREE.BufferGeometry().setFromPoints(pts3);
     const edgeMat=new THREE.LineBasicMaterial({color:catColors[k],transparent:true,opacity:0.45});
     const edge=new THREE.LineLoop(edgeGeo,edgeMat);g.add(edge);
+    // Tree-dot clusters for nature areas
+    if(['national_park','w_np','wildlife','tiger','biosphere','ramsar','forest'].includes(k)){
+      const treeCount=8+Math.floor(Math.random()*6);
+      for(let i=0;i<treeCount;i++){
+        const tPt=d.pts[Math.floor(Math.random()*d.pts.length)];
+        if(!tPt)continue;
+        const tp=ll(tPt.la,tPt.ln,R*1.006);
+        const off=new THREE.Vector3((Math.random()-0.5)*0.025,0,(Math.random()-0.5)*0.025);
+        tp.add(off);
+        const tSize=0.002+Math.random()*0.003;
+        const tGeo=new THREE.SphereGeometry(tSize,5,5);
+        const tMat=new THREE.MeshBasicMaterial({color:'#34d399',transparent:true,opacity:0.3+Math.random()*0.3});
+        const tree=new THREE.Mesh(tGeo,tMat);
+        tree.position.copy(tp);
+        g.add(tree);
+      }
+    }
   });
 });
 
@@ -12621,6 +12699,21 @@ function mkLbl(text,col,scale=0.12){
         g.add(arrow);
       }
     }
+    // Flow animation dots for ocean currents
+    if(d.pts&&d.pts.length>=3){
+      const curve=new THREE.CatmullRomCurve3(pts);
+      d._curve=curve;
+      const dotMat=new THREE.MeshBasicMaterial({color,transparent:true,opacity:0.6});
+      d._flowDots=[];
+      for(let i=0;i<6;i++){
+        const dot=new THREE.Mesh(new THREE.SphereGeometry(0.006,6,6),dotMat);
+        const t=i/6;
+        const p=curve.getPoint(t);
+        dot.position.copy(p);
+        g.add(dot);
+        d._flowDots.push({mesh:dot,t,curve,speed:0.003+Math.random()*0.003,_origSpeed:0.003,_origColor:color});
+      }
+    }
     // Label at mid, with pin + allMarkers registration for proper LOD/culling
     const mid=pts[Math.floor(pts.length/2)];
     let lbl=null, lblPos=null;
@@ -12740,6 +12833,21 @@ function mkLbl(text,col,scale=0.12){
         g.add(arrow);
       }
     }
+    // Flow animation dots for wind belts
+    if(d.pts&&d.pts.length>=3){
+      const curve=new THREE.CatmullRomCurve3(pts);
+      d._curve=curve;
+      const dotMat=new THREE.MeshBasicMaterial({color,transparent:true,opacity:0.6});
+      d._flowDots=[];
+      for(let i=0;i<5;i++){
+        const dot=new THREE.Mesh(new THREE.SphereGeometry(0.005,6,6),dotMat);
+        const t=i/5;
+        const p=curve.getPoint(t);
+        dot.position.copy(p);
+        g.add(dot);
+        d._flowDots.push({mesh:dot,t,curve,speed:0.002+Math.random()*0.002,_origSpeed:0.002,_origColor:color});
+      }
+    }
     const mid=pts[Math.floor(pts.length/2)];
     let lbl=null, lblPos=null;
     if(mid){
@@ -12758,27 +12866,33 @@ function mkLbl(text,col,scale=0.12){
 })();
 
 
-// Build cloud cover (procedural noise texture on sphere)
+// Build cloud cover (billowy semi-transparent sphere clusters)
 (function buildCloud(){
+  const items=D.cloud||[];
   const g=layerGroups.cloud;
-  if(!g)return;
-  const res=128;
-  const size=res*res;
-  const data=new Uint8Array(size*4);
-  for(let i=0;i<size;i++){
-    const x=i%res,y=Math.floor(i/res);
-    const n=Math.sin(x*0.1)*Math.cos(y*0.12)+Math.sin(x*0.05+y*0.07)*0.5+Math.cos(x*0.03-y*0.09)*0.3;
-    const v=Math.max(0,Math.min(1,(n+1.2)/2.4));
-    const a=v>0.3?Math.round((v-0.3)*200):0;
-    data[i*4]=255;data[i*4+1]=255;data[i*4+2]=255;data[i*4+3]=a;
-  }
-  const tex=new THREE.DataTexture(data,res,res,THREE.RGBAFormat,THREE.UnsignedByteType);
-  tex.needsUpdate=true;
-  const geo=new THREE.SphereGeometry(R*1.003,64,64);
-  const mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,depthWrite:false,opacity:1});
-  const mesh=new THREE.Mesh(geo,mat);
-  mesh.name='cloudLayer';
-  g.add(mesh);
+  if(!g||!items.length)return;
+  const baseRad=R*1.005;
+  items.forEach(d=>{
+    if(!d.la||!d.ln)return;
+    const p=ll(d.la,d.ln,baseRad);
+    const count=5+Math.floor(Math.random()*4);
+    for(let i=0;i<count;i++){
+      const off=new THREE.Vector3(
+        (Math.random()-0.5)*0.04,
+        (Math.random()-0.5)*0.025,
+        (Math.random()-0.5)*0.04
+      );
+      const sz=0.015+Math.random()*0.025;
+      const geo=new THREE.SphereGeometry(sz,8,8);
+      const mat=new THREE.MeshBasicMaterial({
+        color:'#ffffff',transparent:true,opacity:0.25+Math.random()*0.2,
+        depthWrite:false,blending:THREE.AdditiveBlending
+      });
+      const sp=new THREE.Mesh(geo,mat);
+      sp.position.copy(p).add(off);
+      g.add(sp);
+    }
+  });
 })();
 
 
@@ -12795,6 +12909,17 @@ function mkLbl(text,col,scale=0.12){
     pin.position.copy(p);
     pin.userData={n:d.n,sub:d.sub||'',desc:d.desc||'',fact:d.fact||''};
     g.add(pin);
+    // Tree clusters
+    const treeCnt=6+Math.floor(Math.random()*5);
+    for(let i=0;i<treeCnt;i++){
+      const off=new THREE.Vector3((Math.random()-0.5)*0.03,0,(Math.random()-0.5)*0.03);
+      const tp=p.clone().add(off);
+      const tGeo=new THREE.SphereGeometry(0.002+Math.random()*0.003,5,5);
+      const tMat=new THREE.MeshBasicMaterial({color:'#34d399',transparent:true,opacity:0.2+Math.random()*0.25});
+      const tM=new THREE.Mesh(tGeo,tMat);
+      tM.position.copy(tp);
+      g.add(tM);
+    }
     const lbl=mkLbl(d.n,color,0.12);
     lbl.position.copy(p.clone().multiplyScalar(1.12));
     g.add(lbl);
@@ -12826,7 +12951,7 @@ function mkLbl(text,col,scale=0.12){
 // LAYER PANEL
 // ============================================================
 const panel=document.getElementById('layersPanel');
-const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','dynasty','organization','tiger','hill','bird','i_pass','tribal','i_book','ruler','freedom','traveller','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','w_dynasty','w_organization','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','latitude','current','phenomena','wind','cloud','forest','rainfall','plateau','plain','valley','w_pass','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','trade','oil','personality','highway','i_range','crop','mineral','statue','capital','w_coast','w_civilization','museum','w_cathedral','w_park','w_reservoir','w_castle','w_shrine','w_university','w_school','statue','ice_shelf','shrine','w_embassy','w_geyser','atoll','w_stadium','folk_dance','waterway','w_theatre','w_war','crater','geopark','w_ww1','mountains','ice_cap','seamount','w_tomb','w_hospital','capital','w_ww2','ecoregion','mesa','ocean_ridge','w_harbor','w_treaty','salt_flat','time_zone','cloud','spaceport','oasis','reservoir','park','w_trench','metro','mangrove','estuary','market','w_coast','climate_zone','i_fort','biome','tornado_region','monument','tomb','w_empire','cyclone_region','rainfall','theatre','i_palace','castle','cathedral','embassy','current','w_civilization','wind','w_alliance','judiciary','w_trade_bloc','w_language','w_religion','space_mission','border','coastline','w_nuclear_power','scientist','sports','w_ideology','invention','movement','corridor','writer','reformer','country','philosopher','artist','architect','w_philosopher','w_artist','w_architect','w_politician','ocean','w_bay','w_cave','w_gorge','w_archipelago','w_isthmus','w_spring','w_revolution','w_disaster','w_plate','w_meteorite','i_corridor','border_road','rl_zone','pipeline','dfc','i_bridge','biogeographic_zone','cement','drainage','fertilizer','i_cave','i_colonial','i_freedom','i_glacier','i_island','i_lake','i_medieval','i_movement','i_observatory','i_pilgrimage','i_stadium','i_tunnel','i_waterfall','i_zoo','industrial','irrigation','monsoon','physiographic','power_plant','refinery','seismic_zone','soil','steel_plant','tribe','vegetation','harbor','mosque','church','archaeological_site','monastery','escarpment','w_market','amusement_park','basin','classical_dance','cuisine','festival','fjord','lagoon','language','longitude','religious','shipwreck','wind_farm','zoo'];
+const CAT_ORDER = ['city','national_park','ramsar','wildlife','river','railway','peak','port','airport','dam','nuclear','biosphere','unesco','battle','temple','institution','kingdom','dynasty','organization','tiger','hill','bird','i_pass','tribal','i_book','ruler','freedom','traveller','w_city','w_river','w_peak','w_np','w_unesco','w_battle','w_landmark','w_inst','w_kingdom','w_dynasty','w_organization','strait','desert','lake','island','peninsula','volcano','gulf','canal','range','sea','waterfall','reef','canyon','cape','delta','latitude','current','phenomena','wind','cloud','forest','rainfall','plateau','plain','valley','w_pass','glacier','w_bridge','lighthouse','wonder','tower','w_dam','w_airport','tunnel','trade','oil','personality','highway','i_range','crop','mineral','statue','capital','w_coast','w_civilization','museum','w_cathedral','w_park','w_reservoir','w_castle','w_shrine','w_university','w_school','statue','ice_shelf','shrine','w_embassy','w_geyser','atoll','w_stadium','folk_dance','waterway','w_theatre','w_war','crater','geopark','w_ww1','mountains','ice_cap','seamount','w_tomb','w_hospital','capital','w_ww2','ecoregion',...'mesa','ocean_ridge','ridge','w_harbor',...,'w_treaty','salt_flat','time_zone','cloud','spaceport','oasis','reservoir','park','w_trench','metro','mangrove','estuary','market','w_coast','climate_zone','i_fort','biome','tornado_region','monument','tomb','w_empire','cyclone_region','rainfall','theatre','i_palace','castle','cathedral','embassy','current','w_civilization','wind','w_alliance','judiciary','w_trade_bloc','w_language','w_religion','space_mission','border','coastline','w_nuclear_power','scientist','sports','w_ideology','invention','movement','corridor','writer','reformer','country','philosopher','artist','architect','w_philosopher','w_artist','w_architect','w_politician','ocean','w_bay','w_cave','w_gorge','w_archipelago','w_isthmus','w_spring','w_revolution','w_disaster','w_plate','w_meteorite','i_corridor','border_road','rl_zone','pipeline','dfc','i_bridge','biogeographic_zone','cement','drainage','fertilizer','i_cave','i_colonial','i_freedom','i_glacier','i_island','i_lake','i_medieval','i_movement','i_observatory','i_pilgrimage','i_stadium','i_tunnel','i_waterfall','i_zoo','industrial','irrigation','monsoon','physiographic','power_plant','refinery','seismic_zone','soil','steel_plant','tribe','vegetation','harbor','mosque','church','archaeological_site','monastery','escarpment','w_market','amusement_park','basin','classical_dance','cuisine','festival','fjord','lagoon','language','longitude','religious','shipwreck','wind_farm','zoo'];
 
 // Auto-play state
 let _ap=null; // {k, idx, items, timeout}
@@ -13081,8 +13206,11 @@ function showDetail(d,cat,k){
   // Highlight tube + arrows for line/path features
   if(d._tube){
     clearHighlight();
-    d._tube.material.color.set('#ff6b6b');
-    d._tube.material.opacity=0.9;
+    const tubes=d._tubes||[d._tube];
+    tubes.forEach(t=>{
+      t.material.color.set('#ff6b6b');
+      t.material.opacity=0.9;
+    });
     _selTube=d._tube;
     _selArrows=d._arrows||[];
     _selArrows.forEach(a=>{
@@ -13123,6 +13251,20 @@ function showDetail(d,cat,k){
   const hlLat=d.la||(d.pts?d.pts[Math.floor(d.pts.length/2)].la:0);
   const hlLn=d.ln||(d.pts?d.pts[Math.floor(d.pts.length/2)].ln:0);
   if((hlLat||hlLn)&&!d._tube)setHighlight(hlLat,hlLn,cat.color||'#ff4444');
+  // Battle explosion effect
+  if((k==='battle'||k==='w_battle')&&(hlLat||hlLn)){
+    const boomPos=ll(hlLat,hlLn,R*1.01);
+    for(let r=0;r<3;r++){
+      const ringGeo=new THREE.RingGeometry(0.005+r*0.008,0.012+r*0.012,24);
+      const ringMat=new THREE.MeshBasicMaterial({color:'#ff6b6b',transparent:true,opacity:0.6-r*0.15,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending});
+      const ring=new THREE.Mesh(ringGeo,ringMat);
+      ring.position.copy(boomPos);
+      ring.lookAt(0,0,0);
+      ring.userData._boom={start:Date.now(),delay:r*100};
+      EG.add(ring);
+      (function(rr){const expand=()=>{if(!rr.parent)return;const e=(Date.now()-rr.userData._boom.start-rr.userData._boom.delay)/600;if(e<0){requestAnimationFrame(expand);return};const s=1+e*2;const o=Math.max(0,0.6-r*0.15-e*0.5);rr.scale.set(s,s,1);rr.material.opacity=o;if(e<1.5)requestAnimationFrame(expand);else{EG.remove(rr);rr.geometry.dispose();rr.material.dispose()}};expand()})(ring);
+    }
+  }
   showPortrait(getFigure(d.n,d.desc,cat.color),cat.color);
   // Timeline play button
   const tlBtn=document.getElementById('dTimeline');
