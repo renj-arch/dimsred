@@ -91,6 +91,16 @@ if (tree['Indian Current Affairs']) {
   });
   delete tree['Indian Current Affairs'];
 }
+// Also merge subject 'Indian Current Affairs' inside Current Affairs (e.g. July 2026 has category:'Current Affairs' but subject:'Indian Current Affairs')
+if (tree['Current Affairs'] && tree['Current Affairs']['Indian Current Affairs']) {
+  if (!tree['Current Affairs']['Current Affairs']) tree['Current Affairs']['Current Affairs'] = {};
+  var icaSubj = tree['Current Affairs']['Indian Current Affairs'];
+  Object.keys(icaSubj).forEach(function(ss) {
+    if (!tree['Current Affairs']['Current Affairs'][ss]) tree['Current Affairs']['Current Affairs'][ss] = [];
+    tree['Current Affairs']['Current Affairs'][ss] = tree['Current Affairs']['Current Affairs'][ss].concat(icaSubj[ss]);
+  });
+  delete tree['Current Affairs']['Indian Current Affairs'];
+}
 // Merge Current Events into Current Affairs
 if (tree['Current Events']) {
   if (!tree['Current Affairs']) tree['Current Affairs'] = {};
