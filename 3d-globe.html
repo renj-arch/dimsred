@@ -13174,30 +13174,33 @@ dp.addEventListener('click',(e)=>{
 });
 const ctEl=document.getElementById('contempTooltip'),ctImg=document.getElementById('ctImg'),ctName=ctEl.querySelector('.ct-name'),ctTitle=ctEl.querySelector('.ct-title');
 let _ctTimer=null;
-document.getElementById('eraList').addEventListener('mouseover',(e)=>{
-  const chip=e.target.closest('.contemp-chip');
-  if(!chip)return;
-  clearTimeout(_ctTimer);
-  const name=chip.textContent,title=chip.dataset.title||'';
-  ctName.textContent=name;ctTitle.textContent=title;
-  ctImg.style.display='none';ctImg.src='';
-  ctEl.querySelector('.ct-fallback').style.display='flex';
-  const rect=chip.getBoundingClientRect();
-  ctEl.style.left=rect.left+'px';ctEl.style.top=(rect.bottom+6)+'px';
-  ctEl.classList.add('show');
-  const fig=getFigure(name,'',null);
-  if(fig&&fig.wiki){
-    fetchWikiThumb(fig.wiki).then(url=>{
-      if(!url||ctName.textContent!==name)return;
-      const img=new Image();
-      img.onload=()=>{if(ctName.textContent===name){ctImg.src=url;ctImg.style.display='block';ctEl.querySelector('.ct-fallback').style.display='none'}};
-      img.src=url;
-    });
-  }
-});
-document.getElementById('eraList').addEventListener('mouseout',(e)=>{
-  if(e.target.closest('.contemp-chip')){_ctTimer=setTimeout(()=>ctEl.classList.remove('show'),200);}
-});
+const eraListEl=document.getElementById('dEraList');
+if(eraListEl){
+  eraListEl.addEventListener('mouseover',(e)=>{
+    const chip=e.target.closest('.contemp-chip');
+    if(!chip)return;
+    clearTimeout(_ctTimer);
+    const name=chip.textContent,title=chip.dataset.title||'';
+    ctName.textContent=name;ctTitle.textContent=title;
+    ctImg.style.display='none';ctImg.src='';
+    const fb=ctEl.querySelector('.ct-fallback');if(fb)fb.style.display='flex';
+    const rect=chip.getBoundingClientRect();
+    ctEl.style.left=Math.min(rect.left,innerWidth-320)+'px';ctEl.style.top=(rect.bottom+6)+'px';
+    ctEl.classList.add('show');
+    const fig=getFigure(name,'',null);
+    if(fig&&fig.wiki){
+      fetchWikiThumb(fig.wiki).then(url=>{
+        if(!url||ctName.textContent!==name)return;
+        const img=new Image();
+        img.onload=()=>{if(ctName.textContent===name){ctImg.src=url;ctImg.style.display='block';if(fb)fb.style.display='none'}};
+        img.src=url;
+      });
+    }
+  });
+  eraListEl.addEventListener('mouseout',(e)=>{
+    if(e.target.closest('.contemp-chip')){_ctTimer=setTimeout(()=>ctEl.classList.remove('show'),200);}
+  });
+}
 ctEl.addEventListener('mouseenter',()=>clearTimeout(_ctTimer));
 ctEl.addEventListener('mouseleave',()=>ctEl.classList.remove('show'));
 
