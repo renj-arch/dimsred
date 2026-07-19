@@ -56,6 +56,12 @@ jobs:
       - name: Fetch state-level news (CM, Governor, budgets)
         run: node scripts/fetch-state-news.js
 
+      - name: Fetch global rankings (India in major indices)
+        run: node scripts/fetch-global-rankings.js
+
+      - name: Fetch parliament bills and acts
+        run: node scripts/fetch-parliament-bills.js
+
       - name: Rebuild single archive + per-category data
         run: node scripts/build-archive-single.js
 
