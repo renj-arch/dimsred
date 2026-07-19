@@ -68,6 +68,33 @@ jobs:
       - name: Fetch UN/WHO yearly themes (Yoga Day, Environment Day, etc.)
         run: node scripts/fetch-themes.js
 
+      - name: Fetch G20/BRICS/SCO/QUAD summits and conferences
+        run: node scripts/fetch-summits.js
+
+      - name: Fetch key appointments (COAS, CJI, CEC, RBI Governor, etc.)
+        run: node scripts/fetch-appointments.js
+
+      - name: Fetch awards (Bharat Ratna, Nobel, Jnanpith, Dadasaheb Phalke)
+        run: node scripts/fetch-awards.js
+
+      - name: Fetch defence exercises and missiles
+        run: node scripts/fetch-defence.js
+
+      - name: Fetch Science & Technology (ISRO missions, satellites)
+        run: node scripts/fetch-science.js
+
+      - name: Fetch Government Schemes
+        run: node scripts/fetch-schemes.js
+
+      - name: Fetch Legal & Constitutional (landmark SC judgements)
+        run: node scripts/fetch-judgements.js
+
+      - name: Fetch Obituaries (notable Indian deaths)
+        run: node scripts/fetch-obituaries.js
+
+      - name: Fetch International Relations (diplomatic relations)
+        run: node scripts/fetch-bilateral.js
+
       - name: Rebuild single archive + per-category data
         run: node scripts/build-archive-single.js
 
