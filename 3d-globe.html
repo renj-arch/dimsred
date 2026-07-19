@@ -13123,7 +13123,7 @@ function showDetail(d,cat,k){
   const hlLat=d.la||(d.pts?d.pts[Math.floor(d.pts.length/2)].la:0);
   const hlLn=d.ln||(d.pts?d.pts[Math.floor(d.pts.length/2)].ln:0);
   if((hlLat||hlLn)&&!d._tube)setHighlight(hlLat,hlLn,cat.color||'#ff4444');
-  showPortrait(getFigure(d.n,d.desc,cat.color),cat.color);
+  showPortrait(getFigure(d.n,d.desc,cat.color),cat.color,k);
   // Timeline play button
   const tlBtn=document.getElementById('dTimeline');
   if(d.steps&&d.steps.length){
@@ -13506,6 +13506,7 @@ function getFigure(itemName,itemDesc,catColor){
   return {name,color:catColor,isDynamic:true,wiki:wikiTitle||null};
 }
 
+const _personCats=new Set(['personality','scientist','writer','reformer','philosopher','artist','architect','ruler','freedom','traveller','sports','invention','movement','battle','w_battle','w_philosopher','w_artist','w_architect','w_politician','country','sage','explorer','tribal','i_book']);
 const pEl=document.getElementById('portrait');
 const pImg=document.getElementById('pImg');
 const pName=document.getElementById('pName');
@@ -13540,7 +13541,7 @@ pImg.addEventListener('click',()=>{
 });
 pZoom.addEventListener('click',()=>pZoom.style.display='none');
 
-function showPortrait(fig,catColor){
+function showPortrait(fig,catColor,cat){
   if(!fig){hidePortrait();return}
   const c=fig.color||catColor||'#fb923c';
   pName.textContent=fig.name;
@@ -13548,7 +13549,7 @@ function showPortrait(fig,catColor){
   pEl.classList.add('show');
   // Show avatar immediately, try real image async
   setAvatar(pImg,fig,c);
-  if(fig.wiki){
+  if(fig.wiki&&(!cat||_personCats.has(cat))){
     fetchWikiThumb(fig.wiki).then(url=>{
       if(url&&pName.textContent===fig.name){
         const img=new Image();
