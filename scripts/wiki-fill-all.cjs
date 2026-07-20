@@ -1309,7 +1309,9 @@ const DAY_GROUPS = [
 ];
 
 async function main() {
-  const quiz = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8'));
+  let quiz;
+  try { quiz = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8')); }
+  catch (e) { quiz = { questions: [] }; console.log('Created new quiz.json (was missing)'); }
   const existingQ = new Set(quiz.questions.map(q => norm(q.question)));
 
   let nextId = quiz.questions.length;
