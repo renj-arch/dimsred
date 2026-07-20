@@ -31,7 +31,8 @@ try {
   }
 } catch {}
 
-const quiz = JSON.parse(fs.readFileSync(quizPath, 'utf8'));
+let quiz = { questions: [] };
+try { quiz = JSON.parse(fs.readFileSync(quizPath, 'utf8')); } catch { quiz = { questions: [] }; }
 const rawQuestions = quiz.questions.concat(pibQuestions).concat(icaQuestions);
 
 // ── Dedup by (question + answer) key ──
