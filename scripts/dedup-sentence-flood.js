@@ -30,7 +30,7 @@ async function main() {
 
   // Clean quiz.json if it exists
   if (fs.existsSync(QUIZ_PATH)) {
-    const quiz = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8'));
+    const quiz = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8').replace(/^\uFEFF/, ''));
     const { kept, removed } = clean(quiz.questions, 'quiz.json');
     totalRemoved += removed.length;
     totalKept += kept.length;
@@ -44,7 +44,7 @@ async function main() {
     const files = fs.readdirSync(QUESTIONS_DIR).filter(f => f.endsWith('.json') && f !== 'manifest.json');
     for (const f of files) {
       const fp = path.join(QUESTIONS_DIR, f);
-      const data = JSON.parse(fs.readFileSync(fp, 'utf8'));
+      const data = JSON.parse(fs.readFileSync(fp, 'utf8').replace(/^\uFEFF/, ''));
       let fileKept = 0, fileRemoved = 0;
       const out = {};
       for (const [subject, subjData] of Object.entries(data)) {
