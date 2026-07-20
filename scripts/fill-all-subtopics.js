@@ -1059,6 +1059,85 @@ async function main() {
     console.log('\n=== Auto-discovery: no gaps found — syllabus is complete ===');
   }
 
+  // ── 4c. Discovery Scan: find new Wikipedia articles not covered by any sub-topic ──
+  console.log('\n=== Discovery Scan: looking for new topics not yet in sub-topics ===');
+  const autoCreated = new Set(); // track auto-created sub-topics this run
+  const skippedWords = new Set(['list', 'index', 'outline', 'timeline', 'bibliography', 'glossary', 'category', 'template', 'portal', 'file', 'talk', 'help']);
+  for (const [cat, queriesStr] of Object.entries(CAT_QUERIES)) {
+    const subMap = SUB_KEYWORDS[cat];
+    if (!subMap) continue;
+    const queries = queriesStr.split(',').map(q => q.trim()).filter(Boolean).slice(0, 2);
+    if (queries.length === 0) continue;
+
+    process.stdout.write('  ' + cat + ': scanning... ');
+    const discovered = [];
+    for (const query of queries) {
+      const articles = await fetchArticles(query, 15);
+      for (const a of articles) {
+        if (!a.extract || a.extract.length < 50) continue;
+        const subSubject = classifySubSubject(cat, a.title, a.extract, '');
+        if (!subSubject) discovered.push(a);
+      }
+      await delay(2000);
+    }
+
+    // Try to create new sub-topics from discovered articles
+    let created = 0;
+    for (const a of discovered) {
+      // Clean the title for use as a sub-topic name
+      let topicName = a.title
+        .replace(/\s*\([^)]*\)\s*/g, '')    // remove (India), (disambiguation) etc
+        .replace(/\s*,\s*.*$/, '')           // remove ", India" suffixes
+        .replace(/^List\s+of\s+/i, '')       // remove "List of "
+        .replace(/^Outline\s+of\s+/i, '')
+        .trim();
+      if (!topicName || topicName.length < 4 || topicName.length > 60) continue;
+
+      // Skip if topic starts with a stop word
+      const firstWord = topicName.split(' ')[0].toLowerCase();
+      if (skippedWords.has(firstWord)) continue;
+
+      // Skip if category group (series, set, types) — too generic
+      if (/^(Types|Groups|Sets|Series|Forms)\s+of/i.test(topicName)) continue;
+
+      // Check if similar sub-topic already exists in this category
+      const topicLow = topicName.toLowerCase();
+      const exists = Object.keys(subMap).some(existing => {
+        const eLow = existing.toLowerCase();
+        return eLow === topicLow || eLow.includes(topicLow) || topicLow.includes(eLow);
+      });
+      if (exists) continue;
+
+      // Also check if already auto-created this run
+      const creationKey = cat + '|||' + topicLow;
+      if (autoCreated.has(creationKey)) continue;
+      autoCreated.add(creationKey);
+
+      // Create new sub-topic with article title + key terms as keywords
+      const keywords = [topicLow, a.title.toLowerCase(), ...a.title.toLowerCase().split(' ').filter(w => w.length > 3).slice(0, 4)];
+      subMap[topicName] = [...new Set(keywords)];
+      created++;
+
+      // Generate questions for this article
+      const qs = generateQuestions([a], cat);
+      let added = 0;
+      for (const q of qs) {
+        q.subSubject = topicName;
+        const key = (q.question + '|||' + q.answer).toLowerCase().trim();
+        if (!existingSet.has(key)) {
+          q.subSubject = topicName;
+          existingSet.add(key);
+          allNewQuestions.push(q);
+          added++;
+        }
+      }
+      if (added > 0) console.log('\n    + Created sub-topic "' + topicName + '" (' + added + ' qs) from "' + a.title + '"');
+    }
+    if (created === 0) process.stdout.write('nothing new\n');
+    await delay(5000);
+  }
+  console.log('  Discovery scan complete. Auto-created sub-topics: ' + autoCreated.size);
+
   // 5. Merge new questions
   console.log('\n=== Adding ' + allNewQuestions.length + ' new questions ===');
   for (const q of allNewQuestions) {
