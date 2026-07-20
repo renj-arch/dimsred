@@ -793,7 +793,7 @@ async function fetchAll() {
   deduped = deduped.filter(function(i) { return new Date(i.pubDate).getTime() > monthAgo; });
   // Sort by priority-weighted score descending, cap at 200
   deduped.sort(function(a, b) { return getSortScore(b) - getSortScore(a); });
-  if (deduped.length > 200) deduped = deduped.slice(0, 200);
+  if (deduped.length > 500) deduped = deduped.slice(0, 500);
   var existing = deduped;
 
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });

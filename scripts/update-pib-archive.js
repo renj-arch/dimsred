@@ -392,7 +392,51 @@ function generateQuestion(item, idx) {
       swapped = t.replace(new RegExp('\\b(announced|approved|launched|sanctioned|released|inaugurated|notified|introduced|partners|facilitates|reviews|commissions|disburses|chairs|holds|organises|signs|flags|marks|invites|addresses|inaugurates|releases|holds|addresses|launches|defines|orders|begins|visits|unveils|concludes|explores|strengthens|forge|accelerates|promotes|resolve|congratulates|aims|declares|defined|began|concluded|explored|ordered|visited|released|chairs)\\b', 'i'), 'NOT $1');
     }
   }
-  if (!swapped || swapped === t) return null;
+  if (!swapped || swapped === t) {
+    // 6. Ultimate fallback: MCQ based on category or entity mention
+    var subjMatch = t.match(/(?:Ministry of|Department of)\s+([A-Z][A-Za-z\s&]+?)(?:\s+(?:announces|launches|releases|signs|approves|flags|organises|partners|holds|inaugurates|begins|visits|unveils|concludes|strengthens|promotes|releases|addresses|chairs))/i);
+    if (subjMatch) {
+      var entity = subjMatch[1].trim();
+      var pool = ['Ministry of Finance', 'Ministry of Defence', 'Ministry of Home Affairs', 'Ministry of Health and Family Welfare', 'Ministry of Education', 'Ministry of Agriculture', 'Ministry of External Affairs', 'Ministry of Power', 'Ministry of Environment', 'Ministry of Jal Shakti', 'Ministry of Railways', 'Ministry of Commerce', 'Ministry of Law and Justice', 'Ministry of Labour', 'Ministry of Rural Development', 'Ministry of Housing and Urban Affairs'];
+      var dist = shuffle(pool.filter(function(v) { return v.toLowerCase() !== entity.toLowerCase(); }));
+      var blankQ = t.replace(entity, '_____');
+      if (blankQ !== t && blankQ.length > 25) {
+        q.question = blankQ.length > 200 ? blankQ.substring(0, 197) + '...' : blankQ;
+        q.answer = entity;
+        q.options = shuffle([entity].concat(dist.slice(0, 3)).concat(['None']));
+        q.type = 'fill_blank';
+        q.hint = 'PIB: ' + cat + ' - Ministry';
+        q.fact = fact;
+        return q;
+      }
+    }
+    // 7. True/false fallback for any title with 20+ chars — swap a key word
+    if (text.length >= 20) {
+      var falseQ = text
+        .replace(/\b(launched|inaugurated|commissioned|opened|approved|sanctioned|released|introduced)\b/i, 'postponed')
+        .replace(/\b(signed|announced|notified|flagged|unveiled|concluded)\b/i, 'cancelled')
+        .replace(/\b(launches|inaugurates|commissions|opens|approves|sanctions|releases|introduces)\b/i, 'postpones')
+        .replace(/\b(successfully|completed|finished|achieved|reached)\b/i, 'unsuccessfully');
+      if (falseQ === text) {
+        var numM = text.match(/(\d[\d,]*)\s*(lakh|crore|million|billion|thousand|GW|MW|KW|KV|%)?/i);
+        if (numM) falseQ = text.replace(numM[0], (parseInt(numM[1].replace(/,/g,''))*2)+'');
+      }
+      if (falseQ === text) falseQ = text.replace(/\b(India|Indian|PM|Prime Minister)\b/i, 'Bangladesh');
+      if (Math.random() > 0.5) {
+        q.question = text + '.';
+        q.answer = 'True';
+      } else {
+        q.question = falseQ + '.';
+        q.answer = 'False';
+      }
+      q.options = ['True', 'False'];
+      q.type = 'true_false';
+      q.hint = 'PIB: ' + cat;
+      q.fact = fact;
+      return q;
+    }
+    return null;
+  }
 
   q.question = 'True or False: ' + text + '.';
   q.answer = Math.random() > 0.5 ? 'True' : 'False';
