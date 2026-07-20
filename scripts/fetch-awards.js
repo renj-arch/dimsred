@@ -25,8 +25,19 @@ function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
 function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
+function fetchJSONWithRetry(url, retries) {
+  retries = retries || 3;
+  return fetchJSON(url).catch(function(err) {
+    if (retries > 0 && err.message.indexOf('429') >= 0) {
+      console.error('  429, retrying after 3s... (' + retries + ' left)');
+      return delay(3000).then(function() { return fetchJSONWithRetry(url, retries - 1); });
+    }
+    throw err;
+  });
+}
+
 function fetchPageText(title) {
-  return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
+  return fetchJSONWithRetry(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
     if (d && d.parse && d.parse.text) return d.parse.text['*'];
     return '';
   });
