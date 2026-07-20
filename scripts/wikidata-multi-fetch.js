@@ -2,7 +2,16 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
-function httpGet(url) {
+let lastHttpGetTime = 0;
+async function rateLimitGet(minGapMs = 400) {
+  const now = Date.now();
+  const elapsed = now - lastHttpGetTime;
+  if (elapsed < minGapMs) await new Promise(r => setTimeout(r, minGapMs - elapsed));
+  lastHttpGetTime = Date.now();
+}
+
+async function httpGet(url) {
+  await rateLimitGet(400);
   return new Promise((resolve, reject) => {
     const req = https.get(url, { headers: { 'User-Agent': 'studypro-wiki/1.0 (gk-bot)' } }, res => {
       let d = '';
@@ -17,6 +26,14 @@ function httpGet(url) {
   });
 }
 
+let lastSparqlTime = 0;
+async function rateLimitSparql(minGapMs = 800) {
+  const now = Date.now();
+  const elapsed = now - lastSparqlTime;
+  if (elapsed < minGapMs) await new Promise(r => setTimeout(r, minGapMs - elapsed));
+  lastSparqlTime = Date.now();
+}
+
 function httpPost(url, body) {
   return new Promise((resolve, reject) => {
     const u = new URL(url);
@@ -29,6 +46,7 @@ function httpPost(url, body) {
       let d = '';
       res.on('data', c => d += c);
       res.on('end', () => {
+        if (res.statusCode === 429 || res.statusCode === 502) return reject(Object.assign(new Error(d.slice(0, 200)), { status: res.statusCode }));
         if (res.statusCode >= 400) return reject(new Error(d.slice(0, 200)));
         resolve(JSON.parse(d));
       });
@@ -40,10 +58,24 @@ function httpPost(url, body) {
   });
 }
 
-function sparql(query) {
-  const url = 'https://query.wikidata.org/sparql?format=json';
-  return httpPost(url, 'query=' + encodeURIComponent(query));
+async function sparqlRetry(query, retries = 3) {
+  await rateLimitSparql(800);
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      return await httpPost('https://query.wikidata.org/sparql?format=json', 'query=' + encodeURIComponent(query));
+    } catch (e) {
+      if ((e.status === 429 || e.status === 502 || e.message.includes('timeout')) && attempt < retries) {
+        const wait = Math.min((attempt + 1) * 3000, 15000);
+        console.log(`  ⏳ SPARQL retry ${attempt+1}/${retries}, waiting ${wait/1000}s...`);
+        await new Promise(r => setTimeout(r, wait));
+        continue;
+      }
+      throw e;
+    }
+  }
 }
+
+function sparql(query) { return sparqlRetry(query); }
 
 async function wikiSummary(title) {
   if (!title) return null;
@@ -1551,7 +1583,7 @@ async function fetchSummariesConcurrently(titles, concurrency = 5) {
 async function processCat(cat) {
   console.log(`\n▓ ${cat.label}`);
   let result;
-  try { result = await sparql(cat.query); }
+  try { result = await sparqlRetry(cat.query); }
   catch(e){ console.log(`  ✗ Query failed: ${e.message}`); return []; }
 
   const seen = new Map();
@@ -1600,7 +1632,7 @@ async function processCat(cat) {
     if(qids.size){
       const qlist = [...qids].map(q=>`<${q}>`).join(' ');
       try {
-        const cr = await sparql(`SELECT ?item ?coord WHERE { VALUES ?item { ${qlist} } ?item wdt:P625 ?coord. }`);
+        const cr = await sparqlRetry(`SELECT ?item ?coord WHERE { VALUES ?item { ${qlist} } ?item wdt:P625 ?coord. }`);
         for(const r of cr.results.bindings){
           const id=r.item?.value||'';
           const cm=r.coord?.value?.match(/Point\(([-\d.]+)\s+([-\d.]+)\)/);

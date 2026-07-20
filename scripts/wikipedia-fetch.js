@@ -14,7 +14,7 @@ async function rateLimit(minGapMs = 1500) {
 }
 
 async function httpGet(url, retries = 5) {
-  await rateLimit(1200);
+  await rateLimit(400);
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const result = await new Promise((resolve, reject) => {
@@ -33,7 +33,7 @@ async function httpGet(url, retries = 5) {
       return result;
     } catch (e) {
       if (e.status === 429 && attempt < retries) {
-        const wait = Math.min((attempt + 1) * 5000, 60000);
+        const wait = Math.min((attempt + 1) * 2000, 30000);
         console.log(`  ⏳ rate limited, waiting ${wait/1000}s...`);
         await new Promise(r => setTimeout(r, wait));
         continue;
@@ -86,7 +86,7 @@ async function titlesToQids(titles) {
 
 async function httpPost(url, data, retries = 5) {
   const postData = typeof data === 'string' ? data : new URLSearchParams(data).toString();
-  await rateLimit(1200);
+  await rateLimit(400);
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const result = await new Promise((resolve, reject) => {
@@ -112,7 +112,7 @@ async function httpPost(url, data, retries = 5) {
       return result;
     } catch (e) {
       if (e.status === 429 && attempt < retries) {
-        const wait = Math.min((attempt + 1) * 5000, 60000);
+        const wait = Math.min((attempt + 1) * 2000, 30000);
         console.log(`  ⏳ SPARQL rate limited, waiting ${wait/1000}s...`);
         await new Promise(r => setTimeout(r, wait));
         continue;
@@ -692,7 +692,7 @@ async function fetchSummariesConcurrently(titles, concurrency = 2) {
     while (queue.length > 0) {
       const title = queue.shift();
       try { results[title] = await wikiSummary(title); } catch { results[title] = null; }
-      await new Promise(r => setTimeout(r, 1000));
+      await new Promise(r => setTimeout(r, 300));
     }
   }
   const workers = [];
@@ -753,7 +753,7 @@ async function processCat(cat, dedupSet) {
   const candidates = [];
   let skipped = 0;
   for (const [title, qid] of valid) {
-    if (candidates.length >= 100) break;
+    if (candidates.length >= 200) break;
     const coord = coordMap.get(qid);
     if (!coord) continue;
     if (dedupSet.has(normName(title))) { skipped++; continue; }
@@ -801,7 +801,7 @@ async function main() {
   const dedupSet = loadDedupSet();
   console.log(`Loaded ${dedupSet.size} names for dedup`);
 
-  // Check which categories already have output files (resume support)
+  // Check which categories already have output files (resume support + skip zero-entry)
   const skipCats = [];
   const runCats = [];
   for (const cat of CFG) {
@@ -809,6 +809,10 @@ async function main() {
     if (fs.existsSync(fp)) {
       try {
         const existing = JSON.parse(fs.readFileSync(fp, 'utf8'));
+        if (existing.length === 0 && process.env.GLOBE_FILL_ALL !== '1') {
+          skipCats.push({ ...cat, existing: 0, note: 'empty' });
+          continue;
+        }
         skipCats.push({ ...cat, existing: existing.length });
       } catch {}
       continue;
