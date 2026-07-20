@@ -258,15 +258,27 @@ function countEntries(content, catName) {
   const startIdx = content.indexOf(startMarker);
   if (startIdx === -1) return 0;
   const afterBracket = content.indexOf('[', startIdx) + 1;
-  const chunk = content.slice(afterBracket, afterBracket + 50000);
+  const chunk = content.slice(afterBracket, afterBracket + 500000);
   // Find closing ];
-  let depth = 1;
-  let endIdx = 0;
+  let depth = 1, endIdx = 0;
+  let inSQ = false, inDQ = false, inBT = false;
   for (let i = 0; i < chunk.length; i++) {
-    if (chunk[i] === '[') depth++;
-    else if (chunk[i] === ']') {
-      depth--;
-      if (depth === 0) { endIdx = i; break; }
+    const c = chunk[i];
+    if (inBT) {
+      if (c === '\\' && i + 1 < chunk.length) { i++; continue; }
+      if (c === '`') inBT = false;
+    } else if (inDQ) {
+      if (c === '\\' && i + 1 < chunk.length) { i++; continue; }
+      if (c === '"') inDQ = false;
+    } else if (inSQ) {
+      if (c === '\\' && i + 1 < chunk.length) { i++; continue; }
+      if (c === "'") inSQ = false;
+    } else {
+      if (c === "'") inSQ = true;
+      else if (c === '"') inDQ = true;
+      else if (c === '`') inBT = true;
+      else if (c === '[') depth++;
+      else if (c === ']') { depth--; if (depth === 0) { endIdx = i; break; } }
     }
   }
   const arrayContent = chunk.slice(0, endIdx);
@@ -282,14 +294,26 @@ for (const [cat, entries] of Object.entries(inserts)) {
     continue;
   }
   const afterOpenBracket = html.indexOf('[', startIdx) + 1;
-  const chunk = html.slice(afterOpenBracket, afterOpenBracket + 50000);
-  let depth = 1;
-  let endIdx = 0;
+  const chunk = html.slice(afterOpenBracket, afterOpenBracket + 500000);
+  let depth = 1, endIdx = 0;
+  let inSQ = false, inDQ = false, inBT = false;
   for (let i = 0; i < chunk.length; i++) {
-    if (chunk[i] === '[') depth++;
-    else if (chunk[i] === ']') {
-      depth--;
-      if (depth === 0) { endIdx = i; break; }
+    const c = chunk[i];
+    if (inBT) {
+      if (c === '\\' && i + 1 < chunk.length) { i++; continue; }
+      if (c === '`') inBT = false;
+    } else if (inDQ) {
+      if (c === '\\' && i + 1 < chunk.length) { i++; continue; }
+      if (c === '"') inDQ = false;
+    } else if (inSQ) {
+      if (c === '\\' && i + 1 < chunk.length) { i++; continue; }
+      if (c === "'") inSQ = false;
+    } else {
+      if (c === "'") inSQ = true;
+      else if (c === '"') inDQ = true;
+      else if (c === '`') inBT = true;
+      else if (c === '[') depth++;
+      else if (c === ']') { depth--; if (depth === 0) { endIdx = i; break; } }
     }
   }
   const arrayContent = chunk.slice(0, endIdx);

@@ -308,11 +308,27 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
   }
 
   const afterOpen = html.indexOf('[', startIdx) + 1;
-  const chunk = html.slice(afterOpen, afterOpen + 100000);
+  const chunk = html.slice(afterOpen, afterOpen + 500000);
   let depth = 1, endIdx = 0;
+  let inSQ = false, inDQ = false, inBT = false;
   for (let i = 0; i < chunk.length; i++) {
-    if (chunk[i] === '[') depth++;
-    else if (chunk[i] === ']') { depth--; if (depth === 0) { endIdx = i; break; } }
+    const c = chunk[i];
+    if (inBT) {
+      if (c === '\\' && i + 1 < chunk.length) { i++; continue; }
+      if (c === '`') inBT = false;
+    } else if (inDQ) {
+      if (c === '\\' && i + 1 < chunk.length) { i++; continue; }
+      if (c === '"') inDQ = false;
+    } else if (inSQ) {
+      if (c === '\\' && i + 1 < chunk.length) { i++; continue; }
+      if (c === "'") inSQ = false;
+    } else {
+      if (c === "'") inSQ = true;
+      else if (c === '"') inDQ = true;
+      else if (c === '`') inBT = true;
+      else if (c === '[') depth++;
+      else if (c === ']') { depth--; if (depth === 0) { endIdx = i; break; } }
+    }
   }
 
   const existingContent = chunk.slice(0, endIdx);

@@ -491,11 +491,27 @@ for (const [cat, entries] of Object.entries(inserts)) {
   var startIdx = html.indexOf(marker);
   if (startIdx === -1) { console.log('ERROR: ' + cat + ' not found'); continue; }
   var afterBracket = html.indexOf('[', startIdx) + 1;
-  var chunk = html.slice(afterBracket, afterBracket + 50000);
+  var chunk = html.slice(afterBracket, afterBracket + 500000);
   var depth = 1, endIdx = 0;
+  var inSQ7 = false, inDQ7 = false, inBT7 = false;
   for (var i = 0; i < chunk.length; i++) {
-    if (chunk[i] === '[') depth++;
-    else if (chunk[i] === ']') { depth--; if (depth === 0) { endIdx = i; break; } }
+    var c7 = chunk[i];
+    if (inBT7) {
+      if (c7 === '\\' && i + 1 < chunk.length) { i++; continue; }
+      if (c7 === '`') inBT7 = false;
+    } else if (inDQ7) {
+      if (c7 === '\\' && i + 1 < chunk.length) { i++; continue; }
+      if (c7 === '"') inDQ7 = false;
+    } else if (inSQ7) {
+      if (c7 === '\\' && i + 1 < chunk.length) { i++; continue; }
+      if (c7 === "'") inSQ7 = false;
+    } else {
+      if (c7 === "'") inSQ7 = true;
+      else if (c7 === '"') inDQ7 = true;
+      else if (c7 === '`') inBT7 = true;
+      else if (c7 === '[') depth++;
+      else if (c7 === ']') { depth--; if (depth === 0) { endIdx = i; break; } }
+    }
   }
   var arrayContent = chunk.slice(0, endIdx);
   var existingCount = (arrayContent.match(/\{n:'/g) || []).length;
