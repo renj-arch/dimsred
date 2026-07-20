@@ -46,8 +46,21 @@ for (let i = 0; i < js.length; i++) {
         }
       }
       const prev = i > 0 ? js[i - 1] : '';
-      const isApostrophe = /[a-zA-Z]/.test(prev) && /[a-zA-Z0-9_]/.test(nextNonSpace);
-      if (isApostrophe) {
+      // Look at the IMMEDIATE next char (no skipping) — lowercase letter = likely apostrophe
+      const nextChar = i + 1 < js.length ? js[i + 1] : '';
+      const isApostropheChar = /[a-zA-Z0-9_]/.test(prev) && /[a-z]/.test(nextChar);
+      // Also check: if the snippet (skipping spaces) starts with end-of-string
+      // patterns like , } ] ) then it's definitely a terminator
+      let snippet = '';
+      for (let j = i + 1; j < Math.min(i + 10, js.length); j++) {
+        const nc = js[j];
+        if (nc !== ' ' && nc !== '\n' && nc !== '\r' && nc !== '\t' && !unicodeSpace.test(nc)) {
+          snippet += nc;
+          if (snippet.length >= 3) break;
+        }
+      }
+      const isEndOfString = /^[,}\]\)]/.test(snippet) || /^['"`]/.test(snippet);
+      if (isApostropheChar && !isEndOfString) {
         result += "\\'";
         fixed++;
       } else {
