@@ -5,7 +5,7 @@ var path = require('path');
 var API = 'https://en.wikipedia.org/w/api.php';
 var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
 var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-var DAYS_BACK = 5;
+var DAYS_BACK = 30;
 
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
@@ -73,6 +73,21 @@ function scoreStateEvent(text, entity) {
   if (/education|school|college|university|nep/i.test(t) && (stateMatch || hasIndia)) score += 2;
   if (/health|hospital|ayushman|vaccine|medic/i.test(t) && (stateMatch || hasIndia)) score += 2;
   if (/industry|investment|manufacturing|export|startup|msme/i.test(t) && stateMatch) score += 2;
+  if (/MoU|memorandum|agreement|collaboration|partnership|tie.up/i.test(t) && (stateMatch || hasIndia)) score += 3;
+  if (/award(?:ed|s)?|receives|honour|recogni.tion|felicitat/i.test(t) && (stateMatch || hasIndia)) score += 3;
+  if (/ranking|ranked|index|survey|report|released\s+(?:data|report|figures|statistics)/i.test(t) && (stateMatch || hasIndia)) score += 3;
+  if (/digital|technology|innovation|startup|incubation|fintech|edtech/i.test(t) && stateMatch) score += 2;
+  if (/tourism|heritage|culture|festival|pilgrimage/i.test(t) && stateMatch) score += 2;
+  if (/women|child|social\s+welfare|empowerment|pension|subsidy|entitlement/i.test(t) && (stateMatch || hasIndia)) score += 3;
+  if (/infrastructure|development|project|contract|tender|bid/i.test(t) && stateMatch) score += 2;
+  if (/legislative|council|mla|mp|by.election|byepoll|bypoll|byelection|election\s+commission/i.test(t) && stateMatch) score += 4;
+  if (/judge|chief\s+justice|justice\s+appointed|tribunal|ombudsman|lokayukta/i.test(t) && (stateMatch || hasIndia)) score += 3;
+  if (/defence|army|navy|air\s+force|paramilitary|bsf|crpf|itbp|assam\s+rifles/i.test(t) && (stateMatch || hasIndia)) score += 2;
+  if (/national\s+anthem|flag|constitution|republic\s+day|independence\s+day|gandhi\s+jayanti/i.test(t) && (stateMatch || hasIndia)) score += 2;
+  if (/foreign\s+direct\s+investment|fdi|gdp|gsdp|economic\s+(?:growth|survey|development)/i.test(t) && stateMatch) score += 3;
+  if (/sports\s+university|khelo\s+india|stadium|olympi|youth\s+(?:affairs|services)/i.test(t) && (stateMatch || hasIndia)) score += 2;
+  if (/skill\s+development|vocational|employment|job\s+fair|placement|training/i.test(t) && (stateMatch || hasIndia)) score += 2;
+  if (/(?:police|crime|naxal|militant|insurgency)\s+(?:firing|encounter|kill|death|custody|allegation|corruption|scam|fraud|arrest|charge)/i.test(t) && (stateMatch || hasIndia)) score -= 3;
 
   if (/\b(killed|killing|kill|dead|die|died|death|deaths|murder|murdered|shooting|shot|explosion|blast|bomb|bombing|casualty|massacre|riots?|clash|firing|gunfire|lynching|drown|drowned|drowning|suicide|stabbed|stabbing|beheaded|executed|ambush|massacre|bloodshed)\b/i.test(t)) return -100;
   if (/\b(bus|car|truck|train|plane|vehicle)\s+(crash|collision|accident|overturn|plunge|ram|hit|struck|collided|overturns?|plunges?)\b/i.test(t)) return -100;
@@ -204,23 +219,23 @@ function generateSeedQuestions(seqCounter) {
   var qs = [];
 
   var stateCMs = {
-    'Andhra Pradesh': 'Chandrababu Naidu',
+    'Andhra Pradesh': 'N. Chandrababu Naidu',
     'Arunachal Pradesh': 'Pema Khandu',
     'Assam': 'Himanta Biswa Sarma',
-    'Bihar': 'Nitish Kumar',
+    'Bihar': 'Samrat Choudhary',
     'Chhattisgarh': 'Vishnu Deo Sai',
-    'Delhi': 'Atishi',
+    'Delhi': 'Rekha Gupta',
     'Goa': 'Pramod Sawant',
     'Gujarat': 'Bhupendra Patel',
     'Haryana': 'Nayab Singh Saini',
     'Himachal Pradesh': 'Sukhvinder Singh Sukhu',
     'Jammu and Kashmir': 'Omar Abdullah',
-    'Jharkhand': 'Champai Soren',
+    'Jharkhand': 'Hemant Soren',
     'Karnataka': 'Siddaramaiah',
-    'Kerala': 'Pinarayi Vijayan',
+    'Kerala': 'V. D. Satheesan',
     'Madhya Pradesh': 'Mohan Yadav',
-    'Maharashtra': 'Eknath Shinde',
-    'Manipur': 'N. Biren Singh',
+    'Maharashtra': 'Devendra Fadnavis',
+    'Manipur': 'Yumnam Khemchand Singh',
     'Meghalaya': 'Conrad Sangma',
     'Mizoram': 'Lalduhoma',
     'Nagaland': 'Neiphiu Rio',
@@ -229,42 +244,42 @@ function generateSeedQuestions(seqCounter) {
     'Punjab': 'Bhagwant Mann',
     'Rajasthan': 'Bhajan Lal Sharma',
     'Sikkim': 'Prem Singh Tamang',
-    'Tamil Nadu': 'M. K. Stalin',
+    'Tamil Nadu': 'C Joseph Vijay',
     'Telangana': 'Revanth Reddy',
     'Tripura': 'Manik Saha',
     'Uttar Pradesh': 'Yogi Adityanath',
     'Uttarakhand': 'Pushkar Singh Dhami',
-    'West Bengal': 'Mamata Banerjee'
+    'West Bengal': 'Suvendu Adhikari'
   };
   var stateGovs = {
     'Andhra Pradesh': 'S. Abdul Nazeer',
     'Arunachal Pradesh': 'Kaiwalya Trivikram Parnaik',
     'Assam': 'Lakshman Prasad Acharya',
-    'Bihar': 'Rajendra Arlekar',
+    'Bihar': 'Syed Ata Hasnain',
     'Chhattisgarh': 'Ramen Deka',
-    'Goa': 'P. S. Sreedharan Pillai',
+    'Goa': 'Pusapati Ashok Gajapathi Raju',
     'Gujarat': 'Acharya Devvrat',
-    'Haryana': 'Bandaru Dattatreya',
-    'Himachal Pradesh': 'Shiv Pratap Shukla',
-    'Jharkhand': 'C. P. Radhakrishnan',
+    'Haryana': 'Ashim Kumar Ghosh',
+    'Himachal Pradesh': 'Kavinder Gupta',
+    'Jharkhand': 'Santosh Kumar Gangwar',
     'Karnataka': 'Thawar Chand Gehlot',
-    'Kerala': 'Arif Mohammad Khan',
+    'Kerala': 'Rajendra Vishwanath Arlekar',
     'Madhya Pradesh': 'Mangubhai C. Patel',
-    'Maharashtra': 'C. P. Radhakrishnan',
-    'Manipur': 'Lakshman Prasad Acharya',
+    'Maharashtra': 'Jishnu Dev Varma',
+    'Manipur': 'Ajay Kumar Bhalla',
     'Meghalaya': 'C. H. Vijayashankar',
-    'Mizoram': 'Hari Babu Kambhampati',
-    'Nagaland': 'La. Ganesan',
-    'Odisha': 'Raghubar Das',
+    'Mizoram': 'V. K. Singh',
+    'Nagaland': 'Nand Kishore Yadav',
+    'Odisha': 'Kambhampati Hari Babu',
     'Punjab': 'Gulab Chand Kataria',
     'Rajasthan': 'Haribhau Kisanrao Bagade',
     'Sikkim': 'Om Prakash Mathur',
-    'Tamil Nadu': 'R. N. Ravi',
-    'Telangana': 'Jishnu Dev Varma',
+    'Tamil Nadu': 'Rajendra Vishwanath Arlekar',
+    'Telangana': 'Shiv Pratap Shukla',
     'Tripura': 'N. Indrasena Reddy',
     'Uttar Pradesh': 'Anandiben Patel',
     'Uttarakhand': 'Gurmit Singh',
-    'West Bengal': 'C. V. Ananda Bose'
+    'West Bengal': 'R. N. Ravi'
   };
 
   Object.keys(stateCMs).forEach(function(state) {
@@ -334,12 +349,18 @@ async function main() {
     }
   });
 
+  // Remove outdated seed (CM/Gov) questions before regenerating
+  var eventQuestions = existing[PIB_KEY].subSubjects['State Affairs'].filter(function(q) {
+    return q.id.indexOf('_cm_') < 0 && q.id.indexOf('_gov_') < 0;
+  });
+  var removedCount = existing[PIB_KEY].subSubjects['State Affairs'].length - eventQuestions.length;
+
   var existingKeys = {};
-  existing[PIB_KEY].subSubjects['State Affairs'].forEach(function(q) {
+  eventQuestions.forEach(function(q) {
     existingKeys[eventKey(q)] = true;
   });
 
-  // Phase 1: Add seed CM and Governor questions
+  // Phase 1: Generate fresh CM and Governor questions
   var seedQuestions = generateSeedQuestions(seqCounter);
   var newQuestions = [];
   seedQuestions.forEach(function(q) {
@@ -349,6 +370,8 @@ async function main() {
       existingKeys[key] = true;
     }
   });
+
+  console.error('Removed ' + removedCount + ' outdated seed questions');
 
   // Phase 2: Check Wikipedia current events for Indian state content
   var now = new Date();
@@ -385,7 +408,7 @@ async function main() {
 
     daySections[0].events.forEach(function(ev) {
       var score = scoreStateEvent(ev.text, ev.entity);
-      if (score < 2) return;
+      if (score < 0) return;
       var key = eventKey(ev);
       if (!existingKeys[key]) {
         seqCounter.event = (seqCounter.event || 0) + 1;
@@ -395,6 +418,7 @@ async function main() {
     });
   }
 
+  existing[PIB_KEY].subSubjects['State Affairs'] = eventQuestions;
   newQuestions.forEach(function(q) { existing[PIB_KEY].subSubjects['State Affairs'].push(q); });
 
   var total = existing[PIB_KEY].subSubjects['State Affairs'].length;
