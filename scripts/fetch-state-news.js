@@ -492,12 +492,67 @@ async function main() {
     });
   }
 
+  // Phase 3: Wikipedia India year page (dense state-level coverage)
+  async function fetchIndiaYearEvents(year) {
+    var page = year + '_in_India';
+    var url = API + '?action=parse&page=' + encodeURIComponent(page) + '&prop=text&format=json';
+    var data;
+    try { data = await fetchJSON(url); } catch (e) { return []; }
+    if (!data || !data.parse || !data.parse.text) return [];
+    var html = data.parse.text['*'] || '';
+    var results = [];
+    var monthRe = /<h3 id="(January|February|March|April|May|June|July|August|September|October|November|December)">\1<\/h3>[\s\S]*?<\/span><\/div>([\s\S]*?)(?=<div class="mw-heading|<h[23]|$)/g;
+    var mm;
+    while ((mm = monthRe.exec(html)) !== null) {
+      var heading = mm[1].trim();
+      var monthIdx = MONTHS.indexOf(heading);
+      if (monthIdx < 0) continue;
+      var monthNum = monthIdx + 1;
+      var content = mm[2];
+      var liRe = /<li>(.*?)<\/li>/g;
+      var lm;
+      while ((lm = liRe.exec(content)) !== null) {
+        var liHtml = lm[1];
+        // Skip parent <li> that wrap sub-lists (they end with </li> but contain <ul>)
+        if (liHtml.indexOf('<ul') >= 0) continue;
+        var liText = stripHtml(liHtml);
+        var dateRe = /^(\d{1,2})\s*(?:January|February|March|April|May|June|July|August|September|October|November|December)?\s*(?:\d{4})?\s*[–-]\s*/;
+        var dm = liText.match(dateRe);
+        var day = dm ? parseInt(dm[1], 10) : 15;
+        var desc = dm ? liText.substring(dm[0].length) : liText;
+        var entity = extractEntity(liHtml);
+        if (desc.length > 30 && desc.length < 500) {
+          results.push({ text: desc, entity: entity || 'India', year: year, month: monthNum, day: day });
+        }
+      }
+    }
+    return results;
+  }
+
+  var yearEvents = await fetchIndiaYearEvents(cy);
+  if (yearEvents.length < 30) {
+    var prevEvents = await fetchIndiaYearEvents(cy - 1);
+    yearEvents = yearEvents.concat(prevEvents);
+  }
+  var yearAdded = 0;
+  yearEvents.forEach(function(ev) {
+    var score = scoreStateEvent(ev.text, ev.entity);
+    if (score < 0) return;
+    var key = eventKey(ev);
+    if (!existingKeys[key]) {
+      seqCounter.event = (seqCounter.event || 0) + 1;
+      newQuestions.push(makeQuestion(ev, seqCounter.event));
+      existingKeys[key] = true;
+      yearAdded++;
+    }
+  });
+
   existing[PIB_KEY].subSubjects['State Affairs'] = eventQuestions;
   newQuestions.forEach(function(q) { existing[PIB_KEY].subSubjects['State Affairs'].push(q); });
 
   var total = existing[PIB_KEY].subSubjects['State Affairs'].length;
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
-  console.error('State Affairs: ' + total + ' total questions, ' + newQuestions.length + ' new');
+  console.error('State Affairs: ' + total + ' total, ' + newQuestions.length + ' new (' + yearAdded + ' from India year page)');
 }
 
 main().catch(function(err) {
