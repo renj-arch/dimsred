@@ -4,7 +4,16 @@ const https = require('https');
 
 // Global rate limiter — enforces minimum gap between all API calls
 let lastRequestTime = 0;
+let firstRequest = true;
 async function rateLimit(minGapMs = 1500) {
+  // Warm-up delay on first ever call: give IP a cooldown from previous workflow runs
+  if (firstRequest) {
+    firstRequest = false;
+    console.log(`  🕐 initial cooldown 15s...`);
+    await new Promise(r => setTimeout(r, 15000));
+    lastRequestTime = Date.now();
+    return;
+  }
   const now = Date.now();
   const elapsed = now - lastRequestTime;
   if (elapsed < minGapMs) {
@@ -13,17 +22,17 @@ async function rateLimit(minGapMs = 1500) {
   lastRequestTime = Date.now();
 }
 
-async function httpGet(url, retries = 5) {
-  await rateLimit(1000);
+async function httpGet(url, retries = 8) {
+  await rateLimit(2000);
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const result = await new Promise((resolve, reject) => {
-        const req = https.get(url, { headers: { 'User-Agent': 'studypro-wiki/1.0 (gk-bot)' } }, res => {
+        const req = https.get(url, { headers: { 'User-Agent': 'studypro-wiki/1.0 (gk-bot; contact: bot@vlymbooq.qzz.io)' } }, res => {
           let d = '';
           res.on('data', c => d += c);
           res.on('end', () => {
             if (res.statusCode === 429) return reject(Object.assign(new Error(d.slice(0, 200)), { status: 429 }));
-            if (res.statusCode >= 400) return reject(new Error(d.slice(0, 200)));
+            if (res.statusCode >= 400) return reject(Object.assign(new Error(d.slice(0, 200)), { status: res.statusCode }));
             resolve(JSON.parse(d));
           });
         });
@@ -32,9 +41,9 @@ async function httpGet(url, retries = 5) {
       });
       return result;
     } catch (e) {
-      if (e.status === 429 && attempt < retries) {
-        const wait = Math.min((attempt + 1) * 2000, 30000);
-        console.log(`  ⏳ rate limited, waiting ${wait/1000}s...`);
+      if (attempt < retries && (e.status === 429 || (e.status >= 500 && e.status <= 599))) {
+        const wait = Math.min((attempt + 1) * 3000 + Math.floor(Math.random() * 2000), 120000);
+        console.log(`  ⏳ retry ${attempt+1}/${retries} (${e.status || 'err'}), waiting ${Math.round(wait/1000)}s...`);
         await new Promise(r => setTimeout(r, wait));
         continue;
       }
@@ -84,23 +93,23 @@ async function titlesToQids(titles) {
   return map;
 }
 
-async function httpPost(url, data, retries = 5) {
+async function httpPost(url, data, retries = 8) {
   const postData = typeof data === 'string' ? data : new URLSearchParams(data).toString();
-  await rateLimit(1000);
+  await rateLimit(2000);
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const result = await new Promise((resolve, reject) => {
         const parsed = new URL(url);
         const opts = {
           hostname: parsed.hostname, path: parsed.pathname, method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Content-Length': Buffer.byteLength(postData), 'User-Agent': 'studypro-wiki/1.0 (gk-bot)' }
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Content-Length': Buffer.byteLength(postData), 'User-Agent': 'studypro-wiki/1.0 (gk-bot; contact: bot@vlymbooq.qzz.io)' }
         };
         const req = https.request(opts, res => {
           let d = '';
           res.on('data', c => d += c);
           res.on('end', () => {
             if (res.statusCode === 429) return reject(Object.assign(new Error(d.slice(0, 200)), { status: 429 }));
-            if (res.statusCode >= 400) return reject(new Error(d.slice(0, 200)));
+            if (res.statusCode >= 400) return reject(Object.assign(new Error(d.slice(0, 200)), { status: res.statusCode }));
             resolve(JSON.parse(d));
           });
         });
@@ -111,9 +120,9 @@ async function httpPost(url, data, retries = 5) {
       });
       return result;
     } catch (e) {
-      if (e.status === 429 && attempt < retries) {
-        const wait = Math.min((attempt + 1) * 2000, 30000);
-        console.log(`  ⏳ SPARQL rate limited, waiting ${wait/1000}s...`);
+      if (attempt < retries && (e.status === 429 || (e.status >= 500 && e.status <= 599))) {
+        const wait = Math.min((attempt + 1) * 3000 + Math.floor(Math.random() * 2000), 120000);
+        console.log(`  ⏳ SPARQL retry ${attempt+1}/${retries} (${e.status || 'err'}), waiting ${Math.round(wait/1000)}s...`);
         await new Promise(r => setTimeout(r, wait));
         continue;
       }
