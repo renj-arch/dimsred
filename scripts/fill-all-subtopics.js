@@ -12,7 +12,7 @@ const BUILD_SCRIPT = path.join(__dirname, 'build-archive.js');
 const CAT_QUERIES = {
   'Indian History': 'History of India,Indian independence movement,Ancient India,Medieval India,Mughal Empire,Maratha Empire,British Raj,Gupta Empire,Chola dynasty,Vijayanagara Empire,Delhi Sultanate,Harsha,Pallava dynasty,Bhakti movement,Sikhism,Indo-Greek,Sangam period',
   'World History': 'World history,Ancient civilization,World war,Industrial Revolution,Cold War,Renaissance,Byzantine Empire,Ottoman Empire,Mongol Empire,Age of Exploration,Decolonization,World War I,World War II,Islamic Golden Age,Human rights,Mongol Empire',
-  'Art & Culture': 'Culture of India,Indian classical music,Indian dance,Indian architecture,UNESCO India',
+  'Art & Culture': 'Culture of India,Indian classical music,Indian dance,Indian architecture,UNESCO India,Foreign artists in India,Orientalist painters India,Taj Mahal paintings,Indian sculpture,Indian handicrafts,Indian folk art,Indian theatre,Indian puppetry,Indian fairs,Indian textiles,Indian epigraphy,Indian numismatics',
   Polity: 'Politics of India,Indian constitution,Indian government,Election India,Supreme Court India',
   'Indian Economy': 'Economy of India,Indian budget,RBI,Indian banking,GST India,Make in India',
   Geography: 'Geography of India,Climate of India,Indian monsoon,Rivers of India,Soil India',
@@ -37,6 +37,11 @@ const CAT_QUERIES = {
   Ethics: 'Ethics,Ethical theory,Applied ethics,Business ethics,Medical ethics',
   Announcements: 'Union budget of India,Government of India announcement,Cabinet decision India',
   'RBI Press Releases': 'Reserve Bank of India,RBI monetary policy,Indian banking regulation',
+  'Indian Railways': 'Indian Railways,Rail transport in India,List of railway stations in India,High-speed rail in India,Railway budget of India',
+  'Indian Cinema': 'Cinema of India,Bollywood,Indian film industry,List of highest-grossing Indian films,Dadasaheb Phalke Award',
+  'Cyber Security': 'Cybercrime in India,Indian Computer Emergency Response Team,Information Technology Act 2000,National Cyber Security Policy 2013',
+  'SDGs & Development': 'Sustainable Development Goals,Millennium Development Goals,Sustainable Development Goals and India,NITI Aayog',
+  'Indian Tribes': 'Scheduled Tribes,List of Scheduled Tribes in India,Particularly vulnerable tribal group,Tribal communities of India',
 };
 
 // ── Sub-subject keyword matchers (compact) ──
@@ -154,12 +159,18 @@ const SUB_KEYWORDS = {
   },
   'Art & Culture': {
     'Classical Dance': ['classical dance', 'bharatanatyam', 'kathak', 'kathakali', 'kuchipudi', 'odissi', 'manipuri', 'mohiniyattam', 'sattriya'],
-    'Music': ['indian music', 'hindustani', 'carnatic', 'raga', 't tabla', 'sitar', 'sarode', 'veena'],
-    'Paintings & Sculpture': ['indian painting', 'madhubani', 'warli', 'pattachitra', 'ajanta painting', 'miniature'],
-    'Architecture': ['indian architecture', 'indo islamic', 'nagara', 'dravida', 'stupa', 'temple architecture'],
+    'Folk Dances': ['folk dance india', 'bhangra', 'garba', 'dandiya', 'bihu dance', 'chhau dance', 'ghoomar', 'kalbelia', 'rouff', 'hikat', 'karma dance', 'veethi natakam'],
+    'Music': ['indian music', 'hindustani', 'carnatic', 'raga', 'tabla', 'sitar', 'sarod', 'veena'],
+    'Paintings & Sculpture': ['indian painting', 'madhubani', 'warli', 'pattachitra', 'ajanta painting', 'miniature', 'mughal painting', 'rajput painting', 'company painting', 'bengal school painting', 'indian sculpture', 'chola bronze', 'mauryan sculpture', 'gupta sculpture', 'bronze sculpture india', 'stone carving india'],
+    'Architecture': ['indian architecture', 'indo islamic', 'nagara temple', 'dravida temple', 'vesara style', 'stupa', 'temple architecture', 'hoysala architecture', 'vijayanagara architecture', 'rock cut architecture india', 'cave architecture india', 'indo saracenic', 'colonial architecture india'],
     'UNESCO Sites': ['unesco world heritage', 'unesco site india'],
-    'Fairs & Festivals': ['indian festival', 'diwali', 'holi', 'eid', 'pongal', 'durga puja', 'fair india'],
+    'UNESCO Intangible Heritage': ['unesco intangible', 'intangible cultural heritage india', 'kumbh mela', 'vedic chanting', 'ramlila', 'kalbelia folk', 'chhau dance'],
+    'Fairs & Festivals': ['indian festival', 'diwali', 'holi', 'eid', 'pongal', 'durga puja', 'fair india', 'pushkar fair', 'sonepur fair', 'kumbh mela', 'goa carnival', 'surajkund mela'],
+    'Folk Theatre & Puppetry': ['indian folk theatre', 'yakshagana', 'bhavai', 'nautanki', 'tamasha theatre', 'jatra theatre', 'therukoothu', 'indian puppetry', 'string puppet india', 'shadow puppet india', 'glove puppet india', 'rod puppet india', 'bommalattam'],
+    'Handicrafts & Handlooms': ['indian handicraft', 'indian handloom', 'indian textile', 'carpet india', 'chikankari', 'kantha embroidery', 'banarasi saree', 'pashmina shawl', 'metal craft india', 'wood carving india', 'stone carving india', 'indian jewellery', 'bidriware', 'channapatna toy', 'sankheda furniture'],
     'Language & Literature': ['indian language', 'sanskrit', 'tamil', 'hindi', 'bengali', 'indian literature', 'veda', 'epic'],
+    'Foreign Artists & Travellers': ['foreign artist india', 'orientalist painter', 'taj mahal painting', 'european painter india', 'traveller india', 'thomas daniell', 'william hodges'],
+    'Indian Epigraphy & Numismatics': ['indian epigraphy', 'inscription india', 'ashoka edict', 'pillar edict', 'copper plate india', 'rock edict india', 'indian coinage', 'indian numismatic', 'punch marked coin', 'gupta coin', 'indian seal', 'indian currency history', 'silver coin india', 'gold coin india'],
   },
   Polity: {
     'Constitution Framework & Philosophy': ['constitution founding', 'constituent assembly', 'constitution making', 'philosophy constitution'],
@@ -363,6 +374,31 @@ const SUB_KEYWORDS = {
     'Banking Regulation': ['banking regulation', 'rbi circular', 'bank license', 'capital adequacy'],
     'Financial Stability': ['financial stability', 'rbi report', 'financial sector', 'bank health'],
   },
+  'Indian Railways': {
+    'Indian Railways Overview': ['indian railways', 'rail transport india', 'railway station india', 'train india', 'rail budget'],
+    'Trains & Locomotives': ['express train', 'rajdhani', 'shatabdi', 'vande bharat', 'locomotive', 'railway zone'],
+    'Railway Infrastructure': ['railway bridge', 'railway tunnel', 'mountain railway', 'unesco railway', 'railway platform'],
+  },
+  'Indian Cinema': {
+    'Film History & Milestones': ['first indian film', 'first talkie', 'first colour film', 'indian cinema history', 'dadasaheb phalke'],
+    'Film Industry & Awards': ['bollywood', 'tollywood', 'kollywood', 'national film award', 'dadasaheb phalke award', 'film industry india'],
+    'Major Films & Personalities': ['highest-grossing indian film', 'satyajit ray', 'raj kapoor', 'amitabh bachchan'],
+  },
+  'Cyber Security': {
+    'Cyber Laws & Policies': ['information technology act', 'cyber law india', 'cyber security policy', 'cert-in', 'cyber crime india'],
+    'Cyber Threats & Defence': ['malware', 'ransomware', 'phishing', 'cyber attack', 'cyber security', 'hacker'],
+    'Cyber Infrastructure & Agencies': ['cyber crime investigation', 'national cyber security', 'cyber swachhta', 'defence cyber'],
+  },
+  'SDGs & Development': {
+    'Sustainable Development Goals': ['sustainable development goal', 'sdg 1', 'sdg 2', 'sdg 3', 'millennium development goal'],
+    'India and SDGs': ['sdg india', 'niti aayog sdg', 'india sdg index', 'sustainable development india'],
+    'Climate Action & Environment': ['climate change india', 'paris agreement', 'unfccc', 'national action plan climate'],
+  },
+  'Indian Tribes': {
+    'Scheduled Tribes Overview': ['scheduled tribe', 'article 342', 'ministry tribal', 'tribal population india', 'fifth schedule'],
+    'Major Tribal Groups': ['gond tribe', 'bhil tribe', 'santhal', 'toda', 'jarawa', 'sentinelese', 'warli', 'khasi'],
+    'Tribal Rights & Welfare': ['forest rights act', 'pesa act', 'pvtg', 'tribal rights', 'national commission scheduled tribe'],
+  },
 };
 
 // ── Helpers ──
@@ -413,6 +449,7 @@ function classifySubSubject(category, title, questionText, answer) {
   const subMap = SUB_KEYWORDS[category];
   if (!subMap) return null;
   const text = (title + ' ' + questionText + ' ' + answer).toLowerCase();
+  const cleanTitle = title.replace(/_/g, ' ').toLowerCase().trim();
   const matches = [];
   for (const [ss, keywords] of Object.entries(subMap)) {
     let score = 0;
@@ -420,6 +457,10 @@ function classifySubSubject(category, title, questionText, answer) {
       if (text.includes(kw)) score++;
     }
     if (score > 0) matches.push({ ss, score });
+    // Exact title match fallback: if article title matches sub-topic name, give it 1 point
+    if (ss.toLowerCase().trim() === cleanTitle) {
+      if (matches.every(m => m.ss !== ss)) matches.push({ ss, score: 1 });
+    }
   }
   matches.sort((a, b) => b.score - a.score);
   return matches.length > 0 ? matches[0].ss : null;
@@ -626,6 +667,7 @@ async function main() {
     'Indian Economy', 'Geography', 'Defence', 'Environment & Ecology',
     'ISRO & Space', 'Sports', 'Society', 'Personalities', 'Awards',
     'Business & Economy', 'Ethics', 'Announcements',
+    'Indian Railways', 'Indian Cinema', 'Cyber Security', 'SDGs & Development', 'Indian Tribes',
   ];
   const sortedEntries = priorityOrder.map(c => [c, CAT_QUERIES[c]]).filter(e => e[1]);
   for (const [category, queriesStr] of sortedEntries) {

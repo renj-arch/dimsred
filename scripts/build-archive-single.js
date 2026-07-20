@@ -64,7 +64,9 @@ const CAT_ICONS = {
   'Indian National Symbols':'🇮🇳','Agriculture & Food':'🌾',
   'Health & Medicine':'🏥','Computer & IT':'💻','Constitution':'📜',
   'Railways & Transport':'🚆','Energy & Power':'⚡',
-  'General':'📌','Announcements':'📢'
+  'General':'📌','Announcements':'📢',
+  'Indian Railways':'🚆','Indian Cinema':'🎬','Cyber Security':'🛡️',
+  'SDGs & Development':'🎯','Indian Tribes':'👥'
 };
 
 // Group questions by category → subject → subSubject
