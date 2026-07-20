@@ -230,7 +230,7 @@ const CAT_MAP = {
   'wiki-corridor.json': 'corridor',
   'wiki-writer.json': 'writer',
   'wiki-reformer.json': 'reformer',
-  'wiki-country.json': 'country',
+  // 'wiki-country.json': 'country',  // skipped: dedup removes all entries causing add/remove cycle
   'wiki-philosopher.json': 'philosopher',
   'wiki-artist.json': 'artist',
   'wiki-architect.json': 'architect',
