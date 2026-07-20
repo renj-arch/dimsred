@@ -28,6 +28,81 @@ function stripHtml(html) { return html.replace(/<[^>]+>/g, '').trim(); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
 var INDIAN_STATE_NAMES = ['Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Delhi','Jammu and Kashmir','Ladakh','Puducherry'];
+var INDIAN_STATE_RE = new RegExp('\\b(?:' + INDIAN_STATE_NAMES.join('|') + ')\\b', 'i');
+
+var STATE_ABBREVIATIONS = {
+  AP:'Andhra Pradesh',AR:'Arunachal Pradesh',AS:'Assam',BR:'Bihar',CG:'Chhattisgarh',
+  GA:'Goa',GJ:'Gujarat',HR:'Haryana',HP:'Himachal Pradesh',JH:'Jharkhand',
+  KA:'Karnataka',KL:'Kerala',MP:'Madhya Pradesh',MH:'Maharashtra',MN:'Manipur',
+  ML:'Meghalaya',MZ:'Mizoram',NL:'Nagaland',OD:'Odisha',PB:'Punjab',
+  RJ:'Rajasthan',SK:'Sikkim',TN:'Tamil Nadu',TG:'Telangana',TR:'Tripura',
+  UP:'Uttar Pradesh',UK:'Uttarakhand',WB:'West Bengal',DL:'Delhi',
+  JK:'Jammu and Kashmir',LA:'Ladakh',PY:'Puducherry'
+};
+
+var CITY_TO_STATE = {
+  mumbai:'Maharashtra',pune:'Maharashtra',nagpur:'Maharashtra',thane:'Maharashtra',navi_mumbai:'Maharashtra',
+  delhi:'Delhi',new_delhi:'Delhi',
+  bengaluru:'Karnataka',bangalore:'Karnataka',mysuru:'Karnataka',mysore:'Karnataka',mangaluru:'Karnataka',mangalore:'Karnataka',
+  chennai:'Tamil Nadu',madras:'Tamil Nadu',coimbatore:'Tamil Nadu',madurai:'Tamil Nadu',
+  hyderabad:'Telangana',secunderabad:'Telangana',
+  kolkata:'West Bengal',calcutta:'West Bengal',howrah:'West Bengal',
+  ahmedabad:'Gujarat',surat:'Gujarat',vadodara:'Gujarat',rajkot:'Gujarat',gandhinagar:'Gujarat',
+  jaipur:'Rajasthan',jodhpur:'Rajasthan',udaipur:'Rajasthan',
+  lucknow:'Uttar Pradesh',kanpur:'Uttar Pradesh',varanasi:'Uttar Pradesh',agra:'Uttar Pradesh',prayagraj:'Uttar Pradesh',allahabad:'Uttar Pradesh',noida:'Uttar Pradesh',ghaziabad:'Uttar Pradesh',
+  patna:'Bihar',gaya:'Bihar',
+  bhopal:'Madhya Pradesh',indore:'Madhya Pradesh',gwalior:'Madhya Pradesh',ujjain:'Madhya Pradesh',
+  chandigarh:'Chandigarh',mohali:'Chandigarh',
+  thiruvananthapuram:'Kerala',kochi:'Kerala',kozhikode:'Kerala',
+  guwahati:'Assam',
+  bhubaneswar:'Odisha',cuttack:'Odisha',puri:'Odisha',
+  ranchi:'Jharkhand',jamshedpur:'Jharkhand',
+  dehradun:'Uttarakhand',haridwar:'Uttarakhand',
+  srinagar:'Jammu and Kashmir',jammu:'Jammu and Kashmir',
+  shimla:'Himachal Pradesh',dharamshala:'Himachal Pradesh',
+  imphal:'Manipur',itanagar:'Arunachal Pradesh',kohima:'Nagaland',shillong:'Meghalaya',agartala:'Tripura',
+  gangtok:'Sikkim',aizawl:'Mizoram',panaji:'Goa',pondicherry:'Puducherry',puducherry:'Puducherry',
+  amritsar:'Punjab',ludhiana:'Punjab',vijayawada:'Andhra Pradesh',visakhapatnam:'Andhra Pradesh'
+};
+
+var ABBREV_RE = new RegExp('\\b(' + Object.keys(STATE_ABBREVIATIONS).join('|') + ')\\b', 'i');
+var CITY_RE = new RegExp('\\b(' + Object.keys(CITY_TO_STATE).join('|') + ')\\b', 'i');
+var SHORT_NAMES = ['Bengal','Mizo','Naga','Bodo','Garhwal','Kumaon','Marathwada','Vidarbha','Konkan','Saurashtra','Kutch','Malabar','Kannada','Telugu','Tamil','Gujarati','Punjabi','Assamese','Oriya','Odia','Bihari','Haryanvi','Rajasthani','Goan','Manipuri'];
+
+function makeShortRe() {
+  var esc = SHORT_NAMES.map(function(s) { return s.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); });
+  return new RegExp('\\b(?:' + esc.join('|') + ')\\b', 'i');
+}
+var SHORT_RE = makeShortRe();
+
+function textAlias(text) {
+  var t = text.toLowerCase();
+  var m = t.match(CITY_RE);
+  if (m) return CITY_TO_STATE[m[1].toLowerCase().replace(/\s+/g,'_')];
+  if (SHORT_RE.test(t)) return true;
+  return false;
+}
+
+function entityAlias(entity) {
+  var e = entity.toLowerCase();
+  var m = e.match(ABBREV_RE);
+  if (m) return STATE_ABBREVIATIONS[m[1].toUpperCase()];
+  if (SHORT_RE.test(e)) return true;
+  return false;
+}
+
+function detectState(text, entity) {
+  var t = text.toLowerCase();
+  var e = entity.toLowerCase();
+  if (INDIAN_STATE_RE.test(t)) return true;
+  for (var i = 0; i < INDIAN_STATE_NAMES.length; i++) {
+    var esc = INDIAN_STATE_NAMES[i].toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    if (new RegExp('\\b' + esc + '\\b').test(e)) return true;
+  }
+  if (textAlias(t)) return true;
+  if (entityAlias(e)) return true;
+  return false;
+}
 
 function extractEntity(eventHtml) {
   var linkRe = /<a[^>]*href="\/wiki\/([^"#]+?)(?:#[^"]*)?"[^>]*>/g;
@@ -41,15 +116,14 @@ function extractEntity(eventHtml) {
   return links.length > 0 ? links[0] : '';
 }
 
-var INDIAN_STATE_RE = new RegExp('\\b(?:' + INDIAN_STATE_NAMES.join('|') + ')\\b', 'i');
-
 function scoreStateEvent(text, entity) {
   var t = text.toLowerCase();
   var e = entity.toLowerCase();
   var score = 0;
 
-  var hasIndia = /india/i.test(t) || /india/i.test(e);
-  var stateMatch = t.match(INDIAN_STATE_RE) || INDIAN_STATE_NAMES.some(function(s) { var esc = s.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); return new RegExp('\\b' + esc + '\\b').test(e); });
+  var body = t.replace(/\([^)]*\)/g, '').replace(/\s+/g, ' ').trim();
+  var hasIndia = /\bindia\b/i.test(body) || /\bindian\b/i.test(body) || /\bindia\b/i.test(e);
+  var stateMatch = t.match(INDIAN_STATE_RE) || detectState(t, e);
 
   if (!hasIndia && !stateMatch) return -100;
 
