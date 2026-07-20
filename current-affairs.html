@@ -241,7 +241,7 @@
                 <div class="streak" id="streakDisplay">🔥 <span id="streakNum">0</span> streak</div>
                 <button id="restartBtn" onclick="if(state.restartFn)state.restartFn()" style="display:none;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:.72em">↻ Restart</button>
             </div>
-            <div class="q-card" onclick="if(!event.target.closest('button,a,.q-hint,.action-btn'))toggleAutoPlay()">
+            <div class="q-card" onclick="if(!event.target.closest('button,a,.q-hint,.action-btn,#jumpRow,#jumpInput'))toggleAutoPlay()">
                 <div class="q-num" id="qNum"></div>
                 <div class="q-progress"><div class="fill" id="qProgress" style="width:0%"></div></div>
                 <div id="jumpRow" style="display:none;align-items:center;justify-content:center;gap:6px;margin-bottom:8px">
@@ -5315,6 +5315,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
 
         document.addEventListener('keydown', function(e) {
             if (!document.getElementById('qArea').classList.contains('active')) return;
+            if (document.activeElement && document.activeElement.id === 'jumpInput') return;
             if (e.key >= '1' && e.key <= '4') {
                 var opts = document.querySelectorAll('#optGrid .q-opt');
                 var idx = parseInt(e.key) - 1;
