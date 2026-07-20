@@ -24,8 +24,11 @@ function fetchJSON(url) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function stripHtml(html) { return html.replace(/<[^>]+>/g, ' ').replace(/\[.*?\]/g, '').replace(/\s+/g, ' ').trim(); }
-function eventKey(q) { return (q.question || q.text || '').substring(0, 80) + '|' + (q.answer || q.entity || ''); }
+function stripHtml(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function eventKey(q) {
+  var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); };
+  return n(q.question || q.text || '').substring(0, 80) + '|' + n(q.answer || q.entity || '');
+}
 
 function extractEntity(eventHtml) {
   var linkRe = /<a[^>]*href="\/wiki\/([^"#]+?)(?:#[^"]*)?"[^>]*>/g;
@@ -93,7 +96,7 @@ function parseDaySections(html) {
     var events = [];
     var liRe = /<li>(.*?)<\/li>/g;
     var lm;
-    while ((lm = liRe.exec(dayContent)) !== null) events.push({ text: stripHtml(lm[1]), html: lm[1] });
+      while ((lm = liRe.exec(dayContent)) !== null) { var t = stripHtml(lm[1]); if (t.indexOf('_____') >= 0 || t.indexOf('___') >= 0) continue; events.push({ text: t, html: lm[1] }); }
     if (events.length > 0) sections.push({ label: dayLabel, events: events });
   }
   if (sections.length === 0) {
@@ -105,7 +108,7 @@ function parseDaySections(html) {
       if (!dayLabel) continue;
       var events = [];
       var liRe = /<li>(.*?)<\/li>/g;
-      while ((lm = liRe.exec(content)) !== null) events.push({ text: stripHtml(lm[1]), html: lm[1] });
+      while ((lm = liRe.exec(content)) !== null) { var t = stripHtml(lm[1]); if (t.indexOf('_____') >= 0 || t.indexOf('___') >= 0) continue; events.push({ text: t, html: lm[1] }); }
       if (events.length > 0) sections.push({ label: dayLabel, events: events });
     }
   }

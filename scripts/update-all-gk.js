@@ -28,7 +28,7 @@ function fetch(url) {
   });
 }
 
-function stripHtml(html) { return html.replace(/<[^>]+>/g, '').trim(); }
+function stripHtml(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 function extractTableRows(wikiHtml) {
   let rows = [];

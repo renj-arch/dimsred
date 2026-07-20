@@ -25,7 +25,7 @@ function fetchJSON(url) {
 
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-function stripHtml(html) { return html.replace(/<[^>]+>/g, '').trim(); }
+function stripHtml(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 function extractEntity(eventHtml) {
   var linkRe = /<a[^>]*href="\/wiki\/([^"#]+?)(?:#[^"]*)?"[^>]*>/g;
@@ -101,7 +101,7 @@ function parseDaySections(html) {
     var lm;
     while ((lm = liRe.exec(dayContent)) !== null) {
       var txt = stripHtml(lm[1]);
-      if (txt.length > 40 && txt.length < 400) {
+      if (txt.length > 40 && txt.length < 400 && txt.indexOf('_____') === -1 && txt.indexOf('___') === -1) {
         var entity = extractEntity(lm[1]);
         if (entity) {
           events.push({ text: txt, entity: entity });
@@ -124,7 +124,7 @@ function parseDaySections(html) {
       var lm;
       while ((lm = liRe.exec(content)) !== null) {
         var txt = stripHtml(lm[1]);
-        if (txt.length > 40 && txt.length < 400) {
+        if (txt.length > 40 && txt.length < 400 && txt.indexOf('_____') === -1 && txt.indexOf('___') === -1) {
           var entity = extractEntity(lm[1]);
           if (entity) {
             events.push({ text: txt, entity: entity });
@@ -192,7 +192,8 @@ function makeQuestion(event, seq) {
 }
 
 function eventKey(ev) {
-  return (ev.question || ev.text || '').substring(0, 80) + '|' + (ev.answer || ev.entity || '');
+  var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); };
+  return n(ev.question || ev.text || '').substring(0, 80) + '|' + n(ev.answer || ev.entity || '');
 }
 
 function updateArchiveHtml(entryStr, total) {

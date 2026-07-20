@@ -24,7 +24,7 @@ function fetchJSON(url) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/\[.*?\]/g, '').replace(/\s+/g, ' ').trim(); }
+function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 var SUMMITS = [
   {
@@ -136,7 +136,8 @@ function makeQuestion(summit, qDef, value, factStr, seq) {
 }
 
 function eventKey(q) {
-  return (q.question || '').substring(0, 80) + '|' + (q.answer || '');
+  var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); };
+  return n(q.question || '').substring(0, 80) + '|' + n(q.answer || '');
 }
 
 async function main() {

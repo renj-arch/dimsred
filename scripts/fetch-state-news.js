@@ -24,7 +24,7 @@ function fetchJSON(url) {
 }
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
-function stripHtml(html) { return html.replace(/<[^>]+>/g, '').trim(); }
+function stripHtml(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
 var INDIAN_STATE_NAMES = ['Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Delhi','Jammu and Kashmir','Ladakh','Puducherry'];
@@ -185,7 +185,7 @@ function parseDaySections(html) {
     var lm;
     while ((lm = liRe.exec(dayContent)) !== null) {
       var txt = stripHtml(lm[1]);
-      if (txt.length > 40 && txt.length < 400) {
+      if (txt.length > 40 && txt.length < 400 && txt.indexOf('_____') === -1 && txt.indexOf('___') === -1) {
         var entity = extractEntity(lm[1]);
         if (entity) {
           events.push({ text: txt, entity: entity });
@@ -208,7 +208,7 @@ function parseDaySections(html) {
       var lm;
       while ((lm = liRe.exec(content)) !== null) {
         var txt = stripHtml(lm[1]);
-        if (txt.length > 40 && txt.length < 400) {
+        if (txt.length > 40 && txt.length < 400 && txt.indexOf('_____') === -1 && txt.indexOf('___') === -1) {
           var entity = extractEntity(lm[1]);
           if (entity) {
             events.push({ text: txt, entity: entity });
@@ -272,7 +272,8 @@ function makeQuestion(event, seq) {
 }
 
 function eventKey(q) {
-  return (q.question || q.text || '').substring(0, 80) + '|' + (q.answer || q.entity || '');
+  var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); };
+  return n(q.question || q.text || '').substring(0, 80) + '|' + n(q.answer || q.entity || '');
 }
 
 async function fetchMonthEvents(year, month) {
@@ -521,7 +522,7 @@ async function main() {
         var day = dm ? parseInt(dm[1], 10) : 15;
         var desc = dm ? liText.substring(dm[0].length) : liText;
         var entity = extractEntity(liHtml);
-        if (desc.length > 30 && desc.length < 500) {
+        if (desc.length > 30 && desc.length < 500 && desc.indexOf('_____') === -1 && desc.indexOf('___') === -1) {
           results.push({ text: desc, entity: entity || 'India', year: year, month: monthNum, day: day });
         }
       }

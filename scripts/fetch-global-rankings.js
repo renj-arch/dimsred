@@ -34,7 +34,7 @@ function fetchJSONWithRetry(url, retries) {
     throw err;
   });
 }
-function stripHtml(html) { return html.replace(/<[^>]+>/g, '').trim(); }
+function stripHtml(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
 function fetchPageContent(title) {
@@ -142,7 +142,8 @@ function makeRankingQuestion(index, rank, seq) {
 }
 
 function eventKey(q) {
-  return (q.question || '').substring(0, 80) + '|' + (q.answer || '');
+  var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); };
+  return n(q.question || '').substring(0, 80) + '|' + n(q.answer || '');
 }
 
 async function main() {

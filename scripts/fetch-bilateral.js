@@ -64,7 +64,10 @@ function makeQuestion(qText, answer, seq, source, emoji, fact) {
   };
 }
 
-function eventKey(q) { return (q.question || '').substring(0, 80) + '|' + (q.answer || ''); }
+function eventKey(q) {
+  var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); };
+  return n(q.question || '').substring(0, 80) + '|' + n(q.answer || '');
+}
 
 async function fetchRelations(existingKeys, newQuestions, seq) {
   console.error('\n--- Diplomatic Relations ---');

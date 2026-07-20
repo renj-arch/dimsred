@@ -23,7 +23,7 @@ function fetchJSON(url) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/\[.*?\]/g, '').replace(/\s+/g, ' ').trim(); }
+function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 var OFFICES = [
   { page: 'Chief_of_the_Army_Staff_(India)', label: 'Chief of the Army Staff', field: 'title', q: 'Who is the current Chief of the Army Staff (COAS) of India?', emoji: '\uD83C\uDFC1' },
@@ -113,7 +113,8 @@ function makeQuestion(office, name, seq) {
 }
 
 function eventKey(q) {
-  return (q.question || '').substring(0, 80) + '|' + (q.answer || '');
+  var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); };
+  return n(q.question || '').substring(0, 80) + '|' + n(q.answer || '');
 }
 
 async function main() {
