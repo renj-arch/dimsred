@@ -588,6 +588,36 @@ const SYLLABUS_GAPS = {
     'Badminton': ['badminton', 'thomas cup', 'uber cup', 'world championship badminton', 'p v sindhu'],
     'Kabaddi': ['kabaddi', 'pro kabaddi', 'asia kabaddi', 'world cup kabaddi'],
   },
+  'Sociology': {
+    // Paper 1 — Sociological Foundations
+    'Sociology as a Discipline': ['sociology discipline', 'scope sociology', 'sociological imagination', 'emergence sociology', 'sociology science'],
+    'Sociology & Other Social Sciences': ['sociology economics', 'sociology political science', 'sociology psychology', 'sociology anthropology', 'sociology history', 'sociology law'],
+    'Sociological Thinkers (Classical)': ['karl marx', 'emile durkheim', 'max weber', 'classical sociological theory', 'marxist theory', 'durkheim theory', 'weber theory'],
+    'Sociological Thinkers (Modern)': ['talcott parsons', 'robert merton', 'george simmel', 'vilfredo pareto', 'herbert blumer', 'c wright mills', 'peter berger', 'jurgen habermas', 'anthony giddens', 'pierre bourdieu'],
+    'Social Stratification': ['social stratification', 'social class', 'social status', 'social mobility', 'caste class power', 'inequality', 'gender stratification', 'ethnic stratification'],
+    'Social Structure & Institutions': ['social structure', 'social institution', 'family kinship', 'marriage religion', 'economy polity', 'education'],
+    'Family, Marriage & Kinship': ['family structure', 'marriage types', 'kinship system', 'descent pattern', 'patriarchy', 'matriarchy', 'nuclear family', 'joint family'],
+    'Religion & Society': ['religion sociology', 'religious institutions', 'secularization', 'religious pluralism', 'ritual', 'church sect cult'],
+    'Social Change & Development': ['social change theory', 'modernization', 'globalization', 'development sociology', 'social evolution', 'diffusion', 'social progress', 'sanskritization', 'westernization'],
+    'Social Movements': ['social movement theory', 'new social movements', 'collective action', 'protest movement', 'civil rights movement', 'environmental movement', 'women movement'],
+    'Research Methodology': ['sociological research', 'research method', 'quantitative research', 'qualitative research', 'survey research', 'participant observation', 'interview method', 'content analysis', 'sociological ethics'],
+    'Sociological Concepts': ['socialization', 'social control', 'social role', 'social norm', 'anomie', 'alienation', 'bureaucracy', 'power authority', 'ideology', 'culture socialization'],
+    // Paper 2 — Indian Society
+    'Indian Social Structure': ['caste system india', 'jati varna', 'caste hierarchy', 'dominant caste', 'sanskritization', 'de caste', 'class in india'],
+    'Tribal Society in India': ['tribe india', 'scheduled tribe', 'tribal community india', 'tribal economy', 'tribal religion', 'tribal kinship', 'assimilation tribe', 'particularly vulnerable tribal group'],
+    'Rural & Agrarian Society': ['village india', 'agrarian society', 'rural social structure', 'land tenure system', 'agrarian class', 'green revolution impact', 'rural development', 'panchayati raj'],
+    'Urban Society in India': ['urbanization india', 'city sociology', 'urban social structure', 'slum india', 'urban poor', 'migration urbanization', 'smart city', 'urban governance'],
+    'Family & Marriage in India': ['indian family', 'joint family india', 'marriage india', 'dowry system', 'hindu marriage', 'muslim marriage', 'family change india'],
+    'Caste & Politics': ['caste politics india', 'vote caste', 'caste party', 'caste reservation', 'mandal commission', 'dalit politics', 'other backward class'],
+    'Religion in India': ['religion india', 'hinduism', 'islam india', 'sikhism', 'christianity india', 'communalism', 'secularism india', 'religious pluralism india'],
+    'Indian Diaspora': ['indian diaspora', 'nri', 'overseas indian', 'diaspora policy', 'diaspora economy', 'diaspora identity'],
+    'Social Problems in India': ['poverty india', 'unemployment india', 'inequality india', 'corruption india', 'crime india', 'violence against women', 'child labour', 'human trafficking', 'homelessness'],
+    'Education & Society': ['education india', 'socialization education', 'educational inequality', 'right to education', 'higher education india', 'gurukul system', 'national education policy'],
+    'Gender & Society': ['gender inequality india', 'women empowerment', 'feminism', 'patriarchy india', 'gender development', 'women movement india', 'sexual harassment', 'women work'],
+    'Population & Demography': ['population india', 'demographic transition', 'population policy india', 'census india', 'fertility mortality', 'sex ratio', 'age structure india', 'demographic dividend'],
+    'Industrialisation & Labour': ['industrialization india', 'labour india', 'informal sector', 'trade union india', 'industrial relation', 'labour policy', 'gig economy india'],
+    'Globalisation & Indian Society': ['globalization india', 'impact globalization india', 'consumer culture india', 'media globalization', 'it revolution india', 'outsourcing india'],
+  },
 };
 // After processing all priorityOrder categories, the script auto-detects gaps
 // by comparing SYLLABUS_GAPS + existing SUB_KEYWORDS against quiz.json coverage.
