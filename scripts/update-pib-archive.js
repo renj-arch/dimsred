@@ -187,6 +187,7 @@ var TEMPLATES = {
 var TEMPLATE_SOURCE = {
   'PIB': 'According to the Press Information Bureau (PIB), ',
   'PIB_RSS': 'As per the Press Information Bureau, ',
+  'PIB_Regional': 'As per the Press Information Bureau regional office, ',
   'RBI': 'The Reserve Bank of India (RBI) has announced that ',
   'SEBI': 'The Securities and Exchange Board of India (SEBI) has ',
   'ISRO': 'The Indian Space Research Organisation (ISRO) has ',
@@ -448,7 +449,7 @@ function main() {
   });
 
   var pibItems = (feed.items || []).filter(function(i) {
-    return i.source === 'PIB' || i.source === 'PIB_RSS';
+    return i.source === 'PIB' || i.source === 'PIB_RSS' || i.source === 'PIB_Regional';
   });
 
   console.log('PIB items in feed: ' + pibItems.length);

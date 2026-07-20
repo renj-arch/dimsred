@@ -52,6 +52,38 @@ function timeLog(label) {
 
 var PIB_RSS_URL = 'https://www.pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3';
 var PIB_ENGLISH_URL = 'https://www.pib.gov.in/AllRelease.aspx?MenuId=4&lang=1&reg=3';
+
+var PIB_REGIONAL_FEEDS = [
+  { regid: 1,  name: 'Delhi', state: 'Delhi' },
+  { regid: 2,  name: 'Mumbai', state: 'Maharashtra' },
+  { regid: 4,  name: 'Hyderabad', state: 'Telangana' },
+  { regid: 5,  name: 'Chennai', state: 'Tamil Nadu' },
+  { regid: 6,  name: 'Chandigarh', state: 'Chandigarh' },
+  { regid: 7,  name: 'Kolkata', state: 'West Bengal' },
+  { regid: 8,  name: 'Bengaluru', state: 'Karnataka' },
+  { regid: 9,  name: 'Bhubaneswar', state: 'Odisha' },
+  { regid: 10, name: 'Ahmedabad', state: 'Gujarat' },
+  { regid: 11, name: 'Guwahati', state: 'Assam' },
+  { regid: 12, name: 'Thiruvananthapuram', state: 'Kerala' },
+  { regid: 13, name: 'Imphal', state: 'Manipur' },
+  { regid: 14, name: 'Mizoram', state: 'Mizoram' },
+  { regid: 15, name: 'Agartala', state: 'Tripura' },
+  { regid: 16, name: 'Gangtok', state: 'Sikkim' },
+  { regid: 17, name: 'Kohima', state: 'Nagaland' },
+  { regid: 18, name: 'Shillong', state: 'Meghalaya' },
+  { regid: 19, name: 'Itanagar', state: 'Arunachal Pradesh' },
+  { regid: 20, name: 'Vijayawada', state: 'Andhra Pradesh' },
+  { regid: 21, name: 'Lucknow', state: 'Uttar Pradesh' },
+  { regid: 22, name: 'Bhopal', state: 'Madhya Pradesh' },
+  { regid: 23, name: 'Jaipur', state: 'Rajasthan' },
+  { regid: 24, name: 'Patna', state: 'Bihar' },
+  { regid: 25, name: 'Ranchi', state: 'Jharkhand' },
+  { regid: 26, name: 'Shimla', state: 'Himachal Pradesh' },
+  { regid: 27, name: 'Raipur', state: 'Chhattisgarh' },
+  { regid: 28, name: 'Jammu', state: 'Jammu and Kashmir' },
+  { regid: 29, name: 'Dehradun', state: 'Uttarakhand' },
+  { regid: 30, name: 'Panaji', state: 'Goa' }
+];
 var RBI_RSS_URL = 'https://www.rbi.org.in/pressreleases_rss.xml';
 var SEBI_RSS_URL = 'https://www.sebi.gov.in/sebirss.xml';
 var SC_JUDGMENTS_RSS_URL = 'https://indiankanoon.org/feeds/latest/supremecourt/';
@@ -538,29 +570,64 @@ async function fetchWikiCurrentEvents() {
   }
 }
 
+async function fetchPIBRegional(regionalFeeds) {
+  var allItems = [];
+  async function fetchOne(reg) {
+    try {
+      var url = 'https://www.pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=' + reg.regid;
+      var feed = await parser.parseURL(url);
+      var items = (feed.items || []).slice(0, 15);
+      return items.map(function(item) {
+        var pubDate = item.pubDate ? new Date(item.pubDate) : new Date();
+        var title = (item.title || '').trim();
+        var desc = (item.contentSnippet || item.content || '').trim().slice(0, 500);
+        var region = extractRegion(title, desc) || reg.state;
+        return {
+          id: 'pib-reg-' + reg.regid + '-' + (item.guid || item.link || title),
+          title: title,
+          link: item.link || '',
+          description: desc,
+          category: categorizeItem(title, desc),
+          region: region,
+          pubDate: pubDate.toISOString(),
+          source: 'PIB_Regional',
+          _regName: reg.name
+        };
+      });
+    } catch (e) {
+      return [];
+    }
+  }
+  var results = await concurrentMap(regionalFeeds, fetchOne, 6);
+  results.forEach(function(r) { allItems = allItems.concat(r); });
+  return allItems;
+}
+
 async function fetchAll() {
   // Run all fetches in parallel using withTimeout
   timeLog('Starting parallel fetches');
   var results = await withTimeout(Promise.all([
     fetchEnglish().then(function(r) { timeLog('PIB English: ' + r.length + ' items'); return r; }),
     fetchRss().then(function(r) { timeLog('PIB RSS: ' + r.length + ' items'); return r; }),
+    fetchPIBRegional(PIB_REGIONAL_FEEDS).then(function(r) { timeLog('PIB Regional: ' + r.length + ' items'); return r; }),
     fetchRBI().then(function(r) { timeLog('RBI: ' + r.length + ' items'); return r; }),
     fetchSEBI().then(function(r) { timeLog('SEBI: ' + r.length + ' items'); return r; }),
     fetchSCJudgments().then(function(r) { timeLog('SC: ' + r.length + ' items'); return r; }),
     fetchISRO().then(function(r) { timeLog('ISRO: ' + r.length + ' items'); return r; }),
     fetchMEA().then(function(r) { timeLog('MEA: ' + r.length + ' items'); return r; }),
     fetchWikiCurrentEvents().then(function(r) { timeLog('Wiki: ' + r.length + ' items'); return r; })
-  ]), 120000, 'overall fetch');
+  ]), 180000, 'overall fetch');
   timeLog('All fetches completed');
 
   var englishItems = results[0];
   var rssItems = results[1];
-  var rbiItems = results[2];
-  var sebiItems = results[3];
-  var scItems = results[4];
-  var isroItems = results[5];
-  var meaItems = results[6];
-  var worldNewsItems = results[7];
+  var regionalItems = results[2];
+  var rbiItems = results[3];
+  var sebiItems = results[4];
+  var scItems = results[5];
+  var isroItems = results[6];
+  var meaItems = results[7];
+  var worldNewsItems = results[8];
 
   // Merge all items
   var seen = new Set();
@@ -577,6 +644,7 @@ async function fetchAll() {
 
   addItems(englishItems);
   addItems(rssItems);
+  addItems(regionalItems);
   addItems(rbiItems);
   addItems(sebiItems);
   addItems(scItems);
@@ -599,7 +667,7 @@ async function fetchAll() {
   function getSortScore(item) {
     var d = new Date(item.pubDate).getTime();
     var boost = 0;
-    if (item.source === 'PIB' || item.source === 'PIB_RSS') boost = 24 * 3600000;
+    if (item.source === 'PIB' || item.source === 'PIB_RSS' || item.source === 'PIB_Regional') boost = 24 * 3600000;
     else if (item.source === 'RBI' || item.source === 'ISRO' || item.source === 'MEA' || item.source === 'SC') boost = 18 * 3600000;
     else if (item.source === 'SEBI') boost = 12 * 3600000;
     return d + boost;
@@ -617,12 +685,10 @@ async function fetchAll() {
     catch(e) { existing = []; }
   }
 
-  // Filter existing: remove non-English, remove deprecated sources, re-categorize, strip links, rewrite all
+  // Filter existing: remove non-English, re-categorize, strip links, rewrite all
   existing = existing.filter(function(item) {
     if (!item.title) return false;
     if (!isEnglishText(item.title)) return false;
-    if (item.source === 'StateGov' || item.source === 'StateRSS' || item.source === 'DelhiGov') return false;
-    if (item.source && /Gov$/.test(item.source) && item.source !== 'StateGov') return false;
     item.link = '';
     item.category = categorizeItem(item.title, item.description || '');
     item.region = extractRegion(item.title, item.description || '');
