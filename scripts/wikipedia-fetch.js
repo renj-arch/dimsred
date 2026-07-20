@@ -14,7 +14,7 @@ async function rateLimit(minGapMs = 1500) {
 }
 
 async function httpGet(url, retries = 5) {
-  await rateLimit(400);
+  await rateLimit(1000);
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const result = await new Promise((resolve, reject) => {
@@ -86,7 +86,7 @@ async function titlesToQids(titles) {
 
 async function httpPost(url, data, retries = 5) {
   const postData = typeof data === 'string' ? data : new URLSearchParams(data).toString();
-  await rateLimit(400);
+  await rateLimit(1000);
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const result = await new Promise((resolve, reject) => {
