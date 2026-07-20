@@ -1138,6 +1138,145 @@ async function main() {
   }
   console.log('  Discovery scan complete. Auto-created sub-topics: ' + autoCreated.size);
 
+  // ── 4d. News Monitor: catch brand-new schemes/policies/acts before Wikipedia has them ──
+  console.log('\n=== News Monitor: scanning for new schemes, policies & acts ===');
+  // Targets: any govt initiative ending in Yojana/Mission/Abhiyan/Policy/Act/Bill
+  // or starting with Pradhan Mantri/National/Prime Minister/Central
+  const schemePatterns = [
+    /^(Pradhan\s*Mantri|National|Prime\s*Minister|Central|All\s*India)\s+\S/i,
+    /\b(Yojana|Mission|Abhiyan|Policy|Act\s*\d{4}|Bill\s*\d{4}|Scheme|Programme|Prakalp|Pariyojana|Kendra|Setu|Path|Sagar|Vikas)\s*$/i,
+    /(Jan\s*Dhan|Kisan|Shiksha|Swasthya|Krishi|Grameen|Shram|Yuva|Mahila|Bal|Jal|Vayu|Surya|Urja|Bharat)\s+\S*(Yojana|Mission|Abhiyan)/i,
+  ];
+  // Also monitor these Wikipedia categories for new articles
+  const watchCategories = [
+    'Government_schemes_in_India', 'Policies_of_India',
+    'Acts_of_the_Parliament_of_India', 'Indian_government_initiatives',
+    'Social_justice_programmes_of_India', 'Healthcare_in_India',
+    'Education_policy_in_India', 'Agriculture_policy_of_India',
+    'Energy_policy_of_India', 'Environment_law_in_India',
+  ];
+
+  // Fetch recent new pages from Wikipedia
+  const monitorUrl = `${WIKI_API}?action=query&list=recentchanges&rcnamespace=0&rcshow=!bot|!redirect&rctype=new&rclimit=100&format=json`;
+  try {
+    const monitorData = await fetchJSON(monitorUrl);
+    const newPages = (monitorData.query ? monitorData.query.recentchanges || [] : []).map(rc => rc.title).filter(Boolean);
+    console.log('  Wikipedia recent new pages: ' + newPages.length + ' checked');
+
+    for (const title of newPages) {
+      // Check if title matches any scheme pattern
+      const matches = schemePatterns.some(p => p.test(title));
+      if (!matches) continue;
+
+      // Determine best category based on title keywords
+      let targetCat = 'Govt Schemes';
+      const titleLow = title.toLowerCase();
+      if (titleLow.includes('health') || titleLow.includes('ayushman') || titleLow.includes('hospital') || titleLow.includes('disease')) targetCat = 'Health & Medicine';
+      else if (titleLow.includes('education') || titleLow.includes('school') || titleLow.includes('university')) targetCat = 'Society';
+      else if (titleLow.includes('agriculture') || titleLow.includes('farmer') || titleLow.includes('kisan') || titleLow.includes('irrigation')) targetCat = 'Agriculture & Food';
+      else if (titleLow.includes('energy') || titleLow.includes('power') || titleLow.includes('solar') || titleLow.includes('renewable')) targetCat = 'Environment & Ecology';
+      else if (titleLow.includes('tax') || titleLow.includes('budget') || titleLow.includes('finance') || titleLow.includes('bank')) targetCat = 'Indian Economy';
+      else if (titleLow.includes('rail') || titleLow.includes('road') || titleLow.includes('highway') || titleLow.includes('transport')) targetCat = 'Indian Railways';
+
+      const subMap = SUB_KEYWORDS[targetCat];
+      if (!subMap) continue;
+
+      // Check if a sub-topic with similar name already exists
+      const cleanTitle = title.replace(/\s*\([^)]*\)\s*/g, '').trim();
+      if (cleanTitle.length < 5) continue;
+      const titleLowClean = cleanTitle.toLowerCase();
+      const exists = Object.keys(subMap).some(existing => {
+        const e = existing.toLowerCase();
+        return e === titleLowClean || e.includes(titleLowClean) || titleLowClean.includes(e);
+      });
+      if (exists) continue;
+
+      // Fetch the article
+      const extUrl = `${WIKI_API}?action=query&prop=extracts|description&exintro&explaintext&titles=${encodeURIComponent(title)}&format=json`;
+      const extData = await fetchJSON(extUrl);
+      const pages = extData.query ? extData.query.pages : {};
+      const page = Object.values(pages).find(p => p && p.title && !p.missing);
+      if (!page || !page.extract || page.extract.length < 50) continue;
+
+      // Create the sub-topic + generate questions
+      subMap[cleanTitle] = [titleLowClean, title.toLowerCase(), ...cleanTitle.toLowerCase().split(' ').filter(w => w.length > 3).slice(0, 4)];
+      const qs = generateQuestions([{ title: page.title, extract: page.extract, description: page.description || '' }], targetCat);
+      let added = 0;
+      for (const q of qs) {
+        q.subSubject = cleanTitle;
+        const key = (q.question + '|||' + q.answer).toLowerCase().trim();
+        if (!existingSet.has(key)) {
+          existingSet.add(key);
+          allNewQuestions.push(q);
+          added++;
+        }
+      }
+      if (added > 0) {
+        console.log('  + NEW SCHEME: "' + cleanTitle + '" (' + added + ' qs) → ' + targetCat);
+      }
+      await delay(2000);
+    }
+  } catch (e) {
+    console.log('  News monitor error (non-fatal): ' + e.message);
+  }
+
+  // Also check category members for the watched categories
+  for (const watchCat of watchCategories) {
+    try {
+      const catUrl = `${WIKI_API}?action=query&list=categorymembers&cmtitle=Category:${watchCat}&cmlimit=50&format=json`;
+      const catData = await fetchJSON(catUrl);
+      const members = (catData.query ? catData.query.categorymembers || [] : []).map(m => m.title).filter(Boolean);
+      for (const title of members) {
+        // Skip if it matches any scheme pattern (already caught above)
+        if (schemePatterns.some(p => p.test(title))) continue;
+
+        let targetCat = 'Govt Schemes';
+        const titleLow = title.toLowerCase();
+        if (titleLow.includes('health') || titleLow.includes('ayushman') || titleLow.includes('hospital')) targetCat = 'Health & Medicine';
+        else if (titleLow.includes('education') || titleLow.includes('school') || titleLow.includes('university')) targetCat = 'Society';
+        else if (titleLow.includes('agriculture') || titleLow.includes('farmer') || titleLow.includes('kisan')) targetCat = 'Agriculture & Food';
+        else if (titleLow.includes('energy') || titleLow.includes('power') || titleLow.includes('solar')) targetCat = 'Environment & Ecology';
+
+        const subMap = SUB_KEYWORDS[targetCat];
+        if (!subMap) continue;
+
+        const cleanTitle = title.replace(/\s*\([^)]*\)\s*/g, '').trim();
+        if (cleanTitle.length < 5) continue;
+        const titleLowClean = cleanTitle.toLowerCase();
+        const exists = Object.keys(subMap).some(existing => {
+          const e = existing.toLowerCase();
+          return e === titleLowClean || e.includes(titleLowClean) || titleLowClean.includes(e);
+        });
+        if (exists) continue;
+
+        const extUrl = `${WIKI_API}?action=query&prop=extracts|description&exintro&explaintext&titles=${encodeURIComponent(title)}&format=json`;
+        const extData = await fetchJSON(extUrl);
+        const pages = extData.query ? extData.query.pages : {};
+        const page = Object.values(pages).find(p => p && p.title && !p.missing);
+        if (!page || !page.extract || page.extract.length < 50) continue;
+
+        subMap[cleanTitle] = [titleLowClean, title.toLowerCase(), ...cleanTitle.toLowerCase().split(' ').filter(w => w.length > 3).slice(0, 4)];
+        const qs = generateQuestions([{ title: page.title, extract: page.extract, description: page.description || '' }], targetCat);
+        let added = 0;
+        for (const q of qs) {
+          q.subSubject = cleanTitle;
+          const key = (q.question + '|||' + q.answer).toLowerCase().trim();
+          if (!existingSet.has(key)) {
+            existingSet.add(key);
+            allNewQuestions.push(q);
+            added++;
+          }
+        }
+        if (added > 0) {
+          console.log('  + NEW: "' + cleanTitle + '" from category [' + watchCat + '] (' + added + ' qs) → ' + targetCat);
+        }
+        await delay(2000);
+      }
+    } catch (e) {}
+    await delay(3000);
+  }
+  console.log('  News monitor complete.');
+
   // 5. Merge new questions
   console.log('\n=== Adding ' + allNewQuestions.length + ' new questions ===');
   for (const q of allNewQuestions) {
