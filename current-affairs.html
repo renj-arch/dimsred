@@ -244,6 +244,11 @@
             <div class="q-card" onclick="if(!event.target.closest('button,a,.q-hint,.action-btn'))toggleAutoPlay()">
                 <div class="q-num" id="qNum"></div>
                 <div class="q-progress"><div class="fill" id="qProgress" style="width:0%"></div></div>
+                <div id="jumpRow" style="display:none;align-items:center;justify-content:center;gap:6px;margin-bottom:8px">
+                    <span style="font-size:.7em;color:var(--text-muted)">🔎 Jump:</span>
+                    <input type="number" id="jumpInput" min="1" style="width:55px;padding:3px 6px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.75em;text-align:center" onkeydown="if(event.key==='Enter')doJump()">
+                    <button onclick="doJump()" style="padding:3px 10px;border-radius:6px;border:1px solid var(--purple);background:rgba(99,102,241,.12);color:var(--purple);cursor:pointer;font-size:.7em;font-weight:600">Go</button>
+                </div>
                 <div class="q-cat-tag" id="catTag"></div>
                 <div class="q-text" id="qText">Loading...</div>
                 <div class="q-hint" id="qHint" onclick="toggleHint()" style="display:none">💡 Hint
@@ -5248,7 +5253,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
 
         function saveQuizSession() {
             if (state.questions.length > 0) {
-                try { localStorage.setItem(SESSION_KEY, JSON.stringify({ cat: state.cat, categoryName: state.categoryName, idx: state.idx, correct: state.correct, streak: state.streak, answered: false, questions: state.questions.slice(0, 50), infinite: state.infinite })); } catch(e) {}
+                try { localStorage.setItem(SESSION_KEY, JSON.stringify({ cat: state.cat, categoryName: state.categoryName, idx: state.idx, correct: state.correct, streak: state.streak, answered: false, questions: state.questions.slice(0, 300), infinite: state.infinite })); } catch(e) {}
             }
         }
         function restoreQuizSession() {
@@ -5565,6 +5570,8 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 }
             }
             _loadingRetry = 0;
+            document.getElementById('jumpRow').style.display = 'flex';
+            document.getElementById('jumpInput').max = state.questions.length;
             var q = state.questions[state.idx];
             var isLearning = (state.infinite && state.cat === 'mixed') || state.cat === 'static';
             if (isLearning) {
@@ -5718,6 +5725,26 @@ var _staticGen_polity = GK_GENERATORS.polity;
             }
         }
 
+        function doJump() {
+            var inp = document.getElementById('jumpInput');
+            var target = parseInt(inp.value);
+            if (isNaN(target) || target < 1) return;
+            var idx = target - 1;
+            if (state.questions.length === 0) return;
+            if (idx >= state.questions.length) idx = state.questions.length - 1;
+            state.idx = idx;
+            state.answered = false;
+            inp.value = '';
+            if (state._feedSource === 'archive') {
+                _stopFeedTimer();
+                state.autoPaused = false;
+                _showFeedItem();
+            } else {
+                stopAutoTimer();
+                showQuestion();
+            }
+        }
+
         function nextQuestion() {
             stopAutoTimer();
             document.getElementById('pauseBtn').classList.add('hidden');
@@ -5767,6 +5794,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 document.getElementById('resultFlash').style.display = 'none';
                 document.getElementById('nextBtn').classList.add('hidden');
                 document.getElementById('intuitionDisplay').style.display = 'none';
+                document.getElementById('jumpRow').style.display = 'none';
                 document.getElementById('nextBtn').textContent = '🔄 Try Again';
                 document.getElementById('nextBtn').classList.remove('hidden');
                 document.getElementById('nextBtn').onclick = function() {
@@ -5789,6 +5817,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('resultFlash').style.display = 'none';
             document.getElementById('nextBtn').classList.add('hidden');
             document.getElementById('intuitionDisplay').style.display = 'none';
+            document.getElementById('jumpRow').style.display = 'none';
             document.getElementById('nextBtn').textContent = '🔄 Try Again';
             document.getElementById('nextBtn').classList.remove('hidden');
             document.getElementById('nextBtn').onclick = function() {
@@ -5871,6 +5900,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('regionFilterRow').style.display = 'none';
             document.getElementById('timeFilterRow').style.display = 'none';
             document.getElementById('customDateRange').style.display = 'none';
+            document.getElementById('jumpRow').style.display = 'none';
             state.questions = [];
             state.idx = 0;
             try { localStorage.removeItem(SESSION_KEY); } catch(e) {}
@@ -6989,6 +7019,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     document.getElementById('qText').innerHTML = '✅ All done! No more questions.';
                     document.getElementById('optGrid').innerHTML = '<button class="action-btn secondary" onclick="backToMenu()">← Back to Menu</button>';
                     document.getElementById('pauseBtn').classList.add('hidden');
+                    document.getElementById('jumpRow').style.display = 'none';
                     return;
                 }
                 try {
@@ -7019,6 +7050,8 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('qHint').style.display = 'none';
             document.getElementById('resultFlash').className = 'result-flash';
             document.getElementById('intuitionDisplay').style.display = 'none';
+            document.getElementById('jumpRow').style.display = 'flex';
+            document.getElementById('jumpInput').max = state.questions.length;
 
             var displayText = '<div style="font-size:1.2em;font-weight:700;margin-bottom:8px">' + q.q.replace(/\n/g, '<br>') + '</div>';
             if (q.a) displayText += '<div style="font-size:1.05em;color:var(--emerald);margin-bottom:10px;padding:8px 12px;border-radius:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15)">✅ ' + q.a + '</div>';
