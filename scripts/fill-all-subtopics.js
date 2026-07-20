@@ -401,6 +401,198 @@ const SUB_KEYWORDS = {
   },
 };
 
+// ── Comprehensive Syllabus Master (all known exam topics) ──
+// The script auto-discovers what's missing from quiz.json by comparing against
+// this master list. Any topic here that has 0 coverage auto-generates.
+// Add new future topics here (e.g., GST, new schemes) — the script handles the rest.
+const SYLLABUS_GAPS = {
+  'Art & Culture': {
+    // Existing sub-topics from SUB_KEYWORDS are already covered
+    // These additional sub-topics fill known exam gaps:
+    'Folk Dances': ['folk dance india', 'bhangra', 'garba', 'dandiya', 'bihu dance', 'chhau dance', 'ghoomar', 'kalbelia', 'rouff', 'hikat', 'karma dance', 'veethi natakam'],
+    'Folk Theatre & Puppetry': ['indian folk theatre', 'yakshagana', 'bhavai', 'nautanki', 'tamasha theatre', 'jatra theatre', 'therukoothu', 'indian puppetry', 'string puppet india', 'shadow puppet india', 'glove puppet india', 'rod puppet india', 'bommalattam'],
+    'Handicrafts & Handlooms': ['indian handicraft', 'indian handloom', 'indian textile', 'carpet india', 'chikankari', 'kantha embroidery', 'banarasi saree', 'pashmina shawl', 'metal craft india', 'wood carving india', 'stone carving india', 'indian jewellery', 'bidriware', 'channapatna toy', 'sankheda furniture'],
+    'UNESCO Intangible Heritage': ['unesco intangible', 'intangible cultural heritage india', 'kumbh mela', 'vedic chanting', 'ramlila', 'kalbelia folk', 'chhau dance'],
+    'Indian Epigraphy & Numismatics': ['indian epigraphy', 'inscription india', 'ashoka edict', 'pillar edict', 'copper plate india', 'rock edict india', 'indian coinage', 'indian numismatic', 'punch marked coin', 'gupta coin', 'indian seal', 'indian currency history', 'silver coin india', 'gold coin india'],
+  },
+  'General': {
+    // General knowledge topics that span categories — broad and commonly asked
+    'Country Capitals & Currencies': ['country capital', 'currency', 'capital city', 'national capital'],
+    'International Borders & Boundaries': ['international border', 'boundary line', 'border dispute', 'radcliffe line', 'durand line', 'mcmahon line', 'hindenburg line', 'order-neisse line'],
+    'Nicknames & Sobriquets': ['nickname', 'sobriquet', 'city nickname', 'country nickname', 'garden city', 'pink city', 'city of lakes'],
+    'First in India (Person, Event, Place)': ['first india', 'first president india', 'first prime minister india', 'first woman india', 'first indian'],
+    'First in World': ['first world', 'first person world', 'first country', 'first woman world'],
+    'Largest, Highest, Longest, Deepest': ['largest', 'highest', 'longest', 'deepest', 'biggest', 'tallest', 'world largest', 'world highest'],
+    'Parent Body & Headquarters': ['headquarters', 'parent organization', 'nodal agency', 'subsidiary'],
+    'Discovery & Invention': ['discovery', 'invention', 'inventor', 'discoverer', 'founder'],
+    'World Records': ['world record', 'guinness', 'limca'],
+    'Titles & Epithets': ['father of', 'grand old man', 'messiah', 'uncrowned king', 'iron man', 'nightingale'],
+    'Temples of India': ['hindu temple', 'mandir', 'devasthanam', 'temple india', 'ancient temple'],
+    'Gurudwaras & Churches of India': ['gurudwara', 'church india', 'golden temple', 'sikh shrine'],
+    'Mausoleums & Tombs': ['tomb', 'mausoleum', 'dargah', 'samadhi', 'maqbara'],
+    'Lakes of India': ['lake india', 'dal lake', 'chilika', 'loktak', 'wular', 'sambhar', 'pulicat', 'kolleru'],
+    'Waterfalls of India': ['waterfall india', 'jog falls', 'dudhsagar', 'nohkalikai', 'kunchikal'],
+    'Dams of India': ['dam india', 'tehri dam', 'bhakra dam', 'hirakud dam', 'sardar sarovar', 'nagarjuna sagar dam'],
+    'Canals of India': ['canal india', 'indira gandhi canal', 'buckingham canal', 'irrigation canal'],
+    'Major Ports of India': ['port india', 'major port', 'mumbai port', 'chennai port', 'kolkata port', 'kandla', 'visakhapatnam', 'paradip', 'cochin port'],
+    'Airports of India': ['airport india', 'international airport india', 'indira gandhi international', 'mumbai airport'],
+    'Nuclear Power Plants in India': ['nuclear power plant india', 'atomic power station', 'kudankulam', 'tarapur', 'kaiga', 'kakrapar', 'narora', 'rawatbhata', 'madras atomic'],
+    'Thermal Power Plants in India': ['thermal power plant india', 'coal power plant india', 'super thermal power'],
+    'Hydro Power Plants in India': ['hydro power plant india', 'hydroelectric india', 'nathpa jhakri', 'tehri hydro', 'bhakra dam'],
+    'Steel Plants in India': ['steel plant india', 'sail', 'bhilai steel', 'rourkela steel', 'durgapur steel', 'burnpur steel', 'visakhapatnam steel', 'vijaynagar steel', 'salem steel'],
+    'Cement Plants in India': ['cement plant india', 'cement industry india', 'acc cement', 'ultratech', 'ambuja'],
+    'Fertilizer Plants in India': ['fertilizer plant india', 'fertilizer industry india', 'urea plant india'],
+    'Oil Refineries in India': ['oil refinery india', 'petroleum refinery india', 'refinery india', 'jamnagar refinery', 'mathura refinery', 'panipat refinery', 'barauni refinery'],
+    'SEZs & Industrial Corridors': ['special economic zone', 'industrial corridor', 'dmic', 'amritsar kolkata corridor', 'chennai bengaluru corridor', 'sez india'],
+    'Coal Mines & Coal Fields': ['coal mine india', 'coalfield india', 'coal india limited', 'jharia', 'raniganj', 'talcher'],
+    'Mines & Minerals in India': ['mineral india', 'iron ore mine india', 'bauxite india', 'copper india', 'mica india', 'gold mine india', 'diamond mine india'],
+    'Biosphere Reserves in India': ['biosphere reserve india', 'nilgiri biosphere', 'nanda devi biosphere', 'sundarbans biosphere', 'gulf of mannar biosphere'],
+    'Important Committees': ['committee india', 'commission india', 'sarkaria commission', 'mandal commission', 'punchhi commission', 'narasimham committee', 'kelkar committee', 'rajamannar committee', 'soli sorabjee committee'],
+    'Important Reports & Indices': ['report india', 'index india', 'economic survey', 'human development report', 'ease of doing business', 'global innovation index', 'hunger index'],
+    'National Symbols': ['national symbol india', 'national flag', 'national emblem', 'national anthem', 'national animal', 'national bird', 'national flower', 'national tree', 'national fruit', 'national river'],
+    'State Symbols': ['state symbol india', 'state animal', 'state bird', 'state flower', 'state tree', 'state emblem'],
+    'Indian Railways': ['indian railways', 'railway zone', 'railway station', 'train india', 'rajdhani express', 'shatabdi express', 'vande bharat'],
+    'Indian Cinema': ['indian cinema', 'bollywood', 'dadasaheb phalke', 'national film award', 'first indian film'],
+  },
+  'Indian History': {
+    'Indus Valley Civilsation': ['indus valley', 'harappa', 'mohenjo daro', 'dholavira', 'lothal', 'sindhu valley'],
+    'Pre-Mauryan Period': ['mahajanapada', 'magadha', 'bimbisara', 'ajatashatru', 'nanda dynasty'],
+    'Mauryan Empire': ['maurya', 'chandragupta', 'ashoka', 'kalinga war', 'arthashastra', 'chanakya'],
+    'Post-Mauryan Period': ['shunga', 'satavahana', 'indo-greek', 'kushan', 'kanishka', 'gandhara art'],
+    'Gupta Empire': ['gupta empire', 'samudragupta', 'chandragupta vikramaditya', 'kalidasa', 'arya bhatta', 'golden age'],
+    'Post-Gupta Period': ['harsha', 'vakataka', 'chalukya', 'pallava', 'badami'],
+    'Delhi Sultanate': ['delhi sultanate', 'slave dynasty', 'khalji', 'tu ghlaq', 'sayyid', 'lodi', 'alaiuddin khilji', 'muhammad bin tughlaq'],
+    'Vijayanagara & Bahmani': ['vijayanagara', 'hampi', 'krishnadevaraya', 'bahmani', 'golconda'],
+    'Bhakti & Sufi Movements': ['bhakti', 'sufi', 'kabir', 'guru nanak', 'meera bai', 'tulsidas', 'namdev', 'chaitanya'],
+    'Mughal Empire': ['mughal', 'babur', 'humayun', 'akbar', 'jahangir', 'shah jahan', 'aurangzeb', 'mansabdari'],
+    'Maratha Empire': ['maratha', 'shivaji', 'peshwa', 'baji rao', 'panipat'],
+    'Sikh Empire': ['sikh empire', 'ranjit singh', 'khalsa', 'anglo sikh war'],
+    'European Trading Companies': ['east india company', 'dutch india', 'french india', 'portuguese india', 'british east india'],
+    'British Expansion & Wars': ['subsidiary alliance', 'doctrine lapse', 'battle plassey', 'battle buxar', 'anglo mysore', 'anglo maratha'],
+    'Revolt of 1857': ['1857 revolt', 'sepoy mutiny', 'mangal pandey', 'bahadur shah', 'jhansi ki rani', 'nana saheb', 'tantia tope'],
+    'Social Reform Movements': ['brahmo samaj', 'arya samaj', 'ramakrishna mission', 'theosophical society', 'sati abolition', 'widow remarriage'],
+    'Indian National Congress': ['indian national congress', 'a o hume', 'moderates', 'extremists', 'surat split', 'lucknow pact'],
+    'Gandhian Era': ['mahatma gandhi', 'satyagraha', 'non cooperation', 'civil disobedience', 'quit india', 'dandi march', 'salt satyagraha'],
+    'Revolutionary Movement': ['bhagat singh', 'chandrashekhar azad', 'kakori', 'hindi republican'],
+    'Constitutional Development': ['morley minto', 'montagu chelmsford', 'simon commission', 'round table conference', 'cabinet mission'],
+    'Partition & Independence': ['partition india', 'independence 1947', 'mountbatten', 'radcliffe', 'integration india'],
+  },
+  'Indian Geography': {
+    'Physiography': ['physiography india', 'himalaya', 'peninsular plateau', 'coastal plain', 'northern plain', 'island india'],
+    'Climate & Monsoon': ['climate india', 'southwest monsoon', 'retreating monsoon', 'el nino', 'la nina', 'jet stream', 'western disturbance'],
+    'Drainage System': ['river india', 'himalayan river', 'peninsular river', 'ganga', 'yamuna', 'brahmaputra', 'indus', 'godavari', 'krishna', 'kaveri', 'narmada', 'tapi', 'mahanadi'],
+    'Soils of India': ['soil india', 'alluvial soil', 'black soil', 'red soil', 'laterite soil', 'desert soil', 'forest soil'],
+    'Natural Vegetation & Forests': ['forest india', 'tropical forest', 'mangrove forest', 'coniferous forest', 'deciduous forest', 'forest cover india'],
+    'Agriculture': ['crop india', 'kharif', 'rabi', 'zaid', 'rice', 'wheat', 'millets', 'pulses', 'oilseeds', 'tea', 'coffee', 'rubber', 'jute', 'cotton', 'sugarcane', 'spices'],
+    'Minerals & Energy': ['mineral india', 'coal', 'petroleum', 'natural gas', 'iron ore', 'bauxite', 'mica', 'copper', 'manganese', 'uranium', 'thorium'],
+    'Population & Demography': ['population india', 'census india', 'population density', 'sex ratio', 'literacy rate', 'population growth'],
+    'Transport in India': ['road india', 'railway india', 'national highway', 'golden quadrilateral', 'north south corridor', 'east west corridor'],
+    'Urbanisation': ['urban india', 'city population', 'smart city', 'million city', 'metro city india'],
+  },
+  'Economy': {
+    'National Income & Accounting': ['national income', 'gdp', 'gnp', 'nnp', 'gva', 'economic growth'],
+    'Fiscal Policy & Budget': ['fiscal policy', 'union budget', 'fiscal deficit', 'revenue deficit', 'primary deficit', 'tax revenue', 'direct tax', 'indirect tax'],
+    'Monetary Policy & Banking': ['monetary policy', 'repo rate', 'reverse repo', 'crr', 'slr', 'rbi', 'inflation target'],
+    'Inflation & Price Indices': ['inflation', 'cpi', 'wpi', 'inflation india', 'consumer price', 'wholesale price'],
+    'Banking System': ['commercial bank', 'public sector bank', 'private bank', 'payment bank', 'small finance bank', 'rrb', 'cooperative bank', 'nbfc'],
+    'Financial Markets': ['stock market', 'sebi', 'bse', 'nse', 'mutual fund', 'insurance', 'pension'],
+    'External Sector': ['export import', 'balance payment', 'current account', 'capital account', 'fdi', 'fpi', 'foreign trade', 'forex reserve'],
+    'Agriculture & Food Security': ['food security', 'minimum support price', 'public distribution', 'buffer stock', 'food corporation', 'green revolution', 'white revolution'],
+    'Industry & Infrastructure': ['industry india', 'manufacturing', 'service sector', 'msme', 'make in india', 'industrial policy'],
+    'Poverty & Unemployment': ['poverty india', 'poverty line', 'unemployment', 'nrega', 'mnrega'],
+    'Human Development': ['human development', 'hdi', 'education india', 'health india', 'literacy'],
+    'Planning & NITI Aayog': ['planning commission', 'niti aayog', 'five year plan', 'socio economic caste census'],
+    'Taxation & GST': ['gst', 'goods service tax', 'direct tax code', 'income tax', 'corporate tax', 'customs duty', 'excise duty'],
+    'Reforms & Liberalisation': ['liberalization', 'privatization', 'globalization', '1991 reforms', 'economic reform'],
+  },
+  'Polity': {
+    'Constitution of India': ['constitution india', 'constituent assembly', 'preamble', 'fundamental right', 'directive principle', 'fundamental duty', 'citizenship'],
+    'Union Executive': ['president india', 'vice president', 'prime minister', 'council minister', 'cabinet'],
+    'State Executive': ['governor', 'chief minister', 'state council minister', 'advocate general'],
+    'Parliament': ['lok sabha', 'rajya sabha', 'speaker', 'bill', 'parliamentary committee'],
+    'State Legislature': ['vidhan sabha', 'vidhan parishad', 'legislative assembly', 'legislative council'],
+    'Judiciary': ['supreme court', 'high court', 'district court', 'judicial review', 'writ', 'public interest litigation'],
+    'Federal System': ['federal system', 'centre state', 'union list', 'state list', 'concurrent list', 'sarkaria commission'],
+    'Local Government': ['panchayati raj', 'municipality', 'municipal corporation', '73rd amendment', '74th amendment'],
+    'Election Commission': ['election commission', 'electoral reform', 'model code', 'evm', 'voter id'],
+    'Constitutional Bodies': ['finance commission', 'upsc', 'election commission', 'cag', 'attorney general'],
+    'Non-Constitutional Bodies': ['niti aayog', 'nhrc', 'cbi', 'cvc', 'lokpal', 'sebi', 'trai', 'rbi'],
+    'Emergency Provisions': ['national emergency', 'president rule', 'financial emergency', 'article 352', 'article 356'],
+    'Amendment Process': ['constitutional amendment', 'basic structure', 'kesavananda bharati', '42nd amendment'],
+    'Special Provisions': ['article 370', 'article 371', 'jammu kashmir', 'special status', 'fifth schedule', 'sixth schedule'],
+    'Rights & Issues': ['right information', 'right education', 'right food', 'consumer right', 'human right', 'women right'],
+  },
+  'Environment & Ecology': {
+    'Ecology & Ecosystem': ['ecosystem', 'food chain', 'food web', 'ecological pyramid', 'biogeochemical cycle', 'succession'],
+    'Biodiversity': ['biodiversity', 'species', 'endangered species', 'critically endangered', 'extinct species', 'biodiversity hotspot'],
+    'Climate Change': ['climate change', 'global warming', 'greenhouse gas', 'carbon emission', 'paris agreement', 'kyoto protocol', 'cop', 'unfccc', 'ipcc'],
+    'Pollution & Waste': ['pollution', 'air pollution', 'water pollution', 'soil pollution', 'noise pollution', 'plastic waste', 'ewaste'],
+    'Conservation': ['conservation', 'national park', 'wildlife sanctuary', 'tiger reserve', 'biosphere reserve', 'ramsar site', 'project tiger', 'project elephant'],
+    'Acts & Policies': ['environment protection act', 'wildlife protection act', 'forest conservation act', 'water act', 'air act', 'environment impact assessment'],
+    'Environmental Organisations': ['moefcc', 'cp cb', 'spcb', 'national green tribunal', 'world wildlife fund', 'greenpeace'],
+  },
+  'Science & Technology': {
+    'Space Technology': ['isro', 'chandrayaan', 'mangalyaan', 'gaganyaan', 'pslv', 'gslv', 'satellite india', 'indian space'],
+    'Defence Technology': ['drdo', 'missile india', 'brahmos', 'n ag', 'akash missile', 'tejas', 'tank arjun', 'insas'],
+    'Nuclear Technology': ['nuclear reactor', 'pressurized heavy water', 'thorium cycle', 'uranium india', 'atomic energy'],
+    'Biotechnology': ['biotechnology', 'genetic engineering', 'dna fingerprint', 'cloning', 'stem cell', 'vaccine', 'bt cotton', 'gm crop'],
+    'Nanotechnology': ['nano', 'nanotechnology', 'nanomaterial', 'nanoparticle'],
+    'Information Technology': ['it india', 'artificial intelligence', 'machine learning', 'blockchain', '5g india', 'quantum computing', 'cyber security'],
+    'Health & Medicine': ['disease india', 'vaccination', 'ayushman bharat', 'covid 19', 'indian medical research', 'ayush', 'ayurveda'],
+  },
+  'International Relations': {
+    'Neighbourhood Policy': ['neighbourhood first', 'saarc', 'bimstec', 'india nepal', 'india sri lanka', 'india bangladesh', 'india myanmar', 'india maldives', 'india bhutan', 'india afghanistan'],
+    'Major Powers': ['india us', 'india russia', 'india china', 'india japan', 'india eu', 'india uk', 'india france', 'india germany'],
+    'Multilateral Organisations': ['un', 'brics', 'g20', 'sco', 'asean', 'wto', 'imf', 'world bank', 'asian development bank', 'quad'],
+    'Disarmament & Nuclear': ['npt', 'ctbt', 'nsg', 'mtcr', 'wassenaar', 'australia group', 'nuclear disarmament'],
+    'Indian Ocean & Maritime': ['indian ocean', 'imo', 'sagarmala', 'blue economy', 'maritime security', 'naval strategy'],
+    'Diplomacy & Foreign Policy': ['look east', 'act east', 'connect central asia', 'gulf cooperation', 'africa india', 'pacific island', 'indo pacific'],
+    'International Organisations': ['world health organization', 'unesco', 'unicef', 'ilo', 'world food programme', 'international court', 'interpol'],
+    'Global Issues': ['terrorism', 'climate change', 'refugee', 'human right', 'pandemic', 'food security', 'energy security', 'water security'],
+  },
+  'Defence & Security': {
+    'Indian Army': ['indian army', 'regiment india', 'infantry', 'armoured corps', 'artillery', 'rashtriya rifles', 'territorial army'],
+    'Indian Navy': ['indian navy', 'warship', 'submarine india', 'aircraft carrier', 'ins vikramaditya', 'ins arihant', 'naval command'],
+    'Indian Air Force': ['indian air force', 'fighter jet india', 'sukhoi', 'tejas', 'aircraft india', 'air force command', 'squadron'],
+    'Paramilitary & CAPF': ['paramilitary', 'capf', 'bsf', 'crpf', 'itbp', 'assam rifles', 'ssb', 'cisf', 'nsg'],
+    'Intelligence Agencies': ['raw', 'ib', 'ntro', 'defence intelligence', 'nca'],
+    'Nuclear Doctrine': ['nuclear doctrine', 'no first use', 'nuclear triad', 'nuclear command', 'credible deterrence'],
+    'Internal Security': ['naxalism', 'left wing extremism', 'insurgency northeast', 'terrorism kashmir', 'militancy', 'counter insurgency'],
+    'Cyber Security': ['cyber attack', 'cyber crime', 'cyber warfare', 'information warfare', 'critical infrastructure', 'cert in'],
+    'Border Management': ['border security', 'border fencing', 'line control', 'line actual control', 'border dispute'],
+    'Defence Production': ['defence industry india', 'make in india defence', 'defence export', 'ordnance factory', 'defence corridor'],
+  },
+  'Disaster Management': {
+    'Natural Disasters': ['earthquake', 'cyclone', 'flood', 'drought', 'landslide', 'tsunami', 'heat wave', 'cold wave', 'avalanche', 'forest fire'],
+    'Man-Made Disasters': ['industrial disaster', 'chemical spill', 'nuclear accident', 'bhopal gas', 'oil spill', 'fire'],
+    'Disaster Management Framework': ['ndma', 'ndrf', 'sdma', 'sdrf', 'disaster management act', 'national policy disaster'],
+    'International Frameworks': ['sendai framework', 'hyogo framework', 'unisdr', 'disaster risk reduction'],
+    'Pandemic & Health Emergencies': ['pandemic', 'epidemic', 'covid 19', 'who emergency', 'health crisis'],
+  },
+  'Awards & Honours': {
+    'National Awards': ['bharat ratna', 'padma award', 'padma vibhushan', 'padma bhushan', 'padma shri', 'gallantry award', 'param vir chakra', 'ashoka chakra'],
+    'Literary Awards': ['sahitya akademi', 'jnanpith award', 'booker prize', 'pulitzer prize'],
+    'Film Awards': ['national film award', 'dadasaheb phalke', 'filmfare', 'oscar india', 'academy award'],
+    'Sports Awards': ['arjuna award', 'dronacharya award', 'rajiv gandhi khel ratna', 'major dhyan chand award'],
+    'International Awards': ['nobel prize', 'raman magsaysay', 'templeton prize', 'right livelihood award', 'man booker'],
+    'Science Awards': ['shanti swarup bhatnagar', 'vigyan ratna', 'vigyan shri', 'national science award'],
+  },
+  'Sports': {
+    'Cricket': ['cricket india', 'ipl', 'world cup', 'test cricket', 'odi', 't20', 'bcci', 'ranji trophy', 'sachin tendulkar', 'virat kohli'],
+    'Hockey': ['hockey india', 'world cup hockey', 'olympics hockey', 'dhyan chand', 'asian hockey'],
+    'Football': ['football india', 'indian super league', 'fifa world cup', 'sunil chhetri', 'saff championship'],
+    'Olympics': ['olympic games', 'summer olympics', 'winter olympics', 'olympics india', 'neeraj chopra', 'p v sindhu', 'saina nehwal', 'mary kom', 'abhinav bindra'],
+    'Asian & Commonwealth Games': ['asian games', 'commonwealth games', 'asian games india', 'cwg india'],
+    'Chess': ['chess', 'viswanathan anand', 'world chess championship', 'grandmaster'],
+    'Tennis': ['tennis', 'grand slam', 'australian open', 'french open', 'wimbledon', 'us open', 'davis cup'],
+    'Badminton': ['badminton', 'thomas cup', 'uber cup', 'world championship badminton', 'p v sindhu'],
+    'Kabaddi': ['kabaddi', 'pro kabaddi', 'asia kabaddi', 'world cup kabaddi'],
+  },
+};
+// After processing all priorityOrder categories, the script auto-detects gaps
+// by comparing SYLLABUS_GAPS + existing SUB_KEYWORDS against quiz.json coverage.
+// Any sub-topic with 0 questions gets automatically added and processed.
+
 // ── Helpers ──
 function fetchJSON(url) {
   return new Promise((resolve, reject) => {
@@ -464,6 +656,43 @@ function classifySubSubject(category, title, questionText, answer) {
   }
   matches.sort((a, b) => b.score - a.score);
   return matches.length > 0 ? matches[0].ss : null;
+}
+
+// ── Auto-discovery: finds topics in SYLLABUS_GAPS not yet in quiz.json ──
+// Runs after priorityOrder processing. Auto-generates config + processes gaps.
+function autoDetectGaps(existingQuestions) {
+  const existingSubs = new Set();
+  existingQuestions.forEach(q => {
+    const cat = q.category || 'Misc';
+    const ss = q.subSubject || 'General';
+    existingSubs.add(cat + '|||' + ss);
+  });
+
+  const gaps = []; // { category, subTopic, isNewCategory, queries, keywords }
+
+  for (const [cat, topics] of Object.entries(SYLLABUS_GAPS)) {
+    const existingCatSubs = SUB_KEYWORDS[cat] ? new Set(Object.keys(SUB_KEYWORDS[cat])) : new Set();
+    const isNewCategory = !SUB_KEYWORDS[cat];
+
+    for (const [subTopic, keywords] of Object.entries(topics)) {
+      if (subTopic.startsWith('__')) continue; // skip metadata keys
+      const key = cat + '|||' + subTopic;
+
+      // Check if this sub-topic already exists in SUB_KEYWORDS or already has questions
+      if (existingCatSubs.has(subTopic)) continue;
+      if (existingSubs.has(key)) continue;
+
+      gaps.push({
+        category: cat,
+        subTopic,
+        keywords,
+        isNewCategory,
+        // For new categories, use sub-topic keywords as search queries
+        queries: isNewCategory ? subTopic + ',' + keywords.slice(0, 3).join(',') : null,
+      });
+    }
+  }
+  return gaps;
 }
 
 async function fetchArticles(query, limit) {
@@ -744,6 +973,90 @@ async function main() {
     console.log('articles=' + allArticles.length + ' generated=' + newQs.length + ' new=' + added + ' subs-covered=' + Object.keys(subAdded).length + '/' + subKeys.length);
 
     await delay(20000);
+  }
+
+  // ── 4b. Auto-discovery: detect gaps from SYLLABUS_GAPS ──
+  const gaps = autoDetectGaps(existingQuestions);
+  if (gaps.length > 0) {
+    console.log('\n=== Auto-discovery: ' + gaps.length + ' gap(s) found in SYLLABUS_GAPS ===');
+    // Group gaps by category
+    const gapByCat = {};
+    for (const g of gaps) {
+      if (!gapByCat[g.category]) gapByCat[g.category] = [];
+      gapByCat[g.category].push(g);
+    }
+
+    for (const [cat, gapList] of Object.entries(gapByCat)) {
+      const firstGap = gapList[0];
+      const isNew = firstGap.isNewCategory;
+
+      // Add to SUB_KEYWORDS if not already present
+      if (!SUB_KEYWORDS[cat]) SUB_KEYWORDS[cat] = {};
+      for (const g of gapList) {
+        if (!SUB_KEYWORDS[cat][g.subTopic]) {
+          SUB_KEYWORDS[cat][g.subTopic] = g.keywords;
+        }
+      }
+
+      // For new categories, add to CAT_QUERIES and priorityOrder
+      if (isNew) {
+        const queryTerms = [...new Set(gapList.flatMap(g => g.keywords.slice(0, 5)))].join(',');
+        CAT_QUERIES[cat] = cat + ',' + queryTerms;
+        if (!priorityOrder.includes(cat)) priorityOrder.push(cat);
+        console.log('  Added new category: ' + cat + ' (' + gapList.length + ' sub-topics)');
+      } else {
+        console.log('  Added ' + gapList.length + ' sub-topic(s) to existing category: ' + cat);
+      }
+
+      // Fetch articles for this category using its CAT_QUERIES
+      const queriesStr = CAT_QUERIES[cat];
+      if (!queriesStr) { console.log('  SKIP: no queries for ' + cat); continue; }
+      const queries = queriesStr.split(',').map(q => q.trim()).filter(Boolean);
+      process.stdout.write('  Fetching for ' + cat + ' (' + queries.length + ' queries)... ');
+
+      const allArticles = [];
+      const seenTitles = new Set();
+      for (let qi = 0; qi < queries.length; qi++) {
+        try {
+          const articles = await fetchArticles(queries[qi], 30);
+          for (const a of articles) {
+            if (!seenTitles.has(a.title)) {
+              seenTitles.add(a.title);
+              allArticles.push(a);
+            }
+          }
+        } catch (e) {}
+        await delay(2000);
+      }
+      console.log(allArticles.length + ' articles');
+
+      if (allArticles.length === 0) continue;
+
+      // Generate questions
+      const newQs = generateQuestions(allArticles, cat);
+      let added = 0;
+      const subAdded = {};
+      for (const q of newQs) {
+        const key = (q.question + '|||' + q.answer).toLowerCase().trim();
+        if (!existingSet.has(key)) {
+          const ss = q.subSubject || 'General';
+          if ((subAdded[ss] || 0) < TARGET_PER_SUBSUBJECT) {
+            const covKey = cat + '|||' + ss;
+            const existingCov = coverage[covKey] || 0;
+            if ((existingCov + (subAdded[ss] || 0)) < TARGET_PER_SUBSUBJECT) {
+              subAdded[ss] = (subAdded[ss] || 0) + 1;
+              existingSet.add(key);
+              allNewQuestions.push(q);
+              added++;
+            }
+          }
+        }
+      }
+      console.log('  Generated ' + newQs.length + ' questions, added ' + added + ' new');
+      await delay(20000);
+    }
+  } else {
+    console.log('\n=== Auto-discovery: no gaps found — syllabus is complete ===');
   }
 
   // 5. Merge new questions
