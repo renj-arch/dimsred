@@ -4,6 +4,37 @@
   var SESSION_CACHE_KEY = 'science_session_cache';
   var activeLayer = 'instinct';
   function esc(s){return (s||'').replace(/[&<>]/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[m];});}
+  function loadTopicImage(qText) {
+    var cache = loadTopicImage._cache || (loadTopicImage._cache = {});
+    var key = (qText || '').toLowerCase().replace(/[^a-z0-9 ]/g,'').trim().slice(0,100);
+    if (!key) return;
+    var imgDiv = document.getElementById('st-topic-img');
+    if (!imgDiv) return;
+    if (key in cache) {
+      if (cache[key]) { imgDiv.innerHTML = '<img src="' + cache[key] + '" style="max-width:100%;max-height:220px;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,.3)" onerror="this.parentElement.style.display=\'none\'">'; }
+      return;
+    }
+    var searchUrl = 'https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=' + encodeURIComponent(key) + '&format=json&srlimit=1&origin=*';
+    fetch(searchUrl).then(function(r){return r.json();}).then(function(d){
+      var title = d.query && d.query.search && d.query.search[0] && d.query.search[0].title;
+      if (!title) { cache[key] = null; return; }
+      var imgUrl = 'https://en.wikipedia.org/w/api.php?action=query&titles=' + encodeURIComponent(title) + '&prop=pageimages&pithumbsize=400&format=json&origin=*';
+      return fetch(imgUrl).then(function(r){return r.json();});
+    }).then(function(d){
+      if (!d) return;
+      var pages = d.query && d.query.pages;
+      if (!pages) return;
+      var pid = Object.keys(pages)[0];
+      var thumb = pages[pid].thumbnail && pages[pid].thumbnail.source;
+      if (thumb) {
+        cache[key] = thumb;
+        var el = document.getElementById('st-topic-img');
+        if (el) el.innerHTML = '<img src="' + thumb + '" style="max-width:100%;max-height:220px;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,.3)" onerror="this.parentElement.style.display=\'none\'">';
+      } else {
+        cache[key] = null;
+      }
+    }).catch(function(){ cache[key] = null; });
+  }
   var session = null;
   var timerId = null;
   var currentQuestion = null;
@@ -7484,8 +7515,16 @@
       html += "<div style='margin-top:16px;padding:12px 14px;background:linear-gradient(135deg,rgba(52,211,153,.08),rgba(167,139,250,.04));border:1px solid rgba(52,211,153,.12);border-radius:10px;color:#34d399;font-size:.78em;line-height:1.5'>📖 " + esc(q.solution) + "</div>";
     }
 
+    if (readOnly) {
+      html += "<div id='st-topic-img' style='margin-top:14px;text-align:center;min-height:0;transition:min-height .3s'></div>";
+    }
+
     area.classList.remove("answered");
     area.innerHTML = html;
+
+    if (readOnly) {
+      loadTopicImage(q.q);
+    }
 
     var _graph2 = q.graph || autoGraph(q);
     if (_graph2) {
