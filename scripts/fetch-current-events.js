@@ -11,7 +11,7 @@ const AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
 function fetchJSON(url) {
   return new Promise((resolve, reject) => {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'CurrentEventsFill/1.0' } }, (res) => {
+    const req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'CurrentEventsFill/1.0' } }, (res) => {
       let data = '';
       res.on('data', c => data += c);
       res.on('end', () => {
@@ -19,7 +19,9 @@ function fetchJSON(url) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(data)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, () => { req.destroy(); reject(new Error('Request timeout')); });
   });
 }
 
