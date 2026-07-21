@@ -328,11 +328,11 @@ function generateQuestion(item, idx) {
     var minPool = ['Ministry of Finance', 'Ministry of Defence', 'Ministry of Home Affairs', 'Ministry of Health', 'Ministry of Education', 'Ministry of Agriculture', 'Ministry of External Affairs', 'Ministry of Power', 'Ministry of Environment', 'Ministry of Jal Shakti'];
     var pool = named.type === 'ministry' ? minPool : named.type === 'scheme' ? schPool : perPool;
     var dist = shuffle(pool.filter(function(v) { return v.toLowerCase() !== answer.toLowerCase(); }));
-    q = makeBlankQuestion(t, answer, answer, cat, item, idx, dist, fact);
-    if (q) {
-      q.type = 'fill_blank';
-      q.hint = 'PIB: ' + cat;
-      return q;
+    var blankQ = makeBlankQuestion(t, answer, answer, cat, item, idx, dist, fact);
+    if (blankQ) {
+      blankQ.type = 'fill_blank';
+      blankQ.hint = 'PIB: ' + cat;
+      return blankQ;
     }
   }
 
@@ -340,11 +340,11 @@ function generateQuestion(item, idx) {
   var acro = extractAcronym(t);
   if (acro && findEntityInTitle(t, acro.value)) {
     var dist = shuffle(['RBI', 'SEBI', 'ISRO', 'DRDO', 'CSIR', 'BHEL', 'ONGC', 'NDDB', 'TRAI', 'CCI']);
-    q = makeBlankQuestion(t, acro.value, acro.value, cat, item, idx, dist, fact);
-    if (q) {
-      q.type = 'fill_blank';
-      q.hint = 'PIB: ' + cat + ' - Acronym';
-      return q;
+    var acroQ = makeBlankQuestion(t, acro.value, acro.value, cat, item, idx, dist, fact);
+    if (acroQ) {
+      acroQ.type = 'fill_blank';
+      acroQ.hint = 'PIB: ' + cat + ' - Acronym';
+      return acroQ;
     }
   }
 
