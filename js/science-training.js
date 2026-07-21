@@ -7109,10 +7109,9 @@
     var q = session.questions[session.questionIndex];
     currentQuestion = q;
 
-    var isAnswered = !!(session.answers && session.answers[session.questionIndex]);
-    renderQuestion(q, isAnswered);
-    if (!isAnswered && !session.isPaused) {
-      startTimer(q.timeLimit || 15);
+    renderQuestion(q, true);
+    if (!session.isPaused) {
+      startTimer(q.timeLimit || 4);
     }
     cacheSession(session);
   }
@@ -7476,18 +7475,9 @@
     }
 
     var ansStr = q.a !== undefined ? (typeof q.a === "number" ? q.a + "" : q.a) : "";
-    var prevAns = session.answers && session.answers[session.questionIndex];
-    var wasCorrect = prevAns ? prevAns.correct : null;
 
     if (readOnly) {
-      var isSelected = prevAns ? prevAns.selected : null;
-      var icon = wasCorrect ? "✓" : "✗";
-      var color = wasCorrect ? "#34d399" : "#ef4444";
-      html += "<div id='st-options' style='margin-top:16px;padding:14px 16px;border-radius:12px;background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.07)'>";
-      html += "<div style='display:flex;align-items:center;gap:10px'><span style='font-size:1.3em'>" + icon + "</span>";
-      html += "<span style='color:" + color + ";font-weight:700;font-size:.9em'>Your answer: " + esc(isSelected || "") + "</span></div>";
-      html += "<div style='margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.05);color:#a1a1aa;font-size:.82em'>Correct answer: <span style='color:#34d399;font-weight:600'>" + esc(ansStr) + "</span></div>";
-      html += "</div>";
+      html += "<div style='margin-top:12px;padding:12px 16px;border-radius:10px;background:linear-gradient(135deg,rgba(52,211,153,.08),rgba(167,139,250,.04));border:1px solid rgba(52,211,153,.1)'><span style='color:#34d399;font-weight:700;font-size:.95em'>" + esc(ansStr) + "</span></div>";
     }
 
     if (q.solution && readOnly) {
@@ -7749,10 +7739,7 @@
       if (remaining <= 0) {
         clearTimer();
         if (currentQuestion && session && !session.isPaused && !(session.answers && session.answers[session.questionIndex])) {
-          var q = currentQuestion;
-          session.answers[session.questionIndex] = { selected: "", correct: false };
-          renderQuestion(q, true);
-          setTimeout(function () { nextQuestion(); }, 1500);
+          nextQuestion();
         }
       }
     }, 1000);
