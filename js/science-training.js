@@ -41,6 +41,7 @@
   var currentQuestion = null;
   var _recentQuestions = [];
   var _RECENT_MAX = 20;
+  var _timerRemaining = 0;
 
   function _isRecent(qtext) { for (var i = 0; i < _recentQuestions.length; i++) { if (_recentQuestions[i] === qtext) return true; } return false; }
   function _addRecent(qtext) { _recentQuestions.push(qtext); if (_recentQuestions.length > _RECENT_MAX) _recentQuestions.shift(); }
@@ -7281,7 +7282,7 @@
       var area = document.getElementById("st-question-area");
       if (session.isPaused) {
         clearTimer();
-        session.pausedRemaining = parseInt((document.getElementById("st-timer") || {}).textContent) || 0;
+        session.pausedRemaining = _timerRemaining > 0 ? _timerRemaining : 0;
         btn.textContent = "▶ Resume";
         btn.style.background = "rgba(52,211,153,.15)";
         btn.style.color = "#34d399";
@@ -7546,7 +7547,7 @@
         var btn = document.getElementById("st-pause-btn");
         if (session.isPaused) {
           clearTimer();
-          session.pausedRemaining = parseInt((document.getElementById("st-timer") || {}).textContent) || 0;
+        session.pausedRemaining = _timerRemaining > 0 ? _timerRemaining : 0;
           if (btn) { btn.textContent = "▶ Resume"; btn.style.background = "rgba(52,211,153,.15)"; btn.style.color = "#34d399"; btn.style.borderColor = "rgba(52,211,153,.2)"; }
           var po = document.getElementById("st-pause-badge");
           if (!po) {
@@ -7751,6 +7752,7 @@
 
     timerId = setInterval(function () {
       remaining--;
+      _timerRemaining = remaining;
       if (timerEl) {
         timerEl.textContent = formatTime(remaining);
         timerEl.className = remaining <= 3 ? "urgent" : (remaining <= 5 ? "warning" : "");
