@@ -21,6 +21,12 @@ jobs:
         with:
           node-version: 22
 
+      - name: Pull latest before modifying files
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git pull --rebase
+
       - name: Fetch Wikipedia categories
         run: node scripts/wikipedia-fetch.js
         env:
@@ -67,11 +73,6 @@ jobs:
 
       - name: Commit and push
         run: |
-          git stash --include-untracked
-          git pull --rebase
-          git stash pop || true
-          git config user.name "vlymbooq-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Daily globe fill $(date +'%Y-%m-%d')"
