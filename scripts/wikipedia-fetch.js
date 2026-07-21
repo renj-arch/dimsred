@@ -402,7 +402,9 @@ const CFG = [
   { id:'traveller', label:'Travellers & Explorers', wikiCat:'Category:Indian_explorers', subFn:(s,a)=>[s,'Indian explorer'].filter(Boolean).join(' · ') },
   { id:'invention', label:'Inventions & Discoveries', wikiCat:'Category:Indian_inventions', subFn:(s,a)=>s },
   { id:'movement', label:'Movements & Protests', wikiCat:'Category:Environmental_protests_in_India', subFn:(s,a)=>s },
-  { id:'i_book', label:'Ancient Books & Texts', wikiCat:'Category:Ancient_Indian_literature',
+  { id:'i_book', label:'Ancient Books & Texts',
+    wikiCat:['Category:Ancient_Indian_literature','Category:Buddhist_texts','Category:Indian_poetry','Category:Indian_philosophical_texts','Category:Indian_religious_texts','Category:Indian_medical_texts','Category:Indian_astronomy_texts','Category:Indian_mathematical_texts','Category:Sangam_literature','Category:Historical_Indian_texts','Category:Indian_legal_texts','Category:Jain_texts','Category:Sikh_texts','Category:Indian_classical_drama','Category:Pali_literature','Category:Sanskrit_literature'],
+    maxDepth:2,
     subFn:(s,a)=>s,
     coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
       VALUES ?item { QIDS }
@@ -712,9 +714,15 @@ async function fetchSummariesConcurrently(titles, concurrency = 2) {
 
 // ====== PROCESS CATEGORY ======
 async function processCat(cat, dedupSet) {
-  console.log(`\n▓ ${cat.label} (${cat.wikiCat})`);
-  const titles = await wikiCategoryDeepMembers(cat.wikiCat, 5000, new Set(), 0, cat.maxDepth ?? 2);
-  console.log(`  Wikipedia: ${titles.length} pages (deep scan, up to ${cat.maxDepth ?? 2} subcat levels)`);
+  const cats = Array.isArray(cat.wikiCat) ? cat.wikiCat : [cat.wikiCat];
+  console.log(`\n▓ ${cat.label} (${cats.join(', ')})`);
+  let allTitles = [];
+  for (const wc of cats) {
+    const t = await wikiCategoryDeepMembers(wc, 5000, new Set(), 0, cat.maxDepth ?? 2);
+    allTitles = allTitles.concat(t);
+  }
+  const titles = [...new Set(allTitles)];
+  console.log(`  Wikipedia: ${titles.length} pages from ${cats.length} categories (deep scan, up to ${cat.maxDepth ?? 2} subcat levels)`);
   if (!titles.length) return [];
 
   const titleQid = await titlesToQids(titles);
