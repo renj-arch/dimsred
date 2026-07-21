@@ -7489,9 +7489,7 @@
       html += "<div style='margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.05);color:#a1a1aa;font-size:.82em'>Correct answer: <span style='color:#34d399;font-weight:600'>" + esc(ansStr) + "</span></div>";
       html += "</div>";
     } else {
-      html += "<div id='st-options' style='margin-top:16px'>";
-      html += "<input id='st-answer-input' type='text' autocomplete='off' spellcheck='false' placeholder='Type your answer…' style='width:100%;padding:12px 16px;border-radius:10px;background:#27272a;color:#fafafa;border:1px solid rgba(255,255,255,.1);font-size:1em;outline:none;transition:border-color .2s;box-sizing:border-box' onfocus='this.style.borderColor=\"rgba(167,139,250,.5)\"' onblur='this.style.borderColor=\"rgba(255,255,255,.1)\"'>";
-      html += "</div>";
+      html += "<div style='margin-top:16px;text-align:center;padding:8px;color:#52525b;font-size:.85em;font-style:italic'>⏳ Answer in 4s…</div>";
     }
 
     if (q.solution && readOnly) {
@@ -7570,7 +7568,6 @@
     var ansStr = typeof q.a === "number" ? q.a + "" : q.a;
     var isUnlimited = session.unlimited;
     var isLast = session.questionIndex >= session.questions.length - 1;
-    var isFirst = session.questionIndex <= 0;
     var answeredCount = session.answers.filter(function(a){return a!==undefined && a!==null;}).length;
     var isAllAnswered = answeredCount >= session.questions.length;
 
@@ -7581,15 +7578,10 @@
     }
 
     if (isAllAnswered && isLast && !isUnlimited) {
-      resultHtml += "<div style='display:flex;gap:8px'>" +
+      resultHtml += "<div style='display:flex;gap:8px;margin-top:8px'>" +
         "<button id='st-review-btn' style='flex:1;padding:11px;border-radius:10px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;font-size:.82em;font-weight:700;cursor:pointer;transition:all .2s' onmouseenter='this.style.opacity=\".9\"' onmouseleave='this.style.opacity=\"\"'>📋 Review All</button>" +
         "<button id='st-finish-btn' style='flex:1;padding:11px;border-radius:10px;background:rgba(255,255,255,.06);color:#fafafa;border:1px solid rgba(255,255,255,.08);font-size:.82em;font-weight:600;cursor:pointer;transition:all .2s' onmouseenter='this.style.background=\"rgba(255,255,255,.1)\"' onmouseleave='this.style.background=\"rgba(255,255,255,.06)\"'>📊 Results</button>" +
         "</div>";
-    } else {
-      resultHtml += "<div style='display:flex;gap:8px'>";
-      if (!isFirst) resultHtml += "<button id='st-prev-btn' style='flex:1;padding:11px;border-radius:10px;background:rgba(255,255,255,.06);color:#fafafa;border:1px solid rgba(255,255,255,.08);font-size:.78em;font-weight:600;cursor:pointer;transition:all .2s' onmouseenter='this.style.background=\"rgba(255,255,255,.1)\"' onmouseleave='this.style.background=\"rgba(255,255,255,.06)\"'>← Previous</button>";
-      resultHtml += "<button id='st-next-btn' style='flex:1;padding:11px;border-radius:10px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;font-size:.78em;font-weight:700;cursor:pointer;transition:all .2s' onmouseenter='this.style.opacity=\".9\"' onmouseleave='this.style.opacity=\"\"'>" + (isLast && !isUnlimited ? "📋 Review All" : "Next →") + "</button>";
-      resultHtml += "</div>";
     }
 
     resultHtml += "</div>";
@@ -7598,19 +7590,8 @@
     if (prev) prev.remove();
     area.insertAdjacentHTML("beforeend", resultHtml);
 
-    var nextBtn = document.getElementById("st-next-btn");
-    var prevBtn = document.getElementById("st-prev-btn");
     var reviewBtn = document.getElementById("st-review-btn");
     var finishBtn = document.getElementById("st-finish-btn");
-
-    if (nextBtn) nextBtn.addEventListener("click", function () {
-      if (session.unlimited || session.questionIndex < session.questions.length - 1) {
-        nextQuestion();
-      } else {
-        showReviewMode();
-      }
-    });
-    if (prevBtn) prevBtn.addEventListener("click", function () { prevQuestion(); });
     if (reviewBtn) reviewBtn.addEventListener("click", function () { showReviewMode(); });
     if (finishBtn) finishBtn.addEventListener("click", function () { endTraining(); });
   }
@@ -7770,8 +7751,10 @@
       if (remaining <= 0) {
         clearTimer();
         if (currentQuestion && session && !session.isPaused && !(session.answers && session.answers[session.questionIndex])) {
-          var inp = document.getElementById("st-answer-input");
-          submitAnswer(inp ? inp.value.trim() : "");
+          var q = currentQuestion;
+          session.answers[session.questionIndex] = { selected: "", correct: false };
+          renderQuestion(q, true);
+          setTimeout(function () { nextQuestion(); }, 1500);
         }
       }
     }, 1000);
