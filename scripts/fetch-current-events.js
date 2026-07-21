@@ -27,6 +27,8 @@ function fetchJSON(url) {
 
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+function log(msg) { var d = new Date(); console.error('[' + d.toISOString().slice(11,19) + '] ' + msg); }
+
 function stripHtml(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 function extractEntity(eventHtml) {
@@ -249,19 +251,20 @@ async function main() {
   var cm = now.getMonth() + 1;
   var cd = now.getDate();
 
+  log('Reading existing file...');
   var existing = { 'Current Affairs': { subSubjects: {} } };
   if (fs.existsSync(OUTPUT)) {
     try {
       existing = JSON.parse(fs.readFileSync(OUTPUT, 'utf8').replace(/^\uFEFF/, ''));
-      console.error('Read existing file with ' + Object.keys(existing['Current Affairs'].subSubjects).length + ' months');
+      log('Read existing file with ' + Object.keys(existing['Current Affairs'].subSubjects).length + ' months');
     } catch (e) {
-      console.error('Error reading existing file, starting fresh: ' + e.message);
+      log('Error reading existing file, starting fresh: ' + e.message);
     }
   }
 
   var todayStr = cy + '-' + pad(cm) + '-' + pad(cd);
   var cutoff = new Date(cy, cm - 1, cd - DAYS_BACK + 1);
-  console.error('Fetching events from ' + (cutoff.getMonth() + 1) + '/' + cutoff.getDate() + '/' + cutoff.getFullYear() + ' to ' + todayStr);
+  log('Fetching events from ' + (cutoff.getMonth() + 1) + '/' + cutoff.getDate() + '/' + cutoff.getFullYear() + ' to ' + todayStr);
 
   var monthsToFetch = {};
   for (var d = new Date(cutoff); d <= now; d.setDate(d.getDate() + 1)) {
@@ -270,22 +273,27 @@ async function main() {
   }
 
   var monthKeys = Object.keys(monthsToFetch).sort();
-  console.error('Months to fetch: ' + monthKeys.join(', '));
+  log('Months to fetch: ' + monthKeys.join(', '));
 
   var monthlySections = {};
   for (var i = 0; i < monthKeys.length; i++) {
     var mk = monthKeys[i];
     var my = monthsToFetch[mk].year;
     var mm = monthsToFetch[mk].month;
+    log('Fetching ' + MONTHS[mm - 1] + ' ' + my + '...');
+    var t0 = Date.now();
     var result = await fetchMonthEvents(my, mm);
+    log('  API + parse: ' + (Date.now() - t0) + 'ms');
     if (result) {
       monthlySections[mk] = result.sections;
     }
     if (i < monthKeys.length - 1) await delay(500);
   }
 
+  log('Processing ' + monthKeys.length + ' month(s) of events...');
   var newCount = 0;
   var skipCount = 0;
+  var totalEvents = 0;
 
   for (var d = new Date(cutoff); d <= now; d.setDate(d.getDate() + 1)) {
     var y = d.getFullYear();
@@ -303,6 +311,7 @@ async function main() {
     if (daySections.length === 0) continue;
 
     var events = daySections[0].events;
+    totalEvents += events.length;
 
     events.forEach(function(ev) { ev.score = scoreEvent(ev); });
     events.sort(function(a, b) { return b.score - a.score; });
@@ -333,10 +342,10 @@ async function main() {
     });
   }
 
-  console.error('New events to add: ' + newCount + ', skipped (duplicates): ' + skipCount);
+  log('Scored ' + totalEvents + ' events. New: ' + newCount + ', skipped (duplicates): ' + skipCount);
 
   if (newCount === 0) {
-    console.error('No new events to add. Updating CAT_INDEX with current totals anyway.');
+    log('No new events to add. Updating CAT_INDEX with current totals anyway.');
   }
 
   var monthKeys_sorted = Object.keys(existing['Current Affairs'].subSubjects).sort(function(a, b) {
@@ -418,20 +427,23 @@ async function main() {
     totalQuestions += existing['Current Affairs'].subSubjects[mk].length;
   });
 
+  var tJson = Date.now();
   fs.writeFileSync(OUTPUT, JSON.stringify(existing, null, 2), 'utf8');
-  console.error('Wrote ' + OUTPUT + ' (' + totalQuestions + ' total questions)');
+  log('Wrote ' + OUTPUT + ' (' + totalQuestions + ' total questions) in ' + (Date.now() - tJson) + 'ms');
 
   var subSubjectEntries = [];
   monthKeys_sorted.forEach(function(mk) {
     var count = existing['Current Affairs'].subSubjects[mk].length;
-    console.error('  ' + mk + ': ' + count + ' questions');
+    log('  ' + mk + ': ' + count + ' questions');
     subSubjectEntries.push('{"name":"' + mk.replace(/"/g, '\\"') + '","count":' + count + '}');
   });
 
   var total = totalQuestions;
   var entryStr = '"name":"Current Affairs","total":' + total + ',"icon":"📰","file":"data/questions/current-events.json","subjects":[{"name":"Current Affairs","total":' + total + ',"subSubjects":[' + subSubjectEntries.join(',') + ']}]}';
+  var tArc = Date.now();
   updateArchiveHtml(entryStr, total);
-  console.error('Total: ' + total + ' events');
+  log('updateArchiveHtml done in ' + (Date.now() - tArc) + 'ms');
+  log('Total: ' + total + ' events');
 }
 
 main().catch(function(err) {
