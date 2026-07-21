@@ -76,6 +76,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Daily globe fill $(date +'%Y-%m-%d')"
+            git pull --rebase
             git push
           else
             echo "No new entries to commit"
