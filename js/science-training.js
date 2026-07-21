@@ -7560,7 +7560,7 @@
           if (btn) { btn.textContent = "⏸ Pause"; btn.style.background = "rgba(255,255,255,.06)"; btn.style.color = "#a1a1aa"; btn.style.borderColor = "rgba(255,255,255,.08)"; }
           var po = document.getElementById("st-pause-badge");
           if (po) po.remove();
-          startTimer(q.timeLimit || 4);
+          startTimer(session.pausedRemaining > 0 ? session.pausedRemaining : (q.timeLimit || 4));
         }
       });
     }
