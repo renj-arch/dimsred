@@ -265,7 +265,7 @@ async function main() {
   var existing = { 'Indian Current Affairs': { subSubjects: {} } };
   if (fs.existsSync(OUTPUT)) {
     try {
-      existing = JSON.parse(fs.readFileSync(OUTPUT, 'utf8'));
+      existing = JSON.parse(fs.readFileSync(OUTPUT, 'utf8').replace(/^\uFEFF/, ''));
       console.error('Read existing file with ' + Object.keys(existing['Indian Current Affairs'].subSubjects).length + ' months');
     } catch (e) {
       console.error('Error reading existing file, starting fresh: ' + e.message);

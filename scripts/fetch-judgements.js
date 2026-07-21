@@ -10,12 +10,26 @@ function clean(v) {
   return v.replace(/&#160;/g, ' ').replace(/<[^>]+>/g, ' ').replace(/[[\d\s,\-]+]|&#91;[\d\s,\-]+&#93;/g, '').replace(/\s+/g, ' ').trim();
 }
 
-function fetchJSON(url) {
+function fetchJSON(url, retries) {
+  retries = retries || 3;
   return new Promise(function(resolve, reject) {
     https.get(url, { agent: AGENT, headers: { 'User-Agent': 'LegalBot/1.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
-      res.on('end', function() { resolve(JSON.parse(d)); });
+      res.on('end', function() {
+        if (res.statusCode === 429) {
+          if (retries > 0) {
+            var wait = 30000 + Math.floor(Math.random() * 15000);
+            console.error('  (HTTP 429, waiting ' + (wait / 1000) + 's... retries left: ' + (retries - 1) + ')');
+            setTimeout(function() { resolve(fetchJSON(url, retries - 1)); }, wait);
+          } else {
+            reject(new Error('HTTP 429 (exhausted retries)'));
+          }
+          return;
+        }
+        if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
+        try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
+      });
     }).on('error', reject);
   });
 }
@@ -99,7 +113,7 @@ async function fetchLandmarks(existingKeys, newQuestions, seq) {
 async function main() {
   var existing = {};
   if (fs.existsSync(PIB_PATH)) {
-    try { existing = JSON.parse(fs.readFileSync(PIB_PATH, 'utf8')); } catch (e) {}
+    try { existing = JSON.parse(fs.readFileSync(PIB_PATH, 'utf8').replace(/^\uFEFF/, '')); } catch (e) {}
   }
   console.error('Read existing pib-archive.json');
 
