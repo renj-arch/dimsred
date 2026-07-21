@@ -4,9 +4,10 @@
   var SESSION_CACHE_KEY = 'science_session_cache';
   var activeLayer = 'instinct';
   function esc(s){return (s||'').replace(/[&<>]/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[m];});}
-  function loadTopicImage(qText) {
+  function loadTopicImage(qText, answer) {
     var cache = loadTopicImage._cache || (loadTopicImage._cache = {});
-    var key = (qText || '').toLowerCase().replace(/[^a-z0-9 ]/g,'').trim().slice(0,100);
+    var searchText = (qText || '') + ' ' + (answer || '');
+    var key = searchText.toLowerCase().replace(/[^a-z0-9 ]/g,'').trim().slice(0,100);
     if (!key) return;
     var imgDiv = document.getElementById('st-topic-img');
     if (!imgDiv) return;
@@ -7523,7 +7524,7 @@
     area.innerHTML = html;
 
     if (readOnly) {
-      loadTopicImage(q.q);
+      loadTopicImage(q.q, q.a);
     }
 
     var _graph2 = q.graph || autoGraph(q);
@@ -7535,10 +7536,11 @@
     }
 
     var readOnly = !!(session.answers && session.answers[session.questionIndex]);
-    if (!readOnly && area) {
+    if (!readOnly && area && !area._pauseAttached) {
+      area._pauseAttached = true;
       area.style.cursor = "pointer";
       area.addEventListener("click", function (e) {
-        if (e.target.closest("#st-answer-input, button")) return;
+        if (e.target.closest("button")) return;
         if (!session) return;
         session.isPaused = !session.isPaused;
         var btn = document.getElementById("st-pause-btn");
