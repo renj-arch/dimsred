@@ -30,6 +30,12 @@ jobs:
           git reset --hard origin/main
           git clean -fd
 
+      - name: Fetch PIB and other RSS feeds
+        run: node scripts/fetch-pib-rss.js
+
+      - name: Update PIB archive from feed (no duplicates)
+        run: node scripts/update-pib-archive.js
+
       - name: Generate questions from Wikipedia
         run: node scripts/wiki-fill-all.cjs
         env:
@@ -43,12 +49,6 @@ jobs:
 
       - name: Fetch current events and update archive.html
         run: node scripts/fetch-current-events.js
-
-      - name: Fetch PIB and other RSS feeds
-        run: node scripts/fetch-pib-rss.js
-
-      - name: Update PIB archive from feed (no duplicates)
-        run: node scripts/update-pib-archive.js
 
       - name: Fetch Indian current affairs from Wikipedia
         run: node scripts/fetch-indian-ca.js
