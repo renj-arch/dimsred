@@ -282,14 +282,22 @@ const CFG = [
   { id:'volcano', label:'Volcanoes', wikiCat:'Category:Volcanoes_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   { id:'i_pass', label:'Mountain Passes', wikiCat:'Category:Mountain_passes_of_India', subFn:(s,a)=>[s,'Pass'].filter(Boolean).join(' · ') },
   { id:'hill', label:'Hills', wikiCat:'Category:Hills_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
-  { id:'railway', label:'Railway Stations', wikiCat:'Category:Railway_stations_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
-  { id:'tower', label:'Towers', wikiCat:'Category:Towers_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
-  { id:'highway', label:'National Highways', wikiCat:'Category:National_highways_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'railway', label:'Railway Stations', wikiCat:['Category:Railway_stations_in_India','Category:Railway_lines_in_India','Category:Railway_junction_stations_in_India'], subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'tower', label:'Skyscrapers', wikiCat:'Category:Skyscrapers',
+    subFn:(s,a)=>[s].filter(Boolean).join(' · '),
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      ?item wdt:P625 ?coord.
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }`
+  },
+  { id:'highway', label:'National Highways', wikiCat:['Category:National_highways_in_India','Category:Expressways_in_India','Category:State_highways_in_India'], subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   { id:'battle', label:'Battles', wikiCat:'Category:Battles_involving_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   { id:'w_battle', label:'World Battles', wikiCat:'Category:Battles', subFn:(s,a)=>s },
   { id:'bird', label:'Bird Sanctuaries', wikiCat:'Category:Bird_sanctuaries_of_India', subFn:(s,a)=>[s,'Bird Sanctuary'].filter(Boolean).join(' · ') },
   { id:'crop', label:'Crops', wikiCat:'Category:Crops_originating_from_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
-  { id:'institution', label:'Institutions', wikiCat:'Category:Universities_and_colleges_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'institution', label:'Institutions', wikiCat:['Category:Universities_and_colleges_in_India','Category:Research_institutes_in_India','Category:Museums_in_India','Category:Libraries_in_India'], subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   { id:'kingdom', label:'Former Kingdoms', wikiCat:'Category:Empires_and_kingdoms_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   { id:'mineral', label:'Minerals', wikiCat:'Category:Minerals_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   { id:'nuclear', label:'Nuclear Power Stations', wikiCat:'Category:Nuclear_power_stations_in_India', subFn:(s,a)=>[s,'Nuclear Station'].filter(Boolean).join(' · ') },
@@ -346,8 +354,8 @@ const CFG = [
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
   },
-  { id:'organization', label:'Organizations', wikiCat:'Category:Indian_nationalist_political_parties', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
-  { id:'personality', label:'Historical Figures', wikiCat:'Category:Indian_historical_figures',
+  { id:'organization', label:'Organizations', wikiCat:['Category:Indian_nationalist_political_parties','Category:Political_organisations_based_in_India','Category:Social_organisations_of_India'], subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'personality', label:'Historical Figures', wikiCat:['Category:Indian_historical_figures','Category:Historical_figures'],
     subFn:(s,a)=>s,
     coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
       VALUES ?item { QIDS }
@@ -369,8 +377,8 @@ const CFG = [
   { id:'biogeographic_zone', label:'Biogeographic Zones', wikiCat:'Category:Biogeographic_regions_of_India', subFn:(s,a)=>s },
   { id:'industrial', label:'Industrial Regions', wikiCat:'Category:Industrial_regions_in_India', subFn:(s,a)=>s },
   { id:'wind', label:'Wind Patterns', wikiCat:'Category:Wind', subFn:(s,a)=>s },
-  { id:'cloud', label:'Cloud Types', wikiCat:'Category:Cloud_types', subFn:(s,a)=>s },
-  { id:'rainfall', label:'Rainfall Records', wikiCat:'Category:Weather_records', subFn:(s,a)=>s },
+  { id:'cloud', label:'Cloud Types', wikiCat:['Category:Cloud_types','Category:Clouds','Category:Cloud_and_fog_phenomena'], subFn:(s,a)=>s },
+  { id:'rainfall', label:'Rainfall Records', wikiCat:['Category:Weather_records','Category:Rain','Category:Precipitation'], subFn:(s,a)=>s },
   { id:'latitude', label:'Latitude Lines', wikiCat:'Category:Lines_of_latitude', subFn:(s,a)=>s },
   { id:'trade', label:'Trade Routes', wikiCat:'Category:Trade_routes', subFn:(s,a)=>s },
   { id:'phenomena', label:'Natural Phenomena', wikiCat:'Category:Natural_phenomena', subFn:(s,a)=>s },
@@ -397,11 +405,11 @@ const CFG = [
   { id:'shrine', label:'Shrines', wikiCat:'Category:Shrines_in_India', subFn:(s,a)=>s },
   { id:'theatre', label:'Theatres', wikiCat:'Category:Theatres_in_India', subFn:(s,a)=>s },
   { id:'tomb', label:'Tombs', wikiCat:'Category:Tombs_in_India', subFn:(s,a)=>s },
-  { id:'ruler', label:'Rulers & Emperors', wikiCat:'Category:Indian_monarchs', subFn:(s,a)=>[s,'Indian monarch'].filter(Boolean).join(' · ') },
-  { id:'freedom', label:'Freedom Fighters', wikiCat:'Category:Indian_revolutionaries', subFn:(s,a)=>[s,'Indian revolutionary'].filter(Boolean).join(' · ') },
-  { id:'traveller', label:'Travellers & Explorers', wikiCat:'Category:Indian_explorers', subFn:(s,a)=>[s,'Indian explorer'].filter(Boolean).join(' · ') },
-  { id:'invention', label:'Inventions & Discoveries', wikiCat:'Category:Indian_inventions', subFn:(s,a)=>s },
-  { id:'movement', label:'Movements & Protests', wikiCat:'Category:Environmental_protests_in_India', subFn:(s,a)=>s },
+  { id:'ruler', label:'Rulers & Emperors', wikiCat:['Category:Indian_monarchs','Category:Maharajas','Category:Monarchs_of_ancient_India','Category:Indian_royalty'], subFn:(s,a)=>[s,'Indian monarch'].filter(Boolean).join(' · ') },
+  { id:'freedom', label:'Freedom Fighters', wikiCat:['Category:Indian_revolutionaries','Category:Indian_independence_activists','Category:Indian_independence_movement'], subFn:(s,a)=>[s,'Indian revolutionary'].filter(Boolean).join(' · ') },
+  { id:'traveller', label:'Travellers & Explorers', wikiCat:['Category:Indian_explorers','Category:Explorers_of_India','Category:Explorers'], subFn:(s,a)=>[s,'Explorer'].filter(Boolean).join(' · ') },
+  { id:'invention', label:'Inventions & Discoveries', wikiCat:['Category:Indian_inventions','Category:Indian_discoveries','Category:Inventions'], subFn:(s,a)=>s },
+  { id:'movement', label:'Movements & Protests', wikiCat:['Category:Social_movements_in_India','Category:Indian_independence_movement','Category:Environmental_protests_in_India','Category:Political_movements_in_India'], subFn:(s,a)=>s },
   { id:'i_book', label:'Ancient Books & Texts',
     wikiCat:['Category:Ancient_Indian_literature','Category:Buddhist_texts','Category:Indian_poetry','Category:Indian_philosophical_texts','Category:Indian_religious_texts','Category:Indian_medical_texts','Category:Indian_astronomy_texts','Category:Indian_mathematical_texts','Category:Sangam_literature','Category:Historical_Indian_texts','Category:Indian_legal_texts','Category:Jain_texts','Category:Sikh_texts','Category:Indian_classical_drama','Category:Pali_literature','Category:Sanskrit_literature'],
     maxDepth:2,
@@ -416,7 +424,7 @@ const CFG = [
     }`
   },
   { id:'tribal', label:'Tribal Regions', wikiCat:'Category:Adivasi', subFn:(s,a)=>s },
-  { id:'corridor', label:'Wildlife Corridors', wikiCat:'Category:Elephant_reserves_of_India', subFn:(s,a)=>s },
+  { id:'corridor', label:'Wildlife Corridors', wikiCat:['Category:Elephant_reserves_of_India','Category:Wildlife_corridors','Category:Protected_areas_of_India'], subFn:(s,a)=>s },
   { id:'reformer', label:'Reformers & Thinkers', wikiCat:'Category:Indian_social_reformers',
     subFn:(s,a)=>s,
     coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
@@ -445,7 +453,7 @@ const CFG = [
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
   },
-  { id:'writer', label:'Writers & Poets', wikiCat:'Category:Indian_poets',
+  { id:'writer', label:'Writers & Poets', wikiCat:['Category:Indian_poets','Category:Indian_writers','Category:Indian_novelists','Category:Indian_dramatists_and_playwrights','Category:Indian_women_writers','Category:Indian_scholars'],
     subFn:(s,a)=>s,
     coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
       VALUES ?item { QIDS }
@@ -497,7 +505,46 @@ const CFG = [
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
   },
-  { id:'w_alliance', label:'World Alliances', wikiCat:'Category:Military_alliances', subFn:(s,a)=>s },
+  { id:'w_philosopher', label:'World Philosophers', wikiCat:'Category:Philosophers',
+    subFn:(s,a)=>s,
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P19 ?coord. }
+      UNION
+      { ?item wdt:P20 ?coord. }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }`
+  },
+  { id:'w_artist', label:'World Artists', wikiCat:'Category:Artists',
+    subFn:(s,a)=>s,
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P19 ?coord. }
+      UNION
+      { ?item wdt:P20 ?coord. }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }`
+  },
+  { id:'w_architect', label:'World Architects', wikiCat:'Category:Architects',
+    subFn:(s,a)=>s,
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P19 ?coord. }
+      UNION
+      { ?item wdt:P20 ?coord. }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }`
+  },
+  { id:'w_alliance', label:'World Alliances', wikiCat:['Category:Military_alliances','Category:International_organizations','Category:Political_unions'], subFn:(s,a)=>s },
   { id:'judiciary', label:'High Courts', wikiCat:'Category:High_courts_of_India', subFn:(s,a)=>[s,'High Court'].filter(Boolean).join(' · ') },
   { id:'w_trade_bloc', label:'Trade Blocs', wikiCat:'Category:Trade_blocs', subFn:(s,a)=>s },
   { id:'w_religion', label:'World Religions', wikiCat:'Category:Major_religious_groups', subFn:(s,a)=>s },
@@ -537,7 +584,7 @@ const CFG = [
   { id:'w_disaster', label:'Disasters', wikiCat:'Category:Disasters', subFn:(s,a)=>s },
   { id:'w_civilization', label:'Ancient Civilizations', wikiCat:'Category:Ancient_civilizations', subFn:(s,a)=>s },
   { id:'w_empire', label:'World Empires', wikiCat:'Category:Empires', subFn:(s,a)=>s },
-  { id:'w_kingdom', label:'Former Kingdoms', wikiCat:'Category:Former_kingdoms', subFn:(s,a)=>s },
+  { id:'w_kingdom', label:'Former Kingdoms', wikiCat:['Category:Former_kingdoms','Category:Empires','Category:Monarchies'], subFn:(s,a)=>s },
   { id:'w_ww1', label:'World War I', wikiCat:'Category:World_War_I', subFn:(s,a)=>s },
   { id:'w_ww2', label:'World War II', wikiCat:'Category:World_War_II', subFn:(s,a)=>s },
   // World landmark categories
@@ -576,14 +623,14 @@ const CFG = [
   { id:'w_plate', label:'Tectonic Plates', wikiCat:'Category:Tectonic_plates', subFn:(s,a)=>s },
   { id:'w_meteorite', label:'Meteorites', wikiCat:'Category:Meteorites', subFn:(s,a)=>s },
   { id:'w_organization', label:'World Organizations', wikiCat:'Category:Organizations', subFn:(s,a)=>s },
-  { id:'w_inst', label:'World Institutions', wikiCat:'Category:Research_institutes', subFn:(s,a)=>s },
+  { id:'w_inst', label:'World Institutions', wikiCat:['Category:Research_institutes','Category:Educational_institutions','Category:International_institutions'], subFn:(s,a)=>s },
   // General geographic categories
   { id:'strait', label:'Straits', wikiCat:'Category:Straits', subFn:(s,a)=>s },
   { id:'peninsula', label:'Peninsulas', wikiCat:'Category:Peninsulas', subFn:(s,a)=>s },
   { id:'gulf', label:'Gulfs', wikiCat:'Category:Gulfs', subFn:(s,a)=>s },
   { id:'canal', label:'Canals', wikiCat:'Category:Canals', subFn:(s,a)=>s },
   { id:'reef', label:'Reefs', wikiCat:'Category:Reefs', subFn:(s,a)=>s },
-  { id:'ridge', label:'Ridges', wikiCat:'Category:Ridges', subFn:(s,a)=>s },
+  { id:'ridge', label:'Ridges', wikiCat:['Category:Ridges','Category:Escarpments'], subFn:(s,a)=>s },
   { id:'canyon', label:'Canyons', wikiCat:'Category:Canyons_and_gorges', subFn:(s,a)=>s },
   { id:'cape', label:'Capes', wikiCat:'Category:Capes_(geography)', subFn:(s,a)=>s },
   { id:'delta', label:'Deltas', wikiCat:'Category:River_deltas', subFn:(s,a)=>s },
