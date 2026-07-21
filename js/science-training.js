@@ -7585,8 +7585,7 @@
       var hasPrev = session.questionIndex > 0;
       var hasNext = session.questionIndex < session.questions.length - 1;
       var isAnswered = !!(session.answers && session.answers[session.questionIndex]);
-      var showNav = isAnswered || (session.mode === "instinct" && session.questionIndex < session.questions.length);
-      if (showNav) {
+      if (isAnswered || session.mode === "instinct" || session.mode === "unlimited") {
         html += "<div style='display:flex;justify-content:center;gap:10px;margin-top:18px'>" +
           "<button id='st-prev-btn' style='padding:8px 18px;border-radius:8px;background:" + (hasPrev ? "rgba(255,255,255,.06)" : "rgba(255,255,255,.02)") + ";color:" + (hasPrev ? "#a1a1aa" : "#52525b") + ";border:1px solid rgba(255,255,255,.08);font-size:.78em;font-weight:600;cursor:" + (hasPrev ? "pointer" : "default") + ";transition:all .2s'" + (hasPrev ? " onmouseenter='this.style.background=\"rgba(255,255,255,.1)\"' onmouseleave='this.style.background=\"rgba(255,255,255,.06)\"'" : "") + ">◀ Prev</button>" +
           "<button id='st-next-btn' style='padding:8px 18px;border-radius:8px;background:" + (hasNext ? "rgba(255,255,255,.06)" : "rgba(255,255,255,.02)") + ";color:" + (hasNext ? "#a1a1aa" : "#52525b") + ";border:1px solid rgba(255,255,255,.08);font-size:.78em;font-weight:600;cursor:" + (hasNext ? "pointer" : "default") + ";transition:all .2s'" + (hasNext ? " onmouseenter='this.style.background=\"rgba(255,255,255,.1)\"' onmouseleave='this.style.background=\"rgba(255,255,255,.06)\"'" : "") + ">Next ▶</button>" +
