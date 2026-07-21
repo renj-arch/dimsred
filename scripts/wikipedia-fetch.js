@@ -544,9 +544,9 @@ const CFG = [
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
   },
-  { id:'w_alliance', label:'World Alliances', wikiCat:['Category:Military_alliances','Category:International_organizations','Category:Political_unions'], subFn:(s,a)=>s },
+  { id:'w_alliance', label:'World Alliances', wikiCat:'Category:Military_alliances', maxDepth:1, subFn:(s,a)=>s },
   { id:'judiciary', label:'High Courts', wikiCat:'Category:High_courts_of_India', subFn:(s,a)=>[s,'High Court'].filter(Boolean).join(' · ') },
-  { id:'w_trade_bloc', label:'Trade Blocs', wikiCat:'Category:Trade_blocs', subFn:(s,a)=>s },
+  { id:'w_trade_bloc', label:'Trade Blocs', wikiCat:'Category:Trade_blocs', maxDepth:1, subFn:(s,a)=>s },
   { id:'w_religion', label:'World Religions', wikiCat:'Category:Major_religious_groups', subFn:(s,a)=>s },
   { id:'space_mission', label:'Space Missions', wikiCat:'Category:Space_missions', subFn:(s,a)=>s },
   { id:'border', label:'Border Disputes', wikiCat:'Category:Border_disputes_involving_India', subFn:(s,a)=>s },
