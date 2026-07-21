@@ -741,6 +741,24 @@ const CFG = [
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
   },
+  { id:'w_waterfall', label:'World Waterfalls', wikiCat:'Category:Waterfalls', maxDepth:1, subFn:(s,a)=>s },
+  { id:'w_volcano', label:'World Volcanoes', wikiCat:'Category:Volcanoes', maxDepth:1, subFn:(s,a)=>s },
+  { id:'w_glacier', label:'World Glaciers', wikiCat:'Category:Glaciers', maxDepth:1, subFn:(s,a)=>s },
+  { id:'w_forest', label:'World Forests', wikiCat:'Category:Forests', maxDepth:1, subFn:(s,a)=>s },
+  { id:'w_desert', label:'World Deserts', wikiCat:'Category:Deserts', maxDepth:1, subFn:(s,a)=>s },
+  { id:'w_lake', label:'World Lakes', wikiCat:'Category:Lakes', maxDepth:1, subFn:(s,a)=>s },
+  { id:'w_island', label:'World Islands', wikiCat:'Category:Islands', maxDepth:1, subFn:(s,a)=>s },
+  { id:'w_bird', label:'Important Bird Areas', wikiCat:'Category:Important_Bird_Areas', subFn:(s,a)=>s },
+  { id:'w_temple', label:'World Temples', wikiCat:'Category:Hindu_temples', maxDepth:1, subFn:(s,a)=>s },
+  { id:'w_sea', label:'World Seas', wikiCat:'Category:Seas', maxDepth:1, subFn:(s,a)=>s },
+  { id:'w_port', label:'World Ports', wikiCat:'Category:Ports', maxDepth:1, subFn:(s,a)=>s },
+  { id:'w_plateau', label:'World Plateaus', wikiCat:'Category:Plateaus', maxDepth:1, subFn:(s,a)=>s },
+  { id:'w_range', label:'World Mountain Ranges', wikiCat:'Category:Mountain_ranges', maxDepth:1, subFn:(s,a)=>s },
+  { id:'w_reef', label:'World Reefs', wikiCat:'Category:Reefs', maxDepth:1, subFn:(s,a)=>s },
+  { id:'w_railway', label:'World Railways', wikiCat:'Category:Railway_lines', maxDepth:1, subFn:(s,a)=>s },
+  { id:'w_highway', label:'World Highways', wikiCat:'Category:Highways', maxDepth:1, subFn:(s,a)=>s },
+  { id:'w_biosphere', label:'World Biosphere Reserves', wikiCat:'Category:Biosphere_reserves', maxDepth:1, subFn:(s,a)=>s },
+  { id:'w_ramsar', label:'World Ramsar Sites', wikiCat:'Category:Ramsar_sites', maxDepth:1, subFn:(s,a)=>s },
 ];
 
 async function fetchSummariesConcurrently(titles, concurrency = 2) {
