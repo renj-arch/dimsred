@@ -7477,56 +7477,26 @@
       html += "<div style='text-align:center;margin:8px 0 4px'><canvas id='st-graph-canvas' width='" + gw + "' height='" + gh + "' style='width:" + gw + "px;height:" + gh + "px;max-width:100%;border-radius:8px'></canvas></div>";
     }
 
-    var opts = q.options;
-    if (!opts || opts.length < 2) {
-      var ans = (q.a || "").toString().trim();
-      var num = parseFloat(ans);
-      if (!isNaN(num)) {
-        var off1 = Math.max(1, Math.round(Math.abs(num) * 0.15) || 1);
-        var off2 = Math.max(1, Math.round(Math.abs(num) * 0.3) || 2);
-        var pool = [ans, (num + off1).toString(), (num - off1).toString(), (num + off2).toString(), (num - off2).toString(), (num + off1 * 2).toString()];
-        pool = pool.filter(function(v,i,a){return a.indexOf(v)===i;});
-        opts = [];
-        var idx = rand(0, Math.min(3, pool.length - 1));
-        opts.push(pool[idx]); pool.splice(idx,1);
-        while (opts.length < 4 && pool.length) { var p = pool.splice(rand(0, pool.length-1), 1)[0]; opts.push(p); }
-        shuffle(opts);
-      } else {
-        opts = [ans, "None of the above", "Can't be determined", "Insufficient data"];
-        shuffle(opts);
-      }
-    }
-    if (!opts) opts = [ans || "1", "2", "3", "4"];
-    var ans = session.answers && session.answers[session.questionIndex];
-    var selectedVal = ans ? ans.selected : null;
-    var isCorrect = ans ? ans.correct : null;
     var ansStr = q.a !== undefined ? (typeof q.a === "number" ? q.a + "" : q.a) : "";
+    var prevAns = session.answers && session.answers[session.questionIndex];
+    var wasCorrect = prevAns ? prevAns.correct : null;
 
-    html += "<div id='st-options' style='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px'>";
-    for (var i = 0; i < opts.length && i < 4; i++) {
-      var val = opts[i];
-      var isSelected = selectedVal === val || (selectedVal !== null && parseFloat(selectedVal) === parseFloat(val));
-      var isAnswer = ansStr === val || (ansStr && parseFloat(ansStr) === parseFloat(val));
-      var btnStyle = "padding:16px 18px;border-radius:12px;font-size:.9em;text-align:left;transition:all .2s;font-weight:500;position:relative;overflow:hidden;cursor:" + (readOnly ? "default" : "pointer") + ";";
-      if (readOnly && isSelected && isCorrect) {
-        btnStyle += "background:linear-gradient(135deg,rgba(52,211,153,.15),rgba(52,211,153,.05));border:2px solid #34d399;color:#34d399;";
-      } else if (readOnly && isSelected && !isCorrect) {
-        btnStyle += "background:linear-gradient(135deg,rgba(239,68,68,.15),rgba(239,68,68,.05));border:2px solid #ef4444;color:#ef4444;";
-      } else if (readOnly && isAnswer && !isCorrect) {
-        btnStyle += "background:linear-gradient(135deg,rgba(52,211,153,.1),rgba(52,211,153,.03));border:2px solid rgba(52,211,153,.4);color:#34d399;";
-      } else {
-        btnStyle += "background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.07);color:#fafafa;";
-      }
-      var iconBg = readOnly && isSelected ? (isCorrect ? "#34d399" : "#ef4444") : "rgba(167,139,250,.15)";
-      var iconColor = readOnly && isSelected ? "#fff" : "#a78bfa";
-      var icon = readOnly && isSelected ? (isCorrect ? "✓" : "✗") : String.fromCharCode(65 + i);
-      html += "<button class='st-opt' data-value='" + val.replace(/'/g, "&apos;") + "' style='" + btnStyle + "' " +
-        (readOnly ? "" : "onmouseenter='this.style.borderColor=\"rgba(167,139,250,.5)\";this.style.background=\"linear-gradient(135deg,rgba(167,139,250,.12),rgba(52,211,153,.06))\";this.style.transform=\"translateY(-2px)\";this.style.boxShadow=\"0 4px 20px rgba(167,139,250,.15)\"' " +
-        "onmouseleave='if(!this.classList.contains(\"selected\")){this.style.borderColor=\"rgba(255,255,255,.07)\";this.style.background=\"linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.01))\";this.style.transform=\"\";this.style.boxShadow=\"\"}'") +
-        "><span style='display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:" + iconBg + ";color:" + iconColor + ";font-size:.75em;font-weight:700;margin-right:10px;flex-shrink:0'>" + icon + "</span>" +
-        "<span>" + val + "</span></button>";
+    if (readOnly) {
+      var isSelected = prevAns ? prevAns.selected : null;
+      var icon = wasCorrect ? "✓" : "✗";
+      var color = wasCorrect ? "#34d399" : "#ef4444";
+      html += "<div id='st-options' style='margin-top:16px;padding:14px 16px;border-radius:12px;background:linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.07)'>";
+      html += "<div style='display:flex;align-items:center;gap:10px'><span style='font-size:1.3em'>" + icon + "</span>";
+      html += "<span style='color:" + color + ";font-weight:700;font-size:.9em'>Your answer: " + esc(isSelected || "") + "</span></div>";
+      html += "<div style='margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.05);color:#a1a1aa;font-size:.82em'>Correct answer: <span style='color:#34d399;font-weight:600'>" + esc(ansStr) + "</span></div>";
+      html += "</div>";
+    } else {
+      html += "<div id='st-options' style='margin-top:16px'>";
+      html += "<div style='display:flex;gap:8px;align-items:stretch'>";
+      html += "<input id='st-answer-input' type='text' autocomplete='off' spellcheck='false' placeholder='Type your answer…' style='flex:1;padding:12px 16px;border-radius:10px;background:#27272a;color:#fafafa;border:1px solid rgba(255,255,255,.1);font-size:1em;outline:none;transition:border-color .2s' onfocus='this.style.borderColor=\"rgba(167,139,250,.5)\"' onblur='this.style.borderColor=\"rgba(255,255,255,.1)\"' onkeydown='if(event.key===\"Enter\"){var inp=document.getElementById(\"st-answer-input\");var btn=document.getElementById(\"st-submit-btn\");if(inp&&btn){btn.click()}}'>";
+      html += "<button id='st-submit-btn' style='padding:12px 24px;border-radius:10px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;font-size:.9em;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap' onmouseenter='this.style.opacity=\".9\"' onmouseleave='this.style.opacity=\"\"'>Submit</button>";
+      html += "</div></div>";
     }
-    html += "</div>";
 
     if (q.solution && readOnly) {
       html += "<div style='margin-top:16px;padding:12px 14px;background:linear-gradient(135deg,rgba(52,211,153,.08),rgba(167,139,250,.04));border:1px solid rgba(52,211,153,.12);border-radius:10px;color:#34d399;font-size:.78em;line-height:1.5'>📖 " + esc(q.solution) + "</div>";
@@ -7566,25 +7536,18 @@
       if (rn) rn.addEventListener("click", function () { nextQuestion(); });
       if (rf) rf.addEventListener("click", function () { session._reviewMode = false; endTraining(); });
     }
-    var btns = area.querySelectorAll(".st-opt");
-    btns.forEach(function (btn) {
-      if (readOnly) return;
-      btn.addEventListener("click", function () {
+    var submitBtn = document.getElementById("st-submit-btn");
+    if (submitBtn && !readOnly) {
+      submitBtn.addEventListener("click", function () {
         if (area.classList.contains("answered")) return;
+        var input = document.getElementById("st-answer-input");
+        if (!input) return;
+        var val = input.value.trim();
+        if (!val) { input.style.borderColor = "#ef4444"; return; }
         area.classList.add("answered");
-        var val = btn.getAttribute("data-value");
-        var ansStr = typeof currentQuestion.a === "number" ? currentQuestion.a + "" : currentQuestion.a;
-        var isCorrect = val === ansStr || parseFloat(val) === parseFloat(currentQuestion.a);
-        btn.classList.add(isCorrect ? "correct" : "wrong");
-        if (!isCorrect) {
-          area.querySelectorAll(".st-opt").forEach(function(ob) {
-            var ov = ob.getAttribute("data-value");
-            if (ov === ansStr || parseFloat(ov) === parseFloat(currentQuestion.a)) ob.classList.add("correct");
-          });
-        }
         submitAnswer(val);
       });
-    });
+    }
   }
 
   function showResult(correct, q) {
