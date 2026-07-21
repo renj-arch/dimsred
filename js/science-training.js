@@ -7488,8 +7488,6 @@
       html += "<span style='color:" + color + ";font-weight:700;font-size:.9em'>Your answer: " + esc(isSelected || "") + "</span></div>";
       html += "<div style='margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.05);color:#a1a1aa;font-size:.82em'>Correct answer: <span style='color:#34d399;font-weight:600'>" + esc(ansStr) + "</span></div>";
       html += "</div>";
-    } else {
-      html += "<div style='margin-top:16px;text-align:center;padding:8px;color:#52525b;font-size:.85em;font-style:italic'>⏳ Answer in 4s…</div>";
     }
 
     if (q.solution && readOnly) {
