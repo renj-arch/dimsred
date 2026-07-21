@@ -7049,9 +7049,7 @@
   }
 
   function getTimeLimit(mode) {
-    if (mode === "instinct") return rand(5, 15);
-    if (mode === "unlimited") return 20;
-    return 20;
+    return 4;
   }
 
   // ==================== TRAINING MODES ====================
@@ -7492,10 +7490,8 @@
       html += "</div>";
     } else {
       html += "<div id='st-options' style='margin-top:16px'>";
-      html += "<div style='display:flex;gap:8px;align-items:stretch'>";
-      html += "<input id='st-answer-input' type='text' autocomplete='off' spellcheck='false' placeholder='Type your answer…' style='flex:1;padding:12px 16px;border-radius:10px;background:#27272a;color:#fafafa;border:1px solid rgba(255,255,255,.1);font-size:1em;outline:none;transition:border-color .2s' onfocus='this.style.borderColor=\"rgba(167,139,250,.5)\"' onblur='this.style.borderColor=\"rgba(255,255,255,.1)\"' onkeydown='if(event.key===\"Enter\"){var inp=document.getElementById(\"st-answer-input\");var btn=document.getElementById(\"st-submit-btn\");if(inp&&btn){btn.click()}}'>";
-      html += "<button id='st-submit-btn' style='padding:12px 24px;border-radius:10px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;font-size:.9em;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap' onmouseenter='this.style.opacity=\".9\"' onmouseleave='this.style.opacity=\"\"'>Submit</button>";
-      html += "</div></div>";
+      html += "<input id='st-answer-input' type='text' autocomplete='off' spellcheck='false' placeholder='Type your answer…' style='width:100%;padding:12px 16px;border-radius:10px;background:#27272a;color:#fafafa;border:1px solid rgba(255,255,255,.1);font-size:1em;outline:none;transition:border-color .2s;box-sizing:border-box' onfocus='this.style.borderColor=\"rgba(167,139,250,.5)\"' onblur='this.style.borderColor=\"rgba(255,255,255,.1)\"'>";
+      html += "</div>";
     }
 
     if (q.solution && readOnly) {
@@ -7536,16 +7532,33 @@
       if (rn) rn.addEventListener("click", function () { nextQuestion(); });
       if (rf) rf.addEventListener("click", function () { session._reviewMode = false; endTraining(); });
     }
-    var submitBtn = document.getElementById("st-submit-btn");
-    if (submitBtn && !readOnly) {
-      submitBtn.addEventListener("click", function () {
-        if (area.classList.contains("answered")) return;
-        var input = document.getElementById("st-answer-input");
-        if (!input) return;
-        var val = input.value.trim();
-        if (!val) { input.style.borderColor = "#ef4444"; return; }
-        area.classList.add("answered");
-        submitAnswer(val);
+    if (!readOnly && area) {
+      area.style.cursor = "pointer";
+      area.addEventListener("click", function (e) {
+        if (e.target.closest("#st-answer-input, button")) return;
+        if (!session) return;
+        session.isPaused = !session.isPaused;
+        var btn = document.getElementById("st-pause-btn");
+        if (session.isPaused) {
+          clearTimer();
+          session.pausedRemaining = parseInt((document.getElementById("st-timer") || {}).textContent) || 0;
+          if (btn) { btn.textContent = "▶ Resume"; btn.style.background = "rgba(52,211,153,.15)"; btn.style.color = "#34d399"; btn.style.borderColor = "rgba(52,211,153,.2)"; }
+          var po = document.getElementById("st-pause-badge");
+          if (!po) {
+            area.style.position = "relative";
+            po = document.createElement("div");
+            po.id = "st-pause-badge";
+            po.style.cssText = "position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);padding:5px 12px;border-radius:100px;font-size:.72em;color:#a1a1aa;z-index:10;backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.06)";
+            po.textContent = "⏸ Paused";
+            area.appendChild(po);
+          }
+        } else {
+          clearTimer();
+          if (btn) { btn.textContent = "⏸ Pause"; btn.style.background = "rgba(255,255,255,.06)"; btn.style.color = "#a1a1aa"; btn.style.borderColor = "rgba(255,255,255,.08)"; }
+          var po = document.getElementById("st-pause-badge");
+          if (po) po.remove();
+          startTimer(q.timeLimit || 4);
+        }
       });
     }
   }
@@ -7757,7 +7770,8 @@
       if (remaining <= 0) {
         clearTimer();
         if (currentQuestion && session && !session.isPaused && !(session.answers && session.answers[session.questionIndex])) {
-          submitAnswer("");
+          var inp = document.getElementById("st-answer-input");
+          submitAnswer(inp ? inp.value.trim() : "");
         }
       }
     }, 1000);
