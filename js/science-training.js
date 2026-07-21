@@ -7104,10 +7104,10 @@
         questions.push(q);
       } else if (subTopic) {
         // If we exhausted unique questions in this topic, clear recent cache and retry
-        _recentQ = [];
+        _recentQuestions = [];
       }
     }
-    _recentQ = [];
+    _recentQuestions = [];
     return questions;
   }
 
