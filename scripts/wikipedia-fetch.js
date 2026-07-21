@@ -405,9 +405,42 @@ const CFG = [
   { id:'shrine', label:'Shrines', wikiCat:'Category:Shrines_in_India', subFn:(s,a)=>s },
   { id:'theatre', label:'Theatres', wikiCat:'Category:Theatres_in_India', subFn:(s,a)=>s },
   { id:'tomb', label:'Tombs', wikiCat:'Category:Tombs_in_India', subFn:(s,a)=>s },
-  { id:'ruler', label:'Rulers & Emperors', wikiCat:['Category:Indian_monarchs','Category:Maharajas','Category:Monarchs_of_ancient_India','Category:Indian_royalty'], subFn:(s,a)=>[s,'Indian monarch'].filter(Boolean).join(' · ') },
-  { id:'freedom', label:'Freedom Fighters', wikiCat:['Category:Indian_revolutionaries','Category:Indian_independence_activists','Category:Indian_independence_movement'], subFn:(s,a)=>[s,'Indian revolutionary'].filter(Boolean).join(' · ') },
-  { id:'traveller', label:'Travellers & Explorers', wikiCat:['Category:Indian_explorers','Category:Explorers_of_India','Category:Explorers'], subFn:(s,a)=>[s,'Explorer'].filter(Boolean).join(' · ') },
+  { id:'ruler', label:'Rulers & Emperors', wikiCat:['Category:Indian_monarchs','Category:Maharajas','Category:Monarchs_of_ancient_India','Category:Indian_royalty'],
+    subFn:(s,a)=>[s,'Indian monarch'].filter(Boolean).join(' · '),
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P19 ?coord. }
+      UNION
+      { ?item wdt:P20 ?coord. }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }` },
+  { id:'freedom', label:'Freedom Fighters', wikiCat:['Category:Indian_revolutionaries','Category:Indian_independence_activists','Category:Indian_independence_movement'],
+    subFn:(s,a)=>[s,'Indian revolutionary'].filter(Boolean).join(' · '),
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P19 ?coord. }
+      UNION
+      { ?item wdt:P20 ?coord. }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }` },
+  { id:'traveller', label:'Travellers & Explorers', wikiCat:['Category:Indian_explorers','Category:Explorers_of_India','Category:Explorers'],
+    subFn:(s,a)=>[s,'Explorer'].filter(Boolean).join(' · '),
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P19 ?coord. }
+      UNION
+      { ?item wdt:P20 ?coord. }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }` },
   { id:'invention', label:'Inventions & Discoveries', wikiCat:['Category:Indian_inventions','Category:Indian_discoveries','Category:Inventions'], subFn:(s,a)=>s },
   { id:'movement', label:'Movements & Protests', wikiCat:['Category:Social_movements_in_India','Category:Indian_independence_movement','Category:Environmental_protests_in_India','Category:Political_movements_in_India'], subFn:(s,a)=>s },
   { id:'i_book', label:'Ancient Books & Texts',
