@@ -6886,6 +6886,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
         }
         function _generateStaticQuestions() {
             var allCats = Object.keys(GK_GENERATORS).filter(function(k) { return typeof GK_GENERATORS[k] === 'function' && k !== 'sebi' && k !== 'scjudgments' && k !== 'rbi' && k !== 'isro' && k !== 'mea'; });
+            shuffleArray(allCats);
             var added = 0;
             for (var ci = 0; ci < allCats.length && added < 400; ci++) {
                 try {
@@ -6897,6 +6898,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     added++;
                 } catch(e) {}
             }
+            shuffleArray(state.questions);
         }
         
 
