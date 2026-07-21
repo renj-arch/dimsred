@@ -7201,8 +7201,9 @@
     var q = session.questions[session.questionIndex];
     currentQuestion = q;
 
+    var alreadyAnswered = !!(session.answers && session.answers[session.questionIndex]);
     renderQuestion(q, true);
-    if (!session.isPaused) {
+    if (!session.isPaused && !alreadyAnswered && !session._reviewMode) {
       startTimer(q.timeLimit || 4);
     }
     cacheSession(session);
@@ -7580,6 +7581,19 @@
       html += "<div id='st-topic-img' style='margin-top:14px;text-align:center;min-height:0;transition:min-height .3s'></div>";
     }
 
+    if (session && !session._reviewMode) {
+      var hasPrev = session.questionIndex > 0;
+      var hasNext = session.questionIndex < session.questions.length - 1;
+      var isAnswered = !!(session.answers && session.answers[session.questionIndex]);
+      var showNav = isAnswered || (session.mode === "instinct" && session.questionIndex < session.questions.length);
+      if (showNav) {
+        html += "<div style='display:flex;justify-content:center;gap:10px;margin-top:18px'>" +
+          "<button id='st-prev-btn' style='padding:8px 18px;border-radius:8px;background:" + (hasPrev ? "rgba(255,255,255,.06)" : "rgba(255,255,255,.02)") + ";color:" + (hasPrev ? "#a1a1aa" : "#52525b") + ";border:1px solid rgba(255,255,255,.08);font-size:.78em;font-weight:600;cursor:" + (hasPrev ? "pointer" : "default") + ";transition:all .2s'" + (hasPrev ? " onmouseenter='this.style.background=\"rgba(255,255,255,.1)\"' onmouseleave='this.style.background=\"rgba(255,255,255,.06)\"'" : "") + ">◀ Prev</button>" +
+          "<button id='st-next-btn' style='padding:8px 18px;border-radius:8px;background:" + (hasNext ? "rgba(255,255,255,.06)" : "rgba(255,255,255,.02)") + ";color:" + (hasNext ? "#a1a1aa" : "#52525b") + ";border:1px solid rgba(255,255,255,.08);font-size:.78em;font-weight:600;cursor:" + (hasNext ? "pointer" : "default") + ";transition:all .2s'" + (hasNext ? " onmouseenter='this.style.background=\"rgba(255,255,255,.1)\"' onmouseleave='this.style.background=\"rgba(255,255,255,.06)\"'" : "") + ">Next ▶</button>" +
+          "</div>";
+      }
+    }
+
     area.classList.remove("answered");
     area.innerHTML = html;
 
@@ -7626,6 +7640,17 @@
         }
       });
     }
+
+    var prevBtn = document.getElementById("st-prev-btn");
+    if (prevBtn) prevBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      prevQuestion();
+    });
+    var nextBtn = document.getElementById("st-next-btn");
+    if (nextBtn) nextBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      nextQuestion();
+    });
   }
 
   function showResult(correct, q) {
@@ -7860,6 +7885,21 @@
 
       if (e.target.id === "st-custom-btn") {
         showCustomDialog();
+      }
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (!session || !currentQuestion) return;
+      var answered = session.answers && session.answers[session.questionIndex];
+      if (e.key === "ArrowLeft" && session.questionIndex > 0 && answered) {
+        e.preventDefault();
+        prevQuestion();
+      }
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        if (session.questionIndex < session.questions.length - 1 && answered) {
+          nextQuestion();
+        }
       }
     });
   }
