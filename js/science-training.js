@@ -7484,20 +7484,6 @@
       html += "<div style='margin-top:16px;padding:12px 14px;background:linear-gradient(135deg,rgba(52,211,153,.08),rgba(167,139,250,.04));border:1px solid rgba(52,211,153,.12);border-radius:10px;color:#34d399;font-size:.78em;line-height:1.5'>📖 " + esc(q.solution) + "</div>";
     }
 
-    if (readOnly) {
-      var isFirst = session.questionIndex <= 0;
-      var isLast = session.questionIndex >= session.questions.length - 1;
-      html += "<div style='display:flex;gap:8px;margin-top:16px'>";
-      if (!isFirst) html += "<button id='st-rprev-btn' style='flex:1;padding:11px;border-radius:10px;background:rgba(255,255,255,.06);color:#fafafa;border:1px solid rgba(255,255,255,.08);font-size:.82em;font-weight:600;cursor:pointer;transition:all .2s' onmouseenter='this.style.background=\"rgba(255,255,255,.1)\"' onmouseleave='this.style.background=\"rgba(255,255,255,.06)\"'>← Previous</button>";
-      if (!isLast) html += "<button id='st-rnext-btn' style='flex:1;padding:11px;border-radius:10px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;font-size:.82em;font-weight:700;cursor:pointer;transition:all .2s' onmouseenter='this.style.opacity=\".9\"' onmouseleave='this.style.opacity=\"\"'>Next →</button>";
-      if (isLast) html += "<button id='st-rfinish-btn' style='flex:1;padding:11px;border-radius:10px;background:linear-gradient(135deg,#a78bfa,#8b5cf6);color:#fff;border:none;font-size:.82em;font-weight:700;cursor:pointer;transition:all .2s' onmouseenter='this.style.opacity=\".9\"' onmouseleave='this.style.opacity=\"\"'>📊 View Results</button>";
-      html += "</div>";
-      if (session._reviewMode && isLast) {
-        var answered = session.answers.filter(function(a){return a!==undefined && a!==null;}).length;
-        html += "<div style='text-align:center;margin-top:10px;font-size:.72em;color:#52525b'>Reviewed " + (session.questionIndex + 1) + " of " + session.totalQuestions + " · " + answered + " answered</div>";
-      }
-    }
-
     area.classList.remove("answered");
     area.innerHTML = html;
 
@@ -7510,14 +7496,6 @@
     }
 
     var readOnly = !!(session.answers && session.answers[session.questionIndex]);
-    if (readOnly) {
-      var rp = document.getElementById("st-rprev-btn");
-      var rn = document.getElementById("st-rnext-btn");
-      var rf = document.getElementById("st-rfinish-btn");
-      if (rp) rp.addEventListener("click", function () { prevQuestion(); });
-      if (rn) rn.addEventListener("click", function () { nextQuestion(); });
-      if (rf) rf.addEventListener("click", function () { session._reviewMode = false; endTraining(); });
-    }
     if (!readOnly && area) {
       area.style.cursor = "pointer";
       area.addEventListener("click", function (e) {
