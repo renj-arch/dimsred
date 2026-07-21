@@ -809,4 +809,4 @@ async function fetchAll() {
   console.log('Source breakdown:', JSON.stringify(srcCounts));
 }
 
-fetchAll().catch(function(e) { console.error(e.message); process.exit(1); });
+fetchAll().then(function() { process.exit(0); }).catch(function(e) { console.error(e.message); process.exit(1); });

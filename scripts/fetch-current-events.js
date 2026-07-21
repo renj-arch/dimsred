@@ -446,7 +446,7 @@ async function main() {
   log('Total: ' + total + ' events');
 }
 
-main().catch(function(err) {
+main().then(function() { process.exit(0); }).catch(function(err) {
   console.error('Fatal error:', err.message);
   process.exit(1);
 });
