@@ -5579,7 +5579,8 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 state.answered = true; // skip answer interaction
                 document.getElementById('qNum').textContent = (state.idx + 1);
                 document.getElementById('qProgress').style.width = ((state.idx / Math.max(state.questions.length, 1)) * 100) + '%';
-                document.getElementById('catTag').textContent = q._wikiCat ? q._wikiCat.replace(/_/g, ' ') : state.categoryName;
+                var catLabel = q._wikiCat ? q._wikiCat.replace(/_/g, ' ') : (q.subject ? q.subject + (q.subTopic ? ' — ' + q.subTopic : '') : state.categoryName);
+                document.getElementById('catTag').textContent = catLabel;
                 var displayText = '<div style="font-size:1.2em;font-weight:700;margin-bottom:8px">' + q.q.replace(/\n/g, '<br>') + '</div>';
                 if (q.a) displayText += '<div style="font-size:1.05em;color:var(--emerald);margin-bottom:10px;padding:8px 12px;border-radius:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15)">→ ' + q.a + '</div>';
                 if (q.fact || q.solution) displayText += '<div style="font-size:.85em;color:var(--text-sec);line-height:1.7">' + (q.fact||q.solution).replace(/\n/g, '<br>') + '</div>';
@@ -7048,7 +7049,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('totalNum').textContent = state.questions.length;
             document.getElementById('qNum').textContent = '';
             document.getElementById('qProgress').style.width = '0%';
-            document.getElementById('catTag').textContent = q.hint || (q.subject ? q.subject : '');
+            document.getElementById('catTag').textContent = q.hint || (q.subject ? q.subject + (q.subTopic ? ' — ' + q.subTopic : '') : '');
             document.getElementById('qText').innerHTML = q.q;
             document.getElementById('qHint').style.display = 'none';
             document.getElementById('resultFlash').className = 'result-flash';
