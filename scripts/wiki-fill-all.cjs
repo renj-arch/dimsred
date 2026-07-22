@@ -1402,9 +1402,10 @@ async function main() {
   });
   const processCats = Object.values(catGroups);
 
-  for (const cat of processCats) {
-    log('\n=== ' + cat.name + ' (' + cat.topics.length + ' topics) ===');
-    const allTopics = cat.topics;
+  for (const item of processCats) {
+    const cat = item.cat;
+    const allTopics = item.topics;
+    log('\n=== ' + cat.name + ' (' + allTopics.length + ' topics) ===');
     const articles = await fetchAllTopics(allTopics, CONCURRENCY);
 
     let added = 0;
