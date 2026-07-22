@@ -3,6 +3,10 @@ const https = require('https');
 const WIKI_API = 'https://en.wikipedia.org/w/api.php';
 const QUIZ_PATH = 'data/quiz.json';
 
+function log(msg) {
+  try { fs.writeSync(1, msg + '\n'); } catch (e) { console.log(msg); }
+}
+
 function fetchJSON(url) {
   return new Promise((resolve, reject) => {
     https.get(url + '&origin=*', { headers: { 'User-Agent': 'WikiFill/1.0' } }, (res) => {
@@ -25,7 +29,7 @@ async function fetchCategoryMembers(wikiCat, maxPages = 200) {
   let pageNum = 0;
   while (pages.length < maxPages) {
     pageNum++;
-    console.log('    page ' + pageNum + ' (' + pages.length + ' topics so far)');
+    log('    page ' + pageNum + ' (' + pages.length + ' topics so far)');
     let url = `${WIKI_API}?action=query&list=categorymembers&cmtitle=${encodeURIComponent('Category:' + wikiCat)}&cmlimit=500&format=json&cmtype=page`;
     if (cmcontinue) url += '&cmcontinue=' + encodeURIComponent(cmcontinue);
     try {
@@ -38,7 +42,7 @@ async function fetchCategoryMembers(wikiCat, maxPages = 200) {
       await delay(500);
     } catch { break; }
   }
-  console.log('    done: ' + pages.length + ' topics');
+  log('    done: ' + pages.length + ' topics');
   return pages.filter(t => !t.startsWith('List of ') && !t.includes('/'));
 }
 
@@ -48,13 +52,13 @@ async function fetchAllTopics(topics, concurrency) {
   async function worker() {
     while (queue.length > 0) {
       const topic = queue.shift();
-      console.log('  Fetching: ' + topic + '...');
+      log('  Fetching: ' + topic + '...');
       const a = await fetchArticleExtract(topic, 5);
       if (a && a.extract.length > 200) {
         results.push(a);
-        console.log('  \u2713 ' + topic);
+        log('  \u2713 ' + topic);
       } else {
-        console.log('  (skip) ' + topic);
+        log('  (skip) ' + topic);
       }
     }
   }
@@ -88,7 +92,7 @@ async function fetchArticleExtract(title, retries) {
       const isRetryable = err.message.includes('429') || err.message.includes('not valid JSON') || err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED';
       if (attempt < retries - 1 && isRetryable) {
         const wait = Math.min(30000 * Math.pow(2, attempt), 120000);
-        console.log('  (HTTP 429, waiting ' + (wait / 1000) + 's...)');
+        log('  (HTTP 429, waiting ' + (wait / 1000) + 's...)');
         await delay(wait);
         continue;
       }
@@ -1313,8 +1317,7 @@ const DAY_GROUPS = [
 ];
 
 async function main() {
-  process.stdout._handle?.setBlocking(true);
-  console.log('Loading quiz.json (' + (fs.statSync(QUIZ_PATH).size / 1024 / 1024).toFixed(0) + ' MiB)...');
+  log('Loading quiz.json (' + (fs.statSync(QUIZ_PATH).size / 1024 / 1024).toFixed(0) + ' MiB)...');
   let quiz;
   try { quiz = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8')); }
   catch (e) { quiz = { questions: [] }; console.log('Created new quiz.json (was missing)'); }
@@ -1338,7 +1341,7 @@ async function main() {
   let activeCategories;
   if (processAll) {
     activeCategories = CATEGORIES;
-    console.log('Processing ALL categories (WIKI_FILL_ALL=1)');
+    log('Processing ALL categories (WIKI_FILL_ALL=1)');
   } else {
     const dayIdx = new Date().getDay();
     const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -1348,23 +1351,23 @@ async function main() {
     }
     const activeIdxs = new Set(groupIdxs.flatMap(gi => DAY_GROUPS[gi]));
     activeCategories = [...activeIdxs].map(i => CATEGORIES[i]);
-    console.log('Day: ' + dayNames[dayIdx] + ' — processing ' + activeCategories.length + ' of ' + CATEGORIES.length + ' categories (groups: ' + groupIdxs.join(',') + ')');
+    log('Day: ' + dayNames[dayIdx] + ' — processing ' + activeCategories.length + ' of ' + CATEGORIES.length + ' categories (groups: ' + groupIdxs.join(',') + ')');
     CATEGORIES.forEach((c, i) => {
-      if (!activeIdxs.has(i)) console.log('  (skipping: ' + c.name + ')');
+      if (!activeIdxs.has(i)) log('  (skipping: ' + c.name + ')');
     });
   }
 
   const CONCURRENCY = 2; // Wikipedia rate-limits; 2 concurrent is safe
   for (const cat of activeCategories) {
-    console.log('\n=== ' + cat.name + ' ===');
+    log('\n=== ' + cat.name + ' ===');
     let allTopics = [...cat.topics];
     if (cat.wikiCat) {
-      console.log('  Fetching category members from Category:' + cat.wikiCat + '...');
+      log('  Fetching category members from Category:' + cat.wikiCat + '...');
       const wikiTopics = await fetchCategoryMembers(cat.wikiCat, 150);
       const existing = new Set(allTopics.map(t => t.toLowerCase()));
       const newTopics = wikiTopics.filter(t => !existing.has(t.toLowerCase()));
       if (newTopics.length) {
-        console.log('  Auto-discovered ' + newTopics.length + ' topics from Category:' + cat.wikiCat);
+        log('  Auto-discovered ' + newTopics.length + ' topics from Category:' + cat.wikiCat);
         allTopics = allTopics.concat(newTopics.slice(0, 100));
       }
     }
@@ -1379,7 +1382,7 @@ async function main() {
 
       // Skip list/table pages — they produce garbled fragments
       if (isListPage(ext)) {
-        console.log('  (skipping list page: ' + title + ')');
+        log('  (skipping list page: ' + title + ')');
         continue;
       }
 
@@ -1477,13 +1480,13 @@ async function main() {
       }
     }
 
-    console.log('  Added ' + added + ' new questions for ' + cat.name + ' (total: ' + quiz.questions.length + ')');
+    log('  Added ' + added + ' new questions for ' + cat.name + ' (total: ' + quiz.questions.length + ')');
     totalAdded += added;
     fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz));
   }
 
   fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz));
-  console.log('\nTotal new: ' + totalAdded + ', Grand total: ' + quiz.questions.length);
+  log('Total new: ' + totalAdded + ', Grand total: ' + quiz.questions.length);
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
