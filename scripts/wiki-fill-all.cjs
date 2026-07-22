@@ -1313,6 +1313,7 @@ const DAY_GROUPS = [
 ];
 
 async function main() {
+  console.log('Loading quiz.json (' + (fs.statSync(QUIZ_PATH).size / 1024 / 1024).toFixed(0) + ' MiB)...');
   let quiz;
   try { quiz = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8')); }
   catch (e) { quiz = { questions: [] }; console.log('Created new quiz.json (was missing)'); }
