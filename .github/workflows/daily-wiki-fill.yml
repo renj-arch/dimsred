@@ -30,6 +30,9 @@ jobs:
           git reset --hard origin/main
           git clean -fd
 
+      - name: Restore quiz.json from per-category files
+        run: node scripts/rebuild-quiz-json.js
+
       - name: Fetch PIB and other RSS feeds
         run: node scripts/fetch-pib-rss.js
 
