@@ -39,10 +39,66 @@ jobs:
       - name: Update PIB archive from feed (no duplicates)
         run: node scripts/update-pib-archive.js
 
-      - name: Generate questions from Wikipedia
+      - name: Generate questions from Wikipedia (1/10)
         run: node scripts/wiki-fill-all.cjs
         env:
           WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 1
+          WIKI_FILL_CHUNKS: 10
+      - name: Generate questions from Wikipedia (2/10)
+        run: node scripts/wiki-fill-all.cjs
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 2
+          WIKI_FILL_CHUNKS: 10
+      - name: Generate questions from Wikipedia (3/10)
+        run: node scripts/wiki-fill-all.cjs
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 3
+          WIKI_FILL_CHUNKS: 10
+      - name: Generate questions from Wikipedia (4/10)
+        run: node scripts/wiki-fill-all.cjs
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 4
+          WIKI_FILL_CHUNKS: 10
+      - name: Generate questions from Wikipedia (5/10)
+        run: node scripts/wiki-fill-all.cjs
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 5
+          WIKI_FILL_CHUNKS: 10
+      - name: Generate questions from Wikipedia (6/10)
+        run: node scripts/wiki-fill-all.cjs
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 6
+          WIKI_FILL_CHUNKS: 10
+      - name: Generate questions from Wikipedia (7/10)
+        run: node scripts/wiki-fill-all.cjs
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 7
+          WIKI_FILL_CHUNKS: 10
+      - name: Generate questions from Wikipedia (8/10)
+        run: node scripts/wiki-fill-all.cjs
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 8
+          WIKI_FILL_CHUNKS: 10
+      - name: Generate questions from Wikipedia (9/10)
+        run: node scripts/wiki-fill-all.cjs
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 9
+          WIKI_FILL_CHUNKS: 10
+      - name: Generate questions from Wikipedia (10/10)
+        run: node scripts/wiki-fill-all.cjs
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 10
+          WIKI_FILL_CHUNKS: 10
 
       - name: Remove garbled questions (table rows, fragments)
         run: node scripts/cleanup-questions.js

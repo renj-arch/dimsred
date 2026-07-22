@@ -1357,6 +1357,16 @@ async function main() {
     });
   }
 
+  const WIKI_FILL_CHUNK = parseInt(process.env.WIKI_FILL_CHUNK || '1', 10);
+  const WIKI_FILL_CHUNKS = parseInt(process.env.WIKI_FILL_CHUNKS || '1', 10);
+  if (WIKI_FILL_CHUNKS > 1) {
+    const chunkSize = Math.ceil(activeCategories.length / WIKI_FILL_CHUNKS);
+    const start = (WIKI_FILL_CHUNK - 1) * chunkSize;
+    const end = Math.min(start + chunkSize, activeCategories.length);
+    activeCategories = activeCategories.slice(start, end);
+    log('Chunk ' + WIKI_FILL_CHUNK + '/' + WIKI_FILL_CHUNKS + ' — processing ' + activeCategories.length + ' categories (indices ' + start + '-' + (end - 1) + ')');
+  }
+
   const CONCURRENCY = 2; // Wikipedia rate-limits; 2 concurrent is safe
   for (const cat of activeCategories) {
     log('\n=== ' + cat.name + ' ===');
