@@ -11,20 +11,26 @@ if (!fs.existsSync(questionsDir)) {
   process.exit(0);
 }
 
-const files = fs.readdirSync(questionsDir).filter(f => f.endsWith('.json'));
+const files = fs.readdirSync(questionsDir).filter(f => f.endsWith('.json') && f !== 'manifest.json');
 const allQuestions = [];
 
 files.forEach(f => {
-  const data = JSON.parse(fs.readFileSync(path.join(questionsDir, f), 'utf8'));
-  Object.entries(data).forEach(([subject, subjData]) => {
-    if (subjData.subSubjects) {
-      Object.entries(subjData.subSubjects).forEach(([subSubject, qs]) => {
-        qs.forEach(q => {
-          allQuestions.push(q);
+  try {
+    let content = fs.readFileSync(path.join(questionsDir, f), 'utf8');
+    if (content.charCodeAt(0) === 0xFEFF) content = content.slice(1);
+    const data = JSON.parse(content);
+    Object.entries(data).forEach(([subject, subjData]) => {
+      if (subjData.subSubjects) {
+        Object.entries(subjData.subSubjects).forEach(([subSubject, qs]) => {
+          qs.forEach(q => {
+            allQuestions.push(q);
+          });
         });
-      });
-    }
-  });
+      }
+    });
+  } catch (e) {
+    console.error('  Skipping ' + f + ': ' + e.message);
+  }
 });
 
 fs.writeFileSync(quizPath, JSON.stringify({ questions: allQuestions }));
