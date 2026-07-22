@@ -1493,9 +1493,15 @@ async function main() {
     log('  Added ' + added + ' new questions for ' + cat.name + ' (total: ' + quiz.questions.length + ')');
     totalAdded += added;
     fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz));
+    if (process.env.RUNNER_TEMP) fs.writeFileSync(process.env.RUNNER_TEMP + '/quiz.json', JSON.stringify(quiz));
   }
 
   fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz));
+  if (process.env.RUNNER_TEMP) {
+    const tmpPath = process.env.RUNNER_TEMP + '/quiz.json';
+    fs.writeFileSync(tmpPath, JSON.stringify(quiz));
+    log('Saved quiz.json to runner temp (' + tmpPath + ')');
+  }
   log('Total new: ' + totalAdded + ', Grand total: ' + quiz.questions.length);
 }
 

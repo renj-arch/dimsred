@@ -33,6 +33,15 @@ jobs:
       - name: Restore quiz.json from per-category files
         run: node scripts/rebuild-quiz-json.js
 
+      - name: Restore quiz.json from runner temp (survives git clean)
+        run: |
+          if [ -f "$RUNNER_TEMP/quiz.json" ]; then
+            cp "$RUNNER_TEMP/quiz.json" data/quiz.json
+            echo "Restored quiz.json from runner temp"
+          else
+            echo "No quiz.json in runner temp"
+          fi
+
       - name: Fetch PIB and other RSS feeds
         run: node scripts/fetch-pib-rss.js
 
