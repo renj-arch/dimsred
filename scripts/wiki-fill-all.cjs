@@ -1313,6 +1313,7 @@ const DAY_GROUPS = [
 ];
 
 async function main() {
+  process.stdout._handle?.setBlocking(true);
   console.log('Loading quiz.json (' + (fs.statSync(QUIZ_PATH).size / 1024 / 1024).toFixed(0) + ' MiB)...');
   let quiz;
   try { quiz = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8')); }
