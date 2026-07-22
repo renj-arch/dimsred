@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const https = require('https');
 const WIKI_API = 'https://en.wikipedia.org/w/api.php';
 const QUIZ_PATH = 'data/quiz.json';
