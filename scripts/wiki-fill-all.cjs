@@ -1357,30 +1357,54 @@ async function main() {
     });
   }
 
+  const CONCURRENCY = 2;
   const WIKI_FILL_CHUNK = parseInt(process.env.WIKI_FILL_CHUNK || '1', 10);
   const WIKI_FILL_CHUNKS = parseInt(process.env.WIKI_FILL_CHUNKS || '1', 10);
-  if (WIKI_FILL_CHUNKS > 1) {
-    const chunkSize = Math.ceil(activeCategories.length / WIKI_FILL_CHUNKS);
-    const start = (WIKI_FILL_CHUNK - 1) * chunkSize;
-    const end = Math.min(start + chunkSize, activeCategories.length);
-    activeCategories = activeCategories.slice(start, end);
-    log('Chunk ' + WIKI_FILL_CHUNK + '/' + WIKI_FILL_CHUNKS + ' — processing ' + activeCategories.length + ' categories (indices ' + start + '-' + (end - 1) + ')');
-  }
 
-  const CONCURRENCY = 2; // Wikipedia rate-limits; 2 concurrent is safe
+  // Phase 1: Gather topics from all active categories (with auto-discovery)
+  const catTopicMap = {};
   for (const cat of activeCategories) {
-    log('\n=== ' + cat.name + ' ===');
-    let allTopics = [...cat.topics];
+    let topics = [...cat.topics];
     if (cat.wikiCat) {
       log('  Fetching category members from Category:' + cat.wikiCat + '...');
       const wikiTopics = await fetchCategoryMembers(cat.wikiCat, 150);
-      const existing = new Set(allTopics.map(t => t.toLowerCase()));
+      const existing = new Set(topics.map(t => t.toLowerCase()));
       const newTopics = wikiTopics.filter(t => !existing.has(t.toLowerCase()));
       if (newTopics.length) {
         log('  Auto-discovered ' + newTopics.length + ' topics from Category:' + cat.wikiCat);
-        allTopics = allTopics.concat(newTopics.slice(0, 100));
+        topics = topics.concat(newTopics.slice(0, 100));
       }
     }
+    catTopicMap[cat.name] = { cat, topics };
+  }
+
+  // Phase 2: Flatten all topics → {cat, topic} entries
+  let allEntries = [];
+  Object.values(catTopicMap).forEach(({ cat, topics }) => {
+    topics.forEach(t => allEntries.push({ cat, topic: t }));
+  });
+
+  // Phase 3: Split by chunk at topic level
+  if (WIKI_FILL_CHUNKS > 1) {
+    const chunkSize = Math.ceil(allEntries.length / WIKI_FILL_CHUNKS);
+    const start = (WIKI_FILL_CHUNK - 1) * chunkSize;
+    const end = Math.min(start + chunkSize, allEntries.length);
+    allEntries = allEntries.slice(start, end);
+    const catNames = [...new Set(allEntries.map(e => e.cat.name))];
+    log('Chunk ' + WIKI_FILL_CHUNK + '/' + WIKI_FILL_CHUNKS + ' — ' + allEntries.length + ' topics, ' + catNames.length + ' categories: ' + catNames.join(', '));
+  }
+
+  // Phase 4: Group chunk's entries by category
+  const catGroups = {};
+  allEntries.forEach(({ cat, topic }) => {
+    if (!catGroups[cat.name]) catGroups[cat.name] = { cat, topics: [] };
+    catGroups[cat.name].topics.push(topic);
+  });
+  const processCats = Object.values(catGroups);
+
+  for (const cat of processCats) {
+    log('\n=== ' + cat.name + ' (' + cat.topics.length + ' topics) ===');
+    const allTopics = cat.topics;
     const articles = await fetchAllTopics(allTopics, CONCURRENCY);
 
     let added = 0;
@@ -1494,6 +1518,34 @@ async function main() {
     totalAdded += added;
     fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz));
     if (process.env.RUNNER_TEMP) fs.writeFileSync(process.env.RUNNER_TEMP + '/quiz.json', JSON.stringify(quiz));
+
+    const slug = cat.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const catPath = path.join(__dirname, '..', 'data', 'questions', slug + '.json');
+    let catFile = {};
+    try { catFile = JSON.parse(fs.readFileSync(catPath, 'utf8')); } catch {}
+    const seen = new Set();
+    Object.entries(catFile).forEach(([subj, subjData]) => {
+      if (subjData.subSubjects) {
+        Object.entries(subjData.subSubjects).forEach(([subSub, qs]) => {
+          qs.forEach(q => seen.add(((q.question||'')+'||'+(q.answer||'')).toLowerCase().replace(/\s+/g,' ').trim()));
+        });
+      }
+    });
+    let addedCount = 0;
+    quiz.questions.filter(q => q.subject === cat.name).forEach(q => {
+      const key = ((q.question||'')+'||'+(q.answer||'')).toLowerCase().replace(/\s+/g,' ').trim();
+      if (!seen.has(key)) {
+        seen.add(key);
+        const subj = q.subject;
+        const subSub = q.subSubject || 'General';
+        if (!catFile[subj]) catFile[subj] = { subSubjects: {} };
+        if (!catFile[subj].subSubjects[subSub]) catFile[subj].subSubjects[subSub] = [];
+        catFile[subj].subSubjects[subSub].push(q);
+        addedCount++;
+      }
+    });
+    fs.writeFileSync(catPath, JSON.stringify(catFile));
+    log('  Saved per-category file: data/questions/' + slug + '.json (' + addedCount + ' new questions)');
   }
 
   fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz));

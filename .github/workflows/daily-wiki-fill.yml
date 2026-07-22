@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       chunk:
-        description: 'Chunk to process (1-10, leave empty for all)'
+        description: 'Chunk to process (1-24, leave empty for all)'
         required: false
         default: ''
 
@@ -53,82 +53,462 @@ jobs:
       - name: Update PIB archive from feed (no duplicates)
         run: node scripts/update-pib-archive.js
 
-      - name: Generate questions from Wikipedia (1/10)
+      - name: Wiki (1/24)
         if: inputs.chunk == '' || inputs.chunk == '1'
-        run: node scripts/wiki-fill-all.cjs
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 1/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
         env:
           WIKI_FILL_GROUPS: 3
           WIKI_FILL_CHUNK: 1
-          WIKI_FILL_CHUNKS: 10
-      - name: Generate questions from Wikipedia (2/10)
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (2/24)
         if: inputs.chunk == '' || inputs.chunk == '2'
-        run: node scripts/wiki-fill-all.cjs
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 2/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
         env:
           WIKI_FILL_GROUPS: 3
           WIKI_FILL_CHUNK: 2
-          WIKI_FILL_CHUNKS: 10
-      - name: Generate questions from Wikipedia (3/10)
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (3/24)
         if: inputs.chunk == '' || inputs.chunk == '3'
-        run: node scripts/wiki-fill-all.cjs
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 3/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
         env:
           WIKI_FILL_GROUPS: 3
           WIKI_FILL_CHUNK: 3
-          WIKI_FILL_CHUNKS: 10
-      - name: Generate questions from Wikipedia (4/10)
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (4/24)
         if: inputs.chunk == '' || inputs.chunk == '4'
-        run: node scripts/wiki-fill-all.cjs
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 4/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
         env:
           WIKI_FILL_GROUPS: 3
           WIKI_FILL_CHUNK: 4
-          WIKI_FILL_CHUNKS: 10
-      - name: Generate questions from Wikipedia (5/10)
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (5/24)
         if: inputs.chunk == '' || inputs.chunk == '5'
-        run: node scripts/wiki-fill-all.cjs
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 5/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
         env:
           WIKI_FILL_GROUPS: 3
           WIKI_FILL_CHUNK: 5
-          WIKI_FILL_CHUNKS: 10
-      - name: Generate questions from Wikipedia (6/10)
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (6/24)
         if: inputs.chunk == '' || inputs.chunk == '6'
-        run: node scripts/wiki-fill-all.cjs
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 6/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
         env:
           WIKI_FILL_GROUPS: 3
           WIKI_FILL_CHUNK: 6
-          WIKI_FILL_CHUNKS: 10
-      - name: Generate questions from Wikipedia (7/10)
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (7/24)
         if: inputs.chunk == '' || inputs.chunk == '7'
-        run: node scripts/wiki-fill-all.cjs
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 7/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
         env:
           WIKI_FILL_GROUPS: 3
           WIKI_FILL_CHUNK: 7
-          WIKI_FILL_CHUNKS: 10
-      - name: Generate questions from Wikipedia (8/10)
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (8/24)
         if: inputs.chunk == '' || inputs.chunk == '8'
-        run: node scripts/wiki-fill-all.cjs
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 8/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
         env:
           WIKI_FILL_GROUPS: 3
           WIKI_FILL_CHUNK: 8
-          WIKI_FILL_CHUNKS: 10
-      - name: Generate questions from Wikipedia (9/10)
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (9/24)
         if: inputs.chunk == '' || inputs.chunk == '9'
-        run: node scripts/wiki-fill-all.cjs
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 9/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
         env:
           WIKI_FILL_GROUPS: 3
           WIKI_FILL_CHUNK: 9
-          WIKI_FILL_CHUNKS: 10
-      - name: Generate questions from Wikipedia (10/10)
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (10/24)
         if: inputs.chunk == '' || inputs.chunk == '10'
-        run: node scripts/wiki-fill-all.cjs
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 10/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
         env:
           WIKI_FILL_GROUPS: 3
           WIKI_FILL_CHUNK: 10
-          WIKI_FILL_CHUNKS: 10
-
-      - name: Remove garbled questions (table rows, fragments)
-        run: node scripts/cleanup-questions.js
-
-      - name: Remove sentence-flood duplicates (same sentence, different blank)
-        run: node scripts/dedup-sentence-flood.js
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (11/24)
+        if: inputs.chunk == '' || inputs.chunk == '11'
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 11/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 11
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (12/24)
+        if: inputs.chunk == '' || inputs.chunk == '12'
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 12/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 12
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (13/24)
+        if: inputs.chunk == '' || inputs.chunk == '13'
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 13/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 13
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (14/24)
+        if: inputs.chunk == '' || inputs.chunk == '14'
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 14/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 14
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (15/24)
+        if: inputs.chunk == '' || inputs.chunk == '15'
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 15/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 15
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (16/24)
+        if: inputs.chunk == '' || inputs.chunk == '16'
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 16/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 16
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (17/24)
+        if: inputs.chunk == '' || inputs.chunk == '17'
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 17/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 17
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (18/24)
+        if: inputs.chunk == '' || inputs.chunk == '18'
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 18/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 18
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (19/24)
+        if: inputs.chunk == '' || inputs.chunk == '19'
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 19/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 19
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (20/24)
+        if: inputs.chunk == '' || inputs.chunk == '20'
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 20/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 20
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (21/24)
+        if: inputs.chunk == '' || inputs.chunk == '21'
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 21/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 21
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (22/24)
+        if: inputs.chunk == '' || inputs.chunk == '22'
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 22/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 22
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (23/24)
+        if: inputs.chunk == '' || inputs.chunk == '23'
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 23/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 23
+          WIKI_FILL_CHUNKS: 24
+      - name: Wiki (24/24)
+        if: inputs.chunk == '' || inputs.chunk == '24'
+        run: |
+          node scripts/wiki-fill-all.cjs
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Wiki 24/24 $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase
+            git push
+          fi
+        env:
+          WIKI_FILL_GROUPS: 3
+          WIKI_FILL_CHUNK: 24
+          WIKI_FILL_CHUNKS: 24
 
       - name: Fetch current events and update archive.html
         run: node scripts/fetch-current-events.js
@@ -187,21 +567,25 @@ jobs:
       - name: Fetch International Relations (diplomatic relations)
         run: node scripts/fetch-bilateral.js
 
-      - name: Rebuild single archive + per-category data
-        run: node scripts/build-archive-single.js
+      - name: Clean up and rebuild archive
+        if: always()
+        run: |
+          node scripts/cleanup-questions.js
+          node scripts/dedup-sentence-flood.js
+          node scripts/build-archive-single.js
 
       - name: Remove quiz.json (too large for Cloudflare Pages)
+        if: always()
         run: rm -f data/quiz.json
 
-      - name: Commit and push
+      - name: Commit fetch scripts and final updates
+        if: always()
         run: |
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git add -A
           if ! git diff --staged --quiet; then
-            git commit -m "Daily wiki fill $(date +'%Y-%m-%d')"
+            git commit -m "Fetch scripts $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase
             git push
-          else
-            echo "No new questions to commit"
           fi
