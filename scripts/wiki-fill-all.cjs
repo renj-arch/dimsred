@@ -22,7 +22,10 @@ function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 async function fetchCategoryMembers(wikiCat, maxPages = 200) {
   let pages = [], cmcontinue = '';
+  let pageNum = 0;
   while (pages.length < maxPages) {
+    pageNum++;
+    console.log('    page ' + pageNum + ' (' + pages.length + ' topics so far)');
     let url = `${WIKI_API}?action=query&list=categorymembers&cmtitle=${encodeURIComponent('Category:' + wikiCat)}&cmlimit=500&format=json&cmtype=page`;
     if (cmcontinue) url += '&cmcontinue=' + encodeURIComponent(cmcontinue);
     try {
@@ -35,6 +38,7 @@ async function fetchCategoryMembers(wikiCat, maxPages = 200) {
       await delay(500);
     } catch { break; }
   }
+  console.log('    done: ' + pages.length + ' topics');
   return pages.filter(t => !t.startsWith('List of ') && !t.includes('/'));
 }
 
@@ -44,19 +48,19 @@ async function fetchAllTopics(topics, concurrency) {
   async function worker() {
     while (queue.length > 0) {
       const topic = queue.shift();
-      process.stdout.write('  Fetching: ' + topic);
+      console.log('  Fetching: ' + topic + '...');
       const a = await fetchArticleExtract(topic, 5);
       if (a && a.extract.length > 200) {
         results.push(a);
-        process.stdout.write(' \u2713\n');
+        console.log('  \u2713 ' + topic);
       } else {
-        process.stdout.write(' (skip)\n');
+        console.log('  (skip) ' + topic);
       }
     }
   }
   const workers = [];
   for (let i = 0; i < Math.min(concurrency, topics.length); i++) {
-    await delay(600);
+    await delay(5000);
     workers.push(worker());
   }
   await Promise.all(workers);
@@ -67,7 +71,7 @@ async function fetchArticleExtract(title, retries) {
   retries = retries || 5;
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
-      await delay(2500);
+      await delay(4000);
       const url = `${WIKI_API}?action=query&prop=extracts|description&explaintext&exlimit=1&titles=${encodeURIComponent(title)}&format=json`;
       const data = await fetchJSON(url);
       const pages = data.query ? data.query.pages : {};
@@ -1353,6 +1357,7 @@ async function main() {
     console.log('\n=== ' + cat.name + ' ===');
     let allTopics = [...cat.topics];
     if (cat.wikiCat) {
+      console.log('  Fetching category members from Category:' + cat.wikiCat + '...');
       const wikiTopics = await fetchCategoryMembers(cat.wikiCat, 150);
       const existing = new Set(allTopics.map(t => t.toLowerCase()));
       const newTopics = wikiTopics.filter(t => !existing.has(t.toLowerCase()));
