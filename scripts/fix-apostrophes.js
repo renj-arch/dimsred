@@ -63,24 +63,26 @@ for (let i = 0; i < LINES.length; i++) {
   const nOpen = line.indexOf("{n:'");
   if (nOpen === -1) continue;
 
-  // Find closing quotes
+  // Find closing quotes via lastIndexOf (right-to-left, anchored by next field)
+  // This is correct even if field values contain `',` — the rightmost match before
+  // the next opening marker is always the real closing delimiter.
   const nClose = line.indexOf("',la:", nOpen + 3);
   if (nClose === -1) continue;
   const laEnd = line.indexOf(",ln:", nClose + 2);
   if (laEnd === -1) continue;
   const lnEnd = line.indexOf(",sub:", laEnd);
   if (lnEnd === -1) continue;
-  const subClose = line.indexOf("',", subOpen + 6);
-  if (subClose === -1) continue;
-  const descClose = line.indexOf("',", descOpen + 7);
-  if (descClose === -1) continue;
-  const factClose = line.indexOf("',", factOpen + 7);
-  if (factClose === -1) continue;
+  const subClose = line.lastIndexOf("',", descOpen);
+  if (subClose === -1 || subClose < subOpen) continue;
+  const descClose = line.lastIndexOf("',", factOpen);
+  if (descClose === -1 || descClose < descOpen) continue;
+  const factClose = line.lastIndexOf("',", tagOpen);
+  if (factClose === -1 || factClose < factOpen) continue;
 
-  // Tag close: '}' or ',\n' or ',pts'
-  const tagClose = line.indexOf("'}", tagOpen + 6);
-  const tagCloseIdx = tagClose !== -1 ? tagClose : line.indexOf("',", tagOpen + 6);
-  if (tagCloseIdx === -1) continue;
+  // Tag close: '}', ',\n', ',pts'
+  let tagClose = line.lastIndexOf("'}");
+  if (tagClose === -1 || tagClose < tagOpen) tagClose = line.lastIndexOf("',");
+  if (tagClose === -1 || tagClose < tagOpen) continue;
 
   // Preserve leading whitespace
   const indent = line.substring(0, nOpen);
@@ -92,9 +94,9 @@ for (let i = 0; i < LINES.length; i++) {
   const sub = line.substring(subOpen + 6, subClose);
   const desc = line.substring(descOpen + 7, descClose);
   const fact = line.substring(factOpen + 7, factClose);
-  const tag = line.substring(tagOpen + 6, tagCloseIdx);
+  const tag = line.substring(tagOpen + 6, tagClose);
 
-  const suffix = line.substring(tagCloseIdx + 2);
+  const suffix = line.substring(tagClose + 2);
 
   // Unescape to get raw values, then re-escape (fixes double-escaping bug)
   const newName = esc(unesc(name));
