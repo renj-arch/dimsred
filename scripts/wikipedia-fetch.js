@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const { execSync } = require('child_process');
+process.stdout._handle?.setBlocking(true);
 
 // Global rate limiter — enforces minimum gap between all API calls
 let lastRequestTime = 0;
@@ -1051,7 +1052,7 @@ async function main() {
     // Commit and push after each category so results are available immediately
     try {
       const ts = new Date().toISOString().replace('T', ' ').replace(/\.\d+Z/, ' UTC');
-      execSync(`git add -A && git commit -m "Wiki ${cat.id} ${ts}" && git pull --rebase || { git rebase --abort 2>/dev/null; git pull --no-rebase -X theirs; } && git push`, { timeout: 120000, stdio:'pipe' });
+      execSync(`git add -A && git commit -m "Wiki ${cat.id} ${ts}" && git pull --rebase || { git rebase --abort 2>/dev/null; git pull --no-rebase -X theirs; } && git push`, { timeout: 120000, stdio:'inherit' });
       console.log(`  ✓ Pushed ${cat.id}`);
     } catch (e) { console.log(`  ⚠ git push failed: ${e.message?.slice(0, 100)}`); }
     if (i < activeRunCats.length - 1) await new Promise(r => setTimeout(r, 5000));
