@@ -351,7 +351,7 @@
             <!-- Listen category grid -->
             <div id="listenCatGrid">
                 <div class="page-sub" style="margin-bottom:8px">🎧 Listen Mode — pick a topic to hear facts read aloud</div>
-                <div class="cat-grid"></div>
+                <div class="cat-grid" id="listenCatGridInner"></div>
             </div>
             <!-- Listen player -->
             <div id="listenPlayer" style="display:none">
@@ -5967,14 +5967,11 @@ var _staticGen_polity = GK_GENERATORS.polity;
             var listenArea = document.getElementById('listenArea');
             quizBtn.style.background = mode === 'quiz' ? 'var(--purple)' : 'transparent';
             quizBtn.style.color = mode === 'quiz' ? '#fff' : 'var(--text-sec)';
-            if (listenBtn) {
-                listenBtn.style.background = mode === 'listen' ? 'var(--purple)' : 'transparent';
-                listenBtn.style.color = mode === 'listen' ? '#fff' : 'var(--text-sec)';
-            }
+            if (listenBtn) { listenBtn.style.background = mode === 'listen' ? 'var(--purple)' : 'transparent'; listenBtn.style.color = mode === 'listen' ? '#fff' : 'var(--text-sec)'; }
             welcome.style.display = mode === 'quiz' ? '' : 'none';
             qArea.style.display = 'none';
             if (studyArea) studyArea.style.display = 'none';
-            if (studyGrid) studyGrid.style.display = 'none';
+            if (studyGrid) studyGrid.style.display = mode === 'study' ? '' : 'none';
             if (listenArea) listenArea.style.display = mode === 'listen' ? '' : 'none';
             if (mode === 'listen') initListenCatGrid();
         }
@@ -5983,7 +5980,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
         var LISTEN = { facts:[], idx:0, playing:false, synth:window.speechSynthesis, utter:null, speed:1, catId:null };
 
         function initListenCatGrid() {
-            var grid = document.querySelector('#listenCatGrid .cat-grid');
+            var grid = document.getElementById('listenCatGridInner');
             if (!grid) return;
             grid.innerHTML = '';
             CATEGORIES.forEach(function(c) {
