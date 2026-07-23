@@ -258,7 +258,8 @@ html += '<div class="breadcrumb" id="breadcrumb">Archive</div>';
 // Welcome view
 html += '<div class="content-panel" id="view-welcome">';
 html += '<h1 class="page-title">📚 GK Current Affairs Archive</h1>';
-html += '<p class="page-sub">' + allQuestions.length + ' questions across ' + sortedCats.length + ' categories — last updated ' + new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + '. Click a category to browse.</p>';
+var buildTime = new Date().toISOString();
+html += '<p class="page-sub">' + allQuestions.length + ' questions across ' + sortedCats.length + ' categories — last updated <time id="build-time" datetime="' + buildTime + '">' + new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' IST</time>. Click a category to browse.</p>';
 html += '<div class="subj-grid">';
 catIndex.forEach((c, ci) => {
   html += '<a href="#" class="subj-card" onclick="return selectCategory(' + ci + ')">';
@@ -533,6 +534,14 @@ html += '  h += \'</div>\';\n';
 html += '  panel.innerHTML = h;\n';
 html += '  window.scrollTo(0, 0);\n';
 html += '}\n';
+
+html += 'function localizeBuildTime() {\n';
+html += '  var el = document.getElementById(\'build-time\');\n';
+html += '  if (!el) return;\n';
+html += '  var d = new Date(el.getAttribute(\'datetime\'));\n';
+html += '  el.textContent = d.toLocaleDateString([], { day: \'numeric\', month: \'short\', year: \'numeric\', hour: \'2-digit\', minute: \'2-digit\', timeZoneName: \'short\' }).replace(\' IST\', \'\');\n';
+html += '}\n';
+html += 'localizeBuildTime();\n';
 
 html += '<\/script><script>if(\'serviceWorker\' in navigator){navigator.serviceWorker.register(\'/sw.js\').catch(function(){})}<\/script>\n';
 html += '<\/body>\n<\/html>';
