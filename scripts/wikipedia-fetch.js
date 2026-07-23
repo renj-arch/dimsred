@@ -323,10 +323,10 @@ const CFG = [
   { id:'steel_plant', label:'Steel Plants', wikiCat:'Category:Steel_plants_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   { id:'tribe', label:'Tribes', wikiCat:'Category:Tribes_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   { id:'i_freedom', label:'Freedom Movement Sites', wikiCat:'Category:Indian_independence_movement', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
-  { id:'i_medieval', label:'Medieval Sites', wikiCat:'Category:Medieval_sites_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
-  { id:'i_colonial', label:'Colonial Sites', wikiCat:'Category:Colonial_architecture_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_medieval', label:'Medieval Sites', wikiCat:['Category:Archaeological_sites_in_India','Category:Medieval_history_of_India'], subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_colonial', label:'Colonial Sites', wikiCat:['Category:Colonial_India','Category:British_India'], subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   { id:'i_movement', label:'Social Movements', wikiCat:'Category:Social_movements_in_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
-  { id:'i_pilgrimage', label:'Pilgrimage Sites', wikiCat:'Category:Pilgrimage_sites_of_India', subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
+  { id:'i_pilgrimage', label:'Pilgrimage Sites', wikiCat:['Category:Pilgrimage_in_India','Category:Hindu_pilgrimage_sites'], subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
   // Remaining categories to wire into fetch+part11 pipeline
   { id:'dynasty', label:'Dynasties', wikiCat:'Category:Dynasties_of_India',
     subFn:(s,a)=>s,
@@ -355,7 +355,7 @@ const CFG = [
     }`
   },
   { id:'organization', label:'Organizations', wikiCat:['Category:Indian_nationalist_political_parties','Category:Political_organisations_based_in_India','Category:Social_organisations_of_India'], subFn:(s,a)=>[s].filter(Boolean).join(' · ') },
-  { id:'personality', label:'Historical Figures', wikiCat:['Category:Indian_historical_figures','Category:Historical_figures'],
+  { id:'personality', label:'Historical Figures', wikiCat:['Category:Indian_businesspeople','Category:Indian_educators','Category:Indian_saints','Category:Indian_politicians'],
     subFn:(s,a)=>s,
     coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
       VALUES ?item { QIDS }
@@ -737,7 +737,7 @@ const CFG = [
   { id:'escarpment', label:'Escarpments', wikiCat:'Category:Escarpments', subFn:(s,a)=>s },
   { id:'w_reservoir', label:'World Reservoirs', wikiCat:'Category:Reservoirs', subFn:(s,a)=>s },
   // Static-fallback categories (use Wikipedia fetch as supplement to static data)
-  { id:'w_politician', label:'World Political Leaders', wikiCat:'Category:Political_leaders',
+  { id:'w_politician', label:'World Political Leaders', wikiCat:['Category:Heads_of_state','Category:Heads_of_government','Category:Prime_ministers'],
     subFn:(s,a)=>s,
     coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
       VALUES ?item { QIDS }
