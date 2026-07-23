@@ -570,6 +570,7 @@ jobs:
       - name: Commit final updates and advance progress
         if: always()
         run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git rebase --abort 2>/dev/null; git switch main 2>/dev/null || git checkout main
