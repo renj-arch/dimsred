@@ -5721,6 +5721,9 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 state.autoPaused = false;
                 pauseBtn.textContent = '⏸';
                 pauseBtn.title = 'Pause auto-advance';
+                if (state._feedSource === 'archive' && state.questions.length > 0 && state.idx < state.questions.length) {
+                    _showFeedItem();
+                }
             } else {
                 state.autoPaused = true;
                 pauseBtn.textContent = '▶';
@@ -5735,6 +5738,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             var idx = target - 1;
             if (state.questions.length === 0) return;
             if (idx >= state.questions.length) idx = state.questions.length - 1;
+            var wasPaused = state.autoPaused;
             state.idx = idx;
             state.answered = false;
             inp.value = '';
@@ -5744,6 +5748,11 @@ var _staticGen_polity = GK_GENERATORS.polity;
             } else {
                 stopAutoTimer();
                 showQuestion();
+                if (wasPaused) {
+                    state.autoPaused = true;
+                    document.getElementById('pauseBtn').textContent = '▶';
+                    document.getElementById('pauseBtn').title = 'Resume auto-advance';
+                }
             }
         }
 
@@ -7224,14 +7233,12 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('optGrid').style.display = 'block';
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
 
-            state._feedTimer = setTimeout(function tick() {
-                if (state.autoPaused) {
-                    state._feedTimer = setTimeout(tick, 4000);
-                } else {
+            if (!state.autoPaused) {
+                state._feedTimer = setTimeout(function tick() {
                     state.idx++;
                     _showFeedItem();
-                }
-            }, 4000);
+                }, 4000);
+            }
         }
 
         function _stopFeedTimer() {
