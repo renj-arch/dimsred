@@ -387,7 +387,16 @@ const CFG = [
   { id:'border_road', label:'Border Roads', wikiCat:'Category:Border_Roads_Organisation', subFn:(s,a)=>s },
   { id:'longitude', label:'Lines of Longitude', wikiCat:'Category:Lines_of_longitude', subFn:(s,a)=>s },
   { id:'festival', label:'Festivals', wikiCat:'Category:Festivals_in_India', subFn:(s,a)=>s+' · Festival' },
-  { id:'language', label:'Languages', wikiCat:'Category:Languages_of_India', maxDepth:1, subFn:(s,a)=>s },
+  { id:'language', label:'Languages', wikiCat:'Category:Languages_of_India', maxDepth:1, subFn:(s,a)=>s,
+    coordSparql:`SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      VALUES ?item { QIDS }
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P17/wdt:P625 ?coord. }
+      OPTIONAL { ?item wdt:P131 ?state. }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+    }`
+  },
   { id:'cuisine', label:'Regional Cuisines', wikiCat:'Category:Indian_cuisine_by_state', subFn:(s,a)=>s+' · Cuisine' },
   { id:'classical_dance', label:'Classical Dances', wikiCat:'Category:Indian_classical_dances', subFn:(s,a)=>s+' · Classical Dance' },
   { id:'monument', label:'Monuments & Memorials', wikiCat:'Category:Monuments_and_memorials_in_India', subFn:(s,a)=>s },
@@ -837,7 +846,9 @@ async function processCat(cat, dedupSet) {
     } else {
       q = `SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
       VALUES ?item { ${qidList} }
-      ?item wdt:P625 ?coord.
+      { ?item wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P17/wdt:P625 ?coord. FILTER NOT EXISTS { ?item wdt:P625 [] } }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`;
@@ -916,7 +927,7 @@ async function main() {
   const dedupSet = loadDedupSet();
   console.log(`Loaded ${dedupSet.size} names for dedup`);
 
-  // Check which categories already have output files (resume support + skip zero-entry)
+  // Check which categories already have output files (resume support)
   const skipCats = [];
   const runCats = [];
   for (const cat of CFG) {
@@ -924,12 +935,16 @@ async function main() {
     if (fs.existsSync(fp)) {
       try {
         const existing = JSON.parse(fs.readFileSync(fp, 'utf8'));
-        if (existing.length === 0 && process.env.GLOBE_FILL_ALL !== '1') {
-          skipCats.push({ ...cat, existing: 0, note: 'empty' });
+        if (existing.length > 0 && process.env.GLOBE_FILL_ALL !== '1') {
+          skipCats.push({ ...cat, existing: existing.length });
           continue;
         }
-        skipCats.push({ ...cat, existing: existing.length });
-      } catch {}
+        // Empty or zero-entry file — re-process it
+        if (existing.length === 0) console.log(`  ⚠ ${cat.id} has empty file, will re-fetch`);
+      } catch {
+        // Corrupt file — re-process
+      }
+      runCats.push(cat);
       continue;
     }
     runCats.push(cat);
