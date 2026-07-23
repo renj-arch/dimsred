@@ -6924,31 +6924,33 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     added++;
                 }
             }
-            // 2) Static GK generators
+            // 2) Static GK generators — round-robin all categories
             var allCats = Object.keys(GK_GENERATORS).filter(function(k) { return typeof GK_GENERATORS[k] === 'function' && k !== 'sebi' && k !== 'scjudgments' && k !== 'rbi' && k !== 'isro' && k !== 'mea'; });
             shuffleArray(allCats);
-            for (var ci = 0; ci < allCats.length && added < count; ci++) {
-                try {
-                    var sq = GK_GENERATORS[allCats[ci]]();
-                    if (!sq || !sq.q || !sq.a) continue;
-                    if (!sq.fact) sq.fact = sq.q + ' ' + (sq.a || '');
-                    sq.opts = sq.opts || buildOptions(sq.a);
-                    var dup = false;
-                    for (var j = 0; j < state.questions.length; j++) {
-                        if (state.questions[j].a === sq.a || state.questions[j].q === sq.q) { dup = true; break; }
-                    }
-                    if (dup) continue;
-                    if (!isValidAnswer(sq.a) || isTrash(sq)) continue;
-                    if (state.regionFilter && state.regionFilter !== 'all') {
-                        var isInd = _isIndiaRelated(sq);
-                        if ((state.regionFilter === 'india' && !isInd) || (state.regionFilter === 'world' && isInd)) continue;
-                    }
-                    if (state.timeFilter && state.timeFilter !== 'all') {
-                        if (!_matchesTimeFilter(sq, state.timeFilter)) continue;
-                    }
-                    state.questions.push(sq);
-                    added++;
-                } catch(e) {}
+            for (var round = 0; round < 10 && added < count; round++) {
+                for (var ci = 0; ci < allCats.length && added < count; ci++) {
+                    try {
+                        var sq = GK_GENERATORS[allCats[ci]]();
+                        if (!sq || !sq.q || !sq.a) continue;
+                        if (!sq.fact) sq.fact = sq.q + ' ' + (sq.a || '');
+                        sq.opts = sq.opts || buildOptions(sq.a);
+                        var dup = false;
+                        for (var j = 0; j < state.questions.length; j++) {
+                            if (state.questions[j].a === sq.a || state.questions[j].q === sq.q) { dup = true; break; }
+                        }
+                        if (dup) continue;
+                        if (!isValidAnswer(sq.a) || isTrash(sq)) continue;
+                        if (state.regionFilter && state.regionFilter !== 'all') {
+                            var isInd = _isIndiaRelated(sq);
+                            if ((state.regionFilter === 'india' && !isInd) || (state.regionFilter === 'world' && isInd)) continue;
+                        }
+                        if (state.timeFilter && state.timeFilter !== 'all') {
+                            if (!_matchesTimeFilter(sq, state.timeFilter)) continue;
+                        }
+                        state.questions.push(sq);
+                        added++;
+                    } catch(e) {}
+                }
             }
             // 3) Wikipedia pool
             for (var i = 0; i < maxTries && added < count; i++) {
@@ -7017,15 +7019,26 @@ var _staticGen_polity = GK_GENERATORS.polity;
             var allCats = Object.keys(GK_GENERATORS).filter(function(k) { return typeof GK_GENERATORS[k] === 'function' && k !== 'sebi' && k !== 'scjudgments' && k !== 'rbi' && k !== 'isro' && k !== 'mea'; });
             shuffleArray(allCats);
             var added = 0;
-            for (var ci = 0; ci < allCats.length && added < 400; ci++) {
-                try {
-                    var q = GK_GENERATORS[allCats[ci]]();
-                    if (!q || !q.q || !q.a) continue;
-                    if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
-                    q._wikiCat = allCats[ci];
-                    state.questions.push(q);
-                    added++;
-                } catch(e) {}
+            var existingSet = {};
+            for (var ei = 0; ei < state.questions.length; ei++) {
+                var eq = state.questions[ei];
+                if (eq.q) existingSet[eq.q] = true;
+                if (eq.a) existingSet[eq.a] = true;
+            }
+            for (var round = 0; round < 10 && added < 400; round++) {
+                for (var ci = 0; ci < allCats.length && added < 400; ci++) {
+                    try {
+                        var q = GK_GENERATORS[allCats[ci]]();
+                        if (!q || !q.q || !q.a) continue;
+                        if (existingSet[q.q] || existingSet[q.a]) continue;
+                        if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
+                        existingSet[q.q] = true;
+                        existingSet[q.a] = true;
+                        q._wikiCat = allCats[ci];
+                        state.questions.push(q);
+                        added++;
+                    } catch(e) {}
+                }
             }
             shuffleArray(state.questions);
         }
@@ -7071,8 +7084,25 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     }
                     loaded++;
                     if (loaded === pending) {
-                        _archiveCache = allQ;
-                        cb(allQ);
+                        var bySubTopic = {};
+                        for (var qi = 0; qi < allQ.length; qi++) {
+                            var aq = allQ[qi];
+                            var key = aq.subject + '||' + aq.subTopic;
+                            if (!bySubTopic[key]) bySubTopic[key] = [];
+                            bySubTopic[key].push(aq);
+                        }
+                        var keys = Object.keys(bySubTopic);
+                        shuffleArray(keys);
+                        var guaranteed = [];
+                        var rest = [];
+                        for (var ki = 0; ki < keys.length; ki++) {
+                            var qs = bySubTopic[keys[ki]];
+                            guaranteed.push(qs[0]);
+                            for (var qj = 1; qj < qs.length; qj++) rest.push(qs[qj]);
+                        }
+                        shuffleArray(rest);
+                        _archiveCache = guaranteed.concat(rest);
+                        cb(_archiveCache);
                     }
                 };
                 xhr.onerror = function() { loaded++; if (loaded === pending) { _archiveCache = allQ; cb(allQ); } };
