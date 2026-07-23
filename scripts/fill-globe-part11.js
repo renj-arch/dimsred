@@ -444,7 +444,12 @@ function fixGlobalDescs(html) {
 
 const { html: fixedHtml, fixed } = fixGlobalDescs(html);
 console.log(`Fixed ${fixed} entries with poor desc/fact across all categories`);
-fs.writeFileSync(GLOBE_PATH, fixedHtml, 'utf8');
 const totalEntries = (fixedHtml.match(/\{n:'/g) || []).length;
+const commentTag = `<!-- Total globe entries: ${totalEntries} -->`;
+const tagIdx = fixedHtml.indexOf('<script type="module">');
+const updatedHtml = tagIdx !== -1
+  ? fixedHtml.slice(0, tagIdx) + commentTag + '\n' + fixedHtml.slice(tagIdx)
+  : fixedHtml;
+fs.writeFileSync(GLOBE_PATH, updatedHtml, 'utf8');
 console.log(`\n=== Total globe entries: ${totalEntries} ===`);
 console.log('Part 11 done');
