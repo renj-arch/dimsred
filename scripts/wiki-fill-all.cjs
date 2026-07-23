@@ -1306,15 +1306,15 @@ const CATEGORIES = [
   ]},
 ];
 
-// Daily rotation groups
+// Rotation groups (7 groups, cycled through by 4h time slots)
 const DAY_GROUPS = [
-  [0,1,2,3],       // Sun: Ancient India, Medieval & Modern India, World History, Indian Geography
-  [4,5,6,7],       // Mon: World Geography, Polity & Governance, Indian Economy, General Science
-  [8,9,10,11],     // Tue: Science & Technology, Art & Culture, Defence & Security, Environment & Ecology
-  [12,13,14,15],   // Wed: International Relations, Indian Society, Ethics & Integrity, ISRO & Space
-  [16,17,18,19],   // Thu: Sports, Books & Authors, Awards & Honours, Govt Schemes
-  [20,21,22,23],   // Fri: Indian States, Important Days, Personalities, Disaster Management
-  [24,25,26,27,28,29,30,31,32], // Sat: Business & Economy, RBI & Banking, Indian National Symbols, Agriculture & Food, Health & Medicine, Constitution, Computer & IT, Railways & Transport, Energy & Power
+  [0,1,2,3],       // Group 0: Ancient India, Medieval & Modern India, World History, Indian Geography
+  [4,5,6,7],       // Group 1: World Geography, Polity & Governance, Indian Economy, General Science
+  [8,9,10,11],     // Group 2: Science & Technology, Art & Culture, Defence & Security, Environment & Ecology
+  [12,13,14,15],   // Group 3: International Relations, Indian Society, Ethics & Integrity, ISRO & Space
+  [16,17,18,19],   // Group 4: Sports, Books & Authors, Awards & Honours, Govt Schemes
+  [20,21,22,23],   // Group 5: Indian States, Important Days, Personalities, Disaster Management
+  [24,25,26,27,28,29,30,31,32], // Group 6: Business & Economy, RBI & Banking, Indian National Symbols, Agriculture & Food, Health & Medicine, Constitution, Computer & IT, Railways & Transport, Energy & Power
 ];
 
 async function main() {
@@ -1336,26 +1336,23 @@ async function main() {
 
   let totalAdded = 0;
 
-  // Determine which categories to process today
+  // Determine which group to process
   const processAll = process.env.WIKI_FILL_ALL === '1';
-  const GROUPS_PER_DAY = parseInt(process.env.WIKI_FILL_GROUPS || '2', 10);
+  const fillGroup = parseInt(process.env.WIKI_FILL_GROUP || '0', 10);
   let activeCategories;
   if (processAll) {
     activeCategories = CATEGORIES;
     log('Processing ALL categories (WIKI_FILL_ALL=1)');
-  } else {
-    const dayIdx = new Date().getDay();
-    const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    const groupIdxs = [];
-    for (let i = 0; i < GROUPS_PER_DAY; i++) {
-      groupIdxs.push((dayIdx * GROUPS_PER_DAY + i) % DAY_GROUPS.length);
-    }
-    const activeIdxs = new Set(groupIdxs.flatMap(gi => DAY_GROUPS[gi]));
+  } else if (fillGroup >= 0 && fillGroup < DAY_GROUPS.length) {
+    const activeIdxs = new Set(DAY_GROUPS[fillGroup]);
     activeCategories = [...activeIdxs].map(i => CATEGORIES[i]);
-    log('Day: ' + dayNames[dayIdx] + ' — processing ' + activeCategories.length + ' of ' + CATEGORIES.length + ' categories (groups: ' + groupIdxs.join(',') + ')');
+    log('Group ' + fillGroup + ' — processing ' + activeCategories.length + ' of ' + CATEGORIES.length + ' categories');
     CATEGORIES.forEach((c, i) => {
       if (!activeIdxs.has(i)) log('  (skipping: ' + c.name + ')');
     });
+  } else {
+    activeCategories = CATEGORIES;
+    log('Invalid WIKI_FILL_GROUP=' + fillGroup + ', processing all');
   }
 
   const CONCURRENCY = 2;
