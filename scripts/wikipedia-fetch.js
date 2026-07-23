@@ -2,7 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const { execSync } = require('child_process');
-process.stdout._handle?.setBlocking(true);
+// Force all logging through stderr (unbuffered) so GitHub Actions shows output in real-time
+const log = console.log;
+console.log = (...a) => { process.stderr.write(a.join(' ') + '\n'); };
 
 // Global rate limiter — enforces minimum gap between all API calls
 let lastRequestTime = 0;
