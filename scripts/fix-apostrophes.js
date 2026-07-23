@@ -16,50 +16,68 @@ const outerPrefix = h.substring(0, ms + 23);
 const js = h.substring(ms + 23, me);
 const outerSuffix = h.substring(me);
 
-function unesc(s) {
-  let r = '';
-  for (let i = 0; i < s.length; i++) {
-    if (s[i] === '\\' && i + 1 < s.length) {
-      const n = s[i + 1];
-      if (n === 'n') { r += '\n'; i++; }
-      else if (n === 'r') { r += '\r'; i++; }
-      else if (n === 't') { r += '\t'; i++; }
-      else { r += n; i++; }
-    } else {
-      r += s[i];
-    }
-  }
-  return r;
-}
-
 function esc(s) {
   return s.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t');
 }
 
-function reesc(s) {
-  return esc(unesc(s));
-}
-
-const ENTRY_PATTERN = /^(\s*\{n:)'((?:[^'\\]|\\.)*)'(,la:-?\d+(?:\.\d+)?,ln:-?\d+(?:\.\d+)?,sub:)'((?:[^'\\]|\\.)*)'(,desc:)'((?:[^'\\]|\\.)*)'(,fact:)'((?:[^'\\]|\\.)*)'((?:,pts:-?\d+(?:\.\d+)?)?,tag:)'((?:[^'\\]|\\.)*)'(\},?\s*)$/;
-
-const lines = js.split('\n');
+const LINES = js.split('\n');
 let fixed = 0;
 
-for (let i = 0; i < lines.length; i++) {
-  const line = lines[i];
-  const m = line.match(ENTRY_PATTERN);
-  if (m) {
-    const [, p1, n, p3, sub, p5, desc, p7, fact, p9, tag, p11] = m;
-    const newN = reesc(n);
-    const newSub = reesc(sub);
-    const newDesc = reesc(desc);
-    const newFact = reesc(fact);
-    const newTag = reesc(tag);
-    if (newN !== n || newSub !== sub || newDesc !== desc || newFact !== fact || newTag !== tag) {
+for (let i = 0; i < LINES.length; i++) {
+  let line = LINES[i];
+  const t = line.trim();
+  if (!t.startsWith('{n:')) continue;
+
+  // Format: {n:'NAME',la:NUM,ln:NUM,sub:'SUB',desc:'DESC',fact:'FACT',tag:'TAG'}[optional ,]
+  // Extract by locating unique field boundary markers (',la:, ,ln:, ,sub:, ',desc:, ',fact:, ',tag:, '})
+  try {
+    const nEnd = line.indexOf("',la:");
+    if (nEnd === -1) continue;
+    const name = line.substring(3, nEnd);
+
+    const laEnd = line.indexOf(",ln:", nEnd + 2);
+    if (laEnd === -1) continue;
+    const laRaw = line.substring(nEnd + 2, laEnd);
+
+    const lnEnd = line.indexOf(",sub:", laEnd);
+    if (lnEnd === -1) continue;
+    const lnRaw = line.substring(laEnd + 1, lnEnd);
+
+    const subStart = line.indexOf("sub:'", laEnd);
+    if (subStart === -1) continue;
+    const subEnd = line.indexOf("',desc:", subStart);
+    if (subEnd === -1) continue;
+    const sub = line.substring(subStart + 5, subEnd);
+
+    const descStart = subEnd + 8;
+    const descEnd = line.indexOf("',fact:", descStart);
+    if (descEnd === -1) continue;
+    const desc = line.substring(descStart, descEnd);
+
+    const factStart = descEnd + 8;
+    const factEnd = line.indexOf("',tag:", factStart);
+    if (factEnd === -1) continue;
+    const fact = line.substring(factStart, factEnd);
+
+    const tagStart = factEnd + 7;
+    const tagEnd = line.indexOf("'}", tagStart);
+    if (tagEnd === -1) continue;
+    const tag = line.substring(tagStart, tagEnd);
+
+    const suffix = line.substring(tagEnd + 2);
+
+    const newName = esc(name);
+    const newSub = esc(sub);
+    const newDesc = esc(desc);
+    const newFact = esc(fact);
+    const newTag = esc(tag);
+
+    if (newName !== name || newSub !== sub || newDesc !== desc || newFact !== fact || newTag !== tag) {
       fixed++;
     }
-    lines[i] = `${p1}'${newN}'${p3}'${newSub}'${p5}'${newDesc}'${p7}'${newFact}'${p9}'${newTag}'${p11}`;
-  }
+
+    LINES[i] = "{n:'" + newName + "'," + laRaw + "," + lnRaw + ",sub:'" + newSub + "',desc:'" + newDesc + "',fact:'" + newFact + "',tag:'" + newTag + "'}" + suffix;
+  } catch(e) {}
 }
 
 const result = lines.join('\n');
