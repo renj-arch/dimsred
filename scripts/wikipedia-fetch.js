@@ -361,9 +361,11 @@ const CFG = [
       VALUES ?item { QIDS }
       { ?item wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P19 ?coord. }
+      { ?item wdt:P19/wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P20 ?coord. }
+      { ?item wdt:P20/wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P17/wdt:P625 ?coord. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }` },
@@ -743,9 +745,11 @@ const CFG = [
       VALUES ?item { QIDS }
       { ?item wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P19 ?coord. }
+      { ?item wdt:P19/wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P20 ?coord. }
+      { ?item wdt:P20/wdt:P625 ?coord. }
+      UNION
+      { ?item wdt:P17/wdt:P625 ?coord. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
@@ -844,11 +848,13 @@ async function processCat(cat, dedupSet) {
     if (cat.coordSparql) {
       q = cat.coordSparql.replace('QIDS', qidList);
     } else {
-      q = `SELECT ?item ?itemLabel ?coord ?stateLabel WHERE {
+      q = `SELECT ?item ?itemLabel ?coord ?country ?countryLabel ?stateLabel WHERE {
       VALUES ?item { ${qidList} }
-      { ?item wdt:P625 ?coord. }
-      UNION
-      { ?item wdt:P17/wdt:P625 ?coord. FILTER NOT EXISTS { ?item wdt:P625 [] } }
+      OPTIONAL { ?item wdt:P625 ?c1. }
+      OPTIONAL { ?item wdt:P17/wdt:P625 ?c2. }
+      OPTIONAL { ?item wdt:P131/wdt:P625 ?c3. }
+      BIND(COALESCE(?c1, ?c2, ?c3) AS ?coord)
+      OPTIONAL { ?item wdt:P17 ?country. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`;
@@ -866,13 +872,64 @@ async function processCat(cat, dedupSet) {
     e.ln = parseFloat(parseFloat(m[1]).toFixed(6));
     if (b.stateLabel?.value && !e.states.includes(b.stateLabel.value)) e.states.push(b.stateLabel.value);
     for (const v of Object.keys(b)) {
-      if (!['item','coord','state','stateLabel','itemLabel'].includes(v) && b[v]?.value) {
+      if (!['item','coord','state','stateLabel','itemLabel','country','countryLabel','c1','c2','c3'].includes(v) && b[v]?.value) {
         const val = b[v].value;
         if (!e.meta[v] || !e.meta[v].includes(val)) { if (!e.meta[v]) e.meta[v] = []; e.meta[v].push(val); }
       }
     }
     coordMap.set(qid, e);
   }
+
+  // Universal fallback: for items still without coords, P17 country lookup + default
+  const missing = valid.filter(([, qid]) => !coordMap.has(qid));
+  if (missing.length > 0) {
+    const missingQids = missing.map(([, q]) => `wd:${q}`).join(' ');
+    console.log(`  No coord for ${missing.length} items, trying P17 fallback...`);
+    try {
+      const fallbackQ = `SELECT ?item ?country ?countryLabel WHERE {
+        VALUES ?item { ${missingQids} }
+        ?item wdt:P17 ?country.
+        SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
+      }`;
+      const fbResult = await sparql(fallbackQ);
+      const countryQidSet = new Set();
+      const itemCountryMap = new Map();
+      for (const b of fbResult.results.bindings) {
+        const qid = b.item.value.split('/').pop();
+        const cqid = b.country.value.split('/').pop();
+        countryQidSet.add(cqid);
+        itemCountryMap.set(qid, cqid);
+      }
+      if (countryQidSet.size > 0) {
+        const countryCoordQ = `SELECT ?country ?coord WHERE {
+          VALUES ?country { ${[...countryQidSet].map(q => `wd:${q}`).join(' ')} }
+          ?country wdt:P625 ?coord.
+        }`;
+        const ccResult = await sparql(countryCoordQ);
+        const countryCoordMap = new Map();
+        for (const b of ccResult.results.bindings) {
+          const cqid = b.country.value.split('/').pop();
+          const m = b.coord?.value?.match(/Point\(([-\d.]+)\s+([-\d.]+)\)/);
+          if (m) countryCoordMap.set(cqid, { la: parseFloat(parseFloat(m[2]).toFixed(6)), ln: parseFloat(parseFloat(m[1]).toFixed(6)) });
+        }
+        for (const [qid, cqid] of itemCountryMap) {
+          if (countryCoordMap.has(cqid)) {
+            coordMap.set(qid, { la: countryCoordMap.get(cqid).la, ln: countryCoordMap.get(cqid).ln, states: [], meta: {} });
+          }
+        }
+      }
+    } catch (e) { console.log(`  ✗ P17 fallback SPARQL failed: ${e.message}`); }
+  }
+
+  // Last resort: assign India center for items still without any coordinate
+  const stillMissing = valid.filter(([, qid]) => !coordMap.has(qid));
+  if (stillMissing.length > 0) {
+    console.log(`  ⚠ Assigning default coords for ${stillMissing.length} unlocatable items`);
+    for (const [, qid] of stillMissing) {
+      coordMap.set(qid, { la: 20.5937, ln: 78.9629, states: [], meta: { _fallback: 'default' } });
+    }
+  }
+
   console.log(`  With coords: ${coordMap.size}`);
 
   // Phase 1: collect candidates (coord + dedup)
