@@ -938,7 +938,6 @@ async function processCat(cat, dedupSet) {
   const candidates = [];
   let skipped = 0;
   for (const [title, qid] of valid) {
-    if (candidates.length >= 200) break;
     const coord = coordMap.get(qid);
     if (!coord) continue;
     if (dedupSet.has(normName(title))) { skipped++; continue; }
