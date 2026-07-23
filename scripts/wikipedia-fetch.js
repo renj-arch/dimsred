@@ -809,19 +809,20 @@ const CFG = [
   { id:'w_ramsar', label:'World Ramsar Sites', wikiCat:'Category:Ramsar_sites', maxDepth:1, subFn:(s,a)=>s },
 ];
 
-async function fetchSummariesConcurrently(titles, concurrency = 2) {
+async function fetchSummariesConcurrently(titles, concurrency = 10) {
   const results = {};
-  const queue = [...titles];
-  async function worker() {
-    while (queue.length > 0) {
-      const title = queue.shift();
-      try { results[title] = await wikiSummary(title); } catch { results[title] = null; }
-      await new Promise(r => setTimeout(r, 300));
-    }
+  // Batch via MediaWiki API (50 per call) instead of individual REST calls
+  for (let i = 0; i < titles.length; i += 50) {
+    const batch = titles.slice(i, i + 50);
+    try {
+      const url = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages&exintro&explaintext&pithumbsize=300&titles=${encodeURIComponent(batch.join('|'))}&format=json`;
+      const d = await httpGet(url);
+      for (const [, page] of Object.entries(d.query.pages)) {
+        if (page.missing) continue;
+        results[page.title] = { extract: page.extract || '', thumbnail: page.thumbnail?.source || '' };
+      }
+    } catch { /* skip failed batch */ }
   }
-  const workers = [];
-  for (let i = 0; i < concurrency && i < titles.length; i++) workers.push(worker());
-  await Promise.all(workers);
   return results;
 }
 
