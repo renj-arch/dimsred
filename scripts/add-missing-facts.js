@@ -21,8 +21,8 @@ const CATEGORIES = {
   trade: { firstN: 25 }
 };
 
-function esc(str) {
-  return str.replace(/'/g, "\\'");
+function esc(s) {
+  return (s || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t');
 }
 
 function findArrayBounds(str, startIdx) {
