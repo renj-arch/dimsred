@@ -14624,7 +14624,7 @@ function getEraEvents(year,buffer=100){
 // THREE.JS SETUP
 // ============================================================
 let totalItems=0;Object.values(D).forEach(a=>{if(a)totalItems+=a.length});document.getElementById('totalCount').textContent=totalItems.toLocaleString()
-fetch('data/topic-index.json').then(r=>r.json()).then(d=>{document.getElementById('lastUpdated').textContent='Updated '+new Date(d.updatedAt).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}).catch(()=>{})
+fetch('data/pib-feed.json').then(r=>r.json()).then(d=>{document.getElementById('lastUpdated').textContent='Updated '+new Date(d.updatedAt).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}).catch(()=>{})
 
 
 const scene = new THREE.Scene();

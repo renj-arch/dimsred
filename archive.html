@@ -326,6 +326,8 @@ function showSearchResults(query, results) {
   panel.innerHTML = h;
   window.scrollTo(0, 0);
 }
+
+fetch("data/pib-feed.json").then(r=>r.json()).then(d=>{document.getElementById("lastUpdated").textContent="Updated "+new Date(d.updatedAt).toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"})}).catch(()=>{})
 </script><script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}</script>
 </body>
 </html>
