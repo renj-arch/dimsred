@@ -851,9 +851,11 @@ async function processCat(cat, dedupSet) {
       q = `SELECT ?item ?itemLabel ?coord ?country ?countryLabel ?stateLabel WHERE {
       VALUES ?item { ${qidList} }
       OPTIONAL { ?item wdt:P625 ?c1. }
-      OPTIONAL { ?item wdt:P17/wdt:P625 ?c2. }
-      OPTIONAL { ?item wdt:P131/wdt:P625 ?c3. }
-      BIND(COALESCE(?c1, ?c2, ?c3) AS ?coord)
+      OPTIONAL { ?item wdt:P19/wdt:P625 ?c2. }
+      OPTIONAL { ?item wdt:P20/wdt:P625 ?c3. }
+      OPTIONAL { ?item wdt:P17/wdt:P625 ?c4. }
+      OPTIONAL { ?item wdt:P131/wdt:P625 ?c5. }
+      BIND(COALESCE(?c1, ?c2, ?c3, ?c4, ?c5) AS ?coord)
       OPTIONAL { ?item wdt:P17 ?country. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
@@ -872,7 +874,7 @@ async function processCat(cat, dedupSet) {
     e.ln = parseFloat(parseFloat(m[1]).toFixed(6));
     if (b.stateLabel?.value && !e.states.includes(b.stateLabel.value)) e.states.push(b.stateLabel.value);
     for (const v of Object.keys(b)) {
-      if (!['item','coord','state','stateLabel','itemLabel','country','countryLabel','c1','c2','c3'].includes(v) && b[v]?.value) {
+      if (!['item','coord','state','stateLabel','itemLabel','country','countryLabel','c1','c2','c3','c4','c5'].includes(v) && b[v]?.value) {
         const val = b[v].value;
         if (!e.meta[v] || !e.meta[v].includes(val)) { if (!e.meta[v]) e.meta[v] = []; e.meta[v].push(val); }
       }
