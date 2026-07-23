@@ -20,64 +20,101 @@ function esc(s) {
   return s.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t');
 }
 
+function unesc(s) {
+  return s.replace(/\\(['\\nrt])/g, (m, c) => {
+    if (c === '\\') return '\\';
+    if (c === "'") return "'";
+    if (c === 'n') return '\n';
+    if (c === 'r') return '\r';
+    if (c === 't') return '\t';
+    return m;
+  });
+}
+
+function isValidJS(line) {
+  try {
+    new Function('return ' + line);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 const LINES = js.split('\n');
 let fixed = 0;
+let skipped = 0;
 
 for (let i = 0; i < LINES.length; i++) {
   let line = LINES[i];
   const t = line.trim();
   if (!t.startsWith('{n:')) continue;
 
-  // Format: {n:'NAME',la:NUM,ln:NUM,sub:'SUB',desc:'DESC',fact:'FACT',tag:'TAG'}[optional ,]
-  // Extract by locating unique field boundary markers (',la:, ,ln:, ,sub:, ',desc:, ',fact:, ',tag:, '})
-  try {
-    const nEnd = line.indexOf("',la:");
-    if (nEnd === -1) continue;
-    const name = line.substring(3, nEnd);
+  // Extract fields by searching backward from end for opening markers
+  // This is more robust than forward search because field values
+  // rarely contain ",sub:'", ",desc:'", ",fact:'", ",tag:'" as literals
+  const tagOpen = line.lastIndexOf(",tag:'");
+  if (tagOpen === -1) continue;
+  const factOpen = line.lastIndexOf(",fact:'", tagOpen);
+  if (factOpen === -1) continue;
+  const descOpen = line.lastIndexOf(",desc:'", factOpen);
+  if (descOpen === -1) continue;
+  const subOpen = line.lastIndexOf(",sub:'", descOpen);
+  if (subOpen === -1) continue;
+  const nOpen = line.indexOf("{n:'");
+  if (nOpen === -1) continue;
 
-    const laEnd = line.indexOf(",ln:", nEnd + 2);
-    if (laEnd === -1) continue;
-    const laRaw = line.substring(nEnd + 2, laEnd);
+  // Find closing quotes
+  const nClose = line.indexOf("',la:", nOpen + 3);
+  if (nClose === -1) continue;
+  const laEnd = line.indexOf(",ln:", nClose + 2);
+  if (laEnd === -1) continue;
+  const lnEnd = line.indexOf(",sub:", laEnd);
+  if (lnEnd === -1) continue;
+  const subClose = line.indexOf("',", subOpen + 6);
+  if (subClose === -1) continue;
+  const descClose = line.indexOf("',", descOpen + 7);
+  if (descClose === -1) continue;
+  const factClose = line.indexOf("',", factOpen + 7);
+  if (factClose === -1) continue;
 
-    const lnEnd = line.indexOf(",sub:", laEnd);
-    if (lnEnd === -1) continue;
-    const lnRaw = line.substring(laEnd + 1, lnEnd);
+  // Tag close: '}' or ',\n' or ',pts'
+  const tagClose = line.indexOf("'}", tagOpen + 6);
+  const tagCloseIdx = tagClose !== -1 ? tagClose : line.indexOf("',", tagOpen + 6);
+  if (tagCloseIdx === -1) continue;
 
-    const subStart = line.indexOf("sub:'", laEnd);
-    if (subStart === -1) continue;
-    const subEnd = line.indexOf("',desc:", subStart);
-    if (subEnd === -1) continue;
-    const sub = line.substring(subStart + 5, subEnd);
+  // Preserve leading whitespace
+  const indent = line.substring(0, nOpen);
 
-    const descStart = subEnd + 8;
-    const descEnd = line.indexOf("',fact:", descStart);
-    if (descEnd === -1) continue;
-    const desc = line.substring(descStart, descEnd);
+  // Extract raw values
+  const name = line.substring(nOpen + 4, nClose);
+  const laRaw = line.substring(nClose + 2, laEnd);
+  const lnRaw = line.substring(laEnd + 1, lnEnd);
+  const sub = line.substring(subOpen + 6, subClose);
+  const desc = line.substring(descOpen + 7, descClose);
+  const fact = line.substring(factOpen + 7, factClose);
+  const tag = line.substring(tagOpen + 6, tagCloseIdx);
 
-    const factStart = descEnd + 8;
-    const factEnd = line.indexOf("',tag:", factStart);
-    if (factEnd === -1) continue;
-    const fact = line.substring(factStart, factEnd);
+  const suffix = line.substring(tagCloseIdx + 2);
 
-    const tagStart = factEnd + 7;
-    const tagEnd = line.indexOf("'}", tagStart);
-    if (tagEnd === -1) continue;
-    const tag = line.substring(tagStart, tagEnd);
+  // Unescape to get raw values, then re-escape (fixes double-escaping bug)
+  const newName = esc(unesc(name));
+  const newSub = esc(unesc(sub));
+  const newDesc = esc(unesc(desc));
+  const newFact = esc(unesc(fact));
+  const newTag = esc(unesc(tag));
 
-    const suffix = line.substring(tagEnd + 2);
+  const changed = newName !== name || newSub !== sub || newDesc !== desc || newFact !== fact || newTag !== tag;
+  if (!changed) continue;
 
-    const newName = esc(name);
-    const newSub = esc(sub);
-    const newDesc = esc(desc);
-    const newFact = esc(fact);
-    const newTag = esc(tag);
+  let newLine = indent + "{n:'" + newName + "'," + laRaw + "," + lnRaw + ",sub:'" + newSub + "',desc:'" + newDesc + "',fact:'" + newFact + "',tag:'" + newTag + "'}" + suffix;
 
-    if (newName !== name || newSub !== sub || newDesc !== desc || newFact !== fact || newTag !== tag) {
-      fixed++;
-    }
-
-    LINES[i] = "{n:'" + newName + "'," + laRaw + "," + lnRaw + ",sub:'" + newSub + "',desc:'" + newDesc + "',fact:'" + newFact + "',tag:'" + newTag + "'}" + suffix;
-  } catch(e) {}
+  // Validate each changed line individually; skip if invalid
+  if (isValidJS(newLine)) {
+    LINES[i] = newLine;
+    fixed++;
+  } else {
+    skipped++;
+  }
 }
 
 const result = LINES.join('\n');
