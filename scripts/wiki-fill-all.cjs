@@ -1344,15 +1344,21 @@ async function main() {
     activeCategories = CATEGORIES;
     log('Processing ALL categories (WIKI_FILL_ALL=1)');
   } else {
-    const dayIdx = new Date().getDay();
+    const baseDayIdx = new Date().getDay();
+    const fillDays = parseInt(process.env.WIKI_FILL_DAYS || '1', 10);
     const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     const groupIdxs = [];
-    for (let i = 0; i < GROUPS_PER_DAY; i++) {
-      groupIdxs.push((dayIdx * GROUPS_PER_DAY + i) % DAY_GROUPS.length);
+    for (let d = 0; d < fillDays; d++) {
+      const dayIdx = (baseDayIdx + d) % 7;
+      for (let i = 0; i < GROUPS_PER_DAY; i++) {
+        groupIdxs.push((dayIdx * GROUPS_PER_DAY + i) % DAY_GROUPS.length);
+      }
     }
-    const activeIdxs = new Set(groupIdxs.flatMap(gi => DAY_GROUPS[gi]));
+    const uniqueGroups = [...new Set(groupIdxs)];
+    const activeIdxs = new Set(uniqueGroups.flatMap(gi => DAY_GROUPS[gi]));
     activeCategories = [...activeIdxs].map(i => CATEGORIES[i]);
-    log('Day: ' + dayNames[dayIdx] + ' — processing ' + activeCategories.length + ' of ' + CATEGORIES.length + ' categories (groups: ' + groupIdxs.join(',') + ')');
+    const dayLabels = [...new Set(Array.from({length: fillDays}, (_, d) => dayNames[(baseDayIdx + d) % 7]))];
+    log('Days: ' + dayLabels.join(', ') + ' — processing ' + activeCategories.length + ' of ' + CATEGORIES.length + ' categories (groups: ' + uniqueGroups.join(',') + ')');
     CATEGORIES.forEach((c, i) => {
       if (!activeIdxs.has(i)) log('  (skipping: ' + c.name + ')');
     });
