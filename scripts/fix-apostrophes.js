@@ -80,7 +80,7 @@ for (let i = 0; i < LINES.length; i++) {
   } catch(e) {}
 }
 
-const result = lines.join('\n');
+const result = LINES.join('\n');
 
 const tmpFile = path.join(os.tmpdir(), 'globe-check.mjs');
 fs.writeFileSync(tmpFile, result, 'utf8');
