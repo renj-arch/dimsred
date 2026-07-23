@@ -435,9 +435,10 @@ function fixGlobalDescs(html) {
   }
   for (let i = fixes.length - 1; i >= 0; i--) {
     const f = fixes[i];
-    const oldStr = `desc:'${f.desc}',fact:'${f.fact}'`;
-    const newStr = `desc:'${esc(f.newDesc)}',fact:'${esc(f.newFact)}'`;
-    html = html.slice(0, f.idx) + f.old.replace(oldStr, newStr) + html.slice(f.idx + f.old.length);
+    const newEntry = f.old
+      .replace(/desc:'((?:[^'\\]|\\.)*)'/, `desc:'${esc(f.newDesc)}'`)
+      .replace(/fact:'((?:[^'\\]|\\.)*)'/, `fact:'${esc(f.newFact)}'`);
+    html = html.slice(0, f.idx) + newEntry + html.slice(f.idx + f.old.length);
   }
   return { html, fixed: fixes.length };
 }
@@ -451,5 +452,26 @@ const updatedHtml = tagIdx !== -1
   ? fixedHtml.slice(0, tagIdx) + commentTag + '\n' + fixedHtml.slice(tagIdx)
   : fixedHtml;
 fs.writeFileSync(GLOBE_PATH, updatedHtml, 'utf8');
+
+// Validate syntax immediately after writing
+const { execSync: execSync2 } = require('child_process');
+const os2 = require('os');
+const tmpCheck = path.join(os2.tmpdir(), 'globe-check-part11.mjs');
+const h2 = fs.readFileSync(GLOBE_PATH, 'utf8');
+const ms2 = h2.indexOf('<script type="module">');
+const me2 = h2.indexOf('</script>', ms2);
+const js2 = h2.substring(ms2 + 23, me2);
+fs.writeFileSync(tmpCheck, js2, 'utf8');
+try {
+  execSync2(`node --check "${tmpCheck}"`, { stdio: 'pipe', timeout: 15000 });
+  console.log('Post-write syntax validation: OK');
+} catch (e) {
+  console.error('Post-write syntax validation: FAILED');
+  console.error(e.stderr ? e.stderr.toString().split('\n')[0] : e.message);
+  process.exit(1);
+} finally {
+  try { fs.unlinkSync(tmpCheck); } catch {}
+}
+
 console.log(`\n=== Total globe entries: ${totalEntries} ===`);
 console.log('Part 11 done');

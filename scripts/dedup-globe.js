@@ -68,8 +68,10 @@ for (let m = catMatches.length - 1; m >= 0; m--) {
         depth--;
         if (depth === 0) {
           const full = content.slice(start, j + 1);
-          const la = parseFloat(content.slice(content.indexOf('la:', start) + 3));
-          const ln = parseFloat(content.slice(content.indexOf('ln:', start) + 3));
+          const laMatch = full.match(/,la:([\d.-]+)/);
+          const lnMatch = full.match(/,ln:([\d.-]+)/);
+          const la = laMatch ? parseFloat(laMatch[1]) : NaN;
+          const ln = lnMatch ? parseFloat(lnMatch[1]) : NaN;
           if (name && !isNaN(la) && !isNaN(ln)) {
             entries.push({ full, name, la, ln, offset: start });
           }

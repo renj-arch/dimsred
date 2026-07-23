@@ -40,54 +40,39 @@ function isValidJS(line) {
   }
 }
 
-const LINES = js.split('\n');
-let fixed = 0;
-let skipped = 0;
-
-for (let i = 0; i < LINES.length; i++) {
-  let line = LINES[i];
-  const t = line.trim();
-  if (!t.startsWith('{n:')) continue;
-
-  // Extract fields by searching backward from end for opening markers
-  // This is more robust than forward search because field values
-  // rarely contain ",sub:'", ",desc:'", ",fact:'", ",tag:'" as literals
+// Parse an entry line into its field values using indexOf/lastIndexOf.
+// This is intentionally simple string matching — it works on raw text
+// even when entries have double-escaped quotes.
+function parseLine(line) {
   const tagOpen = line.lastIndexOf(",tag:'");
-  if (tagOpen === -1) continue;
+  if (tagOpen === -1) return null;
   const factOpen = line.lastIndexOf(",fact:'", tagOpen);
-  if (factOpen === -1) continue;
+  if (factOpen === -1) return null;
   const descOpen = line.lastIndexOf(",desc:'", factOpen);
-  if (descOpen === -1) continue;
+  if (descOpen === -1) return null;
   const subOpen = line.lastIndexOf(",sub:'", descOpen);
-  if (subOpen === -1) continue;
+  if (subOpen === -1) return null;
   const nOpen = line.indexOf("{n:'");
-  if (nOpen === -1) continue;
+  if (nOpen === -1) return null;
 
-  // Find closing quotes via lastIndexOf (right-to-left, anchored by next field)
-  // This is correct even if field values contain `',` — the rightmost match before
-  // the next opening marker is always the real closing delimiter.
   const nClose = line.indexOf("',la:", nOpen + 3);
-  if (nClose === -1) continue;
+  if (nClose === -1) return null;
   const laEnd = line.indexOf(",ln:", nClose + 2);
-  if (laEnd === -1) continue;
+  if (laEnd === -1) return null;
   const lnEnd = line.indexOf(",sub:", laEnd);
-  if (lnEnd === -1) continue;
+  if (lnEnd === -1) return null;
   const subClose = line.lastIndexOf("',", descOpen);
-  if (subClose === -1 || subClose < subOpen) continue;
+  if (subClose === -1 || subClose < subOpen) return null;
   const descClose = line.lastIndexOf("',", factOpen);
-  if (descClose === -1 || descClose < descOpen) continue;
+  if (descClose === -1 || descClose < descOpen) return null;
   const factClose = line.lastIndexOf("',", tagOpen);
-  if (factClose === -1 || factClose < factOpen) continue;
+  if (factClose === -1 || factClose < factOpen) return null;
 
-  // Tag close: '}', ',\n', ',pts'
   let tagClose = line.lastIndexOf("'}");
   if (tagClose === -1 || tagClose < tagOpen) tagClose = line.lastIndexOf("',");
-  if (tagClose === -1 || tagClose < tagOpen) continue;
+  if (tagClose === -1 || tagClose < tagOpen) return null;
 
-  // Preserve leading whitespace
   const indent = line.substring(0, nOpen);
-
-  // Extract raw values
   const name = line.substring(nOpen + 4, nClose);
   const laRaw = line.substring(nClose + 2, laEnd);
   const lnRaw = line.substring(laEnd + 1, lnEnd);
@@ -96,21 +81,40 @@ for (let i = 0; i < LINES.length; i++) {
   const fact = line.substring(factOpen + 7, factClose);
   const tag = line.substring(tagOpen + 6, tagClose);
 
+  // Capture optional pts field between factClose and tagOpen
+  const between = line.substring(factClose + 2, tagOpen);
+  const ptsIdx = between.indexOf(',pts:');
+  const pts = ptsIdx !== -1 ? between.substring(ptsIdx + 5) : '';
   const suffix = line.substring(tagClose + 2);
 
-  // Unescape to get raw values, then re-escape (fixes double-escaping bug)
-  const newName = esc(unesc(name));
-  const newSub = esc(unesc(sub));
-  const newDesc = esc(unesc(desc));
-  const newFact = esc(unesc(fact));
-  const newTag = esc(unesc(tag));
+  return { indent, name, laRaw, lnRaw, sub, desc, fact, tag, pts, suffix, nOpen };
+}
 
-  const changed = newName !== name || newSub !== sub || newDesc !== desc || newFact !== fact || newTag !== tag;
+const LINES = js.split('\n');
+let fixed = 0;
+let skipped = 0;
+
+for (let i = 0; i < LINES.length; i++) {
+  const line = LINES[i];
+  const t = line.trim();
+  if (!t.startsWith('{n:')) continue;
+
+  const p = parseLine(line);
+  if (!p) continue;
+
+  const newName = esc(unesc(p.name));
+  const newSub = esc(unesc(p.sub));
+  const newDesc = esc(unesc(p.desc));
+  const newFact = esc(unesc(p.fact));
+  const newTag = esc(unesc(p.tag));
+  const newPts = esc(unesc(p.pts));
+
+  const changed = newName !== p.name || newSub !== p.sub || newDesc !== p.desc || newFact !== p.fact || newTag !== p.tag;
   if (!changed) continue;
 
-  let newLine = indent + "{n:'" + newName + "'," + laRaw + "," + lnRaw + ",sub:'" + newSub + "',desc:'" + newDesc + "',fact:'" + newFact + "',tag:'" + newTag + "'}" + suffix;
+  const ptsStr = newPts && p.pts ? ',pts:' + newPts : (p.pts ? ',pts:' + newPts : '');
+  const newLine = p.indent + "{n:'" + newName + "',la:" + p.laRaw + ",ln:" + p.lnRaw + ",sub:'" + newSub + "',desc:'" + newDesc + "',fact:'" + newFact + "'" + ptsStr + ",tag:'" + newTag + "'}" + p.suffix;
 
-  // Validate each changed line individually; skip if invalid
   if (isValidJS(newLine)) {
     LINES[i] = newLine;
     fixed++;
@@ -128,7 +132,7 @@ try {
   try { fs.unlinkSync(tmpFile); } catch {}
   h = outerPrefix + result + outerSuffix;
   fs.writeFileSync(filePath, h);
-  console.log(`Fixed ${fixed} apostrophes`);
+  console.log(`Fixed ${fixed} apostrophes, skipped ${skipped}`);
 } catch (e) {
   const stderr = e.stderr ? e.stderr.toString() : e.message;
   console.error('Syntax error in output — reverting changes');
