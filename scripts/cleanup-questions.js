@@ -2,7 +2,13 @@ const fs = require('fs');
 const path = require('path');
 
 const quizPath = path.join(__dirname, '..', 'data', 'quiz.json');
-const quiz = JSON.parse(fs.readFileSync(quizPath, 'utf8'));
+let quiz;
+try {
+  quiz = JSON.parse(fs.readFileSync(quizPath, 'utf8'));
+} catch (e) {
+  console.error('Warning: Could not parse quiz.json (' + e.message + '). Skipping cleanup.');
+  process.exit(0);
+}
 const all = quiz.questions;
 
 const before = all.length;

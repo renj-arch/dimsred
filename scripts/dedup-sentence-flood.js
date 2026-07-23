@@ -30,7 +30,13 @@ async function main() {
 
   // Clean quiz.json if it exists
   if (fs.existsSync(QUIZ_PATH)) {
-    const quiz = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8').replace(/^\uFEFF/, ''));
+    let quiz;
+    try {
+      quiz = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8').replace(/^\uFEFF/, ''));
+    } catch (e) {
+      console.error(`Warning: Could not parse quiz.json (${e.message}). Skipping.`);
+      return;
+    }
     const { kept, removed } = clean(quiz.questions, 'quiz.json');
     totalRemoved += removed.length;
     totalKept += kept.length;
@@ -44,7 +50,13 @@ async function main() {
     const files = fs.readdirSync(QUESTIONS_DIR).filter(f => f.endsWith('.json') && f !== 'manifest.json');
     for (const f of files) {
       const fp = path.join(QUESTIONS_DIR, f);
-      const data = JSON.parse(fs.readFileSync(fp, 'utf8').replace(/^\uFEFF/, ''));
+      let data;
+      try {
+        data = JSON.parse(fs.readFileSync(fp, 'utf8').replace(/^\uFEFF/, ''));
+      } catch (e) {
+        console.error(`Warning: Could not parse ${f} (${e.message}). Skipping.`);
+        continue;
+      }
       let fileKept = 0, fileRemoved = 0;
       const out = {};
       for (const [subject, subjData] of Object.entries(data)) {

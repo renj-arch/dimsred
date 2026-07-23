@@ -6847,6 +6847,135 @@ var _staticGen_polity = GK_GENERATORS.polity;
             }
         }
 
+        var _customTimeFrom = null;
+        var _customTimeTo = null;
+
+        function _applyCustomTimeFilter() {
+            var fromEl = document.getElementById('timeFrom');
+            var toEl = document.getElementById('timeTo');
+            _customTimeFrom = fromEl && fromEl.value ? new Date(fromEl.value + 'T00:00:00') : null;
+            _customTimeTo = toEl && toEl.value ? new Date(toEl.value + 'T23:59:59') : null;
+            if (_customTimeFrom && _customTimeTo && _customTimeFrom > _customTimeTo) {
+                var tmp = _customTimeFrom;
+                _customTimeFrom = _customTimeTo;
+                _customTimeTo = tmp;
+            }
+        }
+
+        function _matchesTimeFilter(q, val) {
+            if (val === 'all') return true;
+            var pd = q.pubDate || q._pubDate;
+            if (!pd) return true;
+            var d = new Date(pd);
+            if (isNaN(d.getTime())) return true;
+            if (val === 'year') return d.getFullYear() === new Date().getFullYear();
+            if (val === 'lastyear') return d.getFullYear() === new Date().getFullYear() - 1;
+            if (val === 'recent') {
+                var sixMonthsAgo = new Date();
+                sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+                return d >= sixMonthsAgo;
+            }
+            if (val === 'custom') {
+                if (_customTimeFrom && d < _customTimeFrom) return false;
+                if (_customTimeTo && d > _customTimeTo) return false;
+                return true;
+            }
+            return true;
+        }
+
+        function setTimeFilter(val) {
+            state.timeFilter = val;
+            var chips = document.querySelectorAll('.period-chip');
+            for (var i = 0; i < chips.length; i++) {
+                chips[i].classList.toggle('active', chips[i].getAttribute('data-val') === val);
+            }
+            var customRange = document.getElementById('customDateRange');
+            if (customRange) customRange.style.display = val === 'custom' ? 'inline-flex' : 'none';
+            if (val === 'custom') _applyCustomTimeFilter();
+        }
+
+        function setRegionFilter(val) {
+            state.regionFilter = val;
+            var chips = document.querySelectorAll('.region-chip');
+            for (var i = 0; i < chips.length; i++) {
+                chips[i].classList.toggle('active', chips[i].getAttribute('data-val') === val);
+            }
+        }
+
+        function generateMixedQuestions(count) {
+            var added = 0;
+            var maxTries = count * 10;
+            // 1) Archive cache
+            if (_archiveCache) {
+                for (var i = 0; i < _archiveCache.length && added < count; i++) {
+                    var aq = _archiveCache[i];
+                    var dup = false;
+                    for (var j = 0; j < state.questions.length; j++) {
+                        if (state.questions[j].a === aq.a || state.questions[j].q === aq.q) { dup = true; break; }
+                    }
+                    if (dup) continue;
+                    if (state.regionFilter && state.regionFilter !== 'all') {
+                        var isInd = _isIndiaRelated(aq);
+                        if ((state.regionFilter === 'india' && !isInd) || (state.regionFilter === 'world' && isInd)) continue;
+                    }
+                    if (state.timeFilter && state.timeFilter !== 'all') {
+                        if (!_matchesTimeFilter(aq, state.timeFilter)) continue;
+                    }
+                    state.questions.push(aq);
+                    added++;
+                }
+            }
+            // 2) Static GK generators
+            var allCats = Object.keys(GK_GENERATORS).filter(function(k) { return typeof GK_GENERATORS[k] === 'function' && k !== 'sebi' && k !== 'scjudgments' && k !== 'rbi' && k !== 'isro' && k !== 'mea'; });
+            shuffleArray(allCats);
+            for (var ci = 0; ci < allCats.length && added < count; ci++) {
+                try {
+                    var sq = GK_GENERATORS[allCats[ci]]();
+                    if (!sq || !sq.q || !sq.a) continue;
+                    if (!sq.fact) sq.fact = sq.q + ' ' + (sq.a || '');
+                    sq.opts = sq.opts || buildOptions(sq.a);
+                    var dup = false;
+                    for (var j = 0; j < state.questions.length; j++) {
+                        if (state.questions[j].a === sq.a || state.questions[j].q === sq.q) { dup = true; break; }
+                    }
+                    if (dup) continue;
+                    if (!isValidAnswer(sq.a) || isTrash(sq)) continue;
+                    if (state.regionFilter && state.regionFilter !== 'all') {
+                        var isInd = _isIndiaRelated(sq);
+                        if ((state.regionFilter === 'india' && !isInd) || (state.regionFilter === 'world' && isInd)) continue;
+                    }
+                    if (state.timeFilter && state.timeFilter !== 'all') {
+                        if (!_matchesTimeFilter(sq, state.timeFilter)) continue;
+                    }
+                    state.questions.push(sq);
+                    added++;
+                } catch(e) {}
+            }
+            // 3) Wikipedia pool
+            for (var i = 0; i < maxTries && added < count; i++) {
+                var wq = null;
+                try { wq = generateOneQuestion(); } catch(e) {}
+                if (!wq) continue;
+                wq.opts = wq.opts || buildOptions(wq.a);
+                if (!wq.fact) wq.fact = wq.q + ' ' + (wq.a || '');
+                if (!isValidAnswer(wq.a) || isTrash(wq)) continue;
+                var dup = false;
+                for (var j = 0; j < state.questions.length; j++) {
+                    if (state.questions[j].a === wq.a || state.questions[j].q === wq.q) { dup = true; break; }
+                }
+                if (dup) continue;
+                if (state.regionFilter && state.regionFilter !== 'all') {
+                    var isInd = _isIndiaRelated(wq);
+                    if ((state.regionFilter === 'india' && !isInd) || (state.regionFilter === 'world' && isInd)) continue;
+                }
+                if (state.timeFilter && state.timeFilter !== 'all') {
+                    if (!_matchesTimeFilter(wq, state.timeFilter)) continue;
+                }
+                state.questions.push(wq);
+                added++;
+            }
+        }
+
         function startStaticGk() {
             if (!confirmAbandonQuiz()) return;
             state.cat = 'static';

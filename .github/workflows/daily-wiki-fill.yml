@@ -69,7 +69,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 1/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -88,7 +88,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 2/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -107,7 +107,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 3/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -126,7 +126,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 4/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -145,7 +145,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 5/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -164,7 +164,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 6/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -183,7 +183,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 7/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -202,7 +202,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 8/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -221,7 +221,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 9/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -240,7 +240,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 10/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -259,7 +259,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 11/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -278,7 +278,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 12/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -297,7 +297,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 13/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -316,7 +316,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 14/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -335,7 +335,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 15/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -354,7 +354,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 16/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -373,7 +373,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 17/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -392,7 +392,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 18/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -411,7 +411,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 19/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -430,7 +430,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 20/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -449,7 +449,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 21/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -468,7 +468,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 22/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -487,7 +487,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 23/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -506,7 +506,7 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 24/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
         env:
@@ -587,9 +587,11 @@ jobs:
         run: |
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
+          # Clean up from any failed rebase (e.g., detached HEAD from wiki step conflicts)
+          git rebase --abort 2>/dev/null; git switch main 2>/dev/null || git checkout main
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Fetch scripts $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase
+            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
             git push
           fi
