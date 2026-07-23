@@ -1,9 +1,13 @@
-name: Daily Globe Fill
+name: Globe Fill
 
 on:
   schedule:
-    - cron: '0 7 * * *'
+    - cron: '0 0 * * *'  # Daily kickstart fallback
   workflow_dispatch:
+
+concurrency:
+  group: globe-fill
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -27,10 +31,17 @@ jobs:
           git config user.email "bot@vlymbooq.qzz.io"
           git pull --rebase
 
+      - name: Read progress state
+        run: |
+          if [ -f data/globe-fill-progress.json ]; then
+            GROUP=$(jq -r '.group' data/globe-fill-progress.json)
+          else
+            GROUP=0
+          fi
+          echo "GLOBE_FILL_GROUP=$GROUP" >> "$GITHUB_ENV"
+
       - name: Fetch Wikipedia categories
         run: node scripts/wikipedia-fetch.js
-        env:
-          GLOBE_FILL_GROUPS: 3
 
       - name: Fetch Wikidata SPARQL
         run: node scripts/wikidata-multi-fetch.js
@@ -71,13 +82,27 @@ jobs:
           "
           node --check /tmp/globe-check.mjs
 
-      - name: Commit and push
+      - name: Commit final updates and advance progress
         run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
           git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Daily globe fill $(date +'%Y-%m-%d')"
-            git pull --rebase
-            git push
+          NEXT=$(( (GLOBE_FILL_GROUP + 1) % 10 ))
+          echo "{\"group\": $NEXT}" > data/globe-fill-progress.json
+          git add data/globe-fill-progress.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
           else
-            echo "No new entries to commit"
+            git commit -m "Globe fill $(date +'%Y-%m-%d %H:%M UTC') — next group $NEXT"
+            for i in 1 2 3; do
+              git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
+              git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
+              sleep 5
+            done
           fi
+
+      - name: Trigger next run
+        if: success()
+        run: gh workflow run "Globe Fill" --ref main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

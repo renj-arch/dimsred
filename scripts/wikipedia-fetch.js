@@ -1019,9 +1019,9 @@ async function main() {
     console.log();
   }
 
-  // Group processing — spread remaining categories across days
+  // Group processing — spread remaining categories across runs
   const processAll = process.env.GLOBE_FILL_ALL === '1';
-  const GROUPS_PER_RUN = parseInt(process.env.GLOBE_FILL_GROUPS || '1', 10);
+  const fillGroup = parseInt(process.env.GLOBE_FILL_GROUP || '0', 10);
   const GROUP_COUNT = 10;
   const DAY_GROUPS = Array.from({ length: GROUP_COUNT }, () => []);
   CFG.forEach((_, i) => DAY_GROUPS[i % GROUP_COUNT].push(i));
@@ -1030,19 +1030,17 @@ async function main() {
   if (processAll) {
     activeRunCats = runCats;
     console.log(`Processing ALL ${runCats.length} remaining categories (GLOBE_FILL_ALL=1)\n`);
-  } else {
-    const dayIdx = new Date().getDay();
-    const activeIdxs = new Set();
-    for (let g = 0; g < GROUPS_PER_RUN; g++) {
-      const gi = (dayIdx * GROUPS_PER_RUN + g) % GROUP_COUNT;
-      for (const idx of DAY_GROUPS[gi]) activeIdxs.add(idx);
-    }
+  } else if (fillGroup >= 0 && fillGroup < GROUP_COUNT) {
+    const activeIdxs = new Set(DAY_GROUPS[fillGroup]);
     activeRunCats = runCats.filter(cat => activeIdxs.has(CFG.indexOf(cat)));
-    console.log(`Day ${dayIdx} — processing ${activeRunCats.length} of ${runCats.length} remaining (${GROUPS_PER_RUN} group(s), ${GROUP_COUNT} total groups)`);
+    console.log(`Group ${fillGroup} — processing ${activeRunCats.length} of ${runCats.length} remaining`);
     for (const cat of runCats) {
       if (!activeIdxs.has(CFG.indexOf(cat))) console.log(`  (skipping: ${cat.id})`);
     }
     console.log();
+  } else {
+    activeRunCats = runCats;
+    console.log(`Invalid GLOBE_FILL_GROUP=${fillGroup}, processing all\n`);
   }
 
   for (let i = 0; i < activeRunCats.length; i++) {
