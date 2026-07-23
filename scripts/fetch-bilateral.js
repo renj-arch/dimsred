@@ -76,33 +76,91 @@ function addContext(s, notes) {
   return s + ' ' + n;
 }
 
+var REL_CONTEXT = {
+  'Namibia': 'Namibia gained independence from South Africa on 21 March 1990.',
+  'Estonia': 'Estonia restored its independence following the dissolution of the Soviet Union.',
+  'Latvia': 'Latvia restored its independence following the dissolution of the Soviet Union.',
+  'Ukraine': 'Ukraine became independent following the dissolution of the Soviet Union.',
+  'Israel': 'India had recognized Israel in 1950 but established full diplomatic relations in 1992.',
+  'Kazakhstan': 'Kazakhstan became independent following the dissolution of the Soviet Union.',
+  'Lithuania': 'Lithuania restored its independence following the dissolution of the Soviet Union.',
+  'Azerbaijan': 'Azerbaijan became independent following the dissolution of the Soviet Union.',
+  'Kyrgyzstan': 'Kyrgyzstan became independent following the dissolution of the Soviet Union.',
+  'Uzbekistan': 'Uzbekistan became independent following the dissolution of the Soviet Union.',
+  'Moldova': 'Moldova became independent following the dissolution of the Soviet Union.',
+  'Belarus': 'Belarus became independent following the dissolution of the Soviet Union.',
+  'Turkmenistan': 'Turkmenistan became independent following the dissolution of the Soviet Union.',
+  'Slovenia': 'Slovenia became independent following the breakup of Yugoslavia.',
+  'Croatia': 'Croatia became independent following the breakup of Yugoslavia.',
+  'Bosnia and Herzegovina': 'Bosnia and Herzegovina became independent following the breakup of Yugoslavia.',
+  'Tajikistan': 'Tajikistan became independent following the dissolution of the Soviet Union.',
+  'Armenia': 'Armenia became independent following the dissolution of the Soviet Union.',
+  'Georgia': 'Georgia became independent following the dissolution of the Soviet Union.',
+  'Slovakia': 'Slovakia became independent after the dissolution of Czechoslovakia on 1 January 1993.',
+  'Eritrea': 'Eritrea gained independence from Ethiopia on 24 May 1993.',
+  'South Africa': 'South Africa was transitioning to democracy after the end of apartheid.',
+  'Palau': 'Palau gained independence on 1 October 1994 under a Compact of Free Association with the United States.',
+  'North Macedonia': 'North Macedonia (then known as Macedonia) became independent following the breakup of Yugoslavia.',
+  'Federated States of Micronesia': 'The Federated States of Micronesia became independent in 1986 under a Compact of Free Association with the United States.',
+  'Marshall Islands': 'The Marshall Islands became independent in 1986 under a Compact of Free Association with the United States.',
+  'Cook Islands': 'The Cook Islands are a self-governing state in free association with New Zealand.',
+  'Timor-Leste': 'Timor-Leste gained independence on 20 May 2002.',
+  'Montenegro': 'Montenegro became independent after the dissolution of the State Union of Serbia and Montenegro on 3 June 2006.',
+  'South Sudan': 'South Sudan gained independence from Sudan on 9 July 2011.',
+  'Niue': 'Niue is a self-governing state in free association with New Zealand.'
+};
+
+function hasDateColumn(t) {
+  for (var hi = 0; hi < Math.min(2, t.length); hi++) {
+    var hdr = t[hi];
+    if (!hdr) continue;
+    for (var ci = 0; ci < hdr.length; ci++) {
+      if (hdr[ci].indexOf('Year of Agreement') >= 0 || hdr[ci].indexOf('Agreement signed') >= 0) return false;
+    }
+  }
+  for (var hi = 0; hi < Math.min(2, t.length); hi++) {
+    var hdr = t[hi];
+    if (!hdr) continue;
+    for (var ci = 0; ci < hdr.length; ci++) {
+      if (hdr[ci] === 'Date' || /^Date$/i.test(hdr[ci])) return true;
+    }
+  }
+  return false;
+}
+
 async function fetchRelations(existingKeys, newQuestions, seq) {
   console.error('\n--- Diplomatic Relations ---');
   try {
     var html = await fetchPage('Foreign_relations_of_India');
     var tables = extractWikiTables(html);
     if (tables.length === 0) { console.error('  No wikitables found\n'); return; }
+    // Use only the table with a "Date" column (diplomatic relations), skip "Year of Agreement" tables
+    var relTable = null;
+    for (var ti = 0; ti < tables.length; ti++) {
+      if (hasDateColumn(tables[ti])) { relTable = tables[ti]; break; }
+    }
+    if (!relTable) { console.error('  Could not identify diplomatic relations table\n'); return; }
     var count = 0;
-    tables.forEach(function(t) {
-      for (var ri = 1; ri < Math.min(t.length, 80); ri++) {
-        var row = t[ri];
-        if (row.length < 3) continue;
-        var country = row[1];
-        var date = row[2];
-        var notes = row.length > 3 ? row[3] : '';
-        if (!country || country.length < 3 || country === 'Country' || country.indexOf('—') >= 0) continue;
-        var yrMatch = date.match(/\b(19|20)\d{2}\b/);
-        if (yrMatch && yrMatch[0] >= '1990') {
-          var yr = yrMatch[0];
-          var qText = 'With which country did India establish diplomatic relations in ' + yr + '?';
-          var fact = 'India established diplomatic relations with ' + country + ' in ' + date + '.';
-          var ctx = addContext('', notes);
-          if (ctx) fact += ' ' + ctx;
-          var q = makeQuestion(qText, country, seq++, 'Wikipedia - Foreign Relations', '\uD83C\uDF0D', fact);
-          if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
-        }
+    for (var ri = 0; ri < Math.min(relTable.length, 200); ri++) {
+      var row = relTable[ri];
+      if (row.length < 3) continue;
+      var country = row[1];
+      var date = row[2];
+      var notes = row.length > 3 ? row[3] : '';
+      if (!country || country.length < 3 || country === 'Country' || country.indexOf('—') >= 0) continue;
+      var yrMatch = date.match(/\b(19|20)\d{2}\b/);
+      if (yrMatch && yrMatch[0] >= '1990') {
+        var yr = yrMatch[0];
+        var qText = 'With which country did India establish diplomatic relations in ' + yr + '?';
+        var fact = 'India established diplomatic relations with ' + country + ' on ' + date + '.';
+        var ctx = addContext('', notes);
+        if (ctx) fact += ' ' + ctx;
+        var enrich = REL_CONTEXT[country];
+        if (enrich) fact += ' ' + enrich;
+        var q = makeQuestion(qText, country, seq++, 'Wikipedia - Foreign Relations', '\uD83C\uDF0D', fact);
+        if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
       }
-    });
+    }
     console.error('  ' + count + ' diplomatic relations questions added\n');
   } catch (e) { console.error('  Error: ' + e.message + '\n'); }
 }
@@ -120,6 +178,19 @@ async function main() {
   if (!existing[CA_KEY].subSubjects[subKey]) existing[CA_KEY].subSubjects[subKey] = [];
 
   var existingKeys = {};
+  // Remove existing wrong questions from agreement table (bare-year dates)
+  var beforeClean = existing[CA_KEY].subSubjects[subKey].length;
+  existing[CA_KEY].subSubjects[subKey] = existing[CA_KEY].subSubjects[subKey].filter(function(q) {
+    if (q.fact && q.type === 'fill_blank' && q.category === 'Current Affairs') {
+      if (q.fact.match(/ in \d{4}\.$/) && !q.fact.match(/ \d{1,2} \d{4}\./) && !q.fact.match(/January|February|March|April|May|June|July|August|September|October|November|December/)) {
+        console.error('  Removing wrong question: "' + (q.question || '').substring(0, 60) + '"');
+        return false;
+      }
+    }
+    return true;
+  });
+  var removed = beforeClean - existing[CA_KEY].subSubjects[subKey].length;
+  if (removed > 0) console.error('  Removed ' + removed + ' wrong diplomatic relations questions\n');
   existing[CA_KEY].subSubjects[subKey].forEach(function(q) { existingKeys[eventKey(q)] = true; });
   var newQuestions = [];
   var seq = existing[CA_KEY].subSubjects[subKey].length + 1;
