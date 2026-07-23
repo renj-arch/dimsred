@@ -23,12 +23,20 @@ async function timedFetch(url, opts, timeoutMs) {
   }
 }
 
-async function fetchText(url, opts, timeoutMs) {
+async function fetchText(url, opts, timeoutMs, retries) {
   timeoutMs = timeoutMs || 30000;
+  if (retries === undefined) retries = 3;
   var controller = new AbortController();
   var timer = setTimeout(function() { controller.abort(); }, timeoutMs);
   try {
     var resp = await fetch(url, Object.assign({}, opts, { signal: controller.signal }));
+    if (resp.status === 429 && retries > 0) {
+      clearTimeout(timer);
+      var wait = Math.pow(2, 4 - retries) * 3000;
+      console.error('HTTP 429, retrying in ' + (wait / 1000) + 's... (' + retries + ' left)');
+      await new Promise(function(r) { setTimeout(r, wait); });
+      return fetchText(url, opts, timeoutMs, retries - 1);
+    }
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     var text = await resp.text();
     return text;

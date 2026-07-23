@@ -11,12 +11,21 @@ function clean(v) {
   return v.replace(/&#160;/g, ' ').replace(/<[^>]+>/g, ' ').replace(/[[\d\s,\-]+]|&#91;[\d\s,\-]+&#93;/g, '').replace(/\s+/g, ' ').trim();
 }
 
-function fetchJSON(url) {
+function fetchJSON(url, retries) {
+  if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
     https.get(url, { agent: AGENT, headers: { 'User-Agent': 'ObitBot/1.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
-      res.on('end', function() { resolve(JSON.parse(d)); });
+      res.on('end', function() {
+        if (res.statusCode === 429 && retries > 0) {
+          var wait = Math.pow(2, 4 - retries) * 3000;
+          console.error('HTTP 429, retrying in ' + (wait / 1000) + 's... (' + retries + ' left)');
+          return setTimeout(function() { fetchJSON(url, retries - 1).then(resolve, reject); }, wait);
+        }
+        if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
+        try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
+      });
     }).on('error', reject);
   });
 }

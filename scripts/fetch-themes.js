@@ -8,13 +8,18 @@ var MONTHS = ['January','February','March','April','May','June','July','August',
 
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
-function fetchJSON(url) {
+function fetchJSON(url, retries) {
+  if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
     https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'ThemesBot/1.0' } }, function(res) {
       var data = '';
       res.on('data', function(c) { data += c; });
       res.on('end', function() {
-        if (res.statusCode === 429) return reject(new Error('HTTP 429'));
+        if (res.statusCode === 429 && retries > 0) {
+          var wait = Math.pow(2, 4 - retries) * 3000;
+          console.error('HTTP 429, retrying in ' + (wait / 1000) + 's... (' + retries + ' left)');
+          return setTimeout(function() { fetchJSON(url, retries - 1).then(resolve, reject); }, wait);
+        }
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(data)); } catch (e) { reject(e); }
       });

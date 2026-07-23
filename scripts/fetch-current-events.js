@@ -9,13 +9,18 @@ const DAYS_BACK = 5;
 
 const AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
-function fetchJSON(url) {
+function fetchJSON(url, retries) {
+  if (retries === undefined) retries = 3;
   return new Promise((resolve, reject) => {
     const req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'CurrentEventsFill/1.0' } }, (res) => {
       let data = '';
       res.on('data', c => data += c);
       res.on('end', () => {
-        if (res.statusCode === 429) return reject(new Error('HTTP 429'));
+        if (res.statusCode === 429 && retries > 0) {
+          const wait = Math.pow(2, 4 - retries) * 3000;
+          console.error('HTTP 429, retrying in ' + (wait / 1000) + 's... (' + retries + ' left)');
+          return setTimeout(() => fetchJSON(url, retries - 1).then(resolve, reject), wait);
+        }
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(data)); } catch (e) { reject(e); }
       });
