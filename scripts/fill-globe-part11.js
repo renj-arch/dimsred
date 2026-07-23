@@ -445,4 +445,6 @@ function fixGlobalDescs(html) {
 const { html: fixedHtml, fixed } = fixGlobalDescs(html);
 console.log(`Fixed ${fixed} entries with poor desc/fact across all categories`);
 fs.writeFileSync(GLOBE_PATH, fixedHtml, 'utf8');
-console.log('\nPart 11 done');
+const totalEntries = (fixedHtml.match(/\{n:'/g) || []).length;
+console.log(`\n=== Total globe entries: ${totalEntries} ===`);
+console.log('Part 11 done');
