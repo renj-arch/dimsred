@@ -403,8 +403,8 @@ const CFG = [
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
   },
-  { id:'cuisine', label:'Regional Cuisines', wikiCat:'Category:Indian_cuisine_by_state', subFn:(s,a)=>s+' · Cuisine' },
-  { id:'classical_dance', label:'Classical Dances', wikiCat:'Category:Indian_classical_dances', subFn:(s,a)=>s+' · Classical Dance' },
+  { id:'cuisine', label:'Regional Cuisines', wikiCat:'Category:Indian_cuisine', subFn:(s,a)=>s+' · Cuisine' },
+  { id:'classical_dance', label:'Classical Dances', wikiCat:'Category:Dances_of_India', subFn:(s,a)=>s+' · Classical Dance' },
   { id:'monument', label:'Monuments & Memorials', wikiCat:'Category:Monuments_and_memorials_in_India', subFn:(s,a)=>s },
   { id:'mosque', label:'Mosques', wikiCat:'Category:Mosques_in_India', subFn:(s,a)=>s },
   { id:'church', label:'Churches', wikiCat:'Category:Churches_in_India', subFn:(s,a)=>s },
@@ -426,9 +426,9 @@ const CFG = [
       VALUES ?item { QIDS }
       { ?item wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P19 ?coord. }
+      { ?item wdt:P19/wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P20 ?coord. }
+      { ?item wdt:P20/wdt:P625 ?coord. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }` },
@@ -438,9 +438,9 @@ const CFG = [
       VALUES ?item { QIDS }
       { ?item wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P19 ?coord. }
+      { ?item wdt:P19/wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P20 ?coord. }
+      { ?item wdt:P20/wdt:P625 ?coord. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }` },
@@ -450,9 +450,9 @@ const CFG = [
       VALUES ?item { QIDS }
       { ?item wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P19 ?coord. }
+      { ?item wdt:P19/wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P20 ?coord. }
+      { ?item wdt:P20/wdt:P625 ?coord. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }` },
@@ -466,7 +466,7 @@ const CFG = [
       VALUES ?item { QIDS }
       { ?item wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P50 ?author. { ?author wdt:P19 ?coord. } UNION { ?author wdt:P20 ?coord. } }
+      { ?item wdt:P50 ?author. { ?author wdt:P19/wdt:P625 ?coord. } UNION { ?author wdt:P20/wdt:P625 ?coord. } }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
@@ -479,9 +479,9 @@ const CFG = [
       VALUES ?item { QIDS }
       { ?item wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P19 ?coord. }
+      { ?item wdt:P19/wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P20 ?coord. }
+      { ?item wdt:P20/wdt:P625 ?coord. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
@@ -507,9 +507,9 @@ const CFG = [
       VALUES ?item { QIDS }
       { ?item wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P19 ?coord. }
+      { ?item wdt:P19/wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P20 ?coord. }
+      { ?item wdt:P20/wdt:P625 ?coord. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
@@ -520,9 +520,9 @@ const CFG = [
       VALUES ?item { QIDS }
       { ?item wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P19 ?coord. }
+      { ?item wdt:P19/wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P20 ?coord. }
+      { ?item wdt:P20/wdt:P625 ?coord. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
@@ -533,9 +533,9 @@ const CFG = [
       VALUES ?item { QIDS }
       { ?item wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P19 ?coord. }
+      { ?item wdt:P19/wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P20 ?coord. }
+      { ?item wdt:P20/wdt:P625 ?coord. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
@@ -546,9 +546,9 @@ const CFG = [
       VALUES ?item { QIDS }
       { ?item wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P19 ?coord. }
+      { ?item wdt:P19/wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P20 ?coord. }
+      { ?item wdt:P20/wdt:P625 ?coord. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
@@ -559,9 +559,9 @@ const CFG = [
       VALUES ?item { QIDS }
       { ?item wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P19 ?coord. }
+      { ?item wdt:P19/wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P20 ?coord. }
+      { ?item wdt:P20/wdt:P625 ?coord. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
@@ -572,9 +572,9 @@ const CFG = [
       VALUES ?item { QIDS }
       { ?item wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P19 ?coord. }
+      { ?item wdt:P19/wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P20 ?coord. }
+      { ?item wdt:P20/wdt:P625 ?coord. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
@@ -585,9 +585,9 @@ const CFG = [
       VALUES ?item { QIDS }
       { ?item wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P19 ?coord. }
+      { ?item wdt:P19/wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P20 ?coord. }
+      { ?item wdt:P20/wdt:P625 ?coord. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
@@ -605,9 +605,9 @@ const CFG = [
       VALUES ?item { QIDS }
       { ?item wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P19 ?coord. }
+      { ?item wdt:P19/wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P20 ?coord. }
+      { ?item wdt:P20/wdt:P625 ?coord. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
@@ -618,9 +618,9 @@ const CFG = [
       VALUES ?item { QIDS }
       { ?item wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P19 ?coord. }
+      { ?item wdt:P19/wdt:P625 ?coord. }
       UNION
-      { ?item wdt:P20 ?coord. }
+      { ?item wdt:P20/wdt:P625 ?coord. }
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`
