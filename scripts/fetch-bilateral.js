@@ -69,6 +69,13 @@ function eventKey(q) {
   return n(q.question || '').substring(0, 80) + '|' + n(q.answer || '');
 }
 
+function addContext(s, notes) {
+  if (!notes) return s;
+  var n = notes.replace(/<[^>]+>/g, '').replace(/\[.*?\]/g, '').trim();
+  if (n.length < 3) return s;
+  return s + ' ' + n;
+}
+
 async function fetchRelations(existingKeys, newQuestions, seq) {
   console.error('\n--- Diplomatic Relations ---');
   try {
@@ -82,11 +89,16 @@ async function fetchRelations(existingKeys, newQuestions, seq) {
         if (row.length < 3) continue;
         var country = row[1];
         var date = row[2];
+        var notes = row.length > 3 ? row[3] : '';
         if (!country || country.length < 3 || country === 'Country' || country.indexOf('—') >= 0) continue;
         var yrMatch = date.match(/\b(19|20)\d{2}\b/);
         if (yrMatch && yrMatch[0] >= '1990') {
-          var qText = 'With which country did India establish diplomatic relations in ' + yrMatch[0] + '?';
-          var q = makeQuestion(qText, country, seq++, 'Wikipedia - Foreign Relations', '\uD83C\uDF0D', 'India established diplomatic relations with ' + country + ' in ' + date + '.');
+          var yr = yrMatch[0];
+          var qText = 'With which country did India establish diplomatic relations in ' + yr + '?';
+          var fact = 'India established diplomatic relations with ' + country + ' in ' + date + '.';
+          var ctx = addContext('', notes);
+          if (ctx) fact += ' ' + ctx;
+          var q = makeQuestion(qText, country, seq++, 'Wikipedia - Foreign Relations', '\uD83C\uDF0D', fact);
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }
