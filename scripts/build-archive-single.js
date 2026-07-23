@@ -259,7 +259,7 @@ html += '<div class="breadcrumb" id="breadcrumb">Archive</div>';
 html += '<div class="content-panel" id="view-welcome">';
 html += '<h1 class="page-title">📚 GK Current Affairs Archive</h1>';
 var buildTime = new Date().toISOString();
-html += '<p class="page-sub">' + allQuestions.length + ' questions across ' + sortedCats.length + ' categories — last updated <time id="build-time" datetime="' + buildTime + '">' + new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' IST</time>. Click a category to browse.</p>';
+html += '<p class="page-sub">' + allQuestions.length + ' questions across ' + sortedCats.length + ' categories — last updated <time id="build-time" datetime="' + buildTime + '">' + new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }) + ' UTC</time>. Click a category to browse.</p>';
 html += '<div class="subj-grid">';
 catIndex.forEach((c, ci) => {
   html += '<a href="#" class="subj-card" onclick="return selectCategory(' + ci + ')">';
@@ -539,7 +539,7 @@ html += 'function localizeBuildTime() {\n';
 html += '  var el = document.getElementById(\'build-time\');\n';
 html += '  if (!el) return;\n';
 html += '  var d = new Date(el.getAttribute(\'datetime\'));\n';
-html += '  el.textContent = d.toLocaleDateString([], { day: \'numeric\', month: \'short\', year: \'numeric\', hour: \'2-digit\', minute: \'2-digit\', timeZoneName: \'short\' }).replace(\' IST\', \'\');\n';
+html += '  el.textContent = d.toLocaleDateString([], { day: \'numeric\', month: \'short\', year: \'numeric\', hour: \'2-digit\', minute: \'2-digit\', timeZoneName: \'short\' });\n';
 html += '}\n';
 html += 'localizeBuildTime();\n';
 
