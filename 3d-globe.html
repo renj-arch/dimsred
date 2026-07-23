@@ -21,7 +21,7 @@ canvas{display:block}
 #topBar .sep{color:rgba(255,255,255,.15)}
 #topBar .info{color:rgba(255,255,255,.4)}
 #totalCount{color:rgba(255,255,255,.55);font-weight:600}
-#lastUpdated{color:rgba(255,255,255,.35);font-size:.85em}
+#build-time{color:rgba(255,255,255,.35);font-size:.85em}
 
 /* Layers panel */
 #layersPanel{
@@ -377,7 +377,7 @@ canvas{display:block}
   <span class="sep">·</span>
   <span id="totalCount"></span>
   <span class="sep">·</span>
-  <span id="lastUpdated"></span>
+  <time id="build-time" datetime=""></time>
 </div>
 
 <div id="eraBar">
@@ -14620,11 +14620,13 @@ function getEraEvents(year,buffer=100){
   return events.sort((a,b)=>a.year-b.year);
 }
 
+function localizeBuildTime(){var el=document.getElementById('build-time');if(!el)return;var dt=el.getAttribute('datetime');if(!dt)return;var d=new Date(dt);el.textContent='Updated '+d.toLocaleDateString([],{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'});}
+
 // ============================================================
 // THREE.JS SETUP
 // ============================================================
 let totalItems=0;Object.values(D).forEach(a=>{if(a)totalItems+=a.length});document.getElementById('totalCount').textContent=totalItems.toLocaleString()
-fetch('data/pib-feed.json').then(r=>r.json()).then(d=>{document.getElementById('lastUpdated').textContent='Updated '+new Date(d.updatedAt).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}).catch(()=>{})
+fetch('data/pib-feed.json').then(r=>r.json()).then(d=>{var el=document.getElementById('build-time');if(el){el.setAttribute('datetime',d.updatedAt);localizeBuildTime()}}).catch(()=>{})
 
 
 const scene = new THREE.Scene();
