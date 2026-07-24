@@ -14359,42 +14359,80 @@ document.addEventListener('keydown',e=>{
 window.addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();ren.setSize(innerWidth,innerHeight)});
 
 // Label LOD — hide/show labels based on zoom, with per-category force toggle
-const _scratch=new THREE.Vector3(),_list=[];
+const _scratch=new THREE.Vector3();
+const _lblCtx=document.createElement('canvas').getContext('2d');
+_lblCtx.font='bold 24px Inter,system-ui,sans-serif';
 function updateLabels(){
   const d=cam.position.length();
   const forced=Object.keys(labelVis).filter(k=>labelVis[k]===true);
-  // Always show labels for force-enabled categories
+  const camDir=cam.position.clone().normalize().applyQuaternion(EG.quaternion.clone().invert());
+  const w=window.innerWidth, h=window.innerHeight, cx=w/2, cy=h/2;
+  const cellSize=100, grid={};
+  const candidates=[];
+
+  // First pass: project all labels to screen, compute bounding boxes
   allMarkers.forEach(m=>{
-    if(m.lbl&&m.cat&&forced.includes(m.cat)){
-      m.lbl.visible=!(m._eraHidden||m._hide);
-    }
+    if(!m.lbl){return;}
+    m.lbl.visible=false;
+    if(m._eraHidden||m._hide)return;
+    if(m.pos.dot(camDir)<=0)return;
+    _scratch.copy(m.pos).applyQuaternion(EG.quaternion).project(cam);
+    const sx=(_scratch.x*0.5+0.5)*w, sy=(-_scratch.y*0.5+0.5)*h;
+    const dist=Math.hypot(sx-cx,sy-cy);
+    const isForced=m.cat&&forced.includes(m.cat);
+
+    // Estimate label screen width from text length and sprite scale
+    const text=(m.data&&m.data.n)||'';
+    const textW=_lblCtx.measureText(text).width;
+    const scale=m.lbl.scale?m.lbl.scale.x:0.24;
+    // Approximate screen width: canvas width ratio * sprite scale factor
+    // Canvas is 512px wide, 24px font; sprite.scale.x ~0.24 in 3D units
+    // At typical zoom (d~1.2), 1 unit ≈ screen height pixels
+    const approxScreenW=Math.min(textW*(scale/0.24)*(h*0.04)+24, w*0.35);
+    const approxScreenH=20;
+
+    candidates.push({m,sx,sy,dist,isForced,w:approxScreenW,h:approxScreenH});
   });
+
   if(d<1.7){
-    const camDir=cam.position.clone().normalize().applyQuaternion(EG.quaternion.clone().invert());
-    const w=window.innerWidth, h=window.innerHeight, cx=w/2, cy=h/2, maxDist=w*0.12, minGap=w*0.035;
-    _list.length=0;
-    allMarkers.forEach(m=>{
-      if(!m.lbl||m._eraHidden||m._hide)return;
-      if(m.cat&&forced.includes(m.cat))return; // already shown above
-      if(m.pos.dot(camDir)<=0){m.lbl.visible=false;return;}
-      _scratch.copy(m.pos).applyQuaternion(EG.quaternion).project(cam);
-      const sx=(_scratch.x*0.5+0.5)*w, sy=(-_scratch.y*0.5+0.5)*h;
-      const dist=Math.hypot(sx-cx,sy-cy);
-      if(dist>=maxDist){m.lbl.visible=false;return;}
-      _list.push({m,dist,sx,sy});
+    // Sort: forced labels first (by distance), then non-forced (by distance)
+    candidates.sort((a,b)=>{
+      if(a.isForced!==b.isForced)return a.isForced?-1:1;
+      return a.dist-b.dist;
     });
-    _list.sort((a,b)=>a.dist-b.dist);
-    const kept=[];
-    _list.forEach(({m,sx,sy})=>{
-      for(const p of kept){if(Math.hypot(sx-p[0],sy-p[1])<minGap){m.lbl.visible=false;return;}}
-      kept.push([sx,sy]);
-      m.lbl.visible=true;
+
+    const maxDist=w*0.14;
+    candidates.forEach(c=>{
+      if(!c.isForced&&c.dist>maxDist)return;
+      const minX=c.sx-c.w/2, maxX=c.sx+c.w/2;
+      const minY=c.sy-c.h/2, maxY=c.sy+c.h/2;
+      const gx1=Math.floor(minX/cellSize), gx2=Math.floor(maxX/cellSize);
+      const gy1=Math.floor(minY/cellSize), gy2=Math.floor(maxY/cellSize);
+      let overlap=false;
+      for(let gx=gx1;gx<=gx2&&!overlap;gx++){
+        for(let gy=gy1;gy<=gy2&&!overlap;gy++){
+          const cell=grid[gx+','+gy];
+          if(!cell)continue;
+          for(let i=0;i<cell.length;i++){
+            const p=cell[i];
+            if(minX<p.maxX&&maxX>p.minX&&minY<p.maxY&&maxY>p.minY){
+              overlap=true;break;
+            }
+          }
+        }
+      }
+      if(!overlap){
+        const key=gx1+','+gy1;
+        if(!grid[key])grid[key]=[];
+        grid[key].push({minX,maxX,minY,maxY});
+        c.m.lbl.visible=true;
+      }else if(c.isForced){
+        c.m.lbl.visible=true;
+      }
     });
   }else{
-    allMarkers.forEach(m=>{
-      if(!m.lbl)return;
-      if(m.cat&&forced.includes(m.cat))return; // keep visible even when zoomed out
-      m.lbl.visible=false;
+    candidates.forEach(c=>{
+      if(c.isForced)c.m.lbl.visible=true;
     });
   }
 }
