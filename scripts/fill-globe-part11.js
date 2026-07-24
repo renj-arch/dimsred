@@ -374,7 +374,6 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
       && e.desc !== (e.sub ? e.sub.split('·')[0].trim() : '');
   }
 
-  const insertIdx = afterOpen + endIdx;
   let insertStr = '';
   let added = 0;
   for (const e of toInsert) {
@@ -404,6 +403,30 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
   }
 
   if (insertStr) {
+    // Recompute insert position AFTER replacements may have shifted the array content
+    const chunk2 = html.slice(afterOpen, afterOpen + 500000);
+    let depth2 = 1, endIdx2 = 0;
+    let inSQ2 = false, inDQ2 = false, inBT2 = false;
+    for (let i = 0; i < chunk2.length; i++) {
+      const c = chunk2[i];
+      if (inBT2) {
+        if (c === '\\' && i + 1 < chunk2.length) { i++; continue; }
+        if (c === '`') inBT2 = false;
+      } else if (inDQ2) {
+        if (c === '\\' && i + 1 < chunk2.length) { i++; continue; }
+        if (c === '"') inDQ2 = false;
+      } else if (inSQ2) {
+        if (c === '\\' && i + 1 < chunk2.length) { i++; continue; }
+        if (c === "'") inSQ2 = false;
+      } else {
+        if (c === "'") inSQ2 = true;
+        else if (c === '"') inDQ2 = true;
+        else if (c === '`') inBT2 = true;
+        else if (c === '[') depth2++;
+        else if (c === ']') { depth2--; if (depth2 === 0) { endIdx2 = i; break; } }
+      }
+    }
+    const insertIdx = afterOpen + endIdx2;
     const before = html.slice(0, insertIdx).replace(/[\s,]+$/, '');
     if (before.endsWith('}')) insertStr = ',\n' + insertStr;
     html = html.slice(0, insertIdx) + '\n' + insertStr + html.slice(insertIdx);
@@ -467,7 +490,16 @@ try {
   console.log('Post-write syntax validation: OK');
 } catch (e) {
   console.error('Post-write syntax validation: FAILED');
-  console.error(e.stderr ? e.stderr.toString().split('\n')[0] : e.message);
+  const stderr = e.stderr ? e.stderr.toString() : e.message;
+  console.error(stderr);
+  const lineMatch = stderr.match(/:(\d+):/);
+  if (lineMatch) {
+    const errLine = parseInt(lineMatch[1], 10);
+    const lines = js2.split('\n');
+    for (let i = Math.max(0, errLine - 3); i < Math.min(lines.length, errLine + 2); i++) {
+      console.error((i + 1) + ': ' + lines[i]);
+    }
+  }
   process.exit(1);
 } finally {
   try { fs.unlinkSync(tmpCheck); } catch {}
