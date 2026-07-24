@@ -7,7 +7,7 @@ on:
 
 concurrency:
   group: globe-fill
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -103,7 +103,7 @@ jobs:
               git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
               git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
               sleep 5
-            done
+            done || true
           fi
 
       - name: Trigger next run

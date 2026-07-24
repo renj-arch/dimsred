@@ -12,7 +12,7 @@ on:
 
 concurrency:
   group: wiki-fill
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -84,7 +84,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 1/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 1
@@ -107,7 +107,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 2/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 2
@@ -130,7 +130,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 3/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 3
@@ -153,7 +153,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 4/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 4
@@ -176,7 +176,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 5/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 5
@@ -199,7 +199,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 6/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 6
@@ -222,7 +222,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 7/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 7
@@ -245,7 +245,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 8/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 8
@@ -268,7 +268,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 9/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 9
@@ -291,7 +291,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 10/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 10
@@ -314,7 +314,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 11/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 11
@@ -337,7 +337,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 12/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 12
@@ -360,7 +360,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 13/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 13
@@ -383,7 +383,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 14/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 14
@@ -406,7 +406,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 15/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 15
@@ -429,7 +429,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 16/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 16
@@ -452,7 +452,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 17/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 17
@@ -475,7 +475,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 18/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 18
@@ -498,7 +498,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 19/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 19
@@ -521,7 +521,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 20/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 20
@@ -544,7 +544,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 21/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 21
@@ -567,7 +567,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 22/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 22
@@ -590,7 +590,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 23/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 23
@@ -613,7 +613,7 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Wiki 24/24 $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done
+            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
           fi
         env:
           WIKI_FILL_CHUNK: 24
@@ -709,7 +709,7 @@ jobs:
               git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
               git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
               sleep 5
-            done
+            done || true
           fi
 
       - name: Trigger next run
