@@ -167,7 +167,7 @@ for (const [cat, entries] of Object.entries(inserts)) {
   const startIdx = html.indexOf(marker);
   if (startIdx === -1) { console.log(`ERROR: ${cat} not found`); continue; }
   const afterBracket = html.indexOf('[', startIdx) + 1;
-  const chunk = html.slice(afterBracket, afterBracket + 500000);
+  const chunk = html.slice(afterBracket);
   let depth = 1, endIdx = 0;
   let inSQ5 = false, inDQ5 = false, inBT5 = false;
   for (let i = 0; i < chunk.length; i++) {

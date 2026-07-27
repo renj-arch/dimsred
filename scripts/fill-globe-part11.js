@@ -327,7 +327,7 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
   }
 
   const afterOpen = html.indexOf('[', startIdx) + 1;
-  const chunk = html.slice(afterOpen, afterOpen + 500000);
+  const chunk = html.slice(afterOpen);
   let depth = 1, endIdx = 0;
   let inSQ = false, inDQ = false, inBT = false;
   for (let i = 0; i < chunk.length; i++) {
@@ -404,7 +404,7 @@ for (const [wikiFile, globeCat] of Object.entries(CAT_MAP)) {
 
   if (insertStr) {
     // Recompute insert position AFTER replacements may have shifted the array content
-    const chunk2 = html.slice(afterOpen, afterOpen + 500000);
+    const chunk2 = html.slice(afterOpen);
     let depth2 = 1, endIdx2 = 0;
     let inSQ2 = false, inDQ2 = false, inBT2 = false;
     for (let i = 0; i < chunk2.length; i++) {

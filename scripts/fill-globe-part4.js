@@ -258,7 +258,7 @@ function countEntries(content, catName) {
   const startIdx = content.indexOf(startMarker);
   if (startIdx === -1) return 0;
   const afterBracket = content.indexOf('[', startIdx) + 1;
-  const chunk = content.slice(afterBracket, afterBracket + 500000);
+  const chunk = content.slice(afterBracket);
   // Find closing ];
   let depth = 1, endIdx = 0;
   let inSQ = false, inDQ = false, inBT = false;
@@ -294,7 +294,7 @@ for (const [cat, entries] of Object.entries(inserts)) {
     continue;
   }
   const afterOpenBracket = html.indexOf('[', startIdx) + 1;
-  const chunk = html.slice(afterOpenBracket, afterOpenBracket + 500000);
+  const chunk = html.slice(afterOpenBracket);
   let depth = 1, endIdx = 0;
   let inSQ = false, inDQ = false, inBT = false;
   for (let i = 0; i < chunk.length; i++) {
