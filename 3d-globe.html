@@ -35774,7 +35774,7 @@ Object.entries(CAT).forEach(([k,v])=>{
   catColors[k]=v.color;
   const g=new THREE.Group();EG.add(g);
   layerGroups[k]=g;
-  if(layerVis[k]===false)g.visible=false;
+  if(layerVis[k]!==true)g.visible=false;
 });
 
 function mkGeom(shape,sz){
@@ -36781,7 +36781,7 @@ function stopAutoPlay(){
 function startAutoPlay(k,items){
   stopAutoPlay();
   // Ensure layer is visible
-  if(layerVis[k]===false){toggleLayer(k,true);
+  if(layerVis[k]!==true){toggleLayer(k,true);
     const vb=document.querySelector(`[data-ap="${k}"]`)?.closest('.lay-section')?.querySelector('.vis-btn');
     if(vb){vb.style.color='rgba(255,255,255,.5)';vb.textContent='◉';}
   }
@@ -36824,7 +36824,7 @@ function buildPanel(){
       if(prevRegion){const d=document.createElement('div');d.style.cssText='height:1px;background:rgba(255,255,255,.06);margin:6px 10px';panel.appendChild(d)}
       prevRegion=cat.region;
     }
-    const startVis=layerVis[k]!==false;
+    const startVis=layerVis[k]===true;
     const startLbl=labelVis[k]===true;
     const sec=document.createElement('div');sec.className='lay-section';
     const head=document.createElement('div');head.className='lay-head';
@@ -36858,7 +36858,7 @@ function buildPanel(){
     });
     head.querySelector('.vis-btn').addEventListener('click',(e)=>{
       e.stopPropagation();
-      const on=layerVis[k]===false;
+      const on=layerVis[k]!==true;
       toggleLayer(k,on);
       e.target.style.color=on?'rgba(255,255,255,.5)':'rgba(255,255,255,.15)';
       e.target.textContent=on?'◉':'○';
@@ -37283,7 +37283,7 @@ document.addEventListener('click',e=>{if(!e.target.closest('#searchInp')&&!e.tar
 // ============================================================
 // CONTROLS
 // ============================================================
-let rotating=false,allLayersVisible=true;
+let rotating=false,allLayersVisible=false;
 document.getElementById('btnRotate').addEventListener('click',()=>{if(_ap)stopAutoPlay();rotating=!rotating;document.getElementById('btnRotate').textContent=rotating?'⏸':'▶'});
 document.getElementById('btnReset').addEventListener('click',()=>{if(_ap)stopAutoPlay();cam.position.set(0.15,0.4,1.9);ctrl.target.set(0,0,0);EG.rotation.y=Math.PI;ctrl.update();dp.classList.remove('show');clearHighlight();hidePortrait();if(window.speechSynthesis)speechSynthesis.cancel();});
 document.getElementById('btnLayers').addEventListener('click',()=>{
@@ -37928,7 +37928,7 @@ function anim(){
     window._tlLabels.forEach(l=>{if(l.parent)l.scale.set(s,s,1)});
   }
   // Animate pulse rings + flow dots (cached in _animatedItems during init)
-  if(window._animatedItems){
+  if(window._animatedItems&&Object.values(layerGroups).some(g=>g.visible)){
     const at=Date.now()/1000;
     for(const d of window._animatedItems){
       if(d._pulseRings){
