@@ -55,7 +55,25 @@ jobs:
       - name: Enrich river entries with flow paths
         run: node scripts/enrich-river-pts.js
 
-      - name: Fill categories — Part 11
+      # ── Hardcoded parts (rotated by group) ──
+      - name: Fill categories — Parts 1 & 2 (peaks, parks, islands, volcanoes)
+        if: env.GLOBE_FILL_GROUP == '0'
+        run: node scripts/fill-globe-part1.js && node scripts/fill-globe-part2.js
+      - name: Fill categories — Parts 3 & 4 (plateaus, valleys, wind, cloud)
+        if: env.GLOBE_FILL_GROUP == '1'
+        run: node scripts/fill-globe-part3.js && node scripts/fill-globe-part4.js
+      - name: Fill categories — Parts 5 & 6 (bays, caves, empires, wars)
+        if: env.GLOBE_FILL_GROUP == '2'
+        run: node scripts/fill-globe-part5.js && node scripts/fill-globe-part6.js
+      - name: Fill categories — Parts 7 & 8 (metro, waterways, soil, monsoon)
+        if: env.GLOBE_FILL_GROUP == '3'
+        run: node scripts/fill-globe-part7.js && node scripts/fill-globe-part8.js
+      - name: Fill categories — Parts 9 & 10 (power, forts, palaces, glaciers)
+        if: env.GLOBE_FILL_GROUP == '4'
+        run: node scripts/fill-globe-part9.js && node scripts/fill-globe-part10.js
+
+      # ── Wiki data merge (always runs) ──
+      - name: Fill categories — Part 11 (wiki data)
         run: node scripts/fill-globe-part11.js
 
       - name: Fetch contemporaries
