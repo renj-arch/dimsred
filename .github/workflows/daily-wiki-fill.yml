@@ -121,6 +121,7 @@ jobs:
           for i in 1 2 3 4 5; do
             git pull --rebase 2>/dev/null || { git rebase --abort 2>/dev/null; git fetch; git checkout main; git reset --hard origin/main; }
             node scripts/merge-category-files.js "$CAT_SAVE" data/questions 2>/dev/null || true
+            node scripts/update-archive-count.js 2>/dev/null || true
             git add -A
             if git diff --staged --quiet; then echo "No changes"; break; fi
             git commit -m "Incremental chunk ${{ matrix.chunk }}"
@@ -170,6 +171,7 @@ jobs:
       - run: node scripts/build-archive-single.js
 
       - run: |
+          cp archive.html data/archive.html
           mkdir -p "$RUNNER_TEMP"
           cp data/quiz.json "$RUNNER_TEMP/quiz.json"
 
@@ -225,7 +227,9 @@ jobs:
       - run: node scripts/split-quiz-to-categories.js
       - run: node scripts/build-archive-single.js
 
-      - run: rm -f data/quiz.json
+      - run: |
+          cp archive.html data/archive.html
+          rm -f data/quiz.json
 
       - uses: actions/upload-artifact@v4
         with:
@@ -259,6 +263,8 @@ jobs:
         with:
           name: final-data
           path: data/
+
+      - run: cp -f data/archive.html archive.html 2>/dev/null || true
 
       - id: progress
         run: |
