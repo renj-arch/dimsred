@@ -89,10 +89,10 @@ for (let m = catMatches.length - 1; m >= 0; m--) {
   for (let i = 0; i < entries.length; i++) {
     for (let j = i + 1; j < entries.length; j++) {
       const a = entries[i], b = entries[j];
-      if (Math.abs(a.la - b.la) < 0.05 && Math.abs(a.ln - b.ln) < 0.05) {
+      if (Math.abs(a.la - b.la) < 0.01 && Math.abs(a.ln - b.ln) < 0.01) {
         const aKey = normalizeName(a.name);
         const bKey = normalizeName(b.name);
-        if (aKey && bKey && (aKey === bKey || aKey.includes(bKey) || bKey.includes(aKey))) {
+        if (aKey && bKey && aKey === bKey) {
           const short = a.name.length <= b.name.length ? a : b;
           removeOffsets.add(contentStart + short.offset);
         }
