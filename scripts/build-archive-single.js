@@ -1,65 +1,35 @@
 const fs = require('fs');
 const path = require('path');
 
-const quizPath = path.join(__dirname, '..', 'data', 'quiz.json');
 const outDir = path.join(__dirname, '..', 'data', 'questions');
 const archivePath = path.join(__dirname, '..', 'archive.html');
 
-const pibPath = path.join(__dirname, '..', 'data', 'questions', 'pib-archive.json');
-let pibQuestions = [];
-try {
-  const pibData = JSON.parse(fs.readFileSync(pibPath, 'utf8'));
-  for (const [, subjData] of Object.entries(pibData)) {
-    if (subjData.subSubjects) {
-      for (const [, qs] of Object.entries(subjData.subSubjects)) {
-        pibQuestions = pibQuestions.concat(qs);
-      }
-    }
-  }
-} catch {}
-
-const icaPath = path.join(__dirname, '..', 'data', 'questions', 'indian-current-affairs.json');
-let icaQuestions = [];
-try {
-  const icaData = JSON.parse(fs.readFileSync(icaPath, 'utf8'));
-  for (const [, subjData] of Object.entries(icaData)) {
-    if (subjData.subSubjects) {
-      for (const [, qs] of Object.entries(subjData.subSubjects)) {
-        icaQuestions = icaQuestions.concat(qs);
-      }
-    }
-  }
-} catch {}
-
-const cePath = path.join(__dirname, '..', 'data', 'questions', 'current-events.json');
-let ceQuestions = [];
-try {
-  const ceData = JSON.parse(fs.readFileSync(cePath, 'utf8'));
-  for (const [, subjData] of Object.entries(ceData)) {
-    if (subjData.subSubjects) {
-      for (const [, qs] of Object.entries(subjData.subSubjects)) {
-        ceQuestions = ceQuestions.concat(qs);
-      }
-    }
-  }
-} catch {}
-
-let quiz = { questions: [] };
-try { quiz = JSON.parse(fs.readFileSync(quizPath, 'utf8')); } catch (e) { console.error('Failed to parse quiz.json: ' + e.message); quiz = { questions: [] }; }
-const rawQuestions = quiz.questions.concat(pibQuestions).concat(icaQuestions).concat(ceQuestions);
-
-// ── Dedup by (question + answer) key ──
-const seen = new Set();
+// ── Read all questions from per-category files ──
 const allQuestions = [];
-rawQuestions.forEach(q => {
-  const key = ((q.question || '') + '||' + (q.answer || '')).toLowerCase().replace(/\s+/g, ' ').trim();
-  if (!seen.has(key)) {
-    seen.add(key);
-    allQuestions.push(q);
-  }
-});
+const seen = new Set();
+let totalRaw = 0;
+const files = fs.readdirSync(outDir).filter(f => f.endsWith('.json') && f !== 'manifest.json');
+for (const f of files) {
+  try {
+    const data = JSON.parse(fs.readFileSync(path.join(outDir, f), 'utf8'));
+    for (const [, subjData] of Object.entries(data)) {
+      if (subjData && subjData.subSubjects) {
+        for (const [, qs] of Object.entries(subjData.subSubjects)) {
+          for (const q of qs) {
+            totalRaw++;
+            const key = ((q.question || '') + '||' + (q.answer || '')).toLowerCase().replace(/\s+/g, ' ').trim();
+            if (!seen.has(key)) {
+              seen.add(key);
+              allQuestions.push(q);
+            }
+          }
+        }
+      }
+    }
+  } catch {}
+}
 const deduped = allQuestions.length;
-console.log('quiz.json: ' + deduped + ' / ' + rawQuestions.length + ' unique (removed ' + (rawQuestions.length - deduped) + ' duplicates)');
+console.log('Per-category files: ' + deduped + ' / ' + totalRaw + ' unique (removed ' + (totalRaw - deduped) + ' duplicates)');
 
 const CAT_ICONS = {
   'Ancient India':'🏛️','Medieval & Modern India':'👑','Indian History':'🏛️',
