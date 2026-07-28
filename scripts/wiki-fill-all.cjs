@@ -1541,10 +1541,13 @@ async function main() {
       }
     }
 
-    // ── Follow internal links 1 level deep ──
-    if (articles.length > 0) {
+    // ── Follow internal links recursively until exhausted ──
+    let prevFetched = articles;
+    let depth = 0;
+    while (prevFetched.length > 0) {
+      depth++;
       const linkCandidates = [];
-      for (const article of articles) {
+      for (const article of prevFetched) {
         if (!article || !article.extract || article.extract.length < 200) continue;
         const titleKey = article.title.toLowerCase();
         if (processedTitles.has(titleKey)) continue;
@@ -1555,43 +1558,42 @@ async function main() {
           if (!processedTitles.has(lKey)) { processedTitles.add(lKey); linkCandidates.push(l); }
         }
       }
-      if (linkCandidates.length > 0) {
-        const linkTopics = linkCandidates.slice(0, 1000);
-        log('  Following ' + linkTopics.length + ' internal links...');
-        const linkArticles = await fetchAllTopics(linkTopics, 2);
-        for (const article of linkArticles) {
-          const ext = article.extract, title = article.title, desc = article.description;
-          if (isListPage(ext)) continue;
-          const allSentences = ext.split('.').filter(s => s.trim().length > 20 && !isBadSentence(s));
-          const sentences = allSentences.filter(s => s.trim().length > 25 && !isBadSentence(s));
-          if (desc && desc.length > 5 && desc.length < 200) {
-            const q = makeDescriptionQuestion(desc, title);
-            if (q.length > 15 && q.length < 200 && pushQ({
-              id: cat.name.substring(0,3).toLowerCase() + added + 'l',
+      if (linkCandidates.length === 0) break;
+      log('  Link depth ' + depth + ': ' + linkCandidates.length + ' new topics...');
+      prevFetched = await fetchAllTopics(linkCandidates, 2);
+      for (const article of prevFetched) {
+        const ext = article.extract, title = article.title, desc = article.description;
+        if (isListPage(ext)) continue;
+        const allSentences = ext.split('.').filter(s => s.trim().length > 20 && !isBadSentence(s));
+        const sentences = allSentences.filter(s => s.trim().length > 25 && !isBadSentence(s));
+        if (desc && desc.length > 5 && desc.length < 200) {
+          const q = makeDescriptionQuestion(desc, title);
+          if (q.length > 15 && q.length < 200 && pushQ({
+            id: cat.name.substring(0,3).toLowerCase() + added + 'l',
+            type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+            pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+            question: q, answer: title, hint: '',
+            fact: paraphrase(getContext(allSentences, title, 3), title),
+          })) added++;
+        }
+        for (let si = 0; si < sentences.length && si < 10; si++) {
+          const sent = sentences[si];
+          if (sent.length > 260) continue;
+          const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
+          if (years && sent.length < 240) {
+            const context = sent.replace(years[0], '_____').trim().substring(0, 200);
+            if (context.length > 25 && pushQ({
+              id: cat.name.substring(0,3).toLowerCase() + added + 'ly',
               type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
               pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
-              question: q, answer: title, hint: '',
-              fact: paraphrase(getContext(allSentences, title, 3), title),
+              question: context, answer: years[0], hint: '',
+              fact: paraphrase(getContext(allSentences, sent, 3), years[0]),
             })) added++;
-          }
-          for (let si = 0; si < sentences.length && si < 10; si++) {
-            const sent = sentences[si];
-            if (sent.length > 260) continue;
-            const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
-            if (years && sent.length < 240) {
-              const context = sent.replace(years[0], '_____').trim().substring(0, 200);
-              if (context.length > 25 && pushQ({
-                id: cat.name.substring(0,3).toLowerCase() + added + 'ly',
-                type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-                pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
-                question: context, answer: years[0], hint: '',
-                fact: paraphrase(getContext(allSentences, sent, 3), years[0]),
-              })) added++;
-            }
           }
         }
       }
     }
+    if (depth > 0) log('  Link traversal finished at depth ' + depth);
 
     log('  Added ' + added + ' new questions for ' + cat.name + ' (total: ' + quiz.questions.length + ')');
     totalAdded += added;
