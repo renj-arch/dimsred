@@ -99,6 +99,9 @@ jobs:
 
       - run: node scripts/rebuild-quiz-json.js
 
+      - name: Prepare chunk output file
+        run: cp data/quiz.json data/quiz-chunk-${{ matrix.chunk }}.json
+
       - name: Wiki fill
         run: node scripts/wiki-fill-all.cjs
         env:
