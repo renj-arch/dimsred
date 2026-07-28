@@ -23,6 +23,31 @@ function fetchJSON(url) {
   });
 }
 
+async function fetchPageLinks(title, maxLinks = 30) {
+  const links = [];
+  let plcontinue = '';
+  while (links.length < maxLinks) {
+    await delay(500);
+    let url = `${WIKI_API}?action=query&prop=links&titles=${encodeURIComponent(title)}&pllimit=500&format=json&plnamespace=0`;
+    if (plcontinue) url += '&plcontinue=' + encodeURIComponent(plcontinue);
+    try {
+      const d = await fetchJSON(url);
+      const pages = d.query ? d.query.pages : {};
+      const page = Object.values(pages).find(p => p && p.links);
+      if (!page || !page.links) break;
+      for (const l of page.links) {
+        if (!l.title.startsWith('List of ') && !l.title.includes('/') && !l.title.includes(':')) {
+          links.push(l.title);
+          if (links.length >= maxLinks) break;
+        }
+      }
+      plcontinue = d.continue?.plcontinue;
+      if (!plcontinue) break;
+    } catch { break; }
+  }
+  return links;
+}
+
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 async function fetchCategoryMembers(wikiCat, maxPages = 5000) {
@@ -1401,6 +1426,7 @@ async function main() {
     catGroups[cat.name].topics.push(topic);
   });
   const processCats = Object.values(catGroups);
+  const processedTitles = new Set();
 
   for (const item of processCats) {
     const cat = item.cat;
@@ -1511,6 +1537,58 @@ async function main() {
             question: context, answer: bestTerm, hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), bestTerm),
           })) { added++; articleQ++; sentUsed = true; }
+        }
+      }
+    }
+
+    // ── Follow internal links 1 level deep ──
+    if (articles.length > 0) {
+      const linkCandidates = [];
+      for (const article of articles) {
+        if (!article || !article.extract || article.extract.length < 200) continue;
+        const titleKey = article.title.toLowerCase();
+        if (processedTitles.has(titleKey)) continue;
+        processedTitles.add(titleKey);
+        const links = await fetchPageLinks(article.title);
+        for (const l of links) {
+          const lKey = l.toLowerCase();
+          if (!processedTitles.has(lKey)) { processedTitles.add(lKey); linkCandidates.push(l); }
+        }
+      }
+      if (linkCandidates.length > 0) {
+        const linkTopics = linkCandidates.slice(0, 1000);
+        log('  Following ' + linkTopics.length + ' internal links...');
+        const linkArticles = await fetchAllTopics(linkTopics, 2);
+        for (const article of linkArticles) {
+          const ext = article.extract, title = article.title, desc = article.description;
+          if (isListPage(ext)) continue;
+          const allSentences = ext.split('.').filter(s => s.trim().length > 20 && !isBadSentence(s));
+          const sentences = allSentences.filter(s => s.trim().length > 25 && !isBadSentence(s));
+          if (desc && desc.length > 5 && desc.length < 200) {
+            const q = makeDescriptionQuestion(desc, title);
+            if (q.length > 15 && q.length < 200 && pushQ({
+              id: cat.name.substring(0,3).toLowerCase() + added + 'l',
+              type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+              pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+              question: q, answer: title, hint: '',
+              fact: paraphrase(getContext(allSentences, title, 3), title),
+            })) added++;
+          }
+          for (let si = 0; si < sentences.length && si < 10; si++) {
+            const sent = sentences[si];
+            if (sent.length > 260) continue;
+            const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
+            if (years && sent.length < 240) {
+              const context = sent.replace(years[0], '_____').trim().substring(0, 200);
+              if (context.length > 25 && pushQ({
+                id: cat.name.substring(0,3).toLowerCase() + added + 'ly',
+                type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+                pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+                question: context, answer: years[0], hint: '',
+                fact: paraphrase(getContext(allSentences, sent, 3), years[0]),
+              })) added++;
+            }
+          }
         }
       }
     }
