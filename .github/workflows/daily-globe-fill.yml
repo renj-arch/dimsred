@@ -13,9 +13,8 @@ permissions:
   actions: write
 
 jobs:
-  fill:
+  setup:
     runs-on: ubuntu-latest
-    timeout-minutes: 600
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,17 +25,59 @@ jobs:
         with:
           node-version: 22
 
-      - name: Pull latest before modifying files
+      - name: Pull latest
         run: |
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git pull --rebase
 
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repo
+          path: .
+          retention-days: 1
+
+  fetch-wiki:
+    needs: setup
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: repo
+          path: .
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
       - name: Fetch Wikipedia categories
         run: node scripts/wikipedia-fetch.js
-
       - name: Fetch Wikidata SPARQL
         run: node scripts/wikidata-multi-fetch.js
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wiki-data
+          path: data/wiki-*.json
+          retention-days: 1
+
+  static-fill:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: repo
+          path: .
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
 
       - name: Generate static data
         run: node scripts/create-static-data.js
@@ -47,31 +88,80 @@ jobs:
       - name: Enrich river entries with flow paths
         run: node scripts/enrich-river-pts.js
 
-      # ── All parts run every run ──
-      - name: Fill categories — Parts 1 & 2
-        run: node scripts/fill-globe-part1.js && node scripts/fill-globe-part2.js
-      - name: Fill categories — Parts 3 & 4
-        run: node scripts/fill-globe-part3.js && node scripts/fill-globe-part4.js
-      - name: Fill categories — Parts 5 & 6
-        run: node scripts/fill-globe-part5.js && node scripts/fill-globe-part6.js
-      - name: Fill categories — Parts 7 & 8
-        run: node scripts/fill-globe-part7.js && node scripts/fill-globe-part8.js
-      - name: Fill categories — Parts 9 & 10
-        run: node scripts/fill-globe-part9.js && node scripts/fill-globe-part10.js
+      - name: Fill all parts 1-10
+        run: |
+          node scripts/fill-globe-part1.js && node scripts/fill-globe-part2.js
+          node scripts/fill-globe-part3.js && node scripts/fill-globe-part4.js
+          node scripts/fill-globe-part5.js && node scripts/fill-globe-part6.js
+          node scripts/fill-globe-part7.js && node scripts/fill-globe-part8.js
+          node scripts/fill-globe-part9.js && node scripts/fill-globe-part10.js
 
-      # ── Wiki data merge (always runs) ──
-      - name: Fill categories — Part 11 (wiki data)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: filled-html
+          path: 3d-globe.html
+          retention-days: 1
+
+  wiki-merge:
+    needs: [static-fill, fetch-wiki]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: repo
+          path: .
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: filled-html
+          path: .
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: wiki-data
+          path: data/
+
+      - name: Fill wiki data (part 11)
         run: node scripts/fill-globe-part11.js
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: merged-html
+          path: 3d-globe.html
+          retention-days: 1
+
+  post:
+    needs: wiki-merge
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: repo
+          path: .
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: merged-html
+          path: .
 
       - name: Fetch contemporaries
         run: node scripts/fetch-contemporaries.js
-
       - name: Insert contemporaries
         run: node scripts/insert-contemporaries.js
-
-      - name: Escape apostrophes in data strings
+      - name: Escape apostrophes
         run: node scripts/fix-apostrophes.js
-
       - name: Deduplicate globe entries
         run: node scripts/dedup-globe.js
 
@@ -88,7 +178,7 @@ jobs:
           "
           node --check /tmp/globe-check.mjs
 
-      - name: Commit final updates and advance progress
+      - name: Commit and push
         run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
