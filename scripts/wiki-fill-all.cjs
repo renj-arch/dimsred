@@ -1367,12 +1367,12 @@ async function main() {
     let topics = [...cat.topics];
     if (cat.wikiCat) {
       log('  Fetching category members from Category:' + cat.wikiCat + '...');
-      const wikiTopics = await fetchCategoryMembers(cat.wikiCat, 2000);
+      const wikiTopics = await fetchCategoryMembers(cat.wikiCat);
       const existing = new Set(topics.map(t => t.toLowerCase()));
       const newTopics = wikiTopics.filter(t => !existing.has(t.toLowerCase()));
       if (newTopics.length) {
         log('  Auto-discovered ' + newTopics.length + ' topics from Category:' + cat.wikiCat);
-        topics = topics.concat(newTopics.slice(0, 2000));
+        topics = topics.concat(newTopics);
       }
     }
     catTopicMap[cat.name] = { cat, topics };
