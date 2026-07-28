@@ -21,11 +21,9 @@ env:
   NODE_OPTIONS: --max-old-space-size=8192
 
 jobs:
-  # ── Setup: prepare baseline quiz.json, PIB feeds, read progress ──
+  # ── Setup: prepare baseline quiz.json, PIB feeds ──
   setup:
     runs-on: ubuntu-latest
-    outputs:
-      group: ${{ steps.progress.outputs.group }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,16 +39,6 @@ jobs:
           git fetch origin
           git reset --hard origin/main
           git clean -fd
-
-      - name: Read progress
-        id: progress
-        run: |
-          if [ -f data/wiki-fill-progress.json ]; then
-            GROUP=$(jq -r '.group' data/wiki-fill-progress.json)
-          else
-            GROUP=0
-          fi
-          echo "group=$GROUP" >> "$GITHUB_OUTPUT"
 
       - run: node scripts/rebuild-quiz-json.js
 
@@ -107,7 +95,7 @@ jobs:
         env:
           WIKI_FILL_CHUNK: ${{ matrix.chunk }}
           WIKI_FILL_CHUNKS: 24
-          WIKI_FILL_GROUP: ${{ needs.setup.outputs.group }}
+          WIKI_FILL_ALL: '1'
           QUIZ_PATH: data/quiz-chunk-${{ matrix.chunk }}.json
 
       - uses: actions/upload-artifact@v4
@@ -245,18 +233,6 @@ jobs:
 
       - run: cp -f data/archive.html archive.html 2>/dev/null || true
 
-      - id: progress
-        run: |
-          GROUP_FILE=data/wiki-fill-progress.json
-          if [ -f "$GROUP_FILE" ]; then
-            GROUP=$(jq -r '.group' "$GROUP_FILE")
-          else
-            GROUP=0
-          fi
-          NEXT=$(( (GROUP + 1) % 7 ))
-          echo "{\"group\": $NEXT}" > "$GROUP_FILE"
-          echo "next=$NEXT" >> "$GITHUB_OUTPUT"
-
       - run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
@@ -269,7 +245,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Daily update $(date +'%Y-%m-%d %H:%M UTC') — next group ${{ steps.progress.outputs.next }}"
+            git commit -m "Bulk fill $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
             for i in 1 2 3; do
               git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
               git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
