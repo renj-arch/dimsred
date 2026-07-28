@@ -133,6 +133,9 @@ jobs:
 
       - uses: actions/download-artifact@v4
 
+      - name: Restore baseline data (overwrite stale repo data/)
+        run: cp -r baseline/data/* data/ 2>/dev/null || true
+
       - name: Collect chunk outputs
         run: |
           mkdir -p chunks
