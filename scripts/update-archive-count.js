@@ -19,12 +19,17 @@ for (const f of files) {
   } catch {}
 }
 
+const now = new Date();
+const dateStr = now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }) + ' UTC';
+const isoStr = now.toISOString().replace(/\.\d+Z$/, 'Z');
+
 let html = fs.readFileSync(archivePath, 'utf8');
 const oldMeta = html.match(/Complete archive of \d+ GK & Current Affairs questions/);
 const oldSub = html.match(/>\d+ questions across \d+ categories/);
+const oldTime = html.match(/<time id="build-time"[^>]*>.*?<\/time>/);
 
-if (!oldMeta && !oldSub) {
-  console.log('No count patterns found in archive.html');
+if (!oldMeta && !oldSub && !oldTime) {
+  console.log('No patterns found in archive.html');
   process.exit(0);
 }
 
@@ -43,6 +48,14 @@ if (oldSub) {
     html = html.replace(oldSub[0], `>${total} questions across 47 categories`);
     changed = true;
     console.log(`Subtitle total: ${before} -> ${total}`);
+  }
+}
+if (oldTime) {
+  const newTime = `<time id="build-time" datetime="${isoStr}">${dateStr}</time>`;
+  if (oldTime[0] !== newTime) {
+    html = html.replace(oldTime[0], newTime);
+    changed = true;
+    console.log(`Timestamp updated`);
   }
 }
 
