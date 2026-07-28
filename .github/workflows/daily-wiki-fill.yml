@@ -160,6 +160,7 @@ jobs:
   feeds:
     needs: merge
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
         with:
@@ -208,10 +209,10 @@ jobs:
           path: data/
           retention-days: 1
 
-  # ── Finalize: commit, push, advance progress, self-trigger ──
+  # ── Finalize: commit wiki+feed data, advance progress, self-trigger ──
   finalize:
-    needs: feeds
-    if: always() && needs.feeds.result == 'success'
+    needs: [merge]
+    if: always() && needs.merge.result == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -222,7 +223,15 @@ jobs:
         with:
           node-version: 22
 
-      - uses: actions/download-artifact@v4
+      - name: Download merged wiki data
+        uses: actions/download-artifact@v4
+        with:
+          name: merged
+          path: data/
+
+      - name: Download feed data (if feeds succeeded)
+        continue-on-error: true
+        uses: actions/download-artifact@v4
         with:
           name: final-data
           path: data/
