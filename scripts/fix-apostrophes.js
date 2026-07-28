@@ -17,18 +17,26 @@ const js = h.substring(ms + 23, me);
 const outerSuffix = h.substring(me);
 
 function esc(s) {
-  return s.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t');
+  return s
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/\u2018|\u2019/g, "'")
+    .replace(/\u201c|\u201d/g, '"')
+    .replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t');
 }
 
 function unesc(s) {
-  return s.replace(/\\(['\\nrt])/g, (m, c) => {
-    if (c === '\\') return '\\';
-    if (c === "'") return "'";
-    if (c === 'n') return '\n';
-    if (c === 'r') return '\r';
-    if (c === 't') return '\t';
-    return m;
-  });
+  return s
+    .replace(/\\(['\\nrt])/g, (m, c) => {
+      if (c === '\\') return '\\';
+      if (c === "'") return "'";
+      if (c === 'n') return '\n';
+      if (c === 'r') return '\r';
+      if (c === 't') return '\t';
+      return m;
+    })
+    .replace(/\u2018|\u2019/g, "'")
+    .replace(/\u201c|\u201d/g, '"');
 }
 
 function isValidJS(line) {
