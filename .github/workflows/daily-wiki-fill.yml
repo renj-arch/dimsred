@@ -145,6 +145,8 @@ jobs:
 
       - run: node scripts/merge-chunks.js
 
+      - run: node scripts/split-quiz-to-categories.js
+
       - run: node scripts/cleanup-questions.js
       - run: node scripts/dedup-sentence-flood.js
       - run: node scripts/build-archive-single.js
@@ -202,6 +204,7 @@ jobs:
 
       - run: node scripts/cleanup-questions.js
       - run: node scripts/dedup-sentence-flood.js
+      - run: node scripts/split-quiz-to-categories.js
       - run: node scripts/build-archive-single.js
 
       - run: rm -f data/quiz.json
