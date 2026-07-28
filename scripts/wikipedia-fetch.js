@@ -990,34 +990,13 @@ async function main() {
   const dedupSet = loadDedupSet();
   console.log(`Loaded ${dedupSet.size} names for dedup`);
 
-  // Check which categories already have output files (resume support)
-  const skipCats = [];
+  // Always re-fetch all categories — new Wikipedia pages may have appeared since last run
   const runCats = [];
   for (const cat of CFG) {
-    const fp = path.join(DATA_DIR, `wiki-${cat.id}.json`);
-    if (fs.existsSync(fp)) {
-      try {
-        const existing = JSON.parse(fs.readFileSync(fp, 'utf8'));
-        if (existing.length > 0 && process.env.GLOBE_FILL_ALL !== '1') {
-          skipCats.push({ ...cat, existing: existing.length });
-          continue;
-        }
-        // Empty or zero-entry file — re-process it
-        if (existing.length === 0) console.log(`  ⚠ ${cat.id} has empty file, will re-fetch`);
-      } catch {
-        // Corrupt file — re-process
-      }
-      runCats.push(cat);
-      continue;
-    }
     runCats.push(cat);
   }
 
-  if (skipCats.length) {
-    console.log(`Skipping ${skipCats.length} already-completed categories:`);
-    for (const c of skipCats) console.log(`  ✅ ${c.id} (${c.existing} entries)`);
-    console.log();
-  }
+  console.log(`Will re-fetch ${runCats.length} categories (group rotation distributes across runs)\n`);
 
   // Group processing — spread remaining categories across runs
   const processAll = process.env.GLOBE_FILL_ALL === '1';
@@ -1046,10 +1025,18 @@ async function main() {
   for (let i = 0; i < activeRunCats.length; i++) {
     const cat = activeRunCats[i];
     console.log(`[${i+1}/${activeRunCats.length}]`);
-    const entries = await processCat(cat, dedupSet);
+    const newEntries = await processCat(cat, dedupSet);
     const fp = path.join(DATA_DIR, `wiki-${cat.id}.json`);
-    fs.writeFileSync(fp, JSON.stringify(entries, null, 2), 'utf8');
-    console.log(`  → data/wiki-${cat.id}.json`);
+    const existing = fs.existsSync(fp) ? JSON.parse(fs.readFileSync(fp, 'utf8')) : [];
+    const seen = new Set(existing.map(e => normName(e.n)));
+    const merged = [...existing];
+    let added = 0;
+    for (const e of newEntries) {
+      const key = normName(e.n);
+      if (!seen.has(key)) { seen.add(key); merged.push(e); added++; }
+    }
+    console.log(`  merged: ${existing.length} existing + ${added} new = ${merged.length} total`);
+    fs.writeFileSync(fp, JSON.stringify(merged, null, 2), 'utf8');
     // Commit and push after each category so results are available immediately
     try {
       const ts = new Date().toISOString().replace('T', ' ').replace(/\.\d+Z/, ' UTC');
