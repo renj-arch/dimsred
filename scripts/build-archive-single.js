@@ -105,6 +105,10 @@ const sortedCats = Object.keys(tree).sort();
 
 // ── Write per-category JSON files ──
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+// Remove stale files that no longer have a category (e.g. after merge)
+fs.readdirSync(outDir).filter(f => f.endsWith('.json') && f !== 'manifest.json').forEach(f => {
+  try { fs.unlinkSync(path.join(outDir, f)); } catch {}
+});
 
 const catIndex = [];
 sortedCats.forEach(c => {
