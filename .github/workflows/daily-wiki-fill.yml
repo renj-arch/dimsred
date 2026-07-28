@@ -2,7 +2,7 @@ name: Wiki Fill
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Daily kickstart fallback
+    - cron: '0 0 * * *'
   workflow_dispatch:
     inputs:
       chunk:
@@ -17,62 +17,227 @@ permissions:
   contents: write
   actions: write
 
+env:
+  NODE_OPTIONS: --max-old-space-size=8192
+
 jobs:
-  fill:
+  # ── Setup: prepare baseline quiz.json, PIB feeds, read progress ──
+  setup:
     runs-on: ubuntu-latest
+    outputs:
+      group: ${{ steps.progress.outputs.group }}
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Use Node.js 22
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Install dependencies
-        run: npm install
+      - run: npm install
 
-      - name: Sync with origin (clean slate)
-        run: |
+      - run: |
           git fetch origin
           git reset --hard origin/main
           git clean -fd
 
-      - name: Read progress state
+      - name: Read progress
+        id: progress
         run: |
           if [ -f data/wiki-fill-progress.json ]; then
             GROUP=$(jq -r '.group' data/wiki-fill-progress.json)
           else
             GROUP=0
           fi
-          echo "WIKI_FILL_GROUP=$GROUP" >> "$GITHUB_ENV"
+          echo "group=$GROUP" >> "$GITHUB_OUTPUT"
 
-      - name: Restore quiz.json from per-category files
-        run: node scripts/rebuild-quiz-json.js
+      - run: node scripts/rebuild-quiz-json.js
 
-      - name: Restore quiz.json from runner temp (survives git clean)
+      - name: Restore quiz.json from runner temp
         run: |
           if [ -f "$RUNNER_TEMP/quiz.json" ]; then
             cp "$RUNNER_TEMP/quiz.json" data/quiz.json
             echo "Restored quiz.json from runner temp"
+          fi
+
+      - run: node scripts/fetch-pib-rss.js
+      - run: node scripts/update-pib-archive.js
+
+      - run: node scripts/rebuild-quiz-json.js
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: baseline
+          path: data/
+          retention-days: 1
+
+  # ── Wiki chunks: 24 parallel runners ──
+  wiki-chunks:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chunk: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
+      max-parallel: 24
+      fail-fast: false
+    if: inputs.chunk == '' || matrix.chunk == inputs.chunk
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: baseline
+          path: data/
+
+      - run: node scripts/rebuild-quiz-json.js
+
+      - name: Wiki fill
+        run: node scripts/wiki-fill-all.cjs
+        env:
+          WIKI_FILL_CHUNK: ${{ matrix.chunk }}
+          WIKI_FILL_CHUNKS: 24
+          WIKI_FILL_GROUP: ${{ needs.setup.outputs.group }}
+          QUIZ_PATH: data/quiz-chunk-${{ matrix.chunk }}.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chunk-${{ matrix.chunk }}
+          path: data/quiz-chunk-${{ matrix.chunk }}.json
+          retention-days: 1
+
+  # ── Merge: combine all chunk outputs ──
+  merge:
+    needs: wiki-chunks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - uses: actions/download-artifact@v4
+
+      - name: Collect chunk outputs
+        run: |
+          mkdir -p chunks
+          find . -name 'quiz-chunk-*.json' -exec cp {} chunks/ \; 2>/dev/null || true
+          echo "Chunk files found:"
+          ls -la chunks/ 2>/dev/null || echo "  (none)"
+
+      - run: node scripts/merge-chunks.js
+
+      - run: node scripts/cleanup-questions.js
+      - run: node scripts/dedup-sentence-flood.js
+      - run: node scripts/build-archive-single.js
+
+      - run: |
+          mkdir -p "$RUNNER_TEMP"
+          cp data/quiz.json "$RUNNER_TEMP/quiz.json"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: merged
+          path: data/
+          retention-days: 1
+
+  # ── Complementary fetchers ──
+  feeds:
+    needs: merge
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: merged
+          path: data/
+
+      - run: node scripts/fetch-current-events.js
+      - run: node scripts/fetch-indian-ca.js
+      - run: node scripts/fetch-rbi-data.js
+      - run: node scripts/fetch-state-news.js
+      - run: node scripts/fetch-global-rankings.js
+      - run: node scripts/fetch-parliament-bills.js
+      - run: node scripts/fetch-themes.js
+      - run: node scripts/fetch-summits.js
+      - run: node scripts/fetch-env-health-agri.js
+      - run: node scripts/fetch-education-culture.js
+      - run: node scripts/fetch-society-news.js
+      - run: node scripts/fetch-appointments.js
+      - run: node scripts/fetch-awards.js
+      - run: node scripts/fetch-defence.js
+      - run: node scripts/fetch-science.js
+      - run: node scripts/fetch-schemes.js
+      - run: node scripts/fetch-judgements.js
+      - run: node scripts/fetch-obituaries.js
+      - run: node scripts/fetch-bilateral.js
+
+      - run: node scripts/cleanup-questions.js
+      - run: node scripts/dedup-sentence-flood.js
+      - run: node scripts/build-archive-single.js
+
+      - run: rm -f data/quiz.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: final-data
+          path: data/
+          retention-days: 1
+
+  # ── Finalize: commit, push, advance progress, self-trigger ──
+  finalize:
+    needs: feeds
+    if: always() && needs.feeds.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: final-data
+          path: data/
+
+      - id: progress
+        run: |
+          GROUP_FILE=data/wiki-fill-progress.json
+          if [ -f "$GROUP_FILE" ]; then
+            GROUP=$(jq -r '.group' "$GROUP_FILE")
           else
-            echo "No quiz.json in runner temp"
+            GROUP=0
           fi
+          NEXT=$(( (GROUP + 1) % 7 ))
+          echo "{\"group\": $NEXT}" > "$GROUP_FILE"
+          echo "next=$NEXT" >> "$GITHUB_OUTPUT"
 
-      - name: Fetch PIB and other RSS feeds
-        run: node scripts/fetch-pib-rss.js
-
-      - name: Update PIB archive from feed (no duplicates)
-        run: node scripts/update-pib-archive.js
-
-      - name: Wiki (1/24)
-        if: inputs.chunk == '' || inputs.chunk == '1'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
+      - run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
           rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
@@ -81,630 +246,10 @@ jobs:
           git checkout -B main 2>/dev/null || true
           git reset HEAD -- . 2>/dev/null
           git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 1/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 1
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (2/24)
-        if: inputs.chunk == '' || inputs.chunk == '2'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 2/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 2
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (3/24)
-        if: inputs.chunk == '' || inputs.chunk == '3'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 3/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 3
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (4/24)
-        if: inputs.chunk == '' || inputs.chunk == '4'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 4/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 4
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (5/24)
-        if: inputs.chunk == '' || inputs.chunk == '5'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 5/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 5
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (6/24)
-        if: inputs.chunk == '' || inputs.chunk == '6'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 6/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 6
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (7/24)
-        if: inputs.chunk == '' || inputs.chunk == '7'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 7/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 7
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (8/24)
-        if: inputs.chunk == '' || inputs.chunk == '8'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 8/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 8
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (9/24)
-        if: inputs.chunk == '' || inputs.chunk == '9'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 9/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 9
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (10/24)
-        if: inputs.chunk == '' || inputs.chunk == '10'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 10/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 10
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (11/24)
-        if: inputs.chunk == '' || inputs.chunk == '11'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 11/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 11
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (12/24)
-        if: inputs.chunk == '' || inputs.chunk == '12'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 12/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 12
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (13/24)
-        if: inputs.chunk == '' || inputs.chunk == '13'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 13/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 13
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (14/24)
-        if: inputs.chunk == '' || inputs.chunk == '14'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 14/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 14
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (15/24)
-        if: inputs.chunk == '' || inputs.chunk == '15'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 15/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 15
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (16/24)
-        if: inputs.chunk == '' || inputs.chunk == '16'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 16/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 16
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (17/24)
-        if: inputs.chunk == '' || inputs.chunk == '17'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 17/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 17
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (18/24)
-        if: inputs.chunk == '' || inputs.chunk == '18'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 18/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 18
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (19/24)
-        if: inputs.chunk == '' || inputs.chunk == '19'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 19/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 19
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (20/24)
-        if: inputs.chunk == '' || inputs.chunk == '20'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 20/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 20
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (21/24)
-        if: inputs.chunk == '' || inputs.chunk == '21'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 21/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 21
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (22/24)
-        if: inputs.chunk == '' || inputs.chunk == '22'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 22/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 22
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (23/24)
-        if: inputs.chunk == '' || inputs.chunk == '23'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 23/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 23
-          WIKI_FILL_CHUNKS: 24
-      - name: Wiki (24/24)
-        if: inputs.chunk == '' || inputs.chunk == '24'
-        run: |
-          node scripts/wiki-fill-all.cjs
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          if ! git diff --staged --quiet; then
-            git commit -m "Wiki 24/24 $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
-            for i in 1 2 3; do git push && { echo "Push succeeded"; break; } || { echo "Push attempt $i failed, retrying..."; sleep 5; git pull --rebase || git pull --no-rebase -X theirs; }; done || true
-          fi
-        env:
-          WIKI_FILL_CHUNK: 24
-          WIKI_FILL_CHUNKS: 24
-
-      - name: Fetch current events and update archive.html
-        run: node scripts/fetch-current-events.js
-
-      - name: Fetch Indian current affairs from Wikipedia
-        run: node scripts/fetch-indian-ca.js
-
-      - name: Fetch RBI monetary data (repo rate, GDP)
-        run: node scripts/fetch-rbi-data.js
-
-      - name: Fetch state-level news (CM, Governor, budgets)
-        run: node scripts/fetch-state-news.js
-
-      - name: Fetch global rankings (India in major indices)
-        run: node scripts/fetch-global-rankings.js
-
-      - name: Fetch parliament bills and acts
-        run: node scripts/fetch-parliament-bills.js
-
-      - name: Fetch UN/WHO yearly themes (Yoga Day, Environment Day, etc.)
-        run: node scripts/fetch-themes.js
-
-      - name: Fetch G20/BRICS/SCO/QUAD summits and conferences
-        run: node scripts/fetch-summits.js
-
-      - name: Fetch Environment, Health & Agriculture news
-        run: node scripts/fetch-env-health-agri.js
-
-      - name: Fetch Education, Arts & Culture news
-        run: node scripts/fetch-education-culture.js
-
-      - name: Fetch Society & Reports news
-        run: node scripts/fetch-society-news.js
-
-      - name: Fetch key appointments (COAS, CJI, CEC, RBI Governor, etc.)
-        run: node scripts/fetch-appointments.js
-
-      - name: Fetch awards (Bharat Ratna, Nobel, Jnanpith, Dadasaheb Phalke)
-        run: node scripts/fetch-awards.js
-
-      - name: Fetch defence exercises and missiles
-        run: node scripts/fetch-defence.js
-
-      - name: Fetch Science & Technology (ISRO missions, satellites)
-        run: node scripts/fetch-science.js
-
-      - name: Fetch Government Schemes
-        run: node scripts/fetch-schemes.js
-
-      - name: Fetch Legal & Constitutional (landmark SC judgements)
-        run: node scripts/fetch-judgements.js
-
-      - name: Fetch Obituaries (notable Indian deaths)
-        run: node scripts/fetch-obituaries.js
-
-      - name: Fetch International Relations (diplomatic relations)
-        run: node scripts/fetch-bilateral.js
-
-      - name: Clean up and rebuild archive
-        if: always()
-        run: |
-          node scripts/cleanup-questions.js
-          node scripts/dedup-sentence-flood.js
-          node scripts/build-archive-single.js
-
-      - name: Remove quiz.json (too large for Cloudflare Pages)
-        if: always()
-        run: rm -f data/quiz.json
-
-      - name: Commit final updates and advance progress
-        if: always()
-        run: |
-          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
-          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
-          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout -B main 2>/dev/null || true
-          git reset HEAD -- . 2>/dev/null
-          git add -A
-          NEXT=$(( (WIKI_FILL_GROUP + 1) % 7 ))
-          echo "{\"group\": $NEXT}" > data/wiki-fill-progress.json
-          git add data/wiki-fill-progress.json
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Final update $(date +'%Y-%m-%d %H:%M UTC') — next group $NEXT"
+            git commit -m "Daily update $(date +'%Y-%m-%d %H:%M UTC') — next group ${{ steps.progress.outputs.next }}"
             for i in 1 2 3; do
               git pull --rebase || { echo "Rebase conflict, aborting and merging instead."; git rebase --abort; git pull --no-rebase -X theirs; }
               git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
@@ -712,8 +257,6 @@ jobs:
             done || true
           fi
 
-      - name: Trigger next run
-        if: success()
-        run: gh workflow run "Wiki Fill" --ref main
+      - run: gh workflow run "Wiki Fill" --ref main
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}

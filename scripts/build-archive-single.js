@@ -31,9 +31,22 @@ try {
   }
 } catch {}
 
+const cePath = path.join(__dirname, '..', 'data', 'questions', 'current-events.json');
+let ceQuestions = [];
+try {
+  const ceData = JSON.parse(fs.readFileSync(cePath, 'utf8'));
+  for (const [, subjData] of Object.entries(ceData)) {
+    if (subjData.subSubjects) {
+      for (const [, qs] of Object.entries(subjData.subSubjects)) {
+        ceQuestions = ceQuestions.concat(qs);
+      }
+    }
+  }
+} catch {}
+
 let quiz = { questions: [] };
-try { quiz = JSON.parse(fs.readFileSync(quizPath, 'utf8')); } catch { quiz = { questions: [] }; }
-const rawQuestions = quiz.questions.concat(pibQuestions).concat(icaQuestions);
+try { quiz = JSON.parse(fs.readFileSync(quizPath, 'utf8')); } catch (e) { console.error('Failed to parse quiz.json: ' + e.message); quiz = { questions: [] }; }
+const rawQuestions = quiz.questions.concat(pibQuestions).concat(icaQuestions).concat(ceQuestions);
 
 // ── Dedup by (question + answer) key ──
 const seen = new Set();
@@ -147,7 +160,7 @@ sortedCats.forEach(c => {
   const FILE_OVERRIDE = { 'PIB': 'pib-archive' };
   const baseName = FILE_OVERRIDE[c] || c.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   const filePaths = [];
-  const MAX_BYTES = 24 * 1024 * 1024;
+  const MAX_BYTES = 8 * 1024 * 1024;
 
   // Flatten to per-subSubject chunks and split if too large
   function writeSubjPart(subjList, partIndex) {
@@ -393,43 +406,63 @@ html += '  var files = CAT_INDEX[ci].file;\n';
 html += '  if (!Array.isArray(files)) files = [files];\n';
 html += '  var merged = {};\n';
 html += '  var loaded = 0;\n';
+html += '  var failed = false;\n';
+html += '  var panel = document.getElementById(\'view-content\');\n';
 html += '  files.forEach(function(url, fi) {\n';
-html += '    var xhr = new XMLHttpRequest();\n';
-html += '    xhr.onload = function() {\n';
-html += '      if (xhr.status !== 200) { _cache[ci] = {}; cb(); return; }\n';
-html += '      var data;\n';
-html += '      try { data = JSON.parse(xhr.responseText); } catch(e) { _cache[ci] = {}; cb(); return; }\n';
-html += '      for (var sk in data) {\n';
-html += '        if (!merged[sk]) merged[sk] = { subSubjects: {} };\n';
-html += '        var ss = data[sk].subSubjects;\n';
-html += '        for (var ssk in ss) {\n';
-html += '          if (ssk === \'__proto__\' || ssk === \'constructor\') continue;\n';
-html += '          if (!merged[sk].subSubjects[ssk]) merged[sk].subSubjects[ssk] = [];\n';
-html += '          merged[sk].subSubjects[ssk] = merged[sk].subSubjects[ssk].concat(ss[ssk]);\n';
+html += '    (function attempt(attemptNum) {\n';
+html += '      var xhr = new XMLHttpRequest();\n';
+html += '      xhr.timeout = 30000;\n';
+html += '      xhr.onload = function() {\n';
+html += '        if (xhr.status !== 200) {\n';
+html += '          if (attemptNum < 1) { setTimeout(function() { attempt(attemptNum + 1); }, 1000); return; }\n';
+html += '          onFail(); return;\n';
 html += '        }\n';
-html += '      }\n';
-html += '      loaded++;\n';
-html += '      if (loaded === files.length) {\n';
-html += '        var allKeys = Object.keys(merged);\n';
-html += '        if (allKeys.length > 1) {\n';
-html += '          var targetKey = CAT_INDEX[ci].subjects[0].name;\n';
-html += '          if (!merged[targetKey]) merged[targetKey] = { subSubjects: {} };\n';
-html += '          for (var ki = 0; ki < allKeys.length; ki++) {\n';
-html += '            if (allKeys[ki] === targetKey) continue;\n';
-html += '            var otherSS = merged[allKeys[ki]].subSubjects;\n';
-html += '            for (var ssk2 in otherSS) {\n';
-html += '              if (ssk2 === \'__proto__\' || ssk2 === \'constructor\') continue;\n';
-html += '              if (!merged[targetKey].subSubjects[ssk2]) merged[targetKey].subSubjects[ssk2] = [];\n';
-html += '              merged[targetKey].subSubjects[ssk2] = merged[targetKey].subSubjects[ssk2].concat(otherSS[ssk2]);\n';
-html += '            }\n';
+html += '        var data;\n';
+html += '        try { data = JSON.parse(xhr.responseText); } catch(e) {\n';
+html += '          if (attemptNum < 1) { setTimeout(function() { attempt(attemptNum + 1); }, 1000); return; }\n';
+html += '          onFail(); return;\n';
+html += '        }\n';
+html += '        for (var sk in data) {\n';
+html += '          if (!merged[sk]) merged[sk] = { subSubjects: {} };\n';
+html += '          var ss = data[sk].subSubjects;\n';
+html += '          for (var ssk in ss) {\n';
+html += '            if (ssk === \'__proto__\' || ssk === \'constructor\') continue;\n';
+html += '            if (!merged[sk].subSubjects[ssk]) merged[sk].subSubjects[ssk] = [];\n';
+html += '            merged[sk].subSubjects[ssk] = merged[sk].subSubjects[ssk].concat(ss[ssk]);\n';
 html += '          }\n';
 html += '        }\n';
-html += '        _cache[ci] = merged; cb();\n';
+html += '        loaded++;\n';
+html += '        if (loaded === files.length) {\n';
+html += '          var allKeys = Object.keys(merged);\n';
+html += '          if (allKeys.length > 1) {\n';
+html += '            var targetKey = CAT_INDEX[ci].subjects[0].name;\n';
+html += '            if (!merged[targetKey]) merged[targetKey] = { subSubjects: {} };\n';
+html += '            for (var ki = 0; ki < allKeys.length; ki++) {\n';
+html += '              if (allKeys[ki] === targetKey) continue;\n';
+html += '              var otherSS = merged[allKeys[ki]].subSubjects;\n';
+html += '              for (var ssk2 in otherSS) {\n';
+html += '                if (ssk2 === \'__proto__\' || ssk2 === \'constructor\') continue;\n';
+html += '                if (!merged[targetKey].subSubjects[ssk2]) merged[targetKey].subSubjects[ssk2] = [];\n';
+html += '                merged[targetKey].subSubjects[ssk2] = merged[targetKey].subSubjects[ssk2].concat(otherSS[ssk2]);\n';
+html += '              }\n';
+html += '            }\n';
+html += '          }\n';
+html += '          _cache[ci] = merged; cb();\n';
+html += '        }\n';
+html += '      };\n';
+html += '      xhr.onerror = function() { if (attemptNum < 1) { setTimeout(function() { attempt(attemptNum + 1); }, 1000); } else { onFail(); } };\n';
+html += '      xhr.ontimeout = function() { if (attemptNum < 1) { setTimeout(function() { attempt(attemptNum + 1); }, 1000); } else { onFail(); } };\n';
+html += '      xhr.open(\'GET\', url, true);\n';
+html += '      xhr.send();\n';
+html += '    })(0);\n';
+html += '    function onFail() {\n';
+html += '      if (!failed) {\n';
+html += '        failed = true;\n';
+html += '        _cache[ci] = {};\n';
+html += '        panel.innerHTML = \'<div class="loading" style="color:var(--red)">\u26a0\ufe0f Failed to load \' + CAT_INDEX[ci].name + \'. Check your connection and try again.</div>\';\n';
 html += '      }\n';
-html += '    };\n';
-html += '    xhr.onerror = function() { _cache[ci] = {}; cb(); };\n';
-html += '    xhr.open(\'GET\', url, true);\n';
-html += '    xhr.send();\n';
+html += '      cb();\n';
+html += '    }\n';
 html += '  });\n';
 html += '}\n';
 

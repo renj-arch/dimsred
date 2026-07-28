@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const WIKI_API = 'https://en.wikipedia.org/w/api.php';
-const QUIZ_PATH = 'data/quiz.json';
+const QUIZ_PATH = process.env.QUIZ_PATH || 'data/quiz.json';
 
 function log(msg) {
   try { fs.writeSync(1, msg + '\n'); } catch (e) { console.log(msg); }
@@ -25,7 +25,7 @@ function fetchJSON(url) {
 
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-async function fetchCategoryMembers(wikiCat, maxPages = 200) {
+async function fetchCategoryMembers(wikiCat, maxPages = 5000) {
   let pages = [], cmcontinue = '';
   let pageNum = 0;
   while (pages.length < maxPages) {
@@ -1365,12 +1365,12 @@ async function main() {
     let topics = [...cat.topics];
     if (cat.wikiCat) {
       log('  Fetching category members from Category:' + cat.wikiCat + '...');
-      const wikiTopics = await fetchCategoryMembers(cat.wikiCat, 150);
+      const wikiTopics = await fetchCategoryMembers(cat.wikiCat, 2000);
       const existing = new Set(topics.map(t => t.toLowerCase()));
       const newTopics = wikiTopics.filter(t => !existing.has(t.toLowerCase()));
       if (newTopics.length) {
         log('  Auto-discovered ' + newTopics.length + ' topics from Category:' + cat.wikiCat);
-        topics = topics.concat(newTopics.slice(0, 100));
+        topics = topics.concat(newTopics.slice(0, 2000));
       }
     }
     catTopicMap[cat.name] = { cat, topics };
