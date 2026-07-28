@@ -13,8 +13,8 @@ async function rateLimit(minGapMs = 1500) {
   // Warm-up delay on first ever call: give IP a cooldown from previous workflow runs
   if (firstRequest) {
     firstRequest = false;
-    console.log(`  🕐 initial cooldown 15s...`);
-    await new Promise(r => setTimeout(r, 15000));
+    console.log(`  🕐 initial cooldown 3s...`);
+    await new Promise(r => setTimeout(r, 3000));
     lastRequestTime = Date.now();
     return;
   }
@@ -27,7 +27,7 @@ async function rateLimit(minGapMs = 1500) {
 }
 
 async function httpGet(url, retries = 8) {
-  await rateLimit(2000);
+  await rateLimit(500);
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const result = await new Promise((resolve, reject) => {
