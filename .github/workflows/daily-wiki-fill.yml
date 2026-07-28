@@ -214,7 +214,7 @@ jobs:
 
   # ── Finalize: commit wiki+feed data, advance progress, self-trigger ──
   finalize:
-    needs: [merge]
+    needs: [merge, feeds]
     if: always() && needs.merge.result == 'success'
     runs-on: ubuntu-latest
     steps:
