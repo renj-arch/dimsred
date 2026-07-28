@@ -110,25 +110,6 @@ jobs:
           WIKI_FILL_GROUP: ${{ needs.setup.outputs.group }}
           QUIZ_PATH: data/quiz-chunk-${{ matrix.chunk }}.json
 
-      - name: Push incremental per-category updates
-        run: |
-          CAT_SAVE="$RUNNER_TEMP/cat-save-${{ matrix.chunk }}"
-          mkdir -p "$CAT_SAVE"
-          cp data/questions/*.json "$CAT_SAVE/"
-          git checkout -- data/questions/
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          for i in 1 2 3 4 5; do
-            git pull --rebase 2>/dev/null || { git rebase --abort 2>/dev/null; git fetch; git checkout main; git reset --hard origin/main; }
-            node scripts/merge-category-files.js "$CAT_SAVE" data/questions 2>/dev/null || true
-            node scripts/build-archive-single.js 2>/dev/null || true
-            git add -A
-            if git diff --staged --quiet; then echo "No changes"; break; fi
-            git commit -m "Incremental chunk ${{ matrix.chunk }}"
-            git push && { echo "Push succeeded"; break; } || echo "Push $i failed"
-            sleep $(( RANDOM % 10 + 5 ))
-          done || true
-
       - uses: actions/upload-artifact@v4
         with:
           name: chunk-${{ matrix.chunk }}
@@ -164,6 +145,7 @@ jobs:
 
       - run: node scripts/merge-chunks.js
 
+      - run: node scripts/split-quiz-to-categories.js
       - run: node scripts/cleanup-questions.js
       - run: node scripts/dedup-sentence-flood.js
       - run: node scripts/build-archive-single.js
