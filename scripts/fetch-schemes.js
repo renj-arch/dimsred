@@ -13,7 +13,7 @@ function clean(v) {
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url, { agent: AGENT, headers: { 'User-Agent': 'SchemeBot/1.0' } }, function(res) {
+    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'SchemeBot/1.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -78,6 +78,34 @@ function eventKey(q) {
   return n(q.question || '').substring(0, 80) + '|' + n(q.answer || '');
 }
 
+var TEMPLATES = [
+  function(row, seq) {
+    var name = clean(row[0]);
+    var ministry = clean(row[2]);
+    var year = clean(row[3]);
+    var yrMatch = year.match(/\b(19|20)\d{2}\b/);
+    return makeQuestion('Which ' + ministry + ' scheme' + (yrMatch ? ' was launched in ' + yrMatch[0] : '') + '?', name, seq, 'Wikipedia - Government Schemes', '\uD83C\uDFE6', name + ' was launched in ' + year + ' under ' + ministry + '.');
+  },
+  function(row, seq) {
+    var name = clean(row[0]);
+    var description = clean(row[1]);
+    if (!description || description.length < 10) return null;
+    var shortDesc = description.substring(0, 100);
+    var lines = shortDesc.split(/[.\n]/);
+    var firstLine = lines[0].trim();
+    if (!firstLine || firstLine.length < 8) return null;
+    var qText = 'Which government scheme is described as: "' + firstLine + '"';
+    if (qText.length > 200) qText = qText.substring(0, 197) + '..."';
+    return makeQuestion(qText, name, seq, 'Wikipedia - Government Schemes', '\uD83C\uDFE6', name + ': ' + description.substring(0, 200));
+  },
+  function(row, seq) {
+    var name = clean(row[0]);
+    var sector = row.length > 4 ? clean(row[4]) : '';
+    if (!sector) return null;
+    return makeQuestion('Which government scheme falls under the ' + sector + ' sector?', name, seq, 'Wikipedia - Government Schemes', '\uD83C\uDFE6', name + ' falls under ' + sector + '.');
+  }
+];
+
 async function fetchSchemes(existingKeys, newQuestions, seq) {
   console.error('\n--- Government Schemes ---');
   try {
@@ -89,17 +117,13 @@ async function fetchSchemes(existingKeys, newQuestions, seq) {
         var row = t[ri];
         if (row.length < 4) continue;
         var name = clean(row[0]);
-        var ministry = clean(row[2]);
-        var year = clean(row[3]);
-        var sector = row.length > 4 ? clean(row[4]) : '';
         if (!name || name.length < 3 || name === 'Scheme' || name.length > 70) continue;
         if (name.match(/^\d/) || name.indexOf('Total') >= 0 || name.indexOf('Source') >= 0) continue;
 
-        var yrMatch = year.match(/\b(19|20)\d{2}\b/);
-
-        var qText = 'Which ' + ministry + ' scheme' + (yrMatch ? ' was launched in ' + yrMatch[0] : '') + '?';
-        var q = makeQuestion(qText, name, seq++, 'Wikipedia - Government Schemes', '\uD83C\uDFE6', name + ' (' + sector.trim() + ') was launched in ' + year + ' under ' + ministry + '.');
-        if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
+        for (var ti = 0; ti < TEMPLATES.length; ti++) {
+          var q = TEMPLATES[ti](row, seq++);
+          if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
+        }
       }
     });
     console.error('  ' + count + ' scheme questions added\n');

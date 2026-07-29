@@ -7,13 +7,13 @@ var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
 function clean(v) {
-  return v.replace(/&#160;/g, ' ').replace(/<[^>]+>/g, ' ').replace(/[[\d\s,\-]+]|&#91;[\d\s,\-]+&#93;/g, '').replace(/\s+/g, ' ').trim();
+  return v.replace(/&#160;/g, ' ').replace(/<[^>]+>/g, ' ').replace(/\[[\d\s,\-]+\]|&#91;[\d\s,\-]+&#93;/g, '').replace(/\s+/g, ' ').trim();
 }
 
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url, { agent: AGENT, headers: { 'User-Agent': 'BilateralBot/1.0' } }, function(res) {
+    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'BilateralBot/1.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -124,13 +124,6 @@ function hasDateColumn(t) {
     var hdr = t[hi];
     if (!hdr) continue;
     for (var ci = 0; ci < hdr.length; ci++) {
-      if (hdr[ci].indexOf('Year of Agreement') >= 0 || hdr[ci].indexOf('Agreement signed') >= 0) return false;
-    }
-  }
-  for (var hi = 0; hi < Math.min(2, t.length); hi++) {
-    var hdr = t[hi];
-    if (!hdr) continue;
-    for (var ci = 0; ci < hdr.length; ci++) {
       if (hdr[ci] === 'Date' || /^Date$/i.test(hdr[ci])) return true;
     }
   }
@@ -143,7 +136,6 @@ async function fetchRelations(existingKeys, newQuestions, seq) {
     var html = await fetchPage('Foreign_relations_of_India');
     var tables = extractWikiTables(html);
     if (tables.length === 0) { console.error('  No wikitables found\n'); return; }
-    // Use only the table with a "Date" column (diplomatic relations), skip "Year of Agreement" tables
     var relTable = null;
     for (var ti = 0; ti < tables.length; ti++) {
       if (hasDateColumn(tables[ti])) { relTable = tables[ti]; break; }
@@ -156,7 +148,7 @@ async function fetchRelations(existingKeys, newQuestions, seq) {
       var country = row[1];
       var date = row[2];
       var notes = row.length > 3 ? row[3] : '';
-      if (!country || country.length < 3 || country === 'Country' || country.indexOf('—') >= 0) continue;
+      if (!country || country.length < 3 || country === 'Country' || country.indexOf('\u2014') >= 0) continue;
       var yrMatch = date.match(/\b(19|20)\d{2}\b/);
       if (yrMatch && yrMatch[0] >= '1990') {
         var yr = yrMatch[0];
@@ -187,7 +179,6 @@ async function main() {
   if (!existing[CA_KEY].subSubjects[subKey]) existing[CA_KEY].subSubjects[subKey] = [];
 
   var existingKeys = {};
-  // Remove existing wrong questions from agreement table (bare-year dates)
   var beforeClean = existing[CA_KEY].subSubjects[subKey].length;
   existing[CA_KEY].subSubjects[subKey] = existing[CA_KEY].subSubjects[subKey].filter(function(q) {
     if (q.fact && q.type === 'fill_blank' && q.category === 'Current Affairs') {
