@@ -37,7 +37,7 @@ async function httpGet(url, retries = 8) {
           res.on('end', () => {
             if (res.statusCode === 429) return reject(Object.assign(new Error(d.slice(0, 200)), { status: 429 }));
             if (res.statusCode >= 400) return reject(Object.assign(new Error(d.slice(0, 200)), { status: res.statusCode }));
-            resolve(JSON.parse(d));
+            resolve(JSON.parse(d.replace(/[\x00-\x1F]/g, ' ')));
           });
         });
         req.on('error', reject);
@@ -114,7 +114,7 @@ async function httpPost(url, data, retries = 8) {
           res.on('end', () => {
             if (res.statusCode === 429) return reject(Object.assign(new Error(d.slice(0, 200)), { status: 429 }));
             if (res.statusCode >= 400) return reject(Object.assign(new Error(d.slice(0, 200)), { status: res.statusCode }));
-            resolve(JSON.parse(d));
+            resolve(JSON.parse(d.replace(/[\x00-\x1F]/g, ' ')));
           });
         });
         req.on('error', reject);
