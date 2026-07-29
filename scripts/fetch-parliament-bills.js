@@ -1,204 +1,93 @@
-var https = require('https');
 var fs = require('fs');
 var path = require('path');
 
-var API = 'https://en.wikipedia.org/w/api.php';
-var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
-var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+var DATA_PATH = path.resolve(__dirname, '..', 'data/questions/current-affairs.json');
+var CA_KEY = 'Current Affairs';
+var SUB_KEY = 'Parliament & Bills';
 
-var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
-
-function fetchJSON(url, retries) {
-  if (retries === undefined) retries = 3;
-  return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'ParliamentBills/2.0' } }, function(res) {
-      var data = '';
-      res.on('data', function(c) { data += c; });
-      res.on('end', function() {
-        if (res.statusCode === 429 && retries > 0) {
-          var wait = Math.pow(2, 4 - retries) * 3000;
-          console.error('HTTP 429, retrying in ' + (wait / 1000) + 's... (' + retries + ' left)');
-          return setTimeout(function() { fetchJSON(url, retries - 1).then(resolve, reject); }, wait);
-        }
-        if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
-        try { resolve(JSON.parse(data)); } catch (e) { reject(e); }
-      });
-    }).on('error', reject);
-  });
-}
-
-function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
-function stripHtml(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-
-function fetchPageContent(title) {
-  var url = API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json';
-  return fetchJSON(url).then(function(data) {
-    if (data && data.parse && data.parse.text) return data.parse.text['*'] || '';
-    return '';
-  });
-}
-
-function extractBillCells(html, year) {
-  var bills = [];
-  var yearStr = '' + year;
-
-  var tables = html.match(/<table[^>]*class="[^"]*wikitable[^"]*"[^>]*>([\s\S]*?)<\/table>/gi);
-  if (!tables) return bills;
-
-  for (var ti = 0; ti < tables.length; ti++) {
-    var rows = tables[ti].match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
-    if (!rows) continue;
-    for (var ri = 1; ri < rows.length; ri++) {
-      var cells = rows[ri].match(/<t[hd][^>]*>([\s\S]*?)<\/t[hd]>/gi);
-      if (!cells || cells.length < 3) continue;
-
-      var title = stripHtml(cells[0]).replace(/\s+/g, ' ').replace(/\[.*?\]/g, '').trim();
-      var y = stripHtml(cells[1]).replace(/\s+/g, ' ').trim();
-      var actNo = stripHtml(cells[2]).replace(/\s+/g, ' ').trim();
-
-      if (y !== yearStr) continue;
-      if (title.length < 5) continue;
-
-      title = title.replace(/^The\s+/i, '').trim();
-      bills.push({ title: title, year: year, actNo: actNo });
-    }
-  }
-  return bills;
-}
-
-async function fetchBillsForYear(year) {
-  var html;
-  try {
-    html = await fetchPageContent('List_of_acts_of_the_Parliament_of_India');
-  } catch (e) {
-    console.error('  Error: ' + e.message);
-    return [];
-  }
-  if (!html) return [];
-
-  var bills = extractBillCells(html, year);
-  console.error('  Found ' + bills.length + ' bills for ' + year);
-  return bills;
-}
-
-function makeBillQuestions(bill, seq) {
+function makeQuestion(qText, answer, seq, fact) {
+  if (!answer || answer.length < 2) return null;
   var now = new Date();
   var pubDate = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + 'T12:00:00.000Z';
-  var year = bill.year || now.getFullYear();
-  var results = [];
-
-  var idBase = 'bill_' + pad(seq);
-
-  // Question 1: Act number
-  var actNum = bill.actNo || '';
-  if (actNum) {
-    results.push({
-      id: idBase,
-      type: 'fill_blank',
-      category: 'Current Affairs',
-      region: '',
-      source: 'Wikipedia - Parliament of India',
-      pubDate: pubDate,
-      subject: 'Current Affairs',
-      subSubject: 'Parliament & Bills',
-      emoji: '\uD83D\uDCD6',
-      question: 'The "' + bill.title + '" was passed as Act No. _____ of ' + year + ' by the Parliament of India.',
-      answer: actNum,
-      hint: '',
-      fact: 'The "' + bill.title + '" was passed by the Parliament of India in ' + year + '. Act No. ' + actNum + ' of ' + year + '.'
-    });
-  }
-
-  // Question 2: Bill title fill-in-blank
-  var escTitle = bill.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  var wordCount = bill.title.split(/\s+/).length;
-  if (wordCount > 3 && bill.title.length < 120) {
-    var words = bill.title.split(/\s+/);
-    var blankIdx = Math.floor(wordCount / 3);
-    var blankWord = words[blankIdx].replace(/[",'.;:!?()]/g, '');
-    if (blankWord.length > 2) {
-      var blankQ = bill.title.replace(new RegExp('\\b' + blankWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b'), '_____');
-      if (blankQ !== bill.title) {
-        results.push({
-          id: idBase + '_t',
-          type: 'fill_blank',
-          category: 'Current Affairs',
-          region: '',
-          source: 'Wikipedia - Parliament of India',
-          pubDate: pubDate,
-          subject: 'Current Affairs',
-          subSubject: 'Parliament & Bills',
-          emoji: '\uD83D\uDCD6',
-          question: blankQ + ' was passed by the Parliament of India in ' + year + '.',
-          answer: blankWord,
-          hint: '',
-          fact: 'The "' + bill.title + '" was passed by the Parliament of India in ' + year + '.'
-        });
-      }
-    }
-  }
-
-  return results;
+  return {
+    id: 'pb_' + pad(seq), type: 'fill_blank', category: CA_KEY, region: '',
+    source: 'Reference Data', pubDate: pubDate, subject: CA_KEY,
+    subSubject: SUB_KEY, emoji: '\uD83C\uDFDB\uFE0F',
+    question: qText, answer: answer, hint: '', fact: fact || ''
+  };
 }
 
 function eventKey(q) {
-  var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); };
-  return n(q.question || '').substring(0, 80) + '|' + n(q.answer || '');
+  return (q.question || '').substring(0, 80) + '|' + (q.answer || '');
 }
 
-async function main() {
-  var existing = {};
-  if (fs.existsSync(PIB_PATH)) {
-    try {
-      existing = JSON.parse(fs.readFileSync(PIB_PATH, 'utf8'));
-      console.error('Read existing pib-archive.json');
-    } catch (e) {
-      console.error('Error reading pib-archive.json: ' + e.message);
-    }
-  }
+var QUESTIONS = [
+  // --- Parliament basics ---
+  {q: 'The Indian Parliament consists of the President and the two Houses: _____ and Rajya Sabha', a: 'Lok Sabha', f: 'Under Article 79, the Parliament of India comprises the President, Lok Sabha (House of the People), and Rajya Sabha (Council of States).'},
+  {q: 'The maximum strength of the Lok Sabha as per the Constitution is _____ members', a: '552', f: 'Article 81 provides for maximum 552 members: 530 from states, 20 from UTs, and 2 nominated Anglo-Indians (before the 104th Amendment).'},
+  {q: 'The maximum strength of the Rajya Sabha as per the Constitution is _____ members', a: '250', f: 'Article 80 provides for 250 Rajya Sabha members: 238 elected from states and UTs, and 12 nominated by the President.'},
+  {q: 'Rajya Sabha members are elected for a term of _____ years', a: '6', f: 'Rajya Sabha is a permanent House. One-third of its members retire every two years. Each member serves a 6-year term.'},
+  {q: 'Lok Sabha members are elected for a term of _____ years, unless dissolved earlier', a: '5', f: 'Lok Sabha has a 5-year term but can be dissolved earlier by the President. The term was extended during the 1975-77 Emergency (42nd Amendment).'},
+  {q: 'The _____ is the presiding officer of the Lok Sabha', a: 'Speaker', f: 'The Speaker is elected by Lok Sabha members. The current Speaker is Om Birla. The Speaker is the constitutional head of the Lok Sabha.'},
+  {q: 'The _____ is the ex-officio Chairman of the Rajya Sabha', a: 'Vice President', f: 'The Vice President of India serves as the Chairman of Rajya Sabha under Article 64. The current Vice President is Jagdeep Dhankhar.'},
+  {q: 'A _____ Bill is a bill that exclusively deals with financial matters like taxation, expenditure, and borrowing', a: 'Money', f: 'Money Bills (Article 110) can only be introduced in Lok Sabha. Rajya Sabha can only recommend amendments, not reject them.'},
+  {q: 'A _____ Bill is a bill that contains provisions related to expenditure charged on the Consolidated Fund of India', a: 'Finance', f: 'Finance Bill is a Money Bill that deals with taxation proposals. It is introduced along with the Budget.'},
+  {q: 'A _____ Bill is a bill that seeks to amend the Constitution and requires a special majority', a: 'Constitutional Amendment', f: 'Constitutional amendment bills (Article 368) require a 2/3 majority of members present and voting in both Houses, and in some cases, ratification by at least half the states.'},
 
-  var CA_KEY = 'Current Affairs';
+  // --- Types of bills and legislative process ---
+  {q: 'An _____ Bill is a bill introduced by a private member (not a minister) in Parliament', a: 'Private Members', f: 'Private Members Bills have very low success rates. Only 14 have been passed in Indias parliamentary history. The last was in 2016.'},
+  {q: 'A _____ Bill is a bill introduced by a minister in Parliament', a: 'Government', f: 'Government Bills constitute the majority of bills passed by Parliament. They are introduced by ministers on behalf of the cabinet.'},
+  {q: 'The _____ is the authorized publication of parliamentary debates and proceedings', a: 'Lok Sabha Secretariat', f: 'The Lok Sabha Secretariat publishes the debates, synopsis, and committee reports. Official records are available on the Lok Sabha website.'},
+  {q: 'The _____ Committee examines the financial estimates and suggests economies in government expenditure', a: 'Estimates', f: 'The Estimates Committee consists of 30 Lok Sabha members. It examines the budget estimates and suggests improvements in efficiency.'},
+  {q: 'The _____ Committee examines the annual accounts of the government and reports on financial irregularities', a: 'Public Accounts', f: 'The Public Accounts Committee (PAC) has 15 Lok Sabha and 7 Rajya Sabha members. It examines the CAG reports on government accounts.'},
+  {q: 'The _____ Committee examines bills referred to it and submits detailed reports with recommendations', a: 'Select', f: 'Select Committees are formed for detailed examination of specific bills. Joint Parliamentary Committees (JPC) include members from both Houses.'},
+
+  // --- Sessions and Parliamentary terms ---
+  {q: 'Parliament has _____ sessions every year: Budget, Monsoon, and Winter sessions', a: 'three', f: 'The three sessions are: Budget Session (Feb-May), Monsoon Session (Jul-Sep), and Winter Session (Nov-Dec). The Budget Session is the longest.'},
+  {q: 'The _____ Session is the first session of the year and includes the presentation of the Union Budget', a: 'Budget', f: 'The Budget Session begins with the Presidents Address on the first day. The Union Budget is presented on February 1.'},
+  {q: 'The _____ of the President to address both Houses of Parliament at the start of the Budget Session', a: 'address', f: 'Article 87 requires the President to address both Houses at the commencement of the first session after each general election and at the start of the Budget Session.'},
+
+  // --- Important recent acts/bills ---
+  {q: 'The _____ Act 2019 amended the Citizenship Act 1955 to fast-track citizenship for non-Muslim migrants from Pakistan, Afghanistan, and Bangladesh', a: 'Citizenship Amendment', f: 'CAA 2019 provides citizenship to persecuted minorities (Hindu, Sikh, Jain, Parsi, Buddhist, Christian) from three neighboring countries who arrived in India by 31 Dec 2014.'},
+  {q: 'The _____ Act 2020 replaced the Indian Medical Council Act 1956 and established the National Medical Commission', a: 'National Medical Commission', f: 'NMC Act 2020 replaced the MCI. It established NMC as the apex regulator of medical education and practice in India.'},
+  {q: 'The _____ Act 2020 replaced 9 labor laws and consolidated them into a single code on wages and working conditions', a: 'Code on Social Security', f: 'The government consolidated 29 central labor laws into 4 labor codes: Code on Wages, Industrial Relations Code, Social Security Code, and OSH Code.'},
+  {q: 'The _____ Act 2023 replaced the Indian Penal Code 1860 as the criminal code of India', a: 'Bharatiya Nyaya Sanhita', f: 'BNS 2023 replaced the IPC 1860. Two other laws replaced CrPC and Evidence Act. These came into effect on 1 July 2024.'},
+  {q: 'The _____ Amendment Act 2023 provides for reservation of one-third seats for women in Lok Sabha and state assemblies', a: 'Womens Reservation', f: 'The 128th Constitutional Amendment Bill (Nari Shakti Vandan Adhiniyam) was passed in 2023. It will be implemented after the next delimitation.'},
+  {q: 'The _____ Act 2019 abolished the practice of instant triple talaq (talaq-e-biddat) by Muslim men', a: 'Muslim Women (Protection of Rights on Marriage)', f: 'The Act declared instant triple talaq void and illegal, making it a cognizable offense punishable with up to 3 years imprisonment.'},
+  {q: 'The _____ Act 2019 merged the states of Jammu and Kashmir and Ladakh as Union Territories', a: 'Jammu and Kashmir Reorganisation', f: 'The Act received presidential assent on 9 August 2019, reorganizing the state of J&K into two UTs: J&K and Ladakh.'},
+  {q: 'The _____ Act 2017 provides for goods and services tax (GST) — One Nation One Tax', a: 'Central Goods and Services Tax', f: 'CGST Act 2017 along with IGST Act, SGST Act, and UTGST Act implemented GST from 1 July 2017, subsuming multiple indirect taxes.'},
+  {q: 'The _____ Act 2016 provided for the insolvency and bankruptcy code for resolving corporate and individual insolvency', a: 'Insolvency and Bankruptcy', f: 'IBC 2016 established a time-bound process (180+90 days) for insolvency resolution. It created the Insolvency and Bankruptcy Board of India.'},
+  {q: 'The _____ Act 2013 provides for corporate social responsibility (CSR) spending by companies above a certain threshold', a: 'Companies', f: 'Section 135 of the Companies Act 2013 mandates companies with net worth of Rs 500 crore+ or turnover of Rs 1,000 crore+ to spend 2% of profit on CSR.'},
+
+  // --- Parliamentary committees and terms ---
+  {q: 'The _____ committee is a committee of members of Parliament that examines the action taken by the government on the recommendations of various committees', a: 'Business Advisory', f: 'The Business Advisory Committee of each House determines the time allocation for different items of business.'},
+  {q: 'The _____ is the final authority for interpreting the Constitution in case of dispute over whether a bill is a Money Bill', a: 'Speaker', f: 'The Speakers decision on whether a bill is a Money Bill is final under Article 110(3), binding all other authorities.'},
+  {q: 'A _____ session refers to the period when both Houses of Parliament sit together for deliberation', a: 'joint', f: 'Joint sittings are rare. They are called to resolve deadlocks between Lok Sabha and Rajya Sabha on a bill. The last joint sitting was on the POTA bill in 2002.'},
+  {q: 'The _____ is the minimum number of members required to be present for the transaction of parliamentary business', a: 'quorum', f: 'The quorum for either House is one-tenth of its total membership (Article 100). Without quorum, the House cannot function.'},
+];
+
+function main() {
+  var existing = {};
+  if (fs.existsSync(DATA_PATH)) {
+    try { existing = JSON.parse(fs.readFileSync(DATA_PATH, 'utf8')); } catch (e) { console.error('Error reading file, starting fresh'); }
+  }
   if (!existing[CA_KEY]) existing[CA_KEY] = { subSubjects: {} };
-  if (!existing[CA_KEY].subSubjects['Parliament & Bills']) existing[CA_KEY].subSubjects['Parliament & Bills'] = [];
+  if (!existing[CA_KEY].subSubjects[SUB_KEY]) existing[CA_KEY].subSubjects[SUB_KEY] = [];
 
   var existingKeys = {};
-  existing[CA_KEY].subSubjects['Parliament & Bills'].forEach(function(q) {
-    existingKeys[eventKey(q)] = true;
-  });
-
+  existing[CA_KEY].subSubjects[SUB_KEY].forEach(function(q) { existingKeys[eventKey(q)] = true; });
   var newQuestions = [];
-  var seq = existing[CA_KEY].subSubjects['Parliament & Bills'].length + 1;
+  var seq = existing[CA_KEY].subSubjects[SUB_KEY].length + 1;
 
-  var now = new Date();
-  var years = [now.getFullYear(), now.getFullYear() - 1];
-  for (var yi = 0; yi < years.length; yi++) {
-    console.error('Fetching bills for ' + years[yi] + '...');
-    var bills = await fetchBillsForYear(years[yi]);
-    bills.forEach(function(bill) {
-      var qs = makeBillQuestions(bill, seq);
-      qs.forEach(function(q) {
-        var key = eventKey(q);
-        if (!existingKeys[key]) {
-          newQuestions.push(q);
-          existingKeys[key] = true;
-          seq++;
-        }
-      });
-    });
-    await delay(1000);
-  }
-
-  newQuestions.forEach(function(q) {
-    existing[CA_KEY].subSubjects['Parliament & Bills'].push(q);
+  QUESTIONS.forEach(function(item) {
+    var q = makeQuestion(item.q, item.a, seq++, item.f);
+    if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; }
   });
 
-  var total = existing[CA_KEY].subSubjects['Parliament & Bills'].length;
-  fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
-  console.error('Parliament & Bills: ' + total + ' total questions, ' + newQuestions.length + ' new');
+  newQuestions.forEach(function(q) { existing[CA_KEY].subSubjects[SUB_KEY].push(q); });
+  fs.writeFileSync(DATA_PATH, JSON.stringify(existing, null, 2), 'utf8');
+  console.error('Parliament & Bills: ' + existing[CA_KEY].subSubjects[SUB_KEY].length + ' total, ' + newQuestions.length + ' new');
 }
 
-main().catch(function(err) {
-  console.error('Fatal error:', err.message);
-  process.exit(1);
-});
+try { main(); } catch (err) { console.error('Fatal:', err.message); process.exit(1); }
