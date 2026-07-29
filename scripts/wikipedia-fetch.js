@@ -139,6 +139,21 @@ function sparql(query) {
   return httpPost('https://query.wikidata.org/sparql', `format=json&query=${encodeURIComponent(query)}`);
 }
 
+async function sparqlBatch(queryTemplate, qidArray, batchSize = 500) {
+  const allBindings = [];
+  for (let i = 0; i < qidArray.length; i += batchSize) {
+    const batch = qidArray.slice(i, i + batchSize);
+    const q = queryTemplate.replace('QIDS', batch.map(q => `wd:${q}`).join(' '));
+    try {
+      const result = await sparql(q);
+      if (result?.results?.bindings) allBindings.push(...result.results.bindings);
+    } catch (e) {
+      console.log(`  ⚠ SPARQL batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(qidArray.length / batchSize)} failed: ${e.message}`);
+    }
+  }
+  return { results: { bindings: allBindings } };
+}
+
 async function wikiSummary(title) {
   if (!title) return null;
   try {
@@ -848,13 +863,15 @@ async function processCat(cat, dedupSet) {
 
   let sparqlResult;
   try {
-    const qidList = valid.map(([, q]) => `wd:${q}`).join(' ');
+    const qidValues = valid.map(([, q]) => q);
+    const batchQids = (list) => list.map(q => `wd:${q}`).join(' ');
     let q;
     if (cat.coordSparql) {
-      q = cat.coordSparql.replace('QIDS', qidList);
+      const template = cat.coordSparql;
+      sparqlResult = await sparqlBatch(template, qidValues);
     } else {
       q = `SELECT ?item ?itemLabel ?coord ?country ?countryLabel ?stateLabel WHERE {
-      VALUES ?item { ${qidList} }
+      VALUES ?item { QIDS }
       OPTIONAL { ?item wdt:P625 ?c1. }
       OPTIONAL { ?item wdt:P19/wdt:P625 ?c2. }
       OPTIONAL { ?item wdt:P20/wdt:P625 ?c3. }
@@ -865,8 +882,8 @@ async function processCat(cat, dedupSet) {
       OPTIONAL { ?item wdt:P131 ?state. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
     }`;
+      sparqlResult = await sparqlBatch(q, qidValues);
     }
-    sparqlResult = await sparql(q);
   } catch (e) { console.log(`  ✗ SPARQL failed: ${e.message}`); return []; }
 
   const coordMap = new Map();
@@ -890,15 +907,15 @@ async function processCat(cat, dedupSet) {
   // Universal fallback: for items still without coords, P17 country lookup + default
   const missing = valid.filter(([, qid]) => !coordMap.has(qid));
   if (missing.length > 0) {
-    const missingQids = missing.map(([, q]) => `wd:${q}`).join(' ');
+    const missingQids = missing.map(([, q]) => q);
     console.log(`  No coord for ${missing.length} items, trying P17 fallback...`);
     try {
       const fallbackQ = `SELECT ?item ?country ?countryLabel WHERE {
-        VALUES ?item { ${missingQids} }
+        VALUES ?item { QIDS }
         ?item wdt:P17 ?country.
         SERVICE wikibase:label { bd:serviceParam wikibase:language 'en'. }
       }`;
-      const fbResult = await sparql(fallbackQ);
+      const fbResult = await sparqlBatch(fallbackQ, missingQids);
       const countryQidSet = new Set();
       const itemCountryMap = new Map();
       for (const b of fbResult.results.bindings) {
@@ -909,10 +926,10 @@ async function processCat(cat, dedupSet) {
       }
       if (countryQidSet.size > 0) {
         const countryCoordQ = `SELECT ?country ?coord WHERE {
-          VALUES ?country { ${[...countryQidSet].map(q => `wd:${q}`).join(' ')} }
+          VALUES ?country { QIDS }
           ?country wdt:P625 ?coord.
         }`;
-        const ccResult = await sparql(countryCoordQ);
+        const ccResult = await sparqlBatch(countryCoordQ, [...countryQidSet]);
         const countryCoordMap = new Map();
         for (const b of ccResult.results.bindings) {
           const cqid = b.country.value.split('/').pop();
