@@ -10,7 +10,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
 function fetchJSON(url) {
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'GlobalRankings/2.0' } }, function(res) {
+    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'GlobalRankings/3.0' } }, function(res) {
       var data = '';
       res.on('data', function(c) { data += c; });
       res.on('end', function() {
@@ -27,13 +27,14 @@ function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function fetchJSONWithRetry(url, retries) {
   retries = retries || 3;
   return fetchJSON(url).catch(function(err) {
-    if (retries > 0 && (err.message.indexOf('429') >= 0 || err.message.indexOf('429') >= 0)) {
+    if (retries > 0 && (err.message.indexOf('429') >= 0)) {
       console.error('  429, retrying after 3s... (' + retries + ' left)');
       return delay(3000).then(function() { return fetchJSONWithRetry(url, retries - 1); });
     }
     throw err;
   });
 }
+
 function stripHtml(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
@@ -78,12 +79,16 @@ function findIndiaRankInTable(html) {
       var cells = rows[ri].match(/<t[hd][^>]*>([\s\S]*?)<\/t[hd]>/gi);
       if (!cells || cells.length < 2) continue;
 
-      var firstCell = stripHtml(cells[0]).replace(/\s+/g, ' ').trim();
-      if (firstCell.toLowerCase().indexOf('india') < 0) continue;
+      var indiaRow = false;
+      for (var ci = 0; ci < cells.length; ci++) {
+        var cellText = stripHtml(cells[ci]).replace(/\s+/g, ' ').trim();
+        if (cellText.toLowerCase().indexOf('india') >= 0) { indiaRow = true; break; }
+      }
+      if (!indiaRow) continue;
 
       var rankVal = '';
-      for (var ci = 1; ci < cells.length; ci++) {
-        var val = stripHtml(cells[ci]).replace(/\s+/g, ' ').replace(/\[.*?\]/g, '').trim();
+      for (var ci2 = 0; ci2 < cells.length; ci2++) {
+        var val = stripHtml(cells[ci2]).replace(/\s+/g, ' ').replace(/\[.*?\]/g, '').trim();
         var numM = val.match(/(\d+)/);
         if (numM) {
           var n = parseInt(numM[1]);
@@ -111,21 +116,30 @@ var RANKINGS = [
   { page: 'Environmental_Performance_Index', name: 'Environmental Performance Index' },
   { page: 'Global_Terrorism_Index', name: 'Global Terrorism Index' },
   { page: 'World_Tourism_rankings', name: 'World Tourism Rankings' },
-  { page: 'World_Press_Freedom_Index', name: 'World Press Freedom Index' },
   { page: 'Global_Gender_Gap_Report', name: 'Global Gender Gap Index' },
   { page: 'Social_Progress_Index', name: 'Social Progress Index' },
   { page: 'World_Competitiveness_Ranking', name: 'IMD World Competitiveness' },
-  { page: 'Henley_Passport_Index', name: 'Henley Passport Index' }
+  { page: 'Henley_Passport_Index', name: 'Henley Passport Index' },
+  { page: 'Global_peace_index', name: 'Global Peace Index' },
+  { page: 'World_Justice_Project_Rule_of_Law_Index', name: 'World Justice Project Rule of Law Index' },
+  { page: 'Network_Readiness_Index', name: 'Network Readiness Index' },
+  { page: 'Sustainable_Development_Goals_Index', name: 'SDG Index' },
+  { page: 'Global_Slavery_Index', name: 'Global Slavery Index' },
+  { page: 'World_Press_Freedom_Index', name: 'World Press Freedom Index' },
+  { page: 'Travel_and_Tourism_Competitiveness_Report', name: 'Travel & Tourism Competitiveness Index' },
+  { page: 'Global_Retirement_Index', name: 'Global Retirement Index' },
+  { page: 'Energy_Transition_Index', name: 'Energy Transition Index' },
+  { page: 'Global_Financial_Centres_Index', name: 'Global Financial Centres Index' },
 ];
 
-function makeRankingQuestion(index, rank, seq) {
+function makeRankingQuestions(index, rank, seq) {
   var now = new Date();
   var pubDate = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + 'T12:00:00.000Z';
   var monthLabel = MONTHS[now.getMonth()] + ' ' + now.getFullYear();
-  var id = 'rank_' + pad(seq);
+  var results = [];
 
-  return {
-    id: id,
+  results.push({
+    id: 'rank_' + pad(seq),
     type: 'fill_blank',
     category: 'Current Affairs',
     region: '',
@@ -138,7 +152,9 @@ function makeRankingQuestion(index, rank, seq) {
     answer: rank,
     hint: '',
     fact: 'India ranks ' + rank + ' in the ' + index.name + '. This is an important global index for competitive exams.'
-  };
+  });
+
+  return results;
 }
 
 function eventKey(q) {
@@ -187,15 +203,15 @@ async function main() {
 
     if (rank) {
       console.error('  India rank: ' + rank);
-      var q = makeRankingQuestion(idx, rank, seq);
-      if (q) {
+      var qs = makeRankingQuestions(idx, rank, seq);
+      qs.forEach(function(q) {
         var key = eventKey(q);
         if (!existingKeys[key]) {
           newQuestions.push(q);
           existingKeys[key] = true;
           seq++;
         }
-      }
+      });
     } else {
       console.error('  Rank not found');
     }

@@ -11,7 +11,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'SummitsBot/1.0' } }, function(res) {
+    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'SummitsBot/2.0' } }, function(res) {
       var data = '';
       res.on('data', function(c) { data += c; });
       res.on('end', function() {
@@ -84,6 +84,69 @@ var SUMMITS = [
     questions: [
       { q: 'Which countries are members of the QUAD (Quadrilateral Security Dialogue)?', field: 'Members', type: 'members' }
     ]
+  },
+  {
+    page: '2025_United_Nations_Climate_Change_Conference',
+    label: 'COP30',
+    date: '2025',
+    emoji: '\uD83C\uDF0D',
+    questions: [
+      { q: 'The 2025 UN Climate Change Conference (COP30) was held in which country?', field: 'Host country', type: 'host' },
+      { q: 'The 2025 UN Climate Change Conference (COP30) was held in which city?', field: 'Cities', type: 'city' },
+      { q: 'Who was the president of COP30?', field: 'President', type: 'chair' }
+    ]
+  },
+  {
+    page: '19th_Non-Aligned_Movement_summit',
+    label: '2024 NAM Summit',
+    date: '2024',
+    emoji: '\uD83C\uDF0D',
+    questions: [
+      { q: 'The 19th Non-Aligned Movement summit was held in which country?', field: 'Host country', type: 'host' },
+      { q: 'The 19th Non-Aligned Movement summit was held in which city?', field: 'Cities', type: 'city' }
+    ]
+  },
+  {
+    page: '2025_ASEAN_Summit',
+    label: '2025 ASEAN Summit',
+    date: '2025',
+    emoji: '\uD83C\uDF0D',
+    questions: [
+      { q: 'The 2025 ASEAN summit was held in which country?', field: 'Host country', type: 'host' },
+      { q: 'The 2025 ASEAN summit was held in which city?', field: 'Cities', type: 'city' },
+      { q: 'What is the motto of the 2025 ASEAN summit?', field: 'Motto', type: 'motto' }
+    ]
+  },
+  {
+    page: '2025_SAARC_Summit',
+    label: '2025 SAARC Summit',
+    date: '2025',
+    emoji: '\uD83C\uDF0D',
+    questions: [
+      { q: 'The 2025 SAARC summit was held in which country?', field: 'Host country', type: 'host' },
+      { q: 'The 2025 SAARC summit was held in which city?', field: 'Cities', type: 'city' },
+      { q: 'Who was the chair of the 2025 SAARC summit?', field: 'Chair', type: 'chair' }
+    ]
+  },
+  {
+    page: '2026_BIMSTEC_Summit',
+    label: '2026 BIMSTEC Summit',
+    date: '2026',
+    emoji: '\uD83C\uDF0D',
+    questions: [
+      { q: 'The 2026 BIMSTEC summit was held in which country?', field: 'Host country', type: 'host' },
+      { q: 'The 2026 BIMSTEC summit was held in which city?', field: 'Cities', type: 'city' }
+    ]
+  },
+  {
+    page: '2025_India-Africa_Forum_Summit',
+    label: '2025 India-Africa Forum Summit',
+    date: '2025',
+    emoji: '\uD83C\uDF0D',
+    questions: [
+      { q: 'The 2025 India-Africa Forum Summit was held in which country?', field: 'Host country', type: 'host' },
+      { q: 'The 2025 India-Africa Forum Summit was held in which city?', field: 'Cities', type: 'city' }
+    ]
   }
 ];
 
@@ -95,12 +158,14 @@ function parseInfobox(html) {
   var rows = table.match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
   if (!rows) return data;
   for (var ri = 0; ri < rows.length; ri++) {
-    var labelMatch = rows[ri].match(/<th[^>]*class="[^"]*infobox-label[^"]*"[^>]*>([\s\S]*?)<\/th>/i);
-    var dataMatch = rows[ri].match(/<td[^>]*class="[^"]*infobox-data[^"]*"[^>]*>([\s\S]*?)<\/td>/i);
+    var labelMatch = rows[ri].match(/<th[^>]*>([\s\S]*?)<\/th>/i);
+    var dataMatch = rows[ri].match(/<td[^>]*>([\s\S]*?)<\/td>/i);
     if (labelMatch && dataMatch) {
       var label = strip(labelMatch[1]);
       var value = strip(dataMatch[1]);
-      data[label] = value;
+      if (label && value && label.length > 2 && value.length > 0) {
+        data[label] = value;
+      }
     }
   }
   return data;

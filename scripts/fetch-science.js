@@ -14,7 +14,7 @@ function clean(v) {
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url, { agent: AGENT, headers: { 'User-Agent': 'ScienceBot/1.0' } }, function(res) {
+    https.get(url, { agent: AGENT, headers: { 'User-Agent': 'ScienceBot/2.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -40,6 +40,26 @@ function fetchPage(title) {
 function extractWikiTables(html) {
   var tables = [];
   var tRegex = /<table[^>]*class="[^"]*wikitable[^"]*"[^>]*>([\s\S]*?)<\/table>/gi;
+  var m;
+  while ((m = tRegex.exec(html)) !== null) {
+    var rows = [];
+    var rRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
+    var rm;
+    while ((rm = rRegex.exec(m[1])) !== null) {
+      var cells = [];
+      var cRegex = /<t[hd][^>]*>([\s\S]*?)<\/t[hd]>/gi;
+      var cm;
+      while ((cm = cRegex.exec(rm[1])) !== null) cells.push(clean(cm[1]));
+      if (cells.length > 0) rows.push(cells);
+    }
+    if (rows.length > 1) tables.push(rows);
+  }
+  return tables;
+}
+
+function extractAnyTable(html) {
+  var tables = [];
+  var tRegex = /<table[^>]*>([\s\S]*?)<\/table>/gi;
   var m;
   while ((m = tRegex.exec(html)) !== null) {
     var rows = [];
@@ -90,10 +110,9 @@ async function fetchSatellites(existingKeys, newQuestions, seq) {
       if (t.length < 5 || t[0].length < 5) return;
       for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
-        if (row.length < 10) continue;  // Skip continuation rows (1970s table structure)
+        if (row.length < 5) continue;
         if (row[0] === '#' || row[0] === 'Name' || row[0].indexOf('Payload') >= 0) continue;
         var name = row[1] || row[0];
-        // Must be a real satellite name (contains letters, not SatCat number)
         if (!name || name.length < 3 || !name.match(/[A-Za-z]/) || name.indexOf('—') >= 0) continue;
         var launchDate = row.length > 6 ? row[6] : '';
         var vehicle = row.length > 7 ? row[7] : '';
@@ -118,7 +137,7 @@ async function fetchMissions(existingKeys, newQuestions, seq) {
     var tables = extractWikiTables(html);
     var count = 0;
     tables.forEach(function(t) {
-      for (var ri = 1; ri < Math.min(t.length, 25); ri++) {
+      for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
         if (row.length < 2) continue;
         var name = row[0];
@@ -127,7 +146,8 @@ async function fetchMissions(existingKeys, newQuestions, seq) {
         if (!name || name.length < 2 || name.match(/^[\d]+$/) || name === 'Mission name' || name.length > 50) continue;
         var yearMatch = date.match(/\b(19|20)\d{2}\b/);
         if (yearMatch && yearMatch[0] >= '2020') {
-          var qText = 'Which ISRO mission was launched in ' + yearMatch[0] + (status.indexOf('success') >= 0 ? ' (successful)' : '') + '?';
+          var statusOk = status.toLowerCase().indexOf('success') >= 0 || status.toLowerCase().indexOf('operational') >= 0;
+          var qText = 'Which ISRO mission was launched in ' + yearMatch[0] + (statusOk ? ' (successful)' : '') + '?';
           var q = makeQuestion(qText, name, seq++, 'Wikipedia - ISRO Missions', '\uD83D\uDE80', name + ' was launched on ' + date + '. Status: ' + status);
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
@@ -135,6 +155,38 @@ async function fetchMissions(existingKeys, newQuestions, seq) {
     });
     console.error('  ' + count + ' mission questions added\n');
   } catch (e) { console.error('  Error: ' + e.message + '\n'); }
+}
+
+async function fetchScienceAwards(existingKeys, newQuestions, seq) {
+  console.error('--- Science Awards ---');
+  var AWARD_PAGES = [
+    { page: 'Shanti_Swarup_Bhatnagar_Prize', label: 'SSB Prize', q: 'Who won the Shanti Swarup Bhatnagar Prize for Science and Technology in {year}?', emoji: '\uD83C\uDFC6' }
+  ];
+  var currentYear = new Date().getFullYear();
+  for (var ai = 0; ai < AWARD_PAGES.length; ai++) {
+    try {
+      var html = await fetchPage(AWARD_PAGES[ai].page);
+      var tables = extractAnyTable(html);
+      var awardCount = 0;
+      tables.forEach(function(t) {
+        for (var ri = 1; ri < t.length; ri++) {
+          var row = t[ri];
+          if (row.length < 2) continue;
+          var yearStr = (row[0] || '').match(/\b(2024|2025|2026)\b/);
+          if (!yearStr) continue;
+          var recipient = row.length > 1 ? row[1] : '';
+          recipient = recipient.replace(/\[.*?\]/g, '').replace(/\([^)]*\)/g, '').trim();
+          if (recipient.length > 2) {
+            var qText = AWARD_PAGES[ai].q.replace('{year}', yearStr[0]);
+            var q = makeQuestion(qText, recipient, seq++, 'Wikipedia - ' + AWARD_PAGES[ai].label, AWARD_PAGES[ai].emoji, recipient + ' won the ' + AWARD_PAGES[ai].label + ' in ' + yearStr[0] + '.');
+            if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; awardCount++; }
+          }
+        }
+      });
+      console.error('  ' + AWARD_PAGES[ai].label + ': ' + awardCount + ' added\n');
+      await delay(DELAY);
+    } catch (e) { console.error('  ' + AWARD_PAGES[ai].label + ' error: ' + e.message + '\n'); }
+  }
 }
 
 async function main() {
@@ -158,6 +210,9 @@ async function main() {
   seq += newQuestions.length;
   await delay(DELAY);
   await fetchMissions(existingKeys, newQuestions, seq);
+  seq += newQuestions.length;
+  await delay(DELAY);
+  await fetchScienceAwards(existingKeys, newQuestions, seq);
 
   newQuestions.forEach(function(q) { existing[CA_KEY].subSubjects[subKey].push(q); });
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');

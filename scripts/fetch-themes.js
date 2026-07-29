@@ -11,7 +11,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'ThemesBot/1.0' } }, function(res) {
+    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'ThemesBot/2.0' } }, function(res) {
       var data = '';
       res.on('data', function(c) { data += c; });
       res.on('end', function() {
@@ -31,8 +31,6 @@ function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
 function stripHtml(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
-// Known 2026 themes (verified from official UN/WHO sources)
-// Format: [dayName, date, emoji, wikipediaPage, knownTheme, hostCountry]
 var THEMES_2026 = [
   ['International Yoga Day', '21 June', '\uD83E\uDDD8', 'International Day of Yoga', 'Yoga for Healthy Ageing', ''],
   ['World Environment Day', '5 June', '\uD83C\uDF33', 'World Environment Day', 'Climate Action', 'Azerbaijan'],
@@ -68,6 +66,21 @@ var THEMES_2026 = [
   ['International Day of Light', '16 May', '\uD83D\uDCA1', 'International Day of Light', 'TBD', ''],
   ['World Braille Day', '4 January', '\uD83D\uDD0D', 'World Braille Day', 'TBD', ''],
   ['International Asteroid Day', '30 June', '\u2604', 'International Asteroid Day', 'TBD', ''],
+  ['National Voters\' Day', '25 January', '\uD83D\uDDF3', 'National Voters\' Day (India)', 'TBD', ''],
+  ['National Science Day', '28 February', '\uD83D\uDD2C', 'National Science Day (India)', 'TBD', ''],
+  ['National Sports Day', '29 August', '\uD83C\uDFC3', 'National Sports Day (India)', 'TBD', ''],
+  ['National Youth Day', '12 January', '\uD83E\uDDD1\u200D\uD83C\uDFEB', 'National Youth Day (India)', 'TBD', ''],
+  ['National Technology Day', '11 May', '\uD83D\uDCBB', 'National Technology Day (India)', 'TBD', ''],
+  ['National Education Day', '11 November', '\uD83D\uDCD6', 'National Education Day (India)', 'TBD', ''],
+  ['Constitution Day (India)', '26 November', '\uD83D\uDCDC', 'Constitution Day (India)', 'TBD', ''],
+  ['National Mathematics Day', '22 December', '\uD83D\uDD22', 'National Mathematics Day (India)', 'TBD', ''],
+  ['National Statistics Day', '29 June', '\uD83D\uDCCA', 'National Statistics Day (India)', 'TBD', ''],
+  ['National Panchayati Raj Day', '24 April', '\uD83C\uDFDB', 'National Panchayati Raj Day (India)', 'TBD', ''],
+  ['National Maritime Day', '5 April', '\u26F5', 'National Maritime Day (India)', 'TBD', ''],
+  ['National Farmers\' Day', '23 December', '\uD83C\uDF3E', 'National Farmers\' Day (India)', 'TBD', ''],
+  ['National Unity Day', '31 October', '\uD83E\uDD1D', 'National Unity Day (India)', 'TBD', ''],
+  ['National Doctors\' Day', '1 July', '\uD83E\uDD12', 'National Doctors\' Day (India)', 'TBD', ''],
+  ['National Postal Day', '10 October', '\u2709', 'National Postal Day (India)', 'TBD', ''],
 ];
 
 async function fetchWikiTheme(pageName) {
@@ -80,20 +93,22 @@ async function fetchWikiTheme(pageName) {
     var textLower = text.toLowerCase();
     var themeMatch = null;
 
-    // Pattern 1: "2026 theme: X" or "2026 – X"
-    var m1 = textLower.match(/2026[^.]{0,80}theme[:\s–-]+([^.]{10,300}\.)/);
+    var m1 = textLower.match(/2026[^.]{0,80}theme[:\s\u2013-]+([^.]{10,300}\.)/);
     if (m1) themeMatch = m1[1];
 
-    // Pattern 2: "theme for 2026: X"
     if (!themeMatch) {
-      var m2 = textLower.match(/theme\s+(?:for|of)\s+2026[:\s–-]+([^.]{10,300}\.)/);
+      var m2 = textLower.match(/theme\s+(?:for|of)\s+2026[:\s\u2013-]+([^.]{10,300}\.)/);
       if (m2) themeMatch = m2[1];
+    }
+
+    if (!themeMatch) {
+      var m3 = textLower.match(/theme[:\s\u2013-]+([^.]{10,300}\.)/);
+      if (m3 && m3[1].indexOf('2026') >= 0) themeMatch = m3[1];
     }
 
     if (themeMatch) {
       themeMatch = themeMatch.replace(/^["'\u201C\u201D]+/, '').replace(/["'\u201C\u201D]+$/, '').trim();
       themeMatch = themeMatch.charAt(0).toUpperCase() + themeMatch.slice(1);
-      // Reject obviously wrong matches
       var badPrefixes = ['for', 'the', 'a ', 'an ', 'has yet', 'to be', 'see also', 'this is'];
       for (var bi = 0; bi < badPrefixes.length; bi++) {
         if (themeMatch.toLowerCase().indexOf(badPrefixes[bi]) === 0) return null;
@@ -101,12 +116,19 @@ async function fetchWikiTheme(pageName) {
       if (themeMatch.length < 5 || themeMatch.length > 200) return null;
       return themeMatch;
     }
-    return null;
 
+    var patterns = [
+      /theme\s+(?:for\s+)?2026\s*(?:\u2013|:|\u2014)\s*["']?([^"'\n]{10,200})["']?/i,
+      /2026\s+(?:theme|slogan|topic)\s*(?:\u2013|:|\u2014)\s*["']?([^"'\n]{10,200})["']?/i
+    ];
     for (var pi = 0; pi < patterns.length; pi++) {
       var m = text.match(patterns[pi]);
-      if (m) return m[1].trim();
+      if (m) {
+        var ft = m[1].trim();
+        if (ft.length > 5 && ft.length < 200) return ft;
+      }
     }
+
     return null;
   } catch (e) {
     return null;
@@ -174,13 +196,12 @@ async function main() {
     var item = THEMES_2026[ti];
     process.stdout.write('  ' + item[0] + '... ');
 
-    // Try to fetch from Wikipedia to get updated theme
     var wikiTheme = await fetchWikiTheme(item[3]);
     if (wikiTheme && wikiTheme.length > 3 && wikiTheme.length < 200) {
       item[4] = wikiTheme;
       process.stdout.write('Wiki: "' + wikiTheme.substring(0, 60) + '..."');
     } else {
-      process.stdout.write('Known: "' + item[4].substring(0, 60) + '"');
+      process.stdout.write('Known: "' + (item[4] !== 'TBD' ? item[4].substring(0, 60) : 'TBD') + '"');
     }
 
     var q = makeThemeQuestion(item, seq);
