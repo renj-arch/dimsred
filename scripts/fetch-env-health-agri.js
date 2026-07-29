@@ -11,7 +11,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'EnvNewsBot/1.0' } }, function(res) {
+    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'EnvNewsBot/2.0' } }, function(res) {
       var data = '';
       res.on('data', function(c) { data += c; });
       res.on('end', function() {
@@ -56,10 +56,12 @@ function categorizeEnvEvent(text) {
   if (/renewable|solar|wind|green energy|clean energy|net zero/i.test(t) && /india/i.test(t)) return 'Environment & Climate';
   if (/flood|drought|cyclone|heatwave|landslide|natural disaster/i.test(t) && /india/i.test(t)) return 'Environment & Climate';
   if (/unfccc|ipcc|unep|environment\s+programme|world\s+environment/i.test(t)) return 'Environment & Climate';
+  if (/agriculture|farmer|crop|foodgrain|wheat|rice|paddy|kisan|mandi|fertiliser|irrigation|soil\s+health|msp|horticulture|dairy|fishery|organic\s+farming/i.test(t)) return 'Agriculture';
+  if (/health|hospital|doctor|patient|disease|ayushman|medicine|vaccine|pharma|drug|nutrition|wellness|healthcare|ayush|dengue|malaria|tuberculosis|covid|pandemic|epidemic|clinical\s+trial/i.test(t)) return 'Health';
   return null;
 }
 
-function makeQuestion(event, seq) {
+function makeQuestion(event, seq, cat) {
   var id = 'env_' + event.year + '_' + pad(event.month) + '_' + pad(seq);
   var pubDate = event.year + '-' + pad(event.month) + '-' + pad(event.day) + 'T12:00:00.000Z';
   var qText = event.text;
@@ -85,11 +87,11 @@ function makeQuestion(event, seq) {
     type: 'fill_blank',
     category: 'PIB',
     region: '',
-    source: 'Wikipedia Environment',
+    source: 'Wikipedia Current Events',
     pubDate: pubDate,
     subject: 'PIB Releases',
-    subSubject: 'Environment & Climate',
-    emoji: '\uD83C\uDF3F',
+    subSubject: cat,
+    emoji: cat === 'Agriculture' ? '\uD83C\uDF3E' : cat === 'Health' ? '\uD83C\uDFE5' : '\uD83C\uDF3F',
     question: blankText,
     answer: finalAnswer,
     hint: '',
@@ -222,7 +224,7 @@ async function main() {
       if (existingKeys[key]) return;
       existingKeys[key] = true;
       seqCounter.event++;
-      var q = makeQuestion({ year: y, month: m, day: day, text: ev.text, entity: entity }, seqCounter.event);
+      var q = makeQuestion({ year: y, month: m, day: day, text: ev.text, entity: entity }, seqCounter.event, cat);
       if (cat === 'Agriculture') newAgriQuestions.push(q);
       else if (cat === 'Health') newHealthQuestions.push(q);
       else newEnvQuestions.push(q);

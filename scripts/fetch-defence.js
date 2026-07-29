@@ -41,13 +41,6 @@ function fetchPageText(title) {
   });
 }
 
-function fetchSection(title, sectionIdx) {
-  return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&section=' + sectionIdx + '&prop=text&format=json').then(function(d) {
-    if (d && d.parse && d.parse.text) return d.parse.text['*'];
-    return '';
-  });
-}
-
 function extractWikiTables(html) {
   var tables = [];
   var tRegex = /<table[^>]*class="[^"]*wikitable[^"]*"[^>]*>([\s\S]*?)<\/table>/gi;
@@ -86,59 +79,67 @@ function eventKey(q) {
   return n(q.question || '').substring(0, 80) + '|' + n(q.answer || '');
 }
 
-async function fetchExercises(existingKeys, newQuestions, seq) {
-  console.error('\n--- Army Exercises ---');
-  try {
-    var html = await fetchPageText('List_of_exercises_of_the_Indian_Army');
-    var tables = extractWikiTables(html);
-    if (tables.length > 0) {
-      var t = tables[0];
+function extractExerciseTable(t) {
+  var recent = [];
+  var currentYear = 0;
+  for (var ri = 1; ri < t.length; ri++) {
+    var row = t[ri];
+    if (row.length < 2) continue;
+    if (row.length === 1 && row[0].match(/\b(19|20)\d{2}\b/)) {
+      currentYear = parseInt(row[0].match(/\b(19|20)\d{2}\b/)[0], 10);
+      continue;
+    }
+    if (row[0].match(/\b(19|20)\d{2}\b/)) {
+      var y = row[0].match(/\b(19|20)\d{2}\b/);
+      if (y) currentYear = parseInt(y[0], 10);
+      if (row.length < 3) continue;
+    }
+    var name = cleanVal(row[0]);
+    var partner = row.length > 1 ? cleanVal(row[1]) : '';
+    if (name.length < 2 || partner.length < 2) continue;
+    if (currentYear >= 2020) {
+      recent.push({ name: name, partner: partner, year: currentYear, force: '' });
+    }
+  }
+  return recent;
+}
+
+async function fetchExercises(existingKeys, newQuestions, seqObj) {
+  var pages = [
+    { title: 'List_of_exercises_of_the_Indian_Army', label: 'Army', force: 'Indian Army' },
+    { title: 'List_of_exercises_of_the_Indian_Air_Force', label: 'Air Force', force: 'Indian Air Force' }
+  ];
+  for (var pi = 0; pi < pages.length; pi++) {
+    var p = pages[pi];
+    console.error('\n--- ' + p.label + ' Exercises ---');
+    try {
+      var html = await fetchPageText(p.title);
+      var tables = extractWikiTables(html);
+      if (tables.length === 0) { console.error('  No wikitables found\n'); continue; }
       var recent = [];
-      var currentYear = 0;
-      for (var ri = 1; ri < t.length; ri++) {
-        var row = t[ri];
-        if (row.length < 2) continue;
-        // Colspan row marks the year group
-        if (row.length === 1 && row[0].match(/\b(19|20)\d{2}\b/)) {
-          currentYear = parseInt(row[0].match(/\b(19|20)\d{2}\b/)[0], 10);
-          continue;
-        }
-        // Some colspan rows have year with 'b' tags
-        if (row[0].match(/\b(19|20)\d{2}\b/)) {
-          var y = row[0].match(/\b(19|20)\d{2}\b/);
-          if (y) currentYear = parseInt(y[0], 10);
-          if (row.length < 3) continue;
-        }
-        var name = cleanVal(row[0]);
-        var partner = row.length > 1 ? cleanVal(row[1]) : '';
-        if (name.length < 2 || partner.length < 2) continue;
-        // Only recent exercises (2020 onwards)
-        if (currentYear >= 2020) {
-          recent.push({ name: name, partner: partner, year: currentYear });
-        }
+      for (var ti = 0; ti < tables.length; ti++) {
+        recent = recent.concat(extractExerciseTable(tables[ti]));
       }
-      // Take latest 10
       recent = recent.slice(0, 10);
       recent.forEach(function(ex) {
-        var qText = 'Which military exercise was conducted between India and ' + ex.partner + ' in recent years?';
-        var q = makeQuestion(qText, ex.name, seq++, 'Wikipedia - Army Exercises', '\uD83C\uDFC1', 'Exercise ' + ex.name + ' was conducted with ' + ex.partner + ' (' + ex.year + ').');
+        var qText = 'Which military exercise was conducted between India and ' + ex.partner + ' by the ' + p.force + ' in recent years?';
+        var q = makeQuestion(qText, ex.name, seqObj.seq++, 'Wikipedia - ' + p.label + ' Exercises', '\uD83C\uDFC1', 'Exercise ' + ex.name + ' (' + p.force + ') was conducted with ' + ex.partner + ' (' + ex.year + ').');
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; }
       });
       console.error('  ' + recent.length + ' exercises added\n');
-    } else console.error('  No wikitables found\n');
-  } catch (e) { console.error('  Error: ' + e.message + '\n'); }
+    } catch (e) { console.error('  Error: ' + e.message + '\n'); }
+    await delay(800);
+  }
 }
 
-async function fetchMissiles(existingKeys, newQuestions, seq) {
+async function fetchMissiles(existingKeys, newQuestions, seqObj) {
   console.error('--- Missiles of India ---');
   try {
     var html = await fetchPageText('Guided_missiles_of_India');
     var tables = extractWikiTables(html);
     var count = 0;
     tables.forEach(function(t) {
-      // Determine column structure from header row
       var hasFamily = t[0].length >= 9;
-
       for (var ri = 1; ri < Math.min(t.length, 30); ri++) {
         var row = t[ri];
         if (row.length < 3) continue;
@@ -147,11 +148,9 @@ async function fetchMissiles(existingKeys, newQuestions, seq) {
         var type = row.length > off + 1 ? cleanVal(row[off + 1]) : '';
         var range = row.length > off + 2 ? cleanVal(row[off + 2]) : '';
         var status = row.length > off + 6 ? cleanVal(row[off + 6]) : '';
-
         if (name.length < 2) continue;
-
         if (range && range.match(/\d+/)) {
-          var q = makeQuestion('What is the maximum range of the ' + name + ' missile?', range, seq++, 'Wikipedia - Missiles of India', '\uD83D\uDEE1', name + ' missile: Type=' + type + ', Range=' + range + ', Status=' + status);
+          var q = makeQuestion('What is the maximum range of the ' + name + ' missile?', range, seqObj.seq++, 'Wikipedia - Missiles of India', '\uD83D\uDEE1', name + ' missile: Type=' + type + ', Range=' + range + ', Status=' + status);
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }
@@ -160,7 +159,7 @@ async function fetchMissiles(existingKeys, newQuestions, seq) {
   } catch (e) { console.error('  Error: ' + e.message + '\n'); }
 }
 
-async function fetchAgniMissiles(existingKeys, newQuestions, seq) {
+async function fetchAgniMissiles(existingKeys, newQuestions, seqObj) {
   console.error('--- Agni Missile ---');
   try {
     var html = await fetchPageText('Agni_(missile)');
@@ -174,10 +173,9 @@ async function fetchAgniMissiles(existingKeys, newQuestions, seq) {
         var type = row.length > 1 ? strip(row[1]).replace(/\[.*?\]/g, '').trim() : '';
         var range = row.length > 2 ? strip(row[2]).replace(/\[.*?\]/g, '').trim() : '';
         var status = row.length > 3 ? strip(row[3]).replace(/\[.*?\]/g, '').trim() : '';
-
         if (range && range.match(/\d+/) && name.length > 2) {
           var cleanedRange = cleanVal(range);
-          var q = makeQuestion('What is the range of the ' + name + ' missile?', cleanedRange, seq++, 'Wikipedia - Agni Missile', '\uD83D\uDEE1', name + ': Type=' + type + ', Range=' + cleanedRange + ', Status=' + status);
+          var q = makeQuestion('What is the range of the ' + name + ' missile?', cleanedRange, seqObj.seq++, 'Wikipedia - Agni Missile', '\uD83D\uDEE1', name + ': Type=' + type + ', Range=' + cleanedRange + ', Status=' + status);
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }
@@ -201,19 +199,13 @@ async function main() {
   existing[CA_KEY].subSubjects['Defence & Exercises'].forEach(function(q) { existingKeys[eventKey(q)] = true; });
 
   var newQuestions = [];
-  var seq = existing[CA_KEY].subSubjects['Defence & Exercises'].length + 1;
+  var seqObj = { seq: existing[CA_KEY].subSubjects['Defence & Exercises'].length + 1 };
 
-  await fetchExercises(existingKeys, newQuestions, seq);
-  seq += newQuestions.length;
+  await fetchExercises(existingKeys, newQuestions, seqObj);
   await delay(800);
-
-  await fetchMissiles(existingKeys, newQuestions, seq);
-  seq += newQuestions.length - (newQuestions.filter(function(q) { return q.id.indexOf('def_missile') >= 0; }).length || 0);
-  // Actually seq tracking is rough -- let's just use a running counter
-  var runningSeq = existing[CA_KEY].subSubjects['Defence & Exercises'].length + 1 + newQuestions.length;
-
+  await fetchMissiles(existingKeys, newQuestions, seqObj);
   await delay(800);
-  await fetchAgniMissiles(existingKeys, newQuestions, runningSeq);
+  await fetchAgniMissiles(existingKeys, newQuestions, seqObj);
 
   newQuestions.forEach(function(q) {
     existing[CA_KEY].subSubjects['Defence & Exercises'].push(q);

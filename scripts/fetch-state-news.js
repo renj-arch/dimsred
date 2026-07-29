@@ -312,7 +312,7 @@ function generateSeedQuestions(seqCounter) {
     'Jammu and Kashmir': 'Omar Abdullah',
     'Jharkhand': 'Hemant Soren',
     'Karnataka': 'Siddaramaiah',
-    'Kerala': 'V. D. Satheesan',
+    'Kerala': 'Pinarayi Vijayan',
     'Madhya Pradesh': 'Mohan Yadav',
     'Maharashtra': 'Devendra Fadnavis',
     'Manipur': 'Yumnam Khemchand Singh',
@@ -324,12 +324,12 @@ function generateSeedQuestions(seqCounter) {
     'Punjab': 'Bhagwant Mann',
     'Rajasthan': 'Bhajan Lal Sharma',
     'Sikkim': 'Prem Singh Tamang',
-    'Tamil Nadu': 'C Joseph Vijay',
+    'Tamil Nadu': 'M. K. Stalin',
     'Telangana': 'Revanth Reddy',
     'Tripura': 'Manik Saha',
     'Uttar Pradesh': 'Yogi Adityanath',
     'Uttarakhand': 'Pushkar Singh Dhami',
-    'West Bengal': 'Suvendu Adhikari'
+    'West Bengal': 'Mamata Banerjee'
   };
   var stateGovs = {
     'Andhra Pradesh': 'S. Abdul Nazeer',

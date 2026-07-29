@@ -7,13 +7,13 @@ var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
 function clean(v) {
-  return v.replace(/&#160;/g, ' ').replace(/<[^>]+>/g, ' ').replace(/[[\d\s,\-]+]|&#91;[\d\s,\-]+&#93;/g, '').replace(/\s+/g, ' ').trim();
+  return v.replace(/&#160;/g, ' ').replace(/<[^>]+>/g, ' ').replace(/\[[\d\s,\-]+\]|&#91;[\d\s,\-]+&#93;/g, '').replace(/\s+/g, ' ').trim();
 }
 
 function fetchJSON(url, retries) {
   retries = retries || 3;
   return new Promise(function(resolve, reject) {
-    https.get(url, { agent: AGENT, headers: { 'User-Agent': 'LegalBot/1.0' } }, function(res) {
+    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'LegalBot/1.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -97,7 +97,7 @@ async function fetchLandmarks(existingKeys, newQuestions, seq) {
         var name = clean(row[0]);
         var yearStr = clean(row[1]);
         var significance = clean(row[2]);
-        if (!name || name.length < 3 || name === 'Name of the case' || name.indexOf('—') >= 0) continue;
+        if (!name || name.length < 3 || name === 'Name of the case' || name.indexOf('\u2014') >= 0) continue;
         var yrMatch = yearStr.match(/\b\d{4}\b/);
         if (yrMatch && yrMatch[0] >= '1950') {
           var qText = 'Which landmark case was decided by the Supreme Court of India in ' + yrMatch[0] + '?';

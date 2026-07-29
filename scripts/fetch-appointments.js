@@ -10,7 +10,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'ApptBot/1.0' } }, function(res) {
+    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'ApptBot/2.0' } }, function(res) {
       var data = '';
       res.on('data', function(c) { data += c; });
       res.on('end', function() {
@@ -31,54 +31,74 @@ function pad(n) { return n < 10 ? '0' + n : '' + n; }
 function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 var OFFICES = [
-  { page: 'Chief_of_the_Army_Staff_(India)', label: 'Chief of the Army Staff', field: 'title', q: 'Who is the current Chief of the Army Staff (COAS) of India?', emoji: '\uD83C\uDFC1' },
-  { page: 'Chief_of_the_Naval_Staff_(India)', label: 'Chief of the Naval Staff', field: 'title', q: 'Who is the current Chief of the Naval Staff (CNS) of India?', emoji: '\uD83D\uDEE5' },
-  { page: 'Chief_of_the_Air_Staff_(India)', label: 'Chief of the Air Staff', field: 'title', q: 'Who is the current Chief of the Air Staff (CAS) of India?', emoji: '\u2708' },
-  { page: 'Chief_Election_Commissioner_of_India', label: 'Chief Election Commissioner', field: 'title', q: 'Who is the current Chief Election Commissioner (CEC) of India?', emoji: '\uD83D\uDDF3' },
-  { page: 'Comptroller_and_Auditor_General_of_India', label: 'Comptroller and Auditor General', field: 'title', q: 'Who is the current Comptroller and Auditor General (CAG) of India?', emoji: '\uD83D\uDCCA' },
-  { page: 'Chief_Justice_of_India', label: 'Chief Justice of India', field: 'title', q: 'Who is the current Chief Justice of India (CJI)?', emoji: '\u2696' },
-  { page: 'Cabinet_Secretary_(India)', label: 'Cabinet Secretary', field: 'title', q: 'Who is the current Cabinet Secretary of India?', emoji: '\uD83C\uDFE2' },
-  { page: 'Attorney_General_of_India', label: 'Attorney General', field: 'title', q: 'Who is the current Attorney General of India?', emoji: '\uD83D\uDC68\u200D\u2696' },
-  // { page: 'Union_Public_Service_Commission', label: 'UPSC Chairperson', field: 'chairperson', q: 'Who is the current Chairperson of the Union Public Service Commission (UPSC)?', emoji: '\uD83C\uDFDB' },
-  { page: 'Governor_of_the_Reserve_Bank_of_India', label: 'RBI Governor', field: 'title', q: 'Who is the current Governor of the Reserve Bank of India (RBI)?', emoji: '\uD83C\uDFE6' },
-  { page: 'National_Security_Advisor_(India)', label: 'National Security Advisor', field: 'title', q: 'Who is the current National Security Advisor (NSA) of India?', emoji: '\uD83D\uDD12' }
+  { page: 'Chief_of_the_Army_Staff_(India)', label: 'Chief of the Army Staff', q: 'Who is the current Chief of the Army Staff (COAS) of India?', emoji: '\uD83C\uDFC1' },
+  { page: 'Chief_of_the_Naval_Staff_(India)', label: 'Chief of the Naval Staff', q: 'Who is the current Chief of the Naval Staff (CNS) of India?', emoji: '\uD83D\uDEE5' },
+  { page: 'Chief_of_the_Air_Staff_(India)', label: 'Chief of the Air Staff', q: 'Who is the current Chief of the Air Staff (CAS) of India?', emoji: '\u2708' },
+  { page: 'Chief_of_Defence_Staff_(India)', label: 'Chief of Defence Staff', q: 'Who is the current Chief of Defence Staff (CDS) of India?', emoji: '\uD83C\uDFC1' },
+  { page: 'Chief_Election_Commissioner_of_India', label: 'Chief Election Commissioner', q: 'Who is the current Chief Election Commissioner (CEC) of India?', emoji: '\uD83D\uDDF3' },
+  { page: 'Comptroller_and_Auditor_General_of_India', label: 'Comptroller and Auditor General', q: 'Who is the current Comptroller and Auditor General (CAG) of India?', emoji: '\uD83D\uDCCA' },
+  { page: 'Chief_Justice_of_India', label: 'Chief Justice of India', q: 'Who is the current Chief Justice of India (CJI)?', emoji: '\u2696' },
+  { page: 'Cabinet_Secretary_(India)', label: 'Cabinet Secretary', q: 'Who is the current Cabinet Secretary of India?', emoji: '\uD83C\uDFE2' },
+  { page: 'Attorney_General_of_India', label: 'Attorney General', q: 'Who is the current Attorney General of India?', emoji: '\uD83D\uDC68\u200D\u2696' },
+  { page: 'Solicitor_General_of_India', label: 'Solicitor General', q: 'Who is the current Solicitor General of India?', emoji: '\uD83D\uDC68\u200D\u2696' },
+  { page: 'Governor_of_the_Reserve_Bank_of_India', label: 'RBI Governor', q: 'Who is the current Governor of the Reserve Bank of India (RBI)?', emoji: '\uD83C\uDFE6' },
+  { page: 'National_Security_Advisor_(India)', label: 'National Security Advisor', q: 'Who is the current National Security Advisor (NSA) of India?', emoji: '\uD83D\uDD12' },
+  { page: 'Union_Public_Service_Commission', label: 'UPSC Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the Union Public Service Commission (UPSC)?', emoji: '\uD83C\uDFDB' },
+  { page: 'National_Human_Rights_Commission_of_India', label: 'NHRC Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the National Human Rights Commission (NHRC) of India?', emoji: '\uD83D\uDCED' },
+  { page: 'Central_Vigilance_Commission_(India)', label: 'CVC', labelField: 'Commissioner', q: 'Who is the current Central Vigilance Commissioner (CVC) of India?', emoji: '\uD83D\uDD0D' },
+  { page: 'Central_Information_Commission', label: 'CIC', labelField: 'Chief Information Commissioner', q: 'Who is the current Chief Information Commissioner (CIC) of India?', emoji: '\uD83D\uDCC4' },
+  { page: 'Law_Commission_of_India', label: 'Law Commission Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the Law Commission of India?', emoji: '\uD83D\uDCD6' },
+  { page: 'Finance_Commission_(India)', label: 'Finance Commission Chairperson', labelField: 'Chairman', q: 'Who is the current Chairman of the Finance Commission of India?', emoji: '\uD83D\uDCB0' },
+  { page: 'Securities_and_Exchange_Board_of_India', label: 'SEBI Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of SEBI?', emoji: '\uD83D\uDCCA' },
+  { page: 'Telecom_Regulatory_Authority_of_India', label: 'TRAI Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of TRAI?', emoji: '\uD83D\uDCF1' },
+  { page: 'Competition_Commission_of_India', label: 'CCI Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the Competition Commission of India (CCI)?', emoji: '\u2696' },
+  { page: 'Insurance_Regulatory_and_Development_Authority', label: 'IRDAI Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of IRDAI?', emoji: '\uD83D\uDCB3' },
+  { page: 'National_Commission_for_Scheduled_Castes', label: 'NCSC Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the National Commission for Scheduled Castes (NCSC)?', emoji: '\uD83E\uDDD1\u200D\u2696' },
+  { page: 'National_Commission_for_Scheduled_Tribes', label: 'NCST Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the National Commission for Scheduled Tribes (NCST)?', emoji: '\uD83E\uDDD1\u200D\u2696' },
+  { page: 'National_Commission_for_Women_(India)', label: 'NCW Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the National Commission for Women (NCW)?', emoji: '\uD83D\uDC69\u200D\u2696' },
 ];
 
-function extractIncumbent(html) {
+function extractIncumbent(html, labelField) {
   var m = html.match(/<table[^>]*class="[^"]*infobox[^"]*"[^>]*>([\s\S]*?)<\/table>/i);
   if (!m) return null;
 
   var section = m[1];
-  var incIdx = section.indexOf('Incumbent');
-  if (incIdx < 0) return null;
 
-  // Take only up to the next closing </tr> to avoid including the organization row
-  var rowEnd = section.indexOf('</tr>', incIdx);
-  var incRow = rowEnd > incIdx ? section.substring(incIdx, rowEnd) : section.substring(incIdx, incIdx + 300);
-
-  // Find all <a> tags after "Incumbent<br />" and take the first non-rank one
-  var links = [];
-  var linkRe = /<a[^>]*>([\s\S]*?)<\/a>/gi;
-  var lr;
-  // Set lastIndex to start searching after "Incumbent<br />"
-  linkRe.lastIndex = incRow.indexOf('Incumbent<br') + 14;
-  while ((lr = linkRe.exec(incRow)) !== null) {
-    var t = strip(lr[1]).replace(/\s+/g, ' ').trim();
-    if (t.length > 0) links.push(t);
-    if (links.length > 5) break;
+  var labelsToTry = ['Incumbent'];
+  if (labelField) {
+    labelsToTry.push(labelField);
+    if (labelField === 'Chairperson') labelsToTry.push('Chairman');
+    if (labelField === 'Commissioner') labelsToTry.push('Chief Commissioner');
   }
 
-  var skipRanks = ['general', 'admiral', 'air chief marshal', 'marshal', 'justice'];
-  for (var li = 0; li < links.length; li++) {
-    var lower = links[li].toLowerCase();
-    var isRank = false;
-    for (var sr = 0; sr < skipRanks.length; sr++) {
-      if (lower === skipRanks[sr] || lower.indexOf(skipRanks[sr] + ' ') === 0) { isRank = true; break; }
+  for (var li = 0; li < labelsToTry.length; li++) {
+    var labelIdx = section.indexOf(labelsToTry[li]);
+    if (labelIdx < 0) continue;
+
+    var afterLabel = section.substring(labelIdx + labelsToTry[li].length);
+
+    var names = [];
+    var linkRe = /<a[^>]*>([\s\S]*?)<\/a>/gi;
+    var lr;
+    linkRe.lastIndex = 0;
+    while ((lr = linkRe.exec(afterLabel)) !== null) {
+      var t = strip(lr[1]).replace(/\s+/g, ' ').trim();
+      if (t.length > 0) names.push(t);
+      if (names.length > 8) break;
     }
-    if (isRank) continue;
-    var name = links[li].replace(/,?\s*(PVSM|UYSM|AVSM|VSM|SM|KC|SC|ADC|PHSM|PSM|MVC|KCMG|OM|AC|PC|AFMC|Bar)\b/gi, '').trim();
-    name = name.replace(/\s+/g, ' ').trim();
-    if (name.length >= 3 && name.length < 100) return name;
+
+    var skipRanks = ['general', 'admiral', 'air chief marshal', 'marshal', 'justice'];
+    for (var ni = 0; ni < names.length; ni++) {
+      var lower = names[ni].toLowerCase();
+      var isRank = false;
+      for (var sr = 0; sr < skipRanks.length; sr++) {
+        if (lower === skipRanks[sr] || lower.indexOf(skipRanks[sr] + ' ') === 0) { isRank = true; break; }
+      }
+      if (isRank) continue;
+      var name = names[ni].replace(/,?\s*(PVSM|UYSM|AVSM|VSM|SM|KC|SC|ADC|PHSM|PSM|MVC|KCMG|OM|AC|PC|AFMC|Bar)\b/gi, '').trim();
+      name = name.replace(/\s+/g, ' ').trim();
+      if (name.length >= 3 && name.length < 100) return name;
+    }
   }
 
   return null;
@@ -88,7 +108,7 @@ async function fetchAppointment(office) {
   try {
     var res = await fetchJSON(API + '?action=parse&page=' + encodeURIComponent(office.page) + '&prop=text&section=0&format=json');
     if (!res || !res.parse || !res.parse.text) return null;
-    return extractIncumbent(res.parse.text['*']);
+    return extractIncumbent(res.parse.text['*'], office.labelField);
   } catch (e) {
     return null;
   }
@@ -142,14 +162,17 @@ async function main() {
 
   var newQuestions = [];
   var seq = existing[CA_KEY].subSubjects['Appointments'].length + 1;
+  var found = 0, notFound = 0;
 
   for (var oi = 0; oi < OFFICES.length; oi++) {
     process.stdout.write('  ' + OFFICES[oi].label + '... ');
     var name = await fetchAppointment(OFFICES[oi]);
     if (name) {
       process.stdout.write(name.substring(0, 50) + '\n');
+      found++;
     } else {
       process.stdout.write('NOT FOUND\n');
+      notFound++;
     }
 
     var q = makeQuestion(OFFICES[oi], name, seq);
@@ -167,6 +190,8 @@ async function main() {
 
     await delay(600);
   }
+
+  console.error('\nFound: ' + found + ', Not found: ' + notFound);
 
   newQuestions.forEach(function(q) {
     existing[CA_KEY].subSubjects['Appointments'].push(q);
