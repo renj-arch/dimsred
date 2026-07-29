@@ -248,6 +248,7 @@ const DATA_DIR = path.resolve(__dirname, '..', 'data');
 fs.mkdirSync(DATA_DIR, { recursive: true });
 
 const MANUAL_PATH = path.resolve(DATA_DIR, 'globe-manual.json');
+const GLOBE_PATH = path.resolve(__dirname, '..', '3d-globe.html');
 
 function loadDedupSet() {
   const set = new Set();

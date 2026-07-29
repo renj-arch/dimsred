@@ -42,16 +42,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 360
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v4
         with:
-          name: repo
-          path: .
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
 
       - run: npm install
+
+      - name: Configure git
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
 
       - name: Fetch Wikipedia categories
         run: node scripts/wikipedia-fetch.js
