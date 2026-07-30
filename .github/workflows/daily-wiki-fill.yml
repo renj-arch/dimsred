@@ -136,6 +136,7 @@ jobs:
       - run: node scripts/split-quiz-to-categories.js
       - run: node scripts/cleanup-questions.js
       - run: node scripts/dedup-sentence-flood.js
+      - run: node scripts/inject-handpicked-gk.js
       - run: node scripts/build-archive-single.js
 
       - run: |
@@ -192,6 +193,7 @@ jobs:
 
       - run: node scripts/cleanup-questions.js
       - run: node scripts/dedup-sentence-flood.js
+      - run: node scripts/inject-handpicked-gk.js
       - run: node scripts/build-archive-single.js
 
       - run: |
