@@ -171,6 +171,12 @@ async function fetchBodyInfo(existingKeys, newQuestions, seqObj) {
           var t = tables[ti];
           if (t.length < 2) continue;
 
+          // Skip tables that are not chairperson lists (report lists, state commissions, etc.)
+          var headerText = t[0].join(' ').toLowerCase();
+          if (headerText.indexOf('report no.') >= 0 || headerText.indexOf('title of report') >= 0 ||
+              headerText.indexOf('presented in') >= 0 || headerText.indexOf('date of presentation') >= 0 ||
+              headerText.indexOf('state commission') >= 0) continue;
+
           var colInfo = findNameAndYearCol(t);
           if (colInfo.nameCol < 0) continue;
 
