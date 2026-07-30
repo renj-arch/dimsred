@@ -463,9 +463,12 @@ function fixGlobalDescs(html) {
   }
   for (let i = fixes.length - 1; i >= 0; i--) {
     const f = fixes[i];
+    // Escape $ in replacement values to prevent back-reference injection in .replace()
+    const safeDesc = esc(f.newDesc).replace(/\$/g, '$$$$');
+    const safeFact = esc(f.newFact).replace(/\$/g, '$$$$');
     const newEntry = f.old
-      .replace(/desc:'((?:[^'\\]|\\.)*)'/, `desc:'${esc(f.newDesc)}'`)
-      .replace(/fact:'((?:[^'\\]|\\.)*)'/, `fact:'${esc(f.newFact)}'`);
+      .replace(/desc:'((?:[^'\\]|\\.)*)'/, `desc:'${safeDesc}'`)
+      .replace(/fact:'((?:[^'\\]|\\.)*)'/, `fact:'${safeFact}'`);
     html = html.slice(0, f.idx) + newEntry + html.slice(f.idx + f.old.length);
   }
   return { html, fixed: fixes.length };

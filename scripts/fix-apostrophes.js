@@ -252,7 +252,10 @@ for (let i = 0; i < LINES.length; i++) {
   const tagStr = p.hasTag ? ",tag:'" + newTag + "'" : '';
   const newLine = p.indent + "{n:'" + newName + "',la:" + p.laRaw + ",ln:" + p.lnRaw + ",sub:'" + newSub + "',desc:'" + newDesc + "',fact:'" + newFact + "'" + ptsStr + tagStr + "}" + p.suffix;
 
-  if (isValidJS(newLine)) {
+  // Validate: re-parse the reconstructed line, ensuring fields round-trip correctly
+  const p2 = parseEntry(newLine);
+  const roundTripOk = p2 && p2.name === newName && p2.sub === newSub && p2.desc === newDesc && p2.fact === newFact && p2.tag === newTag;
+  if (roundTripOk && isValidJS(newLine)) {
     LINES[i] = newLine;
     fixed++;
   } else {
