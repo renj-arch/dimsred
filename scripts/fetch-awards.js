@@ -214,7 +214,7 @@ async function main() {
         for (var ri = 1; ri < Math.min(t.length, 10); ri++) {
           var row = t[ri];
           if (row.length < 2) continue;
-          var name = strip(row[0]).replace(/\[.*?\]/g, '').trim();
+            var name = strip(row[1] || row[0]).replace(/\[.*?\]/g, '').trim();
           if (name.length > 3) {
             var q = makeQuestion(GALLANTRY_PAGES[gi].q, name, seq++, 'Wikipedia - ' + GALLANTRY_PAGES[gi].label, GALLANTRY_PAGES[gi].emoji, name + ' was awarded the ' + GALLANTRY_PAGES[gi].label + '.');
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; gc++; }
@@ -247,10 +247,10 @@ async function main() {
           if (laureate && laureate.length > 2 && laureate !== '\u2014' && laureate.indexOf('not awarded') < 0) {
             var winners = laureate.split(/<br\s*\/?>/gi).map(function(s) { return strip(s).replace(/\([^)]*\)/g, '').trim(); }).filter(function(s) { return s.length > 2; });
             if (winners.length < 2) winners = laureate.split(/[;]/).map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 2; });
-            winners.forEach(function(w) {
-              var q = makeQuestion('Who won the Nobel Prize in ' + category + ' in 2025?', w, seq++, 'Wikipedia - Nobel Prize', '\uD83C\uDFC6', 'Nobel Prize 2025 - ' + category + ': ' + w);
-              if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; nobelCount++; }
-            });
+            var combinedAnswer = winners.join(', ');
+            var combinedFact = 'Nobel Prize 2025 - ' + category + ': ' + combinedAnswer;
+            var q = makeQuestion('Who won the Nobel Prize in ' + category + ' in 2025?', combinedAnswer, seq++, 'Wikipedia - Nobel Prize', '\uD83C\uDFC6', combinedFact);
+            if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; nobelCount++; }
           }
         }
       }
@@ -318,10 +318,18 @@ async function main() {
   for (var si = 0; si < SPORTS_PAGES.length; si++) {
     process.stdout.write('  ' + SPORTS_PAGES[si].label + '... ');
     var recipients = await fetchTableRecipients(SPORTS_PAGES[si].page, '(2024|2025|2026)', SPORTS_PAGES[si].nameCol, SPORTS_PAGES[si].yearCol, SPORTS_PAGES[si].label, SPORTS_PAGES[si].q, SPORTS_PAGES[si].emoji);
-    var sportCount = 0;
+    // Group recipients by year for combined questions
+    var byYear = {};
     recipients.forEach(function(r) {
-      var qText = SPORTS_PAGES[si].q.replace('{year}', r.year);
-      var q = makeQuestion(qText, r.name, seq++, 'Wikipedia - ' + SPORTS_PAGES[si].label, SPORTS_PAGES[si].emoji, r.name + ' received the ' + SPORTS_PAGES[si].label + ' in ' + r.year + '.');
+      if (!byYear[r.year]) byYear[r.year] = [];
+      byYear[r.year].push(r.name);
+    });
+    var sportCount = 0;
+    Object.keys(byYear).forEach(function(year) {
+      var names = byYear[year];
+      var combinedAnswer = names.join(', ');
+      var qText = SPORTS_PAGES[si].q.replace('{year}', year);
+      var q = makeQuestion(qText, combinedAnswer, seq++, 'Wikipedia - ' + SPORTS_PAGES[si].label, SPORTS_PAGES[si].emoji, names[0] + ' received the ' + SPORTS_PAGES[si].label + ' in ' + year + '.');
       if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; sportCount++; }
     });
     process.stdout.write(sportCount + ' recipients\n');

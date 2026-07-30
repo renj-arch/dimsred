@@ -61,7 +61,6 @@ var OFFICES = [
 function extractIncumbent(html, labelField) {
   var m = html.match(/<table[^>]*class="[^"]*infobox[^"]*"[^>]*>([\s\S]*?)<\/table>/i);
   if (!m) return null;
-
   var section = m[1];
 
   var labelsToTry = ['Incumbent'];
@@ -71,33 +70,70 @@ function extractIncumbent(html, labelField) {
     if (labelField === 'Commissioner') labelsToTry.push('Chief Commissioner');
   }
 
-  for (var li = 0; li < labelsToTry.length; li++) {
-    var labelIdx = section.indexOf(labelsToTry[li]);
-    if (labelIdx < 0) continue;
+  var rows = section.match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
+  if (!rows) return null;
 
-    var afterLabel = section.substring(labelIdx + labelsToTry[li].length);
+  var skipWords = ['general', 'admiral', 'air chief marshal', 'marshal', 'chairperson', 'chairman', 'commissioner', 'secretary'];
 
-    var names = [];
+  for (var ri = 0; ri < rows.length; ri++) {
+    var row = rows[ri];
+    var thMatch = row.match(/<th[^>]*>([\s\S]*?)<\/th>/i);
+    var tdMatch = row.match(/<td[^>]*>([\s\S]*?)<\/td>/i);
+    if (!tdMatch) continue;
+
+    var thText = thMatch ? strip(thMatch[1]).toLowerCase() : '';
+    var tdContent = tdMatch[1];
+    var tdText = strip(tdContent).toLowerCase();
+
+    var matchedLabel = null;
+    for (var li = 0; li < labelsToTry.length; li++) {
+      if (thText.indexOf(labelsToTry[li].toLowerCase()) >= 0 || tdText.indexOf(labelsToTry[li].toLowerCase()) >= 0) {
+        matchedLabel = labelsToTry[li];
+        break;
+      }
+    }
+    if (!matchedLabel) continue;
+
+    var labelInTd = tdText.indexOf(matchedLabel.toLowerCase()) >= 0;
+    var labelPos = labelInTd ? tdContent.toLowerCase().indexOf(matchedLabel.toLowerCase()) : -1;
+
+    var allLinks = [];
     var linkRe = /<a[^>]*>([\s\S]*?)<\/a>/gi;
     var lr;
-    linkRe.lastIndex = 0;
-    while ((lr = linkRe.exec(afterLabel)) !== null) {
-      var t = strip(lr[1]).replace(/\s+/g, ' ').trim();
-      if (t.length > 0) names.push(t);
-      if (names.length > 8) break;
+    while ((lr = linkRe.exec(tdContent)) !== null) {
+      allLinks.push({ text: strip(lr[1]).replace(/\s+/g, ' ').trim(), pos: lr.index });
     }
 
-    var skipRanks = ['general', 'admiral', 'air chief marshal', 'marshal', 'justice'];
-    for (var ni = 0; ni < names.length; ni++) {
-      var lower = names[ni].toLowerCase();
-      var isRank = false;
-      for (var sr = 0; sr < skipRanks.length; sr++) {
-        if (lower === skipRanks[sr] || lower.indexOf(skipRanks[sr] + ' ') === 0) { isRank = true; break; }
+    var candidateLinks = labelInTd ? allLinks.filter(function(l) { return l.pos < labelPos; }) : allLinks;
+
+    for (var ni = 0; ni < candidateLinks.length; ni++) {
+      var text = candidateLinks[ni].text;
+      var lower = text.toLowerCase();
+      var isSkip = false;
+      for (var sw = 0; sw < skipWords.length; sw++) {
+        if (lower === skipWords[sw]) { isSkip = true; break; }
       }
-      if (isRank) continue;
-      var name = names[ni].replace(/,?\s*(PVSM|UYSM|AVSM|VSM|SM|KC|SC|ADC|PHSM|PSM|MVC|KCMG|OM|AC|PC|AFMC|Bar)\b/gi, '').trim();
+      if (isSkip) continue;
+      if (/^(www\.|https?:)/.test(lower) || lower.indexOf('.gov') >= 0 || lower.indexOf('.nic') >= 0) continue;
+      var name = text.replace(/,?\s*(PVSM|UYSM|AVSM|VSM|SM|KC|SC|ADC|PHSM|PSM|MVC|KCMG|OM|AC|PC|AFMC|Bar)\b/gi, '').trim();
       name = name.replace(/\s+/g, ' ').trim();
       if (name.length >= 3 && name.length < 100) return name;
+    }
+
+    // Plain text fallback (for rows with no <a> tags around the name)
+    var plainText = tdContent.replace(/<[^>]+>/g, ' ').replace(/\[.*?\]/g, '').replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
+    var segments = plainText.split(/[,;]/);
+    for (var si = 0; si < segments.length; si++) {
+      var seg = segments[si].trim();
+      if (seg.length < 3) continue;
+      var segLower = seg.toLowerCase();
+      var isSkip = false;
+      for (var sw2 = 0; sw2 < skipWords.length; sw2++) {
+        if (segLower.indexOf(skipWords[sw2]) >= 0) { isSkip = true; break; }
+      }
+      if (isSkip) continue;
+      if (segLower.indexOf('.gov') >= 0 || segLower.indexOf('.nic') >= 0 || segLower.indexOf('www') >= 0 || segLower.indexOf('https') >= 0) continue;
+      if (seg.length < 100) return seg;
     }
   }
 
