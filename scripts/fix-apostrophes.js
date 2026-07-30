@@ -183,8 +183,8 @@ function parseEntry(line) {
     // factClose: ' in ', before tagOpen (closing quote of fact)
     factClose = entry.lastIndexOf("',", tagOpen);
     if (factClose === -1 || factClose < factOpen) return null;
-    // tagClose: ' before final } (closing quote of tag)
-    const tagClose = entry.lastIndexOf("'}", tagOpen);
+    // tagClose: ' before final } (closing quote of tag) — search FORWARD from tagOpen
+    const tagClose = entry.indexOf("'}", tagOpen + 6);
     if (tagClose === -1 || tagClose < tagOpen) return null;
     tag = entry.substring(tagOpen + 6, tagClose);
     // between: from , after fact close to tagOpen (includes leading ,)

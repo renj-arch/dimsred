@@ -36,8 +36,8 @@ const sorted = entries.sort((a, b) => {
 for (const [name, data] of sorted) {
   if (existingNames.has(name)) continue;
   if (data.b === undefined || data.d === undefined) continue;
-  const safeName = JSON.stringify(name.replace(/'/g, "\\'"));
-  const safeTitle = JSON.stringify((data.title || data.type || '').replace(/'/g, "\\'").replace(/"/g, '&quot;'));
+  const safeName = JSON.stringify(name);
+  const safeTitle = JSON.stringify(data.title || data.type || '');
   const safeType = JSON.stringify(data.type||'scholar');
   const safeEra = JSON.stringify(data.era||'Global');
   insertStr += `${pad}${safeName}: {b:${data.b},d:${data.d},title:${safeTitle},type:${safeType},era:${safeEra}},\n`;

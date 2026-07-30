@@ -125,3 +125,31 @@ for (let m = catMatches.length - 1; m >= 0; m--) {
 
 fs.writeFileSync(GLOBE_PATH, h, 'utf8');
 console.log('\nTotal: ' + totalRemoved + ' duplicates removed');
+
+// Validate syntax after writing
+const { execSync } = require('child_process');
+const os = require('os');
+const tmpCheck = require('path').join(os.tmpdir(), 'globe-check-dedup.mjs');
+const ms = h.indexOf('<script type="module">');
+const me = h.indexOf('</script>', ms);
+if (ms >= 0 && me > ms) {
+  const js = h.substring(ms + 23, me);
+  require('fs').writeFileSync(tmpCheck, js, 'utf8');
+  try {
+    execSync(`node --check "${tmpCheck}"`, { stdio: 'pipe', timeout: 15000 });
+    console.log('Post-dedup syntax validation: OK');
+  } catch (e) {
+    const stderr = e.stderr ? e.stderr.toString() : e.message;
+    console.error('Post-dedup syntax validation: FAILED');
+    console.error(stderr);
+    const lineMatch = stderr.match(/:(\d+):/);
+    if (lineMatch) {
+      const errLine = parseInt(lineMatch[1], 10);
+      const lines = js.split('\n');
+      for (let i = Math.max(0, errLine - 3); i < Math.min(lines.length, errLine + 2); i++) {
+        console.error((i + 1) + ': ' + lines[i]);
+      }
+    }
+  }
+  try { require('fs').unlinkSync(tmpCheck); } catch {}
+}

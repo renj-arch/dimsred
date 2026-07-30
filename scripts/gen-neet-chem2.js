@@ -14,4 +14,9 @@ function buildPage(subject,chNum,chName,questions,navItems){
 }
 
 // === CHEMISTRY CHAPTERS DATA ===
-const CHEM_CHAPTERS = [
+const CHEM_CHAPTERS = [];
+
+const navData = [{num:1,name:"Some Basic Concepts of Chemistry"},{num:2,name:"Structure of Atom"},{num:3,name:"Classification of Elements and Periodicity"},{num:4,name:"Chemical Bonding and Molecular Structure"},{num:5,name:"States of Matter"},{num:6,name:"Thermodynamics"},{num:7,name:"Equilibrium"},{num:8,name:"Redox Reactions"},{num:9,name:"Hydrogen"},{num:10,name:"s-Block Elements"},{num:11,name:"p-Block Elements (Group 13 & 14)"},{num:12,name:"Organic Chemistry: Some Basic Principles"},{num:13,name:"Hydrocarbons"},{num:14,name:"Environmental Chemistry"},{num:15,name:"Solid State"},{num:16,name:"Solutions"},{num:17,name:"Electrochemistry"},{num:18,name:"Chemical Kinetics"},{num:19,name:"Surface Chemistry"},{num:20,name:"General Principles of Isolation of Elements"},{num:21,name:"p-Block Elements (Group 15-18)"},{num:22,name:"d and f Block Elements"},{num:23,name:"Coordination Compounds"},{num:24,name:"Haloalkanes and Haloarenes"},{num:25,name:"Alcohols, Phenols and Ethers"},{num:26,name:"Aldehydes, Ketones and Carboxylic Acids"},{num:27,name:"Amines"},{num:28,name:"Biomolecules"},{num:29,name:"Polymers"},{num:30,name:"Chemistry in Everyday Life"}];
+
+for(var ci=0;ci<CHEM_CHAPTERS.length;ci++){var ch=CHEM_CHAPTERS[ci];var html=buildPage("Chemistry",ch.num,ch.name,ch.questions,navData);var fname="chemistry-chapter-"+ch.num+"-"+slug(ch.name)+".html";fs.writeFileSync(path.join(OUT,fname),html,"utf8");console.log("Generated: "+fname);}
+console.log("Done! Generated "+CHEM_CHAPTERS.length+" chemistry chapter files.");
