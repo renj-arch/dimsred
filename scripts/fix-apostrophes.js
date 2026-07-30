@@ -19,9 +19,9 @@ const outerSuffix = h.substring(me);
 function esc(s) {
   return s
     .replace(/\\/g, '\\\\')
-    .replace(/'/g, "\\'")
     .replace(/\u2018|\u2019/g, "'")
     .replace(/\u201c|\u201d/g, '"')
+    .replace(/'/g, "\\'")
     .replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t');
 }
 
