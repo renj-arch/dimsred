@@ -27,7 +27,7 @@ function fetchJSON(url, retries) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function strip(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 function fetchPageText(title) {
   return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
@@ -93,7 +93,7 @@ async function fetchIITs(existingKeys, newQuestions, seqObj) {
             var parts = location.split(',');
             var city = strip(parts[0]);
             var qText = 'Which IIT is located in ' + city + '?';
-            var q = makeQuestion(qText, name, seqObj.seq++, 'Wikipedia - IITs', '\uD83C\uDF93', name + ' is located in ' + location + '.');
+            var q = makeQuestion(qText, name, seqObj.seq++, 'IITs', '\uD83C\uDF93', name + ' is located in ' + location + '.');
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
           }
         }
@@ -148,7 +148,7 @@ async function fetchIIMs(existingKeys, newQuestions, seqObj) {
             var parts = location.split(',');
             var city = strip(parts[0]);
             var qText = 'Which IIM is located in ' + city + '?';
-            var q = makeQuestion(qText, name, seqObj.seq++, 'Wikipedia - IIMs', '\uD83C\uDF93', name + ' is located in ' + location + '.');
+            var q = makeQuestion(qText, name, seqObj.seq++, 'IIMs', '\uD83C\uDF93', name + ' is located in ' + location + '.');
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
           }
         }
@@ -205,7 +205,7 @@ async function fetchAIIMS(existingKeys, newQuestions, seqObj) {
             var parts = location.split(',');
             var city = strip(parts[0]);
             var qText = 'Which AIIMS is located in ' + city + '?';
-            var q = makeQuestion(qText, name, seqObj.seq++, 'Wikipedia - AIIMS', '\uD83C\uDFE5', name + ' is located in ' + location + '.');
+            var q = makeQuestion(qText, name, seqObj.seq++, 'AIIMS', '\uD83C\uDFE5', name + ' is located in ' + location + '.');
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
           }
         }
@@ -254,7 +254,7 @@ async function fetchNEP(existingKeys, newQuestions, seqObj) {
         var b = strip(row[1]);
         if (a && b && a.length > 3 && b.length > 2 && a !== 'Key area') {
           var qText = 'According to NEP 2020, what is the detail regarding ' + a.substring(0, 50) + '?';
-          var q = makeQuestion(qText, b, seqObj.seq++, 'Wikipedia - NEP 2020', '\uD83C\uDF93', 'NEP 2020: ' + a + ' - ' + b);
+          var q = makeQuestion(qText, b, seqObj.seq++, 'NEP 2020', '\uD83C\uDF93', 'NEP 2020: ' + a + ' - ' + b);
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }

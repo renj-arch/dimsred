@@ -29,7 +29,7 @@ function fetchJSON(url, retries) {
 }
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
-function stripHtml(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function stripHtml(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
 var INDIAN_STATE_NAMES = ['Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Delhi','Jammu and Kashmir','Ladakh','Puducherry'];
@@ -264,7 +264,7 @@ function makeQuestion(event, seq) {
     type: 'fill_blank',
     category: 'PIB',
     region: '',
-    source: 'Wikipedia State Events',
+    source: 'State Events',
     pubDate: pubDate,
     subject: 'PIB Releases',
     subSubject: 'State Affairs',
@@ -369,7 +369,7 @@ function generateSeedQuestions(seqCounter) {
       type: 'fill_blank',
       category: 'PIB',
       region: '',
-      source: 'Wikipedia',
+      source: 'General Knowledge',
       pubDate: pubDate,
       subject: 'PIB Releases',
       subSubject: 'State Affairs',
@@ -388,7 +388,7 @@ function generateSeedQuestions(seqCounter) {
       type: 'fill_blank',
       category: 'PIB',
       region: '',
-      source: 'Wikipedia',
+      source: 'General Knowledge',
       pubDate: pubDate,
       subject: 'PIB Releases',
       subSubject: 'State Affairs',
@@ -453,7 +453,7 @@ async function main() {
 
   console.error('Removed ' + removedCount + ' outdated seed questions');
 
-  // Phase 2: Check Wikipedia current events for Indian state content
+  // Phase 2: Check current events for Indian state content
   var now = new Date();
   var cy = now.getFullYear();
   var cm = now.getMonth() + 1;
@@ -498,7 +498,7 @@ async function main() {
     });
   }
 
-  // Phase 3: Wikipedia India year page (dense state-level coverage)
+  // Phase 3: India year page (dense state-level coverage)
   async function fetchIndiaYearEvents(year) {
     var page = year + '_in_India';
     var url = API + '?action=parse&page=' + encodeURIComponent(page) + '&prop=text&format=json';

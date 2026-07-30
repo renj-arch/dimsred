@@ -27,7 +27,7 @@ function fetchJSON(url, retries) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function strip(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 function fetchPageText(title) {
   return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
@@ -93,7 +93,7 @@ async function fetchCOP(existingKeys, newQuestions, seqObj) {
           if (year && name && parseInt(year) > 1990 && name.indexOf('COP') >= 0) {
             if (venue && venue.length > 3 && venue.indexOf('Venue') < 0) {
               var qText = 'The ' + name + ' climate conference was held in which city?';
-              var q = makeQuestion(qText, venue, seqObj.seq++, 'Wikipedia - COP', '\uD83C\uDF1D', name + ' was held in ' + venue + '.');
+              var q = makeQuestion(qText, venue, seqObj.seq++, 'COP', '\uD83C\uDF1D', name + ' was held in ' + venue + '.');
               if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
             }
             if (ri > 1) {
@@ -101,7 +101,7 @@ async function fetchCOP(existingKeys, newQuestions, seqObj) {
               if (prevYear && parseInt(prevYear) > 1990) {
                 var qText2 = 'Which COP summit was held in ' + year + '?';
                 var a2 = name.replace(/Conference|\(.*?\)/g,'').trim();
-                var q2 = makeQuestion(qText2, a2, seqObj.seq++, 'Wikipedia - COP', '\uD83C\uDF1D', name + ' was the COP summit in ' + year + '.');
+                var q2 = makeQuestion(qText2, a2, seqObj.seq++, 'COP', '\uD83C\uDF1D', name + ' was the COP summit in ' + year + '.');
                 if (q2 && !existingKeys[eventKey(q2)]) { newQuestions.push(q2); existingKeys[eventKey(q2)] = true; count++; }
               }
             }
@@ -133,7 +133,7 @@ async function fetchEnvLegislation(existingKeys, newQuestions, seqObj) {
               if (!act) act = txt.match(/([A-Z][A-Za-z\s]+Act)/);
               if (act) {
                 var qText = 'Which Indian environmental act is related to ' + title.replace(/Act/i,'').trim() + '?';
-                var q = makeQuestion(qText, strip(act[1]), seqObj.seq++, 'Wikipedia - Env Law', '\uD83C\uDF1D', strip(act[1]) + ': ' + txt.substring(0, 100));
+                var q = makeQuestion(qText, strip(act[1]), seqObj.seq++, 'Env Law', '\uD83C\uDF1D', strip(act[1]) + ': ' + txt.substring(0, 100));
                 if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
               }
             }
@@ -181,7 +181,7 @@ async function fetchNationalParks(existingKeys, newQuestions, seqObj) {
           var state = row.length > 1 ? strip(row[1]) : '';
           if (park && state && park.length > 3 && park !== 'Name' && state.length > 2 && state !== 'State') {
             var qText = 'Which national park is located in ' + state + '?';
-            var q = makeQuestion(qText, park, seqObj.seq++, 'Wikipedia - National Parks', '\uD83C\uDF33', park + ' is a national park in ' + state + '.');
+            var q = makeQuestion(qText, park, seqObj.seq++, 'National Parks', '\uD83C\uDF33', park + ' is a national park in ' + state + '.');
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
           }
         }

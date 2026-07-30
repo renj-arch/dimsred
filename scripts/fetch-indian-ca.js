@@ -31,7 +31,7 @@ function fetchJSON(url, retries) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 
-function stripHtml(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function stripHtml(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 function extractEntity(eventHtml) {
   var linkRe = /<a[^>]*href="\/wiki\/([^"#]+?)(?:#[^"]*)?"[^>]*>/g;
@@ -177,7 +177,7 @@ function makeQuestion(event, seq) {
     type: 'fill_blank',
     category: 'Indian Current Affairs',
     region: '',
-    source: 'Wikipedia Indian Current Events',
+    source: 'Indian Current Events',
     pubDate: pubDate,
     subject: 'Indian Current Affairs',
     subSubject: monthLabel,

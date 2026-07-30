@@ -27,7 +27,7 @@ function fetchJSON(url, retries) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function strip(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 function fetchPageText(title) {
   return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
@@ -101,7 +101,7 @@ async function fetchVandeBharat(existingKeys, newQuestions, seqObj) {
             var origin = strip(parts[0]);
             var dest = strip(parts[parts.length - 1]);
             var qText = 'The Vande Bharat Express train connects which two cities?';
-            var q = makeQuestion(qText, origin + ' and ' + dest, seqObj.seq++, 'Wikipedia - Vande Bharat', '\uD83D\uDE86', name + ' runs between ' + origin + ' and ' + dest + '.');
+            var q = makeQuestion(qText, origin + ' and ' + dest, seqObj.seq++, 'Vande Bharat', '\uD83D\uDE86', name + ' runs between ' + origin + ' and ' + dest + '.');
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
           }
         }
@@ -155,7 +155,7 @@ async function fetchRailwayZones(existingKeys, newQuestions, seqObj) {
           var hq = strip(row[hqCol]);
           if (zone && hq && zone.length > 3 && zone !== 'Zone' && hq !== 'Headquarters' && hq.length > 2 && hq.indexOf('.mw') < 0) {
             var qText = 'Where is the headquarters of the ' + zone + ' railway zone?';
-            var q = makeQuestion(qText, hq, seqObj.seq++, 'Wikipedia - Indian Railways', '\uD83D\uDE86', 'The ' + zone + ' zone headquarters is in ' + hq + '.');
+            var q = makeQuestion(qText, hq, seqObj.seq++, 'Indian Railways', '\uD83D\uDE86', 'The ' + zone + ' zone headquarters is in ' + hq + '.');
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
           }
         }
@@ -190,7 +190,7 @@ async function fetchMajorPorts(existingKeys, newQuestions, seqObj) {
             var parts = state.split(',');
             state = strip(parts[0]);
             var qText = 'Which major port is located in ' + state + '?';
-            var q = makeQuestion(qText, port, seqObj.seq++, 'Wikipedia - Indian Ports', '\u26F5', port + ' is a major port in ' + state + '.');
+            var q = makeQuestion(qText, port, seqObj.seq++, 'Indian Ports', '\u26F5', port + ' is a major port in ' + state + '.');
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
           }
         }

@@ -27,7 +27,7 @@ function fetchJSON(url, retries) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function strip(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 function fetchPageText(title) {
   return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
@@ -105,7 +105,7 @@ async function fetchPSBanks(existingKeys, newQuestions, seqObj) {
         var hq = strip(row[hqCol]);
         if (name && name.length > 3 && name !== 'Name' && hq && hq.length > 2 && hq !== 'Headquarters') {
           var qText = 'Where is the headquarters of ' + name + '?';
-          var q = makeQuestion(qText, hq, seqObj.seq++, 'Wikipedia - Banking in India', '\uD83C\uDFE6', name + ' is headquartered in ' + hq + '.');
+          var q = makeQuestion(qText, hq, seqObj.seq++, 'Banking in India', '\uD83C\uDFE6', name + ' is headquartered in ' + hq + '.');
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }
@@ -167,7 +167,7 @@ async function fetchUPIData(existingKeys, newQuestions, seqObj) {
           if (app && app.length > 2 && app !== 'App' && app !== 'Application') {
             var qText = 'Which organization developed the UPI app ' + app + '?';
             var a = provider || 'NPCI';
-            var q = makeQuestion(qText, a, seqObj.seq++, 'Wikipedia - UPI', '\uD83D\uDCB1', app + ' is a UPI app by ' + a + '.');
+            var q = makeQuestion(qText, a, seqObj.seq++, 'UPI', '\uD83D\uDCB1', app + ' is a UPI app by ' + a + '.');
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
           }
         }

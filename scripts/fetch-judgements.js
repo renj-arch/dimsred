@@ -101,7 +101,7 @@ async function fetchLandmarks(existingKeys, newQuestions, seq) {
         var yrMatch = yearStr.match(/\b\d{4}\b/);
         if (yrMatch && yrMatch[0] >= '1950') {
           var qText = 'Which landmark case was decided by the Supreme Court of India in ' + yrMatch[0] + '?';
-          var q = makeQuestion(qText, name, seq++, 'Wikipedia - Landmark Cases', '\u2696', name + ' (' + yrMatch[0] + '): ' + significance.substring(0, 120));
+          var q = makeQuestion(qText, name, seq++, 'Landmark Cases', '\u2696', name + ' (' + yrMatch[0] + '): ' + significance.substring(0, 120));
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }

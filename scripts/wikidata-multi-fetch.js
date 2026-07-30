@@ -1723,7 +1723,7 @@ async function main(){
     const entries=await processCat(cat);
     const fp=path.resolve(__dirname,'..','data',`wiki-${cat.id}.json`);
     if(entries.length===0){
-      // Check if existing file has content (from wikipedia-fetch.js)
+      -fetch.js)
       try{
         const existing=JSON.parse(fs.readFileSync(fp,'utf8'));
         if(existing.length>0){

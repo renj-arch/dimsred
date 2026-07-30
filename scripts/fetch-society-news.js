@@ -29,7 +29,7 @@ function fetchJSON(url, retries) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function stripHtml(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function stripHtml(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 function eventKey(q) {
   var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); };
   return n(q.question || q.text || '').substring(0, 80) + '|' + n(q.answer || q.entity || '');
@@ -77,7 +77,7 @@ function makeQuestion(event, seq) {
   }
   return {
     id: id, type: 'fill_blank', category: 'PIB', region: '',
-    source: 'Wikipedia Society', pubDate: pubDate,
+    source: 'Society', pubDate: pubDate,
     subject: 'PIB Releases', subSubject: 'Announcements',
     emoji: '\uD83D\uDC65', question: blankText, answer: finalAnswer,
     hint: '', fact: event.text.substring(0, 500)

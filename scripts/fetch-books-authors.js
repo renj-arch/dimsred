@@ -27,7 +27,7 @@ function fetchJSON(url, retries) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function strip(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 function fetchPageText(title) {
   return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
@@ -115,7 +115,7 @@ async function fetchBestSellers(existingKeys, newQuestions, seq) {
       var books = extractBookTable(t);
       books.forEach(function(b) {
         var qText = 'Who is the author of the best-selling book "' + b.title + '"?';
-        var q = makeQuestion(qText, b.author, seq++, 'Wikipedia - Best-selling Books', '\uD83D\uDCD6', b.title + ' by ' + b.author + (b.copies ? ' (' + b.copies + ' copies)' : ''));
+        var q = makeQuestion(qText, b.author, seq++, 'Best-selling Books', '\uD83D\uDCD6', b.title + ' by ' + b.author + (b.copies ? ' (' + b.copies + ' copies)' : ''));
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
       });
     });
@@ -133,7 +133,7 @@ async function fetchJnanpith(existingKeys, newQuestions, seq) {
       var recipients = extractRecipientTable(t);
       recipients.forEach(function(r) {
         var qText = 'Who received the Jnanpith Award in ' + r.year + '?';
-        var q = makeQuestion(qText, r.name, seq++, 'Wikipedia - Jnanpith Award', '\uD83C\uDFC6', r.name + ' received the Jnanpith Award in ' + r.year + '.');
+        var q = makeQuestion(qText, r.name, seq++, 'Jnanpith Award', '\uD83C\uDFC6', r.name + ' received the Jnanpith Award in ' + r.year + '.');
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
       });
     });
@@ -151,7 +151,7 @@ async function fetchSahityaAkademi(existingKeys, newQuestions, seq) {
       var recipients = extractRecipientTable(t);
       recipients.forEach(function(r) {
         var qText = 'Who received the Sahitya Akademi Award in ' + r.year + '?';
-        var q = makeQuestion(qText, r.name, seq++, 'Wikipedia - Sahitya Akademi Award', '\uD83C\uDFC6', r.name + ' received the Sahitya Akademi Award in ' + r.year + '.');
+        var q = makeQuestion(qText, r.name, seq++, 'Sahitya Akademi Award', '\uD83C\uDFC6', r.name + ' received the Sahitya Akademi Award in ' + r.year + '.');
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
       });
     });

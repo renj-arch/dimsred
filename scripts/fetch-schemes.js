@@ -7,7 +7,8 @@ var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
 function clean(v) {
-  return v.replace(/&#160;/g, ' ').replace(/&#91;/g,'').replace(/&#93;/g,'').replace(/<[^>]+>/g, ' ').replace(/\[[\d\s,\-]+\]/g, '').replace(/\s+/g, ' ').trim();
+  v = v.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '').replace(/<[^>]+>/g, ' ').replace(/&#(\d+);/g, function(m, c) { return String.fromCharCode(c); });
+  return v.replace(/\[[\d\s,\-]+\]/g, '').replace(/\s+/g, ' ').trim();
 }
 
 function fetchJSON(url, retries) {
@@ -84,7 +85,7 @@ var TEMPLATES = [
     var ministry = clean(row[2]);
     var year = clean(row[3]);
     var yrMatch = year.match(/\b(19|20)\d{2}\b/);
-    return makeQuestion('Which ' + ministry + ' scheme' + (yrMatch ? ' was launched in ' + yrMatch[0] : '') + '?', name, seq, 'Wikipedia - Government Schemes', '\uD83C\uDFE6', name + ' was launched in ' + year + ' under ' + ministry + '.');
+    return makeQuestion('Which ' + ministry + ' scheme' + (yrMatch ? ' was launched in ' + yrMatch[0] : '') + '?', name, seq, 'Government Schemes', '\uD83C\uDFE6', name + ' was launched in ' + year + ' under ' + ministry + '.');
   },
   function(row, seq) {
     var name = clean(row[0]);
@@ -96,13 +97,13 @@ var TEMPLATES = [
     if (!firstLine || firstLine.length < 8) return null;
     var qText = 'Which government scheme is described as: "' + firstLine + '"';
     if (qText.length > 200) qText = qText.substring(0, 197) + '..."';
-    return makeQuestion(qText, name, seq, 'Wikipedia - Government Schemes', '\uD83C\uDFE6', name + ': ' + description.substring(0, 200));
+    return makeQuestion(qText, name, seq, 'Government Schemes', '\uD83C\uDFE6', name + ': ' + description.substring(0, 200));
   },
   function(row, seq) {
     var name = clean(row[0]);
     var sector = row.length > 4 ? clean(row[4]) : '';
     if (!sector) return null;
-    return makeQuestion('Which government scheme falls under the ' + sector + ' sector?', name, seq, 'Wikipedia - Government Schemes', '\uD83C\uDFE6', name + ' falls under ' + sector + '.');
+    return makeQuestion('Which government scheme falls under the ' + sector + ' sector?', name, seq, 'Government Schemes', '\uD83C\uDFE6', name + ' falls under ' + sector + '.');
   }
 ];
 

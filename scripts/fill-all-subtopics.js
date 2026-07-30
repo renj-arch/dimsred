@@ -1186,7 +1186,7 @@ async function main() {
     'Energy_policy_of_India', 'Environment_law_in_India',
   ];
 
-  // Fetch recent new pages from Wikipedia
+  
   const monitorUrl = `${WIKI_API}?action=query&list=recentchanges&rcnamespace=0&rcshow=!bot|!redirect&rctype=new&rclimit=100&format=json`;
   try {
     const monitorData = await fetchJSON(monitorUrl);

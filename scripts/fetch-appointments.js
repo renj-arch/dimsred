@@ -28,7 +28,7 @@ function fetchJSON(url, retries) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function strip(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 var OFFICES = [
   { page: 'Chief_of_the_Army_Staff_(India)', label: 'Chief of the Army Staff', q: 'Who is the current Chief of the Army Staff (COAS) of India?', emoji: '\uD83C\uDFC1' },
@@ -161,7 +161,7 @@ function makeQuestion(office, name, seq) {
     type: 'fill_blank',
     category: 'Current Affairs',
     region: '',
-    source: 'Wikipedia - ' + office.page,
+    source: '' + office.page,
     pubDate: pubDate,
     subject: 'Current Affairs',
     subSubject: 'Appointments',
@@ -169,7 +169,7 @@ function makeQuestion(office, name, seq) {
     question: office.q,
     answer: name,
     hint: '',
-    fact: 'The current ' + office.label + ' of India is ' + name + '. (as per Wikipedia)'
+    fact: 'The current ' + office.label + ' of India is ' + name + '. '
   };
 }
 

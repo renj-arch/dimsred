@@ -35,7 +35,7 @@ function fetchJSONWithRetry(url, retries) {
   });
 }
 
-function stripHtml(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function stripHtml(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
 function fetchPageContent(title) {
@@ -143,7 +143,7 @@ function makeRankingQuestions(index, rank, seq) {
     type: 'fill_blank',
     category: 'Current Affairs',
     region: '',
-    source: 'Wikipedia - ' + index.name,
+    source: '' + index.name,
     pubDate: pubDate,
     subject: 'Current Affairs',
     subSubject: 'India Rankings',

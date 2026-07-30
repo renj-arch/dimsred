@@ -29,7 +29,7 @@ function fetchJSON(url, retries) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function stripHtml(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function stripHtml(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 var THEMES_2026 = [
   ['International Yoga Day', '21 June', '\uD83E\uDDD8', 'International Day of Yoga', 'Yoga for Healthy Ageing', ''],
@@ -152,7 +152,7 @@ function makeThemeQuestion(item, seq) {
     type: 'fill_blank',
     category: 'Current Affairs',
     region: '',
-    source: 'Wikipedia / UN',
+    source: 'UN',
     pubDate: pubDate,
     subject: 'Current Affairs',
     subSubject: 'Important Days & Themes',

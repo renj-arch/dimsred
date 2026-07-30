@@ -191,6 +191,45 @@ jobs:
       - run: node scripts/fetch-obituaries.js
       - run: node scripts/fetch-bilateral.js
 
+      # Previously existing but unconnected scripts
+      - run: node scripts/fetch-art-culture.js || true
+      - run: node scripts/fetch-banking-ca.js || true
+      - run: node scripts/fetch-economy-ca.js || true
+      - run: node scripts/fetch-infra-ca.js || true
+      - run: node scripts/fetch-health-ca.js || true
+      - run: node scripts/fetch-education-ca.js || true
+      - run: node scripts/fetch-environment-ca.js || true
+      - run: node scripts/fetch-intl-orgs.js || true
+      - run: node scripts/fetch-constitutional-bodies.js || true
+      - run: node scripts/fetch-constitution-articles.js || true
+      - run: node scripts/fetch-census-data.js || true
+      - run: node scripts/fetch-disaster-mgmt.js || true
+      - run: node scripts/fetch-tribes.js || true
+      - run: node scripts/fetch-sports.js || true
+      - run: node scripts/fetch-books-authors.js || true
+
+      # New missing-category scripts
+      - run: node scripts/fetch-persons-places.js || true
+      - run: node scripts/fetch-elections.js || true
+      - run: node scripts/fetch-reports-indexes.js || true
+      - run: node scripts/fetch-agri-energy-security.js || true
+      - run: node scripts/fetch-social-welfare.js || true
+      - run: node scripts/fetch-corporate-digital.js || true
+      - run: node scripts/fetch-global-social-issues.js || true
+      - run: node scripts/fetch-historical-anniversaries.js || true
+      - run: node scripts/fetch-media-press.js || true
+      - run: node scripts/fetch-insurance-irdai.js || true
+      - run: node scripts/fetch-film-world-records.js || true
+      - run: node scripts/fetch-ma-corporate.js || true
+      - run: node scripts/fetch-railway-aviation.js || true
+
+      # High-priority remaining categories
+      - run: node scripts/fetch-committees-commissions.js || true
+      - run: node scripts/fetch-national-parks-wildlife.js || true
+      - run: node scripts/fetch-budget-rbi.js || true
+      - run: node scripts/fetch-unesco-sc-institutions.js || true
+      - run: node scripts/fetch-industry-nuclear-flagships.js || true
+
       - run: node scripts/cleanup-questions.js
       - run: node scripts/dedup-sentence-flood.js
       - run: node scripts/inject-handpicked-gk.js

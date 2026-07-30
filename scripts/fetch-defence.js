@@ -32,7 +32,7 @@ function fetchJSON(url, retries) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/\[.*?\]/g, '').replace(/\s+/g, ' ').trim(); }
+function strip(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 function fetchPageText(title) {
   return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
@@ -123,7 +123,7 @@ async function fetchExercises(existingKeys, newQuestions, seqObj) {
       recent = recent.slice(0, 10);
       recent.forEach(function(ex) {
         var qText = 'Which military exercise was conducted between India and ' + ex.partner + ' by the ' + p.force + ' in recent years?';
-        var q = makeQuestion(qText, ex.name, seqObj.seq++, 'Wikipedia - ' + p.label + ' Exercises', '\uD83C\uDFC1', 'Exercise ' + ex.name + ' (' + p.force + ') was conducted with ' + ex.partner + ' (' + ex.year + ').');
+        var q = makeQuestion(qText, ex.name, seqObj.seq++, '' + p.label + ' Exercises', '\uD83C\uDFC1', 'Exercise ' + ex.name + ' (' + p.force + ') was conducted with ' + ex.partner + ' (' + ex.year + ').');
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; }
       });
       console.error('  ' + recent.length + ' exercises added\n');
@@ -150,7 +150,7 @@ async function fetchMissiles(existingKeys, newQuestions, seqObj) {
         var status = row.length > off + 6 ? cleanVal(row[off + 6]) : '';
         if (name.length < 2) continue;
         if (range && range.match(/\d+/)) {
-          var q = makeQuestion('What is the maximum range of the ' + name + ' missile?', range, seqObj.seq++, 'Wikipedia - Missiles of India', '\uD83D\uDEE1', name + ' missile: Type=' + type + ', Range=' + range + ', Status=' + status);
+          var q = makeQuestion('What is the maximum range of the ' + name + ' missile?', range, seqObj.seq++, 'Missiles of India', '\uD83D\uDEE1', name + ' missile: Type=' + type + ', Range=' + range + ', Status=' + status);
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }
@@ -175,7 +175,7 @@ async function fetchAgniMissiles(existingKeys, newQuestions, seqObj) {
         var status = row.length > 3 ? strip(row[3]).replace(/\[.*?\]/g, '').trim() : '';
         if (range && range.match(/\d+/) && name.length > 2) {
           var cleanedRange = cleanVal(range);
-          var q = makeQuestion('What is the range of the ' + name + ' missile?', cleanedRange, seqObj.seq++, 'Wikipedia - Agni Missile', '\uD83D\uDEE1', name + ': Type=' + type + ', Range=' + cleanedRange + ', Status=' + status);
+          var q = makeQuestion('What is the range of the ' + name + ' missile?', cleanedRange, seqObj.seq++, 'Agni Missile', '\uD83D\uDEE1', name + ': Type=' + type + ', Range=' + cleanedRange + ', Status=' + status);
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }

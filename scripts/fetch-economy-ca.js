@@ -27,7 +27,7 @@ function fetchJSON(url, retries) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function strip(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 function fetchPageText(title) {
   return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
@@ -126,12 +126,12 @@ async function fetchBudgetData(existingKeys, newQuestions, seqObj) {
         var totalBudget = budgetCol >= 0 ? strip(row[budgetCol]) : '';
         if (deficit && deficit.length > 1 && deficit !== 'Fiscal Deficit') {
           var qText = 'What was India\'s fiscal deficit target in the Union Budget for FY' + year + '?';
-          var q = makeQuestion(qText, deficit, seqObj.seq++, 'Wikipedia - Union Budget', '\uD83D\uDCB0', 'Fiscal deficit in FY' + year + ' was ' + deficit + '.');
+          var q = makeQuestion(qText, deficit, seqObj.seq++, 'Union Budget', '\uD83D\uDCB0', 'Fiscal deficit in FY' + year + ' was ' + deficit + '.');
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
         if (totalBudget && totalBudget.length > 1 && totalBudget !== 'Total Budget') {
           var qText2 = 'What was the total Union Budget allocation for FY' + year + '?';
-          var q2 = makeQuestion(qText2, totalBudget, seqObj.seq++, 'Wikipedia - Union Budget', '\uD83D\uDCB0', 'Total budget for FY' + year + ' was ' + totalBudget + '.');
+          var q2 = makeQuestion(qText2, totalBudget, seqObj.seq++, 'Union Budget', '\uD83D\uDCB0', 'Total budget for FY' + year + ' was ' + totalBudget + '.');
           if (q2 && !existingKeys[eventKey(q2)]) { newQuestions.push(q2); existingKeys[eventKey(q2)] = true; count++; }
         }
       }
@@ -182,7 +182,7 @@ async function fetchGSTData(existingKeys, newQuestions, seqObj) {
           var portfolio = strip(row[2] || row[1]);
           if (member && portfolio && member.length > 3 && member !== 'Member') {
             var qText = 'Who is the ' + portfolio.replace(/^Union\s+/,'') + ' in the GST Council?';
-            var q = makeQuestion(qText, member, seqObj.seq++, 'Wikipedia - GST Council', '\uD83D\uDCB0', member + ' serves as ' + portfolio + ' in the GST Council.');
+            var q = makeQuestion(qText, member, seqObj.seq++, 'GST Council', '\uD83D\uDCB0', member + ' serves as ' + portfolio + ' in the GST Council.');
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
           }
         }
@@ -214,7 +214,7 @@ async function fetchNitiAayog(existingKeys, newQuestions, seqObj) {
         var role = row.length > 1 ? strip(row[1]) : '';
         if (name && name.length > 3 && name !== 'Name' && role) {
           var qText = 'Who serves as ' + role + ' of NITI Aayog?';
-          var q = makeQuestion(qText, name, seqObj.seq++, 'Wikipedia - NITI Aayog', '\uD83D\uDCB0', name + ' is ' + role + ' of NITI Aayog.');
+          var q = makeQuestion(qText, name, seqObj.seq++, 'NITI Aayog', '\uD83D\uDCB0', name + ' is ' + role + ' of NITI Aayog.');
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }

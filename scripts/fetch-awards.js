@@ -23,7 +23,7 @@ function fetchJSON(url) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function strip(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 function fetchJSONWithRetry(url, retries) {
   retries = retries || 3;
@@ -161,7 +161,7 @@ async function main() {
     if (names.length < 2) names = extractNamesFromHtml(latest);
     names.forEach(function(n) {
       if (n.length > 3) {
-        var q = makeQuestion('Name a recipient of the Bharat Ratna awarded recently.', n, seq++, 'Wikipedia - Bharat Ratna', '\uD83C\uDFC6', 'Bharat Ratna recipient: ' + n);
+        var q = makeQuestion('Name a recipient of the Bharat Ratna awarded recently.', n, seq++, 'Bharat Ratna', '\uD83C\uDFC6', 'Bharat Ratna recipient: ' + n);
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; }
       }
     });
@@ -190,7 +190,7 @@ async function main() {
     recipients.forEach(function(r) {
       var name = typeof r === 'string' ? r : r.name;
       var year = typeof r === 'string' ? currentYear : r.year;
-      var q = makeQuestion('Who was awarded the ' + PADMA_PAGES[pi].label + ' in ' + year + '?', name, seq++, 'Wikipedia - ' + PADMA_PAGES[pi].label, PADMA_PAGES[pi].emoji, name + ' received the ' + PADMA_PAGES[pi].label + ' in ' + year + '.');
+      var q = makeQuestion('Who was awarded the ' + PADMA_PAGES[pi].label + ' in ' + year + '?', name, seq++, '' + PADMA_PAGES[pi].label, PADMA_PAGES[pi].emoji, name + ' received the ' + PADMA_PAGES[pi].label + ' in ' + year + '.');
       if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; padmaCount++; }
     });
     process.stdout.write(padmaCount + ' recipients\n');
@@ -216,7 +216,7 @@ async function main() {
           if (row.length < 2) continue;
             var name = strip(row[1] || row[0]).replace(/\[.*?\]/g, '').trim();
           if (name.length > 3) {
-            var q = makeQuestion(GALLANTRY_PAGES[gi].q, name, seq++, 'Wikipedia - ' + GALLANTRY_PAGES[gi].label, GALLANTRY_PAGES[gi].emoji, name + ' was awarded the ' + GALLANTRY_PAGES[gi].label + '.');
+            var q = makeQuestion(GALLANTRY_PAGES[gi].q, name, seq++, '' + GALLANTRY_PAGES[gi].label, GALLANTRY_PAGES[gi].emoji, name + ' was awarded the ' + GALLANTRY_PAGES[gi].label + '.');
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; gc++; }
           }
         }
@@ -249,7 +249,7 @@ async function main() {
             if (winners.length < 2) winners = laureate.split(/[;]/).map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 2; });
             var combinedAnswer = winners.join(', ');
             var combinedFact = 'Nobel Prize 2025 - ' + category + ': ' + combinedAnswer;
-            var q = makeQuestion('Who won the Nobel Prize in ' + category + ' in 2025?', combinedAnswer, seq++, 'Wikipedia - Nobel Prize', '\uD83C\uDFC6', combinedFact);
+            var q = makeQuestion('Who won the Nobel Prize in ' + category + ' in 2025?', combinedAnswer, seq++, 'Nobel Prize', '\uD83C\uDFC6', combinedFact);
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; nobelCount++; }
           }
         }
@@ -274,7 +274,7 @@ async function main() {
             if (yearStr) {
               var recipient = strip(row[row.length > 2 ? 1 : row.length - 1]).replace(/\[.*?\]/g, '').replace(/\([^)]*\)/g, '').trim();
               if (recipient.length > 2) {
-                var q = makeQuestion('Who won the Jnanpith Award in ' + yearStr[0] + '?', recipient, seq++, 'Wikipedia - Jnanpith Award', '\uD83D\uDCDA', 'Jnanpith Award ' + yearStr[0] + ': ' + recipient);
+                var q = makeQuestion('Who won the Jnanpith Award in ' + yearStr[0] + '?', recipient, seq++, 'Jnanpith Award', '\uD83D\uDCDA', 'Jnanpith Award ' + yearStr[0] + ': ' + recipient);
                 if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; jnanpithCount++; }
               }
             }
@@ -299,7 +299,7 @@ async function main() {
         if (yearStr) {
           var recipient = strip(t[ri3].length > 1 ? t[ri3][1] : '').replace(/\[.*?\]/g, '').trim();
           if (recipient.length > 2) {
-            var q = makeQuestion('Who received the Dadasaheb Phalke Award in ' + yearStr[0] + '?', recipient, seq++, 'Wikipedia - Dadasaheb Phalke Award', '\uD83C\uDFAC', 'Dadasaheb Phalke Award ' + yearStr[0] + ': ' + recipient);
+            var q = makeQuestion('Who received the Dadasaheb Phalke Award in ' + yearStr[0] + '?', recipient, seq++, 'Dadasaheb Phalke Award', '\uD83C\uDFAC', 'Dadasaheb Phalke Award ' + yearStr[0] + ': ' + recipient);
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; phalkeCount++; }
           }
         }
@@ -329,7 +329,7 @@ async function main() {
       var names = byYear[year];
       var combinedAnswer = names.join(', ');
       var qText = SPORTS_PAGES[si].q.replace('{year}', year);
-      var q = makeQuestion(qText, combinedAnswer, seq++, 'Wikipedia - ' + SPORTS_PAGES[si].label, SPORTS_PAGES[si].emoji, names[0] + ' received the ' + SPORTS_PAGES[si].label + ' in ' + year + '.');
+      var q = makeQuestion(qText, combinedAnswer, seq++, '' + SPORTS_PAGES[si].label, SPORTS_PAGES[si].emoji, names[0] + ' received the ' + SPORTS_PAGES[si].label + ' in ' + year + '.');
       if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; sportCount++; }
     });
     process.stdout.write(sportCount + ' recipients\n');

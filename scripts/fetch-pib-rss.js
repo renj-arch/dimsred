@@ -286,7 +286,7 @@ function rewriteItem(item) {
   desc = desc.replace(/<[^>]+>/g, '').trim();
   if (desc.length > 200) desc = desc.slice(0, 200) + '...';
 
-  if (item.source !== 'Wikipedia') {
+  if (item.source !== 'General Knowledge') {
     desc = handWriteSummary(title, item.source, item.category);
   } else {
     desc = title;
@@ -567,7 +567,7 @@ async function fetchWikiCurrentEvents() {
         category: categorizeWorldItem(text, ''),
         region: '',
         pubDate: new Date().toISOString(),
-        source: 'Wikipedia'
+        source: 'General Knowledge'
       });
     }
     console.log('World news items (rewritten): ' + items.length);

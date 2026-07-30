@@ -158,7 +158,7 @@ async function fetchRelations(existingKeys, newQuestions, seq) {
         if (ctx) fact += ' ' + ctx;
         var enrich = REL_CONTEXT[country];
         if (enrich) fact += ' ' + enrich;
-        var q = makeQuestion(qText, country, seq++, 'Wikipedia - Foreign Relations', '\uD83C\uDF0D', fact);
+        var q = makeQuestion(qText, country, seq++, 'Foreign Relations', '\uD83C\uDF0D', fact);
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
       }
     }

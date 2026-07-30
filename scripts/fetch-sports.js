@@ -27,7 +27,7 @@ function fetchJSON(url, retries) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function strip(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 function fetchPageText(title) {
   return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
@@ -118,7 +118,7 @@ async function fetchKhelRatna(existingKeys, newQuestions, seq) {
       var recipients = extractAwardeeTable(t);
       recipients.forEach(function(r) {
         var qText = 'Who received the Khel Ratna award' + (r.sport ? ' for ' + r.sport : '') + ' in ' + r.year + '?';
-        var q = makeQuestion(qText, r.name, seq++, 'Wikipedia - Khel Ratna', '\uD83C\uDFC5', r.name + ' received Khel Ratna in ' + r.year + (r.sport ? ' for ' + r.sport : '') + '.');
+        var q = makeQuestion(qText, r.name, seq++, 'Khel Ratna', '\uD83C\uDFC5', r.name + ' received Khel Ratna in ' + r.year + (r.sport ? ' for ' + r.sport : '') + '.');
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
       });
     });
@@ -136,7 +136,7 @@ async function fetchOlympicMedalists(existingKeys, newQuestions, seq) {
       var medalists = extractOlympicTable(t);
       medalists.forEach(function(m) {
         var qText = 'Who won the ' + m.medal + ' medal for India in ' + m.games + '?';
-        var q = makeQuestion(qText, m.name, seq++, 'Wikipedia - Indian Olympic Medalists', '\uD83E\uDD47', m.name + ' won ' + m.medal + ' at ' + m.games + (m.sport ? ' (' + m.sport + ')' : '') + '.');
+        var q = makeQuestion(qText, m.name, seq++, 'Indian Olympic Medalists', '\uD83E\uDD47', m.name + ' won ' + m.medal + ' at ' + m.games + (m.sport ? ' (' + m.sport + ')' : '') + '.');
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
       });
     });
@@ -154,7 +154,7 @@ async function fetchDronacharya(existingKeys, newQuestions, seq) {
       var recipients = extractAwardeeTable(t);
       recipients.forEach(function(r) {
         var qText = 'Who received the Dronacharya Award' + (r.sport ? ' for ' + r.sport : '') + ' in ' + r.year + '?';
-        var q = makeQuestion(qText, r.name, seq++, 'Wikipedia - Dronacharya Award', '\uD83C\uDFC5', r.name + ' received Dronacharya Award in ' + r.year + (r.sport ? ' for ' + r.sport : '') + '.');
+        var q = makeQuestion(qText, r.name, seq++, 'Dronacharya Award', '\uD83C\uDFC5', r.name + ' received Dronacharya Award in ' + r.year + (r.sport ? ' for ' + r.sport : '') + '.');
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
       });
     });

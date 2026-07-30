@@ -8,7 +8,8 @@ var DELAY = 600;
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
 function clean(v) {
-  return v.replace(/&#160;/g, ' ').replace(/<[^>]+>/g, ' ').replace(/[[\d\s,\-]+]|&#91;[\d\s,\-]+&#93;/g, '').replace(/\s+/g, ' ').trim();
+  v = v.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '').replace(/<[^>]+>/g, ' ').replace(/&#(\d+);/g, function(m, c) { return String.fromCharCode(c); });
+  return v.replace(/[[\d\s,\-]+]|&#91;[\d\s,\-]+&#93;/g, '').replace(/\s+/g, ' ').trim();
 }
 
 function fetchJSON(url, retries) {
@@ -121,7 +122,7 @@ async function fetchSatellites(existingKeys, newQuestions, seq) {
         var year = yearMatch[0];
         if (year >= '2015') {
           var qText = 'Which satellite was launched by India in ' + year + '?';
-          var q = makeQuestion(qText, name, seq++, 'Wikipedia - Indian Satellites', '\uD83D\uDEE0', name + ' (' + year + ') was launched on ' + launchDate + ' via ' + vehicle + '.');
+          var q = makeQuestion(qText, name, seq++, 'Indian Satellites', '\uD83D\uDEE0', name + ' (' + year + ') was launched on ' + launchDate + ' via ' + vehicle + '.');
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }
@@ -148,7 +149,7 @@ async function fetchMissions(existingKeys, newQuestions, seq) {
         if (yearMatch && yearMatch[0] >= '2020') {
           var statusOk = status.toLowerCase().indexOf('success') >= 0 || status.toLowerCase().indexOf('operational') >= 0;
           var qText = 'Which ISRO mission was launched in ' + yearMatch[0] + (statusOk ? ' (successful)' : '') + '?';
-          var q = makeQuestion(qText, name, seq++, 'Wikipedia - ISRO Missions', '\uD83D\uDE80', name + ' was launched on ' + date + '. Status: ' + status);
+          var q = makeQuestion(qText, name, seq++, 'ISRO Missions', '\uD83D\uDE80', name + ' was launched on ' + date + '. Status: ' + status);
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }
@@ -178,7 +179,7 @@ async function fetchScienceAwards(existingKeys, newQuestions, seq) {
           recipient = recipient.replace(/\[.*?\]/g, '').replace(/\([^)]*\)/g, '').trim();
           if (recipient.length > 2) {
             var qText = AWARD_PAGES[ai].q.replace('{year}', yearStr[0]);
-            var q = makeQuestion(qText, recipient, seq++, 'Wikipedia - ' + AWARD_PAGES[ai].label, AWARD_PAGES[ai].emoji, recipient + ' won the ' + AWARD_PAGES[ai].label + ' in ' + yearStr[0] + '.');
+            var q = makeQuestion(qText, recipient, seq++, '' + AWARD_PAGES[ai].label, AWARD_PAGES[ai].emoji, recipient + ' won the ' + AWARD_PAGES[ai].label + ' in ' + yearStr[0] + '.');
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; awardCount++; }
           }
         }

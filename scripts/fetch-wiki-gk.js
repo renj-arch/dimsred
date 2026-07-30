@@ -177,7 +177,7 @@ function makeQuestions(articles, subject) {
 }
 
 async function main() {
-  console.log('=== Fetching India-focused Wikipedia GK ===\n');
+  console.log('=== Fetching India-focused GK ===\n');
 
   let existing = { questions: [] };
   try { existing = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8')); } catch (e) {}

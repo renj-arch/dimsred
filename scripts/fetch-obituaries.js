@@ -227,7 +227,7 @@ async function fetchDeaths(existingKeys, newQuestions, seq) {
     entries.forEach(function(e) {
       var cat = findCategory(e.desc);
       var qText = pickTemplate(cat, e.month);
-      var q = makeQuestion(qText, e.name, seq++, 'Wikipedia - Deaths in 2026', '\uD83D\uDD4A', e.name + ': ' + e.desc.substring(0, 200));
+      var q = makeQuestion(qText, e.name, seq++, 'Deaths in 2026', '\uD83D\uDD4A', e.name + ': ' + e.desc.substring(0, 200));
       if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
     });
     console.error('  ' + count + ' obituary questions added\n');

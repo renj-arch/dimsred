@@ -27,7 +27,7 @@ function fetchJSON(url, retries) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function strip(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 function fetchPageText(title) {
   return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
@@ -92,7 +92,7 @@ async function fetchAyushman(existingKeys, newQuestions, seqObj) {
           var b = strip(row[1]);
           if (a && b && a.length > 2 && b.length > 2 && a !== 'State/UT' && a !== 'Scheme') {
             var qText = 'Under Ayushman Bharat, what is the value associated with ' + a.replace(/:$/,'').substring(0, 60) + '?';
-            var q = makeQuestion(qText, b, seqObj.seq++, 'Wikipedia - Ayushman Bharat', '\uD83C\uDFE5', a + ': ' + b);
+            var q = makeQuestion(qText, b, seqObj.seq++, 'Ayushman Bharat', '\uD83C\uDFE5', a + ': ' + b);
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
           }
         }
@@ -138,7 +138,7 @@ async function fetchIndianHealth(existingKeys, newQuestions, seqObj) {
           if (a && b && a.length > 2 && a !== 'State/UT' && a !== 'Rank') {
             var val = c || b;
             var qText = 'What is the ' + a.substring(0, 50) + ' metric in Indian healthcare?';
-            var q = makeQuestion(qText, val, seqObj.seq++, 'Wikipedia - Healthcare in India', '\uD83C\uDFE5', a + ': ' + val);
+            var q = makeQuestion(qText, val, seqObj.seq++, 'Healthcare in India', '\uD83C\uDFE5', a + ': ' + val);
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
           }
         }

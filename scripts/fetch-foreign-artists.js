@@ -98,7 +98,7 @@ async function main() {
       type: 'fill_blank',
       category: 'Art & Culture',
       region: '',
-      source: 'Wikipedia',
+      source: 'General Knowledge',
       pubDate: new Date().toISOString(),
       subject: 'Art & Culture',
       subSubject: 'Taj Mahal',

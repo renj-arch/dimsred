@@ -27,7 +27,7 @@ function fetchJSON(url, retries) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function strip(html) { return html.replace(/<[^>]+>/g, ' ').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function strip(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 function fetchPageText(title) {
   return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
@@ -89,7 +89,7 @@ async function fetchUnescoSites(existingKeys, newQuestions, seqObj) {
         if (!name || name.length < 4 || name === 'Name' || name === 'Site' || name.indexOf('Total') >= 0) continue;
         if (state) {
           var qText = 'Which UNESCO World Heritage Site is located in ' + state + '?';
-          var q = makeQuestion(qText, name, seqObj.seq++, 'Wikipedia - UNESCO Sites', '\uD83C\uDFF0', name + ' is a UNESCO World Heritage Site in ' + state + '.');
+          var q = makeQuestion(qText, name, seqObj.seq++, 'UNESCO Sites', '\uD83C\uDFF0', name + ' is a UNESCO World Heritage Site in ' + state + '.');
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }
@@ -154,7 +154,7 @@ async function fetchClassicalDances(existingKeys, newQuestions, seqObj) {
         if (!name || name.length < 3 || name === 'Name' || name.indexOf('Total') >= 0) continue;
         if (origin) {
           var qText = 'The classical dance ' + name + ' originates from which Indian state?';
-          var q = makeQuestion(qText, origin, seqObj.seq++, 'Wikipedia - Classical Dance', '\uD83D\uDC83', name + ' is a classical dance form from ' + origin + '.');
+          var q = makeQuestion(qText, origin, seqObj.seq++, 'Classical Dance', '\uD83D\uDC83', name + ' is a classical dance form from ' + origin + '.');
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }
@@ -172,7 +172,7 @@ async function fetchClassicalDances(existingKeys, newQuestions, seqObj) {
       ];
       danceData.forEach(function(d) {
         var qText = 'The classical dance ' + d.name + ' originates from which Indian state?';
-        var q = makeQuestion(qText, d.state, seqObj.seq++, 'Wikipedia - Classical Dance', '\uD83D\uDC83', d.name + ' is a classical dance form from ' + d.state + '.');
+        var q = makeQuestion(qText, d.state, seqObj.seq++, 'Classical Dance', '\uD83D\uDC83', d.name + ' is a classical dance form from ' + d.state + '.');
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
       });
     }
@@ -200,7 +200,7 @@ async function fetchFolkDances(existingKeys, newQuestions, seqObj) {
                 var state = strip(parts[1]);
                 if (dance.length > 2 && state.length > 2 && state.length < 40) {
                   var qText = 'The folk dance "' + dance.trim() + '" is associated with which state?';
-                  var q = makeQuestion(qText, state.trim(), seqObj.seq++, 'Wikipedia - Folk Dance', '\uD83D\uDC83', dance + ' is a folk dance from ' + state.trim() + '.');
+                  var q = makeQuestion(qText, state.trim(), seqObj.seq++, 'Folk Dance', '\uD83D\uDC83', dance + ' is a folk dance from ' + state.trim() + '.');
                   if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
                 }
               }
