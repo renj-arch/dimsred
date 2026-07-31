@@ -26,6 +26,11 @@ async function rateLimit(minGapMs = 1500) {
   lastRequestTime = Date.now();
 }
 
+function isRetryableHttp(e) {
+  if (!e.status) return true;
+  return e.status === 429 || e.status === 403 || (e.status >= 500 && e.status <= 599);
+}
+
 async function httpGet(url, retries = 8) {
   await rateLimit(500);
   for (let attempt = 0; attempt <= retries; attempt++) {
@@ -45,9 +50,9 @@ async function httpGet(url, retries = 8) {
       });
       return result;
     } catch (e) {
-      if (attempt < retries && (e.status === 429 || (e.status >= 500 && e.status <= 599))) {
+      if (attempt < retries && isRetryableHttp(e)) {
         const wait = Math.min((attempt + 1) * 3000 + Math.floor(Math.random() * 2000), 120000);
-        console.log(`  ⏳ retry ${attempt+1}/${retries} (${e.status || 'err'}), waiting ${Math.round(wait/1000)}s...`);
+        console.log(`  ⏳ retry ${attempt+1}/${retries} (${e.status || e.message.slice(0, 60)}), waiting ${Math.round(wait/1000)}s...`);
         await new Promise(r => setTimeout(r, wait));
         continue;
       }
@@ -124,9 +129,9 @@ async function httpPost(url, data, retries = 8) {
       });
       return result;
     } catch (e) {
-      if (attempt < retries && (e.status === 429 || (e.status >= 500 && e.status <= 599))) {
+      if (attempt < retries && isRetryableHttp(e)) {
         const wait = Math.min((attempt + 1) * 3000 + Math.floor(Math.random() * 2000), 120000);
-        console.log(`  ⏳ SPARQL retry ${attempt+1}/${retries} (${e.status || 'err'}), waiting ${Math.round(wait/1000)}s...`);
+        console.log(`  ⏳ SPARQL retry ${attempt+1}/${retries} (${e.status || e.message.slice(0, 60)}), waiting ${Math.round(wait/1000)}s...`);
         await new Promise(r => setTimeout(r, wait));
         continue;
       }
@@ -848,16 +853,28 @@ async function fetchSummariesConcurrently(titles, concurrency = 10) {
 async function processCat(cat, dedupSet) {
   const cats = Array.isArray(cat.wikiCat) ? cat.wikiCat : [cat.wikiCat];
   console.log(`\n▓ ${cat.label} (${cats.join(', ')})`);
-  let allTitles = [];
-  for (const wc of cats) {
-    const t = await wikiCategoryDeepMembers(wc, 5000, new Set(), 0, cat.maxDepth ?? 2);
-    allTitles = allTitles.concat(t);
+  let titles;
+  try {
+    let allTitles = [];
+    for (const wc of cats) {
+      const t = await wikiCategoryDeepMembers(wc, 5000, new Set(), 0, cat.maxDepth ?? 2);
+      allTitles = allTitles.concat(t);
+    }
+    titles = [...new Set(allTitles)];
+  } catch (e) {
+    console.log(`  ✗ Category scan failed for ${cat.id}: ${e.message} — skipping`);
+    return [];
   }
-  const titles = [...new Set(allTitles)];
   console.log(`  Wikipedia: ${titles.length} pages from ${cats.length} categories (deep scan, up to ${cat.maxDepth ?? 2} subcat levels)`);
   if (!titles.length) return [];
 
-  const titleQid = await titlesToQids(titles);
+  let titleQid;
+  try {
+    titleQid = await titlesToQids(titles);
+  } catch (e) {
+    console.log(`  ✗ Title→QID lookup failed for ${cat.id}: ${e.message} — skipping`);
+    return [];
+  }
   const valid = Object.entries(titleQid).filter(([, qid]) => qid && /^Q\d+$/.test(qid));
   console.log(`  QIDs found: ${valid.length}`);
   if (!valid.length) return [];
@@ -1045,7 +1062,12 @@ async function main() {
     console.log(`[${i+1}/${activeRunCats.length}]`);
     const newEntries = await processCat(cat, dedupSet);
     const fp = path.join(DATA_DIR, `wiki-${cat.id}.json`);
-    const existing = fs.existsSync(fp) ? JSON.parse(fs.readFileSync(fp, 'utf8')) : [];
+    let existing = [];
+    try {
+      if (fs.existsSync(fp)) existing = JSON.parse(fs.readFileSync(fp, 'utf8'));
+    } catch (e) {
+      console.log(`  ⚠ could not parse ${path.basename(fp)} (${e.message.slice(0, 80)}), starting fresh`);
+    }
     const seen = new Set(existing.map(e => normName(e.n)));
     const merged = [...existing];
     let added = 0;
