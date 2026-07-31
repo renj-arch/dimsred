@@ -130,6 +130,29 @@ async function fetchArticleExtract(title, retries) {
 
 function norm(s) { return (s || '').replace(/\s+/g, ' ').trim().toLowerCase(); }
 
+// Deterministic per-run seed so each run blanks DIFFERENT terms/years/numbers
+// from the same sentences. Falls back to date for local runs.
+function runSeed() {
+  const n = parseInt(process.env.GITHUB_RUN_NUMBER || '', 10);
+  if (n > 0) return n;
+  const d = new Date();
+  return d.getFullYear() * 372 + (d.getMonth() + 1) * 31 + d.getDate();
+}
+
+function hashStr(s) {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return (h >>> 0) % 1000000;
+}
+
+// Stable pick per (run, title, sentence index, slot) → 0..999999
+function pickVar(title, sentIdx, slot) {
+  return hashStr('run' + runSeed() + '|' + title + '|' + sentIdx + '|' + slot);
+}
+
 // Detect table/list row fragments: high comma density, starts with year/name, etc.
 function isBadSentence(s) {
   const t = s.trim();
@@ -194,7 +217,7 @@ function getContext(allSentences, sentText, windowSize) {
   return allSentences.slice(start, end).join('. ').substring(0, 1200);
 }
 
-function findBestTerm(sent, title) {
+function findBestTerm(sent, title, variation) {
   const allMatches = [];
   // Title-case words (proper nouns)
   let re = /([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,4})/g, m;
@@ -243,11 +266,12 @@ function findBestTerm(sent, title) {
   });
 
   scored.sort((a, b) => b.score - a.score);
-  // Avoid terms that are just single common words unless they appear early
-  for (const s of scored) {
-    if (s.term.split(/\s+/).length > 1 || s.term.length > 5) return s.term;
-  }
-  return scored[0] ? scored[0].term : null;
+  // Prefer multi-word / long terms (more specific), fall back to the full pool
+  const multi = scored.filter(s => s.term.split(/\s+/).length > 1 || s.term.length > 5);
+  const pool = multi.length ? multi : scored;
+  if (!pool.length) return null;
+  if (variation === undefined || variation === null) return pool[0].term;
+  return pool[variation % pool.length].term;
 }
 
 // Simple paraphrase: shorten to 1-2 most relevant sentences, minor reword
@@ -1473,7 +1497,8 @@ async function main() {
         if (!sentUsed) {
           const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
           if (years && sent.length < 240) {
-            const context = sent.replace(years[0], '_____').trim().substring(0, 200);
+            const yearChoice = years[pickVar(title, si, 1) % years.length];
+            const context = sent.replace(yearChoice, '_____').trim().substring(0, 200);
             if (/^[^a-z]*[A-Z][a-z]+[,\s].*\(_____\)\s*$/.test(context)) continue;
             if (/^\(?_____\)?\s*$/.test(context)) continue;
             if (/^Archived from/i.test(context)) continue;
@@ -1484,23 +1509,25 @@ async function main() {
               id: cat.name.substring(0,3).toLowerCase() + added + 'y',
               type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
               pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
-              question: context, answer: years[0], hint: '',
-              fact: paraphrase(getContext(allSentences, sent, 3), years[0]),
+              question: context, answer: yearChoice, hint: '',
+              fact: paraphrase(getContext(allSentences, sent, 3), yearChoice),
             })) { added++; articleQ++; sentUsed = true; }
           }
         }
 
         // ▸ Number-based (%, lakh, crore, million, billion, km, kg)
         if (articleQ < MAX_PER_ARTICLE && !sentUsed) {
-          const numMatch = sent.match(/\b(\d+(?:[.,]\d+)?\s*(%|lakh|crore|million|billion|trillion|sq\s*\.?\s*km|km²|km\b|kg|tonnes?|hectares?|megawatts?|kilometres?))/i);
-          if (numMatch && sent.length < 240) {
-            const context = sent.replace(numMatch[1], '_____').trim().substring(0, 200);
+          const numRe = /\b(\d+(?:[.,]\d+)?\s*(%|lakh|crore|million|billion|trillion|sq\s*\.?\s*km|km²|km\b|kg|tonnes?|hectares?|megawatts?|kilometres?))/ig;
+          const numMatches = [...sent.matchAll(numRe)].map(m => m[1]);
+          if (numMatches.length && sent.length < 240) {
+            const numChoice = numMatches[pickVar(title, si, 2) % numMatches.length];
+            const context = sent.replace(numChoice, '_____').trim().substring(0, 200);
             if (context.length > 25 && pushQ({
               id: cat.name.substring(0,3).toLowerCase() + added + 'n',
               type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
               pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
-            question: context, answer: numMatch[1].trim(), hint: '',
-            fact: paraphrase(getContext(allSentences, sent, 3), numMatch[1].trim()),
+            question: context, answer: numChoice.trim(), hint: '',
+            fact: paraphrase(getContext(allSentences, sent, 3), numChoice.trim()),
             })) { added++; articleQ++; sentUsed = true; }
           }
         }
@@ -1526,7 +1553,7 @@ async function main() {
         // ▸ Blank-out key term (every sentence)
         if (articleQ < MAX_PER_ARTICLE && !sentUsed) {
           if (new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(sent)) continue;
-          const bestTerm = findBestTerm(sent, title);
+          const bestTerm = findBestTerm(sent, title, pickVar(title, si, 4));
           if (!bestTerm) continue;
           if (new RegExp('^' + bestTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(sent.trim())) continue;
           const context = sent.replace(bestTerm, '_____').trim().substring(0, 200);
@@ -1581,13 +1608,14 @@ async function main() {
           if (sent.length > 260) continue;
           const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
           if (years && sent.length < 240) {
-            const context = sent.replace(years[0], '_____').trim().substring(0, 200);
+            const yearChoice = years[pickVar(title, si, 1) % years.length];
+            const context = sent.replace(yearChoice, '_____').trim().substring(0, 200);
             if (context.length > 25 && pushQ({
               id: cat.name.substring(0,3).toLowerCase() + added + 'ly',
               type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
               pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
-              question: context, answer: years[0], hint: '',
-              fact: paraphrase(getContext(allSentences, sent, 3), years[0]),
+              question: context, answer: yearChoice, hint: '',
+              fact: paraphrase(getContext(allSentences, sent, 3), yearChoice),
             })) added++;
           }
         }

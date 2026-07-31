@@ -292,8 +292,15 @@ jobs:
               git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
               sleep 5
             done || true
+            touch "$RUNNER_TEMP/changes-committed"
           fi
 
-      - run: gh workflow run "Wiki Fill" --ref main
+      - run: |
+          if [ -f "$RUNNER_TEMP/changes-committed" ]; then
+            echo "Data was committed — starting next run"
+            gh workflow run "Wiki Fill" --ref main
+          else
+            echo "No data changes — skipping self-trigger to avoid empty back-to-back runs (daily cron will pick it up)"
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
