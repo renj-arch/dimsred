@@ -130,29 +130,6 @@ async function fetchArticleExtract(title, retries) {
 
 function norm(s) { return (s || '').replace(/\s+/g, ' ').trim().toLowerCase(); }
 
-// Deterministic per-run seed so each run blanks DIFFERENT terms/years/numbers
-// from the same sentences. Falls back to date for local runs.
-function runSeed() {
-  const n = parseInt(process.env.GITHUB_RUN_NUMBER || '', 10);
-  if (n > 0) return n;
-  const d = new Date();
-  return d.getFullYear() * 372 + (d.getMonth() + 1) * 31 + d.getDate();
-}
-
-function hashStr(s) {
-  let h = 2166136261;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return (h >>> 0) % 1000000;
-}
-
-// Stable pick per (run, title, sentence index, slot) → 0..999999
-function pickVar(title, sentIdx, slot) {
-  return hashStr('run' + runSeed() + '|' + title + '|' + sentIdx + '|' + slot);
-}
-
 // Detect table/list row fragments: high comma density, starts with year/name, etc.
 function isBadSentence(s) {
   const t = s.trim();
@@ -217,7 +194,7 @@ function getContext(allSentences, sentText, windowSize) {
   return allSentences.slice(start, end).join('. ').substring(0, 1200);
 }
 
-function findBestTerm(sent, title, variation) {
+function findBestTerm(sent, title) {
   const allMatches = [];
   // Title-case words (proper nouns)
   let re = /([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,4})/g, m;
@@ -270,8 +247,7 @@ function findBestTerm(sent, title, variation) {
   const multi = scored.filter(s => s.term.split(/\s+/).length > 1 || s.term.length > 5);
   const pool = multi.length ? multi : scored;
   if (!pool.length) return null;
-  if (variation === undefined || variation === null) return pool[0].term;
-  return pool[variation % pool.length].term;
+  return pool[0].term;
 }
 
 // Simple paraphrase: shorten to 1-2 most relevant sentences, minor reword
@@ -1410,21 +1386,37 @@ async function main() {
   const WIKI_FILL_CHUNK = parseInt(process.env.WIKI_FILL_CHUNK || '1', 10);
   const WIKI_FILL_CHUNKS = parseInt(process.env.WIKI_FILL_CHUNKS || '1', 10);
 
-  // Phase 1: Gather topics from all active categories (with auto-discovery)
+  // Phase 1: Gather topics from all active categories (with auto-discovery).
+  // Generation is deterministic, so an article that already has Wiki questions
+  // can NEVER yield new ones. Track coverage (Wiki-sourced only) and give the
+  // per-category budget to never-covered content first — each run therefore
+  // rotates through fresh articles and guarantees new questions without
+  // re-fetching already-covered pages.
+  const coveredTitles = new Set();
+  for (const q of quiz.questions) {
+    if (q.source !== 'Wiki' || !q.subSubject) continue;
+    coveredTitles.add(norm(q.subSubject));
+  }
+  const topicBudget = parseInt(process.env.WIKI_FILL_TOPIC_BUDGET || '150', 10);
+
   const catTopicMap = {};
   for (const cat of activeCategories) {
-    let topics = [...cat.topics];
+    const hardcoded = [...cat.topics].filter(t => !coveredTitles.has(norm(t)));
+    let discovered = [];
     if (cat.wikiCat) {
       log('  Fetching category members from Category:' + cat.wikiCat + '...');
       const wikiTopics = await fetchCategoryMembers(cat.wikiCat);
-      const existing = new Set(topics.map(t => t.toLowerCase()));
-      const newTopics = wikiTopics.filter(t => !existing.has(t.toLowerCase()));
-      if (newTopics.length) {
-        log('  Auto-discovered ' + newTopics.length + ' topics from Category:' + cat.wikiCat);
-        topics = topics.concat(newTopics);
-      }
+      const existing = new Set(cat.topics.map(t => t.toLowerCase()));
+      discovered = wikiTopics.filter(t => !existing.has(t.toLowerCase()));
+      if (discovered.length) log('  Auto-discovered ' + discovered.length + ' topics from Category:' + cat.wikiCat);
     }
-    catTopicMap[cat.name] = { cat, topics };
+    // Only never-covered content, then apply budget so each run rotates through NEW articles.
+    const uncovered = discovered.filter(t => !coveredTitles.has(norm(t)));
+    const pickedDiscovered = uncovered.slice(0, topicBudget);
+    if (uncovered.length) {
+      log('  Uncovered topics: ' + uncovered.length + ' — budget picks ' + pickedDiscovered.length + ' (new content first)');
+    }
+    catTopicMap[cat.name] = { cat, topics: hardcoded.concat(pickedDiscovered) };
   }
 
   // Phase 2: Flatten all topics → {cat, topic} entries
@@ -1465,6 +1457,14 @@ async function main() {
       const title = article.title;
       const desc = article.description;
 
+      // Skip articles whose resolved title already has Wiki questions (redirects
+      // like 'Mangalyaan' → 'Mars Orbiter Mission') — deterministic generation
+      // means they can only produce 0 new.
+      if (coveredTitles.has(norm(title))) {
+        log('  (already covered: ' + title + ')');
+        continue;
+      }
+
       // Skip list/table pages — they produce garbled fragments
       if (isListPage(ext)) {
         log('  (skipping list page: ' + title + ')');
@@ -1497,7 +1497,7 @@ async function main() {
         if (!sentUsed) {
           const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
           if (years && sent.length < 240) {
-            const yearChoice = years[pickVar(title, si, 1) % years.length];
+            const yearChoice = years[0];
             const context = sent.replace(yearChoice, '_____').trim().substring(0, 200);
             if (/^[^a-z]*[A-Z][a-z]+[,\s].*\(_____\)\s*$/.test(context)) continue;
             if (/^\(?_____\)?\s*$/.test(context)) continue;
@@ -1518,9 +1518,9 @@ async function main() {
         // ▸ Number-based (%, lakh, crore, million, billion, km, kg)
         if (articleQ < MAX_PER_ARTICLE && !sentUsed) {
           const numRe = /\b(\d+(?:[.,]\d+)?\s*(%|lakh|crore|million|billion|trillion|sq\s*\.?\s*km|km²|km\b|kg|tonnes?|hectares?|megawatts?|kilometres?))/ig;
-          const numMatches = [...sent.matchAll(numRe)].map(m => m[1]);
-          if (numMatches.length && sent.length < 240) {
-            const numChoice = numMatches[pickVar(title, si, 2) % numMatches.length];
+          const numMatch = sent.match(numRe);
+          if (numMatch && sent.length < 240) {
+            const numChoice = numMatch[1];
             const context = sent.replace(numChoice, '_____').trim().substring(0, 200);
             if (context.length > 25 && pushQ({
               id: cat.name.substring(0,3).toLowerCase() + added + 'n',
@@ -1553,7 +1553,7 @@ async function main() {
         // ▸ Blank-out key term (every sentence)
         if (articleQ < MAX_PER_ARTICLE && !sentUsed) {
           if (new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(sent)) continue;
-          const bestTerm = findBestTerm(sent, title, pickVar(title, si, 4));
+          const bestTerm = findBestTerm(sent, title);
           if (!bestTerm) continue;
           if (new RegExp('^' + bestTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(sent.trim())) continue;
           const context = sent.replace(bestTerm, '_____').trim().substring(0, 200);
@@ -1568,10 +1568,12 @@ async function main() {
       }
     }
 
-    // ── Follow internal links recursively until exhausted ──
+    // ── Follow internal links recursively until exhausted (budgeted) ──
     let prevFetched = articles;
     let depth = 0;
-    while (prevFetched.length > 0) {
+    const MAX_LINK_FETCHES = parseInt(process.env.WIKI_FILL_LINK_BUDGET || '60', 10);
+    let linkFetched = 0;
+    while (prevFetched.length > 0 && linkFetched < MAX_LINK_FETCHES) {
       depth++;
       const linkCandidates = [];
       for (const article of prevFetched) {
@@ -1587,10 +1589,12 @@ async function main() {
       }
       if (linkCandidates.length === 0) break;
       log('  Link depth ' + depth + ': ' + linkCandidates.length + ' new topics...');
-      prevFetched = await fetchAllTopics(linkCandidates, 2);
+      prevFetched = await fetchAllTopics(linkCandidates.slice(0, MAX_LINK_FETCHES - linkFetched), 2);
+      linkFetched += prevFetched.length;
       for (const article of prevFetched) {
         const ext = article.extract, title = article.title, desc = article.description;
         if (isListPage(ext)) continue;
+        if (coveredTitles.has(norm(title))) continue;
         const allSentences = ext.split('.').filter(s => s.trim().length > 20 && !isBadSentence(s));
         const sentences = allSentences.filter(s => s.trim().length > 25 && !isBadSentence(s));
         if (desc && desc.length > 5 && desc.length < 200) {
@@ -1608,7 +1612,7 @@ async function main() {
           if (sent.length > 260) continue;
           const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
           if (years && sent.length < 240) {
-            const yearChoice = years[pickVar(title, si, 1) % years.length];
+            const yearChoice = years[0];
             const context = sent.replace(yearChoice, '_____').trim().substring(0, 200);
             if (context.length > 25 && pushQ({
               id: cat.name.substring(0,3).toLowerCase() + added + 'ly',

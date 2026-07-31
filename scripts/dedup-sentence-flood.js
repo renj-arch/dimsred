@@ -8,6 +8,59 @@ function baseText(q) {
   return (q.question || '').toLowerCase().replace(/_{5,}/g, '___').replace(/\s+/g, ' ').trim();
 }
 
+function norm(s) { return (s || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
+
+function tokens(s) {
+  return norm(s).replace(/_{2,}/g, ' ').split(/\s+/).filter(Boolean);
+}
+
+// Token-level Levenshtein distance
+function levDist(a, b) {
+  if (a.length === 0) return b.length;
+  if (b.length === 0) return a.length;
+  const dp = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+  for (let j = 1; j <= b.length; j++) dp[0][j] = j;
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
+    }
+  }
+  return dp[a.length][b.length];
+}
+
+// Remove "same sentence, different blank" near-duplicates: questions derived
+// from the same fact (same subSubject + fact) whose wording differs only by the
+// blanked tokens (e.g. "6 September _____" vs "6 _____ 2019" for the same fact).
+function cleanNearDups(questions) {
+  const groups = new Map();
+  for (const q of questions) {
+    const k = norm(q.subSubject) + '||' + norm(q.fact);
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(q);
+  }
+  const removed = [];
+  const kept = [];
+  for (const list of groups.values()) {
+    if (list.length < 2) { kept.push(...list); continue; }
+    const keptHere = [];
+    for (const q of list) {
+      const tq = tokens(q.question);
+      let isNearDup = false;
+      for (const kq of keptHere) {
+        if (levDist(tq, tokens(kq.question)) <= 2) { isNearDup = true; break; }
+      }
+      if (isNearDup) {
+        removed.push({ question: q.question, answer: q.answer, keptAnswer: keptHere[0].answer });
+      } else {
+        keptHere.push(q);
+      }
+    }
+    kept.push(...keptHere);
+  }
+  return { kept, removed };
+}
+
 function clean(questions, source) {
   const seen = new Map(); // baseText → first question
   const removed = [];
@@ -21,6 +74,10 @@ function clean(questions, source) {
       kept.push(q);
     }
   }
+  const near = cleanNearDups(kept);
+  kept.length = 0;
+  kept.push(...near.kept);
+  removed.push(...near.removed);
   return { kept, removed };
 }
 
@@ -42,7 +99,7 @@ async function main() {
     totalKept += kept.length;
     quiz.questions = kept;
     fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz));
-    console.log(`quiz.json: removed ${removed.length} sentence-duplicate questions, kept ${kept.length}`);
+    console.log(`quiz.json: removed ${removed.length} duplicate questions, kept ${kept.length}`);
   }
 
   // Clean data/questions/*.json
@@ -71,7 +128,7 @@ async function main() {
       }
       if (fileRemoved > 0) {
         fs.writeFileSync(fp, JSON.stringify(out));
-        console.log(`${f}: removed ${fileRemoved} sentence-duplicate questions, kept ${fileKept}`);
+        console.log(`${f}: removed ${fileRemoved} duplicate questions, kept ${fileKept}`);
         totalRemoved += fileRemoved;
         totalKept += fileKept;
       }
