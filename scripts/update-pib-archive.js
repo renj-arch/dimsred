@@ -1,5 +1,6 @@
 var fs = require('fs');
 var path = require('path');
+var https = require('https');
 
 var DATA = path.resolve(__dirname, '..', 'data');
 var ARCHIVE = path.join(DATA, 'questions', 'pib-archive.json');
@@ -8,6 +9,86 @@ var FEED = path.join(DATA, 'pib-feed.json');
 var PIB_KEY = 'PIB Releases';
 var SUBJECT = 'PIB Releases';
 var EMOJI = '\uD83D\uDCF0';
+
+// ── Release body enrichment ──
+function fetchWithRedirects(url, redirects) {
+  redirects = redirects || 0;
+  return new Promise(function(resolve) {
+    var req = https.request(url, { method: 'GET', headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/125.0 Safari/537.36', 'Accept': 'text/html,*/*' } }, function(res) {
+      if ((res.statusCode === 301 || res.statusCode === 302 || res.statusCode === 303) && res.headers.location && redirects < 5) {
+        var loc = res.headers.location;
+        if (loc.indexOf('http') !== 0) {
+          var base = url.split('?')[0].split('/').slice(0, -1).join('/');
+          loc = (loc.charAt(0) === '/' ? url.split('/').slice(0, 3).join('/') : base + '/') + loc;
+        }
+        res.resume();
+        return resolve(fetchWithRedirects(loc, redirects + 1));
+      }
+      var d = '';
+      res.on('data', function(c) { d += c; });
+      res.on('end', function() { resolve({ status: res.statusCode, body: d }); });
+    });
+    req.on('error', function() { resolve({ status: -1, body: '' }); });
+    req.end();
+  });
+}
+
+function stripPibHtml(html) {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&rsquo;/g, "'")
+    .replace(/&lsquo;/g, "'")
+    .replace(/&ldquo;/g, '"')
+    .replace(/&rdquo;/g, '"')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&ndash;/g, '-')
+    .replace(/&mdash;/g, '-')
+    .replace(/&#8239;/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function extractPibBody(html) {
+  var text = stripPibHtml(html);
+  var m = text.match(/by PIB\s+([A-Z][A-Za-z ]+?)\s+(.+)/i);
+  if (!m) return '';
+  var body = m[2];
+  var ends = ['रिलीज़ आईडि', 'रिलीज़ आईडी', 'आगंतुक पटल', 'इस विज्ञप्ति को इन भाषाओं', 'Release ID', 'Visitor', 'आगंतुक'];
+  var cut = body.length;
+  for (var i = 0; i < ends.length; i++) {
+    var idx = body.indexOf(ends[i]);
+    if (idx >= 0 && idx < cut) cut = idx;
+  }
+  body = body.substring(0, cut).trim();
+  body = body.replace(/\s+\*\*\*\s*[A-Z][\w\s.-]*$/, '').trim();
+  return body;
+}
+
+function firstSentences(text, maxChars) {
+  maxChars = maxChars || 600;
+  var sentences = text.split(/(?<=[.!?])\s+/);
+  var out = '';
+  for (var i = 0; i < sentences.length; i++) {
+    if (out && out.length + sentences[i].length > maxChars) break;
+    out = out ? out + ' ' + sentences[i] : sentences[i];
+    if (out.length >= maxChars) break;
+  }
+  return out.trim();
+}
+
+function fetchReleaseBody(prid) {
+  return fetchWithRedirects('https://www.pib.gov.in/PressReleasePage.aspx?PRID=' + prid).then(function(r) {
+    if (r.status !== 200 || !r.body) return '';
+    return firstSentences(extractPibBody(r.body), 600);
+  });
+}
+
+function delay(ms) { return new Promise(function(resolve) { setTimeout(resolve, ms); }); }
 
 function norm(s) {
   return (s || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
@@ -453,7 +534,7 @@ function generateQuestion(item, idx) {
   return q;
 }
 
-function main() {
+async function main() {
   if (!fs.existsSync(ARCHIVE)) {
     console.log('Archive not found, creating: ' + ARCHIVE);
     fs.mkdirSync(path.dirname(ARCHIVE), {recursive:true});
@@ -561,12 +642,23 @@ function main() {
     });
 
     var generated = [];
-    newItems.forEach(function(item) {
+    for (var ni = 0; ni < newItems.length; ni++) {
+      var item = newItems[ni];
       maxId++;
       var q = generateQuestion(item, maxId);
-      if (q) generated.push(q);
-      else maxId--;
-    });
+      if (q) {
+        // Enrich fact with the actual release body when available
+        var prid = (item.id || '').match(/PRID=(\d+)/i);
+        if (q.fact && prid) {
+          var body = await fetchReleaseBody(prid[1]);
+          if (body) q.fact = body;
+          if (ni < newItems.length - 1) await delay(600);
+        }
+        generated.push(q);
+      } else {
+        maxId--;
+      }
+    }
 
     console.log('Generated ' + generated.length + ' new questions');
 
@@ -633,4 +725,4 @@ function main() {
   console.log('Updated: ' + ARCHIVE);
 }
 
-main();
+main().catch(function(e) { console.error(e); process.exit(1); });
