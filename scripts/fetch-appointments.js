@@ -45,18 +45,74 @@ var OFFICES = [
   { page: 'National_Security_Advisor_(India)', label: 'National Security Advisor', q: 'Who is the current National Security Advisor (NSA) of India?', emoji: '\uD83D\uDD12' },
   { page: 'Union_Public_Service_Commission', label: 'UPSC Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the Union Public Service Commission (UPSC)?', emoji: '\uD83C\uDFDB' },
   { page: 'National_Human_Rights_Commission_of_India', label: 'NHRC Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the National Human Rights Commission (NHRC) of India?', emoji: '\uD83D\uDCED' },
-  { page: 'Central_Vigilance_Commission_(India)', label: 'CVC', labelField: 'Commissioner', q: 'Who is the current Central Vigilance Commissioner (CVC) of India?', emoji: '\uD83D\uDD0D' },
+  { page: 'Central_Vigilance_Commission', label: 'CVC', labelField: 'Commissioner', q: 'Who is the current Central Vigilance Commissioner (CVC) of India?', emoji: '\uD83D\uDD0D' },
   { page: 'Central_Information_Commission', label: 'CIC', labelField: 'Chief Information Commissioner', q: 'Who is the current Chief Information Commissioner (CIC) of India?', emoji: '\uD83D\uDCC4' },
   { page: 'Law_Commission_of_India', label: 'Law Commission Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the Law Commission of India?', emoji: '\uD83D\uDCD6' },
-  { page: 'Finance_Commission_(India)', label: 'Finance Commission Chairperson', labelField: 'Chairman', q: 'Who is the current Chairman of the Finance Commission of India?', emoji: '\uD83D\uDCB0' },
+  { page: 'Finance_Commission', label: 'Finance Commission Chairperson', labelField: 'Chairman', q: 'Who is the current Chairman of the Finance Commission of India?', emoji: '\uD83D\uDCB0' },
   { page: 'Securities_and_Exchange_Board_of_India', label: 'SEBI Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of SEBI?', emoji: '\uD83D\uDCCA' },
   { page: 'Telecom_Regulatory_Authority_of_India', label: 'TRAI Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of TRAI?', emoji: '\uD83D\uDCF1' },
   { page: 'Competition_Commission_of_India', label: 'CCI Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the Competition Commission of India (CCI)?', emoji: '\u2696' },
   { page: 'Insurance_Regulatory_and_Development_Authority', label: 'IRDAI Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of IRDAI?', emoji: '\uD83D\uDCB3' },
   { page: 'National_Commission_for_Scheduled_Castes', label: 'NCSC Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the National Commission for Scheduled Castes (NCSC)?', emoji: '\uD83E\uDDD1\u200D\u2696' },
   { page: 'National_Commission_for_Scheduled_Tribes', label: 'NCST Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the National Commission for Scheduled Tribes (NCST)?', emoji: '\uD83E\uDDD1\u200D\u2696' },
-  { page: 'National_Commission_for_Women_(India)', label: 'NCW Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the National Commission for Women (NCW)?', emoji: '\uD83D\uDC69\u200D\u2696' },
+  { page: 'National_Commission_for_Women', label: 'NCW Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the National Commission for Women (NCW)?', emoji: '\uD83D\uDC69\u200D\u2696' },
 ];
+
+var DECOR = ['PVSM','UYSM','AVSM','VSM','SM','KC','SC','ADC','PHSM','PSM','MVC','KCMG','OM','AC','PC','AFMC','Bar','IRSE','ITS','IAS','IPS','IFS','IRS','CAF','AVSM'];
+var BAD_WORDS = ['incumbent','chairperson','chairman','commissioner','secretary','member','members','general','admiral','marshal','since','appointed','ex-officio','part-time','permanent','full-time','member-secretary','the','of','and','in','on','at','for','with','took','charge','assumed','official','officer','present','current','former'];
+
+function cleanName(s) {
+  if (!s) return '';
+  return s
+    .replace(/\s+/g, ' ')
+    .replace(/&#\d+;?/g, ' ')
+    .replace(/\b(?:Incumbent|Justice|Justice \(Retd\)|Retd|Hon'ble|Shri|Shri\.|Dr|Prof|Mr|Mrs|Ms|Sir|Smt|General|Admiral|Air Chief Marshal|Marshal|Air Marshal|Vice Admiral|Rear Admiral|Lt Gen|Lieutenant General)\b/gi, ' ')
+    .replace(new RegExp('\\b(?:' + DECOR.join('|') + ')\\b', 'gi'), ' ')
+    .replace(/\bsince\b.*$/i, ' ')
+    .replace(/\b(?:since|as of)?\s*(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+\d{1,2},?\s+\d{4}\s*$/i, ' ')
+    .replace(new RegExp('\\b(?:' + BAD_WORDS.join('|') + ')\\b', 'gi'), ' ')
+    .replace(/\([^)]*\)/g, ' ')
+    .replace(/\s+/g, ' ')
+    .replace(/^[,.\s]+|[,.\s]+$/g, '')
+    .trim();
+}
+
+function isPersonName(s) {
+  if (!s) return false;
+  var t = s.trim();
+  if (t.length < 3 || t.length > 80) return false;
+  if (/(?:^|\s)(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+\d{1,2}(?:,?\s+\d{2,4})?|\b\d{1,2}\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\b|\b20\d{2}\b|\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b/i.test(t)) return false;
+  var words = t.split(/\s+/);
+  var namey = words.filter(function(w) {
+    if (!w) return false;
+    if (/^\d/.test(w)) return false;
+    if (w === w.toLowerCase() && w.indexOf('.') === -1) return false;
+    return true;
+  });
+  if (namey.length === 0) return false;
+  var joined = namey.join(' ');
+  if (new RegExp('\\b(?:' + BAD_WORDS.join('|') + ')\\b', 'i').test(joined)) return false;
+  return true;
+}
+
+function extractNameFromCell(tdContent) {
+  var allLinks = [];
+  var linkRe = /<a[^>]*>([\s\S]*?)<\/a>/gi, lr;
+  while ((lr = linkRe.exec(tdContent)) !== null) {
+    allLinks.push(strip(lr[1]).replace(/\s+/g, ' ').trim());
+  }
+  for (var i = 0; i < allLinks.length; i++) {
+    var cand = cleanName(allLinks[i]);
+    if (isPersonName(cand)) return cand;
+  }
+  var text = strip(tdContent);
+  var segments = text.split(/[,;|]/);
+  for (var s = 0; s < segments.length; s++) {
+    var seg = cleanName(segments[s]);
+    if (isPersonName(seg)) return seg;
+  }
+  return null;
+}
 
 function extractIncumbent(html, labelField) {
   var m = html.match(/<table[^>]*class="[^"]*infobox[^"]*"[^>]*>([\s\S]*?)<\/table>/i);
@@ -73,70 +129,44 @@ function extractIncumbent(html, labelField) {
   var rows = section.match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
   if (!rows) return null;
 
-  var skipWords = ['general', 'admiral', 'air chief marshal', 'marshal', 'chairperson', 'chairman', 'commissioner', 'secretary'];
-
+  var parsed = [];
   for (var ri = 0; ri < rows.length; ri++) {
     var row = rows[ri];
     var thMatch = row.match(/<th[^>]*>([\s\S]*?)<\/th>/i);
     var tdMatch = row.match(/<td[^>]*>([\s\S]*?)<\/td>/i);
     if (!tdMatch) continue;
+    parsed.push({ th: thMatch ? strip(thMatch[1]).toLowerCase() : '', td: tdMatch[1] });
+  }
 
-    var thText = thMatch ? strip(thMatch[1]).toLowerCase() : '';
-    var tdContent = tdMatch[1];
-    var tdText = strip(tdContent).toLowerCase();
-
-    var matchedLabel = null;
-    for (var li = 0; li < labelsToTry.length; li++) {
-      if (thText.indexOf(labelsToTry[li].toLowerCase()) >= 0 || tdText.indexOf(labelsToTry[li].toLowerCase()) >= 0) {
-        matchedLabel = labelsToTry[li];
-        break;
+  var l, r, n;
+  for (r = 0; r < parsed.length; r++) {
+    for (l = 0; l < labelsToTry.length; l++) {
+      if (parsed[r].th.indexOf(labelsToTry[l].toLowerCase()) >= 0) {
+        n = extractNameFromCell(parsed[r].td);
+        if (n) return n;
       }
     }
-    if (!matchedLabel) continue;
-
-    var labelInTd = tdText.indexOf(matchedLabel.toLowerCase()) >= 0;
-    var labelPos = labelInTd ? tdContent.toLowerCase().indexOf(matchedLabel.toLowerCase()) : -1;
-
-    var allLinks = [];
-    var linkRe = /<a[^>]*>([\s\S]*?)<\/a>/gi;
-    var lr;
-    while ((lr = linkRe.exec(tdContent)) !== null) {
-      allLinks.push({ text: strip(lr[1]).replace(/\s+/g, ' ').trim(), pos: lr.index });
-    }
-
-    var candidateLinks = labelInTd ? allLinks.filter(function(l) { return l.pos < labelPos; }) : allLinks;
-
-    for (var ni = 0; ni < candidateLinks.length; ni++) {
-      var text = candidateLinks[ni].text;
-      var lower = text.toLowerCase();
-      var isSkip = false;
-      for (var sw = 0; sw < skipWords.length; sw++) {
-        if (lower === skipWords[sw]) { isSkip = true; break; }
+  }
+  for (r = 0; r < parsed.length; r++) {
+    var tdText = strip(parsed[r].td).toLowerCase();
+    for (l = 0; l < labelsToTry.length; l++) {
+      if (tdText.indexOf(labelsToTry[l].toLowerCase()) >= 0) {
+        n = extractNameFromCell(parsed[r].td);
+        if (n) return n;
       }
-      if (isSkip) continue;
-      if (/^(www\.|https?:)/.test(lower) || lower.indexOf('.gov') >= 0 || lower.indexOf('.nic') >= 0) continue;
-      var name = text.replace(/,?\s*(PVSM|UYSM|AVSM|VSM|SM|KC|SC|ADC|PHSM|PSM|MVC|KCMG|OM|AC|PC|AFMC|Bar)\b/gi, '').trim();
-      name = name.replace(/\s+/g, ' ').trim();
-      if (name.length >= 3 && name.length < 100) return name;
-    }
-
-    // Plain text fallback (for rows with no <a> tags around the name)
-    var plainText = tdContent.replace(/<[^>]+>/g, ' ').replace(/\[.*?\]/g, '').replace(/\([^)]*\)/g, ' ').replace(/\s+/g, ' ').trim();
-    var segments = plainText.split(/[,;]/);
-    for (var si = 0; si < segments.length; si++) {
-      var seg = segments[si].trim();
-      if (seg.length < 3) continue;
-      var segLower = seg.toLowerCase();
-      var isSkip = false;
-      for (var sw2 = 0; sw2 < skipWords.length; sw2++) {
-        if (segLower.indexOf(skipWords[sw2]) >= 0) { isSkip = true; break; }
-      }
-      if (isSkip) continue;
-      if (segLower.indexOf('.gov') >= 0 || segLower.indexOf('.nic') >= 0 || segLower.indexOf('www') >= 0 || segLower.indexOf('https') >= 0) continue;
-      if (seg.length < 100) return seg;
     }
   }
 
+  var FALLBACK_HDRS = ['executive', 'key people', 'leaders', 'officials'];
+  for (r = 0; r < parsed.length; r++) {
+    var matched = false;
+    for (l = 0; l < FALLBACK_HDRS.length; l++) {
+      if (parsed[r].th.indexOf(FALLBACK_HDRS[l]) >= 0) { matched = true; break; }
+    }
+    if (!matched) continue;
+    n = extractNameFromCell(parsed[r].td);
+    if (n) return n;
+  }
   return null;
 }
 
