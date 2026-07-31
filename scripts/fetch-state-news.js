@@ -32,6 +32,31 @@ function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function stripHtml(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
+var BIO_PAGE_TITLE = {
+  'Vijay': 'Vijay (actor)',
+  'Lakshman Prasad Acharya': 'Lakshman Acharya',
+  'Haribhau Kisanrao Bagade': 'Haribhau Bagade'
+};
+
+function fetchBioSummary(name) {
+  var title = BIO_PAGE_TITLE[name] || name;
+  var url = 'https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(title.replace(/\s+/g, '_'));
+  return new Promise(function(resolve) {
+    https.get(url, { agent: AGENT, headers: { 'User-Agent': 'StateNewsFill/3.0' } }, function(res) {
+      var data = '';
+      res.on('data', function(c) { data += c; });
+      res.on('end', function() {
+        if (res.statusCode !== 200) return resolve('');
+        try {
+          var j = JSON.parse(data);
+          var extract = (j.extract || '').replace(/\s+/g, ' ').trim();
+          resolve(extract);
+        } catch (e) { resolve(''); }
+      });
+    }).on('error', function() { resolve(''); });
+  });
+}
+
 var INDIAN_STATE_NAMES = ['Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Delhi','Jammu and Kashmir','Ladakh','Puducherry'];
 var INDIAN_STATE_RE = new RegExp('\\b(?:' + INDIAN_STATE_NAMES.join('|') + ')\\b', 'i');
 
@@ -292,7 +317,7 @@ async function fetchMonthEvents(year, month) {
   return { html: html, sections: sections };
 }
 
-function generateSeedQuestions(seqCounter) {
+async function generateSeedQuestions(seqCounter) {
   var now = new Date();
   var pubDate = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + 'T12:00:00.000Z';
   var monthLabel = MONTHS[now.getMonth()] + ' ' + now.getFullYear();
@@ -362,8 +387,12 @@ function generateSeedQuestions(seqCounter) {
     'West Bengal': 'R. N. Ravi'
   };
 
-  Object.keys(stateCMs).forEach(function(state) {
+  for (var ci = 0; ci < Object.keys(stateCMs).length; ci++) {
+    var cstate = Object.keys(stateCMs)[ci];
     seqCounter.seed = (seqCounter.seed || 0) + 1;
+    var cFact = 'The Chief Minister of ' + cstate + ' is ' + stateCMs[cstate] + ' (as of ' + monthLabel + '). The CM is the head of the state government.';
+    var cBio = await fetchBioSummary(stateCMs[cstate]);
+    if (cBio && !/may refer to/i.test(cBio)) cFact += ' ' + cBio;
     qs.push({
       id: 'state_cm_' + seqCounter.seed,
       type: 'fill_blank',
@@ -374,15 +403,20 @@ function generateSeedQuestions(seqCounter) {
       subject: 'PIB Releases',
       subSubject: 'State Affairs',
       emoji: '\uD83C\uDFDB\uFE0F',
-      question: 'The Chief Minister of ' + state + ' as of ' + monthLabel + ' is _____.',
-      answer: stateCMs[state],
+      question: 'The Chief Minister of ' + cstate + ' as of ' + monthLabel + ' is _____.',
+      answer: stateCMs[cstate],
       hint: '',
-      fact: 'The Chief Minister of ' + state + ' is ' + stateCMs[state] + ' (as of ' + monthLabel + '). The CM is the head of the state government.'
+      fact: cFact
     });
-  });
+    if (ci < Object.keys(stateCMs).length - 1) await delay(250);
+  }
 
-  Object.keys(stateGovs).forEach(function(state) {
+  for (var gi = 0; gi < Object.keys(stateGovs).length; gi++) {
+    var gstate = Object.keys(stateGovs)[gi];
     seqCounter.seed = (seqCounter.seed || 0) + 1;
+    var gFact = 'The Governor of ' + gstate + ' is ' + stateGovs[gstate] + ' (as of ' + monthLabel + '). The Governor is the constitutional head of the state.';
+    var gBio = await fetchBioSummary(stateGovs[gstate]);
+    if (gBio && !/may refer to/i.test(gBio)) gFact += ' ' + gBio;
     qs.push({
       id: 'state_gov_' + seqCounter.seed,
       type: 'fill_blank',
@@ -393,12 +427,13 @@ function generateSeedQuestions(seqCounter) {
       subject: 'PIB Releases',
       subSubject: 'State Affairs',
       emoji: '\uD83C\uDFDB\uFE0F',
-      question: 'The Governor of ' + state + ' as of ' + monthLabel + ' is _____.',
-      answer: stateGovs[state],
+      question: 'The Governor of ' + gstate + ' as of ' + monthLabel + ' is _____.',
+      answer: stateGovs[gstate],
       hint: '',
-      fact: 'The Governor of ' + state + ' is ' + stateGovs[state] + ' (as of ' + monthLabel + '). The Governor is the constitutional head of the state.'
+      fact: gFact
     });
-  });
+    if (gi < Object.keys(stateGovs).length - 1) await delay(250);
+  }
 
   return qs;
 }
@@ -441,7 +476,7 @@ async function main() {
   });
 
   // Phase 1: Generate fresh CM and Governor questions
-  var seedQuestions = generateSeedQuestions(seqCounter);
+  var seedQuestions = await generateSeedQuestions(seqCounter);
   var newQuestions = [];
   seedQuestions.forEach(function(q) {
     var key = eventKey(q);
