@@ -818,7 +818,7 @@ const CATEGORIES = [
     'Common good','General will','Social contract'
   ]},
   // ───────── ISRO, Space & Nuclear ─────────
-  { name:'ISRO & Space', wikiCat:'Indian_Space_Research_Organisation', topics:[
+  { name:'ISRO & Space', wikiCat:'Space_programme_of_India', topics:[
     'ISRO','Chandrayaan programme','Mangalyaan','Gaganyaan',
     'Satellite navigation','Space research','Indian Space Research Organisation',
     'List of Indian satellites','Launch vehicles of India',
@@ -913,7 +913,7 @@ const CATEGORIES = [
     'List of Indian autobiographies','List of Indian biographies'
   ]},
   // ───────── Awards & Honours ─────────
-  { name:'Awards & Honours', wikiCat:'Awards_in_India', topics:[
+  { name:'Awards & Honours', wikiCat:'Indian_awards', topics:[
     'National awards of India','Bharat Ratna','Padma awards',
     'Sahitya Akademi Award','Jnanpith Award','Dadasaheb Phalke Award',
     'Arjuna Award','Dronacharya Award','Major Dhyan Chand Khel Ratna',
@@ -1059,7 +1059,7 @@ const CATEGORIES = [
     'Kalpana Chawla','Sunita Williams','Rajiv Malhotra'
   ]},
   // ───────── Disaster Management ─────────
-  { name:'Disaster Management', wikiCat:'Disaster_management_in_India', topics:[
+  { name:'Disaster Management', wikiCat:'Emergency_management_in_India', topics:[
     'Disaster management in India','National Disaster Management Authority',
     'Floods in India','Cyclones in India','Earthquakes in India',
     'Drought in India','Tsunami','Landslide','Heat wave',
