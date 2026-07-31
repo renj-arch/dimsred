@@ -82,6 +82,53 @@ function extractWikiTable(html) {
   return tables;
 }
 
+function cleanName(s) {
+  return strip(s || '').replace(/[\u2020\u2032^]/g, '').replace(/\[.*?\]/g, '').replace(/\([^)]*\)/g, '').replace(/posthumous/gi, '').replace(/\s+/g, ' ').trim();
+}
+
+function extractYear(s) {
+  if (!s) return '';
+  var m = strip(s).match(/\b(18|19|20)\d{2}\b/);
+  return m ? m[0] : '';
+}
+
+// Parse gallantry recipient tables. Skips legend/footnote tables (e.g. "† Indicates
+// posthumous honour", "^ Indicates non-Indian recipient") and returns per-person rows.
+function parseGallantryRecipients(html) {
+  var tables = extractWikiTable(html);
+  var out = [];
+  tables.forEach(function(t) {
+    if (t.length < 2) return;
+    var header = t[0].map(function(c) { return strip(c).toLowerCase(); });
+    var joined = header.join(' ');
+    // Only process tables that actually list recipients (not legend/footnote tables).
+    if (joined.indexOf('name') < 0 && joined.indexOf('recipient') < 0) return;
+    var nameCol = -1, yearCol = -1, rankCol = -1, unitCol = -1, actionCol = -1, dateCol = -1;
+    header.forEach(function(h, i) {
+      if (h === 'name' || h === 'recipient') nameCol = i;
+      else if (h === 'year') yearCol = i;
+      else if (h.indexOf('rank') >= 0) rankCol = i;
+      else if (h.indexOf('unit') >= 0 || h.indexOf('service') >= 0 || h.indexOf('branch') >= 0) unitCol = i;
+      else if (h === 'date of action' || h === 'date' || h.indexOf('date of') === 0) dateCol = i;
+      else if (h.indexOf('conflict') >= 0 || h.indexOf('operation') >= 0 || h.indexOf('battle') >= 0) actionCol = i;
+      else if (h.indexOf('action') >= 0 && h.indexOf('place of action') < 0) actionCol = i;
+    });
+    if (nameCol < 0) return;
+    for (var ri = 1; ri < t.length; ri++) {
+      var row = t[ri];
+      if (row.length <= nameCol) continue;
+      var name = cleanName(row[nameCol]);
+      if (name.length < 3 || /indicates|recipient/i.test(name)) continue;
+      var year = yearCol >= 0 ? extractYear(row[yearCol]) : (dateCol >= 0 ? extractYear(row[dateCol]) : '');
+      var rank = rankCol >= 0 ? strip(row[rankCol] || '').replace(/\s+/g, ' ').trim() : '';
+      var unit = unitCol >= 0 ? strip(row[unitCol] || '').replace(/\s+/g, ' ').trim() : '';
+      var action = actionCol >= 0 ? strip(row[actionCol] || '').replace(/\s+/g, ' ').trim() : '';
+      out.push({ name: name, year: year, rank: rank, unit: unit, action: action });
+    }
+  });
+  return out;
+}
+
 function makeQuestion(question, answer, seq, source, emoji, fact) {
   if (!answer || answer.length < 2) return null;
   var now = new Date();
@@ -200,28 +247,37 @@ async function main() {
   // 3. Gallantry Awards
   await delay(600);
   var GALLANTRY_PAGES = [
-    { page: 'Param_Vir_Chakra', label: 'Param Vir Chakra', q: 'Name a recipient of the Param Vir Chakra.', emoji: '\uD83C\uDFC6' },
-    { page: 'Ashoka_Chakra_(military_decoration)', label: 'Ashoka Chakra', q: 'Name a recipient of the Ashoka Chakra.', emoji: '\uD83C\uDFC6' },
-    { page: 'Shaurya_Chakra', label: 'Shaurya Chakra', q: 'Name a recipient of the Shaurya Chakra.', emoji: '\uD83C\uDFC6' }
+    { page: 'Param_Vir_Chakra', label: 'Param Vir Chakra', emoji: '\uD83C\uDFC6' },
+    { page: 'Ashoka_Chakra_(military_decoration)', label: 'Ashoka Chakra', emoji: '\uD83C\uDFC6' },
+    { page: 'Shaurya_Chakra', label: 'Shaurya Chakra', emoji: '\uD83C\uDFC6' }
   ];
   for (var gi = 0; gi < GALLANTRY_PAGES.length; gi++) {
     process.stdout.write('  ' + GALLANTRY_PAGES[gi].label + '... ');
     try {
       var htmlG = await fetchPageText(GALLANTRY_PAGES[gi].page);
-      var tablesG = extractWikiTable(htmlG);
+      var recipientsG = parseGallantryRecipients(htmlG);
       var gc = 0;
-      tablesG.forEach(function(t) {
-        for (var ri = 1; ri < Math.min(t.length, 10); ri++) {
-          var row = t[ri];
-          if (row.length < 2) continue;
-            var name = strip(row[1] || row[0]).replace(/\[.*?\]/g, '').trim();
-          if (name.length > 3) {
-            var q = makeQuestion(GALLANTRY_PAGES[gi].q, name, seq++, '' + GALLANTRY_PAGES[gi].label, GALLANTRY_PAGES[gi].emoji, name + ' was awarded the ' + GALLANTRY_PAGES[gi].label + '.');
-            if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; gc++; }
-          }
-        }
+      // Group recipients by year so one question covers everyone honoured that year
+      var byYear = {};
+      recipientsG.forEach(function(r) {
+        var y = r.year || 'Recent';
+        if (!byYear[y]) byYear[y] = [];
+        byYear[y].push(r);
       });
-      process.stdout.write(gc + ' recipients\n');
+      Object.keys(byYear).sort().forEach(function(year) {
+        var list = byYear[year];
+        var combinedAnswer = list.map(function(r) { return r.name; }).join(', ');
+        var parts = list.map(function(r) {
+          var d = r.name;
+          if (r.rank || r.unit) d += ' (' + [r.rank, r.unit].filter(function(s) { return s; }).join(', ') + ')';
+          if (r.action) d += ' - ' + r.action;
+          return d;
+        });
+        var fact = 'In ' + year + ', the ' + GALLANTRY_PAGES[gi].label + ' was awarded to ' + list.length + ' personnel: ' + parts.join('; ') + '.';
+        var q = makeQuestion('Who received the ' + GALLANTRY_PAGES[gi].label + ' in ' + year + '?', combinedAnswer, seq++, '' + GALLANTRY_PAGES[gi].label, GALLANTRY_PAGES[gi].emoji, fact);
+        if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; gc++; }
+      });
+      process.stdout.write(gc + ' year-groups\n');
     } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
     await delay(600);
   }

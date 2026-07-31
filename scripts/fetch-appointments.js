@@ -208,6 +208,11 @@ function eventKey(q) {
   return n(q.question || '').substring(0, 80) + '|' + n(q.answer || '');
 }
 
+function questionKey(q) {
+  var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim().toLowerCase(); };
+  return n(q.question || '');
+}
+
 async function main() {
   var existing = {};
   if (fs.existsSync(PIB_PATH)) {
@@ -221,14 +226,20 @@ async function main() {
   if (!existing[CA_KEY]) existing[CA_KEY] = { subSubjects: {} };
   if (!existing[CA_KEY].subSubjects['Appointments']) existing[CA_KEY].subSubjects['Appointments'] = [];
 
-  var existingKeys = {};
-  existing[CA_KEY].subSubjects['Appointments'].forEach(function(q) {
-    existingKeys[eventKey(q)] = true;
+  var list = existing[CA_KEY].subSubjects['Appointments'];
+  var byQuestion = {};
+  var usedIds = {};
+  list.forEach(function(q) {
+    byQuestion[questionKey(q)] = q;
+    var m = (q.id || '').match(/^appt_(\d+)$/);
+    if (m) usedIds[parseInt(m[1], 10)] = true;
   });
 
-  var newQuestions = [];
-  var seq = existing[CA_KEY].subSubjects['Appointments'].length + 1;
-  var found = 0, notFound = 0;
+  var maxSeq = 0;
+  Object.keys(usedIds).forEach(function(k) { if (parseInt(k, 10) > maxSeq) maxSeq = parseInt(k, 10); });
+  var seq = maxSeq + 1;
+
+  var found = 0, notFound = 0, updated = 0, added = 0;
 
   for (var oi = 0; oi < OFFICES.length; oi++) {
     process.stdout.write('  ' + OFFICES[oi].label + '... ');
@@ -242,30 +253,39 @@ async function main() {
     }
 
     var q = makeQuestion(OFFICES[oi], name, seq);
-    if (q) {
-      var key = eventKey(q);
-      if (!existingKeys[key]) {
-        newQuestions.push(q);
-        existingKeys[key] = true;
-        seq++;
-        process.stdout.write('    \u2713\n');
+    if (!q) continue;
+
+    var qkey = questionKey(q);
+    var existingQ = byQuestion[qkey];
+    if (existingQ) {
+      if ((existingQ.answer || '').trim().toLowerCase() !== (q.answer || '').trim().toLowerCase()) {
+        var old = existingQ.answer;
+        existingQ.answer = q.answer;
+        existingQ.fact = q.fact;
+        existingQ.pubDate = q.pubDate;
+        existingQ.source = q.source;
+        updated++;
+        process.stdout.write('    updated ' + old + ' -> ' + q.answer + '\n');
       } else {
-        process.stdout.write('    (dup)\n');
+        process.stdout.write('    (unchanged)\n');
       }
+    } else {
+      q.id = 'appt_' + pad(seq);
+      seq++;
+      list.push(q);
+      byQuestion[qkey] = q;
+      added++;
+      process.stdout.write('    \u2713 added\n');
     }
 
     await delay(600);
   }
 
-  console.error('\nFound: ' + found + ', Not found: ' + notFound);
+  console.error('\nFound: ' + found + ', Not found: ' + notFound + ', Updated: ' + updated + ', Added: ' + added);
 
-  newQuestions.forEach(function(q) {
-    existing[CA_KEY].subSubjects['Appointments'].push(q);
-  });
-
-  var total = existing[CA_KEY].subSubjects['Appointments'].length;
+  var total = list.length;
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
-  console.error('\nAppointments: ' + total + ' total questions, ' + newQuestions.length + ' new');
+  console.error('\nAppointments: ' + total + ' total questions (' + updated + ' refreshed, ' + added + ' new)');
 }
 
 main().catch(function(err) {

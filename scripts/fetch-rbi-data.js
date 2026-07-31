@@ -204,9 +204,9 @@ async function main() {
   if (!existing[PIB_KEY]) existing[PIB_KEY] = { subSubjects: {} };
   if (!existing[PIB_KEY].subSubjects['RBI & Banking']) existing[PIB_KEY].subSubjects['RBI & Banking'] = [];
 
-  var existingKeys = {};
+  var existingByKey = {};
   existing[PIB_KEY].subSubjects['RBI & Banking'].forEach(function(q) {
-    existingKeys[eventKey(q)] = true;
+    existingByKey[eventKey(q)] = q;
   });
 
   var html = await fetchPageContent('Monetary_policy_of_India');
@@ -230,19 +230,28 @@ async function main() {
   };
 
   var newQuestions = makeRbiQuestions(data, 1);
-  var added = 0;
+  var added = 0, updated = 0;
   newQuestions.forEach(function(q) {
     var key = eventKey(q);
-    if (!existingKeys[key]) {
+    var oldQ = existingByKey[key];
+    if (oldQ) {
+      if ((oldQ.answer || '').trim().toLowerCase() !== (q.answer || '').trim().toLowerCase()) {
+        oldQ.answer = q.answer;
+        oldQ.fact = q.fact;
+        oldQ.pubDate = q.pubDate;
+        oldQ.source = q.source;
+        updated++;
+      }
+    } else {
       existing[PIB_KEY].subSubjects['RBI & Banking'].push(q);
-      existingKeys[key] = true;
+      existingByKey[key] = q;
       added++;
     }
   });
 
   var total = existing[PIB_KEY].subSubjects['RBI & Banking'].length;
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
-  console.error('Wrote ' + PIB_PATH + ' - RBI & Banking: ' + total + ' total questions, ' + added + ' new');
+  console.error('Wrote ' + PIB_PATH + ' - RBI & Banking: ' + total + ' total questions (' + updated + ' refreshed, ' + added + ' new)');
 }
 
 main().catch(function(err) {

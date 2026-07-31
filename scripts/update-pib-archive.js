@@ -422,6 +422,9 @@ function generateQuestion(item, idx) {
         if (numM) falseQ = text.replace(numM[0], (parseInt(numM[1].replace(/,/g,''))*2)+'');
       }
       if (falseQ === text) falseQ = text.replace(/\b(India|Indian|PM|Prime Minister)\b/i, 'Bangladesh');
+      // If nothing could be swapped, this is a static headline, not a true/false
+      // question — skip it instead of emitting a random answer.
+      if (falseQ === text) return null;
       if (Math.random() > 0.5) {
         q.question = text + '.';
         q.answer = 'True';
@@ -474,6 +477,12 @@ function main() {
       if (/^What is the key highlight/i.test(q.question)) { cleanupCount++; return false; }
       if (/^Which ministry (organised|organized|launched|mentioned|signed)\b/i.test(q.question)) { cleanupCount++; return false; }
       if (/^With which (entity|country|organization)\b.*partner/i.test(q.question) && q.question.length < 40) { cleanupCount++; return false; }
+      // Junk true/false: random answer on an untransformed headline (fact === question)
+      if (q.type === 'true_false' && !/^True or False:/.test(q.question)) {
+        var qText = (q.question || '').replace(/\.$/, '').toLowerCase().trim();
+        var fText = (q.fact || '').replace(/^according to the press information bureau \(pib\),\s*/i, '').replace(/\.$/, '').toLowerCase().trim();
+        if (qText === fText && qText.length >= 20) { cleanupCount++; return false; }
+      }
       return true;
     });
   });
