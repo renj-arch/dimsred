@@ -164,6 +164,13 @@ function isBadSentence(s) {
   if (/https?:\/\//i.test(t)) return true;
   // Ends with a parenthesized year like "(2023)" (citation marker)
   if (/\(\d{4}\)\s*$/.test(t) && t.length < 60) return true;
+  // Reference-section citation strings: raw {{cite}} template errors ("Cite
+  // journal requires |journal="), quoted article titles with page ranges
+  // ("Title": 203–221), and bare quoted titles that are journal/book entries.
+  if (/{{cite|^Cite\s+[A-Za-z]+\s+requires/i.test(t)) return true;
+  if (/^"[^"]{8,}":\s*\d+/.test(t)) return true;
+  if (/\w+":\s*\d+/.test(t)) return true;
+  if (/^"[^"]{8,}"\s*$/.test(t)) return true;
   return false;
 }
 

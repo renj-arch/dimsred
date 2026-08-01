@@ -86,6 +86,13 @@ function isBad(q) {
   // Generic "What is X?" / "Who is X?" definition lookups lacking quiz context
   if (/^(What|Who)\s+is\s+(?!(the|a|an)\s)/i.test(text)) return true;
 
+  // Reference-section citation strings that slipped past generation: {{cite}}
+  // template errors, "Title": page-range citations, and bare quoted titles.
+  if (/{{cite|^Cite\s+[A-Za-z]+\s+requires/i.test(text)) return true;
+  if (/^"[^"]{8,}":\s*\d+/.test(text)) return true;
+  if (/\w+":\s*\d+/.test(text)) return true;
+  if (/^"[^"]{8,}"\s*$/.test(text)) return true;
+
   return false;
 }
 
