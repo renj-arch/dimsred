@@ -34,6 +34,7 @@ function main() {
   }
 
   const seen = new Set(allQuestions.map(q => norm(q.question)));
+  const byKey = new Map(allQuestions.map(q => [norm(q.question), q]));
 
   // Merge each chunk's output
   let added = 0;
@@ -47,7 +48,13 @@ function main() {
         if (!seen.has(key)) {
           allQuestions.push(q);
           seen.add(key);
+          byKey.set(key, q);
           chunkAdded++;
+        } else if (q.wikiDone) {
+          // Carry the "fully covered" marker onto the already-existing question
+          // so partial articles stop being re-fetched on future runs.
+          const existing = byKey.get(key);
+          if (existing && !existing.wikiDone) existing.wikiDone = true;
         }
       }
       console.log('  ' + f + ': ' + qs.length + ' questions (' + chunkAdded + ' new)');

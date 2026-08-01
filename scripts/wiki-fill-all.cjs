@@ -1362,6 +1362,7 @@ async function main() {
   }
 
   let totalAdded = 0;
+  const doneThisRun = new Set();
 
   // Determine which group to process
   const processAll = process.env.WIKI_FILL_ALL === '1';
@@ -1387,17 +1388,24 @@ async function main() {
   const WIKI_FILL_CHUNKS = parseInt(process.env.WIKI_FILL_CHUNKS || '1', 10);
 
   // Phase 1: Gather topics from all active categories (with auto-discovery).
-  // Generation is deterministic, so an article that already has Wiki questions
-  // can NEVER yield new ones. Track coverage (Wiki-sourced only) and give the
-  // per-category budget to never-covered content first — each run therefore
-  // rotates through fresh articles and guarantees new questions without
-  // re-fetching already-covered pages.
+  // Generation is deterministic and pushQ() dedups by question text, so a
+  // re-fetched article only yields questions for sentences not yet consumed —
+  // re-processing therefore RESUMES where the article stopped. Give the
+  // per-category budget to never-covered content first, then continue
+  // partially-covered articles (covered but not yet marked done) so their
+  // remaining paragraphs get finished over successive runs.
   const coveredTitles = new Set();
+  const doneTitles = new Set();
+  const qCount = new Map();
   for (const q of quiz.questions) {
     if (q.source !== 'Wiki' || !q.subSubject) continue;
-    coveredTitles.add(norm(q.subSubject));
+    const k = norm(q.subSubject);
+    coveredTitles.add(k);
+    qCount.set(k, (qCount.get(k) || 0) + 1);
+    if (q.wikiDone) doneTitles.add(k);
   }
   const topicBudget = parseInt(process.env.WIKI_FILL_TOPIC_BUDGET || '150', 10);
+  const revisitBudget = parseInt(process.env.WIKI_FILL_REVISIT_BUDGET || '50', 10);
 
   const catTopicMap = {};
   for (const cat of activeCategories) {
@@ -1410,13 +1418,26 @@ async function main() {
       discovered = wikiTopics.filter(t => !existing.has(t.toLowerCase()));
       if (discovered.length) log('  Auto-discovered ' + discovered.length + ' topics from Category:' + cat.wikiCat);
     }
-    // Only never-covered content, then apply budget so each run rotates through NEW articles.
+    // Fresh (never-covered) content first, then partially-covered articles so the
+    // remaining sentences of each article get finished over successive runs.
     const uncovered = discovered.filter(t => !coveredTitles.has(norm(t)));
     const pickedDiscovered = uncovered.slice(0, topicBudget);
     if (uncovered.length) {
       log('  Uncovered topics: ' + uncovered.length + ' — budget picks ' + pickedDiscovered.length + ' (new content first)');
     }
-    catTopicMap[cat.name] = { cat, topics: hardcoded.concat(pickedDiscovered) };
+    // Revisit articles closest to being done first (fewest questions) so they
+    // get finished and released from the budget; larger ones wait their turn.
+    const partiallyCovered = [...cat.topics, ...discovered]
+      .filter(t => {
+        const k = norm(t);
+        return coveredTitles.has(k) && !doneTitles.has(k);
+      })
+      .sort((a, b) => (qCount.get(norm(a)) || 0) - (qCount.get(norm(b)) || 0));
+    const pickedRevisit = partiallyCovered.slice(0, revisitBudget);
+    if (pickedRevisit.length) {
+      log('  Continuing ' + pickedRevisit.length + ' partially-covered articles (resume from last fetched sentence)');
+    }
+    catTopicMap[cat.name] = { cat, topics: hardcoded.concat(pickedDiscovered, pickedRevisit) };
   }
 
   // Phase 2: Flatten all topics → {cat, topic} entries
@@ -1457,11 +1478,12 @@ async function main() {
       const title = article.title;
       const desc = article.description;
 
-      // Skip articles whose resolved title already has Wiki questions (redirects
-      // like 'Mangalyaan' → 'Mars Orbiter Mission') — deterministic generation
-      // means they can only produce 0 new.
-      if (coveredTitles.has(norm(title))) {
-        log('  (already covered: ' + title + ')');
+      // Skip only articles verified done. Covered-but-not-done articles are
+      // revisited (they were added to the revisit pool above): deterministic
+      // generation + pushQ() dedup means already-consumed sentences contribute
+      // 0 new questions, so the article resumes from the first unused sentence.
+      if (doneTitles.has(norm(title))) {
+        log('  (done: ' + title + ')');
         continue;
       }
 
@@ -1473,6 +1495,8 @@ async function main() {
 
       const allSentences = ext.split('.').filter(s => s.trim().length > 20 && !isBadSentence(s));
       const sentences = allSentences.filter(s => s.trim().length > 25 && !isBadSentence(s));
+      const wasCovered = coveredTitles.has(norm(title));
+      let articleAdded = 0;
             // Description-based (1 per article)
       if (desc && desc.length > 5 && desc.length < 200) {
         const q = makeDescriptionQuestion(desc, title);
@@ -1482,7 +1506,7 @@ async function main() {
           pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
           question: q, answer: title, hint: '',
           fact: paraphrase(getContext(allSentences, title, 3), title),
-        })) added++;
+        })) { added++; articleAdded++; }
       }
 
       const MAX_PER_ARTICLE = 20;
@@ -1511,7 +1535,7 @@ async function main() {
               pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
               question: context, answer: yearChoice, hint: '',
               fact: paraphrase(getContext(allSentences, sent, 3), yearChoice),
-            })) { added++; articleQ++; sentUsed = true; }
+            })) { added++; articleAdded++; articleQ++; sentUsed = true; }
           }
         }
 
@@ -1528,7 +1552,7 @@ async function main() {
               pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
             question: context, answer: numChoice.trim(), hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), numChoice.trim()),
-            })) { added++; articleQ++; sentUsed = true; }
+            })) { added++; articleAdded++; articleQ++; sentUsed = true; }
           }
         }
 
@@ -1545,7 +1569,7 @@ async function main() {
                 pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
             question: context, answer: numberNearby[1].trim(), hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), numberNearby[1].trim()),
-              })) { added++; articleQ++; sentUsed = true; }
+              })) { added++; articleAdded++; articleQ++; sentUsed = true; }
             }
           }
         }
@@ -1563,8 +1587,17 @@ async function main() {
             pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
             question: context, answer: bestTerm, hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), bestTerm),
-          })) { added++; articleQ++; sentUsed = true; }
+          })) { added++; articleAdded++; articleQ++; sentUsed = true; }
         }
+      }
+
+      // Article was already partially covered and this revisit produced nothing
+      // new → every usable sentence has now been consumed. Mark it done so it is
+      // not re-fetched again (flags are written to quiz.json at the end).
+      if (wasCovered && articleAdded === 0) {
+        doneTitles.add(norm(title));
+        doneThisRun.add(norm(title));
+        log('  (fully covered: ' + title + ')');
       }
     }
 
@@ -1594,6 +1627,9 @@ async function main() {
       for (const article of prevFetched) {
         const ext = article.extract, title = article.title, desc = article.description;
         if (isListPage(ext)) continue;
+        // Link traversal is for discovering NEW content only; continuation of
+        // partially-covered articles is handled by the main revisit pool above
+        // (which scans all sentences, unlike this 10-sentence link pass).
         if (coveredTitles.has(norm(title))) continue;
         const allSentences = ext.split('.').filter(s => s.trim().length > 20 && !isBadSentence(s));
         const sentences = allSentences.filter(s => s.trim().length > 25 && !isBadSentence(s));
@@ -1659,6 +1695,13 @@ async function main() {
     });
     fs.writeFileSync(catPath, JSON.stringify(catFile));
     log('  Saved per-category file: data/questions/' + slug + '.json (' + addedCount + ' new questions)');
+  }
+
+  if (doneThisRun.size) {
+    for (const q of quiz.questions) {
+      if (q.source === 'Wiki' && q.subSubject && doneThisRun.has(norm(q.subSubject))) q.wikiDone = true;
+    }
+    log('Marked ' + doneThisRun.size + ' articles fully covered (wikiDone)');
   }
 
   fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz));
