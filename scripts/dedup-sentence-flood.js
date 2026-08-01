@@ -41,8 +41,9 @@ function cleanNearDups(questions) {
   }
   const removed = [];
   const kept = [];
+  const addAll = (target, items) => { for (const item of items) target.push(item); };
   for (const list of groups.values()) {
-    if (list.length < 2) { kept.push(...list); continue; }
+    if (list.length < 2) { addAll(kept, list); continue; }
     const keptHere = [];
     for (const q of list) {
       const tq = tokens(q.question);
@@ -56,7 +57,7 @@ function cleanNearDups(questions) {
         keptHere.push(q);
       }
     }
-    kept.push(...keptHere);
+    addAll(kept, keptHere);
   }
   return { kept, removed };
 }
@@ -76,8 +77,8 @@ function clean(questions, source) {
   }
   const near = cleanNearDups(kept);
   kept.length = 0;
-  kept.push(...near.kept);
-  removed.push(...near.removed);
+  for (const kq of near.kept) kept.push(kq);
+  for (const rq of near.removed) removed.push(rq);
   return { kept, removed };
 }
 
