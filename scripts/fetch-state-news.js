@@ -4,6 +4,7 @@ var path = require('path');
 
 var API = 'https://en.wikipedia.org/w/api.php';
 var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
+var BIO_CACHE_PATH = path.resolve(__dirname, '..', 'data', 'person-bios.json');
 var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 var DAYS_BACK = 30;
 
@@ -38,7 +39,8 @@ var BIO_PAGE_TITLE = {
   'Haribhau Kisanrao Bagade': 'Haribhau Bagade'
 };
 
-function fetchBioSummary(name) {
+function fetchBioSummaryRaw(name, retries) {
+  if (retries === undefined) retries = 3;
   var title = BIO_PAGE_TITLE[name] || name;
   var url = 'https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(title.replace(/\s+/g, '_'));
   return new Promise(function(resolve) {
@@ -46,6 +48,11 @@ function fetchBioSummary(name) {
       var data = '';
       res.on('data', function(c) { data += c; });
       res.on('end', function() {
+        if (res.statusCode === 429 && retries > 0) {
+          var wait = Math.pow(2, 4 - retries) * 2000;
+          console.error('Bio 429, retrying in ' + (wait / 1000) + 's... (' + retries + ' left) for ' + name);
+          return setTimeout(function() { fetchBioSummaryRaw(name, retries - 1).then(resolve); }, wait);
+        }
         if (res.statusCode !== 200) return resolve('');
         try {
           var j = JSON.parse(data);
@@ -55,6 +62,16 @@ function fetchBioSummary(name) {
       });
     }).on('error', function() { resolve(''); });
   });
+}
+
+// Fetch a person's short biography (Wikipedia lead summary) with a persistent
+// cache so repeated runs do not re-fetch the same static bios. Failures are NOT
+// cached, so a transient rate-limit hit is retried on the next run.
+async function getBio(name, cache) {
+  if (cache && cache[name] && cache[name].bio) return cache[name].bio;
+  var bio = await fetchBioSummaryRaw(name);
+  if (bio && cache) cache[name] = { bio: bio, fetched: new Date().toISOString() };
+  return bio;
 }
 
 var INDIAN_STATE_NAMES = ['Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Delhi','Jammu and Kashmir','Ladakh','Puducherry'];
@@ -303,7 +320,27 @@ function makeQuestion(event, seq) {
 
 function eventKey(q) {
   var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); };
-  return n(q.question || q.text || '').substring(0, 80) + '|' + n(q.answer || q.entity || '');
+  var text = n(q.question || q.text || '');
+  var ans = n(q.answer || q.entity || '').replace(/\s+/g, ' ').trim();
+  // Stored questions are truncated by makeQuestion to 250 chars (247 + "...");
+  // truncate candidates identically so long events key the same as their stored copy.
+  if (text.length > 250) text = text.substring(0, 247) + '...';
+  // Normalize so a blanked stored question and its raw source text key the same:
+  // strip blanks, strip the answer word itself, strip any leading date prefix
+  // ("21 March – ..."), and collapse whitespace.
+  var blankRe = /_{2,}/g;
+  var ansEsc = ans.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  var ansRe = ansEsc ? new RegExp('\\b' + ansEsc + '\\b', 'ig') : null;
+  var datePrefixRe = /^\d{1,2}\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)[,.-]?\s*(?:[-–—]\s*)?/i;
+  text = text.replace(blankRe, ' ').replace(datePrefixRe, ' ').trim();
+  if (ansRe) text = text.replace(ansRe, ' ');
+  // Collapse punctuation/currency/hyphen spacing so near-identical variants
+  // key alike ("Prayagraj ," vs "Prayagraj,", "education -reform" vs
+  // "education-reform", "₹ 99 lakh" vs "₹99 lakh").
+  text = text.replace(/([,.;:])\s+/g, '$1 ').replace(/\s+([,.;:])/g, '$1 ')
+            .replace(/\s*[-–—]\s*/g, '-').replace(/₹\s+/g, '₹')
+            .replace(/[.,;\s]+$/g, '');
+  return text.toLowerCase().replace(/\s+/g, ' ').trim();
 }
 
 async function fetchMonthEvents(year, month) {
@@ -317,7 +354,7 @@ async function fetchMonthEvents(year, month) {
   return { html: html, sections: sections };
 }
 
-async function generateSeedQuestions(seqCounter) {
+async function generateSeedQuestions(seqCounter, bioCache) {
   var now = new Date();
   var pubDate = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + 'T12:00:00.000Z';
   var monthLabel = MONTHS[now.getMonth()] + ' ' + now.getFullYear();
@@ -391,7 +428,7 @@ async function generateSeedQuestions(seqCounter) {
     var cstate = Object.keys(stateCMs)[ci];
     seqCounter.seed = (seqCounter.seed || 0) + 1;
     var cFact = 'The Chief Minister of ' + cstate + ' is ' + stateCMs[cstate] + ' (as of ' + monthLabel + '). The CM is the head of the state government.';
-    var cBio = await fetchBioSummary(stateCMs[cstate]);
+    var cBio = await getBio(stateCMs[cstate], bioCache);
     if (cBio && !/may refer to/i.test(cBio)) cFact += ' ' + cBio;
     qs.push({
       id: 'state_cm_' + seqCounter.seed,
@@ -415,7 +452,7 @@ async function generateSeedQuestions(seqCounter) {
     var gstate = Object.keys(stateGovs)[gi];
     seqCounter.seed = (seqCounter.seed || 0) + 1;
     var gFact = 'The Governor of ' + gstate + ' is ' + stateGovs[gstate] + ' (as of ' + monthLabel + '). The Governor is the constitutional head of the state.';
-    var gBio = await fetchBioSummary(stateGovs[gstate]);
+    var gBio = await getBio(stateGovs[gstate], bioCache);
     if (gBio && !/may refer to/i.test(gBio)) gFact += ' ' + gBio;
     qs.push({
       id: 'state_gov_' + seqCounter.seed,
@@ -449,6 +486,16 @@ async function main() {
     }
   }
 
+  var bioCache = {};
+  if (fs.existsSync(BIO_CACHE_PATH)) {
+    try {
+      bioCache = JSON.parse(fs.readFileSync(BIO_CACHE_PATH, 'utf8'));
+      console.error('Read bio cache: ' + Object.keys(bioCache).length + ' people');
+    } catch (e) {
+      console.error('Error reading bio cache: ' + e.message);
+    }
+  }
+
   var PIB_KEY = 'PIB Releases';
   if (!existing[PIB_KEY]) existing[PIB_KEY] = { subSubjects: {} };
   if (!existing[PIB_KEY].subSubjects['State Affairs']) existing[PIB_KEY].subSubjects['State Affairs'] = [];
@@ -476,7 +523,7 @@ async function main() {
   });
 
   // Phase 1: Generate fresh CM and Governor questions
-  var seedQuestions = await generateSeedQuestions(seqCounter);
+  var seedQuestions = await generateSeedQuestions(seqCounter, bioCache);
   var newQuestions = [];
   seedQuestions.forEach(function(q) {
     var key = eventKey(q);
@@ -594,6 +641,9 @@ async function main() {
   var total = existing[PIB_KEY].subSubjects['State Affairs'].length;
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
   console.error('State Affairs: ' + total + ' total, ' + newQuestions.length + ' new (' + yearAdded + ' from India year page)');
+
+  fs.writeFileSync(BIO_CACHE_PATH, JSON.stringify(bioCache, null, 2), 'utf8');
+  console.error('Bio cache: ' + Object.keys(bioCache).length + ' people');
 }
 
 main().catch(function(err) {
