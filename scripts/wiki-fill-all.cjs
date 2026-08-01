@@ -275,6 +275,133 @@ function findBestTerm(sent, title) {
   return pool[0].term;
 }
 
+// Closest phrase boundaries around an index, so a long sentence can yield a
+// compact local-window question instead of being skipped whole. Backs up to the
+// nearest sentence/phrase boundary on the left and hard-caps on the right.
+function clauseWindow(sent, idx, beforeLen, afterLen) {
+  const from = Math.max(0, idx - beforeLen);
+  let start = from;
+  const bounds = [];
+  for (const sep of ['. ', ', ', '; ', ': ', '\u2014 ']) {
+    const p = sent.lastIndexOf(sep, from);
+    if (p >= 0) bounds.push(p + sep.length);
+  }
+  if (bounds.length) start = Math.max(...bounds);
+  const hardEnd = Math.min(sent.length, idx + afterLen);
+  const dotEnd = sent.indexOf('. ', idx + 1);
+  const end = (dotEnd >= 0 && dotEnd <= hardEnd) ? dotEnd : hardEnd;
+  return sent.substring(start, end).replace(/\s+\S*$/, '').trim();
+}
+
+// Expert-style fact questions mined with deterministic patterns (no LLM).
+// Each extractor recognises a specific fact shape and builds the question from
+// a LOCAL CLAUSE around the answer, so it works on long sentences the shallow
+// year/number/superlative/term branches skip. Returns [{question, answer}].
+function extractFactQuestions(sent, title) {
+  const out = [];
+
+  // 1) Event-year anchor in LONG sentences: "...restrictions that began in 1981
+  //    and extended for nearly two decades". The shallow year branch only runs
+  //    on sentences < 240 chars, so dated facts in long sentences are lost.
+  if (sent.length >= 240) {
+    const m = sent.match(/\b(began|started|commenced|initiated|established|founded|created|introduced|launched|enacted|implemented|passed|signed|ratified|opened|ended|declared|announced)\s+(?:in\s+)?(1[0-9]{3}|20[0-9]{2})\b/i);
+    if (m) {
+      const year = m[2];
+      const yearPos = m.index + m[0].lastIndexOf(year);
+      let win = clauseWindow(sent, yearPos, 170, 80);
+      if (win.includes(year)) {
+        let context = win.replace(year, '_____');
+        // Cut a leading "..., and X" fragment so the question starts at the subject
+        // ("...society, and Chakrabarti described restrictions...that began in _____").
+        const blankIdx = context.indexOf('_____');
+        if (blankIdx > 0) {
+          const leadCut = context.lastIndexOf(', and ', blankIdx);
+          if (leadCut >= 0) context = context.substring(leadCut + 6).trim();
+        }
+        context = stripLeadingNoise(context).replace(/^[,\s;]+/, '')
+          .replace(/,\s+(?:and\s+)?(?:thus|therefore|so|how therefore)\s*$/i, '')
+          .replace(/[\s"'()[\]]+$/g, '').trim();
+        if (context.length >= 25 && context.length <= 250 && !/^_____/.test(context)) {
+          out.push({ question: context, answer: year });
+        }
+      }
+    }
+  }
+
+  // 2) Reviewer attribution — three common shapes:
+  //    (a) "NAME wrote in/for PUBLICATION, "QUOTE""
+  //    (b) "In PUBLICATION, NAME wrote the novel/book/film "QUOTE""
+  //    (c) "NAME wrote an extensive critique/review of X in PUBLICATION"
+  //    The NAME is blanked and the question is restructured to avoid a leading
+  //    blank (which the cleanup gate rejects). Regexes are case-sensitive on
+  //    names so lowercase words ("anthropologist Irfan Ahmad") are not caught.
+  const attributionPatterns = [
+    { re: /([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})\s+(?:wrote|writes)\s+(?:in|for)\s+((?:The\s+)?[A-Z][a-z]+(?:\.[a-z]{2,})?(?:\s+[A-Z][a-z]+){0,2})/,
+      build(m) { return { name: m[1], pub: m[2], phrase: 'wrote' }; } },
+    { re: /[Ii]n\s+((?:The\s+)?[A-Z][a-z]+(?:\.[a-z]{2,})?(?:\s+[A-Z][a-z]+){0,2})\s*,\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})\s+wrote\s+the\s+(?:novel|book|film)/,
+      build(m) { return { name: m[2], pub: m[1], phrase: 'wrote the novel' }; } },
+    { re: /([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})\s+(wrote|published)\s+((?:a|an)\s+(?:[a-z]+\s+)?(?:critique|review|analysis|assessment|examination))\s+of\s+[^,.]{0,80}?\bin\s+((?:The\s+)?[A-Z][a-z]+(?:\.[a-z]{2,})?(?:\s+[A-Z][a-z]+){0,2})/,
+      build(m) { return { name: m[1], pub: m[4], phrase: m[2] + ' ' + m[3] + ' of the work' }; } },
+  ];
+  for (const p of attributionPatterns) {
+    const ma = sent.match(p.re);
+    if (!ma) continue;
+    const { name, pub, phrase } = p.build(ma);
+    if (/^(She|He|They|It|I|We|You)\b/i.test(name)) continue;
+    const afterMatch = sent.substring(ma.index + ma[0].length);
+    // Opening quote may lack its closing quote (splitSentences strips the
+    // citation marker AND the quote adjacent to it), so the closing `"` is
+    // optional; the greedy class stops at the next quote anyway.
+    const quote = afterMatch.match(/"([^"]{15,})"?/);
+    const quoteShort = quote ? quote[1].replace(/\s+/g, ' ').trim().replace(/\s+\S*$/, '').substring(0, 80) : '';
+    let context;
+    if (quote && phrase === 'wrote') {
+      context = 'In ' + pub + ', _____ wrote that "' + quoteShort + '..."';
+    } else if (quote) {
+      context = 'In ' + pub + ', _____ ' + phrase + ' "' + quoteShort + '..."';
+    } else if (phrase !== 'wrote') {
+      context = 'In ' + pub + ', _____ ' + phrase + '.';
+    } else {
+      continue; // "wrote" without a quote is too weak
+    }
+    if (context.length <= 220) { out.push({ question: context, answer: name }); }
+    break; // only one attribution per sentence
+  }
+
+  // 3) Theme/list question: "...such as A, B, C and D" → blank the LAST list
+  //    item, leaving the others as hints. Strict guards keep this from firing
+  //    on clauses: the list region must not contain verbs/relatives, each item
+  //    is a short noun phrase, and the question must not end on the blank.
+  const ml = sent.match(/\b(?:such as|including|like|these include)\s+([A-Za-z][^.]{8,160})/i);
+  if (ml) {
+    const clauseMarkers = 'it|he|she|they|we|you|which|who|whom|whose|this|that|these|those|have|has|had|was|were|is|are|may|might|although|because|while|since|however|believe|argue|argued|state|stated|said|say|account|suggest|suggested|described|included|including';
+    let region = ml[1].replace(/\.$/, '');
+    region = region
+      .replace(new RegExp(',\\s+(?:and\\s+)?(?:' + clauseMarkers + ')\\b[\\s\\S]*$', 'i'), '')
+      .replace(/,\s+as well as\b[\s\S]*$/i, '');
+    if (!new RegExp('\\b(?:' + clauseMarkers + ')\\b', 'i').test(region)) {
+      const items = region.split(/[,;]|\s+and\s+|\s+or\s+/)
+        .map(x => x.replace(/^[\s"'\[(]+|[\s"'\])]+$/g, '').trim())
+        .filter(x => x.length > 3 && !/^(and|or)$/i.test(x));
+      if (items.length >= 3) {
+        const last = items[items.length - 1];
+        const lastIdx = sent.lastIndexOf(last);
+        const badItem = last.split(/\s+/).length > 4 || last.length > 30
+          || new RegExp('\\b(?:' + clauseMarkers + ')\\b', 'i').test(last);
+        if (!badItem && lastIdx >= 0) {
+          let context = (sent.substring(0, lastIdx) + '_____' + sent.substring(lastIdx + last.length))
+            .replace(/[\s,"')\]]+$/g, '').trim();
+          if (context.length >= 25 && context.length <= 250 && !/^_____/.test(context) && !/_____\s*$/.test(context)) {
+            out.push({ question: context, answer: last });
+          }
+        }
+      }
+    }
+  }
+
+  return out;
+}
+
 // Simple paraphrase: shorten to 1-2 most relevant sentences, minor reword
 function paraphrase(text, answer) {
   if (!text || text.length < 20) return text;
@@ -1545,9 +1672,26 @@ async function main() {
       let articleQ = 0;
       for (let si = 0; si < sentences.length && articleQ < MAX_PER_ARTICLE; si++) {
         const sent = sentences[si];
-        if (sent.length > 260) continue;
         const sentKey = title + '::' + si;
         let sentUsed = false;
+
+        // ▸ Fact-pattern extractors (expert question shapes). Run first so the
+        //   most important facts — dated events, reviewer attributions, theme
+        //   lists — are captured even from long sentences the shallow branches
+        //   skip. Questions are built from a local clause around the answer.
+        if (!sentUsed) {
+          const facts = extractFactQuestions(sent, title);
+          for (const f of facts) {
+            if (articleQ >= MAX_PER_ARTICLE) break;
+            if (pushQ({
+              id: cat.name.substring(0,3).toLowerCase() + added + 'f',
+              type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+              pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+              question: f.question, answer: f.answer, hint: '',
+              fact: paraphrase(getContext(allSentences, sent, 3), f.answer),
+            })) { added++; articleAdded++; articleQ++; sentUsed = true; break; }
+          }
+        }
 
         // ▸ Year-based (any year, no trigger word filter)
         if (!sentUsed) {
@@ -1606,8 +1750,9 @@ async function main() {
           }
         }
 
-        // ▸ Blank-out key term (every sentence)
-        if (articleQ < MAX_PER_ARTICLE && !sentUsed) {
+        // ▸ Blank-out key term (every short sentence; long ones are handled by
+        //   the fact-pattern extractors above)
+        if (articleQ < MAX_PER_ARTICLE && !sentUsed && sent.length <= 260) {
           if (new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(sent)) continue;
           const bestTerm = findBestTerm(sent, title);
           if (!bestTerm) continue;
