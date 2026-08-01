@@ -27,6 +27,33 @@ function fetchJSON(url, retries) {
   });
 }
 
+function httpPost(url, data, retries) {
+  if (retries === undefined) retries = 3;
+  return new Promise(function(resolve, reject) {
+    var parsed = new URL(url);
+    var opts = {
+      hostname: parsed.hostname, path: parsed.pathname, method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Content-Length': Buffer.byteLength(data), 'User-Agent': 'ApptBot/2.0' }
+    };
+    var req = https.request(opts, function(res) {
+      var d = '';
+      res.on('data', function(c) { d += c; });
+      res.on('end', function() {
+        if ((res.statusCode === 429 || res.statusCode >= 500) && retries > 0) {
+          var wait = Math.pow(2, 4 - retries) * 3000;
+          console.error('HTTP ' + res.statusCode + ', retrying in ' + (wait / 1000) + 's... (' + retries + ' left)');
+          return setTimeout(function() { httpPost(url, data, retries - 1).then(resolve, reject); }, wait);
+        }
+        if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode + ': ' + d.slice(0, 200)));
+        try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
+      });
+    }).on('error', reject);
+    req.setTimeout(180000, function() { req.destroy(); reject(new Error('timeout')); });
+    req.write(data);
+    req.end();
+  });
+}
+
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
 function strip(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
@@ -59,6 +86,174 @@ var OFFICES = [
   { page: 'National_Commission_for_Women', label: 'NCW Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the National Commission for Women (NCW)?', emoji: '\uD83D\uDC69\u200D\u2696' },
 ];
 
+var WIKIDATA_SPARQL = 'https://query.wikidata.org/sparql';
+
+// Auto-discovery of India office-holder positions with a current incumbent.
+// Uses the Wikidata "office holder position" (Q4164871) subclass tree scoped to
+// India (P17=Q668), returning positions that currently have an officeholder
+// (P1308). This finds far more posts than the curated OFFICES list (state CMs,
+// governors, ministers, HC chief justices, service chiefs, etc.) and stays
+// current automatically as incumbents change.
+var DISCOVER_QUERY = `
+SELECT ?position ?positionLabel ?holderLabel ?article WHERE {
+  ?position wdt:P31/wdt:P279* wd:Q4164871 .
+  ?position wdt:P17 wd:Q668 .
+  ?position p:P1308 ?st .
+  ?st ps:P1308 ?holder .
+  ?st pq:P580 ?start .
+  FILTER NOT EXISTS { ?st pq:P582 ?end . }
+  OPTIONAL {
+    ?article schema:about ?position .
+    ?article schema:isPartOf <https://en.wikipedia.org/> .
+  }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}`;
+
+// Convert a Wikipedia article URL (or Q-id) into a wiki page title.
+function articleToPage(articleUrl) {
+  if (!articleUrl) return '';
+  var m = /\/wiki\/([^#?]+)/.exec(articleUrl);
+  if (m) return decodeURIComponent(m[1]);
+  var q = /entity\/(Q\d+)/.exec(articleUrl);
+  return q ? q[1] : '';
+}
+
+// Convert a position label into a best-guess Wikipedia article title.
+function labelToPage(label) {
+  return (label || '').replace(/\s+/g, '_');
+}
+
+// Batch-resolve position titles to their final article titles (following
+// redirects), in chunks of 50. Single API call per chunk. Returns a map of
+// originalTitle -> finalTitle.
+async function resolvePages(titles) {
+  var map = {};
+  var uniq = [];
+  titles.forEach(function(t) { if (t && uniq.indexOf(t) === -1) uniq.push(t); });
+  if (!uniq.length) return map;
+  var CHUNK = 50;
+  for (var c = 0; c < uniq.length; c += CHUNK) {
+    var chunk = uniq.slice(c, c + CHUNK);
+    try {
+      var res = await fetchJSON(API + '?action=query&redirects=1&titles=' + encodeURIComponent(chunk.join('|')) + '&format=json');
+      var pages = res && res.query && res.query.pages;
+      if (!pages) continue;
+      var normalized = {};
+      var redirects = {};
+      (res.query.normalized || []).forEach(function(r) { normalized[r.from] = r.to; });
+      (res.query.redirects || []).forEach(function(r) { redirects[r.from] = r.to; });
+      Object.keys(pages).forEach(function(id) {
+        var p = pages[id];
+        if (p.missing) return;
+        var final = p.title;
+        // Map each requested title -> final title: normalize, then follow redirects.
+        chunk.forEach(function(t) {
+          var step = normalized[t] || t;
+          if (redirects[step]) {
+            if (redirects[step] === final) map[t] = final;
+          } else {
+            if (step === final) map[t] = final;
+          }
+        });
+      });
+    } catch (e) {
+      continue;
+    }
+  }
+  return map;
+}
+
+// Post labels that are NOT useful exam-style appointment questions.
+var NOISE_PATTERNS = [
+  /\bMayor of\b/i,
+  /\bPrincipal of\b/i,
+  /\bAmbassador of\b/i,
+  /\bHigh Commissioner of\b/i,
+  /ambassador to India/i,
+  /Secretary-General/i,
+  /\bfield marshal\b/i,
+  /\bGrand Mufti\b/i,
+  /Leader of (?:the )?Opposition of [A-Z]/i, // state-level LoP, not national
+  /Minister of .+ \(/,                     // state ministers (anything with a state qualifier)
+  /Minister of .+, \w+/,                   // state ministers (Kerala, etc.)
+  /Minister of Legislative Affairs/,       // niche
+  /Deputy Leader of/,                      // niche deputy roles
+  /Deputy leader of opposition/,           // niche deputy roles
+  /Legislative Assembly/,                  // state-assembly staff roles
+  /Deputy Speaker/,                        // deputy speakers (state/national niche)
+  /\bQ\d+\b/                                 // label-less Q-entities
+];
+
+function isNoiseLabel(label) {
+  for (var i = 0; i < NOISE_PATTERNS.length; i++) {
+    if (NOISE_PATTERNS[i].test(label)) return true;
+  }
+  return false;
+}
+
+function normLabel(s) {
+  return (s || '').toLowerCase().replace(/[()]/g, '').replace(/\s+/g, ' ').trim();
+}
+
+// Canonical key for deduping a position label: lowercase, parens stripped,
+// trailing "(India)"/" of India"/" India" removed.
+function dedupKey(s) {
+  return normLabel(s).replace(/\s+(?:of\s+)?india\s*$/, '');
+}
+
+// Discover India office-holder positions from Wikidata. Returns a list of
+// { position, positionLabel, holderLabel, page } deduped by normalized label.
+// `page` is the position's English Wikipedia article title (used to verify the
+// incumbent), or '' if none exists.
+async function discoverPositions() {
+  var res = await httpPost(WIKIDATA_SPARQL, 'format=json&query=' + encodeURIComponent(DISCOVER_QUERY));
+  if (!res || !res.results || !res.results.bindings) return [];
+  var seen = {};
+  var out = [];
+  for (var i = 0; i < res.results.bindings.length; i++) {
+    var b = res.results.bindings[i];
+    var label = b.positionLabel ? b.positionLabel.value : '';
+    if (!label || isNoiseLabel(label)) continue;
+    var key = normLabel(label);
+    if (seen[key]) continue;
+    seen[key] = true;
+    out.push({
+      position: b.position ? b.position.value : '',
+      positionLabel: label,
+      holderLabel: b.holderLabel ? b.holderLabel.value : '',
+      page: articleToPage(b.article ? b.article.value : '')
+    });
+  }
+  for (var j = 0; j < out.length; j++) {
+    if (!out[j].page) out[j].page = labelToPage(out[j].positionLabel);
+  }
+  // Batch-resolve titles (following redirects) in one API call, then drop
+  // positions whose guessed title doesn't exist on English Wikipedia.
+  var map = await resolvePages(out.map(function(d) { return d.page; }));
+  out = out.filter(function(d) { return map[d.page]; });
+  out.forEach(function(d) { d.page = map[d.page]; });
+  out.sort(function(a, b2) { return normLabel(a.positionLabel) < normLabel(b2.positionLabel) ? -1 : 1; });
+  return out;
+}
+
+// Build a Wikipedia-backed "office" spec for a discovered position. The
+// incumbent is read from the position's Wikipedia infobox (via fetchAppointment),
+// NOT from Wikidata, so stale/vandalized Wikidata entries can't produce wrong
+// answers. Positions without an English Wikipedia article are skipped.
+function discoveredToOffice(discovered) {
+  var page = discovered.page;
+  if (!page) return null;
+  var label = discovered.positionLabel;
+  return {
+    page: page,
+    label: label,
+    labelField: 'Incumbent',
+    q: 'Who is the current ' + label + '?',
+    emoji: '\uD83D\uDC68\u200D\uD83D\uDCBC',
+    discovered: true
+  };
+}
+
 var DECOR = ['PVSM','UYSM','AVSM','VSM','SM','KC','SC','ADC','PHSM','PSM','MVC','KCMG','OM','AC','PC','AFMC','Bar','IRSE','ITS','IAS','IPS','IFS','IRS','CAF','AVSM'];
 var BAD_WORDS = ['incumbent','chairperson','chairman','commissioner','secretary','member','members','general','admiral','marshal','since','appointed','ex-officio','part-time','permanent','full-time','member-secretary','the','of','and','in','on','at','for','with','took','charge','assumed','official','officer','present','current','former'];
 
@@ -68,7 +263,7 @@ function cleanName(s) {
     .replace(/\s+/g, ' ')
     .replace(/&#\d+;?/g, ' ')
     .replace(/\b(?:Incumbent|Justice|Justice \(Retd\)|Retd|Hon'ble|Shri|Shri\.|Dr|Prof|Mr|Mrs|Ms|Sir|Smt|General|Admiral|Air Chief Marshal|Marshal|Air Marshal|Vice Admiral|Rear Admiral|Lt Gen|Lieutenant General)\b/gi, ' ')
-    .replace(new RegExp('\\b(?:' + DECOR.join('|') + ')\\b', 'gi'), ' ')
+    .replace(new RegExp('\\b(?:' + DECOR.join('|') + ')\\b', 'g'), ' ')
     .replace(/\bsince\b.*$/i, ' ')
     .replace(/\b(?:since|as of)?\s*(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+\d{1,2},?\s+\d{4}\s*$/i, ' ')
     .replace(new RegExp('\\b(?:' + BAD_WORDS.join('|') + ')\\b', 'gi'), ' ')
@@ -173,7 +368,7 @@ function extractIncumbent(html, labelField) {
 
 async function fetchAppointment(office) {
   try {
-    var res = await fetchJSON(API + '?action=parse&page=' + encodeURIComponent(office.page) + '&prop=text&section=0&format=json');
+    var res = await fetchJSON(API + '?action=parse&page=' + encodeURIComponent(office.page) + '&redirects=1&prop=text&section=0&format=json');
     if (!res || !res.parse || !res.parse.text) return null;
     return extractIncumbent(res.parse.text['*'], office.labelField);
   } catch (e) {
@@ -244,9 +439,39 @@ async function main() {
 
   var found = 0, notFound = 0, updated = 0, added = 0;
 
-  for (var oi = 0; oi < OFFICES.length; oi++) {
-    process.stdout.write('  ' + OFFICES[oi].label + '... ');
-    var name = await fetchAppointment(OFFICES[oi]);
+  // Build dedup keys for curated offices (skip discovered positions that match,
+  // e.g. a Wikidata "Chief of the Army Staff" vs curated COAS entry).
+  var curatedKeys = [];
+  OFFICES.forEach(function(o) {
+    curatedKeys.push(dedupKey(o.page.replace(/_/g, ' ')));
+    curatedKeys.push(dedupKey(o.label));
+  });
+  curatedKeys = curatedKeys.filter(Boolean);
+
+  var candidates = OFFICES.map(function(o) { return { office: o }; });
+  try {
+    var discovered = await discoverPositions();
+    var addedDisc = 0;
+    for (var di = 0; di < discovered.length; di++) {
+      var d = discovered[di];
+      var dk = dedupKey(d.positionLabel);
+      if (curatedKeys.indexOf(dk) >= 0) continue;
+      var office = discoveredToOffice(d);
+      if (!office) continue;
+      curatedKeys.push(dk);
+      candidates.push({ office: office });
+      addedDisc++;
+    }
+    console.error('Discovered ' + discovered.length + ' Wikidata positions, added ' + addedDisc + ' new (each verified via its Wikipedia article)');
+  } catch (e) {
+    console.error('Wikidata discovery failed (using curated list only): ' + e.message);
+  }
+
+  for (var oi = 0; oi < candidates.length; oi++) {
+    var cand = candidates[oi];
+    var label = cand.office.label;
+    process.stdout.write('  ' + label + '... ');
+    var name = await fetchAppointment(cand.office);
     if (name) {
       process.stdout.write(name.substring(0, 50) + '\n');
       found++;
@@ -255,7 +480,7 @@ async function main() {
       notFound++;
     }
 
-    var q = makeQuestion(OFFICES[oi], name, seq);
+    var q = makeQuestion(cand.office, name, seq);
     if (!q) continue;
 
     var personBio = await bio.getBio(name, bioCache);
@@ -273,7 +498,7 @@ async function main() {
         updated++;
         process.stdout.write('    updated ' + old + ' -> ' + q.answer + '\n');
       } else {
-        var bareFact = 'The current ' + OFFICES[oi].label + ' of India is ' + name + '. ';
+        var bareFact = 'The current ' + label + ' of India is ' + name + '. ';
         if (personBio && existingQ.fact === bareFact) {
           existingQ.fact = q.fact;
           process.stdout.write('    (bio enriched)\n');
