@@ -1849,8 +1849,6 @@ async function main() {
 
     log('  Added ' + added + ' new questions for ' + cat.name + ' (total: ' + quiz.questions.length + ')');
     totalAdded += added;
-    fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz));
-    if (process.env.RUNNER_TEMP) fs.writeFileSync(process.env.RUNNER_TEMP + '/quiz.json', JSON.stringify(quiz));
 
     const slug = cat.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     const catPath = path.join(__dirname, '..', 'data', 'questions', slug + '.json');
