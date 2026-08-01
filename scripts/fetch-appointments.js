@@ -4,6 +4,7 @@ var path = require('path');
 
 var API = 'https://en.wikipedia.org/w/api.php';
 var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
+var bio = require('./bio-cache');
 
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
@@ -226,6 +227,8 @@ async function main() {
   if (!existing[CA_KEY]) existing[CA_KEY] = { subSubjects: {} };
   if (!existing[CA_KEY].subSubjects['Appointments']) existing[CA_KEY].subSubjects['Appointments'] = [];
 
+  var bioCache = bio.loadBioCache();
+
   var list = existing[CA_KEY].subSubjects['Appointments'];
   var byQuestion = {};
   var usedIds = {};
@@ -255,6 +258,9 @@ async function main() {
     var q = makeQuestion(OFFICES[oi], name, seq);
     if (!q) continue;
 
+    var personBio = await bio.getBio(name, bioCache);
+    if (personBio) q.fact += ' ' + personBio;
+
     var qkey = questionKey(q);
     var existingQ = byQuestion[qkey];
     if (existingQ) {
@@ -267,7 +273,13 @@ async function main() {
         updated++;
         process.stdout.write('    updated ' + old + ' -> ' + q.answer + '\n');
       } else {
-        process.stdout.write('    (unchanged)\n');
+        var bareFact = 'The current ' + OFFICES[oi].label + ' of India is ' + name + '. ';
+        if (personBio && existingQ.fact === bareFact) {
+          existingQ.fact = q.fact;
+          process.stdout.write('    (bio enriched)\n');
+        } else {
+          process.stdout.write('    (unchanged)\n');
+        }
       }
     } else {
       q.id = 'appt_' + pad(seq);
@@ -286,6 +298,8 @@ async function main() {
   var total = list.length;
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
   console.error('\nAppointments: ' + total + ' total questions (' + updated + ' refreshed, ' + added + ' new)');
+
+  bio.saveBioCache(bioCache);
 }
 
 main().catch(function(err) {

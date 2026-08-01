@@ -4,7 +4,7 @@ var path = require('path');
 
 var API = 'https://en.wikipedia.org/w/api.php';
 var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
-var BIO_CACHE_PATH = path.resolve(__dirname, '..', 'data', 'person-bios.json');
+var bio = require('./bio-cache');
 var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 var DAYS_BACK = 30;
 
@@ -32,47 +32,6 @@ function fetchJSON(url, retries) {
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function stripHtml(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-
-var BIO_PAGE_TITLE = {
-  'Vijay': 'Vijay (actor)',
-  'Lakshman Prasad Acharya': 'Lakshman Acharya',
-  'Haribhau Kisanrao Bagade': 'Haribhau Bagade'
-};
-
-function fetchBioSummaryRaw(name, retries) {
-  if (retries === undefined) retries = 3;
-  var title = BIO_PAGE_TITLE[name] || name;
-  var url = 'https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(title.replace(/\s+/g, '_'));
-  return new Promise(function(resolve) {
-    https.get(url, { agent: AGENT, headers: { 'User-Agent': 'StateNewsFill/3.0' } }, function(res) {
-      var data = '';
-      res.on('data', function(c) { data += c; });
-      res.on('end', function() {
-        if (res.statusCode === 429 && retries > 0) {
-          var wait = Math.pow(2, 4 - retries) * 2000;
-          console.error('Bio 429, retrying in ' + (wait / 1000) + 's... (' + retries + ' left) for ' + name);
-          return setTimeout(function() { fetchBioSummaryRaw(name, retries - 1).then(resolve); }, wait);
-        }
-        if (res.statusCode !== 200) return resolve('');
-        try {
-          var j = JSON.parse(data);
-          var extract = (j.extract || '').replace(/\s+/g, ' ').trim();
-          resolve(extract);
-        } catch (e) { resolve(''); }
-      });
-    }).on('error', function() { resolve(''); });
-  });
-}
-
-// Fetch a person's short biography (Wikipedia lead summary) with a persistent
-// cache so repeated runs do not re-fetch the same static bios. Failures are NOT
-// cached, so a transient rate-limit hit is retried on the next run.
-async function getBio(name, cache) {
-  if (cache && cache[name] && cache[name].bio) return cache[name].bio;
-  var bio = await fetchBioSummaryRaw(name);
-  if (bio && cache) cache[name] = { bio: bio, fetched: new Date().toISOString() };
-  return bio;
-}
 
 var INDIAN_STATE_NAMES = ['Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Delhi','Jammu and Kashmir','Ladakh','Puducherry'];
 var INDIAN_STATE_RE = new RegExp('\\b(?:' + INDIAN_STATE_NAMES.join('|') + ')\\b', 'i');
@@ -428,8 +387,8 @@ async function generateSeedQuestions(seqCounter, bioCache) {
     var cstate = Object.keys(stateCMs)[ci];
     seqCounter.seed = (seqCounter.seed || 0) + 1;
     var cFact = 'The Chief Minister of ' + cstate + ' is ' + stateCMs[cstate] + ' (as of ' + monthLabel + '). The CM is the head of the state government.';
-    var cBio = await getBio(stateCMs[cstate], bioCache);
-    if (cBio && !/may refer to/i.test(cBio)) cFact += ' ' + cBio;
+    var cBio = await bio.getBio(stateCMs[cstate], bioCache);
+    if (cBio) cFact += ' ' + cBio;
     qs.push({
       id: 'state_cm_' + seqCounter.seed,
       type: 'fill_blank',
@@ -452,8 +411,8 @@ async function generateSeedQuestions(seqCounter, bioCache) {
     var gstate = Object.keys(stateGovs)[gi];
     seqCounter.seed = (seqCounter.seed || 0) + 1;
     var gFact = 'The Governor of ' + gstate + ' is ' + stateGovs[gstate] + ' (as of ' + monthLabel + '). The Governor is the constitutional head of the state.';
-    var gBio = await getBio(stateGovs[gstate], bioCache);
-    if (gBio && !/may refer to/i.test(gBio)) gFact += ' ' + gBio;
+    var gBio = await bio.getBio(stateGovs[gstate], bioCache);
+    if (gBio) gFact += ' ' + gBio;
     qs.push({
       id: 'state_gov_' + seqCounter.seed,
       type: 'fill_blank',
@@ -486,15 +445,7 @@ async function main() {
     }
   }
 
-  var bioCache = {};
-  if (fs.existsSync(BIO_CACHE_PATH)) {
-    try {
-      bioCache = JSON.parse(fs.readFileSync(BIO_CACHE_PATH, 'utf8'));
-      console.error('Read bio cache: ' + Object.keys(bioCache).length + ' people');
-    } catch (e) {
-      console.error('Error reading bio cache: ' + e.message);
-    }
-  }
+  var bioCache = bio.loadBioCache();
 
   var PIB_KEY = 'PIB Releases';
   if (!existing[PIB_KEY]) existing[PIB_KEY] = { subSubjects: {} };
@@ -642,8 +593,7 @@ async function main() {
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
   console.error('State Affairs: ' + total + ' total, ' + newQuestions.length + ' new (' + yearAdded + ' from India year page)');
 
-  fs.writeFileSync(BIO_CACHE_PATH, JSON.stringify(bioCache, null, 2), 'utf8');
-  console.error('Bio cache: ' + Object.keys(bioCache).length + ' people');
+  bio.saveBioCache(bioCache);
 }
 
 main().catch(function(err) {

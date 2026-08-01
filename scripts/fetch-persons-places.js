@@ -4,6 +4,7 @@ var path = require('path');
 
 var API = 'https://en.wikipedia.org/w/api.php';
 var CA_PATH = path.resolve(__dirname, '..', 'data/questions/current-affairs.json');
+var bio = require('./bio-cache');
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
 function fetchJSON(url, retries) {
@@ -78,6 +79,8 @@ async function main() {
   existing[CA_KEY].subSubjects['Places in News'].forEach(function(q) { ek.pl[eventKey(q)] = true; });
   var seq = { pe: existing[CA_KEY].subSubjects['Persons in News'].length + 1, pl: existing[CA_KEY].subSubjects['Places in News'].length + 1 };
   var nq = { pe: [], pl: [] };
+
+  var bioCache = bio.loadBioCache();
 
   // ── Fetch CM / Governors / Cabinet ministers from infobox ──
   process.stdout.write('  Incumbents (Persons in News)... ');
@@ -158,11 +161,20 @@ async function main() {
     }
   } catch (e) {}
 
+  for (var bqi = 0; bqi < nq.pe.length; bqi++) {
+    var bq = nq.pe[bqi];
+    if (!bio.isSinglePerson(bq.answer)) continue;
+    var b = await bio.getBio(bq.answer, bioCache);
+    if (b && bq.fact.indexOf(b) === -1) bq.fact += ' ' + b;
+  }
+
   nq.pe.forEach(function(q) { existing[CA_KEY].subSubjects['Persons in News'].push(q); });
   nq.pl.forEach(function(q) { existing[CA_KEY].subSubjects['Places in News'].push(q); });
   fs.writeFileSync(CA_PATH, JSON.stringify(existing, null, 2), 'utf8');
   console.error('Persons in News: ' + existing[CA_KEY].subSubjects['Persons in News'].length + ' total, ' + nq.pe.length + ' new');
   console.error('Places in News: ' + existing[CA_KEY].subSubjects['Places in News'].length + ' total, ' + nq.pl.length + ' new');
+
+  bio.saveBioCache(bioCache);
 }
 
 main().catch(function(err) {

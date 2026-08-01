@@ -4,6 +4,7 @@ var path = require('path');
 
 var API = 'https://en.wikipedia.org/w/api.php';
 var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
+var bio = require('./bio-cache');
 
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
@@ -191,6 +192,8 @@ async function main() {
   var CA_KEY = 'Current Affairs';
   if (!existing[CA_KEY]) existing[CA_KEY] = { subSubjects: {} };
   if (!existing[CA_KEY].subSubjects['Awards & Honours']) existing[CA_KEY].subSubjects['Awards & Honours'] = [];
+
+  var bioCache = bio.loadBioCache();
 
   var existingKeys = {};
   existing[CA_KEY].subSubjects['Awards & Honours'].forEach(function(q) { existingKeys[eventKey(q)] = true; });
@@ -392,6 +395,13 @@ async function main() {
     await delay(600);
   }
 
+  for (var bqi = 0; bqi < newQuestions.length; bqi++) {
+    var bq = newQuestions[bqi];
+    if (!bio.isSinglePerson(bq.answer)) continue;
+    var b = await bio.getBio(bq.answer, bioCache);
+    if (b && bq.fact.indexOf(b) === -1) bq.fact += ' ' + b;
+  }
+
   newQuestions.forEach(function(q) {
     existing[CA_KEY].subSubjects['Awards & Honours'].push(q);
   });
@@ -399,6 +409,8 @@ async function main() {
   var total = existing[CA_KEY].subSubjects['Awards & Honours'].length;
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
   console.error('\nAwards & Honours: ' + total + ' total questions, ' + newQuestions.length + ' new');
+
+  bio.saveBioCache(bioCache);
 }
 
 main().catch(function(err) {

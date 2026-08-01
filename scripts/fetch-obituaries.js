@@ -4,6 +4,7 @@ var path = require('path');
 
 var API = 'https://en.wikipedia.org/w/api.php';
 var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
+var bio = require('./bio-cache');
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
 var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -251,11 +252,22 @@ async function main() {
   var newQuestions = [];
   var seq = existing[CA_KEY].subSubjects[subKey].length + 1;
 
+  var bioCache = bio.loadBioCache();
+
   await fetchDeaths(existingKeys, newQuestions, seq);
+
+  for (var bqi = 0; bqi < newQuestions.length; bqi++) {
+    var bq = newQuestions[bqi];
+    if (!bio.isSinglePerson(bq.answer)) continue;
+    var b = await bio.getBio(bq.answer, bioCache);
+    if (b && bq.fact.indexOf(b) === -1) bq.fact += ' ' + b;
+  }
 
   newQuestions.forEach(function(q) { existing[CA_KEY].subSubjects[subKey].push(q); });
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
   console.error('\nObituaries: ' + existing[CA_KEY].subSubjects[subKey].length + ' total questions, ' + newQuestions.length + ' new');
+
+  bio.saveBioCache(bioCache);
 }
 
 main().catch(function(err) { console.error('Fatal:', err.message); process.exit(1); });
