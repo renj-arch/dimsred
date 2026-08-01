@@ -31,6 +31,11 @@ function isRetryableHttp(e) {
   return e.status === 429 || e.status === 403 || (e.status >= 500 && e.status <= 599);
 }
 
+process.on('uncaughtException', (e) => {
+  console.error('Fatal: uncaught exception:', e.stack || e.message);
+  process.exit(1);
+});
+
 async function httpGet(url, retries = 8) {
   await rateLimit(500);
   for (let attempt = 0; attempt <= retries; attempt++) {
@@ -42,7 +47,11 @@ async function httpGet(url, retries = 8) {
           res.on('end', () => {
             if (res.statusCode === 429) return reject(Object.assign(new Error(d.slice(0, 200)), { status: 429 }));
             if (res.statusCode >= 400) return reject(Object.assign(new Error(d.slice(0, 200)), { status: res.statusCode }));
-            resolve(JSON.parse(d.replace(/[\x00-\x1F]/g, ' ')));
+            try {
+              resolve(JSON.parse(d.replace(/[\x00-\x1F]/g, ' ')));
+            } catch (pe) {
+              reject(Object.assign(new Error(`malformed JSON (${pe.message}, ${d.length} bytes)`), { status: 0 }));
+            }
           });
         });
         req.on('error', reject);
@@ -119,7 +128,11 @@ async function httpPost(url, data, retries = 8) {
           res.on('end', () => {
             if (res.statusCode === 429) return reject(Object.assign(new Error(d.slice(0, 200)), { status: 429 }));
             if (res.statusCode >= 400) return reject(Object.assign(new Error(d.slice(0, 200)), { status: res.statusCode }));
-            resolve(JSON.parse(d.replace(/[\x00-\x1F]/g, ' ')));
+            try {
+              resolve(JSON.parse(d.replace(/[\x00-\x1F]/g, ' ')));
+            } catch (pe) {
+              reject(Object.assign(new Error(`malformed JSON (${pe.message}, ${d.length} bytes)`), { status: 0 }));
+            }
           });
         });
         req.on('error', reject);
