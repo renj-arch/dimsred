@@ -167,6 +167,20 @@ function isBadSentence(s) {
   return false;
 }
 
+// Split extract into sentences without breaking on initials ("S. Webb") or
+// decimals ("6.1 m"). Periods that are part of an initial or a number are
+// temporarily replaced with a placeholder before splitting on '.'.
+function splitSentences(text) {
+  if (!text) return [];
+  const protected_ = text
+    .replace(/\b([A-Z])\.(?=\s+[A-Z])/g, '$1\u0001')
+    .replace(/\b(\d+\.\d+)\b/g, m => m.replace('.', '\u0001'));
+  return protected_
+    .split('.')
+    .map(s => s.replace(/\u0001/g, '.').trim())
+    .filter(s => s.length > 0);
+}
+
 // Check if Wikipedia extract is a list/table page (not prose)
 function isListPage(extract) {
   const first500 = extract.substring(0, 500);
@@ -209,10 +223,15 @@ function findBestTerm(sent, title) {
   re = /\b(?:in|by|at|under|with)\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){0,3})/g;
   while ((m = re.exec(sent)) !== null) allMatches.push(m[1]);
 
+  const titleLower = title.toLowerCase();
+  const titleWords = new Set(titleLower.split(/\s+/));
   const candidates = allMatches.filter(t => {
     if (t.length < 4) return false;
     if (/^(The|This|It|He|She|They|We|I|You|His|Her|Its|Their|An|A|India|Many|Most|Some|Few|All|Each|Every|Both|Such|These|Those|That|Who|Which|What|When|Where|How|Would|Could|Should|After|Before|During|Until|Since|Within|Without|About|Between|Among|Because|Also|Only|Just|Very|Still|Even|Well|Here|There|Now|Then|One|Two|New|Old|First|Last|Next|Other|Same|Own|Long|Great|High|Large|Small|Big|Good|Bad|Chief|State|Union|Central|National|Public|General|Supreme|Federal|World|Year|Years|Name|Names|Part|Parts|Type|Types|Form|Forms|Group|Groups|List|Lists|Known|Also|Instituted|Established|Founded|Created|Introduced|Developed|Published|Released|Announced|Launched|Appointed|Elected|Awarded|Received|Won|Played|Worked|Studied|Taught|Led|Built|Designed|Invented|Discovered|Proposed|Suggested|Argued|Stated|Noted|Observed|Reported|Described|Explained|Formed|Made|Given|Taken|Held|Shown|Found|Seen|Heard|Considered|Regarded|Believed|Thought|Felt|Wanted|Needed|Used)$/i.test(t)) return false;
     if (t === title) return false;
+    // Reject terms built only from title words (e.g. "Adena" for "Adena culture")
+    const tWords = t.toLowerCase().split(/\s+/);
+    if (tWords.every(w => titleWords.has(w))) return false;
     // Skip if it's a truncated version of a longer match
     const truncated = allMatches.some(x => x !== t && x.includes(t + ' '));
     if (truncated) return false;
@@ -230,8 +249,6 @@ function findBestTerm(sent, title) {
   if (!candidates.length) return null;
 
   const uniqueCands = [...new Set(candidates)];
-  const titleLower = title.toLowerCase();
-  const titleWords = new Set(titleLower.split(/\s+/));
 
   const scored = uniqueCands.map(t => {
     const words = t.toLowerCase().split(/\s+/);
@@ -253,7 +270,7 @@ function findBestTerm(sent, title) {
 // Simple paraphrase: shorten to 1-2 most relevant sentences, minor reword
 function paraphrase(text, answer) {
   if (!text || text.length < 20) return text;
-  const sentences = text.split('.').filter(s => s.trim().length > 15);
+  const sentences = splitSentences(text).filter(s => s.trim().length > 15);
   if (sentences.length === 0) return text.substring(0, 200);
 
   // Prefer sentences containing the answer
@@ -288,12 +305,19 @@ function paraphrase(text, answer) {
 }
 
 function makeDescriptionQuestion(desc, title) {
-  const trimmed = desc.replace(/^(the\s+)?/i, '').trim();
-  const isSentence = /^[A-Z].*\w{3,} [a-z]/.test(trimmed);
-  const isPerson = /(born|died|known for|scientist|politician|author|king|queen|leader|poet|painter)/i.test(desc);
-  if (isSentence) return 'What is ' + title + '? ' + trimmed.charAt(0).toUpperCase() + trimmed.slice(1) + '.';
-  if (isPerson) return 'Who is ' + trimmed + '?';
-  return 'What is ' + trimmed + '?';
+  // Strip leading articles/verbs so the description reduces to a noun phrase.
+  const trimmed = desc
+    .replace(/^(the|a|an)\s+/i, '')
+    .replace(/^(was|is|were|are|has been|had been)\s+/i, '')
+    .replace(/^(the|a|an)\s+/i, '')
+    .replace(/\s*[.!?]+$/, '')
+    .trim();
+  // A "what/who is X?" question gets deleted by cleanup, and a trailing blank
+  // also fails cleanup, so blank the title mid-sentence instead.
+  const q = (!trimmed || trimmed.length < 8)
+    ? 'The term ' + title + ' refers to ' + desc + '.'
+    : 'The ' + title + ' was ' + trimmed + '.';
+  return q.replace(title, '_____');
 }
 
 const CATEGORIES = [
@@ -1493,7 +1517,7 @@ async function main() {
         continue;
       }
 
-      const allSentences = ext.split('.').filter(s => s.trim().length > 20 && !isBadSentence(s));
+      const allSentences = splitSentences(ext).filter(s => s.trim().length > 20 && !isBadSentence(s));
       const sentences = allSentences.filter(s => s.trim().length > 25 && !isBadSentence(s));
       const wasCovered = coveredTitles.has(norm(title));
       let articleAdded = 0;
@@ -1541,7 +1565,7 @@ async function main() {
 
         // ▸ Number-based (%, lakh, crore, million, billion, km, kg)
         if (articleQ < MAX_PER_ARTICLE && !sentUsed) {
-          const numRe = /\b(\d+(?:[.,]\d+)?\s*(%|lakh|crore|million|billion|trillion|sq\s*\.?\s*km|km²|km\b|kg|tonnes?|hectares?|megawatts?|kilometres?))/ig;
+          const numRe = /\b(\d+(?:[.,]\d+)?\s*(%|lakh|crore|million|billion|trillion|sq\s*\.?\s*km|km²|km\b|kg|tonnes?|hectares?|megawatts?|kilometres?|kilometers?|metres?|meters?|miles?|feet|ft\b|inches?|yards?|m\b))/i;
           const numMatch = sent.match(numRe);
           if (numMatch && sent.length < 240) {
             const numChoice = numMatch[1];
@@ -1560,7 +1584,7 @@ async function main() {
         if (articleQ < MAX_PER_ARTICLE && !sentUsed) {
           const supMatch = sent.match(/\b(first|second|largest|highest|oldest|deepest|longest|biggest|tallest|smallest|largest|earliest|latest|closest|farthest|most powerful|most populous|most important)\b/i);
           if (supMatch && sent.length < 240) {
-            const numberNearby = sent.match(/\b(\d+(?:[.,]\d+)?)\s*(?=%|million|billion|lakh|crore|km|kg)?/);
+            const numberNearby = sent.match(/\b(\d+(?:[.,]\d+)?)\s*(?=%|million|billion|lakh|crore|km|kg|feet|ft|metres?|meters?|miles?|inches?|yards?|m)?/);
             if (numberNearby) {
               const context = sent.replace(numberNearby[1], '_____').trim().substring(0, 200);
               if (context.length > 25 && pushQ({
@@ -1631,7 +1655,7 @@ async function main() {
         // partially-covered articles is handled by the main revisit pool above
         // (which scans all sentences, unlike this 10-sentence link pass).
         if (coveredTitles.has(norm(title))) continue;
-        const allSentences = ext.split('.').filter(s => s.trim().length > 20 && !isBadSentence(s));
+        const allSentences = splitSentences(ext).filter(s => s.trim().length > 20 && !isBadSentence(s));
         const sentences = allSentences.filter(s => s.trim().length > 25 && !isBadSentence(s));
         if (desc && desc.length > 5 && desc.length < 200) {
           const q = makeDescriptionQuestion(desc, title);
