@@ -173,16 +173,18 @@ function stripLeadingNoise(s) {
   return (s || '').replace(/^[\s"'()\[\]{}—-]+/, '');
 }
 
-// Split extract into sentences without breaking on initials ("S. Webb") or
-// decimals ("6.1 m"). Periods that are part of an initial or a number are
-// temporarily replaced with a placeholder before splitting on '.'.
+// Split extract into sentences. Periods that are part of an initial ("S. Webb"),
+// a decimal ("6.1 m"), or a domain/abbreviation ("Scroll.in", "U.S.") are not
+// sentence boundaries. Wikipedia citation markers ([3]) are stripped so they do
+// not pollute the start of sentences.
 function splitSentences(text) {
   if (!text) return [];
   const protected_ = text
+    .replace(/["']?\[\d+\]["']?/g, ' ')
     .replace(/\b([A-Z])\.(?=\s+[A-Z])/g, '$1\u0001')
     .replace(/\b(\d+\.\d+)\b/g, m => m.replace('.', '\u0001'));
   return protected_
-    .split('.')
+    .split(/\.\s+/)
     .map(s => s.replace(/\u0001/g, '.').trim())
     .filter(s => s.length > 0);
 }
@@ -217,7 +219,7 @@ function getContext(allSentences, sentText, windowSize) {
 function findBestTerm(sent, title) {
   const allMatches = [];
   // Title-case words (proper nouns), allowing initials like "Donald S. Lopez"
-  let re = /([A-Z][a-z]+(?:\s+[A-Z]\.(?:\s+[A-Z][a-z]+)?|\s+[A-Z][a-z]+){0,5})/g, m;
+  let re = /([A-Z][a-z]+(?:\.[a-z]{2,})?(?:\s+[A-Z]\.(?:\s+[A-Z][a-z]+)?|\s+[A-Z][a-z]+){0,5})/g, m;
   while ((m = re.exec(sent)) !== null) allMatches.push(m[1]);
   // ALL-CAPS acronyms (ISRO, NASA, UNESCO, etc.)
   re = /\b([A-Z]{2,6})\b/g;
