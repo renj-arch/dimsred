@@ -167,6 +167,12 @@ function isBadSentence(s) {
   return false;
 }
 
+// Strip leading quotes/punctuation so first-word checks see the real first word
+// (Wikipedia extracts can begin a sentence with `"` when quoting earlier text).
+function stripLeadingNoise(s) {
+  return (s || '').replace(/^[\s"'()\[\]{}—-]+/, '');
+}
+
 // Split extract into sentences without breaking on initials ("S. Webb") or
 // decimals ("6.1 m"). Periods that are part of an initial or a number are
 // temporarily replaced with a placeholder before splitting on '.'.
@@ -210,8 +216,8 @@ function getContext(allSentences, sentText, windowSize) {
 
 function findBestTerm(sent, title) {
   const allMatches = [];
-  // Title-case words (proper nouns)
-  let re = /([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,4})/g, m;
+  // Title-case words (proper nouns), allowing initials like "Donald S. Lopez"
+  let re = /([A-Z][a-z]+(?:\s+[A-Z]\.(?:\s+[A-Z][a-z]+)?|\s+[A-Z][a-z]+){0,5})/g, m;
   while ((m = re.exec(sent)) !== null) allMatches.push(m[1]);
   // ALL-CAPS acronyms (ISRO, NASA, UNESCO, etc.)
   re = /\b([A-Z]{2,6})\b/g;
@@ -242,7 +248,7 @@ function findBestTerm(sent, title) {
     // Skip if term is just a parenthesized number like "(2014)"
     if (/^\(\d+\)$/.test(t)) return false;
     // Skip if term is the first word of the sentence (too obvious)
-    if (new RegExp('^' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[\\s,;:]', 'i').test(sent.trim())) return false;
+    if (new RegExp('^' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '[\\s,;:]', 'i').test(stripLeadingNoise(sent.trim()))) return false;
     return true;
   });
 
@@ -1603,7 +1609,7 @@ async function main() {
           if (new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(sent)) continue;
           const bestTerm = findBestTerm(sent, title);
           if (!bestTerm) continue;
-          if (new RegExp('^' + bestTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(sent.trim())) continue;
+          if (new RegExp('^' + bestTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(stripLeadingNoise(sent.trim()))) continue;
           const context = sent.replace(bestTerm, '_____').trim().substring(0, 200);
           if (context.length > 25 && context.length < 200 && pushQ({
             id: cat.name.substring(0,3).toLowerCase() + added + 't',
