@@ -22,7 +22,19 @@ function isBad(q) {
 
   // Starts with blank (year/term was at start of table row)
   if (/^_____/.test(text)) return true;
-  if (/_____\s*$/.test(text)) return true;
+  if (/_____\s*$/.test(text)) {
+    // A trailing blank is allowed when the answer is strongly determined:
+    //  - right after a month name ("in September _____" → a year),
+    //  - after a strong object-verb "by" ("provided/supplied by _____" → an agent), or
+    //  - after a temporal preposition when the answer is itself a year
+    //    ("commenced trials in _____" → 2014).
+    const isYear = /^(1[0-9]{3}|20[0-9]{2})$/.test(answer);
+    const trailingBlankOk =
+      /\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+_____\s*$/.test(text) ||
+      /\b(?:provided|supplied|built|designed|written|authored|made|produced|developed|created|sponsored|funded|conducted|commissioned|painted|composed)\s+by\s+_____\s*$/.test(text) ||
+      (isYear && /\b(?:in|by|on|during|until|since|before|after)\s+_____\s*$/.test(text));
+    if (!trailingBlankOk) return true;
+  }
 
   // No space at all → fragment
   if (!/\s/.test(text)) return true;
