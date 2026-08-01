@@ -144,10 +144,15 @@ jobs:
     needs: wiki-merge
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v4
         with:
-          name: repo
-          path: .
+          fetch-depth: 0
+
+      - name: Pull latest
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git pull --rebase
 
       - uses: actions/setup-node@v4
         with:
