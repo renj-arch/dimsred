@@ -7331,11 +7331,17 @@ function prevQuestion() {
         function _updateArchiveProgress() {
             var el = document.getElementById('archiveProgress');
             if (!el) return;
-            if (!_archiveCache || _archTotal === 0) { el.style.display = 'none'; return; }
-            var pct = Math.min(100, Math.round((_archCursor / _archTotal) * 100));
-            el.innerHTML = '📚 Archive coverage: <strong>' + _archCursor.toLocaleString() + '</strong> / ' + _archTotal.toLocaleString() + ' visited · <strong>' + pct + '%</strong>';
-            var bar = el.querySelector('.ap-bar-fill');
-            if (bar) bar.style.width = pct + '%';
+            if (_archiveLoading) {
+                el.style.display = 'block';
+                el.innerHTML = '📚 Archive coverage: <span style="color:var(--amber)">loading cache…</span>';
+                return;
+            }
+            if (!_archiveCache || _archiveCache.length === 0) { el.style.display = 'none'; return; }
+            _archTotal = _archiveCache.length;
+            var visited = Math.min(_archCursor, _archTotal);
+            var pct = _archTotal ? Math.min(100, Math.round((visited / _archTotal) * 100)) : 0;
+            var done = visited >= _archTotal;
+            el.innerHTML = (done ? '🎉' : '📚 Archive coverage:') + ' <strong>' + visited.toLocaleString() + '</strong> / ' + _archTotal.toLocaleString() + ' visited · <strong>' + pct + '%</strong>';
         }
         function _loadArchiveIntoState(cb) {
             if (_archiveCache) {
@@ -7368,10 +7374,12 @@ function prevQuestion() {
             if (_archiveCache || _archiveLoading) return;
             _archiveLoading = true;
             setArchiveStatus('loading');
+            _updateArchiveProgress();
             loadArchiveQuestions(function(qs) {
                 _archiveCache = qs;
                 _archiveLoading = false;
                 setArchiveStatus('loaded');
+                _updateArchiveProgress();
             });
         }
         function setArchiveStatus(s) {
