@@ -27,7 +27,7 @@ function fetchJSON(url, retries) {
 
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
-function strip(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
+function strip(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&amp;/g,'&').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
 function makeQuestion(qText, answer, subSubject, seq, source, emoji, fact) {
   if (!answer || answer.length < 2) return null;
@@ -84,7 +84,12 @@ async function main() {
   existing[CA_KEY].subSubjects['UNESCO & World Heritage'].forEach(function(q) { ek.u[eventKey(q)] = true; });
   existing[CA_KEY].subSubjects['SC Landmark Judgments'].forEach(function(q) { ek.s[eventKey(q)] = true; });
   existing[CA_KEY].subSubjects['New Institutions & IITs'].forEach(function(q) { ek.i[eventKey(q)] = true; });
-  var seq = { u: existing[CA_KEY].subSubjects['UNESCO & World Heritage'].length + 1, s: existing[CA_KEY].subSubjects['SC Landmark Judgments'].length + 1, i: existing[CA_KEY].subSubjects['New Institutions & IITs'].length + 1 };
+  function maxSeq(arr, prefix) {
+    var mx = 0;
+    arr.forEach(function(q) { var m = new RegExp('^' + prefix + '_(\\d+)$').exec(q.id || ''); if (m) mx = Math.max(mx, parseInt(m[1], 10)); });
+    return mx + 1;
+  }
+  var seq = { u: maxSeq(existing[CA_KEY].subSubjects['UNESCO & World Heritage'], 'une'), s: maxSeq(existing[CA_KEY].subSubjects['SC Landmark Judgments'], 'scj'), i: maxSeq(existing[CA_KEY].subSubjects['New Institutions & IITs'], 'inst') };
   var nq = { u: [], s: [], i: [] };
 
   // ── UNESCO World Heritage Sites in India ──
@@ -92,7 +97,7 @@ async function main() {
   try {
     var html = await fetchPageText('List_of_World_Heritage_Sites_in_India');
     var tables = extractWikiTables(html);
-    var uCount = 0;
+    var freshU = {};
     tables.forEach(function(t) {
       for (var ri = 1; ri < t.length && ri < 30; ri++) {
         var row = t[ri];
@@ -101,12 +106,37 @@ async function main() {
         var state = strip(row.length > 2 ? row[2] : (row[1] || ''));
         var year = strip(row.length > 3 ? row[3] : '');
         if (name.length > 2 && name.indexOf('Site') < 0 && name.indexOf('Property') < 0 && state.length > 2) {
-          var q = makeQuestion(name + ' is a UNESCO World Heritage Site located in which state?', state, 'UNESCO & World Heritage', seq.u++, 'World Heritage Sites in India', '\uD83C\uDFDB', name + ' is a UNESCO site in ' + state + (year ? ' (inscribed ' + year + ')' : '') + '.');
-          if (q && !ek.u[eventKey(q)]) { nq.u.push(q); ek.u[eventKey(q)] = true; uCount++; }
+          freshU[name] = { state: state, year: year };
         }
       }
     });
-    process.stdout.write(uCount + ' items\n');
+    var existingU = existing[CA_KEY].subSubjects['UNESCO & World Heritage'];
+    var byU = {};
+    existingU.forEach(function(q) {
+      var m = /^(.+?) is a UNESCO World Heritage Site located in which state\?/.exec(q.question || '');
+      if (m) byU[m[1]] = q;
+    });
+    var uUpdated = 0;
+    Object.keys(freshU).sort().forEach(function(name) {
+      var st = freshU[name].state;
+      var year = freshU[name].year;
+      var qText = name + ' is a UNESCO World Heritage Site located in which state?';
+      var fact = name + ' is a UNESCO site in ' + st + (year ? ' (inscribed ' + year + ')' : '') + '.';
+      var existingQ = byU[name];
+      if (existingQ) {
+        if (existingQ.answer !== st || existingQ.fact !== fact) { existingQ.answer = st; existingQ.fact = fact; uUpdated++; }
+      } else {
+        var q = makeQuestion(qText, st, 'UNESCO & World Heritage', seq.u++, 'World Heritage Sites in India', '\uD83C\uDFDB', fact);
+        if (q) nq.u.push(q);
+      }
+    });
+    var uBefore = existingU.length;
+    existing[CA_KEY].subSubjects['UNESCO & World Heritage'] = existingU.filter(function(q) {
+      var m = /^(.+?) is a UNESCO World Heritage Site located in which state\?/.exec(q.question || '');
+      return !m || freshU[m[1]];
+    });
+    var uRemoved = uBefore - existing[CA_KEY].subSubjects['UNESCO & World Heritage'].length;
+    process.stdout.write(Object.keys(freshU).length + ' sites, ' + uUpdated + ' updated, ' + nq.u.length + ' new, ' + uRemoved + ' removed\n');
   } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
   await delay(600);
 
@@ -114,7 +144,7 @@ async function main() {
   try {
     var html = await fetchPageText('List_of_landmark_court_decisions_in_India');
     var tables = extractWikiTables(html);
-    var scCount = 0;
+    var freshS = {};
     tables.forEach(function(t) {
       for (var ri = 1; ri < t.length && ri < 20; ri++) {
         var row = t[ri];
@@ -123,21 +153,38 @@ async function main() {
         var yearStr = strip(row.length > 1 ? row[1] : '');
         var yr = yearStr.match(/\b(19\d{2}|20\d{2})\b/);
         if (caseName.length > 5 && caseName.indexOf('Case') < 0 && caseName.indexOf('Year') < 0) {
-          var year = yr ? yr[1] : '20th century';
-          var q = makeQuestion('Which landmark case was decided by the Supreme Court of India in ' + year + '?', caseName, 'SC Landmark Judgments', seq.s++, 'Landmark court decisions in India', '\u2696', caseName + ' was a landmark judgment of ' + year + '.');
-          if (q && !ek.s[eventKey(q)]) { nq.s.push(q); ek.s[eventKey(q)] = true; scCount++; }
+          freshS[caseName] = yr ? yr[1] : '20th century';
         }
       }
     });
-    process.stdout.write(scCount + ' items\n');
+    var existingS = existing[CA_KEY].subSubjects['SC Landmark Judgments'];
+    var byCase = {};
+    existingS.forEach(function(q) { byCase[q.answer] = q; });
+    var sUpdated = 0;
+    Object.keys(freshS).forEach(function(caseName) {
+      var year = freshS[caseName];
+      var qText = 'Which landmark case was decided by the Supreme Court of India in ' + year + '?';
+      var fact = caseName + ' was a landmark judgment of ' + year + '.';
+      var existingQ = byCase[caseName];
+      if (existingQ) {
+        if (existingQ.question !== qText || existingQ.fact !== fact) { existingQ.question = qText; existingQ.fact = fact; sUpdated++; }
+      } else {
+        var q = makeQuestion(qText, caseName, 'SC Landmark Judgments', seq.s++, 'Landmark court decisions in India', '\u2696', fact);
+        if (q) nq.s.push(q);
+      }
+    });
+    var sBefore = existingS.length;
+    existing[CA_KEY].subSubjects['SC Landmark Judgments'] = existingS.filter(function(q) { return freshS[q.answer]; });
+    var sRemoved = sBefore - existing[CA_KEY].subSubjects['SC Landmark Judgments'].length;
+    process.stdout.write(Object.keys(freshS).length + ' cases, ' + sUpdated + ' updated, ' + nq.s.length + ' new, ' + sRemoved + ' removed\n');
   } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
   await delay(600);
 
   process.stdout.write('  IITs / Institutions... ');
   try {
+    var freshI = {};
     var html = await fetchPageText('Indian_Institutes_of_Technology');
     var tables = extractWikiTables(html);
-    var iCount = 0;
     tables.forEach(function(t) {
       // Identify columns: find Name and State/UT indices from header
       var hdr = t[0] || [];
@@ -159,10 +206,9 @@ async function main() {
         var name = strip(row[nameI] || '');
         var loc = strip(row[locI] || '');
         var yr = strip((yrI >= 0 && row[yrI]) ? row[yrI] : '');
-        if (name && name.indexOf('IIT') >= 0 && loc.length > 2 && name.indexOf('Name') < 0) {
+        if (name && name.indexOf('IIT') >= 0 && name.indexOf('Name') < 0 && loc.length > 2 && !/^\d|^N\/A$|^[0-9]+[,\d]*\s*[–-]\s*[0-9]+$/.test(loc)) {
           var year = yr.match(/\b(19\d{2}|20\d{2})\b/);
-          var q = makeQuestion('Where is ' + name + ' located?', loc, 'New Institutions & IITs', seq.i++, 'IITs', '\uD83C\uDF93', name + ' is located in ' + loc + (year ? ', established in ' + year[1] : '') + '.');
-          if (q && !ek.i[eventKey(q)]) { nq.i.push(q); ek.i[eventKey(q)] = true; iCount++; }
+          freshI[name] = { loc: loc, year: year ? year[1] : '', src: 'IITs' };
         }
       }
     });
@@ -185,13 +231,38 @@ async function main() {
         var locI = (locIdx >= 0 && locIdx < row.length) ? locIdx : (row.length > 2 ? 2 : 1);
         var name = strip(row[nameI] || '');
         var loc = strip(row[locI] || '');
-        if (name && name.indexOf('IIM') >= 0 && loc.length > 2 && name.indexOf('Name') < 0) {
-          var q = makeQuestion('Where is ' + name + ' located?', loc, 'New Institutions & IITs', seq.i++, 'IIMs', '\uD83C\uDF93', name + ' is located in ' + loc + '.');
-          if (q && !ek.i[eventKey(q)]) { nq.i.push(q); ek.i[eventKey(q)] = true; iCount++; }
+        if (name && name.indexOf('IIM') >= 0 && name.indexOf('Name') < 0 && loc.length > 2 && !/^\d|^N\/A$|^[0-9]+[,\d]*\s*[–-]\s*[0-9]+$/.test(loc)) {
+          freshI[name] = { loc: loc, year: '', src: 'IIMs' };
         }
       }
     });
-    process.stdout.write(iCount + ' items\n');
+
+    var existingI = existing[CA_KEY].subSubjects['New Institutions & IITs'];
+    var byInst = {};
+    existingI.forEach(function(q) {
+      var m = /Where is (.+?) located\?/.exec(q.question || '');
+      if (m) byInst[m[1]] = q;
+    });
+    var iUpdated = 0;
+    Object.keys(freshI).sort().forEach(function(name) {
+      var info = freshI[name];
+      var qText = 'Where is ' + name + ' located?';
+      var fact = name + ' is located in ' + info.loc + (info.year ? ', established in ' + info.year : '') + '.';
+      var existingQ = byInst[name];
+      if (existingQ) {
+        if (existingQ.answer !== info.loc || existingQ.fact !== fact) { existingQ.answer = info.loc; existingQ.fact = fact; iUpdated++; }
+      } else {
+        var q = makeQuestion(qText, info.loc, 'New Institutions & IITs', seq.i++, info.src, '\uD83C\uDF93', fact);
+        if (q) nq.i.push(q);
+      }
+    });
+    var iBefore = existingI.length;
+    existing[CA_KEY].subSubjects['New Institutions & IITs'] = existingI.filter(function(q) {
+      var m = /Where is (.+?) located\?/.exec(q.question || '');
+      return !m || freshI[m[1]];
+    });
+    var iRemoved = iBefore - existing[CA_KEY].subSubjects['New Institutions & IITs'].length;
+    process.stdout.write(Object.keys(freshI).length + ' institutions, ' + iUpdated + ' updated, ' + nq.i.length + ' new, ' + iRemoved + ' removed\n');
   } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
 
   Object.keys(nq).forEach(function(k) {
