@@ -128,7 +128,7 @@ async function main() {
   try {
     var html = await fetchPageText('List_of_Ramsar_sites_in_India');
     var tables = extractWikiTables(html);
-    var rsCount = 0;
+    var stateMap = {};
     tables.forEach(function(t) {
       // Find the table with State/UT and Name of site columns
       var firstRow = t[0] || [];
@@ -140,12 +140,49 @@ async function main() {
         var state = strip(row[0] || '');
         var name = strip(row[2] || '');
         if (state.length > 2 && name.length > 2 && state.indexOf('State') < 0 && name.indexOf('Name') < 0) {
-          var q = makeQuestion('Which Ramsar site is located in ' + state + '?', name, 'Ramsar Sites & Wetlands', seqR++, 'Ramsar sites in India', '\uD83C\uDF0A', name + ' is a Ramsar site in ' + state + '.');
-          if (q && !ekR[eventKey(q)]) { newR.push(q); ekR[eventKey(q)] = true; rsCount++; }
+          if (!stateMap[state]) stateMap[state] = [];
+          var parts = name.split(/[;,]/).map(function(s) { return s.replace(/\s+/g, ' ').trim(); }).filter(function(s) { return s.length > 1; });
+          parts.forEach(function(p) { if (stateMap[state].indexOf(p) < 0) stateMap[state].push(p); });
         }
       }
     });
-    process.stdout.write(rsCount + ' items\n');
+
+    var existingRamsar = existing[CA_KEY].subSubjects['Ramsar Sites & Wetlands'];
+    var byState = {};
+    existingRamsar.forEach(function(q) {
+      var m = /Which Ramsar site is located in (.+)\?/.exec(q.question || '');
+      if (m) byState[m[1]] = q;
+    });
+
+    var newR = [];
+    var updated = 0;
+    Object.keys(stateMap).sort().forEach(function(state) {
+      var sites = stateMap[state].sort();
+      var combined = sites.join(' , ');
+      var qText = 'Which Ramsar site is located in ' + state + '?';
+      var fact = sites.length > 1
+        ? 'Ramsar sites in ' + state + ': ' + combined + '.'
+        : sites[0] + ' is a Ramsar site in ' + state + '.';
+      var existingQ = byState[state];
+      if (existingQ) {
+        if (existingQ.answer !== combined || existingQ.fact !== fact) {
+          existingQ.answer = combined;
+          existingQ.fact = fact;
+          updated++;
+        }
+      } else {
+        var q = makeQuestion(qText, combined, 'Ramsar Sites & Wetlands', seqR++, 'Ramsar sites in India', '\uD83C\uDF0A', fact);
+        if (q) newR.push(q);
+      }
+    });
+
+    var before = existingRamsar.length;
+    existing[CA_KEY].subSubjects['Ramsar Sites & Wetlands'] = existingRamsar.filter(function(q) {
+      var m = /Which Ramsar site is located in (.+)\?/.exec(q.question || '');
+      return !m || stateMap[m[1]];
+    });
+    var removed = before - existing[CA_KEY].subSubjects['Ramsar Sites & Wetlands'].length;
+    process.stdout.write(Object.keys(stateMap).length + ' states, ' + updated + ' updated, ' + newR.length + ' new, ' + removed + ' removed\n');
   } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
 
   newN.forEach(function(q) { existing[CA_KEY].subSubjects['National Parks & Wildlife'].push(q); });
