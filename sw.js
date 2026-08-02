@@ -1,4 +1,4 @@
-const CACHE = 'vlymbooq-v6';
+const CACHE = 'vlymbooq-v7';
 const STATIC_ASSETS = [
   '/css/style.css',
   '/js/theme.js',
@@ -27,18 +27,20 @@ self.addEventListener('activate', function(e) {
 });
 
 self.addEventListener('fetch', function(e) {
+  if (e.request.method !== 'GET') return;
+  var path = e.request.url.replace(/^https?:\/\/[^\/]+/, '').split('?')[0];
+  var isHtml = /\.html$/.test(path) || path === '/' || path === '';
   e.respondWith(
     caches.match(e.request).then(function(cached) {
-      if (cached) return cached;
-      if (e.request.method !== 'GET') return fetch(e.request);
+      if (cached && !isHtml) return cached;
       return fetch(e.request).then(function(resp) {
-        if (resp && resp.ok && resp.type === 'basic') {
+        if (resp && resp.ok && resp.type === 'basic' && !isHtml) {
           var clone = resp.clone();
           caches.open(CACHE).then(function(cache) { cache.put(e.request, clone); });
         }
         return resp;
       }).catch(function() {
-        return caches.match(e.request);
+        return cached || caches.match(e.request);
       });
     })
   );
