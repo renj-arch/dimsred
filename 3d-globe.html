@@ -38478,7 +38478,7 @@ function localizeBuildTime(){var el=document.getElementById('build-time');if(!el
 // THREE.JS SETUP
 // ============================================================
 let totalItems=0;Object.values(D).forEach(a=>{if(a)totalItems+=a.length});document.getElementById('totalCount').textContent=totalItems.toLocaleString()
-fetch('data/pib-feed.json').then(r=>r.json()).then(d=>{var el=document.getElementById('build-time');if(el){el.setAttribute('datetime',d.updatedAt);localizeBuildTime()}}).catch(()=>{})
+var GLOBE_UPDATED='__GLOBE_BUILD_TIME__';if(GLOBE_UPDATED.indexOf('__GLOBE')===-1){var el=document.getElementById('build-time');if(el){el.setAttribute('datetime',GLOBE_UPDATED);localizeBuildTime()}}
 
 
 const scene = new THREE.Scene();
