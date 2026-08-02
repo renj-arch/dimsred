@@ -179,10 +179,13 @@ jobs:
           node -e "
             const fs = require('fs');
             let h = fs.readFileSync('3d-globe.html', 'utf8');
+            const now = new Date().toISOString();
             if (h.indexOf('__GLOBE_BUILD_TIME__') !== -1) {
-              h = h.split('__GLOBE_BUILD_TIME__').join(new Date().toISOString());
-              fs.writeFileSync('3d-globe.html', h);
+              h = h.split('__GLOBE_BUILD_TIME__').join(now);
+            } else {
+              h = h.replace(/var GLOBE_UPDATED='[^']*'/, \"var GLOBE_UPDATED='\" + now + \"'\");
             }
+            fs.writeFileSync('3d-globe.html', h);
           "
 
       - name: Validate syntax
