@@ -5569,6 +5569,10 @@ var _staticGen_polity = GK_GENERATORS.polity;
                         }
                     }
                 } else {
+                    if (typeof _topUpArchive === 'function' && _topUpArchive()) {
+                        showQuestion();
+                        return;
+                    }
                     showEnd();
                     return;
                 }
@@ -7302,26 +7306,40 @@ function prevQuestion() {
             if (state._feedTimer) { clearTimeout(state._feedTimer); state._feedTimer = null; }
         }
 
+        var _archMaxBatch = 50;
+        var _archCursor = 0;
+        function _archNextBatch() {
+            var got = [];
+            if (_archiveCache) {
+                while (_archCursor < _archiveCache.length && got.length < _archMaxBatch) {
+                    var aq = _archiveCache[_archCursor++];
+                    aq._archive = true;
+                    got.push(aq);
+                }
+            }
+            return got;
+        }
         function _loadArchiveIntoState(cb) {
             if (_archiveCache) {
-                for (var i = 0; i < _archiveCache.length && state.questions.length < 500; i++) {
-                    var aq = _archiveCache[i];
-                    aq._archive = true;
-                    state.questions.push(aq);
-                }
+                var got = _archNextBatch();
+                for (var i = 0; i < got.length; i++) state.questions.push(got[i]);
                 cb();
             } else {
                 loadArchiveQuestions(function(archiveQs) {
                     if (archiveQs && archiveQs.length) {
-                        for (var i = 0; i < archiveQs.length && state.questions.length < 500; i++) {
-                            archiveQs[i]._archive = true;
-                            state.questions.push(archiveQs[i]);
-                        }
+                        var got2 = _archNextBatch();
+                        for (var j = 0; j < got2.length; j++) state.questions.push(got2[j]);
                     }
                     cb();
                 });
             }
         }
+        function _topUpArchive() {
+            var got = _archNextBatch();
+            for (var i = 0; i < got.length; i++) state.questions.push(got[i]);
+            return got.length > 0;
+        }
+        function resetArchiveCursor() { _archCursor = 0; }
 
         var _archiveCache = null;
         var _archiveLoading = false;
