@@ -5788,9 +5788,8 @@ function prevQuestion() {
         }
 
         function nextQuestion() {
-            stopAutoTimer();
-            document.getElementById('pauseBtn').classList.add('hidden');
-            state.autoPaused = false;
+            if (state.questions.length === 0) return;
+            var wasPaused = state.autoPaused;
             state.idx++;
             // Pre-fetch more questions when running low in infinite mode
             if (state.infinite && state.idx >= state.questions.length - 5) {
@@ -5799,7 +5798,27 @@ function prevQuestion() {
                     _fetchRandomHistoricalOnThisDay();
                 }
             }
-            showQuestion();
+            if (state._feedSource === 'archive') {
+                _stopFeedTimer();
+                state.autoPaused = true;
+                _showFeedItem();
+                if (!wasPaused) {
+                    state.autoPaused = false;
+                    startAutoTimer();
+                }
+            } else {
+                stopAutoTimer();
+                showQuestion();
+                document.getElementById('pauseBtn').classList.remove('hidden');
+                if (wasPaused) {
+                    state.autoPaused = true;
+                    document.getElementById('pauseBtn').textContent = '▶';
+                    document.getElementById('pauseBtn').title = 'Resume auto-advance';
+                    stopAutoTimer();
+                } else {
+                    startAutoTimer();
+                }
+            }
         }
                 function showEnd() {
             // In infinite mode, never end — just generate more questions
