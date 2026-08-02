@@ -7255,6 +7255,7 @@ function prevQuestion() {
 
         function _showFeedItem() {
             _stopFeedTimer();
+            if (typeof _updateArchiveProgress === 'function') _updateArchiveProgress();
             if (state.idx >= state.questions.length) {
                 if (state._feedSource === 'archive') {
                     document.getElementById('qText').innerHTML = '✅ All done! No more questions.';
@@ -7336,12 +7337,15 @@ function prevQuestion() {
         function _updateArchiveProgress() {
             var el = document.getElementById('archiveProgress');
             if (!el) return;
+            el.style.display = 'block';
             if (_archiveLoading) {
-                el.style.display = 'block';
-                el.innerHTML = '📚 Archive coverage: <span style="color:var(--amber)">loading cache…</span>';
+                el.innerHTML = '📚 Archive: <span style="color:var(--amber)">loading cache…</span>';
                 return;
             }
-            if (!_archiveCache || _archiveCache.length === 0) { el.style.display = 'none'; return; }
+            if (!_archiveCache || _archiveCache.length === 0) {
+                el.innerHTML = '📚 Archive: <span style="color:var(--red)">not loaded (offline or <code>file://</code>)</span>';
+                return;
+            }
             _archTotal = _archiveCache.length;
             var visited = Math.min(_archCursor, _archTotal);
             var pct = _archTotal ? Math.min(100, Math.round((visited / _archTotal) * 100)) : 0;
