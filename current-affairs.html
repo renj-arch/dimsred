@@ -236,6 +236,7 @@
         </div>
 
         <div class="q-area" id="qArea">
+            <div id="archiveProgress" style="display:none;margin-bottom:10px;padding:8px 12px;border-radius:8px;background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.15);font-size:.72em;color:var(--cyan);line-height:1.6"></div>
             <div class="score-bar" id="scoreBar">
                 <div><span class="num" id="correctNum">0</span> / <span id="totalNum">0</span> <span id="scoreLabel">correct</span></div>
                 <div class="streak" id="streakDisplay">🔥 <span id="streakNum">0</span> streak</div>
@@ -7068,6 +7069,7 @@ function prevQuestion() {
             if (hasArchive) {
                 document.getElementById('qText').innerHTML = 'Loading Static GK + Archive...';
                 _loadArchiveIntoState(function() {
+                    _updateArchiveProgress();
                     _generateStaticQuestions();
                     if (state.questions.length > 0) showQuestion();
                     else document.getElementById('qText').innerHTML = 'No questions loaded.';
@@ -7241,6 +7243,7 @@ function prevQuestion() {
                     return;
                 }
                 state.questions = filtered;
+                _updateArchiveProgress();
                 _showFeedItem();
             });
         }
@@ -7307,22 +7310,38 @@ function prevQuestion() {
         }
 
         var _archMaxBatch = 50;
-        var _archCursor = 0;
+        var _archTotal = 0;
+        function _readArchiveCursor() { try { var v = parseInt(localStorage.getItem('arch_cursor'),10); return isNaN(v) ? 0 : v; } catch(e) { return 0; } }
+        function _writeArchiveCursor(v) { try { localStorage.setItem('arch_cursor', String(v)); } catch(e) {} }
+        var _archCursor = _readArchiveCursor();
         function _archNextBatch() {
             var got = [];
             if (_archiveCache) {
-                while (_archCursor < _archiveCache.length && got.length < _archMaxBatch) {
+                _archTotal = Math.max(_archTotal, _archiveCache.length);
+                var guard = 0;
+                while (_archCursor < _archiveCache.length && got.length < _archMaxBatch && guard++ < _archMaxBatch) {
                     var aq = _archiveCache[_archCursor++];
                     aq._archive = true;
                     got.push(aq);
                 }
+                _writeArchiveCursor(_archCursor);
             }
             return got;
+        }
+        function _updateArchiveProgress() {
+            var el = document.getElementById('archiveProgress');
+            if (!el) return;
+            if (!_archiveCache || _archTotal === 0) { el.style.display = 'none'; return; }
+            var pct = Math.min(100, Math.round((_archCursor / _archTotal) * 100));
+            el.innerHTML = '📚 Archive coverage: <strong>' + _archCursor.toLocaleString() + '</strong> / ' + _archTotal.toLocaleString() + ' visited · <strong>' + pct + '%</strong>';
+            var bar = el.querySelector('.ap-bar-fill');
+            if (bar) bar.style.width = pct + '%';
         }
         function _loadArchiveIntoState(cb) {
             if (_archiveCache) {
                 var got = _archNextBatch();
                 for (var i = 0; i < got.length; i++) state.questions.push(got[i]);
+                _updateArchiveProgress();
                 cb();
             } else {
                 loadArchiveQuestions(function(archiveQs) {
@@ -7330,6 +7349,7 @@ function prevQuestion() {
                         var got2 = _archNextBatch();
                         for (var j = 0; j < got2.length; j++) state.questions.push(got2[j]);
                     }
+                    _updateArchiveProgress();
                     cb();
                 });
             }
@@ -7337,9 +7357,10 @@ function prevQuestion() {
         function _topUpArchive() {
             var got = _archNextBatch();
             for (var i = 0; i < got.length; i++) state.questions.push(got[i]);
+            _updateArchiveProgress();
             return got.length > 0;
         }
-        function resetArchiveCursor() { _archCursor = 0; }
+        function resetArchiveCursor() { _archCursor = 0; _writeArchiveCursor(0); }
 
         var _archiveCache = null;
         var _archiveLoading = false;
