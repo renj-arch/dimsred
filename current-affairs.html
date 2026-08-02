@@ -5801,6 +5801,12 @@ function prevQuestion() {
             }
             showQuestion();
         }
+                function showEnd() {
+            // In infinite mode, never end — just generate more questions
+            if (state.infinite) {
+                if (typeof _fetchRandomHistoricalOnThisDay !== 'undefined') {
+                    _fetchRandomHistoricalOnThisDay();
+                }
                 generateMixedQuestions(10);
                 generateWikiQuestions(10);
                 if (state.idx < state.questions.length) {
