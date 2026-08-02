@@ -3,7 +3,7 @@ var fs = require('fs');
 var path = require('path');
 
 var API = 'https://en.wikipedia.org/w/api.php';
-var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
+var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/current-affairs.json');
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
 function clean(v) {
