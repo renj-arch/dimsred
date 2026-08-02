@@ -7035,8 +7035,13 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 if (eq.q) existingSet[eq.q] = true;
                 if (eq.a) existingSet[eq.a] = true;
             }
-            for (var round = 0; round < 10 && added < 400; round++) {
-                for (var ci = 0; ci < allCats.length && added < 400; ci++) {
+            // No artificial cap — keep round-robin until every generator is
+            // exhausted (several consecutive passes add nothing new), with only
+            // a high safety ceiling to guard against a pathological generator.
+            var emptyRounds = 0;
+            while (emptyRounds < 20 && added < 100000) {
+                var addedThisRound = 0;
+                for (var ci = 0; ci < allCats.length && added < 100000; ci++) {
                     try {
                         var q = GK_GENERATORS[allCats[ci]]();
                         if (!q || !q.q || !q.a) continue;
@@ -7047,8 +7052,11 @@ var _staticGen_polity = GK_GENERATORS.polity;
                         q._wikiCat = allCats[ci];
                         state.questions.push(q);
                         added++;
+                        addedThisRound++;
                     } catch(e) {}
                 }
+                if (addedThisRound > 0) emptyRounds = 0;
+                else emptyRounds++;
             }
             shuffleArray(state.questions);
         }
