@@ -70,7 +70,8 @@ function makeQuestion(qText, answer, seq, source, emoji, fact) {
     id: id, type: 'fill_blank', category: 'Current Affairs', region: '',
     source: source, pubDate: pubDate, subject: 'Current Affairs',
     subSubject: 'International Relations', emoji: emoji,
-    question: qText, answer: answer, hint: '', fact: fact || ''
+    question: qText, answer: answer, hint: '', fact: fact || '',
+    updatedAt: now.toISOString()
   };
 }
 

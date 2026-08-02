@@ -190,8 +190,9 @@ async function fetchBodyInfo(existingKeys, newQuestions, seqObj) {
             var yr = getRowYear(row, colInfo.yearCol, colInfo.nameCol);
             if (!yr || yr < '2000') continue;
 
-            var qText = 'Who served as the ' + foundName + ' ' + body.label + ' in ' + yr + '?';
-            var fact = name + ' served as ' + foundName + ' ' + body.label + '.';
+            var role = foundName === body.label ? foundName : (foundName + ' ' + body.label);
+            var qText = 'Who served as the ' + role + ' in ' + yr + '?';
+            var fact = name + ' served as ' + role + '.';
             var q = makeQuestion(qText, name, seqObj.seq++, '' + foundName, body.emoji, fact);
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
           }

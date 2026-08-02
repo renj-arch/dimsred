@@ -28,6 +28,8 @@ function main() {
   var ir = ca['Current Affairs'] && ca['Current Affairs'].subSubjects && ca['Current Affairs'].subSubjects[subKey];
   if (!ir || !ir.length) { console.error('No International Relations questions found'); return; }
 
+  var now = new Date();
+  var today = fmtDate(now.toISOString());
   var updated = 0;
   ir.forEach(function(q) {
     var country = q.answer;
@@ -40,21 +42,27 @@ function main() {
       return String(b.pubDate || '').localeCompare(String(a.pubDate || ''));
     }).slice(0, MAX_POINTS);
 
-    var base = String(q.fact || '').split('\nRecent Developments:')[0].replace(/\s+$/, '');
-    if (!base) return;
-    if (hits.length === 0) {
-      q.fact = base;
-      return;
-    }
-    var bullets = hits.map(function(h) {
+    var newRecent = hits.map(function(h) {
       return '• ' + fmtDate(h.pubDate) + ': ' + clean(h.title);
-    });
-    q.fact = base + '\n\nRecent Developments:\n' + bullets.join('\n');
+    }).join('\n');
+
+    var fact = String(q.fact || '');
+    var staticBase = fact.split('\nRecent Developments:')[0].replace(/\s+$/, '');
+    if (!staticBase) return;
+
+    var existingRecent = (fact.match(/\nRecent Developments:\n([\s\S]*?)\nLast updated:/) || [])[1] || '';
+    var existingStamp = (fact.match(/Last updated:\s*(\S+)/) || [])[1] || '';
+
+    var changed = newRecent.trim() !== existingRecent.trim() || !existingStamp;
+    if (!changed) return;
+
+    q.fact = staticBase + (newRecent ? '\n\nRecent Developments:\n' + newRecent : '') + '\nLast updated: ' + today;
+    q.updatedAt = now.toISOString();
     updated++;
   });
 
   fs.writeFileSync(CA_PATH, JSON.stringify(ca), 'utf8');
-  console.log('Recent developments updated for ' + updated + ' countries');
+  console.log('Recent developments / edited dates updated for ' + updated + ' countries');
 }
 
 main();
