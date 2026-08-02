@@ -5405,7 +5405,11 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 initCatGrid();
             }
             loadQuizJson();
-            preloadArchive();
+            if (typeof preloadArchive === 'function') {
+                preloadArchive();
+            } else {
+                setTimeout(function(){ if (typeof preloadArchive === 'function') preloadArchive(); }, 0);
+            }
         }
 
         function startCategory(id, name) {
