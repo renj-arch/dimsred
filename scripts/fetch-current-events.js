@@ -9,6 +9,34 @@ const DAYS_BACK = 5;
 
 const AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
+var WIN1252_REV = {
+  0x20AC: 0x80, 0x201A: 0x82, 0x0192: 0x83, 0x201E: 0x84,
+  0x2026: 0x85, 0x2020: 0x86, 0x2021: 0x87, 0x02C6: 0x88,
+  0x2030: 0x89, 0x0160: 0x8A, 0x2039: 0x8B, 0x0152: 0x8C,
+  0x017D: 0x8E, 0x2018: 0x91, 0x2019: 0x92, 0x201C: 0x93,
+  0x201D: 0x94, 0x2022: 0x95, 0x2013: 0x96, 0x2014: 0x97,
+  0x02DC: 0x98, 0x2122: 0x99, 0x0161: 0x9A, 0x203A: 0x9B,
+  0x0153: 0x9C, 0x017E: 0x9E, 0x0178: 0x9F
+};
+
+// Repair mojibake (UTF-8 bytes misread as Windows-1252). Guarded: only returns
+// the repaired string when the byte sequence decodes to valid UTF-8, so legit
+// accented text (e.g. "Sánchez") is never corrupted.
+function normEnc(s) {
+  if (!s || typeof s !== 'string') return s;
+  if (!/[\u0080-\u00FF]/.test(s)) return s;
+  var bytes = [];
+  for (var i = 0; i < s.length; i++) {
+    var c = s.charCodeAt(i);
+    if (c <= 0xFF) { bytes.push(c); continue; }
+    var b = WIN1252_REV[c];
+    if (b === undefined) return s;
+    bytes.push(b);
+  }
+  var fixed = Buffer.from(bytes).toString('utf8');
+  return fixed.indexOf('\uFFFD') >= 0 ? s : fixed;
+}
+
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise((resolve, reject) => {
@@ -163,8 +191,8 @@ function makeQuestion(event, seq) {
   var day = event.day || 15;
   var pubDate = event.year + '-' + pad(event.month) + '-' + pad(day) + 'T12:00:00.000Z';
 
-  var qText = event.text;
-  var answer = event.entity;
+  var qText = normEnc(event.text);
+  var answer = normEnc(event.entity);
   if (qText.length > 250) qText = qText.substring(0, 247) + '...';
 
   var blankText = qText;
@@ -201,7 +229,7 @@ function makeQuestion(event, seq) {
 }
 
 function eventKey(ev) {
-  var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); };
+  var n = function(s) { return normEnc((s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'')); };
   return n(ev.question || ev.text || '').substring(0, 80) + '|' + n(ev.answer || ev.entity || '');
 }
 

@@ -129,8 +129,8 @@ async function main() {
           var subj = lead.match(/(?:producer|exporter|production|consumption|produce|export|import|yield)\s+of\s+([a-zA-Z\s]+?)(?:\s+in|\s+at|\s+was|\s+is|$)/i);
           var subjText = subj ? subj[1].trim() : '';
           if (num) {
-            var topic = subjText || lead.substring(0,45).trim();
-            if (topic.length > 3) {
+            var topic = subjText;
+            if (topic && topic.length > 3) {
               var q = makeQuestion('What is ' + topic + ' production statistic?', num, 'Agriculture & Food', seq.a++, 'General Knowledge', '\uD83C\uDF3E', lead + '.');
               if (q && !ek.a[eventKey(q)]) { nq.a.push(q); ek.a[eventKey(q)] = true; aCount++; }
             }
@@ -145,8 +145,8 @@ async function main() {
   // ── Energy: Renewable capacity, sources from infobox ──
   process.stdout.write('  Energy & Renewable... ');
   var ENERGY_PAGES = [
-    { page: 'Energy_in_India', name: 'Energy in India', useText: true },
-    { page: 'Renewable_energy_in_India', name: 'Renewable energy in India', useText: true },
+    { page: 'Energy_in_India', name: 'Energy in India', useText: false },
+    { page: 'Renewable_energy_in_India', name: 'Renewable energy in India', useText: false },
     { page: 'Solar_power_in_India', name: 'Solar power in India', useText: false },
     { page: 'Wind_power_in_India', name: 'Wind power in India', useText: false },
     { page: 'Nuclear_power_in_India', name: 'Nuclear power in India', useText: false }

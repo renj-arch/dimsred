@@ -3,8 +3,9 @@ var fs = require('fs');
 var path = require('path');
 
 var API = 'https://en.wikipedia.org/w/api.php';
-var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
+var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/current-affairs.json');
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
+var RICH_FACTS = require('./bilateral-explanations.js').RICH_FACTS;
 
 function clean(v) {
   return v.replace(/&#160;/g, ' ').replace(/<[^>]+>/g, ' ').replace(/\[[\d\s,\-]+\]|&#91;[\d\s,\-]+&#93;/g, '').replace(/\s+/g, ' ').trim();
@@ -69,7 +70,8 @@ function makeQuestion(qText, answer, seq, source, emoji, fact) {
     id: id, type: 'fill_blank', category: 'Current Affairs', region: '',
     source: source, pubDate: pubDate, subject: 'Current Affairs',
     subSubject: 'International Relations', emoji: emoji,
-    question: qText, answer: answer, hint: '', fact: fact || ''
+    question: qText, answer: answer, hint: '', fact: fact || '',
+    updatedAt: now.toISOString()
   };
 }
 
@@ -153,11 +155,17 @@ async function fetchRelations(existingKeys, newQuestions, seq) {
       if (yrMatch && yrMatch[0] >= '1990') {
         var yr = yrMatch[0];
         var qText = 'With which country did India establish diplomatic relations in ' + yr + '?';
-        var fact = 'India established diplomatic relations with ' + country + ' on ' + date + '.';
-        var ctx = addContext('', notes);
-        if (ctx) fact += ' ' + ctx;
-        var enrich = REL_CONTEXT[country];
-        if (enrich) fact += ' ' + enrich;
+        var rich = RICH_FACTS[country];
+        var fact;
+        if (rich) {
+          fact = rich;
+        } else {
+          fact = 'India established diplomatic relations with ' + country + ' on ' + date + '.';
+          var ctx = addContext('', notes);
+          if (ctx) fact += ' ' + ctx;
+          var enrich = REL_CONTEXT[country];
+          if (enrich) fact += ' ' + enrich;
+        }
         var q = makeQuestion(qText, country, seq++, 'Foreign Relations', '\uD83C\uDF0D', fact);
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
       }

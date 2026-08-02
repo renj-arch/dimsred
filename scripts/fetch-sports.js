@@ -102,8 +102,10 @@ function extractOlympicTable(t) {
     var name = strip(row[1]);
     if (!name || name.length < 3 || name === 'Name' || name.indexOf('—') >= 0) continue;
     var medal = row.length > 2 ? strip(row[2]) : '';
-    var sport = row.length > 3 ? strip(row[3]) : '';
+    if (!/^(gold|silver|bronze)/i.test(medal)) continue;
     var games = row.length > 0 ? strip(row[0]) : '';
+    if (/[–-]/.test(games)) continue;
+    var sport = row.length > 3 ? strip(row[3]) : '';
     medalists.push({ name: name, medal: medal, sport: sport, games: games });
   }
   return medalists;

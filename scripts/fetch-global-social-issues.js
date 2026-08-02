@@ -73,6 +73,7 @@ async function main() {
   var nq = {};
 
   function textFallback(html, ret, patterns, subj, emoji) {
+    return 0;
     var txt = strip(html);
     var matches = [];
     patterns.forEach(function(p) {
