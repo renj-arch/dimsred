@@ -245,9 +245,11 @@
                 <div class="q-num" id="qNum"></div>
                 <div class="q-progress"><div class="fill" id="qProgress" style="width:0%"></div></div>
                 <div id="jumpRow" style="display:none;align-items:center;justify-content:center;gap:6px;margin-bottom:8px">
+                    <button onclick="prevQuestion()" title="Previous" style="padding:3px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:.7em;font-weight:600">← Prev</button>
                     <span style="font-size:.7em;color:var(--text-muted)">🔎 Jump:</span>
                     <input type="number" id="jumpInput" min="1" style="width:55px;padding:3px 6px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.75em;text-align:center" onkeydown="if(event.key==='Enter')doJump()">
                     <button onclick="doJump()" style="padding:3px 10px;border-radius:6px;border:1px solid var(--purple);background:rgba(99,102,241,.12);color:var(--purple);cursor:pointer;font-size:.7em;font-weight:600">Go</button>
+                    <button onclick="nextQuestion()" title="Next" style="padding:3px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:.7em;font-weight:600">Next →</button>
                 </div>
                 <div class="q-cat-tag" id="catTag"></div>
                 <div class="q-text" id="qText">Loading...</div>
@@ -5757,6 +5759,34 @@ var _staticGen_polity = GK_GENERATORS.polity;
             }
         }
 
+function prevQuestion() {
+            if (state.questions.length === 0) return;
+            if (state.idx <= 0) return;
+            var wasPaused = state.autoPaused;
+            state.idx--;
+            state.answered = false;
+            if (state._feedSource === 'archive') {
+                _stopFeedTimer();
+                state.autoPaused = true;
+                _showFeedItem();
+                if (!wasPaused) {
+                    state.autoPaused = false;
+                    startAutoTimer();
+                }
+            } else {
+                stopAutoTimer();
+                showQuestion();
+                if (wasPaused) {
+                    state.autoPaused = true;
+                    document.getElementById('pauseBtn').textContent = '▶';
+                    document.getElementById('pauseBtn').title = 'Resume auto-advance';
+                } else {
+                    document.getElementById('pauseBtn').classList.remove('hidden');
+                    startAutoTimer();
+                }
+            }
+        }
+
         function nextQuestion() {
             stopAutoTimer();
             document.getElementById('pauseBtn').classList.add('hidden');
@@ -5771,13 +5801,6 @@ var _staticGen_polity = GK_GENERATORS.polity;
             }
             showQuestion();
         }
-
-        function showEnd() {
-            // In infinite mode, never end — just generate more questions
-            if (state.infinite) {
-                if (typeof _fetchRandomHistoricalOnThisDay !== 'undefined') {
-                    _fetchRandomHistoricalOnThisDay();
-                }
                 generateMixedQuestions(10);
                 generateWikiQuestions(10);
                 if (state.idx < state.questions.length) {
