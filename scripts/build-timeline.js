@@ -305,7 +305,74 @@ var MANUAL_SPANS = {
 // editions and colonial-era publications.
 var TOPIC_OVERRIDES = {
   'Manusmriti': [-200, 200],
-  '1885 Kashmir earthquake': [1885, 1885]
+  '1885 Kashmir earthquake': [1885, 1885],
+  // Buddhist Jataka tales: canonical Pali-canon stories of the Buddha's past lives,
+  // traditionally taught by the Buddha himself and canonized ~4th-3rd century BCE.
+  'Vessantara Jātaka': [-563, -483],
+  'Mahakapi Jataka': [-563, -483],
+  'Sibi Jataka': [-563, -483],
+  'Mahānipāta Jātaka': [-563, -483],
+  'Brihat Jataka': [505, 587],
+  // Era-inferred topics that actually have defensible dates.
+  'Airavatesvara Temple': [1166, 1172],
+  'Amaravati Stupa': [-200, 250],
+  'Amaravati Marbles': [-100, 200],
+  'Amurru kingdom': [-2000, -1200],
+  'Ancestral Puebloans': [-1200, 1300],
+  'Andhra Ikshvaku': [225, 300],
+  'Charaka': [100, 200],
+  'Panini': [-500, -400],
+  'Surdas': [1478, 1583],
+  'Ahom language': [1228, 1826],
+  'Anandalahari': [700, 800],
+  'Bhakti movement': [700, 1700],
+  'Charaka Samhita': [100, 200],
+  'Gandhinagar': [1960, 2026],
+  'Hindustani language': [1200, 2026],
+  'Pallava dynasty': [275, 897],
+  'Gandhi Mandela Awards': [1995, 2026],
+  'Indira Gandhi Prize': [1985, 2026],
+  'Lokmanya Tilak National Award': [1983, 2026],
+  'Article 14 of the Constitution of India': [1950, 1950],
+  'Article 51 of the Constitution of India': [1950, 1950],
+  'Article 47 of the Constitution of India': [1950, 1950],
+  'Constitution bench (India)': [1950, 2026],
+  'Constitutional body (India)': [1950, 2026],
+  'Adilabad Lok Sabha constituency': [1952, 2026],
+  'Alappuzha Lok Sabha constituency': [1957, 2026],
+  'Anand Lok Sabha constituency': [1957, 2026],
+  'Bahraich Lok Sabha constituency': [1952, 2026],
+  'Banka Lok Sabha constituency': [1952, 2026],
+  'Barmer Lok Sabha constituency': [1952, 2026],
+  'Barpeta Lok Sabha constituency': [1957, 2026],
+  'Agra Lok Sabha constituency': [1952, 2026],
+  'Dadra and Nagar Haveli Lok Sabha constituency': [1961, 2026],
+  'Abd al-Rahman al-Sufi': [903, 986],
+  'Al-Baladhuri': [820, 892],
+  'Anglo-Maratha Wars': [1775, 1819],
+  'Cholamandalam MS General Insurance': [2002, 2026],
+  'Agencies of British India': [1800, 1947],
+  'Army of the Mughal Empire': [1526, 1857],
+  'Battle of Panipat': [1526, 1761],
+  'Sepoy': [1800, 1857],
+  'Election Commission & Electoral Reforms': [1950, 2026],
+  'GST': [2017, 2026],
+  'Aryabhata Award': [1976, 2026],
+  'United States Congress': [1789, 2026],
+  'Abbeydale Industrial Hamlet': [1785, 1900],
+  'Ajuran Sultanate': [1200, 1650],
+  'Bahmani & Deccan Sultanates': [1347, 1687],
+  'Congress (Extremist, Swadeshi & Split, 1905–1915)': [1905, 1915],
+  'Delhi Sultanate (Tughlaq, Sayyid & Lodi)': [1320, 1526],
+  'Early Vedic Period': [-1500, -1000],
+  'Gandhian Era (1915–1934)': [1915, 1934],
+  'Gandhian Era (1935–1947)': [1935, 1947],
+  'IVC & Harappan': [-3300, -1300],
+  'Mughal Empire (1605–1707)': [1605, 1707],
+  'Agnicayana': [-1500, -500],
+  'Ahraura': [-260, -260],
+  'Ancient Somali city-states': [200, 1500],
+  'Beryllium': [1798, 1798]
 };
 
 // Curated, authoritative descriptors for the curated-spine persons.
@@ -581,10 +648,10 @@ function topicYears(name, qs, catKey) {
   var fl = ys.filter(function (y) { return trusted[y] || y < 0 || (y >= 1000 && y <= 2026); });
   var nY = nameYears(name);
   if (nY) { fl.push(nY.min); fl.push(nY.max); }
-  if (!fl.length) return null;
   if (TOPIC_OVERRIDES[name]) {
     return { min: TOPIC_OVERRIDES[name][0], max: TOPIC_OVERRIDES[name][1] };
   }
+  if (!fl.length) return null;
   return robustSpan(fl, catKey, trusted);
 }
 
