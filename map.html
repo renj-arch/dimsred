@@ -96,6 +96,7 @@ h1{font-size:1.45em}
     <button class="btn" id="btnIn" title="Zoom in toward present">Zoom in</button>
     <button class="btn" id="btnFull">Max zoom out</button>
     <button class="btn" id="btnAll" title="Show every dated topic at once, regardless of zoom level">Show all</button>
+    <button class="btn" id="btnLinks" title="Toggle co-occurrence link lines between connected topics (off by default)">Links</button>
     <input class="searchbar" id="search" type="text" placeholder="Search any person, movement, disease, scheme, topic…">
     <select class="searchbar" id="catFilter" style="flex:0 0 auto;max-width:250px;cursor:pointer"><option value="">All categories</option></select>
   </div>
@@ -125,6 +126,8 @@ var _catCache = {};
 var _links = [];
 var _adj = {};
 var _catByKey = {};
+var _lastPos = {};   // positions of rendered nodes from the last render, for hover links
+var showLinks = false;
 
 var MIN_YEAR = -3300;   // Indus Valley / start of Ancient India
 var MAX_YEAR = 2026;
@@ -260,7 +263,7 @@ function render() {
   // Same-year topics stack as a readable two-column list instead of piling on top of each other.
   var cap = SHOW_ALL ? 9000 : (searchActive || activeCat ? 6000 : 4000);
   var prevB = [TOP, TOP];
-  var posById = {};   // rendered node id -> center {x,y} in canvas px, for the link layer
+  _lastPos = {};   // rendered node id -> center {x,y} in canvas px, for the link layer
   var canvasW = document.getElementById('viewport').clientWidth || 800;
   for (var i = 0; i < filtered.length; i++) {
     if (count >= cap) break;
@@ -268,7 +271,7 @@ function render() {
     var desired = TOP + (nd.span.min - WINDOW.start) / range * BASE_H;
     var col = prevB[0] <= prevB[1] ? 0 : 1;
     var y = Math.max(desired, prevB[col]);
-    posById[nd.id] = {
+    _lastPos[nd.id] = {
       x: col === 0 ? (14 + (canvasW * 0.5 - 18) / 2) : (canvasW * 0.5 + 4 + (canvasW * 0.5 - 18) / 2),
       y: y + NODE_H / 2
     };
@@ -290,6 +293,7 @@ function render() {
       : 'left:calc(50% + 4px);width:calc(50% - 18px)';
     html += '<div class="node" style="top:' + y + 'px;height:' + NODE_H + 'px;' + horiz + ';border-left:2px solid ' + color + '"'
       + tip
+      + ' onmouseenter="showNodeLinks(\'' + esc(nd.id).replace(/'/g, "\\'") + '\')" onmouseleave="clearNodeLinks()"'
       + ' onclick="openProfile(\'' + esc(nd.id).replace(/'/g, "\\'") + '\')">'
       + '<span class="nm" style="color:' + color + '">' + esc(nd.name) + '</span>'
       + '<span class="ct">' + spanLabel + (nd.count ? ' · ' + nd.count + ' q' : '') + (isArch || isEra ? ' · ~' : '') + '</span></div>';
@@ -304,7 +308,7 @@ function render() {
   }
 
   canvas.style.height = Math.max(TOP + BASE_H, Math.max(prevB[0], prevB[1]) + 8) + 'px';
-  canvas.innerHTML = buildLinkLayer(posById, canvas.style.height, canvasW) + html;
+  canvas.innerHTML = (showLinks ? buildLinkLayer(_lastPos, canvas.style.height, canvasW) : '') + html;
 
   var zi = document.getElementById('zoomInfo');
   zi.textContent = 'Showing ' + fmtYear(WINDOW.start) + ' – ' + fmtYear(WINDOW.end) + ' · level ' + th + (SHOW_ALL ? ' · SHOW ALL' : '') + (activeCat ? ' · filter: ' + (_catByKey[activeCat] || activeCat) : '') + (filtered.length > cap ? ' (capped at ' + cap + ')' : '');
@@ -401,6 +405,44 @@ btnAll.onclick = function () {
   render();
   scrollToPresent();
 };
+
+var btnLinks = document.getElementById('btnLinks');
+btnLinks.onclick = function () {
+  showLinks = !showLinks;
+  btnLinks.classList.toggle('active', showLinks);
+  render();
+};
+
+// Hover a node to see only its own connections — keeps the map clean by default.
+function showNodeLinks(id) {
+  clearNodeLinks();
+  var pos = _lastPos;
+  var p0 = pos[id];
+  if (!p0) return;
+  var lines = [];
+  for (var l of _links) {
+    var oid = l.a === id ? l.b : (l.b === id ? l.a : null);
+    if (!oid) continue;
+    var p1 = pos[oid];
+    if (!p1) continue;
+    var o = Math.min(0.5, 0.12 + (l.w || 1) / 90);
+    lines.push('<line x1="' + p0.x + '" y1="' + p0.y + '" x2="' + p1.x + '" y2="' + p1.y
+      + '" stroke="rgba(167,139,250,' + o.toFixed(3) + ')" stroke-width="1.2"/>');
+  }
+  if (!lines.length) return;
+  var cv = document.getElementById('canvas');
+  var h = parseFloat(cv.style.height) || 100;
+  var w = document.getElementById('viewport').clientWidth || 800;
+  var d = document.createElement('div');
+  d.id = 'hoverLinks';
+  d.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:3';
+  d.innerHTML = '<svg style="width:100%;height:100%" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' + lines.join('') + '</svg>';
+  cv.appendChild(d);
+}
+function clearNodeLinks() {
+  var el = document.getElementById('hoverLinks');
+  if (el) el.remove();
+}
 
 var searchTimer = null;
 document.getElementById('search').addEventListener('input', function () {
