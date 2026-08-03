@@ -64,10 +64,9 @@ h1{font-size:1.45em}
 .qmeta{font-size:.66em;color:var(--text-muted);display:flex;gap:8px;flex-wrap:wrap;margin-bottom:5px}
 .qtext{font-size:.85em}
 .qtext .blank{color:var(--amber);font-weight:800;letter-spacing:1px}
-.qans{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)}
+.qans{display:block;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)}
 .qans .ans{font-size:.8em;color:var(--emerald);font-weight:700}
 .qans .fact{font-size:.75em;color:var(--text-sec);margin-top:5px}
-.reveal{font-size:.68em;color:var(--purple);cursor:pointer;font-weight:700;margin-top:6px;background:none;border:none;padding:0}
 .loading{color:var(--text-sec);font-size:.8em;padding:8px}
 .type-filter{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
 .p-sec{font-size:.72em;color:var(--text-sec);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px}
@@ -123,14 +122,21 @@ var _links = [];
 var _adj = {};
 var _catByKey = {};
 
-var WINDOW = { start: 1000, end: 2026 };
-var FULL = { start: 1000, end: 2026 };
+var MIN_YEAR = -3300;   // Indus Valley / start of Ancient India
+var MAX_YEAR = 2026;
+var WINDOW = { start: MIN_YEAR, end: MAX_YEAR };
+var FULL = { start: MIN_YEAR, end: MAX_YEAR };
 var HISTORY = [];
 
 var TYPE_COLOR = { person: 'var(--purple,#a78bfa)', event: 'var(--amber,#f59e0b)', disease: 'var(--rose,#fb7185)', scheme: 'var(--cyan,#22d3ee)', org: 'var(--cyan,#22d3ee)', concept: '#71717a' };
 var TYPE_FILTERS = { person: true, event: true, disease: true, scheme: true, org: true, concept: true };
 
 function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+function fmtYear(y) {
+  if (y == null) return '';
+  return y < 0 ? (-y) + ' BC' : String(y);
+}
 
 function aliasRe(aliases) {
   return new RegExp('(?:' + aliases.map(function (a) { return a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|') + ')', 'i');
@@ -205,7 +211,7 @@ function render() {
     var col = prevB[0] <= prevB[1] ? 0 : 1;
     var y = Math.max(desired, prevB[col]);
     var color = TYPE_COLOR[nd.type] || '#71717a';
-    var spanLabel = nd.span.min + (nd.span.max > nd.span.min ? '–' + nd.span.max : '');
+    var spanLabel = fmtYear(nd.span.min) + (nd.span.max > nd.span.min ? '–' + fmtYear(nd.span.max) : '');
     var isArch = nd.timebase === 'archive';
     var horiz = col === 0
       ? 'left:14px;width:calc(50% - 18px)'
@@ -229,15 +235,15 @@ function render() {
   canvas.innerHTML = html;
 
   var zi = document.getElementById('zoomInfo');
-  zi.textContent = 'Showing ' + WINDOW.start + ' – ' + WINDOW.end + ' · level ' + th + (activeCat ? ' · filter: ' + (_catByKey[activeCat] || activeCat) : '') + (filtered.length > cap ? ' (capped at ' + cap + ')' : '');
+  zi.textContent = 'Showing ' + fmtYear(WINDOW.start) + ' – ' + fmtYear(WINDOW.end) + ' · level ' + th + (activeCat ? ' · filter: ' + (_catByKey[activeCat] || activeCat) : '') + (filtered.length > cap ? ' (capped at ' + cap + ')' : '');
   document.getElementById('crumb').innerHTML = 'Viewing: ' + (HISTORY.length ? HISTORY.map(function (h) { return '<b onclick="zoomOut()">' + esc(h.label) + '</b>'; }).join(' › ') + ' › ' : '') + '<b onclick="zoomOut()">Full history</b>';
 }
 
 var searchText = '';
 
 function setWindow(start, end, label) {
-  WINDOW.start = Math.round(Math.max(1000, Math.min(2026, start)));
-  WINDOW.end = Math.round(Math.max(WINDOW.start + 1, Math.min(2026, end)));
+  WINDOW.start = Math.round(Math.max(MIN_YEAR, Math.min(MAX_YEAR, start)));
+  WINDOW.end = Math.round(Math.max(WINDOW.start + 1, Math.min(MAX_YEAR, end)));
   if (label) HISTORY.push({ start: WINDOW.start, end: WINDOW.end, label: label });
   render();
   scrollToPresent();
@@ -263,17 +269,17 @@ function zoomOut() {
 
 function zoomIn() {
   var range = WINDOW.end - WINDOW.start;
-  HISTORY.push({ start: WINDOW.start, end: WINDOW.end, label: WINDOW.start + '–' + WINDOW.end });
-  WINDOW.start = Math.round(Math.max(1000, Math.min(2026, WINDOW.end - range / 2)));
-  WINDOW.end = Math.round(Math.max(WINDOW.start + 1, Math.min(2026, WINDOW.end)));
+  HISTORY.push({ start: WINDOW.start, end: WINDOW.end, label: fmtYear(WINDOW.start) + '–' + fmtYear(WINDOW.end) });
+  WINDOW.start = Math.round(Math.max(MIN_YEAR, Math.min(MAX_YEAR, WINDOW.end - range / 2)));
+  WINDOW.end = Math.round(Math.max(WINDOW.start + 1, Math.min(MAX_YEAR, WINDOW.end)));
   render();
   scrollToPresent();
 }
 
 function zoomBy(f) {
   var range = WINDOW.end - WINDOW.start;
-  var newRange = Math.max(2, Math.min(2026 - 1000, range * f));
-  setWindow(WINDOW.end - newRange, WINDOW.end, WINDOW.start + '–' + WINDOW.end);
+  var newRange = Math.max(2, Math.min(MAX_YEAR - MIN_YEAR, range * f));
+  setWindow(WINDOW.end - newRange, WINDOW.end, fmtYear(WINDOW.start) + '–' + fmtYear(WINDOW.end));
 }
 
 function scrollToPresent() {
@@ -334,7 +340,7 @@ function openProfile(id) {
   if (!n) return;
   var p = document.getElementById('pbody');
   var color = TYPE_COLOR[n.type] || '#71717a';
-  var spanLabel = n.span ? (n.span.min + (n.span.max > n.span.min ? ' – ' + n.span.max : '')) : 'timeless';
+  var spanLabel = n.span ? (fmtYear(n.span.min) + (n.span.max > n.span.min ? ' – ' + fmtYear(n.span.max) : '')) : 'timeless';
   var cats = n.cats || [];
   p.innerHTML = '<div class="p-title" style="color:' + color + '">' + esc(n.name) + '</div>'
     + '<div class="p-span">' + spanLabel + '</div>'
@@ -440,17 +446,9 @@ function appendQuestions(container, qs) {
     d.className = 'qcard';
     d.innerHTML = '<div class="qmeta"><span>' + esc(q.subSubject || '') + '</span><span>' + esc(q.source || '') + '</span><span>' + (q.pubDate ? new Date(q.pubDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '') + '</span></div>'
       + '<div class="qtext">' + qtext + '</div>'
-      + '<button class="reveal">' + (hasBlank ? 'Fill blank' : 'Reveal answer') + '</button>'
       + '<div class="qans"><div class="ans">' + esc(q.answer || '') + '</div>'
       + (q.fact ? '<div class="fact">' + esc(q.fact) + '</div>' : '')
       + '</div>';
-    (function (btn, blank) {
-      btn.onclick = function () {
-        var a = this.nextElementSibling;
-        a.style.display = a.style.display === 'block' ? 'none' : 'block';
-        this.textContent = a.style.display === 'block' ? 'Hide' : (blank ? 'Fill blank' : 'Reveal answer');
-      };
-    })(d.querySelector('.reveal'), hasBlank);
     container.appendChild(d);
   }
 }

@@ -8,10 +8,61 @@ var path = require('path');
 var DATA = path.join(__dirname, '..', 'data', 'questions');
 var OUT = path.join(__dirname, '..', 'data', 'timeline.json');
 
-var YEAR_RE = /\b(1[0-9]{3}|20[0-2][0-9])\b/g;
+// All year signals in text: { min, max, trusted } where trusted marks years that
+// were written with BC/BCE/AD/CE or a century (safe to keep even below 1800).
+// - "2500 BCE" / "326 BC"  -> negative year (2500 BC = -2500)
+// - "AD 200" / "320 AD"    -> positive year
+// - "3rd century BC"       -> range [-300, -201]
+// - bare "1857"            -> positive year (trusted only by caller rules)
+function yearSignals(text) {
+  var t = String(text || '');
+  // Normalize era-before-number ("AD 200", "BC 300") into number-before-era.
+  t = t.replace(/\b(BC|BCE|AD|CE)\s*(\d{1,4})\b/gi, function (mm, era, num) { return num + ' ' + era; });
+  var re = /\b(\d{1,4})\s*(st|nd|rd|th)\s+centur(?:y|ies)\s+(BC|BCE|AD|CE)\b|\b(\d{1,4})\s*(BC|BCE|AD|CE)\b|\b(1[0-9]{3}|20[0-2][0-9])\b/gi;
+  var points = [];
+  var trusted = {};
+  var m;
+  while ((m = re.exec(t))) {
+    if (m[1] !== undefined && m[3] !== undefined) {          // "3rd century BC"
+      var n = +m[1];
+      var isBC = /^BC/i.test(m[3]);
+      var lo, hi;
+      if (isBC) { lo = -n * 100; hi = -(n * 100 - 99); }
+      else { lo = (n - 1) * 100; hi = n * 100 - 1; }
+      if (lo > 2026) continue;
+      points.push(lo, hi);
+      trusted[lo] = trusted[hi] = true;
+    } else if (m[4] !== undefined && m[5] !== undefined) {   // "2500 BCE" / "320 AD"
+      var y = +m[4];
+      y = /^BC/i.test(m[5]) ? -y : y;
+      if (y < -10000 || y > 2026) continue;
+      points.push(y);
+      trusted[y] = true;
+    } else if (m[6] !== undefined) {                          // bare "1857"
+      var y2 = +m[6];
+      if (y2 <= 2026) points.push(y2);
+    }
+  }
+  if (!points.length) return null;
+  return { min: Math.min.apply(null, points), max: Math.max.apply(null, points), trusted: trusted };
+}
+
+function yearsFrom(text) {
+  var s = yearSignals(text);
+  return s ? { min: s.min, max: s.max } : null;
+}
+
+// Birth–death span for a person, e.g. "14 April 1891 – 6 December 1956" or "(1869–1948)".
+function bioSpan(text) {
+  var m = String(text || '').match(/\d{1,2}\s+[A-Z][a-z]+\.?\s+(\d{3,4})\s*[-\u2013]\s*\d{1,2}\s+[A-Z][a-z]+\.?\s+(\d{3,4})/);
+  if (m) return { min: +m[1], max: +m[2] };
+  m = String(text || '').match(/\(\s*(\d{3,4})\s*[-\u2013]\s*(\d{3,4})\s*\)/);
+  if (m && +m[1] < +m[2] && +m[2] <= 2026) return { min: +m[1], max: +m[2] };
+  return null;
+}
 
 var ERAS = [
-  { id: 'ancient',       label: 'Ancient India',       min: -3000, max: 1199 },
+  { id: 'ancient',       label: 'Ancient India',       min: -3300, max: 1199 },
   { id: 'medieval',      label: 'Medieval India',      min: 1200,  max: 1799 },
   { id: 'colonial',      label: 'Colonial Era',        min: 1800,  max: 1856 },
   { id: 'freedom',       label: 'Freedom Struggle',    min: 1857,  max: 1947 },
@@ -43,7 +94,14 @@ var SEED = {
     'Bal Gangadhar Tilak', 'Gopal Krishna Gokhale', 'Bhagat Singh', 'Mohammad Ali Jinnah', 'Rabindranath Tagore',
     'Lal Bahadur Shastri', 'Indira Gandhi', 'Sarojini Naidu', 'Rajendra Prasad', 'C. Rajagopalachari',
     'Mangal Pandey', 'Rani Lakshmibai', 'Vinayak Damodar Savarkar', 'Annie Besant', 'Dadabhai Naoroji',
-    'Lala Lajpat Rai', 'Bipin Chandra Pal'
+    'Lala Lajpat Rai', 'Bipin Chandra Pal',
+    'Gautama Buddha', 'Mahavira', 'Chandragupta Maurya', 'Ashoka', 'Chanakya', 'Samudragupta',
+    'Harsha', 'Kanishka', 'Panini', 'Charaka', 'Sushruta', 'Kalidasa', 'Aryabhata', 'Alexander the Great'
+  ]},
+  empires: { type: 'event', level: 1, list: [
+    'Indus Valley Civilization', 'Vedic period', 'Maurya Empire', 'Gupta Empire', 'Kalinga War',
+    'Kushan Empire', 'Sunga Empire', 'Chola Empire', 'Harsha Empire', 'Rashtrakuta Empire',
+    'Delhi Sultanate', 'Vijayanagara Empire', 'Mughal Empire', 'Maratha Empire'
   ]},
   sportspeople: { type: 'person', level: 2, list: [
     'Milkha Singh', 'Dhyan Chand', 'Kapil Dev', 'Sachin Tendulkar', 'P. T. Usha', 'Mary Kom',
@@ -102,7 +160,15 @@ var EXTRA_ALIASES = {
   'Indian Oil Corporation': ['ioc'],
   'Election Commission of India': ['eci'],
   'Chandrayaan-1': ['chandrayaan 1'],
-  'Mangalyaan': ['mars orbiter mission']
+  'Mangalyaan': ['mars orbiter mission'],
+  'Alexander the Great': ['alexander', 'alexander invasion'],
+  'Indus Valley Civilization': ['harappan civilization', 'indus valley'],
+  'Gupta Empire': ['guptas'],
+  'Maurya Empire': ['mauryan empire', 'mauryas'],
+  'Mughal Empire': ['mughals'],
+  'Delhi Sultanate': ['sultanate'],
+  'Ashoka': ['ashoka the great', 'asoka'],
+  'Gautama Buddha': ['siddhartha']
 };
 
 // Manual, authoritative time spans for the curated spine (stable well-known facts).
@@ -116,6 +182,10 @@ var MANUAL_SPANS = {
   'Mangal Pandey': [1827, 1857], 'Rani Lakshmibai': [1828, 1858], 'Vinayak Damodar Savarkar': [1883, 1966],
   'Annie Besant': [1847, 1933], 'Dadabhai Naoroji': [1825, 1917], 'Lala Lajpat Rai': [1865, 1928],
   'Bipin Chandra Pal': [1858, 1932],
+  'Gautama Buddha': [-563, -483], 'Mahavira': [-599, -527], 'Chandragupta Maurya': [-340, -298],
+  'Ashoka': [-304, -232], 'Chanakya': [-350, -275], 'Samudragupta': [335, 380], 'Harsha': [590, 647],
+  'Kanishka': [78, 144], 'Panini': [-500, -400], 'Charaka': [100, 200], 'Sushruta': [-600, -500],
+  'Kalidasa': [400, 455], 'Aryabhata': [476, 550], 'Alexander the Great': [-356, -323],
   'Milkha Singh': [1929, 2021], 'Dhyan Chand': [1905, 1979], 'Kapil Dev': [1959, 2026], 'Sachin Tendulkar': [1973, 2026],
   'P. T. Usha': [1964, 2026], 'Mary Kom': [1982, 2026], 'Neeraj Chopra': [1997, 2026], 'Abhinav Bindra': [1982, 2026],
   'Saina Nehwal': [1990, 2026], 'Viswanathan Anand': [1969, 2026],
@@ -131,6 +201,11 @@ var MANUAL_SPANS = {
   'Anglo-Maratha Wars': [1775, 1819], 'First Anglo-Sikh War': [1845, 1846], 'Second Anglo-Sikh War': [1848, 1849],
   'Sino-Indian War': [1962, 1962], 'Indo-Pakistani War of 1965': [1965, 1965], 'Bangladesh Liberation War': [1971, 1971],
   'Kargil War': [1999, 1999],
+  'Indus Valley Civilization': [-3300, -1300], 'Vedic period': [-1500, -500], 'Maurya Empire': [-322, -185],
+  'Gupta Empire': [320, 550], 'Kalinga War': [-261, -261], 'Kushan Empire': [30, 375], 'Sunga Empire': [-185, -73],
+  'Chola Empire': [850, 1279], 'Harsha Empire': [606, 647], 'Rashtrakuta Empire': [753, 982],
+  'Delhi Sultanate': [1206, 1526], 'Vijayanagara Empire': [1336, 1646], 'Mughal Empire': [1526, 1857],
+  'Maratha Empire': [1674, 1818],
   'Economic liberalisation in India': [1991, 1991], 'LPG reforms': [1991, 1991], 'Demonetisation in India': [2016, 2016],
   'Goods and Services Tax (India)': [2017, 2026], 'Five-Year Plans (India)': [1951, 2017],
   'Bank nationalisation in India': [1969, 1980],
@@ -184,26 +259,6 @@ function loadAll() {
   return { cats: cats, all: all };
 }
 
-function yearsFrom(text) {
-  var m = String(text || '').match(YEAR_RE);
-  if (!m) return null;
-  var ys = m.map(Number).filter(function (y) {
-    if (y < 1000 || y > 2026) return false;
-    return true;
-  });
-  if (!ys.length) return null;
-  return { min: Math.min.apply(null, ys), max: Math.max.apply(null, ys) };
-}
-
-// Birth–death span for a person, e.g. "14 April 1891 – 6 December 1956" or "(1869–1948)".
-function bioSpan(text) {
-  var m = String(text || '').match(/\d{1,2}\s+[A-Z][a-z]+\.?\s+(\d{3,4})\s*[-\u2013]\s*\d{1,2}\s+[A-Z][a-z]+\.?\s+(\d{3,4})/);
-  if (m) return { min: +m[1], max: +m[2] };
-  m = String(text || '').match(/\(\s*(\d{3,4})\s*[-\u2013]\s*(\d{3,4})\s*\)/);
-  if (m && +m[1] < +m[2] && +m[2] <= 2026) return { min: +m[1], max: +m[2] };
-  return null;
-}
-
 function archiveYears(qs) {
   var py = [];
   for (var q of qs) {
@@ -215,15 +270,19 @@ function archiveYears(qs) {
 }
 
 function topicYears(name, qs) {
-  var ny = yearsFrom(name);
+  var ny = yearSignals(name);
   var ys = [];
+  var trusted = {};
   for (var q of qs) {
-    var fy = yearsFrom([q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' '));
-    if (fy) { ys.push(fy.min); ys.push(fy.max); }
+    var fy = yearSignals([q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' '));
+    if (fy) {
+      ys.push(fy.min); ys.push(fy.max);
+      for (var k of Object.keys(fy.trusted)) trusted[k] = true;
+    }
   }
-  // Topic-name years are authoritative; otherwise drop suspiciously early years
-  // (4-digit numbers like ₹1000) unless the topic is genuinely ancient.
-  var fl = ys.filter(function (y) { return ny || y >= 1800; });
+  // Keep a year if: the topic name carries years, or the year is trusted
+  // (came with BC/BCE/AD/CE/century), or it's a negative/BC year, or a modern bare year >= 1800.
+  var fl = ys.filter(function (y) { return ny || trusted[y] || y < 0 || y >= 1800; });
   if (ny) { fl.push(ny.min); fl.push(ny.max); }
   if (!fl.length) {
     // No event-year signal: anchor to the years these questions entered the archive.
@@ -254,7 +313,13 @@ function aliasesFor(name, isPerson) {
   if (parts.length === 1) a.push(parts[0]);
   if (parts.length >= 2) {
     a.push(parts.join(' '));
-    if (isPerson) a.push(parts[parts.length - 1]); // surname only for people
+    if (isPerson) {
+      var sur = parts[parts.length - 1].toLowerCase();
+      // surname alias only for real surnames (avoid "Great" from "Alexander the Great")
+      if (parts[parts.length - 1].length >= 3 && ['great', 'the', 'of', 'de', 'saint', 'junior', 'senior'].indexOf(sur) === -1) {
+        a.push(parts[parts.length - 1]);
+      }
+    }
   }
   return a;
 }
@@ -343,13 +408,17 @@ function main() {
         }
       }
       var ys = [];
+      var trusted = {};
       var bioSpans = [];
       var ownTopics = {}; // sub-topic name -> {n, firstBioSpan}
       var canonical = ename.replace(/^(Dr\.?|Sir|Saint|Mahatma|Sardar|Bapu)\s+/i, '').replace(/[^a-z0-9]+/gi, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
       for (var hq of hitQs) {
         var allText = [hq.q.question, hq.q.answer, hq.q.fact, hq.q.hint].filter(Boolean).join(' ');
-        var fy = yearsFrom(allText);
-        if (fy) { ys.push(fy.min); ys.push(fy.max); }
+        var fy = yearSignals(allText);
+        if (fy) {
+          ys.push(fy.min); ys.push(fy.max);
+          for (var tk of Object.keys(fy.trusted)) trusted[tk] = true;
+        }
         var bs = bioSpan(allText);
         if (bs) bioSpans.push(bs);
         if (isPerson) {
@@ -375,7 +444,7 @@ function main() {
         span = bestTopic && bestTopic.first ? bestTopic.first : modeSpan(bioSpans);
       }
       if (!span && ys.length) {
-        var fl = ys.filter(function (y) { return y >= 1800; });
+        var fl = ys.filter(function (y) { return trusted[y] || y < 0 || y >= 1800; });
         if (fl.length) span = { min: Math.min.apply(null, fl), max: Math.max.apply(null, fl) };
       }
       if (!span) {
