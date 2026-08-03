@@ -200,6 +200,7 @@ function yToPx(y) {
 
 var BASE_H = 2400;   // time-axis height in px (1 year ≈ 2.3px at full history)
 var NODE_H = 16;     // single row height for a node
+var _gpb = [0, 0];   // fallback two-column stack when no era band is in the window
 
 function render() {
   var canvas = document.getElementById('canvas');
@@ -236,27 +237,17 @@ function render() {
       + '</div></div>';
   }
 
-  // Era bands: each era reserves a fixed label row at its top, then a body whose
-  // height is proportional to the era's visible year span. Splitting the label out
-  // of the year axis guarantees the era pill can never sit on top of a node row.
+  // Era bands: each era reserves a fixed label row at its top, then a body that is
+  // tall enough to hold every node assigned to that era in two columns. Sizing the
+  // body by node count (not just year span) stops a dense era from spilling its
+  // nodes into the neighbouring band, and guarantees the era pill can never sit on
+  // top of a node row.
   var LABEL_H = 24;
+  var ROW_H = NODE_H + 2;
   var secs = [];
   for (var e of TL.eras) {
     if (e.max < WINDOW.start || e.min > WINDOW.end) continue;
     secs.push(e);
-  }
-  var totalSpan = 0;
-  for (var s0 of secs) { s0._vs = Math.min(s0.max, WINDOW.end) - Math.max(s0.min, WINDOW.start); totalSpan += s0._vs; }
-  var pxPerYr = secs.length ? Math.max(0, BASE_H - secs.length * LABEL_H) / Math.max(1, totalSpan) : 0;
-  var curY = TOP;
-  for (var s1 of secs) {
-    s1._labelTop = curY;
-    s1._bodyTop = curY + LABEL_H;
-    s1._bodyH = Math.max(0, s1._vs * pxPerYr);
-    curY = s1._bodyTop + s1._bodyH;
-  }
-  for (var s2 of secs) {
-    html += '<div class="era" style="top:' + s2._labelTop + 'px;height:' + (LABEL_H + s2._bodyH) + 'px;background:rgba(167,139,250,.05)" onclick="focusEra(\'' + s2.id + '\')"><span class="era-label">' + esc(s2.label) + '</span></div>';
   }
 
   // Nodes
@@ -272,40 +263,95 @@ function render() {
   }
   filtered.sort(function (a, b) { return (a.span.min - b.span.min) || (a.span.max - b.span.max) || (b.count - a.count); });
 
-  // Greedy anti-overlap: each node's top = max(true chronological position, bottom of its column).
-  // Same-year topics stack as a readable two-column list instead of piling on top of each other.
+  function eraForNode(nd) {
+    if (!secs.length) return null;
+    for (var s of secs) {
+      if (nd.span.min >= Math.max(s.min, WINDOW.start) && nd.span.min <= Math.min(s.max, WINDOW.end)) return s;
+    }
+    return nd.span.min < WINDOW.start ? secs[0] : secs[secs.length - 1];
+  }
+
+  var counts = {};
+  for (var s0 of secs) counts[s0.id] = 0;
+  for (var f0 of filtered) counts[eraForNode(f0).id]++;
+  var totalSpan = 0;
+  for (var s1 of secs) { s1._vs = Math.min(s1.max, WINDOW.end) - Math.max(s1.min, WINDOW.start); totalSpan += s1._vs; }
+  var pxPerYr = secs.length ? Math.max(0, BASE_H - secs.length * LABEL_H) / Math.max(1, totalSpan) : 0;
+  // Initial era bodies: at least the chronological height, but inflated to node
+  // density (two nodes per row) so a dense era can always hold its own nodes.
+  var curY = TOP;
+  for (var s2 of secs) {
+    var chronoH = Math.max(0, s2._vs * pxPerYr);
+    s2._chronoH = chronoH;
+    s2._bodyH = Math.max(chronoH, Math.ceil((counts[s2.id] || 0) / 2) * ROW_H + 6);
+  }
+  function buildEraChain() {
+    var cy = TOP;
+    for (var s7 of secs) {
+      s7._labelTop = cy;
+      s7._bodyTop = cy + LABEL_H;
+      s7._pb = [s7._bodyTop, s7._bodyTop];
+      cy = s7._bodyTop + s7._bodyH;
+    }
+    return cy;
+  }
+  function placeNode(nd) {
+    var es;
+    var desired;
+    if (secs.length) {
+      es = eraForNode(nd);
+      // desired is anchored to the FIXED chronological height (_chronoH), not the
+      // inflatable body height, so growing a body afterwards never moves its nodes.
+      desired = es._bodyTop + ((nd.span.min - Math.max(es.min, WINDOW.start)) / Math.max(1, es._vs)) * es._chronoH;
+      if (desired < secs[0]._bodyTop) desired = secs[0]._bodyTop;
+    } else {
+      es = null;
+      desired = TOP + (nd.span.min - WINDOW.start) / range * BASE_H;
+    }
+    var pb = es ? es._pb : _gpb;
+    var col = pb[0] <= pb[1] ? 0 : 1;
+    var y = Math.max(desired, pb[col]);
+    pb[col] = y + NODE_H + 2;
+    return { es: es, col: col, y: y, bottom: pb[col] };
+  }
+
+  // Greedy anti-overlap per era: each era has its own two-column stack anchored at
+  // its body top, so a dense era's nodes can never be pushed down into the next
+  // era's band (e.g. Maurya Empire spilling from Ancient into Medieval).
   var cap = SHOW_ALL ? 9000 : (searchActive || activeCat ? 6000 : 4000);
-  var prevB = [TOP, TOP];
   var canvasW = document.getElementById('viewport').clientWidth || 800;
+
+  // Dry-run placement to measure how tall each era body must actually be, then
+  // inflate it to match. Two passes are required because the era chain shifts when
+  // bodies grow; rebuilding the chain and re-running the deterministic placement
+  // in the second pass keeps every node inside its own era's band.
+  curY = buildEraChain();
+  var maxBottom = {};
+  count = 0;
+  for (var i = 0; i < filtered.length; i++) {
+    if (count >= cap) break;
+    var p1 = placeNode(filtered[i]);
+    if (p1.es && p1.bottom > (maxBottom[p1.es.id] || 0)) maxBottom[p1.es.id] = p1.bottom;
+    count++;
+  }
+  for (var s4 of secs) {
+    s4._bodyH = Math.max(s4._bodyH, (maxBottom[s4.id] || 0) - s4._bodyTop + ROW_H * 2);
+  }
+  curY = buildEraChain();
+  _gpb[0] = 0; _gpb[1] = 0;
+
+  for (var s3 of secs) {
+    html += '<div class="era" style="top:' + s3._labelTop + 'px;height:' + (LABEL_H + s3._bodyH) + 'px;background:rgba(167,139,250,.05)" onclick="focusEra(\'' + s3.id + '\')"><span class="era-label">' + esc(s3.label) + '</span></div>';
+  }
+
+  count = 0;
   for (var i = 0; i < filtered.length; i++) {
     if (count >= cap) break;
     var nd = filtered[i];
-    var desired;
-    if (secs.length) {
-      var es = null;
-      for (var s3 of secs) {
-        if (nd.span.min >= Math.max(s3.min, WINDOW.start) && nd.span.min <= Math.min(s3.max, WINDOW.end)) { es = s3; break; }
-      }
-      if (!es) es = nd.span.min < WINDOW.start ? secs[0] : secs[secs.length - 1];
-      desired = es._bodyTop + ((nd.span.min - Math.max(es.min, WINDOW.start)) / Math.max(1, es._vs)) * es._bodyH;
-      if (desired < secs[0]._bodyTop) desired = secs[0]._bodyTop;
-    } else {
-      desired = TOP + (nd.span.min - WINDOW.start) / range * BASE_H;
-    }
-    var col = prevB[0] <= prevB[1] ? 0 : 1;
-    var y = Math.max(desired, prevB[col]);
-    // Never let a node row sit inside an era's reserved label row: if the
-    // stacked position lands in [labelTop, bodyTop) of any era, push it below
-    // that row (greedy, so it also skips any later label rows it collides with).
-    if (secs.length) {
-      var done = false;
-      while (!done) {
-        done = true;
-        for (var s5 of secs) {
-          if (y >= s5._labelTop && y < s5._bodyTop) { y = s5._bodyTop; done = false; }
-        }
-      }
-    }
+    var pl = placeNode(nd);
+    var es = pl.es;
+    var col = pl.col;
+    var y = pl.y;
     var color = TYPE_COLOR[nd.type] || '#71717a';
     var isArch = nd.timebase === 'archive';
     var isEra = nd.timebase === 'era';
@@ -328,7 +374,6 @@ function render() {
       + '<span class="nm" style="color:' + color + '">' + esc(nd.name) + '</span>'
       + (nd.desc ? '<span class="ns">' + esc(nd.desc) + '</span>' : '')
       + '<span class="ct">' + spanLabel + (nd.count ? ' · ' + nd.count + ' q' : '') + (isArch || isEra ? ' · ~' : '') + '</span></div>';
-    prevB[col] = y + NODE_H + 2;
     count++;
   }
 
@@ -338,7 +383,10 @@ function render() {
     html += '<div class="loading" style="margin:20px 14px">No ' + esc(_catByKey[activeCat] || activeCat) + ' topics in this window — zoom out or scroll.</div>';
   }
 
-  canvas.style.height = Math.max(curY, TOP + BASE_H, Math.max(prevB[0], prevB[1]) + 8) + 'px';
+  var canvasBottom = curY;
+  for (var s6 of secs) canvasBottom = Math.max(canvasBottom, s6._pb[0], s6._pb[1]);
+  canvasBottom = Math.max(canvasBottom, _gpb[0], _gpb[1]);
+  canvas.style.height = (canvasBottom + 8) + 'px';
   canvas.innerHTML = html;
 
   var zi = document.getElementById('zoomInfo');
