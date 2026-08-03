@@ -350,6 +350,7 @@
 
     </div>
 
+    <script src="js/progress-tracker.js"></script>
     <script>
 
         // ===== GK CATEGORIES & GENERATORS =====
@@ -5589,6 +5590,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             var q = state.questions[state.idx];
             var isLearning = (state.infinite && state.cat === 'mixed') || state.cat === 'static';
             if (isLearning) {
+                if (typeof ProgressTracker !== 'undefined') ProgressTracker.track({ src: 'read', q: q });
                 state.answered = true; // skip answer interaction
                 document.getElementById('qNum').textContent = (state.idx + 1);
                 document.getElementById('qProgress').style.width = ((state.idx / Math.max(state.questions.length, 1)) * 100) + '%';
@@ -5669,6 +5671,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('correctNum').textContent = state.correct;
             document.getElementById('totalNum').textContent = state.infinite ? (state.idx + 1) : state.questions.length;
             saveQuizSession();
+            if (typeof ProgressTracker !== 'undefined') ProgressTracker.track({ src: 'quiz', q: q, correct: val === correct });
             document.getElementById('streakNum').textContent = state.streak;
 
             // Show quick fact with bonus OnThisDay / CurrentEvents context
@@ -7283,6 +7286,7 @@ function prevQuestion() {
                 }
             }
             var q = state.questions[state.idx];
+            if (typeof ProgressTracker !== 'undefined') ProgressTracker.track({ src: 'read', q: q });
             document.getElementById('correctNum').textContent = state.idx + 1;
             document.getElementById('totalNum').textContent = state.questions.length;
             document.getElementById('qNum').textContent = '';
