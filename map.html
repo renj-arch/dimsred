@@ -35,7 +35,7 @@ h1{font-size:1.45em}
 .breadcrumb b{color:var(--purple);cursor:pointer}
 .zoom-range{width:180px}
 .tl-viewport{position:relative;height:74vh;overflow:auto;border:1px solid var(--border);border-radius:14px;background:var(--card)}
-.tl-canvas{position:relative;width:100%}
+.tl-canvas{position:relative;width:100%;height:2400px}
 .tl-now{position:sticky;bottom:0;z-index:3;background:rgba(9,9,11,.9);border-top:1px solid var(--border);font-size:.75em;color:var(--emerald);font-weight:700;padding:8px 14px}
 .era{position:absolute;left:0;right:0;border-top:1px dashed rgba(255,255,255,.06);cursor:pointer}
 .era-label{position:sticky;left:14px;display:inline-block;font-size:.7em;color:var(--text-muted);font-weight:700;padding:2px 0}
@@ -125,7 +125,6 @@ var _catByKey = {};
 
 var WINDOW = { start: 1000, end: 2026 };
 var FULL = { start: 1000, end: 2026 };
-var ZOOM = 0;
 var HISTORY = [];
 
 var TYPE_COLOR = { person: 'var(--purple,#a78bfa)', event: 'var(--amber,#f59e0b)', disease: 'var(--rose,#fb7185)', scheme: 'var(--cyan,#22d3ee)', org: 'var(--cyan,#22d3ee)', concept: '#71717a' };
@@ -213,16 +212,16 @@ function render() {
   canvas.innerHTML = html;
 
   var zi = document.getElementById('zoomInfo');
-  zi.textContent = 'Showing ' + WINDOW.start + ' – ' + WINDOW.end + ' · zoom level ' + ZOOM + (activeCat ? ' · filter: ' + (_catByKey[activeCat] || activeCat) : '') + (filtered.length > cap ? ' (capped at ' + cap + ')' : '');
-  document.getElementById('crumb').innerHTML = 'Viewing: ' + (HISTORY.length ? HISTORY.map(function (h) { return '<b onclick="zoomOut()">' + esc(h) + '</b>'; }).join(' › ') + ' › ' : '') + '<b onclick="zoomOut()">Full history</b>';
+  zi.textContent = 'Showing ' + WINDOW.start + ' – ' + WINDOW.end + ' · level ' + th + (activeCat ? ' · filter: ' + (_catByKey[activeCat] || activeCat) : '') + (filtered.length > cap ? ' (capped at ' + cap + ')' : '');
+  document.getElementById('crumb').innerHTML = 'Viewing: ' + (HISTORY.length ? HISTORY.map(function (h) { return '<b onclick="zoomOut()">' + esc(h.label) + '</b>'; }).join(' › ') + ' › ' : '') + '<b onclick="zoomOut()">Full history</b>';
 }
 
 var searchText = '';
 
 function setWindow(start, end, label) {
-  WINDOW.start = Math.max(1000, Math.min(2026, start));
-  WINDOW.end = Math.max(WINDOW.start + 1, Math.min(2026, end));
-  if (label) HISTORY.push(label);
+  WINDOW.start = Math.round(Math.max(1000, Math.min(2026, start)));
+  WINDOW.end = Math.round(Math.max(WINDOW.start + 1, Math.min(2026, end)));
+  if (label) HISTORY.push({ start: WINDOW.start, end: WINDOW.end, label: label });
   render();
   scrollToPresent();
 }
@@ -232,32 +231,32 @@ function focusEra(id) {
 }
 
 function zoomOut() {
-  if (HISTORY.length) { HISTORY.pop(); }
+  HISTORY.pop();
   if (HISTORY.length) {
     var last = HISTORY[HISTORY.length - 1];
-    // recompute window from last history entry's era
-    for (var e of TL.eras) { if (e.label === last) { WINDOW.start = e.min; WINDOW.end = e.max; } }
-    if (WINDOW.end - WINDOW.start <= 0) { WINDOW.start = FULL.start; WINDOW.end = FULL.end; }
+    WINDOW.start = last.start;
+    WINDOW.end = last.end;
   } else {
-    WINDOW.start = FULL.start; WINDOW.end = FULL.end;
+    WINDOW.start = FULL.start;
+    WINDOW.end = FULL.end;
   }
-  ZOOM = 0;
   render();
   scrollToPresent();
 }
 
 function zoomIn() {
   var range = WINDOW.end - WINDOW.start;
-  var newStart = WINDOW.end - range / 2;
-  setWindow(newStart, WINDOW.end, null);
-  ZOOM++;
+  HISTORY.push({ start: WINDOW.start, end: WINDOW.end, label: WINDOW.start + '–' + WINDOW.end });
+  WINDOW.start = Math.round(Math.max(1000, Math.min(2026, WINDOW.end - range / 2)));
+  WINDOW.end = Math.round(Math.max(WINDOW.start + 1, Math.min(2026, WINDOW.end)));
+  render();
+  scrollToPresent();
 }
 
 function zoomBy(f) {
   var range = WINDOW.end - WINDOW.start;
   var newRange = Math.max(2, Math.min(2026 - 1000, range * f));
-  var newStart = WINDOW.end - newRange;
-  setWindow(newStart, WINDOW.end, null);
+  setWindow(WINDOW.end - newRange, WINDOW.end, WINDOW.start + '–' + WINDOW.end);
 }
 
 function scrollToPresent() {
