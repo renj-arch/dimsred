@@ -554,6 +554,11 @@ import { OrbitControls } from 'https://unpkg.com/three@0.170.0/examples/jsm/cont
 try{
 
 // ============================================================
+// BUILD TIME (stamped by Globe Fill workflow)
+// ============================================================
+var GLOBE_UPDATED='__GLOBE_BUILD_TIME__';
+
+// ============================================================
 // DATA
 // ============================================================
 const CAT = {
@@ -39521,10 +39526,7 @@ function mkLbl(text,col,scale=0.12){
       e1.position.set(-0.008,0,0);e1.lookAt(0,0,0);pin.add(e1);
       const e2=e1.clone();e2.position.set(0.008,0,0);e2.lookAt(0,0,0);pin.add(e2);
     }
-    const lbl=mkLbl(d.n,catColors[k]);
-    lbl.position.copy(pos.clone().multiplyScalar(1.12));
-    g.add(lbl);
-    allMarkers.push({el:pin,lbl,data:d,cat:k,pos});
+    allMarkers.push({el:pin,lbl:null,data:d,cat:k,pos});
     // Pulse ring for important categories
     if(['capital','unesco','w_unesco','wonder','biosphere','national_park','w_np','tiger','ramsar'].includes(k)){
       const isSmall=k==='national_park'||k==='w_np'||k==='ramsar'||k==='unesco'||k==='w_unesco'||k==='tiger';
@@ -39552,10 +39554,7 @@ function mkLbl(text,col,scale=0.12){
       const pos=ll(d.la,d.ln,R*1.008);
       const pin=mkPin(catColors[k],k==='river'||k==='w_river'?0.008:0.012,k);
       pin.position.copy(pos);g.add(pin);
-      const lbl=mkLbl(d.n,catColors[k]);
-      lbl.position.copy(pos.clone().multiplyScalar(1.12));
-      g.add(lbl);
-      allMarkers.push({el:pin,lbl,data:d,cat:k,pos});
+      allMarkers.push({el:pin,lbl:null,data:d,cat:k,pos});
       return;
     }
     const pts=d.pts.map(p=>ll(p.la,p.ln,R*1.004));
@@ -40761,6 +40760,14 @@ window.addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.upda
 const _scratch=new THREE.Vector3();
 const _lblCtx=document.createElement('canvas').getContext('2d');
 _lblCtx.font='bold 24px Inter,system-ui,sans-serif';
+function showMarkerLbl(m){
+  if(!m.lbl){
+    m.lbl=mkLbl((m.data&&m.data.n)||'',catColors[m.cat]||'#ffffff');
+    m.lbl.position.copy(m.pos.clone().multiplyScalar(1.12));
+    (m.el&&m.el.parent?m.el.parent:layerGroups[m.cat]||EG).add(m.lbl);
+  }
+  m.lbl.visible=true;
+}
 function updateLabels(){
   const d=cam.position.length();
   const forced=Object.keys(labelVis).filter(k=>labelVis[k]===true);
@@ -40770,9 +40777,8 @@ function updateLabels(){
   const candidates=[];
 
   // First pass: project all labels to screen, compute bounding boxes
-  allMarkers.forEach(m=>{
-    if(!m.lbl){return;}
-    m.lbl.visible=false;
+allMarkers.forEach(m=>{
+    if(m.lbl)m.lbl.visible=false;
     if(m._eraHidden||m._hide)return;
     if(m.pos.dot(camDir)<=0)return;
     _scratch.copy(m.pos).applyQuaternion(EG.quaternion).project(cam);
@@ -40783,7 +40789,7 @@ function updateLabels(){
     // Estimate label screen width from text length and sprite scale
     const text=(m.data&&m.data.n)||'';
     const textW=_lblCtx.measureText(text).width;
-    const scale=m.lbl.scale?m.lbl.scale.x:0.24;
+    const scale=(m.lbl&&m.lbl.scale)?m.lbl.scale.x:0.24;
     // Approximate screen width: canvas width ratio * sprite scale factor
     // Canvas is 512px wide, 24px font; sprite.scale.x ~0.24 in 3D units
     // At typical zoom (d~1.2), 1 unit ≈ screen height pixels
@@ -40824,7 +40830,7 @@ function updateLabels(){
         const key=gx1+','+gy1;
         if(!grid[key])grid[key]=[];
         grid[key].push({minX,maxX,minY,maxY});
-        c.m.lbl.visible=true;
+        showMarkerLbl(c.m);
       }else if(c.isForced){
         // Show forced labels even if overlapping, but try to stagger vertically
         const overlapCount=Object.keys(grid).reduce((sum,k)=>{
@@ -40835,13 +40841,13 @@ function updateLabels(){
           }
           return sum;
         },0);
-        c.m.lbl.visible=true;
+        showMarkerLbl(c.m);
       }
     });
   }else{
     // Zoomed out: only forced labels visible
     candidates.forEach(c=>{
-      if(c.isForced)c.m.lbl.visible=true;
+      if(c.isForced)showMarkerLbl(c.m);
     });
   }
 }
