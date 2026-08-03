@@ -173,6 +173,8 @@ jobs:
         run: node scripts/fix-apostrophes.js
       - name: Deduplicate globe entries
         run: node scripts/dedup-globe.js
+      - name: Recompute total entry count from data
+        run: node scripts/recount-globe.js
 
       - name: Stamp build time
         run: |
