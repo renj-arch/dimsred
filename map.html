@@ -45,6 +45,12 @@ h1{font-size:1.45em}
 .node .nm{font-size:.74em;font-weight:600;overflow:hidden;text-overflow:ellipsis}
 .node .ns{font-size:.66em;color:var(--text-muted);font-style:italic;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:0}
 .node .ct{font-size:.66em;color:var(--text-muted);flex-shrink:0}
+@media (max-width:767px){
+  .node{padding:2px 4px;gap:4px}
+  .node .nm{font-size:.68em}
+  .node .ns{display:none}
+  .node .ct{font-size:.6em}
+}
 .undated{position:absolute;left:0;right:0;overflow:hidden;background:rgba(52,211,153,.04);border-bottom:1px dashed rgba(255,255,255,.1);padding:8px 12px}
 .undated-label{font-size:.64em;color:var(--emerald);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
 .undated-chips{display:flex;flex-wrap:wrap;gap:4px;max-height:96px;overflow:auto}
@@ -367,9 +373,12 @@ function render() {
     } else {
       spanLabel = fmtYear(nd.span.min) + (nd.span.max > nd.span.min ? '–' + fmtYear(nd.span.max) : '');
     }
-    var tip = isArch
-      ? ' title="Anchored to archive year — no event year found in the data"'
-      : (isEra ? ' title="Era inferred — no exact event year found in the data"' : '');
+    var tip = ' title="' + esc(nd.name)
+      + (isArch ? ' — anchored to archive year (no event year in the data)'
+        : isEra ? ' — era inferred (no exact event year in the data)'
+        : nd.span ? ' — ' + fmtYear(nd.span.min) + (nd.span.max > nd.span.min ? '–' + fmtYear(nd.span.max) : '')
+        : '')
+      + '"';
     var horiz = col === 0
       ? 'left:14px;width:calc(50% - 18px)'
       : 'left:calc(50% + 4px);width:calc(50% - 18px)';
