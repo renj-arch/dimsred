@@ -329,26 +329,86 @@ function eraForTopic(tname, catKey) {
 
 // A topic's question text often cross-references years in answers/facts (e.g. "Battle
 // of Plassey" mentions 1885, 1994, 2025), so naive min..max stretches the span across
-// centuries. Drop minority clusters split off by the largest gaps until the remaining
-// years form one dominant, topically coherent period.
-function robustSpan(ys) {
+// centuries. BUT trimming by raw count is also wrong: a topic like "World Trade
+// Organization" has questions that skew toward recent years, so the densest cluster
+// (2012–2026) wrongly deletes its real history (GATT 1947 → WTO 1995 → present).
+// Rule: drop a separated cluster only when it is BOTH isolated by a large gap AND a
+// minority of the points; keep everything connected by small gaps as the true range.
+// A very large internal gap (>= HUGE) means the years are about two different subjects
+// (e.g. Indus Valley's ancient era vs its 1920s–2020s excavation references). For
+// categories with a known era, keep the side that holds more of that era's years, but
+// ONLY when the losing side is essentially outside the era (<= 10% of its own points in
+// it) — otherwise both sides are real chronological content and the ordinary minority
+// rule decides. And never drop a minority side when the surviving side still spans most
+// of the range: a sparse-but-huge side ("Human history"'s ancient era) is real content,
+// not cross-reference noise.
+function robustSpan(ys, catKey) {
+  var GAP = 60;         // years — a larger gap separates distinct periods
+  var HUGE = 300;       // years — different subject/reference era
+  var MIN_FRAC = 0.25;  // a separated cluster is noise only if it holds < this fraction
   var s = ys.slice().sort(function (a, b) { return a - b; });
   if (s.length <= 2) return { min: s[0], max: s[s.length - 1] };
-  for (var guard = 0; guard < 8 && s.length > 2; guard++) {
+  var changed = true;
+  while (changed && s.length > 2) {
+    changed = false;
     var bestGap = -1, bestIdx = -1;
     for (var i = 1; i < s.length; i++) {
       var g = s[i] - s[i - 1];
       if (g > bestGap) { bestGap = g; bestIdx = i; }
     }
-    var leftCnt = bestIdx, rightCnt = s.length - bestIdx;
-    if (leftCnt < rightCnt && leftCnt / s.length < 0.4) s = s.slice(bestIdx);
-    else if (rightCnt < leftCnt && rightCnt / s.length < 0.4) s = s.slice(0, bestIdx);
+    if (bestGap < GAP) break; // connected series — keep the whole range
+    var left = bestIdx, right = s.length - bestIdx, n = s.length;
+    // A huge internal gap usually means the years are about two different subjects
+    // (e.g. Indus Valley's ancient era vs its 1920s–2020s excavation references). For
+    // categories with a known era, keep the side that holds more of that era's years —
+    // but only when the other side is essentially NOT that era (e.g. excavation-year
+    // references), so the era keeps its genuine span (e.g. Chanakya's source-dating
+    // years -150..300 are all ancient, so they must not be sacrificed to a denser but
+    // artifact-heavy cluster like "11th century" / "1000 gold coins").
+    if (bestGap > HUGE) {
+      var pref = CATEGORY_ERA[catKey];
+      if (pref) {
+        var lCnt = countInEra(s, 0, bestIdx, pref);
+        var rCnt = countInEra(s, bestIdx, s.length, pref);
+        var lFrac = lCnt / bestIdx, rFrac = rCnt / (s.length - bestIdx);
+        if (lCnt > rCnt && rFrac <= 0.1) { s = s.slice(0, bestIdx); changed = true; continue; }
+        if (rCnt > lCnt && lFrac <= 0.1) { s = s.slice(bestIdx); changed = true; continue; }
+      }
+      // else fall through to the ordinary minority rule
+    }
+    // Drop a separated cluster only when it is a clear minority. A 1–2 year cluster is
+    // cross-reference noise (a Red Fort question mentioning "2600 BCE Harappa") and is
+    // always dropped. A multi-year minority is real chronological content only if the
+    // surviving side is also broad (e.g. "History of Eurasia", "Human history") — when
+    // the surviving side is tight, the minority is noise there too (e.g. Plassey's
+    // stray 1400/1500/2025 references).
+    var dropSide = null;
+    if (left < right && left / n < MIN_FRAC) dropSide = 'R';
+    else if (right < left && right / n < MIN_FRAC) dropSide = 'L';
+    if (dropSide) {
+      var dropArr = dropSide === 'R' ? s.slice(0, bestIdx) : s.slice(bestIdx);
+      var distinct = {}, nD = 0;
+      for (var d of dropArr) { if (!distinct[d]) { distinct[d] = 1; nD++; } }
+      if (nD > 2) {
+        var remain = dropSide === 'R' ? s.slice(bestIdx) : s.slice(0, bestIdx);
+        var remainRange = remain[remain.length - 1] - remain[0];
+        var totalRange = s[s.length - 1] - s[0];
+        if (remainRange / totalRange > 0.6) dropSide = null;
+      }
+    }
+    if (dropSide === 'R') { s = s.slice(bestIdx); changed = true; }
+    else if (dropSide === 'L') { s = s.slice(0, bestIdx); changed = true; }
     else break;
   }
   return { min: s[0], max: s[s.length - 1] };
 }
+function countInEra(s, a, b, eraId) {
+  var n = 0;
+  for (var i = a; i < b; i++) if (eraOf(s[i]) === eraId) n++;
+  return n;
+}
 
-function topicYears(name, qs) {
+function topicYears(name, qs, catKey) {
   var ny = yearSignals(name);
   var ys = [];
   var trusted = {};
@@ -365,7 +425,7 @@ function topicYears(name, qs) {
   var fl = ys.filter(function (y) { return trusted[y] || y < 0 || (y >= 1000 && y <= 2026); });
   if (ny) { fl.push(ny.min); fl.push(ny.max); }
   if (!fl.length) return null;
-  return robustSpan(fl);
+  return robustSpan(fl, catKey);
 }
 
 function typeOf(name) {
@@ -492,7 +552,7 @@ function main() {
         continue;
       }
       var qs = byTopic[tname];
-      var span = topicYears(tname, qs);
+      var span = topicYears(tname, qs, key);
       var timebase = null;
       var eraId = null;
       if (!span) {
@@ -589,7 +649,7 @@ function main() {
       }
       if (!span && ys.length) {
         var fl = ys.filter(function (y) { return trusted[y] || y < 0 || y >= 1800; });
-        if (fl.length) span = robustSpan(fl);
+        if (fl.length) span = robustSpan(fl, null);
       }
       if (!span) {
         var ap = archiveYears(hitQs);
