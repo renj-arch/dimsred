@@ -294,6 +294,18 @@ function render() {
     }
     var col = prevB[0] <= prevB[1] ? 0 : 1;
     var y = Math.max(desired, prevB[col]);
+    // Never let a node row sit inside an era's reserved label row: if the
+    // stacked position lands in [labelTop, bodyTop) of any era, push it below
+    // that row (greedy, so it also skips any later label rows it collides with).
+    if (secs.length) {
+      var done = false;
+      while (!done) {
+        done = true;
+        for (var s5 of secs) {
+          if (y >= s5._labelTop && y < s5._bodyTop) { y = s5._bodyTop; done = false; }
+        }
+      }
+    }
     var color = TYPE_COLOR[nd.type] || '#71717a';
     var isArch = nd.timebase === 'archive';
     var isEra = nd.timebase === 'era';
