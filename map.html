@@ -38,11 +38,12 @@ h1{font-size:1.45em}
 .tl-canvas{position:relative;width:100%;height:2400px}
 .tl-now{position:sticky;bottom:0;z-index:3;background:rgba(9,9,11,.9);border-top:1px solid var(--border);font-size:.75em;color:var(--emerald);font-weight:700;padding:8px 14px}
 .era{position:absolute;left:0;right:0;border-top:1px dashed rgba(255,255,255,.06);cursor:pointer}
-.era-label{position:sticky;left:14px;display:inline-block;font-size:.7em;color:var(--text-muted);font-weight:700;padding:2px 0}
-.node{position:absolute;left:14px;right:14px;display:flex;align-items:center;gap:8px;cursor:pointer;border-radius:6px;padding:2px 8px;white-space:nowrap;overflow:hidden;content-visibility:auto;contain-intrinsic-size:20px 20px}
+.era-label{position:absolute;top:2px;left:14px;display:inline-block;font-size:.68em;color:var(--purple);font-weight:800;padding:2px 9px;border-radius:100px;background:rgba(9,9,11,.92);border:1px solid rgba(167,139,250,.35);letter-spacing:.3px;text-transform:uppercase;z-index:6;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+.node{position:absolute;left:14px;right:14px;display:flex;align-items:center;gap:8px;cursor:pointer;border-radius:6px;padding:2px 8px;white-space:nowrap;overflow:hidden;content-visibility:auto;contain-intrinsic-size:20px 20px;z-index:1}
 .node:hover{background:rgba(255,255,255,.06)}
 .node .bar{height:8px;border-radius:6px;flex-shrink:0;min-width:4px}
 .node .nm{font-size:.74em;font-weight:600;overflow:hidden;text-overflow:ellipsis}
+.node .ns{font-size:.66em;color:var(--text-muted);font-style:italic;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:0}
 .node .ct{font-size:.66em;color:var(--text-muted);flex-shrink:0}
 .undated{position:absolute;left:0;right:0;overflow:hidden;background:rgba(52,211,153,.04);border-bottom:1px dashed rgba(255,255,255,.1);padding:8px 12px}
 .undated-label{font-size:.64em;color:var(--emerald);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
@@ -52,6 +53,7 @@ h1{font-size:1.45em}
 .profile.open{transform:translateX(0)}
 .p-close{position:absolute;top:14px;right:14px;font-size:.8em;color:var(--text-muted);cursor:pointer;background:none;border:none}
 .p-title{font-size:1.15em;font-weight:800;margin-bottom:2px}
+.p-desc{font-size:.82em;color:var(--text-muted);font-style:italic;margin-bottom:6px}
 .p-span{font-size:.8em;color:var(--purple);font-weight:700;margin-bottom:4px}
 .p-type{font-size:.7em;color:var(--text-muted);margin-bottom:12px}
 .p-stats{display:flex;gap:8px;margin-bottom:14px}
@@ -198,6 +200,12 @@ function yToPx(y) {
 
 var BASE_H = 2400;   // time-axis height in px (1 year ≈ 2.3px at full history)
 var NODE_H = 16;     // single row height for a node
+var _gpb = [0, 0];   // fallback two-column stack when no era band is in the window
+
+// Phones/iPads cap "Show all" far below the desktop cap: iOS Safari's renderer
+// crashes (blank tab) past a few thousand absolutely-positioned nodes in a
+// multi-tens-of-thousands-of-pixels tall canvas, which desktop Chrome survives.
+var IS_SMALL = window.innerWidth < 768 || (navigator.maxTouchPoints > 1 && window.innerWidth < 1024);
 
 function render() {
   var canvas = document.getElementById('canvas');
@@ -234,13 +242,17 @@ function render() {
       + '</div></div>';
   }
 
-  // Era bands at true chronological positions
+  // Era bands: each era reserves a fixed label row at its top, then a body that is
+  // tall enough to hold every node assigned to that era in two columns. Sizing the
+  // body by node count (not just year span) stops a dense era from spilling its
+  // nodes into the neighbouring band, and guarantees the era pill can never sit on
+  // top of a node row.
+  var LABEL_H = 24;
+  var ROW_H = NODE_H + 2;
+  var secs = [];
   for (var e of TL.eras) {
     if (e.max < WINDOW.start || e.min > WINDOW.end) continue;
-    var etop = TOP + (Math.max(e.min, WINDOW.start) - WINDOW.start) / range * BASE_H;
-    var ebot = TOP + (Math.min(e.max, WINDOW.end) - WINDOW.start) / range * BASE_H;
-    var eh = Math.max(1, ebot - etop);
-    html += '<div class="era" style="top:' + etop + 'px;height:' + eh + 'px;background:rgba(167,139,250,.05)" onclick="focusEra(\'' + e.id + '\')"><span class="era-label">' + esc(e.label) + '</span></div>';
+    secs.push(e);
   }
 
   // Nodes
@@ -256,17 +268,95 @@ function render() {
   }
   filtered.sort(function (a, b) { return (a.span.min - b.span.min) || (a.span.max - b.span.max) || (b.count - a.count); });
 
-  // Greedy anti-overlap: each node's top = max(true chronological position, bottom of its column).
-  // Same-year topics stack as a readable two-column list instead of piling on top of each other.
-  var cap = SHOW_ALL ? 9000 : (searchActive || activeCat ? 6000 : 4000);
-  var prevB = [TOP, TOP];
+  function eraForNode(nd) {
+    if (!secs.length) return null;
+    for (var s of secs) {
+      if (nd.span.min >= Math.max(s.min, WINDOW.start) && nd.span.min <= Math.min(s.max, WINDOW.end)) return s;
+    }
+    return nd.span.min < WINDOW.start ? secs[0] : secs[secs.length - 1];
+  }
+
+  var counts = {};
+  for (var s0 of secs) counts[s0.id] = 0;
+  for (var f0 of filtered) counts[eraForNode(f0).id]++;
+  var totalSpan = 0;
+  for (var s1 of secs) { s1._vs = Math.min(s1.max, WINDOW.end) - Math.max(s1.min, WINDOW.start); totalSpan += s1._vs; }
+  var pxPerYr = secs.length ? Math.max(0, BASE_H - secs.length * LABEL_H) / Math.max(1, totalSpan) : 0;
+  // Initial era bodies: at least the chronological height, but inflated to node
+  // density (two nodes per row) so a dense era can always hold its own nodes.
+  var curY = TOP;
+  for (var s2 of secs) {
+    var chronoH = Math.max(0, s2._vs * pxPerYr);
+    s2._chronoH = chronoH;
+    s2._bodyH = Math.max(chronoH, Math.ceil((counts[s2.id] || 0) / 2) * ROW_H + 6);
+  }
+  function buildEraChain() {
+    var cy = TOP;
+    for (var s7 of secs) {
+      s7._labelTop = cy;
+      s7._bodyTop = cy + LABEL_H;
+      s7._pb = [s7._bodyTop, s7._bodyTop];
+      cy = s7._bodyTop + s7._bodyH;
+    }
+    return cy;
+  }
+  function placeNode(nd) {
+    var es;
+    var desired;
+    if (secs.length) {
+      es = eraForNode(nd);
+      // desired is anchored to the FIXED chronological height (_chronoH), not the
+      // inflatable body height, so growing a body afterwards never moves its nodes.
+      desired = es._bodyTop + ((nd.span.min - Math.max(es.min, WINDOW.start)) / Math.max(1, es._vs)) * es._chronoH;
+      if (desired < secs[0]._bodyTop) desired = secs[0]._bodyTop;
+    } else {
+      es = null;
+      desired = TOP + (nd.span.min - WINDOW.start) / range * BASE_H;
+    }
+    var pb = es ? es._pb : _gpb;
+    var col = pb[0] <= pb[1] ? 0 : 1;
+    var y = Math.max(desired, pb[col]);
+    pb[col] = y + NODE_H + 2;
+    return { es: es, col: col, y: y, bottom: pb[col] };
+  }
+
+  // Greedy anti-overlap per era: each era has its own two-column stack anchored at
+  // its body top, so a dense era's nodes can never be pushed down into the next
+  // era's band (e.g. Maurya Empire spilling from Ancient into Medieval).
+  var cap = SHOW_ALL ? (IS_SMALL ? 2500 : 9000) : (searchActive || activeCat ? 6000 : 4000);
   var canvasW = document.getElementById('viewport').clientWidth || 800;
+
+  // Dry-run placement to measure how tall each era body must actually be, then
+  // inflate it to match. Two passes are required because the era chain shifts when
+  // bodies grow; rebuilding the chain and re-running the deterministic placement
+  // in the second pass keeps every node inside its own era's band.
+  curY = buildEraChain();
+  var maxBottom = {};
+  count = 0;
+  for (var i = 0; i < filtered.length; i++) {
+    if (count >= cap) break;
+    var p1 = placeNode(filtered[i]);
+    if (p1.es && p1.bottom > (maxBottom[p1.es.id] || 0)) maxBottom[p1.es.id] = p1.bottom;
+    count++;
+  }
+  for (var s4 of secs) {
+    s4._bodyH = Math.max(s4._bodyH, (maxBottom[s4.id] || 0) - s4._bodyTop + ROW_H * 2);
+  }
+  curY = buildEraChain();
+  _gpb[0] = 0; _gpb[1] = 0;
+
+  for (var s3 of secs) {
+    html += '<div class="era" style="top:' + s3._labelTop + 'px;height:' + (LABEL_H + s3._bodyH) + 'px;background:rgba(167,139,250,.05)" onclick="focusEra(\'' + s3.id + '\')"><span class="era-label">' + esc(s3.label) + '</span></div>';
+  }
+
+  count = 0;
   for (var i = 0; i < filtered.length; i++) {
     if (count >= cap) break;
     var nd = filtered[i];
-    var desired = TOP + (nd.span.min - WINDOW.start) / range * BASE_H;
-    var col = prevB[0] <= prevB[1] ? 0 : 1;
-    var y = Math.max(desired, prevB[col]);
+    var pl = placeNode(nd);
+    var es = pl.es;
+    var col = pl.col;
+    var y = pl.y;
     var color = TYPE_COLOR[nd.type] || '#71717a';
     var isArch = nd.timebase === 'archive';
     var isEra = nd.timebase === 'era';
@@ -287,8 +377,8 @@ function render() {
       + tip
       + ' onclick="openProfile(\'' + esc(nd.id).replace(/'/g, "\\'") + '\')">'
       + '<span class="nm" style="color:' + color + '">' + esc(nd.name) + '</span>'
+      + (nd.desc ? '<span class="ns">' + esc(nd.desc) + '</span>' : '')
       + '<span class="ct">' + spanLabel + (nd.count ? ' · ' + nd.count + ' q' : '') + (isArch || isEra ? ' · ~' : '') + '</span></div>';
-    prevB[col] = y + NODE_H + 2;
     count++;
   }
 
@@ -298,7 +388,10 @@ function render() {
     html += '<div class="loading" style="margin:20px 14px">No ' + esc(_catByKey[activeCat] || activeCat) + ' topics in this window — zoom out or scroll.</div>';
   }
 
-  canvas.style.height = Math.max(TOP + BASE_H, Math.max(prevB[0], prevB[1]) + 8) + 'px';
+  var canvasBottom = curY;
+  for (var s6 of secs) canvasBottom = Math.max(canvasBottom, s6._pb[0], s6._pb[1]);
+  canvasBottom = Math.max(canvasBottom, _gpb[0], _gpb[1]);
+  canvas.style.height = (canvasBottom + 8) + 'px';
   canvas.innerHTML = html;
 
   var zi = document.getElementById('zoomInfo');
@@ -430,6 +523,7 @@ function openProfile(id) {
   }
   var cats = n.cats || [];
   p.innerHTML = '<div class="p-title" style="color:' + color + '">' + esc(n.name) + '</div>'
+    + (n.desc ? '<div class="p-desc">' + esc(n.desc) + '</div>' : '')
     + '<div class="p-span">' + spanLabel + '</div>'
     + '<div class="p-type">' + esc(n.type) + (n.seed ? ' · curated spine' : '') + '</div>'
     + '<div class="p-stats"><div class="p-stat"><div class="v">' + (n.count || 0) + '</div><div class="k">mentions</div></div>'

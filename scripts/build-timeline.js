@@ -55,10 +55,11 @@ function yearSignals(text) {
   var re4 = /\b(1[0-9]{3}|20[0-2][0-9])s\b/gi;
   while ((m = re4.exec(t))) { add(+m[1], true); }
   // Bare year "1857" — but NOT when it is a quantity, e.g. "1500 metres",
-  // "1500-metre run", "about 1000 tractors", "1000 years", "Masters 1000",
-  // or part of a distance list "200, 300, 400, 600, 1000 & 1200 kilometres".
-  // Units are blocked both before and after the number, allowing "1500-metre".
-  var re5 = /(?<!\b(?:metres?|meters?|m\b|km\b|kgs?|kilograms?|kilometres?|kilometers?|miles?|feet|ft\b|inches?|cm\b|mm\b|tonnes?|tons?|grams?|litres?|liters?|ml\b|points?|pts\b|percent|%|tractors|markets?|messages?|people|persons|students|soldiers|troops|workers|farmers|years?|yrs?|masters?)[\s-]|&\s)\b(1[0-9]{3}|20[0-2][0-9])\b(?![\s-]*(?:m\b|km\b|kg\b|metres?|meters?|kilometres?|kilometers?|miles?|feet|ft\b|inches?|cm\b|mm\b|tonnes?|tons?|grams?|litres?|liters?|ml\b|points?|pts\b|percent|%|people|persons|students|soldiers|troops|workers|villagers|farmers|years?|yrs?|tractors|markets?|messages?)\b|[\s-]*&[\s-]*\d)/gi;
+  // "1500-metre run", "about 1000 tractors", "1000 li", "1000 years",
+  // "Masters 1000", or part of a distance list "200, 300, 400, 600, 1000
+  // & 1200 kilometres". Units are blocked both before and after the number.
+  var UNITS = '(?:metres?|meters?|m\\b|km\\b|kgs?|kilograms?|kilometres?|kilometers?|miles?|li\\b|feet|ft\\b|inches?|cm\\b|mm\\b|acres?|hectares?|tonnes?|tons?|grams?|litres?|liters?|ml\\b|points?|pts\\b|percent|%|rupees?|rs\\b|lakh|crore|dollars?|paise|tractors|markets?|messages?|people|persons|students|soldiers|troops|workers|farmers|villagers|monks?|nuns?|monasteries?|horses?|elephants?|cattle\\b|cows?|camels?|sheep\\b|goats?|buffaloes?|houses?|buildings?|villages?|states?|districts?|coins?|years?|yrs?|masters?)';
+  var re5 = new RegExp('(?<!\\b(?:' + UNITS + ')[\\s-]|&\\s)\\b(1[0-9]{3}|20[0-2][0-9])\\b(?!' + '[\\s-]*(?:' + UNITS + ')\\b|' + '[\\s-]*&[\\s-]*\\d)', 'gi');
   while ((m = re5.exec(t))) { add(+m[1]); }
   if (!points.length) return null;
   return { min: Math.min.apply(null, points), max: Math.max.apply(null, points), trusted: trusted };
@@ -298,6 +299,162 @@ var MANUAL_SPANS = {
   'Doklam': [2017, 2026]
 };
 
+// Curated spans for sub-topics (non-seed) where extracted year clusters cannot
+// separate the topic's genuine dates from reception/reference years — e.g. the
+// Manusmriti's composition (~200 BCE–200 CE) vs centuries of commentaries,
+// editions and colonial-era publications.
+var TOPIC_OVERRIDES = {
+  'Manusmriti': [-200, 200],
+  '1885 Kashmir earthquake': [1885, 1885],
+  // Buddhist Jataka tales: canonical Pali-canon stories of the Buddha's past lives,
+  // traditionally taught by the Buddha himself and canonized ~4th-3rd century BCE.
+  'Vessantara Jātaka': [-563, -483],
+  'Mahakapi Jataka': [-563, -483],
+  'Sibi Jataka': [-563, -483],
+  'Mahānipāta Jātaka': [-563, -483],
+  'Brihat Jataka': [505, 587],
+  // Era-inferred topics that actually have defensible dates.
+  'Airavatesvara Temple': [1166, 1172],
+  'Amaravati Stupa': [-200, 250],
+  'Amaravati Marbles': [-100, 200],
+  'Amurru kingdom': [-2000, -1200],
+  'Ancestral Puebloans': [-1200, 1300],
+  'Andhra Ikshvaku': [225, 300],
+  'Charaka': [100, 200],
+  'Panini': [-500, -400],
+  'Surdas': [1478, 1583],
+  'Ahom language': [1228, 1826],
+  'Anandalahari': [700, 800],
+  'Bhakti movement': [700, 1700],
+  'Charaka Samhita': [100, 200],
+  'Gandhinagar': [1960, 2026],
+  'Hindustani language': [1200, 2026],
+  'Pallava dynasty': [275, 897],
+  'Gandhi Mandela Awards': [1995, 2026],
+  'Indira Gandhi Prize': [1985, 2026],
+  'Lokmanya Tilak National Award': [1983, 2026],
+  'Article 14 of the Constitution of India': [1950, 1950],
+  'Article 51 of the Constitution of India': [1950, 1950],
+  'Article 47 of the Constitution of India': [1950, 1950],
+  'Constitution bench (India)': [1950, 2026],
+  'Constitutional body (India)': [1950, 2026],
+  'Adilabad Lok Sabha constituency': [1952, 2026],
+  'Alappuzha Lok Sabha constituency': [1957, 2026],
+  'Anand Lok Sabha constituency': [1957, 2026],
+  'Bahraich Lok Sabha constituency': [1952, 2026],
+  'Banka Lok Sabha constituency': [1952, 2026],
+  'Barmer Lok Sabha constituency': [1952, 2026],
+  'Barpeta Lok Sabha constituency': [1957, 2026],
+  'Agra Lok Sabha constituency': [1952, 2026],
+  'Dadra and Nagar Haveli Lok Sabha constituency': [1961, 2026],
+  'Abd al-Rahman al-Sufi': [903, 986],
+  'Al-Baladhuri': [820, 892],
+  'Anglo-Maratha Wars': [1775, 1819],
+  'Cholamandalam MS General Insurance': [2002, 2026],
+  'Agencies of British India': [1800, 1947],
+  'Army of the Mughal Empire': [1526, 1857],
+  'Battle of Panipat': [1526, 1761],
+  'Sepoy': [1800, 1857],
+  'Election Commission & Electoral Reforms': [1950, 2026],
+  'GST': [2017, 2026],
+  'Aryabhata Award': [1976, 2026],
+  'United States Congress': [1789, 2026],
+  'Abbeydale Industrial Hamlet': [1785, 1900],
+  'Ajuran Sultanate': [1200, 1650],
+  'Bahmani & Deccan Sultanates': [1347, 1687],
+  'Congress (Extremist, Swadeshi & Split, 1905–1915)': [1905, 1915],
+  'Delhi Sultanate (Tughlaq, Sayyid & Lodi)': [1320, 1526],
+  'Early Vedic Period': [-1500, -1000],
+  'Gandhian Era (1915–1934)': [1915, 1934],
+  'Gandhian Era (1935–1947)': [1935, 1947],
+  'IVC & Harappan': [-3300, -1300],
+  'Mughal Empire (1605–1707)': [1605, 1707],
+  'Agnicayana': [-1500, -500],
+  'Ahraura': [-260, -260],
+  'Ancient Somali city-states': [200, 1500],
+  'Beryllium': [1798, 1798]
+};
+
+// Curated, authoritative descriptors for the curated-spine persons.
+var PERSON_DESCS = {
+  'Mahatma Gandhi': 'Indian independence leader', 'B. R. Ambedkar': 'jurist and social reformer',
+  'Jawaharlal Nehru': 'first Prime Minister of India', 'Sardar Vallabhbhai Patel': 'independence leader and first Deputy PM of India',
+  'Subhas Chandra Bose': 'Indian nationalist leader', 'Bal Gangadhar Tilak': 'freedom fighter and social reformer',
+  'Gopal Krishna Gokhale': 'freedom fighter and politician', 'Bhagat Singh': 'revolutionary freedom fighter',
+  'Mohammad Ali Jinnah': 'founder of Pakistan', 'Rabindranath Tagore': 'poet and Nobel laureate',
+  'Lal Bahadur Shastri': 'third Prime Minister of India', 'Indira Gandhi': 'first woman Prime Minister of India',
+  'Sarojini Naidu': 'poet and freedom fighter', 'Rajendra Prasad': 'first President of India',
+  'C. Rajagopalachari': 'freedom fighter and statesman', 'Mangal Pandey': 'sepoy of the Revolt of 1857',
+  'Rani Lakshmibai': 'queen and freedom fighter', 'Vinayak Damodar Savarkar': 'freedom fighter and writer',
+  'Annie Besant': 'theosophist and social reformer', 'Dadabhai Naoroji': 'Indian political leader',
+  'Lala Lajpat Rai': 'freedom fighter', 'Bipin Chandra Pal': 'freedom fighter',
+  'Gautama Buddha': 'founder of Buddhism', 'Mahavira': 'founder of Jainism',
+  'Chandragupta Maurya': 'founder of the Maurya Empire', 'Ashoka': 'Mauryan emperor',
+  'Chanakya': 'ancient Indian philosopher and strategist', 'Samudragupta': 'Gupta emperor',
+  'Harsha': 'Indian emperor', 'Kanishka': 'Kushan emperor', 'Panini': 'Sanskrit grammarian',
+  'Charaka': 'ancient Indian physician', 'Sushruta': 'ancient Indian surgeon',
+  'Kalidasa': 'Sanskrit poet and playwright', 'Aryabhata': 'ancient Indian mathematician and astronomer',
+  'Alexander the Great': 'Macedonian conqueror',
+  'Milkha Singh': 'Indian sprinter', 'Dhyan Chand': 'Indian hockey player',
+  'Kapil Dev': 'Indian cricketer', 'Sachin Tendulkar': 'Indian cricketer',
+  'P. T. Usha': 'Indian sprinter', 'Mary Kom': 'Indian boxer',
+  'Neeraj Chopra': 'Indian javelin thrower', 'Abhinav Bindra': 'Indian shooter',
+  'Saina Nehwal': 'Indian badminton player', 'Viswanathan Anand': 'Indian chess grandmaster',
+  'Xuanzang': 'Chinese Buddhist monk and scholar',
+  'Prem Behari Narain Raizada': 'Indian calligrapher',
+  'Roy Mugerwa': 'Ugandan physician and academic',
+  'Ali Sardar Jafri': 'Indian writer'
+};
+
+// Person-role keyword gate: an auto-extracted descriptor is only attached when it
+// reads like a person's role/profession, so a topic like "World War II" ("Global
+// conflict (1939–1945)") never gets a descriptor.
+var PERSON_ROLE = /\b(?:monk|nun|scholar|philosopher|poet|writer|author|novelist|playwright|painter|artist|sculptor|musician|singer|vocalist|composer|dancer|actor|actress|filmmaker|director|producer|athlete|cricketer|footballer|boxer|wrestler|shooter|archer|sprinter|runner|hockey player|badminton|chess grandmaster|grandmaster|tennis|javelin|swimmer|gymnast|king|queen|emperor|empress|prince|princess|ruler|monarch|sultan|raja|maharaja|nawab|politician|statesman|president|minister|governor|parliamentarian|senator|diplomat|ambassador|jurist|judge|lawyer|advocate|reformer|activist|revolutionary|leader|saint|guru|mystic|prophet|founder|pioneer|scientist|physicist|chemist|biologist|astronomer|mathematician|botanist|zoologist|geologist|engineer|physician|doctor|surgeon|psychologist|economist|sociologist|anthropologist|archaeologist|historian|linguist|philologist|orientalist|missionary|philanthropist|industrialist|businessman|entrepreneur|banker|educator|academic|professor|journalist|editor|photographer|explorer|navigator|conqueror|warrior|general|admiral|commander|soldier|officer|astronaut|pilot|inventor|administrator|bureaucrat|agronomist|planter|craftsman|priest|bishop|cardinal|pope|caliph|imam|chancellor|viceroy|governor-general|politician|spiritualist|theologian|reformer|economist|activist)\b/i;
+
+function normNameForDesc(s) {
+  return String(s).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
+}
+function nameMatchesForDesc(qName, topic) {
+  var a = normNameForDesc(qName), b = normNameForDesc(topic);
+  if (!a || !b) return false;
+  if (a === b) return true;
+  var bBase = b.replace(/\s*\(.*\)\s*$/, '').trim();
+  if (a === bBase) return true;
+  if (b.length >= 4 && a.indexOf(b) === 0) return true;
+  if (a.length >= 4 && b.indexOf(a) === 0) return true;
+  return false;
+}
+function cleanDesc(s) {
+  var d = String(s).replace(/[}\]]+$/, '').trim();
+  d = d.split(/\.\s+|\u2014\s+|\u2013\s+/)[0];
+  return d.replace(/[,;\s]+$/, '').replace(/\s+/g, ' ').trim();
+}
+// Extract a person's descriptor ("profession") from the topic's own questions, e.g.
+// "What is Xuanzang? Chinese Buddhist monk and scholar (602–664)". Only returns when
+// the quoted name is the topic itself, the descriptor reads as a person role, and the
+// year range looks like a lifespan (so wars/conflicts are excluded).
+function personDescFor(name, qs) {
+  if (PERSON_DESCS[name]) return PERSON_DESCS[name];
+  var reA = /What is\s+([A-Z][^?()]{1,60}?)\??\s*[:.\u2013-]?\s*([A-Za-z][^()?]{2,90}?)\s*\(\s*(?:c\.?\s*)?(-?\d{3,4})\s*[-\u2013]\s*(-?\d{3,4})\s*\)/gi;
+  var reB = /(?:The|A|An)\s*_\s+(?:was|is)\s+([A-Za-z][^()?]{2,90}?)\s*\(\s*(?:c\.?\s*)?(-?\d{3,4})\s*[-\u2013]\s*(-?\d{3,4})\s*\)/gi;
+  for (var i = 0; i < qs.length; i++) {
+    var q = qs[i];
+    var txt = [q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' ');
+    var m;
+    reA.lastIndex = 0;
+    while ((m = reA.exec(txt))) {
+      var d = cleanDesc(m[2]);
+      if (nameMatchesForDesc(m[1], name) && PERSON_ROLE.test(d) && (+m[4] - +m[3]) >= 20 && (+m[4] - +m[3]) <= 130) return d;
+    }
+    reB.lastIndex = 0;
+    while ((m = reB.exec(txt))) {
+      var d2 = cleanDesc(m[1]);
+      if (PERSON_ROLE.test(d2) && (+m[3] - +m[2]) >= 20 && (+m[3] - +m[2]) <= 130) return d2;
+    }
+  }
+  return null;
+}
+
 function loadAll() {
   var cats = {};
   var all = [];
@@ -372,7 +529,7 @@ function eraForTopic(tname, catKey) {
 // rule decides. And never drop a minority side when the surviving side still spans most
 // of the range: a sparse-but-huge side ("Human history"'s ancient era) is real content,
 // not cross-reference noise.
-function robustSpan(ys, catKey) {
+function robustSpan(ys, catKey, trustedSet) {
   var GAP = 60;         // years — a larger gap separates distinct periods
   var HUGE = 300;       // years — different subject/reference era
   var MIN_FRAC = 0.25;  // a separated cluster is noise only if it holds < this fraction
@@ -388,14 +545,25 @@ function robustSpan(ys, catKey) {
     }
     if (bestGap < GAP) break; // connected series — keep the whole range
     var left = bestIdx, right = s.length - bestIdx, n = s.length;
-    // A huge internal gap usually means the years are about two different subjects
-    // (e.g. Indus Valley's ancient era vs its 1920s–2020s excavation references). For
-    // categories with a known era, keep the side that holds more of that era's years —
-    // but only when the other side is essentially NOT that era (e.g. excavation-year
-    // references), so the era keeps its genuine span (e.g. Chanakya's source-dating
-    // years -150..300 are all ancient, so they must not be sacrificed to a denser but
-    // artifact-heavy cluster like "11th century" / "1000 gold coins").
     if (bestGap > HUGE) {
+      // Trusted-anchor: years written with BC/AD/CE or a century are authoritative.
+      // When one side of a huge gap is a coherent cluster of trusted years (span < 200y,
+      // >= 2 distinct) and the other side is almost entirely untrusted, the untrusted
+      // side is reference/citation noise (Xuanzang's 7th-century life vs 19th–21st
+      // century book citations and "1000 li" quantities) and is dropped.
+      if (trustedSet) {
+        var lT = trustedStats(s, 0, bestIdx, trustedSet);
+        var rT = trustedStats(s, bestIdx, s.length, trustedSet);
+        // The kept side must be a coherent trusted cluster that is also a
+        // substantial part of the topic's own years (>= 20% of points) — a stray
+        // ancient "7th century" mention inside a modern topic must not override the
+        // majority. The dropped side must be a scattered, mostly-untrusted reference
+        // range spanning >= 150 years (book citations, quantities).
+        var dropR = lT.fraction >= 0.5 && lT.span < 200 && lT.distinct >= 2 && left / n >= 0.2 && rT.fraction <= 0.15 && (s[s.length - 1] - s[bestIdx]) >= 150;
+        var dropL = rT.fraction >= 0.5 && rT.span < 200 && rT.distinct >= 2 && right / n >= 0.2 && lT.fraction <= 0.15 && (s[bestIdx - 1] - s[0]) >= 150;
+        if (dropR) { s = s.slice(0, bestIdx); changed = true; continue; }
+        if (dropL) { s = s.slice(bestIdx); changed = true; continue; }
+      }
       var pref = CATEGORY_ERA[catKey];
       if (pref) {
         var lCnt = countInEra(s, 0, bestIdx, pref);
@@ -437,11 +605,27 @@ function countInEra(s, a, b, eraId) {
   for (var i = a; i < b; i++) if (eraOf(s[i]) === eraId) n++;
   return n;
 }
+function trustedStats(s, a, b, trustedSet) {
+  var cnt = 0, mn = Infinity, mx = -Infinity, distinct = {};
+  for (var i = a; i < b; i++) {
+    if (trustedSet[s[i]]) {
+      cnt++;
+      if (s[i] < mn) mn = s[i];
+      if (s[i] > mx) mx = s[i];
+      distinct[s[i]] = 1;
+    }
+  }
+  return {
+    fraction: (b - a) ? cnt / (b - a) : 0,
+    span: (mx === -Infinity) ? Infinity : mx - mn,
+    distinct: Object.keys(distinct).length
+  };
+}
 
 // A blank-fill ANSWER that is a pure number is a year only when the blank asks for a
 // year. If the blank sits right next to a measurement word ("the _____ metres run",
 // "about _____ tractors"), the number is a quantity and must not date the topic.
-var MEAS_NEAR_BLANK = /_+[- ]?(?:metres?|meters?|m\b|km\b|kg\b|kgs?|kilometres?|kilometers?|miles?|feet|ft\b|inches?|cm\b|mm\b|grams?|tonnes?|tons?|litres?|liters?|ml\b|points?|pts\b|percent|%|rupees?|rs\b|lakh|crore|tractors|markets?|messages?|altitude|height|distance|weight|mass|speed)/i;
+var MEAS_NEAR_BLANK = /_+[- ]?(?:metres?|meters?|m\b|km\b|kg\b|kgs?|kilometres?|kilometers?|miles?|li\b|feet|ft\b|inches?|cm\b|mm\b|grams?|tonnes?|tons?|litres?|liters?|ml\b|points?|pts\b|percent|%|rupees?|rs\b|lakh|crore|tractors|markets?|messages?|altitude|height|distance|weight|mass|speed|monks?|nuns?|monasteries?|monastaries?|soldiers|troops|students|workers|farmers|people|persons|years?|yrs?)/i;
 
 function topicYears(name, qs, catKey) {
   var ys = [];
@@ -464,8 +648,11 @@ function topicYears(name, qs, catKey) {
   var fl = ys.filter(function (y) { return trusted[y] || y < 0 || (y >= 1000 && y <= 2026); });
   var nY = nameYears(name);
   if (nY) { fl.push(nY.min); fl.push(nY.max); }
+  if (TOPIC_OVERRIDES[name]) {
+    return { min: TOPIC_OVERRIDES[name][0], max: TOPIC_OVERRIDES[name][1] };
+  }
   if (!fl.length) return null;
-  return robustSpan(fl, catKey);
+  return robustSpan(fl, catKey, trusted);
 }
 
 function typeOf(name) {
@@ -624,7 +811,8 @@ function main() {
         timebase: timebase,
         level: 4,
         cats: [{ key: key, label: c.label, count: qs.length }],
-        count: qs.length
+        count: qs.length,
+        desc: personDescFor(tname, qs)
       };
       seen[id] = node;
       nodes.push(node);
@@ -689,7 +877,7 @@ function main() {
       }
       if (!span && ys.length) {
         var fl = ys.filter(function (y) { return trusted[y] || y < 0 || y >= 1800; });
-        if (fl.length) span = robustSpan(fl, null);
+        if (fl.length) span = robustSpan(fl, null, trusted);
       }
       if (!span) {
         var ap = archiveYears(hitQs);
@@ -705,7 +893,8 @@ function main() {
         cats: Object.keys(catMap).map(function (k) { return { key: k, label: all.cats[k] ? all.cats[k].label : k, count: catMap[k] }; }),
         count: hitQs.length,
         seed: true,
-        aliases: aliases
+        aliases: aliases,
+        desc: isPerson ? personDescFor(ename, hitQs) : null
       };
       if (span && span.archive) node.timebase = 'archive';
       nodes.push(node);
