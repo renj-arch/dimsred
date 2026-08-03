@@ -556,7 +556,7 @@ try{
 // ============================================================
 // BUILD TIME (stamped by Globe Fill workflow)
 // ============================================================
-var GLOBE_UPDATED='__GLOBE_BUILD_TIME__';
+var GLOBE_UPDATED='2026-08-03T04:36:59.437Z';
 
 // ============================================================
 // DATA
@@ -39150,7 +39150,7 @@ function localizeBuildTime(){var el=document.getElementById('build-time');if(!el
 // THREE.JS SETUP
 // ============================================================
 let totalItems=0;Object.values(D).forEach(a=>{if(a)totalItems+=a.length});document.getElementById('totalCount').textContent=totalItems.toLocaleString()
-fetch('data/pib-feed.json').then(r=>r.json()).then(d=>{var el=document.getElementById('build-time');if(el){el.setAttribute('datetime',d.updatedAt);localizeBuildTime()}}).catch(()=>{})
+function applyBuildTime(){var el=document.getElementById('build-time');if(!el)return;var stamp=(typeof GLOBE_UPDATED!=='undefined'&&GLOBE_UPDATED&&!isNaN(Date.parse(GLOBE_UPDATED)))?GLOBE_UPDATED:'';if(stamp){el.setAttribute('datetime',stamp);localizeBuildTime();return;}fetch('data/pib-feed.json').then(r=>r.json()).then(d=>{el.setAttribute('datetime',d.updatedAt);localizeBuildTime()}).catch(()=>{})};applyBuildTime()
 
 
 const scene = new THREE.Scene();
