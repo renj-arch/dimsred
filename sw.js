@@ -1,4 +1,4 @@
-const CACHE = 'vlymbooq-v7';
+const CACHE = 'vlymbooq-v8';
 const STATIC_ASSETS = [
   '/css/style.css',
   '/js/theme.js',
