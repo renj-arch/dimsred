@@ -400,6 +400,8 @@ function loadProfileCat(catKey, catLabel, el) {
   loadCategory(catKey, function (catData) {
     var qs = [];
     for (var q of catData.questions) {
+      var sub = (q.subSubject || q._topic || '').trim();
+      if (sub === n.name) { qs.push(q); continue; }   // exact topic bucket (source of the node count)
       var text = [q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' ');
       if (re.test(text)) qs.push(q);
     }
@@ -426,7 +428,11 @@ function loadCategory(key, cb) {
       var questions = [];
       for (var subj of Object.keys(parsed)) {
         var subs = parsed[subj].subSubjects || {};
-        for (var ss of Object.keys(subs)) { if (Array.isArray(subs[ss])) questions = questions.concat(subs[ss]); }
+        for (var ss of Object.keys(subs)) {
+          if (Array.isArray(subs[ss])) {
+            for (var qx of subs[ss]) { if (qx && !qx.subSubject) qx.subSubject = ss; questions.push(qx); }
+          }
+        }
       }
       _catCache[key] = { label: Object.keys(parsed)[0], questions: questions };
     } catch (e) { _catCache[key] = { label: key, questions: [] }; }
