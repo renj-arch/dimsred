@@ -70,6 +70,16 @@ h1{font-size:1.45em}
 .reveal{font-size:.68em;color:var(--purple);cursor:pointer;font-weight:700;margin-top:6px;background:none;border:none;padding:0}
 .loading{color:var(--text-sec);font-size:.8em;padding:8px}
 .type-filter{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+.p-sec{font-size:.72em;color:var(--text-sec);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px}
+.p-chips{display:flex;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:100px;border:1px solid var(--border);background:rgba(255,255,255,.03);font-size:.7em;color:var(--text-sec);cursor:pointer;margin:0 6px 6px 0;max-width:100%}
+.chip:hover{border-color:var(--purple);color:var(--text)}
+.chip b{color:var(--emerald);font-size:.85em}
+.story{display:flex;flex-direction:column}
+.story-row{display:flex;gap:10px;align-items:baseline;padding:5px 0;border-bottom:1px dashed rgba(255,255,255,.05);font-size:.78em}
+.story-y{color:var(--purple);font-weight:800;min-width:44px}
+.story-n{color:var(--text-sec);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.story-n b{color:var(--text)}
 </style>
 </head>
 <body>
@@ -84,6 +94,7 @@ h1{font-size:1.45em}
     <button class="btn" id="btnIn" title="Zoom in toward present">Zoom in</button>
     <button class="btn" id="btnFull">Max zoom out</button>
     <input class="searchbar" id="search" type="text" placeholder="Search any person, movement, disease, scheme, topic…">
+    <select class="searchbar" id="catFilter" style="flex:0 0 auto;max-width:250px;cursor:pointer"><option value="">All categories</option></select>
   </div>
 
   <div class="type-filter" id="typeFilter">
@@ -108,6 +119,9 @@ h1{font-size:1.45em}
 var TL = null;
 var NODES = [];
 var _catCache = {};
+var _links = [];
+var _adj = {};
+var _catByKey = {};
 
 var WINDOW = { start: 1000, end: 2026 };
 var FULL = { start: 1000, end: 2026 };
@@ -163,10 +177,13 @@ function render() {
 
   // Nodes
   var searchActive = !!searchText;
+  var activeCat = catValue();
   var filtered = [];
   for (var n of NODES) {
-    if (!searchActive && nodeLevel(n) > th) continue;
-    if (!TYPE_FILTERS[n.type] && !(n.type === 'concept' && TYPE_FILTERS.concept)) continue;
+    var levelOk = searchActive || activeCat || nodeLevel(n) <= th;
+    if (!levelOk) continue;
+    if (activeCat && !(n.cats || []).some(function (c) { return c.key === activeCat; })) continue;
+    if (!TYPE_FILTERS[n.type]) continue;
     if (!inWindow(n.span)) continue;
     if (searchActive && n.name.toLowerCase().indexOf(searchText) === -1) continue;
     filtered.push(n);
@@ -188,13 +205,15 @@ function render() {
     count++;
   }
 
-  if (count === 0 && filtered.length === 0 && !searchText) {
+  if (count === 0 && filtered.length === 0 && !searchText && !activeCat) {
     html += '<div class="loading" style="margin:20px 14px">Nothing at this zoom — scroll up or zoom out.</div>';
+  } else if (count === 0 && filtered.length === 0 && activeCat) {
+    html += '<div class="loading" style="margin:20px 14px">No ' + esc(_catByKey[activeCat] || activeCat) + ' topics in this window — zoom out or scroll.</div>';
   }
   canvas.innerHTML = html;
 
   var zi = document.getElementById('zoomInfo');
-  zi.textContent = 'Showing ' + WINDOW.start + ' – ' + WINDOW.end + ' · zoom level ' + ZOOM + (filtered.length > cap ? ' (capped at ' + cap + ')' : '');
+  zi.textContent = 'Showing ' + WINDOW.start + ' – ' + WINDOW.end + ' · zoom level ' + ZOOM + (activeCat ? ' · filter: ' + (_catByKey[activeCat] || activeCat) : '') + (filtered.length > cap ? ' (capped at ' + cap + ')' : '');
   document.getElementById('crumb').innerHTML = 'Viewing: ' + (HISTORY.length ? HISTORY.map(function (h) { return '<b onclick="zoomOut()">' + esc(h) + '</b>'; }).join(' › ') + ' › ' : '') + '<b onclick="zoomOut()">Full history</b>';
 }
 
@@ -257,6 +276,42 @@ document.getElementById('search').addEventListener('input', function () {
   searchTimer = setTimeout(function () { searchText = v; render(); }, 200);
 });
 
+document.getElementById('catFilter').addEventListener('change', function () { render(); });
+
+function catValue() {
+  var s = document.getElementById('catFilter');
+  return s ? s.value : '';
+}
+
+function buildCatOptions() {
+  var seen = {};
+  for (var n of NODES) for (var c of (n.cats || [])) if (!seen[c.key]) seen[c.key] = c.label;
+  var keys = Object.keys(seen).sort();
+  var sel = document.getElementById('catFilter');
+  keys.forEach(function (k) {
+    _catByKey[k] = seen[k];
+    var o = document.createElement('option');
+    o.value = k;
+    o.textContent = seen[k];
+    sel.appendChild(o);
+  });
+}
+
+function buildAdj() {
+  _adj = {};
+  for (var l of _links) {
+    if (!_adj[l.a]) _adj[l.a] = [];
+    if (!_adj[l.b]) _adj[l.b] = [];
+    _adj[l.a].push({ id: l.b, w: l.w });
+    _adj[l.b].push({ id: l.a, w: l.w });
+  }
+}
+
+function nodeById(id) {
+  for (var x of NODES) { if (x.id === id) return x; }
+  return null;
+}
+
 function openProfile(id) {
   var n = null;
   for (var x of NODES) { if (x.id === id) { n = x; break; } }
@@ -270,13 +325,46 @@ function openProfile(id) {
     + '<div class="p-type">' + esc(n.type) + (n.seed ? ' · curated spine' : '') + '</div>'
     + '<div class="p-stats"><div class="p-stat"><div class="v">' + (n.count || 0) + '</div><div class="k">mentions</div></div>'
     + '<div class="p-stat"><div class="v">' + cats.length + '</div><div class="k">categories</div></div></div>'
+    + '<div class="p-sec">Connected</div><div class="p-chips" id="p-con"></div>'
+    + '<div class="p-sec">Story</div><div class="story" id="p-story"></div>'
+    + '<div class="p-sec">Drill down</div>'
     + '<div class="qlist" id="p-ql" style="display:none"></div>'
     + cats.map(function (c) { return '<div class="cat-row" onclick="loadProfileCat(\'' + esc(c.key).replace(/'/g, "\\'") + '\',\'' + esc(c.label).replace(/'/g, "\\'") + '\',this)"><span class="n">' + esc(c.label) + '</span></div>'; }).join('');
   document.getElementById('profile').classList.add('open');
   _profileNode = n;
+  renderProfileExtras(n);
   window.scrollTo(0, 0);
 }
 var _profileNode = null;
+
+function renderProfileExtras(n) {
+  var con = document.getElementById('p-con');
+  var story = document.getElementById('p-story');
+  var conns = (_adj[n.id] || []).slice().sort(function (x, y) { return y.w - x.w; });
+  if (con) {
+    con.innerHTML = conns.length
+      ? conns.slice(0, 14).map(function (c) {
+        var cn = nodeById(c.id);
+        return '<span class="chip" onclick="openProfile(\'' + esc(c.id).replace(/'/g, "\\'") + '\')">' + esc(cn ? cn.name : c.id.replace(/^seed\|/, '')) + ' <b>' + c.w + '</b></span>';
+      }).join('')
+      + (conns.length > 14 ? '<span class="chip" style="cursor:default">+' + (conns.length - 14) + ' more</span>' : '')
+      : '<div class="loading">No strong connections — this entity stands alone.</div>';
+  }
+  if (story) {
+    var items = [];
+    for (var c of conns) {
+      var cn = nodeById(c.id);
+      if (cn && cn.span) items.push({ min: cn.span.min, label: cn.name, w: c.w, color: TYPE_COLOR[cn.type] || '#71717a' });
+    }
+    items.sort(function (a, b) { return (a.min - b.min) || (b.w - a.w); });
+    var cap2 = 40;
+    story.innerHTML = items.length
+      ? items.slice(0, cap2).map(function (it) {
+        return '<div class="story-row"><span class="story-y">' + it.min + '</span><span class="story-n" style="border-left:3px solid ' + it.color + ';padding-left:8px">' + esc(it.label) + '</span></div>';
+      }).join('') + (items.length > cap2 ? '<div class="loading">… +' + (items.length - cap2) + ' more</div>' : '')
+      : '<div class="loading">No story neighbours yet — more links land as the spine grows.</div>';
+  }
+}
 
 function closeProfile() { document.getElementById('profile').classList.remove('open'); }
 
@@ -354,6 +442,9 @@ function appendQuestions(container, qs) {
 fetch('data/timeline.json').then(function (r) { return r.json(); }).then(function (t) {
   TL = t;
   NODES = t.nodes;
+  _links = t.links || [];
+  buildAdj();
+  buildCatOptions();
   render();
 }).catch(function () {
   document.getElementById('canvas').innerHTML = '<div class="loading">data/timeline.json not found — run <code>node scripts/build-timeline.js</code>.</div>';

@@ -19,12 +19,90 @@ var ERAS = [
   { id: 'contemporary',  label: 'Contemporary India',  min: 1991,  max: 2026 }
 ];
 
-// Curated spine: movements, people, diseases, schemes that anchor the story.
+// Curated spine: every group has an explicit type + zoom level.
+// level 1 = era/movement scale · 2 = people/events · 3 = orgs/schemes/diseases · 4 = fine topics
 var SEED = {
-  movements: ['Indian independence movement', 'Non-cooperation movement', 'Civil disobedience movement', 'Quit India movement', 'Khilafat movement', 'Partition of India', 'Simon Commission', 'Salt march', 'Jallianwala Bagh massacre', 'Revolt of 1857', 'Swadeshi movement', 'Indian National Congress', 'Constituent Assembly of India', 'Sepoy Mutiny', 'Bardoli Satyagraha', 'Champaran Satyagraha', 'Dandi March'],
-  people: ['Mahatma Gandhi', 'B. R. Ambedkar', 'Jawaharlal Nehru', 'Sardar Vallabhbhai Patel', 'Subhas Chandra Bose', 'Bal Gangadhar Tilak', 'Gopal Krishna Gokhale', 'Bhagat Singh', 'Mohammad Ali Jinnah', 'Rabindranath Tagore', 'Lal Bahadur Shastri', 'Indira Gandhi', 'Sarojini Naidu', 'Rajendra Prasad', 'C. Rajagopalachari', 'Mangal Pandey', 'Rani Lakshmibai', 'Vinayak Damodar Savarkar', 'Annie Besant', 'Dadabhai Naoroji', 'Lala Lajpat Rai', 'Bipin Chandra Pal'],
-  diseases: ['COVID-19', 'Smallpox', 'Cholera', 'Plague', 'Tuberculosis', 'Leprosy', 'Polio', 'Malaria', 'Dengue', 'Spanish flu', 'Chikungunya', 'Kala-azar', 'Famine'],
-  schemes: ['National Health Mission', 'Swachh Bharat Mission', 'Poshan Abhiyan', 'Ayushman Bharat', 'National Rural Health Mission', 'Green Revolution', 'Operation Flood', 'Pradhan Mantri Jan Dhan Yojana', 'Bharat Nirman']
+  movements: { type: 'event', level: 1, list: [
+    'Indian independence movement', 'Non-cooperation movement', 'Civil disobedience movement', 'Quit India movement',
+    'Khilafat movement', 'Partition of India', 'Simon Commission', 'Salt march', 'Jallianwala Bagh massacre',
+    'Revolt of 1857', 'Swadeshi movement', 'Indian National Congress', 'Constituent Assembly of India',
+    'Sepoy Mutiny', 'Bardoli Satyagraha', 'Champaran Satyagraha', 'Dandi March'
+  ]},
+  wars: { type: 'event', level: 1, list: [
+    'Battle of Plassey', 'Battle of Buxar', 'First Battle of Panipat', 'Second Battle of Panipat',
+    'Third Battle of Panipat', 'Battle of Haldighati', 'Battle of Talikota', 'Battle of Wandiwash',
+    'Anglo-Mysore Wars', 'Anglo-Maratha Wars', 'First Anglo-Sikh War', 'Second Anglo-Sikh War',
+    'Sino-Indian War', 'Indo-Pakistani War of 1965', 'Bangladesh Liberation War', 'Kargil War'
+  ]},
+  reforms: { type: 'event', level: 1, list: [
+    'Economic liberalisation in India', 'LPG reforms', 'Demonetisation in India',
+    'Goods and Services Tax (India)', 'Five-Year Plans (India)', 'Bank nationalisation in India'
+  ]},
+  people: { type: 'person', level: 2, list: [
+    'Mahatma Gandhi', 'B. R. Ambedkar', 'Jawaharlal Nehru', 'Sardar Vallabhbhai Patel', 'Subhas Chandra Bose',
+    'Bal Gangadhar Tilak', 'Gopal Krishna Gokhale', 'Bhagat Singh', 'Mohammad Ali Jinnah', 'Rabindranath Tagore',
+    'Lal Bahadur Shastri', 'Indira Gandhi', 'Sarojini Naidu', 'Rajendra Prasad', 'C. Rajagopalachari',
+    'Mangal Pandey', 'Rani Lakshmibai', 'Vinayak Damodar Savarkar', 'Annie Besant', 'Dadabhai Naoroji',
+    'Lala Lajpat Rai', 'Bipin Chandra Pal'
+  ]},
+  sportspeople: { type: 'person', level: 2, list: [
+    'Milkha Singh', 'Dhyan Chand', 'Kapil Dev', 'Sachin Tendulkar', 'P. T. Usha', 'Mary Kom',
+    'Neeraj Chopra', 'Abhinav Bindra', 'Saina Nehwal', 'Viswanathan Anand'
+  ]},
+  science: { type: 'event', level: 2, list: [
+    'Chandrayaan-1', 'Chandrayaan-3', 'Mangalyaan', 'Pokhran-II', 'Nuclear tests of India', 'Smallpox eradication'
+  ]},
+  sports: { type: 'event', level: 2, list: [
+    'Olympic Games', 'Commonwealth Games', 'Asian Games', 'Cricket World Cup', 'T20 World Cup',
+    'Hockey World Cup', 'Khelo India'
+  ]},
+  diseases: { type: 'disease', level: 3, list: [
+    'COVID-19', 'Smallpox', 'Cholera', 'Plague', 'Tuberculosis', 'Leprosy', 'Polio', 'Malaria',
+    'Dengue', 'Spanish flu', 'Chikungunya', 'Kala-azar', 'Famine'
+  ]},
+  schemes: { type: 'scheme', level: 3, list: [
+    'National Health Mission', 'Swachh Bharat Mission', 'Poshan Abhiyan', 'Ayushman Bharat',
+    'National Rural Health Mission', 'Green Revolution', 'Operation Flood',
+    'Pradhan Mantri Jan Dhan Yojana', 'Bharat Nirman'
+  ]},
+  commissions: { type: 'org', level: 3, list: [
+    'Sarkaria Commission', 'Mandal Commission', 'Kothari Commission', 'Finance Commission of India',
+    'Election Commission of India', 'Law Commission of India', 'National Human Rights Commission of India',
+    'Second Administrative Reforms Commission'
+  ]},
+  orgs: { type: 'org', level: 3, list: [
+    'Indian Space Research Organisation', 'Defence Research and Development Organisation',
+    'Bhabha Atomic Research Centre', 'Council of Scientific and Industrial Research', 'Indian Institute of Technology',
+    'Reserve Bank of India', 'State Bank of India', 'Coal India', 'Oil and Natural Gas Corporation',
+    'Indian Oil Corporation', 'Nuclear power in India'
+  ]},
+  geography: { type: 'concept', level: 4, list: [
+    'Suez Canal', 'Panama Canal', 'McMahon Line', 'Line of Actual Control', 'Line of Control',
+    'Siachen Glacier', 'Doklam'
+  ]}
+};
+
+// Extra colloquial / shortened names per entity (merged with the auto aliases).
+var EXTRA_ALIASES = {
+  'Demonetisation in India': ['demonetisation', 'notebandi'],
+  'Economic liberalisation in India': ['liberalisation', 'new economic policy'],
+  'Bangladesh Liberation War': ['bangladesh war', 'liberation war 1971', '1971 war'],
+  'Indo-Pakistani War of 1965': ['1965 war', 'indo-pak war'],
+  'Sino-Indian War': ['1962 war', 'sino-indian conflict'],
+  'Goods and Services Tax (India)': ['gst', 'goods and services tax'],
+  'Five-Year Plans (India)': ['five year plan', 'planning commission'],
+  'Swadeshi movement': ['swadeshi'],
+  'Smallpox eradication': ['smallpox'],
+  'National Rural Health Mission': ['nrh'],
+  'Pradhan Mantri Jan Dhan Yojana': ['jan dhan'],
+  'Indian National Congress': ['congress'],
+  'Reserve Bank of India': ['rbi'],
+  'State Bank of India': ['sbi'],
+  'Oil and Natural Gas Corporation': ['ongc'],
+  'Indian Oil Corporation': ['ioc'],
+  'Election Commission of India': ['eci'],
+  'Chandrayaan-1': ['chandrayaan 1'],
+  'Mangalyaan': ['mars orbiter mission']
 };
 
 // Manual, authoritative time spans for the curated spine (stable well-known facts).
@@ -38,19 +116,48 @@ var MANUAL_SPANS = {
   'Mangal Pandey': [1827, 1857], 'Rani Lakshmibai': [1828, 1858], 'Vinayak Damodar Savarkar': [1883, 1966],
   'Annie Besant': [1847, 1933], 'Dadabhai Naoroji': [1825, 1917], 'Lala Lajpat Rai': [1865, 1928],
   'Bipin Chandra Pal': [1858, 1932],
+  'Milkha Singh': [1929, 2021], 'Dhyan Chand': [1905, 1979], 'Kapil Dev': [1959, 2026], 'Sachin Tendulkar': [1973, 2026],
+  'P. T. Usha': [1964, 2026], 'Mary Kom': [1982, 2026], 'Neeraj Chopra': [1997, 2026], 'Abhinav Bindra': [1982, 2026],
+  'Saina Nehwal': [1990, 2026], 'Viswanathan Anand': [1969, 2026],
   'Indian independence movement': [1857, 1947], 'Non-cooperation movement': [1920, 1922],
   'Civil disobedience movement': [1930, 1934], 'Quit India movement': [1942, 1942], 'Khilafat movement': [1919, 1924],
   'Partition of India': [1947, 1947], 'Simon Commission': [1928, 1928], 'Salt march': [1930, 1930],
   'Jallianwala Bagh massacre': [1919, 1919], 'Revolt of 1857': [1857, 1857], 'Swadeshi movement': [1905, 1908],
   'Indian National Congress': [1885, 2026], 'Constituent Assembly of India': [1946, 1950], 'Sepoy Mutiny': [1857, 1857],
   'Bardoli Satyagraha': [1928, 1928], 'Champaran Satyagraha': [1917, 1917], 'Dandi March': [1930, 1930],
+  'Battle of Plassey': [1757, 1757], 'Battle of Buxar': [1764, 1764], 'First Battle of Panipat': [1526, 1526],
+  'Second Battle of Panipat': [1556, 1556], 'Third Battle of Panipat': [1761, 1761], 'Battle of Haldighati': [1576, 1576],
+  'Battle of Talikota': [1565, 1565], 'Battle of Wandiwash': [1760, 1760], 'Anglo-Mysore Wars': [1767, 1799],
+  'Anglo-Maratha Wars': [1775, 1819], 'First Anglo-Sikh War': [1845, 1846], 'Second Anglo-Sikh War': [1848, 1849],
+  'Sino-Indian War': [1962, 1962], 'Indo-Pakistani War of 1965': [1965, 1965], 'Bangladesh Liberation War': [1971, 1971],
+  'Kargil War': [1999, 1999],
+  'Economic liberalisation in India': [1991, 1991], 'LPG reforms': [1991, 1991], 'Demonetisation in India': [2016, 2016],
+  'Goods and Services Tax (India)': [2017, 2026], 'Five-Year Plans (India)': [1951, 2017],
+  'Bank nationalisation in India': [1969, 1980],
+  'Chandrayaan-1': [2008, 2009], 'Chandrayaan-3': [2023, 2023], 'Mangalyaan': [2013, 2014], 'Pokhran-II': [1998, 1998],
+  'Nuclear tests of India': [1974, 1998], 'Smallpox eradication': [1975, 1980],
+  'Olympic Games': [1896, 2026], 'Commonwealth Games': [1930, 2026], 'Asian Games': [1951, 2026],
+  'Cricket World Cup': [1975, 2026], 'T20 World Cup': [2007, 2026], 'Hockey World Cup': [1971, 2026],
+  'Khelo India': [2018, 2026],
   'COVID-19': [2019, 2026], 'Smallpox': [1800, 1980], 'Cholera': [1817, 2026], 'Plague': [1896, 2026],
   'Tuberculosis': [1800, 2026], 'Leprosy': [1800, 2026], 'Polio': [1900, 2014], 'Malaria': [1800, 2026],
   'Dengue': [1900, 2026], 'Spanish flu': [1918, 1920], 'Chikungunya': [1950, 2026], 'Kala-azar': [1800, 2026],
   'Famine': [1769, 1943],
   'National Health Mission': [2005, 2026], 'Swachh Bharat Mission': [2014, 2026], 'Poshan Abhiyan': [2018, 2026],
   'Ayushman Bharat': [2018, 2026], 'National Rural Health Mission': [2005, 2026], 'Green Revolution': [1960, 1980],
-  'Operation Flood': [1970, 1996], 'Pradhan Mantri Jan Dhan Yojana': [2014, 2026], 'Bharat Nirman': [2005, 2014]
+  'Operation Flood': [1970, 1996], 'Pradhan Mantri Jan Dhan Yojana': [2014, 2026], 'Bharat Nirman': [2005, 2014],
+  'Sarkaria Commission': [1983, 1988], 'Mandal Commission': [1979, 1990], 'Kothari Commission': [1964, 1966],
+  'Finance Commission of India': [1951, 2026], 'Election Commission of India': [1950, 2026],
+  'Law Commission of India': [1955, 2026], 'National Human Rights Commission of India': [1993, 2026],
+  'Second Administrative Reforms Commission': [2005, 2009],
+  'Indian Space Research Organisation': [1969, 2026], 'Defence Research and Development Organisation': [1958, 2026],
+  'Bhabha Atomic Research Centre': [1954, 2026], 'Council of Scientific and Industrial Research': [1942, 2026],
+  'Indian Institute of Technology': [1951, 2026], 'Reserve Bank of India': [1935, 2026], 'State Bank of India': [1955, 2026],
+  'Coal India': [1975, 2026], 'Oil and Natural Gas Corporation': [1956, 2026], 'Indian Oil Corporation': [1964, 2026],
+  'Nuclear power in India': [1969, 2026],
+  'Suez Canal': [1869, 2026], 'Panama Canal': [1914, 2026], 'McMahon Line': [1914, 2026],
+  'Line of Actual Control': [1962, 2026], 'Line of Control': [1972, 2026], 'Siachen Glacier': [1984, 2026],
+  'Doklam': [2017, 2026]
 };
 
 function loadAll() {
@@ -126,16 +233,30 @@ function eraOf(y) {
   return null;
 }
 
-function aliasesFor(name, grp) {
+function aliasesFor(name, isPerson) {
   var a = [name];
   a.push(name.replace(/\b(Dr\.?|Sir|Saint|Mahatma|Sardar|Bapu)\s+/g, ''));
   var parts = name.split(/[\s,]+/).filter(function (p) { return p; });
   if (parts.length === 1) a.push(parts[0]);
   if (parts.length >= 2) {
     a.push(parts.join(' '));
-    if (grp === 'people') a.push(parts[parts.length - 1]); // surname only for people
+    if (isPerson) a.push(parts[parts.length - 1]); // surname only for people
   }
   return a;
+}
+
+// Full-name aliases only (no bare surnames) — used for cross-entity links to avoid noise.
+function linkAliasesFor(name) {
+  var a = [name];
+  a.push(name.replace(/\b(Dr\.?|Sir|Saint|Mahatma|Sardar|Bapu)\s+/g, ''));
+  var parts = name.split(/[\s,]+/).filter(function (p) { return p; });
+  if (parts.length === 1) a.push(parts[0]);
+  if (parts.length >= 2) a.push(parts.join(' '));
+  return a;
+}
+
+function escapeRe(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function modeSpan(spans) {
@@ -190,9 +311,12 @@ function main() {
   }
 
   // Seed entity nodes: match aliases across all questions
+  var seedNodes = [];
   for (var grp of Object.keys(SEED)) {
-    for (var ename of SEED[grp]) {
-      var aliases = aliasesFor(ename, grp);
+    var g = SEED[grp];
+    for (var ename of g.list) {
+      var isPerson = g.type === 'person';
+      var aliases = aliasesFor(ename, isPerson).concat(EXTRA_ALIASES[ename] || []);
       var hitQs = [];
       var catMap = {};
       for (var it of all.all) {
@@ -213,7 +337,7 @@ function main() {
         if (fy) { ys.push(fy.min); ys.push(fy.max); }
         var bs = bioSpan(allText);
         if (bs) bioSpans.push(bs);
-        if (grp === 'people') {
+        if (isPerson) {
           var tname = hq.q.subSubject || hq.q._topic || '';
           var tnorm = tname.replace(/[^a-z0-9]+/gi, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
           var tnormStrip = tnorm.replace(/^(dr|sir|saint|mahatma|sardar|bapu)\s+/, '');
@@ -227,7 +351,7 @@ function main() {
       var span = null;
       if (MANUAL_SPANS[ename]) {
         span = { min: MANUAL_SPANS[ename][0], max: MANUAL_SPANS[ename][1] };
-      } else if (grp === 'people') {
+      } else if (isPerson) {
         // Prefer the largest own-topic's first (birth–death) span.
         var bestTopic = null;
         for (var tn of Object.keys(ownTopics)) {
@@ -239,12 +363,11 @@ function main() {
         var fl = ys.filter(function (y) { return y >= 1800; });
         if (fl.length) span = { min: Math.min.apply(null, fl), max: Math.max.apply(null, fl) };
       }
-      var seedType = grp === 'people' ? 'person' : grp === 'movements' ? 'event' : grp === 'schemes' ? 'scheme' : 'disease';
       var node = {
         id: 'seed|' + ename,
         name: ename,
-        type: seedType,
-        level: seedType === 'event' ? 1 : seedType === 'person' ? 2 : 3,
+        type: g.type,
+        level: g.level,
         span: span,
         era: eraOf(span && span.min),
         cats: Object.keys(catMap).map(function (k) { return { key: k, label: all.cats[k] ? all.cats[k].label : k }; }),
@@ -252,15 +375,57 @@ function main() {
         seed: true
       };
       nodes.push(node);
+      seedNodes.push(node);
     }
   }
 
-  var out = { builtAt: new Date().toISOString(), eras: ERAS, nodes: nodes };
+  // Cross-entity links: co-occurrence of two seed entities inside one question.
+  var aliasMap = {};
+  for (var sn of seedNodes) {
+    for (var al of linkAliasesFor(sn.name)) aliasMap[al.toLowerCase()] = sn.id;
+  }
+  var aliasList = Object.keys(aliasMap).sort(function (x, y) { return y.length - x.length; });
+  var linkRe = new RegExp('(' + aliasList.map(escapeRe).join('|') + ')', 'g');
+  var pairCount = {};
+  for (var it2 of all.all) {
+    var lt = [it2.q.question, it2.q.answer, it2.q.fact, it2.q.hint].filter(Boolean).join(' ').toLowerCase();
+    var found = {};
+    var m;
+    linkRe.lastIndex = 0;
+    while ((m = linkRe.exec(lt))) {
+      var id = aliasMap[m[1]];
+      if (id) found[id] = true;
+      if (m.index === linkRe.lastIndex) linkRe.lastIndex++;
+    }
+    var ids = Object.keys(found);
+    if (ids.length >= 2 && ids.length <= 10) {
+      for (var i = 0; i < ids.length; i++) {
+        for (var j = i + 1; j < ids.length; j++) {
+          var k = ids[i] < ids[j] ? ids[i] + '\u0000' + ids[j] : ids[j] + '\u0000' + ids[i];
+          pairCount[k] = (pairCount[k] || 0) + 1;
+        }
+      }
+    }
+  }
+  var links = [];
+  for (var pk of Object.keys(pairCount)) {
+    if (pairCount[pk] >= 2) {
+      var sp = pk.split('\u0000');
+      links.push({ a: sp[0], b: sp[1], w: pairCount[pk] });
+    }
+  }
+  links.sort(function (x, y) { return y.w - x.w; });
+
+  var out = { builtAt: new Date().toISOString(), eras: ERAS, nodes: nodes, links: links };
   fs.writeFileSync(OUT, JSON.stringify(out));
   var withSpan = nodes.filter(function (n) { return n.span; }).length;
   console.log('Wrote ' + OUT);
   console.log('nodes: ' + nodes.length + ' (with time span: ' + withSpan + ', ' + (withSpan / nodes.length * 100).toFixed(1) + '%)');
-  console.log('seed entities: ' + SEED.movements.length + ' movements, ' + SEED.people.length + ' people, ' + SEED.diseases.length + ' diseases, ' + SEED.schemes.length + ' schemes');
+  var totalSeeds = 0;
+  var seedTypeCounts = {};
+  for (var gk of Object.keys(SEED)) { totalSeeds += SEED[gk].list.length; seedTypeCounts[SEED[gk].type] = (seedTypeCounts[SEED[gk].type] || 0) + SEED[gk].list.length; }
+  console.log('seed entities: ' + totalSeeds + ' across ' + JSON.stringify(seedTypeCounts));
+  console.log('links: ' + links.length + ' (top: ' + links.slice(0, 5).map(function (l) { return l.a.replace('seed|', '') + '↔' + l.b.replace('seed|', '') + ':' + l.w; }).join(', ') + ')');
 }
 
 main();
