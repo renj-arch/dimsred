@@ -89,7 +89,7 @@ h1{font-size:1.45em}
 
 <div class="page-wrap">
   <div class="head"><h1>Timeline Map</h1></div>
-  <div class="sub">All of history on one scroll. Zoom out to see eras, zoom in toward the present to see movements, the people in them, and everything connected — diseases, schemes, institutions. Press <b>Show all</b> to put every dated topic on the line at once. Hover any topic to see what it's connected to.</div>
+  <div class="sub">All of history on one scroll. Zoom out to see eras, zoom in toward the present to see movements, the people in them, and everything connected — diseases, schemes, institutions. Press <b>Show all</b> to put every dated topic on the line at once. Click any topic for its profile and connections.</div>
 
   <div class="controls">
     <button class="btn" id="btnOut" title="Zoom out">Zoom out</button>
@@ -125,7 +125,6 @@ var _catCache = {};
 var _links = [];
 var _adj = {};
 var _catByKey = {};
-var _lastPos = {};   // positions of rendered nodes from the last render, for hover links
 
 var MIN_YEAR = -3300;   // Indus Valley / start of Ancient India
 var MAX_YEAR = 2026;
@@ -261,7 +260,6 @@ function render() {
   // Same-year topics stack as a readable two-column list instead of piling on top of each other.
   var cap = SHOW_ALL ? 9000 : (searchActive || activeCat ? 6000 : 4000);
   var prevB = [TOP, TOP];
-  _lastPos = {};   // rendered node id -> center {x,y} in canvas px, for the link layer
   var canvasW = document.getElementById('viewport').clientWidth || 800;
   for (var i = 0; i < filtered.length; i++) {
     if (count >= cap) break;
@@ -269,10 +267,6 @@ function render() {
     var desired = TOP + (nd.span.min - WINDOW.start) / range * BASE_H;
     var col = prevB[0] <= prevB[1] ? 0 : 1;
     var y = Math.max(desired, prevB[col]);
-    _lastPos[nd.id] = {
-      x: col === 0 ? (14 + (canvasW * 0.5 - 18) / 2) : (canvasW * 0.5 + 4 + (canvasW * 0.5 - 18) / 2),
-      y: y + NODE_H / 2
-    };
     var color = TYPE_COLOR[nd.type] || '#71717a';
     var isArch = nd.timebase === 'archive';
     var isEra = nd.timebase === 'era';
@@ -291,7 +285,6 @@ function render() {
       : 'left:calc(50% + 4px);width:calc(50% - 18px)';
     html += '<div class="node" style="top:' + y + 'px;height:' + NODE_H + 'px;' + horiz + ';border-left:2px solid ' + color + '"'
       + tip
-      + ' onmouseenter="showNodeLinks(\'' + esc(nd.id).replace(/'/g, "\\'") + '\')" onmouseleave="clearNodeLinks()"'
       + ' onclick="openProfile(\'' + esc(nd.id).replace(/'/g, "\\'") + '\')">'
       + '<span class="nm" style="color:' + color + '">' + esc(nd.name) + '</span>'
       + '<span class="ct">' + spanLabel + (nd.count ? ' · ' + nd.count + ' q' : '') + (isArch || isEra ? ' · ~' : '') + '</span></div>';
@@ -375,38 +368,6 @@ btnAll.onclick = function () {
   render();
   scrollToPresent();
 };
-
-// Hover a node to see its co-occurrence connections — the only place links appear on
-// the map, on demand, so the timeline itself always stays clean.
-function showNodeLinks(id) {
-  clearNodeLinks();
-  var pos = _lastPos;
-  var p0 = pos[id];
-  if (!p0) return;
-  var lines = [];
-  for (var l of _links) {
-    var oid = l.a === id ? l.b : (l.b === id ? l.a : null);
-    if (!oid) continue;
-    var p1 = pos[oid];
-    if (!p1) continue;
-    var o = Math.min(0.5, 0.12 + (l.w || 1) / 90);
-    lines.push('<line x1="' + p0.x + '" y1="' + p0.y + '" x2="' + p1.x + '" y2="' + p1.y
-      + '" stroke="rgba(167,139,250,' + o.toFixed(3) + ')" stroke-width="1.2"/>');
-  }
-  if (!lines.length) return;
-  var cv = document.getElementById('canvas');
-  var h = parseFloat(cv.style.height) || 100;
-  var w = document.getElementById('viewport').clientWidth || 800;
-  var d = document.createElement('div');
-  d.id = 'hoverLinks';
-  d.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:3';
-  d.innerHTML = '<svg style="width:100%;height:100%" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' + lines.join('') + '</svg>';
-  cv.appendChild(d);
-}
-function clearNodeLinks() {
-  var el = document.getElementById('hoverLinks');
-  if (el) el.remove();
-}
 
 var searchTimer = null;
 document.getElementById('search').addEventListener('input', function () {
