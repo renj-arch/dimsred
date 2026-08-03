@@ -43,6 +43,7 @@ h1{font-size:1.45em}
 .node:hover{background:rgba(255,255,255,.06)}
 .node .bar{height:8px;border-radius:6px;flex-shrink:0;min-width:4px}
 .node .nm{font-size:.74em;font-weight:600;overflow:hidden;text-overflow:ellipsis}
+.node .ns{font-size:.66em;color:var(--text-muted);font-style:italic;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:0}
 .node .ct{font-size:.66em;color:var(--text-muted);flex-shrink:0}
 .undated{position:absolute;left:0;right:0;overflow:hidden;background:rgba(52,211,153,.04);border-bottom:1px dashed rgba(255,255,255,.1);padding:8px 12px}
 .undated-label{font-size:.64em;color:var(--emerald);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
@@ -52,6 +53,7 @@ h1{font-size:1.45em}
 .profile.open{transform:translateX(0)}
 .p-close{position:absolute;top:14px;right:14px;font-size:.8em;color:var(--text-muted);cursor:pointer;background:none;border:none}
 .p-title{font-size:1.15em;font-weight:800;margin-bottom:2px}
+.p-desc{font-size:.82em;color:var(--text-muted);font-style:italic;margin-bottom:6px}
 .p-span{font-size:.8em;color:var(--purple);font-weight:700;margin-bottom:4px}
 .p-type{font-size:.7em;color:var(--text-muted);margin-bottom:12px}
 .p-stats{display:flex;gap:8px;margin-bottom:14px}
@@ -287,6 +289,7 @@ function render() {
       + tip
       + ' onclick="openProfile(\'' + esc(nd.id).replace(/'/g, "\\'") + '\')">'
       + '<span class="nm" style="color:' + color + '">' + esc(nd.name) + '</span>'
+      + (nd.desc ? '<span class="ns">' + esc(nd.desc) + '</span>' : '')
       + '<span class="ct">' + spanLabel + (nd.count ? ' · ' + nd.count + ' q' : '') + (isArch || isEra ? ' · ~' : '') + '</span></div>';
     prevB[col] = y + NODE_H + 2;
     count++;
@@ -430,6 +433,7 @@ function openProfile(id) {
   }
   var cats = n.cats || [];
   p.innerHTML = '<div class="p-title" style="color:' + color + '">' + esc(n.name) + '</div>'
+    + (n.desc ? '<div class="p-desc">' + esc(n.desc) + '</div>' : '')
     + '<div class="p-span">' + spanLabel + '</div>'
     + '<div class="p-type">' + esc(n.type) + (n.seed ? ' · curated spine' : '') + '</div>'
     + '<div class="p-stats"><div class="p-stat"><div class="v">' + (n.count || 0) + '</div><div class="k">mentions</div></div>'
