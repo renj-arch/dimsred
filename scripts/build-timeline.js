@@ -168,7 +168,40 @@ var EXTRA_ALIASES = {
   'Mughal Empire': ['mughals'],
   'Delhi Sultanate': ['sultanate'],
   'Ashoka': ['ashoka the great', 'asoka'],
-  'Gautama Buddha': ['siddhartha']
+  'Gautama Buddha': ['siddhartha', 'gautam buddha'],
+  'Mahavira': ['mahavir', 'vardhamana'],
+  'Chanakya': ['kautilya', 'vishnugupta'],
+  'Charaka': ['charak'],
+  'Aryabhata': ['aryabhatta'],
+  'Harsha': ['harshavardhana', 'harsha vardhana'],
+  'Samudragupta': ['samudra gupta'],
+  'Mahatma Gandhi': ['mohandas karamchand gandhi', 'gandhi ji'],
+  'B. R. Ambedkar': ['babasaheb', 'bhimrao ambedkar', 'bhimrao ramji ambedkar'],
+  'Jawaharlal Nehru': ['pandit nehru'],
+  'Sardar Vallabhbhai Patel': ['sardar patel', 'vallabhbhai patel'],
+  'Subhas Chandra Bose': ['netaji', 'subhas bose', 'subhash chandra bose', 'subhash bose'],
+  'Bal Gangadhar Tilak': ['lokmanya tilak'],
+  'Mohammad Ali Jinnah': ['mohammed ali jinnah'],
+  'Vinayak Damodar Savarkar': ['veer savarkar'],
+  'C. Rajagopalachari': ['rajaji', 'chakravarti rajagopalachari'],
+  'P. T. Usha': ['pt usha', 'p t usha'],
+  'Rani Lakshmibai': ['rani lakshmi bai', 'lakshmi bai', 'rani of jhansi'],
+  'Lala Lajpat Rai': ['lajpat rai'],
+  'Viswanathan Anand': ['vishwanathan anand'],
+  'Five-Year Plans (India)': ['five year plan', 'five-year plan', 'five year plans']
+};
+
+// Homonym guards: when the alias also names a DIFFERENT entity (same words), exclude
+// questions that clearly refer to the other one. Keeps profiles from cross-contaminating.
+var NEGATIVE_ALIASES = {
+  'Bhagat Singh': ['koshyari', 'thind'],
+  'Mahatma Gandhi': ['indira gandhi', 'rajiv gandhi', 'rahul gandhi', 'sonia gandhi', 'feroze gandhi'],
+  'Jawaharlal Nehru': ['nehru university', 'nehru stadium', 'nehru park', 'nehru port'],
+  'Sachin Tendulkar': ['tendulkar committee'],
+  'Neeraj Chopra': ['priyanka chopra'],
+  'C. Rajagopalachari': ['rajaji national park'],
+  'Ashoka': ['ashoka tree', 'ashoka university'],
+  'Alexander the Great': ['alexander graham bell', 'alexander fleming']
 };
 
 // Manual, authoritative time spans for the curated spine (stable well-known facts).
@@ -269,6 +302,52 @@ function archiveYears(qs) {
   return { min: Math.min.apply(null, py), max: Math.max.apply(null, py) };
 }
 
+// News/time-stamped feeds — for these, the date the question entered the archive
+// is a fair proxy for when the topic is relevant, so archive-anchoring stays on.
+var NEWS_CATS = ['current-affairs', 'pib-archive', 'announcements', 'rbi-press-releases'];
+
+// Keyword → era classifier. Used ONLY when a topic has no dateable content, so a
+// year-less topic still lands in the right era band instead of being dumped at "now".
+var ERA_KEYWORDS = {
+  ancient: /indus|harappa|vedic|vedas|maurya|gupta|sunga|kushan|satavahana|nanda|saka|pallava|chalukya|chola|chera|pandya|sangam|buddha|ashoka|kalinga|panini|aryabhata|sushruta|charaka|kalidasa|mahajanapada|bhimbetka|prehistoric|stone age|bronze age|iron age|ganapati/i,
+  medieval: /sultanate|mughal|mamluk|khilji|tughlaq|sayyid|lodi|vijayanagara|maratha|rashtrakuta|pratihara|gurjara|bhakti|sufi|bahmani|ahom|rajput|kakatiya|adil shahi|qutub|iqta|mansabdar|delhi sultanate/i,
+  freedom: /1857|sepoy|mutiny|swadeshi|satyagraha|non-cooperation|civil disobedience|quit india|partition|jallianwala|khilafat|salt march|bardoli|champaran|gandhi|nehru|tilak|gokhale|bose|congress|independence movement|revolt of 1857|british|east india|viceroy/i,
+  republic: /constitution|planning commission|five year|green revolution|liberalisation|gst|election commission|rajya sabha|lok sabha|republic day|sarkaria|mandal commission|nehruvian/i
+};
+var CATEGORY_ERA = {
+  'ancient-india': 'ancient',
+  'medieval-modern-india': 'medieval'
+};
+
+function eraForTopic(tname, catKey) {
+  var t = String(tname || '').toLowerCase();
+  for (var eid of ['ancient', 'medieval', 'freedom', 'republic']) {
+    if (ERA_KEYWORDS[eid].test(t)) return eid;
+  }
+  return CATEGORY_ERA[catKey] || null;
+}
+
+// A topic's question text often cross-references years in answers/facts (e.g. "Battle
+// of Plassey" mentions 1885, 1994, 2025), so naive min..max stretches the span across
+// centuries. Drop minority clusters split off by the largest gaps until the remaining
+// years form one dominant, topically coherent period.
+function robustSpan(ys) {
+  var s = ys.slice().sort(function (a, b) { return a - b; });
+  if (s.length <= 2) return { min: s[0], max: s[s.length - 1] };
+  for (var guard = 0; guard < 8 && s.length > 2; guard++) {
+    var bestGap = -1, bestIdx = -1;
+    for (var i = 1; i < s.length; i++) {
+      var g = s[i] - s[i - 1];
+      if (g > bestGap) { bestGap = g; bestIdx = i; }
+    }
+    var leftCnt = bestIdx, rightCnt = s.length - bestIdx;
+    if (leftCnt < rightCnt && leftCnt / s.length < 0.4) s = s.slice(bestIdx);
+    else if (rightCnt < leftCnt && rightCnt / s.length < 0.4) s = s.slice(0, bestIdx);
+    else break;
+  }
+  return { min: s[0], max: s[s.length - 1] };
+}
+
 function topicYears(name, qs) {
   var ny = yearSignals(name);
   var ys = [];
@@ -280,16 +359,13 @@ function topicYears(name, qs) {
       for (var k of Object.keys(fy.trusted)) trusted[k] = true;
     }
   }
-  // Keep a year if: the topic name carries years, or the year is trusted
-  // (came with BC/BCE/AD/CE/century), or it's a negative/BC year, or a modern bare year >= 1800.
-  var fl = ys.filter(function (y) { return ny || trusted[y] || y < 0 || y >= 1800; });
+  // A sub-topic's own questions are topically coherent, so every extracted year is
+  // about the topic — keep BC/AD/century years always, and bare years 1000+ too
+  // (previously bare 1000–1799 like "1066" or "1757" were wrongly dropped).
+  var fl = ys.filter(function (y) { return trusted[y] || y < 0 || (y >= 1000 && y <= 2026); });
   if (ny) { fl.push(ny.min); fl.push(ny.max); }
-  if (!fl.length) {
-    // No event-year signal: anchor to the years these questions entered the archive.
-    var ap = archiveYears(qs);
-    return ap ? { min: ap.min, max: ap.max, archive: true } : null;
-  }
-  return { min: Math.min.apply(null, fl), max: Math.max.apply(null, fl) };
+  if (!fl.length) return null;
+  return robustSpan(fl);
 }
 
 function typeOf(name) {
@@ -306,6 +382,17 @@ function eraOf(y) {
   return null;
 }
 
+// Surnames too common in India to act as a person's alias (they match unrelated people,
+// e.g. "Singh" -> Manmohan Singh, "Bose" -> Bose-Einstein, "Chand" -> Chandigarh).
+var COMMON_SURNAMES = ['singh', 'kumar', 'kumari', 'sharma', 'prasad', 'lal', 'ram', 'das', 'dev', 'roy', 'rao', 'nair', 'menon', 'iyer', 'iyengar', 'pillai', 'patil', 'khan', 'ahmed', 'ali', 'begum', 'kaur', 'pal', 'anand', 'rai', 'patel', 'bose', 'chand', 'pandey', 'naidu', 'chopra'];
+
+// Trailing words that are NOT surnames (e.g. "Alexander the Great" -> "Great").
+var NON_SURNAMES = ['great', 'the', 'of', 'de', 'junior', 'senior', 'saint', 'ii', 'iii', 'iv', 'v'];
+
+// Entities whose bare surname is too ambiguous to reuse — match full name only.
+// ("Gandhi" usually means Mahatma; Indira must be named explicitly.)
+var NO_SURNAME_ALIAS = ['Indira Gandhi'];
+
 function aliasesFor(name, isPerson) {
   var a = [name];
   a.push(name.replace(/\b(Dr\.?|Sir|Saint|Mahatma|Sardar|Bapu)\s+/g, ''));
@@ -313,15 +400,47 @@ function aliasesFor(name, isPerson) {
   if (parts.length === 1) a.push(parts[0]);
   if (parts.length >= 2) {
     a.push(parts.join(' '));
-    if (isPerson) {
-      var sur = parts[parts.length - 1].toLowerCase();
-      // surname alias only for real surnames (avoid "Great" from "Alexander the Great")
-      if (parts[parts.length - 1].length >= 3 && ['great', 'the', 'of', 'de', 'saint', 'junior', 'senior'].indexOf(sur) === -1) {
-        a.push(parts[parts.length - 1]);
-      }
+    if (isPerson && NO_SURNAME_ALIAS.indexOf(name) === -1) {
+      var sur = parts[parts.length - 1].toLowerCase().replace(/\.$/, '');
+      // distinctive surnames only (never "Singh"/"Patel"/"Bose"/"Great"...)
+      if (sur.length >= 3 && COMMON_SURNAMES.indexOf(sur) === -1 && NON_SURNAMES.indexOf(sur) === -1) a.push(parts[parts.length - 1]);
     }
   }
   return a;
+}
+
+// Common adjectival/possessive tails that still refer to the same entity:
+// "Gandhian" -> Gandhi, "Ashokan" -> Ashoka, "Gandhiji" -> Gandhi, "Gandhi's" -> Gandhi.
+// Anything else after the alias (e.g. "GandhiNagar", "Chandigarh") is NOT a hit.
+var INFLEX = ['an', 'ian', 'vian', 'ean', 'in', 'ine', 'ite', 'ist', 'ese', 'ers', 'ans', 'ians', 'ites', 'ji', 's', "'s"];
+
+function buildAliasRe(aliases) {
+  var seen = {};
+  var alts = [];
+  for (var a of aliases) {
+    if (!a) continue;
+    var k = a.toLowerCase();
+    if (seen[k]) continue;
+    seen[k] = true;
+    alts.push(a);
+  }
+  if (!alts.length) return null;
+  alts.sort(function (x, y) { return y.length - x.length; });
+  return new RegExp('(^|[^a-z0-9])(' + alts.map(escapeRe).join('|') + ')([a-z]*)(?=[^a-z0-9]|$)', 'gi');
+}
+
+// Whole-word match with a short whitelist of inflections; resets lastIndex safely.
+function aliasHit(re, txt) {
+  if (!re) return false;
+  re.lastIndex = 0;
+  var m;
+  while ((m = re.exec(txt))) {
+    var alias = m[2];
+    var suffix = m[3].toLowerCase();
+    if (suffix === '' ) return true;
+    if (alias.length >= 4 && INFLEX.indexOf(suffix) !== -1) return true;
+  }
+  return false;
 }
 
 // Full-name aliases only (no bare surnames) — used for cross-entity links to avoid noise.
@@ -374,17 +493,39 @@ function main() {
       }
       var qs = byTopic[tname];
       var span = topicYears(tname, qs);
+      var timebase = null;
+      var eraId = null;
+      if (!span) {
+        // No dateable content. Prefer a proper home over a fake "2026":
+        // 1) news feeds keep their archive date, 2) historical topics land in
+        // their era band, 3) everything else is left genuinely undated.
+        if (NEWS_CATS.indexOf(key) !== -1) {
+          var ap = archiveYears(qs);
+          if (ap) { span = { min: ap.min, max: ap.max }; timebase = 'archive'; }
+        }
+        if (!span) {
+          eraId = eraForTopic(tname, key);
+          if (eraId) {
+            var eobj = ERAS.find(function (x) { return x.id === eraId; });
+            var mid = Math.round((eobj.min + eobj.max) / 2);
+            span = { min: mid, max: mid };
+            timebase = 'era';
+          } else {
+            timebase = 'undated';
+          }
+        }
+      }
       var node = {
         id: id,
         name: tname,
         type: typeOf(tname),
         span: span,
-        era: eraOf(span && span.min),
+        era: timebase === 'era' ? eraId : eraOf(span && span.min),
+        timebase: timebase,
         level: 4,
         cats: [{ key: key, label: c.label, count: qs.length }],
         count: qs.length
       };
-      if (span && span.archive) node.timebase = 'archive';
       seen[id] = node;
       nodes.push(node);
     }
@@ -397,11 +538,14 @@ function main() {
     for (var ename of g.list) {
       var isPerson = g.type === 'person';
       var aliases = aliasesFor(ename, isPerson).concat(EXTRA_ALIASES[ename] || []);
+      var alRe = buildAliasRe(aliases);
+      var negatives = (NEGATIVE_ALIASES[ename] || []).map(function (x) { return x.toLowerCase(); });
       var hitQs = [];
       var catMap = {};
       for (var it of all.all) {
         var txt = [it.q.question, it.q.answer, it.q.fact, it.q.hint].filter(Boolean).join(' ').toLowerCase();
-        if (aliases.some(function (a) { return a && txt.indexOf(a.toLowerCase()) !== -1; })) {
+        var negHit = negatives.length && negatives.some(function (x) { return txt.indexOf(x) !== -1; });
+        if (!negHit && aliasHit(alRe, txt)) {
           hitQs.push(it);
           catMap[it.cat] = catMap[it.cat] || 0;
           catMap[it.cat]++;
@@ -445,7 +589,7 @@ function main() {
       }
       if (!span && ys.length) {
         var fl = ys.filter(function (y) { return trusted[y] || y < 0 || y >= 1800; });
-        if (fl.length) span = { min: Math.min.apply(null, fl), max: Math.max.apply(null, fl) };
+        if (fl.length) span = robustSpan(fl);
       }
       if (!span) {
         var ap = archiveYears(hitQs);
@@ -475,7 +619,7 @@ function main() {
     for (var al of linkAliasesFor(sn.name)) aliasMap[al.toLowerCase()] = sn.id;
   }
   var aliasList = Object.keys(aliasMap).sort(function (x, y) { return y.length - x.length; });
-  var linkRe = new RegExp('(' + aliasList.map(escapeRe).join('|') + ')', 'g');
+  var linkRe = new RegExp('(^|[^a-z0-9])(' + aliasList.map(escapeRe).join('|') + ')([a-z]*)(?=[^a-z0-9]|$)', 'gi');
   var pairCount = {};
   for (var it2 of all.all) {
     var lt = [it2.q.question, it2.q.answer, it2.q.fact, it2.q.hint].filter(Boolean).join(' ').toLowerCase();
@@ -483,9 +627,15 @@ function main() {
     var m;
     linkRe.lastIndex = 0;
     while ((m = linkRe.exec(lt))) {
-      var id = aliasMap[m[1]];
-      if (id) found[id] = true;
-      if (m.index === linkRe.lastIndex) linkRe.lastIndex++;
+      var al = m[2].toLowerCase();
+      var suffix = m[3].toLowerCase();
+      if (suffix !== '' && (al.length < 4 || INFLEX.indexOf(suffix) === -1)) continue;
+      var id = aliasMap[al];
+      if (id) {
+        var negs = NEGATIVE_ALIASES[id.slice(5)] || [];
+        var negHit = negs.length && negs.some(function (x) { return lt.indexOf(x.toLowerCase()) !== -1; });
+        if (!negHit) found[id] = true;
+      }
     }
     var ids = Object.keys(found);
     if (ids.length >= 2 && ids.length <= 10) {

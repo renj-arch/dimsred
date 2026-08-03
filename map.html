@@ -44,6 +44,9 @@ h1{font-size:1.45em}
 .node .bar{height:8px;border-radius:6px;flex-shrink:0;min-width:4px}
 .node .nm{font-size:.74em;font-weight:600;overflow:hidden;text-overflow:ellipsis}
 .node .ct{font-size:.66em;color:var(--text-muted);flex-shrink:0}
+.undated{position:absolute;left:0;right:0;overflow:hidden;background:rgba(52,211,153,.04);border-bottom:1px dashed rgba(255,255,255,.1);padding:8px 12px}
+.undated-label{font-size:.64em;color:var(--emerald);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.undated-chips{display:flex;flex-wrap:wrap;gap:4px;max-height:96px;overflow:auto}
 .yticks{position:absolute;left:0;top:0;bottom:0;width:14px;z-index:0}
 .profile{position:fixed;top:0;right:0;bottom:0;width:min(460px,92vw);background:var(--card);border-left:1px solid var(--border);z-index:200;padding:24px;overflow:auto;transform:translateX(100%);transition:transform .2s}
 .profile.open{transform:translateX(0)}
@@ -97,7 +100,7 @@ h1{font-size:1.45em}
   </div>
 
   <div class="type-filter" id="typeFilter">
-    <span class="legend" style="margin:0"><span><span class="dot" style="background:var(--purple)"></span>Person</span><span><span class="dot" style="background:var(--amber)"></span>Event/Movement</span><span><span class="dot" style="background:var(--rose)"></span>Disease</span><span><span class="dot" style="background:var(--cyan)"></span>Scheme/Org</span><span><span class="dot" style="background:#71717a"></span>Topic</span><span>~ archive-anchored (no event year in data)</span></span>
+    <span class="legend" style="margin:0"><span><span class="dot" style="background:var(--purple)"></span>Person</span><span><span class="dot" style="background:var(--amber)"></span>Event/Movement</span><span><span class="dot" style="background:var(--rose)"></span>Disease</span><span><span class="dot" style="background:var(--cyan)"></span>Scheme/Org</span><span><span class="dot" style="background:#71717a"></span>Topic</span><span>~ era-inferred (no exact year)</span><span>undated = timeless/general</span></span>
     <span id="zoomInfo" style="font-size:.75em;color:var(--text-sec)"></span>
   </div>
 
@@ -175,19 +178,43 @@ function render() {
   var html = '';
   var count = 0;
   var range = WINDOW.end - WINDOW.start;
+  var searchActive = !!searchText;
+  var activeCat = catValue();
+
+  // Undated (timeless / no event year) topics — shown in a reserved strip at the
+  // top of the timeline instead of being faked onto the year axis.
+  var undated = [];
+  for (var u of NODES) {
+    if (u.timebase !== 'undated') continue;
+    if (activeCat && !(u.cats || []).some(function (c) { return c.key === activeCat; })) continue;
+    if (!TYPE_FILTERS[u.type]) continue;
+    if (searchActive && u.name.toLowerCase().indexOf(searchText) === -1) continue;
+    undated.push(u);
+  }
+  undated.sort(function (a, b) { return (b.count - a.count) || a.name.localeCompare(b.name); });
+  var TOP = 0;
+  if (undated.length) {
+    TOP = 136;
+    html += '<div class="undated" style="top:0;height:' + (TOP - 10) + 'px">'
+      + '<div class="undated-label">No date / timeless (' + undated.length + ')</div>'
+      + '<div class="undated-chips">'
+      + undated.slice(0, 120).map(function (u2) {
+        return '<button class="chip" onclick="openProfile(\'' + esc(u2.id).replace(/'/g, "\\'") + '\')">' + esc(u2.name) + ' <b>' + u2.count + '</b></button>';
+      }).join('')
+      + (undated.length > 120 ? '<span class="chip" style="cursor:default">+ ' + (undated.length - 120) + ' more</span>' : '')
+      + '</div></div>';
+  }
 
   // Era bands at true chronological positions
   for (var e of TL.eras) {
     if (e.max < WINDOW.start || e.min > WINDOW.end) continue;
-    var etop = (Math.max(e.min, WINDOW.start) - WINDOW.start) / range * BASE_H;
-    var ebot = (Math.min(e.max, WINDOW.end) - WINDOW.start) / range * BASE_H;
+    var etop = TOP + (Math.max(e.min, WINDOW.start) - WINDOW.start) / range * BASE_H;
+    var ebot = TOP + (Math.min(e.max, WINDOW.end) - WINDOW.start) / range * BASE_H;
     var eh = Math.max(1, ebot - etop);
     html += '<div class="era" style="top:' + etop + 'px;height:' + eh + 'px;background:rgba(167,139,250,.05)" onclick="focusEra(\'' + e.id + '\')"><span class="era-label">' + esc(e.label) + '</span></div>';
   }
 
   // Nodes
-  var searchActive = !!searchText;
-  var activeCat = catValue();
   var filtered = [];
   for (var n of NODES) {
     var levelOk = searchActive || activeCat || nodeLevel(n) <= th;
@@ -203,24 +230,34 @@ function render() {
   // Greedy anti-overlap: each node's top = max(true chronological position, bottom of its column).
   // Same-year topics stack as a readable two-column list instead of piling on top of each other.
   var cap = searchActive || activeCat ? 6000 : 2500;
-  var prevB = [0, 0];
+  var prevB = [TOP, TOP];
   for (var i = 0; i < filtered.length; i++) {
     if (count >= cap) break;
     var nd = filtered[i];
-    var desired = (nd.span.min - WINDOW.start) / range * BASE_H;
+    var desired = TOP + (nd.span.min - WINDOW.start) / range * BASE_H;
     var col = prevB[0] <= prevB[1] ? 0 : 1;
     var y = Math.max(desired, prevB[col]);
     var color = TYPE_COLOR[nd.type] || '#71717a';
-    var spanLabel = fmtYear(nd.span.min) + (nd.span.max > nd.span.min ? '–' + fmtYear(nd.span.max) : '');
     var isArch = nd.timebase === 'archive';
+    var isEra = nd.timebase === 'era';
+    var spanLabel;
+    if (isEra) {
+      var eo = TL.eras.find(function (x) { return x.id === nd.era; });
+      spanLabel = (eo ? eo.label : nd.era) + ' (~)';
+    } else {
+      spanLabel = fmtYear(nd.span.min) + (nd.span.max > nd.span.min ? '–' + fmtYear(nd.span.max) : '');
+    }
+    var tip = isArch
+      ? ' title="Anchored to archive year — no event year found in the data"'
+      : (isEra ? ' title="Era inferred — no exact event year found in the data"' : '');
     var horiz = col === 0
       ? 'left:14px;width:calc(50% - 18px)'
       : 'left:calc(50% + 4px);width:calc(50% - 18px)';
     html += '<div class="node" style="top:' + y + 'px;height:' + NODE_H + 'px;' + horiz + ';border-left:2px solid ' + color + '"'
-      + (isArch ? ' title="Anchored to archive year — no event year found in the data"' : '')
+      + tip
       + ' onclick="openProfile(\'' + esc(nd.id).replace(/'/g, "\\'") + '\')">'
       + '<span class="nm" style="color:' + color + '">' + esc(nd.name) + '</span>'
-      + '<span class="ct">' + spanLabel + (nd.count ? ' · ' + nd.count + ' q' : '') + (isArch ? ' · ~' : '') + '</span></div>';
+      + '<span class="ct">' + spanLabel + (nd.count ? ' · ' + nd.count + ' q' : '') + (isArch || isEra ? ' · ~' : '') + '</span></div>';
     prevB[col] = y + NODE_H + 2;
     count++;
   }
@@ -231,7 +268,7 @@ function render() {
     html += '<div class="loading" style="margin:20px 14px">No ' + esc(_catByKey[activeCat] || activeCat) + ' topics in this window — zoom out or scroll.</div>';
   }
 
-  canvas.style.height = Math.max(BASE_H, Math.max(prevB[0], prevB[1]) + 8) + 'px';
+  canvas.style.height = Math.max(TOP + BASE_H, Math.max(prevB[0], prevB[1]) + 8) + 'px';
   canvas.innerHTML = html;
 
   var zi = document.getElementById('zoomInfo');
@@ -340,7 +377,16 @@ function openProfile(id) {
   if (!n) return;
   var p = document.getElementById('pbody');
   var color = TYPE_COLOR[n.type] || '#71717a';
-  var spanLabel = n.span ? (fmtYear(n.span.min) + (n.span.max > n.span.min ? ' – ' + fmtYear(n.span.max) : '')) : 'timeless';
+  var spanLabel;
+  if (n.timebase === 'era') {
+    var eo = TL.eras.find(function (x) { return x.id === n.era; });
+    spanLabel = (eo ? eo.label : n.era) + ' — era inferred (no exact year)';
+  } else if (n.timebase === 'undated' || !n.span) {
+    spanLabel = 'Timeless — no event year';
+  } else {
+    spanLabel = fmtYear(n.span.min) + (n.span.max > n.span.min ? ' – ' + fmtYear(n.span.max) : '');
+    if (n.timebase === 'archive') spanLabel += ' (archive-anchored)';
+  }
   var cats = n.cats || [];
   p.innerHTML = '<div class="p-title" style="color:' + color + '">' + esc(n.name) + '</div>'
     + '<div class="p-span">' + spanLabel + '</div>'
