@@ -174,6 +174,16 @@
     });
   }
 
+  function googleLogin() {
+    if (!configured() || !_client) return;
+    _client.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + window.location.pathname }
+    }).catch(function (err) {
+      showMsg(esc((err && err.message) || 'Google sign-in failed.'));
+    });
+  }
+
   function logout() {
     flushSync();
     return _client.auth.signOut().then(function () {
@@ -231,6 +241,10 @@
       body.innerHTML = ''
         + '<div style="text-align:center;font-weight:800;font-size:1em;margin-bottom:4px">Login to track progress</div>'
         + '<div style="text-align:center;font-size:.72em;color:var(--text-muted,#52525b);margin-bottom:14px">Questions you answer or view are counted per account.</div>'
+        + '<button class="pt-google" onclick="ProgressTracker.googleLogin()">'
+        + '<svg viewBox="0 0 48 48" width="18" height="18" style="flex-shrink:0"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>'
+        + '<span>Continue with Google</span></button>'
+        + '<div style="text-align:center;font-size:.72em;color:var(--text-muted,#52525b);margin:12px 0">or use email</div>'
         + '<div class="pt-tabs" style="display:flex;gap:4px;padding:3px;border-radius:100px;background:rgba(255,255,255,.05);margin-bottom:14px">'
         + '<button class="pt-tab pt-tab-login" style="flex:1" onclick="setProgressTab(\'login\')">Login</button>'
         + '<button class="pt-tab" onclick="setProgressTab(\'signup\')">Sign up</button>'
@@ -317,7 +331,7 @@
 
     var style = document.createElement('style');
     style.id = 'ptStyle';
-    style.textContent = '#progressModal input{width:100%;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#fafafa;font-size:.85em;font-family:inherit;margin-bottom:8px;outline:none}#progressModal input:focus{border-color:var(--purple,#a78bfa)}.pt-btn{padding:11px;border-radius:100px;border:none;cursor:pointer;font-size:.85em;font-weight:700;background:linear-gradient(135deg,#a78bfa,#34d399);color:#fff}.pt-tab{padding:7px;border-radius:100px;border:none;background:transparent;color:#a1a1aa;font-size:.78em;font-weight:600;cursor:pointer}';
+    style.textContent = '#progressModal input{width:100%;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#fafafa;font-size:.85em;font-family:inherit;margin-bottom:8px;outline:none}#progressModal input:focus{border-color:var(--purple,#a78bfa)}.pt-btn{padding:11px;border-radius:100px;border:none;cursor:pointer;font-size:.85em;font-weight:700;background:linear-gradient(135deg,#a78bfa,#34d399);color:#fff}#progressModal .pt-google{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border-radius:100px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fafafa;font-size:.85em;font-weight:600;cursor:pointer;margin-bottom:4px}#progressModal .pt-google:hover{background:rgba(255,255,255,.1)}.pt-tab{padding:7px;border-radius:100px;border:none;background:transparent;color:#a1a1aa;font-size:.78em;font-weight:600;cursor:pointer}';
     document.head.appendChild(style);
     _uiReady = true;
     render();
@@ -361,6 +375,7 @@
     getStats: getStats,
     login: login,
     signup: signup,
+    googleLogin: googleLogin,
     logout: logout,
     onUpdate: function (cb) { _onUpdate.push(cb); },
     isConfigured: configured
