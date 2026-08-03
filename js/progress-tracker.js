@@ -2,7 +2,6 @@
   var SUPABASE_URL = 'https://krvlufonfbcabgcjomvs.supabase.co';
   var SUPABASE_ANON_KEY = 'sb_publishable_jQqqojpcRKwI3boRYfmBYg_-Kem7UyW';
   var SUPABASE_CDN = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-  var REMEMBER_KEY = 'vlym_remember_email';
 
   var _client = null;
   var _user = null;
@@ -45,17 +44,6 @@
 
   function saveStore() {
     try { localStorage.setItem(_storeKey, JSON.stringify(_store)); } catch (e) {}
-  }
-
-  function rememberedEmail() {
-    try { return localStorage.getItem(REMEMBER_KEY) || ''; } catch (e) { return ''; }
-  }
-
-  function saveRememberedEmail(email) {
-    try {
-      if (email) localStorage.setItem(REMEMBER_KEY, email);
-      else localStorage.removeItem(REMEMBER_KEY);
-    } catch (e) {}
   }
 
   function countRecords(src) {
@@ -237,9 +225,8 @@
         + '</div>'
         + '<div class="pt-fields">'
         + '<input id="pt-name" type="text" placeholder="Name (for signup)" style="display:none">'
-        + '<input id="pt-email" type="email" placeholder="Email" value="' + esc(rememberedEmail()) + '">'
+        + '<input id="pt-email" type="email" placeholder="Email">'
         + '<input id="pt-pass" type="password" placeholder="Password">'
-        + '<label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted,#52525b);margin:2px 0 10px;cursor:pointer"><input id="pt-remember" type="checkbox" style="width:auto;margin:0;cursor:pointer"> Remember my email on this device</label>'
         + '</div>'
         + '<div class="pt-msg" style="display:none;font-size:.75em;text-align:center;margin:8px 0;padding:8px;border-radius:8px;background:rgba(245,158,11,.08);color:var(--amber,#f59e0b)"></div>'
         + '<button class="pt-btn pt-submit" style="width:100%" onclick="submitProgressAuth()">Login</button>';
@@ -278,12 +265,7 @@
     var p = isLogin ? login(email, pass) : signup(email, pass, name);
     p.then(function (res) {
       if (res.confirm) { showMsg('Account created! Check your email to confirm, then log in.'); }
-      else {
-        var remember = _modal.querySelector('#pt-remember');
-        if (remember && remember.checked) saveRememberedEmail(email);
-        else if (remember) saveRememberedEmail('');
-        closeModal();
-      }
+      else closeModal();
     }).catch(function (err) {
       showMsg(esc((err && err.message) || 'Something went wrong.'));
     }).finally(function () {
