@@ -368,7 +368,7 @@ function main() {
     for (var tname of Object.keys(byTopic)) {
       var id = key + '|' + tname;
       if (seen[id]) {
-        seen[id].cats.push({ key: key, label: c.label });
+        seen[id].cats.push({ key: key, label: c.label, count: byTopic[tname].length });
         seen[id].count += byTopic[tname].length;
         continue;
       }
@@ -381,7 +381,7 @@ function main() {
         span: span,
         era: eraOf(span && span.min),
         level: 4,
-        cats: [{ key: key, label: c.label }],
+        cats: [{ key: key, label: c.label, count: qs.length }],
         count: qs.length
       };
       if (span && span.archive) node.timebase = 'archive';
@@ -458,9 +458,10 @@ function main() {
         level: g.level,
         span: span,
         era: eraOf(span && span.min),
-        cats: Object.keys(catMap).map(function (k) { return { key: k, label: all.cats[k] ? all.cats[k].label : k }; }),
+        cats: Object.keys(catMap).map(function (k) { return { key: k, label: all.cats[k] ? all.cats[k].label : k, count: catMap[k] }; }),
         count: hitQs.length,
-        seed: true
+        seed: true,
+        aliases: aliases
       };
       if (span && span.archive) node.timebase = 'archive';
       nodes.push(node);

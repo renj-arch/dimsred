@@ -351,7 +351,11 @@ function openProfile(id) {
     + '<div class="p-sec">Story</div><div class="story" id="p-story"></div>'
     + '<div class="p-sec">Drill down</div>'
     + '<div class="qlist" id="p-ql" style="display:none"></div>'
-    + cats.map(function (c) { return '<div class="cat-row" onclick="loadProfileCat(\'' + esc(c.key).replace(/'/g, "\\'") + '\',\'' + esc(c.label).replace(/'/g, "\\'") + '\',this)"><span class="n">' + esc(c.label) + '</span></div>'; }).join('');
+    + cats.map(function (c) {
+      return c.count == null || c.count > 0
+        ? '<div class="cat-row" onclick="loadProfileCat(\'' + esc(c.key).replace(/'/g, "\\'") + '\',\'' + esc(c.label).replace(/'/g, "\\'") + '\',this)"><span class="n">' + esc(c.label) + '</span> <span class="c">' + (c.count || 0) + '</span></div>'
+        : '';
+    }).join('');
   document.getElementById('profile').classList.add('open');
   _profileNode = n;
   renderProfileExtras(n);
@@ -395,15 +399,19 @@ function loadProfileCat(catKey, catLabel, el) {
   var ql = document.getElementById('p-ql');
   ql.style.display = 'flex';
   ql.innerHTML = '<div class="loading">Loading…</div>';
-  var aliases = aliasesForNode(n);
-  var re = aliasRe(aliases);
   loadCategory(catKey, function (catData) {
     var qs = [];
-    for (var q of catData.questions) {
-      var sub = (q.subSubject || q._topic || '').trim();
-      if (sub === n.name) { qs.push(q); continue; }   // exact topic bucket (source of the node count)
-      var text = [q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' ');
-      if (re.test(text)) qs.push(q);
+    if (!n.seed) {
+      // Topic nodes: exact subSubject bucket — the true source of the node count.
+      for (var q of catData.questions) {
+        if ((q.subSubject || q._topic || '') === n.name) qs.push(q);
+      }
+    } else {
+      var re = aliasRe(aliasesForNode(n));
+      for (var q2 of catData.questions) {
+        var text = [q2.question, q2.answer, q2.fact, q2.hint].filter(Boolean).join(' ');
+        if (re.test(text)) qs.push(q2);
+      }
     }
     ql.innerHTML = '<div class="loading" style="font-weight:700">' + catLabel + ' — ' + qs.length + ' questions</div>';
     appendQuestions(ql, qs);
@@ -411,6 +419,7 @@ function loadProfileCat(catKey, catLabel, el) {
 }
 
 function aliasesForNode(n) {
+  if (n.aliases && n.aliases.length) return n.aliases;   // exact set used at build time
   var a = [n.name];
   var parts = n.name.split(/[\s,]+/).filter(function (p) { return p; });
   if (parts.length >= 2) a.push(parts.join(' '));
