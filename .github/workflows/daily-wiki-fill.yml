@@ -276,6 +276,11 @@ jobs:
 
       - run: cp -f data/archive.html archive.html 2>/dev/null || true
 
+      - name: Rebuild timeline map from question data
+        continue-on-error: true
+        run: |
+          node scripts/build-timeline.js || echo "timeline rebuild skipped/failed — questions still committed"
+
       - run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
