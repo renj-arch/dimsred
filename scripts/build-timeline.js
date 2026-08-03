@@ -204,6 +204,16 @@ function bioSpan(text) {
   return null;
 }
 
+function archiveYears(qs) {
+  var py = [];
+  for (var q of qs) {
+    var d = q.pubDate ? new Date(q.pubDate).getUTCFullYear() : null;
+    if (d && d >= 1000 && d <= 2026) py.push(d);
+  }
+  if (!py.length) return null;
+  return { min: Math.min.apply(null, py), max: Math.max.apply(null, py) };
+}
+
 function topicYears(name, qs) {
   var ny = yearsFrom(name);
   var ys = [];
@@ -215,7 +225,11 @@ function topicYears(name, qs) {
   // (4-digit numbers like ₹1000) unless the topic is genuinely ancient.
   var fl = ys.filter(function (y) { return ny || y >= 1800; });
   if (ny) { fl.push(ny.min); fl.push(ny.max); }
-  if (!fl.length) return null;
+  if (!fl.length) {
+    // No event-year signal: anchor to the years these questions entered the archive.
+    var ap = archiveYears(qs);
+    return ap ? { min: ap.min, max: ap.max, archive: true } : null;
+  }
   return { min: Math.min.apply(null, fl), max: Math.max.apply(null, fl) };
 }
 
@@ -305,6 +319,7 @@ function main() {
         cats: [{ key: key, label: c.label }],
         count: qs.length
       };
+      if (span && span.archive) node.timebase = 'archive';
       seen[id] = node;
       nodes.push(node);
     }
@@ -363,6 +378,10 @@ function main() {
         var fl = ys.filter(function (y) { return y >= 1800; });
         if (fl.length) span = { min: Math.min.apply(null, fl), max: Math.max.apply(null, fl) };
       }
+      if (!span) {
+        var ap = archiveYears(hitQs);
+        if (ap) span = { min: ap.min, max: ap.max, archive: true };
+      }
       var node = {
         id: 'seed|' + ename,
         name: ename,
@@ -374,6 +393,7 @@ function main() {
         count: hitQs.length,
         seed: true
       };
+      if (span && span.archive) node.timebase = 'archive';
       nodes.push(node);
       seedNodes.push(node);
     }

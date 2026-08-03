@@ -39,7 +39,7 @@ h1{font-size:1.45em}
 .tl-now{position:sticky;bottom:0;z-index:3;background:rgba(9,9,11,.9);border-top:1px solid var(--border);font-size:.75em;color:var(--emerald);font-weight:700;padding:8px 14px}
 .era{position:absolute;left:0;right:0;border-top:1px dashed rgba(255,255,255,.06);cursor:pointer}
 .era-label{position:sticky;left:14px;display:inline-block;font-size:.7em;color:var(--text-muted);font-weight:700;padding:2px 0}
-.node{position:absolute;left:14px;right:14px;display:flex;align-items:center;gap:8px;cursor:pointer;border-radius:6px;padding:2px 8px;white-space:nowrap;overflow:hidden}
+.node{position:absolute;left:14px;right:14px;display:flex;align-items:center;gap:8px;cursor:pointer;border-radius:6px;padding:2px 8px;white-space:nowrap;overflow:hidden;content-visibility:auto;contain-intrinsic-size:20px 20px}
 .node:hover{background:rgba(255,255,255,.06)}
 .node .bar{height:8px;border-radius:6px;flex-shrink:0;min-width:4px}
 .node .nm{font-size:.74em;font-weight:600;overflow:hidden;text-overflow:ellipsis}
@@ -98,7 +98,7 @@ h1{font-size:1.45em}
   </div>
 
   <div class="type-filter" id="typeFilter">
-    <span class="legend" style="margin:0"><span><span class="dot" style="background:var(--purple)"></span>Person</span><span><span class="dot" style="background:var(--amber)"></span>Event/Movement</span><span><span class="dot" style="background:var(--rose)"></span>Disease</span><span><span class="dot" style="background:var(--cyan)"></span>Scheme/Org</span><span><span class="dot" style="background:#71717a"></span>Topic</span></span>
+    <span class="legend" style="margin:0"><span><span class="dot" style="background:var(--purple)"></span>Person</span><span><span class="dot" style="background:var(--amber)"></span>Event/Movement</span><span><span class="dot" style="background:var(--rose)"></span>Disease</span><span><span class="dot" style="background:var(--cyan)"></span>Scheme/Org</span><span><span class="dot" style="background:#71717a"></span>Topic</span><span>~ archive-anchored (no event year in data)</span></span>
     <span id="zoomInfo" style="font-size:.75em;color:var(--text-sec)"></span>
   </div>
 
@@ -160,18 +160,23 @@ function yToPx(y) {
   return ((y - WINDOW.start) / (WINDOW.end - WINDOW.start)) * 100;
 }
 
+var BASE_H = 2400;   // time-axis height in px (1 year ≈ 2.3px at full history)
+var NODE_H = 16;     // single row height for a node
+
 function render() {
   var canvas = document.getElementById('canvas');
   var th = detailThreshold();
   var html = '';
   var count = 0;
+  var range = WINDOW.end - WINDOW.start;
 
-  // Era bands
+  // Era bands at true chronological positions
   for (var e of TL.eras) {
     if (e.max < WINDOW.start || e.min > WINDOW.end) continue;
-    var top = yToPx(Math.max(e.min, WINDOW.start));
-    var h = Math.max(1, yToPx(Math.min(e.max, WINDOW.end)) - top);
-    html += '<div class="era" style="top:' + top + '%;height:' + h + '%;background:rgba(167,139,250,.05)" onclick="focusEra(\'' + e.id + '\')"><span class="era-label">' + esc(e.label) + '</span></div>';
+    var etop = (Math.max(e.min, WINDOW.start) - WINDOW.start) / range * BASE_H;
+    var ebot = (Math.min(e.max, WINDOW.end) - WINDOW.start) / range * BASE_H;
+    var eh = Math.max(1, ebot - etop);
+    html += '<div class="era" style="top:' + etop + 'px;height:' + eh + 'px;background:rgba(167,139,250,.05)" onclick="focusEra(\'' + e.id + '\')"><span class="era-label">' + esc(e.label) + '</span></div>';
   }
 
   // Nodes
@@ -187,20 +192,30 @@ function render() {
     if (searchActive && n.name.toLowerCase().indexOf(searchText) === -1) continue;
     filtered.push(n);
   }
-  filtered.sort(function (a, b) { return (a.span.min - b.span.min) || (a.span.max - b.span.max); });
+  filtered.sort(function (a, b) { return (a.span.min - b.span.min) || (a.span.max - b.span.max) || (b.count - a.count); });
 
-  var cap = 1400;
+  // Greedy anti-overlap: each node's top = max(true chronological position, bottom of its column).
+  // Same-year topics stack as a readable two-column list instead of piling on top of each other.
+  var cap = searchActive || activeCat ? 6000 : 2500;
+  var prevB = [0, 0];
   for (var i = 0; i < filtered.length; i++) {
     if (count >= cap) break;
     var nd = filtered[i];
-    var top = yToPx(nd.span.min);
-    var bot = yToPx(nd.span.max);
-    var hpx = Math.max(1, (bot - top) / 100 * 900);
+    var desired = (nd.span.min - WINDOW.start) / range * BASE_H;
+    var col = prevB[0] <= prevB[1] ? 0 : 1;
+    var y = Math.max(desired, prevB[col]);
     var color = TYPE_COLOR[nd.type] || '#71717a';
     var spanLabel = nd.span.min + (nd.span.max > nd.span.min ? '–' + nd.span.max : '');
-    html += '<div class="node" style="top:' + top + '%;height:' + Math.max(14, hpx) + 'px;border-left:2px solid ' + color + '" onclick="openProfile(\'' + esc(nd.id).replace(/'/g, "\\'") + '\')">'
+    var isArch = nd.timebase === 'archive';
+    var horiz = col === 0
+      ? 'left:14px;width:calc(50% - 18px)'
+      : 'left:calc(50% + 4px);width:calc(50% - 18px)';
+    html += '<div class="node" style="top:' + y + 'px;height:' + NODE_H + 'px;' + horiz + ';border-left:2px solid ' + color + '"'
+      + (isArch ? ' title="Anchored to archive year — no event year found in the data"' : '')
+      + ' onclick="openProfile(\'' + esc(nd.id).replace(/'/g, "\\'") + '\')">'
       + '<span class="nm" style="color:' + color + '">' + esc(nd.name) + '</span>'
-      + '<span class="ct">' + spanLabel + (nd.count ? ' · ' + nd.count + ' q' : '') + '</span></div>';
+      + '<span class="ct">' + spanLabel + (nd.count ? ' · ' + nd.count + ' q' : '') + (isArch ? ' · ~' : '') + '</span></div>';
+    prevB[col] = y + NODE_H + 2;
     count++;
   }
 
@@ -209,6 +224,8 @@ function render() {
   } else if (count === 0 && filtered.length === 0 && activeCat) {
     html += '<div class="loading" style="margin:20px 14px">No ' + esc(_catByKey[activeCat] || activeCat) + ' topics in this window — zoom out or scroll.</div>';
   }
+
+  canvas.style.height = Math.max(BASE_H, Math.max(prevB[0], prevB[1]) + 8) + 'px';
   canvas.innerHTML = html;
 
   var zi = document.getElementById('zoomInfo');
