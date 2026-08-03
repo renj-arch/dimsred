@@ -14,35 +14,49 @@ var OUT = path.join(__dirname, '..', 'data', 'timeline.json');
 // - "AD 200" / "320 AD"    -> positive year
 // - "3rd century BC"       -> range [-300, -201]
 // - bare "1857"            -> positive year (trusted only by caller rules)
+// - "1950s" / "1960s"      -> the decade's starting year (e.g. 1950)
+// - bare "5th century"     -> AD range 400–499 (no BC/AD suffix means AD)
 function yearSignals(text) {
   var t = String(text || '');
   // Normalize era-before-number ("AD 200", "BC 300") into number-before-era.
   t = t.replace(/\b(BC|BCE|AD|CE)\s*(\d{1,4})\b/gi, function (mm, era, num) { return num + ' ' + era; });
-  var re = /\b(\d{1,4})\s*(st|nd|rd|th)\s+centur(?:y|ies)\s+(BC|BCE|AD|CE)\b|\b(\d{1,4})\s*(BC|BCE|AD|CE)\b|\b(1[0-9]{3}|20[0-2][0-9])\b/gi;
   var points = [];
   var trusted = {};
-  var m;
-  while ((m = re.exec(t))) {
-    if (m[1] !== undefined && m[3] !== undefined) {          // "3rd century BC"
-      var n = +m[1];
-      var isBC = /^BC/i.test(m[3]);
-      var lo, hi;
-      if (isBC) { lo = -n * 100; hi = -(n * 100 - 99); }
-      else { lo = (n - 1) * 100; hi = n * 100 - 1; }
-      if (lo > 2026) continue;
-      points.push(lo, hi);
-      trusted[lo] = trusted[hi] = true;
-    } else if (m[4] !== undefined && m[5] !== undefined) {   // "2500 BCE" / "320 AD"
-      var y = +m[4];
-      y = /^BC/i.test(m[5]) ? -y : y;
-      if (y < -10000 || y > 2026) continue;
-      points.push(y);
-      trusted[y] = true;
-    } else if (m[6] !== undefined) {                          // bare "1857"
-      var y2 = +m[6];
-      if (y2 <= 2026) points.push(y2);
-    }
+  function add(y, trust) {
+    if (y < -10000 || y > 2026) return;
+    points.push(y);
+    if (trust) trusted[y] = true;
   }
+  var m;
+  // "3rd century BC" / "3rd century AD" — an explicit era suffix.
+  var re1 = /\b(\d{1,4})\s*(st|nd|rd|th)\s+centur(?:y|ies)\s+(BC|BCE|AD|CE)\b/gi;
+  while ((m = re1.exec(t))) {
+    var n = +m[1], isBC = /^BC/i.test(m[3]);
+    var lo, hi;
+    if (isBC) { lo = -n * 100; hi = -(n * 100 - 99); }
+    else { lo = (n - 1) * 100; hi = Math.min(n * 100 - 1, 2026); }
+    if (lo > 2026) continue;
+    add(lo, true); add(hi, true);
+  }
+  // "2500 BCE" / "320 AD" — an explicit year + era.
+  var re2 = /\b(\d{1,4})\s*(BC|BCE|AD|CE)\b/gi;
+  while ((m = re2.exec(t))) {
+    var y2 = +m[1];
+    add(/^BC/i.test(m[2]) ? -y2 : y2, true);
+  }
+  // Bare century with no era suffix ("5th century") — implied AD.
+  var re3 = /\b(\d{1,2})\s*(st|nd|rd|th)\s+centur(?:y|ies)\b(?!\s*(BC|BCE|AD|CE))/gi;
+  while ((m = re3.exec(t))) {
+    var lo3 = (m[1] - 1) * 100, hi3 = Math.min(m[1] * 100 - 1, 2026);
+    if (lo3 > 2026) continue;
+    add(lo3, true); add(hi3, true);
+  }
+  // Decade ("1950s", "in the 1990s") — take the starting year.
+  var re4 = /\b(1[0-9]{3}|20[0-2][0-9])s\b/gi;
+  while ((m = re4.exec(t))) { add(+m[1], true); }
+  // Bare year "1857".
+  var re5 = /\b(1[0-9]{3}|20[0-2][0-9])\b/gi;
+  while ((m = re5.exec(t))) { add(+m[1]); }
   if (!points.length) return null;
   return { min: Math.min.apply(null, points), max: Math.max.apply(null, points), trusted: trusted };
 }
@@ -716,6 +730,112 @@ function main() {
   }
   links.sort(function (x, y) { return y.w - x.w; });
 
+  var MANUAL_LINKS = [
+    ['seed|Mahatma Gandhi', 'seed|Indian independence movement', 5],
+    ['seed|Mahatma Gandhi', 'seed|Indian National Congress', 4],
+    ['seed|Mahatma Gandhi', 'seed|Non-cooperation movement', 4],
+    ['seed|Mahatma Gandhi', 'seed|Civil disobedience movement', 4],
+    ['seed|Mahatma Gandhi', 'seed|Salt march', 3],
+    ['seed|Mahatma Gandhi', 'seed|Dandi March', 3],
+    ['seed|Mahatma Gandhi', 'seed|Champaran Satyagraha', 3],
+    ['seed|Mahatma Gandhi', 'seed|Quit India movement', 3],
+    ['seed|Mahatma Gandhi', 'seed|Jawaharlal Nehru', 3],
+    ['seed|Mahatma Gandhi', 'seed|B. R. Ambedkar', 3],
+    ['seed|Mahatma Gandhi', 'seed|Rabindranath Tagore', 3],
+    ['seed|Mahatma Gandhi', 'seed|Gopal Krishna Gokhale', 3],
+    ['seed|Mahatma Gandhi', 'seed|Sardar Vallabhbhai Patel', 2],
+    ['seed|Mahatma Gandhi', 'seed|C. Rajagopalachari', 2],
+    ['seed|Mahatma Gandhi', 'seed|Jallianwala Bagh massacre', 2],
+    ['seed|Indian National Congress', 'seed|Quit India movement', 3],
+    ['seed|Indian National Congress', 'seed|Jawaharlal Nehru', 3],
+    ['seed|Indian National Congress', 'seed|Indira Gandhi', 3],
+    ['seed|Indian National Congress', 'seed|Partition of India', 2],
+    ['seed|Indian National Congress', 'seed|Swadeshi movement', 2],
+    ['seed|Indian National Congress', 'seed|Sarojini Naidu', 2],
+    ['seed|Indian National Congress', 'seed|Annie Besant', 2],
+    ['seed|Indian National Congress', 'seed|C. Rajagopalachari', 2],
+    ['seed|Jawaharlal Nehru', 'seed|Five-Year Plans (India)', 3],
+    ['seed|Jawaharlal Nehru', 'seed|Bangladesh Liberation War', 2],
+    ['seed|Indira Gandhi', 'seed|Bangladesh Liberation War', 3],
+    ['seed|Indira Gandhi', 'seed|Bank nationalisation in India', 3],
+    ['seed|Indira Gandhi', 'seed|Pokhran-II', 2],
+    ['seed|Subhas Chandra Bose', 'seed|Indian independence movement', 3],
+    ['seed|Subhas Chandra Bose', 'seed|Quit India movement', 2],
+    ['seed|B. R. Ambedkar', 'seed|Constituent Assembly of India', 3],
+    ['seed|B. R. Ambedkar', 'seed|Partition of India', 2],
+    ['seed|Sardar Vallabhbhai Patel', 'seed|Partition of India', 3],
+    ['seed|Sardar Vallabhbhai Patel', 'seed|Constituent Assembly of India', 2],
+    ['seed|Bhagat Singh', 'seed|Indian independence movement', 3],
+    ['seed|Bhagat Singh', 'seed|Jallianwala Bagh massacre', 2],
+    ['seed|Mohammad Ali Jinnah', 'seed|Partition of India', 3],
+    ['seed|Mohammad Ali Jinnah', 'seed|Indian National Congress', 2],
+    ['seed|Bal Gangadhar Tilak', 'seed|Swadeshi movement', 3],
+    ['seed|Bal Gangadhar Tilak', 'seed|Indian National Congress', 2],
+    ['seed|Lala Lajpat Rai', 'seed|Simon Commission', 3],
+    ['seed|Mangal Pandey', 'seed|Revolt of 1857', 3],
+    ['seed|Mangal Pandey', 'seed|Sepoy Mutiny', 3],
+    ['seed|Rani Lakshmibai', 'seed|Revolt of 1857', 3],
+    ['seed|Rani Lakshmibai', 'seed|Sepoy Mutiny', 2],
+    ['seed|Rani Lakshmibai', 'seed|Indian independence movement', 2],
+    ['seed|Khilafat movement', 'seed|Non-cooperation movement', 3],
+    ['seed|Chandragupta Maurya', 'seed|Maurya Empire', 3],
+    ['seed|Chanakya', 'seed|Chandragupta Maurya', 3],
+    ['seed|Chanakya', 'seed|Maurya Empire', 2],
+    ['seed|Ashoka', 'seed|Maurya Empire', 3],
+    ['seed|Ashoka', 'seed|Kalinga War', 3],
+    ['seed|Vedic period', 'seed|Maurya Empire', 2],
+    ['seed|Samudragupta', 'seed|Gupta Empire', 3],
+    ['seed|Gupta Empire', 'seed|Kushan Empire', 2],
+    ['seed|Gupta Empire', 'seed|Chola Empire', 2],
+    ['seed|Delhi Sultanate', 'seed|Vijayanagara Empire', 2],
+    ['seed|Delhi Sultanate', 'seed|First Battle of Panipat', 3],
+    ['seed|Mughal Empire', 'seed|Second Battle of Panipat', 3],
+    ['seed|Mughal Empire', 'seed|Maratha Empire', 3],
+    ['seed|Mughal Empire', 'seed|Battle of Plassey', 2],
+    ['seed|Maratha Empire', 'seed|Third Battle of Panipat', 3],
+    ['seed|Battle of Plassey', 'seed|Battle of Buxar', 3],
+    ['seed|Anglo-Mysore Wars', 'seed|Anglo-Maratha Wars', 2],
+    ['seed|First Anglo-Sikh War', 'seed|Second Anglo-Sikh War', 3],
+    ['seed|Battle of Plassey', 'seed|Anglo-Mysore Wars', 2],
+    ['seed|Sino-Indian War', 'seed|Indo-Pakistani War of 1965', 2],
+    ['seed|Indo-Pakistani War of 1965', 'seed|Bangladesh Liberation War', 2],
+    ['seed|Kargil War', 'seed|Sino-Indian War', 2],
+    ['seed|Green Revolution', 'seed|Five-Year Plans (India)', 2],
+    ['seed|Operation Flood', 'seed|Green Revolution', 2],
+    ['seed|Economic liberalisation in India', 'seed|Demonetisation in India', 2],
+    ['seed|Goods and Services Tax (India)', 'seed|Economic liberalisation in India', 2],
+    ['seed|Reserve Bank of India', 'seed|Bank nationalisation in India', 2],
+    ['seed|Chandrayaan-1', 'seed|Indian Space Research Organisation', 3],
+    ['seed|Chandrayaan-1', 'seed|Chandrayaan-3', 3],
+    ['seed|Mangalyaan', 'seed|Indian Space Research Organisation', 3],
+    ['seed|Pokhran-II', 'seed|Nuclear tests of India', 3],
+    ['seed|Polio', 'seed|Smallpox', 2],
+    ['seed|Olympic Games', 'seed|Neeraj Chopra', 3],
+    ['seed|Olympic Games', 'seed|Abhinav Bindra', 3],
+    ['seed|Olympic Games', 'seed|Mary Kom', 2],
+    ['seed|Olympic Games', 'seed|Saina Nehwal', 2],
+    ['seed|Olympic Games', 'seed|Asian Games', 2],
+    ['seed|Olympic Games', 'seed|Khelo India', 2],
+    ['seed|Cricket World Cup', 'seed|T20 World Cup', 3],
+    ['seed|Cricket World Cup', 'seed|Kapil Dev', 3],
+    ['seed|Cricket World Cup', 'seed|Sachin Tendulkar', 3],
+    ['seed|T20 World Cup', 'seed|Sachin Tendulkar', 2],
+    ['seed|Milkha Singh', 'seed|P. T. Usha', 2]
+  ];
+  var linkMap = {};
+  for (var li of links) linkMap[li.a + '\u0000' + li.b] = li.w;
+  var addedManual = 0;
+  for (var ml of MANUAL_LINKS) {
+    var mk = ml[0] + '\u0000' + ml[1];
+    var prev = linkMap[mk] || 0;
+    if (ml[2] > prev) { linkMap[mk] = ml[2]; if (!prev) addedManual++; }
+  }
+  links = Object.keys(linkMap).map(function (k) {
+    var sp = k.split('\u0000');
+    return { a: sp[0], b: sp[1], w: linkMap[k] };
+  });
+  links.sort(function (x, y) { return y.w - x.w; });
+
   var out = { builtAt: new Date().toISOString(), eras: ERAS, nodes: nodes, links: links };
   fs.writeFileSync(OUT, JSON.stringify(out));
   var withSpan = nodes.filter(function (n) { return n.span; }).length;
@@ -725,7 +845,7 @@ function main() {
   var seedTypeCounts = {};
   for (var gk of Object.keys(SEED)) { totalSeeds += SEED[gk].list.length; seedTypeCounts[SEED[gk].type] = (seedTypeCounts[SEED[gk].type] || 0) + SEED[gk].list.length; }
   console.log('seed entities: ' + totalSeeds + ' across ' + JSON.stringify(seedTypeCounts));
-  console.log('links: ' + links.length + ' (top: ' + links.slice(0, 5).map(function (l) { return l.a.replace('seed|', '') + '↔' + l.b.replace('seed|', '') + ':' + l.w; }).join(', ') + ')');
+  console.log('links: ' + links.length + ' (manual added: ' + addedManual + ', top: ' + links.slice(0, 5).map(function (l) { return l.a.replace('seed|', '') + '↔' + l.b.replace('seed|', '') + ':' + l.w; }).join(', ') + ')');
 }
 
 main();

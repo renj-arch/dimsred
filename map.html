@@ -221,14 +221,16 @@ function render() {
   undated.sort(function (a, b) { return (b.count - a.count) || a.name.localeCompare(b.name); });
   var TOP = 0;
   if (undated.length) {
-    TOP = 136;
+    TOP = uExpand ? 356 : 136;
+    var shownU = uExpand ? undated : undated.slice(0, 120);
     html += '<div class="undated" style="top:0;height:' + (TOP - 10) + 'px">'
-      + '<div class="undated-label">No date / timeless (' + undated.length + ')</div>'
-      + '<div class="undated-chips">'
-      + undated.slice(0, 120).map(function (u2) {
+      + '<div class="undated-label">No date / timeless (' + undated.length + ')'
+      + (undated.length > 120 ? ' <button class="chip" style="cursor:pointer" onclick="toggleUndated()">' + (uExpand ? 'show fewer' : 'show all ' + undated.length + ' \u2192') + '</button>' : '')
+      + '</div>'
+      + '<div class="undated-chips"' + (uExpand ? ' style="max-height:310px"' : '') + '>'
+      + shownU.map(function (u2) {
         return '<button class="chip" onclick="openProfile(\'' + esc(u2.id).replace(/'/g, "\\'") + '\')">' + esc(u2.name) + ' <b>' + u2.count + '</b></button>';
       }).join('')
-      + (undated.length > 120 ? '<span class="chip" style="cursor:default">+ ' + (undated.length - 120) + ' more</span>' : '')
       + '</div></div>';
   }
 
@@ -258,12 +260,18 @@ function render() {
   // Same-year topics stack as a readable two-column list instead of piling on top of each other.
   var cap = SHOW_ALL ? 9000 : (searchActive || activeCat ? 6000 : 4000);
   var prevB = [TOP, TOP];
+  var posById = {};   // rendered node id -> center {x,y} in canvas px, for the link layer
+  var canvasW = document.getElementById('viewport').clientWidth || 800;
   for (var i = 0; i < filtered.length; i++) {
     if (count >= cap) break;
     var nd = filtered[i];
     var desired = TOP + (nd.span.min - WINDOW.start) / range * BASE_H;
     var col = prevB[0] <= prevB[1] ? 0 : 1;
     var y = Math.max(desired, prevB[col]);
+    posById[nd.id] = {
+      x: col === 0 ? (14 + (canvasW * 0.5 - 18) / 2) : (canvasW * 0.5 + 4 + (canvasW * 0.5 - 18) / 2),
+      y: y + NODE_H / 2
+    };
     var color = TYPE_COLOR[nd.type] || '#71717a';
     var isArch = nd.timebase === 'archive';
     var isEra = nd.timebase === 'era';
@@ -296,7 +304,7 @@ function render() {
   }
 
   canvas.style.height = Math.max(TOP + BASE_H, Math.max(prevB[0], prevB[1]) + 8) + 'px';
-  canvas.innerHTML = html;
+  canvas.innerHTML = buildLinkLayer(posById, canvas.style.height, canvasW) + html;
 
   var zi = document.getElementById('zoomInfo');
   zi.textContent = 'Showing ' + fmtYear(WINDOW.start) + ' – ' + fmtYear(WINDOW.end) + ' · level ' + th + (SHOW_ALL ? ' · SHOW ALL' : '') + (activeCat ? ' · filter: ' + (_catByKey[activeCat] || activeCat) : '') + (filtered.length > cap ? ' (capped at ' + cap + ')' : '');
@@ -304,6 +312,26 @@ function render() {
 }
 
 var searchText = '';
+
+var uExpand = false;
+function toggleUndated() { uExpand = !uExpand; render(); }
+
+// Draw co-occurrence links between seed entities as faint SVG connectors — only between
+// nodes actually on screen. Opacity scales with co-occurrence weight so the densest
+// connections (Gandhi↔Congress etc.) read first.
+function buildLinkLayer(posById, canvasH, width) {
+  var lines = [];
+  for (var l of _links) {
+    var p1 = posById[l.a], p2 = posById[l.b];
+    if (!p1 || !p2) continue;
+    var o = Math.min(0.35, 0.08 + (l.w || 1) / 100);
+    lines.push('<line x1="' + p1.x + '" y1="' + p1.y + '" x2="' + p2.x + '" y2="' + p2.y
+      + '" stroke="rgba(167,139,250,' + o.toFixed(3) + ')" stroke-width="1"/>');
+  }
+  if (!lines.length) return '';
+  var h = parseFloat(canvasH) || 100;
+  return '<svg class="links" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0" viewBox="0 0 ' + (width || 800) + ' ' + h + '" preserveAspectRatio="none">' + lines.join('') + '</svg>';
+}
 
 function setWindow(start, end, label) {
   WINDOW.start = Math.round(Math.max(MIN_YEAR, Math.min(MAX_YEAR, start)));
