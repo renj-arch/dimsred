@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knowledge Map — vlymbooq</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+:root{--bg:#09090b;--card:#12121c;--border:rgba(255,255,255,.08);--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--cyan:#22d3ee;--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;padding-bottom:80px}
+.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:24px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:.3px}
+.brand-text{color:var(--text)}
+.nav-links{display:flex;gap:18px;flex-wrap:wrap}
+.nav-links a{color:var(--text-sec);text-decoration:none;font-size:.85em;font-weight:600}
+.nav-links a:hover{color:var(--text)}
+.nav-links a.active{color:var(--purple)}
+.page-wrap{max-width:1200px;margin:0 auto;padding:24px}
+h1{font-size:1.5em;margin-bottom:4px}
+.sub{color:var(--text-sec);font-size:.85em;margin-bottom:20px}
+.searchbar{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap}
+.searchbar input{flex:1;min-width:220px;padding:11px 14px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:.9em;outline:none}
+.searchbar input:focus{border-color:var(--purple)}
+.entities{display:flex;flex-direction:column;gap:16px}
+.entity{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
+.entity-head{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;flex-wrap:wrap}
+.entity-head h2{font-size:1.1em}
+.entity-total{font-size:.78em;color:var(--emerald);font-weight:700;white-space:nowrap}
+.entity-desc{color:var(--text-sec);font-size:.8em;margin-top:6px}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-top:14px}
+.cat-chip{border:1px solid var(--border);background:rgba(255,255,255,.03);border-radius:10px;padding:10px 12px;cursor:pointer;transition:background .15s}
+.cat-chip:hover{background:rgba(167,139,250,.08);border-color:rgba(167,139,250,.3)}
+.cat-chip .cn{font-size:.82em;font-weight:700;color:var(--text)}
+.cat-chip .cc{font-size:.72em;color:var(--purple);font-weight:700}
+.cat-chip .ct{font-size:.68em;color:var(--text-muted);margin-top:2px}
+.topic-list{margin-top:8px;display:none;flex-wrap:wrap;gap:6px}
+.topic-tag{font-size:.7em;color:var(--text-sec);background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:100px;padding:3px 10px;cursor:pointer}
+.topic-tag:hover{color:var(--text);border-color:var(--purple)}
+.qlist{margin-top:14px;display:none;flex-direction:column;gap:10px}
+.qcard{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;padding:14px}
+.qmeta{font-size:.68em;color:var(--text-muted);display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.qtext{font-size:.9em}
+.qtext .blank{color:var(--amber);font-weight:800;letter-spacing:1px}
+.qans{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--border)}
+.qans .ans{font-size:.85em;color:var(--emerald);font-weight:700}
+.qans .fact{font-size:.8em;color:var(--text-sec);margin-top:6px}
+.reveal{font-size:.72em;color:var(--purple);cursor:pointer;font-weight:700;margin-top:8px;background:none;border:none;padding:0}
+.back{font-size:.8em;color:var(--text-sec);cursor:pointer;margin-bottom:12px;display:inline-block}
+.back:hover{color:var(--text)}
+.hidden{display:none}
+.loading{color:var(--text-sec);font-size:.85em;padding:10px 0}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner"><div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--purple)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="brand-text">vlymbooq</span></div><div class="nav-links"><a href="index.html">Home</a><a href="current-affairs.html">Quiz</a><a href="dashboard.html">Dashboard</a><a href="archive.html">Archive</a><a class="active" href="map.html">Map</a><a href="about.html">About</a></div></div></nav>
+
+<div class="page-wrap">
+  <h1>Knowledge Map</h1>
+  <div class="sub">Every topic connected across all 51 categories. Pick an entity to see its full story — every category, every mention, with the context that links them.</div>
+  <div class="searchbar">
+    <input id="search" type="text" placeholder="Search entities or topics… (e.g. Ambedkar, Constitution, BRICS)">
+  </div>
+  <div id="list"></div>
+</div>
+
+<script>
+var MAP = null, MAP_ENTITIES = [];
+var _entityCache = {};
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function aliasRe(aliases) {
+  return new RegExp('(?:' + aliases.map(function(a) { return a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|') + ')', 'i');
+}
+
+function renderEntities(filter) {
+  var el = document.getElementById('list');
+  filter = (filter || '').trim().toLowerCase();
+  el.innerHTML = '';
+  var shown = 0;
+  for (var name of MAP_ENTITIES) {
+    var e = MAP.entities[name];
+    if (filter && name.toLowerCase().indexOf(filter) === -1) {
+      var anyTopic = Object.keys(e.cats).some(function(k) {
+        return Object.keys(e.cats[k].topics).some(function(t) { return t.toLowerCase().indexOf(filter) !== -1; });
+      });
+      if (!anyTopic) continue;
+    }
+    shown++;
+    renderEntity(el, name, e, filter);
+  }
+  if (shown === 0) el.innerHTML = '<div class="sub">No matches.</div>';
+}
+
+function renderEntity(root, name, e, filter) {
+  var cats = Object.keys(e.cats);
+  var chips = cats.map(function(k) {
+    var c = e.cats[k];
+    var top = filter ? Object.keys(c.topics).filter(function(t) { return t.toLowerCase().indexOf(filter) !== -1; }) : [];
+    return '<div class="cat-chip" onclick="toggleCat(\'' + esc(k) + '\',\'' + esc(name).replace(/'/g, "\\'") + '\')">'
+      + '<div class="cn">' + esc(c.label) + ' <span class="cc">' + c.total + '</span></div>'
+      + '<div class="ct">' + Object.keys(c.topics).length + ' topics</div>'
+      + '<div class="qlist" id="ql-' + esc(k) + '"></div>'
+      + '</div>';
+  }).join('');
+  var div = document.createElement('div');
+  div.className = 'entity';
+  div.innerHTML = '<div class="entity-head" onclick="toggleCat(\'ALL\',\'' + esc(name).replace(/'/g, "\\'") + '\')">'
+    + '<h2>' + esc(name) + '</h2>'
+    + '<span class="entity-total">' + e.total + ' questions · ' + cats.length + ' categories</span></div>'
+    + '<div class="entity-desc">Ambedkar fragments are scattered across the archive. Expand any category to see every question that mentions him — in context.</div>'
+    + '<div class="cat-grid">' + chips + '</div>'
+    + '<div class="qlist" id="ql-ALL"></div>';
+  root.appendChild(div);
+}
+
+function toggleCat(key, name) {
+  var ql = document.getElementById('ql-' + key);
+  if (!ql) return;
+  var open = ql.style.display === 'flex';
+  ql.style.display = open ? 'none' : 'flex';
+  if (!open && ql.childNodes.length === 0) loadQuestions(key, name, ql);
+}
+
+function loadQuestions(key, name, container) {
+  var e = MAP.entities[name];
+  var aliases = e.aliases;
+  var catKeys = key === 'ALL' ? Object.keys(e.cats) : [key];
+  var re = aliasRe(aliases);
+  var done = 0;
+  container.innerHTML = '<div class="loading">Loading…</div>';
+  for (var i = 0; i < catKeys.length; i++) {
+    loadCategory(catKeys[i], function(catKey, catData) {
+      var qs = [];
+      var q = null;
+      var text = '';
+      for (var qi = 0; qi < catData.questions.length; qi++) {
+        q = catData.questions[qi];
+        text = [q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' ');
+        if (re.test(text)) qs.push(q);
+      }
+      appendQuestions(container, catKey, qs);
+      if (++done === catKeys.length) {
+        if (container.childNodes.length === 0) container.innerHTML = '<div class="loading">No matches.</div>';
+        else if (container.firstChild && container.firstChild.className === 'loading') container.removeChild(container.firstChild);
+      }
+    });
+  }
+}
+
+function loadCategory(key, cb) {
+  if (_entityCache[key]) { cb(key, _entityCache[key]); return; }
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'data/questions/' + key + '.json', true);
+  xhr.onload = function() {
+    try {
+      var parsed = JSON.parse(xhr.responseText);
+      var questions = [];
+      for (var subj of Object.keys(parsed)) {
+        var subs = parsed[subj].subSubjects || {};
+        for (var ss of Object.keys(subs)) {
+          if (Array.isArray(subs[ss])) questions = questions.concat(subs[ss]);
+        }
+      }
+      _entityCache[key] = { label: Object.keys(parsed)[0], questions: questions };
+    } catch (err) { _entityCache[key] = { label: key, questions: [] }; }
+    cb(key, _entityCache[key]);
+  };
+  xhr.onerror = function() { _entityCache[key] = { label: key, questions: [] }; cb(key, _entityCache[key]); };
+  xhr.send();
+}
+
+function appendQuestions(container, catKey, qs) {
+  for (var i = 0; i < qs.length; i++) {
+    var q = qs[i];
+    var qtext = esc(q.question || '');
+    var hasBlank = /_{2,}/.test(q.question || '');
+    if (hasBlank) qtext = qtext.replace(/_{2,}/g, '<span class="blank">______</span>');
+    var d = document.createElement('div');
+    d.className = 'qcard';
+    d.innerHTML = '<div class="qmeta"><span>' + esc(q.subSubject || '') + '</span><span>' + esc(q.source || '') + '</span><span>' + (q.pubDate ? new Date(q.pubDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '') + '</span></div>'
+      + '<div class="qtext">' + qtext + '</div>'
+      + '<button class="reveal">' + (hasBlank ? 'Fill blank' : 'Reveal answer') + '</button>'
+      + '<div class="qans"><div class="ans">' + esc(q.answer || '') + '</div>'
+      + (q.fact ? '<div class="fact">' + esc(q.fact) + '</div>' : '')
+      + (q.hint ? '<div class="fact">Hint: ' + esc(q.hint) + '</div>' : '')
+      + '</div>';
+    (function(btn, blank) {
+      btn.onclick = function() {
+        var a = this.nextElementSibling;
+        a.style.display = a.style.display === 'block' ? 'none' : 'block';
+        this.textContent = a.style.display === 'block' ? 'Hide' : (blank ? 'Fill blank' : 'Reveal answer');
+      };
+    })(d.querySelector('.reveal'), hasBlank);
+    container.appendChild(d);
+  }
+}
+
+var searchTimer = null;
+document.getElementById('search').addEventListener('input', function() {
+  clearTimeout(searchTimer);
+  var v = this.value;
+  searchTimer = setTimeout(function() { renderEntities(v); }, 200);
+});
+
+fetch('data/map.json').then(function(r) { return r.json(); }).then(function(m) {
+  MAP = m;
+  MAP_ENTITIES = Object.keys(m.entities);
+  renderEntities('');
+}).catch(function() {
+  document.getElementById('list').innerHTML = '<div class="sub">data/map.json not found — run <code>node scripts/build-map.js</code>.</div>';
+});
+</script>
+</body>
+</html>
