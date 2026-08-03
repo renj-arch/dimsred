@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timeline Map — vlymbooq</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+:root{--bg:#09090b;--card:#12121c;--border:rgba(255,255,255,.08);--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--cyan:#22d3ee;--rose:#fb7185;--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.5;padding-bottom:60px}
+.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:24px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:.3px}
+.nav-links{display:flex;gap:18px;flex-wrap:wrap}
+.nav-links a{color:var(--text-sec);text-decoration:none;font-size:.85em;font-weight:600}
+.nav-links a:hover{color:var(--text)}
+.nav-links a.active{color:var(--purple)}
+.page-wrap{max-width:1200px;margin:0 auto;padding:24px}
+.head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+h1{font-size:1.45em}
+.sub{color:var(--text-sec);font-size:.85em;margin-bottom:16px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.btn{padding:8px 14px;border-radius:100px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text-sec);font-size:.78em;font-weight:700;cursor:pointer}
+.btn:hover{color:var(--text);border-color:var(--purple)}
+.btn.active{background:rgba(167,139,250,.15);color:var(--purple);border-color:rgba(167,139,250,.4)}
+.btn-primary{background:linear-gradient(135deg,#a78bfa,#34d399);color:#fff;border:none}
+.btn-primary:hover{opacity:.9;color:#fff}
+.searchbar{flex:1;min-width:180px;padding:8px 12px;border-radius:100px;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:.8em;outline:none}
+.searchbar:focus{border-color:var(--purple)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;font-size:.72em;color:var(--text-sec)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.breadcrumb{font-size:.78em;color:var(--text-sec);margin-bottom:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.breadcrumb b{color:var(--purple);cursor:pointer}
+.zoom-range{width:180px}
+.tl-viewport{position:relative;height:74vh;overflow:auto;border:1px solid var(--border);border-radius:14px;background:var(--card)}
+.tl-canvas{position:relative;width:100%}
+.tl-now{position:sticky;bottom:0;z-index:3;background:rgba(9,9,11,.9);border-top:1px solid var(--border);font-size:.75em;color:var(--emerald);font-weight:700;padding:8px 14px}
+.era{position:absolute;left:0;right:0;border-top:1px dashed rgba(255,255,255,.06);cursor:pointer}
+.era-label{position:sticky;left:14px;display:inline-block;font-size:.7em;color:var(--text-muted);font-weight:700;padding:2px 0}
+.node{position:absolute;left:14px;right:14px;display:flex;align-items:center;gap:8px;cursor:pointer;border-radius:6px;padding:2px 8px;white-space:nowrap;overflow:hidden}
+.node:hover{background:rgba(255,255,255,.06)}
+.node .bar{height:8px;border-radius:6px;flex-shrink:0;min-width:4px}
+.node .nm{font-size:.74em;font-weight:600;overflow:hidden;text-overflow:ellipsis}
+.node .ct{font-size:.66em;color:var(--text-muted);flex-shrink:0}
+.yticks{position:absolute;left:0;top:0;bottom:0;width:14px;z-index:0}
+.profile{position:fixed;top:0;right:0;bottom:0;width:min(460px,92vw);background:var(--card);border-left:1px solid var(--border);z-index:200;padding:24px;overflow:auto;transform:translateX(100%);transition:transform .2s}
+.profile.open{transform:translateX(0)}
+.p-close{position:absolute;top:14px;right:14px;font-size:.8em;color:var(--text-muted);cursor:pointer;background:none;border:none}
+.p-title{font-size:1.15em;font-weight:800;margin-bottom:2px}
+.p-span{font-size:.8em;color:var(--purple);font-weight:700;margin-bottom:4px}
+.p-type{font-size:.7em;color:var(--text-muted);margin-bottom:12px}
+.p-stats{display:flex;gap:8px;margin-bottom:14px}
+.p-stat{flex:1;padding:10px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--border);text-align:center}
+.p-stat .v{font-size:1.3em;font-weight:900;color:var(--emerald)}
+.p-stat .k{font-size:.62em;color:var(--text-muted)}
+.cat-row{padding:9px 10px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer;font-size:.78em}
+.cat-row:hover{border-color:var(--purple)}
+.cat-row .n{font-weight:700}
+.cat-row .c{color:var(--purple);font-weight:700}
+.qlist{display:none;flex-direction:column;gap:10px;margin-top:10px}
+.qcard{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;padding:12px}
+.qmeta{font-size:.66em;color:var(--text-muted);display:flex;gap:8px;flex-wrap:wrap;margin-bottom:5px}
+.qtext{font-size:.85em}
+.qtext .blank{color:var(--amber);font-weight:800;letter-spacing:1px}
+.qans{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)}
+.qans .ans{font-size:.8em;color:var(--emerald);font-weight:700}
+.qans .fact{font-size:.75em;color:var(--text-sec);margin-top:5px}
+.reveal{font-size:.68em;color:var(--purple);cursor:pointer;font-weight:700;margin-top:6px;background:none;border:none;padding:0}
+.loading{color:var(--text-sec);font-size:.8em;padding:8px}
+.type-filter{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner"><div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--purple)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="brand-text">vlymbooq</span></div><div class="nav-links"><a href="index.html">Home</a><a href="current-affairs.html">Quiz</a><a href="dashboard.html">Dashboard</a><a href="archive.html">Archive</a><a class="active" href="map.html">Map</a><a href="about.html">About</a></div></div></nav>
+
+<div class="page-wrap">
+  <div class="head"><h1>Timeline Map</h1></div>
+  <div class="sub">All of history on one scroll. Zoom out to see eras, zoom in toward the present to see movements, the people in them, and everything connected — diseases, schemes, institutions.</div>
+
+  <div class="controls">
+    <button class="btn" id="btnOut" title="Zoom out">Zoom out</button>
+    <button class="btn" id="btnIn" title="Zoom in toward present">Zoom in</button>
+    <button class="btn" id="btnFull">Max zoom out</button>
+    <input class="searchbar" id="search" type="text" placeholder="Search any person, movement, disease, scheme, topic…">
+  </div>
+
+  <div class="type-filter" id="typeFilter">
+    <span class="legend" style="margin:0"><span><span class="dot" style="background:var(--purple)"></span>Person</span><span><span class="dot" style="background:var(--amber)"></span>Event/Movement</span><span><span class="dot" style="background:var(--rose)"></span>Disease</span><span><span class="dot" style="background:var(--cyan)"></span>Scheme/Org</span><span><span class="dot" style="background:#71717a"></span>Topic</span></span>
+    <span id="zoomInfo" style="font-size:.75em;color:var(--text-sec)"></span>
+  </div>
+
+  <div class="breadcrumb" id="crumb">Viewing: <b onclick="zoomOut()">Full history</b></div>
+
+  <div class="tl-viewport" id="viewport">
+    <div class="tl-now">NOW — 2026 ↑ scroll up into history</div>
+    <div class="tl-canvas" id="canvas"></div>
+  </div>
+</div>
+
+<div class="profile" id="profile">
+  <button class="p-close" onclick="closeProfile()">✕</button>
+  <div id="pbody"></div>
+</div>
+
+<script>
+var TL = null;
+var NODES = [];
+var _catCache = {};
+
+var WINDOW = { start: 1000, end: 2026 };
+var FULL = { start: 1000, end: 2026 };
+var ZOOM = 0;
+var HISTORY = [];
+
+var TYPE_COLOR = { person: 'var(--purple,#a78bfa)', event: 'var(--amber,#f59e0b)', disease: 'var(--rose,#fb7185)', scheme: 'var(--cyan,#22d3ee)', org: 'var(--cyan,#22d3ee)', concept: '#71717a' };
+var TYPE_FILTERS = { person: true, event: true, disease: true, scheme: true, org: true, concept: true };
+
+function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+function aliasRe(aliases) {
+  return new RegExp('(?:' + aliases.map(function (a) { return a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|') + ')', 'i');
+}
+
+function nodeLevel(n) {
+  if (n.level != null) return n.level;
+  if (n.era) return 0;
+  if (n.seed) { return n.type === 'event' ? 1 : n.type === 'person' ? 2 : 3; }
+  return 4;
+}
+
+function detailThreshold() {
+  var range = WINDOW.end - WINDOW.start;
+  if (range > 420) return 1;          // whole history: eras + movements only
+  if (range > 180) return 2;          // + people
+  if (range > 80) return 3;           // + diseases/schemes/orgs
+  return 4;                           // + all sub-topics
+}
+
+function inWindow(span) {
+  if (!span) return false;
+  return span.max >= WINDOW.start && span.min <= WINDOW.end;
+}
+
+function yToPx(y) {
+  return ((y - WINDOW.start) / (WINDOW.end - WINDOW.start)) * 100;
+}
+
+function render() {
+  var canvas = document.getElementById('canvas');
+  var th = detailThreshold();
+  var html = '';
+  var count = 0;
+
+  // Era bands
+  for (var e of TL.eras) {
+    if (e.max < WINDOW.start || e.min > WINDOW.end) continue;
+    var top = yToPx(Math.max(e.min, WINDOW.start));
+    var h = Math.max(1, yToPx(Math.min(e.max, WINDOW.end)) - top);
+    html += '<div class="era" style="top:' + top + '%;height:' + h + '%;background:rgba(167,139,250,.05)" onclick="focusEra(\'' + e.id + '\')"><span class="era-label">' + esc(e.label) + '</span></div>';
+  }
+
+  // Nodes
+  var searchActive = !!searchText;
+  var filtered = [];
+  for (var n of NODES) {
+    if (!searchActive && nodeLevel(n) > th) continue;
+    if (!TYPE_FILTERS[n.type] && !(n.type === 'concept' && TYPE_FILTERS.concept)) continue;
+    if (!inWindow(n.span)) continue;
+    if (searchActive && n.name.toLowerCase().indexOf(searchText) === -1) continue;
+    filtered.push(n);
+  }
+  filtered.sort(function (a, b) { return (a.span.min - b.span.min) || (a.span.max - b.span.max); });
+
+  var cap = 1400;
+  for (var i = 0; i < filtered.length; i++) {
+    if (count >= cap) break;
+    var nd = filtered[i];
+    var top = yToPx(nd.span.min);
+    var bot = yToPx(nd.span.max);
+    var hpx = Math.max(1, (bot - top) / 100 * 900);
+    var color = TYPE_COLOR[nd.type] || '#71717a';
+    var spanLabel = nd.span.min + (nd.span.max > nd.span.min ? '–' + nd.span.max : '');
+    html += '<div class="node" style="top:' + top + '%;height:' + Math.max(14, hpx) + 'px;border-left:2px solid ' + color + '" onclick="openProfile(\'' + esc(nd.id).replace(/'/g, "\\'") + '\')">'
+      + '<span class="nm" style="color:' + color + '">' + esc(nd.name) + '</span>'
+      + '<span class="ct">' + spanLabel + (nd.count ? ' · ' + nd.count + ' q' : '') + '</span></div>';
+    count++;
+  }
+
+  if (count === 0 && filtered.length === 0 && !searchText) {
+    html += '<div class="loading" style="margin:20px 14px">Nothing at this zoom — scroll up or zoom out.</div>';
+  }
+  canvas.innerHTML = html;
+
+  var zi = document.getElementById('zoomInfo');
+  zi.textContent = 'Showing ' + WINDOW.start + ' – ' + WINDOW.end + ' · zoom level ' + ZOOM + (filtered.length > cap ? ' (capped at ' + cap + ')' : '');
+  document.getElementById('crumb').innerHTML = 'Viewing: ' + (HISTORY.length ? HISTORY.map(function (h) { return '<b onclick="zoomOut()">' + esc(h) + '</b>'; }).join(' › ') + ' › ' : '') + '<b onclick="zoomOut()">Full history</b>';
+}
+
+var searchText = '';
+
+function setWindow(start, end, label) {
+  WINDOW.start = Math.max(1000, Math.min(2026, start));
+  WINDOW.end = Math.max(WINDOW.start + 1, Math.min(2026, end));
+  if (label) HISTORY.push(label);
+  render();
+  scrollToPresent();
+}
+
+function focusEra(id) {
+  for (var e of TL.eras) { if (e.id === id) { setWindow(e.min, e.max, e.label); return; } }
+}
+
+function zoomOut() {
+  if (HISTORY.length) { HISTORY.pop(); }
+  if (HISTORY.length) {
+    var last = HISTORY[HISTORY.length - 1];
+    // recompute window from last history entry's era
+    for (var e of TL.eras) { if (e.label === last) { WINDOW.start = e.min; WINDOW.end = e.max; } }
+    if (WINDOW.end - WINDOW.start <= 0) { WINDOW.start = FULL.start; WINDOW.end = FULL.end; }
+  } else {
+    WINDOW.start = FULL.start; WINDOW.end = FULL.end;
+  }
+  ZOOM = 0;
+  render();
+  scrollToPresent();
+}
+
+function zoomIn() {
+  var range = WINDOW.end - WINDOW.start;
+  var newStart = WINDOW.end - range / 2;
+  setWindow(newStart, WINDOW.end, null);
+  ZOOM++;
+}
+
+function zoomBy(f) {
+  var range = WINDOW.end - WINDOW.start;
+  var newRange = Math.max(2, Math.min(2026 - 1000, range * f));
+  var newStart = WINDOW.end - newRange;
+  setWindow(newStart, WINDOW.end, null);
+}
+
+function scrollToPresent() {
+  var vp = document.getElementById('viewport');
+  vp.scrollTop = vp.scrollHeight;
+}
+
+document.getElementById('btnIn').onclick = function () { zoomBy(0.5); };
+document.getElementById('btnOut').onclick = function () { zoomOut(); };
+document.getElementById('btnFull').onclick = function () { HISTORY = []; zoomOut(); };
+
+var searchTimer = null;
+document.getElementById('search').addEventListener('input', function () {
+  clearTimeout(searchTimer);
+  var v = this.value.trim().toLowerCase();
+  searchTimer = setTimeout(function () { searchText = v; render(); }, 200);
+});
+
+function openProfile(id) {
+  var n = null;
+  for (var x of NODES) { if (x.id === id) { n = x; break; } }
+  if (!n) return;
+  var p = document.getElementById('pbody');
+  var color = TYPE_COLOR[n.type] || '#71717a';
+  var spanLabel = n.span ? (n.span.min + (n.span.max > n.span.min ? ' – ' + n.span.max : '')) : 'timeless';
+  var cats = n.cats || [];
+  p.innerHTML = '<div class="p-title" style="color:' + color + '">' + esc(n.name) + '</div>'
+    + '<div class="p-span">' + spanLabel + '</div>'
+    + '<div class="p-type">' + esc(n.type) + (n.seed ? ' · curated spine' : '') + '</div>'
+    + '<div class="p-stats"><div class="p-stat"><div class="v">' + (n.count || 0) + '</div><div class="k">mentions</div></div>'
+    + '<div class="p-stat"><div class="v">' + cats.length + '</div><div class="k">categories</div></div></div>'
+    + '<div class="qlist" id="p-ql" style="display:none"></div>'
+    + cats.map(function (c) { return '<div class="cat-row" onclick="loadProfileCat(\'' + esc(c.key).replace(/'/g, "\\'") + '\',\'' + esc(c.label).replace(/'/g, "\\'") + '\',this)"><span class="n">' + esc(c.label) + '</span></div>'; }).join('');
+  document.getElementById('profile').classList.add('open');
+  _profileNode = n;
+  window.scrollTo(0, 0);
+}
+var _profileNode = null;
+
+function closeProfile() { document.getElementById('profile').classList.remove('open'); }
+
+function loadProfileCat(catKey, catLabel, el) {
+  var n = _profileNode;
+  var ql = document.getElementById('p-ql');
+  ql.style.display = 'flex';
+  ql.innerHTML = '<div class="loading">Loading…</div>';
+  var aliases = aliasesForNode(n);
+  var re = aliasRe(aliases);
+  loadCategory(catKey, function (catData) {
+    var qs = [];
+    for (var q of catData.questions) {
+      var text = [q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' ');
+      if (re.test(text)) qs.push(q);
+    }
+    ql.innerHTML = '<div class="loading" style="font-weight:700">' + catLabel + ' — ' + qs.length + ' questions</div>';
+    appendQuestions(ql, qs);
+  });
+}
+
+function aliasesForNode(n) {
+  var a = [n.name];
+  var parts = n.name.split(/[\s,]+/).filter(function (p) { return p; });
+  if (parts.length >= 2) a.push(parts.join(' '));
+  if (parts.length >= 2 && n.type === 'person') a.push(parts[parts.length - 1]);
+  return a;
+}
+
+function loadCategory(key, cb) {
+  if (_catCache[key]) { cb(_catCache[key]); return; }
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'data/questions/' + key + '.json', true);
+  xhr.onload = function () {
+    try {
+      var parsed = JSON.parse(xhr.responseText);
+      var questions = [];
+      for (var subj of Object.keys(parsed)) {
+        var subs = parsed[subj].subSubjects || {};
+        for (var ss of Object.keys(subs)) { if (Array.isArray(subs[ss])) questions = questions.concat(subs[ss]); }
+      }
+      _catCache[key] = { label: Object.keys(parsed)[0], questions: questions };
+    } catch (e) { _catCache[key] = { label: key, questions: [] }; }
+    cb(_catCache[key]);
+  };
+  xhr.onerror = function () { _catCache[key] = { label: key, questions: [] }; cb(_catCache[key]); };
+  xhr.send();
+}
+
+function appendQuestions(container, qs) {
+  for (var i = 0; i < qs.length; i++) {
+    var q = qs[i];
+    var qtext = esc(q.question || '');
+    var hasBlank = /_{2,}/.test(q.question || '');
+    if (hasBlank) qtext = qtext.replace(/_{2,}/g, '<span class="blank">______</span>');
+    var d = document.createElement('div');
+    d.className = 'qcard';
+    d.innerHTML = '<div class="qmeta"><span>' + esc(q.subSubject || '') + '</span><span>' + esc(q.source || '') + '</span><span>' + (q.pubDate ? new Date(q.pubDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '') + '</span></div>'
+      + '<div class="qtext">' + qtext + '</div>'
+      + '<button class="reveal">' + (hasBlank ? 'Fill blank' : 'Reveal answer') + '</button>'
+      + '<div class="qans"><div class="ans">' + esc(q.answer || '') + '</div>'
+      + (q.fact ? '<div class="fact">' + esc(q.fact) + '</div>' : '')
+      + '</div>';
+    (function (btn, blank) {
+      btn.onclick = function () {
+        var a = this.nextElementSibling;
+        a.style.display = a.style.display === 'block' ? 'none' : 'block';
+        this.textContent = a.style.display === 'block' ? 'Hide' : (blank ? 'Fill blank' : 'Reveal answer');
+      };
+    })(d.querySelector('.reveal'), hasBlank);
+    container.appendChild(d);
+  }
+}
+
+fetch('data/timeline.json').then(function (r) { return r.json(); }).then(function (t) {
+  TL = t;
+  NODES = t.nodes;
+  render();
+}).catch(function () {
+  document.getElementById('canvas').innerHTML = '<div class="loading">data/timeline.json not found — run <code>node scripts/build-timeline.js</code>.</div>';
+});
+</script>
+</body>
+</html>
