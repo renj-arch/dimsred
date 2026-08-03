@@ -89,12 +89,13 @@ h1{font-size:1.45em}
 
 <div class="page-wrap">
   <div class="head"><h1>Timeline Map</h1></div>
-  <div class="sub">All of history on one scroll. Zoom out to see eras, zoom in toward the present to see movements, the people in them, and everything connected — diseases, schemes, institutions.</div>
+  <div class="sub">All of history on one scroll. Zoom out to see eras, zoom in toward the present to see movements, the people in them, and everything connected — diseases, schemes, institutions. Press <b>Show all</b> to put every dated topic on the line at once.</div>
 
   <div class="controls">
     <button class="btn" id="btnOut" title="Zoom out">Zoom out</button>
     <button class="btn" id="btnIn" title="Zoom in toward present">Zoom in</button>
     <button class="btn" id="btnFull">Max zoom out</button>
+    <button class="btn" id="btnAll" title="Show every dated topic at once, regardless of zoom level">Show all</button>
     <input class="searchbar" id="search" type="text" placeholder="Search any person, movement, disease, scheme, topic…">
     <select class="searchbar" id="catFilter" style="flex:0 0 auto;max-width:250px;cursor:pointer"><option value="">All categories</option></select>
   </div>
@@ -130,6 +131,7 @@ var MAX_YEAR = 2026;
 var WINDOW = { start: MIN_YEAR, end: MAX_YEAR };
 var FULL = { start: MIN_YEAR, end: MAX_YEAR };
 var HISTORY = [];
+var SHOW_ALL = false;   // "Show all" forces every level (including sub-topics) on screen
 
 var TYPE_COLOR = { person: 'var(--purple,#a78bfa)', event: 'var(--amber,#f59e0b)', disease: 'var(--rose,#fb7185)', scheme: 'var(--cyan,#22d3ee)', org: 'var(--cyan,#22d3ee)', concept: '#71717a' };
 var TYPE_FILTERS = { person: true, event: true, disease: true, scheme: true, org: true, concept: true };
@@ -179,11 +181,10 @@ function nodeLevel(n) {
 }
 
 function detailThreshold() {
+  if (SHOW_ALL) return 4;           // Show all: every level, every sub-topic
   var range = WINDOW.end - WINDOW.start;
-  if (range > 420) return 1;          // whole history: eras + movements only
-  if (range > 180) return 2;          // + people
-  if (range > 80) return 3;           // + diseases/schemes/orgs
-  return 4;                           // + all sub-topics
+  if (range > 800) return 3;        // full-to-mid zoom: movements, people, orgs, schemes, diseases
+  return 4;                         // zoomed within a few centuries: all sub-topics too
 }
 
 function inWindow(span) {
@@ -255,7 +256,7 @@ function render() {
 
   // Greedy anti-overlap: each node's top = max(true chronological position, bottom of its column).
   // Same-year topics stack as a readable two-column list instead of piling on top of each other.
-  var cap = searchActive || activeCat ? 6000 : 2500;
+  var cap = SHOW_ALL ? 9000 : (searchActive || activeCat ? 6000 : 4000);
   var prevB = [TOP, TOP];
   for (var i = 0; i < filtered.length; i++) {
     if (count >= cap) break;
@@ -298,7 +299,7 @@ function render() {
   canvas.innerHTML = html;
 
   var zi = document.getElementById('zoomInfo');
-  zi.textContent = 'Showing ' + fmtYear(WINDOW.start) + ' – ' + fmtYear(WINDOW.end) + ' · level ' + th + (activeCat ? ' · filter: ' + (_catByKey[activeCat] || activeCat) : '') + (filtered.length > cap ? ' (capped at ' + cap + ')' : '');
+  zi.textContent = 'Showing ' + fmtYear(WINDOW.start) + ' – ' + fmtYear(WINDOW.end) + ' · level ' + th + (SHOW_ALL ? ' · SHOW ALL' : '') + (activeCat ? ' · filter: ' + (_catByKey[activeCat] || activeCat) : '') + (filtered.length > cap ? ' (capped at ' + cap + ')' : '');
   document.getElementById('crumb').innerHTML = 'Viewing: ' + (HISTORY.length ? HISTORY.map(function (h) { return '<b onclick="zoomOut()">' + esc(h.label) + '</b>'; }).join(' › ') + ' › ' : '') + '<b onclick="zoomOut()">Full history</b>';
 }
 
@@ -352,7 +353,15 @@ function scrollToPresent() {
 
 document.getElementById('btnIn').onclick = function () { zoomBy(0.5); };
 document.getElementById('btnOut').onclick = function () { zoomOut(); };
-document.getElementById('btnFull').onclick = function () { HISTORY = []; zoomOut(); };
+document.getElementById('btnFull').onclick = function () { HISTORY = []; SHOW_ALL = false; document.getElementById('btnAll').classList.remove('active'); zoomOut(); };
+
+var btnAll = document.getElementById('btnAll');
+btnAll.onclick = function () {
+  SHOW_ALL = !SHOW_ALL;
+  btnAll.classList.toggle('active', SHOW_ALL);
+  render();
+  scrollToPresent();
+};
 
 var searchTimer = null;
 document.getElementById('search').addEventListener('input', function () {
