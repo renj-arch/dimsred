@@ -101,17 +101,3 @@ CREATE POLICY "bookmarks_own" ON bookmarks FOR ALL USING (auth.uid() = user_id);
 
 CREATE POLICY "leaderboard_select" ON leaderboard FOR SELECT USING (true);
 CREATE POLICY "leaderboard_insert" ON leaderboard FOR INSERT WITH CHECK (auth.uid() = user_id);
-
--- 6. Quiz progress (questions covered in current-affairs / archive, per user)
-CREATE TABLE IF NOT EXISTS quiz_progress (
-  user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
-  source TEXT NOT NULL,
-  covered INT NOT NULL DEFAULT 0,
-  correct INT NOT NULL DEFAULT 0,
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  PRIMARY KEY (user_id, source)
-);
-
-ALTER TABLE quiz_progress ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS "quiz_progress_own" ON quiz_progress;
-CREATE POLICY "quiz_progress_own" ON quiz_progress FOR ALL USING (auth.uid() = user_id);
