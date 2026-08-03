@@ -202,6 +202,11 @@ var BASE_H = 2400;   // time-axis height in px (1 year ≈ 2.3px at full history
 var NODE_H = 16;     // single row height for a node
 var _gpb = [0, 0];   // fallback two-column stack when no era band is in the window
 
+// Phones/iPads cap "Show all" far below the desktop cap: iOS Safari's renderer
+// crashes (blank tab) past a few thousand absolutely-positioned nodes in a
+// multi-tens-of-thousands-of-pixels tall canvas, which desktop Chrome survives.
+var IS_SMALL = window.innerWidth < 768 || (navigator.maxTouchPoints > 1 && window.innerWidth < 1024);
+
 function render() {
   var canvas = document.getElementById('canvas');
   var th = detailThreshold();
@@ -318,7 +323,7 @@ function render() {
   // Greedy anti-overlap per era: each era has its own two-column stack anchored at
   // its body top, so a dense era's nodes can never be pushed down into the next
   // era's band (e.g. Maurya Empire spilling from Ancient into Medieval).
-  var cap = SHOW_ALL ? 9000 : (searchActive || activeCat ? 6000 : 4000);
+  var cap = SHOW_ALL ? (IS_SMALL ? 2500 : 9000) : (searchActive || activeCat ? 6000 : 4000);
   var canvasW = document.getElementById('viewport').clientWidth || 800;
 
   // Dry-run placement to measure how tall each era body must actually be, then
