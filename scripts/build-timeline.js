@@ -54,8 +54,11 @@ function yearSignals(text) {
   // Decade ("1950s", "in the 1990s") — take the starting year.
   var re4 = /\b(1[0-9]{3}|20[0-2][0-9])s\b/gi;
   while ((m = re4.exec(t))) { add(+m[1], true); }
-  // Bare year "1857".
-  var re5 = /\b(1[0-9]{3}|20[0-2][0-9])\b/gi;
+  // Bare year "1857" — but NOT when it is a quantity, e.g. "1500 metres",
+  // "1500-metre run", "about 1000 tractors", "1000 years", "Masters 1000",
+  // or part of a distance list "200, 300, 400, 600, 1000 & 1200 kilometres".
+  // Units are blocked both before and after the number, allowing "1500-metre".
+  var re5 = /(?<!\b(?:metres?|meters?|m\b|km\b|kgs?|kilograms?|kilometres?|kilometers?|miles?|feet|ft\b|inches?|cm\b|mm\b|tonnes?|tons?|grams?|litres?|liters?|ml\b|points?|pts\b|percent|%|tractors|markets?|messages?|people|persons|students|soldiers|troops|workers|farmers|years?|yrs?|masters?)[\s-]|&\s)\b(1[0-9]{3}|20[0-2][0-9])\b(?![\s-]*(?:m\b|km\b|kg\b|metres?|meters?|kilometres?|kilometers?|miles?|feet|ft\b|inches?|cm\b|mm\b|tonnes?|tons?|grams?|litres?|liters?|ml\b|points?|pts\b|percent|%|people|persons|students|soldiers|troops|workers|villagers|farmers|years?|yrs?|tractors|markets?|messages?)\b|[\s-]*&[\s-]*\d)/gi;
   while ((m = re5.exec(t))) { add(+m[1]); }
   if (!points.length) return null;
   return { min: Math.min.apply(null, points), max: Math.max.apply(null, points), trusted: trusted };
@@ -64,6 +67,19 @@ function yearSignals(text) {
 function yearsFrom(text) {
   var s = yearSignals(text);
   return s ? { min: s.min, max: s.max } : null;
+}
+
+// A year embedded in a topic NAME is only trusted when the name clearly frames it as a
+// year — "Revolt of 1857", "Indo-Pakistani War of 1965", "1857 rebellion" — not when it
+// is a quantity or part of a title ("ATP Masters 1000", "1500 metres", "1000 Islands").
+function nameYears(name) {
+  var s = yearSignals(name);
+  if (!s) return null;
+  var n = ' ' + String(name).toLowerCase().replace(/\s+/g, ' ') + ' ';
+  var yf = /(^|\s)(of|in|from|since|by|the|and|around|circa|during|after|before|post)\s+(1[0-9]{3}|20[0-2][0-9])(\s|$)/.test(n)
+    || /(^|\s)(1[0-9]{3}|20[0-2][0-9])\s+(revolt|rebellion|revolution|movement|war|battle|act|mutiny|partition|uprising|massacre|era|period|decade)(\s|$)/.test(n)
+    || /^\s*(1[0-9]{3}|20[0-2][0-9])\s*$/.test(name);
+  return yf ? s : null;
 }
 
 // Birth–death span for a person, e.g. "14 April 1891 – 6 December 1956" or "(1869–1948)".
@@ -422,12 +438,21 @@ function countInEra(s, a, b, eraId) {
   return n;
 }
 
+// A blank-fill ANSWER that is a pure number is a year only when the blank asks for a
+// year. If the blank sits right next to a measurement word ("the _____ metres run",
+// "about _____ tractors"), the number is a quantity and must not date the topic.
+var MEAS_NEAR_BLANK = /_+[- ]?(?:metres?|meters?|m\b|km\b|kg\b|kgs?|kilometres?|kilometers?|miles?|feet|ft\b|inches?|cm\b|mm\b|grams?|tonnes?|tons?|litres?|liters?|ml\b|points?|pts\b|percent|%|rupees?|rs\b|lakh|crore|tractors|markets?|messages?|altitude|height|distance|weight|mass|speed)/i;
+
 function topicYears(name, qs, catKey) {
-  var ny = yearSignals(name);
   var ys = [];
   var trusted = {};
   for (var q of qs) {
-    var fy = yearSignals([q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' '));
+    var qtext = [q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' ');
+    var ansIsNum = /^\s*(1[0-9]{3}|20[0-2][0-9])\s*$/.test(q.answer || '');
+    if (ansIsNum && MEAS_NEAR_BLANK.test(String(q.question || ''))) {
+      qtext = [q.question, q.fact, q.hint].filter(Boolean).join(' ');
+    }
+    var fy = yearSignals(qtext);
     if (fy) {
       ys.push(fy.min); ys.push(fy.max);
       for (var k of Object.keys(fy.trusted)) trusted[k] = true;
@@ -437,7 +462,8 @@ function topicYears(name, qs, catKey) {
   // about the topic — keep BC/AD/century years always, and bare years 1000+ too
   // (previously bare 1000–1799 like "1066" or "1757" were wrongly dropped).
   var fl = ys.filter(function (y) { return trusted[y] || y < 0 || (y >= 1000 && y <= 2026); });
-  if (ny) { fl.push(ny.min); fl.push(ny.max); }
+  var nY = nameYears(name);
+  if (nY) { fl.push(nY.min); fl.push(nY.max); }
   if (!fl.length) return null;
   return robustSpan(fl, catKey);
 }
