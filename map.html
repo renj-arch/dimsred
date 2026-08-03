@@ -89,14 +89,13 @@ h1{font-size:1.45em}
 
 <div class="page-wrap">
   <div class="head"><h1>Timeline Map</h1></div>
-  <div class="sub">All of history on one scroll. Zoom out to see eras, zoom in toward the present to see movements, the people in them, and everything connected — diseases, schemes, institutions. Press <b>Show all</b> to put every dated topic on the line at once. Press <b>Links</b> to see co-occurrence ribbons at era transitions (far out) or connection arcs between related topics (zoomed in); hover any node to see its own links.</div>
+  <div class="sub">All of history on one scroll. Zoom out to see eras, zoom in toward the present to see movements, the people in them, and everything connected — diseases, schemes, institutions. Press <b>Show all</b> to put every dated topic on the line at once. Hover any topic to see what it's connected to.</div>
 
   <div class="controls">
     <button class="btn" id="btnOut" title="Zoom out">Zoom out</button>
     <button class="btn" id="btnIn" title="Zoom in toward present">Zoom in</button>
     <button class="btn" id="btnFull">Max zoom out</button>
     <button class="btn" id="btnAll" title="Show every dated topic at once, regardless of zoom level">Show all</button>
-    <button class="btn" id="btnLinks" title="Toggle co-occurrence link lines between connected topics (off by default)">Links</button>
     <input class="searchbar" id="search" type="text" placeholder="Search any person, movement, disease, scheme, topic…">
     <select class="searchbar" id="catFilter" style="flex:0 0 auto;max-width:250px;cursor:pointer"><option value="">All categories</option></select>
   </div>
@@ -127,7 +126,6 @@ var _links = [];
 var _adj = {};
 var _catByKey = {};
 var _lastPos = {};   // positions of rendered nodes from the last render, for hover links
-var showLinks = false;
 
 var MIN_YEAR = -3300;   // Indus Valley / start of Ancient India
 var MAX_YEAR = 2026;
@@ -308,7 +306,7 @@ function render() {
   }
 
   canvas.style.height = Math.max(TOP + BASE_H, Math.max(prevB[0], prevB[1]) + 8) + 'px';
-  canvas.innerHTML = (showLinks ? buildLinkLayer(_lastPos, canvas.style.height, canvasW, range, TOP) : '') + html;
+  canvas.innerHTML = html;
 
   var zi = document.getElementById('zoomInfo');
   zi.textContent = 'Showing ' + fmtYear(WINDOW.start) + ' – ' + fmtYear(WINDOW.end) + ' · level ' + th + (SHOW_ALL ? ' · SHOW ALL' : '') + (activeCat ? ' · filter: ' + (_catByKey[activeCat] || activeCat) : '') + (filtered.length > cap ? ' (capped at ' + cap + ')' : '');
@@ -319,81 +317,6 @@ var searchText = '';
 
 var uExpand = false;
 function toggleUndated() { uExpand = !uExpand; render(); }
-
-var ERA_COL = {
-  ancient: '251,191,36',
-  medieval: '167,139,250',
-  colonial: '56,189,248',
-  freedom: '251,113,133',
-  republic: '52,211,153',
-  contemporary: '96,165,250'
-};
-var _eraIndex = {};   // era id -> band index (0..5)
-var _eraOf = {};      // node id -> era id, from span midpoint
-
-function eraForSpan(min, max) {
-  if (!TL) return 'ancient';
-  var mid = (min + max) / 2;
-  var best = TL.eras[0], bd = Infinity;
-  for (var e of TL.eras) {
-    var d = mid < e.min ? e.min - mid : (mid > e.max ? mid - e.max : 0);
-    if (d < bd) { bd = d; best = e; }
-  }
-  return best.id;
-}
-
-// Co-occurrence links, drawn only when the Links toggle is on. Two zoom-aware styles
-// keep the map from turning into a web of straight lines:
-//  * era zoom (range > 400y): a handful of faint horizontal ribbons at era transitions
-//    whose cross-era co-occurrence weight is significant — big-picture connectivity only.
-//  * fine zoom (range <= 400y): curved arcs between nodes in different columns, routed
-//    through the empty middle so they never cross labels; capped to the strongest links.
-function buildLinkLayer(posById, canvasH, width, range, TOP) {
-  var h = parseFloat(canvasH) || 100;
-  var lines = [];
-  if (range > 400) {
-    var bound = {};
-    var maxW = 0;
-    for (var l of _links) {
-      var ai = _eraIndex[_eraOf[l.a]], bi = _eraIndex[_eraOf[l.b]];
-      if (ai === undefined || bi === undefined || ai === bi) continue;
-      if (Math.abs(ai - bi) !== 1) continue;
-      var key = Math.min(ai, bi);
-      bound[key] = (bound[key] || 0) + (l.w || 1);
-      if (bound[key] > maxW) maxW = bound[key];
-    }
-    for (var k in bound) {
-      if (bound[k] < maxW * 0.15) continue;
-      var idx = +k;
-      var y = TOP + (TL.eras[idx].max - WINDOW.start) / range * BASE_H;
-      if (y < TOP || y > TOP + BASE_H) continue;
-      var hh = Math.max(3, 3 + bound[k] / maxW * 11);
-      var o = Math.min(0.22, 0.06 + bound[k] / maxW * 0.14);
-      lines.push('<rect x="0" y="' + (y - hh / 2).toFixed(1) + '" width="' + (width || 800) + '" height="' + hh.toFixed(1) + '" fill="rgba(167,139,250,' + o.toFixed(3) + ')" rx="2"/>');
-    }
-  } else {
-    var centerX = (width || 800) / 2;
-    var cands = [];
-    for (var l of _links) {
-      var p1 = posById[l.a], p2 = posById[l.b];
-      if (!p1 || !p2) continue;
-      if ((l.w || 1) < 3) continue;
-      var cross = (p1.x < centerX && p2.x > centerX) || (p1.x > centerX && p2.x < centerX);
-      if (!cross) continue;
-      cands.push({ p1: p1, p2: p2, w: l.w || 1, era: _eraOf[l.a] || 'ancient' });
-    }
-    cands.sort(function (a, b) { return b.w - a.w; });
-    if (cands.length > 25) cands.length = 25;
-    for (var c of cands) {
-      var o = Math.min(0.12, 0.04 + c.w / 150);
-      var midY = (c.p1.y + c.p2.y) / 2;
-      var col = ERA_COL[c.era] || '167,139,250';
-      lines.push('<path d="M ' + c.p1.x.toFixed(1) + ' ' + c.p1.y.toFixed(1) + ' Q ' + centerX.toFixed(1) + ' ' + midY.toFixed(1) + ' ' + c.p2.x.toFixed(1) + ' ' + c.p2.y.toFixed(1) + '" fill="none" stroke="rgba(' + col + ',' + o.toFixed(3) + ')" stroke-width="1"/>');
-    }
-  }
-  if (!lines.length) return '';
-  return '<svg class="links" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0" viewBox="0 0 ' + (width || 800) + ' ' + h + '" preserveAspectRatio="none">' + lines.join('') + '</svg>';
-}
 
 function setWindow(start, end, label) {
   WINDOW.start = Math.round(Math.max(MIN_YEAR, Math.min(MAX_YEAR, start)));
@@ -453,14 +376,8 @@ btnAll.onclick = function () {
   scrollToPresent();
 };
 
-var btnLinks = document.getElementById('btnLinks');
-btnLinks.onclick = function () {
-  showLinks = !showLinks;
-  btnLinks.classList.toggle('active', showLinks);
-  render();
-};
-
-// Hover a node to see only its own connections — keeps the map clean by default.
+// Hover a node to see its co-occurrence connections — the only place links appear on
+// the map, on demand, so the timeline itself always stays clean.
 function showNodeLinks(id) {
   clearNodeLinks();
   var pos = _lastPos;
@@ -681,8 +598,6 @@ fetch('data/timeline.json').then(function (r) { return r.json(); }).then(functio
   TL = t;
   NODES = t.nodes;
   _links = t.links || [];
-  for (var ei = 0; ei < TL.eras.length; ei++) _eraIndex[TL.eras[ei].id] = ei;
-  for (var n of NODES) _eraOf[n.id] = eraForSpan(n.span ? n.span.min : 0, n.span ? n.span.max : 0);
   buildAdj();
   buildCatOptions();
   render();
