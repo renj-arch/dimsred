@@ -193,6 +193,11 @@ function eventKey(q) {
   return n(q.question || '').substring(0, 80) + '|' + n(q.answer || '');
 }
 
+function rankIndexName(q) {
+  var m = (q.question || '').match(/in the (.+?) as of/);
+  return m ? m[1].trim() : null;
+}
+
 async function main() {
   var existing = {};
   if (fs.existsSync(PIB_PATH)) {
@@ -208,71 +213,86 @@ async function main() {
   if (!existing[CA_KEY]) existing[CA_KEY] = { subSubjects: {} };
   if (!existing[CA_KEY].subSubjects['India Rankings']) existing[CA_KEY].subSubjects['India Rankings'] = [];
 
-  var existingKeys = {};
-  existing[CA_KEY].subSubjects['India Rankings'].forEach(function(q) {
-    existingKeys[eventKey(q)] = true;
+  // One question per index: update in place (keep its id) so monthly runs never
+  // append a second "as of <month>" question for the same index, and ids never
+  // collide between months. Stale month-duplicates are dropped below.
+  var list = existing[CA_KEY].subSubjects['India Rankings'];
+  var byIndex = {};
+  var maxSeq = 0;
+  list.forEach(function(q) {
+    var n = rankIndexName(q);
+    if (n) byIndex[n] = q;
+    var m = (q.id || '').match(/^rank_(\d+)/);
+    if (m) maxSeq = Math.max(maxSeq, parseInt(m[1], 10));
   });
 
-  var newQuestions = [];
-  var seq = existing[CA_KEY].subSubjects['India Rankings'].length + 1;
+  var updated = 0;
+  var added = 0;
 
   for (var ri = 0; ri < RANKINGS.length; ri++) {
     var idx = RANKINGS[ri];
     console.error('Fetching ' + idx.name + '...');
 
     // Curated override: use the published rank instead of the stale Wikipedia table.
+    var rank = null;
+    var fact = null;
     var override = RANK_OVERRIDES[idx.name];
     if (override) {
-      var qsOverride = makeRankingQuestions(idx, override.rank, seq, override.fact);
-      qsOverride.forEach(function(q) {
-        var key = eventKey(q);
-        if (!existingKeys[key]) {
-          newQuestions.push(q);
-          existingKeys[key] = true;
-          seq++;
-        }
-      });
-      console.error('  India rank (curated override): ' + override.rank);
+      rank = override.rank;
+      fact = override.fact;
+      console.error('  India rank (curated override): ' + rank);
       await delay(200);
-      continue;
-    }
-
-    var html;
-    try {
-      html = await fetchPageContent(idx.page);
-    } catch (e) {
-      console.error('  Error: ' + e.message);
-      await delay(200);
-      continue;
-    }
-    await delay(800);
-
-    var rank = findIndiaRankInTable(html);
-    if (!rank) rank = findIndiaRank(html);
-
-    if (rank) {
-      console.error('  India rank: ' + rank);
-      var qs = makeRankingQuestions(idx, rank, seq);
-      qs.forEach(function(q) {
-        var key = eventKey(q);
-        if (!existingKeys[key]) {
-          newQuestions.push(q);
-          existingKeys[key] = true;
-          seq++;
-        }
-      });
     } else {
-      console.error('  Rank not found');
+      var html;
+      try {
+        html = await fetchPageContent(idx.page);
+      } catch (e) {
+        console.error('  Error: ' + e.message);
+        await delay(200);
+        continue;
+      }
+      await delay(800);
+
+      rank = findIndiaRankInTable(html);
+      if (!rank) rank = findIndiaRank(html);
+      console.error(rank ? '  India rank: ' + rank : '  Rank not found');
+    }
+
+    if (!rank) continue;
+
+    var existingQ = byIndex[idx.name];
+    if (existingQ) {
+      var qFresh = makeRankingQuestions(idx, rank, maxSeq || 1, fact)[0];
+      if (existingQ.answer !== qFresh.answer || existingQ.question !== qFresh.question || existingQ.fact !== qFresh.fact || existingQ.pubDate !== qFresh.pubDate) {
+        existingQ.answer = qFresh.answer;
+        existingQ.question = qFresh.question;
+        existingQ.fact = qFresh.fact;
+        existingQ.pubDate = qFresh.pubDate;
+        updated++;
+      }
+    } else {
+      maxSeq++;
+      var qNew = makeRankingQuestions(idx, rank, maxSeq, fact)[0];
+      list.push(qNew);
+      byIndex[idx.name] = qNew;
+      added++;
     }
   }
 
-  newQuestions.forEach(function(q) {
-    existing[CA_KEY].subSubjects['India Rankings'].push(q);
+  // Drop stale month-duplicates that accumulated from earlier append-only runs.
+  var deduped = [];
+  var seenIndex = {};
+  list.forEach(function(q) {
+    var n = rankIndexName(q);
+    if (!n) { deduped.push(q); return; }
+    if (!seenIndex[n]) { seenIndex[n] = true; deduped.push(q); }
   });
+  list.length = 0;
+  Array.prototype.push.apply(list, deduped);
 
-  var total = existing[CA_KEY].subSubjects['India Rankings'].length;
+  var total = list.length;
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
-  console.error('India Rankings: ' + total + ' total questions, ' + newQuestions.length + ' new');
+  console.error('India Rankings: ' + total + ' total questions, ' + added + ' new, ' + updated + ' updated');
 }
 
 main().catch(function(err) {
