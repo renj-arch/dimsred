@@ -5785,13 +5785,32 @@ var _staticGen_polity = GK_GENERATORS.polity;
         function _piFactPerson(q, wrap, i) {
             var names = _piFactNames(q);
             if (i >= names.length) {
-                wrap.style.display = 'none';
-                wrap.innerHTML = '';
+                _piTopicImage(q, wrap, 0);
                 return;
             }
             _resolvePersonImage(names[i], function(url) {
                 if (url) { _renderPersonImg(url); return; }
                 _piFactPerson(q, wrap, i + 1);
+            });
+        }
+        var _piFiller = /^(none|all of the above|both a and b|none of the above|cannot be determined|not possible|none of these|all the above)$/i;
+        function _piTopicImage(q, wrap, step) {
+            step = step || 0;
+            var query = null;
+            if (step === 0) {
+                query = (q.a || '').trim();
+                if (query && _piFiller.test(query)) query = null;
+            } else if (step === 1) {
+                query = [q.fact, q.solution, q.explanation].filter(Boolean).join(' ').trim().slice(0, 100);
+            }
+            if (!query) {
+                wrap.style.display = 'none';
+                wrap.innerHTML = '';
+                return;
+            }
+            _resolvePersonImage(query, function(url) {
+                if (url) { _renderPersonImg(url); return; }
+                _piTopicImage(q, wrap, step + 1);
             });
         }
 
