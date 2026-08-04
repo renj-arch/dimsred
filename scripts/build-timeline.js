@@ -155,7 +155,14 @@ var SEED = {
     'Leonardo da Vinci', 'Michelangelo', 'William Shakespeare', 'Copernicus', 'Voltaire', 'Rousseau',
     'Adam Smith', 'Bismarck', 'Queen Victoria', 'Garibaldi', 'Karl Marx', 'John F. Kennedy', 'Rosa Parks',
     'Mikhail Gorbachev', 'Ronald Reagan', 'Margaret Thatcher', 'Deng Xiaoping', 'Lee Kuan Yew', 'Xi Jinping',
-    'Mahathir'
+    'Mahathir',
+    'Srinivasa Ramanujan', 'Maharishi Patanjali', 'Raja Ram Mohan Roy', 'Ishwar Chandra Vidyasagar',
+    'Chittaranjan Das', 'Motilal Nehru', 'Maulana Abul Kalam Azad', 'Muhammad Iqbal',
+    'Shyama Prasad Mukherjee', 'Vinoba Bhave', 'Jayaprakash Narayan', 'Periyar', 'K. Kamaraj',
+    'C. N. Annadurai', 'Narayana Guru', 'Jagadish Chandra Bose', 'Meghnad Saha', 'Vikram Sarabhai',
+    'Homi Bhabha', 'A. P. J. Abdul Kalam', 'Salim Ali', 'Prafulla Chandra Ray', 'Subramania Bharati',
+    'Ram Prasad Bismil', 'Birsa Munda', 'Bahadur Shah I', 'Shah Alam II', 'Baji Rao II', 'Dara Shikoh',
+    'Joan of Arc', 'Raphael', 'Kepler', 'Sigmund Freud'
   ]},
   religion: { type: 'event', level: 2, list: [
     'First Buddhist Council', 'Second Buddhist Council', 'Third Buddhist Council', 'Fourth Buddhist Council',
@@ -163,7 +170,7 @@ var SEED = {
   ]},
   sites: { type: 'concept', level: 3, list: [
     'Lumbini', 'Kushinagar', 'Rajgir', 'Pataliputra', 'Gandhara', 'Mathura', 'Vatsa', 'Rigveda',
-    'Mohenjo-daro', 'Kanchi', 'Vaishali', 'Kurukshetra'
+    'Mohenjo-daro', 'Kanchi', 'Vaishali', 'Kurukshetra', 'Magadha', 'Mahajanapadas'
   ]},
   classical: { type: 'event', level: 2, list: [
     'Roman Republic', 'Hellenistic period', 'Parthian Empire', 'Sasanian Empire'
@@ -511,6 +518,41 @@ var EXTRA_ALIASES = {
   'Lee Kuan Yew': ['lee kuan yew'],
   'Xi Jinping': ['xi jinping'],
   'Mahathir': ['mahathir', 'mahathir mohamad', 'tun mahathir'],
+  'Srinivasa Ramanujan': ['srinivasa ramanujan', 'ramanujan'],
+  'Maharishi Patanjali': ['patanjali', 'maharishi patanjali', 'sage patanjali'],
+  'Raja Ram Mohan Roy': ['raja ram mohan roy', 'ram mohan roy', 'raja rammohan roy', 'r r m roy'],
+  'Ishwar Chandra Vidyasagar': ['ishwar chandra vidyasagar', 'ishvar chandra vidyasagar', 'vidyasagar', 'ishwar chandra'],
+  'Chittaranjan Das': ['chittaranjan das', 'chitta ranjan das', 'deshbandhu', 'c r das'],
+  'Motilal Nehru': ['motilal nehru', 'pandit motilal nehru'],
+  'Maulana Abul Kalam Azad': ['maulana azad', 'maulana abul kalam azad', 'abul kalam azad', 'azad'],
+  'Muhammad Iqbal': ['muhammad iqbal', 'allama iqbal', 'sir muhammad iqbal'],
+  'Shyama Prasad Mukherjee': ['shyama prasad mukherjee', 'syama prasad mukherjee', 's p mukherjee'],
+  'Vinoba Bhave': ['vinoba bhave', 'acharya vinoba bhave', 'vinoba'],
+  'Jayaprakash Narayan': ['jayaprakash narayan', 'jp narayan', 'j p narayan'],
+  'Periyar': ['periyar', 'e v ramasamy', 'ev ramasamy', 'ramasamy naicker'],
+  'K. Kamaraj': ['k kamaraj', 'kamaraj', 'kamaraj nadar', 'kumarasami kamaraj'],
+  'C. N. Annadurai': ['c n annadurai', 'cn annadurai', 'annadurai', 'conjeevaram annadurai'],
+  'Narayana Guru': ['narayana guru', 'sree narayana guru', 'narayana guru swami'],
+  'Jagadish Chandra Bose': ['jagadish chandra bose', 'jagdish chandra bose', 'j c bose', 'acharya jagadish chandra'],
+  'Meghnad Saha': ['meghnad saha', 'm n saha', 'saha'],
+  'Vikram Sarabhai': ['vikram sarabhai', 'vikram ambalal sarabhai', 'sarabhai'],
+  'Homi Bhabha': ['homi bhabha', 'homi jehangir bhabha', 'bhabha'],
+  'A. P. J. Abdul Kalam': ['a p j abdul kalam', 'apj abdul kalam', 'abdul kalam'],
+  'Salim Ali': ['salim ali', 'sálim ali'],
+  'Prafulla Chandra Ray': ['prafulla chandra ray', 'p c ray', 'acharya p c ray'],
+  'Subramania Bharati': ['subramania bharati', 'subramanya bharathi', 'maha kavi bharathi'],
+  'Ram Prasad Bismil': ['ram prasad bismil', 'ramprasad bismil', 'bismil'],
+  'Birsa Munda': ['birsa munda', 'bhagwan birsa munda'],
+  'Bahadur Shah I': ['bahadur shah i', 'muazzam', 'qutb-ud-din muazzam'],
+  'Shah Alam II': ['shah alam ii', 'ali gauhar'],
+  'Baji Rao II': ['baji rao ii', 'bajirao ii'],
+  'Dara Shikoh': ['dara shikoh', 'dara shukoh'],
+  'Joan of Arc': ['joan of arc', 'jeanne d\u2019arc', 'jeanne d\u2019 arc'],
+  'Raphael': ['raphael', 'raffaello sanzio', 'raffaello'],
+  'Kepler': ['johannes kepler', 'kepler'],
+  'Sigmund Freud': ['sigmund freud', 'freud'],
+  'Magadha': ['magadha', 'magadha kingdom', 'magadha empire', 'magadha janapada'],
+  'Mahajanapadas': ['mahajanapada', 'mahajanapadas', 'sixteen mahajanapadas'],
   'Qing dynasty': ['qing dynasty', 'qing'],
   'Cultural Revolution': ['cultural revolution', 'great proletarian cultural revolution', 'red guards'],
   'Long March': ['long march', 'the long march'],
@@ -683,7 +725,26 @@ var NEGATIVE_ALIASES = {
   'John F. Kennedy': ['kennedy space center', 'kennedy airport', 'kennedy international airport', 'robert f kennedy', 'rfk'],
   'Ronald Reagan': ['reagan airport', 'washington reagan'],
   'Bismarck': ['bismarck (battleship)', 'bismarck ship', 'bismarck archipel'],
-  'Garibaldi': ['garibaldi biscuit', 'garibaldi (biscuit)']
+  'Garibaldi': ['garibaldi biscuit', 'garibaldi (biscuit)'],
+  'Maharishi Patanjali': ['patanjali ayurveda', 'patanjali foods', 'patanjali products', 'patanjali yogpeeth', 'patanjali herbal'],
+  'Motilal Nehru': ['jawaharlal nehru', 'pandit nehru', 'nehru university', 'nehru stadium', 'nehru park', 'nehru port'],
+  'Maulana Abul Kalam Azad': ['chandra shekhar azad', 'chandrashekhar azad', 'azad maidan', 'azad nagar', 'azad india', 'azad bhawan', 'azad foundation', 'azad hind', 'azad kashmir'],
+  'Shyama Prasad Mukherjee': ['pranab mukherjee', 'mukherjee nagar', 'mukherjee house'],
+  'Jayaprakash Narayan': ['swaminarayan', 'narayan murthy', 'narayana guru', 'sathya narayana', 'narayan rao'],
+  'Periyar': ['periyar university', 'periyar tiger reserve', 'periyar wildlife', 'periyar national park', 'periyar sanctuary'],
+  'Jagadish Chandra Bose': ['subhas chandra bose', 'satyendra nath bose', 'bose-einstein', 'bose einstein', 'bose-einstein condensate', 'bose institute'],
+  'Vikram Sarabhai': ['sarabhai vs sarabhai', 'sarabhai v/s sarabhai'],
+  'A. P. J. Abdul Kalam': ['kalam sea', 'kalamkari', 'kalam (film)'],
+  'Salim Ali': ['ali (actor)', 'ali zafar', 'ali baba'],
+  'Prafulla Chandra Ray': ['x-ray', 'x-rays', 'x ray', 'gamma ray', 'cosmic ray', 'cathode ray', 'ray (film)'],
+  'Subramania Bharati': ['bharati telecom', 'bharati shipyard', 'bharati axa', 'bharati vidyapeeth', 'bharati university', 'bharati malhotra'],
+  'Birsa Munda': ['munda tribe', 'munda language', 'austroasiatic', 'munda peoples'],
+  'Bahadur Shah I': ['bahadur shah zafar', 'bahadur shah ii', 'shah alam ii'],
+  'Shah Alam II': ['shah alam (malaysia)'],
+  'Baji Rao II': ['bajirao i', 'baji rao i', 'bajirao mastani'],
+  'Kepler': ['kepler-', 'kepler mission', 'kepler space telescope', 'kepler telescope', 'kepler 22b'],
+  'Raphael': ['raphael (tmnt)', 'raphael (ninja', 'raphael sanzio'],
+  'Magadha': ['magadha (district)']
 };
 
 // Manual, authoritative time spans for the curated spine (stable well-known facts).
@@ -852,7 +913,19 @@ var MANUAL_SPANS = {
   'Bismarck': [1815, 1898], 'Queen Victoria': [1819, 1901], 'Garibaldi': [1807, 1882], 'Karl Marx': [1818, 1883],
   'John F. Kennedy': [1917, 1963], 'Rosa Parks': [1913, 2005], 'Mikhail Gorbachev': [1931, 2022],
   'Ronald Reagan': [1911, 2004], 'Margaret Thatcher': [1925, 2013], 'Deng Xiaoping': [1904, 1997],
-  'Lee Kuan Yew': [1923, 2015], 'Xi Jinping': [1953, 2026], 'Mahathir': [1925, 2026]
+  'Lee Kuan Yew': [1923, 2015], 'Xi Jinping': [1953, 2026], 'Mahathir': [1925, 2026],
+  'Srinivasa Ramanujan': [1887, 1920], 'Maharishi Patanjali': [-200, 200],
+  'Raja Ram Mohan Roy': [1772, 1833], 'Ishwar Chandra Vidyasagar': [1820, 1891],
+  'Chittaranjan Das': [1870, 1925], 'Motilal Nehru': [1861, 1931], 'Maulana Abul Kalam Azad': [1888, 1958],
+  'Muhammad Iqbal': [1877, 1938], 'Shyama Prasad Mukherjee': [1901, 1953], 'Vinoba Bhave': [1895, 1982],
+  'Jayaprakash Narayan': [1902, 1979], 'Periyar': [1879, 1973], 'K. Kamaraj': [1903, 1975],
+  'C. N. Annadurai': [1909, 1969], 'Narayana Guru': [1855, 1928], 'Jagadish Chandra Bose': [1858, 1937],
+  'Meghnad Saha': [1893, 1956], 'Vikram Sarabhai': [1919, 1971], 'Homi Bhabha': [1909, 1966],
+  'A. P. J. Abdul Kalam': [1931, 2015], 'Salim Ali': [1896, 1987], 'Prafulla Chandra Ray': [1861, 1944],
+  'Subramania Bharati': [1882, 1921], 'Ram Prasad Bismil': [1897, 1927], 'Birsa Munda': [1875, 1900],
+  'Bahadur Shah I': [1643, 1712], 'Shah Alam II': [1728, 1806], 'Baji Rao II': [1775, 1851],
+  'Dara Shikoh': [1615, 1659], 'Joan of Arc': [1412, 1431], 'Raphael': [1483, 1520], 'Kepler': [1571, 1630],
+  'Sigmund Freud': [1856, 1939], 'Magadha': [-800, -300], 'Mahajanapadas': [-600, -325]
 };
 
 // Curated spans for sub-topics (non-seed) where extracted year clusters cannot
@@ -1057,7 +1130,24 @@ var PERSON_DESCS = {
   'Karl Marx': 'philosopher and founder of Marxism', 'John F. Kennedy': 'US President',
   'Rosa Parks': 'American civil rights activist', 'Mikhail Gorbachev': 'last leader of the Soviet Union',
   'Ronald Reagan': 'US President', 'Margaret Thatcher': 'British Prime Minister', 'Deng Xiaoping': 'Chinese leader',
-  'Lee Kuan Yew': 'founding father of Singapore', 'Xi Jinping': 'President of China', 'Mahathir': 'Malaysian Prime Minister'
+  'Lee Kuan Yew': 'founding father of Singapore', 'Xi Jinping': 'President of China', 'Mahathir': 'Malaysian Prime Minister',
+  'Srinivasa Ramanujan': 'Indian mathematician', 'Maharishi Patanjali': 'author of the Yoga Sutras',
+  'Raja Ram Mohan Roy': 'father of the Indian Renaissance', 'Ishwar Chandra Vidyasagar': 'social reformer and educationist',
+  'Chittaranjan Das': 'Indian nationalist leader', 'Motilal Nehru': 'Indian freedom fighter and lawyer',
+  'Maulana Abul Kalam Azad': 'first Education Minister of India', 'Muhammad Iqbal': 'national poet of Pakistan',
+  'Shyama Prasad Mukherjee': 'founder of the Bharatiya Jana Sangh', 'Vinoba Bhave': 'Gandhian and Bhoodan leader',
+  'Jayaprakash Narayan': 'socialist and Sarvodaya leader', 'Periyar': 'social reformer and Dravidian leader',
+  'K. Kamaraj': 'Tamil Nadu Chief Minister and freedom fighter', 'C. N. Annadurai': 'founder of the DMK',
+  'Narayana Guru': 'Kerala social reformer', 'Jagadish Chandra Bose': 'plant physiologist and physicist',
+  'Meghnad Saha': 'astrophysicist (Saha equation)', 'Vikram Sarabhai': 'father of the Indian space programme',
+  'Homi Bhabha': 'father of the Indian nuclear programme', 'A. P. J. Abdul Kalam': 'scientist and President of India',
+  'Salim Ali': 'Indian ornithologist', 'Prafulla Chandra Ray': 'founder of Indian pharmaceutical industry',
+  'Subramania Bharati': 'Tamil poet and freedom fighter', 'Ram Prasad Bismil': 'revolutionary freedom fighter',
+  'Birsa Munda': 'tribal freedom fighter', 'Bahadur Shah I': 'Mughal emperor', 'Shah Alam II': 'Mughal emperor',
+  'Baji Rao II': 'last Peshwa of the Maratha Empire', 'Dara Shikoh': 'Mughal prince and scholar',
+  'Joan of Arc': 'French heroine of the Hundred Years\u2019 War', 'Raphael': 'Renaissance painter',
+  'Kepler': 'astronomer who formulated the laws of planetary motion', 'Sigmund Freud': 'founder of psychoanalysis',
+  'Magadha': 'ancient Indian kingdom', 'Mahajanapadas': 'sixteen ancient Indian republics'
 };
 
 // Person-role keyword gate: an auto-extracted descriptor is only attached when it
@@ -1334,7 +1424,7 @@ var NON_SURNAMES = ['great', 'the', 'of', 'de', 'junior', 'senior', 'saint', 'ii
 
 // Entities whose bare surname is too ambiguous to reuse — match full name only.
 // ("Gandhi" usually means Mahatma; Indira must be named explicitly.)
-var NO_SURNAME_ALIAS = ['Indira Gandhi', 'Hu Mei', 'Alexander Graham Bell', 'Guru Tegh Bahadur', 'Rosa Parks', 'Adam Smith', 'Queen Victoria', 'Karl Marx'];
+var NO_SURNAME_ALIAS = ['Indira Gandhi', 'Hu Mei', 'Alexander Graham Bell', 'Guru Tegh Bahadur', 'Rosa Parks', 'Adam Smith', 'Queen Victoria', 'Karl Marx', 'Motilal Nehru', 'Maulana Abul Kalam Azad', 'Jayaprakash Narayan', 'Periyar', 'Jagadish Chandra Bose', 'Meghnad Saha', 'Vikram Sarabhai', 'A. P. J. Abdul Kalam', 'Salim Ali', 'Prafulla Chandra Ray', 'Subramania Bharati', 'Birsa Munda', 'Narayana Guru', 'Joan of Arc', 'Shyama Prasad Mukherjee'];
 
 function aliasesFor(name, isPerson) {
   var a = [name];
@@ -2062,7 +2152,59 @@ function main() {
     ['seed|Margaret Thatcher', 'seed|Cold War', 2],
     ['seed|Deng Xiaoping', 'seed|Cultural Revolution', 2],
     ['seed|Lee Kuan Yew', 'seed|Cold War', 2],
-    ['seed|Xi Jinping', 'seed|War on Terror', 2]
+    ['seed|Xi Jinping', 'seed|War on Terror', 2],
+    ['seed|Maharishi Patanjali', 'seed|Panini', 2],
+    ['seed|Magadha', 'seed|Bimbisara', 3],
+    ['seed|Magadha', 'seed|Ajatashatru', 3],
+    ['seed|Magadha', 'seed|Gautama Buddha', 3],
+    ['seed|Magadha', 'seed|Mahavira', 2],
+    ['seed|Mahajanapadas', 'seed|Magadha', 3],
+    ['seed|Mahajanapadas', 'seed|Gautama Buddha', 2],
+    ['seed|Srinivasa Ramanujan', 'seed|C V Raman', 2],
+    ['seed|Srinivasa Ramanujan', 'seed|Aryabhata', 2],
+    ['seed|Raja Ram Mohan Roy', 'seed|Ishwar Chandra Vidyasagar', 3],
+    ['seed|Raja Ram Mohan Roy', 'seed|Indian independence movement', 2],
+    ['seed|Ishwar Chandra Vidyasagar', 'seed|Swami Vivekananda', 2],
+    ['seed|Chittaranjan Das', 'seed|Indian National Congress', 3],
+    ['seed|Motilal Nehru', 'seed|Jawaharlal Nehru', 3],
+    ['seed|Motilal Nehru', 'seed|Indian National Congress', 2],
+    ['seed|Maulana Abul Kalam Azad', 'seed|Indian National Congress', 2],
+    ['seed|Maulana Abul Kalam Azad', 'seed|Partition of India', 2],
+    ['seed|Muhammad Iqbal', 'seed|Mohammad Ali Jinnah', 3],
+    ['seed|Muhammad Iqbal', 'seed|Partition of India', 2],
+    ['seed|Shyama Prasad Mukherjee', 'seed|Partition of India', 2],
+    ['seed|Vinoba Bhave', 'seed|Mahatma Gandhi', 3],
+    ['seed|Vinoba Bhave', 'seed|Jayaprakash Narayan', 3],
+    ['seed|Jayaprakash Narayan', 'seed|Indian National Congress', 2],
+    ['seed|Periyar', 'seed|C. N. Annadurai', 3],
+    ['seed|C. N. Annadurai', 'seed|K. Kamaraj', 3],
+    ['seed|Narayana Guru', 'seed|Periyar', 2],
+    ['seed|Jagadish Chandra Bose', 'seed|C V Raman', 3],
+    ['seed|Jagadish Chandra Bose', 'seed|Srinivasa Ramanujan', 2],
+    ['seed|Meghnad Saha', 'seed|Jagadish Chandra Bose', 2],
+    ['seed|Vikram Sarabhai', 'seed|Homi Bhabha', 3],
+    ['seed|Vikram Sarabhai', 'seed|Indian Space Research Organisation', 3],
+    ['seed|Homi Bhabha', 'seed|Nuclear power in India', 3],
+    ['seed|A. P. J. Abdul Kalam', 'seed|Indian Space Research Organisation', 2],
+    ['seed|A. P. J. Abdul Kalam', 'seed|Pokhran-II', 2],
+    ['seed|Salim Ali', 'seed|Gir', 2],
+    ['seed|Prafulla Chandra Ray', 'seed|Jagadish Chandra Bose', 2],
+    ['seed|Subramania Bharati', 'seed|Indian independence movement', 2],
+    ['seed|Ram Prasad Bismil', 'seed|Bhagat Singh', 3],
+    ['seed|Ram Prasad Bismil', 'seed|Chandra Shekhar Azad', 3],
+    ['seed|Birsa Munda', 'seed|Indian independence movement', 2],
+    ['seed|Bahadur Shah I', 'seed|Shah Alam II', 3],
+    ['seed|Shah Alam II', 'seed|British East India Company', 3],
+    ['seed|Shah Alam II', 'seed|Battle of Buxar', 3],
+    ['seed|Shah Alam II', 'seed|Battle of Plassey', 2],
+    ['seed|Baji Rao II', 'seed|Anglo-Maratha Wars', 3],
+    ['seed|Dara Shikoh', 'seed|Mughal Empire', 3],
+    ['seed|Joan of Arc', 'seed|Hundred Years\u2019 War', 3],
+    ['seed|Raphael', 'seed|Leonardo da Vinci', 3],
+    ['seed|Raphael', 'seed|Michelangelo', 3],
+    ['seed|Kepler', 'seed|Galileo Galilei', 3],
+    ['seed|Kepler', 'seed|Copernicus', 3],
+    ['seed|Sigmund Freud', 'seed|Enlightenment', 2]
   ];
   var linkMap = {};
   for (var li of links) linkMap[li.a + '\u0000' + li.b] = li.w;
