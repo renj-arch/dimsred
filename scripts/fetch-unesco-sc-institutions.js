@@ -151,9 +151,10 @@ async function main() {
         if (row.length < 2) continue;
         var caseName = strip(row[0] || '');
         var yearStr = strip(row.length > 1 ? row[1] : '');
+        var significance = strip(row.length > 2 ? row[2] : '');
         var yr = yearStr.match(/\b(19\d{2}|20\d{2})\b/);
         if (caseName.length > 5 && caseName.indexOf('Case') < 0 && caseName.indexOf('Year') < 0) {
-          freshS[caseName] = yr ? yr[1] : '20th century';
+          freshS[caseName] = { year: yr ? yr[1] : '20th century', significance: significance };
         }
       }
     });
@@ -162,9 +163,9 @@ async function main() {
     existingS.forEach(function(q) { byCase[q.answer] = q; });
     var sUpdated = 0;
     Object.keys(freshS).forEach(function(caseName) {
-      var year = freshS[caseName];
-      var qText = 'Which landmark case was decided by the Supreme Court of India in ' + year + '?';
-      var fact = caseName + ' was a landmark judgment of ' + year + '.';
+      var info = freshS[caseName];
+      var qText = 'Which landmark case was decided by the Supreme Court of India in ' + info.year + '?';
+      var fact = caseName + ' was a landmark judgment of ' + info.year + '.' + (info.significance ? ' ' + info.significance : '');
       var existingQ = byCase[caseName];
       if (existingQ) {
         if (existingQ.question !== qText || existingQ.fact !== fact) { existingQ.question = qText; existingQ.fact = fact; sUpdated++; }
@@ -173,10 +174,7 @@ async function main() {
         if (q) nq.s.push(q);
       }
     });
-    var sBefore = existingS.length;
-    existing[CA_KEY].subSubjects['SC Landmark Judgments'] = existingS.filter(function(q) { return freshS[q.answer]; });
-    var sRemoved = sBefore - existing[CA_KEY].subSubjects['SC Landmark Judgments'].length;
-    process.stdout.write(Object.keys(freshS).length + ' cases, ' + sUpdated + ' updated, ' + nq.s.length + ' new, ' + sRemoved + ' removed\n');
+    process.stdout.write(Object.keys(freshS).length + ' cases, ' + sUpdated + ' updated, ' + nq.s.length + ' new, append-only (no removal)\n');
   } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
   await delay(600);
 

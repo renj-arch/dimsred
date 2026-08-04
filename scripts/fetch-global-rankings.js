@@ -73,9 +73,19 @@ function findIndiaRankInTable(html) {
 
   for (var ti = 0; ti < tables.length; ti++) {
     var rows = tables[ti].match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
-    if (!rows) continue;
+    if (!rows || rows.length < 2) continue;
 
-    for (var ri = 0; ri < rows.length; ri++) {
+    // Identify a "rank" column from the header row if present.
+    var rankCol = -1;
+    var headerCells = rows[0].match(/<t[hd][^>]*>([\s\S]*?)<\/t[hd]>/gi);
+    if (headerCells) {
+      for (var hci = 0; hci < headerCells.length; hci++) {
+        var hText = stripHtml(headerCells[hci]).replace(/\s+/g, ' ').trim().toLowerCase();
+        if (hText.indexOf('rank') >= 0 || hText === 'pos') { rankCol = hci; break; }
+      }
+    }
+
+    for (var ri = 1; ri < rows.length; ri++) {
       var cells = rows[ri].match(/<t[hd][^>]*>([\s\S]*?)<\/t[hd]>/gi);
       if (!cells || cells.length < 2) continue;
 
@@ -86,22 +96,43 @@ function findIndiaRankInTable(html) {
       }
       if (!indiaRow) continue;
 
-      var rankVal = '';
-      for (var ci2 = 0; ci2 < cells.length; ci2++) {
-        var val = stripHtml(cells[ci2]).replace(/\s+/g, ' ').replace(/\[.*?\]/g, '').trim();
-        var numM = val.match(/(\d+)/);
+      if (rankCol >= 0 && rankCol < cells.length) {
+        var rankVal = stripHtml(cells[rankCol]).replace(/\s+/g, ' ').replace(/\[.*?\]/g, '').trim();
+        var numM = rankVal.match(/\b(\d+)\b/);
         if (numM) {
           var n = parseInt(numM[1]);
-          if (n > 0 && n < 250) {
-            if (!rankVal) rankVal = '' + n;
-          }
+          if (n > 0 && n < 250) return '' + n;
+        }
+        continue;
+      }
+
+      // No rank column header: prefer the LAST numeric cell (rank usually last),
+      // avoiding scores/years that appear earlier in the row.
+      var candidates = [];
+      for (var ci2 = 0; ci2 < cells.length; ci2++) {
+        var val = stripHtml(cells[ci2]).replace(/\s+/g, ' ').replace(/\[.*?\]/g, '').trim();
+        var numM2 = val.match(/\b(\d+)\b/);
+        if (numM2) {
+          var n2 = parseInt(numM2[1]);
+          if (n2 > 0 && n2 < 250) candidates.push(n2);
         }
       }
-      if (rankVal) return rankVal;
+      if (candidates.length) return '' + candidates[candidates.length - 1];
     }
   }
   return '';
 }
+
+// Curated overrides for indexes where Wikipedia's own table is stale or the
+// wikitable parsing returns a wrong cell (e.g. EPI's Rank 2024 col is 149, but
+// the published EPI 2024 ranks India 176/180). Overrides take priority over
+// the live Wikipedia table so the answer stays correct for competitive exams.
+var RANK_OVERRIDES = {
+  'Environmental Performance Index': {
+    rank: '176',
+    fact: 'India ranked 176th out of 180 countries in the Environmental Performance Index (EPI) 2024, scoring 27.6. Published by Yale & Columbia universities, EPI ranks countries on climate change, environmental health and ecosystem vitality. India slid from 155th (2014) to 176th (2024), weighed down by air quality and climate-policy metrics.'
+  }
+};
 
 var RANKINGS = [
   { page: 'World_Happiness_Report', name: 'World Happiness Report' },
@@ -132,7 +163,7 @@ var RANKINGS = [
   { page: 'Global_Financial_Centres_Index', name: 'Global Financial Centres Index' },
 ];
 
-function makeRankingQuestions(index, rank, seq) {
+function makeRankingQuestions(index, rank, seq, fact) {
   var now = new Date();
   var pubDate = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + 'T12:00:00.000Z';
   var monthLabel = MONTHS[now.getMonth()] + ' ' + now.getFullYear();
@@ -151,7 +182,7 @@ function makeRankingQuestions(index, rank, seq) {
     question: 'India\'s rank in the ' + index.name + ' as of ' + monthLabel + ' is _____.',
     answer: rank,
     hint: '',
-    fact: 'India ranks ' + rank + ' in the ' + index.name + '. This is an important global index for competitive exams.'
+    fact: fact || ('India ranks ' + rank + ' in the ' + index.name + '. This is an important global index for competitive exams.')
   });
 
   return results;
@@ -188,6 +219,24 @@ async function main() {
   for (var ri = 0; ri < RANKINGS.length; ri++) {
     var idx = RANKINGS[ri];
     console.error('Fetching ' + idx.name + '...');
+
+    // Curated override: use the published rank instead of the stale Wikipedia table.
+    var override = RANK_OVERRIDES[idx.name];
+    if (override) {
+      var qsOverride = makeRankingQuestions(idx, override.rank, seq, override.fact);
+      qsOverride.forEach(function(q) {
+        var key = eventKey(q);
+        if (!existingKeys[key]) {
+          newQuestions.push(q);
+          existingKeys[key] = true;
+          seq++;
+        }
+      });
+      console.error('  India rank (curated override): ' + override.rank);
+      await delay(200);
+      continue;
+    }
+
     var html;
     try {
       html = await fetchPageContent(idx.page);
