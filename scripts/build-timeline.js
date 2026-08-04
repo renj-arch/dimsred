@@ -120,7 +120,7 @@ var SEED = {
   reforms: { type: 'event', level: 1, list: [
     'Economic liberalisation in India', 'LPG reforms', 'Demonetisation in India',
     'Goods and Services Tax (India)', 'Five-Year Plans (India)', 'Bank nationalisation in India',
-    '73rd Constitutional Amendment'
+    '73rd Constitutional Amendment', 'Railway Budget'
   ]},
   people: { type: 'person', level: 2, list: [
     'Mahatma Gandhi', 'B. R. Ambedkar', 'Jawaharlal Nehru', 'Sardar Vallabhbhai Patel', 'Subhas Chandra Bose',
@@ -136,7 +136,10 @@ var SEED = {
     'Charles Darwin', 'Napoleon', 'Abraham Lincoln', 'Adolf Hitler', 'Vladimir Lenin', 'Joseph Stalin',
     'Franklin D. Roosevelt', 'Winston Churchill', 'Mao Zedong', 'Nelson Mandela', 'Martin Luther King Jr.',
     'Zhu Yuanzhang', 'Yongle Emperor', 'Zheng He', 'Xu Da', 'Chang Yuchun', 'Tang He', 'Liao Yongzhong', 'Hu Mei',
-    'Ranjit Singh', 'C V Raman'
+    'Ranjit Singh', 'C V Raman',
+    'Thomas Edison', 'Alexander Graham Bell', 'Nikola Tesla', 'Marie Curie', 'Louis Pasteur', 'Galileo Galilei',
+    'Mahmud of Ghazni', 'Mohammad Ghori', 'Prithviraj Chauhan', 'Jahangir', 'Kabir', 'Nur Jahan', 'Bajirao I',
+    'Sambhaji', 'Guru Tegh Bahadur', 'Guru Arjan', 'Chaitanya Mahaprabhu', 'Tukaram', 'Basavanna'
   ]},
   religion: { type: 'event', level: 2, list: [
     'First Buddhist Council', 'Second Buddhist Council', 'Third Buddhist Council', 'Fourth Buddhist Council',
@@ -187,10 +190,22 @@ var SEED = {
     'War on Terror', 'Arab Spring', '9/11 attacks'
   ]},
   globalConcepts: { type: 'concept', level: 1, list: [
-    'Internet', 'GPS', 'Bollywood'
+    'Internet', 'GPS', 'Bollywood', 'El Niño', 'La Niña'
   ]},
   wildlife: { type: 'concept', level: 3, list: [
     'Gir'
+  ]},
+  spaceTech: { type: 'event', level: 2, list: [
+    'Sputnik', 'Hubble Space Telescope', 'James Webb Space Telescope', 'Voyager program'
+  ]},
+  digital: { type: 'concept', level: 2, list: [
+    'Smartphone', 'Microsoft', 'Linux', 'Microsoft Windows', 'Twitter', 'Instagram', 'YouTube', 'Bitcoin', 'Cryptocurrency'
+  ]},
+  agriConcepts: { type: 'concept', level: 3, list: [
+    'Handloom', 'Jute', 'Fisheries', 'Poultry', 'Helicopter'
+  ]},
+  constitutionalPosts: { type: 'concept', level: 3, list: [
+    'Vice President of India', 'Speaker of the Lok Sabha', 'Lokpal'
   ]},
   canon: { type: 'concept', level: 3, list: [
     'Tipiṭaka (Pali Canon)'
@@ -219,7 +234,7 @@ var SEED = {
   schemes: { type: 'scheme', level: 3, list: [
     'National Health Mission', 'Swachh Bharat Mission', 'Poshan Abhiyan', 'Ayushman Bharat',
     'National Rural Health Mission', 'Green Revolution', 'Operation Flood',
-    'Pradhan Mantri Jan Dhan Yojana', 'Bharat Nirman'
+    'Pradhan Mantri Jan Dhan Yojana', 'Bharat Nirman', 'MGNREGA', 'Blue Revolution'
   ]},
   commissions: { type: 'org', level: 3, list: [
     'Sarkaria Commission', 'Mandal Commission', 'Kothari Commission', 'Finance Commission of India',
@@ -233,7 +248,8 @@ var SEED = {
     'Indian Oil Corporation', 'Nuclear power in India'
   ]},
   globalOrgs: { type: 'org', level: 1, list: [
-    'United Nations', 'European Union'
+    'United Nations', 'European Union', 'Life Insurance Corporation of India', 'Export-Import Bank of India',
+    'Central Industrial Security Force'
   ]},
   geography: { type: 'concept', level: 4, list: [
     'Suez Canal', 'Panama Canal', 'McMahon Line', 'Line of Actual Control', 'Line of Control',
@@ -339,6 +355,54 @@ var EXTRA_ALIASES = {
   'GPS': ['gps', 'global positioning system'],
   'Bollywood': ['bollywood', 'hindi cinema', 'bombay film industry'],
   'Gir': ['gir forest', 'gir national park', 'gir sanctuary', 'gir', 'sasan gir'],
+  'Thomas Edison': ['thomas edison', 'edison'],
+  'Alexander Graham Bell': ['alexander graham bell', 'graham bell'],
+  'Nikola Tesla': ['nikola tesla', 'tesla'],
+  'Marie Curie': ['marie curie', 'marie curie-sklodowska', 'marie sklodowska curie'],
+  'Louis Pasteur': ['louis pasteur', 'pasteur'],
+  'Galileo Galilei': ['galileo galilei', 'galileo'],
+  'Mahmud of Ghazni': ['mahmud of ghazni', 'mahmud ghaznavi', 'mahmood ghaznavi', 'sultan mahmud', 'muhammad of ghazni'],
+  'Mohammad Ghori': ['mohammad ghori', 'muhammad ghori', 'mohammed ghori', 'shahabuddin ghori', 'muhammad of ghor'],
+  'Prithviraj Chauhan': ['prithviraj chauhan', 'prithviraj iii', 'rai pithora'],
+  'Jahangir': ['jahangir', 'nur-ud-din jahangir'],
+  'Kabir': ['kabir', 'sant kabir', 'kabir das'],
+  'Nur Jahan': ['nur jahan', 'mehr-un-nissa', 'nurjahan'],
+  'Bajirao I': ['bajirao i', 'bajirao', 'bajirao ballal', 'peshwa bajirao'],
+  'Sambhaji': ['sambhaji', 'sambhaji maharaj', 'sambhaji bhonsle'],
+  'Guru Tegh Bahadur': ['guru tegh bahadur', 'guru teg bahadur', 'tegh bahadur'],
+  'Guru Arjan': ['guru arjan', 'guru arjun', 'arjan dev'],
+  'Chaitanya Mahaprabhu': ['chaitanya mahaprabhu', 'sri chaitanya', 'chaitanya'],
+  'Tukaram': ['tukaram', 'sant tukaram'],
+  'Basavanna': ['basavanna', 'basava'],
+  'Sputnik': ['sputnik', 'sputnik 1', 'sputnik program'],
+  'Hubble Space Telescope': ['hubble space telescope', 'hubble telescope', 'hubble', 'hst'],
+  'James Webb Space Telescope': ['james webb space telescope', 'james webb telescope', 'webb telescope', 'jwst'],
+  'Voyager program': ['voyager program', 'voyager', 'voyager 1', 'voyager 2'],
+  'Smartphone': ['smartphone', 'smart phone', 'smartphones'],
+  'Microsoft': ['microsoft'],
+  'Linux': ['linux', 'linux operating system', 'gnu/linux'],
+  'Microsoft Windows': ['microsoft windows', 'windows'],
+  'Twitter': ['twitter'],
+  'Instagram': ['instagram', 'insta'],
+  'YouTube': ['youtube', 'you tube'],
+  'Bitcoin': ['bitcoin', 'btc'],
+  'Cryptocurrency': ['cryptocurrency', 'crypto currency', 'cryptocurrencies', 'digital currency'],
+  'Life Insurance Corporation of India': ['life insurance corporation of india', 'lic of india', 'lic'],
+  'Export-Import Bank of India': ['export-import bank of india', 'exim bank', 'exim'],
+  'Central Industrial Security Force': ['central industrial security force', 'cisf'],
+  'Lokpal': ['lokpal', 'lok pal', 'lokpal and lokayuktas'],
+  'Vice President of India': ['vice president of india', 'vice-president of india', 'indian vice president'],
+  'Speaker of the Lok Sabha': ['speaker of the lok sabha', 'speaker of lok sabha', 'lok sabha speaker'],
+  'MGNREGA': ['mgnrega', 'nrega', 'mahatma gandhi national rural employment guarantee act', 'national rural employment guarantee'],
+  'Railway Budget': ['railway budget', 'rail budget'],
+  'Blue Revolution': ['blue revolution', 'fish revolution'],
+  'El Niño': ['el nino', 'el niño', 'el-nino', 'el nino southern oscillation'],
+  'La Niña': ['la nina', 'la niña', 'la-nina'],
+  'Handloom': ['handloom', 'hand loom', 'handloom sector'],
+  'Jute': ['jute', 'jute industry', 'jute mill'],
+  'Fisheries': ['fisheries', 'fishery', 'fishing industry', 'fisheries sector'],
+  'Poultry': ['poultry', 'poultry farming', 'poultry industry'],
+  'Helicopter': ['helicopter', 'helicopters'],
   'Qing dynasty': ['qing dynasty', 'qing'],
   'Cultural Revolution': ['cultural revolution', 'great proletarian cultural revolution', 'red guards'],
   'Long March': ['long march', 'the long march'],
@@ -470,6 +534,16 @@ var NEGATIVE_ALIASES = {
   'Forbidden City': ['national palace museum'],
   'GPS': ['gram panchayat', 'gram panchayats'],
   'Bollywood': ['bollywood dance'],
+  'Nikola Tesla': ['tesla inc', 'tesla motors', 'tesla model', 'tesla car'],
+  'Galileo Galilei': ['galileo navigation', 'galileo satellite', 'galileo positioning', 'galileo spacecraft'],
+  'Voyager program': ['star trek voyager'],
+  'Jahangir': ['jahangir khan', 'jahangirpuri'],
+  'Kabir': ['kabir khan', 'kabir bedi', 'kabir singh'],
+  'Prithviraj Chauhan': ['prithviraj sukumaran', 'prithviraj (film)'],
+  'Bajirao I': ['bajirao mastani'],
+  'Guru Arjan': ['arjan singh'],
+  'Chaitanya Mahaprabhu': ['chaitanya month'],
+  'Microsoft Windows': ['stained glass window', 'stained glass windows', 'bay window', 'bay windows'],
   'Marco Polo': ['marco polo airport', 'marco polo games'],
   'Suleiman': ['suleiman mosque', 'suleymaniye'],
   'Mehmed': ['mehmed vi', 'mehmed v', 'sultan mehmed'],
@@ -597,7 +671,25 @@ var MANUAL_SPANS = {
   'Ranjit Singh': [1780, 1839], 'C V Raman': [1888, 1970],
   'Ghadar Movement': [1913, 1918], 'Azad Hind Fauj': [1942, 1945], 'Radcliffe Line': [1947, 1947],
   '73rd Constitutional Amendment': [1992, 1993], 'INS Vikrant': [1961, 2026],
-  'GPS': [1973, 2026], 'Bollywood': [1913, 2026], 'Gir': [1965, 2026]
+  'GPS': [1973, 2026], 'Bollywood': [1913, 2026], 'Gir': [1965, 2026],
+  'Thomas Edison': [1847, 1931], 'Alexander Graham Bell': [1847, 1922], 'Nikola Tesla': [1856, 1943],
+  'Marie Curie': [1867, 1934], 'Louis Pasteur': [1822, 1895], 'Galileo Galilei': [1564, 1642],
+  'Mahmud of Ghazni': [971, 1030], 'Mohammad Ghori': [1149, 1206], 'Prithviraj Chauhan': [1166, 1192],
+  'Jahangir': [1569, 1627], 'Kabir': [1440, 1518], 'Nur Jahan': [1577, 1645], 'Bajirao I': [1700, 1740],
+  'Sambhaji': [1657, 1689], 'Guru Tegh Bahadur': [1621, 1675], 'Guru Arjan': [1563, 1606],
+  'Chaitanya Mahaprabhu': [1486, 1534], 'Tukaram': [1608, 1649], 'Basavanna': [1105, 1167],
+  'Sputnik': [1957, 1961], 'Hubble Space Telescope': [1990, 2026], 'James Webb Space Telescope': [2021, 2026],
+  'Voyager program': [1977, 2026],
+  'Smartphone': [1992, 2026], 'Microsoft': [1975, 2026], 'Linux': [1991, 2026], 'Microsoft Windows': [1985, 2026],
+  'Twitter': [2006, 2026], 'Instagram': [2010, 2026], 'YouTube': [2005, 2026], 'Bitcoin': [2009, 2026],
+  'Cryptocurrency': [2009, 2026],
+  'Life Insurance Corporation of India': [1956, 2026], 'Export-Import Bank of India': [1982, 2026],
+  'Central Industrial Security Force': [1969, 2026], 'Lokpal': [2013, 2026],
+  'Vice President of India': [1952, 2026], 'Speaker of the Lok Sabha': [1952, 2026],
+  'MGNREGA': [2005, 2026], 'Railway Budget': [1924, 2016], 'Blue Revolution': [1970, 2026],
+  'El Niño': [1900, 2026], 'La Niña': [1900, 2026],
+  'Handloom': [1800, 2026], 'Jute': [1855, 2026], 'Fisheries': [1951, 2026], 'Poultry': [1951, 2026],
+  'Helicopter': [1939, 2026]
 };
 
 // Curated spans for sub-topics (non-seed) where extracted year clusters cannot
@@ -697,7 +789,10 @@ var TOPIC_OVERRIDES = {
   'Meiji Restoration': [1868, 1912], 'World War II': [1939, 1945], 'Cold War': [1947, 1991],
   'Vietnam War': [1955, 1975], 'Space Race': [1955, 1975], 'Apartheid': [1948, 1994],
   'United Nations': [1945, 2026], 'European Union': [1957, 2026], 'Napoleon': [1769, 1821],
-  'Sikh Empire': [1799, 1849], 'Panchayati raj': [1959, 2026], 'Constitution of India': [1949, 1950]
+  'Sikh Empire': [1799, 1849], 'Panchayati raj': [1959, 2026], 'Constitution of India': [1949, 1950],
+  'Securities and Exchange Board of India': [1988, 2026], 'National Bank for Agriculture and Rural Development': [1982, 2026],
+  'Small Industries Development Bank of India': [1990, 2026], 'Central Bureau of Investigation': [1963, 2026],
+  'Central Reserve Police Force': [1939, 2026], 'Pradhan Mantri Kisan Samman Nidhi': [2019, 2026]
 };
 
 // Curated, authoritative descriptors for the curated-spine persons.
@@ -749,7 +844,16 @@ var PERSON_DESCS = {
   'Zheng He': 'Ming admiral and explorer', 'Xu Da': 'Ming founding general',
   'Chang Yuchun': 'Ming founding general', 'Tang He': 'Ming founding general',
   'Liao Yongzhong': 'Ming founding admiral', 'Hu Mei': 'Ming founding general',
-  'Ranjit Singh': 'founder of the Sikh Empire', 'C V Raman': 'Nobel Prize-winning physicist (Raman effect)'
+  'Ranjit Singh': 'founder of the Sikh Empire', 'C V Raman': 'Nobel Prize-winning physicist (Raman effect)',
+  'Thomas Edison': 'inventor of the electric light bulb', 'Alexander Graham Bell': 'inventor of the telephone',
+  'Nikola Tesla': 'inventor and electrical engineer', 'Marie Curie': 'physicist and chemist, double Nobel laureate',
+  'Louis Pasteur': 'microbiologist and chemist', 'Galileo Galilei': 'Italian astronomer and physicist',
+  'Mahmud of Ghazni': 'Ghaznavid ruler who invaded India', 'Mohammad Ghori': 'Ghurid sultan who invaded India',
+  'Prithviraj Chauhan': 'Rajput king of Ajmer and Delhi', 'Jahangir': 'fourth Mughal emperor',
+  'Kabir': 'mystic poet and saint', 'Nur Jahan': 'Mughal empress', 'Bajirao I': 'Peshwa of the Maratha Empire',
+  'Sambhaji': 'second ruler of the Maratha Empire', 'Guru Tegh Bahadur': 'ninth Sikh Guru',
+  'Guru Arjan': 'fifth Sikh Guru', 'Chaitanya Mahaprabhu': 'Vaishnava saint and reformer',
+  'Tukaram': 'Marathi saint-poet', 'Basavanna': 'Kannada philosopher and founder of the Lingayat movement'
 };
 
 // Person-role keyword gate: an auto-extracted descriptor is only attached when it
@@ -1026,7 +1130,7 @@ var NON_SURNAMES = ['great', 'the', 'of', 'de', 'junior', 'senior', 'saint', 'ii
 
 // Entities whose bare surname is too ambiguous to reuse — match full name only.
 // ("Gandhi" usually means Mahatma; Indira must be named explicitly.)
-var NO_SURNAME_ALIAS = ['Indira Gandhi', 'Hu Mei'];
+var NO_SURNAME_ALIAS = ['Indira Gandhi', 'Hu Mei', 'Alexander Graham Bell', 'Guru Tegh Bahadur'];
 
 function aliasesFor(name, isPerson) {
   var a = [name];
@@ -1432,6 +1536,51 @@ function main() {
     ['seed|73rd Constitutional Amendment', 'constitution|Constitution of India', 3],
     ['seed|C V Raman', 'seed|Bhabha Atomic Research Centre', 2],
     ['seed|Gir', 'environment-ecology|Asiatic lion', 3],
+    ['seed|Thomas Edison', 'seed|Nikola Tesla', 3],
+    ['seed|Thomas Edison', 'seed|Alexander Graham Bell', 2],
+    ['seed|Alexander Graham Bell', 'seed|Nikola Tesla', 2],
+    ['seed|Galileo Galilei', 'seed|Scientific Revolution', 3],
+    ['seed|Galileo Galilei', 'seed|Isaac Newton', 2],
+    ['seed|Louis Pasteur', 'seed|Smallpox', 2],
+    ['seed|Mahmud of Ghazni', 'seed|Mohammad Ghori', 3],
+    ['seed|Mahmud of Ghazni', 'seed|Delhi Sultanate', 2],
+    ['seed|Mohammad Ghori', 'seed|Delhi Sultanate', 3],
+    ['seed|Prithviraj Chauhan', 'seed|Mohammad Ghori', 3],
+    ['seed|Prithviraj Chauhan', 'seed|Delhi Sultanate', 2],
+    ['seed|Jahangir', 'seed|Mughal Empire', 3],
+    ['seed|Jahangir', 'seed|Nur Jahan', 3],
+    ['seed|Jahangir', 'seed|Guru Arjan', 3],
+    ['seed|Guru Arjan', 'seed|Guru Tegh Bahadur', 2],
+    ['seed|Guru Tegh Bahadur', 'seed|Mughal Empire', 2],
+    ['seed|Nur Jahan', 'seed|Mughal Empire', 2],
+    ['seed|Bajirao I', 'seed|Maratha Empire', 3],
+    ['seed|Sambhaji', 'seed|Maratha Empire', 3],
+    ['seed|Sambhaji', 'seed|Shivaji', 3],
+    ['seed|Kabir', 'seed|Guru Nanak', 2],
+    ['seed|Basavanna', 'seed|Kabir', 2],
+    ['seed|Tukaram', 'seed|Chaitanya Mahaprabhu', 2],
+    ['seed|Sputnik', 'seed|Space Race', 3],
+    ['seed|Hubble Space Telescope', 'seed|Space Race', 2],
+    ['seed|James Webb Space Telescope', 'seed|Hubble Space Telescope', 3],
+    ['seed|Voyager program', 'seed|Sputnik', 2],
+    ['seed|Voyager program', 'seed|Space Race', 2],
+    ['seed|Smartphone', 'seed|Internet', 2],
+    ['seed|Smartphone', 'seed|GPS', 2],
+    ['seed|Microsoft', 'seed|Microsoft Windows', 3],
+    ['seed|Microsoft', 'seed|Linux', 2],
+    ['seed|Microsoft Windows', 'seed|Internet', 2],
+    ['seed|Twitter', 'seed|Internet', 2],
+    ['seed|Instagram', 'seed|Twitter', 2],
+    ['seed|YouTube', 'seed|Instagram', 2],
+    ['seed|Bitcoin', 'seed|Cryptocurrency', 3],
+    ['seed|Bitcoin', 'seed|Internet', 2],
+    ['seed|Cryptocurrency', 'seed|Internet', 2],
+    ['seed|Life Insurance Corporation of India', 'seed|Reserve Bank of India', 2],
+    ['seed|Export-Import Bank of India', 'seed|Reserve Bank of India', 2],
+    ['seed|MGNREGA', 'seed|Five-Year Plans (India)', 2],
+    ['seed|Blue Revolution', 'seed|Fisheries', 3],
+    ['seed|Blue Revolution', 'seed|Green Revolution', 2],
+    ['seed|El Niño', 'seed|La Niña', 3],
     ['seed|Qing dynasty', 'seed|Sun Yat-sen', 3],
     ['seed|Han dynasty', 'seed|Confucius', 2],
     ['seed|Qing dynasty', 'seed|Boxer Rebellion', 3],
