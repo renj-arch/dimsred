@@ -79,6 +79,7 @@ h1{font-size:1.45em}
 .qans .ans{font-size:.8em;color:var(--emerald);font-weight:700}
 .qans .fact{font-size:.75em;color:var(--text-sec);margin-top:5px}
 .qans .fact .uniq{background:rgba(255,210,0,.28);color:var(--text);border-radius:3px;padding:1px 2px;font-weight:600}
+.qans .fact .qline{background:rgba(255,110,180,.32);color:var(--text);border-radius:3px;padding:1px 2px;font-weight:700}
 .qans .fact .seen{opacity:.35}
 .loading{color:var(--text-sec);font-size:.8em;padding:8px}
 .type-filter{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
@@ -643,16 +644,45 @@ function loadCategory(key, cb) {
   xhr.send();
 }
 
-function highlightUniqueFact(fact, seen) {
+function escReg(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+function normMatch(s) {
+  return s.replace(/\s+/g, ' ').replace(/^[\s.!?]+|[\s.!?]+$/g, '').toLowerCase();
+}
+
+function highlightUniqueFact(fact, seen, answer, question) {
+  var qCore = null;
+  if (question && /_{2,}/.test(question)) qCore = normMatch(question.replace(/_{2,}/g, '______'));
+  var ansRe = answer ? new RegExp(escReg(String(answer).trim()), 'i') : null;
   var parts = fact.split(/(\n+)|([.!?]\s+)/);
-  var out = '';
+  var segs = [];
   for (var i = 0; i < parts.length; i++) {
     var p = parts[i];
     if (!p) continue;
-    if (/^(\n+|[.!?]\s+)$/.test(p)) { out += p; continue; }
-    var key = p.replace(/\s+/g, ' ').replace(/[\u2013\u2014]/g, '-').trim().toLowerCase().replace(/[.!?]+$/, '');
-    if (!seen.has(key)) { seen.add(key); out += '<span class="uniq">' + esc(p) + '</span>'; }
-    else { out += '<span class="seen">' + esc(p) + '</span>'; }
+    if (/^(\n+|[.!?]\s+)$/.test(p)) continue;
+    segs.push({ text: p, key: normMatch(p), ansHit: ansRe ? ansRe.test(p) : false });
+  }
+  var qIdx = -1;
+  if (qCore && ansRe) {
+    for (var j = 0; j < segs.length; j++) {
+      if (segs[j].ansHit && normMatch(segs[j].text.replace(ansRe, '______')).indexOf(qCore) >= 0) { qIdx = j; break; }
+    }
+  }
+  if (qIdx < 0) {
+    for (var k = 0; k < segs.length; k++) if (segs[k].ansHit) { qIdx = k; break; }
+  }
+  var out = '';
+  var segPos = 0;
+  for (var m = 0; m < parts.length; m++) {
+    var q = parts[m];
+    if (!q) continue;
+    if (/^(\n+|[.!?]\s+)$/.test(q)) { out += q; continue; }
+    var seg = segs[segPos++];
+    var cls;
+    if (segPos - 1 === qIdx) cls = 'qline';
+    else if (!seen.has(seg.key)) { seen.add(seg.key); cls = 'uniq'; }
+    else cls = 'seen';
+    out += '<span class="' + cls + '">' + esc(seg.text) + '</span>';
   }
   return out;
 }
@@ -668,7 +698,7 @@ function appendQuestions(container, qs, uniqSeen) {
     d.innerHTML = '<div class="qmeta"><span>' + esc(q.subSubject || '') + '</span><span>' + esc(q.source || '') + '</span><span>' + (q.pubDate ? new Date(q.pubDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '') + '</span></div>'
       + '<div class="qtext">' + qtext + '</div>'
       + '<div class="qans"><div class="ans">' + esc(q.answer || '') + '</div>'
-      + (q.fact ? '<div class="fact">' + (uniqSeen ? highlightUniqueFact(q.fact, uniqSeen) : esc(q.fact)) + '</div>' : '')
+      + (q.fact ? '<div class="fact">' + (uniqSeen ? highlightUniqueFact(q.fact, uniqSeen, q.answer, q.question) : esc(q.fact)) + '</div>' : '')
       + '</div>';
     container.appendChild(d);
   }
