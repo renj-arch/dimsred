@@ -253,6 +253,7 @@
                     <button onclick="nextQuestion()" title="Next" style="padding:3px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:.7em;font-weight:600">Next →</button>
                 </div>
                 <div class="q-cat-tag" id="catTag"></div>
+                <div id="qImgWrap" style="display:none;text-align:center"></div>
                 <div class="q-text" id="qText">Loading...</div>
                 <div class="q-hint" id="qHint" onclick="toggleHint()" style="display:none">💡 Hint
                 <div class="q-opt-grid" id="optGrid"></div>
@@ -5640,6 +5641,49 @@ var _staticGen_polity = GK_GENERATORS.polity;
             }
         }
 
+        var _piData = null, _piList = null, _piRe = null, _piLoading = false;
+        function _loadPersonImages(cb) {
+            if (_piData) { cb(); return; }
+            if (_piLoading) { setTimeout(function() { _loadPersonImages(cb); }, 250); return; }
+            _piLoading = true;
+            fetch('data/person-images.json').then(function(r) { return r.json(); }).then(function(obj) {
+                _piData = {};
+                _piList = [];
+                for (var k in obj) {
+                    var nk = k.toLowerCase().replace(/[^a-z0-9]+/g, '');
+                    if (!nk || nk.length < 3) continue;
+                    if (!_piData[nk]) {
+                        _piData[nk] = obj[k];
+                        _piList.push(k.toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim());
+                    }
+                }
+                _piList.sort(function(a, b) { return b.length - a.length; });
+                _piRe = new RegExp('(^| )(' + _piList.map(function(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|') + ')( |$)', 'i');
+                _piLoading = false;
+                cb();
+            }).catch(function() { _piLoading = false; cb(); });
+        }
+        function _attachPersonImage(q) {
+            var wrap = document.getElementById('qImgWrap');
+            if (!wrap) return;
+            if (!_piData) { _loadPersonImages(function() { _attachPersonImage(q); }); return; }
+            if (typeof q !== 'object' || q === null) return;
+            var txt = ' ' + [q.q, q.a, q.fact, q.solution, q.explanation].filter(Boolean).join(' ').toLowerCase().replace(/[^a-z0-9]+/g, ' ') + ' ';
+            _piRe.lastIndex = 0;
+            var m = _piRe.exec(txt);
+            if (m) {
+                var key = m[2].toLowerCase().replace(/[^a-z0-9]+/g, '').replace(/\s+/g, '');
+                var url = _piData[key];
+                if (url) {
+                    wrap.style.display = 'block';
+                    wrap.innerHTML = '<img src="' + url + '" alt="" onerror="this.parentNode.style.display=\'none\';this.parentNode.innerHTML=\'\'" style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:2px solid var(--border);margin:0 auto 10px;display:block;box-shadow:0 4px 16px rgba(0,0,0,.35)">';
+                    return;
+                }
+            }
+            wrap.style.display = 'none';
+            wrap.innerHTML = '';
+        }
+
         function answerQuestion(el) {
             if (state.answered) return;
             state.answered = true;
@@ -7301,6 +7345,7 @@ function prevQuestion() {
             document.getElementById('qText').innerHTML = displayText;
             document.getElementById('optGrid').innerHTML = '';
             document.getElementById('optGrid').style.display = 'block';
+            _attachPersonImage(q);
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
 
             if (!state.autoPaused) {
