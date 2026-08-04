@@ -5672,7 +5672,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             var words = s.split(/\s+/).filter(Boolean);
             if (words.length < 2) return false;
             var low = ' ' + s.toLowerCase() + ' ';
-            if (/(organization|government|ministry|department|bureau|council|committee|commission|board|bank|institute|university|association|society|company|corporation|party|union|force|agency|scheme|mission|programme|program|plan|policy|day|week|month|state|district|river|mountain|lake|city|town|country|island|treaty|act|bill|constitution|article|schedule|amendment|report|index|award|prize|medal|stadium|trophy|cup|league|game|series|festival|temple|fort|palace|dynasty|kingdom|empire|war|battle|revolution|movement|language|script|stadium|national park|park|nadu|pradesh|himachal|arunachal|rajasthan|maharashtra|gujarat|kerala|karnataka|bengal|uttar|jammu|kashmir|punjab|uttarakhand|bihar|chhattisgarh|jharkhand|odisha|assam|goa|manipur|meghalaya|mizoram|nagaland|sikkim|tripura|andaman|lakshadweep|delhi|haryana|tamil|pondicherry|chandigarh|dadra|daman|diu)/.test(low)) return false;
+            if (/(organization|government|ministry|department|bureau|council|committee|commission|board|bank|institute|university|association|society|company|corporation|party|union|force|agency|scheme|mission|programme|program|plan|policy|day|week|month|state|district|river|mountain|lake|city|town|country|island|treaty|act|bill|constitution|article|schedule|amendment|report|index|award|prize|medal|stadium|trophy|cup|league|game|series|festival|temple|fort|palace|dynasty|kingdom|empire|war|battle|revolution|movement|language|script|stadium|national park|park|nadu|pradesh|himachal|arunachal|rajasthan|maharashtra|gujarat|kerala|karnataka|bengal|uttar|jammu|kashmir|punjab|uttarakhand|bihar|chhattisgarh|jharkhand|odisha|assam|goa|manipur|meghalaya|mizoram|nagaland|sikkim|tripura|andaman|lakshadweep|delhi|haryana|tamil|pondicherry|chandigarh|dadra|daman|diu|fund|authority|alliance|coalition|federation|republic|territory|province|capital|states|sultanate|caliphate|emirate|parliament|congress|senate|assembly|court|tribunal|army|navy|police|administration|directorate|force|reserve|public|india|global|national|international|asian|african|world|united|antarctic|south|north|west|east|central|indian|america|russia|china|japan|france|germany|italy|spain|england|britain|australia|canada|brazil|pakistan|bangladesh|nepal|sri|lanka|myanmar|iran|iraq|turkey|egypt|israel|saudi|arab|afghanistan|kazakhstan|uzbekistan|bhutan|maldives|europe|asia|africa|australia)/.test(low)) return false;
             return true;
         }
         function _wikiFilePath(title) {
@@ -5710,10 +5710,11 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 if (url && _renderPersonImg(url)) return;
             }
 
-            // "Who ...?" questions: the answer is usually the person's name — resolve via Wikipedia lead image.
-            if (q.a && /^who\b/i.test((q.q || '').trim())) {
+            // The answer is a person's name → resolve its Wikipedia lead image.
+            // Covers "Who/What is X?", fill-in-the-blank person questions, etc.
+            if (q.a && _looksLikePersonName(q.a)) {
                 var pu = _wikiFilePath(q.a);
-                if (pu && _looksLikePersonName(q.a) && _renderPersonImg(pu)) return;
+                if (pu && _renderPersonImg(pu)) return;
             }
 
             wrap.style.display = 'none';
