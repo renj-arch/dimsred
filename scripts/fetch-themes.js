@@ -109,6 +109,12 @@ function extractTheme(text) {
       if (themeMatch.toLowerCase().indexOf(badPrefixes[bi]) === 0) return null;
     }
     if (themeMatch.length < 5 || themeMatch.length > 200) return null;
+    // Reject results that merely echo the day's own name (e.g. "Of the
+    // international day for biological diversity 2026") — these are caption/
+    // citation fragments, not actual themes.
+    var echo = themeMatch.toLowerCase().match(/\b(international day|world day|national day|day for)\b/g);
+    if (echo && echo.length >= 2) return null;
+    if (/^\s*(of|for|on|about)\s/.test(themeMatch.toLowerCase())) return null;
     return themeMatch;
   }
 

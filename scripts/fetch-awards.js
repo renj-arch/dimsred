@@ -4,6 +4,7 @@ var path = require('path');
 
 var API = 'https://en.wikipedia.org/w/api.php';
 var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
+var CA_PATH = path.resolve(__dirname, '..', 'data/questions/current-affairs.json');
 var bio = require('./bio-cache');
 
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
@@ -145,7 +146,7 @@ function makeQuestion(question, answer, seq, source, emoji, fact) {
 
 function eventKey(q) {
   var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); };
-  return n(q.question || '').substring(0, 80) + '|' + n(q.answer || '');
+  return n(q.question || '').substring(0, 80);
 }
 
 function extractNamesFromHtml(rawHtml) {
@@ -182,6 +183,122 @@ async function fetchTableRecipients(page, yearStr, nameCol, yearCol, awardName, 
   return results;
 }
 
+// Keep raw HTML per cell so multi-recipient cells (separated by <br>, list items
+// or newlines) can be split reliably, unlike extractWikiTable which collapses them.
+function extractRawTable(html) {
+  var tables = [];
+  var tableRegex = /<table[^>]*class="[^"]*wikitable[^"]*"[^>]*>([\s\S]*?)<\/table>/gi;
+  var m;
+  while ((m = tableRegex.exec(html)) !== null) {
+    var rows = [];
+    var rowRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
+    var rm;
+    while ((rm = rowRegex.exec(m[1])) !== null) {
+      var cells = [];
+      var cellRegex = /<t[hd][^>]*>([\s\S]*?)<\/t[hd]>/gi;
+      var cm;
+      while ((cm = cellRegex.exec(rm[1])) !== null) cells.push(cm[1]);
+      if (cells.length > 0) rows.push(cells);
+    }
+    if (rows.length > 1) tables.push(rows);
+  }
+  return tables;
+}
+
+function splitCellNames(rawHtml) {
+  var text = String(rawHtml || '')
+    .replace(/<sup[^>]*>[\s\S]*?<\/sup>/gi, ' ')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/li>/gi, '\n')
+    .replace(/<li[^>]*>/gi, '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&#(\d+);/g, function(m, c) { return String.fromCharCode(c); })
+    .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+    .replace(/\[.*?\]/g, '')
+    .replace(/\([^)]*\)/g, '')
+    .replace(/posthumous/gi, '');
+  var parts = [];
+  text.split(/\n/).forEach(function(line) {
+    line.split(/\s*&\s*/).forEach(function(seg) {
+      var n = seg.replace(/\s+/g, ' ').trim();
+      if (n.length > 2) parts.push(n);
+    });
+  });
+  var out = [];
+  parts.forEach(function(n) { if (out.indexOf(n) < 0) out.push(n); });
+  return out;
+}
+
+function isValidWinnerName(n) {
+  if (!n || n.length < 3 || n.length > 90) return false;
+  if (/\d{4}/.test(n)) return false;
+  if (/shortlist|announced|to be (announced|held|decided|chosen)|pending|not awarded|cancell?ed|postponed|no pageant|tbd|\u2014|incumbent|\[edit\]/i.test(n)) return false;
+  if (n.indexOf('of ') === 0 || /^(winner|year|image|name|recipient|laureate|author)$/i.test(n)) return false;
+  return true;
+}
+
+function rowHasBold(cells) {
+  for (var i = 0; i < cells.length; i++) {
+    if (/<b>|<strong>/i.test(cells[i] || '')) return true;
+  }
+  return false;
+}
+
+// Generic extractor for "latest year winners" award tables. Config opts:
+//   yearCol, nameCol, citeCol (optional), nameShift (optional: how many columns
+//   continuation rows without a year cell shift the name), boldWinner (optional:
+//   only count rows that contain a bolded cell, e.g. Pulitzer winners).
+// Continuation rows (multiple winners per year) carry the year of the nearest
+// preceding explicit-year row within the same table.
+async function fetchGenericLatestWinners(page, opts) {
+  var html = await fetchPageText(page);
+  var tables = extractRawTable(html);
+  var byYear = {};
+  var thisYear = new Date().getFullYear();
+  tables.forEach(function(t) {
+    var carry = '';
+    for (var ri = 1; ri < t.length; ri++) {
+      var row = t[ri] || [];
+      if (row.length === 0) continue;
+      var y = '';
+      if (typeof opts.yearCol === 'number' && opts.yearCol >= 0 && row[opts.yearCol]) {
+        var ym = strip(row[opts.yearCol]).match(/\b(19|20)\d{2}\b/);
+        if (ym) y = ym[0];
+      }
+      if (y) carry = y;
+      if (opts.boldWinner && !rowHasBold(row)) continue;
+      var nameIdx = opts.nameCol;
+      if (!y && opts.nameShift) nameIdx = opts.nameCol + opts.nameShift;
+      if (nameIdx < 0 || nameIdx >= row.length) nameIdx = -1;
+      var names = [];
+      if (nameIdx >= 0) names = splitCellNames(row[nameIdx]).filter(isValidWinnerName);
+      if (names.length === 0) {
+        names = splitCellNames(row[0] || '').filter(isValidWinnerName);
+        if (names.length === 0 && row[1]) names = splitCellNames(row[1]).filter(isValidWinnerName);
+      }
+      if (names.length === 0) continue;
+      var yr = y || carry;
+      if (!yr || parseInt(yr, 10) > thisYear) continue;
+      if (!byYear[yr]) byYear[yr] = [];
+      var citation = '';
+      var citeIdx = opts.citeCol;
+      if (!y && opts.citeShift) citeIdx = opts.citeCol + opts.citeShift;
+      if (typeof citeIdx === 'number' && citeIdx >= 0 && row[citeIdx]) {
+        citation = strip(row[citeIdx]).replace(/^["'\u201C\u201D]+|["'\u201C\u201D]+$/g, '').replace(/\s+/g, ' ').trim();
+        if (citation.length > 260) citation = citation.slice(0, 257) + '...';
+      }
+      names.forEach(function(n) { byYear[yr].push({ name: n, citation: citation }); });
+    }
+  });
+  var years = Object.keys(byYear).sort();
+  for (var i = years.length - 1; i >= 0; i--) {
+    if (parseInt(years[i], 10) > thisYear) continue;
+    if (byYear[years[i]].length > 0) return { year: years[i], winners: byYear[years[i]] };
+  }
+  return null;
+}
+
 async function main() {
   var existing = {};
   if (fs.existsSync(PIB_PATH)) {
@@ -198,8 +315,31 @@ async function main() {
   var existingKeys = {};
   existing[CA_KEY].subSubjects['Awards & Honours'].forEach(function(q) { existingKeys[eventKey(q)] = true; });
 
+  // The live site reads current-affairs.json (via quiz.json rebuild + category
+  // split), not pib-archive.json. Seed the dedup set from current-affairs.json
+  // too so questions already published there are never re-added as duplicates.
+  try {
+    var liveCA = JSON.parse(fs.readFileSync(CA_PATH, 'utf8'));
+    var liveAwards = (liveCA[CA_KEY] && liveCA[CA_KEY].subSubjects && liveCA[CA_KEY].subSubjects['Awards & Honours']) || [];
+    liveAwards.forEach(function(q) { existingKeys[eventKey(q)] = true; });
+  } catch (e) {}
+
   var newQuestions = [];
-  var seq = existing[CA_KEY].subSubjects['Awards & Honours'].length + 1;
+  // Start numbering above every award id already present in either archive, so
+  // newly added questions never collide with ids in the live current-affairs.json.
+  var seq = 1;
+  existing[CA_KEY].subSubjects['Awards & Honours'].forEach(function(q) {
+    var m = /^award_(\d+)$/.exec(q.id || '');
+    if (m) seq = Math.max(seq, parseInt(m[1], 10) + 1);
+  });
+  try {
+    var liveCA = JSON.parse(fs.readFileSync(CA_PATH, 'utf8'));
+    var liveAwards = (liveCA[CA_KEY] && liveCA[CA_KEY].subSubjects && liveCA[CA_KEY].subSubjects['Awards & Honours']) || [];
+    liveAwards.forEach(function(q) {
+      var m = /^award_(\d+)$/.exec(q.id || '');
+      if (m) seq = Math.max(seq, parseInt(m[1], 10) + 1);
+    });
+  } catch (e) {}
 
   // 1. Bharat Ratna
   process.stdout.write('  Bharat Ratna... ');
@@ -285,7 +425,7 @@ async function main() {
     await delay(600);
   }
 
-  // 4. Nobel Prize
+  // 4. Nobel Prize (append-only: only add the most recent announced year, never re-add older ones)
   await delay(600);
   process.stdout.write('  Nobel Prize... ');
   try {
@@ -295,10 +435,21 @@ async function main() {
       var t = tables[0];
       var categories = t[0];
       var nobelCount = 0;
+      // Find the latest year present in the table so next year's winners are
+      // automatically picked up once Wikipedia publishes them.
+      var latestNobelYear = '';
       for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
         if (!row || row.length < 2) continue;
-        var yearStr = strip(row[0]).match(/\b2025\b/);
+        var ym = strip(row[0]).match(/\b20\d{2}\b/);
+        if (ym && ym[0] > latestNobelYear) latestNobelYear = ym[0];
+      }
+      if (!latestNobelYear) latestNobelYear = '' + (new Date().getFullYear() - 1);
+      process.stdout.write('(latest year ' + latestNobelYear + ') ');
+      for (var ri = 1; ri < t.length; ri++) {
+        var row = t[ri];
+        if (!row || row.length < 2) continue;
+        var yearStr = strip(row[0]).match(new RegExp('\\b' + latestNobelYear + '\\b'));
         if (!yearStr) continue;
         for (var ci = 1; ci < Math.min(row.length, categories.length); ci++) {
           var category = categories[ci].replace(/\[.*?\]/g, '').replace(/&#91;.*?&#93;/g, '').replace(/&nbsp;/g, ' ').replace(/^Prize in\s+/i, '').trim();
@@ -307,8 +458,10 @@ async function main() {
             var winners = laureate.split(/<br\s*\/?>/gi).map(function(s) { return strip(s).replace(/\([^)]*\)/g, '').trim(); }).filter(function(s) { return s.length > 2; });
             if (winners.length < 2) winners = laureate.split(/[;]/).map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 2; });
             var combinedAnswer = winners.join(', ');
-            var combinedFact = 'Nobel Prize 2025 - ' + category + ': ' + combinedAnswer;
-            var q = makeQuestion('Who won the Nobel Prize in ' + category + ' in 2025?', combinedAnswer, seq++, 'Nobel Prize', '\uD83C\uDFC6', combinedFact);
+            var citation = laureate.match(/\(([^)]*?)\)/);
+            var citationText = citation ? citation[1] : '';
+            var combinedFact = 'Nobel Prize ' + latestNobelYear + ' - ' + category + ': ' + combinedAnswer + (citationText ? ' (' + citationText + ')' : '') + '. The Nobel Prize is awarded annually by the Nobel Foundation for outstanding contributions to humanity.';
+            var q = makeQuestion('Who won the Nobel Prize in ' + category + ' in ' + latestNobelYear + '?', combinedAnswer, seq++, 'Nobel Prize', '\uD83C\uDFC6', combinedFact);
             if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; nobelCount++; }
           }
         }
@@ -367,7 +520,44 @@ async function main() {
     process.stdout.write(phalkeCount + ' recipients\n');
   } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
 
-  // 7. Sports Awards
+  // 7. National Film Awards (append-only: only add the latest announced year)
+  await delay(600);
+  process.stdout.write('  National Film Awards... ');
+  try {
+    html = await fetchPageText('National_Film_Awards');
+    var tables = extractWikiTable(html);
+    var nfaCount = 0;
+    if (tables.length > 0) {
+      var t = tables[0];
+      var latestNfaYear = '';
+      for (var riN = 1; riN < t.length; riN++) {
+        if (!t[riN] || t[riN].length < 2) continue;
+        var ym = strip(t[riN][0]).match(/\b20\d{2}\b/);
+        if (ym && ym[0] > latestNfaYear) latestNfaYear = ym[0];
+      }
+      if (latestNfaYear) {
+        for (var riN = 1; riN < t.length; riN++) {
+          var row = t[riN];
+          if (!row || row.length < 5) continue;
+          if (strip(row[0]).match(new RegExp('\\b' + latestNfaYear + '\\b'))) {
+            var bestFeature = strip(row[3] || '').replace(/\[.*?\]/g, '').trim();
+            var bestNonFeature = strip(row[4] || '').replace(/\[.*?\]/g, '').trim();
+            if (bestFeature && bestFeature !== '\u2014') {
+              var qF = makeQuestion('Which film won the National Film Award for Best Feature Film for the films of ' + latestNfaYear + '?', bestFeature, seq++, 'National Film Awards', '\uD83C\uDFAC', 'Best Feature Film at the National Film Awards ' + latestNfaYear + ': ' + bestFeature + '. The National Film Awards are India\'s most prestigious film awards, presented annually by the Directorate of Film Festivals.');
+              if (qF && !existingKeys[eventKey(qF)]) { newQuestions.push(qF); existingKeys[eventKey(qF)] = true; nfaCount++; }
+            }
+            if (bestNonFeature && bestNonFeature !== '\u2014') {
+              var qN = makeQuestion('Which film won the National Film Award for Best Non-Feature Film for the films of ' + latestNfaYear + '?', bestNonFeature, seq++, 'National Film Awards', '\uD83C\uDFAC', 'Best Non-Feature Film at the National Film Awards ' + latestNfaYear + ': ' + bestNonFeature + '. The National Film Awards are India\'s most prestigious film awards, presented annually by the Directorate of Film Festivals.');
+              if (qN && !existingKeys[eventKey(qN)]) { newQuestions.push(qN); existingKeys[eventKey(qN)] = true; nfaCount++; }
+            }
+          }
+        }
+      }
+    }
+    process.stdout.write(nfaCount + ' winners\n');
+  } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
+
+  // 8. Sports Awards
   await delay(600);
   var SPORTS_PAGES = [
     { page: 'Major_Dhyan_Chand_Khel_Ratna_Award', label: 'Khel Ratna', q: 'Who received the Major Dhyan Chand Khel Ratna Award in {year}?', yearCol: 0, nameCol: 1, emoji: '\uD83C\uDFC6' },
@@ -393,6 +583,66 @@ async function main() {
     });
     process.stdout.write(sportCount + ' recipients\n');
     await delay(600);
+  }
+
+  // 9. Additional Indian & international awards (append-only latest-year winners)
+  var MORE_AWARDS = [
+    { page: 'Gandhi_Peace_Prize', label: 'Gandhi Peace Prize', emoji: '\uD83D\uDE4F', yearCol: 1, nameCol: 2, citeCol: 6, q: 'Who received the Gandhi Peace Prize in {year}?', fact: 'The Gandhi Peace Prize, instituted by the Government of India in 1995 on the 125th birth anniversary of Mahatma Gandhi, honours those who work for peace and Gandhian values.' },
+    { page: 'National_Bravery_Award', label: 'National Bravery Award', emoji: '\uD83C\uDF96\uFE0F', yearCol: 0, nameCol: 1, citeCol: 2, q: 'Who received the National Bravery Award in {year}?', fact: 'The National Bravery Awards are presented annually by the Government of India to children below 16 years for meritorious acts of bravery. They include the Bharat Award, Geeta Chopra Award, Sanjay Chopra Award and Bapu Gaidhani Award.' },
+    { page: 'Vyas_Samman', label: 'Vyas Samman', emoji: '\uD83D\uDCDA', yearCol: 0, nameCol: 1, citeCol: 2, q: 'Who received the Vyas Samman in {year}?', fact: 'The Vyas Samman is a prestigious Indian literary award given annually for outstanding contribution to Hindi literature.' },
+    { page: 'Saraswati_Samman', label: 'Saraswati Samman', emoji: '\uD83D\uDCDA', yearCol: 0, nameCol: 2, citeCol: 3, q: 'Who received the Saraswati Samman in {year}?', fact: 'The Saraswati Samman is awarded annually by the K.K. Birla Foundation for an outstanding literary work in any Indian language.' },
+    { page: 'Dhyan_Chand_Award', label: 'Dhyan Chand Award', emoji: '\uD83C\uDFC6', yearCol: 0, nameCol: 1, citeCol: 2, nameShift: -1, q: 'Who received the Dhyan Chand Award in {year}?', fact: 'The Dhyan Chand Award is India\'s lifetime achievement honour in sports, named after hockey legend Major Dhyan Chand.' },
+    { page: 'Booker_Prize', label: 'Booker Prize', emoji: '\uD83D\uDCD6', yearCol: 0, nameCol: 1, citeCol: 2, q: 'Who won the Booker Prize in {year}?', fact: 'The Booker Prize is one of the world\'s most prestigious literary prizes, awarded annually to the best work of long-form fiction published in the United Kingdom and Ireland.' },
+    { page: 'International_Booker_Prize', label: 'International Booker Prize', emoji: '\uD83D\uDCD6', yearCol: 0, nameCol: 1, citeCol: 5, q: 'Who won the International Booker Prize in {year}?', fact: 'The International Booker Prize is awarded annually for a single book translated into English and published in the UK or Ireland.' },
+    { page: 'Ramon_Magsaysay_Award', label: 'Ramon Magsaysay Award', emoji: '\uD83C\uDF0F', yearCol: 0, nameCol: 2, citeCol: 4, nameShift: -1, q: 'Who received the Ramon Magsaysay Award in {year}?', fact: 'The Ramon Magsaysay Award, often called Asia\'s Nobel Prize, recognises individuals and organisations addressing development issues in Asia.' },
+    { page: 'Templeton_Prize', label: 'Templeton Prize', emoji: '\uD83D\uDCA1', yearCol: 0, nameCol: 2, citeCol: 3, q: 'Who received the Templeton Prize in {year}?', fact: 'The Templeton Prize honours individuals who advance the intersection of science and religion.' },
+    { page: 'Turing_Award', label: 'Turing Award', emoji: '\uD83D\uDCBB', yearCol: 0, nameCol: 1, citeCol: 3, nameShift: -1, q: 'Who received the Turing Award in {year}?', fact: 'The ACM A.M. Turing Award, named after computing pioneer Alan Turing, is regarded as the Nobel Prize of computing.' },
+    { page: 'Abel_Prize', label: 'Abel Prize', emoji: '\uD83E\uDDEE', yearCol: 0, nameCol: 1, citeCol: 4, q: 'Who won the Abel Prize in {year}?', fact: 'The Abel Prize, awarded by the Norwegian Academy of Science and Letters, is one of the most prestigious awards in mathematics.' },
+    { page: 'Fields_Medal', label: 'Fields Medal', emoji: '\uD83C\uDFC6', yearCol: 0, nameCol: 3, citeCol: 5, nameShift: -2, q: 'Who received the Fields Medal in {year}?', fact: 'The Fields Medal, often described as the Nobel Prize of mathematics, is awarded every four years to mathematicians under 40.' },
+    { page: 'Pulitzer_Prize_for_Fiction', label: 'Pulitzer Prize for Fiction', emoji: '\uD83D\uDCD6', yearCol: 0, nameCol: 1, citeCol: 2, boldWinner: true, q: 'Who won the Pulitzer Prize for Fiction in {year}?', fact: 'The Pulitzer Prize for Fiction is awarded annually to a distinguished work of fiction by an American author, preferably dealing with American life.' },
+    { page: 'Right_Livelihood_Award', label: 'Right Livelihood Award', emoji: '\uD83C\uDF31', yearCol: 0, nameCol: 2, citeCol: 4, nameShift: -1, q: 'Who received the Right Livelihood Award in {year}?', fact: 'The Right Livelihood Award, also known as the Alternative Nobel Prize, honours people and organisations working on practical solutions to global problems.' },
+    { page: 'Miss_Universe', label: 'Miss Universe', emoji: '\uD83D\uDC51', yearCol: 1, nameCol: 3, citeCol: -1, q: 'Who won Miss Universe in {year}?', fact: 'Miss Universe is one of the world\'s most watched international beauty pageants.' }
+  ];
+  for (var ai = 0; ai < MORE_AWARDS.length; ai++) {
+    await delay(600);
+    var cfg = MORE_AWARDS[ai];
+    process.stdout.write('  ' + cfg.label + '... ');
+    try {
+      var res = await fetchGenericLatestWinners(cfg.page, cfg);
+      if (res && res.winners.length > 0) {
+        var combinedAnswer = res.winners.map(function(w) { return w.name; }).join(', ');
+        var firstCitation = res.winners.map(function(w) { return w.citation; }).filter(function(c) { return c; })[0] || '';
+        var fact = cfg.fact + ' ' + cfg.label + ' ' + res.year + ': ' + combinedAnswer + '.' + (firstCitation ? ' ' + firstCitation : '');
+        var qText = cfg.q.replace('{year}', res.year);
+        var q = makeQuestion(qText, combinedAnswer, seq++, cfg.label, cfg.emoji, fact);
+        if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; }
+        process.stdout.write(res.winners.length + ' winners (' + res.year + ')\n');
+      } else process.stdout.write('Not found\n');
+    } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
+  }
+
+  // 10. National Film Awards - performance categories (append-only latest year)
+  var NFA_PERF = [
+    { page: 'National_Film_Award_for_Best_Actor_in_a_Leading_Role', label: 'National Film Award for Best Actor', yearCol: 0, nameCol: 1, citeCol: 3, nameShift: -1, citeShift: -1, q: 'Who won the National Film Award for Best Actor for the films of {year}?', fact: 'The National Film Award for Best Actor is presented annually by the Directorate of Film Festivals for the best leading performance in an Indian film.' },
+    { page: 'National_Film_Award_for_Best_Actress_in_a_Leading_Role', label: 'National Film Award for Best Actress', yearCol: 0, nameCol: 1, citeCol: 3, nameShift: -1, citeShift: -1, q: 'Who won the National Film Award for Best Actress for the films of {year}?', fact: 'The National Film Award for Best Actress is presented annually by the Directorate of Film Festivals for the best leading performance by an actress in an Indian film.' },
+    { page: 'National_Film_Award_for_Best_Direction', label: 'National Film Award for Best Direction', yearCol: 0, nameCol: 1, citeCol: 2, nameShift: 0, q: 'Who won the National Film Award for Best Direction for the films of {year}?', fact: 'The National Film Award for Best Direction is presented annually by the Directorate of Film Festivals for the best directed Indian film.' }
+  ];
+  for (var npi = 0; npi < NFA_PERF.length; npi++) {
+    await delay(600);
+    var ncfg = NFA_PERF[npi];
+    process.stdout.write('  ' + ncfg.label + '... ');
+    try {
+      var nres = await fetchGenericLatestWinners(ncfg.page, ncfg);
+      if (nres && nres.winners.length > 0) {
+        var nCombinedAnswer = nres.winners.map(function(w) { return w.name; }).join(', ');
+        var nParts = nres.winners.map(function(w) { return w.name + (w.citation ? ' (' + w.citation + ')' : ''); });
+        var nFact = ncfg.fact + ' ' + ncfg.label + ' ' + nres.year + ': ' + nParts.join('; ') + '.';
+        var nqText = ncfg.q.replace('{year}', nres.year);
+        var nq = makeQuestion(nqText, nCombinedAnswer, seq++, ncfg.label, '\uD83C\uDFAC', nFact);
+        if (nq && !existingKeys[eventKey(nq)]) { newQuestions.push(nq); existingKeys[eventKey(nq)] = true; }
+        process.stdout.write(nres.winners.length + ' winners (' + nres.year + ')\n');
+      } else process.stdout.write('Not found\n');
+    } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
   }
 
   for (var bqi = 0; bqi < newQuestions.length; bqi++) {
