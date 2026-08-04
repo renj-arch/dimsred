@@ -5663,23 +5663,59 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 cb();
             }).catch(function() { _piLoading = false; cb(); });
         }
+        function _looksLikePersonName(s) {
+            if (!s) return false;
+            s = String(s).trim();
+            if (s.length < 3 || s.length > 60) return false;
+            if (/\d/.test(s)) return false;
+            if (/[^a-zA-Z .'\-]/ .test(s)) return false;
+            var words = s.split(/\s+/).filter(Boolean);
+            if (words.length < 2) return false;
+            var low = ' ' + s.toLowerCase() + ' ';
+            if (/(organization|government|ministry|department|bureau|council|committee|commission|board|bank|institute|university|association|society|company|corporation|party|union|force|agency|scheme|mission|programme|program|plan|policy|day|week|month|state|district|river|mountain|lake|city|town|country|island|treaty|act|bill|constitution|article|schedule|amendment|report|index|award|prize|medal|stadium|trophy|cup|league|game|series|festival|temple|fort|palace|dynasty|kingdom|empire|war|battle|revolution|movement|language|script|stadium|national park|park|nadu|pradesh|himachal|arunachal|rajasthan|maharashtra|gujarat|kerala|karnataka|bengal|uttar|jammu|kashmir|punjab|uttarakhand|bihar|chhattisgarh|jharkhand|odisha|assam|goa|manipur|meghalaya|mizoram|nagaland|sikkim|tripura|andaman|lakshadweep|delhi|haryana|tamil|pondicherry|chandigarh|dadra|daman|diu)/.test(low)) return false;
+            return true;
+        }
+        function _wikiFilePath(title) {
+            if (!title) return null;
+            return 'https://en.wikipedia.org/wiki/Special:FilePath/' + encodeURIComponent(String(title).trim().replace(/\s+/g, '_'));
+        }
+        function _renderPersonImg(url) {
+            var wrap = document.getElementById('qImgWrap');
+            if (!wrap || !url) return false;
+            wrap.style.display = 'block';
+            wrap.innerHTML = '<img src="' + url + '" alt="" onerror="this.parentNode.style.display=\'none\';this.parentNode.innerHTML=\'\'" style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:2px solid var(--border);margin:0 auto 10px;display:block;box-shadow:0 4px 16px rgba(0,0,0,.35)">';
+            return true;
+        }
         function _attachPersonImage(q) {
             var wrap = document.getElementById('qImgWrap');
             if (!wrap) return;
-            if (!_piData) { _loadPersonImages(function() { _attachPersonImage(q); }); return; }
             if (typeof q !== 'object' || q === null) return;
+            if (!_piData) { _loadPersonImages(function() { _attachPersonImage(q); }); return; }
+
+            // Live wiki-generated questions: the answer is the exact Wikipedia article title.
+            try {
+                if (q._source === 'wiki' && q.a && typeof WIKI !== 'undefined' && WIKI._seenTypes && WIKI._seenTypes[q.a] === 'person') {
+                    var wu = _wikiFilePath(q.a);
+                    if (wu && _renderPersonImg(wu)) return;
+                }
+            } catch(e) {}
+
+            // Known portrait from the local name->image map (match longest person name in text).
             var txt = ' ' + [q.q, q.a, q.fact, q.solution, q.explanation].filter(Boolean).join(' ').toLowerCase().replace(/[^a-z0-9]+/g, ' ') + ' ';
             _piRe.lastIndex = 0;
             var m = _piRe.exec(txt);
             if (m) {
                 var key = m[2].toLowerCase().replace(/[^a-z0-9]+/g, '').replace(/\s+/g, '');
                 var url = _piData[key];
-                if (url) {
-                    wrap.style.display = 'block';
-                    wrap.innerHTML = '<img src="' + url + '" alt="" onerror="this.parentNode.style.display=\'none\';this.parentNode.innerHTML=\'\'" style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:2px solid var(--border);margin:0 auto 10px;display:block;box-shadow:0 4px 16px rgba(0,0,0,.35)">';
-                    return;
-                }
+                if (url && _renderPersonImg(url)) return;
             }
+
+            // "Who ...?" questions: the answer is usually the person's name — resolve via Wikipedia lead image.
+            if (q.a && /^who\b/i.test((q.q || '').trim())) {
+                var pu = _wikiFilePath(q.a);
+                if (pu && _looksLikePersonName(q.a) && _renderPersonImg(pu)) return;
+            }
+
             wrap.style.display = 'none';
             wrap.innerHTML = '';
         }
