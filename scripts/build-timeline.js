@@ -129,7 +129,10 @@ var SEED = {
     'Gautama Buddha', 'Mahavira', 'Chandragupta Maurya', 'Ashoka', 'Chanakya', 'Samudragupta',
     'Harsha', 'Kanishka', 'Panini', 'Charaka', 'Sushruta', 'Kalidasa', 'Aryabhata', 'Alexander the Great',
     'Moggaliputta-Tissa', 'Faxian', 'Yijing', 'Julius Caesar', 'Augustus', 'Cleopatra', 'Genghis Khan',
-    'Confucius', 'Sun Yat-sen'
+    'Confucius', 'Sun Yat-sen', 'Justinian', 'Charlemagne', 'Marco Polo', 'Mehmed', 'Suleiman',
+    'Christopher Columbus', 'Ferdinand Magellan', 'Martin Luther', 'Johannes Gutenberg', 'Isaac Newton',
+    'Charles Darwin', 'Napoleon', 'Abraham Lincoln', 'Adolf Hitler', 'Vladimir Lenin', 'Joseph Stalin',
+    'Franklin D. Roosevelt', 'Winston Churchill', 'Mao Zedong', 'Nelson Mandela', 'Martin Luther King Jr.'
   ]},
   religion: { type: 'event', level: 2, list: [
     'First Buddhist Council', 'Second Buddhist Council', 'Third Buddhist Council', 'Fourth Buddhist Council',
@@ -154,6 +157,31 @@ var SEED = {
   chinaSites: { type: 'concept', level: 3, list: [
     'Great Wall of China'
   ]},
+  worldAncient: { type: 'event', level: 1, list: [
+    'Ancient Egypt', 'Sumer', 'Babylon', 'Assyria', 'Phoenicia', 'Hittite Empire',
+    'Mycenaean civilization', 'Minoan civilization', 'Carthage', 'Persian Empire', 'Roman Empire'
+  ]},
+  medievalWorld: { type: 'event', level: 1, list: [
+    'Byzantine Empire', 'Holy Roman Empire', 'Norman Conquest', 'Umayyad Caliphate', 'Abbasid Caliphate',
+    'Islamic Golden Age', 'Crusades', 'Mongol Empire', 'Ottoman Empire', 'Hundred Years\u2019 War'
+  ]},
+  earlyModern: { type: 'event', level: 1, list: [
+    'Age of Discovery', 'Protestant Reformation', 'Scientific Revolution', 'Enlightenment',
+    'Congress of Vienna', 'American Revolution', 'French Revolution', 'Industrial Revolution',
+    'British East India Company'
+  ]},
+  modernWorld: { type: 'event', level: 1, list: [
+    'Meiji Restoration', 'American Civil War', 'Scramble for Africa', 'Russian Revolution',
+    'Great Depression', 'Weimar Republic', 'World War I', 'Nazism', 'World War II', 'Holocaust'
+  ]},
+  contemporary: { type: 'event', level: 1, list: [
+    'Cold War', 'Marshall Plan', 'Berlin Wall', 'Korean War', 'Vietnam War', 'Cuban Missile Crisis',
+    'Space Race', 'Civil Rights Movement', 'Apartheid', 'Dissolution of the Soviet Union',
+    'War on Terror', 'Arab Spring', '9/11 attacks'
+  ]},
+  globalConcepts: { type: 'concept', level: 1, list: [
+    'Internet'
+  ]},
   canon: { type: 'concept', level: 3, list: [
     'Tipiṭaka (Pali Canon)'
   ]},
@@ -175,7 +203,7 @@ var SEED = {
   ]},
   diseases: { type: 'disease', level: 3, list: [
     'COVID-19', 'Smallpox', 'Cholera', 'Plague', 'Tuberculosis', 'Leprosy', 'Polio', 'Malaria',
-    'Dengue', 'Spanish flu', 'Chikungunya', 'Kala-azar', 'Famine'
+    'Dengue', 'Spanish flu', 'Chikungunya', 'Kala-azar', 'Famine', 'Black Death'
   ]},
   schemes: { type: 'scheme', level: 3, list: [
     'National Health Mission', 'Swachh Bharat Mission', 'Poshan Abhiyan', 'Ayushman Bharat',
@@ -192,6 +220,9 @@ var SEED = {
     'Bhabha Atomic Research Centre', 'Council of Scientific and Industrial Research', 'Indian Institute of Technology',
     'Reserve Bank of India', 'State Bank of India', 'Coal India', 'Oil and Natural Gas Corporation',
     'Indian Oil Corporation', 'Nuclear power in India'
+  ]},
+  globalOrgs: { type: 'org', level: 1, list: [
+    'United Nations', 'European Union'
   ]},
   geography: { type: 'concept', level: 4, list: [
     'Suez Canal', 'Panama Canal', 'McMahon Line', 'Line of Actual Control', 'Line of Control',
@@ -288,7 +319,79 @@ var EXTRA_ALIASES = {
   'Rani Lakshmibai': ['rani lakshmi bai', 'lakshmi bai', 'rani of jhansi'],
   'Lala Lajpat Rai': ['lajpat rai'],
   'Viswanathan Anand': ['vishwanathan anand'],
-  'Five-Year Plans (India)': ['five year plan', 'five-year plan', 'five year plans']
+  'Five-Year Plans (India)': ['five year plan', 'five-year plan', 'five year plans'],
+  'Ancient Egypt': ['ancient egypt', 'egyptian civilization', 'ancient egyptian', 'pharaohs'],
+  'Sumer': ['sumer', 'sumerians', 'sumerian civilization'],
+  'Babylon': ['babylon', 'babylonia', 'babylonian empire', 'babylonians'],
+  'Assyria': ['assyria', 'assyrian empire', 'assyrians', 'neo-assyrian'],
+  'Phoenicia': ['phoenicia', 'phoenicians', 'phoenician civilization'],
+  'Hittite Empire': ['hittite empire', 'hittites', 'hittite civilization'],
+  'Mycenaean civilization': ['mycenaean', 'mycenaean greece', 'mycenae'],
+  'Minoan civilization': ['minoan', 'minoan civilization', 'minoans', 'minoa'],
+  'Carthage': ['carthage', 'carthaginians', 'punic wars'],
+  'Persian Empire': ['persian empire', 'achaemenid empire', 'achaemenid', 'achaemenids'],
+  'Roman Empire': ['roman empire', 'imperial rome'],
+  'Byzantine Empire': ['byzantine empire', 'byzantium', 'byzantines', 'eastern roman empire'],
+  'Holy Roman Empire': ['holy roman empire', 'holy roman emperor'],
+  'Norman Conquest': ['norman conquest', 'battle of hastings'],
+  'Umayyad Caliphate': ['umayyad caliphate', 'umayyads', 'umayyad dynasty'],
+  'Abbasid Caliphate': ['abbasid caliphate', 'abbasids', 'abbasid dynasty'],
+  'Islamic Golden Age': ['islamic golden age', 'golden age of islam'],
+  'Black Death': ['black death', 'bubonic plague'],
+  'Age of Discovery': ['age of discovery', 'age of exploration'],
+  'Protestant Reformation': ['protestant reformation', 'protestantism', 'reformation'],
+  'Scientific Revolution': ['scientific revolution'],
+  'Enlightenment': ['age of enlightenment'],
+  'Congress of Vienna': ['congress of vienna', 'vienna congress'],
+  'American Revolution': ['american revolution', 'american war of independence'],
+  'British East India Company': ['british east india company', 'east india company'],
+  'Meiji Restoration': ['meiji restoration', 'meiji'],
+  'American Civil War': ['american civil war', 'us civil war', 'war between the states'],
+  'Scramble for Africa': ['scramble for africa', 'partition of africa'],
+  'Russian Revolution': ['russian revolution', 'october revolution', 'bolshevik revolution'],
+  'Great Depression': ['great depression'],
+  'Weimar Republic': ['weimar republic', 'weimar'],
+  'World War I': ['world war i', 'world war one', 'first world war', 'great war', 'wwi'],
+  'Nazism': ['nazism', 'nazi party', 'nazis', 'third reich', 'national socialism'],
+  'World War II': ['world war ii', 'world war two', 'second world war', 'wwii'],
+  'Holocaust': ['holocaust', 'the holocaust', 'shoah'],
+  'Cold War': ['cold war'],
+  'Marshall Plan': ['marshall plan'],
+  'Berlin Wall': ['berlin wall'],
+  'Korean War': ['korean war'],
+  'Vietnam War': ['vietnam war'],
+  'Cuban Missile Crisis': ['cuban missile crisis'],
+  'Space Race': ['space race'],
+  'Civil Rights Movement': ['civil rights movement', 'american civil rights movement'],
+  'Apartheid': ['apartheid'],
+  'Dissolution of the Soviet Union': ['dissolution of the soviet union', 'fall of the soviet union', 'collapse of the soviet union', 'end of the ussr'],
+  'War on Terror': ['war on terror'],
+  'Arab Spring': ['arab spring'],
+  '9/11 attacks': ['9/11 attacks', 'september 11 attacks', 'september 11, 2001'],
+  'United Nations': ['united nations', 'the un', 'united nations organization', 'uno'],
+  'European Union': ['european union', 'the eu', 'european communities'],
+  'Internet': ['internet', 'world wide web', 'worldwide web'],
+  'Justinian': ['justinian', 'justinian the great', 'justinian i'],
+  'Charlemagne': ['charlemagne', 'charles the great'],
+  'Marco Polo': ['marco polo'],
+  'Mehmed': ['mehmed', 'mehmed ii', 'mehmed the conqueror'],
+  'Suleiman': ['suleiman', 'suleiman the magnificent', 'suleiman i'],
+  'Christopher Columbus': ['christopher columbus', 'columbus'],
+  'Ferdinand Magellan': ['ferdinand magellan', 'magellan'],
+  'Martin Luther': ['martin luther'],
+  'Johannes Gutenberg': ['johannes gutenberg', 'gutenberg'],
+  'Isaac Newton': ['isaac newton', 'newton'],
+  'Charles Darwin': ['charles darwin', 'darwin'],
+  'Napoleon': ['napoleon', 'napoleon bonaparte', 'napoleonic'],
+  'Abraham Lincoln': ['abraham lincoln', 'lincoln'],
+  'Adolf Hitler': ['adolf hitler', 'hitler'],
+  'Vladimir Lenin': ['vladimir lenin', 'lenin'],
+  'Joseph Stalin': ['joseph stalin', 'stalin'],
+  'Franklin D. Roosevelt': ['franklin d roosevelt', 'franklin roosevelt', 'fdr'],
+  'Winston Churchill': ['winston churchill', 'churchill'],
+  'Mao Zedong': ['mao zedong', 'mao tse-tung', 'chairman mao'],
+  'Nelson Mandela': ['nelson mandela', 'mandela'],
+  'Martin Luther King Jr.': ['martin luther king', 'martin luther king jr', 'mlk']
 };
 
 // Homonym guards: when the alias also names a DIFFERENT entity (same words), exclude
@@ -308,7 +411,24 @@ var NEGATIVE_ALIASES = {
   'Vikings': ['vikas engine', 'french viking', 'viking engine', 'viking rocket', 'viking orbiter', 'viking lander', 'viking spacecraft', 'viking probes'],
   'Song dynasty': ['song of songs', 'song', 'songs'],
   'Boxer Rebellion': ['boxing', 'boxer', 'boxers', 'wba', 'heavyweight'],
-  'Long March': ['long march to democracy', 'long march of']
+  'Long March': ['long march to democracy', 'long march of'],
+  'Persian Empire': ['persian gulf', 'persian cat', 'persian language', 'persian poetry', 'persian literature', 'persian carpet', 'persian miniature'],
+  'Enlightenment': ['nirvana', 'spiritual enlightenment', 'buddhist enlightenment', 'enlightenment in buddhism', 'jain enlightenment', 'european enlightenment', 'french enlightenment'],
+  'Carthage': ['carthage college', 'carthage missouri'],
+  'Russian Revolution': ['russian revolution of 1905', '1905 russian revolution'],
+  'Nazism': ['neo-nazi', 'neo-nazis', 'nazi gold'],
+  'World War II': ['post-world war ii', 'world war ii memorial', 'world war ii veterans'],
+  'Meiji Restoration': ['meiji shrine', 'meiji university'],
+  'Black Death': ['black death (band)'],
+  'Adolf Hitler': ['hitler youth', 'hitler diaries', 'hitler speeches', 'mein kampf'],
+  'Martin Luther': ['martin luther king', 'mlk', 'martin luther king jr'],
+  'Marco Polo': ['marco polo airport', 'marco polo games'],
+  'Suleiman': ['suleiman mosque', 'suleymaniye'],
+  'Mehmed': ['mehmed vi', 'mehmed v', 'sultan mehmed'],
+  'United Nations': ['united nations association', 'united nations university'],
+  'European Union': ['european union law', 'european union institutions'],
+  'Internet': ['internet protocol', 'internet of things', 'internet archive'],
+  'Isaac Newton': ['newton (unit)', 'newtons', 'newton\u2019s laws', "newton's laws"]
 };
 
 // Manual, authoritative time spans for the curated spine (stable well-known facts).
@@ -392,7 +512,34 @@ var MANUAL_SPANS = {
   'Nuclear power in India': [1969, 2026],
   'Suez Canal': [1869, 2026], 'Panama Canal': [1914, 2026], 'McMahon Line': [1914, 2026],
   'Line of Actual Control': [1962, 2026], 'Line of Control': [1972, 2026], 'Siachen Glacier': [1984, 2026],
-  'Doklam': [2017, 2026]
+  'Doklam': [2017, 2026],
+  'Ancient Egypt': [-3100, -332], 'Sumer': [-4000, -1900], 'Babylon': [-1894, -539], 'Assyria': [-2025, -609],
+  'Phoenicia': [-1500, -300], 'Hittite Empire': [-1650, -1178], 'Mycenaean civilization': [-1600, -1100],
+  'Minoan civilization': [-2700, -1450], 'Carthage': [-814, -146], 'Persian Empire': [-550, -330],
+  'Roman Empire': [-27, 476],
+  'Byzantine Empire': [330, 1453], 'Holy Roman Empire': [800, 1806], 'Norman Conquest': [1066, 1066],
+  'Umayyad Caliphate': [661, 750], 'Abbasid Caliphate': [750, 1258], 'Islamic Golden Age': [750, 1258],
+  'Crusades': [1095, 1291], 'Mongol Empire': [1206, 1368], 'Ottoman Empire': [1299, 1922],
+  'Hundred Years\u2019 War': [1337, 1453], 'Black Death': [1347, 1351],
+  'Age of Discovery': [1400, 1600], 'Protestant Reformation': [1517, 1648], 'Scientific Revolution': [1543, 1687],
+  'Enlightenment': [1685, 1815], 'Congress of Vienna': [1814, 1815], 'American Revolution': [1765, 1783],
+  'French Revolution': [1789, 1799], 'Industrial Revolution': [1760, 1840],
+  'British East India Company': [1600, 1874],
+  'Meiji Restoration': [1868, 1912], 'American Civil War': [1861, 1865], 'Scramble for Africa': [1881, 1914],
+  'Russian Revolution': [1917, 1917], 'Great Depression': [1929, 1939], 'Weimar Republic': [1918, 1933],
+  'World War I': [1914, 1918], 'Nazism': [1919, 1945], 'World War II': [1939, 1945], 'Holocaust': [1941, 1945],
+  'Cold War': [1947, 1991], 'Marshall Plan': [1948, 1952], 'Berlin Wall': [1961, 1989], 'Korean War': [1950, 1953],
+  'Vietnam War': [1955, 1975], 'Cuban Missile Crisis': [1962, 1962], 'Space Race': [1955, 1975],
+  'Civil Rights Movement': [1954, 1968], 'Apartheid': [1948, 1994], 'Dissolution of the Soviet Union': [1991, 1991],
+  'War on Terror': [2001, 2021], 'Arab Spring': [2010, 2012], '9/11 attacks': [2001, 2001],
+  'United Nations': [1945, 2026], 'European Union': [1957, 2026], 'Internet': [1969, 2026],
+  'Justinian': [482, 565], 'Charlemagne': [742, 814], 'Marco Polo': [1254, 1324], 'Mehmed': [1432, 1481],
+  'Suleiman': [1494, 1566], 'Christopher Columbus': [1451, 1506], 'Ferdinand Magellan': [1480, 1521],
+  'Martin Luther': [1483, 1546], 'Johannes Gutenberg': [1400, 1468], 'Isaac Newton': [1643, 1727],
+  'Charles Darwin': [1809, 1882], 'Napoleon': [1769, 1821], 'Abraham Lincoln': [1809, 1865],
+  'Adolf Hitler': [1889, 1945], 'Vladimir Lenin': [1870, 1924], 'Joseph Stalin': [1878, 1953],
+  'Franklin D. Roosevelt': [1882, 1945], 'Winston Churchill': [1874, 1965], 'Mao Zedong': [1893, 1976],
+  'Nelson Mandela': [1918, 2013], 'Martin Luther King Jr.': [1929, 1968]
 };
 
 // Curated spans for sub-topics (non-seed) where extracted year clusters cannot
@@ -479,7 +626,19 @@ var TOPIC_OVERRIDES = {
   'Mongol Empire': [1206, 1368], 'Crusades': [1095, 1291],
   'Mahavira': [-599, -527], 'Samudragupta': [335, 380], 'Chanakya': [-350, -275],
   'Aryabhata': [476, 550], 'Kalidasa': [400, 455], 'Nagarjuna': [150, 250], 'Shivaji': [1630, 1680],
-  'Vedic period': [-1500, -500], 'Indus Valley Civilisation': [-3300, -1300], 'Nalanda mahavihara': [427, 1197]
+  'Vedic period': [-1500, -500], 'Indus Valley Civilisation': [-3300, -1300], 'Nalanda mahavihara': [427, 1197],
+  // Sub-topics sharing names with the curated world spine — pin their spans too so
+  // auto-extracted reference years (e.g. Roman Empire -148..1970) don't show twice.
+  'Roman Empire': [-27, 476], 'Joseph Stalin': [1878, 1953], 'Winston Churchill': [1874, 1965],
+  'Franklin D. Roosevelt': [1882, 1945], 'Vladimir Lenin': [1870, 1924], 'Mao Zedong': [1893, 1976],
+  'Nelson Mandela': [1918, 2013], 'Korean War': [1950, 1953], 'Russian Revolution': [1917, 1917],
+  'Abbasid Caliphate': [750, 1258], 'Hundred Years\u2019 War': [1337, 1453], 'Soviet Union': [1922, 1991],
+  'Fall of the Berlin Wall': [1989, 1990], 'Great Depression': [1929, 1939], 'French Revolution & Napoleon': [1789, 1815],
+  'Renaissance & Reformation': [1400, 1648], 'Ashoka': [-304, -232], 'Maurya Empire': [-322, -185],
+  'Crusades': [1095, 1291], 'Mongol Empire': [1206, 1368], 'Ottoman Empire': [1299, 1922],
+  'Meiji Restoration': [1868, 1912], 'World War II': [1939, 1945], 'Cold War': [1947, 1991],
+  'Vietnam War': [1955, 1975], 'Space Race': [1955, 1975], 'Apartheid': [1948, 1994],
+  'United Nations': [1945, 2026], 'European Union': [1957, 2026], 'Napoleon': [1769, 1821]
 };
 
 // Curated, authoritative descriptors for the curated-spine persons.
@@ -515,7 +674,18 @@ var PERSON_DESCS = {
   'Xuanzang': 'Chinese Buddhist monk and scholar',
   'Prem Behari Narain Raizada': 'Indian calligrapher',
   'Roy Mugerwa': 'Ugandan physician and academic',
-  'Ali Sardar Jafri': 'Indian writer'
+  'Ali Sardar Jafri': 'Indian writer',
+  'Justinian': 'Byzantine emperor', 'Charlemagne': 'Holy Roman Emperor',
+  'Marco Polo': 'Venetian explorer', 'Mehmed': 'Ottoman sultan',
+  'Suleiman': 'Ottoman sultan', 'Christopher Columbus': 'Italian explorer',
+  'Ferdinand Magellan': 'Portuguese explorer', 'Martin Luther': 'leader of the Protestant Reformation',
+  'Johannes Gutenberg': 'inventor of the printing press', 'Isaac Newton': 'English physicist and mathematician',
+  'Charles Darwin': 'English naturalist', 'Napoleon': 'French military and political leader',
+  'Abraham Lincoln': 'US President during the Civil War', 'Adolf Hitler': 'dictator of Nazi Germany',
+  'Vladimir Lenin': 'leader of the Russian Revolution', 'Joseph Stalin': 'Soviet leader',
+  'Franklin D. Roosevelt': 'US President during the Depression and World War II',
+  'Winston Churchill': 'British Prime Minister during World War II', 'Mao Zedong': 'founder of the PRC',
+  'Nelson Mandela': 'South African anti-apartheid leader', 'Martin Luther King Jr.': 'American civil rights leader'
 };
 
 // Person-role keyword gate: an auto-extracted descriptor is only attached when it
@@ -1196,7 +1366,100 @@ function main() {
     ['seed|Cricket World Cup', 'seed|Kapil Dev', 3],
     ['seed|Cricket World Cup', 'seed|Sachin Tendulkar', 3],
     ['seed|T20 World Cup', 'seed|Sachin Tendulkar', 2],
-    ['seed|Milkha Singh', 'seed|P. T. Usha', 2]
+    ['seed|Milkha Singh', 'seed|P. T. Usha', 2],
+    ['seed|Sumer', 'seed|Babylon', 3],
+    ['seed|Babylon', 'seed|Assyria', 3],
+    ['seed|Assyria', 'seed|Phoenicia', 2],
+    ['seed|Phoenicia', 'seed|Carthage', 3],
+    ['seed|Ancient Egypt', 'seed|Carthage', 2],
+    ['seed|Minoan civilization', 'seed|Mycenaean civilization', 3],
+    ['seed|Mycenaean civilization', 'seed|Hellenistic period', 2],
+    ['seed|Hittite Empire', 'seed|Assyria', 2],
+    ['seed|Hittite Empire', 'seed|Ancient Egypt', 2],
+    ['seed|Persian Empire', 'seed|Hellenistic period', 3],
+    ['seed|Persian Empire', 'seed|Carthage', 2],
+    ['seed|Persian Empire', 'seed|Sasanian Empire', 2],
+    ['seed|Roman Empire', 'seed|Byzantine Empire', 3],
+    ['seed|Roman Empire', 'seed|Roman Republic', 3],
+    ['seed|Roman Empire', 'seed|Augustus', 3],
+    ['seed|Byzantine Empire', 'seed|Justinian', 3],
+    ['seed|Byzantine Empire', 'seed|Ottoman Empire', 3],
+    ['seed|Justinian', 'seed|Charlemagne', 2],
+    ['seed|Charlemagne', 'seed|Holy Roman Empire', 3],
+    ['seed|Holy Roman Empire', 'seed|Ottoman Empire', 2],
+    ['seed|Norman Conquest', 'seed|Charlemagne', 2],
+    ['seed|Umayyad Caliphate', 'seed|Abbasid Caliphate', 3],
+    ['seed|Abbasid Caliphate', 'seed|Islamic Golden Age', 3],
+    ['seed|Umayyad Caliphate', 'seed|Ottoman Empire', 2],
+    ['seed|Crusades', 'seed|Byzantine Empire', 3],
+    ['seed|Crusades', 'seed|Ottoman Empire', 2],
+    ['seed|Mongol Empire', 'seed|Genghis Khan', 3],
+    ['seed|Mongol Empire', 'seed|Huns', 2],
+    ['seed|Hundred Years\u2019 War', 'seed|Norman Conquest', 2],
+    ['seed|Black Death', 'seed|Hundred Years\u2019 War', 2],
+    ['seed|Marco Polo', 'seed|Mongol Empire', 3],
+    ['seed|Age of Discovery', 'seed|Christopher Columbus', 3],
+    ['seed|Age of Discovery', 'seed|Marco Polo', 2],
+    ['seed|Christopher Columbus', 'seed|Ferdinand Magellan', 3],
+    ['seed|Christopher Columbus', 'seed|Vasco da Gama', 2],
+    ['seed|Ferdinand Magellan', 'seed|Vasco da Gama', 2],
+    ['seed|Johannes Gutenberg', 'seed|Protestant Reformation', 2],
+    ['seed|Martin Luther', 'seed|Protestant Reformation', 3],
+    ['seed|Protestant Reformation', 'seed|Thirty Years\u2019 War', 2],
+    ['seed|Mehmed', 'seed|Ottoman Empire', 3],
+    ['seed|Mehmed', 'seed|Byzantine Empire', 3],
+    ['seed|Suleiman', 'seed|Ottoman Empire', 3],
+    ['seed|Scientific Revolution', 'seed|Isaac Newton', 3],
+    ['seed|Enlightenment', 'seed|Scientific Revolution', 2],
+    ['seed|Enlightenment', 'seed|French Revolution', 3],
+    ['seed|French Revolution', 'seed|Napoleon', 3],
+    ['seed|Napoleon', 'seed|Congress of Vienna', 3],
+    ['seed|Congress of Vienna', 'seed|British East India Company', 2],
+    ['seed|Industrial Revolution', 'seed|British East India Company', 3],
+    ['seed|American Revolution', 'seed|French Revolution', 2],
+    ['seed|American Civil War', 'seed|Abraham Lincoln', 3],
+    ['seed|American Revolution', 'seed|Abraham Lincoln', 2],
+    ['seed|Charles Darwin', 'seed|Industrial Revolution', 2],
+    ['seed|Meiji Restoration', 'seed|Qing dynasty', 2],
+    ['seed|Scramble for Africa', 'seed|British East India Company', 2],
+    ['seed|World War I', 'seed|Nazism', 3],
+    ['seed|World War I', 'seed|Russian Revolution', 3],
+    ['seed|Russian Revolution', 'seed|Vladimir Lenin', 3],
+    ['seed|Vladimir Lenin', 'seed|Joseph Stalin', 3],
+    ['seed|Weimar Republic', 'seed|Nazism', 3],
+    ['seed|Nazism', 'seed|Adolf Hitler', 3],
+    ['seed|Adolf Hitler', 'seed|World War II', 3],
+    ['seed|World War II', 'seed|Holocaust', 3],
+    ['seed|World War II', 'seed|Winston Churchill', 3],
+    ['seed|World War II', 'seed|Franklin D. Roosevelt', 3],
+    ['seed|Joseph Stalin', 'seed|World War II', 2],
+    ['seed|Mao Zedong', 'seed|Long March', 3],
+    ['seed|Mao Zedong', 'seed|Cultural Revolution', 3],
+    ['seed|Great Depression', 'seed|Franklin D. Roosevelt', 3],
+    ['seed|Great Depression', 'seed|Weimar Republic', 2],
+    ['seed|Cold War', 'seed|World War II', 3],
+    ['seed|Cold War', 'seed|Marshall Plan', 3],
+    ['seed|Cold War', 'seed|Korean War', 3],
+    ['seed|Cold War', 'seed|Vietnam War', 3],
+    ['seed|Cold War', 'seed|Berlin Wall', 3],
+    ['seed|Cold War', 'seed|Cuban Missile Crisis', 3],
+    ['seed|Cold War', 'seed|Space Race', 3],
+    ['seed|United Nations', 'seed|World War II', 3],
+    ['seed|United Nations', 'seed|Korean War', 2],
+    ['seed|Marshall Plan', 'seed|European Union', 3],
+    ['seed|European Union', 'seed|Cold War', 2],
+    ['seed|Space Race', 'seed|Internet', 3],
+    ['seed|Internet', 'seed|United Nations', 2],
+    ['seed|Berlin Wall', 'seed|Dissolution of the Soviet Union', 3],
+    ['seed|Dissolution of the Soviet Union', 'seed|Cold War', 3],
+    ['seed|Apartheid', 'seed|Nelson Mandela', 3],
+    ['seed|Civil Rights Movement', 'seed|Martin Luther King Jr.', 3],
+    ['seed|Nelson Mandela', 'seed|Civil Rights Movement', 2],
+    ['seed|War on Terror', 'seed|9/11 attacks', 3],
+    ['seed|9/11 attacks', 'seed|United Nations', 2],
+    ['seed|Arab Spring', 'seed|War on Terror', 2],
+    ['seed|Vietnam War', 'seed|Civil Rights Movement', 2],
+    ['seed|American Revolution', 'seed|British East India Company', 2]
   ];
   var linkMap = {};
   for (var li of links) linkMap[li.a + '\u0000' + li.b] = li.w;
