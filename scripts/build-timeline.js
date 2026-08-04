@@ -132,7 +132,8 @@ var SEED = {
     'Confucius', 'Sun Yat-sen', 'Justinian', 'Charlemagne', 'Marco Polo', 'Mehmed', 'Suleiman',
     'Christopher Columbus', 'Ferdinand Magellan', 'Martin Luther', 'Johannes Gutenberg', 'Isaac Newton',
     'Charles Darwin', 'Napoleon', 'Abraham Lincoln', 'Adolf Hitler', 'Vladimir Lenin', 'Joseph Stalin',
-    'Franklin D. Roosevelt', 'Winston Churchill', 'Mao Zedong', 'Nelson Mandela', 'Martin Luther King Jr.'
+    'Franklin D. Roosevelt', 'Winston Churchill', 'Mao Zedong', 'Nelson Mandela', 'Martin Luther King Jr.',
+    'Zhu Yuanzhang', 'Yongle Emperor', 'Zheng He', 'Xu Da', 'Chang Yuchun', 'Tang He', 'Liao Yongzhong', 'Hu Mei'
   ]},
   religion: { type: 'event', level: 2, list: [
     'First Buddhist Council', 'Second Buddhist Council', 'Third Buddhist Council', 'Fourth Buddhist Council',
@@ -152,7 +153,9 @@ var SEED = {
   ]},
   china: { type: 'event', level: 2, list: [
     'Qin dynasty', 'Han dynasty', 'Song dynasty', 'Ming dynasty', 'Qing dynasty',
-    'Cultural Revolution', 'Long March', 'Taiping Rebellion', 'Boxer Rebellion'
+    'Cultural Revolution', 'Long March', 'Taiping Rebellion', 'Boxer Rebellion',
+    'Red Turban Rebellion', 'Battle of Lake Poyang', 'Jingnan Campaign', 'Ming conquest of Yunnan',
+    'Treasure voyages', 'Forbidden City', 'Yongle Encyclopedia'
   ]},
   chinaSites: { type: 'concept', level: 3, list: [
     'Great Wall of China'
@@ -294,7 +297,26 @@ var EXTRA_ALIASES = {
   'Qin dynasty': ['qin dynasty', 'qin', 'qin shi huang'],
   'Han dynasty': ['han dynasty', 'han'],
   'Song dynasty': ['song dynasty', 'song china'],
-  'Ming dynasty': ['ming dynasty', 'ming'],
+  'Ming dynasty': ['ming dynasty', 'ming', 'red turban', 'zhu yuanzhang', 'hongwu', 'yongle', 'zheng he',
+    'treasure voyages', 'treasure fleet', 'jingnan', 'lake poyang', 'poyang', 'hu weiyong', 'xu da',
+    'chang yuchun', 'tang he', 'liao yongzhong', 'hu mei', 'guo zixing', 'zhang shicheng', 'chen youliang',
+    'forbidden city', 'yongle encyclopedia', 'ming conquest of yunnan', 'jianwen', 'zhu di', 'han shantong',
+    'da ming baochao', 'naghachu', 'buir lake', 'fang guozhen', 'ming-mong mao war'],
+  'Red Turban Rebellion': ['red turban rebellion', 'red turbans', 'red turban'],
+  'Battle of Lake Poyang': ['battle of lake poyang', 'battle of poyang', 'lake poyang'],
+  'Jingnan Campaign': ['jingnan campaign', 'jingnan'],
+  'Ming conquest of Yunnan': ['ming conquest of yunnan', 'conquest of yunnan'],
+  'Treasure voyages': ['treasure voyages', 'treasure voyage', 'treasure fleet', 'zheng he voyages', 'seven voyages'],
+  'Forbidden City': ['forbidden city', 'zijincheng', 'palace museum'],
+  'Yongle Encyclopedia': ['yongle encyclopedia', 'yongle encyclopaedia', 'yongle dadian'],
+  'Zhu Yuanzhang': ['zhu yuanzhang', 'hongwu emperor', 'hongwu'],
+  'Yongle Emperor': ['yongle emperor', 'yongle', 'zhu di'],
+  'Zheng He': ['zheng he', 'cheng ho', 'ma he'],
+  'Xu Da': ['xu da', 'hsu ta'],
+  'Chang Yuchun': ['chang yuchun', 'chang ch\u2019un'],
+  'Tang He': ['tang he', 'tang ho'],
+  'Liao Yongzhong': ['liao yongzhong', 'liao yung-chung'],
+  'Hu Mei': ['hu mei', 'hu tingrui'],
   'Qing dynasty': ['qing dynasty', 'qing'],
   'Cultural Revolution': ['cultural revolution', 'great proletarian cultural revolution', 'red guards'],
   'Long March': ['long march', 'the long march'],
@@ -422,6 +444,8 @@ var NEGATIVE_ALIASES = {
   'Black Death': ['black death (band)'],
   'Adolf Hitler': ['hitler youth', 'hitler diaries', 'hitler speeches', 'mein kampf'],
   'Martin Luther': ['martin luther king', 'mlk', 'martin luther king jr'],
+  'Yongle Emperor': ['yongle encyclopedia', 'yongle dadian'],
+  'Forbidden City': ['national palace museum'],
   'Marco Polo': ['marco polo airport', 'marco polo games'],
   'Suleiman': ['suleiman mosque', 'suleymaniye'],
   'Mehmed': ['mehmed vi', 'mehmed v', 'sultan mehmed'],
@@ -539,7 +563,12 @@ var MANUAL_SPANS = {
   'Charles Darwin': [1809, 1882], 'Napoleon': [1769, 1821], 'Abraham Lincoln': [1809, 1865],
   'Adolf Hitler': [1889, 1945], 'Vladimir Lenin': [1870, 1924], 'Joseph Stalin': [1878, 1953],
   'Franklin D. Roosevelt': [1882, 1945], 'Winston Churchill': [1874, 1965], 'Mao Zedong': [1893, 1976],
-  'Nelson Mandela': [1918, 2013], 'Martin Luther King Jr.': [1929, 1968]
+  'Nelson Mandela': [1918, 2013], 'Martin Luther King Jr.': [1929, 1968],
+  'Red Turban Rebellion': [1351, 1368], 'Battle of Lake Poyang': [1363, 1363], 'Jingnan Campaign': [1399, 1402],
+  'Ming conquest of Yunnan': [1381, 1382], 'Treasure voyages': [1405, 1433], 'Forbidden City': [1406, 1420],
+  'Yongle Encyclopedia': [1403, 1408],
+  'Zhu Yuanzhang': [1328, 1398], 'Yongle Emperor': [1360, 1424], 'Zheng He': [1371, 1433], 'Xu Da': [1332, 1385],
+  'Chang Yuchun': [1330, 1369], 'Tang He': [1326, 1395], 'Liao Yongzhong': [1323, 1375], 'Hu Mei': [1363, 1384]
 };
 
 // Curated spans for sub-topics (non-seed) where extracted year clusters cannot
@@ -685,7 +714,11 @@ var PERSON_DESCS = {
   'Vladimir Lenin': 'leader of the Russian Revolution', 'Joseph Stalin': 'Soviet leader',
   'Franklin D. Roosevelt': 'US President during the Depression and World War II',
   'Winston Churchill': 'British Prime Minister during World War II', 'Mao Zedong': 'founder of the PRC',
-  'Nelson Mandela': 'South African anti-apartheid leader', 'Martin Luther King Jr.': 'American civil rights leader'
+  'Nelson Mandela': 'South African anti-apartheid leader', 'Martin Luther King Jr.': 'American civil rights leader',
+  'Zhu Yuanzhang': 'founder of the Ming dynasty (Hongwu Emperor)', 'Yongle Emperor': 'Ming emperor who moved the capital to Beijing',
+  'Zheng He': 'Ming admiral and explorer', 'Xu Da': 'Ming founding general',
+  'Chang Yuchun': 'Ming founding general', 'Tang He': 'Ming founding general',
+  'Liao Yongzhong': 'Ming founding admiral', 'Hu Mei': 'Ming founding general'
 };
 
 // Person-role keyword gate: an auto-extracted descriptor is only attached when it
@@ -956,11 +989,13 @@ function eraOf(y) {
 var COMMON_SURNAMES = ['singh', 'kumar', 'kumari', 'sharma', 'prasad', 'lal', 'ram', 'das', 'dev', 'roy', 'rao', 'nair', 'menon', 'iyer', 'iyengar', 'pillai', 'patil', 'khan', 'ahmed', 'ali', 'begum', 'kaur', 'pal', 'anand', 'rai', 'patel', 'bose', 'chand', 'pandey', 'naidu', 'chopra'];
 
 // Trailing words that are NOT surnames (e.g. "Alexander the Great" -> "Great").
-var NON_SURNAMES = ['great', 'the', 'of', 'de', 'junior', 'senior', 'saint', 'ii', 'iii', 'iv', 'v'];
+var NON_SURNAMES = ['great', 'the', 'of', 'de', 'junior', 'senior', 'saint', 'ii', 'iii', 'iv', 'v',
+  'emperor', 'empress', 'king', 'queen', 'prince', 'princess', 'sultan', 'caliph', 'pope', 'tsar', 'czar',
+  'shah', 'raja', 'maharaja', 'nawab', 'pasha', 'grand', 'duke', 'duchess', 'jr', 'sr', 'baba', 'ji', 'saheb'];
 
 // Entities whose bare surname is too ambiguous to reuse — match full name only.
 // ("Gandhi" usually means Mahatma; Indira must be named explicitly.)
-var NO_SURNAME_ALIAS = ['Indira Gandhi'];
+var NO_SURNAME_ALIAS = ['Indira Gandhi', 'Hu Mei'];
 
 function aliasesFor(name, isPerson) {
   var a = [name];
@@ -1324,6 +1359,32 @@ function main() {
     ['seed|Han dynasty', 'seed|Song dynasty', 2],
     ['seed|Song dynasty', 'seed|Ming dynasty', 2],
     ['seed|Ming dynasty', 'seed|Qing dynasty', 3],
+    ['seed|Ming dynasty', 'seed|Zhu Yuanzhang', 3],
+    ['seed|Ming dynasty', 'seed|Yongle Emperor', 3],
+    ['seed|Ming dynasty', 'seed|Zheng He', 3],
+    ['seed|Ming dynasty', 'seed|Red Turban Rebellion', 3],
+    ['seed|Ming dynasty', 'seed|Treasure voyages', 3],
+    ['seed|Ming dynasty', 'seed|Battle of Lake Poyang', 2],
+    ['seed|Ming dynasty', 'seed|Jingnan Campaign', 2],
+    ['seed|Ming dynasty', 'seed|Ming conquest of Yunnan', 2],
+    ['seed|Ming dynasty', 'seed|Forbidden City', 2],
+    ['seed|Ming dynasty', 'seed|Yongle Encyclopedia', 2],
+    ['seed|Ming dynasty', 'seed|Great Wall of China', 2],
+    ['seed|Red Turban Rebellion', 'seed|Zhu Yuanzhang', 3],
+    ['seed|Red Turban Rebellion', 'seed|Battle of Lake Poyang', 2],
+    ['seed|Zhu Yuanzhang', 'seed|Battle of Lake Poyang', 2],
+    ['seed|Zhu Yuanzhang', 'seed|Xu Da', 3],
+    ['seed|Zhu Yuanzhang', 'seed|Chang Yuchun', 3],
+    ['seed|Zhu Yuanzhang', 'seed|Tang He', 3],
+    ['seed|Zhu Yuanzhang', 'seed|Liao Yongzhong', 2],
+    ['seed|Zhu Yuanzhang', 'seed|Hu Mei', 2],
+    ['seed|Battle of Lake Poyang', 'seed|Liao Yongzhong', 2],
+    ['seed|Jingnan Campaign', 'seed|Yongle Emperor', 3],
+    ['seed|Yongle Emperor', 'seed|Zheng He', 3],
+    ['seed|Yongle Emperor', 'seed|Forbidden City', 3],
+    ['seed|Yongle Emperor', 'seed|Yongle Encyclopedia', 3],
+    ['seed|Yongle Emperor', 'seed|Treasure voyages', 3],
+    ['seed|Zheng He', 'seed|Treasure voyages', 3],
     ['seed|Qing dynasty', 'seed|Sun Yat-sen', 3],
     ['seed|Han dynasty', 'seed|Confucius', 2],
     ['seed|Qing dynasty', 'seed|Boxer Rebellion', 3],
