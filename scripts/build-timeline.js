@@ -162,7 +162,11 @@ var SEED = {
     'C. N. Annadurai', 'Narayana Guru', 'Jagadish Chandra Bose', 'Meghnad Saha', 'Vikram Sarabhai',
     'Homi Bhabha', 'A. P. J. Abdul Kalam', 'Salim Ali', 'Prafulla Chandra Ray', 'Subramania Bharati',
     'Ram Prasad Bismil', 'Birsa Munda', 'Bahadur Shah I', 'Shah Alam II', 'Baji Rao II', 'Dara Shikoh',
-    'Joan of Arc', 'Raphael', 'Kepler', 'Sigmund Freud'
+    'Joan of Arc', 'Raphael', 'Kepler', 'Sigmund Freud',
+    'Albert Einstein', 'Shivaji', 'Aurangzeb', 'Shah Jahan', 'Guru Nanak', 'Guru Gobind Singh',
+    'Sher Shah Suri', 'Tipu Sultan', 'Hyder Ali', 'Maharana Pratap', 'Premchand', 'Alfred the Great',
+    'Ram Manohar Lohia', 'Ashfaqulla Khan', 'Batukeshwar Dutt', 'Banda Singh Bahadur', 'Mir Qasim',
+    'Muhammad Shah', 'Bankim Chandra Chatterjee', 'Ramanuja'
   ]},
   religion: { type: 'event', level: 2, list: [
     'First Buddhist Council', 'Second Buddhist Council', 'Third Buddhist Council', 'Fourth Buddhist Council',
@@ -170,7 +174,8 @@ var SEED = {
   ]},
   sites: { type: 'concept', level: 3, list: [
     'Lumbini', 'Kushinagar', 'Rajgir', 'Pataliputra', 'Gandhara', 'Mathura', 'Vatsa', 'Rigveda',
-    'Mohenjo-daro', 'Kanchi', 'Vaishali', 'Kurukshetra', 'Magadha', 'Mahajanapadas'
+    'Mohenjo-daro', 'Kanchi', 'Vaishali', 'Kurukshetra', 'Magadha', 'Mahajanapadas',
+    'Yaudheya', 'Nayanar', 'Alvar'
   ]},
   classical: { type: 'event', level: 2, list: [
     'Roman Republic', 'Hellenistic period', 'Parthian Empire', 'Sasanian Empire'
@@ -236,7 +241,9 @@ var SEED = {
   empires: { type: 'event', level: 1, list: [
     'Indus Valley Civilization', 'Vedic period', 'Maurya Empire', 'Gupta Empire', 'Kalinga War',
     'Kushan Empire', 'Sunga Empire', 'Chola Empire', 'Harsha Empire', 'Rashtrakuta Empire',
-    'Delhi Sultanate', 'Vijayanagara Empire', 'Mughal Empire', 'Maratha Empire'
+    'Delhi Sultanate', 'Vijayanagara Empire', 'Mughal Empire', 'Maratha Empire',
+    'Satavahana dynasty', 'Pallava dynasty', 'Chalukya dynasty', 'Kakatiya dynasty', 'Hoysala dynasty',
+    'Vakataka dynasty', 'Kadamba dynasty', 'Kingdom of Mysore'
   ]},
   sportspeople: { type: 'person', level: 2, list: [
     'Milkha Singh', 'Dhyan Chand', 'Kapil Dev', 'Sachin Tendulkar', 'P. T. Usha', 'Mary Kom',
@@ -553,6 +560,37 @@ var EXTRA_ALIASES = {
   'Sigmund Freud': ['sigmund freud', 'freud'],
   'Magadha': ['magadha', 'magadha kingdom', 'magadha empire', 'magadha janapada'],
   'Mahajanapadas': ['mahajanapada', 'mahajanapadas', 'sixteen mahajanapadas'],
+  'Albert Einstein': ['albert einstein', 'einstein'],
+  'Shivaji': ['shivaji', 'shivaji maharaj', 'chhatrapati shivaji', 'shivaji bhonsle', 'shivaji bhosale'],
+  'Aurangzeb': ['aurangzeb', 'aurengzeb', 'muhi-ud-din aurangzeb', 'alamgir'],
+  'Shah Jahan': ['shah jahan', 'shahjahan', 'khurram'],
+  'Guru Nanak': ['guru nanak', 'guru nanak dev', 'nanak'],
+  'Guru Gobind Singh': ['guru gobind singh', 'gobind singh', 'guru govind singh'],
+  'Sher Shah Suri': ['sher shah suri', 'sher shah', 'farid khan'],
+  'Tipu Sultan': ['tipu sultan', 'tipu', 'fateh ali tipu'],
+  'Hyder Ali': ['hyder ali', 'haidar ali', 'haydar ali'],
+  'Maharana Pratap': ['maharana pratap', 'rana pratap', 'pratap singh', 'maharana pratap singh'],
+  'Premchand': ['premchand', 'munshi premchand', 'dhanpat rai'],
+  'Alfred the Great': ['alfred the great', 'king alfred', 'alfred'],
+  'Ram Manohar Lohia': ['ram manohar lohia', 'lohia', 'ram manohar'],
+  'Ashfaqulla Khan': ['ashfaqulla khan', 'ashfaqullah khan', 'ashfaq'],
+  'Batukeshwar Dutt': ['batukeshwar dutt', 'batukeshwar datta', 'batukeshwar'],
+  'Banda Singh Bahadur': ['banda singh bahadur', 'banda bahadur'],
+  'Mir Qasim': ['mir qasim', 'mir kasim'],
+  'Muhammad Shah': ['muhammad shah', 'nasir-ud-din muhammad shah'],
+  'Satavahana dynasty': ['satavahana', 'satavahanas', 'satavahana dynasty', 'shatavahana'],
+  'Pallava dynasty': ['pallava', 'pallavas', 'pallava dynasty'],
+  'Chalukya dynasty': ['chalukya', 'chalukyas', 'chalukya dynasty', 'badami chalukya'],
+  'Kakatiya dynasty': ['kakatiya', 'kakatiyas', 'kakatiya dynasty'],
+  'Hoysala dynasty': ['hoysala', 'hoysalas', 'hoysala dynasty'],
+  'Vakataka dynasty': ['vakataka', 'vakatakas', 'vakataka dynasty'],
+  'Kadamba dynasty': ['kadamba', 'kadambas', 'kadamba dynasty'],
+  'Kingdom of Mysore': ['kingdom of mysore', 'mysore', 'mysore kingdom'],
+  'Yaudheya': ['yaudheya', 'yaudheyas'],
+  'Nayanar': ['nayanar', 'nayanars', 'nayanmar'],
+  'Alvar': ['alvar', 'alvars', 'azhwar', 'azhwars'],
+  'Bankim Chandra Chatterjee': ['bankim chandra chatterjee', 'bankim', 'bankimchandra', 'bankim chandra'],
+  'Ramanuja': ['ramanuja', 'ramanujacharya', 'sri ramanuja'],
   'Qing dynasty': ['qing dynasty', 'qing'],
   'Cultural Revolution': ['cultural revolution', 'great proletarian cultural revolution', 'red guards'],
   'Long March': ['long march', 'the long march'],
@@ -744,7 +782,23 @@ var NEGATIVE_ALIASES = {
   'Baji Rao II': ['bajirao i', 'baji rao i', 'bajirao mastani'],
   'Kepler': ['kepler-', 'kepler mission', 'kepler space telescope', 'kepler telescope', 'kepler 22b'],
   'Raphael': ['raphael (tmnt)', 'raphael (ninja', 'raphael sanzio'],
-  'Magadha': ['magadha (district)']
+  'Magadha': ['magadha (district)'],
+  'Albert Einstein': ['bose-einstein', 'bose einstein', 'einstein (film)', 'einstein telescope'],
+  'Shivaji': ['shivaji: the boss', 'shivaji the boss', 'shivaji (film)'],
+  'Aurangzeb': ['aurangzeb (film)', 'aurangabad', 'aurangabad district'],
+  'Shah Jahan': ['shahjahanpur', 'shah jahan (film)', 'shahjahan (film)'],
+  'Guru Nanak': ['nanak panchayat', 'nanak shah'],
+  'Tipu Sultan': ['tipu sultan (film)', 'tipu (film)'],
+  'Maharana Pratap': ['pratap (film)', 'pratapgarh'],
+  'Alfred the Great': ['alfred (film)', 'alfred university', 'alfred hospital'],
+  'Ashfaqulla Khan': ['ashfaq (film)', 'ashfaq (cricketer)'],
+  'Mir Qasim': ['mir qasim ali', 'qasim (film)', 'muhammad bin qasim'],
+  'Muhammad Shah': ['shah muhammad', 'muhammad shah (mughal emperor)'],
+  'Banda Singh Bahadur': ['sher bahadur', 'bahadur shah zafar', 'bahadur shah i'],
+  'Kingdom of Mysore': ['mysore pak', 'mysore palace', 'mysuru', 'mysore zoo', 'mysore university', 'mysore sandal'],
+  'Nayanar': ['nayanar (film)', 'karunanidhi nayanar'],
+  'Alvar': ['alvar nunez', 'alvar (film)', 'alvardo'],
+  'Kepler': ['kepler-', 'kepler mission', 'kepler space telescope', 'kepler telescope', 'kepler 22b']
 };
 
 // Manual, authoritative time spans for the curated spine (stable well-known facts).
@@ -925,7 +979,18 @@ var MANUAL_SPANS = {
   'Subramania Bharati': [1882, 1921], 'Ram Prasad Bismil': [1897, 1927], 'Birsa Munda': [1875, 1900],
   'Bahadur Shah I': [1643, 1712], 'Shah Alam II': [1728, 1806], 'Baji Rao II': [1775, 1851],
   'Dara Shikoh': [1615, 1659], 'Joan of Arc': [1412, 1431], 'Raphael': [1483, 1520], 'Kepler': [1571, 1630],
-  'Sigmund Freud': [1856, 1939], 'Magadha': [-800, -300], 'Mahajanapadas': [-600, -325]
+  'Sigmund Freud': [1856, 1939], 'Magadha': [-800, -300], 'Mahajanapadas': [-600, -325],
+  'Albert Einstein': [1879, 1955], 'Shivaji': [1630, 1680], 'Aurangzeb': [1618, 1707],
+  'Shah Jahan': [1592, 1666], 'Guru Nanak': [1469, 1539], 'Guru Gobind Singh': [1666, 1708],
+  'Sher Shah Suri': [1486, 1545], 'Tipu Sultan': [1751, 1799], 'Hyder Ali': [1722, 1782],
+  'Maharana Pratap': [1540, 1597], 'Premchand': [1880, 1936], 'Alfred the Great': [849, 899],
+  'Ram Manohar Lohia': [1910, 1967], 'Ashfaqulla Khan': [1900, 1927], 'Batukeshwar Dutt': [1910, 1965],
+  'Banda Singh Bahadur': [1670, 1716], 'Mir Qasim': [1720, 1777], 'Muhammad Shah': [1702, 1748],
+  'Satavahana dynasty': [-230, 220], 'Pallava dynasty': [275, 897], 'Chalukya dynasty': [543, 753],
+  'Kakatiya dynasty': [1083, 1323], 'Hoysala dynasty': [1026, 1343], 'Vakataka dynasty': [250, 500],
+  'Kadamba dynasty': [345, 540], 'Kingdom of Mysore': [1399, 1950], 'Yaudheya': [-200, 400],
+  'Nayanar': [500, 900], 'Alvar': [500, 900],
+  'Bankim Chandra Chatterjee': [1838, 1894], 'Ramanuja': [1017, 1137]
 };
 
 // Curated spans for sub-topics (non-seed) where extracted year clusters cannot
@@ -1147,7 +1212,23 @@ var PERSON_DESCS = {
   'Baji Rao II': 'last Peshwa of the Maratha Empire', 'Dara Shikoh': 'Mughal prince and scholar',
   'Joan of Arc': 'French heroine of the Hundred Years\u2019 War', 'Raphael': 'Renaissance painter',
   'Kepler': 'astronomer who formulated the laws of planetary motion', 'Sigmund Freud': 'founder of psychoanalysis',
-  'Magadha': 'ancient Indian kingdom', 'Mahajanapadas': 'sixteen ancient Indian republics'
+  'Magadha': 'ancient Indian kingdom', 'Mahajanapadas': 'sixteen ancient Indian republics',
+  'Albert Einstein': 'physicist, author of the theory of relativity', 'Shivaji': 'founder of the Maratha Empire',
+  'Aurangzeb': 'sixth Mughal emperor', 'Shah Jahan': 'Mughal emperor who built the Taj Mahal',
+  'Guru Nanak': 'founder of Sikhism', 'Guru Gobind Singh': 'tenth Sikh Guru',
+  'Sher Shah Suri': 'founder of the Sur Empire', 'Tipu Sultan': 'ruler of the Kingdom of Mysore',
+  'Hyder Ali': 'ruler of Mysore', 'Maharana Pratap': 'Rajput ruler of Mewar',
+  'Premchand': 'Hindi and Urdu novelist', 'Alfred the Great': 'king of Wessex',
+  'Ram Manohar Lohia': 'socialist political leader', 'Ashfaqulla Khan': 'revolutionary freedom fighter',
+  'Batukeshwar Dutt': 'revolutionary freedom fighter', 'Banda Singh Bahadur': 'Sikh military leader',
+  'Mir Qasim': 'Nawab of Bengal', 'Muhammad Shah': 'Mughal emperor',
+  'Satavahana dynasty': 'Deccan dynasty', 'Pallava dynasty': 'southern Indian dynasty',
+  'Chalukya dynasty': 'southern Indian dynasty', 'Kakatiya dynasty': 'Telugu dynasty',
+  'Hoysala dynasty': 'Karnataka dynasty', 'Vakataka dynasty': 'Deccan dynasty',
+  'Kadamba dynasty': 'first Kannada kingdom', 'Kingdom of Mysore': 'kingdom in southern India',
+  'Yaudheya': 'ancient republic',   'Nayanar': 'Tamil Shaiva saint-poets',
+  'Alvar': 'Tamil Vaishnava saint-poets',
+  'Bankim Chandra Chatterjee': 'author of Vande Mataram', 'Ramanuja': 'Vaishnava philosopher'
 };
 
 // Person-role keyword gate: an auto-extracted descriptor is only attached when it
@@ -1424,7 +1505,7 @@ var NON_SURNAMES = ['great', 'the', 'of', 'de', 'junior', 'senior', 'saint', 'ii
 
 // Entities whose bare surname is too ambiguous to reuse — match full name only.
 // ("Gandhi" usually means Mahatma; Indira must be named explicitly.)
-var NO_SURNAME_ALIAS = ['Indira Gandhi', 'Hu Mei', 'Alexander Graham Bell', 'Guru Tegh Bahadur', 'Rosa Parks', 'Adam Smith', 'Queen Victoria', 'Karl Marx', 'Motilal Nehru', 'Maulana Abul Kalam Azad', 'Jayaprakash Narayan', 'Periyar', 'Jagadish Chandra Bose', 'Meghnad Saha', 'Vikram Sarabhai', 'A. P. J. Abdul Kalam', 'Salim Ali', 'Prafulla Chandra Ray', 'Subramania Bharati', 'Birsa Munda', 'Narayana Guru', 'Joan of Arc', 'Shyama Prasad Mukherjee'];
+var NO_SURNAME_ALIAS = ['Indira Gandhi', 'Hu Mei', 'Alexander Graham Bell', 'Guru Tegh Bahadur', 'Rosa Parks', 'Adam Smith', 'Queen Victoria', 'Karl Marx', 'Motilal Nehru', 'Maulana Abul Kalam Azad', 'Jayaprakash Narayan', 'Periyar', 'Jagadish Chandra Bose', 'Meghnad Saha', 'Vikram Sarabhai', 'A. P. J. Abdul Kalam', 'Salim Ali', 'Prafulla Chandra Ray', 'Subramania Bharati', 'Birsa Munda',   'Narayana Guru', 'Joan of Arc', 'Shyama Prasad Mukherjee', 'Banda Singh Bahadur', 'Bankim Chandra Chatterjee'];
 
 function aliasesFor(name, isPerson) {
   var a = [name];
@@ -1647,6 +1728,28 @@ function main() {
       seedNodes.push(node);
     }
   }
+
+  // Absorb sub-topic nodes whose name matches a seed, so the map never shows
+  // two dots for the same entity (e.g. "Albert Einstein" seed + sub-topic).
+  var seedByName = {};
+  for (var sn2 of seedNodes) {
+    seedByName[sn2.name.toLowerCase().replace(/[^a-z0-9]+/gi, ' ').trim()] = sn2;
+  }
+  nodes = nodes.filter(function (nd) {
+    if (nd.id.indexOf('seed|') === 0) return true;
+    var key = nd.name.toLowerCase().replace(/[^a-z0-9]+/gi, ' ').trim();
+    var s = seedByName[key];
+    if (!s) return true;
+    var byKey = {};
+    for (var c of (nd.cats || [])) byKey[c.key] = c;
+    for (var nk of Object.keys(byKey)) {
+      var existing = s.cats.find(function (x) { return x.key === nk; });
+      if (existing) existing.count += byKey[nk].count;
+      else s.cats.push({ key: nk, label: byKey[nk].label, count: byKey[nk].count });
+    }
+    s.count += nd.count;
+    return false;
+  });
 
   // Cross-entity links: co-occurrence of two seed entities inside one question.
   var aliasMap = {};
@@ -2204,7 +2307,58 @@ function main() {
     ['seed|Raphael', 'seed|Michelangelo', 3],
     ['seed|Kepler', 'seed|Galileo Galilei', 3],
     ['seed|Kepler', 'seed|Copernicus', 3],
-    ['seed|Sigmund Freud', 'seed|Enlightenment', 2]
+    ['seed|Sigmund Freud', 'seed|Enlightenment', 2],
+    ['seed|Albert Einstein', 'seed|Isaac Newton', 3],
+    ['seed|Albert Einstein', 'seed|Nikola Tesla', 2],
+    ['seed|Albert Einstein', 'seed|Karl Marx', 2],
+    ['seed|Shivaji', 'seed|Maratha Empire', 3],
+    ['seed|Shivaji', 'seed|Sambhaji', 3],
+    ['seed|Shivaji', 'seed|Aurangzeb', 3],
+    ['seed|Aurangzeb', 'seed|Mughal Empire', 3],
+    ['seed|Aurangzeb', 'seed|Guru Tegh Bahadur', 3],
+    ['seed|Shah Jahan', 'seed|Mughal Empire', 3],
+    ['seed|Shah Jahan', 'seed|Jahangir', 3],
+    ['seed|Guru Nanak', 'seed|Kabir', 2],
+    ['seed|Guru Nanak', 'seed|Guru Ramdas', 3],
+    ['seed|Guru Nanak', 'seed|Guru Arjan', 2],
+    ['seed|Guru Gobind Singh', 'seed|Guru Tegh Bahadur', 3],
+    ['seed|Guru Gobind Singh', 'seed|Guru Arjan', 2],
+    ['seed|Sher Shah Suri', 'seed|Humayun', 3],
+    ['seed|Sher Shah Suri', 'seed|Mughal Empire', 2],
+    ['seed|Tipu Sultan', 'seed|Anglo-Mysore Wars', 3],
+    ['seed|Tipu Sultan', 'seed|Hyder Ali', 3],
+    ['seed|Hyder Ali', 'seed|Anglo-Mysore Wars', 3],
+    ['seed|Hyder Ali', 'seed|Kingdom of Mysore', 3],
+    ['seed|Maharana Pratap', 'seed|Akbar', 3],
+    ['seed|Maharana Pratap', 'seed|Battle of Haldighati', 3],
+    ['seed|Premchand', 'seed|Rabindranath Tagore', 3],
+    ['seed|Premchand', 'seed|Bankim Chandra Chatterjee', 2],
+    ['seed|Alfred the Great', 'seed|Vikings', 3],
+    ['seed|Alfred the Great', 'seed|Norman Conquest', 2],
+    ['seed|Ram Manohar Lohia', 'seed|Jayaprakash Narayan', 3],
+    ['seed|Ram Manohar Lohia', 'seed|Vinoba Bhave', 2],
+    ['seed|Ashfaqulla Khan', 'seed|Ram Prasad Bismil', 3],
+    ['seed|Ashfaqulla Khan', 'seed|Chandra Shekhar Azad', 2],
+    ['seed|Batukeshwar Dutt', 'seed|Bhagat Singh', 3],
+    ['seed|Banda Singh Bahadur', 'seed|Guru Gobind Singh', 3],
+    ['seed|Mir Qasim', 'seed|Battle of Buxar', 3],
+    ['seed|Mir Qasim', 'seed|British East India Company', 2],
+    ['seed|Muhammad Shah', 'seed|Mughal Empire', 2],
+    ['seed|Muhammad Shah', 'seed|Maratha Empire', 2],
+    ['seed|Satavahana dynasty', 'seed|Gautamiputra Satakarni', 3],
+    ['seed|Satavahana dynasty', 'seed|Sunga Empire', 2],
+    ['seed|Pallava dynasty', 'seed|Narasimhavarman', 3],
+    ['seed|Pallava dynasty', 'seed|Rajaraja Chola I', 2],
+    ['seed|Chalukya dynasty', 'seed|Pulakeshin II', 3],
+    ['seed|Chalukya dynasty', 'seed|Rashtrakuta Empire', 2],
+    ['seed|Kakatiya dynasty', 'seed|Vijayanagara Empire', 2],
+    ['seed|Hoysala dynasty', 'seed|Kakatiya dynasty', 2],
+    ['seed|Kingdom of Mysore', 'seed|Anglo-Mysore Wars', 3],
+    ['seed|Kingdom of Mysore', 'seed|Tipu Sultan', 3],
+    ['seed|Yaudheya', 'seed|Kushan Empire', 2],
+    ['seed|Nayanar', 'seed|Basavanna', 2],
+    ['seed|Alvar', 'seed|Nayanar', 2],
+    ['seed|Alvar', 'seed|Ramanuja', 2]
   ];
   var linkMap = {};
   for (var li of links) linkMap[li.a + '\u0000' + li.b] = li.w;
