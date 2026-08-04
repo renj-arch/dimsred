@@ -5686,16 +5686,27 @@ var _staticGen_polity = GK_GENERATORS.polity;
             if (_piData && _piData[key]) { _piApiCache[key] = _piData[key]; done(_piData[key]); return; }
             if (_piApiBusy[key]) { setTimeout(function() { _resolvePersonImage(title, done); }, 250); return; }
             _piApiBusy[key] = true;
-            fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(String(title).trim().replace(/\s+/g, '_')))
-                .then(function(r) { return r.json(); })
-                .then(function(obj) {
-                    _piApiBusy[key] = false;
-                    var u = (obj && obj.thumbnail && obj.thumbnail.source) ? String(obj.thumbnail.source) : null;
-                    if (u) u = u.replace(/[?&]utm_[^&]*/g, '');
-                    _piApiCache[key] = u;
-                    done(u);
-                })
-                .catch(function() { _piApiBusy[key] = false; _piApiCache[key] = null; done(null); });
+            // Same proven mechanism as science.html: search Wikipedia for the best
+            // article, then grab its lead image (prop=pageimages). origin=* enables CORS.
+            var searchUrl = 'https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=' + encodeURIComponent(String(title)) + '&format=json&srlimit=1&origin=*';
+            fetch(searchUrl).then(function(r) { return r.json(); }).then(function(d) {
+                var t = d && d.query && d.query.search && d.query.search[0] && d.query.search[0].title;
+                if (!t) { _piApiBusy[key] = false; _piApiCache[key] = null; done(null); return; }
+                var imgUrl = 'https://en.wikipedia.org/w/api.php?action=query&titles=' + encodeURIComponent(t) + '&prop=pageimages&pithumbsize=400&format=json&origin=*';
+                return fetch(imgUrl).then(function(r) { return r.json(); });
+            }).then(function(d) {
+                if (!d) { _piApiBusy[key] = false; _piApiCache[key] = null; done(null); return; }
+                var pages = d.query && d.query.pages, thumb = null;
+                if (pages) {
+                    for (var pid in pages) {
+                        var p = pages[pid];
+                        if (p.thumbnail && p.thumbnail.source) { thumb = p.thumbnail.source; break; }
+                    }
+                }
+                _piApiBusy[key] = false;
+                _piApiCache[key] = thumb;
+                done(thumb);
+            }).catch(function() { _piApiBusy[key] = false; _piApiCache[key] = null; done(null); });
         }
         function _renderPersonImg(url) {
             var wrap = document.getElementById('qImgWrap');
@@ -5753,8 +5764,35 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 return;
             }
 
-            wrap.style.display = 'none';
-            wrap.innerHTML = '';
+            _piFactPerson(q, wrap, 0);
+        }
+
+        var _piFuncWords = /\b(the|and|of|to|for|in|on|at|by|from|with|is|was|are|were|this|that|these|those|who|what|when|where|why|how|has|have|had|does|did|do|not|its|his|her|their|our|your|into|upon|about|between|during|after|before|over|under|through|until|also|then|than|or|but|as|so)\b/i;
+        function _piFactNames(q) {
+            var txt = ' ' + [q.fact, q.solution, q.explanation].filter(Boolean).join(' ') + ' ';
+            var re = /([A-Z][A-Za-z.'\-]+(?:\s+[A-Z][A-Za-z.'\-]+){1,2})/g;
+            var seen = [], m;
+            while ((m = re.exec(txt))) {
+                var name = m[1].trim();
+                if (name.length < 6) continue;
+                if (!_looksLikePersonName(name)) continue;
+                if (_piFuncWords.test(name)) continue;
+                if (seen.indexOf(name) === -1) seen.push(name);
+            }
+            seen.sort(function(a, b) { return b.length - a.length; });
+            return seen;
+        }
+        function _piFactPerson(q, wrap, i) {
+            var names = _piFactNames(q);
+            if (i >= names.length) {
+                wrap.style.display = 'none';
+                wrap.innerHTML = '';
+                return;
+            }
+            _resolvePersonImage(names[i], function(url) {
+                if (url) { _renderPersonImg(url); return; }
+                _piFactPerson(q, wrap, i + 1);
+            });
         }
 
         function answerQuestion(el) {
