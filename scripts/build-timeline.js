@@ -128,7 +128,8 @@ var SEED = {
     'Lala Lajpat Rai', 'Bipin Chandra Pal',
     'Gautama Buddha', 'Mahavira', 'Chandragupta Maurya', 'Ashoka', 'Chanakya', 'Samudragupta',
     'Harsha', 'Kanishka', 'Panini', 'Charaka', 'Sushruta', 'Kalidasa', 'Aryabhata', 'Alexander the Great',
-    'Moggaliputta-Tissa', 'Faxian', 'Yijing', 'Julius Caesar', 'Augustus', 'Cleopatra', 'Genghis Khan'
+    'Moggaliputta-Tissa', 'Faxian', 'Yijing', 'Julius Caesar', 'Augustus', 'Cleopatra', 'Genghis Khan',
+    'Confucius', 'Sun Yat-sen'
   ]},
   religion: { type: 'event', level: 2, list: [
     'First Buddhist Council', 'Second Buddhist Council', 'Third Buddhist Council', 'Fourth Buddhist Council',
@@ -145,6 +146,13 @@ var SEED = {
   ]},
   conquests: { type: 'event', level: 2, list: [
     'Huna invasions of India', 'Huns', 'Vikings'
+  ]},
+  china: { type: 'event', level: 2, list: [
+    'Qin dynasty', 'Han dynasty', 'Song dynasty', 'Ming dynasty', 'Qing dynasty',
+    'Cultural Revolution', 'Long March', 'Taiping Rebellion', 'Boxer Rebellion'
+  ]},
+  chinaSites: { type: 'concept', level: 3, list: [
+    'Great Wall of China'
   ]},
   canon: { type: 'concept', level: 3, list: [
     'Tipiṭaka (Pali Canon)'
@@ -250,6 +258,18 @@ var EXTRA_ALIASES = {
   'Faxian': ['faxian', 'fa-hien', 'fahien', 'fa hsien'],
   'Yijing': ['i-tsing', 'itsing', 'yijing'],
   'Genghis Khan': ['genghis khan', 'chinggis khan', 'temujin'],
+  'Confucius': ['confucius', 'kong qiu', 'kongzi'],
+  'Sun Yat-sen': ['sun yat-sen', 'sun yat sen', 'sun zhongshan', 'sun wen'],
+  'Qin dynasty': ['qin dynasty', 'qin', 'qin shi huang'],
+  'Han dynasty': ['han dynasty', 'han'],
+  'Song dynasty': ['song dynasty', 'song china'],
+  'Ming dynasty': ['ming dynasty', 'ming'],
+  'Qing dynasty': ['qing dynasty', 'qing'],
+  'Cultural Revolution': ['cultural revolution', 'great proletarian cultural revolution', 'red guards'],
+  'Long March': ['long march', 'the long march'],
+  'Taiping Rebellion': ['taiping', 'taiping rebellion', 'taiping heavenly kingdom'],
+  'Boxer Rebellion': ['boxer rebellion', 'boxer revolt', 'yihetuan', 'righteous harmony society'],
+  'Great Wall of China': ['great wall of china', 'great wall'],
   'Chanakya': ['kautilya', 'vishnugupta'],
   'Charaka': ['charak'],
   'Aryabhata': ['aryabhatta'],
@@ -285,7 +305,10 @@ var NEGATIVE_ALIASES = {
   'Julius Caesar': ['caesar cipher', "caesar's cipher", 'caesars cipher'],
   'Athens': ['olympics', 'olympiad', 'athens olympic'],
   'Yijing': ['i ching', 'book of changes', 'yijing (i ching)'],
-  'Vikings': ['vikas engine', 'french viking', 'viking engine', 'viking rocket', 'viking orbiter', 'viking lander', 'viking spacecraft', 'viking probes']
+  'Vikings': ['vikas engine', 'french viking', 'viking engine', 'viking rocket', 'viking orbiter', 'viking lander', 'viking spacecraft', 'viking probes'],
+  'Song dynasty': ['song of songs', 'song', 'songs'],
+  'Boxer Rebellion': ['boxing', 'boxer', 'boxers', 'wba', 'heavyweight'],
+  'Long March': ['long march to democracy', 'long march of']
 };
 
 // Manual, authoritative time spans for the curated spine (stable well-known facts).
@@ -313,6 +336,12 @@ var MANUAL_SPANS = {
   'Sasanian Empire': [224, 651],
   'Athens': [-600, -146], 'Sparta': [-650, -146],
   'Huna invasions of India': [450, 570], 'Huns': [370, 469], 'Vikings': [793, 1066],
+  'Confucius': [-551, -479], 'Sun Yat-sen': [1866, 1925],
+  'Qin dynasty': [-221, -206], 'Han dynasty': [-206, 220], 'Song dynasty': [960, 1279],
+  'Ming dynasty': [1368, 1644], 'Qing dynasty': [1644, 1912],
+  'Cultural Revolution': [1966, 1976], 'Long March': [1934, 1936],
+  'Taiping Rebellion': [1850, 1864], 'Boxer Rebellion': [1899, 1901],
+  'Great Wall of China': [-221, 1644],
   'First Buddhist Council': [-483, -483], 'Second Buddhist Council': [-383, -383],
   'Third Buddhist Council': [-250, -250], 'Fourth Buddhist Council': [-29, -29],
   'Buddhist missions under Ashoka': [-250, -230],
@@ -441,7 +470,16 @@ var TOPIC_OVERRIDES = {
   'Ancient Somali city-states': [200, 1500],
   'Beryllium': [1798, 1798],
   'Abhidhamma Piṭaka': [-250, -29],
-  'Ancient Greece': [-800, -146]
+  'Ancient Greece': [-800, -146],
+  // Events/wars/persons whose auto-extracted spans leaked reference years across centuries.
+  'French Revolution': [1789, 1799], 'Nazism': [1919, 1945], 'World War I': [1914, 1918],
+  'American Revolution': [1765, 1783], 'Seven Years\u2019 War': [1756, 1763], 'Thirty Years\u2019 War': [1618, 1648],
+  'Ottoman Empire': [1299, 1922], 'British Raj': [1858, 1947], 'Renaissance': [1300, 1600],
+  'Industrial Revolution': [1760, 1840], 'Indian independence movement': [1857, 1947],
+  'Mongol Empire': [1206, 1368], 'Crusades': [1095, 1291],
+  'Mahavira': [-599, -527], 'Samudragupta': [335, 380], 'Chanakya': [-350, -275],
+  'Aryabhata': [476, 550], 'Kalidasa': [400, 455], 'Nagarjuna': [150, 250], 'Shivaji': [1630, 1680],
+  'Vedic period': [-1500, -500], 'Indus Valley Civilisation': [-3300, -1300], 'Nalanda mahavihara': [427, 1197]
 };
 
 // Curated, authoritative descriptors for the curated-spine persons.
@@ -468,6 +506,7 @@ var PERSON_DESCS = {
   'Julius Caesar': 'Roman general and dictator', 'Augustus': 'first Roman emperor',
   'Cleopatra': 'last pharaoh of Ptolemaic Egypt', 'Faxian': 'Chinese Buddhist pilgrim',
   'Yijing': 'Chinese Buddhist pilgrim', 'Genghis Khan': 'founder of the Mongol Empire',
+  'Confucius': 'Chinese philosopher', 'Sun Yat-sen': 'founder of the Republic of China',
   'Milkha Singh': 'Indian sprinter', 'Dhyan Chand': 'Indian hockey player',
   'Kapil Dev': 'Indian cricketer', 'Sachin Tendulkar': 'Indian cricketer',
   'P. T. Usha': 'Indian sprinter', 'Mary Kom': 'Indian boxer',
@@ -1110,6 +1149,16 @@ function main() {
     ['seed|Parthian Empire', 'seed|Sasanian Empire', 3],
     ['seed|Sasanian Empire', 'seed|Huns', 2],
     ['seed|Huna invasions of India', 'seed|Gupta Empire', 3],
+    ['seed|Qin dynasty', 'seed|Han dynasty', 3],
+    ['seed|Qin dynasty', 'seed|Great Wall of China', 3],
+    ['seed|Han dynasty', 'seed|Song dynasty', 2],
+    ['seed|Song dynasty', 'seed|Ming dynasty', 2],
+    ['seed|Ming dynasty', 'seed|Qing dynasty', 3],
+    ['seed|Qing dynasty', 'seed|Sun Yat-sen', 3],
+    ['seed|Han dynasty', 'seed|Confucius', 2],
+    ['seed|Qing dynasty', 'seed|Boxer Rebellion', 3],
+    ['seed|Taiping Rebellion', 'seed|Qing dynasty', 3],
+    ['seed|Cultural Revolution', 'seed|Long March', 2],
     ['seed|Vedic period', 'seed|Maurya Empire', 2],
     ['seed|Samudragupta', 'seed|Gupta Empire', 3],
     ['seed|Gupta Empire', 'seed|Kushan Empire', 2],
