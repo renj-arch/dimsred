@@ -214,6 +214,16 @@ function eventKey(q) {
   return n(q.question || '').substring(0, 80) + '|' + n(q.answer || '');
 }
 
+function isEchoTheme(theme) {
+  var t = String(theme || '').trim();
+  if (!t) return false;
+  var lower = t.toLowerCase();
+  if (/^\s*(of|for|on|about|the)\s/.test(lower)) return true;
+  var echo = lower.match(/\b(international day|world day|national day|day for)\b/g);
+  if (echo && echo.length >= 2) return true;
+  return false;
+}
+
 async function main() {
   var existing = {};
   if (fs.existsSync(PIB_PATH)) {
@@ -229,13 +239,25 @@ async function main() {
   if (!existing[CA_KEY]) existing[CA_KEY] = { subSubjects: {} };
   if (!existing[CA_KEY].subSubjects['Important Days & Themes']) existing[CA_KEY].subSubjects['Important Days & Themes'] = [];
 
+  var themesList = existing[CA_KEY].subSubjects['Important Days & Themes'];
+  var purged = themesList.filter(function(q) { return !isEchoTheme(q.answer); });
+  if (purged.length !== themesList.length) {
+    process.stdout.write('purged ' + (themesList.length - purged.length) + ' echo-fragment theme(s)\n');
+    themesList = purged;
+    existing[CA_KEY].subSubjects['Important Days & Themes'] = themesList;
+  }
+
+  var byQuestion = {};
+  themesList.forEach(function(q) { byQuestion[q.question] = q; });
+
   var existingKeys = {};
-  existing[CA_KEY].subSubjects['Important Days & Themes'].forEach(function(q) {
+  themesList.forEach(function(q) {
     existingKeys[eventKey(q)] = true;
   });
 
   var newQuestions = [];
-  var seq = existing[CA_KEY].subSubjects['Important Days & Themes'].length + 1;
+  var updated = 0;
+  var seq = themesList.length + 1;
 
   for (var ti = 0; ti < THEMES_2026.length; ti++) {
     var item = THEMES_2026[ti];
@@ -260,7 +282,16 @@ async function main() {
     var q = makeThemeQuestion(item, seq);
     if (q) {
       var key = eventKey(q);
-      if (!existingKeys[key]) {
+      var existingQ = byQuestion[q.question];
+      if (existingQ && existingQ.answer !== q.answer) {
+        existingQ.answer = q.answer;
+        existingQ.fact = q.fact;
+        existingQ.emoji = q.emoji;
+        delete existingKeys[eventKey(existingQ)];
+        existingKeys[eventKey(existingQ)] = true;
+        updated++;
+        process.stdout.write(' (fixed ' + existingQ.id + ')');
+      } else if (!existingKeys[key]) {
         newQuestions.push(q);
         existingKeys[key] = true;
         seq++;
@@ -282,7 +313,7 @@ async function main() {
 
   var total = existing[CA_KEY].subSubjects['Important Days & Themes'].length;
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
-  console.error('\nImportant Days & Themes: ' + total + ' total questions, ' + newQuestions.length + ' new');
+  console.error('\nImportant Days & Themes: ' + total + ' total questions, ' + newQuestions.length + ' new, ' + updated + ' fixed');
 }
 
 main().catch(function(err) {

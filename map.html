@@ -78,6 +78,16 @@ h1{font-size:1.45em}
 .qans{display:block;margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)}
 .qans .ans{font-size:.8em;color:var(--emerald);font-weight:700}
 .qans .fact{font-size:.75em;color:var(--text-sec);margin-top:5px}
+.qans .fact .uniq{background:rgba(255,210,0,.28);color:var(--text);border-radius:3px;padding:1px 2px;font-weight:600}
+.qans .fact .qline{background:rgba(255,110,180,.32);color:var(--text);border-radius:3px;padding:1px 2px;font-weight:700}
+.qans .fact .seen{opacity:.35}
+.flow{display:flex;flex-direction:column;align-items:stretch;gap:2px;margin-top:4px}
+.flow-node{display:flex;gap:10px;align-items:flex-start;background:rgba(255,255,255,.03);border:1px solid var(--border);border-left:3px solid var(--purple);border-radius:8px;padding:8px 10px;font-size:.72em;color:var(--text);cursor:pointer}
+.flow-node:hover{border-color:var(--purple);background:rgba(255,255,255,.06)}
+.flow-y{flex:0 0 auto;font-weight:800;color:var(--amber);min-width:64px}
+.flow-t{color:var(--text-sec)}
+.flow-arrow{text-align:center;color:var(--text-sec);opacity:.6;font-size:.8em;line-height:1;margin:2px 0}
+.qcard.flow-flash{border-color:var(--amber);background:rgba(255,210,0,.08)}
 .loading{color:var(--text-sec);font-size:.8em;padding:8px}
 .type-filter{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
 .p-sec{font-size:.72em;color:var(--text-sec);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px}
@@ -539,6 +549,7 @@ function openProfile(id) {
     + '<div class="p-stat"><div class="v">' + cats.length + '</div><div class="k">categories</div></div></div>'
     + '<div class="p-sec">Connected</div><div class="p-chips" id="p-con"></div>'
     + '<div class="p-sec">Story</div><div class="story" id="p-story"></div>'
+    + '<div class="p-sec">Revision diagram</div><div class="flow" id="p-flow"></div>'
     + '<div class="p-sec">Drill down</div>'
     + '<div class="qlist" id="p-ql" style="display:none"></div>'
     + cats.map(function (c) {
@@ -604,7 +615,26 @@ function loadProfileCat(catKey, catLabel, el) {
       }
     }
     ql.innerHTML = '<div class="loading" style="font-weight:700">' + catLabel + ' — ' + qs.length + ' questions</div>';
-    appendQuestions(ql, qs);
+    var flow = document.getElementById('p-flow');
+    if (flow) {
+      var seenS = new Set();
+      var nodes = [];
+      for (var fi = 0; fi < qs.length; fi++) {
+        var s = answerSentenceOf(qs[fi]);
+        if (!s) continue;
+        var k = normMatch(s);
+        if (seenS.has(k)) continue;
+        seenS.add(k);
+        nodes.push({ text: s, year: extractYear(s), idx: fi });
+      }
+      nodes.sort(function (a, b) { return (a.year == null ? 1e15 : a.year) - (b.year == null ? 1e15 : b.year); });
+      flow.innerHTML = nodes.length
+        ? nodes.map(function (n) {
+          return '<div class="flow-node" onclick="flashQ(' + n.idx + ')"><span class="flow-y">' + (n.year == null ? '?' : (n.year < 0 ? (-n.year) + ' BC' : n.year)) + '</span><span class="flow-t">' + esc(n.text) + '</span></div>';
+        }).join('<div class="flow-arrow">&#9662;</div>')
+        : '<div class="loading">No answer sentences to diagram.</div>';
+    }
+    appendQuestions(ql, qs, new Set());
   });
 }
 
@@ -641,7 +671,96 @@ function loadCategory(key, cb) {
   xhr.send();
 }
 
-function appendQuestions(container, qs) {
+function escReg(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+function normMatch(s) {
+  return s.replace(/\s+/g, ' ').replace(/^[\s.!?]+|[\s.!?]+$/g, '').toLowerCase();
+}
+
+function highlightUniqueFact(fact, seen, answer, question) {
+  var qCore = null;
+  if (question && /_{2,}/.test(question)) qCore = normMatch(question.replace(/_{2,}/g, '______'));
+  var ansRe = answer ? new RegExp(escReg(String(answer).trim()), 'i') : null;
+  var parts = fact.split(/(\n+)|([.!?]\s+)/);
+  var segs = [];
+  for (var i = 0; i < parts.length; i++) {
+    var p = parts[i];
+    if (!p) continue;
+    if (/^(\n+|[.!?]\s+)$/.test(p)) continue;
+    segs.push({ text: p, key: normMatch(p), ansHit: ansRe ? ansRe.test(p) : false });
+  }
+  var qIdx = -1;
+  if (qCore && ansRe) {
+    for (var j = 0; j < segs.length; j++) {
+      if (segs[j].ansHit && normMatch(segs[j].text.replace(ansRe, '______')).indexOf(qCore) >= 0) { qIdx = j; break; }
+    }
+  }
+  if (qIdx < 0) {
+    for (var k = 0; k < segs.length; k++) if (segs[k].ansHit) { qIdx = k; break; }
+  }
+  var out = '';
+  var segPos = 0;
+  for (var m = 0; m < parts.length; m++) {
+    var q = parts[m];
+    if (!q) continue;
+    if (/^(\n+|[.!?]\s+)$/.test(q)) { out += q; continue; }
+    var seg = segs[segPos++];
+    var cls;
+    if (segPos - 1 === qIdx) cls = 'qline';
+    else if (!seen.has(seg.key)) { seen.add(seg.key); cls = 'uniq'; }
+    else cls = 'seen';
+    out += '<span class="' + cls + '">' + esc(seg.text) + '</span>';
+  }
+  return out;
+}
+
+function answerSentenceOf(q) {
+  var fact = q.fact, answer = q.answer, question = q.question;
+  if (!fact || !answer) return null;
+  var ansRe = new RegExp(escReg(String(answer).trim()), 'i');
+  var qCore = /_{2,}/.test(question || '') ? normMatch(question.replace(/_{2,}/g, '______')) : null;
+  var parts = fact.split(/(\n+)|([.!?]\s+)/);
+  var segs = [];
+  for (var i = 0; i < parts.length; i++) {
+    var p = parts[i];
+    if (!p || /^(\n+|[.!?]\s+)$/.test(p)) continue;
+    segs.push(p);
+  }
+  var idx = -1;
+  if (qCore) {
+    for (var j = 0; j < segs.length; j++) {
+      if (ansRe.test(segs[j]) && normMatch(segs[j].replace(ansRe, '______')).indexOf(qCore) >= 0) { idx = j; break; }
+    }
+  }
+  if (idx < 0) {
+    for (var k = 0; k < segs.length; k++) if (ansRe.test(segs[k])) { idx = k; break; }
+  }
+  return idx >= 0 ? segs[idx] : null;
+}
+
+function extractYear(text) {
+  if (/\byears ago\b/i.test(text)) return null;
+  var bc = text.match(/\b(\d{1,2}(?:,\d{3})|\d{2,4})\s*(?:BC|BCE)\b/i);
+  if (bc) return -parseInt(bc[1].replace(/,/g, ''), 10);
+  var dec = text.match(/\b(\d{1,2},\d{3}|\d{4})s\b/);
+  if (dec) return parseInt(dec[1].replace(/,/g, ''), 10);
+  var cen = text.match(/\b(\d{1,2})(?:st|nd|rd|th) century\b/i);
+  if (cen) return parseInt(cen[1], 10) * 100 - 100;
+  var m = text.match(/\b(\d{1,2},\d{3}|\d{3,4})\b/);
+  if (!m) return null;
+  return parseInt(m[1].replace(/,/g, ''), 10);
+}
+
+function flashQ(i) {
+  var cards = document.querySelectorAll('#p-ql .qcard');
+  var c = cards[i];
+  if (!c) return;
+  c.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  c.classList.add('flow-flash');
+  setTimeout(function () { c.classList.remove('flow-flash'); }, 1600);
+}
+
+function appendQuestions(container, qs, uniqSeen) {
   for (var i = 0; i < qs.length; i++) {
     var q = qs[i];
     var qtext = esc(q.question || '');
@@ -652,7 +771,7 @@ function appendQuestions(container, qs) {
     d.innerHTML = '<div class="qmeta"><span>' + esc(q.subSubject || '') + '</span><span>' + esc(q.source || '') + '</span><span>' + (q.pubDate ? new Date(q.pubDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '') + '</span></div>'
       + '<div class="qtext">' + qtext + '</div>'
       + '<div class="qans"><div class="ans">' + esc(q.answer || '') + '</div>'
-      + (q.fact ? '<div class="fact">' + esc(q.fact) + '</div>' : '')
+      + (q.fact ? '<div class="fact">' + (uniqSeen ? highlightUniqueFact(q.fact, uniqSeen, q.answer, q.question) : esc(q.fact)) + '</div>' : '')
       + '</div>';
     container.appendChild(d);
   }

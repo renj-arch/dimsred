@@ -78,7 +78,7 @@ function isIndianNotable(name, desc) {
 
   if (/\bPresident of India\b|\bPrime Minister of India\b|\bVice President of India\b/i.test(text)) return true;
 
-  if (/Nobel (laureate|Prize|winner)/i.test(text)) return true;
+  if (/\bIndia\b|Indian/i.test(text) && /Nobel (laureate|Prize|winner)/i.test(text)) return true;
 
   if (/Maharashtra|Tamil Nadu|Uttar Pradesh|Karnataka|Gujarat|Rajasthan|Kerala|Odisha|West Bengal|Andhra Pradesh|Telangana|Madhya Pradesh|Bihar|Punjab|Haryana|Assam|Jharkhand|Chhattisgarh|Uttarakhand|Himachal Pradesh|Goa|Manipur|Meghalaya|Nagaland|Tripura|Mizoram|Sikkim|Arunachal Pradesh|Puducherry|Delhi|Jammu and Kashmir|Ladakh|Andaman|Nicobar|Lakshadweep|Dadra|Daman|Diu/i.test(text)) return true;
 
@@ -215,21 +215,22 @@ var QUESTION_TEMPLATES = {
 
 function pickTemplate(category, month) {
   var templates = QUESTION_TEMPLATES[category] || QUESTION_TEMPLATES['personality'];
-  var tmpl = templates[Math.floor(Math.random() * templates.length)];
-  return tmpl.replace('{month}', month);
+  return templates[0].replace('{month}', month);
 }
 
-async function fetchDeaths(existingKeys, newQuestions, seq) {
+async function fetchDeaths(existingKeys, seenPersons, newQuestions, seq) {
   console.error('\n--- Notable Deaths 2026 ---');
   try {
     var html = await fetchPage('Deaths_in_2026');
     var entries = extractDateEntries(html);
     var count = 0;
     entries.forEach(function(e) {
+      var personKey = e.name.toLowerCase().replace(/\s+/g, ' ').trim();
+      if (seenPersons[personKey]) return;
       var cat = findCategory(e.desc);
       var qText = pickTemplate(cat, e.month);
       var q = makeQuestion(qText, e.name, seq++, 'Deaths in 2026', '\uD83D\uDD4A', e.name + ': ' + e.desc.substring(0, 200));
-      if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
+      if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; seenPersons[personKey] = true; count++; }
     });
     console.error('  ' + count + ' obituary questions added\n');
   } catch (e) { console.error('  Error: ' + e.message + '\n'); }
@@ -248,13 +249,32 @@ async function main() {
   if (!existing[CA_KEY].subSubjects[subKey]) existing[CA_KEY].subSubjects[subKey] = [];
 
   var existingKeys = {};
+  var seenPersons = {};
   existing[CA_KEY].subSubjects[subKey].forEach(function(q) { existingKeys[eventKey(q)] = true; });
+
+  // Self-heal: keep one entry per person (richest fact) so earlier append-only
+  // runs that picked random template variants no longer pile up duplicates.
+  var byPerson = {};
+  existing[CA_KEY].subSubjects[subKey].forEach(function(q) {
+    var p = (q.answer || '').toLowerCase().replace(/\s+/g, ' ').trim();
+    if (!byPerson[p] || (q.fact || '').length > (byPerson[p].fact || '').length) byPerson[p] = q;
+  });
+  var healed = [];
+  Object.keys(byPerson).forEach(function(p) {
+    healed.push(byPerson[p]);
+    seenPersons[p] = true;
+  });
+  if (healed.length !== existing[CA_KEY].subSubjects[subKey].length) {
+    existing[CA_KEY].subSubjects[subKey] = healed;
+    console.error('Deduped existing obituaries to ' + healed.length + ' (one per person)');
+  }
+
   var newQuestions = [];
   var seq = existing[CA_KEY].subSubjects[subKey].length + 1;
 
   var bioCache = bio.loadBioCache();
 
-  await fetchDeaths(existingKeys, newQuestions, seq);
+  await fetchDeaths(existingKeys, seenPersons, newQuestions, seq);
 
   for (var bqi = 0; bqi < newQuestions.length; bqi++) {
     var bq = newQuestions[bqi];
