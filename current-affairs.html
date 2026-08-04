@@ -5651,10 +5651,12 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 _piData = {};
                 _piList = [];
                 for (var k in obj) {
+                    var v = obj[k];
+                    if (typeof v !== 'string' || v.indexOf('upload.wikimedia.org') === -1) continue;
                     var nk = k.toLowerCase().replace(/[^a-z0-9]+/g, '');
                     if (!nk || nk.length < 3) continue;
                     if (!_piData[nk]) {
-                        _piData[nk] = obj[k];
+                        _piData[nk] = v;
                         _piList.push(k.toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim());
                     }
                 }
@@ -5676,9 +5678,24 @@ var _staticGen_polity = GK_GENERATORS.polity;
             if (/(organization|government|ministry|department|bureau|council|committee|commission|board|bank|institute|university|association|society|company|corporation|party|union|force|agency|scheme|mission|programme|program|plan|policy|day|week|month|state|district|river|mountain|lake|city|town|country|island|treaty|act|bill|constitution|article|schedule|amendment|report|index|award|prize|medal|stadium|trophy|cup|league|game|series|festival|temple|fort|palace|dynasty|kingdom|empire|war|battle|revolution|movement|language|script|stadium|national park|park|nadu|pradesh|himachal|arunachal|rajasthan|maharashtra|gujarat|kerala|karnataka|bengal|uttar|jammu|kashmir|punjab|uttarakhand|bihar|chhattisgarh|jharkhand|odisha|assam|goa|manipur|meghalaya|mizoram|nagaland|sikkim|tripura|andaman|lakshadweep|delhi|haryana|tamil|pondicherry|chandigarh|dadra|daman|diu|fund|authority|alliance|coalition|federation|republic|territory|province|capital|states|sultanate|caliphate|emirate|parliament|congress|senate|assembly|court|tribunal|army|navy|police|administration|directorate|force|reserve|public|india|global|national|international|asian|african|world|united|antarctic|south|north|west|east|central|indian|america|russia|china|japan|france|germany|italy|spain|england|britain|australia|canada|brazil|pakistan|bangladesh|nepal|sri|lanka|myanmar|iran|iraq|turkey|egypt|israel|saudi|arab|afghanistan|kazakhstan|uzbekistan|bhutan|maldives|europe|asia|africa|australia)/.test(low)) return false;
             return true;
         }
-        function _wikiFilePath(title) {
-            if (!title) return null;
-            return 'https://en.wikipedia.org/wiki/Special:FilePath/' + encodeURIComponent(String(title).trim().replace(/\s+/g, '_'));
+        var _piApiCache = {}, _piApiBusy = {};
+        function _resolvePersonImage(title, done) {
+            if (!title) { done(null); return; }
+            var key = String(title).toLowerCase().replace(/[^a-z0-9]+/g, '');
+            if (Object.prototype.hasOwnProperty.call(_piApiCache, key)) { done(_piApiCache[key]); return; }
+            if (_piData && _piData[key]) { _piApiCache[key] = _piData[key]; done(_piData[key]); return; }
+            if (_piApiBusy[key]) { setTimeout(function() { _resolvePersonImage(title, done); }, 250); return; }
+            _piApiBusy[key] = true;
+            fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(String(title).trim().replace(/\s+/g, '_')))
+                .then(function(r) { return r.json(); })
+                .then(function(obj) {
+                    _piApiBusy[key] = false;
+                    var u = (obj && obj.thumbnail && obj.thumbnail.source) ? String(obj.thumbnail.source) : null;
+                    if (u) u = u.replace(/[?&]utm_[^&]*/g, '');
+                    _piApiCache[key] = u;
+                    done(u);
+                })
+                .catch(function() { _piApiBusy[key] = false; _piApiCache[key] = null; done(null); });
         }
         function _renderPersonImg(url) {
             var wrap = document.getElementById('qImgWrap');
@@ -5691,32 +5708,37 @@ var _staticGen_polity = GK_GENERATORS.polity;
             var wrap = document.getElementById('qImgWrap');
             if (!wrap) return;
             if (typeof q !== 'object' || q === null) return;
+            _piTryCandidates(q, wrap, 0);
+        }
 
-            var ansKey = q.a ? q.a.toLowerCase().replace(/[^a-z0-9]+/g, '') : '';
-
-            // 1) The answer is a person's name → show that person's image
-            //    (known portrait from the map if present, else its Wikipedia lead image).
-            if (q.a && _looksLikePersonName(q.a)) {
-                var mu = (_piData && _piData[ansKey]) ? _piData[ansKey] : _wikiFilePath(q.a);
-                if (mu && _renderPersonImg(mu)) return;
-            }
-
-            // 2) Live wiki-generated questions: the answer is the exact Wikipedia article title.
+        function _piCandidates(q) {
+            var cands = [];
+            if (q.a && _looksLikePersonName(q.a)) cands.push(q.a);
             try {
-                if (q._source === 'wiki' && q.a && typeof WIKI !== 'undefined' && WIKI._seenTypes && WIKI._seenTypes[q.a] === 'person') {
-                    var wu = _wikiFilePath(q.a);
-                    if (wu && _renderPersonImg(wu)) return;
-                }
+                if (q._source === 'wiki' && q.a && typeof WIKI !== 'undefined' && WIKI._seenTypes && WIKI._seenTypes[q.a] === 'person' && cands.indexOf(q.a) === -1) cands.push(q.a);
             } catch(e) {}
+            return cands;
+        }
 
-            // 3) Exact-answer match in the local map (covers single-word famous names like "Akbar").
-            if (ansKey && _piData && _piData[ansKey]) {
-                if (_renderPersonImg(_piData[ansKey])) return;
+        function _piTryCandidates(q, wrap, i) {
+            var cands = _piCandidates(q);
+            if (i < cands.length) {
+                _resolvePersonImage(cands[i], function(url) {
+                    if (url) { _renderPersonImg(url); return; }
+                    _piTryCandidates(q, wrap, i + 1);
+                });
+                return;
             }
+            _piMapFallback(q, wrap);
+        }
 
-            // 4) Known portrait for a name in the fact/solution text.
-            //    The question text is deliberately excluded so distractor options
-            //    embedded in it (e.g. "Options: Shivaji") cannot hijack the image.
+        function _piMapFallback(q, wrap) {
+            var ansKey = q.a ? q.a.toLowerCase().replace(/[^a-z0-9]+/g, '') : '';
+            if (ansKey && _piData && _piData[ansKey]) { _renderPersonImg(_piData[ansKey]); return; }
+
+            // Known portrait for a name in the fact/solution text.
+            // The question text is deliberately excluded so distractor options
+            // embedded in it (e.g. "Options: Shivaji") cannot hijack the image.
             if (_piData) {
                 var txt = ' ' + [q.a, q.fact, q.solution, q.explanation].filter(Boolean).join(' ').toLowerCase().replace(/[^a-z0-9]+/g, ' ') + ' ';
                 _piRe.lastIndex = 0;
@@ -5727,7 +5749,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     if (url && _renderPersonImg(url)) return;
                 }
             } else if (!_piFailed) {
-                _loadPersonImages(function() { _attachPersonImage(q); });
+                _loadPersonImages(function() { _piMapFallback(q, wrap); });
                 return;
             }
 
