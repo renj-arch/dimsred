@@ -108,7 +108,8 @@ var SEED = {
     'Indian independence movement', 'Non-cooperation movement', 'Civil disobedience movement', 'Quit India movement',
     'Khilafat movement', 'Partition of India', 'Simon Commission', 'Salt march', 'Jallianwala Bagh massacre',
     'Revolt of 1857', 'Swadeshi movement', 'Indian National Congress', 'Constituent Assembly of India',
-    'Sepoy Mutiny', 'Bardoli Satyagraha', 'Champaran Satyagraha', 'Dandi March'
+    'Sepoy Mutiny', 'Bardoli Satyagraha', 'Champaran Satyagraha', 'Dandi March',
+    'Ghadar Movement', 'Azad Hind Fauj', 'Radcliffe Line'
   ]},
   wars: { type: 'event', level: 1, list: [
     'Battle of Plassey', 'Battle of Buxar', 'First Battle of Panipat', 'Second Battle of Panipat',
@@ -118,7 +119,8 @@ var SEED = {
   ]},
   reforms: { type: 'event', level: 1, list: [
     'Economic liberalisation in India', 'LPG reforms', 'Demonetisation in India',
-    'Goods and Services Tax (India)', 'Five-Year Plans (India)', 'Bank nationalisation in India'
+    'Goods and Services Tax (India)', 'Five-Year Plans (India)', 'Bank nationalisation in India',
+    '73rd Constitutional Amendment'
   ]},
   people: { type: 'person', level: 2, list: [
     'Mahatma Gandhi', 'B. R. Ambedkar', 'Jawaharlal Nehru', 'Sardar Vallabhbhai Patel', 'Subhas Chandra Bose',
@@ -133,14 +135,16 @@ var SEED = {
     'Christopher Columbus', 'Ferdinand Magellan', 'Martin Luther', 'Johannes Gutenberg', 'Isaac Newton',
     'Charles Darwin', 'Napoleon', 'Abraham Lincoln', 'Adolf Hitler', 'Vladimir Lenin', 'Joseph Stalin',
     'Franklin D. Roosevelt', 'Winston Churchill', 'Mao Zedong', 'Nelson Mandela', 'Martin Luther King Jr.',
-    'Zhu Yuanzhang', 'Yongle Emperor', 'Zheng He', 'Xu Da', 'Chang Yuchun', 'Tang He', 'Liao Yongzhong', 'Hu Mei'
+    'Zhu Yuanzhang', 'Yongle Emperor', 'Zheng He', 'Xu Da', 'Chang Yuchun', 'Tang He', 'Liao Yongzhong', 'Hu Mei',
+    'Ranjit Singh', 'C V Raman'
   ]},
   religion: { type: 'event', level: 2, list: [
     'First Buddhist Council', 'Second Buddhist Council', 'Third Buddhist Council', 'Fourth Buddhist Council',
     'Buddhist missions under Ashoka', 'Mahaparinirvana of the Buddha'
   ]},
   sites: { type: 'concept', level: 3, list: [
-    'Lumbini', 'Kushinagar', 'Rajgir', 'Pataliputra', 'Gandhara', 'Mathura', 'Vatsa', 'Rigveda'
+    'Lumbini', 'Kushinagar', 'Rajgir', 'Pataliputra', 'Gandhara', 'Mathura', 'Vatsa', 'Rigveda',
+    'Mohenjo-daro', 'Kanchi', 'Vaishali', 'Kurukshetra'
   ]},
   classical: { type: 'event', level: 2, list: [
     'Roman Republic', 'Hellenistic period', 'Parthian Empire', 'Sasanian Empire'
@@ -183,7 +187,10 @@ var SEED = {
     'War on Terror', 'Arab Spring', '9/11 attacks'
   ]},
   globalConcepts: { type: 'concept', level: 1, list: [
-    'Internet'
+    'Internet', 'GPS', 'Bollywood'
+  ]},
+  wildlife: { type: 'concept', level: 3, list: [
+    'Gir'
   ]},
   canon: { type: 'concept', level: 3, list: [
     'Tipiṭaka (Pali Canon)'
@@ -198,7 +205,8 @@ var SEED = {
     'Neeraj Chopra', 'Abhinav Bindra', 'Saina Nehwal', 'Viswanathan Anand'
   ]},
   science: { type: 'event', level: 2, list: [
-    'Chandrayaan-1', 'Chandrayaan-3', 'Mangalyaan', 'Pokhran-II', 'Nuclear tests of India', 'Smallpox eradication'
+    'Chandrayaan-1', 'Chandrayaan-3', 'Mangalyaan', 'Pokhran-II', 'Nuclear tests of India', 'Smallpox eradication',
+    'INS Vikrant'
   ]},
   sports: { type: 'event', level: 2, list: [
     'Olympic Games', 'Commonwealth Games', 'Asian Games', 'Cricket World Cup', 'T20 World Cup',
@@ -317,6 +325,20 @@ var EXTRA_ALIASES = {
   'Tang He': ['tang he', 'tang ho'],
   'Liao Yongzhong': ['liao yongzhong', 'liao yung-chung'],
   'Hu Mei': ['hu mei', 'hu tingrui'],
+  'Mohenjo-daro': ['mohenjo-daro', 'mohenjodaro', 'moenjo-daro', 'mohenjo daro'],
+  'Kanchi': ['kanchi', 'kanchipuram', 'conjeevaram'],
+  'Vaishali': ['vaishali', 'vesali'],
+  'Kurukshetra': ['kurukshetra', 'kuruksetra'],
+  'Ranjit Singh': ['ranjit singh', 'maharaja ranjit singh'],
+  'C V Raman': ['c v raman', 'cv raman', 'chandrasekhara venkata raman', 'raman effect'],
+  'Ghadar Movement': ['ghadar movement', 'ghadar party', 'gadar movement', 'ghadar rebellion', 'ghadar conspiracy'],
+  'Azad Hind Fauj': ['azad hind fauj', 'azad hind', 'indian national army', 'ina', 'azad hind government', 'provisional government of free india'],
+  'Radcliffe Line': ['radcliffe line', 'radcliffe boundary', 'radcliffe award', 'radcliffe'],
+  '73rd Constitutional Amendment': ['73rd constitutional amendment', '73rd amendment', 'seventy-third amendment', 'panchayati raj act 1992', '73rd amendment act'],
+  'INS Vikrant': ['ins vikrant', 'vikrant'],
+  'GPS': ['gps', 'global positioning system'],
+  'Bollywood': ['bollywood', 'hindi cinema', 'bombay film industry'],
+  'Gir': ['gir forest', 'gir national park', 'gir sanctuary', 'gir', 'sasan gir'],
   'Qing dynasty': ['qing dynasty', 'qing'],
   'Cultural Revolution': ['cultural revolution', 'great proletarian cultural revolution', 'red guards'],
   'Long March': ['long march', 'the long march'],
@@ -446,6 +468,8 @@ var NEGATIVE_ALIASES = {
   'Martin Luther': ['martin luther king', 'mlk', 'martin luther king jr'],
   'Yongle Emperor': ['yongle encyclopedia', 'yongle dadian'],
   'Forbidden City': ['national palace museum'],
+  'GPS': ['gram panchayat', 'gram panchayats'],
+  'Bollywood': ['bollywood dance'],
   'Marco Polo': ['marco polo airport', 'marco polo games'],
   'Suleiman': ['suleiman mosque', 'suleymaniye'],
   'Mehmed': ['mehmed vi', 'mehmed v', 'sultan mehmed'],
@@ -568,7 +592,12 @@ var MANUAL_SPANS = {
   'Ming conquest of Yunnan': [1381, 1382], 'Treasure voyages': [1405, 1433], 'Forbidden City': [1406, 1420],
   'Yongle Encyclopedia': [1403, 1408],
   'Zhu Yuanzhang': [1328, 1398], 'Yongle Emperor': [1360, 1424], 'Zheng He': [1371, 1433], 'Xu Da': [1332, 1385],
-  'Chang Yuchun': [1330, 1369], 'Tang He': [1326, 1395], 'Liao Yongzhong': [1323, 1375], 'Hu Mei': [1363, 1384]
+  'Chang Yuchun': [1330, 1369], 'Tang He': [1326, 1395], 'Liao Yongzhong': [1323, 1375], 'Hu Mei': [1363, 1384],
+  'Mohenjo-daro': [-2600, -1900], 'Kanchi': [-300, 900], 'Vaishali': [-600, -400], 'Kurukshetra': [-1000, -500],
+  'Ranjit Singh': [1780, 1839], 'C V Raman': [1888, 1970],
+  'Ghadar Movement': [1913, 1918], 'Azad Hind Fauj': [1942, 1945], 'Radcliffe Line': [1947, 1947],
+  '73rd Constitutional Amendment': [1992, 1993], 'INS Vikrant': [1961, 2026],
+  'GPS': [1973, 2026], 'Bollywood': [1913, 2026], 'Gir': [1965, 2026]
 };
 
 // Curated spans for sub-topics (non-seed) where extracted year clusters cannot
@@ -667,7 +696,8 @@ var TOPIC_OVERRIDES = {
   'Crusades': [1095, 1291], 'Mongol Empire': [1206, 1368], 'Ottoman Empire': [1299, 1922],
   'Meiji Restoration': [1868, 1912], 'World War II': [1939, 1945], 'Cold War': [1947, 1991],
   'Vietnam War': [1955, 1975], 'Space Race': [1955, 1975], 'Apartheid': [1948, 1994],
-  'United Nations': [1945, 2026], 'European Union': [1957, 2026], 'Napoleon': [1769, 1821]
+  'United Nations': [1945, 2026], 'European Union': [1957, 2026], 'Napoleon': [1769, 1821],
+  'Sikh Empire': [1799, 1849], 'Panchayati raj': [1959, 2026], 'Constitution of India': [1949, 1950]
 };
 
 // Curated, authoritative descriptors for the curated-spine persons.
@@ -718,7 +748,8 @@ var PERSON_DESCS = {
   'Zhu Yuanzhang': 'founder of the Ming dynasty (Hongwu Emperor)', 'Yongle Emperor': 'Ming emperor who moved the capital to Beijing',
   'Zheng He': 'Ming admiral and explorer', 'Xu Da': 'Ming founding general',
   'Chang Yuchun': 'Ming founding general', 'Tang He': 'Ming founding general',
-  'Liao Yongzhong': 'Ming founding admiral', 'Hu Mei': 'Ming founding general'
+  'Liao Yongzhong': 'Ming founding admiral', 'Hu Mei': 'Ming founding general',
+  'Ranjit Singh': 'founder of the Sikh Empire', 'C V Raman': 'Nobel Prize-winning physicist (Raman effect)'
 };
 
 // Person-role keyword gate: an auto-extracted descriptor is only attached when it
@@ -1385,6 +1416,22 @@ function main() {
     ['seed|Yongle Emperor', 'seed|Yongle Encyclopedia', 3],
     ['seed|Yongle Emperor', 'seed|Treasure voyages', 3],
     ['seed|Zheng He', 'seed|Treasure voyages', 3],
+    ['seed|Mohenjo-daro', 'seed|Indus Valley Civilization', 3],
+    ['seed|Kanchi', 'art-culture|Pallava dynasty', 3],
+    ['seed|Vaishali', 'seed|Gautama Buddha', 3],
+    ['seed|Vaishali', 'seed|Mahavira', 3],
+    ['seed|Kurukshetra', 'seed|Vedic period', 2],
+    ['seed|Ranjit Singh', 'medieval-modern-india|Sikh Empire', 3],
+    ['seed|Ghadar Movement', 'seed|Indian independence movement', 3],
+    ['seed|Ghadar Movement', 'seed|Bal Gangadhar Tilak', 2],
+    ['seed|Azad Hind Fauj', 'seed|Subhas Chandra Bose', 3],
+    ['seed|Azad Hind Fauj', 'seed|Indian independence movement', 3],
+    ['seed|Azad Hind Fauj', 'seed|Quit India movement', 2],
+    ['seed|Radcliffe Line', 'seed|Partition of India', 3],
+    ['seed|73rd Constitutional Amendment', 'indian-society|Panchayati raj', 3],
+    ['seed|73rd Constitutional Amendment', 'constitution|Constitution of India', 3],
+    ['seed|C V Raman', 'seed|Bhabha Atomic Research Centre', 2],
+    ['seed|Gir', 'environment-ecology|Asiatic lion', 3],
     ['seed|Qing dynasty', 'seed|Sun Yat-sen', 3],
     ['seed|Han dynasty', 'seed|Confucius', 2],
     ['seed|Qing dynasty', 'seed|Boxer Rebellion', 3],
