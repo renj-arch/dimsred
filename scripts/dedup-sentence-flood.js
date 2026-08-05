@@ -4,11 +4,25 @@ const path = require('path');
 const QUIZ_PATH = path.join(__dirname, '..', 'data', 'quiz.json');
 const QUESTIONS_DIR = path.join(__dirname, '..', 'data', 'questions');
 
-function baseText(q) {
-  return (q.question || '').toLowerCase().replace(/_{5,}/g, '___').replace(/\s+/g, ' ').trim();
+// Decode common HTML entities so "&amp;" matches "&", "&#160;" matches a space,
+// and entity-flavoured questions dedup against plain versions of the same text.
+function decodeEntities(s) {
+  return String(s || '')
+    .replace(/&amp;/g, '&')
+    .replace(/&nbsp;|&#160;/g, ' ')
+    .replace(/&#91;/g, '[')
+    .replace(/&#93;/g, ']')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;|&#34;/g, '"')
+    .replace(/&#39;/g, "'");
 }
 
-function norm(s) { return (s || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
+function baseText(q) {
+  return decodeEntities(q.question).toLowerCase().replace(/_{5,}/g, '___').replace(/\s+/g, ' ').trim();
+}
+
+function norm(s) { return decodeEntities(s).toLowerCase().replace(/\s+/g, ' ').trim(); }
 
 function tokens(s) {
   return norm(s).replace(/_{2,}/g, ' ').split(/\s+/).filter(Boolean);
@@ -27,6 +41,24 @@ function levDist(a, b) {
     }
   }
   return dp[a.length][b.length];
+}
+
+// Ensure every question in the list has a unique id (reuse the id of the first
+// occurrence; append a numeric suffix to later collisions).
+function repairIds(questions) {
+  const used = new Set();
+  let repaired = 0;
+  for (const q of questions) {
+    if (!q || !q.id) continue;
+    if (!used.has(q.id)) { used.add(q.id); continue; }
+    let n = 2;
+    let next = q.id + '_' + n;
+    while (used.has(next)) { n++; next = q.id + '_' + n; }
+    q.id = next;
+    used.add(next);
+    repaired++;
+  }
+  return repaired;
 }
 
 // Remove "same sentence, different blank" near-duplicates: questions derived
@@ -82,6 +114,27 @@ function clean(questions, source) {
   return { kept, removed };
 }
 
+// Regroup cleaned questions back into subject/subSubject and repair id collisions
+// per subSubject (ids only need to be unique within a subSubject; reusing a
+// numeric id across different subSubjects is harmless and pre-existing).
+function regroup(data, kept, owner) {
+  const out = {};
+  for (const q of kept) {
+    const [subject, ss] = owner.get(q);
+    if (!out[subject]) out[subject] = { subSubjects: {} };
+    if (!out[subject].subSubjects[ss]) out[subject].subSubjects[ss] = [];
+    out[subject].subSubjects[ss].push(q);
+  }
+  let repaired = 0;
+  for (const subject of Object.keys(data)) {
+    if (!out[subject] || !out[subject].subSubjects) continue;
+    for (const [ss, qs] of Object.entries(out[subject].subSubjects)) {
+      repaired += repairIds(qs);
+    }
+  }
+  return { out, repaired };
+}
+
 async function main() {
   let totalRemoved = 0;
   let totalKept = 0;
@@ -115,21 +168,26 @@ async function main() {
         console.error(`Warning: Could not parse ${f} (${e.message}). Skipping.`);
         continue;
       }
-      let fileKept = 0, fileRemoved = 0;
-      const out = {};
+      // Flatten every subSubject in the file so dedup is FILE-WIDE: duplicate
+      // question text is removed even when it appears under different
+      // subSubjects (e.g. a case listed in both "Legal & Constitutional" and
+      // "SC Landmark Judgments").
+      const flat = [];
+      const owner = new Map(); // question -> [subject, subSubject]
       for (const [subject, subjData] of Object.entries(data)) {
-        out[subject] = { subSubjects: {} };
-        if (!subjData.subSubjects) { out[subject] = subjData; continue; }
+        if (!subjData.subSubjects) continue;
         for (const [ss, qs] of Object.entries(subjData.subSubjects)) {
-          const { kept, removed } = clean(qs, `${f}/${subject}/${ss}`);
-          fileRemoved += removed.length;
-          fileKept += kept.length;
-          out[subject].subSubjects[ss] = kept;
+          for (const q of qs) { flat.push(q); owner.set(q, [subject, ss]); }
         }
       }
-      if (fileRemoved > 0) {
+      const { kept, removed } = clean(flat, f);
+      const fileKept = kept.length, fileRemoved = removed.length;
+      // Regroup deduped questions back into their original subject/subSubject
+      // and repair id collisions within each subSubject.
+      const { out, repaired } = regroup(data, kept, owner);
+      if (fileRemoved > 0 || repaired > 0) {
         fs.writeFileSync(fp, JSON.stringify(out));
-        console.log(`${f}: removed ${fileRemoved} duplicate questions, kept ${fileKept}`);
+        console.log(`${f}: removed ${fileRemoved} duplicate questions, repaired ${repaired} id collisions, kept ${fileKept}`);
         totalRemoved += fileRemoved;
         totalKept += fileKept;
       }
