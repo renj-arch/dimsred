@@ -232,6 +232,11 @@ jobs:
       - run: node scripts/fetch-unesco-sc-institutions.js || true
       - run: node scripts/fetch-industry-nuclear-flagships.js || true
 
+      # Fold fresh monthly Current Events / Indian Current Affairs (written to
+      # the fetch-current-events / fetch-indian-ca scratch files) into the
+      # tracked current-affairs.json, then remove the scratch so it isn't
+      # committed and the archive reflects the merged data.
+      - run: node scripts/merge-monthly-current-affairs.js
       - run: node scripts/cleanup-questions.js
       - run: node scripts/dedup-sentence-flood.js
       - run: node scripts/inject-handpicked-gk.js
