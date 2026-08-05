@@ -185,6 +185,15 @@ sortedCats.forEach(c => {
         splitEntries.push({ subject: s, subSubject: ss, questions: subs[s][ss] });
       });
     });
+    // Sort deterministically so the 8 MiB chunk seam is stable across runs.
+    // Insertion order is arbitrary and drifts as question counts change, which
+    // would otherwise cascade whole ranges of sub-topics between part files
+    // every run (churning category keys, timeline node ids and map diffs).
+    splitEntries.sort(function(a, b) {
+      var ka = (a.subject + '\u0000' + a.subSubject).toLowerCase();
+      var kb = (b.subject + '\u0000' + b.subSubject).toLowerCase();
+      return ka < kb ? -1 : (ka > kb ? 1 : 0);
+    });
     var chunk = [], chunkBytes = 0;
     var partIdx = 0;
     console.log('Large category: ' + c + ' (' + totalQ + ' q, ' + splitEntries.length + ' sub-topics, splitting...)');
