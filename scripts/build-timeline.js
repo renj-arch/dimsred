@@ -92,6 +92,23 @@ function bioSpan(text) {
   return null;
 }
 
+// Combined birth–death span across a topic's own questions. Used to "auto-file"
+// wiki-sourced people (who we detect via person-descriptors) without curating them
+// in SEED: prefer a tight, authoritative lifespan when the questions contain one,
+// falling back to the generic year-cluster extraction in topicYears().
+function bioSpansFor(qs) {
+  var mins = [], maxs = [];
+  for (var q of qs) {
+    var b = bioSpan([q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' '));
+    if (b) {
+      mins.push(b.min);
+      maxs.push(b.max);
+    }
+  }
+  if (!mins.length) return null;
+  return { min: Math.min.apply(null, mins), max: Math.max.apply(null, maxs) };
+}
+
 var ERAS = [
   { id: 'ancient',       label: 'Ancient India',       min: -3300, max: 1199 },
   { id: 'medieval',      label: 'Medieval India',      min: 1200,  max: 1799 },
@@ -1606,7 +1623,18 @@ function main() {
         continue;
       }
       var qs = byTopic[tname];
+      // Auto-file people: when the topic's own questions carry a person-descriptor
+      // ("X was an Indian physicist (1879–1955)"), it is a person even if its name does
+      // not appear in the curated SEED spine. Type it as a person at detail level 2 and
+      // pin a birth–death span from the questions, so future wiki additions land on the
+      // map as purple person bars automatically instead of as generic undated topics.
+      var nodeDesc = personDescFor(tname, qs);
+      var isAutoPerson = !!nodeDesc;
       var span = topicYears(tname, qs, key);
+      if (isAutoPerson) {
+        var autoBio = bioSpansFor(qs);
+        if (autoBio) span = autoBio;
+      }
       var timebase = null;
       var eraId = null;
       if (!span) {
@@ -1632,14 +1660,14 @@ function main() {
       var node = {
         id: id,
         name: tname,
-        type: typeOf(tname),
+        type: isAutoPerson ? 'person' : typeOf(tname),
         span: span,
         era: timebase === 'era' ? eraId : eraOf(span && span.min),
         timebase: timebase,
-        level: 4,
+        level: isAutoPerson ? 2 : 4,
         cats: [{ key: key, label: c.label, count: qs.length }],
         count: qs.length,
-        desc: personDescFor(tname, qs)
+        desc: nodeDesc
       };
       seen[id] = node;
       nodes.push(node);
@@ -2362,9 +2390,37 @@ function main() {
   ];
   var linkMap = {};
   for (var li of links) linkMap[li.a + '\u0000' + li.b] = li.w;
-  var addedManual = 0;
+  var addedManual = 0, droppedManual = 0;
+
+  // Self-healing link resolution: the curated MANUAL_LINKS occasionally point at ids
+  // that no longer exist (a "seed|" id for an entity that only exists as a sub-topic,
+  // a wrong category prefix, or an apostrophe/name mismatch) — or at entities not yet in
+  // the data at all. Instead of writing a dangling edge, resolve each target to a real
+  // node by exact id first, then by normalized name (preferring the highest-count,
+  // highest-level node). Targets with no matching node are dropped, so a new wiki-sourced
+  // entity never produces a dead link and future renames self-correct.
+  var NODE_IDS = {};
+  var NODE_BY_NAME = {};
+  for (var nn of nodes) {
+    NODE_IDS[nn.id] = true;
+    var nk = nn.name.toLowerCase().replace(/[^a-z0-9]+/gi, ' ').replace(/\s+/g, ' ').trim();
+    (NODE_BY_NAME[nk] = NODE_BY_NAME[nk] || []).push(nn);
+  }
+  function resolveLinkTarget(baseId) {
+    if (!baseId || NODE_IDS[baseId]) return baseId;
+    var namePart = baseId.indexOf('seed|') === 0 ? baseId.slice(5) : baseId.split('|').slice(1).join('|');
+    var norm = namePart.toLowerCase().replace(/[^a-z0-9]+/gi, ' ').replace(/\s+/g, ' ').trim();
+    var cands = NODE_BY_NAME[norm] || [];
+    if (!cands.length) return null;
+    cands.sort(function (a, b) { return (b.count - a.count) || ((a.level || 4) - (b.level || 4)) || ((b.seed ? 1 : 0) - (a.seed ? 1 : 0)) || a.id.localeCompare(b.id); });
+    return cands[0].id;
+  }
+
   for (var ml of MANUAL_LINKS) {
-    var mk = ml[0] + '\u0000' + ml[1];
+    var A = resolveLinkTarget(ml[0]);
+    var B = resolveLinkTarget(ml[1]);
+    if (!A || !B || A === B) { droppedManual++; continue; }
+    var mk = A + '\u0000' + B;
     var prev = linkMap[mk] || 0;
     if (ml[2] > prev) { linkMap[mk] = ml[2]; if (!prev) addedManual++; }
   }
@@ -2383,7 +2439,9 @@ function main() {
   var seedTypeCounts = {};
   for (var gk of Object.keys(SEED)) { totalSeeds += SEED[gk].list.length; seedTypeCounts[SEED[gk].type] = (seedTypeCounts[SEED[gk].type] || 0) + SEED[gk].list.length; }
   console.log('seed entities: ' + totalSeeds + ' across ' + JSON.stringify(seedTypeCounts));
-  console.log('links: ' + links.length + ' (manual added: ' + addedManual + ', top: ' + links.slice(0, 5).map(function (l) { return l.a.replace('seed|', '') + '↔' + l.b.replace('seed|', '') + ':' + l.w; }).join(', ') + ')');
+  console.log('links: ' + links.length + ' (manual added: ' + addedManual + ', dropped unresolved: ' + droppedManual + ', top: ' + links.slice(0, 5).map(function (l) { return l.a.replace('seed|', '') + '↔' + l.b.replace('seed|', '') + ':' + l.w; }).join(', ') + ')');
+  var autoPersons = nodes.filter(function (n) { return n.type === 'person' && !n.seed; }).length;
+  console.log('auto-filed persons (via descriptors, not in curated spine): ' + autoPersons);
 }
 
 main();
