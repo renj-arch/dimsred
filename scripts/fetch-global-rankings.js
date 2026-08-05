@@ -4,6 +4,7 @@ var path = require('path');
 
 var API = 'https://en.wikipedia.org/w/api.php';
 var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
+var CA_PATH = path.resolve(__dirname, '..', 'data/questions/current-affairs.json');
 var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
@@ -123,11 +124,60 @@ function findIndiaRankInTable(html) {
   return '';
 }
 
-// Curated overrides for indexes where Wikipedia's own table is stale or the
-// wikitable parsing returns a wrong cell (e.g. EPI's Rank 2024 col is 149, but
-// the published EPI 2024 ranks India 176/180). Overrides take priority over
-// the live Wikipedia table so the answer stays correct for competitive exams.
+// Curated overrides for indexes where Wikipedia's own table is stale, the
+// wikitable parsing returns a wrong cell, or the table mixes editions (rank can
+// come from an old column). Overrides take priority over the live Wikipedia
+// table so answers stay correct for competitive exams. Values below are the
+// latest published editions as of the site's current version.
 var RANK_OVERRIDES = {
+  'World Happiness Report': {
+    rank: '116',
+    fact: 'India ranked 116th out of 147 countries in the World Happiness Report 2026 (published March 2026 by Oxford\'s Wellbeing Research Centre with Gallup and the UN SDSN), up two places from 118th in 2025, scoring 4.536. Finland topped the list for a record ninth year; Afghanistan (147th) ranked last.'
+  },
+  'Global Hunger Index': {
+    rank: '102',
+    fact: 'India ranked 102nd out of 123 countries in the Global Hunger Index (GHI) 2025, with a score of 25.8 (serious hunger category). Published annually by Concern Worldwide and Welthungerhilfe.'
+  },
+  'Corruption Perceptions Index': {
+    rank: '91',
+    fact: 'India ranked 91st out of 182 countries in the Corruption Perceptions Index (CPI) 2025 published by Transparency International, scoring 39/100 (up from 38 in 2024; rank up from 96th). Denmark topped the index with 89; Somalia and South Sudan ranked last (9).'
+  },
+  'Ease of Doing Business': {
+    rank: '63',
+    fact: 'In the World Bank Ease of Doing Business Index (last edition 2020, since discontinued), India ranked 63rd out of 190 economies. India rose steadily from 142nd (2014) to 63rd (2019/2020) before the index was retired.'
+  },
+  'Press Freedom Index': {
+    rank: '157',
+    fact: 'India ranked 157th out of 180 countries in the RSF World Press Freedom Index 2025 edition used by this index, score 32.96. Norway topped the list; North Korea ranked last.'
+  },
+  'World Press Freedom Index': {
+    rank: '157',
+    fact: 'India ranked 157th out of 180 countries in the RSF (Reporters Without Borders) World Press Freedom Index 2026, released 30 April 2026, dropping six places from 151st in 2025, with a score of 31.96. Norway topped the index; Eritrea ranked last.'
+  },
+  'World Tourism Rankings': {
+    rank: '7',
+    fact: 'India ranked about 7th in the world by international tourist arrivals in the UN Tourism (UNWTO) 2024-25 data (roughly 18 million arrivals). By tourism receipts India ranked around 9th (about USD 30 billion).'
+  },
+  'Global Gender Gap Index': {
+    rank: '131',
+    fact: 'India ranked 131st out of 148 economies in the World Economic Forum Global Gender Gap Report 2025, with a parity score of 64.1%, slipping two places from 129th in 2024. Iceland led the index; Pakistan (148th) ranked last.'
+  },
+  'Global Retirement Index': {
+    rank: '43',
+    fact: 'India ranked last (43rd) among the 44 countries in the Natixis Global Retirement Index (GRI) 2025, which covers OECD members, IMF advanced economies and BRIC countries. Norway, Ireland and Switzerland topped the 2025 edition.'
+  },
+  'Global Innovation Index': {
+    rank: '38',
+    fact: 'India ranked 38th out of 139 economies in the Global Innovation Index (GII) 2025 published by WIPO, advancing one place from 39th in 2024. India leads Central and Southern Asia and is the top lower-middle-income economy.'
+  },
+  'Global Terrorism Index': {
+    rank: '14',
+    fact: 'India ranked 14th out of 163 countries in the Global Terrorism Index (GTI) 2025, published by the Institute for Economics & Peace (IEP), with a score of 6.411 (unchanged from 2024). Burkina Faso topped the index; only a handful of countries scored worse for terrorism impact.'
+  },
+  'Henley Passport Index': {
+    rank: '81',
+    fact: 'India ranked 81st in the Henley Passport Index (July 2026 edition, published 21 July 2026), with visa-free access to 55 destinations, dropping from 75th in February 2026. The ranking is by Henley & Partners.'
+  },
   'Environmental Performance Index': {
     rank: '176',
     fact: 'India ranked 176th out of 180 countries in the Environmental Performance Index (EPI) 2024, scoring 27.6. Published by Yale & Columbia universities, EPI ranks countries on climate change, environmental health and ecosystem vitality. India slid from 155th (2014) to 176th (2024), weighed down by air quality and climate-policy metrics.'
@@ -140,7 +190,6 @@ var RANKINGS = [
   { page: 'Corruption_Perceptions_Index', name: 'Corruption Perceptions Index' },
   { page: 'Global_Competitiveness_Report', name: 'Global Competitiveness Index' },
   { page: 'Ease_of_doing_business_index', name: 'Ease of Doing Business' },
-  { page: 'Press_Freedom_Index', name: 'Press Freedom Index' },
   { page: 'Democracy_Index', name: 'Democracy Index' },
   { page: 'Human_Development_Index', name: 'Human Development Index' },
   { page: 'Global_Innovation_Index', name: 'Global Innovation Index' },
@@ -292,7 +341,44 @@ async function main() {
 
   var total = list.length;
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
-  console.error('India Rankings: ' + total + ' total questions, ' + added + ' new, ' + updated + ' updated');
+
+  // The live site reads current-affairs.json (via quiz.json rebuild + category
+  // split), not pib-archive.json. Mirror the same cleaned India Rankings list
+  // there so verified answers never go stale if the pipeline ordering changes.
+  var liveCA = {};
+  if (fs.existsSync(CA_PATH)) {
+    try { liveCA = JSON.parse(fs.readFileSync(CA_PATH, 'utf8')); }
+    catch (e) { console.error('Error reading current-affairs.json: ' + e.message); }
+  }
+  if (!liveCA[CA_KEY]) liveCA[CA_KEY] = { subSubjects: {} };
+  if (!liveCA[CA_KEY].subSubjects['India Rankings']) liveCA[CA_KEY].subSubjects['India Rankings'] = [];
+  var liveList = liveCA[CA_KEY].subSubjects['India Rankings'];
+  var liveByIndex = {};
+  liveList.forEach(function(q) {
+    var n = rankIndexName(q);
+    if (n) liveByIndex[n] = q;
+  });
+  // Sync: upsert by index name, keep existing ids where possible to avoid id churn.
+  list.forEach(function(q) {
+    var idxName = q.source;
+    var m = (q.question || '').match(/in the (.+?) as of/);
+    if (m) idxName = m[1].trim();
+    if (liveByIndex[idxName]) {
+      var old = liveByIndex[idxName];
+      old.answer = q.answer;
+      old.fact = q.fact;
+      old.pubDate = q.pubDate;
+      liveByIndex[idxName] = old;
+    } else {
+      if (!liveByIndex[idxName]) {
+        liveList.push(q);
+        liveByIndex[idxName] = q;
+      }
+    }
+  });
+  var liveTotal = liveList.length;
+  fs.writeFileSync(CA_PATH, JSON.stringify(liveCA, null, 2), 'utf8');
+  console.error('India Rankings: ' + total + ' total (pib-archive), ' + liveTotal + ' total (current-affairs), ' + added + ' new, ' + updated + ' updated');
 }
 
 main().catch(function(err) {

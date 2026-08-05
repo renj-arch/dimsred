@@ -16,7 +16,11 @@ echo === Step 4: Build single archive HTML + per-category data ===
 node scripts/build-archive-single.js
 if %errorlevel% neq 0 exit /b %errorlevel%
 echo.
-echo === Step 5: Commit and push ===
+echo === Step 5: Rebuild timeline map from per-category data ===
+node scripts/build-timeline.js
+if %errorlevel% neq 0 exit /b %errorlevel%
+echo.
+echo === Step 6: Commit and push ===
 git config user.name "vlymbooq-bot"
 git config user.email "bot@vlymbooq.qzz.io"
 git add -A
