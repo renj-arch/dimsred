@@ -4,7 +4,6 @@ var path = require('path');
 
 var API = 'https://en.wikipedia.org/w/api.php';
 var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
-var expander = require('./expand-row');
 
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
@@ -153,13 +152,6 @@ async function fetchMissiles(existingKeys, newQuestions, seqObj) {
         if (range && range.match(/\d+/)) {
           var q = makeQuestion('What is the maximum range of the ' + name + ' missile?', range, seqObj.seq++, 'Missiles of India', '\uD83D\uDEE1', name + ' missile: Type=' + type + ', Range=' + range + ', Status=' + status);
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
-          // Expand the same row into extra factual variants.
-          var exQ = makeQuestion('What type of missile is the ' + name + '?', type, seqObj.seq++, 'Missiles of India', '\uD83D\uDEE1', name + ' missile: Type=' + type + '.');
-          if (type && exQ && !existingKeys[eventKey(exQ)]) { newQuestions.push(exQ); existingKeys[eventKey(exQ)] = true; count++; }
-          if (status && status.length > 2 && status.indexOf('\u2014') < 0) {
-            var exS = makeQuestion('What is the operational status of the ' + name + ' missile?', status, seqObj.seq++, 'Missiles of India', '\uD83D\uDEE1', name + ' missile status: ' + status);
-            if (exS && !existingKeys[eventKey(exS)]) { newQuestions.push(exS); existingKeys[eventKey(exS)] = true; count++; }
-          }
         }
       }
     });
@@ -185,12 +177,6 @@ async function fetchAgniMissiles(existingKeys, newQuestions, seqObj) {
           var cleanedRange = cleanVal(range);
           var q = makeQuestion('What is the range of the ' + name + ' missile?', cleanedRange, seqObj.seq++, 'Agni Missile', '\uD83D\uDEE1', name + ': Type=' + type + ', Range=' + cleanedRange + ', Status=' + status);
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
-          var exA = makeQuestion('What type of missile is the ' + name + '?', type, seqObj.seq++, 'Agni Missile', '\uD83D\uDEE1', name + ': Type=' + type + '.');
-          if (type && exA && !existingKeys[eventKey(exA)]) { newQuestions.push(exA); existingKeys[eventKey(exA)] = true; count++; }
-          if (status && status.length > 2 && status.indexOf('\u2014') < 0) {
-            var exAS = makeQuestion('What is the operational status of the ' + name + ' missile?', status, seqObj.seq++, 'Agni Missile', '\uD83D\uDEE1', name + ' status: ' + status);
-            if (exAS && !existingKeys[eventKey(exAS)]) { newQuestions.push(exAS); existingKeys[eventKey(exAS)] = true; count++; }
-          }
         }
       }
     });

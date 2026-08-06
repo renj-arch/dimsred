@@ -6,7 +6,6 @@ var API = 'https://en.wikipedia.org/w/api.php';
 var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
 var DELAY = 600;
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
-var expander = require('./expand-row');
 
 function clean(v) {
   v = v.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '').replace(/<[^>]+>/g, ' ').replace(/&#(\d+);/g, function(m, c) { return String.fromCharCode(c); });
@@ -125,10 +124,6 @@ async function fetchSatellites(existingKeys, newQuestions, seq) {
           var qText = 'Which satellite was launched by India in ' + year + '?';
           var q = makeQuestion(qText, name, seq++, 'Indian Satellites', '\uD83D\uDEE0', name + ' (' + year + ') was launched on ' + launchDate + ' via ' + vehicle + '.');
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
-          if (vehicle && vehicle.length > 2 && vehicle.indexOf('\u2014') < 0 && vehicle !== '—') {
-            var exV = makeQuestion('Which launch vehicle carried the ' + name + ' satellite?', vehicle, seq++, 'Indian Satellites', '\uD83D\uDEE0', name + ' was launched via ' + vehicle + ' in ' + year + '.');
-            if (exV && !existingKeys[eventKey(exV)]) { newQuestions.push(exV); existingKeys[eventKey(exV)] = true; count++; }
-          }
         }
       }
     });
@@ -156,10 +151,6 @@ async function fetchMissions(existingKeys, newQuestions, seq) {
           var qText = 'Which ISRO mission was launched in ' + yearMatch[0] + (statusOk ? ' (successful)' : '') + '?';
           var q = makeQuestion(qText, name, seq++, 'ISRO Missions', '\uD83D\uDE80', name + ' was launched on ' + date + '. Status: ' + status);
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
-          if (status && status.length > 3 && status.indexOf('\u2014') < 0 && status !== '—') {
-            var exM = makeQuestion('What is the status of the ' + name + ' ISRO mission?', status, seq++, 'ISRO Missions', '\uD83D\uDE80', name + ' status: ' + status);
-            if (exM && !existingKeys[eventKey(exM)]) { newQuestions.push(exM); existingKeys[eventKey(exM)] = true; count++; }
-          }
         }
       }
     });
