@@ -236,10 +236,12 @@ function parseDateFromLabel(label) {
   return day;
 }
 
-function makeQuestion(event, seq) {
-  var id = 'state_' + event.year + '_' + pad(event.month) + '_' + pad(seq);
-  var pubDate = event.year + '-' + pad(event.month) + '-' + pad(event.day) + 'T12:00:00.000Z';
-
+// Blank the entity out of an event's text (the fill-in-the-blank target) and
+// return {question, answer}. Used by both makeQuestion and eventKey so that a
+// freshly-scored raw event and the same event already saved as a question
+// dedupe identically (previously they did NOT, causing every rerun to re-add
+// the previous run's events as duplicates).
+function buildBlank(event) {
   var qText = event.text;
   var answer = event.entity;
   if (qText.length > 250) qText = qText.substring(0, 247) + '...';
@@ -259,6 +261,16 @@ function makeQuestion(event, seq) {
       finalAnswer = m2[0];
     }
   }
+  return { question: blankText, answer: finalAnswer };
+}
+
+function makeQuestion(event, seq) {
+  var id = 'state_' + event.year + '_' + pad(event.month) + '_' + pad(seq);
+  var pubDate = event.year + '-' + pad(event.month) + '-' + pad(event.day) + 'T12:00:00.000Z';
+
+  var built = buildBlank(event);
+  var qText = built.question;
+  var finalAnswer = built.answer;
 
   return {
     id: id,
@@ -270,36 +282,23 @@ function makeQuestion(event, seq) {
     subject: 'PIB Releases',
     subSubject: 'State Affairs',
     emoji: '\uD83C\uDFDB\uFE0F',
-    question: blankText,
+    question: qText,
     answer: finalAnswer,
     hint: '',
     fact: event.text.substring(0, 500)
   };
 }
 
-function eventKey(q) {
+// Canonical dedup key for an event OR a stored question. For raw events (no
+// question yet) compute the same blanked form makeQuestion would produce, so
+// coming events and saved questions share the same key.
+function eventKey(ev) {
   var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); };
-  var text = n(q.question || q.text || '');
-  var ans = n(q.answer || q.entity || '').replace(/\s+/g, ' ').trim();
-  // Stored questions are truncated by makeQuestion to 250 chars (247 + "...");
-  // truncate candidates identically so long events key the same as their stored copy.
-  if (text.length > 250) text = text.substring(0, 247) + '...';
-  // Normalize so a blanked stored question and its raw source text key the same:
-  // strip blanks, strip the answer word itself, strip any leading date prefix
-  // ("21 March – ..."), and collapse whitespace.
-  var blankRe = /_{2,}/g;
-  var ansEsc = ans.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  var ansRe = ansEsc ? new RegExp('\\b' + ansEsc + '\\b', 'ig') : null;
-  var datePrefixRe = /^\d{1,2}\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)[,.-]?\s*(?:[-–—]\s*)?/i;
-  text = text.replace(blankRe, ' ').replace(datePrefixRe, ' ').trim();
-  if (ansRe) text = text.replace(ansRe, ' ');
-  // Collapse punctuation/currency/hyphen spacing so near-identical variants
-  // key alike ("Prayagraj ," vs "Prayagraj,", "education -reform" vs
-  // "education-reform", "₹ 99 lakh" vs "₹99 lakh").
-  text = text.replace(/([,.;:])\s+/g, '$1 ').replace(/\s+([,.;:])/g, '$1 ')
-            .replace(/\s*[-–—]\s*/g, '-').replace(/₹\s+/g, '₹')
-            .replace(/[.,;\s]+$/g, '');
-  return text.toLowerCase().replace(/\s+/g, ' ').trim();
+  if (!ev.question && ev.text) {
+    var b = buildBlank(ev);
+    return n(b.question).substring(0, 80) + '|' + n(b.answer);
+  }
+  return n(ev.question || ev.text || '').substring(0, 80) + '|' + n(ev.answer || ev.entity || '');
 }
 
 async function fetchMonthEvents(year, month) {
