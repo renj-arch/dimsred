@@ -10,7 +10,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
 function clean(v) {
-  return v.replace(/&#160;/g, ' ').replace(/<[^>]+>/g, ' ').replace(/[[\d\s,\-]+]|&#91;[\d\s,\-]+&#93;/g, '').replace(/\s+/g, ' ').trim();
+  return v.replace(/&#160;/g, ' ').replace(/&amp;/g, '&').replace(/<[^>]+>/g, ' ').replace(/[[\d\s,\-]+]|&#91;[\d\s,\-]+&#93;/g, '').replace(/\s+/g, ' ').trim();
 }
 
 function fetchJSON(url, retries) {
@@ -269,8 +269,34 @@ async function main() {
     console.error('Deduped existing obituaries to ' + healed.length + ' (one per person)');
   }
 
+  // The live site reads current-affairs.json (via build-archive-single.js's
+  // category split), not pib-archive.json. Seed the dedup set and id counter
+  // from current-affairs.json too so already-published people are never re-added
+  // and new ids never collide with ones already live.
+  var CA_PATH = path.resolve(__dirname, '..', 'data/questions/current-affairs.json');
+  try {
+    var liveCA = JSON.parse(fs.readFileSync(CA_PATH, 'utf8'));
+    var liveObits = (liveCA[CA_KEY] && liveCA[CA_KEY].subSubjects && liveCA[CA_KEY].subSubjects[subKey]) || [];
+    liveObits.forEach(function(q) {
+      existingKeys[eventKey(q)] = true;
+      seenPersons[(q.answer || '').toLowerCase().replace(/\s+/g, ' ').trim()] = true;
+    });
+  } catch (e) {}
+
   var newQuestions = [];
   var seq = existing[CA_KEY].subSubjects[subKey].length + 1;
+  existing[CA_KEY].subSubjects[subKey].forEach(function(q) {
+    var m = /^obit_(\d+)$/.exec(q.id || '');
+    if (m) seq = Math.max(seq, parseInt(m[1], 10) + 1);
+  });
+  try {
+    var liveCA = JSON.parse(fs.readFileSync(CA_PATH, 'utf8'));
+    var liveObits = (liveCA[CA_KEY] && liveCA[CA_KEY].subSubjects && liveCA[CA_KEY].subSubjects[subKey]) || [];
+    liveObits.forEach(function(q) {
+      var m = /^obit_(\d+)$/.exec(q.id || '');
+      if (m) seq = Math.max(seq, parseInt(m[1], 10) + 1);
+    });
+  } catch (e) {}
 
   var bioCache = bio.loadBioCache();
 

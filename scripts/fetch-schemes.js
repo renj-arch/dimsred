@@ -5,6 +5,7 @@ var path = require('path');
 var API = 'https://en.wikipedia.org/w/api.php';
 var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
+var expander = require('./expand-row');
 
 function clean(v) {
   v = v.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '').replace(/<[^>]+>/g, ' ').replace(/&#(\d+);/g, function(m, c) { return String.fromCharCode(c); });
@@ -125,6 +126,27 @@ async function fetchSchemes(existingKeys, newQuestions, seq) {
           var q = TEMPLATES[ti](row, seq++);
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
+
+        // Expand each row into reverse/attribute variants.
+        var name = clean(row[0]);
+        var yrMatch2 = (clean(row[3]) || '').match(/\b(19|20)\d{2}\b/);
+        var variants = [
+          { tpl: 'Which ministry launched the {name} scheme?', answer: 'value', value: clean(row[2]), max: 90 },
+          { tpl: 'Which government scheme falls under the {value} sector?', answer: 'name', value: clean(row[4]), max: 80 }
+        ];
+        if (yrMatch2) {
+          variants.push({ tpl: 'In which year was the {name} scheme launched?', answer: 'value', value: yrMatch2[0], max: 6 });
+        }
+        var exp = expander.expandRow({
+          name: name,
+          variants: variants,
+          makeQ: function(qText, answer, fact) {
+            return makeQuestion(qText, answer, seq++, 'Government Schemes', '\uD83C\uDFE6', fact);
+          }
+        });
+        exp.forEach(function (eq) {
+          if (eq && !existingKeys[eventKey(eq)]) { newQuestions.push(eq); existingKeys[eventKey(eq)] = true; count++; }
+        });
       }
     });
     console.error('  ' + count + ' scheme questions added\n');

@@ -5,6 +5,7 @@ var path = require('path');
 var API = 'https://en.wikipedia.org/w/api.php';
 var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/pib-archive.json');
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
+var expander = require('./expand-row');
 
 function clean(v) {
   return v.replace(/&#160;/g, ' ').replace(/<[^>]+>/g, ' ').replace(/\[[\d\s,\-]+\]|&#91;[\d\s,\-]+&#93;/g, '').replace(/\s+/g, ' ').trim();
@@ -103,6 +104,8 @@ async function fetchLandmarks(existingKeys, newQuestions, seq) {
           var qText = 'Which landmark case was decided by the Supreme Court of India in ' + yrMatch[0] + '?';
           var q = makeQuestion(qText, name, seq++, 'Landmark Cases', '\u2696', name + ' (' + yrMatch[0] + '): ' + significance.substring(0, 120));
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
+          var exY = makeQuestion('In which year was the landmark case ' + name + ' decided?', yrMatch[0], seq++, 'Landmark Cases', '\u2696', name + ' was decided in ' + yrMatch[0] + ': ' + significance.substring(0, 100));
+          if (exY && !existingKeys[eventKey(exY)]) { newQuestions.push(exY); existingKeys[eventKey(exY)] = true; count++; }
         }
       }
     });

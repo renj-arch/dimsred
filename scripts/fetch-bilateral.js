@@ -6,6 +6,7 @@ var API = 'https://en.wikipedia.org/w/api.php';
 var PIB_PATH = path.resolve(__dirname, '..', 'data/questions/current-affairs.json');
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 var RICH_FACTS = require('./bilateral-explanations.js').RICH_FACTS;
+var expander = require('./expand-row');
 
 function clean(v) {
   return v.replace(/&#160;/g, ' ').replace(/<[^>]+>/g, ' ').replace(/\[[\d\s,\-]+\]|&#91;[\d\s,\-]+&#93;/g, '').replace(/\s+/g, ' ').trim();
@@ -168,6 +169,8 @@ async function fetchRelations(existingKeys, newQuestions, seq) {
         }
         var q = makeQuestion(qText, country, seq++, 'Foreign Relations', '\uD83C\uDF0D', fact);
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
+        var exY = makeQuestion('In which year did India establish diplomatic relations with ' + country + '?', yr, seq++, 'Foreign Relations', '\uD83C\uDF0D', 'India established diplomatic relations with ' + country + ' in ' + yr + '.');
+        if (exY && !existingKeys[eventKey(exY)]) { newQuestions.push(exY); existingKeys[eventKey(exY)] = true; count++; }
       }
     }
     console.error('  ' + count + ' diplomatic relations questions added\n');

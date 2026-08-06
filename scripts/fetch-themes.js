@@ -192,7 +192,8 @@ function makeThemeQuestion(item, seq) {
   var blankText = 'The theme of ' + item[0] + ' 2026 is "' + theme + '".';
   var answer = theme;
 
-  return {
+  var range = [];
+  var mainQ = {
     id: id,
     type: 'fill_blank',
     category: 'Current Affairs',
@@ -207,6 +208,42 @@ function makeThemeQuestion(item, seq) {
     hint: '',
     fact: 'The theme of ' + item[0] + ' 2026 is "' + theme + '". ' + item[0] + ' is observed on ' + item[1] + ' annually.' + (host ? ' Host country: ' + host + '.' : '')
   };
+  range.push(mainQ);
+  var dateQ = {
+    id: 'theme_' + pad(seq + 1),
+    type: 'fill_blank',
+    category: 'Current Affairs',
+    region: '',
+    source: 'UN',
+    pubDate: pubDate,
+    subject: 'Current Affairs',
+    subSubject: 'Important Days & Themes',
+    emoji: item[2],
+    question: 'On which date is ' + item[0] + ' observed every year?',
+    answer: item[1],
+    hint: '',
+    fact: item[0] + ' is observed on ' + item[1] + ' annually.'
+  };
+  range.push(dateQ);
+  if (host && host.length > 2) {
+    var hostQ = {
+      id: 'theme_' + pad(seq + 2),
+      type: 'fill_blank',
+      category: 'Current Affairs',
+      region: '',
+      source: 'UN',
+      pubDate: pubDate,
+      subject: 'Current Affairs',
+      subSubject: 'Important Days & Themes',
+      emoji: item[2],
+      question: 'Which country hosted ' + item[0] + ' 2026?',
+      answer: host,
+      hint: '',
+      fact: 'Host country of ' + item[0] + ' 2026: ' + host + '.'
+    };
+    range.push(hostQ);
+  }
+  return range;
 }
 
 function eventKey(q) {
@@ -279,25 +316,28 @@ async function main() {
       process.stdout.write('Known: "' + item[4].substring(0, 60) + '"');
     }
 
-    var q = makeThemeQuestion(item, seq);
-    if (q) {
-      var key = eventKey(q);
-      var existingQ = byQuestion[q.question];
-      if (existingQ && existingQ.answer !== q.answer) {
-        existingQ.answer = q.answer;
-        existingQ.fact = q.fact;
-        existingQ.emoji = q.emoji;
-        delete existingKeys[eventKey(existingQ)];
-        existingKeys[eventKey(existingQ)] = true;
-        updated++;
-        process.stdout.write(' (fixed ' + existingQ.id + ')');
-      } else if (!existingKeys[key]) {
-        newQuestions.push(q);
-        existingKeys[key] = true;
-        seq++;
-        process.stdout.write(' \u2713');
-      } else {
-        process.stdout.write(' (dup)');
+    var qs = makeThemeQuestion(item, seq);
+    if (qs) {
+      for (var qi = 0; qi < qs.length; qi++) {
+        var q = qs[qi];
+        var key = eventKey(q);
+        var existingQ = byQuestion[q.question];
+        if (existingQ && existingQ.answer !== q.answer) {
+          existingQ.answer = q.answer;
+          existingQ.fact = q.fact;
+          existingQ.emoji = q.emoji;
+          delete existingKeys[eventKey(existingQ)];
+          existingKeys[eventKey(existingQ)] = true;
+          updated++;
+          process.stdout.write(' (fixed ' + existingQ.id + ')');
+        } else if (!existingKeys[key]) {
+          newQuestions.push(q);
+          existingKeys[key] = true;
+          seq++;
+          process.stdout.write(' \u2713');
+        } else {
+          process.stdout.write(' (dup)');
+        }
       }
     } else {
       process.stdout.write(' (skipped - TBD)');
