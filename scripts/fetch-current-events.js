@@ -185,16 +185,15 @@ function parseDateFromLabel(label) {
 
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
-function makeQuestion(event, seq) {
-  var id = 'ce_' + event.year + '_' + pad(event.month) + '_' + pad(seq);
-  var monthLabel = MONTHS[event.month - 1] + ' ' + event.year;
-  var day = event.day || 15;
-  var pubDate = event.year + '-' + pad(event.month) + '-' + pad(day) + 'T12:00:00.000Z';
-
+// Blank the entity out of an event's text (the fill-in-the-blank target) and
+// return {question, answer}. Used by both makeQuestion and eventKey so that a
+// freshly-scored raw event and the same event already saved as a question
+// dedupe identically (previously they did NOT, causing every rerun to re-add
+// the previous run's events as duplicates).
+function buildBlank(event) {
   var qText = normEnc(event.text);
   var answer = normEnc(event.entity);
-  if (qText.length > 250) qText = qText.substring(0, 247) + '...';
-
+  if (qText.length > 250 && !event.keepFull) qText = qText.substring(0, 247) + '...';
   var blankText = qText;
   var finalAnswer = answer;
   var answerEscaped = answer.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -210,6 +209,18 @@ function makeQuestion(event, seq) {
       finalAnswer = m2[0];
     }
   }
+  return { question: blankText, answer: finalAnswer };
+}
+
+function makeQuestion(event, seq) {
+  var id = 'ce_' + event.year + '_' + pad(event.month) + '_' + pad(seq);
+  var monthLabel = MONTHS[event.month - 1] + ' ' + event.year;
+  var day = event.day || 15;
+  var pubDate = event.year + '-' + pad(event.month) + '-' + pad(day) + 'T12:00:00.000Z';
+
+  var built = buildBlank(event);
+  var qText = built.question;
+  var finalAnswer = built.answer;
 
   return {
     id: id,
@@ -221,15 +232,22 @@ function makeQuestion(event, seq) {
     subject: 'Current Affairs',
     subSubject: monthLabel,
     emoji: '',
-    question: blankText,
+    question: qText,
     answer: finalAnswer,
     hint: '',
     fact: event.text.substring(0, 500)
   };
 }
 
+// Canonical dedup key for an event OR a stored question. For raw events (no
+// question yet) compute the same blanked form makeQuestion would produce, so
+// coming events and saved questions share the same key.
 function eventKey(ev) {
   var n = function(s) { return normEnc((s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'')); };
+  if (!ev.question && ev.text) {
+    var b = buildBlank(ev);
+    return n(b.question).substring(0, 80) + '|' + n(b.answer);
+  }
   return n(ev.question || ev.text || '').substring(0, 80) + '|' + n(ev.answer || ev.entity || '');
 }
 
