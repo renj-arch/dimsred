@@ -89,24 +89,6 @@ allQuestions.forEach(q => {
   tree[c][s][ss].push(q);
 });
 
-// Obituaries are generated from append-only fetch runs whose question template
-// rotates each run, so the question+answer dedup above cannot catch the same
-// person appearing twice. Dedupe the Obituaries list by the person (answer),
-// keeping the entry with the richest explanation/fact.
-function dedupeObituaries(qs) {
-  const byPerson = {};
-  qs.forEach(q => {
-    const p = (q.answer || '').toLowerCase().replace(/\s+/g, ' ').trim();
-    if (!byPerson[p] || (q.fact || '').length > (byPerson[p].fact || '').length) byPerson[p] = q;
-  });
-  return Object.keys(byPerson).sort().map(k => byPerson[k]);
-}
-for (const c of Object.keys(tree)) {
-  for (const s of Object.keys(tree[c])) {
-    if (tree[c][s]['Obituaries']) tree[c][s]['Obituaries'] = dedupeObituaries(tree[c][s]['Obituaries']);
-  }
-}
-
 // Merge Indian Current Affairs into Current Affairs subject (not as separate subject)
 if (tree['Indian Current Affairs']) {
   if (!tree['Current Affairs']) tree['Current Affairs'] = {};
