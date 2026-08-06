@@ -58,7 +58,7 @@ function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
 function strip(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
 
-var OFFICES = [
+var OFFICES_CONST = [
   { page: 'Chief_of_the_Army_Staff_(India)', label: 'Chief of the Army Staff', q: 'Who is the current Chief of the Army Staff (COAS) of India?', emoji: '\uD83C\uDFC1' },
   { page: 'Chief_of_the_Naval_Staff_(India)', label: 'Chief of the Naval Staff', q: 'Who is the current Chief of the Naval Staff (CNS) of India?', emoji: '\uD83D\uDEE5' },
   { page: 'Chief_of_the_Air_Staff_(India)', label: 'Chief of the Air Staff', q: 'Who is the current Chief of the Air Staff (CAS) of India?', emoji: '\u2708' },
@@ -86,6 +86,70 @@ var OFFICES = [
   { page: 'National_Commission_for_Women', label: 'NCW Chairperson', labelField: 'Chairperson', q: 'Who is the current Chairperson of the National Commission for Women (NCW)?', emoji: '\uD83D\uDC69\u200D\u2696' },
 ];
 
+// Curated position lists that Wikidata does NOT model with a current officeholder
+// (P1308), so the auto-discovery query below can't return them. The incumbent
+// is still fetched live each run from each position's Wikipedia "List of ..."
+// infobox, so answers stay current automatically. Includes all state Governors,
+// all state Chief Ministers, and the Chief Justices of the High Courts.
+var STATE_GOVERNORS = [];
+var STATE_CMS = [];
+var HC_CHIEF_JUSTICES = [];
+(function () {
+  const GOV = ['Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal'];
+  GOV.forEach(function (s) {
+    var page = 'List_of_governors_of_' + s.replace(/\s+/g, '_');
+    if (s === 'Punjab') page = 'List_of_governors_of_Punjab,_India';
+    STATE_GOVERNORS.push({ page: page, label: 'Governor of ' + s, labelField: 'Incumbent', q: 'Who is the current Governor of ' + s + '?', emoji: '\uD83C\uDFDB' });
+  });
+  ['Jharkhand','Manipur','Meghalaya','Punjab','Sikkim'].forEach(function (s) {
+    var page = 'List_of_chief_ministers_of_' + s.replace(/\s+/g, '_');
+    if (s === 'Punjab') page = 'Chief_Minister_of_Punjab,_India';
+    STATE_CMS.push({ page: page, label: 'Chief Minister of ' + s, labelField: 'Incumbent', q: 'Who is the current Chief Minister of ' + s + '?', emoji: '\uD83C\uDFE2' });
+  });
+  // Chief Justices of the High Courts are all listed (with the current incumbent)
+  // in one consolidated Wikipedia article, not in per-court infoboxes. We parse
+  // that table at runtime, so no per-HC page fetch is needed. `hcCourt` is the
+  // exact "High Court" column value we match against.
+  const HCS = {
+    'Allahabad': 'Allahabad', 'Andhra Pradesh': 'Andhra Pradesh', 'Bombay': 'Bombay', 'Calcutta': 'Calcutta', 'Chhattisgarh': 'Chhattisgarh', 'Delhi': 'Delhi', 'Gauhati': 'Gauhati', 'Gujarat': 'Gujarat', 'Himachal Pradesh': 'Himachal Pradesh', 'Jammu and Kashmir and Ladakh': 'Jammu &amp; Kashmir and Ladakh', 'Jharkhand': 'Jharkhand', 'Karnataka': 'Karnataka', 'Kerala': 'Kerala', 'Madhya Pradesh': 'Madhya Pradesh', 'Madras': 'Madras', 'Manipur': 'Manipur', 'Meghalaya': 'Meghalaya', 'Mizoram': 'Mizoram', 'Nagaland': 'Nagaland', 'Orissa': 'Orissa', 'Patna': 'Patna', 'Punjab and Haryana': 'Punjab &amp; Haryana', 'Rajasthan': 'Rajasthan', 'Sikkim': 'Sikkim', 'Telangana': 'Telangana', 'Tripura': 'Tripura', 'Uttarakhand': 'Uttarakhand'
+  };
+  Object.keys(HCS).forEach(function (hc) {
+    HC_CHIEF_JUSTICES.push({ page: 'List_of_Chief_Justices_of_High_Courts_of_India', courtKey: HCS[hc], label: 'Chief Justice of the ' + hc + ' High Court', q: 'Who is the current Chief Justice of the ' + hc + ' High Court?', emoji: '\u2696' });
+  });
+})();
+var OFFICES = OFFICES_CONST.concat(STATE_GOVERNORS).concat(STATE_CMS).concat(HC_CHIEF_JUSTICES);
+
+// Parse the consolidated "List of Chief Justices of High Courts of India" article
+// into a map of "High Court" column value -> current Chief Justice name. One
+// fetch + one table parse for all High Courts. Returns {} on any failure.
+async function fetchHighCourtJustices() {
+  const TITLE = 'List_of_Chief_Justices_of_High_Courts_of_India';
+  try {
+    var res = await fetchJSON(API + '?action=parse&page=' + encodeURIComponent(TITLE) + '&redirects=1&prop=text&format=json');
+    if (!res || !res.parse || !res.parse.text) return {};
+    var html = res.parse.text['*'];
+    var tbls = html.match(/<table[^>]*class="[^"]*wikitable[^"]*"[^>]*>([\s\S]*?)<\/table>/gi) || [];
+    var t = tbls[tbls.length - 1];
+    if (!t) return {};
+    var rows = t.match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi) || [];
+    var out = {};
+    for (var i = 0; i < rows.length; i++) {
+      var row = rows[i];
+      var th = row.match(/<th[^>]*>([\s\S]*?)<\/th>/i);
+      if (!th) continue;
+      var hcName = strip(th[1]).replace(/\s+/g, ' ').trim();
+      if (!/High Court/.test(hcName)) continue;
+      var tds = row.match(/<td[^>]*>([\s\S]*?)<\/td>/gi) || [];
+      if (tds.length < 2) continue;
+      var name = extractNameFromCell(tds[1]);
+      if (name) out[hcName] = name;
+    }
+    return out;
+  } catch (e) {
+    return {};
+  }
+}
+
 var WIKIDATA_SPARQL = 'https://query.wikidata.org/sparql';
 
 // Auto-discovery of India office-holder positions with a current incumbent.
@@ -97,11 +161,12 @@ var WIKIDATA_SPARQL = 'https://query.wikidata.org/sparql';
 var DISCOVER_QUERY = `
 SELECT ?position ?positionLabel ?holderLabel ?article WHERE {
   ?position wdt:P31/wdt:P279* wd:Q4164871 .
-  ?position wdt:P17 wd:Q668 .
   ?position p:P1308 ?st .
   ?st ps:P1308 ?holder .
-  ?st pq:P580 ?start .
   FILTER NOT EXISTS { ?st pq:P582 ?end . }
+  { ?position wdt:P17 wd:Q668 . }
+  UNION
+  { ?holder wdt:P27 wd:Q668 . }
   OPTIONAL {
     ?article schema:about ?position .
     ?article schema:isPartOf <https://en.wikipedia.org/> .
@@ -167,12 +232,11 @@ async function resolvePages(titles) {
 var NOISE_PATTERNS = [
   /\bMayor of\b/i,
   /\bPrincipal of\b/i,
-  /\bAmbassador of\b/i,
-  /\bHigh Commissioner of\b/i,
-  /ambassador to India/i,
-  /Secretary-General/i,
-  /\bfield marshal\b/i,
+  /\bschool\b/i,
+  /\bcollege\b/i,
+  /\buniversity\b/i,
   /\bGrand Mufti\b/i,
+  /\bBishop of\b/i,
   /Leader of (?:the )?Opposition of [A-Z]/i, // state-level LoP, not national
   /Minister of .+ \(/,                     // state ministers (anything with a state qualifier)
   /Minister of .+, \w+/,                   // state ministers (Kerala, etc.)
@@ -180,7 +244,9 @@ var NOISE_PATTERNS = [
   /Deputy Leader of/,                      // niche deputy roles
   /Deputy leader of opposition/,           // niche deputy roles
   /Legislative Assembly/,                  // state-assembly staff roles
-  /Deputy Speaker/,                        // deputy speakers (state/national niche)
+  /General Secretary/,                     // generic body secretary
+  /Head of the Mission/,                   // redundant with ambassador/high-commissioner
+  /\bCounsel to\b/,
   /\bQ\d+\b/                                 // label-less Q-entities
 ];
 
@@ -227,26 +293,30 @@ async function discoverPositions() {
   for (var j = 0; j < out.length; j++) {
     if (!out[j].page) out[j].page = labelToPage(out[j].positionLabel);
   }
-  // Batch-resolve titles (following redirects) in one API call, then drop
-  // positions whose guessed title doesn't exist on English Wikipedia.
-  var map = await resolvePages(out.map(function(d) { return d.page; }));
-  out = out.filter(function(d) { return map[d.page]; });
-  out.forEach(function(d) { d.page = map[d.page]; });
+  // Batch-resolve titles (following redirects) in one API call. Positions whose
+  // guessed title doesn't exist are kept with the Wikidata holder fallback (their
+  // incumbents are still known via Wikidata even without an English article).
+  try {
+    var map = await resolvePages(out.map(function(d) { return d.page; }));
+    out.forEach(function(d) { if (map[d.page]) d.page = map[d.page]; });
+  } catch (e) {}
   out.sort(function(a, b2) { return normLabel(a.positionLabel) < normLabel(b2.positionLabel) ? -1 : 1; });
   return out;
 }
 
 // Build a Wikipedia-backed "office" spec for a discovered position. The
-// incumbent is read from the position's Wikipedia infobox (via fetchAppointment),
-// NOT from Wikidata, so stale/vandalized Wikidata entries can't produce wrong
-// answers. Positions without an English Wikipedia article are skipped.
+// incumbent is preferred from the position's Wikipedia infobox (via
+// fetchAppointment) so stale/vandalized Wikidata entries can't produce wrong
+// answers. If the position has no English Wikipedia article (or its infobox
+// has no incumbent row — e.g. governors, ambassadors), fall back to the
+// Wikidata officeholder label carried over from the discovery query.
 function discoveredToOffice(discovered) {
-  var page = discovered.page;
-  if (!page) return null;
   var label = discovered.positionLabel;
+  if (!label) return null;
   return {
-    page: page,
+    page: discovered.page || labelToPage(label),
     label: label,
+    holderLabel: discovered.holderLabel || '',
     labelField: 'Incumbent',
     q: 'Who is the current ' + label + '?',
     emoji: '\uD83D\uDC68\u200D\uD83D\uDCBC',
@@ -283,11 +353,13 @@ function isPersonName(s) {
     if (!w) return false;
     if (/^\d/.test(w)) return false;
     if (w === w.toLowerCase() && w.indexOf('.') === -1) return false;
+    if (/^[A-Z]{2,}$/.test(w) && w.indexOf('.') === -1) return false;
     return true;
   });
   if (namey.length === 0) return false;
   var joined = namey.join(' ');
   if (new RegExp('\\b(?:' + BAD_WORDS.join('|') + ')\\b', 'i').test(joined)) return false;
+  if (/\b(?:ministry|department|board|council|commission|secretariat|university|committee|foundation|institute|authority|trust|forum|division|office of|government of|scheme|mission|programme|program|logo|emblem|insignia)\b/i.test(t)) return false;
   return true;
 }
 
@@ -320,6 +392,9 @@ function extractIncumbent(html, labelField) {
     labelsToTry.push(labelField);
     if (labelField === 'Chairperson') labelsToTry.push('Chairman');
     if (labelField === 'Commissioner') labelsToTry.push('Chief Commissioner');
+  }
+  if (!labelField || labelField === 'Incumbent') {
+    labelsToTry.push('Minister responsible', 'Ministers responsible', 'Minister');
   }
 
   var rows = section.match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
@@ -439,6 +514,11 @@ async function main() {
 
   var found = 0, notFound = 0, updated = 0, added = 0;
 
+  // Pre-fetch the consolidated High Court Chief Justice table (one fetch for all
+  // 25 High Courts), used by candidates that carry a `courtKey`.
+  var hcJustices = {};
+  try { hcJustices = await fetchHighCourtJustices(); } catch (e) {}
+
   // Build dedup keys for curated offices (skip discovered positions that match,
   // e.g. a Wikidata "Chief of the Army Staff" vs curated COAS entry).
   var curatedKeys = [];
@@ -462,7 +542,7 @@ async function main() {
       candidates.push({ office: office });
       addedDisc++;
     }
-    console.error('Discovered ' + discovered.length + ' Wikidata positions, added ' + addedDisc + ' new (each verified via its Wikipedia article)');
+    console.error('Discovered ' + discovered.length + ' Wikidata positions, added ' + addedDisc + ' new (incumbent via infobox or Wikidata fallback)');
   } catch (e) {
     console.error('Wikidata discovery failed (using curated list only): ' + e.message);
   }
@@ -471,10 +551,28 @@ async function main() {
     var cand = candidates[oi];
     var label = cand.office.label;
     process.stdout.write('  ' + label + '... ');
-    var name = await fetchAppointment(cand.office);
+    var name = null;
+    if (cand.office.courtKey) {
+      // High Court CJ: look up in the consolidated table (already fetched once).
+      var hcName = hcJustices[cand.office.courtKey] || hcJustices[cand.office.courtKey + ' High Court'];;
+      if (hcName) name = hcName;
+    } else {
+      name = await fetchAppointment(cand.office);
+    }
     if (name) {
       process.stdout.write(name.substring(0, 50) + '\n');
       found++;
+    } else if (cand.office.holderLabel) {
+      // Fall back to the Wikidata officeholder (clean + validate it looks like a person).
+      var wName = cleanName(cand.office.holderLabel);
+      if (isPersonName(wName)) {
+        name = wName;
+        process.stdout.write(wName.substring(0, 50) + ' (from Wikidata)\n');
+        found++;
+      } else {
+        process.stdout.write('NOT FOUND\n');
+        notFound++;
+      }
     } else {
       process.stdout.write('NOT FOUND\n');
       notFound++;
