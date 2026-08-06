@@ -181,6 +181,54 @@ var RANK_OVERRIDES = {
   'Environmental Performance Index': {
     rank: '176',
     fact: 'India ranked 176th out of 180 countries in the Environmental Performance Index (EPI) 2024, scoring 27.6. Published by Yale & Columbia universities, EPI ranks countries on climate change, environmental health and ecosystem vitality. India slid from 155th (2014) to 176th (2024), weighed down by air quality and climate-policy metrics.'
+  },
+  'Global Competitiveness Index': {
+    rank: '68',
+    fact: 'India ranked 68th out of 141 economies in the World Economic Forum Global Competitiveness Report 2019 (the final edition, as the index has since been discontinued). India scored 61.4 (1-100 scale), ranked 8th among BRICS nations after China (28th). The WEF TRindex was retired after the 2019 edition and replaced by other measures.'
+  },
+  'Democracy Index': {
+    rank: '47',
+    fact: 'India ranked 47th out of 167 countries in the EIU Democracy Index 2025 (published by the Economist Intelligence Unit), with a score of 6.96 (a "flawed democracy"), dropping six places from 41st in 2024. Norway topped the index; North Korea ranked last. India was the only major democracy to fall sharply among its peers on civil liberties and the functioning of government.'
+  },
+  'Human Development Index': {
+    rank: '130',
+    fact: 'India ranked 130th out of 193 countries in the UNDP Human Development Report 2025 (released in May 2025), with an HDI value of 0.685 (2023 data), placing India in the medium human development category. India rose three places from 133rd in 2022, helped by renewed growth in life expectancy, schooling and per-capita income. Iceland topped the index.'
+  },
+  'Social Progress Index': {
+    rank: '109',
+    fact: 'India ranked 109th out of 171 countries in the Social Progress Index 2026 published by the Social Progress Imperative, improving one place from 110th in 2025. India ranks above its income level on Shelter and basic needs but lags on environmental quality, inclusiveness and personal rights. Norway topped the 2026 index.'
+  },
+  'IMD World Competitiveness': {
+    rank: '41',
+    fact: 'India ranked 41st out of 69 economies in the IMD World Competitiveness Ranking 2025, slipping two places from 39th in 2024. Switzerland retained the top slot with 100 points, followed by Singapore and Hong Kong. India maintained strong economic performance but was weighed down by infrastructure and government-efficiency weaknesses.'
+  },
+  'Global Peace Index': {
+    rank: '127',
+    fact: 'India ranked 127th out of 163 countries in the Global Peace Index (GPI) 2026 published by the Institute for Economics & Peace (IEP), dropping 12 places from 115th in 2025 amid a less peaceful global trend. Iceland remained the most peaceful country; India is rated a "low" peace category. The 2026 edition was released around June 2026.'
+  },
+  'World Justice Project Rule of Law Index': {
+    rank: '86',
+    fact: 'India ranked 86th out of 143 countries in the WJP Rule of Law Index 2025, falling six places from 2024 position with an overall score of 0.49. The index published by the World Justice Project. Regionally India ranked 3rd of 6 South Asian nations. Denmark topped the 2025 index, followed by Norway.'
+  },
+  'Network Readiness Index': {
+    rank: '45',
+    fact: 'India ranked 45th out of 127 economies in the Network Readiness Index (NRI) 2025, improving four places with a score of 54.43 (up from 53.63 in 2024). The index, published by the Portulans Institute, ranks network readiness in the Applications of ICT. India climbed to 1st globally in annual investment in telecom services, AI publications, ICT exports and e-commerce legislation.'
+  },
+  'SDG Index': {
+    rank: '94',
+    fact: 'India ranked 94th out of 167 countries in the UN Sustainable Development Goals (SDG) Index 2026, with a score of 68.3 out of 100, according to the Sustainable Development Report 2026 released by the UN Sustainable Development Solutions Network (SDSN). This was India\'s highest ever rank, up from 99th in 2025 and 112th in 2015. Finland topped the 2026 index.'
+  },
+  'Global Slavery Index': {
+    rank: '55',
+    fact: 'India ranked 55th out of 160 countries in the Global Slavery Index (2025 data, published by the Walk Free / Minderoo Foundation), with an estimated prevalence of 8.0 per 1,000 people, about 11 million people in modern slavery. India sits in the middle of the global ranking; Eritrea and North Korea recorded the highest prevalence.'
+  },
+  'Travel & Tourism Competitiveness Index': {
+    rank: '39',
+    fact: 'India ranked 39th out of 119 economies in the World Economic Forum Travel & Tourism Development Index (TTDI) 2024 (successor to the Tourism Competitiveness Index), with a score of 4.25, up from 54th in 2021 (adjusted to 38th after WEF revised its methodology). India is the highest-ranked South Asian and lower-middle-income economy; the US topped the index.'
+  },
+  'Global Financial Centres Index': {
+    rank: '43',
+    fact: 'In the Global Financial Centres Index (GFCI 38, September 2025) compiled by Z/Yen and the China Development Institute, India\'s GIFT City (Gandhinagar) ranked 43rd out of 156 financial centres, up from 46th in GFCI 37, the only Indian centre to feature among the top 15 in the Asia-Pacific. India\'s other centres ranked: Mumbai 46th and New Delhi 54th. New York and London topped the index.'
   }
 };
 
