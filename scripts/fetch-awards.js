@@ -39,10 +39,16 @@ function fetchJSONWithRetry(url, retries) {
 }
 
 function fetchPageText(title) {
-  return fetchJSONWithRetry(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
+  return fetchJSONWithRetry(API + '?action=parse&page=' + encodeURIComponent(title) + '&redirects=1&prop=text&format=json').then(function(d) {
     if (d && d.parse && d.parse.text) return d.parse.text['*'];
     return '';
   });
+}
+
+// The Padma/Bharat Ratna infoboxes expose the most recent honorees under
+// "Final award" (renamed from "Latest award" on some pages), so try both.
+function extractLatestAwardField(html) {
+  return extractInfoboxField(html, 'Final award') || extractInfoboxField(html, 'Latest award');
 }
 
 function extractInfoboxField(html, label) {
@@ -344,7 +350,7 @@ async function main() {
   // 1. Bharat Ratna
   process.stdout.write('  Bharat Ratna... ');
   var html = await fetchPageText('Bharat_Ratna');
-  var latest = extractInfoboxField(html, 'Latest award');
+  var latest = extractLatestAwardField(html);
   if (latest) {
     var cleaned = latest.replace(/^\d{4}\s*/, '').replace(/<br\s*\/?>/gi, '|').replace(/<[^>]+>/g, ' ').replace(/\([^)]*\)/g, '').replace(/posthumous/gi, '').trim();
     var names = cleaned.split('|').map(function(s) { return s.trim(); }).filter(function(s) { return s.length > 5; });
@@ -358,32 +364,33 @@ async function main() {
     process.stdout.write(names.length + ' recipients\n');
   } else process.stdout.write('Not found\n');
 
-  // 2. Padma Awards
+  // 2. Padma Awards (recipients live in dedicated "List of ... award recipients"
+  // decade pages, not the award infobox; use the generic latest-year extractor)
   await delay(600);
   var PADMA_PAGES = [
-    { page: 'Padma_Vibhushan', label: 'Padma Vibhushan', emoji: '\uD83C\uDFC6' },
-    { page: 'Padma_Bhushan', label: 'Padma Bhushan', emoji: '\uD83C\uDFC6' },
-    { page: 'Padma_Shri', label: 'Padma Shri', emoji: '\uD83C\uDFC6' }
+    { page: 'List of Padma Vibhushan award recipients', label: 'Padma Vibhushan', emoji: '\uD83C\uDFC6' },
+    { page: 'List of Padma Bhushan award recipients (2020\u20132029)', label: 'Padma Bhushan', emoji: '\uD83C\uDFC6' },
+    { page: 'List of Padma Shri award recipients (2020\u20132029)', label: 'Padma Shri', nameShift: -1, emoji: '\uD83C\uDFC6' }
   ];
-  var currentYear = new Date().getFullYear();
   for (var pi = 0; pi < PADMA_PAGES.length; pi++) {
     process.stdout.write('  ' + PADMA_PAGES[pi].label + '... ');
-    var recipients = await fetchTableRecipients(PADMA_PAGES[pi].page, '' + currentYear, 1, 0, PADMA_PAGES[pi].label, 'Who received the {award} in {year}?', PADMA_PAGES[pi].emoji);
-    if (recipients.length === 0) {
-      var htmlP = await fetchPageText(PADMA_PAGES[pi].page);
-      var infoboxLatest = extractInfoboxField(htmlP, 'Latest award');
-      if (infoboxLatest) {
-        recipients = extractNamesFromHtml(infoboxLatest);
-      }
-    }
     var padmaCount = 0;
-    recipients.forEach(function(r) {
-      var name = typeof r === 'string' ? r : r.name;
-      var year = typeof r === 'string' ? currentYear : r.year;
-      var q = makeQuestion('Who was awarded the ' + PADMA_PAGES[pi].label + ' in ' + year + '?', name, seq++, '' + PADMA_PAGES[pi].label, PADMA_PAGES[pi].emoji, name + ' received the ' + PADMA_PAGES[pi].label + ' in ' + year + '.');
-      if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; padmaCount++; }
-    });
-    process.stdout.write(padmaCount + ' recipients\n');
+    try {
+      var pres = await fetchGenericLatestWinners(PADMA_PAGES[pi].page, { yearCol: 0, nameCol: 2, nameShift: PADMA_PAGES[pi].nameShift || 0 });
+      if (pres && pres.winners.length > 0) {
+        var year = pres.year;
+        // One combined question per award-year listing every recipient, mirroring
+        // the Arjuna/Nobel pattern. (Per-recipient questions would otherwise
+        // collapse to one via eventKey dedup.)
+        var names = pres.winners.map(function(w) { return w.name.replace(/[#*\u2020\u2032^]+/g, '').replace(/\s+/g, ' ').trim(); }).filter(function(n) { return n.length >= 3; });
+        if (names.length > 0) {
+          var combined = names.join(', ');
+          var q = makeQuestion('Who was awarded the ' + PADMA_PAGES[pi].label + ' in ' + year + '?', combined, seq++, '' + PADMA_PAGES[pi].label, PADMA_PAGES[pi].emoji, 'The ' + PADMA_PAGES[pi].label + ' ' + year + ' was conferred on ' + combined + '.');
+          if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; padmaCount++; }
+        }
+        process.stdout.write(padmaCount + ' new question (' + year + ', ' + names.length + ' people)\n');
+      } else process.stdout.write('Not found\n');
+    } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
     await delay(600);
   }
 
@@ -560,28 +567,24 @@ async function main() {
   // 8. Sports Awards
   await delay(600);
   var SPORTS_PAGES = [
-    { page: 'Major_Dhyan_Chand_Khel_Ratna_Award', label: 'Khel Ratna', q: 'Who received the Major Dhyan Chand Khel Ratna Award in {year}?', yearCol: 0, nameCol: 1, emoji: '\uD83C\uDFC6' },
-    { page: 'Arjuna_Award', label: 'Arjuna Award', q: 'Who received the Arjuna Award in {year}?', yearCol: 0, nameCol: 1, emoji: '\uD83C\uDFC6' },
+    { page: 'Khel_Ratna_Award', label: 'Khel Ratna', q: 'Who received the Major Dhyan Chand Khel Ratna Award in {year}?', yearCol: 0, nameCol: 1, nameShift: -1, emoji: '\uD83C\uDFC6' },
+    { page: 'List of Arjuna Award recipients (2020\u20132029)', label: 'Arjuna Award', q: 'Who received the Arjuna Award in {year}?', yearCol: 0, nameCol: 1, emoji: '\uD83C\uDFC6' },
     { page: 'Dronacharya_Award', label: 'Dronacharya Award', q: 'Who received the Dronacharya Award in {year}?', yearCol: 0, nameCol: 1, emoji: '\uD83C\uDFC6' }
   ];
   for (var si = 0; si < SPORTS_PAGES.length; si++) {
     process.stdout.write('  ' + SPORTS_PAGES[si].label + '... ');
-    var recipients = await fetchTableRecipients(SPORTS_PAGES[si].page, '(2024|2025|2026)', SPORTS_PAGES[si].nameCol, SPORTS_PAGES[si].yearCol, SPORTS_PAGES[si].label, SPORTS_PAGES[si].q, SPORTS_PAGES[si].emoji);
-    // Group recipients by year for combined questions
-    var byYear = {};
-    recipients.forEach(function(r) {
-      if (!byYear[r.year]) byYear[r.year] = [];
-      byYear[r.year].push(r.name);
-    });
     var sportCount = 0;
-    Object.keys(byYear).forEach(function(year) {
-      var names = byYear[year];
-      var combinedAnswer = names.join(', ');
-      var qText = SPORTS_PAGES[si].q.replace('{year}', year);
-      var q = makeQuestion(qText, combinedAnswer, seq++, '' + SPORTS_PAGES[si].label, SPORTS_PAGES[si].emoji, names[0] + ' received the ' + SPORTS_PAGES[si].label + ' in ' + year + '.');
-      if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; sportCount++; }
-    });
-    process.stdout.write(sportCount + ' recipients\n');
+    try {
+      var sres = await fetchGenericLatestWinners(SPORTS_PAGES[si].page, SPORTS_PAGES[si]);
+      if (sres && sres.winners.length > 0) {
+        var sCombinedAnswer = sres.winners.map(function(w) { return w.name; }).join(', ');
+        var sFact = sres.winners[0].name + ' received the ' + SPORTS_PAGES[si].label + ' in ' + sres.year + '.';
+        var sqText = SPORTS_PAGES[si].q.replace('{year}', sres.year);
+        var sq = makeQuestion(sqText, sCombinedAnswer, seq++, '' + SPORTS_PAGES[si].label, SPORTS_PAGES[si].emoji, sFact);
+        if (sq && !existingKeys[eventKey(sq)]) { newQuestions.push(sq); existingKeys[eventKey(sq)] = true; sportCount++; }
+        process.stdout.write(sportCount + ' recipient question (' + sres.year + ', ' + sres.winners.length + ' people)\n');
+      } else process.stdout.write('Not found\n');
+    } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
     await delay(600);
   }
 
