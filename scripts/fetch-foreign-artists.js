@@ -4,13 +4,21 @@ const https = require('https');
 
 const API = 'https://en.wikipedia.org/w/api.php';
 
-function wikiFetch(params) {
+const AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
+
+function wikiFetch(params, retries) {
+  if (retries === undefined) retries = 3;
   const qs = Object.entries(params).map(([k,v]) => k + '=' + encodeURIComponent(v)).join('&');
   return new Promise((resolve, reject) => {
-    https.get(API + '?' + qs + '&origin=*&format=json', { headers: { 'User-Agent': 'studypro-wiki/1.0' } }, res => {
+    https.get(API + '?' + qs + '&origin=*&format=json', { agent: AGENT, headers: { 'User-Agent': 'studypro-wiki/1.0' } }, res => {
       let d = '';
       res.on('data', c => d += c);
       res.on('end', () => {
+        if (res.statusCode === 429 && retries > 0) {
+          const wait = Math.pow(2, 4 - retries) * 3000;
+          console.error('HTTP 429, retrying in ' + (wait / 1000) + 's... (' + retries + ' left)');
+          return setTimeout(() => wikiFetch(params, retries - 1).then(resolve, reject), wait);
+        }
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch(e) { reject(e); }
       });
