@@ -70,9 +70,6 @@
 
         .question-card{padding:36px 28px 28px;border-radius:var(--radius);border:1px solid var(--glass-border);background:var(--glass-bg);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);margin-bottom:16px;text-align:center;box-shadow:var(--shadow)}
         .question-card .q-num{font-size:.72em;color:var(--text-muted);margin-bottom:4px;font-weight:500}
-        .q-meta{display:flex;justify-content:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
-        .q-section{font-size:.66em;font-weight:700;color:var(--text-sec);padding:3px 10px;border-radius:100px;border:1px solid var(--border);background:rgba(255,255,255,.03);text-transform:uppercase;letter-spacing:.05em}
-        .q-tier{font-size:.66em;font-weight:800;padding:3px 10px;border-radius:100px;text-transform:uppercase;letter-spacing:.05em}
         .question-card .q-progress{height:4px;background:rgba(255,255,255,.06);border-radius:100px;margin-bottom:20px;overflow:hidden}
         .question-card .q-progress .fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--emerald));border-radius:100px;transition:width .4s cubic-bezier(.4,0,.2,1)}
         .question-card .q-text{font-size:clamp(1.1rem,2.5vw,1.4rem);font-weight:700;line-height:1.7;margin-bottom:16px;font-family:'JetBrains Mono',monospace;letter-spacing:.01em}
@@ -215,7 +212,7 @@
             <!-- 🔢 QUANT REFLEX CATEGORY -->
             <div class="category-card" onclick="toggleCategory('quant')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s">
                 <span style="font-size:1.4em">🔢</span>
-                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Quant Reflex</div><div style="font-size:.72em;color:var(--text-muted)">37 topics — Number Sense, Algebra, Geometry, CI, DI, P&L, Stocks & more</div></div>
+                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Quant Reflex</div><div style="font-size:.72em;color:var(--text-muted)">30 topics — Number Sense, Algebra, Geometry, CI, DI, P&L, Stocks & more</div></div>
                 <span class="cat-arrow" id="catArrowQuant" style="color:var(--text-muted);font-size:.8em">▶</span>
                 <div class="stat" id="stat-quant" style="font-size:.7em;color:var(--purple);white-space:nowrap">0 solved</div>
             </div>
@@ -224,7 +221,7 @@
             <!-- 🧠 REASONING REFLEX CATEGORY -->
             <div class="category-card" onclick="toggleCategory('reasoning')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s;margin-top:6px">
                 <span style="font-size:1.4em">🧠</span>
-                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Reasoning Reflex</div><div style="font-size:.72em;color:var(--text-muted)">51 topics — Puzzles, Coding, Syllogism, Clock, Cal, Direction, Non-Verbal & more</div></div>
+                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Reasoning Reflex</div><div style="font-size:.72em;color:var(--text-muted)">48 topics — Puzzles, Coding, Syllogism, Clock, Cal, Direction, Non-Verbal & more</div></div>
                 <span class="cat-arrow" id="catArrowReasoning" style="color:var(--text-muted);font-size:.8em">▶</span>
                 <div class="stat" id="stat-reasoning" style="font-size:.7em;color:var(--purple);white-space:nowrap">0 solved</div>
             </div>
@@ -233,7 +230,7 @@
             <!-- 📖 VERBAL ABILITY CATEGORY -->
             <div class="category-card" onclick="toggleCategory('verbal')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s;margin-top:6px">
                 <span style="font-size:1.4em">📖</span>
-                                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Verbal Ability</div><div style="font-size:.72em;color:var(--text-muted)">21 topics — Synonyms, Antonyms, Grammar, Voice, Comprehension & more</div></div>
+                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Verbal Ability</div><div style="font-size:.72em;color:var(--text-muted)">16 topics — Synonyms, Antonyms, Grammar, Voice, Comprehension & more</div></div>
                 <span class="cat-arrow" id="catArrowVerbal" style="color:var(--text-muted);font-size:.8em">▶</span>
                 <div class="stat" id="stat-verbal" style="font-size:.7em;color:var(--purple);white-space:nowrap">0 solved</div>
             </div>
@@ -257,21 +254,6 @@
                     <span id="speedOverall" style="color:var(--amber)">—</span>
                 </div>
                 <div id="speedGrid"></div>
-            </div>
-
-            <!-- MOCK EXAM -->
-            <div class="mode-card" onclick="startTraining('mock')" style="margin-top:12px;padding:24px;border:2px solid rgba(52,211,153,.3);background:linear-gradient(135deg,rgba(52,211,153,.08),rgba(167,139,250,.08))">
-                <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px">
-                    <span style="font-size:2em">📝</span>
-                    <span style="font-size:1.3em;font-weight:900;background:linear-gradient(135deg,var(--emerald),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent">Mock Exam</span>
-                </div>
-                <div style="font-size:.82em;color:var(--text-sec);text-align:center">Full-length 25-question paper — Quant (10) + Reasoning (10) + Verbal (5)</div>
-                <div style="display:flex;justify-content:center;gap:16px;margin-top:8px;font-size:.7em;color:var(--text-muted)">
-                    <span>🔢 10 Quant</span>
-                    <span>🧠 10 Reasoning</span>
-                    <span>📖 5 Verbal</span>
-                </div>
-                <div class="stat" id="stat-mock" style="margin-top:8px;font-size:.78em">0 solved</div>
             </div>
 
             <!-- GRAND SLAM -->
@@ -313,7 +295,6 @@
         <div class="arena" id="arena">
             <div class="question-card" id="questionCard">
                 <div class="q-num" id="qNum">Q 1 / 10</div>
-                <div class="q-meta" id="qMeta"></div>
                 <div class="q-progress"><div class="fill" id="qProgress" style="width:0%"></div></div>
 
                 <div class="timer-circle" id="timerCircle">10</div>
@@ -393,12 +374,7 @@
         { key:'quantity_comparison', icon:'⚖️', name:'Quantity Comparison', desc:'Compare Quantity I vs Quantity II' },
         { key:'decimal_fraction', icon:'#️⃣', name:'Decimal Fraction', desc:'Fraction↔Decimal, Comparison' },
         { key:'chain_rule', icon:'⛓️', name:'Chain Rule', desc:'Direct/Inverse Proportion, Men-Days-Work' },
-        { key:'logarithm', icon:'📊', name:'Logarithm', desc:'Log Properties, Simplification' },
-        { key:'average', icon:'📏', name:'Average Lab', desc:'Averages, Avg Speed, Weighted Avg, Missing Value' },
-        { key:'ages', icon:'🎂', name:'Ages', desc:'Age Equations, Ratios Present/Future' },
-        { key:'ratio_proportion', icon:'⚗️', name:'Ratio & Proport.', desc:'Ratio Shares, 4th/3rd/Mean Proportion' },
-        { key:'probability', icon:'🎯', name:'Probability', desc:'Balls, Dice, Cards, Independent Events' },
-        { key:'trigonometry', icon:'📐', name:'Trigonometry', desc:'Standard Angles, Height & Distance' }
+        { key:'logarithm', icon:'📊', name:'Logarithm', desc:'Log Properties, Simplification' }
     ];
     var REASONING_TOPICS = [
         { key:'pattern_flash', icon:'🔢', name:'Pattern Flash', desc:'Number/Letter Series, Odd One Out' },
@@ -448,10 +424,7 @@
         { key:'verification_truth', icon:'🔎', name:'Verification of Truth', desc:'Truth-teller/liar puzzles' },
         { key:'analytical_reasoning', icon:'📐', name:'Analytical Reasoning', desc:'Count triangles/squares in figures' },
         { key:'pattern_completion', icon:'🔄', name:'Pattern Completion', desc:'Complete the missing element' },
-        { key:'shape_construction', icon:'⬜', name:'Shape Construction', desc:'Which pieces form the shape?' },
-        { key:'missing_number', icon:'🔢', name:'Missing Number', desc:'3×3 Grid, Matrix Rule, Find the ?' },
-        { key:'number_analogy', icon:'🔁', name:'Number Analogy', desc:'Square/Cube/Operation Pairs' },
-        { key:'mixed_series', icon:'🔀', name:'Mixed Series', desc:'Two Interleaved Number Patterns' }
+        { key:'shape_construction', icon:'⬜', name:'Shape Construction', desc:'Which pieces form the shape?' }
     ];
 
     var VERBAL_TOPICS = [
@@ -473,9 +446,7 @@
         { key:'comprehension', icon:'📖', name:'Comprehension', desc:'Read passage, answer questions' },
         { key:'sentence_connectors', icon:'🔗', name:'Sentence Connectors', desc:'Choose connector: because, although, however' },
         { key:'double_fillers', icon:'✍️', name:'Double Fillers', desc:'Two blanks — pick the correct word pair' },
-        { key:'paragraph_completion', icon:'📄', name:'Paragraph Completion', desc:'Choose the best concluding sentence' },
-        { key:'verbal_analogy', icon:'🔗', name:'Word Analogies', desc:'Word-pair relationships' },
-        { key:'odd_word', icon:'🧩', name:'Odd Word Out', desc:'Find the word that breaks the category' }
+        { key:'paragraph_completion', icon:'📄', name:'Paragraph Completion', desc:'Choose the best concluding sentence' }
     ];
 
     // ====== CATEGORY TOGGLE ======
@@ -699,8 +670,6 @@
         document.getElementById('hintText').classList.remove('show');
         hasHint = false;
 
-        renderQMeta(q);
-
         // Hide question area, show technique flash
         document.getElementById('qText').style.display = 'none';
         document.getElementById('optGrid').innerHTML = '';
@@ -908,28 +877,6 @@
                     if (a < weakestAcc) { weakestAcc = a; weakest = t; }
                 }
             }
-        } else if (lastSession.mode === 'mock') {
-            // Per-section breakdown from session review
-            var secAgg = {};
-            if (session && session.review) {
-                session.review.forEach(function(r){
-                    var s = r.sectionName || (r.section ? r.section.charAt(0).toUpperCase() + r.section.slice(1) : 'Other');
-                    if (!secAgg[s]) secAgg[s] = { c: 0, t: 0 };
-                    secAgg[s].t++; if (r.isCorrect) secAgg[s].c++;
-                });
-            }
-            for (var sKey in secAgg) {
-                var sa = Math.round(secAgg[sKey].c / secAgg[sKey].t * 100);
-                var sc = sa >= 70 ? 'var(--emerald)' : sa >= 40 ? 'var(--amber)' : 'var(--red)';
-                hasBreakdown = true;
-                breakdownHtml += '<div class="detail-row"><span>' + sKey + '</span><span style="color:' + sc + '">' + sa + '% (' + secAgg[sKey].c + '/' + secAgg[sKey].t + ')</span></div>';
-            }
-            var sw = null, swAcc = 101;
-            for (var swk in secAgg) {
-                var sa2 = Math.round(secAgg[swk].c / secAgg[swk].t * 100);
-                if (sa2 < swAcc) { swAcc = sa2; sw = swk; }
-            }
-            if (sw && swAcc < 70) { weakest = sw; weakestAcc = swAcc; }
         } else if ((lastSession.mode === 'quant' || lastSession.mode === 'reasoning' || lastSession.mode === 'verbal') && lastSession.subMode) {
             var key = lastSession.subMode;
             if (ss && ss[key] && ss[key].attempts > 0) {
@@ -1008,19 +955,6 @@
         else { ht.classList.add('show'); hasHint = true; }
     }
 
-    // ====== META (difficulty tier + exam section) ======
-    function renderQMeta(q) {
-        var el = document.getElementById('qMeta');
-        var html = '';
-        if (q._sectionName || q._section) {
-            var sec = q._sectionName || (q._section.charAt(0).toUpperCase() + q._section.slice(1));
-            html += '<span class="q-section">' + sec + (q._sectionIndex ? ' · ' + q._sectionIndex + '/' + q._sectionTotal : '') + '</span>';
-        }
-        var tier = q.tier || { code:'M', label:'Medium', color:'var(--amber)' };
-        html += '<span class="q-tier" style="border:1px solid ' + tier.color + ';color:' + tier.color + ';background:rgba(255,255,255,.02)">' + (tier.icon ? tier.icon + ' ' : '') + tier.label + '</span>';
-        el.innerHTML = html;
-    }
-
     // ====== FOCUS DRILL ======
     function startFocus(type, hard) {
         document.getElementById('resultsOverlay').classList.remove('show');
@@ -1042,7 +976,7 @@
         grid.innerHTML = '';
         // Show Quant topics first
         grid.innerHTML += '<div style="font-size:.9em;font-weight:700;margin:8px 0 4px;color:var(--cyan)">🔢 Quant Reflex</div>';
-        var quantTopics = ['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','partnership','compound_interest','discount','races','data_interpretation','profit_loss','average','ages','ratio_proportion','probability','trigonometry','quantity_comparison','number_series','alligation','simple_interest'];
+        var quantTopics = ['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','partnership','compound_interest','discount','races','data_interpretation'];
         quantTopics.forEach(function(t){
             var label = t.replace(/_/g,' ');
             var drill = window.TECHNIQUE_DRILLS[t] || { line1:'—', line2:'' };
@@ -1055,7 +989,7 @@
         });
         // Show Verbal Ability topics
         grid.innerHTML += '<div style="font-size:.9em;font-weight:700;margin:10px 0 4px;color:var(--emerald)">📖 Verbal Ability</div>';
-        var verbalTopics = ['synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','spotting_errors','spellings','sentence_correction','sentence_improvement','closet_test','one_word_subs','idioms_phrases','change_voice','change_speech','verbal_analogy','odd_word'];
+        var verbalTopics = ['synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','spotting_errors','spellings','sentence_correction','sentence_improvement','closet_test','one_word_subs','idioms_phrases','change_voice','change_speech'];
         verbalTopics.forEach(function(t){
             var label = t.replace(/_/g,' ');
             var drill = window.TECHNIQUE_DRILLS[t] || { line1:'—', line2:'' };
@@ -1068,7 +1002,7 @@
         });
         // Show Reasoning topics
         grid.innerHTML += '<div style="font-size:.9em;font-weight:700;margin:10px 0 4px;color:var(--violet)">🧠 Reasoning Reflex</div>';
-        var reasTopics = ['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','box_distribution','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram','missing_number','number_analogy','mixed_series'];
+        var reasTopics = ['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','box_distribution','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram'];
         reasTopics.forEach(function(t){
             var label = t.replace(/_/g,' ');
             var drill = window.TECHNIQUE_DRILLS[t] || { line1:'—', line2:'' };

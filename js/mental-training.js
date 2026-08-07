@@ -105,8 +105,7 @@ var defaultState = {
     fivesec: { attempts:0, correct:0 }, examrush: { attempts:0, correct:0 },
     weakspot: { attempts:0, correct:0 },
     quant: { attempts:0, correct:0 }, reasoning: { attempts:0, correct:0 },
-    verbal: { attempts:0, correct:0 },
-    mock: { attempts:0, correct:0 }
+    verbal: { attempts:0, correct:0 }
   },
   subTopicStats: {
     // Quant sub-topics
@@ -126,9 +125,6 @@ var defaultState = {
     height_distance:{attempts:0,correct:0}, decimal_fraction:{attempts:0,correct:0},
     chain_rule:{attempts:0,correct:0}, logarithm:{attempts:0,correct:0},
     meta:{attempts:0,correct:0},
-    average:{attempts:0,correct:0}, ages:{attempts:0,correct:0},
-    ratio_proportion:{attempts:0,correct:0}, probability:{attempts:0,correct:0},
-    trigonometry:{attempts:0,correct:0},
     // Reasoning sub-topics
     pattern_flash:{attempts:0,correct:0}, coding_flash:{attempts:0,correct:0},
     logic_snap:{attempts:0,correct:0}, direction_sense:{attempts:0,correct:0},
@@ -145,8 +141,6 @@ var defaultState = {
     essential_part:{attempts:0,correct:0}, theme_detection:{attempts:0,correct:0},
     statement_argument:{attempts:0,correct:0}, statement_assumption:{attempts:0,correct:0},
     statement_conclusion:{attempts:0,correct:0},
-    missing_number:{attempts:0,correct:0}, number_analogy:{attempts:0,correct:0},
-    mixed_series:{attempts:0,correct:0},
     synonym:{attempts:0,correct:0}, antonym:{attempts:0,correct:0},
     sentence_completion:{attempts:0,correct:0}, word_ordering:{attempts:0,correct:0},
     sentence_ordering:{attempts:0,correct:0}, paragraph_formation:{attempts:0,correct:0},
@@ -309,18 +303,7 @@ var SPEED_TECHNIQUES = {
   'one_word_subs': 'Think of the specific single-word term. Latin/Greek roots help.',
   'idioms_phrases': 'Idioms have figurative meanings. Cannot be understood literally.',
   'change_voice': 'Active→Passive: object→subject, be+past participle, subject→by+agent.',
-  'change_speech': 'Remove quotes. Present→past. will→would. today→that day. Commands→to+verb.',
-  // New topics (exam-ready additions)
-  'average': 'Avg = sum/count. Avg speed (equal distances) = 2ab/(a+b). To find missing value: Missing = avg×(n+1) − sum.',
-  'ages': 'Write one equation per relationship. Ratio present → ages now. For "x yrs ago", subtract x from each.',
-  'ratio_proportion': 'Divide amount: share = (my part/total parts)×amount. 4th proportional a:b::c:d → d=bc/a. Mean prop = √(ab).',
-  'probability': 'P = favorable/total. Simplify fraction. Independent events → multiply. "At least one" = 1 − P(none).',
-  'trigonometry': 'tanθ = height/distance. Standard: sin30=1/2, cos60=1/2, tan45=1, sin90=1. mnemonic: SOH-CAH-TOA.',
-  'missing_number': 'Matrix: find the rule applied to each row/column (sum, product, diff). Apply to the ? row.',
-  'number_analogy': 'Find relation between 1st pair (square, cube, ×n, +n) and apply to 2nd pair.',
-  'mixed_series': 'Two interleaved series (odd & even positions). Solve each separately, then find the ? term.',
-  'verbal_analogy': 'Same as analogy: find the relation in pair 1 (synonym, whole-part, tool-action) and apply to pair 2.',
-  'odd_word': 'Verify the definition exactly. Map each topic; one word breaks the shared category.'
+  'change_speech': 'Remove quotes. Present→past. will→would. today→that day. Commands→to+verb.'
 };
 
 var TECHNIQUE_DRILLS = {
@@ -373,18 +356,7 @@ var TECHNIQUE_DRILLS = {
   'alphabet_arrange': { line1: 'Letter pattern / order', line2: '2s — A=1 to Z=26. Check diff between consecutive letters.' },
   'critical_reasoning': { line1: 'Assumption / course of action', line2: '3s — MUST be true for statement. Action solves problem. Cause precedes effect.' },
   'decision_making': { line1: 'Condition checking', line2: '2s — Check each condition. AND=all pass. OR=any pass. Insufficient=?.' },
-  'venn_diagram': { line1: 'Set theory / surveys', line2: '3s — Only A=A-both. Neither=total-(A+B-both). Draw overlapping circles.' },
-  // New topics (exam-ready additions)
-  'average': { line1: 'Avg / avg-speed / missing', line2: '3s — Avg=sum/count. 2ab/(a+b) for equal-distance speed. Missing=avg×(n+1)−sum.' },
-  'ages': { line1: 'Age equations / ratios', line2: '4s — One equation per relation. Ratio→now. "Ago"=subtract from both.' },
-  'ratio_proportion': { line1: 'Ratio share / proportion', line2: '3s — Share=(part/total)×amount. 4th prop d=bc/a. Mean prop=√(ab).' },
-  'probability': { line1: 'Favourable / total', line2: '3s — P=fav/total, simplify. Multiply for independent. 1−P(none) for "at least one".' },
-  'trigonometry': { line1: 'Height & distance / SOH-CAH-TOA', line2: '3s — tanθ=h/d. sin30=1/2, cos60=1/2, tan45=1. Common angle values to memorize.' },
-  'missing_number': { line1: '3×3 matrix rule', line2: '4s — Find rule across rows/columns (sum, product, diff). Apply to the ? row.' },
-  'number_analogy': { line1: 'Pair relation (square/cube)', line2: '3s — 2:8 → cube. 3:9 → square. Detect relation in pair 1, reuse.' },
-  'mixed_series': { line1: 'Split odd/even series', line2: '4s — Odd positions = one pattern, even = another. Solve both, use target position.' },
-  'verbal_analogy': { line1: 'Pair relation (word)', line2: '3s — Synonym, whole-part, tool-action, person-place. Match relation type exactly.' },
-  'odd_word': { line1: 'Shared category', line2: '2s — Find what 3 share (fruits, metals, verbs). The 4th breaks the category.' }
+  'venn_diagram': { line1: 'Set theory / surveys', line2: '3s — Only A=A-both. Neither=total-(A+B-both). Draw overlapping circles.' }
 };
 
 window.SPEED_TECHNIQUES = SPEED_TECHNIQUES;
@@ -405,50 +377,6 @@ function getRank(points) {
 function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 function pick(arr) { return arr[rand(0, arr.length - 1)]; }
 function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = rand(0, i); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
-
-// Difficulty tier (exam-ready labelling): diff = 1..10 → Easy→Expert
-function tierFor(diff) {
-  if (diff <= 2) return { code: 'E', label: 'Easy', color: 'var(--emerald)' };
-  if (diff <= 4) return { code: 'M', label: 'Medium', color: 'var(--amber)' };
-  if (diff <= 7) return { code: 'H', label: 'Hard', color: 'var(--red)' };
-  return { code: 'X', label: 'Expert', color: 'var(--purple)' };
-}
-window.getTierLabel = function(diff) { return tierFor(diff || 1); };
-
-// Build 4 numeric options around a numeric answer
-function numOptions(ans, spread) {
-  var o = [ans];
-  for (var i = 0; i < 50 && o.length < 4; i++) {
-    var d = ans + rand(-spread, spread);
-    if (o.indexOf(d) < 0 && d > 0) o.push(d);
-  }
-  while (o.length < 4) o.push(ans + o.length + 1);
-  shuffle(o);
-  return o;
-}
-// Build 4 text options: correct answer + 3 distractors
-function txtOptions(ans, distractors) {
-  var opts = [ans];
-  var pool = (distractors || []).filter(function(d){ return String(d) !== String(ans); });
-  shuffle(pool);
-  for (var i = 0; i < pool.length && opts.length < 4; i++) opts.push(pool[i]);
-  while (opts.length < 4) opts.push(ans + ' ' + (opts.length + 1));
-  shuffle(opts);
-  return opts;
-}
-
-// Normalize legacy/short-key questions: {q,a,o,t,hint,sol} → {question,answer,options,timeLimit,solution}
-function normalizeQuestion(q) {
-  if (!q) return q;
-  if (q.question === undefined && q.q !== undefined) q.question = q.q;
-  if (q.answer === undefined && q.a !== undefined) q.answer = q.a;
-  if (q.options === undefined && q.o !== undefined) q.options = q.o;
-  if (q.timeLimit === undefined && q.t !== undefined) q.timeLimit = q.t;
-  if ((q.solution === undefined || q.solution === '') && q.sol !== undefined) q.solution = q.sol;
-  if (q.hint === undefined && q.hi !== undefined) q.hint = q.hi;
-  if (q.options === undefined || q.options.length < 2) q.options = [q.answer, 'None', 'Both', 'Cannot determine'];
-  return q;
-}
 
 // Exposed for HTML layer toggle
 window.setActiveLayer = function(l) { activeLayer = l; };
@@ -2783,15 +2711,7 @@ function generateDiceCubeQuestion(diff) {
   }
   var t = ty[idx];
   var d = t();
-  var o = [d.a];
-  if (o.length < 4) {
-    var wordOpts = ['Red','Blue','Green','Yellow','White','Black','Yes','No','Top','Bottom','Front','Back','Left','Right'];
-    var guard = 0;
-    while (o.length < 4 && guard < 200) { guard++;
-      if (typeof d.a === 'number') { var v = d.a + rand(-3,3); if (o.indexOf(v) < 0 && v >= 0) o.push(v); }
-      else { var w = wordOpts[rand(0, wordOpts.length-1)]; if (o.indexOf(w) < 0) o.push(w); }
-    }
-  }
+  var o = [d.a]; while(o.length<4){var v=d.a+rand(-3,3); if(o.indexOf(v)<0&&v>=0)o.push(v);}
   shuffle(o);
   return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: 20, type:'reasoning', techniqueLabel:'Dice: '+d.hint, intuition: d.intuition||'Dice: opposite sum=7. Cube painting: corners=3, edges=2, centers=1, inner=0 faces.' };
 }
@@ -4739,18 +4659,10 @@ function generateQuantQuestion(diff, subMode) {
     quadratic_comparison: generateQuadraticComparisonQuestion,
     number_series: generateNumberSeriesQuestion,
     quantity_comparison: generateQuantityComparisonQuestion,
-    average: generateAverageQuestion,
-    ages: generateAgesQuestion,
-    ratio_proportion: generateRatioProportionQuestion,
-    probability: generateProbabilityQuestion,
-    trigonometry: generateTrigonometryQuestion,
-    missing_number: generateMissingNumberQuestion,
-    number_analogy: generateNumberAnalogyQuestion,
-    mixed_series: generateMixedSeriesQuestion,
     meta: generateMetaQuestion
   };
   // If no subMode, pick random quant topic
-  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','quadratic_comparison','partnership','simple_interest','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out','height_distance','decimal_fraction','chain_rule','logarithm','number_series','quantity_comparison','average','ages','ratio_proportion','probability','trigonometry','missing_number','number_analogy','mixed_series','meta','meta','meta']);
+  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','quadratic_comparison','partnership','simple_interest','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out','height_distance','decimal_fraction','chain_rule','logarithm','number_series','quantity_comparison','meta','meta','meta']);
   var gen = genMap[topic];
   if (gen) {
     var q, attempts = 0;
@@ -4800,10 +4712,6 @@ function generateReasoningQuestion(diff, subMode) {
     statement_argument: generateStatementArgumentQuestion,
     statement_assumption: generateStatementAssumptionQuestion,
     statement_conclusion: generateStatementConclusionQuestion,
-    // Number / mixed reasoning (exam-ready additions)
-    missing_number: generateMissingNumberQuestion,
-    number_analogy: generateNumberAnalogyQuestion,
-    mixed_series: generateMixedSeriesQuestion,
     // Non-verbal
     embedded_images: generateEmbeddedImagesQuestion,
     figure_matrix: generateFigureMatrixQuestion,
@@ -4825,7 +4733,7 @@ function generateReasoningQuestion(diff, subMode) {
     pattern_completion: generatePatternCompletionQuestion,
     shape_construction: generateShapeConstructionQuestion,
   };
-  var topic = subMode || pick(['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram','letter_symbol_series','artificial_language','matching_definitions','cause_effect','essential_part','theme_detection','statement_argument','statement_assumption','statement_conclusion','missing_number','number_analogy','mixed_series','embedded_images','figure_matrix','paper_folding','paper_cutting','rule_detection','grouping_images','image_analysis','water_images','dot_situation','making_judgments','logical_problems','logical_games','analyzing_arguments','logical_deduction','character_puzzles','verification_truth','analytical_reasoning','pattern_completion','shape_construction']);
+  var topic = subMode || pick(['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram','letter_symbol_series','artificial_language','matching_definitions','cause_effect','essential_part','theme_detection','statement_argument','statement_assumption','statement_conclusion','embedded_images','figure_matrix','paper_folding','paper_cutting','rule_detection','grouping_images','image_analysis','water_images','dot_situation','making_judgments','logical_problems','logical_games','analyzing_arguments','logical_deduction','character_puzzles','verification_truth','analytical_reasoning','pattern_completion','shape_construction']);
   var gen = genMap[topic];
   if (gen) {
     var result, attempts = 0;
@@ -5090,11 +4998,9 @@ function generateVerbalQuestion(diff, subMode) {
     change_speech: generateChangeSpeechQuestion,
     sentence_connectors: generateSentenceConnectorsQuestion,
     double_fillers: generateDoubleFillersQuestion,
-    paragraph_completion: generateParagraphCompletionQuestion,
-    verbal_analogy: generateVerbalAnalogyQuestion,
-    odd_word: generateOddWordQuestion
+    paragraph_completion: generateParagraphCompletionQuestion
   };
-  var topic = subMode || pick(['synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','spotting_errors','spellings','sentence_correction','sentence_improvement','closet_test','one_word_subs','idioms_phrases','change_voice','change_speech','sentence_connectors','double_fillers','paragraph_completion','verbal_analogy','odd_word']);
+  var topic = subMode || pick(['synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','spotting_errors','spellings','sentence_correction','sentence_improvement','closet_test','one_word_subs','idioms_phrases','change_voice','change_speech','sentence_connectors','double_fillers','paragraph_completion']);
   var gen = genMap[topic];
   if (gen) {
     var q, attempts = 0;
@@ -5124,9 +5030,7 @@ function generateVerbalQuestion(diff, subMode) {
           change_speech: 'Quotes→that clause. Present→past. will→would. Commands→to+verb.',
           sentence_connectors: 'Connectors show relationships: contrast, cause-effect, condition, addition, alternative between two parts of a sentence.',
           double_fillers: 'Read the full sentence. Both blanks must fit logically AND grammatically. Eliminate by checking one blank at a time.',
-          paragraph_completion: 'The last sentence should logically conclude the passage — summarize, recommend action, or draw inference.',
-          verbal_analogy: 'Find the relationship in the first pair (synonym, part-whole, tool-function, person-place). Apply the SAME relation to the second pair and pick the matching word.',
-          odd_word: 'Identify the shared category of three words (fruits, metals, cities, verbs). The word that breaks the category is the answer — verify each against the set.'
+          paragraph_completion: 'The last sentence should logically conclude the passage — summarize, recommend action, or draw inference.'
         };
         q.intuition = intuitions[topic] || '';
       } catch(e) {}
@@ -5139,233 +5043,6 @@ function generateVerbalQuestion(diff, subMode) {
     }
   }
   return generateSynonymQuestion(diff);
-}
-
-// ====== NEW EXAM-READY GENERATORS (procedural, never-hang) ======
-
-function generateAverageQuestion(diff) {
-  var type = rand(1, diff <= 3 ? 3 : 4);
-  if (type === 1) {
-    var n = rand(3, 5), sum = 0, nums = [];
-    for (var i = 0; i < n; i++) { var v = rand(20, 60); nums.push(v); sum += v; }
-    var avg = Math.round(sum / n * 100) / 100;
-    var missing = nums.splice(rand(0, n - 1), 1)[0];
-    var q = 'Average of ' + nums.join(', ') + ' and ? is ' + avg + '. Find the missing number.';
-    return { question: q, answer: missing, options: numOptions(missing, 8), hint: 'Missing = avg×' + (n) + ' − sum of given = ' + (avg * n - (sum - missing)), timeLimit: diff <= 2 ? 18 : 14, type: 'quant', techniqueLabel: 'Average: Missing = avg×n − sum', intuition: 'Avg = sum/count → sum = avg×n. Missing value = sum − given numbers.' };
-  }
-  if (type === 2) {
-    var a = rand(30, 60), b = rand(20, 50);
-    var sp = Math.round((2 * a * b / (a + b)) * 100) / 100;
-    return { question: 'A person travels equal distances at ' + a + ' km/h and ' + b + ' km/h. Average speed?', answer: sp, options: numOptions(sp, 6), hint: 'Avg speed = 2ab/(a+b) = 2×' + a + '×' + b + '/(' + a + '+' + b + ')', timeLimit: diff <= 2 ? 20 : 15, type: 'quant', techniqueLabel: 'Avg speed (equal distance) = 2ab/(a+b)', intuition: 'Equal distances → harmonic mean: 2ab/(a+b). Do NOT take simple average of speeds.' };
-  }
-  if (type === 3) {
-    var w1 = rand(10, 40), w2 = rand(50, 90), x1 = rand(60, 90), x2 = rand(30, 60);
-    var wa = Math.round((w1 * x1 + w2 * x2) / (w1 + w2) * 100) / 100;
-    return { question: 'A class has ' + w1 + ' boys averaging ' + x1 + ' marks and ' + w2 + ' girls averaging ' + x2 + '. Overall average?', answer: wa, options: numOptions(wa, 4), hint: 'Weighted = Σ(w×x)/Σw', timeLimit: diff <= 2 ? 20 : 15, type: 'quant', techniqueLabel: 'Weighted average = Σ(weight×value)/Σweight', intuition: 'Weighted avg: multiply each group size by its average, divide by total group size.' };
-  }
-  var n2 = rand(3, 4), avg2 = rand(30, 50), nums2 = [];
-  var sum2 = avg2 * n2;
-  for (var j = 0; j < n2 - 1; j++) { nums2.push(rand(20, avg2 + 20)); }
-  var last = sum2 - nums2.reduce(function(s, v){ return s + v; }, 0);
-  var q2 = 'Average of ' + nums2.join(', ') + ' and ? is ' + avg2 + '. Find the last number.';
-  return { question: q2, answer: last, options: numOptions(last, 8), hint: 'Sum = ' + avg2 + '×' + n2 + ' = ' + sum2 + '. Last = ' + sum2 + ' − ' + nums2.reduce(function(s, v){ return s + v; }, 0), timeLimit: diff <= 3 ? 20 : 15, type: 'quant', techniqueLabel: 'Average: find missing when sum known', intuition: 'Total = avg×count. Subtract known values to find the unknown one.' };
-}
-
-function generateAgesQuestion(diff) {
-  var type = rand(1, diff <= 2 ? 2 : 3);
-  if (type === 1) {
-    var m = rand(2, 4), r1 = rand(3, 5), r2 = rand(6, 9);
-    var x = rand(3, 8);
-    var a1 = r1 * x, b1 = r2 * x;
-    var ask = rand(0, 1);
-    return { question: 'Present ages of A and B are in ratio ' + r1 + ':' + r2 + '. Sum of ages is ' + (a1 + b1) + '. ' + (ask === 0 ? 'Age of A?' : 'Age of B?'), answer: ask === 0 ? a1 : b1, options: numOptions(ask === 0 ? a1 : b1, 4), hint: 'Total parts = ' + (r1 + r2) + '. Value of 1 part = ' + (a1 + b1) + '/' + (r1 + r2) + ' = ' + x + '.', timeLimit: diff <= 2 ? 20 : 15, type: 'quant', techniqueLabel: 'Ages: 1 part = sum/(r1+r2), then × part', intuition: 'Ratio + sum: one part = total / (r1 + r2). A = r1 × part, B = r2 × part.' };
-  }
-  if (type === 2) {
-    var p = rand(30, 45), q2 = rand(8, 15), ago = rand(3, 6);
-    var diff2 = p - q2;
-    var ans = rand(0, 1) === 0 ? p + ago : q2 + ago;
-    return { question: 'A is ' + p + ' and B is ' + q2 + '. In how many years will A be twice B?', answer: diff2, options: numOptions(diff2, 3), hint: 'Let x yrs. ' + p + '+x = 2(' + q2 + '+x) → x = ' + diff2, timeLimit: 20, type: 'quant', techniqueLabel: 'Ages: future equation, solve for x', intuition: 'Set equation: A+x = k(B+x). Solve for x = (k×B − A)/(1 − k).' };
-  }
-  var f = rand(20, 30), c = rand(4, 8), yr = rand(2, 5);
-  var sumNow = f + c;
-  var sumThen = f + c + 2 * yr;
-  return { question: 'Father is ' + f + ', son is ' + c + '. Sum of their ages after ' + yr + ' years?', answer: sumThen, options: numOptions(sumThen, 4), hint: 'Sum after ' + yr + ' yrs = ' + sumNow + ' + 2×' + yr, timeLimit: 12, type: 'quant', techniqueLabel: 'Ages: sum after n yrs = sum now + 2n', intuition: 'Both age each year, so sum increases by 2 per year: sum + 2n.' };
-}
-
-function generateRatioProportionQuestion(diff) {
-  var type = rand(1, diff <= 2 ? 2 : 3);
-  if (type === 1) {
-    var a = rand(2, 4), b = rand(3, 6), amt = rand(2, 6) * (a + b);
-    var part = rand(0, 1) === 0 ? a : b;
-    var ans = amt * part / (a + b);
-    return { question: '₹' + amt + ' is divided in ratio ' + a + ':' + b + '. ' + (part === a ? 'A' : 'B') + '\'s share?', answer: ans, options: numOptions(ans, 30), hint: 'Total parts = ' + (a + b) + '. Share = ' + part + '/' + (a + b) + ' × ' + amt, timeLimit: diff <= 2 ? 15 : 12, type: 'quant', techniqueLabel: 'Ratio: share = (part/total)×amount', intuition: 'Share of X = Xs part / total parts × total amount.' };
-  }
-  if (type === 2) {
-    var x1 = rand(2, 6), y1 = rand(3, 9), x2 = rand(3, 7);
-    var y2 = Math.round(x1 * y1 * x2 / x1 * 100) / 100; // ensure integer-ish
-    var d = Math.round(y1 * x2 / x1);
-    return { question: x1 + ' : ' + y1 + ' :: ' + x2 + ' : ? (fourth proportional)', answer: d, options: numOptions(d, 4), hint: 'a:b :: c:d → d = bc/a = ' + y1 + '×' + x2 + '/' + x1, timeLimit: 20, type: 'quant', techniqueLabel: 'Fourth proportional: d = bc/a', intuition: 'In a:b :: c:d, cross multiply → a×d = b×c → d = b×c/a.' };
-  }
-  var a2 = rand(3, 8), b2 = rand(2, 6);
-  var mp = Math.round(Math.sqrt(a2 * b2) * 100) / 100;
-  return { question: 'Mean proportional between ' + a2 + ' and ' + b2 + '?', answer: mp, options: numOptions(mp, 2), hint: 'Mean prop = √(a×b) = √(' + a2 + '×' + b2 + ')', timeLimit: 15, type: 'quant', techniqueLabel: 'Mean proportional = √(ab)', intuition: 'Mean proportional of a and b is √(a×b).' };
-}
-
-function generateProbabilityQuestion(diff) {
-  var type = rand(1, diff <= 2 ? 2 : 3);
-  if (type === 1) {
-    var r = rand(3, 6), bl = rand(2, 5), g = rand(1, 4);
-    var total = r + bl + g;
-    var color = pick(['Red', 'Blue', 'Green']);
-    var fav = color === 'Red' ? r : (color === 'Blue' ? bl : g);
-    function gcd(u, v) { while (v) { var t = u % v; u = v; v = t; } return u; }
-    var g2 = gcd(fav, total), num = fav / g2, den = total / g2;
-    var ans = num === den ? '1' : num + '/' + den;
-    return { question: 'A bag has ' + r + ' red, ' + bl + ' blue, ' + g + ' green balls. P(one drawn is ' + color.toLowerCase() + ')?', answer: ans, options: txtOptions(ans, [num + 1 + '/' + den, num + '/' + (den + 2), '1/2', '1/3', '2/3', num === 1 ? '1/' + den : '1/' + den]), hint: 'Favourable = ' + fav + ', total = ' + total + ' → ' + fav + '/' + total, timeLimit: 15, type: 'quant', techniqueLabel: 'Probability = favourable/total (simplify)', intuition: 'P = favourable outcomes / total outcomes. Simplify the fraction (divide top & bottom by HCF).' };
-  }
-  if (type === 2) {
-    var faces = rand(2, 6), num = rand(1, faces), fav = faces - num + 1;
-    function gcd2(u, v) { while (v) { var t = u % v; u = v; v = t; } return u; }
-    var g3 = gcd2(fav, faces), nn = fav / g3, dd = faces / g3;
-    var ans2 = nn === dd ? '1' : nn + '/' + dd;
-    return { question: 'A die is rolled. P(number ≥ ' + num + ')?', answer: ans2, options: txtOptions(ans2, ['1/6', '1/3', '1/2', '2/3', '5/6']), hint: 'Favourable = ' + fav + ' faces (' + num + '..' + faces + ') out of ' + faces, timeLimit: 12, type: 'quant', techniqueLabel: 'Die: P(≥k) = (faces−k+1)/6', intuition: 'Count favourable outcomes (numbers ≥ given value) over 6.' };
-  }
-  var c = rand(2, 5), t = rand(5, 12);
-  var both = Math.round(c * c / (4 * t) * 100) / 100;
-  return { question: 'Two cards drawn from ' + t + ' cards where ' + c + ' are defective. P(both defective)? (approx)', answer: both, options: numOptions(both, 0.05), hint: 'P = C(c,2)/C(t,2) = ' + c + '( ' + c + '-1)/( ' + t + '(' + t + '-1))', timeLimit: 25, type: 'quant', techniqueLabel: 'Without replacement: multiply successive probs', intuition: 'First draw prob c/t, then (c−1)/(t−1). Multiply and simplify.' };
-}
-
-function generateTrigonometryQuestion(diff) {
-  var type = rand(1, diff <= 2 ? 2 : 3);
-  if (type === 1) {
-    var m = pick(['sin30° + cos60°', 'sin45° + cos45°', 'tan45° + sin90°', 'cos0° + sin30°', 'tan30° × tan60°']);
-    var vals = { 'sin30° + cos60°': 1, 'sin45° + cos45°': Math.round(Math.SQRT2 * 100) / 100, 'tan45° + sin90°': 2, 'cos0° + sin30°': 1.5, 'tan30° × tan60°': 1 };
-    var ans = vals[m];
-    return { question: 'Value of ' + m + '?', answer: ans, options: numOptions(ans, 0.6), hint: 'sin30=1/2, cos60=1/2, sin45=√2/2, tan45=1, sin90=1, tan30×tan60=1', timeLimit: 15, type: 'quant', techniqueLabel: 'Standard trig values', intuition: 'Memorize standard values: sin30=1/2, cos60=1/2, tan45=1, sin90=1, tan30×tan60=1.' };
-  }
-  if (type === 2) {
-    var ang = pick([30, 45, 60]);
-    var h = rand(20, 80);
-    var d = Math.round(h / Math.tan(ang * Math.PI / 180) * 100) / 100;
-    return { question: 'Angle of elevation of the top of a ' + h + 'm tower from a point is ' + ang + '°. Distance from base?', answer: d, options: numOptions(d, 10), hint: 'tan' + ang + ' = ' + h + '/d → d = ' + h + '/tan' + ang + '°', timeLimit: 25, type: 'quant', techniqueLabel: 'Height & distance: tanθ = h/d', intuition: 'tanθ = opposite/adjacent = height/distance. Rearrange to find distance = height/tanθ.' };
-  }
-  var x = rand(3, 12), y = rand(4, 12);
-  var hyp = Math.round(Math.sqrt(x * x + y * y) * 100) / 100;
-  return { question: 'In a right triangle, legs are ' + x + ' and ' + y + '. sin of angle opposite ' + x + '?', answer: Math.round(x / hyp * 100) / 100, options: numOptions(Math.round(x / hyp * 100) / 100, 0.15), hint: 'Hyp = √(' + x + '²+' + y + '²) = ' + hyp + '. sin = ' + x + '/' + hyp, timeLimit: 25, type: 'quant', techniqueLabel: 'SOH: sin = opposite/hypotenuse', intuition: 'Find hypotenuse first via Pythagoras, then sin = opposite/hypotenuse.' };
-}
-
-function generateMissingNumberQuestion(diff) {
-  var rule = pick([{ name: 'col3 = col1 × col2', fn: function(a, b) { return a * b; } }, { name: 'col3 = col1 + col2', fn: function(a, b) { return a + b; } }, { name: 'col3 = (col1 + col2) × 2', fn: function(a, b) { return (a + b) * 2; } }]);
-  var rows = [];
-  for (var i = 0; i < 3; i++) {
-    var a = rand(3, 9), b = rand(3, 9);
-    var c = rule.fn(a, b);
-    rows.push([a, b, c]);
-  }
-  var missRow = rows[rand(0, 2)];
-  var ans = missRow[2];
-  missRow[2] = '?';
-  var q = 'Find the missing number in the grid:<br><div style="font-family:JetBrains Mono,monospace;margin-top:6px">';
-  rows.forEach(function(r, idx) { q += r.join('  ') + (idx < 2 ? '<br>' : ''); });
-  q += '</div>';
-  return { question: q, answer: ans, options: numOptions(ans, 6), hint: 'Rule: ' + rule.name + ' (apply to each row)', timeLimit: 20, type: 'quant', techniqueLabel: 'Matrix: ' + rule.name, intuition: 'Find the relationship within each row (sum/product/double), then apply it to the row with the missing value.' };
-}
-
-function generateNumberAnalogyQuestion(diff) {
-  var type = pick([{ name: 'cube', desc: function(a) { return a + ':' + (a * a * a); } }, { name: 'square', desc: function(a) { return a + ':' + (a * a); } }, { name: 'plus2', desc: function(a) { return a + ':' + (a + 2); } }, { name: 'times3', desc: function(a) { return a + ':' + (a * 3); } }]);
-  var a = rand(2, 9), b = rand(2, 9);
-  var ans;
-  if (type.name === 'cube') ans = b * b * b;
-  else if (type.name === 'square') ans = b * b;
-  else if (type.name === 'plus2') ans = b + 2;
-  else ans = b * 3;
-  return { question: type.desc(a) + ' :: ' + b + ' : ?', answer: ans, options: numOptions(ans, 8), hint: 'Relation: ' + type.name, timeLimit: 15, type: 'quant', techniqueLabel: 'Number analogy: ' + type.name, intuition: 'Find the operation linking the first pair (square, cube, +n, ×n), then apply the same to the second pair.' };
-}
-
-function generateMixedSeriesQuestion(diff) {
-  var opOdd = pick([{ name: '+2', fn: function(x) { return x + 2; } }, { name: '+3', fn: function(x) { return x + 3; } }, { name: '×2', fn: function(x) { return x * 2; } }]);
-  var opEven = pick([{ name: '×2', fn: function(x) { return x * 2; } }, { name: '+5', fn: function(x) { return x + 5; } }, { name: '×3', fn: function(x) { return x * 3; } }]);
-  var seq = [];
-  var o1 = rand(3, 7), e1 = rand(8, 20);
-  for (var i = 0; i < 8; i++) {
-    if (i % 2 === 0) { seq.push(o1); o1 = opOdd.fn(o1); }
-    else { seq.push(e1); e1 = opEven.fn(e1); }
-  }
-  var ans = opEven.fn(seq[seq.length - 1]);
-  seq[seq.length - 1] = '?';
-  return { question: seq.join(', ') + ' — next term?', answer: ans, options: numOptions(ans, 10), hint: 'Odd positions: ' + opOdd.name + ', Even positions: ' + opEven.name + '. The ? is an even-position term.', timeLimit: 20, type: 'quant', techniqueLabel: 'Mixed series: split odd/even', intuition: 'Split the series into two: odd positions follow one rule, even positions another. Find which rule the target position follows.' };
-}
-
-function generateVerbalAnalogyQuestion(diff) {
-  var cat = ANALOGY_CATS[rand(0, ANALOGY_CATS.length - 1)];
-  var pair = cat.pairs[rand(0, cat.pairs.length - 1)];
-  var targetIdx = rand(0, 1);
-  var first = targetIdx === 0 ? pair[0] : pair[1];
-  var second = targetIdx === 0 ? pair[1] : pair[0];
-  var distractors = [];
-  for (var i = 0; i < cat.pairs.length && distractors.length < 3; i++) {
-    var p = cat.pairs[i];
-    if (p[0] !== second && p[1] !== second) {
-      distractors.push(targetIdx === 0 ? p[1] : p[0]);
-    }
-  }
-  var d2 = [];
-  for (var j = 0; j < ANALOGY_CATS.length && distractors.length < 3; j++) {
-    var c2 = ANALOGY_CATS[j];
-    if (c2 === cat) continue;
-    for (var k = 0; k < c2.pairs.length && distractors.length < 3; k++) {
-      var w = c2.pairs[k][1 - targetIdx];
-      if (w !== second && distractors.indexOf(w) < 0) { distractors.push(w); }
-    }
-  }
-  return { question: first + ' : ' + second + ' :: ' + second + ' : ?', answer: first, options: txtOptions(first, distractors.concat([second])), hint: 'Relation: ' + cat.rel, timeLimit: 15, type: 'verbal', techniqueLabel: 'Word analogy: ' + cat.rel, intuition: 'Find the relationship in the first pair (synonym, part-whole, tool-function, etc.) and pick the word that completes the same relation for the second pair.' };
-}
-
-function generateOddWordQuestion(diff) {
-  var groups = [
-    ['Mango', 'Banana', 'Potato', 'Apple'],
-    ['Copper', 'Silver', 'Gold', 'Plastic'],
-    ['Lion', 'Tiger', 'Elephant', 'Wolf'],
-    ['Rose', 'Lotus', 'Jasmine', 'Mango'],
-    ['Red', 'Green', 'Blue', 'Round'],
-    ['Mumbai', 'Delhi', 'Chennai', 'India'],
-    ['Monday', 'Tuesday', 'Wednesday', 'January'],
-    ['Doctor', 'Teacher', 'Engineer', 'Hospital'],
-    ['Car', 'Bus', 'Train', 'Road'],
-    ['Summer', 'Winter', 'Monsoon', 'March'],
-    ['Pen', 'Pencil', 'Eraser', 'Paper'],
-    ['Table', 'Chair', 'Sofa', 'Car'],
-    ['Football', 'Cricket', 'Hockey', 'Chess'],
-    ['Dog', 'Cat', 'Lion', 'Cow'],
-    ['Banana', 'Orange', 'Mango', 'Tomato']
-  ];
-  var g = groups[rand(0, groups.length - 1)];
-  var odd = g[g.length - 1];
-  var opts = g.slice();
-  shuffle(opts);
-  return { question: 'Find the odd word out: ' + g.slice(0, 3).join(', ') + ', ' + g[3], answer: odd, options: opts, hint: 'Three share a category (fruits, metals, cities...). One does not.', timeLimit: 10, type: 'verbal', techniqueLabel: 'Odd word: find shared category', intuition: 'Identify what three words share (fruits, metals, cities, body parts). The word that breaks the category is the answer.' };
-}
-
-// ====== MOCK EXAM MODE ======
-var MOCK_CONFIG = { total: 25, sections: [{ name: 'Quantitative Aptitude', key: 'quant', count: 10 }, { name: 'Reasoning Ability', key: 'reasoning', count: 10 }, { name: 'Verbal Ability', key: 'verbal', count: 5 }] };
-
-function generateMockQuestion(diff, idx) {
-  var pos = 0, sec = null;
-  for (var i = 0; i < MOCK_CONFIG.sections.length; i++) {
-    var s = MOCK_CONFIG.sections[i];
-    if (idx < pos + s.count) { sec = s; break; }
-    pos += s.count;
-  }
-  if (!sec) sec = MOCK_CONFIG.sections[MOCK_CONFIG.sections.length - 1];
-  var q = GENERATORS[sec.key](diff);
-  if (!q) q = generateNumberSenseQuestion(diff, 'exam');
-  q._section = sec.key;
-  q._sectionName = sec.name;
-  q._sectionIndex = (idx - pos) + 1;
-  q._sectionTotal = sec.count;
-  q.type = 'mock';
-  q.timeLimit = q.timeLimit || 15;
-  return q;
 }
 
 // ====== REFLEX MODE GENERATORS ======
@@ -5559,7 +5236,6 @@ GENERATORS.grandslam = generateGrandSlamQuestion;
 GENERATORS.quant = generateQuantQuestion;
 GENERATORS.reasoning = generateReasoningQuestion;
 GENERATORS.verbal = generateVerbalQuestion;
-GENERATORS.mock = generateMockQuestion;
 
 // ====== MAIN TRAINING FUNCTIONS ======
 window.startMentalSession = function(mode, opts) {
@@ -5593,11 +5269,11 @@ window.startMentalSession = function(mode, opts) {
 
   if (!mode || !GENERATORS[mode]) mode = 'mixed';
   var subMode = opts.subMode || null;
-  var totalQ = (mode === 'puzzle') ? 5 : (mode === 'mock') ? MOCK_CONFIG.total : (mode === 'grandslam') ? 999 : 10;
+  var totalQ = (mode === 'puzzle') ? 5 : (mode === 'grandslam') ? 999 : 10;
 
-  // Inject mistake bank questions (skip for puzzle/weakspot/grandslam/mock mode and when a specific sub-topic is chosen)
+  // Inject mistake bank questions (skip for puzzle/weakspot/grandslam mode and when a specific sub-topic is chosen)
   var mistakeQueue = [];
-  if (mode !== 'puzzle' && mode !== 'weakspot' && mode !== 'grandslam' && mode !== 'mock' && !subMode) {
+  if (mode !== 'puzzle' && mode !== 'weakspot' && mode !== 'grandslam' && !subMode) {
     mistakeQueue = getMistakesForRetry(2);
   }
 
@@ -5653,12 +5329,12 @@ window.getMentalQuestion = function(session) {
       total: session.totalQuestions,
       progress: Math.round(session.questionIndex / session.totalQuestions * 100),
       isMistakeRetry: true,
-      tier: tierFor(diff),
       _mistakeQuestion: m.question  // original question text for bank lookup; null indicates no stored original
     };
   }
 
-  if (session.mode === 'puzzle') {    var puzzle = session.puzzles[session.puzzleIndex];
+  if (session.mode === 'puzzle') {
+    var puzzle = session.puzzles[session.puzzleIndex];
     if (!puzzle) return null;
     // Build full puzzle text (all clues at once, like real exam)
     var clueLines = puzzle.clueBlock.map(function(c, i) { return (i + 1) + '. ' + c; });
@@ -5682,7 +5358,6 @@ window.getMentalQuestion = function(session) {
       progress: Math.round(session.puzzleIndex / session.totalQuestions * 100),
       timeLimit: puzzle.timeLimit,
       hint: puzzle.hint,
-      tier: tierFor(diff),
       solution: puzzle.solution || ''
     };
   }
@@ -5696,23 +5371,7 @@ window.getMentalQuestion = function(session) {
     q._subTopic = q._subTopic || session.subMode;
     if (session.hardMode) q.timeLimit = Math.max(3, Math.round(q.timeLimit * 0.55));
     if (session.layer === 'instinct' && q.timeLimit > 12) q.timeLimit = 12;
-    q.tier = tierFor(diff);
-    return normalizeQuestion(q);
-  }
-
-  // Exam-style mock: mixed full-length paper with fixed sections
-  if (session.mode === 'mock') {
-    var mq;
-    try { mq = generateMockQuestion(diff, session.questionIndex); }
-    catch(e) { mq = generateNumberSenseQuestion(diff, 'exam'); }
-    mq.displayType = 'normal';
-    mq.index = session.questionIndex;
-    mq.total = session.totalQuestions;
-    mq.progress = Math.round(session.questionIndex / session.totalQuestions * 100);
-    if (session.hardMode) mq.timeLimit = Math.max(3, Math.round(mq.timeLimit * 0.55));
-    if (session.layer === 'instinct' && mq.timeLimit > 12) mq.timeLimit = 12;
-    mq.tier = tierFor(diff);
-    return normalizeQuestion(mq);
+    return q;
   }
 
   var q = session.mode === 'pattern' && session.focusType
@@ -5725,8 +5384,7 @@ window.getMentalQuestion = function(session) {
   if (session.hardMode) {
     q.timeLimit = Math.max(3, Math.round(q.timeLimit * 0.55));
   }
-  q.tier = tierFor(diff);
-  return normalizeQuestion(q);
+  return q;
 };
 
 window.submitMentalAnswer = function(session, question, selectedAnswer, timeRemaining) {
@@ -5761,7 +5419,7 @@ window.submitMentalAnswer = function(session, question, selectedAnswer, timeRema
     state.subTopicStats[subTopic].attempts++;
     if (correct) state.subTopicStats[subTopic].correct++;
     // Also update parent category stat
-    var parentCat = mode === 'grandslam' ? (question._parentCategory || null) : (mode === 'mock' ? (question._section || null) : (mode === 'quant' ? 'quant' : (mode === 'reasoning' ? 'reasoning' : (mode === 'verbal' ? 'verbal' : null))));
+    var parentCat = mode === 'grandslam' ? (question._parentCategory || null) : (mode === 'quant' ? 'quant' : (mode === 'reasoning' ? 'reasoning' : (mode === 'verbal' ? 'verbal' : null)));
     if (parentCat && state.stats[parentCat]) {
       state.stats[parentCat].attempts++;
       if (correct) state.stats[parentCat].correct++;
@@ -5801,10 +5459,7 @@ window.submitMentalAnswer = function(session, question, selectedAnswer, timeRema
       options: question.options || [],
       solution: question.solution || '',
       timeTaken: timeTaken,
-      timeLimit: timeLimit,
-      tier: question.tier ? question.tier.label : '',
-      section: question._section || '',
-      sectionName: question._sectionName || ''
+      timeLimit: timeLimit
     });
   }
 
@@ -5893,7 +5548,6 @@ window.resetMentalStats = function() {
 };
 
 window.SPEED_TARGETS = SPEED_TARGETS;
-window.MOCK_CONFIG = MOCK_CONFIG;
 
 window.getSpeedGrades = function() {
   var state = load();
