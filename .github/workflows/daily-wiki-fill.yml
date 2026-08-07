@@ -238,6 +238,7 @@ jobs:
       # tracked current-affairs.json, then remove the scratch so it isn't
       # committed and the archive reflects the merged data.
       - run: node scripts/merge-monthly-current-affairs.js
+      - run: node scripts/fetch-agri-tech.js
       - run: node scripts/cleanup-questions.js
       - run: node scripts/dedup-sentence-flood.js
       - run: node scripts/inject-handpicked-gk.js
