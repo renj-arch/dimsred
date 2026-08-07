@@ -74,7 +74,9 @@ const CAT_ICONS = {
   'Railways & Transport':'🚆','Energy & Power':'⚡',
   'General':'📌','Announcements':'📢',
   'Indian Railways':'🚆','Indian Cinema':'🎬','Cyber Security':'🛡️',
-  'SDGs & Development':'🎯','Indian Tribes':'👥'
+  'SDGs & Development':'🎯','Indian Tribes':'👥',
+  'Statistics & Mathematics':'📊','Geology & Hydrogeology':'💧',
+  'Library & Information Science':'📚','Engineering & Technical':'🔧'
 };
 
 // Group questions by category → subject → subSubject

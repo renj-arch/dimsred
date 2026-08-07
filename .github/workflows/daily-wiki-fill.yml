@@ -239,6 +239,10 @@ jobs:
       # committed and the archive reflects the merged data.
       - run: node scripts/merge-monthly-current-affairs.js
       - run: node scripts/fetch-agri-tech.js
+      - run: node scripts/fetch-stats-maths.js
+      - run: node scripts/fetch-hydrogeology.js
+      - run: node scripts/fetch-library-science.js
+      - run: node scripts/fetch-technical-officer.js
       - run: node scripts/cleanup-questions.js
       - run: node scripts/dedup-sentence-flood.js
       - run: node scripts/inject-handpicked-gk.js
