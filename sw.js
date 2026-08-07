@@ -1,4 +1,4 @@
-const CACHE = 'vlymbooq-v15';
+const CACHE = 'vlymbooq-v16';
 const STATIC_ASSETS = [
   '/css/style.css',
   '/js/theme.js',
@@ -30,11 +30,12 @@ self.addEventListener('fetch', function(e) {
   if (e.request.method !== 'GET') return;
   var path = e.request.url.replace(/^https?:\/\/[^\/]+/, '').split('?')[0];
   var isHtml = /\.html$/.test(path) || path === '/' || path === '';
+  var isData = /^\/data\//.test(path);
   e.respondWith(
     caches.match(e.request).then(function(cached) {
-      if (cached && !isHtml) return cached;
+      if (cached && !isHtml && !isData) return cached;
       return fetch(e.request).then(function(resp) {
-        if (resp && resp.ok && resp.type === 'basic' && !isHtml) {
+        if (resp && resp.ok && resp.type === 'basic' && !isHtml && !isData) {
           var clone = resp.clone();
           caches.open(CACHE).then(function(cache) { cache.put(e.request, clone); });
         }

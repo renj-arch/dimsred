@@ -153,11 +153,26 @@ function mine(topic, title, perPage) {
       var key = (f.question + '|' + f.answer).toLowerCase();
       if (seen[key]) continue;
       seen[key] = 1;
-      out.push({ question: f.question, answer: f.answer });
+      out.push({
+        question: f.question,
+        answer: f.answer,
+        fact: contextLine(sents, i, f.answer)
+      });
       if (out.length >= perPage) break;
     }
     return out;
   });
+}
+
+function contextLine(sents, i, answer) {
+  var out = [sents[i]];
+  for (var d = 1; d <= 2 && out.join(' ').length < 320; d++) {
+    if (sents[i - d]) out.unshift(sents[i - d]);
+    if (sents[i + d]) out.push(sents[i + d]);
+  }
+  var joined = out.join(' ').replace(/\s+/g, ' ').trim();
+  if (joined.length > 500) joined = sents[i];
+  return joined;
 }
 
 function runMiner(opts) {
@@ -206,9 +221,17 @@ function runMiner(opts) {
                 question: m.question,
                 answer: m.answer,
                 hint: '',
-                fact: ''
+                fact: m.fact || ''
               };
-              if (seen[eventKey(q)]) continue;
+              if (seen[eventKey(q)]) {
+                if (m.fact) {
+                  for (var ei = 0; ei < existing[SUBJECT].subSubjects[topic].length; ei++) {
+                    var ex = existing[SUBJECT].subSubjects[topic][ei];
+                    if (eventKey(ex) === eventKey(q) && !ex.fact) ex.fact = m.fact;
+                  }
+                }
+                continue;
+              }
               existing[SUBJECT].subSubjects[topic].push(q);
               seen[eventKey(q)] = true;
               totalAdded++;
