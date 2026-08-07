@@ -51,25 +51,49 @@ async function fetchPageLinks(title, maxLinks = 30) {
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 async function fetchCategoryMembers(wikiCat, maxPages = 5000) {
-  let pages = [], cmcontinue = '';
-  let pageNum = 0;
-  while (pages.length < maxPages) {
-    pageNum++;
-    log('    page ' + pageNum + ' (' + pages.length + ' topics so far)');
-    let url = `${WIKI_API}?action=query&list=categorymembers&cmtitle=${encodeURIComponent('Category:' + wikiCat)}&cmlimit=500&format=json&cmtype=page`;
-    if (cmcontinue) url += '&cmcontinue=' + encodeURIComponent(cmcontinue);
-    try {
-      const d = await fetchJSON(url);
-      for (const m of d.query.categorymembers) {
-        if (m.ns === 0) pages.push(m.title);
-      }
-      cmcontinue = d.continue?.cmcontinue;
-      if (!cmcontinue) break;
-      await delay(500);
-    } catch { break; }
+  // Traverse the category tree recursively: fetch direct pages AND subcategory
+  // names, then descend into each subcategory. This is how content that lives in
+  // nested categories (e.g. Pushtimarga inside Bhakti_movement -> Vaishnavism)
+  // gets discovered, instead of being limited to direct members only.
+  const MAX_DEPTH = 4;
+  const pages = new Set();
+  const visitedCats = new Set();
+  const queue = [{ cat: wikiCat, depth: 0 }];
+
+  while (queue.length && pages.size < maxPages) {
+    const { cat, depth } = queue.shift();
+    const catKey = cat.toLowerCase();
+    if (depth > MAX_DEPTH || visitedCats.has(catKey)) continue;
+    visitedCats.add(catKey);
+
+    let cmcontinue = '';
+    let pageNum = 0;
+    while (pages.size < maxPages) {
+      pageNum++;
+      log('    page ' + pageNum + ' (cat ' + cat + ' depth ' + depth + ', ' + pages.size + ' topics so far)');
+      let url = `${WIKI_API}?action=query&list=categorymembers&cmtitle=${encodeURIComponent('Category:' + cat)}&cmlimit=500&format=json&cmtype=page|subcat`;
+      if (cmcontinue) url += '&cmcontinue=' + encodeURIComponent(cmcontinue);
+      try {
+        const d = await fetchJSON(url);
+        for (const m of d.query.categorymembers) {
+          if (m.ns === 0) {
+            if (!m.title.startsWith('List of ') && !m.title.includes('/')) pages.add(m.title);
+          } else if (m.ns === 14) {
+            queue.push({
+              cat: m.title.replace(/^Category:/, ''),
+              depth: depth + 1,
+            });
+          }
+        }
+        cmcontinue = d.continue?.cmcontinue;
+        if (!cmcontinue) break;
+        await delay(500);
+      } catch { break; }
+    }
   }
-  log('    done: ' + pages.length + ' topics');
-  return pages.filter(t => !t.startsWith('List of ') && !t.includes('/'));
+
+  log('    done: ' + pages.size + ' topics');
+  return [...pages];
 }
 
 async function fetchAllTopics(topics, concurrency) {
