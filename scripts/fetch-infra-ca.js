@@ -9,7 +9,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'InfraBot/1.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'InfraBot/1.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -21,7 +21,9 @@ function fetchJSON(url, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -89,7 +91,7 @@ async function fetchVandeBharat(existingKeys, newQuestions, seqObj) {
         if (h.indexOf('route') >= 0 || h.indexOf('termini') >= 0 || h.indexOf('from') >= 0) hasRoute = ci;
       }
       if (hasName < 0 && hasRoute < 0) { hasName = 0; hasRoute = Math.min(1, hr.length - 1); }
-      for (var ri = 1; ri < Math.min(t.length, 60); ri++) {
+      for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
         if (row.length < Math.max(hasName, hasRoute) + 1) continue;
         var name = strip(row[hasName]);
@@ -148,7 +150,7 @@ async function fetchRailwayZones(existingKeys, newQuestions, seqObj) {
         if (h.indexOf('hq') >= 0 || h.indexOf('headquarter') >= 0) hqCol = ci;
       }
       if (zoneCol >= 0 && hqCol >= 0) {
-        for (var ri = 1; ri < Math.min(t.length, 30); ri++) {
+        for (var ri = 1; ri < t.length; ri++) {
           var row = t[ri];
           if (row.length < Math.max(zoneCol, hqCol) + 1) continue;
           var zone = strip(row[zoneCol]);
@@ -181,7 +183,7 @@ async function fetchMajorPorts(existingKeys, newQuestions, seqObj) {
       }
       if (nameCol < 0 && stateCol < 0) { nameCol = 1; stateCol = 5; }
       if (nameCol >= 0) {
-        for (var ri = 1; ri < Math.min(t.length, 25); ri++) {
+        for (var ri = 1; ri < t.length; ri++) {
           var row = t[ri];
           if (row.length < Math.max(nameCol, stateCol) + 1) continue;
           var port = strip(row[nameCol]);

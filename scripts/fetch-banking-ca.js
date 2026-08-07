@@ -9,7 +9,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'BankBot/1.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'BankBot/1.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -21,7 +21,9 @@ function fetchJSON(url, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -33,6 +35,16 @@ function fetchPageText(title) {
   return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
     if (d && d.parse && d.parse.text) return d.parse.text['*'];
     return '';
+  });
+}
+
+function categoryMembers(category) {
+  return fetchJSON(API + '?action=query&list=categorymembers&cmtitle=Category:' + encodeURIComponent(category) + '&cmlimit=300&cmtype=page&format=json').then(function(d) {
+    var out = [];
+    if (d && d.query && d.query.categorymembers) {
+      d.query.categorymembers.forEach(function(e) { if (e.title) out.push(e.title); });
+    }
+    return out;
   });
 }
 
@@ -54,6 +66,20 @@ function extractWikiTables(html) {
     if (rows.length > 1) tables.push(rows);
   }
   return tables;
+}
+
+function extractInfobox(html) {
+  var data = {};
+  var m = html.match(/<table[^>]*class="[^"]*infobox[^"]*"[^>]*>([\s\S]*?)<\/table>/i);
+  if (!m) return data;
+  var rows = m[1].match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
+  if (!rows) return data;
+  for (var ri = 0; ri < rows.length; ri++) {
+    var th = rows[ri].match(/<th[^>]*>([\s\S]*?)<\/th>/i);
+    var td = rows[ri].match(/<td[^>]*>([\s\S]*?)<\/td>/i);
+    if (th && td) { var label = strip(th[1]); var value = strip(td[1]); if (label && value && label.length > 2) data[label] = value; }
+  }
+  return data;
 }
 
 function makeQuestion(qText, answer, seq, source, emoji, fact) {
@@ -98,7 +124,7 @@ async function fetchPSBanks(existingKeys, newQuestions, seqObj) {
       }
       if (hqCol < 0 && hr.length > 2) hqCol = 2;
       if (hqCol < 0) continue;
-      for (var ri = 1; ri < Math.min(t.length, 25); ri++) {
+      for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
         if (row.length < Math.max(nameCol, hqCol) + 1) continue;
         var name = strip(row[nameCol]);
@@ -159,7 +185,7 @@ async function fetchUPIData(existingKeys, newQuestions, seqObj) {
       }
       if (appCol < 0) { appCol = 0; provCol = 1; }
       if (appCol >= 0) {
-        for (var ri = 1; ri < Math.min(t.length, 15); ri++) {
+        for (var ri = 1; ri < t.length; ri++) {
           var row = t[ri];
           if (row.length < Math.max(appCol, provCol) + 1) continue;
           var app = strip(row[appCol]);
@@ -195,6 +221,34 @@ async function fetchUPIData(existingKeys, newQuestions, seqObj) {
   } catch (e) { console.error('  Error: ' + e.message + '\n'); }
 }
 
+async function fetchBankCategories(existingKeys, newQuestions, seqObj) {
+  console.error('--- Banks (category discovery) ---');
+  var cats = ['Public_sector_banks_of_India', 'Private_sector_banks_in_India', 'Cooperative_banks_of_India', 'Regional_Rural_Banks'];
+  var KEYS = ['Headquarters', 'Founded', 'Chairperson', 'MD'];
+  var count = 0;
+  for (var ci = 0; ci < cats.length; ci++) {
+    try {
+      var members = await categoryMembers(cats[ci]);
+      for (var mi = 0; mi < members.length; mi++) {
+        var title = members[mi];
+        if (title.indexOf('Category:') === 0 || title.indexOf('List of') === 0) continue;
+        try {
+          var html = await fetchPageText(title.replace(/ /g, '_'));
+          var info = extractInfobox(html);
+          for (var k = 0; k < KEYS.length; k++) {
+            if (info[KEYS[k]] && info[KEYS[k]].length > 2) {
+              var q = makeQuestion('What is the ' + KEYS[k] + ' of ' + title + '?', info[KEYS[k]], seqObj.seq++, '' + title, '\uD83C\uDFE6', title + ' ' + KEYS[k] + ': ' + info[KEYS[k]] + '.');
+              if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
+            }
+          }
+        } catch (e) {}
+        await delay(120);
+      }
+    } catch (e) { console.error('  Error on category ' + cats[ci] + ': ' + e.message); }
+  }
+  console.error('  ' + count + ' category-expanded bank questions added\n');
+}
+
 async function main() {
   var existing = {};
   if (fs.existsSync(PIB_PATH)) {
@@ -215,6 +269,8 @@ async function main() {
   await fetchPSBanks(existingKeys, newQuestions, seqObj);
   await delay(800);
   await fetchUPIData(existingKeys, newQuestions, seqObj);
+  await delay(800);
+  await fetchBankCategories(existingKeys, newQuestions, seqObj);
 
   newQuestions.forEach(function(q) { existing[CA_KEY].subSubjects[subKey].push(q); });
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');

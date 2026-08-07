@@ -14,7 +14,7 @@ function clean(v) {
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'SchemeBot/1.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'SchemeBot/1.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -26,7 +26,9 @@ function fetchJSON(url, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -60,6 +62,16 @@ function extractWikiTablesFromBlock(block) {
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 
 function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+function categoryMembers(category) {
+  return fetchJSON(API + '?action=query&list=categorymembers&cmtitle=Category:' + encodeURIComponent(category) + '&cmlimit=300&cmtype=page&format=json').then(function(d) {
+    var out = [];
+    if (d && d.query && d.query.categorymembers) {
+      d.query.categorymembers.forEach(function(p) { if (p.title) out.push(p.title); });
+    }
+    return out;
+  });
+}
 
 function makeQuestion(qText, answer, seq, source, emoji, fact) {
   if (!answer || answer.length < 2) return null;
@@ -107,14 +119,14 @@ var TEMPLATES = [
   }
 ];
 
-async function fetchSchemes(existingKeys, newQuestions, seq) {
+async function fetchSchemes(existingKeys, newQuestions, seqObj) {
   console.error('\n--- Government Schemes ---');
   try {
     var html = await fetchPage('List_of_schemes_of_the_government_of_India');
     var tables = extractWikiTablesFromBlock(html);
     var count = 0;
     tables.forEach(function(t) {
-      for (var ri = 1; ri < Math.min(t.length, 100); ri++) {
+      for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
         if (row.length < 4) continue;
         var name = clean(row[0]);
@@ -122,13 +134,33 @@ async function fetchSchemes(existingKeys, newQuestions, seq) {
         if (name.match(/^\d/) || name.indexOf('Total') >= 0 || name.indexOf('Source') >= 0) continue;
 
         for (var ti = 0; ti < TEMPLATES.length; ti++) {
-          var q = TEMPLATES[ti](row, seq++);
+          var q = TEMPLATES[ti](row, seqObj.n++);
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }
     });
     console.error('  ' + count + ' scheme questions added\n');
   } catch (e) { console.error('  Error: ' + e.message + '\n'); }
+}
+
+async function fetchCategorySchemes(existingKeys, newQuestions, seqObj) {
+  console.error('--- Government Schemes (category discovery) ---');
+  var cats = ['Government_schemes_in_India', 'Pradhan_Mantri_Jan_Dhan_Yojana', 'Social_justice_programmes_of_the_government_of_India'];
+  var count = 0;
+  for (var ci = 0; ci < cats.length; ci++) {
+    try {
+      var members = await categoryMembers(cats[ci]);
+      for (var mi = 0; mi < members.length; mi++) {
+        var name = clean(members[mi]);
+        if (!name || name.length < 3 || name.length > 70) continue;
+        if (name.indexOf('Category:') === 0 || name.indexOf('List of') === 0 || name.match(/^\d/)) continue;
+        var q = makeQuestion('Which is a flagship scheme of the Government of India?', name, seqObj.n++, 'Government Schemes', '\uD83C\uDFE6', name + ' is listed under ' + cats[ci] + '.');
+        if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
+      }
+      await delay(400);
+    } catch (e) { console.error('  Error on category ' + cats[ci] + ': ' + e.message); }
+  }
+  console.error('  ' + count + ' category-expanded scheme questions added\n');
 }
 
 async function main() {
@@ -146,9 +178,11 @@ async function main() {
   var existingKeys = {};
   existing[CA_KEY].subSubjects[subKey].forEach(function(q) { existingKeys[eventKey(q)] = true; });
   var newQuestions = [];
-  var seq = existing[CA_KEY].subSubjects[subKey].length + 1;
+  var seqObj = { n: existing[CA_KEY].subSubjects[subKey].length + 1 };
 
-  await fetchSchemes(existingKeys, newQuestions, seq);
+  await fetchSchemes(existingKeys, newQuestions, seqObj);
+  await delay(400);
+  await fetchCategorySchemes(existingKeys, newQuestions, seqObj);
 
   newQuestions.forEach(function(q) { existing[CA_KEY].subSubjects[subKey].push(q); });
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');

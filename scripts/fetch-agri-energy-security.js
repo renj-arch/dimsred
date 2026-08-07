@@ -50,6 +50,16 @@ function fetchPageText(title) {
   });
 }
 
+function categoryMembers(category) {
+  return fetchJSON(API + '?action=query&list=categorymembers&cmtitle=Category:' + encodeURIComponent(category) + '&cmlimit=300&cmtype=page&format=json').then(function(d) {
+    var out = [];
+    if (d && d.query && d.query.categorymembers) {
+      d.query.categorymembers.forEach(function(e) { if (e.title) out.push(e.title); });
+    }
+    return out;
+  });
+}
+
 function extractInfobox(html) {
   var data = {};
   var m = html.match(/<table[^>]*class="[^"]*infobox[^"]*"[^>]*>([\s\S]*?)<\/table>/i);
@@ -125,7 +135,7 @@ async function main() {
       if (!hadData && AGRI_PAGES[pi].useText) {
         var txt = strip(html);
         var leads = txt.match(/(?:India|Indian)\s+[^.]*(?:\d+[\d,.]*\s*(?:million|billion|tonnes|hectare|rupees|crore|lakh))[^.]*\./gi) || [];
-        leads.slice(0,5).forEach(function(lead) {
+        leads.forEach(function(lead) {
           var numM = lead.match(/(\d+[\d,.]*\s*(?:million|billion|lakh|crore|tonnes|hectare)?)/);
           var num = numM ? numM[0].trim() : '';
           var subj = lead.match(/(?:producer|exporter|production|consumption|produce|export|import|yield)\s+of\s+([a-zA-Z\s]+?)(?:\s+in|\s+at|\s+was|\s+is|$)/i);
@@ -168,7 +178,7 @@ async function main() {
       if (!hadData && ENERGY_PAGES[pi2].useText) {
         var txt = strip(html);
         var leads = txt.match(/(?:India|Indian)\s+[^.]*(?:\d+[\d,.]*\s*(?:GW|MW|gigawatt|megawatt|billion|capacity))[^.]*\./gi) || [];
-        leads.slice(0,4).forEach(function(lead) {
+        leads.forEach(function(lead) {
           var numM = lead.match(/(\d+[\d,.]*\s*(?:GW|MW|billion)?)/);
           var num = numM ? numM[0].trim() : '';
           if (num && num.length > 2) {
@@ -211,6 +221,42 @@ async function main() {
     } catch (e) {}
     await delay(350);
   }
+
+  process.stdout.write('  Category discovery... ');
+  var DISCOVERY = [
+    { cats: ['Agriculture_in_India', 'Indian_crops'], map: 'a', sub: 'Agriculture & Food', keys: ['Production', 'Output', 'Crop', 'Area', 'Founded', 'Ministry'] },
+    { cats: ['Renewable_energy_in_India', 'Solar_power_in_India', 'Hydroelectric_power_stations_in_India', 'Wind_power_in_India'], map: 'e', sub: 'Energy & Renewable', keys: ['Installed capacity', 'Capacity', 'Generation', 'Operator', 'Commissioned'] },
+    { cats: ['Security_and_law_enforcement_agencies_of_India', 'Military_of_India'], map: 's', sub: 'Internal Security', keys: ['Motto', 'Personnel', 'Strength', 'Headquarters', 'Head of the Police'] }
+  ];
+  var catCount = 0;
+  for (var di = 0; di < DISCOVERY.length; di++) {
+    var cfg = DISCOVERY[di];
+    var mapArr = cfg.map === 'a' ? nq.a : (cfg.map === 'e' ? nq.e : nq.s);
+    var ekMap = cfg.map === 'a' ? ek.a : (cfg.map === 'e' ? ek.e : ek.s);
+    var seqMap = cfg.map === 'a' ? seq.a : (cfg.map === 'e' ? seq.e : seq.s);
+    for (var dc = 0; dc < cfg.cats.length; dc++) {
+      try {
+        var members = await categoryMembers(cfg.cats[dc]);
+        for (var mm = 0; mm < members.length; mm++) {
+          var title = members[mm];
+          if (title.indexOf('Category:') === 0 || title.indexOf('List of') === 0 || title.indexOf('Template:') === 0) continue;
+          try {
+            var chh = await fetchPageText(title.replace(/ /g, '_'));
+            var info = extractInfobox(chh);
+            for (var ck = 0; ck < cfg.keys.length; ck++) {
+              var key = cfg.keys[ck];
+              if (info[key] && info[key].length > 2) {
+                var q = makeQuestion('What is the ' + key + ' related to ' + title + '?', info[key], cfg.sub, seqMap++, '' + title, '\u2699\uFE0F', title + ' ' + key + ': ' + info[key] + '.');
+                if (q && !ekMap[eventKey(q)]) { mapArr.push(q); ekMap[eventKey(q)] = true; catCount++; }
+              }
+            }
+          } catch (e) {}
+          await delay(120);
+        }
+      } catch (e) {}
+    }
+  }
+  process.stdout.write(catCount + ' category items\n');
 
   nq.a.forEach(function(q) { existing[CA_KEY].subSubjects['Agriculture & Food'].push(q); });
   nq.e.forEach(function(q) { existing[CA_KEY].subSubjects['Energy & Renewable'].push(q); });

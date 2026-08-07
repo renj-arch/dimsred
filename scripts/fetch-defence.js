@@ -14,7 +14,7 @@ function cleanVal(v) {
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'DefenceBot/1.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'DefenceBot/1.0' } }, function(res) {
       var data = '';
       res.on('data', function(c) { data += c; });
       res.on('end', function() {
@@ -26,7 +26,9 @@ function fetchJSON(url, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(data)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -120,7 +122,7 @@ async function fetchExercises(existingKeys, newQuestions, seqObj) {
       for (var ti = 0; ti < tables.length; ti++) {
         recent = recent.concat(extractExerciseTable(tables[ti]));
       }
-      recent = recent.slice(0, 10);
+      recent = recent.slice();
       recent.forEach(function(ex) {
         var qText = 'Which military exercise was conducted between India and ' + ex.partner + ' by the ' + p.force + ' in recent years?';
         var q = makeQuestion(qText, ex.name, seqObj.seq++, '' + p.label + ' Exercises', '\uD83C\uDFC1', 'Exercise ' + ex.name + ' (' + p.force + ') was conducted with ' + ex.partner + ' (' + ex.year + ').');
@@ -140,7 +142,7 @@ async function fetchMissiles(existingKeys, newQuestions, seqObj) {
     var count = 0;
     tables.forEach(function(t) {
       var hasFamily = t[0].length >= 9;
-      for (var ri = 1; ri < Math.min(t.length, 30); ri++) {
+      for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
         if (row.length < 3) continue;
         var off = (hasFamily && row.length >= 9) ? 1 : 0;

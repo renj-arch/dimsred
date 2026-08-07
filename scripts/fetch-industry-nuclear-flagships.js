@@ -9,14 +9,16 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'IndustryBot/2.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'IndustryBot/2.0' } }, function(res) {
       var d = ''; res.on('data', function(c) { d += c; });
       res.on('end', function() {
         if (res.statusCode === 429 && retries > 0) { var wait = Math.pow(2, 4 - retries) * 3000; return setTimeout(function() { fetchJSON(url, retries - 1).then(resolve, reject); }, wait); }
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -34,6 +36,16 @@ function makeQuestion(qText, answer, subSubject, seq, source, emoji, fact) {
 function eventKey(q) { var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); }; return n(q.question || '').substring(0, 80) + '|' + n(q.answer || ''); }
 
 function fetchPageText(title) { return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) { if (d && d.parse && d.parse.text) return d.parse.text['*']; return ''; }); }
+
+function categoryMembers(category) {
+  return fetchJSON(API + '?action=query&list=categorymembers&cmtitle=Category:' + encodeURIComponent(category) + '&cmlimit=300&cmtype=page&format=json').then(function(d) {
+    var out = [];
+    if (d && d.query && d.query.categorymembers) {
+      d.query.categorymembers.forEach(function(p) { if (p.title) out.push(p.title); });
+    }
+    return out;
+  });
+}
 
 function extractInfobox(html) {
   var data = {}; var m = html.match(/<table[^>]*class="[^"]*infobox[^"]*"[^>]*>([\s\S]*?)<\/table>/i);
@@ -126,7 +138,14 @@ async function main() {
     { page: 'Digital_India', name: 'Digital India', emoji: '\uD83D\uDCF1' },
     { page: 'Make_in_India', name: 'Make in India', emoji: '\uD83C\uDFED' },
     { page: 'Pradhan_Mantri_Awas_Yojana', name: 'Pradhan Mantri Awas Yojana', emoji: '\uD83C\uDFE0' },
-    { page: 'Pradhan_Mantri_Kisan_Samman_Nidhi', name: 'PM-KISAN', emoji: '\uD83C\uDF3E' }
+    { page: 'Pradhan_Mantri_Kisan_Samman_Nidhi', name: 'PM-KISAN', emoji: '\uD83C\uDF3E' },
+    { page: 'Pradhan_Mantri_Jan_Dhan_Yojana', name: 'Jan Dhan Yojana', emoji: '\uD83C\uDFE6' },
+    { page: 'Pradhan_Mantri_Ujjwala_Yojana', name: 'Ujjwala Yojana', emoji: '\uD83D\uDD25' },
+    { page: 'Mission_Indradhanush', name: 'Mission Indradhanush', emoji: '\uD83D\uDC89' },
+    { page: 'Namami_Gange', name: 'Namami Gange', emoji: '\uD83D\uDCA7' },
+    { page: 'National_Digital_Literacy_Mission', name: 'National Digital Literacy Mission', emoji: '\uD83D\uDCF1' },
+    { page: 'Pradhan_Mantri_Suryodaya_Yojana', name: 'PM Suryodaya Yojana', emoji: '\u2600\uFE0F' },
+    { page: 'Pradhan_Mantri_Vishwakarma_Yojana', name: 'PM Vishwakarma Yojana', emoji: '\uD83D\uDD28' }
   ];
   var fCount = 0;
   for (var pi = 0; pi < FLAG_PAGES.length; pi++) {
@@ -144,6 +163,42 @@ async function main() {
     await delay(300);
   }
   process.stdout.write(fCount + ' items\n');
+
+  process.stdout.write('  Category discovery... ');
+  var DISCOVERY = [
+    { cats: ['Coal_by_country', 'Mines_in_India'], map: 'Coal Mining & Minerals', keys: ['Production', 'Proven reserves', 'Reserves', 'Major products', 'Founded', 'Headquarters'] },
+    { cats: ['Ports_in_India', 'Seaports_in_India'], map: 'Ports & Shipping', keys: ['Operator', 'Opened', 'Location', 'Headquarters', 'Coordinates'] },
+    { cats: ['Nuclear_power_plants_in_India'], map: 'Nuclear & Defence Exports', keys: ['Operator', 'Location', 'Commissioned', 'Capacity', 'Modelling'] },
+    { cats: ['Government_schemes_in_India'], map: 'Flagship Programmes', keys: ['Launched', 'Launch date', 'Started', 'Date launched', 'Budget', 'Ministry'] }
+  ];
+  var catCount = 0;
+  for (var di = 0; di < DISCOVERY.length; di++) {
+    var cfg = DISCOVERY[di];
+    for (var dc = 0; dc < cfg.cats.length; dc++) {
+      var title2;
+      try {
+        var members = await categoryMembers(cfg.cats[dc]);
+        for (var mm = 0; mm < members.length; mm++) {
+          title2 = members[mm];
+          if (title2.indexOf('Category:') === 0 || title2.indexOf('List of') === 0) continue;
+          try {
+            var ch3 = await fetchPageText(title2.replace(/ /g, '_'));
+            var ci3 = extractInfobox(ch3);
+            for (var ck = 0; ck < cfg.keys.length; ck++) {
+              var k3 = cfg.keys[ck];
+              if (ci3[k3] && ci3[k3].length > 2) {
+                var catS = cfg.map;
+                var q = makeQuestion('What is the ' + k3 + ' of ' + title2 + '?', strip(ci3[k3]), catS, seq[catS]++, '' + title2, '\u2699\uFE0F', title2 + ' ' + k3 + ': ' + ci3[k3] + '.');
+                if (q && !ek[catS][eventKey(q)]) { if (!nq[catS]) nq[catS] = []; nq[catS].push(q); ek[catS][eventKey(q)] = true; catCount++; }
+              }
+            }
+          } catch (e) {}
+          await delay(120);
+        }
+      } catch (e) {}
+    }
+  }
+  process.stdout.write(catCount + ' category items\n');
 
   Object.keys(nq).forEach(function(cat) { (nq[cat] || []).forEach(function(q) { existing[CA_KEY].subSubjects[cat].push(q); }); });
   fs.writeFileSync(CA_PATH, JSON.stringify(existing, null, 2), 'utf8');

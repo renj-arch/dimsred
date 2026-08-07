@@ -11,7 +11,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'EduCultureBot/1.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'EduCultureBot/1.0' } }, function(res) {
       var data = '';
       res.on('data', function(c) { data += c; });
       res.on('end', function() {
@@ -23,7 +23,9 @@ function fetchJSON(url, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(data)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 

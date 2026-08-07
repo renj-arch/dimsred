@@ -9,7 +9,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'EconBot/1.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'EconBot/1.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -21,7 +21,9 @@ function fetchJSON(url, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -33,6 +35,16 @@ function fetchPageText(title) {
   return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
     if (d && d.parse && d.parse.text) return d.parse.text['*'];
     return '';
+  });
+}
+
+function categoryMembers(category) {
+  return fetchJSON(API + '?action=query&list=categorymembers&cmtitle=Category:' + encodeURIComponent(category) + '&cmlimit=200&cmtype=page&format=json').then(function(d) {
+    var out = [];
+    if (d && d.query && d.query.categorymembers) {
+      d.query.categorymembers.forEach(function(e) { if (e.title) out.push(e.title); });
+    }
+    return out;
   });
 }
 
@@ -115,7 +127,7 @@ async function fetchBudgetData(existingKeys, newQuestions, seqObj) {
       if (yrCol >= 0 && (deficitCol >= 0 || budgetCol >= 0)) { fiscalTable = t; break; }
     }
     if (fiscalTable) {
-      for (var ri = 1; ri < Math.min(fiscalTable.length, 30); ri++) {
+      for (var ri = 1; ri < fiscalTable.length; ri++) {
         var row = fiscalTable[ri];
         if (row.length < Math.max(yrCol, deficitCol, budgetCol) + 1) continue;
         var year = strip(row[yrCol]);
@@ -175,7 +187,7 @@ async function fetchGSTData(existingKeys, newQuestions, seqObj) {
         if (h.indexOf('member') >= 0 || h.indexOf('portfolio') >= 0) isCouncil = true;
       }
       if (isCouncil) {
-        for (var ri = 1; ri < Math.min(t.length, 35); ri++) {
+        for (var ri = 1; ri < t.length; ri++) {
           var row = t[ri];
           if (row.length < 2) continue;
           var member = strip(row[1]);
@@ -240,6 +252,45 @@ async function fetchNitiAayog(existingKeys, newQuestions, seqObj) {
   } catch (e) { console.error('  Error: ' + e.message + '\n'); }
 }
 
+async function fetchBudgetByYear(existingKeys, newQuestions, seqObj) {
+  console.error('\n--- Union Budget (year-wise) ---');
+  try {
+    var now = new Date();
+    var cur = now.getFullYear();
+    var pages = {};
+    try {
+      var members = await categoryMembers('Union_budgets_of_India');
+      members.forEach(function(t) {
+        var ym = t.match(/\b(19|20)\d{2}\b/);
+        if (ym && ym[0] >= '2014') pages[t.replace(/ /g, '_')] = ym[0];
+      });
+    } catch (e) {}
+    for (var off = 0; off < 3; off++) {
+      var y = cur - off;
+      pages[y + '_Union_Budget_of_India'] = '' + y;
+    }
+    var KEYS = ['Total expenditure', 'Total revenue', 'Expenditure', 'Fiscal deficit', 'Revenue deficit', 'Total receipts', 'FinanceMinister'];
+    var count = 0;
+    var titles = Object.keys(pages);
+    for (var pi = 0; pi < titles.length; pi++) {
+      try {
+        var html = await fetchPageText(titles[pi]);
+        var info = extractInfobox(html);
+        var yr2 = pages[titles[pi]];
+        for (var k = 0; k < KEYS.length; k++) {
+          if (info[KEYS[k]] && info[KEYS[k]].length > 2) {
+            var qText = 'In the ' + yr2 + ' Union Budget, what was allocated under ' + KEYS[k] + '?';
+            var q = makeQuestion(qText, info[KEYS[k]], seqObj.seq++, 'Union Budget', '\uD83D\uDCB0', yr2 + ' Union Budget: ' + KEYS[k] + ' = ' + info[KEYS[k]] + '.');
+            if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
+          }
+        }
+      } catch (e) {}
+      await delay(300);
+    }
+    console.error('  ' + count + ' year-wise budget questions added\n');
+  } catch (e) { console.error('  Error: ' + e.message + '\n'); }
+}
+
 async function main() {
   var existing = {};
   if (fs.existsSync(PIB_PATH)) {
@@ -258,6 +309,8 @@ async function main() {
   var seqObj = { seq: existing[CA_KEY].subSubjects[subKey].length + 1 };
 
   await fetchBudgetData(existingKeys, newQuestions, seqObj);
+  await delay(800);
+  await fetchBudgetByYear(existingKeys, newQuestions, seqObj);
   await delay(800);
   await fetchGSTData(existingKeys, newQuestions, seqObj);
   await delay(800);

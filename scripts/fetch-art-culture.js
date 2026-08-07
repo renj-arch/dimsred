@@ -9,7 +9,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'CultureBot/1.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'CultureBot/1.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -21,7 +21,9 @@ function fetchJSON(url, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -81,7 +83,7 @@ async function fetchUnescoSites(existingKeys, newQuestions, seqObj) {
     var tables = extractWikiTables(html);
     var count = 0;
     tables.forEach(function(t) {
-      for (var ri = 1; ri < Math.min(t.length, 50); ri++) {
+      for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
         if (row.length < 3) continue;
         var name = strip(row[1]);
@@ -146,7 +148,7 @@ async function fetchClassicalDances(existingKeys, newQuestions, seqObj) {
     var tables = extractWikiTables(html);
     var count = 0;
     tables.forEach(function(t) {
-      for (var ri = 1; ri < Math.min(t.length, 20); ri++) {
+      for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
         if (row.length < 2) continue;
         var name = strip(row[0]);
@@ -180,76 +182,151 @@ async function fetchClassicalDances(existingKeys, newQuestions, seqObj) {
   } catch (e) { console.error('  Error: ' + e.message + '\n'); }
 }
 
-async function fetchFolkDances(existingKeys, newQuestions, seqObj) {
-  console.error('--- Folk Dances ---');
+async function fetchClassicalDances(existingKeys, newQuestions, seqObj) {
+  console.error('--- Classical Dances ---');
   try {
-    var html = await fetchPageText('Folk_dance');
-    var sections = html.match(/<h[23][^>]*>([\s\S]*?)<\/h[23]>[\s\S]*?<ul>([\s\S]*?)<\/ul>/gi);
+    var html = await fetchPageText('Classical_dance');
+    var tables = extractWikiTables(html);
     var count = 0;
-    if (sections) {
-      var indiaSection = sections.filter(function(s) { return /India/i.test(s); });
-      if (indiaSection.length > 0) {
-        var items = indiaSection[0].match(/<li>([\s\S]*?)<\/li>/gi);
-        if (items) {
-          items.forEach(function(li) {
-            var txt = strip(li);
-            if (txt.length > 5) {
-              var parts = txt.split(/[–-]/);
-              if (parts.length >= 2) {
-                var dance = strip(parts[0]);
-                var state = strip(parts[1]);
-                if (dance.length > 2 && state.length > 2 && state.length < 40) {
-                  var qText = 'The folk dance "' + dance.trim() + '" is associated with which state?';
-                  var q = makeQuestion(qText, state.trim(), seqObj.seq++, 'Folk Dance', '\uD83D\uDC83', dance + ' is a folk dance from ' + state.trim() + '.');
-                  if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
-                }
-              }
-            }
-          });
+    tables.forEach(function(t) {
+      for (var ri = 1; ri < t.length; ri++) {
+        var row = t[ri];
+        if (row.length < 2) continue;
+        var name = strip(row[0]);
+        var origin = row.length > 1 ? strip(row[1]) : '';
+        if (!name || name.length < 3 || name === 'Name' || name.indexOf('Total') >= 0) continue;
+        if (origin) {
+          var qText = 'The classical dance ' + name + ' originates from which Indian state?';
+          var q = makeQuestion(qText, origin, seqObj.seq++, 'Classical Dance', '\uD83D\uDC83', name + ' is a classical dance form from ' + origin + '.');
+          if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }
-    }
-    console.error('  ' + count + ' folk dance questions added\n');
-    if (count < 10) {
-      var folkData = [
-        { dance: 'Bhangra', state: 'Punjab' },
-        { dance: 'Garba', state: 'Gujarat' },
-        { dance: 'Dandiya Raas', state: 'Gujarat' },
-        { dance: 'Ghoomar', state: 'Rajasthan' },
-        { dance: 'Bihu', state: 'Assam' },
-        { dance: 'Lavani', state: 'Maharashtra' },
-        { dance: 'Chhau', state: 'West Bengal' },
-        { dance: 'Kalbelia', state: 'Rajasthan' },
-        { dance: 'Rouf', state: 'Jammu and Kashmir' },
-        { dance: 'Yakshagana', state: 'Karnataka' },
-        { dance: 'Dollu Kunitha', state: 'Karnataka' },
-        { dance: 'Theyyam', state: 'Kerala' },
-        { dance: 'Thiruvathira', state: 'Kerala' },
-        { dance: 'Koli', state: 'Maharashtra' },
-        { dance: 'Pung Cholom', state: 'Manipur' },
-        { dance: 'Nati', state: 'Himachal Pradesh' },
-        { dance: 'Bardo Chham', state: 'Arunachal Pradesh' },
-        { dance: 'Gaur Maria', state: 'Chhattisgarh' },
-        { dance: 'Charkula', state: 'Uttar Pradesh' },
-        { dance: 'Karma', state: 'Madhya Pradesh' },
+    });
+    if (count === 0) {
+      var danceData = [
+        { name: 'Bharatanatyam', state: 'Tamil Nadu' },
+        { name: 'Kathak', state: 'Uttar Pradesh' },
+        { name: 'Kathakali', state: 'Kerala' },
+        { name: 'Kuchipudi', state: 'Andhra Pradesh' },
+        { name: 'Odissi', state: 'Odisha' },
+        { name: 'Manipuri', state: 'Manipur' },
+        { name: 'Mohiniyattam', state: 'Kerala' },
+        { name: 'Sattriya', state: 'Assam' }
       ];
-      var added = 0;
-      folkData.forEach(function(f) {
-        var key = f.dance + f.state;
-        var isDup = false;
-        for (var i = 0; i < newQuestions.length; i++) {
-          if (newQuestions[i].question.indexOf(f.dance) >= 0) { isDup = true; break; }
-        }
-        if (!isDup) {
-          var qText = 'The folk dance "' + f.dance + '" is associated with which state?';
-          var q = makeQuestion(qText, f.state, seqObj.seq++, 'Reference - Folk Dance', '\uD83D\uDC83', f.dance + ' is a folk dance from ' + f.state + '.');
-          if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; added++; }
-        }
+      danceData.forEach(function(d) {
+        var qText = 'The classical dance ' + d.name + ' originates from which Indian state?';
+        var q = makeQuestion(qText, d.state, seqObj.seq++, 'Classical Dance', '\uD83D\uDC83', d.name + ' is a classical dance form from ' + d.state + '.');
+        if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
       });
-      count += added;
-      console.error('  (fallback added ' + added + ' folk dance questions, total ' + count + ')\n');
     }
+    console.error('  ' + count + ' dance questions added\n');
   } catch (e) { console.error('  Error: ' + e.message + '\n'); }
+}
+
+// Discover members of a Wikipedia category (grows as category fills up).
+async function categoryMembers(category) {
+  var out = [];
+  var url = API + '?action=query&list=categorymembers&cmtitle=Category:' + encodeURIComponent(category) + '&cmlimit=300&format=json';
+  var d;
+  try { d = await fetchJSON(url); } catch (e) { return out; }
+  var mems = d && d.query && d.query.categorymembers ? d.query.categorymembers : [];
+  mems.forEach(function(m) { if (m && m.title) out.push(m.title); });
+  return out;
+}
+
+async function fetchFolkDances(existingKeys, newQuestions, seqObj) {
+  console.error('--- Folk Dances ---');
+  var count = 0;
+  // Primary: iterate a spread of state/regional dance categories so each run
+  // can surface new/unlisted forms rather than one fixed "Folk_dance" page.
+  var CATS = [
+    'Indian folk dances', 'Folk dances of India', 'Indian dances',
+    'Dances of Rajasthan', 'Dances of Gujarat', 'Dances of Kerala',
+    'Dances of Tamil Nadu', 'Dances of Andhra Pradesh', 'Dances of Odisha',
+    'Dances of West Bengal', 'Dances of Maharashtra', 'Dances of Karnataka'
+  ];
+  var danceMap = {};
+  try {
+    var html = await fetchPageText('Folk_dance');
+    if (html) {
+      var seen = {};
+      // Try to read the "India" section even if header split differs.
+      var qm = html.match(/<h2[^>]*>[\s\S]*?India[\s\S]*?(?=<h2)/i);
+      (qm ? [qm[0]] : []).concat(html.match(/<ul>[\s\S]*?<\/ul>/gi) || []).forEach(function(blk) {
+        (blk.match(/<li[^>]*>([\s\S]*?)<\/li>/gi) || []).forEach(function(li) {
+          var txt = strip(li);
+          var m = txt.match(/^(.+?)[\s\u2013\u2014-]\s*([A-Z][A-Za-z ]+)$/);
+          if (m) {
+            danceMap[m[1].trim()] = m[2].trim();
+            seen[m[1].trim()] = true;
+          } else if (txt.length > 3 && txt.length < 40) {
+            // Single item; record name only, state resolved later via fetch if possible.
+          }
+        });
+      });
+    }
+  } catch (e) {}
+
+  // Category membership auto-discovery for new dance forms/states.
+  for (var ci = 0; ci < CATS.length; ci++) {
+    var members = await categoryMembers(CATS[ci]);
+    for (var mj = 0; mj < members.length; mj++) {
+      var asDance = members[mj].replace(/^Category:/, '').trim();
+      if (asDance && asDance.length > 3 && asDance.indexOf('India') < 0) {
+        // Store as a dance form; state will be mapped best-effort from category name.
+        var inferred = CATS[ci].replace(/^Dances of /, '');
+        if (inferred === 'Indian folk dances' || inferred === 'Indian dances' || /Categories/.test(inferred)) inferred = '';
+        if (inferred) { if (!danceMap[asDance]) danceMap[asDance] = inferred; }
+        else if (!seen[asDance] && !danceMap[asDance]) danceMap[asDance] = 'Refer regional list'; // placeholders replaced below
+      }
+    }
+    await delay(400);
+  }
+
+  // Turn collected dance->state pairs into questions; drop placeholders with no real state.
+  var FINAL_PLACEHOLDER = 'Refer regional list';
+  Object.keys(danceMap).forEach(function(dance) {
+    var state = danceMap[dance];
+    if (!state || state === FINAL_PLACEHOLDER) return;
+    if (state.length > 40) return;
+    var qText = 'The folk dance "' + dance + '" is associated with which state?';
+    var q = qText.indexOf('Refer') >= 0 ? null : makeQuestion(qText, state, seqObj.seq++, 'Folk Dance', '\uD83D\uDC83', dance + ' is a folk dance from ' + state + '.');
+    if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
+  });
+
+  console.error('  ' + count + ' folk dance questions added\n');
+  if (count < 10) {
+    var folkData = [
+      { dance: 'Bhangra', state: 'Punjab' },
+      { dance: 'Garba', state: 'Gujarat' },
+      { dance: 'Dandiya Raas', state: 'Gujarat' },
+      { dance: 'Ghoomar', state: 'Rajasthan' },
+      { dance: 'Bihu', state: 'Assam' },
+      { dance: 'Lavani', state: 'Maharashtra' },
+      { dance: 'Chhau', state: 'West Bengal' },
+      { dance: 'Kalbelia', state: 'Rajasthan' },
+      { dance: 'Rouf', state: 'Jammu and Kashmir' },
+      { dance: 'Yakshagana', state: 'Karnataka' },
+      { dance: 'Dollu Kunitha', state: 'Karnataka' },
+      { dance: 'Theyyam', state: 'Kerala' },
+      { dance: 'Thiruvathira', state: 'Kerala' },
+      { dance: 'Koli', state: 'Maharashtra' },
+      { dance: 'Pung Cholom', state: 'Manipur' },
+      { dance: 'Nati', state: 'Himachal Pradesh' },
+      { dance: 'Bardo Chham', state: 'Arunachal Pradesh' },
+      { dance: 'Gaur Maria', state: 'Chhattisgarh' },
+      { dance: 'Charkula', state: 'Uttar Pradesh' },
+      { dance: 'Karma', state: 'Madhya Pradesh' },
+    ];
+    var added = 0;
+    folkData.forEach(function(f) {
+      var qText = 'The folk dance "' + f.dance + '" is associated with which state?';
+      var q = makeQuestion(qText, f.state, seqObj.seq++, 'Reference - Folk Dance', '\uD83D\uDC83', f.dance + ' is a folk dance from ' + f.state + '.');
+      if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; added++; }
+    });
+    count += added;
+    console.error('  (fallback added ' + added + ' folk dance questions, total ' + count + ')\n');
+  }
 }
 
 async function main() {

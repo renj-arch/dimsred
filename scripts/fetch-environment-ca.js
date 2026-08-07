@@ -9,7 +9,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'EnvBot/1.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'EnvBot/1.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -21,7 +21,9 @@ function fetchJSON(url, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -84,7 +86,7 @@ async function fetchCOP(existingKeys, newQuestions, seqObj) {
       if (t.length < 3) return;
       var h0 = t[0] && t[0][0] ? t[0][0] : '';
       if (h0.indexOf('Year') >= 0 || h0.indexOf('Conference') >= 0 || h0.indexOf('COP') >= 0) {
-        for (var ri = 1; ri < Math.min(t.length, 35); ri++) {
+        for (var ri = 1; ri < t.length; ri++) {
           var row = t[ri];
           if (row.length < 3) continue;
           var year = strip(row[0]);
@@ -174,7 +176,7 @@ async function fetchNationalParks(existingKeys, newQuestions, seqObj) {
       if (t.length < 3) return;
       var h0 = t[0] && t[0][0] ? t[0][0] : '';
       if (h0.indexOf('Park') >= 0 || h0.indexOf('Name') >= 0 || h0.indexOf('National park') >= 0) {
-        for (var ri = 1; ri < Math.min(t.length, 60); ri++) {
+        for (var ri = 1; ri < t.length; ri++) {
           var row = t[ri];
           if (row.length < 3) continue;
           var park = strip(row[0]);

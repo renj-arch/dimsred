@@ -9,14 +9,16 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'RailBot/2.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'RailBot/2.0' } }, function(res) {
       var d = ''; res.on('data', function(c) { d += c; });
       res.on('end', function() {
         if (res.statusCode === 429 && retries > 0) { var wait = Math.pow(2, 4 - retries) * 3000; return setTimeout(function() { fetchJSON(url, retries - 1).then(resolve, reject); }, wait); }
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -34,6 +36,16 @@ function makeQuestion(qText, answer, subSubject, seq, source, emoji, fact) {
 function eventKey(q) { var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); }; return n(q.question || '').substring(0, 80) + '|' + n(q.answer || ''); }
 
 function fetchPageText(title) { return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) { if (d && d.parse && d.parse.text) return d.parse.text['*']; return ''; }); }
+
+function categoryMembers(category) {
+  return fetchJSON(API + '?action=query&list=categorymembers&cmtitle=Category:' + encodeURIComponent(category) + '&cmlimit=300&cmtype=page&format=json').then(function(d) {
+    var out = [];
+    if (d && d.query && d.query.categorymembers) {
+      d.query.categorymembers.forEach(function(p) { if (p.title) out.push(p.title); });
+    }
+    return out;
+  });
+}
 
 function extractInfobox(html) {
   var data = {}; var m = html.match(/<table[^>]*class="[^"]*infobox[^"]*"[^>]*>([\s\S]*?)<\/table>/i);
@@ -81,7 +93,16 @@ async function main() {
     { page: 'Bharat_Gaurav_Train', name: 'Bharat Gaurav Train' },
     { page: 'Vande_Bharat_Express', name: 'Vande Bharat Express' },
     { page: 'Ministry_of_Railways_(India)', name: 'Ministry of Railways' },
-    { page: 'Railway_Board', name: 'Railway Board' }
+    { page: 'Railway_Board', name: 'Railway Board' },
+    { page: 'Delhi_Metro', name: 'Delhi Metro' },
+    { page: 'Chennai_Metro', name: 'Chennai Metro' },
+    { page: 'Kavach_(train_protection_system)', name: 'Kavach train protection' },
+    { page: 'Indian_Railway_Catering_and_Tourism_Corporation', name: 'IRCTC' },
+    { page: 'RailTel', name: 'RailTel' },
+    { page: 'Container_Corporation_of_India', name: 'CONCOR' },
+    { page: 'Dedicated_Freight_Corridors', name: 'Dedicated Freight Corridor' },
+    { page: 'National_High_Speed_Rail_Corporation', name: 'National High Speed Rail Corporation' },
+    { page: 'Amrit_Bharat_Express', name: 'Amrit Bharat Express' }
   ];
   var rCount = 0;
   for (var pi = 0; pi < RAIL_PAGES.length; pi++) {
@@ -108,7 +129,14 @@ async function main() {
     { page: 'Air_India', name: 'Air India' },
     { page: 'IndiGo', name: 'IndiGo' },
     { page: 'SpiceJet', name: 'SpiceJet' },
-    { page: 'Airports_Authority_of_India', name: 'AAI' }
+    { page: 'Airports_Authority_of_India', name: 'AAI' },
+    { page: 'Akasa_Air', name: 'Akasa Air' },
+    { page: 'Go_First', name: 'Go First' },
+    { page: 'Airlines_of_India', name: 'Airlines' },
+    { page: 'Indira_Gandhi_International_Airport', name: 'IGI Airport' },
+    { page: 'Chhatrapati_Shivaji_Maharaj_International_Airport', name: 'CSMIA Mumbai' },
+    { page: 'Kempegowda_International_Airport', name: 'Kempegowda Airport' },
+    { page: 'GMR_Group', name: 'GMR Group' }
   ];
   var aCount = 0;
   for (var pi2 = 0; pi2 < AV_PAGES.length; pi2++) {
@@ -126,6 +154,55 @@ async function main() {
     await delay(350);
   }
   process.stdout.write(aCount + ' items\n');
+
+  process.stdout.write('  Category discovery... ');
+  var RAIL_CATS = ['Metro_systems_in_India', 'Railway_divides_of_Indian_Railways'];
+  var AV_CATS = ['Indian_airlines', 'Airports_in_India'];
+  var RAIL_KEYS = ['Headquarters', 'Founded', 'Chairperson', 'CEO', 'Lines', 'Stations', 'Operator'];
+  var AV_KEYS = ['Headquarters', 'Founded', 'CEO', 'Fleet size', 'Focus cities', 'Hubs', 'Operator', 'Owner'];
+  var catCount = 0;
+  var ci;
+  for (ci = 0; ci < RAIL_CATS.length; ci++) {
+    try {
+      var rmembers = await categoryMembers(RAIL_CATS[ci]);
+      for (var rm = 0; rm < rmembers.length; rm++) {
+        var rt = rmembers[rm];
+        if (rt.indexOf('Category:') === 0 || rt.indexOf('List of') === 0) continue;
+        try {
+          var rh = await fetchPageText(rt.replace(/ /g, '_'));
+          var rih = extractInfobox(rh);
+          for (var rk = 0; rk < RAIL_KEYS.length; rk++) {
+            if (rih[RAIL_KEYS[rk]] && rih[RAIL_KEYS[rk]].length > 2) {
+              var q = makeQuestion('What is the ' + RAIL_KEYS[rk] + ' of ' + rt + '?', rih[RAIL_KEYS[rk]], 'Railways', seq.r++, '' + rt, '\uD83D\uDE82', rt + ' ' + RAIL_KEYS[rk] + ': ' + rih[RAIL_KEYS[rk]] + '.');
+              if (q && !ek.r[eventKey(q)]) { nq.r.push(q); ek.r[eventKey(q)] = true; catCount++; }
+            }
+          }
+        } catch (e) {}
+        await delay(120);
+      }
+    } catch (e) {}
+  }
+  for (ci = 0; ci < AV_CATS.length; ci++) {
+    try {
+      var amembers = await categoryMembers(AV_CATS[ci]);
+      for (var am = 0; am < amembers.length; am++) {
+        var at = amembers[am];
+        if (at.indexOf('Category:') === 0 || at.indexOf('List of') === 0) continue;
+        try {
+          var ah = await fetchPageText(at.replace(/ /g, '_'));
+          var ai = extractInfobox(ah);
+          for (var ak = 0; ak < AV_KEYS.length; ak++) {
+            if (ai[AV_KEYS[ak]] && ai[AV_KEYS[ak]].length > 2) {
+              var q = makeQuestion('What is the ' + AV_KEYS[ak] + ' of ' + at + '?', ai[AV_KEYS[ak]], 'Aviation', seq.a++, '' + at, '\u2708\uFE0F', at + ' ' + AV_KEYS[ak] + ': ' + ai[AV_KEYS[ak]] + '.');
+              if (q && !ek.a[eventKey(q)]) { nq.a.push(q); ek.a[eventKey(q)] = true; catCount++; }
+            }
+          }
+        } catch (e) {}
+        await delay(120);
+      }
+    } catch (e) {}
+  }
+  process.stdout.write(catCount + ' category items\n');
 
   nq.r.forEach(function(q) { existing[CA_KEY].subSubjects['Railways'].push(q); });
   nq.a.forEach(function(q) { existing[CA_KEY].subSubjects['Aviation'].push(q); });

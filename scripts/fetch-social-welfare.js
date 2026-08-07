@@ -9,14 +9,16 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'WelfareBot/2.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'WelfareBot/2.0' } }, function(res) {
       var d = ''; res.on('data', function(c) { d += c; });
       res.on('end', function() {
         if (res.statusCode === 429 && retries > 0) { var wait = Math.pow(2, 4 - retries) * 3000; return setTimeout(function() { fetchJSON(url, retries - 1).then(resolve, reject); }, wait); }
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -35,6 +37,16 @@ function makeQuestion(qText, answer, subSubject, seq, source, emoji, fact) {
 function eventKey(q) { var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); }; return n(q.question || '').substring(0, 80) + '|' + n(q.answer || ''); }
 
 function fetchPageText(title) { return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) { if (d && d.parse && d.parse.text) return d.parse.text['*']; return ''; }); }
+
+function categoryMembers(category) {
+  return fetchJSON(API + '?action=query&list=categorymembers&cmtitle=Category:' + encodeURIComponent(category) + '&cmlimit=300&cmtype=page&format=json').then(function(d) {
+    var out = [];
+    if (d && d.query && d.query.categorymembers) {
+      d.query.categorymembers.forEach(function(p) { if (p.title) out.push(p.title); });
+    }
+    return out;
+  });
+}
 
 function extractInfobox(html) {
   var data = {}; var m = html.match(/<table[^>]*class="[^"]*infobox[^"]*"[^>]*>([\s\S]*?)<\/table>/i);
@@ -88,6 +100,44 @@ async function main() {
     process.stdout.write(count + ' items\n');
     await delay(350);
   }
+
+  process.stdout.write('  Category discovery... ');
+  var CAT_START = [
+    { cat: 'Women_in_India', map: 'Women & Child Development' },
+    { cat: 'Child_welfare_in_India', map: 'Women & Child Development' },
+    { cat: 'Scheduled_Tribes_of_India', map: 'Tribal Affairs' },
+    { cat: 'Caste_related_legislation', map: 'SC/ST/OBC Welfare' },
+    { cat: 'Rural_development_in_India', map: 'Rural Development' },
+    { cat: 'Urban_planning_in_India', map: 'Urban Development' }
+  ];
+  var CAT_FIELDS = ['Minister', 'Minister of State', 'Headquarters', 'Formed', 'Chairperson', 'Established'];
+  var catCount = 0;
+  for (var ci = 0; ci < CAT_START.length; ci++) {
+    try {
+      var members = await categoryMembers(CAT_START[ci].cat);
+      var map = CAT_START[ci].map;
+      for (var mi = 0; mi < members.length; mi++) {
+        var title = members[mi];
+        if (title.indexOf('Category:') === 0 || title.indexOf('List of') === 0 || title.indexOf('Template:') === 0) continue;
+        try {
+          var ch = await fetchPageText(title.replace(/ /g, '_'));
+          var cinfo = extractInfobox(ch);
+          for (var f = 0; f < CAT_FIELDS.length; f++) {
+            var key = CAT_FIELDS[f];
+            if (cinfo[key] && cinfo[key].length > 2) {
+              var v = cinfo[key];
+              var base = title.replace(/_/g, ' ');
+              var qText = key === 'Formed' || key === 'Established' ? 'When was ' + base + ' established?' : 'Who is the ' + key + ' of ' + base + '?';
+              var q = makeQuestion(qText, v, map, seq[map]++, '' + base, '\uD83C\uDFE5', base + ': ' + key + ' = ' + v + '.');
+              if (q && !ek[map][eventKey(q)]) { if (!nq[map]) nq[map] = []; nq[map].push(q); ek[map][eventKey(q)] = true; catCount++; }
+            }
+          }
+        } catch (e) {}
+        await delay(120);
+      }
+    } catch (e) {}
+  }
+  process.stdout.write(catCount + ' category items\n');
 
   Object.keys(nq).forEach(function(cat) {
     (nq[cat] || []).forEach(function(q) { existing[CA_KEY].subSubjects[cat].push(q); });

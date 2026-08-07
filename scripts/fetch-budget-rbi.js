@@ -9,7 +9,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'BudgetRBIBot/2.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'BudgetRBIBot/2.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -21,7 +21,9 @@ function fetchJSON(url, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -120,7 +122,7 @@ async function main() {
     // Also extract fiscal deficit, GDP numbers from text
     var fd = html.match(/(?:fiscal\s+deficit|revenue\s+deficit|primary\s+deficit)[^<]*?(?:Rs\.?\s*)?([\d,]+(?:\s+crore|\s+lakh\s+crore)?)/gi);
     if (fd) {
-      fd.slice(0, 5).forEach(function(m) {
+      fd.forEach(function(m) {
         var q = makeQuestion('What is a key budget term mentioned in the Union Budget?', strip(m), 'Union Budget & Economic Survey', seq.b++, 'Union Budget 2026', '\uD83D\uDCB0', strip(m));
         if (q && !ek.b[eventKey(q)]) { nq.b.push(q); ek.b[eventKey(q)] = true; bCount++; }
       });

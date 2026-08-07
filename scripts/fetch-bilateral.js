@@ -14,7 +14,7 @@ function clean(v) {
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'BilateralBot/1.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'BilateralBot/1.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -26,7 +26,9 @@ function fetchJSON(url, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -60,6 +62,16 @@ function extractWikiTables(html) {
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 
 function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+function categoryMembers(category) {
+  return fetchJSON(API + '?action=query&list=categorymembers&cmtitle=Category:' + encodeURIComponent(category) + '&cmlimit=300&cmtype=page&format=json').then(function(d) {
+    var out = [];
+    if (d && d.query && d.query.categorymembers) {
+      d.query.categorymembers.forEach(function(p) { if (p.title) out.push(p.title); });
+    }
+    return out;
+  });
+}
 
 function makeQuestion(qText, answer, seq, source, emoji, fact) {
   if (!answer || answer.length < 2) return null;
@@ -132,7 +144,7 @@ function hasDateColumn(t) {
   return false;
 }
 
-async function fetchRelations(existingKeys, newQuestions, seq) {
+async function fetchRelations(existingKeys, newQuestions, seqObj) {
   console.error('\n--- Diplomatic Relations ---');
   try {
     var html = await fetchPage('Foreign_relations_of_India');
@@ -144,7 +156,7 @@ async function fetchRelations(existingKeys, newQuestions, seq) {
     }
     if (!relTable) { console.error('  Could not identify diplomatic relations table\n'); return; }
     var count = 0;
-    for (var ri = 0; ri < Math.min(relTable.length, 200); ri++) {
+    for (var ri = 0; ri < relTable.length; ri++) {
       var row = relTable[ri];
       if (row.length < 3) continue;
       var country = row[1];
@@ -166,12 +178,38 @@ async function fetchRelations(existingKeys, newQuestions, seq) {
           var enrich = REL_CONTEXT[country];
           if (enrich) fact += ' ' + enrich;
         }
-        var q = makeQuestion(qText, country, seq++, 'Foreign Relations', '\uD83C\uDF0D', fact);
+        var q = makeQuestion(qText, country, seqObj.n++, 'Foreign Relations', '\uD83C\uDF0D', fact);
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
       }
     }
     console.error('  ' + count + ' diplomatic relations questions added\n');
   } catch (e) { console.error('  Error: ' + e.message + '\n'); }
+}
+
+async function fetchRelationCategories(existingKeys, newQuestions, seqObj) {
+  console.error('--- Bilateral Relations (category discovery) ---');
+  var cats = ['Bilateral_relations_of_India', 'Foreign_relations_of_India_by_country'];
+  var count = 0;
+  var seen = {};
+  for (var ci = 0; ci < cats.length; ci++) {
+    try {
+      var members = await categoryMembers(cats[ci]);
+      for (var mi = 0; mi < members.length; mi++) {
+        var title = members[mi];
+        if (title.indexOf('Category:') === 0 || title.indexOf('List of') === 0) continue;
+        var m2 = title.match(/India\u2013([A-Za-z\s\-]+?) relations/i) || title.match(/([A-Za-z\s\-]+?)\u2013India relations/i);
+        var other = m2 ? m2[1].trim() : title.replace(/\s+relations$/i, '').trim();
+        if (!other || other.length < 3) continue;
+        if (seen[other.toLowerCase()]) continue;
+        seen[other.toLowerCase()] = true;
+        var qText = 'Which country, other than India, figures in the "' + title + '" bilateral relations entry?';
+        var q = makeQuestion(qText, other, seqObj.n++, 'Foreign Relations', '\uD83C\uDF0D', title + ' documents India\u2019s bilateral relations with ' + other + '.');
+        if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
+      }
+      await delay(400);
+    } catch (e) { console.error('  Error on category ' + cats[ci] + ': ' + e.message); }
+  }
+  console.error('  ' + count + ' category-expanded relations questions added\n');
 }
 
 async function main() {
@@ -201,9 +239,11 @@ async function main() {
   if (removed > 0) console.error('  Removed ' + removed + ' wrong diplomatic relations questions\n');
   existing[CA_KEY].subSubjects[subKey].forEach(function(q) { existingKeys[eventKey(q)] = true; });
   var newQuestions = [];
-  var seq = existing[CA_KEY].subSubjects[subKey].length + 1;
+  var seqObj = { n: existing[CA_KEY].subSubjects[subKey].length + 1 };
 
-  await fetchRelations(existingKeys, newQuestions, seq);
+  await fetchRelations(existingKeys, newQuestions, seqObj);
+  await delay(400);
+  await fetchRelationCategories(existingKeys, newQuestions, seqObj);
 
   newQuestions.forEach(function(q) { existing[CA_KEY].subSubjects[subKey].push(q); });
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');

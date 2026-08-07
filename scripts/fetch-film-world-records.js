@@ -4,19 +4,22 @@ var path = require('path');
 
 var API = 'https://en.wikipedia.org/w/api.php';
 var CA_PATH = path.resolve(__dirname, '..', 'data/questions/current-affairs.json');
+var RECY = new Date().getFullYear(); // current calendar year, used for per-year award pages
 var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'FilmBot/2.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'FilmBot/2.0' } }, function(res) {
       var d = ''; res.on('data', function(c) { d += c; });
       res.on('end', function() {
         if (res.statusCode === 429 && retries > 0) { var wait = Math.pow(2, 4 - retries) * 3000; return setTimeout(function() { fetchJSON(url, retries - 1).then(resolve, reject); }, wait); }
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -75,21 +78,29 @@ async function main() {
   var nq = { f: [], w: [] };
 
   process.stdout.write('  Film Awards... ');
+  var nowY = new Date().getFullYear();
+  // Year-specific award ceremony pages list actual winners/awards; each year adds a new page.
   var AWARD_PAGES = [
-    { page: 'National_Film_Awards_(India)', name: 'National Film Awards' },
-    { page: 'Filmfare_Awards', name: 'Filmfare Awards' },
-    { page: 'IIFA_Awards', name: 'IIFA Awards' },
-    { page: 'Dadasaheb_Phalke_Award', name: 'Dadasaheb Phalke Award' },
-    { page: 'Academy_Awards', name: 'Oscars' },
-    { page: 'Grammy_Awards', name: 'Grammy Awards' }
+    { page: 'National_Film_Awards_(India)', name: 'National Film Awards', kw: ['Awarded for', 'Presented by', 'First awarded', 'Most awards'] },
+    { page: 'Dadasaheb_Phalke_Award', name: 'Dadasaheb Phalke Award', kw: ['Awarded for', 'First awarded', 'First recipient', 'Most recent'] },
+    { page: 'Academy_Awards', name: 'Oscars', kw: ['First awarded', 'Most awards'] }
+  ];
+  var YEARS = [RECY, RECY - 1, RECY - 2, RECY - 3].filter(function(y, i, a) { return a.indexOf(y) === i; });
+  var CEREMONIES = [
+    { tpl: 'Filmfare_Awards_%y', name: 'Filmfare Awards' },
+    { tpl: 'IIFA_Awards_%y', name: 'IIFA Awards' },
+    { tpl: '%_National_Film_Awards', name: 'National Film Awards' },
+    { tpl: 'Filmfare_Awards_South_%y', name: 'Filmfare Awards South' },
+    { tpl: 'Academy_Awards_%y', name: 'Oscars' }
   ];
   var fCount = 0;
+  // (a) generic infobox facts from the main award pages
   for (var ai = 0; ai < AWARD_PAGES.length; ai++) {
     try {
       var html = await fetchPageText(AWARD_PAGES[ai].page);
       var info = extractInfobox(html);
       var name = AWARD_PAGES[ai].name;
-      ['Awarded for', 'Presented by', 'First awarded', 'Last awarded', 'Most awards'].forEach(function(k) {
+      (AWARD_PAGES[ai].kw || ['Awarded for', 'Presented by', 'First awarded', 'Most awards']).forEach(function(k) {
         if (info[k] && info[k].length > 2) {
           var q = makeQuestion('What is the ' + k + ' of ' + name + '?', info[k], 'Film & Entertainment Awards', seq.f++, '' + AWARD_PAGES[ai].page, '\uD83C\uDFAC', name + ': ' + k + ' = ' + info[k] + '.');
           if (q && !ek.f[eventKey(q)]) { nq.f.push(q); ek.f[eventKey(q)] = true; fCount++; }
@@ -97,6 +108,30 @@ async function main() {
       });
     } catch (e) {}
     await delay(350);
+  }
+  // (b) per-year ceremony pages: pull every Award|Winner row from winner tables.
+  for (var ci = 0; ci < CEREMONIES.length; ci++) {
+    for (var yi = 0; yi < YEARS.length; yi++) {
+      var pg = CEREMONIES[ci].tpl.replace('%y', '' + YEARS[yi]).replace('%', '' + YEARS[yi]);
+      try {
+        var html2 = await fetchPageText(pg);
+        var tables2 = extractWikiTables(html2);
+        var perY = 0;
+        for (var tj = 0; tj < tables2.length; tj++) {
+          var t2 = tables2[tj];
+          for (var r2 = 1; r2 < t2.length; r2++) {
+            var row2 = t2[r2]; if (row2.length < 3) continue;
+            var cat = strip(row2[0] || ''); var winner = strip(row2[1] || '');
+            if (winner.length > 2 && cat.length > 1 && winner.indexOf('Winner') < 0 && cat.indexOf('Category') < 0) {
+              var q = makeQuestion('Who won ' + cat + ' at the ' + CEREMONIES[ci].name + ' ' + YEARS[yi] + '?', winner, 'Film & Entertainment Awards', seq.f++, pg, '\uD83C\uDFAC', winner + ' won ' + cat + ' at the ' + CEREMONIES[ci].name + ' ' + YEARS[yi] + '.');
+              if (q && !ek.f[eventKey(q)]) { nq.f.push(q); ek.f[eventKey(q)] = true; fCount++; perY++; }
+            }
+          }
+        }
+        console.error('  ' + CEREMONIES[ci].name + ' ' + YEARS[yi] + ': ' + perY + ' new');
+      } catch (e) {}
+      await delay(300);
+    }
   }
   process.stdout.write(fCount + ' items\n');
 
@@ -107,7 +142,7 @@ async function main() {
     var tables = extractWikiTables(html);
     var wCount = 0;
     tables.forEach(function(t) {
-      for (var ri = 1; ri < t.length && ri < 15; ri++) {
+      for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri]; if (row.length < 2) continue;
         var person = strip(row[0] || ''); var record = strip(row.length > 1 ? row[1] : '');
         if (person.length > 2 && record.length > 5 && person.indexOf('Name') < 0) {

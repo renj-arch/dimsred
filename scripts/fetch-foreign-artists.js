@@ -10,7 +10,7 @@ function wikiFetch(params, retries) {
   if (retries === undefined) retries = 3;
   const qs = Object.entries(params).map(([k,v]) => k + '=' + encodeURIComponent(v)).join('&');
   return new Promise((resolve, reject) => {
-    https.get(API + '?' + qs + '&origin=*&format=json', { agent: AGENT, headers: { 'User-Agent': 'studypro-wiki/1.0' } }, res => {
+    const req = https.get(API + '?' + qs + '&origin=*&format=json', { agent: AGENT, headers: { 'User-Agent': 'studypro-wiki/1.0' } }, res => {
       let d = '';
       res.on('data', c => d += c);
       res.on('end', () => {
@@ -22,7 +22,9 @@ function wikiFetch(params, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch(e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 

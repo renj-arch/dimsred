@@ -9,7 +9,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'ConstBodiesBot/1.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'ConstBodiesBot/1.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -21,7 +21,9 @@ function fetchJSON(url, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -33,6 +35,16 @@ function fetchPageText(title) {
   return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
     if (d && d.parse && d.parse.text) return d.parse.text['*'];
     return '';
+  });
+}
+
+function categoryMembers(category) {
+  return fetchJSON(API + '?action=query&list=categorymembers&cmtitle=Category:' + encodeURIComponent(category) + '&cmlimit=300&cmtype=page&format=json').then(function(d) {
+    var out = [];
+    if (d && d.query && d.query.categorymembers) {
+      d.query.categorymembers.forEach(function(p) { if (p.title) out.push(p.title); });
+    }
+    return out;
   });
 }
 
@@ -102,11 +114,20 @@ var BODIES = [
   { page: 'National_Commission_for_Scheduled_Tribes', name: 'NCST', label: 'Chairperson', emoji: '\u2696' },
   { page: 'Unique_Identification_Authority_of_India', name: 'UIDAI', label: 'Chairperson', emoji: '\uD83C\uDFDB' },
   { page: 'National_Commission_for_Women_(India)', name: 'NCW', label: 'Chairperson', emoji: '\u2696' },
+  { page: 'National_Green_Tribunal', name: 'NGT', label: 'Chairperson', emoji: '\uD83C\uDF3F' },
+  { page: 'Competition_Commission_of_India', name: 'CCI', label: 'Chairperson', emoji: '\uD83D\uDCCA' },
+  { page: 'National_Commission_for_Backward_Classes', name: 'NCBC', label: 'Chairperson', emoji: '\u2696' },
+  { page: 'National_Commission_for_Protection_of_Child_Rights', name: 'NCPCR', label: 'Chairperson', emoji: '\uD83E\uDDD2' },
+  { page: 'Commission_for_Agricultural_Costs_and_Prices', name: 'CACP', label: 'Chairperson', emoji: '\uD83C\uDF3E' },
+  { page: 'National_Medical_Commission', name: 'NMC', label: 'Chairperson', emoji: '\uD83D\uDC89' },
+  { page: 'National_Commission_for_Minorities', name: 'NCM', label: 'Chairperson', emoji: '\u2696' },
+  { page: 'Election_Commission_of_India_State_Election_Commissions', name: 'State Election Commissions', label: 'Chairperson', emoji: '\uD83D\uDDF3' },
+  { page: 'Central_Administrative_Tribunal', name: 'CAT', label: 'Chairperson', emoji: '\u2696' }
 ];
 
 function findNameAndYearCol(t) {
   var nameScores = {}, yearScores = {};
-  for (var ri = 1; ri < Math.min(t.length, 10); ri++) {
+  for (var ri = 1; ri < t.length; ri++) {
     var row = t[ri];
     for (var ci = 0; ci < Math.min(row.length, 6); ci++) {
       var val = strip(row[ci]);
@@ -180,7 +201,7 @@ async function fetchBodyInfo(existingKeys, newQuestions, seqObj) {
           var colInfo = findNameAndYearCol(t);
           if (colInfo.nameCol < 0) continue;
 
-          for (var ri = 1; ri < Math.min(t.length, 50); ri++) {
+          for (var ri = 1; ri < t.length; ri++) {
             var row = t[ri];
             if (row.length < 2) continue;
             var name = getRowName(row, colInfo.nameCol);
@@ -220,6 +241,28 @@ async function main() {
   existing[CA_KEY].subSubjects[subKey].forEach(function(q) { existingKeys[eventKey(q)] = true; });
   var newQuestions = [];
   var seqObj = { seq: existing[CA_KEY].subSubjects[subKey].length + 1 };
+
+  console.error('Auto-expanding bodies from categories...');
+  try {
+    var CATS = ['Constitutional_bodies_of_India', 'Indian_statutory_commissions', 'Government_bodies_of_India'];
+    for (var cci = 0; cci < CATS.length; cci++) {
+      try {
+        var membs = await categoryMembers(CATS[cci]);
+        for (var midx = 0; midx < membs.length; midx++) {
+          var tt = membs[midx];
+          if (tt.indexOf('Category:') === 0 || tt.indexOf('List of') === 0 || tt.indexOf('Template:') === 0) continue;
+          var already = false;
+          for (var bi = 0; bi < BODIES.length; bi++) {
+            if (BODIES[bi].page === tt.replace(/ /g, '_') || BODIES[bi].name.toLowerCase() === tt.toLowerCase()) { already = true; break; }
+          }
+          if (already) continue;
+          BODIES.push({ page: tt.replace(/ /g, '_'), name: tt, label: 'Chairperson', emoji: '\uD83D\uDCDD' });
+        }
+      } catch (e) { console.error('  Category ' + CATS[cci] + ' error: ' + e.message); }
+      await delay(300);
+    }
+    console.error('  Now tracking ' + BODIES.length + ' bodies');
+  } catch (e) { console.error('  Error expanding bodies: ' + e.message); }
 
   await fetchBodyInfo(existingKeys, newQuestions, seqObj);
 

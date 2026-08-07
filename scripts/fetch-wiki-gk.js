@@ -23,13 +23,15 @@ const SUBJECTS = {
 
 function fetchJSON(url) {
   return new Promise((resolve, reject) => {
-    https.get(url + '&origin=*', { headers: { 'User-Agent': 'StudyProGK/2.0' } }, (res) => {
+    var req = https.get(url + '&origin=*', { headers: { 'User-Agent': 'StudyProGK/2.0' } }, (res) => {
       let data = '';
       res.on('data', c => data += c);
       res.on('end', () => {
         try { resolve(JSON.parse(data)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 

@@ -9,7 +9,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'EduBot/1.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'EduBot/1.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -21,7 +21,9 @@ function fetchJSON(url, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -33,6 +35,16 @@ function fetchPageText(title) {
   return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) {
     if (d && d.parse && d.parse.text) return d.parse.text['*'];
     return '';
+  });
+}
+
+function categoryMembers(category) {
+  return fetchJSON(API + '?action=query&list=categorymembers&cmtitle=Category:' + encodeURIComponent(category) + '&cmlimit=500&cmtype=page&format=json').then(function(d) {
+    var out = [];
+    if (d && d.query && d.query.categorymembers) {
+      d.query.categorymembers.forEach(function(p) { if (p.title) out.push(p.title); });
+    }
+    return out;
   });
 }
 
@@ -84,7 +96,7 @@ async function fetchIITs(existingKeys, newQuestions, seqObj) {
       if (t.length < 3) return;
       var h0 = t[0] && t[0][0] ? t[0][0] : '';
       if (h0.indexOf('Institute') >= 0 || h0.indexOf('Name') >= 0 || h0.indexOf('IIT') >= 0) {
-        for (var ri = 1; ri < Math.min(t.length, 30); ri++) {
+        for (var ri = 1; ri < t.length; ri++) {
           var row = t[ri];
           if (row.length < 3) continue;
           var name = strip(row[0]);
@@ -139,7 +151,7 @@ async function fetchIIMs(existingKeys, newQuestions, seqObj) {
       if (t.length < 3) return;
       var h0 = t[0] && t[0][0] ? t[0][0] : '';
       if (h0.indexOf('Institute') >= 0 || h0.indexOf('Name') >= 0 || h0.indexOf('IIM') >= 0) {
-        for (var ri = 1; ri < Math.min(t.length, 30); ri++) {
+        for (var ri = 1; ri < t.length; ri++) {
           var row = t[ri];
           if (row.length < 3) continue;
           var name = strip(row[0]);
@@ -196,7 +208,7 @@ async function fetchAIIMS(existingKeys, newQuestions, seqObj) {
       if (t.length < 3) return;
       var h0 = t[0] && t[0][0] ? t[0][0] : '';
       if (h0.indexOf('Institute') >= 0 || h0.indexOf('Name') >= 0 || h0.indexOf('AIIMS') >= 0) {
-        for (var ri = 1; ri < Math.min(t.length, 25); ri++) {
+        for (var ri = 1; ri < t.length; ri++) {
           var row = t[ri];
           if (row.length < 3) continue;
           var name = strip(row[0]);
@@ -247,7 +259,7 @@ async function fetchNEP(existingKeys, newQuestions, seqObj) {
     var count = 0;
     tables.forEach(function(t) {
       if (t.length < 2) return;
-      for (var ri = 1; ri < Math.min(t.length, 20); ri++) {
+      for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
         if (row.length < 2) continue;
         var a = strip(row[0]);
@@ -286,6 +298,33 @@ async function fetchNEP(existingKeys, newQuestions, seqObj) {
   } catch (e) { console.error('  Error: ' + e.message + '\n'); }
 }
 
+async function fetchEduCategories(existingKeys, newQuestions, seqObj) {
+  console.error('--- Institutions (category discovery) ---');
+  var GROUPS = [
+    { cat: 'Indian_Institutes_of_Technology', label: 'an IIT' },
+    { cat: 'Indian_Institutes_of_Management', label: 'an IIM' },
+    { cat: 'All_India_Institute_of_Medical_Sciences', label: 'an AIIMS' },
+    { cat: 'National_Institutes_of_Technology', label: 'an NIT' },
+    { cat: 'Central_universities_of_India', label: 'a central university' },
+    { cat: 'Deemed_universities_in_India', label: 'a deemed university' }
+  ];
+  var count = 0;
+  for (var ci = 0; ci < GROUPS.length; ci++) {
+    try {
+      var members = await categoryMembers(GROUPS[ci].cat);
+      for (var mi = 0; mi < members.length; mi++) {
+        var title = members[mi];
+        if (title.indexOf('Category:') === 0 || title.indexOf('List of') === 0 || title.indexOf('Template:') === 0) continue;
+        var qText = 'Which educational institution is ' + GROUPS[ci].label + ' in India?';
+        var q = makeQuestion(qText, title, seqObj.seq++, 'Institutions', '\uD83C\uDF93', title + ' is ' + GROUPS[ci].label + ' in India.');
+        if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
+      }
+      await delay(300);
+    } catch (e) { console.error('  Error on category ' + GROUPS[ci].cat + ': ' + e.message); }
+  }
+  console.error('  ' + count + ' category-expanded institution questions added\n');
+}
+
 async function main() {
   var existing = {};
   if (fs.existsSync(PIB_PATH)) {
@@ -310,6 +349,8 @@ async function main() {
   await fetchAIIMS(existingKeys, newQuestions, seqObj);
   await delay(800);
   await fetchNEP(existingKeys, newQuestions, seqObj);
+  await delay(800);
+  await fetchEduCategories(existingKeys, newQuestions, seqObj);
 
   newQuestions.forEach(function(q) { existing[CA_KEY].subSubjects[subKey].push(q); });
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');

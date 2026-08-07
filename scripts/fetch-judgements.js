@@ -13,7 +13,7 @@ function clean(v) {
 function fetchJSON(url, retries) {
   retries = retries || 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'LegalBot/1.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'LegalBot/1.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -30,7 +30,9 @@ function fetchJSON(url, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -65,6 +67,16 @@ function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 
 function pad(n) { return (n < 10 ? '0' : '') + n; }
 
+function categoryMembers(category) {
+  return fetchJSON(API + '?action=query&list=categorymembers&cmtitle=Category:' + encodeURIComponent(category) + '&cmlimit=300&cmtype=page&format=json').then(function(d) {
+    var out = [];
+    if (d && d.query && d.query.categorymembers) {
+      d.query.categorymembers.forEach(function(p) { if (p.title) out.push(p.title); });
+    }
+    return out;
+  });
+}
+
 function makeQuestion(qText, answer, seq, source, emoji, fact) {
   if (!answer || answer.length < 2) return null;
   var now = new Date();
@@ -83,7 +95,7 @@ function eventKey(q) {
   return n(q.question || '').substring(0, 80) + '|' + n(q.answer || '');
 }
 
-async function fetchLandmarks(existingKeys, newQuestions, seq) {
+async function fetchLandmarks(existingKeys, newQuestions, seqObj) {
   console.error('\n--- Landmark Cases ---');
   try {
     var html = await fetchPage('List_of_landmark_court_decisions_in_India');
@@ -91,7 +103,7 @@ async function fetchLandmarks(existingKeys, newQuestions, seq) {
     if (tables.length === 0) { console.error('  No wikitables found\n'); return; }
     var count = 0;
     tables.forEach(function(t) {
-      for (var ri = 1; ri < Math.min(t.length, 50); ri++) {
+      for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
         if (row.length < 3) continue;
         var name = clean(row[0]);
@@ -101,13 +113,33 @@ async function fetchLandmarks(existingKeys, newQuestions, seq) {
         var yrMatch = yearStr.match(/\b\d{4}\b/);
         if (yrMatch && yrMatch[0] >= '1950') {
           var qText = 'Which landmark case was decided by the Supreme Court of India in ' + yrMatch[0] + '?';
-          var q = makeQuestion(qText, name, seq++, 'Landmark Cases', '\u2696', name + ' (' + yrMatch[0] + '): ' + significance.substring(0, 120));
+          var q = makeQuestion(qText, name, seqObj.n++, 'Landmark Cases', '\u2696', name + ' (' + yrMatch[0] + '): ' + significance.substring(0, 120));
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }
     });
     console.error('  ' + count + ' landmark case questions added\n');
   } catch (e) { console.error('  Error: ' + e.message + '\n'); }
+}
+
+async function fetchCategoryCases(existingKeys, newQuestions, seqObj) {
+  console.error('\n--- Landmark Cases (category discovery) ---');
+  var cats = ['Landmark_cases_in_India', 'Supreme_Court_of_India_cases', 'Indian_judgments_on_civil_rights'];
+  var count = 0;
+  for (var ci = 0; ci < cats.length; ci++) {
+    try {
+      var members = await categoryMembers(cats[ci]);
+      for (var mi = 0; mi < members.length; mi++) {
+        var title = clean(members[mi]);
+        if (!title || title.length < 4 || title.indexOf('List of') === 0 || title.indexOf('Category:') === 0) continue;
+        var qText = 'Which is a landmark judgment of the Supreme Court of India?';
+        var q = makeQuestion(qText, title, seqObj.n++, 'Landmark Cases', '\u2696', title + ' is a landmark Supreme Court of India judgment (Category: ' + cats[ci] + ').');
+        if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
+      }
+      await delay(400);
+    } catch (e) { console.error('  Error on category ' + cats[ci] + ': ' + e.message); }
+  }
+  console.error('  ' + count + ' category-expanded case questions added\n');
 }
 
 async function main() {
@@ -125,9 +157,11 @@ async function main() {
   var existingKeys = {};
   existing[CA_KEY].subSubjects[subKey].forEach(function(q) { existingKeys[eventKey(q)] = true; });
   var newQuestions = [];
-  var seq = existing[CA_KEY].subSubjects[subKey].length + 1;
+  var seqObj = { n: existing[CA_KEY].subSubjects[subKey].length + 1 };
 
-  await fetchLandmarks(existingKeys, newQuestions, seq);
+  await fetchLandmarks(existingKeys, newQuestions, seqObj);
+  await delay(400);
+  await fetchCategoryCases(existingKeys, newQuestions, seqObj);
 
   newQuestions.forEach(function(q) { existing[CA_KEY].subSubjects[subKey].push(q); });
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');

@@ -9,14 +9,16 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'MergerBot/2.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'MergerBot/2.0' } }, function(res) {
       var d = ''; res.on('data', function(c) { d += c; });
       res.on('end', function() {
         if (res.statusCode === 429 && retries > 0) { var wait = Math.pow(2, 4 - retries) * 3000; return setTimeout(function() { fetchJSON(url, retries - 1).then(resolve, reject); }, wait); }
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -74,31 +76,38 @@ async function main() {
 
   process.stdout.write('  Mergers & Acquisitions... ');
   var MA_PAGES = [
-    { page: 'List_of_mergers_and_acquisitions_by_Microsoft', name: 'Microsoft acquisitions' },
-    { page: 'List_of_mergers_and_acquisitions_by_Google', name: 'Google acquisitions' },
-    { page: 'List_of_mergers_and_acquisitions_by_Amazon', name: 'Amazon acquisitions' },
-    { page: 'Insights into Indian M&A 2024', fallback: true }
+    { page: 'List_of_mergers_and_acquisitions_by_Microsoft', acquirer: 'Microsoft' },
+    { page: 'List_of_mergers_and_acquisitions_by_Google', acquirer: 'Google' },
+    { page: 'List_of_mergers_and_acquisitions_by_Amazon', acquirer: 'Amazon' },
+    { page: 'List_of_mergers_and_acquisitions_by_Apple', acquirer: 'Apple' },
+    { page: 'List_of_mergers_and_acquisitions_by_Meta_Platforms', acquirer: 'Meta' },
+    { page: 'List_of_mergers_and_acquisitions_by_IBM', acquirer: 'IBM' },
+    { page: 'List_of_acquisitions_by_Intel', acquirer: 'Intel' }
   ];
   var count = 0;
+  var rowCap = 40; // cap rows per table/run so later reruns pick up remaining rows (dedup skips already-added)
   for (var mi = 0; mi < MA_PAGES.length; mi++) {
     try {
-      if (MA_PAGES[mi].fallback) continue;
       var html = await fetchPageText(MA_PAGES[mi].page);
       var tables = extractWikiTables(html);
-      tables.forEach(function(t) {
-        for (var ri = 1; ri < t.length && ri < 8; ri++) {
+      var perPage = 0;
+      for (var ti = 0; ti < tables.length && perPage < rowCap; ti++) {
+        var t = tables[ti];
+        for (var ri = 1; ri < t.length && perPage < rowCap; ri++) {
           var row = t[ri]; if (row.length < 3) continue;
-          var acquirer = strip(MA_PAGES[mi].page.match(/^List_of_mergers_and_acquisitions_by_(\w+)/i) ? RegExp.$1 : '');
+          var acquirer = MA_PAGES[mi].acquirer || '';
           var target = strip(row[0] || '');
           var year = strip(row.length > 1 ? row[1] : '');
           var value = strip(row.length > 2 ? row[2] : '');
-          if (target.length > 2 && target.indexOf('Company') < 0 && (value.match(/[\d.]+/) || year.match(/20\d{2}/))) {
-            var q = makeQuestion('What was the value of ' + acquirer + '\'s acquisition of ' + target + '?', value || year, 'Mergers & Acquisitions', seq++, '' + MA_PAGES[mi].page, '\uD83E\uDD1D', acquirer + ' acquired ' + target + ' for ' + (value || year) + '.');
-            if (q && !ek[eventKey(q)]) { nq.push(q); ek[eventKey(q)] = true; count++; }
+          if (acquirer && target.length > 2 && target.indexOf('Company') < 0 && (value.match(/[\d.]+/) || year.match(/20\d{2}/))) {
+            var ans = value || year;
+            var q = makeQuestion('What was the value of ' + acquirer + '\'s acquisition of ' + target + '?', ans, 'Mergers & Acquisitions', seq++, 'M&A', '\uD83E\uDD1D', acquirer + ' acquired ' + target + ' for ' + ans + ' in ' + year + '.');
+            if (q && !ek[eventKey(q)]) { nq.push(q); ek[eventKey(q)] = true; count++; perPage++; }
           }
         }
-      });
-    } catch (e) {}
+      }
+      console.error('  ' + MA_PAGES[mi].acquirer + ': ' + perPage + ' new');
+    } catch (e) { console.error('  ' + MA_PAGES[mi].acquirer + ': error ' + e.message); }
     await delay(350);
   }
 
@@ -106,16 +115,18 @@ async function main() {
   try {
     var html = await fetchPageText('List_of_largest_companies_in_India');
     var tables = extractWikiTables(html);
+    var coCount = 0;
     tables.forEach(function(t) {
-      for (var ri = 1; ri < t.length && ri < 10; ri++) {
+      for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri]; if (row.length < 3) continue;
         var name = strip(row[0] || ''); var revenue = strip(row[row.length - 1] || '');
         if (name.length > 2 && name.indexOf('Company') < 0 && revenue.match(/[\d,]+/)) {
           var q = makeQuestion('What is the revenue of ' + name + '?', revenue, 'Mergers & Acquisitions', seq++, 'Largest companies in India', '\uD83D\uDCA5', name + ' revenue: ' + revenue + '.');
-          if (q && !ek[eventKey(q)]) { nq.push(q); ek[eventKey(q)] = true; count++; }
+          if (q && !ek[eventKey(q)]) { nq.push(q); ek[eventKey(q)] = true; count++; coCount++; }
         }
       }
     });
+    console.error('  Largest companies: ' + coCount + ' new');
   } catch (e) {}
   process.stdout.write(count + ' items\n');
 

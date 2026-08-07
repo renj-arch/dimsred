@@ -9,7 +9,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'CommitteesBot/2.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'CommitteesBot/2.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -21,7 +21,9 @@ function fetchJSON(url, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -61,6 +63,16 @@ function extractInfobox(html) {
     if (th && td) { var label = strip(th[1]); var value = strip(td[1]); if (label && value && label.length > 2) data[label] = value; }
   }
   return data;
+}
+
+function categoryMembers(category) {
+  return fetchJSON(API + '?action=query&list=categorymembers&cmtitle=Category:' + encodeURIComponent(category) + '&cmlimit=300&cmtype=page&format=json').then(function(d) {
+    var out = [];
+    if (d && d.query && d.query.categorymembers) {
+      d.query.categorymembers.forEach(function(p) { if (p.title) out.push(p.title); });
+    }
+    return out;
+  });
 }
 
 function extractWikiTables(html) {
@@ -109,7 +121,23 @@ async function main() {
     'Election_Commission_of_India',
     'Union_Public_Service_Commission',
     'National_Human_Rights_Commission_of_India',
-    'NITI_Aayog'
+    'NITI_Aayog',
+    'National_Commission_for_Backward_Classes',
+    'National_Commission_for_Protection_of_Child_Rights',
+    'Competition_Commission_of_India',
+    'Central_Vigilance_Commission',
+    'Central_Information_Commission',
+    'National_Water_Commission',
+    'National_Commission_for_Scheduled_Castes',
+    'National_Commission_for_Scheduled_Tribes',
+    'National_Commission_for_Women_(India)',
+    'Telecom_Regulatory_Authority_of_India',
+    'Securities_and_Exchange_Board_of_India',
+    'Reserve_Bank_of_India',
+    'University_Grants_Commission_(India)',
+    'National_Medical_Commission',
+    'Press_Council_of_India',
+    'National_Statistical_Commission_(India)'
   ];
   var cCount = 0;
   for (var pi = 0; pi < COMMITTEE_PAGES.length; pi++) {
@@ -144,7 +172,17 @@ async function main() {
     { page: 'Pradhan_Mantri_Ujjwala_Yojana', name: 'Ujjwala Yojana', emoji: '\uD83D\uDD25' },
     { page: 'Pradhan_Mantri_Jan_Dhan_Yojana', name: 'Jan Dhan Yojana', emoji: '\uD83C\uDFE6' },
     { page: 'Skill_India', name: 'Skill India', emoji: '\uD83D\uDCBC' },
-    { page: 'Smart_Cities_Mission', name: 'Smart Cities Mission', emoji: '\uD83C\uDFD9' }
+    { page: 'Smart_Cities_Mission', name: 'Smart Cities Mission', emoji: '\uD83C\uDFD9' },
+    { page: 'Pradhan_Mantri_Mudra_Yojana', name: 'PM Mudra Yojana', emoji: '\uD83D\uDCB5' },
+    { page: 'Pradhan_Mantri_Krishi_Sinchai_Yojana', name: 'PM Krishi Sinchai Yojana', emoji: '\uD83D\uDCA7' },
+    { page: 'Pradhan_Mantri_Fasal_Bima_Yojana', name: 'PM Fasal Bima Yojana', emoji: '\uD83C\uDF31' },
+    { page: 'Pradhan_Mantri_Matsya_Sampada_Yojana', name: 'PM Matsya Sampada Yojana', emoji: '\uD83D\uDC1F' },
+    { page: 'Pradhan_Mantri_Garib_Kalyan_Yojana', name: 'PM Garib Kalyan Yojana', emoji: '\uD83D\uDCB3' },
+    { page: 'Pradhan_Mantri_Shram_Yogi_Maandhan', name: 'PM Shram Yogi Maandhan', emoji: '\uD83C\uDFF5' },
+    { page: 'Beti_Bachao_Beti_Padhao', name: 'Beti Bachao Beti Padhao', emoji: '\uD83D\uDC69' },
+    { page: 'Poshan_Abhiyaan', name: 'Poshan Abhiyaan', emoji: '\uD83C\uDF3F' },
+    { page: 'Deen_Dayal_Antyodaya_Yojana', name: 'Deen Dayal Antyodaya Yojana', emoji: '\uD83C\uDF3E' },
+    { page: 'Atal_Mission_for_Rejuvenation_and_Urban_Transformation', name: 'AMRUT', emoji: '\uD83C\uDFD9' }
   ];
   var fCount = 0;
   for (var pi2 = 0; pi2 < PROG_PAGES.length; pi2++) {
@@ -166,6 +204,37 @@ async function main() {
     await delay(300);
   }
   process.stdout.write(fCount + ' items\n');
+
+  process.stdout.write('  Committees (category discovery)... ');
+  var catCount = 0;
+  var COM_CATS = ['Committees_of_the_Government_of_India', 'Commissions_of_India', 'Statutory_bodies_of_India'];
+  for (var cc = 0; cc < COM_CATS.length; cc++) {
+    try {
+      var cmembers = await categoryMembers(COM_CATS[cc]);
+      for (var cmi = 0; cmi < cmembers.length; cmi++) {
+        var ctitle = strip(cmembers[cmi]);
+        if (!ctitle || ctitle.length < 3 || ctitle.indexOf('Category:') === 0 || ctitle.indexOf('List of') === 0) continue;
+        try {
+          var cinfo = extractInfobox(await fetchPageText(ctitle.replace(/ /g, '_')));
+          if (cinfo['Chairperson'] || cinfo['Chairman'] || cinfo['Chair'] || cinfo['President'] || cinfo['Established'] || cinfo['Founded'] || cinfo['Formed']) {
+            var cname = strip(ctitle).replace(/_/g, ' ');
+            if (cinfo['Chairperson'] || cinfo['Chairman'] || cinfo['Chair'] || cinfo['President']) {
+              var chair = cinfo['Chairperson'] || cinfo['Chairman'] || cinfo['Chair'] || cinfo['President'];
+              var q = makeQuestion('Who is the chairperson of the ' + cname + '?', chair, 'Committees & Commissions', seq.c++, '' + cname, '\uD83D\uDCDD', cname + ' chairperson: ' + chair + '.');
+              if (q && !ek.c[eventKey(q)]) { nq.c.push(q); ek.c[eventKey(q)] = true; catCount++; }
+            }
+            if (cinfo['Established'] || cinfo['Founded'] || cinfo['Formed']) {
+              var est = cinfo['Established'] || cinfo['Founded'] || cinfo['Formed'];
+              var q = makeQuestion('When was the ' + cname + ' established?', est, 'Committees & Commissions', seq.c++, '' + cname, '\uD83D\uDCDD', cname + ' was established in ' + est + '.');
+              if (q && !ek.c[eventKey(q)]) { nq.c.push(q); ek.c[eventKey(q)] = true; catCount++; }
+            }
+          }
+        } catch (e) {}
+        await delay(150);
+      }
+    } catch (e) {}
+  }
+  process.stdout.write(catCount + ' items\n');
 
   nq.c.forEach(function(q) { existing[CA_KEY].subSubjects['Committees & Commissions'].push(q); });
   nq.f.forEach(function(q) { existing[CA_KEY].subSubjects['Flagship Programmes'].push(q); });

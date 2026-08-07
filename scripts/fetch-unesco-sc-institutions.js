@@ -9,7 +9,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'UNESCOSCBot/2.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'UNESCOSCBot/2.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -21,7 +21,9 @@ function fetchJSON(url, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -92,48 +94,89 @@ async function main() {
   var seq = { u: maxSeq(existing[CA_KEY].subSubjects['UNESCO & World Heritage'], 'une'), s: maxSeq(existing[CA_KEY].subSubjects['SC Landmark Judgments'], 'scj'), i: maxSeq(existing[CA_KEY].subSubjects['New Institutions & IITs'], 'inst') };
   var nq = { u: [], s: [], i: [] };
 
-  // ── UNESCO World Heritage Sites in India ──
+  // ── UNESCO World Heritage Sites in India (uncapped) + other countries ──
   process.stdout.write('  UNESCO World Heritage Sites... ');
   try {
     var html = await fetchPageText('List_of_World_Heritage_Sites_in_India');
     var tables = extractWikiTables(html);
     var freshU = {};
     tables.forEach(function(t) {
-      for (var ri = 1; ri < t.length && ri < 30; ri++) {
+      for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
         if (row.length < 2) continue;
         var name = strip(row[0] || '');
         var state = strip(row.length > 2 ? row[2] : (row[1] || ''));
         var year = strip(row.length > 3 ? row[3] : '');
         if (name.length > 2 && name.indexOf('Site') < 0 && name.indexOf('Property') < 0 && state.length > 2) {
-          freshU[name] = { state: state, year: year };
+          freshU[name] = { state: state, year: year, src: 'World Heritage Sites in India' };
         }
       }
     });
+    // Cross-country grow: other nations' World Heritage site lists add year-on-year.
+    var OTHER_COUNTRIES = [
+      'List_of_World_Heritage_Sites_in_China', 'List_of_World_Heritage_Sites_in_Japan',
+      'List_of_World_Heritage_Sites_in_the_United_States', 'List_of_World_Heritage_Sites_in_Italy',
+      'List_of_World_Heritage_Sites_in_Spain', 'List_of_World_Heritage_Sites_in_the_United_Kingdom',
+      'List_of_World_Heritage_Sites_in_Germany', 'List_of_World_Heritage_Sites_in_France',
+      'List_of_World_Heritage_Sites_in_Mexico', 'List_of_World_Heritage_Sites_in_Egypt'
+    ];
+    for (var oc = 0; oc < OTHER_COUNTRIES.length; oc++) {
+      try {
+        var ocHtml = await fetchPageText(OTHER_COUNTRIES[oc]);
+        var ocTables = extractWikiTables(ocHtml);
+        ocTables.forEach(function(t) {
+          for (var ri = 1; ri < t.length; ri++) {
+            var row = t[ri];
+            if (row.length < 2) continue;
+            var name = strip(row[0] || '');
+            var yrCol = strip(row.length > 2 ? row[row.length - 1] : row[1] || '');
+            var year = yrCol.match(/\b(19\d{2}|20\d{2})\b/);
+            if (name.length > 3 && name.indexOf('Site') < 0 && name.indexOf('Property') < 0 && name.indexOf('Name') < 0) {
+              var countryName = OTHER_COUNTRIES[oc].replace(/^List_of_World_Heritage_Sites_in_/, '').replace(/_/g, ' ');
+              freshU[name + ' (' + countryName + ')'] = { state: countryName, year: year ? year[1] : '', src: countryName + ' World Heritage', ctry: true };
+            }
+          }
+        });
+        console.error('  - ' + OTHER_COUNTRIES[oc].replace(/^List_of_World_Heritage_Sites_in_/, '') + ': added');
+      } catch (e) {}
+      await delay(400);
+    }
     var existingU = existing[CA_KEY].subSubjects['UNESCO & World Heritage'];
     var byU = {};
     existingU.forEach(function(q) {
-      var m = /^(.+?) is a UNESCO World Heritage Site located in which state\?/.exec(q.question || '');
-      if (m) byU[m[1]] = q;
+      var m = /^(.+?) is a UNESCO World Heritage Site located in which (?:state|country)\?/.exec(q.question || '');
+      if (m) byU[m[1].trim()] = q;
     });
     var uUpdated = 0;
     Object.keys(freshU).sort().forEach(function(name) {
       var st = freshU[name].state;
       var year = freshU[name].year;
-      var qText = name + ' is a UNESCO World Heritage Site located in which state?';
+      var src = freshU[name].src || 'World Heritage Sites in India';
+      var isCtry = !!freshU[name].ctry;
+      // For foreign sites we stored "Name (Country)" so ask about the country.
+      var qText;
+      if (isCtry) {
+        qText = name + ' is a UNESCO World Heritage Site located in which country?';
+      } else {
+        qText = name + ' is a UNESCO World Heritage Site located in which state?';
+      }
       var fact = name + ' is a UNESCO site in ' + st + (year ? ' (inscribed ' + year + ')' : '') + '.';
       var existingQ = byU[name];
       if (existingQ) {
         if (existingQ.answer !== st || existingQ.fact !== fact) { existingQ.answer = st; existingQ.fact = fact; uUpdated++; }
       } else {
-        var q = makeQuestion(qText, st, 'UNESCO & World Heritage', seq.u++, 'World Heritage Sites in India', '\uD83C\uDFDB', fact);
+        var q = makeQuestion(qText, st, 'UNESCO & World Heritage', seq.u++, src, '\uD83C\uDFDB', fact);
         if (q) nq.u.push(q);
       }
     });
     var uBefore = existingU.length;
+    function unescoKey(q) {
+      var m = /^(.+?) is a UNESCO World Heritage Site located in which (?:state|country)\?/.exec(q.question || '');
+      return m ? m[1].trim() : null;
+    }
     existing[CA_KEY].subSubjects['UNESCO & World Heritage'] = existingU.filter(function(q) {
-      var m = /^(.+?) is a UNESCO World Heritage Site located in which state\?/.exec(q.question || '');
-      return !m || freshU[m[1]];
+      var k = unescoKey(q);
+      return !k || freshU[k];
     });
     var uRemoved = uBefore - existing[CA_KEY].subSubjects['UNESCO & World Heritage'].length;
     process.stdout.write(Object.keys(freshU).length + ' sites, ' + uUpdated + ' updated, ' + nq.u.length + ' new, ' + uRemoved + ' removed\n');
@@ -146,7 +189,7 @@ async function main() {
     var tables = extractWikiTables(html);
     var freshS = {};
     tables.forEach(function(t) {
-      for (var ri = 1; ri < t.length && ri < 20; ri++) {
+      for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
         if (row.length < 2) continue;
         var caseName = strip(row[0] || '');
@@ -195,7 +238,7 @@ async function main() {
       });
       if (nameIdx < 0) nameIdx = 0;
       if (locIdx < 0) locIdx = 2;
-      for (var ri = 1; ri < t.length && ri < 20; ri++) {
+      for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
         if (row.length < 2) continue;
         var nameI = (nameIdx >= 0 && nameIdx < row.length) ? nameIdx : 0;
@@ -222,7 +265,7 @@ async function main() {
         if (cl.indexOf('name') >= 0 || cl.indexOf('institute') >= 0) nameIdx = i;
         if (cl.indexOf('state') >= 0 || cl.indexOf('location') >= 0 || cl.indexOf('city') >= 0) locIdx = i;
       });
-      for (var ri = 1; ri < t.length && ri < 15; ri++) {
+      for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
         if (row.length < 2) continue;
         var nameI = (nameIdx >= 0 && nameIdx < row.length) ? nameIdx : 0;

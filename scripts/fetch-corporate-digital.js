@@ -9,14 +9,16 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'CorpBot/2.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'CorpBot/2.0' } }, function(res) {
       var d = ''; res.on('data', function(c) { d += c; });
       res.on('end', function() {
         if (res.statusCode === 429 && retries > 0) { var wait = Math.pow(2, 4 - retries) * 3000; return setTimeout(function() { fetchJSON(url, retries - 1).then(resolve, reject); }, wait); }
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -35,6 +37,16 @@ function makeQuestion(qText, answer, subSubject, seq, source, emoji, fact) {
 function eventKey(q) { var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); }; return n(q.question || '').substring(0, 80) + '|' + n(q.answer || ''); }
 
 function fetchPageText(title) { return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) { if (d && d.parse && d.parse.text) return d.parse.text['*']; return ''; }); }
+
+function categoryMembers(category) {
+  return fetchJSON(API + '?action=query&list=categorymembers&cmtitle=Category:' + encodeURIComponent(category) + '&cmlimit=300&cmtype=page&format=json').then(function(d) {
+    var out = [];
+    if (d && d.query && d.query.categorymembers) {
+      d.query.categorymembers.forEach(function(p) { if (p.title) out.push(p.title); });
+    }
+    return out;
+  });
+}
 
 function extractInfobox(html) {
   var data = {}; var m = html.match(/<table[^>]*class="[^"]*infobox[^"]*"[^>]*>([\s\S]*?)<\/table>/i);
@@ -84,7 +96,7 @@ async function main() {
     var tables = extractWikiTables(html);
     var count = 0;
     tables.forEach(function(t) {
-      for (var ri = 1; ri < t.length && ri < 12; ri++) {
+      for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri]; if (row.length < 2) continue;
         var name = strip(row[0] || ''); var sector = strip(row.length > 2 ? row[2] : (row[1] || ''));
         if (name.length > 2 && name.indexOf('Company') < 0 && name.indexOf('Name') < 0 && sector.length > 2 && sector.indexOf('Industry') < 0) {
@@ -136,7 +148,7 @@ async function main() {
     if (!hadData) {
       var txt = strip(html);
       var leads = txt.match(/(?:UPI|digital|payment|transaction)\s+[^.]*(?:\d+[\d,.]*\s*(?:crore|million|billion|trillion|rupee|lakh))[^.]*\./gi) || [];
-      leads.slice(0,3).forEach(function(lead) {
+      leads.forEach(function(lead) {
         var numM = lead.match(/(\d+[\d,.]*\s*(?:crore|million|billion|trillion|lakh)?)/);
         if (numM && numM[0].length > 2) {
           var q = makeQuestion('What digital payments statistic is: ' + lead.substring(0,50).trim() + '?', numM[0].trim(), 'Digital Payments', seq['Digital Payments']++, 'General Knowledge', '\uD83D\uDCB3', lead + '.');
@@ -164,7 +176,7 @@ async function main() {
     if (!hadData) {
       var txt = strip(html);
       var leads = txt.match(/(?:subscriber|mobile|telecom|wireless|broadband|5G)\s+[^.]*(?:\d+[\d,.]*\s*(?:million|billion|crore|lakh|million))[^.]*\./gi) || [];
-      leads.slice(0,3).forEach(function(lead) {
+      leads.forEach(function(lead) {
         var numM = lead.match(/(\d+[\d,.]*\s*(?:million|billion|crore|lakh)?)/);
         if (numM && numM[0].length > 2) {
           var q = makeQuestion('What telecom statistic is: ' + lead.substring(0,50).trim() + '?', numM[0].trim(), 'Telecom & 5G', seq['Telecom & 5G']++, 'General Knowledge', '\uD83D\uDCF6', lead + '.');
@@ -192,7 +204,7 @@ async function main() {
     } else {
       var txt = strip(html);
       var leads = txt.match(/(?:cybercrime|cyber|cases|incidents|reported)\s+[^.]*(?:\d+[\d,.]*\s*(?:cases|incidents|crore|lakh))[^.]*\./gi) || [];
-      leads.slice(0,3).forEach(function(lead) {
+      leads.forEach(function(lead) {
         var numM = lead.match(/(\d+[\d,.]*\s*(?:cases|incidents)?)/);
         if (numM && numM[0].length > 2) {
           var q = makeQuestion('What cybercrime statistic is: ' + lead.substring(0,50).trim() + '?', numM[0].trim(), 'Cyber Security', seq['Cyber Security']++, 'General Knowledge', '\uD83D\uDD10', lead + '.');
@@ -202,6 +214,42 @@ async function main() {
     }
     process.stdout.write(count + ' items\n');
   } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
+
+  process.stdout.write('  Category discovery... ');
+  var DISCOVERY = [
+    { cats: ['Companies_of_India', 'Indian_public_sector_undertakings'], map: 'Corporate & Startups', keys: ['Industry', 'Headquarters', 'Founded', 'Founder', 'Number of employees'] },
+    { cats: ['Companies_listed_on_the_National_Stock_Exchange_of_India', 'BSE_SENSEX'], map: 'Stock Market', keys: ['Industry', 'Headquarters', 'Founded'] },
+    { cats: ['Mobile_payments'], map: 'Digital Payments', keys: ['Developer', 'Operating system', 'Headquarters', 'Founded'] },
+    { cats: ['Telecommunication_companies_of_India'], map: 'Telecom & 5G', keys: ['Headquarters', 'Founded', 'Revenue', 'Subsidiaries'] },
+    { cats: ['Information_technology_companies_of_India'], map: 'Cyber Security', keys: ['Headquarters', 'Founded', 'Founder', 'Services', 'Number of employees'] }
+  ];
+  var catCount = 0;
+  for (var di = 0; di < DISCOVERY.length; di++) {
+    var cfg = DISCOVERY[di];
+    for (var dc = 0; dc < cfg.cats.length; dc++) {
+      try {
+        var members = await categoryMembers(cfg.cats[dc]);
+        for (var mm = 0; mm < members.length; mm++) {
+          var title = members[mm];
+          if (title.indexOf('Category:') === 0 || title.indexOf('List of') === 0 || title.indexOf('Template:') === 0) continue;
+          try {
+            var chh = await fetchPageText(title.replace(/ /g, '_'));
+            var ci3 = extractInfobox(chh);
+            for (var ck = 0; ck < cfg.keys.length; ck++) {
+              var k3 = cfg.keys[ck];
+              if (ci3[k3] && ci3[k3].length > 2) {
+                var catS = cfg.map;
+                var q = makeQuestion('What is the ' + k3 + ' of ' + title + '?', strip(ci3[k3]), catS, seq[catS]++, '' + title, '\uD83C\uDFED', title + ' ' + k3 + ': ' + ci3[k3] + '.');
+                if (q && !ek[catS][eventKey(q)]) { if (!nq[catS]) nq[catS] = []; nq[catS].push(q); ek[catS][eventKey(q)] = true; catCount++; }
+              }
+            }
+          } catch (e) {}
+          await delay(120);
+        }
+      } catch (e) {}
+    }
+  }
+  process.stdout.write(catCount + ' category items\n');
 
   Object.keys(nq).forEach(function(cat) { (nq[cat] || []).forEach(function(q) { existing[CA_KEY].subSubjects[cat].push(q); }); });
   fs.writeFileSync(CA_PATH, JSON.stringify(existing, null, 2), 'utf8');

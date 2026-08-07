@@ -9,7 +9,7 @@ var AGENT = new https.Agent({ keepAlive: true, keepAliveMsecs: 3000 });
 function fetchJSON(url, retries) {
   if (retries === undefined) retries = 3;
   return new Promise(function(resolve, reject) {
-    https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'ParkBot/2.0' } }, function(res) {
+    var req = https.get(url + '&origin=*', { agent: AGENT, headers: { 'User-Agent': 'ParkBot/2.0' } }, function(res) {
       var d = '';
       res.on('data', function(c) { d += c; });
       res.on('end', function() {
@@ -21,7 +21,9 @@ function fetchJSON(url, retries) {
         if (res.statusCode !== 200) return reject(new Error('HTTP ' + res.statusCode));
         try { resolve(JSON.parse(d)); } catch (e) { reject(e); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, function() { req.destroy(new Error('Request timeout')); });
   });
 }
 
@@ -150,6 +152,56 @@ async function main() {
     process.stdout.write(Object.keys(freshNp).length + ' parks, ' + npUpdated + ' updated, ' + newN.length + ' new, ' + npRemoved + ' removed\n');
   } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
   await delay(600);
+
+  // ── Tiger Reserves & Biosphere Reserves (grow as new reserves are declared) ──
+  var RESERVE_PAGES = [
+    { page: 'List_of_tiger_reserves_in_India', key: 'tiger reserve' },
+    { page: 'List_of_biosphere_reserves_in_India', key: 'biosphere reserve' }
+  ];
+  for (var rsi = 0; rsi < RESERVE_PAGES.length; rsi++) {
+    try {
+      var htmlR = await fetchPageText(RESERVE_PAGES[rsi].page);
+      var tablesR = extractWikiTables(htmlR);
+      var freshR = {};
+      var byR = {};
+      existing[CA_KEY].subSubjects['National Parks & Wildlife'].forEach(function(q) {
+        var mmatch = new RegExp('Which state is the (.+?) ' + RESERVE_PAGES[rsi].key + ' located in\\?').exec(q.question || '');
+        if (mmatch) byR[mmatch[1]] = q;
+      });
+      tablesR.forEach(function(t) {
+        var head = t[0] || [];
+        var hasState = head.some(function(c) { return /state|located/i.test(c); });
+        var hasName = head.some(function(c) { return /reserve|name/i.test(c); });
+        if (!hasState || !hasName) return;
+        for (var ri = 1; ri < t.length; ri++) {
+          var row = t[ri]; if (row.length < 2) continue;
+          var state = strip(row[0] || '');
+          var name = strip(row[1] || '');
+          if (state.length > 2 && name.length > 3 && state.indexOf('State') < 0 && name.indexOf('Name') < 0) {
+            var base = name.split(/[;,]/)[0];
+            var full = base.indexOf(RESERVE_PAGES[rsi].key) > 0 ? base : (base + ' ' + RESERVE_PAGES[rsi].key);
+            freshR[full] = state;
+          }
+        }
+      });
+      var rCount = 0;
+      Object.keys(freshR).sort().forEach(function(nm) {
+        var state = freshR[nm];
+        var qText = 'Which state is the ' + nm + ' located in?';
+        var fact = nm + ' is located in ' + state + '.';
+        var existingQ = byR[nm];
+        if (existingQ) {
+          if (existingQ.answer !== state || existingQ.fact !== fact) { existingQ.answer = state; existingQ.fact = fact; }
+        } else {
+          var q = makeQuestion(qText, state, 'National Parks & Wildlife', seqN++, RESERVE_PAGES[rsi].page, '\uD83D\uDC2E', fact);
+          if (q) newN.push(q);
+        }
+        rCount++;
+      });
+      console.error('  ' + (RESERVE_PAGES[rsi].key === 'tiger reserve' ? 'Tiger' : 'Biosphere') + ' Reserves: ' + rCount + ' total');
+    } catch (e) { console.error('  Reserves error: ' + e.message); }
+    await delay(600);
+  }
 
   // ── Fetch Ramsar Sites from List of Ramsar sites in India ──
   process.stdout.write('  Ramsar Sites... ');
