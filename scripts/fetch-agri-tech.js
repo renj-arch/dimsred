@@ -28,11 +28,12 @@ function fetchJSON(url, retries) {
 function delay(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
-function makeQuestion(subTopic, qText, answer, source) {
+function makeQuestion(subTopic, qText, answer, source, factSentence) {
   if (!answer || answer.length < 2) return null;
   if (!qText || qText.length < 25) return null;
   var now = new Date();
   var pubDate = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + 'T12:00:00.000Z';
+  var fact = factSentence ? factSentence.replace(/\s+/g, ' ').trim() : '';
   return {
     id: 'agritech_' + Math.round(Math.random() * 1e9),
     type: 'fill_blank',
@@ -46,7 +47,7 @@ function makeQuestion(subTopic, qText, answer, source) {
     question: qText,
     answer: answer,
     hint: '',
-    fact: ''
+    fact: fact
   };
 }
 
@@ -200,10 +201,64 @@ async function mine(topic, title) {
     var key = (f.question + '|' + f.answer).toLowerCase();
     if (seen[key]) continue;
     seen[key] = 1;
-    out.push(makeQuestion(topic, f.question, f.answer, 'Wiki'));
+    out.push(makeQuestion(topic, f.question, f.answer, 'Wiki', s));
     if (out.length >= 4) break;
   }
   return out;
+}
+
+// Fill the `fact` field for existing questions that somehow have an empty fact,
+// by locating the sentence in the source extract that contains the answer.
+async function backfillFacts(topic) {
+  var list = existing[SUBJECT].subSubjects[topic];
+  if (!list) return;
+  var empty = list.filter(function(q) { return !q.fact || !String(q.fact).trim(); });
+  if (!empty.length) return;
+  var titles = TOPICS[topic] || [];
+  for (var ti = 0; ti < titles.length; ti++) {
+    var extract = await fetchExtract(titles[ti]);
+    if (!extract) continue;
+    var sents = splitSentences(extract);
+    empty.forEach(function(q) {
+      if (q.fact && String(q.fact).trim()) return;
+      var ans = (q.answer || '').replace(/\s+/g, ' ').trim();
+      if (!ans) return;
+      for (var i = 0; i < sents.length; i++) {
+        if (sents[i].indexOf(ans) >= 0) {
+          q.fact = sents[i].replace(/\s+/g, ' ').trim();
+          break;
+        }
+      }
+    });
+  }
+  await delay(400);
+}
+
+// Fill the `fact` field for existing questions that somehow have an empty fact,
+// by locating the sentence in the source extract that contains the answer.
+async function backfillFacts(existing, topic) {
+  var list = existing[SUBJECT].subSubjects[topic];
+  if (!list) return;
+  var empty = list.filter(function(q) { return !q.fact || !String(q.fact).trim(); });
+  if (!empty.length) return;
+  var titles = TOPICS[topic] || [];
+  for (var ti = 0; ti < titles.length; ti++) {
+    var extract = await fetchExtract(titles[ti]);
+    if (!extract) continue;
+    var sents = splitSentences(extract);
+    empty.forEach(function(q) {
+      if (q.fact && String(q.fact).trim()) return;
+      var ans = (q.answer || '').replace(/\s+/g, ' ').trim();
+      if (!ans) return;
+      for (var i = 0; i < sents.length; i++) {
+        if (sents[i].indexOf(ans) >= 0) {
+          q.fact = sents[i].replace(/\s+/g, ' ').trim();
+          break;
+        }
+      }
+    });
+  }
+  await delay(400);
 }
 
 async function main() {
@@ -240,6 +295,7 @@ async function main() {
       } catch (e) { /* tolerate */ }
       await delay(600);
     }
+    await backfillFacts(existing, topic);
   }
 
   fs.writeFileSync(OUT_PATH, JSON.stringify(existing), 'utf8');
