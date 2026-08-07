@@ -451,11 +451,12 @@ async function fetchAppointment(office) {
   }
 }
 
-function makeQuestion(office, name, seq) {
+function makeQuestion(office, name, seq, fromWikiData) {
   if (!name) return null;
   var now = new Date();
   var pubDate = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + 'T12:00:00.000Z';
   var id = 'appt_' + pad(seq);
+  var qText = office.q.replace(/\s*\?$/, '') + ' (' + now.getFullYear() + ')?';
 
   return {
     id: id,
@@ -467,10 +468,11 @@ function makeQuestion(office, name, seq) {
     subject: 'Current Affairs',
     subSubject: 'Appointments',
     emoji: office.emoji,
-    question: office.q,
+    question: qText,
     answer: name,
     hint: '',
-    fact: 'The current ' + office.label + ' of India is ' + name + '. '
+    fact: 'The current ' + office.label + ' of India is ' + name + ' (as of ' + now.getFullYear() + '). ',
+    _fromWikiData: fromWikiData ? true : false
   };
 }
 
@@ -480,7 +482,7 @@ function eventKey(q) {
 }
 
 function questionKey(q) {
-  var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim().toLowerCase(); };
+  var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,'').replace(/\(\d{4}\)\s*\.?\??/g,'').replace(/\s+/g,' ').trim().toLowerCase(); };
   return n(q.question || '');
 }
 
@@ -552,6 +554,7 @@ async function main() {
     var label = cand.office.label;
     process.stdout.write('  ' + label + '... ');
     var name = null;
+    var fromWikiData = false;
     if (cand.office.courtKey) {
       // High Court CJ: look up in the consolidated table (already fetched once).
       var hcName = hcJustices[cand.office.courtKey] || hcJustices[cand.office.courtKey + ' High Court'];;
@@ -567,6 +570,7 @@ async function main() {
       var wName = cleanName(cand.office.holderLabel);
       if (isPersonName(wName)) {
         name = wName;
+        fromWikiData = true;
         process.stdout.write(wName.substring(0, 50) + ' (from Wikidata)\n');
         found++;
       } else {
@@ -578,7 +582,7 @@ async function main() {
       notFound++;
     }
 
-    var q = makeQuestion(cand.office, name, seq);
+    var q = makeQuestion(cand.office, name, seq, fromWikiData);
     if (!q) continue;
 
     var personBio = await bio.getBio(name, bioCache);
@@ -587,17 +591,23 @@ async function main() {
     var qkey = questionKey(q);
     var existingQ = byQuestion[qkey];
     if (existingQ) {
-      if ((existingQ.answer || '').trim().toLowerCase() !== (q.answer || '').trim().toLowerCase()) {
+      var sameAnswer = (existingQ.answer || '').trim().toLowerCase() === (q.answer || '').trim().toLowerCase();
+      // Guard against a stale Wikidata fallback overwriting a good infobox answer:
+      // if we only got the incumbent via Wikidata this run and we already have an
+      // answer, keep the existing (likely fresher/sourced) answer.
+      var staleOverride = fromWikiData && existingQ.answer && !existingQ._fromWikiData;
+      if (!sameAnswer && !staleOverride) {
         var old = existingQ.answer;
         existingQ.answer = q.answer;
         existingQ.fact = q.fact;
         existingQ.pubDate = q.pubDate;
         existingQ.source = q.source;
+        existingQ._fromWikiData = fromWikiData;
         updated++;
         process.stdout.write('    updated ' + old + ' -> ' + q.answer + '\n');
       } else {
-        var bareFact = 'The current ' + label + ' of India is ' + name + '. ';
-        if (personBio && existingQ.fact === bareFact) {
+        var bareFact = 'The current ' + label + ' of India is ' + name + ' (as of ' + (new Date().getFullYear()) + '). ';
+        if (personBio && (existingQ.fact === bareFact || existingQ.fact.indexOf('of India is ' + name + ' (as of') === 0)) {
           existingQ.fact = q.fact;
           process.stdout.write('    (bio enriched)\n');
         } else {
