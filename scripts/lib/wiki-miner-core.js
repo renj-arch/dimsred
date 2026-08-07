@@ -37,6 +37,10 @@ function fetchExtract(title) {
     var pages = (d && d.query && d.query.pages) ? d.query.pages : {};
     var page = Object.values(pages).find(function(p) { return p && p.title && !p.missing; });
     if (!page || !page.extract) return '';
+    // Reject disambiguation / list-of-same-name pages, which produce degenerate
+    // "What is X? Topics referred to by the same term." questions with no real
+    // explanatory content.
+    if (/topics referred to by the same term|may refer to\b|index of (?:articles|conflicts|people|places) with the same name|list of banks and currencies/i.test(page.extract)) return '';
     return page.extract.replace(/\s+/g, ' ').trim();
   });
 }
