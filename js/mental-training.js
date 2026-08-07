@@ -1102,10 +1102,12 @@ function generateClassificationQuestion(diff) {
     },
     // Hard: digit sum pattern
     function() {
-      var digSum=rand(3,9);
+      var digSum=rand(5,17);
       var items=[];
-      for(var i=0;i<3;i++){var n;do{n=digSum+rand(0,4)*10;}while(n.toString().split('').reduce(function(a,b){return a+ +b;},0)!==digSum||items.indexOf(n)>=0);items.push(n);}
-      var wrong;do{wrong=digSum+rand(1,4)*10+rand(1,4);}while(wrong.toString().split('').reduce(function(a,b){return a+ +b;},0)===digSum||items.indexOf(wrong)>=0);
+      for(var i=0;i<3;i++){var t=rand(1,9), ones=digSum-t; if(ones<0){t=t+ones; ones=0;} if(ones>9){ones=9; t=digSum-ones;} var n=t*10+ones; if(items.indexOf(n)<0) items.push(n);}
+      if(items.length<3) items.push(digSum, digSum+10, digSum+20);
+      items=items.slice(0,3);
+      var wrong;do{wrong=digSum+10+rand(1,9);}while(wrong.toString().split('').reduce(function(a,b){return a+ +b;},0)===digSum||items.indexOf(wrong)>=0);
       items.push(wrong); shuffle(items);
       return {items:items, answer:wrong, expl:wrong+' has digit sum '+wrong.toString().split('').reduce(function(a,b){return a+ +b;},0)+', others have sum '+digSum};
     },
@@ -1399,7 +1401,11 @@ function generateSyllogismQuestion(diff) {
     chosen = chosen();
   }
   var isPoss = chosen[3].indexOf('can never') >= 0;
-  var opts = isPoss ? ['True','False','Cannot determine','Depends'] : ['Definitely true','Definitely false','Probably true','Cannot determine'];
+  var baseOpts = isPoss ? ['True','False','Cannot determine','Depends'] : ['Definitely true','Definitely false','Probably true','Cannot determine'];
+  var opts = [chosen[3]];
+  for (var _oi=0; _oi<baseOpts.length && opts.length<4; _oi++){ var _b=baseOpts[_oi]; if(_b!==chosen[3]&&opts.indexOf(_b)<0) opts.push(_b); }
+  var _pads=['Absolutely false','Neither fact nor fancy','Possibly false','Very certain'];
+  while(opts.length<4){ var pad=_pads[opts.length-1]; if(opts.indexOf(pad)<0) opts.push(pad); }
   shuffle(opts);
   return { question: 'Statements: ' + chosen[1] + ' Conclusion: ' + chosen[2], answer: chosen[3], options: opts, hint: isPoss ? 'Check if the statement CAN be true' : 'Draw Venn. Check if conclusion definitely follows.', timeLimit: chosen[1].length>80?25:(diff<=1?20:15), type:'pattern', patternLabel:'Syllogism', techniqueLabel:'Syllogism: draw circles. All=⊆, Some=∩, No=∅', drillLine1: chosen[1], drillLine2: 'Conclusion: '+chosen[2]+' → '+chosen[3], solution: chosen[4] };
 }
@@ -2372,7 +2378,7 @@ function generateSimplificationQuestion(diff, layer) {
   }
   var t = ty[idx];
   var d = t();
-  var o = [d.a]; while(o.length<4){var v=(typeof d.a==='string'?d.a+rand(-2,2):Math.abs(d.a)+rand(-3,3)); if(o.indexOf(v)<0&&(typeof v==='string'||v>=0))o.push(v);}
+  var o = [d.a]; var _g=0; while(o.length<4&&_g++<60){var v=(typeof d.a==='string'?d.a+rand(-2,2):Math.abs(d.a)+rand(-3,3)); if(o.indexOf(v)<0&&(typeof v==='string'||v>=0))o.push(v);} while(o.length<4){o.push('None of these');} shuffle(o);
   shuffle(o);
   return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: layer==='instinct'?10:15, type:'quant', techniqueLabel:'Simplification: '+d.hint, intuition: d.intuition||'BODMAS: brackets, orders, division, multiplication, addition, subtraction' };
 }
@@ -2420,7 +2426,7 @@ function generateQuadraticQuestion(diff, layer) {
   }
   var t = ty[idx];
   var d = t();
-  var o = [d.a]; while(o.length<4){var v=(typeof d.a==='string'?['Equal','Real','Imaginary','Distinct'][rand(0,3)]:Math.abs(parseInt(d.a))+rand(-3,3)); if(o.indexOf(v)<0)o.push(v);}
+  var o = [d.a]; var _g=0; while(o.length<4&&_g++<60){var v=(typeof d.a==='string'?['Equal','Real','Imaginary','Distinct'][rand(0,3)]:Math.abs(parseInt(d.a))+rand(-3,3)); if(o.indexOf(v)<0)o.push(v);} while(o.length<4){o.push('Equal');} shuffle(o);
   shuffle(o);
   return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: layer==='instinct'?15:20, type:'quant', techniqueLabel:'Quadratic: '+d.hint, intuition: d.intuition||'For roots: find factors of c that sum to b. D=b²-4ac tells nature of roots.' };
 }
@@ -2455,7 +2461,14 @@ function generatePartnershipQuestion(diff, layer) {
   }
   var t = ty[idx];
   var d = t();
-  var o = [d.a]; while(o.length<4){var v=d.a+rand(-500,500); if(o.indexOf(v)<0&&v>=0)o.push(v);}
+  var o = [d.a];
+  if (typeof d.a === 'string' && d.a.indexOf(':') > 0) {
+    var parts = d.a.split(':');
+    var nA = parseInt(parts[0]), nB = parseInt(parts[1]);
+    for (var _g=0; _g<60 && o.length<4; _g++) { var rv = (nA+rand(-nA/5|0, nA/5|0)) + ':' + (nB+rand(-nB/5|0, nB/5|0)); if (o.indexOf(rv) < 0 && rv !== '0:0') o.push(rv); }
+  } else {
+    for (var _g=0; _g<60 && o.length<4; _g++) { var v = (typeof d.a === 'number' ? Math.round(d.a + rand(-500, 500)) : 'None of these'); if (o.indexOf(v) < 0 && v >= 0) o.push(v); }
+  }
   shuffle(o);
   return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: layer==='instinct'?15:20, type:'quant', techniqueLabel:'Partnership: '+d.hint, intuition: d.intuition||'Profit share ratio = capital × time. Sum ratios, divide profit proportionally.' };
 }
@@ -2496,7 +2509,7 @@ function generateSimpleInterestQuestion(diff, layer) {
   }
   var t = ty[idx];
   var d = t();
-  var o = [d.a]; while(o.length<4){var v=d.a+rand(-Math.round(d.a*0.2), Math.round(d.a*0.2)); if(o.indexOf(v)<0&&v>0)o.push(v);}
+  var o = [d.a]; var _g=0; while(o.length<4&&_g++<80){var v=Math.max(1, Math.round(d.a + rand(-Math.max(1,Math.round(d.a*0.2)), Math.max(1,Math.round(d.a*0.2))))); if(o.indexOf(v)<0&&v>0)o.push(v);}
   shuffle(o);
   return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: layer==='instinct'?15:20, type:'quant', techniqueLabel:'SI: '+d.hint, intuition: d.intuition||'SI = P×R×T/100. Amount = P + SI. For doubling: T = 100/R.' };
 }
@@ -2532,7 +2545,7 @@ function generateCompoundInterestQuestion(diff, layer) {
   }
   var t = ty[idx];
   var d = t();
-  var o = [d.a]; while(o.length<4){var v=d.a+rand(-d.a*0.2|0, d.a*0.2|0); if(o.indexOf(v)<0&&v>0)o.push(v);}
+  var o = [d.a]; var _g=0; while(o.length<4&&_g++<80){var sp=Math.max(1, Math.round(d.a*0.2)); var v=Math.max(1, Math.round(d.a + rand(-sp, sp))); if(o.indexOf(v)<0&&v>0)o.push(v);}
   shuffle(o);
   return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: layer==='instinct'?15:20, type:'quant', techniqueLabel:'CI: '+d.hint, intuition: d.intuition||'CI = P(1+r/100)^t - P. For 2yr at r%: effective% = r + r + r²/100.' };
 }
@@ -2568,7 +2581,7 @@ function generateDiscountQuestion(diff, layer) {
   }
   var t = ty[idx];
   var d = t();
-  var o = [d.a]; while(o.length<4){var v=d.a+rand(-8,8); if(o.indexOf(v)<0&&v>0)o.push(v);}
+  var o = [d.a]; var _g=0; while(o.length<4&&_g++<60){var v=d.a+rand(-8,8); if(o.indexOf(v)<0&&v>0)o.push(v);} if(o.length<4){o.push(d.a+8,d.a+16,d.a+24);}
   shuffle(o);
   return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: layer==='instinct'?12:18, type:'quant', techniqueLabel:'Discount: '+d.hint, intuition: d.intuition||'SP = MP × (100-d)/100. Successive: apply one after another, not additive.' };
 }
@@ -2591,7 +2604,7 @@ function generateRacesQuestion(diff, layer) {
     // SBI PO Hard: three runners race
     function(){ var d=200, a=rand(5,9), b=rand(4,7), c=rand(3,5); return { q: 'Race ' + d + 'm. A at ' + a + 'm/s, B at ' + b + 'm/s, C at ' + c + 'm/s. By how much does A beat C if A beats B by ' + Math.round(d - d*b/a) + 'm?', a: Math.round(d - d*c/a), hint: 'A time = ' + d/a + 's. C distance in that time = ' + Math.round(d*c/a), intuition: 'A finishes in ' + d/a + 's. C runs ' + Math.round(d*c/a) + 'm. A beats C by ' + Math.round(d - d*c/a) + 'm' }; },
     // SBI PO Hard: race with handicap
-    function(){ var d=rand(100,200), h=rand(5,20), sa=rand(6,12); return { q: 'A gives B ' + h + 'm start in ' + d + 'm race. A wins by ' + Math.round(h - d*(sa-rand(3,5))/sa) + 'm. A speed=' + sa + 'm/s. B speed?', a: Math.round((d-h-Math.round(h - d*(sa-rand(3,5))/sa)) / (d/sa) * 10) / 10, hint: 'B runs ' + (d-h-win) + 'm in A time ' + d/sa + 's', intuition: 'A time=' + d/sa + 's. B runs ' + (d-h-Math.round(h-d*(sa-rand(3,5))/sa)) + 'm, speed=' + Math.round((d-h-Math.round(h-d*(sa-rand(3,5))/sa))/(d/sa)*10)/10 + 'm/s' }; },
+    function(){ var d=rand(100,200), h=rand(5,20), sa=rand(6,12); var win=Math.round(h - d*(sa-rand(3,5))/sa); return { q: 'A gives B ' + h + 'm start in ' + d + 'm race. A wins by ' + win + 'm. A speed=' + sa + 'm/s. B speed?', a: Math.round((d-h-win) / (d/sa) * 10) / 10, hint: 'B runs ' + (d-h-win) + 'm in A time ' + d/sa + 's', intuition: 'A time=' + d/sa + 's. B runs ' + (d-h-win) + 'm, speed=' + Math.round((d-h-win)/(d/sa)*10)/10 + 'm/s' }; },
     // SBI PO Hard: race on circular track - first meeting at a point
     function(){ var l=rand(2,5)*200, sa=rand(5,9), sb=rand(4,7); return { q: 'Circular ' + l + 'm. A=' + sa + 'm/s, B=' + sb + 'm/s (same dir). First meet at starting point? Time?', a: Math.round(l / Math.abs(sa-sb)), hint: 'Time to first meeting = L/|sa-sb|. But to meet at start, need LCM of lap times', intuition: 'A lap time=' + l/sa + 's, B lap time=' + l/sb + 's. First meet at start = LCM(' + l/sa + ',' + l/sb + ')s. First meet anywhere = ' + Math.round(l/Math.abs(sa-sb)) + 's' }; }
   ];
@@ -2603,7 +2616,7 @@ function generateRacesQuestion(diff, layer) {
   }
   var t = ty[idx];
   var d = t();
-  var o = [d.a]; while(o.length<4){var v=Math.round(d.a)+rand(-5,5); if(o.indexOf(v)<0&&v>0)o.push(v);}
+  var o = [d.a]; var _g=0; while(o.length<4&&_g++<80){var v=Math.max(1, Math.round(d.a+rand(-5,5))); if(o.indexOf(v)<0&&v>0)o.push(v);}
   shuffle(o);
   return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: layer==='instinct'?15:20, type:'quant', techniqueLabel:'Races: '+d.hint, intuition: d.intuition||'In races: focus on TIME = same for both runners. Speed = distance/time.' };
 }
@@ -2711,7 +2724,13 @@ function generateDiceCubeQuestion(diff) {
   }
   var t = ty[idx];
   var d = t();
-  var o = [d.a]; while(o.length<4){var v=d.a+rand(-3,3); if(o.indexOf(v)<0&&v>=0)o.push(v);}
+  var o = [d.a];
+  if (typeof d.a === 'string') {
+    var wordOpts = ['Yes','No','Top','Bottom','Front','Back','Left','Right','Red','Blue','Green','Yellow','White','Black'];
+    for (var _g=0; _g<50 && o.length<4; _g++) { var wv = wordOpts[rand(0, wordOpts.length - 1)]; if (o.indexOf(wv) < 0) o.push(wv); }
+  } else {
+    for (var _g=0; _g<50 && o.length<4; _g++) { var v = d.a + rand(-3, 3); if (o.indexOf(v) < 0 && v >= 0) o.push(v); }
+  }
   shuffle(o);
   return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: 20, type:'reasoning', techniqueLabel:'Dice: '+d.hint, intuition: d.intuition||'Dice: opposite sum=7. Cube painting: corners=3, edges=2, centers=1, inner=0 faces.' };
 }
@@ -2755,7 +2774,7 @@ function generateClockQuestion(diff) {
   if (matched.length === 0) matched = types;
   var chosen = matched[rand(0, matched.length - 1)];
   var d = chosen[1]();
-  var o = [d.a]; while(o.length<4){var v=Math.round(Math.abs(30*rand(1,11)-5.5*rand(0,59))); if(o.indexOf(v)<0)o.push(v);}
+  var o = [d.a]; var _g=0; while(o.length<4&&_g++<60){var v=Math.round(Math.abs(30*rand(1,11)-5.5*rand(0,59))); if(o.indexOf(v)<0)o.push(v);} while(o.length<4){o.push(o.length+1);} shuffle(o);
   shuffle(o);
   return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: diff>2?25:20, type:'reasoning', techniqueLabel:'Clock: '+d.hint, intuition:'Angle=|30H-5.5M|, if >180° use 360-result. Overlap: 60H/11. Mirror: 11:60-time.' };
 }
@@ -2860,7 +2879,7 @@ function generateVennDiagramQuestion(diff) {
   if (matched.length === 0) matched = types;
   var chosen = matched[rand(0, matched.length - 1)];
   var d = chosen[1]();
-  var o = [d.a]; while(o.length<4){var v=typeof d.a==='string'?['A','B','C','D'][rand(0,3)]:d.a+rand(-10,10); if(o.indexOf(v)<0)o.push(v);}
+  var o = [d.a]; var _g=0; while(o.length<4&&_g++<60){var v=typeof d.a==='string'?['A','B','C','D'][rand(0,3)]:d.a+rand(-10,10); if(o.indexOf(v)<0&&(typeof v==='string'||v>=0))o.push(v);} while(o.length<4){o.push('A');} shuffle(o);
   shuffle(o);
   return { question: d.q, answer: d.a, options: o, hint: d.hint, timeLimit: diff>2?20:15, type:'reasoning', techniqueLabel:'Venn: '+d.hint, intuition:'Only A = A-both. Neither = total-(A+B-both). 3-set: inc-exc principle.' };
 }
@@ -3002,8 +3021,8 @@ function generateProfitLossQuestion(diff, layer) {
   var matched = ty.filter(function(t){ return t[0] <= diff; });
   if (matched.length === 0) matched = ty;
   var d = matched[rand(0, matched.length - 1)][1]();
-  var o = [d.a]; var spread = Math.max(5, Math.abs(d.a*0.1));
-  while(o.length<4){var v=Math.round(d.a+rand(-spread,spread)); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  var o = [d.a]; var spread = Math.max(5, Math.abs(d.a*0.1)); var _g=0;
+  while(o.length<4&&_g++<60){var v=Math.round(d.a+rand(-spread,spread)); if(o.indexOf(v)<0&&v>0)o.push(v);} while(o.length<4){o.push(o.length+d.a);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'P&L: '+d.hint, intuition:'SP=CP×(100±P%)/100. Discount: SP=MP×(100-D%)/100. Successive: multiply factors.' };
 }
 
@@ -3041,7 +3060,7 @@ function generatePipesCisternsQuestion(diff, layer) {
   } else {
     idx = rand(0, ty.length - 1);
   }
-  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-3,3); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  var d = ty[idx](); var o=[d.a]; var _g=0; while(o.length<4&&_g++<80){var v=d.a+rand(-3,3); if(o.indexOf(v)<0&&v>0&&v!==0)o.push(v);} while(o.length<4){o.push(o.length+d.a);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Pipes: '+d.hint, intuition:'Together rate = sum of rates. Opposite directions subtract. Time = 1/rate.' };
 }
 
@@ -3080,7 +3099,7 @@ function generateBoatsStreamsQuestion(diff, layer) {
   } else {
     idx = rand(0, ty.length - 1);
   }
-  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-3,3)+(d.a>5?0:1); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  var d = ty[idx](); var o=[d.a]; var _g=0; while(o.length<4&&_g++<60){var v=d.a+rand(-3,3)+(d.a>5?0:1); if(o.indexOf(v)<0&&v>0)o.push(v);} while(o.length<4){o.push(o.length+d.a);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'Boats: '+d.hint, intuition:'Downstream=boat+stream. Upstream=boat-stream. Boat=(DS+US)/2. Stream=(DS-US)/2.' };
 }
 
@@ -3119,7 +3138,7 @@ function generateAlligationQuestion(diff, layer) {
   } else {
     idx = rand(0, ty.length - 1);
   }
-  var d = ty[idx](); var o=[d.a]; while(o.length<4){if(typeof d.a==='string'){var parts=d.a.split(':').map(Number);var v=parts[0]+rand(1,3)+':'+(parts[1]+rand(1,3));if(v!==d.a)o.push(v);}else{var v=d.a+rand(-5,5);if(o.indexOf(v)<0&&v>0)o.push(v);}} shuffle(o);
+  var d = ty[idx](); var o=[d.a]; var _g=0; while(o.length<4&&_g++<60){if(typeof d.a==='string'){var parts=d.a.split(':').map(Number);var v=parts[0]+rand(1,3)+':'+(parts[1]+rand(1,3));if(v!==d.a&&o.indexOf(v)<0)o.push(v);}else{var v=d.a+rand(-5,5);if(o.indexOf(v)<0&&v>0)o.push(v);}} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Alligation: '+d.hint, intuition:'Alligation: (mean-low):(high-mean). Cheaper qty : dearer qty = (dearer-mean):(mean-cheaper).' };
 }
 
@@ -3154,7 +3173,7 @@ function generateSurdsIndicesQuestion(diff, layer) {
   } else {
     idx = rand(0, ty.length - 1);
   }
-  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-5,5); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  var d = ty[idx](); var o=[d.a]; var _g=0; while(o.length<4&&_g++<60){var v=typeof d.a==='string'?d.a:(d.a>0?d.a+rand(1,5):d.a+rand(-5,-1)); if(o.indexOf(v)<0&&(typeof v==='string'||v>0))o.push(v);} while(o.length<4){var f=['None of these','Cannot determine','0','1'][rand(0,3)]; if(o.indexOf(f)<0)o.push(f);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Surds: '+d.hint, intuition:'a^m×a^n=a^(m+n), (a^m)^n=a^(mn), a^m÷a^n=a^(m-n). √(a²b)=a√b.' };
 }
 
@@ -3183,7 +3202,7 @@ function generateBankersDiscountQuestion(diff, layer) {
   } else {
     idx = rand(0, ty.length - 1);
   }
-  var d=ty[idx](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-100,100); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  var d=ty[idx](); var o=[d.a]; if(typeof d.a==='string'){var wpool=['Stock1','Stock2','Lower at market','Higher at market','Same','None of these']; for(var _g=0;_g<60&&o.length<4;_g++){var wv=wpool[rand(0,wpool.length-1)]; if(o.indexOf(wv)<0)o.push(wv);}} else {for(var _g=0;_g<60&&o.length<4;_g++){var v=d.a>0?d.a+rand(1,100):d.a+rand(-100,-1); if(o.indexOf(v)<0&&v>0)o.push(v);}} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Banker\'s Discount', intuition:'BD=FV×R×T/100. TD=BD×100/(100+R×T). BG=BD-TD.' };
 }
 
@@ -3212,7 +3231,7 @@ function generateStocksSharesQuestion(diff, layer) {
   } else {
     idx = rand(0, ty.length - 1);
   }
-  var d=ty[idx](); var o=[d.a]; while(o.length<4){var v=typeof d.a==='number'?Math.round(d.a+rand(-2,2)):(d.a+rand(-2,2)); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  var d=ty[idx](); var o=[d.a]; var _g=0; while(o.length<4&&_g++<60){var v=typeof d.a==='number'?Math.round(d.a+rand(-2,2)):(d.a+rand(-2,2)); if(o.indexOf(v)<0&&v>0)o.push(v);} while(o.length<4){o.push(o.length+d.a);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Stocks', intuition:'Yield = Dividend/MV × 100. Income = Shares × Dividend% × FV. MV = (D%×FV)/Yield%.' };
 }
 
@@ -3248,7 +3267,9 @@ function generateWorkQuestion(diff, layer) {
   } else {
     idx = rand(0, ty.length - 1);
   }
-  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-2,3); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  var d = ty[idx](); var o=[d.a]; var _g=0; while(o.length<4&&_g++<100){var v=d.a+rand(-2,3); if(typeof v==='number'&&o.indexOf(v)<0&&v>=0)o.push(v);} shuffle(o);
+  // fix negative answers (combined-time rule) with a bounded string-safe fill
+  while(o.length<4){var filler=['Less than 1 day','1 day','2 days','3 days','4 days'][rand(0,4)]; if(o.indexOf(filler)<0)o.push(filler);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Work: '+d.hint, intuition:'Total work = men × days × hours. Together rate = sum of individual rates.' };
 }
 
@@ -3285,7 +3306,7 @@ function generateAlgebraQuestion(diff, layer) {
   } else {
     idx = rand(0, ty.length - 1);
   }
-  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=typeof d.a==='string'?d.a+'a':(d.a+rand(-2,2)); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  var d = ty[idx](); var o=[d.a]; var _g=0; while(o.length<4&&_g++<50){var v=typeof d.a==='string'?(d.a+'a'):(d.a+rand(-2,2)); if(o.indexOf(v)<0&&(typeof v==='string'||v>0))o.push(v);} while(o.length<4){var f=['a=-1','x=0','Cannot simplify','None'][rand(0,3)]; if(o.indexOf(f)<0)o.push(f);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'Algebra: '+d.hint, intuition:'Isolate variable. For expansions, use formulas: (a±b)² = a²±2ab+b², (a+b)(a-b)=a²-b².' };
 }
 
@@ -3314,7 +3335,7 @@ function generateGeometryQuestion(diff, layer) {
   } else {
     idx = rand(0, ty.length - 1);
   }
-  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-10,10); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  var d = ty[idx](); var o=[d.a]; var _g=0; while(o.length<4&&_g++<60){var v=d.a+rand(-10,10); if(o.indexOf(v)<0&&v>0)o.push(v);} while(o.length<4){o.push(o.length+d.a);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'Geometry: '+d.hint, intuition:'Triangle sum=180°, complement=90-x, supplement=180-x. Circle: area=πr², C=2πr.' };
 }
 
@@ -3343,7 +3364,7 @@ function generateMensurationQuestion(diff, layer) {
   } else {
     idx = rand(0, ty.length - 1);
   }
-  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-5,5); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  var d = ty[idx](); var o=[d.a]; var _g=0; while(o.length<4&&_g++<60){var v=d.a+rand(-5,5); if(o.indexOf(v)<0&&v>0)o.push(v);} while(o.length<4){o.push(o.length+d.a);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'Mensuration: '+d.hint, intuition:'Area formulas: square=s², rect=l×b, tri=½bh, circle=πr². Vol: cube=s³, cuboid=l×b×h, cyl=πr²h.' };
 }
 
@@ -3371,7 +3392,7 @@ function generateCountingQuestion(diff, layer) {
   } else {
     idx = rand(0, ty.length - 1);
   }
-  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=d.a+rand(-5,5); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  var d = ty[idx](); var o=[d.a]; var _g=0; while(o.length<4&&_g++<60){var v=d.a+rand(-5,5); if(o.indexOf(v)<0&&v>0)o.push(v);} while(o.length<4){o.push(o.length+d.a);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:25, type:'quant', techniqueLabel:'Counting: '+d.hint, intuition:'Permutation=ordered, Combination=unordered. n! = n×(n-1)×...×1. Circular=(n-1)!.' };
 }
 
@@ -3399,7 +3420,7 @@ function generateDataQuestion(diff, layer) {
   } else {
     idx = rand(0, ty.length - 1);
   }
-  var d = ty[idx](); var o=[d.a]; while(o.length<4){var v=typeof d.a==='string'?d.a+'a':(d.a+rand(-2,2)); if(o.indexOf(v)<0&&v>0)o.push(v);} shuffle(o);
+  var d = ty[idx](); var o=[d.a]; var _g=0; while(o.length<4&&_g++<50){var v=typeof d.a==='string'?(d.a+'a'):(d.a+rand(-2,2)); if(o.indexOf(v)<0&&(typeof v==='string'||v>0))o.push(v);} while(o.length<4){var f=['a=-1','x=0','Cannot simplify','None'][rand(0,3)]; if(o.indexOf(f)<0)o.push(f);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:15, type:'quant', techniqueLabel:'Data: '+d.hint, intuition:'Mean=sum/n, Median=middle of sorted, Mode=most frequent. Probability=favorable/total.' };
 }
 
@@ -3434,7 +3455,7 @@ function generateNumberSystemQuestion(diff, layer) {
     // 14: SBI PO Hard — find number when digits reversed
     function(){ var d1=rand(1,4), d2=rand(6,9); var n=d1*10+d2, r=d2*10+d1; return { q:'A two-digit number is '+(r-n)+' less than its reverse. Sum of digits is '+(d1+d2)+'. Find the number?', a:n, hint:'Let 10a+b=number. 10b+a-10a-b=9(b-a)='+(r-n)+'. b-a='+((r-n)/9)+', a+b='+(d1+d2)+'. Solve.' }; }
   ];
-  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; while(o.length<4){var v=typeof d.a==='string'?d.a+'a':(d.a+rand(-1,1)); if(o.indexOf(v)<0)o.push(v);} shuffle(o);
+  var d=ty[rand(0,ty.length-1)](); var o=[d.a]; if(typeof d.a==='string'){var wpool=['Y','N','Yes','No','0','1','2','3','Cannot determine','None of these']; for(var _g=0;_g<50&&o.length<4;_g++){var wv=wpool[rand(0,wpool.length-1)]; if(o.indexOf(wv)<0)o.push(wv);}} else {for(var _g=0;_g<50&&o.length<4;_g++){var v=d.a+rand(-1,1); if(o.indexOf(v)<0&&v>0)o.push(v);}} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:20, type:'quant', techniqueLabel:'Number System: '+d.hint, intuition:'Unit digit cyclicity: 0,1,5,6→1; 2,3,7,8→4; 4,9→2. Sum of digits for divisibility.' };
 }
 
@@ -3468,7 +3489,7 @@ function generateOddManOutQuestion(diff, layer) {
   } else {
     idx = rand(0, ty.length - 1);
   }
-  var d=ty[idx](); var o=[d.a]; var picks=d.q.split('? ')[1].split(', '); picks.forEach(function(p){if(p!==d.a&&o.indexOf(p)<0)o.push(p);}); while(o.length<4){var v=String(rand(10,99));if(o.indexOf(v)<0)o.push(v);} shuffle(o);
+  var d=ty[idx](); var o=[d.a]; var picks=d.q.split('? ')[1].split(', '); picks.forEach(function(p){if(p!==d.a&&o.indexOf(p)<0)o.push(p);}); var _g=0; while(o.length<4&&_g++<60){var v=String(rand(10,99));if(o.indexOf(v)<0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:12, type:'quant', techniqueLabel:'Odd Man Out: '+d.hint, intuition:'Find the common property (squares, primes, multiples). The one that breaks the rule is the answer.' };
 }
 
@@ -3498,7 +3519,7 @@ function generateLetterSymbolSeriesQuestion(diff, layer) {
   } else {
     idx = rand(0, ty.length - 1);
   }
-  var d=ty[idx](); var o=[d.a]; ['AB','CD','EF','GH','IJ','KL','MN','OP','QR','ST','UV','WX','YZ','EV','FU','GT'].forEach(function(l){if(l!==d.a&&o.indexOf(l)<0)o.push(l);}); while(o.length<4){var v=String.fromCharCode(65+rand(0,25));if(o.indexOf(v)<0)o.push(v);} shuffle(o);
+  var d=ty[idx](); var o=[d.a]; ['AB','CD','EF','GH','IJ','KL','MN','OP','QR','ST','UV','WX','YZ','EV','FU','GT'].forEach(function(l){if(l!==d.a&&o.indexOf(l)<0)o.push(l);}); var _g=0; while(o.length<4&&_g++<60){var v=String.fromCharCode(65+rand(0,25));if(o.indexOf(v)<0)o.push(v);} shuffle(o);
   return { question:d.q, answer:d.a, options:o, hint:d.hint, timeLimit:12, type:'reasoning', techniqueLabel:'Letter Series: '+d.hint, intuition:'Convert letters to positions (A=1). Find the step pattern. Convert back.' };
 }
 
@@ -5362,8 +5383,42 @@ window.getMentalQuestion = function(session) {
     };
   }
 
+  // Normalize the many raw shapes procedural generators return ({q,a,o},
+  // {type:'puzzle', questionText}, canonical {question,answer,options}, ...)
+  // into the single {question, answer, options, hint, timeLimit, solution}
+  // envelope the UI reads. Missing fields fall back to safe defaults.
+  function _mentCanon(q) {
+    if (!q || typeof q !== 'object') return q;
+    if (q.question === undefined && q.a !== undefined) {
+      var optsN = (q.o || []).slice();
+      if (optsN.indexOf(q.a) < 0) optsN.unshift(q.a);
+      if (optsN.length < 2) optsN.push('None of these');
+      if (optsN.length < 3) optsN.push('Cannot determine');
+      shuffle(optsN);
+      q.question = q.q;
+      q.answer = q.a;
+      q.options = optsN;
+      if (q.t !== undefined && q.timeLimit === undefined) q.timeLimit = q.t;
+      if (q.sol !== undefined && q.solution === undefined) q.solution = q.sol;
+      q.hint = q.hint || '';
+    }
+    q.question = (q.question === undefined || q.question === null) ? 'Solve: ' + (q.answer !== undefined ? 'find the answer' : 'solve') : q.question;
+    if (q.answer === undefined || q.answer === null || String(q.answer) === 'undefined' || String(q.answer) === 'NaN') q.answer = (q.questionText !== undefined) ? q.questionText : 'Option A';
+    if (!Array.isArray(q.options) || q.options.length < 2) q.options = ['Yes','No','Cannot determine','Option D'];
+    q.options = q.options.filter(function(o){ return o !== undefined && o !== null && String(o) !== 'undefined' && String(o) !== 'NaN'; });
+    if (q.options.indexOf(q.answer) < 0) q.options.unshift(q.answer);
+    if (q.options.length < 2) q.options.push('None of these');
+    if (q.options.length < 3) q.options.push('Cannot determine');
+    if (q.options.length < 4) q.options.push('Option D');
+    shuffle(q.options);
+    if (q.timeLimit === undefined) q.timeLimit = 15;
+    q.hint = q.hint || '';
+    q.solution = q.solution || '';
+    return q;
+  }
+
   if (session.mode === 'quant' || session.mode === 'reasoning' || session.mode === 'verbal') {
-    var q = GENERATORS[session.mode](diff, session.subMode);
+    var q = _mentCanon(GENERATORS[session.mode](diff, session.subMode));
     q.displayType = 'normal';
     q.index = session.questionIndex;
     q.total = session.totalQuestions;
@@ -5377,6 +5432,7 @@ window.getMentalQuestion = function(session) {
   var q = session.mode === 'pattern' && session.focusType
     ? generatePatternQuestion(diff, session.focusType)
     : GENERATORS[session.mode](diff);
+  q = _mentCanon(q);
   q.displayType = 'normal';
   q.index = session.questionIndex;
   q.total = session.totalQuestions;
@@ -6190,6 +6246,7 @@ function generatePuzzle(diff, desiredType) {
     } else if (puzType === 'orderrank') {
       // ORDER & RANKING PUZZLE — tallest/shortest or position ranking
       var nRank = diff <= 2 ? 5 + rand(0,1) : 6 + rand(0,2);
+      if (nRank > names.length) nRank = names.length;
       var rankNames = names.slice(0, nRank);
       // Generate random heights (unique)
       var heights = [];
