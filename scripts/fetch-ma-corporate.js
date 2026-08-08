@@ -60,6 +60,18 @@ function extractWikiTables(html) {
   return tables;
 }
 
+function normHeader(cell) { return (cell || '').toLowerCase().replace(/[^a-z0-9]/g, ' ').replace(/\s+/g, ' ').trim(); }
+
+function findColumn(header, keys) {
+  for (var i = 0; i < header.length; i++) {
+    var h = normHeader(header[i]);
+    for (var k = 0; k < keys.length; k++) {
+      if (h === keys[k] || h.indexOf(keys[k]) === 0) return i;
+    }
+  }
+  return -1;
+}
+
 async function main() {
   var existing = {};
 
@@ -93,15 +105,31 @@ async function main() {
       var perPage = 0;
       for (var ti = 0; ti < tables.length && perPage < rowCap; ti++) {
         var t = tables[ti];
+        if (!t || t.length < 2) continue;
+        var header = t[0];
+        var colTarget = findColumn(header, ['company', 'target', 'name']);
+        var colYear = findColumn(header, ['date', 'year']);
+        // Prefer the column that actually holds a USD price; avoid "adjusted" or "cash"
+        var colValue = -1;
+        for (var hi = 0; hi < header.length; hi++) {
+          var h = normHeader(header[hi]);
+          if (h.indexOf('value') >= 0 && h.indexOf('adjusted') < 0 && h.indexOf('reference') < 0) { colValue = hi; break; }
+        }
+        if (colValue < 0) {
+          for (var hi2 = 0; hi2 < header.length; hi2++) { if (normHeader(header[hi2]).indexOf('price') >= 0) { colValue = hi2; break; } }
+        }
+        if (colTarget < 0 || colValue < 0) continue;
         for (var ri = 1; ri < t.length && perPage < rowCap; ri++) {
-          var row = t[ri]; if (row.length < 3) continue;
+          var row = t[ri]; if (!row || row.length < 3) continue;
           var acquirer = MA_PAGES[mi].acquirer || '';
-          var target = strip(row[0] || '');
-          var year = strip(row.length > 1 ? row[1] : '');
-          var value = strip(row.length > 2 ? row[2] : '');
-          if (acquirer && target.length > 2 && target.indexOf('Company') < 0 && (value.match(/[\d.]+/) || year.match(/20\d{2}/))) {
-            var ans = value || year;
-            var q = makeQuestion('What was the value of ' + acquirer + '\'s acquisition of ' + target + '?', ans, 'Mergers & Acquisitions', seq++, 'M&A', '\uD83E\uDD1D', acquirer + ' acquired ' + target + ' for ' + ans + ' in ' + year + '.');
+          var target = strip(row[colTarget] || '');
+          var year = colYear >= 0 ? strip(row[colYear] || '') : '';
+          var value = strip(row[colValue] || '');
+          if (/^\d+$/.test(target)) continue; // row number leaked into target slot
+          if (acquirer && target.length > 2 && value.match(/[\d,.]/) && /—/.test(value) === false) {
+            var ans = value.replace(/\s+/g, ' ').trim();
+            var fact = acquirer + ' acquired ' + target + ' for ' + value + '.' + (year ? ' Date: ' + year + '.' : '');
+            var q = makeQuestion('What was the value of ' + acquirer + '\'s acquisition of ' + target + '?', ans, 'Mergers & Acquisitions', seq++, 'M&A', '\uD83E\uDD1D', fact);
             if (q && !ek[eventKey(q)]) { nq.push(q); ek[eventKey(q)] = true; count++; perPage++; }
           }
         }
