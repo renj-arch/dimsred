@@ -293,6 +293,14 @@ async function main() {
   await delay(800);
   await fetchSahitya(existingKeys, newQuestions, seq);
 
+  // Persist before bio enrichment so the 120s watchdog can never lose the cycle.
+  newQuestions.forEach(function(q) {
+    delete q._book;
+    existing[CA_KEY].subSubjects[subKey].push(q);
+  });
+  fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
+  console.error('\nBooks & Authors: ' + existing[CA_KEY].subSubjects[subKey].length + ' total questions (saved), bio enrichment...');
+
   // Enrich facts: author bios for single people, plus detailed book overviews.
   for (var bqi = 0; bqi < newQuestions.length; bqi++) {
     var bq = newQuestions[bqi];
@@ -303,12 +311,8 @@ async function main() {
     await enrichWithSummary(bq, bookCache);
   }
 
-  newQuestions.forEach(function(q) {
-    delete q._book;
-    existing[CA_KEY].subSubjects[subKey].push(q);
-  });
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
-  console.error('\nBooks & Authors: ' + existing[CA_KEY].subSubjects[subKey].length + ' total questions, ' + newQuestions.length + ' new');
+  console.error('Books & Authors: ' + existing[CA_KEY].subSubjects[subKey].length + ' total questions, ' + newQuestions.length + ' new');
 
   bio.saveBioCache(bioCache);
   saveBookCache(bookCache);

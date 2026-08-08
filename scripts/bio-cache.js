@@ -20,18 +20,17 @@ var PAGE_TITLE = {
 };
 
 function fetchBioSummaryRaw(name, retries) {
-  if (retries === undefined) retries = 3;
+  if (retries === undefined) retries = 2;
   var title = PAGE_TITLE[name] || name;
   var url = 'https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(title.replace(/\s+/g, '_'));
   return new Promise(function(resolve) {
-    https.get(url, { agent: AGENT, headers: { 'User-Agent': 'BioCacheFill/1.0' } }, function(res) {
+    var req = https.get(url, { agent: AGENT, headers: { 'User-Agent': 'BioCacheFill/1.0' } }, function(res) {
       var data = '';
       res.on('data', function(c) { data += c; });
       res.on('end', function() {
         if (res.statusCode === 429 && retries > 0) {
-          var wait = Math.pow(2, 4 - retries) * 2000;
-          console.error('Bio 429, retrying in ' + (wait / 1000) + 's... (' + retries + ' left) for ' + name);
-          return setTimeout(function() { fetchBioSummaryRaw(name, retries - 1).then(resolve); }, wait);
+          console.error('Bio 429, retrying in 2s... (' + retries + ' left) for ' + name);
+          return setTimeout(function() { fetchBioSummaryRaw(name, retries - 1).then(resolve); }, 2000);
         }
         if (res.statusCode !== 200) return resolve('');
         try {
@@ -40,7 +39,13 @@ function fetchBioSummaryRaw(name, retries) {
           resolve(extract);
         } catch (e) { resolve(''); }
       });
-    }).on('error', function() { resolve(''); });
+    });
+    // A hung or rate-limited request must never hold a feed infinite; release
+    // the batch after a few seconds and leave the bio uncached for next run.
+    req.setTimeout(8000, function() {
+      req.destroy(new Error('Bio request timed out for ' + name));
+    });
+    req.on('error', function() { resolve(''); });
   });
 }
 

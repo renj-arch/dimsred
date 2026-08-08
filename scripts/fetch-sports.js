@@ -194,6 +194,11 @@ async function main() {
   await delay(800);
   await fetchDronacharya(existingKeys, newQuestions, seq);
 
+  // Persist before bio enrichment so the 120s watchdog can never lose the cycle.
+  newQuestions.forEach(function(q) { existing[CA_KEY].subSubjects[subKey].push(q); });
+  fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
+  console.error('\nSports: ' + existing[CA_KEY].subSubjects[subKey].length + ' total questions (saved), bio enrichment...');
+
   for (var bqi = 0; bqi < newQuestions.length; bqi++) {
     var bq = newQuestions[bqi];
     if (!bio.isSinglePerson(bq.answer)) continue;
@@ -201,9 +206,8 @@ async function main() {
     if (b && bq.fact.indexOf(b) === -1) bq.fact += ' ' + b;
   }
 
-  newQuestions.forEach(function(q) { existing[CA_KEY].subSubjects[subKey].push(q); });
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
-  console.error('\nSports: ' + existing[CA_KEY].subSubjects[subKey].length + ' total questions, ' + newQuestions.length + ' new');
+  console.error('Sports: ' + existing[CA_KEY].subSubjects[subKey].length + ' total questions, ' + newQuestions.length + ' new');
 
   bio.saveBioCache(bioCache);
 }

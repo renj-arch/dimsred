@@ -650,16 +650,18 @@ async function main() {
     } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
   }
 
+  // Persist before bio enrichment so the 120s watchdog can never lose the cycle.
+  newQuestions.forEach(function(q) {
+    existing[CA_KEY].subSubjects['Awards & Honours'].push(q);
+  });
+  fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
+
   for (var bqi = 0; bqi < newQuestions.length; bqi++) {
     var bq = newQuestions[bqi];
     if (!bio.isSinglePerson(bq.answer)) continue;
     var b = await bio.getBio(bq.answer, bioCache);
     if (b && bq.fact.indexOf(b) === -1) bq.fact += ' ' + b;
   }
-
-  newQuestions.forEach(function(q) {
-    existing[CA_KEY].subSubjects['Awards & Honours'].push(q);
-  });
 
   var total = existing[CA_KEY].subSubjects['Awards & Honours'].length;
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');

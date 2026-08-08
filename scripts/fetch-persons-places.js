@@ -163,6 +163,12 @@ async function main() {
     }
   } catch (e) {}
 
+  // Persist before bio enrichment so the 120s watchdog can never lose the cycle.
+  nq.pe.forEach(function(q) { existing[CA_KEY].subSubjects['Persons in News'].push(q); });
+  nq.pl.forEach(function(q) { existing[CA_KEY].subSubjects['Places in News'].push(q); });
+  fs.writeFileSync(CA_PATH, JSON.stringify(existing, null, 2), 'utf8');
+  console.error('Persons in News: ' + existing[CA_KEY].subSubjects['Persons in News'].length + ' total (saved), bio enrichment...');
+
   for (var bqi = 0; bqi < nq.pe.length; bqi++) {
     var bq = nq.pe[bqi];
     if (!bio.isSinglePerson(bq.answer)) continue;
@@ -170,8 +176,6 @@ async function main() {
     if (b && bq.fact.indexOf(b) === -1) bq.fact += ' ' + b;
   }
 
-  nq.pe.forEach(function(q) { existing[CA_KEY].subSubjects['Persons in News'].push(q); });
-  nq.pl.forEach(function(q) { existing[CA_KEY].subSubjects['Places in News'].push(q); });
   fs.writeFileSync(CA_PATH, JSON.stringify(existing, null, 2), 'utf8');
   console.error('Persons in News: ' + existing[CA_KEY].subSubjects['Persons in News'].length + ' total, ' + nq.pe.length + ' new');
   console.error('Places in News: ' + existing[CA_KEY].subSubjects['Places in News'].length + ' total, ' + nq.pl.length + ' new');

@@ -278,6 +278,12 @@ async function main() {
 
   await fetchDeaths(existingKeys, seenPersons, newQuestions, seq);
 
+  // Persist questions immediately so a slow bio-enrichment pass (even after the
+  // outer 120s watchdog) can never prevent the feed questions from being saved.
+  newQuestions.forEach(function(q) { existing[CA_KEY].subSubjects[subKey].push(q); });
+  fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
+  console.error('\nObituaries: ' + existing[CA_KEY].subSubjects[subKey].length + ' total questions, ' + newQuestions.length + ' new');
+
   for (var bqi = 0; bqi < newQuestions.length; bqi++) {
     var bq = newQuestions[bqi];
     if (!bio.isSinglePerson(bq.answer)) continue;
@@ -285,10 +291,7 @@ async function main() {
     if (b && bq.fact.indexOf(b) === -1) bq.fact += ' ' + b;
   }
 
-  newQuestions.forEach(function(q) { existing[CA_KEY].subSubjects[subKey].push(q); });
   fs.writeFileSync(PIB_PATH, JSON.stringify(existing, null, 2), 'utf8');
-  console.error('\nObituaries: ' + existing[CA_KEY].subSubjects[subKey].length + ' total questions, ' + newQuestions.length + ' new');
-
   bio.saveBioCache(bioCache);
 }
 
