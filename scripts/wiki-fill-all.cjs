@@ -399,6 +399,31 @@ function extractFactQuestions(sent, title) {
     break; // only one attribution per sentence
   }
 
+  // 4) Dashed term list ("X – definition X – definition", the classic anatomy
+  //    of Indian exam lists like the eight limbs of a painting or six limbs of
+  //    chitra). Because extract lines are newline-collapsed, `splitSentences`
+  //    merges such lists into ONE giant sentence that the year/number/term
+  //    branches skip. Recognise at least three "CapitalTerm – lowercase def"
+  //    pairs and turn each pair into a blank-the-term question.
+  const termList = [];
+  const itemRe = /([A-Z][a-zA-Z'-]{2,18}(?:\s+[A-Z][a-zA-Z'-]{2,18}){0,1})\s*[-–—]\s*(?!a\s|an\s|the\s)([a-zA-Z][a-zA-Z0-9 ,()'/-]{4,90}?)(?=\s+[A-Z][a-zA-Z'-]{2,18}(?:\s+[A-Z][a-zA-Z'-]{2,18}){0,1}\s*[-–—]|\s*$)/g;
+  let mp;
+  while ((mp = itemRe.exec(sent)) !== null) {
+    const item = { term: mp[1], def: mp[2].replace(/\s+/g, ' ').trim() };
+    if (item.def.length >= 5 && item.def.length <= 70 && !item.def.includes(title) && !/^[a-z]+\s+[a-z]+\s+[a-z]+,\s*[a-z]+\s+/.test(item.def)) {
+      termList.push(item);
+    }
+  }
+  if (termList.length >= 3 && /(six|seven|eight|nine|three|four|five|ten|twelve|several)\s+(limbs?|parts?|stages?|types?|kinds?|classes?|categories?|elements?|components?|techniques?|methods?|branches?)/i.test(sent)) {
+    for (const item of termList) {
+      if (out.length >= 4) break;
+      const q = 'The term ______ refers to ' + item.def + '.';
+      if (q.length >= 25 && q.length <= 250 && !/^_____/.test(q) && !/_____\s*$/.test(q)) {
+        out.push({ question: q, answer: item.term });
+      }
+    }
+  }
+
   // 3) Theme/list question: "...such as A, B, C and D" → blank the LAST list
   //    item, leaving the others as hints. Strict guards keep this from firing
   //    on clauses: the list region must not contain verbs/relatives, each item
@@ -1701,28 +1726,36 @@ async function main() {
 
       const MAX_PER_ARTICLE = 20;
       let articleQ = 0;
+
+      // ▸ Fact-pattern extractors (expert question shapes). Run across ALL
+      // sentences — not just in article order — so the most important facts
+      // (dated events, reviewer attributions, theme lists such as the "limbs
+      //   of a painting") are not starved by shallow term-blank questions
+      //   eating the 20-question/article budget first.
+      const factsBySentence = sentences.map(sent => extractFactQuestions(sent, title));
+      const factAccepted = new Set();
+      let factTotal = 0;
+      for (let si = 0; si < sentences.length; si++) {
+        if (factTotal >= MAX_PER_ARTICLE) break;
+        const sentFacts = factsBySentence[si];
+        if (!sentFacts.length) continue;
+        const sent = sentences[si];
+        for (const f of sentFacts) {
+          if (factTotal >= MAX_PER_ARTICLE) break;
+          if (pushQ({
+            id: cat.name.substring(0,3).toLowerCase() + added + 'f',
+            type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+            pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+            question: f.question, answer: f.answer, hint: '',
+            fact: paraphrase(getContext(allSentences, sent, 3), f.answer),
+          })) { added++; articleAdded++; articleQ++; factTotal++; factAccepted.add(si); }
+        }
+      }
+
       for (let si = 0; si < sentences.length && articleQ < MAX_PER_ARTICLE; si++) {
         const sent = sentences[si];
         const sentKey = title + '::' + si;
-        let sentUsed = false;
-
-        // ▸ Fact-pattern extractors (expert question shapes). Run first so the
-        //   most important facts — dated events, reviewer attributions, theme
-        //   lists — are captured even from long sentences the shallow branches
-        //   skip. Questions are built from a local clause around the answer.
-        if (!sentUsed) {
-          const facts = extractFactQuestions(sent, title);
-          for (const f of facts) {
-            if (articleQ >= MAX_PER_ARTICLE) break;
-            if (pushQ({
-              id: cat.name.substring(0,3).toLowerCase() + added + 'f',
-              type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-              pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
-              question: f.question, answer: f.answer, hint: '',
-              fact: paraphrase(getContext(allSentences, sent, 3), f.answer),
-            })) { added++; articleAdded++; articleQ++; sentUsed = true; break; }
-          }
-        }
+        let sentUsed = factAccepted.has(si);
 
         // ▸ Year-based (any year, no trigger word filter)
         if (!sentUsed) {
