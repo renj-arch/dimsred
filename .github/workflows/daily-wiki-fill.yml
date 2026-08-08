@@ -49,7 +49,7 @@ jobs:
             echo "Restored quiz.json from runner temp"
           fi
 
-      - run: node scripts/with-timeout.js scripts/fetch-pib-rss.js 120000
+      - run: node scripts/fetch-pib-rss.js
       - run: node scripts/update-pib-archive.js
 
       - run: node scripts/rebuild-quiz-json.js
@@ -172,77 +172,77 @@ jobs:
           name: merged
           path: data/
 
-      - run: node scripts/with-timeout.js scripts/fetch-current-events.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-indian-ca.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-rbi-data.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-state-news.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-global-rankings.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-parliament-bills.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-themes.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-summits.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-env-health-agri.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-education-culture.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-society-news.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-appointments.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-awards.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-defence.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-science.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-schemes.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-judgements.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-obituaries.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-bilateral.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-bilateral-recent.js 120000
+      - run: node scripts/fetch-current-events.js
+      - run: node scripts/fetch-indian-ca.js
+      - run: node scripts/fetch-rbi-data.js
+      - run: node scripts/fetch-state-news.js
+      - run: node scripts/fetch-global-rankings.js
+      - run: node scripts/fetch-parliament-bills.js
+      - run: node scripts/fetch-themes.js
+      - run: node scripts/fetch-summits.js
+      - run: node scripts/fetch-env-health-agri.js
+      - run: node scripts/fetch-education-culture.js
+      - run: node scripts/fetch-society-news.js
+      - run: node scripts/fetch-appointments.js
+      - run: node scripts/fetch-awards.js
+      - run: node scripts/fetch-defence.js
+      - run: node scripts/fetch-science.js
+      - run: node scripts/fetch-schemes.js
+      - run: node scripts/fetch-judgements.js
+      - run: node scripts/fetch-obituaries.js
+      - run: node scripts/fetch-bilateral.js
+      - run: node scripts/fetch-bilateral-recent.js
 
       # Previously existing but unconnected scripts
-      - run: node scripts/with-timeout.js scripts/fetch-art-culture.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-banking-ca.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-economy-ca.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-infra-ca.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-health-ca.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-education-ca.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-environment-ca.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-intl-orgs.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-constitutional-bodies.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-constitution-articles.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-census-data.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-disaster-mgmt.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-tribes.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-sports.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-books-authors.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-foreign-artists.js 120000 || true
+      - run: node scripts/fetch-art-culture.js || true
+      - run: node scripts/fetch-banking-ca.js || true
+      - run: node scripts/fetch-economy-ca.js || true
+      - run: node scripts/fetch-infra-ca.js || true
+      - run: node scripts/fetch-health-ca.js || true
+      - run: node scripts/fetch-education-ca.js || true
+      - run: node scripts/fetch-environment-ca.js || true
+      - run: node scripts/fetch-intl-orgs.js || true
+      - run: node scripts/fetch-constitutional-bodies.js || true
+      - run: node scripts/fetch-constitution-articles.js || true
+      - run: node scripts/fetch-census-data.js || true
+      - run: node scripts/fetch-disaster-mgmt.js || true
+      - run: node scripts/fetch-tribes.js || true
+      - run: node scripts/fetch-sports.js || true
+      - run: node scripts/fetch-books-authors.js || true
+      - run: node scripts/fetch-foreign-artists.js || true
 
       # New missing-category scripts
-      - run: node scripts/with-timeout.js scripts/fetch-persons-places.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-elections.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-reports-indexes.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-agri-energy-security.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-social-welfare.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-corporate-digital.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-global-social-issues.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-historical-anniversaries.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-media-press.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-insurance-irdai.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-film-world-records.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-ma-corporate.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-railway-aviation.js 120000 || true
+      - run: node scripts/fetch-persons-places.js || true
+      - run: node scripts/fetch-elections.js || true
+      - run: node scripts/fetch-reports-indexes.js || true
+      - run: node scripts/fetch-agri-energy-security.js || true
+      - run: node scripts/fetch-social-welfare.js || true
+      - run: node scripts/fetch-corporate-digital.js || true
+      - run: node scripts/fetch-global-social-issues.js || true
+      - run: node scripts/fetch-historical-anniversaries.js || true
+      - run: node scripts/fetch-media-press.js || true
+      - run: node scripts/fetch-insurance-irdai.js || true
+      - run: node scripts/fetch-film-world-records.js || true
+      - run: node scripts/fetch-ma-corporate.js || true
+      - run: node scripts/fetch-railway-aviation.js || true
 
       # High-priority remaining categories
-      - run: node scripts/with-timeout.js scripts/fetch-committees-commissions.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-national-parks-wildlife.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-budget-rbi.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-unesco-sc-institutions.js 120000 || true
-      - run: node scripts/with-timeout.js scripts/fetch-industry-nuclear-flagships.js 120000 || true
+      - run: node scripts/fetch-committees-commissions.js || true
+      - run: node scripts/fetch-national-parks-wildlife.js || true
+      - run: node scripts/fetch-budget-rbi.js || true
+      - run: node scripts/fetch-unesco-sc-institutions.js || true
+      - run: node scripts/fetch-industry-nuclear-flagships.js || true
 
       # Fold fresh monthly Current Events / Indian Current Affairs (written to
       # the fetch-current-events / fetch-indian-ca scratch files) into the
       # tracked current-affairs.json, then remove the scratch so it isn't
       # committed and the archive reflects the merged data.
       - run: node scripts/merge-monthly-current-affairs.js
-      - run: node scripts/with-timeout.js scripts/fetch-agri-tech.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-stats-maths.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-hydrogeology.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-library-science.js 120000
-      - run: node scripts/with-timeout.js scripts/fetch-technical-officer.js 120000
+      - run: node scripts/fetch-agri-tech.js
+      - run: node scripts/fetch-stats-maths.js
+      - run: node scripts/fetch-hydrogeology.js
+      - run: node scripts/fetch-library-science.js
+      - run: node scripts/fetch-technical-officer.js
       - run: node scripts/cleanup-questions.js
       - run: node scripts/dedup-sentence-flood.js
       - run: node scripts/inject-handpicked-gk.js
