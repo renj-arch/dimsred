@@ -394,9 +394,11 @@ function cleanWikiCell(s) {
 }
 
 // Vow/term ↔ definition tables (e.g. the "28 vratas" table in Jain monasticism,
-// "ashtanga" lists, samitis etc.). Each numeric row "N. Term | Meaning" becomes
-// "The term X means ______" (answer = meaning) or "___. The default question
-// blanks the term: "...is called ______". Returns [{question, answer}].
+// "ashtanga" lists, samitis etc.). Only rows shaped "N. Term | <prose meaning>"
+// qualify; index-only and ranking tables ("1 | Acharya | Ganini Aryika",
+// "No | Raga | Scale") never match because the number lives in its own cell and
+// the definition must read like a sentence (≥ 4 words of prose). Returns
+// [{ question, answer }], answer = the Term.
 function extractTableTermDefs(wikitext, title) {
   if (!/\{\|class="wikitable"/.test(wikitext || '')) return [];
   const tables = parseWikiTables(wikitext);
@@ -406,15 +408,21 @@ function extractTableTermDefs(wikitext, title) {
       if (row.length < 2) continue;
       let termCell = -1;
       for (let j = 0; j < row.length; j++) {
-        if (/^\s*\d{1,2}[.\u2013–‑-]\s*/u.test(row[j])) { termCell = j; break; }
+        if (/^\s*\d{1,2}\s*[.\u2013–‑-]\s+[A-Za-z'\u{800}-\u{FFFF}]/u.test(row[j])) { termCell = j; break; }
       }
       if (termCell < 0) continue;
       const defCell = termCell + 1;
       if (defCell >= row.length) continue;
-      const term = row[termCell].replace(/^\s*\d{1,2}[.\u2013–‑-]\s*/u, '').replace(/^\s*[;:]+\s*/, '').trim();
+      const term = row[termCell]
+        .replace(/^\s*\d{1,2}\s*[.\u2013–‑-]\s*/u, '')
+        .replace(/^\s*[;:]+\s*/, '').trim();
       const def = row[defCell].trim();
-      if (term.length < 2 || term.length > 42 || def.length < 5 || def.length > 160) continue;
-      if (/\b(?:class=|style=|url=)\b/i.test(term) || /\b(?:of|the|and)\b.?$/i.test(term)) continue;
+      if (term.length < 3 || term.length > 34) continue;
+      if (!/^[A-Za-z'’\u{800}-\u{FFFF}]+(?:\s+[A-Za-z'’\u{800}-\u{FFFF}]+)*$/u.test(term)) continue;
+      if (def.length < 12 || def.length > 170) continue;
+      if (/^[\d%.,]+$/.test(def)) continue;
+      const words = def.split(/\s+/).length;
+      if (words < 4) continue;
       pairs.push({ term, def });
     }
   }
