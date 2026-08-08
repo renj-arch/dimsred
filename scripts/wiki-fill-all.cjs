@@ -223,15 +223,21 @@ function splitSentences(text) {
 
 // Check if Wikipedia extract is a list/table page (not prose)
 function isListPage(extract) {
-  const first500 = extract.substring(0, 500);
+  // Trim reference/bibliography sections before scoring: Wikipedia's extract
+  // inlines "Author, Name (year)" citations there, and a prose article with many
+  // citations must not be misread as a list page. Works on the collapsed extract.
+  let body = extract;
+  const markerIdx = body.search(/={2,}\s*(?:References|Notes|Citations|Sources|Bibliography|Further reading|External links|See also|Footnotes)\b/i);
+  if (markerIdx >= 0) body = body.substring(0, markerIdx);
+  const first500 = body.substring(0, 500);
   const commas = (first500.match(/,/g) || []).length;
   // If comma density > 1 per 20 chars in first 500 → list page
   if (first500.length > 0 && commas > 0 && first500.length / commas < 20) return true;
   // "Name, Name (year)" pattern — typical of award/prize lists
-  const nameYearMatches = (extract.match(/[A-Z][a-z]+,\s*[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\s*\(\d{4}\)/g) || []).length;
+  const nameYearMatches = (body.match(/[A-Z][a-z]+,\s*[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\s*\(\d{4}\)/g) || []).length;
   if (nameYearMatches > 3) return true;
   // "Name (year)" pattern repeated
-  const nameParenYear = (extract.match(/[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\s*\(\d{4}\)/g) || []).length;
+  const nameParenYear = (body.match(/[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\s*\(\d{4}\)/g) || []).length;
   if (nameParenYear > 8) return true;
   return false;
 }
