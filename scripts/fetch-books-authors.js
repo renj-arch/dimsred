@@ -79,9 +79,10 @@ function makeQuestion(qText, answer, seq, source, emoji, fact, bookTitle) {
 }
 
 function eventKey(q) {
-  var n = function(s) { return (s || '').replace(/&#91;/g,'[').replace(/&#93;/g,']').replace(/&#160;/g,' ').replace(/&amp;/g,'&').replace(/\[.*?\]/g,''); };
-  return n(q.question || '').substring(0, 80) + '|' + n(q.answer || '');
+  return normalize(q.question || '').substring(0, 80) + '|' + normalize(q.answer || '');
 }
+
+function normalize(s) { return (s || '').replace(/&#(\d+);/g, function(m, c) { return String.fromCharCode(parseInt(c, 10)); }).replace(/&amp;/g, '&').replace(/\[.*?\]/g, '').replace(/\s+/g, ' ').trim(); }
 
 // ---------- book summary cache ----------
 function loadBookCache() {
@@ -163,9 +164,23 @@ function extractBookTable(t) {
     title = title.replace(/\[.*?\]/g, '').trim();
     author = author.replace(/\[.*?\]/g, '').trim();
     var copies = row.length > 2 ? strip(row[2]).replace(/\[.*?\]/g, '').trim() : '';
+    if (!title || !author) continue;
+    if (!isCleanAuthor(author)) continue;
     if (title && author) books.push({ title: title, author: author, copies: copies });
   }
   return books;
+}
+
+// Skip rows whose "author" is a vague collective / irrelevant label rather than a
+// single real person (e.g. "Various authors", "Choi Park Lai's family, among
+// others", "Anonymous") — they make poor single-answer fill-in-the-blank questions.
+function isCleanAuthor(author) {
+  if (!author || author.length > 60) return false;
+  if (/\b(?:Various|Anonymous|unknown|collective|attributed|disputed|translated)\b/i.test(author)) return false;
+  if (/family(?:,|'s)/i.test(author)) return false;
+  if (/\bamong others\b/i.test(author)) return false;
+  if (/,\s*(?:et al\.?|and others|others)\s*$/i.test(author)) return false;
+  return true;
 }
 
 function extractRecipientTable(t) {
