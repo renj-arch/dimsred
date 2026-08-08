@@ -133,6 +133,7 @@ async function fetchArticleExtract(title, retries) {
       if (page) {
         return {
           title: page.title,
+          raw: page.extract || '',
           extract: (page.extract || '').replace(/\s+/g, ' ').trim(),
           description: (page.description || '').replace(/\s+/g, ' ').trim(),
         };
@@ -322,6 +323,30 @@ function clauseWindow(sent, idx, beforeLen, afterLen) {
   const dotEnd = sent.indexOf('. ', idx + 1);
   const end = (dotEnd >= 0 && dotEnd <= hardEnd) ? dotEnd : hardEnd;
   return sent.substring(start, end).replace(/\s+\S*$/, '').trim();
+}
+
+// Composer attribution: "Title(s) – Composer" lines (e.g. the Popular
+// compositions section of a raga/music article, lyric or film-song lists).
+// The raw extract keeps each entry on its own newline, so this runs on the RAW
+// (non-collapsed) extract. Requires ≥3 matches and caps at 6 so stray "X – Y"
+// prose lines can't fire it. Returns [{question, answer}].
+function extractComposerAttributions(raw, title) {
+  if (!/\b(?:composers?|compose|songs?|lyrics|composition)\b/i.test(raw || '')) return [];
+  const lines = (raw || '').split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const found = [];
+  for (const line of lines) {
+    if (line.length > 250 || /^(==|\||\[\[|\bThe\b|\bA\b|\bAn\b)/.test(line)) continue;
+    const m = /^(.*?)\s*[-–—]\s*([A-Z][A-Za-z .'’]{2,44})\s*$/.exec(line);
+    if (!m) continue;
+    const left = m[1].trim();
+    const right = m[2].trim();
+    if (!/^[A-Z]/.test(left) || /\d{4}/.test(right)) continue;
+    if (/\b(?:also sung|also known|composed by|written for|in the|for the|including|such as)\b/i.test(left)) continue;
+    const first = left.split(/\s*,\s*|\s+and\s+/i)[0].replace(/['"“”‘’]/g, '');
+    if (first.length < 3 || first.length > 100) continue;
+    found.push({ q: "The composition '" + first + "' was composed by ______", a: right });
+  }
+  return found.length >= 3 ? found.slice(0, 6) : [];
 }
 
 // Expert-style fact questions mined with deterministic patterns (no LLM).
@@ -1726,6 +1751,21 @@ async function main() {
 
       const MAX_PER_ARTICLE = 20;
       let articleQ = 0;
+
+      // ▸ Composer attribution ("Title – Composer" lines, e.g. Popular
+      //   compositions). Runs on the RAW extract so newline-separated entries
+      //   stay distinct. These are high-value exam facts, so emit them before
+      //   the generic blank branches.
+      for (const comp of extractComposerAttributions(article.raw, title)) {
+        if (articleQ >= MAX_PER_ARTICLE) break;
+        if (pushQ({
+          id: cat.name.substring(0,3).toLowerCase() + added + 'c',
+          type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+          pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+          question: comp.q, answer: comp.a, hint: '',
+          fact: paraphrase(getContext(allSentences, title, 3), comp.a),
+        })) { added++; articleAdded++; articleQ++; }
+      }
 
       // ▸ Fact-pattern extractors (expert question shapes). Run across ALL
       // sentences — not just in article order — so the most important facts
