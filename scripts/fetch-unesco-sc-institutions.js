@@ -51,6 +51,57 @@ function fetchPageText(title) {
   });
 }
 
+// Clean a single lead paragraph so questions get real-world "important facts"
+// instead of a bare "X is a UNESCO site in Y." stub. Strips citation markers
+// and leading boilerplate ("Coordinates:", units, etc.); cap at ~500 chars.
+function cleanLead(lead) {
+  lead = (lead || '').replace(/\[\d+\]/g, '').replace(/\s+/g, ' ').trim();
+  lead = lead.replace(/^[^A-Za-z]{0,40}[\s:]+/i, '').trim();
+  lead = lead.replace(/^\s*(?:Coordinates?:?[^.]*\.|The\s+site\s+(?:is|was)\s+(?:a\s+)?[^.]{0,60}\.)/i, '').trim();
+  if (lead.length < 120) return '';
+  return lead.substring(0, 500);
+}
+
+// Batch-fetch site lead paragraphs 20 at a time (multi-title prop=extracts).
+// The previous per-title version made ~500 rapid requests and tripped
+// Wikipedia's 429 rate limiter, stalling the whole feeds job. Batching cuts
+// that to ~25 requests and keeps the daily run within the job timeout.
+function fetchSiteLeads(titles) {
+  var out = {};
+  var batchSize = 20;
+  var chain = Promise.resolve();
+  for (var i = 0; i < titles.length; i += batchSize) {
+    (function(batch) {
+      chain = chain.then(function() {
+        return fetchJSON(API + '?action=query&prop=extracts&exintro&explaintext&exlimit=max&exchars=600&titles=' + encodeURIComponent(batch.join('|')) + '&format=json&redirects=1').then(function(data) {
+          var q = data.query || {};
+          // Redirects/normalization map source title -> actual page title.
+          var toActual = {};
+          [].concat(q.redirects || [], q.normalized || []).forEach(function(r) { toActual[r.from] = r.to; });
+          var pages = q.pages ? (Array.isArray(q.pages) ? q.pages : Object.values(q.pages)) : [];
+          pages.forEach(function(p) {
+            if (p && !p.missing && p.extract && p.title) {
+              var lead = cleanLead(p.extract);
+              // Skip disambiguation pages ("X may refer to...") — not a fact.
+              if (/^\s*[^]{0,40}may refer to/i.test(p.extract)) return;
+              if (!lead) return;
+              // Key by the title(s) we actually asked for so lookups by the
+              // original site name succeed even when Wikipedia redirects.
+              var gaveMe = null;
+              for (var k in toActual) { if (toActual[k] === p.title) { gaveMe = k; break; } }
+              (gaveMe ? [gaveMe] : []).concat(p.title).forEach(function(key) {
+                if (out[key] === undefined) out[key] = lead;
+              });
+            }
+          });
+          return delay(500);
+        }).catch(function() { return delay(500); });
+      });
+    })(titles.slice(i, i + batchSize), titles.slice(i, i + batchSize));
+  }
+  return chain.then(function() { return out; });
+}
+
 function extractWikiTables(html) {
   var tables = [];
   var tRegex = /<table[^>]*class="[^"]*(wikitable|sortable)[^"]*"[^>]*>([\s\S]*?)<\/table>/gi;
@@ -148,7 +199,30 @@ async function main() {
       if (m) byU[m[1].trim()] = q;
     });
     var uUpdated = 0;
-    Object.keys(freshU).sort().forEach(function(name) {
+    var uEnriched = 0;
+    var sortedNames = Object.keys(freshU).sort();
+    // Collect Wikipedia titles of sites whose stored fact is still the bare
+    // "X is a UNESCO site in Y" stub, then batch-fetch all leads up front (20
+    // per request) so enrichment is ~25 API calls instead of ~500.
+    var enrichTitles = [];
+    var wantEnrich = {};
+    sortedNames.forEach(function(name) {
+      var isCtry = !!freshU[name].ctry;
+      var existingQ = byU[name];
+      var thin = !existingQ || !existingQ.fact || existingQ.fact.length < 90 || existingQ.fact.indexOf(' is a UNESCO site in ') === 0;
+      if (thin) {
+        var wikiTitle = isCtry ? name.replace(/\s*\([^)]*\)\s*$/, '').trim() : name;
+        enrichTitles.push(wikiTitle);
+        wantEnrich[wikiTitle] = name;
+      }
+    });
+    var leadsByTitle = {};
+    if (enrichTitles.length) {
+      process.stdout.write('  (enriching ' + enrichTitles.length + ' thin sites...)\n');
+      leadsByTitle = await fetchSiteLeads(enrichTitles);
+    }
+    for (var ui = 0; ui < sortedNames.length; ui++) {
+      var name = sortedNames[ui];
       var st = freshU[name].state;
       var year = freshU[name].year;
       var src = freshU[name].src || 'World Heritage Sites in India';
@@ -162,13 +236,15 @@ async function main() {
       }
       var fact = name + ' is a UNESCO site in ' + st + (year ? ' (inscribed ' + year + ')' : '') + '.';
       var existingQ = byU[name];
+      var wikiTitle = isCtry ? name.replace(/\s*\([^)]*\)\s*$/, '').trim() : name;
+      if (leadsByTitle[wikiTitle]) { fact += ' ' + leadsByTitle[wikiTitle]; uEnriched++; }
       if (existingQ) {
         if (existingQ.answer !== st || existingQ.fact !== fact) { existingQ.answer = st; existingQ.fact = fact; uUpdated++; }
       } else {
         var q = makeQuestion(qText, st, 'UNESCO & World Heritage', seq.u++, src, '\uD83C\uDFDB', fact);
         if (q) nq.u.push(q);
       }
-    });
+    }
     var uBefore = existingU.length;
     function unescoKey(q) {
       var m = /^(.+?) is a UNESCO World Heritage Site located in which (?:state|country)\?/.exec(q.question || '');
@@ -179,7 +255,7 @@ async function main() {
       return !k || freshU[k];
     });
     var uRemoved = uBefore - existing[CA_KEY].subSubjects['UNESCO & World Heritage'].length;
-    process.stdout.write(Object.keys(freshU).length + ' sites, ' + uUpdated + ' updated, ' + nq.u.length + ' new, ' + uRemoved + ' removed\n');
+    process.stdout.write(Object.keys(freshU).length + ' sites, ' + uUpdated + ' updated, ' + uEnriched + ' enriched, ' + nq.u.length + ' new, ' + uRemoved + ' removed\n');
   } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
   await delay(600);
 
