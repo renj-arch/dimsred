@@ -37,6 +37,8 @@ function eventKey(q) { var n = function(s) { return (s || '').replace(/&#91;/g,'
 
 function fetchPageText(title) { return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=text&format=json').then(function(d) { if (d && d.parse && d.parse.text) return d.parse.text['*']; return ''; }); }
 
+function fetchPageWikitext(title) { return fetchJSON(API + '?action=parse&page=' + encodeURIComponent(title) + '&prop=wikitext&format=json').then(function(d) { if (d && d.parse && d.parse.wikitext) return d.parse.wikitext['*']; return ''; }); }
+
 function extractInfobox(html) {
   var data = {}; var m = html.match(/<table[^>]*class="[^"]*infobox[^"]*"[^>]*>([\s\S]*?)<\/table>/i);
   if (!m) return data; var rows = m[1].match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi); if (!rows) return data;
@@ -48,17 +50,37 @@ function extractInfobox(html) {
 }
 
 function extractWikiTables(html) {
+  return extractWikiTablesRaw(html).map(function(t) { return t.map(function(r) { return r.map(strip); }); });
+}
+
+// Like extractWikiTables but keeps raw cell HTML so tree-list markup survives
+// (needed to name the top-level conflict of an ongoing-conflicts row).
+function extractWikiTablesRaw(html) {
   var tables = []; var tRegex = /<table[^>]*class="[^"]*(wikitable|sortable)[^"]*"[^>]*>([\s\S]*?)<\/table>/gi;
   var m; while ((m = tRegex.exec(html)) !== null) {
     var rows = []; var rRegex = /<tr[^>]*>([\s\S]*?)<\/tr>/gi; var rm;
     while ((rm = rRegex.exec(m[2])) !== null) {
       var cells = []; var cRegex = /<t[hd][^>]*>([\s\S]*?)<\/t[hd]>/gi; var cm;
-      while ((cm = cRegex.exec(rm[1])) !== null) cells.push(strip(cm[1]));
+      while ((cm = cRegex.exec(rm[1])) !== null) cells.push(cm[1]);
       if (cells.length > 0) rows.push(cells);
     }
     if (rows.length > 1) tables.push(rows);
   }
   return tables;
+}
+
+// Top-level conflict name of an "ongoing armed conflicts" tree cell. The cell
+// renders a nested bullet list; the first bullet (deepest outer <li>) is the
+// row's headline conflict. Returns up to ~70 chars of plain text.
+function extractConflictName(rawHtml) {
+  var h = (rawHtml || '');
+  var li = h.match(/<li[^>]*>([\s\S]*?)<\/li>/i);
+  var inner = li ? li[1] : h;
+  inner = inner.split(/<ul/i)[0]; // stop before nested bullet level
+  var name = strip(inner);
+  name = name.replace(/\s*\([^)]*\)\s*/g, ' ').replace(/\s+/g, ' ').trim();
+  name = name.replace(/\s*[—–-]\s*$/, '').trim();
+  return name.length > 3 ? name.substring(0, 70) : '';
 }
 
 async function main() {
@@ -162,18 +184,38 @@ async function main() {
   await delay(400);
 
   // ── Global Conflicts (list of ongoing conflicts) ──
+  // The "List of ongoing armed conflicts" article has 6 wikitable/sortable
+  // tables: tables 0-3 use [Start year | Conflict tree | Continent |
+  // Location (countries) | Cumulative fatalities | ...] and the summary
+  // tables 4-5 are [Rank | Conflict | ...] / [Rank | Country | Deaths | ...].
+  // Older versions read columns 0..2 as conflict/location/year, so the start
+  // YEAR became the "conflict" ("Where is the 1948 conflict...?") and header
+  // rows of the summary tables leaked ("Rank", "Conflict", "Country", "Deaths").
+  // The rules below only keep genuine conflict rows (4-digit start year) and
+  // use the correct geography columns.
   process.stdout.write('  Global Conflicts... ');
   try {
     var html = await fetchPageText('List_of_ongoing_armed_conflicts');
-    var tables = extractWikiTables(html); var count = 0;
-    tables.forEach(function(t) {
+    var rawTables = extractWikiTablesRaw(html); var count = 0;
+    rawTables.forEach(function(t) {
       for (var ri = 1; ri < t.length && ri < 10; ri++) {
-        var row = t[ri]; if (row.length < 3) continue;
-        var conflict = strip(row[0] || ''); var location = strip(row[1] || ''); var year = strip(row[2] || '');
-        if (conflict.length > 3 && conflict.indexOf('Conflict') < 0 && location.length > 2) {
-          var q = makeQuestion('Where is the ' + conflict + ' conflict taking place?', location, 'Global Conflicts', seq['Global Conflicts']++, 'Ongoing conflicts', '\uD83C\uDF0D', conflict + ' is ongoing in ' + location + (year ? ' (since ' + year + ')' : '') + '.');
-          if (q && !ek['Global Conflicts'][eventKey(q)]) { if (!nq['Global Conflicts']) nq['Global Conflicts'] = []; nq['Global Conflicts'].push(q); ek['Global Conflicts'][eventKey(q)] = true; count++; }
-        }
+        var row = t[ri]; if (row.length < 4) continue;
+        // Only genuine conflict rows: the start-of-conflict column must be a
+        // 4-digit year. This rejects every header row ("Start of conflict",
+        // "Rank", "Conflict", "Country") and the summary tables' rows
+        // ("1°", "1", "Mexico").
+        var yr = strip(row[0] || '');
+        if (!/^\d{4}$/.test(yr)) continue;
+        var name = extractConflictName(row[1]);
+        if (!name) continue;
+        var continent = strip(row[2] || '');
+        var location = strip(row.length > 3 ? row[3] : '');
+        // Location is a flag list ("Thailand", "Pakistan Nepal"). Keep the
+        // first 2 country names, trimmed, for a compact answer.
+        location = location.split(/\s+/).slice(0, 2).join(' ');
+        if (!location || location.length < 2) continue;
+        var q = makeQuestion('Where is the ' + name + ' conflict taking place?', location, 'Global Conflicts', seq['Global Conflicts']++, 'Ongoing conflicts', '\uD83C\uDF0D', name + ' is a conflict that began in ' + yr + ' in ' + continent + ' (' + location + ').');
+        if (q && !ek['Global Conflicts'][eventKey(q)]) { if (!nq['Global Conflicts']) nq['Global Conflicts'] = []; nq['Global Conflicts'].push(q); ek['Global Conflicts'][eventKey(q)] = true; count++; }
       }
     });
     process.stdout.write(count + ' items\n');

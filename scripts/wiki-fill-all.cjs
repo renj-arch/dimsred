@@ -223,6 +223,19 @@ function splitSentences(text) {
     .filter(s => s.length > 0);
 }
 
+// Cut reference/appendix boilerplate ("== References ==", "== See also ==",
+// "== Bibliography ==", "== External links ==", "== Further reading ==",
+// "== Notes ==", "== Sources ==") and everything after it from an extract.
+// Without this, the citation strings in a References section ("doi:...",
+// "Author, Name (year)", "Place: Publisher.") get turned into fill-blank
+// questions. Mirrors the marker list used by isListPage so the prose scoring
+// and the question sentence pool see the same body.
+function trimBackmatter(extract) {
+  const marker = /={2,}\s*(?:References|Notes|Citations|Sources|Bibliography|Further reading|External links|See also|Footnotes)\b/i;
+  const idx = (extract || '').search(marker);
+  return idx >= 0 ? (extract || '').substring(0, idx) : (extract || '');
+}
+
 // Check if Wikipedia extract is a list/table page (not prose)
 function isListPage(extract) {
   // Trim reference/bibliography sections before scoring: Wikipedia's extract
@@ -339,7 +352,13 @@ function clauseWindow(sent, idx, beforeLen, afterLen) {
 // (non-collapsed) extract. Requires ≥3 matches and caps at 6 so stray "X – Y"
 // prose lines can't fire it. Returns [{question, answer}].
 function extractComposerAttributions(raw, title) {
-  if (!/\b(?:composers?|compose|songs?|lyrics|composition)\b/i.test(raw || '')) return [];
+  // Gate on music-specific vocabulary, not the generic English words
+  // "composition"/"song" (those appear in every article: "composition of the
+  // armed forces", "protest songs", "population composition"). A "Title(s) –
+  // Composer" list only exists in genuine raga/film/music pages, which name a
+  // composer, lyricist, album or soundtrack.
+  if (!/\b(?:composer(?:s)?|lyricist(?:s)?|musical(?:ly)?|songwriter|soundtrack|album|raga|ragam|raagam|kr?t(i|ai)|khayaal|bandi|opera|divulged|gazal|bollywood|filmi|musician)\b/i.test(raw || '') &&
+      !/\b(?:composed by|sung by|written by [A-Z])\b/i.test(raw || '')) return [];
   const lines = (raw || '').split(/\r?\n/).map(l => l.trim()).filter(Boolean);
   const found = [];
   for (const line of lines) {
@@ -349,7 +368,20 @@ function extractComposerAttributions(raw, title) {
     const left = m[1].trim();
     const right = m[2].trim();
     if (!/^[A-Z]/.test(left) || /\d{4}/.test(right)) continue;
-    if (/\b(?:also sung|also known|composed by|written for|in the|for the|including|such as)\b/i.test(left)) continue;
+    // Skip route/service lines (railways, buses, flights): "Agartala – Anand
+    // Vihar Terminal Rajdhani Express", "Mumbai – Delhi Superfast" etc. These
+    // match the "Title – Composer" shape but are common travel trivia; a real
+    // raga/film composition list never names an Express/Mail/Road in the
+    // composer slot.
+    if (/\b(Express|Superfast|Super Fast|Rajdhani|Humsafar|Shatabdi|Duronto|Jan(shatabdi)?|Cantonment|Terminal|Vihar|Mail|Special|Weekly|Local|Passenger|Circular|Fast Passenger|DEMU|MEMU|Airport|Flight|Bus|Coach|Wagon|Tram|Metro|Subway|Highway|Road|NH-\d|Bypass)\b/i.test(left + ' ' + right)) continue;
+    if (/\b(?:also sung|also known|composed by|written for|in the|for the|including|such as|are|is|between|to|from)\b/i.test(left)) continue;
+    // Person-name check: a "Title(s) – Composer" list uses Title-Case names on
+    // both sides ("Harinama Jihveyolirabeku – Vyasatirtha"). Definition lists,
+    // appointment tables and prose lines read "Big data – extremely large
+    // datasets", "Governor of RBI – Chairperson", "NH 2 : Dibrugarh – ..." and
+    // carry lowercase words, digits, colons or punctuation — reject those.
+    if (/\b[a-z][a-z]+\b/.test(left) || /\b[a-z][a-z]+\b/.test(right)) continue;
+    if (/[\d:;/=]/.test(left)) continue;
     const first = left.split(/\s*,\s*|\s+and\s+/i)[0].replace(/['"“”‘’]/g, '');
     if (first.length < 3 || first.length > 100) continue;
     found.push({ q: "The composition '" + first + "' was composed by ______", a: right });
@@ -435,6 +467,12 @@ function extractTableTermDefs(wikitext, title) {
       // "Five vows", "Guna vratas") that merely labels the rows.
       if (/^[A-Z][a-z]+\s+[A-Z][a-z]+/.test(term) && /(vow|vrata|guna|head|group|class|stack)/i.test(term)) continue;
       if (term.length < 3 || term.length > 42) continue;
+      // A "term" must be a real name/acronym — not a number, a percentage, or
+      // a bare token like "44.99%". Election-result tables ("Party | seats |
+      // % of votes") would otherwise yield "The term whose meaning is
+      // 'Communist Party of India' is called 99%". Require at least one letter.
+      if (!/[A-Za-z\u{800}-\u{FFFF}]/u.test(term)) continue;
+      if (/^\d+(\.\d+)?\s*%?$/.test(term)) continue;
       const def = row[defCell].trim();
       if (def.length < 12 || def.length > 170) continue;
       if (/^[\d%.,]+$/.test(def)) continue;
@@ -1839,7 +1877,9 @@ async function main() {
         continue;
       }
 
-      const allSentences = splitSentences(ext).filter(s => s.trim().length > 20 && !isBadSentence(s));
+      const body = trimBackmatter(ext);
+
+      const allSentences = splitSentences(body).filter(s => s.trim().length > 20 && !isBadSentence(s));
       const sentences = allSentences.filter(s => s.trim().length > 25 && !isBadSentence(s));
       const wasCovered = coveredTitles.has(norm(title));
       let articleAdded = 0;
@@ -2032,7 +2072,8 @@ async function main() {
         // partially-covered articles is handled by the main revisit pool above
         // (which scans all sentences, unlike this 10-sentence link pass).
         if (coveredTitles.has(norm(title))) continue;
-        const allSentences = splitSentences(ext).filter(s => s.trim().length > 20 && !isBadSentence(s));
+        const body = trimBackmatter(ext);
+        const allSentences = splitSentences(body).filter(s => s.trim().length > 20 && !isBadSentence(s));
         const sentences = allSentences.filter(s => s.trim().length > 25 && !isBadSentence(s));
         if (desc && desc.length > 5 && desc.length < 200) {
           const q = makeDescriptionQuestion(desc, title);
