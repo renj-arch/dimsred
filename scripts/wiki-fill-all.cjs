@@ -371,10 +371,11 @@ function parseWikiTables(wikitext) {
       const rowCells = part.split('\n')
         .filter(l => /^\s*[|!]/.test(l) && !/^\s*\|\{\|/.test(l))
         .map(l => l.replace(/^\s*[|!]+/, '').trim())
-        .map(cleanWikiCell);
+        .map(cleanWikiCell)
+        .filter(Boolean);
       if (rowCells.length) rows.push(rowCells);
     }
-    if (rows.length >= 4) tables.push(rows);
+    if (rows.length >= 3) tables.push(rows);
   }
   return tables;
 }
@@ -384,6 +385,7 @@ function cleanWikiCell(s) {
     .replace(/\[\[[^\]|]*\|([^\]]+)\]\]/g, '$1')
     .replace(/\[\[([^\]]+)\]\]/g, '$1')
     .replace(/'''{1,3}/g, '').replace(/''/g, '')
+    .replace(/<br\s*\/?>/gi, ' ')
     .replace(/<ref[^>]*>[\s\S]*?<\/ref>/gi, ' ')
     .replace(/<ref[^>]*\/>/gi, ' ')
     .replace(/<[^>]+>/g, ' ')
@@ -394,11 +396,14 @@ function cleanWikiCell(s) {
 }
 
 // Vow/term ↔ definition tables (e.g. the "28 vratas" table in Jain monasticism,
-// "ashtanga" lists, samitis etc.). Only rows shaped "N. Term | <prose meaning>"
-// qualify; index-only and ranking tables ("1 | Acharya | Ganini Aryika",
-// "No | Raga | Scale") never match because the number lives in its own cell and
-// the definition must read like a sentence (≥ 4 words of prose). Returns
-// [{ question, answer }], answer = the Term.
+// the unnumbered "Vow | Transgressions" list in Five Vows, "ashtanga" lists,
+// samitis etc.). Two row shapes qualify:
+//   (1) "N. Term | <prose meaning>"  — numbered vratas/vows
+//   (2) "Term | <4+ word prose>"      — unnumbered vow/term tables
+// Index-only and ranking tables ("1 | Acharya | Ganini Aryika", "No | Raga |
+// Scale") never match because the number lives in its own cell and the
+// definition must read like a sentence (≥ 4 words of prose with a lowercase
+// word). Returns [{ question, answer }], answer = the Term.
 function extractTableTermDefs(wikitext, title) {
   if (!/\{\|class="wikitable"/.test(wikitext || '')) return [];
   const tables = parseWikiTables(wikitext);
@@ -408,21 +413,34 @@ function extractTableTermDefs(wikitext, title) {
       if (row.length < 2) continue;
       let termCell = -1;
       for (let j = 0; j < row.length; j++) {
-        if (/^\s*\d{1,2}\s*[.\u2013–‑-]\s+[A-Za-z'\u{800}-\u{FFFF}]/u.test(row[j])) { termCell = j; break; }
+        if (/^\s*\d{1,2}\s*[.\u2013–‑-]\s+[A-Za-z'\u{800}-\u{FFFF}\/]/u.test(row[j])) { termCell = j; break; }
+      }
+      if (termCell < 0) {
+        // Unnumbered shape: term cell followed immediately by a long prose cell.
+        for (let j = 0; j < row.length - 1; j++) {
+          const trm = row[j];
+          const df = row[j + 1];
+          if (!trm || trm.length > 30) continue;
+          if (!/^[^\d]/.test(trm)) continue;
+          if (df && df.split(/\s+/).length >= 4 && /[a-z]/.test(df) && df.length >= 12) { termCell = j; break; }
+        }
       }
       if (termCell < 0) continue;
       const defCell = termCell + 1;
       if (defCell >= row.length) continue;
       const term = row[termCell]
-        .replace(/^\s*\d{1,2}\s*[.\u2013–‑-]\s*/u, '')
+        .replace(/^\s*\d{1,2}\s*[.\-–]\s*/u, '')
         .replace(/^\s*[;:]+\s*/, '').trim();
+      // Reject when the "term" is itself a big heading/group cell (e.g.
+      // "Five vows", "Guna vratas") that merely labels the rows.
+      if (/^[A-Z][a-z]+\s+[A-Z][a-z]+/.test(term) && /(vow|vrata|guna|head|group|class|stack)/i.test(term)) continue;
+      if (term.length < 3 || term.length > 42) continue;
       const def = row[defCell].trim();
-      if (term.length < 3 || term.length > 34) continue;
-      if (!/^[A-Za-z'’\u{800}-\u{FFFF}]+(?:\s+[A-Za-z'’\u{800}-\u{FFFF}]+)*$/u.test(term)) continue;
       if (def.length < 12 || def.length > 170) continue;
       if (/^[\d%.,]+$/.test(def)) continue;
       const words = def.split(/\s+/).length;
       if (words < 4) continue;
+      if (pairs.some(p => p.term === term)) continue;
       pairs.push({ term, def });
     }
   }
