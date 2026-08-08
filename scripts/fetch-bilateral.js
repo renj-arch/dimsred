@@ -203,7 +203,10 @@ async function fetchRelationCategories(existingKeys, newQuestions, seqObj) {
         if (seen[other.toLowerCase()]) continue;
         seen[other.toLowerCase()] = true;
         var qText = 'Which country, other than India, figures in the "' + title + '" bilateral relations entry?';
-        var q = makeQuestion(qText, other, seqObj.n++, 'Foreign Relations', '\uD83C\uDF0D', title + ' documents India\u2019s bilateral relations with ' + other + '.');
+        var rich = RICH_FACTS[other];
+        var fact = rich
+          || (title + ' documents India\u2019s bilateral relations with ' + other + '.');
+        var q = makeQuestion(qText, other, seqObj.n++, 'Foreign Relations', '\uD83C\uDF0D', fact);
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
       }
       await delay(400);

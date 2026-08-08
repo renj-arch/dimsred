@@ -263,6 +263,10 @@ var RANKINGS = [
 ];
 
 function makeRankingQuestions(index, rank, seq, fact) {
+  // Only publish a question when we have a rich, curated fact. Without one the
+  // generic "...an important global index..." one-liner adds no exam value, so
+  // the index is skipped rather than surfaced with a stub explanation.
+  if (!fact || !fact.trim()) return [];
   var now = new Date();
   var pubDate = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + 'T12:00:00.000Z';
   var monthLabel = MONTHS[now.getMonth()] + ' ' + now.getFullYear();
@@ -281,7 +285,7 @@ function makeRankingQuestions(index, rank, seq, fact) {
     question: 'India\'s rank in the ' + index.name + ' as of ' + monthLabel + ' is _____.',
     answer: rank,
     hint: '',
-    fact: fact || ('India ranks ' + rank + ' in the ' + index.name + '. This is an important global index for competitive exams.')
+    fact: fact
   });
 
   return results;
@@ -358,6 +362,13 @@ async function main() {
     }
 
     if (!rank) continue;
+
+    // Skip indexes without a curated, rich fact — a stub one-liner adds no
+    // exam value (see makeRankingQuestions).
+    if (!fact || !fact.trim()) {
+      console.error('  Skipping ' + idx.name + ' (no curated fact)');
+      continue;
+    }
 
     var existingQ = byIndex[idx.name];
     if (existingQ) {

@@ -498,6 +498,32 @@ Developments:
 India cooperates with Niue through the Forum for India–Pacific Islands Cooperation (FIPIC), including development assistance, ITEC scholarships and collaboration on climate change and sustainable development.
 
 Geopolitical Context:
-India's engagement with Niue and other Pacific states reflects the 'Act East' and SAGAR policies and India's emphasis on maritime cooperation and climate leadership.`
+India's engagement with Niue and other Pacific states reflects the 'Act East' and SAGAR policies and India's emphasis on maritime cooperation and climate leadership.`,
+
+    'El Salvador': `Key Points:
+• India established diplomatic relations with El Salvador on 12 February 1979.
+• The Embassy of India in Guatemala is jointly accredited to El Salvador, while El Salvador maintains an embassy in New Delhi and an honorary consulate in Bangalore.
+
+Background & Additional Information:
+The Embassy of El Salvador in London was concurrently accredited to India until June 2008, when El Salvador opened its embassy in New Delhi. The Embassy of India in Panama City was initially concurrently accredited to El Salvador and was later transferred to Guatemala City.
+
+Progress:
+India and El Salvador signed a memorandum of understanding on holding regular consultations between their foreign ministries in February 2004, and held their first Foreign Office Consultations in August 2012. In August 2012 they also signed an agreement on cooperation in science, technology and innovation, following a 2011 MoU on Fisheries and Aquaculture. Indian foreign minister S. Jaishankar met his Salvadoran counterpart in 2023, discussing cooperation in health, solar power and capacity building.
+
+Geopolitical Context:
+El Salvador sits in the Central American Integration System (SICA), which India has sought closer engagement with. In 2023, a mandatory airport improvement fee introduced in El Salvador for Indian travellers underscored frictions in people-to-people ties — but India has looked to build commercial and development links through SICA and its wider Latin American outreach.`,
+
+    'Equatorial Guinea': `Key Points:
+• Relations between India and Equatorial Guinea existed even before the latter's independence in 1968.
+• The High Commission of India in Lagos, Nigeria was concurrently accredited to Equatorial Guinea from 2005 until 2008, when accreditation was transferred to the Embassy of India in Luanda, Angola.
+
+Background & Additional Information:
+Bilateral engagement picked up around 2004, when India's Joint Secretary (West Africa) visited Malabo and Equatorial Guinea signed the TEAM 9 development-cooperation agreement with India. During ambassador accreditation visits in 2008, both sides discussed a Joint Commission and a General Cooperation Agreement, and Equatorial Guinea requested English-language training for its officials.
+
+Highlights:
+Prime Minister's Special Envoy Sachin Pilot invited President Teodoro Obiang Nguema Mbasogo — then chair of the African Union — to the second India-Africa Summit, which President Mbasogo co-chaired with PM Manmohan Singh in Addis Ababa. A State Minister for AYUSH later invited him to the third India Africa Summit, leading to the first ever visit by an Equatorial Guinean President to India in 2015.
+
+Geopolitical Context:
+Equatorial Guinea is one of the most oil-rich states in West Africa. India's strategic engagement across the region, the India-Africa Summit institutional framework and hydrocarbon interests underpin cooperation, with India maintaining observer status at African Union sessions chaired by Equatorial Guinea.`
   }
 };
