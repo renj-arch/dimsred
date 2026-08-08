@@ -126,16 +126,18 @@ async function fetchArticleExtract(title, retries) {
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
       await delay(4000);
-      const url = `${WIKI_API}?action=query&prop=extracts|description&explaintext&exlimit=1&titles=${encodeURIComponent(title)}&format=json`;
+      const url = `${WIKI_API}?action=query&prop=extracts|description|revisions&explaintext&exlimit=1&rvprop=content&rvslots=main&titles=${encodeURIComponent(title)}&format=json&formatversion=2`;
       const data = await fetchJSON(url);
       const pages = data.query ? data.query.pages : {};
       const page = Object.values(pages).find(p => p && p.title && !p.missing);
       if (page) {
+        const wv = page.revisions && page.revisions[0] && page.revisions[0].slots && page.revisions[0].slots.main && page.revisions[0].slots.main.content;
         return {
           title: page.title,
           raw: page.extract || '',
           extract: (page.extract || '').replace(/\s+/g, ' ').trim(),
           description: (page.description || '').replace(/\s+/g, ' ').trim(),
+          wikitext: wv || '',
         };
       }
       return null;
@@ -353,6 +355,78 @@ function extractComposerAttributions(raw, title) {
     found.push({ q: "The composition '" + first + "' was composed by ______", a: right });
   }
   return found.length >= 3 ? found.slice(0, 6) : [];
+}
+
+// Parse `{|class="wikitable"` blocks into logical rows of cleaned cells. Works
+// on the page wikitext (tables are stripped from prop=extracts plaintext).
+function parseWikiTables(wikitext) {
+  const tables = [];
+  if (!wikitext) return tables;
+  const re = /\{\|class="wikitable"[\s\S]*?\n\|}/g;
+  let tm;
+  while ((tm = re.exec(wikitext)) !== null) {
+    const rows = [];
+    const parts = tm[0].split(/\n\|-/).slice(1);
+    for (const part of parts) {
+      const rowCells = part.split('\n')
+        .filter(l => /^\s*[|!]/.test(l) && !/^\s*\|\{\|/.test(l))
+        .map(l => l.replace(/^\s*[|!]+/, '').trim())
+        .map(cleanWikiCell);
+      if (rowCells.length) rows.push(rowCells);
+    }
+    if (rows.length >= 4) tables.push(rows);
+  }
+  return tables;
+}
+
+function cleanWikiCell(s) {
+  return (s || '')
+    .replace(/\[\[[^\]|]*\|([^\]]+)\]\]/g, '$1')
+    .replace(/\[\[([^\]]+)\]\]/g, '$1')
+    .replace(/'''{1,3}/g, '').replace(/''/g, '')
+    .replace(/<ref[^>]*>[\s\S]*?<\/ref>/gi, ' ')
+    .replace(/<ref[^>]*\/>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\{\{[^}]*\}\}/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Vow/term ↔ definition tables (e.g. the "28 vratas" table in Jain monasticism,
+// "ashtanga" lists, samitis etc.). Each numeric row "N. Term | Meaning" becomes
+// "The term X means ______" (answer = meaning) or "___. The default question
+// blanks the term: "...is called ______". Returns [{question, answer}].
+function extractTableTermDefs(wikitext, title) {
+  if (!/\{\|class="wikitable"/.test(wikitext || '')) return [];
+  const tables = parseWikiTables(wikitext);
+  const pairs = [];
+  for (const rows of tables) {
+    for (const row of rows) {
+      if (row.length < 2) continue;
+      let termCell = -1;
+      for (let j = 0; j < row.length; j++) {
+        if (/^\s*\d{1,2}[.\u2013–‑-]\s*/u.test(row[j])) { termCell = j; break; }
+      }
+      if (termCell < 0) continue;
+      const defCell = termCell + 1;
+      if (defCell >= row.length) continue;
+      const term = row[termCell].replace(/^\s*\d{1,2}[.\u2013–‑-]\s*/u, '').replace(/^\s*[;:]+\s*/, '').trim();
+      const def = row[defCell].trim();
+      if (term.length < 2 || term.length > 42 || def.length < 5 || def.length > 160) continue;
+      if (/\b(?:class=|style=|url=)\b/i.test(term) || /\b(?:of|the|and)\b.?$/i.test(term)) continue;
+      pairs.push({ term, def });
+    }
+  }
+  if (pairs.length < 3) return [];
+  const out = pairs.slice(0, 8).map(p => {
+    const defShort = p.def.length > 95 ? p.def.substring(0, 95).replace(/\s+\S*$/, '') + '…' : p.def;
+    return {
+      q: 'The term whose meaning is "' + defShort + '" is called ______',
+      a: p.term,
+    };
+  });
+  return out;
 }
 
 // Expert-style fact questions mined with deterministic patterns (no LLM).
@@ -1770,6 +1844,20 @@ async function main() {
           pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
           question: comp.q, answer: comp.a, hint: '',
           fact: paraphrase(getContext(allSentences, title, 3), comp.a),
+        })) { added++; articleAdded++; articleQ++; }
+      }
+
+      // ▸ Term–definition tables (wikitext {|class=wikitable}, e.g. the "28
+      //   vratas" list). Tables are stripped from prop=extracts, so this uses the
+      //   wikitext payload and blanks the Sanskrit/technical term from its meaning.
+      for (const tq of extractTableTermDefs(article.wikitext, title)) {
+        if (articleQ >= MAX_PER_ARTICLE) break;
+        if (pushQ({
+          id: cat.name.substring(0,3).toLowerCase() + added + 't-blank',
+          type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+          pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+          question: tq.q, answer: tq.a, hint: '',
+          fact: paraphrase(getContext(allSentences, title, 3), tq.a),
         })) { added++; articleAdded++; articleQ++; }
       }
 
