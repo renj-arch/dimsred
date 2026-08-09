@@ -157,122 +157,9 @@ jobs:
           path: data/
           retention-days: 1
 
-  # ── Complementary fetchers: 8 parallel shards (each on its own data copy) ──
-  feeds:
-    needs: merge
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    strategy:
-      matrix:
-        shard: [1,2,3,4,5,6,7,8]
-      max-parallel: 8
-      fail-fast: false
-    timeout-minutes: 180
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - run: npm install
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: merged
-          path: data/
-
-      - name: Feed shard ${{ matrix.shard }}
-        run: |
-          # Each shard calls a subset of the fetch-*.js scripts. Splitting the
-          # old single serial runner into 8 parallel ones cuts wall-clock a lot;
-          # the shard feeds run on their own copy of data/ and the merge step
-          # unions the results, so per-shard errors are safe (|| true).
-          case "${{ matrix.shard }}" in
-            1) LIST="fetch-current-events fetch-indian-ca fetch-parliament-bills fetch-obituaries fetch-themes" ;;
-            2) LIST="fetch-rbi-data fetch-state-news fetch-global-rankings fetch-awards fetch-defence fetch-science" ;;
-            3) LIST="fetch-env-health-agri fetch-society-news fetch-appointments fetch-judgements fetch-books-authors fetch-bilateral" ;;
-            4) LIST="fetch-education-culture fetch-schemes fetch-summits fetch-bilateral-recent fetch-art-culture" ;;
-            5) LIST="fetch-banking-ca fetch-economy-ca fetch-infra-ca fetch-health-ca fetch-education-ca fetch-environment-ca" ;;
-            6) LIST="fetch-intl-orgs fetch-constitutional-bodies fetch-constitution-articles fetch-census-data fetch-disaster-mgmt fetch-tribes fetch-sports fetch-foreign-artists" ;;
-            7) LIST="fetch-persons-places fetch-elections fetch-reports-indexes fetch-agri-energy-security fetch-social-welfare fetch-corporate-digital fetch-global-social-issues" ;;
-            8) LIST="fetch-historical-anniversaries fetch-media-press fetch-insurance-irdai fetch-film-world-records fetch-ma-corporate fetch-railway-aviation fetch-committees-commissions fetch-national-parks-wildlife fetch-budget-rbi fetch-unesco-sc-institutions fetch-industry-nuclear-flagships" ;;
-          esac
-          for s in $LIST; do
-            echo "=== $s ==="
-            node scripts/$s.js || echo "[shard ${{ matrix.shard }}] $s failed (non-fatal)"
-          done
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: feed-shard-${{ matrix.shard }}
-          path: |
-            data/questions/
-            data/book-summaries.json
-            data/pib-feed.json
-          retention-days: 1
-
-  # ── Feed merge: union shards' current-affairs / pib-archive, then finalize ──
-  feeds-merge:
-    needs: feeds
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - run: npm install
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: merged
-          path: data/
-
-      - name: Download all feed shards
-        continue-on-error: true
-        uses: actions/download-artifact@v4
-        with:
-          path: shards/
-          pattern: feed-shard-*
-
-      - name: Union-merge shard outputs
-        run: node scripts/merge-feed-shards.js shards/
-
-      # Hold monthly CA really lives in current-affairs.json; merge-monthly uses
-      # the scratch from fetch-current-events / fetch-indian-ca shards.
-      - run: node scripts/merge-monthly-current-affairs.js
-      # Post-merge fetchers that must run on the merged corpus.
-      - run: node scripts/fetch-agri-tech.js || true
-      - run: node scripts/fetch-stats-maths.js || true
-      - run: node scripts/fetch-hydrogeology.js || true
-      - run: node scripts/fetch-library-science.js || true
-      - run: node scripts/fetch-technical-officer.js || true
-
-      - run: node scripts/cleanup-questions.js
-      - run: node scripts/dedup-sentence-flood.js
-      - run: node scripts/inject-handpicked-gk.js
-      - run: node scripts/build-archive-single.js
-
-      - run: |
-          cp archive.html data/archive.html
-          rm -f data/quiz.json
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: final-data
-          path: data/
-          retention-days: 1
-
-  # ── Finalize: commit wiki+feed data, advance progress, self-trigger ──
+  # ── Finalize: commit wiki data, advance progress, chain to feed workflow ──
   finalize:
-    needs: [merge, feeds-merge]
+    needs: [merge]
     if: always() && needs.merge.result == 'success'
     runs-on: ubuntu-latest
     steps:
@@ -288,13 +175,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: merged
-          path: data/
-
-      - name: Download feed data (if feeds succeeded)
-        continue-on-error: true
-        uses: actions/download-artifact@v4
-        with:
-          name: final-data
           path: data/
 
       - run: cp -f data/archive.html archive.html 2>/dev/null || true
@@ -316,7 +196,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Bulk fill $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
+            git commit -m "Wiki fill $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
             for i in 1 2 3; do
               if git pull --rebase 2>/dev/null; then
                 echo "Rebased cleanly"
@@ -337,10 +217,10 @@ jobs:
 
       - run: |
           if [ -f "$RUNNER_TEMP/changes-committed" ]; then
-            echo "Data was committed — starting next run"
-            gh workflow run "Wiki Fill" --ref main
+            echo "Wiki data committed — starting feed workflow"
+            gh workflow run "Feed Fill" --ref main
           else
-            echo "No data changes — skipping self-trigger to avoid empty back-to-back runs (daily cron will pick it up)"
+            echo "No wiki data changes — no feed run chained (cron will pick it up)"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
