@@ -217,10 +217,7 @@ jobs:
 
       - run: |
           if [ -f "$RUNNER_TEMP/changes-committed" ]; then
-            echo "Wiki data committed — starting feed workflow"
-            gh workflow run "Feed Fill" --ref main
+            echo "Wiki data committed; next cron (00:00) will pick it up"
           else
-            echo "No wiki data changes — no feed run chained (cron will pick it up)"
+            echo "No wiki data changes today"
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
