@@ -50,7 +50,7 @@ async function fetchPageLinks(title, maxLinks = 30) {
 
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-async function fetchCategoryMembers(wikiCat, maxPages = 5000) {
+async function fetchCategoryMembers(wikiCat, maxPages = parseInt(process.env.WIKI_FILL_MAX_PAGES || '5000', 10)) {
   // Traverse the category tree recursively: fetch direct pages AND subcategory
   // names, then descend into each subcategory. This is how content that lives in
   // nested categories (e.g. Pushtimarga inside Bhakti_movement -> Vaishnavism)
@@ -125,7 +125,7 @@ async function fetchArticleExtract(title, retries) {
   retries = retries || 5;
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
-      await delay(4000);
+      await delay(parseInt(process.env.WIKI_FILL_DELAY_MS || '4000', 10));
       const url = `${WIKI_API}?action=query&prop=extracts|description|revisions&explaintext&exlimit=1&rvprop=content&rvslots=main&titles=${encodeURIComponent(title)}&format=json&formatversion=2`;
       const data = await fetchJSON(url);
       const pages = data.query ? data.query.pages : {};
@@ -1767,7 +1767,7 @@ async function main() {
     log('Invalid WIKI_FILL_GROUP=' + fillGroup + ', processing all');
   }
 
-  const CONCURRENCY = 2;
+  const CONCURRENCY = parseInt(process.env.WIKI_FILL_CONCURRENCY || '2', 10);
   const WIKI_FILL_CHUNK = parseInt(process.env.WIKI_FILL_CHUNK || '1', 10);
   const WIKI_FILL_CHUNKS = parseInt(process.env.WIKI_FILL_CHUNKS || '1', 10);
 
@@ -1895,7 +1895,7 @@ async function main() {
         })) { added++; articleAdded++; }
       }
 
-      const MAX_PER_ARTICLE = 20;
+      const MAX_PER_ARTICLE = parseInt(process.env.WIKI_FILL_PER_ARTICLE || '20', 10);
       let articleQ = 0;
 
       // ▸ Composer attribution ("Title – Composer" lines, e.g. Popular
