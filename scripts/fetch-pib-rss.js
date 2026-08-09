@@ -556,6 +556,7 @@ async function fetchWikiCurrentEvents() {
       var text = rawItems[ri];
       var summary = handWriteSummary(text, 'Wikipedia', categorizeWorldItem(text, ''));
       if (!summary || summary.length < 20) continue;
+      if (hasHarmText(text)) continue;
       var key = summary.toLowerCase().slice(0, 60);
       if (seen.has(key)) continue;
       seen.add(key);
@@ -576,6 +577,23 @@ async function fetchWikiCurrentEvents() {
     console.error('Wiki current events fetch failed: ' + e.message);
     return [];
   }
+}
+
+// Hard content filter: never surface kill/violence/death/disaster news from
+// the Wikipedia listeners. Events that only involve death, war, crime or
+// disaster are excluded from the feed entirely.
+var HARM_PATTERNS = [
+  /(?:killed?|kills|killing|death|deaths|died|dies|dead|fatal(?:ity|ities)?|victim|slaughter|massacre|murder|homicid(?:e|es)?|suicide?|behead|explos|bomb|blast|shoot(?:ing|ings|er|ers)?|gun(?:man|fire|shot)?|stab(?:bed|bing)?|assassin|\battack(?:ed|ing|s)?\b|ambush|lynch|kidnap|abduct|rap(?:e|ed|ist)|genocide|ethnic\s+cleansing|war\s+crimes|crash(?:ed|es|ing)?|injured|injury|wounded|bodies|funeral|cremat)/i,
+  /earthquake|tsunami|avalanche|landslide|flood(?:ing|ed|s)?|cyclone|hurricane|typhoon|wildfire|volcanic?\s+eruption|eruptions?|mudslide/i,
+  /mass\s+(?:grave|killings?)|body\s+count|reported\s+missing|civilian\s+casualti|\bgang\b|arrests?\s+\d+\s+suspected/i
+];
+
+function hasHarmText(text) {
+  var t = ' ' + (text || '') + ' ';
+  for (var i = 0; i < HARM_PATTERNS.length; i++) {
+    if (HARM_PATTERNS[i].test(t)) return true;
+  }
+  return false;
 }
 
 async function fetchPIBRegional(regionalFeeds) {
@@ -716,6 +734,21 @@ async function fetchAll() {
       deduped.push(item);
     }
   }
+
+  // Content-level dedup: the Wikipedia portal, main page and new-article
+  // listeners can each surface the same event with different ids, so also
+  // collapse items whose headlines are the same (case/whitespace-insensitive).
+  var seenText = new Set();
+  var textDeduped = [];
+  for (var item of deduped) {
+    var normTitle = (item.title || '').toLowerCase().replace(/\s+/g, ' ').trim();
+    if (!normTitle) continue;
+    var key = normTitle.slice(0, 120);
+    if (seenText.has(key)) continue;
+    seenText.add(key);
+    textDeduped.push(item);
+  }
+  deduped = textDeduped;
 
   // Filter out non-news junk — routine events, speeches, greetings, observances, quotes, business meetings
   var JUNK_PATTERNS = [
