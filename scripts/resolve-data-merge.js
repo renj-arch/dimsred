@@ -73,6 +73,8 @@ function recomputeTotal(fileObj) {
 
 function readStage(file) {
   // git show :2:path  (ours)   :3:path (theirs)
+  // NOTE: the index paths are repo-relative (e.g. data/questions/current-affairs.json),
+  // so `file` must be the full conflicted path, NOT a basename.
   const ours = JSON.parse(execSync('git show :2:' + file, { maxBuffer: 512 * 1024 * 1024 }).toString());
   const theirs = JSON.parse(execSync('git show :3:' + file, { maxBuffer: 512 * 1024 * 1024 }).toString());
   recomputeTotal(ours);
@@ -95,7 +97,7 @@ function main() {
       continue;
     }
     console.log('Union-merging ' + rel + ' (keeping both sides, deduped)');
-    fs.writeFileSync(rel, readStage(base));
+    fs.writeFileSync(rel, readStage(rel));
     execSync('git add ' + JSON.stringify(rel));
   }
   console.log('Conflict resolution complete.');
