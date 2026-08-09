@@ -25,7 +25,7 @@ function eventKey(q) {
 var QUESTIONS = [
   // --- Parliament basics ---
   {q: 'The Indian Parliament consists of the President and the two Houses: _____ and Rajya Sabha', a: 'Lok Sabha', f: 'Under Article 79, the Parliament of India comprises the President, Lok Sabha (House of the People), and Rajya Sabha (Council of States).'},
-  {q: 'The maximum strength of the Lok Sabha as per the Constitution is _____ members', a: '552', f: 'Article 81 provides for maximum 552 members: 530 from states, 20 from UTs, and 2 nominated Anglo-Indians (before the 104th Amendment).'},
+  {q: 'The maximum strength of the Lok Sabha as per the Constitution is _____ members', a: '550', f: 'Article 81 provides for maximum 550 members: 530 from states and 20 from UTs. The 104th Amendment (2020) abolished the 2 nominated Anglo-Indian seats that previously made the cap 552.'},
   {q: 'The maximum strength of the Rajya Sabha as per the Constitution is _____ members', a: '250', f: 'Article 80 provides for 250 Rajya Sabha members: 238 elected from states and UTs, and 12 nominated by the President.'},
   {q: 'Rajya Sabha members are elected for a term of _____ years', a: '6', f: 'Rajya Sabha is a permanent House. One-third of its members retire every two years. Each member serves a 6-year term.'},
   {q: 'Lok Sabha members are elected for a term of _____ years, unless dissolved earlier', a: '5', f: 'Lok Sabha has a 5-year term but can be dissolved earlier by the President. The term was extended during the 1975-77 Emergency (42nd Amendment).'},

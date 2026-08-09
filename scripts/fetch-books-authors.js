@@ -197,19 +197,39 @@ function extractRecipientTable(t) {
   return recipients;
 }
 
-// Sahitya Akademi winner tables are "Year | Book | Writer | Category".
+// Sahitya Akademi winner tables vary by language page:
+//   English/Bengali: "Year | Book | Writer/Author | Category"
+//   Hindi/Tamil/Telugu/Kannada/Malayalam: "Year | (Image) | glev/author | Work" etc.
+// Detect the Book/Work and Writer/Author/Recipient columns from the header row
+// instead of hard-coding fixed indexes.
+function findSahityaCols(header) {
+  var cols = { year: 0, book: -1, writer: -1 };
+  for (var i = 0; i < header.length; i++) {
+    var h = (header[i] || '').toLowerCase();
+    if (cols.book < 0 && /book|title|work|work\(s\)|translated work/.test(h) && !/author|writer|recipient/.test(h)) cols.book = i;
+    if (cols.writer < 0 && /writer|author|recipient|awardee|translator/.test(h)) cols.writer = i;
+    if (cols.year < 0 && /^year$|^yr$/.test(h.trim())) cols.year = i;
+  }
+  return cols;
+}
+
 function extractSahityaTable(t) {
   var winners = [];
+  if (t.length < 2) return winners;
+  var cols = findSahityaCols(t[0]);
+  if (cols.book < 0 || cols.writer < 0) return winners;
   for (var ri = 1; ri < t.length; ri++) {
     var row = t[ri];
-    if (row.length < 3) continue;
-    var year = strip(row[0]);
-    var book = strip(row[1]);
-    var writer = strip(row[2]);
+    if (row.length <= Math.max(cols.book, cols.writer)) continue;
+    var year = strip(row[cols.year] || '');
+    var book = strip(row[cols.book] || '');
+    var writer = strip(row[cols.writer] || '');
     if (!book || book.length < 2 || book === 'Book' || book === 'Title') continue;
     if (!writer || writer.length < 2 || writer === 'Writer' || writer === 'Author') continue;
     var yrMatch = year.match(/\b\d{4}\b/);
-    winners.push({ book: book, writer: writer, year: yrMatch ? yrMatch[0] : year, category: row.length > 3 ? strip(row[3]) : '' });
+    if (/^tbd\d*$/i.test(book) || /^tbd\d*$/i.test(writer)) continue;
+    if (book === writer) continue;
+    winners.push({ book: book, writer: writer, year: yrMatch ? yrMatch[0] : year, category: '' });
   }
   return winners;
 }

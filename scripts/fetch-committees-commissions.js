@@ -65,6 +65,19 @@ function extractInfobox(html) {
   return data;
 }
 
+// Reduce an infobox "Established" value to the bare ISO date, dropping the
+// relative-age noise Wikipedia appends ("…; 76 years ago (1950-01-25)").
+function cleanEstDate(v) {
+  var s = String(v || '').replace(/&#160;/g, ' ').replace(/\s+/g, ' ').trim();
+  var iso = s.match(/\(?\s*(\d{4}-\d{2}-\d{2})\s*\)?/);
+  if (iso) return iso[1];
+  var m = s.match(/\b(\d{1,2}\s+(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{4})\b/i);
+  if (m) return m[1];
+  var y = s.match(/\b(1[5-9]\d{2}|20\d{2})\b/);
+  if (y) return y[1];
+  return s;
+}
+
 function categoryMembers(category) {
   return fetchJSON(API + '?action=query&list=categorymembers&cmtitle=Category:' + encodeURIComponent(category) + '&cmlimit=300&cmtype=page&format=json').then(function(d) {
     var out = [];
@@ -145,15 +158,15 @@ async function main() {
       var html = await fetchPageText(COMMITTEE_PAGES[pi]);
       var info = extractInfobox(html);
       var chair = info['Chairperson'] || info['Chairman'] || info['Chair'] || info['President'] || '';
-      var est = info['Established'] || info['Founded'] || info['Formed'] || info['Founding year'] || '';
       if (chair.length > 2) {
         var name = COMMITTEE_PAGES[pi].replace(/_/g, ' ');
         var q = makeQuestion('Who is the chairperson of the ' + name + '?', chair, 'Committees & Commissions', seq.c++, '' + name, '\uD83D\uDCDD', name + ' chairperson: ' + chair + '.');
         if (q && !ek.c[eventKey(q)]) { nq.c.push(q); ek.c[eventKey(q)] = true; cCount++; }
       }
-      if (est.length > 2) {
-        var name = COMMITTEE_PAGES[pi].replace(/_/g, ' ');
-        var q = makeQuestion('When was the ' + name + ' established?', est, 'Committees & Commissions', seq.c++, '' + name, '\uD83D\uDCDD', name + ' was established in ' + est + '.');
+      if ((info['Established'] || info['Founded'] || info['Formed'] || info['Founding year'] || '').length > 2) {
+        var name2 = COMMITTEE_PAGES[pi].replace(/_/g, ' ');
+        var est = cleanEstDate(info['Established'] || info['Founded'] || info['Formed'] || info['Founding year'] || '');
+        var q = makeQuestion('When was the ' + name2 + ' established?', est, 'Committees & Commissions', seq.c++, '' + name2, '\uD83D\uDCDD', name2 + ' was established in ' + est + '.');
         if (q && !ek.c[eventKey(q)]) { nq.c.push(q); ek.c[eventKey(q)] = true; cCount++; }
       }
     } catch (e) {}
@@ -190,7 +203,7 @@ async function main() {
       var html = await fetchPageText(PROG_PAGES[pi2].page);
       var info = extractInfobox(html);
       var launched = info['Launched'] || info['Launch date'] || info['Started'] || info['Date launched'] || '';
-      var motto = info['Motto'] || info['Tagline'] || info('Mission statement') || '';
+      var motto = info['Motto'] || info['Tagline'] || info['Mission statement'] || '';
       var ministry = info['Ministry'] || info['Minister'] || info['Responsible ministry'] || '';
       if (launched.length > 2) {
         var q = makeQuestion('When was ' + PROG_PAGES[pi2].name + ' launched?', launched, 'Flagship Programmes', seq.f++, '' + PROG_PAGES[pi2].name, PROG_PAGES[pi2].emoji, PROG_PAGES[pi2].name + ' was launched in ' + launched + '.');
@@ -224,7 +237,7 @@ async function main() {
               if (q && !ek.c[eventKey(q)]) { nq.c.push(q); ek.c[eventKey(q)] = true; catCount++; }
             }
             if (cinfo['Established'] || cinfo['Founded'] || cinfo['Formed']) {
-              var est = cinfo['Established'] || cinfo['Founded'] || cinfo['Formed'];
+              var est = cleanEstDate(cinfo['Established'] || cinfo['Founded'] || cinfo['Formed']);
               var q = makeQuestion('When was the ' + cname + ' established?', est, 'Committees & Commissions', seq.c++, '' + cname, '\uD83D\uDCDD', cname + ' was established in ' + est + '.');
               if (q && !ek.c[eventKey(q)]) { nq.c.push(q); ek.c[eventKey(q)] = true; catCount++; }
             }

@@ -107,14 +107,16 @@ async function main() {
         var t = tables[ti];
         if (!t || t.length < 2) continue;
         var header = t[0];
-        var colTarget = findColumn(header, ['company', 'target', 'name']);
+        var colTarget = findColumn(header, ['company', 'acquired', 'target', 'venture']);
         var colYear = findColumn(header, ['date', 'year']);
         // Prefer the column that actually holds a USD price; avoid "adjusted" or "cash"
         var colValue = -1;
+        var candidates = [];
         for (var hi = 0; hi < header.length; hi++) {
           var h = normHeader(header[hi]);
-          if (h.indexOf('value') >= 0 && h.indexOf('adjusted') < 0 && h.indexOf('reference') < 0) { colValue = hi; break; }
+          if (h.indexOf('value') >= 0 && h.indexOf('adjusted') < 0 && h.indexOf('reference') < 0) candidates.push(hi);
         }
+        if (candidates.length) colValue = candidates[0];
         if (colValue < 0) {
           for (var hi2 = 0; hi2 < header.length; hi2++) { if (normHeader(header[hi2]).indexOf('price') >= 0) { colValue = hi2; break; } }
         }
@@ -126,6 +128,10 @@ async function main() {
           var year = colYear >= 0 ? strip(row[colYear] || '') : '';
           var value = strip(row[colValue] || '');
           if (/^\d+$/.test(target)) continue; // row number leaked into target slot
+          // A date (e.g. "April 21, 2010") or a description in the target slot is
+          // column drift — the target must be a company-like word, not a date/number.
+          if (/^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i.test(target)) continue;
+          if (/\b(19|20)\d{2}\b/.test(target)) continue;
           if (acquirer && target.length > 2 && value.match(/[\d,.]/) && /—/.test(value) === false) {
             var ans = value.replace(/\s+/g, ' ').trim();
             var fact = acquirer + ' acquired ' + target + ' for ' + value + '.' + (year ? ' Date: ' + year + '.' : '');
@@ -145,9 +151,20 @@ async function main() {
     var tables = extractWikiTables(html);
     var coCount = 0;
     tables.forEach(function(t) {
+      if (t.length < 2) return;
+      // Header is "Rank | ... | Name | ... | Revenue" — resolve the Name and
+      // Revenue columns by header text instead of assuming row[0]/row[last].
+      var nameIdx = -1, revIdx = -1;
+      for (var ci = 0; ci < t[0].length; ci++) {
+        var hc = String(strip(t[0][ci] || '')).toLowerCase();
+        if (nameIdx < 0 && /^name$|^company$/.test(hc)) nameIdx = ci;
+        if (revIdx < 0 && /revenue/.test(hc)) revIdx = ci;
+      }
+      if (nameIdx < 0 || revIdx < 0) return;
       for (var ri = 1; ri < t.length; ri++) {
-        var row = t[ri]; if (row.length < 3) continue;
-        var name = strip(row[0] || ''); var revenue = strip(row[row.length - 1] || '');
+        var row = t[ri]; if (row.length <= Math.max(nameIdx, revIdx)) continue;
+        var name = strip(row[nameIdx] || '');
+        var revenue = strip(row[revIdx] || '');
         if (name.length > 2 && name.indexOf('Company') < 0 && revenue.match(/[\d,]+/)) {
           var q = makeQuestion('What is the revenue of ' + name + '?', revenue, 'Mergers & Acquisitions', seq++, 'Largest companies in India', '\uD83D\uDCA5', name + ' revenue: ' + revenue + '.');
           if (q && !ek[eventKey(q)]) { nq.push(q); ek[eventKey(q)] = true; count++; coCount++; }

@@ -102,6 +102,20 @@ function fetchSiteLeads(titles) {
   return chain.then(function() { return out; });
 }
 
+// Wikipedia list pages carry a second "Tentative list" wikitable below the
+// real World Heritage Sites table. Cut the HTML at that heading so tentative
+// candidates (e.g. Vaux-le-Vicomte, Parc national de la Vanoise) are never
+// ingested as if they were inscribed UNESCO World Heritage Sites.
+function truncateBeforeTentative(html) {
+  var cutAt = -1;
+  var markers = ['Tentative_list', 'Tentative_List', 'tentative_list', 'Tentative sites', 'Tentative Sites', 'liste indicative', 'Liste_indicative'];
+  for (var mi = 0; mi < markers.length; mi++) {
+    var i = html.indexOf(markers[mi]);
+    if (i > 0 && (cutAt < 0 || i < cutAt)) cutAt = i;
+  }
+  return cutAt > 0 ? html.substring(0, cutAt) : html;
+}
+
 function extractWikiTables(html) {
   var tables = [];
   var tRegex = /<table[^>]*class="[^"]*(wikitable|sortable)[^"]*"[^>]*>([\s\S]*?)<\/table>/gi;
@@ -174,16 +188,23 @@ async function main() {
     for (var oc = 0; oc < OTHER_COUNTRIES.length; oc++) {
       try {
         var ocHtml = await fetchPageText(OTHER_COUNTRIES[oc]);
-        var ocTables = extractWikiTables(ocHtml);
+        var ocTables = extractWikiTables(truncateBeforeTentative(ocHtml));
         ocTables.forEach(function(t) {
+          // Locate the "Year listed"-style column from the header so the
+          // inscription year is read from the right cell (the old code took
+          // the last column, which is the description, yielding bogus years
+          // like "inscribed 1906" for Cistercian Abbey of Fontenay).
+          var hdr = t[0] || [];
+          var yearIdx = -1;
+          hdr.forEach(function(c, ci) { if (/year|listed|inscribed/i.test(c || '')) yearIdx = ci; });
+          var countryName = OTHER_COUNTRIES[oc].replace(/^List_of_World_Heritage_Sites_in_/, '').replace(/_/g, ' ');
           for (var ri = 1; ri < t.length; ri++) {
             var row = t[ri];
             if (row.length < 2) continue;
-            var name = strip(row[0] || '');
-            var yrCol = strip(row.length > 2 ? row[row.length - 1] : row[1] || '');
+            var name = strip(row[0] || '').replace(/\s*\*+\s*$/, '');
+            var yrCol = (yearIdx >= 0 && row[yearIdx]) ? strip(row[yearIdx]) : '';
             var year = yrCol.match(/\b(19\d{2}|20\d{2})\b/);
             if (name.length > 3 && name.indexOf('Site') < 0 && name.indexOf('Property') < 0 && name.indexOf('Name') < 0) {
-              var countryName = OTHER_COUNTRIES[oc].replace(/^List_of_World_Heritage_Sites_in_/, '').replace(/_/g, ' ');
               freshU[name + ' (' + countryName + ')'] = { state: countryName, year: year ? year[1] : '', src: countryName + ' World Heritage', ctry: true };
             }
           }

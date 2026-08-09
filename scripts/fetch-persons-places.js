@@ -118,6 +118,7 @@ async function main() {
 
   // ── Places in News: capital cities, major infrastructure ──
   process.stdout.write('  State Capitals (Places in News)... ');
+  var INDIA_STATES = ['Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Andaman and Nicobar Islands','Chandigarh','Dadra and Nagar Haveli and Daman and Diu','Jammu and Kashmir','Ladakh','Lakshadweep','Delhi','Puducherry'];
   try {
     var html = await fetchPageText('List_of_state_and_union_territory_capitals_in_India');
     var tables = html.match(/<table[^>]*class="[^"]*(wikitable|sortable)[^"]*"[^>]*>([\s\S]*?)<\/table>/gi);
@@ -125,12 +126,19 @@ async function main() {
       tables.forEach(function(tbl) {
         var rows = tbl.match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
         if (!rows || rows.length < 2) return;
-        for (var ri = 1; ri < rows.length && ri < 20; ri++) {
+        for (var ri = 1; ri < rows.length && ri < 40; ri++) {
           var cells = rows[ri].match(/<t[hd][^>]*>([\s\S]*?)<\/t[hd]>/gi);
           if (!cells || cells.length < 2) continue;
-          var state = strip(cells.length > 1 ? cells[1] : cells[0]);
-          var cap = strip(cells[0]);
-          if (state.length > 2 && cap.length > 2 && state.indexOf('State') < 0) {
+          // Header may be "State | Executive capital |..." OR a doubly-reversed
+          // layout ("Capital | State"). Resolve by recognising the state name.
+          var a = strip(cells[0]);
+          var b = strip(cells[1]);
+          var stateMatch = function(v) { return INDIA_STATES.some(function(s) { return s.toLowerCase() === v.toLowerCase(); }); };
+          var state, cap;
+          if (stateMatch(a) && !stateMatch(b)) { state = a; cap = b; }
+          else if (stateMatch(b) && !stateMatch(a)) { state = b; cap = a; }
+          else continue; // neither (or both) look like a state — skip unreliable rows
+          if (cap.length > 2 && cap.toLowerCase().indexOf('capital') < 0) {
             var q = makeQuestion('What is the capital of ' + state + '?', cap, 'Places in News', seq.pl++, 'State capitals', '\uD83D\uDCCD', 'Capital of ' + state + ' is ' + cap + '.');
             if (q && !ek.pl[eventKey(q)]) { nq.pl.push(q); ek.pl[eventKey(q)] = true; }
           }
@@ -149,12 +157,14 @@ async function main() {
       tables.forEach(function(tbl) {
         var rows = tbl.match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
         if (!rows || rows.length < 2) return;
-        for (var ri = 1; ri < rows.length && ri < 15; ri++) {
+        for (var ri = 1; ri < rows.length && ri < 30; ri++) {
           var cells = rows[ri].match(/<t[hd][^>]*>([\s\S]*?)<\/t[hd]>/gi);
           if (!cells || cells.length < 2) continue;
-          var city = strip(cells[0]);
+          // Header is "# | Name | State | 2001 | 2011 | Change" (two-row header) -
+          // skip sub-header/label rows and read Name from col 1, State from col 2.
+          var city = strip(cells.length > 1 ? cells[1] : cells[0]);
           var state = strip(cells.length > 2 ? cells[2] : cells[1]);
-          if (city.length > 2 && city.indexOf('City') < 0 && state.length > 2) {
+          if (city.length > 2 && /^\d+$/.test(city) === false && city.indexOf('Census') < 0 && city.indexOf('City') < 0 && state.length > 2 && /census|change|state|name/i.test(state) === false) {
             var q = makeQuestion('Which state is ' + city + ' located in?', state, 'Places in News', seq.pl++, 'Cities by population', '\uD83C\uDFD9', city + ' is in ' + state + '.');
             if (q && !ek.pl[eventKey(q)]) { nq.pl.push(q); ek.pl[eventKey(q)] = true; }
           }

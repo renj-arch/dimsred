@@ -77,38 +77,72 @@ function eventKey(q) {
   return n(q.question || '').substring(0, 80) + '|' + n(q.answer || '');
 }
 
+// Header-driven column locator: returns the first column whose header text
+// matches any of the given substrings, else -1. This replaces blind fixed
+// indexes so table layout changes (rank columns, images) cannot shift answers.
+function findCol(header, needles) {
+  for (var hi = 0; hi < header.length; hi++) {
+    var h = String(header[hi] || '').toLowerCase();
+    if (needles.some(function(n) { return h.indexOf(n) >= 0; })) return hi;
+  }
+  return -1;
+}
+
+// Carry the last non-empty year forward so continuation rows (an empty year
+// cell for multiple recipients in the same year) reuse the previous year.
 function extractAwardeeTable(t) {
   var recipients = [];
-  var colYear = 0, colSport = -1;
-  for (var ci = 0; ci < Math.min(t[0].length, 6); ci++) {
-    var h = t[0][ci].toLowerCase();
-    if (h.indexOf('sport') >= 0 || h.indexOf('discipline') >= 0 || h.indexOf('game') >= 0) colSport = ci;
-  }
+  if (!t || t.length < 2 || !t[0]) return recipients;
+  var hdr = t[0];
+  var colYear = findCol(hdr, ['year']);
+  var colName = findCol(hdr, ['recipient', 'winner', 'name', 'awardee']);
+  var colSport = findCol(hdr, ['sport', 'discipline', 'game']);
+  // Only process the real "year -> recipient" tables; ignore medal tallies
+  // ("Event | Medal") and legend/footnote tables entirely.
+  if (colYear < 0 || colName < 0) return recipients;
+  var prevYear = '';
   for (var ri = 1; ri < t.length; ri++) {
     var row = t[ri];
-    if (row.length < 3) continue;
-    var name = strip(row[1]);
-    if (!name || name.length < 3 || name === 'Name' || name.indexOf('Recipient') >= 0) continue;
-    var yrMatch = row[colYear].match(/\b\d{4}\b/);
+    if (row.length < 2) continue;
+    var name = strip(row[colName]);
+    if (!name || name.length < 3 || name === 'Name' || /recipient|—/.test(name)) continue;
+    if (/^(gold|silver|bronze)/i.test(name)) continue;
+    if (/^#|§|Indicates/i.test(name)) continue;
+    if (/^no award$/i.test(name)) continue;
+    var yrCell = (colYear < row.length ? strip(row[colYear]) : '').trim();
+    var yrMatch = yrCell.match(/\b\d{4}\b/);
+    var year = yrMatch ? yrMatch[0] : (yrCell || '');
+    if (!year && prevYear) year = prevYear;
+    if (year) prevYear = year;
     var sport = colSport >= 0 && row.length > colSport ? strip(row[colSport]) : '';
-    recipients.push({ name: name, sport: sport, year: yrMatch ? yrMatch[0] : row[colYear] });
+    recipients.push({ name: name, sport: sport, year: year });
   }
   return recipients;
 }
 
-function extractOlympicTable(t) {
+// Medallist row requires a "Medal" header column (value gold/silver/bronze)
+// and a "Medalist | Sport | Event" set. Games/event context is supplied from
+// the nearest preceding section heading because the medal table itself carries
+// no Olympics column.
+function extractOlympicTable(t, gamesCtx) {
   var medalists = [];
+  if (!t || t.length < 2 || !t[0]) return medalists;
+  var hdr = t[0];
+  var colMedal = findCol(hdr, ['medal']);
+  var colName = findCol(hdr, ['medalist', 'name', 'athlete']);
+  var colSport = findCol(hdr, ['sport', 'discipline']);
+  var colEvent = findCol(hdr, ['event']);
+  if (colMedal < 0 || colName < 0) return medalists;
   for (var ri = 1; ri < t.length; ri++) {
     var row = t[ri];
-    if (row.length < 3) continue;
-    var name = strip(row[1]);
-    if (!name || name.length < 3 || name === 'Name' || name.indexOf('—') >= 0) continue;
-    var medal = row.length > 2 ? strip(row[2]) : '';
+    if (row.length <= colName) continue;
+    var medal = strip(row[colMedal]).replace(/^[^A-Za-z]*/, '');
     if (!/^(gold|silver|bronze)/i.test(medal)) continue;
-    var games = row.length > 0 ? strip(row[0]) : '';
-    if (/[–-]/.test(games)) continue;
-    var sport = row.length > 3 ? strip(row[3]) : '';
-    medalists.push({ name: name, medal: medal, sport: sport, games: games });
+    var name = strip(row[colName]);
+    if (!name || name.length < 3 || name === 'Name' || /—/.test(name)) continue;
+    var sport = colSport >= 0 ? strip(row[colSport]) : '';
+    var event = colEvent >= 0 ? strip(row[colEvent]) : '';
+    medalists.push({ name: name, medal: medal.toLowerCase(), sport: sport, games: gamesCtx + (event && !/[0-9]{4}/.test(event) ? ' (' + event + ')' : '') });
   }
   return medalists;
 }
@@ -122,8 +156,9 @@ async function fetchKhelRatna(existingKeys, newQuestions, seq) {
     tables.forEach(function(t) {
       var recipients = extractAwardeeTable(t);
       recipients.forEach(function(r) {
+        if (!r.year) return;
         var qText = 'Who received the Khel Ratna award' + (r.sport ? ' for ' + r.sport : '') + ' in ' + r.year + '?';
-        var q = makeQuestion(qText, r.name, seq++, 'Khel Ratna', '\uD83C\uDFC5', r.name + ' received Khel Ratna in ' + r.year + (r.sport ? ' for ' + r.sport : '') + '.');
+        var q = makeQuestion(qText, r.name, seq++, 'Khel Ratna', '\uD83C\uDFC5', r.name + ' received the Khel Ratna award in ' + r.year + (r.sport ? ' for ' + r.sport : '') + '.');
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
       });
     });
@@ -135,16 +170,42 @@ async function fetchOlympicMedalists(existingKeys, newQuestions, seq) {
   console.error('--- Indian Olympic Medalists ---');
   try {
     var html = await fetchPageText('India_at_the_Olympics');
-    var tables = extractWikiTables(html);
+    // Grab every <h2>/<h3> heading with its byte offset so each medal table can
+    // be paired with the section it sits under (e.g. "1964 Innsbruck").
+    var headings = [];
+    var hm;
+    var hRe = /<(h2|h3)[^>]*>\s*<span[^>]*>([^<]{1,120}?)<\/span>[\s\S]*?<\/\1>/gi;
+    while ((hm = hRe.exec(html)) !== null) headings.push({ idx: hm.index, txt: strip(hm[2]) });
+    headings.sort(function(a, b) { return a.idx - b.idx; });
+    function ctxFor(pos) {
+      var ctx = '';
+      for (var h2i = 0; h2i < headings.length; h2i++) { if (headings[h2i].idx < pos) ctx = headings[h2i].txt; }
+      return ctx.replace(/\s*(?:at the|in)?\s*olympics?.*$/i, '').trim() || 'Olympics';
+    }
+    var tre2 = /<table[^>]*class="[^"]*(wikitable|sortable)[^"]*"[^>]*>([\s\S]*?)<\/table>/gi;
     var count = 0;
-    tables.forEach(function(t) {
-      var medalists = extractOlympicTable(t);
+    var tm;
+    while ((tm = tre2.exec(html)) !== null) {
+      var tHTML = tm[2];
+      var rows = [];
+      var rRe = /<tr[^>]*>([\s\S]*?)<\/tr>/gi;
+      var rm;
+      while ((rm = rRe.exec(tHTML)) !== null) {
+        var cells = [];
+        var cRe = /<t[hd][^>]*>([\s\S]*?)<\/t[hd]>/gi;
+        var cm;
+        while ((cm = cRe.exec(rm[1])) !== null) cells.push(strip(cm[1]));
+        if (cells.length > 0) rows.push(cells);
+      }
+      if (rows.length < 2) continue;
+      var medalists = extractOlympicTable(rows, ctxFor(tm.index));
       medalists.forEach(function(m) {
-        var qText = 'Who won the ' + m.medal + ' medal for India in ' + m.games + '?';
-        var q = makeQuestion(qText, m.name, seq++, 'Indian Olympic Medalists', '\uD83E\uDD47', m.name + ' won ' + m.medal + ' at ' + m.games + (m.sport ? ' (' + m.sport + ')' : '') + '.');
+        if (!m.games) return;
+        var qText = 'Who won the ' + m.medal + ' medal for India at the Olympics in ' + m.games + '?';
+        var q = makeQuestion(qText, m.name, seq++, 'Indian Olympic Medalists', '\uD83E\uDD47', m.name + ' won the ' + m.medal + ' medal for India at the Olympics, ' + m.games + (m.sport ? ' (' + m.sport + ')' : '') + '.');
         if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
       });
-    });
+    }
     console.error('  ' + count + ' Olympic medalist questions added\n');
   } catch (e) { console.error('  Error: ' + e.message + '\n'); }
 }

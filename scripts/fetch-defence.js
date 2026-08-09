@@ -97,8 +97,12 @@ function extractExerciseTable(t) {
       if (row.length < 3) continue;
     }
     var name = cleanVal(row[0]);
+    // "Participating Country" cell can hold multiple nations; keep only the
+    // first country so the question "between India and <X>" stays clean.
     var partner = row.length > 1 ? cleanVal(row[1]) : '';
-    if (name.length < 2 || partner.length < 2) continue;
+    partner = partner.split(/,| and /)[0].trim();
+    if (name.length < 2 || partner.length < 2 || name.indexOf('Name') >= 0) continue;
+    if (/tbd|proposed|to be announced|planned|—/.test(name + ' ' + partner)) continue;
     if (currentYear >= 2020) {
       recent.push({ name: name, partner: partner, year: currentYear, force: '' });
     }
@@ -140,17 +144,29 @@ async function fetchMissiles(existingKeys, newQuestions, seqObj) {
     var html = await fetchPageText('Guided_missiles_of_India');
     var tables = extractWikiTables(html);
     var count = 0;
+
+    function missIdx(header, re) {
+      for (var i = 0; i < header.length; i++) if (re.test(String(header[i] || '').toLowerCase())) return i;
+      return -1;
+    }
     tables.forEach(function(t) {
-      var hasFamily = t[0].length >= 9;
+      if (t.length < 2) return;
+      var hdr = t[0];
+      var iName = missIdx(hdr, /^name$/);
+      var iType = missIdx(hdr, /^type$/);
+      var iRange = missIdx(hdr, /range/);
+      var iStatus = missIdx(hdr, /status/);
+      if (iName < 0) iName = hdr.length > 1 ? 1 : 0;
+      if (iRange < 0) iRange = iName + 2;
       for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
-        if (row.length < 3) continue;
-        var off = (hasFamily && row.length >= 9) ? 1 : 0;
-        var name = cleanVal(row[off]);
-        var type = row.length > off + 1 ? cleanVal(row[off + 1]) : '';
-        var range = row.length > off + 2 ? cleanVal(row[off + 2]) : '';
-        var status = row.length > off + 6 ? cleanVal(row[off + 6]) : '';
-        if (name.length < 2) continue;
+        if (row.length <= Math.max(iName, iRange)) continue;
+        var name = cleanVal(row[iName]);
+        var type = iType >= 0 && row.length > iType ? cleanVal(row[iType]) : '';
+        var range = cleanVal(row[iRange]);
+        var status = iStatus >= 0 && row.length > iStatus ? cleanVal(row[iStatus]) : '';
+        if (name.length < 2 || /^\d+$/.test(name)) continue;
+        if (/in development|being tested|proposed|under development|tbd|planned|test fired|yet/i.test(status)) continue;
         if (range && range.match(/\d+/)) {
           var q = makeQuestion('What is the maximum range of the ' + name + ' missile?', range, seqObj.seq++, 'Missiles of India', '\uD83D\uDEE1', name + ' missile: Type=' + type + ', Range=' + range + ', Status=' + status);
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
@@ -167,15 +183,30 @@ async function fetchAgniMissiles(existingKeys, newQuestions, seqObj) {
     var html = await fetchPageText('Agni_(missile)');
     var tables = extractWikiTables(html);
     var count = 0;
+    var thisYear = new Date().getFullYear();
     tables.forEach(function(t) {
+      if (t.length < 2) return;
+      // Detect columns from the header: Missile/Name, Type, Range, Status.
+      var hdr = t[0];
+      var iName = -1, iType = -1, iRange = -1, iStatus = -1;
+      for (var ci = 0; ci < hdr.length; ci++) {
+        var hc = String(hdr[ci] || '').toLowerCase();
+        if (iName < 0 && /^missile$|^name$|^project$/.test(hc)) iName = ci;
+        if (iType < 0 && /^type$/.test(hc)) iType = ci;
+        if (iRange < 0 && /range/.test(hc)) iRange = ci;
+        if (iStatus < 0 && /^status$|test/.test(hc)) iStatus = ci;
+      }
+      if (iName < 0 || iRange < 0) return;
       for (var ri = 1; ri < t.length; ri++) {
         var row = t[ri];
-        if (row.length < 2) continue;
-        var name = strip(row[0]).replace(/\[.*?\]/g, '').trim();
-        var type = row.length > 1 ? strip(row[1]).replace(/\[.*?\]/g, '').trim() : '';
-        var range = row.length > 2 ? strip(row[2]).replace(/\[.*?\]/g, '').trim() : '';
-        var status = row.length > 3 ? strip(row[3]).replace(/\[.*?\]/g, '').trim() : '';
-        if (range && range.match(/\d+/) && name.length > 2) {
+        if (row.length <= Math.max(iName, iRange)) continue;
+        var name = strip(row[iName]).replace(/\[.*?\]/g, '').trim();
+        var type = iType >= 0 && row.length > iType ? strip(row[iType]).replace(/\[.*?\]/g, '').trim() : '';
+        var range = strip(row[iRange]).replace(/\[.*?\]/g, '').trim();
+        var status = iStatus >= 0 && row.length > iStatus ? strip(row[iStatus]).replace(/\[.*?\]/g, '').trim() : '';
+        if (/\b(19|20)\d{2}\b/.test(name)) continue;
+        if (/in development|being tested|under development|planned|tbd|yet to|proposed/i.test(status)) continue;
+        if (range && range.match(/\d+/) && name.length > 2 && name.indexOf('Year') < 0) {
           var cleanedRange = cleanVal(range);
           var q = makeQuestion('What is the range of the ' + name + ' missile?', cleanedRange, seqObj.seq++, 'Agni Missile', '\uD83D\uDEE1', name + ': Type=' + type + ', Range=' + cleanedRange + ', Status=' + status);
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }

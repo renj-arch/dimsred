@@ -82,6 +82,10 @@ async function main() {
     { page: 'Ministry_of_Panchayati_Raj', cat: 'Rural Development' }
   ];
 
+  function cleanInfo(v) {
+    return strip(v).replace(/\s*\([^)]*\)\s*/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+
   for (var mi = 0; mi < MINISTRIES.length; mi++) {
     process.stdout.write('  ' + MINISTRIES[mi].cat + '... ');
     var count = 0;
@@ -90,9 +94,14 @@ async function main() {
       var html = await fetchPageText(MINISTRIES[mi].page);
       var info = extractInfobox(html);
       ['Minister', 'Minister of State', 'Headquarters', 'Formed', 'Preceding Ministry', 'Responsible ministry'].forEach(function(key) {
-        if (info[key] && info[key].length > 2) {
-          var qText = key === 'Formed' ? 'When was ' + MINISTRIES[mi].page.replace(/_/g, ' ') + ' established?' : 'Who is the ' + key + ' of ' + MINISTRIES[mi].page.replace(/_/g, ' ') + '?';
-          var q = makeQuestion(qText, info[key], cat, seq[cat]++, '' + MINISTRIES[mi].page, '\uD83C\uDFE5', MINISTRIES[mi].page.replace(/_/g, ' ') + ': ' + key + ' = ' + info[key] + '.');
+        var val = cleanInfo(info[key]);
+        if (val.length > 2 && val.length < 120) {
+          var base = MINISTRIES[mi].page.replace(/_/g, ' ');
+          var qText;
+          if (key === 'Formed') qText = 'When was ' + base + ' established?';
+          else if (key === 'Headquarters') qText = 'What is the headquarters of ' + base + '?';
+          else qText = 'Who is the ' + key + ' of ' + base + '?';
+          var q = makeQuestion(qText, val, cat, seq[cat]++, '' + MINISTRIES[mi].page, '\uD83C\uDFE5', base + ': ' + key + ' = ' + val + '.');
           if (q && !ek[cat][eventKey(q)]) { if (!nq[cat]) nq[cat] = []; nq[cat].push(q); ek[cat][eventKey(q)] = true; count++; }
         }
       });
@@ -124,10 +133,13 @@ async function main() {
           var cinfo = extractInfobox(ch);
           for (var f = 0; f < CAT_FIELDS.length; f++) {
             var key = CAT_FIELDS[f];
-            if (cinfo[key] && cinfo[key].length > 2) {
-              var v = cinfo[key];
+            var v = cleanInfo(cinfo[key]);
+            if (v.length > 2 && v.length < 120) {
               var base = title.replace(/_/g, ' ');
-              var qText = key === 'Formed' || key === 'Established' ? 'When was ' + base + ' established?' : 'Who is the ' + key + ' of ' + base + '?';
+              var qText;
+              if (key === 'Formed' || key === 'Established') qText = 'When was ' + base + ' established?';
+              else if (key === 'Headquarters') qText = 'What is the headquarters of ' + base + '?';
+              else qText = 'Who is the ' + key + ' of ' + base + '?';
               var q = makeQuestion(qText, v, map, seq[map]++, '' + base, '\uD83C\uDFE5', base + ': ' + key + ' = ' + v + '.');
               if (q && !ek[map][eventKey(q)]) { if (!nq[map]) nq[map] = []; nq[map].push(q); ek[map][eventKey(q)] = true; catCount++; }
             }

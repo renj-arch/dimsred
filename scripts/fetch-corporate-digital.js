@@ -96,11 +96,22 @@ async function main() {
     var tables = extractWikiTables(html);
     var count = 0;
     tables.forEach(function(t) {
+      if (t.length < 2) return;
+      // Detect company-name column from the header row instead of assuming row[0]
+      // (the header is "Rank | Image | Name | Revenue | Employees | Notes").
+      var nameIdx = -1, revIdx = -1;
+      for (var ci = 0; ci < t[0].length; ci++) {
+        var hc = strip(t[0][ci] || '').toLowerCase();
+        if (nameIdx < 0 && /^name$|^company$/.test(hc) && !/rank|revenue/.test(hc)) nameIdx = ci;
+        if (revIdx < 0 && /revenue/.test(hc)) revIdx = ci;
+      }
+      if (nameIdx < 0) nameIdx = 0;
       for (var ri = 1; ri < t.length; ri++) {
-        var row = t[ri]; if (row.length < 2) continue;
-        var name = strip(row[0] || ''); var sector = strip(row.length > 2 ? row[2] : (row[1] || ''));
-        if (name.length > 2 && name.indexOf('Company') < 0 && name.indexOf('Name') < 0 && sector.length > 2 && sector.indexOf('Industry') < 0) {
-          var q = makeQuestion('Which sector does ' + name + ' belong to?', sector, 'Corporate & Startups', seq['Corporate & Startups']++, 'Companies of India', '\uD83C\uDFED', name + ' belongs to the ' + sector + ' sector.');
+        var row = t[ri]; if (row.length <= nameIdx) continue;
+        var name = strip(row[nameIdx] || '');
+        if (name.length > 2 && /^\d+$/.test(name) === false && name.indexOf('Company') < 0 && name.indexOf('Name') < 0) {
+          var revenue = revIdx >= 0 && row.length > revIdx ? strip(row[revIdx]) : '';
+          var q = makeQuestion('Which sector does ' + name + ' belong to?', name, 'Corporate & Startups', seq['Corporate & Startups']++, 'Companies of India', '\uD83C\uDFED', name + ' is a major company listed in India.' + (revenue ? ' It reported revenues of ' + revenue + '.' : ''));
           if (q && !ek['Corporate & Startups'][eventKey(q)]) { if (!nq['Corporate & Startups']) nq['Corporate & Startups'] = []; nq['Corporate & Startups'].push(q); ek['Corporate & Startups'][eventKey(q)] = true; count++; }
         }
       }
@@ -229,7 +240,7 @@ async function main() {
     for (var dc = 0; dc < cfg.cats.length; dc++) {
       try {
         var members = await categoryMembers(cfg.cats[dc]);
-        for (var mm = 0; mm < members.length; mm++) {
+        for (var mm = 0; mm < Math.min(members.length, 60); mm++) {
           var title = members[mm];
           if (title.indexOf('Category:') === 0 || title.indexOf('List of') === 0 || title.indexOf('Template:') === 0) continue;
           try {

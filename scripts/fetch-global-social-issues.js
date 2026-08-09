@@ -207,13 +207,13 @@ async function main() {
         var yr = strip(row[0] || '');
         if (!/^\d{4}$/.test(yr)) continue;
         var name = extractConflictName(row[1]);
-        if (!name) continue;
+        if (!name || name.length > 90 || /\(\s*(since\s+)?20|—|–|\.\.\./i.test(name)) continue;
         var continent = strip(row[2] || '');
         var location = strip(row.length > 3 ? row[3] : '');
         // Location is a flag list ("Thailand", "Pakistan Nepal"). Keep the
         // first 2 country names, trimmed, for a compact answer.
-        location = location.split(/\s+/).slice(0, 2).join(' ');
-        if (!location || location.length < 2) continue;
+        location = location.replace(/\(.*?\)/g, ' ').split(/\s+/).slice(0, 2).join(' ');
+        if (!location || location.length < 2 || /^[A-Z][a-z]{1,4}$/.test(location)) continue;
         var q = makeQuestion('Where is the ' + name + ' conflict taking place?', location, 'Global Conflicts', seq['Global Conflicts']++, 'Ongoing conflicts', '\uD83C\uDF0D', name + ' is a conflict that began in ' + yr + ' in ' + continent + ' (' + location + ').');
         if (q && !ek['Global Conflicts'][eventKey(q)]) { if (!nq['Global Conflicts']) nq['Global Conflicts'] = []; nq['Global Conflicts'].push(q); ek['Global Conflicts'][eventKey(q)] = true; count++; }
       }

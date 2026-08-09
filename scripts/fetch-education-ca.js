@@ -86,6 +86,17 @@ function eventKey(q) {
   return n(q.question || '').substring(0, 80) + '|' + n(q.answer || '');
 }
 
+function findInstCols(header) {
+  var cols = { name: -1, loc: -1 };
+  for (var i = 0; i < header.length; i++) {
+    var h = String(header[i] || '').toLowerCase();
+    if (cols.name < 0 && /institute|name|college|iits?\b/i.test(h) &&
+        !/no\.|serial|s\.?no|photo|logo|abbreviation/.test(h)) cols.name = i;
+    if (cols.loc < 0 && /state|ut\b|location|city|town|place/.test(h) && !/website|area|copyright/.test(h)) cols.loc = i;
+  }
+  return cols;
+}
+
 async function fetchIITs(existingKeys, newQuestions, seqObj) {
   console.error('--- IITs ---');
   try {
@@ -94,24 +105,24 @@ async function fetchIITs(existingKeys, newQuestions, seqObj) {
     var count = 0;
     tables.forEach(function(t) {
       if (t.length < 3) return;
-      var h0 = t[0] && t[0][0] ? t[0][0] : '';
-      if (h0.indexOf('Institute') >= 0 || h0.indexOf('Name') >= 0 || h0.indexOf('IIT') >= 0) {
-        for (var ri = 1; ri < t.length; ri++) {
-          var row = t[ri];
-          if (row.length < 3) continue;
-          var name = strip(row[0]);
-          var location = strip(row[1]);
-          if (name && location && name.indexOf('IIT') >= 0 && location.length > 2 && location !== 'Location') {
-            var parts = location.split(',');
-            var city = strip(parts[0]);
-            var qText = 'Which IIT is located in ' + city + '?';
-            var q = makeQuestion(qText, name, seqObj.seq++, 'IITs', '\uD83C\uDF93', name + ' is located in ' + location + '.');
-            if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
-          }
+      var cols = findInstCols(t[0]);
+      if (cols.name < 0 || cols.loc < 0) return;
+      for (var ri = 1; ri < t.length; ri++) {
+        var row = t[ri];
+        if (row.length <= Math.max(cols.name, cols.loc)) continue;
+        var name = strip(row[cols.name]);
+        var location = strip(row[cols.loc]);
+        if (name && location && name.indexOf('IIT') >= 0 && location.length > 2 && /\d|n\/a/i.test(location) === false) {
+          var parts = location.split(',');
+          var city = strip(parts[0]);
+          var qText = 'Which IIT is located in ' + city + '?';
+          var q = makeQuestion(qText, name, seqObj.seq++, 'IITs', '\uD83C\uDF93', name + ' is located in ' + location + '.');
+          if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }
     });
     console.error('  ' + count + ' IIT questions added\n');
+
     if (count === 0) {
       var iitFallback = [
         { c: 'Kharagpur', n: 'IIT Kharagpur' },
@@ -149,20 +160,19 @@ async function fetchIIMs(existingKeys, newQuestions, seqObj) {
     var count = 0;
     tables.forEach(function(t) {
       if (t.length < 3) return;
-      var h0 = t[0] && t[0][0] ? t[0][0] : '';
-      if (h0.indexOf('Institute') >= 0 || h0.indexOf('Name') >= 0 || h0.indexOf('IIM') >= 0) {
-        for (var ri = 1; ri < t.length; ri++) {
-          var row = t[ri];
-          if (row.length < 3) continue;
-          var name = strip(row[0]);
-          var location = strip(row[1]);
-          if (name && location && name.indexOf('IIM') >= 0 && location.length > 2 && location !== 'Location') {
-            var parts = location.split(',');
-            var city = strip(parts[0]);
-            var qText = 'Which IIM is located in ' + city + '?';
-            var q = makeQuestion(qText, name, seqObj.seq++, 'IIMs', '\uD83C\uDF93', name + ' is located in ' + location + '.');
-            if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
-          }
+      var cols = findInstCols(t[0]);
+      if (cols.name < 0 || cols.loc < 0) return;
+      for (var ri = 1; ri < t.length; ri++) {
+        var row = t[ri];
+        if (row.length <= Math.max(cols.name, cols.loc)) continue;
+        var name = strip(row[cols.name]);
+        var location = strip(row[cols.loc]);
+        if (name && location && name.indexOf('IIM') >= 0 && location.length > 2 && /\d/.test(location) === false) {
+          var parts = location.split(',');
+          var city = strip(parts[0]);
+          var qText = 'Which IIM is located in ' + city + '?';
+          var q = makeQuestion(qText, name, seqObj.seq++, 'IIMs', '\uD83C\uDF93', name + ' is located in ' + location + '.');
+          if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }
     });
@@ -206,20 +216,19 @@ async function fetchAIIMS(existingKeys, newQuestions, seqObj) {
     var count = 0;
     tables.forEach(function(t) {
       if (t.length < 3) return;
-      var h0 = t[0] && t[0][0] ? t[0][0] : '';
-      if (h0.indexOf('Institute') >= 0 || h0.indexOf('Name') >= 0 || h0.indexOf('AIIMS') >= 0) {
-        for (var ri = 1; ri < t.length; ri++) {
-          var row = t[ri];
-          if (row.length < 3) continue;
-          var name = strip(row[0]);
-          var location = strip(row[1]);
-          if (name && location && name.indexOf('AIIMS') >= 0 && location.length > 2 && location !== 'Location') {
-            var parts = location.split(',');
-            var city = strip(parts[0]);
-            var qText = 'Which AIIMS is located in ' + city + '?';
-            var q = makeQuestion(qText, name, seqObj.seq++, 'AIIMS', '\uD83C\uDFE5', name + ' is located in ' + location + '.');
-            if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
-          }
+      var cols2 = findInstCols(t[0]);
+      if (cols2.name < 0 || cols2.loc < 0) return;
+      for (var ri = 1; ri < t.length; ri++) {
+        var row = t[ri];
+        if (row.length <= Math.max(cols2.name, cols2.loc)) continue;
+        var name = strip(row[cols2.name]);
+        var location = strip(row[cols2.loc]);
+        if (name && location && name.indexOf('AIIMS') >= 0 && location.length > 2 && /\d/.test(location) === false) {
+          var parts = location.split(',');
+          var city = strip(parts[0]);
+          var qText = 'Which AIIMS is located in ' + city + '?';
+          var q = makeQuestion(qText, name, seqObj.seq++, 'AIIMS', '\uD83C\uDFE5', name + ' is located in ' + location + '.');
+          if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }
     });

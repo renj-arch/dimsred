@@ -122,7 +122,8 @@ async function fetchSatellites(existingKeys, newQuestions, seq) {
         var yearMatch = launchDate.match(/\b(19|20)\d{2}\b/);
         if (!yearMatch) continue;
         var year = yearMatch[0];
-        if (year >= '2015') {
+        var thisYear = String(new Date().getFullYear());
+        if (year >= '2015' && year <= thisYear) {
           var qText = 'Which satellite was launched by India in ' + year + '?';
           var q = makeQuestion(qText, name, seq++, 'Indian Satellites', '\uD83D\uDEE0', name + ' (' + year + ') was launched on ' + launchDate + ' via ' + vehicle + '.');
           if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
@@ -148,7 +149,8 @@ async function fetchMissions(existingKeys, newQuestions, seq) {
         var status = row.length > 2 ? row[2] : '';
         if (!name || name.length < 2 || name.match(/^[\d]+$/) || name === 'Mission name' || name.length > 50) continue;
         var yearMatch = date.match(/\b(19|20)\d{2}\b/);
-        if (yearMatch && yearMatch[0] >= '2020') {
+        var thisYear = new Date().getFullYear();
+        if (yearMatch && yearMatch[0] >= '2020' && parseInt(yearMatch[0], 10) <= thisYear) {
           var statusOk = status.toLowerCase().indexOf('success') >= 0 || status.toLowerCase().indexOf('operational') >= 0;
           var qText = 'Which ISRO mission was launched in ' + yearMatch[0] + (statusOk ? ' (successful)' : '') + '?';
           var q = makeQuestion(qText, name, seq++, 'ISRO Missions', '\uD83D\uDE80', name + ' was launched on ' + date + '. Status: ' + status);

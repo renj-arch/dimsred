@@ -92,8 +92,9 @@ async function fetchCOP(existingKeys, newQuestions, seqObj) {
           var year = strip(row[0]);
           var name = strip(row[1]);
           var venue = row.length > 2 ? strip(row[2]) : '';
-          if (year && name && parseInt(year) > 1990 && name.indexOf('COP') >= 0) {
-            if (venue && venue.length > 3 && venue.indexOf('Venue') < 0) {
+          var thisYear = new Date().getFullYear();
+          if (year && name && parseInt(year) > 1990 && parseInt(year) <= thisYear && name.indexOf('COP') >= 0) {
+            if (venue && venue.length > 3 && venue.indexOf('Venue') < 0 && !/to be determined|tbd|pending|\u2014|-{2,}/i.test(venue)) {
               var qText = 'The ' + name + ' climate conference was held in which city?';
               var q = makeQuestion(qText, venue, seqObj.seq++, 'COP', '\uD83C\uDF1D', name + ' was held in ' + venue + '.');
               if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
@@ -102,7 +103,7 @@ async function fetchCOP(existingKeys, newQuestions, seqObj) {
               var prevYear = strip(t[ri - 1][0]);
               if (prevYear && parseInt(prevYear) > 1990) {
                 var qText2 = 'Which COP summit was held in ' + year + '?';
-                var a2 = name.replace(/Conference|\(.*?\)/g,'').trim();
+                var a2 = name.replace(/Conference|\(.*?\)/g, '').trim();
                 var q2 = makeQuestion(qText2, a2, seqObj.seq++, 'COP', '\uD83C\uDF1D', name + ' was the COP summit in ' + year + '.');
                 if (q2 && !existingKeys[eventKey(q2)]) { newQuestions.push(q2); existingKeys[eventKey(q2)] = true; count++; }
               }

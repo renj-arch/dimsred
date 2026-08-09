@@ -52,9 +52,21 @@ function extractInfobox(html) {
   if (!m) return data; var rows = m[1].match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi); if (!rows) return data;
   for (var ri = 0; ri < rows.length; ri++) {
     var th = rows[ri].match(/<th[^>]*>([\s\S]*?)<\/th>/i); var td = rows[ri].match(/<td[^>]*>([\s\S]*?)<\/td>/i);
-    if (th && td) { var label = strip(th[1]); var value = strip(td[1]); if (label && value && label.length > 2) data[label] = value; }
+    if (th && td) { var label = strip(th[1]); var value = strip(td[1]); if (label && value && label.length > 2) data[label] = sanitizeInfo(value); }
   }
   return data;
+}
+
+// Remove HTML-entity noise, embedded geo-coordinates and relative-age
+// parentheticals so infobox values read as clean facts (not machine HTML).
+function sanitizeValue(v) {
+  return String(v)
+    .replace(/&#xFEFF;|&#\d+;|&nbsp;/gi, ' ')
+    .replace(/\d{1,3}(?:°|º)\s*\d{1,2}[′']\s*\d{1,2}(?:\.\d+)?[″"]|[\d.]+°[NSEW]|[NS]?\s*\d{1,3}\.\d+[°]?\s*[EW]?/g, ' ')
+    .replace(/\s*\(([^)]*\bago\b[^)]*)\)/gi, '')
+    .replace(/\s*\(\s*\)/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function extractWikiTables(html) {

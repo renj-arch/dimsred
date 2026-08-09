@@ -68,6 +68,12 @@ function isIndianNotable(name, desc) {
 
   if (/Indian|India\b/i.test(text)) return true;
 
+  // Some entries start with an explicit foreign nationality (e.g. "French
+  // writer", "Malaysian jurist") and are NOT Indian notables. Guard before the
+  // broad office/institution rules that otherwise match on words like
+  // "Governor of" or "chief justice".
+  if (/\b(?:American|British|French|German|Italian|Spanish|Portuguese|Dutch|Belgian|Swiss|Austrian|Swedish|Norwegian|Danish|Finnish|Polish|Czech|Hungarian|Romanian|Bulgarian|Greek|Turkish|Russian|Ukrainian|Belarusian|Chinese|Japanese|Korean|Vietnamese|Thai|Indonesian|Filipino|Malaysian|Singaporean|Australian|New Zealander|Canadian|Mexican|Brazilian|Argentine|Chilean|Colombian|Peruvian|Venezuelan|Pakistani|Bangladeshi|Sri Lankan|Nepali|Bhutanese|Afghan|Iranian|Iraqi|Syrian|Lebanese|Israeli|Egyptian|Algerian|Moroccan|Tunisian|Libyan|Sudanese|Kenyan|Nigerian|Ghanaian|South African|Ethiopian|Saudi|Emirati|Qatari|Kuwaiti|Omani|Jordanian|Bangladeshi|Tanzanian|Ugandan|Zambian|Zimbabwean|Irish|Scottish|Welsh)\b/i.test(text)) return false;
+
   if (/Bollywood|Tollywood|Kollywood|Mollywood/i.test(text)) return true;
 
   if (/Padma Shri|Padma Bhushan|Padma Vibhushan|Bharat Ratna|Sahitya Akademi|Dadasaheb Phalke|National Film Award/i.test(text)) return true;
@@ -96,8 +102,9 @@ function isIndianNotable(name, desc) {
 
 function extractDateEntries(html) {
   var entries = [];
-  var currentMonth = 'July 2026';
-  var year = new Date().getFullYear();
+  var now = new Date();
+  var currentMonth = MONTHS[now.getMonth()] + ' ' + now.getFullYear();
+  var year = now.getFullYear();
 
   var blocks = html.split(/<div class="mw-heading mw-heading[23]">/);
   for (var bi = 1; bi < blocks.length; bi++) {
@@ -221,9 +228,9 @@ function pickTemplate(category, month) {
 }
 
 async function fetchDeaths(existingKeys, seenPersons, newQuestions, seq) {
-  console.error('\n--- Notable Deaths 2026 ---');
+  console.error('\n--- Notable Deaths ' + new Date().getFullYear() + ' ---');
   try {
-    var html = await fetchPage('Deaths_in_2026');
+    var html = await fetchPage('Deaths_in_' + new Date().getFullYear());
     var entries = extractDateEntries(html);
     var count = 0;
     entries.forEach(function(e) {
@@ -231,7 +238,7 @@ async function fetchDeaths(existingKeys, seenPersons, newQuestions, seq) {
       if (seenPersons[personKey]) return;
       var cat = findCategory(e.desc);
       var qText = pickTemplate(cat, e.month);
-      var q = makeQuestion(qText, e.name, seq++, 'Deaths in 2026', '\uD83D\uDD4A', e.name + ': ' + e.desc.substring(0, 200));
+      var q = makeQuestion(qText, e.name, seq++, 'Deaths in ' + new Date().getFullYear(), '\uD83D\uDD4A', e.name + ': ' + e.desc.substring(0, 200));
       if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; seenPersons[personKey] = true; count++; }
     });
     console.error('  ' + count + ' obituary questions added\n');

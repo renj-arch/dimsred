@@ -153,11 +153,12 @@ async function main() {
   } catch (e) { process.stdout.write('Error: ' + e.message + '\n'); }
   await delay(600);
 
-  // ── Tiger Reserves & Biosphere Reserves (grow as new reserves are declared) ──
+// ── Tiger Reserves & Biosphere Reserves (grow as new reserves are declared) ──
   var RESERVE_PAGES = [
-    { page: 'List_of_tiger_reserves_in_India', key: 'tiger reserve' },
-    { page: 'List_of_biosphere_reserves_in_India', key: 'biosphere reserve' }
+    { page: 'Tiger_reserves_of_India', key: 'tiger reserve' },
+    { page: 'Biosphere_reserves_of_India', key: 'biosphere reserve' }
   ];
+  function findHeaderIdx(head, re) { for (var ciR = 0; ciR < head.length; ciR++) if (re.test(strip(head[ciR]))) return ciR; return -1; }
   for (var rsi = 0; rsi < RESERVE_PAGES.length; rsi++) {
     try {
       var htmlR = await fetchPageText(RESERVE_PAGES[rsi].page);
@@ -170,20 +171,20 @@ async function main() {
       });
       tablesR.forEach(function(t) {
         var head = t[0] || [];
-        var hasState = head.some(function(c) { return /state|located/i.test(c); });
-        var hasName = head.some(function(c) { return /reserve|name/i.test(c); });
-        if (!hasState || !hasName) return;
+        var iName = findHeaderIdx(head, /^name$|reserve|biosphere/i);
+        var iState = findHeaderIdx(head, /^state|state.?ut|located/i);
+        if (iName < 0 || iState < 0) return;
         for (var ri = 1; ri < t.length; ri++) {
-          var row = t[ri]; if (row.length < 2) continue;
-          var state = strip(row[0] || '');
-          var name = strip(row[1] || '');
+          var row = t[ri]; if (row.length <= Math.max(iName, iState)) continue;
+          var state = strip(row[iState] || '');
+          var name = strip(row[iName] || '');
           if (state.length > 2 && name.length > 3 && state.indexOf('State') < 0 && name.indexOf('Name') < 0) {
             var base = name.split(/[;,]/)[0];
-            var full = base.indexOf(RESERVE_PAGES[rsi].key) > 0 ? base : (base + ' ' + RESERVE_PAGES[rsi].key);
+            var full = base.toLowerCase().indexOf(RESERVE_PAGES[rsi].key.toLowerCase()) >= 0 ? base : (base + ' ' + RESERVE_PAGES[rsi].key);
             freshR[full] = state;
           }
         }
-      });
+});
       var rCount = 0;
       Object.keys(freshR).sort().forEach(function(nm) {
         var state = freshR[nm];

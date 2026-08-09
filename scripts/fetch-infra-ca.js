@@ -172,29 +172,40 @@ async function fetchMajorPorts(existingKeys, newQuestions, seqObj) {
   try {
     var html = await fetchPageText('List_of_ports_in_India');
     var tables = extractWikiTables(html);
+    // Only the "major ports" table has a "Cargo handled" column; the second
+    // table lists minor/private ports and would mislead "major port" questions.
+    var portTables = tables.filter(function(t) {
+      if (t.length < 2) return false;
+      var joined = String(t[0].join(' ') || '').toLowerCase();
+      if (joined.indexOf('cargo handled') >= 0) return true;
+      if (joined.indexOf('ownership') >= 0 || joined.indexOf('private') >= 0) return false;
+      return true;
+    });
+    if (tables.length > 1 && portTables.length === tables.length) portTables = tables.slice(0, 1);
     var count = 0;
-    tables.forEach(function(t) {
+    portTables.forEach(function(t) {
       if (t.length < 2) return;
       var hr = t[0], nameCol = -1, stateCol = -1;
       for (var ci = 0; ci < hr.length; ci++) {
-        var h = hr[ci].toLowerCase();
-        if (h.indexOf('name') >= 0 || h.indexOf('port') >= 0) nameCol = ci;
-        if (h.indexOf('state') >= 0 || h.indexOf('location') >= 0) stateCol = ci;
+        var h = String(hr[ci] || '').toLowerCase();
+        if (nameCol < 0 && (h.indexOf('name') >= 0 || h.indexOf('port') >= 0) && h.indexOf('location') < 0) nameCol = ci;
+        // Prefer a State/UT column over a generic Location (city) column.
+        if (h.indexOf('state') >= 0 || h.indexOf('ut') >= 0) stateCol = ci;
+        else if (stateCol < 0 && h.indexOf('location') >= 0) stateCol = ci;
       }
-      if (nameCol < 0 && stateCol < 0) { nameCol = 1; stateCol = 5; }
-      if (nameCol >= 0) {
-        for (var ri = 1; ri < t.length; ri++) {
-          var row = t[ri];
-          if (row.length < Math.max(nameCol, stateCol) + 1) continue;
-          var port = strip(row[nameCol]);
-          var state = strip(row[stateCol]);
-          if (port && port.length > 3 && port !== 'Port Name' && port !== 'Port' && state && state.length > 2) {
-            var parts = state.split(',');
-            state = strip(parts[0]);
-            var qText = 'Which major port is located in ' + state + '?';
-            var q = makeQuestion(qText, port, seqObj.seq++, 'Indian Ports', '\u26F5', port + ' is a major port in ' + state + '.');
-            if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
-          }
+      if (nameCol < 0) return;
+      if (stateCol < 0) { nameCol = 1; stateCol = 6; }
+      for (var ri = 1; ri < t.length; ri++) {
+        var row = t[ri];
+        if (!row || row.length < Math.max(nameCol, stateCol) + 1) continue;
+        var port = strip(row[nameCol]);
+        var state = strip(row[stateCol]);
+        if (port && port.length > 3 && port !== 'Port Name' && port !== 'Port' && state && state.length > 2) {
+          var parts = state.split(',');
+          state = strip(parts[0]);
+          var qText = 'Which major port is located in ' + state + '?';
+          var q = makeQuestion(qText, port, seqObj.seq++, 'Indian Ports', '\u26F5', port + ' is a major port in ' + state + '.');
+          if (q && !existingKeys[eventKey(q)]) { newQuestions.push(q); existingKeys[eventKey(q)] = true; count++; }
         }
       }
     });

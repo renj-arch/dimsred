@@ -38,6 +38,19 @@ function fetchPageText(title) {
   });
 }
 
+// Wikipedia list pages carry a second "Tentative list" wikitable below the
+// real World Heritage Sites table. Cut the HTML at that heading so tentative
+// candidates are never ingested as inscribed UNESCO World Heritage Sites.
+function truncateBeforeTentative(html) {
+  var cutAt = -1;
+  var markers = ['Tentative_list', 'Tentative_List', 'tentative_list', 'Tentative sites', 'Tentative Sites', 'liste indicative', 'Liste_indicative'];
+  for (var mi = 0; mi < markers.length; mi++) {
+    var i = html.indexOf(markers[mi]);
+    if (i > 0 && (cutAt < 0 || i < cutAt)) cutAt = i;
+  }
+  return cutAt > 0 ? html.substring(0, cutAt) : html;
+}
+
 function extractWikiTables(html) {
   var tables = [];
   var tRegex = /<table[^>]*class="[^"]*(wikitable|sortable)[^"]*"[^>]*>([\s\S]*?)<\/table>/gi;
@@ -80,6 +93,7 @@ async function fetchUnescoSites(existingKeys, newQuestions, seqObj) {
   console.error('\n--- UNESCO World Heritage Sites ---');
   try {
     var html = await fetchPageText('List_of_World_Heritage_Sites_in_India');
+    html = truncateBeforeTentative(html);
     var tables = extractWikiTables(html);
     var count = 0;
     tables.forEach(function(t) {

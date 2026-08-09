@@ -96,13 +96,15 @@ var TEMPLATES = [
     var name = clean(row[0]);
     var ministry = clean(row[2]);
     var year = clean(row[3]);
+    if (/^[\u2014\u2013–-]+$/.test(ministry) || ministry.length < 2) ministry = '';
     var yrMatch = year.match(/\b(19|20)\d{2}\b/);
-    return makeQuestion('Which ' + ministry + ' scheme' + (yrMatch ? ' was launched in ' + yrMatch[0] : '') + '?', name, seq, 'Government Schemes', '\uD83C\uDFE6', name + ' was launched in ' + year + ' under ' + ministry + '.');
+    return makeQuestion('Which ' + (ministry ? ministry + ' ' : '') + 'scheme' + (yrMatch ? ' was launched in ' + yrMatch[0] : '') + '?', name, seq, 'Government Schemes', '\uD83C\uDFE6', name + ' was launched in ' + year + (ministry ? ' under ' + ministry : '') + '.');
   },
   function(row, seq) {
     var name = clean(row[0]);
-    var description = clean(row[1]);
-    if (!description || description.length < 10) return null;
+    // Description lives in the trailing "Summary" column; row[1] is the CS/CSS type marker.
+    var description = clean(row.length > 5 ? row[5] : (row[row.length - 1] || ''));
+    if (!description || description.length < 10 || /^[\u2014\u2013–-]+$/.test(description)) return null;
     var shortDesc = description.substring(0, 100);
     var lines = shortDesc.split(/[.\n]/);
     var firstLine = lines[0].trim();
@@ -114,7 +116,7 @@ var TEMPLATES = [
   function(row, seq) {
     var name = clean(row[0]);
     var sector = row.length > 4 ? clean(row[4]) : '';
-    if (!sector) return null;
+    if (!sector || /^[\u2014\u2013–-]+$/.test(sector)) return null;
     return makeQuestion('Which government scheme falls under the ' + sector + ' sector?', name, seq, 'Government Schemes', '\uD83C\uDFE6', name + ' falls under ' + sector + '.');
   }
 ];
