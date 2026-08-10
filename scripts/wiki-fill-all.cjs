@@ -1826,6 +1826,87 @@ const CATEGORIES = [
     'Kasturba Gandhi Balika Vidyalaya','Ujjwala Scheme','One Stop Centre Scheme',
     'Women in Indian politics','Justice Gyan Sudha Misra','Savita Devi (politician)'
   ]},
+  // ───────── Soil Science & Conservation ─────────
+  { name:'Soil & Watershed', wikiCat:'Soil_science', topics:[
+    'Soil science','Pedology','Soil taxonomy','Soil classification','Soil horizon','Soil profile',
+    'Soil texture','Soil structure','Soil organic matter','Humus','Soil fertility','Soil pH',
+    'Soil salinity','Soil alkalinity','Soil acidity','Base saturation','Cation-exchange capacity',
+    'Soil erosion','Sheet erosion','Rill erosion','Gully erosion','Wind erosion','Splash erosion',
+    'Soil conservation','Terrace (agriculture)','Contour plowing','Strip cropping','Mulch','No-till farming',
+    'Watershed','Watershed management','Check dam','Gully plug','Gabion','Afforestation','Agroforestry',
+    'Waterlogging (agriculture)','Drainage','Field tile drainage','Land reclamation','Salinity control',
+    'Soil moisture','Field capacity','Wilting point','Available water capacity','Infiltration (hydrology)',
+    'Runoff','Hydrograph','Water table','Aquifer','Groundwater','Hydrology','Hydrology (agriculture)',
+    'Surveying','Chain surveying','Level (instrument)','Theodolite','Total station','Contour line',
+    'Global Positioning System','Remote sensing','Geographic information system','Photogrammetry',
+    'Irrigation','Drip irrigation','Sprinkler irrigation','Surface irrigation','Furrow irrigation',
+    'Irrigation tank','Crop coefficient','Irrigation scheduling','Water use efficiency','Pipe flow',
+    'Open-channel flow','Weir','Canal','Dam','Barrage','Headworks','Field channel','Watercourse',
+    'Land grading','Laser land leveling','Soil test','Fertilizer','Manure','Compost','Biofertilizer',
+    'Legume','Nitrogen fixation','Phosphorus','Potassium','Micronutrient','Organic farming','Integrated nutrient management'
+  ]},
+  // ───────── Horticulture ─────────
+  { name:'Horticulture', wikiCat:'Horticulture', topics:[
+    'Horticulture','Pomology','Olericulture','Floriculture','Landscaping','Arboriculture','Turf management',
+    'Vegetable','Fruit','Spice','Plantation','Orchard','Fruit tree propagation','Grafting','Budding',
+    'Layering','Cutting (plant)','Tissue culture','Micropropagation','Plant nursery','Germination',
+    'Seed dormancy','Vernalization','Photoperiodism','Trickle irrigation','Greenhouse','Polyhouse',
+    'Shade house','Plant propagation','Pollination','Fertigation','Plant nutrition','Deficiency symptom',
+    'Banana','Mango','Citrus','Grape','Pomegranate','Guava','Papaya','Pineapple','Apple','Pear','Peach','Plum',
+    'Strawberry','Date palm','Coconut','Areca nut','Cashew','Pepper','Cardamom','Turmeric','Ginger',
+    'Onion','Garlic','Potato','Tomato','Brinjal','Chilli','Okra','Cabbage','Cauliflower','Carrot','Radish',
+    'Spinach','Lettuce','Coriander','Mint','Rose','Marigold','Jasmine','Chrysanthemum','Gladiolus',
+    'Tuberose','Orchid','Anthurium'
+  ]},
+  // ───────── Farm Power & Machinery ─────────
+  { name:'Farm Machinery', wikiCat:'Agricultural_machinery', topics:[
+    'Agricultural machinery','Tractor','Farm tractor','Power tiller','Combine harvester','Thresher',
+    'Mower','Reaper','Seed drill','Planter (farm implement)','Transplanter','Sprayer','Row crop cultivator',
+    'Plough','Harrow (tool)','Cultivator','Disc harrow','Subsoiler','Leveler','Ridger','Puddler',
+    'Land levelling','Draft animal','Bullock cart','Tractor drawn implements','Three-point hitch',
+    'Power take-off','Tillage','Conventional tillage','Conservation tillage','Minimum tillage',
+    'Harvesting','Sickle','Sickle bar mower','Fodder','Silage','Hay','Powered machinery','Field sprayer',
+    'Duster (agriculture)','Grain handling','Grain dryer','Silo','Grain mill','Rice mill','Flour mill',
+    'Oil mill','Agricultural engineering','Ergonomics','Farm mechanisation','Custom hiring centre'
+  ]},
+  // ───────── Food Processing & Agricultural Engineering ─────────
+  { name:'Food Processing', wikiCat:'Food_processing', topics:[
+    'Food processing','Unit operation','Food preservation','Food science','Food technology',
+    'Food industry','Food microbiology','Food safety','Food additive','Food packaging','Canning',
+    'Drying','Freeze drying','Dehydration','Refrigeration','Pasteurization','Sterilization (microbiology)',
+    'Fermentation','Pickling','Salting (food)','Smoking (cooking)','Preservative','Antioxidant',
+    'Food colouring','Flavour','Texture (food)','Food chemistry','Carbohydrate','Protein','Fat','Starch',
+    'Pectin','Enzyme','Heat transfer','Mass transfer','Evaporation','Concentration','Extrusion',
+    'Milling (grinding)','Cereal','Wheat flour','Rice processing','Parboiled rice','Maize','Millet','Pulse',
+    'Oil extraction','Oilseed','Sugar industry','Jaggery','Dairy processing','Milk','Cheese','Yoghurt','Ghee',
+    'Meat processing','Fish processing','Fruit processing','Juice','Jam','Pickle','Sauce','Bakery',
+    'Convenience food','Ready-to-eat food','Cold chain','Food cold chain','Food loss and waste','Fortified food','Nutrition'
+  ]},
+  // ───────── Agricultural Engineering & Bioenergy ─────────
+  { name:'Agricultural Engineering', wikiCat:'Agricultural_engineering', topics:[
+    'Agricultural engineering','Farm machinery','Irrigation engineering','Soil and water conservation engineering',
+    'Food engineering','Postharvest technology','Farm structure','Greenhouse','Animal housing','Farmstead',
+    'Renewable energy','Bioenergy','Biogas','Biomass','Biofuel','Biodiesel','Ethanol fuel','Biogas digester',
+    'Solar energy','Solar panel','Solar water heater','Wind power','Micro hydro','Hydroelectricity',
+    'Energy crop','Jatropha','Sugarcane ethanol','Corn ethanol','Anaerobic digestion','Gasification','Pyrolysis',
+    'Combustion','Heat pump','Solar dryer','Solar pumping','Agricultural waste','Crop residue','Straw',
+    'Climate change and agriculture','Precision agriculture','Smart agriculture','IoT in agriculture',
+    'Farm management','Agribusiness','Agricultural extension','Agricultural economics','Value chain',
+    'Warehousing','Cold storage','Supply chain','Jute','Cotton gin'
+  ]},
+  // ───────── Basic & Applied Sciences (Technical Education) ─────────
+  { name:'Applied Sciences', wikiCat:'Applied_science', topics:[
+    'Applied science','Engineering','Basic research','Applied mathematics','Numerical analysis','Calculus',
+    'Statistics','Probability','Linear algebra','Differential equation','Applied physics','Mechanics','Thermodynamics',
+    'Electromagnetism','Optics','Fluid mechanics','Solid mechanics','Material science','Applied chemistry',
+    'Chemical engineering','Industrial chemistry','Polymer','Ceramic','Metallurgy','Corrosion',
+    'Electrical engineering','Electronics','Instrumentation','Digital electronics','Microprocessor',
+    'Computer engineering','Software engineering','Programming language','Operating system','Database',
+    'Civil engineering','Structural engineering','Geotechnical engineering','Construction','Concrete','Steel',
+    'Mechanical engineering','Machine design','Manufacturing engineering','Machine tool','Automobile','Engine',
+    'Thermal engineering','Refrigeration and air conditioning','Workshop','Drafting','Technical drawing',
+    'Computer-aided design','Mechatronics','Robotics','Automation','Nanotechnology','Biotechnology'
+  ]},
 ];
 
 // Rotation groups (7 groups, cycled through by 4h time slots)
@@ -1838,6 +1919,7 @@ const DAY_GROUPS = [
   [20,21,22,23],   // Group 5: Indian States, Important Days, Personalities, Disaster Management
   [24,25,26,27,28,29,30,31,32], // Group 6: Business & Economy, RBI & Banking, Indian National Symbols, Agriculture & Food, Health & Medicine, Constitution, Computer & IT, Railways & Transport, Energy & Power
   [33,34,35,36,37,38,39], // Group 7: Indian Judiciary, Indian Tribes, Education in India, Indian Battles, Indian Heritage, Indian Cinema, Women & Society
+  [40,41,42,43,44,45], // Group 8: Soil & Watershed, Horticulture, Farm Machinery, Food Processing, Agricultural Engineering, Applied Sciences
 ];
 
 async function main() {
