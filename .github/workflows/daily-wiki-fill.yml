@@ -11,7 +11,7 @@ on:
         default: ''
 
 concurrency:
-  group: wiki-fill
+  group: data-fill
 
 permissions:
   contents: write
@@ -128,6 +128,13 @@ jobs:
 
       - uses: actions/download-artifact@v4
 
+      - name: Preserve feed-owned files from fresh checkout
+        run: |
+          mkdir -p preserve-feed
+          for f in current-affairs.json pib-archive.json; do
+            [ -f "data/questions/$f" ] && cp "data/questions/$f" "preserve-feed/$f" && echo "preserved $f"
+          done
+
       - name: Restore baseline data (overwrite stale repo data/)
         run: cp -r baseline/data/* data/ 2>/dev/null || true
 
@@ -141,6 +148,14 @@ jobs:
       - run: node scripts/merge-chunks.js
 
       - run: node scripts/split-quiz-to-categories.js
+
+      - name: Re-apply feed-owned files (keep newest feed additions)
+        run: |
+          for f in current-affairs.json pib-archive.json; do
+            [ -f "preserve-feed/$f" ] && cp "preserve-feed/$f" "data/questions/$f" && echo "re-applied $f"
+          done
+          rm -rf preserve-feed
+
       - run: node scripts/cleanup-questions.js
       - run: node scripts/dedup-sentence-flood.js
       - run: node scripts/inject-handpicked-gk.js
