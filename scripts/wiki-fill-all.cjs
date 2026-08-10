@@ -62,7 +62,7 @@ async function fetchCategoryMembers(wikiCat, maxPages = parseInt(process.env.WIK
   // names, then descend into each subcategory. This is how content that lives in
   // nested categories (e.g. Pushtimarga inside Bhakti_movement -> Vaishnavism)
   // gets discovered, instead of being limited to direct members only.
-  const MAX_DEPTH = 4;
+  const MAX_DEPTH = 6;
   const pages = new Set();
   const visitedCats = new Set();
   const queue = [{ cat: wikiCat, depth: 0 }];
@@ -1729,6 +1729,103 @@ const CATEGORIES = [
     'Nuclear Power Corporation of India',
     'Bharat Heavy Electricals Limited'
   ]},
+  // ───────── Indian Judiciary & Laws ─────────
+  { name:'Indian Judiciary', wikiCat:'Law_of_India', topics:[
+    'Law of India','Judiciary of India','Indian Penal Code','Criminal Procedure Code (India)',
+    'Civil Procedure Code (India)','Indian Evidence Act','Legal Services Authorities Act 1987',
+    'High courts of India','List of high courts of India','District courts in India',
+    'Lok Adalat','National Lok Adalat','Fast-track courts in India','Family court (India)',
+    'Consumer court (India)','Income Tax Appellate Tribunal','National Green Tribunal',
+    'National Company Law Tribunal','Arbitration in India','Legal aid in India',
+    'Public prosecutor (India)','Chief Justice of India','List of judges of the Supreme Court of India',
+    'Law commission of India','Bar Council of India','National Law University',
+    'Right to constitutional remedies','Fundamental rights in India',
+    'Article 370','Article 356 (India)','Article 21 of the Constitution of India',
+    'Cyber crimes in India','Information Technology Act, 2000','Data Protection Bill, India',
+    'Prevention of Corruption Act, 1988','Candidates\'s List','Money laundering in India',
+    'Black money','Benami Transactions (Prohibition) Act, 1988',
+    'Custodial violence','Death penalty in India','Capital punishment in India',
+    'Three-tier judicial system in India','PIL in India','Contempt of court in India'
+  ]},
+  // ───────── Tribal & Regional Cultures ─────────
+  { name:'Indian Tribes', wikiCat:'Tribes_of_India', topics:[
+    'Adivasi','Scheduled Tribes of India','List of Scheduled Tribes in India',
+    'Particularly Vulnerable Tribal Groups','Bhil','Gondi people','Santhal people',
+    'Munda people','Oraon','Khasi people','Garo people','Nagas','Mizo people',
+    'Toda people','Great Andamanese','Jarawa (Andaman Islands)','Sentinelese',
+    'Chenchu','Irula people','Kurumba (tribe)','Kani tribe','Padar','Bodo people',
+    'Kukis','Apatani people','Adi people','Nishi people','Monpa people',
+    'Lepcha people','Sherpa people','Ranjit','Banjara','Kalbelia',
+    'Siddi','Pardhi','Tharu people','Rabari','Meena','Garasia people',
+    'Dongria Kondh','Saora people','Bonda (tribe)','Kutia Kondh'
+  ]},
+  // ───────── Education in India ─────────
+  { name:'Education in India', wikiCat:'Education_in_India', topics:[
+    'Education in India','History of education in India','Gurukula','Nalanda University',
+    'Takshashila','Taxila','Madrasa','Sanskrit education','NTA','CBSE','ICSE',
+    'National Education Policy 2020','New Education Policy','Right to Education Act',
+    'Sarva Shiksha Abhiyan','Midday Meal Scheme','Beti Bachao Beti Padhao',
+    'Navodaya Vidyalaya','Kendriya Vidyalaya','Sainik School','Ekalavya model residential school',
+    'Demographic dividend in India','Indian Institutes of Technology','Indian Institute of Management',
+    'National Institutes of Technology','All India Institute of Medical Sciences',
+    'Indian Institute of Science','Central universities of India',
+    'UGC','AICTE','NCERT','NIOS','IGNOU','NEET','JEE (Main)','UPSC Civil Services Examination',
+    'Median class','Reservation in India','Literacy in India','Sarva Shiksha Abhiyan'
+  ]},
+  // ───────── Indian Wars & Battles ─────────
+  { name:'Indian Battles', wikiCat:'Battles_involving_India', topics:[
+    'Military history of India','Kalinga War','Battle of Panipat (1526)',
+    'Battle of Khanwa','Battle of Haldighati','Battle of Plassey','Battle of Buxar',
+    'Battle of Wandiwash','Anglo-Maratha Wars','Anglo-Mysore Wars','Battle of Seringapatam',
+    'First Anglo-Sikh War','Second Anglo-Sikh War','Battle of Sobraon',
+    'Battle of Chillianwala','Indian Rebellion of 1857','Siege of Delhi (1857)',
+    'Battle of Chinhat','Battle of Kandahar','Third Battle of Panipat',
+    'First Battle of Panipat','Battle of Tarain','Battle of Talikota','Battle of Rajarata',
+    'Battle of Pavan Khind','Battle of Rakshasbhuvan','Battle of Nainwa','Battle of Ambur',
+    'Battle of Karnal','Battle of Colachel','Battle of Talikota','Carnatic Wars',
+    'Anglo-Afghan Wars','Sino-Indian War','Indo-Pakistani War of 1947',
+    'Indo-Pakistani War of 1965','Indo-Pakistani War of 1971','Kargil War',
+    'Battle of Longewala','Operation Blue Star','Operation Vijay (India)',
+    'Operation Meghdoot','Battle of Siachen Glacier','Tamil Tigers','LTTE'
+  ]},
+  // ───────── Tourism & Heritage Sites ─────────
+  { name:'Indian Heritage', wikiCat:'World_Heritage_Sites_in_India', topics:[
+    'List of World Heritage Sites in India','Sundarbans','Nanda Devi and Valley of Flowers',
+    'Kaziranga National Park','Manas National Park','Keoladeo National Park',
+    'Great Himalayan National Park','Western Ghats','Western Ghats (UNESCO)',
+    'Agra Fort','Ajanta Caves','Ellora Caves','Chhatrapati Shivaji Terminus',
+    'Humayun\'s Tomb','Mahabodhi Temple','Charminar','Jaipur City',
+    'Jantar Mantar','Rani ki Vav','Hill Forts of Rajasthan','Fatehpur Sikri',
+    'Mountain Railways of India','Kalka\u2013Shimla railway','Darjeeling Himalayan Railway',
+    'Nilgiri Mountain Railway','Qutub Minar','Red Fort','Taj Mahal','Capitol Complex, Chandigarh',
+    'Victorian Gothic and Art Deco Ensembles of Mumbai','Khajuraho Group of Monuments',
+    'Group of Monuments at Mahabalipuram','Konark Sun Temple','Archaeological Site of Nalanda',
+    'Elephanta Caves','Champaner-Pavagadh Archaeological Park','Bhimbetka rock shelters',
+    'Pattadakal','Sanchi Stupa','Great Chola Temples','Brihadisvara Temple, Thanjavur',
+    'Churches and convents of Goa','Monuments of Hampi','Monuments at Mahabalipuram',
+    'Mansar','Kunchikal','Ramappa Temple','Kakatiya Rudreshwara Temple'
+  ]},
+  // ───────── Indian Cinema ─────────
+  { name:'Indian Cinema', wikiCat:'Cinema_of_India', topics:[
+    'Cinema of India','Bollywood','Cinema of South India','Tollywood (Telugu)','Kollywood',
+    'Mollywood','Sandalwood','Cinema of West Bengal','Cinema of Assam','Cinema of Odisha',
+    'Cinema of Punjab','Cinema of India history','Indian film awards','National Film Awards',
+    'Filmfare Awards','Dadasaheb Phalke Award','International Film Festival of India',
+    'Satellite based movie channel','Cinematograph Act 1952','Central Board of Film Certification',
+    'Indian documentary','Indian animation','VFX in India','Music of Bollywood'
+  ]},
+  // ───────── Women & Social Issues ─────────
+  { name:'Women & Society', wikiCat:'Women_in_India', topics:[
+    'Women in India','Women\'s reservation in India','Women\'s Reservation Bill',
+    'Sangh Parivar','Women in Indian Armed Forces','Feminism in India','Dowry in India',
+    'Dowry death','Female foeticide in India','Child marriage in India','Honor killing in India',
+    'Sati (practice)','Devadasi','Triple talaq','Muslim Women (Protection of Rights on Marriage) Act, 2019',
+    'Women\'s suffrage in India','Women legislators in India','Women in workforce in India',
+    'Sukanya Samriddhi Yojana','Beti Bachao Beti Padhao','Mission Shakti (India)',
+    'Rashtriya Mahila Kosh','National Commission for Women','Mahila Court',
+    'Kasturba Gandhi Balika Vidyalaya','Ujjwala Scheme','One Stop Centre Scheme',
+    'Women in Indian politics','Justice Gyan Sudha Misra','Savita Devi (politician)'
+  ]},
 ];
 
 // Rotation groups (7 groups, cycled through by 4h time slots)
@@ -1740,6 +1837,7 @@ const DAY_GROUPS = [
   [16,17,18,19],   // Group 4: Sports, Books & Authors, Awards & Honours, Govt Schemes
   [20,21,22,23],   // Group 5: Indian States, Important Days, Personalities, Disaster Management
   [24,25,26,27,28,29,30,31,32], // Group 6: Business & Economy, RBI & Banking, Indian National Symbols, Agriculture & Food, Health & Medicine, Constitution, Computer & IT, Railways & Transport, Energy & Power
+  [33,34,35,36,37,38,39], // Group 7: Indian Judiciary, Indian Tribes, Education in India, Indian Battles, Indian Heritage, Indian Cinema, Women & Society
 ];
 
 async function main() {
@@ -1804,8 +1902,8 @@ async function main() {
     qCount.set(k, (qCount.get(k) || 0) + 1);
     if (q.wikiDone) doneTitles.add(k);
   }
-  const topicBudget = parseInt(process.env.WIKI_FILL_TOPIC_BUDGET || '150', 10);
-  const revisitBudget = parseInt(process.env.WIKI_FILL_REVISIT_BUDGET || '50', 10);
+  const topicBudget = parseInt(process.env.WIKI_FILL_TOPIC_BUDGET || '12000', 10);
+  const revisitBudget = parseInt(process.env.WIKI_FILL_REVISIT_BUDGET || '5000', 10);
 
   const catTopicMap = {};
   for (const cat of activeCategories) {
@@ -1911,7 +2009,7 @@ async function main() {
         })) { added++; articleAdded++; }
       }
 
-      const MAX_PER_ARTICLE = parseInt(process.env.WIKI_FILL_PER_ARTICLE || '20', 10);
+      const MAX_PER_ARTICLE = parseInt(process.env.WIKI_FILL_PER_ARTICLE || '100', 10);
       let articleQ = 0;
 
       // ▸ Composer attribution ("Title – Composer" lines, e.g. Popular
@@ -2061,7 +2159,7 @@ async function main() {
     // ── Follow internal links recursively until exhausted (budgeted) ──
     let prevFetched = articles;
     let depth = 0;
-    const MAX_LINK_FETCHES = parseInt(process.env.WIKI_FILL_LINK_BUDGET || '60', 10);
+    const MAX_LINK_FETCHES = parseInt(process.env.WIKI_FILL_LINK_BUDGET || '1000', 10);
     let linkFetched = 0;
     while (prevFetched.length > 0 && linkFetched < MAX_LINK_FETCHES) {
       depth++;
