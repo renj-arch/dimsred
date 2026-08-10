@@ -5414,7 +5414,11 @@ var _staticGen_polity = GK_GENERATORS.polity;
             } else {
                 setTimeout(function(){ if (typeof preloadArchive === 'function') preloadArchive(); }, 0);
             }
-            if (typeof initHomeCatGrid === 'function') initHomeCatGrid();
+            if (typeof initHomeCatGrid === 'function') {
+                initHomeCatGrid();
+            } else {
+                setTimeout(function(){ if (typeof initHomeCatGrid === 'function') initHomeCatGrid(); }, 0);
+            }
         }
 
         function startCategory(id, name) {
