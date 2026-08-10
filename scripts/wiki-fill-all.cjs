@@ -15,7 +15,14 @@ function fetchJSON(url) {
       res.on('data', c => data += c);
       res.on('end', () => {
         if (res.statusCode !== 200) {
-          return reject(new Error('HTTP ' + res.statusCode + ': ' + data.substring(0, 120)));
+          const err = new Error('HTTP ' + res.statusCode + ': ' + data.substring(0, 120));
+          err.statusCode = res.statusCode;
+          const ra = res.headers['retry-after'];
+          if (ra) {
+            const secs = parseInt(ra, 10);
+            if (!isNaN(secs) && secs > 0) err.retryAfter = secs;
+          }
+          return reject(err);
         }
         try { resolve(JSON.parse(data)); } catch (e) { reject(new Error('not valid JSON: ' + data.substring(0, 120))); }
       });
@@ -103,7 +110,7 @@ async function fetchAllTopics(topics, concurrency) {
     while (queue.length > 0) {
       const topic = queue.shift();
       log('  Fetching: ' + topic + '...');
-      const a = await fetchArticleExtract(topic, 5);
+      const a = await fetchArticleExtract(topic);
       if (a && a.extract.length > 200) {
         results.push(a);
         log('  \u2713 ' + topic);
@@ -122,7 +129,7 @@ async function fetchAllTopics(topics, concurrency) {
 }
 
 async function fetchArticleExtract(title, retries) {
-  retries = retries || 5;
+  retries = retries || 8;
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
       await delay(parseInt(process.env.WIKI_FILL_DELAY_MS || '4000', 10));
@@ -143,11 +150,20 @@ async function fetchArticleExtract(title, retries) {
       return null;
     } catch (err) {
       const isRetryable = err.message.includes('429') || err.message.includes('not valid JSON') || err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED';
+      const is429 = err.statusCode === 429 || err.message.includes('429');
       if (attempt < retries - 1 && isRetryable) {
-        const wait = Math.min(30000 * Math.pow(2, attempt), 120000);
-        log('  (HTTP 429, waiting ' + (wait / 1000) + 's...)');
+        // Honor Retry-After when the API supplies it; otherwise exponential backoff.
+        const base = (is429 && err.retryAfter) ? err.retryAfter * 1000 : Math.min(30000 * Math.pow(2, attempt), 120000);
+        const wait = base + Math.floor(Math.random() * 2000);
+        log('  (HTTP 429, waiting ' + Math.round(wait / 1000) + 's...)');
         await delay(wait);
         continue;
+      }
+      // Don't kill the whole run over a rate-limit burst: skip the article and
+      // let the next run resume it (generation is deterministic + deduped).
+      if (is429) {
+        log('  (skipping ' + title + ' — persistent 429 despite ' + retries + ' attempts)');
+        return null;
       }
       throw err;
     }
