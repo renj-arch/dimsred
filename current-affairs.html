@@ -5417,7 +5417,15 @@ var _staticGen_polity = GK_GENERATORS.polity;
             if (typeof initHomeCatGrid === 'function') {
                 initHomeCatGrid();
             } else {
-                setTimeout(function(){ if (typeof initHomeCatGrid === 'function') initHomeCatGrid(); }, 0);
+                var _hgcTries = 0;
+                var _hgcTimer = setInterval(function() {
+                    if (typeof initHomeCatGrid === 'function') {
+                        clearInterval(_hgcTimer);
+                        initHomeCatGrid();
+                    } else if (++_hgcTries > 100) {
+                        clearInterval(_hgcTimer);
+                    }
+                }, 50);
             }
         }
 
