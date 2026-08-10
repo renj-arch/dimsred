@@ -7393,9 +7393,11 @@ function prevQuestion() {
             _drawCatGrid(counts);
         }
         var _catalogTried = false;
+        var HOME_CATALOG = {"total":274303,"subjects":{"Agricultural Engineering":847,"Agriculture & Food":2926,"Ancient India":8724,"Announcements":48,"Applied Sciences":1087,"Art & Culture":13489,"Awards & Honours":3856,"Awards":141,"Books & Authors":11395,"Business & Economy":2109,"Computer & IT":3757,"Constitution":1913,"Current Affairs":10251,"Defence & Security":8955,"Defence":999,"Disaster Management":3086,"Education in India":658,"Energy & Power":2189,"Engineering & Technical":230,"Environment & Ecology":6019,"Ethics & Integrity":3292,"Ethics":48,"Farm Machinery":700,"Food Processing":978,"General Science":11581,"General":93,"Geography":574,"Geology & Hydrogeology":164,"Govt Schemes":3535,"Health & Medicine":2589,"Horticulture":1549,"Important Days":2892,"Indian Battles":1197,"Indian Cinema":556,"Indian Economy":7194,"Indian Geography":5609,"Indian Heritage":1304,"Indian History":1245,"Indian Judiciary":782,"Indian National Symbols":1813,"Indian Society":5280,"Indian States":10308,"Indian Tribes":1511,"International Relations":17900,"ISRO & Space":5142,"Library & Information Science":182,"Medieval & Modern India":8255,"Personalities":1233,"PIB Releases":893,"Polity & Governance":4163,"Polity":403,"Railways & Transport":5434,"RBI & Banking":3450,"RBI Press Releases":235,"Science & Technology":5387,"Society":575,"Soil & Watershed":1679,"Sports":14954,"State GK":602,"Statistics & Mathematics":270,"Tech & Science":63,"Women & Society":820,"World Geography":18053,"World History":37137}};
         function initHomeCatGrid() {
             var grid = document.getElementById('homeCatGrid');
             if (!grid) return;
+            if (HOME_CATALOG && HOME_CATALOG.subjects) { _drawCatGrid(HOME_CATALOG.subjects); return; }
             if (_catalogTried) return;
             _catalogTried = true;
             var xhr = new XMLHttpRequest();

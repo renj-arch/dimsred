@@ -243,6 +243,22 @@ fs.readdirSync(outDir).filter(f => f.endsWith('.json') && f !== 'manifest.json' 
 fs.writeFileSync(path.join(outDir, 'catalog.json'), JSON.stringify(catalog));
 console.log('Wrote catalog.json: ' + Object.keys(catalog.subjects).length + ' subjects, ' + deduped + ' total');
 
+// ── Inline catalog into current-affairs.html (works from file:// with zero network) ──
+try {
+  const caPath = path.join(__dirname, '..', 'current-affairs.html');
+  let ca = fs.readFileSync(caPath, 'utf8');
+  const marker = 'var HOME_CATALOG = null;';
+  if (ca.indexOf(marker) === -1) {
+    console.log('WARN: HOME_CATALOG marker not found in current-affairs.html — skipping inline.');
+  } else {
+    ca = ca.replace(marker, 'var HOME_CATALOG = ' + JSON.stringify(catalog) + ';');
+    fs.writeFileSync(caPath, ca);
+    console.log('Inlined HOME_CATALOG into current-affairs.html (' + Object.keys(catalog.subjects).length + ' subjects).');
+  }
+} catch (e) {
+  console.log('WARN: could not inline catalog into current-affairs.html: ' + e.message);
+}
+
 // ── Generate archive.html ──
 function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
