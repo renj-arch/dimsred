@@ -243,18 +243,34 @@ fs.readdirSync(outDir).filter(f => f.endsWith('.json') && f !== 'manifest.json' 
 fs.writeFileSync(path.join(outDir, 'catalog.json'), JSON.stringify(catalog));
 console.log('Wrote catalog.json: ' + Object.keys(catalog.subjects).length + ' subjects, ' + deduped + ' total');
 
-// ── Inline catalog into current-affairs.html (works from file:// with zero network) ──
+// ── Inline catalog + archive file list into current-affairs.html (file:// safe) ──
 try {
   const caPath = path.join(__dirname, '..', 'current-affairs.html');
   let ca = fs.readFileSync(caPath, 'utf8');
+
   const marker = 'var HOME_CATALOG = null;';
   if (ca.indexOf(marker) === -1) {
-    console.log('WARN: HOME_CATALOG marker not found in current-affairs.html — skipping inline.');
+    console.log('WARN: HOME_CATALOG marker not found in current-affairs.html — skipping catalog inline.');
   } else {
     ca = ca.replace(marker, 'var HOME_CATALOG = ' + JSON.stringify(catalog) + ';');
-    fs.writeFileSync(caPath, ca);
     console.log('Inlined HOME_CATALOG into current-affairs.html (' + Object.keys(catalog.subjects).length + ' subjects).');
   }
+
+  // Regenerate CAT_ARCHIVE from all on-disk data files so every catalog subject
+  // is actually loadable by the quiz feed (avoid 'No questions for X').
+  const archiveMarker = 'var CAT_ARCHIVE = /*__CAT_ARCHIVE__*/null;';
+  if (ca.indexOf(archiveMarker) === -1) {
+    console.log('WARN: CAT_ARCHIVE marker not found in current-affairs.html — skipping archive inline.');
+  } else {
+    const archiveFiles = fs.readdirSync(outDir)
+      .filter(f => f.endsWith('.json') && f !== 'manifest.json' && f !== 'catalog.json')
+      .sort();
+    const archiveList = archiveFiles.map(f => "{file:'data/questions/" + f + "'}").join(',');
+    ca = ca.replace(archiveMarker, 'var CAT_ARCHIVE = [' + archiveList + '];');
+    console.log('Inlined CAT_ARCHIVE into current-affairs.html (' + archiveFiles.length + ' files).');
+  }
+
+  fs.writeFileSync(caPath, ca);
 } catch (e) {
   console.log('WARN: could not inline catalog into current-affairs.html: ' + e.message);
 }
