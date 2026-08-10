@@ -231,6 +231,9 @@
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="archiveToggle" style="accent-color:var(--purple);width:14px;height:14px"> 📚 Include Archive <span id="archiveStatus" style="color:var(--emerald);font-size:.72em">loaded</span></label>
             </div>
 
+            <div style="margin:4px 0 8px;text-align:center;font-size:.78em;font-weight:700;color:var(--text-sec)">🎯 Or pick a single main topic:</div>
+            <div class="cat-grid" id="homeCatGrid" style="max-height:340px;overflow-y:auto;margin-bottom:14px"><div style="grid-column:1/-1;text-align:center;font-size:.72em;color:var(--text-muted);padding:18px 0">Loading topics…</div></div>
+
             <p class="gk-intro">Browse PIB & Current Affairs by date range, or try Static GK across 26 categories. Auto-advances every 4 seconds. Pause anytime.</p>
 
         </div>
@@ -5411,6 +5414,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             } else {
                 setTimeout(function(){ if (typeof preloadArchive === 'function') preloadArchive(); }, 0);
             }
+            if (typeof renderHomeCatGrid === 'function') renderHomeCatGrid();
         }
 
         function startCategory(id, name) {
@@ -7365,6 +7369,91 @@ function prevQuestion() {
         }
         function shuffleArray(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
+        var _SUBJECT_ICONS = {
+            'Constitution':'⚖️','Polity':'🏛️','Polity & Governance':'🏛️','Indian Judiciary':'⚖️','Government & Policies':'🏛️',
+            'Indian History':'📜','Ancient India':'📜','Medieval & Modern India':'📜','World History':'🌍','Indian Battles':'⚔️','Indian Heritage':'🏛️','Indian Tribes':'🪶',
+            'Geography':'🗺️','Indian Geography':'🗺️','World Geography':'🗺️','Environment & Ecology':'🌿','Disaster Management':'🌪️','Geology & Hydrogeology':'⛰️',
+            'Indian Economy':'💹','Business & Economy':'💼','RBI & Banking':'🏦','Agriculture & Food':'🌾','Energy & Power':'⚡','Railways & Transport':'🚆','Food Processing':'🏭',
+            'Science & Technology':'🔬','General Science':'🔬','Computer & IT':'💻','Tech & Science':'💻','Health & Medicine':'🩺','Engineering & Technical':'⚙️','Library & Information Science':'📚','Statistics & Mathematics':'📊',
+            'Art & Culture':'🎭','Dance & Music':'💃','Indian Cinema':'🎬','Books & Authors':'📚','Awards & Honours':'🏆','Awards':'🏆',
+            'Sports':'🏅','Defence':'🛡️','Defence & Security':'🛡️','ISRO & Space':'🚀','International Relations':'🌐','Govt Schemes':'🏗️','Important Days':'📅',
+            'Indian National Symbols':'🇮🇳','Indian States':'🗺️','State GK':'🗺️','Personalities':'👤','Indian Society':'👥','Society':'👥','Women & Society':'👩','Education in India':'🎓',
+            'Current Affairs':'📰','Announcements':'📢','RBI Press Releases':'📢','PIB Releases':'📢','General':'🎯'
+        };
+        function renderHomeCatGrid() {
+            var grid = document.getElementById('homeCatGrid');
+            if (!grid) return;
+            if (!_archiveCache || _archiveCache.length === 0) { return; }
+            var counts = {};
+            for (var i = 0; i < _archiveCache.length; i++) {
+                var s = _archiveCache[i].subject;
+                if (!s) continue;
+                counts[s] = (counts[s] || 0) + 1;
+            }
+            var subjects = Object.keys(counts).sort(function(a,b){ return (counts[b]-counts[a]) || (a<b?-1:1); });
+            if (subjects.length === 0) { grid.innerHTML = ''; return; }
+            grid.innerHTML = '';
+            for (var si = 0; si < subjects.length; si++) {
+                (function(s) {
+                    var btn = document.createElement('div');
+                    btn.className = 'cat-btn';
+                    var icon = _SUBJECT_ICONS[s] || '📚';
+                    btn.innerHTML = '<div class="cat-icon">' + icon + '</div>'
+                        + '<div class="cat-name">' + s + '</div>'
+                        + '<div class="cat-desc">' + counts[s].toLocaleString() + ' questions</div>';
+                    btn.onclick = function() { startSubjectQuiz(s); };
+                    grid.appendChild(btn);
+                })(subjects[si]);
+            }
+        }
+
+        function startSubjectQuiz(subject) {
+            if (state.answered || state.idx > 0) {
+                if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
+            }
+            state.questions = [];
+            state.idx = 0;
+            state.answered = true;
+            state.autoPaused = false;
+            state.infinite = false;
+            state._feedSource = 'archive';
+            state.restartFn = function(){ startSubjectQuiz(subject); };
+
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('qArea').classList.add('active');
+            document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('regionFilterRow').style.display = 'none';
+            document.getElementById('timeFilterRow').style.display = 'none';
+            document.getElementById('customDateRange').style.display = 'none';
+            document.getElementById('correctNum').textContent = '0';
+            document.getElementById('totalNum').textContent = '0';
+            document.getElementById('scoreLabel').textContent = subject;
+            document.getElementById('streakDisplay').style.display = 'none';
+            document.getElementById('pauseBtn').classList.remove('hidden');
+            document.getElementById('pauseBtn').textContent = '⏸';
+            document.getElementById('nextBtn').classList.add('hidden');
+            document.getElementById('restartBtn').style.display = 'none';
+
+            document.getElementById('qText').innerHTML = '⏳ Loading ' + subject + '...';
+            document.getElementById('optGrid').innerHTML = '';
+            loadArchiveQuestions(function(questions) {
+                var filtered = [];
+                for (var i = 0; i < questions.length; i++) {
+                    if (questions[i].subject === subject) filtered.push(questions[i]);
+                }
+                shuffleArray(filtered);
+                state.questions = filtered;
+                _updateArchiveProgress();
+                if (filtered.length === 0) {
+                    document.getElementById('qText').innerHTML = '😕 No questions for ' + subject + '.';
+                    document.getElementById('optGrid').innerHTML = '<button class="action-btn secondary" onclick="backToMenu()">← Back</button>';
+                    document.getElementById('pauseBtn').classList.add('hidden');
+                    return;
+                }
+                _showFeedItem();
+            });
+        }
+
         function startArchiveFeed(days) {
             if (state.answered || state.idx > 0) {
                 if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
@@ -7565,6 +7654,7 @@ function prevQuestion() {
                 _archiveLoading = false;
                 setArchiveStatus('loaded');
                 _updateArchiveProgress();
+                renderHomeCatGrid();
             });
         }
         function setArchiveStatus(s) {
