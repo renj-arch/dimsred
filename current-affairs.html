@@ -5414,7 +5414,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             } else {
                 setTimeout(function(){ if (typeof preloadArchive === 'function') preloadArchive(); }, 0);
             }
-            if (typeof renderHomeCatGrid === 'function') renderHomeCatGrid();
+            if (typeof initHomeCatGrid === 'function') initHomeCatGrid();
         }
 
         function startCategory(id, name) {
@@ -7390,8 +7390,38 @@ function prevQuestion() {
                 if (!s) continue;
                 counts[s] = (counts[s] || 0) + 1;
             }
+            _drawCatGrid(counts);
+        }
+        var _catalogTried = false;
+        function initHomeCatGrid() {
+            var grid = document.getElementById('homeCatGrid');
+            if (!grid) return;
+            if (_catalogTried) return;
+            _catalogTried = true;
+            var xhr = new XMLHttpRequest();
+            xhr.timeout = 15000;
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    try {
+                        var cat = JSON.parse(xhr.responseText);
+                        if (cat && cat.subjects) { _drawCatGrid(cat.subjects); return; }
+                    } catch(e) {}
+                }
+                _drawCatGrid(null);
+            };
+            xhr.onerror = function() { _drawCatGrid(null); };
+            xhr.ontimeout = function() { _drawCatGrid(null); };
+            xhr.open('GET', 'data/questions/catalog.json', true);
+            xhr.send();
+        }
+        function _drawCatGrid(counts) {
+            var grid = document.getElementById('homeCatGrid');
+            if (!grid) return;
+            if (!counts || Object.keys(counts).length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;font-size:.72em;color:var(--text-muted);padding:18px 0">Loading topics…</div>';
+                return;
+            }
             var subjects = Object.keys(counts).sort(function(a,b){ return (counts[b]-counts[a]) || (a<b?-1:1); });
-            if (subjects.length === 0) { grid.innerHTML = ''; return; }
             grid.innerHTML = '';
             for (var si = 0; si < subjects.length; si++) {
                 (function(s) {

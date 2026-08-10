@@ -227,6 +227,22 @@ sortedCats.forEach(c => {
   });
 });
 
+// ── Write lightweight subject catalog (fast topic picker for current-affairs.html) ──
+const catalog = { total: deduped, subjects: {} };
+fs.readdirSync(outDir).filter(f => f.endsWith('.json') && f !== 'manifest.json' && f !== 'catalog.json').forEach(f => {
+  try {
+    const data = JSON.parse(fs.readFileSync(path.join(outDir, f), 'utf8'));
+    for (const sk in data) {
+      if (!data[sk] || !data[sk].subSubjects) continue;
+      let n = 0;
+      for (const ssk in data[sk].subSubjects) n += (data[sk].subSubjects[ssk] || []).length;
+      catalog.subjects[sk] = (catalog.subjects[sk] || 0) + n;
+    }
+  } catch {}
+});
+fs.writeFileSync(path.join(outDir, 'catalog.json'), JSON.stringify(catalog));
+console.log('Wrote catalog.json: ' + Object.keys(catalog.subjects).length + ' subjects, ' + deduped + ' total');
+
 // ── Generate archive.html ──
 function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
