@@ -129,7 +129,7 @@ async function fetchAllTopics(topics, concurrency) {
 }
 
 async function fetchArticleExtract(title, retries) {
-  retries = retries || 8;
+  retries = retries || 12;
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
       await delay(parseInt(process.env.WIKI_FILL_DELAY_MS || '4000', 10));
@@ -1881,7 +1881,7 @@ async function main() {
     log('Invalid WIKI_FILL_GROUP=' + fillGroup + ', processing all');
   }
 
-  const CONCURRENCY = parseInt(process.env.WIKI_FILL_CONCURRENCY || '2', 10);
+  const CONCURRENCY = parseInt(process.env.WIKI_FILL_CONCURRENCY || '12', 10);
   const WIKI_FILL_CHUNK = parseInt(process.env.WIKI_FILL_CHUNK || '1', 10);
   const WIKI_FILL_CHUNKS = parseInt(process.env.WIKI_FILL_CHUNKS || '1', 10);
 
@@ -1902,8 +1902,8 @@ async function main() {
     qCount.set(k, (qCount.get(k) || 0) + 1);
     if (q.wikiDone) doneTitles.add(k);
   }
-  const topicBudget = parseInt(process.env.WIKI_FILL_TOPIC_BUDGET || '12000', 10);
-  const revisitBudget = parseInt(process.env.WIKI_FILL_REVISIT_BUDGET || '5000', 10);
+  const topicBudget = parseInt(process.env.WIKI_FILL_TOPIC_BUDGET || '50000', 10);
+  const revisitBudget = parseInt(process.env.WIKI_FILL_REVISIT_BUDGET || '50000', 10);
 
   const catTopicMap = {};
   for (const cat of activeCategories) {
@@ -2009,7 +2009,7 @@ async function main() {
         })) { added++; articleAdded++; }
       }
 
-      const MAX_PER_ARTICLE = parseInt(process.env.WIKI_FILL_PER_ARTICLE || '100', 10);
+      const MAX_PER_ARTICLE = parseInt(process.env.WIKI_FILL_PER_ARTICLE || '300', 10);
       let articleQ = 0;
 
       // ▸ Composer attribution ("Title – Composer" lines, e.g. Popular
@@ -2159,7 +2159,7 @@ async function main() {
     // ── Follow internal links recursively until exhausted (budgeted) ──
     let prevFetched = articles;
     let depth = 0;
-    const MAX_LINK_FETCHES = parseInt(process.env.WIKI_FILL_LINK_BUDGET || '1000', 10);
+    const MAX_LINK_FETCHES = parseInt(process.env.WIKI_FILL_LINK_BUDGET || '5000', 10);
     let linkFetched = 0;
     while (prevFetched.length > 0 && linkFetched < MAX_LINK_FETCHES) {
       depth++;

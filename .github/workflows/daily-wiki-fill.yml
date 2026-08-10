@@ -67,7 +67,7 @@ jobs:
     strategy:
       matrix:
         chunk: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
-      max-parallel: 16
+      max-parallel: 24
       fail-fast: false
     timeout-minutes: 180
     steps:
@@ -98,12 +98,13 @@ jobs:
           WIKI_FILL_CHUNKS: 24
           WIKI_FILL_ALL: '1'
           QUIZ_PATH: data/quiz-chunk-${{ matrix.chunk }}.json
-          WIKI_FILL_CONCURRENCY: 6
-          WIKI_FILL_PER_ARTICLE: 100
-          WIKI_FILL_TOPIC_BUDGET: 12000
-          WIKI_FILL_REVISIT_BUDGET: 5000
-          WIKI_FILL_LINK_BUDGET: 1000
-          WIKI_FILL_MAX_PAGES: 50000
+          WIKI_FILL_CONCURRENCY: 12
+          WIKI_FILL_PER_ARTICLE: 300
+          WIKI_FILL_TOPIC_BUDGET: 50000
+          WIKI_FILL_REVISIT_BUDGET: 50000
+          WIKI_FILL_LINK_BUDGET: 5000
+          WIKI_FILL_MAX_PAGES: 100000
+          WIKI_FILL_DELAY_MS: 1500
 
       - uses: actions/upload-artifact@v4
         with:
