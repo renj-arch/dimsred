@@ -41,6 +41,7 @@
         .cat-btn .cat-name{font-weight:700;font-size:.85em;margin-bottom:2px}
         .cat-btn .cat-desc{font-size:.68em;color:var(--text-muted)}
         .cat-btn.active{background:rgba(167,139,250,.1);border-color:var(--purple)}
+        .cat-btn.selected{background:rgba(52,211,153,.1);border-color:var(--emerald)}
 
         .q-area{display:none}
         .q-area.active{display:block}
@@ -232,7 +233,12 @@
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="archiveToggle" style="accent-color:var(--purple);width:14px;height:14px"> 📚 Include Archive <span id="archiveStatus" style="color:var(--emerald);font-size:.72em">loaded</span></label>
             </div>
 
-            <div style="margin:4px 0 8px;text-align:center;font-size:.78em;font-weight:700;color:var(--text-sec)">🎯 Or pick a single main topic:</div>
+            <div style="margin:4px 0 8px;text-align:center;font-size:.78em;font-weight:700;color:var(--text-sec)">🎯 Pick one or more topics:</div>
+            <div id="topicSelBar" style="display:none;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+                <button id="startSelTopics" onclick="startSelectedTopics()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--emerald);background:rgba(52,211,153,.12);color:var(--emerald);cursor:pointer;font-size:.78em;font-weight:700">▶ Start Selected Quiz</button>
+                <button onclick="clearTopicSelection()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-muted);cursor:pointer;font-size:.72em">✕ Clear</button>
+                <span id="topicSelCount" style="font-size:.72em;color:var(--text-muted)"></span>
+            </div>
             <div class="cat-grid" id="homeCatGrid" style="max-height:340px;overflow-y:auto;margin-bottom:14px"><div style="grid-column:1/-1;text-align:center;font-size:.72em;color:var(--text-muted);padding:18px 0">Loading topics…</div></div>
 
             <p class="gk-intro">Browse PIB & Current Affairs by date range, or try Static GK across 26 categories. Auto-advances every 4 seconds. Pause anytime.</p>
@@ -5410,7 +5416,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             state._feedSource = 'archive';
             state.autoPaused = false;
             state._lastFeedSave = 0;
-            state.restartFn = function() { if (state.cat.indexOf('subject::') === 0) startSubjectQuiz(state.categoryName); else startArchiveFeed(0); };
+            state.restartFn = function() { if (state.cat.indexOf('combo::') === 0) { var subs = (state.cat.slice(7) || '').split('+'); if (subs.length) startMultiSubjectQuiz(subs); else startArchiveFeed(0); } else if (state.cat.indexOf('subject::') === 0) startSubjectQuiz(state.categoryName); else startArchiveFeed(0); };
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
@@ -5427,7 +5433,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
         }
         function loadSessionIntoState(saved) {
             _resumeHandled = true;
-            if (saved.cat === 'feed' || (saved.cat || '').indexOf('subject::') === 0) { restoreFeedSession(saved); return; }
+            if (saved.cat === 'feed' || (saved.cat || '').indexOf('subject::') === 0 || (saved.cat || '').indexOf('combo::') === 0) { restoreFeedSession(saved); return; }
             state.cat = saved.cat;
             state._sessionKey = saved._sessionKey || null;
             state.categoryName = saved.categoryName;
@@ -7641,6 +7647,33 @@ function prevQuestion() {
             xhr.open('GET', 'data/questions/catalog.json?t=' + Date.now(), true);
             xhr.send();
         }
+        var _selTopics = {};
+        function _refreshSelBar() {
+            var n = Object.keys(_selTopics).length;
+            var bar = document.getElementById('topicSelBar');
+            var cnt = document.getElementById('topicSelCount');
+            var btn = document.getElementById('startSelTopics');
+            if (n === 0) {
+                if (bar) bar.style.display = 'none';
+                return;
+            }
+            if (bar) bar.style.display = 'flex';
+            if (cnt) cnt.textContent = n + ' topic' + (n > 1 ? 's' : '') + ' selected';
+            if (btn) btn.textContent = '▶ Start Selected Quiz (' + n + ')';
+        }
+        function clearTopicSelection() {
+            _selTopics = {};
+            var grid = document.getElementById('homeCatGrid');
+            if (grid) { var btns = grid.querySelectorAll('.cat-btn.selected'); for (var i = 0; i < btns.length; i++) btns[i].classList.remove('selected'); }
+            _refreshSelBar();
+        }
+        function startSelectedTopics() {
+            var subs = Object.keys(_selTopics);
+            if (subs.length === 0) { alert('Select at least one topic to start.'); return; }
+            _selTopics = {};
+            _refreshSelBar();
+            startMultiSubjectQuiz(subs);
+        }
         function _drawCatGrid(counts) {
             var grid = document.getElementById('homeCatGrid');
             if (!grid) return;
@@ -7653,15 +7686,78 @@ function prevQuestion() {
             for (var si = 0; si < subjects.length; si++) {
                 (function(s) {
                     var btn = document.createElement('div');
-                    btn.className = 'cat-btn';
+                    btn.className = 'cat-btn' + (_selTopics[s] ? ' selected' : '');
                     var icon = _SUBJECT_ICONS[s] || '📚';
                     btn.innerHTML = '<div class="cat-icon">' + icon + '</div>'
                         + '<div class="cat-name">' + s + '</div>'
                         + '<div class="cat-desc">' + counts[s].toLocaleString() + ' questions</div>';
-                    btn.onclick = function() { startSubjectQuiz(s); };
+                    btn.onclick = function() {
+                        if (_selTopics[s]) { delete _selTopics[s]; btn.classList.remove('selected'); }
+                        else { _selTopics[s] = true; btn.classList.add('selected'); }
+                        _refreshSelBar();
+                    };
                     grid.appendChild(btn);
                 })(subjects[si]);
             }
+            _refreshSelBar();
+        }
+
+        async function startMultiSubjectQuiz(subjects) {
+            if (state.answered || state.idx > 0) {
+                if (!confirm('Leave the current quiz? Your progress is saved and you can resume it later.')) return;
+            }
+            var label = subjects.length === 1 ? subjects[0] : subjects.length + ' topics';
+            var key = 'combo::' + subjects.slice().sort().join('+');
+            state.cat = key;
+            state.categoryName = label;
+            state._sessionKey = null;
+            await ensureSessionsLoaded();
+            if (offerResumeFor(key, label)) return;
+            clearQuizSession(key);
+            state.questions = [];
+            state.baseIdx = 0;
+            state.idx = 0;
+            state.answered = true;
+            state.autoPaused = false;
+            state.infinite = false;
+            state._feedSource = 'archive';
+            state.restartFn = function(){ startMultiSubjectQuiz(subjects); };
+
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('qArea').classList.add('active');
+            document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('regionFilterRow').style.display = 'none';
+            document.getElementById('timeFilterRow').style.display = 'none';
+            document.getElementById('customDateRange').style.display = 'none';
+            document.getElementById('correctNum').textContent = '0';
+            document.getElementById('totalNum').textContent = '0';
+            document.getElementById('scoreLabel').textContent = label;
+            document.getElementById('streakDisplay').style.display = 'none';
+            document.getElementById('pauseBtn').classList.remove('hidden');
+            document.getElementById('pauseBtn').textContent = '⏸';
+            document.getElementById('nextBtn').classList.add('hidden');
+            document.getElementById('restartBtn').style.display = 'none';
+
+            document.getElementById('qText').innerHTML = '⏳ Loading ' + label + '...';
+            document.getElementById('optGrid').innerHTML = '';
+            loadArchiveQuestions(function(questions) {
+                var filtered = [];
+                var subjSet = {};
+                for (var i = 0; i < subjects.length; i++) subjSet[subjects[i]] = true;
+                for (var j = 0; j < questions.length; j++) {
+                    if (subjSet[questions[j].subject]) filtered.push(questions[j]);
+                }
+                shuffleArray(filtered);
+                state.questions = filtered;
+                _updateArchiveProgress();
+                if (filtered.length === 0) {
+                    document.getElementById('qText').innerHTML = '😕 No questions for the selected topics.';
+                    document.getElementById('optGrid').innerHTML = '<button class="action-btn secondary" onclick="backToMenu()">← Back</button>';
+                    document.getElementById('pauseBtn').classList.add('hidden');
+                    return;
+                }
+                _showFeedItem();
+            });
         }
 
         async function startSubjectQuiz(subject) {
