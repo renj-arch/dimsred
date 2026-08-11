@@ -262,12 +262,22 @@ function escHtml(s) {
 }
 var _searchTimer = null;
 var RESULTS_PER_PAGE = 400;
+var MAX_SEARCH_RESULTS = 500000;
+var SEARCH_CHUNK = 2000;
 var _searchAll = [];
 var _searchRendered = 0;
 var _searchQuery = '';
 var _searchLoading = false;
 var _searchTotalFiles = 0;
 var _searchDoneFiles = 0;
+var _searchToken = 0;
+var _searchStartToken = 0;
+var _searchDateFilter = null;
+var _searchTextWords = [];
+var _searchCapHit = false;
+var _searchQueue = [];
+var _searchCur = null;
+var _dateStrCache = {};
 function onSearchInput(val) {
   clearTimeout(_searchTimer);
   _searchTimer = setTimeout(function(){ doSearch(val); }, 250);
@@ -279,7 +289,9 @@ function doSearch(query) {
   query = query.trim().toLowerCase();
   var panel = document.getElementById('view-content');
   var welcome = document.getElementById('view-welcome');
+  _searchToken++;
   if (!query) {
+    _searchLoading = false;
     if (_currentCat !== null) {
       if (_currentSubSub !== null) { renderQuestions(_currentCat, _currentSubj, _currentSubSub); }
       else if (_currentSubj !== null) { showSubject(_currentCat, _currentSubj); }
@@ -298,33 +310,120 @@ function doSearch(query) {
   _searchQuery = query;
   _searchLoading = true;
   _searchDoneFiles = 0;
-  var pending = [];
-  _searchTotalFiles = 0;
-  for (var ci = 0; ci < CAT_INDEX.length; ci++) {
-    _searchTotalFiles++;
-    if (_cache[ci]) { searchInCategory(ci, query); _searchDoneFiles++; }
-    else { pending.push(ci); }
+  _searchTotalFiles = CAT_INDEX.length;
+  _searchCapHit = false;
+  _searchStartToken = _searchToken;
+  _dateStrCache = {};
+  var words = query.split(/\s+/);
+  _searchDateFilter = null;
+  _searchTextWords = [];
+  for (var wi = 0; wi < words.length; wi++) {
+    if (words[wi].indexOf('date:') === 0) { _searchDateFilter = words[wi].slice(5); }
+    else { _searchTextWords.push(words[wi]); }
   }
-  // Show whatever we already have immediately, then keep appending as files land.
+  _searchQueue = [];
+  for (var ci = 0; ci < CAT_INDEX.length; ci++) _searchQueue.push(ci);
+  _searchCur = null;
   showSearchResults();
-  if (pending.length === 0) { _searchLoading = false; _renderSearchHeader(); return; }
-  var left = pending.length;
-  pending.forEach(function(ci) {
-    loadCategory(ci, function() {
-      searchInCategory(ci, query);
-      left--;
+  _scanChunk();
+}
+function _nextQuestion() {
+  while (_searchCur.skI < _searchCur.skKeys.length) {
+    var sk = _searchCur.skKeys[_searchCur.skI];
+    var subj = _searchCur.data[sk];
+    if (!subj.subSubjects) { _searchCur.skI++; continue; }
+    if (!_searchCur.sskKeys) _searchCur.sskKeys = Object.keys(subj.subSubjects);
+    while (_searchCur.sskI < _searchCur.sskKeys.length) {
+      var ssk = _searchCur.sskKeys[_searchCur.sskI];
+      var arr = subj.subSubjects[ssk];
+      if (_searchCur.qi < arr.length) {
+        return { sk: sk, ssk: ssk, q: arr[_searchCur.qi++] };
+      }
+      _searchCur.qi = 0;
+      _searchCur.sskI++;
+    }
+    _searchCur.sskKeys = null;
+    _searchCur.sskI = 0;
+    _searchCur.skI++;
+  }
+  return null;
+}
+function _fastDateStr(iso) {
+  var m = iso.slice(0, 10).split('-');
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return (+m[2]) + ' ' + months[(+m[1])-1] + ' ' + m[0];
+}
+function _matchesQuery(q) {
+  if (_searchDateFilter) {
+    var qDate = (q.pubDate||'').split('T')[0];
+    if (qDate.indexOf(_searchDateFilter) !== 0) return false;
+  }
+  if (_searchTextWords.length) {
+    var qq = (q.question||'').toLowerCase();
+    var aa = (q.answer||'').toLowerCase();
+    var ff = null;
+    var dd = null;
+    for (var twi = 0; twi < _searchTextWords.length; twi++) {
+      var w = _searchTextWords[twi];
+      if (qq.indexOf(w) !== -1) continue;
+      if (aa.indexOf(w) !== -1) continue;
+      if (dd === null) {
+        if (!q.pubDate) { dd = ''; }
+        else {
+          if (!_dateStrCache[q.pubDate]) _dateStrCache[q.pubDate] = _fastDateStr(q.pubDate);
+          dd = _dateStrCache[q.pubDate];
+        }
+      }
+      if (dd.indexOf(w) !== -1) continue;
+      if (ff === null) ff = (q.fact||'').toLowerCase();
+      if (ff.indexOf(w) === -1) return false;
+    }
+  }
+  return true;
+}
+function _scanChunk() {
+  if (!_searchLoading || _searchStartToken !== _searchToken) return;
+  var scanned = 0;
+  while (scanned < SEARCH_CHUNK) {
+    if (_searchCapHit) { _finishSearch(); return; }
+    if (!_searchCur) {
+      if (_searchQueue.length === 0) { _finishSearch(); return; }
+      var ci = _searchQueue[0];
+      if (!_cache[ci]) {
+        loadCategory(ci, function() { _scanChunk(); });
+        return;
+      }
+      _searchQueue.shift();
+      _searchCur = { ci: ci, data: _cache[ci], skKeys: Object.keys(_cache[ci]), skI: 0, sskKeys: null, sskI: 0, qi: 0 };
+    }
+    var item = _nextQuestion();
+    if (!item) {
+      _searchCur = null;
       _searchDoneFiles++;
-      _renderSearchHeader();
-      _appendSearchPage();
-      if (left === 0) { _searchLoading = false; _renderSearchHeader(); _appendSearchPage(); }
-    });
-  });
+      continue;
+    }
+    scanned++;
+    if (_matchesQuery(item.q)) {
+      _searchAll.push({category: CAT_INDEX[_searchCur.ci].name, icon: CAT_INDEX[_searchCur.ci].icon, subject: item.sk, subSubject: item.ssk, question: item.q});
+      if (_searchAll.length >= MAX_SEARCH_RESULTS) _searchCapHit = true;
+    }
+  }
+  _renderSearchHeader();
+  _appendSearchPage();
+  setTimeout(_scanChunk, 0);
+}
+function _finishSearch() {
+  _searchLoading = false;
+  _renderSearchHeader();
+  _appendSearchPage();
 }
 function _renderSearchHeader() {
   var head = document.getElementById('searchHead');
   if (!head) return;
   var txt;
-  if (_searchAll.length === 0 && _searchLoading) {
+  if (_searchCapHit) {
+    txt = 'Found <strong>' + _searchCountLabel(_searchAll.length) + '</strong> for "' + escHtml(_searchQuery) + '" — showing first ' + MAX_SEARCH_RESULTS.toLocaleString() + '. Refine your search to see more.';
+  } else if (_searchAll.length === 0 && _searchLoading) {
     txt = 'Searching <strong>' + _searchDoneFiles + '/' + _searchTotalFiles + '</strong> files…';
   } else if (_searchLoading) {
     txt = 'Found <strong>' + _searchCountLabel(_searchAll.length) + '</strong> so far · searching <strong>' + _searchDoneFiles + '/' + _searchTotalFiles + '</strong> files…';
@@ -332,37 +431,6 @@ function _renderSearchHeader() {
     txt = 'Found <strong>' + _searchCountLabel(_searchAll.length) + '</strong> for "' + escHtml(_searchQuery) + '"';
   }
   head.innerHTML = txt;
-}
-function searchInCategory(ci, query) {
-  var data = _cache[ci];
-  var c = CAT_INDEX[ci];
-  var words = query.toLowerCase().split(/\s+/);
-  var dateFilter = null;
-  var textWords = [];
-  for (var wi = 0; wi < words.length; wi++) {
-    if (words[wi].indexOf('date:') === 0) { dateFilter = words[wi].slice(5); }
-    else { textWords.push(words[wi]); }
-  }
-  for (var sk in data) {
-    var subj = data[sk];
-    if (!subj.subSubjects) continue;
-    for (var ssk in subj.subSubjects) {
-      subj.subSubjects[ssk].forEach(function(q) {
-        if (dateFilter) {
-          var qDate = (q.pubDate||'').split('T')[0];
-          if (qDate.indexOf(dateFilter) !== 0) return;
-        }
-        if (textWords.length) {
-          var displayDate = q.pubDate ? new Date(q.pubDate).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '';
-          var haystack = ((q.question||'') + ' ' + (q.answer||'') + ' ' + (q.fact||'') + ' ' + displayDate).toLowerCase();
-          for (var twi = 0; twi < textWords.length; twi++) {
-            if (haystack.indexOf(textWords[twi]) === -1) return;
-          }
-        }
-        _searchAll.push({category:c.name,icon:c.icon,subject:sk,subSubject:ssk,question:q});
-      });
-    }
-  }
 }
 function _searchItemHTML(r) {
   var q = r.question;
