@@ -243,6 +243,7 @@
             <div id="archiveProgress" style="display:none;margin-bottom:10px;padding:8px 12px;border-radius:8px;background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.15);font-size:.72em;color:var(--cyan);line-height:1.6"></div>
             <div class="score-bar" id="scoreBar">
                 <div><span class="num" id="correctNum">0</span> / <span id="totalNum">0</span> <span id="scoreLabel">correct</span></div>
+                <div style="font-size:.72em;color:var(--text-sec);margin-top:2px" id="answeredTracker">0 answered</div>
                 <div class="streak" id="streakDisplay">🔥 <span id="streakNum">0</span> streak</div>
                 <button id="restartBtn" onclick="if(state.restartFn)state.restartFn()" style="display:none;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:.72em">↻ Restart</button>
             </div>
@@ -5257,7 +5258,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             if (/^(list of|types of|examples of|categories of|classification of)/i.test((q.q || '').trim())) return true;
             return false;
         }
-        var state = { cat: null, questions: [], idx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null, autoTimer: null, autoPaused: false };
+        var state = { cat: null, questions: [], idx: 0, baseIdx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null, autoTimer: null, autoPaused: false };
         var SESSION_KEY = 'vlym_quiz_state';
 
         // ---------- Multi-category quiz tracker ----------
@@ -5294,14 +5295,19 @@ var _staticGen_polity = GK_GENERATORS.polity;
         function resumeIndexOf() {
             // If the current question is already answered (or it's a learning flashcard),
             // the next resume point is the following question — never re-show a finished one.
-            return Math.min(state.answered ? state.idx + 1 : state.idx, state.questions.length);
+            return (state.baseIdx || 0) + Math.min(state.answered ? state.idx + 1 : state.idx, state.questions.length);
         }
 
         function saveQuizSession() {
             if (!state.questions || state.questions.length === 0) return;
-            var resumeIdx = resumeIndexOf();
-            var remaining = state.questions.slice(resumeIdx, resumeIdx + 500);
-            if (remaining.length === 0) {
+            var resumeAbs = resumeIndexOf();
+            var base = state.baseIdx || 0;
+            // Keep a window of questions around the resume point so you can still
+            // scroll back and review roughly the last 300 finished questions.
+            var windowStart = Math.max(0, resumeAbs - 300);
+            var windowFrom = Math.max(0, windowStart - base);
+            var windowQ = state.questions.slice(windowFrom, windowFrom + 1200);
+            if (windowQ.length === 0) {
                 if (!state.infinite) clearQuizSession(sessionId());
                 return;
             }
@@ -5309,12 +5315,14 @@ var _staticGen_polity = GK_GENERATORS.polity;
             map[sessionId()] = {
                 cat: state.cat,
                 categoryName: state.categoryName,
-                idx: 0,
+                baseIdx: base + windowFrom,
+                idx: resumeAbs - (base + windowFrom),
+                answeredCount: resumeAbs,
                 correct: state.correct,
                 streak: state.streak,
                 answered: false,
                 infinite: state.infinite || false,
-                questions: remaining,
+                questions: windowQ,
                 savedAt: Date.now()
             };
             writeSessions(map);
@@ -5331,6 +5339,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
         function loadSessionIntoState(saved) {
             state.cat = saved.cat;
             state.categoryName = saved.categoryName;
+            state.baseIdx = saved.baseIdx || 0;
             state.idx = saved.idx || 0;
             state.correct = saved.correct || 0;
             state.streak = saved.streak || 0;
@@ -5355,7 +5364,8 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 for (var i = 0; i < unfinished.length; i++) {
                     var saved = unfinished[i];
                     var name = saved.categoryName || saved.cat || 'GK';
-                    var msg = 'You have an unfinished quiz: ' + name + ' — resume at question ' + ((saved.idx || 0) + 1) + ' (' + (saved.correct || 0) + ' correct). Resume it?';
+                    var resumeAt = (saved.baseIdx || 0) + (saved.idx || 0) + 1;
+                    var msg = 'You have an unfinished quiz: ' + name + ' — resume at question ' + resumeAt + ' (' + (saved.answeredCount || 0) + ' answered, ' + (saved.correct || 0) + ' correct). Resume it?';
                     if (unfinished.length > 1) msg += ' (' + (unfinished.length - 1 - i) + ' other saved quiz' + (unfinished.length - 1 - i === 1 ? '' : 'zes') + ' left)';
                     if (confirm(msg)) {
                         loadSessionIntoState(saved);
@@ -5397,7 +5407,8 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 for (var i = 0; i < unfinished.length; i++) {
                     var s = unfinished[i];
                     var name = s.categoryName || s.cat || 'GK';
-                    var msg = 'You have a saved quiz: ' + name + ' — resume from question ' + ((s.idx || 0) + 1) + ' of ' + s.questions.length + '?';
+                    var resumeAt = (s.baseIdx || 0) + (s.idx || 0) + 1;
+                    var msg = 'You have a saved quiz: ' + name + ' — resume from question ' + resumeAt + ' of ' + s.questions.length + '?';
                     if (unfinished.length > 1) msg += ' (' + (unfinished.length - 1 - i) + ' other saved quiz' + (unfinished.length - 1 - i === 1 ? '' : 'zes') + ' left)';
                     if (confirm(msg)) {
                         var map = readSessions();
@@ -5560,6 +5571,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             state.streak = 0;
             state.answered = false;
             state.questions = [];
+            state.baseIdx = 0;
             state.restartFn = function() { startCategory(id, name); };
             var gen2 = GK_GEN2 && GK_GEN2[id];
             var gen1 = GK_GENERATORS[id];
@@ -5679,6 +5691,8 @@ var _staticGen_polity = GK_GENERATORS.polity;
             stopAutoTimer();
             document.getElementById('pauseBtn').classList.add('hidden');
             state.autoPaused = false;
+            var ansEl = document.getElementById('answeredTracker');
+            if (ansEl) ansEl.textContent = ((state.baseIdx || 0) + state.idx + (state.answered ? 1 : 0)) + ' answered';
             if (state.idx >= state.questions.length) {
                 if (state.infinite) {
                     if (typeof _fetchRandomHistoricalOnThisDay !== 'undefined') {
@@ -5727,7 +5741,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             var isLearning = (state.infinite && state.cat === 'mixed') || state.cat === 'static';
             if (isLearning) {
                 state.answered = true; // skip answer interaction
-                document.getElementById('qNum').textContent = (state.idx + 1);
+                document.getElementById('qNum').textContent = (state.baseIdx || 0) + state.idx + 1;
                 document.getElementById('qProgress').style.width = ((state.idx / Math.max(state.questions.length, 1)) * 100) + '%';
                 var catLabel = q._wikiCat ? q._wikiCat.replace(/_/g, ' ') : (q.subject ? q.subject + (q.subTopic ? ' — ' + q.subTopic : '') : state.categoryName);
                 document.getElementById('catTag').textContent = catLabel;
@@ -5740,8 +5754,8 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 document.getElementById('optGrid').innerHTML = '';
                 document.getElementById('qHint').style.display = 'none';
                 document.getElementById('intuitionDisplay').style.display = 'none';
-                document.getElementById('correctNum').textContent = state.idx + 1;
-                document.getElementById('totalNum').textContent = state.questions.length;
+                document.getElementById('correctNum').textContent = (state.baseIdx || 0) + state.idx + 1;
+                document.getElementById('totalNum').textContent = (state.baseIdx || 0) + state.questions.length;
                 _attachPersonImage(q);
                 setTimeout(function() {
                     document.getElementById('pauseBtn').classList.remove('hidden');
@@ -5749,7 +5763,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 }, 200);
             } else {
                 state.answered = false;
-                document.getElementById('qNum').textContent = 'Q ' + (state.idx + 1);
+                document.getElementById('qNum').textContent = 'Q ' + ((state.baseIdx || 0) + state.idx + 1);
                 document.getElementById('qProgress').style.width = ((state.idx / state.questions.length) * 100) + '%';
                 document.getElementById('catTag').textContent = state.categoryName;
                 var pd = q.pubDate || q._pubDate;
@@ -5978,7 +5992,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 flash.innerHTML = '→ ' + correct + ' <span style="font-size:.75em;color:var(--text-muted)">(Key ' + correctKey + ')</span>';
             }
             document.getElementById('correctNum').textContent = state.correct;
-            document.getElementById('totalNum').textContent = state.infinite ? (state.idx + 1) : state.questions.length;
+            document.getElementById('totalNum').textContent = state.infinite ? ((state.baseIdx || 0) + state.idx + 1) : ((state.baseIdx || 0) + state.questions.length);
             saveQuizSession();
             document.getElementById('streakNum').textContent = state.streak;
 
@@ -6245,6 +6259,7 @@ function prevQuestion() {
             state.streak = 0;
             state.answered = false;
             state.questions = [];
+            state.baseIdx = 0;
             state.restartFn = function() { startCustomDateQuiz(); };
             var allCats = Object.keys(GK_GENERATORS);
             var count = 12;
@@ -6286,6 +6301,7 @@ function prevQuestion() {
             document.getElementById('customDateRange').style.display = 'none';
             document.getElementById('jumpRow').style.display = 'none';
             state.questions = [];
+            state.baseIdx = 0;
             state.idx = 0;
             clearQuizSession(sessionId());
         }
@@ -6863,6 +6879,7 @@ function prevQuestion() {
             state.streak = 0;
             state.answered = false;
             state.questions = [];
+            state.baseIdx = 0;
             state.totalFetched = 0;
             state.infinite = false;
             state.restartFn = function() { _runTimedQuiz(startDate, endDate, label, targetCount, maxFetchDays); };
@@ -7371,6 +7388,7 @@ function prevQuestion() {
             state.streak = 0;
             state.answered = true;
             state.questions = [];
+            state.baseIdx = 0;
             state.infinite = false;
             state.restartFn = function() { startStaticGk(); };
             document.getElementById('scoreLabel').textContent = 'topics';
@@ -7579,6 +7597,7 @@ function prevQuestion() {
                 if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
             }
             state.questions = [];
+            state.baseIdx = 0;
             state.idx = 0;
             state.answered = true;
             state.autoPaused = false;
@@ -7628,6 +7647,7 @@ function prevQuestion() {
             clearQuizSession('feed');
             state.cat = 'feed';
             state.questions = [];
+            state.baseIdx = 0;
             state.idx = 0;
             state.answered = true;
             state.autoPaused = false;
@@ -7716,8 +7736,8 @@ function prevQuestion() {
                 }
             }
             var q = state.questions[state.idx];
-            document.getElementById('correctNum').textContent = state.idx + 1;
-            document.getElementById('totalNum').textContent = state.questions.length;
+            document.getElementById('correctNum').textContent = (state.baseIdx || 0) + state.idx + 1;
+            document.getElementById('totalNum').textContent = (state.baseIdx || 0) + state.questions.length;
             document.getElementById('qNum').textContent = '';
             document.getElementById('qProgress').style.width = '0%';
             document.getElementById('catTag').textContent = q.hint || (q.subject ? q.subject + (q.subTopic ? ' — ' + q.subTopic : '') : '');
@@ -7856,6 +7876,7 @@ function prevQuestion() {
             state.streak = 0;
             state.answered = false;
             state.questions = [];
+            state.baseIdx = 0;
             state.restartFn = function() { startCategoryQuiz(id, name); };
             
             var gen1 = GK_GENERATORS[id];
