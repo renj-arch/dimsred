@@ -2109,6 +2109,92 @@ const CATEGORIES = [
     'Indian Ocean','Port of Mumbai','Port of Chennai','Visakhapatnam Port','Kandla Port','Mormugao Port',
     'Jawaharlal Nehru Port','Mundra Port','Kolkata Port','Shipping Corporation of India','Indian Navy'
   ]},
+  // ───────── Group 11: Ag-specialist syllabus gaps ─────────
+  { name:'Plant Breeding & Genetics', wikiCat:'Plant_breeding', topics:[
+    'Plant breeding','Plant genetics','Genetics','Mendelian inheritance','Heredity','Gene','DNA','Chromosome',
+    'Allele','Dominance (genetics)','Hybrid (biology)','Mutation','Polyploidy','Cross-pollination','Self-pollination',
+    'Hybrid seed','F1 hybrid','Pure line','Selection (biology)','Cultivar','Landrace','Germplasm',
+    'Genotype','Phenotype','Molecular genetics','Genetic engineering','Biotechnology','Transgenic plant',
+    'B. T. crop','Marker assisted selection','Somaclonal variation','Tissue culture','Test cross','Backcrossing',
+    'Haploid','Diploid','Tetraploid','Gene bank','Seed bank','National Bureau of Plant Genetic Resources'
+  ]},
+  { name:'Seed Science & Technology', topics:[
+    'Seed','Germination','Seed dormancy','Seed testing','Seed certification','Seed production',
+    'Hybrid seed','Open pollination','Seed treatment','Seedling','Seedling vigor','Scarification (botany)',
+    'Stratification (botany)','Viability','Seed bank','Sowing','Sowing depth','Seed drill','Dormancy',
+    'After-ripening','Seed coat','Endosperm','Dicotyledon','Monocotyledon','Seed viability','Seed germination test',
+    'Seed storage','Tonne','Germination rate','Hard seed','Seed pelleting','Fluid drilling'
+  ]},
+  { name:'Plant Pathology & Crop Protection', wikiCat:'Plant_diseases', topics:[
+    'Plant pathology','Plant disease','Fungus','Bacteria','Virus','Nematode','Phytophthora','Fusarium',
+    'Rust (fungus)','Smut (fungus)','Mildew','Blast disease','Sheath blight','Leaf spot','Root rot','Wilt disease',
+    'Mosaic virus','Tobacco mosaic virus','Damping off','Downy mildew','Powdery mildew','Black rust','Puccinia',
+    'Red rot','Fungicide','Pesticide','Neem oil','Sulphur','Copper fungicide','Bordeaux mixture','Integrated pest management',
+    'Biocontrol','Trichoderma','Pseudomonas fluorescens','Phytoplasma','Quarantine','Plant pathology of India',
+    'Pest','Pesticide resistance','Fumigation','Seed treatment','Systemic acquired resistance'
+  ]},
+  { name:'Agricultural Entomology', wikiCat:'Entomology', topics:[
+    'Entomology','Insect','Life cycle (insect)','Metamorphosis','Larva','Pupa','Pheromone','Pollinator',
+    'Bumblebee','Honey bee','Silkworm','Lac','Termite','Locust','Grasshopper','Aphid','Whitefly','Jassid',
+    'Spider mite','Bollworm','Pink bollworm','Stem borer','Cutworm','Armyworm','Thrips','Ladybird','Parasitoid',
+    'Predatory insect','Apiculture','Sericulture','Integrated pest management','Insecticide','Neem','Bacillus thuringiensis',
+    'Biopesticide','Crop protection','Pest control','Sugarcane borer','Ragi','Mulberry','Honey'
+  ]},
+  { name:'Agricultural Extension & Marketing', wikiCat:'Agricultural_economics', topics:[
+    'Agricultural extension','Agricultural economics','Agronomy','Farm management','Agricultural marketing',
+    'Agricultural price support','Minimum support price','Commodity Futures','Mandi','Regulated market',
+    'Agriculture in India','Agribusiness','Contract farming','Farmers cooperative','Public distribution system',
+    'Agricultural insurance','Farm subsidy','Green Revolution','Organic farming','Food security','Agriculture policy of India',
+    'Krishi Vigyan Kendra','ATMA','Agri start-up','Digital agriculture','e-NAM','Farmer producer organisation',
+    'Cooperative farming','Joint farming','Kisan credit card','Soil health card','Animal husbandry economics'
+  ]},
+  { name:'Agronomy & Crop Production', wikiCat:'Agronomy', topics:[
+    'Agronomy','Crop','Cultivation','Sowing','Irrigation','Fertilization','Crop rotation','Mixed cropping','Intercropping',
+    'Cropping system','Monoculture','Organic farming','Green manure','Cover crop','Catch crop','Relay cropping',
+    'Tillage','Zero tillage','Mulching','Soil fertility','Plant nutrition','Nitrogen fixation','Manure','Compost',
+    'Biofertilizer','Urea','DAP','Potash','Zinc deficiency','Sulphur deficiency','Growth stage','Tillering','Harvesting',
+    'Threshing','Winnowing','Grain','Yield (wine)','Soil moisture','Drought tolerance','Waterlogging','Sodic soil'
+  ]},
+  { name:'Horticulture - Fruit & Vegetable Production', wikiCat:'Pomology', topics:[
+    'Pomology','Horticulture','Fruit tree','Orchard','Bonsai','Grafting','Budding','Marcotting','Layering',
+    'Mango','Banana','Grape','Apple','Citrus','Papaya','Guava','Pomegranate','Pineapple','Litchi','Sapota',
+    'Jackfruit','Cashew','Almond','Walnut','Pear','Plum','Peach','Strawberry','Watermelon','Musk melon',
+    'Vegetable','Tomato','Potato','Onion','Okra','Brinjal','Chilli','Cabbage','Cauliflower','Carrot','Radish',
+    'Spinach','Fenugreek','Cowpea','Pea','Beetroot','Bottle gourd','Bitter gourd','Ridge gourd','French bean'
+  ]},
+  { name:'Floriculture & Landscaping', wikiCat:'Floriculture', topics:[
+    'Floriculture','Flower','Rose','Marigold','Jasmine','Hibiscus','Sunflower','Chrysanthemum','Gladiolus',
+    'Tuberose','Gerbera','Orchid','Lotus','Lilium','Anthurium','Carnation','Aster','Jasmine','Bird of paradise',
+    'Landscaping','Garden','Japanese garden','Mughal garden','Vertical garden','Topiary','Greenhouse','Shade net',
+    'Cut flower','Dried flower','Floral design','Petal','Steam sterilization','Bedding plant','Bonsai',
+    'Hanging basket','Terrace garden','Gardening tool'
+  ]},
+  { name:'Spices & Plantation Crops', wikiCat:'Spices', topics:[
+    'Spice','Spices of India','Black pepper','Cardamom','Turmeric','Ginger','Cinnamon','Clove','Nutmeg','Mace',
+    'Cumin','Coriander','Fennel','Fenugreek','Celery','Ajwain','Mustard seed','Saffron','Vanilla','Allspice',
+    'Bay leaf','Chilli pepper','Tamarind','Curry leaf','Garcinia','Coconut','Areca nut','Tea','Coffee','Rubber',
+    'Cocoa','Perennial crop','Agroforestry','Peppermint','Sandalwood','Eucalyptus','Sal tree','Spice garden'
+  ]},
+  { name:'Plant Physiology & Nutrition', wikiCat:'Plant_physiology', topics:[
+    'Plant physiology','Photosynthesis','Respiration (plant)','Transpiration','Nutrient','Nitrogen','Phosphorus',
+    'Potassium','Zinc','Iron','Calcium','Magnesium','Sulphur','Micronutrient','Chlorophyll','Xylem','Phloem',
+    'Stomata','Leaf','Root','Stem','Photoperiodism','Vernalization','Gibberellin','Auxin','Cytokinin','Ethylene',
+    'Abscisic acid','Transpiration stream','Mineral deficiency','Chlorosis','Necrosis','Plant hormone',
+    'Growth regulator','Crop water requirement','Photosynthetic efficiency','C4 carbon fixation','CAM photosynthesis'
+  ]},
+  { name:'Farm Machinery & Power', wikiCat:'Agricultural_machinery', topics:[
+    'Agricultural machinery','Tractor','Plough','Harrow','Cultivator','Seed drill','Transplanter','Sprayer','Duster',
+    'Combine harvester','Thresher','Winnower','Planter','Mower','Reaper','Pump','Centrifugal pump',
+    'Diesel engine','Petrol engine','Tractor drawn implement','Power tiller','Chaff cutter','Sickle','Hoe',
+    'Paddy thresher','Groundnut decorticator','Maize sheller','Bailer','Loader','Conveyor','Silage','Harvester'
+  ]},
+  { name:'Hydrology & Soil Conservation', wikiCat:'Hydrology', topics:[
+    'Hydrology','Water cycle','Groundwater','Aquifer','Watershed','Catchment area','Runoff','Infiltration (hydrology)',
+    'Evapotranspiration','Rain gauge','Stream gauging','Flood','Drought','Irrigation in India','Water table',
+    'Soil erosion','Sheet erosion','Gully erosion','Wind erosion','Contour ploughing','Terrace (agriculture)',
+    'Bunding','Gully plug','Check dam','Earthen dam','Levee','Canwell','Chowalla','Remote sensing','Geographic information system',
+    'Watershed management','Soil conservation','Swales','Furrow irrigation','Drip irrigation','Sprinkler irrigation'
+  ]},
 ];
 
 // Rotation groups (7 groups, cycled through by 4h time slots)
@@ -2124,6 +2210,7 @@ const DAY_GROUPS = [
   [40,41,42,43,44,45], // Group 8: Soil & Watershed, Horticulture, Farm Machinery, Food Processing, Agricultural Engineering, Applied Sciences
   [46,47,48,49,50,51,52,53,54,55], // Group 9: Meteorology & Climate, Animal Husbandry & Dairy, Fisheries & Aquaculture, Telecom & Postal, Mining & Minerals, Indian Music & Fine Arts, Indian Languages, Courts Cases & Verdicts, Ayurveda & Traditional Medicine, Indian Architecture
   [56,57,58,59,60,61,62,63,64,65,66], // Group 10: Indian Wildlife & National Parks, Indian Rivers & Water Resources, Indian Festivals & Fairs, Indian Philosophy & Thinkers, Indian Theatre & Cinema, Indian Literature & Poets, Indian Handicrafts & Coins, Indian Museums & Heritage Sites, Indian Archaeology & Epigraphy, Indian Demographics & Census, Indian Aviation & Shipping
+  [67,68,69,70,71,72,73,74,75,76,77,78], // Group 11: Plant Breeding & Genetics, Seed Science & Technology, Plant Pathology & Crop Protection, Agricultural Entomology, Agricultural Extension & Marketing, Agronomy & Crop Production, Horticulture - Fruit & Vegetable Production, Floriculture & Landscaping, Spices & Plantation Crops, Plant Physiology & Nutrition, Farm Machinery & Power, Hydrology & Soil Conservation
 ];
 
 async function main() {
