@@ -1,4 +1,4 @@
-const CACHE = 'vlymbooq-v16';
+const CACHE = 'vlymbooq-v17';
 const STATIC_ASSETS = [
   '/css/style.css',
   '/js/theme.js',
@@ -31,6 +31,22 @@ self.addEventListener('fetch', function(e) {
   var path = e.request.url.replace(/^https?:\/\/[^\/]+/, '').split('?')[0];
   var isHtml = /\.html$/.test(path) || path === '/' || path === '';
   var isData = /^\/data\//.test(path);
+  var isJs = /\.js$/.test(path);
+  // JS is network-first so code updates propagate immediately; cache is a fallback for offline.
+  if (isJs) {
+    e.respondWith(
+      fetch(e.request).then(function(resp) {
+        if (resp && resp.ok && resp.type === 'basic') {
+          var clone = resp.clone();
+          caches.open(CACHE).then(function(cache) { cache.put(e.request, clone); });
+        }
+        return resp;
+      }).catch(function() {
+        return caches.match(e.request);
+      })
+    );
+    return;
+  }
   e.respondWith(
     caches.match(e.request).then(function(cached) {
       if (cached && !isHtml && !isData) return cached;
