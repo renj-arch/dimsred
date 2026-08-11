@@ -124,6 +124,7 @@ var defaultState = {
     stocks_shares:{attempts:0,correct:0},     odd_man_out:{attempts:0,correct:0},
     height_distance:{attempts:0,correct:0}, decimal_fraction:{attempts:0,correct:0},
     chain_rule:{attempts:0,correct:0}, logarithm:{attempts:0,correct:0},
+    caselet_di:{attempts:0,correct:0}, trigonometry:{attempts:0,correct:0},
     meta:{attempts:0,correct:0},
     // Reasoning sub-topics
     pattern_flash:{attempts:0,correct:0}, coding_flash:{attempts:0,correct:0},
@@ -282,6 +283,8 @@ var SPEED_TECHNIQUES = {
   'water_images': 'Water image = vertical mirror. Top becomes bottom. Left-right stays same.',
   'dot_situation': 'Each region belongs to specific shapes. Find which shapes share the dot\'s region.',
   'height_distance': 'tan(angle)=height/distance. sin=opp/hyp. cos=adj/hyp. Common angles: 30°,45°,60°.',
+  'caselet_di': 'Extract numbers from the passage. Build the equation stepwise. Watch units.',
+  'trigonometry': 'Standard values: sin0=0, sin30=1/2, sin45=1/√2, sin60=√3/2. Identities: sin²+cos²=1, sin(90-θ)=cosθ.',
   'decimal_fraction': 'Fraction→decimal: divide numerator by denominator. Decimal→fraction: write over power of 10, simplify.',
   'chain_rule': 'More men = fewer days (inverse). More work = more days (direct). M1×D1×W2 = M2×D2×W1.',
   'logarithm': 'log_b(x)=y → b^y=x. log(xy)=log(x)+log(y). log(x/y)=log(x)-log(y). log(x^n)=n×log(x).',
@@ -336,6 +339,8 @@ var TECHNIQUE_DRILLS = {
   'discount': { line1: 'Discount % / successive', line2: '3s — SP=MP×(100-d)/100. Net successive=d1+d2-d1×d2/100.' },
   'races': { line1: 'Race / relative speed', line2: '4s — Time same for all runners. Beat distance = speed×time. Circular: L/rel_speed.' },
   'data_interpretation': { line1: 'Tables / charts / DI', line2: '3s — Read all data. Identify what is asked. Compute total/avg/percent stepwise.' },
+  'caselet_di': { line1: 'Passage DI', line2: '4s — Read once, underline numbers. Build the equation stepwise. Answer what is ASKED, not what you computed first.' },
+  'trigonometry': { line1: 'Standard values / identities', line2: '3s — sin0=0, sin30=1/2, sin45=1/√2, sin60=√3/2, sin90=1. sin²+cos²=1. sin(90-θ)=cosθ. tan=sin/cos.' },
   // REASONING drills
   'pattern_flash': { line1: 'Series / classification', line2: '2s — Check diff/ratio/square/prime. Odd-out: find what 3 share.' },
   'coding_flash': { line1: 'Letter position coding', line2: '3s — A=1 to Z=26. Sum/product/×index. Reverse: A=26.' },
@@ -2670,6 +2675,105 @@ function generateDataInterpretationQuestion(diff, layer) {
   return { question: q, answer: data.a, options: opts, hint: data.hint, timeLimit: layer==='instinct'?15:20, type:'quant', techniqueLabel:'DI: '+data.hint, intuition:'Read table carefully. Identify total/avg/%, compute stepwise. For pie: central angle = % × 3.6°. For growth: (new-old)/old×100.' };
 }
 
+// ====== CASELET DI ======
+// Passage-style data interpretation: read a short paragraph, extract the numbers,
+// answer one targeted computation. Matches bank exam "caselet" style.
+function generateCaseletDIQuestion(diff, layer) {
+  function caseletHtml(passage, note) {
+    var html = '<div style="margin:8px 0;padding:10px 12px;border-left:3px solid var(--purple);background:rgba(167,139,250,.06);font-size:.86em;line-height:1.55">' + passage + '</div>';
+    if (note) html += '<div style="font-size:.74em;color:var(--text-sec);margin-bottom:4px">' + note + '</div>';
+    return html;
+  }
+  var types = [
+    // Revenue split passage
+    [1, function(){ var rev=rand(400,1200), pa=rand(25,40), pb=rand(20,35), pc=100-pa-pb; var q1=Math.round(rev*pa/100); return { tbl:caseletHtml('A company reported total revenue of ₹'+rev+' crore. Product A contributed '+pa+'%, Product B '+pb+'% and the rest came from Product C.', ''), q:'Revenue from Product C (₹cr)?', a:Math.round(rev*pc/100), hint:pc+'% of '+rev, sol:'Product C = 100 - '+pa+' - '+pb+' = '+pc+'%. '+pc+'% of '+rev+' = ₹'+(rev*pc/100)+'cr.'}; }],
+    // Village population passage
+    [1, function(){ var pop=rand(2000,9000), menP=rand(45,60), litMen=rand(20,40); var men=Math.round(pop*menP/100), lit=Math.round(men*litMen/100); return { tbl:caseletHtml('Village Amar has a population of '+pop+'. Men form '+menP+'% of the population. '+litMen+'% of the men are literate.', ''), q:'How many literate men?', a:lit, hint:pop+'×'+menP+'%×'+litMen+'%', sol:'Men = '+menP+'% of '+pop+' = '+men+'. Literate men = '+litMen+'% of '+men+' = '+lit+'.'}; }],
+    // Students by stream passage
+    [2, function(){ var total=rand(600,2000), arts=rand(30,45), sci=rand(25,40), rest=100-arts-sci; return { tbl:caseletHtml('A college has '+total+' students. '+arts+'% study Arts, '+sci+'% study Science and the remaining study Commerce.', ''), q:'Commerce students?', a:Math.round(total*rest/100), hint:rest+'% of '+total, sol:'Commerce = 100 - '+arts+' - '+sci+' = '+rest+'%. '+rest+'% of '+total+' = '+Math.round(total*rest/100)+'.'}; }],
+    // Train passenger passage
+    [2, function(){ var p1=rand(400,1000), p2=Math.round(p1*(rand(110,140)/100)); return { tbl:caseletHtml('Train A carried '+p1+' passengers on Monday. On Tuesday it carried '+p2+' passengers. On Wednesday it carried '+Math.round(p1*(rand(80,105)/100))+' passengers.', 'Note: compute using Monday as base.'), q:'% increase from Monday to Tuesday?', a:Math.round((p2-p1)*100/p1), hint:'(Tue-Mon)/Mon×100', sol:'Increase = '+(p2-p1)+'. % = '+(p2-p1)+'/'+p1+'×100 = '+Math.round((p2-p1)*100/p1)+'%.'}; }],
+    // Farm produce passage
+    [3, function(){ var h1=rand(50,150), h2=rand(60,160), h3=rand(40,130); var tot=h1+h2+h3; return { tbl:caseletHtml('A farmer grows wheat, rice and pulses. Production in tonnes: Wheat '+h1+', Rice '+h2+', Pulses '+h3+'. The produce is sold at ₹'+rand(2000,4000)+' per tonne.', 'Prices apply equally to all crops.'), q:'Wheat share of total production (%)?', a:Math.round(h1*100/tot), hint:'Wheat/total×100', sol:'Total = '+tot+'. Wheat% = '+h1+'/'+tot+'×100 = '+Math.round(h1*100/tot)+'%.'}; }],
+    // Two products with profit passage
+    [3, function(){ var c1=rand(200,500), p1=rand(15,35), c2=rand(300,600), p2=rand(10,30); var sp1=Math.round(c1*(100+p1)/100), sp2=Math.round(c2*(100+p2)/100); return { tbl:caseletHtml('A shopkeeper sells two items. Item X costs ₹'+c1+' and is sold at '+p1+'% profit. Item Y costs ₹'+c2+' and is sold at '+p2+'% profit.', ''), q:'Total selling price of both items (₹)?', a:sp1+sp2, hint:'SP = CP×(100+P)/100 for each', sol:'SP(X) = '+c1+'×'+p1+'% = ₹'+sp1+'. SP(Y) = '+c2+'×'+p2+'% = ₹'+sp2+'. Total = ₹'+(sp1+sp2)+'.'}; }],
+    // Monthly savings passage
+    [4, function(){ var inc=rand(25000,60000), expP=rand(60,80); var sav=Math.round(inc*(100-expP)/100); return { tbl:caseletHtml('Mr. Rao earns ₹'+inc+' per month. He spends '+expP+'% of his income and saves the rest. He deposits his monthly saving in a scheme at 8% simple interest per annum.', ''), q:'Saving after 1 year including interest?', a:Math.round(sav + sav*8/100), hint:'Save='+sav+'. SI = P×8×1/100', sol:'Monthly saving = '+sav+'. Yearly = '+sav*12+' invested; SI on '+(sav*12)+' = ₹'+(sav*12*8/100)+'. Total = ₹'+(sav*12+sav*12*8/100)+'.'}; }],
+    // Election / vote share passage
+    [4, function(){ var total=rand(50000,200000), c1P=rand(35,55), c2P=rand(25,45), rest=100-c1P-c2P; var nv=Math.round(total*rest/100); return { tbl:caseletHtml('In a constituency, '+total+' votes were polled. Candidate A got '+c1P+'% of the votes, Candidate B got '+c2P+'% and the remaining votes went to other candidates or were NOTA.', ''), q:'Votes for others + NOTA?', a:nv, hint:rest+'% of '+total, sol:'Others = 100 - '+c1P+' - '+c2P+' = '+rest+'%. '+rest+'% of '+total+' = '+nv+'.'}; }],
+    // Mixed: city population with gender & literacy
+    [5, function(){ var tot=rand(50000,150000), maleP=rand(48,55), litP=rand(60,80); var males=Math.round(tot*maleP/100), lit=Math.round(tot*litP/100), litFemales=Math.round(lit*(rand(35,50))/100); return { tbl:caseletHtml('City Meera has '+tot+' residents. '+maleP+'% are males. Overall literacy is '+litP+'%. Among literates, '+Math.round((litFemales*100)/lit)+'% are female.', 'Use the given figures exactly.'), q:'Female literates?', a:litFemales, hint:'Total lit×female%, where total lit = '+litP+'% of '+tot, sol:'Total literates = '+litP+'% of '+tot+' = '+lit+'. Female literates = '+Math.round(litFemales*100/lit)+'% of '+lit+' = '+litFemales+'.'}; }],
+    // Mixed: company departments budget
+    [5, function(){ var tot=rand(2000,8000), hr=rand(15,30), it=rand(20,35), ops=100-hr-it; var opsAmt=Math.round(tot*ops/100); return { tbl:caseletHtml('A company budgets ₹'+tot+' lakh for the year. HR gets '+hr+'%, IT gets '+it+'% and the rest is for Operations. Operations spends 30% of its share on cloud services.', ''), q:'Cloud services budget (₹L)?', a:Math.round(opsAmt*30/100), hint:'Ops = '+ops+'% of '+tot+', then 30% of that', sol:'Ops share = '+ops+'% of '+tot+' = ₹'+opsAmt+'L. Cloud = 30% of '+opsAmt+' = ₹'+Math.round(opsAmt*30/100)+'L.'}; }]
+  ];
+  var matched = types.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = types;
+  var chosen = matched[rand(0, matched.length - 1)];
+  var data = chosen[1]();
+  var q = (data.tbl || '') + '<div style="margin-top:8px;font-weight:600">' + data.q + '</div>';
+  var opts = [data.a];
+  var spread = typeof data.a==='number' ? Math.max(2, Math.abs(data.a*0.12)) : 3;
+  for (var _g=0; _g<50 && opts.length<4; _g++) {
+    var v = typeof data.a==='number' ? Math.round(data.a + rand(-spread, spread)) : data.a;
+    if (opts.indexOf(v) < 0 && (typeof v!=='number'||v>=0)) opts.push(v);
+  }
+  shuffle(opts);
+  return { question: q, answer: data.a, options: opts, hint: data.hint, solution: data.sol || '', timeLimit: layer==='instinct'?20:30, type:'quant', techniqueLabel:'Caselet DI', intuition:'Extract the numbers from the passage, build the equation stepwise, compute carefully.' };
+}
+
+// ====== FULLER TRIGONOMETRY ======
+// Identities, standard-angle values, complementary/reciprocal relations — beyond
+// the pure height-distance style. Generates exact-value numeric MCQs.
+function generateTrigonometryQuestion(diff, layer) {
+  var types = [
+    // Standard angle value
+    [1, function(){ var rows=[['sin 30°','1/2'],['sin 45°','1/√2'],['sin 60°','√3/2'],['cos 30°','√3/2'],['cos 45°','1/√2'],['cos 60°','1/2'],['tan 30°','1/√3'],['tan 45°','1'],['tan 60°','√3'],['sin 0°','0'],['cos 0°','1'],['cos 90°','0']]; var r=rows[rand(0,rows.length-1)]; return { q:'Value of '+r[0]+'?', a:r[1], hint:'Memorize standard angle values', sol:r[0]+' = '+r[1]+'. Standard values: sin0=0, sin30=1/2, sin45=1/√2, sin60=√3/2, cos90=0.'}; }],
+    // sin²+cos²
+    [1, function(){ var ang=['θ','30°','45°','60°','A'][rand(0,4)]; return { q:'sin²'+ang+' + cos²'+ang+' = ?', a:'1', hint:'Pythagorean identity', sol:'sin²θ + cos²θ = 1 for all θ. This is the fundamental Pythagorean identity.'}; }],
+    // complementary angles
+    [1, function(){ return { q:'sin 30° = cos of which angle?', a:'60°', hint:'sin(90°-θ) = cos θ', sol:'sin 30° = cos(90°-30°) = cos 60° = 1/2.'}; }],
+    [2, function(){ var ang=[['30','60'],['45','45'],['60','30'],['0','90']][rand(0,3)]; return { q:'sin '+ang[0]+'° = cos ____?', a:ang[1]+'°', hint:'sin(90-θ)=cosθ', sol:'sin '+ang[0]+'° = cos(90-'+ang[0]+'°) = cos '+ang[1]+'°.'}; }],
+    // Reciprocal relations
+    [2, function(){ return { q:'cosec 30° = ?', a:'2', hint:'cosec = 1/sin, sin30°=1/2', sol:'cosec 30° = 1/sin 30° = 1/(1/2) = 2.'}; }],
+    [2, function(){ return { q:'sec 60° = ?', a:'2', hint:'sec = 1/cos, cos60°=1/2', sol:'sec 60° = 1/cos 60° = 1/(1/2) = 2.'}; }],
+    [2, function(){ return { q:'cot 45° = ?', a:'1', hint:'cot = 1/tan, tan45°=1', sol:'cot 45° = 1/tan 45° = 1/1 = 1.'}; }],
+    // sec² - tan²
+    [2, function(){ return { q:'sec²θ - tan²θ = ?', a:'1', hint:'Pythagorean identity', sol:'sec²θ - tan²θ = 1 (derived from 1 + tan²θ = sec²θ).'}; }],
+    // Given sin, find cos
+    [3, function(){ var base=[['3','4','5'],['5','12','13'],['7','24','25'],['8','15','17'],['9','40','41']][rand(0,4)]; var p=parseInt(base[0],10), b=parseInt(base[1],10), h=parseInt(base[2],10); return { q:'If sin θ = '+p+'/'+h+', then cos θ = ?', a:b+'/'+h, hint:'cos = adjacent/hypotenuse, use the triple', sol:'sinθ = '+p+'/'+h+' → opposite='+p+', hyp='+h+'. Adjacent = √(h²-p²) = √('+(h*h-p*p)+') = '+b+'. cosθ = '+b+'/'+h+'.'}; }],
+    // tan from sin & cos
+    [3, function(){ var base=[['3','4','5'],['5','12','13'],['8','15','17'],['7','24','25']][rand(0,3)]; var p=parseInt(base[0],10), b=parseInt(base[1],10), h=parseInt(base[2],10); return { q:'If sin θ = '+p+'/'+h+' and cos θ = '+b+'/'+h+', then tan θ = ?', a:p+'/'+b, hint:'tan = sin/cos', sol:'tanθ = sinθ/cosθ = ('+p+'/'+h+')/('+b+'/'+h+') = '+p+'/'+b+'.'}; }],
+    // sin(A+B) special value
+    [3, function(){ var pairs=[['30','60'],['45','45'],['60','30']][rand(0,2)]; var A=parseInt(pairs[0],10), B=parseInt(pairs[1],10); var val = Math.sin((A+B)*Math.PI/180); return { q:'sin '+A+'° cos '+B+'° + cos '+A+'° sin '+B+'° = ?', a:val===1?'1':(val===Math.sqrt(3)/2?'√3/2':'1/2'), hint:'sin(A+B) formula', sol:'This is sin(A+B) = sin('+A+'+'+B+') = sin '+ (A+B)+'° = '+(val===1?'1':(val===Math.sqrt(3)/2?'√3/2':'1/2'))+'.'}; }],
+    // 2 sin cos
+    [4, function(){ var ang=[30,45,60][rand(0,2)]; var v=Math.sin(2*ang*Math.PI/180); return { q:'2 sin '+ang+'° cos '+ang+'° = ?', a:ang===45?'1':(ang===30?'√3/2':'√3/2'), hint:'2sinθcosθ = sin2θ', sol:'2 sinθ cosθ = sin 2θ = sin '+ (2*ang)+'° = '+(v===1?'1':'√3/2')+'.'}; }],
+    // tan(A+B) special
+    [4, function(){ var pairs=[['15','30'],['30','15'],['30','30'],['15','15']][rand(0,3)]; var A=parseInt(pairs[0],10), B=parseInt(pairs[1],10); var v=Math.tan((A+B)*Math.PI/180); var av=(v===1?'1':(v===Math.sqrt(3)?'√3':'1/√3')); return { q:'(tan '+A+'° + tan '+B+'°)/(1 - tan '+A+'° tan '+B+'°) = ?', a:av, hint:'tan(A+B) formula', sol:'Formula = tan(A+B) = tan '+(A+B)+'° = '+av+'.'}; }],
+    // Identity simplification
+    [4, function(){ return { q:'Simplify: (1 - cos²θ)/sin²θ = ?', a:'1', hint:'1 - cos²θ = sin²θ', sol:'1 - cos²θ = sin²θ, so (1-cos²θ)/sin²θ = sin²θ/sin²θ = 1.'}; }],
+    // Max value of sin
+    [4, function(){ return { q:'Maximum value of sin θ is?', a:'1', hint:'sinθ ranges from -1 to 1', sol:'The sine function oscillates between -1 and 1. Maximum = 1 (at θ=90°).'}; }],
+    // Equation solve
+    [5, function(){ var rows=[['sin θ = 1','90°'],['cos θ = 1','0°'],['tan θ = 1','45°'],['sin θ = 0','0°'],['cos θ = 0','90°']][rand(0,4)]; return { q:'If 0° ≤ θ ≤ 90° and '+rows[0]+', then θ = ?', a:rows[1], hint:'Solve the trig equation in the given range', sol:rows[0]+' → θ = '+rows[1]+' in the range 0°-90°.'}; }],
+    // Compound identity check
+    [5, function(){ return { q:'cos 60° = ? (value)', a:'1/2', hint:'cos60° = 1/2', sol:'cos 60° = 1/2 — one of the standard values.'}; }],
+    // Sum of squares
+    [5, function(){ var ang=['30°','45°','60°'][rand(0,2)]; return { q:'sin²'+ang+' + cos²'+ang+' = ?', a:'1', hint:'Holds for any angle', sol:'sin²'+ang+' + cos²'+ang+' = 1 (Pythagorean identity, true for all angles).'}; }]
+  ];
+  var matched = types.filter(function(t){ return t[0] <= diff; });
+  if (matched.length === 0) matched = types;
+  var chosen = matched[rand(0, matched.length - 1)];
+  var data = chosen[1]();
+  var opts = [data.a];
+  var pool = ['1','0','1/2','√3/2','1/√2','√3','1/√3','2','1/√3','√3/2','45°','30°','60°','90°','tan 45°','sin 60°','2/3','3/4'];
+  for (var _g=0; _g<50 && opts.length<4; _g++) {
+    var v = pool[rand(0, pool.length - 1)];
+    if (opts.indexOf(v) < 0) opts.push(v);
+  }
+  shuffle(opts);
+  return { question: '<div style="margin:4px 0 8px 0">' + data.q + '</div>', answer: data.a, options: opts, hint: data.hint, solution: data.sol || '', timeLimit: layer==='instinct'?10:15, type:'quant', techniqueLabel:'Trigonometry', intuition:'Memorize standard values (sin0=0, sin30=1/2, sin45=1/√2, sin60=√3/2). Use identities: sin²+cos²=1, 1+tan²=sec², 1+cot²=cosec², sin(90-θ)=cosθ.' };
+}
+
 // ====== NEW REASONING GENERATORS ======
 
 function generateMirrorImageQuestion(diff) {
@@ -4680,10 +4784,12 @@ function generateQuantQuestion(diff, subMode) {
     quadratic_comparison: generateQuadraticComparisonQuestion,
     number_series: generateNumberSeriesQuestion,
     quantity_comparison: generateQuantityComparisonQuestion,
+    caselet_di: generateCaseletDIQuestion,
+    trigonometry: generateTrigonometryQuestion,
     meta: generateMetaQuestion
   };
   // If no subMode, pick random quant topic
-  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','quadratic_comparison','partnership','simple_interest','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out','height_distance','decimal_fraction','chain_rule','logarithm','number_series','quantity_comparison','meta','meta','meta']);
+  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','quadratic_comparison','partnership','simple_interest','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out','height_distance','decimal_fraction','chain_rule','logarithm','number_series','quantity_comparison','caselet_di','trigonometry','meta','meta','meta']);
   var gen = genMap[topic];
   if (gen) {
     var q, attempts = 0;
