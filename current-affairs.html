@@ -5367,8 +5367,38 @@ var _staticGen_polity = GK_GENERATORS.polity;
             out.sort(function(a, b) { return (b.savedAt || 0) - (a.savedAt || 0); });
             return out;
         }
+        // Rebuild the archive feed from a saved session and continue auto-advancing.
+        function restoreFeedSession(saved) {
+            state.cat = 'feed';
+            state.categoryName = saved.categoryName || 'Archive';
+            state.baseIdx = saved.baseIdx || 0;
+            state.idx = saved.idx || 0;
+            state.correct = saved.correct || 0;
+            state.streak = saved.streak || 0;
+            state.answered = true;
+            state.questions = saved.questions;
+            state.infinite = false;
+            state._feedSource = 'archive';
+            state.autoPaused = false;
+            state._lastFeedSave = 0;
+            state.restartFn = function() { startArchiveFeed(0); };
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('qArea').classList.add('active');
+            document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('regionFilterRow').style.display = 'none';
+            document.getElementById('timeFilterRow').style.display = 'none';
+            document.getElementById('customDateRange').style.display = 'none';
+            document.getElementById('scoreLabel').textContent = 'archive';
+            document.getElementById('streakDisplay').style.display = 'none';
+            document.getElementById('pauseBtn').classList.remove('hidden');
+            document.getElementById('pauseBtn').textContent = '⏸';
+            document.getElementById('nextBtn').classList.add('hidden');
+            document.getElementById('restartBtn').style.display = 'none';
+            _showFeedItem();
+        }
         function loadSessionIntoState(saved) {
             _resumeHandled = true;
+            if (saved.cat === 'feed') { restoreFeedSession(saved); return; }
             state.cat = saved.cat;
             state.categoryName = saved.categoryName;
             state.baseIdx = saved.baseIdx || 0;
@@ -7814,6 +7844,13 @@ function prevQuestion() {
             document.getElementById('optGrid').style.display = 'block';
             _attachPersonImage(q);
             document.getElementById('qArea').scrollIntoView({behavior:'smooth',block:'start'});
+            var trkFeed = document.getElementById('answeredTracker');
+            if (trkFeed) trkFeed.textContent = ((state.baseIdx || 0) + state.idx + 1) + ' viewed';
+            var _now = Date.now();
+            if (!state._lastFeedSave || _now - state._lastFeedSave > 4000) {
+                state._lastFeedSave = _now;
+                saveQuizSession();
+            }
 
             if (!state.autoPaused) {
                 state._feedTimer = setTimeout(function tick() {
