@@ -5496,30 +5496,12 @@ var _staticGen_polity = GK_GENERATORS.polity;
             return state.questions.length > 0 || document.getElementById('qArea').classList.contains('active');
         }
         function confirmAbandonQuiz() {
-            if (isQuizActive()) {
-                return confirm('A quiz is in progress. Leave and lose your progress?');
-            }
+            // Progress is saved to Supabase continuously, so leaving a quiz is always safe.
             return true;
         }
 
-        window.addEventListener('beforeunload', function(e) {
-            if (isQuizActive()) {
-                e.preventDefault();
-                e.returnValue = 'You have a quiz in progress. Are you sure you want to leave?';
-            }
-        });
-
         window.addEventListener('pagehide', function() {
             saveQuizSession();
-        });
-
-        document.addEventListener('click', function(e) {
-            var link = e.target.closest('.nav-links a');
-            if (link && isQuizActive()) {
-                if (!confirm('A quiz is in progress. Leave and lose your progress?')) {
-                    e.preventDefault();
-                }
-            }
         });
 
         document.addEventListener('keydown', function(e) {
@@ -6366,9 +6348,6 @@ function prevQuestion() {
 
 
         function backToMenu() {
-            if (state.answered || state.idx > 0) {
-                if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
-            }
             document.getElementById('welcome').style.display = 'block';
             document.getElementById('qArea').classList.remove('active');
             document.getElementById('scoreBar').classList.remove('show');
@@ -6379,7 +6358,8 @@ function prevQuestion() {
             state.questions = [];
             state.baseIdx = 0;
             state.idx = 0;
-            clearQuizSession(sessionId());
+            // The session stays saved in Supabase, so you can resume it later —
+            // even after closing the tab or switching devices.
         }
 
         var currentMode = 'quiz';
@@ -7686,7 +7666,7 @@ function prevQuestion() {
 
         async function startSubjectQuiz(subject) {
             if (state.answered || state.idx > 0) {
-                if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
+                if (!confirm('Leave the current quiz? Your progress is saved and you can resume it later.')) return;
             }
             state.cat = 'subject::' + subject;
             state.categoryName = subject;
@@ -7740,7 +7720,7 @@ function prevQuestion() {
 
         async function startArchiveFeed(days) {
             if (state.answered || state.idx > 0) {
-                if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
+                if (!confirm('Leave the current quiz? Your progress is saved and you can resume it later.')) return;
             }
             await ensureSessionsLoaded();
             if (offerResumeFor('feed', 'Archive')) return;
