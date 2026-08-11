@@ -2052,6 +2052,23 @@ async function main() {
   let totalAdded = 0;
   const doneThisRun = new Set();
 
+  // Periodic progress beacon so a running chunk shows live QN-per-minute
+  // throughput in the Actions log (not just the per-category end line).
+  const progressMs = parseInt(process.env.WIKI_FILL_PROGRESS_MS || '60000', 10);
+  let lastProgress = totalAdded;
+  let progressStart = Date.now();
+  const progressTimer = setInterval(() => {
+    const now = Date.now();
+    const mins = (now - progressStart) / 60000;
+    const rate = mins > 0 ? (totalAdded - lastProgress) / mins : 0;
+    log('[progress] chunk=' + process.env.WIKI_FILL_CHUNK + '/' + process.env.WIKI_FILL_CHUNKS +
+      ' newThisRun=' + totalAdded + ' (grandTotal=' + quiz.questions.length + ')' +
+      ' +' + (totalAdded - lastProgress) + ' in last min (' + rate.toFixed(0) + ' qn/min)');
+    lastProgress = totalAdded;
+    progressStart = now;
+  }, progressMs);
+  progressTimer.unref();
+
   // Determine which group to process
   const processAll = process.env.WIKI_FILL_ALL === '1';
   const fillGroup = parseInt(process.env.WIKI_FILL_GROUP || '0', 10);
@@ -2389,19 +2406,54 @@ async function main() {
             fact: paraphrase(getContext(allSentences, title, 3), title),
           })) added++;
         }
-        for (let si = 0; si < sentences.length && si < 10; si++) {
+        const LINK_PER_ARTICLE = parseInt(process.env.WIKI_FILL_LINK_PER_ARTICLE || '50', 10);
+        for (let si = 0; si < sentences.length && si < LINK_PER_ARTICLE; si++) {
           const sent = sentences[si];
           if (sent.length > 260) continue;
-          const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
-          if (years && sent.length < 240) {
-            const yearChoice = years[0];
-            const context = sent.replace(yearChoice, '_____').trim().substring(0, 200);
-            if (context.length > 25 && pushQ({
-              id: cat.name.substring(0,3).toLowerCase() + added + 'ly',
+
+          // ▸ Fact-pattern extractors (dated events, attributions, term lists)
+          const linkFacts = extractFactQuestions(sent, title);
+          for (const f of linkFacts) {
+            if (pushQ({
+              id: cat.name.substring(0,3).toLowerCase() + added + 'lf',
               type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
               pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
-              question: context, answer: yearChoice, hint: '',
-              fact: paraphrase(getContext(allSentences, sent, 3), yearChoice),
+              question: f.question, answer: f.answer, hint: '',
+              fact: paraphrase(getContext(allSentences, sent, 3), f.answer),
+            })) added++;
+          }
+
+          let sentUsed = linkFacts.length > 0;
+
+          // ▸ Year-based
+          if (!sentUsed) {
+            const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
+            if (years && sent.length < 240) {
+              const yearChoice = years[0];
+              const context = sent.replace(yearChoice, '_____').trim().substring(0, 200);
+              if (context.length > 25 && pushQ({
+                id: cat.name.substring(0,3).toLowerCase() + added + 'ly',
+                type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+                pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+                question: context, answer: yearChoice, hint: '',
+                fact: paraphrase(getContext(allSentences, sent, 3), yearChoice),
+              })) { added++; sentUsed = true; }
+            }
+          }
+
+          // ▸ Blank-out key term (cheap, high-yield)
+          if (!sentUsed) {
+            if (new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(sent)) continue;
+            const bestTerm = findBestTerm(sent, title);
+            if (!bestTerm) continue;
+            if (new RegExp('^' + bestTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(stripLeadingNoise(sent.trim()))) continue;
+            const context = sent.replace(bestTerm, '_____').trim().substring(0, 200);
+            if (context.length > 25 && context.length < 200 && pushQ({
+              id: cat.name.substring(0,3).toLowerCase() + added + 'lt',
+              type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+              pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+              question: context, answer: bestTerm, hint: '',
+              fact: paraphrase(getContext(allSentences, sent, 3), bestTerm),
             })) added++;
           }
         }
