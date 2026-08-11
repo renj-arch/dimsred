@@ -2015,6 +2015,100 @@ const CATEGORIES = [
     'Victoria Memorial, Kolkata','Rashtrapati Bhavan','Parliament House, India','Gateway of India',
     'India Gate','Howrah Bridge','Indian Heritage Cities Network','Vastu Shastra'
   ]},
+  // ───────── Group 10: Broad India coverage (new, high-yield categories) ─────────
+  { name:'Indian Wildlife & National Parks', wikiCat:'Wildlife_sanctuaries_of_India', topics:[
+    'Wildlife sanctuaries of India','National parks of India','Bandipur National Park','Corbett National Park',
+    'Kaziranga National Park','Gir National Park','Sundarbans National Park','Ranthambore National Park',
+    'Kanha National Park','Periyar National Park','Jim Corbett','Project Tiger','Project Elephant',
+    'Asiatic lion','Bengal tiger','Indian leopard','Indian rhinoceros','Asian elephant','Blackbuck',
+    'Great Indian bustard','Gharial','Indian peafowl','Brahmaputra','Chilika Lake','Bharatpur Bird Sanctuary',
+    'Western Ghats','Thar Desert','Sundarbans','Nanda Devi','Nokrek','Sundarbans Tiger Reserve'
+  ]},
+  { name:'Indian Rivers & Water Resources', wikiCat:'Dams_in_India', topics:[
+    'Rivers of India','Ganges','Yamuna','Brahmaputra','Godavari','Krishna River','Narmada River','Tapti River',
+    'Mahanadi','Kaveri','Beas River','Ravi River','Sutlej','Chenab River','Jhelum River','Damodar River',
+    'Periyar River','Tungabhadra River','Bhima River','Gandak','Kosi River','Chambal River','Betwa River',
+    'Sardar Sarovar Dam','Hirakud Dam','Bhakra Dam','Nagarjuna Sagar Dam','Tehri Dam','Krishna Raja Sagara',
+    'Kallanai','Farakka Barrage','Indira Gandhi Canal','Rajasthan Canal','Upper Bari Doab Canal',
+    'Rihand Dam','Dams in India','Peninsular rivers of India','East flowing rivers of India'
+  ]},
+  { name:'Indian Festivals & Fairs', wikiCat:'Festivals_in_India', topics:[
+    'Festivals in India','Diwali','Holi','Dussehra','Raksha Bandhan','Navratri','Durga Puja','Ganesh Chaturthi',
+    'Krishna Janmashtami','Maha Shivratri','Ram Navami','Gurpurab','Eid al-Fitr','Eid al-Adha','Muharram',
+    'Buddha Purnima','Mahavir Jayanti','Christmas in India','Pongal','Makar Sankranti','Lohri','Onam',
+    'Vishu','Bihu','Rath Yatra','Janmashthami','Karva Chauth','Chhath Puja','Bhai Dooj','Hemis Festival',
+    'Kumbh Mela','Pushkar Fair','Sonepur cattle fair','Surajkund international crafts mela','Hornbill Festival',
+    'Losar Festival','Thrissur Pooram','Ganga Sagar Mela','Rann Utsav','Tarnetar Fair','Kolayat Festival'
+  ]},
+  { name:'Indian Philosophy & Thinkers', wikiCat:'Indian_philosophy', topics:[
+    'Indian philosophy','Advaita Vedanta','Samkhya','Nyaya','Vaisheshika','Yoga (philosophy)','Mimamsa',
+    'Buddhist philosophy','Jain philosophy','Charvaka','Karma','Dharma','Moksha','Sutra','Upanishads',
+    'Vedanta','Vedas','Bhagavad Gita','Ramayana','Mahabharata','Smriti','Shruti','Arthashastra',
+    'Adi Shankara','Ramanuja','Madhvacharya','Nimbarka','Vallabha','Gautama Buddha','Mahavira','Chanakya',
+    'Swami Vivekananda','Ramakrishna','Mahatma Gandhi philosophy','Jiddu Krishnamurti','Sri Aurobindo',
+    'Rabindranath Tagore philosophy','B.R. Ambedkar philosophy','Nalanda','Taxila','Tattva'
+  ]},
+  { name:'Indian Theatre & Cinema', wikiCat:'Theatre_in_India', topics:[
+    'Theatre in India','Indian classical dance','Bharatanatyam','Kathak','Kathakali','Odissi','Kuchipudi',
+    'Mohiniyattam','Manipuri dance','Sattriya','Yakshagana','Nautanki','Tamasha','Ramlila','Raslila',
+    'Natya Shastra','Bharata Muni','Abhinavagupta','Indian cinema','Bollywood','Hindi cinema','Tamil cinema',
+    'Telugu cinema','Malayalam cinema','Kannada cinema','Bengali cinema','Marathi cinema',
+    'Satyajit Ray','Girish Karnad','Natyamandir','Padma Subrahmanyam','Birju Maharaj','Rukmini Devi Arundale'
+  ]},
+  { name:'Indian Literature & Poets', wikiCat:'Indian_literature', topics:[
+    'Indian literature','Sanskrit literature','Tamil literature','Begum of Bengal literature','Hindi literature',
+    'Bengali literature','Kannada literature','Telugu literature','Malayalam literature','Marathi literature',
+    'Gujarati literature','Punjabi literature','Assamese literature','Oriya literature','Urdu literature',
+    'Rabindranath Tagore','Bankim Chandra Chatterjee','Saratchandra Chattopadhyay','Premchand',
+    'Mulk Raj Anand','R.K. Narayan','Raja Rao','Manik Bandopadhyay','Mahasweta Devi','Amrita Pritam',
+    'C. Subramania Bharati','Subramania Swamy literature','Thiruvalluvar','Kamban','Tulsidas','Surdas',
+    'Kabir','Bharatendu Harishchandra','Harsha','Banabhatta','Kalidasa','Bhavabhuti','Bilhana',
+    'Jnanpith','Sahitya Akademi'
+  ]},
+  { name:'Indian Handicrafts & Coins', wikiCat:'Coins_of_India', topics:[
+    'Coins of India','Indian rupee','Numismatics','Punch-marked coins','Kushan coinage','Gupta coinage',
+    'Rupya','Mohur','Dinar','Tanka (numismatics)','East India Company coinage','Mughal coinage',
+    'Indian handloom','Pashmina shawl','Banarasi sari','Kanchi sari','Chanderi saree','Tanjore painting',
+    'Madhubani art','Warli art','Gond painting','Phulkari','Zardozi','Chikankari','Bidriware',
+    'Moradabad brassware','Sambalpuri sari','Patola sari','Ikat','Jamdani','Pachchi art',
+    'Channapatna toys','Dokra art','Mysore painting','Pattachitra','Kalamkari'
+  ]},
+  { name:'Indian Museums & Heritage Sites', wikiCat:'Museums_in_India', topics:[
+    'Museums in India','Indian Museum','National Museum, New Delhi','Salar Jung Museum','Victoria Memorial',
+    'Prince of Wales Museum','Calico Museum','National Gallery of Modern Art','Albert Hall Museum',
+    'Chhatrapati Shivaji Maharaj Vastu Sangrahalaya','Birla Museum','Government Museum, Chennai',
+    'Archaeological Museum, Hampi','Raja Dinkar Kelkar Museum','Sarnath Museum','Iron Pillar of Delhi',
+    'UNESCO World Heritage Sites in India','Agra Fort','Fatehpur Sikri','Nalanda','Ajanta Caves','Ellora Caves',
+    'Konark Sun Temple','Khajuraho','Mahabalipuram','Hampi','Aihole','Badami','Pattadakal','Jantar Mantar',
+    'Champaner-Pavagadh','Great Living Chola Temples','Kakatiya Rudreshwara Temple','Rani ki Vav',
+    'Hill Forts of Rajasthan','Archaeological Survey of India'
+  ]},
+  { name:'Indian Archaeology & Epigraphy', wikiCat:'Archaeology_of_India', topics:[
+    'Archaeology of India','Archaeological Survey of India','Indus Valley Civilisation','Mohenjo-daro',
+    'Harappa','Dholavira','Lothal','Rakhigarhi','Kalibangan','Banawali','Kot Diji','Sanauli',
+    'Arikamedu','Hastinapur','Kampilya','Taxila','Sanchi','Sarnath','Nalanda','Ajanta','Ellora',
+    'Ashokan Edicts','Pillar of Ashoka','Askoka inscriptions','Brahmi script','Kharosthi',
+    'Gupta inscriptions','Allahabad Pillar','Kalinga rock edicts','Iron Pillar of Delhi',
+    'Copper plate inscriptions','Rashtrakuta inscriptions','Mahabalipuram inscriptions'
+  ]},
+  { name:'Indian Demographics & Census', wikiCat:'Demographics_of_India', topics:[
+    'Demographics of India','Census of India','2011 Census of India','2001 Census of India',
+    'Population of India','Demographic transition','Sex ratio in India','Literacy in India',
+    'Indian diaspora','Languages of India by number of speakers','Religion in India','Hindu population',
+    'Muslim population','Christian population','Sikh population','Jain population','Buddhist population',
+    'Urbanization in India','Megacity','Mumbai','Delhi','Kolkata','Bangalore','Hyderabad',
+    'List of states and union territories by population','Most populous states of India',
+    'Age pyramid India','Elderly population in India','Migrant workers in India'
+  ]},
+  { name:'Indian Aviation & Shipping', wikiCat:'Aviation_in_India', topics:[
+    'Aviation in India','Air India','IndiGo','Jet Airways','Vistara','SpiceJet','Go First','Akasa Air',
+    'Airports Authority of India','Indira Gandhi International Airport','Rajiv Gandhi International Airport',
+    'Jewar Airport','Kempegowda International Airport','Chennai International Airport','Netaji Subhas Chandra Bose International Airport',
+    'Airports in India','Ministry of Civil Aviation','Civil aviation in India','J.R.D. Tata',
+    'Bharat Airways','Deccan Aviation','Air India Flight 182','Air India Express','Coastal India',
+    'Indian Ocean','Port of Mumbai','Port of Chennai','Visakhapatnam Port','Kandla Port','Mormugao Port',
+    'Jawaharlal Nehru Port','Mundra Port','Kolkata Port','Shipping Corporation of India','Indian Navy'
+  ]},
 ];
 
 // Rotation groups (7 groups, cycled through by 4h time slots)
@@ -2029,6 +2123,7 @@ const DAY_GROUPS = [
   [33,34,35,36,37,38,39], // Group 7: Indian Judiciary, Indian Tribes, Education in India, Indian Battles, Indian Heritage, Indian Cinema, Women & Society
   [40,41,42,43,44,45], // Group 8: Soil & Watershed, Horticulture, Farm Machinery, Food Processing, Agricultural Engineering, Applied Sciences
   [46,47,48,49,50,51,52,53,54,55], // Group 9: Meteorology & Climate, Animal Husbandry & Dairy, Fisheries & Aquaculture, Telecom & Postal, Mining & Minerals, Indian Music & Fine Arts, Indian Languages, Courts Cases & Verdicts, Ayurveda & Traditional Medicine, Indian Architecture
+  [56,57,58,59,60,61,62,63,64,65,66], // Group 10: Indian Wildlife & National Parks, Indian Rivers & Water Resources, Indian Festivals & Fairs, Indian Philosophy & Thinkers, Indian Theatre & Cinema, Indian Literature & Poets, Indian Handicrafts & Coins, Indian Museums & Heritage Sites, Indian Archaeology & Epigraphy, Indian Demographics & Census, Indian Aviation & Shipping
 ];
 
 async function main() {
