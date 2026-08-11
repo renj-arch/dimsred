@@ -9,10 +9,13 @@ CREATE TABLE IF NOT EXISTS profiles (
   streak_current INT DEFAULT 0,
   streak_longest INT DEFAULT 0,
   streak_last_date TEXT,
+  xp INT DEFAULT 0,
   badges JSONB DEFAULT '[]',
   goals JSONB DEFAULT '{}',
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS xp INT DEFAULT 0;
 
 -- 2. Results (paper completions)
 CREATE TABLE IF NOT EXISTS results (
@@ -80,11 +83,11 @@ CREATE TABLE IF NOT EXISTS quiz_progress (
 );
 
 -- Indexes
-CREATE INDEX idx_results_user ON results(user_id);
-CREATE INDEX idx_results_date ON results(date DESC);
-CREATE INDEX idx_wrong_user ON wrong_answers(user_id);
-CREATE INDEX idx_bookmarks_user ON bookmarks(user_id);
-CREATE INDEX idx_leaderboard_pct ON leaderboard(pct DESC);
+CREATE INDEX IF NOT EXISTS idx_results_user ON results(user_id);
+CREATE INDEX IF NOT EXISTS idx_results_date ON results(date DESC);
+CREATE INDEX IF NOT EXISTS idx_wrong_user ON wrong_answers(user_id);
+CREATE INDEX IF NOT EXISTS idx_bookmarks_user ON bookmarks(user_id);
+CREATE INDEX IF NOT EXISTS idx_leaderboard_pct ON leaderboard(pct DESC);
 
 -- Row Level Security
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;

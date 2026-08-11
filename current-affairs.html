@@ -5260,37 +5260,105 @@ var _staticGen_polity = GK_GENERATORS.polity;
         var state = { cat: null, questions: [], idx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null, autoTimer: null, autoPaused: false };
         var SESSION_KEY = 'vlym_quiz_state';
 
-        function saveQuizSession() {
-            if (state.questions.length > 0) {
-                try { localStorage.setItem(SESSION_KEY, JSON.stringify({ cat: state.cat, categoryName: state.categoryName, idx: state.idx, correct: state.correct, streak: state.streak, answered: false, questions: state.questions.slice(0, 300), infinite: state.infinite })); } catch(e) {}
-                // Sync to Supabase so the quiz can be resumed after login on any device
-                if (window.supabaseUser && typeof window.syncQuizProgress === 'function') {
-                    try {
-                        window.syncQuizProgress({ cat: state.cat, categoryName: state.categoryName, idx: state.idx, correct: state.correct, streak: state.streak, answered: false, questions: state.questions.slice(0, 300), infinite: state.infinite });
-                    } catch(e) {}
+        // ---------- Multi-category quiz tracker ----------
+        // Sessions are stored as a map keyed by category, so you can leave several
+        // quizzes unfinished and resume each exactly where you stopped. Answered
+        // questions are dropped from the saved pool so you never revisit them.
+        function readSessions() {
+            try {
+                var raw = JSON.parse(localStorage.getItem(SESSION_KEY));
+                if (!raw) return {};
+                if (Array.isArray(raw.questions)) { // legacy single-session payload
+                    var legacy = {};
+                    legacy[raw.cat || 'default'] = raw;
+                    return legacy;
                 }
+                return raw;
+            } catch(e) { return {}; }
+        }
+        function writeSessions(map) {
+            try { localStorage.setItem(SESSION_KEY, JSON.stringify(map)); } catch(e) {}
+            // Sync the whole map to Supabase so every category can be resumed after login on any device
+            if (window.supabaseUser && typeof window.syncQuizProgress === 'function') {
+                try { window.syncQuizProgress(map); } catch(e) {}
             }
+        }
+        function sessionId() { return state.cat || 'default'; }
+        function clearQuizSession(cat) {
+            var map = readSessions();
+            if (map[cat]) {
+                delete map[cat];
+                writeSessions(map);
+            }
+        }
+        function resumeIndexOf() {
+            // If the current question is already answered (or it's a learning flashcard),
+            // the next resume point is the following question — never re-show a finished one.
+            return Math.min(state.answered ? state.idx + 1 : state.idx, state.questions.length);
+        }
+
+        function saveQuizSession() {
+            if (!state.questions || state.questions.length === 0) return;
+            var resumeIdx = resumeIndexOf();
+            var remaining = state.questions.slice(resumeIdx, resumeIdx + 500);
+            if (remaining.length === 0) {
+                if (!state.infinite) clearQuizSession(sessionId());
+                return;
+            }
+            var map = readSessions();
+            map[sessionId()] = {
+                cat: state.cat,
+                categoryName: state.categoryName,
+                idx: 0,
+                correct: state.correct,
+                streak: state.streak,
+                answered: false,
+                infinite: state.infinite || false,
+                questions: remaining,
+                savedAt: Date.now()
+            };
+            writeSessions(map);
+        }
+        function listUnfinishedSessions(map) {
+            var out = [];
+            for (var k in map) {
+                var s = map[k];
+                if (s && s.questions && s.questions.length > 0 && (s.idx || 0) < s.questions.length) out.push(s);
+            }
+            out.sort(function(a, b) { return (b.savedAt || 0) - (a.savedAt || 0); });
+            return out;
+        }
+        function loadSessionIntoState(saved) {
+            state.cat = saved.cat;
+            state.categoryName = saved.categoryName;
+            state.idx = saved.idx || 0;
+            state.correct = saved.correct || 0;
+            state.streak = saved.streak || 0;
+            state.answered = false;
+            state.questions = saved.questions;
+            state.infinite = saved.infinite || false;
+            state._feedSource = null;
+            for (var i = 0; i < state.questions.length; i++) {
+                var qq = state.questions[i];
+                if (!qq.opts) { try { qq.opts = buildOptions(qq.a); } catch(e) {} }
+            }
+            state.restartFn = function() { startCategory(saved.cat, saved.categoryName); };
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('qArea').classList.add('active');
+            document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('restartBtn').style.display = 'inline-block';
+            showQuestion();
         }
         function restoreQuizSession() {
             try {
-                var saved = JSON.parse(localStorage.getItem(SESSION_KEY));
-                if (saved && saved.questions && saved.questions.length > 0) {
-                    if (confirm('You have an unfinished quiz from your last visit. Resume it?')) {
-                        state.cat = saved.cat;
-                        state.categoryName = saved.categoryName;
-                        state.idx = saved.idx;
-                        state.correct = saved.correct;
-                        state.streak = saved.streak;
-                        state.answered = false;
-                        state.questions = saved.questions;
-                        state.infinite = saved.infinite || false;
-                        state.restartFn = function() { startCategory(saved.cat, saved.categoryName); };
-                        document.getElementById('welcome').style.display = 'none';
-                        document.getElementById('qArea').classList.add('active');
-                        document.getElementById('scoreBar').classList.add('show');
-                        document.getElementById('restartBtn').style.display = 'inline-block';
-
-                        showQuestion();
+                var unfinished = listUnfinishedSessions(readSessions());
+                for (var i = 0; i < unfinished.length; i++) {
+                    var saved = unfinished[i];
+                    var name = saved.categoryName || saved.cat || 'GK';
+                    var msg = 'You have an unfinished quiz: ' + name + ' — resume at question ' + ((saved.idx || 0) + 1) + ' (' + (saved.correct || 0) + ' correct). Resume it?';
+                    if (unfinished.length > 1) msg += ' (' + (unfinished.length - 1 - i) + ' other saved quiz' + (unfinished.length - 1 - i === 1 ? '' : 'zes') + ' left)';
+                    if (confirm(msg)) {
+                        loadSessionIntoState(saved);
                         return true;
                     }
                 }
@@ -5316,27 +5384,29 @@ var _staticGen_polity = GK_GENERATORS.polity;
         }
         function restoreRemoteQuizSessionCore() {
             if (!window.supabaseUser || typeof window.loadQuizProgress !== 'function') return;
-            var existingLocal = null;
-            try { existingLocal = JSON.parse(localStorage.getItem(SESSION_KEY)); } catch(e) {}
-            if (existingLocal && existingLocal.questions && existingLocal.questions.length > 0) return;
+            if (listUnfinishedSessions(readSessions()).length > 0) return;
             window.loadQuizProgress().then(function(saved) {
-                if (!saved || !saved.questions || saved.questions.length === 0) return;
-                if (saved.idx >= saved.questions.length) return;
-                if (!confirm('You have a saved quiz (' + (saved.categoryName || 'GK') + '). Resume from question ' + (saved.idx + 1) + ' of ' + saved.questions.length + '?')) return;
-                state.cat = saved.cat;
-                state.categoryName = saved.categoryName;
-                state.idx = saved.idx;
-                state.correct = saved.correct;
-                state.streak = saved.streak;
-                state.answered = false;
-                state.questions = saved.questions;
-                state.infinite = saved.infinite || false;
-                state.restartFn = function() { startCategory(saved.cat, saved.categoryName); };
-                document.getElementById('welcome').style.display = 'none';
-                document.getElementById('qArea').classList.add('active');
-                document.getElementById('scoreBar').classList.add('show');
-                document.getElementById('restartBtn').style.display = 'inline-block';
-                showQuestion();
+                if (!saved) return;
+                if (Array.isArray(saved.questions)) { // legacy single-session payload
+                    var legacy = {};
+                    legacy[saved.cat || 'default'] = saved;
+                    saved = legacy;
+                }
+                var unfinished = listUnfinishedSessions(saved);
+                if (unfinished.length === 0) return;
+                for (var i = 0; i < unfinished.length; i++) {
+                    var s = unfinished[i];
+                    var name = s.categoryName || s.cat || 'GK';
+                    var msg = 'You have a saved quiz: ' + name + ' — resume from question ' + ((s.idx || 0) + 1) + ' of ' + s.questions.length + '?';
+                    if (unfinished.length > 1) msg += ' (' + (unfinished.length - 1 - i) + ' other saved quiz' + (unfinished.length - 1 - i === 1 ? '' : 'zes') + ' left)';
+                    if (confirm(msg)) {
+                        var map = readSessions();
+                        map[s.cat || 'default'] = s;
+                        writeSessions(map);
+                        loadSessionIntoState(s);
+                        return;
+                    }
+                }
             }).catch(function(){});
         }
 
@@ -5481,7 +5551,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
 
         function startCategory(id, name) {
             if (!confirmAbandonQuiz()) return;
-            try { localStorage.removeItem(SESSION_KEY); } catch(e) {}
+            clearQuizSession(id);
             if (state._poolTimerId) { clearInterval(state._poolTimerId); state._poolTimerId = null; }
             state.cat = id;
             state.categoryName = name;
@@ -6094,6 +6164,7 @@ function prevQuestion() {
                     });
                 }
             }
+            if (!state.infinite) clearQuizSession(sessionId());
             if (state.questions.length === 0) {
                 document.getElementById('qNum').textContent = 'Session Complete';
                 document.getElementById('qProgress').style.width = '100%';
@@ -6150,6 +6221,7 @@ function prevQuestion() {
 
         function startTimedQuizWith(days) {
             if (!confirmAbandonQuiz()) return;
+            clearQuizSession('mixed');
             var label = days === 1 ? 'Today\'s Quiz' : (days === 7 ? 'Weekly Quiz' : (days === 30 ? 'Monthly Quiz' : (days === 365 ? 'Yearly Quiz' : 'Quarterly Quiz')));
             var now = new Date();
             var endStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
@@ -6165,6 +6237,7 @@ function prevQuestion() {
             var endEl = document.getElementById('quizEndDate');
             var label = 'Custom Quiz';
             if (startEl.value && endEl.value) label = 'Quiz: ' + startEl.value + ' to ' + endEl.value;
+            clearQuizSession('mixed');
             state.cat = 'mixed';
             state.categoryName = label;
             state.idx = 0;
@@ -6214,7 +6287,7 @@ function prevQuestion() {
             document.getElementById('jumpRow').style.display = 'none';
             state.questions = [];
             state.idx = 0;
-            try { localStorage.removeItem(SESSION_KEY); } catch(e) {}
+            clearQuizSession(sessionId());
         }
 
         var currentMode = 'quiz';
@@ -7290,6 +7363,7 @@ function prevQuestion() {
 
         function startStaticGk() {
             if (!confirmAbandonQuiz()) return;
+            clearQuizSession('static');
             state.cat = 'static';
             state.categoryName = 'Static GK';
             state.idx = 0;
@@ -7551,6 +7625,8 @@ function prevQuestion() {
             if (state.answered || state.idx > 0) {
                 if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
             }
+            clearQuizSession('feed');
+            state.cat = 'feed';
             state.questions = [];
             state.idx = 0;
             state.answered = true;
@@ -7772,6 +7848,7 @@ function prevQuestion() {
         // ===== COMBINED CATEGORY + CURRENT AFFAIRS QUIZ =====
         function startCategoryQuiz(id, name) {
             if (!confirmAbandonQuiz()) return;
+            clearQuizSession(id);
             state.cat = id;
             state.categoryName = name + ' + Current Affairs';
             state.idx = 0;
