@@ -5259,33 +5259,55 @@ var _staticGen_polity = GK_GENERATORS.polity;
             return false;
         }
         var state = { cat: null, _sessionKey: null, questions: [], idx: 0, baseIdx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null, autoTimer: null, autoPaused: false };
-        var SESSION_KEY = 'vlym_quiz_state';
         var _resumeHandled = false;
+        // Sessions live ONLY in Supabase (quiz_progress). The in-memory cache is the
+        // working copy for this page load; it is populated from Supabase on load and
+        // every change is pushed straight back to Supabase. Nothing touches localStorage.        var _sessionCache = null;
+        var _sessionsPromise = null;
 
         // ---------- Multi-category quiz tracker ----------
         // Sessions are stored as a map keyed by category, so you can leave several
         // quizzes unfinished and resume each exactly where you stopped. Answered
         // questions are dropped from the saved pool so you never revisit them.
         function readSessions() {
-            try {
-                var raw = JSON.parse(localStorage.getItem(SESSION_KEY));
-                if (!raw) return {};
-                if (Array.isArray(raw.questions)) { // legacy single-session payload
-                    var legacy = {};
-                    legacy[raw.cat || 'default'] = raw;
-                    return legacy;
-                }
-                return raw;
-            } catch(e) { return {}; }
+            if (_sessionCache === null) _sessionCache = {};
+            return _sessionCache;
         }
         function writeSessions(map) {
-            try { localStorage.setItem(SESSION_KEY, JSON.stringify(map)); } catch(e) {}
-            // Sync the whole map to Supabase so every category can be resumed after login on any device
+            _sessionCache = map;
+            // Push the whole map to Supabase so it can be resumed after login on any device.
             if (window.supabaseUser && typeof window.syncQuizProgress === 'function') {
                 try { window.syncQuizProgress(map).then(function(){ refreshSyncStatus(); }); } catch(e) {}
             } else {
                 refreshSyncStatus();
             }
+        }
+        // Load the user's sessions from Supabase into the cache. Resolves when ready;
+        // concurrent callers share the same promise. If not signed in yet, resolves
+        // immediately without caching so a later call can retry after login.
+        function ensureSessionsLoaded() {
+            if (_sessionsPromise) return _sessionsPromise;
+            if (typeof window.supabaseUser === 'undefined' || !window.supabaseUser || typeof window.loadQuizProgress !== 'function') {
+                return Promise.resolve();
+            }
+            _sessionsPromise = window.loadQuizProgress().then(function(saved) {
+                if (!saved) return;
+                if (Array.isArray(saved.questions)) { // legacy single-session payload
+                    var legacy = {};
+                    legacy[saved.cat || 'default'] = saved;
+                    saved = legacy;
+                }
+                var map = readSessions();
+                var changed = false;
+                for (var k in saved) {
+                    if (!map[k] || (saved[k].savedAt || 0) > (map[k].savedAt || 0)) {
+                        map[k] = saved[k];
+                        changed = true;
+                    }
+                }
+                if (changed) _sessionCache = map;
+            }).catch(function(){});
+            return _sessionsPromise;
         }
         function refreshSyncStatus() {
             var el = document.getElementById('syncStatus');
@@ -5336,7 +5358,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             // Keep a window of questions around the resume point so you can still
             // scroll back and review roughly the last 300 finished questions.
             // The archive feed can hold thousands of long items, so keep its saved
-            // window small to avoid huge localStorage/Supabase payloads.
+            // window small to avoid huge Supabase payloads.
             var isFeed = state._feedSource === 'archive';
             var backWindow = isFeed ? 40 : 300;
             var windowUpTo = isFeed ? 120 : 1200;
@@ -5375,6 +5397,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
         // Rebuild the archive feed (or subject browse) from a saved session and continue auto-advancing.
         function restoreFeedSession(saved) {
             state.cat = saved.cat || 'feed';
+            state._sessionKey = null;
             state.categoryName = saved.categoryName || (state.cat.indexOf('subject::') === 0 ? state.cat.slice(9) : 'Archive');
             state.baseIdx = saved.baseIdx || 0;
             state.idx = saved.idx || 0;
@@ -5405,6 +5428,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             _resumeHandled = true;
             if (saved.cat === 'feed' || (saved.cat || '').indexOf('subject::') === 0) { restoreFeedSession(saved); return; }
             state.cat = saved.cat;
+            state._sessionKey = saved._sessionKey || null;
             state.categoryName = saved.categoryName;
             state.baseIdx = saved.baseIdx || 0;
             state.idx = saved.idx || 0;
@@ -5431,26 +5455,26 @@ var _staticGen_polity = GK_GENERATORS.polity;
             if (trkEl) trkEl.textContent = (saved.answeredCount || 0) + ' answered';
             showQuestion();
         }
-        function restoreQuizSession() {
-            try {
-                var unfinished = listUnfinishedSessions(readSessions());
-                for (var i = 0; i < unfinished.length; i++) {
-                    var saved = unfinished[i];
-                    var name = saved.categoryName || saved.cat || 'GK';
-                    var resumeAt = (saved.baseIdx || 0) + (saved.idx || 0) + 1;
-                    var msg = 'You have an unfinished quiz: ' + name + ' — resume at question ' + resumeAt + ' (' + (saved.answeredCount || 0) + ' answered, ' + (saved.correct || 0) + ' correct). Resume it?';
-                    if (unfinished.length > 1) msg += ' (' + (unfinished.length - 1 - i) + ' other saved quiz' + (unfinished.length - 1 - i === 1 ? '' : 'zes') + ' left)';
-                    if (confirm(msg)) {
-                        loadSessionIntoState(saved);
-                        return true;
-                    }
+        function promptUnfinishedSessions() {
+            if (_resumeHandled) return;
+            var unfinished = listUnfinishedSessions(readSessions());
+            if (unfinished.length === 0) return false;
+            for (var i = 0; i < unfinished.length; i++) {
+                var saved = unfinished[i];
+                var name = saved.categoryName || saved.cat || 'GK';
+                var resumeAt = (saved.baseIdx || 0) + (saved.idx || 0) + 1;
+                var msg = 'You have an unfinished quiz: ' + name + ' — resume at question ' + resumeAt + ' (' + (saved.answeredCount || 0) + ' answered, ' + (saved.correct || 0) + ' correct). Resume it?';
+                if (unfinished.length > 1) msg += ' (' + (unfinished.length - 1 - i) + ' other saved quiz' + (unfinished.length - 1 - i === 1 ? '' : 'zes') + ' left)';
+                if (confirm(msg)) {
+                    loadSessionIntoState(saved);
+                    return true;
                 }
-            } catch(e) {}
+            }
             return false;
         }
 
-        // Resume from Supabase if the user is logged in on another device.
-        // Only kicks in when there is no local unsaved session to avoid double prompts.
+        // Load sessions from Supabase, then offer to resume any that are unfinished.
+        // Polls briefly until supabase is ready (the user may still be mid-login).
         function restoreRemoteQuizSession() {
             if (_resumeHandled) return;
             if (typeof window.supabaseUser === 'undefined' || window.supabaseReady !== true) {
@@ -5459,49 +5483,12 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     _rTries++;
                     if ((typeof window.supabaseUser !== 'undefined' && window.supabaseReady === true) || _rTries > 80) {
                         clearInterval(_rTimer);
-                        restoreRemoteQuizSessionCore();
+                        ensureSessionsLoaded().then(promptUnfinishedSessions);
                     }
                 }, 250);
                 return;
             }
-            restoreRemoteQuizSessionCore();
-        }
-        function restoreRemoteQuizSessionCore() {
-            if (_resumeHandled) return;
-            if (!window.supabaseUser || typeof window.loadQuizProgress !== 'function') return;
-            window.loadQuizProgress().then(function(saved) {
-                if (!saved) return;
-                if (Array.isArray(saved.questions)) { // legacy single-session payload
-                    var legacy = {};
-                    legacy[saved.cat || 'default'] = saved;
-                    saved = legacy;
-                }
-                // Merge remote sessions into local (keep the newer when a key exists),
-                // so every category/subject can offer resume on this device too.
-                var map = readSessions();
-                var changed = false;
-                for (var k in saved) {
-                    if (!map[k] || (saved[k].savedAt || 0) > (map[k].savedAt || 0)) {
-                        map[k] = saved[k];
-                        changed = true;
-                    }
-                }
-                if (changed) writeSessions(map);
-                if (_resumeHandled) return;
-                var unfinished = listUnfinishedSessions(readSessions());
-                if (unfinished.length === 0) return;
-                for (var i = 0; i < unfinished.length; i++) {
-                    var s = unfinished[i];
-                    var name = s.categoryName || s.cat || 'GK';
-                    var resumeAt = (s.baseIdx || 0) + (s.idx || 0) + 1;
-                    var msg = 'You have a saved quiz: ' + name + ' — resume from question ' + resumeAt + ' of ' + s.questions.length + '?';
-                    if (unfinished.length > 1) msg += ' (' + (unfinished.length - 1 - i) + ' other saved quiz' + (unfinished.length - 1 - i === 1 ? '' : 'zes') + ' left)';
-                    if (confirm(msg)) {
-                        loadSessionIntoState(s);
-                        return;
-                    }
-                }
-            }).catch(function(){});
+            ensureSessionsLoaded().then(promptUnfinishedSessions);
         }
 
         function isQuizActive() {
@@ -5616,11 +5603,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
         }
 
         function init() {
-            if (!restoreQuizSession()) {
-                initCatGrid();
-            } else {
-                initCatGrid();
-            }
+            initCatGrid();
             restoreRemoteQuizSession();
             loadQuizJson();
             refreshSyncStatus();
@@ -5645,8 +5628,9 @@ var _staticGen_polity = GK_GENERATORS.polity;
             }
         }
 
-        function startCategory(id, name) {
+        async function startCategory(id, name) {
             if (!confirmAbandonQuiz()) return;
+            await ensureSessionsLoaded();
             if (offerResumeFor(id, name)) return;
             clearQuizSession(id);
             state.cat = id;
@@ -6319,8 +6303,9 @@ function prevQuestion() {
             panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
         }
 
-        function startTimedQuizWith(days) {
+        async function startTimedQuizWith(days) {
             if (!confirmAbandonQuiz()) return;
+            await ensureSessionsLoaded();
             if (offerResumeFor('mixed', null)) return;
             clearQuizSession('mixed');
             var label = days === 1 ? 'Today\'s Quiz' : (days === 7 ? 'Weekly Quiz' : (days === 30 ? 'Monthly Quiz' : (days === 365 ? 'Yearly Quiz' : 'Quarterly Quiz')));
@@ -6332,12 +6317,13 @@ function prevQuestion() {
             _runTimedQuiz(startStr, endStr, label + ' (unlimited)', 9999);
         }
 
-        function startCustomDateQuiz() {
+        async function startCustomDateQuiz() {
             if (!confirmAbandonQuiz()) return;
             var startEl = document.getElementById('quizStartDate');
             var endEl = document.getElementById('quizEndDate');
             var label = 'Custom Quiz';
             if (startEl.value && endEl.value) label = 'Quiz: ' + startEl.value + ' to ' + endEl.value;
+            await ensureSessionsLoaded();
             if (offerResumeFor('mixed', null)) return;
             clearQuizSession('mixed');
             state.cat = 'mixed';
@@ -7478,8 +7464,9 @@ function prevQuestion() {
             }
         }
 
-        function startStaticGk() {
+        async function startStaticGk() {
             if (!confirmAbandonQuiz()) return;
+            await ensureSessionsLoaded();
             if (offerResumeFor('static', 'Static GK')) return;
             clearQuizSession('static');
             state.cat = 'static';
@@ -7696,13 +7683,14 @@ function prevQuestion() {
             }
         }
 
-        function startSubjectQuiz(subject) {
+        async function startSubjectQuiz(subject) {
             if (state.answered || state.idx > 0) {
                 if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
             }
             state.cat = 'subject::' + subject;
             state.categoryName = subject;
             state._sessionKey = null;
+            await ensureSessionsLoaded();
             if (offerResumeFor(state.cat, subject)) return;
             clearQuizSession(state.cat);
             state.questions = [];
@@ -7749,10 +7737,11 @@ function prevQuestion() {
             });
         }
 
-        function startArchiveFeed(days) {
+        async function startArchiveFeed(days) {
             if (state.answered || state.idx > 0) {
                 if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
             }
+            await ensureSessionsLoaded();
             if (offerResumeFor('feed', 'Archive')) return;
             clearQuizSession('feed');
             state.cat = 'feed';
@@ -7984,10 +7973,11 @@ function prevQuestion() {
         
         
         // ===== COMBINED CATEGORY + CURRENT AFFAIRS QUIZ =====
-        function startCategoryQuiz(id, name) {
+        async function startCategoryQuiz(id, name) {
             if (!confirmAbandonQuiz()) return;
             state._sessionKey = 'ca::' + id;
             state.categoryName = name + ' + Current Affairs';
+            await ensureSessionsLoaded();
             if (offerResumeFor(state._sessionKey, state.categoryName)) return;
             clearQuizSession(state._sessionKey);
             state.cat = id;
