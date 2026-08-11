@@ -2278,8 +2278,10 @@ async function main() {
         const sentKey = title + '::' + si;
         let sentUsed = factAccepted.has(si);
 
-        // ▸ Year-based (any year, no trigger word filter)
-        if (!sentUsed) {
+        // ▸ Year-based (any year, no trigger word filter). Multiple extractors
+        //   may fire per sentence: dedup on question text keeps exact overlaps
+        //   out, so a dated+superlative+term sentence yields all of them.
+        {
           const years = sent.match(/\b(1[0-9]{3}|20[0-9]{2})\b/g);
           if (years && sent.length < 240) {
             const yearChoice = years[0];
@@ -2296,12 +2298,12 @@ async function main() {
               pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
               question: context, answer: yearChoice, hint: '',
               fact: paraphrase(getContext(allSentences, sent, 3), yearChoice),
-            })) { added++; articleAdded++; articleQ++; sentUsed = true; }
+            })) { added++; articleAdded++; articleQ++; }
           }
         }
 
         // ▸ Number-based (%, lakh, crore, million, billion, km, kg)
-        if (articleQ < MAX_PER_ARTICLE && !sentUsed) {
+        if (articleQ < MAX_PER_ARTICLE) {
           const numRe = /\b(\d+(?:[.,]\d+)?\s*(%|lakh|crore|million|billion|trillion|sq\s*\.?\s*km|km²|km\b|kg|tonnes?|hectares?|megawatts?|kilometres?|kilometers?|metres?|meters?|miles?|feet|ft\b|inches?|yards?|m\b))/i;
           const numMatch = sent.match(numRe);
           if (numMatch && sent.length < 240) {
@@ -2313,12 +2315,12 @@ async function main() {
               pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
             question: context, answer: numChoice.trim(), hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), numChoice.trim()),
-            })) { added++; articleAdded++; articleQ++; sentUsed = true; }
+            })) { added++; articleAdded++; articleQ++; }
           }
         }
 
         // ▸ Superlative-based (first, largest, highest, oldest, etc.)
-        if (articleQ < MAX_PER_ARTICLE && !sentUsed) {
+        if (articleQ < MAX_PER_ARTICLE) {
           const supMatch = sent.match(/\b(first|second|largest|highest|oldest|deepest|longest|biggest|tallest|smallest|largest|earliest|latest|closest|farthest|most powerful|most populous|most important)\b/i);
           if (supMatch && sent.length < 240) {
             const numberNearby = sent.match(/\b(\d+(?:[.,]\d+)?)\s*(?=%|million|billion|lakh|crore|km|kg|feet|ft|metres?|meters?|miles?|inches?|yards?|m)?/);
@@ -2330,14 +2332,14 @@ async function main() {
                 pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
             question: context, answer: numberNearby[1].trim(), hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), numberNearby[1].trim()),
-              })) { added++; articleAdded++; articleQ++; sentUsed = true; }
+              })) { added++; articleAdded++; articleQ++; }
             }
           }
         }
 
         // ▸ Blank-out key term (every short sentence; long ones are handled by
         //   the fact-pattern extractors above)
-        if (articleQ < MAX_PER_ARTICLE && !sentUsed && sent.length <= 260) {
+        if (articleQ < MAX_PER_ARTICLE && sent.length <= 260) {
           if (new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(sent)) continue;
           const bestTerm = findBestTerm(sent, title);
           if (!bestTerm) continue;
@@ -2349,7 +2351,7 @@ async function main() {
             pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
             question: context, answer: bestTerm, hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), bestTerm),
-          })) { added++; articleAdded++; articleQ++; sentUsed = true; }
+          })) { added++; articleAdded++; articleQ++; }
         }
       }
 
