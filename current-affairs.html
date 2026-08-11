@@ -7628,6 +7628,7 @@ function prevQuestion() {
         function renderHomeCatGrid() {
             var grid = document.getElementById('homeCatGrid');
             if (!grid) return;
+            if (_catalogLoaded) return; // live catalog.json already shown — don't overwrite with filtered archive counts
             if (!_archiveCache || _archiveCache.length === 0) { return; }
             var counts = {};
             for (var i = 0; i < _archiveCache.length; i++) {
@@ -7638,11 +7639,11 @@ function prevQuestion() {
             _drawCatGrid(counts);
         }
         var _catalogTried = false;
+        var _catalogLoaded = false;
         var HOME_CATALOG = {"total":277674,"subjects":{"Agricultural Engineering":1005,"Agriculture & Food":2926,"Ancient India":9423,"Announcements":48,"Applied Sciences":1306,"Art & Culture":13561,"Awards & Honours":3863,"Awards":141,"Books & Authors":11395,"Business & Economy":2109,"Computer & IT":3757,"Constitution":1913,"Current Affairs":10251,"Defence & Security":8955,"Defence":999,"Disaster Management":3086,"Education in India":663,"Energy & Power":2189,"Engineering & Technical":230,"Environment & Ecology":6019,"Ethics & Integrity":3292,"Ethics":48,"Farm Machinery":785,"Food Processing":1089,"General Science":11750,"General":93,"Geography":574,"Geology & Hydrogeology":164,"Govt Schemes":3535,"Health & Medicine":2589,"Horticulture":1875,"Important Days":2892,"Indian Battles":1212,"Indian Cinema":621,"Indian Economy":7202,"Indian Geography":5642,"Indian Heritage":1310,"Indian History":1245,"Indian Judiciary":872,"Indian National Symbols":1813,"Indian Society":5282,"Indian States":10317,"Indian Tribes":1572,"International Relations":17945,"ISRO & Space":5142,"Library & Information Science":182,"Medieval & Modern India":8258,"Personalities":1233,"PIB Releases":895,"Polity & Governance":4165,"Polity":403,"Railways & Transport":5436,"RBI & Banking":3450,"RBI Press Releases":235,"Science & Technology":5387,"Society":575,"Soil & Watershed":2110,"Sports":15007,"State GK":602,"Statistics & Mathematics":270,"Tech & Science":63,"Women & Society":918,"World Geography":18117,"World History":37668}};
         function initHomeCatGrid() {
             var grid = document.getElementById('homeCatGrid');
             if (!grid) return;
-            if (HOME_CATALOG && HOME_CATALOG.subjects) { _drawCatGrid(HOME_CATALOG.subjects); return; }
             if (_catalogTried) return;
             _catalogTried = true;
             var xhr = new XMLHttpRequest();
@@ -7651,14 +7652,15 @@ function prevQuestion() {
                 if (xhr.status === 200) {
                     try {
                         var cat = JSON.parse(xhr.responseText);
-                        if (cat && cat.subjects) { _drawCatGrid(cat.subjects); return; }
+                        if (cat && cat.subjects) { _catalogLoaded = true; _drawCatGrid(cat.subjects); return; }
                     } catch(e) {}
                 }
-                _drawCatGrid(null);
+                if (HOME_CATALOG && HOME_CATALOG.subjects) _drawCatGrid(HOME_CATALOG.subjects);
+                else _drawCatGrid(null);
             };
-            xhr.onerror = function() { _drawCatGrid(null); };
-            xhr.ontimeout = function() { _drawCatGrid(null); };
-            xhr.open('GET', 'data/questions/catalog.json', true);
+            xhr.onerror = function() { if (HOME_CATALOG && HOME_CATALOG.subjects) _drawCatGrid(HOME_CATALOG.subjects); else _drawCatGrid(null); };
+            xhr.ontimeout = function() { if (HOME_CATALOG && HOME_CATALOG.subjects) _drawCatGrid(HOME_CATALOG.subjects); else _drawCatGrid(null); };
+            xhr.open('GET', 'data/questions/catalog.json?t=' + Date.now(), true);
             xhr.send();
         }
         function _drawCatGrid(counts) {
