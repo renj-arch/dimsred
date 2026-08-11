@@ -18,7 +18,7 @@ permissions:
   actions: write
 
 env:
-  NODE_OPTIONS: --max-old-space-size=4096
+  NODE_OPTIONS: --max-old-space-size=8192
 
 jobs:
   # ── Setup: prepare baseline quiz.json, PIB feeds ──
@@ -98,13 +98,14 @@ jobs:
           WIKI_FILL_CHUNKS: 24
           WIKI_FILL_ALL: '1'
           QUIZ_PATH: data/quiz-chunk-${{ matrix.chunk }}.json
-          WIKI_FILL_CONCURRENCY: 12
-          WIKI_FILL_PER_ARTICLE: 300
-          WIKI_FILL_TOPIC_BUDGET: 50000
-          WIKI_FILL_REVISIT_BUDGET: 50000
-          WIKI_FILL_LINK_BUDGET: 5000
-          WIKI_FILL_MAX_PAGES: 100000
-          WIKI_FILL_DELAY_MS: 1500
+          WIKI_FILL_CONCURRENCY: 6
+          WIKI_FILL_BATCH: 20
+          WIKI_FILL_PER_ARTICLE: 1200
+          WIKI_FILL_TOPIC_BUDGET: 200000
+          WIKI_FILL_REVISIT_BUDGET: 200000
+          WIKI_FILL_LINK_BUDGET: 30000
+          WIKI_FILL_MAX_PAGES: 400000
+          WIKI_FILL_DELAY_MS: 1200
 
       - uses: actions/upload-artifact@v4
         with:
