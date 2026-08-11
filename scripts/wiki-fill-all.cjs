@@ -1916,6 +1916,113 @@ const CATEGORIES = [
     'Thermal engineering','Refrigeration and air conditioning','Workshop','Drafting','Technical drawing',
     'Computer-aided design','Mechatronics','Robotics','Automation','Nanotechnology','Biotechnology'
   ]},
+  // ───────── Meteorology & Climate (Indian monsoon, weather systems) ─────────
+  { name:'Meteorology & Climate', wikiCat:'Meteorology', topics:[
+    'Meteorology','Indian monsoon','Monsoon of South Asia','Southwest monsoon','Northeast monsoon',
+    'El Niño','La Niña','Indian Ocean Dipole','Western Disturbance','Jet stream',
+    'Tropical cyclone','Cyclone','Thunderstorm','Cloudburst','Heat wave','Cold wave',
+    'Drought','Flood','Meteorological departments in India','India Meteorological Department',
+    'IMD cyclone warnings','Monsoon onset','Monsoon retreat','Kerala monsoon','Bay of Bengal cyclone',
+    'Arabian Sea cyclone','Cyclone Nivar','Cyclone Amphan','Cyclone Fani','Cyclone Tauktae',
+    'Cyclone Yaas','Cyclone Mocha','Cyclone Biparjoy','El Nino Southern Oscillation',
+    'Rainfall in India','Indian summer monsoon','Winter monsoon','Southwest Monsoon of 2020'
+  ]},
+  // ───────── Animal Husbandry, Poultry, Fisheries ─────────
+  { name:'Animal Husbandry & Dairy', wikiCat:'Animal_husbandry', topics:[
+    'Animal husbandry','Livestock','Poultry farming','Poultry in India','Dairy farming in India',
+    'Cattle (cow)','Buffalo','Goat farming','Sheep farming','Pig farming','Horse breeding',
+    'Veterinary medicine','Veterinary surgery','Animal breeding','Artificial insemination',
+    'Dairy cattle','Milking','Milk','Ghee','Pasteurization','National Dairy Development Board',
+    'Operation Flood','White Revolution (India)','Indian Council of Agricultural Research',
+    'Indian Veterinary Research Institute','Vaccines in livestock','Poultry disease','Fodder','Silo'
+  ]},
+  { name:'Fisheries & Aquaculture', wikiCat:'Fishery', topics:[
+    'Fishery','Fishing','Aquaculture','Mariculture','Inland fisheries in India',
+    'Fisheries in India','Indian fisheries sector','Fish production in India','Pisciculture',
+    'Fish hatchery','Fish farming','Freshwater fish','Marine fish','Prawn farming','Shrimp farming',
+    'Fish meal','Fish processing','National Fisheries Development Board','Pradhan Mantri Matsya Sampada Yojana',
+    'Fisheries Research Institutes of India','Central Institute of Fisheries','Deep sea fishing','Coastal fishing'
+  ]},
+  // ───────── Telecommunications & Postal ─────────
+  { name:'Telecom & Postal', wikiCat:'Telecommunications_in_India', topics:[
+    'Telecommunications in India','Telecom Regulatory Authority of India','TRAI',
+    'Bharat Sanchar Nigam Limited','BSNL','Mahanagar Telephone Nigam Limited','Reliance Jio',
+    'Airtel India','Vodafone Idea','Spectrum auction in India','5G, India','4G LTE',
+    'National Optical Fibre Network','BharatNet','Digital India','Bharat Broadband Network',
+    'Department of Telecommunications','Sanchar Saathi','Mobile number portability (India)',
+    'Indian Postal Service','India Post','India Post Payments Bank','Postal Index Number',
+    'Indian postal service history','Philately in India','Department of Posts (India)',
+    'Postal savings scheme in India','Public Provident Fund (India)','National Savings Institute'
+  ]},
+  // ───────── Mining & Mineral Resources ─────────
+  { name:'Mining & Minerals', wikiCat:'Mining_in_India', topics:[
+    'Mining in India','Ministry of Mines (India)','Coal mining in India','Iron ore in India',
+    'Bauxite mining in India','Copper mining in India','Gold mining in India','Mica mining in India',
+    'Limestone mining','Dolomite','Manganese in India','Chromite in India','Zinc in India',
+    'Rare-earth element mining in India','Ilmenite','Monazite','Mineral wealth of India',
+    'Geological Survey of India','Mines and Minerals (Development and Regulation) Act',
+    'National Mineral Development Corporation','Hindustan Zinc','Coal India','Neyveli Lignite Corporation',
+    'Steel Authority of India','Aluminium in India','Mineral belts of India','Chota Nagpur belt',
+    'Singhbhum belt','Dharwar belt','Kolar Gold Fields','Ballari iron ore district',
+    'Atomic Minerals Directorate','Uranium mining in India','Jaduguda mine','Sukinda chromite valley'
+  ]},
+  // ───────── Indian Classical Music, Dance & Fine Arts ─────────
+  { name:'Indian Music & Fine Arts', wikiCat:'Music_of_India', topics:[
+    'Music of India','Hindustani classical music','Carnatic music','Indian classical music',
+    'Raga','Tala (music)','Khyal','Dhrupad','Thumri','Tappa','Ghazal','Khayal',
+    'Sitar','Santoor','Tabla','Mridangam','Veena','Sarod','Flute, India','Shehnai',
+    'All India Radio','Sangeet Natak Akademi','Tyagaraja','Muthuswami Dikshitar','Syama Sastri',
+    'Ravi Shankar','M. S. Subbulakshmi','Bismillah Khan','Zakir Hussain','Amjad Ali Khan',
+    'Ustad Allauddin Khan','Bhajan','Kirtan','Rabindra Sangeet','Folk music of India',
+    'Bollywood music','Filmi music','Indian pop music','Sufi music','Indian rock music'
+  ]},
+  // ───────── Indian Languages & Literature ─────────
+  { name:'Indian Languages', wikiCat:'Languages_of_India', topics:[
+    'Languages of India','List of official languages of India','Eighth Schedule to the Constitution of India',
+    'Hindi','Sanskrit','Tamil language','Telugu language','Kannada language','Malayalam language',
+    'Bengali language','Marathi language','Gujarati language','Punjabi language','Odia language',
+    'Assamese language','Urdu in India','Kashmiri language','Konkani language','Bodo language',
+    'Santhali language','Sindhi language','Manipuri language','Nepali language','Maithili language',
+    'Scheduled languages of India','Classical languages of India','Official Languages Act, 1963',
+    'Mother tongue','Linguistic Survey of India','Census of India languages','Regional language',
+    'Vernacular','Indian English'
+  ]},
+  // ───────── Landmark Supreme Court & High Court Cases ─────────
+  { name:'Courts Cases & Verdicts', wikiCat:'Supreme_Court_of_India_cases', topics:[
+    'List of landmark court decisions in India','Kesavananda Bharati v. State of Kerala',
+    'Golaknath v. State of Punjab','Minerva Mills v. Union of India','S. R. Bommai v. Union of India',
+    'Maneka Gandhi v. Union of India','A. K. Gopalan v. State of Madras','ADM Jabalpur v. Shivkant Shukla',
+    'Navtej Singh Johar v. Union of India','Indian Union Muslim League v. Union of India',
+    'K. S. Puttaswamy v. Union of India','Vishaka v. State of Rajasthan','Sabrimala Temple case',
+    'Justice K. S. Puttaswamy privacy case','National Legal Services Authority v. Union of India',
+    'Lata Singh v. State of Uttar Pradesh','Hussainara Khatoon case','Sunil Batra v. Delhi Administration',
+    'Bandhua Mukti Morcha v. Union of India','E. P. Royappa v. State of Tamil Nadu',
+    'Ranjit D. Udeshi v. State of Maharashtra','Ashoka Kumar Thakur v. Union of India',
+    'Indra Sawhney v. Union of India','T. M. A. Pai Foundation v. State of Karnataka',
+    'R. D. Agarwala case','West Bengal v. Union of India',
+    'Supreme Court Advocates-on-Record Association v. Union of India','Delhi Judicial Service case'
+  ]},
+  // ───────── Ayurveda & Traditional Medicine ─────────
+  { name:'Ayurveda & Traditional Medicine', wikiCat:'Ayurveda', topics:[
+    'Ayurveda','Ayurvedic medicine','History of Ayurveda','Tridosha','Vata','Pitta','Kapha',
+    'Panchakarma','Rasayana','Charaka Samhita','Sushruta Samhita','Ashtanga Hridayam',
+    'Ayurvedic herbs','Tulsi','Ashwagandha','Turmeric','Neem','Ginger','Triphala','Amla',
+    'Ayurvedic colleges in India','Ministry of AYUSH','AYUSH','National Commission for Indian System of Medicine',
+    'Central Council for Research in Ayurvedic Sciences','Unani medicine','Siddha medicine','Homeopathy in India',
+    'Yoga','Pranayama','Nadi (yoga)','Chakras','Naturopathy'
+  ]},
+  // ───────── Architecture & Heritage Monuments ─────────
+  { name:'Indian Architecture', wikiCat:'Architecture_of_India', topics:[
+    'Architecture of India','Indus Valley architecture','Indian rock-cut architecture','Temple architecture of India',
+    'Dravidian architecture','Nagara style','Vesara architecture','Hill Forts of Rajasthan',
+    'Mughal architecture','Indo-Islamic architecture','Indo-Saracenic architecture','Colonial architecture in India',
+    'Le Corbusier Chandigarh','Bauhaus in India','Laurie Baker','B. V. Doshi',
+    'Iron Pillar of Delhi','Kailasa temple, Ellora','Meenakshi Temple','Sun Temple, Konark',
+    'Brihadeeswarar Temple','Khajuraho Group of Monuments','Qutb Minar complex','Red Fort',
+    'Taj Mahal','Fatehpur Sikri','Humayun\'s Tomb','Charminar','Gol Gumbaz','Hawa Mahal',
+    'Victoria Memorial, Kolkata','Rashtrapati Bhavan','Parliament House, India','Gateway of India',
+    'India Gate','Howrah Bridge','Indian Heritage Cities Network','Vastu Shastra'
+  ]},
 ];
 
 // Rotation groups (7 groups, cycled through by 4h time slots)
@@ -1929,6 +2036,7 @@ const DAY_GROUPS = [
   [24,25,26,27,28,29,30,31,32], // Group 6: Business & Economy, RBI & Banking, Indian National Symbols, Agriculture & Food, Health & Medicine, Constitution, Computer & IT, Railways & Transport, Energy & Power
   [33,34,35,36,37,38,39], // Group 7: Indian Judiciary, Indian Tribes, Education in India, Indian Battles, Indian Heritage, Indian Cinema, Women & Society
   [40,41,42,43,44,45], // Group 8: Soil & Watershed, Horticulture, Farm Machinery, Food Processing, Agricultural Engineering, Applied Sciences
+  [46,47,48,49,50,51,52,53,54,55], // Group 9: Meteorology & Climate, Animal Husbandry & Dairy, Fisheries & Aquaculture, Telecom & Postal, Mining & Minerals, Indian Music & Fine Arts, Indian Languages, Courts Cases & Verdicts, Ayurveda & Traditional Medicine, Indian Architecture
 ];
 
 async function main() {
