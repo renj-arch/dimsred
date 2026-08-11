@@ -261,6 +261,8 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 var _searchTimer = null;
+var _searchTruncated = false;
+var MAX_RESULTS = 400;
 function onSearchInput(val) {
   clearTimeout(_searchTimer);
   _searchTimer = setTimeout(function(){ doSearch(val); }, 250);
@@ -285,14 +287,19 @@ function doSearch(query) {
   panel.innerHTML = '<div class="loading">Searching...</div>';
   var results = [];
   var pending = [];
+  _searchTruncated = false;
   for (var ci = 0; ci < CAT_INDEX.length; ci++) {
     if (_cache[ci]) { searchInCategory(ci, query, results); }
-    else { pending.push(ci); }
+    else if (results.length < MAX_RESULTS) { pending.push(ci); }
   }
   if (pending.length === 0) { showSearchResults(query, results); return; }
   var left = pending.length;
   pending.forEach(function(ci) {
-    loadCategory(ci, function() { searchInCategory(ci, query, results); left--; if (left === 0) showSearchResults(query, results); });
+    loadCategory(ci, function() {
+      if (results.length < MAX_RESULTS) searchInCategory(ci, query, results);
+      left--;
+      if (left === 0) showSearchResults(query, results);
+    });
   });
 }
 function searchInCategory(ci, query, results) {
@@ -306,10 +313,13 @@ function searchInCategory(ci, query, results) {
     else { textWords.push(words[wi]); }
   }
   for (var sk in data) {
+    if (results.length >= MAX_RESULTS) break;
     var subj = data[sk];
     if (!subj.subSubjects) continue;
     for (var ssk in subj.subSubjects) {
+      if (results.length >= MAX_RESULTS) break;
       subj.subSubjects[ssk].forEach(function(q) {
+        if (results.length >= MAX_RESULTS) { _searchTruncated = true; return; }
         if (dateFilter) {
           var qDate = (q.pubDate||'').split('T')[0];
           if (qDate.indexOf(dateFilter) !== 0) return;
@@ -333,6 +343,7 @@ function showSearchResults(query, results) {
     return;
   }
   var h = '<div class="search-results-info">Found <strong>' + results.length + '</strong> result' + (results.length>1?'s':'') + ' for "' + escHtml(query) + '"</div>';
+  if (_searchTruncated) h += '<div class="search-results-info" style="color:var(--amber)">Showing the first ' + MAX_RESULTS + '. Add a topic keyword to narrow it down.</div>';
   h += '<div class="question-list">';
   results.forEach(function(r) {
     var q = r.question;
