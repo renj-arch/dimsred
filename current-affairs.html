@@ -5356,6 +5356,12 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
+            document.getElementById('correctNum').textContent = state.correct;
+            document.getElementById('totalNum').textContent = (state.baseIdx || 0) + state.questions.length;
+            var strEl = document.getElementById('streakNum');
+            if (strEl) strEl.textContent = state.streak;
+            var trkEl = document.getElementById('answeredTracker');
+            if (trkEl) trkEl.textContent = (saved.answeredCount || 0) + ' answered';
             showQuestion();
         }
         function restoreQuizSession() {
