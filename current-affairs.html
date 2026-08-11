@@ -5260,6 +5260,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
         }
         var state = { cat: null, questions: [], idx: 0, baseIdx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null, autoTimer: null, autoPaused: false };
         var SESSION_KEY = 'vlym_quiz_state';
+        var _resumeHandled = false;
 
         // ---------- Multi-category quiz tracker ----------
         // Sessions are stored as a map keyed by category, so you can leave several
@@ -5291,6 +5292,21 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 delete map[cat];
                 writeSessions(map);
             }
+        }
+        // Offer to resume a saved session for this quiz slot when entering the quiz
+        // fresh (i.e. not already mid-quiz). Returns true if the user chose to resume.
+        function offerResumeFor(sessionKey, fallbackName) {
+            if (isQuizActive()) return false;
+            var map = readSessions();
+            var s = map[sessionKey];
+            if (!s || !s.questions || s.questions.length === 0) return false;
+            var resumeAt = (s.baseIdx || 0) + (s.idx || 0) + 1;
+            var name = s.categoryName || fallbackName || s.cat || 'GK';
+            if (confirm('You have a saved quiz: ' + name + ' — resume from question ' + resumeAt + ' (' + (s.answeredCount || resumeAt - 1) + ' answered, ' + (s.correct || 0) + ' correct)?\n\nPress OK to resume, Cancel to start fresh.')) {
+                loadSessionIntoState(s);
+                return true;
+            }
+            return false;
         }
         function resumeIndexOf() {
             // If the current question is already answered (or it's a learning flashcard),
@@ -5337,6 +5353,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             return out;
         }
         function loadSessionIntoState(saved) {
+            _resumeHandled = true;
             state.cat = saved.cat;
             state.categoryName = saved.categoryName;
             state.baseIdx = saved.baseIdx || 0;
@@ -5385,6 +5402,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
         // Resume from Supabase if the user is logged in on another device.
         // Only kicks in when there is no local unsaved session to avoid double prompts.
         function restoreRemoteQuizSession() {
+            if (_resumeHandled) return;
             if (typeof window.supabaseUser === 'undefined' || window.supabaseReady !== true) {
                 var _rTries = 0;
                 var _rTimer = setInterval(function() {
@@ -5399,6 +5417,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             restoreRemoteQuizSessionCore();
         }
         function restoreRemoteQuizSessionCore() {
+            if (_resumeHandled) return;
             if (!window.supabaseUser || typeof window.loadQuizProgress !== 'function') return;
             if (listUnfinishedSessions(readSessions()).length > 0) return;
             window.loadQuizProgress().then(function(saved) {
@@ -5568,6 +5587,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
 
         function startCategory(id, name) {
             if (!confirmAbandonQuiz()) return;
+            if (offerResumeFor(id, name)) return;
             clearQuizSession(id);
             if (state._poolTimerId) { clearInterval(state._poolTimerId); state._poolTimerId = null; }
             state.cat = id;
@@ -6241,6 +6261,7 @@ function prevQuestion() {
 
         function startTimedQuizWith(days) {
             if (!confirmAbandonQuiz()) return;
+            if (offerResumeFor('mixed', null)) return;
             clearQuizSession('mixed');
             var label = days === 1 ? 'Today\'s Quiz' : (days === 7 ? 'Weekly Quiz' : (days === 30 ? 'Monthly Quiz' : (days === 365 ? 'Yearly Quiz' : 'Quarterly Quiz')));
             var now = new Date();
@@ -6257,6 +6278,7 @@ function prevQuestion() {
             var endEl = document.getElementById('quizEndDate');
             var label = 'Custom Quiz';
             if (startEl.value && endEl.value) label = 'Quiz: ' + startEl.value + ' to ' + endEl.value;
+            if (offerResumeFor('mixed', null)) return;
             clearQuizSession('mixed');
             state.cat = 'mixed';
             state.categoryName = label;
@@ -6331,6 +6353,17 @@ function prevQuestion() {
                     + '<div class="cat-desc">' + c.desc + '</div>';
                 btn.onclick = function() { startCategory(c.id, c.name); };
                 grid.appendChild(btn);
+                var savedSession = readSessions()[c.id];
+                if (savedSession && savedSession.questions && savedSession.questions.length) {
+                    var resumeBadge = document.createElement('div');
+                    resumeBadge.style.cssText = 'font-size:.68em;color:var(--emerald);text-align:center;padding:3px 0 2px;cursor:pointer;font-weight:600;letter-spacing:.3px';
+                    resumeBadge.textContent = '▶ Resume';
+                    resumeBadge.onclick = function(e) {
+                        e.stopPropagation();
+                        offerResumeFor(c.id, c.name);
+                    };
+                    grid.appendChild(resumeBadge);
+                }
                 var combBtn = document.createElement('div');
                 combBtn.style.cssText = 'font-size:.6em;color:var(--text-muted);text-align:center;padding:2px 0 4px;cursor:pointer;transition:color .15s';
                 combBtn.textContent = '+ current affairs';
@@ -7386,6 +7419,7 @@ function prevQuestion() {
 
         function startStaticGk() {
             if (!confirmAbandonQuiz()) return;
+            if (offerResumeFor('static', 'Static GK')) return;
             clearQuizSession('static');
             state.cat = 'static';
             state.categoryName = 'Static GK';
@@ -7650,6 +7684,7 @@ function prevQuestion() {
             if (state.answered || state.idx > 0) {
                 if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
             }
+            if (offerResumeFor('feed', 'Archive')) return;
             clearQuizSession('feed');
             state.cat = 'feed';
             state.questions = [];
@@ -7874,6 +7909,7 @@ function prevQuestion() {
         // ===== COMBINED CATEGORY + CURRENT AFFAIRS QUIZ =====
         function startCategoryQuiz(id, name) {
             if (!confirmAbandonQuiz()) return;
+            if (offerResumeFor(id, name)) return;
             clearQuizSession(id);
             state.cat = id;
             state.categoryName = name + ' + Current Affairs';

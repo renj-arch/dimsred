@@ -249,25 +249,34 @@ window.syncGoals = async function (goals) {
 
 // ========== QUIZ PROGRESS (current-affairs resume) ==========
 // One row per user; payload mirrors the localStorage 'vlym_quiz_state' object.
-window.syncQuizProgress = async function (quizState) {
+// Writes are serialized through a promise chain so rapid saves (one per answer)
+// never race each other and drop updates.
+var _quizSyncChain = Promise.resolve();
+window.syncQuizProgress = function (quizState) {
   var tok = getToken();
-  if (!tok || !supabaseUser || !quizState) return false;
-  try {
-    var r = await fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + supabaseUser.id, { headers: sbHeaders(tok) });
-    var rows = await r.json();
-    if (rows && rows.length > 0) {
-      await fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + supabaseUser.id, {
-        method: 'PATCH', headers: sbHeaders(tok),
-        body: JSON.stringify({ payload: quizState, updated_at: new Date().toISOString() })
+  if (!tok || !supabaseUser || !quizState) return Promise.resolve(false);
+  var uid = supabaseUser.id;
+  var job = _quizSyncChain.then(function () {
+    return fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + uid, { headers: sbHeaders(tok) })
+      .then(function (r) { return r.json(); })
+      .then(function (rows) {
+        if (rows && rows.length > 0) {
+          return fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + uid, {
+            method: 'PATCH', headers: sbHeaders(tok),
+            body: JSON.stringify({ payload: quizState, updated_at: new Date().toISOString() })
+          });
+        }
+        return fetch(SUPABASE_URL + '/rest/v1/quiz_progress', {
+          method: 'POST', headers: sbHeaders(tok),
+          body: JSON.stringify({ id: uid, payload: quizState, updated_at: new Date().toISOString() })
+        });
       });
-    } else {
-      await fetch(SUPABASE_URL + '/rest/v1/quiz_progress', {
-        method: 'POST', headers: sbHeaders(tok),
-        body: JSON.stringify({ id: supabaseUser.id, payload: quizState, updated_at: new Date().toISOString() })
-      });
-    }
-    return true;
-  } catch (e) { return false; }
+  });
+  _quizSyncChain = job.catch(function () {});
+  return job.then(function () { return true; }).catch(function (e) {
+    if (window.console) console.warn('quiz_progress sync failed:', e);
+    return false;
+  });
 };
 
 // Load the user's last saved quiz session (returns parsed object or null).
