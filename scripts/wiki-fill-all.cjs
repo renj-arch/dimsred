@@ -3,6 +3,7 @@ const path = require('path');
 const https = require('https');
 const WIKI_API = 'https://en.wikipedia.org/w/api.php';
 const QUIZ_PATH = process.env.QUIZ_PATH || 'data/quiz.json';
+const LINK_POOL_PATH = process.env.WIKI_LINK_POOL_PATH || path.join(path.dirname(QUIZ_PATH), 'wiki-link-pool.json');
 
 function log(msg) {
   try { fs.writeSync(1, msg + '\n'); } catch (e) { console.log(msg); }
@@ -2099,6 +2100,14 @@ async function main() {
   // per-category budget to never-covered content first, then continue
   // partially-covered articles (covered but not yet marked done) so their
   // remaining paragraphs get finished over successive runs.
+  // Persisted linked-page pool: titles discovered by link traversal in past
+  // runs. They are fed into the revisit budget so their remaining sentences get
+  // fully mined across runs (the link pass only touches 50 sentences/run).
+  let linkPool = {};
+  try { linkPool = JSON.parse(fs.readFileSync(LINK_POOL_PATH, 'utf8')); }
+  catch (e) { linkPool = {}; }
+  const linkedThisRun = {};
+
   const coveredTitles = new Set();
   const doneTitles = new Set();
   const qCount = new Map();
@@ -2132,7 +2141,13 @@ async function main() {
     }
     // Revisit articles closest to being done first (fewest questions) so they
     // get finished and released from the budget; larger ones wait their turn.
-    const partiallyCovered = [...cat.topics, ...discovered]
+    // Pooled linked-page titles (discovered by past link traversals) join the
+    // candidates so their un-mined sentences get finished over successive runs.
+    const pooledLinks = (linkPool[cat.name] || []).filter(t => {
+      const k = norm(t);
+      return coveredTitles.has(k) && !doneTitles.has(k);
+    });
+    const partiallyCovered = [...cat.topics, ...discovered, ...pooledLinks]
       .filter(t => {
         const k = norm(t);
         return coveredTitles.has(k) && !doneTitles.has(k);
@@ -2393,6 +2408,7 @@ async function main() {
         // partially-covered articles is handled by the main revisit pool above
         // (which scans all sentences, unlike this 10-sentence link pass).
         if (coveredTitles.has(norm(title))) continue;
+        const addedBeforeLink = added;
         const body = trimBackmatter(ext);
         const allSentences = splitSentences(body).filter(s => s.trim().length > 20 && !isBadSentence(s));
         const sentences = allSentences.filter(s => s.trim().length > 25 && !isBadSentence(s));
@@ -2457,6 +2473,13 @@ async function main() {
             })) added++;
           }
         }
+        // Persist this linked page into the pool: it produced questions but the
+        // link pass only touched up to LINK_PER_ARTICLE sentences, so the rest
+        // should be mined by the main revisit pool in a future run.
+        if (added > addedBeforeLink) {
+          if (!linkedThisRun[cat.name]) linkedThisRun[cat.name] = [];
+          linkedThisRun[cat.name].push(title);
+        }
       }
     }
     if (depth > 0) log('  Link traversal finished at depth ' + depth);
@@ -2500,12 +2523,29 @@ async function main() {
     log('Marked ' + doneThisRun.size + ' articles fully covered (wikiDone)');
   }
 
+  const poolMerged = {};
+  Object.keys(linkPool).forEach(c => { poolMerged[c] = linkPool[c]; });
+  Object.entries(linkedThisRun).forEach(([c, titles]) => {
+    poolMerged[c] = [...new Set([...(poolMerged[c] || []), ...titles])];
+  });
+  // Embed the merged pool in the chunk output so the merge job can aggregate
+  // per-chunk pools into the persisted data/wiki-link-pool.json.
+  quiz.linkPool = poolMerged;
+  try {
+    fs.writeFileSync(LINK_POOL_PATH, JSON.stringify(poolMerged, null, 1));
+    const totalPool = Object.values(poolMerged).reduce((s, a) => s + a.length, 0);
+    log('Saved linked-page pool: ' + totalPool + ' titles across ' + Object.keys(poolMerged).length + ' categories (' + LINK_POOL_PATH + ')');
+  } catch (e) {
+    log('  (could not save link pool: ' + e.message + ')');
+  }
+
   fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz));
   if (process.env.RUNNER_TEMP) {
     const tmpPath = process.env.RUNNER_TEMP + '/quiz.json';
     fs.writeFileSync(tmpPath, JSON.stringify(quiz));
     log('Saved quiz.json to runner temp (' + tmpPath + ')');
   }
+
   log('Total new: ' + totalAdded + ', Grand total: ' + quiz.questions.length);
 }
 
