@@ -5258,7 +5258,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             if (/^(list of|types of|examples of|categories of|classification of)/i.test((q.q || '').trim())) return true;
             return false;
         }
-        var state = { cat: null, questions: [], idx: 0, baseIdx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null, autoTimer: null, autoPaused: false };
+        var state = { cat: null, _sessionKey: null, questions: [], idx: 0, baseIdx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null, autoTimer: null, autoPaused: false };
         var SESSION_KEY = 'vlym_quiz_state';
         var _resumeHandled = false;
 
@@ -5300,7 +5300,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             else if (s.last === 'ok') el.innerHTML = '<span class="badge" style="color:var(--emerald)">☁️ synced</span>';
             else el.innerHTML = '<span class="badge" style="color:var(--red)">☁️ sync error: ' + (s.msg || 'unknown') + '</span>';
         }
-        function sessionId() { return state.cat || 'default'; }
+        function sessionId() { return state._sessionKey || state.cat || 'default'; }
         function clearQuizSession(cat) {
             var map = readSessions();
             if (map[cat]) {
@@ -5372,10 +5372,10 @@ var _staticGen_polity = GK_GENERATORS.polity;
             out.sort(function(a, b) { return (b.savedAt || 0) - (a.savedAt || 0); });
             return out;
         }
-        // Rebuild the archive feed from a saved session and continue auto-advancing.
+        // Rebuild the archive feed (or subject browse) from a saved session and continue auto-advancing.
         function restoreFeedSession(saved) {
-            state.cat = 'feed';
-            state.categoryName = saved.categoryName || 'Archive';
+            state.cat = saved.cat || 'feed';
+            state.categoryName = saved.categoryName || (state.cat.indexOf('subject::') === 0 ? state.cat.slice(9) : 'Archive');
             state.baseIdx = saved.baseIdx || 0;
             state.idx = saved.idx || 0;
             state.correct = saved.correct || 0;
@@ -5386,14 +5386,14 @@ var _staticGen_polity = GK_GENERATORS.polity;
             state._feedSource = 'archive';
             state.autoPaused = false;
             state._lastFeedSave = 0;
-            state.restartFn = function() { startArchiveFeed(0); };
+            state.restartFn = function() { if (state.cat.indexOf('subject::') === 0) startSubjectQuiz(state.categoryName); else startArchiveFeed(0); };
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('regionFilterRow').style.display = 'none';
             document.getElementById('timeFilterRow').style.display = 'none';
             document.getElementById('customDateRange').style.display = 'none';
-            document.getElementById('scoreLabel').textContent = 'archive';
+            document.getElementById('scoreLabel').textContent = state.cat === 'feed' ? 'archive' : (state.categoryName || 'archive');
             document.getElementById('streakDisplay').style.display = 'none';
             document.getElementById('pauseBtn').classList.remove('hidden');
             document.getElementById('pauseBtn').textContent = '⏸';
@@ -5403,7 +5403,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
         }
         function loadSessionIntoState(saved) {
             _resumeHandled = true;
-            if (saved.cat === 'feed') { restoreFeedSession(saved); return; }
+            if (saved.cat === 'feed' || (saved.cat || '').indexOf('subject::') === 0) { restoreFeedSession(saved); return; }
             state.cat = saved.cat;
             state.categoryName = saved.categoryName;
             state.baseIdx = saved.baseIdx || 0;
@@ -5469,7 +5469,6 @@ var _staticGen_polity = GK_GENERATORS.polity;
         function restoreRemoteQuizSessionCore() {
             if (_resumeHandled) return;
             if (!window.supabaseUser || typeof window.loadQuizProgress !== 'function') return;
-            if (listUnfinishedSessions(readSessions()).length > 0) return;
             window.loadQuizProgress().then(function(saved) {
                 if (!saved) return;
                 if (Array.isArray(saved.questions)) { // legacy single-session payload
@@ -5477,7 +5476,19 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     legacy[saved.cat || 'default'] = saved;
                     saved = legacy;
                 }
-                var unfinished = listUnfinishedSessions(saved);
+                // Merge remote sessions into local (keep the newer when a key exists),
+                // so every category/subject can offer resume on this device too.
+                var map = readSessions();
+                var changed = false;
+                for (var k in saved) {
+                    if (!map[k] || (saved[k].savedAt || 0) > (map[k].savedAt || 0)) {
+                        map[k] = saved[k];
+                        changed = true;
+                    }
+                }
+                if (changed) writeSessions(map);
+                if (_resumeHandled) return;
+                var unfinished = listUnfinishedSessions(readSessions());
                 if (unfinished.length === 0) return;
                 for (var i = 0; i < unfinished.length; i++) {
                     var s = unfinished[i];
@@ -5486,9 +5497,6 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     var msg = 'You have a saved quiz: ' + name + ' — resume from question ' + resumeAt + ' of ' + s.questions.length + '?';
                     if (unfinished.length > 1) msg += ' (' + (unfinished.length - 1 - i) + ' other saved quiz' + (unfinished.length - 1 - i === 1 ? '' : 'zes') + ' left)';
                     if (confirm(msg)) {
-                        var map = readSessions();
-                        map[s.cat || 'default'] = s;
-                        writeSessions(map);
                         loadSessionIntoState(s);
                         return;
                     }
@@ -5641,8 +5649,8 @@ var _staticGen_polity = GK_GENERATORS.polity;
             if (!confirmAbandonQuiz()) return;
             if (offerResumeFor(id, name)) return;
             clearQuizSession(id);
-            if (state._poolTimerId) { clearInterval(state._poolTimerId); state._poolTimerId = null; }
             state.cat = id;
+            state._sessionKey = null;
             state.categoryName = name;
             state.idx = 0;
             state.correct = 0;
@@ -6333,6 +6341,7 @@ function prevQuestion() {
             if (offerResumeFor('mixed', null)) return;
             clearQuizSession('mixed');
             state.cat = 'mixed';
+            state._sessionKey = null;
             state.categoryName = label;
             state.idx = 0;
             state.correct = 0;
@@ -7474,6 +7483,7 @@ function prevQuestion() {
             if (offerResumeFor('static', 'Static GK')) return;
             clearQuizSession('static');
             state.cat = 'static';
+            state._sessionKey = null;
             state.categoryName = 'Static GK';
             state.idx = 0;
             state.correct = 0;
@@ -7690,6 +7700,11 @@ function prevQuestion() {
             if (state.answered || state.idx > 0) {
                 if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
             }
+            state.cat = 'subject::' + subject;
+            state.categoryName = subject;
+            state._sessionKey = null;
+            if (offerResumeFor(state.cat, subject)) return;
+            clearQuizSession(state.cat);
             state.questions = [];
             state.baseIdx = 0;
             state.idx = 0;
@@ -7741,6 +7756,7 @@ function prevQuestion() {
             if (offerResumeFor('feed', 'Archive')) return;
             clearQuizSession('feed');
             state.cat = 'feed';
+            state._sessionKey = null;
             state.questions = [];
             state.baseIdx = 0;
             state.idx = 0;
@@ -7970,10 +7986,11 @@ function prevQuestion() {
         // ===== COMBINED CATEGORY + CURRENT AFFAIRS QUIZ =====
         function startCategoryQuiz(id, name) {
             if (!confirmAbandonQuiz()) return;
-            if (offerResumeFor(id, name)) return;
-            clearQuizSession(id);
-            state.cat = id;
+            state._sessionKey = 'ca::' + id;
             state.categoryName = name + ' + Current Affairs';
+            if (offerResumeFor(state._sessionKey, state.categoryName)) return;
+            clearQuizSession(state._sessionKey);
+            state.cat = id;
             state.idx = 0;
             state.correct = 0;
             state.streak = 0;
