@@ -261,8 +261,10 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 var _searchTimer = null;
-var _searchTruncated = false;
-var MAX_RESULTS = 400;
+var RESULTS_PER_PAGE = 400;
+var _searchAll = [];
+var _searchRendered = 0;
+var _searchQuery = '';
 function onSearchInput(val) {
   clearTimeout(_searchTimer);
   _searchTimer = setTimeout(function(){ doSearch(val); }, 250);
@@ -285,24 +287,25 @@ function doSearch(query) {
   welcome.style.display = 'none';
   panel.style.display = 'block';
   panel.innerHTML = '<div class="loading">Searching...</div>';
-  var results = [];
+  _searchAll = [];
+  _searchRendered = 0;
+  _searchQuery = query;
   var pending = [];
-  _searchTruncated = false;
   for (var ci = 0; ci < CAT_INDEX.length; ci++) {
-    if (_cache[ci]) { searchInCategory(ci, query, results); }
-    else if (results.length < MAX_RESULTS) { pending.push(ci); }
+    if (_cache[ci]) { searchInCategory(ci, query); }
+    else { pending.push(ci); }
   }
-  if (pending.length === 0) { showSearchResults(query, results); return; }
+  if (pending.length === 0) { showSearchResults(); return; }
   var left = pending.length;
   pending.forEach(function(ci) {
     loadCategory(ci, function() {
-      if (results.length < MAX_RESULTS) searchInCategory(ci, query, results);
+      searchInCategory(ci, query);
       left--;
-      if (left === 0) showSearchResults(query, results);
+      if (left === 0) showSearchResults();
     });
   });
 }
-function searchInCategory(ci, query, results) {
+function searchInCategory(ci, query) {
   var data = _cache[ci];
   var c = CAT_INDEX[ci];
   var words = query.toLowerCase().split(/\s+/);
@@ -313,13 +316,10 @@ function searchInCategory(ci, query, results) {
     else { textWords.push(words[wi]); }
   }
   for (var sk in data) {
-    if (results.length >= MAX_RESULTS) break;
     var subj = data[sk];
     if (!subj.subSubjects) continue;
     for (var ssk in subj.subSubjects) {
-      if (results.length >= MAX_RESULTS) break;
       subj.subSubjects[ssk].forEach(function(q) {
-        if (results.length >= MAX_RESULTS) { _searchTruncated = true; return; }
         if (dateFilter) {
           var qDate = (q.pubDate||'').split('T')[0];
           if (qDate.indexOf(dateFilter) !== 0) return;
@@ -331,31 +331,56 @@ function searchInCategory(ci, query, results) {
             if (haystack.indexOf(textWords[twi]) === -1) return;
           }
         }
-        results.push({category:c.name,icon:c.icon,subject:sk,subSubject:ssk,question:q});
+        _searchAll.push({category:c.name,icon:c.icon,subject:sk,subSubject:ssk,question:q});
       });
     }
   }
 }
-function showSearchResults(query, results) {
+function _searchItemHTML(r) {
+  var q = r.question;
+  var date = q.pubDate ? new Date(q.pubDate).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '';
+  var h = '<div class="q-item"><div class="q-tags"><span class="tag cat-tag">' + escHtml(r.category) + ' &rsaquo; ' + escHtml(r.subject) + ' &rsaquo; ' + escHtml(r.subSubject) + '</span>' + (date?'<span class="tag date-tag">'+date+'</span>':'') + '</div>';
+  h += '<div class="q-question">' + escHtml(q.question) + '</div>';
+  h += '<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + escHtml(q.answer) + '</span></div>';
+  h += (q.fact ? '<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">' + escHtml(q.fact) + '</div>' : '') + '</div>';
+  return h;
+}
+function _appendSearchPage() {
+  var list = document.getElementById('searchQuestionList');
+  if (!list) return;
+  var next = Math.min(_searchRendered + RESULTS_PER_PAGE, _searchAll.length);
+  var chunk = [];
+  for (var i = _searchRendered; i < next; i++) chunk.push(_searchItemHTML(_searchAll[i]));
+  var frag = document.createElement('div');
+  frag.innerHTML = chunk.join('');
+  while (frag.firstChild) list.appendChild(frag.firstChild);
+  _searchRendered = next;
+  var btn = document.getElementById('searchMoreBtn');
+  if (_searchRendered < _searchAll.length) {
+    var left = _searchAll.length - _searchRendered;
+    if (!btn) {
+      btn = document.createElement('button');
+      btn.id = 'searchMoreBtn';
+      btn.style.cssText = 'display:block;margin:18px auto;padding:10px 22px;border-radius:8px;border:1px solid var(--purple);background:rgba(99,102,241,.12);color:var(--purple);cursor:pointer;font-size:.85em;font-weight:700';
+      btn.onclick = function() { _appendSearchPage(); };
+      list.parentNode.appendChild(btn);
+    }
+    btn.textContent = 'Show more (' + left.toLocaleString() + ' more)';
+  } else if (btn) {
+    btn.remove();
+  }
+}
+function showSearchResults() {
   var panel = document.getElementById('view-content');
-  if (results.length === 0) {
-    panel.innerHTML = '<div class="search-no-results">No questions matching "<strong>' + escHtml(query) + '</strong>"</div>';
+  if (_searchAll.length === 0) {
+    panel.innerHTML = '<div class="search-no-results">No questions matching "<strong>' + escHtml(_searchQuery) + '</strong>"</div>';
     return;
   }
-  var h = '<div class="search-results-info">Found <strong>' + results.length + '</strong> result' + (results.length>1?'s':'') + ' for "' + escHtml(query) + '"</div>';
-  if (_searchTruncated) h += '<div class="search-results-info" style="color:var(--amber)">Showing the first ' + MAX_RESULTS + '. Add a topic keyword to narrow it down.</div>';
-  h += '<div class="question-list">';
-  results.forEach(function(r) {
-    var q = r.question;
-    var date = q.pubDate ? new Date(q.pubDate).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '';
-    h += '<div class="q-item"><div class="q-tags"><span class="tag cat-tag">' + escHtml(r.category) + ' &rsaquo; ' + escHtml(r.subject) + ' &rsaquo; ' + escHtml(r.subSubject) + '</span>' + (date?'<span class="tag date-tag">'+date+'</span>':'') + '</div>';
-    h += '<div class="q-question">' + escHtml(q.question) + '</div>';
-    h += '<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + escHtml(q.answer) + '</span></div>';
-    h += (q.fact ? '<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">' + escHtml(q.fact) + '</div>' : '') + '</div>';
-  });
-  h += '</div>';
+  var h = '<div class="search-results-info">Found <strong>' + _searchAll.length.toLocaleString() + '</strong> result' + (_searchAll.length>1?'s':'') + ' for "' + escHtml(_searchQuery) + '"</div>';
+  h += '<div class="question-list" id="searchQuestionList"></div>';
   panel.innerHTML = h;
-  window.scrollTo(0, 0);
+  _searchRendered = 0;
+  _appendSearchPage();
 }
 function localizeBuildTime() {
   var el = document.getElementById('build-time');
