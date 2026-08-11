@@ -199,7 +199,7 @@
 
         <div class="container">
         <div class="page-title">📰 GK & Current Affairs</div>
-        <div class="page-sub">GK Quiz — Static + Current Affairs</div>
+        <div class="page-sub">GK Quiz — Static + Current Affairs <span id="syncStatus"></span></div>
 
         <!-- Mode Toggle (always visible) -->
         <div style="display:flex;gap:4px;margin:0 auto 12px;padding:4px;border-radius:100px;background:rgba(255,255,255,.04);max-width:240px">
@@ -5282,8 +5282,23 @@ var _staticGen_polity = GK_GENERATORS.polity;
             try { localStorage.setItem(SESSION_KEY, JSON.stringify(map)); } catch(e) {}
             // Sync the whole map to Supabase so every category can be resumed after login on any device
             if (window.supabaseUser && typeof window.syncQuizProgress === 'function') {
-                try { window.syncQuizProgress(map); } catch(e) {}
+                try { window.syncQuizProgress(map).then(function(){ refreshSyncStatus(); }); } catch(e) {}
+            } else {
+                refreshSyncStatus();
             }
+        }
+        function refreshSyncStatus() {
+            var el = document.getElementById('syncStatus');
+            if (!el) return;
+            var s = window.__quizSync;
+            if (!s || !s.last) {
+                if (window.supabaseUser) el.innerHTML = '';
+                else el.innerHTML = '<span class="badge" style="color:var(--text-muted)">☁️ sign in to save progress</span>';
+                return;
+            }
+            if (s.last === 'noauth') el.innerHTML = '<span class="badge" style="color:var(--text-muted)">☁️ not signed in</span>';
+            else if (s.last === 'ok') el.innerHTML = '<span class="badge" style="color:var(--emerald)">☁️ synced</span>';
+            else el.innerHTML = '<span class="badge" style="color:var(--red)">☁️ sync error: ' + (s.msg || 'unknown') + '</span>';
         }
         function sessionId() { return state.cat || 'default'; }
         function clearQuizSession(cat) {
@@ -5565,6 +5580,8 @@ var _staticGen_polity = GK_GENERATORS.polity;
             }
             restoreRemoteQuizSession();
             loadQuizJson();
+            refreshSyncStatus();
+            setInterval(refreshSyncStatus, 3000);
             if (typeof preloadArchive === 'function') {
                 preloadArchive();
             } else {

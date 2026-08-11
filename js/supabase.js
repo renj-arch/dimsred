@@ -250,33 +250,56 @@ window.syncGoals = async function (goals) {
 // ========== QUIZ PROGRESS (current-affairs resume) ==========
 // One row per user; payload mirrors the localStorage 'vlym_quiz_state' object.
 // Writes are serialized through a promise chain so rapid saves (one per answer)
-// never race each other and drop updates.
+// never race each other and drop updates. Retried once on failure.
 var _quizSyncChain = Promise.resolve();
+window.__quizSync = { last: null, status: 0, msg: '', at: 0 };
 window.syncQuizProgress = function (quizState) {
   var tok = getToken();
-  if (!tok || !supabaseUser || !quizState) return Promise.resolve(false);
+  if (!tok || !supabaseUser || !quizState) {
+    window.__quizSync = { last: 'noauth', status: 0, msg: 'not signed in', at: Date.now() };
+    return Promise.resolve(false);
+  }
   var uid = supabaseUser.id;
-  var job = _quizSyncChain.then(function () {
+  function attempt(n) {
     return fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + uid, { headers: sbHeaders(tok) })
       .then(function (r) { return r.json(); })
       .then(function (rows) {
+        var write;
         if (rows && rows.length > 0) {
-          return fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + uid, {
-            method: 'PATCH', headers: sbHeaders(tok),
+          write = fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + uid, {
+            method: 'PATCH', headers: sbHeaders(tok), keepalive: true,
             body: JSON.stringify({ payload: quizState, updated_at: new Date().toISOString() })
           });
+        } else {
+          write = fetch(SUPABASE_URL + '/rest/v1/quiz_progress', {
+            method: 'POST', headers: sbHeaders(tok), keepalive: true,
+            body: JSON.stringify({ id: uid, payload: quizState, updated_at: new Date().toISOString() })
+          });
         }
-        return fetch(SUPABASE_URL + '/rest/v1/quiz_progress', {
-          method: 'POST', headers: sbHeaders(tok),
-          body: JSON.stringify({ id: uid, payload: quizState, updated_at: new Date().toISOString() })
+        return write.then(function (w) {
+          if (!w.ok) throw new Error('HTTP ' + w.status);
+          return w;
         });
+      })
+      .catch(function (e) {
+        if (n < 2) {
+          return new Promise(function (res) { setTimeout(function () { res(attempt(n + 1)); }, 1500); });
+        }
+        throw e;
       });
-  });
+  }
+  var job = _quizSyncChain.then(function () { return attempt(0); });
   _quizSyncChain = job.catch(function () {});
-  return job.then(function () { return true; }).catch(function (e) {
-    if (window.console) console.warn('quiz_progress sync failed:', e);
-    return false;
-  });
+  return job
+    .then(function () {
+      window.__quizSync = { last: 'ok', status: 200, msg: '', at: Date.now() };
+      return true;
+    })
+    .catch(function (e) {
+      window.__quizSync = { last: 'err', status: 0, msg: String((e && e.message) || e), at: Date.now() };
+      if (window.console) console.warn('quiz_progress sync failed:', e);
+      return false;
+    });
 };
 
 // Load the user's last saved quiz session (returns parsed object or null).
