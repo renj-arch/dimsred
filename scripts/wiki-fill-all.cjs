@@ -106,78 +106,69 @@ async function fetchCategoryMembers(wikiCat, maxPages = parseInt(process.env.WIK
 async function fetchAllTopics(topics, concurrency) {
   const results = [];
   const queue = [...topics];
-  const BATCH = parseInt(process.env.WIKI_FILL_BATCH || '20', 10);
-  const batches = [];
-  while (queue.length) batches.push(queue.splice(0, BATCH));
-  log('  Batching ' + topics.length + ' topics into ' + batches.length + ' requests (batch=' + BATCH + ', workers=' + concurrency + ')');
   async function worker() {
-    while (batches.length > 0) {
-      const batch = batches.shift();
-      log('  Fetching batch (' + batch.length + '): ' + batch[0] + (batch.length > 1 ? ' +' + (batch.length - 1) + ' more' : ''));
-      const articles = await fetchArticleBatch(batch);
-      for (const a of articles) {
-        if (a && a.extract.length > 200) {
-          results.push(a);
-          log('  \u2713 ' + a.title);
-        } else {
-          log('  (skip) ' + (a ? a.title : '?'));
-        }
+    while (queue.length > 0) {
+      const topic = queue.shift();
+      log('  Fetching: ' + topic + '...');
+      const a = await fetchArticleExtract(topic);
+      if (a && a.extract.length > 200) {
+        results.push(a);
+        log('  \u2713 ' + topic);
+      } else {
+        log('  (skip) ' + topic);
       }
     }
   }
   const workers = [];
-  for (let i = 0; i < Math.min(concurrency, batches.length); i++) {
-    await delay(parseInt(process.env.WIKI_FILL_STAGGER_MS || '300', 10));
+  for (let i = 0; i < Math.min(concurrency, topics.length); i++) {
+    await delay(parseInt(process.env.WIKI_FILL_STAGGER_MS || '1500', 10));
     workers.push(worker());
   }
   await Promise.all(workers);
   return results;
 }
 
-async function fetchArticleBatch(titles, retries) {
-  retries = retries || 8;
-  const out = [];
-  const BATCH_MAX = parseInt(process.env.WIKI_FILL_BATCH_MAX || '20', 10);
-  for (let i = 0; i < titles.length; i += BATCH_MAX) {
-    const chunk = titles.slice(i, i + BATCH_MAX);
-    for (let attempt = 0; attempt < retries; attempt++) {
-      try {
-        await delay(parseInt(process.env.WIKI_FILL_DELAY_MS || '800', 10));
-        const url = `${WIKI_API}?action=query&prop=extracts|description|revisions&explaintext&exlimit=20&rvprop=content&rvslots=main&rvlimit=1&titles=${encodeURIComponent(chunk.join('|'))}&format=json&formatversion=2`;
-        const data = await fetchJSON(url);
-        const pages = (data.query && data.query.pages) || [];
-        for (const page of pages) {
-          if (!page || page.missing || !page.extract) continue;
-          const wv = page.revisions && page.revisions[0] && page.revisions[0].slots && page.revisions[0].slots.main && page.revisions[0].slots.main.content;
-          out.push({
-            title: page.title,
-            raw: page.extract || '',
-            extract: (page.extract || '').replace(/\s+/g, ' ').trim(),
-            description: (page.description || '').replace(/\s+/g, ' ').trim(),
-            wikitext: wv || '',
-          });
-        }
-        break;
-      } catch (err) {
-        const isRetryable = err.message.includes('429') || err.message.includes('not valid JSON') || err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED';
-        const is429 = err.statusCode === 429 || err.message.includes('429');
-        if (attempt < retries - 1 && isRetryable) {
-          const base = (is429 && err.retryAfter) ? err.retryAfter * 1000 : Math.min(15000 * Math.pow(2, attempt), 60000);
-          const wait = base + Math.floor(Math.random() * 1500);
-          log('  (retry batch, waiting ' + Math.round(wait / 1000) + 's...)');
-          await delay(wait);
-          continue;
-        }
-        if (is429) {
-          log('  (skipping batch — persistent 429)');
-        } else {
-          log('  (batch failed: ' + err.message + ')');
-        }
-        break;
+async function fetchArticleExtract(title, retries) {
+  retries = retries || 12;
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      await delay(parseInt(process.env.WIKI_FILL_DELAY_MS || '4000', 10));
+      const url = `${WIKI_API}?action=query&prop=extracts|description|revisions&explaintext&exlimit=1&rvprop=content&rvslots=main&titles=${encodeURIComponent(title)}&format=json&formatversion=2`;
+      const data = await fetchJSON(url);
+      const pages = data.query ? data.query.pages : {};
+      const page = Array.isArray(pages) ? pages.find(p => p && p.title && !p.missing) : Object.values(pages).find(p => p && p.title && !p.missing);
+      if (page) {
+        const wv = page.revisions && page.revisions[0] && page.revisions[0].slots && page.revisions[0].slots.main && page.revisions[0].slots.main.content;
+        return {
+          title: page.title,
+          raw: page.extract || '',
+          extract: (page.extract || '').replace(/\s+/g, ' ').trim(),
+          description: (page.description || '').replace(/\s+/g, ' ').trim(),
+          wikitext: wv || '',
+        };
       }
+      return null;
+    } catch (err) {
+      const isRetryable = err.message.includes('429') || err.message.includes('not valid JSON') || err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED';
+      const is429 = err.statusCode === 429 || err.message.includes('429');
+      if (attempt < retries - 1 && isRetryable) {
+        // Honor Retry-After when the API supplies it; otherwise exponential backoff.
+        const base = (is429 && err.retryAfter) ? err.retryAfter * 1000 : Math.min(30000 * Math.pow(2, attempt), 120000);
+        const wait = base + Math.floor(Math.random() * 2000);
+        log('  (HTTP 429, waiting ' + Math.round(wait / 1000) + 's...)');
+        await delay(wait);
+        continue;
+      }
+      // Don't kill the whole run over a rate-limit burst: skip the article and
+      // let the next run resume it (generation is deterministic + deduped).
+      if (is429) {
+        log('  (skipping ' + title + ' — persistent 429 despite ' + retries + ' attempts)');
+        return null;
+      }
+      throw err;
     }
   }
-  return out;
+  return null;
 }
 
 function norm(s) { return (s || '').replace(/\s+/g, ' ').trim().toLowerCase(); }
