@@ -332,7 +332,16 @@ function render() {
   // Greedy anti-overlap per era: each era has its own two-column stack anchored at
   // its body top, so a dense era's nodes can never be pushed down into the next
   // era's band (e.g. Maurya Empire spilling from Ancient into Medieval).
-  var cap = SHOW_ALL ? (IS_SMALL ? 2500 : 9000) : (searchActive || activeCat ? 6000 : 4000);
+  // Nodes are placed for ALL filtered topics (no cap); only those inside the
+  // visible viewport (plus a buffer) are emitted to the DOM, and a scroll
+  // listener re-renders as the user pans. This keeps the DOM small even with
+  // "Show All" across all ~29k topics, which would otherwise crash mobile Safari.
+  var vp = document.getElementById('viewport');
+  var vpTop = vp.scrollTop || 0;
+  var vpH = vp.clientHeight || 800;
+  var vpBuffer = 1400;
+  var vpCutTop = vpTop - vpBuffer;
+  var vpCutBot = vpTop + vpH + vpBuffer;
   var canvasW = document.getElementById('viewport').clientWidth || 800;
 
   // Dry-run placement to measure how tall each era body must actually be, then
@@ -341,12 +350,9 @@ function render() {
   // in the second pass keeps every node inside its own era's band.
   curY = buildEraChain();
   var maxBottom = {};
-  count = 0;
   for (var i = 0; i < filtered.length; i++) {
-    if (count >= cap) break;
     var p1 = placeNode(filtered[i]);
     if (p1.es && p1.bottom > (maxBottom[p1.es.id] || 0)) maxBottom[p1.es.id] = p1.bottom;
-    count++;
   }
   for (var s4 of secs) {
     s4._bodyH = Math.max(s4._bodyH, (maxBottom[s4.id] || 0) - s4._bodyTop + ROW_H * 2);
@@ -360,12 +366,12 @@ function render() {
 
   count = 0;
   for (var i = 0; i < filtered.length; i++) {
-    if (count >= cap) break;
     var nd = filtered[i];
     var pl = placeNode(nd);
     var es = pl.es;
     var col = pl.col;
     var y = pl.y;
+    if (y > vpCutBot || y + NODE_H < vpCutTop) continue;
     var color = TYPE_COLOR[nd.type] || '#71717a';
     var isArch = nd.timebase === 'archive';
     var isEra = nd.timebase === 'era';
@@ -407,7 +413,7 @@ function render() {
   canvas.innerHTML = html;
 
   var zi = document.getElementById('zoomInfo');
-  zi.textContent = 'Showing ' + fmtYear(WINDOW.start) + ' – ' + fmtYear(WINDOW.end) + ' · level ' + th + (SHOW_ALL ? ' · SHOW ALL' : '') + (activeCat ? ' · filter: ' + (_catByKey[activeCat] || activeCat) : '') + (filtered.length > cap ? ' (capped at ' + cap + ')' : '');
+  zi.textContent = 'Showing ' + fmtYear(WINDOW.start) + ' – ' + fmtYear(WINDOW.end) + ' · level ' + th + (SHOW_ALL ? ' · SHOW ALL' : '') + (activeCat ? ' · filter: ' + (_catByKey[activeCat] || activeCat) : '') + ' · ' + filtered.length.toLocaleString() + ' topics' + (filtered.length > 400 ? ' (virtualized — pan to view all)' : '');
   document.getElementById('crumb').innerHTML = 'Viewing: ' + (HISTORY.length ? HISTORY.map(function (h) { return '<b onclick="zoomOut()">' + esc(h.label) + '</b>'; }).join(' › ') + ' › ' : '') + '<b onclick="zoomOut()">Full history</b>';
 }
 
@@ -479,6 +485,12 @@ document.getElementById('search').addEventListener('input', function () {
   clearTimeout(searchTimer);
   var v = this.value.trim().toLowerCase();
   searchTimer = setTimeout(function () { searchText = v; render(); }, 200);
+});
+
+var _scrollTimer = null;
+document.getElementById('viewport').addEventListener('scroll', function () {
+  clearTimeout(_scrollTimer);
+  _scrollTimer = setTimeout(render, 60);
 });
 
 document.getElementById('catFilter').addEventListener('change', function () { render(); });

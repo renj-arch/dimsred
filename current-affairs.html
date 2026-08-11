@@ -41,6 +41,7 @@
         .cat-btn .cat-name{font-weight:700;font-size:.85em;margin-bottom:2px}
         .cat-btn .cat-desc{font-size:.68em;color:var(--text-muted)}
         .cat-btn.active{background:rgba(167,139,250,.1);border-color:var(--purple)}
+        .cat-btn.selected{background:rgba(52,211,153,.1);border-color:var(--emerald)}
 
         .q-area{display:none}
         .q-area.active{display:block}
@@ -232,7 +233,12 @@
                 <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="archiveToggle" style="accent-color:var(--purple);width:14px;height:14px"> 📚 Include Archive <span id="archiveStatus" style="color:var(--emerald);font-size:.72em">loaded</span></label>
             </div>
 
-            <div style="margin:4px 0 8px;text-align:center;font-size:.78em;font-weight:700;color:var(--text-sec)">🎯 Or pick a single main topic:</div>
+            <div style="margin:4px 0 8px;text-align:center;font-size:.78em;font-weight:700;color:var(--text-sec)">🎯 Pick one or more topics:</div>
+            <div id="topicSelBar" style="display:none;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+                <button id="startSelTopics" onclick="startSelectedTopics()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--emerald);background:rgba(52,211,153,.12);color:var(--emerald);cursor:pointer;font-size:.78em;font-weight:700">▶ Start Selected Quiz</button>
+                <button onclick="clearTopicSelection()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-muted);cursor:pointer;font-size:.72em">✕ Clear</button>
+                <span id="topicSelCount" style="font-size:.72em;color:var(--text-muted)"></span>
+            </div>
             <div class="cat-grid" id="homeCatGrid" style="max-height:340px;overflow-y:auto;margin-bottom:14px"><div style="grid-column:1/-1;text-align:center;font-size:.72em;color:var(--text-muted);padding:18px 0">Loading topics…</div></div>
 
             <p class="gk-intro">Browse PIB & Current Affairs by date range, or try Static GK across 26 categories. Auto-advances every 4 seconds. Pause anytime.</p>
@@ -5258,34 +5264,57 @@ var _staticGen_polity = GK_GENERATORS.polity;
             if (/^(list of|types of|examples of|categories of|classification of)/i.test((q.q || '').trim())) return true;
             return false;
         }
-        var state = { cat: null, questions: [], idx: 0, baseIdx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null, autoTimer: null, autoPaused: false };
-        var SESSION_KEY = 'vlym_quiz_state';
+        var state = { cat: null, _sessionKey: null, questions: [], idx: 0, baseIdx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null, autoTimer: null, autoPaused: false };
         var _resumeHandled = false;
+        // Sessions live ONLY in Supabase (quiz_progress). The in-memory cache is the
+        // working copy for this page load; it is populated from Supabase on load and
+        // every change is pushed straight back to Supabase. Nothing touches localStorage.
+        var _sessionCache = null;
+        var _sessionsPromise = null;
 
         // ---------- Multi-category quiz tracker ----------
         // Sessions are stored as a map keyed by category, so you can leave several
         // quizzes unfinished and resume each exactly where you stopped. Answered
         // questions are dropped from the saved pool so you never revisit them.
         function readSessions() {
-            try {
-                var raw = JSON.parse(localStorage.getItem(SESSION_KEY));
-                if (!raw) return {};
-                if (Array.isArray(raw.questions)) { // legacy single-session payload
-                    var legacy = {};
-                    legacy[raw.cat || 'default'] = raw;
-                    return legacy;
-                }
-                return raw;
-            } catch(e) { return {}; }
+            if (_sessionCache === null) _sessionCache = {};
+            return _sessionCache;
         }
         function writeSessions(map) {
-            try { localStorage.setItem(SESSION_KEY, JSON.stringify(map)); } catch(e) {}
-            // Sync the whole map to Supabase so every category can be resumed after login on any device
+            _sessionCache = map;
+            // Push the whole map to Supabase so it can be resumed after login on any device.
             if (window.supabaseUser && typeof window.syncQuizProgress === 'function') {
                 try { window.syncQuizProgress(map).then(function(){ refreshSyncStatus(); }); } catch(e) {}
             } else {
                 refreshSyncStatus();
             }
+        }
+        // Load the user's sessions from Supabase into the cache. Resolves when ready;
+        // concurrent callers share the same promise. If not signed in yet, resolves
+        // immediately without caching so a later call can retry after login.
+        function ensureSessionsLoaded() {
+            if (_sessionsPromise) return _sessionsPromise;
+            if (typeof window.supabaseUser === 'undefined' || !window.supabaseUser || typeof window.loadQuizProgress !== 'function') {
+                return Promise.resolve();
+            }
+            _sessionsPromise = window.loadQuizProgress().then(function(saved) {
+                if (!saved) return;
+                if (Array.isArray(saved.questions)) { // legacy single-session payload
+                    var legacy = {};
+                    legacy[saved.cat || 'default'] = saved;
+                    saved = legacy;
+                }
+                var map = readSessions();
+                var changed = false;
+                for (var k in saved) {
+                    if (!map[k] || (saved[k].savedAt || 0) > (map[k].savedAt || 0)) {
+                        map[k] = saved[k];
+                        changed = true;
+                    }
+                }
+                if (changed) _sessionCache = map;
+            }).catch(function(){});
+            return _sessionsPromise;
         }
         function refreshSyncStatus() {
             var el = document.getElementById('syncStatus');
@@ -5300,7 +5329,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             else if (s.last === 'ok') el.innerHTML = '<span class="badge" style="color:var(--emerald)">☁️ synced</span>';
             else el.innerHTML = '<span class="badge" style="color:var(--red)">☁️ sync error: ' + (s.msg || 'unknown') + '</span>';
         }
-        function sessionId() { return state.cat || 'default'; }
+        function sessionId() { return state._sessionKey || state.cat || 'default'; }
         function clearQuizSession(cat) {
             var map = readSessions();
             if (map[cat]) {
@@ -5336,7 +5365,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             // Keep a window of questions around the resume point so you can still
             // scroll back and review roughly the last 300 finished questions.
             // The archive feed can hold thousands of long items, so keep its saved
-            // window small to avoid huge localStorage/Supabase payloads.
+            // window small to avoid huge Supabase payloads.
             var isFeed = state._feedSource === 'archive';
             var backWindow = isFeed ? 40 : 300;
             var windowUpTo = isFeed ? 120 : 1200;
@@ -5372,10 +5401,11 @@ var _staticGen_polity = GK_GENERATORS.polity;
             out.sort(function(a, b) { return (b.savedAt || 0) - (a.savedAt || 0); });
             return out;
         }
-        // Rebuild the archive feed from a saved session and continue auto-advancing.
+        // Rebuild the archive feed (or subject browse) from a saved session and continue auto-advancing.
         function restoreFeedSession(saved) {
-            state.cat = 'feed';
-            state.categoryName = saved.categoryName || 'Archive';
+            state.cat = saved.cat || 'feed';
+            state._sessionKey = null;
+            state.categoryName = saved.categoryName || (state.cat.indexOf('subject::') === 0 ? state.cat.slice(9) : 'Archive');
             state.baseIdx = saved.baseIdx || 0;
             state.idx = saved.idx || 0;
             state.correct = saved.correct || 0;
@@ -5386,14 +5416,14 @@ var _staticGen_polity = GK_GENERATORS.polity;
             state._feedSource = 'archive';
             state.autoPaused = false;
             state._lastFeedSave = 0;
-            state.restartFn = function() { startArchiveFeed(0); };
+            state.restartFn = function() { if (state.cat.indexOf('combo::') === 0) { var subs = (state.cat.slice(7) || '').split('+'); if (subs.length) startMultiSubjectQuiz(subs); else startArchiveFeed(0); } else if (state.cat.indexOf('subject::') === 0) startSubjectQuiz(state.categoryName); else startArchiveFeed(0); };
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('regionFilterRow').style.display = 'none';
             document.getElementById('timeFilterRow').style.display = 'none';
             document.getElementById('customDateRange').style.display = 'none';
-            document.getElementById('scoreLabel').textContent = 'archive';
+            document.getElementById('scoreLabel').textContent = state.cat === 'feed' ? 'archive' : (state.categoryName || 'archive');
             document.getElementById('streakDisplay').style.display = 'none';
             document.getElementById('pauseBtn').classList.remove('hidden');
             document.getElementById('pauseBtn').textContent = '⏸';
@@ -5403,8 +5433,9 @@ var _staticGen_polity = GK_GENERATORS.polity;
         }
         function loadSessionIntoState(saved) {
             _resumeHandled = true;
-            if (saved.cat === 'feed') { restoreFeedSession(saved); return; }
+            if (saved.cat === 'feed' || (saved.cat || '').indexOf('subject::') === 0 || (saved.cat || '').indexOf('combo::') === 0) { restoreFeedSession(saved); return; }
             state.cat = saved.cat;
+            state._sessionKey = saved._sessionKey || null;
             state.categoryName = saved.categoryName;
             state.baseIdx = saved.baseIdx || 0;
             state.idx = saved.idx || 0;
@@ -5431,26 +5462,26 @@ var _staticGen_polity = GK_GENERATORS.polity;
             if (trkEl) trkEl.textContent = (saved.answeredCount || 0) + ' answered';
             showQuestion();
         }
-        function restoreQuizSession() {
-            try {
-                var unfinished = listUnfinishedSessions(readSessions());
-                for (var i = 0; i < unfinished.length; i++) {
-                    var saved = unfinished[i];
-                    var name = saved.categoryName || saved.cat || 'GK';
-                    var resumeAt = (saved.baseIdx || 0) + (saved.idx || 0) + 1;
-                    var msg = 'You have an unfinished quiz: ' + name + ' — resume at question ' + resumeAt + ' (' + (saved.answeredCount || 0) + ' answered, ' + (saved.correct || 0) + ' correct). Resume it?';
-                    if (unfinished.length > 1) msg += ' (' + (unfinished.length - 1 - i) + ' other saved quiz' + (unfinished.length - 1 - i === 1 ? '' : 'zes') + ' left)';
-                    if (confirm(msg)) {
-                        loadSessionIntoState(saved);
-                        return true;
-                    }
+        function promptUnfinishedSessions() {
+            if (_resumeHandled) return;
+            var unfinished = listUnfinishedSessions(readSessions());
+            if (unfinished.length === 0) return false;
+            for (var i = 0; i < unfinished.length; i++) {
+                var saved = unfinished[i];
+                var name = saved.categoryName || saved.cat || 'GK';
+                var resumeAt = (saved.baseIdx || 0) + (saved.idx || 0) + 1;
+                var msg = 'You have an unfinished quiz: ' + name + ' — resume at question ' + resumeAt + ' (' + (saved.answeredCount || 0) + ' answered, ' + (saved.correct || 0) + ' correct). Resume it?';
+                if (unfinished.length > 1) msg += ' (' + (unfinished.length - 1 - i) + ' other saved quiz' + (unfinished.length - 1 - i === 1 ? '' : 'zes') + ' left)';
+                if (confirm(msg)) {
+                    loadSessionIntoState(saved);
+                    return true;
                 }
-            } catch(e) {}
+            }
             return false;
         }
 
-        // Resume from Supabase if the user is logged in on another device.
-        // Only kicks in when there is no local unsaved session to avoid double prompts.
+        // Load sessions from Supabase, then offer to resume any that are unfinished.
+        // Polls briefly until supabase is ready (the user may still be mid-login).
         function restoreRemoteQuizSession() {
             if (_resumeHandled) return;
             if (typeof window.supabaseUser === 'undefined' || window.supabaseReady !== true) {
@@ -5459,71 +5490,24 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     _rTries++;
                     if ((typeof window.supabaseUser !== 'undefined' && window.supabaseReady === true) || _rTries > 80) {
                         clearInterval(_rTimer);
-                        restoreRemoteQuizSessionCore();
+                        ensureSessionsLoaded().then(promptUnfinishedSessions);
                     }
                 }, 250);
                 return;
             }
-            restoreRemoteQuizSessionCore();
-        }
-        function restoreRemoteQuizSessionCore() {
-            if (_resumeHandled) return;
-            if (!window.supabaseUser || typeof window.loadQuizProgress !== 'function') return;
-            if (listUnfinishedSessions(readSessions()).length > 0) return;
-            window.loadQuizProgress().then(function(saved) {
-                if (!saved) return;
-                if (Array.isArray(saved.questions)) { // legacy single-session payload
-                    var legacy = {};
-                    legacy[saved.cat || 'default'] = saved;
-                    saved = legacy;
-                }
-                var unfinished = listUnfinishedSessions(saved);
-                if (unfinished.length === 0) return;
-                for (var i = 0; i < unfinished.length; i++) {
-                    var s = unfinished[i];
-                    var name = s.categoryName || s.cat || 'GK';
-                    var resumeAt = (s.baseIdx || 0) + (s.idx || 0) + 1;
-                    var msg = 'You have a saved quiz: ' + name + ' — resume from question ' + resumeAt + ' of ' + s.questions.length + '?';
-                    if (unfinished.length > 1) msg += ' (' + (unfinished.length - 1 - i) + ' other saved quiz' + (unfinished.length - 1 - i === 1 ? '' : 'zes') + ' left)';
-                    if (confirm(msg)) {
-                        var map = readSessions();
-                        map[s.cat || 'default'] = s;
-                        writeSessions(map);
-                        loadSessionIntoState(s);
-                        return;
-                    }
-                }
-            }).catch(function(){});
+            ensureSessionsLoaded().then(promptUnfinishedSessions);
         }
 
         function isQuizActive() {
             return state.questions.length > 0 || document.getElementById('qArea').classList.contains('active');
         }
         function confirmAbandonQuiz() {
-            if (isQuizActive()) {
-                return confirm('A quiz is in progress. Leave and lose your progress?');
-            }
+            // Progress is saved to Supabase continuously, so leaving a quiz is always safe.
             return true;
         }
 
-        window.addEventListener('beforeunload', function(e) {
-            if (isQuizActive()) {
-                e.preventDefault();
-                e.returnValue = 'You have a quiz in progress. Are you sure you want to leave?';
-            }
-        });
-
         window.addEventListener('pagehide', function() {
             saveQuizSession();
-        });
-
-        document.addEventListener('click', function(e) {
-            var link = e.target.closest('.nav-links a');
-            if (link && isQuizActive()) {
-                if (!confirm('A quiz is in progress. Leave and lose your progress?')) {
-                    e.preventDefault();
-                }
-            }
         });
 
         document.addEventListener('keydown', function(e) {
@@ -5608,11 +5592,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
         }
 
         function init() {
-            if (!restoreQuizSession()) {
-                initCatGrid();
-            } else {
-                initCatGrid();
-            }
+            initCatGrid();
             restoreRemoteQuizSession();
             loadQuizJson();
             refreshSyncStatus();
@@ -5637,12 +5617,13 @@ var _staticGen_polity = GK_GENERATORS.polity;
             }
         }
 
-        function startCategory(id, name) {
+        async function startCategory(id, name) {
             if (!confirmAbandonQuiz()) return;
+            await ensureSessionsLoaded();
             if (offerResumeFor(id, name)) return;
             clearQuizSession(id);
-            if (state._poolTimerId) { clearInterval(state._poolTimerId); state._poolTimerId = null; }
             state.cat = id;
+            state._sessionKey = null;
             state.categoryName = name;
             state.idx = 0;
             state.correct = 0;
@@ -6311,8 +6292,9 @@ function prevQuestion() {
             panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
         }
 
-        function startTimedQuizWith(days) {
+        async function startTimedQuizWith(days) {
             if (!confirmAbandonQuiz()) return;
+            await ensureSessionsLoaded();
             if (offerResumeFor('mixed', null)) return;
             clearQuizSession('mixed');
             var label = days === 1 ? 'Today\'s Quiz' : (days === 7 ? 'Weekly Quiz' : (days === 30 ? 'Monthly Quiz' : (days === 365 ? 'Yearly Quiz' : 'Quarterly Quiz')));
@@ -6324,15 +6306,17 @@ function prevQuestion() {
             _runTimedQuiz(startStr, endStr, label + ' (unlimited)', 9999);
         }
 
-        function startCustomDateQuiz() {
+        async function startCustomDateQuiz() {
             if (!confirmAbandonQuiz()) return;
             var startEl = document.getElementById('quizStartDate');
             var endEl = document.getElementById('quizEndDate');
             var label = 'Custom Quiz';
             if (startEl.value && endEl.value) label = 'Quiz: ' + startEl.value + ' to ' + endEl.value;
+            await ensureSessionsLoaded();
             if (offerResumeFor('mixed', null)) return;
             clearQuizSession('mixed');
             state.cat = 'mixed';
+            state._sessionKey = null;
             state.categoryName = label;
             state.idx = 0;
             state.correct = 0;
@@ -6370,9 +6354,6 @@ function prevQuestion() {
 
 
         function backToMenu() {
-            if (state.answered || state.idx > 0) {
-                if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
-            }
             document.getElementById('welcome').style.display = 'block';
             document.getElementById('qArea').classList.remove('active');
             document.getElementById('scoreBar').classList.remove('show');
@@ -6383,7 +6364,8 @@ function prevQuestion() {
             state.questions = [];
             state.baseIdx = 0;
             state.idx = 0;
-            clearQuizSession(sessionId());
+            // The session stays saved in Supabase, so you can resume it later —
+            // even after closing the tab or switching devices.
         }
 
         var currentMode = 'quiz';
@@ -7469,11 +7451,13 @@ function prevQuestion() {
             }
         }
 
-        function startStaticGk() {
+        async function startStaticGk() {
             if (!confirmAbandonQuiz()) return;
+            await ensureSessionsLoaded();
             if (offerResumeFor('static', 'Static GK')) return;
             clearQuizSession('static');
             state.cat = 'static';
+            state._sessionKey = null;
             state.categoryName = 'Static GK';
             state.idx = 0;
             state.correct = 0;
@@ -7560,7 +7544,7 @@ function prevQuestion() {
         }
         function loadArchiveQuestions(cb) {
             if (_archiveCache) { cb(_archiveCache); return; }
-            var CAT_ARCHIVE = [{file:'data/questions/agricultural-engineering.json'},{file:'data/questions/agriculture-food.json'},{file:'data/questions/ancient-india.json'},{file:'data/questions/announcements.json'},{file:'data/questions/applied-sciences.json'},{file:'data/questions/art-culture-2.json'},{file:'data/questions/art-culture.json'},{file:'data/questions/awards-honours.json'},{file:'data/questions/awards.json'},{file:'data/questions/books-authors.json'},{file:'data/questions/business-economy.json'},{file:'data/questions/computer-it.json'},{file:'data/questions/constitution.json'},{file:'data/questions/current-affairs.json'},{file:'data/questions/defence-security.json'},{file:'data/questions/defence.json'},{file:'data/questions/disaster-management.json'},{file:'data/questions/education-in-india.json'},{file:'data/questions/energy-power.json'},{file:'data/questions/engineering-technical.json'},{file:'data/questions/environment-ecology.json'},{file:'data/questions/ethics-integrity.json'},{file:'data/questions/ethics.json'},{file:'data/questions/farm-machinery.json'},{file:'data/questions/food-processing.json'},{file:'data/questions/general-science.json'},{file:'data/questions/general.json'},{file:'data/questions/geography.json'},{file:'data/questions/geology-hydrogeology.json'},{file:'data/questions/govt-schemes.json'},{file:'data/questions/health-medicine.json'},{file:'data/questions/horticulture.json'},{file:'data/questions/important-days.json'},{file:'data/questions/indian-battles.json'},{file:'data/questions/indian-cinema.json'},{file:'data/questions/indian-economy.json'},{file:'data/questions/indian-geography.json'},{file:'data/questions/indian-heritage.json'},{file:'data/questions/indian-history.json'},{file:'data/questions/indian-judiciary.json'},{file:'data/questions/indian-national-symbols.json'},{file:'data/questions/indian-society.json'},{file:'data/questions/indian-states.json'},{file:'data/questions/indian-tribes.json'},{file:'data/questions/international-relations-2.json'},{file:'data/questions/international-relations.json'},{file:'data/questions/isro-space.json'},{file:'data/questions/library-information-science.json'},{file:'data/questions/medieval-modern-india.json'},{file:'data/questions/personalities.json'},{file:'data/questions/pib-archive.json'},{file:'data/questions/polity-governance.json'},{file:'data/questions/polity.json'},{file:'data/questions/railways-transport.json'},{file:'data/questions/rbi-banking.json'},{file:'data/questions/rbi-press-releases.json'},{file:'data/questions/science-technology.json'},{file:'data/questions/society.json'},{file:'data/questions/soil-watershed.json'},{file:'data/questions/sports-2.json'},{file:'data/questions/sports.json'},{file:'data/questions/state-gk.json'},{file:'data/questions/statistics-mathematics.json'},{file:'data/questions/tech-science.json'},{file:'data/questions/women-society.json'},{file:'data/questions/world-geography-2.json'},{file:'data/questions/world-geography.json'},{file:'data/questions/world-history-2.json'},{file:'data/questions/world-history-3.json'},{file:'data/questions/world-history.json'}];
+            var CAT_ARCHIVE = [{file:'data/questions/agricultural-engineering.json'},{file:'data/questions/agricultural-entomology.json'},{file:'data/questions/agricultural-extension-marketing.json'},{file:'data/questions/agriculture-food.json'},{file:'data/questions/agronomy-crop-production.json'},{file:'data/questions/ancient-india-2.json'},{file:'data/questions/ancient-india.json'},{file:'data/questions/animal-husbandry-dairy.json'},{file:'data/questions/announcements.json'},{file:'data/questions/applied-sciences.json'},{file:'data/questions/art-culture-2.json'},{file:'data/questions/art-culture.json'},{file:'data/questions/awards-honours.json'},{file:'data/questions/awards.json'},{file:'data/questions/ayurveda-traditional-medicine.json'},{file:'data/questions/books-authors.json'},{file:'data/questions/business-economy.json'},{file:'data/questions/computer-it.json'},{file:'data/questions/constitution.json'},{file:'data/questions/courts-cases-verdicts.json'},{file:'data/questions/current-affairs.json'},{file:'data/questions/defence-security.json'},{file:'data/questions/defence.json'},{file:'data/questions/disaster-management.json'},{file:'data/questions/education-in-india.json'},{file:'data/questions/energy-power.json'},{file:'data/questions/engineering-technical.json'},{file:'data/questions/environment-ecology.json'},{file:'data/questions/ethics-integrity.json'},{file:'data/questions/ethics.json'},{file:'data/questions/farm-machinery-power.json'},{file:'data/questions/farm-machinery.json'},{file:'data/questions/fisheries-aquaculture.json'},{file:'data/questions/floriculture-landscaping.json'},{file:'data/questions/food-processing.json'},{file:'data/questions/general-science-2.json'},{file:'data/questions/general-science.json'},{file:'data/questions/general.json'},{file:'data/questions/geography.json'},{file:'data/questions/geology-hydrogeology.json'},{file:'data/questions/govt-schemes.json'},{file:'data/questions/health-medicine.json'},{file:'data/questions/horticulture-fruit-vegetable-production.json'},{file:'data/questions/horticulture.json'},{file:'data/questions/hydrology-soil-conservation.json'},{file:'data/questions/important-days.json'},{file:'data/questions/indian-archaeology-epigraphy.json'},{file:'data/questions/indian-architecture.json'},{file:'data/questions/indian-aviation-shipping.json'},{file:'data/questions/indian-battles.json'},{file:'data/questions/indian-cinema.json'},{file:'data/questions/indian-demographics-census.json'},{file:'data/questions/indian-economy.json'},{file:'data/questions/indian-festivals-fairs.json'},{file:'data/questions/indian-geography.json'},{file:'data/questions/indian-handicrafts-coins.json'},{file:'data/questions/indian-heritage.json'},{file:'data/questions/indian-history.json'},{file:'data/questions/indian-judiciary.json'},{file:'data/questions/indian-languages.json'},{file:'data/questions/indian-literature-poets.json'},{file:'data/questions/indian-museums-heritage-sites.json'},{file:'data/questions/indian-music-fine-arts.json'},{file:'data/questions/indian-national-symbols.json'},{file:'data/questions/indian-philosophy-thinkers.json'},{file:'data/questions/indian-rivers-water-resources.json'},{file:'data/questions/indian-society.json'},{file:'data/questions/indian-states.json'},{file:'data/questions/indian-theatre-cinema.json'},{file:'data/questions/indian-tribes.json'},{file:'data/questions/indian-wildlife-national-parks.json'},{file:'data/questions/international-relations-2.json'},{file:'data/questions/international-relations-3.json'},{file:'data/questions/international-relations.json'},{file:'data/questions/isro-space.json'},{file:'data/questions/library-information-science.json'},{file:'data/questions/medieval-modern-india.json'},{file:'data/questions/meteorology-climate-2.json'},{file:'data/questions/meteorology-climate.json'},{file:'data/questions/mining-minerals.json'},{file:'data/questions/personalities.json'},{file:'data/questions/pib-archive.json'},{file:'data/questions/plant-breeding-genetics.json'},{file:'data/questions/plant-pathology-crop-protection.json'},{file:'data/questions/plant-physiology-nutrition.json'},{file:'data/questions/polity-governance.json'},{file:'data/questions/polity.json'},{file:'data/questions/railways-transport.json'},{file:'data/questions/rbi-banking.json'},{file:'data/questions/rbi-press-releases.json'},{file:'data/questions/science-technology.json'},{file:'data/questions/seed-science-technology.json'},{file:'data/questions/society.json'},{file:'data/questions/soil-watershed.json'},{file:'data/questions/spices-plantation-crops.json'},{file:'data/questions/sports-2.json'},{file:'data/questions/sports.json'},{file:'data/questions/state-gk.json'},{file:'data/questions/statistics-mathematics.json'},{file:'data/questions/tech-science.json'},{file:'data/questions/telecom-postal.json'},{file:'data/questions/women-society.json'},{file:'data/questions/world-geography-2.json'},{file:'data/questions/world-geography-3.json'},{file:'data/questions/world-geography.json'},{file:'data/questions/world-history-2.json'},{file:'data/questions/world-history-3.json'},{file:'data/questions/world-history-4.json'},{file:'data/questions/world-history.json'}];
             var loaded = 0;
             var allQ = [];
             var pending = CAT_ARCHIVE.length;
@@ -7628,6 +7612,7 @@ function prevQuestion() {
         function renderHomeCatGrid() {
             var grid = document.getElementById('homeCatGrid');
             if (!grid) return;
+            if (_catalogLoaded) return; // live catalog.json already shown — don't overwrite with filtered archive counts
             if (!_archiveCache || _archiveCache.length === 0) { return; }
             var counts = {};
             for (var i = 0; i < _archiveCache.length; i++) {
@@ -7638,11 +7623,11 @@ function prevQuestion() {
             _drawCatGrid(counts);
         }
         var _catalogTried = false;
+        var _catalogLoaded = false;
         var HOME_CATALOG = {"total":277674,"subjects":{"Agricultural Engineering":1005,"Agriculture & Food":2926,"Ancient India":9423,"Announcements":48,"Applied Sciences":1306,"Art & Culture":13561,"Awards & Honours":3863,"Awards":141,"Books & Authors":11395,"Business & Economy":2109,"Computer & IT":3757,"Constitution":1913,"Current Affairs":10251,"Defence & Security":8955,"Defence":999,"Disaster Management":3086,"Education in India":663,"Energy & Power":2189,"Engineering & Technical":230,"Environment & Ecology":6019,"Ethics & Integrity":3292,"Ethics":48,"Farm Machinery":785,"Food Processing":1089,"General Science":11750,"General":93,"Geography":574,"Geology & Hydrogeology":164,"Govt Schemes":3535,"Health & Medicine":2589,"Horticulture":1875,"Important Days":2892,"Indian Battles":1212,"Indian Cinema":621,"Indian Economy":7202,"Indian Geography":5642,"Indian Heritage":1310,"Indian History":1245,"Indian Judiciary":872,"Indian National Symbols":1813,"Indian Society":5282,"Indian States":10317,"Indian Tribes":1572,"International Relations":17945,"ISRO & Space":5142,"Library & Information Science":182,"Medieval & Modern India":8258,"Personalities":1233,"PIB Releases":895,"Polity & Governance":4165,"Polity":403,"Railways & Transport":5436,"RBI & Banking":3450,"RBI Press Releases":235,"Science & Technology":5387,"Society":575,"Soil & Watershed":2110,"Sports":15007,"State GK":602,"Statistics & Mathematics":270,"Tech & Science":63,"Women & Society":918,"World Geography":18117,"World History":37668}};
         function initHomeCatGrid() {
             var grid = document.getElementById('homeCatGrid');
             if (!grid) return;
-            if (HOME_CATALOG && HOME_CATALOG.subjects) { _drawCatGrid(HOME_CATALOG.subjects); return; }
             if (_catalogTried) return;
             _catalogTried = true;
             var xhr = new XMLHttpRequest();
@@ -7651,15 +7636,43 @@ function prevQuestion() {
                 if (xhr.status === 200) {
                     try {
                         var cat = JSON.parse(xhr.responseText);
-                        if (cat && cat.subjects) { _drawCatGrid(cat.subjects); return; }
+                        if (cat && cat.subjects) { _catalogLoaded = true; _drawCatGrid(cat.subjects); return; }
                     } catch(e) {}
                 }
-                _drawCatGrid(null);
+                if (HOME_CATALOG && HOME_CATALOG.subjects) _drawCatGrid(HOME_CATALOG.subjects);
+                else _drawCatGrid(null);
             };
-            xhr.onerror = function() { _drawCatGrid(null); };
-            xhr.ontimeout = function() { _drawCatGrid(null); };
-            xhr.open('GET', 'data/questions/catalog.json', true);
+            xhr.onerror = function() { if (HOME_CATALOG && HOME_CATALOG.subjects) _drawCatGrid(HOME_CATALOG.subjects); else _drawCatGrid(null); };
+            xhr.ontimeout = function() { if (HOME_CATALOG && HOME_CATALOG.subjects) _drawCatGrid(HOME_CATALOG.subjects); else _drawCatGrid(null); };
+            xhr.open('GET', 'data/questions/catalog.json?t=' + Date.now(), true);
             xhr.send();
+        }
+        var _selTopics = {};
+        function _refreshSelBar() {
+            var n = Object.keys(_selTopics).length;
+            var bar = document.getElementById('topicSelBar');
+            var cnt = document.getElementById('topicSelCount');
+            var btn = document.getElementById('startSelTopics');
+            if (n === 0) {
+                if (bar) bar.style.display = 'none';
+                return;
+            }
+            if (bar) bar.style.display = 'flex';
+            if (cnt) cnt.textContent = n + ' topic' + (n > 1 ? 's' : '') + ' selected';
+            if (btn) btn.textContent = '▶ Start Selected Quiz (' + n + ')';
+        }
+        function clearTopicSelection() {
+            _selTopics = {};
+            var grid = document.getElementById('homeCatGrid');
+            if (grid) { var btns = grid.querySelectorAll('.cat-btn.selected'); for (var i = 0; i < btns.length; i++) btns[i].classList.remove('selected'); }
+            _refreshSelBar();
+        }
+        function startSelectedTopics() {
+            var subs = Object.keys(_selTopics);
+            if (subs.length === 0) { alert('Select at least one topic to start.'); return; }
+            _selTopics = {};
+            _refreshSelBar();
+            startMultiSubjectQuiz(subs);
         }
         function _drawCatGrid(counts) {
             var grid = document.getElementById('homeCatGrid');
@@ -7673,21 +7686,90 @@ function prevQuestion() {
             for (var si = 0; si < subjects.length; si++) {
                 (function(s) {
                     var btn = document.createElement('div');
-                    btn.className = 'cat-btn';
+                    btn.className = 'cat-btn' + (_selTopics[s] ? ' selected' : '');
                     var icon = _SUBJECT_ICONS[s] || '📚';
                     btn.innerHTML = '<div class="cat-icon">' + icon + '</div>'
                         + '<div class="cat-name">' + s + '</div>'
                         + '<div class="cat-desc">' + counts[s].toLocaleString() + ' questions</div>';
-                    btn.onclick = function() { startSubjectQuiz(s); };
+                    btn.onclick = function() {
+                        if (_selTopics[s]) { delete _selTopics[s]; btn.classList.remove('selected'); }
+                        else { _selTopics[s] = true; btn.classList.add('selected'); }
+                        _refreshSelBar();
+                    };
                     grid.appendChild(btn);
                 })(subjects[si]);
             }
+            _refreshSelBar();
         }
 
-        function startSubjectQuiz(subject) {
+        async function startMultiSubjectQuiz(subjects) {
             if (state.answered || state.idx > 0) {
-                if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
+                if (!confirm('Leave the current quiz? Your progress is saved and you can resume it later.')) return;
             }
+            var label = subjects.length === 1 ? subjects[0] : subjects.length + ' topics';
+            var key = 'combo::' + subjects.slice().sort().join('+');
+            state.cat = key;
+            state.categoryName = label;
+            state._sessionKey = null;
+            await ensureSessionsLoaded();
+            if (offerResumeFor(key, label)) return;
+            clearQuizSession(key);
+            state.questions = [];
+            state.baseIdx = 0;
+            state.idx = 0;
+            state.answered = true;
+            state.autoPaused = false;
+            state.infinite = false;
+            state._feedSource = 'archive';
+            state.restartFn = function(){ startMultiSubjectQuiz(subjects); };
+
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('qArea').classList.add('active');
+            document.getElementById('scoreBar').classList.add('show');
+            document.getElementById('regionFilterRow').style.display = 'none';
+            document.getElementById('timeFilterRow').style.display = 'none';
+            document.getElementById('customDateRange').style.display = 'none';
+            document.getElementById('correctNum').textContent = '0';
+            document.getElementById('totalNum').textContent = '0';
+            document.getElementById('scoreLabel').textContent = label;
+            document.getElementById('streakDisplay').style.display = 'none';
+            document.getElementById('pauseBtn').classList.remove('hidden');
+            document.getElementById('pauseBtn').textContent = '⏸';
+            document.getElementById('nextBtn').classList.add('hidden');
+            document.getElementById('restartBtn').style.display = 'none';
+
+            document.getElementById('qText').innerHTML = '⏳ Loading ' + label + '...';
+            document.getElementById('optGrid').innerHTML = '';
+            loadArchiveQuestions(function(questions) {
+                var filtered = [];
+                var subjSet = {};
+                for (var i = 0; i < subjects.length; i++) subjSet[subjects[i]] = true;
+                for (var j = 0; j < questions.length; j++) {
+                    if (subjSet[questions[j].subject]) filtered.push(questions[j]);
+                }
+                shuffleArray(filtered);
+                state.questions = filtered;
+                _updateArchiveProgress();
+                if (filtered.length === 0) {
+                    document.getElementById('qText').innerHTML = '😕 No questions for the selected topics.';
+                    document.getElementById('optGrid').innerHTML = '<button class="action-btn secondary" onclick="backToMenu()">← Back</button>';
+                    document.getElementById('pauseBtn').classList.add('hidden');
+                    return;
+                }
+                _showFeedItem();
+            });
+        }
+
+        async function startSubjectQuiz(subject) {
+            if (state.answered || state.idx > 0) {
+                if (!confirm('Leave the current quiz? Your progress is saved and you can resume it later.')) return;
+            }
+            state.cat = 'subject::' + subject;
+            state.categoryName = subject;
+            state._sessionKey = null;
+            await ensureSessionsLoaded();
+            if (offerResumeFor(state.cat, subject)) return;
+            clearQuizSession(state.cat);
             state.questions = [];
             state.baseIdx = 0;
             state.idx = 0;
@@ -7732,13 +7814,15 @@ function prevQuestion() {
             });
         }
 
-        function startArchiveFeed(days) {
+        async function startArchiveFeed(days) {
             if (state.answered || state.idx > 0) {
-                if (!confirm('Leave the current quiz? Your progress will be lost.')) return;
+                if (!confirm('Leave the current quiz? Your progress is saved and you can resume it later.')) return;
             }
+            await ensureSessionsLoaded();
             if (offerResumeFor('feed', 'Archive')) return;
             clearQuizSession('feed');
             state.cat = 'feed';
+            state._sessionKey = null;
             state.questions = [];
             state.baseIdx = 0;
             state.idx = 0;
@@ -7966,12 +8050,14 @@ function prevQuestion() {
         
         
         // ===== COMBINED CATEGORY + CURRENT AFFAIRS QUIZ =====
-        function startCategoryQuiz(id, name) {
+        async function startCategoryQuiz(id, name) {
             if (!confirmAbandonQuiz()) return;
-            if (offerResumeFor(id, name)) return;
-            clearQuizSession(id);
-            state.cat = id;
+            state._sessionKey = 'ca::' + id;
             state.categoryName = name + ' + Current Affairs';
+            await ensureSessionsLoaded();
+            if (offerResumeFor(state._sessionKey, state.categoryName)) return;
+            clearQuizSession(state._sessionKey);
+            state.cat = id;
             state.idx = 0;
             state.correct = 0;
             state.streak = 0;
