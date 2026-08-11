@@ -191,6 +191,7 @@
                 <a href="mental.html"><i data-lucide="brain" style="width:14px;height:14px;vertical-align:middle;margin-right:2px"></i> Mental</a>
                 <a href="science.html"><i data-lucide="flask-conical" style="width:14px;height:14px;vertical-align:middle;margin-right:2px"></i> Science</a>
                 <a href="current-affairs.html" class="active">📰 GK</a>
+                <a class="auth-btn" href="#" data-return="/current-affairs.html">🚀 Sign in</a>
                 <a href="premium.html" style="border:1px solid rgba(167,139,250,.25);padding:6px 14px;font-size:.78em"><i data-lucide="crown" style="width:13px;height:13px;vertical-align:middle;margin-right:2px"></i> Premium</a>
             </div>
         </div>
@@ -5262,6 +5263,12 @@ var _staticGen_polity = GK_GENERATORS.polity;
         function saveQuizSession() {
             if (state.questions.length > 0) {
                 try { localStorage.setItem(SESSION_KEY, JSON.stringify({ cat: state.cat, categoryName: state.categoryName, idx: state.idx, correct: state.correct, streak: state.streak, answered: false, questions: state.questions.slice(0, 300), infinite: state.infinite })); } catch(e) {}
+                // Sync to Supabase so the quiz can be resumed after login on any device
+                if (window.supabaseUser && typeof window.syncQuizProgress === 'function') {
+                    try {
+                        window.syncQuizProgress({ cat: state.cat, categoryName: state.categoryName, idx: state.idx, correct: state.correct, streak: state.streak, answered: false, questions: state.questions.slice(0, 300), infinite: state.infinite });
+                    } catch(e) {}
+                }
             }
         }
         function restoreQuizSession() {
@@ -5289,6 +5296,48 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 }
             } catch(e) {}
             return false;
+        }
+
+        // Resume from Supabase if the user is logged in on another device.
+        // Only kicks in when there is no local unsaved session to avoid double prompts.
+        function restoreRemoteQuizSession() {
+            if (typeof window.supabaseUser === 'undefined' || window.supabaseReady !== true) {
+                var _rTries = 0;
+                var _rTimer = setInterval(function() {
+                    _rTries++;
+                    if ((typeof window.supabaseUser !== 'undefined' && window.supabaseReady === true) || _rTries > 80) {
+                        clearInterval(_rTimer);
+                        restoreRemoteQuizSessionCore();
+                    }
+                }, 250);
+                return;
+            }
+            restoreRemoteQuizSessionCore();
+        }
+        function restoreRemoteQuizSessionCore() {
+            if (!window.supabaseUser || typeof window.loadQuizProgress !== 'function') return;
+            var existingLocal = null;
+            try { existingLocal = JSON.parse(localStorage.getItem(SESSION_KEY)); } catch(e) {}
+            if (existingLocal && existingLocal.questions && existingLocal.questions.length > 0) return;
+            window.loadQuizProgress().then(function(saved) {
+                if (!saved || !saved.questions || saved.questions.length === 0) return;
+                if (saved.idx >= saved.questions.length) return;
+                if (!confirm('You have a saved quiz (' + (saved.categoryName || 'GK') + '). Resume from question ' + (saved.idx + 1) + ' of ' + saved.questions.length + '?')) return;
+                state.cat = saved.cat;
+                state.categoryName = saved.categoryName;
+                state.idx = saved.idx;
+                state.correct = saved.correct;
+                state.streak = saved.streak;
+                state.answered = false;
+                state.questions = saved.questions;
+                state.infinite = saved.infinite || false;
+                state.restartFn = function() { startCategory(saved.cat, saved.categoryName); };
+                document.getElementById('welcome').style.display = 'none';
+                document.getElementById('qArea').classList.add('active');
+                document.getElementById('scoreBar').classList.add('show');
+                document.getElementById('restartBtn').style.display = 'inline-block';
+                showQuestion();
+            }).catch(function(){});
         }
 
         function isQuizActive() {
@@ -5408,6 +5457,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             } else {
                 initCatGrid();
             }
+            restoreRemoteQuizSession();
             loadQuizJson();
             if (typeof preloadArchive === 'function') {
                 preloadArchive();
@@ -6612,6 +6662,7 @@ function prevQuestion() {
 </script>
     <script src="https://unpkg.com/lucide@0.468.0"></script>
     <script>lucide.createIcons();</script>
+<script src="js/supabase.js?v=20260811a"></script>
 <script src="js/bundles/core.js"></script>
     <script src="js/gk-data.js"></script>
     <script src="js/gk-generators.js"></script>

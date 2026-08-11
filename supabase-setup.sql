@@ -72,6 +72,13 @@ CREATE TABLE IF NOT EXISTS leaderboard (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- 6. Quiz progress (per-user resume state for current-affairs quizzes)
+CREATE TABLE IF NOT EXISTS quiz_progress (
+  id UUID PRIMARY KEY REFERENCES auth.users ON DELETE CASCADE,
+  payload JSONB NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Indexes
 CREATE INDEX idx_results_user ON results(user_id);
 CREATE INDEX idx_results_date ON results(date DESC);
@@ -85,6 +92,7 @@ ALTER TABLE results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE wrong_answers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE bookmarks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE leaderboard ENABLE ROW LEVEL SECURITY;
+ALTER TABLE quiz_progress ENABLE ROW LEVEL SECURITY;
 
 -- Policies: users can read/write their own data
 DROP POLICY IF EXISTS "profiles_own" ON profiles;
@@ -93,11 +101,13 @@ DROP POLICY IF EXISTS "wrong_own" ON wrong_answers;
 DROP POLICY IF EXISTS "bookmarks_own" ON bookmarks;
 DROP POLICY IF EXISTS "leaderboard_select" ON leaderboard;
 DROP POLICY IF EXISTS "leaderboard_insert" ON leaderboard;
+DROP POLICY IF EXISTS "quiz_progress_own" ON quiz_progress;
 
 CREATE POLICY "profiles_own" ON profiles FOR ALL USING (auth.uid() = id);
 CREATE POLICY "results_own" ON results FOR ALL USING (auth.uid() = user_id);
 CREATE POLICY "wrong_own" ON wrong_answers FOR ALL USING (auth.uid() = user_id);
 CREATE POLICY "bookmarks_own" ON bookmarks FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "quiz_progress_own" ON quiz_progress FOR ALL USING (auth.uid() = id);
 
 CREATE POLICY "leaderboard_select" ON leaderboard FOR SELECT USING (true);
 CREATE POLICY "leaderboard_insert" ON leaderboard FOR INSERT WITH CHECK (auth.uid() = user_id);
