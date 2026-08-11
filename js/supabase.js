@@ -266,15 +266,17 @@ window.syncQuizProgress = function (quizState) {
       .then(function (rows) {
         var write;
         if (rows && rows.length > 0) {
-          write = fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + uid, {
-            method: 'PATCH', headers: sbHeaders(tok), keepalive: true,
-            body: JSON.stringify({ payload: quizState, updated_at: new Date().toISOString() })
-          });
+          var patchBody = JSON.stringify({ payload: quizState, updated_at: new Date().toISOString() });
+          var extra = patchBody.length < 32768 ? { keepalive: true } : {};
+          write = fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + uid, Object.assign({
+            method: 'PATCH', headers: sbHeaders(tok), body: patchBody
+          }, extra));
         } else {
-          write = fetch(SUPABASE_URL + '/rest/v1/quiz_progress', {
-            method: 'POST', headers: sbHeaders(tok), keepalive: true,
-            body: JSON.stringify({ id: uid, payload: quizState, updated_at: new Date().toISOString() })
-          });
+          var postBody = JSON.stringify({ id: uid, payload: quizState, updated_at: new Date().toISOString() });
+          var extra2 = postBody.length < 32768 ? { keepalive: true } : {};
+          write = fetch(SUPABASE_URL + '/rest/v1/quiz_progress', Object.assign({
+            method: 'POST', headers: sbHeaders(tok), body: postBody
+          }, extra2));
         }
         return write.then(function (w) {
           if (!w.ok) throw new Error('HTTP ' + w.status);

@@ -5335,9 +5335,14 @@ var _staticGen_polity = GK_GENERATORS.polity;
             var base = state.baseIdx || 0;
             // Keep a window of questions around the resume point so you can still
             // scroll back and review roughly the last 300 finished questions.
-            var windowStart = Math.max(0, resumeAbs - 300);
+            // The archive feed can hold thousands of long items, so keep its saved
+            // window small to avoid huge localStorage/Supabase payloads.
+            var isFeed = state._feedSource === 'archive';
+            var backWindow = isFeed ? 40 : 300;
+            var windowUpTo = isFeed ? 120 : 1200;
+            var windowStart = Math.max(0, resumeAbs - backWindow);
             var windowFrom = Math.max(0, windowStart - base);
-            var windowQ = state.questions.slice(windowFrom, windowFrom + 1200);
+            var windowQ = state.questions.slice(windowFrom, windowFrom + windowUpTo);
             if (windowQ.length === 0) {
                 if (!state.infinite) clearQuizSession(sessionId());
                 return;
