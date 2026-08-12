@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       chunk:
-        description: 'Chunk to process (1-20, leave empty for all)'
+        description: 'Chunk to process (1-24, leave empty for all)'
         required: false
         default: ''
 
@@ -60,16 +60,19 @@ jobs:
           path: data/
           retention-days: 1
 
-  # ── Wiki chunks: 20 runners, capped at 20 in parallel ──
+  # ── Wiki chunks: 24 runners, capped at 20 in parallel ──
+  # 24 chunks restore the per-chunk work size that last completed cleanly
+  # (run #408); max-parallel 20 keeps concurrency inside the free-tier cap,
+  # so the 4 leftover chunks simply run in a second wave.
   wiki-chunks:
     needs: setup
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        chunk: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+        chunk: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
       max-parallel: 20
       fail-fast: false
-    timeout-minutes: 180
+    timeout-minutes: 240
     steps:
       - uses: actions/checkout@v4
         with:
@@ -95,7 +98,7 @@ jobs:
         run: node scripts/wiki-fill-all.cjs
         env:
           WIKI_FILL_CHUNK: ${{ matrix.chunk }}
-          WIKI_FILL_CHUNKS: 20
+          WIKI_FILL_CHUNKS: 24
           WIKI_FILL_ALL: '1'
           QUIZ_PATH: data/quiz-chunk-${{ matrix.chunk }}.json
           WIKI_FILL_CONCURRENCY: 5
