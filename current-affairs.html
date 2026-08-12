@@ -5388,8 +5388,10 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 answered: false,
                 infinite: state.infinite || false,
                 questions: windowQ,
+                totalCount: (base || 0) + state.questions.length,
                 savedAt: Date.now()
             };
+            state._feedTotal = (base || 0) + state.questions.length;
             writeSessions(map);
         }
         function listUnfinishedSessions(map) {
@@ -5412,6 +5414,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             state.streak = saved.streak || 0;
             state.answered = true;
             state.questions = saved.questions;
+            state._feedTotal = (saved.totalCount != null) ? saved.totalCount : null;
             state.infinite = false;
             state._feedSource = 'archive';
             state.autoPaused = false;
@@ -5455,7 +5458,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('scoreBar').classList.add('show');
             document.getElementById('restartBtn').style.display = 'inline-block';
             document.getElementById('correctNum').textContent = state.correct;
-            document.getElementById('totalNum').textContent = (state.baseIdx || 0) + state.questions.length;
+            document.getElementById('totalNum').textContent = (saved.totalCount != null) ? saved.totalCount : (state.baseIdx || 0) + state.questions.length;
             var strEl = document.getElementById('streakNum');
             if (strEl) strEl.textContent = state.streak;
             var trkEl = document.getElementById('answeredTracker');
@@ -7711,6 +7714,7 @@ function prevQuestion() {
             state.cat = key;
             state.categoryName = label;
             state._sessionKey = null;
+            state._feedTotal = null;
             await ensureSessionsLoaded();
             if (offerResumeFor(key, label)) return;
             clearQuizSession(key);
@@ -7767,6 +7771,7 @@ function prevQuestion() {
             state.cat = 'subject::' + subject;
             state.categoryName = subject;
             state._sessionKey = null;
+            state._feedTotal = null;
             await ensureSessionsLoaded();
             if (offerResumeFor(state.cat, subject)) return;
             clearQuizSession(state.cat);
@@ -7823,6 +7828,7 @@ function prevQuestion() {
             clearQuizSession('feed');
             state.cat = 'feed';
             state._sessionKey = null;
+            state._feedTotal = null;
             state.questions = [];
             state.baseIdx = 0;
             state.idx = 0;
@@ -7914,7 +7920,7 @@ function prevQuestion() {
             }
             var q = state.questions[state.idx];
             document.getElementById('correctNum').textContent = (state.baseIdx || 0) + state.idx + 1;
-            document.getElementById('totalNum').textContent = (state.baseIdx || 0) + state.questions.length;
+            document.getElementById('totalNum').textContent = (state._feedTotal != null) ? state._feedTotal : (state.baseIdx || 0) + state.questions.length;
             document.getElementById('qNum').textContent = '';
             document.getElementById('qProgress').style.width = '0%';
             document.getElementById('catTag').textContent = q.hint || (q.subject ? q.subject + (q.subTopic ? ' — ' + q.subTopic : '') : '');
@@ -7977,6 +7983,11 @@ function prevQuestion() {
             if (!el) return;
             el.style.display = 'block';
             if (_archiveLoading) {
+                el.innerHTML = '📚 Archive: <span style="color:var(--amber)">loading cache…</span>';
+                return;
+            }
+            if (_archiveCache === null && typeof preloadArchive === 'function') {
+                preloadArchive();
                 el.innerHTML = '📚 Archive: <span style="color:var(--amber)">loading cache…</span>';
                 return;
             }
