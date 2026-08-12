@@ -5264,7 +5264,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             if (/^(list of|types of|examples of|categories of|classification of)/i.test((q.q || '').trim())) return true;
             return false;
         }
-        var state = { cat: null, _sessionKey: null, questions: [], idx: 0, baseIdx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null, autoTimer: null, autoPaused: false };
+        var state = { cat: null, _sessionKey: null, questions: [], idx: 0, baseIdx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null, autoTimer: null, autoPaused: false, _lastLearnSave: 0 };
         var _resumeHandled = false;
         var _resumePromptShown = false;
         // Sessions live ONLY in Supabase (quiz_progress). The in-memory cache is the
@@ -5598,6 +5598,12 @@ var _staticGen_polity = GK_GENERATORS.polity;
             saveQuizSession();
         });
 
+        // Save when the tab is hidden too — browsers fire this before unload and give
+        // the async sync request a real chance to complete, unlike pagehide.
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'hidden') saveQuizSession();
+        });
+
         document.addEventListener('keydown', function(e) {
             if (!document.getElementById('qArea').classList.contains('active')) return;
             if (document.activeElement && document.activeElement.id === 'jumpInput') return;
@@ -5914,6 +5920,14 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 document.getElementById('correctNum').textContent = (state.baseIdx || 0) + state.idx + 1;
                 document.getElementById('totalNum').textContent = (state.baseIdx || 0) + state.questions.length;
                 _attachPersonImage(q);
+                // Learning mode never answers, so the pagehide-only save would be lost on
+                // tab close (async fetch is cancelled on unload). Persist periodically so
+                // progress lands in Supabase even if the tab is just closed.
+                var _ls = Date.now();
+                if (!state._lastLearnSave || _ls - state._lastLearnSave > 20000) {
+                    state._lastLearnSave = _ls;
+                    saveQuizSession();
+                }
                 setTimeout(function() {
                     document.getElementById('pauseBtn').classList.remove('hidden');
                     startAutoTimer();
