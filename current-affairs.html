@@ -5465,7 +5465,8 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 infinite: state.infinite || false,
                 questions: windowQ,
                 totalCount: trueTotal,
-                savedAt: Date.now()
+                savedAt: Date.now(),
+                range: state._range || null
             };
             writeSessions(map);
         }
@@ -5529,6 +5530,10 @@ var _staticGen_polity = GK_GENERATORS.polity;
             }
             state.restartFn = function() {
                 if (saved.cat === 'static') startStaticGk();
+                else if (saved.cat === 'mixed') {
+                    if (saved.range && typeof _runTimedQuiz === 'function') _runTimedQuiz(saved.range.startDate, saved.range.endDate, saved.range.label, saved.range.targetCount, saved.range.maxFetchDays);
+                    else startCategory('mixed', saved.categoryName);
+                }
                 else startCategory(saved.cat, saved.categoryName);
             };
             document.getElementById('welcome').style.display = 'none';
@@ -7053,6 +7058,7 @@ function prevQuestion() {
             state.totalFetched = 0;
             state.infinite = false;
             state.restartFn = function() { _runTimedQuiz(startDate, endDate, label, targetCount, maxFetchDays); };
+            state._range = { startDate: startDate, endDate: endDate || null, label: label, targetCount: targetCount, maxFetchDays: maxFetchDays || 0 };
             
             var cutoff = startDate ? new Date(startDate) : new Date(0);
             var dateQs = getDateFilteredQuestions(cutoff);
