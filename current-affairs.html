@@ -5888,7 +5888,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             }
             _loadingRetry = 0;
             document.getElementById('jumpRow').style.display = 'flex';
-            document.getElementById('jumpInput').max = state.questions.length;
+            document.getElementById('jumpInput').max = (state.baseIdx || 0) + state.questions.length;
             var q = state.questions[state.idx];
             var isLearning = (state.infinite && state.cat === 'mixed') || state.cat === 'static';
             if (isLearning) {
@@ -6225,8 +6225,12 @@ var _staticGen_polity = GK_GENERATORS.polity;
             var inp = document.getElementById('jumpInput');
             var target = parseInt(inp.value);
             if (isNaN(target) || target < 1) return;
-            var idx = target - 1;
+            // The typed number is the question's absolute position as shown in qNum
+            // (baseIdx + idx + 1). After a resume baseIdx is non-zero, so subtract it
+            // to get the index into the current (possibly windowed) questions array.
+            var idx = target - 1 - (state.baseIdx || 0);
             if (state.questions.length === 0) return;
+            if (idx < 0) idx = 0;
             if (idx >= state.questions.length) idx = state.questions.length - 1;
             var wasPaused = state.autoPaused;
             state.idx = idx;
@@ -8023,7 +8027,7 @@ function prevQuestion() {
             document.getElementById('resultFlash').className = 'result-flash';
             document.getElementById('intuitionDisplay').style.display = 'none';
             document.getElementById('jumpRow').style.display = 'flex';
-            document.getElementById('jumpInput').max = state.questions.length;
+            document.getElementById('jumpInput').max = (state.baseIdx || 0) + state.questions.length;
 
             var displayText = '<div style="font-size:1.2em;font-weight:700;margin-bottom:8px">' + q.q.replace(/\n/g, '<br>') + '</div>';
             if (q.a) displayText += '<div style="font-size:1.05em;color:var(--emerald);margin-bottom:10px;padding:8px 12px;border-radius:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15)">✅ ' + q.a + '</div>';
