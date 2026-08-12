@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       chunk:
-        description: 'Chunk to process (1-24, leave empty for all)'
+        description: 'Chunk to process (1-20, leave empty for all)'
         required: false
         default: ''
 
@@ -60,13 +60,13 @@ jobs:
           path: data/
           retention-days: 1
 
-  # ── Wiki chunks: 24 runners, capped at 8 in parallel ──
+  # ── Wiki chunks: 20 runners, capped at 20 in parallel ──
   wiki-chunks:
     needs: setup
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        chunk: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
+        chunk: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
       max-parallel: 20
       fail-fast: false
     timeout-minutes: 180
@@ -95,7 +95,7 @@ jobs:
         run: node scripts/wiki-fill-all.cjs
         env:
           WIKI_FILL_CHUNK: ${{ matrix.chunk }}
-          WIKI_FILL_CHUNKS: 24
+          WIKI_FILL_CHUNKS: 20
           WIKI_FILL_ALL: '1'
           QUIZ_PATH: data/quiz-chunk-${{ matrix.chunk }}.json
           WIKI_FILL_CONCURRENCY: 5
