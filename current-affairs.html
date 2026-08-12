@@ -5377,6 +5377,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 return;
             }
             var map = readSessions();
+            var trueTotal = (state._feedTotal != null) ? state._feedTotal : (base || 0) + state.questions.length;
             map[sessionId()] = {
                 cat: state.cat,
                 categoryName: state.categoryName,
@@ -5388,10 +5389,9 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 answered: false,
                 infinite: state.infinite || false,
                 questions: windowQ,
-                totalCount: (base || 0) + state.questions.length,
+                totalCount: trueTotal,
                 savedAt: Date.now()
             };
-            state._feedTotal = (base || 0) + state.questions.length;
             writeSessions(map);
         }
         function listUnfinishedSessions(map) {
