@@ -2141,9 +2141,14 @@ const CATEGORIES = [
     'Predatory insect','Apiculture','Sericulture','Integrated pest management','Insecticide','Neem','Bacillus thuringiensis',
     'Biopesticide','Crop protection','Pest control','Sugarcane borer','Ragi','Mulberry','Honey'
   ]},
-  { name:'Agricultural Extension & Marketing', wikiCat:'Agricultural_economics', topics:[
+  { name:'Agricultural Extension & Marketing', wikiCat:'Agricultural_economics', keywords:[
+    'agricultur','agri','farm','crop','food','market','krishi','kisan','extension','produce',
+    'producer','price','subsid','insur','cooperat','commodit','farmer','rural','agronom','livestock',
+    'horticultur','dairy','economics','policy','supply','distribut','credit','trade','sustain',
+    'fertil','yield','cultivat','harvest','irrigat','manure','biotech','value'
+  ], topics:[
     'Agricultural extension','Agricultural economics','Agronomy','Farm management','Agricultural marketing',
-    'Agricultural price support','Minimum support price','Commodity Futures','Mandi','Regulated market',
+    'Agricultural price support','Minimum support price','Commodity Futures','Regulated market',
     'Agriculture in India','Agribusiness','Contract farming','Farmers cooperative','Public distribution system',
     'Agricultural insurance','Farm subsidy','Green Revolution','Organic farming','Food security','Agriculture policy of India',
     'Krishi Vigyan Kendra','ATMA','Agri start-up','Digital agriculture','e-NAM','Farmer producer organisation',
@@ -2313,6 +2318,19 @@ async function main() {
       const wikiTopics = await fetchCategoryMembers(cat.wikiCat);
       const existing = new Set(cat.topics.map(t => t.toLowerCase()));
       discovered = wikiTopics.filter(t => !existing.has(t.toLowerCase()));
+      // Opt-in relevance gate: when a category lists `keywords`, auto-discovered
+      // titles must contain at least one (whole-word) keyword. Category member
+      // trees like Agricultural_economics recurse into generic sub-topics
+      // (economics schools, journals, people, sports), so this keeps discovered
+      // topics on-topic without touching the curated hardcoded list.
+      if (cat.keywords && cat.keywords.length) {
+        const kw = cat.keywords.map(k => k.toLowerCase());
+        discovered = discovered.filter(t => {
+          const lower = t.toLowerCase();
+          return kw.some(k => new RegExp('(^|[^a-z0-9])' + k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).test(lower));
+        });
+        if (discovered.length) log('  Relevance-gated discovered topics: ' + discovered.length);
+      }
       if (discovered.length) log('  Auto-discovered ' + discovered.length + ' topics from Category:' + cat.wikiCat);
     }
     // Fresh (never-covered) content first, then partially-covered articles so the
