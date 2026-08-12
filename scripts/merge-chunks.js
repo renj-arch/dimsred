@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { readQuiz, writeQuizQuestions } = require('./lib/quiz-store');
 
 const CHUNKS_DIR = path.join(__dirname, '..', 'chunks');
 const QUIZ_PATH = path.join(__dirname, '..', 'data', 'quiz.json');
@@ -26,7 +27,7 @@ function main() {
   let allQuestions = [];
   if (fs.existsSync(QUIZ_PATH)) {
     try {
-      const existing = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8'));
+      const existing = readQuiz(QUIZ_PATH);
       allQuestions = existing.questions || [];
       console.log('Existing quiz.json: ' + allQuestions.length + ' questions');
     } catch (e) {
@@ -46,7 +47,7 @@ function main() {
   } catch (e) { /* no existing pool */ }
   for (const f of chunkFiles) {
     try {
-      const chunkData = JSON.parse(fs.readFileSync(path.join(CHUNKS_DIR, f), 'utf8'));
+      const chunkData = readQuiz(path.join(CHUNKS_DIR, f));
       const qs = chunkData.questions || [];
       let chunkAdded = 0;
       for (const q of qs) {
@@ -79,7 +80,7 @@ function main() {
   }
 
   // Write merged quiz.json
-  fs.writeFileSync(QUIZ_PATH, JSON.stringify({ questions: allQuestions }));
+  writeQuizQuestions(QUIZ_PATH, allQuestions);
   console.log('Wrote quiz.json: ' + allQuestions.length + ' total (' + added + ' new from chunks)');
 
   // Prune fully-mined titles from the pool so it only holds in-progress pages.

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { readQuiz, writeQuiz } = require('./lib/quiz-store');
 
 const QUIZ_PATH = path.join(__dirname, '..', 'data', 'quiz.json');
 const QUESTIONS_DIR = path.join(__dirname, '..', 'data', 'questions');
@@ -143,7 +144,7 @@ async function main() {
   if (fs.existsSync(QUIZ_PATH)) {
     let quiz;
     try {
-      quiz = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8').replace(/^\uFEFF/, ''));
+      quiz = readQuiz(QUIZ_PATH);
     } catch (e) {
       console.error(`Warning: Could not parse quiz.json (${e.message}). Skipping.`);
       return;
@@ -152,7 +153,7 @@ async function main() {
     totalRemoved += removed.length;
     totalKept += kept.length;
     quiz.questions = kept;
-    fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz));
+    writeQuiz(QUIZ_PATH, quiz);
     console.log(`quiz.json: removed ${removed.length} duplicate questions, kept ${kept.length}`);
   }
 

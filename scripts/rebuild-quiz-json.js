@@ -1,12 +1,13 @@
 const fs = require('fs');
 const path = require('path');
+const { writeQuizQuestions } = require('./lib/quiz-store');
 
 const questionsDir = path.join(__dirname, '..', 'data', 'questions');
 const quizPath = path.join(__dirname, '..', 'data', 'quiz.json');
 
 if (!fs.existsSync(questionsDir)) {
   fs.mkdirSync(questionsDir, { recursive: true });
-  fs.writeFileSync(quizPath, JSON.stringify({ questions: [] }));
+  writeQuizQuestions(quizPath, []);
   console.log('Created data/questions/ directory; wrote empty quiz.json');
   process.exit(0);
 }
@@ -33,5 +34,5 @@ files.forEach(f => {
   }
 });
 
-fs.writeFileSync(quizPath, JSON.stringify({ questions: allQuestions }));
+writeQuizQuestions(quizPath, allQuestions);
 console.log('Rebuilt quiz.json with ' + allQuestions.length + ' questions');

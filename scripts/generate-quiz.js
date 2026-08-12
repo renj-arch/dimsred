@@ -1,5 +1,6 @@
 var fs = require('fs');
 var path = require('path');
+var { readQuiz, writeQuiz } = require('./lib/quiz-store');
 
 var dataDir = path.resolve(__dirname, '..', 'data');
 var feedPath = path.join(dataDir, 'pib-feed.json');
@@ -265,7 +266,7 @@ function main() {
 
   var existing = [];
   if (fs.existsSync(quizPath)) {
-    try { existing = JSON.parse(fs.readFileSync(quizPath, 'utf-8')); } catch(e) { existing = []; }
+    try { existing = readQuiz(quizPath); } catch(e) { existing = {}; }
     if (existing.questions) existing = existing.questions;
   }
 
@@ -281,7 +282,7 @@ function main() {
   if (existing.length > 100) existing = existing.slice(0, 100);
 
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-  fs.writeFileSync(quizPath, JSON.stringify({ questions: existing, updatedAt: new Date().toISOString() }, null, 2));
+  writeQuiz(quizPath, { questions: existing, updatedAt: new Date().toISOString() });
   console.log('Quiz saved: ' + questions.length + ' new questions (total: ' + existing.length + ')');
 }
 

@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
+const { readQuizQuestions, writeQuiz } = require('./lib/quiz-store');
 const WIKI_API = 'https://en.wikipedia.org/w/api.php';
 const QUIZ_PATH = process.env.QUIZ_PATH || 'data/quiz.json';
 const LINK_POOL_PATH = process.env.WIKI_LINK_POOL_PATH || path.join(path.dirname(QUIZ_PATH), 'wiki-link-pool.json');
@@ -2218,7 +2219,7 @@ async function main() {
   try { quizSize = fs.statSync(QUIZ_PATH).size; } catch (e) {}
   log('Loading quiz.json (' + (quizSize / 1024 / 1024).toFixed(0) + ' MiB)...');
   let quiz;
-  try { quiz = JSON.parse(fs.readFileSync(QUIZ_PATH, 'utf8')); }
+  try { quiz = { questions: readQuizQuestions(QUIZ_PATH) }; }
   catch (e) { quiz = { questions: [] }; console.log('Created new quiz.json (was missing)'); }
   const existingQ = new Set(quiz.questions.map(q => norm(q.question)));
 
@@ -2721,10 +2722,10 @@ async function main() {
     log('  (could not save link pool: ' + e.message + ')');
   }
 
-  fs.writeFileSync(QUIZ_PATH, JSON.stringify(quiz));
+  writeQuiz(QUIZ_PATH, quiz);
   if (process.env.RUNNER_TEMP) {
     const tmpPath = process.env.RUNNER_TEMP + '/quiz.json';
-    fs.writeFileSync(tmpPath, JSON.stringify(quiz));
+    writeQuiz(tmpPath, quiz);
     log('Saved quiz.json to runner temp (' + tmpPath + ')');
   }
 

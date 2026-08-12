@@ -46,6 +46,9 @@ jobs:
         run: |
           if [ -f "$RUNNER_TEMP/quiz.json" ]; then
             cp "$RUNNER_TEMP/quiz.json" data/quiz.json
+            for f in "$RUNNER_TEMP"/quiz.json.part.*; do
+              [ -f "$f" ] && cp "$f" "data/quiz.json${f##*quiz.json}"
+            done
             echo "Restored quiz.json from runner temp"
           fi
 
@@ -92,7 +95,11 @@ jobs:
       - run: node scripts/rebuild-quiz-json.js
 
       - name: Prepare chunk output file
-        run: cp data/quiz.json data/quiz-chunk-${{ matrix.chunk }}.json
+        run: |
+          cp data/quiz.json data/quiz-chunk-${{ matrix.chunk }}.json
+          for f in data/quiz.json.part.*; do
+            [ -f "$f" ] && cp "$f" "data/quiz-chunk-${{ matrix.chunk }}.json${f#data/quiz.json}"
+          done
 
       - name: Wiki fill
         run: node scripts/wiki-fill-all.cjs
@@ -113,7 +120,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: chunk-${{ matrix.chunk }}
-          path: data/quiz-chunk-${{ matrix.chunk }}.json
+          path: |
+            data/quiz-chunk-${{ matrix.chunk }}.json
+            data/quiz-chunk-${{ matrix.chunk }}.json.part.*
           retention-days: 1
 
   # ── Merge: combine all chunk outputs ──
@@ -146,7 +155,7 @@ jobs:
       - name: Collect chunk outputs
         run: |
           mkdir -p chunks
-          find . -name 'quiz-chunk-*.json' -exec cp {} chunks/ \; 2>/dev/null || true
+          find . -name 'quiz-chunk-*.json*' -exec cp {} chunks/ \; 2>/dev/null || true
           echo "Chunk files found:"
           ls -la chunks/ 2>/dev/null || echo "  (none)"
 
@@ -170,6 +179,9 @@ jobs:
           cp archive.html data/archive.html
           mkdir -p "$RUNNER_TEMP"
           cp data/quiz.json "$RUNNER_TEMP/quiz.json"
+          for f in data/quiz.json.part.*; do
+            [ -f "$f" ] && cp "$f" "$RUNNER_TEMP/quiz.json${f##*quiz.json}"
+          done
 
       - uses: actions/upload-artifact@v4
         with:

@@ -1,11 +1,12 @@
 const fs = require('fs');
 const path = require('path');
+const { readQuiz } = require('./lib/quiz-store');
 
 const quizPath = path.join(__dirname, '..', 'data', 'quiz.json');
 const outDir = path.join(__dirname, '..', 'data', 'questions');
 
 let quiz;
-try { quiz = JSON.parse(fs.readFileSync(quizPath, 'utf8')); }
+try { quiz = readQuiz(quizPath); }
 catch (e) { console.error('Failed to read quiz.json:', e.message); process.exit(1); }
 
 const catMap = {};

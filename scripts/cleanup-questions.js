@@ -1,10 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const { readQuiz, writeQuiz } = require('./lib/quiz-store');
 
 const quizPath = path.join(__dirname, '..', 'data', 'quiz.json');
 let quiz;
 try {
-  quiz = JSON.parse(fs.readFileSync(quizPath, 'utf8'));
+  quiz = readQuiz(quizPath);
 } catch (e) {
   console.error('Warning: Could not parse quiz.json (' + e.message + '). Skipping cleanup.');
   process.exit(0);
@@ -111,7 +112,7 @@ function isBad(q) {
 const clean = all.filter(q => !isBad(q));
 
 quiz.questions = clean;
-fs.writeFileSync(quizPath, JSON.stringify(quiz));
+writeQuiz(quizPath, quiz);
 
 const removed = before - clean.length;
 console.log('Cleaned: ' + before + ' → ' + clean.length + ' questions (-' + removed + ' garbage)');
