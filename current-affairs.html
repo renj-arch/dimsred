@@ -5266,6 +5266,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
         }
         var state = { cat: null, _sessionKey: null, questions: [], idx: 0, baseIdx: 0, correct: 0, streak: 0, answered: false, categoryName: '', restartFn: null, autoTimer: null, autoPaused: false };
         var _resumeHandled = false;
+        var _resumePromptShown = false;
         // Sessions live ONLY in Supabase (quiz_progress). The in-memory cache is the
         // working copy for this page load; it is populated from Supabase on load and
         // every change is pushed straight back to Supabase. Nothing touches localStorage.
@@ -5280,14 +5281,53 @@ var _staticGen_polity = GK_GENERATORS.polity;
             if (_sessionCache === null) _sessionCache = {};
             return _sessionCache;
         }
+        // Sync is retried endlessly: if a write fails (or login has not finished yet),
+        // the latest map is kept and re-pushed with backoff until it lands in Supabase.
+        // So progress is never silently dropped mid-quiz.
+        var _syncPendingMap = null;
+        var _syncInFlight = false;
+        var _syncRetryTimer = null;
+        var _syncFails = 0;
         function writeSessions(map) {
+            map._meta = { lastWrite: Date.now() };
             _sessionCache = map;
-            // Push the whole map to Supabase so it can be resumed after login on any device.
-            if (window.supabaseUser && typeof window.syncQuizProgress === 'function') {
-                try { window.syncQuizProgress(map).then(function(){ refreshSyncStatus(); }); } catch(e) {}
-            } else {
-                refreshSyncStatus();
+            _syncPendingMap = map;
+            _startSync();
+            refreshSyncStatus();
+        }
+        function _startSync() {
+            if (_syncInFlight) return; // in-flight push picks up the latest map when it finishes
+            var map = _syncPendingMap;
+            if (!map) return;
+            var authed = typeof window.supabaseUser !== 'undefined' && window.supabaseUser && typeof window.syncQuizProgress === 'function';
+            if (!authed) {
+                // Not signed in yet — if auth has settled and we are truly signed out,
+                // stop background retries; the auth hook will flush this once they log in.
+                if (typeof window.supabaseReady !== 'undefined' && window.supabaseReady === true && !window.supabaseUser) return;
+                _scheduleSyncRetry();
+                return;
             }
+            _syncInFlight = true;
+            window.syncQuizProgress(map).then(function(ok) {
+                _syncInFlight = false;
+                refreshSyncStatus();
+                if (ok) {
+                    _syncFails = 0;
+                    if (_syncPendingMap === map) _syncPendingMap = null; // fully caught up
+                    if (_syncPendingMap) _startSync(); // a newer save arrived meanwhile
+                } else {
+                    _scheduleSyncRetry();
+                }
+            });
+        }
+        function _scheduleSyncRetry() {
+            if (_syncRetryTimer) return;
+            var delay = Math.min(4000 * Math.pow(2, Math.min(_syncFails, 4)), 60000); // 4s..60s, forever
+            _syncFails++;
+            _syncRetryTimer = setTimeout(function() {
+                _syncRetryTimer = null;
+                if (_syncPendingMap) _startSync();
+            }, delay);
         }
         // Load the user's sessions from Supabase into the cache. Resolves when ready;
         // concurrent callers share the same promise. If not signed in yet, resolves
@@ -5307,19 +5347,49 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 var map = readSessions();
                 var changed = false;
                 for (var k in saved) {
+                    if (k === '_meta') continue;
                     if (!map[k] || (saved[k].savedAt || 0) > (map[k].savedAt || 0)) {
                         map[k] = saved[k];
                         changed = true;
                     }
                 }
+                // Record when this cache last absorbed the remote state, so a later write
+                // can tell whether it has seen everything (authoritative) or must merge.
+                if (!map._meta) map._meta = {};
+                map._meta.lastSyncAt = Date.now();
                 if (changed) _sessionCache = map;
             }).catch(function(){});
             return _sessionsPromise;
+        }
+        // Wait until auth has settled (signed in or not), then load the user's sessions.
+        // Quiz starters use this instead of ensureSessionsLoaded() so a synced quiz is
+        // always visible before we decide to start fresh (resume offer needs the data).
+        function ensureSessionsReady() {
+            if (typeof window.supabaseReady === 'undefined' || window.supabaseReady !== true) {
+                return new Promise(function(resolve) {
+                    var tries = 0;
+                    var timer = setInterval(function() {
+                        tries++;
+                        if (window.supabaseReady === true || tries > 120) { // ~30s for slow mobile logins
+                            clearInterval(timer);
+                            ensureSessionsLoaded().then(resolve);
+                        }
+                    }, 250);
+                });
+            }
+            return ensureSessionsLoaded();
         }
         function refreshSyncStatus() {
             var el = document.getElementById('syncStatus');
             if (!el) return;
             var s = window.__quizSync;
+            // A pending push (failed or waiting on login) means sync is still alive and retrying.
+            if (_syncPendingMap) {
+                var busy = window.supabaseUser ? '<span class="badge" style="color:var(--purple)">☁️ syncing…</span>'
+                                               : '<span class="badge" style="color:var(--text-muted)">☁️ progress waiting — sign in to sync</span>';
+                el.innerHTML = busy;
+                return;
+            }
             if (!s || !s.last) {
                 if (window.supabaseUser) el.innerHTML = '';
                 else el.innerHTML = '<span class="badge" style="color:var(--text-muted)">☁️ sign in to save progress</span>';
@@ -5344,9 +5414,13 @@ var _staticGen_polity = GK_GENERATORS.polity;
             var map = readSessions();
             var s = map[sessionKey];
             if (!s || !s.questions || s.questions.length === 0) return false;
-            if ((s.idx || 0) >= s.questions.length) return false;
-            var resumeAt = (s.baseIdx || 0) + (s.idx || 0) + 1;
             var name = s.categoryName || fallbackName || s.cat || 'GK';
+            if ((s.idx || 0) >= s.questions.length) {
+                // Completed session exists on this slot — never wipe it silently.
+                // OK = start a new one, Cancel = go back without starting.
+                return !confirm('You already completed this quiz (' + name + '): ' + (s.answeredCount || s.questions.length) + ' answered, ' + (s.correct || 0) + ' correct.\n\nPress OK to start a new one, Cancel to go back.');
+            }
+            var resumeAt = (s.baseIdx || 0) + (s.idx || 0) + 1;
             if (confirm('You have a saved quiz: ' + name + ' — resume from question ' + resumeAt + ' (' + (s.answeredCount || resumeAt - 1) + ' answered, ' + (s.correct || 0) + ' correct)?\n\nPress OK to resume, Cancel to start fresh.')) {
                 loadSessionIntoState(s);
                 return true;
@@ -5470,9 +5544,11 @@ var _staticGen_polity = GK_GENERATORS.polity;
             showQuestion();
         }
         function promptUnfinishedSessions() {
-            if (_resumeHandled) return;
+            if (_resumeHandled || _resumePromptShown) return;
+            if (isQuizActive()) return;
             var unfinished = listUnfinishedSessions(readSessions());
             if (unfinished.length === 0) return false;
+            _resumePromptShown = true;
             for (var i = 0; i < unfinished.length; i++) {
                 var saved = unfinished[i];
                 var name = saved.categoryName || saved.cat || 'GK';
@@ -5495,7 +5571,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 var _rTries = 0;
                 var _rTimer = setInterval(function() {
                     _rTries++;
-                    if ((typeof window.supabaseUser !== 'undefined' && window.supabaseReady === true) || _rTries > 80) {
+                    if ((typeof window.supabaseUser !== 'undefined' && window.supabaseReady === true) || _rTries > 120) {
                         clearInterval(_rTimer);
                         ensureSessionsLoaded().then(promptUnfinishedSessions);
                     }
@@ -5622,11 +5698,21 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     }
                 }, 50);
             }
+            // If the user logs in (or finishes logging in) after init, reload sessions so
+            // a synced quiz is offered and flush any progress saved before auth completed.
+            if (typeof window.supabaseOnAuth === 'function') {
+                window.supabaseOnAuth(function(user) {
+                    if (!user) return;
+                    _sessionsPromise = null;
+                    ensureSessionsLoaded().then(promptUnfinishedSessions);
+                    if (_syncPendingMap) _startSync();
+                });
+            }
         }
 
         async function startCategory(id, name) {
             if (!confirmAbandonQuiz()) return;
-            await ensureSessionsLoaded();
+            await ensureSessionsReady();
             if (offerResumeFor(id, name)) return;
             clearQuizSession(id);
             state.cat = id;
@@ -6301,7 +6387,7 @@ function prevQuestion() {
 
         async function startTimedQuizWith(days) {
             if (!confirmAbandonQuiz()) return;
-            await ensureSessionsLoaded();
+            await ensureSessionsReady();
             if (offerResumeFor('mixed', null)) return;
             clearQuizSession('mixed');
             var label = days === 1 ? 'Today\'s Quiz' : (days === 7 ? 'Weekly Quiz' : (days === 30 ? 'Monthly Quiz' : (days === 365 ? 'Yearly Quiz' : 'Quarterly Quiz')));
@@ -6319,7 +6405,7 @@ function prevQuestion() {
             var endEl = document.getElementById('quizEndDate');
             var label = 'Custom Quiz';
             if (startEl.value && endEl.value) label = 'Quiz: ' + startEl.value + ' to ' + endEl.value;
-            await ensureSessionsLoaded();
+            await ensureSessionsReady();
             if (offerResumeFor('mixed', null)) return;
             clearQuizSession('mixed');
             state.cat = 'mixed';
@@ -7460,7 +7546,7 @@ function prevQuestion() {
 
         async function startStaticGk() {
             if (!confirmAbandonQuiz()) return;
-            await ensureSessionsLoaded();
+            await ensureSessionsReady();
             if (offerResumeFor('static', 'Static GK')) return;
             clearQuizSession('static');
             state.cat = 'static';
@@ -7719,7 +7805,7 @@ function prevQuestion() {
             state.categoryName = label;
             state._sessionKey = null;
             state._feedTotal = null;
-            await ensureSessionsLoaded();
+            await ensureSessionsReady();
             if (offerResumeFor(key, label)) return;
             clearQuizSession(key);
             state.questions = [];
@@ -7776,7 +7862,7 @@ function prevQuestion() {
             state.categoryName = subject;
             state._sessionKey = null;
             state._feedTotal = null;
-            await ensureSessionsLoaded();
+            await ensureSessionsReady();
             if (offerResumeFor(state.cat, subject)) return;
             clearQuizSession(state.cat);
             state.questions = [];
@@ -7827,7 +7913,7 @@ function prevQuestion() {
             if (state.answered || state.idx > 0) {
                 if (!confirm('Leave the current quiz? Your progress is saved and you can resume it later.')) return;
             }
-            await ensureSessionsLoaded();
+            await ensureSessionsReady();
             if (offerResumeFor('feed', 'Archive')) return;
             clearQuizSession('feed');
             state.cat = 'feed';
@@ -8116,7 +8202,7 @@ function prevQuestion() {
             if (!confirmAbandonQuiz()) return;
             state._sessionKey = 'ca::' + id;
             state.categoryName = name + ' + Current Affairs';
-            await ensureSessionsLoaded();
+            await ensureSessionsReady();
             if (offerResumeFor(state._sessionKey, state.categoryName)) return;
             clearQuizSession(state._sessionKey);
             state.cat = id;

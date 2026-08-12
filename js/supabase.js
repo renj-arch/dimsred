@@ -253,6 +253,37 @@ window.syncGoals = async function (goals) {
 // never race each other and drop updates. Retried once on failure.
 var _quizSyncChain = Promise.resolve();
 window.__quizSync = { last: null, status: 0, msg: '', at: 0 };
+// Merge the remote quiz_progress payload with the local map so a slow device cannot
+// overwrite newer progress from another device. If the local cache has already seen
+// everything the row holds (lastSyncAt >= row.updated_at), the local map is the
+// authoritative full state and is written back verbatim — this makes deletions
+// (cleared/restarted quizzes) propagate. Otherwise it merges per session key,
+// keeping whichever version is newer by savedAt.
+function mergeQuizPayload(existing, local, remoteUpdatedAtMs) {
+  var lm = (local && local._meta) || {};
+  if (lm.lastSyncAt && remoteUpdatedAtMs && lm.lastSyncAt >= remoteUpdatedAtMs) return local;
+  var out = {};
+  var remote = existing;
+  if (typeof remote === 'string') { try { remote = JSON.parse(remote); } catch (e) { remote = null; } }
+  if (remote && typeof remote === 'object' && !Array.isArray(remote)) {
+    if (remote.cat && remote.questions && remote.questions.length) { // legacy single-session payload
+      var legacy = {};
+      legacy[remote.cat] = remote;
+      remote = legacy;
+    }
+    for (var k in remote) if (k !== '_meta') out[k] = remote[k];
+  }
+  if (local && typeof local === 'object') {
+    for (var k2 in local) {
+      if (k2 === '_meta') continue;
+      var lv = local[k2];
+      var rv = out[k2];
+      if (!rv || !lv || (lv.savedAt || 0) >= (rv.savedAt || 0)) out[k2] = lv;
+    }
+  }
+  out._meta = { lastWrite: Date.now(), lastSyncAt: remoteUpdatedAtMs || 0 };
+  return out;
+}
 window.syncQuizProgress = function (quizState) {
   var tok = getToken();
   if (!tok || !supabaseUser || !quizState) {
@@ -264,15 +295,17 @@ window.syncQuizProgress = function (quizState) {
     return fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + uid, { headers: sbHeaders(tok) })
       .then(function (r) { return r.json(); })
       .then(function (rows) {
+        var payload = quizState;
         var write;
         if (rows && rows.length > 0) {
-          var patchBody = JSON.stringify({ payload: quizState, updated_at: new Date().toISOString() });
+          payload = mergeQuizPayload(rows[0].payload, quizState, new Date(rows[0].updated_at).getTime());
+          var patchBody = JSON.stringify({ payload: payload, updated_at: new Date().toISOString() });
           var extra = patchBody.length < 32768 ? { keepalive: true } : {};
           write = fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + uid, Object.assign({
             method: 'PATCH', headers: sbHeaders(tok), body: patchBody
           }, extra));
         } else {
-          var postBody = JSON.stringify({ id: uid, payload: quizState, updated_at: new Date().toISOString() });
+          var postBody = JSON.stringify({ id: uid, payload: payload, updated_at: new Date().toISOString() });
           var extra2 = postBody.length < 32768 ? { keepalive: true } : {};
           write = fetch(SUPABASE_URL + '/rest/v1/quiz_progress', Object.assign({
             method: 'POST', headers: sbHeaders(tok), body: postBody
