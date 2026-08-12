@@ -7894,6 +7894,10 @@ function prevQuestion() {
             if (typeof _updateArchiveProgress === 'function') _updateArchiveProgress();
             if (state.idx >= state.questions.length) {
                 if (state._feedSource === 'archive') {
+                    if (typeof _topUpFeedFromArchive === 'function' && _topUpFeedFromArchive()) {
+                        _showFeedItem();
+                        return;
+                    }
                     document.getElementById('qText').innerHTML = '✅ All done! No more questions.';
                     document.getElementById('optGrid').innerHTML = '<button class="action-btn secondary" onclick="backToMenu()">← Back to Menu</button>';
                     document.getElementById('pauseBtn').classList.add('hidden');
@@ -8023,6 +8027,49 @@ function prevQuestion() {
             for (var i = 0; i < got.length; i++) state.questions.push(got[i]);
             _updateArchiveProgress();
             return got.length > 0;
+        }
+        function _topUpFeedFromArchive() {
+            if (!_archiveCache || _archiveCache.length === 0) {
+                if (typeof preloadArchive === 'function') preloadArchive();
+                return false;
+            }
+            var cat = state.cat || '';
+            if (cat === 'feed') {
+                return (typeof _topUpArchive === 'function' && _topUpArchive());
+            }
+            var subjSet = {};
+            if (cat.indexOf('subject::') === 0) {
+                subjSet[state.categoryName || ''] = true;
+            } else if (cat.indexOf('combo::') === 0) {
+                (cat.slice(7) || '').split('+').forEach(function(s) { subjSet[s] = true; });
+            } else {
+                return false;
+            }
+            var seen = {};
+            for (var i = 0; i < state.questions.length; i++) {
+                var sq = state.questions[i];
+                seen[(sq.q || '') + '||' + (sq.a || '')] = true;
+            }
+            var pool = [];
+            for (var j = 0; j < _archiveCache.length; j++) {
+                var aq = _archiveCache[j];
+                if (!subjSet[aq.subject]) continue;
+                var key = (aq.q || '') + '||' + (aq.a || '');
+                if (seen[key]) continue;
+                seen[key] = true;
+                pool.push(aq);
+            }
+            if (pool.length === 0) return false;
+            shuffleArray(pool);
+            var added = 0;
+            while (pool.length > 0 && added < _archMaxBatch) {
+                var nq = pool.pop();
+                nq._archive = true;
+                state.questions.push(nq);
+                added++;
+            }
+            _updateArchiveProgress();
+            return added > 0;
         }
         function resetArchiveCursor() { _archCursor = 0; _writeArchiveCursor(0); }
 
