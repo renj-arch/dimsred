@@ -5344,6 +5344,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             var map = readSessions();
             var s = map[sessionKey];
             if (!s || !s.questions || s.questions.length === 0) return false;
+            if ((s.idx || 0) >= s.questions.length) return false;
             var resumeAt = (s.baseIdx || 0) + (s.idx || 0) + 1;
             var name = s.categoryName || fallbackName || s.cat || 'GK';
             if (confirm('You have a saved quiz: ' + name + ' — resume from question ' + resumeAt + ' (' + (s.answeredCount || resumeAt - 1) + ' answered, ' + (s.correct || 0) + ' correct)?\n\nPress OK to resume, Cancel to start fresh.')) {
@@ -5452,7 +5453,10 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 var qq = state.questions[i];
                 if (!qq.opts) { try { qq.opts = buildOptions(qq.a); } catch(e) {} }
             }
-            state.restartFn = function() { startCategory(saved.cat, saved.categoryName); };
+            state.restartFn = function() {
+                if (saved.cat === 'static') startStaticGk();
+                else startCategory(saved.cat, saved.categoryName);
+            };
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
             document.getElementById('scoreBar').classList.add('show');
