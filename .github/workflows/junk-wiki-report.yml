@@ -1,0 +1,64 @@
+name: Junk Wiki Report
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  NODE_OPTIONS: --max-old-space-size=8192
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - name: Generate junk & misplacement dry-run report
+        run: |
+          {
+            echo "=== cleanup-junk-subjects --dry ==="
+            node scripts/cleanup-junk-subjects.js --dry 2>&1
+            echo ""
+            echo "=== relocate-misplaced-subjects --dry ==="
+            node scripts/relocate-misplaced-subjects.js --dry 2>&1
+          } > data/junk-wiki-report.txt
+          echo "Report lines: $(wc -l < data/junk-wiki-report.txt)"
+          echo "--- first 120 lines ---"
+          head -c 6000 data/junk-wiki-report.txt
+
+      - name: Commit report
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
+          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git checkout -B main 2>/dev/null || true
+          git reset HEAD -- . 2>/dev/null
+          git add data/junk-wiki-report.txt
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Junk & misplacement report $(date +'%Y-%m-%d %H:%M UTC')"
+            for i in 1 2 3; do
+              if git pull --rebase 2>/dev/null; then
+                echo "Rebased cleanly"
+              else
+                echo "Rebase conflict — aborting and fetching"
+                git rebase --abort
+                git fetch origin main 2>/dev/null
+              fi
+              git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
+              sleep 5
+            done || true
+          fi
