@@ -175,6 +175,37 @@ async function fetchArticleExtract(title, retries) {
 
 function norm(s) { return (s || '').replace(/\s+/g, ' ').trim().toLowerCase(); }
 
+// ── Junk-topic routing ──────────────────────────────────────────────────────
+// Categories that legitimately own the media/journal/sport content types.
+const JUNK_CINEMA_OWNER = /cinema|theatre/i;
+const JUNK_MUSIC_OWNER = /music/i;
+const JUNK_LIB_OWNER = /library/i;
+const JUNK_SPORT_OWNER = /sport/i;
+const JUNK_FILM_SUFFIX = /\((?:film|(?:19|20)\d{2}\s+film)\)$/i;
+const JUNK_ALBUM_SUFFIX = /\((?:album|song|ep|soundtrack|mixtape)\)$/i;
+const JUNK_JOURNAL_SUFFIX = /\((?:journal|magazine|periodical|newspaper)\)$/i;
+const JUNK_DISAMB_SUFFIX = /\(disambiguation\)$/i;
+const JUNK_SPORT_COMP = /(?:World Cup|World Championship|Champions League|Champions Trophy|Grand Prix|Premier League|Super League|Indian Premier League|Formula One|UEFA|FIFA|FIBA|PGA Championship|Championship Game|National Championship Game|Asia Cup|Club World|Championship|Chess Olympiad|Esports World Cup)\b/i;
+const JUNK_SPORT_WORD = /\b(?:football|soccer|cricket|basketball|volleyball|hockey|bandy|baseball|rugby|tennis|handball|chess|chessboxing|kho kho|kabaddi|netball|sevens|floorball)\b/i;
+// Legitimate titles that LOOK like junk (kept in place by cleanup-junk-subjects.js).
+const JUNK_ALLOW = /^(?:League of Nations|Anti-Defamation League|Arab League|All-India Muslim League|Indian Union Muslim League|Alxa League|Delian League|Acarnanian League|American Radio Relay League|Anti-Cigarette League of America|Hurricane Emily \(2005\)|Cricket Wireless)/;
+
+// Route a topic title to its proper category, or return null to keep it where
+// it was discovered. Moving (never dropping) keeps content that link traversal
+// or recursive category crawls surfaced under the wrong category reachable from
+// its right home; the persisted link pool is relocated likewise so those titles
+// are re-mined under the correct subject on the next run.
+function junkTarget(title, catName) {
+  if (!title || JUNK_ALLOW.test(title)) return null;
+  if (JUNK_DISAMB_SUFFIX.test(title)) return 'Disambiguation';
+  if (JUNK_FILM_SUFFIX.test(title) && !JUNK_CINEMA_OWNER.test(catName)) return 'Indian Cinema';
+  if (JUNK_ALBUM_SUFFIX.test(title) && !JUNK_MUSIC_OWNER.test(catName)) return 'Music & Albums';
+  if (JUNK_JOURNAL_SUFFIX.test(title) && !JUNK_LIB_OWNER.test(catName)) return 'Library & Information Science';
+  if (JUNK_SPORT_COMP.test(title) && !JUNK_SPORT_OWNER.test(catName)) return 'Sports';
+  if (JUNK_SPORT_WORD.test(title) && !JUNK_SPORT_OWNER.test(catName)) return 'Sports';
+  return null;
+}
+
 // Detect table/list row fragments: high comma density, starts with year/name, etc.
 function isBadSentence(s) {
   const t = s.trim();
@@ -1288,7 +1319,9 @@ const CATEGORIES = [
     'C. Rajagopalachari','Bhagat Singh','Subhas Chandra Bose',
     'Lal Bahadur Shastri','Dadabhai Naoroji',
     'V. S. Naipaul','Amartya Sen','Nobel Prize winners by country',
-    'List of Indian autobiographies','List of Indian biographies'
+    'List of Indian autobiographies','List of Indian biographies',
+    'Library of Congress','Google Scholar','Scopus',
+    'Citation index','Academic journal'
   ]},
   // ───────── Awards & Honours ─────────
   { name:'Awards & Honours', wikiCat:'Indian_awards', topics:[
@@ -1364,7 +1397,10 @@ const CATEGORIES = [
     'List of Indian state legislative councils',
     'List of Indian state high courts','List of Indian state universities',
     'List of Indian state festivals','List of Indian state dances',
-    'List of Indian state cuisines','List of Indian state languages'
+    'List of Indian state cuisines','List of Indian state languages',
+    'Kullu district','Mandi district','Chamba district','Kangra district',
+    'Hamirpur district, Himachal Pradesh','Bilaspur district, Himachal Pradesh',
+    'Solan district','Shimla district','Parvati Valley'
   ]},
   // ───────── Important Days ─────────
   { name:'Important Days', wikiCat:'United_Nations_observances', topics:[
@@ -1509,7 +1545,11 @@ const CATEGORIES = [
     'External debt of India','Current account of India',
     'Capital account of India','Portfolio investment in India',
     'Non-resident Indian investment in India',
-    'Brand India','Made in India','India brand equity foundation'
+    'Brand India','Made in India','India brand equity foundation',
+    'Economics','Capitalism','Austerity','Business cycle',
+    'Austrian school of economics','Arthur Laffer','Laffer curve',
+    'Supply-side economics','Keynesian economics',
+    'Anarcho-capitalism','Anti-capitalism'
   ]},
   // ───────── RBI & Banking ─────────
   { name:'RBI & Banking', wikiCat:'Banking_in_India', topics:[
@@ -2331,6 +2371,25 @@ async function main() {
         });
         if (discovered.length) log('  Relevance-gated discovered topics: ' + discovered.length);
       }
+      // Route junk topics (films, albums, journals, disambiguation pages, foreign
+      // sport competitions) discovered under the wrong category to their proper
+      // home so they are mined under the correct subject, not dropped.
+      const routedFromCat = {};
+      let keptDiscovered = [];
+      for (const t of discovered) {
+        const target = junkTarget(t, cat.name);
+        if (target && target !== cat.name) {
+          (routedFromCat[target] = routedFromCat[target] || []).push(t);
+        } else {
+          keptDiscovered.push(t);
+        }
+      }
+      for (const [target, titles] of Object.entries(routedFromCat)) {
+        if (!catTopicMap[target]) catTopicMap[target] = { cat: { name: target, topics: [] }, topics: [] };
+        catTopicMap[target].topics.push(...titles);
+        log('  Routed ' + titles.length + ' discovered topics -> ' + target);
+      }
+      discovered = keptDiscovered;
       if (discovered.length) log('  Auto-discovered ' + discovered.length + ' topics from Category:' + cat.wikiCat);
     }
     // Fresh (never-covered) content first, then partially-covered articles so the
@@ -2344,10 +2403,18 @@ async function main() {
     // get finished and released from the budget; larger ones wait their turn.
     // Pooled linked-page titles (discovered by past link traversals) join the
     // candidates so their un-mined sentences get finished over successive runs.
-    const pooledLinks = (linkPool[cat.name] || []).filter(t => {
+    // Junk titles are routed to their proper category instead of being dropped.
+    const pooledLinks = [];
+    for (const t of (linkPool[cat.name] || [])) {
+      const target = junkTarget(t, cat.name);
+      if (target && target !== cat.name) {
+        if (!linkedThisRun[target]) linkedThisRun[target] = [];
+        linkedThisRun[target].push(t);
+        continue;
+      }
       const k = norm(t);
-      return coveredTitles.has(k) && !doneTitles.has(k);
-    });
+      if (coveredTitles.has(k) && !doneTitles.has(k)) pooledLinks.push(t);
+    }
     const partiallyCovered = [...cat.topics, ...discovered, ...pooledLinks]
       .filter(t => {
         const k = norm(t);
@@ -2358,7 +2425,8 @@ async function main() {
     if (pickedRevisit.length) {
       log('  Continuing ' + pickedRevisit.length + ' partially-covered articles (resume from last fetched sentence)');
     }
-    catTopicMap[cat.name] = { cat, topics: hardcoded.concat(pickedDiscovered, pickedRevisit) };
+    const routedExisting = (catTopicMap[cat.name] && catTopicMap[cat.name].topics) || [];
+    catTopicMap[cat.name] = { cat, topics: hardcoded.concat(pickedDiscovered, pickedRevisit, routedExisting) };
   }
 
   // Phase 2: Flatten all topics → {cat, topic} entries
@@ -2594,6 +2662,15 @@ async function main() {
         processedTitles.add(titleKey);
         const links = await fetchPageLinks(article.title);
         for (const l of links) {
+          // Route junk links (films, albums, journals, disambiguations, foreign
+          // sport competitions) to their proper category pool so they are mined
+          // under the correct subject on the next run — not dropped.
+          const target = junkTarget(l, cat.name);
+          if (target && target !== cat.name) {
+            if (!linkedThisRun[target]) linkedThisRun[target] = [];
+            linkedThisRun[target].push(l);
+            continue;
+          }
           const lKey = l.toLowerCase();
           if (!processedTitles.has(lKey)) { processedTitles.add(lKey); linkCandidates.push(l); }
         }

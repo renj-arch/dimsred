@@ -173,6 +173,8 @@ jobs:
       - run: node scripts/cleanup-questions.js
       - run: node scripts/dedup-sentence-flood.js
       - run: node scripts/inject-handpicked-gk.js
+      - run: node scripts/cleanup-junk-subjects.js
+      - run: node scripts/relocate-misplaced-subjects.js
       - run: node scripts/build-archive-single.js
 
       - run: |
