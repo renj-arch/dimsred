@@ -191,12 +191,12 @@ jobs:
             node scripts/relocate-misplaced-subjects.js --dry 2>&1
             echo ""
             echo "=== relocate-by-wiki-categories --dry ==="
-            node scripts/relocate-by-wiki-categories.js --dry 2>&1
+            node scripts/relocate-by-wiki-categories.js --all --dry 2>&1
           } > data/junk-wiki-report.txt
           tail -c 2000 data/junk-wiki-report.txt
       - run: node scripts/cleanup-junk-subjects.js
       - run: node scripts/relocate-misplaced-subjects.js
-      - run: node scripts/relocate-by-wiki-categories.js
+      - run: node scripts/relocate-by-wiki-categories.js --all
       - run: node scripts/build-archive-single.js
 
       - run: |

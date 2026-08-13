@@ -42,14 +42,14 @@ jobs:
             node scripts/relocate-misplaced-subjects.js --dry 2>&1
             echo ""
             echo "=== relocate-by-wiki-categories --dry ==="
-            node scripts/relocate-by-wiki-categories.js --dry 2>&1
+            node scripts/relocate-by-wiki-categories.js --all --dry 2>&1
           } > data/junk-wiki-report.txt
           echo "Report lines: $(wc -l < data/junk-wiki-report.txt)"
           echo "--- first 120 lines ---"
           head -c 6000 data/junk-wiki-report.txt
 
       - name: Apply category-driven relocation
-        run: node scripts/relocate-by-wiki-categories.js
+        run: node scripts/relocate-by-wiki-categories.js --all
 
       - name: Rebuild quiz.json after relocation
         run: node scripts/rebuild-quiz-json.js
