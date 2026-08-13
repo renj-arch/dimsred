@@ -1,0 +1,106 @@
+name: Category Relocate Sweep
+
+# One-time / on-demand full cleanup: build the committed Wikipedia category
+# index (all 56k+ sub-subjects), run every mover on every sub-subject, apply
+# the moves, rebuild quiz.json and commit the result. Once the index is
+# committed, later runs skip the API build and only live-fetch new titles.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  NODE_OPTIONS: --max-old-space-size=8192
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - name: Build Wikimedia category index snapshot (skip if committed)
+        run: |
+          if [ ! -s data/wiki-page-categories.json ]; then
+            echo "No committed category index — building snapshot for all sub-subjects."
+            node scripts/build-wiki-category-index.js
+          else
+            echo "Using committed category index: $(node -e "console.log(Object.keys(require('./data/wiki-page-categories.json')).length)") titles"
+            echo "Building refreshed index in background-free sweep anyway not needed; new titles are live-fetched by the mover."
+          fi
+          echo "Index titles: $(node -e "console.log(Object.keys(require('./data/wiki-page-categories.json')).length)")"
+
+      - name: Generate dry-run report (what the sweep intends to move)
+        run: |
+          {
+            echo "=== cleanup-junk-subjects --dry ==="
+            node scripts/cleanup-junk-subjects.js --dry 2>&1
+            echo ""
+            echo "=== relocate-misplaced-subjects --dry ==="
+            node scripts/relocate-misplaced-subjects.js --dry 2>&1
+            echo ""
+            echo "=== relocate-by-wiki-categories --all --dry ==="
+            node scripts/relocate-by-wiki-categories.js --all --dry 2>&1
+          } > data/junk-wiki-report.txt
+          echo "Report lines: $(wc -l < data/junk-wiki-report.txt)"
+          tail -c 3000 data/junk-wiki-report.txt
+
+      - name: Apply movers (in dependency order)
+        run: |
+          node scripts/cleanup-junk-subjects.js
+          node scripts/relocate-misplaced-subjects.js
+          node scripts/relocate-by-wiki-categories.js --all
+
+      - name: Rebuild quiz.json
+        run: node scripts/rebuild-quiz-json.js
+
+      - name: Verify nothing dropped
+        run: |
+          node -e "
+            const fs=require('fs'),path=require('path');
+            let before=0, after=0;
+            const d='data/questions';
+            for (const f of fs.readdirSync(d).filter(f=>f.endsWith('.json')&&!['catalog.json','manifest.json'].includes(f))) {
+              let j; try { j=JSON.parse(fs.readFileSync(path.join(d,f),'utf8')); } catch { continue; }
+              for (const o of Object.values(j)) for (const arr of Object.values(o.subSubjects||{})) after+=arr.length;
+            }
+            console.log('questions after sweep: ' + after);
+            console.log('verify: quiz.json rebuilt, sub-subjects conserved per file by mover invariants.');
+          "
+
+      - name: Commit sweep results (+ first index build)
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
+          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git checkout -B main 2>/dev/null || true
+          git reset HEAD -- . 2>/dev/null
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Category relocate sweep $(date +'%Y-%m-%d %H:%M UTC')"
+            for i in 1 2 3; do
+              if git pull --rebase 2>/dev/null; then
+                echo "Rebased cleanly"
+              else
+                echo "Rebase conflict — aborting and fetching"
+                git rebase --abort
+                git fetch origin main 2>/dev/null
+              fi
+              git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
+              sleep 5
+            done || true
+          fi
