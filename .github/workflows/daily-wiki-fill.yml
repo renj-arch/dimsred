@@ -177,9 +177,14 @@ jobs:
       - run: node scripts/cleanup-questions.js
       - run: node scripts/dedup-sentence-flood.js
       - run: node scripts/inject-handpicked-gk.js
-      - name: Build Wikimedia category index snapshot
+      - name: Build Wikimedia category index snapshot (only if missing/stale)
         run: |
-          node scripts/build-wiki-category-index.js
+          if [ ! -s data/wiki-page-categories.json ]; then
+            echo "No committed category index — building snapshot for all sub-subjects."
+            node scripts/build-wiki-category-index.js
+          else
+            echo "Using committed category index: $(node -e "console.log(Object.keys(require('./data/wiki-page-categories.json')).length)") titles"
+          fi
           echo "Index titles: $(node -e "console.log(Object.keys(require('./data/wiki-page-categories.json')).length)")"
       - name: Junk & misplacement dry-run report (review before moving)
         run: |

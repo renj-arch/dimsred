@@ -104,6 +104,17 @@ const ROUTES = [
     why: 'sport competition (category)',
     owner: /sport/i,
   },
+  // ── Sportspersons (footballers, cricketers, athletes...) → Sports ──
+  // Category-driven, so mislocated person pages ("Fatmir Vata" under Ayurveda
+  // & Traditional Medicine) are routed by their Wikipedia categories like
+  // "Albanian men's footballers"; already-sport-homed content stays via owner.
+  {
+    name: 'sportsperson',
+    test: /\b(?:association\s+football|footballers?|football\s+managers?|football\s+coaches?|cricketers?|cricket\s+players?|cricket\s+coaches?|athletes?|sportspeople?|sportsmen|sportswomen)\b/i,
+    to: 'Sports',
+    why: 'sportsperson (category)',
+    owner: /sport/i,
+  },
   // ── Quarantine (put aside, never dropped, never mixed into real subjects) ──
   // Cross-category wiki spillover that has no real subject home in our data:
   // video-game years, television years, numerology/numbers, drug & cannabis
