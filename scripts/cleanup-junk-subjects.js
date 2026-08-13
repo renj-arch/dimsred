@@ -12,9 +12,12 @@
 // pages are routed away) must not be re-read from disk between phases, or the
 // stale snapshot would resurrect removed entries.
 // Usage: node scripts/cleanup-junk-subjects.js
+// Usage: node scripts/cleanup-junk-subjects.js --dry   (report only, no writes)
 
 const fs = require('fs');
 const path = require('path');
+
+const DRY = process.argv.includes('--dry');
 
 const QUESTIONS_DIR = path.join(__dirname, '..', 'data', 'questions');
 const LINK_POOL_PATH = path.join(__dirname, '..', 'data', 'wiki-link-pool.json');
@@ -111,19 +114,24 @@ function main() {
   }
 
   // Write each mutated file exactly once (any file touched, source or target).
-  let written = 0;
-  for (const subject of Object.keys(cats)) {
-    for (const { file, data } of cats[subject].files) {
-      fs.writeFileSync(path.join(QUESTIONS_DIR, file), JSON.stringify(data));
-      written++;
+  if (!DRY) {
+    let written = 0;
+    for (const subject of Object.keys(cats)) {
+      for (const { file, data } of cats[subject].files) {
+        fs.writeFileSync(path.join(QUESTIONS_DIR, file), JSON.stringify(data));
+        written++;
+      }
     }
+    console.log('\nWrote ' + written + ' category files.');
+  } else {
+    console.log('\nDRY-RUN — no files written.');
   }
-
   console.log('MOVED ' + movedTotal + ' questions to correct categories:');
   Object.entries(byTarget).forEach(([c, n]) => console.log('  ' + n + '  ->  ' + c));
-  console.log('\nMoved break-down:');
-  movedList.forEach(d => console.log('  ' + JSON.stringify(d)));
-  console.log('\nWrote ' + written + ' category files.');
+  if (movedList.length) {
+    console.log('\nMoved break-down:');
+    movedList.forEach(d => console.log('  ' + JSON.stringify(d)));
+  }
 
   // Relocate leaked titles in the persisted link pool to their proper category
   // so the next wiki-fill run mines their remaining sentences under the correct
@@ -147,7 +155,7 @@ function main() {
       }
       if (moved.length) console.log('  link pool relocated (' + catName + '): ' + moved.map(([t, to]) => t + ' -> ' + to).join(', '));
     }
-    fs.writeFileSync(LINK_POOL_PATH, JSON.stringify(pool, null, 1));
+    if (!DRY) fs.writeFileSync(LINK_POOL_PATH, JSON.stringify(pool, null, 1));
     console.log('Link pool relocated ' + relocated + ' titles to their proper categories.');
   } catch (e) {
     console.log('  (link pool not relocated: ' + e.message + ')');

@@ -177,6 +177,16 @@ jobs:
       - run: node scripts/cleanup-questions.js
       - run: node scripts/dedup-sentence-flood.js
       - run: node scripts/inject-handpicked-gk.js
+      - name: Junk & misplacement dry-run report (review before moving)
+        run: |
+          {
+            echo "=== cleanup-junk-subjects --dry ==="
+            node scripts/cleanup-junk-subjects.js --dry 2>&1
+            echo ""
+            echo "=== relocate-misplaced-subjects --dry ==="
+            node scripts/relocate-misplaced-subjects.js --dry 2>&1
+          } > data/junk-wiki-report.txt
+          tail -c 2000 data/junk-wiki-report.txt
       - run: node scripts/cleanup-junk-subjects.js
       - run: node scripts/relocate-misplaced-subjects.js
       - run: node scripts/build-archive-single.js
