@@ -177,6 +177,10 @@ jobs:
       - run: node scripts/cleanup-questions.js
       - run: node scripts/dedup-sentence-flood.js
       - run: node scripts/inject-handpicked-gk.js
+      - name: Build Wikimedia category index snapshot
+        run: |
+          node scripts/build-wiki-category-index.js
+          echo "Index titles: $(node -e "console.log(Object.keys(require('./data/wiki-page-categories.json')).length)")"
       - name: Junk & misplacement dry-run report (review before moving)
         run: |
           {
@@ -185,10 +189,14 @@ jobs:
             echo ""
             echo "=== relocate-misplaced-subjects --dry ==="
             node scripts/relocate-misplaced-subjects.js --dry 2>&1
+            echo ""
+            echo "=== relocate-by-wiki-categories --dry ==="
+            node scripts/relocate-by-wiki-categories.js --dry 2>&1
           } > data/junk-wiki-report.txt
           tail -c 2000 data/junk-wiki-report.txt
       - run: node scripts/cleanup-junk-subjects.js
       - run: node scripts/relocate-misplaced-subjects.js
+      - run: node scripts/relocate-by-wiki-categories.js
       - run: node scripts/build-archive-single.js
 
       - run: |

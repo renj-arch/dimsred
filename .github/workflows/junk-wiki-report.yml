@@ -23,6 +23,15 @@ jobs:
 
       - run: npm install
 
+      - name: Ensure Wikimedia category index snapshot exists
+        run: |
+          if [ ! -s data/wiki-page-categories.json ]; then
+            echo "No committed category index — building snapshot for all sub-subjects."
+            node scripts/build-wiki-category-index.js
+          else
+            echo "Using committed category index: $(node -e "console.log(Object.keys(require('./data/wiki-page-categories.json')).length)" ) titles"
+          fi
+
       - name: Generate junk & misplacement dry-run report
         run: |
           {
@@ -31,6 +40,9 @@ jobs:
             echo ""
             echo "=== relocate-misplaced-subjects --dry ==="
             node scripts/relocate-misplaced-subjects.js --dry 2>&1
+            echo ""
+            echo "=== relocate-by-wiki-categories --dry ==="
+            node scripts/relocate-by-wiki-categories.js --dry 2>&1
           } > data/junk-wiki-report.txt
           echo "Report lines: $(wc -l < data/junk-wiki-report.txt)"
           echo "--- first 120 lines ---"
@@ -45,7 +57,7 @@ jobs:
           git config user.email "bot@vlymbooq.qzz.io"
           git checkout -B main 2>/dev/null || true
           git reset HEAD -- . 2>/dev/null
-          git add data/junk-wiki-report.txt
+          git add data/junk-wiki-report.txt data/wiki-page-categories.json
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else

@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { readQuizQuestions, writeQuiz } = require('./lib/quiz-store');
+const { writeQuiz, readQuizQuestions } = require('./lib/quiz-store');
+const { routeByCategories } = require('./wiki-category-routes');
 const WIKI_API = 'https://en.wikipedia.org/w/api.php';
 const QUIZ_PATH = process.env.QUIZ_PATH || 'data/quiz.json';
 const LINK_POOL_PATH = process.env.WIKI_LINK_POOL_PATH || path.join(path.dirname(QUIZ_PATH), 'wiki-link-pool.json');
@@ -135,7 +136,7 @@ async function fetchArticleExtract(title, retries) {
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
       await delay(parseInt(process.env.WIKI_FILL_DELAY_MS || '4000', 10));
-      const url = `${WIKI_API}?action=query&prop=extracts|description|revisions&explaintext&exlimit=1&rvprop=content&rvslots=main&titles=${encodeURIComponent(title)}&format=json&formatversion=2`;
+      const url = `${WIKI_API}?action=query&prop=extracts|description|revisions|categories&explaintext&exlimit=1&rvprop=content&rvslots=main&cllimit=500&clshow=!hidden&redirects=1&titles=${encodeURIComponent(title)}&format=json&formatversion=2`;
       const data = await fetchJSON(url);
       const pages = data.query ? data.query.pages : {};
       const page = Array.isArray(pages) ? pages.find(p => p && p.title && !p.missing) : Object.values(pages).find(p => p && p.title && !p.missing);
@@ -147,6 +148,7 @@ async function fetchArticleExtract(title, retries) {
           extract: (page.extract || '').replace(/\s+/g, ' ').trim(),
           description: (page.description || '').replace(/\s+/g, ' ').trim(),
           wikitext: wv || '',
+          categories: (page.categories || []).map(c => c.title).filter(Boolean),
         };
       }
       return null;
@@ -2462,6 +2464,44 @@ async function main() {
   const RUN_START = Date.now();
   const TIME_BUDGET_MS = parseInt(process.env.WIKI_FILL_TIME_BUDGET_MIN || '0', 10) * 60000;
 
+  // Subjects that received routed articles this run (their Wikipedia categories
+  // pointed elsewhere). Each is flushed to its own category file once.
+  const routedTargets = new Set();
+
+  // Persist every question currently tagged with `subject` into that subject's
+  // category file (merging into whatever already exists on disk, deduped by
+  // question+answer text). Used both for the in-run category and for subjects
+  // that only received routed content.
+  function flushSubject(subject) {
+    const slug = subject.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const catPath = path.join(__dirname, '..', 'data', 'questions', slug + '.json');
+    let catFile = {};
+    try { catFile = JSON.parse(fs.readFileSync(catPath, 'utf8')); } catch {}
+    const seen = new Set();
+    Object.entries(catFile).forEach(([subj, subjData]) => {
+      if (subjData.subSubjects) {
+        Object.entries(subjData.subSubjects).forEach(([subSub, qs]) => {
+          qs.forEach(q => seen.add(((q.question||'')+'||'+(q.answer||'')).toLowerCase().replace(/\s+/g,' ').trim()));
+        });
+      }
+    });
+    let addedCount = 0;
+    quiz.questions.filter(q => q.subject === subject).forEach(q => {
+      const key = ((q.question||'')+'||'+(q.answer||'')).toLowerCase().replace(/\s+/g,' ').trim();
+      if (!seen.has(key)) {
+        seen.add(key);
+        const subj = q.subject;
+        const subSub = q.subSubject || 'General';
+        if (!catFile[subj]) catFile[subj] = { subSubjects: {} };
+        if (!catFile[subj].subSubjects[subSub]) catFile[subj].subSubjects[subSub] = [];
+        catFile[subj].subSubjects[subSub].push(q);
+        addedCount++;
+      }
+    });
+    fs.writeFileSync(catPath, JSON.stringify(catFile));
+    log('  Saved per-category file: data/questions/' + slug + '.json (' + addedCount + ' new questions, routed incl.)');
+  }
+
   for (const item of processCats) {
     if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) {
       log('  (stopping: time budget reached, ' + Math.round((Date.now() - RUN_START) / 60000) + 'min elapsed)');
@@ -2478,6 +2518,8 @@ async function main() {
       const ext = article.extract;
       const title = article.title;
       const desc = article.description;
+      const useCat = (routeByCategories(article.categories, cat.name) || {}).to || cat.name;
+      if (useCat !== cat.name) routedTargets.add(useCat);
 
       // Skip only articles verified done. Covered-but-not-done articles are
       // revisited (they were added to the revisit pool above): deterministic
@@ -2504,9 +2546,9 @@ async function main() {
       if (desc && desc.length > 5 && desc.length < 200) {
         const q = makeDescriptionQuestion(desc, title);
         if (q.length > 15 && q.length < 200 && pushQ({
-          id: cat.name.substring(0,3).toLowerCase() + added,
-          type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-          pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+          id: useCat.substring(0,3).toLowerCase() + added,
+          type: 'fill_blank', category: useCat, region: '', source: 'Wiki',
+          pubDate: new Date().toISOString(), subject: useCat, subSubject: title, emoji: '',
           question: q, answer: title, hint: '',
           fact: paraphrase(getContext(allSentences, title, 3), title),
         })) { added++; articleAdded++; }
@@ -2522,9 +2564,9 @@ async function main() {
       for (const comp of extractComposerAttributions(article.raw, title)) {
         if (articleQ >= MAX_PER_ARTICLE) break;
         if (pushQ({
-          id: cat.name.substring(0,3).toLowerCase() + added + 'c',
-          type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-          pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+          id: useCat.substring(0,3).toLowerCase() + added + 'c',
+          type: 'fill_blank', category: useCat, region: '', source: 'Wiki',
+          pubDate: new Date().toISOString(), subject: useCat, subSubject: title, emoji: '',
           question: comp.q, answer: comp.a, hint: '',
           fact: paraphrase(getContext(allSentences, title, 3), comp.a),
         })) { added++; articleAdded++; articleQ++; }
@@ -2536,9 +2578,9 @@ async function main() {
       for (const tq of extractTableTermDefs(article.wikitext, title)) {
         if (articleQ >= MAX_PER_ARTICLE) break;
         if (pushQ({
-          id: cat.name.substring(0,3).toLowerCase() + added + 't-blank',
-          type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-          pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+          id: useCat.substring(0,3).toLowerCase() + added + 't-blank',
+          type: 'fill_blank', category: useCat, region: '', source: 'Wiki',
+          pubDate: new Date().toISOString(), subject: useCat, subSubject: title, emoji: '',
           question: tq.q, answer: tq.a, hint: '',
           fact: paraphrase(getContext(allSentences, title, 3), tq.a),
         })) { added++; articleAdded++; articleQ++; }
@@ -2560,9 +2602,9 @@ async function main() {
         for (const f of sentFacts) {
           if (factTotal >= MAX_PER_ARTICLE) break;
           if (pushQ({
-            id: cat.name.substring(0,3).toLowerCase() + added + 'f',
-            type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-            pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+            id: useCat.substring(0,3).toLowerCase() + added + 'f',
+            type: 'fill_blank', category: useCat, region: '', source: 'Wiki',
+            pubDate: new Date().toISOString(), subject: useCat, subSubject: title, emoji: '',
             question: f.question, answer: f.answer, hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), f.answer),
           })) { added++; articleAdded++; articleQ++; factTotal++; factAccepted.add(si); }
@@ -2587,9 +2629,9 @@ async function main() {
             if (/^[A-Z][a-z]+\s+\([12]\d{3}\)/.test(sent)) continue;
             if (/\([^)]*_____[^)]*\)/.test(context)) continue;
             if (context.length > 25 && pushQ({
-              id: cat.name.substring(0,3).toLowerCase() + added + 'y',
-              type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-              pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+              id: useCat.substring(0,3).toLowerCase() + added + 'y',
+              type: 'fill_blank', category: useCat, region: '', source: 'Wiki',
+              pubDate: new Date().toISOString(), subject: useCat, subSubject: title, emoji: '',
               question: context, answer: yearChoice, hint: '',
               fact: paraphrase(getContext(allSentences, sent, 3), yearChoice),
             })) { added++; articleAdded++; articleQ++; sentUsed = true; }
@@ -2604,9 +2646,9 @@ async function main() {
             const numChoice = numMatch[1];
             const context = sent.replace(numChoice, '_____').trim().substring(0, 200);
             if (context.length > 25 && pushQ({
-              id: cat.name.substring(0,3).toLowerCase() + added + 'n',
-              type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-              pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+              id: useCat.substring(0,3).toLowerCase() + added + 'n',
+              type: 'fill_blank', category: useCat, region: '', source: 'Wiki',
+              pubDate: new Date().toISOString(), subject: useCat, subSubject: title, emoji: '',
             question: context, answer: numChoice.trim(), hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), numChoice.trim()),
             })) { added++; articleAdded++; articleQ++; sentUsed = true; }
@@ -2621,9 +2663,9 @@ async function main() {
             if (numberNearby) {
               const context = sent.replace(numberNearby[1], '_____').trim().substring(0, 200);
               if (context.length > 25 && pushQ({
-                id: cat.name.substring(0,3).toLowerCase() + added + 's',
-                type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-                pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+                id: useCat.substring(0,3).toLowerCase() + added + 's',
+                type: 'fill_blank', category: useCat, region: '', source: 'Wiki',
+                pubDate: new Date().toISOString(), subject: useCat, subSubject: title, emoji: '',
             question: context, answer: numberNearby[1].trim(), hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), numberNearby[1].trim()),
               })) { added++; articleAdded++; articleQ++; sentUsed = true; }
@@ -2640,9 +2682,9 @@ async function main() {
           if (new RegExp('^' + bestTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(stripLeadingNoise(sent.trim()))) continue;
           const context = sent.replace(bestTerm, '_____').trim().substring(0, 200);
           if (context.length > 25 && context.length < 200 && pushQ({
-            id: cat.name.substring(0,3).toLowerCase() + added + 't',
-            type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-            pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+            id: useCat.substring(0,3).toLowerCase() + added + 't',
+            type: 'fill_blank', category: useCat, region: '', source: 'Wiki',
+            pubDate: new Date().toISOString(), subject: useCat, subSubject: title, emoji: '',
             question: context, answer: bestTerm, hint: '',
             fact: paraphrase(getContext(allSentences, sent, 3), bestTerm),
           })) { added++; articleAdded++; articleQ++; sentUsed = true; }
@@ -2681,8 +2723,8 @@ async function main() {
           // Route junk links (films, albums, journals, disambiguations, foreign
           // sport competitions) to their proper category pool so they are mined
           // under the correct subject on the next run — not dropped.
-          const target = junkTarget(l, cat.name);
-          if (target && target !== cat.name) {
+          const target = junkTarget(l, useCat);
+          if (target && target !== useCat) {
             if (!linkedThisRun[target]) linkedThisRun[target] = [];
             linkedThisRun[target].push(l);
             continue;
@@ -2709,9 +2751,9 @@ async function main() {
         if (desc && desc.length > 5 && desc.length < 200) {
           const q = makeDescriptionQuestion(desc, title);
           if (q.length > 15 && q.length < 200 && pushQ({
-            id: cat.name.substring(0,3).toLowerCase() + added + 'l',
-            type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-            pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+            id: useCat.substring(0,3).toLowerCase() + added + 'l',
+            type: 'fill_blank', category: useCat, region: '', source: 'Wiki',
+            pubDate: new Date().toISOString(), subject: useCat, subSubject: title, emoji: '',
             question: q, answer: title, hint: '',
             fact: paraphrase(getContext(allSentences, title, 3), title),
           })) added++;
@@ -2725,9 +2767,9 @@ async function main() {
           const linkFacts = extractFactQuestions(sent, title);
           for (const f of linkFacts) {
             if (pushQ({
-              id: cat.name.substring(0,3).toLowerCase() + added + 'lf',
-              type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-              pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+              id: useCat.substring(0,3).toLowerCase() + added + 'lf',
+              type: 'fill_blank', category: useCat, region: '', source: 'Wiki',
+              pubDate: new Date().toISOString(), subject: useCat, subSubject: title, emoji: '',
               question: f.question, answer: f.answer, hint: '',
               fact: paraphrase(getContext(allSentences, sent, 3), f.answer),
             })) added++;
@@ -2742,9 +2784,9 @@ async function main() {
               const yearChoice = years[0];
               const context = sent.replace(yearChoice, '_____').trim().substring(0, 200);
               if (context.length > 25 && pushQ({
-                id: cat.name.substring(0,3).toLowerCase() + added + 'ly',
-                type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-                pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+                id: useCat.substring(0,3).toLowerCase() + added + 'ly',
+                type: 'fill_blank', category: useCat, region: '', source: 'Wiki',
+                pubDate: new Date().toISOString(), subject: useCat, subSubject: title, emoji: '',
                 question: context, answer: yearChoice, hint: '',
                 fact: paraphrase(getContext(allSentences, sent, 3), yearChoice),
               })) { added++; sentUsed = true; }
@@ -2759,9 +2801,9 @@ async function main() {
             if (new RegExp('^' + bestTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i').test(stripLeadingNoise(sent.trim()))) continue;
             const context = sent.replace(bestTerm, '_____').trim().substring(0, 200);
             if (context.length > 25 && context.length < 200 && pushQ({
-              id: cat.name.substring(0,3).toLowerCase() + added + 'lt',
-              type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
-              pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
+              id: useCat.substring(0,3).toLowerCase() + added + 'lt',
+              type: 'fill_blank', category: useCat, region: '', source: 'Wiki',
+              pubDate: new Date().toISOString(), subject: useCat, subSubject: title, emoji: '',
               question: context, answer: bestTerm, hint: '',
               fact: paraphrase(getContext(allSentences, sent, 3), bestTerm),
             })) added++;
@@ -2771,8 +2813,8 @@ async function main() {
         // link pass only touched up to LINK_PER_ARTICLE sentences, so the rest
         // should be mined by the main revisit pool in a future run.
         if (added > addedBeforeLink) {
-          if (!linkedThisRun[cat.name]) linkedThisRun[cat.name] = [];
-          linkedThisRun[cat.name].push(title);
+          if (!linkedThisRun[useCat]) linkedThisRun[useCat] = [];
+          linkedThisRun[useCat].push(title);
         }
       }
     }
@@ -2781,33 +2823,16 @@ async function main() {
     log('  Added ' + added + ' new questions for ' + cat.name + ' (total: ' + quiz.questions.length + ')');
     totalAdded += added;
 
-    const slug = cat.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    const catPath = path.join(__dirname, '..', 'data', 'questions', slug + '.json');
-    let catFile = {};
-    try { catFile = JSON.parse(fs.readFileSync(catPath, 'utf8')); } catch {}
-    const seen = new Set();
-    Object.entries(catFile).forEach(([subj, subjData]) => {
-      if (subjData.subSubjects) {
-        Object.entries(subjData.subSubjects).forEach(([subSub, qs]) => {
-          qs.forEach(q => seen.add(((q.question||'')+'||'+(q.answer||'')).toLowerCase().replace(/\s+/g,' ').trim()));
-        });
-      }
-    });
-    let addedCount = 0;
-    quiz.questions.filter(q => q.subject === cat.name).forEach(q => {
-      const key = ((q.question||'')+'||'+(q.answer||'')).toLowerCase().replace(/\s+/g,' ').trim();
-      if (!seen.has(key)) {
-        seen.add(key);
-        const subj = q.subject;
-        const subSub = q.subSubject || 'General';
-        if (!catFile[subj]) catFile[subj] = { subSubjects: {} };
-        if (!catFile[subj].subSubjects[subSub]) catFile[subj].subSubjects[subSub] = [];
-        catFile[subj].subSubjects[subSub].push(q);
-        addedCount++;
-      }
-    });
-    fs.writeFileSync(catPath, JSON.stringify(catFile));
-    log('  Saved per-category file: data/questions/' + slug + '.json (' + addedCount + ' new questions)');
+    flushSubject(cat.name);
+
+    // Questions routed by their Wikipedia categories to a subject outside this
+    // run's category set must still be persisted — flush each routed target's
+    // file once (they are collected per article below).
+    for (const routedTarget of routedTargets) {
+      if (routedTarget === cat.name) continue;
+      flushSubject(routedTarget);
+    }
+    routedTargets.clear();
   }
 
   if (doneThisRun.size) {
