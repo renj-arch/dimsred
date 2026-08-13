@@ -64,9 +64,12 @@ jobs:
           retention-days: 1
 
   # ── Wiki chunks: 27 runners, capped at 20 in parallel ──
-  # 27 chunks make each chunk ~11% smaller than run #408's 24-chunk setup
-  # while running in the same two waves under max-parallel 20 (20+7); the
-  # smaller chunks give extra headroom under the 240-min job timeout.
+  # Each chunk is bounded by its discovery budgets (LINK_BUDGET limits how many
+  # linked pages a single category may traverse per run at ~2.5s/request and
+  # concurrency 2 — worst case a 200k budget would run ~70h). Linked pages are
+  # persisted to the link pool and re-mined next run, so the caps only spread
+  # discovery across runs, never drop data. Timeout lifted to the GitHub-hosted
+  # runner max (360 min) as headroom on top of the cut link budget.
   wiki-chunks:
     needs: setup
     runs-on: ubuntu-latest
@@ -75,7 +78,7 @@ jobs:
         chunk: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27]
       max-parallel: 20
       fail-fast: false
-    timeout-minutes: 240
+    timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
         with:
@@ -110,12 +113,13 @@ jobs:
           QUIZ_PATH: data/quiz-chunk-${{ matrix.chunk }}.json
           WIKI_FILL_CONCURRENCY: 5
           WIKI_FILL_PER_ARTICLE: 2000
-          WIKI_FILL_TOPIC_BUDGET: 200000
-          WIKI_FILL_REVISIT_BUDGET: 200000
-          WIKI_FILL_LINK_BUDGET: 200000
-          WIKI_FILL_LINK_PER_ARTICLE: 100
+          WIKI_FILL_TOPIC_BUDGET: 100000
+          WIKI_FILL_REVISIT_BUDGET: 100000
+          WIKI_FILL_LINK_BUDGET: 20000
+          WIKI_FILL_LINK_PER_ARTICLE: 50
           WIKI_FILL_MAX_PAGES: 400000
           WIKI_FILL_DELAY_MS: 2500
+          WIKI_FILL_TIME_BUDGET_MIN: 330
 
       - uses: actions/upload-artifact@v4
         with:

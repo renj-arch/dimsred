@@ -2454,7 +2454,19 @@ async function main() {
   const processCats = Object.values(catGroups);
   const processedTitles = new Set();
 
+  // Wall-clock deadline: discovery pools grow run over run (link pool gained
+  // ~12k lines in run #418), so a chunk must never exceed the runner timeout
+  // regardless of how much budget the pools leave. Once the deadline is hit we
+  // stop mid-traversal and save what we have — un-mined linked pages stay in
+  // the persisted pool and are re-mined next run (no data is dropped).
+  const RUN_START = Date.now();
+  const TIME_BUDGET_MS = parseInt(process.env.WIKI_FILL_TIME_BUDGET_MIN || '0', 10) * 60000;
+
   for (const item of processCats) {
+    if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) {
+      log('  (stopping: time budget reached, ' + Math.round((Date.now() - RUN_START) / 60000) + 'min elapsed)');
+      break;
+    }
     const cat = item.cat;
     const allTopics = item.topics;
     log('\n=== ' + cat.name + ' (' + allTopics.length + ' topics) ===');
@@ -2653,6 +2665,10 @@ async function main() {
     const MAX_LINK_FETCHES = parseInt(process.env.WIKI_FILL_LINK_BUDGET || '5000', 10);
     let linkFetched = 0;
     while (prevFetched.length > 0 && linkFetched < MAX_LINK_FETCHES) {
+      if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) {
+        log('  (stopping link traversal: time budget reached, ' + Math.round((Date.now() - RUN_START) / 60000) + 'min elapsed)');
+        break;
+      }
       depth++;
       const linkCandidates = [];
       for (const article of prevFetched) {
