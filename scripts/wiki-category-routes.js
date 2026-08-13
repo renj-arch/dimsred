@@ -104,6 +104,39 @@ const ROUTES = [
     why: 'sport competition (category)',
     owner: /sport/i,
   },
+  // ── Quarantine (put aside, never dropped, never mixed into real subjects) ──
+  // Cross-category wiki spillover that has no real subject home in our data:
+  // video-game years, television years, numerology/numbers, drug & cannabis
+  // culture. These get routed (and at ingest, written) into the dedicated
+  // "Junk" subject file so they never pollute the graded categories.
+  {
+    name: 'video-games-junk',
+    test: /video\s+games?\s+by\s+year|video\s+games?\s+by\s+decade|\d{3,4}s?\s+in\s+video\s+gam/i,
+    to: 'Junk',
+    why: 'video game years (put aside)',
+    owner: /computer|\bit\b|tech/i,
+  },
+  {
+    name: 'television-by-year-junk',
+    test: /television\s+by\s+year|\d{3,4}s?\s+in\s+(?:[a-z-]+\s+)*television/i,
+    to: 'Junk',
+    why: 'television by year (put aside)',
+    owner: /media|\btv\b|cinema|theatre/i,
+  },
+  {
+    name: 'number-junk',
+    test: /integers|\d+\s*\(number\)|numerology|millennia/i,
+    to: 'Junk',
+    why: 'number/millennium (put aside)',
+    owner: /mathematics|statistics/i,
+  },
+  {
+    name: 'drug-cannabis-junk',
+    test: /cannabis|designer\s+drugs|psychedelic\s+phenethylamines|nbome|entactogens|entheogens|recreational\s+drugs|drug\s+(?:culture|laws?|policy|reform|parties?|act\b)/i,
+    to: 'Junk',
+    why: 'drug/cannabis (put aside)',
+    owner: /health|medicine|drug/i,
+  },
 ];
 
 // Route an article by its Wikipedia category titles. `sourceCat` is the subject

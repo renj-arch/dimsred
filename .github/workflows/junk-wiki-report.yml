@@ -48,6 +48,12 @@ jobs:
           echo "--- first 120 lines ---"
           head -c 6000 data/junk-wiki-report.txt
 
+      - name: Apply category-driven relocation
+        run: node scripts/relocate-by-wiki-categories.js
+
+      - name: Rebuild quiz.json after relocation
+        run: node scripts/rebuild-quiz-json.js
+
       - name: Commit report
         run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
@@ -57,7 +63,7 @@ jobs:
           git config user.email "bot@vlymbooq.qzz.io"
           git checkout -B main 2>/dev/null || true
           git reset HEAD -- . 2>/dev/null
-          git add data/junk-wiki-report.txt data/wiki-page-categories.json
+          git add -A
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else

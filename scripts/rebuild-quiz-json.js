@@ -21,6 +21,7 @@ files.forEach(f => {
     if (content.charCodeAt(0) === 0xFEFF) content = content.slice(1);
     const data = JSON.parse(content);
     Object.entries(data).forEach(([subject, subjData]) => {
+      if (subject === 'Junk') return;
       if (subjData.subSubjects) {
         Object.entries(subjData.subSubjects).forEach(([subSubject, qs]) => {
           qs.forEach(q => {

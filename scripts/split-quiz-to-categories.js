@@ -12,6 +12,7 @@ catch (e) { console.error('Failed to read quiz.json:', e.message); process.exit(
 const catMap = {};
 for (const q of quiz.questions) {
   const subject = q.subject || 'Uncategorized';
+  if (subject === 'Junk') continue;
   const subSubject = q.subSubject || 'General';
   if (!catMap[subject]) catMap[subject] = {};
   if (!catMap[subject][subSubject]) catMap[subject][subSubject] = [];
