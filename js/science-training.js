@@ -7900,6 +7900,13 @@
           nextQuestion();
         }
       }
+      if (e.key === "Enter") {
+        var showNext = answered || session.mode === "instinct" || session.mode === "unlimited";
+        if (showNext && !session._reviewMode && session.questionIndex < session.questions.length - 1) {
+          e.preventDefault();
+          nextQuestion();
+        }
+      }
     });
   }
 
