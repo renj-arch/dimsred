@@ -151,20 +151,21 @@ async function fetchArticleExtract(title, retries) {
       }
       return null;
     } catch (err) {
-      const isRetryable = err.message.includes('429') || err.message.includes('not valid JSON') || err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED';
+      const is5xx = err.statusCode >= 500 && err.statusCode < 600;
+      const isRetryable = err.message.includes('429') || err.message.includes('not valid JSON') || err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED' || is5xx;
       const is429 = err.statusCode === 429 || err.message.includes('429');
       if (attempt < retries - 1 && isRetryable) {
         // Honor Retry-After when the API supplies it; otherwise exponential backoff.
         const base = (is429 && err.retryAfter) ? err.retryAfter * 1000 : Math.min(30000 * Math.pow(2, attempt), 120000);
         const wait = base + Math.floor(Math.random() * 2000);
-        log('  (HTTP 429, waiting ' + Math.round(wait / 1000) + 's...)');
+        log('  (HTTP ' + (err.statusCode || err.code || '') + ', waiting ' + Math.round(wait / 1000) + 's...)');
         await delay(wait);
         continue;
       }
-      // Don't kill the whole run over a rate-limit burst: skip the article and
-      // let the next run resume it (generation is deterministic + deduped).
-      if (is429) {
-        log('  (skipping ' + title + ' — persistent 429 despite ' + retries + ' attempts)');
+      // Don't kill the whole run over a rate-limit/server-error burst: skip the
+      // article and let the next run resume it (generation is deterministic + deduped).
+      if (is429 || is5xx) {
+        log('  (skipping ' + title + ' — persistent HTTP ' + (err.statusCode || err.code || 'err') + ' despite ' + retries + ' attempts)');
         return null;
       }
       throw err;
