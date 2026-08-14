@@ -198,13 +198,18 @@ const JUNK_ALLOW = /^(?:League of Nations|Anti-Defamation League|Arab League|All
 // its right home; the persisted link pool is relocated likewise so those titles
 // are re-mined under the correct subject on the next run.
 function junkTarget(title, catName) {
-  if (!title || JUNK_ALLOW.test(title)) return null;
-  if (JUNK_DISAMB_SUFFIX.test(title)) return 'Disambiguation';
-  if (JUNK_FILM_SUFFIX.test(title) && !JUNK_CINEMA_OWNER.test(catName)) return 'Indian Cinema';
-  if (JUNK_ALBUM_SUFFIX.test(title) && !JUNK_MUSIC_OWNER.test(catName)) return 'Music & Albums';
-  if (JUNK_JOURNAL_SUFFIX.test(title) && !JUNK_LIB_OWNER.test(catName)) return 'Library & Information Science';
-  if (JUNK_SPORT_COMP.test(title) && !JUNK_SPORT_OWNER.test(catName)) return 'Sports';
-  if (JUNK_SPORT_WORD.test(title) && !JUNK_SPORT_OWNER.test(catName)) return 'Sports';
+  if (!title || typeof title !== 'string' || !title.trim()) return null;
+  try {
+    if (JUNK_ALLOW.test(title)) return null;
+    if (JUNK_DISAMB_SUFFIX.test(title)) return 'Disambiguation';
+    if (JUNK_FILM_SUFFIX.test(title) && !JUNK_CINEMA_OWNER.test(catName)) return 'Indian Cinema';
+    if (JUNK_ALBUM_SUFFIX.test(title) && !JUNK_MUSIC_OWNER.test(catName)) return 'Music & Albums';
+    if (JUNK_JOURNAL_SUFFIX.test(title) && !JUNK_LIB_OWNER.test(catName)) return 'Library & Information Science';
+    if (JUNK_SPORT_COMP.test(title) && !JUNK_SPORT_OWNER.test(catName)) return 'Sports';
+    if (JUNK_SPORT_WORD.test(title) && !JUNK_SPORT_OWNER.test(catName)) return 'Sports';
+  } catch (e) {
+    return null;
+  }
   return null;
 }
 
@@ -2515,10 +2520,20 @@ async function main() {
     let added = 0;
     for (const article of articles) {
 
-      const ext = article.extract;
-      const title = article.title;
-      const desc = article.description;
-      const useCat = (routeByCategories(article.categories, cat.name) || {}).to || cat.name;
+      let ext, title, desc, useCat;
+      try {
+        ext = article.extract;
+        title = article.title;
+        desc = article.description;
+        useCat = (routeByCategories(article.categories, cat.name) || {}).to || cat.name;
+      } catch (routeErr) {
+        log('  (route error on ' + (article && article.title ? article.title : '(untitled)') + ' — ' + routeErr.message + '; keeping in ' + cat.name + ')');
+        useCat = cat.name;
+        ext = article && article.extract;
+        title = article && article.title;
+        desc = article && article.description;
+      }
+      try {
       if (useCat !== cat.name) routedTargets.add(useCat);
 
       // Skip only articles verified done. Covered-but-not-done articles are
@@ -2699,6 +2714,9 @@ async function main() {
         doneThisRun.add(norm(title));
         log('  (fully covered: ' + title + ')');
       }
+      } catch (articleErr) {
+        log('  (skipped article on error: ' + title + ' — ' + articleErr.message + ')');
+      }
     }
 
     // ── Follow internal links recursively until exhausted (budgeted) ──
@@ -2723,8 +2741,8 @@ async function main() {
           // Route junk links (films, albums, journals, disambiguations, foreign
           // sport competitions) to their proper category pool so they are mined
           // under the correct subject on the next run — not dropped.
-          const target = junkTarget(l, useCat);
-          if (target && target !== useCat) {
+          const target = junkTarget(l, cat.name);
+          if (target && target !== cat.name) {
             if (!linkedThisRun[target]) linkedThisRun[target] = [];
             linkedThisRun[target].push(l);
             continue;
@@ -2739,6 +2757,7 @@ async function main() {
       linkFetched += prevFetched.length;
       for (const article of prevFetched) {
         const ext = article.extract, title = article.title, desc = article.description;
+        const useCat = (routeByCategories(article.categories, cat.name) || {}).to || cat.name;
         if (isListPage(ext)) continue;
         // Link traversal is for discovering NEW content only; continuation of
         // partially-covered articles is handled by the main revisit pool above
