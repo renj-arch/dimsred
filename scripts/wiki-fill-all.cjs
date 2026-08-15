@@ -105,12 +105,18 @@ async function fetchCategoryMembers(wikiCat, maxPages = parseInt(process.env.WIK
   return [...pages];
 }
 
-async function fetchAllTopics(topics, concurrency) {
+async function fetchAllTopics(topics, concurrency, skip) {
   const results = [];
   const queue = [...topics];
   async function worker() {
     while (queue.length > 0) {
       const topic = queue.shift();
+      // Skip topics the caller wants excluded (e.g. already-covered link pages)
+      // BEFORE the HTTP request — the fetch is the expensive part.
+      if (skip && skip(topic)) {
+        log('  (skip already covered: ' + topic + ')');
+        continue;
+      }
       log('  Fetching: ' + topic + '...');
       const a = await fetchArticleExtract(topic);
       if (a && a.extract.length > 200) {
@@ -2617,7 +2623,7 @@ async function main() {
       }
       if (linkCandidates.length === 0) break;
       log('  Link depth ' + depth + ': ' + linkCandidates.length + ' new topics...');
-      prevFetched = await fetchAllTopics(linkCandidates.slice(0, MAX_LINK_FETCHES - linkFetched), 2);
+      prevFetched = await fetchAllTopics(linkCandidates.slice(0, MAX_LINK_FETCHES - linkFetched), 2, t => coveredTitles.has(norm(t)));
       linkFetched += prevFetched.length;
       for (const article of prevFetched) {
         const ext = article.extract, title = article.title, desc = article.description;
