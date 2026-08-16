@@ -132,12 +132,12 @@ const sortedCats = Object.keys(tree).sort();
 
 // ── Write per-category JSON files ──
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
-// Remove stale files that no longer have a category (e.g. after merge)
-fs.readdirSync(outDir).filter(f => f.endsWith('.json') && f !== 'manifest.json').forEach(f => {
-  try { fs.unlinkSync(path.join(outDir, f)); } catch {}
-});
+// NOTE: stale file removal is deferred until after every part has been written,
+// so an interrupted build can never wipe the archive (old parts stay put until
+// superseded; only leftovers of removed/merged categories are cleaned at the end).
 
 const catIndex = [];
+const expectedFiles = new Set(['catalog.json']);
 sortedCats.forEach(c => {
   const subs = tree[c];
   const subjList = [];
@@ -176,6 +176,7 @@ sortedCats.forEach(c => {
     const partSizeMb = (Buffer.byteLength(partJson) / 1024 / 1024).toFixed(1);
     fs.writeFileSync(path.join(outDir, partName), partJson);
     filePaths.push('data/questions/' + partName);
+    expectedFiles.add(partName);
     console.log('  Part ' + (partIndex + 1) + ': ' + partName + ' (' + partSizeMb + ' MiB)');
   }
 
@@ -227,8 +228,15 @@ sortedCats.forEach(c => {
   });
 });
 
+// Remove only stale leftovers (categories merged/renamed since the last build),
+// now that every new part file is safely on disk.
+fs.readdirSync(outDir).filter(f => f.endsWith('.json') && f !== 'manifest.json').forEach(f => {
+  if (!expectedFiles.has(f)) { try { fs.unlinkSync(path.join(outDir, f)); } catch {} }
+});
+
 // ── Write lightweight subject catalog (fast topic picker for current-affairs.html) ──
 const catalog = { total: deduped, subjects: {} };
+const subjectFiles = {};
 fs.readdirSync(outDir).filter(f => f.endsWith('.json') && f !== 'manifest.json' && f !== 'catalog.json').forEach(f => {
   try {
     const data = JSON.parse(fs.readFileSync(path.join(outDir, f), 'utf8'));
@@ -237,40 +245,63 @@ fs.readdirSync(outDir).filter(f => f.endsWith('.json') && f !== 'manifest.json' 
       let n = 0;
       for (const ssk in data[sk].subSubjects) n += (data[sk].subSubjects[ssk] || []).length;
       catalog.subjects[sk] = (catalog.subjects[sk] || 0) + n;
+      (subjectFiles[sk] = subjectFiles[sk] || []).push('data/questions/' + f);
     }
   } catch {}
 });
 fs.writeFileSync(path.join(outDir, 'catalog.json'), JSON.stringify(catalog));
 console.log('Wrote catalog.json: ' + Object.keys(catalog.subjects).length + ' subjects, ' + deduped + ' total');
 
-// ── Inline catalog + archive file list into current-affairs.html (file:// safe) ──
+// ── Inline catalog + archive file list + subject→file map into current-affairs.html (file:// safe) ──
+// Scans the existing `var NAME = <literal>;` declarations and rewrites them, so the page always
+// ships the freshest topic counts and file lists regardless of leftover inline state.
+function replaceDecl(src, declName, newValue) {
+  const prefix = 'var ' + declName + ' = ';
+  const start = src.indexOf(prefix);
+  if (start === -1) return null;
+  const open = start + prefix.length;
+  let end = -1;
+  if (src.startsWith('/*', open)) {
+    const cEnd = src.indexOf('*/', open);
+    if (cEnd === -1) return null;
+    const semi = src.indexOf(';', cEnd);
+    if (semi === -1) return null;
+    const end = semi;
+    return src.slice(0, start) + prefix + newValue + src.slice(end + 1).replace(/^;+/, '');
+  }
+  const ch = src[open];
+  if (ch !== '{' && ch !== '[') return null;
+  let depth = 0;
+  for (let k = open; k < src.length; k++) {
+    if (src[k] === ch) depth++;
+    else if ((ch === '{' && src[k] === '}') || (ch === '[' && src[k] === ']')) { depth--; if (depth === 0) { end = k + 1; break; } }
+  }
+  if (end === -1) return null;
+  return src.slice(0, start) + prefix + newValue + src.slice(end).replace(/^;+/, ';');
+}
+
 try {
   const caPath = path.join(__dirname, '..', 'current-affairs.html');
   let ca = fs.readFileSync(caPath, 'utf8');
 
-  const marker = 'var HOME_CATALOG = null;';
-  if (ca.indexOf(marker) === -1) {
-    console.log('WARN: HOME_CATALOG marker not found in current-affairs.html — skipping catalog inline.');
-  } else {
-    ca = ca.replace(marker, 'var HOME_CATALOG = ' + JSON.stringify(catalog) + ';');
-    console.log('Inlined HOME_CATALOG into current-affairs.html (' + Object.keys(catalog.subjects).length + ' subjects).');
-  }
+  let nxt = replaceDecl(ca, 'HOME_CATALOG', JSON.stringify(catalog));
+  if (nxt === null) { console.log('WARN: HOME_CATALOG decl not found in current-affairs.html — skipping catalog inline.'); }
+  else ca = nxt;
 
-  // Regenerate CAT_ARCHIVE from all on-disk data files so every catalog subject
-  // is actually loadable by the quiz feed (avoid 'No questions for X').
-  const archiveMarker = 'var CAT_ARCHIVE = /*__CAT_ARCHIVE__*/null;';
-  if (ca.indexOf(archiveMarker) === -1) {
-    console.log('WARN: CAT_ARCHIVE marker not found in current-affairs.html — skipping archive inline.');
-  } else {
-    const archiveFiles = fs.readdirSync(outDir)
-      .filter(f => f.endsWith('.json') && f !== 'manifest.json' && f !== 'catalog.json')
-      .sort();
-    const archiveList = archiveFiles.map(f => "{file:'data/questions/" + f + "'}").join(',');
-    ca = ca.replace(archiveMarker, 'var CAT_ARCHIVE = [' + archiveList + '];');
-    console.log('Inlined CAT_ARCHIVE into current-affairs.html (' + archiveFiles.length + ' files).');
-  }
+  const archiveFiles = fs.readdirSync(outDir)
+    .filter(f => f.endsWith('.json') && f !== 'manifest.json' && f !== 'catalog.json')
+    .sort();
+  const archiveList = archiveFiles.map(f => "{file:'data/questions/" + f + "'}").join(',');
+  nxt = replaceDecl(ca, 'CAT_ARCHIVE', '[' + archiveList + ']');
+  if (nxt === null) { console.log('WARN: CAT_ARCHIVE decl not found in current-affairs.html — skipping archive inline.'); }
+  else ca = nxt;
+
+  nxt = replaceDecl(ca, 'SUBJECT_FILES', JSON.stringify(subjectFiles));
+  if (nxt === null) { console.log('WARN: SUBJECT_FILES decl not found in current-affairs.html — skipping subject map inline.'); }
+  else ca = nxt;
 
   fs.writeFileSync(caPath, ca);
+  console.log('Inlined HOME_CATALOG/CAT_ARCHIVE/SUBJECT_FILES into current-affairs.html (' + Object.keys(catalog.subjects).length + ' subjects, ' + archiveFiles.length + ' files).');
 } catch (e) {
   console.log('WARN: could not inline catalog into current-affairs.html: ' + e.message);
 }
