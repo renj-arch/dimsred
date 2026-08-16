@@ -299,30 +299,7 @@ let html = '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<
 
 html += '<nav class="nav"><div class="nav-inner"><div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--purple)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"\/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"\/><\/svg><span class="brand-text">vlymbooq<\/span><\/div><div class="nav-links"><a href="index.html">Home<\/a><a href="current-affairs.html">Quiz<\/a><a href="dashboard.html">Dashboard<\/a><a class="active" href="archive.html">Archive<\/a><a href="about.html">About<\/a><\/div><\/div><\/nav>';
 
-html += '<div class="page-wrap"><aside class="sidebar"><div class="sidebar-title">Categories</div>';
-
-catIndex.forEach((c, ci) => {
-  html += '<div class="sidebar-cat">';
-  html += '<a href="#" class="sidebar-link" data-ci="' + ci + '" onclick="return selectCategory(' + ci + ')">';
-  html += '<span class="sidebar-icon">' + c.icon + '</span><span class="sidebar-label">' + esc(c.name) + '</span>';
-  html += '<span class="sidebar-count">' + c.total + '</span></a>';
-  html += '<div class="sidebar-subjects" id="subj-' + ci + '">';
-  c.subjects.forEach((subj, si) => {
-    html += '<a href="#" class="sidebar-subj-link" data-ci="' + ci + '" data-si="' + si + '" onclick="return selectSubject(' + ci + ',' + si + ')">';
-    html += '<span class="sidebar-label">' + esc(subj.name) + '</span>';
-    html += '<span class="sidebar-count">' + subj.total + '</span></a>';
-    html += '<div class="sidebar-subsubs" id="ss-' + ci + '-' + si + '">';
-    subj.subSubjects.forEach((ss, ssi) => {
-      html += '<a href="#" class="sidebar-subsub-link" data-ci="' + ci + '" data-si="' + si + '" data-ssi="' + ssi + '" onclick="return selectSubSubject(' + ci + ',' + si + ',' + ssi + ')">';
-      html += '<span class="sidebar-label">' + esc(ss.name) + '</span>';
-      html += '<span class="sidebar-count">' + ss.count + '</span></a>';
-    });
-    html += '</div>';
-  });
-  html += '</div></div>';
-});
-
-html += '</aside><main class="main-content">';
+html += '<div class="page-wrap"><aside class="sidebar"><div class="sidebar-title">Categories</div><div id="sidebar-root"></div></aside><main class="main-content">';
 html += '<div class="search-bar"><input type="text" id="searchInput" placeholder="Search questions..." oninput="onSearchInput(this.value)" autocomplete="off"><span class="search-info" onclick="alert(\'Search tips:\\n\\n\u2022 Type any keyword — searches question, answer, explanation\\n\u2022 Multiple words = all must match (AND search)\\n\u2022 date:YYYY-MM-DD — filter by exact date\\n\u2022 date:YYYY-MM — filter by month\\n\u2022 Combine e.g. date:2026-07-22 Arjuna\\n\\nClick a category in sidebar to browse.\')" title="Search help">\u24d8</span></div>';
 html += '<div class="breadcrumb" id="breadcrumb">Archive</div>';
 
@@ -331,13 +308,7 @@ html += '<div class="content-panel" id="view-welcome">';
 html += '<h1 class="page-title">📚 GK Current Affairs Archive</h1>';
 var buildTime = new Date().toISOString();
 html += '<p class="page-sub">' + allQuestions.length + ' questions across ' + sortedCats.length + ' categories — last updated <time id="build-time" datetime="' + buildTime + '">' + new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }) + ' UTC</time>. Click a category to browse.</p>';
-html += '<div class="subj-grid">';
-catIndex.forEach((c, ci) => {
-  html += '<a href="#" class="subj-card" onclick="return selectCategory(' + ci + ')">';
-  html += '<div class="subj-card-name">' + c.icon + ' ' + esc(c.name) + '</div>';
-  html += '<div class="subj-card-count">' + c.total + ' questions</div></a>';
-});
-html += '</div></div>';
+html += '<div class="subj-grid" id="welcome-grid"></div></div>';
 
 // Content panel
 html += '<div class="content-panel" id="view-content" style="display:none"></div>';
@@ -774,6 +745,47 @@ html += '  var d = new Date(el.getAttribute(\'datetime\'));\n';
 html += '  el.textContent = d.toLocaleDateString([], { day: \'numeric\', month: \'short\', year: \'numeric\', hour: \'2-digit\', minute: \'2-digit\', timeZoneName: \'short\' });\n';
 html += '}\n';
 html += 'localizeBuildTime();\n';
+
+// Build sidebar + welcome grid from CAT_INDEX at runtime instead of baking the
+// taxonomy into server-rendered HTML. Without this, archive.html ~25 MiB (the
+// sidebar alone was ~21 MiB) and every grow bumped it toward Cloudflare Pages'
+// 25 MiB single-file cap that already broke deployments.
+html += 'function buildSidebar() {\n';
+html += '  var root = document.getElementById(\'sidebar-root\');\n';
+html += '  if (!root) return;\n';
+html += '  var h = \'\';\n';
+html += '  for (var ci = 0; ci < CAT_INDEX.length; ci++) {\n';
+html += '    var c = CAT_INDEX[ci];\n';
+html += '    h += \'<div class="sidebar-cat">\';\n';
+html += '    h += \'<a href="#" class="sidebar-link" data-ci="\' + ci + \'" onclick="return selectCategory(\' + ci + \')"><span class="sidebar-icon">\' + escHtml(c.icon) + \'</span><span class="sidebar-label">\' + escHtml(c.name) + \'</span><span class="sidebar-count">\' + c.total + \'</span></a>\';\n';
+html += '    h += \'<div class="sidebar-subjects" id="subj-\' + ci + \'">\';\n';
+html += '    for (var si = 0; si < c.subjects.length; si++) {\n';
+html += '      var subj = c.subjects[si];\n';
+html += '      h += \'<a href="#" class="sidebar-subj-link" data-ci="\' + ci + \'" data-si="\' + si + \'" onclick="return selectSubject(\' + ci + \',\' + si + \')"><span class="sidebar-label">\' + escHtml(subj.name) + \'</span><span class="sidebar-count">\' + subj.total + \'</span></a>\';\n';
+html += '      h += \'<div class="sidebar-subsubs" id="ss-\' + ci + \'-\' + si + \'">\';\n';
+html += '      for (var ssi = 0; ssi < subj.subSubjects.length; ssi++) {\n';
+html += '        var ss = subj.subSubjects[ssi];\n';
+html += '        h += \'<a href="#" class="sidebar-subsub-link" data-ci="\' + ci + \'" data-si="\' + si + \'" data-ssi="\' + ssi + \'" onclick="return selectSubSubject(\' + ci + \',\' + si + \',\' + ssi + \')"><span class="sidebar-label">\' + escHtml(ss.name) + \'</span><span class="sidebar-count">\' + ss.count + \'</span></a>\';\n';
+html += '      }\n';
+html += '      h += \'</div>\';\n';
+html += '    }\n';
+html += '    h += \'</div></div>\';\n';
+html += '  }\n';
+html += '  root.innerHTML = h;\n';
+html += '}\n';
+
+html += 'function buildWelcomeGrid() {\n';
+html += '  var grid = document.getElementById(\'welcome-grid\');\n';
+html += '  if (!grid) return;\n';
+html += '  var h = \'\';\n';
+html += '  CAT_INDEX.forEach(function(c, ci) {\n';
+html += '    h += \'<a href="#" class="subj-card" onclick="return selectCategory(\' + ci + \')"><div class="subj-card-name">\' + escHtml(c.icon) + \' \' + escHtml(c.name) + \'</div><div class="subj-card-count">\' + c.total + \' questions</div></a>\';\n';
+html += '  });\n';
+html += '  grid.innerHTML = h;\n';
+html += '}\n';
+
+html += 'buildSidebar();\n';
+html += 'buildWelcomeGrid();\n';
 
 html += '<\/script><script>if(\'serviceWorker\' in navigator){navigator.serviceWorker.register(\'/sw.js\').catch(function(){})}<\/script>\n';
 html += '<\/body>\n<\/html>';
