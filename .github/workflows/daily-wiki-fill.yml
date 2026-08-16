@@ -79,6 +79,12 @@ jobs:
       max-parallel: 20
       fail-fast: false
     timeout-minutes: 360
+    # A chunk that hits the runner's hard timeout (or fails) must not abort the
+    # whole run: run #434 lost 17 successful chunks' data because 10 slow chunks
+    # were killed at the 360-min cap, which cancelled merge+finalize. Each chunk
+    # now self-stops at WIKI_FILL_TIME_BUDGET_MIN; this flag keeps the rest of
+    # the run alive even if a chunk still dies.
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
         with:
@@ -132,6 +138,10 @@ jobs:
   # ── Merge: combine all chunk outputs ──
   merge:
     needs: wiki-chunks
+    # Always merge whatever chunks succeeded — a cancelled/failed chunk must not
+    # throw away the rest (run #434). merge-chunks.js skips missing chunks and
+    # no-ops cleanly when there are none.
+    if: always()
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

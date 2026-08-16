@@ -6,6 +6,14 @@ const WIKI_API = 'https://en.wikipedia.org/w/api.php';
 const QUIZ_PATH = process.env.QUIZ_PATH || 'data/quiz.json';
 const LINK_POOL_PATH = process.env.WIKI_LINK_POOL_PATH || path.join(path.dirname(QUIZ_PATH), 'wiki-link-pool.json');
 
+// Wall-clock deadline shared by every fetch/processing loop so a chunk can never
+// run past WIKI_FILL_TIME_BUDGET_MIN and get killed by the runner's hard
+// timeout (run #434: 10 chunks hit the 360-min cap, cancelling merge+finalize
+// and discarding 17 successful chunks' data). Module-scope so fetchAllTopics()
+// workers can also honour it mid-batch.
+const RUN_START = Date.now();
+const TIME_BUDGET_MS = parseInt(process.env.WIKI_FILL_TIME_BUDGET_MIN || '0', 10) * 60000;
+
 function log(msg) {
   try { fs.writeSync(1, msg + '\n'); } catch (e) { console.log(msg); }
 }
@@ -74,10 +82,18 @@ async function fetchCategoryMembers(wikiCat, maxPages = parseInt(process.env.WIK
     const catKey = cat.toLowerCase();
     if (depth > MAX_DEPTH || visitedCats.has(catKey)) continue;
     visitedCats.add(catKey);
+    if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) {
+      log('    (stopping category discovery: time budget reached)');
+      break;
+    }
 
     let cmcontinue = '';
     let pageNum = 0;
     while (pages.size < maxPages) {
+      if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) {
+        log('    (stopping category members: time budget reached)');
+        break;
+      }
       pageNum++;
       log('    page ' + pageNum + ' (cat ' + cat + ' depth ' + depth + ', ' + pages.size + ' topics so far)');
       let url = `${WIKI_API}?action=query&list=categorymembers&cmtitle=${encodeURIComponent('Category:' + cat)}&cmlimit=500&format=json&cmtype=page|subcat`;
@@ -110,6 +126,12 @@ async function fetchAllTopics(topics, concurrency, skip) {
   const queue = [...topics];
   async function worker() {
     while (queue.length > 0) {
+      // Honour the shared wall-clock deadline even mid-batch: a huge category's
+      // topic fetch could otherwise burn past TIME_BUDGET_MS into the runner's
+      // hard timeout. Leftover topics stay un-fetched and are re-picked next run.
+      if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) {
+        return;
+      }
       const topic = queue.shift();
       // Skip topics the caller wants excluded (e.g. already-covered link pages)
       // BEFORE the HTTP request — the fetch is the expensive part.
@@ -2398,8 +2420,7 @@ async function main() {
   // regardless of how much budget the pools leave. Once the deadline is hit we
   // stop mid-traversal and save what we have — un-mined linked pages stay in
   // the persisted pool and are re-mined next run (no data is dropped).
-  const RUN_START = Date.now();
-  const TIME_BUDGET_MS = parseInt(process.env.WIKI_FILL_TIME_BUDGET_MIN || '0', 10) * 60000;
+  // RUN_START / TIME_BUDGET_MS are module-scope (defined at the top).
 
   for (const item of processCats) {
     if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) {
@@ -2413,6 +2434,16 @@ async function main() {
 
     let added = 0;
     for (const article of articles) {
+
+      // Wall-clock budget check inside the per-article sweep as well: a chunk
+      // fed a huge single category can otherwise chew through "already covered"
+      // articles well past TIME_BUDGET_MS and hit the runner's hard timeout
+      // mid-category (run #434: 10 chunks killed at the 360-min limit, shutting
+      // down merge+finalize and discarding 17 successful chunks' data).
+      if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) {
+        log('  (stopping: time budget reached, ' + Math.round((Date.now() - RUN_START) / 60000) + 'min elapsed)');
+        break;
+      }
 
       const ext = article.extract;
       const title = article.title;
