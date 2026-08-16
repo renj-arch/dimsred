@@ -2430,10 +2430,38 @@ function main() {
   });
   links.sort(function (x, y) { return y.w - x.w; });
 
-  var out = { builtAt: new Date().toISOString(), eras: ERAS, nodes: nodes, links: links };
+  // Cloudflare Pages hard-caps individual files at 25 MiB. With ~28 MiB of nodes the
+  // single-file timeline.json tripped that cap and silently killed deploys (wiki run
+  // #433 committed data that never reached the live site). Shard the node array into
+  // per-file chunks well under the cap and keep a small manifest in timeline.json.
+  var TIMELINE_DIR = path.join(__dirname, '..', 'data');
+  var NODES_PART_BYTES = 20 * 1024 * 1024;
+  var staleParts = [];
+  try { staleParts = fs.readdirSync(TIMELINE_DIR).filter(function (f) { return /^timeline\.nodes\.\d+\.json$/.test(f); }); } catch (e) { staleParts = []; }
+  for (var staleFile of staleParts) { try { fs.unlinkSync(path.join(TIMELINE_DIR, staleFile)); } catch (e) { } }
+  var nodeParts = [], curPart = [], curBytes = 0, nodeJson = '';
+  for (var nd of nodes) {
+    nodeJson = JSON.stringify(nd);
+    curBytes += nodeJson.length;
+    if (curBytes > NODES_PART_BYTES && curPart.length) {
+      nodeParts.push(curPart);
+      curPart = [];
+      curBytes = nodeJson.length;
+    }
+    curPart.push(nd);
+  }
+  if (curPart.length) nodeParts.push(curPart);
+  var partSizes = [];
+  for (var pi = 0; pi < nodeParts.length; pi++) {
+    var partFile = path.join(TIMELINE_DIR, 'timeline.nodes.' + pi + '.json');
+    fs.writeFileSync(partFile, JSON.stringify(nodeParts[pi]));
+    partSizes.push(fs.statSync(partFile).size);
+  }
+  var out = { builtAt: new Date().toISOString(), eras: ERAS, nodesParts: nodeParts.length, links: links };
   fs.writeFileSync(OUT, JSON.stringify(out));
   var withSpan = nodes.filter(function (n) { return n.span; }).length;
   console.log('Wrote ' + OUT);
+  console.log('timeline nodes split into ' + nodeParts.length + ' parts: ' + partSizes.map(function (s) { return (s / 1048576).toFixed(2) + ' MiB'; }).join(', '));
   console.log('nodes: ' + nodes.length + ' (with time span: ' + withSpan + ', ' + (withSpan / nodes.length * 100).toFixed(1) + '%)');
   var totalSeeds = 0;
   var seedTypeCounts = {};

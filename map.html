@@ -716,7 +716,23 @@ function appendQuestions(container, qs, uniqSeen) {
   }
 }
 
-fetch('data/timeline.json').then(function (r) { return r.json(); }).then(function (t) {
+function fetchTimelineJson(url) {
+  return fetch(url).then(function (r) { if (!r.ok) throw new Error(url + ' ' + r.status); return r.json(); });
+}
+function loadTimelineData() {
+  return fetchTimelineJson('data/timeline.json').then(function (t) {
+    if (Array.isArray(t.nodes)) return t;
+    var urls = [];
+    for (var i = 0; i < (t.nodesParts || 0); i++) urls.push('data/timeline.nodes.' + i + '.json');
+    return Promise.all(urls.map(fetchTimelineJson)).then(function (parts) {
+      var all = [];
+      for (var p of parts) all = all.concat(p);
+      t.nodes = all;
+      return t;
+    });
+  });
+}
+loadTimelineData().then(function (t) {
   TL = t;
   NODES = t.nodes;
   _links = t.links || [];
