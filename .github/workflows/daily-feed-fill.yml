@@ -100,6 +100,12 @@ jobs:
       - run: node scripts/cleanup-questions.js
       - run: node scripts/dedup-sentence-flood.js
       - run: node scripts/inject-handpicked-gk.js
+
+      # Auto-route freshly generated sub-topics to their correct category
+      # (✓-ticking them). 0 moves when clean.
+      - name: Classify new sub-topics into correct categories
+        run: node scripts/classify-global.cjs
+
       - run: node scripts/build-archive-single.js
 
       - run: |
