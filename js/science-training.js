@@ -72,6 +72,240 @@
     math: ['sets','relations_functions','trigonometry','inverse_trig','complex_numbers','algebra_quadratic','linear_inequalities','algebra_pnc','algebra_binomial','algebra_sequences','principle_mathematical_induction','coordinate_geometry','three_d_geometry','calculus_limits','calculus_diff','continuity','calculus_application','calculus_integration','applications_integrals','calculus_differential','vectors','statistics','probability','algebra_matrices','determinants','linear_programming','mathematical_reasoning']
   };
 
+  var POLY_SUBJECTS = {
+    basic_math: 'Basic Mathematics',
+    basic_physics: 'Basic Physics',
+    basic_chemistry: 'Basic Chemistry',
+    basic_workshop: 'Basic Workshop Practices',
+    digital_workplace: 'Digital Workplace Skills',
+    applied_math: 'Applied Mathematics',
+    applied_physics: 'Applied Physics',
+    applied_chemistry: 'Applied Chemistry',
+    basic_engineering: 'Basic Engineering Practices',
+    drafting: 'Drafting Practices',
+    basic_civil: 'Basic Civil Engineering',
+    electronics_instrumentation: 'Basics of Electronics & Instrumentation',
+    computer_engineering: 'Basics of Computer Engineering',
+    industrial_chemistry: 'Industrial Chemistry',
+    electrical_electronics: 'Basics of Electrical & Electronics Engineering',
+    mechanical_engineering: 'Basics of Mechanical Engineering'
+  };
+
+  function P(q, a, h, s) { return { q: q, a: a, h: h || "", s: s || "" }; }
+
+  var POLY_Q = {
+    basic_math: [
+      P("What does the order of operations rule stand for?", "BODMAS / BIDMAS (Brackets, Orders, Division, Multiplication, Addition, Subtraction)", "Perform calculations inside brackets first, then powers, then division/multiplication left to right, then addition/subtraction", "BODMAS decides which operation to do first in expressions like 2 + 3 × 4"),
+      P("What is the perimeter of a circle called?", "Circumference = 2πr", "r is the radius", "C = 2πr; area = πr²"),
+      P("What is the area of a circle of radius r?", "A = πr²", "π ≈ 3.14 or 22/7", "Area = π × radius × radius"),
+      P("What is the sum of interior angles of a triangle?", "180°", "Any triangle: acute, obtuse or right", "Sum of the three interior angles always equals 180°"),
+      P("What is the HCF of 12 and 18?", "6", "HCF = highest common factor", "Factors of 12: 1,2,3,4,6,12; of 18: 1,2,3,6,9,18 → largest common = 6"),
+      P("What is the LCM of 4 and 6?", "12", "LCM = lowest common multiple", "Multiples of 4: 4,8,12,16; of 6: 6,12,18 → smallest common = 12"),
+      P("What is the square root of 144?", "12", "12 × 12 = 144", "√144 = 12"),
+      P("What is 15% of 200?", "30", "15% = 15/100", "(15/100) × 200 = 30"),
+      P("What is the gradient/slope of a line through (x1,y1) and (x2,y2)?", "m = (y2 − y1) / (x2 − x1)", "Slope = rise over run", "Also written as (y2−y1) ÷ (x2−x1)"),
+      P("What does the Pythagoras theorem state for a right triangle?", "a² + b² = c² (c = hypotenuse)", "Applies only to right-angled triangles", "c² is the square of the longest side"),
+      P("What is the arithmetic mean of n numbers?", "Sum of the numbers ÷ n", "Average", "Mean = total ÷ count"),
+      P("What is 2³?", "8", "2 raised to power 3", "2 × 2 × 2 = 8")
+    ],
+    basic_physics: [
+      P("What is the SI unit of force?", "Newton (N)", "Force = mass × acceleration", "1 N = 1 kg·m/s²"),
+      P("What is the SI unit of work and energy?", "Joule (J)", "Work = force × distance", "1 J = 1 N·m"),
+      P("What is the SI unit of power?", "Watt (W)", "Power = work ÷ time", "1 W = 1 J/s"),
+      P("What is the SI unit of electric current?", "Ampere (A)", "Flow of charge", "Current = charge ÷ time"),
+      P("What is the approximate acceleration due to gravity on Earth?", "9.8 m/s² (≈ 10 m/s²)", "Usually denoted g", "g varies slightly with altitude and latitude"),
+      P("What is Newton's second law of motion (formula)?", "F = m × a", "Force equals mass times acceleration", "F = ma; direction of F same as a"),
+      P("What is the formula for work done?", "W = F × d", "Force × displacement", "Work is done when force moves an object"),
+      P("What is the formula for speed?", "Speed = distance ÷ time", "Speed is a scalar (velocity is vector)", "v = d/t"),
+      P("What is the formula for density?", "Density = mass ÷ volume", "Usually ρ = m/V", "Water density ≈ 1000 kg/m³"),
+      P("What is the kinetic energy of a body of mass m and speed v?", "KE = ½ m v²", "Energy of a moving body", "KE = (1/2)mv²"),
+      P("What is the SI unit of pressure?", "Pascal (Pa)", "Pressure = force ÷ area", "1 Pa = 1 N/m²"),
+      P("Newton's first law is also known as?", "Law of inertia", "Body stays at rest or uniform motion unless acted on by a force", "Inertia is resistance to change in motion")
+    ],
+    basic_chemistry: [
+      P("What is the chemical formula of water?", "H₂O", "Two hydrogen atoms + one oxygen atom", "Water = H2O"),
+      P("What is the chemical formula of common salt?", "NaCl", "Sodium chloride", "Table salt = NaCl"),
+      P("What is the atomic number of carbon?", "6", "Carbon has 6 protons", "Element C, symbol C, atomic no. 6"),
+      P("What is the pH of a neutral solution at 25°C?", "7", "pH < 7 acidic, pH > 7 basic", "Pure water has pH 7"),
+      P("Which gas do plants take in for photosynthesis?", "Carbon dioxide (CO₂)", "Plants release oxygen", "6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂"),
+      P("What is the chemical symbol of iron?", "Fe", "From Latin 'ferrum'", "Symbol Fe, atomic no. 26"),
+      P("Which acid is present in vinegar?", "Acetic acid (CH₃COOH)", "Vinegar is dilute acetic acid", "Acetic acid ≈ 5% in vinegar"),
+      P("What is the chemical formula of ammonia?", "NH₃", "Nitrogen + hydrogen", "Used to make fertilizers"),
+      P("What is the atomic number of hydrogen?", "1", "Simplest element", "Symbol H, atomic no. 1"),
+      P("What is the formula of sulphuric acid?", "H₂SO₄", "Strong acid, 'king of chemicals'", "Used in batteries and industry"),
+      P("What colour does litmus turn in an acidic solution?", "Red", "Blue litmus → red in acid", "Red litmus stays red in acid; turns blue in base"),
+      P("What is the formula of carbon dioxide?", "CO₂", "One carbon + two oxygen", "Produced on burning carbon fuels")
+    ],
+    basic_workshop: [
+      P("Which tool is used for cutting metal by hand?", "Hacksaw", "Blade mounted on a frame", "Hacksaw cuts thin metal sections"),
+      P("Which tool is used to make holes in metal?", "Drilling machine (drill bit)", "Twist drill creates round holes", "Drill press or hand drill"),
+      P("Which device holds the workpiece firmly during fitting work?", "Bench vice", "Fixed to the work bench", "Jaws grip the job for filing/cutting"),
+      P("Which tool is used to flatten and smooth a metal surface?", "File", "Cuts by abrasion", "Different cuts: rough, smooth, dead smooth"),
+      P("Which instrument measures small lengths accurately to 0.01 mm?", "Vernier caliper", "Main scale + vernier scale", "Also micrometer to 0.001 mm"),
+      P("What is the process of joining two metal parts by melting?", "Welding", "Filler rod + heat (arc/gas)", "Arc welding is most common"),
+      P("Which tool cuts external threads on a rod?", "Die (thread die)", "Used with a die stock", "Internal threads are cut with a tap"),
+      P("What safety item should you always wear in the workshop?", "Safety goggles + protective clothing", "Protect eyes and body", "Follow workshop safety rules always"),
+      P("What is 'fitting' work in a workshop?", "Hand working of metal to exact sizes using file, hacksaw, chisel, etc.", "Bench work", "Fitting produces accurate mating parts"),
+      P("Which tool strikes the chisel to cut metal?", "Hammer (ball peen)", "Striking tool", "Used with cold chisel for chipping")
+    ],
+    digital_workplace: [
+      P("Which protocol is used to send outgoing email?", "SMTP (Simple Mail Transfer Protocol)", "SMTP sends, POP3/IMAP receive", "Port 25/587 for SMTP"),
+      P("What is the file extension of an Excel spreadsheet?", ".xlsx", "Microsoft Excel workbook", "Older format was .xls"),
+      P("What is the file extension of a Word document?", ".docx", "Microsoft Word document", "Older format was .doc"),
+      P("Which of these is a cloud storage service?", "Google Drive (also OneDrive, Dropbox)", "Files stored on remote servers", "Access from any device with internet"),
+      P("Which tool is commonly used for video conferencing?", "Zoom (also Google Meet, Teams)", "Online meetings", "Allows screen sharing too"),
+      P("What is the keyboard shortcut to copy?", "Ctrl + C (Cmd+C on Mac)", "Copy selected item", "Paste is Ctrl + V"),
+      P("What is the keyboard shortcut to paste?", "Ctrl + V (Cmd+V on Mac)", "Insert copied item", "Cut is Ctrl + X"),
+      P("What does PDF stand for?", "Portable Document Format", "Fixed-layout document", "Made by Adobe; opens in any viewer"),
+      P("Which software is used to make slide presentations?", "Microsoft PowerPoint", "Slides with text, images, animations", "Alternatives: Google Slides, Canva"),
+      P("What is a 'web browser' used for?", "To view websites (e.g., Chrome, Edge, Firefox)", "Software that fetches and renders web pages", "Address bar enters a URL")
+    ],
+    applied_math: [
+      P("What is the derivative of x² with respect to x?", "2x", "Power rule: d/dx(xⁿ) = n·xⁿ⁻¹", "d(x²)/dx = 2x"),
+      P("What is the derivative of a constant?", "0", "A constant does not change", "d(c)/dx = 0"),
+      P("What is the indefinite integral of x?", "x²/2 + C", "Reverse of differentiation", "∫x dx = x²/2 + C"),
+      P("What does sin²θ + cos²θ equal?", "1", "Fundamental trig identity", "Holds for all angles θ"),
+      P("What is the determinant of the 2×2 matrix [[a,b],[c,d]]?", "ad − bc", "Det = (a·d) − (b·c)", "Used to check invertibility"),
+      P("When can two matrices be multiplied?", "When the columns of the first equal the rows of the second", "Inner dimensions must match", "A(m×n) × B(n×p) = C(m×p)"),
+      P("What is the nth term of an arithmetic progression?", "a + (n − 1)d", "a = first term, d = common difference", "AP: a, a+d, a+2d, …"),
+      P("What is the sum of an infinite geometric series when |r| < 1?", "a / (1 − r)", "a = first term, r = common ratio", "S∞ = a/(1−r)"),
+      P("What type of result does a vector dot product give?", "A scalar (a number)", "A·B = |A||B|cosθ", "Cross product gives a vector"),
+      P("What is the natural logarithm base?", "e ≈ 2.718", "Log to base e = ln", "ln(e) = 1"),
+      P("What is the derivative of sin x?", "cos x", "Derivative of cos x = −sin x", "d/dx(sin x) = cos x"),
+      P("What is the integration of 1/x?", "ln|x| + C", "Natural log", "∫(1/x)dx = ln|x| + C")
+    ],
+    applied_physics: [
+      P("What does Ohm's law state?", "V = I × R (voltage = current × resistance)", "I = V/R, R = V/I", "Fundamental law of electric circuits"),
+      P("What is the unit of capacitance?", "Farad (F)", "Capacitance stores charge", "C = Q/V"),
+      P("Which semiconductor is most widely used in electronics?", "Silicon", "Doped to make n-type/p-type", "Germanium is the other common one"),
+      P("What is the unit of frequency?", "Hertz (Hz)", "Cycles per second", "1 kHz = 1000 Hz"),
+      P("On what principle does a transformer work?", "Electromagnetic induction (mutual induction)", "AC in primary induces EMF in secondary", "Works only with AC, not DC"),
+      P("What is Kirchhoff's voltage law?", "Sum of voltages around any closed loop = 0", "KVL (voltage law)", "Energy conservation in a loop"),
+      P("What is the photoelectric effect?", "Light falling on a metal surface ejects electrons", "Einstein explained it (1905)", "Emission depends on frequency, not intensity"),
+      P("What is the unit of magnetic flux?", "Weber (Wb)", "Magnetic flux = B × A", "1 Wb = 1 T·m²"),
+      P("What is the Doppler effect?", "Change in observed frequency due to relative motion of source and observer", "Siren pitch changes as vehicle passes", "Applies to sound and light waves"),
+      P("What is the resonant frequency of an LC circuit?", "f = 1 / (2π√(LC))", "L = inductance, C = capacitance", "At resonance impedance is minimum"),
+      P("What is electric power (formula)?", "P = V × I", "Power = voltage × current", "Also P = I²R = V²/R"),
+      P("What is a p-n junction diode?", "A device that conducts in one direction (forward bias)", "Made by joining p-type and n-type semiconductor", "Used for rectification")
+    ],
+    applied_chemistry: [
+      P("What is the main raw material for making cement?", "Limestone (and clay)", "Heated in a kiln with clay", "Portland cement = limestone + clay"),
+      P("How is soap made?", "By saponification — fats/oils + alkali (NaOH)", "Reaction of fat with alkali", "Glycerol is a by-product"),
+      P("Which gas is commonly used as a bleaching agent?", "Chlorine (Cl₂)", "Used in textile and paper industry", "Also disinfects water"),
+      P("What causes hardness of water?", "Dissolved calcium and magnesium salts", "Temporary hardness: bicarbonates", "Permanent hardness: chlorides/sulphates"),
+      P("What does NPK stand for in fertilizers?", "Nitrogen, Phosphorus, Potassium", "Macro nutrients for plants", "E.g., urea (N), DAP (N+P)"),
+      P("On what principle is petroleum refined?", "Fractional distillation", "Separation by boiling point", "Gives LPG, petrol, diesel, kerosene"),
+      P("What is electroplating?", "Coating a metal using electrolysis", "Deposits a metal layer (e.g., chrome, nickel)", "Protects and decorates"),
+      P("What is a polymer?", "A large molecule made of repeating monomer units", "Poly = many, mer = unit", "Examples: polyethylene, PVC, nylon"),
+      P("What is green chemistry about?", "Designing processes that reduce hazardous waste", "Prevention over treatment", "Atom economy, safer solvents"),
+      P("What is a mordant used for in dyeing?", "To fix the dye on the fabric", "Helps dye bind to cloth", "Examples: alum, chrome salts")
+    ],
+    basic_engineering: [
+      P("What is an isometric drawing?", "A 3D pictorial view drawn with 30° axes", "Shows length, width, height together", "All three axes equally foreshortened"),
+      P("Which projection standard is used in India/Europe?", "First-angle projection", "Object between observer and plane", "Third-angle is used in USA"),
+      P("What does an orthographic projection show?", "A 2D view of the object (front, top, side)", "Multiple views from perpendicular directions", "Standard set: front, top, side"),
+      P("What does a sectional view show?", "Internal details by cutting the object", "Cut surface is hatched", "Hatching = 45° thin lines"),
+      P("What is a title block on a drawing?", "A box giving drawing name, scale, sheet no., date, drawn-by", "Located bottom-right of sheet", "Standard on all drawing sheets"),
+      P("What does a scale of 1:2 mean?", "The drawing is half the actual size", "1 unit on drawing = 2 units on object", "1:1 is full size"),
+      P("What does dimensioning provide on a drawing?", "The sizes and positions of features", "Dimension lines with arrows", "Units usually mm"),
+      P("What is a 'blueprint'?", "A reproduction of an engineering drawing", "Originally white lines on blue paper", "Now commonly digital prints"),
+      P("What are hidden edges shown as?", "Dashed (short dash) lines", "Invisible outlines", "Continuous thick lines are visible edges"),
+      P("What is a centre line used for?", "To show axes of symmetry and centres of circles", "Thin chain lines (long dash – short dash)", "Also marks pitch circles")
+    ],
+    drafting: [
+      P("Which instrument is used to draw circles and arcs?", "Compass", "Has a needle point and pencil leg", "Dividers measure distances"),
+      P("Which instrument is used to draw vertical lines?", "Set squares (with T-square)", "30°-60° and 45° set squares", "Also used to draw angled lines"),
+      P("Which line shows the outline of an object?", "Continuous thick line", "Visible outlines", "Continuous thin lines for dimensions"),
+      P("How are hidden edges shown in a drawing?", "Dashed lines (short dashes)", "Invisible edges", "Thin dashed line"),
+      P("How is a section cut surface shown?", "With hatching (45° thin lines)", "Shows the material cut", "Also called section lines"),
+      P("What is the standard size of an A4 drawing sheet?", "210 × 297 mm", "ISO A-series", "A3 = 297 × 420 mm"),
+      P("Which pencil grade is used for dimensioning and lettering?", "H / HB (harder leads for fine lines)", "H = hard, B = soft/black", "Outline uses HB; construction uses 2H/3H"),
+      P("What is a T-square used with?", "The drawing board", "Draws horizontal lines", "Set squares slide against it"),
+      P("What does a chain line (long dash, short dash) indicate?", "Centre lines and symmetry axes", "Also pitch circles", "Not to be confused with hidden lines"),
+      P("What is 'lettering' in a drawing?", "Writing notes, titles and dimensions neatly", "Uses single-stroke letters", "Capital letters for titles")
+    ],
+    basic_civil: [
+      P("What is the most common binding material in construction?", "Cement", "Portland cement", "Sets and hardens when mixed with water"),
+      P("What is plain cement concrete made of?", "Cement + sand + coarse aggregate + water", "1:2:4 is common mix (C:S:A)", "Concrete without steel"),
+      P("What does RCC stand for?", "Reinforced Cement Concrete", "Concrete with steel bars", "Steel takes tension, concrete takes compression"),
+      P("What is the function of a foundation?", "To distribute the building load safely to the soil", "Prevents settlement/failure", "Types: isolated, combined, raft, pile"),
+      P("What is a beam?", "A horizontal member that carries loads perpendicular (transverse) to its axis", "Bends under load", "Reinforced with steel at bottom for tension"),
+      P("What is a column?", "A vertical member carrying compressive (axial) load", "Can buckle under load", "Longer columns buckle more"),
+      P("What is a slab?", "A horizontal plate member used for floors and roofs", "Supported by beams", "Usually RCC slab"),
+      P("What is a plumb bob used for?", "To check the verticality of walls/columns", "String with a weight", "Checks true vertical line"),
+      P("What is mortar?", "A mixture of cement (or lime) + sand + water", "Used for masonry joints and plastering", "Binds bricks/stones together"),
+      P("What is the standard size of a modular brick in India?", "190 × 90 × 90 mm", "Nominal size with mortar = 200×100×100 mm", "Common building brick"),
+      P("What is the purpose of a lintel?", "To carry load over a door/window opening", "Resting on jambs/walls", "Prevents load on the opening"),
+      P("What does a plinth level indicate?", "The level of the top of the foundation (base of building)", "Ground floor level is above plinth", "Protects from dampness")
+    ],
+    electronics_instrumentation: [
+      P("Which component conducts in only one direction?", "Diode", "Forward bias conducts", "Rectifies AC to DC"),
+      P("How many terminals does a transistor have?", "3 (Emitter, Base, Collector)", "BJT transistor", "Used as amplifier and switch"),
+      P("Which instrument measures voltage?", "Voltmeter", "Connected in parallel", "Multimeter measures voltage, current, resistance"),
+      P("Which instrument measures electric current?", "Ammeter", "Connected in series", "Ideal ammeter has low resistance"),
+      P("What does a cathode ray oscilloscope (CRO) display?", "Voltage versus time (waveform)", "Screen shows signal shape", "Measures frequency, amplitude"),
+      P("What is a sensor?", "A device that converts a physical quantity into an electrical signal", "E.g., temperature, pressure, light", "Thermocouple, strain gauge, LDR"),
+      P("Which device is used to measure temperature?", "Thermocouple (also RTD, thermistor)", "Seebeck effect", "Two dissimilar metal junctions"),
+      P("What does a strain gauge measure?", "Strain (deformation) of a body", "Change in resistance", "Used in load cells"),
+      P("What does PLC stand for?", "Programmable Logic Controller", "Industrial automation controller", "Runs ladder logic programs"),
+      P("What does a Wheatstone bridge measure?", "Unknown resistance", "Four-arm bridge circuit", "Balanced when P/Q = R/S"),
+      P("What is an operational amplifier (op-amp)?", "A high-gain DC amplifier with two inputs (inverting, non-inverting)", "Ideal: infinite gain, infinite input impedance", "Used in summing, integrating circuits"),
+      P("What is a transducer?", "A device that converts one form of energy to another", "Sensor = input transducer", "Speaker, microphone are transducers")
+    ],
+    computer_engineering: [
+      P("What does CPU stand for?", "Central Processing Unit", "Brain of the computer", "Performs calculations and control"),
+      P("Which memory loses data when power is off?", "RAM (volatile)", "Random Access Memory", "ROM keeps data (non-volatile)"),
+      P("What is the binary number system base?", "2 (digits 0 and 1)", "Computers use binary", "101₂ = 5 decimal"),
+      P("What does HTML stand for?", "HyperText Markup Language", "Language of web pages", "Structures content on the web"),
+      P("What is an operating system?", "Software that manages hardware and software resources", "Examples: Windows, Linux, Android", "Provides user interface and runs programs"),
+      P("What does HTTP stand for?", "HyperText Transfer Protocol", "Used to fetch web pages", "HTTPS adds encryption (secure)"),
+      P("What is the main function of an ALU?", "Arithmetic and logic operations", "Part of CPU", "Adds, subtracts, compares, AND/OR"),
+      P("What is a byte?", "8 bits", "Smallest addressable unit", "1 KB = 1024 bytes"),
+      P("Which programming language is commonly used for web scripting?", "JavaScript", "Runs in the browser", "Also Python, Java, C++ for apps"),
+      P("What does SQL stand for?", "Structured Query Language", "Language for databases", "SELECT, INSERT, UPDATE, DELETE")
+    ],
+    industrial_chemistry: [
+      P("What is the Haber process used for?", "Manufacturing ammonia (NH₃) from N₂ and H₂", "Fe catalyst, ~450°C, 200 atm", "Ammonia → fertilizers"),
+      P("What is the contact process used to make?", "Sulphuric acid (H₂SO₄)", "SO₂ → SO₃ → H₂SO₄", "V₂O₅ catalyst"),
+      P("What is fractional distillation used for in industry?", "Separating petroleum fractions", "Based on boiling point", "Also separates air into gases"),
+      P("What is saponification?", "Making soap from fats/oils and alkali", "Fat + NaOH → soap + glycerol", "Industrial soap production"),
+      P("What is a catalyst?", "A substance that speeds a reaction without being consumed", "Lowers activation energy", "Examples: Fe (Haber), V₂O₅ (contact)"),
+      P("Which gas is produced by the electrolysis of brine?", "Chlorine (and hydrogen, sodium hydroxide)", "Chlor-alkali industry", "2NaCl + 2H₂O → Cl₂ + H₂ + 2NaOH"),
+      P("What is fermentation used to produce?", "Ethanol (and beer, wine)", "Yeast converts sugars", "Also produces CO₂"),
+      P("What is a polymer?", "A chain of many repeating monomer units", "Polymerization", "PVC, polyethylene, nylon"),
+      P("What is an alloy?", "A mixture of a metal with other metals/metalloids", "Improves strength/corrosion resistance", "Brass = Cu + Zn; steel = Fe + C"),
+      P("What does 'NPK fertilizer' contain?", "Nitrogen, Phosphorus, Potassium", "Primary plant nutrients", "Urea (N), DAP (N,P), MOP (K)")
+    ],
+    electrical_electronics: [
+      P("What is the unit of electrical power?", "Watt (W)", "Power = V × I", "1 kW = 1000 W"),
+      P("What is the colour of the earth/ground wire in a domestic circuit?", "Green (or green-yellow)", "India: green/yellow for earth", "Live = brown/red, Neutral = black/blue"),
+      P("What does a fuse do?", "Protects circuit from overcurrent by melting", "Thin wire, low melting point", "Breaks the circuit on excess current"),
+      P("What is the frequency of AC mains supply in India?", "50 Hz", "220–240 V", "USA uses 60 Hz"),
+      P("What is a transformer?", "A device that changes AC voltage level", "Step-up / step-down", "Works by mutual induction"),
+      P("What is the function of an MCB?", "Miniature Circuit Breaker — automatically trips on overload/short circuit", "Replaces fuse", "Can be reset after trip"),
+      P("What is a rectifier?", "A circuit that converts AC to DC", "Uses diodes", "Half-wave and full-wave types"),
+      P("What is Ohm's law?", "V = I × R", "Voltage = current × resistance", "R in ohms (Ω)"),
+      P("What is a motor?", "A machine that converts electrical energy to mechanical energy", "Works on Fleming's left-hand rule", "Used in fans, pumps, machines"),
+      P("What is the unit of resistance?", "Ohm (Ω)", "Opposition to current", "1 Ω = 1 V/A"),
+      P("What is a capacitor?", "A component that stores electrical energy in an electric field", "Unit: Farad", "Used for filtering and timing"),
+      P("What does a generator do?", "Converts mechanical energy to electrical energy", "Faraday's law of induction", "Based on electromagnetic induction")
+    ],
+    mechanical_engineering: [
+      P("What is the SI unit of force?", "Newton (N)", "F = ma", "1 N = 1 kg·m/s²"),
+      P("What is a gear used for?", "To transmit power between shafts with speed/torque change", "Toothed wheels mesh together", "Gear ratio changes speed and torque"),
+      P("What is the function of a bearing?", "To support rotating shafts and reduce friction", "Ball and roller types", "Reduces wear, carries load"),
+      P("What is a lathe used for?", "Turning cylindrical workpieces", "Work rotates, tool cuts", "Also facing, threading, drilling"),
+      P("What is the mechanical advantage of a simple machine?", "Load ÷ Effort", "MA = output/input force", "Efficiency = output work/input work × 100"),
+      P("What is a piston?", "A moving part inside a cylinder that transmits force", "Seals and moves in cylinder", "Key part of engines and compressors"),
+      P("What is the function of a flywheel?", "To store rotational energy and smooth speed fluctuations", "Heavy rotating wheel", "Reduces speed variation in engines"),
+      P("What is a camshaft used for?", "To convert rotary motion to reciprocating motion of valves", "Cam profile pushes followers", "Opens/closes engine valves"),
+      P("What is a coupling?", "A device that joins two shafts to transmit power", "Rigid or flexible", "Flexible couplings absorb misalignment"),
+      P("What is a thermostat used for?", "To control temperature automatically", "Bimetallic strip", "Found in engines, ovens, AC"),
+      P("What is torque?", "The turning effect of a force", "T = F × r", "Unit: N·m"),
+      P("What does a pump do?", "Moves liquids by raising pressure", "Centrifugal and positive displacement", "Converts mechanical to fluid energy")
+    ]
+  };
+
   function loadState() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(defaultState)); }
     catch(e) { return JSON.parse(JSON.stringify(defaultState)); }
@@ -7091,6 +7325,20 @@
     return topics[rand(0, topics.length - 1)];
   }
 
+  function getPolyQuestion(subject) {
+    var bank = POLY_Q[subject];
+    if (!bank || bank.length === 0) return null;
+    for (var t = 0; t < 40; t++) {
+      var q = pick(bank);
+      var key = q.q + "||" + q.a;
+      if (!_isRecent(key)) {
+        _addRecent(key);
+        return { q: q.q, a: q.a, hint: q.h || "", solution: q.s || "", subject: POLY_SUBJECTS[subject] || subject, subTopic: "" };
+      }
+    }
+    return null;
+  }
+
   function generateSessionQuestions(mode, count, subject, subTopic) {
     var questions = [];
     var attempts = 0;
@@ -7098,7 +7346,12 @@
       attempts++;
       var s = subject || pick(["physics","chemistry","biology","math"]);
       var st = subTopic || getRandomTopic(s);
-      var q = getQuestionForTopic(s, st);
+      var q;
+      if (POLY_Q[s]) {
+        q = getPolyQuestion(s);
+      } else {
+        q = getQuestionForTopic(s, st);
+      }
       if (q) {
         q.timeLimit = getTimeLimit(mode);
         questions.push(q);
@@ -7189,7 +7442,7 @@
     if (!session || session.questionIndex >= session.questions.length) {
       if (session && session._reviewMode) { session._reviewMode = false; endTraining(); return; }
       if (session && session.unlimited) {
-        var more = generateSessionQuestions("unlimited", 10, null, null);
+        var more = generateSessionQuestions("unlimited", 10, session.subject, session.subTopic);
         session.questions = session.questions.concat(more);
         session.totalQuestions = session.questions.length;
         cacheSession(session);
@@ -7297,8 +7550,14 @@
 
   // ==================== UI RENDERING ====================
 
+  function trainingContainer() {
+    var c = document.getElementById("science-training-container");
+    if (c) return c;
+    return document.getElementById("polytechnic-training-container");
+  }
+
   function renderFullUI() {
-    var container = document.getElementById("science-training-container");
+    var container = trainingContainer();
     if (!container) {
       container = document.createElement("div");
       container.id = "science-training-container";
@@ -7693,7 +7952,7 @@
   }
 
   function showSessionResults() {
-    var container = document.getElementById("science-training-container");
+    var container = trainingContainer();
     if (!container) return;
     if (!session) return;
 
@@ -7751,7 +8010,7 @@
 
   function backToMenu() {
     clearTimer();
-    var container = document.getElementById("science-training-container");
+    var container = trainingContainer();
     if (container) container.innerHTML = renderMenu();
     session = null;
     currentQuestion = null;
@@ -7802,26 +8061,26 @@
 
     var polyGroups = [
       { name: 'Basic Sciences', color: '#a78bfa', items: [
-        { n: 'Basic Mathematics', i: '➗' },
-        { n: 'Basic Physics', i: '🔭' },
-        { n: 'Basic Chemistry', i: '🧪' },
-        { n: 'Applied Mathematics', i: '📐' },
-        { n: 'Applied Physics', i: '📡' },
-        { n: 'Applied Chemistry', i: '⚗️' },
-        { n: 'Industrial Chemistry', i: '🏭' }
+        { k: 'basic_math', n: 'Basic Mathematics', i: '➗' },
+        { k: 'basic_physics', n: 'Basic Physics', i: '🔭' },
+        { k: 'basic_chemistry', n: 'Basic Chemistry', i: '🧪' },
+        { k: 'applied_math', n: 'Applied Mathematics', i: '📐' },
+        { k: 'applied_physics', n: 'Applied Physics', i: '📡' },
+        { k: 'applied_chemistry', n: 'Applied Chemistry', i: '⚗️' },
+        { k: 'industrial_chemistry', n: 'Industrial Chemistry', i: '🏭' }
       ]},
       { name: 'Skills & Workshop', color: '#34d399', items: [
-        { n: 'Basic Workshop Practices', i: '🛠️' },
-        { n: 'Digital Workplace Skills', i: '💻' },
-        { n: 'Basic Engineering Practices', i: '🔧' },
-        { n: 'Drafting Practices', i: '✏️' }
+        { k: 'basic_workshop', n: 'Basic Workshop Practices', i: '🛠️' },
+        { k: 'digital_workplace', n: 'Digital Workplace Skills', i: '💻' },
+        { k: 'basic_engineering', n: 'Basic Engineering Practices', i: '🔧' },
+        { k: 'drafting', n: 'Drafting Practices', i: '✏️' }
       ]},
       { name: 'Engineering Foundations', color: '#f59e0b', items: [
-        { n: 'Basic Civil Engineering', i: '🏗️' },
-        { n: 'Basics of Electronics & Instrumentation', i: '🔌' },
-        { n: 'Basics of Computer Engineering', i: '🖥️' },
-        { n: 'Basics of Electrical & Electronics Engineering', i: '💡' },
-        { n: 'Basics of Mechanical Engineering', i: '⚙️' }
+        { k: 'basic_civil', n: 'Basic Civil Engineering', i: '🏗️' },
+        { k: 'electronics_instrumentation', n: 'Basics of Electronics & Instrumentation', i: '🔌' },
+        { k: 'computer_engineering', n: 'Basics of Computer Engineering', i: '🖥️' },
+        { k: 'electrical_electronics', n: 'Basics of Electrical & Electronics Engineering', i: '💡' },
+        { k: 'mechanical_engineering', n: 'Basics of Mechanical Engineering', i: '⚙️' }
       ]}
     ];
     var polyHtml = '';
@@ -7834,7 +8093,9 @@
         "<div style='display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px'>";
       for (var pi = 0; pi < grp.items.length; pi++) {
         var it = grp.items[pi];
-        polyHtml += "<span style='display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:100px;background:linear-gradient(135deg," + grp.color + "12,rgba(255,255,255,.03));border:1px solid " + grp.color + "22;font-size:.74em;font-weight:600;color:#fafafa;cursor:default;transition:all .2s' onmouseenter='this.style.borderColor=\"" + grp.color + "55\";this.style.transform=\"translateY(-2px)\";this.style.background=\"linear-gradient(135deg," + grp.color + "20,rgba(255,255,255,.04))\"' onmouseleave='this.style.borderColor=\"" + grp.color + "22\";this.style.transform=\"\";this.style.background=\"linear-gradient(135deg," + grp.color + "12,rgba(255,255,255,.03))\"'><span style='font-size:1.05em'>" + it.i + "</span>" + it.n + "</span>";
+        polyHtml += "<button class='st-poly-chip' data-subject='" + it.k + "' style='display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:100px;background:linear-gradient(135deg," + grp.color + "12,rgba(255,255,255,.03));border:1px solid " + grp.color + "22;font-size:.74em;font-weight:600;color:#fafafa;cursor:pointer;transition:all .2s' " +
+          "onmouseenter='this.style.borderColor=\"" + grp.color + "55\";this.style.transform=\"translateY(-2px)\";this.style.background=\"linear-gradient(135deg," + grp.color + "20,rgba(255,255,255,.04))\"' " +
+          "onmouseleave='this.style.borderColor=\"" + grp.color + "22\";this.style.transform=\"\";this.style.background=\"linear-gradient(135deg," + grp.color + "12,rgba(255,255,255,.03))\"'><span style='font-size:1.05em'>" + it.i + "</span>" + it.n + "</button>";
       }
       polyHtml += "</div></div>";
     }
@@ -7847,6 +8108,7 @@
         "<div style='font-size:2em;margin-bottom:4px'>🏫</div>" +
         "<h1 style='margin:0 0 2px;color:#fafafa;font-size:1.4em;font-weight:800;background:linear-gradient(135deg,#fbbf24,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent'>Polytechnic · First Year</h1>" +
         "<div style='color:#a1a1aa;font-size:.78em'>Diploma engineering curriculum · 16 subjects</div>" +
+        "<div style='margin-top:10px;color:#52525b;font-size:.72em'>Tap any subject to start an unlimited flashcard session</div>" +
         "<div style='margin-top:12px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap'>" +
         "<span style='padding:5px 12px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.12);border-radius:100px;color:#fbbf24;font-size:.72em;font-weight:600'>🏅 " + rank.name + "</span>" +
         "<span style='padding:5px 12px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.1);border-radius:100px;color:#fbbf24;font-size:.72em;font-weight:600'>⭐ " + state.totalPoints + " pts</span>" +
@@ -7926,6 +8188,13 @@
 
   function bindEvents() {
     document.addEventListener("click", function (e) {
+      var polyChip = e.target.closest(".st-poly-chip");
+      if (polyChip) {
+        var psub = polyChip.getAttribute("data-subject");
+        if (POLY_Q[psub]) startTraining("unlimited", { count: 10, subject: psub });
+        return;
+      }
+
       var modeBtn = e.target.closest(".st-mode-btn");
       if (modeBtn) {
         var mode = modeBtn.getAttribute("data-mode");
@@ -8053,9 +8322,10 @@
     injectStyles();
     var container = document.getElementById("science-training-container") || document.getElementById("polytechnic-training-container");
     if (!container) return;
-    // Check for cached session (JEE · NEET lab only)
-    var cached = container.id === "science-training-container" ? restoreCachedSession() : null;
-    if (cached) {
+    var isPolyContainer = container.id === "polytechnic-training-container";
+    // Check for cached session (only restore when it matches this page)
+    var cached = restoreCachedSession();
+    if (cached && !!POLY_Q[cached.subject] === isPolyContainer) {
       session = cached;
       renderFullUI();
       showQuestion();
