@@ -38,41 +38,72 @@ function main() {
   const seen = new Set(allQuestions.map(q => norm(q.question)));
   const byKey = new Map(allQuestions.map(q => [norm(q.question), q]));
 
-  // Merge each chunk's output
+  // Merge each chunk's output.
+  // Each chunk artifact is itself a full copy of the quiz (sharded into
+  // .part.N files), so we stream its parts one at a time instead of calling
+  // readQuiz() which would hold a second ~3M-question array in memory on top
+  // of allQuestions/seen/byKey and OOM the 7GB runner heap.
   let added = 0;
   const linkPool = {};
   try {
     const existingPool = JSON.parse(fs.readFileSync(LINK_POOL_PATH, 'utf8'));
     Object.entries(existingPool).forEach(([c, titles]) => { linkPool[c] = titles; });
   } catch (e) { /* no existing pool */ }
+
+  function consumeQuestions(qs, f) {
+    let chunkAdded = 0;
+    for (const q of qs) {
+      const key = norm(q.question);
+      if (!seen.has(key)) {
+        allQuestions.push(q);
+        seen.add(key);
+        byKey.set(key, q);
+        chunkAdded++;
+      } else if (q.wikiDone) {
+        // Carry the "fully covered" marker onto the already-existing question
+        // so partial articles stop being re-fetched on future runs.
+        const existing = byKey.get(key);
+        if (existing && !existing.wikiDone) existing.wikiDone = true;
+      }
+    }
+    return chunkAdded;
+  }
+
   for (const f of chunkFiles) {
     try {
-      const chunkData = readQuiz(path.join(CHUNKS_DIR, f));
-      const qs = chunkData.questions || [];
+      const chunkPath = path.join(CHUNKS_DIR, f);
+      // Primary file holds top-level fields (linkPool, shardCount, questions).
+      const primary = JSON.parse(fs.readFileSync(chunkPath, 'utf8'));
+      let chunkTotal = 0;
       let chunkAdded = 0;
-      for (const q of qs) {
-        const key = norm(q.question);
-        if (!seen.has(key)) {
-          allQuestions.push(q);
-          seen.add(key);
-          byKey.set(key, q);
-          chunkAdded++;
-        } else if (q.wikiDone) {
-          // Carry the "fully covered" marker onto the already-existing question
-          // so partial articles stop being re-fetched on future runs.
-          const existing = byKey.get(key);
-          if (existing && !existing.wikiDone) existing.wikiDone = true;
+      if (primary.shardCount) {
+        // Aggregate this chunk's linked-page pool so partially-mined linked
+        // pages get finished by the revisit pool on future runs.
+        if (primary.linkPool && typeof primary.linkPool === 'object') {
+          Object.entries(primary.linkPool).forEach(([c, titles]) => {
+            if (!Array.isArray(titles)) return;
+            linkPool[c] = [...new Set([...(linkPool[c] || []), ...titles])];
+          });
+        }
+        // Stream parts one at a time so only ~1/N of the chunk is in memory.
+        for (let i = 0; i < primary.shardCount; i++) {
+          const part = JSON.parse(fs.readFileSync(chunkPath + '.part.' + i, 'utf8'));
+          const qs = part.questions || [];
+          chunkTotal += qs.length;
+          chunkAdded += consumeQuestions(qs, f);
+        }
+      } else {
+        const qs = primary.questions || [];
+        chunkTotal = qs.length;
+        chunkAdded += consumeQuestions(qs, f);
+        if (primary.linkPool && typeof primary.linkPool === 'object') {
+          Object.entries(primary.linkPool).forEach(([c, titles]) => {
+            if (!Array.isArray(titles)) return;
+            linkPool[c] = [...new Set([...(linkPool[c] || []), ...titles])];
+          });
         }
       }
-      // Aggregate this chunk's linked-page pool so partially-mined linked
-      // pages get finished by the revisit pool on future runs.
-      if (chunkData.linkPool && typeof chunkData.linkPool === 'object') {
-        Object.entries(chunkData.linkPool).forEach(([c, titles]) => {
-          if (!Array.isArray(titles)) return;
-          linkPool[c] = [...new Set([...(linkPool[c] || []), ...titles])];
-        });
-      }
-      console.log('  ' + f + ': ' + qs.length + ' questions (' + chunkAdded + ' new)');
+      console.log('  ' + f + ': ' + chunkTotal + ' questions (' + chunkAdded + ' new)');
       added += chunkAdded;
     } catch (e) {
       console.error('  ' + f + ': ERROR ' + e.message);
