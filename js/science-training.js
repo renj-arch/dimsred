@@ -1663,6 +1663,282 @@
     ],
   };
 
+  // Harder numerical / application questions (exam-style, multi-step)
+  var POLY_HARD = {
+    basic_math: [
+      P("Solve for x: 2x² − 5x − 3 = 0. Write both roots.", "x = 3 and x = −1/2", "Factorise or use the quadratic formula", "2x² − 5x − 3 = (2x + 1)(x − 3) = 0 → x = 3 or x = −1/2"),
+      P("Find the sum of the first 20 terms of the AP: 3, 7, 11, 15, …", "820", "Sₙ = n/2 [2a + (n−1)d]", "a = 3, d = 4 → S₂₀ = 10(6 + 76) = 820"),
+      P("A train covers 240 km in 4 h. How many hours will it take to cover 360 km at the same speed?", "6 hours", "Speed = distance ÷ time", "Speed = 240/4 = 60 km/h → 360/60 = 6 h"),
+      P("15 workers can build a wall in 12 days. How many days will 20 workers take?", "9 days", "More workers → fewer days (inverse proportion)", "15 × 12 = 180 worker-days → 180/20 = 9 days"),
+      P("A shopkeeper marks goods 25% above cost and then allows a 10% discount. What is his profit percent?", "12.5%", "SP = Marked Price × 0.9", "Let CP = 100 → MP = 125 → SP = 125 × 0.9 = 112.5 → profit = 12.5%"),
+      P("Find the compound interest on Rs. 5000 at 10% p.a. for 2 years, compounded annually.", "Rs. 1050", "CI = P(1 + r/100)ⁿ − P", "Amount = 5000 × 1.1² = 6050 → CI = 6050 − 5000 = 1050"),
+      P("Find the volume of a cylinder of radius 7 cm and height 10 cm (π = 22/7).", "1540 cm³", "V = πr²h", "V = (22/7) × 7² × 10 = 1540 cm³"),
+      P("If log₁₀ 2 = 0.3010, find log₁₀ 8.", "0.9030", "log aᵐ = m log a", "log₁₀ 8 = log₁₀ 2³ = 3 × 0.3010 = 0.9030"),
+      P("Two dice are thrown together. Find the probability of getting a total of 7.", "1/6", "P = favourable outcomes ÷ total outcomes", "Total 36 outcomes; 6 give sum 7 → 6/36 = 1/6"),
+      P("Simplify: (3/4 of 48) − (2/5 of 25).", "26", "Do the fractions first", "36 − 10 = 26")
+    ],
+    basic_physics: [
+      P("A force of 50 N acts on a body of mass 5 kg. Find its acceleration.", "10 m/s²", "a = F/m", "a = 50/5 = 10 m/s²"),
+      P("Calculate the work done in lifting a 10 kg box to a height of 2 m (take g = 10 m/s²).", "200 J", "W = mgh", "W = 10 × 10 × 2 = 200 J"),
+      P("A car of mass 1000 kg moves at 20 m/s. Find its kinetic energy.", "2 × 10⁵ J", "KE = ½mv²", "KE = ½ × 1000 × 400 = 200,000 J"),
+      P("A machine does 3000 J of work in 5 s. Find its power.", "600 W", "P = W/t", "P = 3000/5 = 600 W"),
+      P("A 2 kg body has a momentum of 10 kg·m/s. Find its velocity.", "5 m/s", "p = mv", "v = 10/2 = 5 m/s"),
+      P("Find the current through a 12 Ω resistor connected to a 24 V source.", "2 A", "Ohm's law: V = IR", "I = 24/12 = 2 A"),
+      P("A body of mass 200 g has a volume of 50 cm³. Find its density.", "4 g/cm³", "density = mass ÷ volume", "200/50 = 4 g/cm³"),
+      P("A 600 N force acts on an area of 2 m². Find the pressure.", "300 Pa", "P = F/A", "600/2 = 300 Pa"),
+      P("A train starts from rest and accelerates at 2 m/s². Find the distance covered in 5 s.", "25 m", "s = ½at²", "s = ½ × 2 × 25 = 25 m"),
+      P("A ball thrown vertically up reaches a maximum height of 20 m. Find its initial velocity (g = 10 m/s²).", "20 m/s", "v² = 2gh at maximum height", "u² = 2 × 10 × 20 = 400 → u = 20 m/s")
+    ],
+    basic_chemistry: [
+      P("Calculate the molar mass of H₂SO₄.", "98 g/mol", "Add atomic masses: H×2, S, O×4", "2 + 32 + 64 = 98 g/mol"),
+      P("How many moles are present in 88 g of CO₂?", "2 moles", "Moles = mass ÷ molar mass", "88/44 = 2 mol"),
+      P("What is the percent of oxygen by mass in water (H₂O)?", "88.9%", "Oxygen mass ÷ molar mass × 100", "16/18 × 100 = 88.9%"),
+      P("How many moles are in 6.022 × 10²³ molecules of a gas?", "1 mole", "Avogadro number = 6.022 × 10²³", "1 mole of anything has 6.022 × 10²³ particles"),
+      P("Find the mass of 0.5 mol of NaCl.", "29.25 g", "Molar mass of NaCl = 58.5", "0.5 × 58.5 = 29.25 g"),
+      P("A compound contains 75% carbon and 25% hydrogen. Find its empirical formula.", "CH₄", "Divide % by atomic mass, then simplify the ratio", "C: 75/12 = 6.25; H: 25/1 = 25 → ratio 1:4 → CH₄"),
+      P("Find the pH of a 0.01 M HCl solution.", "2", "pH = −log[H⁺]", "pH = −log(10⁻²) = 2"),
+      P("What volume does 2 mol of any gas occupy at STP?", "44.8 L", "1 mol occupies 22.4 L at STP", "2 × 22.4 = 44.8 L"),
+      P("4 g of NaOH is dissolved to make 250 mL of solution. Find its molarity.", "0.4 M", "Molarity = moles ÷ litres", "Moles = 4/40 = 0.1 → M = 0.1/0.25 = 0.4 M"),
+      P("Which has more atoms: 1 mol of H₂ or 0.5 mol of O₂?", "1 mol of H₂", "Count total atoms", "1 mol H₂ = 2 mol atoms; 0.5 mol O₂ = 1 mol atoms")
+    ],
+    basic_workshop: [
+      P("In the screw designation M12 × 1.75, what does 1.75 represent?", "Thread pitch in mm", "Pitch = distance between threads", "M12 × 1.75 means 12 mm major diameter, 1.75 mm pitch"),
+      P("A 6 mm hole is to be finished by reaming. What drill size is used before reaming?", "5.9 mm", "Drill slightly smaller than reamed size", "Reaming removes a small amount; drill ≈ 0.1 mm under size"),
+      P("Find the tap drill size for an M10 × 1.5 internal thread.", "8.5 mm", "Tap drill ≈ major diameter − pitch", "10 − 1.5 = 8.5 mm"),
+      P("What is the standard countersink angle used for flat-head screws?", "90°", "Conical recess for flush heads", "Countersink tools are usually 90°"),
+      P("What is the standard point angle of a high-speed steel twist drill?", "118°", "Cuts metal", "Standard HSS drill point = 118°"),
+      P("A vernier caliper has a main scale of 1 mm and 50 vernier divisions. Find its least count.", "0.02 mm", "LC = main scale ÷ vernier divisions", "1/50 = 0.02 mm"),
+      P("Which hacksaw blade (teeth per inch) is chosen to cut thin metal tubes?", "32 TPI", "Fine teeth for thin material", "Fine blades (32 TPI) prevent teeth grabbing on thin sections"),
+      P("A small gap is measured using thin blades of known thickness. Name the tool.", "Feeler gauge", "Used for clearances", "Feeler gauges measure gaps and clearances")
+    ],
+    digital_workplace: [
+      P("Convert 2 GB to megabytes.", "2048 MB", "1 GB = 1024 MB", "2 × 1024 = 2048 MB"),
+      P("In Excel, if A1 = 5 and A2 = 10, what does =A1*A2 return?", "50", "Multiplication formula", "5 × 10 = 50"),
+      P("Convert the decimal number 10 to binary.", "1010", "Repeated division by 2", "10 = 1010₂"),
+      P("Convert the binary number 1011 to decimal.", "11", "Add place values", "8 + 0 + 2 + 1 = 11"),
+      P("How many 512 MB files fit on a 4 GB pen drive?", "8 files", "4 GB = 4096 MB", "4096 ÷ 512 = 8"),
+      P("In Excel, =SUM(A1:A4) where A1 to A4 are 3, 5, 7, 9 returns what value?", "24", "Sum of the range", "3 + 5 + 7 + 9 = 24"),
+      P("If each photo is 1.5 MB, how many photos fit on a 3 GB memory card?", "2048 photos", "3 GB = 3072 MB", "3072 ÷ 1.5 = 2048"),
+      P("What does Ctrl + S do in most applications?", "Save the file", "Shortcut key", "Ctrl + S saves the current document")
+    ],
+    applied_math: [
+      P("Differentiate y = x³ + 2x² − 5 with respect to x.", "3x² + 4x", "d/dx xⁿ = nxⁿ⁻¹", "dy/dx = 3x² + 4x"),
+      P("Integrate: ∫(2x + 3) dx.", "x² + 3x + C", "∫xⁿ dx = xⁿ⁺¹/(n+1)", "x² + 3x + C"),
+      P("Find the slope of the line joining (2, 3) and (5, 9).", "2", "m = (y₂−y₁)/(x₂−x₁)", "(9−3)/(5−2) = 6/3 = 2"),
+      P("Solve for x: |x − 3| = 7.", "x = 10 or x = −4", "Absolute value gives two cases", "x − 3 = 7 → 10; x − 3 = −7 → −4"),
+      P("Find the sum of the first 6 terms of the GP: 5, 10, 20, …", "315", "Sₙ = a(rⁿ−1)/(r−1)", "5(2⁶−1)/(2−1) = 5 × 63 = 315"),
+      P("Multiply the matrices: [1 2] × [3 4]ᵀ. Find the single number.", "11", "Row × column dot product", "1×3 + 2×4 = 11"),
+      P("Find the mean of 2, 4, 6, 8, 10.", "6", "Mean = sum ÷ count", "30 ÷ 5 = 6"),
+      P("A card is drawn from a full pack of 52. Find the probability it is an ace.", "1/13", "4 aces in a pack", "4/52 = 1/13"),
+      P("Find the minimum value of y = x² − 4x + 5.", "1", "Complete the square or use the vertex", "Vertex at x = 2 → y = 4 − 8 + 5 = 1"),
+      P("Find log₂ 32.", "5", "2⁵ = 32", "log₂ 32 = 5")
+    ],
+    applied_physics: [
+      P("A 2 kg body moving at 3 m/s is acted on by a 4 N force for 2 s. Find its final velocity.", "7 m/s", "v = u + at with a = F/m", "a = 4/2 = 2 → v = 3 + 2×2 = 7 m/s"),
+      P("A wheel completes 20 revolutions in 10 s. Find its frequency.", "2 rev/s", "Frequency = rev ÷ time", "20/10 = 2 rev/s (2 Hz)"),
+      P("A concave lens of focal length 20 cm forms an image of an object 30 cm away. Find the image distance (use sign convention).", "−12 cm", "1/f = 1/v − 1/u with f = −20, u = −30", "1/v = −1/20 − 1/30 = −5/60 → v = −12 cm"),
+      P("A 60 W bulb runs 5 h per day. Find its energy consumption in kWh for 30 days.", "9 kWh", "Energy = power × time", "60 × 5 × 30 / 1000 = 9 kWh"),
+      P("Find the equivalent resistance of 6 Ω and 3 Ω connected in parallel.", "2 Ω", "1/R = 1/R₁ + 1/R₂", "(6 × 3)/(6 + 3) = 2 Ω"),
+      P("Sound has a speed of 340 m/s and a frequency of 170 Hz. Find its wavelength.", "2 m", "v = fλ", "340/170 = 2 m"),
+      P("Find the centripetal force on a 1 kg body moving at 2 m/s in a circle of radius 1 m.", "4 N", "F = mv²/r", "1 × 4/1 = 4 N"),
+      P("A spring of spring constant 100 N/m is stretched by 0.2 m. Find the stored energy.", "2 J", "PE = ½kx²", "½ × 100 × 0.04 = 2 J"),
+      P("A charge of 2 C is moved through a potential difference of 5 V. Find the energy.", "10 J", "W = qV", "2 × 5 = 10 J"),
+      P("A person of mass 70 kg stands in a lift at rest. Find the force on the floor (g = 10 m/s²).", "700 N", "Weight = mg", "70 × 10 = 700 N")
+    ],
+    applied_chemistry: [
+      P("How many coulombs make up one Faraday of charge?", "96500 C", "1 F = 96500 C", "Faraday constant ≈ 96500 C/mol"),
+      P("What are the units of the rate constant k for a first-order reaction?", "s⁻¹", "k for first order has units of 1/time", "k = (1/t) ln(A₀/A) → s⁻¹"),
+      P("Find the pH of a 0.001 M NaOH solution.", "11", "pOH = −log[OH⁻]; pH = 14 − pOH", "pOH = 3 → pH = 11"),
+      P("For the reaction A ⇌ 2B, Kc = 0.8 and [B] = 0.4 M at equilibrium. Find [A].", "0.2 M", "Kc = [B]²/[A]", "[A] = 0.16/0.8 = 0.2 M"),
+      P("Combustion of 2 mol of H₂ releases 572 kJ. Find the heat released per mole.", "286 kJ/mol", "Divide by moles", "572/2 = 286 kJ/mol"),
+      P("The rate constant of a first-order reaction is 0.693 s⁻¹. Find its half-life.", "1 s", "t½ = 0.693/k", "0.693/0.693 = 1 s"),
+      P("Find the oxidation state of sulphur in H₂SO₄.", "+6", "Sum of oxidation states = 0", "2 + x − 8 = 0 → x = +6"),
+      P("How many litres of CO₂ at STP are obtained from 50 g of CaCO₃ (molar mass 100)?", "11.2 L", "Moles × 22.4", "0.5 mol → 0.5 × 22.4 = 11.2 L"),
+      P("0.5 mol of solute is dissolved in 250 mL of solution. Find the molarity.", "2 M", "Molarity = moles ÷ litres", "0.5/0.25 = 2 M"),
+      P("Find the normality of 0.1 M H₂SO₄.", "0.2 N", "Normality = Molarity × n-factor", "0.1 × 2 = 0.2 N")
+    ],
+    basic_engineering: [
+      P("A force of 1000 N acts on a rod of cross-section 50 mm². Find the stress.", "20 N/mm²", "Stress = F/A", "1000/50 = 20 N/mm²"),
+      P("A 2 m long rod stretches by 2 mm. Find the strain.", "0.001", "Strain = ΔL/L", "0.002/2 = 0.001"),
+      P("A material has a stress of 200 MPa and a strain of 0.001. Find Young's modulus.", "200 GPa", "E = stress/strain", "200 MPa/0.001 = 200,000 MPa = 200 GPa"),
+      P("Find the torque produced by a 50 N force applied at 0.4 m from the pivot.", "20 N·m", "Torque = F × r", "50 × 0.4 = 20 N·m"),
+      P("A shaft rotates at 600 rpm with a torque of 100 N·m. Find the power in watts (π ≈ 3.14).", "6283 W", "P = 2πNT/60", "2 × 3.14 × 600 × 100 / 60 = 6280 W"),
+      P("A machine has 4000 W output and 5000 W input. Find its efficiency.", "80%", "Efficiency = output/input × 100", "4000/5000 × 100 = 80%"),
+      P("A driver gear has 20 teeth and the driven gear has 60 teeth. Find the gear ratio.", "3:1", "Ratio = driven/driver teeth", "60/20 = 3 → 3:1"),
+      P("A 5 m steel wire (E = 200 GPa) carries a stress of 100 MPa. Find its elongation in mm.", "2.5 mm", "e = σL/E", "Strain = 100/200000 = 0.0005 → 5 × 0.0005 = 0.0025 m = 2.5 mm")
+    ],
+    drafting: [
+      P("On a 1:100 scale drawing, 1 cm on paper represents what in reality?", "1 m", "Scale = drawing/actual", "1 cm × 100 = 100 cm = 1 m"),
+      P("Which angle method of projection is standard for Indian engineering drawings?", "First angle projection", "IS standard", "India follows first-angle projection"),
+      P("In an isometric drawing, the receding axes are drawn at what angle to the horizontal?", "30°", "Isometric axes", "Axes are 30° from horizontal"),
+      P("What is the standard size of an A4 sheet in mm?", "210 × 297 mm", "ISO A-series", "A4 = 210 × 297 mm"),
+      P("Which line style is used to show hidden edges in an orthographic view?", "Dashed lines", "Hidden features", "Hidden outlines are drawn as short dashes"),
+      P("In first-angle projection, where is the top view placed relative to the front view?", "Below the front view", "Projection convention", "First angle: top view below the front view"),
+      P("A circle drawn on an isometric view appears as what shape?", "Ellipse", "Foreshortening", "Circles become ellipses in isometric"),
+      P("What is used to terminate a dimension line in a drawing?", "Arrowheads", "Dimensioning", "Arrowheads mark the extent of dimensions")
+    ],
+    basic_civil: [
+      P("What is the modular size of a standard Indian brick in mm?", "190 × 90 × 90 mm", "BIS standard brick", "Modular brick = 190 × 90 × 90 mm"),
+      P("Approximately how many bricks are used per cubic metre of brickwork?", "About 500", "With 10 mm mortar joints", "≈ 500 bricks per m³"),
+      P("What is the nominal mix proportion of M20 grade concrete?", "1 : 1.5 : 3", "Cement : sand : aggregate", "M20 = 1 : 1.5 : 3"),
+      P("What does RCC stand for?", "Reinforced Cement Concrete", "Concrete with steel", "RCC = Reinforced Cement Concrete"),
+      P("Each course of brickwork is 200 mm high. How many courses are in a 1 m wall?", "5 courses", "Divide height by course height", "1000/200 = 5"),
+      P("A plot is 30 m × 20 m with a built-up area of 20 m × 15 m. Find the Floor Space Index.", "0.5", "FSI = built-up ÷ plot area", "300/600 = 0.5"),
+      P("Find the volume of earthwork for a pit 10 m × 8 m × 2 m.", "160 m³", "Volume = l × b × h", "10 × 8 × 2 = 160 m³"),
+      P("What is the ideal water–cement ratio range for durable concrete?", "About 0.45 to 0.60", "Lower gives stronger concrete", "W/C ratio ≈ 0.5 for most works")
+    ],
+    electronics_instrumentation: [
+      P("A resistor has colour bands brown, black, red. Find its value.", "1 kΩ", "Brown=1, Black=0, Red=×100", "10 × 100 = 1000 Ω = 1 kΩ"),
+      P("A 9 V battery drives a 3 kΩ resistor. Find the current.", "3 mA", "I = V/R", "9/3000 = 0.003 A = 3 mA"),
+      P("Find the power dissipated in a 5 Ω resistor carrying 2 A.", "20 W", "P = I²R", "4 × 5 = 20 W"),
+      P("Two 10 kΩ resistors in series are across 12 V. Find the voltage across one resistor.", "6 V", "Equal division in series", "12/2 = 6 V"),
+      P("An amplifier has output 10 W and input 1 W. Find the gain in dB.", "10 dB", "Gain = 10 log₁₀(Po/Pi)", "10 log₁₀(10) = 10 dB"),
+      P("An LED (2 V drop) is fed from 5 V through a 150 Ω resistor. Find the current.", "20 mA", "I = (V − Vled)/R", "(5 − 2)/150 = 0.02 A = 20 mA"),
+      P("How is an ammeter connected in a circuit?", "In series", "Measures current", "Ammeters connect in series with the load"),
+      P("What is the frequency of the mains AC supply in India?", "50 Hz", "Standard supply", "India uses 50 Hz AC")
+    ],
+    computer_engineering: [
+      P("Convert the decimal number 25 to binary.", "11001", "Repeated division by 2", "25 = 11001₂"),
+      P("Convert the decimal number 255 to hexadecimal.", "FF", "255 = 15×16 + 15", "255₁₀ = FF₁₆"),
+      P("Convert the binary number 1101 to decimal.", "13", "Place values 8,4,2,1", "8+4+0+1 = 13"),
+      P("How many megabytes are in 1 GB?", "1024 MB", "Memory units in powers of 2", "1 GB = 1024 MB"),
+      P("What is the output of an AND gate with inputs 1 and 0?", "0", "AND is 1 only if all inputs are 1", "1 AND 0 = 0"),
+      P("What is the output of an OR gate with inputs 0 and 1?", "1", "OR is 1 if any input is 1", "0 OR 1 = 1"),
+      P("How many bits make one nibble?", "4 bits", "Half a byte", "1 nibble = 4 bits"),
+      P("What is the ASCII code of the capital letter A?", "65", "ASCII table", "'A' = 65")
+    ],
+    industrial_chemistry: [
+      P("A reaction gives 80 g actual product against a theoretical 100 g. Find the percent yield.", "80%", "% yield = actual/theoretical × 100", "80/100 × 100 = 80%"),
+      P("A 40 g sample contains 36 g of pure substance. Find the purity.", "90%", "Purity = pure mass/total × 100", "36/40 × 100 = 90%"),
+      P("20 g of salt is dissolved in 80 g of water. Find the concentration in % w/w.", "20% w/w", "% w/w = solute/solution × 100", "20/100 × 100 = 20%"),
+      P("For 2H₂ + O₂ → 2H₂O, how many grams of O₂ react with 4 g of H₂?", "32 g", "4 g H₂ = 2 mol → needs 1 mol O₂ = 32 g", "2 mol H₂ uses 1 mol O₂ (32 g)"),
+      P("100 mL of 5 M acid is diluted until its molarity is 1 M. Find the final volume.", "500 mL", "M₁V₁ = M₂V₂", "5 × 100 = 1 × V → V = 500 mL"),
+      P("0.1 mol of solute is dissolved in 200 g of solvent. Find the molality.", "0.5 m", "Molality = moles ÷ kg solvent", "0.1/0.2 = 0.5 m"),
+      P("Find the normality of a 0.1 M HCl solution.", "0.1 N", "HCl has n-factor 1", "N = M × 1 = 0.1 N"),
+      P("10 g of a substance is dissolved to make 500 mL of solution. Find the concentration in % w/v.", "2% w/v", "% w/v = g solute ÷ mL × 100", "10/500 × 100 = 2%")
+    ],
+    electrical_electronics: [
+      P("An appliance draws 2 A at 220 V. Find its power.", "440 W", "P = VI", "220 × 2 = 440 W"),
+      P("Three 4 Ω resistors are connected in series. Find the total resistance.", "12 Ω", "Series: R = R₁+R₂+R₃", "4+4+4 = 12 Ω"),
+      P("Two 2 Ω resistors are connected in parallel. Find the total resistance.", "1 Ω", "Parallel equal resistors: R/n", "2/2 = 1 Ω"),
+      P("A 1000 W heater runs for 1 hour. Find the energy in kWh.", "1 kWh", "Energy = kW × h", "1 kW × 1 h = 1 kWh"),
+      P("A transformer has 1000 primary turns and 500 secondary turns at 230 V. Find the secondary voltage.", "115 V", "Vs/Vp = Ns/Np", "230 × 500/1000 = 115 V"),
+      P("A 2400 W appliance is used on a 240 V supply. Find the fuse rating in amperes.", "10 A", "Fuse ≥ current = P/V", "2400/240 = 10 A"),
+      P("Find the cost of 3 units of electricity at Rs. 8 per unit.", "Rs. 24", "Cost = units × rate", "3 × 8 = Rs. 24"),
+      P("1 HP equals how many watts?", "746 W", "Mechanical horsepower", "1 HP = 746 W")
+    ],
+    mechanical_engineering: [
+      P("A 10 kN load is applied on a bar of 100 mm² area. Find the stress.", "100 MPa", "Stress = F/A", "10,000 N / 100 mm² = 100 MPa"),
+      P("A 1 m long bar elongates by 1.5 mm. Find the strain.", "0.0015", "Strain = ΔL/L", "0.0015/1 = 0.0015"),
+      P("Find the torque from a 40 N force acting at 0.25 m from the axis.", "10 N·m", "T = F × r", "40 × 0.25 = 10 N·m"),
+      P("A pinion with 40 teeth drives a gear with 20 teeth. Find the gear ratio.", "2:1", "Ratio = driver/driven", "40/20 = 2 → 2:1"),
+      P("A motor has 7 kW output for 8 kW input. Find the efficiency.", "87.5%", "η = output/input × 100", "7/8 × 100 = 87.5%"),
+      P("A shaft runs at 1200 rpm with 50 N·m torque. Find the power in kW (π ≈ 3.14).", "6.28 kW", "P = 2πNT/60", "2 × 3.14 × 1200 × 50/60 = 6280 W"),
+      P("A belt drive has a 150 mm driver pulley and 300 mm driven pulley. The driver runs at 1000 rpm. Find the driven speed.", "500 rpm", "N₁D₁ = N₂D₂", "1000 × 150/300 = 500 rpm"),
+      P("Find the heat needed to raise 2 kg of water by 10 °C (c = 4200 J/kg·°C).", "84000 J", "Q = mcΔT", "2 × 4200 × 10 = 84,000 J")
+    ],
+    surveying_hydrology: [
+      P("A 30 m chain is used to measure 150 m. How many full chain lengths is this?", "5", "Divide distance by chain length", "150/30 = 5 chains"),
+      P("What is the vertical distance between two successive contours called?", "Contour interval", "Maps show elevation", "Contour interval is fixed for a map"),
+      P("What is the standard length of Gunter's chain?", "66 feet (20.12 m)", "Surveying chain", "Gunter's chain = 66 ft"),
+      P("With a backsight of 1.5 m and a benchmark of 100 m, the foresight is 1.2 m. Find the reduced level.", "100.3 m", "RL = HI − FS; HI = BM + BS", "HI = 101.5 → RL = 101.5 − 1.2 = 100.3 m"),
+      P("Rainfall of 100 mm falls on 1 km² with a runoff coefficient of 0.3. Find the runoff volume.", "30000 m³", "Runoff depth × area", "0.03 m × 1,000,000 = 30,000 m³"),
+      P("A stream has a cross-section area of 2 m² and flows at 1.5 m/s. Find the discharge.", "3 m³/s", "Q = A × V", "2 × 1.5 = 3 m³/s"),
+      P("A road drops 5 m over a length of 200 m. Express the gradient.", "1 in 40", "Gradient = fall/run", "5/200 = 1 in 40"),
+      P("The line of sight through a dumpy level is kept ______.", "Horizontal", "Level line", "The telescope gives a horizontal line of sight")
+    ],
+    soil_erosion_conservation: [
+      P("Using USLE, soil loss = R × K × LS × C × P. With R = 100, K = 0.2, LS = 1, C = 0.5, P = 1, find the loss.", "10 t/ha/yr", "Multiply all factors", "100 × 0.2 × 1 × 0.5 × 1 = 10"),
+      P("What is the most suitable soil conservation measure on steep slopes?", "Terracing / contour bunding", "Reduce slope length", "Terraces and bunds control runoff on slopes"),
+      P("A slope rises 4 m over a horizontal run of 50 m. Find the slope percent.", "8%", "% slope = rise/run × 100", "4/50 × 100 = 8%"),
+      P("Small channels 2–5 cm deep formed by runoff are called ______.", "Rills", "Erosion forms", "Rills are the first channels formed by erosion"),
+      P("Using USLE with R = 80, K = 0.3, LS = 0.5, C = 0.2, P = 1, find the soil loss.", "2.4 t/ha/yr", "Multiply factors", "80 × 0.3 × 0.5 × 0.2 × 1 = 2.4"),
+      P("Contour farming is practised along the ______ of the slope.", "Contours", "Lines of equal elevation", "Tillage is done across the contours, not up and down"),
+      P("Mulching is mainly used to control which type of erosion?", "Water (and wind) erosion", "Protects the soil surface", "Mulch covers the soil and reduces splash erosion"),
+      P("In which region is wind erosion most severe?", "Arid and semi-arid regions", "Dry exposed soil", "Dry, bare soil in arid areas blows away easily")
+    ],
+    watershed_development: [
+      P("Using Q = C i A, find the discharge for C = 0.5, i = 50 mm/h and A = 2 km².", "13.9 m³/s", "Convert i to m/s and A to m²", "Q = 0.5 × (0.05/3600) × 2×10⁶ = 13.9 m³/s"),
+      P("A reservoir is 100 m × 50 m × 2 m deep. Find its storage volume.", "10000 m³", "V = l × b × h", "100 × 50 × 2 = 10,000 m³"),
+      P("A 10 km² watershed receives 600 mm rain with a 0.25 runoff coefficient. Find the annual runoff volume.", "1.5 million m³", "Runoff depth × area", "0.15 m × 10×10⁶ = 1.5×10⁶ m³"),
+      P("The chief purpose of watershed development is ______.", "Water and soil conservation", "Integrated management", "Watersheds conserve water, soil and vegetation"),
+      P("The downward movement of water into the soil is called ______.", "Infiltration / percolation", "Water entry", "Water seeps down through the soil profile"),
+      P("With a runoff coefficient of 0.6 and rainfall of 800 mm on 5 km², find the runoff volume.", "2.4 million m³", "0.8 m × 0.6 × area", "0.48 × 5×10⁶ = 2.4×10⁶ m³"),
+      P("Compared with flood irrigation, drip irrigation saves about what percent of water?", "40–70%", "Efficient application", "Drip systems commonly save 40–70% water"),
+      P("A gully is a channel that is deeper than ______.", "0.3 m", "Channel classification", "Channels deeper than 0.3 m are called gullies")
+    ],
+    irrigation_drainage: [
+      P("1 cumec of water irrigates 180 ha. Find the duty.", "180 ha/cumec", "Duty = area per unit discharge", "Duty = 180 ha/cumec"),
+      P("A crop needs 10 cm of water per irrigation and receives 8 irrigations. Find the total delta.", "80 cm", "Delta = depth per irrigation × number", "10 × 8 = 80 cm = 0.8 m"),
+      P("Water requirement is 600 mm with an application efficiency of 60%. Find the gross water requirement.", "1000 mm", "Gross = net ÷ efficiency", "600/0.6 = 1000 mm"),
+      P("A canal has an area of 0.5 m² and a velocity of 1 m/s. Find the discharge.", "0.5 m³/s", "Q = A × V", "0.5 × 1 = 0.5 m³/s"),
+      P("Pan evaporation is 5 mm/day and irrigation depth is 50 mm. Find the irrigation interval.", "10 days", "Interval = depth ÷ evaporation", "50/5 = 10 days"),
+      P("100 m³ of water is applied to 1 ha. Find the depth of water in mm.", "10 mm", "Depth = volume ÷ area", "100/10000 = 0.01 m = 10 mm"),
+      P("Conveyance efficiency is 80% and field efficiency 75%. Find the overall efficiency.", "60%", "Multiply the efficiencies", "0.8 × 0.75 = 0.6 = 60%"),
+      P("The depth of water required by a crop during its entire base period is called ______.", "Delta", "Crop water need", "Delta is the total water depth over the base period")
+    ],
+    farm_irrigation_structures: [
+      P("A rectangular weir has L = 1 m and head H = 0.25 m. Using Q = 1.84 L H^1.5, find the discharge.", "0.23 m³/s", "H^1.5 = 0.125", "1.84 × 1 × 0.125 = 0.23 m³/s"),
+      P("A canal must supply 0.5 m³/s net with 20% conveyance loss. Find the required gross capacity.", "0.625 m³/s", "Gross = net ÷ (1 − loss)", "0.5/0.8 = 0.625 m³/s"),
+      P("When is a drop structure provided in a canal?", "When ground slope is steeper than the canal bed slope", "Prevents erosion", "Drops dissipate excess energy on steep slopes"),
+      P("What is the standard angle of a V-notch weir?", "90°", "Common notch shape", "90° V-notch is the most common"),
+      P("A sluice gate is used to control flow in a ______.", "Canal", "Flow control", "Sluice gates regulate water in canals"),
+      P("A rectangular weir has L = 2 m and head H = 0.16 m. Find the discharge (Q = 1.84 L H^1.5).", "0.24 m³/s", "H^1.5 = 0.064", "1.84 × 2 × 0.064 = 0.235 ≈ 0.24 m³/s"),
+      P("Which simple structure is most commonly used to measure water flow?", "Weir", "Discharge measurement", "Weirs are simple and reliable flow meters"),
+      P("A culvert is built to carry water ______.", "Under a road", "Cross drainage", "Culverts pass water beneath roads")
+    ],
+    farm_power: [
+      P("An engine has a 100 mm bore, 120 mm stroke and 4 cylinders. Find the swept volume in litres (π ≈ 3.14).", "3.77 L", "V = (π/4)d² × stroke × n", "0.785 × 0.01 × 0.12 × 4 = 0.00377 m³ ≈ 3.77 L"),
+      P("Convert 1 mechanical horsepower to watts.", "746 W", "HP unit", "1 HP = 746 W"),
+      P("Convert 40 HP tractor power to kilowatts.", "29.8 kW", "Multiply by 0.746", "40 × 0.746 = 29.8 kW"),
+      P("A tractor consumes 5 L of fuel per hour for 8 hours. Find the total fuel.", "40 L", "Rate × time", "5 × 8 = 40 L"),
+      P("A tractor has 30 kW brake power and 40 kW indicated power. Find the mechanical efficiency.", "75%", "η = BP/IP × 100", "30/40 × 100 = 75%"),
+      P("A pulley of 300 mm diameter runs at 1000 rpm. Find the belt speed in m/s (π ≈ 3.14).", "15.7 m/s", "v = πDN/60", "3.14 × 0.3 × 1000/60 = 15.7 m/s"),
+      P("In how many crankshaft revolutions is the cycle of a 4-stroke engine completed?", "2", "Four-stroke cycle", "One cycle = 2 revolutions"),
+      P("What is the standard PTO speed of most tractors in rpm?", "540 rpm", "Power take-off", "Standard PTO speed is 540 rpm")
+    ],
+    farm_machinery: [
+      P("A machine has 1 m effective width, runs at 4 km/h with 80% field efficiency. Find its field capacity.", "0.32 ha/h", "C = (w × s × e)/10", "(1 × 4 × 0.8)/10 = 0.32 ha/h"),
+      P("Seed rate is 5 kg/ha. Find the seed needed for 10 ha.", "50 kg", "Rate × area", "5 × 10 = 50 kg"),
+      P("Find the theoretical field capacity of a 1.5 m wide machine at 6 km/h.", "0.9 ha/h", "C = (w × s)/10", "(1.5 × 6)/10 = 0.9 ha/h"),
+      P("A machine cultivates at 0.25 ha/h. Find the time to cultivate 10 ha.", "40 h", "Time = area ÷ capacity", "10/0.25 = 40 h"),
+      P("A combine harvester performs which two operations together?", "Harvesting and threshing", "Combined operation", "Combine = harvest + thresh"),
+      P("Spraying rate is 10 L/ha for 5 ha. Find the total spray solution.", "50 L", "Rate × area", "10 × 5 = 50 L"),
+      P("Rows are spaced 45 cm and seeds 20 cm apart. Find the plant population per m².", "About 11", "1 ÷ (row × plant spacing)", "1/(0.45 × 0.2) ≈ 11 plants/m²"),
+      P("Which is the most widely used tractor-drawn implement for primary tillage?", "Mouldboard plough", "Primary tillage", "The mouldboard plough is the standard primary tillage tool")
+    ],
+    food_unit_operations: [
+      P("A sample weighs 100 g fresh and 80 g dry. Find its moisture content (wet basis).", "20%", "MC = (fresh − dry)/fresh × 100", "(100 − 80)/100 × 100 = 20%"),
+      P("100 kg of material at 25% moisture is dried to 10% moisture. Find the water removed.", "16.7 kg", "Dry solids stay constant", "Dry = 75 kg → final mass = 75/0.9 = 83.3 → removed 16.7 kg"),
+      P("Find the heat needed to raise 10 kg of water from 20 °C to 80 °C (c = 4.18 kJ/kg·°C).", "2508 kJ", "Q = mcΔT", "10 × 4.18 × 60 = 2508 kJ"),
+      P("What is the HTST pasteurisation condition for milk?", "72 °C for 15 s", "High temperature short time", "Milk is pasteurised at 72 °C for 15 s"),
+      P("What is the specific heat of water?", "4.18 kJ/kg·°C", "Thermal property", "c of water ≈ 4.18 kJ/kg·°C"),
+      P("What is the standard storage temperature for frozen food in a cold store?", "−18 °C", "Frozen storage", "Frozen foods are stored at −18 °C"),
+      P("100 kg of 10% juice is concentrated to 25% solids. Find the water removed.", "60 kg", "Solids remain constant", "Solids = 10 kg → final = 10/0.25 = 40 kg → removed 60 kg"),
+      P("The removal of water from a solid by heat is called ______.", "Drying", "Dehydration", "Drying removes moisture by evaporation")
+    ],
+    crop_process_engineering: [
+      P("100 kg of paddy gives 70 kg of rice. Find the milling yield.", "70%", "Yield = rice/paddy × 100", "70/100 × 100 = 70%"),
+      P("A godown 10 m × 8 m × 3 m stores paddy at 600 kg/m³. Find the storage capacity in tonnes.", "144 tonnes", "Volume × bulk density", "240 × 600 = 144,000 kg = 144 t"),
+      P("What is the safe moisture content for storing paddy?", "About 14%", "Safe storage MC", "Paddy stores well at ~14% moisture"),
+      P("What is the main purpose of parboiling paddy?", "Improves milling yield and nutrition", "Steam treatment", "Parboiling hardens the grain and improves milling"),
+      P("1000 kg of paddy at 20% moisture is dried to 14%. Find the water removed.", "70 kg", "Dry matter constant", "Dry = 800 kg → final = 800/0.86 = 930 → removed ≈ 70 kg"),
+      P("The percent of grain recovered by a thresher is called ______.", "Threshing efficiency", "Machine performance", "Threshing efficiency measures grain recovery"),
+      P("Grain is separated from chaff using air flow in a process called ______.", "Winnowing", "Separation", "Winnowing uses air to separate chaff"),
+      P("A bucket elevator is used to ______.", "Lift grain vertically", "Material handling", "Bucket elevators raise grain to storage height")
+    ],
+    renewable_bioenergy: [
+      P("What is the approximate calorific value of biogas?", "About 5000 kcal/m³", "≈ 20 MJ/m³", "Biogas has a calorific value of about 20 MJ/m³"),
+      P("What is the main combustible component of biogas?", "Methane (CH₄)", "About 55–60%", "Methane is the burning component of biogas"),
+      P("A 300 W solar panel receives 5 peak sun hours. Find its daily energy output.", "1.5 kWh", "Energy = W × hours", "0.3 kW × 5 = 1.5 kWh"),
+      P("The power available in wind is proportional to the ______ of wind speed.", "Cube", "Wind energy", "P ∝ v³"),
+      P("A bio-digester charges 50 kg of cattle dung per day. If gas yield is 0.04 m³/kg, find the daily gas.", "2 m³/day", "Dung × yield", "50 × 0.04 = 2 m³/day"),
+      P("Solar panels convert sunlight directly into ______.", "Electricity", "Photovoltaic effect", "PV panels generate DC electricity from sunlight"),
+      P("What is the most abundant renewable energy source on Earth?", "Solar energy", "Source of all weather", "Solar energy is the largest renewable source"),
+      P("The gas produced by anaerobic digestion of organic waste in a biogas plant is ______.", "Biogas (methane + CO₂)", "Anaerobic digestion", "Biogas is mainly methane with carbon dioxide")
+    ]
+  };
+
   function loadState() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(defaultState)); }
     catch(e) { return JSON.parse(JSON.stringify(defaultState)); }
@@ -8683,7 +8959,9 @@
   }
 
   function getPolyQuestion(subject) {
-    var bank = POLY_Q[subject];
+    var easy = POLY_Q[subject] || [];
+    var hard = POLY_HARD[subject] || [];
+    var bank = (hard.length > 0 && Math.random() < 0.5) ? hard : easy.concat(hard);
     if (!bank || bank.length === 0) return null;
     for (var t = 0; t < 40; t++) {
       var q = pick(bank);
@@ -9477,7 +9755,7 @@
         "<div style='font-size:2em;margin-bottom:4px'>🏫</div>" +
         "<h1 style='margin:0 0 2px;color:#fafafa;font-size:1.4em;font-weight:800;background:linear-gradient(135deg,#fbbf24,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent'>Polytechnic · First Year</h1>" +
         "<div style='color:#a1a1aa;font-size:.78em'>Diploma engineering curriculum · 26 subjects</div>" +
-        "<div style='margin-top:10px;color:#52525b;font-size:.72em'>Tap any subject to start an unlimited flashcard session</div>" +
+        "<div style='margin-top:10px;color:#52525b;font-size:.72em'>Tap any subject to start an unlimited session — basics + numerical/application problems</div>" +
         "<div style='margin-top:12px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap'>" +
         "<span style='padding:5px 12px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.12);border-radius:100px;color:#fbbf24;font-size:.72em;font-weight:600'>🏅 " + rank.name + "</span>" +
         "<span style='padding:5px 12px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.1);border-radius:100px;color:#fbbf24;font-size:.72em;font-weight:600'>⭐ " + state.totalPoints + " pts</span>" +
