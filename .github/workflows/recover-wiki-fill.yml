@@ -43,11 +43,15 @@ jobs:
       # responses can't sink the batch) and unzips+deletes each archive as it
       # lands, keeping the 14 GB runner out of disk trouble (run #441).
       - name: Download chunk outputs from run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           chmod +x scripts/download-run-artifacts.sh
           bash scripts/download-run-artifacts.sh "${{ inputs.run-id || github.run_id }}" '^chunk-[0-9]+$' chunk-src
 
       - name: Download baseline data from run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           bash scripts/download-run-artifacts.sh "${{ inputs.run-id || github.run_id }}" '^baseline$' baseline
 

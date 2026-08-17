@@ -165,11 +165,15 @@ jobs:
       # when every chunk failed (merge-chunks.js no-ops cleanly).
       - name: Download chunk outputs (single copy, retrying)
         continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           chmod +x scripts/download-run-artifacts.sh
           bash scripts/download-run-artifacts.sh "${{ github.run_id }}" '^chunk-[0-9]+$' chunk-src
 
       - name: Download baseline data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           bash scripts/download-run-artifacts.sh "${{ github.run_id }}" '^baseline$' baseline
 
