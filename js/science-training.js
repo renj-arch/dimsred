@@ -49,6 +49,10 @@
   function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
   function pick(arr) { return arr[rand(0, arr.length - 1)]; }
   function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = rand(0, i); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function r1(x) { return Math.round(x * 10) / 10; }
+  function r2(x) { return Math.round(x * 100) / 100; }
+  function r3(x) { return Math.round(x * 1000) / 1000; }
+  function G(q, a, h, s) { return { q: q, a: a, hint: h, solution: s }; }
 
   var RANKS = [
     { name: 'Bronze Brains', minPoints: 0, icon: '🥉' },
@@ -1936,6 +1940,214 @@
       P("Solar panels convert sunlight directly into ______.", "Electricity", "Photovoltaic effect", "PV panels generate DC electricity from sunlight"),
       P("What is the most abundant renewable energy source on Earth?", "Solar energy", "Source of all weather", "Solar energy is the largest renewable source"),
       P("The gas produced by anaerobic digestion of organic waste in a biogas plant is ______.", "Biogas (methane + CO₂)", "Anaerobic digestion", "Biogas is mainly methane with carbon dioxide")
+    ]
+  };
+
+  // Procedural generators: randomized numerical / application questions for the polytechnic bank
+  var POLY_GENERATORS = {
+    basic_math: [
+      function () { var a = rand(1, 6), x = rand(2, 12), b = rand(1, 25), c = a * x + b; return G("Solve for x: " + a + "x + " + b + " = " + c, "" + x + "", "Isolate x: x = (c − b) ÷ a", a + "x = " + c + " − " + b + " = " + (c - b) + " → x = " + x); },
+      function () { var r1r = rand(2, 7), r2r = rand(2, 7); while (r2r === r1r) r2r = rand(2, 7); var p = r1r + r2r, qr = r1r * r2r; return G("Solve for x: x² − " + p + "x + " + qr + " = 0. Write both roots.", "x = " + r1r + " and x = " + r2r, "Factorise: (x − a)(x − b)", "x² − " + p + "x + " + qr + " = (x − " + r1r + ")(x − " + r2r + ") = 0 → x = " + r1r + ", " + r2r); },
+      function () { var a = rand(1, 5), d = rand(2, 6), n = rand(8, 20); var S = n / 2 * (2 * a + (n - 1) * d); return G("Find the sum of the first " + n + " terms of the AP: " + a + ", " + (a + d) + ", " + (a + 2 * d) + ", …", "" + S + "", "Sₙ = n/2 [2a + (n−1)d]", "S = " + n + "/2 × [" + (2 * a) + " + " + (n - 1) + "×" + d + "] = " + S); },
+      function () { var s = pick([40, 50, 60, 80]), t = rand(2, 8); var d = s * t; return G("A vehicle travels at " + s + " km/h for " + t + " h. Find the distance covered.", "" + d + " km", "Distance = speed × time", "d = " + s + " × " + t + " = " + d + " km"); },
+      function () { var w1 = rand(5, 12), d1 = rand(4, 12); var total = w1 * d1; var f = pick([2, 3, 4]); var w2 = w1 * f; while (total % w2 !== 0) { d1 = rand(4, 12); total = w1 * d1; } var d2 = total / w2; return G(w1 + " workers can build a wall in " + d1 + " days. How many days will " + w2 + " workers take?", "" + d2 + " days", "Inverse proportion: total work is fixed", "Total = " + w1 + " × " + d1 + " = " + total + " worker-days → " + total + "/" + w2 + " = " + d2 + " days"); },
+      function () { var m = pick([25, 50, 100, 20, 40]), dd = pick([10, 20, 25]); var sp = (100 + m) * (100 - dd) / 100; var pr = r2(sp - 100); return G("A shopkeeper marks goods " + m + "% above cost and then allows a " + dd + "% discount. What is his profit percent?", "" + pr + "%", "SP = MP × (1 − discount)", "CP = 100 → MP = " + (100 + m) + " → SP = " + (100 + m) + " × " + ((100 - dd) / 100) + " = " + r2(sp) + " → profit = " + pr + "%"); },
+      function () { var P = 1000 * rand(2, 9); var r = 10, n = 2; var A = P * 1.21, CI = r2(A - P); return G("Find the compound interest on Rs. " + P + " at " + r + "% p.a. for " + n + " years, compounded annually.", "Rs. " + CI + "", "CI = P(1 + r/100)ⁿ − P", "Amount = " + P + " × 1.1² = " + A + " → CI = " + A + " − " + P + " = Rs. " + CI); },
+      function () { var r = pick([7, 14, 21]), h = rand(3, 12); var V = (22 / 7) * r * r * h; return G("Find the volume of a cylinder of radius " + r + " cm and height " + h + " cm (π = 22/7).", "" + V + " cm³", "V = πr²h", "V = (22/7) × " + r + "² × " + h + " = " + V + " cm³"); },
+      function () { var m = rand(1, 5); var v = m * 0.3010; return G("If log₁₀ 2 = 0.3010, find log₁₀ " + Math.pow(2, m) + ".", "" + v.toFixed(4) + "", "log aᵐ = m log a", "log₁₀ " + Math.pow(2, m) + " = " + m + " × 0.3010 = " + v.toFixed(4)); },
+      function () { var sum = pick([5, 6, 7, 8, 9]); var fav = [0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1][sum]; return G("Two dice are thrown together. Find the probability of getting a total of " + sum + ".", "" + fav + "/36", "P = favourable outcomes ÷ total outcomes", "Total 36 outcomes; " + fav + " give sum " + sum + " → " + fav + "/36"); },
+      function () { var c = 4 * rand(1, 15), d = 5 * rand(1, 6); var r = 3 / 4 * c - 2 / 5 * d; return G("Simplify: (3/4 of " + c + ") − (2/5 of " + d + ").", "" + r + "", "Do the fractions first", (3 / 4) + " of " + c + " = " + (3 / 4 * c) + "; (2/5) of " + d + " = " + (2 / 5 * d) + " → " + (3 / 4 * c) + " − " + (2 / 5 * d) + " = " + r); }
+    ],
+    basic_physics: [
+      function () { var m = rand(2, 10), a = rand(2, 9); return G("A force acts on a body of mass " + m + " kg to give an acceleration of " + a + " m/s². Find the force.", "" + (m * a) + " N", "F = ma", "F = " + m + " × " + a + " = " + (m * a) + " N"); },
+      function () { var m = rand(2, 20), h = rand(1, 8); return G("Calculate the work done in lifting a " + m + " kg box to a height of " + h + " m (g = 10 m/s²).", "" + (m * 10 * h) + " J", "W = mgh", "W = " + m + " × 10 × " + h + " = " + (m * 10 * h) + " J"); },
+      function () { var m = pick([1000, 2000, 5000, 8000]), v = pick([2, 4, 5, 10, 20]); return G("A body of mass " + m + " kg moves at " + v + " m/s. Find its kinetic energy.", "" + (0.5 * m * v * v) + " J", "KE = ½mv²", "KE = ½ × " + m + " × " + v + "² = " + (0.5 * m * v * v) + " J"); },
+      function () { var W = 1000 * rand(1, 9), t = rand(2, 10); return G("A machine does " + W + " J of work in " + t + " s. Find its power.", "" + (W / t) + " W", "P = W/t", "P = " + W + "/" + t + " = " + (W / t) + " W"); },
+      function () { var m = rand(2, 10), p = rand(4, 30); return G("A " + m + " kg body has a momentum of " + p + " kg·m/s. Find its velocity.", "" + (p / m) + " m/s", "p = mv", "v = " + p + "/" + m + " = " + (p / m) + " m/s"); },
+      function () { var V = rand(3, 48), R = pick([2, 3, 4, 6, 8, 12]); return G("Find the current through a " + R + " Ω resistor connected to a " + V + " V source.", "" + (V / R) + " A", "Ohm's law: V = IR", "I = " + V + "/" + R + " = " + (V / R) + " A"); },
+      function () { var m = pick([100, 200, 400, 600, 900]), V = rand(10, 100); return G("A body of mass " + m + " g has a volume of " + V + " cm³. Find its density.", "" + (m / V) + " g/cm³", "density = mass ÷ volume", "" + m + "/" + V + " = " + (m / V) + " g/cm³"); },
+      function () { var F = 100 * rand(1, 8), A = pick([1, 2, 4, 5]); return G("A " + F + " N force acts on an area of " + A + " m². Find the pressure.", "" + (F / A) + " Pa", "P = F/A", F + "/" + A + " = " + (F / A) + " Pa"); },
+      function () { var a = rand(2, 6), t = rand(2, 6); return G("A train starts from rest and accelerates at " + a + " m/s². Find the distance covered in " + t + " s.", "" + (0.5 * a * t * t) + " m", "s = ½at²", "s = ½ × " + a + " × " + t + "² = " + (0.5 * a * t * t) + " m"); },
+      function () { var h = pick([5, 10, 15, 20, 25]); var u = Math.sqrt(2 * 10 * h); return G("A ball thrown vertically up reaches a maximum height of " + h + " m. Find its initial velocity (g = 10 m/s²).", "" + u + " m/s", "v² = 2gh at maximum height", "u² = 2 × 10 × " + h + " = " + (20 * h) + " → u = " + u + " m/s"); }
+    ],
+    basic_chemistry: [
+      function () { var mm = pick([98, 40, 58.5, 100, 44, 18]); var n = rand(1, 5); return G("Calculate the mass of " + n + " mol of a substance with molar mass " + mm + " g/mol.", "" + (n * mm) + " g", "Mass = moles × molar mass", "m = " + n + " × " + mm + " = " + (n * mm) + " g"); },
+      function () { var mm = pick([44, 18, 40, 98, 100]); var m = mm * rand(1, 4); return G("How many moles are present in " + m + " g of a substance with molar mass " + mm + " g/mol?", "" + (m / mm) + " moles", "Moles = mass ÷ molar mass", "" + m + "/" + mm + " = " + (m / mm) + " mol"); },
+      function () { var n = rand(1, 4); var pc = r2(Math.pow(10, -n)); return G("Find the pH of a " + (pc) + " M HCl solution.", "" + n + "", "pH = −log[H⁺]", "pH = −log(10⁻" + n + ") = " + n); },
+      function () { var n = rand(1, 3); return G("What volume does " + n + " mol of any gas occupy at STP?", "" + (n * 22.4) + " L", "1 mol occupies 22.4 L at STP", "" + n + " × 22.4 = " + (n * 22.4) + " L"); },
+      function () { var MM = 58.5, n = rand(1, 5); return G("Find the mass of " + (n / 2) + " mol of NaCl (molar mass 58.5).", "" + (n / 2 * MM) + " g", "Molar mass of NaCl = 58.5", (n / 2) + " × 58.5 = " + (n / 2 * MM) + " g"); },
+      function () { var m = rand(1, 5); return G("A 250 mL solution contains " + m + " g of NaOH (molar mass 40). Find its molarity.", "" + (m / 40 / 0.25) + " M", "Molarity = moles ÷ litres", "Moles = " + m + "/40 = " + (m / 40) + " → M = " + (m / 40) + "/0.25 = " + (m / 40 / 0.25) + " M"); }
+    ],
+    basic_workshop: [
+      function () { var d = pick([10, 12, 14, 16, 20]), p = pick([1.5, 1.75, 2, 2.5, 3]); return G("Find the tap drill size for an M" + d + " × " + p + " internal thread.", "" + (d - p) + " mm", "Tap drill ≈ major diameter − pitch", d + " − " + p + " = " + (d - p) + " mm"); },
+      function () { var vsd = pick([10, 20, 25, 50, 100]); return G("A vernier caliper has a main scale of 1 mm and " + vsd + " vernier divisions. Find its least count.", "" + (1 / vsd) + " mm", "LC = main scale ÷ vernier divisions", "1/" + vsd + " = " + (1 / vsd) + " mm"); },
+      function () { var b = pick([6, 8, 10, 12, 16]); return G("A " + b + " mm hole is to be finished by reaming. What drill size is used before reaming?", "" + r1(b - 0.1) + " mm", "Drill slightly smaller than reamed size", "Drill ≈ " + b + " − 0.1 = " + r1(b - 0.1) + " mm"); },
+      function () { var p = pick([0.5, 0.75, 1, 1.25, 1.5, 2]); return G("In the screw designation M" + (rand(6, 24)) + " × " + p + ", what does " + p + " represent?", "Thread pitch in mm", "Pitch = distance between threads", "M… × " + p + " means the thread pitch is " + p + " mm"); }
+    ],
+    digital_workplace: [
+      function () { var g = rand(1, 16); return G("Convert " + g + " GB to megabytes.", "" + (g * 1024) + " MB", "1 GB = 1024 MB", g + " × 1024 = " + (g * 1024) + " MB"); },
+      function () { var a = rand(1, 20), b = rand(1, 20); return G("In Excel, if A1 = " + a + " and A2 = " + b + ", what does =A1*A2 return?", "" + (a * b) + "", "Multiplication formula", a + " × " + b + " = " + (a * b)); },
+      function () { var n = rand(1, 31); var bin = n.toString(2); return G("Convert the decimal number " + n + " to binary.", "" + bin + "", "Repeated division by 2", n + " = " + bin + "₂"); },
+      function () { var n = rand(1, 15); var bin = n.toString(2); return G("Convert the binary number " + bin + " to decimal.", "" + n + "", "Add place values", bin + "₂ = " + n); },
+      function () { var g = rand(1, 8), f = pick([256, 512, 1024]); return G("How many " + f + " MB files fit on a " + g + " GB pen drive?", "" + (g * 1024 / f) + " files", g + " GB = " + (g * 1024) + " MB", (g * 1024) + " ÷ " + f + " = " + (g * 1024 / f)); },
+      function () { var a = rand(1, 10), b = rand(1, 10), c = rand(1, 10), d = rand(1, 10); return G("In Excel, =SUM(A1:A4) where A1 to A4 are " + a + ", " + b + ", " + c + ", " + d + " returns what value?", "" + (a + b + c + d) + "", "Sum of the range", a + " + " + b + " + " + c + " + " + d + " = " + (a + b + c + d)); }
+    ],
+    applied_math: [
+      function () { var a = rand(1, 5), b = rand(1, 5), c = rand(1, 5); return G("Differentiate y = " + a + "x³ + " + b + "x² − " + c + " with respect to x.", "" + (3 * a) + "x² + " + (2 * b) + "x", "d/dx xⁿ = nxⁿ⁻¹", "dy/dx = " + (3 * a) + "x² + " + (2 * b) + "x"); },
+      function () { var a = rand(1, 5), b = rand(1, 9); return G("Integrate: ∫(" + a + "x + " + b + ") dx.", "" + a + "x²/2 + " + b + "x + C", "∫xⁿ dx = xⁿ⁺¹/(n+1)", "" + a + "x²/2 + " + b + "x + C"); },
+      function () { var x1 = rand(0, 5), y1 = rand(0, 5), dx = rand(1, 5), dy = rand(2, 8); return G("Find the slope of the line joining (" + x1 + ", " + y1 + ") and (" + (x1 + dx) + ", " + (y1 + dy) + ").", "" + r1(dy / dx) + "", "m = (y₂−y₁)/(x₂−x₁)", "(" + (y1 + dy) + "−" + y1 + ")/(" + (x1 + dx) + "−" + x1 + ") = " + dy + "/" + dx + " = " + r1(dy / dx)); },
+      function () { var a = rand(1, 8), d = rand(1, 5); return G("Solve for x: |x − " + a + "| = " + d + ".", "x = " + (a + d) + " or x = " + (a - d), "Absolute value gives two cases", "x − " + a + " = ±" + d + " → x = " + (a + d) + ", " + (a - d)); },
+      function () { var a = rand(1, 5), r = 2, n = rand(3, 6); var S = a * (Math.pow(r, n) - 1) / (r - 1); return G("Find the sum of the first " + n + " terms of the GP: " + a + ", " + (a * r) + ", " + (a * r * r) + ", …", "" + S + "", "Sₙ = a(rⁿ−1)/(r−1)", a + "(" + Math.pow(r, n) + "−1)/(" + (r - 1) + ") = " + S); },
+      function () { var a = rand(1, 9), b = rand(1, 9), c = rand(1, 9), d = rand(1, 9); return G("Multiply the matrices: [ " + a + " " + b + " ] × [ " + c + " " + d + " ]ᵀ. Find the single number.", "" + (a * c + b * d) + "", "Row × column dot product", a + "×" + c + " + " + b + "×" + d + " = " + (a * c + b * d)); },
+      function () { var a = rand(1, 15), b = rand(1, 15), c = rand(1, 15), d = rand(1, 15); return G("Find the mean of " + a + ", " + b + ", " + c + ", " + d + ".", "" + (r1((a + b + c + d) / 4)) + "", "Mean = sum ÷ count", "(" + (a + b + c + d) + ") ÷ 4 = " + r1((a + b + c + d) / 4)); },
+      function () { var b = rand(1, 6), c = rand(2, 10); var min = c - b * b; return G("Find the minimum value of y = x² − " + (2 * b) + "x + " + c + ".", "" + min + "", "Complete the square or use the vertex", "Vertex at x = " + b + " → y = " + b + "² − " + (2 * b) + "×" + b + " + " + c + " = " + min); },
+      function () { var m = rand(2, 8); return G("Find log₂ " + Math.pow(2, m) + ".", "" + m + "", "2ᵐ = " + Math.pow(2, m), "log₂ " + Math.pow(2, m) + " = " + m); },
+      function () { var p = rand(0, 3); return G("A card is drawn from a full pack of 52. Find the probability it is a " + pick(["king", "queen", "ace", "jack"]) + ".", "" + 4 / 52 + "", "4 such cards in a pack", "4/52 = " + 4 / 52); }
+    ],
+    applied_physics: [
+      function () { var m = rand(2, 8), F = rand(4, 20), t = rand(2, 5), u = rand(1, 5); var a = F / m; var v = u + a * t; return G("A " + m + " kg body moving at " + u + " m/s is acted on by a " + F + " N force for " + t + " s. Find its final velocity.", "" + v + " m/s", "v = u + at with a = F/m", "a = " + F + "/" + m + " = " + a + " → v = " + u + " + " + a + "×" + t + " = " + v + " m/s"); },
+      function () { var rev = rand(10, 40), t = rand(2, 10); return G("A wheel completes " + rev + " revolutions in " + t + " s. Find its frequency.", "" + (rev / t) + " rev/s", "Frequency = rev ÷ time", rev + "/" + t + " = " + (rev / t) + " Hz"); },
+      function () { var F = pick([10, 20, 30, 40, 50]); var U = F * 1.5; var v = -Math.round(F * U / (F + U)); return G("A concave lens of focal length " + F + " cm forms an image of an object " + U + " cm away. Find the image distance (use sign convention).", "" + v + " cm", "1/f = 1/v − 1/u with f = −" + F + ", u = −" + U, "1/v = −1/" + F + " − 1/" + U + " = −" + (F + U) + "/" + (F * U) + " → v = " + v + " cm"); },
+      function () { var W = pick([40, 60, 100]), h = rand(2, 8), d = rand(10, 30); return G("A " + W + " W bulb runs " + h + " h per day. Find its energy consumption in kWh for " + d + " days.", "" + r2(W * h * d / 1000) + " kWh", "Energy = power × time", W + " × " + h + " × " + d + " / 1000 = " + r2(W * h * d / 1000) + " kWh"); },
+      function () { var R1 = rand(2, 12), R2 = R1 * 2; return G("Find the equivalent resistance of " + R1 + " Ω and " + R2 + " Ω connected in parallel.", "" + (R1 * R2 / (R1 + R2)) + " Ω", "1/R = 1/R₁ + 1/R₂", "(" + R1 + " × " + R2 + ")/(" + R1 + " + " + R2 + ") = " + (R1 * R2 / (R1 + R2)) + " Ω"); },
+      function () { var v = 340, f = pick([100, 170, 200, 340, 680]); return G("Sound has a speed of " + v + " m/s and a frequency of " + f + " Hz. Find its wavelength.", "" + (v / f) + " m", "v = fλ", v + "/" + f + " = " + (v / f) + " m"); },
+      function () { var m = rand(1, 3), v = rand(2, 6), r = rand(1, 4); return G("Find the centripetal force on a " + m + " kg body moving at " + v + " m/s in a circle of radius " + r + " m.", "" + (m * v * v / r) + " N", "F = mv²/r", m + " × " + v + "²/" + r + " = " + (m * v * v / r) + " N"); },
+      function () { var k = pick([50, 100, 200, 400]), x = pick([0.1, 0.2, 0.3, 0.4]); return G("A spring of spring constant " + k + " N/m is stretched by " + x + " m. Find the stored energy.", "" + r2(0.5 * k * x * x) + " J", "PE = ½kx²", "½ × " + k + " × " + x + "² = " + r2(0.5 * k * x * x) + " J"); },
+      function () { var q = rand(1, 5), V = rand(2, 12); return G("A charge of " + q + " C is moved through a potential difference of " + V + " V. Find the energy.", "" + (q * V) + " J", "W = qV", q + " × " + V + " = " + (q * V) + " J"); }
+    ],
+    applied_chemistry: [
+      function () { var n = rand(1, 3); return G("How many coulombs make up " + n + " Faraday(s) of charge?", "" + (n * 96500) + " C", "1 F = 96500 C", n + " × 96500 = " + (n * 96500) + " C"); },
+      function () { var n = rand(1, 3); var pOH = n, pH = 14 - n; return G("Find the pH of a " + Math.pow(10, -n) + " M NaOH solution.", "" + pH + "", "pOH = −log[OH⁻]; pH = 14 − pOH", "pOH = " + pOH + " → pH = " + pH); },
+      function () { var B = pick([0.4, 0.5, 0.6, 0.8]), Kc = pick([0.8, 1.0, 1.25, 1.6]); var A = r2(B * B / Kc); return G("For the reaction A ⇌ 2B, Kc = " + Kc + " and [B] = " + B + " M at equilibrium. Find [A].", "" + A + " M", "Kc = [B]²/[A]", "[A] = " + B + "²/" + Kc + " = " + A + " M"); },
+      function () { var n = rand(1, 5), q = n * pick([286, 572, 890]); return G("Combustion of " + n + " mol of fuel releases " + q + " kJ. Find the heat released per mole.", "" + (q / n) + " kJ/mol", "Divide by moles", q + "/" + n + " = " + (q / n) + " kJ/mol"); },
+      function () { var n = rand(1, 5); var k = 0.693 / n; return G("The rate constant of a first-order reaction is " + k + " s⁻¹. Find its half-life.", "" + r2(0.693 / k) + " s", "t½ = 0.693/k", "0.693/" + k + " = " + r2(0.693 / k) + " s"); },
+      function () { var m = 50 * rand(1, 4); var L = m / 100 * 22.4; return G("How many litres of CO₂ at STP are obtained from " + m + " g of CaCO₃ (molar mass 100)?", "" + r1(L) + " L", "Moles × 22.4", (m / 100) + " mol → " + (m / 100) + " × 22.4 = " + r1(L) + " L"); },
+      function () { var n = rand(1, 4), V = pick([250, 500]); return G(n + " mol of solute is dissolved in " + V + " mL of solution. Find the molarity.", "" + (n / (V / 1000)) + " M", "Molarity = moles ÷ litres", n + "/" + (V / 1000) + " = " + (n / (V / 1000)) + " M"); },
+      function () { var M = pick([0.1, 0.5, 1, 2]); return G("Find the normality of " + M + " M H₂SO₄.", "" + (M * 2) + " N", "Normality = Molarity × n-factor", M + " × 2 = " + (M * 2) + " N"); }
+    ],
+    basic_engineering: [
+      function () { var F = 500 * rand(1, 6), A = pick([25, 50, 100, 250]); return G("A force of " + F + " N acts on a rod of cross-section " + A + " mm². Find the stress.", "" + (F / A) + " N/mm²", "Stress = F/A", F + "/" + A + " = " + (F / A) + " N/mm²"); },
+      function () { var L = rand(1, 4), e = pick([1, 2, 2.5, 4, 5]); return G("A " + L + " m long rod stretches by " + e + " mm. Find the strain.", "" + (e / 1000 / L) + "", "Strain = ΔL/L", (e / 1000) + "/" + L + " = " + (e / 1000 / L)); },
+      function () { var s = pick([100, 200, 250, 400]), e = pick([0.0005, 0.001, 0.002, 0.0025]); return G("A material has a stress of " + s + " MPa and a strain of " + e + ". Find Young's modulus.", "" + (s / e / 1000) + " GPa", "E = stress/strain", s + " MPa/" + e + " = " + (s / e / 1000) + " GPa"); },
+      function () { var F = rand(10, 80), r = rand(2, 9) / 10; return G("Find the torque produced by a " + F + " N force applied at " + r + " m from the pivot.", "" + (F * r) + " N·m", "Torque = F × r", F + " × " + r + " = " + (F * r) + " N·m"); },
+      function () { var N = pick([300, 600, 900, 1200]), T = pick([50, 100, 150, 200]); return G("A shaft rotates at " + N + " rpm with a torque of " + T + " N·m. Find the power in watts (π ≈ 3.14).", "" + Math.round(2 * 3.14 * N * T / 60) + " W", "P = 2πNT/60", "2 × 3.14 × " + N + " × " + T + " / 60 = " + Math.round(2 * 3.14 * N * T / 60) + " W"); },
+      function () { var out = pick([400, 800, 1500, 2500]), inr = out * pick([2, 4, 5]); return G("A machine has " + out + " W output and " + inr + " W input. Find its efficiency.", "" + (out / inr * 100) + "%", "Efficiency = output/input × 100", out + "/" + inr + " × 100 = " + (out / inr * 100) + "%"); },
+      function () { var d1 = rand(12, 30), d2 = d1 * pick([2, 3, 4]); return G("A driver gear has " + d1 + " teeth and the driven gear has " + d2 + " teeth. Find the gear ratio.", "" + (d2 / d1) + ":1", "Ratio = driven/driver teeth", d2 + "/" + d1 + " = " + (d2 / d1) + " → " + (d2 / d1) + ":1"); },
+      function () { var L = rand(2, 6), s = pick([50, 100, 150]), E = 200; var e = s / 1000 * L; return G("A " + L + " m steel wire (E = 200 GPa) carries a stress of " + s + " MPa. Find its elongation in mm.", "" + r1(e) + " mm", "e = σL/E", "Strain = " + s + "/200000 = " + (s / 200000) + " → " + L + " × " + (s / 200000) + " = " + r1(e) + " m = " + (e * 1000) + " mm"); }
+    ],
+    drafting: [
+      function () { var S = pick([50, 100, 200, 500, 1000]); return G("On a 1:" + S + " scale drawing, 1 cm on paper represents what in reality?", "" + S + " cm = " + (S / 100) + " m", "Scale = drawing/actual", "1 cm × " + S + " = " + S + " cm = " + (S / 100) + " m"); },
+      function () { var L = rand(1, 8); return G("A line of length " + L + " m is drawn on a 1:50 scale. Find the drawing length in cm.", "" + (L * 2) + " cm", "Drawing = actual ÷ scale", L + " m ÷ 50 = " + (L / 50) + " m = " + (L * 2) + " cm"); }
+    ],
+    basic_civil: [
+      function () { var c = rand(5, 15); return G("Each course of brickwork is 200 mm high. How many courses are in a " + (c * 0.2) + " m wall?", "" + c + " courses", "Divide height by course height", (c * 0.2 * 1000) + "/200 = " + c); },
+      function () { var bl = 10 * rand(2, 5), bw = 10 * rand(2, 4), pl = bl + 10 * rand(2, 5), pw = bw + 10 * rand(2, 4); return G("A plot is " + pl + " m × " + pw + " m with a built-up area of " + bl + " m × " + bw + " m. Find the Floor Space Index.", "" + r2((bl * bw) / (pl * pw)) + "", "FSI = built-up ÷ plot area", (bl * bw) + "/" + (pl * pw) + " = " + r2((bl * bw) / (pl * pw))); },
+      function () { var l = rand(5, 20), b = rand(5, 15), h = rand(1, 4); return G("Find the volume of earthwork for a pit " + l + " m × " + b + " m × " + h + " m.", "" + (l * b * h) + " m³", "Volume = l × b × h", l + " × " + b + " × " + h + " = " + (l * b * h) + " m³"); },
+      function () { var cp = pick([200, 250, 300, 400]); var vol = rand(2, 5); return G("A concrete mix has a cement content of " + cp + " kg/m³. Find the cement needed for " + vol + " m³.", "" + (cp * vol) + " kg", "Cement per m³ × volume", cp + " × " + vol + " = " + (cp * vol) + " kg"); }
+    ],
+    electronics_instrumentation: [
+      function () { var d1 = rand(0, 9), d2 = rand(0, 9), mult = pick([1, 10, 100, 1000, 10000]); var val = (d1 * 10 + d2) * mult; var out = val >= 1000000 ? (val / 1000000) + " MΩ" : val >= 1000 ? (val / 1000) + " kΩ" : val + " Ω"; return G("A resistor has bands representing digits " + d1 + " and " + d2 + " with multiplier ×" + mult + ". Find its value.", "" + out + "", "Value = (d₁d₂) × multiplier", "(10×" + d1 + " + " + d2 + ") × " + mult + " = " + val + " Ω = " + out); },
+      function () { var V = pick([6, 9, 12, 24]), R = pick([1, 2, 3, 6, 12]); return G("A " + V + " V battery drives a " + R + " kΩ resistor. Find the current.", "" + (V / R) + " mA", "I = V/R", V + "/" + (R * 1000) + " = " + (V / R) + " mA"); },
+      function () { var I = pick([1, 2, 3, 5]), R = pick([2, 4, 5, 10]); return G("Find the power dissipated in a " + R + " Ω resistor carrying " + I + " A.", "" + (I * I * R) + " W", "P = I²R", I + "² × " + R + " = " + (I * I * R) + " W"); },
+      function () { var Po = pick([2, 10, 50, 100]), Pi = 1; return G("An amplifier has output " + Po + " W and input " + Pi + " W. Find the gain in dB.", "" + (10 * Math.log10(Po / Pi)) + " dB", "Gain = 10 log₁₀(Po/Pi)", "10 log₁₀(" + Po + "/" + Pi + ") = " + (10 * Math.log10(Po / Pi)) + " dB"); },
+      function () { var V = pick([5, 9, 12]), vled = 2, R = pick([100, 150, 220, 330]); var I = (V - vled) / R * 1000; return G("An LED (2 V drop) is fed from " + V + " V through a " + R + " Ω resistor. Find the current.", "" + Math.round(I) + " mA", "I = (V − Vled)/R", "(" + V + " − 2)/" + R + " = " + r2((V - 2) / R) + " A = " + Math.round(I) + " mA"); }
+    ],
+    computer_engineering: [
+      function () { var n = rand(1, 31); var bin = n.toString(2); return G("Convert the decimal number " + n + " to binary.", "" + bin + "", "Repeated division by 2", n + " = " + bin + "₂"); },
+      function () { var n = rand(1, 63); var bin = n.toString(2); return G("Convert the binary number " + bin + " to decimal.", "" + n + "", "Add place values", bin + "₂ = " + n); },
+      function () { var n = rand(10, 255); var hex = n.toString(16).toUpperCase(); return G("Convert the decimal number " + n + " to hexadecimal.", "" + hex + "", "Repeated division by 16", n + "₁₀ = " + hex + "₁₆"); },
+      function () { var n = rand(1, 255); var hex = n.toString(16).toUpperCase(); return G("Convert the hexadecimal number " + hex + " to decimal.", "" + n + "", "Place values of 16", hex + "₁₆ = " + n); },
+      function () { var g = rand(1, 8); return G("How many megabytes are in " + g + " GB?", "" + (g * 1024) + " MB", "Memory units in powers of 2", g + " GB = " + (g * 1024) + " MB"); },
+      function () { var a = rand(0, 1), b = rand(0, 1); var g = pick(['AND', 'OR', 'NAND', 'NOR', 'XOR']); var out = g === 'AND' ? (a & b) : g === 'OR' ? (a | b) : g === 'NAND' ? (a & b ? 0 : 1) : g === 'NOR' ? (a | b ? 0 : 1) : (a ^ b); return G("What is the output of a " + g + " gate with inputs " + a + " and " + b + "?", "" + out + "", g + " truth table", a + " " + g + " " + b + " = " + out); }
+    ],
+    industrial_chemistry: [
+      function () { var theo = 100 * rand(1, 5), act = theo * pick([0.5, 0.6, 0.75, 0.8, 0.9]); return G("A reaction gives " + act + " g actual product against a theoretical " + theo + " g. Find the percent yield.", "" + (act / theo * 100) + "%", "% yield = actual/theoretical × 100", act + "/" + theo + " × 100 = " + (act / theo * 100) + "%"); },
+      function () { var tot = 100 * rand(1, 5), pure = tot * pick([0.8, 0.85, 0.9, 0.95]); return G("A " + tot + " g sample contains " + pure + " g of pure substance. Find the purity.", "" + (pure / tot * 100) + "%", "Purity = pure mass/total × 100", pure + "/" + tot + " × 100 = " + (pure / tot * 100) + "%"); },
+      function () { var s = rand(5, 40), w = 100 - s; return G(s + " g of salt is dissolved in " + w + " g of water. Find the concentration in % w/w.", "" + s + "% w/w", "% w/w = solute/solution × 100", s + "/100 × 100 = " + s + "%"); },
+      function () { var h = rand(2, 10); return G("For 2H₂ + O₂ → 2H₂O, how many grams of O₂ react with " + h + " g of H₂?", "" + (h * 8) + " g", "4 g H₂ = 2 mol → needs 1 mol O₂ = 32 g", "2 mol H₂ uses 1 mol O₂ (32 g) → " + h + " g H₂ uses " + (h * 8) + " g O₂"); },
+      function () { var M1 = pick([5, 10, 2]), V1 = 100 * rand(1, 4), M2 = pick([1, 2]); var V2 = M1 * V1 / M2; return G(V1 + " mL of " + M1 + " M acid is diluted until its molarity is " + M2 + " M. Find the final volume.", "" + V2 + " mL", "M₁V₁ = M₂V₂", M1 + " × " + V1 + " = " + M2 + " × V → V = " + V2 + " mL"); },
+      function () { var n = pick([0.1, 0.2, 0.5, 1]), g = pick([200, 500, 1000]); return G(n + " mol of solute is dissolved in " + g + " g of solvent. Find the molality.", "" + (n / (g / 1000)) + " m", "Molality = moles ÷ kg solvent", n + "/" + (g / 1000) + " = " + (n / (g / 1000)) + " m"); },
+      function () { var s = 10 * rand(1, 6), V = pick([250, 500, 1000]); return G(s + " g of a substance is dissolved to make " + V + " mL of solution. Find the concentration in % w/v.", "" + (s / V * 100) + "% w/v", "% w/v = g solute ÷ mL × 100", s + "/" + V + " × 100 = " + (s / V * 100) + "%"); }
+    ],
+    electrical_electronics: [
+      function () { var I = rand(1, 10), V = pick([110, 220, 230, 240]); return G("An appliance draws " + I + " A at " + V + " V. Find its power.", "" + (V * I) + " W", "P = VI", V + " × " + I + " = " + (V * I) + " W"); },
+      function () { var R = rand(2, 10), n = rand(2, 5); return G("" + n + " " + R + " Ω resistors are connected in series. Find the total resistance.", "" + (n * R) + " Ω", "Series: R = R₁+R₂+…", (new Array(n)).join(R + "+") + R + " = " + (n * R) + " Ω"); },
+      function () { var R = rand(2, 12), n = rand(2, 4); return G("" + n + " " + R + " Ω resistors are connected in parallel. Find the total resistance.", "" + (R / n) + " Ω", "Parallel equal resistors: R/n", R + "/" + n + " = " + (R / n) + " Ω"); },
+      function () { var W = pick([500, 1000, 1500, 2000]), h = rand(1, 8); return G("A " + W + " W heater runs for " + h + " hour(s). Find the energy in kWh.", "" + (W * h / 1000) + " kWh", "Energy = kW × h", (W / 1000) + " kW × " + h + " h = " + (W * h / 1000) + " kWh"); },
+      function () { var Np = 1000 * rand(1, 4), Ns = Np * pick([0.25, 0.5, 2, 4]), Vp = 230; return G("A transformer has " + Np + " primary turns and " + Ns + " secondary turns at " + Vp + " V. Find the secondary voltage.", "" + (Vp * Ns / Np) + " V", "Vs/Vp = Ns/Np", "230 × " + Ns + "/" + Np + " = " + (Vp * Ns / Np) + " V"); },
+      function () { var P = 1200 * rand(1, 3), V = pick([220, 230, 240]); return G("A " + P + " W appliance is used on a " + V + " V supply. Find the fuse rating in amperes.", "" + (P / V) + " A", "Fuse ≥ current = P/V", P + "/" + V + " = " + (P / V) + " A"); },
+      function () { var u = rand(1, 20), rate = pick([5, 6, 8, 10]); return G("Find the cost of " + u + " units of electricity at Rs. " + rate + " per unit.", "Rs. " + (u * rate) + "", "Cost = units × rate", u + " × " + rate + " = Rs. " + (u * rate)); },
+      function () { var hp = pick([1, 2, 5, 10]); return G(hp + " HP equals how many watts?", "" + (hp * 746) + " W", "Mechanical horsepower", hp + " HP = " + (hp * 746) + " W"); }
+    ],
+    mechanical_engineering: [
+      function () { var F = 1000 * rand(1, 9), A = pick([50, 100, 200, 500]); return G("A " + (F / 1000) + " kN load is applied on a bar of " + A + " mm² area. Find the stress.", "" + (F / A) + " MPa", "Stress = F/A", F + " N / " + A + " mm² = " + (F / A) + " MPa"); },
+      function () { var L = rand(1, 3), e = pick([1, 1.5, 2, 2.5, 3]); return G("A " + L + " m long bar elongates by " + e + " mm. Find the strain.", "" + (e / 1000 / L) + "", "Strain = ΔL/L", (e / 1000) + "/" + L + " = " + (e / 1000 / L)); },
+      function () { var F = rand(20, 80), r = rand(1, 9) / 10; return G("Find the torque from a " + F + " N force acting at " + r + " m from the axis.", "" + (F * r) + " N·m", "T = F × r", F + " × " + r + " = " + (F * r) + " N·m"); },
+      function () { var d1 = rand(15, 40), d2 = d1 * pick([2, 3]); return G("A pinion with " + d1 + " teeth drives a gear with " + d2 + " teeth. Find the gear ratio.", "" + (d1 / d2) + ":1", "Ratio = driver/driven", d1 + "/" + d2 + " = " + (d1 / d2) + " → " + (d1 / d2) + ":1"); },
+      function () { var out = pick([3, 5, 7, 10]), inr = out * pick([2, 4]); return G("A motor has " + out + " kW output for " + inr + " kW input. Find the efficiency.", "" + (out / inr * 100) + "%", "η = output/input × 100", out + "/" + inr + " × 100 = " + (out / inr * 100) + "%"); },
+      function () { var N = pick([600, 900, 1200, 1500]), T = pick([50, 80, 100, 120]); return G("A shaft runs at " + N + " rpm with " + T + " N·m torque. Find the power in kW (π ≈ 3.14).", "" + r2(2 * 3.14 * N * T / 60000) + " kW", "P = 2πNT/60000", "2 × 3.14 × " + N + " × " + T + "/60000 = " + r2(2 * 3.14 * N * T / 60000) + " kW"); },
+      function () { var D1 = 100 * rand(1, 4), D2 = 100 * rand(2, 8), N1 = 100 * rand(5, 20); return G("A belt drive has a " + D1 + " mm driver pulley and " + D2 + " mm driven pulley. The driver runs at " + N1 + " rpm. Find the driven speed.", "" + (N1 * D1 / D2) + " rpm", "N₁D₁ = N₂D₂", N1 + " × " + D1 + "/" + D2 + " = " + (N1 * D1 / D2) + " rpm"); },
+      function () { var m = rand(1, 5), dT = pick([10, 20, 25, 50]); return G("Find the heat needed to raise " + m + " kg of water by " + dT + " °C (c = 4200 J/kg·°C).", "" + (m * 4200 * dT) + " J", "Q = mcΔT", m + " × 4200 × " + dT + " = " + (m * 4200 * dT) + " J"); }
+    ],
+    surveying_hydrology: [
+      function () { var len = 30, dist = 30 * rand(2, 10); return G("A " + len + " m chain is used to measure " + dist + " m. How many full chain lengths is this?", "" + (dist / len) + "", "Divide distance by chain length", dist + "/" + len + " = " + (dist / len) + " chains"); },
+      function () { var BS = 1.5, BM = 100, FS = r2(1 + Math.random()); var HI = BM + BS, RL = r2(HI - FS); return G("With a backsight of " + BS + " m and a benchmark of " + BM + " m, the foresight is " + FS + " m. Find the reduced level.", "" + RL + " m", "RL = HI − FS; HI = BM + BS", "HI = " + HI + " → RL = " + HI + " − " + FS + " = " + RL + " m"); },
+      function () { var rain = 50 * rand(1, 5), area = 1, C = pick([0.2, 0.3, 0.4, 0.6]); return G("Rainfall of " + rain + " mm falls on " + area + " km² with a runoff coefficient of " + C + ". Find the runoff volume.", "" + (rain / 1000 * 1000000 * C) + " m³", "Runoff depth × area", (rain / 1000) + " m × 1,000,000 × " + C + " = " + (rain / 1000 * 1000000 * C) + " m³"); },
+      function () { var A = rand(1, 4), V = r2(rand(1, 10) / 10); return G("A stream has a cross-section area of " + A + " m² and flows at " + V + " m/s. Find the discharge.", "" + r2(A * V) + " m³/s", "Q = A × V", A + " × " + V + " = " + r2(A * V) + " m³/s"); },
+      function () { var fall = rand(1, 8), run = fall * pick([20, 30, 40, 50]); return G("A road drops " + fall + " m over a length of " + run + " m. Express the gradient.", "1 in " + (run / fall) + "", "Gradient = fall/run", fall + "/" + run + " = 1 in " + (run / fall)); }
+    ],
+    soil_erosion_conservation: [
+      function () { var R = 100 * rand(1, 2), K = pick([0.2, 0.3, 0.4]), LS = pick([0.5, 1, 1.5]), C = pick([0.2, 0.5, 0.8]), P = 1; return G("Using USLE, soil loss = R × K × LS × C × P. With R = " + R + ", K = " + K + ", LS = " + LS + ", C = " + C + ", P = " + P + ", find the loss.", "" + r2(R * K * LS * C * P) + " t/ha/yr", "Multiply all factors", R + " × " + K + " × " + LS + " × " + C + " × " + P + " = " + r2(R * K * LS * C * P)); },
+      function () { var rise = rand(1, 8), run = 10 * rand(5, 20); return G("A slope rises " + rise + " m over a horizontal run of " + run + " m. Find the slope percent.", "" + (rise / run * 100) + "%", "% slope = rise/run × 100", rise + "/" + run + " × 100 = " + (rise / run * 100) + "%"); }
+    ],
+    watershed_development: [
+      function () { var C = pick([0.3, 0.5, 0.6]), i = pick([40, 50, 60]), A = rand(1, 5); var Q = r1(C * i / 3600 / 1000 * A * 1000000); return G("Using Q = C i A, find the discharge for C = " + C + ", i = " + i + " mm/h and A = " + A + " km².", "" + Q + " m³/s", "Convert i to m/s and A to m²", "Q = " + C + " × (" + i + "/3600000) × " + A + "×10⁶ = " + Q + " m³/s"); },
+      function () { var l = 100 * rand(1, 5), b = 50 * rand(1, 4), h = rand(1, 4); return G("A reservoir is " + l + " m × " + b + " m × " + h + " m deep. Find its storage volume.", "" + (l * b * h) + " m³", "V = l × b × h", l + " × " + b + " × " + h + " = " + (l * b * h) + " m³"); },
+      function () { var A = rand(1, 10), rain = 100 * rand(2, 8), C = pick([0.2, 0.25, 0.4]); var V = A * 1000000 * rain / 1000 * C; return G("A " + A + " km² watershed receives " + rain + " mm rain with a " + C + " runoff coefficient. Find the annual runoff volume.", "" + (V / 1000000) + " million m³", "Runoff depth × area", (rain / 1000) + " m × " + C + " × " + A + "×10⁶ = " + (V / 1000000) + "×10⁶ m³"); }
+    ],
+    irrigation_drainage: [
+      function () { var dp = 10 * rand(1, 4), n = rand(2, 8); return G("A crop needs " + dp + " cm of water per irrigation and receives " + n + " irrigations. Find the total delta.", "" + (dp * n) + " cm", "Delta = depth per irrigation × number", dp + " × " + n + " = " + (dp * n) + " cm = " + (dp * n / 100) + " m"); },
+      function () { var net = 100 * rand(2, 8), eff = pick([50, 60, 75, 80]); return G("Water requirement is " + net + " mm with an application efficiency of " + eff + "%. Find the gross water requirement.", "" + (net / eff * 100) + " mm", "Gross = net ÷ efficiency", net + "/" + (eff / 100) + " = " + (net / eff * 100) + " mm"); },
+      function () { var A = r2(rand(1, 10) / 10), V = r2(rand(1, 10) / 10); return G("A canal has an area of " + A + " m² and a velocity of " + V + " m/s. Find the discharge.", "" + r2(A * V) + " m³/s", "Q = A × V", A + " × " + V + " = " + r2(A * V) + " m³/s"); },
+      function () { var evap = pick([3, 4, 5, 6]), dep = 10 * pick([3, 5, 6]); return G("Pan evaporation is " + evap + " mm/day and irrigation depth is " + dep + " mm. Find the irrigation interval.", "" + (dep / evap) + " days", "Interval = depth ÷ evaporation", dep + "/" + evap + " = " + (dep / evap) + " days"); },
+      function () { var vol = 100 * rand(1, 5); return G(vol + " m³ of water is applied to 1 ha. Find the depth of water in mm.", "" + (vol / 100) + " mm", "Depth = volume ÷ area", vol + "/10000 = " + (vol / 100) + " mm"); },
+      function () { var c = pick([0.7, 0.8, 0.85]), f = pick([0.7, 0.75, 0.8]); return G("Conveyance efficiency is " + (c * 100) + "% and field efficiency " + (f * 100) + "%. Find the overall efficiency.", "" + (c * f * 100) + "%", "Multiply the efficiencies", c + " × " + f + " = " + (c * f) + " = " + (c * f * 100) + "%"); }
+    ],
+    farm_irrigation_structures: [
+      function () { var L = pick([1, 2, 3]), H = pick([0.16, 0.25, 0.36, 0.49]); var Q = 1.84 * L * Math.pow(H, 1.5); return G("A rectangular weir has L = " + L + " m and head H = " + H + " m. Using Q = 1.84 L H^1.5, find the discharge.", "" + r2(Q) + " m³/s", "H^1.5 = " + r3(Math.pow(H, 1.5)), "1.84 × " + L + " × " + r3(Math.pow(H, 1.5)) + " = " + r2(Q) + " m³/s"); },
+      function () { var net = r2(rand(1, 10) / 10), loss = pick([0.1, 0.2, 0.25]); return G("A canal must supply " + net + " m³/s net with " + (loss * 100) + "% conveyance loss. Find the required gross capacity.", "" + r2(net / (1 - loss)) + " m³/s", "Gross = net ÷ (1 − loss)", net + "/" + (1 - loss) + " = " + r2(net / (1 - loss)) + " m³/s"); }
+    ],
+    farm_power: [
+      function () { var d = 100 * rand(1, 2), s = 100 * rand(1, 2), n = rand(2, 4); var V = (3.14 / 4) * (d / 1000) * (d / 1000) * (s / 1000) * n; return G("An engine has a " + d + " mm bore, " + s + " mm stroke and " + n + " cylinders. Find the swept volume in litres (π ≈ 3.14).", "" + r2(V * 1000) + " L", "V = (π/4)d² × stroke × n", "0.785 × " + (d / 1000) + "² × " + (s / 1000) + " × " + n + " = " + r2(V) + " m³ ≈ " + r2(V * 1000) + " L"); },
+      function () { var hp = pick([30, 40, 50, 60]); return G("Convert " + hp + " HP tractor power to kilowatts.", "" + r1(hp * 0.746) + " kW", "Multiply by 0.746", hp + " × 0.746 = " + r1(hp * 0.746) + " kW"); },
+      function () { var rate = rand(2, 8), t = rand(2, 10); return G("A tractor consumes " + rate + " L of fuel per hour for " + t + " hours. Find the total fuel.", "" + (rate * t) + " L", "Rate × time", rate + " × " + t + " = " + (rate * t) + " L"); },
+      function () { var BP = 10 * pick([2, 3, 4]), IP = BP * pick([1.25, 1.5, 2]); return G("A tractor has " + BP + " kW brake power and " + IP + " kW indicated power. Find the mechanical efficiency.", "" + (BP / IP * 100) + "%", "η = BP/IP × 100", BP + "/" + IP + " × 100 = " + (BP / IP * 100) + "%"); },
+      function () { var D = 100 * pick([2, 3, 4, 5]), N = 100 * pick([5, 10, 15, 20]); return G("A pulley of " + D + " mm diameter runs at " + N + " rpm. Find the belt speed in m/s (π ≈ 3.14).", "" + r1(3.14 * D / 1000 * N / 60) + " m/s", "v = πDN/60", "3.14 × " + (D / 1000) + " × " + N + "/60 = " + r1(3.14 * D / 1000 * N / 60) + " m/s"); }
+    ],
+    farm_machinery: [
+      function () { var w = r2(rand(5, 20) / 10), s = rand(1, 8), e = pick([0.6, 0.7, 0.8]); return G("A machine has " + w + " m effective width, runs at " + s + " km/h with " + (e * 100) + "% field efficiency. Find its field capacity.", "" + r2(w * s * e / 10) + " ha/h", "C = (w × s × e)/10", "(" + w + " × " + s + " × " + e + ")/10 = " + r2(w * s * e / 10) + " ha/h"); },
+      function () { var rate = pick([5, 10, 15, 20]), area = rand(2, 10); return G("Seed rate is " + rate + " kg/ha. Find the seed needed for " + area + " ha.", "" + (rate * area) + " kg", "Rate × area", rate + " × " + area + " = " + (rate * area) + " kg"); },
+      function () { var w = r2(rand(5, 20) / 10), s = rand(1, 8); return G("Find the theoretical field capacity of a " + w + " m wide machine at " + s + " km/h.", "" + r2(w * s / 10) + " ha/h", "C = (w × s)/10", "(" + w + " × " + s + ")/10 = " + r2(w * s / 10) + " ha/h"); },
+      function () { var rate = pick([0.1, 0.2, 0.25, 0.5]), area = pick([5, 10, 20]); return G("A machine cultivates at " + rate + " ha/h. Find the time to cultivate " + area + " ha.", "" + (area / rate) + " h", "Time = area ÷ capacity", area + "/" + rate + " = " + (area / rate) + " h"); },
+      function () { var rate = pick([10, 15, 20]), area = rand(2, 8); return G("Spraying rate is " + rate + " L/ha for " + area + " ha. Find the total spray solution.", "" + (rate * area) + " L", "Rate × area", rate + " × " + area + " = " + (rate * area) + " L"); },
+      function () { var r = 0.1 * pick([3, 4, 5, 6]), p = 0.1 * pick([2, 3, 4]); return G("Rows are spaced " + (r * 100) + " cm and seeds " + (p * 100) + " cm apart. Find the plant population per m².", "About " + Math.round(1 / (r * p)), "1 ÷ (row × plant spacing)", "1/(" + r + " × " + p + ") ≈ " + Math.round(1 / (r * p)) + " plants/m²"); }
+    ],
+    food_unit_operations: [
+      function () { var f = 100, d = 100 * pick([0.7, 0.75, 0.8, 0.85]); return G("A sample weighs " + f + " g fresh and " + d + " g dry. Find its moisture content (wet basis).", "" + (f - d) / f * 100 + "%", "MC = (fresh − dry)/fresh × 100", "(" + f + " − " + d + ")/" + f + " × 100 = " + (f - d) / f * 100 + "%"); },
+      function () { var w = 100 * rand(2, 5), m1 = pick([20, 25, 30]), m2 = pick([10, 12, 14]); var dry = w * (1 - m1 / 100), fin = dry / (1 - m2 / 100); return G(w + " kg of material at " + m1 + "% moisture is dried to " + m2 + "% moisture. Find the water removed.", "" + r2(w - fin) + " kg", "Dry solids stay constant", "Dry = " + r1(dry) + " kg → final mass = " + r1(dry) + "/" + (1 - m2 / 100) + " = " + r1(fin) + " → removed " + r2(w - fin) + " kg"); },
+      function () { var m = rand(2, 15), T1 = 10 * rand(1, 5), dT = 10 * rand(2, 6); var T2 = T1 + dT; return G("Find the heat needed to raise " + m + " kg of water from " + T1 + " °C to " + T2 + " °C (c = 4.18 kJ/kg·°C).", "" + r1(m * 4.18 * dT) + " kJ", "Q = mcΔT", m + " × 4.18 × " + dT + " = " + r1(m * 4.18 * dT) + " kJ"); },
+      function () { var w = 100, s1 = pick([10, 15, 20]), s2 = pick([25, 30, 40]); var sol = w * s1 / 100, fin = sol / (s2 / 100); return G(w + " kg of " + s1 + "% juice is concentrated to " + s2 + "% solids. Find the water removed.", "" + (w - fin) + " kg", "Solids remain constant", "Solids = " + sol + " kg → final = " + sol + "/" + (s2 / 100) + " = " + fin + " kg → removed " + (w - fin) + " kg"); }
+    ],
+    crop_process_engineering: [
+      function () { var p = 100, r = 100 * pick([0.65, 0.7, 0.75]); return G(p + " kg of paddy gives " + r + " kg of rice. Find the milling yield.", "" + r + "%", "Yield = rice/paddy × 100", r + "/" + p + " × 100 = " + r + "%"); },
+      function () { var l = 10 * rand(1, 4), b = 8 * rand(1, 4), h = rand(2, 5), bd = 600; var t = l * b * h * bd / 1000; return G("A godown " + l + " m × " + b + " m × " + h + " m stores paddy at " + bd + " kg/m³. Find the storage capacity in tonnes.", "" + (l * b * h * bd / 1000) + " tonnes", "Volume × bulk density", (l * b * h) + " × " + bd + " = " + (l * b * h * bd) + " kg = " + t + " t"); },
+      function () { var w = 1000, m1 = pick([18, 20, 22, 25]), m2 = pick([12, 13, 14]); var dry = w * (1 - m1 / 100), fin = dry / (1 - m2 / 100); return G(w + " kg of paddy at " + m1 + "% moisture is dried to " + m2 + "%. Find the water removed.", "About " + Math.round(w - fin) + " kg", "Dry matter constant", "Dry = " + r1(dry) + " kg → final = " + r1(dry) + "/" + (1 - m2 / 100) + " = " + r1(fin) + " → removed ≈ " + Math.round(w - fin) + " kg"); }
+    ],
+    renewable_bioenergy: [
+      function () { var W = 100 * pick([2, 3, 5]), h = rand(3, 7); return G("A " + W + " W solar panel receives " + h + " peak sun hours. Find its daily energy output.", "" + r1(W / 1000 * h) + " kWh", "Energy = W × hours", (W / 1000) + " kW × " + h + " = " + r1(W / 1000 * h) + " kWh"); },
+      function () { var dung = 10 * rand(2, 8), yieldv = pick([0.04, 0.05, 0.06]); return G("A bio-digester charges " + dung + " kg of cattle dung per day. If gas yield is " + yieldv + " m³/kg, find the daily gas.", "" + r2(dung * yieldv) + " m³/day", "Dung × yield", dung + " × " + yieldv + " = " + r2(dung * yieldv) + " m³/day"); },
+      function () { var P1 = 100 * pick([2, 5]), v1 = rand(2, 6), v2 = v1 * pick([2, 3]); var P2 = P1 * Math.pow(v2 / v1, 3); return G("A wind turbine produces " + P1 + " kW at " + v1 + " m/s. Wind speed rises to " + v2 + " m/s. Find the new power (P ∝ v³).", "" + P2 + " kW", "P ∝ v³", P1 + " × (" + v2 + "/" + v1 + ")³ = " + P1 + " × " + Math.pow(v2 / v1, 3) + " = " + P2 + " kW"); },
+      function () { var cal = pick([4000, 4500, 5000, 5500]); return G("What is the approximate calorific value of biogas in kcal/m³?", "About " + cal + " kcal/m³", "≈ 20 MJ/m³", "Biogas calorific value ≈ " + cal + " kcal/m³"); }
     ]
   };
 
@@ -8959,16 +9171,24 @@
   }
 
   function getPolyQuestion(subject) {
+    var gens = POLY_GENERATORS[subject] || [];
     var easy = POLY_Q[subject] || [];
     var hard = POLY_HARD[subject] || [];
     var bank = (hard.length > 0 && Math.random() < 0.5) ? hard : easy.concat(hard);
-    if (!bank || bank.length === 0) return null;
     for (var t = 0; t < 40; t++) {
-      var q = pick(bank);
+      var q;
+      if (gens.length > 0 && Math.random() < 0.75) {
+        var g = pick(gens);
+        q = g();
+        q._gen = true;
+      } else {
+        q = pick(bank);
+      }
+      if (!q) continue;
       var key = q.q + "||" + q.a;
       if (!_isRecent(key)) {
         _addRecent(key);
-        return { q: q.q, a: q.a, hint: q.h || "", solution: q.s || "", subject: POLY_SUBJECTS[subject] || subject, subTopic: "" };
+        return { q: q.q, a: q.a, hint: q._gen ? (q.hint || "") : (q.h || ""), solution: q._gen ? (q.solution || "") : (q.s || ""), subject: POLY_SUBJECTS[subject] || subject, subTopic: "" };
       }
     }
     return null;
