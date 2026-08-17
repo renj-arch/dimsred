@@ -7799,6 +7799,45 @@
         "<div style='font-size:.62em;color:#a1a1aa;margin-top:2px'>" + t.desc + "</div></button>";
     }
 
+    var polyGroups = [
+      { name: 'Basic Sciences', color: '#a78bfa', items: [
+        { n: 'Basic Mathematics', i: '➗' },
+        { n: 'Basic Physics', i: '🔭' },
+        { n: 'Basic Chemistry', i: '🧪' },
+        { n: 'Applied Mathematics', i: '📐' },
+        { n: 'Applied Physics', i: '📡' },
+        { n: 'Applied Chemistry', i: '⚗️' },
+        { n: 'Industrial Chemistry', i: '🏭' }
+      ]},
+      { name: 'Skills & Workshop', color: '#34d399', items: [
+        { n: 'Basic Workshop Practices', i: '🛠️' },
+        { n: 'Digital Workplace Skills', i: '💻' },
+        { n: 'Basic Engineering Practices', i: '🔧' },
+        { n: 'Drafting Practices', i: '✏️' }
+      ]},
+      { name: 'Engineering Foundations', color: '#f59e0b', items: [
+        { n: 'Basic Civil Engineering', i: '🏗️' },
+        { n: 'Basics of Electronics & Instrumentation', i: '🔌' },
+        { n: 'Basics of Computer Engineering', i: '🖥️' },
+        { n: 'Basics of Electrical & Electronics Engineering', i: '💡' },
+        { n: 'Basics of Mechanical Engineering', i: '⚙️' }
+      ]}
+    ];
+    var polyHtml = '';
+    for (var pg = 0; pg < polyGroups.length; pg++) {
+      var grp = polyGroups[pg];
+      polyHtml += "<div style='margin:4px 0 2px'>" +
+        "<div style='font-size:.7em;font-weight:700;color:" + grp.color + ";letter-spacing:.04em;margin-bottom:8px;display:flex;align-items:center;gap:8px'>" + grp.name +
+        "<span style='height:1px;flex:1;background:rgba(255,255,255,.06)'></span>" +
+        "<span style='color:#52525b;font-weight:500;font-size:.9em'>" + grp.items.length + "</span></div>" +
+        "<div style='display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px'>";
+      for (var pi = 0; pi < grp.items.length; pi++) {
+        var it = grp.items[pi];
+        polyHtml += "<span style='display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:100px;background:linear-gradient(135deg," + grp.color + "12,rgba(255,255,255,.03));border:1px solid " + grp.color + "22;font-size:.74em;font-weight:600;color:#fafafa;cursor:default;transition:all .2s' onmouseenter='this.style.borderColor=\"" + grp.color + "55\";this.style.transform=\"translateY(-2px)\";this.style.background=\"linear-gradient(135deg," + grp.color + "20,rgba(255,255,255,.04))\"' onmouseleave='this.style.borderColor=\"" + grp.color + "22\";this.style.transform=\"\";this.style.background=\"linear-gradient(135deg," + grp.color + "12,rgba(255,255,255,.03))\"'><span style='font-size:1.05em'>" + it.i + "</span>" + it.n + "</span>";
+      }
+      polyHtml += "</div></div>";
+    }
+
     var html =
       "<div style='text-align:center;padding:24px 0 12px;position:relative'>" +
       "<div style='position:absolute;top:0;left:50%;transform:translateX(-50%);width:240px;height:240px;background:radial-gradient(circle,rgba(167,139,250,.06),transparent 70%);pointer-events:none'></div>" +
@@ -7812,6 +7851,13 @@
       "</div></div>" +
       "<div style='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0'>" + quickHtml + "</div>" +
       "<div style='display:flex;gap:8px;margin:14px 0'>" + toolHtml + "</div>" +
+      "<div style='margin:16px 0 0;padding:16px;background:linear-gradient(135deg,rgba(167,139,250,.04),rgba(52,211,153,.02));border:1px solid rgba(255,255,255,.05);border-radius:14px'>" +
+      "<div style='display:flex;align-items:center;gap:10px;margin-bottom:10px'>" +
+      "<div style='width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,rgba(245,158,11,.18),rgba(52,211,153,.1));display:flex;align-items:center;justify-content:center;font-size:1.15em;flex-shrink:0'>🏫</div>" +
+      "<div><div style='font-weight:800;font-size:.92em;color:#fafafa;background:linear-gradient(135deg,#fbbf24,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent'>Polytechnic · First Year</div>" +
+      "<div style='font-size:.7em;color:#a1a1aa;margin-top:2px'>Diploma engineering curriculum · 16 subjects</div></div></div>" +
+      polyHtml +
+      "</div>" +
       "<div style='display:flex;gap:10px;margin:12px 0;padding:12px 14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:12px;align-items:center;flex-wrap:wrap'>" +
       "<span style='font-size:.68em;color:#52525b'>" + state.sessions.length + " sessions</span>" +
       "<span style='font-size:.68em;color:#52525b'>" + pct + "% accuracy</span>" +
