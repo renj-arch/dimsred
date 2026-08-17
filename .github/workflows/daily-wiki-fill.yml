@@ -177,17 +177,32 @@ jobs:
         run: |
           bash scripts/download-run-artifacts.sh "${{ github.run_id }}" '^baseline$' baseline
 
-      - name: Preserve feed-owned files from baseline
+      - name: Preserve feed-owned files
         run: |
           mkdir -p preserve-feed
           for f in current-affairs.json pib-archive.json; do
-            [ -f "baseline/data/questions/$f" ] && cp "baseline/data/questions/$f" "preserve-feed/$f" && echo "preserved $f"
+            if [ -f "data/questions/$f" ]; then
+              cp "data/questions/$f" "preserve-feed/$f" && echo "preserved $f from checkout"
+            elif [ -f "baseline/data/questions/$f" ]; then
+              cp "baseline/data/questions/$f" "preserve-feed/$f" && echo "preserved $f from baseline"
+            else
+              echo "note: $f not found — skipping preserve"
+            fi
           done
 
       - name: Restore baseline data (drop stale repo data/, avoids duplicating it)
         run: |
           rm -rf data
-          cp -r baseline/data data
+          if [ -d baseline/data ]; then
+            cp -r baseline/data data
+            echo "restored from baseline/data"
+          elif [ -d baseline ]; then
+            cp -r baseline data
+            echo "restored from baseline (flat layout)"
+          else
+            echo "WARNING: no baseline content found — merging over checkout data/"
+            mkdir -p data
+          fi
 
       - name: Collect chunk outputs (move, do not copy — frees download heap)
         run: |
@@ -204,7 +219,11 @@ jobs:
       - name: Re-apply feed-owned files (keep newest feed additions)
         run: |
           for f in current-affairs.json pib-archive.json; do
-            [ -f "preserve-feed/$f" ] && cp "preserve-feed/$f" "data/questions/$f" && echo "re-applied $f"
+            if [ -f "preserve-feed/$f" ]; then
+              cp "preserve-feed/$f" "data/questions/$f" && echo "re-applied $f"
+            else
+              echo "note: no preserved $f — leaving merged version"
+            fi
           done
           rm -rf preserve-feed
 
