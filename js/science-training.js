@@ -7102,8 +7102,8 @@
       if (q) {
         q.timeLimit = getTimeLimit(mode);
         questions.push(q);
-      } else if (subTopic) {
-        // If we exhausted unique questions in this topic, clear recent cache and retry
+      } else {
+        // Picked topic ran out of unique questions: clear the recent cache and retry
         _recentQuestions = [];
       }
     }
@@ -7583,7 +7583,7 @@
 
     if (session && !session._reviewMode) {
       var hasPrev = session.questionIndex > 0;
-      var hasNext = session.questionIndex < session.questions.length - 1;
+      var hasNext = session.unlimited || session.questionIndex < session.questions.length - 1;
       var isAnswered = !!(session.answers && session.answers[session.questionIndex]);
       if (isAnswered || session.mode === "instinct" || session.mode === "unlimited") {
         html += "<div style='display:flex;justify-content:center;gap:10px;margin-top:18px'>" +
@@ -7960,7 +7960,7 @@
       }
       if (e.key === "Enter") {
         var showNext = answered || session.mode === "instinct" || session.mode === "unlimited";
-        if (showNext && !session._reviewMode && session.questionIndex < session.questions.length - 1) {
+        if (showNext && !session._reviewMode && (session.unlimited || session.questionIndex < session.questions.length - 1)) {
           e.preventDefault();
           nextQuestion();
         }
