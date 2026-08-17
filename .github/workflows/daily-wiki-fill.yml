@@ -154,22 +154,44 @@ jobs:
 
       - run: npm install
 
-      - uses: actions/download-artifact@v4
+      # Disk-safe: only pull the artifacts this job actually consumes, and never
+      # duplicate them. Run #441's merge died with "No space left on device"
+      # because it (a) downloaded ALL artifacts (~6.5 GB) and (b) `cp`-ed every
+      # chunk file again into chunks/ — a second ~6.5 GB copy that blew the 14 GB
+      # runner. We now download chunk artifacts into one dir with merge-multiple,
+      # move (not copy) the chunk files into chunks/, and delete the download
+      # trees and the repo's stale data/ before restoring the baseline.
+      - name: Download chunk outputs (single copy, no duplication)
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: chunk-*
+          path: chunk-src
+          merge-multiple: true
 
-      - name: Preserve feed-owned files from fresh checkout
+      - name: Download baseline data
+        uses: actions/download-artifact@v4
+        with:
+          name: baseline
+          path: baseline
+
+      - name: Preserve feed-owned files from baseline
         run: |
           mkdir -p preserve-feed
           for f in current-affairs.json pib-archive.json; do
-            [ -f "data/questions/$f" ] && cp "data/questions/$f" "preserve-feed/$f" && echo "preserved $f"
+            [ -f "baseline/data/questions/$f" ] && cp "baseline/data/questions/$f" "preserve-feed/$f" && echo "preserved $f"
           done
 
-      - name: Restore baseline data (overwrite stale repo data/)
-        run: cp -r baseline/data/* data/ 2>/dev/null || true
+      - name: Restore baseline data (drop stale repo data/, avoids duplicating it)
+        run: |
+          rm -rf data
+          cp -r baseline/data data
 
-      - name: Collect chunk outputs
+      - name: Collect chunk outputs (move, do not copy — frees download heap)
         run: |
           mkdir -p chunks
-          find . -name 'quiz-chunk-*.json*' -exec cp {} chunks/ \; 2>/dev/null || true
+          find chunk-src -name 'quiz-chunk-*.json*' -exec mv {} chunks/ \; 2>/dev/null || true
+          rm -rf chunk-src baseline
           echo "Chunk files found:"
           ls -la chunks/ 2>/dev/null || echo "  (none)"
 

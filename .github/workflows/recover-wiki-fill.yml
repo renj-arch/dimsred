@@ -1,0 +1,151 @@
+name: Wiki Fill Recovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      run-id:
+        description: 'Run ID whose artifacts to merge (empty = current run)'
+        required: false
+        default: ''
+      dry-run:
+        description: 'true = merge locally without committing/pushing'
+        required: false
+        default: 'true'
+
+concurrency:
+  group: data-fill
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: read
+
+env:
+  NODE_OPTIONS: --max-old-space-size=8192
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      # Download artifacts from the target run (defaults to this run when empty).
+      # Disk-safe: chunk artifacts land in chunk-src with merge-multiple and are
+      # MOVED into chunks/, then the download trees are deleted — no duplication,
+      # no "No space left on device" (run #441).
+      - name: Download chunk outputs from run
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: chunk-*
+          path: chunk-src
+          merge-multiple: true
+          run-id: ${{ inputs.run-id || github.run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download baseline data from run
+        uses: actions/download-artifact@v4
+        with:
+          name: baseline
+          path: baseline
+          run-id: ${{ inputs.run-id || github.run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Preserve feed-owned files from baseline
+        run: |
+          mkdir -p preserve-feed
+          for f in current-affairs.json pib-archive.json; do
+            [ -f "baseline/data/questions/$f" ] && cp "baseline/data/questions/$f" "preserve-feed/$f" && echo "preserved $f"
+          done
+
+      - name: Restore baseline data
+        run: |
+          rm -rf data
+          cp -r baseline/data data
+
+      - name: Collect chunk outputs (move, do not copy)
+        run: |
+          mkdir -p chunks
+          find chunk-src -name 'quiz-chunk-*.json*' -exec mv {} chunks/ \; 2>/dev/null || true
+          rm -rf chunk-src baseline
+          echo "Chunk files found:"
+          ls -la chunks/ 2>/dev/null || echo "  (none)"
+
+      - run: node scripts/merge-chunks.js
+
+      - run: node scripts/split-quiz-to-categories.js
+
+      - name: Re-apply feed-owned files
+        run: |
+          for f in current-affairs.json pib-archive.json; do
+            [ -f "preserve-feed/$f" ] && cp "preserve-feed/$f" "data/questions/$f" && echo "re-applied $f"
+          done
+          rm -rf preserve-feed
+
+      - run: node scripts/cleanup-questions.js
+      - run: node scripts/dedup-sentence-flood.js
+      - run: node scripts/inject-handpicked-gk.js
+
+      - name: Classify new sub-topics into correct categories
+        run: node scripts/classify-global.cjs
+
+      - run: node scripts/build-archive-single.js
+
+      - run: |
+          cp archive.html data/archive.html
+          mkdir -p "$RUNNER_TEMP"
+          cp data/quiz.json "$RUNNER_TEMP/quiz.json"
+          for f in data/quiz.json.part.*; do
+            [ -f "$f" ] && cp "$f" "$RUNNER_TEMP/quiz.json${f##*quiz.json}"
+          done
+
+      - name: Rebuild timeline map from question data
+        continue-on-error: true
+        run: |
+          node scripts/build-timeline.js || echo "timeline rebuild skipped/failed — questions still committed"
+
+      - name: Commit and push recovered wiki data
+        run: |
+          if [ "${{ inputs.dry-run }}" = "true" ]; then
+            echo "DRY RUN — would have committed and pushed. Showing pending changes:"
+            git add -A
+            git diff --cached --stat | tail -20
+            git reset -q
+            exit 0
+          fi
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
+          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git checkout -B main 2>/dev/null || true
+          git reset HEAD -- . 2>/dev/null
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Wiki fill recovery — run #${{ inputs.run-id || github.run_id }} $(date +'%Y-%m-%d %H:%M UTC')"
+            for i in 1 2 3; do
+              if git pull --rebase 2>/dev/null; then
+                echo "Rebased cleanly"
+              else
+                echo "Rebase conflict — aborting and union-merging to keep BOTH runs' data."
+                git rebase --abort
+                git fetch origin main 2>/dev/null
+                git merge --no-edit origin/main 2>/dev/null || {
+                  node scripts/resolve-data-merge.js
+                  git commit --no-edit 2>/dev/null || true
+                }
+              fi
+              git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
+              sleep 5
+            done || true
+          fi
