@@ -7763,6 +7763,7 @@
     var rank = getRank(state.totalPoints);
     var pct = state.sessions.length > 0 ? Math.round(state.sessions.reduce(function(a,s){return a+s.correct;},0) / Math.max(1, state.sessions.reduce(function(a,s){return a+s.total;},0)) * 100) : 0;
     var mistakeCount = loadMistakes().length;
+    var isPolyPage = !!document.getElementById("polytechnic-training-container");
 
     var quickStart = [
       { subject:'physics', icon:'🔭', name:'Physics', desc:'Mechanics · EM · Optics · Modern · Thermo', color:'#a78bfa', topics:16 },
@@ -7838,30 +7839,41 @@
       polyHtml += "</div></div>";
     }
 
-    var html =
-      "<div style='text-align:center;padding:24px 0 12px;position:relative'>" +
-      "<div style='position:absolute;top:0;left:50%;transform:translateX(-50%);width:240px;height:240px;background:radial-gradient(circle,rgba(167,139,250,.06),transparent 70%);pointer-events:none'></div>" +
-      "<div style='font-size:2em;margin-bottom:4px'>🔬</div>" +
-      "<h1 style='margin:0 0 2px;color:#fafafa;font-size:1.4em;font-weight:800;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent'>JEE · NEET Lab</h1>" +
-      "<div style='color:#a1a1aa;font-size:.78em'>Physics · Chemistry · Biology · Math</div>" +
-      "<div style='margin-top:12px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap'>" +
-      "<span style='padding:5px 12px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.12);border-radius:100px;color:#a78bfa;font-size:.72em;font-weight:600'>🏅 " + rank.name + "</span>" +
-      "<span style='padding:5px 12px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.1);border-radius:100px;color:#fbbf24;font-size:.72em;font-weight:600'>⭐ " + state.totalPoints + " pts</span>" +
-      "<span style='padding:5px 12px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.1);border-radius:100px;color:#34d399;font-size:.72em;font-weight:600'>🔥 " + state.streaks.current + "d</span>" +
-      "</div></div>" +
-      "<div style='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0'>" + quickHtml + "</div>" +
-      "<div style='display:flex;gap:8px;margin:14px 0'>" + toolHtml + "</div>" +
-      "<div style='margin:16px 0 0;padding:16px;background:linear-gradient(135deg,rgba(167,139,250,.04),rgba(52,211,153,.02));border:1px solid rgba(255,255,255,.05);border-radius:14px'>" +
-      "<div style='display:flex;align-items:center;gap:10px;margin-bottom:10px'>" +
-      "<div style='width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,rgba(245,158,11,.18),rgba(52,211,153,.1));display:flex;align-items:center;justify-content:center;font-size:1.15em;flex-shrink:0'>🏫</div>" +
-      "<div><div style='font-weight:800;font-size:.92em;color:#fafafa;background:linear-gradient(135deg,#fbbf24,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent'>Polytechnic · First Year</div>" +
-      "<div style='font-size:.7em;color:#a1a1aa;margin-top:2px'>Diploma engineering curriculum · 16 subjects</div></div></div>" +
-      polyHtml +
-      "</div>" +
-      "<div style='display:flex;gap:10px;margin:12px 0;padding:12px 14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:12px;align-items:center;flex-wrap:wrap'>" +
-      "<span style='font-size:.68em;color:#52525b'>" + state.sessions.length + " sessions</span>" +
-      "<span style='font-size:.68em;color:#52525b'>" + pct + "% accuracy</span>" +
-      "</div>";
+    var html;
+    if (isPolyPage) {
+      html =
+        "<div style='text-align:center;padding:24px 0 12px;position:relative'>" +
+        "<div style='position:absolute;top:0;left:50%;transform:translateX(-50%);width:240px;height:240px;background:radial-gradient(circle,rgba(245,158,11,.06),transparent 70%);pointer-events:none'></div>" +
+        "<div style='font-size:2em;margin-bottom:4px'>🏫</div>" +
+        "<h1 style='margin:0 0 2px;color:#fafafa;font-size:1.4em;font-weight:800;background:linear-gradient(135deg,#fbbf24,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent'>Polytechnic · First Year</h1>" +
+        "<div style='color:#a1a1aa;font-size:.78em'>Diploma engineering curriculum · 16 subjects</div>" +
+        "<div style='margin-top:12px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap'>" +
+        "<span style='padding:5px 12px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.12);border-radius:100px;color:#fbbf24;font-size:.72em;font-weight:600'>🏅 " + rank.name + "</span>" +
+        "<span style='padding:5px 12px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.1);border-radius:100px;color:#fbbf24;font-size:.72em;font-weight:600'>⭐ " + state.totalPoints + " pts</span>" +
+        "<span style='padding:5px 12px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.1);border-radius:100px;color:#34d399;font-size:.72em;font-weight:600'>🔥 " + state.streaks.current + "d</span>" +
+        "</div></div>" +
+        "<div style='margin:8px 0 0;padding:16px;background:linear-gradient(135deg,rgba(167,139,250,.04),rgba(52,211,153,.02));border:1px solid rgba(255,255,255,.05);border-radius:14px'>" +
+        polyHtml +
+        "</div>";
+    } else {
+      html =
+        "<div style='text-align:center;padding:24px 0 12px;position:relative'>" +
+        "<div style='position:absolute;top:0;left:50%;transform:translateX(-50%);width:240px;height:240px;background:radial-gradient(circle,rgba(167,139,250,.06),transparent 70%);pointer-events:none'></div>" +
+        "<div style='font-size:2em;margin-bottom:4px'>🔬</div>" +
+        "<h1 style='margin:0 0 2px;color:#fafafa;font-size:1.4em;font-weight:800;background:linear-gradient(135deg,#a78bfa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent'>JEE · NEET Lab</h1>" +
+        "<div style='color:#a1a1aa;font-size:.78em'>Physics · Chemistry · Biology · Math</div>" +
+        "<div style='margin-top:12px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap'>" +
+        "<span style='padding:5px 12px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.12);border-radius:100px;color:#a78bfa;font-size:.72em;font-weight:600'>🏅 " + rank.name + "</span>" +
+        "<span style='padding:5px 12px;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.1);border-radius:100px;color:#fbbf24;font-size:.72em;font-weight:600'>⭐ " + state.totalPoints + " pts</span>" +
+        "<span style='padding:5px 12px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.1);border-radius:100px;color:#34d399;font-size:.72em;font-weight:600'>🔥 " + state.streaks.current + "d</span>" +
+        "</div></div>" +
+        "<div style='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0'>" + quickHtml + "</div>" +
+        "<div style='display:flex;gap:8px;margin:14px 0'>" + toolHtml + "</div>" +
+        "<div style='display:flex;gap:10px;margin:12px 0;padding:12px 14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:12px;align-items:center;flex-wrap:wrap'>" +
+        "<span style='font-size:.68em;color:#52525b'>" + state.sessions.length + " sessions</span>" +
+        "<span style='font-size:.68em;color:#52525b'>" + pct + "% accuracy</span>" +
+        "</div>";
+    }
 
     return html;
   }
@@ -8039,8 +8051,10 @@
 
   function initScienceTraining() {
     injectStyles();
-    // Check for cached session
-    var cached = restoreCachedSession();
+    var container = document.getElementById("science-training-container") || document.getElementById("polytechnic-training-container");
+    if (!container) return;
+    // Check for cached session (JEE · NEET lab only)
+    var cached = container.id === "science-training-container" ? restoreCachedSession() : null;
     if (cached) {
       session = cached;
       renderFullUI();
@@ -8048,10 +8062,7 @@
       return;
     }
 
-    var container = document.getElementById("science-training-container");
-    if (container) {
-      container.innerHTML = renderMenu();
-    }
+    container.innerHTML = renderMenu();
     bindEvents();
   }
 
@@ -8069,10 +8080,10 @@
   // Auto-init if DOM ready
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
-      if (document.getElementById("science-training-container")) initScienceTraining();
+      if (document.getElementById("science-training-container") || document.getElementById("polytechnic-training-container")) initScienceTraining();
     });
   } else {
-    if (document.getElementById("science-training-container")) initScienceTraining();
+    if (document.getElementById("science-training-container") || document.getElementById("polytechnic-training-container")) initScienceTraining();
   }
 
 })();
