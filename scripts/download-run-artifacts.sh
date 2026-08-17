@@ -5,9 +5,10 @@
 # whole step the instant any single blob GET returns a transient 503 ("No server
 # is currently available…") — exactly what killed run #441's merge retries and
 # the recovery dry-runs on 2026-08-17. This script pulls each artifact
-# sequentially with retry/backoff so one flaky blob response can never sink the
-# batch, and unzips each archive as it lands (deleting the zip) so it is also
-# disk-safe.
+# sequentially (disk-safe: unzips + deletes each archive as it lands) and, when
+# the artifact service is in a flaky window where individual blobs 503 for
+# minutes, keeps sweeping the failing set across multiple rounds instead of
+# aborting the batch.
 #
 # Usage:
 #   GITHUB_TOKEN=... bash scripts/download-run-artifacts.sh RUN_ID '^chunk-[0-9]+$' DEST
@@ -24,6 +25,8 @@ DEST="${3:?destination dir required}"
 REPO="${REPO:-${GITHUB_REPOSITORY:-}}"
 TOKEN="${GITHUB_TOKEN:?GITHUB_TOKEN required}"
 API="https://api.github.com/repos/${REPO}/actions/runs/${RUN_ID}/artifacts"
+MAX_ROUNDS="${MAX_ROUNDS:-10}"
+ROUND_SLEEP="${ROUND_SLEEP:-30}"
 
 mkdir -p "$DEST"
 
@@ -50,36 +53,44 @@ done
 
 [ -z "$ids" ] && { echo "No artifacts matched pattern '${PATTERN}' in run ${RUN_ID}"; exit 1; }
 
+mapfile -t items <<< "$ids"
+
 count=0
-while IFS= read -r line; do
-  [ -z "$line" ] && continue
-  id=${line%% *}
-  name=${line#* }
-  tmp="${DEST}/.${name}.zip"
-  echo "== downloading ${name} (${id})"
-  ok=0
-  for attempt in 1 2 3 4 5; do
-    if curl -sS -L --fail --retry 5 --retry-all-errors --retry-delay 3 \
+round=1
+while [ "$round" -le "$MAX_ROUNDS" ]; do
+  remaining=()
+  for line in "${items[@]}"; do
+    [ -z "$line" ] && continue
+    id=${line%% *}
+    name=${line#* }
+    marker="${DEST}/.${name}.ok"
+    [ -f "$marker" ] && continue
+    tmp="${DEST}/.${name}.zip"
+    if curl -sS -L --fail --retry 8 --retry-all-errors --retry-delay 5 \
        -H "Authorization: Bearer ${TOKEN}" \
-       -o "$tmp" "https://api.github.com/repos/${REPO}/actions/artifacts/${id}/zip"; then
-      ok=1
-      break
+       -o "$tmp" "https://api.github.com/repos/${REPO}/actions/artifacts/${id}/zip" \
+       && [ -s "$tmp" ] \
+       && unzip -oq "$tmp" -d "$DEST"; then
+      rm -f "$tmp"
+      touch "$marker"
+      count=$((count + 1))
+      echo "extracted ${name} (${count} total so far)"
     else
-      echo "   attempt ${attempt} failed, retrying in 5s..."
-      sleep 5
+      rm -f "$tmp"
+      remaining+=("$line")
     fi
   done
-  if [ "$ok" -ne 1 ] || [ ! -s "$tmp" ]; then
-    echo "ERROR: failed to download artifact ${name} (${id})"
-    exit 1
+  if [ "${#remaining[@]}" -eq 0 ]; then
+    echo "Downloaded ${count} artifact(s) into ${DEST}"
+    exit 0
   fi
-  if ! unzip -oq "$tmp" -d "$DEST"; then
-    echo "ERROR: unzip failed for ${name}"
-    exit 1
-  fi
-  rm -f "$tmp"
-  count=$((count + 1))
-  echo "   extracted ${name} (${count} total so far)"
-done <<< "$ids"
+  echo "round ${round}/${MAX_ROUNDS}: ${#remaining[@]} artifact(s) still failing " \
+      "(chunk-14 style 503 windows) — sleeping ${ROUND_SLEEP}s before next sweep"
+  items=("${remaining[@]}")
+  round=$((round + 1))
+  [ "$round" -le "$MAX_ROUNDS" ] && sleep "$ROUND_SLEEP"
+done
 
-echo "Downloaded ${count} artifact(s) into ${DEST}"
+echo "ERROR: still failing after ${MAX_ROUNDS} rounds:"
+for line in "${items[@]}"; do echo "  ${line%% *} ${line#* }"; done
+exit 1
