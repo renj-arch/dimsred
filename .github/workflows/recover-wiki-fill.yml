@@ -37,27 +37,19 @@ jobs:
 
       - run: npm install
 
-      # Download artifacts from the target run (defaults to this run when empty).
-      # Disk-safe: chunk artifacts land in chunk-src with merge-multiple and are
-      # MOVED into chunks/, then the download trees are deleted — no duplication,
-      # no "No space left on device" (run #441).
+      # Retrying downloader: actions/download-artifact fires all downloads in
+      # parallel and aborts the whole step on any single transient 503. This
+      # fetches each artifact sequentially with retry/backoff (flaky blob
+      # responses can't sink the batch) and unzips+deletes each archive as it
+      # lands, keeping the 14 GB runner out of disk trouble (run #441).
       - name: Download chunk outputs from run
-        uses: actions/download-artifact@v4
-        continue-on-error: true
-        with:
-          pattern: chunk-*
-          path: chunk-src
-          merge-multiple: true
-          run-id: ${{ inputs.run-id || github.run_id }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x scripts/download-run-artifacts.sh
+          bash scripts/download-run-artifacts.sh "${{ inputs.run-id || github.run_id }}" '^chunk-[0-9]+$' chunk-src
 
       - name: Download baseline data from run
-        uses: actions/download-artifact@v4
-        with:
-          name: baseline
-          path: baseline
-          run-id: ${{ inputs.run-id || github.run_id }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bash scripts/download-run-artifacts.sh "${{ inputs.run-id || github.run_id }}" '^baseline$' baseline
 
       - name: Preserve feed-owned files from baseline
         run: |

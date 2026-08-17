@@ -158,22 +158,20 @@ jobs:
       # duplicate them. Run #441's merge died with "No space left on device"
       # because it (a) downloaded ALL artifacts (~6.5 GB) and (b) `cp`-ed every
       # chunk file again into chunks/ — a second ~6.5 GB copy that blew the 14 GB
-      # runner. We now download chunk artifacts into one dir with merge-multiple,
-      # move (not copy) the chunk files into chunks/, and delete the download
-      # trees and the repo's stale data/ before restoring the baseline.
-      - name: Download chunk outputs (single copy, no duplication)
-        uses: actions/download-artifact@v4
+      # runner. We now download chunk artifacts via a retrying script that
+      # unzips+deletes each archive as it lands, move (not copy) the chunk files
+      # into chunks/, and delete the download trees and the repo's stale data/
+      # before restoring the baseline. continue-on-error keeps the merge alive
+      # when every chunk failed (merge-chunks.js no-ops cleanly).
+      - name: Download chunk outputs (single copy, retrying)
         continue-on-error: true
-        with:
-          pattern: chunk-*
-          path: chunk-src
-          merge-multiple: true
+        run: |
+          chmod +x scripts/download-run-artifacts.sh
+          bash scripts/download-run-artifacts.sh "${{ github.run_id }}" '^chunk-[0-9]+$' chunk-src
 
       - name: Download baseline data
-        uses: actions/download-artifact@v4
-        with:
-          name: baseline
-          path: baseline
+        run: |
+          bash scripts/download-run-artifacts.sh "${{ github.run_id }}" '^baseline$' baseline
 
       - name: Preserve feed-owned files from baseline
         run: |
