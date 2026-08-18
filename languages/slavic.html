@@ -140,7 +140,7 @@
         <div class="card">
             <h2>💬 Essential Phrases</h2>
             <table>
-                <tr><th>English</th><th>Russian</th><th>Polish</th><th>Czech</th></tr>
+                <tr><th>English</th><th>Russian</th><th data-lang="pl">Polish</th><th data-lang="cs">Czech</th></tr>
                 <tr><td>Hello</td><td class="nat">Здравствуйте</td><td class="nat">Cześć / Dzień dobry</td><td class="nat">Dobrý den</td></tr>
                 <tr><td>Thank you</td><td class="nat">Спасибо</td><td class="nat">Dziękuję</td><td class="nat">Děkuji</td></tr>
                 <tr><td>Please</td><td class="nat">Пожалуйста</td><td class="nat">Proszę</td><td class="nat">Prosím</td></tr>
@@ -157,7 +157,7 @@
         <div class="card">
             <h2>🔢 Numbers 0–10 &amp; 20</h2>
             <table>
-                <tr><th>#</th><th>Russian</th><th>Polish</th><th>Czech</th></tr>
+                <tr><th>#</th><th>Russian</th><th data-lang="pl">Polish</th><th data-lang="cs">Czech</th></tr>
                 <tr><td>0</td><td class="nat">ноль</td><td class="nat">zero</td><td class="nat">nula</td></tr>
                 <tr><td>1</td><td class="nat">один</td><td class="nat">jeden</td><td class="nat">jedna</td></tr>
                 <tr><td>2</td><td class="nat">два</td><td class="nat">dwa</td><td class="nat">dva</td></tr>
@@ -186,7 +186,80 @@
             </ul>
         </div>
 
+        <div id="ru-review"></div>
+
+        <div class="card">
+            <h2>🎯 Most Frequent Words Trainer</h2>
+            <p>Roughly 1,000 headwords gets you fluent in everyday Russian. This trainer starts you on the top-frequency core — tap 🔊 to hear, mark mastered, then run Quick recall until 100%.</p>
+            <div id="ru-words"></div>
+        </div>
+
+        <div class="card">
+            <h2>👂 Listen &amp; Type Drill</h2>
+            <p>Hear the sentence, type it in Cyrillic. This trains your ear to hard vs. soft consonants and stress.</p>
+            <div id="ru-listen"></div>
+        </div>
+
+        <div class="card">
+            <h2>💬 Voice Chat Practice</h2>
+            <p>A scripted dialogue with a native-sounding bot. Speak (Chrome/Edge) or type. Reply using phrases from this course.</p>
+            <div id="ru-chat"></div>
+        </div>
+
         <a href="index.html" class="back">← Back to Languages Hub</a>
     </div>
+    <script>
+        window.COURSE = {
+            lang: "ru",
+            wordTrainers: {
+                "ru-words": {
+                    lang: "ru",
+                    words: [
+                        ["я", "I"], ["ты", "you (sg.)"], ["он", "he"], ["она", "she"], ["мы", "we"], ["вы", "you (pl.)"], ["это", "this"], ["то", "that"], ["что", "what"], ["кто", "who"], ["где", "where"], ["когда", "when"], ["почему", "why"], ["как", "how"], ["человек", "person"], ["имя", "name"], ["дом", "home / house"], ["школа", "school"], ["друг", "friend"], ["мама", "mom"], ["папа", "dad"], ["сын", "son"], ["дочь", "daughter"], ["ребёнок", "child"], ["мужчина", "man"], ["женщина", "woman"], ["русский", "Russian (language)"], ["Россия", "Russia"], ["Индия", "India"], ["Америка", "America"], ["страна", "country"], ["город", "city"], ["Москва", "Moscow"], ["время", "time"], ["день", "day"], ["сегодня", "today"], ["завтра", "tomorrow"], ["вчера", "yesterday"], ["сейчас", "now"], ["утро", "morning"], ["обед", "noon / lunch"], ["вечер", "evening"], ["ночь", "night"], ["неделя", "week"], ["месяц", "month"], ["год", "year"], ["погода", "weather"], ["дождь", "rain"], ["снег", "snow"], ["гора", "mountain"], ["море", "sea"], ["вода", "water"], ["огонь", "fire"], ["деньги", "money"], ["магазин", "shop"], ["дорога", "road"], ["одежда", "clothes"], ["обувь", "shoes"], ["рис", "rice"], ["хлеб", "bread"], ["мясо", "meat"], ["рыба", "fish"], ["овощи", "vegetables"], ["фрукты", "fruit"], ["яблоко", "apple"], ["чай", "tea"], ["кофе", "coffee"], ["пиво", "beer"], ["молоко", "milk"], ["идти", "to go"], ["приходить", "to come"], ["есть", "to eat"], ["пить", "to drink"], ["видеть", "to see"], ["слышать", "to hear"], ["говорить", "to speak"], ["читать", "to read"], ["писать", "to write"], ["делать", "to do"], ["знать", "to know"], ["понимать", "to understand"], ["учить", "to learn / study"], ["работать", "to work"], ["покупать", "to buy"], ["продавать", "to sell"], ["давать", "to give"], ["встречать", "to meet"], ["жить", "to live"], ["любить", "to like / love"], ["хотеть", "to want"], ["хороший", "good"], ["плохой", "bad"], ["большой", "big"], ["маленький", "small"], ["много", "many / a lot"], ["мало", "few / little"], ["длинный", "long"], ["короткий", "short"], ["дорогой", "expensive / dear"], ["дешёвый", "cheap"], ["вкусный", "delicious"], ["холодный", "cold"], ["горячий", "hot"], ["быстрый", "fast"], ["медленный", "slow"], ["трудный", "difficult"], ["лёгкий", "easy"], ["занятой", "busy"], ["счастливый", "happy"], ["грустный", "sad"], ["но", "but"], ["и", "and"], ["очень", "very"], ["здесь", "here"], ["там", "there"], ["верх", "above"], ["низ", "below"], ["спереди", "in front"], ["сзади", "behind"], ["право", "right (side)"], ["лево", "left (side)"]
+                    ]
+                }
+            },
+            listenDrills: {
+                "ru-listen": {
+                    lang: "ru",
+                    items: [
+                        { say: "Здравствуйте", trans: "Hello (formal)", hint: "zdra-stvuy-te" },
+                        { say: "Спасибо", trans: "Thank you", hint: "spa-si-ba" },
+                        { say: "Извините", trans: "Excuse me / sorry", hint: "iz-vi-ni-te" },
+                        { say: "Я студент", trans: "I am a student", hint: "ya stu-dent" },
+                        { say: "Я учу русский", trans: "I'm learning Russian", hint: "ya u-chu rus-skiy" },
+                        { say: "Сколько стоит?", trans: "How much does it cost?", hint: "skol-ka sto-it" },
+                        { say: "Где туалет?", trans: "Where is the restroom?", hint: "gde tu-a-let" },
+                        { say: "Очень вкусно", trans: "Very tasty", hint: "o-chen vkus-na" },
+                        { say: "Как вас зовут?", trans: "What's your name?", hint: "kak vas zo-vut" },
+                        { say: "Говорите по-русски?", trans: "Do you speak Russian?", hint: "go-vo-ri-te pa-rus-ski" },
+                        { say: "Я не понимаю", trans: "I don't understand", hint: "ya ne po-ni-ma-yu" },
+                        { say: "До свидания", trans: "Goodbye", hint: "da svi-da-nia" }
+                    ]
+                }
+            },
+            chats: {
+                "ru-chat": {
+                    lang: "ru",
+                    srLang: "ru-RU",
+                    title: "Meeting at the café",
+                    dialogue: [
+                        { say: "Здравствуйте! Меня зовут Анна.", en: "Hello! My name is Anna.", expect: ["здравствуйте", "привет"] },
+                        { say: "Как вас зовут?", en: "What's your name?", expect: ["зовут", "я"], },
+                        { say: "Откуда вы приехали?", en: "Where are you from?", expect: ["инди", "приеха", "откуда"] },
+                        { say: "Вы учите русский?", en: "Are you learning Russian?", expect: ["учу", "русский"] },
+                        { say: "Русский сложный?", en: "Is Russian difficult?", expect: ["сложный", "трудный", "да", "нет"] },
+                        { say: "Что вы хотите есть?", en: "What would you like to eat?", expect: ["хочу", "есть"] },
+                        { say: "Давайте попробуем борщ?", en: "Shall we try borscht?", expect: ["да", "борщ", "будет"] },
+                        { say: "До свидания!", en: "Goodbye!", expect: ["свидания", "пока"] }
+                    ]
+                }
+            },
+            reviews: {
+                "ru-review": { lang: "ru", total: 121, target: "ru-words" }
+            }
+        };
+    </script>
+    <script src="course.js"></script>
 </body>
 </html>

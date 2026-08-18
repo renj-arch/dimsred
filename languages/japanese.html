@@ -165,7 +165,80 @@
             </ul>
         </div>
 
+        <div id="ja-review"></div>
+
+        <div class="card">
+            <h2>🎯 Most Frequent Words Trainer</h2>
+            <p>Roughly 1,000 headwords gets you fluent in everyday Japanese. This trainer starts you on the top-frequency core — tap 🔊 to hear, mark mastered, then run Quick recall until 100%.</p>
+            <div id="ja-words"></div>
+        </div>
+
+        <div class="card">
+            <h2>👂 Listen &amp; Type Drill</h2>
+            <p>Hear the phrase, type it in kana/kanji. This trains your ear to Japanese pitch and rhythm.</p>
+            <div id="ja-listen"></div>
+        </div>
+
+        <div class="card">
+            <h2>💬 Voice Chat Practice</h2>
+            <p>A scripted dialogue with a native-sounding bot. Speak (Chrome/Edge) or type. Reply using phrases from this course.</p>
+            <div id="ja-chat"></div>
+        </div>
+
         <a href="index.html" class="back">← Back to Languages Hub</a>
     </div>
+    <script>
+        window.COURSE = {
+            lang: "ja",
+            wordTrainers: {
+                "ja-words": {
+                    lang: "ja",
+                    words: [
+                        ["私", "I (me)"], ["あなた", "you"], ["僕", "I (male casual)"], ["彼", "he"], ["彼女", "she / girlfriend"], ["私たち", "we"], ["これ", "this"], ["それ", "that (near you)"], ["あれ", "that (over there)"], ["何", "what"], ["誰", "who"], ["どこ", "where"], ["いつ", "when"], ["なぜ", "why"], ["人", "person"], ["こと", "thing / fact"], ["名前", "name"], ["家", "home / house"], ["学校", "school"], ["友達", "friend"], ["母", "mother"], ["父", "father"], ["息子", "son"], ["娘", "daughter"], ["兄", "older brother"], ["姉", "older sister"], ["弟", "younger brother"], ["妹", "younger sister"], ["子供", "child"], ["男", "man"], ["女", "woman"], ["日本語", "Japanese (language)"], ["日本", "Japan"], ["インド", "India"], ["アメリカ", "America"], ["国", "country"], ["町", "town"], ["東京", "Tokyo"], ["時間", "time / hour"], ["日", "day"], ["今日", "today"], ["明日", "tomorrow"], ["昨日", "yesterday"], ["今", "now"], ["朝", "morning"], ["昼", "noon"], ["夜", "night"], ["週", "week"], ["月", "month"], ["年", "year"], ["天気", "weather"], ["雨", "rain"], ["雪", "snow"], ["山", "mountain"], ["海", "sea"], ["水", "water"], ["火", "fire"], ["お金", "money"], ["店", "shop"], ["通り", "street"], ["服", "clothes"], ["靴", "shoes"], ["ご飯", "rice / meal"], ["パン", "bread"], ["肉", "meat"], ["魚", "fish"], ["野菜", "vegetables"], ["果物", "fruit"], ["りんご", "apple"], ["寿司", "sushi"], ["ラーメン", "ramen"], ["お茶", "tea"], ["コーヒー", "coffee"], ["ビール", "beer"], ["酒", "alcohol / sake"], ["牛乳", "milk"], ["行く", "to go"], ["来る", "to come"], ["食べる", "to eat"], ["飲む", "to drink"], ["見る", "to see / watch"], ["聞く", "to listen / ask"], ["話す", "to speak"], ["読む", "to read"], ["書く", "to write"], ["する", "to do"], ["知る", "to know"], ["分かる", "to understand"], ["学ぶ", "to learn"], ["勉強する", "to study"], ["働く", "to work"], ["買う", "to buy"], ["売る", "to sell"], ["あげる", "to give"], ["会う", "to meet"], ["住む", "to live"], ["好き", "be liked / like"], ["欲しい", "want (adj.)"], ["いい", "good"], ["悪い", "bad"], ["大きい", "big"], ["小さい", "small"], ["多い", "many"], ["少ない", "few"], ["長い", "long"], ["短い", "short"], ["高い", "expensive / tall"], ["安い", "cheap"], ["美味しい", "delicious"], ["楽しい", "fun"], ["寒い", "cold"], ["暑い", "hot"], ["暖かい", "warm"], ["速い", "fast"], ["難しい", "difficult"], ["簡単", "easy"], ["忙しい", "busy"], ["嬉しい", "happy"], ["悲しい", "sad"], ["怖い", "scary"], ["疲れた", "tired"], ["でも", "but"], ["そして", "and / then"], ["だから", "so / therefore"], ["また", "again"], ["とても", "very"], ["ちょっと", "a little"], ["一緒に", "together"], ["ここ", "here"], ["そこ", "there"], ["上", "above"], ["下", "below"], ["前", "in front"], ["後ろ", "behind"], ["右", "right (side)"], ["左", "left (side)"]
+                    ]
+                }
+            },
+            listenDrills: {
+                "ja-listen": {
+                    lang: "ja",
+                    items: [
+                        { say: "こんにちは", trans: "Hello", hint: "konnichiwa" },
+                        { say: "ありがとうございます", trans: "Thank you (polite)", hint: "arigatou gozaimasu" },
+                        { say: "すみません", trans: "Excuse me / sorry", hint: "sumimasen" },
+                        { say: "お願いします", trans: "Please", hint: "onegaishimasu" },
+                        { say: "私は学生です", trans: "I am a student", hint: "watashi wa gakusei desu" },
+                        { say: "日本語を勉強しています", trans: "I'm studying Japanese", hint: "nihongo o benkyou shiteimasu" },
+                        { say: "ちょっと待ってください", trans: "Please wait a moment", hint: "chotto matte kudasai" },
+                        { say: "これはいくらですか", trans: "How much is this?", hint: "kore wa ikura desu ka" },
+                        { say: "トイレはどこですか", trans: "Where is the toilet?", hint: "toire wa doko desu ka" },
+                        { say: "美味しいです", trans: "It's delicious", hint: "oishii desu" },
+                        { say: "お元気ですか", trans: "How are you?", hint: "ogenki desu ka" },
+                        { say: "またね", trans: "See you later", hint: "mata ne" }
+                    ]
+                }
+            },
+            chats: {
+                "ja-chat": {
+                    lang: "ja",
+                    srLang: "ja-JP",
+                    title: "Meeting Ken",
+                    dialogue: [
+                        { say: "こんにちは、ケンです。", en: "Hello, I'm Ken.", expect: ["こんにちは"] },
+                        { say: "お名前は何ですか？", en: "What is your name?", expect: ["わたし", "です", "と申します"] },
+                        { say: "どこから来ましたか？", en: "Where are you from?", expect: ["から", "インド", "来ま"] },
+                        { say: "日本語を勉強していますか？", en: "Are you studying Japanese?", expect: ["勉強", "日本語"] },
+                        { say: "日本語は難しいですか？", en: "Is Japanese difficult?", expect: ["難しい", "いいえ", "はい"] },
+                        { say: "何を食べたいですか？", en: "What do you want to eat?", expect: ["食べたい", "寿司", "ラーメン"] },
+                        { say: "ラーメンはどうですか？", en: "How about ramen?", expect: ["いい", "好き", "おいしい"] },
+                        { say: "また会いましょう！", en: "Let's meet again!", expect: ["また"] }
+                    ]
+                }
+            },
+            reviews: {
+                "ja-review": { lang: "ja", total: 136, target: "ja-words" }
+            }
+        };
+    </script>
+    <script src="course.js"></script>
 </body>
 </html>

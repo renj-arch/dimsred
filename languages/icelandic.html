@@ -160,7 +160,80 @@
             </ul>
         </div>
 
+        <div id="is-review"></div>
+
+        <div class="card">
+            <h2>🎯 Most Frequent Words Trainer</h2>
+            <p>Roughly 1,000 headwords lets you hold a real conversation in Icelandic. This trainer starts you on the top-frequency core — tap 🔊 to hear, mark mastered, then run Quick recall until 100%.</p>
+            <div id="is-words"></div>
+        </div>
+
+        <div class="card">
+            <h2>👂 Listen &amp; Type Drill</h2>
+            <p>Hear the sentence, type it in Icelandic. This trains your ear to þ, ð and the rolled r.</p>
+            <div id="is-listen"></div>
+        </div>
+
+        <div class="card">
+            <h2>💬 Voice Chat Practice</h2>
+            <p>A scripted dialogue with a native-sounding bot. Speak (Chrome/Edge) or type. Reply using phrases from this course.</p>
+            <div id="is-chat"></div>
+        </div>
+
         <a href="index.html" class="back">← Back to Languages Hub</a>
     </div>
+    <script>
+        window.COURSE = {
+            lang: "is",
+            wordTrainers: {
+                "is-words": {
+                    lang: "is",
+                    words: [
+                        ["ég", "I"], ["þú", "you"], ["hann", "he"], ["hún", "she"], ["við", "we"], ["þið", "you (pl.)"], ["það", "it / that"], ["þessi", "this"], ["sá", "that"], ["hvað", "what"], ["hver", "who"], ["hvar", "where"], ["hvenær", "when"], ["af hverju", "why"], ["hvernig", "how"], ["maður", "person / man"], ["nafn", "name"], ["heimili", "home"], ["skóli", "school"], ["vinur", "friend"], ["mamma", "mother"], ["pabbi", "father"], ["sonur", "son"], ["dóttir", "daughter"], ["barn", "child"], ["kona", "woman"], ["íslenska", "Icelandic (language)"], ["Ísland", "Iceland"], ["Indland", "India"], ["Ameríka", "America"], ["land", "country / land"], ["borg", "city"], ["Reykjavík", "Reykjavík"], ["tími", "time"], ["dagur", "day"], ["í dag", "today"], ["á morgun", "tomorrow"], ["í gær", "yesterday"], ["núna", "now"], ["morgunn", "morning"], ["hádegi", "noon"], ["kvöld", "evening"], ["nótt", "night"], ["vika", "week"], ["mánuður", "month"], ["ár", "year"], ["veður", "weather"], ["rigning", "rain"], ["snjór", "snow"], ["fjall", "mountain"], ["sjór", "sea"], ["vatn", "water"], ["eldur", "fire"], ["peningar", "money"], ["búð", "shop"], ["vegur", "road"], ["föt", "clothes"], ["skór", "shoes"], ["hrísgrjón", "rice"], ["brauð", "bread"], ["kjöt", "meat"], ["fiskur", "fish"], ["grænmeti", "vegetables"], ["ávöxtur", "fruit"], ["epli", "apple"], ["te", "tea"], ["kaffi", "coffee"], ["bjór", "beer"], ["mjólk", "milk"], ["fara", "to go"], ["koma", "to come"], ["borða", "to eat"], ["drekka", "to drink"], ["sjá", "to see"], ["heyra", "to hear"], ["tala", "to speak"], ["lesa", "to read"], ["skrifa", "to write"], ["gera", "to do"], ["vita", "to know"], ["skilja", "to understand"], ["læra", "to learn / study"], ["vinna", "to work"], ["kaupa", "to buy"], ["selja", "to sell"], ["gefa", "to give"], ["hitta", "to meet"], ["búa", "to live"], ["líka", "to like"], ["vilja", "to want"], ["góður", "good"], ["vondur", "bad"], ["stór", "big"], ["lítill", "small"], ["margur", "many"], ["fáir", "few"], ["langur", "long"], ["stuttur", "short"], ["dýr", "expensive"], ["ódýr", "cheap"], ["bragðgóður", "delicious"], ["kaldur", "cold"], ["heitur", "hot"], ["fljótur", "fast"], ["hægur", "slow"], ["erfiður", "difficult"], ["auðveldur", "easy"], ["upptekinn", "busy"], ["glaður", "happy"], ["sorglegur", "sad"], ["en", "but"], ["og", "and"], ["mjög", "very"], ["hér", "here"], ["þar", "there"]
+                    ]
+                }
+            },
+            listenDrills: {
+                "is-listen": {
+                    lang: "is",
+                    items: [
+                        { say: "Halló", trans: "Hello", hint: "hal-loh" },
+                        { say: "Takk fyrir", trans: "Thank you", hint: "tahk fih-rir" },
+                        { say: "Fyrirgefðu", trans: "Sorry / forgive me", hint: "fih-rir-gev-thu" },
+                        { say: "Ég heiti Eva", trans: "My name is Eva", hint: "yegh hey-ti" },
+                        { say: "Ég er frá Indlandi", trans: "I'm from India", hint: "yegh er frau ind-lan-di" },
+                        { say: "Ég læri íslensku", trans: "I'm learning Icelandic", hint: "yegh lai-ri" },
+                        { say: "Hvað kostar þetta?", trans: "How much is this?", hint: "hvath kos-tar" },
+                        { say: "Hvar er klósettið?", trans: "Where is the bathroom?", hint: "khvar er" },
+                        { say: "Þetta er gott", trans: "This is good", hint: "thet-ta er got" },
+                        { say: "Hvað heitir þú?", trans: "What's your name?", hint: "hvath hey-tir" },
+                        { say: "Góðan dag", trans: "Good day", hint: "goh-than dahg" },
+                        { say: "Bless", trans: "Bye", hint: "bless" }
+                    ]
+                }
+            },
+            chats: {
+                "is-chat": {
+                    lang: "is",
+                    srLang: "is-IS",
+                    title: "Meeting at the harbour",
+                    dialogue: [
+                        { say: "Halló! Ég heiti Ólafur.", en: "Hello! I'm Ólafur.", expect: ["halló", "góðan"] },
+                        { say: "Hvað heitir þú?", en: "What's your name?", expect: ["ég heiti", "heit"] },
+                        { say: "Hvaðan ert þú?", en: "Where are you from?", expect: ["frá", "indland", "ástral"] },
+                        { say: "Ertu að læra íslensku?", en: "Are you learning Icelandic?", expect: ["læra", "læri", "íslensku"] },
+                        { say: "Er íslenska erfið?", en: "Is Icelandic difficult?", expect: ["erfið", "já", "nei"] },
+                        { say: "Hvað viltu borða?", en: "What do you want to eat?", expect: ["borða", "fisk", "kjöt"] },
+                        { say: "Ertu með mér að borða fisk?", en: "Will you eat fish with me?", expect: ["já", "tak", "gjarn"] },
+                        { say: "Bless, sjáumst!", en: "Bye, see you!", expect: ["bless", "sjáumst"] }
+                    ]
+                }
+            },
+            reviews: {
+                "is-review": { lang: "is", total: 115, target: "is-words" }
+            }
+        };
+    </script>
+    <script src="course.js"></script>
 </body>
 </html>

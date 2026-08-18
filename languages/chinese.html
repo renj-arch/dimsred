@@ -196,7 +196,80 @@
             </ul>
         </div>
 
+        <div id="zh-review"></div>
+
+        <div class="card">
+            <h2>🎯 Most Frequent Words Trainer</h2>
+            <p>Roughly 1,000 headwords gets you fluent in everyday Mandarin. This trainer starts you on the top-frequency core — tap 🔊 to hear, mark mastered, then run Quick recall until 100%.</p>
+            <div id="zh-words"></div>
+        </div>
+
+        <div class="card">
+            <h2>👂 Listen &amp; Type Drill</h2>
+            <p>Hear the sentence, type it in characters or pinyin. This trains your ear to the four tones.</p>
+            <div id="zh-listen"></div>
+        </div>
+
+        <div class="card">
+            <h2>💬 Voice Chat Practice</h2>
+            <p>A scripted dialogue with a native-sounding bot. Speak (Chrome/Edge) or type. Reply using phrases from this course.</p>
+            <div id="zh-chat"></div>
+        </div>
+
         <a href="index.html" class="back">← Back to Languages Hub</a>
     </div>
+    <script>
+        window.COURSE = {
+            lang: "zh-CN",
+            wordTrainers: {
+                "zh-words": {
+                    lang: "zh-CN",
+                    words: [
+                        ["我", "I / me"], ["你", "you"], ["他", "he"], ["她", "she"], ["我们", "we"], ["你们", "you (plural)"], ["这", "this"], ["那", "that"], ["什么", "what"], ["谁", "who"], ["哪里", "where"], ["什么时候", "when"], ["为什么", "why"], ["怎么", "how"], ["人", "person"], ["事情", "matter / thing"], ["名字", "name"], ["家", "home"], ["学校", "school"], ["朋友", "friend"], ["妈妈", "mother"], ["爸爸", "father"], ["儿子", "son"], ["女儿", "daughter"], ["孩子", "child"], ["男人", "man"], ["女人", "woman"], ["中国", "China"], ["印度", "India"], ["美国", "America"], ["国家", "country"], ["城市", "city"], ["北京", "Beijing"], ["时间", "time"], ["今天", "today"], ["明天", "tomorrow"], ["昨天", "yesterday"], ["现在", "now"], ["早上", "morning"], ["中午", "noon"], ["晚上", "evening"], ["星期", "week"], ["月", "month"], ["年", "year"], ["天气", "weather"], ["雨", "rain"], ["雪", "snow"], ["山", "mountain"], ["海", "sea"], ["水", "water"], ["火", "fire"], ["钱", "money"], ["店", "shop"], ["路", "road"], ["衣服", "clothes"], ["鞋", "shoes"], ["米饭", "rice (cooked)"], ["面包", "bread"], ["肉", "meat"], ["鱼", "fish"], ["菜", "vegetables / dishes"], ["水果", "fruit"], ["苹果", "apple"], ["面条", "noodles"], ["茶", "tea"], ["咖啡", "coffee"], ["啤酒", "beer"], ["牛奶", "milk"], ["去", "to go"], ["来", "to come"], ["吃", "to eat"], ["喝", "to drink"], ["看", "to see / watch"], ["听", "to listen"], ["说", "to speak"], ["读", "to read"], ["写", "to write"], ["做", "to do"], ["知道", "to know"], ["明白", "to understand"], ["学", "to learn"], ["学习", "to study"], ["工作", "to work"], ["买", "to buy"], ["卖", "to sell"], ["给", "to give"], ["见面", "to meet"], ["住", "to live"], ["喜欢", "to like"], ["想要", "to want"], ["好", "good"], ["坏", "bad"], ["大", "big"], ["小", "small"], ["多", "many"], ["少", "few"], ["长", "long"], ["短", "short"], ["贵", "expensive"], ["便宜", "cheap"], ["好吃", "delicious"], ["好玩", "fun"], ["疼", "painful"], ["冷", "cold"], ["热", "hot"], ["快", "fast"], ["慢", "slow"], ["难", "difficult"], ["容易", "easy"], ["忙", "busy"], ["高兴", "happy"], ["伤心", "sad"], ["但是", "but"], ["和", "and"], ["所以", "so / therefore"], ["很", "very"], ["一起", "together"], ["这里", "here"], ["那里", "there"], ["上", "above"], ["下", "below"], ["前", "front"], ["后", "back"], ["右", "right (side)"], ["左", "left (side)"]
+                    ]
+                }
+            },
+            listenDrills: {
+                "zh-listen": {
+                    lang: "zh-CN",
+                    items: [
+                        { say: "你好", trans: "Hello", hint: "nǐ hǎo" },
+                        { say: "谢谢", trans: "Thank you", hint: "xièxie" },
+                        { say: "对不起", trans: "Sorry", hint: "duìbuqǐ" },
+                        { say: "请问", trans: "May I ask / excuse me", hint: "qǐngwèn" },
+                        { say: "我是学生", trans: "I am a student", hint: "wǒ shì xuéshēng" },
+                        { say: "我在学中文", trans: "I'm learning Chinese", hint: "wǒ zài xué zhōngwén" },
+                        { say: "多少钱", trans: "How much?", hint: "duōshao qián" },
+                        { say: "太贵了", trans: "It's too expensive", hint: "tài guì le" },
+                        { say: "洗手间在哪里", trans: "Where is the restroom?", hint: "xǐshǒujiān zài nǎli" },
+                        { say: "很好吃", trans: "It's delicious", hint: "hěn hǎochī" },
+                        { say: "你叫什么名字", trans: "What's your name?", hint: "nǐ jiào shénme míngzi" },
+                        { say: "再见", trans: "Goodbye", hint: "zàijiàn" }
+                    ]
+                }
+            },
+            chats: {
+                "zh-chat": {
+                    lang: "zh-CN",
+                    srLang: "zh-CN",
+                    title: "Meeting Xiao Li",
+                    dialogue: [
+                        { say: "你好！我是小李。", en: "Hello! I'm Xiao Li.", expect: ["你好"] },
+                        { say: "你叫什么名字？", en: "What's your name?", expect: ["叫", "是", "名字"] },
+                        { say: "你是哪国人？", en: "What country are you from?", expect: ["印度", "人", "国"] },
+                        { say: "你在学中文吗？", en: "Are you studying Chinese?", expect: ["学", "中文"] },
+                        { say: "中文难吗？", en: "Is Chinese difficult?", expect: ["难", "不难", "很"] },
+                        { say: "你想吃什么？", en: "What do you want to eat?", expect: ["吃", "想"] },
+                        { say: "饺子怎么样？", en: "How about dumplings?", expect: ["好", "喜欢", "吃"] },
+                        { say: "再见！", en: "Goodbye!", expect: ["再见"] }
+                    ]
+                }
+            },
+            reviews: {
+                "zh-review": { lang: "zh-CN", total: 125, target: "zh-words" }
+            }
+        };
+    </script>
+    <script src="course.js"></script>
 </body>
 </html>

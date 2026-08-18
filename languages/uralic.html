@@ -157,7 +157,80 @@
             </ul>
         </div>
 
+        <div id="hu-review"></div>
+
+        <div class="card">
+            <h2>🎯 Most Frequent Words Trainer</h2>
+            <p>Roughly 1,000 headwords gets you fluent in everyday Hungarian. This trainer starts you on the top-frequency core — tap 🔊 to hear, mark mastered, then run Quick recall until 100%.</p>
+            <div id="hu-words"></div>
+        </div>
+
+        <div class="card">
+            <h2>👂 Listen &amp; Type Drill</h2>
+            <p>Hear the sentence, type it in Hungarian. This trains your ear to vowel harmony and long vs. short vowels.</p>
+            <div id="hu-listen"></div>
+        </div>
+
+        <div class="card">
+            <h2>💬 Voice Chat Practice</h2>
+            <p>A scripted dialogue with a native-sounding bot. Speak (Chrome/Edge) or type. Reply using phrases from this course.</p>
+            <div id="hu-chat"></div>
+        </div>
+
         <a href="index.html" class="back">← Back to Languages Hub</a>
     </div>
+    <script>
+        window.COURSE = {
+            lang: "hu",
+            wordTrainers: {
+                "hu-words": {
+                    lang: "hu",
+                    words: [
+                        ["én", "I"], ["te", "you"], ["ő", "he / she"], ["mi", "we"], ["ti", "you (pl.)"], ["ez", "this"], ["az", "that"], ["mi", "what"], ["ki", "who"], ["hol", "where"], ["mikor", "when"], ["miért", "why"], ["hogyan", "how"], ["ember", "person"], ["név", "name"], ["otthon", "home"], ["iskola", "school"], ["barát", "friend"], ["anya", "mother"], ["apa", "father"], ["fiú", "son / boy"], ["lány", "daughter / girl"], ["gyerek", "child"], ["férfi", "man"], ["nő", "woman"], ["magyar", "Hungarian"], ["Magyarország", "Hungary"], ["India", "India"], ["Amerika", "America"], ["ország", "country"], ["város", "city"], ["Budapest", "Budapest"], ["idő", "time"], ["nap", "day"], ["ma", "today"], ["holnap", "tomorrow"], ["tegnap", "yesterday"], ["most", "now"], ["reggel", "morning"], ["dél", "noon"], ["este", "evening"], ["éjszaka", "night"], ["hét", "week"], ["hónap", "month"], ["év", "year"], ["időjárás", "weather"], ["eső", "rain"], ["hó", "snow"], ["hegy", "mountain"], ["tenger", "sea"], ["víz", "water"], ["tűz", "fire"], ["pénz", "money"], ["bolt", "shop"], ["út", "road"], ["ruha", "clothes"], ["cipő", "shoes"], ["rizs", "rice"], ["kenyér", "bread"], ["hús", "meat"], ["hal", "fish"], ["zöldség", "vegetables"], ["gyümölcs", "fruit"], ["alma", "apple"], ["tea", "tea"], ["kávé", "coffee"], ["sör", "beer"], ["tej", "milk"], ["megy", "to go"], ["jön", "to come"], ["eszik", "to eat"], ["iszik", "to drink"], ["lát", "to see"], ["hall", "to hear"], ["beszél", "to speak"], ["olvas", "to read"], ["ír", "to write"], ["csinál", "to do"], ["tud", "to know / can"], ["ért", "to understand"], ["tanul", "to learn / study"], ["dolgozik", "to work"], ["vesz", "to buy"], ["elad", "to sell"], ["ad", "to give"], ["találkozik", "to meet"], ["lakik", "to live (in)"], ["szeret", "to like / love"], ["akar", "to want"], ["jó", "good"], ["rossz", "bad"], ["nagy", "big"], ["kicsi", "small"], ["sok", "many"], ["kevés", "few"], ["hosszú", "long"], ["rövid", "short"], ["drága", "expensive"], ["olcsó", "cheap"], ["finom", "delicious"], ["hideg", "cold"], ["meleg", "hot / warm"], ["gyors", "fast"], ["lassú", "slow"], ["nehéz", "difficult"], ["könnyű", "easy"], ["elfoglalt", "busy"], ["boldog", "happy"], ["szomorú", "sad"], ["de", "but"], ["és", "and"], ["nagyon", "very"], ["itt", "here"], ["ott", "there"], ["fent", "above"], ["lent", "below"], ["elöl", "in front"], ["hátul", "behind"], ["jobb", "right (side)"], ["bal", "left (side)"]
+                    ]
+                }
+            },
+            listenDrills: {
+                "hu-listen": {
+                    lang: "hu",
+                    items: [
+                        { say: "Szia", trans: "Hello / hi", hint: "see-yah" },
+                        { say: "Köszönöm", trans: "Thank you", hint: "kö-sö-nöm" },
+                        { say: "Sajnálom", trans: "I'm sorry", hint: "shoy-nalom" },
+                        { say: "Diák vagyok", trans: "I am a student", hint: "dee-ak vogyok" },
+                        { say: "Magyarul tanulok", trans: "I'm learning Hungarian", hint: "mogyarul tanulok" },
+                        { say: "Mennyibe kerül?", trans: "How much does it cost?", hint: "mennyibe kerül" },
+                        { say: "Hol van a mosdó?", trans: "Where is the restroom?", hint: "hol van a modshdó" },
+                        { say: "Finom!", trans: "Delicious!", hint: "finom" },
+                        { say: "Hogy hívnak?", trans: "What's your name?", hint: "hogy hívnak" },
+                        { say: "Jó napot kívánok", trans: "Good day (formal greeting)", hint: "yó nopot kívá-nok" },
+                        { say: "Miről beszélsz?", trans: "What are you talking about?", hint: "miről bessélsz" },
+                        { say: "Viszlát", trans: "Goodbye", hint: "visz-lát" }
+                    ]
+                }
+            },
+            chats: {
+                "hu-chat": {
+                    lang: "hu",
+                    srLang: "hu-HU",
+                    title: "Getting coffee",
+                    dialogue: [
+                        { say: "Szia! Dorka vagyok.", en: "Hi! I'm Dorka.", expect: ["szia", "jónapot"] },
+                        { say: "Hogy hívnak téged?", en: "What's your name?", expect: ["vagyok", "hív"] },
+                        { say: "Honnan jöttél?", en: "Where are you from?", expect: ["indi", "jött"] },
+                        { say: "Magyarul tanulsz?", en: "Are you learning Hungarian?", expect: ["tanul", "magyar"] },
+                        { say: "Nehéz a magyar?", en: "Is Hungarian difficult?", expect: ["nehéz", "könnyű", "igen"] },
+                        { say: "Mit iszol?", en: "What are you drinking?", expect: ["kávé", "tea", "vizet"] },
+                        { say: "Kérsz egy kávét?", en: "Would you like a coffee?", expect: ["kér", "köszönöm", "igen"] },
+                        { say: "Viszlát!", en: "Goodbye!", expect: ["viszlát", "lát"] }
+                    ]
+                }
+            },
+            reviews: {
+                "hu-review": { lang: "hu", total: 120, target: "hu-words" }
+            }
+        };
+    </script>
+    <script src="course.js"></script>
 </body>
 </html>

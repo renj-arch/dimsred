@@ -160,7 +160,73 @@
             </ul>
         </div>
 
+        <div id="nv-review"></div>
+
+        <div class="card">
+            <h2>🎯 Most Frequent Words Trainer</h2>
+            <p>Navajo has no Google TTS voice, so 🔊 plays an English approximation — still useful for tones and vowel length. This trainer starts you on the most useful core words; mark mastered, then run Quick recall.</p>
+            <div id="nv-words"></div>
+        </div>
+
+        <div class="card">
+            <h2>👂 Listen &amp; Type Drill</h2>
+            <p>Hear the word (English approximation) and type the Navajo orthography. Focus on the glottal stops ʼ and long vowels ą́.</p>
+            <div id="nv-listen"></div>
+        </div>
+
+        <div class="card">
+            <h2>💬 Voice Chat Practice</h2>
+            <p>Since speech recognition doesn't support Navajo yet, reply by typing — try the Navajo words from this course, English works too.</p>
+            <div id="nv-chat"></div>
+        </div>
+
         <a href="index.html" class="back">← Back to Languages Hub</a>
     </div>
+    <script>
+        window.COURSE = {
+            lang: "en",
+            wordTrainers: {
+                "nv-words": {
+                    lang: "en",
+                    words: [
+                        ["Yáʼátʼééh", "Hello / it is good"], ["Ahéheeʼ", "Thank you"], ["Hágoóneeʼ", "See you again / bye"], ["Nizhóní", "It is beautiful / nice"], ["Tʼáá ákótʼée", "That's fine / okay"], ["Hózhǫ́", "Peace / harmony / beauty"], ["Shí", "I (me)"], ["Ni", "you"], ["Nihí", "we"], ["Díí", "this"], ["Éí", "that"], ["Haʼátʼíí", "what"], ["Háí", "who"], ["Háadi", "where"], ["Hádą́ą́ʼ", "when"], ["Haʼátʼéego", "how"], ["Doo", "not (negation)"], ["Dóó", "and"], ["Kʼad", "now"], ["Tʼáá", "just / very"], ["Ałkʼidą́ą́ʼ", "before / earlier"], ["Tádą́ą́ʼ", "right after"], ["Diné", "person / the Navajo people"], ["Asdzáán", "woman"], ["Hastiin", "man"], ["Atʼééd", "girl"], ["Ashkii", "boy"], ["Áłchíní", "children"], ["Amá", "mother"], ["Azhéʼé", "father"], ["Hooghan", "home / hogan"], ["Kin", "house"], ["Tsé", "rock / stone"], ["Tsintah", "pine forest"], ["Dził", "mountain"], ["Beʼekʼid", "lake"], ["Tooh", "river"], ["Yá", "sky"], ["Shá", "sun"], ["Tłʼééʼ", "night"], ["Níłchʼi", "wind / air"], ["Tó", "water"], ["Kǫʼ", "fire"], ["Leezh", "dust / dirt"], ["Gah", "rabbit"], ["Gídí", "cat"], ["Łééchąąʼí", "dog"], ["Béégashii", "cow"], ["Tłʼízí", "goat"], ["Dibé", "sheep"], ["Łį́į́ʼ", "horse"], ["Maʼii", "coyote"], ["Shash", "bear"], ["Mąʼiitsoh", "wolf"], ["Tsídii", "bird"], ["Łóóʼ", "fish"], ["Tłʼiish", "snake"], ["Bįįh", "deer"], ["Tʼááłáʼí", "one"], ["Naaki", "two"], ["Tááʼ", "three"], ["Dį́į́ʼ", "four"], ["Ashdlaʼ", "five"], ["Hastą́ą́", "six"], ["Tsostsʼid", "seven"], ["Tseebíí", "eight"], ["Náhástʼéí", "nine"], ["Neeznáá", "ten"]
+                    ]
+                }
+            },
+            listenDrills: {
+                "nv-listen": {
+                    lang: "en",
+                    items: [
+                        { say: "Yáʼátʼééh", trans: "Hello", hint: "yah-ah-TEH-h" },
+                        { say: "Ahéheeʼ", trans: "Thank you", hint: "ah-heh-heh" },
+                        { say: "Hágoóneeʼ", trans: "See you again", hint: "hah-GOH-neh" },
+                        { say: "Nizhóní", trans: "It's beautiful", hint: "nee-ZHOH-nee" },
+                        { say: "Tó", trans: "water", hint: "toh" },
+                        { say: "Dibé", trans: "sheep", hint: "dih-BEH" },
+                        { say: "Tʼááłáʼí", trans: "one", hint: "tah-LAH-eh" },
+                        { say: "Neeznáá", trans: "ten", hint: "nehzh-NAH" }
+                    ]
+                }
+            },
+            chats: {
+                "nv-chat": {
+                    lang: "en",
+                    srLang: "en-US",
+                    title: "A first greeting",
+                    dialogue: [
+                        { say: "Yáʼátʼééh!", en: "Hello! (it is good)", expect: ["yá", "hello", "hi"] },
+                        { say: "Shí éí Anna.", en: "I am Anna.", expect: ["shí", "anna", "am anna"] },
+                        { say: "Hágoóneeʼ!", en: "See you again!", expect: ["hágo", "see you", "bye", "goodbye"] },
+                        { say: "Ahéheeʼ!", en: "Thank you!", expect: ["ahéhee", "thank"] },
+                        { say: "Tʼáá ákótʼée.", en: "That's fine / okay.", expect: ["okay", "ok", "fine", "ákót"] }
+                    ]
+                }
+            },
+            reviews: {
+                "nv-review": { lang: "en", total: 68, target: "nv-words" }
+            }
+        };
+    </script>
+    <script src="course.js"></script>
 </body>
 </html>

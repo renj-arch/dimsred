@@ -172,7 +172,80 @@
             </ul>
         </div>
 
+        <div id="ar-review"></div>
+
+        <div class="card">
+            <h2>🎯 Most Frequent Words Trainer</h2>
+            <p>Roughly 1,000 headwords gets you fluent in everyday Arabic. This trainer starts you on the top-frequency core — tap 🔊 to hear, mark mastered, then run Quick recall until 100%.</p>
+            <div id="ar-words"></div>
+        </div>
+
+        <div class="card">
+            <h2>👂 Listen &amp; Type Drill</h2>
+            <p>Hear the phrase, type it in Arabic script. This trains your ear to the consonants and emphatic sounds.</p>
+            <div id="ar-listen"></div>
+        </div>
+
+        <div class="card">
+            <h2>💬 Voice Chat Practice</h2>
+            <p>A scripted dialogue with a native-sounding bot. Speak (Chrome/Edge) or type Arabic. Reply using phrases from this course.</p>
+            <div id="ar-chat"></div>
+        </div>
+
         <a href="index.html" class="back">← Back to Languages Hub</a>
     </div>
+    <script>
+        window.COURSE = {
+            lang: "ar",
+            wordTrainers: {
+                "ar-words": {
+                    lang: "ar",
+                    words: [
+                        ["أنا", "I"], ["أنت", "you (m.)"], ["أنتِ", "you (f.)"], ["هو", "he"], ["هي", "she"], ["نحن", "we"], ["هذا", "this"], ["ذلك", "that"], ["ماذا", "what"], ["من", "who"], ["أين", "where"], ["متى", "when"], ["لماذا", "why"], ["كيف", "how"], ["شخص", "person"], ["اسم", "name"], ["بيت", "home"], ["مدرسة", "school"], ["صديق", "friend"], ["أم", "mother"], ["أب", "father"], ["ابن", "son"], ["ابنة", "daughter"], ["طفل", "child"], ["رجل", "man"], ["امرأة", "woman"], ["لغة عربية", "Arabic (language)"], ["الهند", "India"], ["أمريكا", "America"], ["بلد", "country"], ["مدينة", "city"], ["وقت", "time"], ["يوم", "day"], ["اليوم", "today"], ["غدا", "tomorrow"], ["أمس", "yesterday"], ["الآن", "now"], ["صباح", "morning"], ["ظهر", "noon"], ["مساء", "evening"], ["ليل", "night"], ["أسبوع", "week"], ["شهر", "month"], ["سنة", "year"], ["طقس", "weather"], ["مطر", "rain"], ["ثلج", "snow"], ["جبل", "mountain"], ["بحر", "sea"], ["ماء", "water"], ["نار", "fire"], ["مال", "money"], ["متجر", "shop"], ["طريق", "road"], ["ملابس", "clothes"], ["حذاء", "shoes"], ["أرز", "rice"], ["خبز", "bread"], ["لحم", "meat"], ["سمك", "fish"], ["خضار", "vegetables"], ["فاكهة", "fruit"], ["تفاحة", "apple"], ["شاي", "tea"], ["قهوة", "coffee"], ["بيرة", "beer"], ["حليب", "milk"], ["ذهب", "to go"], ["جاء", "to come"], ["أكل", "to eat"], ["شرب", "to drink"], ["رأى", "to see"], ["سمع", "to hear"], ["تحدث", "to speak"], ["قرأ", "to read"], ["كتب", "to write"], ["عمل", "to do / work"], ["عرف", "to know"], ["فهم", "to understand"], ["تعلم", "to learn"], ["درس", "to study"], ["اشترى", "to buy"], ["باع", "to sell"], ["أعطى", "to give"], ["التقى", "to meet"], ["سكن", "to live (in)"], ["أحب", "to like / love"], ["أراد", "to want"], ["جيد", "good"], ["سيئ", "bad"], ["كبير", "big"], ["صغير", "small"], ["كثير", "many"], ["قليل", "few"], ["طويل", "long / tall"], ["قصير", "short"], ["غالٍ", "expensive"], ["رخيص", "cheap"], ["لذيذ", "delicious"], ["بارد", "cold"], ["حار", "hot"], ["سريع", "fast"], ["بطيء", "slow"], ["صعب", "difficult"], ["سهل", "easy"], ["مشغول", "busy"], ["سعيد", "happy"], ["حزين", "sad"], ["لكن", "but"], ["و", "and"], ["جدا", "very"], ["هنا", "here"], ["هناك", "there"], ["فوق", "above"], ["تحت", "below"]
+                    ]
+                }
+            },
+            listenDrills: {
+                "ar-listen": {
+                    lang: "ar",
+                    items: [
+                        { say: "السلام عليكم", trans: "Peace be upon you (hello)", hint: "as-salāmu ʿalaykum" },
+                        { say: "وعليكم السلام", trans: "And peace to you", hint: "wa ʿalaykum as-salām" },
+                        { say: "شكرا", trans: "Thank you", hint: "shukran" },
+                        { say: "من فضلك", trans: "Please", hint: "min faḍlik" },
+                        { say: "أنا طالب", trans: "I am a student", hint: "anā ṭālib" },
+                        { say: "أنا أتعلم العربية", trans: "I'm learning Arabic", hint: "anā ataʿallam al-ʿarabiyya" },
+                        { say: "كم الثمن", trans: "How much?", hint: "kam ath-thaman" },
+                        { say: "أين الحمام", trans: "Where is the restroom?", hint: "ayna al-ḥammām" },
+                        { say: "لذيذ جدا", trans: "Very delicious", hint: "ladhīdh jiddan" },
+                        { say: "ما اسمك", trans: "What's your name?", hint: "mā ismuk" },
+                        { say: "مرحبا", trans: "Hello / welcome", hint: "marḥaban" },
+                        { say: "مع السلامة", trans: "Goodbye (with peace)", hint: "maʿa as-salāma" }
+                    ]
+                }
+            },
+            chats: {
+                "ar-chat": {
+                    lang: "ar",
+                    srLang: "ar-SA",
+                    title: "Meeting a new friend",
+                    dialogue: [
+                        { say: "السلام عليكم! أنا أحمد.", en: "Hello! I'm Ahmad.", expect: ["السلام عليكم", "مرحبا"] },
+                        { say: "ما اسمك؟", en: "What's your name?", expect: ["اسمي", "أنا", "اسم"] },
+                        { say: "من أين أنت؟", en: "Where are you from?", expect: ["الهند", "من", "أنا"] },
+                        { say: "هل تتعلم العربية؟", en: "Are you learning Arabic?", expect: ["تعلم", "العربية", "نعم"] },
+                        { say: "هل اللغة العربية صعبة؟", en: "Is Arabic difficult?", expect: ["صعب", "نعم", "لا"] },
+                        { say: "ماذا تحب أن تأكل؟", en: "What would you like to eat?", expect: ["أكل", "آكل", "حب"] },
+                        { say: "الطعام الهندي لذيذ؟", en: "Is Indian food delicious?", expect: ["لذيذ", "نعم", "جيد"] },
+                        { say: "إلى اللقاء!", en: "Goodbye (until next time)!", expect: ["لقاء", "السلامة"] }
+                    ]
+                }
+            },
+            reviews: {
+                "ar-review": { lang: "ar", total: 115, target: "ar-words" }
+            }
+        };
+    </script>
+    <script src="course.js"></script>
 </body>
 </html>
