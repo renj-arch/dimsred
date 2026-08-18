@@ -95,6 +95,13 @@ jobs:
 
       - run: node scripts/merge-chunks.js
 
+      # merge-chunks.js consumes chunks/ but never deletes it, and the commit
+      # step's `git add -A` runs in this same job — sweeping the ~7GB of
+      # quiz-chunk-*.json.part.* files into the commit (run #9 died pushing
+      # them: >100MB blobs → runner shutdown). Drop the workspace now.
+      - name: Drop merge workspace (must not reach the commit)
+        run: rm -rf chunks chunk-src baseline
+
       - run: node scripts/split-quiz-to-categories.js
 
       - name: Re-apply feed-owned files
@@ -134,7 +141,7 @@ jobs:
         run: |
           if [ "${{ inputs.dry-run }}" = "true" ]; then
             echo "DRY RUN — would have committed and pushed. Showing pending changes:"
-            git add -A
+            git add -A ':!chunks' ':!chunk-src' ':!baseline'
             git diff --cached --stat | tail -20
             git reset -q
             exit 0
@@ -146,7 +153,7 @@ jobs:
           git config user.email "bot@vlymbooq.qzz.io"
           git checkout -B main 2>/dev/null || true
           git reset HEAD -- . 2>/dev/null
-          git add -A
+          git add -A ':!chunks' ':!chunk-src' ':!baseline'
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
