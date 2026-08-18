@@ -310,85 +310,6 @@
         show();
     }
 
-    function renderChat(id, cfg) {
-        var host = document.getElementById(id);
-        if (!host || !cfg || !cfg.dialogue) return;
-        var lang = cfg.lang || C.lang, SR = null, listening = false;
-        if (typeof window !== "undefined") SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
-        var html = '<div class="chat"><div class="chat-box"></div><div class="chat-ctl">';
-        html += '<button type="button" class="chat-voice" ' + (SR ? "" : "style=\"display:none\"") + '>🎤 Hold to speak</button>';
-        html += '<div class="chat-type" ' + (SR ? "style=\"display:none\"" : "") + '><input type="text" placeholder="Type your reply…"><button type="button" class="chat-send">Send</button></div>';
-        html += '<div class="chat-aux"><button type="button" class="chat-skip">Skip</button><button type="button" class="chat-reset">Restart</button></div></div></div>';
-        host.innerHTML = html;
-        var box = host.querySelector(".chat-box"), step = -1;
-        function bubble(txt, who, en) {
-            var d = document.createElement("div");
-            d.className = "chat-bubble " + who;
-            if (who === "bot") {
-                d.innerHTML = '<span class="chat-t">' + esc(txt) + '</span><button type="button" class="tts-btn">' + iconHTML() + "</button><br><span class=\"chat-en\">" + esc(en) + "</span>";
-                d.querySelector(".tts-btn").addEventListener("click", function () { play(txt, lang); });
-            } else d.textContent = txt;
-            box.appendChild(d); box.scrollTop = box.scrollHeight;
-        }
-        function told(word) { return norm(word).replace(/[\s.,!?，。！？]/g, ""); }
-        function advance() {
-            var d = cfg.dialogue[step];
-            bubble(d.say, "bot", "…" + d.en);
-            play(d.say, lang);
-            if (step >= cfg.dialogue.length - 1) return;
-        }
-        function checkUser(text) {
-            var d = cfg.dialogue[step];
-            var t = told(text);
-            for (var k = 0; k < d.expect.length; k++) { if (t.indexOf(told(d.expect[k])) >= 0) return true; }
-            return false;
-        }
-        function feedback(ok, text) {
-            var d = cfg.dialogue[step];
-            if (ok) {
-                bubble("✓", "ok", "");
-                step++;
-            } else {
-                var guess = (text || "").trim();
-                if (guess) bubble("Heard: “" + guess + "”", "user", "");
-                bubble("Try something like: “" + d.expect[0] + "”", "bot", "(" + d.en + ")");
-                play(d.expect[0], lang);
-                return;
-            }
-            advance();
-        }
-        host.querySelector(".chat-voice").addEventListener("click", function () {
-            if (!SR) return;
-            var rec = new SR();
-            rec.lang = cfg.srLang || lang;
-            rec.interimResults = false; rec.maxAlternatives = 1;
-            var btn = host.querySelector(".chat-voice");
-            btn.classList.add("on"); btn.disabled = true;
-            rec.onresult = function (e) { var t = e.results[0][0].transcript || ""; btn.classList.remove("on"); btn.disabled = false; feedback(checkUser(t), t); };
-            rec.onerror = function () { btn.classList.remove("on"); btn.disabled = false; feedback(false, ""); };
-            rec.start();
-        });
-        var sendBtn = host.querySelector(".chat-send");
-        function doType() {
-            var inp = host.querySelector(".chat-type input");
-            var v = inp.value; inp.value = "";
-            if (!v.trim()) return;
-            bubble(v, "user", "");
-            var ok = checkUser(v);
-            if (ok) feedback(true, v);
-            else {
-                var d = cfg.dialogue[step];
-                bubble("Try: “" + d.expect[0] + "”", "bot", "(" + d.en + ")");
-                play(d.expect[0], lang);
-            }
-        }
-        sendBtn.addEventListener("click", doType);
-        host.querySelector(".chat-type input").addEventListener("keydown", function (e) { if (e.keyCode === 13) doType(); });
-        host.querySelector(".chat-skip").addEventListener("click", function () { step++; advance(); });
-        host.querySelector(".chat-reset").addEventListener("click", function () { box.innerHTML = ""; step = -1; host.querySelector(".chat-voice").style.display = SR ? "" : "none"; advance(); });
-        host.querySelector(".chat-reset").click();
-    }
-
     function renderReview(id, cfg) {
         var host = document.getElementById(id);
         if (!host || !cfg) return;
@@ -476,23 +397,6 @@
             ".ltd-actions button{background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text-sec);border-radius:8px;padding:6px 16px;font-size:.8em;cursor:pointer}",
             ".ltd-actions button:not([disabled]):hover{color:var(--text);background:rgba(255,255,255,.1)}",
             ".ltd-actions button:disabled{opacity:.4;cursor:default}",
-            ".chat-box{max-height:340px;overflow-y:auto;padding:14px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.015);display:flex;flex-direction:column;gap:10px;margin-bottom:10px}",
-            ".chat-bubble{max-width:82%;padding:9px 13px;border-radius:14px;font-size:.86em;line-height:1.5;align-self:flex-start;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text)}",
-            ".chat-bubble.user{align-self:flex-end;background:rgba(167,139,250,.14);border-color:rgba(167,139,250,.3)}",
-            ".chat-bubble.ok{align-self:flex-end;background:rgba(52,211,153,.14);border-color:rgba(52,211,153,.4);color:var(--emerald);font-weight:700}",
-            ".chat-bubble .chat-en{color:var(--text-muted);font-size:.78em}",
-            ".chat-bubble .tts-btn{vertical-align:-3px}",
-            ".chat-ctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap}",
-            ".chat-voice{background:rgba(52,211,153,.14);border:1px solid rgba(52,211,153,.45);color:var(--emerald);border-radius:100px;padding:9px 18px;font-size:.84em;cursor:pointer}",
-            ".chat-voice:hover{background:rgba(52,211,153,.24)}",
-            ".chat-voice.on{animation:chatpulse 1s infinite}",
-            "@keyframes chatpulse{50%{box-shadow:0 0 0 6px rgba(52,211,153,.15)}}",
-            ".chat-type{display:flex;flex:1;gap:8px;min-width:220px}",
-            ".chat-type input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 12px;font-size:.84em;font-family:inherit}",
-            ".chat-type button{background:rgba(167,139,250,.14);border:1px solid rgba(167,139,250,.4);color:var(--text);border-radius:8px;padding:8px 16px;font-size:.8em;cursor:pointer}",
-            ".chat-aux{display:flex;gap:8px;margin-left:auto}",
-            ".chat-aux button{background:transparent;border:none;color:var(--text-muted);font-size:.74em;cursor:pointer;padding:6px}",
-            ".chat-aux button:hover{color:var(--text)}",
             ".rev{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:rgba(251,191,36,.05);border:1px solid rgba(251,191,36,.18);border-radius:10px;padding:12px 16px;font-size:.84em;color:var(--text)}",
             ".rev .rev-count{color:var(--amber)}"
         ].join("\n");
@@ -508,7 +412,6 @@
             Object.keys(COURSE.quizzes || {}).forEach(function (id) { renderQuiz(id, COURSE.quizzes[id]); });
             Object.keys(COURSE.wordTrainers || {}).forEach(function (id) { renderWords(id, COURSE.wordTrainers[id]); });
             Object.keys(COURSE.listenDrills || {}).forEach(function (id) { renderListen(id, COURSE.listenDrills[id]); });
-            Object.keys(COURSE.chats || {}).forEach(function (id) { renderChat(id, COURSE.chats[id]); });
             Object.keys(COURSE.reviews || {}).forEach(function (id) { renderReview(id, COURSE.reviews[id]); });
         }
     });
