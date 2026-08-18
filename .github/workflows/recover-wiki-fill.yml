@@ -79,11 +79,12 @@ jobs:
             rm -rf data
             cp -r baseline/data data
             echo "restored from baseline/data"
-          elif [ -d baseline ]; then
+          elif [ -d baseline ] && [ -n "$(ls -A baseline 2>/dev/null)" ]; then
             rm -rf data
             cp -r baseline data
             echo "restored from baseline (flat layout)"
           else
+            rm -rf baseline
             echo "WARNING: no baseline content found — using checkout data/ as baseline"
             echo "WARNING: ensure checkout data/ exists: $(ls data | head -3 | tr '\n' ' ')"
           fi
