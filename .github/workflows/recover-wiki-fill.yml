@@ -50,10 +50,12 @@ jobs:
           bash scripts/download-run-artifacts.sh "${{ inputs.run-id || github.run_id }}" '^chunk-[0-9]+$' chunk-src
 
       - name: Download baseline data from run
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bash scripts/download-run-artifacts.sh "${{ inputs.run-id || github.run_id }}" '^baseline$' baseline
+          bash scripts/download-run-artifacts.sh "${{ inputs.run-id || github.run_id }}" '^baseline$' baseline \
+            || echo "baseline artifact missing/expired — will fall back to checkout data/"
 
       - name: Preserve feed-owned files
         run: |
@@ -73,16 +75,17 @@ jobs:
           echo "DEBUG baseline top-level:"; ls -la baseline 2>/dev/null | head -20
           echo "DEBUG baseline/data exists?:"; ls -la baseline/data 2>/dev/null | head -20
           echo "DEBUG chunk top-level:"; ls -la chunk-src 2>/dev/null | head -20
-          rm -rf data
           if [ -d baseline/data ]; then
+            rm -rf data
             cp -r baseline/data data
             echo "restored from baseline/data"
           elif [ -d baseline ]; then
+            rm -rf data
             cp -r baseline data
             echo "restored from baseline (flat layout)"
           else
-            echo "WARNING: no baseline content found — merging over checkout data/"
-            mkdir -p data
+            echo "WARNING: no baseline content found — using checkout data/ as baseline"
+            echo "WARNING: ensure checkout data/ exists: $(ls data | head -3 | tr '\n' ' ')"
           fi
 
       - name: Collect chunk outputs (move, do not copy)
