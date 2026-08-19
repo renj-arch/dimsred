@@ -5,18 +5,36 @@
  * Scheduled: GitHub Actions weekly
  *
  * Updates:
- *  - Indian CMs, Governors, Constitutional posts
+ *  - Indian CMs (includes 28-state CM quiz matrix)
+ *  - Indian Governors (prose leaders bank)
+ *  - Constitutional posts (President, VP, PM, CJI, LS Speaker, CEC, CAG, AG)
+ *  - RBI Governor
  *  - World leaders (US, UK, Russia, China, etc.)
- *  - UN / global org heads
- *  - Cabinet ministers, RBI Governor
  *  - Pageant winners (Miss World, Miss Universe, Miss India)
- *  - Film festival winners (Cannes, Berlin, Venice)
- *  - Major sports tournament champions (World Cup, T20 WC, etc.)
+ *  - Film festival winners (Cannes, Berlin, Venice, Oscars)
+ *  - Major sports tournament champions (Cricket WC, T20 WC, FIFA WC)
+ *
+ * All dynamic values are stored in machine-readable groups inside
+ * current-affairs.html (_studyExtra.current and _studyExtra.world) and are
+ * regenerated here every run; only values that change are rewritten.
  */
 const fs = require('fs');
 const https = require('https');
 
 const HTML_PATH = 'current-affairs.html';
+
+const NAMED_ENT = {
+  'nbsp': ' ', 'amp': '&', 'lt': '<', 'gt': '>', 'quot': '"', 'apos': "'",
+  'ndash': '–', 'mdash': '—', 'minus': '-',
+  'Iuml': 'İ', 'iuml': 'ï', 'ntilde': 'ñ', 'Ntilde': 'Ñ',
+  'aacute': 'á', 'Aacute': 'Á', 'eacute': 'é', 'Eacute': 'É',
+  'iacute': 'í', 'Iacute': 'Í', 'oacute': 'ó', 'Oacute': 'Ó',
+  'uacute': 'ú', 'Uacute': 'Ú', 'auml': 'ä', 'Auml': 'Ä',
+  'ouml': 'ö', 'Ouml': 'Ö', 'uuml': 'ü', 'Uuml': 'Ü', 'szlig': 'ß',
+  'ccedil': 'ç', 'Ccedil': 'Ç', 'agrave': 'à', 'egrave': 'è',
+  'egravex': 'è', 'oumlx': 'ö', 'uumext': 'ü',
+  'aigrave': 'à', '0': ' '
+};
 
 function fetch(url) {
   return new Promise((resolve, reject) => {
@@ -27,45 +45,88 @@ function fetch(url) {
     });
     req.on('error', reject);
     req.on('timeout', () => { req.destroy(); reject(new Error('timeout')); });
+    req.setTimeout(25000);
   });
 }
 
-function stripHtml(html) { return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/&#(\d+);/g,function(m,c){return String.fromCharCode(c);}).replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\[.*?\]/g,'').replace(/\s+/g,' ').trim(); }
-
-function extractTableRows(wikiHtml) {
-  let rows = [];
-  let tableMatch = wikiHtml.match(/<table[^>]*class="[^"]*wikitable[^"]*"[^>]*>([\s\S]*?)<\/table>/i);
-  if (!tableMatch) return rows;
-  let table = tableMatch[1];
-  let rowMatches = table.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
-  for (let row of rowMatches) {
-    let cells = [];
-    let cellMatches = row[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi);
-    for (let cell of cellMatches) {
-      cells.push(stripHtml(cell[1]));
-    }
-    if (cells.length >= 2) rows.push(cells);
-  }
-  return rows.slice(1); // skip header
+function stripHtml(html) {
+  return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&#(\d+);/g, function (m, c) { return String.fromCharCode(c); })
+    .replace(/&([a-zA-Z]+);/g, function (m, n) { return NAMED_ENT[n] || m; })
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+    .replace(/\[.*?\]/g, '')
+    .replace(/\s+/g, ' ').trim();
 }
 
-// === INDIAN CMs ===
+// Strip tags/entities but keep bracketed refs & parens for infobox value parsing.
+function stripText(html) {
+  return html.replace(/<[^>]+>/g, ' ')
+    .replace(/&#(\d+);/g, function (m, c) { return String.fromCharCode(c); })
+    .replace(/&([a-zA-Z]+);/g, function (m, n) { return NAMED_ENT[n] || m; })
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ').trim();
+}
+
+async function apiParse(page) {
+  const url = 'https://en.wikipedia.org/w/api.php?action=parse&page=' + encodeURIComponent(page) + '&redirects=1&prop=text&format=json';
+  const parsed = await fetchWithRetry(url);
+  if (!parsed || !parsed.parse || !parsed.parse.text) throw new Error('parse failed: ' + page);
+  return parsed.parse.text['*'];
+}
+
+let _lastFetchAt = 0;
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// Throttle + retry helper: Wikimedia rate-limits anonymous API clients, and a
+// rate-limited response is a 200 HTML page (not JSON), so we retry after backoff.
+async function fetchWithRetry(url) {
+  const now = Date.now();
+  const wait = _lastFetchAt ? Math.max(0, 1200 - (now - _lastFetchAt)) : 0;
+  _lastFetchAt = now + wait;
+  if (wait) await sleep(wait);
+  let lastErr;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    try {
+      const data = await fetch(url);
+      try { return JSON.parse(data); }
+      catch (e) {
+        lastErr = new Error('non-JSON API response: ' + data.slice(0, 60));
+        await sleep(2000 * Math.pow(2, attempt));
+      }
+    } catch (e) {
+      lastErr = e;
+      await sleep(2000 * Math.pow(2, attempt));
+    }
+  }
+  throw lastErr;
+}
+
+function infoboxLines(html) {
+  const m = html.match(/<table[^>]*class="[^"]*infobox[^"]*"[^>]*>([\s\S]*?)<\/table>/i);
+  if (!m) return [];
+  const out = [];
+  for (const r of m[1].matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)) {
+    const t = stripText(r[1]);
+    if (t) out.push(t);
+  }
+  return out;
+}
+
+// === INDIAN CMs (unchanged — patches the CM quiz matrix) ===
 async function fetchCMs() {
-  let data = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Chief_minister_(India)&prop=text&format=json');
-  let parsed = JSON.parse(data);
+  let parsed = await fetchWithRetry('https://en.wikipedia.org/w/api.php?action=parse&page=Chief_minister_(India)&prop=text&format=json');
   let html = parsed.parse.text['*'];
-  // Current-CM table has header "State/UT | List | Portrait | Officeholder | Took office | Political Party"
-  // (the "Party" table holds deputy CMs, so require the "Political Party" header).
   let allTables = html.match(/<table[^>]*class="[^"]*(?:wikitable|sortable)[^"]*"[^>]*>([\s\S]*?)<\/table>/gi);
   let map = {};
   if (allTables) {
     for (let tbl of allTables) {
       let rows = [...tbl.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)];
       if (!rows.length) continue;
-      let headerCells = [];
-      for (let c of rows[0][1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)) headerCells.push(stripHtml(c[1]));
-      let header = headerCells.join(' ').toLowerCase();
-      if (!header.includes('officeholder') || !header.includes('political party')) continue;
+      let header = [];
+      for (let c of rows[0][1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)) header.push(stripHtml(c[1]));
+      let h = header.join(' ').toLowerCase();
+      if (!h.includes('officeholder') || !h.includes('political party')) continue;
       for (let r of rows.slice(1)) {
         let cells = [];
         for (let c of r[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)) cells.push(stripHtml(c[1]));
@@ -73,14 +134,12 @@ async function fetchCMs() {
         let name = cells[3] ? cells[3].trim() : '';
         let party = (cells[5] || '').trim();
         if (state && name && party && state.length > 2 && name.length < 60) {
-          // Normalize state names; the current table sometimes uses "Keralam".
           state = STATE_FIX[state] || state;
           map[state] = { name, party };
         }
       }
     }
   }
-  // Alliance labels from Wikipedia -> primary party used by the app.
   for (let [s, p] of Object.entries(PARTY_OVERRIDE)) {
     if (map[s]) map[s].party = p;
   }
@@ -89,293 +148,295 @@ async function fetchCMs() {
 
 // === INDIAN GOVERNORS ===
 async function fetchGovernors() {
-  let data = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Governor_(India)&prop=text&format=json');
-  let parsed = JSON.parse(data);
-  let html = parsed.parse.text['*'];
-  let allTables = html.match(/<table[^>]*class="[^"]*(?:wikitable|sortable)[^"]*"[^>]*>([\s\S]*?)<\/table>/gi);
-  let map = {};
-  if (allTables) {
-    for (let tbl of allTables) {
-      let rowMatches = tbl.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
-      for (let row of rowMatches) {
-        let cells = [];
-        let cellMatches = row[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi);
-        for (let cell of cellMatches) {
-          cells.push(cell[1].replace(/<[^>]+>/g, '').trim());
-        }
-        if (cells.length >= 2 && cells[0].length < 30 && !cells[0].includes('State')) {
-          let state = cells[0].replace(/\[edit\]/, '').trim();
-          let name = cells[1].replace(/\(.*?\)/g, '').trim();
-          if (state && name && state.length > 2) {
-            map[state] = name;
-          }
-        }
+  const html = await apiParse('Governor_(India)');
+  const map = {};
+  const tables = html.match(/<table[^>]*class="[^"]*(?:wikitable|sortable)[^"]*"[^>]*>([\s\S]*?)<\/table>/gi) || [];
+  for (const tbl of tables) {
+    const rows = [...tbl.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)];
+    if (!rows.length) continue;
+    const header = [];
+    for (const c of rows[0][1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)) header.push(stripHtml(c[1]));
+    if (!header.join(' ').toLowerCase().includes('officeholder')) continue;
+    for (const r of rows.slice(1)) {
+      const cells = [];
+      for (const c of r[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)) cells.push(stripHtml(c[1]));
+      let state = cells[0] ? cells[0].trim() : '';
+      let name = cells[3] ? cells[3].trim() : '';
+      state = STATE_FIX[state] || state;
+      name = name.replace(/\s*[†‡*▪]+\s*$/, '').trim();
+      if (state && name && state.length > 2 && name.length < 60 && GOV_STATES.includes(state)) {
+        map[state] = name;
       }
     }
   }
   return map;
 }
 
-// === CONSTITUTIONAL POSTS ===
-async function fetchConstitutionalPosts() {
-  // President, VP, PM, CJI, LS Speaker, AG, CEC, CAG
-  // Wikipedia infoboxes at India page or individual pages
-  let data = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=India&prop=text&section=0&format=json');
-  let parsed = JSON.parse(data);
-  let html = parsed.parse.text['*'];
-  
-  let posts = {};
-
-  // Try to extract from infobox
-  let infoboxMatch = html.match(/<table[^>]*class="[^"]*infobox[^"]*"[^>]*>([\s\S]*?)<\/table>/i);
-  if (infoboxMatch) {
-    let infobox = infoboxMatch[1];
-    // Look for "President", "Prime Minister", etc.
-    let leaders = infobox.match(/<th[^>]*>(?:President|Prime Minister|Chief Justice|Speaker of the Lok Sabha|Vice President)[^<]*<\/th>\s*<td[^>]*>([\s\S]*?)<\/td>/gi);
-    // This approach is fragile. Let's use the specific pages instead.
-  }
-
-  // Better: fetch from List of current Indian constitutional officers
-  try {
-    let d2 = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=List_of_current_Indian_constitutional_officers&prop=text&format=json');
-    let p2 = JSON.parse(d2);
-    let h2 = p2.parse.text['*'];
-    let rows = extractTableRows(h2);
-    for (let r of rows) {
-      if (r.length >= 2) {
-        let office = r[0].trim();
-        let name = r[1].trim();
-        posts[office] = name;
+// Patch the "Important Governors (2025-26)" group inside _studyExtra.personalities.
+// Existing rows keep their manual descriptions; only the NAME field is replaced.
+// States present on Wikipedia but missing from the bank are appended.
+function updateGovernorBank(html, govMap) {
+  const lines = html.split(/\r?\n/);
+  const marker = "h:'Important Governors (2025-26)'";
+  let si = -1;
+  for (let i = 0; i < lines.length; i++) if (lines[i].includes(marker)) { si = i; break; }
+  if (si === -1) return { html, count: 0 };
+  let bi = -1;
+  for (let i = si; i < Math.min(si + 6, lines.length); i++) if (lines[i].includes('b:[')) { bi = i; break; }
+  let ei = -1;
+  for (let i = bi + 1; i < lines.length; i++) if (/^\s*\]},\s*$/.test(lines[i])) { ei = i; break; }
+  if (bi === -1 || ei === -1) return { html, count: 0 };
+  const rowRe = /^\s*\['((?:[^'\\]|\\.)*)'\s*,\s*'((?:[^'\\]|\\.)*)'\],?\s*$/;
+  const content = [];
+  const seen = new Set();
+  let count = 0;
+  for (let i = bi + 1; i < ei; i++) {
+    const line = lines[i];
+    const m = line.match(rowRe);
+    if (!m) { content.push(line); continue; }
+    const name = m[1];
+    const desc = m[2];
+    const state = desc.split(' — ')[0].trim();
+    if (GOV_STATES.includes(state)) {
+      seen.add(state);
+      if (govMap[state] && govMap[state] !== name) {
+        const newName = govMap[state].replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        const q = line.indexOf("'");
+        content.push(line.slice(0, q + 1) + newName + line.slice(q + 1 + name.length));
+        count++;
+        console.log('  Governor ' + state + ': ' + name + ' -> ' + govMap[state]);
+        continue;
       }
     }
-  } catch (e) {
-    // Fallback: try individual pages
+    content.push(line);
   }
-
-  return posts;
+  const missing = GOV_STATES.filter(s => !seen.has(s) && govMap[s]);
+  if (missing.length) {
+    const last = content.length - 1;
+    if (content.length && !/,\s*$/.test(content[last])) {
+      content[last] = content[last].replace(/'\]\s*$/, "'],");
+    }
+    for (let i = 0; i < missing.length; i++) {
+      const s = missing[i];
+      const nm = govMap[s].replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+      content.push("                ['" + nm + "','" + s + " — Governor (auto-updated)']" + (i < missing.length - 1 ? ',' : ''));
+      count++;
+      console.log('  Governor ' + s + ' (added): ' + nm);
+    }
+  }
+  lines.splice(bi + 1, ei - bi - 1, ...content);
+  return { html: lines.join('\n'), count };
 }
 
-// === WORLD LEADERS ===
-async function fetchWorldLeaders() {
-  let map = {};
-  try {
-    let data = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=List_of_current_heads_of_state_and_government&prop=text&format=json');
-    let parsed = JSON.parse(data);
-    let html = parsed.parse.text['*'];
-    // Multiple tables: one for heads of state, one for heads of government
-    let tables = html.match(/<table[^>]*class="[^"]*wikitable[^"]*"[^>]*>([\s\S]*?)<\/table>/gi);
-    if (tables) {
-      for (let tbl of tables) {
-        let rows = tbl.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
-        for (let row of rows) {
-          let cells = [];
-          let cellMatches = row[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi);
-          for (let cell of cellMatches) {
-            cells.push(stripHtml(cell[1]));
-          }
-          if (cells.length >= 3) {
-            let country = cells[0].trim();
-            let leader = cells[cells.length - 1].trim().replace(/\s*\(.*?\)/g, '').trim();
-            if (country && leader && country.length < 50 && leader.length < 100) {
-              map[country] = leader;
-            }
-          }
-        }
+// === INDIAN GLOBAL OFFICEHOLDERS ===
+// Infobox convention: "Incumbent NAME since DATE"
+function cleanRefs(s) { return s.replace(/\s*\[\s*\d+\s*\]\s*/g, ' ').replace(/\s+/g, ' ').trim(); }
+function collapseParens(s) { return s.replace(/\(\s+/g, '(').replace(/\s+\)\s*/g, ')').trim(); }
+
+async function fetchIncumbent(page) {
+  const html = await apiParse(page);
+  for (const line of infoboxLines(html)) {
+    const m = line.match(/^Incumbent\s+(.*?)(?:\s+since\s+(.+?))?$/i);
+    if (!m || !m[1]) continue;
+    let name = cleanRefs(m[1]).replace(/,\s*[A-Z]{2,4}\s*$/i, '').trim();
+    name = name.replace(/\s*[†‡*▪]+\s*$/, '').trim();
+    if (!name) continue;
+    const since = cleanRefs(m[2] || '');
+    const y = since.match(/\b(?:19\d\d|20\d\d)\b/);
+    return { name, year: y ? y[0] : '' };
+  }
+  throw new Error('Incumbent not found');
+}
+
+// General infobox label -> value (e.g. "Currently held by – Fjord (2026)")
+async function fetchInfoValue(page, labels) {
+  const html = await apiParse(page);
+  for (const line of infoboxLines(html)) {
+    for (const lab of labels) {
+      const m = line.match(new RegExp('^' + lab + '\\s+(.+)$', 'i'));
+      if (m && m[1].trim()) {
+        return collapseParens(cleanRefs(m[1]));
       }
     }
-  } catch (e) {
-    // Fallback: fetch key countries individually
   }
-  return map;
-}
-
-// === PAGEANT WINNERS ===
-async function fetchPageantWinners() {
-  let results = {};
-  // Miss World winners table
-  try {
-    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Miss_World&prop=text&section=2&format=json');
-    let p = JSON.parse(d);
-    let h = p.parse.text['*'];
-    let rows = extractTableRows(h);
-    if (rows.length > 0) {
-      let last = rows[rows.length - 1];
-      results['Miss World'] = { year: last[0], winner: last[1] };
-    }
-  } catch(e) {}
-  // Miss Universe winners
-  try {
-    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Miss_Universe&prop=text&section=1&format=json');
-    let p = JSON.parse(d);
-    let h = p.parse.text['*'];
-    let rows = extractTableRows(h);
-    if (rows.length > 0) {
-      let last = rows[rows.length - 1];
-      results['Miss Universe'] = { year: last[0], winner: last[1] };
-    }
-  } catch(e) {}
-  // Femina Miss India winners (more complex table)
-  try {
-    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Femina_Miss_India&prop=text&section=3&format=json');
-    let p = JSON.parse(d);
-    let h = p.parse.text['*'];
-    let rows = extractTableRows(h);
-    if (rows.length > 0) {
-      let last = rows[rows.length - 1];
-      results['Miss India'] = { year: last[0], winner: last[1] };
-    }
-  } catch(e) {}
-  return results;
-}
-
-// === FILM FESTIVAL WINNERS ===
-async function fetchFilmFestivalWinners() {
-  let results = {};
-  // Cannes Palme d'Or
-  try {
-    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Palme_d%27Or&prop=text&section=1&format=json');
-    let p = JSON.parse(d);
-    let h = p.parse.text['*'];
-    let rows = extractTableRows(h);
-    if (rows.length > 0) {
-      let last = rows[rows.length - 1];
-      results['Cannes Palme d\'Or'] = { year: last[0], film: last[1] };
-    }
-  } catch(e) {}
-  // Berlin Golden Bear
-  try {
-    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Golden_Bear&prop=text&section=1&format=json');
-    let p = JSON.parse(d);
-    let h = p.parse.text['*'];
-    let rows = extractTableRows(h);
-    if (rows.length > 0) {
-      let last = rows[rows.length - 1];
-      results['Berlin Golden Bear'] = { year: last[0], film: last[1] };
-    }
-  } catch(e) {}
-  // Venice Golden Lion
-  try {
-    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Golden_Lion&prop=text&section=2&format=json');
-    let p = JSON.parse(d);
-    let h = p.parse.text['*'];
-    let rows = extractTableRows(h);
-    if (rows.length > 0) {
-      let last = rows[rows.length - 1];
-      results['Venice Golden Lion'] = { year: last[0], film: last[1] };
-    }
-  } catch(e) {}
-  // Oscar Best Picture
-  try {
-    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Academy_Award_for_Best_Picture&prop=text&section=3&format=json');
-    let p = JSON.parse(d);
-    let h = p.parse.text['*'];
-    let rows = extractTableRows(h);
-    if (rows.length > 0) {
-      let last = rows[rows.length - 1];
-      results['Oscar Best Picture'] = { year: last[0], film: last[1] };
-    }
-  } catch(e) {}
-  return results;
-}
-
-// === SPORTS TOURNAMENT CHAMPIONS ===
-async function fetchSportsChampions() {
-  let results = {};
-  // Cricket World Cup winners
-  try {
-    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=ICC_Cricket_World_Cup&prop=text&section=1&format=json');
-    let p = JSON.parse(d);
-    let h = p.parse.text['*'];
-    let tables = h.match(/<table[^>]*class="[^"]*wikitable[^"]*"[^>]*>([\s\S]*?)<\/table>/gi);
-    if (tables && tables[0]) {
-      let rows = tables[0].matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
-      let lastRow;
-      for (let row of rows) { lastRow = row; }
-      if (lastRow) {
-        let cells = [];
-        let cellMatches = lastRow[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi);
-        for (let c of cellMatches) cells.push(stripHtml(c[1]));
-        if (cells.length >= 2) results['Cricket World Cup'] = { year: cells[0], winner: cells[cells.length-1] };
-      }
-    }
-  } catch(e) {}
-  // FIFA World Cup winners
-  try {
-    let d = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=FIFA_World_Cup&prop=text&section=1&format=json');
-    let p = JSON.parse(d);
-    let h = p.parse.text['*'];
-    let rows = extractTableRows(h);
-    if (rows.length > 0) {
-      let last = rows[rows.length - 1];
-      results['FIFA World Cup'] = { year: last[0], winner: last[1] };
-    }
-  } catch(e) {}
-  return results;
-}
-
-// === RBI GOVERNOR ===
-async function fetchRBIGovernor() {
-  try {
-    let data = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Reserve_Bank_of_India&prop=text&section=0&format=json');
-    let parsed = JSON.parse(data);
-    let html = parsed.parse.text['*'];
-    let govMatch = html.match(/Governor<[^>]*><[^>]*>([^<]+)</i);
-    if (govMatch) return stripHtml(govMatch[1]);
-  } catch (e) {}
   return null;
 }
 
-// === PATCH HELPER ===
-function patch(html, pattern, replacement) {
-  let re = new RegExp(pattern, 'g');
-  let m = html.match(re);
-  if (m) {
-    html = html.replace(re, replacement);
-    return { html, count: m.length };
+// RBI infobox: "Governor Sanjay Malhotra, IAS [2]"
+async function fetchRBIGovernor() {
+  const html = await apiParse('Reserve_Bank_of_India');
+  for (const line of infoboxLines(html)) {
+    let m = line.match(/^Governor\s+(.+?)\s*,\s*[A-Z]{2,4}\s*$/i);
+    if (m) {
+      const name = cleanRefs(m[1]).trim();
+      if (name) return { name };
+    }
+    m = line.match(/^Governor\s+(.+)$/i);
+    if (m) {
+      const name = cleanRefs(m[1]).replace(/,?\s*[A-Z]{2,4}\s*$/i, '').trim();
+      if (name && name.length < 60) return { name };
+    }
   }
-  return { html, count: 0 };
+  throw new Error('RBI Governor not found');
 }
 
-// Map Wikipedia state names to our file's state names
-const STATE_MAP = {
-  'Andhra Pradesh': 'Andhra Pradesh',
-  'Arunachal Pradesh': 'Arunachal Pradesh',
-  'Assam': 'Assam',
-  'Bihar': 'Bihar',
-  'Chhattisgarh': 'Chhattisgarh',
-  'Goa': 'Goa',
-  'Gujarat': 'Gujarat',
-  'Haryana': 'Haryana',
-  'Himachal Pradesh': 'Himachal Pradesh',
-  'Jharkhand': 'Jharkhand',
-  'Karnataka': 'Karnataka',
-  'Kerala': 'Kerala',
-  'Madhya Pradesh': 'Madhya Pradesh',
-  'Maharashtra': 'Maharashtra',
-  'Manipur': 'Manipur',
-  'Meghalaya': 'Meghalaya',
-  'Mizoram': 'Mizoram',
-  'Nagaland': 'Nagaland',
-  'Odisha': 'Odisha',
-  'Punjab': 'Punjab',
-  'Rajasthan': 'Rajasthan',
-  'Sikkim': 'Sikkim',
-  'Tamil Nadu': 'Tamil Nadu',
-  'Telangana': 'Telangana',
-  'Tripura': 'Tripura',
-  'Uttar Pradesh': 'Uttar Pradesh',
-  'Uttarakhand': 'Uttarakhand',
-  'West Bengal': 'West Bengal'
+// Pageants: "Current titleholder Suchata Chuangsri Thailand"
+async function fetchCurrentTitleholder(page) {
+  const html = await apiParse(page);
+  for (const line of infoboxLines(html)) {
+    const m = line.match(/^Current titleholder\s+(.+)$/i);
+    if (!m) continue;
+    let v = collapseParens(cleanRefs(m[1]));
+    if (!v) continue;
+    if (v.includes('\"')) v = v.replace(/^\"/, '');
+    const mm = v.match(/^(.+?)\s+([A-Z][a-zA-Z]+)$/);
+    return mm ? mm[1].trim() + ' (' + mm[2].trim() + ')' : v;
+  }
+  return null;
+}
+
+// Find the latest Year + winner-style row across a page's tables.
+function findYearWinner(html, winnerHeaderRx) {
+  for (const tbl of html.match(/<table[^>]*>([\s\S]*?)<\/table>/gi) || []) {
+    const rows = [...tbl.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)];
+    if (rows.length < 4) continue;
+    for (let hi = 0; hi < Math.min(3, rows.length); hi++) {
+      const header = [];
+      for (const c of rows[hi][1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)) header.push(stripHtml(c[1]));
+      const hy = header.findIndex(h => /^year/.test(h.trim()));
+      let hw = -1;
+      for (let i = 0; i < header.length; i++) {
+        if (winnerHeaderRx.test(header[i].trim())) { hw = i; break; }
+      }
+      if (hy < 0 || hw < 0) continue;
+      let best = null;
+      for (const r of rows.slice(hi + 1)) {
+        const cells = [];
+        for (const c of r[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)) cells.push(stripHtml(c[1]));
+        if (!cells[hy]) continue;
+        const y = (cells[hy].match(/[12]\d{3}/) || [])[0];
+        if (!y) continue;
+        let w = (cells[hw] || '').trim();
+        if (!w || /^(—|–|-|n\/a)$/.test(w) || /no (winner|champion|pageant)|cancell?ed/i.test(w)) continue;
+        if (!best || +y > best.year) best = { year: +y, winner: w };
+      }
+      if (best) return best;
+    }
+  }
+  return null;
+}
+
+// Sports champion from an "X title" infobox line, e.g. "Champions India (3rd title)".
+async function championWithYear(page, label) {
+  const html = await apiParse(page);
+  const yrMatch = page.match(/(20\d\d) /);
+  const yr = yrMatch ? yrMatch[1] : '';
+  for (const line of infoboxLines(html)) {
+    const m = line.match(new RegExp('^' + label + '\\s+(.+)$', 'i'));
+    if (m) {
+      let v = collapseParens(m[1].replace(/\s*\(\d(?:st|nd|rd|th)\s+title\)\s*$/i, '').trim());
+      if (!v) continue;
+      return v + (yr ? ' (' + yr + ')' : '');
+    }
+  }
+  return null;
+}
+
+// === WORLD LEADERS ===
+const WORLD_LEADERS = {
+  'United States': { label: 'President of the United States', role: 'President', field: 'hos' },
+  'United Kingdom': { label: 'Prime Minister of the United Kingdom', role: 'Prime Minister', field: 'hog' },
+  'Russia': { label: 'President of Russia', role: 'President', field: 'hos' },
+  'China': { label: 'General Secretary of the Chinese Communist Party', role: 'General Secretary of the Communist Party', field: 'hos' },
+  'Germany': { label: 'Chancellor of Germany', role: 'Chancellor', field: 'hog' },
+  'France': { label: 'President of France', role: 'President', field: 'hos' },
+  'Japan': { label: 'Prime Minister of Japan', role: 'Prime Minister', field: 'hog' },
+  'Canada': { label: 'Prime Minister of Canada', role: 'Prime Minister', field: 'hog' },
+  'Australia': { label: 'Prime Minister of Australia', role: 'Prime Minister', field: 'hog' },
+  'New Zealand': { label: 'Prime Minister of New Zealand', role: 'Prime Minister', field: 'hog' },
+  'Brazil': { label: 'President of Brazil', role: 'President', field: 'hos' },
+  'South Africa': { label: 'President of South Africa', role: 'President', field: 'hos' }
 };
 
-// Map Wikipedia state names to the row names used in the file's state matrix,
-// where the 7th field (index 6) of each row is "CM Name (Party)".
+function extractLeaderName(cell, role) {
+  if (!cell) return null;
+  const segRe = /([A-Z][A-Za-z()\-'’./]*?)\s*[–—-]\s*([^\[\]–—-]+?)(?=\s+(?:[A-Z][A-Za-z()\-'’./]*?)\s*[–—-]\s*|$)/g;
+  let m;
+  while ((m = segRe.exec(cell))) {
+    if (m[1].trim().toLowerCase().indexOf(role.toLowerCase()) > -1) {
+      const name = m[2].replace(/\[\d+\]/g, '').replace(/[,;:].*$/, '').trim();
+      if (name && name.charAt(0) === name.charAt(0).toUpperCase()) return name;
+    }
+  }
+  const m2 = cell.match(new RegExp(role.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*[–—-]\\s*([^\\[\\]\\n]+)'));
+  if (m2) return m2[1].replace(/\[\d+\]/g, '').replace(/[,;:].*$/, '').trim();
+  return null;
+}
+
+async function fetchWorldLeaders() {
+  const html = await apiParse('List_of_current_heads_of_state_and_government');
+  const map = {};
+  for (const tbl of html.match(/<table[^>]*>([\s\S]*?)<\/table>/gi) || []) {
+    const rows = [...tbl.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)];
+    if (!rows.length) continue;
+    const header = [];
+    for (const c of rows[0][1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)) header.push(stripHtml(c[1]));
+    const h = header.join(' ').toLowerCase();
+    if (!h.includes('head of state') || !h.includes('head of government')) continue;
+    for (const r of rows.slice(1)) {
+      const cells = [];
+      for (const c of r[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)) cells.push(stripText(c[1]));
+      if (cells.length < 1) continue;
+      map[cells[0].trim()] = { hos: cells[1] || '', hog: cells[2] || '' };
+    }
+  }
+  // China's HoG is not in the leaders table; take it from its own page.
+  try {
+    const premier = await fetchIncumbent('Premier_of_China');
+    if (premier && premier.name) map['China'].premier = premier.name;
+  } catch (e) {}
+  return map;
+}
+
+// Rewrite rows of a machine-readable group inside _studyExtra (keeps unknown rows).
+function rewriteGroup(html, hText, rows) {
+  const lines = html.split(/\r?\n/);
+  let si = -1;
+  for (let i = 0; i < lines.length; i++) if (lines[i].includes("h:'" + hText + "'")) { si = i; break; }
+  if (si === -1) return { html, count: 0 };
+  let bi = -1;
+  for (let i = si; i < Math.min(si + 6, lines.length); i++) if (lines[i].includes('b:[')) { bi = i; break; }
+  let ei = -1;
+  for (let i = bi + 1; i < lines.length; i++) if (/^\s*\]},?\s*$/.test(lines[i])) { ei = i; break; }
+  if (bi === -1 || ei === -1) return { html, count: 0 };
+  const rowRe = /^\s*\['((?:[^'\\]|\\.)*)','((?:[^'\\]|\\.)*)'\],?\s*$/;
+  const want = {};
+  for (const r of rows) want[r.label] = r.value;
+  let count = 0;
+  const content = [];
+  for (let i = bi + 1; i < ei; i++) {
+    const line = lines[i];
+    const m = line.match(rowRe);
+    if (!m) { content.push(line); continue; }
+    const label = m[1];
+    const oldVal = m[2];
+    if (want[label] !== undefined && want[label] !== oldVal) {
+      const newVal = want[label].replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+      const comma = /,\s*$/.test(line) ? ',' : '';
+      content.push(line.slice(0, line.indexOf('[')) + "['" + label + "','" + newVal + "']" + comma);
+      count++;
+      console.log('  ' + label + ': ' + oldVal + ' -> ' + want[label]);
+    } else {
+      content.push(line);
+    }
+  }
+  lines.splice(bi + 1, ei - bi - 1, ...content);
+  return { html: lines.join('\n'), count };
+}
+
+// Map Wikipedia state names to our file's state names (matrix rows)
 const STATE_FIX = { 'Keralam': 'Kerala' };
 
-// The wiki's "current CMs" table sometimes omits the party column entirely
-// (iteration/alliance labels shift into it, e.g. "Sarma II", "NDA", "MY").
-// So the officeholder NAME is taken from the wiki, but the PARTY used by the
-// app is pinned here to the primary party of the current CM for each state.
 const PARTY_OVERRIDE = {
   'Andhra Pradesh': 'TDP', 'Arunachal Pradesh': 'BJP', 'Assam': 'BJP',
   'Bihar': 'BJP', 'Chhattisgarh': 'BJP', 'Goa': 'BJP', 'Gujarat': 'BJP',
@@ -417,6 +478,13 @@ const MATRIX_STATE_MAP = {
   'Uttarakhand': 'Uttarakhand',
   'West Bengal': 'West Bengal'
 };
+const GOV_STATES = [
+  'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
+  'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka',
+  'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram',
+  'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu',
+  'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'
+];
 
 // Split a JS array-literal row (without surrounding brackets) into quoted fields.
 function splitFields(s) {
@@ -427,10 +495,16 @@ function splitFields(s) {
   return out;
 }
 
+// Read the year embedded in a group row's current value, e.g. "X (2026)" -> 2026.
+function embeddedYear(html, label) {
+  const re = new RegExp("\\['" + label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + "','((?:[^'\\\\]|\\\\.)*)'");
+  const m = html.match(re);
+  if (!m) return null;
+  const y = m[1].match(/\((?:19|20)\d\d\)/);
+  return y ? +y[0].replace(/[()]/g, '') : null;
+}
+
 // Patch "CM Name (Party)" (field index 6) in the file's state matrix rows.
-// The state matrix rows are exactly 13 quoted fields ending with an ALL-CAPS
-// capital, which makes them unambiguous vs other arrays that start with a
-// state name.
 function updateCMatrix(html, cmMap) {
   const lines = html.split(/\r?\n/);
   let count = 0;
@@ -472,179 +546,122 @@ async function main() {
     errors.push('CMs: ' + e.message);
   }
 
-  // 2. Update Governors
+  // 2. Update Governors (prose leaders bank)
   try {
     let govMap = await fetchGovernors();
-    for (let [wikiState, govName] of Object.entries(govMap)) {
-      let ourState = STATE_MAP[wikiState];
-      if (!ourState) continue;
-      let re = new RegExp(
-        '(<b>' + ourState.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + 
-        '</b>[^<]*?\\.\\s*Governor:\\s*)([^.<]+?)([\\.<])'
-      );
-      let match = html.match(re);
-      if (match) {
-        let oldName = match[2].trim();
-        if (oldName !== govName) {
-          html = html.replace(re, match[1] + govName + match[3]);
-          updates++;
-          console.log('  Governor ' + ourState + ': ' + oldName + ' -> ' + govName);
-        }
-      }
-    }
+    let res = updateGovernorBank(html, govMap);
+    html = res.html;
+    updates += res.count;
   } catch (e) {
     errors.push('Governors: ' + e.message);
   }
 
-  // 3. Update Constitutional Posts (line ~1494)
+  // 3. Constitutional posts + RBI + pageant/film/sports latest (auto-updated group)
   try {
-    let posts = await fetchConstitutionalPosts();
-    if (posts['President']) {
-      let re = /President:\s*[^.\s]+(?:\s+[^.\s]+)*?\./;
-      let m = html.match(re);
-      if (m) {
-        html = html.replace(re, 'President: ' + posts['President'] + '.');
-        updates++;
-      }
+    const rows = [];
+    const inc = [
+      { label: 'President of India', page: 'President_of_India' },
+      { label: 'Vice-President of India', page: 'Vice_President_of_India' },
+      { label: 'Prime Minister of India', page: 'Prime_Minister_of_India' },
+      { label: 'Chief Justice of India', page: 'Chief_Justice_of_India' },
+      { label: 'Lok Sabha Speaker', page: 'Speaker_of_the_Lok_Sabha' },
+      { label: 'Chief Election Commissioner', page: 'Chief_Election_Commissioner_of_India' },
+      { label: 'Comptroller & Auditor General', page: 'Comptroller_and_Auditor_General_of_India' },
+      { label: 'Attorney General of India', page: 'Attorney_General_of_India' }
+    ];
+    for (const it of inc) {
+      try {
+        const got = await fetchIncumbent(it.page);
+        if (got && got.name) {
+          const yr = got.year || embeddedYear(html, it.label);
+          rows.push({ label: it.label, value: yr ? got.name + ' (' + yr + ')' : got.name });
+        }
+      } catch (e) {}
     }
-    if (posts['Prime Minister']) {
-      let re = /PM:\s*[^.\s]+(?:\s+[^.\s]+)*?\./;
-      let m = html.match(re);
-      if (m) {
-        html = html.replace(re, 'PM: ' + posts['Prime Minister'] + '.');
-        updates++;
+    try {
+      const rbi = await fetchRBIGovernor();
+      if (rbi && rbi.name) {
+        const yr = embeddedYear(html, 'RBI Governor of India');
+        rows.push({ label: 'RBI Governor of India', value: yr ? rbi.name + ' (' + yr + ')' : rbi.name });
       }
-    }
+    } catch (e) {}
+    try {
+      const mw = await fetchCurrentTitleholder('Miss_World');
+      if (mw) rows.push({ label: 'Miss World (latest)', value: mw });
+    } catch (e) {}
+    try {
+      const mu = await fetchCurrentTitleholder('Miss_Universe');
+      if (mu) rows.push({ label: 'Miss Universe (latest)', value: mu });
+    } catch (e) {}
+    try {
+      const femina = findYearWinner(await apiParse('Femina_Miss_India'), /^femina miss india/i);
+      const femCur = embeddedYear(html, 'Femina Miss India (latest)');
+      if (femina && femina.winner && (!femCur || femina.year >= femCur)) {
+        rows.push({ label: 'Femina Miss India (latest)', value: femina.winner + ' (' + femina.year + ')' });
+      }
+    } catch (e) {}
+    try {
+      const cann = await fetchInfoValue('Palme_d\'Or', ['Currently held by']);
+      if (cann) rows.push({ label: "Cannes Palme d\\'Or (latest)", value: cann });
+    } catch (e) {}
+    try {
+      const berl = await fetchInfoValue('Golden_Bear', ['Winner']);
+      if (berl) rows.push({ label: 'Berlin Golden Bear (latest)', value: berl });
+    } catch (e) {}
+    try {
+      const venc = await fetchInfoValue('Golden_Lion', ['Currently held by']);
+      if (venc) rows.push({ label: 'Venice Golden Lion (latest)', value: venc });
+    } catch (e) {}
+    try {
+      const osc = await fetchInfoValue('Academy_Award_for_Best_Picture', ['Most recent winner']);
+      if (osc) rows.push({ label: 'Oscars Best Picture (latest)', value: osc });
+    } catch (e) {}
+    try {
+      const cwc = findYearWinner(await apiParse('List_of_Cricket_World_Cup_finals'), /^winner$/);
+      if (cwc && cwc.winner) rows.push({ label: 'Cricket World Cup (latest)', value: cwc.winner + ' (' + cwc.year + ')' });
+    } catch (e) {}
+    try {
+      const fifa = await fetchInfoValue('FIFA_World_Cup', ['Current champions']);
+      if (fifa) {
+        let clean = fifa.replace(/\s*\(\d(?:st|nd|rd|th)\s+title\)\s*$/i, '').trim();
+        const yrs = ((await apiParse('FIFA_World_Cup')).match(/\b(?:19\d\d|20\d\d)\b/g) || [])
+          .map(Number)
+          .filter(y => y >= 1930 && y <= new Date().getFullYear());
+        const latest = Math.max.apply(null, yrs);
+        if (clean && latest) rows.push({ label: 'FIFA World Cup (latest)', value: clean + ' (' + latest + ')' });
+      }
+    } catch (e) {}
+    try {
+      const t20 = await championWithYear('2026 Men\'s T20 World Cup', 'Champions');
+      if (t20) rows.push({ label: 'T20 World Cup (latest)', value: t20 });
+    } catch (e) {}
+
+    let res = rewriteGroup(html, 'Current Officeholders & Recent Winners (auto-updated)', rows);
+    html = res.html;
+    updates += res.count;
   } catch (e) {
-    errors.push('Constitutional posts: ' + e.message);
+    errors.push('Current posts: ' + e.message);
   }
 
-  // 4. Update RBI Governor (line ~1374)
+  // 4. World leaders
   try {
-    let rbiGov = await fetchRBIGovernor();
-    if (rbiGov) {
-      let re = /(RBI Governor[^:]*?:|RBI\s+Governor\s+–\s+)[^.\s]+(?:\s+[^.\s]+){0,3}/;
-      let m = html.match(re);
-      if (m) {
-        // Only update if the name doesn't match
-        let before = m[1];
-        let name = m[0].substring(before.length).trim();
-        if (!name.includes(rbiGov.split(' ').slice(0, 2).join(' '))) {
-          // Can't safely replace here without more context
-        }
-      }
+    const wmap = await fetchWorldLeaders();
+    const rows = [];
+    for (const [country, spec] of Object.entries(WORLD_LEADERS)) {
+      const entry = wmap[country];
+      if (!entry) continue;
+      const cell = spec.field === 'hog' ? entry.hog : entry.hos;
+      const name = extractLeaderName(cell, spec.role);
+      if (name) rows.push({ label: spec.label, value: name });
     }
+    if (wmap['China'] && wmap['China'].premier) {
+      rows.push({ label: 'Premier of the State Council of China', value: wmap['China'].premier });
+    }
+    let res = rewriteGroup(html, 'World Leaders (auto-updated)', rows);
+    html = res.html;
+    updates += res.count;
   } catch (e) {
-    errors.push('RBI Governor: ' + e.message);
-  }
-
-  // 5. Update World Leaders — USA, UK, Russia, China, etc.
-  // Only patch if our file has entries for these (we include mini-updates in comments)
-  // World leaders data is primarily in the IR section as static text
-  // For now, this is informational only - actual world leader data changes
-  // are better handled through the IR section's static content approach.
-  console.log('  World leaders: auto-update requires manual HTML section audit');
-  // Future: can add targeted world leader sections in the HTML with machine-readable anchors
-
-  // 6. Update Pageant Winners
-  try {
-    let pageants = await fetchPageantWinners();
-    if (pageants['Miss World']) {
-      let w = pageants['Miss World'];
-      let re = /(Miss World[^<]*?:\s*)[^<(]+(?:\s*\([^)]*\))?/i;
-      let m = html.match(re);
-      if (m) {
-        let oldVal = m[0].substring(m[1].length).trim();
-        let newVal = w.winner + ' (' + w.year + ')';
-        if (!oldVal.includes(w.winner)) {
-          html = html.replace(re, m[1] + newVal);
-          updates++;
-          console.log('  Miss World: ' + oldVal + ' -> ' + newVal);
-        }
-      }
-    }
-    if (pageants['Miss Universe']) {
-      let w = pageants['Miss Universe'];
-      let re = /(Miss Universe[^<]*?:\s*)[^<(]+(?:\s*\([^)]*\))?/i;
-      let m = html.match(re);
-      if (m) {
-        let oldVal = m[0].substring(m[1].length).trim();
-        let newVal = w.winner + ' (' + w.year + ')';
-        if (!oldVal.includes(w.winner)) {
-          html = html.replace(re, m[1] + newVal);
-          updates++;
-          console.log('  Miss Universe: ' + oldVal + ' -> ' + newVal);
-        }
-      }
-    }
-  } catch (e) {
-    errors.push('Pageants: ' + e.message);
-  }
-
-  // 7. Update Film Festival Winners
-  try {
-    let films = await fetchFilmFestivalWinners();
-    if (films['Cannes Palme d\'Or']) {
-      let w = films['Cannes Palme d\'Or'];
-      let re = /(Cannes[^<]*?Palme[^<]*?:\s*)[^<(]+(?:\s*\([^)]*\))?/i;
-      let m = html.match(re);
-      if (m) {
-        let newVal = w.film + ' (' + w.year + ')';
-        if (!m[0].includes(w.film)) {
-          html = html.replace(re, m[1] + newVal);
-          updates++;
-          console.log('  Cannes: ' + newVal);
-        }
-      }
-    }
-    if (films['Oscar Best Picture']) {
-      let w = films['Oscar Best Picture'];
-      let re = /(Oscar[^<]*?Best Picture[^<]*?:\s*)[^<(]+(?:\s*\([^)]*\))?/i;
-      let m = html.match(re);
-      if (m) {
-        let newVal = w.film + ' (' + w.year + ')';
-        if (!m[0].includes(w.film)) {
-          html = html.replace(re, m[1] + newVal);
-          updates++;
-          console.log('  Oscar Best Picture: ' + newVal);
-        }
-      }
-    }
-  } catch (e) {
-    errors.push('Film festivals: ' + e.message);
-  }
-
-  // 8. Update Major Sports Champions
-  try {
-    let sports = await fetchSportsChampions();
-    if (sports['Cricket World Cup']) {
-      let w = sports['Cricket World Cup'];
-      let re = /(Cricket World Cup[^<]*?:\s*)[^<]+?(\d+)/i;
-      let m = html.match(re);
-      if (m) {
-        let newVal = w.winner + ' (' + w.year + ')';
-        if (!m[0].includes(w.winner)) {
-          html = html.replace(re, m[1] + newVal);
-          updates++;
-          console.log('  Cricket World Cup: ' + newVal);
-        }
-      }
-    }
-    if (sports['FIFA World Cup']) {
-      let w = sports['FIFA World Cup'];
-      let re = /(Football World Cup[^<]*?:\s*)[^<]+?(\d+)/i;
-      let m = html.match(re);
-      if (m) {
-        let newVal = w.winner + ' (' + w.year + ')';
-        if (!m[0].includes(w.winner)) {
-          html = html.replace(re, m[1] + newVal);
-          updates++;
-          console.log('  FIFA World Cup: ' + newVal);
-        }
-      }
-    }
-  } catch (e) {
-    errors.push('Sports champions: ' + e.message);
+    errors.push('World leaders: ' + e.message);
   }
 
   // Write if changes made
