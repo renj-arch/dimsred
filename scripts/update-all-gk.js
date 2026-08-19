@@ -20,11 +20,13 @@ const HTML_PATH = 'current-affairs.html';
 
 function fetch(url) {
   return new Promise((resolve, reject) => {
-    https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; GK-Updater/1.0)' } }, (res) => {
+    const req = https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; GK-Updater/1.0)' } }, (res) => {
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => resolve(data));
-    }).on('error', reject).on('timeout', () => { req.destroy(); reject(new Error('timeout')); });
+    });
+    req.on('error', reject);
+    req.on('timeout', () => { req.destroy(); reject(new Error('timeout')); });
   });
 }
 
@@ -52,29 +54,35 @@ async function fetchCMs() {
   let data = await fetch('https://en.wikipedia.org/w/api.php?action=parse&page=Chief_minister_(India)&prop=text&format=json');
   let parsed = JSON.parse(data);
   let html = parsed.parse.text['*'];
-  // Find "Current list of chief ministers" section by looking for tables 
-  // that contain state names and party names
+  // Current-CM table has header "State/UT | List | Portrait | Officeholder | Took office | Political Party"
+  // (the "Party" table holds deputy CMs, so require the "Political Party" header).
   let allTables = html.match(/<table[^>]*class="[^"]*(?:wikitable|sortable)[^"]*"[^>]*>([\s\S]*?)<\/table>/gi);
   let map = {};
   if (allTables) {
     for (let tbl of allTables) {
-      let rowMatches = tbl.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
-      for (let row of rowMatches) {
+      let rows = [...tbl.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)];
+      if (!rows.length) continue;
+      let headerCells = [];
+      for (let c of rows[0][1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)) headerCells.push(stripHtml(c[1]));
+      let header = headerCells.join(' ').toLowerCase();
+      if (!header.includes('officeholder') || !header.includes('political party')) continue;
+      for (let r of rows.slice(1)) {
         let cells = [];
-        let cellMatches = row[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi);
-        for (let cell of cellMatches) {
-          cells.push(cell[1].replace(/<[^>]+>/g, '').trim());
-        }
-        if (cells.length >= 3 && cells[2].length < 100 && !cells[0].includes('State')) {
-          let state = cells[0].replace(/\[edit\]/, '').trim();
-          let name = cells[1].replace(/\(.*?\)/g, '').trim();
-          let party = (cells[1].match(/\(([^)]+)\)/) || [, ''])[1].trim();
-          if (state && name && party && state.length > 2) {
-            map[state] = { name, party };
-          }
+        for (let c of r[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)) cells.push(stripHtml(c[1]));
+        let state = cells[0] ? cells[0].trim() : '';
+        let name = cells[3] ? cells[3].trim() : '';
+        let party = (cells[5] || '').trim();
+        if (state && name && party && state.length > 2 && name.length < 60) {
+          // Normalize state names; the current table sometimes uses "Keralam".
+          state = STATE_FIX[state] || state;
+          map[state] = { name, party };
         }
       }
     }
+  }
+  // Alliance labels from Wikipedia -> primary party used by the app.
+  for (let [s, p] of Object.entries(PARTY_OVERRIDE)) {
+    if (map[s]) map[s].party = p;
   }
   return map;
 }
@@ -360,33 +368,106 @@ const STATE_MAP = {
   'West Bengal': 'West Bengal'
 };
 
+// Map Wikipedia state names to the row names used in the file's state matrix,
+// where the 7th field (index 6) of each row is "CM Name (Party)".
+const STATE_FIX = { 'Keralam': 'Kerala' };
+
+// The wiki's "current CMs" table sometimes omits the party column entirely
+// (iteration/alliance labels shift into it, e.g. "Sarma II", "NDA", "MY").
+// So the officeholder NAME is taken from the wiki, but the PARTY used by the
+// app is pinned here to the primary party of the current CM for each state.
+const PARTY_OVERRIDE = {
+  'Andhra Pradesh': 'TDP', 'Arunachal Pradesh': 'BJP', 'Assam': 'BJP',
+  'Bihar': 'BJP', 'Chhattisgarh': 'BJP', 'Goa': 'BJP', 'Gujarat': 'BJP',
+  'Haryana': 'BJP', 'Himachal Pradesh': 'INC', 'Jharkhand': 'JMM',
+  'Karnataka': 'INC', 'Kerala': 'INC', 'Madhya Pradesh': 'BJP',
+  'Maharashtra': 'BJP', 'Manipur': 'BJP', 'Meghalaya': 'NPP',
+  'Mizoram': 'ZPM', 'Nagaland': 'NPF', 'Odisha': 'BJP', 'Punjab': 'AAP',
+  'Rajasthan': 'BJP', 'Sikkim': 'SKM', 'Tamil Nadu': 'TVK',
+  'Telangana': 'INC', 'Tripura': 'BJP', 'Uttar Pradesh': 'BJP',
+  'Uttarakhand': 'BJP', 'West Bengal': 'BJP'
+};
+const MATRIX_STATE_MAP = {
+  'Andhra Pradesh': 'Andhra Pradesh',
+  'Arunachal Pradesh': 'Arunachal',
+  'Assam': 'Assam',
+  'Bihar': 'Bihar',
+  'Chhattisgarh': 'Chhattisgarh',
+  'Goa': 'Goa',
+  'Gujarat': 'Gujarat',
+  'Haryana': 'Haryana',
+  'Himachal Pradesh': 'Himachal',
+  'Jharkhand': 'Jharkhand',
+  'Karnataka': 'Karnataka',
+  'Kerala': 'Kerala',
+  'Madhya Pradesh': 'Madhya Pradesh',
+  'Maharashtra': 'Maharashtra',
+  'Manipur': 'Manipur',
+  'Meghalaya': 'Meghalaya',
+  'Mizoram': 'Mizoram',
+  'Nagaland': 'Nagaland',
+  'Odisha': 'Odisha',
+  'Punjab': 'Punjab',
+  'Rajasthan': 'Rajasthan',
+  'Sikkim': 'Sikkim',
+  'Tamil Nadu': 'Tamil Nadu',
+  'Telangana': 'Telangana',
+  'Tripura': 'Tripura',
+  'Uttar Pradesh': 'Uttar Pradesh',
+  'Uttarakhand': 'Uttarakhand',
+  'West Bengal': 'West Bengal'
+};
+
+// Split a JS array-literal row (without surrounding brackets) into quoted fields.
+function splitFields(s) {
+  const out = [];
+  const re = /'((?:[^'\\]|\\.)*)'/g;
+  let m;
+  while ((m = re.exec(s))) out.push(m[1]);
+  return out;
+}
+
+// Patch "CM Name (Party)" (field index 6) in the file's state matrix rows.
+// The state matrix rows are exactly 13 quoted fields ending with an ALL-CAPS
+// capital, which makes them unambiguous vs other arrays that start with a
+// state name.
+function updateCMatrix(html, cmMap) {
+  const lines = html.split(/\r?\n/);
+  let count = 0;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const start = line.indexOf("['");
+    const end = line.lastIndexOf("']");
+    if (start === -1 || end === -1 || end <= start) continue;
+    const fields = splitFields(line.slice(start + 1, end + 1));
+    if (fields.length !== 13) continue;
+    if (!/^[A-Z][A-Z .&'()-]*$/.test(fields[12].trim())) continue;
+    const rowState = fields[0];
+    const ourState = Object.keys(MATRIX_STATE_MAP).find(k => MATRIX_STATE_MAP[k] === rowState);
+    const cm = ourState && cmMap[ourState];
+    if (!cm || !cm.name) continue;
+    const newVal = cm.name + (cm.party ? ' (' + cm.party + ')' : '');
+    if (fields[6].trim() !== newVal) {
+      const at = line.indexOf("'" + fields[6] + "'");
+      lines[i] = line.slice(0, at) + "'" + newVal + "'" + line.slice(at + fields[6].length + 2);
+      count++;
+      console.log('  CM ' + fields[0] + ': ' + fields[6].trim() + ' -> ' + newVal);
+    }
+  }
+  return { html: lines.join('\n'), count };
+}
+
 async function main() {
   let html = fs.readFileSync(HTML_PATH, 'utf8');
   let updates = 0;
   let errors = [];
 
-  // 1. Update CMs
+  // 1. Update CMs in the state matrix ("Who is the CM of X?" quiz source)
   try {
     let cmMap = await fetchCMs();
-    for (let [wikiState, cm] of Object.entries(cmMap)) {
-      let ourState = STATE_MAP[wikiState];
-      if (!ourState) continue;
-      // Pattern: <b>OurState:</b> ... CM: OldName (OldParty). Governor: ...
-      let re = new RegExp(
-        '(<b>' + ourState.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + 
-        '</b>[^<]*?CM:\\s*)([^(]+?)(\\s*\\([^)]+\\))(\\.\\s*Governor:)'
-      );
-      let match = html.match(re);
-      if (match) {
-        let oldName = match[2].trim();
-        let oldParty = match[3].replace(/[()]/g, '').trim();
-        if (oldName !== cm.name) {
-          html = html.replace(re, match[1] + cm.name + ' (' + cm.party + ')' + match[4]);
-          updates++;
-          console.log('  CM ' + ourState + ': ' + oldName + ' (' + oldParty + ') -> ' + cm.name + ' (' + cm.party + ')');
-        }
-      }
-    }
+    let res = updateCMatrix(html, cmMap);
+    html = res.html;
+    updates += res.count;
   } catch (e) {
     errors.push('CMs: ' + e.message);
   }
