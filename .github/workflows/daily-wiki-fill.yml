@@ -154,27 +154,17 @@ jobs:
 
       - run: npm install
 
-      # Disk-safe: only pull the artifacts this job actually consumes, and never
-      # duplicate them. Run #441's merge died with "No space left on device"
-      # because it (a) downloaded ALL artifacts (~6.5 GB) and (b) `cp`-ed every
-      # chunk file again into chunks/ — a second ~6.5 GB copy that blew the 14 GB
-      # runner. We now download chunk artifacts via a retrying script that
-      # unzips+deletes each archive as it lands, move (not copy) the chunk files
-      # into chunks/, and delete the download trees and the repo's stale data/
-      # before restoring the baseline. continue-on-error keeps the merge alive
-      # when every chunk failed (merge-chunks.js no-ops cleanly).
-      - name: Download chunk outputs (single copy, retrying)
-        continue-on-error: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          chmod +x scripts/download-run-artifacts.sh
-          bash scripts/download-run-artifacts.sh "${{ github.run_id }}" '^chunk-[0-9]+$' chunk-src
-
+      # ── Baseline FIRST, then chunks ONE AT A TIME ──
+      # Run #458 died with "No space left on device": all 27 unzipped chunks
+      # (~25 GB) landed on disk before the baseline restore ran. Pulling the
+      # baseline while disk is empty, then download→merge→free per chunk,
+      # caps peak usage at roughly one chunk (~1 GB). merge-chunks.js deletes
+      # each quiz-chunk-* file as it consumes it.
       - name: Download baseline data
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          chmod +x scripts/download-run-artifacts.sh
           bash scripts/download-run-artifacts.sh "${{ github.run_id }}" '^baseline$' baseline
 
       - name: Preserve feed-owned files
@@ -190,46 +180,39 @@ jobs:
             fi
           done
 
-      # Run #458's merge died silently mid-restore (runner lost, logs never
-      # uploaded). Leave a disk breadcrumb at each heavy phase so the next
-      # failure is diagnosable, and drop the stale checkout data/ BEFORE the
-      # baseline copy instead of during it.
-      - name: Free checkout data (df breadcrumb)
+      - name: Restore baseline data (early, frees checkout data/)
         run: |
           df -h / || true
-          rm -rf data
-          echo "freed checkout data/"; df -h / || true
-
-      - name: Restore baseline data
-        run: |
           if [ -d baseline/data ]; then
-            cp -r baseline/data data
-            echo "restored from baseline/data"
-          elif [ -d baseline ]; then
-            cp -r baseline data
-            echo "restored from baseline (flat layout)"
+            rm -rf data && cp -r baseline/data data && echo "restored from baseline/data"
+          elif [ -d baseline ] && [ -n "$(ls -A baseline 2>/dev/null)" ]; then
+            rm -rf data && cp -r baseline data && echo "restored from baseline (flat layout)"
           else
-            echo "WARNING: no baseline content found — merging over empty data/"
+            echo "WARNING: no baseline artifact — merging over checkout data/"
             mkdir -p data
           fi
+          rm -rf baseline
           df -h / || true
 
-      - name: Collect chunk outputs (move, do not copy — frees download heap)
+      - name: Merge chunks incrementally (download, merge, free — repeat)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          chmod +x scripts/download-run-artifacts.sh
           mkdir -p chunks
-          find chunk-src -name 'quiz-chunk-*.json*' -exec mv {} chunks/ \; 2>/dev/null || true
-          rm -rf chunk-src baseline
-          echo "Chunk files found:"
-          ls -la chunks/ 2>/dev/null || echo "  (none)"
-
-      - run: node scripts/merge-chunks.js
-
-      # merge-chunks.js deletes each chunk as it consumes it, but a failed
-      # parse leaves corpses behind; either way nothing downstream needs
-      # chunks/ and the later steps write several GB of their own.
-      - name: Drop merge workspace
-        run: |
-          rm -rf chunks chunk-src baseline
+          for i in $(seq 1 40); do
+            if bash scripts/download-run-artifacts.sh "${{ github.run_id }}" "^chunk-${i}$" chunks; then
+              node scripts/merge-chunks.js || echo "WARNING: merge errored for chunk $i (continuing)"
+            else
+              echo "chunk-$i not produced this run — skipping"
+            fi
+            find chunks -name 'quiz-chunk-*' -delete 2>/dev/null || true
+            df -h / | tail -1
+          done
+          if bash scripts/download-run-artifacts.sh "${{ github.run_id }}" '^chunk-[0-9]+$' chunks; then
+            node scripts/merge-chunks.js || true
+          fi
+          find chunks -name 'quiz-chunk-*' -delete 2>/dev/null || true
           df -h / || true
 
       - run: node scripts/split-quiz-to-categories.js
