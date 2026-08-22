@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       run-id:
-        description: 'Run ID whose artifacts to merge (empty = current run)'
+        description: 'Wiki Fill run ID whose chunk artifacts to merge (required — empty fails fast)'
         required: false
         default: ''
       dry-run:
@@ -37,6 +37,22 @@ jobs:
 
       - run: npm install
 
+      # Recovery #18 failed because an empty run-id input made the workflow
+      # scan its own artifacts (which never include quiz-chunk-N). Require the
+      # target run explicitly so we never silently recover nothing.
+      - name: Resolve target run id (must be given explicitly)
+        id: resolve
+        run: |
+          RUN_ID="${{ inputs.run-id }}"
+          if [ -z "$RUN_ID" ]; then
+            echo "::error::'run-id' input is required."
+            echo "::error::Dispatch this workflow WITH the run ID of the Wiki Fill run whose chunk artifacts should be merged"
+            echo "::error::(find it via: gh api repos/${GITHUB_REPOSITORY}/actions/runs?event=schedule — or the URL .../actions/runs/<run-id>)."
+            exit 1
+          fi
+          echo "Using target run-id: $RUN_ID"
+          echo "run-id=$RUN_ID" >> "$GITHUB_OUTPUT"
+
       # Retrying downloader: actions/download-artifact fires all downloads in
       # parallel and aborts the whole step on any single transient 503. This
       # fetches each artifact sequentially with retry/backoff (flaky blob
@@ -47,17 +63,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          RUN_ID="${{ inputs.run-id || github.run_id }}"
-          API="https://api.github.com/repos/${GITHUB_REPOSITORY:-dimsred-bot/dimsred}/actions/runs/${RUN_ID}/artifacts?per_page=100"
+          RUN_ID="${{ steps.resolve.outputs.run-id }}"
+          API="https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}/artifacts?per_page=100"
           resp=$(curl -sS --retry 5 --retry-all-errors --retry-delay 3 \
             -H "Authorization: Bearer ${TOKEN}" -H "Accept: application/vnd.github+json" \
             "${API}") || echo "ERROR: artifact list request failed"
           printf '%s' "$resp" | node -e '
             const d = JSON.parse(require("fs").readFileSync(0, "utf8"));
-            (d.artifacts || []).forEach(a => {
+            const arts = d.artifacts || [];
+            arts.forEach(a => {
               console.log("Found artifact:", a.name, "expired:", a.expired);
             });
-          ' || echo "Could not parse artifact list"
+            const chunks = arts.filter(a => /^quiz-chunk-[0-9]+$/.test(a.name) && a.expired !== true);
+            console.log("Usable quiz-chunk-N artifacts:", chunks.length, "/", arts.length, "total");
+            if (chunks.length === 0) {
+              console.error("::error::No non-expired quiz-chunk-N artifacts in this run — nothing to recover (expired or wrong run-id?).");
+              process.exit(1);
+            }
+          ' || { echo "Could not parse artifact list"; exit 1; }
 
       - name: Download chunk outputs from run
         env:
@@ -65,14 +88,14 @@ jobs:
         run: |
           chmod +x scripts/download-run-artifacts.sh
           # Pattern matches quiz-chunk-N (e.g., quiz-chunk-1, quiz-chunk-27)
-          bash scripts/download-run-artifacts.sh "${{ inputs.run-id || github.run_id }}" '^quiz-chunk-[0-9]+$' chunk-src
+          bash scripts/download-run-artifacts.sh "${{ steps.resolve.outputs.run-id }}" '^quiz-chunk-[0-9]+$' chunk-src
 
       - name: Download baseline data from run
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bash scripts/download-run-artifacts.sh "${{ inputs.run-id || github.run_id }}" '^baseline$' baseline \
+            bash scripts/download-run-artifacts.sh "${{ steps.resolve.outputs.run-id }}" '^baseline$' baseline \
             || echo "baseline artifact missing/expired — will fall back to checkout data/"
 
       - name: Preserve feed-owned files
@@ -185,7 +208,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Wiki fill recovery — run #${{ inputs.run-id || github.run_id }} $(date +'%Y-%m-%d %H:%M UTC')"
+            git commit -m "Wiki fill recovery — run ${{ steps.resolve.outputs.run-id }} $(date +'%Y-%m-%d %H:%M UTC')"
             for i in 1 2 3; do
               if git pull --rebase 2>/dev/null; then
                 echo "Rebased cleanly"

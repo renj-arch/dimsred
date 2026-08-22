@@ -105,6 +105,14 @@ function main() {
       }
       console.log('  ' + f + ': ' + chunkTotal + ' questions (' + chunkAdded + ' new)');
       added += chunkAdded;
+      // Free disk as we go: each chunk is a full quiz copy (~1 GB sharded) and
+      // holding all 27 simultaneously blew the runner mid-merge (run #458).
+      try {
+        fs.unlinkSync(chunkPath);
+        if (primary.shardCount) {
+          for (let i = 0; i < primary.shardCount; i++) fs.unlinkSync(chunkPath + '.part.' + i);
+        }
+      } catch (e2) { /* best-effort cleanup */ }
     } catch (e) {
       console.error('  ' + f + ': ERROR ' + e.message);
     }
