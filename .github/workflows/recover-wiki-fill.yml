@@ -65,22 +65,33 @@ jobs:
         run: |
           RUN_ID="${{ steps.resolve.outputs.run-id }}"
           API="https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}/artifacts?per_page=100"
+          # NB: must use ${GITHUB_TOKEN} — the old ${TOKEN} reference was empty,
+          # sending this request unauthenticated, where shared runner IPs get
+          # rate-limited into an error JSON that looked like "0 artifacts"
+          # (recovery #19).
           resp=$(curl -sS --retry 5 --retry-all-errors --retry-delay 3 \
-            -H "Authorization: Bearer ${TOKEN}" -H "Accept: application/vnd.github+json" \
-            "${API}") || echo "ERROR: artifact list request failed"
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" \
+            "${API}") || { echo "ERROR: artifact list request failed"; exit 1; }
+          echo "--- artifact list raw response (first 400 chars) ---"
+          printf '%s' "$resp" | cut -c1-400
+          echo "----------------------------------------------------"
           printf '%s' "$resp" | node -e '
             const d = JSON.parse(require("fs").readFileSync(0, "utf8"));
+            if (d.message && !Array.isArray(d.artifacts)) {
+              console.error("::error::artifact list API said: " + d.message);
+              process.exit(1);
+            }
             const arts = d.artifacts || [];
             arts.forEach(a => {
               console.log("Found artifact:", a.name, "expired:", a.expired);
             });
             const chunks = arts.filter(a => /^quiz-chunk-[0-9]+$/.test(a.name) && a.expired !== true);
-            console.log("Usable quiz-chunk-N artifacts:", chunks.length, "/", arts.length, "total");
+            console.log("Usable quiz-chunk-N artifacts:", chunks.length, "/", arts.length, "total (total_count:", d.total_count, ")");
             if (chunks.length === 0) {
               console.error("::error::No non-expired quiz-chunk-N artifacts in this run — nothing to recover (expired or wrong run-id?).");
               process.exit(1);
             }
-          ' || { echo "Could not parse artifact list"; exit 1; }
+          '
 
       - name: Download chunk outputs from run
         env:
