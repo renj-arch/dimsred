@@ -85,10 +85,10 @@ jobs:
             arts.forEach(a => {
               console.log("Found artifact:", a.name, "expired:", a.expired);
             });
-            # Artifact NAMES are 'chunk-N' as uploaded by daily-wiki-fill
-            # (the quiz-chunk-N.json names are files INSIDE each artifact).
-            # Accept both spellings defensively. Wrong '^quiz-chunk-N' pattern
-            # is why recoveries #18/#20 matched nothing.
+            // Artifact NAMES are 'chunk-N' as uploaded by daily-wiki-fill
+            // (the quiz-chunk-N.json names are files INSIDE each artifact).
+            // Accept both spellings defensively. Wrong '^quiz-chunk-N' pattern
+            // is why recoveries #18/#20 matched nothing.
             const chunks = arts.filter(a => /^(quiz-)?chunk-[0-9]+$/.test(a.name) && a.expired !== true);
             console.log("Usable quiz-chunk-N artifacts:", chunks.length, "/", arts.length, "total (total_count:", d.total_count, ")");
             if (chunks.length === 0) {
