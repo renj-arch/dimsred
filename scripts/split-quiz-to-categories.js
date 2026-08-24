@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { readQuiz } = require('./lib/quiz-store');
 
-const quizPath = path.join(__dirname, '..', 'data', 'quiz.json');
+const quizPath = process.env.SPLIT_QUIZ_PATH || path.join(__dirname, '..', 'data', 'quiz.json');
 const outDir = process.env.SPLIT_OUT_DIR || path.join(__dirname, '..', 'data', 'questions');
 
 let quiz;
