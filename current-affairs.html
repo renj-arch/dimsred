@@ -3822,12 +3822,31 @@
             if (_seenQ) return _seenQ;
             try { _seenQ = JSON.parse(localStorage.getItem(_SEEN_KEY)); } catch(e) {}
             if (!_seenQ || !_seenQ.length) _seenQ = [];
+            // Merge remote _seenQ from Supabase session cache
+            try {
+                var map = readSessions();
+                if (map && map._seenQ && map._seenQ.length) {
+                    var remoteSet = {};
+                    for (var i = 0; i < _seenQ.length; i++) remoteSet[_seenQ[i]] = true;
+                    for (var j = 0; j < map._seenQ.length; j++) {
+                        if (!remoteSet[map._seenQ[j]]) { _seenQ.push(map._seenQ[j]); remoteSet[map._seenQ[j]] = true; }
+                    }
+                    while (_seenQ.length > _SEEN_MAX) _seenQ.shift();
+                    try { localStorage.setItem(_SEEN_KEY, JSON.stringify(_seenQ)); } catch(e) {}
+                }
+            } catch(e) {}
             return _seenQ;
         }
         function _saveSeen() {
             if (!_seenQ) return;
             while (_seenQ.length > _SEEN_MAX) _seenQ.shift();
             try { localStorage.setItem(_SEEN_KEY, JSON.stringify(_seenQ)); } catch(e) {}
+            // Also push to Supabase via the quiz_progress payload
+            try {
+                var map = readSessions();
+                map._seenQ = _seenQ;
+                if (typeof _startSync === 'function') _startSync();
+            } catch(e) {}
         }
         function _hashQ(text) {
             if (!text) return '';

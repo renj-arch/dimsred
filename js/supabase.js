@@ -278,7 +278,16 @@ function mergeQuizPayload(existing, local, remoteUpdatedAtMs) {
       if (k2 === '_meta') continue;
       var lv = local[k2];
       var rv = out[k2];
-      if (!rv || !lv || (lv.savedAt || 0) >= (rv.savedAt || 0)) out[k2] = lv;
+      // Union _seenQ arrays instead of overwriting
+      if (k2 === '_seenQ' && Array.isArray(lv) && Array.isArray(rv)) {
+        var seen = {};
+        var merged = [];
+        for (var si = 0; si < rv.length; si++) { if (!seen[rv[si]]) { seen[rv[si]] = true; merged.push(rv[si]); } }
+        for (var sj = 0; sj < lv.length; sj++) { if (!seen[lv[sj]]) { seen[lv[sj]] = true; merged.push(lv[sj]); } }
+        out[k2] = merged;
+      } else {
+        if (!rv || !lv || (lv.savedAt || 0) >= (rv.savedAt || 0)) out[k2] = lv;
+      }
     }
   }
   out._meta = { lastWrite: Date.now(), lastSyncAt: remoteUpdatedAtMs || 0 };
