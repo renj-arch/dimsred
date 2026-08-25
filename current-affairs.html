@@ -8313,7 +8313,10 @@ function _isExamRelevant(q) {
             var pct = _archTotal ? Math.min(100, Math.round((visited / _archTotal) * 100)) : 0;
             var done = visited >= _archTotal;
             var totalLabel = _archEstimatedTotal > _archTotal ? _archEstimatedTotal.toLocaleString() + '+' : _archTotal.toLocaleString();
-            el.innerHTML = (done ? '🎉' : '📚 Archive coverage:') + ' <strong>' + visited.toLocaleString() + '</strong> / ~' + totalLabel + ' · <strong>' + pct + '%</strong>'
+            var seenArr = _loadSeen();
+            var seenCount = seenArr ? seenArr.length : 0;
+            el.innerHTML = (done ? '🎉' : '📚 Archive:') + ' <strong>' + visited.toLocaleString() + '</strong> / ~' + totalLabel + ' · <strong>' + pct + '%</strong>'
+                + (seenCount > 0 ? ' · 🔖 ' + seenCount.toLocaleString() + ' seen' : '')
                 + ' <span style="margin-left:8px;opacity:.7">'
                 + '<input id="archJumpInput" type="number" min="0" max="' + _archTotal + '" value="' + visited + '" style="width:70px;padding:1px 4px;border-radius:4px;border:1px solid rgba(34,211,238,.25);background:rgba(0,0,0,.2);color:var(--cyan);font-size:.9em" title="Jump to position" onkeydown="if(event.key===\'Enter\')this.nextElementSibling.click()">'
                 + ' <button onclick="var v=parseInt(document.getElementById(\'archJumpInput\').value,10);if(!isNaN(v)&&v>=0){_archCursor=Math.min(v,_archTotal);_writeArchiveCursor(_archCursor);if(state.questions&&state.questions.length){for(var ri=(state.idx||0);ri<state.questions.length;ri++)_markSeen(state.questions[ri])}if(state.restartFn)state.restartFn()}" style="padding:1px 6px;border-radius:4px;border:1px solid rgba(34,211,238,.25);background:rgba(0,0,0,.2);color:var(--cyan);cursor:pointer;font-size:.85em" title="Go to position">Go</button>'
