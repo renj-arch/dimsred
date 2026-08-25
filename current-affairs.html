@@ -7683,10 +7683,17 @@ function prevQuestion() {
             }
         }
 
+        var _isRestarting = false;
         async function startStaticGk() {
             if (!confirmAbandonQuiz()) return;
             await ensureSessionsReady();
             if (offerResumeFor('static', 'Static GK')) return;
+            _isRestarting = (state.questions && state.questions.length > 0);
+            if (_isRestarting) {
+                for (var ri = (state.idx || 0); ri < state.questions.length; ri++) {
+                    _markSeen(state.questions[ri]);
+                }
+            }
             clearQuizSession('static');
             state.cat = 'static';
             state._sessionKey = null;
@@ -7716,6 +7723,7 @@ function prevQuestion() {
             if (hasArchive) {
                 document.getElementById('qText').innerHTML = 'Loading Static GK + Archive...';
                 _loadArchiveIntoState(function() {
+                    _isRestarting = false;
                     _updateArchiveProgress();
                     _generateStaticQuestions();
                     if (state.questions.length > 0) showQuestion();
