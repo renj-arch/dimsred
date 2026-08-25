@@ -7786,68 +7786,83 @@ function _isExamRelevant(q) {
             var allQ = [];
             var pending = files.length;
             if (pending === 0) { cb([]); return; }
-            files.forEach(function(entry) {
+            var finished = false;
+            var BATCH_SIZE = 20;
+            var XHR_TIMEOUT = 15000;
+            var OVERALL_TIMEOUT = 45000;
+            var overallTimer = setTimeout(function() {
+                if (!finished) { finished = true; flushAndCb(); }
+            }, OVERALL_TIMEOUT);
+            function flushAndCb() {
+                clearTimeout(overallTimer);
+                if (allQ.length === 0 && !finished) return;
+                finished = true;
+                if (allQ.length === 0) { cb([]); return; }
+                var bySubTopic = {};
+                for (var qi2 = 0; qi2 < allQ.length; qi2++) {
+                    var aq = allQ[qi2];
+                    var key = aq.subject + '||' + aq.subTopic;
+                    if (!bySubTopic[key]) bySubTopic[key] = [];
+                    bySubTopic[key].push(aq);
+                }
+                var keys = Object.keys(bySubTopic);
+                shuffleArray(keys);
+                var guaranteed = [];
+                var rest = [];
+                for (var ki = 0; ki < keys.length; ki++) {
+                    var qs = bySubTopic[keys[ki]];
+                    guaranteed.push(qs[0]);
+                    for (var qj = 1; qj < qs.length; qj++) rest.push(qs[qj]);
+                }
+                shuffleArray(rest);
+                cb(guaranteed.concat(rest));
+            }
+            function checkDone() {
+                if (finished) return;
+                loaded++;
+                if (loaded >= pending) { flushAndCb(); }
+            }
+            function processFile(entry) {
+                if (finished) return;
                 var xhr = new XMLHttpRequest();
+                xhr.timeout = XHR_TIMEOUT;
                 xhr.onload = function() {
                     if (xhr.status === 200) {
                         var data = null;
                         try { data = JSON.parse(xhr.responseText); } catch(e) { data = null; }
-                        (function() {
-                            var queue = [];
-                            if (data) {
-                                for (var sk in data) {
-                                    var ss = data[sk].subSubjects;
-                                    for (var ssk in ss) {
-                                        for (var qi = 0; qi < ss[ssk].length; qi++) queue.push([sk, ssk, ss[ssk][qi]]);
+                        if (data) {
+                            for (var sk in data) {
+                                var ss = data[sk].subSubjects;
+                                for (var ssk in ss) {
+                                    for (var qi = 0; qi < ss[ssk].length; qi++) {
+                                        var item = [sk, ssk, ss[ssk][qi]];
+                                        var q = item[2];
+                                        if (q && q.question && q.answer) {
+                                            var fact = q.fact || q.solution || q.explanation || '';
+                                            if (!_isExamRelevant({q:q.question, a:q.answer, fact:fact})) continue;
+                                            allQ.push({q:q.question, a:q.answer, options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:item[0], subTopic:item[1], pubDate:q.pubDate||''});
+                                        }
                                     }
                                 }
                             }
-                            var cpos = 0;
-                            function pushChunk() {
-                                var end = Math.min(cpos + 5000, queue.length);
-                                for (; cpos < end; cpos++) {
-                                    var item = queue[cpos];
-                                    var q = item[2];
-                                    if (q && q.question && q.answer) {
-                                        var fact = q.fact || q.solution || q.explanation || '';
-                                        if (!_isExamRelevant({q:q.question, a:q.answer, fact:fact})) continue;
-                                        allQ.push({q:q.question, a:q.answer, options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:item[0], subTopic:item[1], pubDate:q.pubDate||''});
-                                    }
-                                }
-                                if (cpos < queue.length) { setTimeout(pushChunk, 0); return; }
-                                loaded++;
-                                if (loaded >= pending) {
-                                    var bySubTopic = {};
-                                    for (var qi2 = 0; qi2 < allQ.length; qi2++) {
-                                        var aq = allQ[qi2];
-                                        var key = aq.subject + '||' + aq.subTopic;
-                                        if (!bySubTopic[key]) bySubTopic[key] = [];
-                                        bySubTopic[key].push(aq);
-                                    }
-                                    var keys = Object.keys(bySubTopic);
-                                    shuffleArray(keys);
-                                    var guaranteed = [];
-                                    var rest = [];
-                                    for (var ki = 0; ki < keys.length; ki++) {
-                                        var qs = bySubTopic[keys[ki]];
-                                        guaranteed.push(qs[0]);
-                                        for (var qj = 1; qj < qs.length; qj++) rest.push(qs[qj]);
-                                    }
-                                    shuffleArray(rest);
-                                    cb(guaranteed.concat(rest));
-                                }
-                            }
-                            setTimeout(pushChunk, 0);
-                        })();
-                    } else {
-                        loaded++;
-                        if (loaded >= pending) { cb(allQ); }
+                        }
                     }
+                    checkDone();
                 };
-                xhr.onerror = function() { loaded++; if (loaded >= pending) { cb(allQ); } };
+                xhr.onerror = function() { checkDone(); };
+                xhr.ontimeout = function() { checkDone(); };
                 xhr.open('GET', entry.file, true);
                 xhr.send();
-            });
+            }
+            var idx = 0;
+            function loadBatch() {
+                if (finished) return;
+                var end = Math.min(idx + BATCH_SIZE, files.length);
+                for (var i = idx; i < end; i++) { processFile(files[i]); }
+                idx = end;
+                if (idx < files.length) { setTimeout(loadBatch, 50); }
+            }
+            loadBatch();
         }
         var _subjCache = null;
         function loadArchiveQuestions(filter, cb) {
