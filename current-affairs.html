@@ -5469,6 +5469,15 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 if (!map._meta) map._meta = {};
                 map._meta.lastSyncAt = Date.now();
                 if (changed) _sessionCache = map;
+                // Restore archive seed + cursor from Supabase
+                var arc = map._archive;
+                if (arc && arc.seed) {
+                    try { localStorage.setItem('arch_seed', String(arc.seed)); } catch(e) {}
+                }
+                if (arc && typeof arc.cursor === 'number') {
+                    _archCursor = arc.cursor;
+                    try { localStorage.setItem('arch_cursor', String(arc.cursor)); } catch(e) {}
+                }
             }).catch(function(){});
             return _sessionsPromise;
         }
@@ -8263,7 +8272,14 @@ function _isExamRelevant(q) {
         var _archMaxBatch = 50;
         var _archTotal = 0;
         function _readArchiveCursor() { try { var v = parseInt(localStorage.getItem('arch_cursor'),10); return isNaN(v) ? 0 : v; } catch(e) { return 0; } }
-        function _writeArchiveCursor(v) { try { localStorage.setItem('arch_cursor', String(v)); } catch(e) {} }
+        function _writeArchiveCursor(v) { try { localStorage.setItem('arch_cursor', String(v)); } catch(e) {} _syncArchiveState(); }
+        function _syncArchiveState() {
+            try {
+                var map = readSessions();
+                map._archive = { seed: _getArchiveSeed(), cursor: _archCursor };
+                if (typeof _startSync === 'function') _startSync();
+            } catch(e) {}
+        }
         var _archCursor = _readArchiveCursor();
         function _archNextBatch() {
             var got = [];
@@ -8391,6 +8407,7 @@ function _isExamRelevant(q) {
             try { var v = parseInt(localStorage.getItem('arch_seed'), 10); if (!isNaN(v)) return v; } catch(e) {}
             var s = Math.floor(Math.random() * 2147483647);
             try { localStorage.setItem('arch_seed', String(s)); } catch(e) {}
+            _syncArchiveState();
             return s;
         }
         function _applyShuffle(arr) {
