@@ -3814,6 +3814,44 @@
         function pick(arr) { return arr[rand(0, arr.length - 1)]; }
         function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = rand(0, i); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
+        // ===== CROSS-SESSION SEEN-QUESTION TRACKING =====
+        var _SEEN_KEY = 'gk_seen';
+        var _SEEN_MAX = 10000;
+        var _seenQ = null;
+        function _loadSeen() {
+            if (_seenQ) return _seenQ;
+            try { _seenQ = JSON.parse(localStorage.getItem(_SEEN_KEY)); } catch(e) {}
+            if (!_seenQ || !_seenQ.length) _seenQ = [];
+            return _seenQ;
+        }
+        function _saveSeen() {
+            if (!_seenQ) return;
+            while (_seenQ.length > _SEEN_MAX) _seenQ.shift();
+            try { localStorage.setItem(_SEEN_KEY, JSON.stringify(_seenQ)); } catch(e) {}
+        }
+        function _hashQ(text) {
+            if (!text) return '';
+            var s = String(text).toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 120);
+            var h = 0;
+            for (var i = 0; i < s.length; i++) { h = ((h << 5) - h + s.charCodeAt(i)) | 0; }
+            return (h >>> 0).toString(36);
+        }
+        function _isSeen(q) {
+            if (!q || !q.q) return false;
+            var h = _hashQ(q.q);
+            var arr = _loadSeen();
+            for (var i = 0; i < arr.length; i++) { if (arr[i] === h) return true; }
+            return false;
+        }
+        function _markSeen(q) {
+            if (!q || !q.q) return;
+            var h = _hashQ(q.q);
+            var arr = _loadSeen();
+            for (var i = 0; i < arr.length; i++) { if (arr[i] === h) return; }
+            arr.push(h);
+            _saveSeen();
+        }
+
         // ===== GK GENERATORS =====
         var GK_GENERATORS = {};
 
@@ -5955,6 +5993,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('jumpRow').style.display = 'flex';
             document.getElementById('jumpInput').max = (state.baseIdx || 0) + state.questions.length;
             var q = state.questions[state.idx];
+            _markSeen(q);
             var isLearning = (state.infinite && state.cat === 'mixed') || state.cat === 'static';
             if (isLearning) {
                 state.answered = true; // skip answer interaction
@@ -7558,6 +7597,7 @@ function prevQuestion() {
                         if (state.questions[j].a === aq.a || state.questions[j].q === aq.q) { dup = true; break; }
                     }
                     if (dup) continue;
+                    if (_isSeen(aq)) continue;
                     if (state.regionFilter && state.regionFilter !== 'all') {
                         var isInd = _isIndiaRelated(aq);
                         if ((state.regionFilter === 'india' && !isInd) || (state.regionFilter === 'world' && isInd)) continue;
@@ -7584,6 +7624,7 @@ function prevQuestion() {
                             if (state.questions[j].a === sq.a || state.questions[j].q === sq.q) { dup = true; break; }
                         }
                         if (dup) continue;
+                        if (_isSeen(sq)) continue;
                         if (!isValidAnswer(sq.a) || isTrash(sq)) continue;
                         if (state.regionFilter && state.regionFilter !== 'all') {
                             var isInd = _isIndiaRelated(sq);
@@ -7610,6 +7651,7 @@ function prevQuestion() {
                     if (state.questions[j].a === wq.a || state.questions[j].q === wq.q) { dup = true; break; }
                 }
                 if (dup) continue;
+                if (_isSeen(wq)) continue;
                 if (state.regionFilter && state.regionFilter !== 'all') {
                     var isInd = _isIndiaRelated(wq);
                     if ((state.regionFilter === 'india' && !isInd) || (state.regionFilter === 'world' && isInd)) continue;
@@ -7687,6 +7729,7 @@ function prevQuestion() {
                         var q = GK_GENERATORS[allCats[ci]]();
                         if (!q || !q.q || !q.a) continue;
                         if (existingSet[q.q] || existingSet[q.a]) continue;
+                        if (_isSeen(q)) continue;
                         if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
                         existingSet[q.q] = true;
                         existingSet[q.a] = true;
