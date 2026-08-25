@@ -7894,7 +7894,7 @@ function _isExamRelevant(q) {
                 return;
             }
             if (_archiveCache) { cb(_archiveCache); return; }
-            _loadArchiveFiles(CAT_ARCHIVE, function(qs) { _archiveCache = qs; cb(qs); });
+            _loadArchiveFiles(CAT_ARCHIVE, function(qs) { _archiveCache = _applyShuffle(qs); cb(qs); });
         }
         function shuffleArray(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
@@ -8316,6 +8316,7 @@ function _isExamRelevant(q) {
             } else {
                 loadArchiveQuestions(function(archiveQs) {
                     if (archiveQs && archiveQs.length) {
+                        if (!_archiveCache) { _archiveCache = _applyShuffle(archiveQs); }
                         var got2 = _archNextBatch();
                         for (var j = 0; j < got2.length; j++) state.questions.push(got2[j]);
                     }
@@ -8376,14 +8377,38 @@ function _isExamRelevant(q) {
         function resetArchiveCursor() { _archCursor = 0; _writeArchiveCursor(0); }
 
         var _archiveCache = null;
+        var _archiveShuffleOrder = null;
         var _archiveLoading = false;
+        function _mulberry32(a) {
+            return function() {
+                a |= 0; a = a + 0x6D2B79F5 | 0;
+                var t = Math.imul(a ^ a >>> 15, 1 | a);
+                t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+                return ((t ^ t >>> 14) >>> 0) / 4294967296;
+            };
+        }
+        function _getArchiveSeed() {
+            try { var v = parseInt(localStorage.getItem('arch_seed'), 10); if (!isNaN(v)) return v; } catch(e) {}
+            var s = Math.floor(Math.random() * 2147483647);
+            try { localStorage.setItem('arch_seed', String(s)); } catch(e) {}
+            return s;
+        }
+        function _applyShuffle(arr) {
+            var seed = _getArchiveSeed();
+            var rng = _mulberry32(seed);
+            for (var i = arr.length - 1; i > 0; i--) {
+                var j = Math.floor(rng() * (i + 1));
+                var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+            }
+            return arr;
+        }
         function preloadArchive() {
             if (_archiveCache || _archiveLoading) return;
             _archiveLoading = true;
             setArchiveStatus('loading');
             _updateArchiveProgress();
             loadArchiveQuestions(function(qs) {
-                _archiveCache = qs;
+                _archiveCache = _applyShuffle(qs);
                 _archiveLoading = false;
                 setArchiveStatus('loaded');
                 _updateArchiveProgress();
