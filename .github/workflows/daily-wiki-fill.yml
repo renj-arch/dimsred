@@ -236,6 +236,7 @@ jobs:
       # them) so fresh wiki content lands in the right place. 0 moves when clean.
       - name: Classify new sub-topics into correct categories
         run: node scripts/classify-global.cjs
+        continue-on-error: true
 
       - run: node scripts/build-archive-single.js
 

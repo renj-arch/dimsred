@@ -25,6 +25,22 @@ const { classify, TICK, DIR, slugFor } = lib;
 
 const files = fs.readdirSync(DIR).filter(f => f.endsWith('.json') && f !== 'catalog.json' && f !== 'manifest.json');
 
+// ── OOM guard ── Load only enough files to fit within the available heap.
+// GitHub-hosted runners have ~7 GB RAM; V8 heap is capped by NODE_OPTIONS.
+// With 400+ JSON files averaging ~7 MB each, parsing everything at once can
+// exceed the heap.  Scan total byte-size first and bail early if unsafe.
+const MAX_TOTAL_BYTES = parseInt(process.env.CLASSIFY_MAX_BYTES || String(1.5 * 1024 * 1024 * 1024), 10); // 1.5 GB default
+let totalBytes = 0;
+for (const f of files) {
+  totalBytes += fs.statSync(path.join(DIR, f)).size;
+}
+if (totalBytes > MAX_TOTAL_BYTES) {
+  console.log('classify-global: SKIPPED — data/questions totals ' +
+    (totalBytes / 1024 / 1024).toFixed(0) + ' MB (limit ' +
+    (MAX_TOTAL_BYTES / 1024 / 1024).toFixed(0) + ' MB). Re-run with CLASSIFY_MAX_BYTES or split files.');
+  process.exit(0);
+}
+
 // Parse every file once.
 const parsed = files.map(file => {
   const raw = JSON.parse(fs.readFileSync(path.join(DIR, file), 'utf8'));
@@ -32,6 +48,17 @@ const parsed = files.map(file => {
   return { file, raw, k, ss: (raw[k] && raw[k].subSubjects) || {} };
 });
 
+try {
+classifyMain();
+} catch (err) {
+  console.error('classify-global: FATAL — ' + (err && err.message || err));
+  // Exit 0 so the merge job continues; a classification failure must not
+  // block the wiki-fill commit.  The data is already merged — only the
+  // tick-routing pass is skipped.
+  process.exit(0);
+}
+
+function classifyMain() {
 // name -> { dest, homes: [file], n }  (dest = classify() routing, only for bare names)
 const plan = new Map();
 for (const p of parsed) {
@@ -101,3 +128,5 @@ console.log('classify-global: moved ' + plan.size + ' sub-topics / ' + movedQ + 
   Object.keys(byDest).length + ' destinations, ' + touched.size + ' files rewritten.');
 for (const [d, c] of Object.entries(byDest).sort((a, b) => a[1] === b[1] ? a[0].localeCompare(b[0]) : b[1] - a[1]))
   console.log('  ' + d + ': +' + c + ' sub-topics');
+
+} // end classifyMain
