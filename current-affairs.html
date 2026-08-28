@@ -5404,6 +5404,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             _sessionCache = map;
             _syncPendingMap = map;
             _startSync();
+            _notifyTabs();
             refreshSyncStatus();
         }
         function _startSync() {
@@ -5424,6 +5425,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 refreshSyncStatus();
                 if (ok) {
                     _syncFails = 0;
+                    _notifyTabs();
                     if (_syncPendingMap === map) _syncPendingMap = null; // fully caught up
                     if (_syncPendingMap) _startSync(); // a newer save arrived meanwhile
                 } else {
@@ -5520,6 +5522,82 @@ var _staticGen_polity = GK_GENERATORS.polity;
             else el.innerHTML = '<span class="badge" style="color:var(--red)">☁️ sync error: ' + (s.msg || 'unknown') + '</span>';
         }
         function sessionId() { return state._sessionKey || state.cat || 'default'; }
+        // ---------- Cross-tab live sync ----------
+        // Saves are pushed to Supabase; when a tab is notified (or regains focus,
+        // or the archive seed/cursor changes in localStorage) it re-pulls so the
+        // same account sees converging progress instead of diverging per tab.
+        var _lastLocalSaveAt = 0;
+        var _remoteRefreshTimer = null;
+        var _tabBus = null;
+        try { if (typeof BroadcastChannel !== 'undefined') _tabBus = new BroadcastChannel('gk_session_sync'); } catch(e) {}
+        function _notifyTabs() { try { if (_tabBus) _tabBus.postMessage({ t: 'sync', at: Date.now() }); } catch(e) {} }
+        function _refreshSessionsFromRemote() {
+            if (typeof window.supabaseUser === 'undefined' || !window.supabaseUser || typeof window.loadQuizProgress !== 'function') return;
+            if (_remoteRefreshTimer) return;
+            _remoteRefreshTimer = setTimeout(function() { _remoteRefreshTimer = null; }, 1500);
+            window.loadQuizProgress().then(function(saved) {
+                _remoteRefreshTimer = null;
+                if (!saved) { refreshSyncStatus(); return; }
+                var map = readSessions();
+                var changed = false;
+                var activeKey = sessionId();
+                var activeRemote = null;
+                var arc = saved._archive;
+                if (arc) {
+                    var oldSeed = _getArchiveSeed();
+                    var cursorBefore = _archCursor;
+                    if (arc.seed != null) {
+                        try { localStorage.setItem('arch_seed', String(arc.seed)); } catch(e) {}
+                        if (_archiveCache && arc.seed !== oldSeed) _applyShuffle(_archiveCache);
+                    }
+                    if (typeof arc.cursor === 'number') {
+                        _archCursor = arc.cursor;
+                        try { localStorage.setItem('arch_cursor', String(arc.cursor)); } catch(e) {}
+                    }
+                    if (_archCursor !== cursorBefore) { changed = true; _updateArchiveProgress(); }
+                }
+                for (var k in saved) {
+                    if (k === '_meta') continue;
+                    var s = saved[k];
+                    if (!map[k] || (s.savedAt || 0) > (map[k].savedAt || 0)) {
+                        map[k] = s;
+                        changed = true;
+                        if (k === activeKey) activeRemote = s;
+                    }
+                }
+                if (changed) {
+                    _sessionCache = map;
+                    if (activeRemote) _applyRemoteSessionToState(activeRemote);
+                }
+                refreshSyncStatus();
+            }).catch(function() { _remoteRefreshTimer = null; });
+        }
+        function _applyRemoteSessionToState(remote) {
+            if (!state || !state.questions || state.questions.length === 0) return;
+            if (!remote || !remote.questions || remote.questions.length === 0) return;
+            if ((remote.savedAt || 0) <= (_lastLocalSaveAt || 0)) return;
+            state.correct = remote.correct || 0;
+            state.streak = remote.streak || 0;
+            var elC = document.getElementById('correctNum');
+            if (elC) elC.textContent = state.correct;
+            var elS = document.getElementById('streakNum');
+            if (elS) elS.textContent = state.streak;
+            var elT = document.getElementById('totalNum');
+            if (elT && remote.totalCount != null) elT.textContent = remote.totalCount;
+            var trk = document.getElementById('answeredTracker');
+            if (trk && trk.style.display !== 'none') trk.textContent = (remote.answeredCount || remote.idx || 0) + ' answered';
+        }
+        if (_tabBus) {
+            _tabBus.onmessage = function(ev) {
+                if (ev && ev.data && ev.data.t === 'sync') _refreshSessionsFromRemote();
+            };
+        }
+        window.addEventListener('storage', function(ev) {
+            if (!ev.key || ev.key.indexOf('arch_') === 0 || ev.key.indexOf('sb_') === 0) _refreshSessionsFromRemote();
+        });
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible') _refreshSessionsFromRemote();
+        });
         function clearQuizSession(cat) {
             var map = readSessions();
             if (map[cat]) {
@@ -5572,6 +5650,8 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 return;
             }
             var map = readSessions();
+            var savedAt = Date.now();
+            _lastLocalSaveAt = savedAt;
             var trueTotal = (state._feedTotal != null) ? state._feedTotal : (base || 0) + state.questions.length;
             map[sessionId()] = {
                 cat: state.cat,
@@ -5585,7 +5665,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 infinite: state.infinite || false,
                 questions: windowQ,
                 totalCount: trueTotal,
-                savedAt: Date.now(),
+                savedAt: savedAt,
                 range: state._range || null
             };
             writeSessions(map);
@@ -8403,7 +8483,26 @@ var fact = q.fact || q.solution || q.explanation || '';
                 return ((t ^ t >>> 14) >>> 0) / 4294967296;
             };
         }
+        function _hashStr(s) {
+            var h = 2166136261;
+            for (var i = 0; i < s.length; i++) {
+                h ^= s.charCodeAt(i);
+                h = Math.imul(h, 16777619);
+            }
+            return h >>> 0;
+        }
+        function _accountArchiveSeed() {
+            try {
+                var u = window.supabaseUser;
+                if (u && u.id) return _hashStr('gk-arch::' + u.id);
+            } catch(e) {}
+            return null;
+        }
         function _getArchiveSeed() {
+            // Signed-in users get the same deterministic seed on every device, so
+            // the archive order (and the synced cursor) agree across tabs/browsers.
+            var acct = _accountArchiveSeed();
+            if (acct !== null) return acct;
             try { var v = parseInt(localStorage.getItem('arch_seed'), 10); if (!isNaN(v)) return v; } catch(e) {}
             var s = Math.floor(Math.random() * 2147483647);
             try { localStorage.setItem('arch_seed', String(s)); } catch(e) {}
@@ -8424,13 +8523,21 @@ var fact = q.fact || q.solution || q.explanation || '';
             _archiveLoading = true;
             setArchiveStatus('loading');
             _updateArchiveProgress();
-            loadArchiveQuestions(function(qs) {
-                _archiveCache = _applyShuffle(qs);
-                _archiveLoading = false;
-                setArchiveStatus('loaded');
-                _updateArchiveProgress();
-                renderHomeCatGrid();
-            });
+            // Wait for auth to settle so a signed-in user's archive order is built
+            // from the deterministic account seed (not a random local one).
+            var go = function() {
+                loadArchiveQuestions(function(qs) {
+                    if (_archiveCache) return;
+                    _archiveCache = _applyShuffle(qs);
+                    _archiveLoading = false;
+                    setArchiveStatus('loaded');
+                    _updateArchiveProgress();
+                    renderHomeCatGrid();
+                });
+            };
+            if (typeof ensureSessionsReady === 'function' && typeof window.supabaseReady !== 'undefined') {
+                ensureSessionsReady().then(go);
+            } else go();
         }
         function setArchiveStatus(s) {
             var el = document.getElementById('archiveStatus');
