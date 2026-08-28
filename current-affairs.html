@@ -7781,22 +7781,6 @@ function prevQuestion() {
         }
         
 
-        var _nonExamStr = [];
-var _nonExamRe = [];
-(function() {
-            var nonExamWords = ['killed','killing','kills','kill','died','dies','death','deaths','dead','murder','murdered','shooting','shot','gunshot','explosion','blast','bomb','bombing','casualty','casualties','suicide','suicide bomber','massacre','assassination','assassinated','kidnapped','kidnapping','mass shooting','terrorist attack','terror attack','lynching','riots','riot','clash','clashes','firing','open fire','gunfire','stabbing','stabbed','beheaded','executed','execution','ambush','insurgency','militant','militants','militant attack','naxal attack','IED','shelling','bloodshed','war crime','war crimes','genocide','crimes against humanity'];
-            for (var wi = 0; wi < nonExamWords.length; wi++) {
-                var w = nonExamWords[wi];
-                if (w.indexOf(' ') > 0) { _nonExamStr.push(w); }
-                else { _nonExamRe.push(new RegExp('\\b' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i')); }
-            }
-})();
-function _isExamRelevant(q) {
-            var text = ((q.q||q.question||'') + ' ' + (q.a||q.answer||'') + ' ' + (q.fact||q.solution||'')).toLowerCase();
-            for (var si = 0; si < _nonExamStr.length; si++) { if (text.indexOf(_nonExamStr[si]) !== -1) return false; }
-            for (var ri = 0; ri < _nonExamRe.length; ri++) { if (_nonExamRe[ri].test(text)) return false; }
-            return true;
-        }
         function _loadArchiveFiles(files, cb) {
             var loaded = 0;
             var allQ = [];
@@ -7854,9 +7838,8 @@ function _isExamRelevant(q) {
                                         var item = [sk, ssk, ss[ssk][qi]];
                                         var q = item[2];
                                         if (q && q.question && q.answer) {
-                                            var fact = q.fact || q.solution || q.explanation || '';
-                                            if (!_isExamRelevant({q:q.question, a:q.answer, fact:fact})) continue;
-                                            allQ.push({q:q.question, a:q.answer, options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:item[0], subTopic:item[1], pubDate:q.pubDate||''});
+var fact = q.fact || q.solution || q.explanation || '';
+                                                allQ.push({q:q.question, a:q.answer, options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:item[0], subTopic:item[1], pubDate:q.pubDate||''});
                                         }
                                     }
                                 }
