@@ -5653,9 +5653,16 @@ var _staticGen_polity = GK_GENERATORS.polity;
             var savedAt = Date.now();
             _lastLocalSaveAt = savedAt;
             var trueTotal = (state._feedTotal != null) ? state._feedTotal : (base || 0) + state.questions.length;
-            map[sessionId()] = {
+            var key = sessionId();
+            // A current-affairs quiz uses a distinct session key ('ca::<id>') that is
+            // separate from the plain category (<id>). Persist the key with the session
+            // so a resumed quiz keeps using the same slot; otherwise the session drifts
+            // to the bare category key and progress diverges (different questions, cannot
+            // continue where you left off across devices).
+            map[key] = {
                 cat: state.cat,
                 categoryName: state.categoryName,
+                _sessionKey: state._sessionKey,
                 baseIdx: base + windowFrom,
                 idx: resumeAbs - (base + windowFrom),
                 answeredCount: resumeAbs,
