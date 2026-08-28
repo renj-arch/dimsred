@@ -7804,7 +7804,9 @@ function _isExamRelevant(q) {
             if (pending === 0) { cb([]); return; }
             var finished = false;
             var BATCH_SIZE = 50;
-            var XHR_TIMEOUT = 30000;
+            var XHR_TIMEOUT = 60000;
+            var MAX_RETRIES = 3;
+            var _failCount = 0;
             function flushAndCb() {
                 if (finished) return;
                 finished = true;
@@ -7833,15 +7835,18 @@ function _isExamRelevant(q) {
                 loaded++;
                 if (loaded >= pending) { flushAndCb(); }
             }
-            function processFile(entry) {
+            function processFile(entry, attempt) {
                 if (finished) return;
+                attempt = attempt || 0;
                 var xhr = new XMLHttpRequest();
                 xhr.timeout = XHR_TIMEOUT;
                 xhr.onload = function() {
+                    var ok = false;
                     if (xhr.status === 200) {
                         var data = null;
                         try { data = JSON.parse(xhr.responseText); } catch(e) { data = null; }
                         if (data) {
+                            ok = true;
                             for (var sk in data) {
                                 var ss = data[sk].subSubjects;
                                 for (var ssk in ss) {
@@ -7858,10 +7863,23 @@ function _isExamRelevant(q) {
                             }
                         }
                     }
+                    if (!ok && attempt < MAX_RETRIES) {
+                        processFile(entry, attempt + 1);
+                        return;
+                    }
+                    if (!ok) _failCount++;
                     checkDone();
                 };
-                xhr.onerror = function() { checkDone(); };
-                xhr.ontimeout = function() { checkDone(); };
+                xhr.onerror = function() {
+                    if (attempt < MAX_RETRIES) { processFile(entry, attempt + 1); return; }
+                    _failCount++;
+                    checkDone();
+                };
+                xhr.ontimeout = function() {
+                    if (attempt < MAX_RETRIES) { processFile(entry, attempt + 1); return; }
+                    _failCount++;
+                    checkDone();
+                };
                 xhr.open('GET', entry.file, true);
                 xhr.send();
             }
