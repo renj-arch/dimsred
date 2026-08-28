@@ -7863,7 +7863,7 @@ var fact = q.fact || q.solution || q.explanation || '';
                     _failCount++;
                     checkDone();
                 };
-                xhr.open('GET', entry.file, true);
+                xhr.open('GET', entry.file + '?t=' + Date.now(), true);
                 xhr.send();
             }
             var idx = 0;
