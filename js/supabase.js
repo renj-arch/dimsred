@@ -285,6 +285,13 @@ function mergeQuizPayload(existing, local, remoteUpdatedAtMs) {
         for (var si = 0; si < rv.length; si++) { if (!seen[rv[si]]) { seen[rv[si]] = true; merged.push(rv[si]); } }
         for (var sj = 0; sj < lv.length; sj++) { if (!seen[lv[sj]]) { seen[lv[sj]] = true; merged.push(lv[sj]); } }
         out[k2] = merged;
+      } else if (k2 === '_archive' && lv && rv && typeof rv === 'object' && typeof lv === 'object') {
+        // Archive seed/cursor is device-independent state (same per-account order), so
+        // merging must keep the furthest progress — last-write-wins would regress devices.
+        out[k2] = {
+          seed: (lv.seed != null ? lv.seed : rv.seed),
+          cursor: Math.max(typeof lv.cursor === 'number' ? lv.cursor : 0, typeof rv.cursor === 'number' ? rv.cursor : 0)
+        };
       } else {
         if (!rv || !lv || (lv.savedAt || 0) >= (rv.savedAt || 0)) out[k2] = lv;
       }

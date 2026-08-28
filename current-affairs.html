@@ -5476,7 +5476,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 if (arc && arc.seed) {
                     try { localStorage.setItem('arch_seed', String(arc.seed)); } catch(e) {}
                 }
-                if (arc && typeof arc.cursor === 'number') {
+                if (arc && typeof arc.cursor === 'number' && arc.cursor > _archCursor) {
                     _archCursor = arc.cursor;
                     try { localStorage.setItem('arch_cursor', String(arc.cursor)); } catch(e) {}
                 }
@@ -5550,7 +5550,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                         try { localStorage.setItem('arch_seed', String(arc.seed)); } catch(e) {}
                         if (_archiveCache && arc.seed !== oldSeed) _applyShuffle(_archiveCache);
                     }
-                    if (typeof arc.cursor === 'number') {
+                    if (typeof arc.cursor === 'number' && arc.cursor > _archCursor) {
                         _archCursor = arc.cursor;
                         try { localStorage.setItem('arch_cursor', String(arc.cursor)); } catch(e) {}
                     }
