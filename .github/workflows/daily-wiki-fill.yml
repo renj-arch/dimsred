@@ -75,7 +75,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        chunk: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27]
+        chunk: ${{ fromJSON(inputs.chunk != '' && format('[{0}]', inputs.chunk) || '[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27]') }}
       max-parallel: 20
       fail-fast: false
     timeout-minutes: 360
@@ -102,6 +102,14 @@ jobs:
           path: data/
 
       - run: node scripts/rebuild-quiz-json.js
+
+      - name: Validate requested chunk
+        if: inputs.chunk != ''
+        run: |
+          case "${{ inputs.chunk }}" in
+            1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27) echo "Single-chunk run: only chunk ${{ inputs.chunk }}";;
+            *) echo "::error::chunk must be 1-27, got '${{ inputs.chunk }}'"; exit 1;;
+          esac
 
       - name: Prepare chunk output file
         run: |
