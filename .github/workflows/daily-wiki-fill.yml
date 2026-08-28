@@ -127,11 +127,16 @@ jobs:
           QUIZ_PATH: data/quiz-chunk-${{ matrix.chunk }}.json
           WIKI_FILL_CONCURRENCY: 5
           WIKI_FILL_PER_ARTICLE: 2000
-          WIKI_FILL_TOPIC_BUDGET: 100000
-          WIKI_FILL_REVISIT_BUDGET: 100000
-          WIKI_FILL_LINK_BUDGET: 20000
+          # Raised so under-covered (single-shard) categories can surface more
+          # fresh content instead of the run time being dominated by re-checking
+          # already-covered pages in the big saturated categories. The
+          # wikiDone/barren-skip fix reclaims the time wasted re-fetching barren
+          # articles, so higher budgets translate into more net-new questions.
+          WIKI_FILL_TOPIC_BUDGET: 150000
+          WIKI_FILL_REVISIT_BUDGET: 150000
+          WIKI_FILL_LINK_BUDGET: 40000
           WIKI_FILL_LINK_PER_ARTICLE: 50
-          WIKI_FILL_MAX_PAGES: 400000
+          WIKI_FILL_MAX_PAGES: 500000
           WIKI_FILL_DELAY_MS: 2500
           WIKI_FILL_TIME_BUDGET_MIN: 330
 

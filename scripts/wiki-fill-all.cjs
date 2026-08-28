@@ -2619,13 +2619,18 @@ async function main() {
         }
       }
 
-      // Article was already partially covered and this revisit produced nothing
-      // new → every usable sentence has now been consumed. Mark it done so it is
-      // not re-fetched again (flags are written to quiz.json at the end).
-      if (wasCovered && articleAdded === 0) {
+      // Article produced nothing new this run — every usable sentence has been
+      // consumed (partial revisit) OR the article has no extractable question
+      // material at all (fresh but barren, e.g. stubs/short pages). Generation is
+      // deterministic from the same extract, so re-fetching a barren article
+      // would only waste budget. Mark it done so it is not re-fetched again
+      // (flags are written to quiz.json at the end). Previously only covered
+      // articles got this marker; fresh barren pages were re-fetched endlessly.
+      if (articleAdded === 0) {
         doneTitles.add(norm(title));
         doneThisRun.add(norm(title));
-        log('  (fully covered: ' + title + ')');
+        if (wasCovered) log('  (fully covered: ' + title + ')');
+        else log('  (barren, no questions: ' + title + ')');
       }
     }
 
