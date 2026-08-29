@@ -2563,7 +2563,86 @@ const CATEGORIES = [
     'List of currencies','Currency','List of flags','List of countries by GDP','List of countries by Human Development Index',
     'List of monarchies','List of republics','Landlocked country','Enclave and exclave','Geography of the United States'
   ]},
+  // ───────── UPSC: Religions, Mythology & Festivals ─────────
+  { name:'Indian Religions', wikiCat:'Indian_religions', keywords:[
+    'religion','hindu','hinduism','buddh','buddhism','jain','jainism','sikh','sikhism','temple','shrine','pilgrim','monastery','stupa','deity','sect','cult','veda','upanishad','bhakti','sufi','saint','reform','missionary'
+  ], topics:[
+    'Hinduism','Buddhism','Jainism','Sikhism','Hindu mythology','List of Hindu deities','Vedas','Upanishads','Puranas','Ramayana','Mahabharata','Bhagavad Gita','Dharma','Karma','Moksha','Advaita Vedanta','Bhakti movement',
+    'Gautama Buddha','Four Noble Truths','Eightfold Path','Buddhist councils','Ashoka the Great','Dhamma','Mahayana','Theravada','Vajrayana','Nalanda','Taxila',
+    'Mahavira','Tirthankara','Ganadhara','Anekantavada','Ahimsa','Jain councils','Acharya','Sravanabelagola','Palitana',
+    'Guru Nanak','Guru Granth Sahib','Gurdwara','Khalsa','Gurudwara Amritsar','Golden Temple','Panth','Guru Gobind Singh',
+    'Pilgrimage in India','Char Dham','Kumbh Mela','Rameswaram','Varanasi','Haridwar','Tirupati','Sabarimala','Ajmer Sharif','Kashi Vishwanath'
+  ]},
+  { name:'Hinduism & Mythology', wikiCat:'Hinduism', keywords:[
+    'hindu','veda','upanishad','purana','deity','avatar','epic','ramayana','mahabharata','bhagavad','dharma','karma','moksha','temple','yajna','mantra','gayatri','shiva','vishnu','parvati'
+  ], topics:[
+    'Hinduism','Hindu mythology','List of Hindu deities','Brahma','Vishnu','Shiva','Lakshmi','Saraswati','Parvati','Ganesha','Murugan','Krishna','Rama','Durga','Kali',
+    'Vedas','Rigveda','Samaveda','Yajurveda','Atharvaveda','Upanishads','Brihadaranyaka Upanishad','Chandogya Upanishad','Puranas','Bhagavata Purana','Matsya Purana',
+    'Ramayana','Mahabharata','Bhagavad Gita','Yoga Sutras','Mimamsa','Vedanta','Samkhya','Nyaya','Vaisheshika','Ayurveda',
+    'Dharma','Karma','Samsara','Moksha','Brahman','Atman','Maya','Guru','Sannyasa','Yajna','Homa','Puja','Aarti','Prasada',
+    'Dashavatara','Rig Veda deities','Surya','Indra','Agni','Vayu','Varuna','Yama','Kamadeva'
+  ]},
+  { name:'Buddhism & Jainism', wikiCat:'Buddhism', keywords:[
+    'buddh','buddha','dhamma','sangha','bodhisattva','nirvana','stupa','vihara','monastery','jain','tirthankara','ahisma','monk','nun','meditation','sutta','vinaya',
+    'four noble truths','eightfold','zen','mahayana','theravada','mahavira','parshvanatha','siddha','kevala','solitary'
+  ], topics:[
+    'Gautama Buddha','Buddhism','Four Noble Truths','Noble Eightfold Path','Sangha','Dharma','Nirvana','Bodhisattva','Buddhist councils','First Buddhist council','Second Buddhist council','Third Buddhist council','Fourth Buddhist council',
+    'Mahayana','Theravada','Vajrayana','Zen','Tibetan Buddhism','Dalai Lama','Ashoka','Emperor Ashoka','Tripitaka','Pali Canon','Vipassana',
+    'Mahabodhi Temple','Bodh Gaya','Sarnath','Kushinagar','Lumbini','Sanchi Stupa','Ajanta Caves','Ellora Caves',
+    'Mahavira','Jainism','Tirthankara','First Tirthankara','Parshvanatha','Anekantavada','Ahimsa','Aparigraha','Kevala Jnana','Sallekhana',
+    'Digambara','Svetambara','Jain Agamas','Jain councils','Sravanabelagola','Mount Abu','Shikharji','Jain symbol','Navkar Mantra'
+  ]},
+  { name:'Sikhism & Other Faiths', wikiCat:'Sikhism', keywords:[
+    'sikh','guru','gurdwara','khalsa','granth','gurbani','amrit','panth','christian','islam','zoroastr','parsi','judais','bahai','faith','prayer','liturgy','worship'
+  ], topics:[
+    'Sikhism','Guru Nanak','Guru Angad','Guru Amar Das','Guru Ram Das','Guru Arjan','Guru Hargobind','Guru Har Rai','Guru Har Krishan','Guru Tegh Bahadur','Guru Gobind Singh',
+    'Guru Granth Sahib','Gurbani','Gurdwara','Golden Temple','Amritsar','Khalsa','Panj Pyare','Amrit Sanskar','Five Ks','Langar','Akhand Path','Nishan Sahib',
+    'Christianity in India','St Thomas Christians','Goa','Archbishop','Roman Catholic Church in India',
+    'Islam in India','Sufism in India','Chishti Order','Dargah','Madrasa','Waqf',
+    'Zoroastrianism','Parsis','Fire temple','Avesta','Gatha','Navjote','Zarathustra','Bahai Faith','Judaism in India','Bene Israel','Cochin Jews'
+  ]},
+  { name:'Classical & Dravidian Languages', wikiCat:'Classical_languages_of_India', keywords:[
+    'classical','sanskrit','tamil','telugu','kannada','malayalam','oda','prakrit','grammar','literature','kavya','natyasastra','tolkappiyam'
+  ], topics:[
+    'Classical languages of India','Sanskrit','Tamil','Telugu','Kannada','Malayalam','Odia','Prakrit','Pali','Apabhramsha','Vedic Sanskrit',
+    'Tolkappiyam','Sangam literature','Thirukkural','Eight Anthologies','Pathuppattu','Sangam poems','Bharathi','Ilango Adigal',
+    'Kannada classics','Vachana literature','Basaavanna','Malayalam classics','Thunchath Ezhuthachan','Adhyatma Ramayana','Odiyan',
+    'Natyasastra','Kavya','Alankara','Rasa','Arsha','Sanskrit drama','Kalidasa','Abhijnanasakuntalam','Panchatantra','Hitopadesha'
+  ]},
+  { name:'Indian Languages - National & Regional', wikiCat:'Scheduled_languages_of_India', keywords:[
+    'language','official language','mother tongue','bhasha','script','devanagari','linguistic','dialect','tribal language'
+  ], topics:[
+    'Scheduled languages of India','Eighth Schedule of the Constitution','Official Languages Act','Hindi belt','Devanagari script',
+    'Tamil','Telugu','Kannada','Malayalam','Marathi','Gujarati','Bengali','Punjabi','Odia','Assamese','Urdu','Kashmiri','Konkani','Sindhi','Nepali',
+    'Sanskrit revival','Prakrit languages','Regional languages of India','Linguistic diversity of India',
+    'Sixth Schedule languages','Tribal languages of India','Adivasi language','Gondi','Khasi','Mizo','Garo','Angami','Bodo language'
+  ]},
+  // ───────── UPSC: Health, Human Body & Lifestyle ─────────
+  { name:'Health & Human Body', wikiCat:'Human_anatomy', keywords:[
+    'anatomy','human body','organ','bone','muscle','heart','lung','liver','kidney','brain','blood','nerve','skeleton','cell','tissue','system','gland','hormone','enzyme','disease','deficiency','vitamin'
+  ], topics:[
+    'Human body','Anatomy','List of bones of the human skeleton','Skeleton','Muscular system','Human skeleton','Heart','Lungs','Liver','Kidney','Brain','Nervous system','Blood','Circulatory system','Respiratory system','Digestive system','Endocrine system','Reproductive system',
+    'Vitamin','Vitamin A','Vitamin B complex','Vitamin C','Vitamin D','Vitamin E','Vitamin K','Mineral deficiency','Anaemia','Iodine deficiency','Goitre',
+    'Blood groups','Haemoglobin','White blood cell','Red blood cell','Plasma','Platelet','Blood donation','Disease','Infectious disease','Vaccine','Immunization','Antibiotic',
+    'National Nutrition Mission','Poshan Abhiyaan','Balanced diet','Malnutrition','Protein-energy malnutrition','Bengal Famine','ICDS','Midday Meal Scheme'
+  ]},
+  { name:'Health & Nutrition', wikiCat:'Human_nutrition', keywords:[
+    'nutrition','diet','food','protein','carbohydrate','fat','vitamin','mineral','calorie','malnutrition','obesity','food security','micronutrient','dietary','nutrient'
+  ], topics:[
+    'Nutrition','Human nutrition','Diet','Balanced diet','Carbohydrate','Protein','Fat','Saturated fat','Omega-3','Vitamins','Minerals','Calcium','Iron','Zinc','Folic acid',
+    'Calorie','Metabolism','Malnutrition','Undernutrition','Overnutrition','Food security','Hunger in India','Zero Hunger','Midday Meal Scheme','ICDS','Anganwadi',
+    'Breastfeeding','Micronutrient deficiency','Salt iodisation','Fortified foods','Organic food','Dietary Guidelines for Indians','Nutritional labelling',
+    'National Institute of Nutrition','Deficiency diseases','Kwashiorkor','Marasmus','Rickets','Scurvy','Beriberi','Pellagra'
+  ]},
+  { name:'Sports & Physical Education', wikiCat:'Physical_exercise', keywords:[
+    'exercise','physical education','fitness','sport','yoga','asana','pranayama','strength','endurance','training','athlete','marathon','olympic','fitness'
+  ], topics:[
+    'Khelo India','Fit India Movement','Khelo India Youth Games','National Sports Day','Major Dhyan Chand','Rajiv Gandhi Khel Ratna',
+    'Physical education','Aerobic exercise','Anaerobic exercise','Strength training','Endurance training','Flexibility','Warm-up','Cool-down','Stretching',
+    'Yoga and fitness','Marathon','Athletics','Field and track','Indian Olympic Association','Arjuna Award','Dronacharya'
+  ]},
 ];
+
 
 // Rotation groups (7 groups, cycled through by 4h time slots)
 const DAY_GROUPS = [
@@ -2584,6 +2663,7 @@ const DAY_GROUPS = [
   [89,90,91,92,93], // Group 14: Indian Scientists & Nobel Laureates, Defence & Strategic Affairs, Nuclear Energy & Technology, Space & Astronomy, ICT Digital & Cyber
   [94,95,96,97,98,99,100,101,102], // Group 15: Commissions Committees & Bodies, Malayalam Literature, Tamil Literature, Sanskrit & Classical Languages, Kannada Literature, Telugu Literature, Bengali Literature, Marathi & Hindi Literature, Punjabi & Other Regional Literature
   [103,104,105], // Group 16: International Organizations & Summits, India & International Relations, World Geography & Countries
+  [106,107,108,109,110,111,112,113,114], // Group 17: Indian Religions, Hinduism & Mythology, Buddhism & Jainism, Sikhism & Other Faiths, Classical & Dravidian Languages, Indian Languages - National & Regional, Health & Human Body, Health & Nutrition, Sports & Physical Education
 ];
 
 async function main() {
