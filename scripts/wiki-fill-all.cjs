@@ -2287,7 +2287,7 @@ const CATEGORIES = [
     'Social audit','Transparency (behavior)','Accountability','Administrative reform','Neo-liberalism'
   ]},
   // ───────── UPSC: Economy ─────────
-  { name:'Indian Economy & Development', wikiCat:'Economy_of_India', keywords:[
+  { name:'Indian Economy & Development', wikiCat:'Economic_history_of_India', keywords:[
     'econom','gdp','gross domestic','inflation','fiscal','monetary','budget','finance','tax','bank','rbi','reserve bank','rupee','market','trade','export','import','industry','manufactur','service sector','development','plan','niti','growth','reform','liberali','privatis','globalis','poverty','unemploy','human development'
   ], topics:[
     'Economy of India','Economic history of India','Indian economy','GDP','Nominal GDP','Purchasing power parity',
@@ -2304,7 +2304,7 @@ const CATEGORIES = [
     'Poverty in India','Poverty line in India','Tendulkar Committee','Rangarajan Committee','Unemployment in India','MGNREGA',
     'Human Development Index','Multidimensional Poverty Index','Inequality in India','Gini coefficient','Kuznets curve'
   ]},
-  { name:'Banking & Financial System', wikiCat:'Banking_in_India', topics:[
+  { name:'Banking & Financial System', wikiCat:'Financial_services_companies_of_India', topics:[
     'Banking in India','Reserve Bank of India','Scheduled Banks in India','Public sector banks in India','Nationalized bank',
     'State Bank of India','Private sector banks in India','Cooperative banking in India','Regional Rural Bank',
     'Small Finance Bank','Payment bank','Banking Ombudsman','Demonetisation by the government of India','Banknote',
@@ -2318,7 +2318,7 @@ const CATEGORIES = [
     'Mutual fund','Systematic Investment Plan','Sovereign gold bond','Gold monetisation scheme'
   ]},
   // ───────── UPSC: Geography & Environment breadth ─────────
-  { name:'World & Indian Physical Geography', wikiCat:'Physical_geography', topics:[
+  { name:'World & Indian Physical Geography', wikiCat:'Landforms', topics:[
     'Physical geography','Geomorphology','Plate tectonics','Continental drift','Volcano','Earthquake','Tsunami',
     'Weathering','Erosion','Types of rocks','Igneous rock','Sedimentary rock','Metamorphic rock','Rock cycle',
     'Minerals','Fossil','Glacier','Glacial landforms','Desert','Desertification','Soil','Soil formation','Aridity',
@@ -2329,7 +2329,7 @@ const CATEGORIES = [
     'Biogeochemical cycle','Aquifer','Hydrological cycle','River','Delta','Estuary','Wetland','Mangrove','Coral reef',
     'Ocean current','Tides','Ocean floor','Continent','Continentality'
   ]},
-  { name:'Indian Physical Geography', wikiCat:'Geography_of_India', topics:[
+  { name:'Indian Physical Geography', wikiCat:'Rivers_of_India', topics:[
     'Geography of India','Physiographic divisions of India','Himalayas','Western Ghats','Eastern Ghats','Vindhya Range',
     'Satpura Range','Aravalli Range','Indo-Gangetic Plain','Deccan Plateau','Thar Desert','Coastline of India',
     'Rivers of India','Indus River','Ganges','Brahmaputra River','Yamuna','Godavari','Krishna River','Kaveri',
@@ -2418,7 +2418,7 @@ const CATEGORIES = [
     'SDSC SHAR','Satish Dhawan Space Centre','ISRO Telemetry','K. Sivan','S. Somanath','Indian astronomy','Astronomy in India',
     'Aryabhata (satellite)','Jantar Mantar','Twilight Anomaly'
   ]},
-  { name:'ICT Digital & Cyber', wikiCat:'Information_technology_in_India', keywords:[
+  { name:'ICT Digital & Cyber', wikiCat:'Technology_companies_of_India', keywords:[
     'software','digital','computer','internet','cyber','data','network','technology','it','tech','ai','artificial','machine','cloud','semiconductor','chip','5g','telecom','platform'
   ], topics:[
     'Information technology in India','Software industry in India','IT services in India','Bangalore','Bengaluru IT hub',
@@ -2538,7 +2538,7 @@ const CATEGORIES = [
     'International Atomic Energy Agency','World Meteorological Organization','Intellectual Property Organization',
     'International Maritime Organization','International Civil Aviation Organization','Universal Postal Union','OPEC'
   ]},
-  { name:'India & International Relations', wikiCat:'Foreign_relations_of_India', keywords:[
+  { name:'India & International Relations', wikiCat:'Bilateral_relations_of_India', keywords:[
     'india','bilateral','diplomatic','relation','treaty','agreement','pact','summit','visit','foreign','neighbor','strategic','defence cooperation','trade agreement'
   ], topics:[
     'Foreign relations of India','Ministry of External Affairs of India','Indian foreign policy','Non-Aligned Movement','Look East policy','Act East policy',
