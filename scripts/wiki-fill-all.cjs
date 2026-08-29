@@ -14,6 +14,16 @@ const LINK_POOL_PATH = process.env.WIKI_LINK_POOL_PATH || path.join(path.dirname
 const RUN_START = Date.now();
 const TIME_BUDGET_MS = parseInt(process.env.WIKI_FILL_TIME_BUDGET_MIN || '0', 10) * 60000;
 
+// Reserve a guaranteed generation window by capping how much of the run's
+// wall-clock budget discovery (category members + recursive link traversal) may
+// consume. Discovery spins up an ever-bigger frontier (deep categories, list
+// pages, 500 links/article) that could otherwise eat the whole chunk window and
+// yield 0 questions; the link/category pools are persisted across runs, so
+// anything not reached this run is simply re-mined next run — no data lost.
+// Default: cap discovery at 35% of the run budget, guaranteeing ~65% for mining.
+const DISCOVERY_BUDGET_MS = parseInt(process.env.WIKI_FILL_DISCOVERY_BUDGET_PCT || '35', 10) / 100 * TIME_BUDGET_MS;
+function discoveryDeadline() { return RUN_START + DISCOVERY_BUDGET_MS; }
+
 function log(msg) {
   try { fs.writeSync(1, msg + '\n'); } catch (e) { console.log(msg); }
 }
@@ -40,7 +50,8 @@ function fetchJSON(url) {
   });
 }
 
-async function fetchPageLinks(title, maxLinks = 30) {
+async function fetchPageLinks(title, maxLinks) {
+  if (maxLinks === undefined) maxLinks = parseInt(process.env.WIKI_FILL_LINK_FETCH || '500', 10) || 500;
   const links = [];
   let plcontinue = '';
   while (links.length < maxLinks) {
@@ -53,7 +64,9 @@ async function fetchPageLinks(title, maxLinks = 30) {
       const page = Object.values(pages).find(p => p && p.links);
       if (!page || !page.links) break;
       for (const l of page.links) {
-        if (!l.title.startsWith('List of ') && !l.title.includes('/') && !l.title.includes(':')) {
+        // Keep list pages and navigational sub-pages too — they can be rich fact
+        // sources (e.g. "List of Prime Ministers", "List of Ramsar sites in India").
+        if (!l.title.includes('/')) {
           links.push(l.title);
           if (links.length >= maxLinks) break;
         }
@@ -67,12 +80,12 @@ async function fetchPageLinks(title, maxLinks = 30) {
 
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-async function fetchCategoryMembers(wikiCat, maxPages = parseInt(process.env.WIKI_FILL_MAX_PAGES || '5000', 10)) {
+async function fetchCategoryMembers(wikiCat, maxPages = parseInt(process.env.WIKI_FILL_MAX_PAGES || '1000000', 10)) {
   // Traverse the category tree recursively: fetch direct pages AND subcategory
   // names, then descend into each subcategory. This is how content that lives in
   // nested categories (e.g. Pushtimarga inside Bhakti_movement -> Vaishnavism)
   // gets discovered, instead of being limited to direct members only.
-  const MAX_DEPTH = 6;
+  const MAX_DEPTH = parseInt(process.env.WIKI_FILL_CAT_DEPTH || '30', 10) || 30;
   const pages = new Set();
   const visitedCats = new Set();
   const queue = [{ cat: wikiCat, depth: 0 }];
@@ -82,16 +95,16 @@ async function fetchCategoryMembers(wikiCat, maxPages = parseInt(process.env.WIK
     const catKey = cat.toLowerCase();
     if (depth > MAX_DEPTH || visitedCats.has(catKey)) continue;
     visitedCats.add(catKey);
-    if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) {
-      log('    (stopping category discovery: time budget reached)');
+    if (DISCOVERY_BUDGET_MS && Date.now() > discoveryDeadline()) {
+      log('    (stopping category discovery: discovery budget reached, reserving time for mining)');
       break;
     }
 
     let cmcontinue = '';
     let pageNum = 0;
     while (pages.size < maxPages) {
-      if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) {
-        log('    (stopping category members: time budget reached)');
+      if (DISCOVERY_BUDGET_MS && Date.now() > discoveryDeadline()) {
+        log('    (stopping category members: discovery budget reached, reserving time for mining)');
         break;
       }
       pageNum++;
@@ -102,7 +115,10 @@ async function fetchCategoryMembers(wikiCat, maxPages = parseInt(process.env.WIK
         const d = await fetchJSON(url);
         for (const m of d.query.categorymembers) {
           if (m.ns === 0) {
-            if (!m.title.startsWith('List of ') && !m.title.includes('/')) pages.add(m.title);
+            // Keep list pages too ("List of ...") — they are often rich fact
+            // sources (e.g. "List of Ramsar sites in India"). Only drop
+            // sub-page / file namespace noise.
+            if (!m.title.includes(':')) pages.add(m.title);
           } else if (m.ns === 14) {
             queue.push({
               cat: m.title.replace(/^Category:/, ''),
@@ -2148,7 +2164,7 @@ const CATEGORIES = [
     'B. T. crop','Marker assisted selection','Somaclonal variation','Tissue culture','Test cross','Backcrossing',
     'Haploid','Diploid','Tetraploid','Gene bank','Seed bank','National Bureau of Plant Genetic Resources'
   ]},
-  { name:'Seed Science & Technology', topics:[
+  { name:'Seed Science & Technology', wikiCat:'Seed', topics:[
     'Seed','Germination','Seed dormancy','Seed testing','Seed certification','Seed production',
     'Hybrid seed','Open pollination','Seed treatment','Seedling','Seedling vigor','Scarification (botany)',
     'Stratification (botany)','Viability','Seed bank','Sowing','Sowing depth','Seed drill','Dormancy',
@@ -2230,6 +2246,323 @@ const CATEGORIES = [
     'Bunding','Gully plug','Check dam','Earthen dam','Levee','Canwell','Chowalla','Remote sensing','Geographic information system',
     'Watershed management','Soil conservation','Swales','Furrow irrigation','Drip irrigation','Sprinkler irrigation'
   ]},
+  // ───────── UPSC: Polity, Governance & Public Administration ─────────
+  { name:'Indian Polity & Constitution', wikiCat:'Politics_of_India', topics:[
+    'Politics of India','Constitution of India','Preamble to the Constitution of India','Fundamental Rights in India',
+    'Directive Principles in India','Fundamental duties in India','President of India','Vice President of India',
+    'Prime Minister of India','Union Council of Ministers','Parliament of India','Lok Sabha','Rajya Sabha',
+    'Supreme Court of India','High courts of India','District courts of India','Attorney General of India',
+    'Comptroller and Auditor General of India','Election Commission of India','Union Public Service Commission',
+    'Finance Commission of India','NITI Aayog','Inter-State Council','Parliamentary committees of India',
+    'Sarkaria Commission','National Commission for Scheduled Castes','National Commission for Scheduled Tribes',
+    'National Commission for Women','Panchayati Raj','Municipal corporation (India)','73rd Amendment',
+    '74th Amendment','Federalism in India','Separation of powers','Judicial review in India','Basic structure doctrine',
+    'Ordinance (India)','Money bill','Financial bill','Amendment of the Constitution of India','State List, Union List, Concurrent List',
+    'Governor (India)','State Legislative Assembly','Legislative Council (India)','Chief Minister (India)',
+    'Elections in India','First-past-the-post voting','Anti-defection law','Office of profit','Question Hour','Zero Hour',
+    'Leader of the Opposition','Whips in Indian politics','President\'s rule'
+  ]},
+  { name:'Elections & Political Parties', wikiCat:'Elections_in_India', keywords:[
+    'elect','vot','poll','party','candid','constituen','ballot','commission','rajya','lok sabha','assembly','reserv','delimit','campaign','aid','symbol'
+  ], topics:[
+    'Elections in India','Election Commission of India','Voter ID (India)','Electronic voting in India','Voter-verified paper audit trail',
+    'National parties in India','Political parties in India','Indian National Congress','Bharatiya Janata Party',
+    'Communist Party of India (Marxist)','Aam Aadmi Party','Bahujan Samaj Party','Rashtriya Janata Dal',
+    'Dravida Munnetra Kazhagam','All India Anna Dravida Munnetra Kazhagam','Shiv Sena','Nationalist Congress Party',
+    'Telugu Desam Party','Janata Dal (United)','Lok Janshakti Party','Rashtriya Lok Dal','Left Front (India)',
+    'National Democratic Alliance','United Progressive Alliance','Indian National Developmental Inclusive Alliance',
+    'Election symbols in India','Model Code of Conduct','Free and fair election','Delimitation Commission of India',
+    'Anti-defection law','Representation of the People Act, 1951','Representation of the People Act, 1950',
+    'General elections in India','State Assembly elections in India','By-election','Mid-term election','Caretaker government',
+    'Coalition government','Hung parliament','Motion of no confidence','Vote of confidence','Money bill','EVM'
+  ]},
+  { name:'Public Administration & Governance', wikiCat:'Public_administration', topics:[
+    'Public administration','New Public Management','Good governance','E-governance','Digital India',
+    'District collector','District magistrate','Tehsildar','Panchayat','Gram panchayat','Zilla Parishad',
+    'Block Development Officer','Sub-Divisional Magistrate','Right to Information Act, 2005','Citizen\'s Charter',
+    'E-governance in India','Aadhaar','Direct Benefit Transfer','Jan Dhan Yojana','MGNREGA','Midday Meal Scheme',
+    'National Rural Livelihood Mission','Pradhan Mantri Awas Yojana','Swachh Bharat Mission','Beti Bachao Beti Padhao',
+    'Public Service Broadcasting','Civil Services of India','Indian Administrative Service','Indian Police Service',
+    'Indian Foreign Service','Lateral entry (India)','Mission Karmayogi','Right to Public Services legislation',
+    'Social audit','Transparency (behavior)','Accountability','Administrative reform','Neo-liberalism'
+  ]},
+  // ───────── UPSC: Economy ─────────
+  { name:'Indian Economy & Development', wikiCat:'Economy_of_India', keywords:[
+    'econom','gdp','gross domestic','inflation','fiscal','monetary','budget','finance','tax','bank','rbi','reserve bank','rupee','market','trade','export','import','industry','manufactur','service sector','development','plan','niti','growth','reform','liberali','privatis','globalis','poverty','unemploy','human development'
+  ], topics:[
+    'Economy of India','Economic history of India','Indian economy','GDP','Nominal GDP','Purchasing power parity',
+    'Gross value added','Economic growth in India','Inflation in India','Consumer price index','Wholesale price index',
+    'Fiscal policy','Fiscal deficit','Revenue deficit','Primary deficit','Union budget of India','Direct tax','Indirect tax',
+    'Goods and Services Tax (India)','GST Council','Income tax in India','Corporate tax','Service tax (India)','Customs duty',
+    'Monetary policy of India','Reserve Bank of India','Repo rate','Reverse repo rate','Cash reserve ratio','Statutory liquidity ratio',
+    'CRR','MSF','Liquidity adjustment facility','Money supply','Broad money','Narrow money','Inflation targeting in India',
+    'Monetary Policy Committee','Five-Year Plans of India','Twelfth Five-Year Plan','NITI Aayog','Planning Commission',
+    'New Industrial Policy','Make in India','Startup India','Standup India','Digital India','Foreign direct investment in India',
+    'Foreign institutional investor','FII','Balance of payments','Current account','Capital account','Foreign exchange reserves',
+    'Rupee','Rupee depreciation','Convertibility of the rupee','India–United States economic relations','Special Economic Zone',
+    'SEZ','Infrastructure in India','Public–private partnership','Disinvestment','PSE policy','Navratna','Maharatna','Miniratna',
+    'Poverty in India','Poverty line in India','Tendulkar Committee','Rangarajan Committee','Unemployment in India','MGNREGA',
+    'Human Development Index','Multidimensional Poverty Index','Inequality in India','Gini coefficient','Kuznets curve'
+  ]},
+  { name:'Banking & Financial System', wikiCat:'Banking_in_India', topics:[
+    'Banking in India','Reserve Bank of India','Scheduled Banks in India','Public sector banks in India','Nationalized bank',
+    'State Bank of India','Private sector banks in India','Cooperative banking in India','Regional Rural Bank',
+    'Small Finance Bank','Payment bank','Banking Ombudsman','Demonetisation by the government of India','Banknote',
+    'Currency in India','Indian rupee','Digital payment','Unified Payments Interface','UPI','National Payments Corporation of India',
+    'BHIM (app)','Mobile payment','Cheque','Demand draft','Bank account','Savings account','Current account','Fixed deposit',
+    'Recurring deposit','Certificate of deposit','NEFT','RTGS','IMPS','ATM','Debit card','Credit card','KYC',
+    'Basel III','Bank for International Settlements','Non-performing loan','Bad bank','Insolvency and Bankruptcy Code',
+    'Deposit Insurance and Credit Guarantee Corporation','Financial inclusion','Jan Dhan Yojana','Microfinance in India',
+    'Self-Help Group (finance)','Money market in India','Call money','Treasury bills','Government securities','Bond market in India',
+    'Stock market in India','National Stock Exchange of India','Bombay Stock Exchange','SEBI','Sensex','NIFTY 50',
+    'Mutual fund','Systematic Investment Plan','Sovereign gold bond','Gold monetisation scheme'
+  ]},
+  // ───────── UPSC: Geography & Environment breadth ─────────
+  { name:'World & Indian Physical Geography', wikiCat:'Physical_geography', topics:[
+    'Physical geography','Geomorphology','Plate tectonics','Continental drift','Volcano','Earthquake','Tsunami',
+    'Weathering','Erosion','Types of rocks','Igneous rock','Sedimentary rock','Metamorphic rock','Rock cycle',
+    'Minerals','Fossil','Glacier','Glacial landforms','Desert','Desertification','Soil','Soil formation','Aridity',
+    'Latitude','Longitude','Equator','Tropic of Cancer','Tropic of Capricorn','Latitudinal heat zones','Rainforest',
+    'Savanna','Tundra','Taiga','Mediterranean climate','Monsoon','Jet stream','El Niño','La Niña','Indian Ocean Dipole',
+    'Atmosphere of Earth','Troposphere','Stratosphere','Ozone layer','Global warming','Climate change','Greenhouse effect',
+    'Carbon cycle','Nitrogen cycle','Water cycle','Ecosystem','Biome','Biodiversity','Ecology','Food chain','Trophic level',
+    'Biogeochemical cycle','Aquifer','Hydrological cycle','River','Delta','Estuary','Wetland','Mangrove','Coral reef',
+    'Ocean current','Tides','Ocean floor','Continent','Continentality'
+  ]},
+  { name:'Indian Physical Geography', wikiCat:'Geography_of_India', topics:[
+    'Geography of India','Physiographic divisions of India','Himalayas','Western Ghats','Eastern Ghats','Vindhya Range',
+    'Satpura Range','Aravalli Range','Indo-Gangetic Plain','Deccan Plateau','Thar Desert','Coastline of India',
+    'Rivers of India','Indus River','Ganges','Brahmaputra River','Yamuna','Godavari','Krishna River','Kaveri',
+    'Narmada River','Tapti River','Mahanadi','Northern rivers of India','Peninsular rivers of India','Estuary of India',
+    'Deltas of India','Climate of India','Monsoon of India','Southwest monsoon','Northeast monsoon','El Niño effect on India',
+    'Heat wave','Cold wave','Drought in India','Floods in India','Cyclone in India','Soil types of India','Alluvial soil',
+    'Black soil','Red soil','Laterite','Arid soil','Forest cover in India','Tropical rainforest','Sal forest','Mangroves of India',
+    'Sundarbans','Wetlands of India','National parks of India','Wildlife sanctuaries of India','Biosphere reserves of India',
+    'Desert in India','Rann of Kutch','Lakshadweep','Andaman and Nicobar Islands','Plateau of India','Mountain ranges of India'
+  ]},
+  // ───────── UPSC: History / Art & Culture deeper roots ─────────
+  { name:'Indian Art & Architecture', wikiCat:'History_of_Indian_art', keywords:[
+    'art','architectur','temple','sculpt','paint','mural','rock','cave','stupa','buddh','hindu','jain','mosque','fort','palace','style','school','dance','music','craft'
+  ], topics:[
+    'Indian art','Indian architecture','History of Indian architecture','Temple architecture in India','Nagara style',
+    'Dravidian architecture','Vesara style','Hoysala architecture','Vijayanagara architecture','Rock-cut architecture in India',
+    'Ajanta Caves','Ellora Caves','Elephanta Caves','Badami cave temples','Mahabalipuram','Khajuraho','Konark Sun Temple',
+    'Brihadeeswarar Temple','Meenakshi Temple','Sun Temple, Modhera','Jain architecture','Sikh architecture','Indo-Islamic architecture',
+    'Mughal architecture','Taj Mahal','Red Fort','Qutb Minar','Charminar','Gol Gumbaz','Fatehpur Sikri','Fatehpur Sikri, India',
+    'Madrasa (India)','Garden of Mughal Empire','Colonial architecture in India','Victoria Memorial','Rashtrapati Bhavan',
+    'Indian painting','Mughal painting','Rajput painting','Pahari painting','Company style','Bengal School of Art',
+    'Madhubani art','Warli painting','Phad painting','Tanja art','Miniature painting','Fresco painting','Mural (India)',
+    'Indian sculpture','Bronze sculpture','Chola bronze','Nataraja','Indian folk art','Pattachitra','Kalamkari',
+    'Sanjhi art','Thanjavur painting'
+  ]},
+  { name:'Indian Music Dance & Theatre', wikiCat:'Performing_arts_in_India', keywords:[
+    'music','dance','theatre','raga','raag','tala','taal','instrument','classical','carnatic','hindustani','kathak','bharatanatyam','kuchipudi','odissi','kathakali','mohiniyattam','folk','natyam','natya'
+  ], topics:[
+    'Music of India','Indian classical music','Carnatic music','Hindustani classical music','Raga','Tala (music)',
+    'Mela (music)','Thaat','Khayal','Dhrupad','Thumri','Tappa','Ghazal','Qawwali','Bollywood music','Bhajan','Kirtan',
+    'Musical instruments of India','Sitar','Tabla','Veena','Mridangam','Sarod','Shehnai','Bansuri','Sarangi','Harmonium',
+    'Dance in India','Indian classical dance','Bharatanatyam','Kathak','Kuchipudi','Odissi','Kathakali','Mohiniyattam','Manipuri dance',
+    'Sattriya','Chhau dance','Folk dances of India','Bhangra','Garba','Ghoomar','Lavani','Giddha','Tamang Selo',
+    'Theatre in India','Indian theatre','Natya Shastra','Sanskrit theatre','Kathakali theatre','Nautanki','Tamasha',
+    'Bhavai','Yakshagana','Ram Leela','Indian cinema','Bollywood','Cinema of South India','Malayalam cinema','Kollywood','Tollywood'
+  ]},
+  { name:'Indian Festivals & Traditions', wikiCat:'Hindu_festivals', keywords:[
+    'festiv','puja','prayer','ritual','vrat','fast','pilgrimage','yatra','mela','fair','tradition','custom','ceremony','worship','deity','temple','puran','sankrant','pooja'
+  ], topics:[
+    'List of Hindu festivals','Diwali','Holi','Navaratri','Durga Puja','Dussehra','Ganesh Chaturthi','Raksha Bandhan',
+    'Makar Sankranti','Pongal','Lohri','Baisakhi','Onam','Vishu','Thrissur Pooram','Puthandu','Ugadi','Gudi Padwa',
+    'Mahashivratri','Rama Navami','Krishna Janmashtami','Karva Chauth','Bhai Dooj','Eid al-Fitr','Eid al-Adha',
+    'Muharram','Milad','Christmas in India','Buddha\'s Birthday','Mahavir Jayanti','Guru Nanak Gurpurab','Gurpurab',
+    'Parsi New Year','Jains festival','Kumbh Mela','Pushkar Fair','Hemis Festival','Losar','Onam harvest festival',
+    'Ambubachi Mela','Kalaripayattu festival'
+  ]},
+  // ───────── UPSC: Science, Technology & Defence breadth ─────────
+  { name:'Indian Scientists & Nobel Laureates', wikiCat:'Indian_scientists', topics:[
+    'List of Indian scientists','C. V. Raman','Homi J. Bhabha','Vikram Sarabhai','A. P. J. Abdul Kalam','Satyendra Nath Bose',
+    'Jagadish Chandra Bose','Prafulla Chandra Ray','Salim Ali','Birbal Sahni','Har Gobind Khorana','Subrahmanyan Chandrasekhar',
+    'Venkatraman Ramakrishnan','Abhijit Banerjee','G. N. Ramachandran','Yellapragada Subbarow','K. S. Krishnan',
+    'Ashoke Sen','Roddam Narasimha','C. N. R. Rao','S. Chandrasekhar','Ramanujan','Niels Bohr connection',
+    'List of Nobel laureates from India','Rabindranath Tagore','Mother Teresa','Kailash Satyarthi','Amartya Sen',
+    'C. V. Raman','Har Gobind Khorana','Subrahmanyan Chandrasekhar','Venkatraman Ramakrishnan','Indian Nobel laureates'
+  ]},
+  { name:'Defence & Strategic Affairs', wikiCat:'Indian_Armed_Forces', keywords:[
+    'defence','defense','army','navy','air force','military','missile','weapon','war','battle','soldier','regiment','corps','command','strateg','border','operation','exercise','indian armed'
+  ], topics:[
+    'Indian Armed Forces','Indian Army','Indian Navy','Indian Air Force','Indian Coast Guard','Paramilitary forces of India',
+    'Border Security Force','Central Reserve Police Force','Central Armed Police Forces','National Security Guard',
+    'Rashtriya Rifles','Territorial Army (India)','Chief of Defence Staff (India)','Chief of the Army Staff (India)',
+    'Chief of the Naval Staff (India)','Chief of the Air Staff (India)','Integrated Defence Staff','Defence Research and Development Organisation',
+    'Missiles of India','Agni missile','Prithvi (missile)','BrahMos','Akash (missile)','Nag (missile)','Nirbhay',
+    'Arjun (tank)','INS Vikrant','INS Viraat','Aircraft carrier India','Submarine fleet of India','INS Arihant',
+    'Nuclear doctrine of India','No first use','Strategic Forces Command','Indian space programme','Defence budget of India',
+    'Raksha Mantri','National Security Advisor (India)','Indian military academies','National Defence Academy',
+    'Indian Military Academy','Kargil War','1962 war India China','Indo-Pakistani wars','Operation Vijay (1961)',
+    'Balakot airstrike','Surgical Strike','Exercise (military)','Kunor (India)','INS Vikramaditya'
+  ]},
+  { name:'Nuclear Energy & Technology', wikiCat:'Nuclear_energy_in_India', topics:[
+    'Nuclear power in India','Nuclear energy','Nuclear reactor','Pressurized heavy water reactor','Fast breeder reactor',
+    'Bhabha Atomic Research Centre','Indira Gandhi Centre for Atomic Research','Atomic Energy Commission of India',
+    'Department of Atomic Energy','NPCIL','Nuclear fuel cycle','Uranium','Thorium','Plutonium','MOX fuel',
+    'Three-stage nuclear power programme','Kalpakkam','Kudankulam Nuclear Power Plant','Tarapur Atomic Power Station',
+    'Prototype Fast Breeder Reactor','Advanced Heavy Water Reactor','India and weapons of mass destruction',
+    'Smiling Buddha','Pokhran-II','Operation Shakti','Nuclear Suppliers Group','India–United States Civil Nuclear Agreement',
+    'Nuclear Safety','IAEA','Comprehensive Nuclear-Test-Ban Treaty','Criticality (status)','Nuclear waste'
+  ]},
+  { name:'Space & Astronomy', wikiCat:'Indian_space_programme', keywords:[
+    'space','satellite','rocket','launch','isro','chandrayaan','mangalyaan','orbit','astronom','cosmos','gaganyaan','navic','pslv','gslv','lvm','mission','probe','astro'
+  ], topics:[
+    'Indian Space Research Organisation','Space programme of India','Chandrayaan-1','Chandrayaan-2','Chandrayaan-3',
+    'Mangalyaan','Mars Orbiter Mission','Gaganyaan','Aditya-L1','XPoSat','Shukrayaan','AstroSat','PSLV','GSLV','LVM3',
+    'Reusable Launch Vehicle','RLV-TD','Scramjet','NavIC','GAGAN','INSAT','GSAT','Remote sensing satellite','Cartosat',
+    'Resourcesat','RISAT','Bhuvan','India\'s moon mission','National Space Policy','IN-SPACe','NRSC','Vikram Sarabhai Space Centre',
+    'SDSC SHAR','Satish Dhawan Space Centre','ISRO Telemetry','K. Sivan','S. Somanath','Indian astronomy','Astronomy in India',
+    'Aryabhata (satellite)','Jantar Mantar','Twilight Anomaly'
+  ]},
+  { name:'ICT Digital & Cyber', wikiCat:'Information_technology_in_India', keywords:[
+    'software','digital','computer','internet','cyber','data','network','technology','it','tech','ai','artificial','machine','cloud','semiconductor','chip','5g','telecom','platform'
+  ], topics:[
+    'Information technology in India','Software industry in India','IT services in India','Bangalore','Bengaluru IT hub',
+    'Indian IT sector','Software exports from India','Business process outsourcing in India','Indian tech companies',
+    'TCS','Infosys','Wipro','HCL Technologies','Tech Mahindra','Cognizant','Digital India','India Stack','Aadhaar',
+    'UPI','NPCI','Artificial intelligence in India','Machine learning','Data protection in India','Digital Personal Data Protection Act, 2023',
+    'Cybersecurity in India','Computer Emergency Response Team (India)','Indian Computer Emergency Response Team','CERT-In',
+    'Semiconductor industry in India','India Semiconductor Mission','Semiconductor fab in India','5G in India','6G',
+    'Telecom Regulatory Authority of India','Jio','BharatNet','National Optical Fibre Network','Cloud computing in India',
+    'Quantum computing in India','National Quantum Mission','Supercomputer in India','Param (supercomputer)','AI Mission',
+    'Robotics in India','Drones in India','Geospatial data'
+  ]},
+  // ───────── UPSC: Important Commissions, Reports & Bodies (dynamic) ─────────
+  { name:'Commissions Committees & Bodies', wikiCat:'Commissions_in_India', keywords:[
+    'commission','committee','committee report','board','council','authority','tribunal','panel','task force','group','committee headed','headed by'
+  ], topics:[
+    'Union Public Service Commission','Finance Commission of India','Election Commission of India','NITI Aayog',
+    'National Human Rights Commission of India','National Commission for Women','National Commission for Minorities',
+    'Law Commission of India','Pay Commission (India)','7th Central Pay Commission','Fourteenth Finance Commission',
+    'Tenth Finance Commission','Sarkaria Commission','Mandal Commission','Kothari Commission','Radhakrishnan Commission',
+    'Kesavan Committee','Justice Verma Committee','Narasimham Committee','RBI committee','Kelkar Committee',
+    'Bimal Jalan Committee','Sinha committee','Rangarajan Committee','Tendulkar Committee','Administrative Reforms Commission',
+    'National Commission for Scheduled Castes','National Commission for Scheduled Tribes','Competition Commission of India',
+    'Securities and Exchange Board of India','Central Vigilance Commission','Central Information Commission',
+    'Election Commission','Comptroller and Auditor General of India','National Green Tribunal','Green tribunals in India',
+    'Lokpal','Lokayukta','IRDAI','Insurance Regulatory and Development Authority','Telecom Regulatory Authority of India',
+    'National Disaster Management Authority','Parliamentary Standing Committee'
+  ]},
+  // ───────── Regional Language Literatures (UPSC optional / literarture-rich) ─────────
+  { name:'Malayalam Literature', wikiCat:'Malayalam_literature', topics:[
+    'Malayalam literature','Malayalam poetry','Malayalam novels','History of Malayalam literature','Malayalam Renaissance',
+    'Thunchaththu Ezhuthachan','Adhyatma Ramayanam','Kilippattu','Attakkatha','Kathakali literature','Ashtapadi (Malayalam)',
+    'Kunchan Nambiar','Ottamthullal','Poonthanam','Narayana Guru','Kumaran Asan','Vallathol Narayana Menon','Ulloor S. Parameswara Iyer',
+    'K. P. Kesava Menon','V. T. Bhattathiripad','Thakazhi Sivasankara Pillai','Vaikom Muhammad Basheer','S. K. Pottekkatt',
+    'O. V. Vijayan','M. T. Vasudevan Nair','Kamala Surayya','Sugathakumari','O. N. V. Kurup','Ayyappa Paniker',
+    'K. Ayyappa Panicker','N. V. Krishna Warrier','G. Sankara Kurup','Changampuzha Krishnapillai','Edasseri Govindan Nair',
+    'Vyloppilli Sreedhara Menon','P. Kunhiraman Nair','K. S. Narasimha Swami','Sasthamangalam','Perumbadavam Sreedharan',
+    'Kakkanadan','V. K. N.','V. K. N. Krishnan Nair','Pavana Balan','Kavalam Narayana Panicker','C. Radhakrishnan',
+    'M. Leelavathy','Sukumar Azhikode','K. M. George','A. R. Rajaraja Varma','V. C. Balakrishna Panicker','M. P. Appan',
+    'K. Satchidanandan','D. Vinayachandran','Attoor Ravi Varma','Balachandran Chullikkadu','V. Madhusoodanan Nair',
+    'Prabha Varma','S. Ramesan Nair','Vishnunarayanan','K. Jayakumar','R. Ramachandran','Kadavanad Kuttikrishnan',
+    'Narangath Bhrathikkabi','Thunchath Ezhuthachan Malayalam University','Kerala Sahitya Akademi','Malayalam Renaissance writers',
+    'Malayalam film literature','Jnanpith Award Malayalam','Sahitya Akademi Malayalam'
+  ]},
+  { name:'Tamil Literature', wikiCat:'Tamil_literature', topics:[
+    'Tamil literature','Sangam literature','Thirukkural','Tamil poetry','Tamil epics','Silappatikaram','Manimekalai',
+    'Pathuppaattu','Ettuthokai','Tolkappiyam','Naladiyar','Periya Puranam','Kamba Ramayanam','Tamil Bhakti literature',
+    'Nayanars','Alvars','Tevaram','Tiruvasagam','Tirumurai','Naalayira Divya Prabandham','Tamil Jain literature',
+    'Sangam landscape','Tamil grammar','Eelam literature','Subramania Bharati','Bharathidasan','Tamil renaissance',
+    'Tamil modernist poetry','Tamil short story','Novels in Tamil','Tamil cinema literature','Tamil literary criticism'
+  ]},
+  { name:'Sanskrit & Classical Languages', wikiCat:'Sanskrit_literature', topics:[
+    'Sanskrit literature','Vedic Sanskrit','Classical Sanskrit','Vedas','Rigveda','Yajurveda','Samaveda','Atharvaveda',
+    'Brahmana','Aranyaka','Upanishads','Vedanga','Puranas','Itihasa','Ramayana','Mahabharata','Bhagavad Gita',
+    'Kalidasa','Raghuvamsa','Kumarasambhava','Meghaduta','Abhijnanashakuntalam','Vishakhadatta','Mudrarakshasa',
+    'Bharavi','Kiratarjuniya','Magha','Shishupala Vadha','Bhattikavya','Panini','Ashtadhyayi','Patanjali','Yogasutra',
+    'Kautilya','Arthashastra','Manusmriti','Natyashastra','Kamasutra','Sanskrit grammar','Sanskrit drama','Sanskrit poetry',
+    'Sanskrit metre','Sanskrit philosophy','Adi Shankara','Ramanuja','Madhvacharya','Amarakosha','Mukesh'
+  ]},
+  { name:'Kannada Literature', wikiCat:'Kannada_literature', topics:[
+    'Kannada literature','Old Kannada','Kavirajamarga','Pampa','Pampa Bharata','Ranna','Ranna Saahasabhiman','Nagavarma I',
+    'Janna','Haridasa literature','Purandara Dasa','Kanaka Dasa','Dasa Sahitya','Vachana literature','Basava',
+    'Allama Prabhu','Akka Mahadevi','Kuvempu','D. R. Bendre','Masti Venkatesha Iyengar','K. Shivaram Karanth',
+    'Shivaram Karanth','Girish Karnad','U. R. Ananthamurthy','P. Lankesh','K. P. Poornachandra Tejaswi','Niranjana',
+    'T. P. Kailasam','M. G. Ramachandra','Kannada poetry','Kannada novels','Bandaya movement','Navya movement',
+    'Kannada cinema literature','Jnanpith Award Kannada'
+  ]},
+  { name:'Telugu Literature', wikiCat:'Telugu_literature', topics:[
+    'Telugu literature','Telugu language','Nannaya','Tikkana','Errana','Mahabharata Telugu','Padmakavi','Srinatha',
+    'Sarangapani','Vemana','Tyagaraja','Kancherla Gopanna','Annamacharya','Ksherayya','Telugu poetry','Prabandha',
+    'Chandassu','Telugu grammar','Telugu novel','Kandukuri Veeresalingam','Chilakamarti Lakshmi Narasimham',
+    'Viswanatha Satyanarayana','Jnanpith Award Telugu','S. V. Joga Rao','Palnati Yuddham','Telugu cinema literature',
+    'Telugu Renaissance','Adikavi Nannaya University'
+  ]},
+  { name:'Bengali Literature', wikiCat:'Bengali_literature', topics:[
+    'Bengali literature','Bengali poetry','Bengali novels','Charyapada','Mangalkavya','Vaishnava padavali','Bankim Chandra Chatterjee',
+    'Anandamath','Michael Madhusudan Dutt','Rabindranath Tagore','Gitanjali','Kazi Nazrul Islam','Sarat Chandra Chattopadhyay',
+    'Jibanananda Das','Sunil Gangopadhyay','Mahasweta Devi','Tarashankar Bandyopadhyay','Bibhutibhushan Bandopadhyay',
+    'Pather Panchali','Bimal Kar','Motijheel','Bengali Renaissance','Calcutta Group','Hungryalist movement',
+    'Bengali literary criticism','Tagore literary works','Bengali drama','Bengali film literature','Satyajit Ray'
+  ]},
+  { name:'Marathi & Hindi Literature', wikiCat:'Marathi_literature', keywords:[
+    'marathi','hindi','literature','poet','novel','playwright','drama','kavi','sant','abhanga','bhakti','sahitya'
+  ], topics:[
+    'Marathi literature','Sant Dnyaneshwar','Dnyaneshwari','Sant Tukaram','Abhanga','Namdev','Eknath','Marathi poetry',
+    'V. S. Khandekar','P. L. Deshpande','Vijay Tendulkar','Vyankatesh Madgulkar','Arun Kolatkar','Dilip Chitre',
+    'Bhalchandra Nemade','S. H. Deshpande','Marathi novels','Marathi theatre','Marathi cinema literature',
+    'Hindi literature','Hindi poetry','Bhakti movement Hindi','Kabir','Tulsidas','Ramcharitmanas','Surdas','Sur Sagar',
+    'Rahim','Raskhan','Meera','Nirala','Suryakant Tripathi','Mahadevi Verma','Maithili Sharan Gupt','Jaishankar Prasad',
+    'Munshi Premchand','Godan','Mahatma Gandhi literature','Harivansh Rai Bachchan','Madhup','Modern Hindi poetry',
+    'Nayi Kavita','Hindi novels','Hindi literary criticism'
+  ]},
+  { name:'Punjabi & Other Regional Literature', wikiCat:'Punjabi_literature', keywords:[
+    'punjabi','gujarati','oriya','odia','assamese','bengal','tamil','telugu','kannada','malayalam','literature','poet','novel'
+  ], topics:[
+    'Punjabi literature','Baba Farid','Guru Nanak','Gurbani','Shah Hussain','Waris Shah','Heer Ranjha','Bulleh Shah',
+    'Ranjit Singh literature','Amrita Pritam','Gurdial Singh','Punjabi poetry','Punjabi novels','Punjabi Sufi literature',
+    'Gujarati literature','Narsinh Mehta','Premanand','Dayaram','Narmad','Govardhanram Tripathi','K. M. Munshi',
+    'Jhaverchand Meghani','Umaswati','Gujarati poetry','Gujarati novels','Odia literature','Fakir Mohan Senapati',
+    'Radhanath Ray','Gopabandhu Das','Odia poetry','Sitakant Mahapatra','Assamese literature','Srimanta Shankaradeva',
+    'Assamese poetry','Lakshminath Bezbarua','Jyoti Prasad Agarwala','Bhupen Hazarika','Assamese novels'
+  ]},
+  // ───────── UPSC: International Organizations, Summits & World Bodies ─────────
+  { name:'International Organizations & Summits', wikiCat:'International_organizations', keywords:[
+    'organization','organisation','united nations','un ','who','imf','world bank','wto','g20','brics','saarc','nato','unicef','unesco','ilo','fao','union','summit','convention','treaty','protocol','agency'
+  ], topics:[
+    'United Nations','United Nations General Assembly','United Nations Security Council','International Court of Justice',
+    'World Health Organization','UNICEF','UNESCO','United Nations Development Programme','United Nations Environment Programme',
+    'International Labour Organization','Food and Agriculture Organization','World Food Programme','UN Women',
+    'United Nations High Commissioner for Refugees','United Nations Human Rights Council','United Nations Charter',
+    'International Monetary Fund','World Bank Group','International Bank for Reconstruction and Development',
+    'International Finance Corporation','Asian Development Bank','World Trade Organization','GAATT','Doha Development Round',
+    'Bretton Woods Conference','WTO Ministerial Conference','G20','G7','BRICS','Shanghai Cooperation Organisation',
+    'SAARC','ASEAN','Association of Southeast Asian Nations','European Union','African Union','NATO','United Nations Peacekeeping',
+    'UN Peacekeeping missions','Kyoto Protocol','Paris Agreement','Montreal Protocol','Vienna Convention on the Law of Treaties',
+    'Comprehensive Nuclear-Test-Ban Treaty','Non-Proliferation Treaty','Nuclear Suppliers Group','Intergovernmental Panel on Climate Change',
+    'International Atomic Energy Agency','World Meteorological Organization','Intellectual Property Organization',
+    'International Maritime Organization','International Civil Aviation Organization','Universal Postal Union','OPEC'
+  ]},
+  { name:'India & International Relations', wikiCat:'Foreign_relations_of_India', keywords:[
+    'india','bilateral','diplomatic','relation','treaty','agreement','pact','summit','visit','foreign','neighbor','strategic','defence cooperation','trade agreement'
+  ], topics:[
+    'Foreign relations of India','Ministry of External Affairs of India','Indian foreign policy','Non-Aligned Movement','Look East policy','Act East policy',
+    'Neighbourhood First policy','India and the United Nations','India–China relations','India–Pakistan relations','India–Nepal relations',
+    'India–Bangladesh relations','India–Sri Lanka relations','India–Maldives relations','India–Bhutan relations',
+    'India–Myanmar relations','India–Afghanistan relations','India–United States relations','India–Russia relations',
+    'India–United Kingdom relations','India–France relations','India–Germany relations','India–Japan relations',
+    'India–Israel relations','India–United Arab Emirates relations','India–Saudi Arabia relations','India–Iran relations',
+    'Panchsheel','Simla Agreement','Lahore Declaration','Agartala Accord','25 year defence pact','India–Russia defence',
+    'Quadrilateral Security Dialogue','Quad','Chabahar Port','International North–South Transport Corridor','India–Middle East–Europe Economic Corridor',
+    'Make in India diplomacy','Digital trade','Remittances to India','Indian diaspora','Overseas Citizenship of India','Vande Bharat Mission'
+  ]},
+  { name:'World Geography & Countries', wikiCat:'Countries', keywords:[
+    'country','capital','region','continent','island','mountain','river','ocean','sea','strait','desert','climate','population','flag','currency','borders','landlocked'
+  ], topics:[
+    'List of sovereign states','List of countries and dependencies by area','List of countries by population','Capital city',
+    'List of national capitals','Continent','Africa','Asia','Europe','North America','South America','Oceania','Antarctica',
+    'List of mountains','Mount Everest','List of rivers by length','Amazon River','Nile','Mississippi','Danube','Yangtze',
+    'List of oceans','Pacific Ocean','Atlantic Ocean','Indian Ocean','Arctic Ocean','Southern Ocean','List of straits','Strait of Gibraltar',
+    'Bering Strait','Strait of Hormuz','Malacca Strait','Suez Canal','Panama Canal','List of deserts','Sahara','Gobi','Atacama',
+    'List of islands by area','Greenland','List of time zones','International Date Line','Prime Meridian','Map projections',
+    'List of currencies','Currency','List of flags','List of countries by GDP','List of countries by Human Development Index',
+    'List of monarchies','List of republics','Landlocked country','Enclave and exclave','Geography of the United States'
+  ]},
 ];
 
 // Rotation groups (7 groups, cycled through by 4h time slots)
@@ -2246,6 +2579,11 @@ const DAY_GROUPS = [
   [46,47,48,49,50,51,52,53,54,55], // Group 9: Meteorology & Climate, Animal Husbandry & Dairy, Fisheries & Aquaculture, Telecom & Postal, Mining & Minerals, Indian Music & Fine Arts, Indian Languages, Courts Cases & Verdicts, Ayurveda & Traditional Medicine, Indian Architecture
   [56,57,58,59,60,61,62,63,64,65,66], // Group 10: Indian Wildlife & National Parks, Indian Rivers & Water Resources, Indian Festivals & Fairs, Indian Philosophy & Thinkers, Indian Theatre & Cinema, Indian Literature & Poets, Indian Handicrafts & Coins, Indian Museums & Heritage Sites, Indian Archaeology & Epigraphy, Indian Demographics & Census, Indian Aviation & Shipping
   [67,68,69,70,71,72,73,74,75,76,77,78], // Group 11: Plant Breeding & Genetics, Seed Science & Technology, Plant Pathology & Crop Protection, Agricultural Entomology, Agricultural Extension & Marketing, Agronomy & Crop Production, Horticulture - Fruit & Vegetable Production, Floriculture & Landscaping, Spices & Plantation Crops, Plant Physiology & Nutrition, Farm Machinery & Power, Hydrology & Soil Conservation
+  [79,80,81,82,83], // Group 12: Indian Polity & Constitution, Elections & Political Parties, Public Administration & Governance, Indian Economy & Development, Banking & Financial System
+  [84,85,86,87,88], // Group 13: World & Indian Physical Geography, Indian Physical Geography, Indian Art & Architecture, Indian Music Dance & Theatre, Indian Festivals & Traditions
+  [89,90,91,92,93], // Group 14: Indian Scientists & Nobel Laureates, Defence & Strategic Affairs, Nuclear Energy & Technology, Space & Astronomy, ICT Digital & Cyber
+  [94,95,96,97,98,99,100,101,102], // Group 15: Commissions Committees & Bodies, Malayalam Literature, Tamil Literature, Sanskrit & Classical Languages, Kannada Literature, Telugu Literature, Bengali Literature, Marathi & Hindi Literature, Punjabi & Other Regional Literature
+  [103,104,105], // Group 16: International Organizations & Summits, India & International Relations, World Geography & Countries
 ];
 
 async function main() {
@@ -2335,8 +2673,8 @@ async function main() {
     qCount.set(k, (qCount.get(k) || 0) + 1);
     if (q.wikiDone) doneTitles.add(k);
   }
-  const topicBudget = parseInt(process.env.WIKI_FILL_TOPIC_BUDGET || '50000', 10);
-  const revisitBudget = parseInt(process.env.WIKI_FILL_REVISIT_BUDGET || '50000', 10);
+  const topicBudget = parseInt(process.env.WIKI_FILL_TOPIC_BUDGET || '200000', 10);
+  const revisitBudget = parseInt(process.env.WIKI_FILL_REVISIT_BUDGET || '200000', 10);
 
   const catTopicMap = {};
   for (const cat of activeCategories) {
@@ -2482,7 +2820,7 @@ async function main() {
         })) { added++; articleAdded++; }
       }
 
-      const MAX_PER_ARTICLE = parseInt(process.env.WIKI_FILL_PER_ARTICLE || '300', 10);
+      const MAX_PER_ARTICLE = parseInt(process.env.WIKI_FILL_PER_ARTICLE || '2000', 10);
       let articleQ = 0;
 
       // ▸ Composer attribution ("Title – Composer" lines, e.g. Popular
@@ -2637,11 +2975,11 @@ async function main() {
     // ── Follow internal links recursively until exhausted (budgeted) ──
     let prevFetched = articles;
     let depth = 0;
-    const MAX_LINK_FETCHES = parseInt(process.env.WIKI_FILL_LINK_BUDGET || '5000', 10);
+    const MAX_LINK_FETCHES = parseInt(process.env.WIKI_FILL_LINK_BUDGET || '200000', 10);
     let linkFetched = 0;
     while (prevFetched.length > 0 && linkFetched < MAX_LINK_FETCHES) {
-      if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) {
-        log('  (stopping link traversal: time budget reached, ' + Math.round((Date.now() - RUN_START) / 60000) + 'min elapsed)');
+      if (DISCOVERY_BUDGET_MS && Date.now() > discoveryDeadline()) {
+        log('  (stopping link traversal: discovery budget reached, reserving time for mining, ' + Math.round((Date.now() - RUN_START) / 60000) + 'min elapsed)');
         break;
       }
       depth++;
@@ -2682,7 +3020,7 @@ async function main() {
             fact: paraphrase(getContext(allSentences, title, 3), title),
           })) added++;
         }
-        const LINK_PER_ARTICLE = parseInt(process.env.WIKI_FILL_LINK_PER_ARTICLE || '50', 10);
+        const LINK_PER_ARTICLE = parseInt(process.env.WIKI_FILL_LINK_PER_ARTICLE || '200', 10);
         for (let si = 0; si < sentences.length && si < LINK_PER_ARTICLE; si++) {
           const sent = sentences[si];
           if (sent.length > 260) continue;

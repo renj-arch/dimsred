@@ -132,11 +132,20 @@ jobs:
           # already-covered pages in the big saturated categories. The
           # wikiDone/barren-skip fix reclaims the time wasted re-fetching barren
           # articles, so higher budgets translate into more net-new questions.
-          WIKI_FILL_TOPIC_BUDGET: 150000
-          WIKI_FILL_REVISIT_BUDGET: 150000
-          WIKI_FILL_LINK_BUDGET: 40000
-          WIKI_FILL_LINK_PER_ARTICLE: 50
-          WIKI_FILL_MAX_PAGES: 500000
+          WIKI_FILL_TOPIC_BUDGET: 200000
+          WIKI_FILL_REVISIT_BUDGET: 200000
+          WIKI_FILL_LINK_BUDGET: 200000
+          WIKI_FILL_LINK_PER_ARTICLE: 200
+          WIKI_FILL_LINK_FETCH: 500
+          WIKI_FILL_CAT_DEPTH: 30
+          WIKI_FILL_MAX_PAGES: 1000000
+          # Reserve at least ~65% of each chunk's wall-clock budget for question
+          # generation by capping how much time discovery (category members +
+          # recursive link traversal) may consume. The persisted link/category
+          # pools ensure anything not reached this run is re-mined next run, so
+          # every chunk is guaranteed to add new questions rather than spending
+          # its whole window enumerating an ever-deeper frontier.
+          WIKI_FILL_DISCOVERY_BUDGET_PCT: 35
           WIKI_FILL_DELAY_MS: 2500
           WIKI_FILL_TIME_BUDGET_MIN: 330
 
