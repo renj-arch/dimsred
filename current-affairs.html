@@ -8282,10 +8282,19 @@ var fact = q.fact || q.solution || q.explanation || '';
             if (typeof _updateArchiveProgress === 'function') _updateArchiveProgress();
             if (state.idx >= state.questions.length) {
                 if (state._feedSource === 'archive') {
-                    if (typeof _topUpFeedFromArchive === 'function' && _topUpFeedFromArchive()) {
-                        _showFeedItem();
+                    if (typeof _topUpFeedFromArchive === 'function') {
+                        _topUpFeedFromArchive(function(more) {
+                            if (more) _showFeedItem();
+                            else {
+                                document.getElementById('qText').innerHTML = '✅ All done! No more questions.';
+                                document.getElementById('optGrid').innerHTML = '<button class="action-btn secondary" onclick="backToMenu()">← Back to Menu</button>';
+                                document.getElementById('pauseBtn').classList.add('hidden');
+                                document.getElementById('jumpRow').style.display = 'none';
+                            }
+                        });
                         return;
                     }
+                    // _topUpFeedFromArchive unavailable — treat the archive as done
                     document.getElementById('qText').innerHTML = '✅ All done! No more questions.';
                     document.getElementById('optGrid').innerHTML = '<button class="action-btn secondary" onclick="backToMenu()">← Back to Menu</button>';
                     document.getElementById('pauseBtn').classList.add('hidden');
@@ -8363,18 +8372,119 @@ var fact = q.fact || q.solution || q.explanation || '';
             } catch(e) {}
         }
         var _archCursor = _readArchiveCursor();
+        // ---- Lazy archive loading ----
+        // The archive is ~6.1M questions in ~3.3GB of JSON. Loading it all in the
+        // browser up front is what made counts collapse (many file fetches fail on
+        // mobile and were silently dropped) and made load slow. Now we only fetch a
+        // light index up front (true total + per-file counts) and stream actual
+        // question files in the background on demand as the feed advances. The total
+        // always shows the true 6.1M from the index regardless of how much is loaded.
+        var _archiveIndex = null;
+        var _archIndexLoading = false;
+        var _archIndexWaiters = [];
+        var _lazyFiles = [];      // deterministic per-account order of {file,count}
+        var _lazyFileCursor = 0;  // how many files appended into _archiveCache
+        var _lazyLoading = false; // a background file fetch is in flight
+        function loadArchiveIndex(cb) {
+            if (_archiveIndex) { if (cb) cb(_archiveIndex); return; }
+            if (_archIndexLoading) { if (cb) _archIndexWaiters.push(cb); return; }
+            _archIndexLoading = true;
+            _archIndexWaiters = [];
+            var xhr = new XMLHttpRequest();
+            xhr.timeout = 60000;
+            xhr.onload = function() {
+                _archIndexLoading = false;
+                var ok = false;
+                try { _archiveIndex = JSON.parse(xhr.responseText); ok = !!_archiveIndex; } catch(e) { _archiveIndex = null; }
+                _kickLazyLoader();
+                var ws = _archIndexWaiters; _archIndexWaiters = [];
+                if (cb) cb(_archiveIndex);
+                for (var i = 0; i < ws.length; i++) ws[i](_archiveIndex);
+            };
+            xhr.onerror = function() { _archIndexLoading = false; _archiveIndex = null; _archIndexWaiters = []; if (cb) cb(null); };
+            xhr.ontimeout = xhr.onerror;
+            xhr.open('GET', 'data/questions/archive-index.json?t=' + Date.now(), true);
+            xhr.send();
+        }
+        // Deterministic per-account order of files to stream. Shuffling at the FILE
+        // level (476 files) with the account seed keeps the ordering identical on
+        // every device, while in-file order stays as-authored. This is a different
+        // (but consistent) arrangement than the old per-question global shuffle.
+        function _ensureLazyFiles() {
+            if (_lazyFiles && _lazyFiles.length) return _lazyFiles;
+            _lazyFiles = [];
+            if (!_archiveIndex || !_archiveIndex.files) return _lazyFiles;
+            _lazyFiles = _archiveIndex.files.map(function(f) { return { file: f.file, count: f.count || 0 }; });
+            _archTotal = (_archiveIndex.total || _lazyFiles.reduce(function(a,f){return a+f.count;},0));
+            _lazyFiles = _applyShuffle(_lazyFiles);
+            return _lazyFiles;
+        }
+        // Flatten one question file into feed-shaped items. Mirrors _loadArchiveFiles'
+        // mapping so displayed cards stay identical to before.
+        function _lazyFlattenFile(fileRec, cb) {
+            var xhr = new XMLHttpRequest();
+            xhr.timeout = 60000;
+            xhr.onload = function() {
+                var out = [];
+                if (xhr.status === 200) {
+                    var data = null;
+                    try { data = JSON.parse(xhr.responseText); } catch(e) { data = null; }
+                    if (data) {
+                        for (var sk in data) {
+                            var subjData = data[sk];
+                            if (!subjData || !subjData.subSubjects) continue;
+                            for (var st in subjData.subSubjects) {
+                                var qs = subjData.subSubjects[st];
+                                if (!Array.isArray(qs)) continue;
+                                for (var qi = 0; qi < qs.length; qi++) {
+                                    var q = qs[qi];
+                                    if (!q || !q.question || !q.answer) continue;
+                                    var fact = q.fact || q.solution || q.explanation || '';
+                                    out.push({ q: q.question, a: q.answer, options: q.options || [], solution: fact, hint: q.hint || '', fact: fact, subject: sk, subTopic: st, pubDate: q.pubDate || '' });
+                                }
+                            }
+                        }
+                    }
+                }
+                cb(out);
+            };
+            xhr.onerror = function() { cb([]); };
+            xhr.ontimeout = xhr.onerror;
+            xhr.open('GET', 'data/questions/' + fileRec.file + '?t=' + Date.now(), true);
+            xhr.send();
+        }
+        // Background refill: whenever the still-unconsumed tail of _archiveCache is
+        // running low, fetch the next question file and append it. Keeps _archNextBatch
+        // synchronous (drains the already-loaded cache) so existing callers are intact.
+        function _kickLazyLoader() {
+            if (_lazyLoading) return;
+            _ensureLazyFiles();
+            if (!_archiveCache) _archiveCache = [];
+            if (_lazyFileCursor >= _lazyFiles.length) return;
+            _lazyLoading = true;
+            var rec = _lazyFiles[_lazyFileCursor++];
+            _lazyFlattenFile(rec, function(items) {
+                _lazyLoading = false;
+                if (!_archiveCache) _archiveCache = [];
+                for (var i = 0; i < items.length; i++) { items[i]._archive = true; _archiveCache.push(items[i]); }
+                _archTotal = Math.max(_archTotal, _archiveCache.length);
+                _updateArchiveProgress();
+                // Queue the next file (fire an eager look-ahead for smooth streaming)
+                if (_lazyFileCursor < _lazyFiles.length) setTimeout(_kickLazyLoader, 0);
+            });
+        }
         function _archNextBatch() {
             var got = [];
-            if (_archiveCache) {
-                _archTotal = Math.max(_archTotal, _archiveCache.length);
-                var guard = 0;
-                while (_archCursor < _archiveCache.length && got.length < _archMaxBatch && guard++ < _archMaxBatch) {
-                    var aq = _archiveCache[_archCursor++];
-                    aq._archive = true;
-                    got.push(aq);
-                }
-                _writeArchiveCursor(_archCursor);
+            if (!_archiveCache) _archiveCache = [];
+            if (_archTotal < _archiveCache.length) _archTotal = _archiveCache.length;
+            _kickLazyLoader(); // ensure a file is queued so future batches stream
+            var guard = 0;
+            while (_archCursor < _archiveCache.length && got.length < _archMaxBatch && guard++ < _archMaxBatch) {
+                var aq = _archiveCache[_archCursor++];
+                aq._archive = true;
+                got.push(aq);
             }
+            _writeArchiveCursor(_archCursor);
             return got;
         }
         function _updateArchiveProgress() {
@@ -8391,10 +8501,17 @@ var fact = q.fact || q.solution || q.explanation || '';
                 return;
             }
             if (!_archiveCache || _archiveCache.length === 0) {
+                // If the index loaded but no question file has streamed yet, still
+                // show the true total instead of a misleading 0.
+                if (_archTotal > 0) {
+                    var vis0 = Math.min(_archCursor, _archTotal);
+                    var pct0 = Math.min(100, Math.round((vis0 / _archTotal) * 100));
+                    el.innerHTML = '📚 Archive: <strong>' + vis0.toLocaleString() + '</strong> / ' + _archTotal.toLocaleString() + ' loaded · <strong>' + pct0 + '%</strong> <span style="color:var(--amber)">warming up…</span>';
+                    return;
+                }
                 el.innerHTML = '📚 Archive: <span style="color:var(--red)">not loaded (offline or <code>file://</code>)</span>';
                 return;
             }
-            _archTotal = _archiveCache.length;
             var visited = Math.min(_archCursor, _archTotal);
             var pct = _archTotal ? Math.min(100, Math.round((visited / _archTotal) * 100)) : 0;
             var done = visited >= _archTotal;
@@ -8411,44 +8528,55 @@ var fact = q.fact || q.solution || q.explanation || '';
                 + '</span>';
         }
         function _loadArchiveIntoState(cb) {
-            if (_archiveCache) {
-                var got = _archNextBatch();
-                for (var i = 0; i < got.length; i++) state.questions.push(got[i]);
-                _updateArchiveProgress();
-                cb();
-            } else {
-                loadArchiveQuestions(function(archiveQs) {
-                    if (archiveQs && archiveQs.length) {
-                        if (!_archiveCache) { _archiveCache = _applyShuffle(archiveQs); }
-                        var got2 = _archNextBatch();
-                        for (var j = 0; j < got2.length; j++) state.questions.push(got2[j]);
-                    }
-                    _updateArchiveProgress();
-                    cb();
-                });
-            }
-        }
-        function _topUpArchive() {
+            if (!_archiveCache) { _archiveCache = []; }
             var got = _archNextBatch();
             for (var i = 0; i < got.length; i++) state.questions.push(got[i]);
             _updateArchiveProgress();
+            if (got.length > 0 || _lazyFileCursor >= _lazyFiles.length) { cb(); return; }
+            // Lazy stream still buffering the first file — wait and fill next batch.
+            if (!_lazyLoading) _kickLazyLoader();
+            setTimeout(function() {
+                var g2 = _archNextBatch();
+                for (var j = 0; j < g2.length; j++) state.questions.push(g2[j]);
+                _updateArchiveProgress();
+                cb();
+            }, 400);
+        }
+        function _topUpArchive(cb) {
+            var got = _archNextBatch();
+            for (var i = 0; i < got.length; i++) state.questions.push(got[i]);
+            _updateArchiveProgress();
+            if (got.length > 0) { if (cb) cb(true); return true; }
+            // Empty because lazy streaming hasn't buffered the next file yet. Wait a
+            // moment and try once more before declaring nothing left.
+            if (_lazyFileCursor < _lazyFiles.length && !_lazyLoading) _kickLazyLoader();
+            if (_lazyFileCursor < _lazyFiles.length) {
+                if (cb) { setTimeout(function() { var g2 = _archNextBatch(); for (var j = 0; j < g2.length; j++) state.questions.push(g2[j]); _updateArchiveProgress(); cb(g2.length > 0); }, 300); }
+                return true; // optimistic: more files remain
+            }
+            if (cb) cb(false);
             return got.length > 0;
         }
-        function _topUpFeedFromArchive() {
-            if (!_archiveCache || _archiveCache.length === 0) {
-                if (typeof preloadArchive === 'function') preloadArchive();
+        function _topUpFeedFromArchive(cb) {
+            if (_archiveCache === null) {
+                if (typeof preloadArchive === 'function') { preloadArchive(); setTimeout(function(){ _topUpFeedFromArchive(cb); }, 400); }
+                else if (cb) cb(false);
                 return false;
             }
             var cat = state.cat || '';
             if (cat === 'feed') {
-                return (typeof _topUpArchive === 'function' && _topUpArchive());
+                return _topUpArchive(cb);
             }
+            // Subject / combo browse: scan the lazily buffered cache for matching
+            // subjects. If the matching pool proves empty while files remain, stream
+            // more before giving up.
             var subjSet = {};
             if (cat.indexOf('subject::') === 0) {
                 subjSet[state.categoryName || ''] = true;
             } else if (cat.indexOf('combo::') === 0) {
                 (cat.slice(7) || '').split('+').forEach(function(s) { subjSet[s] = true; });
             } else {
+                if (cb) cb(false);
                 return false;
             }
             var seen = {};
@@ -8465,7 +8593,13 @@ var fact = q.fact || q.solution || q.explanation || '';
                 seen[key] = true;
                 pool.push(aq);
             }
-            if (pool.length === 0) return false;
+            if (pool.length === 0 && _lazyFileCursor < _lazyFiles.length) {
+                if (!_lazyLoading) _kickLazyLoader();
+                var again = function() { _topUpFeedFromArchive(cb); };
+                if (cb) setTimeout(again, 400);
+                return false;
+            }
+            if (pool.length === 0) { if (cb) cb(false); return false; }
             shuffleArray(pool);
             var added = 0;
             while (pool.length > 0 && added < _archMaxBatch) {
@@ -8475,6 +8609,7 @@ var fact = q.fact || q.solution || q.explanation || '';
                 added++;
             }
             _updateArchiveProgress();
+            if (cb) cb(added > 0);
             return added > 0;
         }
         function resetArchiveCursor() { _archCursor = 0; _writeArchiveCursor(0); }
@@ -8530,14 +8665,16 @@ var fact = q.fact || q.solution || q.explanation || '';
             _archiveLoading = true;
             setArchiveStatus('loading');
             _updateArchiveProgress();
-            // Wait for auth to settle so a signed-in user's archive order is built
-            // from the deterministic account seed (not a random local one).
+            // Load only the lightweight index (true total ~6.1M + per-file counts),
+            // then stream question files on demand in the background. No more pulling
+            // the whole 3.3GB up front, which collapsed counts on mobile.
+            _archiveCache = [];
+            _ensureLazyFiles();
             var go = function() {
-                loadArchiveQuestions(function(qs) {
-                    if (_archiveCache) return;
-                    _archiveCache = _applyShuffle(qs);
+                loadArchiveIndex(function(index) {
                     _archiveLoading = false;
-                    setArchiveStatus('loaded');
+                    setArchiveStatus(index ? 'loaded' : 'ready');
+                    _ensureLazyFiles();       // sets _archTotal from index
                     _updateArchiveProgress();
                     renderHomeCatGrid();
                 });
@@ -8585,6 +8722,15 @@ var fact = q.fact || q.solution || q.explanation || '';
             var gen1 = GK_GENERATORS[id];
             var gen2 = GK_GEN2 && GK_GEN2[id];
             
+            // Deterministic per (category + account + day). Same account on any
+            // device generates the identical question set for this slot, so switching
+            // from phone to laptop shows the same questions and resume continues
+            // exactly where you left off. Fresh questions arrive on a new day.
+            var slotSeed = _hashStr('ca::' + id + '::' + (window.supabaseUser && window.supabaseUser.id ? window.supabaseUser.id : 'anon') + '::' + new Date().toISOString().slice(0, 10));
+            var slotRand = _mulberry32(slotSeed);
+            var _origRandom = Math.random;
+            Math.random = function() { return slotRand(); };
+            try {
             for (var i = 0; i < 8; i++) {
                 var q = null;
                 if (gen2 && Math.random() < 0.7) { try { q = gen2(); } catch(e) {} }
@@ -8596,6 +8742,7 @@ var fact = q.fact || q.solution || q.explanation || '';
                     state.questions.push(q);
                 }
             }
+            } finally { Math.random = _origRandom; }
             if (state.questions.length === 0) return;
             document.getElementById('welcome').style.display = 'none';
             document.getElementById('qArea').classList.add('active');
