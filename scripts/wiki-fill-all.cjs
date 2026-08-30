@@ -2848,22 +2848,28 @@ async function main() {
     const cat = item.cat;
     const allTopics = item.topics;
     log('\n=== ' + cat.name + ' (' + allTopics.length + ' topics) ===');
-    const articles = await fetchAllTopics(allTopics, CONCURRENCY);
 
+    // Fetch and mine IN BATCHES instead of fetch-everything-then-mine. Phase-1
+    // `fetchAllTopics` over a huge pooled topic list (budgets were raised to
+    // 200000/cat) spends its whole ~330-min window at ~2.5s delay per article
+    // (concurrency 5), so by the time it returns the per-article mining loop
+    // below immediately hits its own TIME_BUDGET break and yields 0 questions.
+    // Interleaving a small batch guarantees mining always runs as articles
+    // arrive, so questions are produced continuously regardless of the pool size.
     let added = 0;
-    for (const article of articles) {
-
-      // Wall-clock budget check inside the per-article sweep as well: a chunk
-      // fed a huge single category can otherwise chew through "already covered"
-      // articles well past TIME_BUDGET_MS and hit the runner's hard timeout
-      // mid-category (run #434: 10 chunks killed at the 360-min limit, shutting
-      // down merge+finalize and discarding 17 successful chunks' data).
+    let fetchedThisCat = [];
+    const BATCH = 120;
+    for (let i = 0; i < allTopics.length; i += BATCH) {
       if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) {
         log('  (stopping: time budget reached, ' + Math.round((Date.now() - RUN_START) / 60000) + 'min elapsed)');
         break;
       }
-
-      const ext = article.extract;
+      const slice = allTopics.slice(i, i + BATCH);
+      const articles = await fetchAllTopics(slice, CONCURRENCY);
+      for (const a of articles) fetchedThisCat.push(a);
+      for (const article of articles) {
+        if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) break;
+        const ext = article.extract;
       const title = article.title;
       const desc = article.description;
 
@@ -3050,10 +3056,11 @@ async function main() {
         if (wasCovered) log('  (fully covered: ' + title + ')');
         else log('  (barren, no questions: ' + title + ')');
       }
+      }
     }
 
     // ── Follow internal links recursively until exhausted (budgeted) ──
-    let prevFetched = articles;
+    let prevFetched = fetchedThisCat;
     let depth = 0;
     const MAX_LINK_FETCHES = parseInt(process.env.WIKI_FILL_LINK_BUDGET || '200000', 10);
     let linkFetched = 0;
@@ -3077,9 +3084,20 @@ async function main() {
       }
       if (linkCandidates.length === 0) break;
       log('  Link depth ' + depth + ': ' + linkCandidates.length + ' new topics...');
-      prevFetched = await fetchAllTopics(linkCandidates.slice(0, MAX_LINK_FETCHES - linkFetched), 2, t => coveredTitles.has(norm(t)));
-      linkFetched += prevFetched.length;
-      for (const article of prevFetched) {
+      // Fetch+mine link pages in small slices so a huge candidate pool (link
+      // budget was raised to 200000) cannot burn the whole discovery window in
+      // one fetchAllTopics call before any mining happens — same starvation
+      // pattern as the main loop above. Slice results are accumulated into
+      // prevFetched so the next depth's link discovery still sees every page.
+      const linkSliceTotal = Math.min(linkCandidates.length, MAX_LINK_FETCHES - linkFetched);
+      const LINK_BATCH = 120;
+      prevFetched = [];
+      for (let li = 0; li < linkSliceTotal; li += LINK_BATCH) {
+        const linkSlice = linkCandidates.slice(li, li + LINK_BATCH);
+        const fetched = await fetchAllTopics(linkSlice, 2, t => coveredTitles.has(norm(t)));
+        for (const a of fetched) prevFetched.push(a);
+        linkFetched += fetched.length;
+        for (const article of fetched) {
         const ext = article.extract, title = article.title, desc = article.description;
         if (isListPage(ext)) continue;
         // Link traversal is for discovering NEW content only; continuation of
@@ -3158,6 +3176,7 @@ async function main() {
           if (!linkedThisRun[cat.name]) linkedThisRun[cat.name] = [];
           linkedThisRun[cat.name].push(title);
         }
+      }
       }
     }
     if (depth > 0) log('  Link traversal finished at depth ' + depth);
