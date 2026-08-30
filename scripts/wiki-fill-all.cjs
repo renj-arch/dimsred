@@ -2687,6 +2687,9 @@ async function main() {
 
   let totalAdded = 0;
   const doneThisRun = new Set();
+  // Cursor advances made this run, persisted to quiz questions as wikiMinedTo
+  // for the next run (so revisits keep resuming past already-mined sentences).
+  const cursorThisRun = new Map(); // norm(title) -> sentences consumed
 
   // Periodic progress beacon so a running chunk shows live QN-per-minute
   // throughput in the Actions log (not just the per-category end line).
@@ -2746,12 +2749,21 @@ async function main() {
   const coveredTitles = new Set();
   const doneTitles = new Set();
   const qCount = new Map();
+  // Persisted per-article mining cursor: number of sentences already consumed
+  // for each covered title. Deterministic generation re-produces the same
+  // questions from the same sentences, and pushQ() rejects those as duplicates,
+  // so without a cursor a revisited article re-mints its first N sentences and
+  // yields 0 new (stalling partial articles after their first pass). The cursor
+  // lets the revisit resume PAST the already-mined sentences each run.
+  const minedCursor = new Map(); // norm(title) -> count of sentences consumed
   for (const q of quiz.questions) {
     if (q.source !== 'Wiki' || !q.subSubject) continue;
     const k = norm(q.subSubject);
     coveredTitles.add(k);
     qCount.set(k, (qCount.get(k) || 0) + 1);
     if (q.wikiDone) doneTitles.add(k);
+    const v = q.wikiMinedTo || 0;
+    if (v > (minedCursor.get(k) || 0)) minedCursor.set(k, v);
   }
   const topicBudget = parseInt(process.env.WIKI_FILL_TOPIC_BUDGET || '200000', 10);
   const revisitBudget = parseInt(process.env.WIKI_FILL_REVISIT_BUDGET || '200000', 10);
@@ -2963,7 +2975,17 @@ async function main() {
         }
       }
 
-      for (let si = 0; si < sentences.length && articleQ < MAX_PER_ARTICLE; si++) {
+      // Resume the blank-out sweep from the persisted cursor (how many sentences
+      // were consumed in prior runs) so a revisited article continues past its
+      // already-mined front instead of re-minting the same sentences. The fact
+      // extractors above are deterministic + pushQ-deduped, so leaving them to
+      // scan all sentences is harmless (0 new) — only the volume-driving loop
+      // needs the cursor. Track the highest sentence index reached so the cursor
+      // can be advanced and persisted for the next run.
+      const startSent = Math.min(minedCursor.get(norm(title)) || 0, sentences.length);
+      let siReached = startSent;
+      for (let si = startSent; si < sentences.length && articleQ < MAX_PER_ARTICLE; si++) {
+        siReached = si + 1;
         const sent = sentences[si];
         const sentKey = title + '::' + si;
         let sentUsed = factAccepted.has(si);
@@ -3043,16 +3065,22 @@ async function main() {
         }
       }
 
-      // Article produced nothing new this run — every usable sentence has been
-      // consumed (partial revisit) OR the article has no extractable question
-      // material at all (fresh but barren, e.g. stubs/short pages). Generation is
-      // deterministic from the same extract, so re-fetching a barren article
-      // would only waste budget. Mark it done so it is not re-fetched again
-      // (flags are written to quiz.json at the end). Previously only covered
-      // articles got this marker; fresh barren pages were re-fetched endlessly.
+      // Advance the persisted per-article cursor to the highest sentence consumed
+      // this run. This is what lets the NEXT run resume past the sentences just
+      // scanned, so a partial article is finished over successive runs instead of
+      // re-minting its mined front (which pushQ() would reject as duplicates).
+      const titleKey = norm(title);
+      const cursor = Math.max(minedCursor.get(titleKey) || 0, siReached);
+      minedCursor.set(titleKey, cursor);
+      cursorThisRun.set(titleKey, cursor);
+
+      // Article produced nothing new this run — its remaining sentences (from the
+      // cursor onward) yielded no extractable question material. Because the loop
+      // resumes at the cursor, articleAdded===0 here genuinely means this article
+      // is exhausted (or barren), so mark it done and stop re-fetching it.
       if (articleAdded === 0) {
-        doneTitles.add(norm(title));
-        doneThisRun.add(norm(title));
+        doneTitles.add(titleKey);
+        doneThisRun.add(titleKey);
         if (wasCovered) log('  (fully covered: ' + title + ')');
         else log('  (barren, no questions: ' + title + ')');
       }
@@ -3171,10 +3199,19 @@ async function main() {
         }
         // Persist this linked page into the pool: it produced questions but the
         // link pass only touched up to LINK_PER_ARTICLE sentences, so the rest
-        // should be mined by the main revisit pool in a future run.
+        // should be mined by the main revisit pool in a future run. Record the
+        // mined-sentence cursor so the revisit loop resumes PAST these sentences
+        // instead of re-minting them (dedup -> 0 new), which previously stranded
+        // every linked page at sentence ~200 forever.
         if (added > addedBeforeLink) {
           if (!linkedThisRun[cat.name]) linkedThisRun[cat.name] = [];
           linkedThisRun[cat.name].push(title);
+          const linkCursor = Math.min(LINK_PER_ARTICLE, sentences.length);
+          const titleKey = norm(title);
+          if (linkCursor > (minedCursor.get(titleKey) || 0)) {
+            minedCursor.set(titleKey, linkCursor);
+            cursorThisRun.set(titleKey, linkCursor);
+          }
         }
       }
       }
@@ -3218,6 +3255,21 @@ async function main() {
       if (q.source === 'Wiki' && q.subSubject && doneThisRun.has(norm(q.subSubject))) q.wikiDone = true;
     }
     log('Marked ' + doneThisRun.size + ' articles fully covered (wikiDone)');
+  }
+
+  // Persist per-article sentence-progress cursors so the next run's revisit
+  // loop resumes past already-mined sentences (instead of re-minting the same
+  // ones into the dedup sink, which yields 0 new each run). Without this the
+  // 146k linked-page frontier was stuck at sentence ~200 forever.
+  if (cursorThisRun.size) {
+    let updated = 0;
+    for (const q of quiz.questions) {
+      if (q.source !== 'Wiki' || !q.subSubject) continue;
+      const k = norm(q.subSubject);
+      const c = cursorThisRun.get(k);
+      if (c != null && (!q.wikiMinedTo || c > q.wikiMinedTo)) { q.wikiMinedTo = c; updated++; }
+    }
+    log('Persisted mining cursor for ' + updated + ' questions (' + cursorThisRun.size + ' articles)');
   }
 
   const poolMerged = {};
