@@ -5901,7 +5901,18 @@ var _staticGen_polity = GK_GENERATORS.polity;
             if (typeof preloadArchive === 'function') {
                 preloadArchive();
             } else {
-                setTimeout(function(){ if (typeof preloadArchive === 'function') preloadArchive(); }, 0);
+                // preloadArchive lives in a later <script> block that may not have
+                // parsed yet (downstream blocking scripts can be slow). Poll until it
+                // exists instead of trying once and silently missing the archive init.
+                var _paTries = 0;
+                var _paTimer = setInterval(function() {
+                    if (typeof preloadArchive === 'function') {
+                        clearInterval(_paTimer);
+                        preloadArchive();
+                    } else if (++_paTries > 200) {
+                        clearInterval(_paTimer);
+                    }
+                }, 50);
             }
             if (typeof initHomeCatGrid === 'function') {
                 initHomeCatGrid();
@@ -8690,17 +8701,28 @@ var fact = q.fact || q.solution || q.explanation || '';
             // the whole 3.3GB up front, which collapsed counts on mobile.
             _archiveCache = [];
             _ensureLazyFiles();
+            var finished = false;
             var go = function() {
+                if (finished) return;
+                finished = true;
                 loadArchiveIndex(function(index) {
                     _archiveLoading = false;
                     setArchiveStatus(index ? 'loaded' : 'ready');
                     _ensureLazyFiles();       // sets _archTotal from index
                     _updateArchiveProgress();
                     renderHomeCatGrid();
+                    if (!index) {
+                        // Transient failure: reset so a later call retries the whole
+                        // flow instead of leaving the archive stuck on "not loaded".
+                        _archiveCache = null;
+                        setTimeout(preloadArchive, 6000);
+                    }
                 });
             };
             if (typeof ensureSessionsReady === 'function' && typeof window.supabaseReady !== 'undefined') {
                 ensureSessionsReady().then(go);
+                // Don't let a wedged auth handshake stall the archive forever.
+                setTimeout(go, 4000);
             } else go();
         }
         function setArchiveStatus(s) {
