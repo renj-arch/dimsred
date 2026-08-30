@@ -1,7 +1,12 @@
 // Builds data/questions/archive-index.json
-// Contains the true total question count (6.1M) plus per-file metadata so the
+// Contains the true total question count (6.1M) plus per-file counts so the
 // browser can (a) show the correct archive total instantly and (b) load files
 // lazily/on-demand instead of pulling all 3.3GB up front.
+//
+// Only {file,count} are emitted: the archive quiz needs nothing else, and the
+// heavier per-file subject/subtopic maps inflated the index to ~5MB — which can
+// blow past the browser's XHR timeout on slow mobile and leave the archive
+// showing "not loaded". Keeping it tiny makes it load in milliseconds.
 //
 // Usage: node scripts/build-archive-index.mjs
 import fs from 'fs';
@@ -13,46 +18,29 @@ const MSG = {};
 
 let total = 0;
 const files = [];
-const seenSubjects = {};
 
 for (const f of fs.readdirSync(DIR)) {
   if (!f.endsWith('.json')) continue;
   if (f === 'manifest.json' || f === 'archive-index.json') continue;
   const p = path.join(DIR, f);
   let count = 0;
-  const subjects = {};
-  const subtopics = {};
   try {
     const data = JSON.parse(fs.readFileSync(p, 'utf8'));
     for (const sk in data) {
       const ss = data[sk];
       if (!ss || typeof ss !== 'object') continue;
-      if (ss.subSubjects && typeof ss.subSubjects === 'object') {
-        const arr = Array.isArray(ss.subSubjects) ? ss.subSubjects : Object.entries(ss.subSubjects);
-        const keys = Array.isArray(ss.subSubjects) ? null : Object.keys(ss.subSubjects);
-        if (Array.isArray(ss.subSubjects)) {
-          // shouldn't happen: subSubjects is an object map
-          subjects[sk] = 0;
-        } else {
-          let subCount = 0;
-          const subList = [];
-          for (const st in ss.subSubjects) {
-            const qs = ss.subSubjects[st];
-            if (!Array.isArray(qs)) continue;
-            subCount += qs.length;
-            subList.push(st);
-          }
-          subjects[sk] = subCount;
-          subtopics[sk] = subList;
-          count += subCount;
-          seenSubjects[sk] = true;
+      if (ss.subSubjects && typeof ss.subSubjects === 'object' && !Array.isArray(ss.subSubjects)) {
+        for (const st in ss.subSubjects) {
+          const qs = ss.subSubjects[st];
+          if (!Array.isArray(qs)) continue;
+          count += qs.length;
         }
       }
     }
   } catch (e) {
     MSG[f] = 'parse-error';
   }
-  files.push({ file: f, count, subjects, subtopics });
+  files.push({ file: f, count });
   total += count;
 }
 

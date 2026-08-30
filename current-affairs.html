@@ -8390,21 +8390,41 @@ var fact = q.fact || q.solution || q.explanation || '';
             if (_archIndexLoading) { if (cb) _archIndexWaiters.push(cb); return; }
             _archIndexLoading = true;
             _archIndexWaiters = [];
-            var xhr = new XMLHttpRequest();
-            xhr.timeout = 60000;
-            xhr.onload = function() {
-                _archIndexLoading = false;
-                var ok = false;
-                try { _archiveIndex = JSON.parse(xhr.responseText); ok = !!_archiveIndex; } catch(e) { _archiveIndex = null; }
-                _kickLazyLoader();
-                var ws = _archIndexWaiters; _archIndexWaiters = [];
-                if (cb) cb(_archiveIndex);
-                for (var i = 0; i < ws.length; i++) ws[i](_archiveIndex);
+            var attempt = 0;
+            var tryFetch = function() {
+                var xhr = new XMLHttpRequest();
+                xhr.timeout = 30000;
+                xhr.onload = function() {
+                    _archIndexLoading = false;
+                    var ok = false;
+                    try { _archiveIndex = JSON.parse(xhr.responseText); ok = !!_archiveIndex; } catch(e) { _archiveIndex = null; }
+                    if (!ok && attempt < 2) { // retry on parse failure before giving up
+                        attempt++;
+                        tryFetch();
+                        return;
+                    }
+                    _kickLazyLoader();
+                    var ws = _archIndexWaiters; _archIndexWaiters = [];
+                    if (cb) cb(_archiveIndex);
+                    for (var i = 0; i < ws.length; i++) ws[i](_archiveIndex);
+                };
+                var fail = function() {
+                    if (attempt < 2) { // transient network / timeout — retry
+                        attempt++;
+                        setTimeout(tryFetch, 300 * attempt);
+                        return;
+                    }
+                    _archIndexLoading = false;
+                    _archiveIndex = null;
+                    _archIndexWaiters = [];
+                    if (cb) cb(null);
+                };
+                xhr.onerror = fail;
+                xhr.ontimeout = fail;
+                xhr.open('GET', 'data/questions/archive-index.json?t=' + Date.now(), true);
+                xhr.send();
             };
-            xhr.onerror = function() { _archIndexLoading = false; _archiveIndex = null; _archIndexWaiters = []; if (cb) cb(null); };
-            xhr.ontimeout = xhr.onerror;
-            xhr.open('GET', 'data/questions/archive-index.json?t=' + Date.now(), true);
-            xhr.send();
+            tryFetch();
         }
         // Deterministic per-account order of files to stream. Shuffling at the FILE
         // level (476 files) with the account seed keeps the ordering identical on
