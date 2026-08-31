@@ -213,7 +213,7 @@
             <!-- 🔢 QUANT REFLEX CATEGORY -->
             <div class="category-card" onclick="toggleCategory('quant')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s">
                 <span style="font-size:1.4em">🔢</span>
-                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Quant Reflex</div><div style="font-size:.72em;color:var(--text-muted)">30 topics — Number Sense, Algebra, Geometry, CI, DI, P&L, Stocks & more</div></div>
+                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Quant Reflex</div><div style="font-size:.72em;color:var(--text-muted)">35 topics — Number Sense, Algebra, Geometry, CI, DI, P&L, Stocks & more</div></div>
                 <span class="cat-arrow" id="catArrowQuant" style="color:var(--text-muted);font-size:.8em">▶</span>
                 <div class="stat" id="stat-quant" style="font-size:.7em;color:var(--purple);white-space:nowrap">0 solved</div>
             </div>
@@ -222,7 +222,7 @@
             <!-- 🧠 REASONING REFLEX CATEGORY -->
             <div class="category-card" onclick="toggleCategory('reasoning')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s;margin-top:6px">
                 <span style="font-size:1.4em">🧠</span>
-                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Reasoning Reflex</div><div style="font-size:.72em;color:var(--text-muted)">48 topics — Puzzles, Coding, Syllogism, Clock, Cal, Direction, Non-Verbal & more</div></div>
+                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Reasoning Reflex</div><div style="font-size:.72em;color:var(--text-muted)">50 topics — Puzzles, Coding, Syllogism, Clock, Cal, Direction, Non-Verbal & more</div></div>
                 <span class="cat-arrow" id="catArrowReasoning" style="color:var(--text-muted);font-size:.8em">▶</span>
                 <div class="stat" id="stat-reasoning" style="font-size:.7em;color:var(--purple);white-space:nowrap">0 solved</div>
             </div>
@@ -231,7 +231,7 @@
             <!-- 📖 VERBAL ABILITY CATEGORY -->
             <div class="category-card" onclick="toggleCategory('verbal')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s;margin-top:6px">
                 <span style="font-size:1.4em">📖</span>
-                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Verbal Ability</div><div style="font-size:.72em;color:var(--text-muted)">16 topics — Synonyms, Antonyms, Grammar, Voice, Comprehension & more</div></div>
+                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Verbal Ability</div><div style="font-size:.72em;color:var(--text-muted)">24 topics — Synonyms, Antonyms, Grammar, Voice, Comprehension & more</div></div>
                 <span class="cat-arrow" id="catArrowVerbal" style="color:var(--text-muted);font-size:.8em">▶</span>
                 <div class="stat" id="stat-verbal" style="font-size:.7em;color:var(--purple);white-space:nowrap">0 solved</div>
             </div>
@@ -377,7 +377,8 @@
         { key:'quantity_comparison', icon:'⚖️', name:'Quantity Comparison', desc:'Compare Quantity I vs Quantity II' },
         { key:'decimal_fraction', icon:'#️⃣', name:'Decimal Fraction', desc:'Fraction↔Decimal, Comparison' },
         { key:'chain_rule', icon:'⛓️', name:'Chain Rule', desc:'Direct/Inverse Proportion, Men-Days-Work' },
-        { key:'logarithm', icon:'📊', name:'Logarithm', desc:'Log Properties, Simplification' }
+        { key:'logarithm', icon:'📊', name:'Logarithm', desc:'Log Properties, Simplification' },
+        { key:'instalments', icon:'💳', name:'Instalments', desc:'Equal payments, Loan Repayment (SI)' }
     ];
     var REASONING_TOPICS = [
         { key:'pattern_flash', icon:'🔢', name:'Pattern Flash', desc:'Number/Letter Series, Odd One Out' },
@@ -427,7 +428,9 @@
         { key:'verification_truth', icon:'🔎', name:'Verification of Truth', desc:'Truth-teller/liar puzzles' },
         { key:'analytical_reasoning', icon:'📐', name:'Analytical Reasoning', desc:'Count triangles/squares in figures' },
         { key:'pattern_completion', icon:'🔄', name:'Pattern Completion', desc:'Complete the missing element' },
-        { key:'shape_construction', icon:'⬜', name:'Shape Construction', desc:'Which pieces form the shape?' }
+        { key:'shape_construction', icon:'⬜', name:'Shape Construction', desc:'Which pieces form the shape?' },
+        { key:'verbal_analogy', icon:'🔤', name:'Verbal Analogy', desc:'Word analogies — A:B :: C:?' },
+        { key:'number_coding', icon:'🔢', name:'Number Coding', desc:'Letter → number position codes' }
     ];
 
     var VERBAL_TOPICS = [
@@ -449,7 +452,12 @@
         { key:'comprehension', icon:'📖', name:'Comprehension', desc:'Read passage, answer questions' },
         { key:'sentence_connectors', icon:'🔗', name:'Sentence Connectors', desc:'Choose connector: because, although, however' },
         { key:'double_fillers', icon:'✍️', name:'Double Fillers', desc:'Two blanks — pick the correct word pair' },
-        { key:'paragraph_completion', icon:'📄', name:'Paragraph Completion', desc:'Choose the best concluding sentence' }
+        { key:'paragraph_completion', icon:'📄', name:'Paragraph Completion', desc:'Choose the best concluding sentence' },
+        { key:'tenses', icon:'🕒', name:'Tenses', desc:'Present, Past, Future — verb forms' },
+        { key:'prepositions', icon:'📍', name:'Prepositions', desc:'in, on, at, since, for, among & more' },
+        { key:'articles', icon:'🔤', name:'Articles', desc:'a, an, the, no article' },
+        { key:'confusing_words', icon:'🤔', name:'Confusing Words', desc:'affect/effect, advice/advise & more' },
+        { key:'homophones', icon:'👂', name:'Homophones', desc:'Sound-alike words with different meanings' }
     ];
 
     // ====== CATEGORY TOGGLE ======
@@ -979,7 +987,7 @@
         grid.innerHTML = '';
         // Show Quant topics first
         grid.innerHTML += '<div style="font-size:.9em;font-weight:700;margin:8px 0 4px;color:var(--cyan)">🔢 Quant Reflex</div>';
-        var quantTopics = ['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','partnership','compound_interest','discount','races','data_interpretation','caselet_di','trigonometry'];
+        var quantTopics = ['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','partnership','compound_interest','discount','races','data_interpretation','caselet_di','trigonometry','instalments'];
         quantTopics.forEach(function(t){
             var label = t.replace(/_/g,' ');
             var drill = window.TECHNIQUE_DRILLS[t] || { line1:'—', line2:'' };
@@ -992,7 +1000,7 @@
         });
         // Show Verbal Ability topics
         grid.innerHTML += '<div style="font-size:.9em;font-weight:700;margin:10px 0 4px;color:var(--emerald)">📖 Verbal Ability</div>';
-        var verbalTopics = ['synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','spotting_errors','spellings','sentence_correction','sentence_improvement','closet_test','one_word_subs','idioms_phrases','change_voice','change_speech'];
+        var verbalTopics = ['synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','spotting_errors','spellings','sentence_correction','sentence_improvement','closet_test','one_word_subs','idioms_phrases','change_voice','change_speech','tenses','prepositions','articles','confusing_words','homophones'];
         verbalTopics.forEach(function(t){
             var label = t.replace(/_/g,' ');
             var drill = window.TECHNIQUE_DRILLS[t] || { line1:'—', line2:'' };
@@ -1005,7 +1013,7 @@
         });
         // Show Reasoning topics
         grid.innerHTML += '<div style="font-size:.9em;font-weight:700;margin:10px 0 4px;color:var(--violet)">🧠 Reasoning Reflex</div>';
-        var reasTopics = ['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','box_distribution','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram'];
+        var reasTopics = ['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','box_distribution','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram','verbal_analogy','number_coding'];
         reasTopics.forEach(function(t){
             var label = t.replace(/_/g,' ');
             var drill = window.TECHNIQUE_DRILLS[t] || { line1:'—', line2:'' };

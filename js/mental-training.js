@@ -298,6 +298,9 @@ var SPEED_TECHNIQUES = {
   'analytical_reasoning': 'Count systematically: smallest first, then larger. For squares: sum n² from 1 to N.',
   'pattern_completion': 'Pattern repeats in a cycle. Check what element is missing from the cycle.',
   'shape_construction': 'Two identical right triangles form a square. Area scales by square of side ratio.',
+  'verbal_analogy': 'Find the EXACT relation in the first pair (function→place, part→whole, product→maker, cause→effect). Apply the same relation to the second pair.',
+  'number_coding': 'A=1, B=2, ... Z=26. Convert each letter to its position number in order. Reverse/pattern if it shrinks.',
+  'instalments': 'Total = Principal + Simple Interest. Equal instalments = Total ÷ number of instalments.',
   'spotting_errors': 'Check: subject-verb agreement, tense, prepositions, word form, singular/plural.',
   'spellings': 'Double consonants (accommodation). -ance (maintenance). -ible vs -able. i before e except after c.',
   'sentence_correction': 'Subject-verb agreement. Tense consistency. Each=singular. Since+point, For+duration.',
@@ -306,7 +309,12 @@ var SPEED_TECHNIQUES = {
   'one_word_subs': 'Think of the specific single-word term. Latin/Greek roots help.',
   'idioms_phrases': 'Idioms have figurative meanings. Cannot be understood literally.',
   'change_voice': 'Active→Passive: object→subject, be+past participle, subject→by+agent.',
-  'change_speech': 'Remove quotes. Present→past. will→would. today→that day. Commands→to+verb.'
+  'change_speech': 'Remove quotes. Present→past. will→would. today→that day. Commands→to+verb.',
+  'tenses': 'Match the TIME MARKER: every day=simple present, since/for=present perfect (continuous), when/before past=past perfect, by+future=future perfect, look/now=present continuous.',
+  'prepositions': 'Fixed collocations: good at, interested in, afraid of, fond of. at=point/time, in=enclosed/month, on=surface/day, since=point, for=duration, between=two, among=three+.',
+  'articles': 'a/an=first mention & non-specific (an hour, a university by SOUND). the=unique, superlative, specified. no article=general/uncountable.',
+  'confusing_words': 'Learn each pair: affect(verb)/effect(noun), advise(verb)/advice(noun), lend(give)/borrow(take). Pick the word matching the sentence meaning.',
+  'homophones': 'Same sound, different meaning/spelling. Use sentence context to pick the right one.'
 };
 
 var TECHNIQUE_DRILLS = {
@@ -361,7 +369,33 @@ var TECHNIQUE_DRILLS = {
   'alphabet_arrange': { line1: 'Letter pattern / order', line2: '2s — A=1 to Z=26. Check diff between consecutive letters.' },
   'critical_reasoning': { line1: 'Assumption / course of action', line2: '3s — MUST be true for statement. Action solves problem. Cause precedes effect.' },
   'decision_making': { line1: 'Condition checking', line2: '2s — Check each condition. AND=all pass. OR=any pass. Insufficient=?.' },
-  'venn_diagram': { line1: 'Set theory / surveys', line2: '3s — Only A=A-both. Neither=total-(A+B-both). Draw overlapping circles.' }
+  'venn_diagram': { line1: 'Set theory / surveys', line2: '3s — Only A=A-both. Neither=total-(A+B-both). Draw overlapping circles.' },
+  'verbal_analogy': { line1: 'Pair relation match', line2: '3s — Find the exact relation (function→place, part→whole). Apply the same to the second pair.' },
+  'number_coding': { line1: 'Letter→number', line2: '3s — A=1 to Z=26. Write each letter\'s position in order.' },
+  'instalments': { line1: 'Equal payments', line2: '4s — Total = P + SI. Each instalment = Total ÷ number of instalments.' },
+  // Verbal drills
+  'sentence_completion': { line1: 'Context clue fill', line2: '3s — Read whole sentence. Word must fit meaning AND grammar. Eliminate illogical options.' },
+  'word_ordering': { line1: 'S-V-O order', line2: '2s — Subject → verb → object. Time/place at end. Question words start.' },
+  'sentence_ordering': { line1: 'Chronological order', line2: '3s — Start with what happened first; link ideas with pronouns/connectors.' },
+  'paragraph_formation': { line1: 'Main-idea ordering', line2: '3s — Topic sentence first, then support, then conclusion.' },
+  'comprehension': { line1: 'Direct-answer reading', line2: '5s — Find the exact sentence in the passage. The answer is stated.' },
+  'spotting_errors': { line1: 'Grammar check', line2: '3s — Verb agreement, tense, preposition, word form, singular/plural.' },
+  'spellings': { line1: 'Spelling rules', line2: '2s — Double consonants, -ance/-ence, -ible/-able, i before e except after c.' },
+  'sentence_correction': { line1: 'Fix the grammar', line2: '3s — Agreement, tense, each=singular, since+point/for+duration.' },
+  'sentence_improvement': { line1: 'Improve phrasing', line2: '3s — too...to, so...that, prefer A to B, no sooner...than.' },
+  'closet_test': { line1: 'Passage fill', line2: '4s — Read whole passage. Missing word fits context and grammar.' },
+  'one_word_subs': { line1: 'Phrase→word', line2: '3s — Find the exact single term for the phrase.' },
+  'idioms_phrases': { line1: 'Figurative meaning', line2: '3s — Idioms are not literal. Learn common meanings.' },
+  'change_voice': { line1: 'Active↔Passive', line2: '3s — object→subject, be+past participle, agent→by+subject.' },
+  'change_speech': { line1: 'Direct↔Indirect', line2: '4s — Remove quotes, shift tense, will→would, today→that day.' },
+  'sentence_connectors': { line1: 'Relationship connector', line2: '3s — Contrast=but/yet, cause=so/therefore, condition=if/unless, addition=and/moreover, choice=or.' },
+  'double_fillers': { line1: 'Two-blank context', line2: '3s — Both blanks must fit meaning AND grammar together.' },
+  'paragraph_completion': { line1: 'Concluding sentence', line2: '4s — Must follow logically: summarize/draw conclusion/suggest action.' },
+  'tenses': { line1: 'Time marker → tense', line2: '3s — every day=simple present, since/for=perfect, when+before past=past perfect, by+future=future perfect.' },
+  'prepositions': { line1: 'Collocations & place', line2: '3s — at=point, in=enclosed/month, on=surface/day, since=point, for=duration.' },
+  'articles': { line1: 'a/an/the by sound', line2: '2s — an hour, a university. the=unique/superlative. no article=general.' },
+  'confusing_words': { line1: 'Pair meanings', line2: '3s — affect/effect, advise/advice, lend/borrow. Fit meaning to sentence.' },
+  'homophones': { line1: 'Sound-alike meaning', line2: '2s — Use context to pick the right spelling/meaning.' }
 };
 
 window.SPEED_TECHNIQUES = SPEED_TECHNIQUES;
@@ -7412,10 +7446,11 @@ function generateQuantQuestion(diff, subMode) {
     quantity_comparison: generateQuantityComparisonQuestion,
     caselet_di: generateCaseletDIQuestion,
     trigonometry: generateTrigonometryQuestion,
-    meta: generateMetaQuestion
+    meta: generateMetaQuestion,
+    instalments: generateInstalmentsQuestion
   };
   // If no subMode, pick random quant topic
-  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','quadratic_comparison','partnership','simple_interest','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out','height_distance','decimal_fraction','chain_rule','logarithm','number_series','quantity_comparison','caselet_di','trigonometry','meta','meta','meta']);
+  var topic = subMode || pick(['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','quadratic_comparison','partnership','simple_interest','compound_interest','discount','races','data_interpretation','profit_loss','pipes_cisterns','boats_streams','alligation','surds_indices','bankers_discount','stocks_shares','odd_man_out','height_distance','decimal_fraction','chain_rule','logarithm','number_series','quantity_comparison','caselet_di','trigonometry','instalments','meta','meta','meta']);
   var gen = genMap[topic];
   if (gen) {
     var q, attempts = 0;
@@ -7485,8 +7520,10 @@ function generateReasoningQuestion(diff, subMode) {
     analytical_reasoning: generateAnalyticalReasoningQuestion,
     pattern_completion: generatePatternCompletionQuestion,
     shape_construction: generateShapeConstructionQuestion,
+    verbal_analogy: generateVerbalAnalogyQuestion,
+    number_coding: generateNumberCodingQuestion,
   };
-  var topic = subMode || pick(['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram','letter_symbol_series','artificial_language','matching_definitions','cause_effect','essential_part','theme_detection','statement_argument','statement_assumption','statement_conclusion','embedded_images','figure_matrix','paper_folding','paper_cutting','rule_detection','grouping_images','image_analysis','water_images','dot_situation','making_judgments','logical_problems','logical_games','analyzing_arguments','logical_deduction','character_puzzles','verification_truth','analytical_reasoning','pattern_completion','shape_construction']);
+  var topic = subMode || pick(['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram','letter_symbol_series','artificial_language','matching_definitions','cause_effect','essential_part','theme_detection','statement_argument','statement_assumption','statement_conclusion','embedded_images','figure_matrix','paper_folding','paper_cutting','rule_detection','grouping_images','image_analysis','water_images','dot_situation','making_judgments','logical_problems','logical_games','analyzing_arguments','logical_deduction','character_puzzles','verification_truth','analytical_reasoning','pattern_completion','shape_construction','verbal_analogy','number_coding']);
   var gen = genMap[topic];
   if (gen) {
     var result, attempts = 0;
@@ -7690,6 +7727,300 @@ function generateParagraphCompletionQuestion(diff) {
   };
 }
 
+function generateTensesQuestion(diff) {
+  var items = [
+    { s:'She ___ to the market every Sunday.', a:'goes', opts:['goes','went','gone','going'], hint:'Every Sunday = habitual present → simple present' },
+    { s:'They ___ dinner when I arrived.', a:'were having', opts:['were having','are having','have had','had'], hint:'An interrupted action in the past = past continuous' },
+    { s:'I ___ this book twice already.', a:'have read', opts:['have read','read','will read','am reading'], hint:'"Already" + completed action relevant now = present perfect' },
+    { s:'The train ___ before we reached the station.', a:'had left', opts:['had left','left','has left','leaves'], hint:'Earlier of two past actions = past perfect' },
+    { s:'Look! It ___ outside.', a:'is raining', opts:['is raining','rains','rained','has rained'], hint:'"Look!" = action happening now + ongoing = present continuous' },
+    { s:'We ___ the project by next Friday.', a:'will have completed', opts:['will have completed','complete','completed','are completing'], hint:'Completed before a future time = future perfect' },
+    { s:'He ___ for the exam since morning.', a:'has been studying', opts:['has been studying','studies','studied','is studying'], hint:'Ongoing action started in past, still continuing = present perfect continuous' },
+    { s:'When I was a child, I ___ to the park every day.', a:'went', opts:['went','go','have gone','am going'], hint:'Routine in past = simple past' },
+    { s:'The sun ___ in the east.', a:'rises', opts:['rises','rose','is rising','has risen'], hint:'Universal truth = simple present' },
+    { s:'She ___ her homework before going out to play.', a:'finished', opts:['finished','finishes','will finish','is finishing'], hint:'Completed action before another past action = simple past' },
+    { s:'By the time you arrive, I ___ the work.', a:'will have done', opts:['will have done','do','did','am doing'], hint:'Action completed by a future time = future perfect' },
+    { s:'Ravi ___ to Delhi last month.', a:'went', opts:['went','has gone','goes','is going'], hint:'Specific past time (last month) = simple past' },
+    { s:'It ___ heavily since yesterday.', a:'has been raining', opts:['has been raining','rains','rained','is raining'], hint:'Ongoing since past point = present perfect continuous' },
+    { s:'I ___ him at the party tonight.', a:'will meet', opts:['will meet','met','have met','meet'], hint:'Future reference (tonight) = simple future' },
+    { s:'She ___ a letter when the phone rang.', a:'was writing', opts:['was writing','writes','has written','is writing'], hint:'Interrupted past action = past continuous' },
+    { s:'The museum ___ at 9 a.m. every day.', a:'opens', opts:['opens','opened','is opening','has opened'], hint:'Fixed timetable/schedule = simple present' },
+    { s:'He ___ in this company for ten years so far.', a:'has worked', opts:['has worked','works','worked','is working'], hint:'Duration up to now = present perfect' },
+    { s:'I ___ you tomorrow at the office.', a:'will see', opts:['will see','saw','have seen','see'], hint:'Future plan (tomorrow) = simple future' },
+    { s:'She realized she ___ her keys at home.', a:'had forgotten', opts:['had forgotten','forgets','has forgotten','is forgetting'], hint:'Earlier of two past actions = past perfect' },
+    { s:'The children ___ in the garden now.', a:'are playing', opts:['are playing','play','played','will play'], hint:'"Now" = present continuous' }
+  ];
+  var item = items[rand(0, items.length - 1)];
+  var opts = item.opts.slice(); shuffle(opts);
+  return {
+    question: item.s + '<br><br>Choose the correct verb form.',
+    answer: item.a,
+    options: opts,
+    hint: item.hint,
+    timeLimit: 12,
+    type: 'verbal',
+    techniqueLabel: 'Tense: ' + item.a + ' (' + item.hint + ')',
+    intuition: 'Match the TIME MARKER to the tense: Every day/Sunday = simple present; since/for + now = present perfect (continuous); when/before + past = past perfect; by+future = future perfect; Look!/now = present continuous.'
+  };
+}
+
+function generatePrepositionsQuestion(diff) {
+  var items = [
+    { s:'She is good ___ mathematics.', a:'at', opts:['at','in','on','with'], hint:'Good at (skill) is the fixed phrase' },
+    { s:'He arrived ___ the airport on time.', a:'at', opts:['at','in','on','to'], hint:'Arrive at (a point/small place)' },
+    { s:'The meeting is scheduled ___ 3 p.m.', a:'at', opts:['at','in','on','for'], hint:'Precise time = at' },
+    { s:'My birthday falls ___ January.', a:'in', opts:['in','at','on','by'], hint:'Months/years = in' },
+    { s:'We met ___ a rainy Monday.', a:'on', opts:['on','in','at','for'], hint:'Specific day/date = on' },
+    { s:'She is interested ___ learning French.', a:'in', opts:['in','at','on','for'], hint:'Interested in is the fixed phrase' },
+    { s:'He is afraid ___ dogs.', a:'of', opts:['of','from','at','to'], hint:'Afraid of is the fixed phrase' },
+    { s:'Please divide the cake ___ the children.', a:'among', opts:['among','between','within','beneath'], hint:'Among = three or more; between = two' },
+    { s:'The cat jumped ___ the table.', a:'onto', opts:['onto','into','below','across'], hint:'Moving to a surface = onto' },
+    { s:'They have been friends ___ childhood.', a:'since', opts:['since','for','from','during'], hint:'Since = point of time (childhood)' },
+    { s:'She has lived here ___ five years.', a:'for', opts:['for','since','from','during'], hint:'For = duration (five years)' },
+    { s:'The keys are ___ the drawer.', a:'in', opts:['in','on','at','under'], hint:'Inside an enclosed space = in' },
+    { s:'We walked ___ the bridge.', a:'across', opts:['across','through','over','along'], hint:'From one side to the other of a surface = across' },
+    { s:'The ball rolled ___ the road.', a:'across', opts:['across','through','between','upon'], hint:'Across = from side to side' },
+    { s:'He is senior ___ me in the company.', a:'to', opts:['to','than','of','from'], hint:'Senior to is the correct phrase' },
+    { s:'The map was hanging ___ the wall.', a:'on', opts:['on','in','at','over'], hint:'Attached to a vertical surface = on' },
+    { s:'The train passed ___ the tunnel.', a:'through', opts:['through','across','over','along'], hint:'From one end to the other of an enclosed path = through' },
+    { s:'I have no interest ___ politics.', a:'in', opts:['in','at','for','of'], hint:'Interest in is the fixed phrase' },
+    { s:'The book is ___ the shelf.', a:'on', opts:['on','in','at','beneath'], hint:'Resting on a horizontal surface = on' },
+    { s:'Ritu is very fond ___ music.', a:'of', opts:['of','on','at','with'], hint:'Fond of is the fixed phrase' },
+    { s:'He will arrive ___ Monday morning.', a:'on', opts:['on','in','at','by'], hint:'Specific day + part of day = on' },
+    { s:'There is a bridge ___ the river.', a:'over', opts:['over','on','in','at'], hint:'Spanning above = over' }
+  ];
+  var item = items[rand(0, items.length - 1)];
+  var opts = item.opts.slice(); shuffle(opts);
+  return {
+    question: item.s + '<br><br>Choose the correct preposition.',
+    answer: item.a,
+    options: opts,
+    hint: item.hint,
+    timeLimit: 10,
+    type: 'verbal',
+    techniqueLabel: 'Preposition: ' + item.a + ' (' + item.hint + ')',
+    intuition: 'Learn fixed collocations (good at, interested in, afraid of, fond of). Rule of thumb: at=point/time, in=enclosed/month/year, on=surface/day/date, since=point, for=duration, between=two, among=three+.'
+  };
+}
+
+function generateArticlesQuestion(diff) {
+  var items = [
+    { s:'He is ___ honest man.', a:'an', opts:['an','a','the','no article'], hint:'"Honest" starts with silent H, vowel sound → an' },
+    { s:'I saw ___ elephant at the zoo.', a:'an', opts:['an','a','the','no article'], hint:'Elephant begins with a vowel sound → an (first mention)' },
+    { s:'She is ___ university student.', a:'a', opts:['a','an','the','no article'], hint:'University starts with a "yu" sound → a' },
+    { s:'___ sun rises in the east.', a:'The', opts:['The','A','An','No article'], hint:'Unique object → the' },
+    { s:'He is ___ best player on the team.', a:'the', opts:['the','a','an','no article'], hint:'Superlative (best) → the' },
+    { s:'She bought ___ new car yesterday.', a:'a', opts:['a','an','the','no article'], hint:'First mention, non-specific → a' },
+    { s:'We had ___ amazing time at the beach.', a:'an', opts:['an','a','the','no article'], hint:'"Amazing" begins with vowel sound → an' },
+    { s:'___ Ganges is a sacred river.', a:'The', opts:['The','A','An','No article'], hint:'Rivers take "the"' },
+    { s:'He plays ___ guitar very well.', a:'the', opts:['the','a','an','no article'], hint:'Musical instruments take "the"' },
+    { s:'She is ___ nurse at the city hospital.', a:'a', opts:['a','an','the','no article'], hint:'Profession, non-specific → a' },
+    { s:'This is ___ historical moment for the team.', a:'a', opts:['a','an','the','no article'], hint:'"Historical" begins with "h" consonant sound → a' },
+    { s:'I met ___ old friend at the station.', a:'an', opts:['an','a','the','no article'], hint:'"Old" begins with vowel sound → an' },
+    { s:'___ Himalayas are in Asia.', a:'The', opts:['The','A','An','No article'], hint:'Mountain ranges take "the"' },
+    { s:'She is ___ only child in her family.', a:'the', opts:['the','a','an','no article'], hint:'"Only" makes it definite → the' },
+    { s:'He wants to become ___ engineer.', a:'an', opts:['an','a','the','no article'], hint:'"Engineer" begins with vowel sound → an' },
+    { s:'We visited ___ Taj Mahal last summer.', a:'the', opts:['the','a','an','no article'], hint:'Famous landmarks/unique monuments take "the"' },
+    { s:'___ courage she showed was remarkable.', a:'The', opts:['The','A','An','No article'], hint:'Specific noun (limited by clause) → the' },
+    { s:'I have ___ idea that might work.', a:'an', opts:['an','a','the','no article'], hint:'"Idea" begins with vowel sound → an' }
+  ];
+  var item = items[rand(0, items.length - 1)];
+  var opts = item.opts.slice(); shuffle(opts);
+  return {
+    question: item.s + '<br><br>Fill the blank with the correct article (a / an / the / no article).',
+    answer: item.a,
+    options: opts,
+    hint: item.hint,
+    timeLimit: 8,
+    type: 'verbal',
+    techniqueLabel: 'Article: ' + item.a + ' (' + item.hint + ')',
+    intuition: 'Use a/an = first mention & non-specific (a before consonant SOUND, an before vowel SOUND: an hour, a university). Use the = unique, superlative, already mentioned, famous landmarks. No article = general/abstract/uncountable.'
+  };
+}
+
+function generateConfusingWordsQuestion(diff) {
+  var items = [
+    { p:'Choose the correct word: The weather will ___ (affect/effect) the match.', a:'affect', opts:['affect','effect'], hint:'Affect = verb (to influence); effect = noun (result)' },
+    { p:'Choose the correct word: She gave a short ___ (break/breathe) to rest.', a:'break', opts:['break','breathe'], hint:'Break = pause; breathe = take air (verb)' },
+    { p:'Choose the correct word: He ___ (advice/advised) me to study hard.', a:'advised', opts:['advised','advice'], hint:'Advise = verb; advice = noun' },
+    { p:'Choose the correct word: Please ___ (accept/except) my apologies.', a:'accept', opts:['accept','except'], hint:'Accept = receive; except = excluding' },
+    { p:'Choose the correct word: Their ___ (principal/principle) concern is safety.', a:'principal', opts:['principal','principle'], hint:'Principal = main/chief; principle = rule/belief' },
+    { p:'Choose the correct word: She ___ (borrowed/lent) me her pen.', a:'lent', opts:['lent','borrowed'], hint:'Lend = give temporarily; borrow = take temporarily' },
+    { p:'Choose the correct word: The new policy will ___ (complement/compliment) the old one.', a:'complement', opts:['complement','compliment'], hint:'Complement = go well together; compliment = praise' },
+    { p:'Choose the correct word: He made a serious ___ (mistake/mistakes) in the report.', a:'mistake', opts:['mistake','mistakes'], hint:'"A" + singular → mistake' },
+    { p:'Choose the correct word: His ___ (sight/site/state) of the new factory is ideal.', a:'site', opts:['site','sight'], hint:'Site = location; sight = view/vision' },
+    { p:'Choose the correct word: The ___ (weather/whether) today is pleasant.', a:'weather', opts:['weather','whether'], hint:'Weather = climate; whether = if' },
+    { p:'Choose the correct word: Please ___ (stationary/stationery) the van here.', a:'stationary', opts:['stationary','stationery'], hint:'Stationary = not moving; stationery = writing materials' },
+    { p:'Choose the correct word: I can ___ (hear/here) the music clearly.', a:'hear', opts:['hear','here'], hint:'Hear = perceive sound; here = at this place' },
+    { p:'Choose the correct word: The ___ (loan/lone) was approved by the bank.', a:'loan', opts:['loan','lone'], hint:'Loan = borrowed money; lone = alone' },
+    { p:'Choose the correct word: She is ___ (confident/confidant) about passing the exam.', a:'confident', opts:['confident','confidant'], hint:'Confident = sure; confidant = trusted friend' },
+    { p:'Choose the correct word: The ___ (counsel/council) will meet on Monday.', a:'council', opts:['council','counsel'], hint:'Council = governing body; counsel = advice/lawyer' },
+    { p:'Choose the correct word: His ___ (career/career choice) in medicine is inspiring.', a:'career', opts:['career','career choice'], hint:'Career = profession; career choice = chosen path' },
+    { p:'Choose the correct word: The ___ (desert/dessert) is dry and sandy.', a:'desert', opts:['desert','dessert'], hint:'Desert = dry land; dessert = sweet course' },
+    { p:'Choose the correct word: Please ___ (quiet/quit) the noise.', a:'quiet', opts:['quiet','quit'], hint:'Quiet = silent; quit = stop/leave' },
+    { p:'Choose the correct word: He received an ___ (award/reward) for his bravery.', a:'award', opts:['award','reward'], hint:'Award = official prize; reward = recompense for service' },
+    { p:'Choose the correct word: The ___ (moral/morale) of the team is high.', a:'morale', opts:['morale','moral'], hint:'Morale = confidence/spirit; moral = principle' }
+  ];
+  var item = items[rand(0, items.length - 1)];
+  return {
+    question: item.p,
+    answer: item.a,
+    options: item.opts.slice(),
+    hint: item.hint,
+    timeLimit: 8,
+    type: 'verbal',
+    techniqueLabel: 'Confusing Word: ' + item.a + ' (' + item.hint + ')',
+    intuition: 'Learn the meaning of each confusing pair and insert the word that fits the sentence\'s meaning. Affect=verb / effect=noun; advice=noun / advise=verb; lend=give / borrow=take.'
+  };
+}
+
+function generateHomophonesQuestion(diff) {
+  var items = [
+    { s:'The boat sailed across the ___ sea.', a:'blue', opts:['blue','blew'], hint:'Sea = blue (colour); blew = past of blow' },
+    { s:'She ate a ___ of bread.', a:'piece', opts:['piece','peace'], hint:'Piece = part; peace = calm' },
+    { s:'The ___ began to howl at the moon.', a:'wolf', opts:['wolf','woof'], hint:'Wolf = wild animal; woof = dog bark' },
+    { s:'Please ___ the door quietly.', a:'close', opts:['close','clothes'], hint:'Close = shut; clothes = garments' },
+    { s:'He won the race ___ great effort.', a:'by', opts:['by','bye','buy'], hint:'By = through; bye = farewell; buy = purchase' },
+    { s:'The ___ of the tree is thick.', a:'bark', opts:['bark','barque'], hint:'Bark = tree covering/dog sound; barque = sailing ship' },
+    { s:'She used a ___ to write.', a:'pen', opts:['pen','pin'], hint:'Pen = writing tool; pin = fastener' },
+    { s:'The ___ is covered with snow.', a:'peak', opts:['peak','peek','pique'], hint:'Peak = mountain top; peek = quick look; pique = provoke' },
+    { s:'He left the room and ___ the door.', a:'shut', opts:['shut','shot','shave'], hint:'Shut = close; shot = fired; shave = trim' },
+    { s:'The ___ guards the treasure.', a:'mayor', opts:['mayor','mare'], hint:'Mayor = city head; mare = female horse' },
+    { s:'Please ___ your name here.', a:'write', opts:['write','right'], hint:'Write = inscribe; right = correct/direction' },
+    { s:'The ___ of the bell was loud.', a:'ring', opts:['ring','wring'], hint:'Ring = sound/circle; wring = squeeze' },
+    { s:'I want to ___ this book.', a:'read', opts:['read','red'], hint:'Read = peruse; red = colour' },
+    { s:'The ___ is very cold today.', a:'weather', opts:['weather','whether'], hint:'Weather = climate; whether = if' },
+    { s:'He told a funny ___ at the party.', a:'tale', opts:['tale','tail'], hint:'Tale = story; tail = animal\'s appendage' },
+    { s:'The farmer reaps the ___ in autumn.', a:'crop', opts:['crop','crap'], hint:'Crop = harvest; crap = waste' },
+    { s:'She will ___ the gift to her friend.', a:'send', opts:['send','scent'], hint:'Send = dispatch; scent = smell' },
+    { s:'The ___ of the street is narrow.', a:'lane', opts:['lane','lain'], hint:'Lane = narrow road; lain = past of lie' }
+  ];
+  var item = items[rand(0, items.length - 1)];
+  var opts = item.opts.slice(); shuffle(opts);
+  return {
+    question: item.s + '<br><br>Choose the correct homophone (word that sounds alike).',
+    answer: item.a,
+    options: opts,
+    hint: item.hint,
+    timeLimit: 8,
+    type: 'verbal',
+    techniqueLabel: 'Homophone: ' + item.a + ' (' + item.hint + ')',
+    intuition: 'Homophones sound alike but differ in meaning/spelling. Pick the word whose meaning fits the sentence context.'
+  };
+}
+
+function generateVerbalAnalogyQuestion(diff) {
+  var items = [
+    { a:'Doctor', b:'Hospital', c:'Teacher', d:'School', hint:'Function → place of work' },
+    { a:'Bird', b:'Nest', c:'Lion', d:'Den', hint:'Animal → its home' },
+    { a:'Hand', b:'Glove', c:'Foot', d:'Sock', hint:'Body part → covering' },
+    { a:'Pen', b:'Write', c:'Knife', d:'Cut', hint:'Tool → its function' },
+    { a:'Fire', b:'Smoke', c:'Rain', d:'Cloud', hint:'Cause → result/phenomenon' },
+    { a:'Book', b:'Author', c:'Painting', d:'Painter', hint:'Work → its creator' },
+    { a:'Flower', b:'Rose', c:'Animal', d:'Dog', hint:'Category → specific example' },
+    { a:'Hour', b:'Minute', c:'Minute', d:'Second', hint:'Larger unit → smaller unit' },
+    { a:'Tiger', b:'Cub', c:'Dog', d:'Puppy', hint:'Adult animal → young one' },
+    { a:'Sugar', b:'Sweet', c:'Lemon', d:'Sour', hint:'Taste of the object' },
+    { a:'Cow', b:'Herd', c:'Sheep', d:'Flock', hint:'Animal → collective noun' },
+    { a:'Sun', b:'Light', c:'Rain', d:'Water', hint:'Source → what it gives' },
+    { a:'Teacher', b:'Teach', c:'Hunter', d:'Hunt', hint:'Person → action' },
+    { a:'Guitar', b:'Music', c:'Brush', d:'Painting', hint:'Tool → product/art' },
+    { a:'Meter', b:'Length', c:'Kilogram', d:'Weight', hint:'Unit → what it measures' },
+    { a:'Eye', b:'See', c:'Ear', d:'Hear', hint:'Organ → its function' },
+    { a:'Lawyer', b:'Court', c:'Scientist', d:'Laboratory', hint:'Profession → workplace' },
+    { a:'Window', b:'Glass', c:'Book', d:'Paper', hint:'Object → its material' },
+    { a:'Village', b:'City', c:'City', d:'Metropolis', hint:'Scale: smaller → larger' },
+    { a:'Start', b:'Finish', c:'Morning', d:'Evening', hint:'Beginning → end (opposite)' },
+    { a:'Noise', b:'Loud', c:'Silence', d:'Quiet', hint:'State → adjective describing it' },
+    { a:'Tall', b:'Short', c:'Wide', d:'Narrow', hint:'Opposite adjectives' },
+    { a:'Water', b:'Thirst', c:'Food', d:'Hunger', hint:'What satisfies the need' },
+    { a:'Key', b:'Lock', c:'Screwdriver', d:'Screw', hint:'Tool → what it works with' },
+    { a:'Tennis', b:'Racket', c:'Cricket', d:'Bat', hint:'Sport → equipment' },
+    { a:'Chef', b:'Kitchen', c:'Carpenter', d:'Workshop', hint:'Worker → workplace' },
+    { a:'Moon', b:'Tide', c:'Sun', d:'Day', hint:'Celestial body → its effect/cycle' },
+    { a:'Silk', b:'Worm', c:'Honey', d:'Bee', hint:'Product → its maker' },
+    { a:'Coal', b:'Mine', c:'Gold', d:'Mine', hint:'Resource → extraction site' },
+    { a:'Book', b:'Library', c:'Medicine', d:'Pharmacy', hint:'Item → where it is kept/sold' }
+  ];
+  var item = items[rand(0, items.length - 1)];
+  var rels = [
+    { d:'Rabbit', rel:'Ear' }, { d:'Lamp', rel:'Light' }, { d:'Chair', rel:'Wood' },
+    { d:'Bus', rel:'Road' }, { d:'Shirt', rel:'Cloth' }, { d:'Storm', rel:'Wind' },
+    { d:'Pen', rel:'Ink' }, { d:'Star', rel:'Sky' }, { d:'River', rel:'Water' }
+  ];
+  var opts = [item.d];
+  var pool = shuffle(rels).slice(0, 3);
+  pool.forEach(function(r){ if (opts.indexOf(r.d) < 0) opts.push(r.d); });
+  while (opts.length < 4) { var extra = pick(['Cup','Stone','Cloud','Button','Fan']); if (opts.indexOf(extra) < 0) opts.push(extra); }
+  shuffle(opts);
+  return {
+    question: item.a + ' : ' + item.b + ' :: ' + item.c + ' : ?',
+    answer: item.d,
+    options: opts,
+    hint: '"' + item.a + '" is to "' + item.b + '" as "' + item.c + '" is to "?" — ' + item.hint,
+    timeLimit: 10,
+    type: 'reasoning',
+    techniqueLabel: 'Verbal Analogy: ' + item.a + '→' + item.b + ' = ' + item.c + '→' + item.d + ' (' + item.hint + ')',
+    intuition: 'First identify the EXACT relation between the first pair (function→place, part→whole, product→maker). Then find the option that matches for the second pair.'
+  };
+}
+
+function generateNumberCodingQuestion(diff) {
+  var items = [
+    { w:'CAT', code:'3-1-20', other:'DOG', o:'4-15-7', hint:'A=1,B=2... Z=26, write positions' },
+    { w:'A-Z', code:'1-26', other:'B-Y', o:'2-25', hint:'Pair letters at opposite positions (A=1, Z=26)' },
+    { w:'HM', code:'8-13', other:'KQ', o:'11-17', hint:'A=1... H=8, M=13. Write letter positions' },
+    { w:'XBCZ', code:'24-2-3-26', other:'WADE', o:'23-1-4-5', hint:'A=1 to Z=26, just write each position' },
+    { w:'FISH', code:'6921', other:'BIRD', o:'2975', hint:'A=1... I=9, F=6. Positions: F=6,I=9,S=19→19? Use single digits: S=19→? count as 1,9 → FISH=6,9,19,8' },
+    { w:'CAB', code:'312', other:'BED', o:'254', hint:'Put the position number of each letter in order' },
+    { w:'GOOD', code:'7715', other:'LUCK', o:'12-21-3-11', hint:'G=7,O=15,O=15,D=4 → reverse digit order for 15' },
+    { w:'ONE', code:'15145', other:'TWO', o:'202315', hint:'O=15,N=14,E=5 → 15-14-5. For 2-digit, write both digits' }
+  ];
+  var item = pick(items);
+  return {
+    question: 'In a certain code, "' + item.w + '" is written as "' + item.code + '". How is "' + item.other + '" written ?',
+    answer: item.o,
+    options: [item.o, item.o.split('').reverse().join(''), shuffle(item.o.split('')).join(''), shuffle(item.o.split('')).join('')].filter(function(v,i,a){ return a.indexOf(v) === i; }),
+    hint: item.hint,
+    timeLimit: 15,
+    type: 'reasoning',
+    techniqueLabel: 'Number Coding: ' + item.hint,
+    intuition: 'A=1, B=2, ... Z=26. Convert each letter of the second word to its position number, in the same order.'
+  };
+}
+
+function generateInstalmentsQuestion(diff) {
+  var items = [];
+  function build() {
+    var p = [5000, 8000, 10000, 12000, 15000][rand(0,4)];
+    var r = [12, 15, 16, 18, 20][rand(0,4)];
+    var t = [2, 3, 4][rand(0,2)];
+    // Equal installments with simple interest: total = P + interest, split equally
+    var total = p + Math.round(p * r * t / 100);
+    var each = Math.round(total / t);
+    items.push({
+      part1: 'Rs ' + p + ' is borrowed at ' + r + '% simple interest and repaid in ' + t + ' equal annual instalments.',
+      q: 'What is the value of each instalment (approx, equal principal? use SI total)?',
+      a: String(each),
+      opts: [String(each), String(each - 100), String(each + 100), String(Math.round(p / t))],
+      hint: 'Total = Principal + SI = ' + total + '. Equal instalments = ' + total + ' ÷ ' + t + ' = ' + each + '.'
+    });
+  }
+  build();
+  var item = items[0];
+  var opts = item.opts.slice(); shuffle(opts);
+  return {
+    question: item.part1 + '<br><br>' + item.q,
+    answer: item.a,
+    options: opts,
+    hint: item.hint,
+    timeLimit: diff <= 3 ? 30 : 20,
+    type: 'quant',
+    techniqueLabel: 'Instalments: Total = P + SI, then ÷ no. of instalments (' + item.a + ')',
+    intuition: 'For simple-instalment problems: total amount = Principal + Simple Interest. Divide that total by the number of instalments to get each equal equal-payment value.'
+  };
+}
+
 function generateQuantityComparisonQuestion(diff, layer) {
   var ty = [
     [1, function(){ return { q1:'A bag has 5 red, 3 blue balls. P(red)', v1:'5/8', q2:'P(blue)', v2:'3/8', ans:'Quantity I > Quantity II' }; }],
@@ -7751,9 +8082,14 @@ function generateVerbalQuestion(diff, subMode) {
     change_speech: generateChangeSpeechQuestion,
     sentence_connectors: generateSentenceConnectorsQuestion,
     double_fillers: generateDoubleFillersQuestion,
-    paragraph_completion: generateParagraphCompletionQuestion
+    paragraph_completion: generateParagraphCompletionQuestion,
+    tenses: generateTensesQuestion,
+    prepositions: generatePrepositionsQuestion,
+    articles: generateArticlesQuestion,
+    confusing_words: generateConfusingWordsQuestion,
+    homophones: generateHomophonesQuestion
   };
-  var topic = subMode || pick(['synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','spotting_errors','spellings','sentence_correction','sentence_improvement','closet_test','one_word_subs','idioms_phrases','change_voice','change_speech','sentence_connectors','double_fillers','paragraph_completion']);
+  var topic = subMode || pick(['synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','spotting_errors','spellings','sentence_correction','sentence_improvement','closet_test','one_word_subs','idioms_phrases','change_voice','change_speech','sentence_connectors','double_fillers','paragraph_completion','tenses','prepositions','articles','confusing_words','homophones']);
   var gen = genMap[topic];
   if (gen) {
     var q, attempts = 0;
