@@ -1970,6 +1970,16 @@ const CATEGORIES = [
     'Thermal engineering','Refrigeration and air conditioning','Workshop','Drafting','Technical drawing',
     'Computer-aided design','Mechatronics','Robotics','Automation','Nanotechnology','Biotechnology'
   ]},
+  // ───────── Mechanical Engineering (applied machine-design, fluid, thermo, hydraulics) ─────────
+  { name:'Mechanical Engineering', wikiCat:'Mechanical_engineering', topics:[
+    'Mechanical engineering','Machine design','Machine element','Machine tool','Workshop','Engine','Internal combustion engine','Diesel engine','Petrol engine',
+    'Fluid mechanics','Fluid dynamics','Fluid statics','Hydraulics','Hydraulic machinery','Fluid machinery','Pipe','Nozzle','Venturi effect','Bernoulli principle','Pascal law','Continuity equation',
+    'Pump','Centrifugal pump','Reciprocating pump','Turbine','Hydraulic turbine','Water turbine','Steam turbine','Impeller','Propeller','Discharge','Head (hydraulic)','Manometer','Venturimeter','Pitot tube','Flow measurement',
+    'Valve','Safety valve','Relief valve','Pressure relief valve','Check valve','Non-return valve','Gate valve','Globe valve','Ball valve','Butterfly valve','Slide valve','Regulating valve','Throttle valve','Pressure regulator','Pressure gauge',
+    'Thermodynamics','Thermodynamic cycle','Carnot cycle','Otto cycle','Diesel cycle','Rankine cycle','Heat engine','Heat pump','Refrigeration','Refrigerator','Air conditioning','Cooling tower','Condenser','Evaporator','Compressor','Heat exchanger','Boiler','Steam engine',
+    'Hydraulics and pneumatics','Pneumatics','Bearing','Rolling-element bearing','Journal bearing','Gear','Gear train','Clutch','Brake','Flywheel','Coupling','Shaft','Spring (device)','Fastener','Screw','Bolt','Nut (hardware)','Wrench','Gasket','Seal (mechanical)',
+    'Strength of materials','Stress (mechanics)','Strain (mechanics)','Young modulus','Hardness','Tensile strength','Compressive strength','Fatigue (material)','Factor of safety','Casting','Forging','Welding','Machining','Drilling','Lathe','Milling (machining)','Grinding (abrasive cutting)','Sheet metal','CNC machine'
+  ]},
   // ───────── Meteorology & Climate (Indian monsoon, weather systems) ─────────
   { name:'Meteorology & Climate', wikiCat:'Meteorology', topics:[
     'Meteorology','Indian monsoon','Monsoon of South Asia','Southwest monsoon','Northeast monsoon',
