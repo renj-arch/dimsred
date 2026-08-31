@@ -963,6 +963,34 @@ const CATEGORIES = [
     'Special economic zones of India','Export processing zones of India',
     'International trade of India','World Trade Organization and India'
   ]},
+  // ───────── Labour Law & Industrial Relations (UPSC EPFO APFC/EO) ─────────
+  { name:'Labour Law & Industrial Relations', wikiCat:'Indian_labour_law', topics:[
+    'Indian labour law','Labour law in India','Labour in India','Organised sector in India','Unorganised sector in India','Informal economy in India','Casual worker','Daily wage worker',
+    'Trade Union','Trade union in India','All India Trade Union Congress','Indian National Trade Union Congress','Bharatiya Mazdoor Sangh','Centre of Indian Trade Unions','Hind Mazdoor Sabha','United Trade Union Congress','Labour movement in India',
+    'Industrial Relations','Industrial dispute','Collective bargaining','Strike action','Lockout (industry)','Workers participation in management','Works committee','Conciliation','Arbitration','Industrial tribunal','Labour court in India',
+    'Industrial Relations Code 2020','Code on Social Security 2020','Code on Wages 2019','Occupational Safety Health and Working Conditions Code 2020',
+    'Employees Provident Fund Organisation','Employees Provident Fund and Miscellaneous Provisions Act 1952','Employees Deposit Linked Insurance Scheme','Employees State Insurance','Employees State Insurance Act 1948','National Pension Scheme','Atal Pension Yojana','Pradhan Mantri Shram Yogi Maandhan',
+    'Payment of Wages Act 1936','Minimum Wages Act 1948','Payment of Bonus Act 1965','Equal Remuneration Act 1976','Payment of Gratuity Act 1972','Maternity Benefit Act 1961','Employees Compensation Act 1923','Workmen Compensation Act',
+    'Factories Act 1948','Mines Act 1952','Contract Labour Regulation and Abolition Act 1970','Inter-State Migrant Workmen Act 1979','Industrial Disputes Act 1947','Industrial Employment Standing Orders Act 1946','Plantations Labour Act 1951','Shops and Establishments Act',
+    'Industrial health and safety','Occupational safety and health','Wage','Wage board','Dearness allowance','Minimum wage','National Floor Level Minimum Wage','Labour welfare','Child labour in India','Bonded labour in India','Unorganised Workers Social Security Act 2008','National Commission for Enterprises in the Unorganised Sector'
+  ]},
+  // ───────── Social Security in India (UPSC EPFO APFC) ─────────
+  { name:'Social Security', wikiCat:'Social_security', topics:[
+    'Social security','Social security in India','Social protection','Welfare state','Directive Principles in India','State policy on welfare in India',
+    'Pradhan Mantri Garib Kalyan Yojana','Ayushman Bharat','Pradhan Mantri Jan Arogya Yojana','National Health Mission','National Food Security Act 2013','Public Distribution System','Midday Meal Scheme','Integrated Child Development Services','ANganwadi','Total sanitation campaign','Swachh Bharat Abhiyan',
+    'Pension in India','Old Age Pension','Indira Gandhi National Old Age Pension Scheme','National Social Assistance Programme','Public Provident Fund','Employees Provident Fund','Pradhan Mantri Jeevan Jyoti Bima Yojana','Pradhan Mantri Suraksha Bima Yojana','Pradhan Mantri Mudra Yojana','Stand Up India','Atal Pension Yojana',
+    'Rashtriya Swasthya Bima Yojana','National Rural Health Mission','National Urban Health Mission','Family planning in India','Reproductive health in India','Janani Suraksha Yojana','Girl protection scheme','Beti Bachao Beti Padhao',
+    'Right to food','Right to health','Right to work','Mahatma Gandhi National Rural Employment Guarantee Act','MGNREGA','Rural employment guarantee','Unorganized Workers Social Security','Self Employed Women Association','Aadhaar and social welfare','Digital India and welfare'
+  ]},
+  // ───────── Accounting, Auditing & Insurance (UPSC EPFO APFC/EO) ─────────
+  { name:'Accounting & Auditing', wikiCat:'Accounting', topics:[
+    'Accounting','Accountancy','Bookkeeping','Financial accounting','Management accounting','Cost accounting','Accounting equation','Double-entry bookkeeping','Debits and credits','Journal (accounting)','Ledger','Subsidiary ledger','Trial balance','Cash book','Bank reconciliation statement','T-account',
+    'Accounting principles','Generally Accepted Accounting Principles','Indian Accounting Standards','IFRS','Accounting Standards Board (India)','Accrual basis accounting','Matching principle','Conservatism (accounting)','Going concern','Accounting period','Depreciation','Amortization','Bad debt','Provisions and reserves','Capital expenditure','Revenue expenditure',
+    'Financial statement','Balance sheet','Income statement','Profit and loss account','Cash flow statement','Statement of changes in equity','Final accounts','Trading account','Manufacturing account','Gross profit','Net profit',
+    'Financial ratio','Ratio analysis','Liquidity ratio','Profitability ratio','Solvency ratio','Current ratio','Quick ratio','Debt-to-equity ratio','Return on investment','Earnings per share',
+    'Auditing','Auditor','Independent auditor','Audit report','Audit evidence','Internal audit','External audit','Statutory audit','Audit trail','Forensic accounting','Vouching','Verification of assets','Auditing standards','Comptroller and Auditor General of India','Chartered accountant',
+    'Insurance','Insurance in India','Life insurance','General insurance','Health insurance in India','Principles of insurance','Utmost good faith','Insurable interest','Indemnity','Subrogation','Insurance policy','Premium','Claim (insurance)','Insurance Regulatory and Development Authority','IRDAI','National Insurance Company','LIC','Life Insurance Corporation','Actuary'
+  ]},
   // ───────── General Science ─────────
   { name:'General Science', wikiCat:'Science', topics:[
     'Physics','Chemistry','Biology','Human body','Genetics','Cell biology',
