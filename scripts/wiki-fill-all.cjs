@@ -172,12 +172,18 @@ async function fetchAllTopics(topics, concurrency, skip) {
         continue;
       }
       log('  Fetching: ' + topic + '...');
-      const a = await fetchArticleExtract(topic);
-      if (a && a.extract.length > 200) {
-        results.push(a);
-        log('  \u2713 ' + topic);
-      } else {
-        log('  (skip) ' + topic);
+      try {
+        const a = await fetchArticleExtract(topic);
+        if (a && a.extract.length > 200) {
+          results.push(a);
+          log('  \u2713 ' + topic);
+        } else {
+          log('  (skip) ' + topic);
+        }
+      } catch (err) {
+        // Never let a single article's non-retryable error abort the whole chunk:
+        // log and continue so questions already mined this run are still saved.
+        log('  (error fetching ' + topic + ': ' + (err && (err.message || err.code) ? (err.message || err.code) : err) + ')');
       }
     }
   }
@@ -2964,6 +2970,7 @@ async function main() {
       log('  (stopping: time budget reached, ' + Math.round((Date.now() - RUN_START) / 60000) + 'min elapsed)');
       break;
     }
+    try {
     const cat = item.cat;
     const allTopics = item.topics;
     log('\n=== ' + cat.name + ' (' + allTopics.length + ' topics) ===');
@@ -2984,7 +2991,12 @@ async function main() {
         break;
       }
       const slice = allTopics.slice(i, i + BATCH);
-      const articles = await fetchAllTopics(slice, CONCURRENCY);
+      let articles = [];
+      try {
+        articles = await fetchAllTopics(slice, CONCURRENCY);
+      } catch (err) {
+        log('  (batch fetch failed for this slice: ' + (err && (err.message || err.code) ? (err.message || err.code) : err) + ' — continuing)');
+      }
       for (const a of articles) fetchedThisCat.push(a);
       for (const article of articles) {
         if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) break;
@@ -3229,7 +3241,12 @@ async function main() {
       prevFetched = [];
       for (let li = 0; li < linkSliceTotal; li += LINK_BATCH) {
         const linkSlice = linkCandidates.slice(li, li + LINK_BATCH);
-        const fetched = await fetchAllTopics(linkSlice, 2, t => coveredTitles.has(norm(t)));
+        let fetched = [];
+        try {
+          fetched = await fetchAllTopics(linkSlice, 2, t => coveredTitles.has(norm(t)));
+        } catch (err) {
+          log('  (link-batch fetch failed: ' + (err && (err.message || err.code) ? (err.message || err.code) : err) + ' — continuing)');
+        }
         for (const a of fetched) prevFetched.push(a);
         linkFetched += fetched.length;
         for (const article of fetched) {
@@ -3355,6 +3372,13 @@ async function main() {
     });
     fs.writeFileSync(catPath, JSON.stringify(catFile));
     log('  Saved per-category file: data/questions/' + slug + '.json (' + addedCount + ' new questions)');
+    } catch (catErr) {
+      // A category that throws (network burst, malformed page, OOM edge, etc.)
+      // must not abort the whole chunk: log it, keep the questions the category
+      // already accumulated in `quiz`, and move on to the next category so the
+      // chunk still finishes and persists its output.
+      log('  (category error for ' + cat.name + ': ' + (catErr && (catErr.message || catErr.code) ? (catErr.message || catErr.code) : catErr) + ' — continuing)');
+    }
   }
 
   if (doneThisRun.size) {
