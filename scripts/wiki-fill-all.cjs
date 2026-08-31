@@ -5,6 +5,13 @@ const { readQuizQuestions, writeQuiz } = require('./lib/quiz-store');
 const WIKI_API = 'https://en.wikipedia.org/w/api.php';
 const QUIZ_PATH = process.env.QUIZ_PATH || 'data/quiz.json';
 const LINK_POOL_PATH = process.env.WIKI_LINK_POOL_PATH || path.join(path.dirname(QUIZ_PATH), 'wiki-link-pool.json');
+// Cache of Category:XXX member lists discovered by past chunk jobs. All 27 chunk
+// jobs run in parallel and previously each independently re-fetched the members
+// of all 115 categories over the network, which both wasted the API budget and
+// burned the per-run discovery deadline sequentially. Persisting the member list
+// per category lets the first job that discovers a category seed this cache and
+// every other job read it instantly instead of re-fetching.
+const CAT_MEMBER_CACHE_PATH = process.env.WIKI_CAT_MEMBER_CACHE_PATH || path.join(path.dirname(QUIZ_PATH), 'wiki-category-members.json');
 
 // Wall-clock deadline shared by every fetch/processing loop so a chunk can never
 // run past WIKI_FILL_TIME_BUDGET_MIN and get killed by the runner's hard
@@ -80,31 +87,40 @@ async function fetchPageLinks(title, maxLinks) {
 
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-async function fetchCategoryMembers(wikiCat, maxPages = parseInt(process.env.WIKI_FILL_MAX_PAGES || '1000000', 10)) {
+async function fetchCategoryMembers(wikiCat, maxPages = parseInt(process.env.WIKI_FILL_MAX_PAGES || '1000000', 10), sliceMs = 0) {
   // Traverse the category tree recursively: fetch direct pages AND subcategory
   // names, then descend into each subcategory. This is how content that lives in
   // nested categories (e.g. Pushtimarga inside Bhakti_movement -> Vaishnavism)
   // gets discovered, instead of being limited to direct members only.
+  // sliceMs (0 = use the global discovery deadline): when Phase 1 runs discovery
+  // sequentially across dozens of categories, the GLOBAL discovery budget gets
+  // consumed by the first few categories, leaving the rest empty — so the once
+  // per-run budget is apportioned to each category here (fair slice) to ensure
+  // EVERY category gets some discovery instead of the early ones monopolizing it.
   const MAX_DEPTH = parseInt(process.env.WIKI_FILL_CAT_DEPTH || '30', 10) || 30;
   const pages = new Set();
   const visitedCats = new Set();
   const queue = [{ cat: wikiCat, depth: 0 }];
+  // Per-category discovery deadline: when a fair slice is given, discovery for
+  // THIS category stops after its own slice so every category gets a chance in
+  // the same run. Otherwise fall back to the global discovery deadline.
+  const catDeadline = sliceMs > 0 ? Date.now() + sliceMs : discoveryDeadline();
 
   while (queue.length && pages.size < maxPages) {
     const { cat, depth } = queue.shift();
     const catKey = cat.toLowerCase();
     if (depth > MAX_DEPTH || visitedCats.has(catKey)) continue;
     visitedCats.add(catKey);
-    if (DISCOVERY_BUDGET_MS && Date.now() > discoveryDeadline()) {
-      log('    (stopping category discovery: discovery budget reached, reserving time for mining)');
+    if (DISCOVERY_BUDGET_MS && Date.now() > catDeadline) {
+      log('    (stopping category discovery: reachable budget for this category used, reserving time for mining)');
       break;
     }
 
     let cmcontinue = '';
     let pageNum = 0;
     while (pages.size < maxPages) {
-      if (DISCOVERY_BUDGET_MS && Date.now() > discoveryDeadline()) {
-        log('    (stopping category members: discovery budget reached, reserving time for mining)');
+      if (DISCOVERY_BUDGET_MS && Date.now() > catDeadline) {
+        log('    (stopping category members: reachable budget for this category used, reserving time for mining)');
         break;
       }
       pageNum++;
@@ -2744,6 +2760,11 @@ async function main() {
   let linkPool = {};
   try { linkPool = JSON.parse(fs.readFileSync(LINK_POOL_PATH, 'utf8')); }
   catch (e) { linkPool = {}; }
+  // Discovered Category:XXX member lists shared across the 27 parallel chunk
+  // jobs (persisted read-through cache, see CAT_MEMBER_CACHE_PATH above).
+  const catMemberCache = {};
+  try { Object.assign(catMemberCache, JSON.parse(fs.readFileSync(CAT_MEMBER_CACHE_PATH, 'utf8'))); }
+  catch (e) { /* no cache yet */ }
   const linkedThisRun = {};
 
   const coveredTitles = new Set();
@@ -2773,10 +2794,26 @@ async function main() {
     const hardcoded = [...cat.topics].filter(t => !coveredTitles.has(norm(t)));
     let discovered = [];
     if (cat.wikiCat) {
-      log('  Fetching category members from Category:' + cat.wikiCat + '...');
-      const wikiTopics = await fetchCategoryMembers(cat.wikiCat);
+      const cachedMembers = catMemberCache[cat.wikiCat];
+      if (Array.isArray(cachedMembers) && cachedMembers.length) {
+        discovered = cachedMembers;
+        log('  Using cached members for Category:' + cat.wikiCat + ' (' + discovered.length + ' topics)');
+      } else {
+        log('  Fetching category members from Category:' + cat.wikiCat + '...');
+        // Apportion the per-run discovery budget fairly across every active category
+        // so no single category (or the first sequential ones) monopolizes it and
+        // leaves later categories with empty topic lists (which yielded 0 net-new
+        // questions once the category count grew past the ~8 the budget covered).
+        const perCatDisco = activeCategories.length
+          ? Math.max(1, Math.floor(DISCOVERY_BUDGET_MS / activeCategories.length)) : 0;
+        const wikiTopics = await fetchCategoryMembers(cat.wikiCat, parseInt(process.env.WIKI_FILL_MAX_PAGES || '1000000', 10), perCatDisco);
+        // Seed the shared cache so the other parallel chunk jobs don't re-fetch
+        // this category's members over the network this run (or future runs).
+        if (wikiTopics.length) catMemberCache[cat.wikiCat] = wikiTopics;
+        discovered = wikiTopics;
+      }
       const existing = new Set(cat.topics.map(t => t.toLowerCase()));
-      discovered = wikiTopics.filter(t => !existing.has(t.toLowerCase()));
+      discovered = discovered.filter(t => !existing.has(t.toLowerCase()));
       // Opt-in relevance gate: when a category lists `keywords`, auto-discovered
       // titles must contain at least one (whole-word) keyword. Category member
       // trees like Agricultural_economics recurse into generic sub-topics
@@ -3286,6 +3323,22 @@ async function main() {
     log('Saved linked-page pool: ' + totalPool + ' titles across ' + Object.keys(poolMerged).length + ' categories (' + LINK_POOL_PATH + ')');
   } catch (e) {
     log('  (could not save link pool: ' + e.message + ')');
+  }
+
+  // Persist discovered category-member lists so parallel/future chunk jobs read
+  // the cache instead of re-fetching every category's members over the network.
+  try {
+    const finalCache = {};
+    try { Object.assign(finalCache, JSON.parse(fs.readFileSync(CAT_MEMBER_CACHE_PATH, 'utf8'))); }
+    catch (e2) { /* no prior cache */ }
+    let cachedNew = 0;
+    Object.entries(catMemberCache).forEach(([c, titles]) => {
+      if (Array.isArray(titles) && titles.length && !finalCache[c]) { finalCache[c] = titles; cachedNew++; }
+    });
+    fs.writeFileSync(CAT_MEMBER_CACHE_PATH, JSON.stringify(finalCache));
+    log('Saved category-member cache: ' + Object.keys(finalCache).length + ' categories (' + cachedNew + ' new)');
+  } catch (e) {
+    log('  (could not save category-member cache: ' + e.message + ')');
   }
 
   writeQuiz(QUIZ_PATH, quiz);
