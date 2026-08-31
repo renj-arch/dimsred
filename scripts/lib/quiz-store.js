@@ -105,4 +105,64 @@ function writeQuizQuestions(p, questions) {
   return writeQuiz(p, { questions });
 }
 
-module.exports = { readQuiz, readQuizQuestions, writeQuiz, writeQuizQuestions, splitQuestions, MAX_SHARD_BYTES };
+// Stream-iterate a (possibly sharded) quiz's questions without ever holding the
+// whole questions array in memory. cb(q, shardIndex) is called for every
+// question; each shard's parsed objects are released once its iteration ends so
+// a multi-GB corpus can be walked inside a bounded heap. This is essential for
+// merges over the monolithic quiz.json, whose combined shards exceed the runner
+// heap when loaded in full (FATAL OOM in merge-chunks).
+function iterQuizQuestions(p, cb) {
+  if (!fs.existsSync(p)) return;
+  const primary = JSON.parse(fs.readFileSync(p, 'utf8'));
+  if (primary.shardCount) {
+    for (let i = 0; i < primary.shardCount; i++) {
+      const sp = p + '.part.' + i;
+      if (!fs.existsSync(sp)) continue;
+      const s = JSON.parse(fs.readFileSync(sp, 'utf8'));
+      const qs = s.questions || [];
+      for (let j = 0; j < qs.length; j++) cb(qs[j], i);
+    }
+  } else if (Array.isArray(primary.questions)) {
+    for (let j = 0; j < primary.questions.length; j++) cb(primary.questions[j], 0);
+  }
+}
+
+// Incremental sharded writer. Appends questions to on-disk .part.N files as
+// they arrive so a large merged corpus is never materialized in memory. Usage:
+//   const w = createStreamingShardWriter(p, optionalPrimaryFields);
+//   w.add(q) ...;  w.finish();      // finish() writes the primary + counts.
+// If zero questions are added, finish() writes nothing (leaves past shards).
+function createStreamingShardWriter(p, primaryFields) {
+  const HEADER = Buffer.byteLength('{"questions":[]}');
+  let cur = [];
+  let curLen = HEADER;
+  let writtenShards = 0;
+
+  function flush() {
+    if (!cur.length) return;
+    fs.writeFileSync(p + '.part.' + writtenShards, JSON.stringify({ questions: cur }));
+    writtenShards++;
+    cur = [];
+    curLen = HEADER;
+  }
+
+  function add(q) {
+    const qLen = Buffer.byteLength(JSON.stringify(q));
+    if (cur.length && curLen + qLen + 1 > MAX_SHARD_BYTES) flush();
+    cur.push(q);
+    curLen += qLen + 1;
+  }
+
+  function finish() {
+    flush();
+    if (!writtenShards) return { shards: 0 };
+    const rest = primaryFields || {};
+    const primary = Object.assign({}, rest, { questions: [], shardCount: writtenShards });
+    fs.writeFileSync(p, JSON.stringify(primary));
+    return { shards: writtenShards };
+  }
+
+  return { add, finish };
+}
+
+module.exports = { readQuiz, readQuizQuestions, writeQuiz, writeQuizQuestions, splitQuestions, iterQuizQuestions, createStreamingShardWriter, MAX_SHARD_BYTES };

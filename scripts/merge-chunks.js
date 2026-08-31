@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { readQuiz, writeQuizQuestions } = require('./lib/quiz-store');
+const { iterQuizQuestions, createStreamingShardWriter } = require('./lib/quiz-store');
 
 const CHUNKS_DIR = path.join(__dirname, '..', 'chunks');
 const QUIZ_PATH = path.join(__dirname, '..', 'data', 'quiz.json');
@@ -23,90 +23,85 @@ function main() {
   }
   console.log('Found ' + chunkFiles.length + ' chunk output files');
 
-  // Load existing quiz.json
-  let allQuestions = [];
+  // ── Pass 1: index existing questions by streaming the shards ──
+  // Only the normalized question KEY is kept in memory (a Set), never the full
+  // question objects. The current quiz.json is sharded across ~4 files totaling
+  // ~940MB with ~6.1M questions; materializing every object (readQuiz) plus the
+  // seen/byKey structures blew the 7GB runner heap (FATAL OOM). Streaming the
+  // keys keeps peak memory to roughly one key-set + one shard at a time.
+  const seen = new Set();
+  const existingWikiDone = new Set();
+  let existingCount = 0;
   if (fs.existsSync(QUIZ_PATH)) {
     try {
-      const existing = readQuiz(QUIZ_PATH);
-      allQuestions = existing.questions || [];
-      console.log('Existing quiz.json: ' + allQuestions.length + ' questions');
+      iterQuizQuestions(QUIZ_PATH, (q) => {
+        existingCount++;
+        const key = norm(q.question);
+        seen.add(key);
+        if (q.wikiDone) existingWikiDone.add(key);
+      });
+      console.log('Existing quiz.json: ' + existingCount + ' questions');
     } catch (e) {
       console.error('Error reading quiz.json: ' + e.message);
     }
   }
 
-  const seen = new Set(allQuestions.map(q => norm(q.question)));
-  const byKey = new Map(allQuestions.map(q => [norm(q.question), q]));
-
-  // Merge each chunk's output.
-  // Each chunk artifact is itself a full copy of the quiz (sharded into
-  // .part.N files), so we stream its parts one at a time instead of calling
-  // readQuiz() which would hold a second ~3M-question array in memory on top
-  // of allQuestions/seen/byKey and OOM the 7GB runner heap.
-  let added = 0;
+  // ── Load linked-page pool (small) ──
   const linkPool = {};
   try {
     const existingPool = JSON.parse(fs.readFileSync(LINK_POOL_PATH, 'utf8'));
     Object.entries(existingPool).forEach(([c, titles]) => { linkPool[c] = titles; });
   } catch (e) { /* no existing pool */ }
 
-  function consumeQuestions(qs, f) {
-    let chunkAdded = 0;
-    for (const q of qs) {
-      const key = norm(q.question);
-      if (!seen.has(key)) {
-        allQuestions.push(q);
-        seen.add(key);
-        byKey.set(key, q);
-        chunkAdded++;
-      } else if (q.wikiDone) {
-        // Carry the "fully covered" marker onto the already-existing question
-        // so partial articles stop being re-fetched on future runs.
-        const existing = byKey.get(key);
-        if (existing && !existing.wikiDone) existing.wikiDone = true;
-      }
-    }
-    return chunkAdded;
-  }
+  // ── Pass 2: stream each chunk, collect ONLY new questions ──
+  // carry holds keys where a chunk marks an already-existing question as
+  // wikiDone (so we can patch those existing questions during the write pass).
+  const carry = new Set();
+  const newQuestions = [];
+  let added = 0;
 
   for (const f of chunkFiles) {
     try {
       const chunkPath = path.join(CHUNKS_DIR, f);
-      // Primary file holds top-level fields (linkPool, shardCount, questions).
       const primary = JSON.parse(fs.readFileSync(chunkPath, 'utf8'));
       let chunkTotal = 0;
       let chunkAdded = 0;
-      if (primary.shardCount) {
-        // Aggregate this chunk's linked-page pool so partially-mined linked
-        // pages get finished by the revisit pool on future runs.
-        if (primary.linkPool && typeof primary.linkPool === 'object') {
-          Object.entries(primary.linkPool).forEach(([c, titles]) => {
-            if (!Array.isArray(titles)) return;
-            linkPool[c] = [...new Set([...(linkPool[c] || []), ...titles])];
-          });
+
+      if (primary.linkPool && typeof primary.linkPool === 'object') {
+        Object.entries(primary.linkPool).forEach(([c, titles]) => {
+          if (!Array.isArray(titles)) return;
+          linkPool[c] = [...new Set([...(linkPool[c] || []), ...titles])];
+        });
+      }
+
+      const consume = (qs) => {
+        for (const q of qs) {
+          chunkTotal++;
+          const key = norm(q.question);
+          if (!seen.has(key)) {
+            seen.add(key);
+            newQuestions.push(q);
+            chunkAdded++;
+          } else if (q.wikiDone) {
+            carry.add(key);
+          }
         }
-        // Stream parts one at a time so only ~1/N of the chunk is in memory.
+      };
+
+      if (primary.shardCount) {
         for (let i = 0; i < primary.shardCount; i++) {
           const part = JSON.parse(fs.readFileSync(chunkPath + '.part.' + i, 'utf8'));
-          const qs = part.questions || [];
-          chunkTotal += qs.length;
-          chunkAdded += consumeQuestions(qs, f);
+          consume(part.questions || []);
         }
       } else {
-        const qs = primary.questions || [];
-        chunkTotal = qs.length;
-        chunkAdded += consumeQuestions(qs, f);
-        if (primary.linkPool && typeof primary.linkPool === 'object') {
-          Object.entries(primary.linkPool).forEach(([c, titles]) => {
-            if (!Array.isArray(titles)) return;
-            linkPool[c] = [...new Set([...(linkPool[c] || []), ...titles])];
-          });
-        }
+        consume(primary.questions || []);
       }
+
       console.log('  ' + f + ': ' + chunkTotal + ' questions (' + chunkAdded + ' new)');
       added += chunkAdded;
-      // Free disk as we go: each chunk is a full quiz copy (~1 GB sharded) and
-      // holding all 27 simultaneously blew the runner mid-merge (run #458).
+
+      // Free disk as we go: each chunk is a full quiz copy sharded across many
+      // files. Removing it after consuming caps peak disk usage at ~1 chunk.
       try {
         fs.unlinkSync(chunkPath);
         if (primary.shardCount) {
@@ -118,20 +113,69 @@ function main() {
     }
   }
 
-  // Write merged quiz.json
-  writeQuizQuestions(QUIZ_PATH, allQuestions);
-  console.log('Wrote quiz.json: ' + allQuestions.length + ' total (' + added + ' new from chunks)');
+  // ── Pass 3: stream-merge into a temp file (existing patched + new) ──
+  // We never hold the full question list in memory: existing questions are
+  // streamed one shard at a time into the writer, and only this run's genuinely
+  // new questions are in memory at once.
+  const TMP = QUIZ_PATH + '.merging';
+  try { fs.unlinkSync(TMP); } catch (e) {}
+  for (let i = 0; i < 1000; i++) { try { fs.unlinkSync(TMP + '.part.' + i); } catch (e) { break; } }
 
-  // Prune fully-mined titles from the pool so it only holds in-progress pages.
+  const writer = createStreamingShardWriter(TMP);
+  let total = 0;
+  let carried = 0;
+  if (fs.existsSync(QUIZ_PATH)) {
+    try {
+      iterQuizQuestions(QUIZ_PATH, (q) => {
+        const key = norm(q.question);
+        if (carry.has(key) && !q.wikiDone) {
+          q.wikiDone = true;
+          carried++;
+        }
+        writer.add(q);
+        total++;
+      });
+    } catch (e) {
+      console.error('Error re-streaming quiz.json for write: ' + e.message);
+    }
+  }
+  for (const q of newQuestions) {
+    writer.add(q);
+    total++;
+  }
+  newQuestions.length = 0;
+  const res = writer.finish();
+  console.log('Wrote quiz.json: ' + total + ' total (' + added + ' new, ' + carried + ' wikiDone carried) across ' + (res.shards || 0) + ' shards');
+
+  // ── Atomically swap temp file in for the real quiz.json ──
+  if (res.shards) {
+    for (let i = 0; i < 1000; i++) {
+      const sp = QUIZ_PATH + '.part.' + i;
+      try { fs.unlinkSync(sp); } catch (e) { break; }
+    }
+    for (let i = 0; i < res.shards; i++) {
+      fs.renameSync(TMP + '.part.' + i, QUIZ_PATH + '.part.' + i);
+    }
+    fs.renameSync(TMP, QUIZ_PATH);
+  } else {
+    console.error('No questions written — leaving existing quiz.json untouched.');
+  }
+
+  // ── Prune fully-mined titles from the pool ──
   // A title is "done" once every question carrying it has wikiDone=true.
   const doneTitles = new Set();
   const titleQuestionCount = new Map();
-  allQuestions.forEach(q => {
+  const tally = (q) => {
     if (!q.subSubject) return;
     const k = norm(q.subSubject);
     titleQuestionCount.set(k, (titleQuestionCount.get(k) || 0) + 1);
     if (q.wikiDone) doneTitles.add(k);
-  });
+  };
+  if (fs.existsSync(QUIZ_PATH)) {
+    iterQuizQuestions(QUIZ_PATH, tally);
+  }
+  for (const q of newQuestions) tally(q);
+
   const fullyDone = new Set();
   Object.keys(linkPool).forEach(c => {
     linkPool[c] = (linkPool[c] || []).filter(t => {
