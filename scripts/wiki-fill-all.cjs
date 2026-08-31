@@ -2657,6 +2657,65 @@ const CATEGORIES = [
     'Physical education','Aerobic exercise','Anaerobic exercise','Strength training','Endurance training','Flexibility','Warm-up','Cool-down','Stretching',
     'Yoga and fitness','Marathon','Athletics','Field and track','Indian Olympic Association','Arjuna Award','Dronacharya'
   ]},
+  // ───────── Indian Climate, Monsoon & Seasons ─────────
+  { name:'Indian Monsoon & Climate', wikiCat:'Climate_of_India', keywords:[
+    'monsoon','southwest','northeast','retreating','advancing','itcz','jet stream','westerlies','south china','heat wave','cold wave','arid','semi-arid','humid','sub-humid','drought','flood','el nino','la nina','indian ocean dipole','orographic'
+  ], topics:[
+    'Climate of India','Monsoon of South Asia','Southwest monsoon','Northeast monsoon','Retreating monsoon','Advancing monsoon','Monsoon trough','Intertropical Convergence Zone','ITCZ','Thermal equator','Subtropical high',
+    'Indian Ocean Dipole','El Nino','La Nina','Southern Oscillation','Rossby wave','Jet stream','Subtropical westerly jet','Tropical easterly jet','Western disturbances',
+    'Orographic precipitation','Monsoon burst','Break in monsoon','Monsoon depression','Cyclonic storm','Norwester','Kal Baisakhi','Cherrapunji','Mawsynram',
+    'Drought in India','Floods in India','Drought-prone areas in India','Monsoon variability','El Nino effect on Indian monsoon',
+    'Koeppen climate classification','Tropical savanna climate','Tropical monsoon climate','Arid climate','Semi-arid climate','Subtropical climate','Himalayan climate'
+  ]},
+  { name:'Seasons & Weather of India', wikiCat:'Seasons_in_India', keywords:[
+    'season','winter','summer','spring','autumn','post-monsoon','pre-monsoon','harvest','kharif','rabi','zaid','temperature','wind','humidity','evaporation','condensation','thunderstorm','cyclone','depression','pressure'
+  ], topics:[
+    'Seasons in India','Winter in India','Summer in India','Monsoon season in India','Post-monsoon season','Spring in India','Autumn in India',
+    'Kharif crop','Rabi crop','Zaid crop','Cropping seasons in India',
+    'Temperature','Heat wave in India','Cold wave in India','Wind system of India','Loo','Dust storm','Thunderstorm','Lightning',
+    'Tropical cyclones in India','Cyclone Nargis','Cyclone Amphan','Cyclone Fani','Odisha cyclone','Indian Meteorological Department','Cyclone warning',
+    'Atmosphere','Humidity','Evaporation','Condensation','Precipitation','Rainfall distribution in India','Normal monsoon','Deficient monsoon'
+  ]},
+  // ───────── Biological & Life Sciences ─────────
+  { name:'Biological Classification & Taxonomy', wikiCat:'Biological_classification', keywords:[
+    'taxonomy','classification','kingdom','phylum','class','order','family','genus','species','taxon','nomenclature','dichotomous','prokaryote','eukaryote','kingdom animalia','plantae','fungi','protista','monera','archaea','carolus linnaeus','binomial'
+  ], topics:[
+    'Biological classification','Taxonomy','Kingdom','Phylum','Class','Order','Family','Genus','Species','Taxon','Carl Linnaeus','Binomial nomenclature','Biological nomen','Dichotomous key','Hierarchy of biological classification',
+    'Five kingdoms','Three-domain system','Prokaryote','Eukaryote','Archaea','Bacteria','Monera','Protista','Fungi','Plantae','Animalia','Virus','Viroid','Prion','Lichens','Mycoplasma',
+    'Whittaker classification','Haeckel','Woese','Taxonomic rank','Type species','Conservation status','Endemism','Biodiversity hotspot'
+  ]},
+  { name:'Cell Biology & Genetics', wikiCat:'Cell_biology', keywords:[
+    'cell','organelle','nucleus','mitochondria','ribosome','chloroplast','membrane','dna','rna','gene','chromosome','mitosis','meiosis','replication','transcription','translation','heredity','mutation','allele','genome','genetics','protein'
+  ], topics:[
+    'Cell biology','Cell','Eukaryote cell','Prokaryote cell','Cell membrane','Cytoplasm','Nucleus','Nucleolus','Ribosome','Endoplasmic reticulum','Golgi apparatus','Mitochondria','Chloroplast','Lysosome','Vacuole','Cell wall','Cytoskeleton',
+    'DNA','RNA','Gene','Chromosome','Chromatin','Histone','Genome','Genetics','Gregor Mendel','Mendelian inheritance','Allele','Dominant','Recessive','Genotype','Phenotype','Heredity',
+    'Mitosis','Meiosis','Cell division','Cell cycle','DNA replication','Transcription','Translation','Central dogma','Protein biosynthesis','Mutation','Genetic code','Nucleic acid',
+    'DNA fingerprinting','Recombinant DNA','Plasmid','Stem cell','Gene therapy','Human Genome Project','Genetically modified organism'
+  ]},
+  { name:'Plant Biology (Botany)', wikiCat:'Botany', keywords:[
+    'plant','botany','root','stem','leaf','flower','photosynthesis','transpiration','respiration in plant','germination','pollination','fertilization in plant','seed','fruit','chlorophyll','xylem','phloem','stomata','hormone in plant','tropism','perennation','crop'
+  ], topics:[
+    'Botany','Plant','Root','Stem','Leaf','Flower','Fruit','Seed','Photosynthesis','Chlorophyll','Chloroplast','Transpiration','Stomata','Xylem','Phloem','Vascular tissue','Vascular bundle',
+    'Respiration in plants','Germination','Pollination','Self-pollination','Cross-pollination','Fertilisation (plant)','Double fertilisation','Phototropism','Geotropism','Hydrotropism','Plant hormone','Auxin','Gibberellin','Cytokinin','Ethylene','Abscisic acid',
+    'Nitrogen fixation','Rhizobium','Symbiosis (plant)','Parasitic plant','Carnivorous plant','Epiphyte','Xerophyte','Hydrophyte','Halophyte','Algae','Bryophyte','Pteridophyte','Gymnosperm','Angiosperm','Monocotyledon','Dicotyledon',
+    'Medicinal plants','Spice','Cash crop','Fibre crop','Oilseed','Pulses','Cereals','Millets','Vegetable farming','Plant breeding','All India Coordinated Project'
+  ]},
+  { name:'Animal Biology (Zoology)', wikiCat:'Zoology', keywords:[
+    'animal','zoology','mammal','reptile','amphibian','bird','fish','invertebrate','vertebrate','arthropod','mollusc','annelid','cnidarian','poriferan','echinoderm','endotherm','ectotherm','camouflage','migration','metamorphosis','wildlife'
+  ], topics:[
+    'Zoology','Animal','Vertebrate','Invertebrate','Mammal','Reptile','Amphibian','Bird','Fish','Amphioxus','Cnidaria','Porifera','Arthropod','Insect','Arachnid','Crustacean','Mollusc','Gastropod','Bivalve','Annelid','Echinoderm',
+    'Endotherm','Ectotherm','Warm-blooded','Cold-blooded','Camouflage','Mimicry','Migration in animals','Hibernation','Metamorphosis','Ecdysis','Regeneration',
+    'Wildlife of India','Endangered species in India','Critically endangered species in India','Indian rhinoceros','Bengal tiger','Asiatic lion','Indian elephant','Snow leopard','Nilgiri tahr','Great Indian bustard',
+    'IUCN Red List','Wildlife conservation in India','Project Tiger','Project Elephant','Wildlife Sanctuary','National Park','Zoo','Breeding'
+  ]},
+  { name:'Microbiology & Human Diseases', wikiCat:'Microbiology', keywords:[
+    'microbe','microorganism','bacteria','virus','fungus','protozoa','pathogen','infection','disease','antibiotic','vaccine','immunity','host','vector','transmission','epidemic','pandemic','antigen','antibody','parasite'
+  ], topics:[
+    'Microbiology','Microorganism','Bacteria','Virus','Fungus','Protozoa','Algae','Pathogen','Infection','Infectious disease','Contagious disease','Host','Vector','Parasite','Saprophyte','Saprotroph',
+    'Antigen','Antibody','Vaccine','Vaccination','Immunity','Innate immunity','Adaptive immunity','Antibiotic','Antiviral drug','Antiseptic','Disinfectant','Germ theory of disease',
+    'Tuberculosis','Malaria','Dengue fever','Chikungunya','Typhoid','Cholera','Polio','Measles','Smallpox','COVID-19 pandemic','Hepatitis','Rabies','Tetanus','Leprosy','Filariasis','Japanese encephalitis','Amoebiasis','Ringworm',
+    'Epidemic','Pandemic','Outbreak','Herd immunity','Quarantine','National Immunisation Schedule','Mission Indradhanush'
+  ]},
 ];
 
 
@@ -2680,6 +2739,7 @@ const DAY_GROUPS = [
   [94,95,96,97,98,99,100,101,102], // Group 15: Commissions Committees & Bodies, Malayalam Literature, Tamil Literature, Sanskrit & Classical Languages, Kannada Literature, Telugu Literature, Bengali Literature, Marathi & Hindi Literature, Punjabi & Other Regional Literature
   [103,104,105], // Group 16: International Organizations & Summits, India & International Relations, World Geography & Countries
   [106,107,108,109,110,111,112,113,114], // Group 17: Indian Religions, Hinduism & Mythology, Buddhism & Jainism, Sikhism & Other Faiths, Classical & Dravidian Languages, Indian Languages - National & Regional, Health & Human Body, Health & Nutrition, Sports & Physical Education
+  [115,116,117,118,119,120,121], // Group 18: Indian Monsoon & Climate, Seasons & Weather of India, Biological Classification & Taxonomy, Cell Biology & Genetics, Plant Biology (Botany), Animal Biology (Zoology), Microbiology & Human Diseases
 ];
 
 async function main() {
