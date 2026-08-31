@@ -8521,6 +8521,12 @@ var fact = q.fact || q.solution || q.explanation || '';
         function _updateArchiveProgress() {
             var el = document.getElementById('archiveProgress');
             if (!el) return;
+            // If the user is actively typing in the archive jump box, do NOT
+            // rebuild this container's innerHTML — doing so would destroy the
+            // input element, steal focus, and erase the typed number. The
+            // counters catch up again the next time this runs (e.g. after blur).
+            var ae = document.activeElement;
+            if (ae && (ae.id === 'archJumpInput' || ae.id === 'jumpInput')) return;
             el.style.display = 'block';
             if (_archiveLoading) {
                 el.innerHTML = '📚 Archive: <span style="color:var(--amber)">loading cache…</span>';
