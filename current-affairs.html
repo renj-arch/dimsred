@@ -163,6 +163,17 @@
         .sr-box .sr-item .snippet b{color:var(--purple)}
         .sr-close{position:absolute;top:66px;right:calc(50% - 220px);background:var(--bg-card);border:1px solid var(--border);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:1.1em}
         @media(max-width:500px){.sr-close{right:12px}}
+
+        /* Floating mobile quick-nav (fixed position, always visible in quiz) */
+        .mob-qnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:90;padding:8px 12px 14px;background:linear-gradient(to top,rgba(9,9,11,.95) 60%,transparent);pointer-events:none}
+        .mob-qnav.show{display:flex;align-items:center;justify-content:center;gap:10px;pointer-events:auto}
+        .mob-qnav button{width:48px;height:48px;border-radius:50%;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:1.3em;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+        .mob-qnav button:active{transform:scale(.92);background:rgba(255,255,255,.08)}
+        .mob-qnav button.next-btn{width:56px;height:56px;background:linear-gradient(135deg,var(--purple),var(--emerald));color:#fff;border:none;font-size:1.4em;box-shadow:0 4px 20px rgba(167,139,250,.3)}
+        .mob-qnav button.next-btn:active{box-shadow:0 2px 10px rgba(167,139,250,.2)}
+        .mob-qnav button:disabled{opacity:.3;cursor:default;transform:none}
+        .mob-qnav .speed-hint{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:.6em;color:var(--emerald);background:rgba(9,9,11,.9);padding:2px 8px;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .2s;white-space:nowrap}
+        .mob-qnav .speed-hint.show{opacity:1}
     </style>
 </head>
 <body>
@@ -269,7 +280,7 @@
                 <div class="q-text" id="qText">Loading...</div>
                 <div class="q-hint" id="qHint" onclick="toggleHint()" style="display:none">💡 Hint
                 <div class="q-opt-grid" id="optGrid"></div>
-                <div style="font-size:.65em;color:var(--text-muted);margin-top:8px;text-align:center"><span class="kb-hint"><kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">→</kbd> advance · <kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">⏸</kbd> pause</span> <span class="swipe-hint" style="display:none">swipe → next</span></div>
+                <div style="font-size:.65em;color:var(--text-muted);margin-top:8px;text-align:center"><span class="kb-hint"><kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">→</kbd> advance · <kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">⏸</kbd> pause</span> <span class="swipe-hint" style="display:none">swipe ← / swipe → · hold →⚡ rapid</span></div>
             </div>
             <div class="result-flash" id="resultFlash"></div>
             <div id="intuitionDisplay" style="font-size:.78em;color:var(--amber);margin-top:4px;padding:10px 12px;border-radius:8px;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);display:none;line-height:1.6;text-align:left"><span style="font-weight:700;color:var(--amber);display:block;margin-bottom:3px">⚡ Quick Fact</span><span id="intuitionText"></span></div>
@@ -361,6 +372,13 @@
             <div class="cat-grid"></div>
         </div>
 
+    </div>
+
+    <!-- Floating mobile quick-nav -->
+    <div class="mob-qnav" id="mobQnav">
+        <button id="mobPrevBtn" title="Previous" onclick="mobPrevClick()">←</button>
+        <button class="next-btn" id="mobNextBtn" title="Next (hold to rapid-fire)" onclick="mobNextClick()">→</button>
+        <div class="speed-hint" id="speedHint">⚡ Rapid mode</div>
     </div>
 
     <script>
@@ -5843,8 +5861,67 @@ var _staticGen_polity = GK_GENERATORS.polity;
             if (dx < -60) {
                 var nextBtn = document.getElementById('nextBtn');
                 if (!nextBtn.classList.contains('hidden')) nextBtn.click();
+            } else if (dx > 60) {
+                prevQuestion();
             }
         }, { passive: true });
+
+        // ==== Mobile floating quick-nav (fixed position, never moves) ====
+        function _updateMobileNav() {
+            var nav = document.getElementById('mobQnav');
+            if (!nav) return;
+            var active = document.getElementById('qArea').classList.contains('active') && ('ontouchstart' in window);
+            if (active !== nav.classList.contains('show')) nav.classList.toggle('show', active);
+            document.getElementById('mobPrevBtn').disabled = !active;
+            document.body.style.paddingBottom = active ? '86px' : '';
+        }
+        new MutationObserver(function() {
+            _updateMobileNav();
+        }).observe(document.getElementById('qArea'), { attributes:true, attributeFilter:['class'] });
+        _updateMobileNav();
+
+        var _rapidTimer = null, _rapidActive = false, _rapidFired = false, _suppressClick = false;
+        function mobPrevClick() { prevQuestion(); }
+        function _rapidStop() {
+            if (_rapidTimer) { clearInterval(_rapidTimer); _rapidTimer = null; }
+            _rapidActive = false;
+            var hint = document.getElementById('speedHint');
+            var b = document.getElementById('mobNextBtn');
+            hint.classList.remove('show');
+            if (b) b.style.background = '';
+        }
+        function _rapidStart(e) {
+            if (e && e.cancelable) e.preventDefault();
+            _rapidStop();
+            _rapidFired = false;
+            _rapidActive = true;
+            var nextBtn = document.getElementById('mobNextBtn');
+            var hint = document.getElementById('speedHint');
+            _rapidTimer = setTimeout(function() {
+                _rapidFired = true;
+                _suppressClick = true;
+                hint.classList.add('show');
+                nextBtn.style.background = 'linear-gradient(135deg,#f59e0b,#ef4444)';
+                nextQuestion();
+                _rapidTimer = setInterval(function() { nextQuestion(); }, 350);
+            }, 400);
+        }
+        function mobNextClick() {
+            if (_suppressClick) { _suppressClick = false; _rapidStop(); return; }
+            nextQuestion();
+        }
+        (function() {
+            var nextBtn = document.getElementById('mobNextBtn');
+            if (!nextBtn) return;
+            nextBtn.addEventListener('touchstart', _rapidStart, { passive:false });
+            nextBtn.addEventListener('mousedown', _rapidStart);
+            nextBtn.addEventListener('touchend', function(e) {
+                if (_rapidActive) { if (_rapidFired && e.cancelable) e.preventDefault(); _rapidStop(); }
+            }, { passive:false });
+            nextBtn.addEventListener('touchcancel', _rapidStop);
+            nextBtn.addEventListener('mouseup', _rapidStop);
+            nextBtn.addEventListener('mouseleave', _rapidStop);
+        })();
 
         function _initStudyData() {
             Object.keys(GK_LEARN).forEach(function(cid){ try { studyData[cid] = _parseStudyContent(cid); } catch(e) { studyData[cid] = null; } });
