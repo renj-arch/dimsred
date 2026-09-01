@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { readQuiz, writeQuiz } = require('./lib/quiz-store');
+const { iterQuizQuestions, createStreamingShardWriter } = require('./lib/quiz-store');
 
 const QUIZ_PATH = path.join(__dirname, '..', 'data', 'quiz.json');
 const QUESTIONS_DIR = path.join(__dirname, '..', 'data', 'questions');
@@ -140,21 +140,63 @@ async function main() {
   let totalRemoved = 0;
   let totalKept = 0;
 
-  // Clean quiz.json if it exists
+  // ── Clean quiz.json if it exists ──
+  // The monolithic quiz is sharded across ~4 files totalling ~1GB+ (~6M question
+  // objects) after a 27-chunk merge. `readQuiz()` reassembles ALL shards into one
+  // in-memory array; combined with the `seen` Map and the near-dup groups map
+  // this blew the 8GB heap and killed the merge job with a FATAL OOM (exit 134,
+  // run #482 step:12). So the quiz pass streams shards one at a time via
+  // iterQuizQuestions(), keeping only (a) a bounded Set of seen question-text
+  // keys and (b) one shard's buffer in memory at once — the same pattern that
+  // merge-chunks.js already runs successfully.
+  //
+  // The fuzzy Levenshtein near-dup pass is inherently "group every question by
+  // subSubject+fact and compare within the group", which needs all questions
+  // resident. That is NOT done here for the giant quiz anymore: after this step
+  // the quiz is split into per-category files (split-quiz-to-categories.js) and
+  // each file's fuzzy near-dup removal runs in the per-file loop below, where a
+  // single file (~8MiB) is trivially in-memory. Cross-file fuzz dedup is lost,
+  // but same-article same-sentence near-dups (the flood this targets) land in
+  // the same category file after split, so they are still caught.
   if (fs.existsSync(QUIZ_PATH)) {
-    let quiz;
+    const seen = new Set();
+    let kept = 0;
+    let removed = 0;
+    let readErr = null;
+    const TMP = QUIZ_PATH + '.dedup-tmp';
+    try { for (let i = 0; i < 1000; i++) { try { require('fs').unlinkSync(TMP + '.part.' + i); } catch (e) { break; } } } catch (e) {}
+    try { require('fs').unlinkSync(TMP); } catch (e) {}
+    const writer = createStreamingShardWriter(TMP);
     try {
-      quiz = readQuiz(QUIZ_PATH);
+      iterQuizQuestions(QUIZ_PATH, (q) => {
+        const key = baseText(q);
+        if (seen.has(key)) { removed++; return; }
+        seen.add(key);
+        writer.add(q);
+        kept++;
+      });
     } catch (e) {
+      readErr = e;
       console.error(`Warning: Could not parse quiz.json (${e.message}). Skipping.`);
-      return;
     }
-    const { kept, removed } = clean(quiz.questions, 'quiz.json');
-    totalRemoved += removed.length;
-    totalKept += kept.length;
-    quiz.questions = kept;
-    writeQuiz(QUIZ_PATH, quiz);
-    console.log(`quiz.json: removed ${removed.length} duplicate questions, kept ${kept.length}`);
+    const res = writer.finish();
+    if (readErr) {
+      // Leave the partial temp writer output for cleanup below and move on.
+      try { require('fs').unlinkSync(TMP); for (let i = 0; i < 1000; i++) { try { require('fs').unlinkSync(TMP + '.part.' + i); } catch (e) { break; } } } catch (e) {}
+    } else if (res.shards) {
+      for (let i = 0; i < 1000; i++) {
+        const sp = QUIZ_PATH + '.part.' + i;
+        try { require('fs').unlinkSync(sp); } catch (e) { break; }
+      }
+      for (let i = 0; i < res.shards; i++) {
+        require('fs').renameSync(TMP + '.part.' + i, QUIZ_PATH + '.part.' + i);
+      }
+      require('fs').renameSync(TMP, QUIZ_PATH);
+    }
+    seen.clear();
+    totalRemoved += removed;
+    totalKept += kept;
+    console.log(`quiz.json: removed ${removed} duplicate questions, kept ${kept}`);
   }
 
   // Clean data/questions/*.json

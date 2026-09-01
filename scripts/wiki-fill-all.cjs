@@ -3463,14 +3463,40 @@ async function main() {
     log('  (could not save category-member cache: ' + e.message + ')');
   }
 
-  writeQuiz(QUIZ_PATH, quiz);
+  // ── Persist the chunk ──
+  // The per-category loop above already wraps each category so one category's
+  // failure can't abort the chunk. The tail below must never surface an error to
+  // main().catch() → process.exit(1), because a non-zero exit makes Actions skip
+  // the upload-artifact step: the chunk's file (with all questions mined this
+  // run) never reaches the merge, losing that run's data.
+  //   - Primary write of the chunk output: critical, but if it fails we still
+  //     try the runner-temp copy before deciding the chunk is unsavable.
+  //   - Link pool / category cache / runner-temp mirror: best-effort side
+  //     writes — a failure must NOT sink the chunk.
+  let writeOk = false;
+  let tmpOk = false;
+  try { writeQuiz(QUIZ_PATH, quiz); writeOk = true; }
+  catch (e) { log('  (ERROR writing chunk output ' + QUIZ_PATH + ': ' + (e && (e.message || e.code)) + ')'); }
+
   if (process.env.RUNNER_TEMP) {
-    const tmpPath = process.env.RUNNER_TEMP + '/quiz.json';
-    writeQuiz(tmpPath, quiz);
-    log('Saved quiz.json to runner temp (' + tmpPath + ')');
+    try {
+      const tmpPath = process.env.RUNNER_TEMP + '/quiz.json';
+      writeQuiz(tmpPath, quiz);
+      tmpOk = true;
+    } catch (e2) {
+      log('  (ERROR writing runner-temp quiz.json: ' + (e2 && (e2.message || e2.code)) + ')');
+    }
   }
 
   log('Total new: ' + totalAdded + ', Grand total: ' + quiz.questions.length);
+
+  // Only when BOTH persists failed is the chunk truly unsavable — that is the
+  // single case worth surfacing as a hard error. Otherwise exit cleanly (0) so
+  // the upload-artifact step runs and the mined questions reach the merge.
+  if (!writeOk && !tmpOk) {
+    log('(FATAL: could not persist chunk output anywhere — nothing to upload)');
+    throw new Error('could not persist chunk output');
+  }
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
