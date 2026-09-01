@@ -262,6 +262,12 @@ jobs:
 
       - run: node scripts/build-archive-single.js
 
+      # Rebuild the per-file archive index so current-affairs.html's archive
+      # progress total (read from data/questions/archive-index.json) stays in
+      # sync with archive.html/catalog.json. Without this the index is left at
+      # the previous snapshot's count while the archive keeps growing.
+      - run: node scripts/build-archive-index.mjs
+
       - run: |
           cp archive.html data/archive.html
           mkdir -p "$RUNNER_TEMP"
