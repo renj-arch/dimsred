@@ -23,7 +23,7 @@ const path = require('path');
 const lib = require('./classify_lib.js');
 const { classify, TICK, DIR, slugFor } = lib;
 
-const files = fs.readdirSync(DIR).filter(f => f.endsWith('.json') && f !== 'catalog.json' && f !== 'manifest.json');
+const files = fs.readdirSync(DIR).filter(f => f.endsWith('.json') && f !== 'catalog.json' && f !== 'manifest.json' && f !== 'archive-cat-index.json');
 
 // ── OOM guard ── Load only enough files to fit within the available heap.
 // GitHub-hosted runners have ~7 GB RAM; V8 heap is capped by NODE_OPTIONS.

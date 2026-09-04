@@ -12,7 +12,7 @@ if (!fs.existsSync(questionsDir)) {
   process.exit(0);
 }
 
-const files = fs.readdirSync(questionsDir).filter(f => f.endsWith('.json') && f !== 'manifest.json');
+const files = fs.readdirSync(questionsDir).filter(f => f.endsWith('.json') && f !== 'manifest.json' && f !== 'archive-cat-index.json');
 const allQuestions = [];
 
 files.forEach(f => {

@@ -5,7 +5,7 @@ const questionsDir = path.join(__dirname, '..', 'data', 'questions');
 const archivePath = path.join(__dirname, '..', 'archive.html');
 
 let total = 0;
-const files = fs.readdirSync(questionsDir).filter(f => f.endsWith('.json') && f !== 'manifest.json');
+const files = fs.readdirSync(questionsDir).filter(f => f.endsWith('.json') && f !== 'manifest.json' && f !== 'archive-cat-index.json');
 for (const f of files) {
   try {
     const data = JSON.parse(fs.readFileSync(path.join(questionsDir, f), 'utf8'));

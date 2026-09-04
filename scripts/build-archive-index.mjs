@@ -21,7 +21,7 @@ const files = [];
 
 for (const f of fs.readdirSync(DIR)) {
   if (!f.endsWith('.json')) continue;
-  if (f === 'manifest.json' || f === 'archive-index.json') continue;
+  if (f === 'manifest.json' || f === 'archive-index.json' || f === 'archive-cat-index.json') continue;
   const p = path.join(DIR, f);
   let count = 0;
   try {

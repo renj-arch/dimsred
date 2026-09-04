@@ -201,7 +201,7 @@ async function main() {
 
   // Clean data/questions/*.json
   if (fs.existsSync(QUESTIONS_DIR)) {
-    const files = fs.readdirSync(QUESTIONS_DIR).filter(f => f.endsWith('.json') && f !== 'manifest.json');
+    const files = fs.readdirSync(QUESTIONS_DIR).filter(f => f.endsWith('.json') && f !== 'manifest.json' && f !== 'archive-cat-index.json');
     for (const f of files) {
       const fp = path.join(QUESTIONS_DIR, f);
       let data;

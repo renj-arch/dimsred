@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { readQuizQuestions, writeQuiz } = require('./lib/quiz-store');
+const { readQuizQuestions, writeQuiz, iterQuizQuestions, createStreamingShardWriter } = require('./lib/quiz-store');
 const WIKI_API = 'https://en.wikipedia.org/w/api.php';
 const QUIZ_PATH = process.env.QUIZ_PATH || 'data/quiz.json';
 const LINK_POOL_PATH = process.env.WIKI_LINK_POOL_PATH || path.join(path.dirname(QUIZ_PATH), 'wiki-link-pool.json');
@@ -2789,19 +2789,32 @@ const DAY_GROUPS = [
 async function main() {
   let quizSize = 0;
   try { quizSize = fs.statSync(QUIZ_PATH).size; } catch (e) {}
-  log('Loading quiz.json (' + (quizSize / 1024 / 1024).toFixed(0) + ' MiB)...');
-  let quiz;
-  try { quiz = { questions: readQuizQuestions(QUIZ_PATH) }; }
-  catch (e) { quiz = { questions: [] }; console.log('Created new quiz.json (was missing)'); }
-  const existingQ = new Set(quiz.questions.map(q => norm(q.question)));
-
-  let nextId = quiz.questions.length;
+  // The monolithic quiz is sharded across ~4 files totalling ~3GB (~6M question
+  // objects). readQuizQuestions()/readQuiz() reassemble ALL shards into one
+  // in-memory array; doing that on every one of the 27 parallel chunk jobs
+  // blows the 8GB heap → FATAL OOM (exit 134, runs #482 / #488). Instead we
+  // stream the existing questions one shard at a time via iterQuizQuestions(),
+  // keeping only the derived dedup/state structures in memory — the same
+  // pattern merge-chunks.js and dedup-sentence-flood.js already run safely.
+  log('Scanning quiz.json (' + (quizSize / 1024 / 1024).toFixed(0) + ' MiB, streaming)...');
+  const existingQ = new Set();
+  const newQuestions = [];
+  let nextId = 0;
+  try {
+    iterQuizQuestions(QUIZ_PATH, (q) => {
+      existingQ.add(norm(q.question));
+      nextId++;
+    });
+  } catch (e) {
+    console.log('Could not read quiz.json; starting fresh (' + e.message + ')');
+  }
+  let grandTotal = nextId;
 
   function pushQ(qObj) {
     if (existingQ.has(norm(qObj.question))) return false;
     existingQ.add(norm(qObj.question));
-    qObj.id = 'q' + (nextId++);
-    quiz.questions.push(qObj);
+    qObj.id = 'q' + (grandTotal++); // continue the q0..qN sequence; avoid collision
+    newQuestions.push(qObj);
     return true;
   }
 
@@ -2821,7 +2834,7 @@ async function main() {
     const mins = (now - progressStart) / 60000;
     const rate = mins > 0 ? (totalAdded - lastProgress) / mins : 0;
     log('[progress] chunk=' + process.env.WIKI_FILL_CHUNK + '/' + process.env.WIKI_FILL_CHUNKS +
-      ' newThisRun=' + totalAdded + ' (grandTotal=' + quiz.questions.length + ')' +
+      ' newThisRun=' + totalAdded + ' (grandTotal=' + grandTotal + ')' +
       ' +' + (totalAdded - lastProgress) + ' in last min (' + rate.toFixed(0) + ' qn/min)');
     lastProgress = totalAdded;
     progressStart = now;
@@ -2881,15 +2894,15 @@ async function main() {
   // yields 0 new (stalling partial articles after their first pass). The cursor
   // lets the revisit resume PAST the already-mined sentences each run.
   const minedCursor = new Map(); // norm(title) -> count of sentences consumed
-  for (const q of quiz.questions) {
-    if (q.source !== 'Wiki' || !q.subSubject) continue;
+  iterQuizQuestions(QUIZ_PATH, (q) => {
+    if (q.source !== 'Wiki' || !q.subSubject) return;
     const k = norm(q.subSubject);
     coveredTitles.add(k);
     qCount.set(k, (qCount.get(k) || 0) + 1);
     if (q.wikiDone) doneTitles.add(k);
     const v = q.wikiMinedTo || 0;
     if (v > (minedCursor.get(k) || 0)) minedCursor.set(k, v);
-  }
+  });
   const topicBudget = parseInt(process.env.WIKI_FILL_TOPIC_BUDGET || '200000', 10);
   const revisitBudget = parseInt(process.env.WIKI_FILL_REVISIT_BUDGET || '200000', 10);
 
@@ -3370,7 +3383,7 @@ async function main() {
     }
     if (depth > 0) log('  Link traversal finished at depth ' + depth);
 
-    log('  Added ' + added + ' new questions for ' + cat.name + ' (total: ' + quiz.questions.length + ')');
+    log('  Added ' + added + ' new questions for ' + cat.name + ' (total: ' + grandTotal + ')');
     totalAdded += added;
 
     const slug = cat.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -3386,7 +3399,13 @@ async function main() {
       }
     });
     let addedCount = 0;
-    quiz.questions.filter(q => q.subject === cat.name).forEach(q => {
+    // Only this run's freshly-mined questions for this category need appending
+    // here: the on-disk catFile already holds every pre-existing question, and
+    // the merge job regenerates data/questions/* from the full quiz via
+    // split-quiz-to-categories.js anyway. Scanning the entire 6.1M-question DB
+    // per category (the old quiz.questions.filter) is impossible without holding
+    // all questions in memory — the OOM this file previously hit.
+    newQuestions.filter(q => q.subject === cat.name).forEach(q => {
       const key = ((q.question||'')+'||'+(q.answer||'')).toLowerCase().replace(/\s+/g,' ').trim();
       if (!seen.has(key)) {
         seen.add(key);
@@ -3403,42 +3422,25 @@ async function main() {
     } catch (catErr) {
       // A category that throws (network burst, malformed page, OOM edge, etc.)
       // must not abort the whole chunk: log it, keep the questions the category
-      // already accumulated in `quiz`, and move on to the next category so the
-      // chunk still finishes and persists its output.
+      // already accumulated in `newQuestions`, and move on so the chunk still
+      // finishes and persists its output.
       log('  (category error for ' + cat.name + ': ' + (catErr && (catErr.message || catErr.code) ? (catErr.message || catErr.code) : catErr) + ' — continuing)');
     }
   }
 
-  if (doneThisRun.size) {
-    for (const q of quiz.questions) {
-      if (q.source === 'Wiki' && q.subSubject && doneThisRun.has(norm(q.subSubject))) q.wikiDone = true;
-    }
-    log('Marked ' + doneThisRun.size + ' articles fully covered (wikiDone)');
-  }
-
-  // Persist per-article sentence-progress cursors so the next run's revisit
-  // loop resumes past already-mined sentences (instead of re-minting the same
-  // ones into the dedup sink, which yields 0 new each run). Without this the
-  // 146k linked-page frontier was stuck at sentence ~200 forever.
-  if (cursorThisRun.size) {
-    let updated = 0;
-    for (const q of quiz.questions) {
-      if (q.source !== 'Wiki' || !q.subSubject) continue;
-      const k = norm(q.subSubject);
-      const c = cursorThisRun.get(k);
-      if (c != null && (!q.wikiMinedTo || c > q.wikiMinedTo)) { q.wikiMinedTo = c; updated++; }
-    }
-    log('Persisted mining cursor for ' + updated + ' questions (' + cursorThisRun.size + ' articles)');
-  }
+  // The wikiDone / wikiMinedTo mutations (which used to be applied in-place on
+  // an in-memory quiz.questions array) are now applied to each existing question
+  // as it streams through the write pass below — there is no resident array of
+  // all questions to mutate anymore.
 
   const poolMerged = {};
   Object.keys(linkPool).forEach(c => { poolMerged[c] = linkPool[c]; });
   Object.entries(linkedThisRun).forEach(([c, titles]) => {
     poolMerged[c] = [...new Set([...(poolMerged[c] || []), ...titles])];
   });
-  // Embed the merged pool in the chunk output so the merge job can aggregate
-  // per-chunk pools into the persisted data/wiki-link-pool.json.
-  quiz.linkPool = poolMerged;
+  // Embed the merged pool in the chunk output (passed as the shard writer's
+  // primary fields) so the merge job can aggregate per-chunk pools into the
+  // persisted data/wiki-link-pool.json.
   try {
     fs.writeFileSync(LINK_POOL_PATH, JSON.stringify(poolMerged, null, 1));
     const totalPool = Object.values(poolMerged).reduce((s, a) => s + a.length, 0);
@@ -3473,22 +3475,56 @@ async function main() {
   //     try the runner-temp copy before deciding the chunk is unsavable.
   //   - Link pool / category cache / runner-temp mirror: best-effort side
   //     writes — a failure must NOT sink the chunk.
+  // Streaming write helper. Existing questions are read one shard at a time and
+  // written straight into a fresh shard writer (never held in memory); the
+  // wikiDone / wikiMinedTo mutations computed above are applied in-flight; then
+  // this run's bounded set of new questions is appended. The output is sharded
+  // exactly like readQuiz/writeQuiz produced, so the merge job and baseline
+  // restore read it identically. For the primary QUIZ_PATH the write goes to a
+  // temp file first and is atomically swapped in, because reading and writing
+  // the same .part.N file simultaneously would corrupt the shards.
+  let streamedOut = 0;
+  const streamWriteQuiz = (target, useTempSwap) => {
+    const out = useTempSwap ? target + '.wiki-tmp' : target;
+    for (let i = 0; i < 1000; i++) { try { fs.unlinkSync(out + '.part.' + i); } catch (e) { break; } }
+    const writer = createStreamingShardWriter(out, { linkPool: poolMerged });
+    iterQuizQuestions(QUIZ_PATH, (q) => {
+      if (q.source === 'Wiki' && q.subSubject) {
+        const k = norm(q.subSubject);
+        if (doneThisRun.has(k)) q.wikiDone = true;
+        const c = cursorThisRun.get(k);
+        if (c != null && (!q.wikiMinedTo || c > q.wikiMinedTo)) { q.wikiMinedTo = c; streamedOut++; }
+      }
+      writer.add(q);
+    });
+    for (const q of newQuestions) writer.add(q);
+    const res = writer.finish();
+    if (useTempSwap && res.shards) {
+      for (let i = 0; i < 1000; i++) {
+        const sp = target + '.part.' + i;
+        try { fs.unlinkSync(sp); } catch (e) { break; }
+      }
+      for (let i = 0; i < res.shards; i++) fs.renameSync(out + '.part.' + i, target + '.part.' + i);
+      fs.renameSync(out, target);
+    }
+    return res;
+  };
+
   let writeOk = false;
   let tmpOk = false;
-  try { writeQuiz(QUIZ_PATH, quiz); writeOk = true; }
+  try { streamWriteQuiz(QUIZ_PATH, true); writeOk = true; }
   catch (e) { log('  (ERROR writing chunk output ' + QUIZ_PATH + ': ' + (e && (e.message || e.code)) + ')'); }
 
   if (process.env.RUNNER_TEMP) {
     try {
-      const tmpPath = process.env.RUNNER_TEMP + '/quiz.json';
-      writeQuiz(tmpPath, quiz);
+      streamWriteQuiz(process.env.RUNNER_TEMP + '/quiz.json', false);
       tmpOk = true;
     } catch (e2) {
       log('  (ERROR writing runner-temp quiz.json: ' + (e2 && (e2.message || e2.code)) + ')');
     }
   }
 
-  log('Total new: ' + totalAdded + ', Grand total: ' + quiz.questions.length);
+  log('Total new: ' + totalAdded + ', Grand total: ' + grandTotal + ' (persisted ' + (streamedOut || 0) + ' cursor/done updates)');
 
   // Only when BOTH persists failed is the chunk truly unsavable — that is the
   // single case worth surfacing as a hard error. Otherwise exit cleanly (0) so
