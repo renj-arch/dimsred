@@ -1,4 +1,5 @@
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 
 const outDir = path.join(__dirname, '..', 'data', 'questions');
@@ -29,32 +30,115 @@ function normEnc(s) {
   return fixed.indexOf('\uFFFD') >= 0 ? s : fixed;
 }
 
-// ── Read all questions from per-category files ──
-const allQuestions = [];
+// ── Streaming build ──
+// Run #492 died in the merge job (heap OOM) inside the old all-in-memory build,
+// which held every question object + the full dedup Set + the whole category
+// tree at once (~0.87 KB/question → ~7 GB before write-phase spikes). This
+// build streams instead:
+//   Phase 1 — dedup-key pass: only the key Set lives in memory (~0.28 KB/question).
+//   Phase 2 — re-scan; stream first occurrences to per-category temp JSONL.
+//   Phase 3 — rebuild one category at a time and write its part files.
+// Questions stay in the exact same first-occurrence order, so every output
+// (part jsons, cat index, catalog, archive listing) is byte-identical to the
+// old build given the same input ordering.
+function dedupKey(q) {
+  return normEnc(((q.question || '') + '||' + (q.answer || '')).toLowerCase().replace(/\s+/g, ' ').trim());
+}
+function memLog(label) {
+  const m = process.memoryUsage();
+  console.log('[mem] ' + label + ': heapUsed ' + (m.heapUsed / 1048576).toFixed(0) + ' MiB, heapTotal ' + (m.heapTotal / 1048576).toFixed(0) + ' MiB, rss ' + (m.rss / 1048576).toFixed(0) + ' MiB');
+}
+// Bounded retry for file writes: on dev boxes an AV scanner can briefly lock a
+// just-written file (UNKNOWN/EAGAIN/EBUSY/EPERM). Retry a few times, then rethrow.
+function safeSleep(ms) {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+}
+function retryableFs(err) {
+  return err && (err.code === 'UNKNOWN' || err.code === 'EAGAIN' || err.code === 'EBUSY' || err.code === 'EPERM');
+}
+function safeWrite(p, data, tries) {
+  for (let i = 0; ; i++) {
+    try { fs.writeFileSync(p, data); return; }
+    catch (e) { if (i >= (tries || 5) - 1 || !retryableFs(e)) throw e; safeSleep(200); }
+  }
+}
+function safeAppend(p, data, tries) {
+  for (let i = 0; ; i++) {
+    try { fs.appendFileSync(p, data); return; }
+    catch (e) { if (i >= (tries || 5) - 1 || !retryableFs(e)) throw e; safeSleep(200); }
+  }
+}
+
+const files = fs.readdirSync(outDir).filter(f => f.endsWith('.json') && f !== 'manifest.json' && f !== 'archive-cat-index.json');
+
+// ── Phase 1 — dedup-key pass. ──
 const seen = new Set();
 let totalRaw = 0;
-const files = fs.readdirSync(outDir).filter(f => f.endsWith('.json') && f !== 'manifest.json' && f !== 'archive-cat-index.json');
 for (const f of files) {
-  try {
-    const data = JSON.parse(fs.readFileSync(path.join(outDir, f), 'utf8'));
+  let data;
+  try { data = JSON.parse(fs.readFileSync(path.join(outDir, f), 'utf8')); } catch { continue; }
+  for (const [, subjData] of Object.entries(data)) {
+    if (subjData && subjData.subSubjects) {
+      for (const [, qs] of Object.entries(subjData.subSubjects)) {
+        for (const q of qs) {
+          totalRaw++;
+          seen.add(dedupKey(q));
+        }
+      }
+    }
+  }
+}
+const deduped = seen.size;
+console.log('Per-category files: ' + deduped + ' / ' + totalRaw + ' unique (removed ' + (totalRaw - deduped) + ' duplicates)');
+memLog('phase1 dedup set built');
+
+// ── Phase 2 — route each first occurrence to a per-category temp JSONL file. ──
+const tmpBase = fs.mkdtempSync(path.join(os.tmpdir(), 'archive-stream-'));
+const catHas = new Set();
+const catTmp = new Map();
+const expectedFiles = new Set(['catalog.json']);
+const catIndex = [];
+let sortedCats = [];
+const lineBuf = new Map();
+function flushCat(c) {
+  const arr = lineBuf.get(c);
+  if (arr && arr.length) {
+    safeAppend(catTmp.get(c), arr.join('\n') + '\n');
+    arr.length = 0;
+  }
+}
+function writeLine(c, json) {
+  let arr = lineBuf.get(c);
+  if (!arr) { arr = []; lineBuf.set(c, arr); }
+  arr.push(json);
+  if (arr.length >= 4000) flushCat(c);
+}
+try {
+  for (const f of files) {
+    let data;
+    try { data = JSON.parse(fs.readFileSync(path.join(outDir, f), 'utf8')); } catch { continue; }
     for (const [, subjData] of Object.entries(data)) {
       if (subjData && subjData.subSubjects) {
-        for (const [, qs] of Object.entries(subjData.subSubjects)) {
+        for (const [ss, qs] of Object.entries(subjData.subSubjects)) {
           for (const q of qs) {
-            totalRaw++;
-            const key = normEnc(((q.question || '') + '||' + (q.answer || '')).toLowerCase().replace(/\s+/g, ' ').trim());
-            if (!seen.has(key)) {
-              seen.add(key);
-              allQuestions.push(q);
+            const key = dedupKey(q);
+            if (!seen.has(key)) continue;
+            seen.delete(key);
+            const c = q.category || 'Misc';
+            if (!catHas.has(c)) {
+              catHas.add(c);
+              catTmp.set(c, path.join(tmpBase, encodeURIComponent(c) + '.ndjson'));
             }
+            writeLine(c, JSON.stringify([q.subject || 'General', q.subSubject || 'General', q]));
           }
         }
       }
     }
-  } catch {}
-}
-const deduped = allQuestions.length;
-console.log('Per-category files: ' + deduped + ' / ' + totalRaw + ' unique (removed ' + (totalRaw - deduped) + ' duplicates)');
+  }
+  for (const c of catHas) flushCat(c);
+  seen.clear();
+  lineBuf.clear();
+  memLog('phase2 routed first occurrences');
 
 const CAT_ICONS = {
   'Ancient India':'🏛️','Medieval & Modern India':'👑','Indian History':'🏛️',
@@ -79,67 +163,82 @@ const CAT_ICONS = {
   'Library & Information Science':'📚','Engineering & Technical':'🔧'
 };
 
-// Group questions by category → subject → subSubject
-const tree = {};
-allQuestions.forEach(q => {
-  const c = q.category || 'Misc';
-  const s = q.subject || 'General';
-  const ss = q.subSubject || 'General';
-  if (!tree[c]) tree[c] = {};
-  if (!tree[c][s]) tree[c][s] = {};
-  if (!tree[c][s][ss]) tree[c][s][ss] = [];
-  tree[c][s][ss].push(q);
-});
+// ── Phase 3 — rebuild one category at a time (bounded memory) and write parts. ──
+function buildCategoryTree(cat) {
+  const subs = {};
+  const file = catTmp.get(cat);
+  if (!file) return subs;
+  // Read as bytes and split on newlines in-place: the largest category's JSONL
+  // can exceed Node's maximum single-string size (~536 MB / ERR_STRING_TOO_LONG),
+  // so never materialize the whole file as one JS string.
+  const buf = fs.readFileSync(file);
+  let start = 0;
+  for (let i = 0; i <= buf.length; i++) {
+    if (i === buf.length || buf[i] === 0x0a) {
+      if (i > start) {
+        const line = buf.toString('utf8', start, i);
+        if (line) {
+          let rec;
+          try { rec = JSON.parse(line); } catch { start = i + 1; continue; }
+          const s = rec[0], ss = rec[1], q = rec[2];
+          if (!subs[s]) subs[s] = {};
+          if (!subs[s][ss]) subs[s][ss] = [];
+          subs[s][ss].push(q);
+        }
+      }
+      start = i + 1;
+    }
+  }
+  return subs;
+}
 
-// Merge Indian Current Affairs into Current Affairs subject (not as separate subject)
-if (tree['Indian Current Affairs']) {
-  if (!tree['Current Affairs']) tree['Current Affairs'] = {};
-  if (!tree['Current Affairs']['Current Affairs']) tree['Current Affairs']['Current Affairs'] = {};
-  var icaSubjects = tree['Indian Current Affairs'];
-  Object.keys(icaSubjects).forEach(function(s) {
-    Object.keys(icaSubjects[s]).forEach(function(ss) {
+// Merge Indian Current Affairs / Current Events into Current Affairs (same merge
+// logic the old in-memory build applied to the full tree, now per-'Current Affairs').
+function buildCurrentAffairsTree() {
+  const tree = {};
+  if (catHas.has('Current Affairs')) tree['Current Affairs'] = buildCategoryTree('Current Affairs');
+  if (catHas.has('Indian Current Affairs')) tree['Indian Current Affairs'] = buildCategoryTree('Indian Current Affairs');
+  if (catHas.has('Current Events')) tree['Current Events'] = buildCategoryTree('Current Events');
+  // Merge Indian Current Affairs into Current Affairs subject (not as separate subject)
+  if (tree['Indian Current Affairs']) {
+    if (!tree['Current Affairs']) tree['Current Affairs'] = {};
+    if (!tree['Current Affairs']['Current Affairs']) tree['Current Affairs']['Current Affairs'] = {};
+    var icaSubjects = tree['Indian Current Affairs'];
+    Object.keys(icaSubjects).forEach(function(s) {
+      Object.keys(icaSubjects[s]).forEach(function(ss) {
+        if (!tree['Current Affairs']['Current Affairs'][ss]) tree['Current Affairs']['Current Affairs'][ss] = [];
+        tree['Current Affairs']['Current Affairs'][ss] = tree['Current Affairs']['Current Affairs'][ss].concat(icaSubjects[s][ss]);
+      });
+    });
+    delete tree['Indian Current Affairs'];
+  }
+  // Also merge subject 'Indian Current Affairs' inside Current Affairs (e.g. July 2026 has category:'Current Affairs' but subject:'Indian Current Affairs')
+  if (tree['Current Affairs'] && tree['Current Affairs']['Indian Current Affairs']) {
+    if (!tree['Current Affairs']['Current Affairs']) tree['Current Affairs']['Current Affairs'] = {};
+    var icaSubj = tree['Current Affairs']['Indian Current Affairs'];
+    Object.keys(icaSubj).forEach(function(ss) {
       if (!tree['Current Affairs']['Current Affairs'][ss]) tree['Current Affairs']['Current Affairs'][ss] = [];
-      tree['Current Affairs']['Current Affairs'][ss] = tree['Current Affairs']['Current Affairs'][ss].concat(icaSubjects[s][ss]);
+      tree['Current Affairs']['Current Affairs'][ss] = tree['Current Affairs']['Current Affairs'][ss].concat(icaSubj[ss]);
     });
-  });
-  delete tree['Indian Current Affairs'];
-}
-// Also merge subject 'Indian Current Affairs' inside Current Affairs (e.g. July 2026 has category:'Current Affairs' but subject:'Indian Current Affairs')
-if (tree['Current Affairs'] && tree['Current Affairs']['Indian Current Affairs']) {
-  if (!tree['Current Affairs']['Current Affairs']) tree['Current Affairs']['Current Affairs'] = {};
-  var icaSubj = tree['Current Affairs']['Indian Current Affairs'];
-  Object.keys(icaSubj).forEach(function(ss) {
-    if (!tree['Current Affairs']['Current Affairs'][ss]) tree['Current Affairs']['Current Affairs'][ss] = [];
-    tree['Current Affairs']['Current Affairs'][ss] = tree['Current Affairs']['Current Affairs'][ss].concat(icaSubj[ss]);
-  });
-  delete tree['Current Affairs']['Indian Current Affairs'];
-}
-// Merge Current Events into Current Affairs
-if (tree['Current Events']) {
-  if (!tree['Current Affairs']) tree['Current Affairs'] = {};
-  var ceSubjects = tree['Current Events'];
-  Object.keys(ceSubjects).forEach(function(s) {
-    if (!tree['Current Affairs'][s]) tree['Current Affairs'][s] = {};
-    Object.keys(ceSubjects[s]).forEach(function(ss) {
-      if (!tree['Current Affairs'][s][ss]) tree['Current Affairs'][s][ss] = [];
-      tree['Current Affairs'][s][ss] = tree['Current Affairs'][s][ss].concat(ceSubjects[s][ss]);
+    delete tree['Current Affairs']['Indian Current Affairs'];
+  }
+  // Merge Current Events into Current Affairs
+  if (tree['Current Events']) {
+    if (!tree['Current Affairs']) tree['Current Affairs'] = {};
+    var ceSubjects = tree['Current Events'];
+    Object.keys(ceSubjects).forEach(function(s) {
+      if (!tree['Current Affairs'][s]) tree['Current Affairs'][s] = {};
+      Object.keys(ceSubjects[s]).forEach(function(ss) {
+        if (!tree['Current Affairs'][s][ss]) tree['Current Affairs'][s][ss] = [];
+        tree['Current Affairs'][s][ss] = tree['Current Affairs'][s][ss].concat(ceSubjects[s][ss]);
+      });
     });
-  });
-  delete tree['Current Events'];
+    delete tree['Current Events'];
+  }
+  return tree;
 }
 
-const sortedCats = Object.keys(tree).sort();
-
-// ── Write per-category JSON files ──
-if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
-// NOTE: stale file removal is deferred until after every part has been written,
-// so an interrupted build can never wipe the archive (old parts stay put until
-// superseded; only leftovers of removed/merged categories are cleaned at the end).
-
-const catIndex = [];
-const expectedFiles = new Set(['catalog.json']);
-sortedCats.forEach(c => {
-  const subs = tree[c];
+function writeCategory(c, subs) {
   const subjList = [];
   const totalQ = Object.keys(subs).reduce((sum, s) => {
     const ssList = subs[s];
@@ -174,7 +273,7 @@ sortedCats.forEach(c => {
     const partName = baseName + (partIndex > 0 ? '-' + (partIndex + 1) : '') + '.json';
     const partJson = JSON.stringify(partFile);
     const partSizeMb = (Buffer.byteLength(partJson) / 1024 / 1024).toFixed(1);
-    fs.writeFileSync(path.join(outDir, partName), partJson);
+    safeWrite(path.join(outDir, partName), partJson);
     filePaths.push('data/questions/' + partName);
     expectedFiles.add(partName);
     console.log('  Part ' + (partIndex + 1) + ': ' + partName + ' (' + partSizeMb + ' MiB)');
@@ -200,6 +299,7 @@ sortedCats.forEach(c => {
     var chunk = [], chunkBytes = 0;
     var partIdx = 0;
     console.log('Large category: ' + c + ' (' + totalQ + ' q, ' + splitEntries.length + ' sub-topics, splitting...)');
+    memLog('phase3 holding ' + c);
     splitEntries.forEach(function(entry, i) {
       var entryBytes = Buffer.byteLength(JSON.stringify(entry.questions));
       if (chunk.length > 0 && chunkBytes + entryBytes > MAX_BYTES) {
@@ -226,7 +326,35 @@ sortedCats.forEach(c => {
     file: filePaths.length === 1 ? filePaths[0] : filePaths,
     subjects: subjList
   });
-});
+}
+
+// Deduplicated category set after the Current Affairs merges (same as the old
+// `Object.keys(tree).sort()` post-merge list).
+const postMergeCats = new Set(catHas);
+if (catHas.has('Indian Current Affairs') || catHas.has('Current Events')) postMergeCats.add('Current Affairs');
+postMergeCats.delete('Indian Current Affairs');
+postMergeCats.delete('Current Events');
+sortedCats = [...postMergeCats].sort();
+
+for (const c of sortedCats) {
+  let subs;
+  if (c === 'Current Affairs') {
+    const mtree = buildCurrentAffairsTree();
+    subs = mtree['Current Affairs'];
+    ['Indian Current Affairs', 'Current Events'].forEach(function(src) {
+      if (catHas.has(src)) { try { fs.unlinkSync(catTmp.get(src)); } catch {} }
+    });
+  } else {
+    subs = buildCategoryTree(c);
+    try { fs.unlinkSync(catTmp.get(c)); } catch {}
+  }
+  writeCategory(c, subs);
+  subs = null;
+}
+} finally {
+  for (const c of catHas) { try { fs.unlinkSync(catTmp.get(c)); } catch {} }
+  try { fs.rmdirSync(tmpBase); } catch {}
+}
 
 // Remove only stale leftovers (categories merged/renamed since the last build),
 // now that every new part file is safely on disk.
@@ -249,7 +377,7 @@ fs.readdirSync(outDir).filter(f => f.endsWith('.json') && f !== 'manifest.json' 
     }
   } catch {}
 });
-fs.writeFileSync(path.join(outDir, 'catalog.json'), JSON.stringify(catalog));
+safeWrite(path.join(outDir, 'catalog.json'), JSON.stringify(catalog));
 console.log('Wrote catalog.json: ' + Object.keys(catalog.subjects).length + ' subjects, ' + deduped + ' total');
 
 // ── Inline catalog + archive file list + subject→file map into current-affairs.html (file:// safe) ──
@@ -300,7 +428,7 @@ try {
   if (nxt === null) { console.log('WARN: SUBJECT_FILES decl not found in current-affairs.html — skipping subject map inline.'); }
   else ca = nxt;
 
-  fs.writeFileSync(caPath, ca);
+  safeWrite(caPath, ca);
   console.log('Inlined HOME_CATALOG/CAT_ARCHIVE/SUBJECT_FILES into current-affairs.html (' + Object.keys(catalog.subjects).length + ' subjects, ' + archiveFiles.length + ' files).');
 } catch (e) {
   console.log('WARN: could not inline catalog into current-affairs.html: ' + e.message);
@@ -330,9 +458,9 @@ function renderQuestion(q, idx) {
 // archive-cat-index.json that the page fetches on demand (see loadIndex below),
 // keeping archive.html itself at a few KB while preserving the full taxonomy and
 // the existing lazy-load of per-category question files.
-fs.writeFileSync(path.join(outDir, 'archive-cat-index.json'), JSON.stringify(catIndex));
+safeWrite(path.join(outDir, 'archive-cat-index.json'), JSON.stringify(catIndex));
 
-let html = '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width,initial-scale=1.0">\n<title>GK Current Affairs Archive — vlymbooq</title>\n<meta name="description" content="Complete archive of ' + allQuestions.length + ' GK & Current Affairs questions with explanations. Free practice for competitive exams. Browse by subject tree.">\n<link rel="icon" type="image/svg+xml" href="favicon.svg">\n<link rel="icon" type="image/png" href="logo.png">\n<link rel="stylesheet" href="css/style.css">\n<style>\n@import url(\'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap\');\n*{margin:0;padding:0;box-sizing:border-box}\n:root{--bg:#09090b;--bg-card:#111113;--bg-hover:#18181b;--border:rgba(255,255,255,.06);--border-hover:rgba(255,255,255,.1);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--red:#ef4444;--amber:#f59e0b;--cyan:#22d3ee;--radius:12px;--radius-lg:16px}\nbody{font-family:\'Inter\',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}\na{color:var(--text);text-decoration:none}\n.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}\n.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}\n.brand{display:flex;align-items:center;gap:8px}\n.brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}\n.nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}\n.nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:var(--text-sec);white-space:nowrap}\n.nav-links a.active,.nav-links a:hover{background:rgba(167,139,250,.1);color:var(--purple)}\n.page-wrap{display:flex;max-width:1100px;margin:0 auto;padding:24px;gap:24px}\n.sidebar{width:280px;flex-shrink:0;position:sticky;top:80px;align-self:flex-start;max-height:calc(100vh - 96px);overflow-y:auto;scrollbar-width:thin}\n.sidebar-title{font-size:.8em;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:12px}\n.sidebar-cat{margin-bottom:2px}\n.sidebar-link,.sidebar-subj-link,.sidebar-subsub-link{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;border-radius:8px;font-size:.85em;color:var(--text-sec);cursor:pointer}\n.sidebar-link.active,.sidebar-subj-link.active,.sidebar-subsub-link.active{background:rgba(167,139,250,.12);color:var(--text)}\n.sidebar-icon{margin-right:6px}\n.sidebar-count{font-size:.78em;color:var(--text-muted);padding:1px 6px;border-radius:4px;background:var(--bg-card)}\n.sidebar-subjects{display:none;margin-left:12px}\n.sidebar-subjects.open{display:block}\n.sidebar-subj-link{padding:4px 10px;font-size:.82em}\n.sidebar-subsubs{display:none;margin-left:12px}\n.sidebar-subsubs.open{display:block}\n.sidebar-subsub-link{padding:3px 8px;font-size:.78em}\n.main-content{flex:1;min-width:0}\n.breadcrumb{font-size:.85em;color:var(--text-muted);margin-bottom:20px}\n.breadcrumb span{color:var(--text-sec)}\n.breadcrumb .current{color:var(--text)}\n.page-title{font-size:1.6em;font-weight:800;margin-bottom:4px;letter-spacing:-.5px}\n.page-sub{color:var(--text-sec);font-size:.9em;margin-bottom:24px}\n.loading{text-align:center;padding:40px;color:var(--text-muted)}\n.search-bar{position:relative;margin-bottom:20px;display:flex;align-items:center;gap:8px}.search-info{cursor:pointer;color:var(--text-muted);font-size:1.2em;flex-shrink:0;transition:color .2s}.search-info:hover{color:var(--purple)}.search-bar input{width:100%;padding:12px 16px;border-radius:100px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.9em;outline:none;font-family:inherit;transition:border-color .2s}.search-bar input:focus{border-color:var(--purple)}.search-bar input::placeholder{color:var(--text-muted)}.search-results-info{font-size:.85em;color:var(--text-sec);margin-bottom:16px;padding:8px 0}.search-no-results{text-align:center;padding:40px;color:var(--text-muted)}\n.subj-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;display:block}\n.subj-card:hover{background:var(--bg-hover);border-color:var(--border-hover)}\n.subj-card-name{font-weight:600;font-size:.95em;margin-bottom:4px}\n.subj-card-count{font-size:.8em;color:var(--text-muted);margin-bottom:8px}\n.subj-card-preview{font-size:.75em;color:var(--text-muted);line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}\n.question-list{display:flex;flex-direction:column;gap:12px}\n.q-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px}\n.q-item:hover{background:var(--bg-hover)}\n.q-num{font-size:.75em;color:var(--text-muted);margin-bottom:4px}\n.q-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}\n.tag{font-size:.7em;padding:2px 8px;border-radius:100px;font-weight:500}\n.cat-tag{background:rgba(167,139,250,.12);color:var(--purple)}\n.date-tag{background:rgba(34,211,238,.08);color:var(--cyan)}\n.q-question{font-size:.95em;font-weight:500;margin-bottom:8px;line-height:1.6}\n.q-answer{font-size:.85em;margin-bottom:6px}\n.a-label{color:var(--text-muted)}\n.a-value{color:var(--emerald);font-weight:600}\n.explain-btn{background:transparent;border:1px solid var(--border);color:var(--text-sec);padding:5px 12px;border-radius:100px;cursor:pointer;font-size:.78em}\n.explain-btn:hover{background:var(--bg-hover);border-color:var(--border-hover)}\n.q-explain{background:rgba(167,139,250,.05);border-radius:8px;padding:12px;margin-top:8px;font-size:.82em;color:var(--text-sec);line-height:1.7;display:none}\n.q-explain.show{display:block}\n@media(max-width:768px){.sidebar{display:none}.page-wrap{padding:16px;flex-direction:column}}\n<\/style>\n</head>\n<body>\n';
+let html = '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width,initial-scale=1.0">\n<title>GK Current Affairs Archive — vlymbooq</title>\n<meta name="description" content="Complete archive of ' + deduped + ' GK & Current Affairs questions with explanations. Free practice for competitive exams. Browse by subject tree.">\n<link rel="icon" type="image/svg+xml" href="favicon.svg">\n<link rel="icon" type="image/png" href="logo.png">\n<link rel="stylesheet" href="css/style.css">\n<style>\n@import url(\'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap\');\n*{margin:0;padding:0;box-sizing:border-box}\n:root{--bg:#09090b;--bg-card:#111113;--bg-hover:#18181b;--border:rgba(255,255,255,.06);--border-hover:rgba(255,255,255,.1);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--red:#ef4444;--amber:#f59e0b;--cyan:#22d3ee;--radius:12px;--radius-lg:16px}\nbody{font-family:\'Inter\',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}\na{color:var(--text);text-decoration:none}\n.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}\n.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}\n.brand{display:flex;align-items:center;gap:8px}\n.brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}\n.nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}\n.nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:var(--text-sec);white-space:nowrap}\n.nav-links a.active,.nav-links a:hover{background:rgba(167,139,250,.1);color:var(--purple)}\n.page-wrap{display:flex;max-width:1100px;margin:0 auto;padding:24px;gap:24px}\n.sidebar{width:280px;flex-shrink:0;position:sticky;top:80px;align-self:flex-start;max-height:calc(100vh - 96px);overflow-y:auto;scrollbar-width:thin}\n.sidebar-title{font-size:.8em;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:12px}\n.sidebar-cat{margin-bottom:2px}\n.sidebar-link,.sidebar-subj-link,.sidebar-subsub-link{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;border-radius:8px;font-size:.85em;color:var(--text-sec);cursor:pointer}\n.sidebar-link.active,.sidebar-subj-link.active,.sidebar-subsub-link.active{background:rgba(167,139,250,.12);color:var(--text)}\n.sidebar-icon{margin-right:6px}\n.sidebar-count{font-size:.78em;color:var(--text-muted);padding:1px 6px;border-radius:4px;background:var(--bg-card)}\n.sidebar-subjects{display:none;margin-left:12px}\n.sidebar-subjects.open{display:block}\n.sidebar-subj-link{padding:4px 10px;font-size:.82em}\n.sidebar-subsubs{display:none;margin-left:12px}\n.sidebar-subsubs.open{display:block}\n.sidebar-subsub-link{padding:3px 8px;font-size:.78em}\n.main-content{flex:1;min-width:0}\n.breadcrumb{font-size:.85em;color:var(--text-muted);margin-bottom:20px}\n.breadcrumb span{color:var(--text-sec)}\n.breadcrumb .current{color:var(--text)}\n.page-title{font-size:1.6em;font-weight:800;margin-bottom:4px;letter-spacing:-.5px}\n.page-sub{color:var(--text-sec);font-size:.9em;margin-bottom:24px}\n.loading{text-align:center;padding:40px;color:var(--text-muted)}\n.search-bar{position:relative;margin-bottom:20px;display:flex;align-items:center;gap:8px}.search-info{cursor:pointer;color:var(--text-muted);font-size:1.2em;flex-shrink:0;transition:color .2s}.search-info:hover{color:var(--purple)}.search-bar input{width:100%;padding:12px 16px;border-radius:100px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.9em;outline:none;font-family:inherit;transition:border-color .2s}.search-bar input:focus{border-color:var(--purple)}.search-bar input::placeholder{color:var(--text-muted)}.search-results-info{font-size:.85em;color:var(--text-sec);margin-bottom:16px;padding:8px 0}.search-no-results{text-align:center;padding:40px;color:var(--text-muted)}\n.subj-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;display:block}\n.subj-card:hover{background:var(--bg-hover);border-color:var(--border-hover)}\n.subj-card-name{font-weight:600;font-size:.95em;margin-bottom:4px}\n.subj-card-count{font-size:.8em;color:var(--text-muted);margin-bottom:8px}\n.subj-card-preview{font-size:.75em;color:var(--text-muted);line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}\n.question-list{display:flex;flex-direction:column;gap:12px}\n.q-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px}\n.q-item:hover{background:var(--bg-hover)}\n.q-num{font-size:.75em;color:var(--text-muted);margin-bottom:4px}\n.q-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}\n.tag{font-size:.7em;padding:2px 8px;border-radius:100px;font-weight:500}\n.cat-tag{background:rgba(167,139,250,.12);color:var(--purple)}\n.date-tag{background:rgba(34,211,238,.08);color:var(--cyan)}\n.q-question{font-size:.95em;font-weight:500;margin-bottom:8px;line-height:1.6}\n.q-answer{font-size:.85em;margin-bottom:6px}\n.a-label{color:var(--text-muted)}\n.a-value{color:var(--emerald);font-weight:600}\n.explain-btn{background:transparent;border:1px solid var(--border);color:var(--text-sec);padding:5px 12px;border-radius:100px;cursor:pointer;font-size:.78em}\n.explain-btn:hover{background:var(--bg-hover);border-color:var(--border-hover)}\n.q-explain{background:rgba(167,139,250,.05);border-radius:8px;padding:12px;margin-top:8px;font-size:.82em;color:var(--text-sec);line-height:1.7;display:none}\n.q-explain.show{display:block}\n@media(max-width:768px){.sidebar{display:none}.page-wrap{padding:16px;flex-direction:column}}\n<\/style>\n</head>\n<body>\n';
 
 html += '<nav class="nav"><div class="nav-inner"><div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--purple)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"\/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"\/><\/svg><span class="brand-text">vlymbooq<\/span><\/div><div class="nav-links"><a href="index.html">Home<\/a><a href="current-affairs.html">Quiz<\/a><a href="dashboard.html">Dashboard<\/a><a class="active" href="archive.html">Archive<\/a><a href="about.html">About<\/a><\/div><\/div><\/nav>';
 
@@ -344,7 +472,7 @@ html += '<div class="breadcrumb" id="breadcrumb">Archive</div>';
 html += '<div class="content-panel" id="view-welcome">';
 html += '<h1 class="page-title">📚 GK Current Affairs Archive</h1>';
 var buildTime = new Date().toISOString();
-html += '<p class="page-sub">' + allQuestions.length + ' questions across ' + sortedCats.length + ' categories — last updated <time id="build-time" datetime="' + buildTime + '">' + new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }) + ' UTC</time>. Click a category to browse.</p>';
+html += '<p class="page-sub">' + deduped + ' questions across ' + sortedCats.length + ' categories — last updated <time id="build-time" datetime="' + buildTime + '">' + new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }) + ' UTC</time>. Click a category to browse.</p>';
 html += '<div class="subj-grid" id="welcome-grid"></div></div>';
 
 // Content panel
@@ -897,14 +1025,14 @@ html += 'loadIndex();\n';
 html += '<\/script><script>if(\'serviceWorker\' in navigator){navigator.serviceWorker.register(\'/sw.js\').catch(function(){})}<\/script>\n';
 html += '<\/body>\n<\/html>';
 
-fs.writeFileSync(archivePath, html);
+safeWrite(archivePath, html);
 const sizeMb = (Buffer.byteLength(html) / 1024 / 1024).toFixed(1);
 console.log('\nWrote archive.html (' + sizeMb + ' MiB) - single page with lazy-load');
 
 // Write manifest listing all category files (for Cloudflare Function)
 const manifestPath = path.join(outDir, 'manifest.json');
 const manifestFiles = fs.readdirSync(outDir).filter(f => f.endsWith('.json') && f !== 'manifest.json');
-fs.writeFileSync(manifestPath, JSON.stringify(manifestFiles));
+safeWrite(manifestPath, JSON.stringify(manifestFiles));
 console.log('Wrote manifest.json with ' + manifestFiles.length + ' files');
 
 console.log('Done: ' + catIndex.length + ' category files in data/questions/');
