@@ -248,14 +248,32 @@ function writeCategory(c, subs) {
     return sum + sTotal;
   }, 0);
 
-  // Per-category file: { subjects: { "Subject": { subSubjects: { "SubSub": [...questions] } } } }
-  const catFile = {};
-  Object.keys(subs).forEach(s => {
-    catFile[s] = { subSubjects: {} };
-    Object.keys(subs[s]).forEach(ss => {
-      catFile[s].subSubjects[ss] = subs[s][ss];
-    });
-  });
+  // Per-category file shape: { "Subject": { subSubjects: { "SubSub": [...questions] } } }.
+  // Recovery #28 died at JSON.stringify(catFile) below with "RangeError: Invalid
+  // string length": a category whose serialized JSON exceeds V8's ~536M-char max
+  // string (≈ 512 MiB of ASCII) can never be materialized as one string. Compute
+  // the exact byte length of JSON.stringify(catFile) incrementally instead, and
+  // only ever stringify the ≤8 MiB part files.
+  function catFileBytes(subs) {
+    let bytes = 2; // outer '{' and '}'
+    const subjects = Object.keys(subs);
+    for (let i = 0; i < subjects.length; i++) {
+      const s = subjects[i];
+      const ssKeys = Object.keys(subs[s]);
+      bytes += Buffer.byteLength(JSON.stringify(s)); // "Subject"
+      bytes += 1 + 1 + 13 + 1 + 1; // : { "subSubjects" : {
+      for (let k = 0; k < ssKeys.length; k++) {
+        const ss = ssKeys[k];
+        bytes += Buffer.byteLength(JSON.stringify(ss)); // "SubSub"
+        bytes += 1; // :
+        bytes += Buffer.byteLength(JSON.stringify(subs[s][ss])); // [...questions]
+        if (k < ssKeys.length - 1) bytes += 1; // ,
+      }
+      bytes += 2; // } }
+      if (i < subjects.length - 1) bytes += 1; // ,
+    }
+    return bytes;
+  }
 
   const FILE_OVERRIDE = { 'PIB': 'pib-archive' };
   const baseName = FILE_OVERRIDE[c] || c.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -279,7 +297,7 @@ function writeCategory(c, subs) {
     console.log('  Part ' + (partIndex + 1) + ': ' + partName + ' (' + partSizeMb + ' MiB)');
   }
 
-  if (Buffer.byteLength(JSON.stringify(catFile)) > MAX_BYTES) {
+  if (catFileBytes(subs) > MAX_BYTES) {
     // Split by subSubject: each entry = {subject, subSubject, questions}
     var splitEntries = [];
     Object.keys(subs).forEach(function(s) {
