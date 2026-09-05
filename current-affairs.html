@@ -8201,6 +8201,7 @@ var fact = q.fact || q.solution || q.explanation || '';
             state.autoPaused = false;
             state.infinite = false;
             state._feedSource = 'archive';
+            _resetScanState();
             state.restartFn = function(){ startMultiSubjectQuiz(subjects); };
 
             document.getElementById('welcome').style.display = 'none';
@@ -8258,6 +8259,7 @@ var fact = q.fact || q.solution || q.explanation || '';
             state.autoPaused = false;
             state.infinite = false;
             state._feedSource = 'archive';
+            _resetScanState();
             state.restartFn = function(){ startSubjectQuiz(subject); };
 
             document.getElementById('welcome').style.display = 'none';
@@ -8312,6 +8314,7 @@ var fact = q.fact || q.solution || q.explanation || '';
             state.autoPaused = false;
             state.infinite = false;
             state._feedSource = 'archive';
+            _resetScanState();
             state.restartFn = function(){startArchiveFeed(days)};
 
             document.getElementById('welcome').style.display = 'none';
@@ -8569,21 +8572,36 @@ var fact = q.fact || q.solution || q.explanation || '';
         var _cacheBase = 0;        // absolute archive position of _archiveCache[0]
         var _archCacheCap = 25000; // hard ceiling on question items kept in _archiveCache
         var _archRefillMin = 4000; // stream another file only when fewer than this many unviewed items remain
+        var _scanPos = 0;          // absolute stream position drained by subject/combo top-up scans
+        var _scanActive = false;   // a subject/combo scan is currently draining _archiveCache
+        var _scanCatKey = null;    // feed identity the active scan session belongs to
+        var _scanSeen = null;      // dedupe keys for everything the active scan has surfaced
+        var _scanPending = null;   // matched items collected ahead, served a page at a time
+        function _resetScanState() {
+            _scanActive = false;
+            _scanCatKey = null;
+            _scanSeen = null;
+            _scanPending = null;
+            _scanPos = Math.max(_archCursor, _cacheBase);
+        }
         function _trimArchiveCache() {
             if (!_archiveCache || !_archiveCache.length) return;
             // Drop items that have already been consumed, keeping a small window so
             // prev / jump can still revisit recent cards. _archiveCache holds plain
             // references; state.questions keeps its own copies, so this is safe.
+            // During a subject/combo scan the items past the scan position are shed
+            // too, so scanning the stream can't blow the cache up again.
             var keepBehind = 200;
-            var drop = _archCursor - _cacheBase - keepBehind;
+            var frontPos = _scanActive && _scanPos > _archCursor ? _scanPos : _archCursor;
+            var drop = frontPos - _cacheBase - keepBehind;
             if (drop > 0) { _archiveCache.splice(0, drop); _cacheBase += drop; }
             var over = _archiveCache.length - _archCacheCap;
             if (over > 0) {
-                var dropCap = Math.min(over, _archCursor - _cacheBase);
+                var dropCap = Math.max(0, Math.min(over, frontPos - _cacheBase));
                 if (dropCap > 0) { _archiveCache.splice(0, dropCap); _cacheBase += dropCap; }
             }
         }
-        function _kickLazyLoader() {
+        function _kickLazyLoader(force) {
             if (_lazyLoading) return;
             _ensureLazyFiles();
             if (!_archiveCache) { _archiveCache = []; _cacheBase = 0; }
@@ -8592,8 +8610,9 @@ var fact = q.fact || q.solution || q.explanation || '';
             // file when the unviewed tail runs low, and shed already-consumed items
             // so the cache stays under a fixed cap. This keeps the archive feed
             // effectively endless without an unbounded, always-on background download.
-            var unviewed = _cacheBase + _archiveCache.length - _archCursor;
-            if (unviewed > _archRefillMin) return;
+            var frontPos = _scanActive && _scanPos > _archCursor ? _scanPos : _archCursor;
+            var unviewed = _cacheBase + _archiveCache.length - frontPos;
+            if (!force && unviewed > _archRefillMin) return;
             _trimArchiveCache();
             var rec = null;
             while (_lazyFileCursor < _lazyFiles.length) {
@@ -8616,12 +8635,14 @@ var fact = q.fact || q.solution || q.explanation || '';
             });
         }
         function _archNextBatch() {
+            _resetScanState();
             var got = [];
             if (!_archiveCache) { _archiveCache = []; _cacheBase = 0; }
             if (_archTotal < _cacheBase + _archiveCache.length) _archTotal = _cacheBase + _archiveCache.length;
             _kickLazyLoader(); // ensure a file is queued so future batches stream
             var guard = 0;
             var rel = _archCursor - _cacheBase;
+            if (rel < 0) { _archCursor = _cacheBase; _writeArchiveCursor(_archCursor); rel = 0; }
             while (rel < _archiveCache.length && got.length < _archMaxBatch && guard++ < _archMaxBatch) {
                 var aq = _archiveCache[rel];
                 _archCursor++;
@@ -8714,8 +8735,10 @@ var fact = q.fact || q.solution || q.explanation || '';
                 else if (cb) cb(false);
                 return false;
             }
+            var done = function(v) { if (cb) cb(v); return v; };
             var cat = state.cat || '';
             if (cat === 'feed') {
+                _resetScanState();
                 return _topUpArchive(cb);
             }
             // Subject / combo browse: scan the lazily buffered cache for matching
@@ -8727,41 +8750,55 @@ var fact = q.fact || q.solution || q.explanation || '';
             } else if (cat.indexOf('combo::') === 0) {
                 (cat.slice(7) || '').split('+').forEach(function(s) { subjSet[s] = true; });
             } else {
-                if (cb) cb(false);
-                return false;
+                return done(false);
             }
-            var seen = {};
-            for (var i = 0; i < state.questions.length; i++) {
-                var sq = state.questions[i];
-                seen[(sq.q || '') + '||' + (sq.a || '')] = true;
+            if (!_scanActive || _scanCatKey !== cat) {
+                _resetScanState();
+                _scanCatKey = cat;
+                _scanActive = true;
+                _scanSeen = {};
+                for (var si = 0; si < state.questions.length; si++) {
+                    var sq = state.questions[si];
+                    _scanSeen[(sq.q || '') + '||' + (sq.a || '')] = true;
+                }
             }
-            var pool = [];
-            for (var j = 0; j < _archiveCache.length; j++) {
-                var aq = _archiveCache[j];
+            _scanActive = true;
+            if (!_scanPending) _scanPending = [];
+            if (_scanPending.length > 0) {
+                var fed = 0;
+                while (_scanPending.length > 0 && fed < _archMaxBatch) { state.questions.push(_scanPending.pop()); fed++; }
+                _updateArchiveProgress();
+                return done(fed > 0);
+            }
+            var startRel = Math.max(_scanPos, _cacheBase) - _cacheBase;
+            if (startRel < 0) { _scanPos = _cacheBase; startRel = 0; }
+            var rel = startRel;
+            while (rel < _archiveCache.length) {
+                var aq = _archiveCache[rel];
+                rel++;
+                _scanPos++;
                 if (!subjSet[aq.subject]) continue;
                 var key = (aq.q || '') + '||' + (aq.a || '');
-                if (seen[key]) continue;
-                seen[key] = true;
-                pool.push(aq);
+                if (_scanSeen[key]) continue;
+                _scanSeen[key] = true;
+                if (_scanPending.length < _archMaxBatch * 20) _scanPending.push(aq);
             }
-            if (pool.length === 0 && _lazyFileCursor < _lazyFiles.length) {
-                if (!_lazyLoading) _kickLazyLoader();
+            _trimArchiveCache();
+            if (_scanPending.length > 0) {
+                shuffleArray(_scanPending);
+                var n = Math.min(_archMaxBatch, _scanPending.length);
+                for (var pi = 0; pi < n; pi++) state.questions.push(_scanPending.pop());
+                _updateArchiveProgress();
+                return done(true);
+            }
+            if (_lazyFileCursor < _lazyFiles.length) {
+                if (!_lazyLoading) _kickLazyLoader(true);
                 var again = function() { _topUpFeedFromArchive(cb); };
                 if (cb) setTimeout(again, 400);
                 return false;
             }
-            if (pool.length === 0) { if (cb) cb(false); return false; }
-            shuffleArray(pool);
-            var added = 0;
-            while (pool.length > 0 && added < _archMaxBatch) {
-                var nq = pool.pop();
-                nq._archive = true;
-                state.questions.push(nq);
-                added++;
-            }
-            _updateArchiveProgress();
-            if (cb) cb(added > 0);
-            return added > 0;
+            _resetScanState();
+            return done(false);
         }
         function resetArchiveCursor() { _archCursor = 0; _writeArchiveCursor(0); }
 
