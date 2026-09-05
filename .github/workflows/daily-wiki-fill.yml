@@ -18,7 +18,7 @@ permissions:
   actions: write
 
 env:
-  NODE_OPTIONS: --max-old-space-size=8192
+  NODE_OPTIONS: --max-old-space-size=12288
 
 jobs:
   # ── Setup: prepare baseline quiz.json, PIB feeds ──
@@ -270,11 +270,16 @@ jobs:
 
       - run: |
           cp archive.html data/archive.html
-          mkdir -p "$RUNNER_TEMP"
-          cp data/quiz.json "$RUNNER_TEMP/quiz.json"
-          for f in data/quiz.json.part.*; do
-            [ -f "$f" ] && cp "$f" "$RUNNER_TEMP/quiz.json${f##*quiz.json}"
-          done
+
+      # quiz.json (+ shards, ~4.8 GB) is consumed only within this job (split,
+      # cleanup, dedup). Setup rebuilds it fresh from the committed
+      # data/questions on the next run, so dropping it here keeps the merged
+      # artifact and finalize download ~5 GB lighter (build-timeline reads
+      # data/questions, not quiz.json).
+      - name: Drop quiz.json from merged upload
+        run: |
+          rm -f data/quiz.json
+          rm -f data/quiz.json.part.*
 
       - uses: actions/upload-artifact@v4
         with:
