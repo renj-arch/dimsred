@@ -8073,7 +8073,7 @@ var fact = q.fact || q.solution || q.explanation || '';
                 return;
             }
             if (_archiveCache) { cb(_archiveCache); return; }
-            _loadArchiveFiles(CAT_ARCHIVE, function(qs) { _archiveCache = _applyShuffle(qs); cb(qs); });
+            _loadArchiveFiles(CAT_ARCHIVE, function(qs) { _archiveCache = _applyShuffle(qs); _cacheBase = 0; cb(qs); });
         }
         function shuffleArray(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
@@ -8564,31 +8564,68 @@ var fact = q.fact || q.solution || q.explanation || '';
         // Background refill: whenever the still-unconsumed tail of _archiveCache is
         // running low, fetch the next question file and append it. Keeps _archNextBatch
         // synchronous (drains the already-loaded cache) so existing callers are intact.
+        // _cacheBase is the absolute archive position of _archiveCache[0], so trimming
+        // consumed items from the front never corrupts the global _archCursor position.
+        var _cacheBase = 0;        // absolute archive position of _archiveCache[0]
+        var _archCacheCap = 25000; // hard ceiling on question items kept in _archiveCache
+        var _archRefillMin = 4000; // stream another file only when fewer than this many unviewed items remain
+        function _trimArchiveCache() {
+            if (!_archiveCache || !_archiveCache.length) return;
+            // Drop items that have already been consumed, keeping a small window so
+            // prev / jump can still revisit recent cards. _archiveCache holds plain
+            // references; state.questions keeps its own copies, so this is safe.
+            var keepBehind = 200;
+            var drop = _archCursor - _cacheBase - keepBehind;
+            if (drop > 0) { _archiveCache.splice(0, drop); _cacheBase += drop; }
+            var over = _archiveCache.length - _archCacheCap;
+            if (over > 0) {
+                var dropCap = Math.min(over, _archCursor - _cacheBase);
+                if (dropCap > 0) { _archiveCache.splice(0, dropCap); _cacheBase += dropCap; }
+            }
+        }
         function _kickLazyLoader() {
             if (_lazyLoading) return;
             _ensureLazyFiles();
-            if (!_archiveCache) _archiveCache = [];
+            if (!_archiveCache) { _archiveCache = []; _cacheBase = 0; }
             if (_lazyFileCursor >= _lazyFiles.length) return;
+            // Never drag the whole ~4.5GB archive into memory. Only stream the next
+            // file when the unviewed tail runs low, and shed already-consumed items
+            // so the cache stays under a fixed cap. This keeps the archive feed
+            // effectively endless without an unbounded, always-on background download.
+            var unviewed = _cacheBase + _archiveCache.length - _archCursor;
+            if (unviewed > _archRefillMin) return;
+            _trimArchiveCache();
+            var rec = null;
+            while (_lazyFileCursor < _lazyFiles.length) {
+                rec = _lazyFiles[_lazyFileCursor++];
+                if ((rec.count || 0) > 0) break;
+                rec = null;
+            }
+            if (!rec) return;
             _lazyLoading = true;
-            var rec = _lazyFiles[_lazyFileCursor++];
             _lazyFlattenFile(rec, function(items) {
                 _lazyLoading = false;
-                if (!_archiveCache) _archiveCache = [];
+                if (!_archiveCache) { _archiveCache = []; _cacheBase = _archCursor; }
                 for (var i = 0; i < items.length; i++) { items[i]._archive = true; _archiveCache.push(items[i]); }
-                _archTotal = Math.max(_archTotal, _archiveCache.length);
+                _archTotal = Math.max(_archTotal, _cacheBase + _archiveCache.length);
+                _trimArchiveCache();
                 _updateArchiveProgress();
-                // Queue the next file (fire an eager look-ahead for smooth streaming)
+                // Eager look-ahead for smooth streaming; self-stops above once the
+                // unviewed tail crosses _archRefillMin (or all files are buffered).
                 if (_lazyFileCursor < _lazyFiles.length) setTimeout(_kickLazyLoader, 0);
             });
         }
         function _archNextBatch() {
             var got = [];
-            if (!_archiveCache) _archiveCache = [];
-            if (_archTotal < _archiveCache.length) _archTotal = _archiveCache.length;
+            if (!_archiveCache) { _archiveCache = []; _cacheBase = 0; }
+            if (_archTotal < _cacheBase + _archiveCache.length) _archTotal = _cacheBase + _archiveCache.length;
             _kickLazyLoader(); // ensure a file is queued so future batches stream
             var guard = 0;
-            while (_archCursor < _archiveCache.length && got.length < _archMaxBatch && guard++ < _archMaxBatch) {
-                var aq = _archiveCache[_archCursor++];
+            var rel = _archCursor - _cacheBase;
+            while (rel < _archiveCache.length && got.length < _archMaxBatch && guard++ < _archMaxBatch) {
+                var aq = _archiveCache[rel];
+                _archCursor++;
+                rel++;
                 aq._archive = true;
                 got.push(aq);
             }
@@ -8783,6 +8820,7 @@ var fact = q.fact || q.solution || q.explanation || '';
             // then stream question files on demand in the background. No more pulling
             // the whole 3.3GB up front, which collapsed counts on mobile.
             _archiveCache = [];
+            _cacheBase = 0;
             _ensureLazyFiles();
             var finished = false;
             var go = function() {
@@ -8798,6 +8836,7 @@ var fact = q.fact || q.solution || q.explanation || '';
                         // Transient failure: reset so a later call retries the whole
                         // flow instead of leaving the archive stuck on "not loaded".
                         _archiveCache = null;
+                        _cacheBase = 0;
                         setTimeout(preloadArchive, 6000);
                     }
                 });
