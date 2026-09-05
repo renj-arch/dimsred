@@ -157,13 +157,30 @@ jobs:
             data/quiz-chunk-${{ matrix.chunk }}.json.part.*
           retention-days: 1
 
+      # Runs when the run is manually cancelled mid-chunk. GitHub does not
+      # expose the *canceller* in the github.* context (only actor/actor_id =
+      # triggerer), so record which account started this run here and point to
+      # Settings → Security log → Actions, the only place the canceller's user
+      # id is authoritatively recorded.
+      - name: Cancellation receipt
+        if: cancelled()
+        run: |
+          echo "## Run cancelled" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Run #${{ github.run_number }} (id ${{ github.run_id }}), chunk ${{ matrix.chunk }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Started by: \`${{ github.actor }}\` (user id ${{ github.actor_id }})" >> "$GITHUB_STEP_SUMMARY"
+          echo "- To confirm WHO cancelled: GitHub Security log (Settings → Security log → Actions) records the cancelling user id — the Actions context/api do not expose it." >> "$GITHUB_STEP_SUMMARY"
+
   # ── Merge: combine all chunk outputs ──
   merge:
     needs: wiki-chunks
-    # Always merge whatever chunks succeeded — a cancelled/failed chunk must not
-    # throw away the rest (run #434). merge-chunks.js skips missing chunks and
-    # no-ops cleanly when there are none.
-    if: always()
+    # Merge whatever chunks succeeded — a failed/timed-out chunk must not throw
+    # away the rest (run #434). merge-chunks.js skips missing chunks and no-ops
+    # cleanly when there are none.
+    # NOT `always()`: when the run is manually cancelled GitHub re-evaluates
+    # this condition for running jobs, and `always()` evaluates true so the
+    # merge would keep running for hours. `!cancelled()` stops it immediately.
+    # A chunk timing out is NOT a run cancellation, so the salvage stays intact.
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -290,7 +307,10 @@ jobs:
   # ── Finalize: commit wiki data, advance progress, chain to feed workflow ──
   finalize:
     needs: [merge]
-    if: always() && needs.merge.result == 'success'
+    # `!cancelled()` (not `always()`): a manual cancel must also stop an already
+    # running commit/push/self-dispatch, otherwise finalize keeps going for the
+    # whole cancellation window. Chunk failures still reach finalize via merge.
+    if: ${{ !cancelled() && needs.merge.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
