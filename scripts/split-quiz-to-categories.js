@@ -1,22 +1,10 @@
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
-const { readQuiz } = require('./lib/quiz-store');
+const { iterQuizQuestions } = require('./lib/quiz-store');
 
 const quizPath = process.env.SPLIT_QUIZ_PATH || path.join(__dirname, '..', 'data', 'quiz.json');
 const outDir = process.env.SPLIT_OUT_DIR || path.join(__dirname, '..', 'data', 'questions');
-
-let quiz;
-try { quiz = readQuiz(quizPath); }
-catch (e) { console.error('Failed to read quiz.json:', e.message); process.exit(1); }
-
-const catMap = {};
-for (const q of quiz.questions) {
-  const subject = q.subject || 'Uncategorized';
-  const subSubject = q.subSubject || 'General';
-  if (!catMap[subject]) catMap[subject] = {};
-  if (!catMap[subject][subSubject]) catMap[subject][subSubject] = [];
-  catMap[subject][subSubject].push(q);
-}
 
 // A single monolithic file per subject now overflows V8's ~512Mi-char string
 // limit (RangeError: Invalid string length — run #461) and was heading for
@@ -33,10 +21,77 @@ function slugFor(subject) {
   return subject.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
+if (!fs.existsSync(quizPath)) {
+  console.error('Failed to read quiz.json: ' + new Error('ENOENT: no such file or directory, open \'' + quizPath + '\'').message);
+  process.exit(1);
+}
+
+// Streamed split. The old code materialized the ENTIRE corpus through
+// readQuiz() (all shards into one array) plus the catMap, which exceeds the
+// runner heap as the corpus grows. Instead route each question (via
+// iterQuizQuestions, shard by shard) into per-category JSONL scratch files, then
+// rebuild and write ONE category at a time — peak heap is bounded by the largest
+// single category, not the whole 8 M+ question corpus.
+const tmpBase = fs.mkdtempSync(path.join(os.tmpdir(), 'quiz-split-'));
+const FLUSH = 8 * 1024 * 1024;
+const subjects = [];
+const subjFiles = {}; // subject -> { file, buf }
+let total = 0;
+
+function scratchFor(subject) {
+  let s = subjFiles[subject];
+  if (!s) {
+    s = { file: path.join(tmpBase, 'cat-' + subjects.length + '.ndjson'), buf: '' };
+    subjFiles[subject] = s;
+    subjects.push(subject);
+  }
+  return s;
+}
+
+try {
+  iterQuizQuestions(quizPath, (q) => {
+    const subject = q.subject || 'Uncategorized';
+    const subSubject = q.subSubject || 'General';
+    const s = scratchFor(subject);
+    s.buf += JSON.stringify([subSubject, q]) + '\n';
+    if (s.buf.length >= FLUSH) {
+      fs.appendFileSync(s.file, s.buf);
+      s.buf = '';
+    }
+    total++;
+  });
+} catch (e) {
+  console.error('Failed to read quiz.json:', e.message);
+  process.exit(1);
+}
+
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
 let written = 0;
-for (const [subject, subMap] of Object.entries(catMap)) {
+for (const subject of subjects) {
+  const s = subjFiles[subject];
+  if (s.buf.length) {
+    fs.appendFileSync(s.file, s.buf);
+    s.buf = '';
+  }
+
+  // Read the scratch back as a Buffer and slice one line at a time — the
+  // largest categories exceed V8's single-string ceiling if read whole.
+  const raw = fs.readFileSync(s.file);
+  const subMap = {};
+  let start = 0;
+  for (let i = 0; i <= raw.length; i++) {
+    if (i === raw.length || raw[i] === 10) {
+      if (i > start) {
+        const parsed = JSON.parse(raw.toString('utf8', start, i));
+        const ss = parsed[0];
+        (subMap[ss] = subMap[ss] || []).push(parsed[1]);
+      }
+      start = i + 1;
+    }
+  }
+  fs.unlinkSync(s.file);
+
   const entries = Object.keys(subMap).map(ss => ({ ss, qs: subMap[ss] }));
   // Deterministic order keeps the split seam stable across runs (smaller diffs).
   entries.sort((a, b) => (a.ss < b.ss ? -1 : a.ss > b.ss ? 1 : 0));
@@ -80,4 +135,5 @@ for (const [subject, subMap] of Object.entries(catMap)) {
   });
 }
 
-console.log('Wrote ' + written + ' category files from ' + quiz.questions.length + ' questions');
+fs.rmdirSync(tmpBase, { recursive: true });
+console.log('Wrote ' + written + ' category files from ' + total + ' questions');

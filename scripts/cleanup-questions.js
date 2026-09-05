@@ -1,18 +1,29 @@
 const fs = require('fs');
 const path = require('path');
-const { readQuiz, writeQuiz } = require('./lib/quiz-store');
+const { iterQuizQuestions, MAX_SHARD_BYTES } = require('./lib/quiz-store');
 
 const quizPath = path.join(__dirname, '..', 'data', 'quiz.json');
-let quiz;
+
+if (!fs.existsSync(quizPath)) {
+  console.error('Warning: Could not parse quiz.json (ENOENT: quiz.json missing). Skipping cleanup.');
+  process.exit(0);
+}
+
+// Read only the primary (no questions) to recover the non-question top-level
+// fields and their key order, so the rewritten file keeps the exact layout
+// writeQuiz produced.
+let primary;
 try {
-  quiz = readQuiz(quizPath);
+  primary = JSON.parse(fs.readFileSync(quizPath, 'utf8'));
 } catch (e) {
   console.error('Warning: Could not parse quiz.json (' + e.message + '). Skipping cleanup.');
   process.exit(0);
 }
-const all = quiz.questions;
-
-const before = all.length;
+delete primary.shardCount;
+const rest = {};
+for (const k of Object.keys(primary)) {
+  if (k !== 'questions') rest[k] = primary[k];
+}
 
 function isBad(q) {
   const text = (q.question || '').trim();
@@ -109,10 +120,54 @@ function isBad(q) {
   return false;
 }
 
-const clean = all.filter(q => !isBad(q));
+// Streamed filter + rewrite. The old code held the entire corpus in memory
+// through readQuiz() plus the filtered copy and handed it to writeQuiz() — the
+// same whole-corpus heap that eventually OOMs as the corpus grows. This mirrors
+// writeQuiz's exact shard layout and per-question byte measurement while walking
+// the questions one shard at a time, so peak heap stays bounded instead.
+const HEADER = Buffer.byteLength('{"questions":[]}');
+const shards = [];
+let cur = [];
+let curLen = HEADER;
+let before = 0;
+let kept = 0;
 
-quiz.questions = clean;
-writeQuiz(quizPath, quiz);
+function removeParts(p) {
+  for (let i = 0; fs.existsSync(p + '.part.' + i); i++) fs.unlinkSync(p + '.part.' + i);
+}
 
-const removed = before - clean.length;
-console.log('Cleaned: ' + before + ' → ' + clean.length + ' questions (-' + removed + ' garbage)');
+try {
+  iterQuizQuestions(quizPath, (q) => {
+    before++;
+    if (isBad(q)) return;
+    const qLen = Buffer.byteLength(JSON.stringify(q));
+    if (cur.length && curLen + qLen + 1 > MAX_SHARD_BYTES) {
+      shards.push(cur);
+      cur = [];
+      curLen = HEADER;
+    }
+    cur.push(q);
+    curLen += qLen + 1;
+    kept++;
+  });
+} catch (e) {
+  console.error('Warning: Could not parse quiz.json (' + e.message + '). Skipping cleanup.');
+  process.exit(0);
+}
+
+removeParts(quizPath);
+if (shards.length === 0) {
+  const out = {};
+  for (const k of Object.keys(primary)) out[k] = primary[k];
+  out.questions = cur;
+  fs.writeFileSync(quizPath, JSON.stringify(out));
+} else {
+  shards.push(cur);
+  shards.forEach((sh, i) => {
+    fs.writeFileSync(quizPath + '.part.' + i, JSON.stringify({ questions: sh }));
+  });
+  const header = Object.assign({}, rest, { questions: [], shardCount: shards.length });
+  fs.writeFileSync(quizPath, JSON.stringify(header));
+}
+
+console.log('Cleaned: ' + before + ' → ' + kept + ' questions (-' + (before - kept) + ' garbage)');
