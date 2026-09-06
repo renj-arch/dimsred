@@ -1891,6 +1891,226 @@ function escapeRe(s) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+// ---------------------------------------------------------------------------
+// Directed relationship ("lineage & influence") edges.
+//
+// Extracts directional parent--child relations from question fact text, e.g.
+//   "Irene was one of the Horae, daughter of Zeus and Themis."
+//   "... the son of George Antheil."
+//   "... succeeded by Chun Doo-hwan ..."
+//   "... founded by J. R. D. Tata ..."
+// Only emitted when BOTH ends resolve to real nodes on the map, so there are
+// never dangling references. Edges are directionally significant: { a, b, rel }
+// means "a -> b via rel" (e.g. a's relation to b).
+// ---------------------------------------------------------------------------
+var REL_FAMILY_LEGACY = null; // kept out; see extractRelations below
+var REL_RELATION_LEGACY = null;
+
+function canonName(s) {
+  return String(s).toLowerCase().replace(/[^a-z0-9]+/gi, ' ').replace(/\s+/g, ' ').trim();
+}
+function canon(s) {
+  return canonName(s);
+}
+
+// Max names in the relation-resolver regex. Bounded so per-question scanning stays
+// cheap — the prominent (seed + high-mention) entities carry the lineage story.
+var REL_MAX_NAMES = 9000;
+
+// Generic/all-purpose topic names that carry no real entity — never usable as an
+// endpoint in a relation ("General", "Background", "Introduction", ...).
+var GENERIC_TOPICS = ['general', 'background', 'introduction', 'overview', 'miscellaneous', 'other', 'others', 'more', 'notes', 'see also', 'external links', 'further reading', 'summary', 'about', 'all topics'];
+
+function extractRelations(all, nodes, topicMap) {
+  // --- Build the name resolver with RAW name strings and a canonical lookup. ---
+  // Keep the LONGEST raw form per canonical key so "J. R. D. Tata" wins over "Tata".
+  var canonIndex = {};   // canonical -> id
+  var rawByName = {};    // canonical -> longest raw string
+  function addName(nm, id) {
+    if (!nm) return;
+    var c = canonName(nm);
+    if (c.length < 3) return;
+    if (GENERIC_TOPICS.indexOf(c) !== -1) return;
+    // Exclude bare year/decade names ("1857", "1920s") which are not real entities
+    if (/^\d{3,4}s?$/.test(c)) return;
+    if (!canonIndex[c]) { canonIndex[c] = id; rawByName[c] = nm; }
+    else if (nm.length > (rawByName[c] || '').length) rawByName[c] = nm;
+  }
+  // Priority set: seed spine + person nodes. Person cap keeps the regex bounded.
+  var persons = nodes.filter(function (n) { return n.type === 'person'; });
+  var seeds = nodes.filter(function (n) { return n.seed; });
+  // Keep generous person set but sorted by prominence (mention count proxy).
+  persons.sort(function (x, y) { return (y.count || 0) - (x.count || 0); });
+  var seedCount = seeds.length;
+  var personCap = Math.max(0, REL_MAX_NAMES - seedCount);
+  var relationNodes = seeds.slice();
+  for (var p of persons.slice(0, personCap)) { relationNodes.push(p); }
+  // De-dupe: a node can be both seed and person.
+  var seenNode = {};
+  relationNodes = relationNodes.filter(function (n) { if (seenNode[n.id]) return false; seenNode[n.id] = true; return true; });
+  for (var rn of relationNodes) {
+    addName(rn.name, rn.id);
+    if (rn.aliases) for (var al of rn.aliases) addName(al, rn.id);
+  }
+  var rawList = Object.keys(rawByName).map(function (c) { return rawByName[c]; });
+  if (!rawList.length) return [];
+  rawList.sort(function (x, y) { return y.length - x.length; });
+  var nameRe = new RegExp('(^|[^a-z0-9])(' + rawList.map(escapeRe).join('|') + ')(?=[^a-z0-9]|$)', 'gi');
+
+  var edges = {};
+  function ensureEdge(a, b, rel) {
+    if (!a || !b || a === b) return;
+    var k = a + '\u0000' + b + '\u0000' + rel;
+    edges[k] = { a: a, b: b, rel: rel };
+  }
+
+  function mentions(txt) {
+    var out = [];
+    var m;
+    nameRe.lastIndex = 0;
+    while ((m = nameRe.exec(txt))) {
+      var id = canonIndex[canonName(m[2])];
+      if (id) out.push({ id: id, start: m.index, end: nameRe.lastIndex });
+    }
+    return out;
+  }
+  // Last mention ending before `at`; first starting at/after `at`.
+  function prevMention(ms, at) {
+    var best = null;
+    for (var x of ms) if (x.end <= at && (!best || x.end > best.end)) best = x;
+    return best;
+  }
+  function nextMention(ms, at) {
+    var best = null;
+    for (var x of ms) if (x.start >= at && (!best || x.start < best.start)) best = x;
+    return best;
+  }
+  // Up to `max` consecutive mentions from `at`, allowing an "and"/","/"with" joiner between.
+  function nextMentions(ms, at, max, txt) {
+    var out = [];
+    var cur = at;
+    for (var i = 0; i < max; i++) {
+      var nx = nextMention(ms, cur);
+      if (!nx) break;
+      if (out.length) {
+        var gap = txt.slice(out[out.length - 1].end, nx.start).toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
+        if (gap && !/^(and|with|along with|&)\b|\bwith$/.test(gap)) break;
+      }
+      out.push(nx);
+      cur = nx.end;
+    }
+    return out;
+  }
+  // Bounds of the sentence containing position `at` (splits on . ! ? ; — and newline).
+  function sentenceAt(txt, at) {
+    var start = 0, end = txt.length;
+    for (var i = at - 1; i >= 0; i--) {
+      var ch = txt.charAt(i);
+      if (ch === '.' || ch === '!' || ch === '?' || ch === ';' || ch === '\u2014' || ch === '\n') { start = i + 1; break; }
+    }
+    for (var j = at; j < txt.length; j++) {
+      var ch2 = txt.charAt(j);
+      if (ch2 === '.' || ch2 === '!' || ch2 === '?' || ch2 === ';' || ch2 === '\u2014' || ch2 === '\n') { end = j; break; }
+    }
+    return { start: start, end: end };
+  }
+
+  var FAMILY_SINGULAR = {
+    father:'father', mother:'mother', son:'son', daughter:'daughter', brother:'brother', sister:'sister',
+    grandfather:'grandfather', grandmother:'grandmother', grandson:'grandson', granddaughter:'granddaughter',
+    uncle:'uncle', aunt:'aunt', nephew:'nephew', niece:'niece', cousin:'cousin',
+    sibling:'sibling', child:'child', children:'child', parent:'parent', parents:'parent',
+    spouse:'spouse', wife:'wife', husband:'husband', consort:'husband',
+    descendant:'descends from', descends:'descends from', descended:'descends from', heir:'heir of', heiress:'heir of'
+  };
+
+  var ofByRe = /\b((?:elder\s+|younger\s+|paternal\s+|maternal\s+)?(?:father|mother|son|daughter|brother|sister|grandfather|grandmother|grandson|granddaughter|uncle|aunt|nephew|niece|cousin|sibling|child|children|parent|parents|spouse|wife|husband|consort|descendant|descends|descended|heir|heiress|founder|establisher|successor|predecessor)|succeeded\s+by|succeeded|founded\s+by|established\s+by|preceded\s+by|preceded|mentored\s+by|mentored|taught\s+by|studied\s+under|pupil\s+of|student\s+of|disciple\s+of|guru\s+of|mentor\s+of)\b/g;
+  var verbRe = /\b(succeeded|founded|established|preceded|mentored|sired|created|built|fathered|mothered)\b/g;
+
+  for (var it of all.all) {
+    var q = it.q;
+    var owner = topicMap ? (topicMap[canonName(q.subSubject || q._topic || '')] || null) : null;
+    var txt = [q.fact, q.question, q.answer, q.hint].filter(Boolean).join(' ');
+    txt = txt.replace(/_+ +/g, ' ').replace(/_{2,}/g, ' ');
+    if (!txt) continue;
+    var ms = mentions(txt);
+    if (!ms.length) continue;
+
+    // Pattern 1: "... <rel> of/by <target>" (subject = nearest preceding mention,
+    // or the owning topic when the sentence leaves it implicit, e.g. "She ...").
+    var m;
+    ofByRe.lastIndex = 0;
+    while ((m = ofByRe.exec(txt))) {
+      // strip elder/younger/paternal/maternal prefixes before canonical lookup
+      var phrase = m[1].toLowerCase().replace(/^(?:elder|younger|paternal|maternal)\s+/, '');
+      var pStart = m.index, pEnd = ofByRe.lastIndex;
+      // "parent body of X" / "parent wing of Y" are astronomy/org phrases, not kin.
+      if (phrase === 'parent' && /body|wing|company|firm|organization|organisation|group\b/.test(txt.slice(pEnd, pEnd + 20).toLowerCase())) continue;
+      // Subject = nearest preceding mention IN THE SAME SENTENCE. Falling back to the
+      // owning topic only for family-of forms where the sentence leaves it implicit
+      // ("She was one of the Horae, daughter of Zeus and Themis").
+      var sent = sentenceAt(txt, pStart);
+      var subj = prevMention(ms, pStart);
+      var a = (subj && subj.start >= sent.start) ? subj.id : null;
+      if (!a && owner && FAMILY_SINGULAR[phrase]) {
+        var seg = txt.slice(sent.start, pStart);
+        if (/\b(he|she|his|her)\b/i.test(seg)) a = owner;
+      }
+      if (!a) continue;
+      var objs = nextMentions(ms, pEnd, 2, txt);
+      if (!objs.length) continue;
+      for (var o of objs) {
+        if (o.start - pEnd > 45) break;
+        var b = o.id;
+        if (!b || b === a) continue;
+        if (phrase === 'succeeded by' || phrase === 'succeeded') ensureEdge(a, b, 'succeeded by');
+        else if (phrase === 'founded by' || phrase === 'established by') ensureEdge(b, a, 'founded');
+        else if (phrase === 'preceded by' || phrase === 'preceded') ensureEdge(b, a, 'preceded');
+        else if (phrase === 'mentored by' || phrase === 'taught by' || phrase === 'mentor of' || phrase === 'guru of') ensureEdge(b, a, 'mentored by');
+        else if (phrase === 'studied under' || phrase === 'pupil of' || phrase === 'student of' || phrase === 'disciple of') ensureEdge(a, b, 'pupil of');
+        else if (FAMILY_SINGULAR[phrase]) ensureEdge(a, b, FAMILY_SINGULAR[phrase]);
+        else if (phrase === 'founder' || phrase === 'establisher') ensureEdge(a, b, 'founder of');
+        else if (phrase === 'successor') ensureEdge(a, b, 'successor of');
+        else if (phrase === 'predecessor') ensureEdge(a, b, 'predecessor of');
+      }
+    }
+
+    // Pattern 2: verb-like "SUBJ founded/succeeded/mentored OBJ" and the passive
+    // "OBJ was founded ... by SUBJ". Direction flips for passives with a "by"
+    // clause; a passive with no "by" right after is left alone ("was founded in 1969").
+    var m2;
+    verbRe.lastIndex = 0;
+    while ((m2 = verbRe.exec(txt))) {
+      var verb = m2[1].toLowerCase();
+      var subj = prevMention(ms, m2.index);
+      var a2 = (subj && m2.index - subj.end <= 8) ? subj.id : null;
+      var obj = nextMention(ms, verbRe.lastIndex);
+      if (!a2 || !obj || (obj.start - verbRe.lastIndex > 45)) continue;
+      var b2 = obj.id;
+      if (!b2 || b2 === a2) continue;
+      var wasPassive = /\b(was|were|being|been)\b/.test(txt.slice(Math.max(0, m2.index - 10), m2.index).toLowerCase());
+      var gap = txt.slice(verbRe.lastIndex, obj.start);
+      var hasBy = /\bby\b/.test(gap);
+      if (verb === 'founded' || verb === 'established' || verb === 'created' || verb === 'built') {
+        if (wasPassive && !hasBy) continue;               // "... was founded in 1969." — no actor
+        ensureEdge(wasPassive ? b2 : a2, wasPassive ? a2 : b2, 'founded');
+      }
+      else if (verb === 'succeeded') ensureEdge(a2, b2, 'succeeded by');
+      else if (verb === 'preceded') {
+        if (wasPassive && !hasBy) continue;
+        ensureEdge(wasPassive ? b2 : a2, wasPassive ? a2 : b2, 'preceded');
+      }
+      else if (verb === 'mentored') {
+        if (wasPassive && !hasBy) continue;
+        ensureEdge(wasPassive ? b2 : a2, wasPassive ? a2 : b2, 'mentored by');
+      }
+      else if (verb === 'sired' || verb === 'fathered') { if (!wasPassive) ensureEdge(a2, b2, 'father'); }
+      else if (verb === 'mothered') { if (!wasPassive) ensureEdge(a2, b2, 'mother'); }
+    }
+  }
+  return Object.keys(edges).map(function (k) { return edges[k]; });
+}
+
 function modeSpan(spans) {
   var freq = {};
   for (var sp of spans) {
@@ -2185,6 +2405,17 @@ function main() {
     s.count += nd.count;
     return false;
   });
+
+  // Topic -> node id map (all final nodes, name + aliases) so relation extraction
+  // can attribute an implicit subject ("She, daughter of Zeus") to the owning node.
+  var topicMap = {};
+  for (var tmNode of nodes) {
+    var tmNames = [tmNode.name].concat(tmNode.aliases || []);
+    for (var tnm of tmNames) {
+      var tc = canonName(tnm);
+      if (tc.length >= 3 && !topicMap[tc]) topicMap[tc] = tmNode.id;
+    }
+  }
 
   // Cross-entity links: co-occurrence of two seed entities inside one question.
   var aliasMap = {};
@@ -2870,7 +3101,8 @@ function main() {
     fs.writeFileSync(partFile, JSON.stringify(nodeParts[pi]));
     partSizes.push(fs.statSync(partFile).size);
   }
-  var out = { builtAt: new Date().toISOString(), eras: ERAS, nodesParts: nodeParts.length, links: links };
+  var edges = extractRelations(all, nodes, topicMap);
+  var out = { builtAt: new Date().toISOString(), eras: ERAS, nodesParts: nodeParts.length, links: links, edges: edges };
   fs.writeFileSync(OUT, JSON.stringify(out));
   var withSpan = nodes.filter(function (n) { return n.span; }).length;
   console.log('Wrote ' + OUT);
@@ -2881,6 +3113,7 @@ function main() {
   for (var gk of Object.keys(SEED)) { totalSeeds += SEED[gk].list.length; seedTypeCounts[SEED[gk].type] = (seedTypeCounts[SEED[gk].type] || 0) + SEED[gk].list.length; }
   console.log('seed entities: ' + totalSeeds + ' across ' + JSON.stringify(seedTypeCounts));
   console.log('links: ' + links.length + ' (manual added: ' + addedManual + ', dropped unresolved: ' + droppedManual + ', top: ' + links.slice(0, 5).map(function (l) { return l.a.replace('seed|', '') + '↔' + l.b.replace('seed|', '') + ':' + l.w; }).join(', ') + ')');
+  console.log('relations edges: ' + edges.length + ' (sample: ' + edges.slice(0, 5).map(function (e) { return e.a.replace('seed|', '').split('|').pop() + ' -' + e.rel + '-> ' + e.b.replace('seed|', '').split('|').pop(); }).join(', ') + ')');
   var autoPersons = nodes.filter(function (n) { return n.type === 'person' && !n.seed; }).length;
   console.log('auto-filed persons (via descriptors, not in curated spine): ' + autoPersons);
 
@@ -2901,4 +3134,8 @@ function main() {
   console.log('desc coverage: ' + (nodes.length - nodesNoDesc.length) + '/' + nodes.length + ' nodes (' + ((nodes.length - nodesNoDesc.length) / nodes.length * 100).toFixed(1) + '%)' + (seedNoDesc.length ? ' — seed nodes still missing: ' + seedNoDesc.map(function (n) { return n.name; }).join(', ') : ''));
 }
 
-main();
+if (require.main === module) main();
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { extractRelations: extractRelations, canon: canon };
+}
