@@ -2034,11 +2034,51 @@ function extractRelations(all, nodes, topicMap) {
     sibling:'sibling', child:'child', children:'child', parent:'parent', parents:'parent',
     spouse:'spouse', wife:'wife', husband:'husband', consort:'husband',
     descendant:'descends from', descends:'descends from', descended:'descends from', heir:'heir of', heiress:'heir of',
+    offspring:'child', progeny:'child',
+    friend:'friend of', colleague:'colleague of', coworker:'colleague of', workmate:'colleague of',
+    boyfriend:'partner of', girlfriend:'partner of', partner:'partner of', fiance:'partner of', fiancee:'partner of', 'fianc\u00e9':'partner of', 'fianc\u00e9e':'partner of',
+    rival:'rival of', opponent:'rival of', enemy:'rival of', archenemy:'rival of',
+    relative:'relative of', kinsman:'relative of', ward:'ward of',
+    protege:'pupil of', apprentice:'pupil of',
+    widow:'wife', widower:'husband', bride:'wife', groom:'husband',
+    'ex-wife':'ex-wife', 'ex-husband':'ex-husband',
     'father-in-law':'father-in-law', 'mother-in-law':'mother-in-law', 'son-in-law':'son-in-law', 'daughter-in-law':'daughter-in-law',
     'brother-in-law':'brother-in-law', 'sister-in-law':'sister-in-law',
     'father in law':'father-in-law', 'mother in law':'mother-in-law', 'son in law':'son-in-law', 'daughter in law':'daughter-in-law',
-    'brother in law':'brother-in-law', 'sister in law':'sister-in-law'
+    'brother in law':'brother-in-law', 'sister in law':'sister-in-law',
+    'foster father':'father', 'foster mother':'mother', 'foster son':'son', 'foster daughter':'daughter',
+    'foster parent':'parent', 'foster child':'child', 'foster children':'child'
   };
+
+  // Generated variants: step-, half-, great-(great-)(great)- forms with hyphen,
+  // space or no separator, and English plurals (fathers, sons, nieces, half-brothers...).
+  var STEP_BASE = { father:'father', mother:'mother', son:'son', daughter:'daughter', brother:'brother', sister:'sister', parent:'parent', child:'child', children:'child', sibling:'sibling' };
+  for (var sw of Object.keys(STEP_BASE)) {
+    for (var ssep of ['', '-', ' ']) FAMILY_SINGULAR['step' + ssep + sw] = 'step-' + STEP_BASE[sw];
+  }
+  for (var hw of ['brother', 'sister']) {
+    for (var hsep of ['', '-', ' ']) FAMILY_SINGULAR['half' + hsep + hw] = 'half-' + hw;
+  }
+  var GREAT_BASE = ['grandfather','grandmother','grandson','granddaughter','uncle','aunt','nephew','niece','grandparent','grandchild'];
+  for (var gw of GREAT_BASE) {
+    for (var gsep of ['-', ' ']) {
+      FAMILY_SINGULAR['great' + gsep + gw] = 'great-' + gw;
+      FAMILY_SINGULAR['great' + gsep + 'great' + gsep + gw] = 'great-great-' + gw;
+      FAMILY_SINGULAR['great' + gsep + 'great' + gsep + 'great' + gsep + gw] = 'great-great-great-' + gw;
+    }
+  }
+  var FAM_KEYS = Object.keys(FAMILY_SINGULAR);
+  for (var fk of FAM_KEYS) {
+    FAMILY_SINGULAR[fk + 's'] = FAMILY_SINGULAR[fk];
+    FAMILY_SINGULAR[fk + 'es'] = FAMILY_SINGULAR[fk];
+  }
+  FAMILY_SINGULAR['sons-in-law'] = 'son-in-law';
+  FAMILY_SINGULAR['daughters-in-law'] = 'daughter-in-law';
+  FAMILY_SINGULAR['brothers-in-law'] = 'brother-in-law';
+  FAMILY_SINGULAR['sisters-in-law'] = 'sister-in-law';
+  FAMILY_SINGULAR['fathers-in-law'] = 'father-in-law';
+  FAMILY_SINGULAR['mothers-in-law'] = 'mother-in-law';
+  FAMILY_SINGULAR['fianc\u00e9s'] = 'partner of';
 
   // Adjacent context that flips a family/relation edge to run target->subject:
   // "X's son", "his eldest son", "his own daughter", "X had a son Y", "X had a wife Y".
@@ -2049,8 +2089,8 @@ function extractRelations(all, nodes, topicMap) {
     return /\bhad\s+[a-z]+\s*$/.test(seg);
   }
 
-  var ofByRe = /\b((?:elder\s+|younger\s+|paternal\s+|maternal\s+)?(?:father|mother|son|daughter|brother|sister|grandfather|grandmother|grandson|granddaughter|uncle|aunt|nephew|niece|cousin|sibling|child|children|parent|parents|spouse|wife|husband|consort|descendant|descends|descended|heir|heiress|founder|establisher|successor|predecessor)(?:[\s-]in[\s-]law)?|succeeded\s+by|succeeded|founded\s+by|established\s+by|preceded\s+by|preceded|mentored\s+by|mentored|taught\s+by|studied\s+under|pupil\s+of|student\s+of|disciple\s+of|guru\s+of|mentor\s+of)\b/g;
-  var verbRe = /\b(succeeded|founded|established|preceded|mentored|sired|created|built|fathered|mothered)\b/g;
+  var ofByRe = /\b((?:elder\s+|younger\s+|paternal\s+|maternal\s+)*(?:great(?:[- ]+great){0,2}[- ]+)?(?:father|mother|son|daughter|brother|sister|grandfather|grandmother|grandson|granddaughter|uncle|aunt|nephew|niece|cousin|sibling|child|children|parent|parents|spouse|wife|husband|consort|descendant|descends|descended|heir|heiress|founder|establisher|successor|predecessor|offspring|progeny|ancestor|forefather|friend|colleague|coworker|workmate|boyfriend|girlfriend|partner|fiance|fiancee|rival|opponent|enemy|archenemy|relative|kinsman|ward|guardian|protege|apprentice|widow|widower|bride|groom|stepfather|stepmother|stepson|stepdaughter|stepbrother|stepsister|stepparent|stepchild|stepchildren|stepsibling|step-father|step-mother|step-son|step-daughter|step-brother|step-sister|step-parent|step-child|step-children|step-sibling|half-brother|half-sister|halfbrother|halfsister|ex-wife|ex-husband)(?:s|es)?(?:[\s-]+in[\s-]+law)?|succeeded\s+by|succeeded|founded\s+by|established\s+by|preceded\s+by|preceded|mentored\s+by|mentored|taught\s+by|studied\s+under|pupil\s+of|student\s+of|disciple\s+of|guru\s+of|mentor\s+of|teacher\s+of|tutor\s+of|coach\s+of|born\s+to|gave\s+birth\s+to|gave\s+birth|adopted\s+by|raised\s+by|brought\s+up\s+by|brought\s+up|foster\s+father|foster\s+mother|foster\s+son|foster\s+daughter|foster\s+parent|foster\s+child)\b/g;
+  var verbRe = /\b(succeeded|succeeds|founded|co-founded|cofounded|established|preceded|mentored|married|wed|remarried|divorced|sired|created|built|fathered|mothered|birthed|raised)\b/g;
 
   for (var it of all.all) {
     var q = it.q;
@@ -2106,6 +2146,11 @@ function extractRelations(all, nodes, topicMap) {
         else if (phrase === 'preceded by' || phrase === 'preceded') ensureEdge(b, a, 'preceded');
         else if (phrase === 'mentored by' || phrase === 'taught by' || phrase === 'mentor of' || phrase === 'guru of') ensureEdge(b, a, 'mentored by');
         else if (phrase === 'studied under' || phrase === 'pupil of' || phrase === 'student of' || phrase === 'disciple of') ensureEdge(a, b, 'pupil of');
+        else if (phrase === 'teacher of' || phrase === 'tutor of' || phrase === 'coach of') ensureEdge(a, b, 'mentored by');
+        else if (phrase === 'born to' || phrase === 'adopted by' || phrase === 'raised by' || phrase === 'brought up by') ensureEdge(a, b, 'child');
+        else if (phrase === 'gave birth to' || phrase === 'gave birth') ensureEdge(b, a, 'child');
+        else if (phrase === 'guardian') ensureEdge(poss ? b : a, poss ? a : b, 'guardian of');
+        else if (phrase === 'ancestor' || phrase === 'forefather') ensureEdge(poss ? a : b, poss ? b : a, 'descends from');
         else if (FAMILY_SINGULAR[phrase]) ensureEdge(poss ? b : a, poss ? a : b, FAMILY_SINGULAR[phrase]);
         else if (phrase === 'founder' || phrase === 'establisher') ensureEdge(poss ? b : a, poss ? a : b, 'founder of');
         else if (phrase === 'successor') ensureEdge(poss ? b : a, poss ? a : b, 'successor of');
@@ -2129,11 +2174,11 @@ function extractRelations(all, nodes, topicMap) {
       var wasPassive = /\b(was|were|being|been)\b/.test(txt.slice(Math.max(0, m2.index - 10), m2.index).toLowerCase());
       var gap = txt.slice(verbRe.lastIndex, obj.start);
       var hasBy = /\bby\b/.test(gap);
-      if (verb === 'founded' || verb === 'established' || verb === 'created' || verb === 'built') {
+      if (verb === 'founded' || verb === 'co-founded' || verb === 'cofounded' || verb === 'established' || verb === 'created' || verb === 'built') {
         if (wasPassive && !hasBy) continue;               // "... was founded in 1969." — no actor
         ensureEdge(wasPassive ? b2 : a2, wasPassive ? a2 : b2, 'founded');
       }
-      else if (verb === 'succeeded') ensureEdge(a2, b2, 'succeeded by');
+      else if (verb === 'succeeded' || verb === 'succeeds') ensureEdge(a2, b2, 'succeeded by');
       else if (verb === 'preceded') {
         if (wasPassive && !hasBy) continue;
         ensureEdge(wasPassive ? b2 : a2, wasPassive ? a2 : b2, 'preceded');
@@ -2142,8 +2187,12 @@ function extractRelations(all, nodes, topicMap) {
         if (wasPassive && !hasBy) continue;
         ensureEdge(wasPassive ? b2 : a2, wasPassive ? a2 : b2, 'mentored by');
       }
+      else if (verb === 'married' || verb === 'wed' || verb === 'remarried') ensureEdge(a2, b2, 'spouse');
+      else if (verb === 'divorced') ensureEdge(a2, b2, 'divorced');
+      else if (verb === 'birthed') { if (!wasPassive) ensureEdge(b2, a2, 'child'); }
       else if (verb === 'sired' || verb === 'fathered') { if (!wasPassive) ensureEdge(a2, b2, 'father'); }
       else if (verb === 'mothered') { if (!wasPassive) ensureEdge(a2, b2, 'mother'); }
+      else if (verb === 'raised') { if (wasPassive && hasBy) ensureEdge(a2, b2, 'child'); }
     }
   }
   return Object.keys(edges).map(function (k) { return edges[k]; });
