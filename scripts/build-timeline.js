@@ -1921,6 +1921,13 @@ var REL_MAX_NAMES = 9000;
 // endpoint in a relation ("General", "Background", "Introduction", ...).
 var GENERIC_TOPICS = ['general', 'background', 'introduction', 'overview', 'miscellaneous', 'other', 'others', 'more', 'notes', 'see also', 'external links', 'further reading', 'summary', 'about', 'all topics'];
 
+// Sub-topic co-occurrence links ("Gandhism <-> Mahatma Gandhi"): prominent
+// sub-topics (own-name match, min mention count) join the cross-entity linker so
+// hub topics no longer stand alone. Count floors out noise; the cap bounds the
+// regex just like REL_MAX_NAMES does for the relation resolver.
+var SUB_LINK_MIN_COUNT = 25;
+var SUB_LINK_MAX_NAMES = 8000;
+
 function extractRelations(all, nodes, topicMap) {
   // --- Build the name resolver with RAW name strings and a canonical lookup. ---
   // Keep the LONGEST raw form per canonical key so "J. R. D. Tata" wins over "Tata".
@@ -2417,10 +2424,32 @@ function main() {
     }
   }
 
-  // Cross-entity links: co-occurrence of two seed entities inside one question.
+  // Cross-entity links: co-occurrence of two entities inside one question.
+  // Seed entities (with their curated aliases) always participate; prominent
+  // sub-topics join by their own name so hubs like "Gandhism" (a non-seed
+  // concept) collect Connected/Story neighbours instead of standing alone.
   var aliasMap = {};
   for (var sn of seedNodes) {
     for (var al of linkAliasesFor(sn.name)) aliasMap[al.toLowerCase()] = sn.id;
+  }
+  var subtopics = nodes.filter(function (n) {
+    return n.id.indexOf('seed|') !== 0
+      && (n.count || 0) >= SUB_LINK_MIN_COUNT;
+  });
+  subtopics.sort(function (x, y) { return (y.count || 0) - (x.count || 0); });
+  var addedSub = 0;
+  for (var st of subtopics) {
+    if (addedSub >= SUB_LINK_MAX_NAMES) break;
+    var stSet = [st.name].concat(st.aliases || []);
+    for (var stAlias of stSet) {
+      var stKey = stAlias.toLowerCase();
+      var stCanon = canonName(stAlias);
+      if (stCanon.length < 3 || GENERIC_TOPICS.indexOf(stCanon) !== -1 || /^\d{3,4}s?$/.test(stCanon)) continue;
+      if (aliasMap[stKey] !== undefined) continue;
+      aliasMap[stKey] = st.id;
+      addedSub++;
+      break;
+    }
   }
   var aliasList = Object.keys(aliasMap).sort(function (x, y) { return y.length - x.length; });
   var linkRe = new RegExp('(^|[^a-z0-9])(' + aliasList.map(escapeRe).join('|') + ')([a-z]*)(?=[^a-z0-9]|$)', 'gi');
@@ -2453,9 +2482,14 @@ function main() {
   }
   var links = [];
   for (var pk of Object.keys(pairCount)) {
-    if (pairCount[pk] >= 2) {
-      var sp = pk.split('\u0000');
-      links.push({ a: sp[0], b: sp[1], w: pairCount[pk] });
+    var pairW = pairCount[pk];
+    var sp = pk.split('\u0000');
+    // Sub-topic-involving pairs need only one co-occurrence — hubs like "Gandhism"
+    // (116 mentions, 1 shared item) must still light up. Seed↔seed pairs stay at
+    // the stricter >= 2 so curated spines don't drown in weak new pairs.
+    var isSubPair = sp[0].indexOf('seed|') === -1 || sp[1].indexOf('seed|') === -1;
+    if (isSubPair ? pairW >= 1 : pairW >= 2) {
+      links.push({ a: sp[0], b: sp[1], w: pairW });
     }
   }
   links.sort(function (x, y) { return y.w - x.w; });
