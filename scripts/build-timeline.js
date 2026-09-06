@@ -1911,36 +1911,43 @@ function capDesc(s) {
   return s || null;
 }
 
-// One-line description for any topic that lacks a curated line. Scans the entity's
-// own questions for a defining sentence ("X is/was/refers to …"), else the shortest
-// clean first sentence of a fact, else any readable sentence, and as a guaranteed
-// last resort a neutral line — so autoDescFor never leaves a node without a desc.
-function autoDescFor(name, qs) {
-  var nm = String(name || '').trim();
-  if (!nm) return null;
-  var esc = escapeRe(nm);
-  var defRe = new RegExp('(^|[^a-z0-9])(' + esc + ')\\s+(?:is|are|was|were|refers? to|means|denotes?|describes?|stands for|may be defined as)\\s+((?:an?|the|a kind of|a type of)?[^.;!?]{6,180})', 'i');
-  var best = null, bestLen = 1e9, seen = 0;
+var META_RE = /\b(?:commonly|usually|sometimes|often|also|sometimes|literally|figuratively|informally|formally|understood|shortened|abbreviated|abbreviates|referred to as|known as|called|so[- ]called)\b/i;
+
+// Choose the most descriptive, definition-shaped first sentence from a topic's
+// facts. Scores each candidate so a substantive line ("X was a Mesopotamian
+// dynasty in the 21st century BC") wins over shorter meta/tangential lines
+// ("X is commonly abbreviated as …"). Falls back to the plainest readable line.
+function selectBestSent(qs, nm, esc) {
+  var best = null, bestScore = -1e9;
+  var seen = 0;
+  var nmc = String(nm || '').replace(/^[^a-z0-9]+/i, '');
+  var bare = /^[a-z0-9](?:[a-z0-9\s&.-]*[a-z0-9])?$/i.test(nmc) ? nmc : null;
+  var nameRe = bare ? new RegExp('\\b' + bare.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i') : null;
   for (var q of qs) {
-    if (++seen > 40) break;
-    var txt = cleanTex([q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' ')).replace(/\s+/g, ' ').trim();
-    var m = txt.match(defRe);
-    if (!m) continue;
-    var d = m[3].replace(/[,;:\u2013\u2014\s]+$/g, '').trim();
-    if (d && d.length < 190 && d.length < bestLen) { best = d; bestLen = d.length; }
+    if (++seen > 60) break;
+    var t2 = cleanTex(q.fact || q.answer || '').replace(/\s+/g, ' ').trim();
+    if (!t2) continue;
+    var sents = t2.split(/[.!?]\s+/);
+    for (var k = 0; k < sents.length; k++) {
+      var s = sents[k].split(/[,;:]\s+/)[0].trim().replace(/\.$/, '');
+      if (s.length < 14 || s.length >= 220 || !/\s/.test(s)) continue;
+      if (/^[-_(\d]/.test(s) || /\s[A-Z]$/.test(s)) continue;
+      var low = s.toLowerCase();
+      var hasName = nameRe === null ? false : nameRe.test(s);
+      var score = 0;
+      if (hasName) score += 4;
+      if (hasName && /\b(?:is|was|are|were|refers? to|means|denotes?|describes?|constitutes?|comprises?)\s+(?:an?|the|a kind of|a type of)\b/.test(low)) score += 6;
+      else if (hasName && /^\s*(?:the )?[a-z0-9]+(?:\s+[a-z0-9]+){0,3}\s+(?:is|was|are|were)\b/i.test(s)) score += 3;
+      if (hasName && /\b(?:century|BC|AD|BCE|CE|dynasty|kingdom|empire|state|republic|movement|war|battle|treaty|organisation|organization|institution|programme|program|scheme)\b/i.test(s)) score += 2;
+      if (!hasName) score -= 6;
+      if (META_RE.test(s)) score -= 5;
+      if (/^(\w+)(?:\s+\w+){0,2}\s+\1\b/i.test(s)) score -= 4;
+      if (/^\s*(?:it|its|he|she|they|his|her|their|the?|this|that|these|those)\b/i.test(s)) score -= 3;
+      if (score > bestScore || (score === bestScore && s.length < (best ? best.length : 1e9))) { best = s; bestScore = score; }
+    }
   }
-  if (best) return capDesc(best);
-  var fb = null, fbLen = 1e9;
-  seen = 0;
-  for (var q2 of qs) {
-    if (++seen > 40) break;
-    var s2 = cleanTex(q2.fact || q2.answer || '').replace(/\s+/g, ' ').trim();
-    if (!s2) continue;
-    var s = s2.split(/[.!?]\s+/)[0].trim().replace(/\.$/, '');
-    if (s.length >= 14 && s.length < 220 && /\s/.test(s) && !/\s[A-Z]$/.test(s) && !/^[-_(\d]/.test(s) && s.length < fbLen) { fb = s; fbLen = s.length; }
-  }
-  if (fb) return capDesc(fb);
-  var any = null, anyLen = 1e9;
+  if (best) return best;
+  var any = null, anyLen = 1e9, anyN = null, anyNLen = 1e9;
   seen = 0;
   for (var q3 of qs) {
     if (++seen > 40) break;
@@ -1949,10 +1956,36 @@ function autoDescFor(name, qs) {
       if (st.length < 14) continue;
       var s3 = st.split(/[.!?]\s+/)[0].trim().replace(/\.$/, '');
       if (s3.length < 14 || !/\s/.test(s3) || /\s[A-Z]$/.test(s3)) continue;
-      if (s3.length < anyLen) { any = s3; anyLen = s3.length; }
+      if (nameRe !== null && nameRe.test(s3)) {
+        if (s3.length < anyNLen) { anyN = s3; anyNLen = s3.length; }
+      } else if (s3.length < anyLen) { any = s3; anyLen = s3.length; }
     }
   }
-  if (any) return capDesc(any);
+  return anyN || any;
+}
+
+// One-line description for any topic that lacks a curated line. Scans the entity's
+// own questions for a defining sentence ("X is/was/refers to …"), else the shortest
+// clean first sentence of a fact, else any readable sentence, and as a guaranteed
+// last resort a neutral line — so autoDescFor never leaves a node without a desc.
+function autoDescFor(name, qs) {
+  var nm = String(name || '').replace(/^[^a-z0-9]+/i, '').trim();
+  if (!nm) return null;
+  var esc = escapeRe(nm);
+  var defRe = new RegExp('(^|[^a-z0-9])(?:the\\s+)?(' + esc + ')(?:\\s*\\([^)]*\\)|\\s+or\\s+[^.,;:!?()]{1,40})?\\s+(?:is|are|was|were|refers? to|means|denotes?|describes?|stands for|may be defined as)\\s+((?:an?|the|a kind of|a type of)?[^.;!?]{6,180})', 'i');
+  var best = null, bestLen = 1e9, seen = 0;
+  for (var q of qs) {
+    if (++seen > 40) break;
+    var txt = cleanTex([q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' ')).replace(/\s+/g, ' ').trim();
+    var m = txt.match(defRe);
+    if (!m) continue;
+    var d = m[3].replace(/[,;:\u2013\u2014\s]+$/g, '').trim();
+    if (/^(?:also|commonly|usually|sometimes|often|informally|formally|literally|figuratively)?\s*(?:known as|called|referred to as|abbreviated(?: as)?|shortened|termed)\b/i.test(d)) continue;
+    if (d && d.length < 190 && d.length < bestLen) { best = d; bestLen = d.length; }
+  }
+  if (best) return capDesc(best);
+  var fb = selectBestSent(qs, nm, esc);
+  if (fb) return capDesc(fb);
   if (qs && qs.length) return capDesc(nm);
   return null;
 }
@@ -1973,7 +2006,7 @@ function seedFallback(name, label) {
 // Wiki/TeX question text embeds LaTeX markup like {\displaystyle …}; strip it so
 // extracted sentences stay readable.
 function cleanTex(s) {
-  return String(s || '').replace(/\{\\?displaystyle\s*[^}]*\}/g, ' ').replace(/[{}]+/g, ' ');
+  return String(s || '').replace(/\{\\?displaystyle\s*[^}]*\}/g, ' ').replace(/\=+/g, ' ').replace(/[{}]+/g, ' ');
 }
 
 function main() {
