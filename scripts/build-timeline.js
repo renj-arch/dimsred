@@ -1965,10 +1965,15 @@ function extractRelations(all, nodes, topicMap) {
   var nameRe = new RegExp('(^|[^a-z0-9])(' + rawList.map(escapeRe).join('|') + ')(?=[^a-z0-9]|$)', 'gi');
 
   var edges = {};
+  var srcInfo = process.env.REL_SRC === '1';
+  var curSent = '';
   function ensureEdge(a, b, rel) {
     if (!a || !b || a === b) return;
     var k = a + '\u0000' + b + '\u0000' + rel;
-    edges[k] = { a: a, b: b, rel: rel };
+    if (!edges[k]) {
+      edges[k] = { a: a, b: b, rel: rel };
+      if (srcInfo) edges[k].src = curSent;
+    }
   }
 
   function mentions(txt) {
@@ -2031,13 +2036,22 @@ function extractRelations(all, nodes, topicMap) {
     descendant:'descends from', descends:'descends from', descended:'descends from', heir:'heir of', heiress:'heir of'
   };
 
+  // Adjacent context that flips a family/relation edge to run target->subject:
+  // "X's son", "his eldest son", "his own daughter", "X had a son Y", "X had a wife Y".
+  function isPossSeg(seg) {
+    if (/\'s\s*$/.test(seg)) return true;
+    if (/\b(?:his|her|its|their|our|your)(?:\s+[a-z]+){0,2}\s*$/.test(seg)) return true;
+    if (/\bhad\s+(?:an?|the|two|three|four|five|six|seven|several|one|[0-9]+)(?:\s+[a-z]+)?\s*$/.test(seg)) return true;
+    return /\bhad\s+[a-z]+\s*$/.test(seg);
+  }
+
   var ofByRe = /\b((?:elder\s+|younger\s+|paternal\s+|maternal\s+)?(?:father|mother|son|daughter|brother|sister|grandfather|grandmother|grandson|granddaughter|uncle|aunt|nephew|niece|cousin|sibling|child|children|parent|parents|spouse|wife|husband|consort|descendant|descends|descended|heir|heiress|founder|establisher|successor|predecessor)|succeeded\s+by|succeeded|founded\s+by|established\s+by|preceded\s+by|preceded|mentored\s+by|mentored|taught\s+by|studied\s+under|pupil\s+of|student\s+of|disciple\s+of|guru\s+of|mentor\s+of)\b/g;
   var verbRe = /\b(succeeded|founded|established|preceded|mentored|sired|created|built|fathered|mothered)\b/g;
 
   for (var it of all.all) {
     var q = it.q;
     var owner = topicMap ? (topicMap[canonName(q.subSubject || q._topic || '')] || null) : null;
-    var txt = [q.fact, q.question, q.answer, q.hint].filter(Boolean).join(' ');
+    var txt = [q.fact, q.question, q.answer, q.hint].filter(Boolean).join('. ') + ' ';
     txt = txt.replace(/_+ +/g, ' ').replace(/_{2,}/g, ' ');
     if (!txt) continue;
     var ms = mentions(txt);
@@ -2057,6 +2071,7 @@ function extractRelations(all, nodes, topicMap) {
       // owning topic only for family-of forms where the sentence leaves it implicit
       // ("She was one of the Horae, daughter of Zeus and Themis").
       var sent = sentenceAt(txt, pStart);
+      curSent = txt.slice(sent.start, sent.end).slice(0, 220);
       var subj = prevMention(ms, pStart);
       var a = (subj && subj.start >= sent.start) ? subj.id : null;
       if (!a && owner && FAMILY_SINGULAR[phrase]) {
@@ -2064,7 +2079,19 @@ function extractRelations(all, nodes, topicMap) {
         if (/\b(he|she|his|her)\b/i.test(seg)) a = owner;
       }
       if (!a) continue;
-      var objs = nextMentions(ms, pEnd, 2, txt);
+      // Possessive form ("Ashoka's father, Bindusara" / "his son Kunala"): the
+      // subject OWNS the relative, so the relation runs target->subject. The
+      // same inversion applies when the subject "had a son Y" or "had a wife Y".
+      // Leave "the father of X" / "son of X" (subject IS the relative) as-is.
+      var poss = false;
+      if (subj && subj.start >= sent.start) {
+        var preTxt = txt.slice(subj.end, pStart).replace(/\s+/g, ' ').toLowerCase().slice(-30);
+        poss = isPossSeg(preTxt);
+      } else if (owner) {
+        var preTxt2 = txt.slice(sent.start, pStart).replace(/\s+/g, ' ').toLowerCase().slice(-30);
+        poss = isPossSeg(preTxt2);
+      }
+      var objs = nextMentions(ms, pEnd, poss ? 1 : 2, txt);
       if (!objs.length) continue;
       for (var o of objs) {
         if (o.start - pEnd > 45) break;
@@ -2075,10 +2102,10 @@ function extractRelations(all, nodes, topicMap) {
         else if (phrase === 'preceded by' || phrase === 'preceded') ensureEdge(b, a, 'preceded');
         else if (phrase === 'mentored by' || phrase === 'taught by' || phrase === 'mentor of' || phrase === 'guru of') ensureEdge(b, a, 'mentored by');
         else if (phrase === 'studied under' || phrase === 'pupil of' || phrase === 'student of' || phrase === 'disciple of') ensureEdge(a, b, 'pupil of');
-        else if (FAMILY_SINGULAR[phrase]) ensureEdge(a, b, FAMILY_SINGULAR[phrase]);
-        else if (phrase === 'founder' || phrase === 'establisher') ensureEdge(a, b, 'founder of');
-        else if (phrase === 'successor') ensureEdge(a, b, 'successor of');
-        else if (phrase === 'predecessor') ensureEdge(a, b, 'predecessor of');
+        else if (FAMILY_SINGULAR[phrase]) ensureEdge(poss ? b : a, poss ? a : b, FAMILY_SINGULAR[phrase]);
+        else if (phrase === 'founder' || phrase === 'establisher') ensureEdge(poss ? b : a, poss ? a : b, 'founder of');
+        else if (phrase === 'successor') ensureEdge(poss ? b : a, poss ? a : b, 'successor of');
+        else if (phrase === 'predecessor') ensureEdge(poss ? b : a, poss ? a : b, 'predecessor of');
       }
     }
 
