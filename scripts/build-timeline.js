@@ -2033,7 +2033,11 @@ function extractRelations(all, nodes, topicMap) {
     uncle:'uncle', aunt:'aunt', nephew:'nephew', niece:'niece', cousin:'cousin',
     sibling:'sibling', child:'child', children:'child', parent:'parent', parents:'parent',
     spouse:'spouse', wife:'wife', husband:'husband', consort:'husband',
-    descendant:'descends from', descends:'descends from', descended:'descends from', heir:'heir of', heiress:'heir of'
+    descendant:'descends from', descends:'descends from', descended:'descends from', heir:'heir of', heiress:'heir of',
+    'father-in-law':'father-in-law', 'mother-in-law':'mother-in-law', 'son-in-law':'son-in-law', 'daughter-in-law':'daughter-in-law',
+    'brother-in-law':'brother-in-law', 'sister-in-law':'sister-in-law',
+    'father in law':'father-in-law', 'mother in law':'mother-in-law', 'son in law':'son-in-law', 'daughter in law':'daughter-in-law',
+    'brother in law':'brother-in-law', 'sister in law':'sister-in-law'
   };
 
   // Adjacent context that flips a family/relation edge to run target->subject:
@@ -2045,7 +2049,7 @@ function extractRelations(all, nodes, topicMap) {
     return /\bhad\s+[a-z]+\s*$/.test(seg);
   }
 
-  var ofByRe = /\b((?:elder\s+|younger\s+|paternal\s+|maternal\s+)?(?:father|mother|son|daughter|brother|sister|grandfather|grandmother|grandson|granddaughter|uncle|aunt|nephew|niece|cousin|sibling|child|children|parent|parents|spouse|wife|husband|consort|descendant|descends|descended|heir|heiress|founder|establisher|successor|predecessor)|succeeded\s+by|succeeded|founded\s+by|established\s+by|preceded\s+by|preceded|mentored\s+by|mentored|taught\s+by|studied\s+under|pupil\s+of|student\s+of|disciple\s+of|guru\s+of|mentor\s+of)\b/g;
+  var ofByRe = /\b((?:elder\s+|younger\s+|paternal\s+|maternal\s+)?(?:father|mother|son|daughter|brother|sister|grandfather|grandmother|grandson|granddaughter|uncle|aunt|nephew|niece|cousin|sibling|child|children|parent|parents|spouse|wife|husband|consort|descendant|descends|descended|heir|heiress|founder|establisher|successor|predecessor)(?:[\s-]in[\s-]law)?|succeeded\s+by|succeeded|founded\s+by|established\s+by|preceded\s+by|preceded|mentored\s+by|mentored|taught\s+by|studied\s+under|pupil\s+of|student\s+of|disciple\s+of|guru\s+of|mentor\s+of)\b/g;
   var verbRe = /\b(succeeded|founded|established|preceded|mentored|sired|created|built|fathered|mothered)\b/g;
 
   for (var it of all.all) {
