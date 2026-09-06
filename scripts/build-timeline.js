@@ -1248,6 +1248,309 @@ var PERSON_DESCS = {
   'Bankim Chandra Chatterjee': 'author of Vande Mataram', 'Ramanuja': 'Vaishnava philosopher'
 };
 
+// Curated one-line descriptions for every non-person seed entity (events, movements,
+// wars, empires, diseases, schemes, orgs, concepts). The build asserts full coverage
+// so nothing on the map is ever left without a desc line.
+var TOPIC_DESCS = {
+  // movements
+  'Indian independence movement': 'political campaign that won Indian independence in 1947',
+  'Non-cooperation movement': 'Gandhi-led campaign of peaceful non-cooperation against British rule (1920\u201322)',
+  'Civil disobedience movement': 'Gandhi-led mass campaign of law-breaking and the Salt March (1930\u201334)',
+  'Quit India movement': 'mass anti-British campaign demanding immediate exit, launched August 1942',
+  'Khilafat movement': 'Indian Muslim campaign against British treatment of the Ottoman Caliphate (1919\u201324)',
+  'Partition of India': '1947 division of British India into India and Pakistan',
+  'Simon Commission': '1928 British constitutional commission boycotted as \u201cSimon Go Back\u201d',
+  'Salt march': 'Gandhi\u2019s 1930 Dandi march that broke the British salt monopoly',
+  'Jallianwala Bagh massacre': '1919 British massacre of civilians at Amritsar',
+  'Revolt of 1857': 'great armed rising against British rule across India',
+  'Swadeshi movement': 'movement for Indian self-reliance and boycott of foreign goods',
+  'Indian National Congress': 'India\u2019s foremost party and principal architect of independence',
+  'Constituent Assembly of India': 'body that drafted and adopted the Constitution of India',
+  'Sepoy Mutiny': 'Indian soldiers\u2019 revolt that began the Revolt of 1857',
+  'Bardoli Satyagraha': '1928 peasant non-cooperation against heavy taxation in Gujarat',
+  'Champaran Satyagraha': 'Gandhi\u2019s first satyagraha, for indigo farmers of Bihar (1917)',
+  'Dandi March': 'Gandhi\u2019s 1930 march from Sabarmati to Dandi against the salt tax',
+  'Ghadar Movement': 'early 20th-century revolutionary movement of overseas Indians',
+  'Azad Hind Fauj': 'Indian National Army raised by Subhas Chandra Bose in World War II',
+  'Radcliffe Line': '1947 boundary drawn by Radcliffe between India and Pakistan',
+  // wars
+  'Battle of Plassey': '1757 battle that gave the British rule over Bengal',
+  'Battle of Buxar': '1764 battle that sealed British supremacy in eastern India',
+  'First Battle of Panipat': '1526 battle in which Babur founded the Mughal Empire',
+  'Second Battle of Panipat': '1556 battle where Akbar\u2019s army defeated Hemu',
+  'Third Battle of Panipat': '1761 battle in which Afghans crushed the Maratha confederacy',
+  'Battle of Haldighati': '1576 battle between Maharana Pratap and Akbar\u2019s Mughals',
+  'Battle of Talikota': '1565 battle of the united Deccan sultanates against Vijayanagara',
+  'Battle of Wandiwash': '1760 battle that ended French ambitions in South India',
+  'Anglo-Mysore Wars': 'four late-18th-century wars between Britain and the Kingdom of Mysore',
+  'Anglo-Maratha Wars': 'three wars between the British and the Marathas decided in the Third (1817\u201319)',
+  'First Anglo-Sikh War': '1845\u201346 war that gave the British much of Punjab',
+  'Second Anglo-Sikh War': '1848\u201349 war that annexed Punjab to British India',
+  'Sino-Indian War': '1962 border war between India and China',
+  'Indo-Pakistani War of 1965': 'second India\u2013Pakistan war, fought over Kashmir',
+  'Bangladesh Liberation War': '1971 war that freed Bangladesh from Pakistan',
+  'Kargil War': '1999 India\u2013Pakistan conflict in the Kargil sector of Kashmir',
+  // reforms
+  'Economic liberalisation in India': '1991 reforms that opened up the Indian economy',
+  'LPG reforms': 'Liberalisation, Privatisation and Globalisation reforms of 1991',
+  'Demonetisation in India': 'November 2016 withdrawal of the \u20b9500 and \u20b91000 notes',
+  'Goods and Services Tax (India)': 'single nationwide indirect tax, rolled out in 2017',
+  'Five-Year Plans (India)': 'central planning framework for the Indian economy (1951\u20132017)',
+  'Bank nationalisation in India': '1969 and 1980 government takeovers of the major commercial banks',
+  '73rd Constitutional Amendment': '1992 amendment that constitutionalised panchayati raj',
+  'Railway Budget': 'annual budget of Indian Railways, merged with the Union Budget in 2017',
+  // religion
+  'First Buddhist Council': 'council held at Rajagriha soon after the Buddha\u2019s death',
+  'Second Buddhist Council': 'council at Vaishali over monastic discipline',
+  'Third Buddhist Council': 'council at Pataliputra under Ashoka\u2019s patronage',
+  'Fourth Buddhist Council': 'councils held in Kashmir and Tamrashatiya in the 1st century CE',
+  'Buddhist missions under Ashoka': 'Ashoka\u2019s envoys who carried Buddhism to foreign lands',
+  'Mahaparinirvana of the Buddha': 'the death and final liberation of the Buddha',
+  // sites
+  'Lumbini': 'birthplace of Gautama Buddha, in present-day Nepal',
+  'Kushinagar': 'place of the Buddha\u2019s death and parinirvana',
+  'Rajgir': 'ancient capital of Magadha and site of the First Buddhist Council',
+  'Pataliputra': 'ancient capital of Magadha (modern Patna) under great empires',
+  'Gandhara': 'ancient north-western region famed for Greco-Buddhist art',
+  'Mathura': 'ancient city and major religious and artistic centre',
+  'Vatsa': 'one of the sixteen Mahajanapadas',
+  'Rigveda': 'oldest of the four Vedas',
+  'Mohenjo-daro': 'largest city of the Indus Valley Civilization',
+  'Kanchi': 'ancient Tamil city and capital of the Pallavas',
+  'Vaishali': 'ancient republic and site of the Second Buddhist Council',
+  'Kurukshetra': 'battlefield of the Mahabharata war',
+  'Magadha': 'mightiest of the Mahajanapadas, seat of later empires',
+  'Mahajanapadas': 'the sixteen ancient states of the Indian subcontinent',
+  'Yaudheya': 'ancient martial republic of northern India',
+  'Nayanar': 'Tamil Shaiva saint-poets',
+  'Alvar': 'Tamil Vaishnava saint-poets',
+  // classical
+  'Roman Republic': 'republic of Rome from 509 BC to 27 BC',
+  'Hellenistic period': 'Greek-influenced age after the splitting of Alexander\u2019s empire',
+  'Parthian Empire': 'Iranian empire that rivalled Rome in the east',
+  'Sasanian Empire': 'last Persian empire before the rise of Islam',
+  // greekStates
+  'Athens': 'Greek city-state, cradle of democracy',
+  'Sparta': 'militaristic Greek city-state, rival of Athens',
+  // conquests
+  'Huna invasions of India': 'Central Asian Huna incursions that weakened the Gupta Empire',
+  'Huns': 'nomadic horse-riders of Attila who ravaged Eurasia',
+  'Vikings': 'Norse seafarers and raiders of the 8th\u201311th centuries',
+  // china
+  'Qin dynasty': 'dynasty under which China was first unified',
+  'Han dynasty': 'long Chinese dynasty that consolidated the empire',
+  'Song dynasty': 'Chinese dynasty famed for economic and technological progress',
+  'Ming dynasty': 'Chinese dynasty (1368\u20131644) of the treasure voyages',
+  'Qing dynasty': 'last imperial dynasty of China (1644\u20131912)',
+  'Cultural Revolution': 'Mao\u2019s 1966\u201376 campaign against capitalist elements',
+  'Long March': 'epic 1934\u201335 retreat that made Mao\u2019s communists China\u2019s vanguard',
+  'Taiping Rebellion': 'massive mid-19th-century revolt against the Qing',
+  'Boxer Rebellion': '1900 anti-foreign uprising in China',
+  'Red Turban Rebellion': 'Yuan-dynasty revolt that helped found the Ming',
+  'Battle of Lake Poyang': 'decisive 1363 naval battle of the Red Turban wars',
+  'Jingnan Campaign': 'civil war that made Zhu Di the Yongle Emperor',
+  'Ming conquest of Yunnan': 'early Ming campaign that annexed Yunnan',
+  'Treasure voyages': 'Zheng He\u2019s Ming naval expeditions across the Indian Ocean',
+  'Forbidden City': 'walled imperial palace of the Ming and Qing in Beijing',
+  'Yongle Encyclopedia': 'vast Ming encyclopaedia compiled under the Yongle Emperor',
+  // chinaSites
+  'Great Wall of China': 'ancient defensive wall across northern China',
+  // worldAncient
+  'Ancient Egypt': 'civilisation of the Nile, land of the Pharaohs',
+  'Sumer': 'first civilisation of Mesopotamia',
+  'Babylon': 'Mesopotamian empire of Hammurabi and the Hanging Gardens',
+  'Assyria': 'mighty war-like empire of Mesopotamia',
+  'Phoenicia': 'seafaring Levantine people and inventors of the alphabet',
+  'Hittite Empire': 'Anatolian empire, rival of Egypt',
+  'Mycenaean civilization': 'Bronze Age Greek civilisation',
+  'Minoan civilization': 'Bronze Age civilisation of Crete',
+  'Carthage': 'Phoenician city-state that rivalled Rome',
+  'Persian Empire': 'Achaemenid empire founded by Cyrus the Great',
+  'Roman Empire': 'imperial Rome spanning the Mediterranean and beyond',
+  // medievalWorld
+  'Byzantine Empire': 'eastern Roman empire centred on Constantinople',
+  'Holy Roman Empire': 'medieval empire of Central Europe',
+  'Norman Conquest': '1066 conquest of England by William of Normandy',
+  'Umayyad Caliphate': 'first great Islamic caliphate',
+  'Abbasid Caliphate': 'second Islamic caliphate, centred on Baghdad',
+  'Islamic Golden Age': 'age of Islamic science and culture (8th\u201313th centuries)',
+  'Crusades': 'medieval holy wars fought in the Levant',
+  'Mongol Empire': 'largest contiguous land empire, founded by Genghis Khan',
+  'Ottoman Empire': 'long-lived empire centred on Anatolia and the Balkans',
+  'Hundred Years\u2019 War': '1337\u20131453 war between England and France',
+  // earlyModern
+  'Age of Discovery': 'European overseas exploration from the 15th century',
+  'Protestant Reformation': '16th-century break-away from the Catholic Church',
+  'Scientific Revolution': 'birth of modern science in the 16th\u201317th centuries',
+  'Enlightenment': '18th-century movement of reason, science and rights',
+  'Congress of Vienna': '1815 redrawing of Europe after Napoleon',
+  'American Revolution': '1775\u201383 war that created the United States',
+  'French Revolution': '1789 revolution that toppled the French monarchy',
+  'Industrial Revolution': '18th\u201319th-century shift to machine manufacture',
+  'British East India Company': 'trading company that grew into the ruler of British India',
+  // modernWorld
+  'Meiji Restoration': 'Japan\u2019s 1868 revolution of modernisation',
+  'American Civil War': '1861\u201365 war over secession and slavery',
+  'Scramble for Africa': 'late-19th-century partition of Africa by Europe',
+  'Russian Revolution': '1917 revolutions that overthrew the Tsar',
+  'Great Depression': 'world economic collapse of the 1930s',
+  'Weimar Republic': 'Germany\u2019s democratic republic between the world wars',
+  'World War I': '1914\u201318 global war',
+  'Nazism': 'Hitler\u2019s fascist ideology and regime in Germany',
+  'World War II': '1939\u201345 global war',
+  'Holocaust': 'Nazi genocide of six million Jews and other victims',
+  // contemporary
+  'Cold War': 'post-1945 ideological rivalry between the US and the USSR',
+  'Marshall Plan': 'US aid programme that rebuilt Western Europe',
+  'Berlin Wall': 'wall that divided Berlin and symbolised Europe\u2019s split (1961\u201389)',
+  'Korean War': '1950\u201353 war between North and South Korea',
+  'Vietnam War': 'long Cold War conflict in Vietnam',
+  'Cuban Missile Crisis': '1962 nuclear standoff between the US and the USSR',
+  'Space Race': 'US\u2013Soviet rivalry in spaceflight',
+  'Civil Rights Movement': 'US struggle for African-American equality',
+  'Apartheid': 'South African system of institutionalised racial segregation',
+  'Dissolution of the Soviet Union': '1991 breakup of the USSR',
+  'War on Terror': 'US-led global security campaign after 9/11',
+  'Arab Spring': 'wave of anti-government uprisings in the Arab world (2010\u201312)',
+  '9/11 attacks': '2001 al-Qaeda attacks on the United States',
+  // globalConcepts
+  'Internet': 'world-spanning computer network',
+  'GPS': 'satellite-based global positioning system',
+  'Bollywood': 'Hindi film industry based in Mumbai',
+  'El Ni\u00f1o': 'warming of the tropical Pacific that disrupts world weather',
+  'La Ni\u00f1a': 'cooling counterpart of El Ni\u00f1o in the Pacific',
+  // wildlife
+  'Gir': 'Gujarat forest, last wild home of the Asiatic lion',
+  // spaceTech
+  'Sputnik': 'first artificial satellite, launched by the USSR in 1957',
+  'Hubble Space Telescope': 'orbiting optical telescope of NASA and ESA',
+  'James Webb Space Telescope': 'infrared space observatory launched in 2021',
+  'Voyager program': 'NASA probes exploring the outer solar system',
+  // digital
+  'Smartphone': 'handheld phone computer',
+  'Microsoft': 'US software giant behind Windows and Office',
+  'Linux': 'open-source operating system',
+  'Microsoft Windows': 'most widely used desktop operating system',
+  'Twitter': 'microblogging social network',
+  'Instagram': 'photo- and video-sharing app',
+  'YouTube': 'video-sharing platform',
+  'Bitcoin': 'first cryptocurrency',
+  'Cryptocurrency': 'digital currency secured by cryptography',
+  // agriConcepts
+  'Handloom': 'cloth woven on a manually operated loom',
+  'Jute': 'fibre crop of eastern India, the \u201cgolden fibre\u201d',
+  'Fisheries': 'sector that catches and farms fish and aquatic life',
+  'Poultry': 'sector of raising domestic fowl for eggs and meat',
+  'Helicopter': 'rotorcraft that takes off and lands vertically',
+  // constitutionalPosts
+  'Vice President of India': 'ex-officio Chairman of the Rajya Sabha',
+  'Speaker of the Lok Sabha': 'presiding officer of the Lok Sabha',
+  'Lokpal': 'anti-corruption ombudsman for the central government',
+  // canon
+  'Tipi\u1e6daka (Pali Canon)': 'canonical scriptures of Theravada Buddhism',
+  // empires
+  'Indus Valley Civilization': 'Bronze Age civilisation of the Indus river basin',
+  'Vedic period': 'early era of the Vedas in northern India',
+  'Maurya Empire': 'first great pan-Indian empire, founded by Chandragupta',
+  'Gupta Empire': 'imperial age often called the golden age of India',
+  'Kalinga War': '261 BC war that turned Emperor Ashoka to non-violence',
+  'Kushan Empire': 'central Asian empire that ruled across the Hindu Kush',
+  'Sunga Empire': 'post-Mauryan dynasty of Magadha',
+  'Chola Empire': 'southern maritime empire of the Tamils',
+  'Harsha Empire': 'north Indian empire of Harsha Vardhana',
+  'Rashtrakuta Empire': 'Deccan empire behind the rock-cut temples of Ellora',
+  'Delhi Sultanate': 'succession of Turkic and Afghan dynasties ruling Delhi',
+  'Vijayanagara Empire': 'southern Hindu empire that defied the Deccan sultanates',
+  'Mughal Empire': 'Islamic empire that ruled most of India (1526\u20131857)',
+  'Maratha Empire': 'Hindu confederacy that rose against the Mughals',
+  'Satavahana dynasty': 'Deccan dynasty of the Amaravati stupa',
+  'Pallava dynasty': 'southern dynasty of Mahabalipuram',
+  'Chalukya dynasty': 'Deccan dynasty centred on Badami',
+  'Kakatiya dynasty': 'Telugu dynasty of Warangal',
+  'Hoysala dynasty': 'Karnataka dynasty of Belur and Halebidu',
+  'Vakataka dynasty': 'Deccan dynasty contemporary with the Guptas',
+  'Kadamba dynasty': 'first Kannada kingdom, ruled from Banavasi',
+  'Kingdom of Mysore': 'southern kingdom of Hyder Ali and Tipu Sultan',
+  // science
+  'Chandrayaan-1': 'ISRO\u2019s first lunar orbiter (2008)',
+  'Chandrayaan-3': 'ISRO\u2019s 2023 mission that soft-landed on the Moon',
+  'Mangalyaan': 'ISRO\u2019s Mars Orbiter Mission',
+  'Pokhran-II': 'India\u2019s 1998 series of nuclear tests',
+  'Nuclear tests of India': 'India\u2019s 1974 and 1998 nuclear tests',
+  'Smallpox eradication': 'global vaccination campaign that wiped out smallpox',
+  'INS Vikrant': 'India\u2019s first indigenously built aircraft carrier',
+  // sports
+  'Olympic Games': 'premier multi-sport games of the world',
+  'Commonwealth Games': 'multi-sport games of the Commonwealth nations',
+  'Asian Games': 'continental multi-sport games of Asia',
+  'Cricket World Cup': 'ICC\u2019s premier one-day international tournament',
+  'T20 World Cup': 'ICC\u2019s world championship of Twenty20 cricket',
+  'Hockey World Cup': 'world championship of field hockey',
+  'Khelo India': 'government platform for nurturing Indian sport',
+  // diseases
+  'COVID-19': 'coronavirus disease behind the 2019\u201320 pandemic',
+  'Smallpox': 'viral disease eradicated by 1980',
+  'Cholera': 'water-borne bacterial infection of the gut',
+  'Plague': 'rodent-borne bacterial disease of historic pandemics',
+  'Tuberculosis': 'bacterial infection, chiefly of the lungs',
+  'Leprosy': 'chronic bacterial disease also called Hansen\u2019s disease',
+  'Polio': 'paralysing viral disease, almost eradicated',
+  'Malaria': 'mosquito-borne parasitic fever',
+  'Dengue': 'mosquito-borne viral fever',
+  'Spanish flu': '1918\u201319 influenza pandemic',
+  'Chikungunya': 'mosquito-borne viral fever',
+  'Kala-azar': 'visceral leishmaniasis, a parasitic disease',
+  'Famine': 'mass starvation, recurring cause of Indian hunger crises',
+  'Black Death': 'bubonic plague pandemic of the 14th century',
+  // schemes
+  'National Health Mission': 'flagship public health programme of India',
+  'Swachh Bharat Mission': 'national cleanliness and toilet-building campaign (2014)',
+  'Poshan Abhiyan': 'India\u2019s national nutrition mission',
+  'Ayushman Bharat': 'health assurance scheme covering poor families (PM-JAY)',
+  'National Rural Health Mission': 'rural component of the National Health Mission',
+  'Green Revolution': '1960s cereal-boom driven by high-yielding varieties and fertilisers',
+  'Operation Flood': 'white revolution that built India\u2019s milk cooperatives',
+  'Pradhan Mantri Jan Dhan Yojana': 'financial inclusion scheme for universal bank accounts',
+  'Bharat Nirman': 'rural infrastructure building programme',
+  'MGNREGA': 'rural employment guarantee scheme of 100 days\u2019 work a year',
+  'Blue Revolution': 'programme to develop India\u2019s fisheries and aquaculture',
+  // commissions
+  'Sarkaria Commission': '1983 commission on Centre\u2013State relations',
+  'Mandal Commission': 'commission whose report brought OBC reservations',
+  'Kothari Commission': '1964\u201366 commission on national education',
+  'Finance Commission of India': 'constitutional body fixing Centre\u2013State revenue sharing',
+  'Election Commission of India': 'constitutional body that conducts Indian elections',
+  'Law Commission of India': 'advisory body recommending law reform',
+  'National Human Rights Commission of India': 'statutory watchdog for human rights in India',
+  'Second Administrative Reforms Commission': '2005 commission on governance reform',
+  // orgs
+  'Indian Space Research Organisation': 'India\u2019s national space agency (ISRO)',
+  'Defence Research and Development Organisation': 'India\u2019s defence research agency (DRDO)',
+  'Bhabha Atomic Research Centre': 'India\u2019s premier nuclear research centre (BARC)',
+  'Council of Scientific and Industrial Research': 'India\u2019s chain of government labs (CSIR)',
+  'Indian Institute of Technology': 'network of India\u2019s leading engineering institutes (IIT)',
+  'Reserve Bank of India': 'central bank of India',
+  'State Bank of India': 'largest public-sector bank of India',
+  'Coal India': 'world\u2019s largest coal-mining company, state-owned',
+  'Oil and Natural Gas Corporation': 'India\u2019s principal oil and gas explorer (ONGC)',
+  'Indian Oil Corporation': 'India\u2019s largest oil company',
+  'Nuclear power in India': 'India\u2019s civil nuclear energy programme',
+  // globalOrgs
+  'United Nations': 'intergovernmental body for peace and cooperation',
+  'European Union': 'political and economic union of European states',
+  'Life Insurance Corporation of India': 'India\u2019s dominant state life insurer (LIC)',
+  'Export-Import Bank of India': 'Indian foreign-trade financing bank',
+  'Central Industrial Security Force': 'paramilitary force guarding strategic Indian installations',
+  // geography
+  'Suez Canal': 'shipping canal linking the Mediterranean and Red Seas',
+  'Panama Canal': 'canal linking the Atlantic and Pacific across the Americas',
+  'McMahon Line': '1914 boundary line between India and Tibet/China',
+  'Line of Actual Control': 'de facto India\u2013China border in the western sector',
+  'Line of Control': 'de facto ceasefire line dividing Kashmir',
+  'Siachen Glacier': 'world\u2019s highest battlefield, in Kashmir',
+  'Doklam': 'disputed plateau at the India\u2013China\u2013Bhutan trijunction'
+};
+
 // Person-role keyword gate: an auto-extracted descriptor is only attached when it
 // reads like a person's role/profession, so a topic like "World War II" ("Global
 // conflict (1939–1945)") never gets a descriptor.
@@ -1602,6 +1905,42 @@ function modeSpan(spans) {
   return { min: +b[0], max: +b[1] };
 }
 
+function capDesc(s) {
+  s = String(s == null ? '' : s).replace(/\s+/g, ' ').trim();
+  if (s.length > 190) s = s.slice(0, 187).replace(/\s+\S*$/, '') + '\u2026';
+  return s || null;
+}
+
+// Best-effort one-line description for any topic with no curated line: scan the
+// entity's own questions for a sentence that names it and defines it ("X is/was/refers
+// to …"), else reuse the shortest clean first sentence of the most relevant fact.
+function autoDescFor(name, qs) {
+  var nm = String(name || '').trim();
+  if (!nm || nm.length < 3) return null;
+  var esc = escapeRe(nm);
+  var defRe = new RegExp('(^|[^a-z0-9])(' + esc + ')\\s+(?:is|are|was|were|refers? to|means|denotes?|describes?|stands for|may be defined as)\\s+((?:an?|the|a kind of|a type of)?[^.;!?]{6,180})', 'i');
+  var best = null, bestLen = 1e9, seen = 0;
+  for (var q of qs) {
+    if (++seen > 80) break;
+    var txt = [q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+    var m = txt.match(defRe);
+    if (!m) continue;
+    var d = m[3].replace(/[,;:\u2013\u2014\s]+$/g, '').trim();
+    if (d && d.length < 190 && d.length < bestLen) { best = d; bestLen = d.length; }
+  }
+  if (best) return capDesc(best);
+  var fb = null, fbLen = 1e9;
+  seen = 0;
+  for (var q2 of qs) {
+    if (++seen > 80) break;
+    var s2 = String(q2.fact || q2.answer || '').replace(/\s+/g, ' ').trim();
+    if (!s2) continue;
+    var s = s2.split(/[.!?]\s+/)[0].trim().replace(/\.$/, '');
+    if (s.length < 220 && s.length < fbLen && !/^[-_(\d]/.test(s)) { fb = s; fbLen = s.length; }
+  }
+  return fb ? capDesc(fb) : null;
+}
+
 function main() {
   var all = loadAll();
   var nodes = [];
@@ -1667,7 +2006,7 @@ function main() {
         level: isAutoPerson ? 2 : 4,
         cats: [{ key: key, label: c.label, count: qs.length }],
         count: qs.length,
-        desc: nodeDesc
+        desc: nodeDesc || (!isAutoPerson ? autoDescFor(tname, qs) : null)
       };
       seen[id] = node;
       nodes.push(node);
@@ -1749,7 +2088,7 @@ function main() {
         count: hitQs.length,
         seed: true,
         aliases: aliases,
-        desc: isPerson ? personDescFor(ename, hitQs) : null
+        desc: TOPIC_DESCS[ename] || (isPerson ? personDescFor(ename, hitQs) : autoDescFor(ename, hitQs))
       };
       if (span && span.archive) node.timebase = 'archive';
       nodes.push(node);
@@ -2470,6 +2809,22 @@ function main() {
   console.log('links: ' + links.length + ' (manual added: ' + addedManual + ', dropped unresolved: ' + droppedManual + ', top: ' + links.slice(0, 5).map(function (l) { return l.a.replace('seed|', '') + '↔' + l.b.replace('seed|', '') + ':' + l.w; }).join(', ') + ')');
   var autoPersons = nodes.filter(function (n) { return n.type === 'person' && !n.seed; }).length;
   console.log('auto-filed persons (via descriptors, not in curated spine): ' + autoPersons);
+
+  // Guarantee nothing on the map is left without a description: every non-person
+  // seed entity needs a curated TOPIC_DESCS line, and every emitted node (seed or
+  // auto topic) must end up with some desc.
+  var missingDescs = [];
+  for (var gk2 of Object.keys(SEED)) {
+    for (var en2 of SEED[gk2].list) {
+      if (SEED[gk2].type !== 'person' && TOPIC_DESCS[en2] === undefined) missingDescs.push(en2);
+    }
+  }
+  if (missingDescs.length) {
+    throw new Error('TOPIC_DESCS missing for ' + missingDescs.length + ' seed entities: ' + missingDescs.slice(0, 10).join(', ') + (missingDescs.length > 10 ? '\u2026' : ''));
+  }
+  var nodesNoDesc = nodes.filter(function (n) { return !n.desc; });
+  var seedNoDesc = nodesNoDesc.filter(function (n) { return n.seed; });
+  console.log('desc coverage: ' + (nodes.length - nodesNoDesc.length) + '/' + nodes.length + ' nodes (' + ((nodes.length - nodesNoDesc.length) / nodes.length * 100).toFixed(1) + '%)' + (seedNoDesc.length ? ' — seed nodes still missing: ' + seedNoDesc.map(function (n) { return n.name; }).join(', ') : ''));
 }
 
 main();
