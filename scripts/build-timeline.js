@@ -1911,18 +1911,19 @@ function capDesc(s) {
   return s || null;
 }
 
-// Best-effort one-line description for any topic with no curated line: scan the
-// entity's own questions for a sentence that names it and defines it ("X is/was/refers
-// to …"), else reuse the shortest clean first sentence of the most relevant fact.
+// One-line description for any topic that lacks a curated line. Scans the entity's
+// own questions for a defining sentence ("X is/was/refers to …"), else the shortest
+// clean first sentence of a fact, else any readable sentence, and as a guaranteed
+// last resort a neutral line — so autoDescFor never leaves a node without a desc.
 function autoDescFor(name, qs) {
   var nm = String(name || '').trim();
-  if (!nm || nm.length < 3) return null;
+  if (!nm) return null;
   var esc = escapeRe(nm);
   var defRe = new RegExp('(^|[^a-z0-9])(' + esc + ')\\s+(?:is|are|was|were|refers? to|means|denotes?|describes?|stands for|may be defined as)\\s+((?:an?|the|a kind of|a type of)?[^.;!?]{6,180})', 'i');
   var best = null, bestLen = 1e9, seen = 0;
   for (var q of qs) {
-    if (++seen > 80) break;
-    var txt = [q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+    if (++seen > 40) break;
+    var txt = cleanTex([q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' ')).replace(/\s+/g, ' ').trim();
     var m = txt.match(defRe);
     if (!m) continue;
     var d = m[3].replace(/[,;:\u2013\u2014\s]+$/g, '').trim();
@@ -1932,13 +1933,47 @@ function autoDescFor(name, qs) {
   var fb = null, fbLen = 1e9;
   seen = 0;
   for (var q2 of qs) {
-    if (++seen > 80) break;
-    var s2 = String(q2.fact || q2.answer || '').replace(/\s+/g, ' ').trim();
+    if (++seen > 40) break;
+    var s2 = cleanTex(q2.fact || q2.answer || '').replace(/\s+/g, ' ').trim();
     if (!s2) continue;
     var s = s2.split(/[.!?]\s+/)[0].trim().replace(/\.$/, '');
-    if (s.length < 220 && s.length < fbLen && !/^[-_(\d]/.test(s)) { fb = s; fbLen = s.length; }
+    if (s.length >= 14 && s.length < 220 && /\s/.test(s) && !/\s[A-Z]$/.test(s) && !/^[-_(\d]/.test(s) && s.length < fbLen) { fb = s; fbLen = s.length; }
   }
-  return fb ? capDesc(fb) : null;
+  if (fb) return capDesc(fb);
+  var any = null, anyLen = 1e9;
+  seen = 0;
+  for (var q3 of qs) {
+    if (++seen > 40) break;
+    for (var f of [q3.fact, q3.answer, q3.question, q3.hint]) {
+      var st = cleanTex(f).replace(/\s+/g, ' ').trim();
+      if (st.length < 14) continue;
+      var s3 = st.split(/[.!?]\s+/)[0].trim().replace(/\.$/, '');
+      if (s3.length < 14 || !/\s/.test(s3) || /\s[A-Z]$/.test(s3)) continue;
+      if (s3.length < anyLen) { any = s3; anyLen = s3.length; }
+    }
+  }
+  if (any) return capDesc(any);
+  if (qs && qs.length) return capDesc(nm);
+  return null;
+}
+
+var SEED_TYPE_LABEL = {
+  person: 'person',
+  event: 'event \u2014 movement \u2014 development',
+  disease: 'disease \u2014 medical condition',
+  scheme: 'government programme \u2014 scheme',
+  org: 'organisation \u2014 institution',
+  concept: 'concept \u2014 recurring topic'
+};
+
+function seedFallback(name, label) {
+  return capDesc(String(name || '').trim() + ' \u2014 ' + label);
+}
+
+// Wiki/TeX question text embeds LaTeX markup like {\displaystyle …}; strip it so
+// extracted sentences stay readable.
+function cleanTex(s) {
+  return String(s || '').replace(/\{\\?displaystyle\s*[^}]*\}/g, ' ').replace(/[{}]+/g, ' ');
 }
 
 function main() {
@@ -2088,7 +2123,7 @@ function main() {
         count: hitQs.length,
         seed: true,
         aliases: aliases,
-        desc: TOPIC_DESCS[ename] || (isPerson ? personDescFor(ename, hitQs) : autoDescFor(ename, hitQs))
+        desc: TOPIC_DESCS[ename] || (isPerson ? (personDescFor(ename, hitQs) || seedFallback(ename, SEED_TYPE_LABEL.person)) : (autoDescFor(ename, hitQs) || seedFallback(ename, SEED_TYPE_LABEL[g.type] || SEED_TYPE_LABEL.concept)))
       };
       if (span && span.archive) node.timebase = 'archive';
       nodes.push(node);
@@ -2768,6 +2803,12 @@ function main() {
     return { a: sp[0], b: sp[1], w: linkMap[k] };
   });
   links.sort(function (x, y) { return y.w - x.w; });
+
+  // Hard gate: no node on the map may ship without a description (dated or undated).
+  var nodesNoDescPre = nodes.filter(function (n) { return !n.desc; });
+  if (nodesNoDescPre.length) {
+    throw new Error('Every node must have a description, but ' + nodesNoDescPre.length + ' have none: ' + nodesNoDescPre.slice(0, 10).map(function (n) { return n.name; }).join(', ') + (nodesNoDescPre.length > 10 ? '\u2026' : ''));
+  }
 
   // Cloudflare Pages hard-caps individual files at 25 MiB. With ~28 MiB of nodes the
   // single-file timeline.json tripped that cap and silently killed deploys (wiki run
