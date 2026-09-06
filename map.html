@@ -82,6 +82,10 @@ h1{font-size:1.45em}
 .qans .fact .qline{background:rgba(255,110,180,.32);color:var(--text);border-radius:3px;padding:1px 2px;font-weight:700}
 .qans .fact .seen{opacity:.35}
 .loading{color:var(--text-sec);font-size:.8em;padding:8px}
+.loading.story-more{cursor:pointer;text-decoration:underline;text-decoration-style:dotted}
+.loading.story-more:hover{color:var(--text)}
+.chip.chip-more{cursor:pointer;border-style:dashed}
+.chip.chip-more:hover{border-color:var(--text-sec)}
 .type-filter{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
 .p-sec{font-size:.72em;color:var(--text-sec);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px}
 .p-chips{display:flex;flex-wrap:wrap}
@@ -563,22 +567,27 @@ function openProfile(id) {
     }).join('');
   document.getElementById('profile').classList.add('open');
   _profileNode = n;
+  _conCap = 14;
+  _storyCap = 40;
   renderProfileExtras(n);
   window.scrollTo(0, 0);
 }
 var _profileNode = null;
+var _conCap = 14;
+var _storyCap = 40;
 
 function renderProfileExtras(n) {
   var con = document.getElementById('p-con');
   var story = document.getElementById('p-story');
   var conns = (_adj[n.id] || []).slice().sort(function (x, y) { return y.w - x.w; });
   if (con) {
+    var conShown = conns.slice(0, _conCap);
     con.innerHTML = conns.length
-      ? conns.slice(0, 14).map(function (c) {
+      ? conShown.map(function (c) {
         var cn = nodeById(c.id);
         return '<span class="chip" onclick="openProfile(\'' + esc(c.id).replace(/'/g, "\\'") + '\')">' + esc(cn ? cn.name : c.id.replace(/^seed\|/, '')) + ' <b>' + c.w + '</b></span>';
       }).join('')
-      + (conns.length > 14 ? '<span class="chip" style="cursor:default">+' + (conns.length - 14) + ' more</span>' : '')
+      + (conns.length > _conCap ? '<span class="chip chip-more" onclick="expandConn()">+' + (conns.length - _conCap) + ' more</span>' : '')
       : '<div class="loading">No strong connections — this entity stands alone.</div>';
   }
   if (story) {
@@ -588,13 +597,22 @@ function renderProfileExtras(n) {
       if (cn && cn.span) items.push({ min: cn.span.min, label: cn.name, w: c.w, color: TYPE_COLOR[cn.type] || '#71717a' });
     }
     items.sort(function (a, b) { return (a.min - b.min) || (b.w - a.w); });
-    var cap2 = 40;
+    var storyShown = items.slice(0, _storyCap);
     story.innerHTML = items.length
-      ? items.slice(0, cap2).map(function (it) {
+      ? storyShown.map(function (it) {
         return '<div class="story-row"><span class="story-y">' + it.min + '</span><span class="story-n" style="border-left:3px solid ' + it.color + ';padding-left:8px">' + esc(it.label) + '</span></div>';
-      }).join('') + (items.length > cap2 ? '<div class="loading">… +' + (items.length - cap2) + ' more</div>' : '')
+      }).join('') + (items.length > _storyCap ? '<div class="loading story-more" onclick="expandStory()">… +' + (items.length - _storyCap) + ' more</div>' : '')
       : '<div class="loading">No story neighbours yet — more links land as the spine grows.</div>';
   }
+}
+
+function expandConn() {
+  _conCap = Math.max(_conCap * 4, _conCap + 25);
+  if (_profileNode) renderProfileExtras(_profileNode);
+}
+function expandStory() {
+  _storyCap = Math.max(_storyCap * 4, _storyCap + 60);
+  if (_profileNode) renderProfileExtras(_profileNode);
 }
 
 function closeProfile() { document.getElementById('profile').classList.remove('open'); }
