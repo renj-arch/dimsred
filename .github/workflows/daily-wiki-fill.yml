@@ -332,7 +332,7 @@ jobs:
       - name: Rebuild timeline map from question data
         continue-on-error: true
         run: |
-          node scripts/build-timeline.js || echo "timeline rebuild skipped/failed — questions still committed"
+          NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-timeline.js || echo "timeline rebuild skipped/failed — questions still committed"
 
       - run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock

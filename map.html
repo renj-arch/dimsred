@@ -82,6 +82,10 @@ h1{font-size:1.45em}
 .qans .fact .qline{background:rgba(255,110,180,.32);color:var(--text);border-radius:3px;padding:1px 2px;font-weight:700}
 .qans .fact .seen{opacity:.35}
 .loading{color:var(--text-sec);font-size:.8em;padding:8px}
+.loading.story-more{cursor:pointer;text-decoration:underline;text-decoration-style:dotted}
+.loading.story-more:hover{color:var(--text)}
+.chip.chip-more{cursor:pointer;border-style:dashed}
+.chip.chip-more:hover{border-color:var(--text-sec)}
 .type-filter{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
 .p-sec{font-size:.72em;color:var(--text-sec);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px}
 .p-chips{display:flex;flex-wrap:wrap}
@@ -93,6 +97,15 @@ h1{font-size:1.45em}
 .story-y{color:var(--purple);font-weight:800;min-width:44px}
 .story-n{color:var(--text-sec);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .story-n b{color:var(--text)}
+.lin-row{display:flex;align-items:baseline;gap:6px;padding:4px 6px 4px 0;font-size:.76em;cursor:pointer;border-left:2px solid transparent;margin-left:6px;padding-left:8px}
+.lin-row:hover{border-left-color:var(--purple);background:rgba(255,255,255,.02)}
+.lin-rel{color:var(--amber);font-weight:700;min-width:70px;flex-shrink:0}
+.lin-name{color:var(--text);font-weight:600;background:none;border:none;cursor:pointer;font-size:1em;padding:0;text-align:left;font-family:inherit}
+.lin-name:hover{color:var(--purple);text-decoration:underline}
+.lin-dir{color:var(--text-muted);font-size:.9em;font-style:italic}
+.lin-expand{color:var(--purple);cursor:pointer;font-size:.72em;padding:2px 7px;border:1px dashed var(--purple);border-radius:8px;background:rgba(167,139,250,.06);margin-left:8px;white-space:nowrap}
+.lin-expand:hover{background:rgba(167,139,250,.15)}
+.lin-empty{color:var(--text-muted);font-size:.78em;padding:6px 8px;font-style:italic}
 </style>
 </head>
 <body>
@@ -135,6 +148,10 @@ var NODES = [];
 var _catCache = {};
 var _links = [];
 var _adj = {};
+var _edges = [];
+var _eadj = {};
+var _linOpen = new Set();
+var _nodeByIdMap = {};
 var _catByKey = {};
 
 var MIN_YEAR = -3300;   // Indus Valley / start of Ancient India
@@ -524,9 +541,23 @@ function buildAdj() {
   }
 }
 
+function buildEadj() {
+  _eadj = {};
+  for (var e of _edges) {
+    if (!_eadj[e.a]) _eadj[e.a] = [];
+    if (!_eadj[e.b]) _eadj[e.b] = [];
+    _eadj[e.a].push({ target: e.b, rel: e.rel, dir: 'out' });
+    _eadj[e.b].push({ target: e.a, rel: e.rel, dir: 'in' });
+  }
+}
+
+function buildNodeMap() {
+  _nodeByIdMap = {};
+  for (var nd of NODES) _nodeByIdMap[nd.id] = nd;
+}
+
 function nodeById(id) {
-  for (var x of NODES) { if (x.id === id) return x; }
-  return null;
+  return _nodeByIdMap[id] || null;
 }
 
 function openProfile(id) {
@@ -553,6 +584,7 @@ function openProfile(id) {
     + '<div class="p-stats"><div class="p-stat"><div class="v">' + (n.count || 0) + '</div><div class="k">mentions</div></div>'
     + '<div class="p-stat"><div class="v">' + cats.length + '</div><div class="k">categories</div></div></div>'
     + '<div class="p-sec">Connected</div><div class="p-chips" id="p-con"></div>'
+    + '<div class="p-sec">Lineage</div><div class="lineage" id="p-line"></div>'
     + '<div class="p-sec">Story</div><div class="story" id="p-story"></div>'
     + '<div class="p-sec">Drill down</div>'
     + '<div class="qlist" id="p-ql" style="display:none"></div>'
@@ -563,22 +595,28 @@ function openProfile(id) {
     }).join('');
   document.getElementById('profile').classList.add('open');
   _profileNode = n;
+  _conCap = 14;
+  _storyCap = 40;
+  _linOpen = new Set();
   renderProfileExtras(n);
   window.scrollTo(0, 0);
 }
 var _profileNode = null;
+var _conCap = 14;
+var _storyCap = 40;
 
 function renderProfileExtras(n) {
   var con = document.getElementById('p-con');
   var story = document.getElementById('p-story');
   var conns = (_adj[n.id] || []).slice().sort(function (x, y) { return y.w - x.w; });
   if (con) {
+    var conShown = conns.slice(0, _conCap);
     con.innerHTML = conns.length
-      ? conns.slice(0, 14).map(function (c) {
+      ? conShown.map(function (c) {
         var cn = nodeById(c.id);
         return '<span class="chip" onclick="openProfile(\'' + esc(c.id).replace(/'/g, "\\'") + '\')">' + esc(cn ? cn.name : c.id.replace(/^seed\|/, '')) + ' <b>' + c.w + '</b></span>';
       }).join('')
-      + (conns.length > 14 ? '<span class="chip" style="cursor:default">+' + (conns.length - 14) + ' more</span>' : '')
+      + (conns.length > _conCap ? '<span class="chip chip-more" onclick="expandConn()">+' + (conns.length - _conCap) + ' more</span>' : '')
       : '<div class="loading">No strong connections — this entity stands alone.</div>';
   }
   if (story) {
@@ -588,13 +626,67 @@ function renderProfileExtras(n) {
       if (cn && cn.span) items.push({ min: cn.span.min, label: cn.name, w: c.w, color: TYPE_COLOR[cn.type] || '#71717a' });
     }
     items.sort(function (a, b) { return (a.min - b.min) || (b.w - a.w); });
-    var cap2 = 40;
+    var storyShown = items.slice(0, _storyCap);
     story.innerHTML = items.length
-      ? items.slice(0, cap2).map(function (it) {
+      ? storyShown.map(function (it) {
         return '<div class="story-row"><span class="story-y">' + it.min + '</span><span class="story-n" style="border-left:3px solid ' + it.color + ';padding-left:8px">' + esc(it.label) + '</span></div>';
-      }).join('') + (items.length > cap2 ? '<div class="loading">… +' + (items.length - cap2) + ' more</div>' : '')
+      }).join('') + (items.length > _storyCap ? '<div class="loading story-more" onclick="expandStory()">… +' + (items.length - _storyCap) + ' more</div>' : '')
       : '<div class="loading">No story neighbours yet — more links land as the spine grows.</div>';
   }
+  renderLineage(n);
+}
+
+function renderLineage(n) {
+  var el = document.getElementById('p-line');
+  if (!el) return;
+  var kids = (_eadj[n.id] || []).filter(function (e) { return e.target !== n.id; });
+  if (!kids.length) {
+    el.innerHTML = '<div class="lin-empty">No lineage links yet — these grow as more relation facts are mined.</div>';
+    return;
+  }
+  function buildRows(id, depth, pathSet) {
+    if (depth > 3) return '';
+    var ch = (_eadj[id] || []).filter(function (e) { return e.target !== id && !pathSet.has(e.target); });
+    ch.sort(function (x, y) { return (x.dir === 'out' ? 1 : 0) - (y.dir === 'out' ? 1 : 0) || x.rel.localeCompare(y.rel); });
+    var rows = '';
+    for (var k of ch) {
+      var cn = nodeById(k.target);
+      var nm = cn ? cn.name : k.target.replace(/^seed\|/, '');
+      var col = cn ? (TYPE_COLOR[cn.type] || '#71717a') : '#71717a';
+      var subKids = (_eadj[k.target] || []).filter(function (e) { return e.target !== k.target && !pathSet.has(e.target); });
+      var canExpand = subKids.length > 0 && depth < 3;
+      var isExpanded = _linOpen.has(k.target);
+      rows += '<div class="lin-row" style="margin-left:' + (depth * 20) + 'px">'
+        + '<span class="lin-dir">' + (k.dir === 'out' ? '→' : '←') + '</span>'
+        + '<span class="lin-rel" style="color:' + esc(col) + '">' + esc(k.rel) + '</span>'
+        + '<button class="lin-name" onclick="openProfile(\'' + esc(k.target).replace(/'/g, "\\'") + '\')">' + esc(nm) + '</button>'
+        + (canExpand ? '<span class="lin-expand" onclick="toggleLin(\'' + esc(k.target).replace(/'/g, "\\'") + '\');event.stopPropagation()">' + (isExpanded ? '▾' : '▸') + ' ' + subKids.length + '</span>' : '')
+        + '</div>';
+      if (isExpanded) {
+        var deeper = new Set(pathSet);
+        deeper.add(k.target);
+        rows += buildRows(k.target, depth + 1, deeper);
+      }
+    }
+    return rows;
+  }
+  var html = buildRows(n.id, 0, new Set([n.id]));
+  if (!html) html = '<div class="lin-empty">No lineage links yet — these grow as more relation facts are mined.</div>';
+  el.innerHTML = html;
+}
+
+function toggleLin(id) {
+  if (_linOpen.has(id)) _linOpen.delete(id); else _linOpen.add(id);
+  if (_profileNode) renderLineage(_profileNode);
+}
+
+function expandConn() {
+  _conCap = Math.max(_conCap * 4, _conCap + 25);
+  if (_profileNode) renderProfileExtras(_profileNode);
+}
+function expandStory() {
+  _storyCap = Math.max(_storyCap * 4, _storyCap + 60);
+  if (_profileNode) renderProfileExtras(_profileNode);
 }
 
 function closeProfile() { document.getElementById('profile').classList.remove('open'); }
@@ -736,7 +828,10 @@ loadTimelineData().then(function (t) {
   TL = t;
   NODES = t.nodes;
   _links = t.links || [];
+  _edges = t.edges || [];
+  buildNodeMap();
   buildAdj();
+  buildEadj();
   buildCatOptions();
   render();
 }).catch(function () {

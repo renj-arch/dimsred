@@ -1248,6 +1248,309 @@ var PERSON_DESCS = {
   'Bankim Chandra Chatterjee': 'author of Vande Mataram', 'Ramanuja': 'Vaishnava philosopher'
 };
 
+// Curated one-line descriptions for every non-person seed entity (events, movements,
+// wars, empires, diseases, schemes, orgs, concepts). The build asserts full coverage
+// so nothing on the map is ever left without a desc line.
+var TOPIC_DESCS = {
+  // movements
+  'Indian independence movement': 'political campaign that won Indian independence in 1947',
+  'Non-cooperation movement': 'Gandhi-led campaign of peaceful non-cooperation against British rule (1920\u201322)',
+  'Civil disobedience movement': 'Gandhi-led mass campaign of law-breaking and the Salt March (1930\u201334)',
+  'Quit India movement': 'mass anti-British campaign demanding immediate exit, launched August 1942',
+  'Khilafat movement': 'Indian Muslim campaign against British treatment of the Ottoman Caliphate (1919\u201324)',
+  'Partition of India': '1947 division of British India into India and Pakistan',
+  'Simon Commission': '1928 British constitutional commission boycotted as \u201cSimon Go Back\u201d',
+  'Salt march': 'Gandhi\u2019s 1930 Dandi march that broke the British salt monopoly',
+  'Jallianwala Bagh massacre': '1919 British massacre of civilians at Amritsar',
+  'Revolt of 1857': 'great armed rising against British rule across India',
+  'Swadeshi movement': 'movement for Indian self-reliance and boycott of foreign goods',
+  'Indian National Congress': 'India\u2019s foremost party and principal architect of independence',
+  'Constituent Assembly of India': 'body that drafted and adopted the Constitution of India',
+  'Sepoy Mutiny': 'Indian soldiers\u2019 revolt that began the Revolt of 1857',
+  'Bardoli Satyagraha': '1928 peasant non-cooperation against heavy taxation in Gujarat',
+  'Champaran Satyagraha': 'Gandhi\u2019s first satyagraha, for indigo farmers of Bihar (1917)',
+  'Dandi March': 'Gandhi\u2019s 1930 march from Sabarmati to Dandi against the salt tax',
+  'Ghadar Movement': 'early 20th-century revolutionary movement of overseas Indians',
+  'Azad Hind Fauj': 'Indian National Army raised by Subhas Chandra Bose in World War II',
+  'Radcliffe Line': '1947 boundary drawn by Radcliffe between India and Pakistan',
+  // wars
+  'Battle of Plassey': '1757 battle that gave the British rule over Bengal',
+  'Battle of Buxar': '1764 battle that sealed British supremacy in eastern India',
+  'First Battle of Panipat': '1526 battle in which Babur founded the Mughal Empire',
+  'Second Battle of Panipat': '1556 battle where Akbar\u2019s army defeated Hemu',
+  'Third Battle of Panipat': '1761 battle in which Afghans crushed the Maratha confederacy',
+  'Battle of Haldighati': '1576 battle between Maharana Pratap and Akbar\u2019s Mughals',
+  'Battle of Talikota': '1565 battle of the united Deccan sultanates against Vijayanagara',
+  'Battle of Wandiwash': '1760 battle that ended French ambitions in South India',
+  'Anglo-Mysore Wars': 'four late-18th-century wars between Britain and the Kingdom of Mysore',
+  'Anglo-Maratha Wars': 'three wars between the British and the Marathas decided in the Third (1817\u201319)',
+  'First Anglo-Sikh War': '1845\u201346 war that gave the British much of Punjab',
+  'Second Anglo-Sikh War': '1848\u201349 war that annexed Punjab to British India',
+  'Sino-Indian War': '1962 border war between India and China',
+  'Indo-Pakistani War of 1965': 'second India\u2013Pakistan war, fought over Kashmir',
+  'Bangladesh Liberation War': '1971 war that freed Bangladesh from Pakistan',
+  'Kargil War': '1999 India\u2013Pakistan conflict in the Kargil sector of Kashmir',
+  // reforms
+  'Economic liberalisation in India': '1991 reforms that opened up the Indian economy',
+  'LPG reforms': 'Liberalisation, Privatisation and Globalisation reforms of 1991',
+  'Demonetisation in India': 'November 2016 withdrawal of the \u20b9500 and \u20b91000 notes',
+  'Goods and Services Tax (India)': 'single nationwide indirect tax, rolled out in 2017',
+  'Five-Year Plans (India)': 'central planning framework for the Indian economy (1951\u20132017)',
+  'Bank nationalisation in India': '1969 and 1980 government takeovers of the major commercial banks',
+  '73rd Constitutional Amendment': '1992 amendment that constitutionalised panchayati raj',
+  'Railway Budget': 'annual budget of Indian Railways, merged with the Union Budget in 2017',
+  // religion
+  'First Buddhist Council': 'council held at Rajagriha soon after the Buddha\u2019s death',
+  'Second Buddhist Council': 'council at Vaishali over monastic discipline',
+  'Third Buddhist Council': 'council at Pataliputra under Ashoka\u2019s patronage',
+  'Fourth Buddhist Council': 'councils held in Kashmir and Tamrashatiya in the 1st century CE',
+  'Buddhist missions under Ashoka': 'Ashoka\u2019s envoys who carried Buddhism to foreign lands',
+  'Mahaparinirvana of the Buddha': 'the death and final liberation of the Buddha',
+  // sites
+  'Lumbini': 'birthplace of Gautama Buddha, in present-day Nepal',
+  'Kushinagar': 'place of the Buddha\u2019s death and parinirvana',
+  'Rajgir': 'ancient capital of Magadha and site of the First Buddhist Council',
+  'Pataliputra': 'ancient capital of Magadha (modern Patna) under great empires',
+  'Gandhara': 'ancient north-western region famed for Greco-Buddhist art',
+  'Mathura': 'ancient city and major religious and artistic centre',
+  'Vatsa': 'one of the sixteen Mahajanapadas',
+  'Rigveda': 'oldest of the four Vedas',
+  'Mohenjo-daro': 'largest city of the Indus Valley Civilization',
+  'Kanchi': 'ancient Tamil city and capital of the Pallavas',
+  'Vaishali': 'ancient republic and site of the Second Buddhist Council',
+  'Kurukshetra': 'battlefield of the Mahabharata war',
+  'Magadha': 'mightiest of the Mahajanapadas, seat of later empires',
+  'Mahajanapadas': 'the sixteen ancient states of the Indian subcontinent',
+  'Yaudheya': 'ancient martial republic of northern India',
+  'Nayanar': 'Tamil Shaiva saint-poets',
+  'Alvar': 'Tamil Vaishnava saint-poets',
+  // classical
+  'Roman Republic': 'republic of Rome from 509 BC to 27 BC',
+  'Hellenistic period': 'Greek-influenced age after the splitting of Alexander\u2019s empire',
+  'Parthian Empire': 'Iranian empire that rivalled Rome in the east',
+  'Sasanian Empire': 'last Persian empire before the rise of Islam',
+  // greekStates
+  'Athens': 'Greek city-state, cradle of democracy',
+  'Sparta': 'militaristic Greek city-state, rival of Athens',
+  // conquests
+  'Huna invasions of India': 'Central Asian Huna incursions that weakened the Gupta Empire',
+  'Huns': 'nomadic horse-riders of Attila who ravaged Eurasia',
+  'Vikings': 'Norse seafarers and raiders of the 8th\u201311th centuries',
+  // china
+  'Qin dynasty': 'dynasty under which China was first unified',
+  'Han dynasty': 'long Chinese dynasty that consolidated the empire',
+  'Song dynasty': 'Chinese dynasty famed for economic and technological progress',
+  'Ming dynasty': 'Chinese dynasty (1368\u20131644) of the treasure voyages',
+  'Qing dynasty': 'last imperial dynasty of China (1644\u20131912)',
+  'Cultural Revolution': 'Mao\u2019s 1966\u201376 campaign against capitalist elements',
+  'Long March': 'epic 1934\u201335 retreat that made Mao\u2019s communists China\u2019s vanguard',
+  'Taiping Rebellion': 'massive mid-19th-century revolt against the Qing',
+  'Boxer Rebellion': '1900 anti-foreign uprising in China',
+  'Red Turban Rebellion': 'Yuan-dynasty revolt that helped found the Ming',
+  'Battle of Lake Poyang': 'decisive 1363 naval battle of the Red Turban wars',
+  'Jingnan Campaign': 'civil war that made Zhu Di the Yongle Emperor',
+  'Ming conquest of Yunnan': 'early Ming campaign that annexed Yunnan',
+  'Treasure voyages': 'Zheng He\u2019s Ming naval expeditions across the Indian Ocean',
+  'Forbidden City': 'walled imperial palace of the Ming and Qing in Beijing',
+  'Yongle Encyclopedia': 'vast Ming encyclopaedia compiled under the Yongle Emperor',
+  // chinaSites
+  'Great Wall of China': 'ancient defensive wall across northern China',
+  // worldAncient
+  'Ancient Egypt': 'civilisation of the Nile, land of the Pharaohs',
+  'Sumer': 'first civilisation of Mesopotamia',
+  'Babylon': 'Mesopotamian empire of Hammurabi and the Hanging Gardens',
+  'Assyria': 'mighty war-like empire of Mesopotamia',
+  'Phoenicia': 'seafaring Levantine people and inventors of the alphabet',
+  'Hittite Empire': 'Anatolian empire, rival of Egypt',
+  'Mycenaean civilization': 'Bronze Age Greek civilisation',
+  'Minoan civilization': 'Bronze Age civilisation of Crete',
+  'Carthage': 'Phoenician city-state that rivalled Rome',
+  'Persian Empire': 'Achaemenid empire founded by Cyrus the Great',
+  'Roman Empire': 'imperial Rome spanning the Mediterranean and beyond',
+  // medievalWorld
+  'Byzantine Empire': 'eastern Roman empire centred on Constantinople',
+  'Holy Roman Empire': 'medieval empire of Central Europe',
+  'Norman Conquest': '1066 conquest of England by William of Normandy',
+  'Umayyad Caliphate': 'first great Islamic caliphate',
+  'Abbasid Caliphate': 'second Islamic caliphate, centred on Baghdad',
+  'Islamic Golden Age': 'age of Islamic science and culture (8th\u201313th centuries)',
+  'Crusades': 'medieval holy wars fought in the Levant',
+  'Mongol Empire': 'largest contiguous land empire, founded by Genghis Khan',
+  'Ottoman Empire': 'long-lived empire centred on Anatolia and the Balkans',
+  'Hundred Years\u2019 War': '1337\u20131453 war between England and France',
+  // earlyModern
+  'Age of Discovery': 'European overseas exploration from the 15th century',
+  'Protestant Reformation': '16th-century break-away from the Catholic Church',
+  'Scientific Revolution': 'birth of modern science in the 16th\u201317th centuries',
+  'Enlightenment': '18th-century movement of reason, science and rights',
+  'Congress of Vienna': '1815 redrawing of Europe after Napoleon',
+  'American Revolution': '1775\u201383 war that created the United States',
+  'French Revolution': '1789 revolution that toppled the French monarchy',
+  'Industrial Revolution': '18th\u201319th-century shift to machine manufacture',
+  'British East India Company': 'trading company that grew into the ruler of British India',
+  // modernWorld
+  'Meiji Restoration': 'Japan\u2019s 1868 revolution of modernisation',
+  'American Civil War': '1861\u201365 war over secession and slavery',
+  'Scramble for Africa': 'late-19th-century partition of Africa by Europe',
+  'Russian Revolution': '1917 revolutions that overthrew the Tsar',
+  'Great Depression': 'world economic collapse of the 1930s',
+  'Weimar Republic': 'Germany\u2019s democratic republic between the world wars',
+  'World War I': '1914\u201318 global war',
+  'Nazism': 'Hitler\u2019s fascist ideology and regime in Germany',
+  'World War II': '1939\u201345 global war',
+  'Holocaust': 'Nazi genocide of six million Jews and other victims',
+  // contemporary
+  'Cold War': 'post-1945 ideological rivalry between the US and the USSR',
+  'Marshall Plan': 'US aid programme that rebuilt Western Europe',
+  'Berlin Wall': 'wall that divided Berlin and symbolised Europe\u2019s split (1961\u201389)',
+  'Korean War': '1950\u201353 war between North and South Korea',
+  'Vietnam War': 'long Cold War conflict in Vietnam',
+  'Cuban Missile Crisis': '1962 nuclear standoff between the US and the USSR',
+  'Space Race': 'US\u2013Soviet rivalry in spaceflight',
+  'Civil Rights Movement': 'US struggle for African-American equality',
+  'Apartheid': 'South African system of institutionalised racial segregation',
+  'Dissolution of the Soviet Union': '1991 breakup of the USSR',
+  'War on Terror': 'US-led global security campaign after 9/11',
+  'Arab Spring': 'wave of anti-government uprisings in the Arab world (2010\u201312)',
+  '9/11 attacks': '2001 al-Qaeda attacks on the United States',
+  // globalConcepts
+  'Internet': 'world-spanning computer network',
+  'GPS': 'satellite-based global positioning system',
+  'Bollywood': 'Hindi film industry based in Mumbai',
+  'El Ni\u00f1o': 'warming of the tropical Pacific that disrupts world weather',
+  'La Ni\u00f1a': 'cooling counterpart of El Ni\u00f1o in the Pacific',
+  // wildlife
+  'Gir': 'Gujarat forest, last wild home of the Asiatic lion',
+  // spaceTech
+  'Sputnik': 'first artificial satellite, launched by the USSR in 1957',
+  'Hubble Space Telescope': 'orbiting optical telescope of NASA and ESA',
+  'James Webb Space Telescope': 'infrared space observatory launched in 2021',
+  'Voyager program': 'NASA probes exploring the outer solar system',
+  // digital
+  'Smartphone': 'handheld phone computer',
+  'Microsoft': 'US software giant behind Windows and Office',
+  'Linux': 'open-source operating system',
+  'Microsoft Windows': 'most widely used desktop operating system',
+  'Twitter': 'microblogging social network',
+  'Instagram': 'photo- and video-sharing app',
+  'YouTube': 'video-sharing platform',
+  'Bitcoin': 'first cryptocurrency',
+  'Cryptocurrency': 'digital currency secured by cryptography',
+  // agriConcepts
+  'Handloom': 'cloth woven on a manually operated loom',
+  'Jute': 'fibre crop of eastern India, the \u201cgolden fibre\u201d',
+  'Fisheries': 'sector that catches and farms fish and aquatic life',
+  'Poultry': 'sector of raising domestic fowl for eggs and meat',
+  'Helicopter': 'rotorcraft that takes off and lands vertically',
+  // constitutionalPosts
+  'Vice President of India': 'ex-officio Chairman of the Rajya Sabha',
+  'Speaker of the Lok Sabha': 'presiding officer of the Lok Sabha',
+  'Lokpal': 'anti-corruption ombudsman for the central government',
+  // canon
+  'Tipi\u1e6daka (Pali Canon)': 'canonical scriptures of Theravada Buddhism',
+  // empires
+  'Indus Valley Civilization': 'Bronze Age civilisation of the Indus river basin',
+  'Vedic period': 'early era of the Vedas in northern India',
+  'Maurya Empire': 'first great pan-Indian empire, founded by Chandragupta',
+  'Gupta Empire': 'imperial age often called the golden age of India',
+  'Kalinga War': '261 BC war that turned Emperor Ashoka to non-violence',
+  'Kushan Empire': 'central Asian empire that ruled across the Hindu Kush',
+  'Sunga Empire': 'post-Mauryan dynasty of Magadha',
+  'Chola Empire': 'southern maritime empire of the Tamils',
+  'Harsha Empire': 'north Indian empire of Harsha Vardhana',
+  'Rashtrakuta Empire': 'Deccan empire behind the rock-cut temples of Ellora',
+  'Delhi Sultanate': 'succession of Turkic and Afghan dynasties ruling Delhi',
+  'Vijayanagara Empire': 'southern Hindu empire that defied the Deccan sultanates',
+  'Mughal Empire': 'Islamic empire that ruled most of India (1526\u20131857)',
+  'Maratha Empire': 'Hindu confederacy that rose against the Mughals',
+  'Satavahana dynasty': 'Deccan dynasty of the Amaravati stupa',
+  'Pallava dynasty': 'southern dynasty of Mahabalipuram',
+  'Chalukya dynasty': 'Deccan dynasty centred on Badami',
+  'Kakatiya dynasty': 'Telugu dynasty of Warangal',
+  'Hoysala dynasty': 'Karnataka dynasty of Belur and Halebidu',
+  'Vakataka dynasty': 'Deccan dynasty contemporary with the Guptas',
+  'Kadamba dynasty': 'first Kannada kingdom, ruled from Banavasi',
+  'Kingdom of Mysore': 'southern kingdom of Hyder Ali and Tipu Sultan',
+  // science
+  'Chandrayaan-1': 'ISRO\u2019s first lunar orbiter (2008)',
+  'Chandrayaan-3': 'ISRO\u2019s 2023 mission that soft-landed on the Moon',
+  'Mangalyaan': 'ISRO\u2019s Mars Orbiter Mission',
+  'Pokhran-II': 'India\u2019s 1998 series of nuclear tests',
+  'Nuclear tests of India': 'India\u2019s 1974 and 1998 nuclear tests',
+  'Smallpox eradication': 'global vaccination campaign that wiped out smallpox',
+  'INS Vikrant': 'India\u2019s first indigenously built aircraft carrier',
+  // sports
+  'Olympic Games': 'premier multi-sport games of the world',
+  'Commonwealth Games': 'multi-sport games of the Commonwealth nations',
+  'Asian Games': 'continental multi-sport games of Asia',
+  'Cricket World Cup': 'ICC\u2019s premier one-day international tournament',
+  'T20 World Cup': 'ICC\u2019s world championship of Twenty20 cricket',
+  'Hockey World Cup': 'world championship of field hockey',
+  'Khelo India': 'government platform for nurturing Indian sport',
+  // diseases
+  'COVID-19': 'coronavirus disease behind the 2019\u201320 pandemic',
+  'Smallpox': 'viral disease eradicated by 1980',
+  'Cholera': 'water-borne bacterial infection of the gut',
+  'Plague': 'rodent-borne bacterial disease of historic pandemics',
+  'Tuberculosis': 'bacterial infection, chiefly of the lungs',
+  'Leprosy': 'chronic bacterial disease also called Hansen\u2019s disease',
+  'Polio': 'paralysing viral disease, almost eradicated',
+  'Malaria': 'mosquito-borne parasitic fever',
+  'Dengue': 'mosquito-borne viral fever',
+  'Spanish flu': '1918\u201319 influenza pandemic',
+  'Chikungunya': 'mosquito-borne viral fever',
+  'Kala-azar': 'visceral leishmaniasis, a parasitic disease',
+  'Famine': 'mass starvation, recurring cause of Indian hunger crises',
+  'Black Death': 'bubonic plague pandemic of the 14th century',
+  // schemes
+  'National Health Mission': 'flagship public health programme of India',
+  'Swachh Bharat Mission': 'national cleanliness and toilet-building campaign (2014)',
+  'Poshan Abhiyan': 'India\u2019s national nutrition mission',
+  'Ayushman Bharat': 'health assurance scheme covering poor families (PM-JAY)',
+  'National Rural Health Mission': 'rural component of the National Health Mission',
+  'Green Revolution': '1960s cereal-boom driven by high-yielding varieties and fertilisers',
+  'Operation Flood': 'white revolution that built India\u2019s milk cooperatives',
+  'Pradhan Mantri Jan Dhan Yojana': 'financial inclusion scheme for universal bank accounts',
+  'Bharat Nirman': 'rural infrastructure building programme',
+  'MGNREGA': 'rural employment guarantee scheme of 100 days\u2019 work a year',
+  'Blue Revolution': 'programme to develop India\u2019s fisheries and aquaculture',
+  // commissions
+  'Sarkaria Commission': '1983 commission on Centre\u2013State relations',
+  'Mandal Commission': 'commission whose report brought OBC reservations',
+  'Kothari Commission': '1964\u201366 commission on national education',
+  'Finance Commission of India': 'constitutional body fixing Centre\u2013State revenue sharing',
+  'Election Commission of India': 'constitutional body that conducts Indian elections',
+  'Law Commission of India': 'advisory body recommending law reform',
+  'National Human Rights Commission of India': 'statutory watchdog for human rights in India',
+  'Second Administrative Reforms Commission': '2005 commission on governance reform',
+  // orgs
+  'Indian Space Research Organisation': 'India\u2019s national space agency (ISRO)',
+  'Defence Research and Development Organisation': 'India\u2019s defence research agency (DRDO)',
+  'Bhabha Atomic Research Centre': 'India\u2019s premier nuclear research centre (BARC)',
+  'Council of Scientific and Industrial Research': 'India\u2019s chain of government labs (CSIR)',
+  'Indian Institute of Technology': 'network of India\u2019s leading engineering institutes (IIT)',
+  'Reserve Bank of India': 'central bank of India',
+  'State Bank of India': 'largest public-sector bank of India',
+  'Coal India': 'world\u2019s largest coal-mining company, state-owned',
+  'Oil and Natural Gas Corporation': 'India\u2019s principal oil and gas explorer (ONGC)',
+  'Indian Oil Corporation': 'India\u2019s largest oil company',
+  'Nuclear power in India': 'India\u2019s civil nuclear energy programme',
+  // globalOrgs
+  'United Nations': 'intergovernmental body for peace and cooperation',
+  'European Union': 'political and economic union of European states',
+  'Life Insurance Corporation of India': 'India\u2019s dominant state life insurer (LIC)',
+  'Export-Import Bank of India': 'Indian foreign-trade financing bank',
+  'Central Industrial Security Force': 'paramilitary force guarding strategic Indian installations',
+  // geography
+  'Suez Canal': 'shipping canal linking the Mediterranean and Red Seas',
+  'Panama Canal': 'canal linking the Atlantic and Pacific across the Americas',
+  'McMahon Line': '1914 boundary line between India and Tibet/China',
+  'Line of Actual Control': 'de facto India\u2013China border in the western sector',
+  'Line of Control': 'de facto ceasefire line dividing Kashmir',
+  'Siachen Glacier': 'world\u2019s highest battlefield, in Kashmir',
+  'Doklam': 'disputed plateau at the India\u2013China\u2013Bhutan trijunction'
+};
+
 // Person-role keyword gate: an auto-extracted descriptor is only attached when it
 // reads like a person's role/profession, so a topic like "World War II" ("Global
 // conflict (1939–1945)") never gets a descriptor.
@@ -1588,6 +1891,313 @@ function escapeRe(s) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+// ---------------------------------------------------------------------------
+// Directed relationship ("lineage & influence") edges.
+//
+// Extracts directional parent--child relations from question fact text, e.g.
+//   "Irene was one of the Horae, daughter of Zeus and Themis."
+//   "... the son of George Antheil."
+//   "... succeeded by Chun Doo-hwan ..."
+//   "... founded by J. R. D. Tata ..."
+// Only emitted when BOTH ends resolve to real nodes on the map, so there are
+// never dangling references. Edges are directionally significant: { a, b, rel }
+// means "a -> b via rel" (e.g. a's relation to b).
+// ---------------------------------------------------------------------------
+var REL_FAMILY_LEGACY = null; // kept out; see extractRelations below
+var REL_RELATION_LEGACY = null;
+
+function canonName(s) {
+  return String(s).toLowerCase().replace(/[^a-z0-9]+/gi, ' ').replace(/\s+/g, ' ').trim();
+}
+function canon(s) {
+  return canonName(s);
+}
+
+// Max names in the relation-resolver regex. Bounded so per-question scanning stays
+// cheap — the prominent (seed + high-mention) entities carry the lineage story.
+var REL_MAX_NAMES = 9000;
+
+// Generic/all-purpose topic names that carry no real entity — never usable as an
+// endpoint in a relation ("General", "Background", "Introduction", ...).
+var GENERIC_TOPICS = ['general', 'background', 'introduction', 'overview', 'miscellaneous', 'other', 'others', 'more', 'notes', 'see also', 'external links', 'further reading', 'summary', 'about', 'all topics'];
+
+// Sub-topic co-occurrence links ("Gandhism <-> Mahatma Gandhi"): prominent
+// sub-topics (own-name match, min mention count) join the cross-entity linker so
+// hub topics no longer stand alone. Count floors out noise; the cap bounds the
+// regex just like REL_MAX_NAMES does for the relation resolver.
+var SUB_LINK_MIN_COUNT = 25;
+var SUB_LINK_MAX_NAMES = 8000;
+
+function extractRelations(all, nodes, topicMap) {
+  // --- Build the name resolver with RAW name strings and a canonical lookup. ---
+  // Keep the LONGEST raw form per canonical key so "J. R. D. Tata" wins over "Tata".
+  var canonIndex = {};   // canonical -> id
+  var rawByName = {};    // canonical -> longest raw string
+  function addName(nm, id) {
+    if (!nm) return;
+    var c = canonName(nm);
+    if (c.length < 3) return;
+    if (GENERIC_TOPICS.indexOf(c) !== -1) return;
+    // Exclude bare year/decade names ("1857", "1920s") which are not real entities
+    if (/^\d{3,4}s?$/.test(c)) return;
+    if (!canonIndex[c]) { canonIndex[c] = id; rawByName[c] = nm; }
+    else if (nm.length > (rawByName[c] || '').length) rawByName[c] = nm;
+  }
+  // Priority set: seed spine + person nodes. Person cap keeps the regex bounded.
+  var persons = nodes.filter(function (n) { return n.type === 'person'; });
+  var seeds = nodes.filter(function (n) { return n.seed; });
+  // Keep generous person set but sorted by prominence (mention count proxy).
+  persons.sort(function (x, y) { return (y.count || 0) - (x.count || 0); });
+  var seedCount = seeds.length;
+  var personCap = Math.max(0, REL_MAX_NAMES - seedCount);
+  var relationNodes = seeds.slice();
+  for (var p of persons.slice(0, personCap)) { relationNodes.push(p); }
+  // De-dupe: a node can be both seed and person.
+  var seenNode = {};
+  relationNodes = relationNodes.filter(function (n) { if (seenNode[n.id]) return false; seenNode[n.id] = true; return true; });
+  for (var rn of relationNodes) {
+    addName(rn.name, rn.id);
+    if (rn.aliases) for (var al of rn.aliases) addName(al, rn.id);
+  }
+  var rawList = Object.keys(rawByName).map(function (c) { return rawByName[c]; });
+  if (!rawList.length) return [];
+  rawList.sort(function (x, y) { return y.length - x.length; });
+  var nameRe = new RegExp('(^|[^a-z0-9])(' + rawList.map(escapeRe).join('|') + ')(?=[^a-z0-9]|$)', 'gi');
+
+  var edges = {};
+  var srcInfo = process.env.REL_SRC === '1';
+  var curSent = '';
+  function ensureEdge(a, b, rel) {
+    if (!a || !b || a === b) return;
+    var k = a + '\u0000' + b + '\u0000' + rel;
+    if (!edges[k]) {
+      edges[k] = { a: a, b: b, rel: rel };
+      if (srcInfo) edges[k].src = curSent;
+    }
+  }
+
+  function mentions(txt) {
+    var out = [];
+    var m;
+    nameRe.lastIndex = 0;
+    while ((m = nameRe.exec(txt))) {
+      var id = canonIndex[canonName(m[2])];
+      if (id) out.push({ id: id, start: m.index, end: nameRe.lastIndex });
+    }
+    return out;
+  }
+  // Last mention ending before `at`; first starting at/after `at`.
+  function prevMention(ms, at) {
+    var best = null;
+    for (var x of ms) if (x.end <= at && (!best || x.end > best.end)) best = x;
+    return best;
+  }
+  function nextMention(ms, at) {
+    var best = null;
+    for (var x of ms) if (x.start >= at && (!best || x.start < best.start)) best = x;
+    return best;
+  }
+  // Up to `max` consecutive mentions from `at`, allowing an "and"/","/"with" joiner between.
+  function nextMentions(ms, at, max, txt) {
+    var out = [];
+    var cur = at;
+    for (var i = 0; i < max; i++) {
+      var nx = nextMention(ms, cur);
+      if (!nx) break;
+      if (out.length) {
+        var gap = txt.slice(out[out.length - 1].end, nx.start).toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
+        if (gap && !/^(and|with|along with|&)\b|\bwith$/.test(gap)) break;
+      }
+      out.push(nx);
+      cur = nx.end;
+    }
+    return out;
+  }
+  // Bounds of the sentence containing position `at` (splits on . ! ? ; — and newline).
+  function sentenceAt(txt, at) {
+    var start = 0, end = txt.length;
+    for (var i = at - 1; i >= 0; i--) {
+      var ch = txt.charAt(i);
+      if (ch === '.' || ch === '!' || ch === '?' || ch === ';' || ch === '\u2014' || ch === '\n') { start = i + 1; break; }
+    }
+    for (var j = at; j < txt.length; j++) {
+      var ch2 = txt.charAt(j);
+      if (ch2 === '.' || ch2 === '!' || ch2 === '?' || ch2 === ';' || ch2 === '\u2014' || ch2 === '\n') { end = j; break; }
+    }
+    return { start: start, end: end };
+  }
+
+  var FAMILY_SINGULAR = {
+    father:'father', mother:'mother', son:'son', daughter:'daughter', brother:'brother', sister:'sister',
+    grandfather:'grandfather', grandmother:'grandmother', grandson:'grandson', granddaughter:'granddaughter',
+    uncle:'uncle', aunt:'aunt', nephew:'nephew', niece:'niece', cousin:'cousin',
+    sibling:'sibling', child:'child', children:'child', parent:'parent', parents:'parent',
+    spouse:'spouse', wife:'wife', husband:'husband', consort:'husband',
+    descendant:'descends from', descends:'descends from', descended:'descends from', heir:'heir of', heiress:'heir of',
+    offspring:'child', progeny:'child',
+    friend:'friend of', colleague:'colleague of', coworker:'colleague of', workmate:'colleague of',
+    boyfriend:'partner of', girlfriend:'partner of', partner:'partner of', fiance:'partner of', fiancee:'partner of', 'fianc\u00e9':'partner of', 'fianc\u00e9e':'partner of',
+    rival:'rival of', opponent:'rival of', enemy:'rival of', archenemy:'rival of',
+    relative:'relative of', kinsman:'relative of', ward:'ward of',
+    protege:'pupil of', apprentice:'pupil of',
+    widow:'wife', widower:'husband', bride:'wife', groom:'husband',
+    'ex-wife':'ex-wife', 'ex-husband':'ex-husband',
+    'father-in-law':'father-in-law', 'mother-in-law':'mother-in-law', 'son-in-law':'son-in-law', 'daughter-in-law':'daughter-in-law',
+    'brother-in-law':'brother-in-law', 'sister-in-law':'sister-in-law',
+    'father in law':'father-in-law', 'mother in law':'mother-in-law', 'son in law':'son-in-law', 'daughter in law':'daughter-in-law',
+    'brother in law':'brother-in-law', 'sister in law':'sister-in-law',
+    'foster father':'father', 'foster mother':'mother', 'foster son':'son', 'foster daughter':'daughter',
+    'foster parent':'parent', 'foster child':'child', 'foster children':'child'
+  };
+
+  // Generated variants: step-, half-, great-(great-)(great)- forms with hyphen,
+  // space or no separator, and English plurals (fathers, sons, nieces, half-brothers...).
+  var STEP_BASE = { father:'father', mother:'mother', son:'son', daughter:'daughter', brother:'brother', sister:'sister', parent:'parent', child:'child', children:'child', sibling:'sibling' };
+  for (var sw of Object.keys(STEP_BASE)) {
+    for (var ssep of ['', '-', ' ']) FAMILY_SINGULAR['step' + ssep + sw] = 'step-' + STEP_BASE[sw];
+  }
+  for (var hw of ['brother', 'sister']) {
+    for (var hsep of ['', '-', ' ']) FAMILY_SINGULAR['half' + hsep + hw] = 'half-' + hw;
+  }
+  var GREAT_BASE = ['grandfather','grandmother','grandson','granddaughter','uncle','aunt','nephew','niece','grandparent','grandchild'];
+  for (var gw of GREAT_BASE) {
+    for (var gsep of ['-', ' ']) {
+      FAMILY_SINGULAR['great' + gsep + gw] = 'great-' + gw;
+      FAMILY_SINGULAR['great' + gsep + 'great' + gsep + gw] = 'great-great-' + gw;
+      FAMILY_SINGULAR['great' + gsep + 'great' + gsep + 'great' + gsep + gw] = 'great-great-great-' + gw;
+    }
+  }
+  var FAM_KEYS = Object.keys(FAMILY_SINGULAR);
+  for (var fk of FAM_KEYS) {
+    FAMILY_SINGULAR[fk + 's'] = FAMILY_SINGULAR[fk];
+    FAMILY_SINGULAR[fk + 'es'] = FAMILY_SINGULAR[fk];
+  }
+  FAMILY_SINGULAR['sons-in-law'] = 'son-in-law';
+  FAMILY_SINGULAR['daughters-in-law'] = 'daughter-in-law';
+  FAMILY_SINGULAR['brothers-in-law'] = 'brother-in-law';
+  FAMILY_SINGULAR['sisters-in-law'] = 'sister-in-law';
+  FAMILY_SINGULAR['fathers-in-law'] = 'father-in-law';
+  FAMILY_SINGULAR['mothers-in-law'] = 'mother-in-law';
+  FAMILY_SINGULAR['fianc\u00e9s'] = 'partner of';
+
+  // Adjacent context that flips a family/relation edge to run target->subject:
+  // "X's son", "his eldest son", "his own daughter", "X had a son Y", "X had a wife Y".
+  function isPossSeg(seg) {
+    if (/\'s\s*$/.test(seg)) return true;
+    if (/\b(?:his|her|its|their|our|your)(?:\s+[a-z]+){0,2}\s*$/.test(seg)) return true;
+    if (/\bhad\s+(?:an?|the|two|three|four|five|six|seven|several|one|[0-9]+)(?:\s+[a-z]+)?\s*$/.test(seg)) return true;
+    return /\bhad\s+[a-z]+\s*$/.test(seg);
+  }
+
+  var ofByRe = /\b((?:elder\s+|younger\s+|paternal\s+|maternal\s+)*(?:great(?:[- ]+great){0,2}[- ]+)?(?:father|mother|son|daughter|brother|sister|grandfather|grandmother|grandson|granddaughter|uncle|aunt|nephew|niece|cousin|sibling|child|children|parent|parents|spouse|wife|husband|consort|descendant|descends|descended|heir|heiress|founder|establisher|successor|predecessor|offspring|progeny|ancestor|forefather|friend|colleague|coworker|workmate|boyfriend|girlfriend|partner|fiance|fiancee|rival|opponent|enemy|archenemy|relative|kinsman|ward|guardian|protege|apprentice|widow|widower|bride|groom|stepfather|stepmother|stepson|stepdaughter|stepbrother|stepsister|stepparent|stepchild|stepchildren|stepsibling|step-father|step-mother|step-son|step-daughter|step-brother|step-sister|step-parent|step-child|step-children|step-sibling|half-brother|half-sister|halfbrother|halfsister|ex-wife|ex-husband)(?:s|es)?(?:[\s-]+in[\s-]+law)?|succeeded\s+by|succeeded|founded\s+by|established\s+by|preceded\s+by|preceded|mentored\s+by|mentored|taught\s+by|studied\s+under|pupil\s+of|student\s+of|disciple\s+of|guru\s+of|mentor\s+of|teacher\s+of|tutor\s+of|coach\s+of|born\s+to|gave\s+birth\s+to|gave\s+birth|adopted\s+by|raised\s+by|brought\s+up\s+by|brought\s+up|foster\s+father|foster\s+mother|foster\s+son|foster\s+daughter|foster\s+parent|foster\s+child)\b/g;
+  var verbRe = /\b(succeeded|succeeds|founded|co-founded|cofounded|established|preceded|mentored|married|wed|remarried|divorced|sired|created|built|fathered|mothered|birthed|raised)\b/g;
+
+  for (var it of all.all) {
+    var q = it.q;
+    var owner = topicMap ? (topicMap[canonName(q.subSubject || q._topic || '')] || null) : null;
+    var txt = [q.fact, q.question, q.answer, q.hint].filter(Boolean).join('. ') + ' ';
+    txt = txt.replace(/_+ +/g, ' ').replace(/_{2,}/g, ' ');
+    if (!txt) continue;
+    var ms = mentions(txt);
+    if (!ms.length) continue;
+
+    // Pattern 1: "... <rel> of/by <target>" (subject = nearest preceding mention,
+    // or the owning topic when the sentence leaves it implicit, e.g. "She ...").
+    var m;
+    ofByRe.lastIndex = 0;
+    while ((m = ofByRe.exec(txt))) {
+      // strip elder/younger/paternal/maternal prefixes before canonical lookup
+      var phrase = m[1].toLowerCase().replace(/^(?:elder|younger|paternal|maternal)\s+/, '');
+      var pStart = m.index, pEnd = ofByRe.lastIndex;
+      // "parent body of X" / "parent wing of Y" are astronomy/org phrases, not kin.
+      if (phrase === 'parent' && /body|wing|company|firm|organization|organisation|group\b/.test(txt.slice(pEnd, pEnd + 20).toLowerCase())) continue;
+      // Subject = nearest preceding mention IN THE SAME SENTENCE. Falling back to the
+      // owning topic only for family-of forms where the sentence leaves it implicit
+      // ("She was one of the Horae, daughter of Zeus and Themis").
+      var sent = sentenceAt(txt, pStart);
+      curSent = txt.slice(sent.start, sent.end).slice(0, 220);
+      var subj = prevMention(ms, pStart);
+      var a = (subj && subj.start >= sent.start) ? subj.id : null;
+      if (!a && owner && FAMILY_SINGULAR[phrase]) {
+        var seg = txt.slice(sent.start, pStart);
+        if (/\b(he|she|his|her)\b/i.test(seg)) a = owner;
+      }
+      if (!a) continue;
+      // Possessive form ("Ashoka's father, Bindusara" / "his son Kunala"): the
+      // subject OWNS the relative, so the relation runs target->subject. The
+      // same inversion applies when the subject "had a son Y" or "had a wife Y".
+      // Leave "the father of X" / "son of X" (subject IS the relative) as-is.
+      var poss = false;
+      if (subj && subj.start >= sent.start) {
+        var preTxt = txt.slice(subj.end, pStart).replace(/\s+/g, ' ').toLowerCase().slice(-30);
+        poss = isPossSeg(preTxt);
+      } else if (owner) {
+        var preTxt2 = txt.slice(sent.start, pStart).replace(/\s+/g, ' ').toLowerCase().slice(-30);
+        poss = isPossSeg(preTxt2);
+      }
+      var objs = nextMentions(ms, pEnd, poss ? 1 : 2, txt);
+      if (!objs.length) continue;
+      for (var o of objs) {
+        if (o.start - pEnd > 45) break;
+        var b = o.id;
+        if (!b || b === a) continue;
+        if (phrase === 'succeeded by' || phrase === 'succeeded') ensureEdge(a, b, 'succeeded by');
+        else if (phrase === 'founded by' || phrase === 'established by') ensureEdge(b, a, 'founded');
+        else if (phrase === 'preceded by' || phrase === 'preceded') ensureEdge(b, a, 'preceded');
+        else if (phrase === 'mentored by' || phrase === 'taught by' || phrase === 'mentor of' || phrase === 'guru of') ensureEdge(b, a, 'mentored by');
+        else if (phrase === 'studied under' || phrase === 'pupil of' || phrase === 'student of' || phrase === 'disciple of') ensureEdge(a, b, 'pupil of');
+        else if (phrase === 'teacher of' || phrase === 'tutor of' || phrase === 'coach of') ensureEdge(a, b, 'mentored by');
+        else if (phrase === 'born to' || phrase === 'adopted by' || phrase === 'raised by' || phrase === 'brought up by') ensureEdge(a, b, 'child');
+        else if (phrase === 'gave birth to' || phrase === 'gave birth') ensureEdge(b, a, 'child');
+        else if (phrase === 'guardian') ensureEdge(poss ? b : a, poss ? a : b, 'guardian of');
+        else if (phrase === 'ancestor' || phrase === 'forefather') ensureEdge(poss ? a : b, poss ? b : a, 'descends from');
+        else if (FAMILY_SINGULAR[phrase]) ensureEdge(poss ? b : a, poss ? a : b, FAMILY_SINGULAR[phrase]);
+        else if (phrase === 'founder' || phrase === 'establisher') ensureEdge(poss ? b : a, poss ? a : b, 'founder of');
+        else if (phrase === 'successor') ensureEdge(poss ? b : a, poss ? a : b, 'successor of');
+        else if (phrase === 'predecessor') ensureEdge(poss ? b : a, poss ? a : b, 'predecessor of');
+      }
+    }
+
+    // Pattern 2: verb-like "SUBJ founded/succeeded/mentored OBJ" and the passive
+    // "OBJ was founded ... by SUBJ". Direction flips for passives with a "by"
+    // clause; a passive with no "by" right after is left alone ("was founded in 1969").
+    var m2;
+    verbRe.lastIndex = 0;
+    while ((m2 = verbRe.exec(txt))) {
+      var verb = m2[1].toLowerCase();
+      var subj = prevMention(ms, m2.index);
+      var a2 = (subj && m2.index - subj.end <= 8) ? subj.id : null;
+      var obj = nextMention(ms, verbRe.lastIndex);
+      if (!a2 || !obj || (obj.start - verbRe.lastIndex > 45)) continue;
+      var b2 = obj.id;
+      if (!b2 || b2 === a2) continue;
+      var wasPassive = /\b(was|were|being|been)\b/.test(txt.slice(Math.max(0, m2.index - 10), m2.index).toLowerCase());
+      var gap = txt.slice(verbRe.lastIndex, obj.start);
+      var hasBy = /\bby\b/.test(gap);
+      if (verb === 'founded' || verb === 'co-founded' || verb === 'cofounded' || verb === 'established' || verb === 'created' || verb === 'built') {
+        if (wasPassive && !hasBy) continue;               // "... was founded in 1969." — no actor
+        ensureEdge(wasPassive ? b2 : a2, wasPassive ? a2 : b2, 'founded');
+      }
+      else if (verb === 'succeeded' || verb === 'succeeds') ensureEdge(a2, b2, 'succeeded by');
+      else if (verb === 'preceded') {
+        if (wasPassive && !hasBy) continue;
+        ensureEdge(wasPassive ? b2 : a2, wasPassive ? a2 : b2, 'preceded');
+      }
+      else if (verb === 'mentored') {
+        if (wasPassive && !hasBy) continue;
+        ensureEdge(wasPassive ? b2 : a2, wasPassive ? a2 : b2, 'mentored by');
+      }
+      else if (verb === 'married' || verb === 'wed' || verb === 'remarried') ensureEdge(a2, b2, 'spouse');
+      else if (verb === 'divorced') ensureEdge(a2, b2, 'divorced');
+      else if (verb === 'birthed') { if (!wasPassive) ensureEdge(b2, a2, 'child'); }
+      else if (verb === 'sired' || verb === 'fathered') { if (!wasPassive) ensureEdge(a2, b2, 'father'); }
+      else if (verb === 'mothered') { if (!wasPassive) ensureEdge(a2, b2, 'mother'); }
+      else if (verb === 'raised') { if (wasPassive && hasBy) ensureEdge(a2, b2, 'child'); }
+    }
+  }
+  return Object.keys(edges).map(function (k) { return edges[k]; });
+}
+
 function modeSpan(spans) {
   var freq = {};
   for (var sp of spans) {
@@ -1600,6 +2210,110 @@ function modeSpan(spans) {
   if (!bestK) return null;
   var b = bestK.split('-');
   return { min: +b[0], max: +b[1] };
+}
+
+function capDesc(s) {
+  s = String(s == null ? '' : s).replace(/\s+/g, ' ').trim();
+  if (s.length > 190) s = s.slice(0, 187).replace(/\s+\S*$/, '') + '\u2026';
+  return s || null;
+}
+
+var META_RE = /\b(?:commonly|usually|sometimes|often|also|sometimes|literally|figuratively|informally|formally|understood|shortened|abbreviated|abbreviates|referred to as|known as|called|so[- ]called)\b/i;
+
+// Choose the most descriptive, definition-shaped first sentence from a topic's
+// facts. Scores each candidate so a substantive line ("X was a Mesopotamian
+// dynasty in the 21st century BC") wins over shorter meta/tangential lines
+// ("X is commonly abbreviated as …"). Falls back to the plainest readable line.
+function selectBestSent(qs, nm, esc) {
+  var best = null, bestScore = -1e9;
+  var seen = 0;
+  var nmc = String(nm || '').replace(/^[^a-z0-9]+/i, '');
+  var bare = /^[a-z0-9](?:[a-z0-9\s&.-]*[a-z0-9])?$/i.test(nmc) ? nmc : null;
+  var nameRe = bare ? new RegExp('\\b' + bare.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i') : null;
+  for (var q of qs) {
+    if (++seen > 60) break;
+    var t2 = cleanTex(q.fact || q.answer || '').replace(/\s+/g, ' ').trim();
+    if (!t2) continue;
+    var sents = t2.split(/[.!?]\s+/);
+    for (var k = 0; k < sents.length; k++) {
+      var s = sents[k].split(/[,;:]\s+/)[0].trim().replace(/\.$/, '');
+      if (s.length < 14 || s.length >= 220 || !/\s/.test(s)) continue;
+      if (/^[-_(\d]/.test(s) || /\s[A-Z]$/.test(s)) continue;
+      var low = s.toLowerCase();
+      var hasName = nameRe === null ? false : nameRe.test(s);
+      var score = 0;
+      if (hasName) score += 4;
+      if (hasName && /\b(?:is|was|are|were|refers? to|means|denotes?|describes?|constitutes?|comprises?)\s+(?:an?|the|a kind of|a type of)\b/.test(low)) score += 6;
+      else if (hasName && /^\s*(?:the )?[a-z0-9]+(?:\s+[a-z0-9]+){0,3}\s+(?:is|was|are|were)\b/i.test(s)) score += 3;
+      if (hasName && /\b(?:century|BC|AD|BCE|CE|dynasty|kingdom|empire|state|republic|movement|war|battle|treaty|organisation|organization|institution|programme|program|scheme)\b/i.test(s)) score += 2;
+      if (!hasName) score -= 6;
+      if (META_RE.test(s)) score -= 5;
+      if (/^(\w+)(?:\s+\w+){0,2}\s+\1\b/i.test(s)) score -= 4;
+      if (/^\s*(?:it|its|he|she|they|his|her|their|the?|this|that|these|those)\b/i.test(s)) score -= 3;
+      if (score > bestScore || (score === bestScore && s.length < (best ? best.length : 1e9))) { best = s; bestScore = score; }
+    }
+  }
+  if (best) return best;
+  var any = null, anyLen = 1e9, anyN = null, anyNLen = 1e9;
+  seen = 0;
+  for (var q3 of qs) {
+    if (++seen > 40) break;
+    for (var f of [q3.fact, q3.answer, q3.question, q3.hint]) {
+      var st = cleanTex(f).replace(/\s+/g, ' ').trim();
+      if (st.length < 14) continue;
+      var s3 = st.split(/[.!?]\s+/)[0].trim().replace(/\.$/, '');
+      if (s3.length < 14 || !/\s/.test(s3) || /\s[A-Z]$/.test(s3)) continue;
+      if (nameRe !== null && nameRe.test(s3)) {
+        if (s3.length < anyNLen) { anyN = s3; anyNLen = s3.length; }
+      } else if (s3.length < anyLen) { any = s3; anyLen = s3.length; }
+    }
+  }
+  return anyN || any;
+}
+
+// One-line description for any topic that lacks a curated line. Scans the entity's
+// own questions for a defining sentence ("X is/was/refers to …"), else the shortest
+// clean first sentence of a fact, else any readable sentence, and as a guaranteed
+// last resort a neutral line — so autoDescFor never leaves a node without a desc.
+function autoDescFor(name, qs) {
+  var nm = String(name || '').replace(/^[^a-z0-9]+/i, '').trim();
+  if (!nm) return null;
+  var esc = escapeRe(nm);
+  var defRe = new RegExp('(^|[^a-z0-9])(?:the\\s+)?(' + esc + ')(?:\\s*\\([^)]*\\)|\\s+or\\s+[^.,;:!?()]{1,40})?\\s+(?:is|are|was|were|refers? to|means|denotes?|describes?|stands for|may be defined as)\\s+((?:an?|the|a kind of|a type of)?[^.;!?]{6,180})', 'i');
+  var best = null, bestLen = 1e9, seen = 0;
+  for (var q of qs) {
+    if (++seen > 40) break;
+    var txt = cleanTex([q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' ')).replace(/\s+/g, ' ').trim();
+    var m = txt.match(defRe);
+    if (!m) continue;
+    var d = m[3].replace(/[,;:\u2013\u2014\s]+$/g, '').trim();
+    if (/^(?:also|commonly|usually|sometimes|often|informally|formally|literally|figuratively)?\s*(?:known as|called|referred to as|abbreviated(?: as)?|shortened|termed)\b/i.test(d)) continue;
+    if (d && d.length < 190 && d.length < bestLen) { best = d; bestLen = d.length; }
+  }
+  if (best) return capDesc(best);
+  var fb = selectBestSent(qs, nm, esc);
+  if (fb) return capDesc(fb);
+  if (qs && qs.length) return capDesc(nm);
+  return null;
+}
+
+var SEED_TYPE_LABEL = {
+  person: 'person',
+  event: 'event \u2014 movement \u2014 development',
+  disease: 'disease \u2014 medical condition',
+  scheme: 'government programme \u2014 scheme',
+  org: 'organisation \u2014 institution',
+  concept: 'concept \u2014 recurring topic'
+};
+
+function seedFallback(name, label) {
+  return capDesc(String(name || '').trim() + ' \u2014 ' + label);
+}
+
+// Wiki/TeX question text embeds LaTeX markup like {\displaystyle …}; strip it so
+// extracted sentences stay readable.
+function cleanTex(s) {
+  return String(s || '').replace(/\{\\?displaystyle\s*[^}]*\}/g, ' ').replace(/\=+/g, ' ').replace(/[{}]+/g, ' ');
 }
 
 function main() {
@@ -1667,7 +2381,7 @@ function main() {
         level: isAutoPerson ? 2 : 4,
         cats: [{ key: key, label: c.label, count: qs.length }],
         count: qs.length,
-        desc: nodeDesc
+        desc: nodeDesc || (!isAutoPerson ? autoDescFor(tname, qs) : null)
       };
       seen[id] = node;
       nodes.push(node);
@@ -1749,7 +2463,7 @@ function main() {
         count: hitQs.length,
         seed: true,
         aliases: aliases,
-        desc: isPerson ? personDescFor(ename, hitQs) : null
+        desc: TOPIC_DESCS[ename] || (isPerson ? (personDescFor(ename, hitQs) || seedFallback(ename, SEED_TYPE_LABEL.person)) : (autoDescFor(ename, hitQs) || seedFallback(ename, SEED_TYPE_LABEL[g.type] || SEED_TYPE_LABEL.concept)))
       };
       if (span && span.archive) node.timebase = 'archive';
       nodes.push(node);
@@ -1779,10 +2493,43 @@ function main() {
     return false;
   });
 
-  // Cross-entity links: co-occurrence of two seed entities inside one question.
+  // Topic -> node id map (all final nodes, name + aliases) so relation extraction
+  // can attribute an implicit subject ("She, daughter of Zeus") to the owning node.
+  var topicMap = {};
+  for (var tmNode of nodes) {
+    var tmNames = [tmNode.name].concat(tmNode.aliases || []);
+    for (var tnm of tmNames) {
+      var tc = canonName(tnm);
+      if (tc.length >= 3 && !topicMap[tc]) topicMap[tc] = tmNode.id;
+    }
+  }
+
+  // Cross-entity links: co-occurrence of two entities inside one question.
+  // Seed entities (with their curated aliases) always participate; prominent
+  // sub-topics join by their own name so hubs like "Gandhism" (a non-seed
+  // concept) collect Connected/Story neighbours instead of standing alone.
   var aliasMap = {};
   for (var sn of seedNodes) {
     for (var al of linkAliasesFor(sn.name)) aliasMap[al.toLowerCase()] = sn.id;
+  }
+  var subtopics = nodes.filter(function (n) {
+    return n.id.indexOf('seed|') !== 0
+      && (n.count || 0) >= SUB_LINK_MIN_COUNT;
+  });
+  subtopics.sort(function (x, y) { return (y.count || 0) - (x.count || 0); });
+  var addedSub = 0;
+  for (var st of subtopics) {
+    if (addedSub >= SUB_LINK_MAX_NAMES) break;
+    var stSet = [st.name].concat(st.aliases || []);
+    for (var stAlias of stSet) {
+      var stKey = stAlias.toLowerCase();
+      var stCanon = canonName(stAlias);
+      if (stCanon.length < 3 || GENERIC_TOPICS.indexOf(stCanon) !== -1 || /^\d{3,4}s?$/.test(stCanon)) continue;
+      if (aliasMap[stKey] !== undefined) continue;
+      aliasMap[stKey] = st.id;
+      addedSub++;
+      break;
+    }
   }
   var aliasList = Object.keys(aliasMap).sort(function (x, y) { return y.length - x.length; });
   var linkRe = new RegExp('(^|[^a-z0-9])(' + aliasList.map(escapeRe).join('|') + ')([a-z]*)(?=[^a-z0-9]|$)', 'gi');
@@ -1815,9 +2562,14 @@ function main() {
   }
   var links = [];
   for (var pk of Object.keys(pairCount)) {
-    if (pairCount[pk] >= 2) {
-      var sp = pk.split('\u0000');
-      links.push({ a: sp[0], b: sp[1], w: pairCount[pk] });
+    var pairW = pairCount[pk];
+    var sp = pk.split('\u0000');
+    // Sub-topic-involving pairs need only one co-occurrence — hubs like "Gandhism"
+    // (116 mentions, 1 shared item) must still light up. Seed↔seed pairs stay at
+    // the stricter >= 2 so curated spines don't drown in weak new pairs.
+    var isSubPair = sp[0].indexOf('seed|') === -1 || sp[1].indexOf('seed|') === -1;
+    if (isSubPair ? pairW >= 1 : pairW >= 2) {
+      links.push({ a: sp[0], b: sp[1], w: pairW });
     }
   }
   links.sort(function (x, y) { return y.w - x.w; });
@@ -2430,6 +3182,12 @@ function main() {
   });
   links.sort(function (x, y) { return y.w - x.w; });
 
+  // Hard gate: no node on the map may ship without a description (dated or undated).
+  var nodesNoDescPre = nodes.filter(function (n) { return !n.desc; });
+  if (nodesNoDescPre.length) {
+    throw new Error('Every node must have a description, but ' + nodesNoDescPre.length + ' have none: ' + nodesNoDescPre.slice(0, 10).map(function (n) { return n.name; }).join(', ') + (nodesNoDescPre.length > 10 ? '\u2026' : ''));
+  }
+
   // Cloudflare Pages hard-caps individual files at 25 MiB. With ~28 MiB of nodes the
   // single-file timeline.json tripped that cap and silently killed deploys (wiki run
   // #433 committed data that never reached the live site). Shard the node array into
@@ -2457,7 +3215,8 @@ function main() {
     fs.writeFileSync(partFile, JSON.stringify(nodeParts[pi]));
     partSizes.push(fs.statSync(partFile).size);
   }
-  var out = { builtAt: new Date().toISOString(), eras: ERAS, nodesParts: nodeParts.length, links: links };
+  var edges = extractRelations(all, nodes, topicMap);
+  var out = { builtAt: new Date().toISOString(), eras: ERAS, nodesParts: nodeParts.length, links: links, edges: edges };
   fs.writeFileSync(OUT, JSON.stringify(out));
   var withSpan = nodes.filter(function (n) { return n.span; }).length;
   console.log('Wrote ' + OUT);
@@ -2468,8 +3227,29 @@ function main() {
   for (var gk of Object.keys(SEED)) { totalSeeds += SEED[gk].list.length; seedTypeCounts[SEED[gk].type] = (seedTypeCounts[SEED[gk].type] || 0) + SEED[gk].list.length; }
   console.log('seed entities: ' + totalSeeds + ' across ' + JSON.stringify(seedTypeCounts));
   console.log('links: ' + links.length + ' (manual added: ' + addedManual + ', dropped unresolved: ' + droppedManual + ', top: ' + links.slice(0, 5).map(function (l) { return l.a.replace('seed|', '') + '↔' + l.b.replace('seed|', '') + ':' + l.w; }).join(', ') + ')');
+  console.log('relations edges: ' + edges.length + ' (sample: ' + edges.slice(0, 5).map(function (e) { return e.a.replace('seed|', '').split('|').pop() + ' -' + e.rel + '-> ' + e.b.replace('seed|', '').split('|').pop(); }).join(', ') + ')');
   var autoPersons = nodes.filter(function (n) { return n.type === 'person' && !n.seed; }).length;
   console.log('auto-filed persons (via descriptors, not in curated spine): ' + autoPersons);
+
+  // Guarantee nothing on the map is left without a description: every non-person
+  // seed entity needs a curated TOPIC_DESCS line, and every emitted node (seed or
+  // auto topic) must end up with some desc.
+  var missingDescs = [];
+  for (var gk2 of Object.keys(SEED)) {
+    for (var en2 of SEED[gk2].list) {
+      if (SEED[gk2].type !== 'person' && TOPIC_DESCS[en2] === undefined) missingDescs.push(en2);
+    }
+  }
+  if (missingDescs.length) {
+    throw new Error('TOPIC_DESCS missing for ' + missingDescs.length + ' seed entities: ' + missingDescs.slice(0, 10).join(', ') + (missingDescs.length > 10 ? '\u2026' : ''));
+  }
+  var nodesNoDesc = nodes.filter(function (n) { return !n.desc; });
+  var seedNoDesc = nodesNoDesc.filter(function (n) { return n.seed; });
+  console.log('desc coverage: ' + (nodes.length - nodesNoDesc.length) + '/' + nodes.length + ' nodes (' + ((nodes.length - nodesNoDesc.length) / nodes.length * 100).toFixed(1) + '%)' + (seedNoDesc.length ? ' — seed nodes still missing: ' + seedNoDesc.map(function (n) { return n.name; }).join(', ') : ''));
 }
 
-main();
+if (require.main === module) main();
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { extractRelations: extractRelations, canon: canon };
+}
