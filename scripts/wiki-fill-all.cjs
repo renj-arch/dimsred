@@ -894,7 +894,8 @@ const CATEGORIES = [
     'United Nations','European Union','African Union','ASEAN','SAARC',
     'NATO','OECD','OPEC','World Trade Organization','G20','BRICS','G7',
     'World Bank','International Monetary Fund','Asian Development Bank',
-    'New Development Bank','Asian Infrastructure Investment Bank'
+    'New Development Bank','Asian Infrastructure Investment Bank',
+    'Location theory','Hotelling\'s law','August Lösch','Alfred Weber'
   ]},
   // ───────── Indian Polity & Governance ─────────
   { name:'Polity & Governance', wikiCat:'Government_of_India', topics:[
