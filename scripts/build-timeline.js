@@ -1600,9 +1600,13 @@ function personDescFor(name, qs) {
   return null;
 }
 
-function loadAll() {
-  var cats = {};
-  var all = [];
+// Previously loadAll() parsed EVERY file into one resident object, holding the whole
+// ~5.5 GB corpus (and every 5-level deep question object) in memory for the duration
+// of the build — which blew past the CI heap in run #498. The build only ever needs
+// ONE file's questions at a time; every pass is a per-question fold, so we stream the
+// corpus: cb(key, label, questions) is invoked per file and the file is released when
+// cb returns. Peak memory is now one file (~10s of MB) plus the small fold aggregates.
+function eachQuestionFile(cb) {
   for (var f of fs.readdirSync(DATA)) {
     if (!f.endsWith('.json') || f === 'manifest.json') continue;
     var key = f.replace('.json', '');
@@ -1618,10 +1622,16 @@ function loadAll() {
         }
       }
     }
-    cats[key] = { key: key, label: label, questions: questions };
-    all = all.concat(questions.map(function (q) { return { cat: key, q: q }; }));
+    cb(key, label, questions);
   }
-  return { cats: cats, all: all };
+}
+
+// Visitor over every question in the corpus as { cat, q } (same contract the old
+// `all.all` array provided), in exactly the same file/question order.
+function eachQuestion(cb) {
+  eachQuestionFile(function (key, label, questions) {
+    for (var q of questions) cb({ cat: key, q: q });
+  });
 }
 
 function archiveYears(qs) {
@@ -1928,7 +1938,11 @@ var GENERIC_TOPICS = ['general', 'background', 'introduction', 'overview', 'misc
 var SUB_LINK_MIN_COUNT = 25;
 var SUB_LINK_MAX_NAMES = 8000;
 
-function extractRelations(all, nodes, topicMap) {
+// scanSource: either the legacy { all: [{cat,q}, ...] } array-wrapped object (kept for
+// external callers of the exported function) or a function(cb) streaming each {cat,q}.
+// The question scan is a pure fold over edges{}, so streaming a file at a time produces
+// byte-identical output while never holding the whole corpus in memory.
+function extractRelations(scanSource, nodes, topicMap) {
   // --- Build the name resolver with RAW name strings and a canonical lookup. ---
   // Keep the LONGEST raw form per canonical key so "J. R. D. Tata" wins over "Tata".
   var canonIndex = {};   // canonical -> id
@@ -2092,14 +2106,14 @@ function extractRelations(all, nodes, topicMap) {
   var ofByRe = /\b((?:elder\s+|younger\s+|paternal\s+|maternal\s+)*(?:great(?:[- ]+great){0,2}[- ]+)?(?:father|mother|son|daughter|brother|sister|grandfather|grandmother|grandson|granddaughter|uncle|aunt|nephew|niece|cousin|sibling|child|children|parent|parents|spouse|wife|husband|consort|descendant|descends|descended|heir|heiress|founder|establisher|successor|predecessor|offspring|progeny|ancestor|forefather|friend|colleague|coworker|workmate|boyfriend|girlfriend|partner|fiance|fiancee|rival|opponent|enemy|archenemy|relative|kinsman|ward|guardian|protege|apprentice|widow|widower|bride|groom|stepfather|stepmother|stepson|stepdaughter|stepbrother|stepsister|stepparent|stepchild|stepchildren|stepsibling|step-father|step-mother|step-son|step-daughter|step-brother|step-sister|step-parent|step-child|step-children|step-sibling|half-brother|half-sister|halfbrother|halfsister|ex-wife|ex-husband)(?:s|es)?(?:[\s-]+in[\s-]+law)?|succeeded\s+by|succeeded|founded\s+by|established\s+by|preceded\s+by|preceded|mentored\s+by|mentored|taught\s+by|studied\s+under|pupil\s+of|student\s+of|disciple\s+of|guru\s+of|mentor\s+of|teacher\s+of|tutor\s+of|coach\s+of|born\s+to|gave\s+birth\s+to|gave\s+birth|adopted\s+by|raised\s+by|brought\s+up\s+by|brought\s+up|foster\s+father|foster\s+mother|foster\s+son|foster\s+daughter|foster\s+parent|foster\s+child)\b/g;
   var verbRe = /\b(succeeded|succeeds|founded|co-founded|cofounded|established|preceded|mentored|married|wed|remarried|divorced|sired|created|built|fathered|mothered|birthed|raised)\b/g;
 
-  for (var it of all.all) {
+  function handleQuestion(it) {
     var q = it.q;
     var owner = topicMap ? (topicMap[canonName(q.subSubject || q._topic || '')] || null) : null;
     var txt = [q.fact, q.question, q.answer, q.hint].filter(Boolean).join('. ') + ' ';
     txt = txt.replace(/_+ +/g, ' ').replace(/_{2,}/g, ' ');
-    if (!txt) continue;
+    if (!txt) return;
     var ms = mentions(txt);
-    if (!ms.length) continue;
+    if (!ms.length) return;
 
     // Pattern 1: "... <rel> of/by <target>" (subject = nearest preceding mention,
     // or the owning topic when the sentence leaves it implicit, e.g. "She ...").
@@ -2195,6 +2209,8 @@ function extractRelations(all, nodes, topicMap) {
       else if (verb === 'raised') { if (wasPassive && hasBy) ensureEdge(a2, b2, 'child'); }
     }
   }
+  if (typeof scanSource === 'function') scanSource(handleQuestion);
+  else if (scanSource && scanSource.all) { for (var itl of scanSource.all) handleQuestion(itl); }
   return Object.keys(edges).map(function (k) { return edges[k]; });
 }
 
@@ -2317,22 +2333,53 @@ function cleanTex(s) {
 }
 
 function main() {
-  var all = loadAll();
   var nodes = [];
   var seen = {};
+  var catLabels = {};
 
-  // Sub-topic nodes
-  for (var key of Object.keys(all.cats)) {
-    var c = all.cats[key];
+  // Seed scan accumulators — pure per-question folds, so no question text is retained
+  // once a file is released. Order of contributions per seed matches the old all.all
+  // scan exactly (same file order, same within-file question order).
+  var seedScan = [];
+  for (var grp of Object.keys(SEED)) {
+    var g = SEED[grp];
+    for (var ename of g.list) {
+      seedScan.push({
+        ename: ename,
+        gtype: g.type,
+        glevel: g.level,
+        isPerson: g.type === 'person',
+        aliases: aliasesFor(ename, g.type === 'person').concat(EXTRA_ALIASES[ename] || []),
+        negatives: (NEGATIVE_ALIASES[ename] || []).map(function (x) { return x.toLowerCase(); }),
+        canonical: ename.replace(/^(Dr\.?|Sir|Saint|Mahatma|Sardar|Bapu)\s+/i, '').replace(/[^a-z0-9]+/gi, ' ').replace(/\s+/g, ' ').trim().toLowerCase(),
+        alRe: null,
+        hitCount: 0,
+        catMap: {},
+        ys: [],
+        trusted: {},
+        bioSpans: [],
+        ownTopics: {},
+        pyMin: null,
+        pyMax: null
+      });
+    }
+  }
+
+  // Single streaming sweep: build sub-topic nodes and fold the seed-entity scan one
+  // file at a time. Each file's parsed questions are released when the callback returns.
+  eachQuestionFile(function (key, label, questions) {
+    catLabels[key] = label;
+
+    // Sub-topic nodes
     var byTopic = {};
-    for (var q of c.questions) {
+    for (var q of questions) {
       var t = q.subSubject || q._topic || 'General';
       (byTopic[t] = byTopic[t] || []).push(q);
     }
     for (var tname of Object.keys(byTopic)) {
       var id = key + '|' + tname;
       if (seen[id]) {
-        seen[id].cats.push({ key: key, label: c.label, count: byTopic[tname].length });
+        seen[id].cats.push({ key: key, label: label, count: byTopic[tname].length });
         seen[id].count += byTopic[tname].length;
         continue;
       }
@@ -2379,96 +2426,110 @@ function main() {
         era: timebase === 'era' ? eraId : eraOf(span && span.min),
         timebase: timebase,
         level: isAutoPerson ? 2 : 4,
-        cats: [{ key: key, label: c.label, count: qs.length }],
+        cats: [{ key: key, label: label, count: qs.length }],
         count: qs.length,
         desc: nodeDesc || (!isAutoPerson ? autoDescFor(tname, qs) : null)
       };
       seen[id] = node;
       nodes.push(node);
     }
-  }
 
-  // Seed entity nodes: match aliases across all questions
-  var seedNodes = [];
-  for (var grp of Object.keys(SEED)) {
-    var g = SEED[grp];
-    for (var ename of g.list) {
-      var isPerson = g.type === 'person';
-      var aliases = aliasesFor(ename, isPerson).concat(EXTRA_ALIASES[ename] || []);
-      var alRe = buildAliasRe(aliases);
-      var negatives = (NEGATIVE_ALIASES[ename] || []).map(function (x) { return x.toLowerCase(); });
-      var hitQs = [];
-      var catMap = {};
-      for (var it of all.all) {
-        var txt = [it.q.question, it.q.answer, it.q.fact, it.q.hint].filter(Boolean).join(' ').toLowerCase();
-        var negHit = negatives.length && negatives.some(function (x) { return txt.indexOf(x) !== -1; });
-        if (!negHit && aliasHit(alRe, txt)) {
-          hitQs.push(it);
-          catMap[it.cat] = catMap[it.cat] || 0;
-          catMap[it.cat]++;
-        }
-      }
-      var ys = [];
-      var trusted = {};
-      var bioSpans = [];
-      var ownTopics = {}; // sub-topic name -> {n, firstBioSpan}
-      var canonical = ename.replace(/^(Dr\.?|Sir|Saint|Mahatma|Sardar|Bapu)\s+/i, '').replace(/[^a-z0-9]+/gi, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
-      for (var hq of hitQs) {
-        var allText = [hq.q.question, hq.q.answer, hq.q.fact, hq.q.hint].filter(Boolean).join(' ');
+    // Seed-entity scan: fold alias hits, year signals, bio spans, own-topic mentions
+    // and archive pubDates per question. All per-question work; nothing retained.
+    for (var q2 of questions) {
+      var txt = [q2.question, q2.answer, q2.fact, q2.hint].filter(Boolean).join(' ').toLowerCase();
+      for (var sd of seedScan) {
+        var negHit = sd.negatives.length && sd.negatives.some(function (x) { return txt.indexOf(x) !== -1; });
+        if (negHit) continue;
+        if (!sd.alRe) sd.alRe = buildAliasRe(sd.aliases);
+        if (!aliasHit(sd.alRe, txt)) continue;
+        sd.hitCount++;
+        sd.catMap[key] = (sd.catMap[key] || 0) + 1;
+        var allText = [q2.question, q2.answer, q2.fact, q2.hint].filter(Boolean).join(' ');
         var fy = yearSignals(allText);
         if (fy) {
-          ys.push(fy.min); ys.push(fy.max);
-          for (var tk of Object.keys(fy.trusted)) trusted[tk] = true;
+          sd.ys.push(fy.min); sd.ys.push(fy.max);
+          for (var tk of Object.keys(fy.trusted)) sd.trusted[tk] = true;
         }
         var bs = bioSpan(allText);
-        if (bs) bioSpans.push(bs);
-        if (isPerson) {
-          var tname = hq.q.subSubject || hq.q._topic || '';
-          var tnorm = tname.replace(/[^a-z0-9]+/gi, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+        if (bs) sd.bioSpans.push(bs);
+        if (sd.isPerson) {
+          var tname2 = q2.subSubject || q2._topic || '';
+          var tnorm = tname2.replace(/[^a-z0-9]+/gi, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
           var tnormStrip = tnorm.replace(/^(dr|sir|saint|mahatma|sardar|bapu)\s+/, '');
-          if (tnorm === canonical || tnormStrip === canonical || tnorm === ename.toLowerCase()) {
-            if (!ownTopics[tname]) ownTopics[tname] = { n: 0, first: null };
-            ownTopics[tname].n++;
-            if (ownTopics[tname].first === null && bs) ownTopics[tname].first = bs;
+          if (tnorm === sd.canonical || tnormStrip === sd.canonical || tnorm === sd.ename.toLowerCase()) {
+            if (!sd.ownTopics[tname2]) sd.ownTopics[tname2] = { n: 0, first: null };
+            sd.ownTopics[tname2].n++;
+            if (sd.ownTopics[tname2].first === null && bs) sd.ownTopics[tname2].first = bs;
           }
         }
-      }
-      var span = null;
-      if (MANUAL_SPANS[ename]) {
-        span = { min: MANUAL_SPANS[ename][0], max: MANUAL_SPANS[ename][1] };
-      } else if (isPerson) {
-        // Prefer the largest own-topic's first (birth–death) span.
-        var bestTopic = null;
-        for (var tn of Object.keys(ownTopics)) {
-          if (!bestTopic || ownTopics[tn].n > bestTopic.n) bestTopic = ownTopics[tn];
+        var pd = q2.pubDate ? new Date(q2.pubDate).getUTCFullYear() : null;
+        if (pd && pd >= 1000 && pd <= 2026) {
+          if (sd.pyMin === null || pd < sd.pyMin) sd.pyMin = pd;
+          if (sd.pyMax === null || pd > sd.pyMax) sd.pyMax = pd;
         }
-        span = bestTopic && bestTopic.first ? bestTopic.first : modeSpan(bioSpans);
       }
-      if (!span && ys.length) {
-        var fl = ys.filter(function (y) { return trusted[y] || y < 0 || y >= 1800; });
-        if (fl.length) span = robustSpan(fl, null, trusted);
-      }
-      if (!span) {
-        var ap = archiveYears(hitQs);
-        if (ap) span = { min: ap.min, max: ap.max, archive: true };
-      }
-      var node = {
-        id: 'seed|' + ename,
-        name: ename,
-        type: g.type,
-        level: g.level,
-        span: span,
-        era: eraOf(span && span.min),
-        cats: Object.keys(catMap).map(function (k) { return { key: k, label: all.cats[k] ? all.cats[k].label : k, count: catMap[k] }; }),
-        count: hitQs.length,
-        seed: true,
-        aliases: aliases,
-        desc: TOPIC_DESCS[ename] || (isPerson ? (personDescFor(ename, hitQs) || seedFallback(ename, SEED_TYPE_LABEL.person)) : (autoDescFor(ename, hitQs) || seedFallback(ename, SEED_TYPE_LABEL[g.type] || SEED_TYPE_LABEL.concept)))
-      };
-      if (span && span.archive) node.timebase = 'archive';
-      nodes.push(node);
-      seedNodes.push(node);
     }
+  });
+
+  // Seed entity nodes: build each one from its accumulated folds. Descriptions come
+  // from the curated desc maps; only an entity missing from both maps falls back to a
+  // targeted re-scan of its own matches (empty for the current, fully covered corpus —
+  // the desc-coverage gate below enforces it).
+  var seedNodes = [];
+  for (var si = 0; si < seedScan.length; si++) {
+    var sd = seedScan[si];
+    var ename = sd.ename;
+    var isPerson = sd.isPerson;
+    var desc = null;
+    if (TOPIC_DESCS[ename]) {
+      desc = TOPIC_DESCS[ename];
+    } else if (isPerson && PERSON_DESCS[ename]) {
+      desc = PERSON_DESCS[ename];
+    } else {
+      var hitQs = [];
+      var alRe = buildAliasRe(sd.aliases);
+      eachQuestion(function (it) {
+        var txt = [it.q.question, it.q.answer, it.q.fact, it.q.hint].filter(Boolean).join(' ').toLowerCase();
+        var negHit = sd.negatives.length && sd.negatives.some(function (x) { return txt.indexOf(x) !== -1; });
+        if (!negHit && aliasHit(alRe, txt)) hitQs.push(it);
+      });
+      desc = isPerson ? (personDescFor(ename, hitQs) || seedFallback(ename, SEED_TYPE_LABEL.person)) : (autoDescFor(ename, hitQs) || seedFallback(ename, SEED_TYPE_LABEL[sd.gtype] || SEED_TYPE_LABEL.concept));
+    }
+    var span = null;
+    if (MANUAL_SPANS[ename]) {
+      span = { min: MANUAL_SPANS[ename][0], max: MANUAL_SPANS[ename][1] };
+    } else if (isPerson) {
+      // Prefer the largest own-topic's first (birth–death) span.
+      var bestTopic = null;
+      for (var tn of Object.keys(sd.ownTopics)) {
+        if (!bestTopic || sd.ownTopics[tn].n > bestTopic.n) bestTopic = sd.ownTopics[tn];
+      }
+      span = bestTopic && bestTopic.first ? bestTopic.first : modeSpan(sd.bioSpans);
+    }
+    if (!span && sd.ys.length) {
+      var fl = sd.ys.filter(function (y) { return sd.trusted[y] || y < 0 || y >= 1800; });
+      if (fl.length) span = robustSpan(fl, null, sd.trusted);
+    }
+    if (!span && sd.pyMin !== null) {
+      span = { min: sd.pyMin, max: sd.pyMax, archive: true };
+    }
+    var node = {
+      id: 'seed|' + ename,
+      name: ename,
+      type: sd.gtype,
+      level: sd.glevel,
+      span: span,
+      era: eraOf(span && span.min),
+      cats: Object.keys(sd.catMap).map(function (k) { return { key: k, label: catLabels[k] || k, count: sd.catMap[k] }; }),
+      count: sd.hitCount,
+      seed: true,
+      aliases: sd.aliases,
+      desc: desc
+    };
+    if (span && span.archive) node.timebase = 'archive';
+    nodes.push(node);
+    seedNodes.push(node);
   }
 
   // Absorb sub-topic nodes whose name matches a seed, so the map never shows
@@ -2534,7 +2595,7 @@ function main() {
   var aliasList = Object.keys(aliasMap).sort(function (x, y) { return y.length - x.length; });
   var linkRe = new RegExp('(^|[^a-z0-9])(' + aliasList.map(escapeRe).join('|') + ')([a-z]*)(?=[^a-z0-9]|$)', 'gi');
   var pairCount = {};
-  for (var it2 of all.all) {
+  eachQuestion(function (it2) {
     var lt = [it2.q.question, it2.q.answer, it2.q.fact, it2.q.hint].filter(Boolean).join(' ').toLowerCase();
     var found = {};
     var m;
@@ -2559,7 +2620,7 @@ function main() {
         }
       }
     }
-  }
+  });
   var links = [];
   for (var pk of Object.keys(pairCount)) {
     var pairW = pairCount[pk];
@@ -3215,7 +3276,7 @@ function main() {
     fs.writeFileSync(partFile, JSON.stringify(nodeParts[pi]));
     partSizes.push(fs.statSync(partFile).size);
   }
-  var edges = extractRelations(all, nodes, topicMap);
+  var edges = extractRelations(eachQuestion, nodes, topicMap);
   var out = { builtAt: new Date().toISOString(), eras: ERAS, nodesParts: nodeParts.length, links: links, edges: edges };
   fs.writeFileSync(OUT, JSON.stringify(out));
   var withSpan = nodes.filter(function (n) { return n.span; }).length;

@@ -7,7 +7,7 @@ const QUIZ_PATH = process.env.QUIZ_PATH || 'data/quiz.json';
 const LINK_POOL_PATH = process.env.WIKI_LINK_POOL_PATH || path.join(path.dirname(QUIZ_PATH), 'wiki-link-pool.json');
 // Cache of Category:XXX member lists discovered by past chunk jobs. All 27 chunk
 // jobs run in parallel and previously each independently re-fetched the members
-// of all 115 categories over the network, which both wasted the API budget and
+// of all 126 categories over the network, which both wasted the API budget and
 // burned the per-run discovery deadline sequentially. Persisting the member list
 // per category lets the first job that discovers a category seed this cache and
 // every other job read it instantly instead of re-fetching.
@@ -2784,7 +2784,7 @@ const DAY_GROUPS = [
   [94,95,96,97,98,99,100,101,102], // Group 15: Commissions Committees & Bodies, Malayalam Literature, Tamil Literature, Sanskrit & Classical Languages, Kannada Literature, Telugu Literature, Bengali Literature, Marathi & Hindi Literature, Punjabi & Other Regional Literature
   [103,104,105], // Group 16: International Organizations & Summits, India & International Relations, World Geography & Countries
   [106,107,108,109,110,111,112,113,114], // Group 17: Indian Religions, Hinduism & Mythology, Buddhism & Jainism, Sikhism & Other Faiths, Classical & Dravidian Languages, Indian Languages - National & Regional, Health & Human Body, Health & Nutrition, Sports & Physical Education
-  [115,116,117,118,119,120,121], // Group 18: Indian Monsoon & Climate, Seasons & Weather of India, Biological Classification & Taxonomy, Cell Biology & Genetics, Plant Biology (Botany), Animal Biology (Zoology), Microbiology & Human Diseases
+  [115,116,117,118,119,120,121,122,123,124,125], // Group 18: Indian Monsoon & Climate, Seasons & Weather of India, Biological Classification & Taxonomy, Cell Biology & Genetics, Plant Biology (Botany), Animal Biology (Zoology), Microbiology & Human Diseases
 ];
 
 async function main() {
