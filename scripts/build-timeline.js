@@ -2313,6 +2313,19 @@ function autoDescFor(name, qs) {
   return null;
 }
 
+// Mined sub-topics occasionally carry names with no ASCII word chars (e.g. the
+// ccTLD sub-subjects ".мон", ".рф") whose definition/sentence patterns in
+// autoDescFor can never match, leaving the node desc-less and tripping the
+// hard "every node must have a description" gate. Always produce SOMETHING so
+// one odd mined topic cannot silently kill the whole timeline build: prefer the
+// auto-desc, then fall back to a contextual "name — category" line (same shape
+// as seedFallback, used by curated seeds).
+function topicDescFor(name, label, qs) {
+  var d = autoDescFor(name, qs);
+  if (d) return d;
+  return capDesc(String(name || '').trim() + ' \u2014 ' + label);
+}
+
 var SEED_TYPE_LABEL = {
   person: 'person',
   event: 'event \u2014 movement \u2014 development',
@@ -2428,7 +2441,7 @@ function main() {
         level: isAutoPerson ? 2 : 4,
         cats: [{ key: key, label: label, count: qs.length }],
         count: qs.length,
-        desc: nodeDesc || (!isAutoPerson ? autoDescFor(tname, qs) : null)
+        desc: nodeDesc || (!isAutoPerson ? topicDescFor(tname, label, qs) : null)
       };
       seen[id] = node;
       nodes.push(node);
