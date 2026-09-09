@@ -2177,12 +2177,26 @@ function extractRelations(scanSource, nodes, topicMap) {
       var sent = sentenceAt(txt, pStart);
       curSent = txt.slice(sent.start, sent.end).slice(0, 220);
       var subj = prevMention(ms, pStart);
-      var a = (subj && subj.start >= sent.start) ? subj.id : null;
-      if (!a && owner && FAMILY_SINGULAR[phrase]) {
-        var seg = txt.slice(sent.start, pStart);
-        if (/\b(he|she|his|her)\b/i.test(seg)) a = owner;
+      // A kin noun names the relative adjacent to it ("Ashoka's father,
+      // Bindusara" / "Kasturba, the wife of Gandhi"). If the nearest mention is a
+      // co-occurring person a sentence's worth away ("…award received jointly with
+      // Coretta Scott King, widow of Martin Luther King Jr." — subject Gandhi sits
+      // ~56 chars before "widow"), the phrase is about an unlisted person, not them.
+      var subjGap = FAMILY_SINGULAR[phrase] ? 30 : 45;
+      var nearSubj = !!(subj && subj.start >= sent.start);
+      var usedOwner = false;
+      var a = (nearSubj && pStart - subj.end <= subjGap) ? subj.id : null;
+      if (!a) {
+        // A subject IS named in this sentence but sits beyond the kin window — the
+        // kin phrase refers to an unlisted person ("…Met her future husband Feroze
+        // Gandhi"), not to the topic. Reject instead of promoting the owner.
+        if (nearSubj) continue;
+        if (owner && FAMILY_SINGULAR[phrase]) {
+          var seg = txt.slice(sent.start, pStart);
+          if (/\b(he|she|his|her)\b/i.test(seg)) { a = owner; usedOwner = true; }
+        }
+        if (!a) continue;
       }
-      if (!a) continue;
       // Possessive form ("Ashoka's father, Bindusara" / "his son Kunala"): the
       // subject OWNS the relative, so the relation runs target->subject. The
       // same inversion applies when the subject "had a son Y" or "had a wife Y".
@@ -2195,10 +2209,32 @@ function extractRelations(scanSource, nodes, topicMap) {
         var preTxt2 = txt.slice(sent.start, pStart).replace(/\s+/g, ' ').toLowerCase().slice(-30);
         poss = isPossSeg(preTxt2);
       }
+      // Owner-fallback possessive inversion ("…succeeded as diwan of Porbandar by
+      // his brother Tulsidas") should only stand when the pronoun's referent is
+      // really the topic. A capitalized proper-noun in the sentence (Karamchand,
+      // Narayan, Nehru…) is that referent — the 'his/her' is not the topic's.
+      if (usedOwner && poss && FAMILY_SINGULAR[phrase]) {
+        var ante = txt.slice(sent.start, pStart).replace(/^\s*[A-Z][a-z]{2,}\b/, '');
+        if (/[A-Z][a-z]{2,}/.test(ante)) continue;
+      }
       var objs = nextMentions(ms, pEnd, poss ? 1 : 2, txt);
       if (!objs.length) continue;
+      // Kin nouns name the relative immediately ("X's son, Y"; "wife of Z"; "his
+      // brother, John") — never a co-occurring name a sentence or list away
+      // ("Kennedy and his brother, as well as Mahatma Gandhi, Martin Luther King").
+      // Keep the object in the same sentence, inside a tight window, and reject
+      // multi-item list markers in the gap. "founded by/succeeded by/preceded by"
+      // keep the looser 45-char net because organisations may span a clause.
+      var relGapCap = FAMILY_SINGULAR[phrase] ? 32 : 45;
       for (var o of objs) {
-        if (o.start - pEnd > 45) break;
+        if (o.start >= sent.end || o.start - pEnd > relGapCap) break;
+        var gapTxt = txt.slice(pEnd, o.start);
+        if (FAMILY_SINGULAR[phrase] && /(?:as well as|along with|together with|in addition to|including|among|besides)\b/i.test(gapTxt)) break;
+        // Title idioms are not kinship ("…and father of the nation Mahatma Gandhi").
+        if (FAMILY_SINGULAR[phrase] && /^ of (?:the|our) (?:nation|country|republic)\b/i.test(gapTxt)) break;
+        // "Ambedkar persuaded her husband to ask Mahatma Gandhi": an infinitive in
+        // the gap means the next name is the object of that verb, not the relative.
+        if (poss && FAMILY_SINGULAR[phrase] && /\bto\s+[a-z]/i.test(gapTxt)) continue;
         var b = o.id;
         if (!b || b === a) continue;
         if (phrase === 'succeeded by' || phrase === 'succeeded') ensureEdge(a, b, 'succeeded by');
