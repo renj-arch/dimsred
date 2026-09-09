@@ -2203,7 +2203,8 @@ function extractRelations(scanSource, nodes, topicMap) {
         if (!b || b === a) continue;
         if (phrase === 'succeeded by' || phrase === 'succeeded') ensureEdge(a, b, 'succeeded by');
         else if (phrase === 'founded by' || phrase === 'established by') ensureEdge(b, a, 'founded');
-        else if (phrase === 'preceded by' || phrase === 'preceded') ensureEdge(b, a, 'preceded');
+        else if (phrase === 'preceded by') ensureEdge(b, a, 'preceded');
+        else if (phrase === 'preceded') ensureEdge(a, b, 'preceded');
         else if (phrase === 'mentored by' || phrase === 'taught by' || phrase === 'mentor of' || phrase === 'guru of') ensureEdge(b, a, 'mentored by');
         else if (phrase === 'studied under' || phrase === 'pupil of' || phrase === 'student of' || phrase === 'disciple of') ensureEdge(a, b, 'pupil of');
         else if (phrase === 'teacher of' || phrase === 'tutor of' || phrase === 'coach of') ensureEdge(a, b, 'mentored by');
