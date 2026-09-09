@@ -2036,13 +2036,28 @@ function extractRelations(scanSource, nodes, topicMap) {
     }
   }
 
+  // Honorifics that legitimately precede a person's name ("President Lincoln").
+  // A capitalized run like "Agrippa Julius Caesar" is ONE name; its tail must not
+  // be re-resolved to another entity (the seed Julius Caesar).
+  var NAME_TITLES = ['president','king','queen','emperor','empress','archduke','prince','princess','saint','sir','lady','lord','pope','cardinal','bishop','archbishop','shah','tsar','czar','tsarina','czarina','general','colonel','major','captain','lieutenant','marshal','admiral','commander','duke','duchess','count','countess','baron','baroness','maharaja','maharani','raja','rani','sultan','sultana','khan','sheikh','mullah','imam','mother','father','elder','younger','grand','great'];
+
   function mentions(txt) {
     var out = [];
     var m;
+    var skipTo = -1;
     nameRe.lastIndex = 0;
     while ((m = nameRe.exec(txt))) {
+      if (m.index < skipTo) continue;
       var id = canonIndex[canonName(m[2])];
-      if (id) out.push({ id: id, start: m.index, end: nameRe.lastIndex });
+      if (id) {
+        var cont = false;
+        if (/\s/.test(m[2])) {
+          var lw = /([A-Za-z]+)\s*$/.exec(txt.slice(0, m.index));
+          if (lw && /^[A-Z]/.test(lw[1]) && NAME_TITLES.indexOf(lw[1].toLowerCase()) === -1) cont = true;
+        }
+        if (cont) { skipTo = m.end + 1; continue; }
+        out.push({ id: id, start: m.index, end: nameRe.lastIndex });
+      }
     }
     return out;
   }
@@ -2149,6 +2164,85 @@ function extractRelations(scanSource, nodes, topicMap) {
     return /\bhad\s+[a-z]+\s*$/.test(seg);
   }
 
+  var HAS_BOUND = /(?:^|[\s(])(?:and|but|or)\b|(?:\s|^)(?:who|which|that|as well as|along with|in addition to|including|among|besides)\b/i;
+
+  // Genealogical relations are ONLY paired from an explicit kinship construction —
+  // a name merely co-occurring near a kin word is never enough:
+  //   F1 "X's <kin>[, Y]"          → Y is X's <kin>
+  //   F3 "X's <kin> with/by Y, Z"  → Z is X's <kin>; X and Y are partners
+  //   F2 "X[, is/was] <kin> of Y"  → X is Y's <kin> (X the relative)
+  //   F4 "(he|she) is/was <kin> of Y" → the owning topic is Y's <kin>
+  var KIN_RELS = ['father','mother','son','daughter','brother','sister','grandfather','grandmother','grandson','granddaughter','uncle','aunt','nephew','niece','cousin','sibling','child','parent','spouse','wife','husband','step-father','step-mother','step-son','step-daughter','step-brother','step-sister','step-parent','step-child','half-brother','half-sister','father-in-law','mother-in-law','son-in-law','daughter-in-law','brother-in-law','sister-in-law'];
+  var KIN_REL = {};
+  for (var kr of KIN_RELS) KIN_REL[kr] = 1;
+
+  function xGapOk(xg) {
+    var t = xg.trim();
+    if (!t) return true;
+    if (/^,\s*(?:the|a|an)?\s*$/.test(t)) return true;                       // "X, <kin>"
+    if (/^(?:is|was)\s*(?:the|a|an)?\s*$/.test(t)) return true;              // "X is/was <kin> of Y"
+    if (/^being\s*(?:the)?\s*$/.test(t)) return true;
+    if (/^one\s+of\s+the\s+\w+,\s*$/.test(t)) return true;                   // "X was one of the Horae, <kin> of"
+    return false;
+  }
+
+  function strictKin(pStart, pEnd, rel, txt, ms, owner, sent) {
+    var subj = prevMention(ms, pStart);
+    var x = (subj && subj.start >= sent.start) ? subj : null;
+    var xGap = x ? txt.slice(x.end, pStart) : '';
+    // F1/F3 possessive: "X's <kin>" (kinsman is the name right after the kin noun)
+    if (x && /^['\u2019]s(?:\s+[a-z]+){0,2}\s/.test(xGap)) {
+      var y = nextMention(ms, pEnd);
+      if (y && y.start < sent.end) {
+        var yGap = txt.slice(pEnd, y.start);
+        if (/^\s+(?:with|by)\b/i.test(yGap)) {
+          // co-parent: "Cleopatra's son with Julius Caesar, Caesarion" → the next
+          // name is a partner; the son's name follows apposition after him.
+          ensureEdge(x.id, y.id, 'partner of');
+          var z = nextMention(ms, y.end);
+          if (z && z.start < sent.end && z.start - pEnd <= 45) {
+            var zGap = txt.slice(y.end, z.start);
+            if (/^\s*[,;]\s|^\s+and\b/.test(zGap)) {
+              ensureEdge(z.id, x.id, rel);
+              ensureEdge(z.id, y.id, rel);
+            }
+          }
+        } else if (y.start - pEnd <= 26 && !HAS_BOUND.test(yGap)) {
+          ensureEdge(y.id, x.id, rel);
+        }
+      }
+      return;
+    }
+    // " of Y" binding after the kin noun
+    var after = txt.slice(pEnd, Math.min(txt.length, pEnd + 90));
+    var ofm = /^\s*(?:the\s+|a\s+|an\s+|his\s+|her\s+|their\s+|our\s+|my\s+)?of\s+/i.exec(after);
+    if (!ofm) return;
+    var yPos = pEnd + (ofm.index + ofm[0].length);
+    var y = nextMention(ms, yPos);
+    if (!y || y.start >= sent.end) return;
+    var yGap2 = txt.slice(yPos, y.start);
+    if (yGap2.trim().length > 24 || HAS_BOUND.test(yGap2)) return;
+    var subject = null;
+    if (x) {
+      if (!HAS_BOUND.test(xGap) && xGapOk(xGap)) subject = x;
+    } else if (owner && isPersonId(owner)) {
+      // F4 pronoun-copula: "He is the grandson of Mahatma Gandhi". The pronoun must
+      // open its clause; any explicit person in that clause is handled as F2 above.
+      var frag = txt.slice(sent.start, pStart).split(/[,;(]+/).pop().trim();
+      if (/^(?:he|she)\s+(?:is|was)\b/i.test(frag)) subject = { id: owner };
+    }
+    if (!subject) return;
+    ensureEdge(subject.id, y.id, rel);
+    // "grandson of X and Y" — both grandparents. But a second kin noun in the
+    // gap ("niece of X and mother of Y") means Y belongs to a DIFFERENT kin
+    // phrase handled on its own repetition of the loop — reject that here.
+    var y2 = nextMention(ms, y.end);
+    if (y2 && y2.start < sent.end) {
+      var g2 = txt.slice(y.end, y2.start);
+      if (/^\s*,?\s*(?:and|&)\s/.test(g2) && !/^(?:the|a|an|his|her|their|our|my)?\s*\w*(?:father|mother|son|daughter|brother|sister|spouse|wife|husband|grandfather|grandmother|grandson|granddaughter|uncle|aunt|nephew|niece|cousin|sibling|child|children|parent|parents|consort)\b/i.test(g2)) ensureEdge(subject.id, y2.id, rel);
+    }
+  }
+
   var ofByRe = /\b((?:elder\s+|younger\s+|paternal\s+|maternal\s+)*(?:great(?:[- ]+great){0,2}[- ]+)?(?:father|mother|son|daughter|brother|sister|grandfather|grandmother|grandson|granddaughter|uncle|aunt|nephew|niece|cousin|sibling|child|children|parent|parents|spouse|wife|husband|consort|descendant|descends|descended|heir|heiress|founder|establisher|successor|predecessor|offspring|progeny|ancestor|forefather|friend|colleague|coworker|workmate|boyfriend|girlfriend|partner|fiance|fiancee|rival|opponent|enemy|archenemy|relative|kinsman|ward|guardian|protege|apprentice|widow|widower|bride|groom|stepfather|stepmother|stepson|stepdaughter|stepbrother|stepsister|stepparent|stepchild|stepchildren|stepsibling|step-father|step-mother|step-son|step-daughter|step-brother|step-sister|step-parent|step-child|step-children|step-sibling|half-brother|half-sister|halfbrother|halfsister|ex-wife|ex-husband)(?:s|es)?(?:[\s-]+in[\s-]+law)?|succeeded\s+by|succeeded|founded\s+by|established\s+by|preceded\s+by|preceded|mentored\s+by|mentored|taught\s+by|studied\s+under|pupil\s+of|student\s+of|disciple\s+of|guru\s+of|mentor\s+of|teacher\s+of|tutor\s+of|coach\s+of|born\s+to|gave\s+birth\s+to|gave\s+birth|adopted\s+by|raised\s+by|brought\s+up\s+by|brought\s+up|foster\s+father|foster\s+mother|foster\s+son|foster\s+daughter|foster\s+parent|foster\s+child)\b/g;
   var verbRe = /\b(succeeded|succeeds|founded|co-founded|cofounded|established|preceded|mentored|married|wed|remarried|divorced|sired|created|built|fathered|mothered|birthed|raised)\b/g;
 
@@ -2176,6 +2270,8 @@ function extractRelations(scanSource, nodes, topicMap) {
       // ("She was one of the Horae, daughter of Zeus and Themis").
       var sent = sentenceAt(txt, pStart);
       curSent = txt.slice(sent.start, sent.end).slice(0, 220);
+      var famRel = FAMILY_SINGULAR[phrase];
+      if (famRel && KIN_REL[famRel]) { strictKin(pStart, pEnd, famRel, txt, ms, owner, sent); continue; }
       var subj = prevMention(ms, pStart);
       // A kin noun names the relative adjacent to it ("Ashoka's father,
       // Bindusara" / "Kasturba, the wife of Gandhi"). If the nearest mention is a
@@ -2237,7 +2333,8 @@ function extractRelations(scanSource, nodes, topicMap) {
         if (poss && FAMILY_SINGULAR[phrase] && /\bto\s+[a-z]/i.test(gapTxt)) continue;
         var b = o.id;
         if (!b || b === a) continue;
-        if (phrase === 'succeeded by' || phrase === 'succeeded') ensureEdge(a, b, 'succeeded by');
+        if (phrase === 'succeeded by') ensureEdge(a, b, 'succeeded by');
+        else if (phrase === 'succeeded') ensureEdge(b, a, 'succeeded by');
         else if (phrase === 'founded by' || phrase === 'established by') ensureEdge(b, a, 'founded');
         else if (phrase === 'preceded by') ensureEdge(b, a, 'preceded');
         else if (phrase === 'preceded') ensureEdge(a, b, 'preceded');
@@ -2263,7 +2360,15 @@ function extractRelations(scanSource, nodes, topicMap) {
     while ((m2 = verbRe.exec(txt))) {
       var verb = m2[1].toLowerCase();
       var subj = prevMention(ms, m2.index);
-      var a2 = (subj && m2.index - subj.end <= 8) ? subj.id : null;
+      var subjStepped = false;
+      if (subj && /^\s*,/.test(txt.slice(subj.end, m2.index))) {
+        // Nearest mention is the tail of an appositive parenthetical right before
+        // the verb ("Caesarion, her son by Julius Caesar, nominally succeeded
+        // Cleopatra") — the real subject sits before that parenthetical.
+        var earlier = prevMention(ms, subj.end);
+        if (earlier && m2.index - earlier.end <= 26) { subj = earlier; subjStepped = true; }
+      }
+      var a2 = (subj && m2.index - subj.end <= (subjStepped ? 26 : 8)) ? subj.id : null;
       var obj = nextMention(ms, verbRe.lastIndex);
       if (!a2 || !obj || (obj.start - verbRe.lastIndex > 45)) continue;
       var b2 = obj.id;
@@ -2275,7 +2380,7 @@ function extractRelations(scanSource, nodes, topicMap) {
         if (wasPassive && !hasBy) continue;               // "... was founded in 1969." — no actor
         ensureEdge(wasPassive ? b2 : a2, wasPassive ? a2 : b2, 'founded');
       }
-      else if (verb === 'succeeded' || verb === 'succeeds') ensureEdge(a2, b2, 'succeeded by');
+      else if (verb === 'succeeded' || verb === 'succeeds') ensureEdge(wasPassive ? a2 : b2, wasPassive ? b2 : a2, 'succeeded by');
       else if (verb === 'preceded') {
         if (wasPassive && !hasBy) continue;
         ensureEdge(wasPassive ? b2 : a2, wasPassive ? a2 : b2, 'preceded');
