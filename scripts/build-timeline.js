@@ -1969,9 +1969,34 @@ function extractRelations(scanSource, nodes, topicMap) {
   // De-dupe: a node can be both seed and person.
   var seenNode = {};
   relationNodes = relationNodes.filter(function (n) { if (seenNode[n.id]) return false; seenNode[n.id] = true; return true; });
+  // A bare single-word token ("Gandhi", "Nehru") is a surname shared by many
+  // people. Resolving it to ONE node makes the lineage scanner attribute every
+  // "Rajiv Gandhi"/"Motilal Nehru" sentence to Mahatma Gandhi / Jawaharlal Nehru
+  // (they are not in NO_SURNAME_ALIAS) — e.g. "Mahatma Gandhi - wife -> Rajiv
+  // Gandhi". Keep a bare token as a resolver alias only when it is distinctive
+  // to exactly one node; otherwise the ends must be matched by full multi-word
+  // names, which always resolve the right person.
+  var tokenOwner = {};  // canonical token -> node id, or 'shared'
+  function addToken(tok, id) {
+    var t = canonName(tok);
+    if (t.length < 3 || GENERIC_TOPICS.indexOf(t) !== -1 || /^\d{3,4}s?$/.test(t)) return;
+    if (!tokenOwner[t]) tokenOwner[t] = id;
+    else if (tokenOwner[t] !== id) tokenOwner[t] = 'shared';
+  }
+  for (var rnT of relationNodes) {
+    addToken(rnT.name, rnT.id);
+    if (rnT.aliases) for (var alT of rnT.aliases) {
+      if (!/\s/.test(alT)) continue;
+      var cT = canonName(alT);
+      cT.split(' ').forEach(function (tok) { addToken(tok, rnT.id); });
+    }
+  }
   for (var rn of relationNodes) {
     addName(rn.name, rn.id);
-    if (rn.aliases) for (var al of rn.aliases) addName(al, rn.id);
+    if (rn.aliases) for (var al of rn.aliases) {
+      if (!/\s/.test(al) && tokenOwner[canonName(al)] !== rn.id) continue;
+      addName(al, rn.id);
+    }
   }
   var rawList = Object.keys(rawByName).map(function (c) { return rawByName[c]; });
   if (!rawList.length) return [];
@@ -1981,8 +2006,29 @@ function extractRelations(scanSource, nodes, topicMap) {
   var edges = {};
   var srcInfo = process.env.REL_SRC === '1';
   var curSent = '';
+  // Kinship-style relations are only meaningful between two human nodes — a
+  // "wife of Nehru" line inside a Tuberculosis-topic page must never produce
+  // "Tuberculosis - wife -> Jawaharlal Nehru". "founded/succeeded by" stays
+  // flexible because organisations are legal subjects of those relations.
+  var PERSON_KIN = ['father', 'mother', 'son', 'daughter', 'brother', 'sister',
+    'grandfather', 'grandmother', 'grandson', 'granddaughter', 'uncle', 'aunt',
+    'nephew', 'niece', 'cousin', 'sibling', 'child', 'parent', 'spouse', 'wife',
+    'husband', 'partner of', 'ex-wife', 'ex-husband', 'divorced',
+    'step-father', 'step-mother', 'step-son', 'step-daughter', 'step-brother', 'step-sister',
+    'half-brother', 'half-sister',
+    'father-in-law', 'mother-in-law', 'son-in-law', 'daughter-in-law', 'brother-in-law', 'sister-in-law',
+    'great-grandfather', 'great-grandmother', 'great-grandson', 'great-granddaughter',
+    'great-great-grandfather', 'great-great-grandmother', 'great-great-grandson', 'great-great-granddaughter',
+    'great-great-great-grandfather', 'great-great-great-grandson', 'great-nephew', 'great-niece',
+    'great-uncle', 'great-aunt', 'great-great-niece',
+    'descends from', 'relative of', 'heir of', 'ward of', 'guardian of',
+    'pupil of', 'mentored by', 'friend of', 'colleague of', 'rival of'];
+  var NODE_BY_ID = {};
+  for (var nn0 of nodes) NODE_BY_ID[nn0.id] = nn0;
+  function isPersonId(id) { var nd = NODE_BY_ID[id]; return !!(nd && nd.type === 'person'); }
   function ensureEdge(a, b, rel) {
     if (!a || !b || a === b) return;
+    if (PERSON_KIN.indexOf(rel) !== -1 && !(isPersonId(a) && isPersonId(b))) return;
     var k = a + '\u0000' + b + '\u0000' + rel;
     if (!edges[k]) {
       edges[k] = { a: a, b: b, rel: rel };
