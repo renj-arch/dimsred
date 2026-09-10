@@ -3700,8 +3700,8 @@ function main() {
     var r = lineageRole(g.rel);
     if (r === 'parent') return lineageAgeOk(g.a, g.b, 10);
     if (r === 'child') return lineageAgeOk(g.b, g.a, 10);
-    if (r === 'gp') return lineageAgeOk(g.a, g.b, 24);
-    if (r === 'gn') return lineageAgeOk(g.b, g.a, 24);
+    if (r === 'gp') return lineageAgeOk(g.a, g.b, 24, 40);
+    if (r === 'gn') return lineageAgeOk(g.b, g.a, 24, 40);
     return true;
   }
   // Generation distance to rank claims on the same slot: parent/child is the
@@ -3715,10 +3715,16 @@ function main() {
   }
   var lineageNodeById = {};
   for (var lg of nodes) lineageNodeById[lg.id] = lg;
-  function lineageAgeOk(parId, kidId, minGap) {
+  function lineageAgeOk(parId, kidId, minGap, lag) {
     var p = lineageNodeById[parId], k = lineageNodeById[kidId];
     if (!p || !k || !p.span || !k.span) return true;
-    return p.span.min + minGap <= k.span.min && k.span.min <= p.span.max + 1;
+    // elder must be at least minGap older than the kid
+    if (p.span.min + minGap > k.span.min) return false;
+    // parents must outlive the child's birth; grandparents need not (an ancestor
+    // routinely dies before a grandchild/great-grandchild is born), but a kid
+    // born absurdly long after the elder died is not a believable descendant.
+    if (k.span.min > p.span.max + 1 + (lag || 0)) return false;
+    return true;
   }
   function sanitizeLineage(allEdges) {
     var bad = new Map();
@@ -3774,8 +3780,8 @@ function main() {
         var r1 = lineageRole(g1.rel);
         if (r1 === 'parent' && !lineageAgeOk(g1.a, g1.b, 10)) bad.set(g1, 1);
         if (r1 === 'child' && !lineageAgeOk(g1.b, g1.a, 10)) bad.set(g1, 1);
-        if (r1 === 'gp' && !lineageAgeOk(g1.a, g1.b, 24)) bad.set(g1, 1);
-        if (r1 === 'gn' && !lineageAgeOk(g1.b, g1.a, 24)) bad.set(g1, 1);
+        if (r1 === 'gp' && !lineageAgeOk(g1.a, g1.b, 24, 40)) bad.set(g1, 1);
+        if (r1 === 'gn' && !lineageAgeOk(g1.b, g1.a, 24, 40)) bad.set(g1, 1);
         for (var g2 of group) {
           if (g1 === g2) continue;
           var r2 = lineageRole(g2.rel);
