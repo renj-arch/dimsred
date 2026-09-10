@@ -3704,6 +3704,15 @@ function main() {
     if (r === 'gn') return lineageAgeOk(g.b, g.a, 24);
     return true;
   }
+  // Generation distance to rank claims on the same slot: parent/child is the
+  // most direct; grand (gp/gn), great-grand etc. are successively weaker. A
+  // person cannot be BOTH the son and the great-grandson of the same target, so
+  // the more direct claim keeps the slot and the deeper one is discarded.
+  function lineageDepth(rel) {
+    if (LINEAGE_PARENT[rel] || LINEAGE_CHILD[rel] || LINEAGE_SIBLING[rel] || LINEAGE_SPOUSE[rel]) return 1;
+    if (LINEAGE_GP[rel] || LINEAGE_GN[rel] || LINEAGE_UA[rel] || LINEAGE_NI[rel]) return 2;
+    return 99;
+  }
   var lineageNodeById = {};
   for (var lg of nodes) lineageNodeById[lg.id] = lg;
   function lineageAgeOk(parId, kidId, minGap) {
@@ -3742,10 +3751,23 @@ function main() {
         }
         var plausible = [], implausible = [];
         for (var cp of cands) (lineageRolePlausible(cp) ? plausible : implausible).push(cp);
-        if (!plausible.length || !implausible.length) {
-          for (var cb of cands) bad.set(cb, 1);
-        } else {
+        if (implausible.length) {
+          // Any age-impossible claim loses to an age-plausible one.
           for (var ci of implausible) bad.set(ci, 1);
+          if (!plausible.length) continue;
+        }
+        if (plausible.length > 1) {
+          // Contradictory but age-plausible roles on one slot (X is both the son
+          // and the great-grandson of Y): keep the MOST DIRECT claim, drop the
+          // deeper generational ones rather than throwing out the right answer.
+          var best = null, bestDepth = 99;
+          for (var cp of plausible) {
+            var dep = lineageDepth(cp.rel);
+            if (dep < bestDepth) { best = cp; bestDepth = dep; }
+          }
+          for (var cp2 of plausible) if (cp2 !== best) bad.set(cp2, 1);
+        } else if (!plausible.length) {
+          for (var cb of cands) bad.set(cb, 1);
         }
       }
       for (var g1 of group) {
