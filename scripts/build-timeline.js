@@ -110,7 +110,7 @@ function bioSpansFor(qs) {
 }
 
 var ERAS = [
-  { id: 'ancient',       label: 'Ancient India',       min: -3300, max: 1199 },
+  { id: 'ancient',       label: 'Ancient India',       min: -4000, max: 1199 },
   { id: 'medieval',      label: 'Medieval India',      min: 1200,  max: 1799 },
   { id: 'colonial',      label: 'Colonial Era',        min: 1800,  max: 1856 },
   { id: 'freedom',       label: 'Freedom Struggle',    min: 1857,  max: 1947 },
@@ -1357,7 +1357,7 @@ var TOPIC_DESCS = {
   'Great Wall of China': 'ancient defensive wall across northern China',
   // worldAncient
   'Ancient Egypt': 'civilisation of the Nile, land of the Pharaohs',
-  'Sumer': 'first civilisation of Mesopotamia',
+  'Sumer': 'first civilisation of Mesopotamia, absorbed into the Babylonian Empire',
   'Babylon': 'Mesopotamian empire of Hammurabi and the Hanging Gardens',
   'Assyria': 'mighty war-like empire of Mesopotamia',
   'Phoenicia': 'seafaring Levantine people and inventors of the alphabet',
@@ -2026,6 +2026,19 @@ function extractRelations(scanSource, nodes, topicMap) {
   var NODE_BY_ID = {};
   for (var nn0 of nodes) NODE_BY_ID[nn0.id] = nn0;
   function isPersonId(id) { var nd = NODE_BY_ID[id]; return !!(nd && nd.type === 'person'); }
+  // Precision rule: a kinship edge from a LOOSE form is only trusted when its
+  // sentence names at most two distinct people. A third named person makes the
+  // coupling ambiguous ("John's brother, who married Mary"). Anchored forms —
+  // possessive "X's <kin>, Name" and "<kin> of Y" — are exempt: the relative is
+  // bound by adjacency inside strictKin, so an extra name cannot hijack them.
+  function distPersons(ms, sent) {
+    var seen = {};
+    var n = 0;
+    for (var dm of ms) {
+      if (dm.start >= sent.start && dm.start < sent.end && isPersonId(dm.id) && !seen[dm.id]) { seen[dm.id] = 1; n++; }
+    }
+    return n;
+  }
   function ensureEdge(a, b, rel) {
     if (!a || !b || a === b) return;
     if (PERSON_KIN.indexOf(rel) !== -1 && !(isPersonId(a) && isPersonId(b))) return;
@@ -2039,7 +2052,7 @@ function extractRelations(scanSource, nodes, topicMap) {
   // Honorifics that legitimately precede a person's name ("President Lincoln").
   // A capitalized run like "Agrippa Julius Caesar" is ONE name; its tail must not
   // be re-resolved to another entity (the seed Julius Caesar).
-  var NAME_TITLES = ['president','king','queen','emperor','empress','archduke','prince','princess','saint','sir','lady','lord','pope','cardinal','bishop','archbishop','shah','tsar','czar','tsarina','czarina','general','colonel','major','captain','lieutenant','marshal','admiral','commander','duke','duchess','count','countess','baron','baroness','maharaja','maharani','raja','rani','sultan','sultana','khan','sheikh','mullah','imam','mother','father','elder','younger','grand','great'];
+  var NAME_TITLES = ['president','king','queen','emperor','empress','archduke','prince','princess','saint','sir','lady','lord','pope','cardinal','bishop','archbishop','shah','tsar','czar','tsarina','czarina','general','colonel','major','captain','lieutenant','marshal','admiral','commander','duke','duchess','count','countess','baron','baroness','maharaja','maharani','raja','rani','sultan','sultana','khan','sheikh','mullah','imam','mother','father','elder','younger','grand','great','dr','doctor','prof','professor','mrs','ms','mr','miss','rev','hon'];
 
   function mentions(txt) {
     var out = [];
@@ -2089,15 +2102,29 @@ function extractRelations(scanSource, nodes, topicMap) {
     return out;
   }
   // Bounds of the sentence containing position `at` (splits on . ! ? ; — and newline).
+  // Periods that close a known name title ("Dr.", "St.", "Prof.") are NOT sentence
+  // ends: "his new fiancé, Dr. Genevieve Sterling" keeps Genevieve in the sentence.
   function sentenceAt(txt, at) {
     var start = 0, end = txt.length;
     for (var i = at - 1; i >= 0; i--) {
       var ch = txt.charAt(i);
-      if (ch === '.' || ch === '!' || ch === '?' || ch === ';' || ch === '\u2014' || ch === '\n') { start = i + 1; break; }
+      if (ch === '.' || ch === '!' || ch === '?' || ch === ';' || ch === '\u2014' || ch === '\n') {
+        if (ch === '.') {
+          var w0 = /([A-Za-z]+)$/.exec(txt.slice(0, i));
+          if (w0 && NAME_TITLES.indexOf(w0[1].toLowerCase()) !== -1) continue;
+        }
+        start = i + 1; break;
+      }
     }
     for (var j = at; j < txt.length; j++) {
       var ch2 = txt.charAt(j);
-      if (ch2 === '.' || ch2 === '!' || ch2 === '?' || ch2 === ';' || ch2 === '\u2014' || ch2 === '\n') { end = j; break; }
+      if (ch2 === '.' || ch2 === '!' || ch2 === '?' || ch2 === ';' || ch2 === '\u2014' || ch2 === '\n') {
+        if (ch2 === '.') {
+          var w1 = /([A-Za-z]+)$/.exec(txt.slice(0, j));
+          if (w1 && NAME_TITLES.indexOf(w1[1].toLowerCase()) !== -1) continue;
+        }
+        end = j; break;
+      }
     }
     return { start: start, end: end };
   }
@@ -2172,7 +2199,7 @@ function extractRelations(scanSource, nodes, topicMap) {
   //   F3 "X's <kin> with/by Y, Z"  → Z is X's <kin>; X and Y are partners
   //   F2 "X[, is/was] <kin> of Y"  → X is Y's <kin> (X the relative)
   //   F4 "(he|she) is/was <kin> of Y" → the owning topic is Y's <kin>
-  var KIN_RELS = ['father','mother','son','daughter','brother','sister','grandfather','grandmother','grandson','granddaughter','uncle','aunt','nephew','niece','cousin','sibling','child','parent','spouse','wife','husband','step-father','step-mother','step-son','step-daughter','step-brother','step-sister','step-parent','step-child','half-brother','half-sister','father-in-law','mother-in-law','son-in-law','daughter-in-law','brother-in-law','sister-in-law'];
+  var KIN_RELS = ['father','mother','son','daughter','brother','sister','grandfather','grandmother','grandson','granddaughter','uncle','aunt','nephew','niece','cousin','sibling','child','parent','spouse','wife','husband','step-father','step-mother','step-son','step-daughter','step-brother','step-sister','step-parent','step-child','half-brother','half-sister','father-in-law','mother-in-law','son-in-law','daughter-in-law','brother-in-law','sister-in-law','partner of','friend of'];
   var KIN_REL = {};
   for (var kr of KIN_RELS) KIN_REL[kr] = 1;
 
@@ -2180,6 +2207,7 @@ function extractRelations(scanSource, nodes, topicMap) {
     var t = xg.trim();
     if (!t) return true;
     if (/^,\s*(?:the|a|an)?\s*$/.test(t)) return true;                       // "X, <kin>"
+    if (/^,\s*(?:the|a|an)?\s*(?:[a-z]+(?:-[a-z]+)*\s*){0,4}$/.test(t)) return true; // ", the six-year-old " appositive
     if (/^(?:is|was)\s*(?:the|a|an)?\s*$/.test(t)) return true;              // "X is/was <kin> of Y"
     if (/^being\s*(?:the)?\s*$/.test(t)) return true;
     if (/^one\s+of\s+the\s+\w+,\s*$/.test(t)) return true;                   // "X was one of the Horae, <kin> of"
@@ -2187,11 +2215,25 @@ function extractRelations(scanSource, nodes, topicMap) {
   }
 
   function strictKin(pStart, pEnd, rel, txt, ms, owner, sent) {
+    // Anchored kinship constructions ("X's <kin>, Name" / "<kin> of Y") stay
+    // trustworthy even with a third person in the sentence: the relative is
+    // bound by the adjacency checks below, so an extra name (e.g. "... his
+    // wife, Beatrice" after "Eleanor's eldest son, Arthur") cannot hijack the
+    // reading. The ambiguous loose forms keep their 2-person guard in the
+    // family-phrase main loop and the kinship-verb pattern.
     var subj = prevMention(ms, pStart);
     var x = (subj && subj.start >= sent.start) ? subj : null;
     var xGap = x ? txt.slice(x.end, pStart) : '';
-    // F1/F3 possessive: "X's <kin>" (kinsman is the name right after the kin noun)
-    if (x && /^['\u2019]s(?:\s+[a-z]+){0,2}\s/.test(xGap)) {
+    // F1/F3 possessive: "X's <kin>" or a possessive-pronoun gap ("...undermined by
+    // his ambitious wife, Beatrice" / "...Thomas and his uncle Marcus") — the
+    // kinsman is the name right after the kin noun.
+    var possGap = x ? (/^['\u2019]s(?:\s+[a-z]+){0,2}\s/.test(xGap) || /\b(?:his|her|their|its)\b(?:\s+[a-z]+){0,2}\s*$/.test(xGap.replace(/\s+/g, ' ').toLowerCase())) : false;
+if (x && possGap) {
+      // Plural-kin followed by a colon introduces a LIST of names ("...their two
+      // adult sons: Alistair, ... and Tristan") — Pattern 3b extracts each listed
+      // child; the strictKin read here would grab only the first and mislabel the
+      // list-introducing phrase as a second relative of the same kind.
+      if (/(?:sons|daughters|children|grandchildren|twins)$/i.test(txt.slice(Math.max(0, pEnd - 12), pEnd)) && /^\s*:/.test(txt.slice(pEnd, pEnd + 5))) return;
       var y = nextMention(ms, pEnd);
       if (y && y.start < sent.end) {
         var yGap = txt.slice(pEnd, y.start);
@@ -2209,6 +2251,24 @@ function extractRelations(scanSource, nodes, topicMap) {
           }
         } else if (y.start - pEnd <= 26 && !HAS_BOUND.test(yGap)) {
           ensureEdge(y.id, x.id, rel);
+          // Co-parent by "X and Y's": "Diana and Marcus Vance's family ... their
+          // eldest son, Simon" — the "and"-joined prior mention owns the kin too.
+          // (mentions start on the preceding space, so the join reads " and").
+          // (The "of" form "son of X and Y" covers its own case further below.)
+          if (/^(?:son|daughter|child|grandson|granddaughter|grandchild)$/.test(rel)) {
+            var x2 = prevMention(ms, x.start);
+            if (x2 && x2.start >= sent.start && /^\s+and\s*$/.test(txt.slice(x2.end, x.start))) ensureEdge(y.id, x2.id, rel);
+          }
+          // Conjoined relatives: "his twin daughters, Iris and Chloe" — the second
+          // name carries the same relation, but ONLY when the gap is a bare joiner
+          // (a colon list or an embedded kin noun means the next name is a NEW
+          // relative of a different kind; "Diocletian's daughter, Valeria and her
+          // husband" → "her husband" is not another daughter).
+          var y2 = nextMention(ms, y.end);
+          if (y2 && y2.start < sent.end) {
+            var g2 = txt.slice(y.end, y2.start);
+            if (/^\s*,?\s*(?:and|&)\s*$/.test(g2)) ensureEdge(y2.id, x.id, rel);
+          }
         }
       }
       return;
@@ -2217,7 +2277,7 @@ function extractRelations(scanSource, nodes, topicMap) {
     var after = txt.slice(pEnd, Math.min(txt.length, pEnd + 90));
     var ofm = /^\s*(?:the\s+|a\s+|an\s+|his\s+|her\s+|their\s+|our\s+|my\s+)?of\s+/i.exec(after);
     if (!ofm) return;
-    var yPos = pEnd + (ofm.index + ofm[0].length);
+    var yPos = pEnd + (ofm.index + ofm[0].length) - 1;
     var y = nextMention(ms, yPos);
     if (!y || y.start >= sent.end) return;
     var yGap2 = txt.slice(yPos, y.start);
@@ -2239,11 +2299,14 @@ function extractRelations(scanSource, nodes, topicMap) {
     var y2 = nextMention(ms, y.end);
     if (y2 && y2.start < sent.end) {
       var g2 = txt.slice(y.end, y2.start);
-      if (/^\s*,?\s*(?:and|&)\s/.test(g2) && !/^(?:the|a|an|his|her|their|our|my)?\s*\w*(?:father|mother|son|daughter|brother|sister|spouse|wife|husband|grandfather|grandmother|grandson|granddaughter|uncle|aunt|nephew|niece|cousin|sibling|child|children|parent|parents|consort)\b/i.test(g2)) ensureEdge(subject.id, y2.id, rel);
+      // Only a BARE "and" joiner qualifies: a second kin noun in the gap ("niece
+      // of X and mother of Y") means Y belongs to a different kin phrase handled
+      // on its own repetition of the loop.
+      if (/^\s*,?\s*(?:and|&)\s*$/.test(g2)) ensureEdge(subject.id, y2.id, rel);
     }
   }
 
-  var ofByRe = /\b((?:elder\s+|younger\s+|paternal\s+|maternal\s+)*(?:great(?:[- ]+great){0,2}[- ]+)?(?:father|mother|son|daughter|brother|sister|grandfather|grandmother|grandson|granddaughter|uncle|aunt|nephew|niece|cousin|sibling|child|children|parent|parents|spouse|wife|husband|consort|descendant|descends|descended|heir|heiress|founder|establisher|successor|predecessor|offspring|progeny|ancestor|forefather|friend|colleague|coworker|workmate|boyfriend|girlfriend|partner|fiance|fiancee|rival|opponent|enemy|archenemy|relative|kinsman|ward|guardian|protege|apprentice|widow|widower|bride|groom|stepfather|stepmother|stepson|stepdaughter|stepbrother|stepsister|stepparent|stepchild|stepchildren|stepsibling|step-father|step-mother|step-son|step-daughter|step-brother|step-sister|step-parent|step-child|step-children|step-sibling|half-brother|half-sister|halfbrother|halfsister|ex-wife|ex-husband)(?:s|es)?(?:[\s-]+in[\s-]+law)?|succeeded\s+by|succeeded|founded\s+by|established\s+by|preceded\s+by|preceded|mentored\s+by|mentored|taught\s+by|studied\s+under|pupil\s+of|student\s+of|disciple\s+of|guru\s+of|mentor\s+of|teacher\s+of|tutor\s+of|coach\s+of|born\s+to|gave\s+birth\s+to|gave\s+birth|adopted\s+by|raised\s+by|brought\s+up\s+by|brought\s+up|foster\s+father|foster\s+mother|foster\s+son|foster\s+daughter|foster\s+parent|foster\s+child)\b/g;
+  var ofByRe = /\b((?:elder\s+|younger\s+|paternal\s+|maternal\s+)*(?:great(?:[- ]+great){0,2}[- ]+)?(?:father|mother|son|daughter|brother|sister|grandfather|grandmother|grandson|granddaughter|uncle|aunt|nephew|niece|cousin|sibling|child|children|parent|parents|spouse|wife|husband|consort|descendant|descends|descended|heir|heiress|founder|establisher|successor|predecessor|offspring|progeny|ancestor|forefather|friend|colleague|coworker|workmate|boyfriend|girlfriend|partner|fiance|fiancee|fianc\xE9|fianc\xE9e|rival|opponent|enemy|archenemy|relative|kinsman|ward|guardian|protege|apprentice|widow|widower|bride|groom|stepfather|stepmother|stepson|stepdaughter|stepbrother|stepsister|stepparent|stepchild|stepchildren|stepsibling|step-father|step-mother|step-son|step-daughter|step-brother|step-sister|step-parent|step-child|step-children|step-sibling|half-brother|half-sister|halfbrother|halfsister|ex-wife|ex-husband)(?:s|es)?(?:[\s-]+in[\s-]+law)?|succeeded\s+by|succeeded|founded\s+by|established\s+by|preceded\s+by|preceded|mentored\s+by|mentored|taught\s+by|studied\s+under|pupil\s+of|student\s+of|disciple\s+of|guru\s+of|mentor\s+of|teacher\s+of|tutor\s+of|coach\s+of|born\s+to|gave\s+birth\s+to|gave\s+birth|adopted\s+by|raised\s+by|brought\s+up\s+by|brought\s+up|foster\s+father|foster\s+mother|foster\s+son|foster\s+daughter|foster\s+parent|foster\s+child)(?![A-Za-z0-9_])/g;
   var verbRe = /\b(succeeded|succeeds|founded|co-founded|cofounded|established|preceded|mentored|married|wed|remarried|divorced|sired|created|built|fathered|mothered|birthed|raised)\b/g;
 
   function handleQuestion(it) {
@@ -2254,6 +2317,12 @@ function extractRelations(scanSource, nodes, topicMap) {
     if (!txt) return;
     var ms = mentions(txt);
     if (!ms.length) return;
+
+    // True if a PERSON mention (other than skipId) occupies the half-open span.
+    function personBetween(from, to, skipId) {
+      for (var pbm of ms) if (pbm.start > from && pbm.start < to && isPersonId(pbm.id) && pbm.id !== skipId) return true;
+      return false;
+    }
 
     // Pattern 1: "... <rel> of/by <target>" (subject = nearest preceding mention,
     // or the owning topic when the sentence leaves it implicit, e.g. "She ...").
@@ -2313,6 +2382,7 @@ function extractRelations(scanSource, nodes, topicMap) {
         var ante = txt.slice(sent.start, pStart).replace(/^\s*[A-Z][a-z]{2,}\b/, '');
         if (/[A-Z][a-z]{2,}/.test(ante)) continue;
       }
+      if (FAMILY_SINGULAR[phrase] && distPersons(ms, sent) > 2) continue;
       var objs = nextMentions(ms, pEnd, poss ? 1 : 2, txt);
       if (!objs.length) continue;
       // Kin nouns name the relative immediately ("X's son, Y"; "wife of Z"; "his
@@ -2359,6 +2429,7 @@ function extractRelations(scanSource, nodes, topicMap) {
     verbRe.lastIndex = 0;
     while ((m2 = verbRe.exec(txt))) {
       var verb = m2[1].toLowerCase();
+      var isSpouseVerb = verb === 'married' || verb === 'wed' || verb === 'remarried' || verb === 'divorced';
       var subj = prevMention(ms, m2.index);
       var subjStepped = false;
       if (subj && /^\s*,/.test(txt.slice(subj.end, m2.index))) {
@@ -2368,11 +2439,28 @@ function extractRelations(scanSource, nodes, topicMap) {
         var earlier = prevMention(ms, subj.end);
         if (earlier && m2.index - earlier.end <= 26) { subj = earlier; subjStepped = true; }
       }
-      var a2 = (subj && m2.index - subj.end <= (subjStepped ? 26 : 8)) ? subj.id : null;
+      var a2 = null, spvSent = null;
+      if (subj) {
+        if (isSpouseVerb) {
+          // Spouse verbs tolerate a subordinate clause between subject and verb
+          // ("Diana, who had defiantly married an outsider, Marcus Vance"), but only
+          // when no OTHER person sits between subject and verb.
+          spvSent = sentenceAt(txt, m2.index);
+          if (subj.start >= spvSent.start && m2.index - subj.end <= 45 && !personBetween(subj.end, m2.index, subj.id)) a2 = subj.id;
+        } else if (m2.index - subj.end <= (subjStepped ? 26 : 8)) a2 = subj.id;
+      }
       var obj = nextMention(ms, verbRe.lastIndex);
       if (!a2 || !obj || (obj.start - verbRe.lastIndex > 45)) continue;
       var b2 = obj.id;
       if (!b2 || b2 === a2) continue;
+      var kinVerb = isSpouseVerb || verb === 'birthed' || verb === 'sired' || verb === 'fathered' || verb === 'mothered';
+      if (kinVerb) {
+        if (!spvSent) spvSent = sentenceAt(txt, verbRe.lastIndex);
+        if (isSpouseVerb) {
+          // ... nor when a different person claims the object slot.
+          if (obj && personBetween(verbRe.lastIndex, obj.start, a2)) continue;
+        } else if (distPersons(ms, spvSent) > 2) continue;
+      }
       var wasPassive = /\b(was|were|being|been)\b/.test(txt.slice(Math.max(0, m2.index - 10), m2.index).toLowerCase());
       var gap = txt.slice(verbRe.lastIndex, obj.start);
       var hasBy = /\bby\b/.test(gap);
@@ -2395,6 +2483,107 @@ function extractRelations(scanSource, nodes, topicMap) {
       else if (verb === 'sired' || verb === 'fathered') { if (!wasPassive) ensureEdge(a2, b2, 'father'); }
       else if (verb === 'mothered') { if (!wasPassive) ensureEdge(a2, b2, 'mother'); }
       else if (verb === 'raised') { if (wasPassive && hasBy) ensureEdge(a2, b2, 'child'); }
+    }
+
+    // Pattern 3: "X (and Y) raised N children: A, B, C" — every name listed after
+    // "children:" is a child of each named parent in the clause.
+    var m3;
+    var raisedRe = /\b(?:raised|reared|brought up)\b(?:\s+(?:[a-z0-9]+\s+){0,2})(?:child|children|son|sons|daughter|daughters)\s*[:,\u2014]\s*/gi;
+    while ((m3 = raisedRe.exec(txt))) {
+      var s3 = sentenceAt(txt, m3.index);
+      var parents = [];
+      for (var pm3 of ms) if (pm3.start >= s3.start && pm3.start <= m3.index && m3.index - pm3.start <= 60 && isPersonId(pm3.id)) parents.push(pm3.id);
+      if (!parents.length) { continue; }
+      // A children LIST is separated by commas AND semicolons ("Julian, ...; Clara,
+      // ...; and Thomas, ...") — so the walk is NOT cut at ';' like sentenceAt does.
+      // Bound it instead at the next real full-stop or start of a new paragraph.
+      var s3End = txt.length;
+      var s3m = /[.!?]\s+[A-Z]/g.exec(txt.slice(m3.index, m3.index + 400));
+      if (s3m) s3End = m3.index + s3m.index + 1;
+      var kids = [];
+      var cur = raisedRe.lastIndex - 1;
+      var k3 = nextMention(ms, cur);
+      while (k3 && k3.start < s3End) {
+        var kGap = txt.slice(cur, k3.start);
+        if (/\b(?:except|rather than|instead of)\b/i.test(kGap)) break;
+        if (k3.start - cur > 90) break;
+        kids.push(k3.id);
+        cur = k3.end - 1;
+        k3 = nextMention(ms, cur);
+        if (k3 && /\b(?:who|which|whose|that)\b/.test(txt.slice(cur, k3.start))) break;
+      }
+      if (!kids.length) { continue; }
+      for (var kid of kids) for (var pa of parents) ensureEdge(kid, pa, 'child');
+    }
+
+    // Pattern 3b: colon-introduced plural-kin LIST inside an owning clause —
+    // "...his fiercely protective wife, Victoria, and their two adult sons:
+    // Alistair, ... and Tristan" — every listed name is a child of every person
+    // earlier in the sentence. Pattern 3's "raised N children:" also trips this
+    // regex and emits identical ars-child edges, which ensureEdge makes idempotent.
+    var m9;
+    var kinListRe = /\b(?:sons|daughters|children|grandchildren|twins)\s*:\s*/gi;
+    while ((m9 = kinListRe.exec(txt))) {
+      var s9 = sentenceAt(txt, m9.index);
+      var pars = [];
+      for (var p9 of ms) {
+        if (p9.start >= s9.start && p9.start < m9.index && isPersonId(p9.id)) pars.push(p9.id);
+      }
+      if (!pars.length) continue;
+      var kEnd = txt.length;
+      var kM = /[.!?]\s+[A-Z]/g.exec(txt.slice(m9.index, m9.index + 400));
+      if (kM) kEnd = m9.index + kM.index + 1;
+      var kids = [];
+      var curK = kinListRe.lastIndex - 1;
+      var kk = nextMention(ms, curK);
+      while (kk && kk.start < kEnd) {
+        var kkGap = txt.slice(curK, kk.start);
+        if (/\b(?:except|rather than|instead of)\b/i.test(kkGap)) break;
+        if (/\b(?:who|which|whose|that)\b/.test(kkGap)) break;
+        if (kk.start - curK > 110) break;
+        kids.push(kk.id);
+        curK = kk.end - 1;
+        kk = nextMention(ms, curK);
+      }
+      if (!kids.length) continue;
+      for (var kid2 of kids) for (var pa9 of pars) ensureEdge(kid2, pa9, 'child');
+    }
+
+    // Pattern 4: "X's marriage to Y" → spouses.
+    var m5;
+    var marrRe = /\b(?:marriage|wedding|remarriage|engagement)\b\s+(?:to|with)\s+/gi;
+    while ((m5 = marrRe.exec(txt))) {
+      var s5 = sentenceAt(txt, m5.index);
+      var spe = nextMention(ms, marrRe.lastIndex - 1);
+      if (!spe || spe.start >= s5.end || spe.start - (marrRe.lastIndex - 1) > 30) continue;
+      var sp0 = prevMention(ms, m5.index);
+      var g5 = sp0 ? txt.slice(sp0.end, m5.index) : '';
+      if (!(sp0 && sp0.start >= s5.start && m5.index - sp0.end <= 45 && /['\u2019]s(?:\s+[a-z]+){0,2}\s$/i.test(g5))) continue;
+      ensureEdge(sp0.id, spe.id, 'spouse');
+    }
+
+    // Pattern 5: "X adopted a (young) son named Y" → Y is X's child.
+    var m6;
+    var adoptRe = /\badopted\b(?:\s+[a-z]+){0,4}\s+(?:son|sons|daughter|daughters|child|children)\s+(?:named|called)\s+/gi;
+    while ((m6 = adoptRe.exec(txt))) {
+      var s6 = sentenceAt(txt, m6.index);
+      var ch6 = nextMention(ms, adoptRe.lastIndex - 1);
+      if (!ch6 || ch6.start >= s6.end || ch6.start - (adoptRe.lastIndex - 1) > 40) continue;
+      var p6 = prevMention(ms, m6.index);
+      if (!(p6 && p6.start >= s6.start && m6.index - p6.end <= 45)) continue;
+      ensureEdge(ch6.id, p6.id, 'child');
+    }
+
+    // Pattern 6: "the quiet, enduring friendship between Helena and Chloe" → both
+    // names are friends (person-only, enforced by ensureEdge's PERSON_KIN gate).
+    var m8;
+    var friendRe = /\bfriendship\s+between\b/gi;
+    while ((m8 = friendRe.exec(txt))) {
+      var ff = nextMentions(ms, friendRe.lastIndex, 2, txt);
+      if (ff.length === 2) {
+        ensureEdge(ff[0].id, ff[1].id, 'friend of');
+        ensureEdge(ff[1].id, ff[0].id, 'friend of');
+      }
     }
   }
   if (typeof scanSource === 'function') scanSource(handleQuestion);
@@ -3478,6 +3667,111 @@ function main() {
     partSizes.push(fs.statSync(partFile).size);
   }
   var edges = extractRelations(eachQuestion, nodes, topicMap);
+  // ---------------------------------------------------------------------------
+  // General lineage sanitizer (no per-person curation). Applied to every kinship
+  // edge: (a) parent/child & grandparent/grandchild must be age-plausible given
+  // each person's lifespan span; (b) the same directed slot (A -> B) cannot claim
+  // contradictory roles (brother vs mother, parent vs child, ...) — when one role
+  // is age-impossible the age-plausible one wins, otherwise the contested slot is
+  // dropped; (c) reversed edge pairs must be role-consistent, again letting an
+  // age-plausible claim survive an age-impossible one.
+  // ---------------------------------------------------------------------------
+  var LINEAGE_PARENT = { father: 1, mother: 1, parent: 1, 'step-father': 1, 'step-mother': 1, 'step-parent': 1 };
+  var LINEAGE_CHILD = { son: 1, daughter: 1, child: 1, 'step-son': 1, 'step-daughter': 1, 'step-child': 1 };
+  var LINEAGE_SIBLING = { brother: 1, sister: 1, sibling: 1, 'half-brother': 1, 'half-sister': 1, 'step-brother': 1, 'step-sister': 1, 'step-sibling': 1 };
+  var LINEAGE_GP = { grandfather: 1, grandmother: 1, grandparent: 1, 'great-grandfather': 1, 'great-grandmother': 1, 'great-great-grandfather': 1, 'great-great-grandmother': 1, 'great-great-great-grandfather': 1, 'great-great-great-grandmother': 1 };
+  var LINEAGE_GN = { grandson: 1, granddaughter: 1, grandchild: 1, 'great-grandson': 1, 'great-granddaughter': 1, 'great-great-grandson': 1, 'great-great-granddaughter': 1, 'great-great-great-grandson': 1, 'great-great-great-granddaughter': 1 };
+  var LINEAGE_UA = { uncle: 1, aunt: 1, 'great-uncle': 1, 'great-aunt': 1 };
+  var LINEAGE_NI = { nephew: 1, niece: 1, 'great-nephew': 1, 'great-niece': 1 };
+  var LINEAGE_SPOUSE = { husband: 1, wife: 1, spouse: 1, 'partner of': 1, consort: 1, 'ex-wife': 1, 'ex-husband': 1, divorced: 1 };
+  var LINEAGE_ROLE_INV = { parent: 'child', child: 'parent', gp: 'gn', gn: 'gp', ua: 'ni', ni: 'ua', sibling: 'sibling' };
+  function lineageRole(rel) {
+    if (LINEAGE_PARENT[rel]) return 'parent';
+    if (LINEAGE_CHILD[rel]) return 'child';
+    if (LINEAGE_SIBLING[rel]) return 'sibling';
+    if (LINEAGE_GP[rel]) return 'gp';
+    if (LINEAGE_GN[rel]) return 'gn';
+    if (LINEAGE_UA[rel]) return 'ua';
+    if (LINEAGE_NI[rel]) return 'ni';
+    if (LINEAGE_SPOUSE[rel]) return 'spouse';
+    return 'other';
+  }
+  function lineageRolePlausible(g) {
+    var r = lineageRole(g.rel);
+    if (r === 'parent') return lineageAgeOk(g.a, g.b, 10);
+    if (r === 'child') return lineageAgeOk(g.b, g.a, 10);
+    if (r === 'gp') return lineageAgeOk(g.a, g.b, 24);
+    if (r === 'gn') return lineageAgeOk(g.b, g.a, 24);
+    return true;
+  }
+  var lineageNodeById = {};
+  for (var lg of nodes) lineageNodeById[lg.id] = lg;
+  function lineageAgeOk(parId, kidId, minGap) {
+    var p = lineageNodeById[parId], k = lineageNodeById[kidId];
+    if (!p || !k || !p.span || !k.span) return true;
+    return p.span.min + minGap <= k.span.min && k.span.min <= p.span.max + 1;
+  }
+  function sanitizeLineage(allEdges) {
+    var bad = new Map();
+    var byPair = {};
+    var key1, key2;
+    for (var se of allEdges) {
+      if (se.a === se.b) continue;
+      key1 = se.a < se.b ? se.a + '\u0000' + se.b : se.b + '\u0000' + se.a;
+      (byPair[key1] = byPair[key1] || []).push(se);
+    }
+    for (var pk of Object.keys(byPair)) {
+      var group = byPair[pk];
+      // Directed-slot conflict: X cannot be BOTH brother and mother of the same Y
+      // (nor father+son, uncle+nephew, ...). Slot = one direction X -> Y.
+      var slotRoles = {};
+      for (var gg of group) {
+        var dk = gg.a + '\u0000' + gg.b;
+        var rl2 = lineageRole(gg.rel);
+        if (rl2 === 'other') continue;
+        (slotRoles[dk] = slotRoles[dk] || {})[rl2] = (slotRoles[dk][rl2] || 0) + 1;
+      }
+      for (var dk2 of Object.keys(slotRoles)) {
+        var classes = Object.keys(slotRoles[dk2]);
+        var conflict = classes.length > 1 || (classes.length === 1 && slotRoles[dk2][classes[0]] > 1);
+        if (!conflict) continue;
+        var cands = [];
+        for (var cc of group) {
+          if ((cc.a + '\u0000' + cc.b) !== dk2) continue;
+          if (lineageRole(cc.rel) !== 'other') cands.push(cc);
+        }
+        var plausible = [], implausible = [];
+        for (var cp of cands) (lineageRolePlausible(cp) ? plausible : implausible).push(cp);
+        if (!plausible.length || !implausible.length) {
+          for (var cb of cands) bad.set(cb, 1);
+        } else {
+          for (var ci of implausible) bad.set(ci, 1);
+        }
+      }
+      for (var g1 of group) {
+        var r1 = lineageRole(g1.rel);
+        if (r1 === 'parent' && !lineageAgeOk(g1.a, g1.b, 10)) bad.set(g1, 1);
+        if (r1 === 'child' && !lineageAgeOk(g1.b, g1.a, 10)) bad.set(g1, 1);
+        if (r1 === 'gp' && !lineageAgeOk(g1.a, g1.b, 24)) bad.set(g1, 1);
+        if (r1 === 'gn' && !lineageAgeOk(g1.b, g1.a, 24)) bad.set(g1, 1);
+        for (var g2 of group) {
+          if (g1 === g2) continue;
+          var r2 = lineageRole(g2.rel);
+          if (r1 === 'other' || r2 === 'other') continue;
+          if (!(g1.a === g2.b && g1.b === g2.a)) continue;
+          var consistent = (r1 === 'spouse' && r2 === 'spouse') || LINEAGE_ROLE_INV[r1] === r2 || LINEAGE_ROLE_INV[r2] === r1;
+          if (!consistent) {
+            var pl1 = lineageRolePlausible(g1), pl2 = lineageRolePlausible(g2);
+            if (pl1 && !pl2) { bad.set(g2, 1); }
+            else if (!pl1 && pl2) { bad.set(g1, 1); }
+            else { bad.set(g1, 1); bad.set(g2, 1); }
+          }
+        }
+      }
+    }
+    return allEdges.filter(function (e) { return !bad.get(e); });
+  }
+  edges = sanitizeLineage(edges);
   var out = { builtAt: new Date().toISOString(), eras: ERAS, nodesParts: nodeParts.length, links: links, edges: edges };
   fs.writeFileSync(OUT, JSON.stringify(out));
   var withSpan = nodes.filter(function (n) { return n.span; }).length;

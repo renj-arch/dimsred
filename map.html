@@ -95,8 +95,10 @@ h1{font-size:1.45em}
 .story{display:flex;flex-direction:column}
 .story-row{display:flex;gap:10px;align-items:baseline;padding:5px 0;border-bottom:1px dashed rgba(255,255,255,.05);font-size:.78em}
 .story-y{color:var(--purple);font-weight:800;min-width:44px}
-.story-n{color:var(--text-sec);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.story-n{display:flex;flex-direction:column;flex:1;overflow:hidden}
+.story-line{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .story-n b{color:var(--text)}
+.story-desc{color:var(--text-sec);opacity:.75;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lin-row{display:flex;align-items:baseline;gap:6px;padding:4px 6px 4px 0;font-size:.76em;cursor:pointer;border-left:2px solid transparent;margin-left:6px;padding-left:8px}
 .lin-row:hover{border-left-color:var(--purple);background:rgba(255,255,255,.02)}
 .lin-rel{color:var(--amber);font-weight:700;min-width:70px;flex-shrink:0}
@@ -154,7 +156,7 @@ var _linOpen = new Set();
 var _nodeByIdMap = {};
 var _catByKey = {};
 
-var MIN_YEAR = -3300;   // Indus Valley / start of Ancient India
+var MIN_YEAR = -4000;   // Sumer (c. 4000 BC) precedes the Indus Valley / start of Ancient India
 var MAX_YEAR = 2026;
 var WINDOW = { start: MIN_YEAR, end: MAX_YEAR };
 var FULL = { start: MIN_YEAR, end: MAX_YEAR };
@@ -623,13 +625,13 @@ function renderProfileExtras(n) {
     var items = [];
     for (var c of conns) {
       var cn = nodeById(c.id);
-      if (cn && cn.span) items.push({ min: cn.span.min, label: cn.name, w: c.w, color: TYPE_COLOR[cn.type] || '#71717a' });
+      if (cn && cn.span) items.push({ min: cn.span.min, label: cn.name, w: c.w, color: TYPE_COLOR[cn.type] || '#71717a', desc: cn.desc });
     }
     items.sort(function (a, b) { return (a.min - b.min) || (b.w - a.w); });
     var storyShown = items.slice(0, _storyCap);
     story.innerHTML = items.length
       ? storyShown.map(function (it) {
-        return '<div class="story-row"><span class="story-y">' + it.min + '</span><span class="story-n" style="border-left:3px solid ' + it.color + ';padding-left:8px">' + esc(it.label) + '</span></div>';
+        return '<div class="story-row"><span class="story-y">' + it.min + '</span><span class="story-n" style="border-left:3px solid ' + it.color + ';padding-left:8px"><span class="story-line">' + esc(it.label) + '</span>' + (it.desc ? '<span class="story-desc">' + esc(it.desc) + '</span>' : '') + '</span></div>';
       }).join('') + (items.length > _storyCap ? '<div class="loading story-more" onclick="expandStory()">… +' + (items.length - _storyCap) + ' more</div>' : '')
       : '<div class="loading">No story neighbours yet — more links land as the spine grows.</div>';
   }
@@ -639,21 +641,25 @@ function renderProfileExtras(n) {
 function renderLineage(n) {
   var el = document.getElementById('p-line');
   if (!el) return;
-  var kids = (_eadj[n.id] || []).filter(function (e) { return e.target !== n.id; });
+  var FAMILY_RE = /^(father|mother|son|daughter|brother|sister|grandfather|grandmother|grandson|granddaughter|grandparent|grandchild|great-grandfather|great-grandmother|great-grandson|great-granddaughter|great-great-grandfather|great-great-grandmother|great-great-grandson|great-great-granddaughter|great-great-great-grandfather|great-great-great-grandmother|great-uncle|great-aunt|great-nephew|great-niece|uncle|aunt|nephew|niece|cousin|sibling|child|children|parent|parents|spouse|wife|husband|partner of|ex-wife|ex-husband|divorced|step-father|step-mother|step-son|step-daughter|step-brother|step-sister|half-brother|half-sister|father-in-law|mother-in-law|son-in-law|daughter-in-law|brother-in-law|sister-in-law|descends from|relative of|heir of|ward of|guardian of)$/;
+  function linEdges(id) {
+    return (_eadj[id] || []).filter(function (e) { return FAMILY_RE.test(e.rel); });
+  }
+  var kids = linEdges(n.id).filter(function (e) { return e.target !== n.id; });
   if (!kids.length) {
-    el.innerHTML = '<div class="lin-empty">No lineage links yet — these grow as more relation facts are mined.</div>';
+    el.innerHTML = '<div class="lin-empty">No family-lineage links yet - these grow as more relation facts are mined.</div>';
     return;
   }
   function buildRows(id, depth, pathSet) {
     if (depth > 3) return '';
-    var ch = (_eadj[id] || []).filter(function (e) { return e.target !== id && !pathSet.has(e.target); });
+    var ch = linEdges(id).filter(function (e) { return e.target !== id && !pathSet.has(e.target); });
     ch.sort(function (x, y) { return (x.dir === 'out' ? 1 : 0) - (y.dir === 'out' ? 1 : 0) || x.rel.localeCompare(y.rel); });
     var rows = '';
     for (var k of ch) {
       var cn = nodeById(k.target);
       var nm = cn ? cn.name : k.target.replace(/^seed\|/, '');
       var col = cn ? (TYPE_COLOR[cn.type] || '#71717a') : '#71717a';
-      var subKids = (_eadj[k.target] || []).filter(function (e) { return e.target !== k.target && !pathSet.has(e.target); });
+      var subKids = linEdges(k.target).filter(function (e) { return e.target !== k.target && !pathSet.has(e.target); });
       var canExpand = subKids.length > 0 && depth < 3;
       var isExpanded = _linOpen.has(k.target);
       rows += '<div class="lin-row" style="margin-left:' + (depth * 20) + 'px">'
