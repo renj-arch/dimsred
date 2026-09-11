@@ -147,7 +147,15 @@ jobs:
           # its whole window enumerating an ever-deeper frontier.
           WIKI_FILL_DISCOVERY_BUDGET_PCT: 35
           WIKI_FILL_DELAY_MS: 2500
-          WIKI_FILL_TIME_BUDGET_MIN: 330
+          # Self-stop budget: 280 min leaves 80 min of headroom before the
+          # runner's 360-min hard timeout. Run #508 proved 330 was too tight —
+          # the link-following loop only respected the discovery budget, ate the
+          # remaining window, and chunks were killed at the 360-min cap before
+          # upload-artifact ran, losing the merged data. The script now also
+          # enforces TIME_BUDGET inside the link-traversal loops (not just the
+          # discovery budget), so a chunk always exits cleanly (code 0) with time
+          # to upload — never killed mid-run by the runner timeout.
+          WIKI_FILL_TIME_BUDGET_MIN: 280
 
       - uses: actions/upload-artifact@v4
         with:

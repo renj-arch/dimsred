@@ -3254,6 +3254,15 @@ async function main() {
     const MAX_LINK_FETCHES = parseInt(process.env.WIKI_FILL_LINK_BUDGET || '200000', 10);
     let linkFetched = 0;
     while (prevFetched.length > 0 && linkFetched < MAX_LINK_FETCHES) {
+      // The link-following loop must honour the SAME hard wall-clock deadline as
+      // the mining loops (run #508: chunks hit the 360-min runner cap because the
+      // link pass only checked the discovery budget — with generous discovery
+      // budget it ate the whole window and the job was killed before
+      // upload-artifact ran, losing the chunk's data).
+      if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) {
+        log('  (stopping link traversal: time budget reached, ' + Math.round((Date.now() - RUN_START) / 60000) + 'min elapsed)');
+        break;
+      }
       if (DISCOVERY_BUDGET_MS && Date.now() > discoveryDeadline()) {
         log('  (stopping link traversal: discovery budget reached, reserving time for mining, ' + Math.round((Date.now() - RUN_START) / 60000) + 'min elapsed)');
         break;
@@ -3261,6 +3270,10 @@ async function main() {
       depth++;
       const linkCandidates = [];
       for (const article of prevFetched) {
+        if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) {
+          log('  (stopping link traversal: time budget reached mid-article, ' + Math.round((Date.now() - RUN_START) / 60000) + 'min elapsed)');
+          break;
+        }
         if (!article || !article.extract || article.extract.length < 200) continue;
         const titleKey = article.title.toLowerCase();
         if (processedTitles.has(titleKey)) continue;
@@ -3282,6 +3295,12 @@ async function main() {
       const LINK_BATCH = 120;
       prevFetched = [];
       for (let li = 0; li < linkSliceTotal; li += LINK_BATCH) {
+        // Honour the hard wall-clock deadline between link-batch fetches too —
+        // otherwise a large candidate pool can still overshoot the runner cap.
+        if (TIME_BUDGET_MS && Date.now() - RUN_START > TIME_BUDGET_MS) {
+          log('  (stopping link traversal: time budget reached in batch loop, ' + Math.round((Date.now() - RUN_START) / 60000) + 'min elapsed)');
+          break;
+        }
         const linkSlice = linkCandidates.slice(li, li + LINK_BATCH);
         let fetched = [];
         try {
