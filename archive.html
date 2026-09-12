@@ -335,7 +335,6 @@ var _searchTextWords = [];
 var _searchCapHit = false;
 var _searchQueue = [];
 var _searchCur = null;
-var _dateStrCache = {};
 function onSearchInput(val) {
   clearTimeout(_searchTimer);
   _searchTimer = setTimeout(function(){ doSearch(val); }, 250);
@@ -372,7 +371,6 @@ function doSearch(query) {
   _searchTotalFiles = CAT_INDEX.length;
   _searchCapHit = false;
   _searchStartToken = _searchToken;
-  _dateStrCache = {};
   var words = query.split(/\s+/);
   _searchDateFilter = null;
   _searchTextWords = [];
@@ -407,11 +405,6 @@ function _nextQuestion() {
   }
   return null;
 }
-function _fastDateStr(iso) {
-  var m = iso.slice(0, 10).split('-');
-  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  return (+m[2]) + ' ' + months[(+m[1])-1] + ' ' + m[0];
-}
 function _matchesQuery(q) {
   if (_searchDateFilter) {
     var qDate = (q.pubDate||'').split('T')[0];
@@ -421,19 +414,10 @@ function _matchesQuery(q) {
     var qq = (q.question||'').toLowerCase();
     var aa = (q.answer||'').toLowerCase();
     var ff = null;
-    var dd = null;
     for (var twi = 0; twi < _searchTextWords.length; twi++) {
       var w = _searchTextWords[twi];
       if (qq.indexOf(w) !== -1) continue;
       if (aa.indexOf(w) !== -1) continue;
-      if (dd === null) {
-        if (!q.pubDate) { dd = ''; }
-        else {
-          if (!_dateStrCache[q.pubDate]) _dateStrCache[q.pubDate] = _fastDateStr(q.pubDate);
-          dd = _dateStrCache[q.pubDate];
-        }
-      }
-      if (dd.indexOf(w) !== -1) continue;
       if (ff === null) ff = (q.fact||'').toLowerCase();
       if (ff.indexOf(w) === -1) return false;
     }
