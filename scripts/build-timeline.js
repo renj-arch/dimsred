@@ -2192,6 +2192,11 @@ function extractRelations(scanSource, nodes, topicMap) {
   }
 
   var HAS_BOUND = /(?:^|[\s(])(?:and|but|or)\b|(?:\s|^)(?:who|which|that|as well as|along with|in addition to|including|among|besides)\b/i;
+  // Subordinate-clause/prepositional starters that move the RESOLVED name out of
+  // the apposition slot: a name after "when/after/known as/because..." is a
+  // different clause's subject, not the possessor's relative ("...foster sister
+  // WHEN Cleopatra's foster mother..." → Cleopatra is in another clause).
+  var F1_CLAUSE = /\b(?:when|while|because|as|after|before|since|although|though|unless|until|where|whom|whose|if|then|named|called|known|described|portrayed|depicted|married|wed|divorced|renamed|became|become|built|created|founded|established)\b/i;
 
   // Genealogical relations are ONLY paired from an explicit kinship construction —
   // a name merely co-occurring near a kin word is never enough:
@@ -2229,6 +2234,12 @@ function extractRelations(scanSource, nodes, topicMap) {
     // kinsman is the name right after the kin noun.
     var possGap = x ? (/^['\u2019]s(?:\s+[a-z]+){0,2}\s/.test(xGap) || /\b(?:his|her|their|its)\b(?:\s+[a-z]+){0,2}\s*$/.test(xGap.replace(/\s+/g, ' ').toLowerCase())) : false;
 if (x && possGap) {
+      // F1 adjacency: the kin noun must sit directly on the possessor ("X's
+      // eldest son"), with only short adjectives between. A clausal/nameful
+      // stretch in between ("X's daughter Lakshmi married ... son of Y") means
+      // the kin noun belongs to another person's chain and X must not be reused
+      // as its owner.
+      if (xGap.length > 32 || /[A-Z]/.test(xGap) || /\b(?:married|wed|divorced|was|were|is|are|had|born|gave|founded|succeeded|preceded)\b/i.test(xGap)) return;
       // Plural-kin followed by a colon introduces a LIST of names ("...their two
       // adult sons: Alistair, ... and Tristan") — Pattern 3b extracts each listed
       // child; the strictKin read here would grab only the first and mislabel the
@@ -2249,7 +2260,7 @@ if (x && possGap) {
               ensureEdge(z.id, y.id, rel);
             }
           }
-        } else if (y.start - pEnd <= 26 && !HAS_BOUND.test(yGap)) {
+        } else if (y.start - pEnd <= 26 && !HAS_BOUND.test(yGap) && !F1_CLAUSE.test(yGap)) {
           ensureEdge(y.id, x.id, rel);
           // Co-parent by "X and Y's": "Diana and Marcus Vance's family ... their
           // eldest son, Simon" — the "and"-joined prior mention owns the kin too.
@@ -2459,6 +2470,23 @@ if (x && possGap) {
         if (isSpouseVerb) {
           // ... nor when a different person claims the object slot.
           if (obj && personBetween(verbRe.lastIndex, obj.start, a2)) continue;
+          // The spouses must be named ADJACENT to the verb. A possessive-kin
+          // bridge between subject and verb means the resolved subject is the
+          // POSSESSOR, not the spouse ("Rajagopalachari's daughter Lakshmi
+          // married ..." — Rajagopalachari only owns the married daughter; the
+          // spouse Lakshmi is not resolvable, so the edge must not fire).
+          var subjBridge = txt.slice(subj.end, m2.index).replace(/\s+/g, ' ');
+          if (/['\u2019]s\s+(?:(?:great(?:\s*-\s*)?){0,2})?(?:father|mother|son|daughter|brother|sister|child|children|spouse|wife|husband|grandfather|grandmother|grandson|granddaughter|uncle|aunt|nephew|niece|cousin|sibling|partner)\b/i.test(subjBridge)) continue;
+          // ... or a possessive pronoun intending an unresolvable named spouse
+          // between subject and verb ("his wife Beatrice married").
+          if (/\b(?:his|her|their)\s+(?:[a-z][a-z-]*\s+){1,3}[A-Z]/.test(subjBridge)) continue;
+          // ... and when the resolved object sits BEHIND an unresolvable person
+          // in kin-apposition ("married Devdas Gandhi, son of Mahatma Gandhi" —
+          // Gandhi is Devdas's father, not the one being married). Only a
+          // capitalized name in the gap counts: "his second wife Soyarabai" is a
+          // note about the object, not a second person to skip past.
+          var objGap = txt.slice(verbRe.lastIndex, obj.start);
+          if (/\s[A-Z][a-z]+(?:[\s'-][A-Z][a-z]+)*\s*\b.{0,24}?\b(?:son|daughter|wife|husband|widow|widower|father|mother|child|brother|sister|grandson|granddaughter|grandchild|grandchildren|uncle|aunt|nephew|niece|cousin|spouse)\s+of\b/i.test(objGap)) continue;
         } else if (distPersons(ms, spvSent) > 2) continue;
       }
       var wasPassive = /\b(was|were|being|been)\b/.test(txt.slice(Math.max(0, m2.index - 10), m2.index).toLowerCase());
