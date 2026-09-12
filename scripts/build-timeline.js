@@ -147,7 +147,8 @@ var SEED = {
     'Lala Lajpat Rai', 'Bipin Chandra Pal',
     'Gautama Buddha', 'Mahavira', 'Chandragupta Maurya', 'Ashoka', 'Chanakya', 'Samudragupta',
     'Harsha', 'Kanishka', 'Panini', 'Charaka', 'Sushruta', 'Kalidasa', 'Aryabhata', 'Alexander the Great',
-    'Moggaliputta-Tissa', 'Faxian', 'Yijing', 'Julius Caesar', 'Augustus', 'Cleopatra', 'Genghis Khan',
+    'Moggaliputta-Tissa', 'Faxian', 'Yijing', 'Julius Caesar', 'Augustus', 'Cleopatra', 'Mark Antony',
+    'Caesarion', 'Pompey', 'Octavia Minor', 'Genghis Khan',
     'Confucius', 'Sun Yat-sen', 'Justinian', 'Charlemagne', 'Marco Polo', 'Mehmed', 'Suleiman',
     'Christopher Columbus', 'Ferdinand Magellan', 'Martin Luther', 'Johannes Gutenberg', 'Isaac Newton',
     'Charles Darwin', 'Napoleon', 'Abraham Lincoln', 'Adolf Hitler', 'Vladimir Lenin', 'Joseph Stalin',
@@ -326,6 +327,10 @@ var EXTRA_ALIASES = {
   'Chandrayaan-1': ['chandrayaan 1'],
   'Mangalyaan': ['mars orbiter mission'],
   'Alexander the Great': ['alexander', 'alexander invasion'],
+  'Mark Antony': ['marcus antonius', 'mark anthony', 'antony'],
+  'Caesarion': ['ptolemy xv', 'ptolemy caesar', 'ptolemy xv caesarion'],
+  'Pompey': ['pompey the great', 'gnaeus pompeius magnus'],
+  'Octavia Minor': ['octavia the younger'],
   'Indus Valley Civilization': ['harappan civilization', 'indus valley'],
   'Gupta Empire': ['guptas'],
   'Maurya Empire': ['mauryan empire', 'mauryas'],
@@ -2237,7 +2242,8 @@ function extractRelations(scanSource, nodes, topicMap) {
     // F1/F3 possessive: "X's <kin>" or a possessive-pronoun gap ("...undermined by
     // his ambitious wife, Beatrice" / "...Thomas and his uncle Marcus") — the
     // kinsman is the name right after the kin noun.
-    var possGap = x ? (/^['\u2019]s(?:\s+[a-z]+){0,2}\s/.test(xGap) || /\b(?:his|her|their|its)\b(?:\s+[a-z]+){0,2}\s*$/.test(xGap.replace(/\s+/g, ' ').toLowerCase())) : false;
+    var possMode = x ? (/^['\u2019]s(?:\s+[a-z]+){0,2}\s/.test(xGap) ? 2 : (/\b(?:his|her|their|its)\b(?:\s+[a-z]+){0,2}\s*$/.test(xGap.replace(/\s+/g, ' ').toLowerCase()) ? 1 : 0)) : 0;
+    var possGap = possMode > 0;
 if (x && possGap) {
       // F1 adjacency: the kin noun must sit directly on the possessor ("X's
       // eldest son"), with only short adjectives between. A clausal/nameful
@@ -2253,14 +2259,19 @@ if (x && possGap) {
       var y = nextMention(ms, pEnd);
       if (y && y.start < sent.end) {
         var yGap = txt.slice(pEnd, y.start);
-        if (/^\s+(?:with|by)\b/i.test(yGap)) {
+        if (possMode === 2 && /^\s+(?:with|by)\b/i.test(yGap) && y.start - pEnd <= 30 && !/\b(?:is|was|were|are|had|has|married|wed|divorced|succeeded|preceded|founded|ordered|executed|killed|died)\b/i.test(yGap)) {
           // co-parent: "Cleopatra's son with Julius Caesar, Caesarion" → the next
-          // name is a partner; the son's name follows apposition after him.
+          // name is a partner; the son's name follows apposition after him. Gated
+          // to the proper-possessive ("X's") form — a pronoun possessor ("her son
+          // by Julius Caesar") cannot name the real owner by position, and the
+          // comma-scan must not reach past a bare appositive: "…as well as Mark
+          // Antony's eldest son" or "Julius Caesar, nominally succeeded" are
+          // NOT comma-appositions of the child.
           ensureEdge(x.id, y.id, 'partner of');
           var z = nextMention(ms, y.end);
           if (z && z.start < sent.end && z.start - pEnd <= 45) {
             var zGap = txt.slice(y.end, z.start);
-            if (/^\s*[,;]\s|^\s+and\b/.test(zGap)) {
+            if (/^\s*[,;]\s*$/i.test(zGap) || /^\s+and\b/.test(zGap)) {
               ensureEdge(z.id, x.id, rel);
               ensureEdge(z.id, y.id, rel);
             }
@@ -2465,6 +2476,7 @@ if (x && possGap) {
     var m2;
     verbRe.lastIndex = 0;
     while ((m2 = verbRe.exec(txt))) {
+      curSent = txt.slice(Math.max(0, m2.index - 70), Math.min(txt.length, m2.index + 190));
       var verb = m2[1].toLowerCase();
       var isSpouseVerb = verb === 'married' || verb === 'wed' || verb === 'remarried' || verb === 'divorced';
       var subj = prevMention(ms, m2.index);
@@ -2531,7 +2543,7 @@ if (x && possGap) {
         // the person named in it.
         if (isPersonId(b2)) {
           var genObj = txt.slice(verbRe.lastIndex, obj.end);
-          if (/\bof\s*$/.test(gap) || /['\u2019]s\s/.test(genObj)) continue;
+          if (/\bof\s*$/.test(gap) || /['\u2019]s\s/.test(genObj) || /\bby\s+[a-z]+ing\b/i.test(gap)) continue;
         }
         ensureEdge(wasPassive ? b2 : a2, wasPassive ? a2 : b2, 'founded');
       }
