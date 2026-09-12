@@ -2525,6 +2525,14 @@ if (x && possGap) {
       }
       if (verb === 'founded' || verb === 'co-founded' || verb === 'cofounded' || verb === 'established' || verb === 'created' || verb === 'built') {
         if (wasPassive && !hasBy) continue;               // "... was founded in 1969." — no actor
+        // A person-object reached through a genitive ("…created a black-chalk
+        // drawing of Cleopatra…") or possessive ("…built Cleopatra's tomb…") is
+        // embedded in the thing founded — the artwork/monument is the object, not
+        // the person named in it.
+        if (isPersonId(b2)) {
+          var genObj = txt.slice(verbRe.lastIndex, obj.end);
+          if (/\bof\s*$/.test(gap) || /['\u2019]s\s/.test(genObj)) continue;
+        }
         ensureEdge(wasPassive ? b2 : a2, wasPassive ? a2 : b2, 'founded');
       }
       else if (verb === 'succeeded' || verb === 'succeeds') ensureEdge(wasPassive ? a2 : b2, wasPassive ? b2 : a2, 'succeeded by');
