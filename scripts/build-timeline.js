@@ -2400,6 +2400,14 @@ if (x && possGap) {
         var preTxt2 = txt.slice(sent.start, pStart).replace(/\s+/g, ' ').toLowerCase().slice(-30);
         poss = isPossSeg(preTxt2);
       }
+      // A possessive owner directly before the rel noun ("Pompey's rival Julius
+      // Caesar"; "Lakshmibai's son Damodar Rao") claims the relation for an
+      // UNRESOLVED person. Pairing through the nearest resolved mention then
+      // misattributes the relation to that subject — reject.
+      if (poss && subj && subj.start >= sent.start) {
+        var ownerRe = /([A-Z][a-z]{1,}(?:[\s'\u2019-][A-Z][a-z]{1,})*)[\u2019']s\s*$/.exec(txt.slice(subj.end, pStart));
+        if (ownerRe) continue;
+      }
       // Owner-fallback possessive inversion ("…succeeded as diwan of Porbandar by
       // his brother Tulsidas") should only stand when the pronoun's referent is
       // really the topic. A capitalized proper-noun in the sentence (Karamchand,
