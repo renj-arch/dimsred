@@ -1574,6 +1574,11 @@ function cleanDesc(s) {
   d = d.split(/\.\s+|\u2014\s+|\u2013\s+/)[0];
   return d.replace(/[,;\s]+$/, '').replace(/\s+/g, ' ').trim();
 }
+function personDescOK(d) {
+  if (!PERSON_ROLE.test(d)) return false;
+  var stripped = String(d).replace(/(?:^|[\s,])General\s+(?:Electric|Motors|Foods|Food|Dynamics|Mills|Hospital|Aircraft|Electrical|Radio|Instrument|Petroleum|Chemical|Insurance|Band|Television|Transport|Telecom|Electric Company|Motors Corporation|Foods Corporation|Dynamics Corporation|Mills Corporation)(?:\s+(?:Company|Corporation|Corp\.?|Group|Inc\.?|Ltd\.?|Co\.?))?/gi, ' ');
+  return PERSON_ROLE.test(stripped);
+}
 // Extract a person's descriptor ("profession") from the topic's own questions, e.g.
 // "What is Xuanzang? Chinese Buddhist monk and scholar (602–664)". Only returns when
 // the quoted name is the topic itself, the descriptor reads as a person role, and the
@@ -1589,12 +1594,12 @@ function personDescFor(name, qs) {
     reA.lastIndex = 0;
     while ((m = reA.exec(txt))) {
       var d = cleanDesc(m[2]);
-      if (nameMatchesForDesc(m[1], name) && PERSON_ROLE.test(d) && (+m[4] - +m[3]) >= 20 && (+m[4] - +m[3]) <= 130) return d;
+      if (nameMatchesForDesc(m[1], name) && personDescOK(d) && (+m[4] - +m[3]) >= 20 && (+m[4] - +m[3]) <= 130) return d;
     }
     reB.lastIndex = 0;
     while ((m = reB.exec(txt))) {
       var d2 = cleanDesc(m[1]);
-      if (PERSON_ROLE.test(d2) && (+m[3] - +m[2]) >= 20 && (+m[3] - +m[2]) <= 130) return d2;
+      if (personDescOK(d2) && (+m[3] - +m[2]) >= 20 && (+m[3] - +m[2]) <= 130) return d2;
     }
   }
   return null;
@@ -2337,6 +2342,16 @@ if (x && possGap) {
 
     // Pattern 1: "... <rel> of/by <target>" (subject = nearest preceding mention,
     // or the owning topic when the sentence leaves it implicit, e.g. "She ...").
+    // Relations that also legitimately apply to organisations ("founded by",
+    // "succeeded by", "preceded by", "mentored by", the -or noun forms) are left
+    // ungated at ensureEdge, so a person->person pairing through one of them is
+    // judged against the same strict coverage rule FAMILY uses below.
+    var FLEXIBLE_RELS = {};
+    ['succeeded by','succeeded','founded by','established by','preceded by','preceded',
+     'mentored by','taught by','mentor of','guru of','studied under','pupil of',
+     'student of','disciple of','teacher of','tutor of','coach of',
+     'founder','establisher','successor','predecessor'
+    ].forEach(function (fk) { FLEXIBLE_RELS[fk] = 1; });
     var m;
     ofByRe.lastIndex = 0;
     while ((m = ofByRe.exec(txt))) {
@@ -2414,6 +2429,9 @@ if (x && possGap) {
         if (poss && FAMILY_SINGULAR[phrase] && /\bto\s+[a-z]/i.test(gapTxt)) continue;
         var b = o.id;
         if (!b || b === a) continue;
+        // Person-pair flexible relation: a third named person in the same sentence
+        // makes the coupling ambiguous ("...with Pompey's rival Julius Caesar").
+        if (FLEXIBLE_RELS[phrase] && isPersonId(a) && isPersonId(b) && distPersons(ms, sent) > 2) continue;
         if (phrase === 'succeeded by') ensureEdge(a, b, 'succeeded by');
         else if (phrase === 'succeeded') ensureEdge(b, a, 'succeeded by');
         else if (phrase === 'founded by' || phrase === 'established by') ensureEdge(b, a, 'founded');
@@ -2492,6 +2510,11 @@ if (x && possGap) {
       var wasPassive = /\b(was|were|being|been)\b/.test(txt.slice(Math.max(0, m2.index - 10), m2.index).toLowerCase());
       var gap = txt.slice(verbRe.lastIndex, obj.start);
       var hasBy = /\bby\b/.test(gap);
+      // Person-pair flexible verb relation: same strict-coverage rule as Pattern 1.
+      if (!kinVerb && isPersonId(a2) && isPersonId(b2)) {
+        var flexSent = sentenceAt(txt, m2.index);
+        if (distPersons(ms, flexSent) > 2) continue;
+      }
       if (verb === 'founded' || verb === 'co-founded' || verb === 'cofounded' || verb === 'established' || verb === 'created' || verb === 'built') {
         if (wasPassive && !hasBy) continue;               // "... was founded in 1969." — no actor
         ensureEdge(wasPassive ? b2 : a2, wasPassive ? a2 : b2, 'founded');
