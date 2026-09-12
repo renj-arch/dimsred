@@ -401,7 +401,18 @@ window.loadQuizProgress = async function () {
   var tok = getToken();
   if (!tok || !supabaseUser) return null;
   try {
+    if (tokenExpired()) {
+      var fresh = await refreshToken();
+      if (!fresh) return null;
+      tok = getToken();
+    }
     var r = await fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + supabaseUser.id, { headers: sbHeaders(tok) });
+    if (r.status === 401) {
+      var ok = await refreshToken();
+      if (!ok) return null;
+      tok = getToken();
+      r = await fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + supabaseUser.id, { headers: sbHeaders(tok) });
+    }
     var rows = await r.json();
     if (!rows || rows.length === 0) return null;
     var payload = rows[0].payload;
