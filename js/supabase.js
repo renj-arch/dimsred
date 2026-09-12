@@ -147,6 +147,19 @@ async function initSupabase() {
 
 function getToken() { return localStorage.getItem('sb_access_token'); }
 
+// True when the stored access token is expired or within ~1 min of its JWT exp claim.
+function tokenExpired() {
+  var tok = getToken();
+  if (!tok) return true;
+  try {
+    var parts = tok.split('.');
+    if (parts.length < 2) return false;
+    var payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+    if (payload && payload.exp) return (payload.exp * 1000) - Date.now() < 60000;
+    return false;
+  } catch (e) { return false; }
+}
+
 async function ensureProfile(user) {
   var tok = getToken();
   try {
@@ -301,38 +314,68 @@ function mergeQuizPayload(existing, local, remoteUpdatedAtMs) {
   return out;
 }
 window.syncQuizProgress = function (quizState) {
-  var tok = getToken();
-  if (!tok || !supabaseUser || !quizState) {
+  if (!supabaseUser || !quizState || !getToken()) {
     window.__quizSync = { last: 'noauth', status: 0, msg: 'not signed in', at: Date.now() };
     return Promise.resolve(false);
   }
   var uid = supabaseUser.id;
   function attempt(n) {
-    return fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + uid, { headers: sbHeaders(tok) })
-      .then(function (r) { return r.json(); })
-      .then(function (rows) {
-        var payload = quizState;
-        var write;
-        if (rows && rows.length > 0) {
-          payload = mergeQuizPayload(rows[0].payload, quizState, new Date(rows[0].updated_at).getTime());
-          var patchBody = JSON.stringify({ payload: payload, updated_at: new Date().toISOString() });
-          var extra = patchBody.length < 32768 ? { keepalive: true } : {};
-          write = fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + uid, Object.assign({
-            method: 'PATCH', headers: sbHeaders(tok), body: patchBody
-          }, extra));
-        } else {
-          var postBody = JSON.stringify({ id: uid, payload: payload, updated_at: new Date().toISOString() });
-          var extra2 = postBody.length < 32768 ? { keepalive: true } : {};
-          write = fetch(SUPABASE_URL + '/rest/v1/quiz_progress', Object.assign({
-            method: 'POST', headers: sbHeaders(tok), body: postBody
-          }, extra2));
-        }
-        return write.then(function (w) {
-          if (!w.ok) throw new Error('HTTP ' + w.status);
-          return w;
+    return Promise.resolve()
+      .then(function () {
+        var tok = getToken();
+        if (!tok) throw new Error('not signed in');
+        if (!tokenExpired()) return tok;
+        return refreshToken().then(function (ok) {
+          if (!ok) throw new Error('session expired — sign in again');
+          return getToken();
         });
       })
+      .then(function (tok) {
+        return fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + uid, { headers: sbHeaders(tok) })
+          .then(function (r) { return r.json(); })
+          .then(function (rows) {
+            var payload = quizState;
+            var write;
+            if (rows && rows.length > 0) {
+              payload = mergeQuizPayload(rows[0].payload, quizState, new Date(rows[0].updated_at).getTime());
+              var patchBody = JSON.stringify({ payload: payload, updated_at: new Date().toISOString() });
+              var extra = patchBody.length < 32768 ? { keepalive: true } : {};
+              write = fetch(SUPABASE_URL + '/rest/v1/quiz_progress?id=eq.' + uid, Object.assign({
+                method: 'PATCH', headers: sbHeaders(tok), body: patchBody
+              }, extra));
+            } else {
+              var postBody = JSON.stringify({ id: uid, payload: payload, updated_at: new Date().toISOString() });
+              var extra2 = postBody.length < 32768 ? { keepalive: true } : {};
+              write = fetch(SUPABASE_URL + '/rest/v1/quiz_progress', Object.assign({
+                method: 'POST', headers: sbHeaders(tok), body: postBody
+              }, extra2));
+            }
+            return write.then(function (w) {
+              if (!w.ok) {
+                if (w.status === 401) throw new Error('session expired — sign in again');
+                throw new Error('HTTP ' + w.status);
+              }
+              return w;
+            });
+          });
+      })
       .catch(function (e) {
+        var msg = String((e && e.message) || e);
+        var expired = /^HTTP 401/.test(msg) || /^session expired/.test(msg);
+        if (expired && n < 2) {
+          return refreshToken().then(function (ok) {
+            if (!ok || !getToken() || !supabaseUser) {
+              localStorage.removeItem('sb_access_token');
+              localStorage.removeItem('sb_refresh_token');
+              localStorage.removeItem('sb_user');
+              supabaseUser = null;
+              updateAuthUI();
+              _emitAuthChange();
+              throw new Error('session expired — please sign in again');
+            }
+            return new Promise(function (res) { setTimeout(function () { res(attempt(n + 1)); }, 400); });
+          });
+        }
         if (n < 2) {
           return new Promise(function (res) { setTimeout(function () { res(attempt(n + 1)); }, 1500); });
         }
